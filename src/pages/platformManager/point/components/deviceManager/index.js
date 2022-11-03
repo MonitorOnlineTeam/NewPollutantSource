@@ -384,9 +384,33 @@ const gasSyatemCancel = (record,type) =>{
       editable: true,
     },
     {
-      title: '操作',
-      dataIndex: 'operation',
+      title: '创建人',
+      dataIndex: 'createUserName',
       align: 'center',
+      editable: false,
+    },  
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      align: 'center',
+      editable: false,
+    },
+    {
+      title: '更新人',
+      dataIndex: 'updateUser',
+      align: 'center',
+      editable: false,
+    },    
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      align: 'center',
+      editable: false,
+    }, 
+    {
+      title: '操作',
+      align: 'center',
+      fixed:'right',
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
@@ -462,10 +486,35 @@ const gasSyatemCancel = (record,type) =>{
       dataIndex: 'gasEquipment',
       align: 'center',
       editable: true,
-    },{
-      title: '操作',
-      dataIndex: 'operation',
+    },
+    {
+      title: '创建人',
+      dataIndex: 'createUser',
       align: 'center',
+      editable: true,
+    },  
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      align: 'center',
+      editable: false,
+    },
+    {
+      title: '更新人',
+      dataIndex: 'updateUser',
+      align: 'center',
+      editable: false,
+    },    
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      align: 'center',
+      editable: false,
+    },  
+    {
+      title: '操作',
+      align: 'center',
+      fixed:'right',
       render: (_, record) => {
         const editable = isGasSystemEditing(record);
         return editable ? (
@@ -558,8 +607,6 @@ const gasSyatemCancel = (record,type) =>{
     },
     {
       title: '操作',
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
       render: (text, record) => {
         return <Button type='primary' size='small' onClick={() => { generatorColChoice(record) }}> 选择 </Button>
@@ -796,8 +843,6 @@ const gasSyatemCancel = (record,type) =>{
     // },
     {
       title: '操作',
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
       render: (text, record) => {
         return <Button type='primary' size='small' onClick={() => { deviceColChoice(record) }}> 选择 </Button>
@@ -975,7 +1020,7 @@ const gasSyatemCancel = (record,type) =>{
       </Select>
     } else if (inputType === 'number') {
       inputNode = <InputNumber placeholder={`请输入`} />
-    } else {
+    }else {
       inputNode = <Input  title={formDevice.getFieldValue([dataIndex])} disabled={title==='设备名称'||title==='设备型号' || title ==='CEMS设备规格型号'? true : title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? isManual  :false} placeholder={  title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? `CIS同步使用` : `请输入`} />
     }
 

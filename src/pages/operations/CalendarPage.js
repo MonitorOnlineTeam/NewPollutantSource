@@ -48,7 +48,7 @@ class CalendarPage extends PureComponent {
       //   pageIndex: 1,
       //   pageSize: 10
       // }
-      pointName: '',
+      abnormalTitle: '',
     };
   }
 
@@ -142,7 +142,7 @@ class CalendarPage extends PureComponent {
   }
   exceptionDetail = (row) => { //打卡异常详情
     this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: true, }, })
-    this.setState({ pointName: `${row.EnterpriseName} - ${row.PointName}` })
+    this.setState({ abnormalTitle: `${row.EnterpriseName} - ${row.PointName}`})
     setTimeout(() => {
 
       // 根据统计周期，计算开始及结束时间
@@ -157,6 +157,7 @@ class CalendarPage extends PureComponent {
           beginTime: beginTime,
           endTime: endTime,
           DGIMN: row.DGIMN,
+          taskID:row.TaskID,
         },
       }
       )
@@ -544,7 +545,7 @@ class CalendarPage extends PureComponent {
 
   render() {
     const { abnormalDetailList, abnormalForm, loading, calendarInfoLoading, modalTableDataSource, modalTableTotal } = this.props;
-    const { currentCellInfo, dateFormat, listData, columns, modalTableCurrent, taskRecordDetailVisible, pointName, } = this.state;
+    const { currentCellInfo, dateFormat, listData, columns, modalTableCurrent, taskRecordDetailVisible, abnormalTitle, } = this.state;
     const cardTitle = `${currentCellInfo.text} - ${moment(currentCellInfo.date).format(dateFormat)}`;
     return (
       <BreadcrumbWrapper title="运维日历">
@@ -669,7 +670,7 @@ class CalendarPage extends PureComponent {
             />
           </Modal>
           {/** 打卡异常  监测点 弹框 */}
-          <EntAbnormalMapModal isCalendar pointName={pointName} />
+          <EntAbnormalMapModal  abnormalTitle={abnormalTitle} />
         </div>
       </BreadcrumbWrapper>
     );

@@ -104,6 +104,8 @@ class NavigationTree extends Component {
       useChioce: true,
       isLoading:false,
       // panelSelKey:"",
+      pageIndex:1,
+      pageSize:20,
       panelColumn: [
         {
           title: 'Name',
@@ -158,6 +160,7 @@ class NavigationTree extends Component {
     const state = this.props.runState == undefined ? '' : this.props.runState
     this.setState({
       RunState: state,
+      pageSize:1,
     })
 
     dispatch({
@@ -167,6 +170,8 @@ class NavigationTree extends Component {
         RunState: state,
         PollutantTypes: this.props.polShow&&this.props.type=='ent'? '1,2' :this.props.polShow&&this.props.type=='air'?'5' : this.state.PollutantTypes,
         isFilter: this.props.isMap,
+        PageIndex:1,
+        PageSize:this.state.pageSize,
       },
       callback: data => {
         this.loadCallback(data)
@@ -423,6 +428,7 @@ class NavigationTree extends Component {
     }
     this.setState({
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,
+      pageIndex:1,
     })
     value = this.props.checkpPol ? this.props.checkpPol : value;
     this.defaultKey = 0;
@@ -435,6 +441,8 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
+        PageIndex:1,
+        PageSize:this.state.pageSize,
       },
       callback: data => {
         this.loadCallback(data)
@@ -445,6 +453,7 @@ class NavigationTree extends Component {
 
     this.setState({
       RegionCode: value? value : '',
+      pageIndex:1,
     })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
@@ -455,6 +464,8 @@ class NavigationTree extends Component {
        Status: this.state.screenList,
        RunState: this.state.RunState,
        isFilter: this.props.isMap,
+       PageIndex:1,
+       PageSize:this.state.pageSize,
      },
      callback: data => {
        this.loadCallback(data)
@@ -553,6 +564,7 @@ class NavigationTree extends Component {
     value = value.toString()
     this.setState({
       RegionCode: value,
+      pageIndex:1,
     })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
@@ -563,7 +575,8 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-
+        PageIndex:1,
+        PageSize:this.state.pageSize,
       },
       callback: data => {
         this.loadCallback(data)
@@ -643,7 +656,7 @@ class NavigationTree extends Component {
     } else {
       typeList.splice(index, 1)
     }
-    this.setState({ screenList: typeList, offState, normalState, overState, exceState, zState, cState })
+    this.setState({ screenList: typeList, offState, normalState, overState, exceState, zState, cState,pageIndex:1, })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
@@ -653,6 +666,8 @@ class NavigationTree extends Component {
         Status: typeList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
+        PageIndex:1,
+        PageSize:this.state.pageSize,
       },
       callback: data => {
         this.loadCallback(data)
@@ -938,8 +953,27 @@ class NavigationTree extends Component {
           rowClassName={this.setRowClassName}/>
     }
 
-    pageChange = (pageIndex,pageSize) =>{
-     console.log(pageIndex,pageSize)
+    pageChange = (pageIndex,pageSize) =>{ //分页
+     this.setState({
+      pageIndex:pageIndex,
+      pageIndex:pageSize,
+    })
+    this.props.dispatch({
+      type: 'navigationtree/getentandpoint',
+      payload: {
+        Name: this.state.Name,
+        PollutantTypes: this.state.PollutantTypes,
+        RegionCode:  this.state.RegionCode,
+        Status: this.state.screenList,
+        RunState: this.state.RunState,
+        isFilter: this.props.isMap,
+        PageIndex:pageIndex,
+        PageSize:this.state.pageSize,
+      },
+      callback: data => {
+        this.loadCallback(data)
+      },
+    })
     }
   // ></Table>
   render() {
@@ -955,7 +989,7 @@ class NavigationTree extends Component {
     }
  
     return (
-      <div >
+      <div>
 
         <Drawer
           // title="导航菜单"
@@ -972,6 +1006,7 @@ class NavigationTree extends Component {
           style={{
             marginTop: 64,
           }}
+          className={styles.navTreeSty}
         >
           <div style={{ marginBottom: 15 }}>
             <Row style={{ textAlign: 'center' }}>
@@ -1054,15 +1089,15 @@ class NavigationTree extends Component {
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
                 // style={{maxHeight: this.props.type=='ent'?'calc(100vh - 320px)': 'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' }}
-                style={{ overflow: 'hidden', overflowY: 'auto', width: '100%' }}
+                // style={{ overflow: 'hidden', overflowY: 'auto', width: '100%' }}
                 onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
-                height={this.props.clientHeight - 320}
-                // height={this.props.clientHeight - 350} //虚拟滚动 解决打开卡顿 分页高度
+                // height={this.props.clientHeight - 320}
+                height={this.props.clientHeight - 350} //虚拟滚动 解决打开卡顿 分页高度
                 treeData={this.loop(this.state.EntAndPoint)}
                 {..._props}
               />
-                {/* <Pagination  onChange={this.pageChange}  showLessItems className={styles.navTreePaginationSty} size="small" showSizeChanger={false} total={this.state.EntAndPoint.length} showTotal={(total)=>{ return `共${total}条`}} /> */}
+                <Pagination  onChange={this.pageChange}  showLessItems className={styles.navTreePaginationSty} size="small" showSizeChanger={false} total={this.state.EntAndPoint.length} showTotal={(total)=>{ return `共${total}条`}} />
               </div>
                  /* {this.loop(this.state.EntAndPoint)}
                  </Tree> */

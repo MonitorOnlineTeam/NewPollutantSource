@@ -86,6 +86,7 @@ const Index = (props) => {
         title: '序号',
         align: 'center',
         width: 50,
+        ellipsis:true,
         render: (text, record, index) => {
             return index + 1;
         }
@@ -95,6 +96,7 @@ const Index = (props) => {
       dataIndex: 'RegionName',
       key:'RegionName',
       align:'center',
+      ellipsis:true,
     },
 
     {
@@ -102,12 +104,14 @@ const Index = (props) => {
       dataIndex: 'EntName',
       key:'EntName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '监测点名称',
       dataIndex: 'PointName',
       key:'PointName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '污染源类型',
@@ -115,6 +119,7 @@ const Index = (props) => {
       key:'PollutantTypeName',
       align:'center',
       width:120,
+      ellipsis:true,
     },
     {
       title: '任务单号',
@@ -122,30 +127,42 @@ const Index = (props) => {
       key:'TaskCode',
       align:'center',
       width:200,
+      ellipsis:true,
     },
+    {
+      title: '运维状态',
+      dataIndex: 'OperationStatus',
+      key:'OperationStatus', 
+      align:'center',
+      ellipsis:true,
+    }, 
     {
       title: '任务来源',
       dataIndex: 'TaskFromText',
       key:'TaskFromText',
       align:'center',
-    },  
+      ellipsis:true,
+    }, 
     {
       title: '任务类型',
       dataIndex: 'TaskTypeText',
       key:'TaskTypeText', 
       align:'center',
+      ellipsis:true,
     },
     {
       title: '任务状态',
       dataIndex: 'TaskStatus',
       key:'TaskStatus', 
       align:'center',
+      ellipsis:true,
     },
     {
       title: '运维人',
       dataIndex: 'OperationsUserName',
       key:'OperationsUserName', 
       align:'center',
+      ellipsis:true,
     },
     {
       title: '完成时间/系统关闭时间',
@@ -153,6 +170,7 @@ const Index = (props) => {
       key:'CompleteTime', 
       align:'center',
       width:200,
+      ellipsis:true,
       sorter: (a, b) => moment(a.CompleteTime).valueOf() - moment(b.CompleteTime).valueOf()
 
     },
@@ -202,6 +220,7 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
+        resizable
         pagination={{
           total:tableTotal,
           pageSize: pageSize,

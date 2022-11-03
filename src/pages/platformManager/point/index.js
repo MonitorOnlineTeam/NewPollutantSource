@@ -55,7 +55,7 @@ let pointConfigIdEdit = '';
   getMonitorPointVerificationItemLoading: loading.effects['point/getMonitorPointVerificationItem'] || false,
   addPointParamInfoLoading: loading.effects['point/addPointParamInfo'],
   getParamInfoListLoading: loading.effects['point/getParamInfoList'] || false,
-  getPointCoefficientListLoading: loading.effects[`point/getPointCoefficientByDGIMN`]  || false ,
+  getPointCoefficientListLoading: loading.effects[`point/getPointCoefficientByDGIMN`] || false,
   addOrEditPointCoefficientLoading: loading.effects['operaAchiev/addOrEditPointCoefficient'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
@@ -103,7 +103,7 @@ export default class MonitorPoint extends Component {
       sortTitle: '开启排序',
       noPaging: false,
       sortLoading: false,
-      loadFlag:false,
+      loadFlag: false,
     };
   }
 
@@ -162,7 +162,7 @@ export default class MonitorPoint extends Component {
       dispatch({
         type: 'point/getParamCodeList', //设备参数项码表
         payload: { pollutantType: type },
-        callback: () => { this.setState({loadFlag:true,}) }
+        callback: () => { this.setState({ loadFlag: true, }) }
       });
       dispatch({
         type: 'point/getMonitorPointVerificationList', //获取数据核查信息码表
@@ -287,12 +287,12 @@ export default class MonitorPoint extends Component {
         },
       })
     } else if (this.state.tabKey == 5) { //监测点系数
-      const  { pointCoefficientVal } = this.state;
-      if(!pointCoefficientVal&&pointCoefficientVal!==0){
+      const { pointCoefficientVal } = this.state;
+      if (!pointCoefficientVal && pointCoefficientVal !== 0) {
         message.warning('请输入监测点系数')
         return;
       }
-      if(pointCoefficientVal<=0){
+      if (pointCoefficientVal <= 0) {
         message.warning('请输入大于0的监测点系数')
         return;
       }
@@ -318,11 +318,11 @@ export default class MonitorPoint extends Component {
           if (this.state.isEdit) {
             FormData.PointCode = this.state.selectedPointCode;
           }
-          FormData['DGIMN'] = FormData['DGIMN']&&FormData['DGIMN'].toLowerCase();
+          FormData['DGIMN'] = FormData['DGIMN'] && FormData['DGIMN'].toLowerCase();
           const payload = {
             BaseType: match.params.targetType,
             TargetId: match.params.targetId,
-            Point: {...FormData,},
+            Point: { ...FormData, },
           };
 
           dispatch({
@@ -346,7 +346,7 @@ export default class MonitorPoint extends Component {
             },
           });
           this.setState({
-            FormData: {...FormData,},
+            FormData: { ...FormData, },
           })
         }
       });
@@ -485,7 +485,7 @@ export default class MonitorPoint extends Component {
 
     return <Spin spinning={this.props.getMonitorPointVerificationItemLoading}>
       <div className={styles.dataVerificationSty}>
-        <div style={{ color: '#f5222d', paddingBottom: 10, paddingTop: 5, paddingLeft: 126 }}>以下选项根据监测点现场真实情况进行填写，设置的选项作为数据一致性核查电子表单中的检查项字段，有则填写。</div>
+        <div style={{ color: '#f5222d', paddingBottom: 16, paddingLeft: 112 }}>以下选项根据监测点现场真实情况进行填写，设置的选项作为数据一致性核查电子表单中的检查项字段，有则填写。</div>
         <Form.Item label="核查项" >
           <Checkbox.Group value={this.state.itemCode} options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
         </Form.Item>
@@ -495,10 +495,11 @@ export default class MonitorPoint extends Component {
         {/* <Form.Item label="小时日数据一致性核查因子" >
           <Checkbox.Group value={this.state.hourPollutantCode}  options={this.props.pointHourItemList} onChange={this.hourPollutantChange} />
          </Form.Item> */}
-        <Form.Item label="监控平台数量" className='platformNumSty' >
+        <Form.Item label="监控平台数量" className='inputSty' >
           <InputNumber style={{ width: '50%', }} value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange} />
           <span style={{ color: '#f5222d', paddingLeft: 10 }}>填写现场监测点数据转发到几个监控平台，请填写数量。</span>
         </Form.Item>
+        {this.createComponents()}
       </div>
     </Spin>
   }
@@ -520,13 +521,24 @@ export default class MonitorPoint extends Component {
   pointCoefficientChange = (value) => { //监测点系数
     this.setState({ pointCoefficientVal: value })
   }
+  createComponents = () => {
+    return <Form.Item>
+      <Row>
+        <Col>创建人：</Col>
+        <Col offset={2}>创建时间：</Col>
+        <Col offset={2}>更新人：</Col>
+        <Col offset={2}>更新时间：</Col>
+      </Row>
+    </Form.Item>
+  }
   getEquipmentPar = () => { //设备参数项
     return <Spin spinning={this.props.getParamInfoListLoading}>
-      <div style={{ padding: '5px 0 10px 0' }}>
-        <div style={{ color: '#f5222d', paddingBottom: 5 }}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写。</div>
+      <div className={styles.deviceParSty}>
+        <div style={{ color: '#f5222d', paddingBottom: 16 }}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写。</div>
         <Form.Item label="设备参数类别" >
           <Checkbox.Group value={this.state.equipmentPol} options={this.props.paramCodeList} onChange={this.equipmentParChange} />
         </Form.Item>
+        {this.createComponents()}
       </div>
     </Spin>
   }
@@ -535,11 +547,12 @@ export default class MonitorPoint extends Component {
     const { pointCoefficientFlag } = this.state;
 
     return <Spin spinning={this.props.getPointCoefficientListLoading}>
-      <div style={{ padding: '10px 0' }}>
-        <Form.Item label='监测点系数' >
-          <InputNumber disabled={pointCoefficientFlag}  value={this.state.pointCoefficientVal} style={{ width: 200 }} placeholder='请输入' onChange={this.pointCoefficientChange} />
+      <div  className={styles.pointCoefficientSty}>
+        <Form.Item label='监测点系数' className='inputSty'>
+          <InputNumber disabled={pointCoefficientFlag} value={this.state.pointCoefficientVal} style={{ width: 200 }} placeholder='请输入' onChange={this.pointCoefficientChange} />
           {pointCoefficientFlag && <span style={{ paddingLeft: 10 }} className='red'>如需修改系数，请联系管理员</span>}
         </Form.Item>
+        {this.createComponents()}
       </div>
     </Spin>
   }
@@ -772,7 +785,7 @@ export default class MonitorPoint extends Component {
               </span>
             }
             // extra={<PollutantType handlePollutantTypeChange={this.getPageConfig} />}
-            extra={this.state.loadFlag&&<SelectPollutantType
+            extra={this.state.loadFlag && <SelectPollutantType
               style={{ marginLeft: 50, float: 'left' }}
               showType="radio"
               onChange={this.onPollutantChange}
@@ -792,7 +805,7 @@ export default class MonitorPoint extends Component {
             }
             {
 
-                pointConfigId && (<AutoFormTable
+              pointConfigId && (<AutoFormTable
                 dragable={sortTitle === '关闭排序' ? true : false}
                 dragData={(data) => { this.dragData(data) }}
                 noPaging={this.state.noPaging}
@@ -893,7 +906,7 @@ export default class MonitorPoint extends Component {
                                 pointCoefficientVal: data ? data.PointCoefficient : undefined,
                               })
                               this.setState({
-                                pointCoefficientFlag: data&&data.PointCoefficient  ? true : false,
+                                pointCoefficientFlag: data && data.PointCoefficient ? true : false,
                               })
                             }
                           })

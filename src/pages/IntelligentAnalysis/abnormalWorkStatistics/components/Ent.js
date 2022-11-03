@@ -437,12 +437,14 @@ const abnormalExceptionTaskList = (entCode) =>{ //响应超时
 
   
   // const [outOrInside,setOutOrInside] = useState()
-const [pointName,setPointName] = useState()
+const [abnormalTitle,setAbnormalTitle] = useState()
 
 const abnormalNum = (row,outOrInside) =>{  //企业监测点异常打卡
 
   props.updateState({entAbnormalNumVisible:true})
-  setPointName(`${row.entName} - ${row.pointName}`)
+  setAbnormalTitle(`${row.entName} - ${row.pointName} ，${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')} 期间打卡异常数：${outOrInside==1? row.insidePlanCount  : row.outPlanExceptionCount}`)
+
+
   setTimeout(()=>{
     props.getPointExceptionSignList({
       beginTime:queryPar.beginTime,
@@ -523,7 +525,7 @@ useImperativeHandle(refInstance,() => {
       /> 
    
   {/** 打卡异常  监测点 弹框 */}
-   <EntAbnormalMapModal pointName={pointName} />
+   <EntAbnormalMapModal abnormalTitle={abnormalTitle} />
  {/** 响应超时  弹框 */}
      <Modal
         title={ `${regName} - 统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}

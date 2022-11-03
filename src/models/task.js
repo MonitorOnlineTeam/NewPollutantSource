@@ -99,30 +99,31 @@ export default Model.extend({
             const taskInfo = yield call(GetTaskRecord, payload);
             if (taskInfo !== null && taskInfo.IsSuccess) {
                 if (taskInfo.Datas.length > 0) {
-                    yield put({
-                        type: 'GetAlarmResponseList',
-                        payload: {
-                            DGIMN: payload.DGIMN,
-                            TaskID: payload.TaskID,
-                        },
-                    });
-                    yield take('GetAlarmResponseList/@@end');
-                    const { AlarmResponseList } = yield select(_ => _.task);
-                    if (AlarmResponseList.length > 0) {
-                        taskInfo.Datas[0].AlarmList = AlarmResponseList;
-                        yield update({
-                            TaskRecord: taskInfo,
-                        });
-                    } else {
-                        yield update({
-                            TaskRecord: taskInfo,
-                        });
-                    }
+                    yield update({ TaskRecordLoading:false });
+                    // yield put({
+                    //     type: 'GetAlarmResponseList',
+                    //     payload: {
+                    //         DGIMN: payload.DGIMN,
+                    //         TaskID: payload.TaskID,
+                    //     },
+                    // });
+                    // yield take('GetAlarmResponseList/@@end');
+                    // const { AlarmResponseList } = yield select(_ => _.task);
+                    // if (AlarmResponseList.length > 0) {
+                    //     taskInfo.Datas[0].AlarmList = AlarmResponseList;
+                    //     yield update({
+                    //         TaskRecord: taskInfo,
+                    //     });
+                    // } else {
+                    //     yield update({
+                    //         TaskRecord: taskInfo,
+                    //     });
+                    // }
+                    yield update({  TaskRecord: taskInfo,  });
                 } else {
-                    yield update({
-                        TaskRecord: null,
-                    });
+                    yield update({  TaskRecord: null,  });
                 }
+
             }else{
                 message.error(taskInfo.Message)
                 yield update({ TaskRecordLoading:false });

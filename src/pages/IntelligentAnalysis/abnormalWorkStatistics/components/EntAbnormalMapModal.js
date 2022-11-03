@@ -54,24 +54,6 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    abnormalExceptionTaskList:(payload)=>{ //响应超时
-      dispatch({
-        type: `${namespace}/abnormalExceptionTaskList`,
-        payload:payload,
-      })
-    },
-    getPointExceptionSignList:(payload)=>{  //企业监测点  异常打卡
-      dispatch({
-        type: `${namespace}/getPointExceptionSignList`,
-        payload:payload,
-      })
-    },
-    exportEntResExceptionTaskList:(payload)=>{  //企业 响应超时
-      dispatch({
-        type: `${namespace}/exportEntResExceptionTaskList`,
-        payload:payload,
-      })
-    },
   }
 }
 const Index = (props) => {
@@ -123,7 +105,7 @@ const Index = (props) => {
   
 
 
-  const  { entAbnormalList,getPointExceptionLoading,taskList,pointName, }  = props; 
+  const  { entAbnormalList,getPointExceptionLoading,taskList,abnormalTitle, }  = props; 
 
   const renderMarker = (extData) =>{
     return <div>
@@ -189,8 +171,7 @@ if (getPointExceptionLoading) {
           />
 
       <div style={styleA}>
-        <span>{`${pointName}${!props.isCalendar? `,${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
-             期间打卡异常数：${ entAbnormalList.exceptionCount}` : '' }`}</span>
+        <span>{abnormalTitle}</span>
         </div>
            <div  style={styleB}>
           <Row align='middle'>

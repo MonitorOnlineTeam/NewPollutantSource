@@ -35,23 +35,15 @@
     }
   }
 }
-.dataVerificationSty{
+.dataVerificationSty,.pointCoefficientSty,.deviceParSty{
   :global{
-    .ant-legacy-form-item-label{
-      min-width: 181px;
-      line-height: normal;
-    }
     .ant-legacy-form-item{
       margin-bottom: 16px;
-    }
-    .ant-legacy-form-item-control{
+    } 
+    .ant-legacy-form-item-control,.ant-legacy-form-item-label{
       line-height: normal;
     }
-    .ant-checkbox-group .ant-checkbox-group-item>span:nth-last-child(1){
-        width: 105px;
-        display: inline-block;
-    }
-    .platformNumSty{
+    .inputSty{
       .ant-legacy-form-item-label{
         line-height: 40px;
       }
@@ -61,7 +53,20 @@
     }
   }
 }
-
+.dataVerificationSty{
+  :global{
+    .ant-legacy-form-item-label{
+      min-width: 167px;
+    }
+    .ant-checkbox-group .ant-checkbox-group-item>span:nth-last-child(1){
+        width: 105px;
+        display: inline-block;
+    }
+    .ant-legacy-form-item:last-child{
+      padding-left: 112px;
+    }
+  }
+}
 .popSelectSty :global{
   display: none;
 }

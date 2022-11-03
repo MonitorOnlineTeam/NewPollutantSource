@@ -79,7 +79,8 @@ export default class EntTransmissionEfficiency extends Component {
     this.state = {
       day:7,
       pointTitle:'',
-      passParame:''
+      passParame:'',
+      outputType:'',
     };
     
     this.columns = [
@@ -230,6 +231,12 @@ export default class EntTransmissionEfficiency extends Component {
         title: <span>监测点类型</span>,
         dataIndex: 'PollutantType',
         key: 'PollutantType',
+        align: 'center',
+      },
+      {
+        title: <span>排口类型</span>,
+        dataIndex: 'OutputTypeName',
+        key: 'OutputTypeName',
         align: 'center',
       },
       {
@@ -408,19 +415,32 @@ export default class EntTransmissionEfficiency extends Component {
         },
     });
   }
+  getData =()=>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: pageUrl.getData,
+      payload: { 
+        PollutantType:this.state.pollutantType,
+        OutputType:this.state.outputType,
+      }
+    });
+  }
     typeChange=(e)=>{
-      const { dispatch } = this.props;
+    
       this.setState({
         pollutantType: e.target ? e.target.value : e
       },()=>{
-        dispatch({
-          type: pageUrl.getData,
-          payload: { 
-            PollutantType:this.state.pollutantType
-          }
-        });
+        this.getData()
       })
 
+    }
+    outPutTypeChange=(e)=>{
+      const { dispatch } = this.props;
+      this.setState({
+        outputType: e.target ? e.target.value : e
+      },()=>{
+        this.getData()
+      })
     }
     getPointDataFun = (row,type) =>{
       const { dispatch } = this.props;
@@ -487,7 +507,13 @@ export default class EntTransmissionEfficiency extends Component {
                <Radio.Button value={'2'}>废气</Radio.Button>
                <Radio.Button value={'1'}>废水</Radio.Button>
              </Radio.Group>
-
+            </Form.Item>
+            <Form.Item>
+            <Radio.Group onChange={this.outPutTypeChange} value={this.state.outputType}>
+               <Radio.Button value={''}>全部</Radio.Button>
+               <Radio.Button value={'0'}>排放口</Radio.Button>
+               <Radio.Button value={'1'}>非排放口</Radio.Button>
+             </Radio.Group>
             </Form.Item>
              <Form.Item>
                 <Button
