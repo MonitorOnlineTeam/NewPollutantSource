@@ -137,10 +137,33 @@ const Index = (props) => {
       },
     },   
     {
-      title: <span>操作</span>,
-      dataIndex: 'x',
-      key: 'x',
+      title: '创建人',
+      dataIndex: 'CreateUserName',
+      key:'CreateUserName',
+      align:'center',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'CreateTime',
+      key:'CreateTime',
+      align:'center',
+    },
+    {
+      title: '更新人',
+      dataIndex: 'UpdUserName',
+      key: 'UpdUserName',
       align: 'center',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'UpdTime',
+      key: 'UpdTime',
+      align: 'center',
+    },
+    {
+      title: <span>操作</span>,
+      align: 'center',
+      fixed:'right',
       width:180,
       render: (text, record) =>{
         return  <span>

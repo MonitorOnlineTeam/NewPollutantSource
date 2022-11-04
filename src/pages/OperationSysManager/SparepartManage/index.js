@@ -41,8 +41,8 @@ const { Search } = Input;
     total: SparepartManage.total,
     sparepartManageParameters: SparepartManage.sparepartManageParameters,
     pageCount: SparepartManage.pageCount,
-    storehouseList:SparepartManage.storehouseList,
-    monitoringTypeList:SparepartManage.monitoringTypeList,
+    storehouseList: SparepartManage.storehouseList,
+    monitoringTypeList: SparepartManage.monitoringTypeList,
     confirmLoading: loading.effects['SparepartManage/UpdateSpareParts'],
 
 }))
@@ -361,7 +361,7 @@ export default class Index extends Component {
                 sparepartManageParameters: {
                     ...this.props.sparepartManageParameters,
                     ...{
-                        EquipmentType: val?val:''
+                        EquipmentType: val ? val : ''
                     }
                 }
             }
@@ -376,7 +376,7 @@ export default class Index extends Component {
                 sparepartManageParameters: {
                     ...this.props.sparepartManageParameters,
                     ...{
-                        SparePartsStationCode: value? value : ''
+                        SparePartsStationCode: value ? value : ''
                     }
                 }
             }
@@ -391,7 +391,7 @@ export default class Index extends Component {
                 sparepartManageParameters: {
                     ...this.props.sparepartManageParameters,
                     ...{
-                        IsUsed: value?value :'' ,
+                        IsUsed: value ? value : '',
                     }
                 }
             }
@@ -442,7 +442,7 @@ export default class Index extends Component {
         }
     }
     render() {
-        const { sparepartManageDatalist, sparepartManageParameters, pageCount,storehouseList,monitoringTypeList } = this.props;
+        const { sparepartManageDatalist, sparepartManageParameters, pageCount, storehouseList, monitoringTypeList } = this.props;
         const { visible } = this.state;
         const columns = [
             {
@@ -491,30 +491,30 @@ export default class Index extends Component {
             //     width: 100,
             //     align: 'center',
             //     render: (text, row, index) => {
-                    // switch (text) {
-                    //     case '1':
-                    //         text = "废水";
-                    //         break;
-                    //     case '2':
-                    //         text = "废气";
-                    //         break;
-                    //     case '5':
-                    //         text = "环境质量";
-                    //         break;
-                    //     case '10':
-                    //         text = "VOC";
-                    //         break;
-                    //     case '12':
-                    //         text = "扬尘";
-                    //         break;
-                    // }
-                    // return text;
-                //    return monitoringTypeList.map(item=>{
-                //         if(item.Code === text){
-                //            return item.Name
-                //         }
-                //     })
-                // },
+            // switch (text) {
+            //     case '1':
+            //         text = "废水";
+            //         break;
+            //     case '2':
+            //         text = "废气";
+            //         break;
+            //     case '5':
+            //         text = "环境质量";
+            //         break;
+            //     case '10':
+            //         text = "VOC";
+            //         break;
+            //     case '12':
+            //         text = "扬尘";
+            //         break;
+            // }
+            // return text;
+            //    return monitoringTypeList.map(item=>{
+            //         if(item.Code === text){
+            //            return item.Name
+            //         }
+            //     })
+            // },
             // },
             // {
             //     title: '服务站',
@@ -524,7 +524,7 @@ export default class Index extends Component {
             //     align: 'center',
             //     sorter: (a, b) => a.SparePartsStationName.length - b.SparePartsStationName.length,
             // },
-             {
+            {
                 title: '仓库名称',
                 dataIndex: 'SparePartsStationName',
                 key: 'SparePartsStationName',
@@ -550,10 +550,35 @@ export default class Index extends Component {
                 },
             },
             {
+                title: '创建人',
+                dataIndex: 'CreateUserName',
+                key: 'CreateUserName',
+                align: 'center',
+            },
+            {
+                title: '创建时间',
+                dataIndex: 'CreateTime',
+                key: 'CreateTime',
+                align: 'center',
+            },
+            {
+                title: '更新人',
+                dataIndex: 'UpdUserName',
+                key: 'UpdUserName',
+                align: 'center',
+            },
+            {
+                title: '更新时间',
+                dataIndex: 'UpdTime',
+                key: 'UpdTime',
+                align: 'center',
+            },
+            {
                 title: '操作',
                 key: 'action',
                 width: 100,
                 align: 'center',
+                fixed:'right',
                 render: (text, record, index) => (
                     <span>
                         <Fragment type='edit'>
@@ -590,24 +615,24 @@ export default class Index extends Component {
                     bordered={false}>
                     <div>
                         <Form layout="inline">
-                            <Row style={{paddingBottom:8}}>
-                            <Form.Item>
-                               <div style={{minWidth:70,display:'inline-block',textAlign:'right'}}> 编码 ：</div>
-                                <Input placeholder="编码" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartCode} onChange={this.PartCodeChange} />
-                            </Form.Item>
+                            <Row style={{ paddingBottom: 8 }}>
+                                <Form.Item>
+                                    <div style={{ minWidth: 70, display: 'inline-block', textAlign: 'right' }}> 编码 ：</div>
+                                    <Input placeholder="编码" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartCode} onChange={this.PartCodeChange} />
+                                </Form.Item>
 
-                            <Form.Item label='备品备件名称'>
-                                <Input placeholder="备品备件名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartName} onChange={this.PartNameChange} />
-                            </Form.Item>
+                                <Form.Item label='备品备件名称'>
+                                    <Input placeholder="备品备件名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartName} onChange={this.PartNameChange} />
+                                </Form.Item>
 
-                            <Form.Item label='规格型号'>
-                                <Input placeholder="规格型号" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.Code} onChange={this.Codechange} />
-                            </Form.Item>
-                            
-                            {/* <Form.Item>
+                                <Form.Item label='规格型号'>
+                                    <Input placeholder="规格型号" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.Code} onChange={this.Codechange} />
+                                </Form.Item>
+
+                                {/* <Form.Item>
                                 <Input placeholder="服务站名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.SparePartsStationCode} onChange={this.SparePartsStationNameChange} />
                             </Form.Item> */}
-   
+
                             </Row>
                             {/* <Form.Item>
                                 设备类型：
@@ -620,27 +645,27 @@ export default class Index extends Component {
                                            }  
                                 </Select>
                             </Form.Item> */}
-                         <Form.Item>
-                               仓库名称：
+                            <Form.Item>
+                                仓库名称：
                             <Select placeholder="仓库名称"
                                     showSearch
                                     filterOption={(input, option) =>
                                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                      }
-                                    allowClear style={{ width: 150 }}  onChange={this.storehouseChange}>
-                                     {
-                                      storehouseList[0]&&storehouseList.map(item=>{
-                                      return <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>
-                                      })
-                                     }
+                                    }
+                                    allowClear style={{ width: 150 }} onChange={this.storehouseChange}>
+                                    {
+                                        storehouseList[0] && storehouseList.map(item => {
+                                            return <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
                             <Form.Item>
-                               <div style={{minWidth:98,display:'inline-block',textAlign:'right'}}> 状态 ：</div>
-                                <Select placeholder="状态"  style={{ width: 150 }} allowClear value={sparepartManageParameters.IsUsed&&sparepartManageParameters.IsUsed.toString()? sparepartManageParameters.IsUsed.toString() :undefined } onChange={this.IsUsedChange}>
+                                <div style={{ minWidth: 98, display: 'inline-block', textAlign: 'right' }}> 状态 ：</div>
+                                <Select placeholder="状态" style={{ width: 150 }} allowClear value={sparepartManageParameters.IsUsed && sparepartManageParameters.IsUsed.toString() ? sparepartManageParameters.IsUsed.toString() : undefined} onChange={this.IsUsedChange}>
                                     <Option value="1">启用</Option>
                                     <Option value="0">停用</Option>
-                                  </Select>
+                                </Select>
                             </Form.Item>
 
                             <Form.Item>

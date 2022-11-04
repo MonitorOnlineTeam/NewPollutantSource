@@ -499,7 +499,7 @@ export default class MonitorPoint extends Component {
           <InputNumber style={{ width: '50%', }} value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange} />
           <span style={{ color: '#f5222d', paddingLeft: 10 }}>填写现场监测点数据转发到几个监控平台，请填写数量。</span>
         </Form.Item>
-        {this.createComponents()}
+        {this.createComponents(this.state.createUserName1,this.state.createTime1,this.state.updUserName1,this.state.updTime1)}
       </div>
     </Spin>
   }
@@ -521,13 +521,14 @@ export default class MonitorPoint extends Component {
   pointCoefficientChange = (value) => { //监测点系数
     this.setState({ pointCoefficientVal: value })
   }
-  createComponents = () => {
-    return <Form.Item>
+  createComponents = (createUserName,createTime,updUserName,updTime) => {
+    const {isEdit } = this.state;
+    return isEdit&&<Form.Item>
       <Row>
-        <Col>创建人：</Col>
-        <Col offset={2}>创建时间：</Col>
-        <Col offset={2}>更新人：</Col>
-        <Col offset={2}>更新时间：</Col>
+        <Col>创建人：{createUserName}</Col>
+        <Col offset={2}>创建时间：{createTime}</Col>
+        <Col offset={2}>更新人：{updUserName}</Col>
+        <Col offset={2}>更新时间：{updTime}</Col>
       </Row>
     </Form.Item>
   }
@@ -538,7 +539,7 @@ export default class MonitorPoint extends Component {
         <Form.Item label="设备参数类别" >
           <Checkbox.Group value={this.state.equipmentPol} options={this.props.paramCodeList} onChange={this.equipmentParChange} />
         </Form.Item>
-        {this.createComponents()}
+        {this.createComponents(this.state.createUserName2,this.state.createTime2,this.state.updUserName2,this.state.updTime2)}
       </div>
     </Spin>
   }
@@ -552,7 +553,7 @@ export default class MonitorPoint extends Component {
           <InputNumber disabled={pointCoefficientFlag} value={this.state.pointCoefficientVal} style={{ width: 200 }} placeholder='请输入' onChange={this.pointCoefficientChange} />
           {pointCoefficientFlag && <span style={{ paddingLeft: 10 }} className='red'>如需修改系数，请联系管理员</span>}
         </Form.Item>
-        {this.createComponents()}
+        {this.createComponents(this.state.createUserName3,this.state.createTime3,this.state.updUserName3,this.state.updTime3)}
       </div>
     </Spin>
   }
@@ -879,11 +880,15 @@ export default class MonitorPoint extends Component {
                                 realtimePollutantCode: res && res.RealTimeItem ? res.RealTimeItem : undefined,
                                 hourPollutantCode: res && res.HourItem ? res.HourItem : undefined,
                                 platformNum: res && res.platformNum ? res.platformNum : undefined,
+                                createUserName1: res&&res.CreateUserName,
+                                createTime1: res&&res.CreateTime,
+                                updUserName1: res&&res.UpdUserName,
+                                updTime1: res&&res.UpdTime,
                               })
                             }
                           })
 
-                          this.props.dispatch({ //设备参数 回显数据
+                          this.props.dispatch({ //设备参数项 回显数据
                             type: 'point/getParamInfoList',
                             payload: {
                               DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
@@ -892,6 +897,10 @@ export default class MonitorPoint extends Component {
                             callback: (res) => {
                               this.setState({
                                 equipmentPol: res && res.code ? res.code : undefined,
+                                createUserName2: res&&res.CreateUserName,
+                                createTime2: res&&res.CreateTime,
+                                updUserName2: res&&res.UpdUserName,
+                                updTime2: res&&res.UpdTime,
                               })
                             }
                           })
@@ -901,12 +910,16 @@ export default class MonitorPoint extends Component {
                             payload: {
                               DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
                             },
-                            callback: (data) => {
+                            callback: (res) => {
                               this.setState({
-                                pointCoefficientVal: data ? data.PointCoefficient : undefined,
+                                pointCoefficientVal: res ? res.PointCoefficient : undefined,
+                                createUserName3: res&&res.CreateUserName,
+                                createTime3: res&&res.CreateTime,
+                                updUserName3: res&&res.UpdUserName,
+                                updTime3: res&&res.UpdTime,
                               })
                               this.setState({
-                                pointCoefficientFlag: data && data.PointCoefficient ? true : false,
+                                pointCoefficientFlag: res && res.PointCoefficient ? true : false,
                               })
                             }
                           })

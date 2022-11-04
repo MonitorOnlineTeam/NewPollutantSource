@@ -53,7 +53,7 @@ class Dispatchreport extends Component {
             },
         };
         this.state = {
-            rangeDate: [],
+            rangeDate: [moment(new Date()).add(-7, 'day').startOf('D'), moment(new Date()).endOf('D')],
             format: 'YYYY-MM-DD HH:mm',
             selectvalue: '',
             UserName: '',

@@ -1074,7 +1074,7 @@ class NavigationTree extends Component {
               this.props.EntAndPointLoading ? <Spin
                 style={{
                   width: '100%',
-                  height: 'calc(100vh/2)',
+                  height: this.props.clientHeight - 350,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1097,7 +1097,6 @@ class NavigationTree extends Component {
                 treeData={this.loop(this.state.EntAndPoint)}
                 {..._props}
               />
-                <Pagination  onChange={this.pageChange}  showLessItems className={styles.navTreePaginationSty} size="small" showSizeChanger={false} total={this.state.EntAndPoint.length} showTotal={(total)=>{ return `共${total}条`}} />
               </div>
                  /* {this.loop(this.state.EntAndPoint)}
                  </Tree> */
@@ -1105,6 +1104,7 @@ class NavigationTree extends Component {
                <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                 </div>
             }
+           {this.state.EntAndPoint.length? <Pagination  onChange={this.pageChange}  showLessItems className={styles.navTreePaginationSty} size="small" showSizeChanger={false} total={this.state.EntAndPoint.length} showTotal={(total)=>{ return `共${total}条`}} /> : null}
 
           </div> : <div >
               {

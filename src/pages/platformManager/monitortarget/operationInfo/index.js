@@ -359,10 +359,21 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: <span>操作</span>,
-      dataIndex: 'x',
-      key: 'x',
+      title: '更新人',
+      dataIndex: 'updUserName',
+      key: 'updUserName',
       align: 'center',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updTime',
+      key: 'updTime',
+      align: 'center',
+    },
+    {
+      title: <span>操作</span>,
+      align: 'center',
+      fixed:'right',
       render: (text, record) => {
         return <span>
           <Fragment><Tooltip title="编辑"> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>

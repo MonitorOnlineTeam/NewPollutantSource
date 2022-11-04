@@ -180,11 +180,34 @@ const Index = (props) => {
       },
     },
     {
+      title: '创建人',
+      dataIndex: 'CreateUserName',
+      key:'CreateUserName',
+      align:'center',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'CreateTime',
+      key:'CreateTime',
+      align:'center',
+    },
+    {
+      title: '更新人',
+      dataIndex: 'UpdUserName',
+      key: 'UpdUserName',
+      align: 'center',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'UpdTime',
+      key: 'UpdTime',
+      align: 'center',
+    },
+    {
       title: <span>操作</span>,
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
       width:180,
+      fixed:'right',
       render: (text, record) =>{
         return  <span>
                <Fragment><Tooltip title="编辑"> <a  onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>

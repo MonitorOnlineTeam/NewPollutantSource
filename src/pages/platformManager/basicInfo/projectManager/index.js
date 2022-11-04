@@ -199,10 +199,23 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
-      title: <span>操作</span>,
-      dataIndex: 'x',
-      key: 'x',
+      title: '更新人',
+      dataIndex: 'UpdUserName',
+      key: 'UpdUserName',
       align: 'center',
+      ellipsis:true,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'UpdTime',
+      key: 'UpdTime',
+      align: 'center',
+      ellipsis:true,
+    },
+    {
+      title: <span>操作</span>,
+      align: 'center',
+      fixed:'right',
       width:180,
       ellipsis:true,
       render: (text, record) =>{
