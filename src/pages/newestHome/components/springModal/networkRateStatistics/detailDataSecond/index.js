@@ -244,7 +244,7 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch } = this.props;
-   this.typeChange();
+    this.typeChange();
   };
  loadChart=()=>{
 
@@ -366,12 +366,13 @@ export default class EntTransmissionEfficiency extends Component {
  }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch,location:{query:{p,networkType}}}  = this.props;
+    const { dispatch,location:{query:{p,networkType,outputType,}}}  = this.props;
     dispatch({
       type: pageUrl.exportData,
       payload: { 
         PollutantType: networkType,
         ProviceCode:p,
+        OutputType:outputType,
       },
         callback: data => {
          downloadFile(data);
@@ -379,7 +380,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
   pointTemplate = () => {  //弹框  监测点列表导出
-    const { dispatch,location:{query:{p,networkType}} } = this.props;
+    const { dispatch,location:{query:{p,networkType,outputType,}} } = this.props;
     const { CityCode } = this.state;
     dispatch({
       type: pageUrl.exportPointData,
@@ -387,7 +388,8 @@ export default class EntTransmissionEfficiency extends Component {
         PollutantType: networkType,
         ProviceCode:p,
         CityCode:CityCode,
-        NetworkingRateType:this.state.networkingRateType
+        NetworkingRateType:this.state.networkingRateType,
+        OutputType:outputType,
       },
       callback: data => {
          downloadFile(data);
@@ -395,17 +397,18 @@ export default class EntTransmissionEfficiency extends Component {
     });
   }
     typeChange=(e)=>{
-      const { dispatch,location:{query:{p,networkType}}} = this.props;
+      const { dispatch,location:{query:{p,networkType,outputType,}}} = this.props;
       dispatch({
         type: pageUrl.getData,
         payload: { 
           PollutantType: networkType,
           ProviceCode: p,
+          OutputType:outputType,
         }
       });
     }
     getPointDataFun = (row,type) =>{
-      const {location:{query:{p,networkType}} }= this.props;
+      const {location:{query:{p,networkType,outputType,}} }= this.props;
       this.setState({CityCode:row.CityCode, networkingRateType:type})
 
       this.props.dispatch({
@@ -414,7 +417,8 @@ export default class EntTransmissionEfficiency extends Component {
           PollutantType: networkType,
           ProviceCode: p,
           CityCode: row.CityCode,
-          NetworkingRateType: type
+          NetworkingRateType: type,
+          OutputType:outputType,
        }
       })
     }

@@ -328,6 +328,18 @@ export async function GetOperationTaskList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationTaskList', body.params, null);
     return result === null ? { Datas: null } : result;
 }
+/** 任务列表 导出 */
+export async function ExportOperationTaskList(params) {
+    const body = {
+        params: {
+            ...params,
+            CompleteTime: params.CompleteTime ? `${params.CompleteTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CompleteTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
+            CreateTime: params.CreateTime ? `${params.CreateTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CreateTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
+        },
+    };
+    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationTaskList', body.params, null);
+    return result === null ? { Datas: null } : result;
+}
 /** 试剂更换列表 */
 export async function GetStandardLiquidRepalceRecordList(params) {
     const body = {

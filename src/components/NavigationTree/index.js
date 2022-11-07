@@ -1092,8 +1092,8 @@ class NavigationTree extends Component {
                 // style={{ overflow: 'hidden', overflowY: 'auto', width: '100%' }}
                 onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
-                // height={this.props.clientHeight - 320}
-                height={this.props.clientHeight - 350} //虚拟滚动 解决打开卡顿 分页高度
+                height={this.props.clientHeight - 320}
+                // height={this.props.clientHeight - 350} //虚拟滚动 解决打开卡顿 分页高度
                 treeData={this.loop(this.state.EntAndPoint)}
                 {..._props}
               />
@@ -1104,7 +1104,7 @@ class NavigationTree extends Component {
                <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                 </div>
             }
-           {this.state.EntAndPoint.length? <Pagination  onChange={this.pageChange}  showLessItems className={styles.navTreePaginationSty} size="small" showSizeChanger={false} total={this.state.EntAndPoint.length} showTotal={(total)=>{ return `共${total}条`}} /> : null}
+           {/* {this.state.EntAndPoint.length? <Pagination  onChange={this.pageChange}  showLessItems className={styles.navTreePaginationSty} size="small" showSizeChanger={false} total={this.state.EntAndPoint.length} showTotal={(total)=>{ return `共${total}条`}} /> : null} */}
 
           </div> : <div >
               {

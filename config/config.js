@@ -1448,6 +1448,11 @@ export default {
                   component: './monitoring/dataquery/index',
                 },
                 {
+                  name: 'platformAnalysReport',//平台分析报告
+                  path: '/monitoring/platformAnalysReport',
+                  component: './monitoring/platformAnalysReport',
+                },
+                {
                   name: 'outputstopmanage',
                   path: '/monitoring/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',

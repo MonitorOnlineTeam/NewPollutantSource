@@ -26,12 +26,13 @@ import {
      GetWaterParametersChangeRecordForPCList,
      GetGasParametersChangeRecordForPCList,
      GetWaterComparisonTestRecordForPCList,
-     GetCooperationInspectionRecordList
+     GetCooperationInspectionRecordList,
+     ExportOperationTaskList,
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
 import { GetAlarmResponseList } from '../services/AlarmResponseApi';
-
+import { downloadFile } from '@/utils/utils';
 export default Model.extend({
     namespace: 'task',
     state: {
@@ -408,6 +409,15 @@ export default Model.extend({
               })
             }
           },
+        /** 任务列表 导出*/
+        *ExportOperationTaskList({ payload, }, { call, update, select }) {
+            const result = yield call(ExportOperationTaskList, payload);
+            if (result.IsSuccess) {
+                message.success('下载成功');
+                downloadFile(`/upload${result.Datas}`);
+            }
+          },
+           
         // 获取运维记录
         * GetOperationLogList({
             payload,

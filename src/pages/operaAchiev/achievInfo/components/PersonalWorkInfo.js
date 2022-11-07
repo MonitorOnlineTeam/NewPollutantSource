@@ -129,13 +129,13 @@ const Index = (props) => {
       width:200,
       ellipsis:true,
     },
-    {
-      title: '运维状态',
-      dataIndex: 'OperationStatus',
-      key:'OperationStatus', 
-      align:'center',
-      ellipsis:true,
-    }, 
+    // {
+    //   title: '运维状态',
+    //   dataIndex: 'OperationStatus',
+    //   key:'OperationStatus', 
+    //   align:'center',
+    //   ellipsis:true,
+    // }, 
     {
       title: '任务来源',
       dataIndex: 'TaskFromText',

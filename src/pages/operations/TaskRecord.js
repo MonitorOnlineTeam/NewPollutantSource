@@ -11,6 +11,7 @@ import {
   PlusOutlined,
   ProfileOutlined,
   UpOutlined,
+  ExportOutlined,
 } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -55,8 +56,8 @@ const { RangePicker } = DatePicker;
   datatable: task.datatable,
   LoadingData: loading.effects['task/GetOperationTaskList'],
   clientHeight: global.clientHeight,
-  operationCompanyList:operations.operationCompanyList
-
+  operationCompanyList:operations.operationCompanyList,
+  exportLoading: loading.effects['task/ExportOperationTaskList'],
 }))
 @Form.create()
 class TaskRecord extends Component {
@@ -432,6 +433,13 @@ entChange = (value) => {
   })
   this.props.form.setFieldsValue({ DGIMN: undefined })
 
+}
+exportData = () =>{ //导出
+  const par = this.props.form.getFieldsValue(); 
+  this.props.dispatch({
+    type: `task/ExportOperationTaskList`,
+    payload:{ ...par },
+  })
 }
   render() {
     const { form: { getFieldDecorator }, operationsUserList, loading, LoadingData, gettasklistqueryparams,isHomeModal } = this.props;
@@ -861,6 +869,9 @@ entChange = (value) => {
                       <Button style={{ marginLeft: 8 }} onClick={this._resetForm}>
                           重置
                           </Button>
+                          {/* <Button  icon={<ExportOutlined />} loading={this.props.exportLoading} style={{ marginLeft: 8 }} onClick={this.exportData}>
+                          导出
+                          </Button> */}
                       {
                           this.state.expand ?
                               <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>

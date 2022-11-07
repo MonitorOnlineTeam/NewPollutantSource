@@ -398,7 +398,8 @@ export default class EntTransmissionEfficiency extends Component {
     dispatch({
       type: pageUrl.exportData,
       payload: {
-        PollutantType: this.state.pollutantType
+        PollutantType: this.state.pollutantType,
+        OutputType: this.state.outputType,
       },
       callback: data => {
         downloadFile(data);
@@ -413,7 +414,8 @@ export default class EntTransmissionEfficiency extends Component {
       payload: {
         PollutantType: this.state.pollutantType,
         ProviceCode: ProviceCode,
-        NetworkingRateType: this.state.networkingRateType
+        NetworkingRateType: this.state.networkingRateType,
+        OutputType: this.state.outputType,
       },
       callback: data => {
         downloadFile(data);
@@ -431,8 +433,9 @@ export default class EntTransmissionEfficiency extends Component {
     });
   }
   typeChange = (e) => {
-
+    
     this.setState({
+      outputType: e.target && e.target.value==1? '' : this.state.outputType, //废水没有排口
       pollutantType: e.target ? e.target.value : e
     }, () => {
       this.getData()
@@ -457,7 +460,8 @@ export default class EntTransmissionEfficiency extends Component {
       payload: {
         PollutantType: this.state.pollutantType,
         ProviceCode: row.ProviceCode,
-        NetworkingRateType: type
+        NetworkingRateType: type,
+        OutputType:this.state.outputType,
       }
     })
   }
@@ -498,7 +502,7 @@ export default class EntTransmissionEfficiency extends Component {
         footer={null}
       >
 
-        {detailVisible && <DetailDataSecond networkDetailCancel={() => { this.setState({ detailVisible: false, passParame: '' }) }} location={{ query: { p: passParame.ProviceCode, n: passParame.ProviceName, networkType: this.state.pollutantType } }} />}
+        {detailVisible && <DetailDataSecond  networkDetailCancel={() => { this.setState({ detailVisible: false, passParame: '' }) }} location={{ query: { p: passParame.ProviceCode, n: passParame.ProviceName, networkType: this.state.pollutantType,outputType: this.state.outputType } }} />}
         {!detailVisible && networkRateVisible && <Card
           bordered={false}
           style={{ height: '100%' }}
@@ -513,13 +517,13 @@ export default class EntTransmissionEfficiency extends Component {
                       <Radio.Button value={'1'}>废水</Radio.Button>
                     </Radio.Group>
                   </Form.Item>
-                  <Form.Item>
+                 { this.state.pollutantType == 2 && <Form.Item>
                     <Radio.Group onChange={this.outTypeChange} value={this.state.outputType}>
                       <Radio.Button value={''}>全部</Radio.Button>
                       <Radio.Button value={'0'}>排放口</Radio.Button>
                       <Radio.Button value={'1'}>非排放口</Radio.Button>
                     </Radio.Group>
-                  </Form.Item>
+                  </Form.Item>}
                   <Form.Item>
                     <Button
                       style={{ margin: '0 5px' }}
