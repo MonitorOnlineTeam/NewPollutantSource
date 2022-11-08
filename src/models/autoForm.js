@@ -227,9 +227,11 @@ export default Model.extend({
     // 获取页面配置项
     *getPageConfig({ payload }, { call, put, update, select }) {
       const result = yield call(services.getPageConfigInfo, { ...payload });
+      console.log(result,1111)
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
         const columns = result.Datas.ColumnFields.filter(
+          console.log()
           itm => itm.FOREIGH_DT_CONFIGID === '' && itm.DF_WIDTH !== '0',
         ).map((item, index) => ({
           title: item.DF_NAME_CN,
@@ -248,6 +250,7 @@ export default Model.extend({
           dateFormat: item.DF_DATEFORMAT,
           type: item.DF_CONTROL_TYPE,
         }));
+        console.log(columns)
         const checkboxOrRadio = result.Datas.MulType;
 
         const whereList = {};

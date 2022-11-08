@@ -482,21 +482,21 @@ exportData = () =>{ //导出
       },
       {
         title: '运维状态',
-        dataIndex: 'ExceptionType',
-        key: 'ExceptionType',
+        dataIndex: 'ExceptionTypeName',
+        key: 'ExceptionTypeName',
         align:'center',
         ellipsis:true,
-        render: (text, record) => {
-          if (text === '1') {
-            return <span>打卡异常</span>;
-          }
-          if (text === '2') {
-            return <span>报警响应异常</span>;
-          }
-          if (text === '3') {
-          return <span>工作超时</span>;
-          }
-        },
+        // render: (text, record) => {
+        //   if (text === '1') {
+        //     return <span>打卡异常</span>;
+        //   }
+        //   if (text === '2') {
+        //     return <span>报警响应异常</span>;
+        //   }
+        //   if (text === '3') {
+        //   return <span>工作超时</span>;
+        //   }
+        // },
       },
       {
         title: '任务来源',
@@ -869,9 +869,9 @@ exportData = () =>{ //导出
                       <Button style={{ marginLeft: 8 }} onClick={this._resetForm}>
                           重置
                           </Button>
-                          {/* <Button  icon={<ExportOutlined />} loading={this.props.exportLoading} style={{ marginLeft: 8 }} onClick={this.exportData}>
+                           <Button  icon={<ExportOutlined />} loading={this.props.exportLoading} style={{ marginLeft: 8 }} onClick={this.exportData}>
                           导出
-                          </Button> */}
+                          </Button>
                       {
                           this.state.expand ?
                               <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>

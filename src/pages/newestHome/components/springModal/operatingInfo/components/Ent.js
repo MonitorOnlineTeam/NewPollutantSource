@@ -92,6 +92,7 @@ const Index = (props) => {
         regionCode:regionCode,
         pollutantType:pollutantType,
         pointType:1,
+        operationStatus:operatingStatus,   
     })
 
  };

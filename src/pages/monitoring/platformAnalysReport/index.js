@@ -52,7 +52,7 @@ const Index = (props) => {
 
 
 
-    const { exportloading,} = props;
+    const { exportloading, } = props;
 
     useEffect(() => {
     }, []);
@@ -66,28 +66,17 @@ const Index = (props) => {
     }
 
 
-
-
-
-
-
-
-
     return (
         <BreadcrumbWrapper>
             <Card>
-                <Form layout="inline"  form={form} initialValues={{time:moment()}}>
+                <Form layout="inline" form={form} initialValues={{ time: moment() }}>
                     <Form.Item name='time'>
-                        <DatePicker picker="month" allowClear={false}/>
+                        <DatePicker picker="month" allowClear={false} />
                     </Form.Item>
                     <Form.Item>
-                        <Button
-                            icon={<ExportOutlined />}
-                            onClick={exports}
-                            loading={exportloading}
-                        >
+                        <Button icon={<ExportOutlined />} onClick={exports} loading={exportloading}>
                             导出
-                </Button>
+                       </Button>
                     </Form.Item>
                 </Form>
             </Card>

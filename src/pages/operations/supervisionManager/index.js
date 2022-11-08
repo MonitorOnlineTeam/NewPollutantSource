@@ -718,7 +718,7 @@ const Index = (props) => {
     >
       <Row align='middle'>
         <Form.Item label='行政区' name='RegionCode' >
-          <RegionList  noFilter levelNum={3} style={{ width: 150 }}/>
+          <RegionList  noFilter levelNum={3} style={{ width: 150 }} />
         </Form.Item>
         <Spin spinning={entLoading} size='small' style={{ top: -3,left:39 }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
