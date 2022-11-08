@@ -231,7 +231,6 @@ export default Model.extend({
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
         const columns = result.Datas.ColumnFields.filter(
-          console.log()
           itm => itm.FOREIGH_DT_CONFIGID === '' && itm.DF_WIDTH !== '0',
         ).map((item, index) => ({
           title: item.DF_NAME_CN,
