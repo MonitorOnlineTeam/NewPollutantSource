@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, EllipsisOutlined, FileTextOutlined, UnlockFilled } from '@ant-design/icons';
+import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, EllipsisOutlined, FileTextOutlined, UnlockFilled, RotateLeftOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -775,7 +775,11 @@ export default class MonitorPoint extends Component {
                 <Button
                   style={{ marginLeft: 10 }}
                   onClick={() => {
-                    history.go(-1);
+                    // history.go(-1);
+                    router.push({
+                      pathname: `/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2`,
+                      query: {thisPage :true},
+                  });
                   }}
                   type="link"
                   size="small"

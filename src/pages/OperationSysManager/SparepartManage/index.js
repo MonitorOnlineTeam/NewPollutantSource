@@ -44,7 +44,6 @@ const { Search } = Input;
     storehouseList: SparepartManage.storehouseList,
     monitoringTypeList: SparepartManage.monitoringTypeList,
     confirmLoading: loading.effects['SparepartManage/UpdateSpareParts'],
-
 }))
 @Form.create()
 
@@ -214,8 +213,7 @@ export default class Index extends Component {
                 width: 1000,
                 data: record,
             });
-        }
-        else {
+        } else {
             this.setState({
                 visible: true,
                 title: '添加信息',
@@ -655,7 +653,7 @@ export default class Index extends Component {
                                     allowClear style={{ width: 150 }} onChange={this.storehouseChange}>
                                     {
                                         storehouseList[0] && storehouseList.map(item => {
-                                            return <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>
+                                            return <Option key={item.StorehouseCode} value={item.StorehouseCode}>{item.StorehouseName}</Option>
                                         })
                                     }
                                 </Select>

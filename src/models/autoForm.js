@@ -115,6 +115,7 @@ export default Model.extend({
     regionList: [], // 联动数据
     fileList: null, // 文件列表
     formLayout: {}, // 添加编辑布局
+    thisPage:false,
   },
   effects: {
     // 获取数据
@@ -227,7 +228,6 @@ export default Model.extend({
     // 获取页面配置项
     *getPageConfig({ payload }, { call, put, update, select }) {
       const result = yield call(services.getPageConfigInfo, { ...payload });
-      console.log(result,1111)
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
         const columns = result.Datas.ColumnFields.filter(
@@ -249,7 +249,6 @@ export default Model.extend({
           dateFormat: item.DF_DATEFORMAT,
           type: item.DF_CONTROL_TYPE,
         }));
-        console.log(columns)
         const checkboxOrRadio = result.Datas.MulType;
 
         const whereList = {};

@@ -242,6 +242,14 @@ const Index = (props) => {
               ],
             filterMultiple:false,
         },
+        {
+            title: '监测设备安装日期',
+            dataIndex: 'installDate',
+            key: 'installDate',
+            align: 'center',
+            width:150,
+            ellipsis:true,
+        },
     ]
 
 

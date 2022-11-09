@@ -1475,7 +1475,7 @@ const Index = (props) => {
                 return <Row align='middle' justify='center'>
                   <Form.Item name='isDisplay2'>
                     <Checkbox checked={isDisPlayCheck2} onChange={(e) => { isDisplayChange(e, 'isDisplay2') }}>无显示屏</Checkbox>
-                  </Form.Item> <NumTips style={{ top: 'auto', right: 12,zIndex:2 }} content={'1、颗粒物分析仪无显示屏时，分析仪量程填写铭牌量程'} /></Row>
+                  </Form.Item> <NumTips style={{ top: 'auto', right: 12,zIndex:1 }} content={'1、颗粒物分析仪无显示屏时，分析仪量程填写铭牌量程'} /></Row>
                 break;
               case 3:
                 return <Row align='middle' style={{ paddingLeft: 10 }}>

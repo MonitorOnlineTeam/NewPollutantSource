@@ -162,7 +162,7 @@ class SdlForm extends PureComponent {
 
     const isStart = item.fullFieldName == "dbo.T_Bas_TestCommonPoint.BeginTime";
     const isEnd = item.fullFieldName == "dbo.T_Bas_TestCommonPoint.EndTime";
-
+    console.log(item)
     const { dateFormat = 'YYYY-MM-DD HH:mm:ss' } = item;
     const format = dateFormat.toUpperCase();
     if (format === 'YYYY-MM' || format === 'MM') {

@@ -347,15 +347,15 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
-      align: 'center',
-    },
-    {
       title: '创建人',
       dataIndex: 'createUserName',
       key: 'createUserName',
+      align: 'center',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
       align: 'center',
     },
     {

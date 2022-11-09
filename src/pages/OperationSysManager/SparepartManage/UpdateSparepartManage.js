@@ -49,11 +49,11 @@ export default class UpdateSparepartManage extends Component {
     }
     componentWillMount() {
         const { dispatch, item } = this.props;
-        dispatch({
-            type: 'SparepartManage/GetSparePartsStation',
-            payload: {
-            }
-        });
+        // dispatch({
+        //     type: 'SparepartManage/GetSparePartsStation',
+        //     payload: {
+        //     }
+        // });
         dispatch({
             type: 'SparepartManage/GetMonitoringTypeList',
             payload: {

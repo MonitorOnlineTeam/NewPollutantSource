@@ -73,15 +73,29 @@ class AutoFormTable extends PureComponent {
   componentWillMount = () => {
     const { onRef } = this.props;
     onRef && onRef(this);
+
+  //  if(this.props.location&&this.props.location.query&&this.props.location.query.thisPage){
+  //    console.log(this.props.searchForm)
+  //   return
+  //  }else if(this.props.configId==='GasOutputNew'){ //进入监测点
+  //   this.props.dispatch({
+  //     type: 'autoForm/updateState',
+  //     payload: {
+  //       searchForm: {...this.props.searchForm,GasOutputNew:null},
+  //     },
+  //   });
+  //  }else{
+  //   this.props.dispatch({
+  //     type: 'autoForm/updateState',
+  //     payload: {
+  //       searchForm: {},
+  //     },
+  //   });
+  //  }
+
   };
   componentWillUnmount = () =>{
-    this.props.dispatch({
-      type: 'autoForm/updateState',
-      payload: {
-        searchForm: {},
-        tableInfo:{},
-      },
-    });
+
   }
   componentDidMount() {
     this.loadDataSource()

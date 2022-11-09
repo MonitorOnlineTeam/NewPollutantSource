@@ -389,7 +389,7 @@ class CalendarPage extends PureComponent {
         }
         // 系统关闭任务
         if (item.HaveInHandTaskNum) {
-          listData.push({ color: '#bfbfbf', content: `系统关闭任务${item.HaveInHandTaskNum}个`, type: 2, date: item.ExcetionDate, text: "系统关闭任务" })
+          listData.push({ color: '#bfbfbf', content: `系统关闭任务${item.ColseTaskNum}个`, type: 10, date: item.ExcetionDate, text: "系统关闭任务" })
         }
       }
       // 未来 0全部  1 备件更换  2 易耗品更换 3标气更换 4 清理点位（保养）
