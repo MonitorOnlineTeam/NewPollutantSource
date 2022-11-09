@@ -14,7 +14,8 @@ import path from 'path'
 // const API_HOST = 'http://218.64.81.32:50056/jsh/';  // 吉水
 
 // 新框架
-const API_HOST = 'http://172.16.12.60:6001/';  // 测试
+const API_HOST = 'http://172.16.12.60:6001/';  // 测试 - 志鹏
+const CONSOLE_HOST = 'http://172.16.12.39:33622/';  // 
 // const API_HOST = 'http://172.16.12.209:33688/';  // 霍达
 // const API_HOST = 'http://172.16.9.3:33688/';  // 志鹏
 
@@ -166,8 +167,27 @@ export default {
     // 视频私有云服务器
     '/api': {
       target: 'http://172.16.12.135:18080/', // 接口的域名
+      // target: API_HOST, // 接口的域名
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       // pathRewrite: { '^/wwwroot': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
-    }
+    },
+    // 采集
+    '/DataCollect': {
+      target: 'http://172.16.12.39:33622/', // 接口的域名
+      changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+      pathRewrite: { '^/DataCollect': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+    },
+     // 定时任务
+     '/DataStatis': {
+      target: 'http://172.16.12.39:33623/', // 接口的域名
+      changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+      pathRewrite: { '^/DataStatis': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+    },  
+     // 转发
+     '/DataTransmit': {
+      target: 'http://172.16.12.39:33624/', // 接口的域名
+      changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+      pathRewrite: { '^/DataTransmit': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+    },  
   },
 };

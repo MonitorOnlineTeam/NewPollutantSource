@@ -976,7 +976,29 @@ export const API = {
     GetLeChengKITToken: before + '/VideoApi/GetLeChengKITToken',
     // 获取首页视频列表
     GetHomePageVideo: before + '/VideoApi/GetHomePageVideo',
-  }
+  },
+  // console Api
+  ConsoleApi: {
+    // 获取采集服务配置及基本信息
+    GetConsulConfig: '/DataCollect/api/DataCollectSet/GetConsulConfig',
+    // 更新采集服务操作
+    UpdateConsulConfig: '/DataCollect/api/DataCollectSet/UpdateConsulConfig',
+    // 重启联网scoket
+    RestartCollect: '/DataCollect/api/DataCollectSet/RestartCollect',
+    // 获取定时任务配置
+    GetStatisSet: '/DataStatis/api/StatisSet/GetStatisSet',
+    // 设置定时任务配置
+    ModifyStatisTask: '/DataStatis/api/StatisSet/ModifyStatisTask',
+    // 重启定时任务
+    Restart: '/DataStatis/api/StatisSet/Restart',
+    // 获取转发服务配置及基本信息
+    GetTransmitSet: '/DataTransmit/api/DataTransmitSet/GetTransmitSet',
+    // 修改转发配置
+    ModifyTransmitSet: '/DataTransmit/api/DataTransmitSet/ModifyTransmitSet',
+    // 重启转发服务
+    RestartTransmit: '/DataTransmit/api/DataTransmitSet/RestartTransmit',
+    
+  },
 }
 
 export const UPLOAD = {

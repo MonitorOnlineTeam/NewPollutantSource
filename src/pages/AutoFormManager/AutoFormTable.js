@@ -113,9 +113,9 @@ class AutoFormTable extends PureComponent {
         },
       },
     });
-    setTimeout(() => {
-      this.loadDataSource();
-    }, 0);
+    // setTimeout(() => {
+    //   this.loadDataSource();
+    // }, 0);
   }
 
   onSelectChange = (selectedRowKeys, selectedRows) => {
@@ -716,7 +716,7 @@ class AutoFormTable extends PureComponent {
             pageSize,
             current,
             // onShowSizeChange: this.onTableChange,
-            onShowSizeChange: this.onTableChange,
+            onChange: this.onTableChange,
             pageSizeOptions: ['10', '20', '30', '40'],
             total,
           }}

@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2022-10-27 15:26:47 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-10-27 15:27:17
+ * @Last Modified time: 2022-11-04 15:51:01
  * @Description: 质控日志查询
  */
 import React, { PureComponent } from 'react'
@@ -58,6 +58,11 @@ class index extends PureComponent {
                     noload
                     style={{ marginTop: 10 }}
                     configId={CONFIGID}
+                    searchParams={[{
+                      Key: "dbo__T_Bas_QCARecord__DGIMN",
+                      Value: DGIMN,
+                      Where: '$=',
+                    }]}
                   />
                 </>
               }

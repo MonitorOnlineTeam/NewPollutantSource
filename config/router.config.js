@@ -22,6 +22,42 @@ const routes = [
     ]
   },
   {
+    path: '/console',
+    component: '../layouts/ConsoleLayout',
+    routes: [
+      /* 配置中心-AutoForm配置 */
+      {
+        path: '/console/baseConfig',
+        routes: [
+          // 常规配置
+          {
+            name: 'normal',
+            path: '/console/baseConfig/normal',
+            component: './Console/Normal',
+          },
+          // 数据采集
+          {
+            name: 'collect',
+            path: '/console/baseConfig/collect',
+            component: './Console/Collect',
+          },
+          // 数据转发
+          {
+            name: 'dataForwarding',
+            path: '/console/baseConfig/dataForwarding',
+            component: './Console/DataForwarding',
+          },
+          // 定时任务
+          {
+            name: 'crontab',
+            path: '/console/baseConfig/crontab',
+            component: './Console/Crontab',
+          },
+        ]
+      },
+    ]
+  },
+  {
     path: '/',
     component: '../layouts/BlankLayout',
     routes: [
@@ -456,30 +492,30 @@ const routes = [
             ],
           },
           /* 配置中心-AutoForm配置 */
-          {
-            path: '/console',
-            routes: [
-              /* 配置中心-AutoForm配置-AutoForm数据库配置 */
-              {
-                path: '/console',
-                redirect: '/sessionMiddlePage?sysInfo={"ID":"559becbf-bf68-46c0-8eda-664457b355cf","Name":"Autoform配置","TipsName":"Autoform配置","CodeList":""}'
-              },
-              {
-                path: '/console/database',
-                component: './autoformConfig/DatabaseConfig'
-              },
-              /* 配置中心-系统配置-菜单管理 */
-              {
-                path: '/console/menuManagement',
-                component: './autoformConfig/MenuManagement'
-              },
-              /* 配置中心-AutoForm配置-AutoForm数据源配置 */
-              {
-                path: '/console/datasource',
-                component: './autoformConfig/AutoFormDataSource'
-              }
-            ]
-          },
+          // {
+          //   path: '/console',
+          //   routes: [
+          //     /* 配置中心-AutoForm配置-AutoForm数据库配置 */
+          //     {
+          //       path: '/console',
+          //       redirect: '/sessionMiddlePage?sysInfo={"ID":"559becbf-bf68-46c0-8eda-664457b355cf","Name":"Autoform配置","TipsName":"Autoform配置","CodeList":""}'
+          //     },
+          //     {
+          //       path: '/console/database',
+          //       component: './autoformConfig/DatabaseConfig'
+          //     },
+          //     /* 配置中心-系统配置-菜单管理 */
+          //     {
+          //       path: '/console/menuManagement',
+          //       component: './autoformConfig/MenuManagement'
+          //     },
+          //     /* 配置中心-AutoForm配置-AutoForm数据源配置 */
+          //     {
+          //       path: '/console/datasource',
+          //       component: './autoformConfig/AutoFormDataSource'
+          //     }
+          //   ]
+          // },
           //污水处理台
           // {
           //   path: '/SewagePlant',
