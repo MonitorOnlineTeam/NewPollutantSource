@@ -175,22 +175,28 @@
 .more {
   padding: 2px 20px;
   border-radius: 50px;
-  background: rgb(203, 203, 203);
+  background: #c3c1c1;
+  margin-top: 4px;
   cursor: pointer;
+  font-size: 13px;
 }
 
 .so2,
 .no,
 .o2,
 .leng {
-  left: 744px;
-  top: 311px;
+  position: initial;
+  // left: 744px;
+  // top: 311px;
   width: 144px;
   height: 85px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background: #c6cdda;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
 .no {
@@ -205,7 +211,10 @@
   top: 663px;
   flex-direction: row;
   height: 80px;
+  position: absolute;
   color: #fff;
+  left: 744px;
+  background: transparent;
 }
 
 .tong {
@@ -327,4 +336,17 @@
 
 .leng3 {
   left: 380px;
+}
+
+.pollutantContent {
+  position: absolute;
+  width: 172px;
+  height: 274px;
+  top: 310px;
+  background: #dfdfdf;
+  left: 730px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

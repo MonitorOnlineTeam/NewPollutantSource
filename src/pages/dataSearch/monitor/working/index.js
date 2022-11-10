@@ -33,7 +33,7 @@ class working extends Component {
       DGIMN: value[0].key,
       entName: `${value[0].entName} - ${value[0].pointName}`
     }, () => {
-      this.getPollutantListByDgimn();
+      // this.getPollutantListByDgimn();
     })
   }
 
@@ -58,7 +58,9 @@ class working extends Component {
   }
 
   render() {
-    const { DGIMN, entName, isCarbon } = this.state;
+    // const { DGIMN, entName, isCarbon } = this.state;
+    const { DGIMN, entName } = this.state;
+    let isCarbon = true;
     return (
       <>
         <NavigationTree domId="working" onItemClick={(value, selectItem) => { this.changeDgimn(value, selectItem) }} />
@@ -66,16 +68,12 @@ class working extends Component {
           <BreadcrumbWrapper>
             <Card loading={this.props.loading}>
               <Tabs type="card">
-                {
-                  isCarbon && <TabPane tab="数据可视化" key="1">
-                    {DGIMN ? <FlowChart_Carbon DGIMN={DGIMN} /> : <PageLoading />}
-                  </TabPane>
-                }
-                {
-                  !isCarbon && <TabPane tab="数据可视化" key="1">
-                    {DGIMN ? <FlowChart DGIMN={DGIMN} /> : <PageLoading />}
-                  </TabPane>
-                }
+                <TabPane tab="数据可视化" key="1">
+                  {DGIMN ? <FlowChart DGIMN={DGIMN} /> : <PageLoading />}
+                </TabPane>
+                {/* <TabPane tab="数据可视化" key="3">
+                  {DGIMN ? <FlowChart_Carbon DGIMN={DGIMN} /> : <PageLoading />}
+                </TabPane> */}
                 {/* <TabPane tab="数据可视化" key="1">
                   {DGIMN ? <FlowChart DGIMN={DGIMN} /> : <PageLoading />}
                 </TabPane> */}
