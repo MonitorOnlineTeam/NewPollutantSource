@@ -13,6 +13,11 @@ export async function GetRemoteInspectorList(params) {
   return result;
 }
 
+// 数据一致性核查列表 导出
+export async function ExportRemoteInspectorList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportRemoteInspectorList', params, null);
+  return result;
+}
 
 
 

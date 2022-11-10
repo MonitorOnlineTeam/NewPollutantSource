@@ -35,6 +35,16 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    //导出
+    *exportRemoteInspectorList({ payload, }, { call, update, select, put }) {
+      const result = yield call(services.ExportRemoteInspectorList, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      } else {
+        message.error(result.Message)
+      }
+    },
     //获取数据 添加参数列表
     *getPointConsistencyParam({ payload,callback }, { call, update, select, put }) {
       const result = yield call(services.GetPointConsistencyParam, { ...payload });

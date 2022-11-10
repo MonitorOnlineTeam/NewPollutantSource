@@ -7,6 +7,7 @@ import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
 import moment from 'moment';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 import { remove } from 'lodash';
+import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'dataquery',
   state: {
@@ -929,6 +930,15 @@ debugger;
         window.open(result.Datas);
       } else {
         message.error(result.Message);
+      }
+    },
+    *exportPlatformAnalysisReport({ payload }, { call, put, update, select }) { //导出 平台分析报告
+      const result = yield call(services.exportPlatformAnalysisReport, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      }else{
+        message.warning(result.Message)
       }
     },
   },

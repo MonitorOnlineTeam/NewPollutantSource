@@ -170,7 +170,7 @@ const Index = (props,ref ) => {
 
 
   
-  const  {clientHeight, tableDatas,tableTotal,tableLoading,pointLoading,exportLoading,exportPointLoading,refInstance,isPlanCalibrationModal,isPlanInspectionModal,isActualCalibrationModal } = props; 
+  const  {clientHeight, tableDatas,tableTotal,tableLoading,pointLoading,exportLoading,exportPointLoading,pollutantType,refInstance,isPlanCalibrationModal,isPlanInspectionModal,isActualCalibrationModal } = props; 
 
   const {cityTableDatas,cityTableLoading,cityTableTotal,cityActualTableLoading} = props; //市级别
 
@@ -654,6 +654,36 @@ const Index = (props,ref ) => {
         }
       },
       {
+        title: '备品备件更换',
+        dataIndex: 'sparePartsCompleteCount',
+        key: 'sparePartsCompleteCount',
+        width: 100,
+        align:'center',
+        render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{workOrderNum(3,record,'sparePartsCount')}}>{text}</Button>
+        }
+      },
+      {
+        title: '易耗品更换',
+        dataIndex: 'consumablesCompleteCount',
+        key: 'consumablesCompleteCount',
+        width: 100,
+        align:'center',
+        render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{workOrderNum(3,record,'consumablesCount')}}>{text}</Button>
+        }
+      },
+      {
+        title: pollutantType==1? '试剂更换' :'标准物质更换',
+        dataIndex: pollutantType==1? 'reagentCompleteCount' : 'referenceMaterialsCompleteCount',
+        key:  pollutantType==1? 'reagentCompleteCount' : 'referenceMaterialsCompleteCount',
+        width:pollutantType==1? 80 : 100,
+        align:'center',
+        render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{workOrderNum(3,record,pollutantType==1? 'reagentCount' : 'referenceMaterialsCount')}}>{text}</Button>
+        }
+      },
+      {
         title: '校准',
         dataIndex: 'calibrationCompleteCount',
         key: 'calibrationCompleteCount',
@@ -1092,7 +1122,20 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
      </Form>
   }
 
-  
+  const outTypePar = {
+    "inspectionCount"  : "1",
+    "calibrationCount" :'2',
+    "sparePartsCount" :'9', //后加
+    "consumablesCount" :'10',
+    "reagentCount" :'11',//废水 试剂更换
+    "referenceMaterialsCount" : '12',//废水 标准物质更换
+    "repairCount" :'3',
+    "maintainCount" :'4',
+    "matchingComparisonCount" :'5',
+    "cooperationInspectionCount" :'6',
+    "calibrationTestCount":'7',
+    "coordinationComparisonCount":'8',
+   }
   const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
     const pars ={
       ...queryPar,
@@ -1114,26 +1157,22 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
   const [outType,setOutType] = useState()
   const [outTypeName,setOutTypeName] = useState()
 
-  const outTypePar = {
-    "inspectionCount"  : "1",
-    "calibrationCount" :'2',
-    "repairCount" :'3',
-    "maintainCount" :'4',
-    "matchingComparisonCount" :'5',
-    "cooperationInspectionCount" :'6',
-    "calibrationTestCount":'7',
-    "coordinationComparisonCount":'8',
-   }
+
    const outTypeNames = {
     "inspectionCount"  : "巡检工单",
     "calibrationCount" :'校准工单',
     "repairCount" :'维修工单',
+    "sparePartsCount" :'备品备件更换工单',
+    "consumablesCount" :'易耗品更换工单',
+    "reagentCount" : '试剂更换工单',
+    "referenceMaterialsCount" : '标准物质更换工单',
     "maintainCount" :'维护工单',
     "matchingComparisonCount" :'参数核对工单',
     "cooperationInspectionCount" :'配合检查工单',
     "calibrationTestCount":'校验测试工单',
     "coordinationComparisonCount":'配合比对完成工单数',
    }
+   
   const workOrderNum = (type,record,outType) =>{ //计划内  计划外  总数工单
     
      if(type == 1 || type ==2){
@@ -1148,7 +1187,6 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
      workRegForm.resetFields()
      setRegName(record.regionName)
      setRegionCode(record.regionCode?record.regionCode:cityDetailRegionCode)
-  
   
      setWorkPageIndex(1)
      setWorkPageSize(10)
@@ -1556,6 +1594,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       key:'taskCount',
       align:'center',
       fixed: 'left',
+      width:outTypeName&&outTypeName.length>=7? 140 : outTypeName&&outTypeName.length>=6? 120 : 100,
     },{
       title: `${outTypeName}分布`,
       width:200, 
@@ -1584,7 +1623,6 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                           //  for(let key in outTypeObj){ //完成
                           //     if(outType=== key && dateItem[`${outTypeObj[key]}`]){ 
                                  if(dateItem.taskCompleteCount&&dateItem.date == item.date){
-                                  console.log(dateItem.taskCompleteCount)
                                 return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                 {/* <span style={{color:'#fff'}}>{dateItem[`${outTypeObj[key]}`]}</span> */}
                                   <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>

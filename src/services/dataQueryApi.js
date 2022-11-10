@@ -48,4 +48,8 @@ export async function exportDataFlagReport(params) {
   return result;
 }
 
-
+// 平台分析报告 - 导出
+export async function exportPlatformAnalysisReport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportPlatformAnalysisReport', params, null);
+  return result;
+}

@@ -1010,7 +1010,7 @@ const Index = (props) => {
         return <Form.Item name={`Remark${record.Sort}`}>
                <TextArea rows={1} placeholder='请输入'/>
              </Form.Item>
-      },
+      }, 
     }]
   }
   ]

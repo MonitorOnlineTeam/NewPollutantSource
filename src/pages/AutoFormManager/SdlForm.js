@@ -156,7 +156,10 @@ class SdlForm extends PureComponent {
     }
   }
 
-
+  disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current > moment().endOf('day');
+  };
   // 处理时间控件
   _rtnDateEl = item => {
 
@@ -179,7 +182,7 @@ class SdlForm extends PureComponent {
       //   format={format} />
     }
     if (format === 'YYYY-MM-DD') {
-      return <DatePicker format={format} style={{ width: '100%' }} />
+      return <DatePicker format={format} style={{ width: '100%' }} disabledDate={item.fullFieldName==="dbo.T_Bas_CommonPoint.Col10"? this.disabledDate : null}/> //disabledDate 监测点监测设备安装日期选择范围显示/>
     }
     // 年-月-日 时:分:秒
     return <DatePicker showTime={{ defaultValue:isStart?  moment('00:00:00', 'HH:mm:ss') : isEnd ?  moment('23:59:59', 'HH:mm:ss') :  moment()}}  format={'YYYY-MM-DD HH:mm:ss'} style={{ width: '100%' }} />

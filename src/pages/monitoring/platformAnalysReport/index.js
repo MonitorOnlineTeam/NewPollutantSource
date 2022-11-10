@@ -26,7 +26,7 @@ const namespace = 'dataquery'
 
 
 const dvaPropsData = ({ loading, newestHome }) => ({
-    exportloading: loading.effects['dataquery/exportNetworkingRateForPoint'],
+    exportloading: loading.effects['dataquery/exportPlatformAnalysisReport'],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -37,9 +37,9 @@ const dvaDispatch = (dispatch) => {
                 payload: { ...payload },
             })
         },
-        updateState: (payload) => { //导出
+        exportPlatformAnalysisReport: (payload) => { //导出
             dispatch({
-                type: `${namespace}/updateState`,
+                type: `${namespace}/exportPlatformAnalysisReport`,
                 payload: { ...payload },
             })
         },
@@ -62,7 +62,14 @@ const Index = (props) => {
 
 
     const exports = () => {
-
+        const values = form.getFieldValue();
+        props.exportPlatformAnalysisReport({
+            staticType:"1",
+            beginTime:values.time&&values.time.startOf('M').format('YYYY-MM-DD 00:00:00'),
+            endTime:values.time&&values.time.endOf('M').format('YYYY-MM-DD 23:59:59'),
+            outOrInside:1,
+            regionLevel:1,
+        })
     }
 
 

@@ -58,6 +58,8 @@ const dvaPropsData = ({ loading, remoteSupervision, global, common,autoForm }) =
   addParconsistencyData: remoteSupervision.addParconsistencyData,
   consistencyCheckDetail: remoteSupervision.consistencyCheckDetail,
   tableInfo:autoForm.tableInfo,
+  exportLoading: loading.effects[`${namespace}/exportRemoteInspectorList`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -84,9 +86,15 @@ const dvaDispatch = (dispatch) => {
         }
       })
     },
-    getRemoteInspectorList: (payload) => { // 列表
+    getRemoteInspectorList: (payload) => { // 列表查询
       dispatch({
         type: `${namespace}/getRemoteInspectorList`,
+        payload: payload,
+      })
+    },
+    exportRemoteInspectorList: (payload) => { // 列表导出
+      dispatch({
+        type: `${namespace}/exportRemoteInspectorList`,
         payload: payload,
       })
     },
@@ -182,7 +190,7 @@ const Index = (props) => {
   const [commonForm] = Form.useForm();
 
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading,editLoading,tableInfo } = props;
+  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading,editLoading,tableInfo,exportLoading,} = props;
 
   const [tabType, setTabType] = useState('1')
 
@@ -258,15 +266,7 @@ const Index = (props) => {
  }
 
 
-  const exports = async () => {
-    const values = await form.validateFields();
-    props.exportTaskWorkOrderList({
-      ...queryPar,
-      pageIndex: undefined,
-      pageSize: undefined,
-    })
 
-  };
   const [ID, setID] = useState()
 
 
@@ -716,6 +716,15 @@ const Index = (props) => {
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
+  }
+  const exports = async () =>{  //导出
+    const values = await form.validateFields();
+    props.exportRemoteInspectorList({
+      ...values,
+      month: undefined,
+      BeginTime: values.month ? moment(values.month[0]).format("YYYY-MM-DD 00:00:00") : undefined,
+      EndTime: values.month ? moment(values.month[1]).format("YYYY-MM-DD 23:59:59") : undefined,
+    })
   }
   const resetData = (flag) => {
     form2.resetFields();
@@ -2153,6 +2162,9 @@ const Index = (props) => {
                {!isRecord&&<Button style={{ marginRight: 8 }} onClick={add}>
                   添加
             </Button>}
+            <Button  laoding={exportLoading}  icon={<ExportOutlined />} onClick={() => { exports() }}  >
+                  导出
+                </Button>
               </Form.Item>
             </Row>
           </Form>}>

@@ -336,7 +336,7 @@ const Index = (props) => {
       width: 150,
       render: (text, record, index) => {
         const attachmentDataSource = getAttachmentArrDataSource(text);
-        return <AttachmentView dataSource={attachmentDataSource} />;
+        return text&&text[0]? <AttachmentView dataSource={attachmentDataSource} /> : null;
 
       }
     },

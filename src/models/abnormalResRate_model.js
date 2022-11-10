@@ -2,6 +2,8 @@ import Model from '@/utils/model';
 import * as services from '../services/abnormalResRate_Api';
 import moment from 'moment';
 import { message } from 'antd';
+import { downloadFile } from '@/utils/utils';
+
 export default Model.extend({
   namespace: 'abnormalResRate',
   state: {
@@ -42,31 +44,33 @@ export default Model.extend({
     *exportReport({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportReport, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
       } else {
         message.error(result.Message)
       }
     },
-        // table数据-城市一级
-   *getExceptionAlarmRateListForCity ({ payload }, { call, put, update, select }) {
-          const result = yield call(services.getExceptionAlarmRateListForCity , { ...payload });
-          if (result.IsSuccess) {
-            yield update({
-              tableDataSource: result.Datas
-            })
-          } else {
-            message.error(result.Message)
-          }
-        },
-        // 导出-城市一级
+    // table数据-城市一级
+    *getExceptionAlarmRateListForCity({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getExceptionAlarmRateListForCity, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          tableDataSource: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 导出-城市一级
     *exportExceptionAlarmRateListForCity({ payload }, { call, put, update, select }) {
-          const result = yield call(services.exportExceptionAlarmRateListForCity, { ...payload });
-          if (result.IsSuccess) {
-            window.open(result.Datas)
-          } else {
-            message.error(result.Message)
-          }
-        },
+      const result = yield call(services.exportExceptionAlarmRateListForCity, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      } else {
+        message.error(result.Message)
+      }
+    },
     // table数据-二级页面
     *getSecondTableDataSource({ payload }, { call, put, update, select }) {
       const result = yield call(services.getSecondTableDataSource, { ...payload });
@@ -82,7 +86,8 @@ export default Model.extend({
     *exportSecond({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportSecond, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
       } else {
         message.error(result.Message)
       }

@@ -1,6 +1,6 @@
 /**
  * 功  能：计划工单统计
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2021.10.13
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
@@ -161,9 +161,9 @@ const Index = (props) => {
     name="advanced_search"
     onFinish={onFinish}
     initialValues={{
-      pollutantType:isPlanCalibrationModal||isPlanInspectionModal||isActualCalibrationModal ? props.pollutantTypes : undefined,
+      pollutantType:isPlanCalibrationModal||isPlanInspectionModal||isActualCalibrationModal ? props.pollutantTypes : 2,
       abnormalType:1,
-      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')]
+      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')],
     }}
   >  
     {showType==1? <Row  align='middle'>
@@ -243,7 +243,7 @@ const Index = (props) => {
     <div  className={styles.planWorkOrderStatisticsSty}>
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
     <Card title={searchComponents()}>
-      {showType==1? <Region isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
+      {showType==1? <Region pollutantType={form.getFieldValue('pollutantType')} isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
    </Card>
    </BreadcrumbWrapper>
    
