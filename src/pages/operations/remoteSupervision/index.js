@@ -1051,6 +1051,8 @@ const Index = (props) => {
    const onNumRealTimeChange =  (e) => { //数采仪实时数据
     setNumRealTimeChecked(e.target.checked)
   }
+  const [fileType, setFileType] = useState(1)
+
   const [filesCuid1, setFilesCuid1] = useState(cuid())
   const [filesCuid2, setFilesCuid2] = useState(cuid())
 
@@ -1061,8 +1063,6 @@ const Index = (props) => {
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewTitle, setPreviewTitle] = useState()
   const [previewImage, setPreviewImage] = useState()
-  const [fileType, setFileType] = useState(1)
-
   const [ photoIndex,setPhotoIndex] = useState(0); //预览附件Index
   const [imgUrlList,setImgUrlList ]= useState([]);//预览附件列表
 
@@ -1084,7 +1084,6 @@ const Index = (props) => {
     onChange(info) {
       const fileList = info.fileList.map(item=>{
         if(item.response&&item.response.IsSuccess){ //刚上传的
-          console.log(item)
           return {...item,url: `/upload/${item.response.Datas}`,}
         }else{
           return {...item}
@@ -1124,7 +1123,9 @@ const Index = (props) => {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
       }
-
+      // setPreviewImage(file.url || file.preview)
+      // setPreviewVisible(true)
+      // setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
       const imageList = fileType == 1 ? fileList1 : fileType == 2 ? fileList2 : fileType == 3? filesList3[filePar] : []  
   
       let imageListIndex = 0;
@@ -1141,9 +1142,7 @@ const Index = (props) => {
         })
         setImgUrlList(imgData)
       }
-      console.log(imageListIndex)
       setPhotoIndex(imageListIndex)
-      // setPreviewImage(file.url || file.preview)
       setPreviewVisible(true)
       setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
     },

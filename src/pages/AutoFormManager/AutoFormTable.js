@@ -476,7 +476,7 @@ class AutoFormTable extends PureComponent {
           }
           // 格式化日期
           if (col.dateFormat) {
-            text = moment(text).format(col.dateFormat)
+            text = text? moment(text).format(col.dateFormat) : ''
           }
           return text && <div title={!type && text}  className={styles.ellipsisText} style={{display:isCenter?'inline-block':""}}>
             {/* {type === '超链接' &&
