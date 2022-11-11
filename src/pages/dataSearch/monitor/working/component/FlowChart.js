@@ -377,7 +377,7 @@ class FlowChart extends PureComponent {
         {
           visualizaData.pollutant.length ? visualizaData.pollutant.map((item, index) => {
             return <div className={`${styles.so2} ${styles.commonSty}`} style={{ top: 311 + index * 90 }}>
-              <span>{item.PollutantName}：{item.value}</span>
+              <span>{item.PollutantName}：{item.value} {item.Unit}</span>
               <Tooltip placement="top" title={this.renderParamList(item.params)} trigger='click'>
                 <span className={`${styles.more}`}>更多参数</span>
               </Tooltip>

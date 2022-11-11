@@ -44,6 +44,7 @@ export default Model.extend({
               PollutantName: pollutant[key][0].PollutantName,
               PollutantCode: pollutant[key][0].PollutantCode,
               value: valueObj.Value || '-',
+              Unit: valueObj.Unit || '',
               params: pollutant[key]
             })
           } else {
