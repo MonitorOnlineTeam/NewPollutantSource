@@ -468,14 +468,15 @@ const Index = (props) => {
     if (record.uploadInfo && record.uploadInfo[0]) {  // 运维接收确认单附件
       form2.setFieldsValue({ Enclosure: record.uploadID })
       setFilesCuid1(record.uploadID)
-      const fileList = record.uploadInfo.map(item => {
+      const fileList =[]
+       record.uploadInfo.map(item => {
         if (!item.IsDelete) {
-          return {
+          fileList.push({
             uid: item.GUID,
             name: item.FileName,
             status: 'done',
             url: `\\upload\\${item.FileName}`,
-          }
+          })
 
         }
       })

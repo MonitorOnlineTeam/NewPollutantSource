@@ -641,7 +641,7 @@ const Index = (props) => {
       setEchoLoading(false)
 
       /***参数一致性核查表***/
-      let uploadList = {}
+      let uploadList = {};
       data.consistentParametersCheckList.map(item=>{ 
         let code = item.CheckItem 
         form3.setFieldsValue({
@@ -653,17 +653,18 @@ const Index = (props) => {
           [`${code}Remark3`]:item.Remark,
           [`${code}ParFiles`]:item.Upload,
         })
-        uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(item=>{
+         let parFileList = [] ;
+         item.UploadList&&item.UploadList[0]&&item.UploadList.map(item=>{
           if(!item.IsDelete){
-          return {
+            parFileList.push({
             uid: item.GUID,
             name: item.FileName,
             status: 'done',
             url: `\\upload\\${item.FileName}`,
-          }
+          })
         }
          })
-
+         uploadList[`${code}ParFiles`] = parFileList;
        })
        setFilesList3({ ...uploadList })
     })
@@ -1160,10 +1161,10 @@ const Index = (props) => {
     if(!ele){return}
     for (var i = 0; i < ele.childNodes.length; i++) {
       if (val.toString() != i + 1) {
-        ele.childNodes&&ele.childNodes[i].getElementsByTagName('input')[0].setAttribute("disabled", true)
+        ele.childNodes&&ele.childNodes[i]&&ele.childNodes[i].getElementsByTagName('input')[0].setAttribute("disabled", true)
       }
       if (!val[0]) {
-        ele.childNodes&&ele.childNodes[i].getElementsByTagName('input')[0].removeAttribute("disabled")
+        ele.childNodes&&ele.childNodes[i]&&ele.childNodes[i].getElementsByTagName('input')[0].removeAttribute("disabled")
       }
     }
    
@@ -1401,11 +1402,11 @@ const Index = (props) => {
     const displayEle4 = document.getElementById(`advanced_search_isDisplay4`);
     if (name === 'isDisplay3') {
       setIsDisPlayCheck3(e.target.checked)
-      displayEle4.setAttribute("disabled", true)
+      displayEle4&&displayEle4.setAttribute("disabled", true)
     }
     if (name === 'isDisplay4') {
       setIsDisPlayCheck4(e.target.checked)
-      displayEle3.setAttribute("disabled", true)
+      displayEle3&&displayEle3.setAttribute("disabled", true)
     }
     if (!e.target.checked) { //取消选中状态
       setIsDisPlayCheck3(e.target.checked)
