@@ -125,4 +125,26 @@
   }
 
 }
-  
+.questLoadingSty  :global{
+  .ant-spin-container{
+    height: 100vh;
+  }
+
+}
+//手机端
+.mobileSty :global{
+  img{
+    max-width: 100%;
+  }
+  .ant-spin-nested-loading{
+    height: 100%;
+    overflow-y: auto;
+  }
+  .ant-spin-container{
+    padding: 12px;
+    background: #fff;
+  }
+  .mobileContentSty p:last-child{
+   margin-bottom: 0;
+  }
+}

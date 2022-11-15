@@ -75,7 +75,17 @@ const Index = (props) => {
     return  <div style={{display:'inline-block', fontWeight:'bold',padding:'2px 4px',marginBottom:16,borderBottom:'1px solid rgba(0,0,0,.1)'}}>{props.text}</div>
             
     }
-  
+    const getAttachmentDataSource = (fileInfo)=> {
+      const  fileList =[];
+        if(fileInfo){
+        fileInfo.split(',').map(item => {
+          if(!item.IsDelete){
+              fileList.push({ name: item,   attach: item })
+         }
+      })
+    }
+     return fileList;
+    }
  const supervisionCol1 = [ {
     title: <span style={{fontWeight:'bold',fontSize:14}}>
       {operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList[0]&&operationInfoList.PrincipleProblemList[0].Title}
@@ -115,10 +125,27 @@ const Index = (props) => {
       dataIndex: 'Remark',
       key: 'Remark',
       align: 'center',
+     
       render: (text, record) => {
         return <div style={{textAlign:"left"}}>{text}</div>
       },
-    }]
+    },
+    {
+      title: '附件',
+      dataIndex: 'Attachments',
+      key: 'Attachments',
+      align: 'center',
+      width:120,
+      render: (text, record) => {
+        const attachmentDataSource = getAttachmentDataSource(text);
+        return   <div>
+           {text&&<AttachmentView  dataSource={attachmentDataSource} />}
+      </div>
+      },
+    },
+             
+  
+  ]
   }
   ]
 
@@ -161,7 +188,21 @@ const Index = (props) => {
         render: (text, record) => {
           return <div style={{textAlign:"left"}}>{text}</div>
         },
-       }]
+       },
+       {
+        title: '附件',
+        dataIndex: 'Attachments',
+        key: 'Attachments',
+        align: 'center',
+        width:120,
+        render: (text, record) => {
+          const attachmentDataSource = getAttachmentDataSource(text);
+          return   <div>
+             {text&&<AttachmentView  dataSource={attachmentDataSource} />}
+        </div>
+        },
+      },
+      ]
       }]
 
       const supervisionCol3 = [{
@@ -201,7 +242,21 @@ const Index = (props) => {
           render: (text, record) => {
             return <div style={{textAlign:"left"}}>{text}</div>
           },
-        }]
+        },
+        {
+          title: '附件',
+          dataIndex: 'Attachments',
+          key: 'Attachments',
+          align: 'center',
+          width:120,
+          render: (text, record) => {
+            const attachmentDataSource = getAttachmentDataSource(text);
+            return   <div>
+               {text&&<AttachmentView  dataSource={attachmentDataSource} />}
+          </div>
+          },
+        },
+      ]
         }]
         const supervisionCol4 = [
           {

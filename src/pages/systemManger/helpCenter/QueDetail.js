@@ -85,12 +85,21 @@ const Index = (props) => {
 
 
   return (
-    <div className={styles.quesDetailSty} style={{padding:isMobile? 12 : 0,height:isMobile? '100vh': '100%',backgroundColor:'#fff'}}>
-         <Spin spinning={questionDetialLoading} active style={{height:isMobile? '100vh':'100%'}}>
-       <div style={{textAlign:isMobile? 'center' : 'left',fontWeight:'bold',fontSize:15,}}>{questionDetail.QuestionName}</div>
-       <div style={{textAlign:isMobile? 'center' : 'left',color:'rgb(194,194,194)',paddingTop:8}}><span>创建人：{questionDetail.CreateUserName}</span> <span style={{paddingLeft:22}}>创建时间：{questionDetail.CreateTime}</span></div>
-       <div style={{paddingTop:12}} dangerouslySetInnerHTML={{__html:questionDetail.Content}}></div> 
+    <div className={questionDetialLoading?styles.questLoadingSty : isMobile ? styles.mobileSty : styles.quesDetailSty  } style={{height:isMobile? '100vh': '100%',backgroundColor:isMobile? '#f2f2f2' : '#fff'}}>
+      {isMobile?
+      <Spin spinning={questionDetialLoading} active style={{height:'100vh',maxHeight:'100vh'}}>
+       <div style={{textAlign:'left',fontWeight:'bold',lineHeight:'14px'}}>{questionDetail.QuestionName}</div>
+       <Divider style={{margin:'12px  0'}}/>
+      <div dangerouslySetInnerHTML={{__html:`<div class='mobileContentSty'>${questionDetail.Content}</div>` }}></div> 
        </Spin>
+       :
+       <Spin spinning={questionDetialLoading} active style={{height:'100%'}}>
+      <div style={{textAlign:'left',fontWeight:'bold',fontSize:15,}}>{questionDetail.QuestionName}</div>
+       <div style={{textAlign: 'left',color:'rgb(194,194,194)',paddingTop:8}}><span>创建人：{questionDetail.CreateUserName}</span> <span style={{paddingLeft:22}}>创建时间：{questionDetail.CreateTime}</span></div>
+       <div style={{paddingTop:12}} dangerouslySetInnerHTML={{__html:questionDetail.Content}}></div> 
+      </Spin>
+      }
+      
  </div>
   );
 };

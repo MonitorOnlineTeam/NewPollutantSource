@@ -641,7 +641,7 @@ const Index = (props) => {
       setEchoLoading(false)
 
       /***参数一致性核查表***/
-      let uploadList = {};
+      let uploadList = {},uploadFilesListObj = {};
       data.consistentParametersCheckList.map(item=>{ 
         let code = item.CheckItem 
         form3.setFieldsValue({
@@ -665,8 +665,10 @@ const Index = (props) => {
         }
          })
          uploadList[`${code}ParFiles`] = parFileList;
+         uploadFilesListObj[`${code}ParFiles`] = item.Upload ? item.Upload : cuid();
        })
        setFilesList3({ ...uploadList })
+       setFilesCuidList({...uploadFilesListObj })
     })
   }
 
@@ -2251,7 +2253,7 @@ const Index = (props) => {
             </Spin>
           </Row>
 
-
+         <Spin spinning={parLoading}>
           <Tabs
             activeKey={tabType}
             onChange={key => {
@@ -2268,7 +2270,7 @@ const Index = (props) => {
                 onValuesChange={onValuesChange2}
               >
                 <SdlTable
-                  loading={parLoading}
+                  // loading={parLoading}
                   columns={columns2}
                   dataSource={addDataConsistencyData}
                   pagination={false}
@@ -2278,7 +2280,7 @@ const Index = (props) => {
                   sticky
                 />
                 <SdlTable
-                  loading={parLoading}                                         
+                  // loading={parLoading}                                         
                   columns={columns3}                                         
                   dataSource={addRealTimeData}
                   pagination={false}
@@ -2330,6 +2332,7 @@ const Index = (props) => {
               </Form>
             </TabPane>
           </Tabs>
+          </Spin>
         </Form>
         </Spin>
       </Modal>

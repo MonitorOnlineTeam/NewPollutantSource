@@ -464,7 +464,7 @@ const Index = (props) => {
         }
 
         const echoPrincipleProblemList = data.PrincipleProblemList && data.PrincipleProblemList; //原则问题
-        const uploadList1 = {};
+        const uploadList1 = {},uploadCuid1={};
         echoPrincipleProblemList.map(item => {
           tableForm.setFieldsValue({
             [`Inspector${item.Sort}`]: item.Inspector,
@@ -483,12 +483,14 @@ const Index = (props) => {
             }
           })
           uploadList1[`Files1${item.Sort}`] = problemFilesList1;
+          uploadCuid1[`Files1${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid ? item.AttachmentsList[0].FileUuid :  cuid();
         })
 
-        setFilesList1({ ...uploadList1 })
+        setFilesList1({...uploadList1})
+        setFilesCuidList1({...uploadCuid1})
 
         const echoImportanProblemList = data.importanProblemList && data.importanProblemList; //重点问题
-        const uploadList2 = {};
+        const uploadList2 = {}, uploadCuid2={};
         echoImportanProblemList.map(item => {
           tableForm.setFieldsValue({
             [`Inspector${item.Sort}`]: item.Inspector,
@@ -507,11 +509,14 @@ const Index = (props) => {
             }
           })
           uploadList2[`Files2${item.Sort}`] = problemFilesList2;
+          uploadCuid2[`Files2${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid? item.AttachmentsList[0].FileUuid :  cuid();
         })
         setFilesList2({ ...uploadList2 })
+        setFilesCuidList2({...uploadCuid2})
+
 
         const echoCommonlyProblemList = data.CommonlyProblemList && data.CommonlyProblemList; //一般问题
-        const uploadList3 = {};
+        const uploadList3 = {} , uploadCuid3={};;
         echoCommonlyProblemList.map(item => {
           tableForm.setFieldsValue({
             [`Inspector${item.Sort}`]: item.Inspector,
@@ -530,11 +535,11 @@ const Index = (props) => {
             }
           })
           uploadList3[`Files3${item.Sort}`] = problemFilesList3;
+          uploadCuid3[`Files3${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid ? item.AttachmentsList[0].FileUuid :  cuid();
+
         })
-
         setFilesList3({ ...uploadList3 })
-
-
+        setFilesCuidList3({...uploadCuid3})
       })
   };
   const [detailVisible, setDetailVisible] = useState(false)
@@ -1369,7 +1374,7 @@ const Index = (props) => {
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
     // accept:'image/*',
     data: {
-      FileUuid: fileType == 0 ? filesCuid1 : fileType == 1 ? filesCuid1() : fileType == 2 ? filesCuid2() : filesCuid3(),
+      FileUuid: fileType == 0 ? filesCuid0 : fileType == 1 ? filesCuid1() : fileType == 2 ? filesCuid2() : filesCuid3(),
       FileActualType: '0',
     },
     listType: "picture-card",
@@ -1383,7 +1388,7 @@ const Index = (props) => {
       })
       fileType == 0 ? setFilesList0(fileList) : fileType == 1 ? setFilesList1({ ...filesList1, [files1]: fileList }) : fileType == 2 ? setFilesList2({ ...filesList2, [files2]: fileList }) : setFilesList3({ ...filesList3, [files3]: fileList })
       if (info.file.status === 'done') {
-        fileType == 0 ? tableForm.setFieldsValue({ Files: filesCuid1 }) : fileType == 1 ? tableForm.setFieldsValue({ [files1]: filesCuid1() }) : fileType == 2 ? tableForm.setFieldsValue({ [files2]: filesCuid2() }) : tableForm.setFieldsValue({ [files3]: filesCuid3() })
+        fileType == 0 ? tableForm.setFieldsValue({ Files: filesCuid0 }) : fileType == 1 ? tableForm.setFieldsValue({ [files1]: filesCuid1() }) : fileType == 2 ? tableForm.setFieldsValue({ [files2]: filesCuid2() }) : tableForm.setFieldsValue({ [files3]: filesCuid3() })
       }
       if (info.file.status === 'error') {
         message.error('上传文件失败！')
