@@ -2164,7 +2164,7 @@ const Index = (props) => {
                {!isRecord&&<Button style={{ marginRight: 8 }} onClick={add}>
                   添加
             </Button>}
-            <Button  laoding={exportLoading}  icon={<ExportOutlined />} onClick={() => { exports() }}  >
+            <Button  loading={exportLoading}  icon={<ExportOutlined />} onClick={() => { exports() }}  >
                   导出
                 </Button>
               </Form.Item>

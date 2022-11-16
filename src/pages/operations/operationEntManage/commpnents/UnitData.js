@@ -202,7 +202,7 @@ export default class EntTransmissionEfficiency extends Component {
                         onRef={this.onRef1}
                         style={{ marginTop: 10 }}
                         configId={configId}
-                        parentcode="platformconfig/operationEntManage"
+                        // parentcode="platformconfig/operationEntManage"
                         appendHandleRows={row =><> <Fragment>
                             {/* <Tooltip title="删除">
                             <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(row)} okText="是" cancelText="否">

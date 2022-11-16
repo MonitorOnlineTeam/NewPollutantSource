@@ -135,12 +135,18 @@ const Index = (props) => {
       dataIndex: 'BeginTime',
       key: 'BeginTime',
       align: 'center',
+      render: (text, record) => { 
+        return text ? moment(text).format('YYYY-MM-DD 00:00:00') : undefined;
+    }
     },
     {
       title: '失效时间',
       dataIndex: 'EndTime',
       key: 'EndTime',
       align: 'center',
+      render: (text, record) => { 
+          return text ? moment(text).format('YYYY-MM-DD 23:59:59') : undefined;
+      }
     },
     {
       title: '公告状态',
