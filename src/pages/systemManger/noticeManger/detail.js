@@ -12,7 +12,7 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { DelIcon, DetailIcon, EditIcon,PointIcon } from '@/utils/icon'
 import PageLoading from '@/components/PageLoading'
-
+import moment from 'moment';
 import styles from "./style.less"
 const { Option } = Select;
 
@@ -80,13 +80,13 @@ const Index = (props) => {
       </Col>
       <Col span={12}>
       <Form.Item label="生效时间">
-      {data.BeginTime}
+      {data.BeginTime && moment(data.BeginTime).format('YYYY-MM-DD 00:00:00')}
       </Form.Item>
       </Col>
 
         <Col span={12}>
         <Form.Item label="失效时间">
-        {data.EndTime}
+        {data.EndTime  && moment(data.EndTime).format('YYYY-MM-DD 23:59:59') }
       </Form.Item>
       </Col>
       <Col span={12}>

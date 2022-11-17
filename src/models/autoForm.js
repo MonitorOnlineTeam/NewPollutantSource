@@ -226,7 +226,7 @@ export default Model.extend({
     },
     // FOREIGN_DF_NAME /// FOREIGN_DF_ID
     // 获取页面配置项
-    *getPageConfig({ payload }, { call, put, update, select }) {
+    *getPageConfig({ payload,callback }, { call, put, update, select }) {
       const result = yield call(services.getPageConfigInfo, { ...payload });
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
@@ -354,6 +354,7 @@ export default Model.extend({
           },
         });
       }
+      callback&&callback()
     },
 
     *del({ payload }, { call, update, put }) {

@@ -810,7 +810,7 @@ export default class MonitorPoint extends Component {
             }
             {
 
-              pointConfigId && (<AutoFormTable
+              pointConfigId && this.state.loadFlag  && (<AutoFormTable
                 dragable={sortTitle === '关闭排序' ? true : false}
                 dragData={(data) => { this.dragData(data) }}
                 noPaging={this.state.noPaging}

@@ -53,7 +53,9 @@ const { confirm } = Modal;
 export default class MonitorTarget extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            flag:false,
+        };
     }
 
     componentDidMount() {
@@ -80,6 +82,11 @@ export default class MonitorTarget extends Component {
             payload: {
                 configId,
             },
+            callback:()=>{
+                this.setState({
+                    flag:true,
+                })
+            }
         })
     }
 
@@ -235,7 +242,7 @@ export default class MonitorTarget extends Component {
                         isCoustom
                         selectType='3,是'
                     ></SearchWrapper>
-                    <AutoFormTable
+                    {this.state.flag&&<AutoFormTable
                         resizable
                         onRef={this.onRef1}
                         style={{ marginTop: 10 }}
@@ -308,7 +315,7 @@ export default class MonitorTarget extends Component {
                         parentcode="platformconfig/monitortarget"
                         {...this.props}
                     >
-                    </AutoFormTable>
+                    </AutoFormTable>}
                 </Card>
             </BreadcrumbWrapper>
         );

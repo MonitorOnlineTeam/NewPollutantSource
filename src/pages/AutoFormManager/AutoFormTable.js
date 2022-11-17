@@ -95,12 +95,12 @@ class AutoFormTable extends PureComponent {
 
   };
   componentWillUnmount = () =>{
-    this.props.dispatch({
-      type: 'autoForm/updateState',
-      payload: {
-        tableInfo: [],
-      },
-    });
+    // this.props.dispatch({
+    //   type: 'autoForm/updateState',
+    //   payload: {
+    //     tableInfo: [],
+    //   },
+    // });
   }
   componentDidMount() {
     this.loadDataSource()
@@ -116,18 +116,18 @@ class AutoFormTable extends PureComponent {
   loadDataSource(params) {
     if(this.props.configId=="TestPoint"&&!this.props.searchParams){return} //调试检测 污染源管理监测点特殊处理
     
-    // console.log(this.props.configId,this.props.tableInfo,'-----')
-    switch (this.props.configId) {
-      case 'GasOutputNew'://监测点  废气
-        if (!this.props.tableInfo['GasOutput']) { return }
-        break;
-      case 'WaterOutputNew'://监测点  废水
-        if (!this.props.tableInfo['WaterOutput']) { return }
-        break;
-      case 'AEnterpriseTest'://企业
-        if (!this.props.tableInfo['AEnterpriseTest']) { return }
-        break;
-    }
+    // console.log(this.props.configId,this.props.tableInfo,'-----',this.props.noLoad)
+    // switch (this.props.configId) {
+    //   case 'GasOutputNew'://监测点  废气
+    //     if (!this.props.tableInfo['GasOutputNew']) { return }
+    //     break;
+    //   case 'WaterOutputNew'://监测点  废水
+    //     if (!this.props.tableInfo['WaterOutputNew']) { return }
+    //     break;
+    //   case 'AEnterpriseTest'://企业
+    //     if (!this.props.tableInfo['AEnterpriseTest']) { return }
+    //     break;
+    // }
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',
       payload: {

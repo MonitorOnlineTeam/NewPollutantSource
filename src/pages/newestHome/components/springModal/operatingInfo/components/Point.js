@@ -76,7 +76,7 @@ const Index = (props) => {
         pageIndex:PageIndex?PageIndex: pageIndex ,
         pageSize:PageSize?PageSize: pageSize,
         operationStatus:operatingStatus,
-        outputType:outputType
+        outputType:outputType,
     })
  };
 
@@ -94,6 +94,7 @@ const Index = (props) => {
         pollutantType:pollutantType,
         pointType:2,
         operationStatus:operatingStatus,
+        outputType:outputType,
     })
 
  };
@@ -101,9 +102,9 @@ const Index = (props) => {
   {
     title: '序号',
     align:'center',
-    render:(text,record,index)=>{
-     return  index +1 
-    }
+    render: (text, record, index) => {
+      return  (index + 1) + (pageIndex-1)*pageSize;
+  }
   },
   {
     title: '省/市',
