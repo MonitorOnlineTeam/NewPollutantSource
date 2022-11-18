@@ -45,6 +45,7 @@ function getQueryParams(state, payload) {
               ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss')
               : searchForm[key].value.toString(),
           };
+          console.log(state.whereList)
           for (const whereKey in state.whereList[configId]) {
             if (key === whereKey) {
               groupItem.Where = state.whereList[configId][whereKey];
@@ -339,7 +340,7 @@ export default Model.extend({
             ...state.opreationButtons,
             [configId]: result.Datas.OpreationButtons,
           },
-          whereList,
+          whereList:{...state.whereList,...whereList},
           keys: {
             ...state.keys,
             [configId]: keys,

@@ -900,7 +900,6 @@ export default class MonitorPoint extends Component {
                               pollutantType: this.state.pollutantType
                             },
                             callback: (codeList,res) => {
-                              console.log(codeList,res,22222222222) 
                               this.setState({
                                 equipmentPol: codeList && codeList[0] ? codeList : undefined,
                                 createUserName2: res&&res[0]&&res[0].CreateUserName,
