@@ -344,7 +344,7 @@ export default Model.extend({
             ...state.opreationButtons,
             [configId]: result.Datas.OpreationButtons,
           },
-          whereList,
+          whereList:{...state.whereList,...whereList},
           keys: {
             ...state.keys,
             [configId]: keys,
