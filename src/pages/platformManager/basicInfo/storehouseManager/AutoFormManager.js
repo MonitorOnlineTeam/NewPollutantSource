@@ -40,7 +40,9 @@ export default class AutoFormIndex extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      loadFlag:false,
+    };
 
   }
 
@@ -68,14 +70,17 @@ export default class AutoFormIndex extends Component {
       type: 'autoForm/getPageConfig',
       payload: {
         configId: configId
-      }
+      },
+      callback:()=>{
+       this.setState({loadFlag:true})
+      },
     })
   }
-
   render() {
     const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
     const searchConditions = searchConfigItems[configId] || []
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
+    const isFixedOpera =  configId === 'Storehouse'? true : false;
     if (this.props.loading) {
       return (<Spin
         style={{
@@ -114,7 +119,7 @@ export default class AutoFormIndex extends Component {
             //   }
             // ]}
             ></SearchWrapper>
-            <SdlTable
+            {this.state.loadFlag&&<SdlTable
               style={{ marginTop: 10 }}
               // columns={columns}
               configId={configId}
@@ -125,6 +130,7 @@ export default class AutoFormIndex extends Component {
               }}
               {...this.props}
               isCenter
+              isFixedOpera={isFixedOpera}
               // onAdd={()=>{
               //   console.log("点击了添加")
               // }}
@@ -152,7 +158,7 @@ export default class AutoFormIndex extends Component {
             //   }
             // ]}
             // dataSource={dataSource}
-            />
+            />}
           </Card>
         </div>
         </BreadcrumbWrapper>

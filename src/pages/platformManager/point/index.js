@@ -824,6 +824,7 @@ export default class MonitorPoint extends Component {
                     row,
                   });
                 }}
+                isFixedOpera
                 otherParams={{ SortFileds: 'Sort', IsAsc: true, }}
                 onAdd={() => {
                   this.showModal();
@@ -898,13 +899,14 @@ export default class MonitorPoint extends Component {
                               DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
                               pollutantType: this.state.pollutantType
                             },
-                            callback: (res) => {
+                            callback: (codeList,res) => {
+                              console.log(codeList,res,22222222222) 
                               this.setState({
-                                equipmentPol: res && res.code ? res.code : undefined,
-                                createUserName2: res&&res.CreateUserName,
-                                createTime2: res&&res.CreateTime,
-                                updUserName2: res&&res.UpdUserName,
-                                updTime2: res&&res.UpdTime,
+                                equipmentPol: codeList && codeList[0] ? codeList : undefined,
+                                createUserName2: res&&res[0]&&res[0].CreateUserName,
+                                createTime2: res&&res[0]&&res[0].CreateTime,
+                                updUserName2: res&&res[0]&&res[0].UpdUserName,
+                                updTime2: res&&res[0]&&res[0].UpdTime,
                               })
                             }
                           })

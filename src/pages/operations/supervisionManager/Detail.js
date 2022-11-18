@@ -508,14 +508,14 @@ const Index = (props) => {
               rowClassName="editable-row"
               pagination={false}
               className={'commonlyTableSty'}
-             />
+             /></>}
              <Table 
               bordered
               dataSource={[{Sort:1},{Sort:2}]}
               columns={supervisionCol4}
               className="summaryTableSty"
               pagination={false}
-             /></>}
+             />
            </>
            }
            

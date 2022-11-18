@@ -48,6 +48,7 @@ const dvaPropsData = ({ loading, deviceInfo, global }) => ({
   maxNum: deviceInfo.maxNum,
   // equipmentNameList:deviceInfo.equipmentNameList,
   addEditEquipmentNameList: deviceInfo.addEditEquipmentNameList,
+  exportLoading: loading.effects[`${namespace}/exportEquipmentInfoList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -127,6 +128,12 @@ const dvaDispatch = (dispatch) => {
         type: `${namespace}/addEditGetEquipmentName`,
         payload: payload,
 
+      })
+    },
+    exportEquipmentInfoList: (payload) => { //导出
+      dispatch({
+        type: `${namespace}/exportEquipmentInfoList`,
+        payload: payload,
       })
     },
   }
@@ -401,6 +408,14 @@ const Index = (props) => {
   const onSearch = (value) => {
     getManufacturerListFun(value)
   }
+
+  const exports = () => { //导出
+    const values = form.getFieldsValue();
+    props.exportEquipmentInfoList({
+      ...values,
+    })
+  }
+
   const searchComponents = () => {
     return <Form
       form={form}
@@ -452,9 +467,12 @@ const Index = (props) => {
           <Button type="primary" htmlType='submit' style={{ marginRight: 8 }}>
             查询
      </Button>
-          <Button onClick={() => { add() }} >
+          <Button onClick={() => { add() }} style={{ marginRight: 8 }} >
             添加
      </Button>
+     <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
+          导出
+      </Button>
         </Form.Item>
       </Row>
     </Form>

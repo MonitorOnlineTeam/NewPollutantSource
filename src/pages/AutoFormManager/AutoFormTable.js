@@ -514,7 +514,7 @@ class AutoFormTable extends PureComponent {
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
       let leftMenuWidth = config.isShowTabs && defaultSettings.layout === "sidemenu" ? 255 : 0
-      const isFixed = scrollXWidth > (window.innerWidth - 64 - 48 - leftMenuWidth) ? 'right' : ''
+      const isFixed = scrollXWidth > (window.innerWidth - 64 - 48 - leftMenuWidth) || this.props.isFixedOpera? 'right' : ''
       _columns.length && _columns.push({
         align: 'center',
         title: '操作',

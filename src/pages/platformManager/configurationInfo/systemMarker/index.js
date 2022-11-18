@@ -39,7 +39,7 @@ const dvaPropsData =  ({ loading,systemMarker }) => ({
   maxNum:systemMarker.maxNum,
   systemModelNameList:systemMarker.systemModelNameList,
   systemModelNameListLoading: loading.effects[`${namespace}/getSystemModelNameList`],
-
+  exportLoading: loading.effects[`${namespace}/exportSystemModelList`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -99,6 +99,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
         callback:callback
       }) 
+    },
+    exportSystemModelList:(payload)=>{ //导出
+      dispatch({
+        type: `${namespace}/exportSystemModelList`,
+        payload:payload,
+      })
     },
   }
 }
@@ -309,6 +315,14 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
+
+  const exports = () =>{ //导出
+    const values =  form.getFieldsValue();
+    props.exportSystemModelList({
+      ...values,
+    })
+  }
+
   const [pageIndex,setPageIndex] = useState(1)
   const [pageSize,setPageSize] = useState(20)
   const handleTableChange =   async (PageIndex, PageSize)=>{ //分页
@@ -377,9 +391,12 @@ const Index = (props) => {
       <Button   type="primary" htmlType='submit' style={{marginRight:8}}>
           查询
      </Button>
-     <Button   onClick={()=>{ add()}} >
+     <Button   onClick={()=>{ add()}} style={{marginRight:8}}>
           添加
      </Button>
+     <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
+                    导出
+         </Button>
      </Form.Item>
      </Row>
      </Form>

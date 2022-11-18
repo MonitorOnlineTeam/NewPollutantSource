@@ -264,13 +264,13 @@ class BasicLayout extends Component {
 
 
     const logoRender = Item => {
-      if (configInfo && configInfo.IsShowLogo === 'true') {
-        return settings.layout === 'topmenu' ? (
-          <img style={{ height: 60 }} src={configInfo.Logo ? `/${configInfo.Logo}` : logo} alt="logo" />
-        ) : (
-            <img src={`/${configInfo.Logo}`} alt="logo" />
-          );
-      }
+      // if (configInfo && configInfo.IsShowLogo === 'true') {
+      //   return settings.layout === 'topmenu' ? (
+      //     <img style={{ height: 60 }} src={configInfo.Logo ? `/${configInfo.Logo}` : logo} alt="logo" />
+      //   ) : (
+      //       <img src={`/${configInfo.Logo}`} alt="logo" />
+      //     );
+      // }
 
       return <div></div>
     };

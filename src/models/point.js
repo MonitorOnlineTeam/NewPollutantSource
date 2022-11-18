@@ -270,13 +270,13 @@ export default Model.extend({
         *getParamInfoList({callback, payload }, { call, put, update, select }) {
             const result = yield call(GetParamInfoList, payload);
             if (result.IsSuccess) { 
-                let data = []
+                let codeList = []
                 if(result.Datas&&result.Datas[0]){
-                    data =  result.Datas.map(item=>{
+                    codeList =  result.Datas.map(item=>{
                         return item.id
                     })
                 }
-                callback({code:data});
+                callback(codeList,result.Datas);
             } else {
                 sdlMessage(result.Message, 'error');
             }

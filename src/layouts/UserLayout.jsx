@@ -84,9 +84,9 @@ const UserLayout = props => {
             <div className={styles.header}>
               <Link to="/">
 
-                {
+                {/* {
                   configInfo && configInfo.IsShowLogo === 'true' && <img alt="logo" className={styles.logo} src={configInfo.Logo ? `/${configInfo.Logo}` : logo} />
-                }
+                } */}
 
                 {/* <span className={styles.title}>污染源智能分析平台</span> */}
                 <span className={styles.title}>{configInfo && configInfo.SystemName}</span>

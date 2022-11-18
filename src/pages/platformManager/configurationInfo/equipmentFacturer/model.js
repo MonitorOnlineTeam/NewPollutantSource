@@ -61,6 +61,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    //导出
+    *exportManufacturerList({ payload, }, { call, update, select, put }) {
+      const result = yield call(services.ExportManufacturerList, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 })

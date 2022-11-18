@@ -51,7 +51,7 @@ class index extends PureComponent {
       <Popover content={content} title="附件详情" trigger="click">
         <a onClick={(e) => {
           e.stopPropagation()
-        }}>查看附件</a>
+        }}>{dataSource&&dataSource[0]? "查看附件" : ''}</a>
       </Popover>
     );
   }

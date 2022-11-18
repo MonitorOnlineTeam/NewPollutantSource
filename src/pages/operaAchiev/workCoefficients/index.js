@@ -125,12 +125,38 @@ const Index = (props) => {
       align: 'center',
       width: 180,
     },
-
+    {
+      title: '创建人',
+      dataIndex: 'CreateUserName',
+      key: 'CreateUserName',
+      align: 'center',
+      ellipsis:true,
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'CreateTime',
+      key: 'CreateTime',
+      align: 'center',
+      ellipsis:true,
+    },
+    {
+      title: '更新人',
+      dataIndex: 'UpdUserName',
+      key: 'UpdUserName',
+      align: 'center',
+      ellipsis:true,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'UpdTime',
+      key: 'UpdTime',
+      align: 'center',
+      ellipsis:true,
+    },
   ];
   isList && columns.push({
     title: <span>操作</span>,
-    dataIndex: 'x',
-    key: 'x',
+    fixed:'right',
     align: 'center',
     width: 180,
     render: (text, record) => {

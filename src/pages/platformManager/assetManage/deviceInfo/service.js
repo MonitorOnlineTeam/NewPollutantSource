@@ -43,3 +43,8 @@ export async function GetManufacturerList(params) {
   return result;
 }
 
+//设备信息 导出
+export async function ExportEquipmentInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportEquipmentInfoList',params, null);
+  return result;
+}

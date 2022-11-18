@@ -134,6 +134,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    //导出
+    *exportEquipmentInfoList({ payload, }, { call, update, select, put }) {
+      const result = yield call(services.ExportEquipmentInfoList, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 })

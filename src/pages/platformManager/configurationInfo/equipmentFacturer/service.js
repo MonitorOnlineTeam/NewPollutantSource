@@ -28,4 +28,8 @@ export async function DelManufacturer(params) {
   return result;
 }
 
-
+//设备厂家 列表  导出
+export async function ExportManufacturerList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportManufacturerList',params, null);
+  return result;
+}

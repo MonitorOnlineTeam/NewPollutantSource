@@ -127,7 +127,6 @@ class SdlForm extends PureComponent {
     if (isEdit) {
       // 获取上传组件文件列表
       if (uid) {
-        debugger;
         this.props.form.setFieldsValue({ cuid: uid })
         dispatch({
           type: 'autoForm/getAttachmentList',
@@ -165,7 +164,6 @@ class SdlForm extends PureComponent {
 
     const isStart = item.fullFieldName == "dbo.T_Bas_TestCommonPoint.BeginTime";
     const isEnd = item.fullFieldName == "dbo.T_Bas_TestCommonPoint.EndTime";
-    console.log(item)
     const { dateFormat = 'YYYY-MM-DD HH:mm:ss' } = item;
     const format = dateFormat.toUpperCase();
     if (format === 'YYYY-MM' || format === 'MM') {

@@ -1,6 +1,6 @@
 import { post, get, getNew } from '@/utils/request';
 
-// //系统型号 列表
+//系统型号 列表
 export async function GetSystemModelList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelList',params, null);
   return result;
@@ -37,5 +37,11 @@ export async function GetManufacturerList(params) {
 // 系统型号 获取系统名称列表
 export async function GetSystemModelNameList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelNameList',params, null);
+  return result;
+}
+
+//系统型号 导出
+export async function ExportSystemModelList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportSystemModelList',params, null);
   return result;
 }

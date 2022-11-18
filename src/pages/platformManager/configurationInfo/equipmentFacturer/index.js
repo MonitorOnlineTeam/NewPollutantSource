@@ -34,6 +34,7 @@ const dvaPropsData =  ({ loading,equipmentFacturer }) => ({
   loadingAddConfirm: loading.effects[`${namespace}/addManufacturer`],
   loadingEditConfirm: loading.effects[`${namespace}/editManufacturer`],
   maxNum:equipmentFacturer.maxNum,
+  exportLoading:loading.effects[`${namespace}/exportManufacturerList`]
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -69,6 +70,13 @@ const  dvaDispatch = (dispatch) => {
     delManufacturer:(payload,callback)=>{ //删除
       dispatch({
         type: `${namespace}/delManufacturer`, 
+        payload:payload,
+        callback:callback
+      }) 
+    },
+    exportManufacturerList:(payload,callback)=>{ //导出
+      dispatch({
+        type: `${namespace}/exportManufacturerList`, 
         payload:payload,
         callback:callback
       }) 
@@ -256,6 +264,13 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
+  
+  const exports = () =>{ //导出
+    const values =  form.getFieldsValue();
+    props.exportManufacturerList({
+      ...values,
+    })
+  }
   const handleTableChange =   async (PageIndex,PageSize )=>{ //分页
     setPageSize(PageSize)
     setPageIndex(PageIndex)
@@ -285,9 +300,12 @@ const Index = (props) => {
       <Button   type="primary" htmlType='submit'  style={{marginRight:8}}>
           查询
      </Button>
-     <Button   onClick={()=>{ add()}} >
+     <Button   onClick={()=>{ add()}} style={{marginRight:8}} >
           添加
      </Button>
+     <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
+                    导出
+         </Button>
      </Form.Item>
      </Form>
   }
