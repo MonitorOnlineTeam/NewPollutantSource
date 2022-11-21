@@ -560,7 +560,7 @@ export default Model.extend({
     *getRealTimeColumn({ payload }, { call, update }) {
       const result = yield call(getRealTimeColumn, payload);
       let realtimeColumns = [];
-      if (payload.pollutantTypes == 5 || payload.pollutantTypes == 12) {
+      if ((payload.pollutantTypes == 5 || payload.pollutantTypes == 12) && configInfo.IsOpenAQI === '1') {
         realtimeColumns = realtimeColumns.concat([{
           title: 'AQI',
           field: 'AQI',

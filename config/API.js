@@ -977,6 +977,17 @@ export const API = {
     // 获取首页视频列表
     GetHomePageVideo: before + '/VideoApi/GetHomePageVideo',
   },
+  TYGTApi: {
+    // 获取排放源下设施列表(治理设施,生产,环保点位) InstallationType: 1=治理设施,2=生产,3=环保点位
+    GetInstallationByEmission: before + '/EmissionDataApi/GetInstallationByEmission',
+    // 关联排放源设施
+    SetInstallation: before + '/EmissionDataApi/SetInstallation',
+    // 添加排放源
+    AddEmission: before + '/EmissionDataApi/AddEmission',
+    // 排放源删除
+    DeleteEmission: before + '/EmissionDataApi/DeleteEmission',
+
+  },
   // console Api
   ConsoleApi: {
     // 获取采集服务配置及基本信息
@@ -997,7 +1008,7 @@ export const API = {
     ModifyTransmitSet: '/DataTransmit/api/DataTransmitSet/ModifyTransmitSet',
     // 重启转发服务
     RestartTransmit: '/DataTransmit/api/DataTransmitSet/RestartTransmit',
-    
+
   },
 }
 

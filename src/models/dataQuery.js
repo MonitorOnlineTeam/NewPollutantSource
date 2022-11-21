@@ -237,7 +237,7 @@ export default Model.extend({
             }
           },
         }];
-        if (result && result[0] && result[0].PollutantType === '5AQI' || payload.searchDataType === 2) {
+        if (result && result[0] && (result[0].PollutantType === '5AQI' || payload.searchDataType === 2) && configInfo.IsOpenAQI === '1') {
           columns = columns.concat({
             title: 'AQI',
             dataIndex: 'AQI',
@@ -258,7 +258,7 @@ export default Model.extend({
             align: 'center',
           });
         }
-        if (result && result[0] && result[0].PollutantType === '5IQI') {
+        if (result && result[0] && result[0].PollutantType === '5IQI' && configInfo.IsOpenAQI === '1') {
           columns = columns.concat({
             title: '综合指数',
             dataIndex: 'IQI',

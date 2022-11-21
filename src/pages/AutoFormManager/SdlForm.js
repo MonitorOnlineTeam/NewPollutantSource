@@ -2,8 +2,8 @@
  * @desc: form 组件
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-10-31 15:06:14
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2022-11-17 15:47:56
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -110,6 +110,7 @@ class SdlForm extends PureComponent {
   }
 
   componentDidMount() {
+    this.props.onRef && this.props.onRef(this);
     const { addFormItems, dispatch, noLoad } = this.props;
     const { configId, isEdit, keysParams, uid } = this._SELF_;
     // if (!addFormItems || addFormItems.length === 0) {
@@ -225,7 +226,7 @@ class SdlForm extends PureComponent {
       // let initialValue = (formData[fieldName] != undefined) ? `${formData[fieldName]}` : undefined;
       let initialValue = (formData[fieldName] != null && formData[fieldName] != undefined) ? `${formData[fieldName]}` : undefined;
 
-      if (item.configId && item.fullFieldName) {
+      if (item.foreignType && item.fullFieldName) {
         // 有表连接时，取带表名的字段
         if (formData[item.fullFieldName] != undefined) {
           let fieldValue = formData[item.fullFieldName] + "";
@@ -246,13 +247,12 @@ class SdlForm extends PureComponent {
         case '下拉列表框':
         case '多选下拉列表':
           validator = `${selectPlaceholder}`;
-          // initialValue = formData[configDataItemValue || fieldName] !== undefined ? (`${formData[configDataItemValue || fieldName]}`) : undefined;
-          initialValue = formData[configDataItemValue || fieldName] ? (`${formData[configDataItemValue || fieldName]}`) : undefined;
+          // initialValue = formData[configDataItemValue || fieldName] ? (`${formData[configDataItemValue || fieldName]}`) : undefined;
           placeholder = placeholder || selectPlaceholder;
           let mode = '';
           if (item.type === '多选下拉列表') {
             mode = 'multiple';
-            initialValue = formData[configDataItemValue || fieldName] ? (`${formData[configDataItemValue || fieldName]}`).split(',') : [];
+            // initialValue = formData[configDataItemValue || fieldName] ? (`${formData[configDataItemValue || fieldName]}`).split(',') : [];
           }
           element = (
             <SearchSelect
@@ -454,14 +454,14 @@ class SdlForm extends PureComponent {
       })
       if (element) {
         // 布局方式
-        let colSpan = 12;
+        let rowSpan = 12;
         let layout = formLayout;
         if (this.props.formItemLayout[configId]) {
-          colSpan = this.props.formItemLayout[configId]
-        } else if (item.colSpan === 1 || item.colSpan === null) {
-          colSpan = 12
+          rowSpan = this.props.formItemLayout[configId]
+        } else if (item.rowSpan === 1 || item.rowSpan === null) {
+          rowSpan = 12
         } else {
-          colSpan = 24;
+          rowSpan = 24;
           layout = {
             labelCol: {
               span: 4,
@@ -472,7 +472,7 @@ class SdlForm extends PureComponent {
           }
         }
         if (item.type === '上传' && element) {
-          colSpan = 24;
+          rowSpan = 24;
           layout = {
             labelCol: {
               span: 4,
@@ -482,8 +482,8 @@ class SdlForm extends PureComponent {
             },
           }
         }
-        colSpan = this.props.colSpan || colSpan;
-        if (this.props.colSpan == 24) {
+        rowSpan = this.props.rowSpan || rowSpan;
+        if (this.props.rowSpan == 24) {
           layout = {
             labelCol: {
               span: 6,
@@ -494,7 +494,7 @@ class SdlForm extends PureComponent {
           }
         }
         return (
-          <Col span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
+          <Col span={rowSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
             <FormItem key={fieldName} {...layout} label={labelText}>
               {getFieldDecorator(`${fieldName}`, {
                 initialValue: initialValue !== undefined ? initialValue : undefined,
@@ -561,7 +561,6 @@ class SdlForm extends PureComponent {
           }
           console.log('!errEditSubmitFormData=', formData);
         }
-
         this.props.onSubmitForm && this.props.onSubmitForm(formData);
       }
     });

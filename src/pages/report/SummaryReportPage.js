@@ -138,7 +138,7 @@ class SummaryReportPage extends PureComponent {
       let AQIColumn = [];
       const pollutantSourceType = nextProps.form.getFieldValue('PollutantSourceType');
       // 汇总报表 - 扬尘和大气站显示AQI
-      if (pollutantSourceType == 5 || pollutantSourceType == 12) {
+      if ((pollutantSourceType == 5 || pollutantSourceType == 12) && configInfo.IsOpenAQI === '1') {
         AQIColumn = [
           {
             title: 'AQI',
@@ -701,8 +701,8 @@ class SummaryReportPage extends PureComponent {
                 onChange: this.onTableChange,
                 total: Total,
               }}
-              // bordered
-              // pagination={true}
+            // bordered
+            // pagination={true}
             />
           </Card>
         </Spin>

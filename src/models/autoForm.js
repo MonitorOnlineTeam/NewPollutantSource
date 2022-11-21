@@ -1,8 +1,8 @@
 ﻿/*
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-10-31 15:05:44
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2022-11-21 15:22:46
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -257,10 +257,10 @@ export default Model.extend({
         }
         // const colSpanLen = ;
         let layout = 12;
-        if (addCfgField.filter(item => item.DF_COLSPAN === null).length == addCfgField.length) {
+        if (addCfgField.filter(item => item.DF_ROWSPAN === null).length == addCfgField.length) {
           // 显示两列
           layout = 12
-        } else if (addCfgField.filter(item => item.DF_COLSPAN === 1 || item.DF_COLSPAN === 2).length == addCfgField.length) {
+        } else if (addCfgField.filter(item => item.DF_ROWSPAN === 1 || item.DF_ROWSPAN === 2).length == addCfgField.length) {
           // 显示一列
           layout = 24
         } else {
@@ -275,6 +275,7 @@ export default Model.extend({
           value: item.ENUM_NAME ? JSON.parse(item.ENUM_NAME) : [],
           placeholder: item.DF_TOOLTIP,
           // configId: item.DT_CONFIG_ID,
+          foreignType: item.DF_FOREIGN_TYPE,
           where: item.DF_CONDITION,
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
@@ -282,7 +283,7 @@ export default Model.extend({
           required: item.DF_ISNOTNULL === 1,
           validator: item.DF_ISNOTNULL === 1 && (item.DF_TOOLTIP || ''), // TODO：正则？
           validate: item.DF_VALIDATE ? item.DF_VALIDATE.split(',') : [],
-          colSpan: item.DF_COLSPAN,
+          rowSpan: item.DF_ROWSPAN,
           dateFormat: item.DF_DATEFORMAT,
           isHide: item.DF_HIDDEN,
           defaultValue: item.DF_DEFAULTVALUE,
@@ -385,7 +386,7 @@ export default Model.extend({
     },
 
     * add({ payload }, { call, update, put, select }) {
-      const sysConfig = yield  select(state => state.global.configInfo);
+      const sysConfig = yield select(state => state.global.configInfo);
       // let postData = {
       //   params: { ...payload, FormData: JSON.stringify(payload.FormData) },
       //   sysConfig

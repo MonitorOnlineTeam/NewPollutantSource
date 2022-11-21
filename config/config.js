@@ -5,16 +5,9 @@ import routes from './router.config.js'
 import path from 'path'
 
 
-// const API_HOST = 'http://172.16.12.165:7070/';  // 碳排放
-// const API_HOST = 'http://172.16.12.39:5005/';
-// const API_HOST = 'http://172.16.12.39:6300/';
-// const API_HOST = 'http://172.16.12.165:5001/';
-// const API_HOST = 'http://172.16.12.183:50059/';
-// const API_HOST = 'http://223.84.203.227:50060/';
-// const API_HOST = 'http://218.64.81.32:50056/jsh/';  // 吉水
-
 // 新框架
-const API_HOST = 'http://172.16.12.60:6001/';  // 测试 - 志鹏
+// const API_HOST = 'http://172.16.12.60:6001/';  // 测试 - 志鹏
+const API_HOST = 'http://172.16.12.39:9090/';  // 唐银钢铁 - 开发
 const CONSOLE_HOST = 'http://172.16.12.39:33622/';  // 
 // const API_HOST = 'http://172.16.12.209:33688/';  // 霍达
 // const API_HOST = 'http://172.16.9.3:33688/';  // 志鹏
@@ -177,17 +170,17 @@ export default {
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       pathRewrite: { '^/DataCollect': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
-     // 定时任务
-     '/DataStatis': {
+    // 定时任务
+    '/DataStatis': {
       target: 'http://172.16.12.39:33623/', // 接口的域名
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       pathRewrite: { '^/DataStatis': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
-    },  
-     // 转发
-     '/DataTransmit': {
+    },
+    // 转发
+    '/DataTransmit': {
       target: 'http://172.16.12.39:33624/', // 接口的域名
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       pathRewrite: { '^/DataTransmit': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
-    },  
+    },
   },
 };

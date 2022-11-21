@@ -2,8 +2,8 @@
  * @desc: AutoForm添加公共页面
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-06-14 16:14:19
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2022-11-16 16:51:37
  */
 import React, { Component, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -119,18 +119,8 @@ class AutoFormAdd extends Component {
         {
           breadcrumb ?
             <BreadcrumbWrapper title="添加">
-              {/* // <MonitorContent breadCrumbList={
-            //   [
-            //     { Name: '首页', Url: '/' },
-            //     { Name: '系统管理', Url: '' },
-            //     { Name: 'AutoForm', Url: '/sysmanage/autoformmanager/' + configId },
-            //     { Name: '添加', Url: '' }
-            //   ]
-            // }
-            // > */}
               {this._renderForm()}
             </BreadcrumbWrapper> :
-            // </MonitorContent> :
             <Fragment>
               {this._renderForm()}
             </Fragment>

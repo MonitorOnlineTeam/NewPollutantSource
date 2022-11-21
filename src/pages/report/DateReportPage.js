@@ -146,7 +146,7 @@ class DateReportPage extends PureComponent {
       let AQIColumn = [];
       // 站点日报 - 扬尘和大气站显示AQI
       const pollutantSourceType = nextProps.form.getFieldValue('PollutantSourceType');
-      if (pollutantSourceType == 5 || pollutantSourceType == 12) {
+      if ((pollutantSourceType == 5 || pollutantSourceType == 12) && configInfo.IsOpenAQI === '1') {
         AQIColumn = [
           {
             title: 'AQI',

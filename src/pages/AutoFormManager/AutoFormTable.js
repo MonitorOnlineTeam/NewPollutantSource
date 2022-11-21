@@ -32,6 +32,8 @@ import { getAttachmentDataSource } from './utils'
 import { getRowCuid } from '@/utils/utils';
 import config from '@/config'
 import styles from './index.less';
+import AutoFormAddModal from './AutoFormAddModal';
+import AutoFormEditModal from './AutoFormEditModal';
 import SdlTable from '@/components/SdlTable'
 import defaultSettings from '../../../config/defaultSettings'
 import moment from 'moment';
@@ -57,7 +59,8 @@ class AutoFormTable extends PureComponent {
     this.state = {
       selectedRowKeys: [],
       delPostData: {},
-      otherParams: {}
+      otherParams: {},
+      editKeysParams: {},
     };
     this._SELF_ = { btnEl: [], configId: props.configId, moreBtns: [] };
 
@@ -217,6 +220,49 @@ class AutoFormTable extends PureComponent {
       },
     });
   }
+
+  // 操作添加
+  onHandleAdd = () => {
+    const { dispatch, parentcode, match, configId } = this.props;
+    if (this.props.onAdd) {
+      this.props.onAdd();
+    } else {
+      if (this.props.handleMode === 'modal') {
+        this.setState({
+          handleAddVisible: true
+        })
+      } else {
+        dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
+      }
+    }
+  }
+
+  // 操作编辑
+  onHandleEdit = (record, returnKey, postData, cuid) => {
+    const { dispatch, parentCode, configId } = this.props;
+    if (this.props.onEdit) {
+      this.props.onEdit(record, returnKey);
+    } else {
+      if (this.props.handleMode === 'modal') {
+        this.setState({
+          handleEditVisible: true,
+          editKeysParams: postData
+        })
+      } else {
+        dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
+      }
+    }
+    // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
+  }
+
+  // 关闭操作弹窗
+  onHandleCancel = () => {
+    this.setState({
+      handleAddVisible: false,
+      handleEditVisible: false,
+    })
+  }
+
   _renderHandleButtons() {
     const { opreationButtons, keys, dispatch, btnsAuthority, match, parentcode, configId } = this.props;
     this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
@@ -231,12 +277,7 @@ class AutoFormTable extends PureComponent {
               key={btn.DISPLAYBUTTON}
               icon={<PlusOutlined />}
               type="primary"
-              onClick={() => {
-                //this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
-                this.props.onAdd ?
-                  this.props.onAdd() :
-                  dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
-              }}
+              onClick={this.onHandleAdd}
             >添加
             </Button>
           );
@@ -395,7 +436,7 @@ class AutoFormTable extends PureComponent {
   }
 
   render() {
-    const { loading, selectedRowKeys } = this.state;
+    const { loading, selectedRowKeys, handleAddVisible, handleEditVisible } = this.state;
     const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode, hideBtns } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
@@ -484,7 +525,7 @@ class AutoFormTable extends PureComponent {
       _columns.length && _columns.push({
         align: 'center',
         title: '操作',
-        width: 180,
+        width: 220,
         fixed: isFixed,
         render: (text, record) => {
           const returnKey = keys[configId] && record[keys[configId][0]];
@@ -507,7 +548,8 @@ class AutoFormTable extends PureComponent {
                               postData[item] = record[item]
                             }
                           })
-                          this.props.onEdit ? this.props.onEdit(record, returnKey) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
+                          this.onHandleEdit(record, returnKey, postData, cuid)
+                          // this.props.onEdit ? this.props.onEdit(record, returnKey) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
                           // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
                         }}><EditIcon /></a>
                       </Tooltip>
@@ -750,6 +792,11 @@ class AutoFormTable extends PureComponent {
               }}>下载导入模板</a></Col>
           </Row>
         </Modal>
+
+        <AutoFormAddModal configId={configId} visible={handleAddVisible} width={700} onCancel={this.onHandleCancel} successCallback={this.onHandleCancel} />
+        <AutoFormEditModal configId={configId} visible={handleEditVisible} width={700}
+          keysParams={this.state.editKeysParams}
+          onCancel={this.onHandleCancel} successCallback={this.onHandleCancel} />
       </Fragment>
     );
   }

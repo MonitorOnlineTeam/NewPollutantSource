@@ -215,6 +215,43 @@ const routes = [
               },
             ]
           },
+          // 唐银钢铁项目
+          {
+            name: 'standingBook',
+            path: '/standingBook',
+            routes: [
+              // 排放源清单台账
+              {
+                name: 'emissionSource',
+                path: '/standingBook/emissionSource/:entCode',
+                component: './TYGT/standingBook/emissionSource',
+              },
+              // 除尘器清单台账
+              {
+                name: 'Deduster',
+                path: '/standingBook/deduster',
+                component: './TYGT/standingBook/Deduster',
+              },
+              // 雾炮清单台账
+              {
+                name: 'fogGun',
+                path: '/standingBook/fogGun',
+                component: './TYGT/standingBook/FogGun',
+              },
+              // 生产清单台账
+              {
+                name: 'production',
+                path: '/standingBook/production',
+                component: './TYGT/standingBook/Production',
+              },
+              // 环保车清单台账
+              {
+                name: 'greenCar',
+                path: '/standingBook/greenCar',
+                component: './TYGT/standingBook/GreenCar',
+              },
+            ]
+          },
           // 克里斯金差值图
           {
             name: 'krigingMap',
