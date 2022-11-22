@@ -11,7 +11,8 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import styles from "./SparePartReplaceRecordContent.less";
 import MonitorContent from '../../components/MonitorContent/index';
-
+import config from '@/config'
+import Cookie from 'js-cookie';
 @connect(({ task, loading }) => ({
     isloading: loading.effects['task/GetSparePartReplaceRecord'],
     SparePartReplaceRecord: task.SparePartReplaceRecord
@@ -22,9 +23,9 @@ import MonitorContent from '../../components/MonitorContent/index';
 class SparePartReplaceRecordContent extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            isloading:this.props.isloading
-        };
+        // this.state = {
+        //     isloading:this.props.isloading
+        // };
     }
 
     componentDidMount() {
@@ -35,9 +36,9 @@ class SparePartReplaceRecordContent extends Component {
                 TypeID: this.props.TypeID,
             },
         });
-        this.setState({
-            isloading: false
-        });
+        // this.setState({
+        //     isloading: false
+        // });
     }
 
     renderItem = (record) => {
@@ -100,10 +101,10 @@ class SparePartReplaceRecordContent extends Component {
         const Content=Record!==null?Record.Content:null;
         const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
         const DeviceName = 'CEMS'; //设备名称
-        if (this.state.isloading) {
+        if (this.props.isloading) {
             return (<Spin
                 style={{
-                    width: '100%',
+                    width: '100vw',
                     height: 'calc(100vh/2)',
                     display: 'flex',
                     alignItems: 'center',

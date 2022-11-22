@@ -470,9 +470,9 @@ const Index = (props) => {
           <Button onClick={() => { add() }} style={{ marginRight: 8 }} >
             添加
      </Button>
-     <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
+     {/* <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
           导出
-      </Button>
+      </Button> */}
         </Form.Item>
       </Row>
     </Form>
