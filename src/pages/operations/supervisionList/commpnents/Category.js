@@ -212,6 +212,8 @@ const Index = (props) => {
       AssessmentMethod:assessmentMethodList[1]&&assessmentMethodList[1].ChildID,
 
     })
+    setTitle('添加')
+    setScoreDis(false)
     setVisible(true)
   }
 

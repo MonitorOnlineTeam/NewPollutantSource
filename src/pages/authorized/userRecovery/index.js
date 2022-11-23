@@ -151,8 +151,8 @@ const Index = (props) => {
             props.getTableData({
                 ...values,
                 status:'0',
-                pageIndex: pageIndexs,
-                pageSize: pageSizes
+                // pageIndex: pageIndexs,
+                // pageSize: pageSizes
             })
         } catch (errorInfo) {
             console.log('Failed:', errorInfo); 
@@ -165,7 +165,7 @@ const Index = (props) => {
     const handleTableChange = (PageIndex, PageSize) => {
         setPageIndex(PageIndex)
         setPageSize(PageSize)
-        onFinish(PageIndex, PageSize)
+        // onFinish(PageIndex, PageSize)
     }
 
 
@@ -208,14 +208,14 @@ const Index = (props) => {
                     bordered
                     dataSource={tableDatas}
                     columns={columns}
-                    // pagination={{
-                    //     total: tableTotal,
-                    //     pageSize: pageSize,
-                    //     current: pageIndex,
-                    //     showSizeChanger: true,
-                    //     showQuickJumper: true,
-                    //     onChange: handleTableChange,
-                    // }}
+                    pagination={{
+                        total: tableTotal,
+                        pageSize: pageSize,
+                        current: pageIndex,
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        onChange: handleTableChange,
+                    }}
                 />
             </Card>
             </BreadcrumbWrapper>
