@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2022-11-16 16:05:32 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-17 15:15:51
+ * @Last Modified time: 2022-11-22 10:23:49
  * @Description: 除尘器清单台账页面
  */
 import React, { PureComponent } from 'react';
@@ -23,17 +23,34 @@ class index extends PureComponent {
     };
   }
 
+  // 删除
+  onDelete = (id) => {
+    this.props.dispatch({
+      type: 'standingBook/DeleteInstallation',
+      payload: {
+        "id": id,
+        "installationType": 1
+      }
+    }).then(() => {
+      this.loadDataSource();
+    })
+  }
+
+  // 加载表格数据
+  loadDataSource() {
+    this.props.dispatch({
+      type: 'autoForm/getAutoFormData',
+      payload: {
+        configId: CONFIGID,
+      },
+    });
+  }
+
   render() {
     return <BreadcrumbWrapper>
       <Card>
         <SearchWrapper
           configId={CONFIGID}
-        // reloadFlag={DGIMN}
-        // searchParams={[{
-        //   Key: "dbo__T_Cod_UnEmissionAndEnt__EntCode",
-        //   Value: entCode,
-        //   Where: '$=',
-        // }]}
         ></SearchWrapper>
         <AutoFormTable
           getPageConfig
@@ -41,11 +58,9 @@ class index extends PureComponent {
           style={{ marginTop: 10 }}
           handleMode="modal"
           configId={CONFIGID}
-        // searchParams={[{
-        //   Key: "dbo__T_Cod_UnEmissionAndEnt__EntCode",
-        //   Value: entCode,
-        //   Where: '$=',
-        // }]}
+          onDelete={(row, key) => {
+            this.onDelete(key);
+          }}
         />
       </Card>
     </BreadcrumbWrapper >

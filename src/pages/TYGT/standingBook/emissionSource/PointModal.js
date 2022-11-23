@@ -1,10 +1,20 @@
+/*
+ * @Author: JiaQi 
+ * @Date: 2022-11-23 09:17:11 
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2022-11-23 09:17:41
+ * @Description: 点位关联配置页面
+ */
 import React, { PureComponent } from 'react'
 import { Modal, Transfer, Radio } from 'antd'
 import { connect } from 'dva';
+import SelectPollutantType from '@/components/SelectPollutantType'
+import { formatDataSource } from './_utils'
 
-@connect(({ standingBook, loading }) => ({
+@connect(({ standingBook, common, loading }) => ({
   installationData: standingBook.installationData,
   pointModalVisible: standingBook.pointModalVisible,
+  pollutantTypelist: common.pollutantTypelist,
   // loading: loading.effects['standingBook/getDayReportTableData'],
 }))
 class PointModal extends PureComponent {
@@ -13,6 +23,7 @@ class PointModal extends PureComponent {
     this.state = {
       entCode: props.entCode,
       dataSource: [],
+      allDataSource: [],
       targetKeys: [],
     };
 
@@ -36,71 +47,37 @@ class PointModal extends PureComponent {
       }
     }).then(() => {
       let { installationData } = this.props;
-      console.log('installationData', installationData)
-      // let targetKeys = [], bindKeysArr = [];
-      // installationData.Duster.BindData.map(item => {
-      //   targetKeys.push(item.Key + '|Duster');
-      // })
-      // installationData.EcoCar.BindData.map(item => {
-      //   targetKeys.push(item.Key + '|EcoCar');
-      // })
-      // installationData.FogGun.BindData.map(item => {
-      //   targetKeys.push(item.Key + '|BindData');
-      // })
-      // this.setState({
-      //   targetKeys,
-      //   bindKeysArr,
-      //   dataSource: this.formatDataSource(installationData.Duster.AllData, 'Duster')
-      // })
+      let targetKeys = [];
+      installationData.Point.BindData.map(item => {
+        targetKeys.push(item.Key);
+      })
+      this.setState({
+        targetKeys,
+        dataSource: formatDataSource(installationData.Point.AllData, ''),
+        allDataSource: formatDataSource(installationData.Point.AllData, '')
+      })
     })
   }
 
   // 穿梭框Change
   handleChange = (newTargetKeys) => {
-    console.log('newTargetKeys', newTargetKeys)
     this.setState({
       targetKeys: newTargetKeys
-    })
-  };
-
-  // 类型选择
-  onTypeChange = (e) => {
-    let { installationData } = this.props;
-    let targetValue = e.target.value;
-    this.setState({
-      dataSource: this.formatDataSource(installationData[targetValue].AllData, targetValue)
     })
   };
 
   // 提交保存
   onSubmitSave = () => {
     const { targetRowData } = this.props;
-    let Duster = [], FogGun = [], EcoCar = [];
-    this.state.targetKeys.map(item => {
-      let items = item.split("|");
-      if (items) {
-        let key = items[0];
-        if (items[1] === 'Duster') {
-          Duster.push(key);
-        }
-        if (items[1] === 'FogGun') {
-          FogGun.push(key);
-        }
-        if (items[1] === 'EcoCar') {
-          EcoCar.push(key);
-        }
-      }
-    })
+    const { targetKeys } = this.state;
     // return;
     this.props.dispatch({
       type: 'standingBook/SetInstallation',
       payload: {
         "relationIDs": {
-          1: Duster.toString(),
-          2: FogGun.toString(),
-          3: EcoCar.toString()
+          5: targetKeys.toString(),
         },
-        "installationType": 1,
+        "installationType": 5,
         "emissionID": targetRowData['dbo.T_Cod_UnEmissionAndEnt.EmissionID']
       }
     })
@@ -116,10 +93,26 @@ class PointModal extends PureComponent {
     })
   }
 
+  // 污染物类型选择
+  onPollutantTypeChange = (e) => {
+    const value = e.target.value + '';
+    console.log('value', value)
+    const { dataSource, allDataSource } = this.state;
+    let temp_dataSource = [];
+    if (value.split(',').length > 1) {
+      // 全部
+      temp_dataSource = allDataSource
+    } else {
+      temp_dataSource = allDataSource.filter(item => item.PollutantType === value);
+    }
+    this.setState({
+      dataSource: temp_dataSource
+    })
+  }
+
   render() {
     const { pointModalVisible } = this.props;
     const { dataSource, targetKeys } = this.state;
-    console.log('dataSource', dataSource)
     return <Modal
       title="环保点位关联关系配置"
       visible={pointModalVisible}
@@ -127,11 +120,12 @@ class PointModal extends PureComponent {
       onOk={this.onSubmitSave}
       onCancel={this.onCancel}
     >
-      <Radio.Group onChange={this.onTypeChange} defaultValue="Duster" style={{ marginBottom: 20 }}>
-        <Radio.Button value="Duster">除尘器</Radio.Button>
-        <Radio.Button value="FogGun">雾炮</Radio.Button>
-        <Radio.Button value="EcoCar">环保车</Radio.Button>
-      </Radio.Group>
+      <SelectPollutantType
+        style={{ marginBottom: 20 }}
+        showType="radio"
+        showAll
+        onChange={this.onPollutantTypeChange}
+      />
       <Transfer
         dataSource={dataSource}
         showSearch

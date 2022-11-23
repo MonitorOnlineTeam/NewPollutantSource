@@ -4,6 +4,7 @@ export const formatDataSource = (dataSource) => {
     return {
       key: item.Key,
       title: item.Value,
+      PollutantType: item.PollutantType
     }
   })
 }

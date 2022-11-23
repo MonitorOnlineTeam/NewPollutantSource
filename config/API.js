@@ -986,6 +986,8 @@ export const API = {
     AddEmission: before + '/EmissionDataApi/AddEmission',
     // 排放源删除
     DeleteEmission: before + '/EmissionDataApi/DeleteEmission',
+    // 删除治理设施和生产设施
+    DeleteInstallation: before + '/EmissionDataApi/DeleteInstallation',
 
   },
   // console Api

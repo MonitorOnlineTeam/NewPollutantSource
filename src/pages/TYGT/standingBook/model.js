@@ -30,7 +30,8 @@ export default Model.extend({
           type: 'updateState',
           payload: {
             governanceModalVisible: false,
-            productionModalVisible: false
+            productionModalVisible: false,
+            pointModalVisible: false
           }
         })
         message.success('关联成功！');
@@ -54,6 +55,13 @@ export default Model.extend({
     // 删除排放源
     * DeleteEmission({ payload }, { call, update, put }) {
       const result = yield call(_post, API.TYGTApi.DeleteEmission, payload);
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+      }
+    },
+    // 删除治理设施和生产设施
+    * DeleteInstallation({ payload }, { call, update, put }) {
+      const result = yield call(_post, API.TYGTApi.DeleteInstallation, payload);
       if (result.IsSuccess) {
         message.success('删除成功！');
       }

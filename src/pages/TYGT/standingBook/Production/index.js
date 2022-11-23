@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2022-11-17 15:17:42 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-17 15:18:16
+ * @Last Modified time: 2022-11-22 10:27:00
  * @Description: 生产清单台账页面
  */
 
@@ -24,6 +24,29 @@ class index extends PureComponent {
     };
   }
 
+  // 删除
+  onDelete = (id) => {
+    this.props.dispatch({
+      type: 'standingBook/DeleteInstallation',
+      payload: {
+        "id": id,
+        "installationType": 4
+      }
+    }).then(() => {
+      this.loadDataSource();
+    })
+  }
+
+  // 加载表格数据
+  loadDataSource() {
+    this.props.dispatch({
+      type: 'autoForm/getAutoFormData',
+      payload: {
+        configId: CONFIGID,
+      },
+    });
+  }
+
   render() {
     return <BreadcrumbWrapper>
       <Card>
@@ -36,6 +59,9 @@ class index extends PureComponent {
           handleMode="modal"
           style={{ marginTop: 10 }}
           configId={CONFIGID}
+          onDelete={(row, key) => {
+            this.onDelete(key);
+          }}
         />
       </Card>
     </BreadcrumbWrapper >

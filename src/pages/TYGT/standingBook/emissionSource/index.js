@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2022-11-16 15:16:34 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-21 17:23:53
+ * @Last Modified time: 2022-11-23 09:25:44
  * @Description: 排放源清单台账页面
  */
 import React, { PureComponent } from 'react';
@@ -101,7 +101,6 @@ class index extends PureComponent {
           style={{ marginTop: 10 }}
           configId={CONFIGID}
           searchParams={searchParams}
-
           appendHandleRows={row => {
             return (
               <>
