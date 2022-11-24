@@ -44,7 +44,7 @@ class index extends PureComponent {
   render() {
     const { columns } = this._SELF_;
     const { dataSource } = this.props;
-    // console.log(dataSource)
+    console.log(dataSource)
     const content = (
       <Table style={{ fontSize: 20 }} dataSource={dataSource} columns={columns} size="small" bordered={false} pagination={false} />
     );
@@ -52,7 +52,7 @@ class index extends PureComponent {
       <Popover content={content} title="附件详情" trigger="click">
         <a onClick={(e) => {
           e.stopPropagation()
-        }}>查看附件</a>
+        }}>{this.props.noDataNoShow? dataSource&&dataSource[0]&&'查看附件' :  '查看附件'}</a>
       </Popover>
     );
   }

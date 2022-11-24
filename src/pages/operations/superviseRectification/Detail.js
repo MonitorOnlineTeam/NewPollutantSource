@@ -1,7 +1,7 @@
 /**
- * 功  能：督查管理
+ * 功  能：督查整改详情
  * 创建人：jab
- * 创建时间：2022.04.25
+ * 创建时间：2022.11.24
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tabs, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin   } from 'antd';
@@ -17,20 +17,21 @@ import moment from 'moment';
 import { getAttachmentArrDataSource  } from '@/utils/utils';
 import styles from "./style.less"
 import Cookie from 'js-cookie';
-import AttachmentView from './components/AttachmentView'
+import AttachmentView from '@/components/AttachmentView'
 
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
 
 
-const namespace = 'supervisionManager'
+const namespace = 'superviseRectification'
 
 
 
 
-const dvaPropsData =  ({ loading,supervisionManager,global,common }) => ({
+const dvaPropsData =  ({ loading,superviseRectification,global,common }) => ({
     detailLoading: loading.effects[`${namespace}/getInspectorOperationView`],
+    tableLoading: loading.effects[`${namespace}/getInspectorOperationView`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -58,19 +59,25 @@ const  dvaDispatch = (dispatch) => {
 const Index = (props) => {
   
   
-     const  {detailLoading,ID,pollutantType} = props;
-
+  const  {detailLoading,ID,pollutantType,tableLoading,} = props;
 
   const [operationInfoList,setOperationInfoList] = useState([])
   const [infoList,seInfoList] = useState(null)
 
+  
   useEffect(() => {
     props.getInspectorOperationView({ID:ID},(data)=>{
         setOperationInfoList(data)
         seInfoList(data.Info&&data.Info[0]?data.Info[0] : null )
     })
   }, []);
+   
+  const rectificationPass = (record) =>{ //整改通过
 
+  }
+  const rectificationReject = (record) =>{ //整改驳回
+
+  }
   const TitleComponents = (props) =>{
     return  <div style={{display:'inline-block', fontWeight:'bold',padding:'2px 4px',marginBottom:16,borderBottom:'1px solid rgba(0,0,0,.1)'}}>{props.text}</div>
             
@@ -86,7 +93,7 @@ const Index = (props) => {
     }
      return fileList;
     }
- const supervisionCol1 = [ {
+ const supervisionCol = [ {
     title: <span style={{fontWeight:'bold',fontSize:14}}>
       {operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList[0]&&operationInfoList.PrincipleProblemList[0].Title}
     </span>,
@@ -111,16 +118,6 @@ const Index = (props) => {
       },
     },
     {
-      title: `有无原则问题`,
-      dataIndex: 'Inspector',
-      key: 'Inspector',
-      align: 'center',
-      width:200,
-      render: (text, record) => {
-        return <div>{text ==0? '有' : '无'}</div>
-      },
-    },
-    {
       title: '问题描述',
       dataIndex: 'Remark',
       key: 'Remark',
@@ -131,7 +128,7 @@ const Index = (props) => {
       },
     },
     {
-      title: '附件',
+      title: '问题附件',
       dataIndex: 'Attachments',
       key: 'Attachments',
       align: 'center',
@@ -139,125 +136,170 @@ const Index = (props) => {
       render: (text, record) => {
         const attachmentDataSource = getAttachmentDataSource(text);
         return   <div>
-           {text&&<AttachmentView  dataSource={attachmentDataSource} />}
+           {text&&<AttachmentView  noDataNoShow dataSource={attachmentDataSource} />}
       </div>
       },
     },
-             
-  
+    {
+      title: '整改描述',
+      dataIndex: 'Remark',
+      key: 'Remark',
+      align: 'center',
+     
+      render: (text, record) => {
+        return <div style={{textAlign:"left"}}>{text}</div>
+      },
+    },          
+    {
+      title: '整改附件',
+      dataIndex: 'Attachments',
+      key: 'Attachments',
+      align: 'center',
+      width:120,
+      render: (text, record) => {
+        const attachmentDataSource = getAttachmentDataSource(text);
+        return   <div>
+           {text&&<AttachmentView  noDataNoShow dataSource={attachmentDataSource} />}
+      </div>
+      },
+    },
+    {
+      title: '整改日期',
+      dataIndex: 'Attachments',
+      key: 'Attachments',
+      align: 'center',
+    },
+    {
+      title: <span>操作</span>,
+      align: 'center',
+      fixed: 'right',
+      width: 180,
+      ellipsis: true,
+      render: (text, record) => {
+        return <Fragment>
+            <Popconfirm title="确定要整改通过？" style={{ paddingRight: 5 }} onConfirm={() => { rectificationPass(record) }} okText="是" cancelText="否">
+              <a>整改通过</a>
+            </Popconfirm>
+            <Divider type="vertical" />
+            <Popconfirm title="确定要整改驳回？" style={{ paddingRight: 5 }} onConfirm={() => { rectificationReject(record) }} okText="是" cancelText="否">
+              <a>整改驳回</a>
+            </Popconfirm>
+        </Fragment>
+      }
+    },
   ]
   }
   ]
 
-    const supervisionCol2 = [ {
-      title: <span style={{fontWeight:'bold',fontSize:14}}>
-        {operationInfoList.importanProblemList&&operationInfoList.importanProblemList[0]&&operationInfoList.importanProblemList[0].Title}
-      </span>,
-      align: 'center',
-      children:[
-        {
-          title: '序号',
-          align: 'center',
-          width:100,
-          render:(text,record,index)=>{
-           return index+1
-          }
-       },
-      {
-        title: '督查内容',
-        dataIndex: 'ContentItem',
-        key: 'ContentItem',
-        align: 'center',
-        width:380,
-        render: (text, record) => {
-          return <div style={{textAlign:"left"}}>{text}</div>
-        },
-      },
-      {
-        title: `扣分`,
-        dataIndex: 'Inspector',
-        key: 'Inspector',
-        align: 'center',
-        width:200,
-      },
-      {
-        title: '说明',
-        dataIndex: 'Remark',
-        key: 'Remark',
-        align: 'center',
-        render: (text, record) => {
-          return <div style={{textAlign:"left"}}>{text}</div>
-        },
-       },
-       {
-        title: '附件',
-        dataIndex: 'Attachments',
-        key: 'Attachments',
-        align: 'center',
-        width:120,
-        render: (text, record) => {
-          const attachmentDataSource = getAttachmentDataSource(text);
-          return   <div>
-             {text&&<AttachmentView  dataSource={attachmentDataSource} />}
-        </div>
-        },
-      },
-      ]
-      }]
+    // const supervisionCol2 = [ {
+    //   title: <span style={{fontWeight:'bold',fontSize:14}}>
+    //     {operationInfoList.importanProblemList&&operationInfoList.importanProblemList[0]&&operationInfoList.importanProblemList[0].Title}
+    //   </span>,
+    //   align: 'center',
+    //   children:[
+    //     {
+    //       title: '序号',
+    //       align: 'center',
+    //       width:100,
+    //       render:(text,record,index)=>{
+    //        return index+1
+    //       }
+    //    },
+    //   {
+    //     title: '督查内容',
+    //     dataIndex: 'ContentItem',
+    //     key: 'ContentItem',
+    //     align: 'center',
+    //     width:380,
+    //     render: (text, record) => {
+    //       return <div style={{textAlign:"left"}}>{text}</div>
+    //     },
+    //   },
+    //   {
+    //     title: `扣分`,
+    //     dataIndex: 'Inspector',
+    //     key: 'Inspector',
+    //     align: 'center',
+    //     width:200,
+    //   },
+    //   {
+    //     title: '说明',
+    //     dataIndex: 'Remark',
+    //     key: 'Remark',
+    //     align: 'center',
+    //     render: (text, record) => {
+    //       return <div style={{textAlign:"left"}}>{text}</div>
+    //     },
+    //    },
+    //    {
+    //     title: '附件',
+    //     dataIndex: 'Attachments',
+    //     key: 'Attachments',
+    //     align: 'center',
+    //     width:120,
+    //     render: (text, record) => {
+    //       const attachmentDataSource = getAttachmentDataSource(text);
+    //       return   <div>
+    //          {text&&<AttachmentView noDataNoShow dataSource={attachmentDataSource} />}
+    //     </div>
+    //     },
+    //   },
+    //   ]
+    //   }]
 
-      const supervisionCol3 = [{
-        title: <span style={{fontWeight:'bold',fontSize:14}}>{operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0]&&operationInfoList.CommonlyProblemList[0].Title}</span>,
-        align: 'center',
-        children:[ 
-          {
-            title: '序号',
-            align: 'center',
-            width:100,
-            render:(text,record,index)=>{
-             return index+1
-            }
-         },
-        {
-          title: '督查内容',
-          dataIndex: 'ContentItem',
-          key: 'ContentItem',
-          align: 'center',
-          width:380,
-          render: (text, record) => {
-            return <div style={{textAlign:"left"}}>{text}</div>
-          },
-        },
-        {
-          title: `扣分`,
-          dataIndex: 'Inspector',
-          key: 'Inspector',
-          align: 'center',
-          width:200,
-        },
-        {
-          title: '说明',
-          dataIndex: 'Remark',
-          key: 'Remark',
-          align: 'center',
-          render: (text, record) => {
-            return <div style={{textAlign:"left"}}>{text}</div>
-          },
-        },
-        {
-          title: '附件',
-          dataIndex: 'Attachments',
-          key: 'Attachments',
-          align: 'center',
-          width:120,
-          render: (text, record) => {
-            const attachmentDataSource = getAttachmentDataSource(text);
-            return   <div>
-               {text&&<AttachmentView  dataSource={attachmentDataSource} />}
-          </div>
-          },
-        },
-      ]
-        }]
+    //   const supervisionCol3 = [{
+    //     title: <span style={{fontWeight:'bold',fontSize:14}}>{operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0]&&operationInfoList.CommonlyProblemList[0].Title}</span>,
+    //     align: 'center',
+    //     children:[ 
+    //       {
+    //         title: '序号',
+    //         align: 'center',
+    //         width:100,
+    //         render:(text,record,index)=>{
+    //          return index+1
+    //         }
+    //      },
+    //     {
+    //       title: '督查内容',
+    //       dataIndex: 'ContentItem',
+    //       key: 'ContentItem',
+    //       align: 'center',
+    //       width:380,
+    //       render: (text, record) => {
+    //         return <div style={{textAlign:"left"}}>{text}</div>
+    //       },
+    //     },
+    //     {
+    //       title: `扣分`,
+    //       dataIndex: 'Inspector',
+    //       key: 'Inspector',
+    //       align: 'center',
+    //       width:200,
+    //     },
+    //     {
+    //       title: '说明',
+    //       dataIndex: 'Remark',
+    //       key: 'Remark',
+    //       align: 'center',
+    //       render: (text, record) => {
+    //         return <div style={{textAlign:"left"}}>{text}</div>
+    //       },
+    //     },
+    //     {
+    //       title: '附件',
+    //       dataIndex: 'Attachments',
+    //       key: 'Attachments',
+    //       align: 'center',
+    //       width:120,
+    //       render: (text, record) => {
+    //         const attachmentDataSource = getAttachmentDataSource(text);
+    //         return   <div>
+    //            {text&&<AttachmentView noDataNoShow  dataSource={attachmentDataSource} />}
+    //       </div>
+    //       },
+    //     },
+    //   ]
+    //     }]
         const supervisionCol4 = [
           {
             align:'center',
@@ -300,7 +342,7 @@ const Index = (props) => {
                 const attachmentDataSource = getAttachmentArrDataSource(infoList&&infoList.FilesList);
                 const obj = {
                   children:  <div>
-                  <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} /> 
+                  <AttachmentView noDataNoShow style={{ marginTop: 10 }} dataSource={attachmentDataSource} /> 
                 </div>,
                   props: {},
                 };
@@ -311,29 +353,10 @@ const Index = (props) => {
               }
             },
       ]
-      const deviceCol = [
-        {
-          title: '系统名称',
-          dataIndex: 'SystemName',
-          key: 'SystemName',
-          align: 'center',
-        },
-        {
-          title: 'CEMS设备生产商',
-          dataIndex: 'Manufacturer',
-          key: 'Manufacturer',
-          align: 'center',
-        },
-        {
-          title: 'CEMS设备规格型号',
-          dataIndex: 'Equipment',
-          key: 'Equipment',
-          align: 'center',
-        },
-      ]
+
   return (
     <div  className={'detail'} >
-       <div style={{fontSize:16,padding:6,textAlign:'center',fontWeight:'bold'}}>运维督查表</div>
+       <div style={{fontSize:16,padding:6,textAlign:'center',fontWeight:'bold'}}>督查整改详情</div>
 
        <Spin spinning={detailLoading}>
 
@@ -344,20 +367,14 @@ const Index = (props) => {
           <div className={'essentialInfoSty'}>
            <TitleComponents text='基本信息'/>
            <Row>
-            <Col span={12}>
-              <Form.Item label="行业" >
-              {infoList&&infoList.PollutantTypeName}
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label='督查类别' >
-              {infoList&&infoList.InspectorTypeName}
-              </Form.Item>
-            </Col>
-
-            <Col span={12}>
+           <Col span={12}>
               <Form.Item label="企业名称" >
               {infoList&&infoList.EntName}
+              </Form.Item>
+            </Col>
+           <Col span={12}>
+              <Form.Item label='行政区'>
+               {infoList&&infoList.RegionName}
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -365,23 +382,13 @@ const Index = (props) => {
             {infoList&&infoList.PointName}
           </Form.Item>
             </Col>
-
-            {infoList&&infoList.PollutantTypeName=='废气'&& <Col span={12}>
-              <Form.Item label="是否排口" >
-                {infoList&&infoList.OutTypeName}
-              </Form.Item>
-            </Col>}
             <Col span={12}>
-              <Form.Item label='行政区'>
-               {infoList&&infoList.RegionName}
+              <Form.Item label='督查类别' >
+              {infoList&&infoList.InspectorTypeName}
               </Form.Item>
             </Col>
 
-            <Col span={12}>
-              <Form.Item label="监测因子" >
-              {infoList&&infoList.PollutantName}
-              </Form.Item>
-            </Col>
+
             <Col span={12}>
              <Form.Item label="督查人员"   >
              {infoList&&infoList.InspectorName}
@@ -399,83 +406,20 @@ const Index = (props) => {
               
                </Form.Item>
             </Col>
+            <Col span={12}>
+               <Form.Item label="得分"  >
+               {infoList&&infoList.aa}
+              
+               </Form.Item>
+            </Col>
             </Row>
           </div>
 
-
-          <div className={'deviceInfoSty'}>
-           <TitleComponents text='设备信息'/>
-            {infoList&&infoList.PollutantTypeName=='废水'?
-            <>
-               <Row className='waterDeviceInfo'>
-            <Col span={12}>
-            <Form.Item label='设备厂家'  >
-            {infoList&&infoList.GasManufacturer}
-      
-          </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label='设备类型'>
-            {infoList&&infoList.GasEquipment}
-          </Form.Item>
-          </Col>
-          
-          <Col span={24}>
-          <Form.Item label='备注' name='EquipmentRemark'>
-          {infoList&&infoList.EquipmentRemark}
-              </Form.Item>
-            </Col>
-          </Row>
-            </>
-            :
-            <>
-           {/* <Row>
-            <Col span={12}>
-            <Form.Item label='气态CEMS设备生产商' >
-            {infoList&&infoList.GasManufacturer}
-          </Form.Item>
-            </Col>
-            <Col span={12}>
-                 <Form.Item label='气态CEMS设备规格型号'>
-                 {infoList&&infoList.GasEquipment}
-              </Form.Item>
-            </Col>
-          </Row>
-
-           <Row>
-            <Col span={12}>
-            <Form.Item label='颗粒物CEMS设备生产商' >
-            {infoList&&infoList.PMManufacturer}
-          </Form.Item>
-            </Col>
-            <Col span={12}>
-                 <Form.Item label='颗粒物CEMS设备规格型号'>
-                 {infoList&&infoList.PMEquipment}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-          <Col span={24}>
-          <Form.Item label='备注' name='EquipmentRemark'>
-          {infoList&&infoList.EquipmentRemark}
-              </Form.Item>
-            </Col>
-          </Row> */}
-            <Table 
-              bordered
-              dataSource={infoList&&infoList.MonitorPointEquipmentList}
-              columns={deviceCol} 
-              rowClassName="editable-row"
-              pagination={false}
-              size="small"
-              style={{paddingBottom:10}}
-             />
-          </>}
-           </div>
            </Form>
 
            <div className={'supervisionDetailSty'}>
            <TitleComponents text='督查内容'/>
+           <Spin spinning={tableLoading}>
             {!operationInfoList.PrincipleProblemList&&!operationInfoList.importanProblemList&&!operationInfoList.CommonlyProblemList?
             
               <Table 
@@ -490,14 +434,14 @@ const Index = (props) => {
              {operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList[0]&&<Table 
               bordered
               dataSource={operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList}
-              columns={supervisionCol1} 
+              columns={supervisionCol} 
               rowClassName="editable-row"
               pagination={false}
              />}
              {operationInfoList.importanProblemList&&operationInfoList.importanProblemList[0]&&<Table 
               bordered
               dataSource={operationInfoList.importanProblemList&&operationInfoList.importanProblemList}
-              columns={supervisionCol2}
+              columns={supervisionCol}
               rowClassName="editable-row"
               className="impTableSty"
               pagination={false}
@@ -505,7 +449,7 @@ const Index = (props) => {
             {operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0]&&<> <Table 
               bordered
               dataSource={operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList}
-              columns={supervisionCol3}
+              columns={supervisionCol}
               rowClassName="editable-row"
               pagination={false}
               className={'commonlyTableSty'}
@@ -520,7 +464,7 @@ const Index = (props) => {
            </>
            }
            
-           
+          </Spin>
            </div>
            
            </Spin>

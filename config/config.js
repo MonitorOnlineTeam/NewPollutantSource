@@ -1238,6 +1238,11 @@ export default {
                   name: 'supervisionAnalySumm',
                   component: './operations/supervisionAnalySumm',
                 },
+                {
+                  path: '/operations/superviseRectification', //督查整改列表 现场督查
+                  name: 'superviseRectification',
+                  component: './operations/superviseRectification',
+                },
               ],
             },
             {
