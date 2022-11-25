@@ -1239,7 +1239,7 @@ export default {
                   component: './operations/supervisionAnalySumm',
                 },
                 {
-                  path: '/operations/superviseRectification', //督查整改列表 现场督查
+                  path: '/operations/superviseRectification', //督查整改列表 
                   name: 'superviseRectification',
                   component: './operations/superviseRectification',
                 },

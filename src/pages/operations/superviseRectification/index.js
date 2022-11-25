@@ -127,8 +127,7 @@ const Index = (props) => {
   const { match: { path } } = props;
 
 
-  const inspectorType = path === '/operations/siteInspector' || path === '/operations/siteSupervisionRecod' ? 1 :
-    path === '/operations/superviseRectification' || path === '/operations/supervisionRecod' ? 2 : ''; // 是否为现场督查 1 现场 2 远程  其他为运维督查记录
+  const inspectorType = path === '/operations/superviseRectification' ? 1 : 2 ; // 是否为现场督查 1 现场 2 远程  
 
   const [form] = Form.useForm();
  
@@ -231,13 +230,6 @@ const Index = (props) => {
       title: '整改完成时间',
       dataIndex: 'importanProblemNum',
       key: 'importanProblemNum',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '一般问题数量',
-      dataIndex: 'CommonlyProblemNum',
-      key: 'CommonlyProblemNum',
       align: 'center',
       ellipsis: true,
     },
