@@ -291,7 +291,7 @@ class EntWorkOrderStatistics extends PureComponent {
             </Row>
 
           </Form>
-          <SdlTable align="center" dataSource={tableDataSource} columns={columns} loading={loading} />
+          <SdlTable align="center" dataSource={tableDataSource} columns={columns} loading={loading} pagination={false}/>
           
         </Card>
     );
