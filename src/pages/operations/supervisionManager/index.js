@@ -1372,7 +1372,7 @@ const Index = (props) => {
 
   const uploadProps = { //附件上传 
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
-    // accept:'image/*',
+    accept:'image/*',
     data: {
       FileUuid: fileType == 0 ? filesCuid0 : fileType == 1 ? filesCuid1() : fileType == 2 ? filesCuid2() : filesCuid3(),
       FileActualType: '0',
