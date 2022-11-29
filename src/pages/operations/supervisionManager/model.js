@@ -84,5 +84,14 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    *pushInspectorOperation({ payload, callback }, { call, put, update }) { //整改推送
+      const result = yield call(services.PushInspectorOperation, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback();
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 })

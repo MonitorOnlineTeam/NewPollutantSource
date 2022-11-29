@@ -39,3 +39,8 @@ export async function DeleteInspectorOperation(params) {
   return result;
 }
 
+//整改问题推送
+export async function PushInspectorOperation(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/PushInspectorOperation/'+params.ID,null, null);
+  return result;
+}

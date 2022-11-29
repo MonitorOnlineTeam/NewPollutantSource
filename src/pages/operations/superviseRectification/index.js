@@ -39,17 +39,14 @@ const namespace = 'superviseRectification'
 
 const dvaPropsData = ({ loading, superviseRectification, global, common, point, autoForm }) => ({
   tableDatas: superviseRectification.tableDatas,
-  tableLoading: superviseRectification.tableLoading,
+  tableLoading: loading.effects[`${namespace}/getInspectorRectificationManageList`],
   tableTotal: superviseRectification.tableTotal,
   pointParamesLoading: loading.effects[`${namespace}/getPointParames`],
   infoloading: loading.effects[`${namespace}/getInspectorOperationInfoList`],
   userLoading: loading.effects[`common/getUserList`],
   entLoading: common.entLoading,
   clientHeight: global.clientHeight,
-  exportLoading: loading.effects[`${namespace}/exportInspectorOperationManage`],
-
-
-
+  exportLoading: loading.effects[`${namespace}/exportInspectorRectificationManageList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -75,21 +72,6 @@ const dvaDispatch = (dispatch) => {
       })
     },
 
-
-    getInspectorOperationManageList: (payload) => { //列表
-      dispatch({
-        type: `${namespace}/getInspectorOperationManageList`,
-        payload: payload,
-      })
-    },
-    getPointParames: (payload, callback) => { //获取单个排口默认值
-      dispatch({
-        type: `${namespace}/getPointParames`,
-        payload: payload,
-        callback: callback
-      })
-
-    },
     deleteAttach: (file) => { //删除照片
       dispatch({
         type: "autoForm/deleteAttach",
@@ -98,24 +80,16 @@ const dvaDispatch = (dispatch) => {
         }
       })
     },
-    addOrEditInspectorOperation: (payload, callback) => { //添加或修改
+    getInspectorRectificationManageList: (payload) => { //列表
       dispatch({
-        type: `${namespace}/addOrEditInspectorOperation`,
+        type: `${namespace}/getInspectorRectificationManageList`,
         payload: payload,
-        callback: callback
       })
+    },
 
-    },
-    exportInspectorOperationManage: (payload, callback) => { //导出
+    exportInspectorRectificationManageList: (payload, callback) => { //导出
       dispatch({
-        type: `${namespace}/exportInspectorOperationManage`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    deleteInspectorOperation: (payload, callback) => { //删除
-      dispatch({
-        type: `${namespace}/deleteInspectorOperation`,
+        type: `${namespace}/exportInspectorRectificationManageList`,
         payload: payload,
         callback: callback
       })
@@ -221,15 +195,15 @@ const Index = (props) => {
     },
     {
       title: '整改状态',
-      dataIndex: 'PrincipleProblemNum',
-      key: 'PrincipleProblemNum',
+      dataIndex: 'Status',
+      key: 'Status',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '整改完成时间',
-      dataIndex: 'importanProblemNum',
-      key: 'importanProblemNum',
+      dataIndex: 'CompletionTime',
+      key: 'CompletionTime',
       align: 'center',
       ellipsis: true,
     },
@@ -276,12 +250,12 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getInspectorOperationManageList({
+      props.getInspectorRectificationManageList({
         ...values,
         BTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
-        InspectorType: inspectorType,
+        // InspectorType: inspectorType,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
       })
@@ -292,13 +266,12 @@ const Index = (props) => {
   const exports = async () => { //导出
     const values = await form.validateFields();
 
-    props.exportInspectorOperationManage({
+    props.exportInspectorRectificationManageList({
       ...values,
       BTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
       ETime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
-      InspectorType: inspectorType,
-
+      // InspectorType: inspectorType,
     })
   }
 
@@ -343,7 +316,7 @@ const Index = (props) => {
         <Form.Item label='行政区' name='RegionCode' >
           <RegionList noFilter levelNum={3} style={{ width: 150 }} />
         </Form.Item>
-        <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
+        <Spin spinning={entLoading} size='small' style={{ top: -3, left: 28 }}>
           <Form.Item label='企业' name='EntCode'>
             <EntAtmoList noFilter style={{ width: 150 }} />
           </Form.Item>

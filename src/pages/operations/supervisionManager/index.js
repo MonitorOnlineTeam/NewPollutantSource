@@ -6,7 +6,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled,ToTopOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -139,6 +139,13 @@ const dvaDispatch = (dispatch) => {
     deleteInspectorOperation: (payload, callback) => { //删除
       dispatch({
         type: `${namespace}/deleteInspectorOperation`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    pushInspectorOperation: (payload, callback) => { //整改问题推送
+      dispatch({
+        type: `${namespace}/pushInspectorOperation`,
         payload: payload,
         callback: callback
       })
@@ -314,6 +321,23 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '状态',
+      dataIndex: 'Status',
+      key: 'Status',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return text==0 ? '保存' : text==1 ? '提交' : '推送';
+      }
+    },
+    {
+      title: '整改状态',
+      dataIndex: 'StatusName',
+      key: 'StatusName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '创建人',
       dataIndex: 'CreateUserName',
       key: 'CreateUserName',
@@ -352,27 +376,43 @@ const Index = (props) => {
           return <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip>
         }
         const flag = record.IsFlag;
+        const pushStatusFlag = record.Status == 2; //推送状态  只能查看详情
+        const noSubmitStatusFlag = record.Status == 0 || record.Status == 2; //暂存状态 推送状态  不可以推送
+
         return <span>
-          <Fragment><Tooltip title={!flag ? "运维督查记录已超过30天，不可编辑" : "编辑"}> <a onClick={() => {
-            if (!flag) {
+          <Fragment><Tooltip title={!flag ? "运维督查记录已超过30天，不可编辑" : pushStatusFlag? '推送状态，不可编辑': "编辑"}> <a onClick={() => {
+            if ((!flag) || pushStatusFlag) {
               return;
             }
             edit(record)
 
-          }} ><EditOutlined style={{ cursor: !flag && 'not-allowed', color: !flag && '#00000040', fontSize: 16 }} /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          }} ><EditOutlined style={{ cursor: (!flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (!flag && '#00000040') || (pushStatusFlag && '#00000040') , fontSize: 16 }} /></a> </Tooltip><Divider type="vertical" /> </Fragment>
           <Fragment>
-            <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip> <Divider type="vertical" /> </Fragment>
+            <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip> <Divider type="vertical" /> 
+          </Fragment>
           <Fragment>
-            <Tooltip placement="left" title="删除" title={!flag ? "运维督查记录已超过30天，不可删除" : "删除"}>
-              <Popconfirm disabled={!flag} placement="left" title="确定要删除这条数据吗？"
+            <Tooltip title={!flag ? "运维督查记录已超过30天，不可推送" : noSubmitStatusFlag? "只有提交状态才可以整改推送" : "整改推送"}>
+              <Popconfirm disabled={(!flag) || noSubmitStatusFlag} placement="left" title="是否把整改问题推送给运维人员？"
                 onConfirm={() => {
-                  if (!flag) { return; } del(record)
+                  if ((!flag) || noSubmitStatusFlag) { return; } rectificationPush(record);
                 }
                 } okText="是" cancelText="否">
-                <a style={{ cursor: !flag && 'not-allowed', color: !flag && '#00000040' }} > <DelIcon style={{ fontSize: 16 }} /> </a>
+                <a style={{ cursor: (!flag && 'not-allowed') || (noSubmitStatusFlag && 'not-allowed'), color: (!flag && '#00000040') || (noSubmitStatusFlag && '#00000040') , }} > <ToTopOutlined style={{ fontSize: 16 }} /> </a>
               </Popconfirm>
             </Tooltip>
+            <Divider type="vertical" /> 
           </Fragment>
+           <Fragment>
+            <Tooltip placement={(!flag) || pushStatusFlag? "left" : 'top'}  title={!flag ? "运维督查记录已超过30天，不可删除" : pushStatusFlag? '推送状态，不可删除': "删除"}>
+              <Popconfirm disabled={(!flag) || pushStatusFlag} placement="left" title="确定要删除这条数据吗？"
+                onConfirm={() => {
+                  if ((!flag) || pushStatusFlag ) { return; } del(record)
+                }
+                } okText="是" cancelText="否">
+                <a style={{ cursor: (!flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (!flag && '#00000040') || (pushStatusFlag && '#00000040') , }} > <DelIcon style={{ fontSize: 16 }} /> </a>
+              </Popconfirm>
+            </Tooltip>
+          </Fragment> 
         </span>
       }
     },
@@ -464,14 +504,14 @@ const Index = (props) => {
         }
 
         const echoPrincipleProblemList = data.PrincipleProblemList && data.PrincipleProblemList; //原则问题
-        const uploadList1 = {},uploadCuid1={};
+        const uploadList1 = {}, uploadCuid1 = {};
         echoPrincipleProblemList.map(item => {
           tableForm.setFieldsValue({
             [`Inspector${item.Sort}`]: item.Inspector,
             [`Remark${item.Sort}`]: item.Remark,
             [`Files1${item.Sort}`]: item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid,
           })
-          const  problemFilesList1 = [];
+          const problemFilesList1 = [];
           item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList.map(items => {
             if (!items.IsDelete) {
               problemFilesList1.push({
@@ -483,21 +523,21 @@ const Index = (props) => {
             }
           })
           uploadList1[`Files1${item.Sort}`] = problemFilesList1;
-          uploadCuid1[`Files1${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid ? item.AttachmentsList[0].FileUuid :  cuid();
+          uploadCuid1[`Files1${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid ? item.AttachmentsList[0].FileUuid : cuid();
         })
 
-        setFilesList1({...uploadList1})
-        setFilesCuidList1({...uploadCuid1})
+        setFilesList1({ ...uploadList1 })
+        setFilesCuidList1({ ...uploadCuid1 })
 
         const echoImportanProblemList = data.importanProblemList && data.importanProblemList; //重点问题
-        const uploadList2 = {}, uploadCuid2={};
+        const uploadList2 = {}, uploadCuid2 = {};
         echoImportanProblemList.map(item => {
           tableForm.setFieldsValue({
             [`Inspector${item.Sort}`]: item.Inspector,
             [`Remark${item.Sort}`]: item.Remark,
             [`Files2${item.Sort}`]: item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid,
           })
-          const  problemFilesList2 = [];
+          const problemFilesList2 = [];
           item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList.map(items => {
             if (!items.IsDelete) {
               problemFilesList2.push({
@@ -509,21 +549,21 @@ const Index = (props) => {
             }
           })
           uploadList2[`Files2${item.Sort}`] = problemFilesList2;
-          uploadCuid2[`Files2${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid? item.AttachmentsList[0].FileUuid :  cuid();
+          uploadCuid2[`Files2${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid ? item.AttachmentsList[0].FileUuid : cuid();
         })
         setFilesList2({ ...uploadList2 })
-        setFilesCuidList2({...uploadCuid2})
+        setFilesCuidList2({ ...uploadCuid2 })
 
 
         const echoCommonlyProblemList = data.CommonlyProblemList && data.CommonlyProblemList; //一般问题
-        const uploadList3 = {} , uploadCuid3={};;
+        const uploadList3 = {}, uploadCuid3 = {};;
         echoCommonlyProblemList.map(item => {
           tableForm.setFieldsValue({
             [`Inspector${item.Sort}`]: item.Inspector,
             [`Remark${item.Sort}`]: item.Remark,
             [`Files3${item.Sort}`]: item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid,
           })
-          const  problemFilesList3 = [];
+          const problemFilesList3 = [];
           item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList.map(items => {
             if (!items.IsDelete) {
               problemFilesList3.push({
@@ -535,21 +575,28 @@ const Index = (props) => {
             }
           })
           uploadList3[`Files3${item.Sort}`] = problemFilesList3;
-          uploadCuid3[`Files3${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid ? item.AttachmentsList[0].FileUuid :  cuid();
+          uploadCuid3[`Files3${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid ? item.AttachmentsList[0].FileUuid : cuid();
 
         })
         setFilesList3({ ...uploadList3 })
-        setFilesCuidList3({...uploadCuid3})
+        setFilesCuidList3({ ...uploadCuid3 })
       })
   };
   const [detailVisible, setDetailVisible] = useState(false)
   const [detailId, setDetailId] = useState(null)
-  const detail = (record) => {
+  const detail = (record) => { //详情
     setDetailId(record.ID);
     setDetailVisible(true)
   }
-  const del = async (record) => {
-    const values = await form.validateFields();
+
+  const rectificationPush =  (record) => { //整改推送
+    props.pushInspectorOperation({ ID: record.ID }, () => {
+      setPageIndex(1)
+      onFinish(1, pageSize)
+    })
+  };
+
+  const del =  (record) => { //删除
     props.deleteInspectorOperation({ ID: record.ID }, () => {
       setPageIndex(1)
       onFinish(1, pageSize)
@@ -662,6 +709,7 @@ const Index = (props) => {
     })
   }
 
+  const [saveLoading0, setSaveLoading0] = useState(false)
   const [saveLoading1, setSaveLoading1] = useState(false)
   const [saveLoading2, setSaveLoading2] = useState(false)
 
@@ -670,7 +718,7 @@ const Index = (props) => {
 
     const values = await form2.validateFields();
     try {
-      type == 1 ? setSaveLoading2(true) : setSaveLoading1(true);
+      type == 0 ? setSaveLoading0(true) :  type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
 
       let principleProblemList = operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList || [];
       let importanProblemList = operationInfoList.importanProblemList && operationInfoList.importanProblemList || [];
@@ -712,16 +760,16 @@ const Index = (props) => {
         InspectorOperationInfoList: [...principleProblemList, ...importanProblemList, ...commonlyProblemList],
         ...devicePar,
       }
-      console.log(data)
       props.addOrEditInspectorOperation(data, () => {
         setFromVisible(false)
-        type == 1 ? setSaveLoading2(false) : setSaveLoading1(false);
+        type == 0 ? setSaveLoading0(false) :  type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
         onFinish()
       })
 
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
-      type == 1 ? setSaveLoading2(false) : setSaveLoading1(false);
+      type == 0 ? setSaveLoading0(false) :  type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
+
 
     }
   }
@@ -1372,7 +1420,7 @@ const Index = (props) => {
 
   const uploadProps = { //附件上传 
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
-    accept:'image/*',
+    accept: 'image/*',
     data: {
       FileUuid: fileType == 0 ? filesCuid0 : fileType == 1 ? filesCuid1() : fileType == 2 ? filesCuid2() : filesCuid3(),
       FileActualType: '0',
@@ -1461,12 +1509,15 @@ const Index = (props) => {
           <Button onClick={() => { setFromVisible(false) }}>
             取消
           </Button>,
-          <Button type="primary" onClick={() => { save() }} loading={saveLoading1 || detailLoading || pointLoading2 || false}>
+          <Button type="primary" onClick={() => { save(0) }} loading={saveLoading0 || detailLoading || pointLoading2 || false}>
             保存
           </Button>,
-          <Button type="primary" onClick={() => save(1)} loading={saveLoading2 || detailLoading || pointLoading2 || false} >
+          <Button type="primary" onClick={() => save(1)} loading={saveLoading1 || detailLoading || pointLoading2 || false} >
             提交
           </Button>,
+          <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || detailLoading || pointLoading2 || false} >
+            推送
+         </Button>,
         ]}
       >
         <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>运维督查表</div>

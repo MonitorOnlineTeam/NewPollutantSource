@@ -17,57 +17,27 @@ export default Model.extend({
     operationInfoList:[],
   },
   effects: {
-    *getInspectorOperationManageList({ payload, callback }, { call, put, update }) { //列表
-      yield update({ tableLoading: true })
-      const result = yield call(services.GetInspectorOperationManageList, payload);
+    *getInspectorRectificationManageList({ payload, callback }, { call, put, update }) { //列表
+      const result = yield call(services.GetInspectorRectificationManageList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal: result.Total,
           tableDatas: result.Datas,
-          tableLoading: false
         })
       } else {
         message.error(result.Message)
-        yield update({ tableLoading: false })
       }
     },
-    *getInspectorOperationInfoList({ payload, callback }, { call, put, update }) { //获取单个督查表实体
-      const result = yield call(services.GetInspectorOperationInfoList, payload);
-      if (result.IsSuccess) {
-        yield update({  operationInfoList: result.Datas, })
-        callback(result.Datas)
-      } else {
-        message.error(result.Message)
-        callback()
-      }
-    },
-    *getPointParames({ payload, callback }, { call, put, update }) { //获取单个排口默认值
-      const result = yield call(services.GetPointParames, payload);
+    *getInspectorRectificationView({ payload, callback }, { call, put, update }) { //详情
+      const result = yield call(services.GetInspectorRectificationView, payload);
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
         message.error(result.Message)
       }
     },
-    *addOrEditInspectorOperation({ payload, callback }, { call, put, update }) { //添加或修改督查模板
-      const result = yield call(services.AddOrEditInspectorOperation, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback(result.Datas)
-      } else {
-        message.error(result.Message)
-      }
-    },
-    *getInspectorOperationView({ payload, callback }, { call, put, update }) { //详情
-      const result = yield call(services.GetInspectorOperationView, payload);
-      if (result.IsSuccess) {
-        callback(result.Datas)
-      } else {
-        message.error(result.Message)
-      }
-    },
-    *exportInspectorOperationManage({ payload, callback }, { call, put, update }) { //导出
-      const result = yield call(services.ExportInspectorOperationManage, payload);
+    *exportInspectorRectificationManageList({ payload, callback }, { call, put, update }) { //导出
+      const result = yield call(services.ExportInspectorRectificationManageList, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
@@ -75,8 +45,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *deleteInspectorOperation({ payload, callback }, { call, put, update }) { //删除
-      const result = yield call(services.DeleteInspectorOperation, payload);
+    *updateRectificationStatus({ payload, callback }, { call, put, update }) { //修改状态
+      const result = yield call(services.UpdateRectificationStatus, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback();
