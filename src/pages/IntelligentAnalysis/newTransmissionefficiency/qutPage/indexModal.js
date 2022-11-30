@@ -417,7 +417,7 @@ export default class EntTransmissionEfficiency extends Component {
                   placeholder="企业列表"
                   onChange={this.changeRegion}
                   value={EntCode ? EntCode : undefined}
-                  style={{ width: 200, marginLeft: 10 }}
+                  style={{ width: 200, }}
                 >
                   {this.children()}
                 </Select>

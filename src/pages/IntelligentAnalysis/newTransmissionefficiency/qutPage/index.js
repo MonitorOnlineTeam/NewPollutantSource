@@ -426,7 +426,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="企业列表"
                     onChange={this.changeRegion}
                     value={EntCode ? EntCode : undefined}
-                    style={{ width: 200, marginLeft: 10 }}
+                    style={{ width: 200, }}
                   >
                     {this.children()}
                   </Select>
@@ -512,7 +512,6 @@ export default class EntTransmissionEfficiency extends Component {
               bordered={false}
               onChange={this.handleTableChange}
               dataSource={this.props.tableDatas}
-              scroll={this.props.isModal?{ y: 'calc(100vh - 550px)'}:''}
               // scroll={{ y: 550 }}
               width={'100%'}
               pagination={{

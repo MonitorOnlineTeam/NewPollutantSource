@@ -120,21 +120,21 @@ export default class EntTransmissionEfficiency extends Component {
   //     this.getTableData(pagination.current);
   // }
 
-  children = () => {
-    const { regionList } = this.props;
+  // children = () => {
+  //   const { regionList } = this.props;
 
-    const selectList = [];
-    if (regionList.length > 0) {
-      regionList[0].children.map(item => {
-        selectList.push(
-          <Option key={item.key} value={item.value}>
-            {item.title}
-          </Option>,
-        );
-      });
-      return selectList;
-    }
-  };
+  //   const selectList = [];
+  //   if (regionList.length > 0) {
+  //     regionList[0].children.map(item => {
+  //       selectList.push(
+  //         <Option key={item.key} value={item.value}>
+  //           {item.title}
+  //         </Option>,
+  //       );
+  //     });
+  //     return selectList;
+  //   }
+  // };
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <Card style={{ paddingBottom: 25, width: '100%', lineHeight: 2 }}>
@@ -383,8 +383,7 @@ export default class EntTransmissionEfficiency extends Component {
           bordered={false}
           title={
             <>
-              <Form layout="inline">
-                <Form.Item>
+              <Form layout="inline"> 
                 <Form.Item>
                   查询时间：
                   {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
@@ -418,6 +417,7 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="1">国家考核</Option>
                   </Select>
                 </Form.Item>
+                <Form.Item>
                   {/* <Select
                     allowClear
                     placeholder="请选择行政区"

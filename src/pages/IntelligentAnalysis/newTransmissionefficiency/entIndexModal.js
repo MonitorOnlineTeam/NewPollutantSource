@@ -521,6 +521,7 @@ export default class EntIndexModal extends Component {
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                    {`<90%未达标`}
                 </span>
+                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span>
               </div>}
               {level&&<><Button
                     style={{ margin: '0 5px' }}
@@ -550,7 +551,7 @@ export default class EntIndexModal extends Component {
             columns={columns}
              bordered={false}
              dataSource={this.props.tableDatas}
-             scroll={{ y: 'calc(100vh - 450px)'}}
+            //  scroll={{ y: 'calc(100vh - 450px)'}}
              pagination={false}
            /> 
         </Card>

@@ -332,7 +332,7 @@ export default class EnterpriseEfficiency extends Component {
               columns={columns}
               bordered={false}
               // onChange={this.handleTableChange}
-              scroll={{ x: null }}
+              scroll={{ y: 'calc(100vh - 450px)' }}
               size="small" // small middle
               dataSource={this.props.tableDatas}
               // pagination={{

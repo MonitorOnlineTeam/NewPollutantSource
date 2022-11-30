@@ -77,6 +77,7 @@ class CalendarPage extends PureComponent {
                   overlayClassName={styles.exceptionTypePopSty}
                   zIndex={99}
                   visible={itm === "打卡异常"}
+                  getPopupContainer={trigger => trigger.parentNode}
                 >
                   <Tag color={color}>{itm}</Tag>
                 </Popover>
@@ -522,7 +523,7 @@ class CalendarPage extends PureComponent {
 
   // 分页
   onTableChange = (current, pageSize) => {
-    this.updateState({ current })
+    this.updateState({ current, pageSize})
     setTimeout(() => {
       // 获取表格数据
       this.abnormalItemClick(this.state.currentCellInfo, true)
@@ -594,7 +595,8 @@ class CalendarPage extends PureComponent {
                     pageSize: abnormalForm.pageSize,
                     current: abnormalForm.current,
                     onChange: this.onTableChange,
-                    total: abnormalForm.total
+                    total: abnormalForm.total,
+                    pageSizeOptions:[6,10,20,50,100]
                   }}
                   dataSource={listData}
                   renderItem={item => (
