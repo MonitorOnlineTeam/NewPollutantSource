@@ -294,13 +294,12 @@ class OperationRecord extends Component {
         currentDate: [date[0], date[1]],
       },
     });
-
     if (maintenanceFlag === 'operationrecord') {
       this.setState({
         rangeDate: date,
       });
 
-      if (this.props.currentRecordType == '8') {
+      if (this.props.currentRecordType == '8') {//运维没这个类型
         this.props.dispatch({
           type: 'operationform/getjzhistoryinfo',
           payload: {

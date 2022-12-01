@@ -167,7 +167,7 @@ if (getPointExceptionLoading) {
         <Circle 
             center={ { longitude:  entAbnormalList.longitude, latitude:entAbnormalList.latitude} } 
             radius={ Number(entAbnormalList.operationRadius) }
-            style={  {fillColor:"rgba(228,228,228,.7)", strokeColor: 'rgba(228,228,228,.8)'}}
+            style={  {fillColor:"rgba(228,228,228,.3)", strokeColor: 'rgba(228,228,228,.5)'}}
           />
 
       <div style={styleA}>
