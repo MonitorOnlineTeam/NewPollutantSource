@@ -32,7 +32,7 @@ const { RangePicker } = DatePicker;
   divisorList: exceptionrecordNew.divisorList,
   exceptionAlarmDataSource: exceptionrecordNew.exceptionAlarmDataSource,
   exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
-  exceptionrecordForm: exceptionrecordNew.exceptionrecordForm,
+  exceptionrecordForms: exceptionrecordNew.exceptionrecordForms,
   exceptionTime: exceptionrecordNew.exceptionTime,
   loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForCity"],
   exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarmListForCity"],
@@ -41,24 +41,24 @@ const { RangePicker } = DatePicker;
 @Form.create({
   mapPropsToFields(props) {
     return {
-      dataType: Form.createFormField(props.exceptionrecordForm.dataType),
+      // dataType: Form.createFormField(props.exceptionrecordForm.dataType),
     //   time: Form.createFormField(props.exceptionrecordForm.time),
-      RegionCode: Form.createFormField(props.exceptionrecordForm.RegionCode),
+      // RegionCode: Form.createFormField(props.exceptionrecordForm.RegionCode),
     //   RegionCode: Form.createFormField(props.location.query.regionCode),
-      AttentionCode: Form.createFormField(props.exceptionrecordForm.AttentionCode),
-      PollutantType: Form.createFormField(props.exceptionrecordForm.PollutantType),
+      // AttentionCode: Form.createFormField(props.exceptionrecordForm.AttentionCode),
+      // PollutantType: Form.createFormField(props.exceptionrecordForm.PollutantType),
     };
   },
   onFieldsChange(props, fields) {
-    props.dispatch({
-      type: 'exceptionrecordNew/updateState',
-      payload: {
-        exceptionrecordForm: {
-          ...props.exceptionrecordForm,
-          ...fields,
-        },
-      },
-    })
+    // props.dispatch({
+    //   type: 'exceptionrecordNew/updateState',
+    //   payload: {
+    //     exceptionrecordForm: {
+    //       ...props.exceptionrecordForm,
+    //       ...fields,
+    //     },
+    //   },
+    // })
   },
 })
 class index extends PureComponent {
@@ -325,7 +325,7 @@ class index extends PureComponent {
   getExceptionList = () => {
  
     // let values = this.props.form.getFieldsValue();
-    let values = this.props.exceptionrecordForm;
+    let values = this.props.exceptionrecordForms;
     console.log("values=", this.props.form)
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
@@ -365,7 +365,7 @@ class index extends PureComponent {
   // 导出异常数据
   exportExceptionAlarmListForCity = () => {
     // let values = this.props.form.getFieldsValue();
-    let values = this.props.exceptionrecordForm;
+    let values = this.props.exceptionrecordForms;
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {

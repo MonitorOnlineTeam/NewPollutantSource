@@ -12,6 +12,8 @@ export default Model.extend({
     exceptionAlarmListForEntDataSource: [],
     exceptionrecordForm: {
     },
+    exceptionrecordForms: {
+    },
     exceptionTime: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")]
   },
   effects: {

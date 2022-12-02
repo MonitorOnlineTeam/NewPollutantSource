@@ -33,6 +33,7 @@ const { RangePicker } = DatePicker;
   exceptionAlarmDataSource: exceptionrecordNew.exceptionAlarmDataSource,
   exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
   exceptionrecordForm: exceptionrecordNew.exceptionrecordForm,
+  exceptionrecordForms: exceptionrecordNew.exceptionrecordForms,
   exceptionTime: exceptionrecordNew.exceptionTime,
   loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForRegion"],
   exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarm"],
@@ -355,20 +356,23 @@ class index extends PureComponent {
         OperationPersonnel:this.state.operationpersonnel
       }
     })
-    this.props.dispatch({
-      type: 'exceptionrecordNew/updateState',
-      payload: {
-        exceptionrecordForm: {
-          AttentionCode: values.AttentionCode,
-          PollutantType: values.PollutantType,
-          RegionCode: values.RegionCode?values.RegionCode:'',
-          dataType: values.dataType,
-          beginTime: beginTime,
-          endTime: endTime,
-          OperationPersonnel:this.state.operationpersonnel
+    setTimeout(()=>{
+      this.props.dispatch({
+        type: 'exceptionrecordNew/updateState',
+        payload: {
+          exceptionrecordForms: {
+            AttentionCode: values.AttentionCode,
+            PollutantType: values.PollutantType,
+            RegionCode: values.RegionCode?values.RegionCode:'',
+            dataType: values.dataType,
+            beginTime: beginTime,
+            endTime: endTime,
+            OperationPersonnel:this.state.operationpersonnel
+          },
         },
-      },
-    })
+      })
+    },3000)
+
   }
 
   // 导出异常数据
