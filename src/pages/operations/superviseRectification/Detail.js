@@ -193,13 +193,13 @@ const Index = (props) => {
         ellipsis: true,
         render: (text, record) => {
           return  <Fragment>
-           {record.Status==1&&<><Popconfirm title="确定要整改通过？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,3) }} okText="是" cancelText="否">
+           {(record.Status==1|| record.Status==4)&&<Popconfirm title="确定要整改通过？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,3) }} okText="是" cancelText="否">
               <a>整改通过</a>
-            </Popconfirm>  <Divider type="vertical" /></>}
+            </Popconfirm>  }
            
-            {(record.Status==1|| record.Status==4)&&<Popconfirm title="确定要整改驳回？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,4) }} okText="是" cancelText="否">
+            {record.Status==1&& <><Divider type="vertical" /><Popconfirm title="确定要整改驳回？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,4) }} okText="是" cancelText="否">
               <a>整改驳回</a>
-            </Popconfirm>}
+            </Popconfirm></>}
           </Fragment>
           
         }
