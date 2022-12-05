@@ -83,7 +83,7 @@ const Index = (props) => {
     })
   }
   const rectification = (record,status) => { //整改通过 or  整改驳回 
-    props.updateRectificationStatus({ ID: record.ID,Status:status }, () => {
+    props.updateRectificationStatus({ ID: record.Id,Status:status }, () => {
       initData('rectificat');
     })
   }

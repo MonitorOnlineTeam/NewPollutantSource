@@ -1104,6 +1104,18 @@ const Index = (props) => {
     }
     return obj;
   };
+  const [principleDisabled,setPrincipleDisabled] = useState({})
+  const principleChange = (val,sort) =>{ //有无原则问题
+    if(!val){ //为否时
+      setPrincipleDisabled({...principleDisabled, [sort]:true}) 
+      tableForm.setFieldsValue({[`Remark${sort}`]:undefined})
+    }else{
+      setPrincipleDisabled({...principleDisabled, [sort]:false}) 
+    }
+    setTimeout(()=>{ 
+    console.log(principleDisabled)
+    },1000)
+  }
   const supervisionCol1 = [{
     title: <span style={{ fontWeight: 'bold', fontSize: 14 }}>
       {operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList[0] && operationInfoList.PrincipleProblemList[0].Title}
@@ -1136,7 +1148,7 @@ const Index = (props) => {
         width: 200,
         render: (text, record) => {
           return <Form.Item name={`Inspector${record.Sort}`}>
-            <Select placeholder='请选择'> <Option value={'0'}>有</Option>   <Option value={null}>无</Option>     </Select>
+            <Select placeholder='请选择' onChange={(val,)=>principleChange(val,record.Sort)}> <Option value={'0'}>有</Option>   <Option value={null}>无</Option>     </Select>
           </Form.Item>
         },
       },
@@ -1147,7 +1159,7 @@ const Index = (props) => {
         align: 'center',
         render: (text, record) => {
           return <Form.Item name={`Remark${record.Sort}`}>
-            <TextArea rows={1} placeholder='请输入' />
+            <TextArea rows={1} placeholder='请输入'  disabled={principleDisabled[`${record.Sort}`]}/>
           </Form.Item>
         },
       },
@@ -1721,7 +1733,7 @@ const Index = (props) => {
 
           <div className={'supervisionContentSty'}>
             <Spin spinning={type == 'add' && infoloading}>
-              <Form name="tableForm" form={tableForm}  >
+              <Form name="tableForm" form={tableForm}>
                 <TitleComponents text='督查内容' />
                 {!(operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList[0]) && !(operationInfoList.importanProblemList && operationInfoList.importanProblemList[0]) && !(operationInfoList.CommonlyProblemList && operationInfoList.CommonlyProblemList[0]) ?
                   <Table
