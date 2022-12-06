@@ -173,8 +173,14 @@ const Index = (props) => {
                         showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
            />
      </Form.Item>
+     {(isPlanCalibrationModal||isPlanInspectionModal||isActualCalibrationModal) &&  <Form.Item label = '打卡状态' name='singinStatus' style={{padding:'0 8px'}}>
+         <Select placeholder='请选择' style={{width:120}} allowClear>       
+            <Option value={1}>正常</Option>
+            <Option value={2}>异常</Option>
+            </Select>
+        </Form.Item>}
       <Form.Item label = '监测点类型' name='pollutantType' style={{padding:'0 8px'}}>
-         <Select placeholder='监测点类型' style={{width:120}}>       
+         <Select placeholder='请选择' style={{width:120}}>       
             <Option value={2}>废气</Option>
             <Option value={1}>废水</Option>
             </Select>

@@ -97,7 +97,7 @@ const Index = (props) => {
     if (fileInfo) {
       fileInfo.split(',').map(item => {
         if (!item.IsDelete) {
-          fileList.push({ name: item, attach: item })
+          fileList.push({ name: `${item}`, attach: `/upload/${item}` })
         }
       })
     }
@@ -317,59 +317,59 @@ const Index = (props) => {
   //     },
   //   ]
   //     }]
-  const supervisionCol4 = [
-    {
-      align: 'center',
-      width: 480,
-      render: (text, record, index) => {
-        return index == 0 ? '总分' : '评价'
-      },
-    },
-    {
-      key: 'Sort',
-      render: (text, record, index) => {
-        if (index == 0) {
-          return <div>{infoList && infoList.TotalScore} </div>
-        } else {
-          return {
-            children: <div>{infoList && infoList.Evaluate} </div>,
-            props: { colSpan: 3 },
-          };
-        }
+  // const supervisionCol4 = [
+  //   {
+  //     align: 'center',
+  //     width: 480,
+  //     render: (text, record, index) => {
+  //       return index == 0 ? '总分' : '评价'
+  //     },
+  //   },
+  //   {
+  //     key: 'Sort',
+  //     render: (text, record, index) => {
+  //       if (index == 0) {
+  //         return <div>{infoList && infoList.TotalScore} </div>
+  //       } else {
+  //         return {
+  //           children: <div>{infoList && infoList.Evaluate} </div>,
+  //           props: { colSpan: 3 },
+  //         };
+  //       }
 
-      }
-    },
-    {
-      key: 'Sort',
-      align: 'center',
-      render: (text, record, index) => {
-        const obj = {
-          children: '附件',
-          props: {},
-        };
-        if (index === 1) {
-          obj.props.colSpan = 0;
-        }
-        return obj;
-      }
-    },
-    {
-      key: 'Sort',
-      render: (text, record, index) => {
-        const attachmentDataSource = getAttachmentArrDataSource(infoList && infoList.FilesList);
-        const obj = {
-          children: <div>
-            <AttachmentView noDataNoShow style={{ marginTop: 10 }} dataSource={attachmentDataSource} />
-          </div>,
-          props: {},
-        };
-        if (index === 1) {
-          obj.props.colSpan = 0;
-        }
-        return obj;
-      }
-    },
-  ]
+  //     }
+  //   },
+  //   {
+  //     key: 'Sort',
+  //     align: 'center',
+  //     render: (text, record, index) => {
+  //       const obj = {
+  //         children: '附件',
+  //         props: {},
+  //       };
+  //       if (index === 1) {
+  //         obj.props.colSpan = 0;
+  //       }
+  //       return obj;
+  //     }
+  //   },
+  //   {
+  //     key: 'Sort',
+  //     render: (text, record, index) => {
+  //       const attachmentDataSource = getAttachmentArrDataSource(infoList && infoList.FilesList);
+  //       const obj = {
+  //         children: <div>
+  //           <AttachmentView noDataNoShow style={{ marginTop: 10 }} dataSource={attachmentDataSource} />
+  //         </div>,
+  //         props: {},
+  //       };
+  //       if (index === 1) {
+  //         obj.props.colSpan = 0;
+  //       }
+  //       return obj;
+  //     }
+  //   },
+  // ]
 
   return (
     <div className={'detail'} >
@@ -470,13 +470,13 @@ const Index = (props) => {
                 pagination={false}
                 className={'commonlyTableSty'}
               /></>}
-              <Table
+              {/* <Table
                 bordered
                 dataSource={[{ Sort: 1 }, { Sort: 2 }]}
                 columns={supervisionCol4}
                 className="summaryTableSty"
                 pagination={false}
-              />
+              /> */}
             </>
           }
 

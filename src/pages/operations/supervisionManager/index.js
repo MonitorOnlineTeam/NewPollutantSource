@@ -320,16 +320,16 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
     },
-    {
-      title: '状态',
-      dataIndex: 'Status',
-      key: 'Status',
-      align: 'center',
-      ellipsis: true,
-      render: (text, record, index) => {
-        return text==0 ? '保存' : text==1 ? '提交' : '推送';
-      }
-    },
+    // {
+    //   title: '状态',
+    //   dataIndex: 'Status',
+    //   key: 'Status',
+    //   align: 'center',
+    //   ellipsis: true,
+    //   render: (text, record, index) => {
+    //     return text==0 ? '保存' : text==1 ? '提交' : '推送';
+    //   }
+    // },
     {
       title: '整改状态',
       dataIndex: 'StatusName',
@@ -809,7 +809,8 @@ const Index = (props) => {
       }
       setPointLoading2(true)
       props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
-        setPointList2(res)
+        const data = res.filter(item=>item.PollutantType == form2.getFieldValue('PollutantType'))
+        setPointList2(data)
         setPointLoading2(false)
       })
       form2.setFieldsValue({ DGIMN: undefined })

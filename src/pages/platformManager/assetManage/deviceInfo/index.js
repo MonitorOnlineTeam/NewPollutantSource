@@ -222,12 +222,12 @@ const Index = (props) => {
       key: 'AnalyticalMethod',
       align: 'center',
     },
-    {
-      title: '设备品牌',
-      dataIndex: 'EquipmentBrand',
-      key: 'EquipmentBrand',
-      align: 'center',
-    },
+    // {
+    //   title: '设备品牌',
+    //   dataIndex: 'EquipmentBrand',
+    //   key: 'EquipmentBrand',
+    //   align: 'center',
+    // },
     {
       title: '设备厂家',
       dataIndex: 'ManufacturerName',
