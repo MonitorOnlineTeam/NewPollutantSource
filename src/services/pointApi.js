@@ -256,60 +256,70 @@ export async function GetPointEquipmentParameters(params) { //列表显示
 
 
 export async function GetManufacturerList(params) { //设备厂商 列表
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetManufacturerList',params, null);
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetManufacturerList', params, null);
     return result;
-  }
+}
 
 export async function GetMonitoringTypeList(params) { // 获取监测类别
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList',params, null);
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList', params, null);
     return result;
-  }
+}
 
 
 export async function GetSystemModelList(params) { //系统型号
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelList',params, null);
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelList', params, null);
     return result;
-  }
+}
 
 
 export async function GetEquipmentInfoList(params) { //设备信息
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEquipmentInfoList',params, null);
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEquipmentInfoList', params, null);
     return result;
-  }
-  
-  export async function GetMonitoringTypeList2(params) { //设备信息  获取监测类别 
+}
+
+export async function GetMonitoringTypeList2(params) { //设备信息  获取监测类别 
     const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
     return result;
-  }
+}
 
-  export async function GetPollutantById(params) {   //设备信息  获取监测类型
+export async function GetPollutantById(params) {   //设备信息  获取监测类型
     const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
     return result;
-  }
+}
 
-  export async function GetPollutantById2(params) {   //设备信息  获取监测类型
+export async function GetPollutantById2(params) {   //设备信息  获取监测类型
     const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
     return result;
-  }
+}
 
-  export async function GetMonitoringCategoryType(params) {   //设备信息  获取监测类型
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringCategoryType',params,null);
+export async function GetMonitoringCategoryType(params) {   //设备信息  获取监测类型
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringCategoryType', params, null);
     return result;
-  }
+}
 
-  export async function GetPBList(params) {   //设备信息  废气 配备
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPBList',params,null);
+export async function GetPBList(params) {   //设备信息  废气 配备
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPBList', params, null);
     return result;
-  }
+}
 
-  /*******监测点新增功能******* */
-  export async function PointSort(params) {   //监测点排序
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/PointSort',params,null);
+/*******监测点新增功能******* */
+export async function PointSort(params) {   //监测点排序
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/PointSort', params, null);
     return result;
-  }
+}
 
 
-  export async function GetPointCoefficientByDGIMN(params) {   //获取监测点系数
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPointCoefficientByDGIMN?DGIMN='+params.DGIMN,null,null);
+export async function GetPointCoefficientByDGIMN(params) {   //获取监测点系数
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPointCoefficientByDGIMN?DGIMN=' + params.DGIMN, null, null);
     return result;
-  }
+}
+
+
+export async function GetPointElectronicFenceInfo(params) {   //获取电子围栏半径
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPointElectronicFenceInfo', params, null);
+    return result;
+}
+export async function AddOrUpdatePointElectronicFenceInfo(params) {   //电子围栏半径  添加or更新
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdatePointElectronicFenceInfo', params, null);
+    return result;
+}

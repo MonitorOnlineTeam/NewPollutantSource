@@ -132,7 +132,6 @@ const Index = (props) => {
         dataIndex: 'InspectorProblem',
         key: 'InspectorProblem',
         align: 'center',
-
         render: (text, record) => {
           return <div style={{ textAlign: "left" }}>{text}</div>
         },
@@ -155,7 +154,6 @@ const Index = (props) => {
         dataIndex: 'RectificationDescribe',
         key: 'RectificationDescribe',
         align: 'center',
-
         render: (text, record) => {
           return <div style={{ textAlign: "left" }}>{text}</div>
         },

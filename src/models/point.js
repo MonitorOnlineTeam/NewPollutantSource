@@ -14,12 +14,13 @@ import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentNam
     AddPointParamInfo,GetParamInfoList,GetParamCodeList,
     GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetMonitoringTypeList,
     GetManufacturerList,GetSystemModelList,GetPollutantById,GetPollutantById2,GetEquipmentInfoList,GetMonitoringTypeList2,
-    GetMonitoringCategoryType,GetPBList,PointSort,GetPointCoefficientByDGIMN,
+    GetMonitoringCategoryType,GetPBList,PointSort,GetPointCoefficientByDGIMN,GetPointElectronicFenceInfo,AddOrUpdatePointElectronicFenceInfo,
+    
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
 import cuid from 'cuid';
 
-export default Model.extend({
+export default Model.extend({ 
     namespace: 'point',
     state: {
         pollutantType: 'all',
@@ -455,6 +456,23 @@ export default Model.extend({
           *getPointCoefficientByDGIMN({ payload, callback }, { call, put, update }) { //监测点排序
             const result = yield call(GetPointCoefficientByDGIMN, payload);
             if (result.IsSuccess) {
+                callback&&callback(result.Datas)
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *getPointElectronicFenceInfo({ payload, callback }, { call, put, update }) { //获取电子围栏半径
+            const result = yield call(GetPointElectronicFenceInfo, payload);
+            if (result.IsSuccess) {
+                callback&&callback(result.Datas)
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *addOrUpdatePointElectronicFenceInfo({ payload, callback }, { call, put, update }) { // 添加更新电子围栏半径
+            const result = yield call(AddOrUpdatePointElectronicFenceInfo, payload);
+            if (result.IsSuccess) {
+                message.success(result.Message)
                 callback&&callback(result.Datas)
             } else {
               message.error(result.Message)

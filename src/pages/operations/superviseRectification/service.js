@@ -14,8 +14,8 @@ export async function GetInspectorRectificationView(params) {
 }
 
 //督查整改 导出
-export async function ExportInspectorRectificationManageList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportInspectorRectificationManageList',params, null);
+export async function ExportInspectorRectificationManage(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportInspectorRectificationManage',params, null);
   return result;
 }
 //更新 督查整改状态

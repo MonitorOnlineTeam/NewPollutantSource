@@ -29,6 +29,7 @@ import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import { router } from 'umi'
+import {  numVerify } from '@/utils/utils'
 import styles from './index.less';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
@@ -57,6 +58,8 @@ let pointConfigIdEdit = '';
   getParamInfoListLoading: loading.effects['point/getParamInfoList'] || false,
   getPointCoefficientListLoading: loading.effects[`point/getPointCoefficientByDGIMN`] || false,
   addOrEditPointCoefficientLoading: loading.effects['operaAchiev/addOrEditPointCoefficient'],
+  getPointElectronicFenceInfoLoading: loading.effects[`point/getPointElectronicFenceInfo`] || false,
+  addOrUpdatePointElectronicFenceInfoLoading: loading.effects['operaAchiev/addOrUpdatePointElectronicFenceInfo '],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
@@ -104,6 +107,7 @@ export default class MonitorPoint extends Component {
       noPaging: false,
       sortLoading: false,
       loadFlag: false,
+      radiusElectronicFenceVal:'',//电子围栏半径
     };
   }
 
@@ -307,6 +311,14 @@ export default class MonitorPoint extends Component {
         }
       })
 
+    } else if (this.state.tabKey == 6) { //电子围栏半径
+      dispatch({
+        type: 'point/addOrUpdatePointElectronicFenceInfo',
+        payload: {
+          DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
+          Rang: this.state.radiusElectronicFenceVal,
+        },
+      })
     } else {
       form.validateFields((err, values) => {
         if (!err) {
@@ -521,6 +533,9 @@ export default class MonitorPoint extends Component {
   pointCoefficientChange = (value) => { //监测点系数
     this.setState({ pointCoefficientVal: value })
   }
+  radiusElectronicFenceChange = (value) =>{ //电子围栏半径
+    this.setState({ radiusElectronicFenceVal: value })
+  }
   createComponents = (createUserName,createTime,updUserName,updTime) => {
     const {isEdit } = this.state;
     return isEdit&&<Form.Item>
@@ -557,6 +572,24 @@ export default class MonitorPoint extends Component {
       </div>
     </Spin>
   }
+  radiusElectronicFence = () => { //电子围栏半径
+
+    return <Spin spinning={this.props.getPointElectronicFenceInfoLoading}>
+      <div  className={styles.pointCoefficientSty}>
+        <Form.Item label='电子围栏半径' className='inputSty'>
+          <InputNumber  value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入'   onKeyDown={(e) => { this.radiusElectronicChange(e) }} />
+          <span style={{ paddingLeft: 5 }} >KM</span>
+          <span style={{ paddingLeft: 10 }} className='red'>如需修改，请联系管理员</span>
+        </Form.Item>
+        {this.createComponents(this.state.createUserName4,this.state.createTime4,this.state.updUserName4,this.state.updTime4)}
+      </div>
+    </Spin>
+  }
+  radiusElectronicChange = (e) => {
+    const value = e.target.value;
+    this.setState({radiusElectronicFenceVal:value})
+
+}
   equipmentParChange = (val) => {
     this.setState({ equipmentPol: val })
   }
@@ -706,7 +739,7 @@ export default class MonitorPoint extends Component {
 
   loadingStatus = () => {
     const { tabKey } = this.state;
-    const { saveLoadingAdd, saveLoadingEdit, addMonitorPointVerificationLoading, addPointParamInfoLoading, addOrEditPointCoefficientLoading, } = this.props;
+    const { saveLoadingAdd, saveLoadingEdit, addMonitorPointVerificationLoading, addPointParamInfoLoading, addOrEditPointCoefficientLoading,addOrUpdatePointElectronicFenceInfoLoading, } = this.props;
     if (tabKey == 1) {
       return !this.state.isEdit ? saveLoadingAdd : saveLoadingEdit
     }
@@ -720,6 +753,10 @@ export default class MonitorPoint extends Component {
     }
     if (tabKey == 5) { //监测点系数
       return addOrEditPointCoefficientLoading
+
+    }
+    if (tabKey == 6) { //电子围栏半径
+      return addOrUpdatePointElectronicFenceInfoLoading
 
     }
   }
@@ -929,7 +966,21 @@ export default class MonitorPoint extends Component {
                             }
                           })
 
-
+                          this.props.dispatch({ //电子围栏半径 回显数据
+                            type: 'point/getPointElectronicFenceInfo',
+                            payload: {
+                              DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
+                            },
+                            callback: (res) => {
+                              this.setState({
+                                radiusElectronicFenceVal: res ? res.Range : undefined,
+                                createUserName4: res&&res.CreateUser,
+                                createTime4: res&&res.CreateTime,
+                                updUserName4: res&&res.UpdateUser,
+                                updTime: res&&res.UpdateTime,
+                              })
+                            }
+                          })
                         }}
                       >
                         <EditIcon />
@@ -1049,6 +1100,9 @@ export default class MonitorPoint extends Component {
                   </TabPane>
                   <TabPane tab="监测点系数" key="5">
                     {this.getPointCoefficient()}
+                  </TabPane>
+                  <TabPane tab="电子围栏半径" key="6">
+                    {this.radiusElectronicFence()}
                   </TabPane>
                 </Tabs>
 

@@ -353,7 +353,6 @@ export function getAve(arr) { //求平均值
 
 export function numVerify (val,callback)  { //允许输入数字 负数 小数
   const t = val.charAt(0)
-
   if (!(/^([-])?\d+(\.[0-9]{1,2})?$/.test(val))) {
       // 先把非数字的都替换掉，除了数字和.
       val = val.replace(/[^\d.]/g, '')
@@ -370,6 +369,8 @@ export function numVerify (val,callback)  { //允许输入数字 负数 小数
           val = '-' + val
       }
       callback(val)
+  }else{
+    callback(val)
   }
 }
 export function arrDistinctByProp(arr,prop){  //对象数组去重

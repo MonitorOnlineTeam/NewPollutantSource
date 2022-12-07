@@ -1084,6 +1084,13 @@ const Index = (props) => {
       FileActualType: '0',
     },
     listType: "picture-card",
+    beforeUpload : (file) => {
+      const fileType = file?.type; //获取文件类型 type  image/*
+      if(!(/^image/g.test(fileType))){
+        message.error(`请上传图片格式文件!`);
+        return false;
+      }
+    },
     onChange(info) {
       const fileList = info.fileList.map(item=>{
         if(item.response&&item.response.IsSuccess){ //刚上传的
@@ -1092,17 +1099,15 @@ const Index = (props) => {
           return {...item}
         }
       })
-      if (fileType == 1) {
-         setFileList1(fileList) 
-        } else if (fileType == 2) {
-        setFileList2(fileList)
-      } else {
-        setFilesList3({
-          ...filesList3,
-          [filePar]: fileList
-        })
-      }
+
       if (info.file.status === 'done') {
+        if (fileType == 1) {
+          setFileList1(fileList) 
+         } else if (fileType == 2) {
+         setFileList2(fileList)
+        } else {
+         setFilesList3({  ...filesList3,  [filePar]: fileList })
+       }
         if (fileType == 1) {
           form2.setFieldsValue({ files1: filesCuid1 })
         } else if (fileType == 2) {

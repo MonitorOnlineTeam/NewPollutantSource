@@ -526,7 +526,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={8}>
                     <Form.Item label="排放限值" name="EmissionLimits"  rules={[{ required: isReg, message: '' }]}>
-                        <Input  placeholder='请输入' allowClear suffix="mg/m3" onKeyup={(e) => { numCheck(e, 'EmissionLimits') }} />
+                        <Input  placeholder='请输入' allowClear suffix="mg/m3" onKeyUp={(e) => { numCheck(e, 'EmissionLimits') }} />
                     </Form.Item>
                 </Col>
             </Row>

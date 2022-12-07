@@ -53,9 +53,10 @@ export default Model.extend({
       const result = yield call(services.AddOrEditInspectorOperation, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback(result.Datas)
+        callback(result.IsSuccess)
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess)
       }
     },
     *getInspectorOperationView({ payload, callback }, { call, put, update }) { //详情
@@ -88,9 +89,10 @@ export default Model.extend({
       const result = yield call(services.PushInspectorOperation, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback();
+        callback(result.IsSuccess);
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess);
       }
     },
   },

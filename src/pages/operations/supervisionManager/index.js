@@ -25,7 +25,7 @@ import EntType from '@/components/EntType'
 import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import cuid from 'cuid';
-import { getBase64 } from '@/utils/utils';
+import { getBase64, } from '@/utils/utils';
 import Detail from './Detail';
 import Lightbox from "react-image-lightbox-rotate";
 
@@ -171,6 +171,7 @@ const Index = (props) => {
 
 
   const [type, setType] = useState()
+  const [pushFlag, setPushFlag] = useState(true)
 
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
@@ -427,7 +428,7 @@ const Index = (props) => {
     tableForm.resetFields();
     setFilesList0([])
     setDetailLoading(true)
-
+    record.Status == 1 ? setPushFlag(false) : setPushFlag(true)
     form2.setFieldsValue({
       ID: record.ID,
     })
@@ -647,6 +648,7 @@ const Index = (props) => {
     setFromVisible(true)
     setTimeout(() => {
       setType('add')
+      setPushFlag(true)
       setPollutantType("2");
       setDeviceInfoList([])
       form2.resetFields();
@@ -760,11 +762,21 @@ const Index = (props) => {
         InspectorOperationInfoList: [...principleProblemList, ...importanProblemList, ...commonlyProblemList],
         ...devicePar,
       }
-      props.addOrEditInspectorOperation(data, () => {
-        setFromVisible(false)
-        type == 0 ? setSaveLoading0(false) :  type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
-        onFinish()
+
+      if(type==0 || type ==1 ){
+      props.addOrEditInspectorOperation(data, (isSuccess) => {
+        type == 0 ? setSaveLoading0(false) :  type == 1 ? setSaveLoading1(false) : null;
+        isSuccess&&setFromVisible(false)
+        isSuccess&&onFinish()
+
       })
+    }else{ //推送
+      props.pushInspectorOperation({ID:form2.getFieldValue('ID')},(isSuccess)=>{
+           setSaveLoading2(false)
+           isSuccess&&setFromVisible(false)
+           isSuccess&&onFinish()
+      })
+    }
 
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -772,6 +784,7 @@ const Index = (props) => {
 
 
     }
+
   }
 
 
@@ -789,7 +802,6 @@ const Index = (props) => {
       props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
-        console.log(res[0].DGIMN)
         form.setFieldsValue({ DGIMN: res[0].DGIMN })
       })
     }
@@ -1439,6 +1451,23 @@ const Index = (props) => {
       FileActualType: '0',
     },
     listType: "picture-card",
+    beforeUpload : (file) => {
+      const fileType = file?.type; //获取文件类型 type  image/*
+      if(!(/^image/g.test(fileType))){
+        message.error(`请上传图片格式文件!`);
+        return false;
+      }
+      // 将从父组件拿到的accept类型转为数组，类似['.docs','.rar','.zip','.png']
+      // const docsArr = accept?.split(",");
+      // if (!docsArr?.includes(`.${fileDate[0]}`)) {
+      //   message.error(`仅支持文件格式：${accept}格式附件!`);
+      //   return false;
+      // }
+      // if (file.size / 1024 / 1024 > 100) {
+      //   message.error("文件大小不能超过100兆");
+      //   return false;
+      // }
+    },
     onChange(info) {
       const fileList = info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
@@ -1447,8 +1476,9 @@ const Index = (props) => {
           return { ...item }
         }
       })
-      fileType == 0 ? setFilesList0(fileList) : fileType == 1 ? setFilesList1({ ...filesList1, [files1]: fileList }) : fileType == 2 ? setFilesList2({ ...filesList2, [files2]: fileList }) : setFilesList3({ ...filesList3, [files3]: fileList })
+      console.log(info)
       if (info.file.status === 'done') {
+        fileType == 0 ? setFilesList0(fileList) : fileType == 1 ? setFilesList1({ ...filesList1, [files1]: fileList }) : fileType == 2 ? setFilesList2({ ...filesList2, [files2]: fileList }) : setFilesList3({ ...filesList3, [files3]: fileList })
         fileType == 0 ? tableForm.setFieldsValue({ Files: filesCuid0 }) : fileType == 1 ? tableForm.setFieldsValue({ [files1]: filesCuid1() }) : fileType == 2 ? tableForm.setFieldsValue({ [files2]: filesCuid2() }) : tableForm.setFieldsValue({ [files3]: filesCuid3() })
       }
       if (info.file.status === 'error') {
@@ -1528,7 +1558,7 @@ const Index = (props) => {
           <Button type="primary" onClick={() => save(1)} loading={saveLoading1 || detailLoading || pointLoading2 || false} >
             提交
           </Button>,
-          <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || detailLoading || pointLoading2 || false} >
+          !pushFlag&&<Button type="primary"  onClick={() => save(2)} loading={saveLoading2 || detailLoading || pointLoading2 || false} >
             推送
          </Button>,
         ]}

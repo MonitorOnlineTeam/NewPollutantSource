@@ -46,7 +46,7 @@ const dvaPropsData = ({ loading, superviseRectification, global, common, point, 
   userLoading: loading.effects[`common/getUserList`],
   entLoading: common.entLoading,
   clientHeight: global.clientHeight,
-  exportLoading: loading.effects[`${namespace}/exportInspectorRectificationManageList`],
+  exportLoading: loading.effects[`${namespace}/exportInspectorRectificationManage`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -87,9 +87,9 @@ const dvaDispatch = (dispatch) => {
       })
     },
 
-    exportInspectorRectificationManageList: (payload, callback) => { //导出
+    exportInspectorRectificationManage: (payload, callback) => { //导出
       dispatch({
-        type: `${namespace}/exportInspectorRectificationManageList`,
+        type: `${namespace}/exportInspectorRectificationManage`,
         payload: payload,
         callback: callback
       })
@@ -266,7 +266,7 @@ const Index = (props) => {
   const exports = async () => { //导出
     const values = await form.validateFields();
 
-    props.exportInspectorRectificationManageList({
+    props.exportInspectorRectificationManage({
       ...values,
       BTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
       ETime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),

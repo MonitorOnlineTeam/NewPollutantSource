@@ -36,8 +36,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *exportInspectorRectificationManageList({ payload, callback }, { call, put, update }) { //导出
-      const result = yield call(services.ExportInspectorRectificationManageList, payload);
+    *exportInspectorRectificationManage({ payload, callback }, { call, put, update }) { //导出
+      const result = yield call(services.ExportInspectorRectificationManage, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         downloadFile(`${result.Datas}`)

@@ -48,8 +48,9 @@ class index extends PureComponent {
     const content = (
       <Table style={{ fontSize: 20 }} dataSource={dataSource} columns={columns} size="small" bordered={false} pagination={false} />
     );
+    // getPopupContainer={trigger => trigger.parentNode} overlayClassName='popAttachFixWidthSty'
     return (
-      <Popover content={content} title="附件详情" trigger="click">
+      <Popover  content={content} title="附件详情" trigger="click">
         <a onClick={(e) => {
           e.stopPropagation()
         }}>{this.props.noDataNoShow? dataSource&&dataSource[0]&&'查看附件' :  '查看附件'}</a>
