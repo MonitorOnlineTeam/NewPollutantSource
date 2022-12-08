@@ -59,7 +59,7 @@ let pointConfigIdEdit = '';
   getPointCoefficientListLoading: loading.effects[`point/getPointCoefficientByDGIMN`] || false,
   addOrEditPointCoefficientLoading: loading.effects['operaAchiev/addOrEditPointCoefficient'],
   getPointElectronicFenceInfoLoading: loading.effects[`point/getPointElectronicFenceInfo`] || false,
-  addOrUpdatePointElectronicFenceInfoLoading: loading.effects['operaAchiev/addOrUpdatePointElectronicFenceInfo '],
+  addOrUpdatePointElectronicFenceInfoLoading: loading.effects['point/addOrUpdatePointElectronicFenceInfo'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
@@ -163,15 +163,6 @@ export default class MonitorPoint extends Component {
           pointConfigId = `${pointConfigIdEdit}New`;
         }
       }
-      dispatch({
-        type: 'point/getParamCodeList', //设备参数项码表
-        payload: { pollutantType: type },
-        callback: () => { this.setState({ loadFlag: true, }) }
-      });
-      dispatch({
-        type: 'point/getMonitorPointVerificationList', //获取数据核查信息码表
-        payload: { pollutantType: type },
-      });
     } catch (e) {
       // sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
@@ -217,6 +208,9 @@ export default class MonitorPoint extends Component {
       payload: {
         configId: pointConfigIdEdit,
       },
+      callback:()=>{
+        this.setState({ loadFlag: true, })
+      }
     });
   };
 
@@ -316,7 +310,7 @@ export default class MonitorPoint extends Component {
         type: 'point/addOrUpdatePointElectronicFenceInfo',
         payload: {
           DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
-          Rang: this.state.radiusElectronicFenceVal,
+          Range: this.state.radiusElectronicFenceVal,
         },
       })
     } else {
@@ -577,7 +571,7 @@ export default class MonitorPoint extends Component {
     return <Spin spinning={this.props.getPointElectronicFenceInfoLoading}>
       <div  className={styles.pointCoefficientSty}>
         <Form.Item label='电子围栏半径' className='inputSty'>
-          <InputNumber  value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入'   onKeyDown={(e) => { this.radiusElectronicChange(e) }} />
+          <InputNumber min={0.00001} value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入'   onChange={(e) => { this.radiusElectronicChange(e) }} />
           <span style={{ paddingLeft: 5 }} >KM</span>
           <span style={{ paddingLeft: 10 }} className='red'>如需修改，请联系管理员</span>
         </Form.Item>
@@ -585,8 +579,7 @@ export default class MonitorPoint extends Component {
       </div>
     </Spin>
   }
-  radiusElectronicChange = (e) => {
-    const value = e.target.value;
+  radiusElectronicChange = (value) => {
     this.setState({radiusElectronicFenceVal:value})
 
 }
@@ -901,7 +894,7 @@ export default class MonitorPoint extends Component {
                 )}
                 appendHandleRows={row => (
                   <Fragment>
-
+           
 
                     <Tooltip title="编辑">
                       <a
@@ -911,6 +904,10 @@ export default class MonitorPoint extends Component {
                             cuid: getRowCuid(row, 'dbo.T_Bas_CommonPoint.Photo'),
                             FormData: row
                           })
+                          dispatch({
+                            type: 'point/getMonitorPointVerificationList', //获取数据核查信息
+                            payload: { pollutantType: row['dbo.T_Bas_CommonPoint.PollutantType'] },
+                          });
                           this.props.dispatch({ //数据核查 回显数据
                             type: 'point/getMonitorPointVerificationItem',
                             payload: {
@@ -929,7 +926,11 @@ export default class MonitorPoint extends Component {
                               })
                             }
                           })
-
+                          dispatch({
+                            type: 'point/getParamCodeList', //设备参数项
+                            payload: { pollutantType: row['dbo.T_Bas_CommonPoint.PollutantType'],cemsType:row['dbo.T_Bas_CommonPoint.Col4']  },
+                            callback: () => {  }
+                          });
                           this.props.dispatch({ //设备参数项 回显数据
                             type: 'point/getParamInfoList',
                             payload: {
