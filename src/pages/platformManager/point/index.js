@@ -108,6 +108,7 @@ export default class MonitorPoint extends Component {
       sortLoading: false,
       loadFlag: false,
       radiusElectronicFenceVal:'',//电子围栏半径
+      radiusElectronicFlag:true,
     };
   }
 
@@ -571,7 +572,7 @@ export default class MonitorPoint extends Component {
     return <Spin spinning={this.props.getPointElectronicFenceInfoLoading}>
       <div  className={styles.pointCoefficientSty}>
         <Form.Item label='电子围栏半径' className='inputSty'>
-          <InputNumber min={0.00001} value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入'   onChange={(e) => { this.radiusElectronicChange(e) }} />
+          <InputNumber min={0.00001} disabled={!this.state.radiusElectronicFlag} value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入'   onChange={(e) => { this.radiusElectronicChange(e) }} />
           <span style={{ paddingLeft: 5 }} >KM</span>
           <span style={{ paddingLeft: 10 }} className='red'>如需修改，请联系管理员</span>
         </Form.Item>
@@ -960,8 +961,6 @@ export default class MonitorPoint extends Component {
                                 createTime3: res&&res.CreateTime,
                                 updUserName3: res&&res.UpdUserName,
                                 updTime3: res&&res.UpdTime,
-                              })
-                              this.setState({
                                 pointCoefficientFlag: res && res.PointCoefficient ? true : false,
                               })
                             }
@@ -979,6 +978,7 @@ export default class MonitorPoint extends Component {
                                 createTime4: res&&res.CreateTime,
                                 updUserName4: res&&res.UpdateUser,
                                 updTime: res&&res.UpdateTime,
+                                radiusElectronicFlag : res && res.isUpdate ? true : false,
                               })
                             }
                           })

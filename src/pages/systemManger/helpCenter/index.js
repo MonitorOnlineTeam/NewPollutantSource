@@ -30,7 +30,7 @@ const namespace = 'helpCenter'
 
 const dvaPropsData = ({ loading, helpCenter }) => ({
   questTypeTreeData: helpCenter.questTypeTreeData,
-  treeLoading: loading.effects[`${namespace}/getHelpCenterList`],
+  treeLoading: loading.effects[`${namespace}/getQuestionType`],
   listData: helpCenter.questionListData,
   listDataTotal: helpCenter.questionListTotal,
   questionTypeTitle: helpCenter.questionTypeTitle,
@@ -46,9 +46,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getHelpCenterList: (payload, callback) => { //左侧问题数
+    getQuestionType: (payload, callback) => { //左侧问题树
       dispatch({
-        type: `${namespace}/getHelpCenterList`,
+        type: `${namespace}/getQuestionType`,
         payload: payload,
         callback: callback,
       })
@@ -83,7 +83,7 @@ const Index = (props) => {
 
   const [selectedKey, setSelectedKey] = useState([])
   useEffect(() => {
-    props.getHelpCenterList({}, (data) => {
+    props.getQuestionType({}, (data) => {
       const expandedKey = data.map(item => item.key) //默认全部展开
       setExpandedKeys(expandedKey)
       if (data[0] && data[0].children) {

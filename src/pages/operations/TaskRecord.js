@@ -544,6 +544,13 @@ class TaskRecord extends Component {
         },
       },
       {
+        title: '报警类型',
+        dataIndex: 'alarmType',
+        key: 'alarmType',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
         title: '任务状态',
         dataIndex: 'TaskStatus',
         key: 'TaskStatus',

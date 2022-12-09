@@ -37,13 +37,13 @@ export default Model.extend({
         callback&&callback([])
       }
     },
-    *getHelpCenterList({ payload,callback }, { call, put, update }) { //问题类别
-      const result = yield call(services.GetHelpCenterList, payload);
+    *getQuestionType({ payload,callback }, { call, put, update }) { //问题类别
+      const result = yield call(services.GetQuestionType, payload);
       if (result.IsSuccess) {
          if(result.Datas){
-          const data = [result.Datas.appPage,result.Datas.webPage]
-          yield update({  questTypeTreeData :data,  })
-          callback&&callback(data)
+          // const data = [result.Datas.appPage,result.Datas.webPage]
+          yield update({  questTypeTreeData :result.Datas,  })
+          callback&&callback(result.Datas)
          }
       }else{
         message.error(result.Message)
