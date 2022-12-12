@@ -17,7 +17,6 @@ export default Model.extend({
     monitoringTypeList:[],
     manufacturerList:[],
     maxNum:null,
-    helpCenterList:[],
   },
   effects: {
     *getQuestionDetialList({ payload,callback }, { call, put, update }) { //列表
@@ -50,8 +49,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *getHelpCenterList({ payload,callback }, { call, put, update }) { //问题类别
-      const result = yield call(services.GetHelpCenterList, payload);
+    *getQuestionType({ payload,callback }, { call, put, update }) { //问题类别
+      const result = yield call(services.GetQuestionType, payload);
       if (result.IsSuccess) {
         callback(result.Datas)
       }else{

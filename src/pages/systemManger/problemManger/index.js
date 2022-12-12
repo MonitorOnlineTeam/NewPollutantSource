@@ -4,7 +4,7 @@
  * 创建时间：2022.09
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Spin, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Spin, Typography, Card, Cascader, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -18,7 +18,7 @@ import RegionList from '@/components/RegionList'
 import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
-import { Resizable,ResizableBox } from 'react-resizable';
+import { Resizable, ResizableBox } from 'react-resizable';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -37,7 +37,7 @@ const dvaPropsData = ({ loading, problemManger }) => ({
   tableLoading: loading.effects[`${namespace}/getQuestionDetialList`],
   tableTotal: problemManger.tableTotal,
   loadingConfirm: loading.effects[`${namespace}/addOrUpdQuestionDetial`],
-  loadingFirstLevel: loading.effects[`${namespace}/getHelpCenterList`],
+  loadingQuestionType: loading.effects[`${namespace}/getQuestionType`],
   delLoading: loading.effects[`${namespace}/deleteQuestionDetial`],
 })
 
@@ -70,9 +70,9 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    getHelpCenterList: (payload, callback) => { //问题类别
+    getQuestionType: (payload, callback) => { //问题类别
       dispatch({
-        type: `${namespace}/getHelpCenterList`,
+        type: `${namespace}/getQuestionType`,
         payload: payload,
         callback: callback
       })
@@ -124,20 +124,33 @@ const Index = (props) => {
 
   const isEditing = (record) => record.key === editingKey;
 
-  const { tableDatas, tableTotal, tableLoading, loadingConfirm, loadingFirstLevel, delLoading, } = props;
+  const { tableDatas, tableTotal, tableLoading, loadingConfirm, loadingQuestionType, delLoading, } = props;
 
-  const [firstLevelList, setFirstLevelList] = useState([])
-
+  // const [firstLevelList, setFirstLevelList] = useState([])
+  const [questionTypeList, setQuestionTypeList] = useState([])
   useEffect(() => {
     onFinish();
-    props.getHelpCenterList({}, (data) => {
+    props.getQuestionType({}, (data) => {
       if (data) {
-        setFirstLevelList([data.appPage, data.webPage])
+        const questionTypeData = getQuestionTypeData(data,[])
+        setQuestionTypeList(questionTypeData)
       }
     })
 
   }, []);
-
+  const getQuestionTypeData = (data, arr) => { //转换json树的key值
+    if (data && data[0]) {
+       data.map(item => {
+        let obj = { 
+          label: item.title, 
+          value: item.type,
+          children: item.children&&item.children[0]? getQuestionTypeData(item.children,[]) : []
+        }
+        arr.push(obj)
+      })
+      return arr;
+    }
+  }
   const columns = [
     {
       title: '编号',
@@ -211,14 +224,13 @@ const Index = (props) => {
   const edit = async (record) => {
     setFromVisible(true)
     setType('edit')
-    const selectData = firstLevelList.filter(item => item.type == record.FirstLevelID)
-    selectData[0] && setSecondLevelList(selectData[0].children) //二级类别下拉列表赋值
+    // const selectData = firstLevelList.filter(item => item.type == record.FirstLevelID)
+    // selectData[0] && setSecondLevelList(selectData[0].children) //二级类别下拉列表赋值
     form2.resetFields();
     try {
       form2.setFieldsValue({
         ...record,
-        FirstLevel: record.FirstLevelID,
-        SecondLevel: record.SecondLevelID,
+        FirstLevel: record.FirstLevelID ? record.FirstLevelID.split(',') : [],
         Status: record.StatusID,
         BeginTime: record.BeginTime && moment(record.BeginTime),
         EndTime: record.EndTime && moment(record.EndTime),
@@ -262,14 +274,13 @@ const Index = (props) => {
       const values = await form2.validateFields();//触发校验
 
       const contentVal = values.Content.replaceAll(/<p>|[</p>]/g, '').trim();
-
-      console.log(values)
       if ((!contentVal) || contentVal === 'br') {
         message.warning('请输入问题描述')
         return;
       }
       props.addOrUpdQuestionDetial({
         ...values,
+        FirstLevel:values.FirstLevel&&values.FirstLevel.toString(),
       }, () => {
         setFromVisible(false)
         type === 'add' ? onFinish() : onFinish(pageIndex)
@@ -294,18 +305,18 @@ const Index = (props) => {
   }
   const [secondLevelList, setSecondLevelList] = useState([])
   const onAddEditValuesChange = (hangedValues, allValues) => { //添加修改时
-    if (Object.keys(hangedValues).join() == 'FirstLevel') { //获取二级类别
-      form2.setFieldsValue({ SecondLevel: undefined })
-      const selectData = firstLevelList.filter(item => item.type == hangedValues.FirstLevel)
-      selectData[0] && setSecondLevelList(selectData[0].children)
-    }
+    // if (Object.keys(hangedValues).join() == 'FirstLevel') { //获取二级类别
+    //   form2.setFieldsValue({ SecondLevel: undefined })
+    //   const selectData = firstLevelList.filter(item => item.type == hangedValues.FirstLevel)
+    //   selectData[0] && setSecondLevelList(selectData[0].children)
+    // }
   }
   const handleTableChange = async (PageIndex, PageSize) => { //分页
     setPageSize(PageSize)
     setPageIndex(PageIndex)
     onFinish(PageIndex, PageSize)
   }
-  const handleResize =  (e, { size }) => {
+  const handleResize = (e, { size }) => {
     // console.log(size)
   };
 
@@ -382,7 +393,7 @@ const Index = (props) => {
                 <TextArea showCount maxLength={50} rows={1} placeholder='请输入' />
               </Form.Item>
             </Col>
-            <Col span={24}>
+            {/* <Col span={24}>
               <Spin size='small' spinning={loadingFirstLevel} style={{ top: -5 }}>
                 <Form.Item label="一级类别" name="FirstLevel" rules={[{ required: true, message: '请选择一级类别' }]}>
 
@@ -406,18 +417,25 @@ const Index = (props) => {
                   }
                 </Select>
               </Form.Item>
+            </Col> */}
+            <Col span={24}>
+              <Spin size='small' spinning={loadingQuestionType} style={{ top: -5 }}>
+                <Form.Item label="问题类别" name="FirstLevel" rules={[{ required: true, message: '请选择二级类别' }]}>
+                  <Cascader options={questionTypeList} />
+                </Form.Item>
+              </Spin>
             </Col>
             <Col span={24}>
-              <ResizableBox 
-                  height={260}     
-                  axis = {'y'}
-                  minConstraints={['100%', 120]}
-                  onResize={handleResize}
-                  className={'resizable_quill_sty'}
-                > 
-              <Form.Item label="答案描述" name='Content' rules={[{ required: true, message: '请输入答案描述' }]}>
-                <ReactQuill  theme="snow" modules={modules}  />
-               </Form.Item>
+              <ResizableBox
+                height={260}
+                axis={'y'}
+                minConstraints={['100%', 120]}
+                onResize={handleResize}
+                className={'resizable_quill_sty'}
+              >
+                <Form.Item label="答案描述" name='Content' rules={[{ required: true, message: '请输入答案描述' }]}>
+                  <ReactQuill theme="snow" modules={modules} />
+                </Form.Item>
               </ResizableBox >
             </Col>
             <Col span={24}>

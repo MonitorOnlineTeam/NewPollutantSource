@@ -84,15 +84,20 @@ const Index = (props) => {
   const [selectedKey, setSelectedKey] = useState([])
   useEffect(() => {
     props.getQuestionType({}, (data) => {
-      const expandedKey = data.map(item => item.key) //默认全部展开
-      setExpandedKeys(expandedKey)
-      if (data[0] && data[0].children) {
-        const selectKey = data[0].children[0].key
-        setSelectedKey([selectKey]) //默认选中第一个
+      // const expandedKey = data.map(item =>{
+      //   if(item.children&&item.children[0]){
+
+      //   }
+      // }) 
+      const defaultExpandedKeys =  getExpandedKey(data, []) //默认全部展开
+      setExpandedKeys(defaultExpandedKeys)
+      if (data[2] && data[2].children && data[2].children[0].children[0]) {
+        const selectKey = data[2].children[0].children[0].key
+        setSelectedKey([selectKey]) //默认选中 平台使用
         props.updateState({
-          questionTypeTitle: data[0].children[0].title && data[0].children[0].title,
-          questTypeFirstLevel: data[0].type,
-          questTypeSecondLevel: data[0].children[0].type,
+          questionTypeTitle: data[2].children[0].children[0].title,
+          questTypeFirstLevel: data[2].children[0].type,
+          questTypeSecondLevel: data[2].children[0].children[0].type,
         })
       }
     })
@@ -101,9 +106,21 @@ const Index = (props) => {
 
 
 
+  const getExpandedKey = (arr, arrKey) => {
+    //没有则跳出
+    if (!(arr[0] && arr[0].key)) {
+      return arrKey;
+    } else {
+      //有就放入
+      arr.filter(item => {
+        arrKey.push(item.key);
+        getExpandedKey(item.children, arrKey);//再次递归
+      })
 
+    }
+    return arrKey;
 
-
+  }
 
   const treeDatas = (data, i, parent) => {
     if (data && data.length > 0) {
@@ -112,7 +129,7 @@ const Index = (props) => {
         return {
           ...item,
           titles: item.title,
-          title: i == 1 ? <Row style={{ backgroundColor: '#fff', padding: '4px 0 4px 24px',borderBottom:'1px solid #f0f0e0', }}> {item.title} </Row> : <Row align='middle' style={ item.title=='常见问题'? { margin:'12px 0  3px 0', } : {margin: '3px 0 12px 0', }}><span className={'dotSty'} style={{ display: 'inline-block', width: 5, height: 5, borderRadius: 5, marginRight: 6, }}></span>{item.title}</Row>,
+          title: i == 1 ? <Row style={{ backgroundColor: '#fff', padding: '4px 0 4px 38px', borderBottom: '1px solid #f0f0e0', }}> {item.title} </Row> : <Row align='middle' style={{ paddingLeft: 24, lineHeight: '36px',}} ><span className={'dotSty'} style={{ display: 'inline-block', width: 5, height: 5, borderRadius: 5, marginRight: 6, marginLeft: (i - 1) * 10 }}></span> {item.title}</Row>,
           // selectable:i==1? false : true ,
           parentTitle: parent && parent.title,
           parentType: parent && parent.type,
@@ -127,13 +144,13 @@ const Index = (props) => {
   const [expandedKeys, setExpandedKeys] = useState([])
   const onSelect = (selectedKeys, info) => {
     if (info.node.children && info.node.children[0]) {
-      if(info.node.expanded){ //展开状态 再次点击收缩
-       const expandData =  expandedKeys.filter(item=>item!=selectedKeys)
-       setExpandedKeys(expandData)
-      }else{
+      if (info.node.expanded) { //展开状态 再次点击收缩
+        const expandData = expandedKeys.filter(item => item != selectedKeys)
+        setExpandedKeys(expandData)
+      } else {
         setExpandedKeys([...expandedKeys, ...selectedKeys])
       }
-     
+
       return;
     }
 
@@ -210,10 +227,11 @@ const Index = (props) => {
                   treeData={treeDatas(questTypeTreeData, 0)}
                   // defaultExpandAll
                   expandedKeys={expandedKeys}
+                  blockNode
                 />
               </Skeleton>
             </div>
-            <div style={{ width: 'calc(100% - 122px)', }}>
+            <div style={{ width: 'calc(100% - 165px)', }}>
               {selectedKey && selectedKey[0] ? <QueList listLoading={listLoading} pageIndex={pageIndex} pageSize={pageSize} handleListChange={handleListChange} /> : <Empty style={{ height: 223, backgroundColor: '#fff', margin: 0, marginLeft: 14, paddingTop: 60, }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
             </div>
 
