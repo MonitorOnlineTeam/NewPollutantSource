@@ -34,7 +34,7 @@ const dvaPropsData = ({ loading, helpCenter }) => ({
   listData: helpCenter.questionListData,
   listDataTotal: helpCenter.questionListTotal,
   questionTypeTitle: helpCenter.questionTypeTitle,
-  questTypeFirstLevel: helpCenter.questTypeFirstLevel,
+  // questTypeFirstLevel: helpCenter.questTypeFirstLevel,
   questTypeSecondLevel: helpCenter.questTypeSecondLevel,
 })
 
@@ -84,11 +84,6 @@ const Index = (props) => {
   const [selectedKey, setSelectedKey] = useState([])
   useEffect(() => {
     props.getQuestionType({}, (data) => {
-      // const expandedKey = data.map(item =>{
-      //   if(item.children&&item.children[0]){
-
-      //   }
-      // }) 
       const defaultExpandedKeys =  getExpandedKey(data, []) //默认全部展开
       setExpandedKeys(defaultExpandedKeys)
       if (data[2] && data[2].children && data[2].children[0].children[0]) {
@@ -96,7 +91,7 @@ const Index = (props) => {
         setSelectedKey([selectKey]) //默认选中 平台使用
         props.updateState({
           questionTypeTitle: data[2].children[0].children[0].title,
-          questTypeFirstLevel: data[2].children[0].type,
+          // questTypeFirstLevel: data[2].children[0].type,
           questTypeSecondLevel: data[2].children[0].children[0].type,
         })
       }
@@ -143,6 +138,7 @@ const Index = (props) => {
 
   const [expandedKeys, setExpandedKeys] = useState([])
   const onSelect = (selectedKeys, info) => {
+    console.log(info)
     if (info.node.children && info.node.children[0]) {
       if (info.node.expanded) { //展开状态 再次点击收缩
         const expandData = expandedKeys.filter(item => item != selectedKeys)
@@ -150,7 +146,6 @@ const Index = (props) => {
       } else {
         setExpandedKeys([...expandedKeys, ...selectedKeys])
       }
-
       return;
     }
 
@@ -158,7 +153,7 @@ const Index = (props) => {
     const data = info.node;
     props.updateState({
       questionTypeTitle: data.titles,
-      questTypeFirstLevel: data.parentType,
+      // questTypeFirstLevel: data.parentType,
       questTypeSecondLevel: data.type,
     })
   };
@@ -171,11 +166,11 @@ const Index = (props) => {
   const [searchContent, setSearchContent] = useState()
 
   useEffect(() => {
-    if (questTypeFirstLevel && questTypeSecondLevel) {
+    if (questTypeSecondLevel) {
       getQuestionDetialListFun(pageIndex, pageSize, searchContent);
     }
 
-  }, [questTypeFirstLevel, questTypeSecondLevel,]);
+  }, [questTypeSecondLevel,]);
 
   const [id, setId] = useState()
 
@@ -194,8 +189,9 @@ const Index = (props) => {
       pageIndex: pageIndexs,
       pageSize: pageSizes,
       QuestionName: questionName,
-      firstLevel: questTypeFirstLevel,
-      secondLevel: questTypeSecondLevel,
+      firstLevel:questTypeSecondLevel,
+      // firstLevel: questTypeFirstLevel,
+      // secondLevel: questTypeSecondLevel,
     }, () => { setListLoading(false) })
   }
 
@@ -212,7 +208,6 @@ const Index = (props) => {
     setPageIndex(PageIndex)
     getQuestionDetialListFun(PageIndex, PageSize)
   }
-
   return (
     <div className={styles.helpCenterSty}>
       <BreadcrumbWrapper>

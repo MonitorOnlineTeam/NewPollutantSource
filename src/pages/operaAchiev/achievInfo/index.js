@@ -6,7 +6,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Tag, Tabs, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined,ProfileOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -31,12 +31,15 @@ const namespace = 'operaAchiev'
 const dvaPropsData = ({ loading, operaAchiev, global }) => ({
   tableTotal: operaAchiev.personalPerformanceRateTotal,
   tableDatas: operaAchiev.personalPerformanceRateList,
-  tableLoading:loading.effects[`${namespace}/getPersonalPerformanceRateList`],
-  tableDatas2: operaAchiev.personalPerformanceRateList,
-  tableLoading2:loading.effects[`${namespace}/getPersonalPerformanceRateList`],
-  historyOperationInfo:operaAchiev.historyOperationInfo,
-  historyOperationInfoLoading: operaAchiev.historyProjectRelationLoading,
+  tableLoading: loading.effects[`${namespace}/getPersonalPerformanceRateList`],
   exportLoading: loading.effects[`${namespace}/exportPersonalPerformanceRate`],
+  historyOperationInfo: operaAchiev.historyOperationInfo,
+  historyOperationInfoLoading: operaAchiev.historyProjectRelationLoading,
+  tableTotal2: operaAchiev.personalPerformanceRateInfoTotal,
+  tableDatas2: operaAchiev.personalPerformanceRateInfoList,
+  tableLoading2: loading.effects[`${namespace}/getPersonalPerformanceRateInfoList`],
+  exportLoading2: loading.effects[`${namespace}/exportPersonalPerformanceRateInfo`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -47,18 +50,30 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getPersonalPerformanceRateList: (payload) => { //列表
+    getPersonalPerformanceRateList: (payload) => { //绩效汇总 列表
       dispatch({
-          type: `${namespace}/getPersonalPerformanceRateList`,
-          payload: payload,
+        type: `${namespace}/getPersonalPerformanceRateList`,
+        payload: payload,
       })
-  },
-    exportPersonalPerformanceRate: (payload) => { //导出
+    },
+    exportPersonalPerformanceRate: (payload) => { //绩效汇总 导出
       dispatch({
-          type: `${namespace}/exportPersonalPerformanceRate`,
-          payload: payload
+        type: `${namespace}/exportPersonalPerformanceRate`,
+        payload: payload
       })
-  },
+    },
+    getPersonalPerformanceRateInfoList: (payload) => { //绩效明细 列表
+      dispatch({
+        type: `${namespace}/getPersonalPerformanceRateInfoList`,
+        payload: payload,
+      })
+    },
+    exportPersonalPerformanceRateInfo: (payload) => { //绩效明细 导出
+      dispatch({
+        type: `${namespace}/exportPersonalPerformanceRateInfo`,
+        payload: payload
+      })
+    },
   }
 }
 
@@ -67,32 +82,34 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const {tableTotal, tableDatas, tableLoading,tableDatas2,tableLoading2, exportLoading } = props;
+  const { tableTotal, tableDatas, tableLoading, exportLoading, tableTotal2, tableDatas2, tableLoading2, exportLoading2, } = props;
 
-   useEffect(()=>{
-    onFinish(pageIndex,pageSize)
-   },[])
+  useEffect(() => {
+    onFinish(pageIndex, pageSize)
+    onFinish2(pageIndex2, pageSize2)
+
+  }, [])
 
   const columns = [
     {
-        title: '序号',
-        align: 'center',
-        width: 50,
-        render: (text, record, index) => {
-            return index + 1;
-        }
+      title: '序号',
+      align: 'center',
+      width: 50,
+      render: (text, record, index) => {
+        return index + 1;
+      }
     },
     {
-        title: '员工编号',
-        dataIndex: 'UserAccount',
-        key: 'UserAccount',
-        align: 'center',
+      title: '员工编号',
+      dataIndex: 'UserAccount',
+      key: 'UserAccount',
+      align: 'center',
     },
     {
-        title: '姓名',
-        dataIndex: 'UserName',
-        key: 'UserName',
-        align: 'center',
+      title: '姓名',
+      dataIndex: 'UserName',
+      key: 'UserName',
+      align: 'center',
     },
     {
       title: '非驻场',
@@ -118,171 +135,161 @@ const Index = (props) => {
       children: [
         {
           title: '污染源气绩效套数',
-          dataIndex: 'GasPerformance',
-          key: 'GasPerformance',
+          dataIndex: 'GasPerformanceZ',
+          key: 'GasPerformanceZ',
           align: 'center'
         },
         {
           title: '污染源水绩效套数',
-          dataIndex: 'WaterPerformance',
-          key: 'WaterPerformance',
+          dataIndex: 'WaterPerformanceZ',
+          key: 'WaterPerformanceZ',
           align: 'center'
         },
       ]
     },
 
     {
-        title: <span>操作</span>,
-        dataIndex: 'x',
-        key: 'x',
-        align: 'center',
-        render: (text, record) => {
-            return <span>
-                <Fragment>
-                    <Tooltip title="详情">
-                        <a  onClick={()=>{detail(record)}}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
-                    </Tooltip>
-                </Fragment>
-            </span>
-        }
+      title: <span>操作</span>,
+      align: 'center',
+      render: (text, record) => {
+        return <span>
+          <Fragment>
+            <Tooltip title="详情">
+              <a onClick={() => { detail(record) }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
+            </Tooltip>
+          </Fragment>
+        </span>
+      }
     },
-];
+  ];
 
-const columns2 = [
-  {
-    title: '序号',
-    align: 'center',
-    width: 50,
-    render: (text, record, index) => {
-      return index + 1;
-    }
-  },
-  {
-    title: '省份',
-    dataIndex: 'UserAccount',
-    key: 'UserAccount',
-    align: 'center',
-  },
-  {
-    title: '地级市',
-    dataIndex: 'UserName',
-    key: 'UserName',
-    align: 'center',
-  },
-  {
-    title: '运维项目号',
-    dataIndex: 'GasPerformance',
-    key: 'GasPerformance',
-    align: 'center'
-  },
-  {
-    title: '项目名称',
-    dataIndex: 'WaterPerformance',
-    key: 'WaterPerformance',
-    align: 'center'
-  },
-  {
-    title: '企业名称',
-    dataIndex: 'GasPerformance',
-    key: 'GasPerformance',
-    align: 'center'
-  },
-  {
-    title: '站点名称',
-    dataIndex: 'WaterPerformance',
-    key: 'WaterPerformance',
-    align: 'center'
-  },
-  {
-    title: 'MN号',
-    dataIndex: 'GasPerformance',
-    key: 'GasPerformance',
-    align: 'center'
-  },
-  {
-    title: '分类',
-    dataIndex: 'WaterPerformance',
-    key: 'WaterPerformance',
-    align: 'center'
-  },
-  {
-    title: '设备类别系数',
-    dataIndex: 'GasPerformance',
-    key: 'GasPerformance',
-    align: 'center'
-  },
-  {
-    title: '巡检周期',
-    dataIndex: 'WaterPerformance',
-    key: 'WaterPerformance',
-    align: 'center'
-  },
-  {
-    title: '巡检周期系数',
-    dataIndex: 'GasPerformance',
-    key: 'GasPerformance',
-    align: 'center'
-  },
-  {
-    title: '实际运维人员',
-    dataIndex: 'WaterPerformance',
-    key: 'WaterPerformance',
-    align: 'center'
-  },
-  {
-    title: '工号',
-    dataIndex: 'GasPerformance',
-    key: 'GasPerformance',
-    align: 'center'
-  },
-  {
-    title: '个人分摊套数/点位数',
-    dataIndex: 'WaterPerformance',
-    key: 'WaterPerformance',
-    align: 'center'
-  },
-  {
-    title: '工单完成比例',
-    dataIndex: 'GasPerformance',
-    key: 'GasPerformance',
-    align: 'center'
-  }, 
-  {
-    title: '执行比例',
-    dataIndex: 'GasPerformance',
-    key: 'GasPerformance',
-    align: 'center'
-  }, 
-  {
-    title: '绩效套数',
-    dataIndex: 'GasPerformance',
-    key: 'GasPerformance',
-    align: 'center'
-  },
-  {
-    title: <span>操作</span>,
-    dataIndex: 'x',
-    key: 'x',
-    align: 'center',
-    render: (text, record) => {
-      return <span>
-        <Fragment>
-          <Tooltip title="详情">
-            <a onClick={() => { detail(record) }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
-          </Tooltip>
-        </Fragment>
-      </span>
-    }
-  },
-];
-  const onFinish = async (pageIndexs,pageSizes) => {  //查询
+  const columns2 = [
+    {
+      title: '序号',
+      align: 'center',
+      width: 50,
+      render: (text, record, index) => {
+        return index + 1;
+      }
+    },
+    {
+      title: '省份',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
+      align: 'center',
+    },
+    {
+      title: '地级市',
+      dataIndex: 'CityName',
+      key: 'CityName',
+      align: 'center',
+    },
+    {
+      title: '运维项目号',
+      dataIndex: 'ProjectCode',
+      key: 'ProjectCode',
+      align: 'center'
+    },
+    {
+      title: '项目名称',
+      dataIndex: 'ProjectName',
+      key: 'ProjectName',
+      align: 'center'
+    },
+    {
+      title: '企业名称',
+      dataIndex: 'EntName',
+      key: 'EntName',
+      align: 'center'
+    },
+    {
+      title: '站点名称',
+      dataIndex: 'PointName',
+      key: 'PointName',
+      align: 'center'
+    },
+    {
+      title: 'MN号',
+      dataIndex: 'DGIMN',
+      key: 'DGIMN',
+      align: 'center'
+    },
+    {
+      title: '分类',
+      dataIndex: 'PollutantTypeName',
+      key: 'PollutantTypeName',
+      align: 'center'
+    },
+    {
+      title: '设备类别系数',
+      dataIndex: 'PointCoefficient',
+      key: 'PointCoefficient',
+      align: 'center'
+    },
+    {
+      title: '巡检周期',
+      dataIndex: 'InspectionTypeName',
+      key: 'InspectionTypeName',
+      align: 'center'
+    },
+    {
+      title: '巡检周期系数',
+      dataIndex: 'RecordCoefficient',
+      key: 'RecordCoefficientx',
+      align: 'center'
+    },
+    {
+      title: '实际运维人员',
+      dataIndex: 'UserName',
+      key: 'UserName',
+      align: 'center'
+    },
+    {
+      title: '工号',
+      dataIndex: 'UserAccount',
+      key: 'UserAccount',
+      align: 'center'
+    },
+    {
+      title: '工单完成比例',
+      dataIndex: 'OrderExecutionRatio',
+      key: 'OrderExecutionRatio',
+      align: 'center'
+    },
+    {
+      title: '执行比例',
+      dataIndex: 'ExecutionRatio',
+      key: 'ExecutionRatio',
+      align: 'center'
+    },
+    {
+      title: '绩效套数',
+      dataIndex: 'UserCoefficient',
+      key: 'UserCoefficient',
+      align: 'center'
+    },
+    {
+      title: <span>操作</span>,
+      align: 'center',
+      render: (text, record) => {
+        return <span>
+          <Fragment>
+            <Tooltip title="详情">
+              <a onClick={() => { detail(record,'isDetailed') }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
+            </Tooltip>
+          </Fragment>
+        </span>
+      }
+    },
+  ];
+  const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
       setPageIndex(pageIndexs)
       const par = {
         ...values,
-        pageIndex:pageIndexs,
-        pageSize:pageSizes,
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
         Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
       }
       props.getPersonalPerformanceRateList({ ...par })
@@ -290,15 +297,16 @@ const columns2 = [
       console.log('Failed:', errorInfo);
     }
   }
-  const onFinish2 = async () => {  //查询 绩效明细
+  const onFinish2 = async (pageIndexs,pageSizes) => {  //查询 绩效明细
     try {
-      const values = await form.validateFields();
+      const values = await form2.validateFields();
       const par = {
         ...values,
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
         Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
-        UserId: userId,
       }
-      props.getPersonalPerformanceRateList({ ...par })
+      props.getPersonalPerformanceRateInfoList({ ...par })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -306,10 +314,19 @@ const columns2 = [
 
   const [pageSize, setPageSize] = useState(20)
   const [pageIndex, setPageIndex] = useState(1)
-  const handleTableChange = (PageIndex, PageSize) => { //详情分页
-      setPageIndex(PageIndex)
-      setPageSize(PageSize)
-      onFinish(PageIndex,PageSize)
+  const handleTableChange = (PageIndex, PageSize) => { //绩效汇总 分页
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+    onFinish(PageIndex, PageSize)
+
+  }
+
+  const [pageSize2, setPageSize2] = useState(20)
+  const [pageIndex2, setPageIndex2] = useState(1)
+  const handleTableChange2 = (PageIndex, PageSize) => { //绩效明细 分页
+    setPageIndex2(PageIndex)
+    setPageSize2(PageSize)
+    onFinish2(PageIndex, PageSize)
 
   }
 
@@ -317,15 +334,22 @@ const columns2 = [
   const [title, setTitle] = useState(null)
   const [detailPar, setDetailPar] = useState(null)
 
-  const detail = (record) =>{
-      setVisible(true)
+  const detail = (record,type) => {
+    setVisible(true)
+    if(type === 'isDetailed'){
+      setDetailPar({
+        ID: record.ID,
+      })
+    }else{
       setDetailPar({
         Month: form.getFieldValue('Month').format("YYYY-MM-01 00:00:00"),
         UserAccount: record.UserAccount,
-        UserName:record.UserName,
+        UserName: record.UserName,
         UserId: record.UserId,
       })
-      setTitle(`${record.UserName}`)  
+    }
+
+    setTitle(`${record.UserName}`)
   }
 
 
@@ -335,15 +359,15 @@ const columns2 = [
       ...values,
       Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
     }
-    props.exportPersonalPerformanceRate({...par})
-};
-  const exports2 =  () => {
-    const values =  form.getFieldsValue();
+    props.exportPersonalPerformanceRate({ ...par })
+  };
+  const exports2 = () => {
+    const values = form.getFieldsValue();
     const par = {
       ...values,
       Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
     }
-    props.exportPersonalPerformanceRate({ ...par })
+    props.exportPersonalPerformanceRateInfo({ ...par })
   };
 
 
@@ -352,7 +376,7 @@ const columns2 = [
       name="advanced_search"
       form={form}
       layout='inline'
-      onFinish={() => { onFinish(1,pageSize) }}
+      onFinish={() => { onFinish(1, pageSize) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
@@ -375,9 +399,9 @@ const columns2 = [
         <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}  >
           重置
       </Button>
-        <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
-          导出
-     </Button>
+      <Button icon={<ExportOutlined />} loading={exportLoading2} onClick={() => { exports() }}>
+            导出
+      </Button>
       </Form.Item>
 
     </Form>
@@ -386,54 +410,54 @@ const columns2 = [
   const searchComponents2 = () => {
     return <Form
       name="advanced_search2"
-    
+
       form={form2}
-      onFinish={() => { onFinish2() }}
+      onFinish={() => { onFinish2(1, pageSize2) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
     >
 
       <Row>
-      <Form.Item label='统计月份' name='Month'   className='form2ItemWidth'>
-        <DatePicker picker="month" allowClear={false} style={{width:200}}/>
-      </Form.Item>
-      <Form.Item label='员工编号' name='aa'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item label='姓名' name='bb' className='form2ItemWidth'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
+        <Form.Item label='统计月份' name='Month' className='form2ItemWidth'>
+          <DatePicker picker="month" allowClear={false} style={{ width: 200 }} />
+        </Form.Item>
+        <Form.Item label='员工编号' name='UserAccount'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item label='姓名' name='UserName' className='form2ItemWidth'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
       </Row>
-      <Row style={{marginTop:6}}>
-      <Form.Item label='运维项目号' name='cc'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item label='企业名称' name='dd'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item label='监测点名称' name='ee'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item style={{ marginBottom: 0 }}>
-        <Button type="primary" htmlType="submit" loading={tableLoading2}>
-          查询
+      <Row style={{ marginTop: 6 }}>
+        <Form.Item label='运维项目号' name='ProjectNum'  className='form2ItemWidth'>
+          <Input placeholder='请输入' allowClear={true}/>
+        </Form.Item>
+        <Form.Item label='企业名称' name='EntName'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item label='监测点名称' name='PointName' className='form2ItemWidth'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Button type="primary" htmlType="submit" loading={tableLoading2}>
+            查询
       </Button>
-        <Button style={{ margin: '0 8px', }} onClick={() => { form2.resetFields(); }}  >
-          重置
-      </Button>
-        <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports2() }}>
-          导出
-     </Button>
-      </Form.Item>
+          <Button style={{ margin: '0 8px', }} onClick={() => { form2.resetFields(); }}  >
+            重置
+         </Button>
+          <Button icon={<ExportOutlined />} loading={exportLoading2} onClick={() => { exports2() }}>
+            导出
+         </Button>
+        </Form.Item>
       </Row>
     </Form>
   }
 
   return (
-    <div  className={styles.achievQuerySty}>
+    <div className={styles.achievQuerySty}>
       <BreadcrumbWrapper>
-        <Tabs tabPosition='left' style={{ marginTop: 16 }}>
+       <Tabs tabPosition='left' style={{ marginTop: 16 }}>
           <TabPane tab="绩效汇总" key="1">
             <Card title={searchComponents()}>
 
@@ -442,7 +466,14 @@ const columns2 = [
                 bordered
                 dataSource={tableDatas}
                 columns={columns}
-                pagination={false}
+                pagination={{
+                  total: tableTotal,
+                  pageSize: pageSize,
+                  current: pageIndex,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange,
+                }}
               />
             </Card>
           </TabPane>
@@ -454,7 +485,14 @@ const columns2 = [
                 bordered
                 dataSource={tableDatas2}
                 columns={columns2}
-                pagination={false}
+                pagination={{
+                  total: tableTotal2,
+                  pageSize: pageSize2,
+                  current: pageIndex2,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange2,
+                }}
               />
             </Card>
           </TabPane>
@@ -466,16 +504,19 @@ const columns2 = [
           onCancel={() => { setVisible(false) }}
           destroyOnClose
           width='95%'
-          // centered
+        // centered
         >
-          <Tabs tabPosition='left'>
+         {detailPar&&detailPar.ID?  //绩效明细
+           <PersonalWorkInfo props detailPar={detailPar} />
+           :
+           <Tabs tabPosition='left'>
             <TabPane tab="个人分摊套数" key="1">
-              <PersonalShare props  detailPar={detailPar} />
+              <PersonalShare props detailPar={detailPar} />
             </TabPane>
             <TabPane tab='个人工单信息' key="2">
-              <PersonalWorkInfo props detailPar={detailPar}/>
+              <PersonalWorkInfo props detailPar={detailPar} />
             </TabPane>
-          </Tabs>
+          </Tabs>}
         </Modal>
       </BreadcrumbWrapper>
 

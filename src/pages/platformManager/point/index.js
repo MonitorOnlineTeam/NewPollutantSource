@@ -29,7 +29,7 @@ import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import { router } from 'umi'
-import {  numVerify } from '@/utils/utils'
+import { numVerify } from '@/utils/utils'
 import styles from './index.less';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
@@ -107,8 +107,8 @@ export default class MonitorPoint extends Component {
       noPaging: false,
       sortLoading: false,
       loadFlag: false,
-      radiusElectronicFenceVal:'',//电子围栏半径
-      radiusElectronicFlag:true,
+      radiusElectronicFenceVal: '',//电子围栏半径
+      radiusElectronicFlag: true,
     };
   }
 
@@ -209,7 +209,7 @@ export default class MonitorPoint extends Component {
       payload: {
         configId: pointConfigIdEdit,
       },
-      callback:()=>{
+      callback: () => {
         this.setState({ loadFlag: true, })
       }
     });
@@ -315,7 +315,7 @@ export default class MonitorPoint extends Component {
         },
       })
     } else {
-      form.validateFields((err, values) => {
+      form.validateFields((err, values) => { //监测点
         if (!err) {
           const FormData = handleFormData(values);
           if (!Object.keys(FormData).length) {
@@ -349,12 +349,12 @@ export default class MonitorPoint extends Component {
                     },
                   });
                 }
+                this.setState({
+                  FormData: { ...FormData, },
+                })
               },
             },
           });
-          this.setState({
-            FormData: { ...FormData, },
-          })
         }
       });
     }
@@ -459,7 +459,7 @@ export default class MonitorPoint extends Component {
    */
   onTabPaneChange = (key) => {
 
-    const { selectedPointCode, FormData } = this.state;
+    const { selectedPointCode, FormData, } = this.state;
     if (key != "1") {
 
       if (this.state.selectedPointCode || FormData) {
@@ -469,6 +469,32 @@ export default class MonitorPoint extends Component {
         //     configId: 'service_StandardLibrary',
         //   },
         //  });
+        if (key == "4") { //设备参数项
+          this.props.dispatch({
+            type: 'point/getParamCodeList', //获取
+            payload: {
+              pollutantType: FormData['dbo.T_Bas_CommonPoint.PollutantType'] || FormData['PollutantType'],
+              cemsType: FormData['dbo.T_Bas_CommonPoint.Col4'] || FormData['Col4'],
+            },
+            callback: () => { }
+          });
+          this.props.dispatch({ //回显数据
+            type: 'point/getParamInfoList',
+            payload: {
+              DGIMN: FormData['dbo.T_Bas_CommonPoint.DGIMN'] || FormData['DGIMN'],
+              pollutantType: FormData['dbo.T_Bas_CommonPoint.PollutantType'] || FormData['PollutantType'],
+            },
+            callback: (codeList, res) => {
+              this.setState({
+                equipmentPol: codeList && codeList[0] ? codeList : undefined,
+                createUserName2: res && res[0] && res[0].CreateUserName,
+                createTime2: res && res[0] && res[0].CreateTime,
+                updUserName2: res && res[0] && res[0].UpdUserName,
+                updTime2: res && res[0] && res[0].UpdTime,
+              })
+            }
+          })
+        }
       } else {
         message.error("请先保存站点信息！")
         return;
@@ -506,7 +532,7 @@ export default class MonitorPoint extends Component {
           <InputNumber style={{ width: '50%', }} value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange} />
           <span style={{ color: '#f5222d', paddingLeft: 10 }}>填写现场监测点数据转发到几个监控平台，请填写数量。</span>
         </Form.Item>
-        {this.createComponents(this.state.createUserName1,this.state.createTime1,this.state.updUserName1,this.state.updTime1)}
+        {this.createComponents(this.state.createUserName1, this.state.createTime1, this.state.updUserName1, this.state.updTime1)}
       </div>
     </Spin>
   }
@@ -528,12 +554,12 @@ export default class MonitorPoint extends Component {
   pointCoefficientChange = (value) => { //监测点系数
     this.setState({ pointCoefficientVal: value })
   }
-  radiusElectronicFenceChange = (value) =>{ //电子围栏半径
+  radiusElectronicFenceChange = (value) => { //电子围栏半径
     this.setState({ radiusElectronicFenceVal: value })
   }
-  createComponents = (createUserName,createTime,updUserName,updTime) => {
-    const {isEdit } = this.state;
-    return isEdit&&<Form.Item>
+  createComponents = (createUserName, createTime, updUserName, updTime) => {
+    const { isEdit } = this.state;
+    return isEdit && <Form.Item>
       <Row>
         <Col>创建人：{createUserName}</Col>
         <Col offset={2}>创建时间：{createTime}</Col>
@@ -549,7 +575,7 @@ export default class MonitorPoint extends Component {
         <Form.Item label="设备参数类别" >
           <Checkbox.Group value={this.state.equipmentPol} options={this.props.paramCodeList} onChange={this.equipmentParChange} />
         </Form.Item>
-        {this.createComponents(this.state.createUserName2,this.state.createTime2,this.state.updUserName2,this.state.updTime2)}
+        {this.createComponents(this.state.createUserName2, this.state.createTime2, this.state.updUserName2, this.state.updTime2)}
       </div>
     </Spin>
   }
@@ -558,32 +584,32 @@ export default class MonitorPoint extends Component {
     const { pointCoefficientFlag } = this.state;
 
     return <Spin spinning={this.props.getPointCoefficientListLoading}>
-      <div  className={styles.pointCoefficientSty}>
+      <div className={styles.pointCoefficientSty}>
         <Form.Item label='监测点系数' className='inputSty'>
           <InputNumber disabled={pointCoefficientFlag} value={this.state.pointCoefficientVal} style={{ width: 200 }} placeholder='请输入' onChange={this.pointCoefficientChange} />
           {pointCoefficientFlag && <span style={{ paddingLeft: 10 }} className='red'>如需修改系数，请联系管理员</span>}
         </Form.Item>
-        {this.createComponents(this.state.createUserName3,this.state.createTime3,this.state.updUserName3,this.state.updTime3)}
+        {this.createComponents(this.state.createUserName3, this.state.createTime3, this.state.updUserName3, this.state.updTime3)}
       </div>
     </Spin>
   }
   radiusElectronicFence = () => { //电子围栏半径
 
     return <Spin spinning={this.props.getPointElectronicFenceInfoLoading}>
-      <div  className={styles.pointCoefficientSty}>
+      <div className={styles.pointCoefficientSty}>
         <Form.Item label='电子围栏半径' className='inputSty'>
-          <InputNumber min={0.00001} disabled={!this.state.radiusElectronicFlag} value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入'   onChange={(e) => { this.radiusElectronicChange(e) }} />
+          <InputNumber min={0.00001} disabled={!this.state.radiusElectronicFlag} value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入' onChange={(e) => { this.radiusElectronicChange(e) }} />
           <span style={{ paddingLeft: 5 }} >KM</span>
           <span style={{ paddingLeft: 10 }} className='red'>如需修改，请联系管理员</span>
         </Form.Item>
-        {this.createComponents(this.state.createUserName4,this.state.createTime4,this.state.updUserName4,this.state.updTime4)}
+        {this.createComponents(this.state.createUserName4, this.state.createTime4, this.state.updUserName4, this.state.updTime4)}
       </div>
     </Spin>
   }
   radiusElectronicChange = (value) => {
-    this.setState({radiusElectronicFenceVal:value})
+    this.setState({ radiusElectronicFenceVal: value })
 
-}
+  }
   equipmentParChange = (val) => {
     this.setState({ equipmentPol: val })
   }
@@ -733,7 +759,7 @@ export default class MonitorPoint extends Component {
 
   loadingStatus = () => {
     const { tabKey } = this.state;
-    const { saveLoadingAdd, saveLoadingEdit, addMonitorPointVerificationLoading, addPointParamInfoLoading, addOrEditPointCoefficientLoading,addOrUpdatePointElectronicFenceInfoLoading, } = this.props;
+    const { saveLoadingAdd, saveLoadingEdit, addMonitorPointVerificationLoading, addPointParamInfoLoading, addOrEditPointCoefficientLoading, addOrUpdatePointElectronicFenceInfoLoading, } = this.props;
     if (tabKey == 1) {
       return !this.state.isEdit ? saveLoadingAdd : saveLoadingEdit
     }
@@ -809,8 +835,8 @@ export default class MonitorPoint extends Component {
                     // history.go(-1);
                     router.push({
                       pathname: `/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2`,
-                      query: {thisPage :true},
-                  });
+                      query: { thisPage: true },
+                    });
                   }}
                   type="link"
                   size="small"
@@ -841,7 +867,7 @@ export default class MonitorPoint extends Component {
             }
             {
 
-              pointConfigId && this.state.loadFlag  && (<AutoFormTable
+              pointConfigId && this.state.loadFlag && (<AutoFormTable
                 dragable={sortTitle === '关闭排序' ? true : false}
                 dragData={(data) => { this.dragData(data) }}
                 noPaging={this.state.noPaging}
@@ -895,7 +921,7 @@ export default class MonitorPoint extends Component {
                 )}
                 appendHandleRows={row => (
                   <Fragment>
-           
+
 
                     <Tooltip title="编辑">
                       <a
@@ -920,31 +946,10 @@ export default class MonitorPoint extends Component {
                                 realtimePollutantCode: res && res.RealTimeItem ? res.RealTimeItem : undefined,
                                 hourPollutantCode: res && res.HourItem ? res.HourItem : undefined,
                                 platformNum: res && res.platformNum ? res.platformNum : undefined,
-                                createUserName1: res&&res.CreateUserName,
-                                createTime1: res&&res.CreateTime,
-                                updUserName1: res&&res.UpdUserName,
-                                updTime1: res&&res.UpdTime,
-                              })
-                            }
-                          })
-                          dispatch({
-                            type: 'point/getParamCodeList', //设备参数项
-                            payload: { pollutantType: row['dbo.T_Bas_CommonPoint.PollutantType'],cemsType:row['dbo.T_Bas_CommonPoint.Col4']  },
-                            callback: () => {  }
-                          });
-                          this.props.dispatch({ //设备参数项 回显数据
-                            type: 'point/getParamInfoList',
-                            payload: {
-                              DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
-                              pollutantType: this.state.pollutantType
-                            },
-                            callback: (codeList,res) => {
-                              this.setState({
-                                equipmentPol: codeList && codeList[0] ? codeList : undefined,
-                                createUserName2: res&&res[0]&&res[0].CreateUserName,
-                                createTime2: res&&res[0]&&res[0].CreateTime,
-                                updUserName2: res&&res[0]&&res[0].UpdUserName,
-                                updTime2: res&&res[0]&&res[0].UpdTime,
+                                createUserName1: res && res.CreateUserName,
+                                createTime1: res && res.CreateTime,
+                                updUserName1: res && res.UpdUserName,
+                                updTime1: res && res.UpdTime,
                               })
                             }
                           })
@@ -957,10 +962,10 @@ export default class MonitorPoint extends Component {
                             callback: (res) => {
                               this.setState({
                                 pointCoefficientVal: res ? res.PointCoefficient : undefined,
-                                createUserName3: res&&res.CreateUserName,
-                                createTime3: res&&res.CreateTime,
-                                updUserName3: res&&res.UpdUserName,
-                                updTime3: res&&res.UpdTime,
+                                createUserName3: res && res.CreateUserName,
+                                createTime3: res && res.CreateTime,
+                                updUserName3: res && res.UpdUserName,
+                                updTime3: res && res.UpdTime,
                                 pointCoefficientFlag: res && res.PointCoefficient ? true : false,
                               })
                             }
@@ -974,11 +979,11 @@ export default class MonitorPoint extends Component {
                             callback: (res) => {
                               this.setState({
                                 radiusElectronicFenceVal: res ? res.Range : undefined,
-                                createUserName4: res&&res.CreateUser,
-                                createTime4: res&&res.CreateTime,
-                                updUserName4: res&&res.UpdateUser,
-                                updTime: res&&res.UpdateTime,
-                                radiusElectronicFlag : res && res.isUpdate ? true : false,
+                                createUserName4: res && res.CreateUser,
+                                createTime4: res && res.CreateTime,
+                                updUserName4: res && res.UpdateUser,
+                                updTime: res && res.UpdateTime,
+                                radiusElectronicFlag: res && res.isUpdate ? true : false,
                               })
                             }
                           })

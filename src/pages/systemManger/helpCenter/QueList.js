@@ -33,8 +33,6 @@ const dvaPropsData = ({ loading, helpCenter }) => ({
   listData: helpCenter.questionListData,
   listDataTotal: helpCenter.questionListTotal,
   questionTypeTitle: helpCenter.questionTypeTitle,
-  questTypeFirstLevel: helpCenter.questTypeFirstLevel,
-  questTypeSecondLevel: helpCenter.questTypeSecondLevel,
 
 })
 
@@ -65,7 +63,7 @@ const Index = (props) => {
 
 
 
-  const { listData, listDataTotal, detailLoading, questionTypeTitle, questTypeFirstLevel, questTypeSecondLevel, } = props;
+  const { listData, listDataTotal, detailLoading, questionTypeTitle, } = props;
 
   const [searchContent, setSearchContent] = useState()
 

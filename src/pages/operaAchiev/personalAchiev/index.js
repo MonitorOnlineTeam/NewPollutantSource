@@ -33,6 +33,10 @@ const dvaPropsData = ({ loading, operaAchiev, global }) => ({
   tableDatas: operaAchiev.personalPerformanceRateList,
   tableLoading: loading.effects[`${namespace}/getPersonalPerformanceRateList`],
   exportLoading: loading.effects[`${namespace}/exportPersonalPerformanceRate`],
+  tableTotal2: operaAchiev.personalPerformanceRateInfoTotal,
+  tableDatas2: operaAchiev.personalPerformanceRateInfoList,
+  tableLoading2: loading.effects[`${namespace}/getPersonalPerformanceRateInfoList`],
+  exportLoading2: loading.effects[`${namespace}/exportPersonalPerformanceRateInfo`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -43,15 +47,27 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getPersonalPerformanceRateList: (payload) => { //列表
+    getPersonalPerformanceRateList: (payload) => { //绩效汇总 列表
       dispatch({
         type: `${namespace}/getPersonalPerformanceRateList`,
         payload: payload,
       })
     },
-    exportPersonalPerformanceRate: (payload) => { //导出
+    exportPersonalPerformanceRate: (payload) => { //绩效汇总 导出
       dispatch({
         type: `${namespace}/exportPersonalPerformanceRate`,
+        payload: payload
+      })
+    },
+    getPersonalPerformanceRateInfoList: (payload) => { //绩效明细 列表
+      dispatch({
+        type: `${namespace}/getPersonalPerformanceRateInfoList`,
+        payload: payload,
+      })
+    },
+    exportPersonalPerformanceRateInfo: (payload) => { //绩效明细 导出
+      dispatch({
+        type: `${namespace}/exportPersonalPerformanceRateInfo`,
         payload: payload
       })
     },
@@ -63,10 +79,11 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const { tableDatas, tableLoading, exportLoading, tableDatas2, tableLoading2, exportLoading2, tableTotal2, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, } = props;
 
   useEffect(() => {
-    onFinish()
+    onFinish(pageIndex,pageSize)
+    onFinish2(pageIndex2,pageSize2)
   }, [])
 
   const columns = [
@@ -114,30 +131,18 @@ const Index = (props) => {
       children: [
         {
           title: '污染源气绩效套数',
-          dataIndex: 'GasPerformance',
-          key: 'GasPerformance',
+          dataIndex: 'GasPerformanceZ',
+          key: 'GasPerformanceZ',
           align: 'center'
         },
         {
           title: '污染源水绩效套数',
-          dataIndex: 'WaterPerformance',
-          key: 'WaterPerformance',
+          dataIndex: 'WaterPerformanceZ',
+          key: 'WaterPerformanceZ',
           align: 'center'
         },
       ]
     },
-    // {
-    //   title: '污染源气绩效套数',
-    //   dataIndex: 'GasPerformance',
-    //   key: 'GasPerformance',
-    //   align: 'center'
-    // },
-    // {
-    //   title: '污染源水绩效套数',
-    //   dataIndex: 'WaterPerformance',
-    //   key: 'WaterPerformance',
-    //   align: 'center'
-    // },
     {
       title: <span>操作</span>,
       dataIndex: 'x',
@@ -253,13 +258,13 @@ const Index = (props) => {
       dataIndex: 'GasPerformance',
       key: 'GasPerformance',
       align: 'center'
-    }, 
+    },
     {
       title: '执行比例',
       dataIndex: 'GasPerformance',
       key: 'GasPerformance',
       align: 'center'
-    }, 
+    },
     {
       title: '绩效套数',
       dataIndex: 'GasPerformance',
@@ -268,8 +273,6 @@ const Index = (props) => {
     },
     {
       title: <span>操作</span>,
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
       render: (text, record) => {
         return <span>
@@ -282,11 +285,13 @@ const Index = (props) => {
       }
     },
   ];
-  const onFinish = async () => {  //查询 绩效汇总
+  const onFinish = async (pageIndexs,pageSizes) => {  //查询 绩效汇总
     try {
       const values = await form.validateFields();
       const par = {
         ...values,
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
         Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
         UserId: userId,
       }
@@ -295,18 +300,38 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-  const onFinish2 = async () => {  //查询 绩效明细
+  const onFinish2 = async (pageIndexs,pageSizes) => {  //查询 绩效明细
     try {
-      const values = await form.validateFields();
+      const values = await form2.validateFields();
       const par = {
         ...values,
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
         Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
         UserId: userId,
       }
-      props.getPersonalPerformanceRateList({ ...par })
+      props.getPersonalPerformanceRateInfoList({ ...par })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
+  }
+
+  const [pageSize, setPageSize] = useState(20)
+  const [pageIndex, setPageIndex] = useState(1)
+  const handleTableChange = (PageIndex, PageSize) => { //绩效汇总 分页
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+    onFinish(PageIndex, PageSize)
+
+  }
+
+  const [pageSize2, setPageSize2] = useState(20)
+  const [pageIndex2, setPageIndex2] = useState(1)
+  const handleTableChange2 = (PageIndex, PageSize) => { //绩效明细 分页
+    setPageIndex2(PageIndex)
+    setPageSize2(PageSize)
+    onFinish2(PageIndex, PageSize)
+
   }
 
 
@@ -325,22 +350,24 @@ const Index = (props) => {
     setTitle(`${record.UserName}`)
   }
 
-  const exports =  () => {
-    const values =  form.getFieldsValue();
+  const exports = () => {
+    const values = form.getFieldsValue();
     const par = {
       ...values,
+      UserId: userId,
       Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
     }
     props.exportPersonalPerformanceRate({ ...par })
   };
 
-  const exports2 =  () => {
-    const values =  form.getFieldsValue();
+  const exports2 = () => {
+    const values = form.getFieldsValue();
     const par = {
       ...values,
+      UserId: userId,
       Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
     }
-    props.exportPersonalPerformanceRate({ ...par })
+    props.exportPersonalPerformanceRateInfo({ ...par })
   };
 
 
@@ -349,7 +376,7 @@ const Index = (props) => {
       name="advanced_search"
       form={form}
       layout='inline'
-      onFinish={() => { onFinish() }}
+      onFinish={() => { onFinish(1,pageSize) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
@@ -374,50 +401,49 @@ const Index = (props) => {
     </Form>
   }
 
-
   const searchComponents2 = () => {
     return <Form
       name="advanced_search2"
-    
+
       form={form2}
-      onFinish={() => { onFinish2() }}
+      onFinish={() => { onFinish2(1, pageSize2) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
     >
 
       <Row>
-      <Form.Item label='统计月份' name='Month'   className='form2ItemWidth'>
-        <DatePicker picker="month" allowClear={false} style={{width:200}}/>
-      </Form.Item>
-      <Form.Item label='员工编号' name='aa'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item label='姓名' name='bb' className='form2ItemWidth'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
+        <Form.Item label='统计月份' name='Month' className='form2ItemWidth'>
+          <DatePicker picker="month" allowClear={false} style={{ width: 200 }} />
+        </Form.Item>
+        <Form.Item label='员工编号' name='UserAccount'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item label='姓名' name='UserName' className='form2ItemWidth'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
       </Row>
-      <Row style={{marginTop:6}}>
-      <Form.Item label='运维项目号' name='cc'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item label='企业名称' name='dd'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item label='监测点名称' name='ee'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item style={{ marginBottom: 0 }}>
-        <Button type="primary" htmlType="submit" loading={tableLoading2}>
-          查询
+      <Row style={{ marginTop: 6 }}>
+        <Form.Item label='运维项目号' name='ProjectNum'  className='form2ItemWidth'>
+          <Input placeholder='请输入' allowClear={true}/>
+        </Form.Item>
+        <Form.Item label='企业名称' name='EntName'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item label='监测点名称' name='PointName' className='form2ItemWidth'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Button type="primary" htmlType="submit" loading={tableLoading2}>
+            查询
       </Button>
-        <Button style={{ margin: '0 8px', }} onClick={() => { form2.resetFields(); }}  >
-          重置
-      </Button>
-        <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports2() }}>
-          导出
-     </Button>
-      </Form.Item>
+          <Button style={{ margin: '0 8px', }} onClick={() => { form2.resetFields(); }}  >
+            重置
+         </Button>
+          <Button icon={<ExportOutlined />} loading={exportLoading2} onClick={() => { exports2() }}>
+            导出
+         </Button>
+        </Form.Item>
       </Row>
     </Form>
   }
@@ -433,7 +459,14 @@ const Index = (props) => {
                 bordered
                 dataSource={tableDatas}
                 columns={columns}
-                pagination={false}
+                pagination={{
+                  total: tableTotal,
+                  pageSize: pageSize,
+                  current: pageIndex,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange,
+                }}
               />
             </Card>
           </TabPane>
@@ -445,7 +478,14 @@ const Index = (props) => {
                 bordered
                 dataSource={tableDatas2}
                 columns={columns2}
-                pagination={false}
+                pagination={{
+                  total: tableTotal2,
+                  pageSize: pageSize2,
+                  current: pageIndex2,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange2,
+                }}
               />
             </Card>
           </TabPane>

@@ -8,7 +8,7 @@
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Space, Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,FilterFilled , CreditCardFilled,ProfileFilled,DatabaseFilled } from '@ant-design/icons';
+import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,FilterFilled , CreditCardFilled,ProfileFilled,DatabaseFilled, CalculatorFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -80,6 +80,8 @@ const Index = (props) => {
     props.getTableData({...detailPar,pageIndex:pageIndex,pageSize:pageSize,})
 
   },[]);
+
+  const [filteredInfo, setFilteredInfo] = useState({});
 
   const columns = [
     {
@@ -158,6 +160,25 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
+      title: '打卡状态',
+      dataIndex: 'ExceptionTypeName',
+      key:'ExceptionTypeName', 
+      align:'center',
+      filters: [
+        {
+          text: '打卡正常',
+          value: '打卡正常',
+        },
+        {
+          text: '打卡异常',
+          value: '打卡异常',
+        },
+      ],
+      filteredValue: filteredInfo.ExceptionTypeName || null,
+      onFilter: (value, record) => record.ExceptionTypeName.includes(value),
+      ellipsis:true,
+    },
+    {
       title: '运维人',
       dataIndex: 'OperationsUserName',
       key:'OperationsUserName', 
@@ -184,11 +205,12 @@ const Index = (props) => {
 
   const [pageIndex,setPageIndex]=useState(1)
   const [pageSize,setPageSize]=useState(20)
-  const handleTableChange = (PageIndex, PageSize) =>{
-    setPageIndex(PageIndex)
-    setPageSize(PageSize)
-    props.getTableData({...detailPar,pageIndex:PageIndex,pageSize:PageSize,})
-
+  const handleTableChange = (pagination, filters, sorter) =>{
+    console.log(pagination, filters)
+    setPageIndex(pagination.current)
+    setPageSize(pagination.pageSize)
+    props.getTableData({...detailPar,pageIndex:pagination.current,pageSize:pagination.pageSize,})
+    setFilteredInfo(filters);
   }
 
   const exports =  async () => {
@@ -221,13 +243,14 @@ const Index = (props) => {
         dataSource={tableDatas}
         columns={columns}
         resizable
+        scroll={{ y: 'calc(100vh - 460px)'}}
+        onChange={handleTableChange}
         pagination={{
           total:tableTotal,
           pageSize: pageSize,
           current: pageIndex,
           showSizeChanger: true,
           showQuickJumper: true,
-          onChange: handleTableChange,
         }}
       />
    </Card>

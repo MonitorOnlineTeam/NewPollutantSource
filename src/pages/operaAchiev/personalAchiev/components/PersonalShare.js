@@ -166,6 +166,7 @@ const Index = (props) => {
                     bordered
                     dataSource={tableDatas}
                     columns={columns}
+                    scroll={{ y: 'calc(100vh - 460px)'}}
                     pagination={{
                         total: tableTotal,
                         pageSize: pageSize,

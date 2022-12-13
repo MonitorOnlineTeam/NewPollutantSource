@@ -166,15 +166,9 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '一级类别',
+      title: '类别',
       dataIndex: 'FirstLevel',
       key: 'FirstLevel',
-      align: 'center',
-    },
-    {
-      title: '二级类别',
-      dataIndex: 'SecondLevel',
-      key: 'SecondLevel',
       align: 'center',
     },
     {
@@ -420,7 +414,7 @@ const Index = (props) => {
             </Col> */}
             <Col span={24}>
               <Spin size='small' spinning={loadingQuestionType} style={{ top: -5 }}>
-                <Form.Item label="问题类别" name="FirstLevel" rules={[{ required: true, message: '请选择二级类别' }]}>
+                <Form.Item label="类别" name="FirstLevel" rules={[{ required: true, message: '请选择二级类别' }]}>
                   <Cascader options={questionTypeList} />
                 </Form.Item>
               </Spin>

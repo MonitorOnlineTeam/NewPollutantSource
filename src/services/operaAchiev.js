@@ -83,3 +83,13 @@ export async function ExportIndividualTaskInfo(params) {
   return result;
 }
 
+//绩效明细 查询列表
+export async function GetPersonalPerformanceRateInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPersonalPerformanceRateInfoList',params, null);
+  return result;
+}
+//绩效明细 导出
+export async function ExportPersonalPerformanceRateInfo(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPersonalPerformanceRateInfo',params, null);
+  return result;
+}

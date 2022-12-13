@@ -9,7 +9,7 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'operaAchiev',
+  namespace: 'operaAchiev', 
   state: {
     pointCoefficientList:[],
     pointCoefficientTotal:0,
@@ -21,6 +21,8 @@ export default Model.extend({
     individualApportionmentTotal: 0,
     individualTaskInfo: [], //个人工单详情
     individualTaskTotal: 0,
+    personalPerformanceRateInfoList: [],
+    personalPerformanceRateInfoTotal: [],
   },
   effects: {
     *getPointCoefficientList({ payload,callback }, { call, put, update }) { //获取所有排口监测点系数列表
@@ -108,7 +110,7 @@ export default Model.extend({
         yield update({ tableLoading: false })
       }
     },
-    *exportPersonalPerformanceRate({ payload }, { call, put, update, select }) { //导出 绩效信息
+    *exportPersonalPerformanceRate({ payload }, { call, put, update, select }) { //绩效信息 导出
       const result = yield call(services.ExportPersonalPerformanceRate, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
@@ -152,8 +154,31 @@ export default Model.extend({
         yield update({ tableLoading: false })
       }
     },
-    *exportIndividualTaskInfo({ payload }, { call, put, update, select }) { //导出 个人工单详细
+    *exportIndividualTaskInfo({ payload }, { call, put, update, select }) { //个人工单详细 导出
       const result = yield call(services.ExportIndividualTaskInfo, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      }else{
+        message.warning(result.Message)
+      }
+    },
+
+    *getPersonalPerformanceRateInfoList({ payload, callback }, { call, put, update }) { //绩效明细 查询列表
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetPersonalPerformanceRateInfoList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          personalPerformanceRateInfoList: result.Datas,
+          personalPerformanceRateInfoTotal: result.Total,
+        })
+      } else {
+        message.error(result.Message)
+        yield update({ tableLoading: false })
+      }
+    },
+    *exportPersonalPerformanceRateInfo({ payload }, { call, put, update, select }) { //绩效明细 导出
+      const result = yield call(services.ExportPersonalPerformanceRateInfo, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
