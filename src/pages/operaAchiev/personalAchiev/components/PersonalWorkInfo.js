@@ -144,19 +144,10 @@ const Index = (props) => {
       dataIndex: 'ExceptionTypeName',
       key:'ExceptionTypeName', 
       align:'center',
-      filters: [
-        {
-          text: '打卡正常',
-          value: '打卡正常',
-        },
-        {
-          text: '打卡异常',
-          value: '打卡异常',
-        },
-      ],
-      filteredValue: filteredInfo.ExceptionTypeName || null,
-      onFilter: (value, record) => record.ExceptionTypeName.includes(value),
       ellipsis:true,
+      render:(text,record)=>{
+       return  text=='打卡异常'? <span className='red' style={{fontWeight:'bold'}}>{text}</span> : text;       
+      }
     },
     {
       title: '运维人',
@@ -177,23 +168,13 @@ const Index = (props) => {
 
   const [pageIndex,setPageIndex]=useState(1)
   const [pageSize,setPageSize]=useState(20)
-  // const handleTableChange = (PageIndex, PageSize) =>{
-  //   setPageIndex(PageIndex)
-  //   setPageSize(PageSize)
-  //   props.getTableData({...detailPar,pageIndex:PageIndex,pageSize:PageSize,})
+  const handleTableChange = (PageIndex, PageSize) =>{
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+    props.getTableData({...detailPar,pageIndex:PageIndex,pageSize:PageSize,})
 
-  // }
-  const handleTableChange = (pagination, filters, sorter) =>{
-    console.log(pagination, filters)
-    setPageIndex(pagination.current)
-    setPageSize(pagination.pageSize)
-    props.getTableData({...detailPar,pageIndex:pagination.current,pageSize:pagination.pageSize,})
-    setFilteredInfo(filters);
   }
-  const exports =  async () => {
-    props.exportData({...detailPar})
-     
- };
+
 
 
   const searchComponents = () =>{
@@ -225,7 +206,7 @@ const Index = (props) => {
           current: pageIndex,
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          onChange: handleTableChange,
         }}
       />
    </Card>
