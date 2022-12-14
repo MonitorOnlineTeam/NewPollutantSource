@@ -86,7 +86,7 @@ const Index = (props) => {
 
   useEffect(() => {
     onFinish(pageIndex, pageSize)
-    onFinish2(pageIndex2, pageSize2)
+    onFinish2(pageIndex2, pageSize2,'initData')
 
   }, [])
 
@@ -297,14 +297,14 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-  const onFinish2 = async (pageIndexs,pageSizes) => {  //查询 绩效明细
+  const onFinish2 = async (pageIndexs,pageSizes,initData) => {  //查询 绩效明细
     try {
       const values = await form2.validateFields();
       const par = {
         ...values,
         pageIndex: pageIndexs,
         pageSize: pageSizes,
-        Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+        Month:initData?  moment().add(-1, 'M').format("YYYY-MM-01 00:00:00") : values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
       }
       props.getPersonalPerformanceRateInfoList({ ...par })
     } catch (errorInfo) {
@@ -410,7 +410,6 @@ const Index = (props) => {
   const searchComponents2 = () => {
     return <Form
       name="advanced_search2"
-
       form={form2}
       onFinish={() => { onFinish2(1, pageSize2) }}
       initialValues={{
