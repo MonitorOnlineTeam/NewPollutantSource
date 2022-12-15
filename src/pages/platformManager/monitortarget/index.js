@@ -5,7 +5,7 @@
  * @Date: 2019年7月29日15:11:59
  */
 import React, { Component, Fragment } from 'react';
-import { CalendarTwoTone, QrcodeOutlined, DatabaseOutlined } from '@ant-design/icons';
+import { CalendarTwoTone, QrcodeOutlined, DatabaseOutlined, FundProjectionScreenOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -278,7 +278,14 @@ export default class MonitorTarget extends Component {
                                     this.editMonitorInfo('', row);
                                 }}><PointIcon />    </a>
                             </Tooltip>
-
+                            <Divider type="vertical" />
+                            <Tooltip title="排放源清单台账">
+                                <a onClick={() => {
+                                    router.push(`/standingBook/emissionSource/${row['dbo.T_Bas_Enterprise.EntCode']}`)
+                                }}>
+                                    <FundProjectionScreenOutlined style={{ fontSize: 16 }} />
+                                </a>
+                            </Tooltip>
                             {configId == "Station" && webConfig.entShowBtns.includes("licence") ? "" : <><Divider type="vertical" />
                                 <Tooltip title="排污许可证">
                                     <a onClick={() => {

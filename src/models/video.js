@@ -13,6 +13,10 @@ export default Model.extend({
     },
     videoList: [],
     videoManagerEditData: {},
+    VideoType: [],
+    HKLiveVideoUrl: '',
+    HKPlaybackVideoUrl: '',
+    backData: [],
   },
 
   effects: {
@@ -91,5 +95,53 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取视频接入方式
+    *GetVideoInputType({ payload }, { call, update }) {
+      const result = yield call(services.GetVideoInputType, payload);
+      if (result.IsSuccess) {
+        yield update({
+          VideoType: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取实时视频地址
+    *GetPreviewURL({ payload }, { call, update }) {
+      const result = yield call(services.GetPreviewURL, payload);
+      if (result.IsSuccess) {
+        yield update({
+          HKLiveVideoUrl: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取海康历史视频地址
+    *GetPlaybackURL({ payload }, { call, update }) {
+      const result = yield call(services.GetPlaybackURL, payload);
+      if (result.IsSuccess) {
+        yield update({
+          HKPlaybackVideoUrl: result.Datas ? result.Datas.url : "",
+          backData: result.Datas ? result.Datas.list : []
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 海康云台操作
+    *PTZControl({ payload }, { call, update }) {
+      const result = yield call(services.PTZControl, payload);
+      if (result.IsSuccess) {
+        if (result.Datas.code === '0') {
+
+        } else {
+          message.error("错误码：" + result.Datas.code + "，错误信息" + result.Datas.msg)
+        }
+      } else {
+        message.error(result.Message)
+      }
+    },
+
   }
 })

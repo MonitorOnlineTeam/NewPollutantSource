@@ -876,10 +876,6 @@ class NavigationTree extends Component {
   }
 
   render() {
-    console.log('overallexpkeys=', this.props.overallexpkeys)
-    console.log('overallselkeys=', this.props.overallselkeys)
-    console.log('selectedKeys=', this.state.selectedKeys)
-    console.log('expandedKeys=', this.state.expandedKeys)
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     const { configInfo } = this.props;
     // 渲染数据及企业排口图标和运行状态

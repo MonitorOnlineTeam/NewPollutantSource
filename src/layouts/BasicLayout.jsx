@@ -124,7 +124,6 @@ class BasicLayout extends Component {
             return <Link to={menuItemProps.path}>{defaultDom}</Link>;
           }}
           breadcrumbRender={(routers = []) => {
-            console.log("routers=", routers);
             return [{
               path: '/',
               breadcrumbName: formatMessage({

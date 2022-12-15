@@ -7,22 +7,25 @@ import { connect } from 'dva'
 import { DelIcon, EditIcon } from '@/utils/icon'
 import LiveVideo from '@/components/Video/LiveVideo'
 
-const VideoType = [{
-  key: '萤石云',
-  value: 1,
-}, {
-  key: '乐橙云',
-  value: 2,
-}, {
-  key: '私有云',
-  value: 3,
-}, {
-  key: '海康网站',
-  value: 4,
-}, {
-  key: '大华网站',
-  value: 5,
-}]
+// const VideoType = [{
+//   key: '萤石云',
+//   value: 1,
+// }, {
+//   key: '乐橙云',
+//   value: 2,
+// }, {
+//   key: '私有云',
+//   value: 3,
+// }, {
+//   key: '海康网站',
+//   value: 4,
+// }, {
+//   key: '大华网站',
+//   value: 5,
+// }, {
+//   key: '大华网站',
+//   value: 5,
+// }]
 
 @connect(({ loading, video }) => ({
   // validateLoading: loading.effects['video/validateVideo'],
@@ -30,6 +33,7 @@ const VideoType = [{
   modalLoading: loading.effects['video/AddVideoDevice', 'video/validateVideo'],
   videoManagerList: video.videoManagerList,
   videoManagerEditData: video.videoManagerEditData,
+  VideoType: video.VideoType,
 }))
 class PageContent extends PureComponent {
   constructor(props) {
@@ -59,8 +63,8 @@ class PageContent extends PureComponent {
           dataIndex: 'InputType',
           key: 'InputType',
           render: (text) => {
-            let current = VideoType.find(item => item.value === text);
-            return current.key;
+            let current = this.props.VideoType.find(item => item.InputType == text) || {};
+            return current.InputTypeName;
           }
         },
         {
@@ -133,8 +137,8 @@ class PageContent extends PureComponent {
           dataIndex: 'InputType',
           key: 'InputType',
           render: (text) => {
-            let current = VideoType.find(item => item.value === text);
-            return current.key;
+            let current = this.props.VideoType.find(item => item.InputType === text) || {};
+            return current.InputTypeName;
           }
         },
         {
@@ -216,6 +220,19 @@ class PageContent extends PureComponent {
 
   componentDidMount() {
     this.getVideoList();
+    this.getVideoInputType();
+  }
+
+  // 获取视频接入方式
+  getVideoInputType = () => {
+    this.props.dispatch({
+      type: 'video/GetVideoInputType',
+      payload: {
+
+      }
+    }).then(() => {
+      this.setState({ InputType: this.props.VideoType[0].InputType })
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -273,6 +290,7 @@ class PageContent extends PureComponent {
         IsShowHomePage: values.IsShowHomePage,
         Data: {
           VedioCamera_ID: this.state.editData.VedioCamera_ID,
+          ChannelNo: values.ChannelNo || 0,
           ...values,
         }
       },
@@ -577,14 +595,14 @@ class PageContent extends PureComponent {
 
   render() {
     const { validateLoading, videoManagerList, modalLoading, tableLoading } = this.props;
-    const { isModalOpen, editData, isPreviewModalOpen, currentVideo } = this.state;
+    const { isModalOpen, editData, isPreviewModalOpen, currentVideo, InputType } = this.state;
     const { columns1, columns2 } = this.SELF;
-    let Longitude = "", Latitude = "", InputType = 1;
+    let Longitude = "", Latitude = "";
     if (this.formRef.current) {
       const fieldsValue = this.formRef.current.getFieldsValue();
       Longitude = fieldsValue.Longitude;
       Latitude = fieldsValue.Latitude;
-      InputType = fieldsValue.InputType;
+      // InputType = fieldsValue.InputType;
     }
     console.log('InputType=', InputType);
     return (
@@ -593,9 +611,14 @@ class PageContent extends PureComponent {
           <Row style={{ marginBottom: 10 }}>
             <Button type='primary' icon={<PlusOutlined />} onClick={() => this.setState({ isModalOpen: true, editData: {} })}>添加</Button>
           </Row>
-          {videoManagerList.one.length ?
-            <SdlTable rowKey="VedioCamera_ID" loading={tableLoading} style={{ marginBottom: 10 }} dataSource={videoManagerList.one} columns={columns1} /> :
-            <SdlTable rowKey="VedioCamera_ID" loading={tableLoading} dataSource={videoManagerList.two} columns={columns2} />}
+          {
+            videoManagerList.one.length ?
+              <SdlTable rowKey="VedioCamera_ID" loading={tableLoading} style={{ marginBottom: 10 }} dataSource={videoManagerList.one} columns={columns1} /> : ''
+          }
+          {
+            videoManagerList.two.length ?
+              <SdlTable rowKey="VedioCamera_ID" loading={tableLoading} dataSource={videoManagerList.two} columns={columns2} /> : ""
+          }
         </Card>
         <Modal
           width="800px"
@@ -617,7 +640,7 @@ class PageContent extends PureComponent {
               span: 16,
             }}
             initialValues={{
-              InputType: 1,
+              InputType: InputType,
               RTSPPort: 80,
               IsShowControl: 0,
               IsShowHomePage: 0,
@@ -641,8 +664,8 @@ class PageContent extends PureComponent {
                 >
                   <Select placeholder="请选择接入方式" onChange={(value) => this.setState({ InputType: value })}>
                     {
-                      VideoType.map(item => {
-                        return <Option value={item.value}>{item.key}</Option>
+                      this.props.VideoType.map(item => {
+                        return <Option value={item.InputType}>{item.InputTypeName}</Option>
                       })
                     }
                   </Select>
@@ -678,20 +701,39 @@ class PageContent extends PureComponent {
                   <Input />
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="摄像头通道号"
-                  name="ChannelNo"
-                  rules={[
-                    {
-                      required: true,
-                      message: '请输入摄像头通道号!',
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
+              {
+                InputType == 6 ?
+                  <Col span={12}>
+                    <Form.Item
+                      label="摄像头编号"
+                      name="VedioCamera_No"
+                      rules={[
+                        {
+                          required: true,
+                          message: '请输入摄像编号!',
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  :
+                  <Col span={12}>
+                    <Form.Item
+                      label="摄像头通道号"
+                      name="ChannelNo"
+                      rules={[
+                        {
+                          required: true,
+                          message: '请输入摄像头通道号!',
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+              }
+
               {this.renderFormItem()}
               <Col span={12}>
                 <Form.Item

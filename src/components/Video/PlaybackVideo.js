@@ -4,6 +4,7 @@ import { message } from 'antd';
 // import LCYPlaybackVideo from './LCY/Live'
 // import LCYPlaybackVideo from './LCY/Playback'
 import PrivateCloudPlaybackVideo from './PrivateCloud/Playback'
+import HKPlaybackVideo from './HK/Playback'
 
 
 class PlaybackVideo extends PureComponent {
@@ -30,6 +31,12 @@ class PlaybackVideo extends PureComponent {
       if (this.props.videoInfo.InputType === 2) {
         format = 'YYYY-MM-DD HH:mm:ss';
       }
+      // 海康
+      if (this.props.videoInfo.InputType === 6) {
+        format = 'YYYY-MM-DDTHH:mm:ss';
+      }
+      // console.log('startDate.format(format), endDate.format(format)', startDate.format(format), endDate.format(format))
+      // return;
       this.playbackVideo.onPlayClick(startDate.format(format), endDate.format(format))
     } else {
       message.error('请选择时间后播放！')
@@ -39,6 +46,7 @@ class PlaybackVideo extends PureComponent {
   switchVideo = () => {
     const { videoInfo } = this.props;
     const { startDate, endDate } = this.state;
+    debugger
     switch (videoInfo.InputType) {
       case 1:
         // 萤石云
@@ -65,6 +73,14 @@ class PlaybackVideo extends PureComponent {
         break;
       case 5:
         // 大华IE
+        break;
+      case 6:
+        // 海康
+        return <HKPlaybackVideo
+          id="HKPlayback"
+          onRef={ref => this.playbackVideo = ref}
+          CameraCode={videoInfo.VedioCamera_No}
+        />
         break;
     }
   }

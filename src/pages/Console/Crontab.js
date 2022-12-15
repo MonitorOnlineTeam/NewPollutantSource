@@ -5,7 +5,7 @@ import {
   Input, Modal, InputNumber, Radio, Switch, Spin,
 } from 'antd';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
-import { RetweetOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons'
+import { RetweetOutlined, MinusCircleOutlined, SyncOutlined, ReloadOutlined } from '@ant-design/icons'
 import styles from './index.less'
 import { connect } from 'dva';
 import QuestionTooltip from "@/components/QuestionTooltip"
@@ -60,9 +60,7 @@ class Crontab extends PureComponent {
           align: 'center',
           width: 100,
           render: (text, record) => {
-            return <Switch checkedChildren="启用" unCheckedChildren="关闭" checked={text} onChange={(checked, event) => {
-              this.onSwitchChange(checked, event, record)
-            }} />
+            return <Switch checkedChildren="启用" unCheckedChildren="关闭" checked={text} disabled />
           },
         },
         {
@@ -92,30 +90,44 @@ class Crontab extends PureComponent {
           fixed: 'right',
           align: 'center',
           render: (text, record, index) => {
-            return <>
-              <Tooltip title="编辑">
-                <a onClick={() => {
-                  console.log("record=", record)
-                  this.setState({
-                    selectRow: record,
-                    isModalOpen: true
-                  })
-                }}><EditIcon /></a>
-              </Tooltip>
-              <Divider type="vertical" />
-              <Tooltip title="删除">
-                <Popconfirm
-                  placement="left"
-                  title="确认是否删除?"
-                  onConfirm={() => {
-                    this.delRowData(record.taskCode);
-                  }}
-                  okText="是"
-                  cancelText="否">
-                  <a href="#"><DelIcon /></a>
-                </Popconfirm>
-              </Tooltip>
-            </>
+            return <Tooltip title="重启">
+              <Popconfirm
+                placement="left"
+                title="确认是否重启?"
+                onConfirm={() => {
+                  this.onRestart(record.taskCode);
+                }}
+                okText="是"
+                cancelText="否">
+                <a>
+                  <ReloadOutlined style={{ fontSize: 14 }} />
+                </a>
+              </Popconfirm>
+            </Tooltip>
+            // return <>
+            //   <Tooltip title="编辑">
+            //     <a onClick={() => {
+            //       console.log("record=", record)
+            //       this.setState({
+            //         selectRow: record,
+            //         isModalOpen: true
+            //       })
+            //     }}><EditIcon /></a>
+            //   </Tooltip>
+            //   <Divider type="vertical" />
+            //   <Tooltip title="删除">
+            //     <Popconfirm
+            //       placement="left"
+            //       title="确认是否删除?"
+            //       onConfirm={() => {
+            //         this.delRowData(record.taskCode);
+            //       }}
+            //       okText="是"
+            //       cancelText="否">
+            //       <a href="#"><DelIcon /></a>
+            //     </Popconfirm>
+            //   </Tooltip>
+            // </>
           }
         },
       ]
@@ -141,7 +153,7 @@ class Crontab extends PureComponent {
   }
 
   // 是否启用状态更改
-  onSwitchChange = (checked, event, record) => {
+  onSwitchChange = (record) => {
     let _taskAllDatas = [...this.state.taskAllDatas];
     let index = _taskAllDatas.findIndex(item => item.taskCode !== record.taskCode);
     _taskAllDatas[index - 1].switch = checked;;
@@ -165,9 +177,12 @@ class Crontab extends PureComponent {
   }
 
   // 重启
-  onRestart = () => {
+  onRestart = (TaskCode) => {
     this.props.dispatch({
       type: 'console/Restart',
+      payload: {
+        TaskCode
+      },
       callback: () => {
         this.getPageData();
       }
@@ -270,12 +285,12 @@ class Crontab extends PureComponent {
           {
             taskGroupDatas.map(item => {
               let title = `${item.groupName} - ${item.groupCode}`;
-              return <Col className={styles["gutter-row"]} span={12}>
-                <Card bodyStyle={{ height: 340 }} title={title}>
+              return <Col className={styles["gutter-row"]} span={24}>
+                <Card title={title}>
                   <Table
                     rowKey={'taskCode'}
                     size='small'
-                    scroll={{ y: '260px' }}
+                    scroll={{ y: '300px' }}
                     dataSource={item.taskList}
                     columns={columns}
                     pagination={false}

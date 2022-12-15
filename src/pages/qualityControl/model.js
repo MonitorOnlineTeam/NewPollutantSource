@@ -1,8 +1,8 @@
 /*
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-09-02 10:32:25
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2022-11-25 10:24:19
  * @desc: 智能质控model
  */
 
@@ -710,7 +710,6 @@ export default Model.extend({
     *getQCAComponentInfoList({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.getQCAComponentInfoList, payload);
       if (result.IsSuccess) {
-        console.log('result=', result)
         yield update({ gasJoinListData: result.Datas })
       } else {
         message.error(result.Message)

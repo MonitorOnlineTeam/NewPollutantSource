@@ -55,6 +55,20 @@ const routes = [
           },
         ]
       },
+      {
+        path: '/console/database',
+        component: './autoformConfig/DatabaseConfig'
+      },
+      /* 配置中心-系统配置-菜单管理 */
+      {
+        path: '/console/menuManagement',
+        component: './autoformConfig/MenuManagement'
+      },
+      /* 配置中心-AutoForm配置-AutoForm数据源配置 */
+      {
+        path: '/console/datasource',
+        component: './autoformConfig/AutoFormDataSource'
+      }
     ]
   },
   {
@@ -249,6 +263,33 @@ const routes = [
                 name: 'greenCar',
                 path: '/standingBook/greenCar',
                 component: './TYGT/standingBook/GreenCar',
+              },
+            ]
+          },
+          // 报警
+          {
+            name: 'alarm',
+            path: '/alarm',
+            routes: [
+              // 报警记录
+              {
+                name: 'emissionSource',
+                path: '/alarm/alarmRecord',
+                component: './Alarm/alarmRecord',
+              },
+            ]
+          },
+          // 视频
+          {
+            name: 'video',
+            path: '/video',
+            routes: [
+              // 海康视频 - 预览
+              {
+                name: 'emissionSource',
+                path: '/video/HK/view',
+                component: './Video/HKPlatform/index',
+                // component: './Video/HKPlatform/Live',
               },
             ]
           },
@@ -1907,7 +1948,7 @@ const routes = [
                 path: '/Intelligentanalysis/dataGainRatePage',
                 component: './dataAnalyze/DataGainRatePage',
               },
-              // 数据获取率`
+              // 空气质量日报
               {
                 name: 'report',
                 path: '/Intelligentanalysis/report/:type',

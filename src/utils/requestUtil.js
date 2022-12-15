@@ -96,7 +96,6 @@ const request = extend({
 });
 
 request.interceptors.request.use(async (url, options) => {
-  console.log('options=', options)
   if (
     options.method === 'post' ||
     options.method === 'put' ||

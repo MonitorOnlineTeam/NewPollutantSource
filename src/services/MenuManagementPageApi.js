@@ -12,7 +12,7 @@ import { API } from '@config/API'
 export async function GetMenuInfos(params) {
     const body = {
     };
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/GetMenuInfos', body, null);
+    const result = await post('/rest/PollutantSourceApi/AutoFormDataApi/GetMenuInfos', body, null);
     return result === null ? null : result;
 }
 

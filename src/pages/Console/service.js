@@ -15,7 +15,7 @@ export async function UpdateConsulConfig(params) {
 
 // 重启联网scoket
 export async function RestartCollect(params) {
-  const result = await post(API.ConsoleApi.RestartCollect, params, null);
+  const result = await post(API.ConsoleApi.RestartCollect + '?LocalEndPoint=' + params.LocalEndPoint, {}, null);
   return result;
 }
 
@@ -51,7 +51,24 @@ export async function ModifyTransmitSet(params) {
 
 // 重启转发服务
 export async function RestartTransmit(params) {
-  const result = await post(API.ConsoleApi.RestartTransmit, params, null);
+  const result = await post(API.ConsoleApi.RestartTransmit + '?clientKey=' + params.clientKey, params, null);
+  return result;
+}
+// 获取排口信息
+export async function GetPoint(params) {
+  const result = await post(API.ConsoleApi.GetPoint, params, null);
+  return result;
+}
+
+// 获取协议列表
+export async function GetAnayticeList(params) {
+  const result = await post(API.ConsoleApi.GetAnayticeList, params, null);
+  return result;
+}
+
+// 获取协议列表
+export async function GetRemotePoint(params) {
+  const result = await post(API.ConsoleApi.GetRemotePoint, params, null);
   return result;
 }
 

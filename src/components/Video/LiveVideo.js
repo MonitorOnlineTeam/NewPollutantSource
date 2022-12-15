@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react'
 import PrivateCloudLiveVideo from './PrivateCloud/Live'
 // import LCYLiveVideo from './LCY/Live'
 import IEDHLiveVideo from './IE-DH/Live'
+import HKHLiveVideo from './HK/Live'
 import { getBrowserInfo } from '@/utils/video'
 import { Empty } from 'antd'
 
@@ -76,6 +77,11 @@ class Live extends PureComponent {
         return <PrivateCloudLiveVideo
           id={id}
           IP={videoInfo.IP} port={videoInfo.Device_Port} deviceSerial={videoInfo.VedioCamera_No} channelNo={videoInfo.ChannelNo} />
+      case 6:
+        // 海康安防视频平台
+        // return <HKHLiveVideo CameraCode={'27b812ca24bd46c98cca749c834ecac1'} />
+        return <HKHLiveVideo CameraCode={videoInfo.VedioCamera_No} />
+
     }
   }
 

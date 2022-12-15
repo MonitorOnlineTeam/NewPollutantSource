@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-17 15:47:56
+ * @Last Modified time: 2022-12-15 10:46:50
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -225,12 +225,12 @@ class SdlForm extends PureComponent {
       // let initialValue = formData && Object.keys(formData).length && formData[fieldName];
       // let initialValue = (formData[fieldName] != undefined) ? `${formData[fieldName]}` : undefined;
       let initialValue = (formData[fieldName] != null && formData[fieldName] != undefined) ? `${formData[fieldName]}` : undefined;
-
       if (item.foreignType && item.fullFieldName) {
         // 有表连接时，取带表名的字段
         if (formData[item.fullFieldName] != undefined) {
           let fieldValue = formData[item.fullFieldName] + "";
-          initialValue = fieldValue.split(',')
+          // initialValue = fieldValue.split(',')
+          initialValue = fieldValue
         }
       };
       // 判断类型
@@ -252,6 +252,7 @@ class SdlForm extends PureComponent {
           let mode = '';
           if (item.type === '多选下拉列表') {
             mode = 'multiple';
+            initialValue = initialValue.split(',')
             // initialValue = formData[configDataItemValue || fieldName] ? (`${formData[configDataItemValue || fieldName]}`).split(',') : [];
           }
           element = (

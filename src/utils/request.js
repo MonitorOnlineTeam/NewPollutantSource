@@ -107,7 +107,6 @@ export async function get(url, params) {
   getTokenTimeAndRefreshToken(() => {
     result = request(url, { method: 'GET' });
   })
-  console.log('result=', result)
   return result;
   // return request(url, { method: 'GET' });
 }

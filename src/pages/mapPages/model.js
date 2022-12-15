@@ -46,7 +46,6 @@ export default Model.extend({
     // 获取监测点infoWindow数据
     *getInfoWindowData({ payload }, { call, update, select, put }) {
       const result = yield call(services.getInfoWindowData, payload);
-      console.log('result=', result)
       if (result.IsSuccess) {
         let data = result.Datas[0] ? result.Datas[0] : {};
         console.log('data=', data)

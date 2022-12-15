@@ -546,6 +546,7 @@ class Contrast extends PureComponent {
                     style={{ width: 160 }}
                     showDefaultValue
                     placeholder="请选择污染物类型"
+                    filterPollutantType={'1,2'}
                     initCallback={(value) => {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();

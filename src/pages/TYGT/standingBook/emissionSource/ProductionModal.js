@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2022-11-21 10:16:02 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-23 09:17:02
+ * @Last Modified time: 2022-11-23 09:57:14
  * @Description: 生产设施关联页面
  */
 import React, { PureComponent } from 'react'
@@ -94,7 +94,6 @@ class ProductionModal extends PureComponent {
   render() {
     const { productionModalVisible } = this.props;
     const { dataSource, targetKeys } = this.state;
-    console.log('dataSource', dataSource)
     return <Modal
       title="生产设施关系配置"
       visible={productionModalVisible}

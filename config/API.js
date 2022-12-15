@@ -719,6 +719,8 @@ export const API = {
     GetAlarmVerifyDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyDetail',
     // 异常数据报警 - 师下所有企业数据
     GetExceptionAlarmListForEnt: before + '/ExceptionAlarmApi/GetExceptionAlarmListForEnt',
+    // 获取报警记录
+    GetAlarmRecord: before + '/AlarmVerifyManageApi/GetAlarmAndExDetail',
 
     // GetDefectPointDetail: before + '/ExceptionAlarmApi/GetDefectPointDetail',
 
@@ -970,12 +972,22 @@ export const API = {
     DeleteVideoDeviceOne: before + '/VideoApi/DeleteVideoDeviceOne',
     // 获取单个设备信息
     GetVideoDeviceOne: before + '/VideoApi/GetVideoDeviceOne',
-    // 更新单个设备信息
+    // 更新单个设备信息 
     UpdateVideoDeviceOne: before + '/VideoApi/UpdateVideoDeviceOne',
     // 获取乐橙云KitToken
     GetLeChengKITToken: before + '/VideoApi/GetLeChengKITToken',
     // 获取首页视频列表
     GetHomePageVideo: before + '/VideoApi/GetHomePageVideo',
+    // 获取视频接入方式
+    GetVideoInputType: before + '/VideoApi/GetVideoInputType',
+    // --------------------------------------------------------
+    // 获取海康平台实时视频播放地址
+    GetPreviewURL: before + '/VideoApi/PreviewURL',
+    // 获取海康平台历史视频播放地址
+    GetPlaybackURL: before + '/VideoApi/PlaybackURL',
+    // 海康云台操作
+    PTZControl: before + '/VideoApi/PTZControl',
+
   },
   TYGTApi: {
     // 获取排放源下设施列表(治理设施,生产,环保点位) InstallationType: 1=治理设施,2=生产,3=环保点位
@@ -996,8 +1008,14 @@ export const API = {
     GetConsulConfig: '/DataCollect/api/DataCollectSet/GetConsulConfig',
     // 更新采集服务操作
     UpdateConsulConfig: '/DataCollect/api/DataCollectSet/UpdateConsulConfig',
+    // 获取采集连接数详情
+    GetRemotePoint: '/DataCollect/api/DataCollectSet/GetRemotePoint',
     // 重启联网scoket
     RestartCollect: '/DataCollect/api/DataCollectSet/RestartCollect',
+    // 获取排口信息
+    GetPoint: '/DataCollect/api/DataCollectSet/GetPoint',
+    // 获取协议列表
+    GetAnayticeList: '/DataCollect/api/DataCollectSet/GetAnayticeList',
     // 获取定时任务配置
     GetStatisSet: '/DataStatis/api/StatisSet/GetStatisSet',
     // 设置定时任务配置

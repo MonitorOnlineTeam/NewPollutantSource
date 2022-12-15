@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import YSYPTZ from './YSY/YSYPTZ'
 import PrivateCloudPTZ from './PrivateCloud/PTZ'
 import LCYPTZ from './LCY/PTZ'
+import HKPTZ from './HK/PTZ'
 
 class PTZControl extends PureComponent {
   constructor(props) {
@@ -36,6 +37,9 @@ class PTZControl extends PureComponent {
         case 5:
           // 大华IE
           break;
+        case 6:
+          // 海康平台
+          return <HKPTZ CameraCode={videoInfo.VedioCamera_No} />
       }
     } else {
       return null;

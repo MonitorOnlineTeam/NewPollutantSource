@@ -48,3 +48,25 @@ export async function queryhistorydatalist(params) {
   const result = await post(API.MonitorDataApi.GetAllTypeDataList, params);
   return result === null ? { data: null } : result;
 }
+
+// 获取实时视频的数据
+export async function GetVideoInputType(params) {
+  const result = await post(API.VideoApi.GetVideoInputType, params);
+  return result;
+}
+
+// 获取海康实时视频地址
+export async function GetPreviewURL(params) {
+  const result = await post(`${API.VideoApi.GetPreviewURL}?CameraCode=${params.CameraCode}&protocol=${params.protocol}`, {});
+  return result;
+}
+// 获取海康历史视频地址
+export async function GetPlaybackURL(params) {
+  const result = await post(`${API.VideoApi.GetPlaybackURL}?CameraCode=${params.CameraCode}&BeginTime=${params.BeginTime}&EndTime=${params.EndTime}`, {});
+  return result;
+}
+// 获取海康历史视频地址
+export async function PTZControl(params) {
+  const result = await post(`${API.VideoApi.PTZControl}?CameraCode=${params.CameraCode}&action=${params.action}&command=${params.command}`, {});
+  return result;
+}
