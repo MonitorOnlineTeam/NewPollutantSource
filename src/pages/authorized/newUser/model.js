@@ -90,7 +90,7 @@ export default Model.extend({
                 });
             }
         },
-        *getUserList({ payload }, { call, put, update, select }) {
+        *getUserList({ payload,callback }, { call, put, update, select }) {
             //用户列表
             yield update({ loading: true });
             const response = yield call(GetUserList, { ...payload });
@@ -100,6 +100,7 @@ export default Model.extend({
                     loading: false
                 });
             }
+            callback&&callback()
         },
         *exportUserList({ callback, payload }, { call, put, update, select }) {
             //用户列表 导出

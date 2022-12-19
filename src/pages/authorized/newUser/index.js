@@ -398,7 +398,12 @@ export default class UserInfoIndex extends Component {
   };
   queryClick=()=>{
    const {dispatch,userPar } = this.props;
-   this.getUserList(userPar)
+   this.getUserList(userPar,()=>{
+    this.props.dispatch({
+      type: 'newuserinfo/updateState',
+      payload: {  userManagePageIndex:1,},
+    })
+   })
   }
   restClick=()=>{
     const {dispatch,userPar } = this.props;
@@ -447,10 +452,13 @@ export default class UserInfoIndex extends Component {
      })
  }
   //获取角色列表
-  getUserList=(params)=>{
+  getUserList=(params,callback)=>{
     this.props.dispatch({
       type: 'newuserinfo/getUserList',
-      payload: params? params : { roleListID:'', groupListID:'', userName:'',	userAccount:''}
+      payload: params? params : { roleListID:'', groupListID:'', userName:'',	userAccount:''},
+      callback:()=>{
+        callback&&callback();
+      }
     });
   }
   //获取部门列表

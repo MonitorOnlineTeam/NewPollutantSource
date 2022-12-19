@@ -88,7 +88,7 @@ const Index = (props) => {
     <div className={styles.noticeContentDetailSty} style={{padding:12,height:'100vh',backgroundColor:'#fff'}}>
          <Spin spinning={noticeContentDetailLoading} active style={{height: '100vh'}}>
        <div style={{textAlign:'center',fontWeight:'bold',fontSize:15,}}>{noticeContentDetail.NoticeTitle}</div>
-       <div style={{textAlign:'center',color:'rgb(194,194,194)',paddingTop:8}}><span>创建人：{noticeContentDetail.CreateUserName}</span> <span style={{paddingLeft:22}}>创建时间：{noticeContentDetail.CreateTime}</span></div>
+       {/* <div style={{textAlign:'center',color:'rgb(194,194,194)',paddingTop:8}}><span>创建人：{noticeContentDetail.CreateUserName}</span> <span style={{paddingLeft:22}}>创建时间：{noticeContentDetail.CreateTime}</span></div> */}
        <div style={{paddingTop:12}} dangerouslySetInnerHTML={{__html:noticeContentDetail.Content}}></div> 
        </Spin>
  </div>

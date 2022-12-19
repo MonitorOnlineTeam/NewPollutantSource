@@ -437,7 +437,7 @@ class AutoFormTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter,resizable,noPaging, } = this.props;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter,resizable,noPaging,isFixedOpera, } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
     const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {}
@@ -514,7 +514,7 @@ class AutoFormTable extends PureComponent {
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
       let leftMenuWidth = config.isShowTabs && defaultSettings.layout === "sidemenu" ? 255 : 0
-      const isFixed = scrollXWidth > (window.innerWidth - 64 - 48 - leftMenuWidth) ? 'right' : ''
+      const isFixed = scrollXWidth > (window.innerWidth - 64 - 48 - leftMenuWidth) || isFixedOpera ? 'right' : ''
       _columns.length && _columns.push({
         align: 'center',
         title: '操作',

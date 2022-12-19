@@ -263,6 +263,7 @@ export default Model.extend({
             const result = yield call(AddMonitorPointVerificationItem, payload);
             if (result.IsSuccess) {
                 sdlMessage(result.Message, 'success');
+                callback&&callback()
             } else {
                 sdlMessage(result.Message, 'error');
             }
@@ -303,6 +304,7 @@ export default Model.extend({
             const result = yield call(AddPointParamInfo, payload);
             if (result.IsSuccess) {
                 sdlMessage(result.Message, 'success');
+                callback&&callback()
             } else {
                 sdlMessage(result.Message, 'error');
             }

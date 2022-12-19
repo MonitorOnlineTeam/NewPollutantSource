@@ -23,6 +23,7 @@ import {
   Tabs,
   Checkbox,
 } from 'antd';
+import Cookie from 'js-cookie';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import MonitorContent from '@/components/MonitorContent';
@@ -46,7 +47,6 @@ const { TabPane } = Tabs;
 const { confirm } = Modal;
 let pointConfigId = '';
 let pointConfigIdEdit = '';
-
 @connect(({ loading, autoForm, monitorTarget, common, point, global }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
@@ -109,6 +109,8 @@ export default class MonitorPoint extends Component {
       loadFlag: false,
       radiusElectronicFenceVal: '',//电子围栏半径
       radiusElectronicFlag: true,
+      isSuperAdministrator:false,
+
     };
   }
 
@@ -127,7 +129,8 @@ export default class MonitorPoint extends Component {
         },
       },
     });
-
+    const userAccountFlag = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserAccount === 'system';
+    this.setState({isSuperAdministrator:userAccountFlag})
 
   }
 
@@ -274,6 +277,9 @@ export default class MonitorPoint extends Component {
           HourPollutantCode: this.state.hourPollutantCode ? this.state.hourPollutantCode.toString() : '',
           PlatformNum: this.state.platformNum,
         },
+        callback: () => {
+          this.getMonitorPointVerificationItemFun(FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"])
+        }
       });
     } else if (this.state.tabKey == 4) { //设备参数项
       dispatch({
@@ -282,8 +288,10 @@ export default class MonitorPoint extends Component {
           pollutantType: this.state.pollutantType,
           DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
           pollutantList: this.state.equipmentPol ? this.state.equipmentPol : '',
-
         },
+        callback: () => {
+          this.getParamInfoListFun(FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],this.state.pollutantType)
+        }
       })
     } else if (this.state.tabKey == 5) { //监测点系数
       const { pointCoefficientVal } = this.state;
@@ -303,6 +311,7 @@ export default class MonitorPoint extends Component {
         },
         callback: () => {
           this.setState({ pointCoefficientFlag: true })
+          this.getPointCoefficientByDGIMNFun(FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"])
         }
       })
 
@@ -313,6 +322,9 @@ export default class MonitorPoint extends Component {
           DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
           Range: this.state.radiusElectronicFenceVal,
         },
+        callback: () => {
+          this.getPointElectronicFenceInfoFun(FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"])
+        }
       })
     } else {
       form.validateFields((err, values) => { //监测点
@@ -478,22 +490,7 @@ export default class MonitorPoint extends Component {
             },
             callback: () => { }
           });
-          this.props.dispatch({ //回显数据
-            type: 'point/getParamInfoList',
-            payload: {
-              DGIMN: FormData['dbo.T_Bas_CommonPoint.DGIMN'] || FormData['DGIMN'],
-              pollutantType: FormData['dbo.T_Bas_CommonPoint.PollutantType'] || FormData['PollutantType'],
-            },
-            callback: (codeList, res) => {
-              this.setState({
-                equipmentPol: codeList && codeList[0] ? codeList : undefined,
-                createUserName2: res && res[0] && res[0].CreateUserName,
-                createTime2: res && res[0] && res[0].CreateTime,
-                updUserName2: res && res[0] && res[0].UpdUserName,
-                updTime2: res && res[0] && res[0].UpdTime,
-              })
-            }
-          })
+          this.getParamInfoListFun(FormData['dbo.T_Bas_CommonPoint.DGIMN'] || FormData['DGIMN'], FormData['dbo.T_Bas_CommonPoint.PollutantType'] || FormData['PollutantType'])
         }
       } else {
         message.error("请先保存站点信息！")
@@ -780,6 +777,84 @@ export default class MonitorPoint extends Component {
 
     }
   }
+  getMonitorPointVerificationItemFun = (DGIMN) =>{
+    this.props.dispatch({ //数据核查 回显数据
+      type: 'point/getMonitorPointVerificationItem',
+      payload: {
+        DGIMN: DGIMN,
+      },
+      callback: (res) => {
+        this.setState({
+          itemCode: res && res.code ? res.code : undefined,
+          realtimePollutantCode: res && res.RealTimeItem ? res.RealTimeItem : undefined,
+          hourPollutantCode: res && res.HourItem ? res.HourItem : undefined,
+          platformNum: res && res.platformNum ? res.platformNum : undefined,
+          createUserName1: res && res.CreateUserName,
+          createTime1: res && res.CreateTime,
+          updUserName1: res && res.UpdUserName,
+          updTime1: res && res.UpdTime,
+        })
+      }
+    })
+  }
+ 
+  getParamInfoListFun = (DGIMN,pollutantType) =>{
+    this.props.dispatch({ //设备参数项 回显数据
+      type: 'point/getParamInfoList',
+      payload: {
+        DGIMN: DGIMN,
+        pollutantType: pollutantType,
+      },
+      callback: (codeList, res) => {
+        this.setState({
+          equipmentPol: codeList && codeList[0] ? codeList : undefined,
+          createUserName2: res && res[0] && res[0].CreateUserName,
+          createTime2: res && res[0] && res[0].CreateTime,
+          updUserName2: res && res[0] && res[0].UpdUserName,
+          updTime2: res && res[0] && res[0].UpdTime,
+        })
+      }
+    }) 
+  }
+  getPointCoefficientByDGIMNFun = (DGIMN) =>{
+    this.props.dispatch({ //监测点系数 回显数据
+      type: 'point/getPointCoefficientByDGIMN',
+      payload: {
+        DGIMN: DGIMN,
+      },
+      callback: (res) => {
+        this.setState({
+          pointCoefficientVal: res ? res.PointCoefficient : undefined,
+          createUserName3: res && res.CreateUserName,
+          createTime3: res && res.CreateTime,
+          updUserName3: res && res.UpdUserName,
+          updTime3: res && res.UpdTime,
+          pointCoefficientFlag: res && res.PointCoefficient ? true : false,
+        })
+      }
+    })
+  }
+
+  getPointElectronicFenceInfoFun = (DGIMN) =>{
+    this.props.dispatch({ //电子围栏半径 回显数据
+      type: 'point/getPointElectronicFenceInfo',
+      payload: {
+        DGIMN: DGIMN,
+      },
+      callback: (res) => {
+        this.setState({
+          radiusElectronicFenceVal: res ? res.Range : undefined,
+          createUserName4: res && res.CreateUser,
+          createTime4: res && res.CreateTime,
+          updUserName4: res && res.UpdateUser,
+          updTime4: res && res.UpdateTime,
+          radiusElectronicFlag: res && res.isUpdate ? true : false,
+        })
+      }
+    })
+  }
+
+
   render() {
     const {
       searchConfigItems,
@@ -820,8 +895,10 @@ export default class MonitorPoint extends Component {
 
       </Menu>
     );
-    const { tabKey, pointCoefficientFlag, pollutantType, deviceManagerGasType, sortTitle, } = this.state;
+    const { tabKey, pointCoefficientFlag, pollutantType, deviceManagerGasType, sortTitle,isSuperAdministrator, } = this.state;
     const pointFlag = tabKey == 5 && pointCoefficientFlag;
+    const radiusFlag = tabKey == 6 && !isSuperAdministrator;
+
     return (
       <BreadcrumbWrapper title="监测点维护">
         <div className={styles.cardTitle}>
@@ -935,58 +1012,13 @@ export default class MonitorPoint extends Component {
                             type: 'point/getMonitorPointVerificationList', //获取数据核查信息
                             payload: { pollutantType: row['dbo.T_Bas_CommonPoint.PollutantType'] },
                           });
-                          this.props.dispatch({ //数据核查 回显数据
-                            type: 'point/getMonitorPointVerificationItem',
-                            payload: {
-                              DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
-                            },
-                            callback: (res) => {
-                              this.setState({
-                                itemCode: res && res.code ? res.code : undefined,
-                                realtimePollutantCode: res && res.RealTimeItem ? res.RealTimeItem : undefined,
-                                hourPollutantCode: res && res.HourItem ? res.HourItem : undefined,
-                                platformNum: res && res.platformNum ? res.platformNum : undefined,
-                                createUserName1: res && res.CreateUserName,
-                                createTime1: res && res.CreateTime,
-                                updUserName1: res && res.UpdUserName,
-                                updTime1: res && res.UpdTime,
-                              })
-                            }
-                          })
 
-                          this.props.dispatch({ //监测点系数 回显数据
-                            type: 'point/getPointCoefficientByDGIMN',
-                            payload: {
-                              DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
-                            },
-                            callback: (res) => {
-                              this.setState({
-                                pointCoefficientVal: res ? res.PointCoefficient : undefined,
-                                createUserName3: res && res.CreateUserName,
-                                createTime3: res && res.CreateTime,
-                                updUserName3: res && res.UpdUserName,
-                                updTime3: res && res.UpdTime,
-                                pointCoefficientFlag: res && res.PointCoefficient ? true : false,
-                              })
-                            }
-                          })
+                          this.getMonitorPointVerificationItemFun(row['dbo.T_Bas_CommonPoint.DGIMN'])
+                          
+                          this.getPointCoefficientByDGIMNFun(row['dbo.T_Bas_CommonPoint.DGIMN'])
 
-                          this.props.dispatch({ //电子围栏半径 回显数据
-                            type: 'point/getPointElectronicFenceInfo',
-                            payload: {
-                              DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
-                            },
-                            callback: (res) => {
-                              this.setState({
-                                radiusElectronicFenceVal: res ? res.Range : undefined,
-                                createUserName4: res && res.CreateUser,
-                                createTime4: res && res.CreateTime,
-                                updUserName4: res && res.UpdateUser,
-                                updTime: res && res.UpdateTime,
-                                radiusElectronicFlag: res && res.isUpdate ? true : false,
-                              })
-                            }
-                          })
+                          this.getPointElectronicFenceInfoFun(row['dbo.T_Bas_CommonPoint.DGIMN'])
+
                         }}
                       >
                         <EditIcon />
@@ -1062,7 +1094,7 @@ export default class MonitorPoint extends Component {
             </Button>,
 
                 <>
-                  {pointFlag ?
+                  {pointFlag || radiusFlag?
                     <Button key="submit" onClick={this.modelClose}>
                       取消
                   </Button>
