@@ -73,7 +73,7 @@ class TaskRecord extends Component {
       DGIMN: null,
       pointList: [],
       pointLoading: false,
-      abnormalTitle:'',
+      abnormalTitle: '',
     };
     this._SELF_ = {
       configId: 'TaskRecord',
@@ -446,11 +446,11 @@ class TaskRecord extends Component {
 
   exceptionDetail = (row) => { //打卡异常详情
     this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: true, }, })
-    this.setState({ abnormalTitle: `${row.EntName} - ${row.PointName}`})
+    this.setState({ abnormalTitle: `${row.EntName} - ${row.PointName}` })
     setTimeout(() => {
       const baseReportSearchForm = this.props.form.getFieldsValue();
-      const beginTime = baseReportSearchForm.CreateTime &&moment(baseReportSearchForm.CreateTime[0]).format("YYYY-MM-DD HH:mm:ss");
-      const endTime = baseReportSearchForm.CreateTime &&moment(baseReportSearchForm.CreateTime[1]).format("YYYY-MM-DD HH:mm:ss");
+      const beginTime = baseReportSearchForm.CreateTime && moment(baseReportSearchForm.CreateTime[0]).format("YYYY-MM-DD HH:mm:ss");
+      const endTime = baseReportSearchForm.CreateTime && moment(baseReportSearchForm.CreateTime[1]).format("YYYY-MM-DD HH:mm:ss");
       this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { queryPar: { ...this.props.queryPar, beginTime: beginTime, endTime: endTime, } } })
       this.props.dispatch({
         type: `abnormalWorkStatistics/getPointExceptionSignList`,
@@ -458,7 +458,7 @@ class TaskRecord extends Component {
           beginTime: beginTime,
           endTime: endTime,
           DGIMN: row.DGIMN,
-          taskID:row.ID,
+          taskID: row.ID,
         },
       }
       )
@@ -510,7 +510,16 @@ class TaskRecord extends Component {
         align: 'center',
         ellipsis: true,
         render: (text, record) => {
-          return text === '打卡异常' ? <a onClick={()=>this.exceptionDetail(record)}>{text}</a> : text;
+          if (text) {
+            if (text === '打卡异常') {
+              return <a onClick={() => this.exceptionDetail(record)}>{text}</a>
+            } else if (text.split(',')[0]=='打卡异常') {
+              const str = text.substring(4) //截取第四位后面的字符串
+              return <div><a onClick={() => this.exceptionDetail(record)}>{text.split(',')[0]}</a><span>{str}</span></div>
+           } else {
+              return text;
+            }
+          }
           // if (text === '1') {
           //   return <span>打卡异常</span>;
           // }

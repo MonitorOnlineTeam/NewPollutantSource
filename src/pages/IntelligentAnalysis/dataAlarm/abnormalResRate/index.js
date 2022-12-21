@@ -118,12 +118,10 @@ class Index extends PureComponent {
               }
             }
             })
-
             if(this.props.onRegionClick){
               this.props.onRegionClick(record.RegionCode) 
             }else{
-
-              router.push(`/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${record.RegionCode}`)
+              router.push(`/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${record.RegionCode? record.RegionCode : ''}`)
             }
               // router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
           }}>{text}</a>

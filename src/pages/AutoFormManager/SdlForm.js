@@ -8,7 +8,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
 
-import { LeftOutlined, RightOutlined,QuestionCircleOutlined  } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -66,7 +66,7 @@ const FormItem = Form.Item;
   formItemLayout: autoForm.formLayout,
   fileList: autoForm.fileList,
   fileLoading: loading.effects['autoForm/getFormData'],
-  regionList:autoForm.regionList,
+  regionList: autoForm.regionList,
 }))
 
 class SdlForm extends PureComponent {
@@ -180,10 +180,10 @@ class SdlForm extends PureComponent {
       //   format={format} />
     }
     if (format === 'YYYY-MM-DD') {
-      return <DatePicker format={format} style={{ width: '100%' }} disabledDate={item.fullFieldName==="dbo.T_Bas_CommonPoint.Col10"? this.disabledDate : null}/> //disabledDate 监测点监测设备安装日期选择范围显示/>
+      return <DatePicker format={format} style={{ width: '100%' }} disabledDate={item.fullFieldName === "dbo.T_Bas_CommonPoint.Col10" ? this.disabledDate : null} /> //disabledDate 监测点监测设备安装日期选择范围显示/>
     }
     // 年-月-日 时:分:秒
-    return <DatePicker showTime={{ defaultValue:isStart?  moment('00:00:00', 'HH:mm:ss') : isEnd ?  moment('23:59:59', 'HH:mm:ss') :  moment()}}  format={'YYYY-MM-DD HH:mm:ss'} style={{ width: '100%' }} />
+    return <DatePicker showTime={{ defaultValue: isStart ? moment('00:00:00', 'HH:mm:ss') : isEnd ? moment('23:59:59', 'HH:mm:ss') : moment() }} format={'YYYY-MM-DD HH:mm:ss'} style={{ width: '100%' }} />
   }
 
   // 检验重复
@@ -216,7 +216,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode,flag } = this.props;
+    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode, flag } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
@@ -241,21 +241,21 @@ class SdlForm extends PureComponent {
       // 判断类型
       switch (item.type) {
         case '文本框':
-          validator = `${inputPlaceholder}`;   
-          if( item.labelText==='大气站名称'){
+          validator = `${inputPlaceholder}`;
+          if (item.labelText === '大气站名称') {
             placeholder = stationPlaceStr
-          }else if(item.labelText==='登录名'&& configId === 'UserInfoAdd'){ //用户管理 基本信息
-             placeholder = `${inputPlaceholder}员工编号，例子：SDL0000`
-          }else{
-            placeholder =  inputPlaceholder
+          } else if (item.labelText === '登录名' && configId === 'UserInfoAdd') { //用户管理 基本信息
+            placeholder = `${inputPlaceholder}员工编号，例子：SDL0000`
+          } else {
+            placeholder = inputPlaceholder
           }
           placeholder = placeholder || inputPlaceholder;
-          element = <Input disabled={item.labelText==='设备编号(MN)'&&isEdit? true : false} placeholder={placeholder} title={ item.labelText==='大气站名称'&&stationPlaceStr} allowClear />;
+          element = <Input disabled={item.labelText === '设备编号(MN)' && isEdit ? true : false} placeholder={placeholder} title={item.labelText === '大气站名称' && stationPlaceStr} allowClear />;
           break;
-          case '数字':
-            validator = `${inputPlaceholder}`;
-            element = <InputNumber style={{ width: '100%' }} min={0} placeholder={'请输入' + item.labelText} allowClear />;
-            break;
+        case '数字':
+          validator = `${inputPlaceholder}`;
+          element = <InputNumber style={{ width: '100%' }} min={0} placeholder={'请输入' + item.labelText} allowClear />;
+          break;
         case '下拉列表框':
         case '多选下拉列表':
           validator = `${selectPlaceholder}`;
@@ -290,7 +290,7 @@ class SdlForm extends PureComponent {
               itemValue={item.configDataItemValue}
               configId={item.configId}
               data={item.value}
-              selectType={labelText==='行政区'? item.selectType : '999,是'}
+              selectType={labelText === '行政区' ? item.selectType : '999,是'}
               placeholder={placeholder}
             />
           )
@@ -302,7 +302,7 @@ class SdlForm extends PureComponent {
         case '单选':
           initialValue = (formData[fieldName] != undefined) && formData[fieldName];
           if (item.value && !initialValue && !isEdit) {
-            initialValue = item.value[0].key
+             initialValue =  configId === "GasOutput" && item.fullFieldName == "dbo.T_Bas_CommonPoint.Col4"? undefined :  item.value[0].key
           }
           element = (
             <SdlRadio
@@ -428,7 +428,7 @@ class SdlForm extends PureComponent {
               },
             };
 
-            element = <SdlUpload  accept={flag=="img"?"image/*":''} fileList={this.props.fileList}  flags={flag} cuid={uid} uploadSuccess={(cuid) => {
+            element = <SdlUpload accept={flag == "img" ? "image/*" : ''} fileList={this.props.fileList} flags={flag} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
               setFieldsValue({ [fieldName]: uid })
             }} />
@@ -537,7 +537,7 @@ class SdlForm extends PureComponent {
         }
         return (
           <Col className='searchForm' span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
-            <FormItem   key={fieldName} {...layout} label={labelText}>
+            <FormItem key={fieldName} {...layout} label={labelText}>
               {getFieldDecorator(`${fieldName}`, {
                 initialValue: initialValue || undefined,
                 rules: [
@@ -718,14 +718,14 @@ class SdlForm extends PureComponent {
     // }
     return (
       <Fragment>
-        <Spin  spinning={this.props.isModal&&this.props.isEdit? this.props.fileLoading : false}> {/*弹框编辑的加载状态loading */}
-        {this.renderContent()}
+        <Spin spinning={this.props.isModal && this.props.isEdit ? this.props.fileLoading : false}> {/*弹框编辑的加载状态loading */}
+          {this.renderContent()}
         </Spin>
       </Fragment>
     );
   }
 
-  
+
 }
 
 

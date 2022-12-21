@@ -327,14 +327,14 @@ export default class Index extends Component {
          dataIndex: `${item.PollutantCode}_overrun`,
          key: `${item.PollutantCode}_overrun`,
          width: 100, align:'center' 
+         }]
         },
         {
           title: '恒定值异常',
           align:'center',
           children: [{  title: '恒定值计数',   dataIndex: `${item.PollutantCode}_continuity`,  key:`${item.PollutantCode}_continuity`,  width: 100, align:'center' }]
-         },
-      ]
-          }],
+         },  
+        ],
 
         })
     })
@@ -422,7 +422,7 @@ export default class Index extends Component {
             columns={columns}
             bordered={true}
             dataSource={tableDatas}
-            scroll={{ y: column.length>0&&'calc(100vh - 450px)' }}
+            scroll={{ y: column.length>0&&'calc(100vh - 400px)' }}
             pagination={{
               showSizeChanger: true,
               showQuickJumper: true,

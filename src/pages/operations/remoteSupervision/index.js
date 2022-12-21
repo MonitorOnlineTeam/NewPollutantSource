@@ -2120,7 +2120,7 @@ const Index = (props) => {
           <Form
             form={form}
             name="advanced_search"
-            onFinish={() => { onFinish(pageIndex, pageSize) }}
+            onFinish={() => {setPageIndex(1); onFinish(1, pageSize) }}
             initialValues={{
               month: [moment().add(-30, 'day'),moment()],
             }}

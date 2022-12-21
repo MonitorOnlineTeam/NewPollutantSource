@@ -4,7 +4,7 @@
  * 创建时间：2022.05.18
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Tabs, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Tabs, Typography,Pagination, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
@@ -90,6 +90,7 @@ const Index = (props) => {
 
   }, [])
 
+
   const columns = [
     {
       title: '序号',
@@ -162,81 +163,96 @@ const Index = (props) => {
       }
     },
   ];
-
+  const rowSpanFun = (value,record) =>{
+    let obj = {
+      children: <div>{value}</div>,
+      props: { rowSpan: record.Count},
+    };
+    return obj;
+  }
   const columns2 = [
-    {
-      title: '序号',
-      align: 'center',
-      width: 50,
-      render: (text, record, index) => {
-        return index + 1;
-      }
-    },
+    // {
+    //   title: '序号',
+    //   align: 'center',
+    //   width: 50,
+    //   render:(text, record, index)=>{return index+1}
+    // },
     {
       title: '省份',
       dataIndex: 'RegionName',
       key: 'RegionName',
       align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '地级市',
       dataIndex: 'CityName',
       key: 'CityName',
       align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '运维项目号',
       dataIndex: 'ProjectCode',
       key: 'ProjectCode',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '项目名称',
       dataIndex: 'ProjectName',
       key: 'ProjectName',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '企业名称',
       dataIndex: 'EntName',
       key: 'EntName',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '站点名称',
       dataIndex: 'PointName',
       key: 'PointName',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: 'MN号',
       dataIndex: 'DGIMN',
       key: 'DGIMN',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '分类',
       dataIndex: 'PollutantTypeName',
       key: 'PollutantTypeName',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '设备类别系数',
       dataIndex: 'PointCoefficient',
       key: 'PointCoefficient',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '巡检周期',
       dataIndex: 'InspectionTypeName',
       key: 'InspectionTypeName',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '巡检周期系数',
       dataIndex: 'RecordCoefficient',
       key: 'RecordCoefficientx',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '实际运维人员',
@@ -251,13 +267,13 @@ const Index = (props) => {
       align: 'center'
     },
     {
-      title: '工单完成比例',
+      title: '个人分摊套数/点位数',
       dataIndex: 'OrderExecutionRatio',
       key: 'OrderExecutionRatio',
       align: 'center'
     },
     {
-      title: '执行比例',
+      title: '执行比例/工单完成比例',
       dataIndex: 'ExecutionRatio',
       key: 'ExecutionRatio',
       align: 'center'
@@ -411,7 +427,7 @@ const Index = (props) => {
     return <Form
       name="advanced_search2"
       form={form2}
-      onFinish={() => { onFinish2(1, pageSize2) }}
+      onFinish={() => {setPageIndex2(1); onFinish2(1, pageSize2) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
@@ -452,7 +468,6 @@ const Index = (props) => {
       </Row>
     </Form>
   }
-
   return (
     <div className={styles.achievQuerySty}>
       <BreadcrumbWrapper>
@@ -484,16 +499,19 @@ const Index = (props) => {
                 bordered
                 dataSource={tableDatas2}
                 columns={columns2}
-                pagination={{
-                  total: tableTotal2,
-                  pageSize: pageSize2,
-                  current: pageIndex2,
-                  showSizeChanger: true,
-                  showQuickJumper: true,
-                  onChange: handleTableChange2,
-                }}
+                rowClassName={{}}
+                pagination={false}
               />
             </Card>
+            <Pagination 
+                  size='small'
+                  total= {tableTotal2}
+                  pageSize= {pageSize2}
+                  current= {pageIndex2}
+                  showSizeChanger
+                  showQuickJumper
+                  onChange= {handleTableChange2}
+           />
           </TabPane>
         </Tabs>
         <Modal
@@ -524,3 +542,4 @@ const Index = (props) => {
   );
 };
 export default connect(dvaPropsData, dvaDispatch)(Index);
+

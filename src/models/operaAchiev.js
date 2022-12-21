@@ -168,6 +168,7 @@ export default Model.extend({
       yield update({ tableLoading: true })
       const result = yield call(services.GetPersonalPerformanceRateInfoList, payload);
       if (result.IsSuccess) {
+        console.log(result.Datas)
         yield update({
           personalPerformanceRateInfoList: result.Datas,
           personalPerformanceRateInfoTotal: result.Total,

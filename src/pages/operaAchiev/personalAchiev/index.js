@@ -171,104 +171,98 @@ const Index = (props) => {
     },
     {
       title: '省份',
-      dataIndex: 'UserAccount',
-      key: 'UserAccount',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
       align: 'center',
     },
     {
       title: '地级市',
-      dataIndex: 'UserName',
-      key: 'UserName',
+      dataIndex: 'CityName',
+      key: 'CityName',
       align: 'center',
     },
     {
       title: '运维项目号',
-      dataIndex: 'GasPerformance',
-      key: 'GasPerformance',
+      dataIndex: 'ProjectCode',
+      key: 'ProjectCode',
       align: 'center'
     },
     {
       title: '项目名称',
-      dataIndex: 'WaterPerformance',
-      key: 'WaterPerformance',
+      dataIndex: 'ProjectName',
+      key: 'ProjectName',
       align: 'center'
     },
     {
       title: '企业名称',
-      dataIndex: 'GasPerformance',
-      key: 'GasPerformance',
+      dataIndex: 'EntName',
+      key: 'EntName',
       align: 'center'
     },
     {
       title: '站点名称',
-      dataIndex: 'WaterPerformance',
-      key: 'WaterPerformance',
+      dataIndex: 'PointName',
+      key: 'PointName',
       align: 'center'
     },
     {
       title: 'MN号',
-      dataIndex: 'GasPerformance',
-      key: 'GasPerformance',
+      dataIndex: 'DGIMN',
+      key: 'DGIMN',
       align: 'center'
     },
     {
       title: '分类',
-      dataIndex: 'WaterPerformance',
-      key: 'WaterPerformance',
+      dataIndex: 'PollutantTypeName',
+      key: 'PollutantTypeName',
       align: 'center'
     },
     {
       title: '设备类别系数',
-      dataIndex: 'GasPerformance',
-      key: 'GasPerformance',
+      dataIndex: 'PointCoefficient',
+      key: 'PointCoefficient',
       align: 'center'
     },
     {
       title: '巡检周期',
-      dataIndex: 'WaterPerformance',
-      key: 'WaterPerformance',
+      dataIndex: 'InspectionTypeName',
+      key: 'InspectionTypeName',
       align: 'center'
     },
     {
       title: '巡检周期系数',
-      dataIndex: 'GasPerformance',
-      key: 'GasPerformance',
+      dataIndex: 'RecordCoefficient',
+      key: 'RecordCoefficientx',
       align: 'center'
     },
     {
       title: '实际运维人员',
-      dataIndex: 'WaterPerformance',
-      key: 'WaterPerformance',
+      dataIndex: 'UserName',
+      key: 'UserName',
       align: 'center'
     },
     {
       title: '工号',
-      dataIndex: 'GasPerformance',
-      key: 'GasPerformance',
+      dataIndex: 'UserAccount',
+      key: 'UserAccount',
       align: 'center'
     },
     {
       title: '个人分摊套数/点位数',
-      dataIndex: 'WaterPerformance',
-      key: 'WaterPerformance',
+      dataIndex: 'OrderExecutionRatio',
+      key: 'OrderExecutionRatio',
       align: 'center'
     },
     {
-      title: '工单完成比例',
-      dataIndex: 'GasPerformance',
-      key: 'GasPerformance',
-      align: 'center'
-    },
-    {
-      title: '执行比例',
-      dataIndex: 'GasPerformance',
-      key: 'GasPerformance',
+      title: '执行比例/工单完成比例',
+      dataIndex: 'ExecutionRatio',
+      key: 'ExecutionRatio',
       align: 'center'
     },
     {
       title: '绩效套数',
-      dataIndex: 'GasPerformance',
-      key: 'GasPerformance',
+      dataIndex: 'UserCoefficient',
+      key: 'UserCoefficient',
       align: 'center'
     },
     {
@@ -278,7 +272,7 @@ const Index = (props) => {
         return <span>
           <Fragment>
             <Tooltip title="详情">
-              <a onClick={() => { detail(record) }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
+              <a onClick={() => { detail(record,'isDetailed') }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
             </Tooltip>
           </Fragment>
         </span>
@@ -405,7 +399,7 @@ const Index = (props) => {
     return <Form
       name="advanced_search2"
       form={form2}
-      onFinish={() => { onFinish2(1, pageSize2) }}
+      onFinish={() => {setPageIndex2(1); onFinish2(1, pageSize2) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
