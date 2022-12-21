@@ -39,7 +39,7 @@ const dvaPropsData = ({ loading, operaAchiev, global }) => ({
   tableDatas2: operaAchiev.personalPerformanceRateInfoList,
   tableLoading2: loading.effects[`${namespace}/getPersonalPerformanceRateInfoList`],
   exportLoading2: loading.effects[`${namespace}/exportPersonalPerformanceRateInfo`],
-
+  clientHeight: global.clientHeight,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -82,7 +82,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const { tableTotal, tableDatas, tableLoading, exportLoading, tableTotal2, tableDatas2, tableLoading2, exportLoading2, } = props;
+  const {clientHeight, tableTotal, tableDatas, tableLoading, exportLoading, tableTotal2, tableDatas2, tableLoading2, exportLoading2, } = props;
 
   useEffect(() => {
     onFinish(pageIndex, pageSize)
@@ -493,16 +493,17 @@ const Index = (props) => {
           </TabPane>
           <TabPane tab='绩效明细' key="2">
             <Card title={searchComponents2()}>
-
               <SdlTable
                 loading={tableLoading2}
                 bordered
                 dataSource={tableDatas2}
                 columns={columns2}
+                scroll={{ y: clientHeight - 440 }}
                 rowClassName={{}}
                 pagination={false}
               />
             </Card>
+            <Row style={{margin:'16px 24px 0 0 '}} justify='end'>
             <Pagination 
                   size='small'
                   total= {tableTotal2}
@@ -512,6 +513,7 @@ const Index = (props) => {
                   showQuickJumper
                   onChange= {handleTableChange2}
            />
+           </Row>
           </TabPane>
         </Tabs>
         <Modal
