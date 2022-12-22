@@ -4,7 +4,7 @@
  * 创建时间：2022.05.17
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Tabs, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Tabs,Pagination, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
@@ -37,6 +37,7 @@ const dvaPropsData = ({ loading, operaAchiev, global }) => ({
   tableDatas2: operaAchiev.personalPerformanceRateInfoList,
   tableLoading2: loading.effects[`${namespace}/getPersonalPerformanceRateInfoList`],
   exportLoading2: loading.effects[`${namespace}/exportPersonalPerformanceRateInfo`],
+  clientHeight:global.clientHeight
 })
 
 const dvaDispatch = (dispatch) => {
@@ -79,7 +80,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, } = props;
+  const {clientHeight, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, } = props;
 
   useEffect(() => {
     onFinish(pageIndex,pageSize)
@@ -160,80 +161,91 @@ const Index = (props) => {
     },
   ];
 
+  const rowSpanFun = (value,record) =>{
+    let obj = {
+      children: <div>{value}</div>,
+      props: { rowSpan: record.Count},
+    };
+    return obj;
+  }
   const columns2 = [
-    {
-      title: '序号',
-      align: 'center',
-      width: 50,
-      render: (text, record, index) => {
-        return index + 1;
-      }
-    },
     {
       title: '省份',
       dataIndex: 'RegionName',
       key: 'RegionName',
       align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '地级市',
       dataIndex: 'CityName',
       key: 'CityName',
       align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '运维项目号',
       dataIndex: 'ProjectCode',
       key: 'ProjectCode',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '项目名称',
       dataIndex: 'ProjectName',
       key: 'ProjectName',
-      align: 'center'
+      align: 'center',
+      width:160,
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '企业名称',
       dataIndex: 'EntName',
       key: 'EntName',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '站点名称',
       dataIndex: 'PointName',
       key: 'PointName',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: 'MN号',
       dataIndex: 'DGIMN',
       key: 'DGIMN',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '分类',
       dataIndex: 'PollutantTypeName',
       key: 'PollutantTypeName',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '设备类别系数',
       dataIndex: 'PointCoefficient',
       key: 'PointCoefficient',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '巡检周期',
       dataIndex: 'InspectionTypeName',
       key: 'InspectionTypeName',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '巡检周期系数',
       dataIndex: 'RecordCoefficient',
       key: 'RecordCoefficientx',
-      align: 'center'
+      align: 'center',
+      render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
       title: '实际运维人员',
@@ -251,13 +263,15 @@ const Index = (props) => {
       title: '个人分摊套数/点位数',
       dataIndex: 'OrderExecutionRatio',
       key: 'OrderExecutionRatio',
-      align: 'center'
+      align: 'center',
+      width:160,
     },
     {
       title: '执行比例/工单完成比例',
       dataIndex: 'ExecutionRatio',
       key: 'ExecutionRatio',
-      align: 'center'
+      align: 'center',
+      width:180,
     },
     {
       title: '绩效套数',
@@ -471,16 +485,22 @@ const Index = (props) => {
                 bordered
                 dataSource={tableDatas2}
                 columns={columns2}
-                pagination={{
-                  total: tableTotal2,
-                  pageSize: pageSize2,
-                  current: pageIndex2,
-                  showSizeChanger: true,
-                  showQuickJumper: true,
-                  onChange: handleTableChange2,
-                }}
+                scroll={{ y: clientHeight - 440 }}
+                rowClassName={{}}
+                pagination={false}
               />
             </Card>
+            <Row style={{margin:'16px 24px 0 0 '}} justify='end'>
+             {tableTotal2 >0&&<Pagination 
+                  size='small'
+                  total= {tableTotal2}
+                  pageSize= {pageSize2}
+                  current= {pageIndex2}
+                  showSizeChanger
+                  showQuickJumper
+                  onChange= {handleTableChange2}
+           />}
+           </Row>
           </TabPane>
         </Tabs>
         {/* <Card title={searchComponents()}>

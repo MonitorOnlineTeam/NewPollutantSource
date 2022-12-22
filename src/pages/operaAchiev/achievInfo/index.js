@@ -203,6 +203,7 @@ const Index = (props) => {
       dataIndex: 'ProjectName',
       key: 'ProjectName',
       align: 'center',
+      width:160,
       render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
@@ -270,13 +271,15 @@ const Index = (props) => {
       title: '个人分摊套数/点位数',
       dataIndex: 'OrderExecutionRatio',
       key: 'OrderExecutionRatio',
-      align: 'center'
+      align: 'center',
+      width:160,
     },
     {
       title: '执行比例/工单完成比例',
       dataIndex: 'ExecutionRatio',
       key: 'ExecutionRatio',
-      align: 'center'
+      align: 'center',
+      width:180,
     },
     {
       title: '绩效套数',
@@ -504,7 +507,7 @@ const Index = (props) => {
               />
             </Card>
             <Row style={{margin:'16px 24px 0 0 '}} justify='end'>
-            <Pagination 
+             {tableTotal2 >0&&<Pagination 
                   size='small'
                   total= {tableTotal2}
                   pageSize= {pageSize2}
@@ -512,7 +515,7 @@ const Index = (props) => {
                   showSizeChanger
                   showQuickJumper
                   onChange= {handleTableChange2}
-           />
+            />}
            </Row>
           </TabPane>
         </Tabs>
