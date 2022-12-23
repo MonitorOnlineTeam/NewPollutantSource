@@ -195,7 +195,7 @@ export default class OverVerifyLstModal extends Component {
                 key: item.PollutantCode + '_RespondedRate',
                 align: 'center',
                 render: (text, record) => {
-                  return <div>{text == '-' ? text : `${text}%`}</div>;
+                  return <div>{text == '-' ? text : text? `${text}%` : ''}</div>;
                 },
               },
             ],
@@ -445,7 +445,7 @@ export default class OverVerifyLstModal extends Component {
               key: item.PollutantCode + '_RespondedRate',
               align: 'center',
               render: (text, record) => {
-                return <div>{text == '-' ? text : `${text}%`}</div>;
+                return <div>{text == '-' ? text : text? `${text}%` : ''}</div>;
               },
             },
           ],

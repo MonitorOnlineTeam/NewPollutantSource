@@ -25,7 +25,8 @@ const { TabPane } = Tabs;
 
 import PersonalShare from './components/PersonalShare'
 import PersonalWorkInfo from './components/PersonalWorkInfo'
-const userId = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId;
+
+let userId;
 
 const namespace = 'operaAchiev'
 const dvaPropsData = ({ loading, operaAchiev, global }) => ({
@@ -85,6 +86,7 @@ const Index = (props) => {
   useEffect(() => {
     onFinish(pageIndex,pageSize)
     onFinish2(pageIndex2,pageSize2,'initData') //initData tab没切换之前获取不到form2
+    userId = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId;
   }, [])
 
   const columns = [

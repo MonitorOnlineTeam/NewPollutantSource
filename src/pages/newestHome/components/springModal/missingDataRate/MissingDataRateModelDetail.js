@@ -92,6 +92,12 @@ export default class Index extends Component {
        },
       },
       {
+        title: '运维负责人',
+        dataIndex: 'operationUser',
+        key: 'operationUser',
+        align: 'center',
+      },
+      {
         title: <span>缺失数据报警次数</span>,
         dataIndex: 'alarmCount',
         key: 'alarmCount',

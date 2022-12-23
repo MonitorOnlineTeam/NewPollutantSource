@@ -95,6 +95,12 @@ export default class PointVerifyLst extends Component {
         key: 'pointName',
         align: 'left',
       },
+      {
+        title: <span>运维负责人</span>,
+        dataIndex: 'operationUser',
+        key: 'operationUser',
+        align: 'left',
+      },
     ];
     this.props.divisorList.map((item, key) => {
        let pollutantList = this.props.overVerifyRateForm.PollutantList.value?  
@@ -139,7 +145,7 @@ export default class PointVerifyLst extends Component {
               key: item.PollutantCode + '_RespondedRate',
               align: 'center',
               render: (text, record) => {
-                return <div>{text == '-' ? text : `${text}%`}</div>;
+                return <div>{text == '-' ? text : text? `${text}%` : ''}</div>;
               },
             },
           ],

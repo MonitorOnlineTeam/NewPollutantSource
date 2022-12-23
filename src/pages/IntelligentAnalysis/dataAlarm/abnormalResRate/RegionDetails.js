@@ -44,6 +44,12 @@ class RegionDetails extends PureComponent {
           align: 'left'
         },
         {
+          title: '运维负责人',
+          dataIndex: 'OperationsUserName',
+          key: 'OperationsUserName',
+          align: 'left',
+        },
+        {
           title: '零值报警',
           children: [
             {

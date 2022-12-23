@@ -345,6 +345,13 @@ const Index = (props) => {
       fixed: 'left',
     },
     {
+      title: '运维负责人',
+      dataIndex: 'operationUser',
+      dataIndex: 'operationUser',
+      align: 'center',
+      fixed: 'left',
+    },
+    {
       title: '响应超时数',
       dataIndex: 'exceptionCount',
       key:'exceptionCount',

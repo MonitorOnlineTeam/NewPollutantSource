@@ -4,9 +4,9 @@
  * 创建时间：2022.09
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Spin, Typography, Card, Cascader, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Spin, Typography, Card, Cascader, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio,Upload, } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined,UploadOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -115,7 +115,7 @@ const Index = (props) => {
   const [form2] = Form.useForm();
 
 
-  const [fromVisible, setFromVisible] = useState(false)
+  const [fromVisible, setFromVisible] = useState(true)
 
 
   const [type, setType] = useState('add')
@@ -132,7 +132,7 @@ const Index = (props) => {
     onFinish();
     props.getQuestionType({}, (data) => {
       if (data) {
-        const questionTypeData = getQuestionTypeData(data,[])
+        const questionTypeData = getQuestionTypeData(data, [])
         setQuestionTypeList(questionTypeData)
       }
     })
@@ -140,11 +140,11 @@ const Index = (props) => {
   }, []);
   const getQuestionTypeData = (data, arr) => { //转换json树的key值
     if (data && data[0]) {
-       data.map(item => {
-        let obj = { 
-          label: item.title, 
+      data.map(item => {
+        let obj = {
+          label: item.title,
           value: item.type,
-          children: item.children&&item.children[0]? getQuestionTypeData(item.children,[]) : []
+          children: item.children && item.children[0] ? getQuestionTypeData(item.children, []) : []
         }
         arr.push(obj)
       })
@@ -274,7 +274,7 @@ const Index = (props) => {
       }
       props.addOrUpdQuestionDetial({
         ...values,
-        FirstLevel:values.FirstLevel&&values.FirstLevel.toString(),
+        FirstLevel: values.FirstLevel && values.FirstLevel.toString(),
       }, () => {
         setFromVisible(false)
         type === 'add' ? onFinish() : onFinish(pageIndex)
@@ -313,7 +313,26 @@ const Index = (props) => {
   const handleResize = (e, { size }) => {
     // console.log(size)
   };
+  const uploadProps = {
+    name: 'file',
+    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    onRemove: (file) => {
+      if (!file.error) {
+        props.deleteAttach(file)
+      }
 
+    },
+  };
   const searchComponents = () => {
     return <Form
       form={form}
@@ -431,6 +450,13 @@ const Index = (props) => {
                   <ReactQuill theme="snow" modules={modules} />
                 </Form.Item>
               </ResizableBox >
+            </Col>
+            <Col span={24}>
+              <Form.Item label="附件" name="Files" >
+                <Upload {...uploadProps}>
+                  <Button icon={<UploadOutlined />}>上传附件</Button>
+                </Upload>
+              </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item label="问题状态" name="Status" >
