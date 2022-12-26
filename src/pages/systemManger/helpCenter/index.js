@@ -164,7 +164,8 @@ const Index = (props) => {
   const { listData, listDataTotal, detailLoading, questionTypeTitle, questTypeFirstLevel, questTypeSecondLevel, } = props;
 
   const [searchContent, setSearchContent] = useState()
-
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
   useEffect(() => {
     if (questTypeSecondLevel) {
       getQuestionDetialListFun(pageIndex, pageSize, searchContent);
@@ -201,8 +202,7 @@ const Index = (props) => {
   const onSearch = (value, e) => {  //查询
     getQuestionDetialListFun(pageIndex, pageSize, value);
   }
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
+
   const handleListChange = (PageIndex, PageSize) => { //分页
     setPageSize(PageSize)
     setPageIndex(PageIndex)

@@ -577,6 +577,13 @@ a:hover {
     }
    }
  }
+ .spreadOverHiddenModal{ //铺满页面的弹框 长度隐藏
+  :global{
+    .ant-modal-content{
+      overflow-y: hidden;
+     }
+  }
+}
  .fullScreenModal{ //全面屏弹框
   :global{
    .ant-modal{

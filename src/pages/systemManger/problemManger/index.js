@@ -18,6 +18,7 @@ import RegionList from '@/components/RegionList'
 import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
+import cuid from 'cuid';
 import { Resizable, ResizableBox } from 'react-resizable';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -77,6 +78,14 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
+    deleteAttach: (file)=>{ //删除文件
+      dispatch({
+        type: "autoForm/deleteAttach",
+        payload: {
+          Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
+        }
+      })
+    },
   }
 }
 // 自定义文字大小
@@ -115,7 +124,7 @@ const Index = (props) => {
   const [form2] = Form.useForm();
 
 
-  const [fromVisible, setFromVisible] = useState(true)
+  const [fromVisible, setFromVisible] = useState(false)
 
 
   const [type, setType] = useState('add')
@@ -221,6 +230,21 @@ const Index = (props) => {
     // const selectData = firstLevelList.filter(item => item.type == record.FirstLevelID)
     // selectData[0] && setSecondLevelList(selectData[0].children) //二级类别下拉列表赋值
     form2.resetFields();
+    if(record.FileList&&record.FileList[0]){ //文件列表
+      const fileList =[]
+      record.FileList.map(item=>{
+        if(!item.IsDelete){
+          fileList.push({
+            uid: item.GUID,
+            name: item.FileName,
+            status: 'done',
+            url: `/upload/${item.FileName}`,
+          })
+          
+        }
+      })
+      setFilesList(fileList)
+    }
     try {
       form2.setFieldsValue({
         ...record,
@@ -228,6 +252,7 @@ const Index = (props) => {
         Status: record.StatusID,
         BeginTime: record.BeginTime && moment(record.BeginTime),
         EndTime: record.EndTime && moment(record.EndTime),
+        File:record.FileList&&record.FileList[0]&&record.FileList[0].FileUuid ? record.FileList[0].FileUuid : undefined,
       })
 
     } catch (errInfo) {
@@ -313,17 +338,39 @@ const Index = (props) => {
   const handleResize = (e, { size }) => {
     // console.log(size)
   };
+  const [filesLoading,setFilesLoading] = useState(false)
+  const [filesList,setFilesList] = useState([])
+  const [filesCuid,setFilesCuid] = useState(cuid())
   const uploadProps = {
     name: 'file',
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    data: {
+      FileUuid: filesCuid,
+    },
     onChange(info) {
+      setFilesLoading(true)
       if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
+        console.log(info)
       }
+      const fileList = info.fileList.map(item=>{
+        if(item.response&&item.response.IsSuccess){ //刚上传的
+          return {...item,url: `/upload/${item.response.Datas}`,}
+        }else{
+          return {...item}
+        }
+      })
       if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
+        form2.setFieldsValue({ File: filesCuid })
+        setFilesList(fileList)
+        setFilesLoading(false)
+        message.success(`${info.file.name} 上传成功`);
       } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+        setFilesLoading(false)
+        message.error(`${info.file.name} 上传失败`);
+      }else if(info.file.status === 'removed'){ //删除状态
+        form2.setFieldsValue({ File: filesCuid })
+        setFilesLoading(false)
+        setFilesList(fileList)
       }
     },
     onRemove: (file) => {
@@ -332,6 +379,7 @@ const Index = (props) => {
       }
 
     },
+    fileList:filesList,
   };
   const searchComponents = () => {
     return <Form
@@ -452,9 +500,9 @@ const Index = (props) => {
               </ResizableBox >
             </Col>
             <Col span={24}>
-              <Form.Item label="附件" name="Files" >
+              <Form.Item label="附件" name="File" >
                 <Upload {...uploadProps}>
-                  <Button icon={<UploadOutlined />}>上传附件</Button>
+                  <Button icon={<UploadOutlined />} loading={filesLoading}>上传附件</Button>
                 </Upload>
               </Form.Item>
             </Col>

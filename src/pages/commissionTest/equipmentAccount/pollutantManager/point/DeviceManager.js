@@ -1295,7 +1295,7 @@ const handleSystemAdd = () => { //添加系统信息
                 dataSource={systemData}
                 columns={systemCols}
                 rowClassName="editable-row"
-                scroll={{ y: 'calc(100vh - 380px)' }}
+                scroll={{ y: 'auto' }}
                 loading={props.cEMSSystemListLoading}
                 pagination={false}
               />
@@ -1316,7 +1316,6 @@ const handleSystemAdd = () => { //添加系统信息
               dataSource={deviceData}
               columns={deviceColumns}
               rowClassName="editable-row"
-              scroll={{ y: 'calc(100vh - 380px)' }}
               loading={props.cEMSSystemListLoading}
               pagination={false}
             />
@@ -1339,7 +1338,6 @@ const handleSystemAdd = () => { //添加系统信息
             dataSource={referInstruData}
             columns={referInstruInfoCols}
             rowClassName="editable-row"
-            scroll={{ y: 'calc(100vh - 380px)' }}
             loading={props.paramListLoading}
             pagination={false}
           />
@@ -1350,7 +1348,7 @@ const handleSystemAdd = () => { //添加系统信息
         </TabPane>
 
       </Tabs>
-      <Row justify='end'> <Button type="primary" loading={tabKey==1? props.operationCEMSSystemLoading : props.operationParamLoading} onClick={submits} > 保存</Button></Row>
+      <Row justify='end' style={{position:'fixed',background:'#fff',width:'100%',padding:'8px 24px',left:0,bottom:0, boxShadow: '0 0 5px 0 #ccc'}}> <Button type="primary" loading={tabKey==1? props.operationCEMSSystemLoading : props.operationParamLoading} onClick={submits} > 保存</Button></Row>
 
 
 
