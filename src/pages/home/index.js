@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-09-23 15:19:48
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2022-12-27 15:56:17
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -98,32 +98,32 @@ class index extends Component {
         }
 
       },
-      zoomchange: (value) => {
-        if (_thismap.getZoom() <= this.state.zoom) {
-          props.dispatch({
-            type: "home/updateState",
-            payload: {
-              // currentEntInfo: {},
-              currentMarkersList: this.props.allEntAndPointList
-            }
-          })
-          if (this.state.showType === "point") {
-            props.dispatch({
-              type: "home/updateState",
-              payload: {
-                currentEntInfo: {},
-              }
-            })
-            this.setState({
-              currentPoint: undefined,
-              DGIMN: null
-            })
-          }
-          this.setState({ showType: "ent" })
-        } else {
-          this.setState({ showType: "point" })
-        }
-      },
+      // zoomchange: (value) => {
+      //   if (_thismap.getZoom() <= this.state.zoom) {
+      //     props.dispatch({
+      //       type: "home/updateState",
+      //       payload: {
+      //         // currentEntInfo: {},
+      //         currentMarkersList: this.props.allEntAndPointList
+      //       }
+      //     })
+      //     if (this.state.showType === "point") {
+      //       props.dispatch({
+      //         type: "home/updateState",
+      //         payload: {
+      //           currentEntInfo: {},
+      //         }
+      //       })
+      //       this.setState({
+      //         currentPoint: undefined,
+      //         DGIMN: null
+      //       })
+      //     }
+      //     this.setState({ showType: "ent" })
+      //   } else {
+      //     this.setState({ showType: "point" })
+      //   }
+      // },
       complete: () => {
         //_thismap.setZoomAndCenter(13, [centerlongitude, centerlatitude]);
       }
@@ -299,6 +299,9 @@ class index extends Component {
           currentMarkersList: itemData.position.children,
         }
       })
+      this.setState({
+        showType: 'point'
+      })
     } else {
       this.setState({
         currentPoint: itemData.position,
@@ -449,6 +452,32 @@ class index extends Component {
   rightLoading = () => {
     //   this.
   }
+
+
+  // 显示企业点
+  showEntMarkers = () => {
+    this.props.dispatch({
+      type: "home/updateState",
+      payload: {
+        // currentEntInfo: {},
+        currentMarkersList: this.props.allEntAndPointList
+      }
+    })
+    if (this.state.showType === "point") {
+      this.props.dispatch({
+        type: "home/updateState",
+        payload: {
+          currentEntInfo: {},
+        }
+      })
+      this.setState({
+        currentPoint: undefined,
+        DGIMN: null
+      })
+    }
+    this.setState({ showType: "ent" })
+  }
+
   render() {
     console.log('theme=', this.props.theme)
     const {
@@ -608,7 +637,7 @@ class index extends Component {
                 // let themeLink = document.getElementById('theme-link');
                 if (value) {
                   document.documentElement.className = 'home-dark-theme';
-                  document.documentElement.id = 'innerSystem';
+                  // document.documentElement.id = 'innerSystem';
                   // themeLink.href = '/theme/light.css'; // 切换 antd 组件主题(亮色)
                 } else {
                   document.documentElement.className = 'home-light-theme';
@@ -616,6 +645,17 @@ class index extends Component {
                   // themeLink.href = '/theme/dark.css'; // 切换 antd 组件主题(暗色)
                 }
               }} />
+              {
+                showType === 'point' &&
+                <Button
+                  type="primary"
+                  size='small'
+                  style={{ position: 'absolute', zIndex: 1, left: 10, top: 10 }}
+                  onClick={this.showEntMarkers}
+                >
+                  返回企业
+                </Button>
+              }
               <Map
                 resizeEnable={true}
                 events={this.mapEvents}

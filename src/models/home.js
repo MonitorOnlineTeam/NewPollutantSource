@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-09-23 14:31:33
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2022-12-27 09:48:49
  * @desc: 主页model
  */
 import moment from 'moment';
@@ -62,7 +62,11 @@ export default Model.extend({
       beginTime: moment().format('YYYY-MM-01 HH:mm:ss'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
     },
-    taskCountData: {},
+    taskCountData: {
+      TaskSum: 0,
+      CompletedTaskSum: 0,
+      NoCompletedTaskSum: 0,
+    },
     // 运维 - 智能预警
     operationsWarningParams: {
       beginTime: moment().format('YYYY-MM-01 HH:mm:ss'),
