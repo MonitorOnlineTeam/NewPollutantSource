@@ -281,7 +281,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 140,
                     render: (text, record, index) => {
-                        return renderContent(<Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>, index)
+                        return renderContent(<Form.Item className={styles.reqSty} name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>, index)
                     }
                 },
                 {
@@ -289,7 +289,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 140,
                     render: (text, record, index) => {
-                        return renderContent(<Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>, index)
+                        return renderContent(<Form.Item className={styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>, index)
 
                     }
                 },
@@ -301,7 +301,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => measuredValBlur(index)} placeholder='请输入' /></Form.Item>
+                    return <Form.Item className={styles.reqSty} name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => measuredValBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == tableDatas.length) {
                     return <span> {!isClears&&form.getFieldValue('ReferenceAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
@@ -323,7 +323,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>
+                    return <Form.Item className={styles.importSty} name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>
                 } else if (index == tableDatas.length) {
                     return <span> {!isClears&&form.getFieldValue('MeasuredAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
@@ -340,7 +340,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
+                    return <Form.Item  className={styles.calculaSty} name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
                 } else if (index == tableDatas.length) {
                     return <span> {!isClears&&form.getFieldValue('AlignmentAvg')}  </span>
                 } else if (index >= tableDatas.length + 1) {
@@ -405,7 +405,7 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`GuaranteedValue`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`GuaranteedValue`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   placeholder='请输入' /></Form.Item>
                 }
                 return obj;
             }
@@ -427,7 +427,7 @@ const Index = (props) => {
                     obj.children = '采样前'
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`BeforeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`BeforeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -450,7 +450,7 @@ const Index = (props) => {
 
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`AfterCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`AfterCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -475,7 +475,7 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`RelativeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
+                    obj.children = <Form.Item className={styles.calculaSty} name={`RelativeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
                 }
                 return obj;
             }

@@ -216,7 +216,7 @@ const Index = (props) => {
             align: 'center',
             width: 140,
             render: (text, record, index) => {
-                return <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>;
+                return <Form.Item className={styles.reqSty} name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>;
             }
         },
         {
@@ -228,7 +228,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 115,
                     render: (text, record, index) => {
-                        return <Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
                 },
                 {
@@ -236,7 +236,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 115,
                     render: (text, record, index) => {
-                        return <Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item  className={styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
                     }
                 },
             ]
@@ -255,7 +255,7 @@ const Index = (props) => {
                             width: 100,
                             render: (text, record, index) => {
                                 if(index==0){ return '/'  }
-                                return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item className={styles.reqSty} name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
@@ -263,7 +263,7 @@ const Index = (props) => {
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1,'end')} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item  className={styles.reqSty} name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1,'end')} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -278,7 +278,7 @@ const Index = (props) => {
                             align: 'center',
                             render: (text, record, index) => {
                                 if(index==0){ return '/'  }
-                                return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     disabled /></Form.Item>;
+                                return <Form.Item  className={styles.calculaSty} name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     disabled /></Form.Item>;
                             }
                         },
                     ]
@@ -287,7 +287,7 @@ const Index = (props) => {
                     title: '调节零点否',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`ZeroCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
+                        return <Form.Item className={styles.reqRadioSty} name={`ZeroCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
                             <Radio.Group onChange={()=>{adjustChang(`ZeroCalibration`,'ZeroEnd','ZeroBegin',index)}}>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>
@@ -305,7 +305,7 @@ const Index = (props) => {
                             width: 100,
                             render: (text, record, index) => {
                                 if(index==0){ return '/'  }
-                                return <Form.Item name={`CalibrationBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item className={styles.reqSty} name={`CalibrationBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
@@ -313,7 +313,7 @@ const Index = (props) => {
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2,'end')} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item className={styles.reqSty} name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2,'end')} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -328,7 +328,7 @@ const Index = (props) => {
                             align: 'center',
                             render: (text, record, index) => {
                                 if(index==0){ return '/'  }
-                                return <Form.Item name={`DriftAbsolute${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     disabled /></Form.Item>;
+                                return <Form.Item className={styles.calculaSty} name={`DriftAbsolute${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     disabled /></Form.Item>;
                             }
                         },
                     ]
@@ -337,7 +337,7 @@ const Index = (props) => {
                     title: '调节跨度否',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`AdjustSpan${index}`} rules={[{ required: isReg, message: '' }]}>
+                        return <Form.Item className={styles.reqRadioSty} name={`AdjustSpan${index}`} rules={[{ required: isReg, message: '' }]}>
                             <Radio.Group onChange={()=>{adjustChang(`AdjustSpan`,'CalibrationEnd','CalibrationBegin',index)}}>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>
@@ -349,7 +349,7 @@ const Index = (props) => {
                     title: '清洁镜头否',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`CleanLens${index}`} rules={[{ required: isReg, message: '' }]}>
+                        return <Form.Item className={styles.reqRadioSty} name={`CleanLens${index}`} rules={[{ required: isReg, message: '' }]}>
                             <Radio.Group>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>

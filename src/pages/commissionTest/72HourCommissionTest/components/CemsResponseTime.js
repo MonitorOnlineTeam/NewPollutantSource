@@ -181,7 +181,7 @@ const Index = (props) => {
         //  if (name == 'CreateTime0' && !date1 && !date2) {
          if (name == 'CreateTime0') {
             if(!values){
-                form.setFieldsValue({ CreateTime1: undefined, CreateTime1: undefined, })
+                form.setFieldsValue({ CreateTime1: undefined, CreateTime2: undefined, })
                 return;
             }
             form.setFieldsValue({
@@ -236,7 +236,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 0) {
                     return {
-                        children: <Form.Item name={`CreateTime`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} format="YYYY-MM-DD" /></Form.Item>,
+                        children: <Form.Item className={styles.reqSty} name={`CreateTime`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} format="YYYY-MM-DD" /></Form.Item>,
                         props: { rowSpan: 6 },
                     };
                 } else if (index >= 1 && index < 6) {
@@ -322,7 +322,7 @@ const Index = (props) => {
                     //   return <Form.Item name={`LabelGas80${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled    /></Form.Item>
                       return <span>{!isClears&&form.getFieldValue(`LabelGas80${index}`)}</span>
                     }else{
-                        return <Form.Item name={`LabelGas80${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(80, 100, `LabelGas80${index}`, index) }} placeholder='请输入'/></Form.Item>;   
+                        return <Form.Item  className={styles.reqSty} name={`LabelGas80${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(80, 100, `LabelGas80${index}`, index) }} placeholder='请输入'/></Form.Item>;   
                  }
             }
 
@@ -339,7 +339,7 @@ const Index = (props) => {
                 //   return <Form.Item name={`LabelGas50${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   /></Form.Item>
                   return <span>{!isClears&&form.getFieldValue(`LabelGas50${index}`)}</span>
                 }else{
-                    return <Form.Item name={`LabelGas50${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(50, 60, `LabelGas50${index}`, index) }}  placeholder='请输入'/></Form.Item>;   
+                    return <Form.Item  className={styles.reqSty} name={`LabelGas50${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(50, 60, `LabelGas50${index}`, index) }}  placeholder='请输入'/></Form.Item>;   
                 }
 
             }
@@ -355,7 +355,7 @@ const Index = (props) => {
                     //   return <Form.Item name={`LabelGas20${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   placeholder='请输入' /></Form.Item>
                       return <span>{!isClears&&form.getFieldValue(`LabelGas20${index}`)}</span>
                     }else{
-                        return <Form.Item name={`LabelGas20${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(20, 30, `LabelGas20${index}`, index) }} placeholder='请输入'/></Form.Item>;   
+                        return <Form.Item  className={styles.reqSty} name={`LabelGas20${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(20, 30, `LabelGas20${index}`, index) }} placeholder='请输入'/></Form.Item>;   
                     }
 
             }
@@ -382,7 +382,7 @@ const Index = (props) => {
             title: '检测日期',
             align: 'center',
             render: (text, record, index) => {
-                return index == 3 ? '评价依据' : <Form.Item name={`CreateTime${index}`} rules={[{ required: isReg, message: '' }]}>
+                return index == 3 ? '评价依据' : <Form.Item className={styles.reqSty} name={`CreateTime${index}`} rules={[{ required: isReg, message: '' }]}>
                     <DatePicker disabledDate={disabledDate} format="YYYY-MM-DD" onChange={() => onDateChange(`CreateTime${index}`)} />
                 </Form.Item>
             }
@@ -414,7 +414,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
-                return <Form.Item name={`TimeT1${index}`} rules={[{ required: isReg, message: '' }]}>
+                return <Form.Item  className={styles.reqSty}  name={`TimeT1${index}`} rules={[{ required: isReg, message: '' }]}>
                     <InputNumber step='0.01' placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
                 </Form.Item>
             }
@@ -424,7 +424,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
-                return <Form.Item name={`TimeT2${index}`} rules={[{ required: isReg, message: '' }]}>
+                return <Form.Item  className={styles.reqSty} name={`TimeT2${index}`} rules={[{ required: isReg, message: '' }]}>
                     <InputNumber step='0.01' placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
                 </Form.Item>
             }
@@ -434,7 +434,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
-                return <Form.Item name={`ResponseTime${index}`} rules={[{ required: isReg, message: '' }]}>
+                return <Form.Item  className={styles.calculaSty} name={`ResponseTime${index}`} rules={[{ required: isReg, message: '' }]}>
                     <Input  disabled  />
                 </Form.Item>
             }
@@ -445,7 +445,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 0) {
                     return {
-                        children: <Form.Item name={`AVG`} rules={[{ required: isReg, message: '' }]}>
+                        children: <Form.Item  className={styles.calculaSty} name={`AVG`} rules={[{ required: isReg, message: '' }]}>
                                   <InputNumber  disabled  />
                                   </Form.Item>, 
                         props: { rowSpan: 3 },

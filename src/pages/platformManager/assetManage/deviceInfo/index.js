@@ -281,7 +281,7 @@ const Index = (props) => {
     {
       title: <span>操作</span>,
       align: 'center',
-      fixed:'right',
+      fixed: 'right',
       width: 180,
       render: (text, record) => {
         return <span>
@@ -466,13 +466,13 @@ const Index = (props) => {
         <Form.Item>
           <Button type="primary" htmlType='submit' style={{ marginRight: 8 }}>
             查询
-     </Button>
+         </Button>
           <Button onClick={() => { add() }} style={{ marginRight: 8 }} >
             添加
-     </Button>
-     {/* <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
-          导出
-      </Button> */}
+         </Button>
+          <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
+            导出
+         </Button>
         </Form.Item>
       </Row>
     </Form>

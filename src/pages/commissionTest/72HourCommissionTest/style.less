@@ -90,5 +90,34 @@
     }
    }
 
-   
-     
+   .reqSty :global{ //必填
+    .ant-picker,.ant-input-number,.ant-input{
+      background-color: #fff1f0;
+    }
+   }
+   .reqRadioSty  :global{ //必填 单选按钮
+    background-color: #fff1f0;
+    width: 105px;
+    .ant-radio-wrapper:last-child{
+      margin-right:0;
+      span.ant-radio + *{
+        padding-right: 0;
+      }
+    }
+   }
+   .importSty :global{ //导入
+    .ant-picker,.ant-input-number,.ant-input{
+      background-color: #e6f7ff;
+    }
+  }
+  .calculaSty :global{ //计算
+    .ant-picker,.ant-input-number,.ant-input{
+      background-color: #f6ffed;
+    }
+  }
+  /*时间间隔*/
+  .particleMatterReferTimeSty :global{ 
+    .ant-form-item-label{
+      width: 83px;
+    }
+  } 

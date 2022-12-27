@@ -299,13 +299,13 @@ const Index = (props) => {
       <Form.Item>
         <Button type="primary" htmlType='submit' style={{ marginRight: 8 }}>
           查询
-      </Button>
+       </Button>
         <Button onClick={() => { add() }} style={{ marginRight: 8 }} >
           添加
-      </Button>
-      {/* <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
+       </Button>
+        <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
           导出
-      </Button> */}
+       </Button>
       </Form.Item>
     </Form>
   }

@@ -179,7 +179,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 const number = index + 1 + 7;
                 const obj = {
-                    children: <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>,
+                    children: <Form.Item className={styles.reqSty} name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>,
                     props: { rowSpan: number % 8 == 0 ? 8 : 0 },
                 };
                 return obj;
@@ -203,7 +203,7 @@ const Index = (props) => {
                         if ((index + 1) % 8 == 0) {
                             return { children: '相对误差（%）', props: { colSpan: 3 }, };
                         }
-                        return <Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
                 },
                 {
@@ -212,7 +212,7 @@ const Index = (props) => {
                     width: 140,
                     render: (text, record, index) => {
                         if ((index + 1) % 8 == 0 || (index + 2) % 8 == 0 || (index + 3) % 8 == 0) { return { props: { colSpan: 0 }, } }
-                        return <Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
                     }
                 },
             ]
@@ -255,7 +255,7 @@ const Index = (props) => {
                             // return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
                             return <span>{!isClears && form.getFieldValue(`AVG${i}`)}</span>
                         }
-                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -271,7 +271,7 @@ const Index = (props) => {
                             //  return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
                             return <span>{!isClears && form.getFieldValue(`AVG${i + 3}`)}</span>
                         }
-                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请导入' /></Form.Item>;
+                        return <Form.Item className={styles.importSty} name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
             ]
