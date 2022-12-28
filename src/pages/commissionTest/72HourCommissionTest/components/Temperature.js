@@ -19,10 +19,10 @@ import RegionList from '@/components/RegionList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
 import BtnComponents from './BtnComponents'
+import GenerateTime from './GenerateTime'
 const { TextArea } = Input;
 const { Option } = Select;
 import config from '@/config'
-import { func } from 'prop-types';
 const namespace = 'hourCommissionTest'
 
 
@@ -623,10 +623,30 @@ const Index = (props) => {
     }
     const onValuesChange = (hangedValues, allValues) => {
     }
+    const generateTimeData = (res) => {
+        if (res&&res[0]) {
+            const data = [];
+            res.map(item => {
+                if (item.ChildList) {
+                    item.ChildList.map(item2 => { data.push(item2) })
+                }
+            })
+            console.log(data,111111)
+            data.map(item => {
+                const index = item.Sort;
+                form.setFieldsValue({
+                    [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
+                    [`BTime${index}`]: item.BTime && moment(item.BTime),
+                    [`ETime${index}`]: item.ETime && moment(item.ETime),
+                })
+            })
+        }
+    }
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
                 <BtnComponents {...props} isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2} delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
+                <GenerateTime pointId={pointId} pollutantCode={pollutantCode} generateTimeData={generateTimeData} />
                 <Form
                     form={form}
                     name="advanced_search"

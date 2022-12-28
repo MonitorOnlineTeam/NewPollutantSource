@@ -13,8 +13,8 @@ export default Model.extend({
     treeList: [],
     testRecordType: [],
     particleMatterReferTableDatas: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-    delVisible:false,
-    pointStatus:null,
+    delVisible: false,
+    pointStatus: null,
   },
   effects: {
     *getTestEntTree({ payload, callback }, { call, put, update }) { //企业树
@@ -24,7 +24,7 @@ export default Model.extend({
         yield update({
           treeList: result.Datas,
         })
-        callback&&callback(result.Datas)
+        callback && callback(result.Datas)
       } else {
         message.error(result.Message)
       }
@@ -33,7 +33,7 @@ export default Model.extend({
       yield update({ tableLoading: true })
       const result = yield call(services.Get72TestRecordType, payload);
       if (result.IsSuccess) {
-        yield update({ testRecordType: payload.PointCode? result.Datas : [], })
+        yield update({ testRecordType: payload.PointCode ? result.Datas : [], })
       } else {
         message.error(result.Message)
         yield update({ testRecordType: [], })
@@ -355,21 +355,27 @@ export default Model.extend({
       }
     },
 
-   /*** 生成检测报告 ***/
+    /*** 生成检测报告 ***/
 
-   *exportTestPeport({ payload,callback }, { call, put, update }) { //检测报告 导出
-    const result = yield call(services.exportTestPeport, payload);
-     if (result.IsSuccess) {
-       message.success('下载成功');
-         downloadFile(`${result.Datas}`);
-        } else {
-       message.error(result.Message);
-     }
-  },
-
-
-
-
+    *exportTestPeport({ payload, callback }, { call, put, update }) { //检测报告 导出
+      const result = yield call(services.exportTestPeport, payload);
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    /*** 自动生成采样时间 ***/
+    *usePMReferenceTimes({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.usePMReferenceTimes, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        callback([])
+        message.error(result.Message);
+      }
+    },
 
 
   }

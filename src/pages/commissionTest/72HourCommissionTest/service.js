@@ -201,3 +201,8 @@ export async function exportTestPeport(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ImportRecord',params, null);
   return result;
 }
+/*** 生成采样时间  ***/
+export async function usePMReferenceTimes(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/UsePMReferenceTimes',params, null);
+  return result;
+}

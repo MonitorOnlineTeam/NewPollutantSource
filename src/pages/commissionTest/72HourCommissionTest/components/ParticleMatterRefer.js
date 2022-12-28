@@ -118,7 +118,7 @@ const Index = (props) => {
                             }
                         })
                         data.map(item => {
-                            const index = item.Sort - 1;
+                            const index = item.Sort;
                             form.setFieldsValue({
                                 [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
                                 [`BTime${index}`]: item.BTime && moment(item.BTime),
@@ -163,7 +163,6 @@ const Index = (props) => {
     const onTimeChange = (index, type) => {
         const startTime = form.getFieldValue(`BTime${index}`)
         const endTime = form.getFieldValue(`ETime${index}`)
-        const timeInterValue = form.getFieldValue('TimeIntervals')
         if (endTime && startTime && endTime.valueOf() <= startTime.valueOf()) {
             message.warning('结束时间必须大于开始时间')
             if (type === 'start') {
@@ -171,8 +170,13 @@ const Index = (props) => {
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
+        }else{
+            const timeInterValue = form.getFieldValue('TimeIntervals')
+            if(timeInterValue){ //间隔时间不为空
+                const generatEndTime = moment(moment(startTime).add(timeInterValue,'minutes'));
+                form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
+            }
         }
-        console.log(timeInterValue)
 
     }
     const [isReg, setIsReg] = useState(false)
@@ -417,7 +421,7 @@ const Index = (props) => {
                 }
                 data.ChildTable = tableDatas.map((item, index) => {
                     return {
-                        Sort: index + 1,
+                        Sort: index,
                         CreateDate: index <= 4 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`CreateDate5`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate10`] && values[`CreateDate10`].format('YYYY-MM-DD 00:00:00'),
                         BTime: index <= 4 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate10`] && values[`BTime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
                         ETime: index <= 4 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate10`] && values[`ETime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
@@ -513,20 +517,17 @@ const Index = (props) => {
     const [conversionVal, setConversionVal] = useState(1)
     const conversionChange = (value) => { //是否折算
         setConversionVal(value)
-        if (value == 2) {
-            form.setFieldsValue({ AirCoefficient: '' })
-        }
     }
     const SearchComponents = () => {
         return <>
             <Row gutter={36}>
-                <Col span={recordType == 1 ? 6 : 24}>
+                <Col span={recordType == 1 ? conversionVal==1? 6 : 8 : 24}>
                     <Form.Item className={styles.reqSty} label="当前大气压" name="Atmos" rules={[{ required: isReg, message: '' }]}>
                         <InputNumber   placeholder='请输入'  suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} /> 
                     </Form.Item>
                 </Col>
                 {recordType == 1 && <>
-                    <Col span={6}>
+                    <Col span={conversionVal==1? 6 : 8}>
                         <Form.Item label="是否折算">
                             <Select value={conversionVal} onChange={conversionChange}>
                                 <Option value={1}>折算</Option>
@@ -534,20 +535,20 @@ const Index = (props) => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
-                        <Form.Item label="空气过剩系数" name="AirCoefficient" rules={[{ required: isReg, message: '' }]}>
-                            <InputNumber disabled={conversionVal == 2} step='0.01' placeholder='请输入' allowClear />
+                     {conversionVal==1&&<Col span={6}>
+                        <Form.Item className={styles.reqSty} label="空气过剩系数" name="AirCoefficient" rules={[{ required: isReg, message: '' }]}>
+                            <InputNumber step='0.01' placeholder='请输入' allowClear />
                         </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item label="排放限值" name="EmissionLimits" rules={[{ required: isReg, message: '' }]}>
+                    </Col>}
+                    <Col span={conversionVal==1? 6 : 8}>
+                        <Form.Item className={styles.reqSty} label="排放限值" name="EmissionLimits" rules={[{ required: isReg, message: '' }]}>
                             <Input placeholder='请输入时间间隔(分钟)' allowClear suffix="mg/m3" onKeyUp={(e) => { numCheck(e, 'EmissionLimits') }} />
                         </Form.Item>
                     </Col></>}
             </Row>
             <Row gutter={36} className={styles.particleMatterReferTimeSty}>
-            <Col span={recordType == 1 ? 6 : 24}> 
-            <Form.Item label="采样时间" name='TimeIntervals' rules={[{ required: isReg, message: '' }]}>
+            <Col span={recordType == 1 ? conversionVal==1? 6 : 8 : 24}> 
+            <Form.Item label="采样时间" name='TimeIntervals' rules={[{ required: false, message: '' }]}>
                 <InputNumber onChange={(value)=>{form.setFieldsValue({'TimeIntervals':value})}}  min={0.000001} placeholder='请输入时间间隔(分钟)' /> {/* style={{width:recordType==1? '100%' : '282px'}} */}
             </Form.Item>
             </Col>

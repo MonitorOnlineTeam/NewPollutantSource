@@ -19,6 +19,7 @@ import RegionList from '@/components/RegionList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
 import BtnComponents from './BtnComponents'
+import GenerateTime from './GenerateTime'
 const { TextArea } = Input;
 const { Option } = Select;
 import config from '@/config'
@@ -31,7 +32,6 @@ const namespace = 'hourCommissionTest'
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
     formLoading: loading.effects[`${namespace}/getVelocityFieldCheckingRecord`],
     delLoading: loading.effects[`${namespace}/deleteVelocityFieldCheckingRecord`],
-
 })
 
 const dvaDispatch = (dispatch) => {
@@ -118,7 +118,7 @@ const Index = (props) => {
 
                     form.setFieldsValue({
                         ...res.MainTable,
-                        PMUnit:res.MainTable.PMUnit? res.MainTable.PMUnit : res.MainTable.Unit,
+                        PMUnit: res.MainTable.PMUnit ? res.MainTable.PMUnit : res.MainTable.Unit,
                         AVG1: avg1, AVG4: avg4, AVG7: avg7, AVG2: avg2, AVG5: avg5, AVG8: avg8, AVG3: avg3, AVG6: avg6, AVG9: avg9,
                     })
 
@@ -154,8 +154,8 @@ const Index = (props) => {
     const onDateChange = (name) => {
         const values = form.getFieldValue('CreateDate0')
 
-        let dateIndex1,dateIndex2;
-        if (recordType == 1) {  dateIndex1 = 6, dateIndex2 = 12} else { dateIndex1 = 7, dateIndex2 = 14}
+        let dateIndex1, dateIndex2;
+        if (recordType == 1) { dateIndex1 = 6, dateIndex2 = 12 } else { dateIndex1 = 7, dateIndex2 = 14 }
         if (name == 'CreateDate0') {
             if (!values) {
                 form.setFieldsValue({ [`CreateDate${dateIndex1}`]: undefined, [`CreateDate${dateIndex2}`]: undefined, })
@@ -301,7 +301,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 const number = index + 1 + 6;
                 const obj = {
-                    children: <Form.Item className={styles.reqSty}  name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>,
+                    children: <Form.Item className={styles.reqSty} name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>,
                     props: { rowSpan: number % 7 == 0 ? 7 : 0 },
                 };
                 return obj;
@@ -328,7 +328,7 @@ const Index = (props) => {
                                 props: { colSpan: 3 },
                             };
                         }
-                        return <Form.Item className={styles.reqSty}  name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
                 },
                 {
@@ -337,7 +337,7 @@ const Index = (props) => {
                     width: 140,
                     render: (text, record, index) => {
                         if ((index + 1) % 7 == 0 || (index + 2) % 7 == 0) { return { props: { colSpan: 0 }, } }
-                        return <Form.Item className={styles.reqSty}  name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
                     }
                 },
             ]
@@ -494,8 +494,8 @@ const Index = (props) => {
             form.validateFields().then((values) => {
 
                 if (type == 2) {  // 提交时判断日期不能一样
-                    let dateIndex1,dateIndex2;
-                    if (recordType == 1) {  dateIndex1 = 6, dateIndex2 = 12} else { dateIndex1 = 7, dateIndex2 = 14}
+                    let dateIndex1, dateIndex2;
+                    if (recordType == 1) { dateIndex1 = 6, dateIndex2 = 12 } else { dateIndex1 = 7, dateIndex2 = 14 }
                     const date1 = form.getFieldValue('CreateDate0').format('YYYY-MM-DD')
                     const date2 = form.getFieldValue(`CreateDate${dateIndex1}`).format('YYYY-MM-DD')
                     const date3 = form.getFieldValue(`CreateDate${dateIndex2}`).format('YYYY-MM-DD')
@@ -513,16 +513,16 @@ const Index = (props) => {
                     }
                 })
 
-                     
-            //   const avg1 = form.getFieldValue('AVG1') ? form.getFieldValue('AVG1') : '',
-            //         avg2 = form.getFieldValue('AVG2') ? form.getFieldValue('AVG2') : '',
-            //         avg3 = form.getFieldValue('AVG3') ? form.getFieldValue('AVG3') : '',
-            //         avg4 = form.getFieldValue('AVG4') ? form.getFieldValue('AVG4') : '',
-            //         avg5 = form.getFieldValue('AVG5') ? form.getFieldValue('AVG5') : '',
-            //         avg6 = form.getFieldValue('AVG6') ? form.getFieldValue('AVG6') : '',
-            //         avg7 = form.getFieldValue('AVG7') ? form.getFieldValue('AVG7') : '',
-            //         avg8 = form.getFieldValue('AVG8') ? form.getFieldValue('AVG8') : '',
-            //         avg9 = form.getFieldValue('AVG9') ? form.getFieldValue('AVG9') : '';
+
+                //   const avg1 = form.getFieldValue('AVG1') ? form.getFieldValue('AVG1') : '',
+                //         avg2 = form.getFieldValue('AVG2') ? form.getFieldValue('AVG2') : '',
+                //         avg3 = form.getFieldValue('AVG3') ? form.getFieldValue('AVG3') : '',
+                //         avg4 = form.getFieldValue('AVG4') ? form.getFieldValue('AVG4') : '',
+                //         avg5 = form.getFieldValue('AVG5') ? form.getFieldValue('AVG5') : '',
+                //         avg6 = form.getFieldValue('AVG6') ? form.getFieldValue('AVG6') : '',
+                //         avg7 = form.getFieldValue('AVG7') ? form.getFieldValue('AVG7') : '',
+                //         avg8 = form.getFieldValue('AVG8') ? form.getFieldValue('AVG8') : '',
+                //         avg9 = form.getFieldValue('AVG9') ? form.getFieldValue('AVG9') : '';
                 let data = {
                     AddType: type,
                     MainTable: {
@@ -851,10 +851,29 @@ const Index = (props) => {
     const onValuesChange = (hangedValues, allValues) => {
     }
 
+    const generateTimeData = (res) => {
+        if (res&&res[0]) {
+            const data = [];
+            res.map(item => {
+                if (item.ChildList) {
+                    item.ChildList.map(item2 => { data.push(item2) })
+                }
+            })
+            data.map(item => {
+                const index = item.Sort;
+                form.setFieldsValue({
+                    [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
+                    [`BTime${index}`]: item.BTime && moment(item.BTime),
+                    [`ETime${index}`]: item.ETime && moment(item.ETime),
+                })
+            })
+        }
+    }
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
                 <BtnComponents {...props} isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2} delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
+                <GenerateTime pointId={pointId} pollutantCode={pollutantCode} generateTimeData={generateTimeData} />
                 <Form
                     form={form}
                     name="advanced_search"
