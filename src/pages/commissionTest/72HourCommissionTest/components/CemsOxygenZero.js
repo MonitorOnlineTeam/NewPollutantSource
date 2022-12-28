@@ -176,8 +176,8 @@ const Index = (props) => {
         // const date1 = form.getFieldValue('CreateDate1'),date2=form.getFieldValue('CreateDate2'),date3=form.getFieldValue('CreateDate3');
         // if (name == 'CreateDate0' &&  !date1 && !date2 && !date3) {
         if (name == 'CreateDate0') {
-            if(!values){
-                form.setFieldsValue({ CreateDate1: undefined, CreateDate2: undefined,CreateDate3:undefined, })
+            if (!values) {
+                form.setFieldsValue({ CreateDate1: undefined, CreateDate2: undefined, CreateDate3: undefined, })
                 return;
             }
             form.setFieldsValue({
@@ -202,46 +202,46 @@ const Index = (props) => {
         }
     }
 
-    const zeroReadBlur = (index, type,positionType) => {
+    const zeroReadBlur = (index, type, positionType) => {
         let value1, value2;
         if (type == 1) { //零点漂移绝对误差	
             value1 = form.getFieldValue(`ZeroBegin${index}`), value2 = form.getFieldValue(`ZeroEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
                 form.setFieldsValue({ [`ZeroChange${index}`]: (value2 - value1).toFixed(2) })
-            }else{
+            } else {
                 form.setFieldsValue({ [`ZeroChange${index}`]: undefined })
             }
-            if(positionType && form.getFieldValue(`ZeroCalibration${index}`) ==2 ){ //下一列起始值 赋值
-                form.setFieldsValue({ [`ZeroBegin${index+1}`]: form.getFieldValue(`ZeroEnd${index}`) })
+            if (positionType && form.getFieldValue(`ZeroCalibration${index}`) == 2) { //下一列起始值 赋值
+                form.setFieldsValue({ [`ZeroBegin${index + 1}`]: form.getFieldValue(`ZeroEnd${index}`) })
             }
         } else {
             value1 = form.getFieldValue(`RangeBegin${index}`), value2 = form.getFieldValue(`RangeEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
                 form.setFieldsValue({ [`RangeChange${index}`]: (value2 - value1).toFixed(2) })
-            }else{
+            } else {
                 form.setFieldsValue({ [`RangeChange${index}`]: undefined })
-            }  
-            if(positionType && form.getFieldValue(`RangeCalibration${index}`) ==2 ){ //下一列起始值 赋值
-                form.setFieldsValue({ [`RangeBegin${index+1}`]: form.getFieldValue(`RangeEnd${index}`) })
+            }
+            if (positionType && form.getFieldValue(`RangeCalibration${index}`) == 2) { //下一列起始值 赋值
+                form.setFieldsValue({ [`RangeBegin${index + 1}`]: form.getFieldValue(`RangeEnd${index}`) })
             }
         }
     }
 
-    const adjustChang = (name,name2,name3,index) =>{
+    const adjustChang = (name, name2, name3, index) => {
         const value = form.getFieldValue(`${name}${index}`)
         const value2 = form.getFieldValue(`${name2}${index}`)
-         if(value==2){
-            value2&&form.setFieldsValue({[`${name3}${index+1}`] : value2})
-         }
-          
-      }
+        if (value == 2) {
+            value2 && form.setFieldsValue({ [`${name3}${index + 1}`]: value2 })
+        }
+
+    }
 
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
-     
-     const smallFont = (text) =>{
-        return <span style={{fontSize:12}}>{text}</span>
-      }
+
+    const smallFont = (text) => {
+        return <span style={{ fontSize: 12 }}>{text}</span>
+    }
     const columns = [
         {
             title: '日期',
@@ -281,7 +281,7 @@ const Index = (props) => {
                     title: <span>起始(Z{smallFont('0')})</span>,
                     align: 'center',
                     render: (text, record, index) => {
-                        if(index==0){ return '/'  }
+                        if (index == 0) { return '/' }
                         return <Form.Item className={styles.reqSty} name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                     }
                 },
@@ -289,7 +289,7 @@ const Index = (props) => {
                     title: <span>最终(Z{smallFont('i')})</span>,
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item className={styles.reqSty} name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  step='0.01' onBlur={() => zeroReadBlur(index, 1,'end')} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 1, 'end')} placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -302,8 +302,8 @@ const Index = (props) => {
                     title: <span>∆Z=Z{smallFont('i')}-Z{smallFont('0')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
-                        if(index==0){ return '/'  }
-                        return <Form.Item className={styles.calculaSty} name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  step='0.01' disabled  /></Form.Item>;
+                        if (index == 0) { return '/' }
+                        return <Form.Item className={styles.calculaSty} name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>;
                     }
                 },
             ]
@@ -313,7 +313,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 return <Form.Item className={styles.reqRadioSty} name={`ZeroCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <Radio.Group  onChange={()=>{adjustChang(`ZeroCalibration`,'ZeroEnd','ZeroBegin',index)}}>
+                    <Radio.Group onChange={() => { adjustChang(`ZeroCalibration`, 'ZeroEnd', 'ZeroBegin', index) }}>
                         <Radio value="1">是</Radio>
                         <Radio value="2">否</Radio>
                     </Radio.Group>
@@ -325,10 +325,10 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title:<span>起始(S{smallFont('0')})</span>,
+                    title: <span>起始(S{smallFont('0')})</span>,
                     align: 'center',
                     render: (text, record, index) => {
-                        if(index==0){ return '/'  }
+                        if (index == 0) { return '/' }
                         return <Form.Item className={styles.reqSty} name={`RangeBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                     }
                 },
@@ -336,7 +336,7 @@ const Index = (props) => {
                     title: <span>最终(S{smallFont('i')})</span>,
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item className={styles.reqSty} name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 2,'end')} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 2, 'end')} placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -349,8 +349,8 @@ const Index = (props) => {
                     title: <span>∆S=S{smallFont('i')}-S{smallFont('0')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
-                        if(index==0){ return '/'  }
-                        return <Form.Item className={styles.calculaSty} name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'  disabled  /></Form.Item>;
+                        if (index == 0) { return '/' }
+                        return <Form.Item className={styles.calculaSty} name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>;
                     }
                 },
             ]
@@ -360,7 +360,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 return <Form.Item className={styles.reqRadioSty} name={`RangeCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <Radio.Group onChange={()=>{adjustChang(`RangeCalibration`,'RangeEnd','RangeBegin',index)}}>
+                    <Radio.Group onChange={() => { adjustChang(`RangeCalibration`, 'RangeEnd', 'RangeBegin', index) }}>
                         <Radio value="1">是</Radio>
                         <Radio value="2">否</Radio>
                     </Radio.Group>
@@ -386,15 +386,15 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('ZeroErrorMaximum')}</span>,
+            title: <span>{!isClears && form.getFieldValue('ZeroErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{!isClears&&form.getFieldValue('ZeroValue')}</span>,
+                    title: <span>{!isClears && form.getFieldValue('ZeroValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
-                            children: <span>{!isClears&&form.getFieldValue('EvaluationBasis')}</span>,
+                            children: <span>{!isClears && form.getFieldValue('EvaluationBasis')}</span>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -422,11 +422,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{ !isClears&& form.getFieldValue('SpanErrorMaximum')}</span>,
+            title: <span>{!isClears && form.getFieldValue('SpanErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{!isClears&&form.getFieldValue('SpanValue')}</span>,
+                    title: <span>{!isClears && form.getFieldValue('SpanValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
@@ -469,13 +469,13 @@ const Index = (props) => {
                     MainTable: {
                         ...mainValue,
                         PointId: pointId,
-                        PollutantCode:pollutantCode,
+                        PollutantCode: pollutantCode,
                         // ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
                         // SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),
                         // ZeroValue: form.getFieldValue('ZeroValue'),
                         // SpanValue: form.getFieldValue('SpanValue'),
                         // EvaluationBasis: form.getFieldValue('EvaluationBasis'),
-                        
+
 
                     },
                     ChildTable: [],
@@ -500,8 +500,8 @@ const Index = (props) => {
                 })
                 props.addGasZeroRangeInfoRecord(data, (isSuccess) => {
                     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                    isSuccess&&getFormData(pollutantCode)
-                   
+                    isSuccess && getFormData(pollutantCode)
+
                 })
             }).catch((errorInfo) => {
                 console.log('Failed:', errorInfo);
@@ -514,12 +514,12 @@ const Index = (props) => {
 
     }
 
-    const [isClears,setIsClears] = useState(false)
+    const [isClears, setIsClears] = useState(false)
     const clears = () => {
         const value = form.getFieldsValue()
         Object.keys(value).map((item, index) => { //清除表格表单数据
-            if(/\d/g.test(item)){
-               form.setFieldsValue({[item]:undefined})
+            if (/\d/g.test(item)) {
+                form.setFieldsValue({ [item]: undefined })
             }
         })
         setIsClears(true)//清除算法结果数据
@@ -580,26 +580,26 @@ const Index = (props) => {
                 </Col>
                 <Col span={8}>
                     <Form.Item label="CEMS原理" name="CEMSPrinciple">
-                        <Input disabled  disabled placeholder='请输入' allowClear />
+                        <Input disabled disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Row>
-                    <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程<span style={{padding:'0 8px 0 2px'}}>:</span></label>
+                        <label style={{ width: 125, textAlign: 'right', lineHeight: '32px', }}>量程<span style={{ padding: '0 8px 0 2px' }}>:</span></label>
                         <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber disabled  placeholder='最小值' allowClear />
+                            <InputNumber disabled placeholder='最小值' allowClear />
                         </Form.Item>
                         <div style={{ width: 15, paddingTop: 4, textAlign: 'center' }}>-</div>
                         <Form.Item name="MaxRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber disabled  placeholder='最大值' allowClear />
+                            <InputNumber disabled placeholder='最大值' allowClear />
                         </Form.Item>
                     </Row>
                 </Col>
 
                 <Col span={8}>
                     <Form.Item label="污染物名称" name="PollutantName" >
-                        <Input disabled  />
+                        <Input disabled />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
@@ -633,6 +633,9 @@ const Index = (props) => {
                 {pollOptions[0] ? <>
                     <BtnComponents {...props} saveLoading1={saveLoading1} saveLoading2={saveLoading2} delLoading={props.delLoading} delLoading={props.delLoading} submits={submits} clears={clears} del={del} />
                     <PollutantComponents />
+                    <Form.Item label="采样时长" name='TimeIntervals' rules={[{ required: false, message: '' }]}>
+                        <InputNumber style={{ width: 283 }} onChange={(value) => { form.setFieldsValue({ 'TimeIntervals': value }) }} min={0.000001} placeholder='请输入采样时长(分钟)' /> {/* style={{width:recordType==1? '100%' : '282px'}} */}
+                    </Form.Item>
                     <Spin spinning={formLoading}>
                         <Form
                             form={form}

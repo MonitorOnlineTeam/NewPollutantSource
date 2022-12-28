@@ -542,14 +542,14 @@ const Index = (props) => {
                     </Col>}
                     <Col span={conversionVal==1? 6 : 8}>
                         <Form.Item className={styles.reqSty} label="排放限值" name="EmissionLimits" rules={[{ required: isReg, message: '' }]}>
-                            <Input placeholder='请输入时间间隔(分钟)' allowClear suffix="mg/m3" onKeyUp={(e) => { numCheck(e, 'EmissionLimits') }} />
+                            <Input placeholder='请输入' allowClear suffix="mg/m3" onKeyUp={(e) => { numCheck(e, 'EmissionLimits') }} />
                         </Form.Item>
                     </Col></>}
             </Row>
             <Row gutter={36} className={styles.particleMatterReferTimeSty}>
             <Col span={recordType == 1 ? conversionVal==1? 6 : 8 : 24}> 
-            <Form.Item label="采样时间" name='TimeIntervals' rules={[{ required: false, message: '' }]}>
-                <InputNumber onChange={(value)=>{form.setFieldsValue({'TimeIntervals':value})}}  min={0.000001} placeholder='请输入时间间隔(分钟)' /> {/* style={{width:recordType==1? '100%' : '282px'}} */}
+            <Form.Item label="采样时长" name='TimeIntervals' rules={[{ required: false, message: '' }]}>
+                <InputNumber onChange={(value)=>{form.setFieldsValue({'TimeIntervals':value})}}  min={0.000001} placeholder='请输入采样时长(分钟)' /> {/* style={{width:recordType==1? '100%' : '282px'}} */}
             </Form.Item>
             </Col>
             </Row>

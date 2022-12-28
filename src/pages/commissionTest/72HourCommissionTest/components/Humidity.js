@@ -628,21 +628,27 @@ const Index = (props) => {
     const onValuesChange = (hangedValues, allValues) => {
     }
     const generateTimeData = (res) => {
-        if (res&&res[0]) {
+        if (res && res[0]) {
             const data = [];
             res.map(item => {
-                if (item.ChildList) {
-                    item.ChildList.map(item2 => { data.push(item2) })
+                if (item.ChildList) { 
+                    item.ChildList.map(item2 => { data.push({...item2,CreateDate:item2.BTime&&moment(item2.BTime).format('YYYY-MM-DD 00:00:00')} ) })
                 }
             })
-            data.map(item => {
-                const index = item.Sort;
+            data.map((item, index) => {
+                    let index1 = 5, index2 = 13;
+                    if (index == index1 || index == index2) {
+                        data.splice(index,0,'平均值', '绝对误差', '相对误差（%）')
+                    }
+            })
+            data.map((item, index) => {    
                 form.setFieldsValue({
                     [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
                     [`BTime${index}`]: item.BTime && moment(item.BTime),
                     [`ETime${index}`]: item.ETime && moment(item.ETime),
                 })
-            })
+            })      
+
         }
     }
     return (

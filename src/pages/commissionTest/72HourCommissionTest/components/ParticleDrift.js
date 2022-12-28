@@ -164,6 +164,30 @@ const Index = (props) => {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
 
+        }else{
+            const timeInterValue = form.getFieldValue('TimeIntervals')
+            if(timeInterValue && startTime){ //间隔时间不为空
+                const generatEndTime = moment(moment(startTime).add(timeInterValue,'minutes'));
+                if(type === 'start'){
+                    form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
+                }else{
+                    // const { confirm } = Modal;
+                    // if(moment(endTime).format('HH:mm') != moment(generatEndTime).format('HH:mm')){
+                    //     confirm({
+                    //         content: '选择采样时长与前一样品不同，是否确认修改?',
+                    //         okText:'确定',
+                    //         cancelText:'取消',
+                    //         onOk() {
+                    //             console.log('OK');
+                    //           },
+                    //         onCancel() {
+                    //             console.log('Cancel');
+                    //           },
+                    //       });
+                    // }
+       
+                }
+            }
         }
 
     }
@@ -236,7 +260,8 @@ const Index = (props) => {
                     align: 'center',
                     width: 115,
                     render: (text, record, index) => {
-                        return <Form.Item  className={styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item  className={styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>
+                      ;
                     }
                 },
             ]
@@ -620,6 +645,9 @@ const Index = (props) => {
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
                 <BtnComponents {...props} saveLoading1={saveLoading1} saveLoading2={saveLoading2} delLoading={props.delLoading} submits={submits} clears={clears} del={del} />
+                <Form.Item label="采样时长" name='TimeIntervals' rules={[{ required: false, message: '' }]}>
+                 <InputNumber style={{width:221}} onChange={(value)=>{form.setFieldsValue({'TimeIntervals':value})}}  min={0.000001} placeholder='请输入采样时长(分钟)' /> {/* style={{width:recordType==1? '100%' : '282px'}} */}
+                </Form.Item>
                 <Form
                     form={form}
                     name="advanced_search"
