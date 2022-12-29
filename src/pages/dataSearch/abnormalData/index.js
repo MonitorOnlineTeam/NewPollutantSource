@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined, ManOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Card, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
@@ -10,7 +10,8 @@ import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList'
-
+import Modal from 'antd/lib/modal/Modal';
+import DetailsPage from './DetailsPage'
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -54,6 +55,9 @@ class index extends PureComponent {
     pollutantType: "1",
     checkedValues: [],
     operationpersonnel:'',
+    queryCondition:{},
+    detailVisible:false,
+    queryConditionDetail:{},
   }
   _SELF_ = {
     formLayout: {
@@ -111,6 +115,22 @@ class index extends PureComponent {
             queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
             router.push(`/dataSearch/abnormalData/details?queryCondition=${queryCondition}`)
+          }}>{text}</a>
+        }
+      },
+      {
+        title: '恒定值个数',
+        dataIndex: 'ExceptionTypeLian',
+        key: 'ExceptionTypeLian',
+        render: (text, record) => {
+          return <a onClick={() => {
+            let queryCondition = this.state.queryCondition;
+            queryCondition.RegionCode = record.RegionCode;
+            queryCondition.ExceptionType = 3;
+            queryCondition.RegionName = record.RegionName;
+            queryCondition = JSON.stringify(queryCondition)
+            // router.push(`/dataSearch/abnormalData/details?queryCondition=${queryCondition}`)
+            this.setState({detailVisible:true,queryConditionDetail:queryCondition})
           }}>{text}</a>
         }
       },
@@ -271,9 +291,17 @@ class index extends PureComponent {
   render() {
     const { form: { getFieldDecorator }, regionList, abnormalDataTime, attentionList, divisorList, exceptionDataSource, loading } = this.props;
     const { formLayout, columns } = this._SELF_;
-    const { format, showTime, checkedValues } = this.state;
-    console.log("attentionList=", attentionList)
+    const { format, showTime, checkedValues,queryConditionDetail, } = this.state;
     let _regionList = regionList.length ? regionList[0].children : [];
+
+    const queryConditionDetailParse =  queryConditionDetail && Object.keys(queryConditionDetail).length != 0 && JSON.parse(queryConditionDetail)
+    let beginTime = queryConditionDetailParse.dataType === "HourData" ? moment(queryConditionDetailParse.beginTime).format("YYYY-MM-DD HH时") : moment(queryConditionDetailParse.beginTime).format("YYYY-MM-DD")
+    let endTime = queryConditionDetailParse.dataType === "HourData" ? moment(queryConditionDetailParse.endTime).format("YYYY-MM-DD HH时") : moment(queryConditionDetailParse.endTime).format("YYYY-MM-DD")
+    let title='';
+    if (queryConditionDetailParse.ExceptionType == 3) {
+      title = "恒定值"
+    }
+    const detailTitle =  `${queryConditionDetailParse.RegionName}${beginTime}至${endTime}${title}情况`;
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -409,6 +437,9 @@ class index extends PureComponent {
           </Form>
           <SdlTable align="center" dataSource={exceptionDataSource} columns={columns} loading={loading} />
         </Card>
+        <Modal destroyOnClose title={detailTitle} width={'90%'} footer={null} visible={this.state.detailVisible} onCancel={()=>{this.setState({detailVisible:false})}}>
+        <DetailsPage isModal  location={{query:{queryCondition : queryConditionDetail}}} visible={this.state.detailVisible}/>
+        </Modal>
       </BreadcrumbWrapper>
     );
   }

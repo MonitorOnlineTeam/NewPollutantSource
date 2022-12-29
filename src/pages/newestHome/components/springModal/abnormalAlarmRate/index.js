@@ -48,6 +48,7 @@ class Index extends PureComponent {
         visible={visible}
         footer={false}
         onCancel={this.onCancel}
+        destroyOnClose
       >
         {
           defaultPollutantCode && !time && <Ent

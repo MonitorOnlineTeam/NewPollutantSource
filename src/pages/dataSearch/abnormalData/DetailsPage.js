@@ -8,6 +8,7 @@ import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
 import { router } from 'umi'
 import moment from 'moment'
+import Modal from 'antd/lib/modal/Modal';
 
 @connect(({ loading, autoForm, abnormalData }) => ({
   exceptionPointList: abnormalData.exceptionPointList,
@@ -16,14 +17,14 @@ import moment from 'moment'
 class DetailsPage extends PureComponent {
   state = {}
   _SELF_ = {
-    queryCondition: JSON.parse(this.props.location.query.queryCondition),
+    queryCondition: this.props.location && this.props.location.query && Object.keys(this.props.location.query.queryCondition).length != 0 && JSON.parse(this.props.location.query.queryCondition),
     columns: [
       {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
         render: (text, record) => {
-          return <span>{text}{ record.CityName? '/'+record.CityName : ''} </span>
+          return <span>{text}{record.CityName ? '/' + record.CityName : ''} </span>
         }
       },
       {
@@ -112,6 +113,50 @@ class DetailsPage extends PureComponent {
         dataIndex: 'ExceptionTypeChao',
         key: 'ExceptionTypeChao',
       },
+    ],
+    columns_Lian: [
+      {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+      },
+      {
+        title: '企业名称',
+        dataIndex: 'EntName',
+        key: 'EntName',
+        align: 'left'
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'PointName',
+        key: 'PointName',
+        align: 'left'
+      },
+      {
+        title: '数据类型',
+        dataIndex: 'DataType',
+        key: 'DataType',
+      },
+      {
+        title: '监测时间',
+        dataIndex: 'ExceptionTime',
+        key: 'ExceptionTime',
+      },
+      {
+        title: '监测因子',
+        dataIndex: 'PollutantName',
+        key: 'PollutantName',
+      },
+      {
+        title: '监测值',
+        dataIndex: 'MonitorValue',
+        key: 'MonitorValue',
+      },
+      {
+        title: '恒定值个数',
+        dataIndex: 'ExceptionTypeLian',
+        key: 'ExceptionTypeLian',
+      },
     ]
   }
 
@@ -124,7 +169,6 @@ class DetailsPage extends PureComponent {
       }
     })
   }
-
   onExport = () => {
     const queryCondition = this._SELF_.queryCondition;
     this.props.dispatch({
@@ -135,20 +179,23 @@ class DetailsPage extends PureComponent {
     })
   }
 
-
   render() {
-    const { exceptionPointList, loading, location } = this.props;
-    const { columns, columns_Chao, queryCondition } = this._SELF_;
+    const { exceptionPointList, loading, location, isModal, } = this.props;
+    const { columns, columns_Chao, columns_Lian, queryCondition } = this._SELF_;
     let _columns = columns;
     let title = "零值异常"
     if (queryCondition.ExceptionType == 2) {
       _columns = columns_Chao;
       title = "超量程"
     }
+    if (queryCondition.ExceptionType == 3) {
+      _columns = columns_Lian;
+      title = "恒定值"
+    }
     let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY-MM-DD HH时") : moment(queryCondition.beginTime).format("YYYY-MM-DD")
     let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY-MM-DD HH时") : moment(queryCondition.endTime).format("YYYY-MM-DD")
     return (
-      <BreadcrumbWrapper title={title + "详情"}>
+      <div>{!isModal ? <BreadcrumbWrapper title={title + "详情"}>
         <Card>
           <Row style={{ fontWeight: "bold", marginBottom: 20 }}>
             {`${queryCondition.RegionName}${beginTime}至${endTime}${title}情况`}
@@ -165,6 +212,15 @@ class DetailsPage extends PureComponent {
           <SdlTable align="center" dataSource={exceptionPointList} columns={_columns} loading={loading} />
         </Card>
       </BreadcrumbWrapper>
+        :
+        <div>
+        <Button style={{marginBottom:12}} type="primary" ghost icon={<ExportOutlined />} onClick={this.onExport}>
+        导出
+      </Button>
+       <SdlTable align="center" dataSource={exceptionPointList} columns={_columns} loading={loading} scroll={{y:'calc(100vh - 380px)'}} />
+      </div>
+      }
+      </div>
     );
   }
 }

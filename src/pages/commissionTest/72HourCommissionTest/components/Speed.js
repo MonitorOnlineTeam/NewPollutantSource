@@ -863,7 +863,7 @@ const Index = (props) => {
                 if (recordType == 1) {
                    let index1 = 5, index2 = 11;
                     if (index == index1 || index == index2) {
-                        data.splice(index,1,'平均值') 
+                        data.splice(index,0,'平均值') 
                     }
                 } else {
                     let index1 = 5, index2 = 12;

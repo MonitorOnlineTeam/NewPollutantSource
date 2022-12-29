@@ -206,6 +206,53 @@ class index extends PureComponent {
           },
         ]
       },
+      {
+        title: '恒定值报警',
+        children: [
+          {
+            title: '报警次数',
+            dataIndex: 'LianAlarmCount',
+            key: 'LianAlarmCount',
+            width: 120,
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "3", undefined)
+              }}>{text}</a>
+            }
+          },
+          {
+            title: '已响应报警次数',
+            dataIndex: 'LianResponsedCount',
+            key: 'LianResponsedCount',
+            width: 120,
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "3", '1')
+              }}>{text}</a>
+            }
+          },
+          {
+            title: '待响应报警次数',
+            dataIndex: 'LianNoResponseCount',
+            key: 'LianNoResponseCount',
+            width: 120,
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "3", '0')
+              }}>{text}</a>
+            }
+          },
+        ]
+      },
     ],
     detailsColumns: [
       {
@@ -434,14 +481,16 @@ class index extends PureComponent {
     // let showTypeText = secondQueryCondition.ResponseStatus == "0" ? "待响应报警情况" : (secondQueryCondition.ResponseStatus == "1" ? "已响应报警情况" : "报警响应情况")
     let showTypeText = "";
     if (secondQueryCondition.ResponseStatus == "0") {
-      showTypeText = "待响应报警情况"
+      showTypeText = `${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值'}待响应报警情况`
     } else if (secondQueryCondition.ResponseStatus == "1") {
-      showTypeText = "已响应报警情况"
+      showTypeText =`${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值报'}已响应报警情况`
     } else {
       if (secondQueryCondition.ExceptionType == "1") {
         showTypeText = "零值报警情况"
-      } else {
+      } else if(secondQueryCondition.ExceptionType == "2") {
         showTypeText = "超量程报警情况"
+      }else if(secondQueryCondition.ExceptionType == "3"){
+        showTypeText = "恒定值报警情况"
       }
     }
     let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY年MM月DD号HH时") : moment(queryCondition.beginTime).format("YYYY年MM月DD号")

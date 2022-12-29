@@ -122,6 +122,42 @@ class RegionDetails extends PureComponent {
           ]
         },
         {
+          title: '恒定值报警',
+          children: [
+            {
+              title: '报警次数',
+              dataIndex: 'LianAlarmCount',
+              key: 'LianAlarmCount',
+              width: 120,
+              align: 'center',
+            },
+            {
+              title: '已响应报警次数',
+              dataIndex: 'LianResponsedCount',
+              key: 'LianResponsedCount',
+              width: 120,
+              align: 'center',
+            },
+            {
+              title: '待响应报警次数',
+              dataIndex: 'LianNoResponseCount',
+              key: 'LianNoResponseCount',
+              width: 120,
+              align: 'center',
+            },
+            {
+              title: '响应率',
+              dataIndex: 'LianRate',
+              key: 'LianRate',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return record.ChaoAlarmCount === 0 ? '-' : text
+              }
+            },
+          ]
+        },
+        {
           title: '响应率',
           dataIndex: 'AllRate',
           key: 'AllRate',

@@ -65,8 +65,8 @@ const Index = (props) => {
     return (
         <div >
 
-            <Popconfirm placement="right" title={'采样时间是否于颗粒物采样时间相同?'} onConfirm={generateTimeClick}>
-                <Button loading={loading}>采样时间</Button>
+            <Popconfirm placement="right" title={'是否引用参比方法校准颗粒物CEMS采样时间？'} onConfirm={generateTimeClick}>
+                <Button loading={loading}>引用参比方法校准颗粒物CEMS采样时间</Button>
             </Popconfirm>
         </div>
     );

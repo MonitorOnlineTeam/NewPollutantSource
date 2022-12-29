@@ -287,7 +287,7 @@ export default Model.extend({
         *getParamCodeList({callback, payload }, { call, put, update, select }) {
             const result = yield call(GetParamCodeList, payload);
             if (result.IsSuccess) {
-                 if(result.Datas&&result.Datas[0]){
+                 if(result.Datas){
                    const data =  result.Datas.map(item=>{
                         return  { label: item.Name, value:  item.ChildID }
                     })
@@ -297,6 +297,7 @@ export default Model.extend({
                
             } else {
                 sdlMessage(result.Message, 'error');
+                callback([])
             }
         },     
         //添加设备参数项

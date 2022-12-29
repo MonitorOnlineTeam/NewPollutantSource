@@ -229,7 +229,7 @@ const Index = (props) => {
   </Form>
 
   <SdlTable
-        loading = {tableLoading}
+        loading = {paramCodeListLoading || tableLoading }
         bordered
         dataSource={tableDatas}
         columns={ columns}
