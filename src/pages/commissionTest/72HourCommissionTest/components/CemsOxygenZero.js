@@ -633,9 +633,6 @@ const Index = (props) => {
                 {pollOptions[0] ? <>
                     <BtnComponents {...props} saveLoading1={saveLoading1} saveLoading2={saveLoading2} delLoading={props.delLoading} delLoading={props.delLoading} submits={submits} clears={clears} del={del} />
                     <PollutantComponents />
-                    <Form.Item label="采样时长" name='TimeIntervals' rules={[{ required: false, message: '' }]}>
-                        <InputNumber style={{ width: 283 }} onChange={(value) => { form.setFieldsValue({ 'TimeIntervals': value }) }} min={0.000001} placeholder='请输入采样时长(分钟)' /> {/* style={{width:recordType==1? '100%' : '282px'}} */}
-                    </Form.Item>
                     <Spin spinning={formLoading}>
                         <Form
                             form={form}

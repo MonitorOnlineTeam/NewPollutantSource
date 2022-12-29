@@ -170,11 +170,30 @@ const Index = (props) => {
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
-        }else{
+        } else {
             const timeInterValue = form.getFieldValue('TimeIntervals')
-            if(timeInterValue){ //间隔时间不为空
-                const generatEndTime = moment(moment(startTime).add(timeInterValue,'minutes'));
-                form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
+            if (timeInterValue && startTime) { //间隔时间不为空
+                const generatEndTime = moment(moment(startTime).add(timeInterValue, 'minutes'));
+                if (type === 'start') {
+                    form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
+                } else {
+                    const { confirm } = Modal;
+                    if (moment(endTime).format('HH:mm') != moment(generatEndTime).format('HH:mm')) {
+                        confirm({
+                            content: '选择采样时长与前一样品不同，是否确认修改?',
+                            okText: '确定',
+                            cancelText: '取消',
+                            centered:true,
+                            onOk() {
+                                console.log('OK');
+                            },
+                            onCancel() {
+                                form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
+                            },
+                        });
+                    }
+
+                }
             }
         }
 
@@ -505,10 +524,16 @@ const Index = (props) => {
             operatingCalcula(index)
         })
     }
-    const numCheck = (e, name) => {
+    const numCheck = (e, name,min) => {
         const value = e.target.value
         if (value) {
             numVerify(value, (data) => {
+                if(min){
+                    if(data<=min){
+                        form.setFieldsValue({ [name]: '' })
+                        return;
+                    }
+                }
                 form.setFieldsValue({ [name]: data })
             })
         }
@@ -521,13 +546,13 @@ const Index = (props) => {
     const SearchComponents = () => {
         return <>
             <Row gutter={36}>
-                <Col span={recordType == 1 ? conversionVal==1? 6 : 8 : 24}>
+                <Col span={recordType == 1 ? conversionVal == 1 ? 6 : 8 : 24}>
                     <Form.Item className={styles.reqSty} label="当前大气压" name="Atmos" rules={[{ required: isReg, message: '' }]}>
-                        <InputNumber   placeholder='请输入'  suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} /> 
+                        <Input placeholder='请输入' allowClear suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
                     </Form.Item>
                 </Col>
                 {recordType == 1 && <>
-                    <Col span={conversionVal==1? 6 : 8}>
+                    <Col span={conversionVal == 1 ? 6 : 8}>
                         <Form.Item label="是否折算">
                             <Select value={conversionVal} onChange={conversionChange}>
                                 <Option value={1}>折算</Option>
@@ -535,23 +560,23 @@ const Index = (props) => {
                             </Select>
                         </Form.Item>
                     </Col>
-                     {conversionVal==1&&<Col span={6}>
+                    {conversionVal == 1 && <Col span={6}>
                         <Form.Item className={styles.reqSty} label="空气过剩系数" name="AirCoefficient" rules={[{ required: isReg, message: '' }]}>
                             <InputNumber step='0.01' placeholder='请输入' allowClear />
                         </Form.Item>
                     </Col>}
-                    <Col span={conversionVal==1? 6 : 8}>
+                    <Col span={conversionVal == 1 ? 6 : 8}>
                         <Form.Item className={styles.reqSty} label="排放限值" name="EmissionLimits" rules={[{ required: isReg, message: '' }]}>
-                            <Input placeholder='请输入' allowClear suffix="mg/m3" onKeyUp={(e) => { numCheck(e, 'EmissionLimits') }} />
+                            <Input placeholder='请输入' suffix="mg/m3" onKeyUp={(e) => { numCheck(e, 'EmissionLimits') }} allowClear />
                         </Form.Item>
                     </Col></>}
             </Row>
             <Row gutter={36} className={styles.particleMatterReferTimeSty}>
-            <Col span={recordType == 1 ? conversionVal==1? 6 : 8 : 24}> 
-            <Form.Item label="采样时长" name='TimeIntervals' rules={[{ required: false, message: '' }]}>
-                <InputNumber onChange={(value)=>{form.setFieldsValue({'TimeIntervals':value})}}  min={0.000001} placeholder='请输入采样时长(分钟)' /> {/* style={{width:recordType==1? '100%' : '282px'}} */}
-            </Form.Item>
-            </Col>
+                <Col span={recordType == 1 ? conversionVal == 1 ? 6 : 8 : 24}>
+                    <Form.Item label="采样时长" name="TimeIntervals" rules={[{ required: false, message: '' }]}>
+                        <Input placeholder='请输入' suffix="min" onKeyUp={(e) => { numCheck(e, 'TimeIntervals','0') }} allowClear />{/* style={{width:recordType==1? '100%' : '282px'}} */}
+                    </Form.Item>
+                </Col>
             </Row>
             <Row justify='center' style={{ fontSize: 16, fontWeight: 'bold', paddingBottom: 16 }}>{recordName}</Row>
             <Row justify='center' className={styles['advanced_search_sty']}>
