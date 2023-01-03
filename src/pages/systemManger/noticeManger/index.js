@@ -252,8 +252,8 @@ const Index = (props) => {
         pageSize: pageSizes ? pageSizes : pageSize,
         beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
-        Company:values.Company?values.Company.toString() : '',
-        Role:values.Role?values.Role.toString() : '',
+        company:values.company?values.company.toString() : '',
+        role:values.role?values.role.toString() : '',
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
