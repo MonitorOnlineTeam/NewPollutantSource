@@ -219,8 +219,8 @@ const Index = (props) => {
     form2.resetFields();
     form2.setFieldsValue({
         ...record,
-        Role:record.RoleID,
-        Company:record.CompanyID,     
+        Role:record.RoleID? record.RoleID.split(',') : [],
+        Company:record.CompanyID? record.CompanyID.split(',') : [],     
         Status:record.StatusID,
         BeginTime: record.BeginTime&&moment(record.BeginTime),
         EndTime:record.EndTime&&moment(record.EndTime),
@@ -252,6 +252,8 @@ const Index = (props) => {
         pageSize: pageSizes ? pageSizes : pageSize,
         beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        Company:values.Company?values.Company.toString() : '',
+        Role:values.Role?values.Role.toString() : '',
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -275,6 +277,8 @@ const Index = (props) => {
         ...values,
         BeginTime: values.BeginTime && moment(values.BeginTime).format('YYYY-MM-DD HH:mm:ss'),
         EndTime: values.EndTime && moment(values.EndTime).format('YYYY-MM-DD HH:mm:ss'),
+        Company:values.Company?values.Company.toString() : '',
+        Role:values.Role?values.Role.toString() : '',
       }, () => {
         setFromVisible(false)
         onFinish()
@@ -344,10 +348,10 @@ const Index = (props) => {
       </Row>
       <Row>
         <Form.Item label="查看公告单位" name="company"  >
-          <OperationCompanyList style={{ width: 200 }} />
+          <OperationCompanyList style={{ width: 200 }} mode='multiple'/>
         </Form.Item>
         <Form.Item label="查看公告角色" name="role" style={{ margin: '0 8px' }}>
-          <RoleList  style={{ width: 350 }} />
+          <RoleList  style={{ width: 350 }} mode='multiple'/>
         </Form.Item>
         <Form.Item style={{ marginLeft: 30 }}>
           <Button type="primary" htmlType='submit' style={{ marginRight: 8 }}>
@@ -436,12 +440,12 @@ const Index = (props) => {
             </Col>
             <Col span={24}>
               <Form.Item label="查看公告单位" name="Company" rules={[{ required: true, message: '请选择公告单位' }]}>
-                <OperationCompanyList />
+                <OperationCompanyList  mode='multiple'/>
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item label="查看公告角色" name="Role" rules={[{ required: true, message: '请选择公告角色' }]}>
-                <RoleList  />
+                <RoleList  mode='multiple' />
               </Form.Item>
             </Col>
             <Col span={24}>

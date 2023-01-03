@@ -104,6 +104,7 @@ const Index = (props) => {
       {isMobile ?
         <Spin spinning={questionDetialLoading} active style={{ height: '100vh', maxHeight: '100vh' }}>
           <div style={{ textAlign: 'left', fontWeight: 'bold', lineHeight: '14px' }}>{questionDetail.QuestionName}</div>
+      <div style={{ textAlign: 'left', color: 'rgb(194,194,194)', paddingTop: 8 }}><span>{questionDetail.CreateTime&&`创建时间：${questionDetail.CreateTime}`}</span></div>
           <Divider style={{ margin: '12px  0' }} />
           <div dangerouslySetInnerHTML={{ __html: `<div class='mobileContentSty'>${questionDetail.Content}</div>` }}></div>
         </Spin>

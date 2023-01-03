@@ -35,13 +35,15 @@ class Index extends Component {
 
 
   render() {
-    const { operationCompanyLoading, operationCompanyList, style, placeholder, } = this.props;
+    const { operationCompanyLoading, operationCompanyList, style, placeholder,mode, } = this.props;
 
     return (<Spin spinning={operationCompanyLoading} size='small'>
       <Select 
          allowClear
          showSearch
-         style={{ width: '100%', ...style }} placeholder={placeholder ? placeholder : '请选择'}  {...this.props} >
+         style={{ width: '100%', ...style }} 
+         placeholder={placeholder ? placeholder : '请选择'} 
+         {...this.props} >
         {operationCompanyList.map(item => {
           return <Option key={item.id} value={item.id}>{item.name}</Option>
         })

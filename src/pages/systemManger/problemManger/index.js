@@ -367,6 +367,7 @@ const Index = (props) => {
       } else if (info.file.status === 'error') {
         setFilesLoading(false)
         message.error(`${info.file.name} 上传失败`);
+        setFilesList(fileList)
       }else if(info.file.status === 'removed'){ //删除状态
         form2.setFieldsValue({ File: filesCuid })
         setFilesLoading(false)
