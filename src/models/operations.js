@@ -455,7 +455,7 @@ export default Model.extend({
         });
         callback&&callback(result.Datas)
       } else {
-        sdlMessage(result.Message, "warning");
+        message.error(result.Message);
       }
     },      
   },
