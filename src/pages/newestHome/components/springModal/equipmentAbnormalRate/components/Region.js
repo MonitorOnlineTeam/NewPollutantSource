@@ -178,7 +178,7 @@ const Index = (props) => {
     if(Object.keys(hangedValues).join() == 'pollutantType'){
       props.getParamCodeList({pollutantType:hangedValues.pollutantType},(data)=>{
         setParType(data)
-        form.setFieldsValue({parameterCategory:data.map(item=>item.value) })
+        form.setFieldsValue({parameterCategory:data.map(item=>item.value)})
       }) 
     }
   }

@@ -38,6 +38,7 @@ const { RangePicker } = DatePicker;
   loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForRegion"],
   exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarm"],
   detailsLoading: loading.effects["exceptionrecordNew/getExceptionAlarmListForEnt"],
+  exportExceptionAlarmListForEntLoading:loading.effects["exceptionrecordNew/exportExceptionAlarmListForEnt"],
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -484,7 +485,7 @@ class index extends PureComponent {
 
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
+    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading,exportExceptionAlarmListForEntLoading } = this.props;
     const { formLayout, columns, detailsColumns } = this._SELF_;
     const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime } = this.state;
     let _detailsColumns = detailsColumns;
@@ -636,7 +637,7 @@ class index extends PureComponent {
           onCancel={() => { this.setState({ visible: false }) }}
         >
           <Row style={{ marginBottom: 10 }}>
-            <Button type="primary" onClick={this.onExport}>
+            <Button  icon={<ExportOutlined />} loading={exportExceptionAlarmListForEntLoading} onClick={this.onExport}>
               导出
             </Button>
           </Row>
