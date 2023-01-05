@@ -409,6 +409,12 @@ class NavigationTree extends Component {
         const VideoNo = hisData ? hisData.VideoNo : '';
         const rtnKey = [{ key: nowKey[0], pointName, entName, IsEnt: false, Type: pollutantType, EntCode, VideoNo }]
         console.log('rtnKey=', rtnKey)
+        this.props.dispatch({
+          type: 'navigationtree/updateState',
+          payload: {
+            pointInfo: { entName: rtnKey[0].entName, pointName: rtnKey[0].pointName }
+          },
+        })
         this.props.onItemClick && this.props.onItemClick(rtnKey)
         return
       }

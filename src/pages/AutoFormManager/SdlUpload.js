@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi
  * @Date: 2019-11-05 17:18:49
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-10-31 17:14:37
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2022-12-30 14:22:27
  * @desc: 上传组件
  */
 
@@ -71,8 +71,6 @@ class SdlUpload extends Component {
   render() {
     const { configId, fileList, dispatch, accept, uploadNumber } = this.props;
     const { cuid } = this._SELF_;
-    console.log('fileList=', fileList)
-    console.log('props=', this.props)
     let acceptProps = {};
     if (accept) {
       acceptProps.accept = accept;
@@ -94,7 +92,6 @@ class SdlUpload extends Component {
         console.log('info=', info)
         if (info.file.status === 'done') {
           // setFieldsValue({ cuid: cuid })
-          console.log(fileList)
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
           fileList[fileList.length - 1].url = "/" + fileList[fileList.length - 1].response.Datas
           fileList[fileList.length - 1].thumbUrl = "/" + fileList[fileList.length - 1].response.Datas

@@ -34,7 +34,7 @@ class UnitInfoPage extends PureComponent {
         CrewCode: CrewCode
       },
       callback: () => {
-        message.success('添加成功！')
+        message.success('删除成功！')
         this.getUnitList()
       }
     })
