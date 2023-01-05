@@ -580,7 +580,7 @@ class index extends PureComponent {
                 {getFieldDecorator('PollutantType', {
                   initialValue: '1',
                 })(
-                  <Select style={{ width: 200 }} placeholder="请选择企业类型" onChange={(value) => {
+                  <Select style={{ width: 231 }} placeholder="请选择企业类型" onChange={(value) => {
                     this.setState({ pollutantType: value }, () => {
                     })
                   }}>

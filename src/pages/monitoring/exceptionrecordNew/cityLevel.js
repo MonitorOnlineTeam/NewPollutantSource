@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
+import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -37,14 +37,15 @@ const { RangePicker } = DatePicker;
   loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForCity"],
   exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarmListForCity"],
   detailsLoading: loading.effects["exceptionrecordNew/getExceptionAlarmListForEnt"],
+  exportExceptionAlarmListForEntLoading: loading.effects["exceptionrecordNew/exportExceptionAlarmListForEnt"],
 }))
 @Form.create({
   mapPropsToFields(props) {
     return {
       // dataType: Form.createFormField(props.exceptionrecordForm.dataType),
-    //   time: Form.createFormField(props.exceptionrecordForm.time),
+      //   time: Form.createFormField(props.exceptionrecordForm.time),
       // RegionCode: Form.createFormField(props.exceptionrecordForm.RegionCode),
-    //   RegionCode: Form.createFormField(props.location.query.regionCode),
+      //   RegionCode: Form.createFormField(props.location.query.regionCode),
       // AttentionCode: Form.createFormField(props.exceptionrecordForm.AttentionCode),
       // PollutantType: Form.createFormField(props.exceptionrecordForm.PollutantType),
     };
@@ -70,7 +71,7 @@ class index extends PureComponent {
     secondQueryCondition: {},
     queryCondition: {},
     exceptionTime: this.props.time || this.props.exceptionTime,
-    operationpersonnel:'',
+    operationpersonnel: '',
   }
   _SELF_ = {
     formLayout: {
@@ -90,8 +91,8 @@ class index extends PureComponent {
             queryCondition = JSON.stringify(queryCondition)
             this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
               router.push(`/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
-            
-          }}>{record.CityName? `${text}/${record.CityName}` : text}</a>
+
+          }}>{record.CityName ? `${text}/${record.CityName}` : text}</a>
         }
       },
       {
@@ -334,14 +335,14 @@ class index extends PureComponent {
     this.getExceptionList([moment().subtract(7, "days").startOf("day"), moment().endOf("day")]);
   }
 
-  onTableClick = (RegionCode, ExceptionType, ResponseStatus,operationpersonnel) => {
+  onTableClick = (RegionCode, ExceptionType, ResponseStatus, operationpersonnel) => {
     this.setState({
       secondQueryCondition: {
         ...this.state.queryCondition,
         RegionCode: RegionCode,
         ExceptionType: ExceptionType,
         ResponseStatus: ResponseStatus,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationPersonnel: this.state.operationpersonnel
       },
       visible: true
     }, () => {
@@ -370,7 +371,7 @@ class index extends PureComponent {
 
   // 获取异常数据
   getExceptionList = () => {
- 
+
     // let values = this.props.form.getFieldsValue();
     let values = this.props.exceptionrecordForms;
     console.log("values=", this.props.form)
@@ -388,11 +389,11 @@ class index extends PureComponent {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
         // RegionCode: values.RegionCode?values.RegionCode:'',
-        RegionCode:this.props.location.query.regionCode? this.props.location.query.regionCode : '',
+        RegionCode: this.props.location.query.regionCode ? this.props.location.query.regionCode : '',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationPersonnel: this.state.operationpersonnel
       }
     })
     this.setState({
@@ -400,11 +401,11 @@ class index extends PureComponent {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
         // RegionCode: values.RegionCode?values.RegionCode:'',
-        RegionCode:this.props.location.query.regionCode? this.props.location.query.regionCode : '',
+        RegionCode: this.props.location.query.regionCode ? this.props.location.query.regionCode : '',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationPersonnel: this.state.operationpersonnel
       }
     })
   }
@@ -427,11 +428,11 @@ class index extends PureComponent {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
         // RegionCode: values.RegionCode?values.RegionCode:'',
-        RegionCode:this.props.location.query.regionCode? this.props.location.query.regionCode : '',
+        RegionCode: this.props.location.query.regionCode ? this.props.location.query.regionCode : '',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationPersonnel: this.state.operationpersonnel
       }
     })
   }
@@ -473,7 +474,7 @@ class index extends PureComponent {
 
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading } = this.props;
+    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading, exportExceptionAlarmListForEntLoading } = this.props;
     const { formLayout, columns, detailsColumns } = this._SELF_;
     const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime } = this.state;
     let _detailsColumns = detailsColumns;
@@ -481,15 +482,15 @@ class index extends PureComponent {
     // let showTypeText = secondQueryCondition.ResponseStatus == "0" ? "待响应报警情况" : (secondQueryCondition.ResponseStatus == "1" ? "已响应报警情况" : "报警响应情况")
     let showTypeText = "";
     if (secondQueryCondition.ResponseStatus == "0") {
-      showTypeText = `${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值'}待响应报警情况`
+      showTypeText = `${secondQueryCondition.ExceptionType == "1" ? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值'}待响应报警情况`
     } else if (secondQueryCondition.ResponseStatus == "1") {
-      showTypeText =`${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值报'}已响应报警情况`
+      showTypeText = `${secondQueryCondition.ExceptionType == "1" ? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值报'}已响应报警情况`
     } else {
       if (secondQueryCondition.ExceptionType == "1") {
         showTypeText = "零值报警情况"
-      } else if(secondQueryCondition.ExceptionType == "2") {
+      } else if (secondQueryCondition.ExceptionType == "2") {
         showTypeText = "超量程报警情况"
-      }else if(secondQueryCondition.ExceptionType == "3"){
+      } else if (secondQueryCondition.ExceptionType == "3") {
         showTypeText = "恒定值报警情况"
       }
     }
@@ -603,12 +604,12 @@ class index extends PureComponent {
                   onClick={this.exportExceptionAlarmListForCity}
                 >
                   导出
-                      </Button>
-                 <Button  onClick={() => {
-                     history.go(-1);
-                //   this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/air'}))
-                   }}>
-                   <RollbackOutlined />返回 </Button>
+               </Button>
+                <Button onClick={() => {
+                  history.go(-1);
+                  //   this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/air'}))
+                }}>
+                  <RollbackOutlined />返回 </Button>
                 {/* <span style={{ color: "red", marginLeft: 20 }}>已响应指：运维人员响应报警，并完成响应报警生成的运维工单。</span> */}
               </div>
             </Row>
@@ -624,11 +625,11 @@ class index extends PureComponent {
           onCancel={() => { this.setState({ visible: false }) }}
         >
           <Row style={{ marginBottom: 10 }}>
-            <Button type="primary" onClick={this.onExport}>
+            <Button icon={<ExportOutlined />} loading={exportExceptionAlarmListForEntLoading} onClick={this.onExport}>
               导出
             </Button>
           </Row>
-          <SdlTable align="center" loading={detailsLoading} dataSource={exceptionAlarmListForEntDataSource} columns={_detailsColumns} />
+          <SdlTable align="center" loading={detailsLoading} dataSource={exceptionAlarmListForEntDataSource} columns={_detailsColumns} scroll={{ y: 'calc(100vh - 380px)' }} />
         </Modal>
       </BreadcrumbWrapper>
     );

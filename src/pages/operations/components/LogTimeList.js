@@ -220,8 +220,8 @@ class LogTimeList extends Component {
                     // } else {
                     //   router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
                     // }
-                    if(node.TypeID==67 || node.TypeID ==10 || node.TypeID == 5 ||  node.TypeID == 75){
-                      this.getOperationImageList(node);
+                    if(node.TypeID == 5 || node.TypeID == 6 || node.TypeID == 7 || node.TypeID ==10 || node.TypeID==67 || node.TypeID == 75 || node.TypeID == 76){
+                      this.getOperationImageList(node); 
                     }else{
                       // router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
                       this.setState({ detailVisible:true,typeID:node.TypeID,taskID:node.TaskID, })

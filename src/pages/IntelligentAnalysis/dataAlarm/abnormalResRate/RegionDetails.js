@@ -152,7 +152,7 @@ class RegionDetails extends PureComponent {
               width: 120,
               align: 'center',
               render: (text, record) => {
-                return record.ChaoAlarmCount === 0 ? '-' : text
+                return record.LianAlarmCount === 0 ? '-' : text
               }
             },
           ]

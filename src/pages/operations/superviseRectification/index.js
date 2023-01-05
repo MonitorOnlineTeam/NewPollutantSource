@@ -199,6 +199,9 @@ const Index = (props) => {
       key: 'Status',
       align: 'center',
       ellipsis: true,
+      render: (text, record, index) => {
+        return <span style={{color: text=='未开始整改'? '#f5222d':'#52c41a' }}>{text}</span>;
+      }
     },
     {
       title: '整改完成时间',
@@ -318,7 +321,7 @@ const Index = (props) => {
         </Form.Item>
         <Spin spinning={entLoading} size='small' style={{ top: -3, left: 28 }}>
           <Form.Item label='企业' name='EntCode'>
-            <EntAtmoList noFilter style={{ width: 150 }} />
+            <EntAtmoList noFilter style={{ width: 240 }} />
           </Form.Item>
         </Spin>
         <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
@@ -346,7 +349,7 @@ const Index = (props) => {
             format="YYYY-MM-DD" />
         </Form.Item> */}
         <Form.Item label="运维人员" name="OperationUser">
-          <OperationInspectoUserList noFirst style={{ width: 150 }} />
+          <OperationInspectoUserList noFirst style={{ width: 240 }} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 5 }}>
