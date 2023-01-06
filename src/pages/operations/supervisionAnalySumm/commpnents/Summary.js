@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Tag, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Tag, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -29,7 +29,9 @@ const dvaPropsData = ({ loading, supervisionAnalySumm, global, common }) => ({
   tableLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
   inspectorTypeloading: loading.effects[`${namespace}/getInspectorTypeCode`],
   exportLoading: loading.effects[`${namespace}/exportInspectorSummaryList`],
-  inspectorCodeList:supervisionAnalySumm.inspectorCodeList,
+  inspectorCodeList: supervisionAnalySumm.inspectorCodeList,
+  tableLoading2: loading.effects[`${namespace}/getInspectorSummaryList`],
+  regExportLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -47,18 +49,18 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getInspectorSummaryList: (payload,callback) => { // 列表
+    getInspectorSummaryList: (payload, callback) => { // 列表
       dispatch({
         type: `${namespace}/getInspectorSummaryList`,
         payload: payload,
-        callback:callback,
+        callback: callback,
       })
     },
-    exportInspectorSummaryList: (payload,callback) => { // 导出
+    exportInspectorSummaryList: (payload, callback) => { // 导出
       dispatch({
         type: `${namespace}/exportInspectorSummaryList`,
         payload: payload,
-        callback:callback,
+        callback: callback,
       })
     },
   }
@@ -67,7 +69,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const { tableDatas,tableLoading,exportLoading,inspectorCodeList, } = props;
+  const { tableDatas, tableLoading, exportLoading, inspectorCodeList, tableDatas2, tableLoading2, exportLoading2, regExportLoading,} = props;
 
 
   useEffect(() => {
@@ -76,166 +78,274 @@ const Index = (props) => {
   }, []);
 
   const values = form.getFieldsValue();
- 
-const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',fontSize:16}}>{moment().format('YYYY年')}督查总结</span>)
+
+  const [tableTitle, setTableTitle] = useState(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment().format('YYYY年')}督查总结</span>)
 
   const columns = [
     {
-    title: tableTitle,
-    align: 'center',
-    children:[
-    {
-      title: '序号',
-      width:70,
+      title: tableTitle,
       align: 'center',
-      render:(text,record,index)=>{
-        return index + 1
-      }
-    },
-    {
-      title: '督查人员',
-      dataIndex: 'userName',
-      key: 'userName',
-      align: 'center',
-      width:100,
-      render: (value, record, index) => {
-        let obj = {
-          children: <div>{value}</div>,
-          props: { rowSpan: record.count},
-        };
-        return obj;
-      }
-    },
-    {
-      title: '督查类别',
-      dataIndex: 'dataType',
-      key: 'dataType',
-      width:100,
-      align: 'center',
-    },
-    {
-      title: '督查日期',
-      dataIndex: 'dataTime',
-      key: 'dataTime',
-      align: 'center',
-      width:100,
-      render: (value, record, index) => {
-        let obj = {
-          children: <div>{value}</div>,
-          props: { rowSpan: record.count},
-        };
-        return obj;
-      }
-    },
-    {
-      title: '督查套数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      width:100,
-    },
-    {
-      title: '原则性问题数量',
-      dataIndex: 'principleProblemNum',
-      key: 'principleProblemNum',
-      align: 'center',
-      width:120,
-    },
-    {
-      title: '严重问题数量',
-      dataIndex: 'importanProblemNum',
-      key: 'importanProblemNum',
-      align: 'center',
-      width:100,
-    },
-    {
-      title: '一般问题数量',
-      dataIndex: 'commonlyProblemNum',
-      key: 'commonlyProblemNum',
-      align: 'center',
-      width:100,
-    },
-    {
-      title: '原则及重点问题描述',
-      align: 'center',
-      children:[
+      children: [
         {
-          title: '量程一致性问题数量',
+          title: '序号',
+          width: 70,
+          align: 'center',
+          render: (text, record, index) => {
+            return index + 1
+          }
+        },
+        {
+          title: '督查人员',
+          dataIndex: 'userName',
+          key: 'userName',
+          align: 'center',
+          width: 100,
+          render: (value, record, index) => {
+            let obj = {
+              children: <div>{value}</div>,
+              props: { rowSpan: record.count },
+            };
+            return obj;
+          }
+        },
+        {
+          title: '督查类别',
+          dataIndex: 'dataType',
+          key: 'dataType',
+          width: 100,
+          align: 'center',
+        },
+        {
+          title: '督查日期',
+          dataIndex: 'dataTime',
+          key: 'dataTime',
+          align: 'center',
+          width: 100,
+          render: (value, record, index) => {
+            let obj = {
+              children: <div>{value}</div>,
+              props: { rowSpan: record.count },
+            };
+            return obj;
+          }
+        },
+        {
+          title: '督查套数',
+          dataIndex: 'pointCount',
+          key: 'pointCount',
+          align: 'center',
+          width: 100,
+        },
+        {
+          title: '原则性问题数量',
+          dataIndex: 'principleProblemNum',
+          key: 'principleProblemNum',
+          align: 'center',
+          width: 120,
+        },
+        {
+          title: '严重问题数量',
+          dataIndex: 'importanProblemNum',
+          key: 'importanProblemNum',
+          align: 'center',
+          width: 100,
+        },
+        {
+          title: '一般问题数量',
+          dataIndex: 'commonlyProblemNum',
+          key: 'commonlyProblemNum',
+          align: 'center',
+          width: 100,
+        },
+        {
+          title: '原则及重点问题描述',
+          align: 'center',
+          children: [
+            {
+              title: '量程一致性问题数量',
+              dataIndex: 'rangeNum',
+              key: 'rangeNum',
+              align: 'center',
+              width: 140,
+            },
+            {
+              title: '数据一致性问题数量',
+              dataIndex: 'dataNum',
+              key: 'dataNum',
+              align: 'center',
+              width: 140,
+            },
+            {
+              title: '参数一致性问题数量',
+              dataIndex: 'paramNum',
+              key: 'paramNum',
+              align: 'center',
+              width: 140,
+            },
+          ]
+
+        }
+      ]
+    }]
+
+
+  const columns2 = [
+    {
+      title: tableTitle,
+      align: 'center',
+      children: [
+        {
+          title: '序号',
+          width: 70,
+          align: 'center',
+          render: (text, record, index) => {
+            return index + 1
+          }
+        },
+        {
+          title: '省份',
+          dataIndex: 'userName',
+          key: 'userName',
+          align: 'center',
+          width: 100,
+          render: (value, record, index) => {
+             return <a onClick={regDetail(record)}> </a>
+          }
+        },
+        {
+          title: '督查套数',
+          dataIndex: 'pointCount',
+          key: 'pointCount',
+          align: 'center',
+          width: 100,
+        },
+        {
+          title: '原则性问题',
+          dataIndex: 'principleProblemNum',
+          key: 'principleProblemNum',
+          align: 'center',
+          width: 120,
+        },
+        {
+          title: '重点问题',
+          dataIndex: 'importanProblemNum',
+          key: 'importanProblemNum',
+          align: 'center',
+          width: 100,
+        },
+        {
+          title: '整改完成数量',
+          dataIndex: 'commonlyProblemNum',
+          key: 'commonlyProblemNum',
+          align: 'center',
+          width: 100,
+        },
+        {
+          title: '重点问题整改率',
           dataIndex: 'rangeNum',
           key: 'rangeNum',
           align: 'center',
-          width:140,
+          width: 140,
         },
         {
-          title: '数据一致性问题数量',
+          title: '一般问题',
           dataIndex: 'dataNum',
           key: 'dataNum',
           align: 'center',
-          width:140,
+          width: 140,
         },
         {
-          title: '参数一致性问题数量',
+          title: '整改完成数量',
           dataIndex: 'paramNum',
           key: 'paramNum',
           align: 'center',
-          width:140,
+          width: 140,
+        },
+        {
+          title: '一般问题整改率',
+          dataIndex: 'paramNum',
+          key: 'paramNum',
+          align: 'center',
+          width: 140,
+        },
+        {
+          title: '平均分',
+          dataIndex: 'paramNum',
+          key: 'paramNum',
+          align: 'center',
+          width: 140,
         },
       ]
-
-    }
-  ]
-}]
-
- 
-
-
+    }]
+  
+  const [regDetailVisible,setRegDetailVisible] = useState(false)
+  const [regDetailTitle,setRegDetailTitle] = useState(false)
+  const regDetail = (record) =>{
+    setRegDetailVisible(true)
+    setRegDetailTitle()
+  }
   const onFinish = async () => {  //查询
     try {
       const values = await form.validateFields();
+      if(radioType==1){ //按人员统计
       props.getInspectorSummaryList({
         ...values,
-        BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY-01-01 00:00:00') : values.time&&moment(values.time).format('YYYY-MM-01 00:00:00'),
-        EndTime:  type==3? values.time&&moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
-        time:undefined,
-      },()=>{
-        if(type==1){
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年')}督查总结</span>)
-        }else if(type==2){
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年MM月')}督查总结</span>)
-        }else{
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time[0]).format('YYYY年MM月DD日') } ~ {moment(values.time[1]).format('YYYY年MM月DD日')}督查总结</span>)
+        BeginTime: type == 3 ? values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00') : type == 1 ? values.time && moment(values.time).format('YYYY-01-01 00:00:00') : values.time && moment(values.time).format('YYYY-MM-01 00:00:00'),
+        EndTime: type == 3 ? values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
+        time: undefined,
+      }, () => {
+        if (type == 1) {
+          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年')}督查总结</span>)
+        } else if (type == 2) {
+          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年MM月')}督查总结</span>)
+        } else {
+          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}督查总结</span>)
         }
       })
+    }else{ //按省统计
+
+    }
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
+
+
+
+  const exports = async () => {
+    const values = await form.validateFields();
+    if(radioType==1){ //按人员统计
+    props.exportInspectorSummaryList({
+      ...values,
+      BeginTime: type == 3 ? values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00') : type == 1 ? values.time && moment(values.time).format('YYYY-01-01 00:00:00') : values.time && moment(values.time).format('YYYY-MM-01 00:00:00'),
+      EndTime: type == 3 ? values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
+      time: undefined,
+    })
+     }else{ //按省统计
+
+    }
+  };
+  const regDetailExports =  () => { //按省统计 详情导出
+
+  }
   
 
-
-  const exports = async  () => {
-    const values = await form.validateFields();
-      props.exportInspectorSummaryList({
-        ...values,
-        BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY-01-01 00:00:00') : values.time&&moment(values.time).format('YYYY-MM-01 00:00:00'),
-        EndTime:  type==3? values.time&&moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
-        time:undefined,
-    })
-
- };
-  const [type,setType] = useState(1)
+  const [type, setType] = useState(1)
   const onValuesChange = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'DateType') {
-        setType(hangedValues.DateType)
-        if(hangedValues.DateType==3){
-          form.setFieldsValue({ time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")] })
-        }else{
-          form.setFieldsValue({ time:  moment() })
-        }
+      setType(hangedValues.DateType)
+      if (hangedValues.DateType == 3) {
+        form.setFieldsValue({ time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")] })
+      } else {
+        form.setFieldsValue({ time: moment() })
+      }
 
     }
   }
-
+  const [radioType, setRadioType] = useState(1);
+  const onRadioChange = (e) => {
+    setRadioType(e.target.value);
+  }
 
   return (
     <div className={styles.analysisSummarySty}>
@@ -247,69 +357,92 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
             onFinish={() => { onFinish() }}
             layout='inline'
             initialValues={{
-              DateType:1,
+              DateType: 1,
               time: moment(),
             }}
             className={styles.queryForm}
             onValuesChange={onValuesChange}
           >
             <Form.Item label='统计方式' name='DateType'>
-              <Select placeholder='请选择' style={{ width: 150}}>
+              <Select placeholder='请选择' style={{ width: 150 }}>
                 <Option value={1}>按年统计</Option>
                 <Option value={2}>按月统计</Option>
                 <Option value={3}>按日统计</Option>
               </Select>
             </Form.Item>
-          {type==1?  <Form.Item label='统计年份' name='time' >
-              <DatePicker picker="year" style={{ width: 150}} allowClear={false}/>
+            {type == 1 ? <Form.Item label='统计年份' name='time' >
+              <DatePicker picker="year" style={{ width: 150 }} allowClear={false} />
             </Form.Item>
-             :
-             type==2 ?
-            <Form.Item label='统计月份' name='time' >
-              <DatePicker picker="month" style={{ width: 150}}  allowClear={false}/>
-            </Form.Item>
-            :
-            <Form.Item label='统计日期' name='time' >
-            <RangePicker_
-              allowClear={false}
-              style={{ width: 386}}
-              format="YYYY-MM-DD HH:mm:ss"
-              showTime="YYYY-MM-DD HH:mm:ss" />
-            </Form.Item>
-        }
-            <Spin spinning={false  } size='small' style={{ top: -9 }}>
+              :
+              type == 2 ?
+                <Form.Item label='统计月份' name='time' >
+                  <DatePicker picker="month" style={{ width: 150 }} allowClear={false} />
+                </Form.Item>
+                :
+                <Form.Item label='统计日期' name='time' >
+                  <RangePicker_
+                    allowClear={false}
+                    style={{ width: 386 }}
+                    format="YYYY-MM-DD HH:mm:ss"
+                    showTime="YYYY-MM-DD HH:mm:ss" />
+                </Form.Item>
+            }
+            {radioType == 1 && <Spin spinning={false} size='small' style={{ top: -9 }}>
               <Form.Item label='督查类别' name="InspectorType" >
-               <Select placeholder='请选择' style={{ width: 150}} allowClear    showSearch optionFilterProp="children">
-              {
-               inspectorCodeList&&inspectorCodeList[0]&&inspectorCodeList.map(item => {
-                  return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>
-                })
-              }
-                 </Select>
+                <Select placeholder='请选择' style={{ width: 150 }} allowClear showSearch optionFilterProp="children">
+                  {
+                    inspectorCodeList && inspectorCodeList[0] && inspectorCodeList.map(item => {
+                      return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>
+                    })
+                  }
+                </Select>
               </Form.Item>
-              </Spin>
+            </Spin>}
             <Form.Item>
-          
+
               <Button type="primary" loading={tableLoading} htmlType="submit">
                 查询
           </Button>
               <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
                 重置
           </Button>
-          <Button  icon={<ExportOutlined />} onClick={()=>{exports()}} loading={exportLoading}>
-              导出
+              <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>
+                导出
             </Button>
             </Form.Item>
-          </Form>}>
-        <SdlTable
+            <Radio.Group defaultValue={1} buttonStyle="solid" onChange={onRadioChange}>
+              <Radio.Button value={1}>按人统计</Radio.Button>
+              <Radio.Button value={2}>按省统计</Radio.Button>
+            </Radio.Group>
+          </Form>
+
+        }
+
+      >
+
+        {radioType == 1 ? <SdlTable
           loading={tableLoading}
           bordered
           rowClassName={null}
           dataSource={tableDatas}
           columns={columns}
           pagination={false}
-        />
+        /> :
+          <SdlTable
+            loading={tableLoading2}
+            bordered
+            rowClassName={null}
+            dataSource={tableDatas2}
+            columns={columns2}
+            pagination={false}
+          />
+        }
       </Card>
+       <Modal visible={regDetailVisible} title={regDetailTitle}>
+        <Button icon={<ExportOutlined />} onClick={() => {regDetailExports() }} loading={regExportLoading}>
+                导出
+            </Button>
+      </Modal> 
     </div>
 
   );
