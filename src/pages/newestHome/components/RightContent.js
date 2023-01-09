@@ -573,14 +573,17 @@ const operationExpiraOption = { //点位到期统计
      </div>
      </Spin>
 
-      <MissingDataRateModal type={'ent'} //缺失报警响应率弹框
+      <MissingDataRateModal //缺失报警响应率弹框
+            type={'ent'} 
+            pollutantType={pollutantType}
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
             missingRateVisible={missingRateVisible} missingRateCancel={() => {
               setMissingRateVisible(false)
               props.MissingRateDataModal(dataAlarmResBtnCheck)
 
             }} />
-    <AbnormalAlarmRateModal type={pollutantType} //异常报警响应率弹框
+    <AbnormalAlarmRateModal  //异常报警响应率弹框
+            type={pollutantType}
             visible={abnormalAlarmRateVisible}
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]} 
             onCancel={() => {

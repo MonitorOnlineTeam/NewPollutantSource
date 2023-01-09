@@ -148,12 +148,13 @@ export default class Index extends PureComponent {
       }
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,types,time } = this.props;
+    const { dispatch, location,Atmosphere,types,time,defaultPollutantType, } = this.props;
     this.updateQueryState({
       RegionCode: '',
       EntType: types==='ent'? "1":"2",
       beginTime: time[0].format('YYYY-MM-DD 00:00:00'),
       endTime: time[1].format('YYYY-MM-DD 23:59:59'),
+      PollutantType:defaultPollutantType
       // OperationPersonnel:'',
     });
     console.log('首次加载')

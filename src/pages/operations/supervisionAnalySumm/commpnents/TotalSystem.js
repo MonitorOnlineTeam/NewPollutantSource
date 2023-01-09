@@ -40,11 +40,11 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        getOperationManageSummaryList: (payload,callback) => { // 列表
+        getOperationManageSummaryList: (payload, callback) => { // 列表
             dispatch({
                 type: `${namespace}/getOperationManageSummaryList`,
                 payload: payload,
-                callback:callback,
+                callback: callback,
             })
         },
         exportOperationManageSummaryList: (payload) => { // 导出
@@ -59,7 +59,7 @@ const Index = (props) => {
 
     const [form] = Form.useForm();
 
-    const { tableDatas, tableTotal, tableLoading, exportLoading, } = props;
+    const { tableDatas, tableTotal, tableLoading, exportLoading,  } = props;
 
 
     useEffect(() => {
@@ -70,8 +70,112 @@ const Index = (props) => {
 
 
 
-    const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',fontSize:16}}>{moment().format('YYYY年')}全系统督查汇总表</span>)
+    const [tableTitle, setTableTitle] = useState(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment().format('YYYY年')}全系统督查汇总表</span>)
 
+    // const columns = [
+    //     {
+    //         title: tableTitle,
+    //         align: 'center',
+    //         children: [
+    //             {
+    //                 title: '序号',
+    //                 dataIndex: 'TypeNum',
+    //                 key: 'TypeNum',
+    //                 width: 70,
+    //                 align: 'center',
+    //                 render: (text, record, index) => {
+    //                     return index + 1
+    //                 }
+    //             },
+    //             {
+    //                 title: '省区',
+    //                 dataIndex: 'provinceName',
+    //                 key: 'provinceName',
+    //                 align: 'center',
+    //                 width: 100,
+    //             },
+    //             {
+    //                 title: '地级市',
+    //                 dataIndex: 'cityName',
+    //                 key: 'cityName',
+    //                 align: 'center',
+    //                 width: 100,
+    //             },
+    //             {
+    //                 title: '企业名称',
+    //                 dataIndex: 'entName',
+    //                 key: 'entName',
+    //                 align: 'center',
+    //                 width: 150,
+    //             },
+    //             {
+    //                 title: '排口名称',
+    //                 dataIndex: 'pointName',
+    //                 key: 'pointName',
+    //                 align: 'center',
+    //                 width: 100,
+    //             },
+    //             {
+    //                 title: '监测因子',
+    //                 dataIndex: 'pollutantName',
+    //                 key: 'pollutantName',
+    //                 width: 150,
+    //                 align: 'center',
+    //                 ellipsis: true,
+
+    //             },
+    //             {
+    //                 title: '督查人员',
+    //                 dataIndex: 'operationName',
+    //                 key: 'createUserName',
+    //                 align: 'center',
+    //                 width: 100,
+    //             },
+    //             {
+    //                 title: '运维人员',
+    //                 dataIndex: 'operationName',
+    //                 key: 'operationName',
+    //                 align: 'center',
+    //                 width: 100,
+    //             },
+    //             {
+    //                 title: '督查日期',
+    //                 dataIndex: 'dateTime',
+    //                 key: 'dateTime',
+    //                 align: 'center',
+    //                 width: 100,
+    //                 render: (text, record, index) => {
+    //                     return text ? moment(text).format('YYYY-MM-DD') : null;
+    //                 }
+    //             },
+    //             {
+    //                 title: '原则性问题',
+    //                 dataIndex: 'principleProblem',
+    //                 key: 'principleProblem',
+    //                 align: 'center',
+    //                 width: 150,
+    //                 ellipsis: true,
+    //             },
+    //             {
+    //                 title: '严重问题',
+    //                 dataIndex: 'importanProblem',
+    //                 key: 'importanProblem',
+    //                 align: 'center',
+    //                 width: 150,
+    //                 ellipsis: true,
+    //             },
+    //             {
+    //                 title: '一般问题',
+    //                 dataIndex: 'commonlyProblem',
+    //                 key: 'commonlyProblem',
+    //                 align: 'center',
+    //                 width: 150,
+    //                 ellipsis: true,
+    //             },
+    //         ]
+    //     }
+
+    // ]
     const columns = [
         {
             title: tableTitle,
@@ -81,7 +185,7 @@ const Index = (props) => {
                     title: '序号',
                     dataIndex: 'TypeNum',
                     key: 'TypeNum',
-                    width:70,
+                    width: 70,
                     align: 'center',
                     render: (text, record, index) => {
                         return index + 1
@@ -92,111 +196,114 @@ const Index = (props) => {
                     dataIndex: 'provinceName',
                     key: 'provinceName',
                     align: 'center',
-                    width:100,
-                  },
-                  {
+                    width: 100,
+                },
+                {
                     title: '地级市',
                     dataIndex: 'cityName',
                     key: 'cityName',
                     align: 'center',
-                    width:100,
-                  },
-                  {
+                    width: 100,
+                },
+                {
                     title: '企业名称',
                     dataIndex: 'entName',
                     key: 'entName',
                     align: 'center',
-                    width:150,
-                  },
-                  {
+                    width: 150,
+                },
+                {
                     title: '排口名称',
                     dataIndex: 'pointName',
                     key: 'pointName',
                     align: 'center',
-                    width:100,
-                  },
-                  {
-                    title: '监测因子',
-                    dataIndex: 'pollutantName',
-                    key: 'pollutantName',
-                    width:150,
-                    align: 'center',
-                    ellipsis: true,
-                    
-                  },
-                  {
-                    title: '督查人员',
-                    dataIndex: 'createUserName',
-                    key: 'createUserName',
-                    align: 'center',
-                    width:100,
-                  },
-                  {
+                    width: 100,
+                },
+                {
                     title: '运维人员',
                     dataIndex: 'operationName',
                     key: 'operationName',
+                    width: 150,
                     align: 'center',
-                    width:100,
-                  },
+                    ellipsis: true,
+
+                },
+                {
+                    title: '运维人员工号',
+                    dataIndex: 'createUserName',
+                    key: 'createUserName',
+                    align: 'center',
+                    width: 140,
+                },
+                {
+                    title: '督查人员',
+                    dataIndex: 'operationName',
+                    key: 'operationName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '全系统督查',
+                    dataIndex: 'dateTime',
+                    key: 'dateTime',
+                    align: 'center',
+                    width: 100,
+                },
                 {
                     title: '督查日期',
                     dataIndex: 'dateTime',
                     key: 'dateTime',
                     align: 'center',
-                    width:100,
-                    render:(text,record,index)=>{
-                        return text? moment(text).format('YYYY-MM-DD') : null;
-                      }
+                    width: 100,
+                    render: (text, record, index) => {
+                        return text ? moment(text).format('YYYY-MM-DD') : null;
+                    }
                 },
                 {
-                    title: '原则性问题',
-                    dataIndex: 'principleProblem',
-                    key: 'principleProblem',
+                    title: '问题类别',
+                    dataIndex: 'dateTime',
+                    key: 'dateTime',
                     align: 'center',
-                    width:150,
-                    ellipsis: true,
+                    width: 100,
                 },
                 {
-                    title: '严重问题',
-                    dataIndex: 'importanProblem',
-                    key: 'importanProblem',
+                    title: '问题描述',
+                    dataIndex: 'dateTime',
+                    key: 'dateTime',
                     align: 'center',
-                    width:150,
-                    ellipsis: true,
+                    width: 100,
                 },
                 {
-                    title: '一般问题',
-                    dataIndex: 'commonlyProblem',
-                    key: 'commonlyProblem',
+                    title: '整改措施',
+                    dataIndex: 'dateTime',
+                    key: 'dateTime',
                     align: 'center',
-                    width:150,
-                    ellipsis: true,
+                    width: 100,
                 },
             ]
         }
 
     ]
 
-
-    const onFinish = async (pageIndexs, pageSizes) => {  //查询
+    const onFinish = async (pageIndexs, pageSizes) => {  //查询 按原则性问题统计
         try {
             const values = await form.validateFields();
             props.getOperationManageSummaryList({
                 ...values,
-                BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY-01-01 00:00:00') : values.time&&moment(values.time).format('YYYY-MM-01 00:00:00'),
-                EndTime:  type==3? values.time&&moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
-                time:undefined,
+                BeginTime: type == 3 ? values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00') : type == 1 ? values.time && moment(values.time).format('YYYY-01-01 00:00:00') : values.time && moment(values.time).format('YYYY-MM-01 00:00:00'),
+                EndTime: type == 3 ? values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
+                time: undefined,
                 pageIndex: pageIndexs,
                 pageSize: pageSizes,
-            },()=>{
-                if(type==1){
-                  setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年')}全系统督查汇总表</span>)
-                }else if(type==2){
-                  setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年MM月')}全系统督查汇总表</span>)
-                }else{
-                  setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time[0]).format('YYYY年MM月DD日') } ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
+            }, () => {
+                if (type == 1) {
+                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年')}全系统督查汇总表</span>)
+                } else if (type == 2) {
+                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年MM月')}全系统督查汇总表</span>)
+                } else {
+                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
                 }
-              })
+            })
 
 
         } catch (errorInfo) {
@@ -205,15 +312,39 @@ const Index = (props) => {
     }
 
 
+    const onFinish2 = async (pageIndexs, pageSizes) => {  //查询 按重点问题统计
+        try {
+            const values = await form.validateFields();
+            props.getOperationManageSummaryList({
+                ...values,
+                BeginTime: type == 3 ? values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00') : type == 1 ? values.time && moment(values.time).format('YYYY-01-01 00:00:00') : values.time && moment(values.time).format('YYYY-MM-01 00:00:00'),
+                EndTime: type == 3 ? values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
+                time: undefined,
+                pageIndex: pageIndexs,
+                pageSize: pageSizes,
+            }, () => {
+                if (type == 1) {
+                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年')}全系统督查汇总表</span>)
+                } else if (type == 2) {
+                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年MM月')}全系统督查汇总表</span>)
+                } else {
+                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
+                }
+            })
 
+
+        } catch (errorInfo) {
+            console.log('Failed:', errorInfo);
+        }
+    }
     const exports = async () => {
         const values = await form.validateFields();
         props.exportOperationManageSummaryList({
-          ...values,
-          BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY-01-01 00:00:00') : values.time&&moment(values.time).format('YYYY-MM-01 00:00:00'),
-          EndTime:  type==3? values.time&&moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
-          time:undefined,
-      })
+            ...values,
+            BeginTime: type == 3 ? values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00') : type == 1 ? values.time && moment(values.time).format('YYYY-01-01 00:00:00') : values.time && moment(values.time).format('YYYY-MM-01 00:00:00'),
+            EndTime: type == 3 ? values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
+            time: undefined,
+        })
     }
 
 
@@ -221,11 +352,11 @@ const Index = (props) => {
     const onValuesChange = (hangedValues, allValues) => {
         if (Object.keys(hangedValues).join() == 'DateType') {
             setType(hangedValues.DateType)
-            if(hangedValues.DateType==3){
+            if (hangedValues.DateType == 3) {
                 form.setFieldsValue({ time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")] })
-              }else{
-                form.setFieldsValue({ time:  moment() })
-              }
+            } else {
+                form.setFieldsValue({ time: moment() })
+            }
         }
     }
 
@@ -235,6 +366,10 @@ const Index = (props) => {
         setPageIndex(PageIndex)
         setPageSize(PageSize)
         onFinish(PageIndex, PageSize)
+    }
+    const [statisType,setStatisType] = useState(1)
+    const statisTypeChange = (value) => {
+        setStatisType(value)
     }
     return (
         <div className={styles.analysisSummarySty}>
@@ -260,12 +395,12 @@ const Index = (props) => {
                             </Select>
                         </Form.Item>
                         {type == 1 ? <Form.Item label='统计年份' name='time' >
-                            <DatePicker picker="year" style={{ width: 150 }} allowClear={false}/>
+                            <DatePicker picker="year" style={{ width: 150 }} allowClear={false} />
                         </Form.Item>
                             :
                             type == 2 ?
                                 <Form.Item label='统计月份' name='time' >
-                                    <DatePicker picker="month" style={{ width: 150 }}  allowClear={false}/>
+                                    <DatePicker picker="month" style={{ width: 150 }} allowClear={false} />
                                 </Form.Item>
                                 :
                                 <Form.Item label='统计日期' name='time' >
@@ -276,8 +411,14 @@ const Index = (props) => {
                                         showTime="YYYY-MM-DD HH:mm:ss" />
                                 </Form.Item>
                         }
+                        <Form.Item label='统计维度' name='statisType'>
+                            <Select placeholder='请选择' style={{ width: 150 }} showSearch optionFilterProp="children" onChange={statisTypeChange}>
+                                <Option key={1} value={1} >按原则性问题统计</Option>
+                                <Option key={2} value={2} >按重点问题统计</Option>
+                                <Option key={3} value={3} >按一般问题统计</Option>
+                            </Select>
+                        </Form.Item>
                         <Form.Item>
-
                             <Button type="primary" loading={tableLoading} htmlType="submit">
                                 查询
                                </Button>
@@ -289,7 +430,7 @@ const Index = (props) => {
                             </Button>
                         </Form.Item>
                     </Form>}>
-                <MultipleHeadResizeTable
+                    <MultipleHeadResizeTable
                     loading={tableLoading}
                     bordered
                     dataSource={tableDatas}
@@ -302,8 +443,9 @@ const Index = (props) => {
                         showQuickJumper: true,
                         onChange: handleTableChange,
                     }}
-                    scroll={{ x: '100%',y:'calc(100vh - 405px)' }}
-                />
+                    scroll={{ x: '100%', y: 'calc(100vh - 405px)' }}
+                /> 
+
             </Card>
         </div>
 

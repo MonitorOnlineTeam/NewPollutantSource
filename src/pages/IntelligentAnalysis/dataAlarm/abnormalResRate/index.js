@@ -486,7 +486,7 @@ class Index extends PureComponent {
             
               <FormItem label="企业类型">
                 {getFieldDecorator('PollutantType', {
-                  initialValue: '1',
+                  initialValue: this.props.defaultPollutantCode || '1',
                 })(
                   <Select style={{ width: 180 }} placeholder="请选择企业类型" onChange={(value) => {
                     this.setState({ pollutantType: value }, () => {

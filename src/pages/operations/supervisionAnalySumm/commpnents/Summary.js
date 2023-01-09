@@ -30,8 +30,11 @@ const dvaPropsData = ({ loading, supervisionAnalySumm, global, common }) => ({
   inspectorTypeloading: loading.effects[`${namespace}/getInspectorTypeCode`],
   exportLoading: loading.effects[`${namespace}/exportInspectorSummaryList`],
   inspectorCodeList: supervisionAnalySumm.inspectorCodeList,
+  tableDatas2: supervisionAnalySumm.inspectorSummaryList2,
   tableLoading2: loading.effects[`${namespace}/getInspectorSummaryList`],
-  regExportLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
+  regDetailExportLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
+  regDetailTableLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
+  regDetailTableDatas:supervisionAnalySumm.regDetailTableDatas,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -69,7 +72,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const { tableDatas, tableLoading, exportLoading, inspectorCodeList, tableDatas2, tableLoading2, exportLoading2, regExportLoading,} = props;
+  const { tableDatas, tableLoading, exportLoading, inspectorCodeList, tableDatas2, tableLoading2, exportLoading2, regDetailExportLoading,regDetailTableLoading,regDetailTableDatas,} = props;
 
 
   useEffect(() => {
@@ -277,7 +280,149 @@ const Index = (props) => {
         },
       ]
     }]
-  
+  const regDetailColumns =  [
+    {
+      title: '序号',
+      width: 70,
+      align: 'center',
+      render: (text, record, index) => {
+        return index + 1
+      }
+    },
+    {
+      title: '行政区',
+      dataIndex: 'userName',
+      key: 'userName',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '企业名称',
+      dataIndex: 'pointCount',
+      key: 'pointCount',
+      align: 'center',
+      width: 180,
+    },
+    {
+      title: '站点名称',
+      dataIndex: 'principleProblemNum',
+      key: 'principleProblemNum',
+      align: 'center',
+      width: 120,
+    },
+    {
+      title: '监督类别',
+      dataIndex: 'importanProblemNum',
+      key: 'importanProblemNum',
+      align: 'center',
+      width: 120,
+    },
+    {
+      title: '监测因子',
+      dataIndex: 'commonlyProblemNum',
+      key: 'commonlyProblemNum',
+      align: 'center',
+      width: 150,
+    },
+    {
+      title: '监督人员',
+      dataIndex: 'rangeNum',
+      key: 'rangeNum',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '监督日期',
+      dataIndex: 'dataNum',
+      key: 'dataNum',
+      align: 'center',
+      width: 120,
+    },
+    {
+      title: '运维人员',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '原则数量问题',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '重点数量问题',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '一般数量问题',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '原则问题',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '重点问题',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '一般问题',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '总分',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '整改状态',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '创建人',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+    {
+      title: '更新人',
+      dataIndex: 'paramNum',
+      key: 'paramNum',
+      align: 'center',
+      width: 140,
+    },
+  ]
   const [regDetailVisible,setRegDetailVisible] = useState(false)
   const [regDetailTitle,setRegDetailTitle] = useState(false)
   const regDetail = (record) =>{
@@ -439,9 +584,17 @@ const Index = (props) => {
         }
       </Card>
        <Modal visible={regDetailVisible} title={regDetailTitle}>
-        <Button icon={<ExportOutlined />} onClick={() => {regDetailExports() }} loading={regExportLoading}>
+            <Button icon={<ExportOutlined />} onClick={() => {regDetailExports() }} loading={regDetailExportLoading}>
                 导出
             </Button>
+            <SdlTable
+            loading={regDetailTableLoading}
+            bordered
+            rowClassName={null}
+            dataSource={regDetailTableDatas}
+            columns={regDetailColumns}
+            pagination={false}
+          />
       </Modal> 
     </div>
 

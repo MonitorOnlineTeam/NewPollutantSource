@@ -24,7 +24,7 @@ export default class Index extends Component {
   
    }
   render() {
-      const {missingRateVisible,missingRateCancel,type,time} = this.props;
+      const {missingRateVisible,missingRateCancel,type,time,pollutantType,} = this.props;
     return (
         <Modal
         title={type=='air'? '数据缺失报警响应率(空气站)':'数据缺失报警响应率(企业)'}
@@ -34,7 +34,7 @@ export default class Index extends Component {
         footer={null}
         destroyOnClose
     >
-           <MissingRateModelData  Atmosphere={type=='air'?true:false} time={time} types={type} isModel={true} />
+           <MissingRateModelData  Atmosphere={type=='air'?true:false} time={time} types={type} defaultPollutantType={pollutantType} isModel={true} />
         </Modal>
     );
   }

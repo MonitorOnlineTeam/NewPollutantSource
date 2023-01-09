@@ -39,7 +39,7 @@ class Index extends PureComponent {
   }
 
   render() {
-    const { status, stopStatus, defaultPollutantCode, time,visible } = this.props
+    const { status, stopStatus, type, time,visible } = this.props
     const { regionCodeOneLevel,queryConditions, show,cityLevel } = this.state;
     return (
       <Modal
@@ -51,15 +51,15 @@ class Index extends PureComponent {
         destroyOnClose
       >
         {
-          defaultPollutantCode && !time && <Ent
+          type && !time && <Ent
             selectedTags={status !== undefined ? [status] : undefined}
             stopStatus={stopStatus !== undefined ? [stopStatus] : undefined}
-            defaultPollutantCode={defaultPollutantCode}
+            defaultPollutantCode={type}
             hideBreadcrumb
           />
         }
         {
-          time && show && <AbnormalResRate time={time} hideBreadcrumb onRegionClick={(regionCode) => {
+          time && show && <AbnormalResRate defaultPollutantCode={type} time={time} hideBreadcrumb onRegionClick={(regionCode) => {
             this.setState({
               regionCodeOneLevel: regionCode,
               cityLevel:true,

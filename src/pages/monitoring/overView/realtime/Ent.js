@@ -49,7 +49,7 @@ const statusList = [{ value: 1, label: "正常", color: "#34c066" }, { value: 2,
   dataLoading: loading.effects['overview/getRealTimeDataView'],
   columnLoading: loading.effects['overview/getRealTimeColumn'],
 }))
-class index extends Component {
+class Index extends Component {
   constructor(props) {
     super(props);
     // this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
@@ -678,4 +678,4 @@ class index extends Component {
   }
 }
 
-export default index;
+export default Index;
