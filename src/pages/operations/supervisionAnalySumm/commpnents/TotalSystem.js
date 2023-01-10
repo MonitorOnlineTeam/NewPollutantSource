@@ -383,6 +383,7 @@ const Index = (props) => {
                         initialValues={{
                             DateType: 1,
                             time: moment(),
+                            statisType:1,
                         }}
                         className={styles.queryForm}
                         onValuesChange={onValuesChange}
@@ -412,7 +413,7 @@ const Index = (props) => {
                                 </Form.Item>
                         }
                         <Form.Item label='统计维度' name='statisType'>
-                            <Select placeholder='请选择' style={{ width: 150 }} showSearch optionFilterProp="children" onChange={statisTypeChange}>
+                            <Select placeholder='请选择' style={{ width: 160 }} showSearch optionFilterProp="children" onChange={statisTypeChange}>
                                 <Option key={1} value={1} >按原则性问题统计</Option>
                                 <Option key={2} value={2} >按重点问题统计</Option>
                                 <Option key={3} value={3} >按一般问题统计</Option>

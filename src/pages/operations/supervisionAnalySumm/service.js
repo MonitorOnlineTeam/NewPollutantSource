@@ -17,6 +17,19 @@ export async function ExportInspectorSummaryList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportInspectorSummaryList',params, null);
   return result;
 }
+//列表 督查总结---按省统计
+export async function GetInspectorSummaryForRegionList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetInspectorSummaryForRegionList',params, null);
+  return result;
+}
+
+ 
+//导出 督查总结---按省统计
+export async function ExportInspectorSummaryForRegion(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportInspectorSummaryForRegion',params, null);
+  return result;
+}
+
 //列表 关键参数督查汇总
 export async function GetRemoteSummaryList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetRemoteSummaryList',params, null);

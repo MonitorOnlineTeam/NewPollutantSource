@@ -30,8 +30,8 @@ const dvaPropsData = ({ loading, supervisionAnalySumm, global, common }) => ({
   inspectorTypeloading: loading.effects[`${namespace}/getInspectorTypeCode`],
   exportLoading: loading.effects[`${namespace}/exportInspectorSummaryList`],
   inspectorCodeList: supervisionAnalySumm.inspectorCodeList,
-  tableDatas2: supervisionAnalySumm.inspectorSummaryList2,
-  tableLoading2: loading.effects[`${namespace}/getInspectorSummaryList`],
+  tableLoading2: loading.effects[`${namespace}/getInspectorSummaryForRegionList`],
+  exportLoading2: loading.effects[`${namespace}/exportInspectorSummaryForRegion`],
   regDetailExportLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
   regDetailTableLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
   regDetailTableDatas:supervisionAnalySumm.regDetailTableDatas,
@@ -66,20 +66,33 @@ const dvaDispatch = (dispatch) => {
         callback: callback,
       })
     },
+    getInspectorSummaryForRegionList: (payload, callback) => { // 列表 按行政区
+      dispatch({
+        type: `${namespace}/getInspectorSummaryForRegionList`,
+        payload: payload,
+        callback: callback,
+      })
+    },
+    exportInspectorSummaryForRegion: (payload, callback) => { // 导出 按行政区
+      dispatch({
+        type: `${namespace}/exportInspectorSummaryForRegion`,
+        payload: payload,
+        callback: callback,
+      })
+    },
   }
 }
 const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const { tableDatas, tableLoading, exportLoading, inspectorCodeList, tableDatas2, tableLoading2, exportLoading2, regDetailExportLoading,regDetailTableLoading,regDetailTableDatas,} = props;
+  const { tableDatas, tableLoading, exportLoading, inspectorCodeList, tableLoading2, exportLoading2, regDetailExportLoading,regDetailTableLoading,regDetailTableDatas,} = props;
 
 
   useEffect(() => {
     props.getInspectorCodeList({});
-    onFinish();
   }, []);
-
+  
   const values = form.getFieldsValue();
 
   const [tableTitle, setTableTitle] = useState(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment().format('YYYY年')}督查总结</span>)
@@ -432,12 +445,28 @@ const Index = (props) => {
   const onFinish = async () => {  //查询
     try {
       const values = await form.validateFields();
-      if(radioType==1){ //按人员统计
-      props.getInspectorSummaryList({
+
+      const par = { 
         ...values,
         BeginTime: type == 3 ? values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00') : type == 1 ? values.time && moment(values.time).format('YYYY-01-01 00:00:00') : values.time && moment(values.time).format('YYYY-MM-01 00:00:00'),
         EndTime: type == 3 ? values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
         time: undefined,
+      }
+      if(radioType==1){ //按人员统计
+       props.getInspectorSummaryList({
+        ...par
+       }, () => {
+        if (type == 1) {
+          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年')}督查总结</span>)
+        } else if (type == 2) {
+          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年MM月')}督查总结</span>)
+        } else {
+          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}督查总结</span>)
+        }
+       })
+     }else{ //按省统计
+      props.getInspectorSummaryForRegionList({
+        ...par
       }, () => {
         if (type == 1) {
           setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年')}督查总结</span>)
@@ -447,8 +476,6 @@ const Index = (props) => {
           setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}督查总结</span>)
         }
       })
-    }else{ //按省统计
-
     }
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -459,15 +486,16 @@ const Index = (props) => {
 
   const exports = async () => {
     const values = await form.validateFields();
-    if(radioType==1){ //按人员统计
-    props.exportInspectorSummaryList({
+    const par = {
       ...values,
       BeginTime: type == 3 ? values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00') : type == 1 ? values.time && moment(values.time).format('YYYY-01-01 00:00:00') : values.time && moment(values.time).format('YYYY-MM-01 00:00:00'),
       EndTime: type == 3 ? values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
       time: undefined,
-    })
+      }
+    if(radioType==1){ //按人员统计
+      props.exportInspectorSummaryList(par)
      }else{ //按省统计
-
+      props.exportInspectorSummaryForRegion(par)
     }
   };
   const regDetailExports =  () => { //按省统计 详情导出
@@ -491,6 +519,10 @@ const Index = (props) => {
   const onRadioChange = (e) => {
     setRadioType(e.target.value);
   }
+  useEffect(()=>{
+    console.log(radioType)
+    onFinish()
+  },[radioType])
 
   return (
     <div className={styles.analysisSummarySty}>
@@ -551,7 +583,7 @@ const Index = (props) => {
               <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
                 重置
           </Button>
-              <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>
+              <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={ radioType == 1 ? exportLoading : exportLoading2}>
                 导出
             </Button>
             </Form.Item>
@@ -565,23 +597,14 @@ const Index = (props) => {
 
       >
 
-        {radioType == 1 ? <SdlTable
-          loading={tableLoading}
+        <SdlTable
+          loading={radioType == 1 ? tableLoading : tableLoading2}
           bordered
           rowClassName={null}
           dataSource={tableDatas}
-          columns={columns}
+          columns={radioType == 1 ?  columns : columns2}
           pagination={false}
-        /> :
-          <SdlTable
-            loading={tableLoading2}
-            bordered
-            rowClassName={null}
-            dataSource={tableDatas2}
-            columns={columns2}
-            pagination={false}
-          />
-        }
+        />
       </Card>
        <Modal visible={regDetailVisible} title={regDetailTitle}>
             <Button icon={<ExportOutlined />} onClick={() => {regDetailExports() }} loading={regDetailExportLoading}>
