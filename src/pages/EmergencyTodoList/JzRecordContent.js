@@ -58,7 +58,8 @@ class JzRecordContent extends Component {
                                 </tr>
                                 <tr>
                                     <td rowSpan="2" style={{ width: '16%', height: '30px' }}>零点漂移校准</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{item !== '颗粒物' ? '零气浓度值' : '零气校准参考值'}</td>
+                                    {/* <td style={{ width: '14%', height: '30px' }}>{item !== '颗粒物' ? '零气浓度值' : '零气校准参考值'}</td> */}
+                                    <td style={{ width: '14%', height: '30px' }}>{ '零气浓度值'}</td>
                                     <td style={{ width: '14%', height: '30px' }}>上次校准后测试值</td>
                                     <td style={{ width: '14%', height: '30px' }}>校前测试值</td>
                                     <td style={{ width: '14%', height: '30px' }}>零点漂移%F.S.</td>
@@ -75,7 +76,8 @@ class JzRecordContent extends Component {
                                 </tr>
                                 <tr>
                                     <td rowSpan="2" style={{ width: '16%' }}>量程漂移校准</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{item !== '颗粒物' ? '标气浓度值' : '量程校准参考值'}</td>
+                                    {/* <td style={{ width: '14%', height: '30px' }}>{item !== '颗粒物' ? '标气浓度值' : '量程校准参考值'}</td> */}
+                                    <td style={{ width: '14%', height: '30px' }}>{'标气浓度值'}</td>
                                     <td style={{ width: '14%', height: '30px' }}>上次校准后测试值</td>
                                     <td style={{ width: '14%', height: '30px' }}>校前测试值</td>
                                     <td style={{ width: '14%', height: '30px' }}>量程漂移%F.S.</td>
