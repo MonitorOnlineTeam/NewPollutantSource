@@ -72,111 +72,111 @@ const Index = (props) => {
 
     const [tableTitle, setTableTitle] = useState(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment().format('YYYY年')}全系统督查汇总表</span>)
 
-    // const columns = [
-    //     {
-    //         title: tableTitle,
-    //         align: 'center',
-    //         children: [
-    //             {
-    //                 title: '序号',
-    //                 dataIndex: 'TypeNum',
-    //                 key: 'TypeNum',
-    //                 width: 70,
-    //                 align: 'center',
-    //                 render: (text, record, index) => {
-    //                     return index + 1
-    //                 }
-    //             },
-    //             {
-    //                 title: '省区',
-    //                 dataIndex: 'provinceName',
-    //                 key: 'provinceName',
-    //                 align: 'center',
-    //                 width: 100,
-    //             },
-    //             {
-    //                 title: '地级市',
-    //                 dataIndex: 'cityName',
-    //                 key: 'cityName',
-    //                 align: 'center',
-    //                 width: 100,
-    //             },
-    //             {
-    //                 title: '企业名称',
-    //                 dataIndex: 'entName',
-    //                 key: 'entName',
-    //                 align: 'center',
-    //                 width: 150,
-    //             },
-    //             {
-    //                 title: '排口名称',
-    //                 dataIndex: 'pointName',
-    //                 key: 'pointName',
-    //                 align: 'center',
-    //                 width: 100,
-    //             },
-    //             {
-    //                 title: '监测因子',
-    //                 dataIndex: 'pollutantName',
-    //                 key: 'pollutantName',
-    //                 width: 150,
-    //                 align: 'center',
-    //                 ellipsis: true,
+    const columns1 = [
+        {
+            title: tableTitle,
+            align: 'center',
+            children: [
+                {
+                    title: '序号',
+                    dataIndex: 'TypeNum',
+                    key: 'TypeNum',
+                    width: 70,
+                    align: 'center',
+                    render: (text, record, index) => {
+                        return index + 1
+                    }
+                },
+                {
+                    title: '省区',
+                    dataIndex: 'provinceName',
+                    key: 'provinceName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '地级市',
+                    dataIndex: 'cityName',
+                    key: 'cityName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '企业名称',
+                    dataIndex: 'entName',
+                    key: 'entName',
+                    align: 'center',
+                    width: 150,
+                },
+                {
+                    title: '排口名称',
+                    dataIndex: 'pointName',
+                    key: 'pointName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '监测因子',
+                    dataIndex: 'pollutantName',
+                    key: 'pollutantName',
+                    width: 150,
+                    align: 'center',
+                    ellipsis: true,
 
-    //             },
-    //             {
-    //                 title: '督查人员',
-    //                 dataIndex: 'operationName',
-    //                 key: 'createUserName',
-    //                 align: 'center',
-    //                 width: 100,
-    //             },
-    //             {
-    //                 title: '运维人员',
-    //                 dataIndex: 'operationName',
-    //                 key: 'operationName',
-    //                 align: 'center',
-    //                 width: 100,
-    //             },
-    //             {
-    //                 title: '督查日期',
-    //                 dataIndex: 'dateTime',
-    //                 key: 'dateTime',
-    //                 align: 'center',
-    //                 width: 100,
-    //                 render: (text, record, index) => {
-    //                     return text ? moment(text).format('YYYY-MM-DD') : null;
-    //                 }
-    //             },
-    //             {
-    //                 title: '原则性问题',
-    //                 dataIndex: 'principleProblem',
-    //                 key: 'principleProblem',
-    //                 align: 'center',
-    //                 width: 150,
-    //                 ellipsis: true,
-    //             },
-    //             {
-    //                 title: '严重问题',
-    //                 dataIndex: 'importanProblem',
-    //                 key: 'importanProblem',
-    //                 align: 'center',
-    //                 width: 150,
-    //                 ellipsis: true,
-    //             },
-    //             {
-    //                 title: '一般问题',
-    //                 dataIndex: 'commonlyProblem',
-    //                 key: 'commonlyProblem',
-    //                 align: 'center',
-    //                 width: 150,
-    //                 ellipsis: true,
-    //             },
-    //         ]
-    //     }
+                },
+                {
+                    title: '督查人员',
+                    dataIndex: 'operationName',
+                    key: 'createUserName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '运维人员',
+                    dataIndex: 'operationName',
+                    key: 'operationName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '督查日期',
+                    dataIndex: 'dateTime',
+                    key: 'dateTime',
+                    align: 'center',
+                    width: 100,
+                    render: (text, record, index) => {
+                        return text ? moment(text).format('YYYY-MM-DD') : null;
+                    }
+                },
+                {
+                    title: '原则性问题',
+                    dataIndex: 'principleProblem',
+                    key: 'principleProblem',
+                    align: 'center',
+                    width: 150,
+                    ellipsis: true,
+                },
+                {
+                    title: '严重问题',
+                    dataIndex: 'importanProblem',
+                    key: 'importanProblem',
+                    align: 'center',
+                    width: 150,
+                    ellipsis: true,
+                },
+                {
+                    title: '一般问题',
+                    dataIndex: 'commonlyProblem',
+                    key: 'commonlyProblem',
+                    align: 'center',
+                    width: 150,
+                    ellipsis: true,
+                },
+            ]
+        }
 
-    // ]
-    const columns = [
+    ]
+    const columns2 = [
         {
             title: tableTitle,
             align: 'center',
@@ -284,7 +284,7 @@ const Index = (props) => {
         }
 
     ]
-
+    const [col , setCol] = useState(columns1)
     const onFinish = async (pageIndexs, pageSizes) => {  //查询 按原则性问题统计
         try {
             const values = await form.validateFields();
@@ -303,6 +303,7 @@ const Index = (props) => {
                 } else {
                     setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
                 }
+               values.InspectorType ? setCol(columns2) : setCol(columns1)
             })
 
 
@@ -383,7 +384,7 @@ const Index = (props) => {
                         initialValues={{
                             DateType: 1,
                             time: moment(),
-                            statisType:1,
+                            InspectorType:'',
                         }}
                         className={styles.queryForm}
                         onValuesChange={onValuesChange}
@@ -412,11 +413,12 @@ const Index = (props) => {
                                         showTime="YYYY-MM-DD HH:mm:ss" />
                                 </Form.Item>
                         }
-                        <Form.Item label='统计维度' name='statisType'>
+                        <Form.Item label='统计维度' name='InspectorType'>
                             <Select placeholder='请选择' style={{ width: 160 }} showSearch optionFilterProp="children" onChange={statisTypeChange}>
-                                <Option key={1} value={1} >按原则性问题统计</Option>
-                                <Option key={2} value={2} >按重点问题统计</Option>
-                                <Option key={3} value={3} >按一般问题统计</Option>
+                                <Option key={''} value={''} >按点位统计</Option>
+                                <Option key={491} value={491} >按原则性问题统计</Option>
+                                <Option key={492} value={492} >按一般问题统计</Option>
+                                <Option key={493} value={493} >按重点问题统计</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item>
@@ -435,7 +437,7 @@ const Index = (props) => {
                     loading={tableLoading}
                     bordered
                     dataSource={tableDatas}
-                    columns={columns}
+                    columns={col}
                     pagination={{
                         total: tableTotal,
                         pageSize: pageSize,

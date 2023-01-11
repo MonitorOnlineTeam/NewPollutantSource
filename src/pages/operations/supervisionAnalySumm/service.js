@@ -42,15 +42,26 @@ export async function ExportRemoteSummaryList(params) {
   return result;
 }
 
-//列表 全系统督查汇总
+//列表 全系统督查汇总 点位统计
 export async function GetOperationManageSummaryList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationManageSummaryList',params, null);
   return result;
 }
 
  
-//导出 全系统督查汇总
+//导出 全系统督查汇总 点位统计
 export async function ExportOperationManageSummaryList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationManageSummaryList',params, null);
+  return result;
+}
+
+//列表 全系统督查汇总 问题统计
+export async function GetOperationManageSummaryTypeList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationManageSummaryTypeList',params, null);
+  return result;
+}
+//导出 全系统督查汇总 问题统计
+export async function ExportOperationManageSummaryTypeList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationManageSummaryTypeList',params, null);
   return result;
 }

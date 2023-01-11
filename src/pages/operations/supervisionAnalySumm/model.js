@@ -83,8 +83,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *getOperationManageSummaryList({ payload, callback }, { call, put, update }) { //列表 全系统督查汇总
-      const result = yield call(services.GetOperationManageSummaryList, payload);
+    *getOperationManageSummaryList({ payload, callback }, { call, put, update }) { //列表 全系统督查汇总 
+      const result = yield call(payload.InspectorType?  services.GetOperationManageSummaryTypeList : services.GetOperationManageSummaryList , payload);
       if (result.IsSuccess) {
         yield update({ operationManageSummaryList: result.Datas,operationManageSummaryTotal:result.Total })
         callback();
@@ -92,8 +92,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *exportOperationManageSummaryList({ payload, callback }, { call, put, update }) { //导出 全系统督查汇总
-      const result = yield call(services.ExportOperationManageSummaryList, payload);
+    *exportOperationManageSummaryList({ payload, callback }, { call, put, update }) { //导出 全系统督查汇总 
+      const result = yield call(payload.InspectorType?  services.ExportOperationManageSummaryTypeList : services.ExportOperationManageSummaryList , payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         downloadFile(`/upload${result.Datas}`)

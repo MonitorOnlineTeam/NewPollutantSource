@@ -14,7 +14,7 @@ import RegionList from '@/components/RegionList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-
+import SupervisionManager from '@/pages/operations/supervisionManager';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -32,9 +32,6 @@ const dvaPropsData = ({ loading, supervisionAnalySumm, global, common }) => ({
   inspectorCodeList: supervisionAnalySumm.inspectorCodeList,
   tableLoading2: loading.effects[`${namespace}/getInspectorSummaryForRegionList`],
   exportLoading2: loading.effects[`${namespace}/exportInspectorSummaryForRegion`],
-  regDetailExportLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
-  regDetailTableLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
-  regDetailTableDatas:supervisionAnalySumm.regDetailTableDatas,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -86,7 +83,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const { tableDatas, tableLoading, exportLoading, inspectorCodeList, tableLoading2, exportLoading2, regDetailExportLoading,regDetailTableLoading,regDetailTableDatas,} = props;
+  const { tableDatas, tableLoading, exportLoading, inspectorCodeList, tableLoading2, exportLoading2,} = props;
 
 
   useEffect(() => {
@@ -263,7 +260,7 @@ const Index = (props) => {
           align: 'center',
           width: 140,
           render: (text, record, index) => {
-            return <a onClick={()=>{ regDetail(record)}}>{text}</a>
+            return text? text + '%' : ''
            }
         },
         {
@@ -286,6 +283,9 @@ const Index = (props) => {
           key: 'CommonlyProblemCompleteRate',
           align: 'center',
           width: 140,
+          render: (text, record, index) => {
+            return text? text + '%' : ''
+           }
         },
         {
           title: '平均分',
@@ -296,154 +296,17 @@ const Index = (props) => {
         },
       ]
     }]
-  const regDetailColumns =  [
-    {
-      title: '序号',
-      width: 70,
-      align: 'center',
-      render: (text, record, index) => {
-        return index + 1
-      }
-    },
-    {
-      title: '行政区',
-      dataIndex: 'userName',
-      key: 'userName',
-      align: 'center',
-      width: 100,
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      width: 180,
-    },
-    {
-      title: '站点名称',
-      dataIndex: 'principleProblemNum',
-      key: 'principleProblemNum',
-      align: 'center',
-      width: 120,
-    },
-    {
-      title: '监督类别',
-      dataIndex: 'importanProblemNum',
-      key: 'importanProblemNum',
-      align: 'center',
-      width: 120,
-    },
-    {
-      title: '监测因子',
-      dataIndex: 'commonlyProblemNum',
-      key: 'commonlyProblemNum',
-      align: 'center',
-      width: 150,
-    },
-    {
-      title: '监督人员',
-      dataIndex: 'rangeNum',
-      key: 'rangeNum',
-      align: 'center',
-      width: 100,
-    },
-    {
-      title: '监督日期',
-      dataIndex: 'dataNum',
-      key: 'dataNum',
-      align: 'center',
-      width: 120,
-    },
-    {
-      title: '运维人员',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 100,
-    },
-    {
-      title: '原则数量问题',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '重点数量问题',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '一般数量问题',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '原则问题',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '重点问题',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '一般问题',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '总分',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '整改状态',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '创建人',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-    {
-      title: '更新人',
-      dataIndex: 'paramNum',
-      key: 'paramNum',
-      align: 'center',
-      width: 140,
-    },
-  ]
+  
+  const [dateTitle, setDateTitle] = useState()
+  const [dateTime, setDateTime] = useState([])
+  const [regDetailPar,setRegDetailPar] = useState()
   const [regDetailVisible,setRegDetailVisible] = useState(false)
   const [regDetailTitle,setRegDetailTitle] = useState(false)
+
   const regDetail = (record) =>{
     setRegDetailVisible(true)
-    setRegDetailTitle()
+    setRegDetailTitle(`${record.RegionName}系统设施核查（${dateTitle}）`)
+    setRegDetailPar({regionCode:record.RegionCode,time:dateTime})
   }
   const onFinish = async () => {  //查询
     try {
@@ -472,11 +335,14 @@ const Index = (props) => {
         ...par
       }, () => {
         if (type == 1) {
-          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年')}督查总结</span>)
+          setDateTitle(moment(values.time).format('YYYY年'))
+          setDateTime(values.time&&[moment(moment(values.time).startOf('year')).startOf('d'),moment(moment(values.time).endOf('year')).endOf('d')])
         } else if (type == 2) {
-          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年MM月')}督查总结</span>)
+          setDateTitle(moment(values.time).format('YYYY-MM'))
+          setDateTime(values.time&&[moment(moment(values.time).startOf('month')).startOf('d'),moment(moment(values.time).endOf('month')).endOf('d')])
         } else {
-          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}督查总结</span>)
+          setDateTitle(moment(values.time[0]).format('YYYY-MM-DD')+'至'+moment(values.time[1]).format('YYYY-MM-DD'))
+          setDateTime(values.time[0]&&values.time[1]&&[values.time[0].startOf('d'),values.time[1].endOf('d')])
         }
       })
     }
@@ -501,9 +367,7 @@ const Index = (props) => {
       props.exportInspectorSummaryForRegion(par)
     }
   };
-  const regDetailExports =  () => { //按省统计 详情导出
 
-  }
   
 
   const [type, setType] = useState(1)
@@ -523,7 +387,6 @@ const Index = (props) => {
     setRadioType(e.target.value);
   }
   useEffect(()=>{
-    console.log(radioType)
     onFinish()
   },[radioType])
 
@@ -609,18 +472,9 @@ const Index = (props) => {
           pagination={false}
         />
       </Card>
-       <Modal visible={regDetailVisible} title={regDetailTitle}>
-            <Button icon={<ExportOutlined />} onClick={() => {regDetailExports() }} loading={regDetailExportLoading}>
-                导出
-            </Button>
-            <SdlTable
-            loading={regDetailTableLoading}
-            bordered
-            rowClassName={null}
-            dataSource={regDetailTableDatas}
-            columns={regDetailColumns}
-            pagination={false}
-          />
+  
+       <Modal wrapClassName={styles.regDetailModalSty} visible={regDetailVisible} title={regDetailTitle} onCancel={()=>{setRegDetailVisible(false)}}   width={'100%'} destroyOnClose>
+          <SupervisionManager isDetailModal regDetailPar={regDetailPar} match = { { path:''  } }/>
       </Modal> 
     </div>
 

@@ -155,10 +155,10 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
   const { match: { path } } = props;
-
-  const isRecord = path === '/operations/supervisionRecod' || path === '/operations/siteSupervisionRecod' ? true : false; //是否为运维督查记录
-  const inspectorType = path === '/operations/siteInspector' || path === '/operations/siteSupervisionRecod' ? 1 :
-    path === '/operations/supervisionManager' || path === '/operations/supervisionRecod' ? 2 : ''; // 是否为现场督查 1 现场 2 远程  其他为运维督查记录
+  //是否为运维督查记录
+  const isRecord = path === '/operations/supervisionRecod' || path === '/operations/siteSupervisionRecod' ? true : false;
+  // 是否为现场督查 1 现场 2 远程  其他为全部
+  const inspectorType = path === '/operations/siteInspector' || path === '/operations/siteSupervisionRecod' ? 1 : path === '/operations/supervisionManager' || path === '/operations/supervisionRecod' ? 2 : '';
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
@@ -176,7 +176,7 @@ const Index = (props) => {
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
-  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, } = props;
+  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, isDetailModal,regDetailPar, } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -184,7 +184,7 @@ const Index = (props) => {
 
 
   useEffect(() => {
-    initData()
+    isDetailModal ? onFinish() : initData()
   }, []);
 
   const initData = () => {
@@ -195,10 +195,9 @@ const Index = (props) => {
       })
       props.getMonitoringTypeList({})
     })
-
   }
 
-  const columns = [
+  let columns = [
     {
       title: '序号',
       align: 'center',
@@ -338,7 +337,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        return <span style={{color: text=='未推送'? '#f5222d':'#52c41a' }}>{text}</span>;
+        return <span style={{ color: text == '未推送' ? '#f5222d' : '#52c41a' }}>{text}</span>;
       }
     },
     {
@@ -370,7 +369,7 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: <span>操作</span>,
+      title: '操作',
       fixed: 'right',
       align: 'center',
       width: 180,
@@ -859,76 +858,93 @@ const Index = (props) => {
       })
     }
   }
+  const ExportComponents = () => <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
 
   const searchComponents = () => {
-    return <Form
-      form={form}
-      name="advanced_search"
-      initialValues={{
-        time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
-      }}
-      className={styles["ant-advanced-search-form"]}
-      onFinish={onFinish}
-      onValuesChange={onValuesChange}
-    >
-      <Row align='middle'>
-        <Form.Item label='行政区' name='RegionCode' >
+    return isDetailModal ?
+      <Form
+        form={form}
+        name="advanced_search"
+        layout='inline'
+        initialValues={{
+          RegionCode:regDetailPar.regionCode&&regDetailPar.regionCode,
+          time: regDetailPar.time&&regDetailPar.time,
+        }}
+      >
+        <Form.Item label='行政区' name='RegionCode' hidden>
           <RegionList noFilter levelNum={3} style={{ width: 150 }} />
         </Form.Item>
-        <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
-          <Form.Item label='企业' name='EntCode' style={{ marginLeft: 8, marginRight: 8 }}>
-            <EntAtmoList noFilter style={{ width: 300 }} />
-          </Form.Item>
-        </Spin>
-        <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
-          <Form.Item label='站点名称' name='DGIMN' >
-
-            <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 150 }}>
-              {
-                pointList[0] && pointList.map(item => {
-                  return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
-                })
-              }
-            </Select>
-          </Form.Item>
-        </Spin>
-      </Row>
-
-      <Row>
-        {/* <Spin  spinning={infoloading&&type!=='edit'&&type!=='add'} size='small' style={{top:-3,left:39}}> */}
-        <Form.Item label="督查人员" name="Inspector"  >
-          <OperationInspectoUserList type='2' style={{ width: 150 }} />
-        </Form.Item>
-        {/* </Spin> */}
-        <Form.Item label="督查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
+        <Form.Item label="督查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }} hidden >
           <RangePicker_
             style={{ width: 300 }}
             allowClear={false}
             format="YYYY-MM-DD" />
         </Form.Item>
-        {/* <Spin spinning={infoloading&&type!=='edit'&&type!=='add'} size='small' style={{top:-3,left:39}}> */}
-        <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
-          <OperationInspectoUserList noFirst style={{ width: 150 }} />
-        </Form.Item>
-        {/* </Spin> */}
-        <Form.Item>
-          <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
-            查询
+      </Form>
+
+      :
+      <Form
+        form={form}
+        name="advanced_search"
+        initialValues={{
+          time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
+        }}
+        className={styles["ant-advanced-search-form"]}
+        onFinish={onFinish}
+        onValuesChange={onValuesChange}
+      >
+        <Row align='middle'>
+          <Form.Item label='行政区' name='RegionCode' >
+            <RegionList noFilter levelNum={3} style={{ width: 150 }} />
+          </Form.Item>
+          <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
+            <Form.Item label='企业' name='EntCode' style={{ marginLeft: 8, marginRight: 8 }}>
+              <EntAtmoList noFilter style={{ width: 300 }} />
+            </Form.Item>
+          </Spin>
+          <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
+            <Form.Item label='站点名称' name='DGIMN' >
+
+              <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 150 }}>
+                {
+                  pointList[0] && pointList.map(item => {
+                    return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                  })
+                }
+              </Select>
+            </Form.Item>
+          </Spin>
+        </Row>
+
+        <Row>
+          <Form.Item label="督查人员" name="Inspector"  >
+            <OperationInspectoUserList type='2' style={{ width: 150 }} />
+          </Form.Item>
+          <Form.Item label="督查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
+            <RangePicker_
+              style={{ width: 300 }}
+              allowClear={false}
+              format="YYYY-MM-DD" />
+          </Form.Item>
+          <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
+            <OperationInspectoUserList noFirst style={{ width: 150 }} />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
+              查询
      </Button>
-          <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }} >
-            重置
+            <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }} >
+              重置
      </Button>
-          {!isRecord && <Button style={{ marginRight: 8 }} onClick={() => { add() }} >
-            添加
+            {!isRecord && <Button style={{ marginRight: 8 }} onClick={() => { add() }} >
+              添加
        </Button>}
-          <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>
-            导出
-            </Button>
+            <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
 
-        </Form.Item>
+          </Form.Item>
 
-      </Row>
-    </Form>
+        </Row>
+      </Form>
   }
 
 
@@ -1523,16 +1539,22 @@ const Index = (props) => {
     },
     fileList: fileType == 0 ? filesList0 : fileType == 1 ? filesList1[files1] : fileType == 2 ? filesList2[files2] : filesList3[files3]
   };
+
+  if (isDetailModal) {
+    columns = columns.filter(item => item.title != '操作')
+  }
+
   return (
     <div className={styles.supervisionManagerSty}>
-      <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+      <BreadcrumbWrapper hideBreadcrumb={isDetailModal} >
+        <Card title={searchComponents()} className={isDetailModal&&styles.supervisionManagerModalSty}>
           <SdlTable
             resizable
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
             columns={columns}
+            scroll={{y:'calc(100vh - 360px)'}}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

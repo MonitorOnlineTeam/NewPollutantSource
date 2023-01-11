@@ -96,6 +96,5 @@ export default function ResizeTable(props) {
     });
   };
   const columns_ = setColumnsResizeable(selfColumns);
-  console.log(columns_);
   return <Table {...props} size='middle' columns={columns_} components={components} />;
 }
