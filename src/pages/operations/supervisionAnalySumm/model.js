@@ -93,10 +93,10 @@ export default Model.extend({
       }
     },
     *exportOperationManageSummaryList({ payload, callback }, { call, put, update }) { //导出 全系统督查汇总 
-      const result = yield call(payload.InspectorType?  services.ExportOperationManageSummaryTypeList : services.ExportOperationManageSummaryList , payload);
+      const result = yield call(payload.InspectorType?  services.ExportOperationManageSummaryType : services.ExportOperationManageSummaryList , payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        downloadFile(`/upload${result.Datas}`)
+        downloadFile(payload.InspectorType? `${result.Datas}` : `/upload${result.Datas}`)
       } else {
         message.error(result.Message)
       }

@@ -476,14 +476,13 @@ class Index extends Component {
   };
 
   onRegCheck = (checkedKeys,info) => {
-    this.setState({checkedRegKey: checkedKeys.checked,});
+    this.setState({checkedRegKey: checkedKeys,});
 
   };
 
 
 
   onSelectRegion = (selectedKey, info) => {
-    console.log(selectedKey)
     this.setState({ selectedKey });
   };
 
@@ -622,8 +621,8 @@ class Index extends Component {
     this.props.dispatch({
       type: 'areaPermissManage/insertRegionByUser',
       payload: {
-        RegionFlagCode: this.state.checkedRegKey,
-        RegionCode: this.state.checkedRegKey,
+        RegionFlagCode: this.state.checkedRegKey,//用来回显的参数
+        RegionCode: this.state.checkedRegKey,//真正的参数  带父节点
         UserGroup_ID: this.state.selectedRowKeys.key,
       },
       callback: res => {
@@ -891,7 +890,7 @@ class Index extends Component {
                       <Tree
                         key="key"
                         checkable
-                        checkStrictly
+                        // checkStrictly
                         onCheck={this.onRegCheck}
                         checkedKeys={this.state.checkedRegKey}
                         defaultExpandAll={false}

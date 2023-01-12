@@ -61,7 +61,7 @@ export async function GetOperationManageSummaryTypeList(params) {
   return result;
 }
 //导出 全系统督查汇总 问题统计
-export async function ExportOperationManageSummaryTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationManageSummaryTypeList',params, null);
+export async function ExportOperationManageSummaryType(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationManageSummaryType',params, null);
   return result;
 }
