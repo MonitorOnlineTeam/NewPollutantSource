@@ -653,7 +653,7 @@ export default class Index extends Component {
                                     allowClear style={{ width: 150 }} onChange={this.storehouseChange}>
                                     {
                                         storehouseList[0] && storehouseList.map(item => {
-                                            return <Option key={item.StorehouseCode} value={item.StorehouseCode}>{item.StorehouseName}</Option>
+                                            return <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>
                                         })
                                     }
                                 </Select>

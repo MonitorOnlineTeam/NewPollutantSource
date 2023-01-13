@@ -209,6 +209,7 @@ export default class Index extends Component {
             configId={pointConfigId}
             resizable
             isCenter
+            isFixedOpera
             {...this.props}
             type='company'
             searchParams={pointDataWhere}

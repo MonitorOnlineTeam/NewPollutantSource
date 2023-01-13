@@ -880,6 +880,9 @@ const Index = (props) => {
             allowClear={false}
             format="YYYY-MM-DD" />
         </Form.Item>
+        <Form.Item>
+        <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
+        </Form.Item>
       </Form>
 
       :

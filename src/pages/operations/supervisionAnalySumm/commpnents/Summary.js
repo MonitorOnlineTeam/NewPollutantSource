@@ -335,12 +335,15 @@ const Index = (props) => {
         ...par
       }, () => {
         if (type == 1) {
+          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年')}督查总结</span>)
           setDateTitle(moment(values.time).format('YYYY年'))
           setDateTime(values.time&&[moment(moment(values.time).startOf('year')).startOf('d'),moment(moment(values.time).endOf('year')).endOf('d')])
         } else if (type == 2) {
+          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年MM月')}督查总结</span>)
           setDateTitle(moment(values.time).format('YYYY-MM'))
           setDateTime(values.time&&[moment(moment(values.time).startOf('month')).startOf('d'),moment(moment(values.time).endOf('month')).endOf('d')])
         } else {
+          setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}督查总结</span>)
           setDateTitle(moment(values.time[0]).format('YYYY-MM-DD')+'至'+moment(values.time[1]).format('YYYY-MM-DD'))
           setDateTime(values.time[0]&&values.time[1]&&[values.time[0].startOf('d'),values.time[1].endOf('d')])
         }
@@ -443,12 +446,12 @@ const Index = (props) => {
             </Spin>}
             <Form.Item>
 
-              <Button type="primary" loading={tableLoading} htmlType="submit">
+              <Button type="primary" style={{ marginRight:8 }} loading={tableLoading} htmlType="submit">
                 查询
           </Button>
-              <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
+              {/* <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
                 重置
-          </Button>
+          </Button> */}
               <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={ radioType == 1 ? exportLoading : exportLoading2}>
                 导出
             </Button>

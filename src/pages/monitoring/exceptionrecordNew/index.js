@@ -495,7 +495,7 @@ class index extends PureComponent {
     if (secondQueryCondition.ResponseStatus == "0") {
       showTypeText = `${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值'}待响应报警情况`
     } else if (secondQueryCondition.ResponseStatus == "1") {
-      showTypeText =`${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值报'}已响应报警情况`
+      showTypeText =`${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值'}已响应报警情况`
     } else {
       if (secondQueryCondition.ExceptionType == "1") {
         showTypeText = "零值报警情况"

@@ -127,7 +127,7 @@ export default class Index extends Component {
                         isCoustom
                         selectType='3,是'
                     ></SearchWrapper>
-                    <AutoFormTable
+                    <AutoFormTable 
                         resizable
                         onRef={this.onRef1}
                         style={{ marginTop: 10 }}
@@ -148,8 +148,7 @@ export default class Index extends Component {
                         </Fragment>}
                         parentcode="platformconfig/monitortarget"
                         {...this.props}
-                    >
-                    </AutoFormTable>
+                    />
                 </Card>
             </BreadcrumbWrapper>
         );

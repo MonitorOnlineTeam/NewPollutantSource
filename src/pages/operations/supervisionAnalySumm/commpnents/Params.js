@@ -282,12 +282,12 @@ const Index = (props) => {
 
             <Form.Item>
          
-              <Button type="primary" loading={tableLoading} htmlType="submit">
+              <Button type="primary"  style={{ marginRight:8 }} loading={tableLoading} htmlType="submit">
                 查询
           </Button>
-              <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
+              {/* <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
                 重置
-          </Button>
+          </Button> */}
           <Button  icon={<ExportOutlined />} onClick={()=>{exports()}} loading={exportLoading}>
               导出
             </Button>

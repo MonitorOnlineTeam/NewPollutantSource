@@ -59,7 +59,7 @@ const Index = (props) => {
 
     const [form] = Form.useForm();
 
-    const { tableDatas, tableTotal, tableLoading, exportLoading,  } = props;
+    const { tableDatas, tableTotal, tableLoading, exportLoading, } = props;
 
 
     useEffect(() => {
@@ -244,8 +244,8 @@ const Index = (props) => {
                 },
                 {
                     title: '全系统督查',
-                    dataIndex: 'dateTime',
-                    key: 'dateTime',
+                    dataIndex: 'InspectorTypeName',
+                    key: 'InspectorTypeName',
                     align: 'center',
                     width: 100,
                 },
@@ -261,30 +261,37 @@ const Index = (props) => {
                 },
                 {
                     title: '问题类别',
-                    dataIndex: 'dateTime',
-                    key: 'dateTime',
+                    dataIndex: 'typename',
+                    key: 'typename',
                     align: 'center',
                     width: 100,
                 },
                 {
                     title: '问题描述',
-                    dataIndex: 'dateTime',
-                    key: 'dateTime',
+                    dataIndex: 'RectificationDescribe',
+                    key: 'RectificationDescribe',
                     align: 'center',
-                    width: 100,
+                    width: 200,
+                    render: (text, record, index) => {
+                        //  const htmlText = text.replaceAll(/\\r\\n/g, '<br/>')
+                        return <div style={{ textAlign: 'left', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
+                    }
                 },
                 {
                     title: '整改措施',
-                    dataIndex: 'dateTime',
-                    key: 'dateTime',
+                    dataIndex: 'InspectorProblem',
+                    key: 'InspectorProblem',
                     align: 'center',
-                    width: 100,
+                    width: 200,
+                    render: (text, record, index) => {
+                        return <div style={{ textAlign: 'left', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
+                    }
                 },
             ]
         }
 
     ]
-    const [col , setCol] = useState(columns1)
+    const [col, setCol] = useState(columns1)
     const onFinish = async (pageIndexs, pageSizes) => {  //查询 按原则性问题统计
         try {
             const values = await form.validateFields();
@@ -303,7 +310,6 @@ const Index = (props) => {
                 } else {
                     setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
                 }
-               values.InspectorType ? setCol(columns2) : setCol(columns1)
             })
 
 
@@ -312,7 +318,9 @@ const Index = (props) => {
         }
     }
 
-
+    useEffect(() => {
+        form.getFieldValue('InspectorType') ? setCol(columns2) : setCol(columns1)
+    }, [tableTitle])
     const onFinish2 = async (pageIndexs, pageSizes) => {  //查询 按重点问题统计
         try {
             const values = await form.validateFields();
@@ -368,7 +376,7 @@ const Index = (props) => {
         setPageSize(PageSize)
         onFinish(PageIndex, PageSize)
     }
-    const [statisType,setStatisType] = useState(1)
+    const [statisType, setStatisType] = useState(1)
     const statisTypeChange = (value) => {
         setStatisType(value)
     }
@@ -384,7 +392,7 @@ const Index = (props) => {
                         initialValues={{
                             DateType: 1,
                             time: moment(),
-                            InspectorType:'',
+                            InspectorType: '',
                         }}
                         className={styles.queryForm}
                         onValuesChange={onValuesChange}
@@ -422,18 +430,18 @@ const Index = (props) => {
                             </Select>
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary" loading={tableLoading} htmlType="submit">
+                            <Button type="primary" style={{ marginRight: 8 }} loading={tableLoading} htmlType="submit">
                                 查询
                                </Button>
-                            <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
+                            {/* <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
                                 重置
-                              </Button>
+                              </Button> */}
                             <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>
                                 导出
                             </Button>
                         </Form.Item>
                     </Form>}>
-                    <MultipleHeadResizeTable
+                <MultipleHeadResizeTable
                     loading={tableLoading}
                     bordered
                     dataSource={tableDatas}
@@ -447,8 +455,7 @@ const Index = (props) => {
                         onChange: handleTableChange,
                     }}
                     scroll={{ x: '100%', y: 'calc(100vh - 405px)' }}
-                /> 
-
+                />
             </Card>
         </div>
 

@@ -106,6 +106,13 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
+            title: '行业',
+            dataIndex: 'industryTypeName',
+            key: 'industryTypeName',
+            align: 'center',
+            ellipsis:true,
+        },
+        {
             title: '企业地址',
             dataIndex: 'entAdress',
             key: 'entAdress',

@@ -138,9 +138,14 @@ class DetailsPage extends PureComponent {
         key: 'DataType',
       },
       {
-        title: '监测时间',
-        dataIndex: 'ExceptionTime',
-        key: 'ExceptionTime',
+        title: '开始时间',
+        dataIndex: 'BTime',
+        key: 'BTime',
+      },
+      {
+        title: '结束时间',
+        dataIndex: 'ETime',
+        key: 'ETime',
       },
       {
         title: '监测因子',
