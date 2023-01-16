@@ -121,7 +121,7 @@ export default class EntTransmissionEfficiency extends Component {
       EntCode: '',
       RegionCode: '',
       PollutantCode: '',
-      PollutantType: '1',
+      PollutantType: '2',
     });
     setTimeout(() => {
       this.getTableData();
@@ -363,8 +363,8 @@ export default class EntTransmissionEfficiency extends Component {
                   value={PollutantType}
                   style={{ width: 170 }}
                 >
-                  <Option value="1">废水</Option>
                   <Option value="2">废气</Option>
+                  <Option value="1">废水</Option>
                 </Select>
               </Form.Item>
               <Form.Item label='企业列表'>

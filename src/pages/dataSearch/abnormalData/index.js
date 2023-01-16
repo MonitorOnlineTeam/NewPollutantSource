@@ -12,6 +12,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList'
 import Modal from 'antd/lib/modal/Modal';
 import DetailsPage from './DetailsPage'
+import styles from './index.less'
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -52,7 +53,7 @@ class index extends PureComponent {
   state = {
     showTime: true,
     format: 'YYYY-MM-DD HH',
-    pollutantType: "1",
+    pollutantType: "2",
     checkedValues: [],
     operationpersonnel:'',
     queryCondition:{},
@@ -374,7 +375,7 @@ class index extends PureComponent {
               <Col md={4}>
                 <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
                   {getFieldDecorator('PollutantType', {
-                    initialValue: '1',
+                    initialValue: '2',
                   })(
                     <Select placeholder="请选择企业类型" onChange={(value) => {
                       this.setState({ pollutantType: value }, () => {
@@ -388,7 +389,7 @@ class index extends PureComponent {
                 </FormItem>
               </Col>
 
-              <Col md={24} style={{ display: "flex", alignItems: "center" }}>
+              <Col md={24} style={{ display: "flex", alignItems: "center" }} className={styles.pollutantListSty}>
                 {/* <div class="ant-form-item-label" style={{ width: '5.3%' }}>
                   <label for="RegionCode" class="" title="监测因子">监测因子</label>
                 </div> */}
@@ -422,7 +423,7 @@ class index extends PureComponent {
                     }
                   </Checkbox.Group>
                 )}
-                <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>
+                <Button loading={loading} type="primary"  onClick={this.getExceptionList}>
                   查询
                       </Button>
                 <Button

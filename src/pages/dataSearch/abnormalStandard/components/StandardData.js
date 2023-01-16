@@ -128,7 +128,7 @@ export default class Index extends Component {
       EntCode: '',
       RegionCode: '',
       PollutantCode:'',
-      PollutantType:'1',
+      PollutantType:'2',
     });
     setTimeout(() => {
       this.getTableData();

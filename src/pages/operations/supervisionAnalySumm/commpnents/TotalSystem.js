@@ -303,12 +303,13 @@ const Index = (props) => {
                 pageIndex: pageIndexs,
                 pageSize: pageSizes,
             }, () => {
-                if (type == 1) {
-                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年')}全系统督查汇总表</span>)
+                const typeTitle =`${values.InspectorType==491 ? '原则问题汇总表' : values.InspectorType==492? '一般问题汇总表' : values.InspectorType==493 ? '重点问题汇总表' :  '全系统督查汇总表'}`
+                if(type == 1){
+                   setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}> {`${moment(values.time).format('YYYY年')}${typeTitle}`}</span>)
                 } else if (type == 2) {
-                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年MM月')}全系统督查汇总表</span>)
+                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{ `${moment(values.time).format('YYYY年MM月')}${typeTitle}`}</span>)
                 } else {
-                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
+                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{`${moment(values.time[0]).format('YYYY年MM月DD日')} ~ ${moment(values.time[1]).format('YYYY年MM月DD日')}${typeTitle}`}</span>)
                 }
             })
 
@@ -321,31 +322,6 @@ const Index = (props) => {
     useEffect(() => {
         form.getFieldValue('InspectorType') ? setCol(columns2) : setCol(columns1)
     }, [tableTitle])
-    const onFinish2 = async (pageIndexs, pageSizes) => {  //查询 按重点问题统计
-        try {
-            const values = await form.validateFields();
-            props.getOperationManageSummaryList({
-                ...values,
-                BeginTime: type == 3 ? values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00') : type == 1 ? values.time && moment(values.time).format('YYYY-01-01 00:00:00') : values.time && moment(values.time).format('YYYY-MM-01 00:00:00'),
-                EndTime: type == 3 ? values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
-                time: undefined,
-                pageIndex: pageIndexs,
-                pageSize: pageSizes,
-            }, () => {
-                if (type == 1) {
-                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年')}全系统督查汇总表</span>)
-                } else if (type == 2) {
-                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time).format('YYYY年MM月')}全系统督查汇总表</span>)
-                } else {
-                    setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment(values.time[0]).format('YYYY年MM月DD日')} ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
-                }
-            })
-
-
-        } catch (errorInfo) {
-            console.log('Failed:', errorInfo);
-        }
-    }
     const exports = async () => {
         const values = await form.validateFields();
         props.exportOperationManageSummaryList({
@@ -387,7 +363,7 @@ const Index = (props) => {
                     <Form
                         form={form}
                         name="advanced_search"
-                        onFinish={() => { onFinish(pageIndex, pageSize) }}
+                        onFinish={() => {setPageIndex(1);onFinish(1, pageSize) }}
                         layout='inline'
                         initialValues={{
                             DateType: 1,

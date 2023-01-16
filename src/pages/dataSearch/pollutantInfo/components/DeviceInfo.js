@@ -97,9 +97,9 @@ const Index = (props) => {
     useEffect(() => {
             props.getPollutantById({id:undefined},(res)=>{
                 if(res){
-                    form.setFieldsValue({PollutantType:res[1]?res[1].ID:undefined})
+                    form.setFieldsValue({PollutantType:res[0]?res[0].ID:undefined})
                     onFinish(pageIndex, pageSize);    
-                    props.getPollutantById2({id:res[1]?res[1].ID:'',type:1},()=>{
+                    props.getPollutantById2({id:res[0]?res[0].ID:'',type:1},()=>{
                         form.setFieldsValue({PollutantCode:undefined})
                       }) //监测类别
                 }

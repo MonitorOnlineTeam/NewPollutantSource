@@ -246,7 +246,7 @@ const Index = (props) => {
           <Form
             form={form}
             name="advanced_search"
-            onFinish={() => { onFinish(pageIndex,pageSize) }}
+            onFinish={() => {setPageIndex(1);onFinish(1, pageSize) }}
             layout='inline'
             initialValues={{
               DateType:1,

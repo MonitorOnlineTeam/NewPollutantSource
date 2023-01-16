@@ -106,9 +106,9 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
-            title: '企业简称',
-            dataIndex: 'abbreviation',
-            key: 'abbreviation',
+            title: '行业',
+            dataIndex: 'industryTypeName',
+            key: 'industryTypeName',
             align: 'center',
             ellipsis:true,
         },

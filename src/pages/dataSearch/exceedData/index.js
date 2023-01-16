@@ -92,10 +92,10 @@ class index extends PureComponent {
             visibleEnt:false,
             time: [moment().add(-1, "day").startOf('day'), moment().endOf('day')],
             dataType: "Hour",
-            entType:'1',
+            entType:'2',
             pollutionWaterList:[],
             pollutionGasList:[],
-            activeKey:'1',
+            activeKey:'2',
             panes:[],
             enterpriseValue:'',
             selectPollution:[],
@@ -146,7 +146,7 @@ class index extends PureComponent {
         this.props.dispatch({
             type: pageUrl.GetPollutantByType,
             payload: {
-                type:'1'
+                type:'2'
             },
         }).then(()=>{
             // console.log(this.props.PollutantByType)
@@ -842,7 +842,7 @@ class index extends PureComponent {
                 <Form.Item label="企业类型" >
                     {
                         getFieldDecorator('outlet', {
-                            initialValue: '1'
+                            initialValue: '2'
                         })(
                             <Select
                                 style={{ width: 200, marginLeft: 10, marginRight: 20 }}
@@ -862,8 +862,8 @@ class index extends PureComponent {
                                         entType:value
                                     })
                                 }}>
-                                <Option value="1">废水</Option>
                                 <Option value="2">废气</Option>
+                                <Option value="1">废水</Option>
                             </Select>
                         )
                     }
@@ -1363,7 +1363,7 @@ class index extends PureComponent {
             onEdit={this.onEdit}
             onTabClick={this.onTabClick}
             >
-                <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key='1' closable={false}>
+                <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key={this.state.activeKey} closable={false}>
                     {
                             <SdlTable columns={columns} dataSource={ExceedDataList}
                             scroll={{ x: scrollWith }}
