@@ -2,14 +2,15 @@
  * @Author: JiaQi 
  * @Date: 2022-11-17 15:17:42 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-22 10:27:00
+ * @Last Modified time: 2023-01-06 10:12:59
  * @Description: 生产清单台账页面
  */
 
 import React, { PureComponent } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from 'dva';
-import { Card } from 'antd';
+import { Card, Tooltip, Divider } from 'antd';
+import { LineChartOutlined } from '@ant-design/icons'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 
@@ -61,6 +62,20 @@ class index extends PureComponent {
           configId={CONFIGID}
           onDelete={(row, key) => {
             this.onDelete(key);
+          }}
+          appendHandleRows={row => {
+            return (
+              <>
+                <Divider type="vertical" />
+                <Tooltip title="查看数据">
+                  <a onClick={() => {
+
+                  }}>
+                    <LineChartOutlined style={{ fontSize: 16 }} />
+                  </a>
+                </Tooltip>
+              </>
+            );
           }}
         />
       </Card>

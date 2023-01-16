@@ -1000,6 +1000,10 @@ export const API = {
     DeleteEmission: before + '/EmissionDataApi/DeleteEmission',
     // 删除治理设施和生产设施
     DeleteInstallation: before + '/EmissionDataApi/DeleteInstallation',
+    // 根基点位查询治理设施和生产设施
+    GetFacByPoint: before + '/EmissionsApi/GetFacByPoint',
+    // 根据DGIMN，设施，参数查询数据
+    GetDataByParams: before + '/EmissionsApi/GetDataByParams',
 
   },
   // console Api

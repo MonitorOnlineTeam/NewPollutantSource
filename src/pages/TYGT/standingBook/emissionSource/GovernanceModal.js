@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2022-11-18 09:40:22 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-18 17:36:58
+ * @Last Modified time: 2022-12-26 16:21:27
  * @Description: 关联治理设施弹窗
  */
 import React, { PureComponent } from 'react'
@@ -147,7 +147,7 @@ class GovernanceModal extends PureComponent {
       <Radio.Group onChange={this.onTypeChange} defaultValue="Duster" style={{ marginBottom: 20 }}>
         <Radio.Button value="Duster">除尘器</Radio.Button>
         <Radio.Button value="FogGun">雾炮</Radio.Button>
-        <Radio.Button value="EcoCar">环保车</Radio.Button>
+        {/* <Radio.Button value="EcoCar">环保车</Radio.Button> */}
       </Radio.Group>
       <Transfer
         dataSource={dataSource}

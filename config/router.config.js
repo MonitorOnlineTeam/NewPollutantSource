@@ -229,7 +229,7 @@ const routes = [
               },
             ]
           },
-          // 唐银钢铁项目
+          // 唐银钢铁项目 - 台账
           {
             name: 'standingBook',
             path: '/standingBook',
@@ -263,6 +263,19 @@ const routes = [
                 name: 'greenCar',
                 path: '/standingBook/greenCar',
                 component: './TYGT/standingBook/GreenCar',
+              },
+            ]
+          },
+          // 唐银钢铁项目 - 生产及环保数据管理
+          {
+            name: 'EPAndProduction',
+            path: '/EPAndProduction',
+            routes: [
+              // 治理设施及生产数据
+              {
+                name: 'facilityAndProduction',
+                path: '/EPAndProduction/facilityAndProductionData',
+                component: './TYGT/EPAndProduction/FacilityAndProductionData',
               },
             ]
           },

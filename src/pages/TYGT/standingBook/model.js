@@ -9,6 +9,7 @@ export default Model.extend({
   namespace: 'standingBook',
   state: {
     installationData: {},
+    viewDataVisible: false
   },
 
   effects: {
