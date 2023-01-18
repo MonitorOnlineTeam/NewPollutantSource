@@ -268,8 +268,8 @@ const Index = (props) => {
                 },
                 {
                     title: '问题描述',
-                    dataIndex: 'RectificationDescribe',
-                    key: 'RectificationDescribe',
+                    dataIndex: 'InspectorProblem',
+                    key: 'InspectorProblem',
                     align: 'center',
                     width: 200,
                     render: (text, record, index) => {
@@ -279,8 +279,8 @@ const Index = (props) => {
                 },
                 {
                     title: '整改措施',
-                    dataIndex: 'InspectorProblem',
-                    key: 'InspectorProblem',
+                    dataIndex: 'RectificationDescribe',
+                    key: 'RectificationDescribe',
                     align: 'center',
                     width: 200,
                     render: (text, record, index) => {
