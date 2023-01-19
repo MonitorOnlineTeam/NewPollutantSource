@@ -98,6 +98,7 @@ class WrapFormItem extends Component {
       type,
       form,
       tabUtil,
+      loginSuccess,
       ...restProps
     } = this.props;
 
@@ -137,16 +138,16 @@ class WrapFormItem extends Component {
       );
     }
     return (
-      name=='verificaCode'? //验证码
+      name=='verificaCode'? //验证码 登录失败需要验证
       <Row gutter={8} className={styles.verificaCodeSty}>
-        <Col span={16}>
+        {!loginSuccess&&<><Col span={16}>
            <FormItem>
               {getFieldDecorator(name, options)(<Input  {...customProps} {...otherProps} />)}
               </FormItem>
             </Col>
             <Col span={8}>
              <Captcha charNum={4}   onRef={this.props.handleRef}  onChange={this.props.verificaCodeChange}  bgColor={'#c6d2e0'}/>
-            </Col>
+            </Col></>}
     </Row>
     :
       <FormItem>
