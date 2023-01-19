@@ -650,6 +650,7 @@ export default class Index extends Component {
                                     filterOption={(input, option) =>
                                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }
+                                    value={sparepartManageParameters.SparePartsStationCode? sparepartManageParameters.SparePartsStationCode : undefined} 
                                     allowClear style={{ width: 150 }} onChange={this.storehouseChange}>
                                     {
                                         storehouseList[0] && storehouseList.map(item => {

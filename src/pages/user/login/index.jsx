@@ -21,6 +21,7 @@ class Login extends Component {
     autoLogin: true,
     verificaCode:undefined,
     agreementVisible:false,
+    loginSuccess:true,
   };
 
   changeAutoLogin = e => {
@@ -44,14 +45,15 @@ class Login extends Component {
     const { type,verificaCode, } = this.state;
     const { isAgree } = this.props;
     console.log('values=', values);
-
     if (!err) {
       const { dispatch } = this.props;
-      if( values.verificaCode.toLowerCase() != verificaCode){
+      if(!this.state.loginSuccess){
+       if(values.verificaCode.toLowerCase() != verificaCode){
         message.error('请输入正确的验证码')
         this.child.current.click(); //刷新验证码
         return;
       }
+     }
       if(!isAgree){ 
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
@@ -59,6 +61,9 @@ class Login extends Component {
       dispatch({
         type: 'userLogin/login',
         payload: { ...values,IsAgree:isAgree, type },
+        callback:isSuccess=>{
+           this.setState({loginSuccess:isSuccess})
+        }
       });
     }
   };
@@ -103,7 +108,7 @@ class Login extends Component {
   render() {
     const { userLogin, submitting,isAgree, } = this.props;
     const { status, type: loginType, message } = userLogin;
-    const { type, autoLogin,agreementVisible, } = this.state;
+    const { type, autoLogin,agreementVisible,loginSuccess, } = this.state;
     return (
       <div className={styles.main}>
         <LoginComponents
@@ -151,6 +156,7 @@ class Login extends Component {
             />
              <VerificaCode  //验证码
               name="verificaCode"
+              loginSuccess={loginSuccess}
             />
           </Tab>
           {/* <Tab

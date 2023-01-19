@@ -19,7 +19,7 @@ const Model = {
         type: 'changeLoginStatus',
         payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', message: response.Message },
       });
-     
+        callback(response.IsSuccess)
      if (response.IsSuccess) { 
          response.Datas.User_ID = response.Datas.UserId;
          let defaultNavigateUrl = '/user/login';
