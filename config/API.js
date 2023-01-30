@@ -513,8 +513,10 @@ export const API = {
     DoReportCO2: before + '/GreenhouseGasAnalysis/DoReportCO2',
     // 获取柱状体详细数据
     GetCO2QuotaList: before + '/GreenhouseGasAnalysis/GetCO2QuotaList',
-    // 
-
+    // 监测数据比对分析报表
+    GetComparisonOfMonData: before + '/AccountingMode/GetComparisonOfMonData',
+    //  获取监测数据线性回归分析报表
+    GetCO2LinearAnalysisOther: before + '/AccountingMode/GetCO2LinearAnalysisOther',
   },
   // 用户权限
   AuthorityApi: {

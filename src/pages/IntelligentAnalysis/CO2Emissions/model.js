@@ -10,6 +10,11 @@ export default Model.extend({
     cementTableCO2Sum: 0,
     steelCO2Sum: [],
     unitInfoList: [],
+    entList: [],
+    monitorComparaAnalysisData: [],
+    monitorComparaAnalysisCol: [],
+    monitorComparaAnalysisChartData:{lineAcc:'',  lineDis:'',lineTime: ''  },
+    monitorLineAnalysisChartData:{},
   },
   effects: {
     // 获取缺省值码表
@@ -111,6 +116,47 @@ export default Model.extend({
         yield update({ unitInfoList: result.Datas })
       } else {
         message.error(result.Message);
+      }
+    },
+    // 获取企业列表
+    *getAllEnterprise({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.getAllEnterprise, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          entList: response.Datas,
+        });
+        callback && callback(response.Datas)
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 获取监测对比分析
+    *getComparisonOfMonData({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.getComparisonOfMonData, { ...payload });
+      console.log(payload)
+      if (response.IsSuccess) {
+        if(payload.type=='table'){
+          yield update({ monitorComparaAnalysisData: response.Datas && response.Datas.data});
+          callback && callback(response.Datas && response.Datas.column)
+        }else{
+          yield update({ monitorComparaAnalysisChartData:{lineAcc:response.Datas && response.Datas['Line-Acc'],  lineDis:response.Datas && response.Datas['Line-Dis'],lineTime: response.Datas && response.Datas['Line-Time'], }  });
+          callback && callback()
+        }
+
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 获取监测数据线性回归分析报表
+    *getCO2LinearAnalysisOther({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.getCO2LinearAnalysisOther, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          monitorLineAnalysisChartData: response.Datas,
+        });
+        callback && callback(response.Datas)
+      } else {
+        message.error(response.Message)
       }
     },
   },

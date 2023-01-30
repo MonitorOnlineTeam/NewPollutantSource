@@ -6,8 +6,8 @@ import path from 'path'
 
 
 // 新框架
-// const API_HOST = 'http://172.16.12.60:6001/';  // 测试 - 志鹏
-const API_HOST = 'http://172.16.12.39:9090/';  // 唐银钢铁 - 开发
+const API_HOST = 'http://172.16.12.60:6001/';  // 测试 - 志鹏
+// const API_HOST = 'http://172.16.12.39:9090/';  // 唐银钢铁 - 开发
 const CONSOLE_HOST = 'http://172.16.12.39:33622/';  // 
 // const API_HOST = 'http://172.16.12.209:33688/';  // 霍达
 // const API_HOST = 'http://172.16.9.3:33688/';  // 志鹏
