@@ -513,8 +513,10 @@ export const API = {
     DoReportCO2: before + '/GreenhouseGasAnalysis/DoReportCO2',
     // 获取柱状体详细数据
     GetCO2QuotaList: before + '/GreenhouseGasAnalysis/GetCO2QuotaList',
-    // 
-
+    // 监测数据比对分析报表
+    GetComparisonOfMonData: before + '/AccountingMode/GetComparisonOfMonData',
+    //  获取监测数据线性回归分析报表
+    GetCO2LinearAnalysisOther: before + '/AccountingMode/GetCO2LinearAnalysisOther',
   },
   // 用户权限
   AuthorityApi: {
@@ -1000,6 +1002,10 @@ export const API = {
     DeleteEmission: before + '/EmissionDataApi/DeleteEmission',
     // 删除治理设施和生产设施
     DeleteInstallation: before + '/EmissionDataApi/DeleteInstallation',
+    // 根基点位查询治理设施和生产设施
+    GetFacByPoint: before + '/EmissionsApi/GetFacByPoint',
+    // 根据DGIMN，设施，参数查询数据
+    GetDataByParams: before + '/EmissionsApi/GetDataByParams',
 
   },
   // console Api

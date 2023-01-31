@@ -23,13 +23,14 @@ class SelectPollutantType extends PureComponent {
     this.props.dispatch({
       type: 'common/getPollutantTypeList',
       payload: {
-        filterPollutantType: this.props.filterPollutantType//自定义显示污染物类型 wjw
+        filterPollutantType: this.props.filterPollutantType,//自定义显示污染物类型 wjw
+        filterInvalidData: this.props.filterInvalidData//自定义显示污染物类型 wjw
       },
       showAll: this.props.showAll,
       callback: (data) => {
-        let defaultPollutantCode =  data[0] && data[0]['pollutantTypeCode'];
+        let defaultPollutantCode = data[0] && data[0]['pollutantTypeCode'];
         this.props.initCallback && this.props.initCallback(defaultPollutantCode)
-        this.setState({ 
+        this.setState({
           pollutantTypelist: data,
           defaultPollutantCode: defaultPollutantCode
         })

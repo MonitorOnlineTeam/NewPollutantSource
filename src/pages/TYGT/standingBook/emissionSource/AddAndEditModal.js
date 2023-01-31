@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2022-11-21 15:59:50 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-21 17:00:07
+ * @Last Modified time: 2022-12-27 11:48:46
  * @Description: 排放源添加、编辑页面
  */
 import React, { PureComponent } from 'react'
@@ -270,7 +270,7 @@ class AddAndEditModal extends PureComponent {
             <Form.Item
               label="是否满足要求"
               name="IsSatisfy"
-              rules={[{ required: true, message: '请选择性别!' }]}
+              rules={[{ required: true, message: '请选择是否满足要求!' }]}
             >
               <Radio.Group>
                 <Radio key={1} value={'1'}>是</Radio>

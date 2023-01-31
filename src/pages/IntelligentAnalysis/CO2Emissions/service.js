@@ -60,3 +60,18 @@ export async function getUnitList(params) {
   const result = await post(API.CO2EmissionsApi.GetCrewInfo, params);
   return result;
 }
+// 获取所有企业
+export async function getAllEnterprise(params) {
+  const result = await post(API.RegionApi.GetEntByRegion, params, null);
+  return result;
+}
+// 获取监测数据对比分析
+export async function getComparisonOfMonData(params) {
+  const result = await post(API.CO2EmissionsApi.GetComparisonOfMonData, params, null);
+  return result;
+}
+// 获取监测数据对比分析
+export async function getCO2LinearAnalysisOther(params) {
+  const result = await post(API.CO2EmissionsApi.GetCO2LinearAnalysisOther, params, null);
+  return result;
+}

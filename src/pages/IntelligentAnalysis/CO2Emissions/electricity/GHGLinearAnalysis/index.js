@@ -6,7 +6,7 @@ import ReactEcharts from 'echarts-for-react';
 import moment from 'moment'
 
 const { RangePicker } = DatePicker;
-
+ 
 @connect(({ loading, CO2Material }) => ({
   loading: loading.effects['CO2Material/getCO2LinearAnalysis'],
   entList: CO2Material.entList,

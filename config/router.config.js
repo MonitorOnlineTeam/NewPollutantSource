@@ -229,7 +229,7 @@ const routes = [
               },
             ]
           },
-          // 唐银钢铁项目
+          // 唐银钢铁项目 - 台账
           {
             name: 'standingBook',
             path: '/standingBook',
@@ -266,6 +266,19 @@ const routes = [
               },
             ]
           },
+          // 唐银钢铁项目 - 生产及环保数据管理
+          {
+            name: 'EPAndProduction',
+            path: '/EPAndProduction',
+            routes: [
+              // 治理设施及生产数据
+              {
+                name: 'facilityAndProduction',
+                path: '/EPAndProduction/facilityAndProductionData',
+                component: './TYGT/EPAndProduction/FacilityAndProductionData',
+              },
+            ]
+          },
           // 报警
           {
             name: 'alarm',
@@ -285,12 +298,12 @@ const routes = [
             path: '/video',
             routes: [
               // 海康视频 - 预览
-              {
-                name: 'emissionSource',
-                path: '/video/HK/view',
-                component: './Video/HKPlatform/index',
-                // component: './Video/HKPlatform/Live',
-              },
+              // {
+              //   name: 'emissionSource',
+              //   path: '/video/HK/view',
+              //   component: './Video/HKPlatform/index',
+              // component: './Video/HKPlatform/Live',
+              // },
             ]
           },
           // 克里斯金差值图
@@ -310,11 +323,11 @@ const routes = [
             path: '/realtimeLive',
             component: './SC/realtimeLive/M3U8Video',
           },
-          {
-            name: 'test',
-            path: '/test',
-            component: './Test/Test',
-          },
+          // {
+          //   name: 'test',
+          //   path: '/test',
+          //   component: './Test/Test',
+          // },
           {
             name: 'home',
             path: '/home',
@@ -2106,7 +2119,21 @@ const routes = [
                     path: '/Intelligentanalysis/CO2Material/nondeterminacy',
                     component: './IntelligentAnalysis/CO2Emissions/electricity/nondeterminacy',
                   },
-
+                  // 监测数据对比分析
+                  {
+                    path: '/Intelligentanalysis/CO2Material/monitorComparaAnalysis',
+                    component: './IntelligentAnalysis/CO2Emissions/monitorComparaAnalysis',
+                  },
+                  //监测数据曲线对比分析
+                  {
+                    path: '/Intelligentanalysis/CO2Material/monitorCurveAnalysis',
+                    component: './IntelligentAnalysis/CO2Emissions/monitorCurveAnalysis',
+                  },
+                  // 测数据线性回归分析
+                  {
+                    path: '/Intelligentanalysis/CO2Material/monitorLineAnalysis',
+                    component: './IntelligentAnalysis/CO2Emissions/monitorLineAnalysis',
+                  },
                 ]
               },
               // 水泥行业

@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-12-15 12:22:24
+ * @Last Modified time: 2023-01-30 22:34:27
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -213,7 +213,6 @@ class SdlForm extends PureComponent {
   renderFormItem() {
     const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
-    const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
     const formData = isEdit ? (editFormData[configId] || {}) : {};
     // return addFormItems[configId].map((item) =>{
@@ -368,21 +367,10 @@ class SdlForm extends PureComponent {
           />;
           break;
         case "上传":
-          //   const props = {
-          //     action: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
-          //     // onChange: this.handleChange(fieldName),
-          //     multiple: true,
-          //     data: {
-          //       FileUuid: uid,
-          //       FileActualType: "1"
-          //     }
-          //   };
-          //   element = <Upload {...props}>
-          //     <Button>
-          //       <Icon type="upload" /> Upload
-          //     </Button>
-          //   </Upload>
-          element = <SdlUpload {...this.props} accept={item.uploadType} fileList={_fileList} cuid={uid} uploadSuccess={(cuid) => {
+          const fileListProps = isEdit ? {
+            fileList: fileList,
+          } : {};
+          element = <SdlUpload {...this.props} accept={item.uploadType} {...fileListProps} cuid={uid} uploadSuccess={(cuid) => {
             setFieldsValue({ cuid: cuid })
             setFieldsValue({ [fieldName]: uid })
           }} />

@@ -164,26 +164,10 @@ class DataQuery extends Component {
         const { historyparams, pollutantlist, dispatch } = this.props;
         const dataType = e.target.value;
         this.setState({ dataType });
-        // switch (dataType) {
-        //     case "realtime":
-        //     case "minute":
-        //     case "hour":
-        //     case "day":
-        //         pollutantlist.map((item)=>{
-
-        //         })
-
-        // }
-
-        dispatch({
-            type: 'dataquery/updateState',
-            payload: {
-                historyparams,
-            },
-        })
-
-
-        this.children.onDataTypeChange(dataType)
+        this.onResetPage()
+        setTimeout(() => {
+            this.children.onDataTypeChange(dataType)
+        }, 0)
     }
 
     /** 图表转换 */
@@ -244,6 +228,8 @@ class DataQuery extends Component {
             type: 'dataquery/updateState',
             payload: {
                 historyparams,
+                pageIndex: 1,
+                pageSize: 20,
             },
         })
         // this.reloaddatalist(historyparams);
@@ -317,7 +303,7 @@ class DataQuery extends Component {
     /** 渲染数据展示 */
 
     loaddata = () => {
-        const { dataloading, option, datatable, columns, chartHeight } = this.props;
+        const { dataloading, option, datatable, historyparams, columns, chartHeight } = this.props;
         const { displayType } = this.state;
         // if (dataloading) {
         //     return (<Spin
@@ -350,6 +336,7 @@ class DataQuery extends Component {
 
             return (<div style={{ textAlign: 'center' }}><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>);
         }
+        console.log('total', this.props.total)
         return (
             // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
             <SdlTable
@@ -362,14 +349,53 @@ class DataQuery extends Component {
                 scroll={{ y: "calc(100vh - 380px)" }}
                 // pagination={{ pageSize: 20 }}
                 pagination={{
+                    total: this.props.total,
+                    pageSize: historyparams.pageSize,
+                    current: historyparams.pageIndex,
                     showSizeChanger: true,
                     showQuickJumper: true,
-                    defaultPageSize: 20
+                    defaultPageSize: 20,
+                    onChange: this.onTableChange
                 }}
             />
             // </Card.Grid>
 
         );
+    }
+
+    // 分页页数change
+    onTableChange = (current, pageSize) => {
+        let { historyparams, dispatch } = this.props;
+        historyparams = {
+            ...historyparams,
+            pageIndex: current,
+            pageSize: pageSize,
+        }
+        this.props.dispatch({
+            type: 'dataquery/updateState',
+            payload: {
+                historyparams
+            },
+        })
+        setTimeout(() => {
+            this.reloaddatalist();
+        }, 0);
+    }
+
+    // 重置分页
+    onResetPage = () => {
+        let { historyparams, dispatch } = this.props;
+        historyparams = {
+            ...historyparams,
+            pageIndex: 1,
+            pageSize: 20,
+        }
+        this.props.dispatch({
+            type: 'dataquery/updateState',
+            payload: {
+                historyparams
+            },
+        })
     }
 
     exportReport = () => {
@@ -450,7 +476,7 @@ class DataQuery extends Component {
 
     render() {
         const { dataType, dateValue, displayType, searchDataType } = this.state;
-        const { pointName, entName, pollutantlist, Type, isShowSearchDataType } = this.props;
+        const { pointName, entName, pollutantlist, Type, historyparams, isShowSearchDataType } = this.props;
         let flag = "", mode = [];
         if (pollutantlist && pollutantlist[0]) {
             flag = pollutantlist[0].PollutantType === "5" ? "" : "none";
@@ -517,8 +543,18 @@ class DataQuery extends Component {
                                         </Form.Item>
                                     }
                                     <Form.Item style={{ marginRight: 5 }}>
-                                        <Button type="primary" loading={false} onClick={() => { this.reloaddatalist() }} style={{ marginRight: 10 }}>查询</Button>
-                                        <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>
+                                        <Button type="primary" loading={false} onClick={() => {
+                                            this.onResetPage();
+                                            setTimeout(() => {
+                                                this.reloaddatalist();
+                                            }, 0);
+                                        }} style={{ marginRight: 10 }}>查询</Button>
+                                        <Button type="primary" loading={this.props.exportLoading} onClick={() => {
+                                            this.onResetPage();
+                                            setTimeout(() => {
+                                                this.exportReport();
+                                            }, 0);
+                                        }}>导出</Button>
                                     </Form.Item>
                                     <Form.Item style={{ marginRight: 5 }}>
                                         <ButtonGroup_ style={{ width: '100%' }} pollutantType={Type} checked={Type == 10 ? 'hour' : "realtime"} showOtherTypes={flag} onChange={this._handleDateTypeChange} />

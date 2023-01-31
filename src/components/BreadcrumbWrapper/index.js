@@ -87,9 +87,9 @@ class index extends Component {
             :
             (selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""}
         </div>
-      }else{
+      } else {
         return <div className="ant-page-header">当前位置：
-        <Breadcrumb>
+          <Breadcrumb>
             {
               this.props.title ?
                 <Breadcrumb.Item key={this.props.title}>

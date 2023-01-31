@@ -210,6 +210,7 @@ class MapView extends Component {
             console.log('this.state.displayType=', this.state.displayType)
             this.setState({
               pointName: extData.position.title,
+              entName: extData.position.EntName
             })
             // 点击排口，显示弹窗
             newState = {
@@ -817,7 +818,6 @@ class MapView extends Component {
     if (infoWindowData.photo) {
       imgName = config.uploadHost + "upload" + imgName;
     }
-    console.log("displayType=", displayType)
     return (
       // QCAUse="1"
       <div className={styles.mapWrapper} style={mapWrapperStyle}>

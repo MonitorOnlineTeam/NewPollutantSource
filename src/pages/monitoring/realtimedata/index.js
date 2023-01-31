@@ -67,6 +67,7 @@ class Index extends Component {
             collapsed: true,
             pointName: value[0].pointName,
             entName: value[0].entName,
+            title: `${value[0].entName} - ${value[0].pointName}`,
         })
         // 同時更新此Model中的DGIMN
         dispatch({
@@ -451,12 +452,12 @@ class Index extends Component {
 
     render() {
         const pointcode = this.state.dgimn; // 任务ID
-        const { scale, translation } = this.state;
+        const { scale, translation, title } = this.state;
         const { isloading,
             stateInfo, paramsInfo, paramstatusInfo, dataInfo } = this.props;
         return (
             <div id="realtimedata">
-                <BreadcrumbWrapper>
+                <BreadcrumbWrapper titles={`【${title}】`}>
                     <div style={{ overflowX: 'hidden' }}>
                         <Layout className={this.state.contentstyle} hasSider>
                             <Content><Card className="contentContainer" >

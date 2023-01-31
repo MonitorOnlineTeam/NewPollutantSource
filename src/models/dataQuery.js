@@ -25,8 +25,8 @@ export default Model.extend({
     historyparams: {
       datatype: 'realtime',
       DGIMNs: null,
-      pageIndex: null,
-      pageSize: null,
+      pageIndex: 1,
+      pageSize: 20,
       beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       pollutantCodes: null,
@@ -121,6 +121,7 @@ export default Model.extend({
         DGIMNs: payload.searchDataType === 2 ? _historyparams.DGIMNs + '_check' : _historyparams.DGIMNs,
         DGIMN: payload.searchDataType === 2 ? _historyparams.DGIMNs + '_check' : _historyparams.DGIMNs
       });
+      console.log('resultlist', resultlist)
       const result = resultlist.Datas;
       if (result && result.length === 0) {
         yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
@@ -427,7 +428,7 @@ export default Model.extend({
           series: arr,
         };
       }
-      yield update({ tablewidth, datalist: result, chartdata: option, columns, datatable: result, total: resultlist.total });
+      yield update({ tablewidth, datalist: result, chartdata: option, columns, datatable: result, total: resultlist.Total });
     },
 
     // 导出报表
