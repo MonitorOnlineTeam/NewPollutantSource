@@ -130,16 +130,16 @@ const Index = (props) => {
             fixed: 'left',
             render: (text, record, index) => {
                 if ((index + 4) % 4 == 0) {
-                    return '监测量'
+                    return '监测量(kg)'
                 }
                 if ((index + 4 - 1) % 4 == 0) {
-                    return '核算量'
+                    return '核算量(kg)'
                 }
                 if ((index + 4 - 2) % 4 == 0) {
-                    return '相差量'
+                    return '相差量(kg)'
                 }
                 if ((index + 4 - 3) % 4 == 0) {
-                    return '相差百分比'
+                    return '相差百分比(%)'
                 }
             }
         },
@@ -172,7 +172,19 @@ const Index = (props) => {
                     //     columnsTotal.splice(columns.length - 1, 0, { title: `${item}`, dataIndex: 222, key: 111, width: 80, align: 'center' })
                     // })
                     for(let colKey in col){
-                        columnsTotal.splice(columns.length - 1, 0, { title:col[colKey], dataIndex: colKey, key: colKey, width: 80, align: 'center' })
+                        columnsTotal.splice(columns.length - 1, 0, 
+                         { title:col[colKey], 
+                            dataIndex: colKey, 
+                            key: colKey,
+                            width: 80, 
+                            align: 'center', 
+                            render: (text, record, index) => {
+                            if ((index + 4 - 3) % 4 == 0) {
+                                return text ? text*100 + '%'   : ''
+                            }else{
+                                return text
+                            }
+                        } })
                     }
                     setColumns(columnsTotal)
                 }

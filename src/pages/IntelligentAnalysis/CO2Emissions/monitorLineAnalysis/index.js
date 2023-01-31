@@ -127,7 +127,7 @@ const Index = (props) => {
           grid: {
             left: '55px',
             right: '180px',
-            bottom: 0,
+            bottom: 5,
             containLabel: true
           },
           tooltip: {

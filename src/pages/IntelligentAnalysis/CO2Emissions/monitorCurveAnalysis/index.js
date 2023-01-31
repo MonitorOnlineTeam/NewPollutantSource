@@ -105,13 +105,14 @@ const Index = (props) => {
                 data: chartDatas.lineTime && chartDatas.lineTime,
             },
             yAxis: {
+                name: 'kg',
                 type: 'value'
             },
             legend: {
                 data: ['监测量', '核算量',]
             },
             grid: {
-                left: 0,
+                left: 6,
                 right: 0,
                 bottom: 0,
                 containLabel: true
