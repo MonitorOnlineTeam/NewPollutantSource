@@ -145,7 +145,7 @@ const Index = (props) => {
                          { title:col[colKey], 
                             dataIndex: colKey, 
                             key: colKey,
-                            width: 80, 
+                            width: 100, 
                             align: 'center', 
                          })
                     }
