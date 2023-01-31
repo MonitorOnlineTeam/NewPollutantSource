@@ -220,6 +220,22 @@ class Index extends Component {
                 if (datas) { dataInfolist.push(datas); }
             })
         }
+
+        //流速
+        if (data === 'a01011') {
+            console.log('paramsInfo222', paramsInfo)
+            let flows = paramsInfo.filter(item => item.pollutantCode.indexOf('_') > -1);
+            console.log('flows', flows)
+            // return;
+            return <Descriptions bordered>
+                {
+                    flows.map(item => {
+                        return <Descriptions.Item label={item.pollutantName}>{item.value} {item.Unit}</Descriptions.Item>
+                    })
+                }
+            </Descriptions>
+        }
+
         if (paramInfolist.length > 0 || dataInfolist.length > 0) {
             const res = [];
             //系统参数
@@ -246,6 +262,61 @@ class Index extends Component {
             return <div style={{ margin: 'auto', textAlign: 'center' }}>暂无数据</div>;
         }
     }
+
+
+    // 渲染参数值
+    getParamsValue = (param, data) => {
+        const { paramstatusInfo, paramsInfo } = this.props;
+        const paramlist = param ? param.split(',') : null;
+        // const statuslist = status ? status.split(',') : null;
+        const datalist = data ? data.split(',') : null;
+        const paramInfolist = [];
+        // const stateInfolist = [];
+        const dataInfolist = [];
+        if (paramlist && paramstatusInfo) {
+            paramlist.map(item => {
+                const params = paramstatusInfo.find(value => value.statecode == item)
+                if (params) { paramInfolist.push(params); }
+            })
+        }
+        if (datalist && paramsInfo) {
+            datalist.map(item => {
+                const datas = paramsInfo.find(value => value.pollutantCode == item)
+                if (datas) { dataInfolist.push(datas); }
+            })
+        }
+
+
+        if (paramInfolist.length > 0 || dataInfolist.length > 0) {
+            const res = [];
+            //系统参数
+            if (paramInfolist && paramInfolist.length > 0) {
+                paramInfolist.map(item => {
+                    let unit = !item.unit ? "" : item.unit === "/" ? "" : item.unit;
+                    res.push(`${item.value}${unit}`)
+                })
+            }
+            //数据
+            if (dataInfolist && dataInfolist.length > 0) {
+                let value = dataInfolist[0].value != null ? dataInfolist[0].value : '无数据';
+                let unit = dataInfolist[0].Unit != null ? dataInfolist[0].Unit : '';
+                res.push(`${value}${unit}`)
+
+                // dataInfolist.map((item, key) => {
+                //     if (item.pollutantParamInfo && item.pollutantParamInfo.length > 0) {
+                //         item.pollutantParamInfo.map(param => {
+                //             res.push(`${param.statename}: ${param.value}`)
+                //         })
+                //     }
+                // })
+            }
+            return res ? res : <div>无数据</div>;
+        }
+        else {
+            return <div style={{ margin: 'auto', textAlign: 'center', color: '#777' }}>无数据</div>;
+        }
+    }
+
     /**
      *获取工艺流程图类型
      *
@@ -263,6 +334,7 @@ class Index extends Component {
                         stateInfo={stateInfo}
                         paramsInfo={paramsInfo}
                         getsystemparamNew={this.getsystemparamNew}
+                        getParamsValue={this.getParamsValue}
                         pollutantMonitingDataNew={this.pollutantMonitingDataNew}
                         getSystemStatesNew={this.getSystemStatesNew}
                         DGIMN={dgimn}
@@ -295,7 +367,6 @@ class Index extends Component {
                     return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
             }
         } else if (dgimn) {
-            console.log('datainfo=', dataInfo)
             return <CommonChart DGIMN={dgimn} pointName={pointName} entName={entName} />
         }
     }
