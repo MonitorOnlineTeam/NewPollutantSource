@@ -57,7 +57,7 @@ const pageUrl = {
   disColumn: standardData.disColumn,
 }))
 @Form.create()
-export default class EntTransmissionEfficiency extends Component {
+export default class Index extends Component {
   constructor(props) {
     super(props);
 
@@ -311,7 +311,7 @@ export default class EntTransmissionEfficiency extends Component {
     } = this.props;
     const { TabPane } = Tabs;
     let columns = this.state.columns;
-    if (disColumn.length > 0) { //数据请求完成
+    if (disColumn&&disColumn.length > 0) { //数据请求完成
       const num = PollutantType == 1 ? 3 : 4;
       if(columns[num] && columns[num].title == '污染物排放标准' ){
          columns[num].children = [];

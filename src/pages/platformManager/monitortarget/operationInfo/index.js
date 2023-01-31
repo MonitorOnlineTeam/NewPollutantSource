@@ -391,6 +391,13 @@ const Index = (props) => {
 
   const projectNumCol = [
     {
+      title: '合同名称',
+      dataIndex: 'ProjectName',
+      key: 'ProjectName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '项目编号',
       dataIndex: 'ProjectCode',
       key: 'ProjectCode',

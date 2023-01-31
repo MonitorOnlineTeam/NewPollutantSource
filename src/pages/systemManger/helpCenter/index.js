@@ -168,7 +168,8 @@ const Index = (props) => {
   const [pageSize, setPageSize] = useState(20)
   useEffect(() => {
     if (questTypeSecondLevel) {
-      getQuestionDetialListFun(pageIndex, pageSize, searchContent);
+      setPageIndex(1)
+      getQuestionDetialListFun(1, pageSize, searchContent);
     }
 
   }, [questTypeSecondLevel,]);
@@ -191,6 +192,7 @@ const Index = (props) => {
       pageSize: pageSizes,
       QuestionName: questionName,
       firstLevel:questTypeSecondLevel,
+      status:1,
       // firstLevel: questTypeFirstLevel,
       // secondLevel: questTypeSecondLevel,
     }, () => { setListLoading(false) })
@@ -200,7 +202,8 @@ const Index = (props) => {
     setSearchContent(e.target.value)
   }
   const onSearch = (value, e) => {  //查询
-    getQuestionDetialListFun(pageIndex, pageSize, value);
+    setPageIndex(1)
+    getQuestionDetialListFun(1, pageSize, value);
   }
 
   const handleListChange = (PageIndex, PageSize) => { //分页

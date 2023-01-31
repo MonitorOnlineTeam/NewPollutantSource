@@ -50,7 +50,7 @@ class Login extends Component {
       if(!this.state.loginSuccess){
        if(values.verificaCode.toLowerCase() != verificaCode){
         message.error('请输入正确的验证码')
-        this.child.current.click(); //刷新验证码
+        this.child&&this.child.current&&this.child.current.click(); //刷新验证码
         return;
       }
      }

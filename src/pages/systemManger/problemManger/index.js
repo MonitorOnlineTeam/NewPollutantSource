@@ -267,6 +267,7 @@ const Index = (props) => {
   const add = () => {
     setFromVisible(true)
     setType('add')
+    setFilesList([])
     form2.resetFields();
   };
 
@@ -340,17 +341,18 @@ const Index = (props) => {
   };
   const [filesLoading,setFilesLoading] = useState(false)
   const [filesList,setFilesList] = useState([])
-  const [filesCuid,setFilesCuid] = useState(cuid())
+  // const [filesCuid,setFilesCuid] = useState(form2.getFieldValue('File')&&type=='edit' ? form2.getFieldValue('File') : cuid())
+  const filesCuid = form2.getFieldValue('File') ? form2.getFieldValue('File') : cuid()
   const uploadProps = {
     name: 'file',
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
     data: {
-      FileUuid: filesCuid,
+      FileUuid:filesCuid,
     },
     onChange(info) {
       setFilesLoading(true)
       if (info.file.status !== 'uploading') {
-        console.log(info)
+        // console.log(info)
       }
       const fileList = info.fileList.map(item=>{
         if(item.response&&item.response.IsSuccess){ //刚上传的

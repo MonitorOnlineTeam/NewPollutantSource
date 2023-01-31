@@ -100,7 +100,8 @@ class index extends PureComponent {
             queryCondition.ExceptionType = 1;
             queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
-            router.push(`/dataSearch/abnormalData/details?queryCondition=${queryCondition}`)
+            // router.push(`/dataSearch/abnormalData/details?queryCondition=${queryCondition}`)
+            this.setState({detailVisible:true,queryConditionDetail:queryCondition})
           }}>{text}</a>
         }
       },
@@ -115,7 +116,8 @@ class index extends PureComponent {
             queryCondition.ExceptionType = 2;
             queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
-            router.push(`/dataSearch/abnormalData/details?queryCondition=${queryCondition}`)
+            // router.push(`/dataSearch/abnormalData/details?queryCondition=${queryCondition}`)
+            this.setState({detailVisible:true,queryConditionDetail:queryCondition})
           }}>{text}</a>
         }
       },
@@ -438,7 +440,7 @@ class index extends PureComponent {
           </Form>
           <SdlTable align="center" dataSource={exceptionDataSource} columns={columns} loading={loading} />
         </Card>
-        <Modal destroyOnClose title={detailTitle} width={'90%'} footer={null} visible={this.state.detailVisible} onCancel={()=>{this.setState({detailVisible:false})}}>
+         <Modal destroyOnClose title={detailTitle} width={'90%'} footer={null} visible={this.state.detailVisible} onCancel={()=>{this.setState({detailVisible:false})}}>
         <DetailsPage isModal  location={{query:{queryCondition : queryConditionDetail}}} visible={this.state.detailVisible}/>
         </Modal>
       </BreadcrumbWrapper>

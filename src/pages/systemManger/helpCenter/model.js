@@ -12,7 +12,6 @@ export default Model.extend({
   state: {
     questTypeTreeData : [],
     questionListData:[],
-    questionListData:[],
     questionListTotal:0,
     questionTypeTitle:undefined,
     questTypeFirstLevel:undefined,

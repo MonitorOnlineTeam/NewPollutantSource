@@ -72,6 +72,8 @@ class index extends PureComponent {
     queryCondition: {},
     exceptionTime: this.props.time || this.props.exceptionTime,
     operationpersonnel:'',
+    pageIndex:1,
+    pageSize:10,
   }
   _SELF_ = {
     formLayout: {
@@ -344,7 +346,8 @@ class index extends PureComponent {
         ResponseStatus: ResponseStatus,
         OperationPersonnel:this.state.operationpersonnel
       },
-      visible: true
+      visible: true,
+      pageIndex:1,
     }, () => {
       this.getExceptionAlarmListForEnt();
     })
@@ -640,7 +643,28 @@ class index extends PureComponent {
               导出
             </Button>
           </Row>
-          <SdlTable align="center" loading={detailsLoading} dataSource={exceptionAlarmListForEntDataSource} columns={_detailsColumns} scroll={{y:'calc(100vh - 380px)'}}/>
+          <SdlTable
+            align="center" 
+            loading={detailsLoading} 
+            dataSource={exceptionAlarmListForEntDataSource}
+            columns={_detailsColumns} 
+            scroll={{y:'calc(100vh - 380px)'}}
+            pagination={{
+              // defaultCurrent: 1,
+              pageSize: this.state.pageSize,
+              current:this.state.pageIndex,
+              // showQuickJumper: true,
+              total: exceptionAlarmListForEntDataSource? exceptionAlarmListForEntDataSource.length : 0,
+              showSizeChanger: true,
+              onChange: (current, size) => {
+                this.setState({
+                  pageIndex:current,
+                  pageSize: size,
+                })
+              },
+              pageSizeOptions: [ '10', '20', '30', '40', '100'],
+            }}
+            />
         </Modal> 
       </BreadcrumbWrapper>
     );
