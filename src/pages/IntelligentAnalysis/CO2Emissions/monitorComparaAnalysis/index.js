@@ -42,7 +42,7 @@ const dvaDispatch = (dispatch) => {
             })
 
         },
-        getComparisonOfMonData: (payload,callback) => { //列表
+        getComparisonOfMonData: (payload, callback) => { //列表
             dispatch({
                 type: `${namespace}/getComparisonOfMonData`,
                 payload: payload,
@@ -88,7 +88,7 @@ const Index = (props) => {
             fixed: 'left',
             render: (text, record, index) => {
                 const val = form.getFieldsValue();
-                const data = val.Time&&val.Time.startOf('M').format('YYYY-MM-DD')
+                const data = val.Time && val.Time.startOf('M').format('YYYY-MM-DD')
                 return rowSpan(data, record, index)
             }
         },
@@ -129,25 +129,26 @@ const Index = (props) => {
                 // pageIndex: pageIndexs,
                 // pageSize: pageSize,
                 ...values,
-                BeginTime: values.Time&&values.Time.startOf('M').format('YYYY-MM-DD'),
-                EndTime: values.Time&&values.Time.endOf('M').format('YYYY-MM-DD'),
+                BeginTime: values.Time && values.Time.startOf('M').format('YYYY-MM-DD'),
+                EndTime: values.Time && values.Time.endOf('M').format('YYYY-MM-DD'),
                 Time: undefined,
                 type: 'table',
             }, (col) => {
-                
+
                 let columnsTotal = defalutCols;
                 if (col && Object.keys(col).length) {
                     // tableCol.map((item, index) => {
                     //     columnsTotal.splice(columns.length - 1, 0, { title: `${item}`, dataIndex: 222, key: 111, width: 80, align: 'center' })
                     // })
-                    for(let colKey in col){
-                        columnsTotal.splice(defalutCols.length - 1, 0, 
-                         { title:col[colKey], 
-                            dataIndex: colKey, 
-                            key: colKey,
-                            width: 100, 
-                            align: 'center', 
-                         })
+                    for (let colKey in col) {
+                        columnsTotal.splice(defalutCols.length - 1, 0,
+                            {
+                                title: col[colKey],
+                                dataIndex: colKey,
+                                key: colKey,
+                                width: 100,
+                                align: 'center',
+                            })
                     }
                     setColumns(columnsTotal)
                 }
@@ -181,7 +182,7 @@ const Index = (props) => {
         >
             <Spin spinning={entLoading} size='small'>
                 <Form.Item label="企业" name="EntCode" >
-                    <Select placeholder='请选择企业名称'  showSearch
+                    <Select placeholder='请选择企业名称' showSearch
                         filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         style={{ width: 200 }}>
                         {
@@ -193,7 +194,7 @@ const Index = (props) => {
                 </Form.Item>
             </Spin>
             <Form.Item name='Time' label='日期' >
-                <DatePicker allowClear={false}  picker="month" style={{ width: '100%' }} />
+                <DatePicker allowClear={false} picker="month" style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType='submit' style={{ marginRight: 8 }} loading={tableLoading}>
