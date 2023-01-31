@@ -77,39 +77,9 @@ const Index = (props) => {
             props: { rowSpan: number % 4 == 0 ? 4 : 0 },
         };
     }
-    const [columns, setColumns] = useState([
-        // {
-        //     title: '承担单位',
-        //     dataIndex: 'EntName',
-        //     key: 'EntName',
-        //     align: 'center',
-        //     fixed: 'left',
-        //     render: (text, record, index) => rowSpan(text, record, index)
-        // },
-        // {
-        //     title: '机组编号',
-        //     dataIndex: 'SystemName',
-        //     key: 'SystemName',
-        //     align: 'center',
-        //     fixed: 'left',
-        //     render: (text, record, index) => rowSpan(text, record, index)
-        // },
-        // {
-        //     title: '安装完成日期',
-        //     dataIndex: 'SystemModel',
-        //     key: 'SystemModel',
-        //     align: 'center',
-        //     fixed: 'left',
-        //     render: (text, record, index) => rowSpan(text, record, index)
-        // },
-        // {
-        //     title: '调试完成日期',
-        //     dataIndex: 'MonitoringType',
-        //     key: 'MonitoringType',
-        //     align: 'center',
-        //     fixed: 'left',
-        //     render: (text, record, index) => rowSpan(text, record, index)
-        // },
+    const [columns, setColumns] = useState([]);
+
+    const defalutCols = [
         {
             title: '数据对比开始日期',
             dataIndex: 'CreateUserName',
@@ -149,9 +119,7 @@ const Index = (props) => {
             key: 'Month',
             align: 'center',
         },
-    ]);
-
-
+    ]
     const onFinish = async (pageIndexs, pageSize) => {  //查询
 
         try {
@@ -166,25 +134,20 @@ const Index = (props) => {
                 Time: undefined,
                 type: 'table',
             }, (col) => {
-                let columnsTotal = columns;
+                
+                let columnsTotal = defalutCols;
                 if (col && Object.keys(col).length) {
                     // tableCol.map((item, index) => {
                     //     columnsTotal.splice(columns.length - 1, 0, { title: `${item}`, dataIndex: 222, key: 111, width: 80, align: 'center' })
                     // })
                     for(let colKey in col){
-                        columnsTotal.splice(columns.length - 1, 0, 
+                        columnsTotal.splice(defalutCols.length - 1, 0, 
                          { title:col[colKey], 
                             dataIndex: colKey, 
                             key: colKey,
                             width: 80, 
                             align: 'center', 
-                            render: (text, record, index) => {
-                            if ((index + 4 - 3) % 4 == 0) {
-                                return text || text == 0? text*100 + '%'   : ''
-                            }else{
-                                return text
-                            }
-                        } })
+                         })
                     }
                     setColumns(columnsTotal)
                 }
