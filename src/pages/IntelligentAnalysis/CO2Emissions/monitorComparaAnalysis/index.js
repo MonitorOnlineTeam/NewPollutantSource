@@ -3,9 +3,9 @@
  * 创建时间：2023.01.30
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Upload,Form, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined,UploadOutlined,ImportOutlined, ExportOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -49,6 +49,14 @@ const dvaDispatch = (dispatch) => {
                 callback: callback
             })
         },
+        exportTemplet: (payload, callback) => { // 导入模板
+            dispatch({
+                type: `autoForm/exportTemplet`,
+                payload: payload,
+                callback: callback
+            })
+
+        },
     }
 }
 const Index = (props) => {
@@ -77,6 +85,7 @@ const Index = (props) => {
             props: { rowSpan: number % 4 == 0 ? 4 : 0 },
         };
     }
+
     const [columns, setColumns] = useState([]);
 
     const defalutCols = [
@@ -169,6 +178,7 @@ const Index = (props) => {
     //     setPageIndex(PageIndex)
     //     props.getComparisonOfMonData({ ...values, PageIndex, PageSize })
     // }
+    
     const searchComponents = () => {
         return <Form
             form={form}
@@ -199,16 +209,20 @@ const Index = (props) => {
             <Form.Item>
                 <Button type="primary" htmlType='submit' style={{ marginRight: 8 }} loading={tableLoading}>
                     查询
-          </Button>
+                </Button>
+                <Button  icon={<ImportOutlined/>}  style={{ marginRight: 8 }}  onClick={()=>{setImpVisible(true)}}>
+                    导入
+                </Button>
             </Form.Item>
         </Form>
     }
-
+    const [impVisible, setImpVisible] = useState(false);
     return (
         <div>
             <BreadcrumbWrapper>
                 <Card title={searchComponents()}>
                     <SdlTable
+                        title={()=>{return <div style={{fontSize:22, textAlign:'center',fontWeight:'bold',}}>直测及核算碳排放量比对分析统计表</div>}}
                         loading={tableLoading}
                         bordered
                         dataSource={tableDatas}
@@ -224,6 +238,26 @@ const Index = (props) => {
                     // }}
                     />
                 </Card>
+         <Modal
+          title="导入"
+          visible={impVisible}
+          onOk={()=>{setImpVisible(false)}}
+          onCancel={()=>{setImpVisible(false)}}
+        >
+          <Row>
+            <Col span={18}>
+              <Upload {...props}>
+                <Button>
+                  <UploadOutlined /> 请选择文件
+                </Button>
+              </Upload>
+            </Col>
+            <Col span={6} style={{ marginTop: 6 }}>
+              <a onClick={() => {
+                props.exportTemplet({configId:'AEnterpriseTest'})
+              }}>下载导入模板</a></Col>
+          </Row>
+        </Modal>
             </BreadcrumbWrapper>
         </div>
     );

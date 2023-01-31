@@ -100,7 +100,9 @@ const Index = (props) => {
           label: {
             formatter: chartDatas.formula,
             align: 'right',
-            fontSize: 16,
+            fontSize: 26,
+            color:'#f5222d',
+            fontWeight:'bold',
           },
           lineStyle: {
             type: 'solid'
@@ -121,6 +123,12 @@ const Index = (props) => {
         };
     
         let option = {
+          title: {
+            text: "直测及核算碳排放量线性相关分析图",
+            left: 'center',
+            top: 0,
+            textStyle:{ fontSize:22,} //字体大小,
+          },
           itemStyle: {
             color:'#52c41a',
           },
@@ -132,7 +140,7 @@ const Index = (props) => {
           },
           tooltip: {
             formatter: function (params, ticket, callback) {
-              return `直测二氧化碳排放当量:    ${params&&params.value[0]} tCO₂e <br />核算二氧化碳排放当量:    ${params&&params.value[1]} tCO₂e`
+              return `直测二氧化碳排放当量:    ${params&&params.value[0]} KgCO₂e <br />核算二氧化碳排放当量:    ${params&&params.value[1]} KgCO₂e`
             }
           },
           toolbox: {
@@ -147,11 +155,11 @@ const Index = (props) => {
             }
           },
           xAxis: [
-            { name: `直测二氧化碳排放当量(tCO₂e)`, gridIndex: 0, min: chartDatas.coordMin&&chartDatas.coordMin[0], max: chartDatas.coordMax&&chartDatas.coordMax[0] },
+            { name: `直测二氧化碳排放当量(KgCO₂e)`, gridIndex: 0, min: chartDatas.coordMin&&chartDatas.coordMin[0], max: chartDatas.coordMax&&chartDatas.coordMax[0] },
           ],
           yAxis: [
             // { name: `核算排放量(t)`, gridIndex: 0, min: chartDatas.coordMin[1] < 0 ? chartDatas.coordMin[1] - 5 : chartDatas.coordMin[1], max: chartDatas.coordMax[1] + 5 },
-            { name: `核算二氧化碳排放当量(tCO₂e)`, gridIndex: 0, min: chartDatas.coordMin&&chartDatas.coordMin[1], max: chartDatas.coordMax&&chartDatas.coordMax[1] },
+            { name: `核算二氧化碳排放当量(KgCO₂e)`, gridIndex: 0, min: chartDatas.coordMin&&chartDatas.coordMin[1], max: chartDatas.coordMax&&chartDatas.coordMax[1] },
           ],
           series: [
             {

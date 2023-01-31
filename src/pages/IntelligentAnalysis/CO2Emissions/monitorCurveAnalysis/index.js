@@ -99,6 +99,12 @@ const Index = (props) => {
 
     const getOption = () => {
         return {
+            title: {
+                text: "直测及核算碳排放量比对分析图",
+                left: 'center',
+                top: 0,
+                textStyle:{ fontSize:22,} //字体大小,
+              },
             color:['#52c41a','#1677ff'],
             xAxis: {
                 type: 'category',
@@ -106,15 +112,17 @@ const Index = (props) => {
             },
             yAxis: {
                 name: 'kg',
-                type: 'value'
+                type: 'value',
             },
             legend: {
-                data: ['监测量', '核算量',]
+                data: ['监测量', '核算量',],
+                padding:[40, 0,0,0],
             },
             grid: {
-                left: 6,
+                left: 0,
                 right: 0,
                 bottom: 0,
+                top:60,
                 containLabel: true
               },
             series: [
@@ -122,13 +130,13 @@ const Index = (props) => {
                     name: '监测量',
                     data: chartDatas.lineDis && chartDatas.lineDis,
                     type: 'line',
-                    smooth: true
+                    // smooth: true
                 },
                 {
                     name: '核算量',
                     data: chartDatas.lineAcc && chartDatas.lineAcc,
                     type: 'line',
-                    smooth: true
+                    // smooth: true
                 },
             ]
         }
