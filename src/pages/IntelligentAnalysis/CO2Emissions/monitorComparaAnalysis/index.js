@@ -180,7 +180,7 @@ const Index = (props) => {
                             align: 'center', 
                             render: (text, record, index) => {
                             if ((index + 4 - 3) % 4 == 0) {
-                                return text ? text*100 + '%'   : ''
+                                return text || text == 0? text*100 + '%'   : ''
                             }else{
                                 return text
                             }
