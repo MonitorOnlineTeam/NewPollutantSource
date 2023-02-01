@@ -200,7 +200,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        return <span style={{color: text=='未开始整改'? '#f5222d':'#52c41a' }}>{text}</span>;
+        return <span style={{color: text=='未开始整改'? '#f5222d': text=='整改进行中'? '#1890ff': '#52c41a' }}>{text}</span>;
       }
     },
     {

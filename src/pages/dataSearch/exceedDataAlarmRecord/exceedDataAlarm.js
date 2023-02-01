@@ -78,7 +78,7 @@ class index extends PureComponent {
             //////////////
             dataType: "Hour",
             time: [moment().add(-24, "hour"), moment()],
-            activeKey:'2',
+            activeKey:'1',
             panes:[],
             entType:'2',
             regionValue: '',
@@ -925,7 +925,7 @@ class index extends PureComponent {
             activeKey={this.state.activeKey}
             onEdit={this.onEdit}
             >
-                <TabPane tab={this.state.entType == '1'?'废水':'废气'} key={this.state.activeKey} closable={false}>
+                <TabPane tab={this.state.entType == '1'?'废水':'废气'} key={'1'} closable={false}>
                     <SdlTable columns={columns} dataSource={AlarmList}
                     loading={loading}
                         // pagination={{
