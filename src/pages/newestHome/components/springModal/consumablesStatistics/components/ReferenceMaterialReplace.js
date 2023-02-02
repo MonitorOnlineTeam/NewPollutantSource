@@ -194,11 +194,32 @@ const columns2 = [
      return  index +1 
     }
   },
+  // {
+  //   title: '省/市',
+  //   dataIndex: 'regionName',
+  //   key:'regionName',
+  //   align:'center',
+  // },
   {
-    title: '省/市',
-    dataIndex: 'regionName',
-    key:'regionName',
-    align:'center',
+    title: '省',
+    dataIndex: 'province',
+    key: 'province',
+    align: 'center',
+    render: (text, record, index) => {
+      if (text == '合计') {
+        return { props: { colSpan: 0 }, };
+      }
+      return text;
+    },
+  },
+  {
+    title: '市',
+    dataIndex: 'city',
+    key: 'city',
+    align: 'center',
+    render: (text, record, index) => {
+      return { props: { colSpan: text == '合计' ? 2 : 1 }, children: text, };
+    }
   },
   {
     title: '企业名称',

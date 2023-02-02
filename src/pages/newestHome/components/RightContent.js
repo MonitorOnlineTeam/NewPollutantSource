@@ -424,7 +424,7 @@ const operationExpiraOption = { //点位到期统计
     {
       name: '点位统计',
       type: 'pie',
-      radius: ['56%', '85%'],
+      radius: ['52%', '82%'],
       avoidLabelOverlap: false,
       hoverAnimation:false,
       minAngle: 90,//最小角度
@@ -562,7 +562,7 @@ const operationExpiraOption = { //点位到期统计
      <Spin spinning={operationExpireLoading}>
      <div className={styles.operationExpira}>{/**运维到期点位 */}
     <CardHeader btnClick={dataAlarmResClick}   title='运维到期点位' />
-     <div style={{height:'100%',padding:'30px 17px 30px 0' }}>
+     <div style={{height:'100%',padding:'10px 17px 30px 0' }}>
          <ReactEcharts
             option={operationExpiraOption}
             style={{ height: '100%', width: '100%' }}

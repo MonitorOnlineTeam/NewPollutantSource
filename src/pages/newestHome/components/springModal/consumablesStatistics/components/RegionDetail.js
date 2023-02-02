@@ -99,13 +99,34 @@ const Index = (props) => {
      return  index +1 
     }
   },
+  // {
+  //   title: '省/市',
+  //   dataIndex: 'regionName',
+  //   key:'regionName',
+  //   align:'center',
+  //   render:(text,record,index)=>{
+  //     return  <Button type="link" onClick={()=>{ pointDetail(record)  }} >{text}</Button>
+  //   }
+  // },
+    {
+      title: '省',
+      dataIndex: 'province',
+      key:'province',
+      align:'center',
+      render: (text, record, index) => {
+        if (text=='合计') {
+            return { props: { colSpan: 0 }, };
+        }
+        return text;
+    },
+  },
   {
-    title: '省/市',
-    dataIndex: 'regionName',
-    key:'regionName',
+    title: '市',
+    dataIndex: 'city',
+    key:'city',
     align:'center',
     render:(text,record,index)=>{
-      return  <Button type="link" onClick={()=>{ pointDetail(record)  }} >{text}</Button>
+      return { props: { colSpan: text=='合计'? 2 : 1},  children: <Button type="link" onClick={()=>{ pointDetail(record)  }} >{text}</Button>, };
     }
   },
   {

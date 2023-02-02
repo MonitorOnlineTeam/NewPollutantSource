@@ -1,7 +1,7 @@
 /**
- * 功  能：异常工单统计
+ * 功  能：计划工单统计
  * 创建人：贾安波
- * 创建时间：2021.09.27
+ * 创建时间：2021.10.13
  */
 import React, { useState,useEffect,Fragment,useRef,useImperativeHandle,forwardRef} from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs    } from 'antd';
@@ -354,14 +354,34 @@ const Index = (props,ref ) => {
         return index + 1;
       }
     },
+    // {
+    //   title: '省/市',
+    //   dataIndex: 'regionName',
+    //   key:'regionName',
+    //   align:'center',
+    //   width: 150,
+    // },
     {
-      title: '省/市',
-      dataIndex: 'regionName',
-      key:'regionName',
+      title: '省',
+      dataIndex: 'province',
+      key:'province',
       align:'center',
-      width: 150,
-      render:(text,record,index)=>{
-        return <div style={{textAlign:'center'}}>{text}</div>
+      width: 100,
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { props: { colSpan: 0 }, };
+        }
+        return text;
+      },
+    },
+    {
+      title: '市',
+      dataIndex: 'city',
+      key:'city',
+      align:'center',
+      width: 100,
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
       }
     },
     {
@@ -468,12 +488,35 @@ const Index = (props,ref ) => {
     },
    ]
    const insideWorkOrderColumns = [
+    // {
+    //   title: '省/市',
+    //   dataIndex: 'regionName',
+    //   key:'regionName',
+    //   align:'center',
+    //   fixed: 'left',
+    // },
     {
-      title: '省/市',
-      dataIndex: 'regionName',
-      key:'regionName',
+      title: '省',
+      dataIndex: 'province',
+      key:'province',
       align:'center',
       fixed: 'left',
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { props: { colSpan: 0 }, };
+        }
+        return text;
+      },
+    },
+    {
+      title: '市',
+      dataIndex: 'city',
+      key:'city',
+      align:'center',
+      fixed: 'left',
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
+      }
     },
     {
       title: '企业名称',
@@ -497,6 +540,12 @@ const Index = (props,ref ) => {
       title: '运维负责人',
       dataIndex: 'operationUser',
       key:'operationUser',
+      align:'center',
+    },
+    {
+      title: '运维负责人工号',
+      dataIndex: 'operationUserCode',
+      key:'operationUserCode',
       align:'center',
     },
     {
@@ -550,13 +599,38 @@ const Index = (props,ref ) => {
   ];
  
   const insideWorkOrderColumns2 = [
+    // {
+    //   title: '省/市',
+    //   dataIndex: 'regionName',
+    //   key:'regionName',
+    //   align:'center',
+    //   width: 100,
+    //   fixed: 'left',
+    // },
     {
-      title: '省/市',
-      dataIndex: 'regionName',
-      key:'regionName',
+      title: '省',
+      dataIndex: 'province',
+      key:'province',
       align:'center',
       width: 100,
       fixed: 'left',
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { props: { colSpan: 0 }, };
+        }
+        return text;
+      },
+    },
+    {
+      title: '市',
+      dataIndex: 'city',
+      key:'city',
+      align:'center',
+      width: 100,
+      fixed: 'left',
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
+      }
     },
     {
       title: '企业名称',
@@ -580,6 +654,12 @@ const Index = (props,ref ) => {
       title: '运维负责人',
       dataIndex: 'operationUser',
       key:'operationUser',
+      align:'center',
+    },
+    {
+      title: '运维负责人工号',
+      dataIndex: 'operationUserCode',
+      key:'operationUserCode',
       align:'center',
     },
     {
@@ -810,14 +890,37 @@ const Index = (props,ref ) => {
         return index + 1;
       }
     },
+    // {
+    //   title: '省/市',
+    //   dataIndex: 'regionName',
+    //   key:'regionName',
+    //   align:'center',
+    //   width:150,
+    //   render:(text,record,index)=>{
+    //     return <div style={{textAlign:'center'}}> <a href="javascript:;" onClick={()=>{cityDetail(record)}}>{text}</a></div>
+    //   }
+    // },
     {
-      title: '省/市',
-      dataIndex: 'regionName',
-      key:'regionName',
+      title: '省',
+      dataIndex: 'province',
+      key:'province',
       align:'center',
-      width:150,
-      render:(text,record,index)=>{
-        return <div style={{textAlign:'center'}}> <a href="javascript:;" onClick={()=>{cityDetail(record)}}>{text}</a></div>
+      width: 100,
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { props: { colSpan: 0 }, };
+        }
+        return text;
+      },
+    },
+    {
+      title: '市',
+      dataIndex: 'city',
+      key:'city',
+      align:'center',
+      width: 100,
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: <div style={{textAlign:'center'}}> <a href="javascript:;" onClick={()=>{cityDetail(record)}}>{text}</a></div>, };
       }
     },
     {
@@ -851,12 +954,35 @@ const Index = (props,ref ) => {
    
   ];
   const cityDetailOutRegColumns = [ //计划外  市级别详情  三级弹框
+    // {
+    //   title: '省/市',
+    //   dataIndex: 'regionName',
+    //   key:'regionName',
+    //   align:'center',
+    //   width:150,
+    // },
     {
-      title: '省/市',
-      dataIndex: 'regionName',
-      key:'regionName',
+      title: '省',
+      dataIndex: 'province',
+      key:'province',
       align:'center',
-      width:150,
+      width: 100,
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { props: { colSpan: 0 }, };
+        }
+        return text;
+      },
+    },
+    {
+      title: '市',
+      dataIndex: 'city',
+      key:'city',
+      align:'center',
+      width: 100,
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
+      }
     },
     {
       title: '企业名称',
@@ -933,12 +1059,35 @@ const Index = (props,ref ) => {
    
   ];
   const  outWorkOrderColumn = [ //计划外 工单
+    // {
+    //   title: '省/市',
+    //   dataIndex: 'regionName',
+    //   key:'regionName',
+    //   align:'center',
+    //   fixed: 'left',
+    // },
     {
-      title: '省/市',
-      dataIndex: 'regionName',
-      key:'regionName',
+      title: '省',
+      dataIndex: 'province',
+      key:'province',
       align:'center',
       fixed: 'left',
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { props: { colSpan: 0 }, };
+        }
+        return text;
+      },
+    },
+    {
+      title: '市',
+      dataIndex: 'city',
+      key:'city',
+      align:'center',
+      fixed: 'left',
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
+      }
     },
     {
       title: '企业名称',
@@ -960,11 +1109,32 @@ const Index = (props,ref ) => {
     },
   ]
   const operaPointColumns = [
+    // {
+    //   title: '省/市',
+    //   dataIndex: 'regionName',
+    //   key:'regionName',
+    //   align:'center',
+    // },
     {
-      title: '省/市',
-      dataIndex: 'regionName',
-      key:'regionName',
+      title: '省',
+      dataIndex: 'province',
+      key:'province',
       align:'center',
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { props: { colSpan: 0 }, };
+        }
+        return text;
+      },
+    },
+    {
+      title: '市',
+      dataIndex: 'city',
+      key:'city',
+      align:'center',
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
+      }
     },
     {
       title: '企业名称',

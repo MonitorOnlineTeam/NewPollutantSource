@@ -236,7 +236,7 @@ const Index = (props) => {
         if(!item.IsDelete){
           fileList.push({
             uid: item.GUID,
-            name: item.FileName,
+            name: item.FileActualName,
             status: 'done',
             url: `/upload/${item.FileName}`,
           })
