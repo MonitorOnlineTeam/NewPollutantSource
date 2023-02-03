@@ -1,12 +1,12 @@
 /**
- * 功  能：系统设施核查 
+ * 功  能：运维督查管理 
  * 创建人：jab
  * 创建时间：2022.04.20
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled, ToTopOutlined, } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined,ProfileOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled, ToTopOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -26,21 +26,21 @@ import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import cuid from 'cuid';
 import { getBase64, } from '@/utils/utils';
-import Detail from './Detail';
+import CheckDetail from './CheckDetail';
 import Lightbox from "react-image-lightbox-rotate";
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'supervisionManager'
+const namespace = 'cruxParSupervision'
 
 
 
 
-const dvaPropsData = ({ loading, supervisionManager, global, common, point, autoForm }) => ({
-  tableDatas: supervisionManager.tableDatas,
-  tableLoading: supervisionManager.tableLoading,
-  tableTotal: supervisionManager.tableTotal,
+const dvaPropsData = ({ loading, cruxParSupervision, global, common, point, autoForm }) => ({
+  tableDatas: cruxParSupervision.tableDatas,
+  tableLoading: cruxParSupervision.tableLoading,
+  tableTotal: cruxParSupervision.tableTotal,
   pointParamesLoading: loading.effects[`${namespace}/getPointParames`],
   infoloading: loading.effects[`${namespace}/getInspectorOperationInfoList`],
   userLoading: loading.effects[`common/getUserList`],
@@ -50,7 +50,7 @@ const dvaPropsData = ({ loading, supervisionManager, global, common, point, auto
   systemModelList: point.systemModelList,
   loadingSystemModel: loading.effects[`point/getSystemModelList`] || false,
   systemModelListTotal: point.systemModelListTotal,
-  operationInfoList: supervisionManager.operationInfoList,
+  operationInfoList: cruxParSupervision.operationInfoList,
   exportLoading: loading.effects[`${namespace}/exportInspectorOperationManage`],
 
 
@@ -158,7 +158,7 @@ const Index = (props) => {
   //是否为运维督查记录
   const isRecord = path === '/operations/supervisionRecod' || path === '/operations/siteSupervisionRecod' ? true : false;
   // 是否为现场督查 1 现场 2 远程  其他为全部
-  const inspectorType = path === '/operations/siteInspector' || path === '/operations/siteSupervisionRecod' ? 1 : path === '/operations/supervisionManager' || path === '/operations/supervisionRecod' ? 2 : '';
+  const inspectorType = path === '/operations/siteInspector' || path === '/operations/siteSupervisionRecod' ? 1 : path === '/operations/cruxParSupervision' || path === '/operations/supervisionRecod' ? 2 : '';
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
@@ -208,11 +208,16 @@ const Index = (props) => {
       }
     },
     {
-      title: '行政区',
-      dataIndex: 'RegionName',
-      key: 'RegionName',
+      title: '省',
+      dataIndex: 'province',
+      key: 'province',
       align: 'center',
-      ellipsis: true,
+    },
+    {
+      title: '市',
+      dataIndex: 'city',
+      key: 'city',
+      align: 'center',
     },
     {
       title: `企业名称`,
@@ -222,43 +227,11 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '站点名称',
+      title: '监测点名称',
       dataIndex: 'PointName',
       key: 'PointName',
       align: 'center',
       ellipsis: true,
-    },
-    {
-      title: '督查类别',
-      dataIndex: 'InspectorTypeName',
-      key: 'InspectorTypeName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '监测因子',
-      dataIndex: 'PollutantCodeName',
-      key: 'PollutantCodeName',
-      align: 'center',
-      width: 200,
-      ellipsis: true,
-    },
-    {
-      title: '督查人员',
-      dataIndex: 'InspectorName',
-      key: 'InspectorName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '督查日期',
-      dataIndex: 'InspectorDate',
-      key: 'InspectorDate',
-      align: 'center',
-      ellipsis: true,
-      render: (text, record, index) => {
-        return text ? moment(text).format("YYYY-MM-DD") : null;
-      }
     },
     {
       title: '运维人员',
@@ -268,78 +241,67 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '原则问题数量',
-      dataIndex: 'PrincipleProblemNum',
-      key: 'PrincipleProblemNum',
+      title: '核查人',
+      dataIndex: 'InspectorName',
+      key: 'InspectorName',
       align: 'center',
       ellipsis: true,
     },
     {
-      title: '重点问题数量',
-      dataIndex: 'importanProblemNum',
-      key: 'importanProblemNum',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '一般问题数量',
-      dataIndex: 'CommonlyProblemNum',
-      key: 'CommonlyProblemNum',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: `原则问题`,
-      dataIndex: 'PrincipleProblem',
-      key: 'PrincipleProblem',
-      align: 'center',
-      width: 200,
-      ellipsis: true,
-    },
-    {
-      title: '重点问题',
-      dataIndex: 'importanProblem',
-      key: 'importanProblem',
-      align: 'center',
-      width: 200,
-      ellipsis: true,
-    },
-    {
-      title: '一般问题',
-      dataIndex: 'CommonlyProblem',
-      key: 'CommonlyProblem',
-      align: 'center',
-      width: 200,
-      ellipsis: true,
-    },
-
-    {
-      title: '总分',
-      dataIndex: 'TotalScore',
-      key: 'TotalScore',
-      align: 'center',
-      ellipsis: true,
-    },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'Status',
-    //   key: 'Status',
-    //   align: 'center',
-    //   ellipsis: true,
-    //   render: (text, record, index) => {
-    //     return text==0 ? '保存' : text==1 ? '提交' : '推送';
-    //   }
-    // },
-    {
-      title: '推送状态',
-      dataIndex: 'StatusName',
-      key: 'StatusName',
+      title: '核查日期',
+      dataIndex: 'InspectorDate',
+      key: 'InspectorDate',
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        return <span style={{ color: text == '未推送' ? '#f5222d' : '#52c41a' }}>{text}</span>;
+        return text ? moment(text).format("YYYY-MM-DD") : null;
       }
     },
+    {
+      title: '核查状态',
+      dataIndex: 'Status',
+      key: 'Status',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return text==0 ? '保存' : text==1 ? '提交' : '推送';
+      }
+    },
+    {
+      title: '核查结果',
+      dataIndex: 'Status',
+      key: 'Status',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return text==0 ? '保存' : text==1 ? '提交' : '推送';
+      }
+    },
+    {
+      title: '问题数量',
+      dataIndex: 'ProblemNum',
+      key: 'ProblemNum',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '下发状态',
+      dataIndex: 'issue',
+      key: 'issue',
+      align: 'center',
+      ellipsis:true,
+      render: (text, record) => {
+        return text === '待下发' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
+      }
+    },
+    {
+      title: '下发时间',
+      dataIndex: 'issueTime',
+      key: 'issueTime',
+      align: 'center',
+      ellipsis:true,
+    },
+
     {
       title: '创建人',
       dataIndex: 'CreateUserName',
@@ -370,55 +332,45 @@ const Index = (props) => {
     },
     {
       title: '操作',
-      fixed: 'right',
       align: 'center',
-      width: 180,
-      ellipsis: true,
+      fixed:'right',
+      width:150,
+      ellipsis:true,
       render: (text, record) => {
-        if (isRecord) {
-          return <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip>
-        }
-        const flag = record.IsFlag;
-        const pushStatusFlag = record.Status == 2; //推送状态  只能查看详情
-        const noSubmitStatusFlag = record.Status == 0 || record.Status == 2; //暂存状态 推送状态  不可以推送
-
-        return <span>
-          <Fragment><Tooltip title={!flag ? "运维督查记录已超过30天，不可编辑" : pushStatusFlag ? '推送状态，不可编辑' : "编辑"}> <a onClick={() => {
-            if ((!flag) || pushStatusFlag) {
-              return;
-            }
-            edit(record)
-
-          }} ><EditOutlined style={{ cursor: (!flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (!flag && '#00000040') || (pushStatusFlag && '#00000040'), fontSize: 16 }} /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-          <Fragment>
-            <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip> <Divider type="vertical" />
-          </Fragment>
-          <Fragment>
-            <Tooltip title={!flag ? "运维督查记录已超过30天，不可推送" : noSubmitStatusFlag ? "只有提交状态才可以整改推送" : "整改推送"}>
-              <Popconfirm disabled={(!flag) || noSubmitStatusFlag} placement="left" title="是否把整改问题推送给运维人员？"
-                onConfirm={() => {
-                  if ((!flag) || noSubmitStatusFlag) { return; } rectificationPush(record);
-                }
-                } okText="是" cancelText="否">
-                <a style={{ cursor: (!flag && 'not-allowed') || (noSubmitStatusFlag && 'not-allowed'), color: (!flag && '#00000040') || (noSubmitStatusFlag && '#00000040'), }} > <ToTopOutlined style={{ fontSize: 16 }} /> </a>
-              </Popconfirm>
-            </Tooltip>
+         const updateflag = record.updateflag;
+         const flag = record.flag;
+         const issue = record.issue;
+         
+      let detail =  <Tooltip title="详情">
+      <a onClick={() => {
+        details(record) 
+      }}>
+        <ProfileOutlined style={{ fontSize: 16 }} />
+      </a>
+    </Tooltip>
+       if(isRecord){ //远程督查记录页面
+        return detail 
+       }
+        return (
+          <>
+            {detail}
+             <Divider type="vertical" />
+              <Tooltip title={ updateflag && flag? "删除": null  } >
+                <Popconfirm   disabled={!(updateflag && flag)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                  <a   style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
+                </Popconfirm>
+              </Tooltip>
             <Divider type="vertical" />
-          </Fragment>
-          <Fragment>
-            <Tooltip placement={(!flag) || pushStatusFlag ? "left" : 'top'} title={!flag ? "运维督查记录已超过30天，不可删除" : pushStatusFlag ? '推送状态，不可删除' : "删除"}>
-              <Popconfirm disabled={(!flag) || pushStatusFlag} placement="left" title="确定要删除这条数据吗？"
-                onConfirm={() => {
-                  if ((!flag) || pushStatusFlag) { return; } del(record)
-                }
-                } okText="是" cancelText="否">
-                <a style={{ cursor: (!flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (!flag && '#00000040') || (pushStatusFlag && '#00000040'), }} > <DelIcon style={{ fontSize: 16 }} /> </a>
+            <Tooltip   title={!issue||issue==='已下发'?  null : "下发"} >
+              <Popconfirm disabled={!issue||issue==='已下发'? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
+                <a  style={{cursor:!issue||issue==='已下发'? 'not-allowed' : 'pointer', color:!issue||issue==='已下发'?'#00000040' : '#1890ff', }}><IssuesCloseOutlined  style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
-          </Fragment>
-        </span>
+          </>
+        )
       }
-    },
+
+    }
   ];
 
   const [defaultEvaluate, setDefaultEvaluate] = useState(undefined)
@@ -599,12 +551,7 @@ const Index = (props) => {
     })
   };
 
-  const del = (record) => { //删除
-    props.deleteInspectorOperation({ ID: record.ID }, () => {
-      setPageIndex(1)
-      onFinish(1, pageSize)
-    })
-  };
+
 
 
   const [entLoading2, setEntLoading2] = useState(false)
@@ -646,30 +593,6 @@ const Index = (props) => {
     setFilesCuidList3(filesCuidObj3)
     setFilesList3(filesListObj3)
   }
-  const add = () => {
-    setFromVisible(true)
-    setTimeout(() => {
-      setType('add')
-      setPushFlag(true)
-      setPollutantType("2");
-      setDeviceInfoList([])
-      form2.resetFields();
-      tableForm.resetFields();
-      form2.setFieldsValue({ Inspector: userCookie && JSON.parse(userCookie).UserId })
-      setGaschoiceData(null);//清空生产商的值 
-      setPmchoiceData(null);
-      setEvaluate(null); //评价
-      setFilesList0([])
-      setFilesCuid0(cuid())
-      setTimeout(() => {
-        props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: "2" }, (data) => {
-          foramtProblemFilesList(data)
-        })
-        getEntList(2);
-      }, 100);
-
-    })
-  };
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
@@ -906,7 +829,7 @@ const Index = (props) => {
             </Form.Item>
           </Spin>
           <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
-            <Form.Item label='站点名称' name='DGIMN' >
+            <Form.Item label='监测点名称' name='DGIMN' >
 
               <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 150 }}>
                 {
@@ -920,17 +843,20 @@ const Index = (props) => {
         </Row>
 
         <Row>
-          <Form.Item label="督查人员" name="Inspector"  >
+          <Form.Item label="核查人" name="Inspector"  >
             <OperationInspectoUserList type='2' style={{ width: 150 }} />
           </Form.Item>
-          <Form.Item label="督查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
+          <Form.Item label="核查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
             <RangePicker_
               style={{ width: 300 }}
               allowClear={false}
               format="YYYY-MM-DD" />
           </Form.Item>
-          <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
-            <OperationInspectoUserList noFirst style={{ width: 150 }} />
+          <Form.Item label="核查结果" name="OperationUser" style={{ marginRight: 8 }}  >
+              <Select placeholder='请选择'  allowClear   style={{ width: 150 }}>
+                <Option key={1} value={1} >合格</Option>
+                <Option key={2} value={2} >不合格</Option>
+              </Select>
           </Form.Item>
           <Form.Item>
             <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
@@ -939,9 +865,6 @@ const Index = (props) => {
             <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }} >
               重置
      </Button>
-            {!isRecord && <Button style={{ marginRight: 8 }} onClick={() => { add() }} >
-              添加
-       </Button>}
             <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
 
           </Form.Item>
@@ -1003,18 +926,19 @@ const Index = (props) => {
     },
 
   ]
+  const del = (record) => { //删除
+    props.deleteRemoteInspector({ ID: record.id }, () => {
+      setPageIndex(1)
+      onFinish(1, pageSize)
+    })
+  }
+  const details = (record) =>{ //详情
 
-  const generatorColChoice = (record) => {
-    if (popVisible) {
-      form2.setFieldsValue({ GasManufacturer: record.ManufacturerID, GasEquipment: record.SystemModel });
-      setGaschoiceData(record.ManufacturerName)
-      setPopVisible(false)
-    } else {//颗粒物
-      form2.setFieldsValue({ PMManufacturer: record.ManufacturerID, PMEquipment: record.SystemModel });
-      setPmchoiceData(record.ManufacturerName)
-      setPmPopVisible(false)
-    }
-
+  }
+  const issues = (record) => { //下发
+    props.issueRemoteInspector({ ID: record.id }, () => {
+      onFinish(pageIndex, pageSize)
+    })
   }
 
   const [gaschoiceData, setGaschoiceData] = useState()
@@ -1642,7 +1566,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={12}>
                   <Spin spinning={pointLoading2} size='small' style={{ top: -3 }}>
-                    <Form.Item label='站点名称' name='DGIMN' rules={[{ required: true, message: '请选择站点名称' }]}>
+                    <Form.Item label='监测点名称' name='DGIMN' rules={[{ required: true, message: '请选择站点名称' }]}>
 
                       <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
                         {
@@ -1681,11 +1605,9 @@ const Index = (props) => {
                   </Spin>
                 </Col>
                 <Col span={12}>
-                  {/* <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} > */}
                   <Form.Item label="督查人员" name="Inspector" rules={[{ required: true, message: '请输入督查人员' }]} >
                     <OperationInspectoUserList noFirst type='2' allowClear={false} disabled />
                   </Form.Item>
-                  {/* </Spin> */}
                 </Col >
                 <Col span={12}>
                   <Form.Item label="督查日期" name="InspectorDate" rules={[{ required: true, message: '请选择督查日期' }]} >
@@ -1693,11 +1615,9 @@ const Index = (props) => {
                   </Form.Item>
                 </Col >
                 <Col span={12}>
-                  {/* <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}}> */}
                   <Form.Item allowClear={false} label="运维人员" name="OperationUser" rules={[{ required: true, message: '请输入运维人员' }]}>
                     <OperationInspectoUserList noFirst allowClear={false} />
                   </Form.Item>
-                  {/* </Spin> */}
                 </Col>
               </Row>
             </div>
@@ -1738,38 +1658,6 @@ const Index = (props) => {
                 </>
                 :
                 <>
-                  {/* <Row>
-            <Col span={12}>
-            <Form.Item label='气态CEMS设备生产商' name='GasManufacturer' rules={[{ required: false, message: '请选择气态CEMS设备生产商' }]}>
-             {selectPopover()}
-          </Form.Item>
-            </Col>
-            <Col span={12}>
-                 <Form.Item label='气态CEMS设备规格型号' name='GasEquipment' rules={[{ required: false, message: '请输入气态CEMS设备规格型号' }]}>
-                 <Input placeholder='请输入' allowClear/>
-              </Form.Item>
-            </Col>
-          </Row>
-
-           <Row>
-            <Col span={12}>
-            <Form.Item label='颗粒物CEMS设备生产商' name='PMManufacturer' rules={[{ required: false, message: '请选择颗粒物CEMS设备生产商' }]}>
-            {selectPopover('pm')}
-          </Form.Item>
-            </Col>
-            <Col span={12}>
-                 <Form.Item label='颗粒物CEMS设备规格型号' name='PMEquipment' rules={[{ required: false, message: '请输入颗粒物CEMS设备规格型号' }]}>
-                  <Input placeholder='请输入' allowClear/>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-          <Col span={24}>
-          <Form.Item label='设备备注' name='EquipmentRemark'>
-                  <TextArea rows={1} placeholder='请输入' allowClear/>
-              </Form.Item>
-            </Col>
-          </Row> */}
                   <Table
                     bordered
                     dataSource={deviceInfoList}
@@ -1860,15 +1748,6 @@ const Index = (props) => {
           </div>
         </Upload>
       </Modal>
-      {/* <Modal //预览上传附件
-        visible={previewVisible}
-        title={previewTitle}
-        footer={null}
-        onCancel={() => { setPreviewVisible(false) }}
-        destroyOnClose
-      >
-        <img alt="example" style={{ width: '100%' }} src={previewImage} />
-      </Modal> */}
       {previewVisible && <Lightbox
         mainSrc={imgUrlList[photoIndex]}
         nextSrc={imgUrlList[(photoIndex + 1) % imgUrlList.length]}
@@ -1890,7 +1769,7 @@ const Index = (props) => {
         onCancel={() => { setDetailVisible(false) }}
         destroyOnClose
       >
-        <Detail ID={detailId} />
+        <CheckDetail ID={detailId} />
       </Modal>
     </div>
   );

@@ -1,5 +1,5 @@
 /**
- * 功  能：系统设施核查 
+ * 功  能：运维督查管理 
  * 创建人：jab
  * 创建时间：2022.04.20
  */
@@ -32,15 +32,15 @@ import Lightbox from "react-image-lightbox-rotate";
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'supervisionManager'
+const namespace = 'cruxParSupervisionRectifica'
 
 
 
 
-const dvaPropsData = ({ loading, supervisionManager, global, common, point, autoForm }) => ({
-  tableDatas: supervisionManager.tableDatas,
-  tableLoading: supervisionManager.tableLoading,
-  tableTotal: supervisionManager.tableTotal,
+const dvaPropsData = ({ loading, cruxParSupervisionRectifica, global, common, point, autoForm }) => ({
+  tableDatas: cruxParSupervisionRectifica.tableDatas,
+  tableLoading: cruxParSupervisionRectifica.tableLoading,
+  tableTotal: cruxParSupervisionRectifica.tableTotal,
   pointParamesLoading: loading.effects[`${namespace}/getPointParames`],
   infoloading: loading.effects[`${namespace}/getInspectorOperationInfoList`],
   userLoading: loading.effects[`common/getUserList`],
@@ -50,7 +50,7 @@ const dvaPropsData = ({ loading, supervisionManager, global, common, point, auto
   systemModelList: point.systemModelList,
   loadingSystemModel: loading.effects[`point/getSystemModelList`] || false,
   systemModelListTotal: point.systemModelListTotal,
-  operationInfoList: supervisionManager.operationInfoList,
+  operationInfoList: cruxParSupervisionRectifica.operationInfoList,
   exportLoading: loading.effects[`${namespace}/exportInspectorOperationManage`],
 
 
@@ -158,7 +158,7 @@ const Index = (props) => {
   //是否为运维督查记录
   const isRecord = path === '/operations/supervisionRecod' || path === '/operations/siteSupervisionRecod' ? true : false;
   // 是否为现场督查 1 现场 2 远程  其他为全部
-  const inspectorType = path === '/operations/siteInspector' || path === '/operations/siteSupervisionRecod' ? 1 : path === '/operations/supervisionManager' || path === '/operations/supervisionRecod' ? 2 : '';
+  const inspectorType = path === '/operations/siteInspector' || path === '/operations/siteSupervisionRecod' ? 1 : path === '/operations/cruxParSupervisionRectifica' || path === '/operations/supervisionRecod' ? 2 : '';
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();

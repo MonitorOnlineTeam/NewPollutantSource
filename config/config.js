@@ -1244,6 +1244,16 @@ export default {
                   name: 'superviseRectification',
                   component: './operations/superviseRectification',
                 },
+                {
+                  path: '/operations/cruxParSupervision', //关键参数督查 
+                  name: 'superviseRectification',
+                  component: './operations/cruxParSupervision',
+                },
+                {
+                  path: '/operations/cruxParSupervisionRectifica', //关键参数督查 
+                  name: 'cruxParSupervisionRectifica',
+                  component: './operations/cruxParSupervisionRectifica',
+                },
               ],
             },
             {

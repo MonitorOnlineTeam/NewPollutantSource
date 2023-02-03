@@ -1,5 +1,5 @@
 /**
- * 功  能：系统设施核查 详情
+ * 功  能：督查管理
  * 创建人：jab
  * 创建时间：2022.04.25
  */
@@ -24,12 +24,12 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 
 
-const namespace = 'supervisionManager'
+const namespace = 'cruxParSupervisionRectifica'
 
 
 
 
-const dvaPropsData =  ({ loading,supervisionManager,global,common }) => ({
+const dvaPropsData =  ({ loading,cruxParSupervisionRectifica,global,common }) => ({
     detailLoading: loading.effects[`${namespace}/getInspectorOperationView`],
 })
 
