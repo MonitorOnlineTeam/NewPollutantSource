@@ -351,7 +351,7 @@ const Index = (props) => {
     },
     onChange(info) {
       setFilesLoading(true)
-      if (info.file.status !== 'uploading') {
+      if (info.file.status === 'uploading') {
         // console.log(info)
       }
       const fileList = info.fileList.map(item=>{
