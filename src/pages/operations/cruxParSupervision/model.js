@@ -11,24 +11,23 @@ export default Model.extend({
   namespace: 'cruxParSupervision',
   state: {
     tableDatas: [],
-    parametersList: [],
     tableLoading: false,
     tableTotal: 0,
     operationInfoList:[],
+    checkDetailDate:null,
+    regQueryPar:'',
   },
   effects: {
     *getInspectorOperationManageList({ payload, callback }, { call, put, update }) { //列表
-      yield update({ tableLoading: true })
       const result = yield call(services.GetInspectorOperationManageList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal: result.Total,
           tableDatas: result.Datas,
-          tableLoading: false
+          regQueryPar:payload,
         })
       } else {
         message.error(result.Message)
-        yield update({ tableLoading: false })
       }
     },
     *getInspectorOperationInfoList({ payload, callback }, { call, put, update }) { //获取单个督查表实体

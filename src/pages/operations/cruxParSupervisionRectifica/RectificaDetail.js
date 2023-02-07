@@ -1,7 +1,7 @@
 /**
- * 功  能：关键参数督查
+ * 功  能：督查管理
  * 创建人：jab
- * 创建时间：2023.02.05
+ * 创建时间：2022.04.25
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Upload, Popconfirm, Form, Tabs, Typography, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
@@ -25,7 +25,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 
 
-const namespace = 'cruxParSupervision'
+const namespace = 'cruxParSupervisionRectifica'
 
 
 
@@ -121,28 +121,9 @@ const Index = (props) => {
       width: 200,
     },
     {
-      title: `备注`,
-      dataIndex: 'Inspector',
-      key: 'Inspector',
-      align: 'center',
-      width: 200,
-    },
-    {
-      title: '照片附件(运维人员提交)',
-      dataIndex: 'Attachments',
-      key: 'Attachments',
-      align: 'center',
-      width: 170,
-      render: (text, record) => {
-        return <div>
-          <a onClick={() => { getAttachmentData(text) }}>查看附件</a>
-        </div>
-      },
-    },
-    {
-      title: `核查状态`,
-      dataIndex: 'Inspector',
-      key: 'Inspector',
+      title: '核查整改次数',
+      dataIndex: 'ContentItem',
+      key: 'ContentItem',
       align: 'center',
       width: 200,
     },
@@ -154,7 +135,33 @@ const Index = (props) => {
       width: 200,
     },
     {
-      title: `核查问题照片附件`,
+      title: '核查问题照片附件',
+      dataIndex: 'Attachments',
+      key: 'Attachments',
+      align: 'center',
+      width: 170,
+      render: (text, record) => {
+        return <div>
+          <a onClick={() => { getAttachmentData(text) }}>查看附件</a>
+        </div>
+      },
+    },
+    {
+      title: `核查问题提交时间`,
+      dataIndex: 'Inspector',
+      key: 'Inspector',
+      align: 'center',
+      width: 200,
+    },
+    {
+      title: `整改/申诉描述`,
+      dataIndex: 'Inspector',
+      key: 'Inspector',
+      align: 'center',
+      width: 200,
+    },
+    {
+      title: `整改/申诉照片附件`,
       dataIndex: 'Inspector',
       key: 'Inspector',
       align: 'center',
@@ -166,30 +173,51 @@ const Index = (props) => {
       },
     },
     {
+      title: `整改/申诉提交时间`,
+      dataIndex: 'Inspector',
+      key: 'Inspector',
+      align: 'center',
+      width: 200,
+    },
+    {
+      title: `状态`,
+      dataIndex: 'Inspector',
+      key: 'Inspector',
+      align: 'center',
+      width: 100,
+      render: (text, record) => {
+        return text === '待下发' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
+      }
+    },
+    {
       title: '操作',
+      dataIndex: 'Inspector',
+      key: 'Inspector',
       align: 'center',
       fixed: 'right',
       width: 150,
       render: (text, record) => {
         return (<>
-          <a onClick={() => { check(record) }}> 核查  </a>
-          <Divider type="vertical" />
-          <Popconfirm title="确定要清除此条核查记录？" placement="left" onConfirm={() => clear(record)} okText="是" cancelText="否">
-            <a>
-              清除
-                </a>
+          <Popconfirm title={text==1? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => reject(record)} okText="是" cancelText="否">
+           <a> {text==1? '整改通过' : '申诉通过'} </a>
           </Popconfirm>
+          <Divider type="vertical" />
+          <a onClick={() => { pass(record,text) }}>   
+           <a> {text==1? '整改驳回' : '申诉驳回'} </a>       
+            </a>
         </>
         )
       }
 
     }
   ]
-  const [checkVisible, setCheckVisible] = useState(false)
-  const check = (record) => {
-    setCheckVisible(true)
+  const [passVisible, setPassVisible] = useState(false)
+  const [passTitle,setPassTitle] = useState(null)
+  const pass = (record,type) => {
+    setPassVisible(true)
+    type==1? setPassTitle('整改通过') :  setPassTitle('申诉通过')
   }
-  const clear = (record) => {
+  const reject = (record) => {
 
   }
 
@@ -295,7 +323,7 @@ const Index = (props) => {
       </div>
     </div>
   );
-  const checkOK = async () => {
+  const passOK = async () => {
     try {
       const values = await form.validateFields();
       props.getInspectorOperationManageList({
@@ -313,7 +341,7 @@ const Index = (props) => {
   }
 
   return (
-    <div className={'checkDetail'} >
+    <div className={'passDetail'} >
       <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>运维督查表</div>
 
       <Spin spinning={detailLoading}>
@@ -349,20 +377,14 @@ const Index = (props) => {
               </Col >
               <Col span={12}>
                 <Form.Item label="核查日期" >
-                  {type == 1 ? <DatePicker onChange={(date, dateString) => {
-                     console.log(date.format('YYYY-MM-DD'))
-                     props.updateState({checkDetailDate:date&&date.format('YYYY-MM-DD') })  
-                  }} />
-                    :
-                    <div>{infoList && infoList.InspectorDate}</div>
-                  }
+                 {infoList && infoList.InspectorDate}
                 </Form.Item>
               </Col >
             </Row>
           </div>
         </Form>
 
-        <div className={'checkDetail'}>
+        <div className={'passDetail'}>
           <TitleComponents text='督查内容' />
           <SdlTable
             dataSource={operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList}
@@ -396,13 +418,13 @@ const Index = (props) => {
         }
       />}
       <Modal
-        title='上位机量程与参数设置照片'
-        visible={checkVisible}
-        onOk={() => { checkOK }}
+        title={passTitle}
+        visible={passVisible}
+        onOk={() => { passOK }}
         destroyOnClose
-        onCancel={() => { setCheckVisible(false) }}
+        onCancel={() => { setPassVisible(false) }}
         width={'50%'}
-        wrapClassName={styles.checkOKSty}
+        wrapClassName={styles.passOKSty}
       >
         <Form
           name="basics"

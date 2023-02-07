@@ -1,7 +1,7 @@
 /**
- * 功  能：运维督查管理 
+ * 功  能：关键参数督查
  * 创建人：jab
- * 创建时间：2022.04.20
+ * 创建时间：2023.02.05
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
@@ -39,16 +39,15 @@ const namespace = 'cruxParSupervision'
 
 const dvaPropsData = ({ loading, cruxParSupervision, global, common, point, autoForm }) => ({
   tableDatas: cruxParSupervision.tableDatas,
-  tableLoading: cruxParSupervision.tableLoading,
+  tableLoading: loading.effects[`point/getSystemModelList`],
   tableTotal: cruxParSupervision.tableTotal,
   entLoading: common.entLoading,
   clientHeight: global.clientHeight,
-  saveloading: loading.effects[`point/getSystemModelList`] || false,
-  systemModelListTotal: point.systemModelListTotal,
+  saveloading: loading.effects[`point/getSystemModelList`],
   operationInfoList: cruxParSupervision.operationInfoList,
   exportLoading: loading.effects[`${namespace}/exportInspectorOperationManage`],
-
-
+  checkDetailDate:cruxParSupervision.checkDetailDate,
+  regQueryPar:cruxParSupervision.regQueryPar,
 
 })
 
@@ -110,22 +109,12 @@ const Index = (props) => {
   const isRecord = path === '/operations/supervisionRecod' || path === '/operations/siteSupervisionRecod' ? true : false;
 
   const [form] = Form.useForm();
-  const [form2] = Form.useForm();
-  const [form3] = Form.useForm();
-
-  const [tableForm] = Form.useForm();
 
 
-  const [fromVisible, setFromVisible] = useState(false)
 
 
-  const [type, setType] = useState()
-  const [pushFlag, setPushFlag] = useState(true)
 
-
-  const [manufacturerId, setManufacturerId] = useState(undefined)
-
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, operationInfoList, regDetailPar,saveloading, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, operationInfoList,saveloading,checkDetailDate,regQueryPar, } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -133,7 +122,7 @@ const Index = (props) => {
 
 
   useEffect(() => {
-    onFinish()
+    onFinish(pageIndex,pageSize)
   }, []);
 
 
@@ -336,17 +325,17 @@ const Index = (props) => {
   }
 
 
-  const onFinish = async (pageIndexs, pageSizes) => {  //查询
+  const onFinish = async (pageIndexs, pageSizes,par) => {  //查询
     try {
       const values = await form.validateFields();
 
-      props.getInspectorOperationManageList({
+      props.getInspectorOperationManageList(par? par: { 
         ...values,
         BTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
-        pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
-        pageSize: pageSizes ? pageSizes : pageSize,
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -364,14 +353,22 @@ const Index = (props) => {
     })
   }
 
-
+  const formatData = (data, type) => {
+    return data.map(item => {
+      return {
+        InspectorContentID: item.InspectorContentID,
+        InspectorNum: item.InspectorNum,
+        ParentID: item.ParentID,
+        Attachment:'',
+      }
+    })
+  }
   const [saveLoading1, setSaveLoading1] = useState(false)
   const [saveLoading2, setSaveLoading2] = useState(false)
 
-  const save = async (type) => {
+  const save =  (type) => {
 
 
-    const values = await form2.validateFields();
     try {
       type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
 
@@ -395,40 +392,25 @@ const Index = (props) => {
         PollutantCode: values.PollutantCode.join(","),
         InspectorDate: moment(values.InspectorDate).format("YYYY-MM-DD HH:mm:ss"),
         IsSubmit: type,
-        TotalScore: tableForm.getFieldValue([`TotalScore`]),
-        Files: tableForm.getFieldValue([`Files`]),
-        Evaluate: tableForm.getFieldValue([`Evaluate`]),
         InspectorOperationInfoList: [...principleProblemList, ...importanProblemList, ...commonlyProblemList],
         ...devicePar,
       }
 
         props.addOrEditInspectorOperation(data, (isSuccess) => {
           type == 1 ? setSaveLoading1(false) : null;
-          isSuccess && setFromVisible(false)
-          isSuccess && onFinish()
+          isSuccess && onFinish(pageIndex,pageSize)
 
         })
 
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
-      type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
+      type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
 
 
     }
 
   }
-  const formatData = (data, type) => {
-    return data.map(item => {
-      return {
-        InspectorContentID: item.InspectorContentID,
-        InspectorNum: item.InspectorNum,
-        ParentID: item.ParentID,
-        Inspector: tableForm.getFieldValue([`Inspector${item.Sort}`]),
-        Remark: tableForm.getFieldValue([`Remark${item.Sort}`]),
-        Attachment: type == 1 ? tableForm.getFieldValue([`Files1${item.Sort}`]) : type == 2 ? tableForm.getFieldValue([`Files2${item.Sort}`]) : tableForm.getFieldValue([`Files3${item.Sort}`]),
-      }
-    })
-  }
+
 
   const [pointList, setPointList] = useState([])
   const [pointLoading, setPointLoading] = useState(false)
@@ -458,7 +440,7 @@ const Index = (props) => {
           time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
         }}
         className={styles["ant-advanced-search-form"]}
-        onFinish={onFinish}
+        onFinish={()=>{setPageIndex(1); onFinish(1,pageSize)}}
         onValuesChange={onValuesChange}
       >
         <Row align='middle'>
@@ -519,7 +501,7 @@ const Index = (props) => {
   const handleTableChange = (PageIndex, PageSize) => {
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    onFinish(PageIndex, PageSize)
+    onFinish(PageIndex, PageSize,regQueryPar) //regQueryPar 防止输入查询条件 不点击查询 直接点击分页的情况
   }
 
 
@@ -595,7 +577,7 @@ const Index = (props) => {
             提交
           </Button> ,
         ] : null}
-        width={'90%'}
+        width={'95%'}
         className={styles.fromModal}
         onCancel={() => { setCheckDetailVisible(false) }}
         destroyOnClose

@@ -31,7 +31,7 @@ class Login extends Component {
   };
  componentDidMount(){
   this.timer = setInterval(() => {
-    this.child.current.click(); // 3分钟刷新一次
+    this.child&&this.child.current&&this.child.current.click(); // 3分钟刷新一次
   }, 1000 * 60 * 3  );
  }
   

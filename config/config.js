@@ -1250,7 +1250,7 @@ export default {
                   component: './operations/cruxParSupervision',
                 },
                 {
-                  path: '/operations/cruxParSupervisionRectifica', //关键参数督查 
+                  path: '/operations/cruxParSupervisionRectifica', //关键参数核查整改
                   name: 'cruxParSupervisionRectifica',
                   component: './operations/cruxParSupervisionRectifica',
                 },
