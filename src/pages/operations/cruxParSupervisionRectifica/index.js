@@ -196,24 +196,26 @@ const Index = (props) => {
       title: '操作',
       align: 'center',
       fixed: 'right',
+      dataIndex: 'InspectorDate',
+      key: 'InspectorDate',
       width: 150,
       ellipsis: true,
       render: (text, record) => {
-        const updateflag = record.updateflag;
         const flag = record.flag;
-        const issue = record.issue;
         return (
-          <>
+          <div>
+            <>
             <a onClick={() => { rectificaDetail(record, 1) }}>
               核查整改
               </a>
             <Divider type="vertical" />
+            </>
             <a onClick={() => {
               rectificaDetail(record, 2)
             }}>
               整改详情
           </a>
-          </>
+          </div>
         )
       }
 

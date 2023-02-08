@@ -31,7 +31,7 @@ const namespace = 'cruxParSupervision'
 
 
 const dvaPropsData = ({ loading, supervisionManager, global, common }) => ({
-  detailLoading: loading.effects[`${namespace}/getInspectorOperationView`],
+  checkDetailLoading: loading.effects[`${namespace}/getInspectorOperationView`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -66,7 +66,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-  const { detailLoading, ID, pollutantType, type, } = props;
+  const { checkDetailLoading, ID, pollutantType, type, } = props;
 
   const [form] = Form.useForm();
 
@@ -316,7 +316,7 @@ const Index = (props) => {
     <div className={'checkDetail'} >
       <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>运维督查表</div>
 
-      <Spin spinning={detailLoading}>
+      <Spin spinning={checkDetailLoading}>
 
         <Form>
           <div className={'essentialInfoSty'}>
@@ -376,7 +376,7 @@ const Index = (props) => {
       <Modal
         title='查看附件'
         visible={fileVisible}
-        onOk={() => { setFileVisible(false) }}
+        footer={null}
         destroyOnClose
         onCancel={() => { setFileVisible(false) }}
         width={'50%'}

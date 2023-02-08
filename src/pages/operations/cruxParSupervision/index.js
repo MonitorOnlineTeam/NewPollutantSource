@@ -86,27 +86,13 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    deleteInspectorOperation: (payload, callback) => { //删除
-      dispatch({
-        type: `${namespace}/deleteInspectorOperation`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    pushInspectorOperation: (payload, callback) => { //整改问题推送
-      dispatch({
-        type: `${namespace}/pushInspectorOperation`,
-        payload: payload,
-        callback: callback
-      })
-    },
   }
 }
 const Index = (props) => {
 
   const { match: { path } } = props;
   //是否为运维督查记录
-  const isRecord = path === '/operations/supervisionRecod' || path === '/operations/siteSupervisionRecod' ? true : false;
+  const isRecord = path === '/operations/cruxParSupervisionRecord' ? true : false;
 
   const [form] = Form.useForm();
 
@@ -266,25 +252,18 @@ const Index = (props) => {
       width: 150,
       ellipsis: true,
       render: (text, record) => {
-        const updateflag = record.updateflag;
         const flag = record.flag;
-        const issue = record.issue;
-
         let detail = <Tooltip title="详情">
-          <a onClick={() => {
-            checkDetail(record,2)
-          }}>
-            <ProfileOutlined style={{ fontSize: 16 }} />
-          </a>
-        </Tooltip>
+                     <a onClick={() => {  checkDetail(record,2) }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
+                     </Tooltip>
         if (isRecord) { //远程督查记录页面
           return detail
         }
         return (
           <>
-            <Tooltip title={updateflag && flag ? "删除" : null} >
-              <Popconfirm disabled={!(updateflag && flag)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                <a style={{ cursor: updateflag && flag ? 'pointer' : 'not-allowed', color: updateflag && flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }} /></a>
+            <Tooltip title={"删除"} >
+              <Popconfirm title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                <a><DelIcon style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
             <Divider type="vertical" />
@@ -294,9 +273,9 @@ const Index = (props) => {
               </a>
             </Tooltip>
             <Divider type="vertical" />
-            <Tooltip title={!issue || issue === '已下发' ? null : "下发"} >
-              <Popconfirm disabled={!issue || issue === '已下发' ? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
-                <a style={{ cursor: !issue || issue === '已下发' ? 'not-allowed' : 'pointer', color: !issue || issue === '已下发' ? '#00000040' : '#1890ff', }}><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
+            <Tooltip title={"下发"} >
+              <Popconfirm  title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
+                <a><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
             <Divider type="vertical" />
@@ -533,11 +512,6 @@ const Index = (props) => {
   }
 
 
-
-  if (isRecord) {
-    columns = columns.filter(item => item.title != '操作')
-  }
-
   return (
     <div className={styles.supervisionManagerSty}>
       <BreadcrumbWrapper >
@@ -563,7 +537,7 @@ const Index = (props) => {
 
 
 
-      <Modal //核查和详情
+      <Modal //核查和详情 
         visible={checkDetailVisible}
         title={'详情'}
         footer={checkDetailType==1? [

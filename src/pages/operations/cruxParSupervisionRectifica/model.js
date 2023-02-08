@@ -14,8 +14,8 @@ export default Model.extend({
     parametersList: [],
     tableLoading: false,
     tableTotal: 0,
-    operationInfoList:[],
-    regQueryPar:'',
+    operationInfoList: [],
+    regQueryPar: '',
   },
   effects: {
     *getInspectorOperationManageList({ payload, callback }, { call, put, update }) { //列表
@@ -24,74 +24,31 @@ export default Model.extend({
         yield update({
           tableTotal: result.Total,
           tableDatas: result.Datas,
-          regQueryPar:payload,
+          regQueryPar: payload,
         })
       } else {
         message.error(result.Message)
       }
     },
-    *getInspectorOperationInfoList({ payload, callback }, { call, put, update }) { //获取单个督查表实体
-      const result = yield call(services.GetInspectorOperationInfoList, payload);
-      if (result.IsSuccess) {
-        yield update({  operationInfoList: result.Datas, })
-        callback(result.Datas)
-      } else {
-        message.error(result.Message)
-        callback()
-      }
-    },
-    *getPointParames({ payload, callback }, { call, put, update }) { //获取单个排口默认值
-      const result = yield call(services.GetPointParames, payload);
-      if (result.IsSuccess) {
-        callback(result.Datas)
-      } else {
-        message.error(result.Message)
-      }
-    },
-    *addOrEditInspectorOperation({ payload, callback }, { call, put, update }) { //添加或修改督查模板
-      const result = yield call(services.AddOrEditInspectorOperation, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback(result.IsSuccess)
-      } else {
-        message.error(result.Message)
-        callback(result.IsSuccess)
-      }
-    },
-    *getInspectorOperationView({ payload, callback }, { call, put, update }) { //详情
-      const result = yield call(services.GetInspectorOperationView, payload);
-      if (result.IsSuccess) {
-        callback(result.Datas)
-      } else {
-        message.error(result.Message)
-      }
-    },
-    *exportInspectorOperationManage({ payload, callback }, { call, put, update }) { //导出
-      const result = yield call(services.ExportInspectorOperationManage, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        downloadFile(`${result.Datas}`)
-      } else {
-        message.error(result.Message)
-      }
-    },
-    *deleteInspectorOperation({ payload, callback }, { call, put, update }) { //删除
-      const result = yield call(services.DeleteInspectorOperation, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback();
-      } else {
-        message.error(result.Message)
-      }
-    },
+
     *pushInspectorOperation({ payload, callback }, { call, put, update }) { //整改推送
-      const result = yield call(services.PushInspectorOperation, payload);
+      const result = yield call(services.GetInspectorOperationManageList, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
         message.error(result.Message)
         callback(result.IsSuccess);
+      }
+    },
+    //导出
+    *exportRemoteInspectorList({ payload, }, { call, update, select, put }) {
+      const result = yield call(services.PushInspectorOperation, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      } else {
+        message.error(result.Message)
       }
     },
   },

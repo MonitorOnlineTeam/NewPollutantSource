@@ -38,11 +38,20 @@
         height: calc(100vh - 250px);
         overflow-y: auto;
       }
-        .checkDetail{ //详情
-          .ant-table-tbody .ant-table-cell-fix-right{
-            background-color: #fff;
-          }
-        }
+      .ant-form-item-label{
+        min-width: 83px;
+     }  
   }
 
 
+  .checkDetail  :global { //详情
+    .ant-table-tbody .ant-table-cell-fix-right{
+      background-color: #fff;
+    }
+  }
+  
+  .checkOKSty  :global {
+    .ant-form-item-label{
+      min-width: 125px;
+   }  
+}
