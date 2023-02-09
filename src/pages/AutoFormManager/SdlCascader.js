@@ -59,6 +59,7 @@ class SdlCascader extends Component {
       //     this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
       //   }
       // })
+   
       if(!data.length && this.props.noFilter){
         if(noFilterRegionList&&noFilterRegionList[0]){
           this.setState({ industryTreeList: this.industryTreeListFormat(noFilterRegionList, 1) })
@@ -71,8 +72,9 @@ class SdlCascader extends Component {
             }
           })
         }
-      }
+      }else{
       setTimeout(() => { this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList, 1) }), 300 })
+      }
     } else {
       !data.length && this.props.dispatch({
         type: "common/getIndustryTree",

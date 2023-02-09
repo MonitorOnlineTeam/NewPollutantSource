@@ -6,8 +6,8 @@ import webpackPlugin from './plugin.config';
 import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-const apiHost = 'http://172.16.12.234:61002/';
-// const apiHost = 'http://172.16.12.134:63001/';
+// const apiHost = 'http://172.16.12.234:61002/';
+const apiHost = 'http://172.16.12.134:63001/';
 // const apiHost = 'http://172.16.9.33:8800/'
 // const apiHost = 'http://172.16.12.36:63003/';
 // const apiHost = 'http://172.16.12.135:50210/';
@@ -696,6 +696,11 @@ export default {
                       name: 'pointMatchingSet',//台账填报设置
                       path: '/platformconfig/configurationInfo/accountFilling/accountFillingSet',
                       component: './platformManager/configurationInfo/accountFillingSet',
+                    },
+                    {
+                      name: 'noDataPointExport',//无数据点位导出
+                      path: '/platformconfig/configurationInfo/noDataPoint/noDataPointExport',
+                      component: './platformManager/configurationInfo/noDataPointExport',
                     },
                   ]
                 },
