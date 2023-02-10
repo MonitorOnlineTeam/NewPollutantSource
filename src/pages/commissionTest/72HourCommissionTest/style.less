@@ -1,5 +1,15 @@
-     
+     .treeSty{
+        overflow-y: auto;
+        height: calc(100vh - 210px);
+     }
      .hourCommissionTestSty :global{
+        ::-webkit-scrollbar {
+           height: 12px;
+         }
+         ::-webkit-scrollbar-thumb {
+           border-radius: 40px;
+         }
+       
       .ant-card-body{
         padding: 0;
       }
@@ -11,9 +21,6 @@
         overflow: auto;
         padding: 12px 24px;
         // overflow-x: hidden;
-     }
-     .ant-tree .ant-tree-node-content-wrapper{
-      padding: 0;
      }
      .white-table-thead{
       .ant-table.ant-table-bordered > .ant-table-container{

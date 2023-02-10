@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, numVerify, arrDistinctByProp, } from '@/utils/utils'
+import { getSum, getAve, numVerify, arrDistinctByProp,timeCompare, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -199,17 +199,15 @@ const Index = (props) => {
     const [autoDateFlag, setAutoDateFlag] = useState(true)
 
     const onTimeChange = (index, type) => {
-        const startTime = form.getFieldValue(`BTime${index}`)
-        const endTime = form.getFieldValue(`ETime${index}`)
-        if (endTime && startTime && endTime.valueOf() <= startTime.valueOf()) {
-            message.warning('结束时间必须大于开始时间')
+        const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
+        const endTime = form.getFieldValue(`ETime${index}`) && form.getFieldValue(`ETime${index}`).format('HH:mm')
+        props.timeCompare(startTime,endTime,()=>{
             if (type === 'start') {
                 form.setFieldsValue({ [`BTime${index}`]: '' })
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
-
-        }
+        })   
 
     }
 

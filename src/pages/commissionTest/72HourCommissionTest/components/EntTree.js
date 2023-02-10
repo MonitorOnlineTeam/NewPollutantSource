@@ -28,10 +28,10 @@ const namespace = 'hourCommissionTest'
 
 
 
-const dvaPropsData =  ({ loading,hourCommissionTest,global }) => ({
+const dvaPropsData =  ({ loading,hourCommissionTest,global, }) => ({
   treeList:hourCommissionTest.treeList,
   treeLoading:loading.effects[`${namespace}/getTestEntTree`],
-
+  clientHeight: global.clientHeight,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -57,7 +57,7 @@ const Index = (props) => {
 
   const isQuery = props&&props.match&&props.match.path === '/commissionTest/72HourCommissionTestQuery'
 
-  const  { treeList,treeLoading,} = props; 
+  const  { treeList,treeLoading,clientHeight,} = props; 
  
   const [defaultPointId,setDefaultPointId] = useState();
   useEffect(() => {
@@ -119,17 +119,17 @@ const Index = (props) => {
  
 
   return (
-    <div className={styles.hourCommissionTestSty} >
+    <div>
     <Drawer
           placement={'left'}
           closable={false}
           visible={props.drawerVisible}
-          width={ 320}
+          width={320}
           mask={false}
           keyboard={false}
           zIndex={1}
           onClose={props.onClose} 
-          bodyStyle={{ padding: '18px 8px' }}
+          bodyStyle={{ padding: '18px 8px',overflowY:'hidden' }}
           style={{
             marginTop: 64,
           }}
@@ -162,7 +162,7 @@ const Index = (props) => {
          :
          <>
         {treeList.length ? 
-          <Tree  defaultSelectedKeys={[defaultPointId]}   blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas} height={props.clientHeight - 64 - 20}  defaultExpandAll />
+          <Tree  className={styles.treeSty}  defaultSelectedKeys={[defaultPointId]}   blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas}  virtual={false} defaultExpandAll />
           :
         <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         </>

@@ -154,17 +154,30 @@ const Index = (props) => {
         }
     }
     const onTimeChange = (index, type) => {
-        const startTime = form.getFieldValue(`BTime${index}`)
-        const endTime = form.getFieldValue(`ETime${index}`)
-        if (endTime && startTime && endTime.valueOf() <= startTime.valueOf()) {
-            message.warning('结束时间必须大于开始时间')
+        // const dateData = form.getFieldValue(`CreateDate${index}`)? form.getFieldValue(`CreateDate${index}`).format('YYYY-MM-DD') : moment(new Date()).format('YYYY-MM-DD')
+        // const startTime = form.getFieldValue(`BTime${index}`)?  form.getFieldValue(`BTime${index}`).format('HH:mm') : undefined;
+        // const endTime = form.getFieldValue(`ETime${index}`) ? form.getFieldValue(`ETime${index}`).format('HH:mm') : undefined;
+        // if (endTime && startTime) {
+        //     const startTimeVal = moment(dateData + ' ' +startTime).valueOf() ;
+        //     const endTimeVal = moment(dateData + ' ' +endTime).valueOf();
+        //     if(endTimeVal <= startTimeVal){
+        //         message.warning('结束时间必须大于开始时间')
+        //         if (type === 'start') {
+        //             form.setFieldsValue({ [`BTime${index}`]: '' })
+        //         } else {
+        //             form.setFieldsValue({ [`ETime${index}`]: '' })
+        //         }
+        //     }
+        // }
+        const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
+        const endTime = form.getFieldValue(`ETime${index}`) && form.getFieldValue(`ETime${index}`).format('HH:mm')
+        props.timeCompare(startTime,endTime,()=>{
             if (type === 'start') {
                 form.setFieldsValue({ [`BTime${index}`]: '' })
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
-        }
-
+        })    
     }
 
     const zeroReadBlur = (index, type, positionType) => {

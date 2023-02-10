@@ -155,17 +155,15 @@ const Index = (props) => {
         }
     }
     const onTimeChange = (index, type) => {
-        const startTime = form.getFieldValue(`BTime${index}`)
-        const endTime = form.getFieldValue(`ETime${index}`)
-        if (endTime && startTime && endTime.valueOf() <= startTime.valueOf()) {
-            message.warning('结束时间必须大于开始时间')
+        const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
+        const endTime = form.getFieldValue(`ETime${index}`) && form.getFieldValue(`ETime${index}`).format('HH:mm')
+        props.timeCompare(startTime,endTime,()=>{
             if (type === 'start') {
                 form.setFieldsValue({ [`BTime${index}`]: '' })
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
-
-        }
+        })
 
     }
     const [isReg, setIsReg] = useState(false)

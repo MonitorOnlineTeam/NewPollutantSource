@@ -161,19 +161,54 @@ const Index = (props) => {
         }
     }
     const onTimeChange = (index, type) => {
-        const startTime = form.getFieldValue(`BTime${index}`)
-        const endTime = form.getFieldValue(`ETime${index}`)
-        if (endTime && startTime && endTime.valueOf() <= startTime.valueOf()) {
-            message.warning('结束时间必须大于开始时间')
+        // const startTime = form.getFieldValue(`BTime${index}`)
+        // const endTime = form.getFieldValue(`ETime${index}`)
+        // if (endTime && startTime && endTime.valueOf() <= startTime.valueOf()) {
+        //     message.warning('结束时间必须大于开始时间')
+        //     if (type === 'start') {
+        //         form.setFieldsValue({ [`BTime${index}`]: '' })
+        //     } else {
+        //         form.setFieldsValue({ [`ETime${index}`]: '' })
+        //     }
+        // } else {
+        //     const timeInterValue = form.getFieldValue('TimeIntervals')
+        //     if (timeInterValue && startTime) { //间隔时间不为空
+        //         const generatEndTime = moment(moment(startTime).add(timeInterValue, 'minutes'));
+        //         if (type === 'start') {
+        //             form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
+        //         } else {
+        //             const { confirm } = Modal;
+        //             if (moment(endTime).format('HH:mm') != moment(generatEndTime).format('HH:mm')) {
+        //                 confirm({
+        //                     content: '选择采样时长与前一样品不同，是否确认修改?',
+        //                     okText: '确定',
+        //                     cancelText: '取消',
+        //                     centered:true,
+        //                     onOk() {
+        //                         console.log('OK');
+        //                     },
+        //                     onCancel() {
+        //                         form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
+        //                     },
+        //                 });
+        //             }
+
+        //         }
+        //     }
+        // }
+        const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
+        const endTime = form.getFieldValue(`ETime${index}`) && form.getFieldValue(`ETime${index}`).format('HH:mm')
+        props.timeCompare(startTime,endTime,()=>{
             if (type === 'start') {
                 form.setFieldsValue({ [`BTime${index}`]: '' })
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
-        } else {
+        },()=>{
+            const startTimeData = form.getFieldValue(`BTime${index}`)
             const timeInterValue = form.getFieldValue('TimeIntervals')
             if (timeInterValue && startTime) { //间隔时间不为空
-                const generatEndTime = moment(moment(startTime).add(timeInterValue, 'minutes'));
+                const generatEndTime = moment(moment(startTimeData).add(timeInterValue, 'minutes'));
                 if (type === 'start') {
                     form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
                 } else {
@@ -194,9 +229,8 @@ const Index = (props) => {
                     }
 
                 }
-            }
-        }
-
+            } 
+        })
     }
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)

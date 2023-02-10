@@ -81,26 +81,35 @@ const Index = (props) => {
     })
   }
   
-
+  const timeCompare  = (startTime,endTime,callback,callback2)=>{  //比较时间大小
+    const startTimeVal = startTime&&startTime.replaceAll(':','')
+    const endTimeVal = endTime&&endTime.replaceAll(':','')
+    if(startTimeVal&&endTimeVal&&startTimeVal>=endTimeVal){
+        message.warning('结束时间必须大于开始时间1111')
+        callback()
+    }else{
+        callback2()
+    }
+  }
 
   const tabContet = (key) => {
     switch (key) {
       case "1":
-        return <ParticleDrift {...props} pointId={pointId}  /> //颗粒物CEMS零点和量程漂移检测
+        return <ParticleDrift {...props} pointId={pointId}  timeCompare={timeCompare}/> //颗粒物CEMS零点和量程漂移检测
       case "2":
-        return <ParticleMatterRefer {...props} pointId={pointId} /> //参比方法校准颗粒物CEMS
+        return <ParticleMatterRefer {...props} pointId={pointId}  timeCompare={timeCompare}/> //参比方法校准颗粒物CEMS
       case "3":
-        return <CemsOxygenZero {...props} pointId={pointId} /> //气态污染物CEMS（含氧量）零点和量程漂移检测
+        return <CemsOxygenZero {...props} pointId={pointId}  timeCompare={timeCompare}/> //气态污染物CEMS（含氧量）零点和量程漂移检测
       case "4":
-        return <CemsResponseTime {...props} pointId={pointId} /> // 气态污染物CEMS示值误差和系统响应时间检测
+        return <CemsResponseTime {...props} pointId={pointId}/> // 气态污染物CEMS示值误差和系统响应时间检测
       case "5":
-        return <ReferenceOxygenZero {...props} pointId={pointId} /> //参比方法评估气态污染物CEMS（含氧量）准确度
+        return <ReferenceOxygenZero {...props} pointId={pointId}  timeCompare={timeCompare}/> //参比方法评估气态污染物CEMS（含氧量）准确度
       case "6":
-        return <Speed {...props} pointId={pointId} /> //速度场系数检测
+        return <Speed {...props} pointId={pointId}  timeCompare={timeCompare}/> //速度场系数检测
       case "7":
-        return <Temperature {...props} pointId={pointId} /> //温度CMS准确度检测
+        return <Temperature {...props} pointId={pointId}  timeCompare={timeCompare}/> //温度CMS准确度检测
       case "8":
-        return <Humidity {...props} pointId={pointId} /> //湿度CMS准确度检测
+        return <Humidity {...props} pointId={pointId}  timeCompare={timeCompare}/> //湿度CMS准确度检测
       case "9":
         return <TestPeport pointId={pointId} /> //检测报告
       default:
