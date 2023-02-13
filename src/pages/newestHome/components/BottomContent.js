@@ -360,7 +360,7 @@ const Index = (props) => {
       },
       color: type == 1 ? color1 : type == 2 ? color2 : color3,
       title: {
-        text: type == 1 ? opertionExceptionList.exceptionRate=='-'?'-': ` ${opertionExceptionList.exceptionRate}%` : type == 2 ? opertionExceptionList.failureRate=='-'?'-':  `${opertionExceptionList.failureRate}%` : opertionExceptionList.repairRate=='-'?'-':  `${opertionExceptionList.repairRate}%`,
+        text: type == 1 ? opertionExceptionList.exceptionRate=='-'?'-': ` ${ 100 - opertionExceptionList.exceptionRate}%` : type == 2 ? opertionExceptionList.failureRate=='-'?'-':  `${opertionExceptionList.failureRate}%` : opertionExceptionList.repairRate=='-'?'-':  `${opertionExceptionList.repairRate}%`,
         left: "center",
         top: "42%",
         textStyle: {
@@ -378,8 +378,8 @@ const Index = (props) => {
           avoidLabelOverlap: false,
           label: { normal: { show: false, position: 'center' }, },
           data: [
-            { value: type == 1 ? opertionExceptionList.exceptionRate : type == 2 ? opertionExceptionList.failureRate: opertionExceptionList.repairRate, name: '已完成' },
-            { value: type == 1 ? opertionExceptionList.exceptionRate=='-'? 0 : (100 -  opertionExceptionList.exceptionRate) : type == 2 ? opertionExceptionList.failureRate=='-'? 0 : (100 - opertionExceptionList.failureRate) : opertionExceptionList.repairRate=='-'? 0  : (100 - opertionExceptionList.repairRate), name: '未完成' },
+            { value: type == 1 ? 100 - opertionExceptionList.exceptionRate : type == 2 ? opertionExceptionList.failureRate: opertionExceptionList.repairRate, name: '已完成' },
+            { value: type == 1 ? opertionExceptionList.exceptionRate=='-'? 0 : (100 -  (100-opertionExceptionList.exceptionRate)) : type == 2 ? opertionExceptionList.failureRate=='-'? 0 : (100 - opertionExceptionList.failureRate) : opertionExceptionList.repairRate=='-'? 0  : (100 - opertionExceptionList.repairRate), name: '未完成' },
           ],
           minAngle: 0,//最小角度
           startAngle:350, //起始角度
@@ -389,11 +389,11 @@ const Index = (props) => {
     return option;
   }
 
-  const deviceAbnormals = () =>{ //设备异常率
+  const deviceAbnormals = () =>{ //设备完好率
     setEquipmentAbnormalRateVisible(true)
   }
 
-  const deviceFailureRate = () =>{ //设备异常率
+  const deviceFailureRate = () =>{ //设备完好率
     setEquipmentFailureRateVisible(true)
   }
   const deviceFailurerePairRate = () =>{ //设备故障修复率
@@ -408,7 +408,7 @@ const Index = (props) => {
         style={{ width: '100%', height: 151 }}
         onEvents={{ click: deviceAbnormals }}
       />
-     <div>设备异常率</div>
+     <div>设备完好率</div>
     </Col>
     <Col span={8} align='middle'>
       <ReactEcharts
@@ -433,7 +433,7 @@ const Index = (props) => {
   const { consumablesLoading } = props; //耗材统计
   const [clockAbnormalVisible,setClockAbnormalVisible] = useState(false)  //现场打卡 弹框
   const { exceptionListLoading } = props; //设备异常总览
-  const [equipmentAbnormalRateVisible,setEquipmentAbnormalRateVisible ] = useState(false) //设备异常率 弹框
+  const [equipmentAbnormalRateVisible,setEquipmentAbnormalRateVisible ] = useState(false) //设备完好率 弹框
   const [equipmentFailureRateVisible,setEquipmentFailureRateVisible ] = useState(false) //设备故障率 弹框
   const [equipmentFailurerePairRateVisible,setEquipmentFailurerePairRateVisible ] = useState(false) //设备故障修复率 弹框
  
@@ -531,7 +531,7 @@ const Index = (props) => {
         onCancel={()=>{setConsumablesStatisticsVisible(false)}}
         time={[moment(consumablesCheck.beginTime),moment(consumablesCheck.endTime)]}
       />    
-      <EquipmentAbnormalRateModal  //设备异常率弹框
+      <EquipmentAbnormalRateModal  //设备完好率弹框
         visible={equipmentAbnormalRateVisible}
         type={Number(pollutantType)}
         onCancel={()=>{setEquipmentAbnormalRateVisible(false)}}

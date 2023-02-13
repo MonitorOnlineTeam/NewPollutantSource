@@ -125,7 +125,7 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                let RegionCode = record.CityCode || this.props.location.query.regionCode;
                 this.onTableClick(RegionCode, '1', undefined)
               }}>{text}</a>
             }
@@ -139,7 +139,7 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                let RegionCode = record.CityCode || this.props.location.query.regionCode;
                 this.onTableClick(RegionCode, "1", '1')
               }}>{text}</a>
             }
@@ -153,7 +153,7 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                let RegionCode = record.CityCode || this.props.location.query.regionCode;
                 this.onTableClick(RegionCode, "1", '0')
               }}>{text}</a>
             }
@@ -172,7 +172,7 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                let RegionCode = record.CityCode || this.props.location.query.regionCode;
                 this.onTableClick(RegionCode, "2", undefined)
               }}>{text}</a>
             }
@@ -186,7 +186,7 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                let RegionCode = record.CityCode || this.props.location.query.regionCode;
                 this.onTableClick(RegionCode, "2", '1')
               }}>{text}</a>
             }
@@ -200,7 +200,7 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                let RegionCode = record.CityCode || this.props.location.query.regionCode;
                 this.onTableClick(RegionCode, "2", '0')
               }}>{text}</a>
             }
@@ -219,7 +219,7 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                let RegionCode = record.CityCode || this.props.location.query.regionCode;
                 this.onTableClick(RegionCode, "3", undefined)
               }}>{text}</a>
             }
@@ -233,7 +233,7 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                let RegionCode = record.CityCode || this.props.location.query.regionCode;
                 this.onTableClick(RegionCode, "3", '1')
               }}>{text}</a>
             }
@@ -247,7 +247,7 @@ class index extends PureComponent {
             render: (text, record) => {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                let RegionCode = record.CityCode || this.props.location.query.regionCode;
                 this.onTableClick(RegionCode, "3", '0')
               }}>{text}</a>
             }
@@ -621,7 +621,6 @@ class index extends PureComponent {
           visible={this.state.visible}
           footer={false}
           width={"90vw"}
-          maskClosable={false}
           onCancel={() => { this.setState({ visible: false }) }}
         >
           <Row style={{ marginBottom: 10 }}>

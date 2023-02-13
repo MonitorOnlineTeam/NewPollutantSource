@@ -103,6 +103,17 @@ export default Model.extend({
             render: (text, record) => {
               return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
             }
+          },
+          {
+            title: '完好率',
+            dataIndex: 'exceptionRate',
+            key: 'exceptionRate',
+            width: 150,
+            align:'center',
+            sorter: (a, b) => a.exceptionRate - b.exceptionRate,
+            render: (text, record) => {
+              return<Progress percent={text&&(100-text)}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{(100 - text) + '%'}</span>}  />
+            }
           }
         
        ],

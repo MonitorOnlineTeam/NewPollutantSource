@@ -66,7 +66,6 @@ class index extends PureComponent {
   state = {
     showTime: true,
     format: 'YYYY-MM-DD HH',
-    pollutantType: "2",
     checkedValues: [],
     secondQueryCondition: {},
     queryCondition: {},
@@ -583,10 +582,7 @@ class index extends PureComponent {
                 {getFieldDecorator('PollutantType', {
                   initialValue: '2',
                 })(
-                  <Select style={{ width: 231 }} placeholder="请选择企业类型" onChange={(value) => {
-                    this.setState({ pollutantType: value }, () => {
-                    })
-                  }}>
+                  <Select style={{ width: 231 }} placeholder="请选择企业类型">
                     <Option value="2">废气</Option>
                     <Option value="1">废水</Option>
                   </Select>
@@ -635,7 +631,6 @@ class index extends PureComponent {
           visible={this.state.visible}
           footer={false}
           width={"90vw"}
-          maskClosable={false}
           onCancel={() => { this.setState({ visible: false }) }}
         >
           <Row style={{ marginBottom: 10 }}>

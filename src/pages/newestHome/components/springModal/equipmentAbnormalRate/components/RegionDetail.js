@@ -162,7 +162,7 @@ const Index = (props) => {
         onCancel={()=>{setPointVisible(false)}}
         footer={null}
         destroyOnClose
-        width='90%'
+        width='100%'
       >
         <Point />
         </Modal>
