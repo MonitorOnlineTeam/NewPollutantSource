@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2022-11-17 15:15:38 
+ * @Author: JiaQi
+ * @Date: 2022-11-17 15:15:38
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-01-06 10:12:52
+ * @Last Modified time: 2023-01-18 10:31:47
  * @Description: 雾炮清单台账页面
  */
 
@@ -13,15 +13,19 @@ import { Card, Tooltip, Divider } from 'antd';
 import { LineChartOutlined } from '@ant-design/icons'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
+import { formatParamsList } from '../../utils'
+import ViewDataModal from '../components/ViewDataModal';
 
 const CONFIGID = 'UnFogGun';
 
-@connect()
+@connect(({ loading, standingBook, }) => ({
+  viewDataVisible: standingBook.viewDataVisible,
+}))
 class index extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      entCode: props.match.params.entCode
+      paramsList: []
     };
   }
 
@@ -48,7 +52,19 @@ class index extends PureComponent {
     });
   }
 
+  // 查看数据
+  viewData = () => {
+    this.props.dispatch({
+      type: 'standingBook/updateState',
+      payload: {
+        viewDataVisible: true
+      }
+    })
+  }
+
   render() {
+    const { viewDataVisible } = this.props;
+    const { facilityCode, paramsList } = this.state;
     return <BreadcrumbWrapper>
       <Card>
         <SearchWrapper
@@ -64,12 +80,20 @@ class index extends PureComponent {
             this.onDelete(key);
           }}
           appendHandleRows={row => {
+            return false;
             return (
               <>
                 <Divider type="vertical" />
                 <Tooltip title="查看数据">
                   <a onClick={() => {
-
+                    let PollutantCodes = row['dbo.T_Cod_UnFogGun.Pollutant'];
+                    let PollutantNames = row['dbo.T_Cod_Pollutant.PollutantName'];
+                    let paramsList = formatParamsList(PollutantNames, PollutantCodes)
+                    this.setState({
+                      facilityCode: row['dbo.T_Cod_UnFogGun.DGIMN'],
+                      paramsList: paramsList
+                    })
+                    this.viewData();
                   }}>
                     <LineChartOutlined style={{ fontSize: 16 }} />
                   </a>
@@ -79,6 +103,7 @@ class index extends PureComponent {
           }}
         />
       </Card>
+      {(viewDataVisible && facilityCode) && <ViewDataModal type={'dus'} facilityCode={facilityCode} paramsList={paramsList} />}
     </BreadcrumbWrapper >
   }
 }

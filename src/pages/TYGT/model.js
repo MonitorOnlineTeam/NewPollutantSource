@@ -33,6 +33,7 @@ export default Model.extend({
         ...payload,
         beginTime: _startTime.format('YYYY-MM-DD HH:mm:ss'),
         endTime: _endTime.format('YYYY-MM-DD HH:mm:ss'),
+        startTime: undefined
         // beginTime: '2023-01-11 08:00:00',
         // endTime: '2023-01-11 09:00:00',
       }

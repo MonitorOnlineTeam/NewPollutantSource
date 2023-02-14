@@ -48,7 +48,7 @@ const ImportantTypeList = [
 class Gas extends PureComponent {
   state = {
     time: [moment().subtract(1, 'days').startOf("day"), moment().subtract(1, 'days').endOf("day")],
-    DataType: "region",
+    DataType: configInfo.IsSingleEnt == '1' ? "ent" : 'region',
     regionFlag: true,
     entFlag: false,
     pointFlag: false
@@ -559,7 +559,7 @@ class Gas extends PureComponent {
                   <SelectPollutantType
                     style={{ width: 200 }}
                     showDefaultValue
-                    filterPollutantType={'1,2'}
+                    filterInvalidData={'5,12'}
                     placeholder="请选择污染物类型"
                     onChange={value => {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
@@ -567,7 +567,7 @@ class Gas extends PureComponent {
                     initCallback={(value) => {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();
-                      this.getTableData("region");
+                      this.getTableData(DataType);
                       // this.getTableData("ent");
                       // this.getTableData("point");
                     }}
@@ -599,15 +599,17 @@ class Gas extends PureComponent {
             </Row>
           </Form>
           {/* <Divider /> */}
-          <Tabs defaultActiveKey="region" onChange={(key) => {
+          <Tabs defaultActiveKey={DataType} onChange={(key) => {
             if (!regionFlag || !entFlag || !pointFlag) {
               this.getTableData(key);
             }
             this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
           }}>
-            <TabPane tab="辖区排放量" key="region">
-              <SdlTable scroll={{ y: 'calc(100vh - 490px)' }} loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
-            </TabPane>
+            {
+              configInfo.IsSingleEnt !== '1' && <TabPane tab="辖区排放量" key="region">
+                <SdlTable scroll={{ y: 'calc(100vh - 490px)' }} loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
+              </TabPane>
+            }
             <TabPane tab="企业排放量" key="ent">
               <SdlTable scroll={{ y: 'calc(100vh - 490px)' }} loading={entLoading} pagination={false} align="center" dataSource={entTableDataSource} columns={EntColumns} />
             </TabPane>

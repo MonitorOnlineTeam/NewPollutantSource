@@ -63,7 +63,7 @@ class FacilityCard extends PureComponent {
         showSearch
         placeholder="请选择设施"
         style={{ width: 200 }}
-        value={currentFacility}
+        value={currentFacility || undefined}
         filterOption={(input, option) =>
           (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
         }

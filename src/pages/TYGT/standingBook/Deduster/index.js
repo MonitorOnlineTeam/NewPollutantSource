@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2022-11-16 16:05:32 
+ * @Author: JiaQi
+ * @Date: 2022-11-16 16:05:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-01-16 10:38:29
+ * @Last Modified time: 2023-01-17 11:11:13
  * @Description: 除尘器清单台账页面
  */
 import React, { PureComponent } from 'react';
@@ -79,6 +79,7 @@ class index extends PureComponent {
             this.onDelete(key);
           }}
           appendHandleRows={row => {
+            return false;
             return (
               <>
                 <Divider type="vertical" />

@@ -50,7 +50,7 @@ const ImportantTypeList = [
 @Form.create()
 class Contrast extends PureComponent {
   state = {
-    DataType: "region",
+    DataType: configInfo.IsSingleEnt == '1' ? "ent" : 'region',
     regionFlag: true,
     entFlag: false,
     pointFlag: false
@@ -546,11 +546,12 @@ class Contrast extends PureComponent {
                     style={{ width: 160 }}
                     showDefaultValue
                     placeholder="请选择污染物类型"
-                    filterPollutantType={'1,2'}
+                    // filterPollutantType={'1,2'}
+                    filterInvalidData={'5,12'}
                     initCallback={(value) => {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();
-                      this.getTableData("region");
+                      this.getTableData(DataType);
                       // this.getTableData("ent");
                       // this.getTableData("point");
                     }}
@@ -651,15 +652,17 @@ class Contrast extends PureComponent {
             </Row>
           </Form>
           {/* <Divider /> */}
-          <Tabs defaultActiveKey="region" onChange={(key) => {
+          <Tabs defaultActiveKey={DataType} onChange={(key) => {
             if (!regionFlag || !entFlag || !pointFlag) {
               this.getTableData(key);
             }
             this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
           }}>
-            <TabPane tab="辖区排放量" key="region">
-              <SdlTable loading={regionContrastLoading} pagination={false} align="center" dataSource={regionContrastTableDataSource} columns={RegionColumns} />
-            </TabPane>
+            {
+              configInfo.IsSingleEnt !== '1' && <TabPane tab="辖区排放量" key="region">
+                <SdlTable loading={regionContrastLoading} pagination={false} align="center" dataSource={regionContrastTableDataSource} columns={RegionColumns} />
+              </TabPane>
+            }
             <TabPane tab="企业排放量" key="ent">
               <SdlTable loading={entContrastLoading} pagination={false} align="center" dataSource={entContrastTableDataSource} columns={EntColumns} />
             </TabPane>
