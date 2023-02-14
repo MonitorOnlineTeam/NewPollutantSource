@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import EZUIKit from 'ezuikit-js'
 import { connect } from 'dva'
 import Cookies from 'js-cookie';
+import $ from 'jquery'
 // import styles from './index.less'
 
 @connect(({ loading, global }) => ({
@@ -20,22 +21,32 @@ class Video extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.deviceSerial !== prevProps.deviceSerial || this.props.channelNo !== prevProps.channelNo) {
-      if (this.playr && this.props.deviceSerial && this.props.channelNo) {
-        // this.playr.stop();
-        let url = `ezopen://open.ys7.com/${this.props.deviceSerial}/${this.props.channelNo}.live`
-        this.playr.play({
-          url: url
-        });
-      } else {
-        this.playViode();
+    if (this.props.appKey !== prevProps.appKey || this.props.appSecret !== prevProps.appSecret) {
+      this.playViode();
+    } else
+      if (this.props.deviceSerial !== prevProps.deviceSerial || this.props.channelNo !== prevProps.channelNo) {
+        if (this.playr && this.props.deviceSerial && this.props.channelNo) {
+          // this.playr.stop();
+          let url = `ezopen://open.ys7.com/${this.props.deviceSerial}/${this.props.channelNo}.live`
+          this.playr.play({
+            url: url
+          });
+        } else {
+          this.playViode();
+        }
       }
-    }
   }
 
   playViode = () => {
-    if (Cookies.get('YSYAccessToken')) {
-      this.onPlayClick()
+    const { appKey, appSecret, id } = this.props;
+    // $(`#${id}`).innerHTML();
+    let el = document.querySelector(`#${id}`);
+    el.innerHTML = '';
+    let el2 = document.querySelector(`.iframe-btn-container`);
+    el2 && el2.remove();
+    let accessToken = Cookies.get(`YSYAccessToken-${appKey}-${appSecret}`);
+    if (accessToken) {
+      this.onPlayClick(accessToken)
     } else {
       this.getAccessToken();
     }
@@ -50,7 +61,7 @@ class Video extends PureComponent {
       .then(res => res.json())
       .catch(error => console.error('Error:', error))
       .then(response => {
-        Cookies.set('YSYAccessToken', response.data.accessToken, { expires: 7 });
+        Cookies.set(`YSYAccessToken-${appKey}-${appSecret}`, response.data.accessToken, { expires: 7 });
         this.onPlayClick(response.data.accessToken);
       });
   }
@@ -62,9 +73,9 @@ class Video extends PureComponent {
       this.playr = new EZUIKit.EZUIKitPlayer({
         id: id, // 准备的dom元素的id，画面就在这里面播放
         autoplay: true, // 开启自动播放
-        accessToken: accessToken || Cookies.get('YSYAccessToken'),
+        accessToken: accessToken,
         url: url,
-        template: template || 'standard', // simple - 极简版;standard-标准版;security - 安防版(预览回放);voice-语音版； 
+        template: template || 'standard', // simple - 极简版;standard-标准版;security - 安防版(预览回放);voice-语音版；
       })
     }
   }

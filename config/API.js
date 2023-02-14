@@ -798,6 +798,8 @@ export const API = {
     GetRateStatisticsByEntOrPoint: before + '/HomePage/GetRateStatisticsByEntOrPoint',
     // 年度排放量对比
     GetGHGandEmissionContrast: before + '/HomePage/GetGHGandEmissionContrast',
+    // 华能北京热电
+    GetGHGandEmissionContrastOther: before + '/HomePage/GetGHGandEmissionContrastOther',
     // 运维 - 任务数量统计
     GetTaskStatistics: before + '/HomePageApi/GetTaskStatistics',
   },

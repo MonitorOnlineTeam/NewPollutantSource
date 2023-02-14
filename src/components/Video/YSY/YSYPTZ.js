@@ -44,7 +44,11 @@ class YSYPTZ extends PureComponent {
   }
 
   playViode = () => {
-    if (Cookies.get('YSYAccessToken')) {
+    const { appKey, appSecret } = this.props;
+    let accessToken = Cookies.get(`YSYAccessToken-${appKey}-${appSecret}`);
+    debugger
+    if (accessToken) {
+      debugger
       // this.onPlayClick()
     } else {
       this.getAccessToken();
@@ -53,23 +57,50 @@ class YSYPTZ extends PureComponent {
 
   getAccessToken = () => {
     const { configInfo } = this.props;
-    fetch(`https://open.ys7.com/api/lapp/token/get?appKey=${configInfo.YSYAppKey}&appSecret=${configInfo.YSYSecret}`, {
+    const { appKey, appSecret } = this.props;
+    fetch(`https://open.ys7.com/api/lapp/token/get?appKey=${appKey}&appSecret=${appSecret}`, {
+      // fetch(`https://open.ys7.com/api/lapp/token/get?appKey=${configInfo.YSYAppKey}&appSecret=${configInfo.YSYSecret}`, {
       method: 'POST', // or 'PUT'
     })
       .then(res => res.json())
       .catch(error => console.error('Error:', error))
       .then(response => {
-        Cookies.set('YSYAccessToken', response.data.accessToken, { expires: 7 });
-        this.setState({ accessToken: response.data.accessToken });
+        console.log('response', response)
+        if (response.code == '200') {
+          Cookies.set(`YSYAccessToken-${appKey}-${appSecret}`, response.data.accessToken, { expires: 7 });
+          this.setState({ accessToken: response.data.accessToken });
+        } else {
+          message.error(response.msg)
+        }
         // this.onPlayClick(response.data.accessToken);
       });
   }
 
-  // 云台操作
+  // 云台操作 - 开始
   start = (direction) => {
-    const { deviceSerial, channelNo } = this.props;
-    let accessToken = Cookies.get('YSYAccessToken');
+    const { deviceSerial, channelNo, appKey, appSecret } = this.props;
+    let accessToken = Cookies.get(`YSYAccessToken-${appKey}-${appSecret}`);
     fetch(`https://open.ys7.com/api/lapp/device/ptz/start?accessToken=${accessToken}&deviceSerial=${deviceSerial}&channelNo=${channelNo}&direction=${direction}&speed=1`, {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+    })
+      .then(res => res.json())
+      .catch(error => console.error('Error:', error))
+      .then(response => {
+        if (response.code !== '200') {
+          message.error(response.msg)
+        }
+      });
+  }
+
+  // 云台操作 - 开始
+  stop = (direction) => {
+    const { deviceSerial, channelNo, appKey, appSecret } = this.props;
+    // let accessToken = Cookies.get('YSYAccessToken');
+    let accessToken = Cookies.get(`YSYAccessToken-${appKey}-${appSecret}`);
+    fetch(`https://open.ys7.com/api/lapp/device/ptz/stop?accessToken=${accessToken}&deviceSerial=${deviceSerial}&channelNo=${channelNo}&direction=${direction}&speed=1`, {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -106,7 +137,11 @@ class YSYPTZ extends PureComponent {
         }
         return <Col span="8" style={{ textAlign: 'center', marginBottom: index < 6 ? 8 : 0 }}>
           <Tooltip title={item.text}>
-            <Button shape="circle" onClick={() => { this.start(item.direction) }}>
+            <Button shape="circle"
+              onMouseDown={() => this.start(item.direction)}
+              onMouseUp={() => this.stop(item.direction)}
+            // onClick={() => { this.start(item.direction) }}
+            >
               {/* <CaretUpOutlined style={{ transform: `rotate(${item.rotate}deg)`, fontSize: 18 }} /> */}
               {icon}
             </Button>
@@ -130,7 +165,11 @@ class YSYPTZ extends PureComponent {
       }
       return <Col span={8} style={{ textAlign: 'center' }}>
         <Tooltip title={item.title}>
-          <Button shape="circle" onClick={() => { this.start(item.direction) }}>
+          <Button shape="circle"
+            onMouseDown={() => this.start(item.direction)}
+            onMouseUp={() => this.stop(item.direction)}
+          // onClick={() => { this.start(item.direction) }}
+          >
             {icon}
           </Button>
         </Tooltip>

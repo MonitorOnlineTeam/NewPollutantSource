@@ -1,195 +1,249 @@
 .demoinfinitecontainer {
-    overflow: auto;
-  }
-  .demoloading {
-    position: absolute;
-    bottom: -40px;
-    left: 50%;
-  }
-
-  .listTh{
-    height: 30px;
-  }
-
-  
-// /*工艺流程图*/
-.GyProcessPic{
- // width: 100%;
-  // height: calc(100vh-10px);
-  overflow-x:hidden;
-  // overflow-y: scroll; 
- 
+  overflow: auto;
 }
-.divClick{
+
+.demoloading {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+}
+
+.listTh {
+  height: 30px;
+}
+
+
+// /*工艺流程图*/
+.GyProcessPic {
+  // width: 100%;
+  // height: calc(100vh-10px);
+  overflow-x: hidden;
+  // overflow-y: scroll;
+
+}
+
+.divClick {
   cursor: pointer;
 }
-.overstatus :global{
-  .ant-badge-status-processing
-  {
-      background-color: #E64B49;
+
+.overstatus :global {
+  .ant-badge-status-processing {
+    background-color: #E64B49;
   }
-  .ant-badge-status-processing:after
-  {
-      border: 1px solid #E64B49;
+
+  .ant-badge-status-processing:after {
+    border: 1px solid #E64B49;
   }
-  .ant-badge-status-dot{
+
+  .ant-badge-status-dot {
     width: 12px;
     height: 12px;
   }
 }
 
-.normalstatus :global{
-  .ant-badge-status-processing
-  {
-      background-color: #4EC062;
+.normalstatus :global {
+  .ant-badge-status-processing {
+    background-color: #4EC062;
   }
-  .ant-badge-status-processing:after
-  {
-      border: 1px solid #4EC062;
+
+  .ant-badge-status-processing:after {
+    border: 1px solid #4EC062;
   }
-  .ant-badge-status-dot{
+
+  .ant-badge-status-dot {
     width: 12px;
     height: 12px;
   }
 }
 
-.imgBg1{
+.imgBg {
+  background: url(/realtimeData/bg-2.jpg);
+  background-repeat: no-repeat;
+  width: 1548px;
+  height: 928px;
+  background-position-y: bottom;
+  background-size: 95% 95%;
+}
+
+.imgBg1 {
   background: url(../../../../../public/gylct.png);
   background-repeat: no-repeat;
   width: 1548px;
   height: 928px;
-  background-position-y:bottom;
-   background-size: 95% 95%;
+  background-position-y: bottom;
+  background-size: 95% 95%;
 }
-.imgBg2{
+
+.imgBg2 {
   background: url(../../../../../public/pointvoc.png);
   background-repeat: no-repeat;
   width: 1548px;
   height: 928px;
-  background-position-y:bottom;
-   background-size: 95% 95%;
+  background-position-y: bottom;
+  background-size: 95% 95%;
 }
-.imgBg3{
+
+.imgBg3 {
   background: url(../../../../../public/pointhg.png);
   background-repeat: no-repeat;
   width: 1548px;
   height: 928px;
-  background-position-y:bottom;
-   background-size: 95% 95%;
+  background-position-y: bottom;
+  background-size: 95% 95%;
 }
 
-.CardDataClass
-{
+.CardDataClass {
   background-color: white;
   float: right;
   margin-right: 50px;
-  position: relative; 
-  width: 65%; 
+  position: relative;
+  width: 65%;
   z-index: 1;
 }
 
-.mapClass{
-  position:absolute;
-  width:98%;
+.mapClass {
+  position: relative;
+  width: 98%;
   height: calc(100vh - 160px);
+
+  &:global {
+    &>div>div>div {
+      width: 100%;
+      height: 100%;
+      // position: absolute;
+      // top: 50%;
+      // left: 50%;
+      // margin-left: -25%;
+      // margin-top: -25%;
+    }
+
+    // div:nth-child(1) {
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+    // }
+  }
+
+  .vertical {
+    transform: translateX(-36%) translateY(8%) rotate(90deg);
+    position: relative;
+    top: 50%;
+    left: 50%;
+
+
+    // transform: rotate(90deg);
+    // position: relative;
+    // top: 100%;
+    // left: -50%;
+  }
 }
 
 .gridStyle {
   width: 150px;
   text-align: center;
-};
+}
 
-.lasttr{
+;
+
+.lasttr {
   border: none;
 }
-.stateClass{
+
+.stateClass {
 
   float: left;
-  position: relative; 
+  position: relative;
   z-index: 1;
 }
+
 .stateClass :global {
-  .ant-badge-status-text{
+  .ant-badge-status-text {
     font-size: 15px;
     font-weight: 800;
   }
-  .ant-badge-status-error{
+
+  .ant-badge-status-error {
     margin-bottom: 2px;
   }
 }
 
 .FormTable {
-  text-indent:2em;
+  text-indent: 2em;
   overflow: hidden;
-  width:90%;
-  border-collapse: collapse;/* 边框合并属性  */
+  width: 90%;
+  border-collapse: collapse;
+  /* 边框合并属性  */
   font-size: 10px;
-  margin:auto;
+  margin: auto;
   background-color: #fff;
   border: none;
   margin-bottom: 10px;
 }
+
 .FormTable>thead>th {
-      text-align: right;
-      border: 1px solid #ccc;
-      font-weight: normal;
-      display: table-cell;
-      vertical-align: inherit;
-      line-height: 25px;
-      height: 25px;
-      white-space: nowrap;
-      padding-left: 9px;
-      background-color: rgb(114,135,178);
-      color: #fff;
-      border-bottom:  1px solid #ccc;
-  }
-  .FormTable>tbody>tr {
-    border-bottom:  1px solid #7487b221;
-    line-height: 30px;
+  text-align: right;
+  border: 1px solid #ccc;
+  font-weight: normal;
+  display: table-cell;
+  vertical-align: inherit;
+  line-height: 25px;
+  height: 25px;
+  white-space: nowrap;
+  padding-left: 9px;
+  background-color: rgb(114, 135, 178);
+  color: #fff;
+  border-bottom: 1px solid #ccc;
 }
 
-  .FormTable>tbody>tr>td {
-     // border: 1px solid #ccc;
-      display: table-cell;
-      vertical-align: inherit;
-      text-align: left;
-      padding-left: 9px;
-      padding-top:9px;
-      padding-bottom:9px;
-  }
+.FormTable>tbody>tr {
+  border-bottom: 1px solid #7487b221;
+  line-height: 30px;
+}
 
-  .AlarmRed{
-  color: red;  
-  }
+.FormTable>tbody>tr>td {
+  // border: 1px solid #ccc;
+  display: table-cell;
+  vertical-align: inherit;
+  text-align: left;
+  padding-left: 9px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
 
-  .AlarmCommon{
-    color: #000; 
-  }
+.AlarmRed {
+  color: red;
+}
+
+.AlarmCommon {
+  color: #000;
+}
 
 /*工艺流程图*/
 
 .cardcss :global {
-    .ant-card-head{
-      color: #fff; 
-      background: #7487b2;
-      border-radius: 9px 9px 0 0;
-    }
-    .ant-card-head-title {
-   
-      font-size: 16px;
-      padding: 16px 0;
-      -o-text-overflow: ellipsis;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      color: #fff; 
-      white-space: nowrap;
-      font-weight: 500;
-      display: inline-block;
-      -webkit-box-flex: 1;
-      -ms-flex: 1;
-      flex: 1;
+  .ant-card-head {
+    color: #fff;
+    background: #7487b2;
+    border-radius: 9px 9px 0 0;
   }
-  .ant-card-body{
+
+  .ant-card-head-title {
+
+    font-size: 16px;
+    padding: 16px 0;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: #fff;
+    white-space: nowrap;
+    font-weight: 500;
+    display: inline-block;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+
+  .ant-card-body {
     padding: 10px 0 0 0;
   }
 }
@@ -197,254 +251,355 @@
 
 
 
-  @-webkit-keyframes  shineRed {  
-    from { -webkit-box-shadow: 0 0 5px red; }  
-    50% { -webkit-box-shadow: 0 0 20px red; }  
-    to { -webkit-box-shadow: 0 0 10px red; }  
-    }  
-    .shine_red{  
-      color: red; 
-    -webkit-animation-name: shineRed;   
-    -webkit-animation-duration: 2s;  
-    -webkit-animation-iteration-count: infinite;   
-    }  
- 
-    .rightParams{
-      margin: 5px 5px 0 30px;
+@-webkit-keyframes shineRed {
+  from {
+    -webkit-box-shadow: 0 0 5px red;
   }
-  .rightParams div{
-      margin-top: 10px;
-  }
-  .ncard{
-      border: 1px solid #E0FFFF;
-      height: 80px;
-      width: 160px;
-      background: #fff;
-      text-align: center;
-  }
-  .wcard{
-      border: 1px solid #E0FFFF;
-      background: #97FFFF;
-      height: 100px;
-      width: 180px;
-      line-height: 100px;
-  }
-  .divcard{
-      
-      // box-shadow: 0 0 0 10px #98F5FF,
-      // 0 0 0 15px #97FFFF;
-     // 0 2px 5px 15px rgb(0, 0, 0,0.6);
-      width: 150px;
-      text-align: center;
-      height: 110px;
-      display: table-cell;
-      vertical-align:middle;
-      cursor: pointer;
-      margin-top: 10px;
-  }
-  .footer{
-      border-top: 1px solid #ECECEC;
-      background: #fff;
-      // margin-top: 10px;
-      // padding-top: 5px;
-  }
-  .content :global{
-      margin-bottom: 5px;
-      font-size: 15px;
-   //   height: 800px;
-        overflow: hidden;
-      .ant-layout-sider-trigger{
-           position: relative;
-         //  bottom: 300px;
-      }
-  }
-  
-  .hiddentrigger :global{ 
-      .ant-layout-sider-trigger{
-          display: none;
-     }
-  }
-  .contentcollapse :global
-  {
-      margin-bottom: 5px;
-      font-size: 15px;
-   //   height: 800px;
-      overflow: hidden;
-      .ant-layout-sider-trigger{
-           position: relative;
-            bottom: 300px;
-      }
-  }
-  .detailtitle{
-     border-bottom: 1px solid #ECECEC;
-     padding-bottom: 10px;
-  }
-   
-  .datalist :global
-  {
-      .ant-badge-status-success {
-          background-color: #3B91FF;
-      }
-  }
-  
-  .dataInfo :global{
-      .ant-avatar-sm
-      {
-          width: 18px;
-          height: 18px;
-          line-height: 18px;
-          border-radius: 50%;
-          margin-right: 5px;
-      }
-  }
-  
-  
-   .overstatus :global{
-      .ant-badge-status-processing
-      {
-          background-color: #E64B49;
-      }
-      .ant-badge-status-processing:after
-      {
-          border: 1px solid #E64B49;
-      }
-   }
-  
-   .normalstatus :global{
-      .ant-badge-status-processing
-      {
-          background-color: #4EC062;
-      }
-      .ant-badge-status-processing:after
-      {
-          border: 1px solid #4EC062;
-      }
-   }
-   .unlinestatus :global{
-      .ant-badge-status-processing
-      {
-          background-color: #999999;
-      }
-      .ant-badge-status-processing:after
-      {
-          border: 1px solid #999999;
-      }
-   }
-   .exceptionstatus :global{
-      .ant-badge-status-processing
-      {
-          background-color: #E7983A;
-      }
-      .ant-badge-status-processing:after
-      {
-          border: 1px solid #E7983A;
-      }
-   }
-   .sidertrigger{
-      .ant-layout-sider-trigger{
-          position: relative;
-      }
-   }
-   .infotitle{
-       border-bottom: 1px solid  #ECECEC;
-       padding-bottom: 5px;
-       font-size: 15px;
-   }
 
-   .caiyangbeng1{
-     position: relative;
-     left: 150px;
-     top: 430px;
-     font-weight: 700;
-     font-size: 10px;
-     width:300px;
-   }
-   .caiyangbeng2{
+  50% {
+    -webkit-box-shadow: 0 0 20px red;
+  }
+
+  to {
+    -webkit-box-shadow: 0 0 10px red;
+  }
+}
+
+.shine_red {
+  color: red;
+  -webkit-animation-name: shineRed;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+}
+
+.rightParams {
+  margin: 5px 5px 0 30px;
+}
+
+.rightParams div {
+  margin-top: 10px;
+}
+
+.ncard {
+  border: 1px solid #E0FFFF;
+  height: 80px;
+  width: 160px;
+  background: #fff;
+  text-align: center;
+}
+
+.wcard {
+  border: 1px solid #E0FFFF;
+  background: #97FFFF;
+  height: 100px;
+  width: 180px;
+  line-height: 100px;
+}
+
+.divcard {
+
+  // box-shadow: 0 0 0 10px #98F5FF,
+  // 0 0 0 15px #97FFFF;
+  // 0 2px 5px 15px rgb(0, 0, 0,0.6);
+  width: 150px;
+  text-align: center;
+  height: 110px;
+  display: table-cell;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.footer {
+  border-top: 1px solid #ECECEC;
+  background: #fff;
+  // margin-top: 10px;
+  // padding-top: 5px;
+}
+
+.content :global {
+  margin-bottom: 5px;
+  font-size: 15px;
+  //   height: 800px;
+  overflow: hidden;
+
+  .ant-layout-sider-trigger {
     position: relative;
-    left: 650px;
-    top: 370px;
-    font-weight: 700;
-    font-size: 10px;
-    width: 300px;
-   }
-   .lengningqi{
+    //  bottom: 300px;
+  }
+}
+
+.hiddentrigger :global {
+  .ant-layout-sider-trigger {
+    display: none;
+  }
+}
+
+.contentcollapse :global {
+  margin-bottom: 5px;
+  font-size: 15px;
+  //   height: 800px;
+  overflow: hidden;
+
+  .ant-layout-sider-trigger {
     position: relative;
-    left: 585px;
-    top: 295px;
-    font-weight: 700; 
-    font-size: 10px;
-    width:300px;
-   }
+    bottom: 300px;
+  }
+}
 
-.normalBox{
-    text-align: center;
-   // background: url(../../../../../public/instrumentnormal.png) no-repeat;
-    width: 150px;
-    height: 110px;
-    display: table-cell;
-    vertical-align:middle;
+.detailtitle {
+  border-bottom: 1px solid #ECECEC;
+  padding-bottom: 10px;
 }
-.mainbox{
-    cursor: pointer;
-    float: left;
-    margin-left: 20px;
-    margin-bottom: 20px;
+
+.datalist :global {
+  .ant-badge-status-success {
+    background-color: #3B91FF;
+  }
 }
-.maincard{
-    width: 150px;
-    float: left;
-}
-.pshsj{
-    text-indent: 20px;
-}
-.cardfonttype{
-  color: rgba(0,0,0,.85);
-    // font-size: 18px;
-    // line-height: 28px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    word-break: break-all;
+
+.dataInfo :global {
+  .ant-avatar-sm {
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
 }
 
 
-.maintabs :global{
-    .ant-tabs-nav .ant-tabs-tab{
-        padding: 1px 1px;
-    }
+.overstatus :global {
+  .ant-badge-status-processing {
+    background-color: #E64B49;
+  }
+
+  .ant-badge-status-processing:after {
+    border: 1px solid #E64B49;
+  }
 }
-.imgArrawClass{
-    width: 25px;
-    height: 25px;
-    margin-bottom: 2px
+
+.normalstatus :global {
+  .ant-badge-status-processing {
+    background-color: #4EC062;
+  }
+
+  .ant-badge-status-processing:after {
+    border: 1px solid #4EC062;
+  }
 }
-:global{
+
+.unlinestatus :global {
+  .ant-badge-status-processing {
+    background-color: #999999;
+  }
+
+  .ant-badge-status-processing:after {
+    border: 1px solid #999999;
+  }
+}
+
+.exceptionstatus :global {
+  .ant-badge-status-processing {
+    background-color: #E7983A;
+  }
+
+  .ant-badge-status-processing:after {
+    border: 1px solid #E7983A;
+  }
+}
+
+.sidertrigger {
+  .ant-layout-sider-trigger {
+    position: relative;
+  }
+}
+
+.infotitle {
+  border-bottom: 1px solid #ECECEC;
+  padding-bottom: 5px;
+  font-size: 15px;
+}
+
+.caiyangbeng1 {
+  position: relative;
+  left: 150px;
+  top: 430px;
+  font-weight: 700;
+  font-size: 10px;
+  width: 300px;
+}
+
+.caiyangbeng2 {
+  position: relative;
+  left: 650px;
+  top: 370px;
+  font-weight: 700;
+  font-size: 10px;
+  width: 300px;
+}
+
+.lengningqi {
+  position: relative;
+  left: 585px;
+  top: 295px;
+  font-weight: 700;
+  font-size: 10px;
+  width: 300px;
+}
+
+.normalBox {
+  text-align: center;
+  // background: url(../../../../../public/instrumentnormal.png) no-repeat;
+  width: 150px;
+  height: 110px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.mainbox {
+  cursor: pointer;
+  float: left;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.maincard {
+  width: 150px;
+  float: left;
+}
+
+.pshsj {
+  text-indent: 20px;
+}
+
+.cardfonttype {
+  color: rgba(0, 0, 0, .85);
+  // font-size: 18px;
+  // line-height: 28px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+
+.maintabs :global {
+  .ant-tabs-nav .ant-tabs-tab {
+    padding: 1px 1px;
+  }
+}
+
+.imgArrawClass {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 2px
+}
+
+:global {
   .antd-pro-pages-monitoring-realtimedata-components-process-flow-chart-maintabs .ant-tabs-nav .ant-tabs-tab {
     padding: 1px 1px;
-}
-.ant-tabs-nav .ant-tabs-tab
-{
-  margin: 0 20px 0 0;
-}
-.ant-tabs-bar{
-  margin: 0 0 5px 0;
-}
+  }
+
+  .ant-tabs-nav .ant-tabs-tab {
+    margin: 0 20px 0 0;
+  }
+
+  .ant-tabs-bar {
+    margin: 0 0 5px 0;
+  }
 
 }
 
 
- .cardClass{
-  :global{
-    .ant-card-head-title{
+.cardClass {
+  :global {
+    .ant-card-head-title {
       padding: 0;
     }
-    .ant-card-head{
+
+    .ant-card-head {
       padding: 0;
     }
   }
- }
+}
 
 
+.line {
+  position: absolute;
+  // width: 1470px;
+  // height: 870px;
+  // z-index: 0px;
+  // top: 54px;
+  // left: 1px;
+  // background: url(/realtimeData/3-1.gif) no-repeat;
+  background-size: 95%;
+  width: 1548px;
+  height: 928px;
+  top: 46px;
+  // background-position-y: bottom;
+  background-size: 95% 95%;
+  background-repeat: no-repeat;
+}
 
+.line1 {
+  background-image: url(/realtimeData/gif/1.gif);
+}
 
+.QC1 {
+  background-image: url(/realtimeData/gif/QC1.gif);
+}
 
+.QC2 {
+  background-image: url(/realtimeData/gif/QC2.gif);
+}
 
+.XT1 {
+  background-image: url(/realtimeData/gif/XT1.gif);
+  // background-position-y: center;
+  right: 1px;
+  // top: -1px;
+}
+
+.XT2 {
+  background-image: url(/realtimeData/gif/XT2.gif);
+  // background-position-y: center;
+  right: 1px;
+  top: 45px;
+}
+
+.valve {
+  position: absolute;
+  top: 500px;
+  left: 556px;
+  width: 42px;
+  height: 36px;
+}
+
+.valve2 {
+  position: absolute;
+  left: 646px;
+  top: 574px;
+  width: 36px;
+  height: 40px;
+}
+
+.myModal {
+  :global {
+
+    .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-label,
+    .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-content {
+      padding: 16px 10px;
+    }
+
+    .ant-modal-content {
+      width: 636px;
+    }
+  }
+}
+
+.canvas_lengend {
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg);
+}

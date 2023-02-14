@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi
  * @Date: 2019-10-10 09:39:12
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-09-23 14:59:49
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-02-01 14:37:49
  * @desc: 主页接口api
  */
 import { post, get, getNew } from '@/utils/request';
@@ -113,8 +113,20 @@ export async function getGHGandEmissionContrast(params) {
   return result;
 }
 
+// 年度排放量对比分析 - 华能北京热电厂
+export async function GetGHGandEmissionContrastOther(params) {
+  const result = post(API.HomeApi.GetGHGandEmissionContrastOther, params, null);
+  return result;
+}
+
 // 获取首页视频列表
 export async function getHomePageVideo(params) {
   const result = post(API.VideoApi.GetHomePageVideo, params, null);
+  return result;
+}
+
+// 获取所有污染物
+export async function GetProcessFlowChartStatus(params) {
+  const result = await get(API.DymaicControlApi.GetProcessFlowChartStatus, params, null);
   return result;
 }

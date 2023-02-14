@@ -6,7 +6,6 @@ import { extend } from 'umi-request';
 import { notification } from 'antd';
 import Cookie from 'js-cookie';
 import router from 'umi/router';
-import { async } from 'q';
 import configToken from '@/config'
 
 const codeMessage = {
@@ -27,15 +26,6 @@ const codeMessage = {
   504: '网关超时。',
 };
 
-export function getCookie(name) {
-  const reg = new RegExp(`(^| )${name}=([^;]*)(;|$)`);
-  const arr = document.cookie.match(reg);
-  if (arr) {
-    return decodeURIComponent(arr[2]);
-  }
-  return null;
-}
-
 /**
  * 异常处理程序
  */
@@ -45,6 +35,7 @@ const errorHandler = error => {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
     if (status === 401) {
+
       Cookie.set(configToken.cookieName, null);
       Cookie.set('currentUser', null);
       router.push('/user/login');
@@ -82,7 +73,6 @@ const errorHandler = error => {
 /**
  * 配置request请求时的默认参数
  */
-const ssoToken = `${getCookie(configToken.cookieName)}`;
 const request = extend({
   errorHandler,
   // timeout: 30000,

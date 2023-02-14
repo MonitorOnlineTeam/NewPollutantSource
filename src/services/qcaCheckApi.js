@@ -91,6 +91,11 @@ export async function exportErrorValueCheck(params) {
   return result;
 }
 
+// 获取质控记录污染物
+export async function getQCAPollutantByDGIMN(params) {
+  const result = await post(API.QualityControlApi.GetQCStandard, params, null);
+  return result;
+}
 
 
 

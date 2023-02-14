@@ -136,7 +136,7 @@ export default Model.extend({
           CenterLatitude: response.Datas.CenterLatitude || 39.908195,
         }))
         // 防止系统错乱，如果没有menuId，跳转中间页。
-        if (location.pathname !== '/user/login' && response.Datas.IsShowSysPage === '1') {
+        if (location.pathname !== '/user/login' && location.pathname !== '/dataFlowChart' && response.Datas.IsShowSysPage === '1') {
           if (!sessionStorage.getItem('sysMenuId')) {
             router.push('/sysTypeMiddlePage')
           }
@@ -467,6 +467,20 @@ export default Model.extend({
                       data: obj.Message,
                     },
                   });
+                  // 更新工艺流程图参数
+                  dispatch({
+                    type: 'realtimeserver/updateFlows',
+                    payload: {
+                      data: obj.Message,
+                    },
+                  });
+                  // 更新首页排放速率
+                  dispatch({
+                    type: 'home/updateFlows',
+                    payload: {
+                      data: obj.Message,
+                    },
+                  });
                   // 实时数据一览
                   dispatch({
                     type: 'overview/updateRealTimeDataView',
@@ -502,14 +516,14 @@ export default Model.extend({
                 // 工艺流程图动态参数数据
                 case 'DynamicControlParam':
                 case 'DynamicControlState':
-                // console.log("DynamicControlParam And DynamicControlState=", obj)
-                // dispatch({
-                //   type: 'realtimeserver/updateDynamicControl',
-                //   payload: {
-                //     data: obj,
-                //   },
-                // });
-                // break;
+                  // console.log("DynamicControlParam And DynamicControlState=", obj)
+                  dispatch({
+                    type: 'realtimeserver/updateDynamicControl',
+                    payload: {
+                      data: obj,
+                    },
+                  });
+                  break;
                 // 推送报警数据
                 case 'Alarm':
                   dispatch({
@@ -546,12 +560,22 @@ export default Model.extend({
                     type: 'qcManual/updateRealChartData',
                     payload: { message: obj.Message },
                   });
+                  // 工艺流程图测量浓度
+                  // dispatch({
+                  //   type: 'realtimeserver/updateRealChartData',
+                  //   payload: { message: obj.Message },
+                  // });
                   break;
                 // 阀门状态
                 case 'ControlData':
-                  // console.log("ControlData=", obj.Message[0])
+                  console.log("ControlData=", obj.Message[0])
                   dispatch({
                     type: 'qcManual/changeQCState',
+                    payload: obj.Message[0],
+                  })
+                  // 工艺流程图
+                  dispatch({
+                    type: 'realtimeserver/changeQCState',
                     payload: obj.Message[0],
                   })
                   break;
@@ -606,6 +630,11 @@ export default Model.extend({
                   // 质控仪状态
                   dispatch({
                     type: 'qcManual/changeQCStatus',
+                    payload: obj.Message[0],
+                  })
+                  // 工艺流程图
+                  dispatch({
+                    type: 'realtimeserver/changeQCStatus',
                     payload: obj.Message[0],
                   })
                   break;

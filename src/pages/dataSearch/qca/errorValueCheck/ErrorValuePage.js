@@ -87,7 +87,7 @@ class BlindCheckPage extends PureComponent {
       {
         title: <span>
           相对误差（%）
-      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入盲样标准气体，仪器的读数与盲样标准气体初始测量值之间的偏差相对于满量程的百分比。（测量浓度-标准浓度）/量程范围*100%（参考75标准中示值误差计算公式）" />
+          <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入盲样标准气体，仪器的读数与盲样标准气体初始测量值之间的偏差相对于满量程的百分比。（测量浓度-标准浓度）/量程范围*100%（参考75标准中示值误差计算公式）" />
         </span>,
         dataIndex: 'Offset',
         width: 180,
@@ -148,7 +148,7 @@ class BlindCheckPage extends PureComponent {
     this.props.dispatch({
       type: "qcaCheck/getPollutantListByDgimn",
       payload: {
-        DGIMNs: this.props.DGIMN
+        DGIMN: this.props.DGIMN
       }
     })
   }
@@ -236,36 +236,36 @@ class BlindCheckPage extends PureComponent {
           </Row>
         </Form>
         {/* <Spin spinning={tableLoading}> */}
-          <Tabs type="card">
-            <TabPane tab="示值误差核查" key="1">
-              <SdlTable loading={tableLoading} dataSource={errorValueCheckTableData} columns={columns}
-                onRow={record => {
-                  return {
-                    onClick: event => {
-                      if (record.Result == 2) {
-                        return;
+        <Tabs type="card">
+          <TabPane tab="示值误差核查" key="1">
+            <SdlTable loading={tableLoading} dataSource={errorValueCheckTableData} columns={columns}
+              onRow={record => {
+                return {
+                  onClick: event => {
+                    if (record.Result == 2) {
+                      return;
+                    }
+                    this.setState({
+                      currentRowData: record
+                    })
+                    this.props.dispatch({
+                      type: "qcaCheck/updateState",
+                      payload: {
+                        checkModalVisible: true
                       }
-                      this.setState({
-                        currentRowData: record
-                      })
-                      this.props.dispatch({
-                        type: "qcaCheck/updateState",
-                        payload: {
-                          checkModalVisible: true
-                        }
-                      })
-                    }, // 点击行
-                  };
-                }}
-              />
-            </TabPane>
-            <TabPane tab="示值误差核查数据图表" key="2">
-              <ErrorValueChart pollutantCodeList={pollutantCodeList} />
-            </TabPane>
-          </Tabs>
+                    })
+                  }, // 点击行
+                };
+              }}
+            />
+          </TabPane>
+          <TabPane tab="示值误差核查数据图表" key="2">
+            <ErrorValueChart pollutantCodeList={pollutantCodeList} />
+          </TabPane>
+        </Tabs>
         {/* </Spin> */}
         {/* 详情弹窗 */}
-        {checkModalVisible && <CheckModal QCAType="3105" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
+        {checkModalVisible && <CheckModal QCAType="3106" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
       </Card>
     );
   }

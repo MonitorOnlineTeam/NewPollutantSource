@@ -13,6 +13,7 @@ import styles from '@/pages/monitoring/realtimedata/components/ProcessFlowChart.
 import { connect } from 'dva';
 import { MapInteractionCSS } from 'react-map-interaction';
 import WasteGasChart from '@/pages/monitoring/realtimedata/components//WasteGasChart';
+import CO2Chart from '@/pages/monitoring/realtimedata/components//CO2Chart';
 import VocChart from '@/pages/monitoring/realtimedata/components//VocChart';
 import HgChart from '@/pages/monitoring/realtimedata/components//HgChart';
 import CommonChart from '@/pages/monitoring/realtimedata/components//CommonChart';
@@ -29,6 +30,7 @@ const { Header, Footer, Sider, Content } = Layout;
     stateNameInfo: realtimeserver.stateNameInfo,
     paramNameInfo: realtimeserver.paramNameInfo,
     paramdivInfo: realtimeserver.paramdivInfo,
+    valveStatus: realtimeserver.valveStatus,
     DGIMN: realtimeserver.DGIMN,
 }))
 class Index extends Component {
@@ -47,6 +49,13 @@ class Index extends Component {
         };
     }
 
+    componentDidMount() {
+        const { showMode, currentTreeItemData } = this.props;
+        if (this.props.showMode === 'modal' && this.props.currentTreeItemData) {
+            this.changeDgimn(currentTreeItemData)
+        }
+    }
+
     componentWillReceiveProps = nextProps => {
         const { stateInfo, paramsInfo, paramstatusInfo, DGIMN } = this.props;
         const { param, status, data, dgimn } = this.state;
@@ -56,6 +65,48 @@ class Index extends Component {
         //         this.positionClick(param, status, data)
         //     }
         // }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (JSON.stringify(this.props.paramsInfo) !== JSON.stringify(prevProps.paramsInfo)) {
+            this.countCO2Rate();
+            this.getSampleGasValue();
+        }
+        if (JSON.stringify(this.props.currentTreeItemData) !== JSON.stringify(prevProps.currentTreeItemData)) {
+            this.changeDgimn(this.props.currentTreeItemData)
+        }
+    }
+
+    // 获取标气浓度
+    getSampleGasValue = () => {
+        const { paramsInfo } = this.props;
+        let CO2Value = 0, O2Value = 0;
+        paramsInfo.map(item => {
+            if (item.pollutantCode === 'a05001') {
+                if (item.pollutantParamInfo && item.pollutantParamInfo.length) {
+                    // debugger
+                    let current = item.pollutantParamInfo.find(itm => itm.stateCode === 'i13051');
+                    CO2Value = current.value;
+                }
+            }
+            if (item.pollutantCode === 'a19001') {
+                if (item.pollutantParamInfo && item.pollutantParamInfo.length) {
+                    // debugger
+                    let current = item.pollutantParamInfo.find(itm => itm.stateCode === 'i13051');
+                    O2Value = current.value;
+                }
+            }
+        })
+        console.log('CO2Value', CO2Value)
+        console.log('O2Value', O2Value)
+        this.props.dispatch({
+            type: 'realtimeserver/updateState',
+            payload: {
+                CO2SampleGasValue: CO2Value,
+                O2SampleGasValue: O2Value,
+            },
+        });
+
     }
 
     changeDgimn = value => {
@@ -82,7 +133,35 @@ class Index extends Component {
             payload: {
                 dgimn: value[0].key,
             },
+        }).then(() => {
+            this.countCO2Rate();
+            this.getSampleGasValue();
         });
+    }
+
+    //  计算二氧化碳排放率
+    countCO2Rate = () => {
+        let CO2Value = 0, flowValue = 0;
+        const { paramsInfo } = this.props;
+        paramsInfo.map(item => {
+            if (item.pollutantCode === 'a05001') {
+                CO2Value = item.value || 0;
+            }
+            if (item.pollutantCode === 'b02') {
+                flowValue = item.value || 0;
+            }
+        })
+
+        // 实时CO2*10000*44*标杆流量/22.4/两个1000
+        let value = CO2Value * 10000 * 44 * flowValue / 22.4 / 1000 / 1000;
+        this.props.dispatch({
+            type: 'realtimeserver/updateState',
+            payload: {
+                CO2Rate: value.toFixed(0),
+            },
+        });
+        console.log('countCO2Rate=', value)
+        // return value
     }
 
     // 参数表盘
@@ -323,10 +402,29 @@ class Index extends Component {
      * @memberof ProcessFlowChart
      */
     getChartType = () => {
-        const { dataInfo, DGIMN, paramstatusInfo, stateInfo, paramsInfo } = this.props;
+        const { dataInfo, DGIMN, paramstatusInfo, stateInfo, paramsInfo, wrapperStyle, vertical, scale } = this.props;
         const { dgimn, pointName, entName } = this.state;
 
         if (dataInfo && dataInfo.pollutantType == '2') {
+
+            // 二氧化碳
+            if (dataInfo['a05001']) {
+                return <CO2Chart
+                    paramstatusInfo={paramstatusInfo}
+                    stateInfo={stateInfo}
+                    paramsInfo={paramsInfo}
+                    getsystemparamNew={this.getsystemparamNew}
+                    getParamsValue={this.getParamsValue}
+                    pollutantMonitingDataNew={this.pollutantMonitingDataNew}
+                    getSystemStatesNew={this.getSystemStatesNew}
+                    DGIMN={dgimn}
+                    valveStatus={this.props.valveStatus}
+                    pointName={pointName} entName={entName}
+                    wrapperStyle={wrapperStyle}
+                    vertical={vertical}
+                    scale={scale}
+                />
+            }
             switch (dataInfo.equipmentType) {
                 case '1':
                     return (<WasteGasChart
@@ -338,7 +436,9 @@ class Index extends Component {
                         pollutantMonitingDataNew={this.pollutantMonitingDataNew}
                         getSystemStatesNew={this.getSystemStatesNew}
                         DGIMN={dgimn}
-                        pointName={pointName} entName={entName} />)
+                        valveStatus={this.props.valveStatus}
+                        pointName={pointName} entName={entName}
+                    />)
                     break;
                 case '2':
                     return (<VocChart
@@ -450,45 +550,60 @@ class Index extends Component {
         })
     }
 
+    getPageContent = () => {
+        const { isloading } = this.props;
+        return <div style={{ overflowX: 'hidden' }}>
+            <Layout className={this.state.contentstyle} hasSider>
+                <Content>
+                    <Card className="contentContainer" >
+                        {isloading ? <Spin style={{
+                            width: '100%',
+                            marginTop: 100,
+                        }} size="large" />
+                            : this.getChartType()
+                        }
+                    </Card>
+                </Content>
+                {
+                    this.state.showSider && <Sider width={250} collapsedWidth={10} theme="light"
+                        collapsed={this.state.collapsed}
+                        onCollapse={this.onCollapse}
+                        collapsible
+                        reverseArrow
+                    >
+                        <div className={styles.rightParams}>
+                            {this.state.paramInfo}
+                        </div>
+                    </Sider>
+                }
+
+            </Layout>
+        </div>
+    }
+
     render() {
         const pointcode = this.state.dgimn; // 任务ID
         const { scale, translation, title } = this.state;
         const { isloading,
-            stateInfo, paramsInfo, paramstatusInfo, dataInfo } = this.props;
+            stateInfo, paramsInfo, paramstatusInfo, dataInfo, showMode } = this.props;
         return (
             <div id="realtimedata">
-                <BreadcrumbWrapper titles={`【${title}】`}>
-                    <div style={{ overflowX: 'hidden' }}>
-                        <Layout className={this.state.contentstyle} hasSider>
-                            <Content><Card className="contentContainer" >
-                                {isloading ? <Spin style={{
-                                    width: '100%',
-                                    marginTop: 100,
-                                }} size="large" />
-                                    : this.getChartType()
-                                }
-                            </Card></Content>
-                            {
-                                this.state.showSider && <Sider width={250} collapsedWidth={10} theme="light"
-                                    collapsed={this.state.collapsed}
-                                    onCollapse={this.onCollapse}
-                                    collapsible
-                                    reverseArrow
-                                >
-                                    <div className={styles.rightParams}>
-                                        {this.state.paramInfo}
-                                    </div>
-                                </Sider>
-                            }
-
-                        </Layout>
-                    </div>
-                </BreadcrumbWrapper>
-                <NavigationTree runState='1' domId="#realtimedata" choice={false} onItemClick={value => {
-                    if (value.length > 0 && !value[0].IsEnt) {
-                        this.changeDgimn(value)
-                    }
-                }} />
+                {
+                    showMode === 'modal' ?
+                        this.getPageContent() :
+                        <BreadcrumbWrapper>
+                            {this.getPageContent()}
+                        </BreadcrumbWrapper>
+                }
+                {
+                    showMode !== 'modal' &&
+                    <NavigationTree runState='1' domId="#realtimedata" choice={false} onItemClick={value => {
+                        if (value.length > 0 && !value[0].IsEnt) {
+                            console.log('value', value)
+                            this.changeDgimn(value)
+                        }
+                    }} />
+                }
             </div>
         );
     }

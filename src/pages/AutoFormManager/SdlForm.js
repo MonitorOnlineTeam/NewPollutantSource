@@ -3,8 +3,10 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-01-30 22:34:27
+ * @Last Modified time: 2023-02-01 18:58:45
  */
+
+
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
 
@@ -274,7 +276,7 @@ class SdlForm extends PureComponent {
           break;
         case '多选下拉搜索树':
           placeholder = placeholder || selectPlaceholder;
-          // initialValue = formData[item.fullFieldName] && formData[item.fullFieldName].split(',');
+          initialValue = formData[item.fullFieldName] && formData[item.fullFieldName].split(',');
           element = (
             <SdlCascader
               itemName={item.configDataItemName}

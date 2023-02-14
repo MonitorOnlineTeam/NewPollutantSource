@@ -57,13 +57,22 @@ export default Model.extend({
     },
     // 获取污染物类型
     *getPollutantListByDgimn({ payload, callback }, { call, update, put, take, select }) {
-      const result = yield call(getQCAPollutantByDGIMN, { ...payload, dataType: "qca" });
+      const result = yield call(services.getQCAPollutantByDGIMN, { ...payload });
       if (result.IsSuccess) {
-        const pollutantCode = result.Datas.map((item, index) => {
-          return item.PollutantCode
+        let pollutantList = [];
+        const pollutantCode = result.Datas.filter((item, index) => {
+          if (item.GasCode !== 'n00000') {
+            pollutantList.push({
+              "PollutantCode": item.GasCode,
+              "PollutantName": item.PollutantName,
+              Unit: item.Unit,
+              StandardCode: item.GasCode
+            })
+            return item.GasCode;
+          }
         })
-        yield update({ pollutantList: result.Datas, pollutantCode: pollutantCode })
-        callback && callback(result.Datas)
+        yield update({ pollutantList: pollutantList, pollutantCode: pollutantCode })
+        callback && callback(pollutantList)
       } else {
         message.error(result.Message)
       }

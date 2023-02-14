@@ -10,6 +10,7 @@ export default Model.extend({
     flowTableData: [],
     visualizaData: {
       pollutant: [],
+      flows: [],
     },
     visLoading: true
   },
@@ -38,7 +39,8 @@ export default Model.extend({
             key !== 'a01011' &&
             key !== 'a01012' &&
             key !== 'a01013' &&
-            key !== 'a01014'
+            key !== 'a01014' &&
+            key !== 'b02'
           ) {
             newPollutant.push({
               PollutantName: pollutant[key][0].PollutantName,
@@ -55,6 +57,7 @@ export default Model.extend({
         let visualizaData = {
           ...result.Datas,
           pollutant: newPollutant,
+          flows: pollutant['a01011'] || [],
           otherParams: otherParams,
           isShowKLW: isShowKLW,
           isCO2: !!newPollutant.find(item => item.PollutantCode === 'a05001')

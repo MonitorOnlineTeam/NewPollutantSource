@@ -13,7 +13,6 @@ const style = {
 }
 
 @connect(({ loading, global }) => ({
-  configInfo: global.configInfo,
 }))
 class PlaybackVideo extends PureComponent {
   constructor(props) {
@@ -78,7 +77,7 @@ class PlaybackVideo extends PureComponent {
           autoplay: true, // 开启自动播放
           accessToken: Cookies.get('YSYAccessToken'),
           url: url,
-          template: 'security', // simple - 极简版;standard-标准版;security - 安防版(预览回放);voice-语音版； 
+          template: 'security', // simple - 极简版;standard-标准版;security - 安防版(预览回放);voice-语音版；
         })
       }
     }

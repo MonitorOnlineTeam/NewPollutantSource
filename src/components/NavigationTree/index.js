@@ -931,6 +931,10 @@ class NavigationTree extends Component {
     } else {
       _props = { expandedKeys }
     }
+    let getContainer = (Setting.layout === 'sidemenu' && config.isShowTabs) ? false : 'body';
+    if (this.props.getContainer !== undefined) {
+      getContainer = this.props.getContainer;
+    }
     return (
       <div >
 
@@ -944,7 +948,8 @@ class NavigationTree extends Component {
           width={320}
           mask={false}
           zIndex={1}
-          getContainer={(Setting.layout === 'sidemenu' && config.isShowTabs) ? false : 'body'}
+          getContainer={getContainer}
+          // getContainer={false}
           bodyStyle={{ padding: '18px 8px' }}
           style={{
             marginTop: 64,

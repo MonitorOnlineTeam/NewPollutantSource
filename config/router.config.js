@@ -1,10 +1,15 @@
 
 const routes = [
-  {
-    path: '/autoLogin',
-    component: '../layouts/BlankLayout',
-    routes: [{ path: '/autoLogin', component: './user/login/AutoLogin' }],
-  },
+  // {
+  //   path: '/auto',
+  //   component: '../layouts/BlankLayout',
+  //   routes: [
+  //     {
+  //       path: '/autoLogin',
+  //       component: './user/login/AutoLogin'
+  //     },
+  //   ],
+  // },
   {
     path: '/ControlCabin',
     component: '../layouts/ControlCabinLayout',
@@ -76,6 +81,10 @@ const routes = [
     component: '../layouts/BlankLayout',
     routes: [
       {
+        path: '/autoLogin',
+        component: './user/login/AutoLogin'
+      },
+      {
         name: 'homepage',
         path: '/homepage',
         component: './home',
@@ -95,7 +104,11 @@ const routes = [
         path: '/summaryProject',
         component: './projectSummary/index',
       },
-
+      {
+        name: 'dataFlowChart',
+        path: '/dataFlowChart',
+        component: './home/yanshi/DataFolwChart',
+      },
       // appoperation
       {
         path: '/appoperation',

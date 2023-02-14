@@ -98,7 +98,7 @@ export default Model.extend({
             if (defaultNavigateUrl) {
               router.push(defaultNavigateUrl);
             } else {
-              const configInfo = yield select(state => state.global.configInfo)
+              // const configInfo = yield select(state => state.global.configInfo)
               if (configInfo.IsShowSysPage === '1') {
                 router.push('/sysTypeMiddlePage');
               } else {

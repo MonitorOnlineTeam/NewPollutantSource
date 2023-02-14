@@ -911,6 +911,9 @@ class DepartIndex extends Component {
                                     },
                                 })}
                                 style={{ marginTop: '20px' }}
+                                pagination={{
+                                    pageSize: 20
+                                }}
                                 //rowSelection={rowRadioSelection}
                                 size="small" columns={this.state.columns} defaultExpandAllRows dataSource={this.props.DepartInfoTree} />
 

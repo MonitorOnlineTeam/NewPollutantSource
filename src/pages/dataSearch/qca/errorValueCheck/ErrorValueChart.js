@@ -55,7 +55,7 @@ class BlindCheckChart extends PureComponent {
 
     return {
       title: {
-        text: "盲样核查数据历史记录",
+        text: "示值误差核查数据历史记录",
         left: 'center'
       },
       tooltip: {
@@ -202,11 +202,11 @@ class BlindCheckChart extends PureComponent {
           <div className={styles.legendItem}>
             <i className={styles.sanjiao}></i>
             合格
-            </div>
+          </div>
           <div className={styles.legendItem}>
             <i className={`${styles.sanjiao} ${styles.bhg}`}></i>
             不合格
-            </div>
+          </div>
         </div>
       </div>
     );

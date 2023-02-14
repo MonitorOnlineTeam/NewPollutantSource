@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva'
 import { MapInteractionCSS } from 'react-map-interaction';
-import { Image, Tooltip } from 'antd';
+import { Tag, Tooltip, Descriptions, Modal } from 'antd';
 import styles from "../index.less"
 import PageLoading from '@/components/PageLoading'
 import QuestionTooltip from "@/components/QuestionTooltip"
@@ -333,7 +333,7 @@ class FlowChart extends PureComponent {
             <li><span>温度：</span>{yanw}</li>
             <li><span>湿度：</span>{yans}</li>
             <li><span>静压：</span>{yanj}</li>
-            <li><span>流速：</span>{yanls}</li>
+            <li><span>流速：</span><Tag color="#108ee9" style={{}} onClick={() => this.setState({ visible: true })}>查看</Tag></li>
             <li><span>流量：</span>{yanll}</li>
           </ul>
         }
@@ -420,8 +420,8 @@ class FlowChart extends PureComponent {
           tongxunState: res.status, // 通讯状态
         })
 
-        res.cems.cems.map(item => {
-          if (item.Code === "a01016") { //烟道截面积  
+        res.cems.map(item => {
+          if (item.Code === "a01016") { //烟道截面积
             this.setState({ yan: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
           }
           if (item.Code === "a01030") { //皮托管
@@ -610,10 +610,39 @@ class FlowChart extends PureComponent {
       })
     }
   }
+
+  handleCancel = e => {
+    this.setState({
+      visible: false,
+    });
+  };
+
   render() {
     const PageContent = this.pageContent;
+    const { visualizaData } = this.props;
+    console.log('visualizaData', visualizaData)
     return (
-      <> {this.props.loading ? <PageLoading /> : <PageContent />}</>
+      <>
+        {this.props.loading ? <PageLoading /> : <PageContent />}
+        <Modal
+          title="查看流速"
+          width={'80vw'}
+          visible={this.state.visible}
+          footer={false}
+          onCancel={this.handleCancel}
+        >
+          <Descriptions bordered>
+            {
+              visualizaData.flows.map(item => {
+                return <Descriptions.Item label={item.PollutantName}>{item.Value} {item.Unit}</Descriptions.Item>
+              })
+            }
+            {/* <Descriptions.Item label="Billing Mode">Prepaid</Descriptions.Item>
+            <Descriptions.Item label="Automatic Renewal">YES</Descriptions.Item>
+            <Descriptions.Item label="Order time">2018-04-24 18:00:00</Descriptions.Item> */}
+          </Descriptions>
+        </Modal>
+      </>
     );
   }
 }
