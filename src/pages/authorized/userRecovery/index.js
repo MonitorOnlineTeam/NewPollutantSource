@@ -191,10 +191,10 @@ const Index = (props) => {
             <Form.Item>
                 <Button loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">
                     查询
-       </Button>
+               </Button>
                 <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
                     重置
-        </Button>
+                </Button>
             </Form.Item>
         </Form>
         </>

@@ -162,14 +162,13 @@ const Index = (props) => {
                     dataSource={tableDatas}
                     columns={columns}
                     scroll={{ y: 'calc(100vh - 460px)'}}
-                    onChange={handleTableChange}
                     pagination={{
                         total: tableTotal,
                         pageSize: pageSize,
                         current: pageIndex,
                         showSizeChanger: true,
                         showQuickJumper: true,
-                        // onChange: handleTableChange,
+                        onChange: handleTableChange,
                     }}
                 />
                 </Card>

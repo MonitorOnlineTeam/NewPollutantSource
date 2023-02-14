@@ -49,14 +49,14 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *exportTestPeport({ payload, callback }, { call, put, update }) { //检测报告 导出
-      const result = yield call(services.DeleteQuestionDetial, payload);
+    *getQuestionType({ payload,callback }, { call, put, update }) { //问题类别
+      const result = yield call(services.GetQuestionType, payload);
       if (result.IsSuccess) {
-        message.success('下载成功');
-        downloadFile(`${result.Datas}`);
-      } else {
-        message.error(result.Message);
+        callback(result.Datas)
+      }else{
+        message.error(result.Message)
       }
-    }, 
+    },
+    
   },
 })
