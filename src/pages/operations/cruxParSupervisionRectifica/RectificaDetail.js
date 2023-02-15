@@ -31,7 +31,9 @@ const namespace = 'cruxParSupervisionRectifica'
 
 
 const dvaPropsData = ({ loading, supervisionManager, global, common }) => ({
-  rectificaDetailLoading: loading.effects[`${namespace}/getInspectorOperationView`],
+  tableDatas:cruxParSupervisionRectifica.parameterQuestionDetailList,
+  tableLoading: loading.effects[`${namespace}/getKeyParameterQuestionDetailList`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -42,9 +44,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getInspectorOperationView: (payload, callback) => {//获取单个督查表实体
+    getKeyParameterQuestionDetailList: (payload, callback) => {//详情
       dispatch({
-        type: `${namespace}/getInspectorOperationView`,
+        type: `${namespace}/getKeyParameterQuestionDetailList`,
         payload: payload,
         callback: callback,
       })
@@ -66,18 +68,14 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-  const { rectificaDetailLoading, ID, pollutantType, type, } = props;
+  const { tableDatas,tableLoading, id, pollutantType, type, } = props;
 
   const [form] = Form.useForm();
 
-  const [operationInfoList, setOperationInfoList] = useState([])
-  const [infoList, seInfoList] = useState(null)
+  const [infoData, seInfoList] = useState(null)
 
   useEffect(() => {
-    props.getInspectorOperationView({ ID: ID }, (data) => {
-      setOperationInfoList(data)
-      seInfoList(data.Info && data.Info[0] ? data.Info[0] : null)
-    })
+    props.getKeyParameterQuestionList({ id: id })
   }, []);
 
   const TitleComponents = (props) => {
@@ -343,41 +341,37 @@ const Index = (props) => {
   return (
     <div className={'passDetail'} >
       <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>运维督查表</div>
-
-      <Spin spinning={rectificaDetailLoading}>
-
         <Form>
-          <div className={'essentialInfoSty'}>
-            <TitleComponents text='基本信息' />
+          <div style={{padding:'8px 0'}}> 
             <Row>
               <Col span={12}>
                 <Form.Item label="企业名称" >
-                  {infoList && infoList.EntName}
+                  {infoData && infoData.entName}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label='监测点名称' >
-                  {infoList && infoList.PointName}
+                  {infoData && infoData.pointName}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="运维人员"   >
-                  {infoList && infoList.InspectorName}
+                  {infoData && infoData.operationUserName}
                 </Form.Item>
               </Col >
               <Col span={12}>
                 <Form.Item label="提交时间" >
-                  {infoList && infoList.InspectorDate}
+                  {infoData && infoData.createTime}
                 </Form.Item>
               </Col >
               <Col span={12}>
                 <Form.Item label="核查人员"   >
-                  {infoList && infoList.InspectorName}
+                  {infoData && infoData.checkUserName}
                 </Form.Item>
               </Col >
               <Col span={12}>
                 <Form.Item label="核查日期" >
-                 {infoList && infoList.InspectorDate}
+                 {infoData && moment(infoData.checkTime).format('YYYY-MM-DD')}
                 </Form.Item>
               </Col >
             </Row>
@@ -385,16 +379,14 @@ const Index = (props) => {
         </Form>
 
         <div className={'passDetail'}>
-          <TitleComponents text='督查内容' />
           <SdlTable
-            dataSource={operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList}
+            dataSource={tableDatas}
             columns={columns}
             pagination={false}
+            loading={tableLoading}
           />
 
         </div>
-
-      </Spin>
       <Modal
         title='查看附件'
         visible={fileVisible}

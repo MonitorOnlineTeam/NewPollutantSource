@@ -38,17 +38,14 @@ const namespace = 'cruxParSupervision'
 
 
 const dvaPropsData = ({ loading, cruxParSupervision, global, common, point, autoForm }) => ({
-  tableDatas: cruxParSupervision.tableDatas,
-  tableLoading: loading.effects[`point/getSystemModelList`],
-  tableTotal: cruxParSupervision.tableTotal,
   entLoading: common.entLoading,
   clientHeight: global.clientHeight,
-  saveloading: loading.effects[`point/getSystemModelList`],
-  operationInfoList: cruxParSupervision.operationInfoList,
-  exportLoading: loading.effects[`${namespace}/exportInspectorOperationManage`],
-  checkDetailDate:cruxParSupervision.checkDetailDate,
+  tableDatas: cruxParSupervision.tableDatas,
+  tableLoading: loading.effects[`${namespace}/getKeyParameterCheckList`] || loading.effects[`${namespace}/deleteKeyParameterItemCheck`] || loading.effects[`${namespace}/issuedKeyParameter`] || false,
+  tableTotal: cruxParSupervision.tableTotal,
   regQueryPar:cruxParSupervision.regQueryPar,
-
+  checkDetailLoading: loading.effects[`${namespace}/getKeyParameterCheckDetailList`],
+  editCheckTime:cruxParSupervision.editCheckTime,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -73,15 +70,35 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    getInspectorOperationManageList: (payload) => { //列表
+    getKeyParameterCheckList: (payload) => { //获取关键参数核查列表
       dispatch({
-        type: `${namespace}/getInspectorOperationManageList`,
+        type: `${namespace}/getKeyParameterCheckList`,
         payload: payload,
       })
     },
-    exportInspectorOperationManage: (payload, callback) => { //导出
+    exportKeyParameterCheckList: (payload) => { //获取关键参数核查列表 导出
       dispatch({
-        type: `${namespace}/exportInspectorOperationManage`,
+        type: `${namespace}/exportKeyParameterCheckList`,
+        payload: payload,
+      })
+    },
+    subCheckItem: (payload,callback) => { //保存或提交关键参数核查
+      dispatch({
+        type: `${namespace}/subCheckItem`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    deleteKeyParameterItemCheck: (payload,callback) => { //删除关键参数核查项
+      dispatch({
+        type: `${namespace}/deleteKeyParameterItemCheck`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    issuedKeyParameter: (payload,callback) => { //下发关键参数核查信息
+      dispatch({
+        type: `${namespace}/issuedKeyParameter`,
         payload: payload,
         callback: callback
       })
@@ -100,7 +117,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, operationInfoList,saveloading,checkDetailDate,regQueryPar, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,saveloading,regQueryPar, } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -124,85 +141,79 @@ const Index = (props) => {
     },
     {
       title: '省',
-      dataIndex: 'province',
-      key: 'province',
+      dataIndex: 'provinceName',
+      key: 'provinceName',
       align: 'center',
     },
     {
       title: '市',
-      dataIndex: 'city',
-      key: 'city',
+      dataIndex: 'cityName',
+      key: 'cityName',
       align: 'center',
     },
     {
       title: `企业名称`,
-      dataIndex: 'EntName',
-      key: 'EntName',
+      dataIndex: 'entName',
+      key: 'entName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '监测点名称',
-      dataIndex: 'PointName',
-      key: 'PointName',
+      dataIndex: 'pointName',
+      key: 'pointName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '运维人员',
-      dataIndex: 'OperationUserName',
-      key: 'OperationUserName',
+      dataIndex: 'operationUserName',
+      key: 'operationUserName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '核查人',
-      dataIndex: 'InspectorName',
-      key: 'InspectorName',
+      dataIndex: 'checkUserName',
+      key: 'checkUserName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '核查日期',
-      dataIndex: 'InspectorDate',
-      key: 'InspectorDate',
+      dataIndex: 'checkTime',
+      key: 'checkTime',
       align: 'center',
       ellipsis: true,
-      render: (text, record, index) => {
-        return text ? moment(text).format("YYYY-MM-DD") : null;
-      }
     },
     {
       title: '核查状态',
-      dataIndex: 'Status',
-      key: 'Status',
+      dataIndex: 'checkStatus',
+      key: 'checkStatus',
       align: 'center',
       ellipsis: true,
-      render: (text, record, index) => {
-        return text == 0 ? '保存' : text == 1 ? '提交' : '推送';
-      }
     },
     {
       title: '核查结果',
-      dataIndex: 'Status',
-      key: 'Status',
+      dataIndex: 'checkResult',
+      key: 'checkResult',
       align: 'center',
       ellipsis: true,
-      render: (text, record, index) => {
-        return text == 0 ? '保存' : text == 1 ? '提交' : '推送';
+      render: (text, record) => {
+        return text === '不合格' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
       }
     },
     {
       title: '问题数量',
-      dataIndex: 'ProblemNum',
-      key: 'ProblemNum',
+      dataIndex: 'questionCount',
+      key: 'questionCount',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '下发状态',
-      dataIndex: 'issue',
-      key: 'issue',
+      dataIndex: 'issuedStatus',
+      key: 'issuedStatus',
       align: 'center',
       ellipsis: true,
       render: (text, record) => {
@@ -219,29 +230,29 @@ const Index = (props) => {
 
     {
       title: '创建人',
-      dataIndex: 'CreateUserName',
-      key: 'CreateUserName',
+      dataIndex: 'createUserName',
+      key: 'createUserName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '创建时间',
-      dataIndex: 'CreateTime',
-      key: 'CreateTime',
+      dataIndex: 'createTime',
+      key: 'createTime',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '更新人',
-      dataIndex: 'UpdateUserName',
-      key: 'UpdateUserName',
+      dataIndex: 'updUserName',
+      key: 'updUserName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '更新时间',
-      dataIndex: 'UpdateTime',
-      key: 'UpdateTime',
+      dataIndex: 'updTime',
+      key: 'updTime',
       align: 'center',
       ellipsis: true,
     },
@@ -272,12 +283,14 @@ const Index = (props) => {
                 <AuditOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip>
-            <Divider type="vertical" />
+           {/* {record.issuedStatus=='待下发'&&<> */}
+           <Divider type="vertical" />
             <Tooltip title={"下发"} >
               <Popconfirm  title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
                 <a><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
+            {/* </>} */}
             <Divider type="vertical" />
             {detail}
           </>
@@ -308,11 +321,14 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getInspectorOperationManageList(par? par: { 
+      props.getKeyParameterCheckList(par? par: { 
         ...values,
-        BTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-        ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        checkBeginTime: values.time2 && moment(values.time2[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        checkEndTime: values.time2 && moment(values.time2[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
+        time2:undefined,
         pageIndex: pageIndexs,
         pageSize: pageSizes,
       })
@@ -322,93 +338,38 @@ const Index = (props) => {
   }
   const exports = async () => { //导出
     const values = await form.validateFields();
-
-    props.exportInspectorOperationManage({
+    props.exportKeyParameterCheckList({
       ...values,
-      BTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-      ETime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
-      time: undefined,
-
+      pageIndex: undefined,
+      pageSize: undefined,
     })
   }
 
-  const formatData = (data, type) => {
-    return data.map(item => {
-      return {
-        InspectorContentID: item.InspectorContentID,
-        InspectorNum: item.InspectorNum,
-        ParentID: item.ParentID,
-        Attachment:'',
-      }
-    })
-  }
+
   const [saveLoading1, setSaveLoading1] = useState(false)
   const [saveLoading2, setSaveLoading2] = useState(false)
 
   const save =  (type) => {
 
-
-    try {
       type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
-
-      let principleProblemList = operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList || [];
-      let importanProblemList = operationInfoList.importanProblemList && operationInfoList.importanProblemList || [];
-      let commonlyProblemList = operationInfoList.CommonlyProblemList && operationInfoList.CommonlyProblemList || [];
-
-      if (principleProblemList) {
-        principleProblemList = formatData(principleProblemList, 1)
-      }
-      if (importanProblemList) {
-        importanProblemList = formatData(importanProblemList, 2)
-      }
-      if (commonlyProblemList) {
-        commonlyProblemList = formatData(commonlyProblemList, 3)
-      }
-
       const data = {
-        ...values,
-        RegionCode: values.RegionCode.join(","),
-        PollutantCode: values.PollutantCode.join(","),
-        InspectorDate: moment(values.InspectorDate).format("YYYY-MM-DD HH:mm:ss"),
-        IsSubmit: type,
-        InspectorOperationInfoList: [...principleProblemList, ...importanProblemList, ...commonlyProblemList],
-        ...devicePar,
+        id:checkDetailId,
+        checkTime:props.editCheckTime && moment(props.editCheckTime).format("YYYY-MM-DD HH:mm:ss"),
+        submitStatus: type,
       }
-
-        props.addOrEditInspectorOperation(data, (isSuccess) => {
-          type == 1 ? setSaveLoading1(false) : null;
+        props.subCheckItem(data, (isSuccess) => {
+          type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
           isSuccess && onFinish(pageIndex,pageSize)
-
+          if(isSuccess){
+             onFinish(pageIndex,pageSize)
+            }else{
+              props.updateState({editCheckTime:infoData&&infoData.checkTime&& moment(infoData.checkTime).format('YYYY-MM-DD HH:mm:ss') })  
+            }
         })
-
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-      type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
-
-
-    }
-
+    
   }
 
 
-  const [pointList, setPointList] = useState([])
-  const [pointLoading, setPointLoading] = useState(false)
-
-  const onValuesChange = (hangedValues, allValues) => {
-    if (Object.keys(hangedValues).join() == 'EntCode') {
-      if (!hangedValues.EntCode) { //清空时 不走请求
-        form.setFieldsValue({ DGIMN: undefined })
-        setPointList([])
-        return;
-      }
-      setPointLoading(true)
-      props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
-        setPointList(res)
-        setPointLoading(false)
-        form.setFieldsValue({ DGIMN: res[0].DGIMN })
-      })
-    }
-  }
 
 
   const searchComponents = () => {
@@ -423,11 +384,20 @@ const Index = (props) => {
         onValuesChange={onValuesChange}
       >
         <Row align='middle'>
-          <Form.Item label='行政区' name='RegionCode' >
+          <Form.Item label='行政区' name='regionCode' >
             <RegionList noFilter levelNum={3} style={{ width: 150 }} />
           </Form.Item>
+          <Form.Item label="创建时间" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
+            <RangePicker_
+              style={{ width: 300 }}
+              allowClear={false}
+              showTime={{
+                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+              }} 
+              format="YYYY-MM-DD" />
+          </Form.Item>
           <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
-            <Form.Item label='企业' name='EntCode' style={{ marginLeft: 8, marginRight: 8 }}>
+            <Form.Item label='企业' name='entCode' style={{  marginRight: 8 }}>
               <EntAtmoList noFilter style={{ width: 300 }} />
             </Form.Item>
           </Spin>
@@ -445,17 +415,17 @@ const Index = (props) => {
           </Spin>
         </Row>
 
-        <Row>
-          <Form.Item label="核查人" name="Inspector"  >
+        <Row style={{paddingTop:5}}>
+          <Form.Item label="核查人" name="checkUser"  >
             <OperationInspectoUserList type='2' style={{ width: 150 }} />
           </Form.Item>
-          <Form.Item label="核查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
+          <Form.Item label="核查日期" name="time2" style={{ marginLeft: 8, marginRight: 8 }}  >
             <RangePicker_
               style={{ width: 300 }}
               allowClear={false}
               format="YYYY-MM-DD" />
           </Form.Item>
-          <Form.Item label="核查结果" name="OperationUser" style={{ marginRight: 8 }}  >
+          <Form.Item label="核查结果" name="checkResult" style={{ marginRight: 8 }}  >
             <Select placeholder='请选择' allowClear style={{ width: 150 }}>
               <Option key={1} value={1} >合格</Option>
               <Option key={2} value={2} >不合格</Option>
@@ -476,6 +446,8 @@ const Index = (props) => {
       </Form>
   }
 
+  const [pageSize, setPageSize] = useState(20)
+  const [pageIndex, setPageIndex] = useState(1)
 
   const handleTableChange = (PageIndex, PageSize) => {
     setPageIndex(PageIndex)
@@ -484,34 +456,50 @@ const Index = (props) => {
   }
 
 
-  const [pageSize, setPageSize] = useState(20)
-  const [pageIndex, setPageIndex] = useState(1)
 
 
 
-  const del = (record) => { //删除
-    props.deleteRemoteInspector({ ID: record.id }, () => {
-      setPageIndex(1)
-      onFinish(1, pageSize)
-    })
-  }
   const [checkDetailVisible, setCheckDetailVisible] = useState(false)
   const [checkDetailId, setCheckDetailId] = useState(null)
   const [checkDetailType, setCheckDetailType] = useState(1)
-
+  const [infoData,setInfoData] = useState(null)
   const checkDetail = (record,type) => { //核查 详情
-    setCheckDetailId(record.ID);
+    setCheckDetailId(record.id);
     setCheckDetailVisible(true)
     setCheckDetailType(type)
+    setInfoData(record)
+  }
+
+  const del = (record) => { //删除
+    props.deleteKeyParameterItemCheck({ id: record.id }, (isSuccess) => {
+      setPageIndex(1)
+      isSuccess&&onFinish(1, pageSize)
+    })
   }
 
   const issues = (record) => { //下发
-    props.issueRemoteInspector({ ID: record.id }, () => {
+    props.issuedKeyParameter({ id: record.id }, () => {
       onFinish(pageIndex, pageSize)
     })
   }
 
-
+  const [pointList, setPointList] = useState([])
+  const [pointLoading, setPointLoading] = useState(false)
+  const onValuesChange = (hangedValues, allValues) => {
+    if (Object.keys(hangedValues).join() == 'entCode') {
+      if (!hangedValues.EntCode) { //清空时 不走请求
+        form.setFieldsValue({ DGIMN: undefined })
+        setPointList([])
+        return;
+      }
+      setPointLoading(true)
+      props.getPointByEntCode({ EntCode: hangedValues.entCode }, (res) => {
+        setPointList(res)
+        setPointLoading(false)
+      })
+      form.setFieldsValue({ DGIMN: undefined })
+    }
+  }
   return (
     <div className={styles.supervisionManagerSty}>
       <BreadcrumbWrapper >
@@ -539,15 +527,15 @@ const Index = (props) => {
 
       <Modal //核查和详情 
         visible={checkDetailVisible}
-        title={'详情'}
+        title={checkDetailType ==1?  '核查' : '详情'}
         footer={checkDetailType==1? [
           <Button onClick={()=>{setCheckDetailVisible(false)}}>
             取消
           </Button>,
-          <Button  type="primary" loading={saveloading}  onClick={()=>{save(1)}}>
+          <Button  type="primary" loading={saveLoading1 || props.checkDetailLoading}  onClick={()=>{save(1)}}>
             保存
           </Button>,
-          <Button  type="primary" loading={saveloading}   onClick={()=>{save(2)}} >
+          <Button  type="primary" loading={saveLoading2 || props.checkDetailLoading}   onClick={()=>{save(2)}} >
             提交
           </Button> ,
         ] : null}
@@ -556,7 +544,7 @@ const Index = (props) => {
         onCancel={() => { setCheckDetailVisible(false) }}
         destroyOnClose
       >
-        <CheckDetail ID={checkDetailId} type={checkDetailType}/>
+        <CheckDetail id={checkDetailId} type={checkDetailType} infoData={infoData}/>
       </Modal>
     </div>
   );

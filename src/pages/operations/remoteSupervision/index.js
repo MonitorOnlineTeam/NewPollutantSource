@@ -905,10 +905,6 @@ const Index = (props) => {
 
   const [pointList, setPointList] = useState([])
   const [pointLoading, setPointLoading] = useState(false)
-
-
-
-
   const onValuesChange = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'EntCode') {
       if (!hangedValues.EntCode) { //清空时 不走请求

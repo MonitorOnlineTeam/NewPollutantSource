@@ -30,8 +30,11 @@ const namespace = 'cruxParSupervision'
 
 
 
-const dvaPropsData = ({ loading, supervisionManager, global, common }) => ({
-  checkDetailLoading: loading.effects[`${namespace}/getInspectorOperationView`],
+const dvaPropsData = ({ loading, cruxParSupervision, global, common }) => ({
+  tableLoading: loading.effects[`${namespace}/getKeyParameterCheckDetailList`] || loading.effects[`${namespace}/deleteKeyParameterCheck`] || false,
+  checkSaveLoading: loading.effects[`${namespace}/checkItemKeyParameter`],
+  tableDatas: cruxParSupervision.checkDetailData,
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -42,19 +45,24 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getInspectorOperationView: (payload, callback) => {//获取单个督查表实体
+    getKeyParameterCheckDetailList: (payload) => {//获取关键参数核查列表详情
       dispatch({
-        type: `${namespace}/getInspectorOperationView`,
+        type: `${namespace}/getKeyParameterCheckDetailList`,
         payload: payload,
-        callback: callback,
       })
     },
-    deleteAttach: (file) => { //删除照片
+    checkItemKeyParameter: (payload,callback) => { //核查
       dispatch({
-        type: "autoForm/deleteAttach",
-        payload: {
-          Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
-        }
+        type: `${namespace}/checkItemKeyParameter`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    deleteKeyParameterCheck: (payload,callback) => { //清除
+      dispatch({
+        type: `${namespace}/deleteKeyParameterCheck`,
+        payload: payload,
+        callback: callback
       })
     },
   }
@@ -66,18 +74,13 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-  const { checkDetailLoading, ID, pollutantType, type, } = props;
+  const { tableDatas,tableLoading, id, pollutantType, type, checkSaveLoading,infoData,} = props;
 
   const [form] = Form.useForm();
 
-  const [operationInfoList, setOperationInfoList] = useState([])
-  const [infoList, seInfoList] = useState(null)
 
   useEffect(() => {
-    props.getInspectorOperationView({ ID: ID }, (data) => {
-      setOperationInfoList(data)
-      seInfoList(data.Info && data.Info[0] ? data.Info[0] : null)
-    })
+    props.getKeyParameterCheckDetailList({ id: id })
   }, []);
 
   const TitleComponents = (props) => {
@@ -115,22 +118,22 @@ const Index = (props) => {
     },
     {
       title: '核查项',
-      dataIndex: 'ContentItem',
-      key: 'ContentItem',
+      dataIndex: 'typeName',
+      key: 'typeName',
       align: 'center',
       width: 200,
     },
     {
       title: `备注`,
-      dataIndex: 'Inspector',
-      key: 'Inspector',
+      dataIndex: 'remark',
+      key: 'remark',
       align: 'center',
       width: 200,
     },
     {
       title: '照片附件(运维人员提交)',
-      dataIndex: 'Attachments',
-      key: 'Attachments',
+      dataIndex: 'fileList',
+      key: 'fileList',
       align: 'center',
       width: 170,
       render: (text, record) => {
@@ -141,22 +144,25 @@ const Index = (props) => {
     },
     {
       title: `核查状态`,
-      dataIndex: 'Inspector',
-      key: 'Inspector',
+      dataIndex: 'checkStatusName',
+      key: 'checkStatusName',
       align: 'center',
       width: 200,
+      render: (text, record) => {
+        return text === '未通过' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
+      }
     },
     {
       title: `核查问题描述`,
-      dataIndex: 'Inspector',
-      key: 'Inspector',
+      dataIndex: 'checkReamrk',
+      key: 'checkReamrk',
       align: 'center',
       width: 200,
     },
     {
       title: `核查问题照片附件`,
-      dataIndex: 'Inspector',
-      key: 'Inspector',
+      dataIndex: 'checkFileList',
+      key: 'checkFileList',
       align: 'center',
       width: 200,
       render: (text, record) => {
@@ -189,11 +195,6 @@ const Index = (props) => {
   const check = (record) => {
     setCheckVisible(true)
   }
-  const clear = (record) => {
-
-  }
-
-
 
   const [previewVisible, setPreviewVisible] = useState(false)
   const [photoIndex, setPhotoIndex] = useState(0); //预览附件Index
@@ -261,14 +262,14 @@ const Index = (props) => {
         setFilesList2(fileList)
       }
       if (info.file.status === 'done') {
-        form.setFieldsValue({ File: filesCuid })
+        form.setFieldsValue({ checkFile: filesCuid })
         setFilesList2(fileList)
         message.success(`${info.file.name} 上传成功`);
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} 上传失败`);
         setFilesList2(fileList)
       } else if (info.file.status === 'removed') { //删除状态
-        form.setFieldsValue({ File: filesCuid })
+        form.setFieldsValue({ checkFile: filesCuid })
         setFilesList2(fileList)
       }
     },
@@ -295,13 +296,20 @@ const Index = (props) => {
       </div>
     </div>
   );
-  const checkOK = async () => {
+  const clear = (record) => {
+    props.deleteKeyParameterCheck({ id: id}, () => {
+      props.getKeyParameterCheckDetailList({ id: id })
+    })
+  }
+
+  const checkOK = async () => { //核查保存
     try {
       const values = await form.validateFields();
-      props.getInspectorOperationManageList({
+      props.checkItemKeyParameter({
         ...values,
-      }, () => {
-
+        id:id,
+      }, (isSuccess) => {
+        isSuccess&&props.getKeyParameterCheckDetailList({ id: id })
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -311,68 +319,62 @@ const Index = (props) => {
   if (type == 2) {
     columns = columns.filter(item => item.title != '操作')
   }
-
   return (
     <div className={'checkDetail'} >
-      <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>运维督查表</div>
-
-      <Spin spinning={checkDetailLoading}>
-
+      {/* <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>{type==1? '核查':'详情'}</div> */}
         <Form>
-          <div className={'essentialInfoSty'}>
-            <TitleComponents text='基本信息' />
+          <div style={{padding:'8px 0'}}>
             <Row>
               <Col span={12}>
                 <Form.Item label="企业名称" >
-                  {infoList && infoList.EntName}
+                  {infoData && infoData.entName}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label='监测点名称' >
-                  {infoList && infoList.PointName}
+                  {infoData && infoData.pointName}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="运维人员"   >
-                  {infoList && infoList.InspectorName}
+                  {infoData && infoData.operationUserName}
                 </Form.Item>
               </Col >
               <Col span={12}>
                 <Form.Item label="提交时间" >
-                  {infoList && infoList.InspectorDate}
+                  {infoData && infoData.createTime}
                 </Form.Item>
               </Col >
               <Col span={12}>
                 <Form.Item label="核查人员"   >
-                  {infoList && infoList.InspectorName}
+                  {infoData && infoData.checkUserName}
                 </Form.Item>
               </Col >
               <Col span={12}>
                 <Form.Item label="核查日期" >
-                  {type == 1 ? <DatePicker onChange={(date, dateString) => {
-                     console.log(date.format('YYYY-MM-DD'))
-                     props.updateState({checkDetailDate:date&&date.format('YYYY-MM-DD') })  
+                  {type == 1 ? <DatePicker 
+                  showTime
+                  defaultValue={infoData&&infoData.checkTime&& moment(infoData.checkTime)}
+                  onChange={(date, dateString) => {
+                     props.updateState({editCheckTime:date })  
                   }} />
                     :
-                    <div>{infoList && infoList.InspectorDate}</div>
+                    <div>{infoData&&infoData.checkTime&& moment(infoData.checkTime).format('YYYY-MM-DD HH:mm:ss')}</div>
                   }
                 </Form.Item>
               </Col >
             </Row>
           </div>
         </Form>
-
-        <div className={'checkDetail'}>
-          <TitleComponents text='督查内容' />
-          <SdlTable
-            dataSource={operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList}
+        <SdlTable
+            resizable
+            bordered
+            dataSource={tableDatas}
+            loading={tableLoading}
             columns={columns}
+            scroll={{ y: 'calc(100vh - 360px)' }}
             pagination={false}
           />
-
-        </div>
-
-      </Spin>
       <Modal
         title='查看附件'
         visible={fileVisible}
@@ -398,11 +400,12 @@ const Index = (props) => {
       <Modal
         title='上位机量程与参数设置照片'
         visible={checkVisible}
-        onOk={() => { checkOK }}
+        onOk={() => { checkOK() }}
         destroyOnClose
         onCancel={() => { setCheckVisible(false) }}
         width={'50%'}
         wrapClassName={styles.checkOKSty}
+        confirmLoading={checkSaveLoading}
       >
         <Form
           name="basics"
@@ -411,7 +414,7 @@ const Index = (props) => {
 
           <Form.Item
             label="核查状态"
-            name="aa"
+            name="checkResult"
             rules={[{ required: true, message: '请选择核查状态' }]}
           >
             <Radio.Group>
@@ -421,14 +424,14 @@ const Index = (props) => {
           </Form.Item>
           <Form.Item
             label="核查问题描述"
-            name="bb"
+            name="checkRemark"
             rules={[{ required: true, message: '请输入核查问题描述' }]}
           >
             <TextArea placeholder='请输入' rows={4} />
           </Form.Item>
           <Form.Item
             label="核查问题照片附件"
-            name="file"
+            name="checkFile"
           >
             <Upload
               {...uploadProps2}
