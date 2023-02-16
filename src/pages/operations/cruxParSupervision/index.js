@@ -41,7 +41,7 @@ const dvaPropsData = ({ loading, cruxParSupervision, global, common, point, auto
   entLoading: common.entLoading,
   clientHeight: global.clientHeight,
   tableDatas: cruxParSupervision.tableDatas,
-  tableLoading: loading.effects[`${namespace}/getKeyParameterCheckList`] || loading.effects[`${namespace}/deleteKeyParameterItemCheck`] || loading.effects[`${namespace}/issuedKeyParameter`] || false,
+  tableLoading: loading.effects[`${namespace}/getKeyParameterCheckList`] || loading.effects[`${namespace}/deleteKeyParameterCheck`] || loading.effects[`${namespace}/issuedKeyParameter`] || false,
   tableTotal: cruxParSupervision.tableTotal,
   regQueryPar:cruxParSupervision.regQueryPar,
   checkDetailLoading: loading.effects[`${namespace}/getKeyParameterCheckDetailList`],
@@ -54,6 +54,14 @@ const dvaDispatch = (dispatch) => {
       dispatch({
         type: `${namespace}/updateState`,
         payload: payload,
+      })
+    },
+    deleteAttach: (file) => { //删除照片
+      dispatch({
+        type: "autoForm/deleteAttach",
+        payload: {
+          Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
+        }
       })
     },
     getPointByEntCode: (payload, callback) => { //监测点
@@ -89,9 +97,9 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    deleteKeyParameterItemCheck: (payload,callback) => { //删除关键参数核查项
+    deleteKeyParameterCheck: (payload,callback) => { //删除关键参数核查信息
       dispatch({
-        type: `${namespace}/deleteKeyParameterItemCheck`,
+        type: `${namespace}/deleteKeyParameterCheck`,
         payload: payload,
         callback: callback
       })
@@ -227,7 +235,13 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
     },
-
+    {
+      title: '下发次数',
+      dataIndex: 'issuedCount',
+      key: 'issuedCount',
+      align: 'center',
+      ellipsis: true,
+    },
     {
       title: '创建人',
       dataIndex: 'createUserName',
@@ -359,7 +373,6 @@ const Index = (props) => {
       }
         props.subCheckItem(data, (isSuccess) => {
           type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
-          isSuccess && onFinish(pageIndex,pageSize)
           if(isSuccess){
              onFinish(pageIndex,pageSize)
             }else{
@@ -387,15 +400,6 @@ const Index = (props) => {
           <Form.Item label='行政区' name='regionCode' >
             <RegionList noFilter levelNum={3} style={{ width: 150 }} />
           </Form.Item>
-          <Form.Item label="创建时间" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
-            <RangePicker_
-              style={{ width: 300 }}
-              allowClear={false}
-              showTime={{
-                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-              }} 
-              format="YYYY-MM-DD" />
-          </Form.Item>
           <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
             <Form.Item label='企业' name='entCode' style={{  marginRight: 8 }}>
               <EntAtmoList noFilter style={{ width: 300 }} />
@@ -413,31 +417,40 @@ const Index = (props) => {
               </Select>
             </Form.Item>
           </Spin>
+          <Form.Item label="创建时间" name="time" style={{marginRight: 8 }}  >
+            <RangePicker_
+              style={{ width: 300 }}
+              allowClear={false}
+              showTime={{
+                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+              }} 
+              format="YYYY-MM-DD" />
+          </Form.Item>
         </Row>
 
         <Row style={{paddingTop:5}}>
           <Form.Item label="核查人" name="checkUser"  >
             <OperationInspectoUserList type='2' style={{ width: 150 }} />
           </Form.Item>
-          <Form.Item label="核查日期" name="time2" style={{ marginLeft: 8, marginRight: 8 }}  >
+          <Form.Item label="核查日期" name="time2"  >
             <RangePicker_
               style={{ width: 300 }}
               allowClear={false}
               format="YYYY-MM-DD" />
           </Form.Item>
-          <Form.Item label="核查结果" name="checkResult" style={{ marginRight: 8 }}  >
+          <Form.Item label="核查结果" name="checkResult"   >
             <Select placeholder='请选择' allowClear style={{ width: 150 }}>
               <Option key={1} value={1} >合格</Option>
               <Option key={2} value={2} >不合格</Option>
             </Select>
           </Form.Item>
-          <Form.Item>
-            <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
+          <Form.Item style={{paddingLeft:16}}>
+            <Button type="primary" loading={tableLoading} htmlType='submit'>
               查询
-     </Button>
-            <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }} >
+            </Button>
+            <Button onClick={() => { form.resetFields() }}   style={{ margin: '0 8px' }}>
               重置
-     </Button>
+            </Button>
             <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
 
           </Form.Item>
@@ -471,7 +484,7 @@ const Index = (props) => {
   }
 
   const del = (record) => { //删除
-    props.deleteKeyParameterItemCheck({ id: record.id }, (isSuccess) => {
+    props.deleteKeyParameterCheck({ id: record.id }, (isSuccess) => {
       setPageIndex(1)
       isSuccess&&onFinish(1, pageSize)
     })

@@ -31,7 +31,7 @@ const namespace = 'cruxParSupervision'
 
 
 const dvaPropsData = ({ loading, cruxParSupervision, global, common }) => ({
-  tableLoading: loading.effects[`${namespace}/getKeyParameterCheckDetailList`] || loading.effects[`${namespace}/deleteKeyParameterCheck`] || false,
+  tableLoading: loading.effects[`${namespace}/getKeyParameterCheckDetailList`] || loading.effects[`${namespace}/deleteKeyParameterItemCheck`] || false,
   checkSaveLoading: loading.effects[`${namespace}/checkItemKeyParameter`],
   tableDatas: cruxParSupervision.checkDetailData,
 
@@ -43,6 +43,14 @@ const dvaDispatch = (dispatch) => {
       dispatch({
         type: `${namespace}/updateState`,
         payload: payload,
+      })
+    },
+    deleteAttach: (file) => { //删除照片
+      dispatch({
+        type: "autoForm/deleteAttach",
+        payload: {
+          Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
+        }
       })
     },
     getKeyParameterCheckDetailList: (payload) => {//获取关键参数核查列表详情
@@ -58,9 +66,9 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    deleteKeyParameterCheck: (payload,callback) => { //清除
+    deleteKeyParameterItemCheck: (payload,callback) => { //清除关键参数核查项
       dispatch({
-        type: `${namespace}/deleteKeyParameterCheck`,
+        type: `${namespace}/deleteKeyParameterItemCheck`,
         payload: payload,
         callback: callback
       })
@@ -87,25 +95,18 @@ const Index = (props) => {
     return <div style={{ display: 'inline-block', fontWeight: 'bold', padding: '2px 4px', marginBottom: 16, borderBottom: '1px solid rgba(0,0,0,.1)' }}>{props.text}</div>
 
   }
-  const [filesList, setFilesList] = useState([{
-    uid: '-1',
-    name: 'image.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },]);
+  const [filesList, setFilesList] = useState([]);
   const [fileVisible, setFileVisible] = useState(false)
 
   const getAttachmentData = (fileInfo) => {
     setFileVisible(true)
-    // const fileList = [];
-    // if (fileInfo) {
-    //   fileInfo.split(',').map(item,index => {
-    //     if (!item.IsDelete) {
-    //       fileList.push({ name: item, url: item, status: 'done',  uid: index, })
-    //     }
-    //   })
-    // }
-    // setFilesList(fileList)
+    const fileList = [];
+      fileInfo.map((item,index) => { 
+        if (!item.IsDelete) {
+          fileList.push({ name: item.FileActualName, url: `/upload/${item.FileName}`, status: 'done',  uid: item.GUID, })
+        }
+      })
+    setFilesList(fileList)
   }
   let columns = [
     {
@@ -138,7 +139,7 @@ const Index = (props) => {
       width: 170,
       render: (text, record) => {
         return <div>
-          <a onClick={() => { getAttachmentData(text) }}>查看附件</a>
+         {text&&text[0]&&<a onClick={() => { getAttachmentData(text) }}>查看附件</a>}
         </div>
       },
     },
@@ -149,7 +150,7 @@ const Index = (props) => {
       align: 'center',
       width: 200,
       render: (text, record) => {
-        return text === '未通过' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
+        return  <span style={{ color: text === '未通过' ? '#f5222d' : text === '已核查' ? '#52c41a' : ''}}>{text}</span> 
       }
     },
     {
@@ -167,7 +168,7 @@ const Index = (props) => {
       width: 200,
       render: (text, record) => {
         return <div>
-          <a onClick={() => { getAttachmentData(text) }}>查看附件</a>
+          {text&&text[0]&&<a onClick={() => { getAttachmentData(text) }}>查看附件</a>}
         </div>
       },
     },
@@ -191,10 +192,7 @@ const Index = (props) => {
 
     }
   ]
-  const [checkVisible, setCheckVisible] = useState(false)
-  const check = (record) => {
-    setCheckVisible(true)
-  }
+
 
   const [previewVisible, setPreviewVisible] = useState(false)
   const [photoIndex, setPhotoIndex] = useState(0); //预览附件Index
@@ -231,7 +229,7 @@ const Index = (props) => {
     showUploadList: { showRemoveIcon: false },
   };
 
-  const [filesCuid, setFilesCuid] = useState(cuid())
+  const filesCuid = form.getFieldValue('checkFile') ? form.getFieldValue('checkFile') : cuid()
   const [filesList2, setFilesList2] = useState([])
 
   const uploadProps2 = { // 核查问题照片附件 上传
@@ -297,17 +295,40 @@ const Index = (props) => {
     </div>
   );
   const clear = (record) => {
-    props.deleteKeyParameterCheck({ id: id}, () => {
-      props.getKeyParameterCheckDetailList({ id: id })
+    props.deleteKeyParameterItemCheck({id: record.id}, (isSuccess) => {
+      isSuccess&&props.getKeyParameterCheckDetailList({ id: id })
     })
   }
 
+  const [checkVisible, setCheckVisible] = useState(false)
+  const check = (record) => {
+    setCheckVisible(true)
+    form.setFieldsValue({
+      checkResult:record.checkStatus,
+      checkRemark:record.checkReamrk,
+      id:record.id,
+      typeID:record.typeID,
+    })
+    /*附件 */
+    setFilesList2([])
+    if(record.checkFileList && record.checkFileList[0]){
+     const fileList2 = [];
+     record.checkFileList.map((item,index) => { 
+      if (!item.IsDelete) {
+        fileList2.push({ name: item.FileActualName, url: `/upload/${item.FileName}`, status: 'done',  uid: item.GUID, })
+      }
+    })
+    setFilesList2(fileList2)
+    form.setFieldsValue({ checkFile:record.checkFileList[0].FileUuid,})
+    }else{
+    form.setFieldsValue({ checkFile:undefined,})
+   }
+  }
   const checkOK = async () => { //核查保存
     try {
       const values = await form.validateFields();
       props.checkItemKeyParameter({
         ...values,
-        id:id,
       }, (isSuccess) => {
         isSuccess&&props.getKeyParameterCheckDetailList({ id: id })
       })
@@ -372,7 +393,7 @@ const Index = (props) => {
             dataSource={tableDatas}
             loading={tableLoading}
             columns={columns}
-            scroll={{ y: 'calc(100vh - 360px)' }}
+            scroll={{y: 'hidden',}}
             pagination={false}
           />
       <Modal
@@ -411,15 +432,20 @@ const Index = (props) => {
           name="basics"
           form={form}
         >
-
+          <Form.Item name="typeID" hidden >
+            <Input />
+          </Form.Item>
+          <Form.Item name="id" hidden >
+            <Input />
+          </Form.Item>
           <Form.Item
             label="核查状态"
             name="checkResult"
             rules={[{ required: true, message: '请选择核查状态' }]}
           >
             <Radio.Group>
-              <Radio value={1}>已通过</Radio>
-              <Radio value={2}>未通过</Radio>
+              <Radio value={2}>已通过</Radio>
+              <Radio value={3}>未通过</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item

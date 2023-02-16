@@ -39,14 +39,6 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *getKeyParameterQuestionDetailList({ payload, callback }, { call, put, update }) { //关键参数核查整改详情
-      const result = yield call(services.GetKeyParameterQuestionDetailList, payload);
-      if (result.IsSuccess) {
-        yield update({  parameterQuestionDetailList: result.Datas,  })
-      } else {
-        message.error(result.Message)
-      }
-    },
     *checkItemKeyParameterQuestion({ payload, callback }, { call, put, update }) { //关键参数核查整改
       const result = yield call(services.CheckItemKeyParameterQuestion, payload);
       if (result.IsSuccess) {
@@ -55,6 +47,14 @@ export default Model.extend({
       } else {
         message.error(result.Message)
         callback(result.IsSuccess);
+      }
+    },
+    *getKeyParameterQuestionDetailList({ payload, callback }, { call, put, update }) { //关键参数核查整改详情
+      const result = yield call(services.GetKeyParameterQuestionDetailList, payload);
+      if (result.IsSuccess) {
+        yield update({  parameterQuestionDetailList:  result.Datas&&result.Datas.Itemlist? result.Datas.Itemlist : [],  })
+      } else {
+        message.error(result.Message)
       }
     },
     *updateKeyParameterQuestionStatus({ payload, callback }, { call, put, update }) { //通过或驳回关键参数核查整改

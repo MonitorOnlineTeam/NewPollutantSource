@@ -56,6 +56,14 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
+    deleteAttach: (file) => { //删除照片
+      dispatch({
+        type: "autoForm/deleteAttach",
+        payload: {
+          Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
+        }
+      })
+    },
     getPointByEntCode: (payload, callback) => { //监测点
       dispatch({
         type: `remoteSupervision/getPointByEntCode`,
@@ -85,13 +93,6 @@ const dvaDispatch = (dispatch) => {
     checkItemKeyParameterQuestion: (payload, callback) => { //核查整改
       dispatch({
         type: `${namespace}/checkItemKeyParameterQuestion`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    updateKeyParameterQuestionStatus: (payload, callback) => { //通过或驳回关键参数核查整改
-      dispatch({
-        type: `${namespace}/updateKeyParameterQuestionStatus`,
         payload: payload,
         callback: callback
       })
@@ -167,23 +168,20 @@ const Index = (props) => {
     },
     {
       title: '状态',
-      dataIndex: 'issuedStatus',
-      key: 'issuedStatus',
+      dataIndex: 'rectificationStatus',
+      key: 'rectificationStatus',
       align: 'center',
       ellipsis: true,
       render: (text, record) => {
-        return text === '待下发' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
+        return  <span style={{ color: text=='整改待核实'? '#f5222d': text=='整改已完成'? '#52c41a' : ''}}>{text}</span> 
       }
     },
     {
       title: '整改完成时间',
-      dataIndex: 'InspectorDate',
-      key: 'InspectorDate',
+      dataIndex: 'createTime',
+      key: 'createTime',
       align: 'center',
       ellipsis: true,
-      render: (text, record, index) => {
-        return text ? moment(text).format("YYYY-MM-DD") : null;
-      }
     },
 
     {
@@ -195,7 +193,7 @@ const Index = (props) => {
       render: (text, record) => {
         return (
           <div>
-            {!record.ss=='整改已完成'&&<>
+            {!record.rectificationStatus=='整改已完成'&&<>
             <a onClick={() => { rectificaDetail(record, 1) }}>
               核查整改
               </a>
@@ -300,7 +298,7 @@ const Index = (props) => {
           <RegionList noFilter levelNum={3} style={{ width: 150 }} />
         </Form.Item>
         <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
-          <Form.Item label='企业' name='entCode' style={{ marginLeft: 8, marginRight: 8 }}>
+          <Form.Item label='企业' name='entCode'>
             <EntAtmoList noFilter style={{ width: 300 }} />
           </Form.Item>
         </Spin>
@@ -316,7 +314,7 @@ const Index = (props) => {
             </Select>
           </Form.Item>
         </Spin>
-        <Form.Item label="核查日期" name="time2" style={{ marginLeft: 8, marginRight: 8 }}  >
+        <Form.Item label="核查日期" name="time2"  >
             <RangePicker_
               style={{ width: 300 }}
               allowClear={false}
@@ -328,25 +326,25 @@ const Index = (props) => {
         <Form.Item label="核查人" name="checkUser"  >
           <OperationInspectoUserList type='2' style={{ width: 150 }} />
         </Form.Item>
-        <Form.Item label="创建日期" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
+        <Form.Item label="创建日期" name="time"  >
           <RangePicker_
             style={{ width: 300 }}
             allowClear={false}
             format="YYYY-MM-DD" />
         </Form.Item>
-        <Form.Item label="核查结果" name="checkResult" style={{ marginRight: 8 }}  >
+        <Form.Item label="核查结果" name="checkResult"  >
           <Select placeholder='请选择' allowClear style={{ width: 150 }}>
             <Option key={1} value={1} >合格</Option>
             <Option key={2} value={2} >不合格</Option>
           </Select>
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
+        <Form.Item style={{paddingLeft:16}}>
+          <Button type="primary" loading={tableLoading} htmlType='submit'>
             查询
-     </Button>
-          <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }} >
+          </Button>
+          <Button onClick={() => { form.resetFields() }}   style={{ margin: '0 8px' }}>
             重置
-     </Button>
+          </Button>
           <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
 
         </Form.Item>
@@ -411,7 +409,7 @@ const Index = (props) => {
         visible={rectificaDetailVisible}
         title={'详情'}
         footer={null}
-        width={'98%'}
+        width={'100%'}
         className={styles.fromModal}
         onCancel={() => { setRectificaDetailVisible(false) }}
         destroyOnClose

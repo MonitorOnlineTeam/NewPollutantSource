@@ -39,6 +39,26 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    *deleteKeyParameterCheck({ payload, callback }, { call, put, update }) { //删除关键参数核查信息
+      const result = yield call(services.DeleteKeyParameterCheck, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback(result.IsSuccess);
+      } else {
+        message.error(result.Message)
+        callback(result.IsSuccess);
+      }
+    },
+    *issuedKeyParameter({ payload, callback }, { call, put, update }) { //下发关键参数核查信息
+      const result = yield call(services.IssuedKeyParameter, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback(result.IsSuccess);
+      } else {
+        message.error(result.Message)
+        callback(result.IsSuccess);
+      }
+    },
     *getKeyParameterCheckDetailList({ payload, callback }, { call, put, update }) { //获取关键参数核查列表详情
       const result = yield call(services.GetKeyParameterCheckDetailList, payload);
       if (result.IsSuccess) {
@@ -69,26 +89,6 @@ export default Model.extend({
     },
     *deleteKeyParameterItemCheck({ payload, callback }, { call, put, update }) { //删除关键参数核查项
       const result = yield call(services.DeleteKeyParameterItemCheck, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback(result.IsSuccess);
-      } else {
-        message.error(result.Message)
-        callback(result.IsSuccess);
-      }
-    },
-    *deleteKeyParameterCheck({ payload, callback }, { call, put, update }) { //删除关键参数核查信息
-      const result = yield call(services.DeleteKeyParameterCheck, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback(result.IsSuccess);
-      } else {
-        message.error(result.Message)
-        callback(result.IsSuccess);
-      }
-    },
-    *issuedKeyParameter({ payload, callback }, { call, put, update }) { //下发关键参数核查信息
-      const result = yield call(services.IssuedKeyParameter, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback(result.IsSuccess);
