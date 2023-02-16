@@ -230,8 +230,8 @@ const Index = (props) => {
                 },
                 {
                     title: '运维人员工号',
-                    dataIndex: 'createUserName',
-                    key: 'createUserName',
+                    dataIndex: 'AccountName',
+                    key: 'AccountName',
                     align: 'center',
                     width: 140,
                 },
