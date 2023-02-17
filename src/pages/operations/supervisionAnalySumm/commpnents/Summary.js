@@ -299,14 +299,14 @@ const Index = (props) => {
   
   const [dateTitle, setDateTitle] = useState()
   const [dateTime, setDateTime] = useState([])
-  const [regDetailPar,setRegDetailPar] = useState()
+  const [regDetailPar,setRegDetailPar] = useState({})
   const [regDetailVisible,setRegDetailVisible] = useState(false)
   const [regDetailTitle,setRegDetailTitle] = useState(false)
 
   const regDetail = (record) =>{
     setRegDetailVisible(true)
     setRegDetailTitle(`${record.RegionName}系统设施核查（${dateTitle}）`)
-    setRegDetailPar({regionCode:record.RegionCode,time:dateTime})
+    setRegDetailPar({...regDetailPar,regionCode:record.RegionCode,time:dateTime,RegionName:record.RegionName,})
   }
   const onFinish = async () => {  //查询
     try {
@@ -347,6 +347,7 @@ const Index = (props) => {
           setDateTitle(moment(values.time[0]).format('YYYY-MM-DD')+'至'+moment(values.time[1]).format('YYYY-MM-DD'))
           setDateTime(values.time[0]&&values.time[1]&&[values.time[0].startOf('d'),values.time[1].endOf('d')])
         }
+        setRegDetailPar({DateType:type})
       })
     }
     } catch (errorInfo) {

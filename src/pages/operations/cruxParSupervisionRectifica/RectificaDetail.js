@@ -33,7 +33,7 @@ const namespace = 'cruxParSupervisionRectifica'
 const dvaPropsData = ({ loading, cruxParSupervisionRectifica, global, common }) => ({
   tableDatas: cruxParSupervisionRectifica.parameterQuestionDetailList,
   tableLoading: loading.effects[`${namespace}/getKeyParameterQuestionDetailList`],
-  okLoading: loading.effects[`${namespace}/updateKeyParameterQuestionStatus`],
+  saveLoading: loading.effects[`${namespace}/updateKeyParameterQuestionStatus`],
 
   
 })
@@ -373,7 +373,10 @@ const Index = (props) => {
       props.updateKeyParameterQuestionStatus({
         ...values,
       }, (isSuccess) => {
-        isSuccess && props.getKeyParameterQuestionDetailList({ id: id })
+        if(isSuccess){
+          setRejectVisible(false)
+          props.getKeyParameterQuestionDetailList({ id: id })
+        }
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -463,7 +466,7 @@ const Index = (props) => {
         onCancel={() => { setRejectVisible(false) }}
         width={'50%'}
         wrapClassName={styles.rejectSty}
-        confirmLoading={props.okLoading}
+        confirmLoading={props.saveLoading}
       >
         <Form
           name="basics"

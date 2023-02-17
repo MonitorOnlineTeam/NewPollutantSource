@@ -870,16 +870,21 @@ const Index = (props) => {
         initialValues={{
           RegionCode:regDetailPar.regionCode&&regDetailPar.regionCode,
           time: regDetailPar.time&&regDetailPar.time,
+          RegionName:regDetailPar.RegionName&&regDetailPar.RegionName,
+          DateType:regDetailPar.DateType&&regDetailPar.DateType,
         }}
       >
         <Form.Item label='行政区' name='RegionCode' hidden>
-          <RegionList noFilter levelNum={3} style={{ width: 150 }} />
+          <Input />
         </Form.Item>
-        <Form.Item label="督查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }} hidden >
-          <RangePicker_
-            style={{ width: 300 }}
-            allowClear={false}
-            format="YYYY-MM-DD" />
+        <Form.Item label="督查日期" name="time" hidden>
+           <Input />
+        </Form.Item>
+        <Form.Item  name="RegionName"  hidden>
+           <Input />
+        </Form.Item>
+        <Form.Item  name="DateType"  hidden>
+           <Input />
         </Form.Item>
         <Form.Item>
         <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>

@@ -330,7 +330,10 @@ const Index = (props) => {
       props.checkItemKeyParameter({
         ...values,
       }, (isSuccess) => {
-        isSuccess&&props.getKeyParameterCheckDetailList({ id: id })
+        if(isSuccess){
+          setCheckVisible(false)
+          props.getKeyParameterCheckDetailList({ id: id })
+        }
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -431,6 +434,7 @@ const Index = (props) => {
         <Form
           name="basics"
           form={form}
+          initialValues={{checkResult:3}}
         >
           <Form.Item name="typeID" hidden >
             <Input />

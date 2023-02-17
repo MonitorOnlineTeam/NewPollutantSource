@@ -314,24 +314,24 @@ const Index = (props) => {
             </Select>
           </Form.Item>
         </Spin>
-        <Form.Item label="核查日期" name="time2"  >
-            <RangePicker_
-              style={{ width: 300 }}
-              allowClear={false}
-              format="YYYY-MM-DD" />
-          </Form.Item>
+          <Form.Item label="创建日期" name="time"  >
+          <RangePicker_
+            style={{ width: 300 }}
+            allowClear={false}
+            format="YYYY-MM-DD" />
+        </Form.Item>
       </Row>
 
       <Row>
         <Form.Item label="核查人" name="checkUser"  >
           <OperationInspectoUserList type='2' style={{ width: 150 }} />
         </Form.Item>
-        <Form.Item label="创建日期" name="time"  >
-          <RangePicker_
-            style={{ width: 300 }}
-            allowClear={false}
-            format="YYYY-MM-DD" />
-        </Form.Item>
+        <Form.Item label="核查日期" name="time2"  >
+            <RangePicker_
+              style={{ width: 300 }}
+              allowClear={false}
+              format="YYYY-MM-DD" />
+          </Form.Item>
         <Form.Item label="核查结果" name="checkResult"  >
           <Select placeholder='请选择' allowClear style={{ width: 150 }}>
             <Option key={1} value={1} >合格</Option>

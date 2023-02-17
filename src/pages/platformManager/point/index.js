@@ -77,6 +77,7 @@ let pointConfigIdEdit = '';
   paramCodeList: point.paramCodeList,
   updatePointDGIMNLoading: loading.effects['point/updatePointDGIMN'],
   saveSortLoading: loading.effects['point/pointSort'],
+  equipmentPol:[],
 
 }))
 @Form.create()
