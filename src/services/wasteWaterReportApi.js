@@ -27,5 +27,10 @@ export async function ExportAllTypeDataListWater(params) {
     const result = post(API.ExportApi.ExportAllTypeDataListWater, params, null)
     return result
 }
+// 二氧化碳 - 获取企业列表
+export async function getReportColumns(params) {
+    const result = post(API.ReportApi.GetPointPollutantColumnByDGIMN, params, null)
+    return result
+}
 
 

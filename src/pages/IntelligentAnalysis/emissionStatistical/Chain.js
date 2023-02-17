@@ -50,7 +50,7 @@ const ImportantTypeList = [
 @Form.create()
 class Chain extends PureComponent {
   state = {
-    DataType: "region",
+    DataType: configInfo.IsSingleEnterprise ? "ent" : 'region',
     regionFlag: true,
     entFlag: false,
     pointFlag: false
@@ -337,7 +337,7 @@ class Chain extends PureComponent {
                     initCallback={(value) => {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();
-                      this.getTableData("region");
+                      this.getTableData(DataType);
                       // this.getTableData("ent");
                       // this.getTableData("point");
                     }}
@@ -409,9 +409,12 @@ class Chain extends PureComponent {
             }
             this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
           }}>
-            <TabPane tab="辖区排放量" key="region">
-              <SdlTable loading={regionChainLoading} pagination={false} align="center" dataSource={regionChainTableDataSource} columns={RegionColumns} />
-            </TabPane>
+            {
+              !configInfo.IsSingleEnterprise &&
+              <TabPane tab="辖区排放量" key="region">
+                <SdlTable loading={regionChainLoading} pagination={false} align="center" dataSource={regionChainTableDataSource} columns={RegionColumns} />
+              </TabPane>
+            }
             <TabPane tab="企业排放量" key="ent">
               <SdlTable loading={entChainLoading} pagination={false} align="center" dataSource={entChainTableDataSource} columns={EntColumns} />
             </TabPane>

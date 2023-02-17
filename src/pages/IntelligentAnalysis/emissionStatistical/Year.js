@@ -50,7 +50,7 @@ const ImportantTypeList = [
 @Form.create()
 class Year extends PureComponent {
   state = {
-    DataType: "region",
+    DataType: configInfo.IsSingleEnterprise ? "ent" : 'region',
     regionFlag: true,
     entFlag: false,
     pointFlag: false
@@ -339,7 +339,7 @@ class Year extends PureComponent {
                     initCallback={(value) => {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();
-                      this.getTableData("region");
+                      this.getTableData(DataType);
                       // this.getTableData("ent");
                       // this.getTableData("point");
                     }}
@@ -407,15 +407,17 @@ class Year extends PureComponent {
             </Row>
           </Form>
           {/* <Divider /> */}
-          <Tabs defaultActiveKey="region" onChange={(key) => {
+          <Tabs defaultActiveKey={DataType} onChange={(key) => {
             if (!regionFlag || !entFlag || !pointFlag) {
               this.getTableData(key);
             }
             this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
           }}>
-            <TabPane tab="辖区排放量" key="region">
-              <SdlTable  scroll={{ y: 'calc(100vh - 400px)' }} loading={regionYearLoading} pagination={false} align="center" dataSource={regionYearTableDataSource} columns={RegionColumns} />
-            </TabPane>
+            {
+              !configInfo.IsSingleEnterprise && <TabPane tab="辖区排放量" key="region">
+                <SdlTable scroll={{ y: 'calc(100vh - 400px)' }} loading={regionYearLoading} pagination={false} align="center" dataSource={regionYearTableDataSource} columns={RegionColumns} />
+              </TabPane>
+            }
             <TabPane tab="企业排放量" key="ent">
               <SdlTable scroll={{ y: 'calc(100vh - 400px)' }} loading={entYearLoading} pagination={false} align="center" dataSource={entYearTableDataSource} columns={EntColumns} />
             </TabPane>

@@ -66,7 +66,8 @@ class index extends PureComponent {
             attentionValue: '',
             outletValue: '',
             entValue: undefined,
-            pointValue: undefined
+            pointValue: undefined,
+            columns: [],
         };
     }
 
@@ -92,6 +93,11 @@ class index extends PureComponent {
             //获取企业列表
             type: pageUrl.GetEntByRegionAndAtt,
             payload: { RegionCode: '', Attention: '', PollutantTypeCode: '1' },
+            callback: (res) => {
+                if (res.length) {
+                    this.onChangeEntSelect(res[0].EntCode);
+                }
+            }
         });
         this.props.dispatch({
             type: 'wasteWaterReportModel/updateState',
@@ -143,6 +149,55 @@ class index extends PureComponent {
             }
         })
     }
+
+    // 获取表头
+    getTableColumns = () => {
+        this.props.dispatch({
+            type: 'wasteWaterReportModel/getReportColumns',
+            payload: {
+                DGIMN: this.state.pointValue
+            },
+            callback: (res) => {
+                let columns = [];
+                res.map(item => {
+                    if (item.ChildColumnHeaders) {
+                        let children = item.ChildColumnHeaders.map(itm => {
+                            return {
+                                title: itm.ChildColumnName,
+                                dataIndex: itm.ChildColumnCode,
+                                width: 140,
+                                align: 'center',
+                                render: (value, row, index) => {
+                                    const obj = {
+                                        children: value,
+                                        props: {},
+                                    };
+                                    return obj;
+                                },
+                            }
+                        })
+                        columns.push({
+                            title: item.ParenntColumnName,
+                            children: children
+                        })
+                    } else {
+                        columns.push({
+                            title: item.ParenntColumnName,
+                            dataIndex: item.ParenntColumnCode,
+                            // width: 200,
+                            align: 'center',
+                        })
+                    }
+                })
+                console.log('columns', columns)
+                this.setState({
+                    columns: columns
+                })
+            }
+        })
+    }
+
+
     //行政区
     children = () => {
         const { regionList } = this.props;
@@ -208,6 +263,23 @@ class index extends PureComponent {
             time: dateString
         })
     }
+
+    // 企业列表改变事件
+    onChangeEntSelect = (value) => {
+        //获取企业列表
+        this.props.dispatch({
+            type: pageUrl.GetPointByEntCode,
+            payload: {
+                EntCode: value,
+                PollutantTypeCode: '1'
+            },
+        });
+        this.setState({
+            entValue: value,
+            pointValue: undefined
+        })
+    }
+
     cardTitle = () => {
         const { time } = this.state;
 
@@ -310,18 +382,7 @@ class index extends PureComponent {
                     }
                 }}
                 onChange={(value) => {
-                    //获取企业列表
-                    this.props.dispatch({
-                        type: pageUrl.GetPointByEntCode,
-                        payload: {
-                            EntCode: value,
-                            PollutantTypeCode: '1'
-                        },
-                    });
-                    this.setState({
-                        entValue: value,
-                        pointValue: undefined
-                    })
+                    this.onChangeEntSelect(value)
                 }}>
                 {this.entList()}
             </Select>
@@ -337,6 +398,8 @@ class index extends PureComponent {
                     onChange={(value) => {
                         this.setState({
                             pointValue: value,
+                        }, () => {
+                            this.getTableColumns();
                         })
                     }}>
                     {this.pointList()}
@@ -357,156 +420,12 @@ class index extends PureComponent {
     pageContent = () => {
         const { AllTypeDataListWaterList, loading } = this.props
         const fixed = false
-        const columns = [
-            {
-                title: "监测时间",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: 'Time',
-                key: 'Time',
-            },
-            {
-                title: "COD",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                children: [
-                    {
-                        title: "平均值(mg/L)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: '011',
-                        key: '011',
-                    },
-                    {
-                        title: "排放量(Kg)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: '011sum',
-                        key: '011sum',
-                    },
-                ]
-            },
-            {
-                title: "氨氮",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                children: [
-                    {
-                        title: "平均值(mg/L)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: '060',
-                        key: '060   ',
-                    },
-                    {
-                        title: "排放量(Kg)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: '060sum',
-                        key: '060sum',
-                    },
-                ]
-            },
-            {
-                title: "总磷",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                children: [
-                    {
-                        title: "平均值(mg/L)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: '101',
-                        key: '101',
-                    },
-                    {
-                        title: "排放量(Kg)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: '101sum',
-                        key: '101sum',
-                    },
-                ]
-            },
-            {
-                title: "总氮",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                children: [
-                    {
-                        title: "平均值(mg/L)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: '065',
-                        key: '065',
-                    },
-                    {
-                        title: "排放量(Kg)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: '065sum',
-                        key: '065sum',
-                    },
-                ]
-            },
-            {
-                title: "流量",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                children: [
-                    {
-                        title: "平均值(L/s)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: 'b01',
-                        key: 'b01',
-                    },
-                    {
-                        title: "排放量(t)",
-                        width: 100,
-                        align: 'center',
-                        fixed: fixed,
-                        dataIndex: 'b01sum',
-                        key: 'b01sum',
-                    },
-                ]
-            },
-        ]
-
-        return <>{
-            loading ? <PageLoading /> :
-                <SdlTable columns={columns} dataSource={AllTypeDataListWaterList}
-                    // pagination={{
-                    //     showSizeChanger: true,
-                    //     showQuickJumper: true,
-                    //     pageSize: this.props.pageSize,
-                    //     current: this.props.PageIndex,
-                    //     onChange: this.onChange,
-                    //     pageSizeOptions: ['20', '30', '40', '100'],
-                    //     total: this.props.total,
-                    // }} 
-                    pagination={
-                        false
-                    }
-                />
-        }
-        </>
-        //
+        return <SdlTable
+            columns={this.state.columns}
+            dataSource={AllTypeDataListWaterList}
+            scroll={{ x: '1800px' }}
+            pagination={false}
+        />
     }
     render() {
         const { loading, priseList } = this.props
@@ -523,7 +442,7 @@ class index extends PureComponent {
                             className={style.dataTable}
                         >
 
-                            {loading ? <PageLoading /> : this.pageContent()}
+                            {this.pageContent()}
                         </Card>
                     </BreadcrumbWrapper>
                 </div>

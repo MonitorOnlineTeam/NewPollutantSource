@@ -165,5 +165,10 @@ export async function getEntByRegionAndAtt(params) {
   const result = post(API.RegionApi.GetEntByRegionAndAtt, params, null)
   return result
 }
+// 二氧化碳 - 获取企业列表
+export async function getReportColumns(params) {
+  const result = post(API.ReportApi.GetPointPollutantColumnByDGIMN, params, null)
+  return result
+}
 
 

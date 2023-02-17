@@ -50,7 +50,7 @@ const ImportantTypeList = [
 @Form.create()
 class Contrast extends PureComponent {
   state = {
-    DataType: configInfo.IsSingleEnt == '1' ? "ent" : 'region',
+    DataType: configInfo.IsSingleEnterprise ? "ent" : 'region',
     regionFlag: true,
     entFlag: false,
     pointFlag: false
@@ -659,7 +659,7 @@ class Contrast extends PureComponent {
             this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
           }}>
             {
-              configInfo.IsSingleEnt !== '1' && <TabPane tab="辖区排放量" key="region">
+              !configInfo.IsSingleEnterprise && <TabPane tab="辖区排放量" key="region">
                 <SdlTable loading={regionContrastLoading} pagination={false} align="center" dataSource={regionContrastTableDataSource} columns={RegionColumns} />
               </TabPane>
             }

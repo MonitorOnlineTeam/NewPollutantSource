@@ -79,7 +79,7 @@ export default class EntTransmissionEfficiency extends Component {
   componentWillMount() {
     this.updateState({
       pollutantType: '',
-      assessment:'1',
+      assessment: configInfo.IsSingleEnterprise ? '2' : '1',
     })
     this.getTableData();
     this.props.dispatch({
@@ -405,21 +405,27 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="2">废气</Option>
                   </Select>
                 </Form.Item>
-                <Form.Item>
-                  <Select
-                    placeholder="请选择考核类型"
-                    onChange={this.asseChange}
-                    value={this.props.assessment}
-                    style={{ width: 200, marginLeft: 10 }}
-                  >
-                    <Option value="1">国家考核</Option>
-                    <Option value="2">辖区考核</Option>
-                  </Select>
-                </Form.Item>
-                <Form.Item>
-                  <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode} />
+                {
+                  // 单企业不显示行政区和考核类型
+                  !configInfo.IsSingleEnterprise && <>
+                    {/* true && <> */}
+                    <Form.Item>
+                      <Select
+                        placeholder="请选择考核类型"
+                        onChange={this.asseChange}
+                        value={this.props.assessment}
+                        style={{ width: 200, marginLeft: 10 }}
+                      >
+                        <Option value="1">国家考核</Option>
+                        <Option value="2">辖区考核</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item>
+                      <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode} />
 
-                </Form.Item>
+                    </Form.Item>
+                  </>
+                }
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询

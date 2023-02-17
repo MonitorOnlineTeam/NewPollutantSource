@@ -13,7 +13,7 @@ import {
   Tag,
   TimePicker,
   DatePicker,
-  Popconfirm,
+  Space,
   Button,
   Checkbox,
   message,
@@ -228,7 +228,8 @@ class index extends Component {
             }
             return (
               <span>
-                {record.abbreviation} - {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
+                {/* 单企业不显示企业名称 */}
+                {!configInfo.IsSingleEnterprise && record.abbreviation + ' - '}{text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
               </span>
             );
           },
@@ -400,9 +401,9 @@ class index extends Component {
       <BreadcrumbWrapper>
         <Card
           title={
-            <>
+            <Space>
               <SelectPollutantType
-                style={{ float: 'left', marginRight: 20 }}
+                // style={{ float: 'left', marginRight: 20 }}
                 showType="radio"
                 value={this.state.pollutantCode}
                 onChange={e => {
@@ -516,7 +517,7 @@ class index extends Component {
                     this.setState({ visible });
                   }}
                 >
-                  <Button style={{ marginLeft: 10 }} type="primary">污染物</Button>
+                  <Button type="primary">污染物</Button>
                 </Popover> : null
               }
               {currentDataType === 'HourData' && (
@@ -536,7 +537,7 @@ class index extends Component {
                 //   format="HH:00:00"
                 // />
                 <Select
-                  style={{ width: 150, marginLeft: 20 }}
+                  style={{ width: 150 }}
                   placeholder="请选择时间"
                   defaultValue={time}
                   suffixIcon={<ClockCircleOutlined />}
@@ -557,7 +558,7 @@ class index extends Component {
               {currentDataType === 'DayData' && (
                 <DatePicker
                   defaultValue={dayTime}
-                  style={{ width: 150, marginLeft: 20 }}
+                  style={{ width: 150 }}
                   onChange={(date, dateString) => {
                     this.setState({ dayTime: date, pageIndex: 1 }, () => {
                       this.getRealTimeDataView();
@@ -567,7 +568,7 @@ class index extends Component {
               )}
               <Input.Search
                 allowClear
-                style={{ width: 300, marginLeft: 20 }}
+                style={{ width: 300 }}
                 onChange={e => {
                   this.setState({
                     pointName: e.target.value,
@@ -579,7 +580,7 @@ class index extends Component {
                 }}
                 placeholder="请输入监控目标/监测点名称"
               />
-            </>
+            </Space>
           }
           extra={
             <Radio.Group

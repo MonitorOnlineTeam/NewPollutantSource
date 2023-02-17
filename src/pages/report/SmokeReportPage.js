@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi
  * @Date: 2020-02-18 15:16:30
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-01-20 17:30:29
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-02-15 15:47:42
  * @desc
  */
 import React, { PureComponent } from 'react'
@@ -60,233 +60,7 @@ class SmokeReportPage extends PureComponent {
     super(props);
     this.state = {
       dataSource: [],
-
-      columns: [
-        {
-          title: '时间',
-          dataIndex: 'Time',
-          width: 200,
-          align: 'center',
-        },
-        {
-          title: '烟尘',
-          // width: 330,
-          children: [
-            {
-              title: '浓度(mg/m³)',
-              dataIndex: '01',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                // if (index === dataLength) {
-                //   obj.props.colSpan = 2;
-                //   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
-                //   // return "-";
-                //   // }else{
-                // }
-                return obj;
-              },
-            },
-            {
-              title: '折算浓度(mg/m³)',
-              dataIndex: 'zs01',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                // if (index === dataLength) {
-                //   obj.props.colSpan = 0;
-                // }
-                return obj;
-              },
-            },
-            {
-              title: `排放量(Kg)`,
-              dataIndex: '01sum',
-              width: 140,
-              align: 'center',
-            },
-          ],
-        },
-        {
-          title: 'SO₂',
-          // width: 330,
-          children: [
-            {
-              title: '浓度(mg/m³)',
-              dataIndex: '02',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                // if (index === dataLength) {
-                //   obj.props.colSpan = 2;
-                //   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
-                // }
-                return obj;
-              },
-            },
-            {
-              title: '折算浓度(mg/m³)',
-              dataIndex: 'zs02',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                // if (index === dataLength) {
-                //   obj.props.colSpan = 0;
-                // }
-                return obj;
-              },
-            },
-            {
-              title: `排放量(Kg)`,
-              dataIndex: '02sum',
-              width: 140,
-              align: 'center',
-            },
-          ],
-        },
-        {
-          title: 'NOx',
-          // width: 330,
-          children: [
-            {
-              title: '浓度(mg/m³)',
-              dataIndex: '03',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                // if (index === dataLength) {
-                //   obj.props.colSpan = 2;
-                //   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
-                // }
-                return obj;
-              },
-            },
-            {
-              title: '折算浓度(mg/m³)',
-              dataIndex: 'zs03',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                // if (index === dataLength) {
-                //   obj.props.colSpan = 0;
-                // }
-                return obj;
-              },
-            },
-            {
-              title: `排放量(Kg)`,
-              dataIndex: '03sum',
-              width: 140,
-              align: 'center',
-            },
-          ],
-        },
-        {
-          title: '二氧化碳',
-          // width: 330,
-          children: [
-            {
-              title: '浓度(mg/m³)',
-              dataIndex: '01',
-              width: 140,
-              align: 'center',
-              render: (value, row, index) => {
-                const obj = {
-                  children: value,
-                  props: {},
-                };
-                return obj;
-              },
-            },
-            {
-              title: `排放量(Kg)`,
-              dataIndex: '01sum',
-              width: 140,
-              align: 'center',
-            },
-          ],
-        },
-        {
-          title: `流量(m³)`,
-          dataIndex: 'b02',
-          width: 140,
-          align: 'center',
-        },
-        {
-          title: '氧含量(%)',
-          dataIndex: 's01',
-          width: 140,
-          align: 'center',
-          render: (value, row, index) => {
-            const obj = {
-              children: value,
-              props: {},
-            };
-            // if (index === dataLength) {
-            //   obj.props.colSpan = 5;
-            //   obj.children = <div style={{ textAlign: 'center' }}>-</div>;
-            // }
-            return obj;
-          },
-        },
-        {
-          title: '温度(°C)',
-          dataIndex: 's03',
-          width: 140,
-          align: 'center',
-          render: (value, row, index) => {
-            const obj = {
-              children: value,
-              props: {},
-            };
-            // if (index === dataLength) {
-            //   obj.props.colSpan = 0;
-            // }
-            return obj;
-          },
-        },
-        {
-          title: '湿度(%)',
-          dataIndex: 's05',
-          width: 140,
-          align: 'center',
-          render: (value, row, index) => {
-            const obj = {
-              children: value,
-              props: {},
-            };
-            // if (index === dataLength) {
-            //   obj.props.colSpan = 0;
-            // }
-            return obj;
-          },
-        },
-
-      ],
+      columns: [],
       time: moment(new Date(), 'YYYY-MM-DD'),
       regionValue: '',
       attentionValue: '',
@@ -389,6 +163,88 @@ class SmokeReportPage extends PureComponent {
     this.timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />
   }
 
+  // 获取表头
+  getTableColumns = () => {
+    this.props.dispatch({
+      type: 'report/getReportColumns',
+      payload: {
+        DGIMN: this.state.pointValue
+      },
+      callback: (res) => {
+        let columns = [];
+        res.map(item => {
+          if (item.ParenntColumnCode === 'a19001') {
+            columns.push({
+              title: '二氧化碳',
+              // width: 330,
+              children: [
+                {
+                  title: '浓度(mg/m³)',
+                  dataIndex: item.ParenntColumnCode,
+                  width: 140,
+                  align: 'center',
+                  render: (value, row, index) => {
+                    const obj = {
+                      children: value,
+                      props: {},
+                    };
+                    return obj;
+                  },
+                },
+                {
+                  title: `排放量(Kg)`,
+                  dataIndex: item.ParenntColumnCode + 'sum',
+                  width: 140,
+                  align: 'center',
+                  render: (value, row, index) => {
+                    const obj = {
+                      children: value,
+                      props: {},
+                    };
+                    return value !== undefined ? value : '-';
+                  },
+                },
+              ],
+            })
+          }
+
+          if (item.ChildColumnHeaders) {
+            let children = item.ChildColumnHeaders.map(itm => {
+              return {
+                title: itm.ChildColumnName,
+                dataIndex: itm.ChildColumnCode,
+                width: 140,
+                align: 'center',
+                render: (value, row, index) => {
+                  const obj = {
+                    children: value,
+                    props: {},
+                  };
+                  return obj;
+                },
+              }
+            })
+            columns.push({
+              title: item.ParenntColumnName,
+              children: children
+            })
+          } else {
+            columns.push({
+              title: item.ParenntColumnName,
+              dataIndex: item.ParenntColumnCode,
+              // width: 200,
+              align: 'center',
+            })
+          }
+        })
+        console.log('columns', columns)
+        this.setState({
+          columns: columns
+        })
+      }
+    })
+  }
+
   dateOnchange = (dates, beginTime, endTime) => {
     this.props.form.setFieldsValue({ time: dates });
     this.props.dispatch({
@@ -409,6 +265,7 @@ class SmokeReportPage extends PureComponent {
         PointMark: '2',
         RegionCode: ''
       },
+
     });
     //获取关注度列表
     this.props.dispatch({
@@ -419,6 +276,11 @@ class SmokeReportPage extends PureComponent {
       //获取企业列表
       type: pageUrl.GetEntByRegionAndAtt,
       payload: { RegionCode: '', Attention: '', PollutantTypeCode: '2' },
+      callback: (res) => {
+        if (res.length) {
+          this.onChangeEntSelect(res[0].EntCode);
+        }
+      }
     });
   };
 
@@ -467,6 +329,7 @@ class SmokeReportPage extends PureComponent {
       return selectList;
     }
   };
+
   //监测列表
   pointList = () => {
     const { PointByEntCodeList } = this.props;
@@ -524,7 +387,6 @@ class SmokeReportPage extends PureComponent {
   //查询数据
   getSmokeReportData = (dataType) => {
     const { time, pointValue } = this.state
-    console.log("props-dataType=", dataType)
     if (pointValue == '' || pointValue == undefined) {
       return message.error('请选择监测点')
     }
@@ -550,6 +412,23 @@ class SmokeReportPage extends PureComponent {
   //     },
   //   })
   // }
+
+
+  // 企业列表改变事件
+  onChangeEntSelect = (value) => {
+    //获取企业列表
+    this.props.dispatch({
+      type: pageUrl.GetPointByEntCode,
+      payload: {
+        EntCode: value,
+        PollutantTypeCode: '2'
+      },
+    });
+    this.setState({
+      entValue: value,
+      pointValue: undefined
+    })
+  }
 
   // 搜索
   filter = (inputValue, path) => path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1)
@@ -648,7 +527,8 @@ class SmokeReportPage extends PureComponent {
                 }}>
                 {this.attention()}
               </Select>
-              <label style={{ lineHeight: '32px' }}>企业列表:</label><Select
+              <label style={{ lineHeight: '32px' }}>企业列表:</label>
+              <Select
                 allowClear
                 showSearch
                 filterOption={(input, option) =>
@@ -661,18 +541,7 @@ class SmokeReportPage extends PureComponent {
                 value={this.state.entValue}
                 maxTagPlaceholder="..."
                 onChange={(value) => {
-                  //获取企业列表
-                  this.props.dispatch({
-                    type: pageUrl.GetPointByEntCode,
-                    payload: {
-                      EntCode: value,
-                      PollutantTypeCode: '2'
-                    },
-                  });
-                  this.setState({
-                    entValue: value,
-                    pointValue: undefined
-                  })
+                  this.onChangeEntSelect(value)
                 }}>
                 {this.entList()}
               </Select>
@@ -689,6 +558,8 @@ class SmokeReportPage extends PureComponent {
                 onChange={(value) => {
                   this.setState({
                     pointValue: value,
+                  }, () => {
+                    this.getTableColumns()
                   })
                 }}>
                 {this.pointList()}

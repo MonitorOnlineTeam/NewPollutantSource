@@ -378,5 +378,14 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取烟气报表表头
+    *getReportColumns({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.getReportColumns, payload)
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 });
