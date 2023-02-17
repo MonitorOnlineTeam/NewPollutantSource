@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-02-18 15:16:30
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-02-15 15:47:42
+ * @Last Modified time: 2023-02-17 15:35:41
  * @desc
  */
 import React, { PureComponent } from 'react'
@@ -173,7 +173,7 @@ class SmokeReportPage extends PureComponent {
       callback: (res) => {
         let columns = [];
         res.map(item => {
-          if (item.ParenntColumnCode === 'a19001') {
+          if (item.ParenntColumnCode === 'a05001') {
             columns.push({
               title: '二氧化碳',
               // width: 330,
