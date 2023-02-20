@@ -192,7 +192,7 @@ const Index = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return <span style={{ color: text == '整改未通过' || text == '审核未通过' ? '#f5222d' : text == '已整改' || text == '审核通过' ? '#52c41a' : '' }}>{text}</span>
+        return <span style={{ color: text == '整改未通过' || text == '申诉未通过' ? '#f5222d' : text == '已整改' || text == '审核通过' ? '#52c41a' : '' }}>{text}</span>
       }
     },
     {

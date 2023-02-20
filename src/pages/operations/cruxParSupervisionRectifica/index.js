@@ -193,7 +193,7 @@ const Index = (props) => {
       render: (text, record) => {
         return (
           <div>
-            {!record.rectificationStatus=='整改已完成'&&<>
+            {record.rectificationStatus!=='整改已完成'&&<>
             <a onClick={() => { rectificaDetail(record, 1) }}>
               核查整改
               </a>
