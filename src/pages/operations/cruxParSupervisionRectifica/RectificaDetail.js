@@ -335,7 +335,7 @@ const Index = (props) => {
     setPassLoading(true)
     props.updateKeyParameterQuestionStatus({
       id: record.id,
-      checkResult: record.checkStatus,
+      checkResult: 2,
       AuditStatus:auditStatus[status],
     }, (isSuccess) => {
       setPassLoading(false)
@@ -351,7 +351,7 @@ const Index = (props) => {
     form.setFieldsValue({
       id: record.id,
       checkRemark: record.checkReamrk,
-      checkResult: record.checkStatus,
+      checkResult: 1,
       AuditStatus:auditStatus[status],
     })
     /*附件 */
