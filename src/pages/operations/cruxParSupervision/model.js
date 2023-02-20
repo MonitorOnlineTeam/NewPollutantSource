@@ -15,7 +15,7 @@ export default Model.extend({
     tableTotal: 0,
     checkDetailData: [],
     regQueryPar: '',
-    editCheckTime:undefined,
+    editCheckTime:moment(),
   },
   effects: {
     *getKeyParameterCheckList({ payload, callback }, { call, put, update }) { //获取关键参数核查列表

@@ -1527,6 +1527,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       ...queryPar,
       regionCode: cityDetailRegionCode,
       regionLevel: 2,
+      staticType:1,
       pageIndex:undefined,
       pageSize:undefined,
       homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,

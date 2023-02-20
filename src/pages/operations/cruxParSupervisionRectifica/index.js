@@ -251,9 +251,12 @@ const Index = (props) => {
     const values = await form.validateFields();
     props.exportKeyParameterQuestionList({
       ...values,
-      BTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-      ETime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+      beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      checkBeginTime: values.time2 && moment(values.time2[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      checkEndTime: values.time2 && moment(values.time2[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
+      time2:undefined,
 
     })
   }
@@ -407,7 +410,7 @@ const Index = (props) => {
 
       <Modal //核查和详情
         visible={rectificaDetailVisible}
-        title={'详情'}
+        title={rectificaDetailType==1? '核查': '详情'}
         footer={null}
         width={'100%'}
         className={styles.fromModal}

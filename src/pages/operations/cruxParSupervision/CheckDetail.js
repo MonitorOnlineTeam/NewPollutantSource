@@ -34,7 +34,7 @@ const dvaPropsData = ({ loading, cruxParSupervision, global, common }) => ({
   tableLoading: loading.effects[`${namespace}/getKeyParameterCheckDetailList`] || loading.effects[`${namespace}/deleteKeyParameterItemCheck`] || false,
   checkSaveLoading: loading.effects[`${namespace}/checkItemKeyParameter`],
   tableDatas: cruxParSupervision.checkDetailData,
-
+  editCheckTime: cruxParSupervision.editCheckTime,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -89,6 +89,7 @@ const Index = (props) => {
 
   useEffect(() => {
     props.getKeyParameterCheckDetailList({ id: id })
+    props.updateState({editCheckTime:moment() })  
   }, []);
 
   const TitleComponents = (props) => {
@@ -378,7 +379,8 @@ const Index = (props) => {
                 <Form.Item label="核查日期" >
                   {type == 1 ? <DatePicker 
                   showTime
-                  defaultValue={infoData&&infoData.checkTime&& moment(infoData.checkTime)}
+                  allowClear={false}
+                  defaultValue={infoData&&infoData.checkTime?  moment(infoData.checkTime) : props.editCheckTime}
                   onChange={(date, dateString) => {
                      props.updateState({editCheckTime:date })  
                   }} />

@@ -103,10 +103,10 @@ const Index = (props) => {
     })
     setFilesList(fileList)
   }
-  const rowSpanFun = (value, record) => {
+  const rowSpanFun = (value,rowSpans) => {
     let obj = {
       children: <div>{value}</div>,
-      props: { rowSpan: record.Count },
+      props: { rowSpan: rowSpans || rowSpans===0 ?rowSpans :value  },
     };
     return obj;
   }
@@ -114,9 +114,11 @@ const Index = (props) => {
     {
       title: '序号',
       align: 'center',
+      dataIndex: 'code',
+      key: 'code',
       width: 80,
       render: (text, record, index) => {
-        return index + 1
+        return rowSpanFun(text,record.count)
       }
     },
     {
@@ -128,11 +130,11 @@ const Index = (props) => {
     },
     {
       title: '核查整改次数',
-      dataIndex: 'aaaa',
-      key: 'aaaa',
+      dataIndex: 'count',
+      key: 'count',
       align: 'center',
       width: 100,
-      render: (text, record, index) => rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text)
     },
     {
       title: `核查问题描述`,
@@ -192,7 +194,7 @@ const Index = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return <span style={{ color: text == '整改未通过' || text == '申诉未通过' ? '#f5222d' : text == '已整改' || text == '审核通过' ? '#52c41a' : '' }}>{text}</span>
+        return <span style={{ color: text == '整改未通过' || text == '申诉未通过' ? '#f5222d' : text == '整改通过' || text == '申诉通过' ? '#52c41a' : '' }}>{text}</span>
       }
     },
     {
@@ -206,7 +208,7 @@ const Index = (props) => {
         return (
         <div>{(text == '已整改' || text == '申诉中') &&
          <>
-          <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record, text == '已整改' ? '整改驳回' : '申诉驳回')} okText="是" cancelText="否">
+          <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record, text == '已整改' ? '整改通过' : '申诉通过')} okText="是" cancelText="否">
             <a> {text == '已整改' ? '整改通过' : '申诉通过'} </a>
           </Popconfirm>
           <Divider type="vertical" />
@@ -333,7 +335,7 @@ const Index = (props) => {
     setPassLoading(true)
     props.updateKeyParameterQuestionStatus({
       id: record.id,
-      checkResult : record.checkStatus,
+      checkResult: record.checkStatus,
       AuditStatus:auditStatus[status],
     }, (isSuccess) => {
       setPassLoading(false)
@@ -347,9 +349,9 @@ const Index = (props) => {
     setRejectVisible(true)
     record.status == 1 ? setRejectTitle('整改驳回') : setRejectTitle('申诉驳回')
     form.setFieldsValue({
+      id: record.id,
       checkRemark: record.checkReamrk,
       checkResult: record.checkStatus,
-      id: record.id,
       AuditStatus:auditStatus[status],
     })
     /*附件 */
@@ -433,6 +435,7 @@ const Index = (props) => {
           pagination={false}
           loading={tableLoading || passLoading}
           scroll={{y: 'hidden',}}
+          rowClassName={null}
         />
 
       </div>

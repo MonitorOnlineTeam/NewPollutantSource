@@ -354,6 +354,12 @@ const Index = (props) => {
     const values = await form.validateFields();
     props.exportKeyParameterCheckList({
       ...values,
+      beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      checkBeginTime: values.time2 && moment(values.time2[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      checkEndTime: values.time2 && moment(values.time2[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      time: undefined,
+      time2:undefined,
       pageIndex: undefined,
       pageSize: undefined,
     })

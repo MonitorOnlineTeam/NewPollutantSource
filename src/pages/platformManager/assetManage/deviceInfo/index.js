@@ -413,6 +413,7 @@ const Index = (props) => {
     const values = form.getFieldsValue();
     props.exportEquipmentInfoList({
       ...values,
+      ManufacturerId: manufacturerId,
     })
   }
 
