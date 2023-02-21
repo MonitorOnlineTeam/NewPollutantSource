@@ -114,8 +114,8 @@ const Index = (props) => {
     {
       title: '序号',
       align: 'center',
-      dataIndex: 'code',
-      key: 'code',
+      dataIndex:'level',
+      key:'level',
       width: 80,
       render: (text, record, index) => {
         return rowSpanFun(text,record.count)
@@ -141,7 +141,10 @@ const Index = (props) => {
       dataIndex: 'checkReamrk',
       key: 'checkReamrk',
       align: 'center',
-      width: 200,
+      width: 150,
+      render: (text, record) => {
+        return <div style={{ textAlign: 'left', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
+      },
     },
     {
       title: '核查问题照片附件',
@@ -150,9 +153,7 @@ const Index = (props) => {
       align: 'center',
       width: 140,
       render: (text, record) => {
-        return <div>
-               {text && text[0] && <a onClick={() => { getAttachmentData(text) }}>查看附件</a>}
-               </div>
+        return <div>{text && text[0] && <a onClick={() => { getAttachmentData(text) }}>查看附件</a>}</div>
       },
     },
     {
@@ -167,6 +168,10 @@ const Index = (props) => {
       dataIndex: 'remark',
       key: 'remark',
       align: 'center',
+      width: 150,
+      render: (text, record) => {
+        return <div style={{ textAlign: 'left', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
+      },
     },
     {
       title: `整改/申诉照片附件`,
@@ -208,11 +213,11 @@ const Index = (props) => {
         return (
         <div>{(text == '已整改' || text == '申诉中') &&
          <>
-          <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record, text == '已整改' ? '整改通过' : '申诉通过')} okText="是" cancelText="否">
+          <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record,record.checkStatus)} okText="是" cancelText="否">
             <a> {text == '已整改' ? '整改通过' : '申诉通过'} </a>
           </Popconfirm>
           <Divider type="vertical" />
-          <a onClick={() => { reject(record, text == '已整改' ? '整改驳回' : '申诉驳回') }}>
+          <a onClick={() => { reject(record, record.checkStatus) }}>
             <a> {text == '已整改' ? '整改驳回' : '申诉驳回'} </a>
           </a>
         </>
@@ -324,19 +329,13 @@ const Index = (props) => {
       </div>
     </div>
   );
-  const auditStatus = {
-    '整改通过': 3,
-    '整改驳回': 4,
-    '申诉通过': 6,
-    '申诉驳回': 7,
-  }
   const [passLoading,setPassLoading ] = useState(false)
   const pass = (record,status) => { //整改或申诉通过
     setPassLoading(true)
     props.updateKeyParameterQuestionStatus({
       id: record.id,
       checkResult: 2,
-      AuditStatus:auditStatus[status],
+      AuditStatus:status
     }, (isSuccess) => {
       setPassLoading(false)
       isSuccess && props.getKeyParameterQuestionDetailList({ id: id })
@@ -352,7 +351,7 @@ const Index = (props) => {
       id: record.id,
       checkRemark: record.checkReamrk,
       checkResult: 1,
-      AuditStatus:auditStatus[status],
+      AuditStatus:status,
     })
     /*附件 */
     setFilesList2([])

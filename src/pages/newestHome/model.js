@@ -26,7 +26,7 @@ export default Model.extend({
     exceptionSignTaskRateList:{insidePlanRate: "0.00",  insidePlanTaskCount: 0, insidePlanTaskExceptionCount: 0,
                                outPlanTaskCount: 0, outPlanTaskExceptionCount: 0, outPlanTaskRate: "0.00"},
     consumablesList:{consumablesReplaceCount: 0,sparePartReplaceRecordCount: 0, standardGasRepalceCoun: 0, standardLiquidRepalceCount: 0},
-    opertionExceptionList:{exceptionRate: "0.00" ,failureRate: "0.00",repairRate: "57.14"},
+    opertionExceptionList:{intactRate: "0.00" ,failureRate: "0.00",repairRate: "0.00"},
     mapPointList:[],
     regionMarkers:[],
     mapStatusData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0},

@@ -360,7 +360,7 @@ const Index = (props) => {
       },
       color: type == 1 ? color1 : type == 2 ? color2 : color3,
       title: {
-        text: type == 1 ? opertionExceptionList.exceptionRate=='-'?'-': ` ${ 100 - opertionExceptionList.exceptionRate}%` : type == 2 ? opertionExceptionList.failureRate=='-'?'-':  `${opertionExceptionList.failureRate}%` : opertionExceptionList.repairRate=='-'?'-':  `${opertionExceptionList.repairRate}%`,
+        text: type == 1 ? opertionExceptionList.intactRate=='-'?'-': ` ${ opertionExceptionList.intactRate }%` : type == 2 ? opertionExceptionList.failureRate=='-'?'-':  `${opertionExceptionList.failureRate}%` : opertionExceptionList.repairRate=='-'?'-':  `${opertionExceptionList.repairRate}%`,
         left: "center",
         top: "42%",
         textStyle: {
@@ -378,8 +378,8 @@ const Index = (props) => {
           avoidLabelOverlap: false,
           label: { normal: { show: false, position: 'center' }, },
           data: [
-            { value: type == 1 ? 100 - opertionExceptionList.exceptionRate : type == 2 ? opertionExceptionList.failureRate: opertionExceptionList.repairRate, name: '已完成' },
-            { value: type == 1 ? opertionExceptionList.exceptionRate=='-'? 0 : (100 -  (100-opertionExceptionList.exceptionRate)) : type == 2 ? opertionExceptionList.failureRate=='-'? 0 : (100 - opertionExceptionList.failureRate) : opertionExceptionList.repairRate=='-'? 0  : (100 - opertionExceptionList.repairRate), name: '未完成' },
+            { value: type == 1 ? opertionExceptionList.intactRate  : type == 2 ? opertionExceptionList.failureRate: opertionExceptionList.repairRate, name: '已完成' },
+            { value: type == 1 ? opertionExceptionList.intactRate=='-'? 0 : (100 - opertionExceptionList.intactRate) : type == 2 ? opertionExceptionList.failureRate=='-'? 0 : (100 - opertionExceptionList.failureRate) : opertionExceptionList.repairRate=='-'? 0  : (100 - opertionExceptionList.repairRate), name: '未完成' },
           ],
           minAngle: 0,//最小角度
           startAngle:350, //起始角度

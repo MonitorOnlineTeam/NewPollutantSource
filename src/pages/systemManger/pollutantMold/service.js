@@ -1,23 +1,18 @@
 import { post, get, getNew } from '@/utils/request';
 
 /**
- * 问题清单
+ * 污染源模型
  */
 
  
-// 列表  
-export async function GetQuestionDetialList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQuestionDetialList',params, null);
+// 生成模型需要的Excl
+export async function AddAnomalyModle(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddAnomalyModle',params, null);
   return result;
 }
-// 添加or修改
-export async function AddOrUpdQuestionDetial(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdQuestionDetial',params, null);
+// 生成特征库
+export async function CreateFeatureLibrary(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/CreateFeatureLibrary',params, null);
   return result;
 }
 
-// 删除
-export async function DeleteQuestionDetial(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteQuestionDetial',params, null);
-  return result;
-}

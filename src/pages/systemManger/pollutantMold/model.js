@@ -10,28 +10,11 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'pollutantMold',
   state: {
-    tableDatas:[],
-    parametersList:[],
-    tableLoading:false,
-    tableTotal:0,
-    monitoringTypeList:[],
-    manufacturerList:[],
-    maxNum:null,
+
   },
   effects: {
-    *getQuestionDetialList({ payload,callback }, { call, put, update }) { //列表
-      const result = yield call(services.GetQuestionDetialList, payload);
-      if (result.IsSuccess) {
-        yield update({
-          tableTotal:result.Total,
-          tableDatas:result.Datas?result.Datas : [],
-        })
-      }else{
-        message.error(result.Message)
-      }
-    },
-    *addOrUpdQuestionDetial({ payload,callback }, { call, put, update }) { //添加修改
-      const result = yield call(services.AddOrUpdQuestionDetial, payload);
+    *addAnomalyModle({ payload,callback }, { call, put, update }) { //生成模型需要的Excl
+      const result = yield call(services.AddAnomalyModle, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -40,19 +23,11 @@ export default Model.extend({
       }
     }, 
 
-    *deleteQuestionDetial({ payload,callback }, { call, put, update }) { //删除
-      const result = yield call(services.DeleteQuestionDetial, payload);
+    *createFeatureLibrary({ payload,callback }, { call, put, update }) { //生成特征库
+      const result = yield call(services.CreateFeatureLibrary, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
-      }else{
-        message.error(result.Message)
-      }
-    },
-    *getQuestionType({ payload,callback }, { call, put, update }) { //问题类别
-      const result = yield call(services.GetQuestionType, payload);
-      if (result.IsSuccess) {
-        callback(result.Datas)
       }else{
         message.error(result.Message)
       }

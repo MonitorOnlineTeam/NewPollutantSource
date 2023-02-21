@@ -228,7 +228,7 @@ const Index = (props) => {
   }
 
 
-  const onFinish = async (pageIndexs, pageSizes,par) => {  //查询
+  const onFinish = async (pageIndexs, pageSizes,par) => {  //查询  par参数 分页需要的参数
     try {
       const values = await form.validateFields();
 
@@ -414,7 +414,7 @@ const Index = (props) => {
         footer={null}
         width={'100%'}
         className={styles.fromModal}
-        onCancel={() => { setRectificaDetailVisible(false) }}
+        onCancel={() => { setRectificaDetailVisible(false);rectificaDetailType==1&&onFinish(pageIndex,pageSize); }}
         destroyOnClose
       >
         <RectificaDetail id={rectificaDetailId} type={rectificaDetailType} infoData={infoData}/>

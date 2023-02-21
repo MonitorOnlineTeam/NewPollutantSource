@@ -22,8 +22,8 @@ const namespace = 'pollutantMold'
 
 
 const dvaPropsData = ({ loading, pollutantMold }) => ({
-  saveLoading: loading.effects[`${namespace}/getQuestionDetialList`],
-  questTypeTreeData: pollutantMold.questTypeTreeData,
+  saveLoading: loading.effects[`${namespace}/addAnomalyModle`],
+  createLoading: loading.effects[`${namespace}/addAnomalyModle`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -34,13 +34,20 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getQuestionType: (payload, callback) => { //左侧问题树
+    addAnomalyModle: (payload, callback) => { //生成模型需要的Excl
       dispatch({
-        type: `${namespace}/getQuestionType`,
+        type: `${namespace}/addAnomalyModle`,
         payload: payload,
         callback: callback,
       })
     },
+    createFeatureLibrary: (payload, callback) => { //生成特征库
+      dispatch({
+        type: `${namespace}/createFeatureLibrary`,
+        payload: payload,
+        callback: callback,
+      })
+    },  
   }
 }
 
@@ -51,22 +58,25 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const {DGIMN,saveLoading,} = props;
+  const {DGIMN,saveLoading,createLoading,} = props;
+  const [btnText,setBtnText] = useState('保存');
 
   useEffect(() => {
     if (DGIMN) {
-      props.getQuestionType();
+      // props.addAnomalyModle();
+      form.setFieldsValue({FileName:DGIMN})
     }
 
   }, [DGIMN]);
 
  
-  const save = async () => {  //保存
+  const save = async () => {  //生成模型需要的Excl
     try {
         const values = await form.validateFields();
-        props.getTableData({
+        props.addAnomalyModle({
             ...values,
-            status:'0',
+            Btime:values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+            Etime:values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
         })
     } catch (errorInfo) {
         console.log('Failed:', errorInfo); 
@@ -76,9 +86,10 @@ const Index = (props) => {
 const generateFeatureLib = async () =>{ //生成特征库
     try {
         const values = await form.validateFields();
-        props.getTableData({
+        props.createFeatureLibrary({
             ...values,
-            status:'0',
+            Btime:values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+            Etime:values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
         })
     } catch (errorInfo) {
         console.log('Failed:', errorInfo); 
@@ -91,7 +102,9 @@ const generateFeatureLib = async () =>{ //生成特征库
           name="basic"
           form={form}
           initialValues={{
-            Status: 1
+            DataType:1,
+            IsUse: 1,
+            IsExcl:1,
           }}
           onFinish={() => { save() }}
         >
@@ -102,18 +115,18 @@ const generateFeatureLib = async () =>{ //生成特征库
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Form.Item label="数据时段" name="aa"  >
+              <Form.Item label="数据时段" name="time"  >
               <RangePicker_   />
               </Form.Item>
             </Col>
             <Col span={4}/>
             <Col span={10}>
-              <Form.Item label="文件名称" name="bb">
-                <Input placeholder='请输入' disabled/>
+              <Form.Item label="文件名称" name="FileName">
+                <Input placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Form.Item label="数据类型" name="cc" >
+              <Form.Item label="数据类型" name="DataType" >
                 <Radio.Group>
                   <Radio value={1}>实测值</Radio>
                   <Radio value={2}>折算值</Radio>
@@ -122,7 +135,7 @@ const generateFeatureLib = async () =>{ //生成特征库
             </Col>
             <Col span={4}/>
             <Col span={10}>
-              <Form.Item label="是否启用" name="dd" >
+              <Form.Item label="是否启用" name="IsUse" >
                 <Radio.Group>
                   <Radio value={1}>是</Radio>
                   <Radio value={2}>否</Radio>
@@ -130,13 +143,13 @@ const generateFeatureLib = async () =>{ //生成特征库
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Form.Item label="报警间隔" name="ee"  >
-                <InputNumber placeholder='请输入' />
+              <Form.Item label="报警间隔" name="AlarmInterval"  >
+                <InputNumber placeholder='请输入（小时）' />
               </Form.Item>
             </Col>
             <Col span={4}/>
             <Col span={10}>
-              <Form.Item label="是否生成Excl" name="ff" >
+              <Form.Item label="是否生成Excl" name="IsExcl" >
                 <Radio.Group>
                   <Radio value={1}>是</Radio>
                   <Radio value={2}>否</Radio>
@@ -147,11 +160,11 @@ const generateFeatureLib = async () =>{ //生成特征库
           <Row justify='end' style={{paddingTop:20}}>
               <Form.Item>
                <Button loading={saveLoading} type="primary"  htmlType="submit">
-                    保存
+                 {btnText}
                </Button>
-                <Button style={{ marginLeft: 8 }} onClick={() => { generateFeatureLib()}}  >
+                {btnText=='修改'&&<Button loading={createLoading}  style={{ marginLeft: 8 }} onClick={() => { generateFeatureLib()}}  >
                     生成特征库
-                </Button>
+                </Button>}
               </Form.Item>
           </Row>
           </Form>

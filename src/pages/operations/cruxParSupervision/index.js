@@ -208,7 +208,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record) => {
-        return text === '不合格' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
+        return    <span style={{ color:text === '不合格'? '#f5222d' : '#52c41a' }}>{text}</span> 
       }
     },
     {
@@ -225,7 +225,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record) => {
-        return text === '待下发' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
+        return  <span style={{ color:text === '待下发'? '#f5222d' : '#52c41a' }}>{text}</span> 
       }
     },
     {
@@ -297,7 +297,6 @@ const Index = (props) => {
                 <AuditOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip>
-           {/* {record.issuedStatus=='待下发'&&<> */}
            <Divider type="vertical" />
             <Tooltip title={"下发"} >
               <Popconfirm  title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
@@ -380,6 +379,7 @@ const Index = (props) => {
         props.subCheckItem(data, (isSuccess) => {
           type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
           if(isSuccess){
+             setCheckDetailVisible(false)
              onFinish(pageIndex,pageSize)
             }else{
               props.updateState({editCheckTime:infoData&&infoData.checkTime&& moment(infoData.checkTime).format('YYYY-MM-DD HH:mm:ss') })  
