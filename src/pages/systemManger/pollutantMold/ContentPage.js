@@ -10,7 +10,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-
+import moment from 'moment';
 import styles from "./style.less"
 
 
@@ -22,8 +22,9 @@ const namespace = 'pollutantMold'
 
 
 const dvaPropsData = ({ loading, pollutantMold }) => ({
+  echoDataLoading: loading.effects[`${namespace}/addAnomalyModle`],
   saveLoading: loading.effects[`${namespace}/addAnomalyModle`],
-  createLoading: loading.effects[`${namespace}/addAnomalyModle`],
+  createLoading: loading.effects[`${namespace}/createFeatureLibrary`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -58,17 +59,20 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const {DGIMN,saveLoading,createLoading,} = props;
+  const {DGIMN,echoDataLoading,saveLoading,createLoading,} = props;
   const [btnText,setBtnText] = useState('保存');
 
   useEffect(() => {
+    initData(DGIMN)
+  }, [DGIMN]);
+  
+  const initData=(DGIMN)=>{
     if (DGIMN) {
       // props.addAnomalyModle();
       form.setFieldsValue({FileName:DGIMN})
     }
 
-  }, [DGIMN]);
-
+  }
  
   const save = async () => {  //生成模型需要的Excl
     try {
@@ -77,6 +81,9 @@ const Index = (props) => {
             ...values,
             Btime:values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
             Etime:values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+            time:undefined,
+        },()=>{
+          initData(DGIMN)
         })
     } catch (errorInfo) {
         console.log('Failed:', errorInfo); 
@@ -97,6 +104,7 @@ const generateFeatureLib = async () =>{ //生成特征库
 }
   return (
     <div className={styles.pollutantMoldSty}>
+      <Spin spinning={echoDataLoading||false}>
         <Card>
         <Form
           name="basic"
@@ -116,7 +124,7 @@ const generateFeatureLib = async () =>{ //生成特征库
             </Col>
             <Col span={10}>
               <Form.Item label="数据时段" name="time"  >
-              <RangePicker_   />
+              <RangePicker_  showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
               </Form.Item>
             </Col>
             <Col span={4}/>
@@ -169,6 +177,7 @@ const generateFeatureLib = async () =>{ //生成特征库
           </Row>
           </Form>
         </Card>
+        </Spin>
     </div>
   );
 };

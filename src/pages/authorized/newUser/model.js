@@ -59,6 +59,7 @@ export default Model.extend({
         CheckPoint: [],
         userManagePageIndex: 1,
         userManagePageSize: 20,
+        goDetail:false,
     },
     subscriptions: {
         setup({

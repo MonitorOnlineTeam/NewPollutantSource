@@ -204,6 +204,10 @@ export default class UserInfoIndex extends Component {
             <Tooltip title="编辑">
               <a
                 onClick={() => {
+                  this.props.dispatch({
+                    type: 'newuserinfo/updateState',
+                    payload: {  goDetail:true,},
+                  })
                   this.props.dispatch(
                     routerRedux.push(
                       '/rolesmanager/user/userinfoedit/' + row['ID'] + "?tabName=用户管理 - 编辑",
@@ -252,12 +256,15 @@ export default class UserInfoIndex extends Component {
   }
 
   componentDidMount() {
-    const { match,userPar,dispatch, } = this.props;
-
+    const { match,userPar,dispatch,goDetail, } = this.props;
+    if(goDetail){
     this.getDepInfoByTree()
-    this.getRolesTree();
+    this.getRolesTree();  
     this.restClick();
     this.getUserList();
+    }else{
+    this.getUserList(userPar);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -486,7 +493,10 @@ export default class UserInfoIndex extends Component {
   addClick=()=>{
 
     const {dispatch } = this.props;
-
+    this.props.dispatch({
+      type: 'newuserinfo/updateState',
+      payload: {  goDetail:true,},
+    })
     dispatch(routerRedux.push('/rolesmanager/user/userinfoadd?tabName=用户管理 - 添加'));
   }
   exports = ()=>{
@@ -685,6 +695,8 @@ export default class UserInfoIndex extends Component {
                     treeData={depInfoList}
                     value={groupListID?groupListID:undefined}
                     style={{ width: 200, marginLeft: 10 }}
+                    showSearch
+                    treeNodeFilterProp='title'
                   />
                 </Form.Item>
                 <Form.Item label='角色'>
@@ -695,6 +707,8 @@ export default class UserInfoIndex extends Component {
                     onChange={this.onRolesChange}
                     value={roleListID?roleListID:undefined}
                     style={{ width: 200, marginLeft: 10 }}
+                    showSearch
+                    treeNodeFilterProp='title'
                   />
                 </Form.Item>
                 <Form.Item label='运维单位' >
