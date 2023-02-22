@@ -240,7 +240,7 @@ const Index = (props) => {
                             let i = (index + 1) / 7
                             return {
                                 // children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>,
-                                children: <span>{!isClears && form.getFieldValue(`AbsolutelyError${i}`)}</span>,
+                                children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue(`AbsolutelyError${i}`)&&4,background:form.getFieldValue('col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue(`AbsolutelyError${i}`)}</span>,
                                 props: { colSpan: 3 },
                             }
                         }
@@ -276,7 +276,7 @@ const Index = (props) => {
             width: 150,
         },
         {
-            title: <span>{!isClears && form.getFieldValue('Evaluation')}</span>,
+            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('Evaluation')&&4,background:form.getFieldValue('col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('Evaluation')}</span>,
             align: 'center',
         },
     ]

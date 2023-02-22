@@ -265,7 +265,7 @@ const Index = (props) => {
                     };
                 } else {
                     return {
-                        children: <div>{form.getFieldValue('EvaluationBasis')}</div>,
+                        children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('EvaluationBasis')&&4,background:form.getFieldValue('col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears&&form.getFieldValue('EvaluationBasis')}</span>,
                         props: { colSpan: 7 },
                     };
                 }
@@ -320,7 +320,7 @@ const Index = (props) => {
                 }
                 if(index == 4 || index == 5){
                     //   return <Form.Item name={`LabelGas80${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled    /></Form.Item>
-                      return <span>{!isClears&&form.getFieldValue(`LabelGas80${index}`)}</span>
+                        return <span style={index==5&&form.getFieldValue(`LabelGas80${index}`)==form.getFieldValue(`ErrorValue`)? {color:'#fff',padding:!isClears&&form.getFieldValue(`LabelGas50${index}`)&&4,background:form.getFieldValue(`col1`)==1 ? '#73d13d':'#ff4d4f' }  : {}}>{!isClears&&form.getFieldValue(`LabelGas80${index}`)}</span>
                     }else{
                         return <Form.Item  className={styles.reqSty} name={`LabelGas80${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(80, 100, `LabelGas80${index}`, index) }} placeholder='请输入'/></Form.Item>;   
                  }
@@ -337,7 +337,7 @@ const Index = (props) => {
                 }
                 if(index == 4 || index == 5){
                 //   return <Form.Item name={`LabelGas50${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   /></Form.Item>
-                  return <span>{!isClears&&form.getFieldValue(`LabelGas50${index}`)}</span>
+                  return <span style={index==5&&form.getFieldValue(`LabelGas50${index}`)==form.getFieldValue(`ErrorValue`)? {color:'#fff',padding:!isClears&&form.getFieldValue(`LabelGas50${index}`)&&4,background:form.getFieldValue(`col1`)==1 ? '#73d13d':'#ff4d4f' }  : {}}>{!isClears&&form.getFieldValue(`LabelGas50${index}`)}</span>
                 }else{
                     return <Form.Item  className={styles.reqSty} name={`LabelGas50${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(50, 60, `LabelGas50${index}`, index) }}  placeholder='请输入'/></Form.Item>;   
                 }
@@ -353,7 +353,7 @@ const Index = (props) => {
                 }
                 if(index == 4 || index == 5){
                     //   return <Form.Item name={`LabelGas20${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   placeholder='请输入' /></Form.Item>
-                      return <span>{!isClears&&form.getFieldValue(`LabelGas20${index}`)}</span>
+                    return <span style={index==5&&form.getFieldValue(`LabelGas20${index}`)==form.getFieldValue(`ErrorValue`)? {color:'#fff',padding:!isClears&&form.getFieldValue(`LabelGas50${index}`)&&4,background:form.getFieldValue(`col1`)==1 ? '#73d13d':'#ff4d4f' }  : {}}>{!isClears&&form.getFieldValue(`LabelGas20${index}`)}</span>
                     }else{
                         return <Form.Item  className={styles.reqSty} name={`LabelGas20${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(20, 30, `LabelGas20${index}`, index) }} placeholder='请输入'/></Form.Item>;   
                     }
@@ -391,7 +391,7 @@ const Index = (props) => {
             title: '标气名称',
             align: 'center',
             render: (text, record, index) => {
-                if (index == 3) { return { children: <span>{!isClears&&form.getFieldValue('EvaluationBasis1')}</span>, props: { colSpan: 6 }, }; }
+                if (index == 3) { return { children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('EvaluationBasis1')&&4,background:form.getFieldValue('col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears&&form.getFieldValue('EvaluationBasis1')}</span>, props: { colSpan: 6 }, }; }
                 // return <Form.Item name="PollutantName" >
                 //     <Input disabled placeholder='请选择' allowClear title={form.getFieldValue('PollutantName')} />
                 // </Form.Item>

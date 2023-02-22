@@ -1,6 +1,8 @@
 .deviceManagerSty{
     :global{
-
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
       .ant-pagination-options-size-changer.ant-select{
        width: auto;
       }
@@ -30,3 +32,14 @@
    }
   }
   }
+  .contentContainerSty,.pointSty,.deviceManagerSty{
+    :global{
+      ::-webkit-scrollbar {
+        height: 12px;
+        // width: 12px;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 40px;
+      }
+  }
+}

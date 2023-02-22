@@ -21,7 +21,7 @@ import {
   InputNumber,
   Tooltip,
 } from 'antd';
-import styles from '@/pages/AutoFormManager/index.less';
+import styles from "../style.less"
 import MonitorContent from '@/components/MonitorContent/index';
 import { routerRedux } from 'dva/router';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
@@ -179,7 +179,7 @@ export default class Index extends Component {
     }
     return (
       <BreadcrumbWrapper title="监测点维护">
-      <div className={styles.cardTitle}>
+      <div className={styles.pointSty}>
           <Card
             title={
               <span>

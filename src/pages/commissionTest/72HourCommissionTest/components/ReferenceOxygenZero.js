@@ -309,7 +309,7 @@ const Index = (props) => {
                     if (index == tableDatas.length + 3) { value = form.getFieldValue('RelativeAccuracy') }
                     if (index == tableDatas.length + 4) { value = form.getFieldValue('Evaluation') }
                     return {
-                        children: <span> {!isClears&&value} </span>,
+                        children: <span style={!isClears&&value&&value!='/'? {color:'#fff',padding:4,background:form.getFieldValue(`col1`)==1 ? '#73d13d':'#ff4d4f' }  : {}}> {!isClears&&value} </span>,
                         props: { colSpan: 3 },
                     };
                 }

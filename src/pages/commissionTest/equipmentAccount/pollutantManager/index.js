@@ -119,7 +119,7 @@ export default class Index extends Component {
         }else{
         return (
             <BreadcrumbWrapper>
-                <Card className={styles.contentContainer}>
+                <Card className={styles.contentContainerSty}>
 
                     <SearchWrapper
                         onSubmitForm={form => this.loadReportList(form)}

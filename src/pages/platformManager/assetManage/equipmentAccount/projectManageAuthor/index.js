@@ -38,6 +38,7 @@ const dvaPropsData =  ({ loading,projectManageAuthor,global }) => ({
   userList:projectManageAuthor.userList,
   loadingUser: loading.effects[`${namespace}/getUserList`],
   loadingAssignPermissions: loading.effects[`${namespace}/addProjectAuthor`],
+  clientHeight:global.clientHeight,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -477,7 +478,6 @@ onFinish2(PageIndex,PageSize);
         onCancel={()=>{setAssignPermissionsVisible(false)}}
         className={styles.tableModal}
         destroyOnClose
-        centered
         width='90%'
         confirmLoading={loadingAssignPermissions}
       >
@@ -501,7 +501,7 @@ onFinish2(PageIndex,PageSize);
         bordered
         dataSource={projectAuthorList}
         columns={columns2}
-        scroll={{y:props.clientHeight - 550}}
+        scroll={{y:props.clientHeight - 500}}
         pagination={{
           total:projectAuthorListTotal,
           pageSize: pageSize2,

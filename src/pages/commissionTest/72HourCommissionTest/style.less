@@ -5,6 +5,7 @@
      .hourCommissionTestSty :global{
         ::-webkit-scrollbar {
            height: 12px;
+           width: 12px;
          }
          ::-webkit-scrollbar-thumb {
            border-radius: 40px;
@@ -16,8 +17,15 @@
       .ant-tabs-nav{
         padding: 0 24px;
       }
+      .ant-tabs-nav .ant-tabs-tab{
+        margin: 12px 20px 6px 0;
+      }
+      .ant-tabs-tab-btn{
+        font-size: 15px;
+        font-weight: bold !important;
+      }
       .ant-tabs-content{
-        height: calc(100vh - 210px);
+        height: calc(100vh - 228px);
         overflow: auto;
         padding: 12px 24px;
         // overflow-x: hidden;

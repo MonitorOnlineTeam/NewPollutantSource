@@ -200,12 +200,6 @@ const columns2 = [
      return  index +1 
     }
   },
-  // {
-  //   title: '省/市',
-  //   dataIndex: 'regionName',
-  //   key:'regionName',
-  //   align:'center',
-  // },
   {
     title: '省',
     dataIndex: 'province',
@@ -226,6 +220,12 @@ const columns2 = [
     render: (text, record, index) => {
       return { props: { colSpan: text == '合计' ? 2 : 1 }, children: text, };
     }
+  },
+  {
+    title: '项目号',
+    dataIndex: 'projectCode',
+    key:'projectCode',
+    align:'center',
   },
   {
     title: '企业名称',

@@ -60,6 +60,7 @@ export default Model.extend({
         userManagePageIndex: 1,
         userManagePageSize: 20,
         goDetail:false,
+        queryPar:null,
     },
     subscriptions: {
         setup({
@@ -98,7 +99,8 @@ export default Model.extend({
             if (response.IsSuccess) {
                 yield update({
                     tableDatas: response.Datas,
-                    loading: false
+                    loading: false,
+                    queryPar:payload,
                 });
             }
             callback&&callback()
