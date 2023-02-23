@@ -230,7 +230,7 @@ const Index = (props) => {
                     form.setFieldsValue({[`BeforeRelativeCollection${i}`]:undefined})
                  }     
         }else{
-            form.setFieldsValue({ AfterRelativeCollection: undefined,BeforeRelativeCollection:undefined, })
+            form.setFieldsValue({ [`AfterRelativeCollection${i}`]: undefined,[`BeforeRelativeCollection${i}`]:undefined, })
         }
     }
     const [isReg, setIsReg] = useState(false)
