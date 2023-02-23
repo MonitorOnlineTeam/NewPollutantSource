@@ -351,9 +351,6 @@ const Index = (props) => {
     },
     onChange(info) {
       setFilesLoading(true)
-      if (info.file.status === 'uploading') {
-        // console.log(info)
-      }
       const fileList = info.fileList.map(item=>{
         if(item.response&&item.response.IsSuccess){ //刚上传的
           return {...item,url: `/upload/${item.response.Datas}`,}
@@ -361,6 +358,9 @@ const Index = (props) => {
           return {...item}
         }
       })
+      if (info.file.status === 'uploading') {
+        // console.log(info)
+      }
       if (info.file.status === 'done') {
         form2.setFieldsValue({ File: filesCuid })
         setFilesList(fileList)

@@ -249,14 +249,15 @@ const Index = (props) => {
       }
     },
     onChange(info) {
-      const fileList = info.fileList.map(item => {
+      
+      const fileList = [];
+      info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
-          return { ...item, url: `/upload/${item.response.Datas}`, }
-        } else {
-          return { ...item }
+          fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+        } else if(!item.response ){
+          fileList.push({ ...item})
         }
       })
-
       if (info.file.status == 'uploading') {
         setFilesList2(fileList)
       }
@@ -265,10 +266,11 @@ const Index = (props) => {
         setFilesList2(fileList)
         message.success(`${info.file.name} 上传成功`);
       } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} 上传失败`);
+        form.setFieldsValue({ checkFile:fileList&&fileList[0]?  filesCuid : undefined }) //有上传成功的取前面的uid 没有则表示没有上传成功的图片
+        message.error(`${info.file.name}${info.file&&info.file.response&&info.file.response.Message? info.file.response.Message : '上传失败'}`);
         setFilesList2(fileList)
       } else if (info.file.status === 'removed') { //删除状态
-        form.setFieldsValue({ checkFile: filesCuid })
+        form.setFieldsValue({ checkFile:fileList&&fileList[0]?  filesCuid : undefined }) 
         setFilesList2(fileList)
       }
     },
@@ -329,6 +331,7 @@ const Index = (props) => {
     form.setFieldsValue({ checkFile:undefined,})
    }
   }
+
   const checkOK = async () => { //核查保存
     try {
       const values = await form.validateFields();
@@ -349,6 +352,9 @@ const Index = (props) => {
     columns = columns.filter(item => item.title != '操作')
   }
   const [checkResultVal,setCheckResultVal] = useState()
+  useEffect(() => {
+    form.validateFields(['checkRemark']);
+  }, [checkResultVal]);
   return (
     <div className={'checkDetail'} >
       {/* <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>{type==1? '核查':'详情'}</div> */}

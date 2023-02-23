@@ -1095,7 +1095,9 @@ const Index = (props) => {
           return {...item}
         }
       })
-
+      if (info.file.status === 'uploading') {
+        // console.log(info)
+      }
       if (info.file.status === 'done') {
         if (fileType == 1) {
           setFileList1(fileList) 

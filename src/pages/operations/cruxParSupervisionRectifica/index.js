@@ -173,7 +173,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record) => {
-        return  <span style={{ color: text=='整改待核实'? '#f5222d': text=='整改已完成'? '#52c41a' : ''}}>{text}</span> 
+        return  <span style={{ color: text=='整改未开始'? '#f5222d': text=='整改已完成'? '#52c41a' : ''}}>{text}</span> 
       }
     },
     {
@@ -270,13 +270,13 @@ const Index = (props) => {
 
   const onValuesChange = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'entCode') {
-      if (!hangedValues.EntCode) { //清空时 不走请求
+      if (!hangedValues.entCode) { //清空时 不走请求
         form.setFieldsValue({ DGIMN: undefined })
         setPointList([])
         return;
       }
       setPointLoading(true)
-      props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
+      props.getPointByEntCode({ EntCode: hangedValues.entCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
         form.setFieldsValue({ DGIMN: res[0].DGIMN })
@@ -298,7 +298,7 @@ const Index = (props) => {
     >
       <Row align='middle'>
         <Form.Item label='行政区' name='regionCode' >
-          <RegionList noFilter levelNum={3} style={{ width: 150 }} />
+          <RegionList noFilter levelNum={2} style={{ width: 150 }} />
         </Form.Item>
         <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
           <Form.Item label='企业' name='entCode'>

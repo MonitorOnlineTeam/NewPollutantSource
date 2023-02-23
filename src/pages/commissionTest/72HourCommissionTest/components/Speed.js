@@ -421,7 +421,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 const obj = {
-                    children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('Evaluation')&&4,background:form.getFieldValue('col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('Evaluation')}</span>,
+                    children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('Evaluation')&&4,background:form.getFieldValue('Col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('Evaluation')}</span>,
                     props: { colSpan: 5 },
                 };
                 return obj;
@@ -462,7 +462,7 @@ const Index = (props) => {
             }
         },
         {
-            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('RelativeDeviation')&&4,background:form.getFieldValue('col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('RelativeDeviation')}</span>,
+            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('RelativeDeviation')&&4,background:form.getFieldValue('Col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('RelativeDeviation')}</span>,
             align: 'center',
             render: (text, record, index) => {
                 const obj = {

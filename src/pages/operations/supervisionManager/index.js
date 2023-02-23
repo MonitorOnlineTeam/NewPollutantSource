@@ -1504,7 +1504,9 @@ const Index = (props) => {
           return { ...item }
         }
       })
-      console.log(info)
+      if (info.file.status === 'uploading') {
+        // console.log(info)
+      }
       if (info.file.status === 'done') {
         fileType == 0 ? setFilesList0(fileList) : fileType == 1 ? setFilesList1({ ...filesList1, [files1]: fileList }) : fileType == 2 ? setFilesList2({ ...filesList2, [files2]: fileList }) : setFilesList3({ ...filesList3, [files3]: fileList })
         fileType == 0 ? tableForm.setFieldsValue({ Files: filesCuid0 }) : fileType == 1 ? tableForm.setFieldsValue({ [files1]: filesCuid1() }) : fileType == 2 ? tableForm.setFieldsValue({ [files2]: filesCuid2() }) : tableForm.setFieldsValue({ [files3]: filesCuid3() })

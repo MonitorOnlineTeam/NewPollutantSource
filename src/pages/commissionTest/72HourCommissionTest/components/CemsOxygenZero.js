@@ -388,11 +388,11 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('ZeroValue')&&4,background:form.getFieldValue('col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('ZeroValue')}</span>,
+                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('ZeroValue')&&4,background:form.getFieldValue('Col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('ZeroValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
-                            children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('EvaluationBasis')&&4,background:form.getFieldValue('col1')==1&&form.getFieldValue('col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('EvaluationBasis')}</span>,
+                            children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('EvaluationBasis')&&4,background:form.getFieldValue('Col1')==1&&form.getFieldValue('Col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('EvaluationBasis')}</span>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -424,7 +424,7 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('SpanValue')&&4,background:form.getFieldValue('col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('SpanValue')}</span>,
+                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('SpanValue')&&4,background:form.getFieldValue('Col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('SpanValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {

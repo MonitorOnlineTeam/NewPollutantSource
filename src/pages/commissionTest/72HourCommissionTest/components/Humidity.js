@@ -237,7 +237,7 @@ const Index = (props) => {
                             let i = (index + 1) / 8;
                             return {
                                 //  children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01' disabled  /></Form.Item>,
-                                children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue(`RelativeError${i}`)&&4,background:form.getFieldValue('col3') && form.getFieldValue('col3').split(',')[i-1]==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue(`RelativeError${i}`)}</span>,
+                                children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue(`RelativeError${i}`)&&4,background:form.getFieldValue('Col3') && form.getFieldValue('Col3').split(',')[i-1]==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue(`RelativeError${i}`)}</span>,
                                 props: { colSpan: 2 },
                             }
                         }
@@ -283,7 +283,7 @@ const Index = (props) => {
             width: 150,
         },
         {
-            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('Evaluation')&&4,background:form.getFieldValue('col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('Evaluation')}</span>,
+            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('Evaluation')&&4,background:form.getFieldValue('Col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('Evaluation')}</span>,
             align: 'center',
         },
     ]

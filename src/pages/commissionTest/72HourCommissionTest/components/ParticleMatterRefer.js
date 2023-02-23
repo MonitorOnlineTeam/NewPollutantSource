@@ -358,12 +358,12 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('ConfidenceHalfWidth')&&4,background:form.getFieldValue('col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('ConfidenceHalfWidth')}</span >,
+                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('ConfidenceHalfWidth')&&4,background:form.getFieldValue('Col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('ConfidenceHalfWidth')}</span >,
                     align: 'center',
                     render: (text, record, index) => {
                         const evaluationArr = !isClears && form.getFieldValue('Evaluation') && form.getFieldValue('Evaluation').split(';')
                         
-                        const col1 = form.getFieldValue('col1'),col2=form.getFieldValue('col2'),col3=form.getFieldValue('col3');
+                        const col1 = form.getFieldValue('Col1'),col2=form.getFieldValue('Col2'),col3=form.getFieldValue('Col3');
                         let evaluation1,evaluation2,evaluation3;
                         if(evaluationArr){
                             evaluation1 = evaluationArr[0];
@@ -371,11 +371,11 @@ const Index = (props) => {
                             evaluation3 = evaluationArr[2];
                         }
                         const obj = {
-                            children: <div style={{textAlign:'left'}}>
-                                        <span style={{color:'#fff',padding:evaluation1&&4,background:col1==1? '#73d13d':'#ff4d4f',whiteSpace: 'pre-wrap' }}>{evaluation1}</span>
-                                        <span style={{color:'#fff',padding:evaluation2&&4,background:col2==1? '#73d13d':'#ff4d4f',whiteSpace: 'pre-wrap' }}>{evaluation2}</span>
-                                        <span style={{color:'#fff',padding:evaluation3&&4,background:col3==1? '#73d13d':'#ff4d4f',whiteSpace: 'pre-wrap' }}>{evaluation3}</span> 
-                                      </div>,
+                            children: <ol style={{textAlign:'left'}}>
+                                       <li style={{lineHeight:'24px',margin:4}}> <span style={{color:'#fff',padding:evaluation1&&4,background:col1==1? '#73d13d':'#ff4d4f',}}>{evaluation1}</span></li>
+                                       <li style={{lineHeight:'24px',margin:4}}> <span style={{color:'#fff',padding:evaluation2&&4,background:col2==1? '#73d13d':'#ff4d4f', }}>{evaluation2}</span></li>
+                                       <li style={{lineHeight:'24px',margin:4}}> <span style={{color:'#fff',padding:evaluation3&&4,background:col3==1? '#73d13d':'#ff4d4f',}}>{evaluation3}</span> </li>
+                                      </ol>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -403,11 +403,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('CorrelationCoefficient')&&4,background:form.getFieldValue('col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('CorrelationCoefficient')}</span>,
+            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('CorrelationCoefficient')&&4,background:form.getFieldValue('Col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('CorrelationCoefficient')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('AllowHalfWidth')&&4,background:form.getFieldValue('col3')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('AllowHalfWidth')}</span>,
+                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('AllowHalfWidth')&&4,background:form.getFieldValue('Col3')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('AllowHalfWidth')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
