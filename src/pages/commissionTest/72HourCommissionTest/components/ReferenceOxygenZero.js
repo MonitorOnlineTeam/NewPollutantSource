@@ -220,11 +220,15 @@ const Index = (props) => {
                  if(afterVal || afterVal == 0 ){
                     const val = ((afterVal - guaranteedVal) / guaranteedVal  * 100 ).toFixed(2);
                     form.setFieldsValue({[`AfterRelativeCollection${i}`]:val})
-                 }         
+                  }else{
+                    form.setFieldsValue({[`AfterRelativeCollection${i}`]:undefined})
+                  }        
                  if(beforeVal || beforeVal == 0){
                     const val = ((beforeVal - guaranteedVal) / guaranteedVal  * 100 ).toFixed(2);
                     form.setFieldsValue({[`BeforeRelativeCollection${i}`]:val})
-                 }      
+                 }else{
+                    form.setFieldsValue({[`BeforeRelativeCollection${i}`]:undefined})
+                 }     
         }else{
             form.setFieldsValue({ AfterRelativeCollection: undefined,BeforeRelativeCollection:undefined, })
         }
