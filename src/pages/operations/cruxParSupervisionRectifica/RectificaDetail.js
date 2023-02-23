@@ -143,7 +143,7 @@ const Index = (props) => {
       align: 'center',
       width: 150,
       render: (text, record) => {
-        return <div style={{ textAlign: 'left', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
+        return <div style={{ textAlign: 'left', whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
       },
     },
     {
@@ -170,7 +170,7 @@ const Index = (props) => {
       align: 'center',
       width: 150,
       render: (text, record) => {
-        return <div style={{ textAlign: 'left', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
+        return <div style={{ textAlign: 'left', whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
       },
     },
     {
@@ -347,26 +347,27 @@ const Index = (props) => {
   const reject = (record,status) => { //驳回弹框
     setRejectVisible(true)
     record.status == 1 ? setRejectTitle('整改驳回') : setRejectTitle('申诉驳回')
+    form.resetFields();
     form.setFieldsValue({
       id: record.id,
-      checkRemark: record.checkReamrk,
-      checkResult: 1,
       AuditStatus:status,
+      checkResult: 1,
+      // checkRemark: record.checkReamrk,
     })
     /*附件 */
     setFilesList2([])
-    if (record.checkFileList && record.checkFileList[0]) {
-      const fileList2 = [];
-      record.checkFileList.map((item, index) => {
-        if (!item.IsDelete) {
-          fileList2.push({ name: item.FileActualName, url: `/upload/${item.FileName}`, status: 'done', uid: item.GUID, })
-        }
-      })
-      setFilesList2(fileList2)
-      form.setFieldsValue({ checkFile: record.checkFileList[0].FileUuid, })
-    } else {
-      form.setFieldsValue({ checkFile: undefined, })
-    }
+    // if (record.checkFileList && record.checkFileList[0]) {
+    //   const fileList2 = [];
+    //   record.checkFileList.map((item, index) => {
+    //     if (!item.IsDelete) {
+    //       fileList2.push({ name: item.FileActualName, url: `/upload/${item.FileName}`, status: 'done', uid: item.GUID, })
+    //     }
+    //   })
+    //   setFilesList2(fileList2)
+    //   form.setFieldsValue({ checkFile: record.checkFileList[0].FileUuid, })
+    // } else {
+    //   form.setFieldsValue({ checkFile: undefined, })
+    // }
   }
   const jectOk = async () => {//整改或申诉通过 
     try {

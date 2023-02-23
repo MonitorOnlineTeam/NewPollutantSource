@@ -380,8 +380,8 @@ const Index = (props) => {
     }
     props.exportPersonalPerformanceRate({ ...par })
   };
-  const exports2 = () => {
-    const values = form.getFieldsValue();
+  const exports2 = async () => {
+    const values = await form2.getFieldsValue();
     const par = {
       ...values,
       Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),

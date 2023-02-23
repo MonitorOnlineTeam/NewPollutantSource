@@ -126,7 +126,7 @@ const Index = (props) => {
       width: 200,
     },
     {
-      title: `备注`,
+      title: '备注(运维人员提交)',
       dataIndex: 'remark',
       key: 'remark',
       align: 'center',
@@ -302,6 +302,8 @@ const Index = (props) => {
   }
 
   const [checkVisible, setCheckVisible] = useState(false)
+  const [checkTitle, setCheckTitle] = useState()
+
   const check = (record) => {
     setCheckVisible(true)
     form.setFieldsValue({
@@ -310,6 +312,8 @@ const Index = (props) => {
       id:record.id,
       typeID:record.typeID,
     })
+    setCheckResultVal(record.checkStatus)
+    setCheckTitle(record.typeName)
     /*附件 */
     setFilesList2([])
     if(record.checkFileList && record.checkFileList[0]){
@@ -344,6 +348,7 @@ const Index = (props) => {
   if (type == 2) {
     columns = columns.filter(item => item.title != '操作')
   }
+  const [checkResultVal,setCheckResultVal] = useState()
   return (
     <div className={'checkDetail'} >
       {/* <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>{type==1? '核查':'详情'}</div> */}
@@ -424,7 +429,7 @@ const Index = (props) => {
         }
       />}
       <Modal
-        title='上位机量程与参数设置照片'
+        title={checkTitle}
         visible={checkVisible}
         onOk={() => { checkOK() }}
         destroyOnClose
@@ -447,9 +452,9 @@ const Index = (props) => {
           <Form.Item
             label="核查状态"
             name="checkResult"
-            rules={[{ required: true, message: '请选择核查状态' }]}
+            rules={[{ required:true, message: '请选择核查状态' }]}
           >
-            <Radio.Group>
+            <Radio.Group onChange={(e)=>{setCheckResultVal(e.target.value)}}>
               <Radio value={2}>已通过</Radio>
               <Radio value={3}>未通过</Radio>
             </Radio.Group>
@@ -457,7 +462,7 @@ const Index = (props) => {
           <Form.Item
             label="核查问题描述"
             name="checkRemark"
-            rules={[{ required: true, message: '请输入核查问题描述' }]}
+            rules={[{ required: checkResultVal==3? true : false, message: '请输入核查问题描述' }]}
           >
             <TextArea placeholder='请输入' rows={4} />
           </Form.Item>

@@ -371,7 +371,7 @@ const Index = (props) => {
   };
 
   const exports2 = () => {
-    const values = form.getFieldsValue();
+    const values = form2.getFieldsValue();
     const par = {
       ...values,
       UserId: userId,

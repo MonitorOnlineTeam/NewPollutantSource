@@ -274,7 +274,7 @@ const Index = (props) => {
                     width: 200,
                     render: (text, record, index) => {
                         //  const htmlText = text.replaceAll(/\\r\\n/g, '<br/>')
-                        return <div style={{ textAlign: 'left', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
+                        return <div style={{ textAlign: 'left', whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
                     }
                 },
                 {
@@ -284,7 +284,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 200,
                     render: (text, record, index) => {
-                        return <div style={{ textAlign: 'left', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
+                        return <div style={{ textAlign: 'left', whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: text }} ></div>
                     }
                 },
             ]

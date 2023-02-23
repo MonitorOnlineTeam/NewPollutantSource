@@ -127,7 +127,7 @@ const Index = (props) => {
 
 
 
-    const exports = async () => {
+    const exports =  () => {
         props.exportIndividualApportionment({ ...detailPar })
     };
 

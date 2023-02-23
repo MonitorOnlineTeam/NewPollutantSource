@@ -410,7 +410,7 @@ const Index = (props) => {
 
       <Modal //核查和详情
         visible={rectificaDetailVisible}
-        title={rectificaDetailType==1? '核查': '详情'}
+        title={rectificaDetailType==1? '核查整改': '整改详情'}
         footer={null}
         width={'100%'}
         className={styles.fromModal}

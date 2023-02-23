@@ -46,6 +46,7 @@ const dvaPropsData = ({ loading, cruxParSupervision, global, common, point, auto
   regQueryPar:cruxParSupervision.regQueryPar,
   checkDetailLoading: loading.effects[`${namespace}/getKeyParameterCheckDetailList`],
   editCheckTime:cruxParSupervision.editCheckTime,
+  exportLoading:loading.effects[`${namespace}/exportKeyParameterCheckList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -230,8 +231,8 @@ const Index = (props) => {
     },
     {
       title: '下发时间',
-      dataIndex: 'issueTime',
-      key: 'issueTime',
+      dataIndex: 'issuedTime',
+      key: 'issuedTime',
       align: 'center',
       ellipsis: true,
     },

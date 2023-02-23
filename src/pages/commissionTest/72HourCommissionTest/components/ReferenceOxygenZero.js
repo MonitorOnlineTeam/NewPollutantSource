@@ -212,15 +212,21 @@ const Index = (props) => {
     }
 
 
-    const collectionBlur = () => {
+    const collectionBlur = (i) => {
+    
+        const guaranteedVal = form.getFieldValue(`GuaranteedValue${i}`),  beforeVal = form.getFieldValue(`BeforeCollection${i}`), afterVal = form.getFieldValue(`AfterCollection${i}`)
 
-        const beforeVal = form.getFieldValue('BeforeCollection'), afterVal = form.getFieldValue('AfterCollection')
-
-        if ((beforeVal || beforeVal == 0) && (afterVal || afterVal == 0)) {
-            const val = ((afterVal - beforeVal) * 100 / afterVal).toFixed(2);
-            form.setFieldsValue({ RelativeCollection: val })
+        if (guaranteedVal || guaranteedVal == 0) {
+                 if(afterVal || afterVal == 0 ){
+                    const val = ((afterVal - guaranteedVal) / guaranteedVal  * 100 ).toFixed(2);
+                    form.setFieldsValue({[`AfterRelativeCollection${i}`]:val})
+                 }         
+                 if(beforeVal || beforeVal == 0){
+                    const val = ((beforeVal - guaranteedVal) / guaranteedVal  * 100 ).toFixed(2);
+                    form.setFieldsValue({[`BeforeRelativeCollection${i}`]:val})
+                 }      
         }else{
-            form.setFieldsValue({ RelativeCollection: undefined })
+            form.setFieldsValue({ AfterRelativeCollection: undefined,BeforeRelativeCollection:undefined, })
         }
     }
     const [isReg, setIsReg] = useState(false)
@@ -359,7 +365,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 const obj = {
                     children: '标准气体',
-                    props: { rowSpan: index == 0 ? 3 : 0 },
+                    props: { rowSpan: index == 0 ? 5 : 0 },
                 };
                 return obj;
             }
@@ -379,8 +385,8 @@ const Index = (props) => {
                 if (index == 1) {
                     obj.props.rowSpan = 0;
                 }
-                if (index == 2) {
-                    obj.children = <span> {form.getFieldValue('StandardGasName')}  </span>
+                if (index >= 2 ) {
+                    obj.children = <span> {form.getFieldValue(`StandardGasName${index-2}`)}  </span>
                     
                     // <Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input disabled  title={form.getFieldValue('StandardGasName')} /></Form.Item>
                 }
@@ -402,8 +408,8 @@ const Index = (props) => {
                 if (index == 1) {
                     obj.props.rowSpan = 0;
                 }
-                if (index == 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`GuaranteedValue`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   placeholder='请输入' /></Form.Item>
+                if (index >= 2) {
+                    obj.children = <Form.Item className={styles.reqSty} name={`GuaranteedValue${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index-2) }}  placeholder='请输入' /></Form.Item>
                 }
                 return obj;
             }
@@ -424,8 +430,8 @@ const Index = (props) => {
                 if (index == 1) {
                     obj.children = '采样前'
                 }
-                if (index == 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`BeforeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
+                if (index >= 2) {
+                    obj.children = <Form.Item className={styles.reqSty} name={`BeforeCollection${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur(index-2) }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -447,16 +453,12 @@ const Index = (props) => {
                     obj.children = '采样后'
 
                 }
-                if (index == 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`AfterCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
+                if (index >= 2) {
+                    obj.children = <Form.Item className={styles.reqSty} name={`AfterCollection${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur(index-2) }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
             }
-
-
-
-
         },
         {
             align: 'center',
@@ -467,17 +469,39 @@ const Index = (props) => {
                 };
                 if (index == 0) {
                     obj.children = '采样前后相对误差(%)'
-                    obj.props.rowSpan = 2;
+                    obj.props.colSpan = 2;
                 }
                 if (index == 1) {
-                    obj.props.rowSpan = 0;
+                    obj.children = '采样前'
                 }
-                if (index == 2) {
-                    obj.children = <Form.Item className={styles.calculaSty} name={`RelativeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
+                if (index >= 2) {
+                    obj.children = <Form.Item className={styles.calculaSty} name={`BeforeRelativeCollection${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
                 }
                 return obj;
             }
-        }
+        },
+        {
+            align: 'center',
+            colSpan: 0,
+            render: (text, record, index) => {
+                const obj = {
+                    children: null,
+                    props: {},
+                };
+                if (index == 0) {
+                    obj.props.colSpan = 0;
+                }
+                if (index == 1) {
+                    obj.children = '采样后'
+
+                }
+                if (index >= 2) {
+                    obj.children = <Form.Item className={styles.calculaSty} name={`AfterRelativeCollection${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled/></Form.Item>
+
+                }
+                return obj;
+            }
+        },
 
 
 
@@ -570,7 +594,7 @@ const Index = (props) => {
     const clears = () => {
         const value = form.getFieldsValue()
         Object.keys(value).map((item, index) => { //清除表格表单数据
-            if(/\d/g.test(item) || /GuaranteedValue/g.test(item) ||/Collection/g.test(item)){
+            if(/\d/g.test(item)){
                 form.setFieldsValue({[item]:undefined})
              }
         })
@@ -941,7 +965,7 @@ const Index = (props) => {
                             <Table
                                 size="small"
                                 bordered
-                                dataSource={[1, 2, 3]}
+                                dataSource={[1, 2, 3,4,5]}
                                 columns={columns2()}
                                 pagination={false}
                                 className={'hidden-thead  tableSty2'}
