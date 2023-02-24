@@ -277,14 +277,14 @@ const Index = (props) => {
       fixed: 'right',
       width: 150,
       ellipsis: true,
-      render: (text, record) => {
-        const flag = record.flag;
+      render: (text, record) => {      
         let detail = <Tooltip title="详情">
                      <a onClick={() => {  checkDetail(record,2) }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
                      </Tooltip>
         if (isRecord) { //远程督查记录页面
           return detail
         }
+        const issuesFlag = record.checkResult&&record.checkStatus==='提交';
         return (
           <>
             <Tooltip title={"删除"} >
@@ -299,9 +299,9 @@ const Index = (props) => {
               </a>
             </Tooltip>
            <Divider type="vertical" />
-            <Tooltip title={"下发"} >
-              <Popconfirm  title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
-                <a><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
+            <Tooltip placement={issuesFlag ? "top" : "left"}  title={issuesFlag ? "下发" : "只有核查并提交之后才可以下发" } >
+              <Popconfirm disabled={!issuesFlag} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
+                <a className={issuesFlag? '':'disabledSty'}><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
             {/* </>} */}
@@ -472,7 +472,7 @@ const Index = (props) => {
   const handleTableChange = (PageIndex, PageSize) => {
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    onFinish(PageIndex, PageSize,regQueryPar) //regQueryPar 防止输入查询条件 不点击查询 直接点击分页的情况
+    onFinish(PageIndex, PageSize,{...regQueryPar,pageIndex:PageIndex,pageSize:PageSize}) //regQueryPar 防止输入查询条件 不点击查询 直接点击分页的情况
   }
 
 

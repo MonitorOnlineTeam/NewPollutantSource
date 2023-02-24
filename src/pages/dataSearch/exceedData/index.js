@@ -1363,7 +1363,7 @@ class index extends PureComponent {
             onEdit={this.onEdit}
             onTabClick={this.onTabClick}
             >
-                <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key={this.state.activeKey} closable={false}>
+                <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key='1' closable={false}>
                     {
                             <SdlTable columns={columns} dataSource={ExceedDataList}
                             scroll={{ x: scrollWith }}

@@ -384,24 +384,24 @@ const Index = (props) => {
         const noSubmitStatusFlag = record.Status == 0 || record.Status == 2; //暂存状态 推送状态  不可以推送
 
         return <span>
-          <Fragment><Tooltip title={flag ? "运维督查记录已超过30天，不可编辑" : pushStatusFlag ? '推送状态，不可编辑' : "编辑"}> <a onClick={() => {
+          <Fragment><Tooltip placement={(flag) || pushStatusFlag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可编辑" : pushStatusFlag ? '推送状态，不可编辑' : "编辑"}> <a onClick={() => {
             if (flag || pushStatusFlag) {
               return;
             }
             edit(record)
 
-          }} ><EditOutlined style={{ cursor: (flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (flag && '#00000040') || (pushStatusFlag && '#00000040'), fontSize: 16 }} /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          }} ><EditOutlined style={{ cursor: (flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') || (pushStatusFlag && 'rgba(0, 0, 0, 0.25) '), fontSize: 16 }} /></a> </Tooltip><Divider type="vertical" /> </Fragment>
           <Fragment>
             <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip> <Divider type="vertical" />
           </Fragment>
           <Fragment>
-            <Tooltip title={flag ? "运维督查记录已超过30天，不可推送" : noSubmitStatusFlag ? "只有提交状态才可以整改推送" : "整改推送"}>
+            <Tooltip  placement={(flag) || pushStatusFlag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可推送" : noSubmitStatusFlag ? "只有提交状态才可以整改推送" : "整改推送"}>
               <Popconfirm disabled={(flag) || noSubmitStatusFlag} placement="left" title="是否把整改问题推送给运维人员？"
                 onConfirm={() => {
                   if ((flag) || noSubmitStatusFlag) { return; } rectificationPush(record);
                 }
                 } okText="是" cancelText="否">
-                <a style={{ cursor: (flag && 'not-allowed') || (noSubmitStatusFlag && 'not-allowed'), color: (flag && '#00000040') || (noSubmitStatusFlag && '#00000040'), }} > <ToTopOutlined style={{ fontSize: 16 }} /> </a>
+                <a style={{ cursor: (flag && 'not-allowed') || (noSubmitStatusFlag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') || (noSubmitStatusFlag && 'rgba(0, 0, 0, 0.25) '), }} > <ToTopOutlined style={{ fontSize: 16 }} /> </a>
               </Popconfirm>
             </Tooltip>
             <Divider type="vertical" />
@@ -413,7 +413,7 @@ const Index = (props) => {
                   if (flag || pushStatusFlag) { return; } del(record)
                 }
                 } okText="是" cancelText="否">
-                <a style={{ cursor: (flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (flag && '#00000040') || (pushStatusFlag && '#00000040'), }} > <DelIcon style={{ fontSize: 16 }} /> </a>
+                <a style={{ cursor: (flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') || (pushStatusFlag && 'rgba(0, 0, 0, 0.25) '), }} > <DelIcon style={{ fontSize: 16 }} /> </a>
               </Popconfirm>
             </Tooltip>
           </Fragment>
@@ -1497,11 +1497,19 @@ const Index = (props) => {
       // }
     },
     onChange(info) {
-      const fileList = info.fileList.map(item => {
+      // const fileList = info.fileList.map(item => {
+      //   if (item.response && item.response.IsSuccess) { //刚上传的
+      //     return { ...item, url: `/upload/${item.response.Datas}`, }
+      //   } else {
+      //     return { ...item }
+      //   }
+      // })
+      const fileList = [];
+      info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
-          return { ...item, url: `/upload/${item.response.Datas}`, }
-        } else {
-          return { ...item }
+          fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+        } else if(!item.response ){
+          fileList.push({ ...item})
         }
       })
       if (info.file.status === 'uploading') {

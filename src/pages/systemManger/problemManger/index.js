@@ -351,11 +351,19 @@ const Index = (props) => {
     },
     onChange(info) {
       setFilesLoading(true)
-      const fileList = info.fileList.map(item=>{
-        if(item.response&&item.response.IsSuccess){ //刚上传的
-          return {...item,url: `/upload/${item.response.Datas}`,}
-        }else{
-          return {...item}
+      // const fileList = info.fileList.map(item=>{
+      //   if(item.response&&item.response.IsSuccess){ //刚上传的
+      //     return {...item,url: `/upload/${item.response.Datas}`,}
+      //   }else{
+      //     return {...item}
+      //   }
+      // })
+      const fileList = [];
+      info.fileList.map(item => {
+        if (item.response && item.response.IsSuccess) { //刚上传的
+          fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+        } else if(!item.response ){
+          fileList.push({ ...item})
         }
       })
       if (info.file.status === 'uploading') {

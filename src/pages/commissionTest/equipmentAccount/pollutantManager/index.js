@@ -41,13 +41,14 @@ import { sdlMessage } from '@/utils/utils';
 
 const { confirm } = Modal;
 
-@connect(({ loading, autoForm, common }) => ({
+@connect(({ loading, autoForm, global }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
     autoForm,
     searchConfigItems: autoForm.searchConfigItems,
     tableInfo: autoForm.tableInfo,
     searchForm: autoForm.searchForm,
     routerConfig: autoForm.routerConfig,
+    configInfo: global.configInfo,
 }))
 
 export default class Index extends Component {
@@ -102,9 +103,11 @@ export default class Index extends Component {
         this.child = ref;
     };
     render() {
-        const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
+        const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch,configInfo, } = this.props;
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
+        const noDelFlag = configInfo&&configInfo.DeleteTestUser==0? true : false;
+
         if (this.props.loading) {
             return (<Spin
                 style={{
@@ -138,8 +141,9 @@ export default class Index extends Component {
                                 key, row,
                             })
                         }}
+                        noDel={noDelFlag}
                         appendHandleRows={row => <Fragment>
-                            <Divider type="vertical" />
+                            {!noDelFlag&&<Divider type="vertical" />}
                             <Tooltip title="维护点信息">
                                 <a onClick={() => {
                                     this.goPointInfo(row);

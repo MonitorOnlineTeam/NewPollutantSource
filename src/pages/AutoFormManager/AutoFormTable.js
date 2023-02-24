@@ -437,7 +437,7 @@ class AutoFormTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter,resizable,noPaging,isFixedOpera, } = this.props;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter,resizable,noPaging,isFixedOpera,noDel, } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
     const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {}
@@ -574,6 +574,9 @@ class AutoFormTable extends PureComponent {
                 }
                 // if (item.type === 'del' && btnsAuthority.includes('del')) {
                 if (item.type === 'del') {
+                  
+                  if(noDel){return false}
+                  
                   return (<Fragment key={item.type}>
                     <Tooltip title="删除">
                       <Popconfirm

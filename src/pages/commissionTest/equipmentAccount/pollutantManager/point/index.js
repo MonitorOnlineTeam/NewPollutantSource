@@ -34,7 +34,7 @@ import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import { handleFormData } from '@/utils/utils';
 import DeviceManager from './DeviceManager'
 const pointConfigId = 'TestPoint'
-@connect(({ loading, autoForm,commissionTestPoint, }) => ({
+@connect(({ loading, autoForm,commissionTestPoint,global, }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   autoForm: autoForm,
   searchConfigItems: autoForm.searchConfigItems,
@@ -44,6 +44,7 @@ const pointConfigId = 'TestPoint'
   pointDataWhere:commissionTestPoint.pointDataWhere,
   loadingAddConfirm: loading.effects['autoForm/add'],
   loadingEditConfirm: loading.effects['autoForm/saveEdit'],
+  configInfo: global.configInfo,
 }))
 @Form.create()
 export default class Index extends Component {
@@ -162,9 +163,10 @@ export default class Index extends Component {
     })
   }
   render() {
-    const { searchConfigItems, searchForm, tableInfo, dispatch,pointDataWhere, loadingEditConfirm , loadingAddConfirm ,} = this.props;
+    const { searchConfigItems, searchForm, tableInfo, dispatch,pointDataWhere, loadingEditConfirm , loadingAddConfirm ,configInfo,} = this.props;
     const { location: { query: { targetName, targetId} }  } = this.props;
     const { isEdit } = this.state;
+    const noDelFlag = configInfo&&configInfo.DeleteTestUser==0? true : false;
     if (this.props.loading) {
       return (<Spin
         style={{
@@ -216,10 +218,10 @@ export default class Index extends Component {
             onAdd={() => { //添加
               this.addPoint();
             }}
+            noDel={noDelFlag}
             appendHandleRows={row => (
               <Fragment>
-
-               <Divider type="vertical" />
+                {!noDelFlag&&<Divider type="vertical" />}
                 <Tooltip title="编辑">
                   <a
                     onClick={() => {

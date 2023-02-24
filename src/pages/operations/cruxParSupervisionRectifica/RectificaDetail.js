@@ -348,7 +348,7 @@ const Index = (props) => {
   const [rejectTitle, setRejectTitle] = useState(null)
   const reject = (record,status) => { //驳回弹框
     setRejectVisible(true)
-    record.status == 1 ? setRejectTitle('整改驳回') : setRejectTitle('申诉驳回')
+    record.checkStatusName == '已整改'? setRejectTitle('整改驳回') : setRejectTitle('申诉驳回')
     form.resetFields();
     form.setFieldsValue({
       id: record.id,

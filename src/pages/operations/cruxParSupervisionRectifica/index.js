@@ -173,13 +173,13 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record) => {
-        return  <span style={{ color: text=='整改未开始'? '#f5222d': text=='整改已完成'? '#52c41a' : ''}}>{text}</span> 
+        return  <span style={{ color: text=='整改待核实'? '#f5222d': text=='整改已完成'? '#52c41a' : ''}}>{text}</span> 
       }
     },
     {
       title: '整改完成时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
+      dataIndex: 'rectificationTime',
+      key: 'rectificationTime',
       align: 'center',
       ellipsis: true,
     },
@@ -360,7 +360,7 @@ const Index = (props) => {
   const handleTableChange = (PageIndex, PageSize) => {
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    onFinish(PageIndex, PageSize,regQueryPar)
+    onFinish(PageIndex, PageSize,{...regQueryPar,pageIndex:PageIndex,pageSize:PageSize})
   }
 
 
@@ -414,7 +414,7 @@ const Index = (props) => {
         footer={null}
         width={'100%'}
         className={styles.fromModal}
-        onCancel={() => { setRectificaDetailVisible(false);rectificaDetailType==1&&onFinish(pageIndex,pageSize); }}
+        onCancel={() => { setRectificaDetailVisible(false);rectificaDetailType==1&&infoData&&infoData.rectificationStatus!=='整改未完成'&&onFinish(pageIndex,pageSize); }}
         destroyOnClose
       >
         <RectificaDetail id={rectificaDetailId} type={rectificaDetailType} infoData={infoData}/>

@@ -441,28 +441,28 @@ const Index = (props) => {
        }
         return (
           <>
-            <Tooltip  title={updateflag && flag? "编辑" : null  }>
+            <Tooltip  title={'编辑'}> {/* title={updateflag && flag? "编辑" : null  } */}
               <a onClick={() => {
                if(updateflag && flag){
                 edit(record)
                } 
                return;
               }}  >
-                <EditOutlined  style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag?  '#1890ff' : '#00000040',  fontSize: 16 }} />
+                <EditOutlined  style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag?  '#1890ff' : 'rgba(0, 0, 0, 0.25) ',  fontSize: 16 }} />
               </a>
             </Tooltip>
               <Divider type="vertical" />
             {detail}
              <Divider type="vertical" />
-              <Tooltip title={ updateflag && flag? "删除": null  } >
+              <Tooltip title={"删除"} >{/* title={ updateflag && flag? "删除": null  } */}
                 <Popconfirm   disabled={!(updateflag && flag)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                  <a   style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
+                  <a   style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }}/></a>
                 </Popconfirm>
               </Tooltip>
             <Divider type="vertical" />
-            <Tooltip   title={!issue||issue==='已下发'?  null : "下发"} >
+            <Tooltip   title={"下发"} > {/* title={!issue||issue==='已下发'?  null : "下发"}*/}
               <Popconfirm disabled={!issue||issue==='已下发'? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
-                <a  style={{cursor:!issue||issue==='已下发'? 'not-allowed' : 'pointer', color:!issue||issue==='已下发'?'#00000040' : '#1890ff', }}><IssuesCloseOutlined  style={{ fontSize: 16 }} /></a>
+                <a  style={{cursor:!issue||issue==='已下发'? 'not-allowed' : 'pointer', color:!issue||issue==='已下发'?'rgba(0, 0, 0, 0.25) ' : '#1890ff', }}><IssuesCloseOutlined  style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
           </>
@@ -1088,11 +1088,19 @@ const Index = (props) => {
       }
     },
     onChange(info) {
-      const fileList = info.fileList.map(item=>{
-        if(item.response&&item.response.IsSuccess){ //刚上传的
-          return {...item,url: `/upload/${item.response.Datas}`,}
-        }else{
-          return {...item}
+      // const fileList = info.fileList.map(item=>{
+      //   if(item.response&&item.response.IsSuccess){ //刚上传的
+      //     return {...item,url: `/upload/${item.response.Datas}`,}
+      //   }else{
+      //     return {...item}
+      //   }
+      // })
+      const fileList = [];
+      info.fileList.map(item => {
+        if (item.response && item.response.IsSuccess) { //刚上传的
+          fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+        } else if(!item.response ){
+          fileList.push({ ...item})
         }
       })
       if (info.file.status === 'uploading') {
