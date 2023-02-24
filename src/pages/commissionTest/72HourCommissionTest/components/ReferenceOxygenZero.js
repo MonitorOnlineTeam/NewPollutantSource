@@ -167,7 +167,9 @@ const Index = (props) => {
                     form.setFieldsValue({
                         ...res.MainTable,
                         PollutantCode: pollCode,
-                        StandardGasName: res.MainTable.PollutantName,
+                        StandardGasName0: res.MainTable.PollutantName,
+                        StandardGasName1: res.MainTable.PollutantName,
+                        StandardGasName2: res.MainTable.PollutantName,
                     })
 
 
@@ -319,7 +321,7 @@ const Index = (props) => {
                     if (index == tableDatas.length + 3) { value = form.getFieldValue('RelativeAccuracy') }
                     if (index == tableDatas.length + 4) { value = form.getFieldValue('Evaluation') }
                     return {
-                        children: <span style={!isClears&&value&&value!='/'? {color:'#fff',padding:4,background:form.getFieldValue(`col1`)==1 ? '#73d13d':'#ff4d4f' }  : {}}> {!isClears&&value} </span>,
+                        children: <span style={!isClears&&value&&value!='/'? {color:'#fff',padding:4,background:form.getFieldValue(`Col1`)==1 ? '#73d13d':'#ff4d4f' }  : {}}> {!isClears&&value} </span>,
                         props: { colSpan: 3 },
                     };
                 }
@@ -540,13 +542,11 @@ const Index = (props) => {
                 type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
 
                 let mainValue = { ...values }
-                Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                    if (/\d/g.test(item)) {
+                Object.keys(mainValue).map((item, index) => { //去除主表 多余字段 多余字段不包含标准气体表格字段
+                    if (/\d/g.test(item) &&!(/^GuaranteedValue/g.test(item))  && !(/^After/g.test(item)) && !(/^Before/g.test(item))) {
                         delete mainValue[item];
                     }
                 })
-
-
                 let data = {
                     AddType: type,
                     MainTable: {

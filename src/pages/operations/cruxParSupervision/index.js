@@ -442,7 +442,6 @@ const Index = (props) => {
           <Form.Item label="核查日期" name="time2"  >
             <RangePicker_
               style={{ width: 300 }}
-              allowClear={false}
               format="YYYY-MM-DD" />
           </Form.Item>
           <Form.Item label="核查结果" name="checkResult"   >

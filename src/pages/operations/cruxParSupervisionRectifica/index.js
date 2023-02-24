@@ -236,8 +236,6 @@ const Index = (props) => {
         ...values,
         beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-        checkBeginTime: values.time2 && moment(values.time2[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-        checkEndTime: values.time2 && moment(values.time2[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         time2:undefined,
         pageIndex: pageIndexs,
@@ -317,28 +315,23 @@ const Index = (props) => {
             </Select>
           </Form.Item>
         </Spin>
-          <Form.Item label="创建日期" name="time"  >
-          <RangePicker_
-            style={{ width: 300 }}
-            allowClear={false}
-            format="YYYY-MM-DD" />
-        </Form.Item>
       </Row>
 
       <Row>
         <Form.Item label="核查人" name="checkUser"  >
           <OperationInspectoUserList type='2' style={{ width: 150 }} />
         </Form.Item>
-        <Form.Item label="核查日期" name="time2"  >
+        <Form.Item label="核查日期" name="time"  >
             <RangePicker_
               style={{ width: 300 }}
               allowClear={false}
               format="YYYY-MM-DD" />
           </Form.Item>
-        <Form.Item label="核查结果" name="checkResult"  >
+        <Form.Item label="整改状态" name="rectificationStatus"  >
           <Select placeholder='请选择' allowClear style={{ width: 150 }}>
-            <Option key={1} value={1} >合格</Option>
-            <Option key={2} value={2} >不合格</Option>
+            <Option key={3} value={3} >整改未完成</Option>
+            <Option key={2} value={2} >整改待核实</Option>
+            <Option key={1} value={1} >整改已完成</Option>
           </Select>
         </Form.Item>
         <Form.Item style={{paddingLeft:16}}>
