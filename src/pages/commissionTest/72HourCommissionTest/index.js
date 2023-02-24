@@ -123,7 +123,10 @@ const Index = (props) => {
       <BreadcrumbWrapper>
         <Card>
 
-          {tabLoading ? <PageLoading /> : <>{!testRecordType.length ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <Tabs defaultActiveKey="1" tabPosition="bottom" >
+          {tabLoading ? 
+          <PageLoading /> 
+          : <>{!testRecordType.length ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> 
+          : <Tabs defaultActiveKey="1" tabPosition="bottom"  moreIcon={<>更多</>}>
             {testRecordType.map(item => {
               return <TabPane tab={item.RecordName} key={item.ID} >
                 {tabContet(item.ID)}

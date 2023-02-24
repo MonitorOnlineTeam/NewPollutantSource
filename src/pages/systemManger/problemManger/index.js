@@ -367,7 +367,7 @@ const Index = (props) => {
         }
       })
       if (info.file.status === 'uploading') {
-        // console.log(info)
+        setFilesList(fileList)
       }
       if (info.file.status === 'done') {
         form2.setFieldsValue({ File: filesCuid })
@@ -375,11 +375,12 @@ const Index = (props) => {
         setFilesLoading(false)
         message.success(`${info.file.name} 上传成功`);
       } else if (info.file.status === 'error') {
+        form2.setFieldsValue({ File: fileList&&fileList[0]?  filesCuid : undefined })
         setFilesLoading(false)
-        message.error(`${info.file.name} 上传失败`);
         setFilesList(fileList)
+        message.error(`${info.file.name}${info.file&&info.file.response&&info.file.response.Message? info.file.response.Message : '上传失败'}`);
       }else if(info.file.status === 'removed'){ //删除状态
-        form2.setFieldsValue({ File: filesCuid })
+        form2.setFieldsValue({ File: fileList&&fileList[0]?  filesCuid : undefined })
         setFilesLoading(false)
         setFilesList(fileList)
       }

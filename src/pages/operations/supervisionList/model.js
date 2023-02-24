@@ -139,7 +139,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    // 督察模板详细
+    // 督查模板详细
     *getInspectorTemplateView({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.GetInspectorTemplateView, { ...payload });
       if (result.IsSuccess) {

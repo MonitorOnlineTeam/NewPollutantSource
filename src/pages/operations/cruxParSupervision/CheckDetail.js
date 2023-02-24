@@ -267,8 +267,8 @@ const Index = (props) => {
         message.success(`${info.file.name} 上传成功`);
       } else if (info.file.status === 'error') {
         form.setFieldsValue({ checkFile:fileList&&fileList[0]?  filesCuid : undefined }) //有上传成功的取前面的uid 没有则表示没有上传成功的图片
-        message.error(`${info.file.name}${info.file&&info.file.response&&info.file.response.Message? info.file.response.Message : '上传失败'}`);
         setFilesList2(fileList)
+        message.error(`${info.file.name}${info.file&&info.file.response&&info.file.response.Message? info.file.response.Message : '上传失败'}`);
       } else if (info.file.status === 'removed') { //删除状态
         form.setFieldsValue({ checkFile:fileList&&fileList[0]?  filesCuid : undefined }) 
         setFilesList2(fileList)

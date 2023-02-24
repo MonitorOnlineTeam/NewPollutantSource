@@ -1104,9 +1104,15 @@ const Index = (props) => {
         }
       })
       if (info.file.status === 'uploading') {
-        // console.log(info)
+        if (fileType == 1) {
+          setFileList1(fileList) 
+         } else if (fileType == 2) {
+         setFileList2(fileList)
+        } else {
+         setFilesList3({  ...filesList3,  [filePar]: fileList })
+       }
       }
-      if (info.file.status === 'done') {
+      if (info.file.status === 'done' || info.file.status === 'removed' || info.file.status === 'error' ) {
         if (fileType == 1) {
           setFileList1(fileList) 
          } else if (fileType == 2) {
@@ -1115,16 +1121,15 @@ const Index = (props) => {
          setFilesList3({  ...filesList3,  [filePar]: fileList })
        }
         if (fileType == 1) {
-          form2.setFieldsValue({ files1: filesCuid1 })
+          form2.setFieldsValue({ files1:fileList&&fileList[0]?  filesCuid1 : undefined })
         } else if (fileType == 2) {
-          form2.setFieldsValue({ files2: filesCuid2 })
+          form2.setFieldsValue({ files2: fileList&&fileList[0]?  filesCuid2 : undefined })
         } else {
           form3.setFieldsValue({ [filePar]: filesCuid3() })
         }
-        message.success('上传成功！')
-      }
-      if (info.file.status === 'error') {
-        message.error('上传文件失败！')
+        info.file.status === 'done' && message.success('上传成功！')
+        info.file.status === 'error' &&  message.error(`${info.file.name}${info.file&&info.file.response&&info.file.response.Message? info.file.response.Message : '上传失败'}`);
+
       }
     },
     onRemove: (file) => {

@@ -92,7 +92,7 @@ class index extends PureComponent {
             visibleEnt:false,
             time: [moment().add(-1, "day").startOf('day'), moment().endOf('day')],
             dataType: "Hour",
-            entType:'1',
+            entType:'2',
             pollutionWaterList:[],
             pollutionGasList:[],
             activeKey:'1',

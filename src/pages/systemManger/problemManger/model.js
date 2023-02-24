@@ -8,7 +8,7 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'pollutantMold',
+  namespace: 'problemManger',
   state: {
     tableDatas:[],
     parametersList:[],
@@ -39,7 +39,16 @@ export default Model.extend({
         message.error(result.Message)
       }
     }, 
-
+    *getQuestionType({ payload,callback }, { call, put, update }) { //问题类别
+      const result = yield call(services.GetQuestionType, payload);
+      if (result.IsSuccess) {
+         if(result.Datas){
+          callback&&callback(result.Datas)
+         }
+      }else{
+        message.error(result.Message)
+      }
+    },
     *deleteQuestionDetial({ payload,callback }, { call, put, update }) { //删除
       const result = yield call(services.DeleteQuestionDetial, payload);
       if (result.IsSuccess) {

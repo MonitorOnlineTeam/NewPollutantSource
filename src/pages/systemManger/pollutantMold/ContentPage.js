@@ -82,6 +82,7 @@ const Index = (props) => {
             Btime:values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
             Etime:values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
             time:undefined,
+            DGIMN:DGIMN,
         },()=>{
           initData(DGIMN)
         })
@@ -97,6 +98,8 @@ const generateFeatureLib = async () =>{ //生成特征库
             ...values,
             Btime:values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
             Etime:values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+            time:undefined,
+            DGIMN:DGIMN,
         })
     } catch (errorInfo) {
         console.log('Failed:', errorInfo); 

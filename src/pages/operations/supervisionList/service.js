@@ -57,7 +57,7 @@ export async function ChangeInspectorTemplateStatus(params) {
   const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/ChangeInspectorTemplateStatus?InspectorNum=${params.InspectorNum}&Status=${params.Status}`, null, null);
   return result;
 }
-//督查模板 督察模板详细
+//督查模板 督查模板详细
 export async function GetInspectorTemplateView(params) {
   const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorTemplateView?InspectorNum=${params.InspectorNum}`, null, null);
   return result;
