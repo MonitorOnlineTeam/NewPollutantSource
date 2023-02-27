@@ -382,8 +382,6 @@ const Index = (props) => {
           if(isSuccess){
              setCheckDetailVisible(false)
              onFinish(pageIndex,pageSize)
-            }else{
-              props.updateState({editCheckTime:infoData&&infoData.checkTime&& moment(infoData.checkTime).format('YYYY-MM-DD HH:mm:ss') })  
             }
         })
     

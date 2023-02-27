@@ -93,12 +93,6 @@ const Index = (props) => {
         return index + 1
       }
     },
-    // {
-    //   title: '省/市',
-    //   dataIndex: 'regionName',
-    //   key:'regionName',
-    //   align:'center',
-    // },
     {
       title: '省',
       dataIndex: 'province',
@@ -125,9 +119,6 @@ const Index = (props) => {
       dataIndex: 'entName',
       key: 'entName',
       align: 'center',
-      // render:(text,record,index)=>{
-      //   return  <div style={{textAlign:'left'}} >{text}</div>
-      // }
     },
     {
       title: '监测点名称',

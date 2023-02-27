@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Tag, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Tag, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin,Pagination, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -72,7 +72,160 @@ const Index = (props) => {
 
     const [tableTitle, setTableTitle] = useState(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment().format('YYYY年')}全系统督查汇总表</span>)
 
-    const columns1 = [
+
+    const columns1_1 = [
+        {
+            title: tableTitle,
+            align: 'center',
+            children: [
+                {
+                    title: '序号',
+                    dataIndex: 'TypeNum',
+                    key: 'TypeNum',
+                    width: 70,
+                    align: 'center',
+                    render: (text, record, index) => {
+                        return index + 1
+                    }
+                },
+                {
+                    title: '省区',
+                    dataIndex: 'provinceName',
+                    key: 'provinceName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '地级市',
+                    dataIndex: 'cityName',
+                    key: 'cityName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '企业名称',
+                    dataIndex: 'entName',
+                    key: 'entName',
+                    align: 'center',
+                    width: 150,
+                },
+                {
+                    title: '监测点名称',
+                    dataIndex: 'pointName',
+                    key: 'pointName',
+                    align: 'center',
+                    width: 100,
+                },
+
+                {
+                    title: '督查人员',
+                    dataIndex: 'operationName',
+                    key: 'createUserName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '督查日期',
+                    dataIndex: 'dateTime',
+                    key: 'dateTime',
+                    align: 'center',
+                    width: 100,
+                    render: (text, record, index) => {
+                        return text ? moment(text).format('YYYY-MM-DD') : null;
+                    }
+                },
+                {
+                    title: '运维人员',
+                    dataIndex: 'operationName',
+                    key: 'operationName',
+                    align: 'center',
+                    width: 100,
+                },
+                {
+                    title: '原则性问题数量',
+                    dataIndex: 'principleProblemNum',
+                    key: 'principleProblemNum',
+                    align: 'center',
+                    width: 150,
+                    ellipsis: true,
+                },
+                {
+                    title: '严重问题数量',
+                    dataIndex: 'importanProblemNum',
+                    key: 'importanProblemNum',
+                    align: 'center',
+                    width: 120,
+                    ellipsis: true,
+                },
+                {
+                    title: '一般问题数量',
+                    dataIndex: 'commonlyProblemNum',
+                    key: 'commonlyProblemNum',
+                    align: 'center',
+                    width: 120,
+                    ellipsis: true,
+                }, 
+                {
+                    title: '原则性问题',
+                    dataIndex: 'principleProblem',
+                    key: 'principleProblem',
+                    align: 'center',
+                    width: 120,
+                    ellipsis: true,
+                },
+                {
+                    title: '严重问题',
+                    dataIndex: 'importanProblem',
+                    key: 'importanProblem',
+                    align: 'center',
+                    width: 150,
+                    ellipsis: true,
+                },
+                {
+                    title: '一般问题',
+                    dataIndex: 'commonlyProblem',
+                    key: 'commonlyProblem',
+                    align: 'center',
+                    width: 150,
+                    ellipsis: true,
+                },
+                {
+                    title: '扣分',
+                    dataIndex: 'aa',
+                    key: 'aa',
+                    align: 'center',
+                    width: 80,
+                    ellipsis: true,
+                },
+                {
+                    title: '说明',
+                    dataIndex: 'bb',
+                    key: 'bb',
+                    align: 'center',
+                    width: 150,
+                    ellipsis: true,
+                },
+                {
+                    title: '总分',
+                    dataIndex: 'cc',
+                    key: 'cc',
+                    align: 'center',
+                    width: 80,
+                    ellipsis: true,
+                },
+                {
+                    title: '推动状态',
+                    dataIndex: 'cc',
+                    key: 'cc',
+                    align: 'center',
+                    width: 100,
+                    ellipsis: true,
+                },
+            ]
+        }
+
+    ]
+    const columns1_2 = [
         {
             title: tableTitle,
             align: 'center',
@@ -291,7 +444,8 @@ const Index = (props) => {
         }
 
     ]
-    const [col, setCol] = useState(columns1)
+    
+    const [col, setCol] = useState(columns1_2)
     const onFinish = async (pageIndexs, pageSizes) => {  //查询 按原则性问题统计
         try {
             const values = await form.validateFields();
@@ -320,7 +474,7 @@ const Index = (props) => {
     }
 
     useEffect(() => {
-        form.getFieldValue('InspectorType') ? setCol(columns2) : setCol(columns1)
+        form.getFieldValue('InspectorType') ? setCol(columns2) : setCol(columns1_2)
     }, [tableTitle])
     const exports = async () => {
         const values = await form.validateFields();
@@ -333,7 +487,7 @@ const Index = (props) => {
     }
 
 
-    const [type, setType] = useState(1)
+    const [type, setType] = useState(2)
     const onValuesChange = (hangedValues, allValues) => {
         if (Object.keys(hangedValues).join() == 'DateType') {
             setType(hangedValues.DateType)
@@ -366,7 +520,7 @@ const Index = (props) => {
                         onFinish={() => {setPageIndex(1);onFinish(1, pageSize) }}
                         layout='inline'
                         initialValues={{
-                            DateType: 1,
+                            DateType: 2,
                             time: moment(),
                             InspectorType: '',
                         }}
@@ -399,7 +553,8 @@ const Index = (props) => {
                         }
                         <Form.Item label='统计维度' name='InspectorType'>
                             <Select placeholder='请选择' style={{ width: 160 }} showSearch optionFilterProp="children" onChange={statisTypeChange}>
-                                <Option key={''} value={''} >按点位统计</Option>
+                                {/* <Option key={''} value={''} >按点位统计1</Option> */}
+                                <Option key={''} value={''} >按点位统计</Option>    
                                 <Option key={491} value={491} >按原则性问题统计</Option>
                                 <Option key={492} value={492} >按一般问题统计</Option>
                                 <Option key={493} value={493} >按重点问题统计</Option>
@@ -432,6 +587,17 @@ const Index = (props) => {
                     }}
                     scroll={{ x: '100%', y: 'calc(100vh - 405px)' }}
                 />
+          {/* <Row style={{margin:'16px 24px 0 0 '}} justify='end'>
+              {tableTotal2 >0&&<Pagination 
+                  size='small'
+                  total= {tableTotal}
+                  pageSize= {pageSize}
+                  current = {pageIndex}
+                  showSizeChanger = {true}
+                  showQuickJumper = {true}
+                  onChange={ handleTableChange}
+            />}
+           </Row> */}
             </Card>
         </div>
 

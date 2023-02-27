@@ -89,7 +89,7 @@ const Index = (props) => {
 
   useEffect(() => {
     props.getKeyParameterCheckDetailList({ id: id })
-    props.updateState({editCheckTime:moment() })  
+    props.updateState({editCheckTime:infoData&&infoData.checkTime? moment(infoData.checkTime).format('YYYY-MM-DD HH:mm:ss') : moment() })  
   }, []);
 
   const TitleComponents = (props) => {

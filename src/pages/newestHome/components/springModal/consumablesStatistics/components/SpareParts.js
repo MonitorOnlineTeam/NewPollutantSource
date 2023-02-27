@@ -221,20 +221,17 @@ const columns2 = [
       return { props: { colSpan: text == '合计' ? 2 : 1 }, children: text, };
     }
   },
-  {
-    title: '项目号',
-    dataIndex: 'projectCode',
-    key:'projectCode',
-    align:'center',
-  },
+  // {
+  //   title: '项目号',
+  //   dataIndex: 'projectCode',
+  //   key:'projectCode',
+  //   align:'center',
+  // },
   {
     title: '企业名称',
     dataIndex: 'entName',
     key:'entName',
     align:'center',
-    // render:(text,record,index)=>{
-    //   return  <div style={{textAlign:'left'}} >{text}</div>
-    // }
   },
   {
     title: '监测点名称',
