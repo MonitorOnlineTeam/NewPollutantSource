@@ -133,8 +133,7 @@ class BasicLayout extends Component {
             },
             ...routers,
             ]
-          }
-          }
+          }}
           footerRender={() => {
             return <div></div>;
           }}

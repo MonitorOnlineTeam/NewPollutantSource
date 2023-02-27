@@ -158,60 +158,58 @@ class DatabaseConfig extends PureComponent {
     const { currentRowData } = this.state;
     const { tableDatas } = this.props;
     return (
-      <BreadcrumbWrapper>
-        <Card>
-          <Form
-            layout='inline'
-            ref={this.formRef}
-            style={{ marginBottom: 20 }}
-            initialValues={{
-            }}
+      <Card>
+        <Form
+          layout='inline'
+          ref={this.formRef}
+          style={{ marginBottom: 20 }}
+          initialValues={{
+          }}
+        >
+          <Form.Item
+            name="DB_NAME"
+            label="库名"
           >
-            <Form.Item
-              name="DB_NAME"
-              label="库名"
+            <Input placeholder="请输入库名" />
+          </Form.Item>
+          <Form.Item
+            name="DB_KEY"
+            label="数据库Code"
+          >
+            <Input placeholder="请输入数据库Code" />
+          </Form.Item>
+          <Form.Item
+            name="DB_MARK"
+            label="中文说明"
+          >
+            <Input placeholder="请输入中文说明" />
+          </Form.Item>
+          <Form.Item
+            name="DB_VERSION"
+            label="数据库类型"
+          >
+            <Select
+              style={{ width: 150, marginRight: 10 }}
+              allowClear
+              defaultValue='all'
+              placeholder="请选择数据库类型"
             >
-              <Input placeholder="请输入库名" />
-            </Form.Item>
-            <Form.Item
-              name="DB_KEY"
-              label="数据库Code"
-            >
-              <Input placeholder="请输入数据库Code" />
-            </Form.Item>
-            <Form.Item
-              name="DB_MARK"
-              label="中文说明"
-            >
-              <Input placeholder="请输入中文说明" />
-            </Form.Item>
-            <Form.Item
-              name="DB_VERSION"
-              label="数据库类型"
-            >
-              <Select
-                style={{ width: 150, marginRight: 10 }}
-                allowClear
-                defaultValue='all'
-                placeholder="请选择数据库类型"
-              >
-                <Select.Option value="all">全部</Select.Option>
-                <Select.Option value="SQLSERVER">SQLSERVER</Select.Option>
-                <Select.Option value="ORACLE">ORACLE</Select.Option>
-                <Select.Option value="MYSQL">MYSQL</Select.Option>
-              </Select>
-            </Form.Item>
-            <Space align="baseline">
-              <Button type="primary" onClick={this.getTableDataSource}>查询</Button>
-              <Button type="primary" onClick={this._resetForm}>重置</Button>
-            </Space>
-          </Form>
-          <Row style={{ marginBottom: 10 }}>
-            <DatabaseConnectionAdd reloadData={(e) => this.getTableDataSource(e)} />
-          </Row>
-          <SdlTable dataSource={tableDatas} columns={columns} />
-        </Card>
-      </BreadcrumbWrapper>
+              <Select.Option value="all">全部</Select.Option>
+              <Select.Option value="SQLSERVER">SQLSERVER</Select.Option>
+              <Select.Option value="ORACLE">ORACLE</Select.Option>
+              <Select.Option value="MYSQL">MYSQL</Select.Option>
+            </Select>
+          </Form.Item>
+          <Space align="baseline">
+            <Button type="primary" onClick={this.getTableDataSource}>查询</Button>
+            <Button type="primary" onClick={this._resetForm}>重置</Button>
+          </Space>
+        </Form>
+        <Row style={{ marginBottom: 10 }}>
+          <DatabaseConnectionAdd reloadData={(e) => this.getTableDataSource(e)} />
+        </Row>
+        <SdlTable dataSource={tableDatas} columns={columns} />
+      </Card>
     );
   }
 }

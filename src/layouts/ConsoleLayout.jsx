@@ -7,6 +7,7 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from './ConsoleLayout.less'
 const { Header, Content, Footer, Sider } = Layout;
 import { router } from "umi"
+import Cookie from 'js-cookie';
 
 class ConsoleLayout extends Component {
   constructor(props) {
@@ -65,12 +66,18 @@ class ConsoleLayout extends Component {
           }
         </Breadcrumb>
       </div>
-
     }
   }
   // const menuList = getMenuList(cMenu);
   render() {
     const { subMenuList, current, parentMenuCurrent } = this.state;
+
+    // 判断登录状态
+    let userCookie = Cookie.get('currentUser');
+    if (!userCookie) {
+      router.push("/user/login");
+    }
+
     return (
       <Layout className={styles.consoleLayout}>
         <Header className={styles.header}>
@@ -99,23 +106,25 @@ class ConsoleLayout extends Component {
               padding: '24px 0',
             }}
           >
-            <Sider className="site-layout-background" width={200}>
-              <Menu
-                selectedKeys={[current]}
-                mode="inline"
-                theme={'dark'}
-                defaultSelectedKeys={['mail']}
-                onClick={this.onSubMenuItemClick}
-              >
-                {
-                  subMenuList.map(item => {
-                    return <Menu.Item key={item.path} icon={<MailOutlined />}>
-                      {item.name}
-                    </Menu.Item>
-                  })
-                }
-              </Menu>
-            </Sider>
+            {
+              subMenuList && <Sider className="site-layout-background" width={200}>
+                <Menu
+                  selectedKeys={[current]}
+                  mode="inline"
+                  theme={'dark'}
+                  defaultSelectedKeys={['mail']}
+                  onClick={this.onSubMenuItemClick}
+                >
+                  {
+                    subMenuList.map(item => {
+                      return <Menu.Item key={item.path} icon={<MailOutlined />}>
+                        {item.name}
+                      </Menu.Item>
+                    })
+                  }
+                </Menu>
+              </Sider>
+            }
             <div
               className={styles.container}
               style={{

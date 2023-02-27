@@ -119,9 +119,14 @@ class MenuManagement extends Component {
             payload: {}
         }).then(() => {
             this.handleSort(this.props.TableData);
-            this.setState({
-                TableDatas: this.props.TableData
-            })
+            const { searchText } = this.state;
+            if (searchText) {
+                this.handleSearch(searchText)
+            } else {
+                this.setState({
+                    TableDatas: this.props.TableData
+                })
+            }
         });
     }
     //删除确认
@@ -168,16 +173,19 @@ class MenuManagement extends Component {
     }
 
     handleSearch = searchText => {
+        console.log('searchText', searchText)
         const { TableData } = this.props;
         if (searchText.trim() == '') {
             this.setState({
-                TableDatas: TableData
+                TableDatas: TableData,
+                searchText: searchText.trim()
             });
         } else {
             let val = [];
             val = this.SearchRecursion(TableData, searchText);
             this.setState({
-                TableDatas: val
+                TableDatas: val,
+                searchText: searchText.trim()
             });
         }
     };
@@ -197,6 +205,7 @@ class MenuManagement extends Component {
     render() {
         let { TableData } = this.state;
         const { TableDatas } = this.state;
+        const { loading } = this.props;
 
         const { selectedRowKeys, dataSource, value } = this.state;
         const hasSelected = selectedRowKeys.length > 0;
@@ -218,56 +227,55 @@ class MenuManagement extends Component {
             }
         };
         return (
-            <BreadcrumbWrapper>
-                <Card>
-                    <Row style={{ marginBottom: 10 }}>
-                        <AutoComplete
-                            dataSource={dataSource}
-                            // onSelect={this.onSelect}
-                            onSearch={this.handleSearch}
-                            placeholder="请输入菜单名称"
-                            className={styles.autoCompleteTop}
-                        />
-                        <MenuManagementModal
-                            hasSelected={hasSelected}
-                            type={0}
-                            reloadData={this.reloadData}
-                            records={{ Menu_Id: 0 }}
-                            title="添加根菜单"
-                        />
-                        <span style={{ margin: "0 5px" }}></span>
-                        <MenuManagementModal
-                            hasSelected={!hasSelected}
-                            type={0}
-                            reloadData={this.reloadData}
-                            records={this.state.records}
-                            title="添加子菜单"
-                        />
-                        <Button
-                            type="danger"
-                            disabled={!hasSelected}
-                            onClick={this.handledeleteConfirm}
-                            className={styles.buttonTop}
-                        >
-                            删除
-                        </Button>
-                    </Row>
-                    <Table
-                        size="small"
-                        columns={this.columns}
-                        rowSelection={rowSelection}
-                        dataSource={this.state.TableDatas}
-                        rowClassName={(record, index) => record.DeleteMark == 2 ? styles.MenuTableColor : ''}
-                        defaultExpandedRowKeys={this.state.expandedKeys}
-                        // expandedRowRender={(render)=>{console.log(render)}}
-                        // expandedRowKeys={this.state.expandedKeys}
-                        bordered
-                        // scroll={{ y: layoutStyle.tableYstyle }}
-                        pagination={false}
-                        rowKey={(record) => record.Menu_Id}
+            <Card>
+                <Row style={{ marginBottom: 10 }}>
+                    <AutoComplete
+                        dataSource={dataSource}
+                        // onSelect={this.onSelect}
+                        onSearch={this.handleSearch}
+                        placeholder="请输入菜单名称"
+                        className={styles.autoCompleteTop}
                     />
-                </Card>
-            </BreadcrumbWrapper>
+                    <MenuManagementModal
+                        hasSelected={hasSelected}
+                        type={0}
+                        reloadData={this.reloadData}
+                        records={{ Menu_Id: 0 }}
+                        title="添加根菜单"
+                    />
+                    <span style={{ margin: "0 5px" }}></span>
+                    <MenuManagementModal
+                        hasSelected={!hasSelected}
+                        type={0}
+                        reloadData={this.reloadData}
+                        records={this.state.records}
+                        title="添加子菜单"
+                    />
+                    <Button
+                        type="danger"
+                        disabled={!hasSelected}
+                        onClick={this.handledeleteConfirm}
+                        className={styles.buttonTop}
+                    >
+                        删除
+                    </Button>
+                </Row>
+                <Table
+                    size="small"
+                    loading={loading}
+                    columns={this.columns}
+                    rowSelection={rowSelection}
+                    dataSource={this.state.TableDatas}
+                    rowClassName={(record, index) => record.DeleteMark == 2 ? styles.MenuTableColor : ''}
+                    defaultExpandedRowKeys={this.state.expandedKeys}
+                    // expandedRowRender={(render)=>{console.log(render)}}
+                    // expandedRowKeys={this.state.expandedKeys}
+                    bordered
+                    // scroll={{ y: layoutStyle.tableYstyle }}
+                    pagination={false}
+                    rowKey={(record) => record.Menu_Id}
+                />
+            </Card>
         );
     }
 }

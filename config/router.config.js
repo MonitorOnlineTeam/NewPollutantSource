@@ -30,17 +30,25 @@ const routes = [
     path: '/console',
     component: '../layouts/ConsoleLayout',
     routes: [
+      {
+        path: '/console',
+        redirect: '/console/baseConfig'
+      },
       /* 配置中心-AutoForm配置 */
       {
         path: '/console/baseConfig',
         routes: [
-          // 常规配置
-          {
-            name: 'normal',
-            path: '/console/baseConfig/normal',
-            component: './Console/Normal',
-          },
+          // // 常规配置
+          // {
+          //   name: 'normal',
+          //   path: '/console/baseConfig/normal',
+          //   component: './Console/Normal',
+          // },
           // 数据采集
+          {
+            path: '/console/baseConfig',
+            redirect: '/console/baseConfig/database'
+          },
           {
             name: 'collect',
             path: '/console/baseConfig/collect',
@@ -58,22 +66,36 @@ const routes = [
             path: '/console/baseConfig/crontab',
             component: './Console/Crontab',
           },
+          // 数据库配置
+          {
+            path: '/console/baseConfig/database',
+            component: './autoformConfig/DatabaseConfig'
+          },
+          /* 配置中心-系统配置-菜单管理 */
+          {
+            path: '/console/baseConfig/menuManagement',
+            component: './autoformConfig/MenuManagement'
+          },
+          /* 配置中心-AutoForm配置-AutoForm数据源配置 */
+          {
+            path: '/console/baseConfig/datasource',
+            component: './autoformConfig/AutoFormDataSource'
+          },
+          /* 配置中心-AutoForm配置-AutoForm数据源配置 */
+          {
+            path: '/console/baseConfig/datasource2',
+            component: './autoformConfig/AutoFormDataSource2'
+          },
+          // 数据源备份还原
+          {
+            path: '/console/baseConfig/SyncBackSE',
+            component: './autoformConfig/DataSourceSyncBackSE'
+          },
         ]
       },
-      {
-        path: '/console/database',
-        component: './autoformConfig/DatabaseConfig'
-      },
-      /* 配置中心-系统配置-菜单管理 */
-      {
-        path: '/console/menuManagement',
-        component: './autoformConfig/MenuManagement'
-      },
-      /* 配置中心-AutoForm配置-AutoForm数据源配置 */
-      {
-        path: '/console/datasource',
-        component: './autoformConfig/AutoFormDataSource'
-      }
+
+
+
     ]
   },
   {

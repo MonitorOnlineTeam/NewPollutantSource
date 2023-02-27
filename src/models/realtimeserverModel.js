@@ -6,7 +6,7 @@
  * @Description:
  */
 import moment from 'moment';
-import * as services from './service';
+import * as services from '@/pages/monitoring/realtimedata/service.js';
 import {
     queryhistorydatalist,
 } from '@/services/monitordata';
@@ -483,7 +483,7 @@ const params = [{
 }]
 
 export default Model.extend({
-    namespace: 'realtimeserver1',
+    namespace: 'realtimeserver',
     state: {
         operationInfo: null,
         stateInfo: null,
@@ -1023,6 +1023,7 @@ export default Model.extend({
                     //这里只更新点数据，不更新点位污染物状态（再次说明）**********
                     //如果是系统的，更新paramstatusInfo参数状态信息
                     if (newChilddata[0].PollutantCode === "cems") {
+                        console.log('paramstatusInfo', paramstatusInfo)
                         paramstatusInfo && paramstatusInfo.map((item, key) => {
                             if (item.statecode === newChilddata[0].StateCode) {
                                 item.value = newChilddata[0].NewStateValue;
@@ -1032,6 +1033,7 @@ export default Model.extend({
                     }
                     //证明不是系统的，是污染物的，更新paramsInfo参数信息
                     else {
+                        console.log('paramsInfo', paramsInfo)
                         paramsInfo && paramsInfo.map((item, key) => {
                             if (item.pollutantCode === newChilddata[0].PollutantCode) {
                                 //再此只考虑了状态（截距、斜率、量程）要么全有要么全部没有的情况，里面参数个数要么是3要么是0，个数为1或2的情况没有考虑（可以问一下宏宾）

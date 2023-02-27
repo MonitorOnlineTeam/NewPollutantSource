@@ -22,12 +22,12 @@ class index extends PureComponent {
   render() {
     const { pointName, DGIMN, pointType } = this.state;
     // const { resTimeCheckTableData, pollutantList, tableLoading } = this.props;
-    const { location } = this.props;
+    const { location, showMode } = this.props;
 
     return (
       <>
         {location.query && location.query.type !== 'alarm' ?
-          <NavigationTree domId="#resTimeCheck" onItemClick={item => {
+          <NavigationTree getContainer={showMode === 'modal' ? false : 'body'} domId="#resTimeCheck" onItemClick={item => {
             if (!item[0].IsEnt) {
               this.setState({
                 pointName: `${item[0].entName} - ${item[0].pointName}`,
@@ -40,11 +40,18 @@ class index extends PureComponent {
           : null
         }
         <div id="resTimeCheck">
-          <BreadcrumbWrapper extraName={pointName}>
-            {
-              location.query && location.query.type === 'alarm' ? <ResTimeCheckPage DGIMN={location.query.dgimn} initLoadData location={location} /> : DGIMN ? <ResTimeCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
-            }
-          </BreadcrumbWrapper>
+          {
+            showMode === 'modal' ? <>
+              {
+                location.query && location.query.type === 'alarm' ? <ResTimeCheckPage DGIMN={location.query.dgimn} initLoadData location={location} /> : DGIMN ? <ResTimeCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
+              }
+            </> : <BreadcrumbWrapper extraName={pointName}>
+              {
+                location.query && location.query.type === 'alarm' ? <ResTimeCheckPage DGIMN={location.query.dgimn} initLoadData location={location} /> : DGIMN ? <ResTimeCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
+              }
+            </BreadcrumbWrapper>
+          }
+
         </div>
       </>
     );

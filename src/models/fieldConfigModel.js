@@ -18,7 +18,7 @@ export default Model.extend({
         EnumData: []  //枚举值
     },
     effects: {
-        * GetCfgFiledsData({ payload }, { call, update, select, put, take }) {
+        * GetCfgFiledsData({ payload, callback }, { call, update, select, put, take }) {
             let body = {
                 dbKey: payload.dbKey,
                 configId: payload.id
@@ -29,66 +29,73 @@ export default Model.extend({
                 let data = result.Datas
                 data.forEach(item => {
                     if (item.DF_ISPRIMARYKEY == 1) {
-                        item.DF_ISPRIMARYKEY = '√'
+                        item.DF_ISPRIMARYKEY = true
                     } else {
-                        item.DF_ISPRIMARYKEY = ''
+                        item.DF_ISPRIMARYKEY = false
                     }
 
                     if (item.DF_ISNOTNULL == "1") {
-                        item.DF_ISNOTNULL = '√'
+                        item.DF_ISNOTNULL = true
                     } else {
-                        item.DF_ISNOTNULL = ''
+                        item.DF_ISNOTNULL = false
                     }
 
                     if (item.DF_ISADD == "1") {
-                        item.DF_ISADD = '√'
+                        item.DF_ISADD = true
                     } else {
-                        item.DF_ISADD = ''
+                        item.DF_ISADD = false
                     }
 
                     if (item.DF_ISEDIT == "1") {
-                        item.DF_ISEDIT = '√'
+                        item.DF_ISEDIT = true
                     } else {
-                        item.DF_ISEDIT = ''
+                        item.DF_ISEDIT = false
                     }
 
                     if (item.LIST_ISSHOW == "1") {
-                        item.LIST_ISSHOW = '√'
+                        item.LIST_ISSHOW = true
                     } else {
-                        item.LIST_ISSHOW = ''
+                        item.LIST_ISSHOW = false
                     }
 
                     if (item.DF_ISFIXED == "1") {
-                        item.DF_ISFIXED = '√'
+                        item.DF_ISFIXED = true
                     } else {
-                        item.DF_ISFIXED = ''
+                        item.DF_ISFIXED = false
                     }
 
                     if (item.LIST_ISEXPORT == 1) {
-                        item.LIST_ISEXPORT = '√'
+                        item.LIST_ISEXPORT = true
                     } else {
-                        item.LIST_ISEXPORT = ''
+                        item.LIST_ISEXPORT = false
                     }
 
-                    if (item.DF_ISQUERY == 0) {
-                        item.DF_ISQUERY = '不查询'
-                    }
-                    if (item.DF_ISQUERY == 1) {
-                        item.DF_ISQUERY = '列表头部显示'
-                    }
-                    if (item.DF_ISQUERY == 2) {
-                        item.DF_ISQUERY = '特殊位置显示'
+                    // 隐藏
+                    if (item.DF_HIDDEN == 1) {
+                        item.DF_HIDDEN = true
+                    } else {
+                        item.DF_HIDDEN = false
                     }
 
-                    if (item.DF_FOREIGN_TYPE == "0") {
-                        item.DF_FOREIGN_TYPE = "无"
-                    }
-                    if (item.DF_FOREIGN_TYPE == "1") {
-                        item.DF_FOREIGN_TYPE = "表链接"
-                    }
-                    if (item.DF_FOREIGN_TYPE == "2") {
-                        item.DF_FOREIGN_TYPE = "枚举"
-                    }
+                    // if (item.DF_ISQUERY == 0) {
+                    //     item.DF_ISQUERY = '不查询'
+                    // }
+                    // if (item.DF_ISQUERY == 1) {
+                    //     item.DF_ISQUERY = '列表头部显示'
+                    // }
+                    // if (item.DF_ISQUERY == 2) {
+                    //     item.DF_ISQUERY = '特殊位置显示'
+                    // }
+
+                    // if (item.DF_FOREIGN_TYPE == "0") {
+                    //     item.DF_FOREIGN_TYPE = "无"
+                    // }
+                    // if (item.DF_FOREIGN_TYPE == "1") {
+                    //     item.DF_FOREIGN_TYPE = "表链接"
+                    // }
+                    // if (item.DF_FOREIGN_TYPE == "2") {
+                    //     item.DF_FOREIGN_TYPE = "枚举"
+                    // }
 
                     // if(item.ENUM_NAME!=null&&item.ENUM_NAME!=""&&item.ENUM_NAME.length>0){
                     //     item.ENUM_NAME=item.ENUM_NAME.substring(0,10)+'...';
@@ -123,22 +130,28 @@ export default Model.extend({
                     // if(item.DF_CONDITION=="$in"){
                     //     item.DF_CONDITION='包含'
                     // }
-                    //校验方式
-                    // if(item.DF_VALIDATE=="'number'"){
-                    //     item.DF_VALIDATE=item.DF_VALIDATE.replace("'number'","");
-                    // }
+                    // 校验方式
+                    if (!item.DF_VALIDATE) {
+                        item.DF_VALIDATE = undefined;
+                    }
+                    // 外键name
+                    if (!item.FOREIGN_DF_NAME) {
+                        item.FOREIGN_DF_NAME = undefined;
+                    }
                 });
                 yield update({
                     tableDatas: data,
                     total: result.Total,
                     pageIndex: payload.pageIndex || 1,
                 });
+                callback && callback(data)
             } else {
                 yield update({
                     tableDatas: [],
                     total: result.Total,
                     pageIndex: payload.pageIndex || 1,
                 });
+                callback && callback([])
             }
         },
         /**  编辑数据源配置 */

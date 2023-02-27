@@ -17,7 +17,10 @@ class PTZControl extends PureComponent {
       switch (videoInfo.InputType) {
         case 1:
           // 萤石云
-          return <YSYPTZ deviceSerial={videoInfo.VedioCamera_No} channelNo={videoInfo.ChannelNo} />
+          return <YSYPTZ
+            appKey={videoInfo.AppKey}
+            appSecret={videoInfo.AppSecret}
+            deviceSerial={videoInfo.VedioCamera_No} channelNo={videoInfo.ChannelNo} />
         case 2:
           // 乐橙云
           return <LCYPTZ

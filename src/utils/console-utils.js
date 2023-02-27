@@ -5,17 +5,35 @@ export const menuList = [
     "icon": "FundViewOutlined",
     "breadcrumbNames": "基础信息配置",
     "children": [
-      {
-        "name": "常规配置",
-        "path": "/console/baseConfig/normal",
-        "icon": "16/16",
-        "breadcrumbNames": "基础信息配置/常规配置",
-      },
+      // {
+      //   "name": "常规配置",
+      //   "path": "/console/baseConfig/normal",
+      //   "icon": "16/16",
+      //   "breadcrumbNames": "基础信息配置/常规配置",
+      // },
       {
         "name": "数据库配置",
         "path": "/console/baseConfig/database",
         "icon": "16/16",
         "breadcrumbNames": "基础信息配置/数据库配置",
+      },
+      {
+        "name": "菜单管理",
+        "path": "/console/baseConfig/menuManagement",
+        "icon": "FundViewOutlined",
+        "breadcrumbNames": "基础信息配置/菜单管理",
+      },
+      {
+        "name": "数据源配置",
+        "path": "/console/baseConfig/datasource",
+        "icon": "FundViewOutlined",
+        "breadcrumbNames": "基础信息配置/数据源配置",
+      },
+      {
+        "name": "数据源备份还原",
+        "path": "/console/baseConfig/SyncBackSE",
+        "icon": "FundViewOutlined",
+        "breadcrumbNames": "基础信息配置/数据源备份还原",
       },
       {
         "name": "数据采集",
@@ -36,7 +54,13 @@ export const menuList = [
         "breadcrumbNames": "基础信息配置/定时任务",
       },
     ]
-  }
+  },
+  // {
+  //   "name": "菜单管理",
+  //   "path": "/console/menuManagement",
+  //   "icon": "FundViewOutlined",
+  //   "breadcrumbNames": "基础信息配置",
+  // }
 ]
 
 export function getMenuList(target, init = []) {

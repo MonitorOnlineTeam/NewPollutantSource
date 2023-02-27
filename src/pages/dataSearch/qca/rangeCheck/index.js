@@ -9,7 +9,7 @@ const RangeCheck = (props) => {
   const [DGIMN, setDGIMN] = useState()
   const [pointType, setPointType] = useState()
 
-  const { location } = props;
+  const { location, showMode } = props;
 
   useEffect(() => {
     if (location.query && location.query.type === 'alarm') {
@@ -20,7 +20,7 @@ const RangeCheck = (props) => {
   return (
     <>
       {location.query && location.query.type !== 'alarm' ?
-        <NavigationTree domId="#rangeCheck" onItemClick={item => {
+        <NavigationTree getContainer={showMode === 'modal' ? false : 'body'} domId="#rangeCheck" onItemClick={item => {
           if (!item[0].IsEnt) {
             setDGIMN(item[0].key)
             setPointType(item[0].Type)
@@ -30,13 +30,17 @@ const RangeCheck = (props) => {
         : null
       }
       <div id="rangeCheck">
-        <BreadcrumbWrapper>
-          {
+        {
+          showMode === 'modal' ?
             location.query && location.query.type === 'alarm' ? <RangeCheckPage DGIMN={location.query.dgimn} initLoadData location={location} /> : DGIMN ? <RangeCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
-          }
-        </BreadcrumbWrapper>
+            :
+            <BreadcrumbWrapper>
+              {
+                location.query && location.query.type === 'alarm' ? <RangeCheckPage DGIMN={location.query.dgimn} initLoadData location={location} /> : DGIMN ? <RangeCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
+              }
+            </BreadcrumbWrapper>
+        }
       </div>
-
     </>
   );
 }

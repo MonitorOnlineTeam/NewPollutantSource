@@ -32,7 +32,7 @@ export default Model.extend({
     RegionCode: '',
     EnterpriseName: '',
     pollutantType: '',
-    assessment:'1',
+    assessment: '1',
     qutletQueryPar: {
       beginTime: moment().subtract(1, 'days').format('YYYY-MM-DD 00:00:00'),
       endTime: moment().subtract(1, 'days').format('YYYY-MM-DD 23:59:59'),
@@ -41,7 +41,7 @@ export default Model.extend({
       EntCode: '',
       PollutantType: '',
       RegionCode: '',
-      Assessment:'1'
+      Assessment: '1'
     },
     qutleTableDatas: [],
     qutleTotal: '',
@@ -72,7 +72,7 @@ export default Model.extend({
         endTime: endTime,
         PollutantType: pollutantType,
         EntCode: entCode,
-        Assessment:assessment,
+        Assessment: assessment,
         // PageSize: pageSize,
         // PageIndex: pageIndex,
         ...payload
@@ -133,7 +133,7 @@ export default Model.extend({
         endTime: endTime,
         PollutantType: pollutantType,
         EntCode: entCode,
-        Assessment:assessment
+        Assessment: assessment
       };
       const response = yield call(ExportTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {
@@ -146,7 +146,7 @@ export default Model.extend({
       }
     },
 
-    *exportTransmissionEfficiencyForEnt({ callback,payload }, { call, put, update, select }) {
+    *exportTransmissionEfficiencyForEnt({ callback, payload }, { call, put, update, select }) {
       //企业级导出
       const response = yield call(ExportTransmissionEfficiencyForEnt, { ...payload });
       if (response.IsSuccess) {

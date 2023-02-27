@@ -5,8 +5,8 @@
  */
 
 import React, { Component } from 'react';
-import {Card,Row,Col, Button,Tooltip,Icon,Checkbox,Select,Divider,Input,message} from 'antd';
-import {connect} from 'dva';
+import { Card, Row, Col, Button, Tooltip, Icon, Checkbox, Select, Divider, Input, message } from 'antd';
+import { connect } from 'dva';
 import styles from './otherConfig.less';
 import { Form } from '@ant-design/compatible';
 
@@ -15,15 +15,15 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
 const plainOptions = [
-    {label:'增加' ,value :'add'},
-    {label:'修改' ,value :'edit'},
-    {label:'查看' ,value :'view'},
-    {label:'删除' ,value :'del'},
-    {label:'批量删除' ,value :'alldel'},
-    {label:'导出' ,value :'exp'},
-    {label:'导入' ,value :'imp'},
-    {label:'日志' ,value :'log'},
-    {label:'打印' ,value :'print'},
+    { label: '增加', value: 'add' },
+    { label: '修改', value: 'edit' },
+    { label: '详情', value: 'view' },
+    { label: '删除', value: 'del' },
+    { label: '批量删除', value: 'alldel' },
+    { label: '导出', value: 'exp' },
+    { label: '导入', value: 'imp' },
+    // { label: '日志', value: 'log' },
+    { label: '打印', value: 'print' },
 ]
 
 const pageUrl = {
@@ -40,7 +40,7 @@ const pageUrl = {
     styleDatas: getButtonData.styleDatas
 }))
 @Form.create()
-class otherConfig extends Component{
+class otherConfig extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -69,7 +69,7 @@ class otherConfig extends Component{
             checkedList: changeList
         });
         if (pageConfig && pageConfig.length != 0) {
-            
+
             this.setState({
                 selectPage: pageConfig.DT_PAGEFLAG,
                 textareaValueCSS: pageConfig.DT_CUSTOMCSS,
@@ -113,8 +113,7 @@ class otherConfig extends Component{
             })
         }
         if (this.props.pageConfig != newProps.formDatas) {
-            if(newProps.formDatas.DT_PAGEFLAG != undefined)
-            {
+            if (newProps.formDatas.DT_PAGEFLAG != undefined) {
                 this.props.form.setFieldsValue({
                     selectPage: newProps.formDatas.DT_PAGEFLAG,
                 })
@@ -134,7 +133,7 @@ class otherConfig extends Component{
     }
 
     //在组件完成更新后立即调用。
-    componentDidUpdate(prevProps){
+    componentDidUpdate(prevProps) {
 
     }
 
@@ -206,19 +205,19 @@ class otherConfig extends Component{
         const { tableConfigList } = this.props;
         const { checkedList } = this.state;
         if (tableConfigList.length !== 0) {
-            if (checkedList.length > 0) {
-                this.props.dispatch({
-                    type: 'getButtonData/SaveCfgButtons',
-                    payload: {
-                        "ConfigId": tableConfigList[0].DT_CONFIG_ID,
-                        "ButtonList": checkedList
-                    }
-                }).then(() => {
-                    this.reloadBtnData();
-                }).catch(() => {
-                    this.reloadBtnData();
-                })
-            }
+            // if (checkedList.length > 0) {
+            this.props.dispatch({
+                type: 'getButtonData/SaveCfgButtons',
+                payload: {
+                    "ConfigId": tableConfigList[0].DT_CONFIG_ID,
+                    "ButtonList": checkedList
+                }
+            }).then(() => {
+                this.reloadBtnData();
+            }).catch(() => {
+                this.reloadBtnData();
+            })
+            // }
         } else {
             message.warning('选择树节点');
         }
@@ -251,7 +250,7 @@ class otherConfig extends Component{
             textareaValueJS: e.target.value
         })
     }
-    
+
     // 页面样式和脚本配置保存
     SaveTableExtend1 = e => {
         e.preventDefault();
@@ -342,7 +341,7 @@ class otherConfig extends Component{
                             <div className={styles.saveBTN}>
                                 {this.props.tableConfigList.length == 0 ?
                                     <Button disabled icon="save" type="primary" onClick={this.SaveCfgButtons}>保存</Button> :
-                                    <Button icon="save" type="primary" onClick={this.SaveCfgButtons}>保存</Button>
+                                    <Button type="primary" onClick={this.SaveCfgButtons}>保存</Button>
                                 }
                                 <Tooltip placement="top" title='配置在列表页面显示的按钮，如需增加自定义的按钮，可通过权限系统增加相应的按钮，并注入脚本绑定相应事件。'>
                                     <Icon type="question-circle" style={{ color: "#808080" }} />
@@ -360,7 +359,7 @@ class otherConfig extends Component{
                                 ></CheckboxGroup>
                             </div>
                         </div>
-                        <Card
+                        {/* <Card
                             title="页面样式和脚本配置"
                             headStyle={{ fontWeight: 'bold' }}
                             bodyStyle={{ borderBottom: '1px dashed #C0C0C0' }}
@@ -490,7 +489,7 @@ class otherConfig extends Component{
                                     </Form>
                                 </div>
                             </div>
-                        </Card>
+                        </Card> */}
                     </Card>
                 </Col>
             </Row>

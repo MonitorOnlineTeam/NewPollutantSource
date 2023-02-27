@@ -57,7 +57,12 @@ export const API = {
     UpdateMenuManagement: before + '/AutoFormConfigApi/UpdateMenuManagement',
     // 菜单管理删除
     DelectMenuManagement: before + '/AutoFormConfigApi/DelectMenuManagement',
-
+    // 获取菜单列表
+    GetMenuInfos: before + '/AutoFormConfigApi/GetMenuInfos',
+    // 导出数据源配置
+    ExportConsoleConfig: before + '/AutoFormConfigApi/ExportConsoleConfig',
+    // 导入数据源配置
+    ImportConsoleConfig: before + '/AutoFormConfigApi/ImportConsoleConfig',
     // ------------------------------------------------------------------------------------------------
 
     // 分页获取列表数据
@@ -82,6 +87,7 @@ export const API = {
     ImportDataExcel: before + '/AutoFormDataApi/ImportDataExcel',
     // 校验数据重复
     VerificationData: before + '/AutoFormDataApi/VerificationData',
+
 
   },
   // 通用Api
@@ -858,6 +864,8 @@ export const API = {
     GetSummaryYearReport: before + '/MonBasicDataApi/GetSummaryYearReport',
     // 汇总季报
     GetSummaryQuarterReport: before + '/MonBasicDataApi/GetSummaryQuarterReport',
+    // 废气表头
+    GetPointPollutantColumnByDGIMN: before + '/MonBasicDataApi/GetPointPollutantColumnByDGIMN'
     //
   },
   // 导出Api

@@ -125,6 +125,7 @@ export default Model.extend({
         }
 
         let configInfo = response.Datas;
+        // configInfo.IsSingleEnterprise = true;
         window.configInfo = configInfo;
         configInfo.SystemName = getSysName(configInfo.SystemName);
         localStorage.setItem('sysConfigInfo', JSON.stringify({
@@ -136,7 +137,7 @@ export default Model.extend({
           CenterLatitude: response.Datas.CenterLatitude || 39.908195,
         }))
         // 防止系统错乱，如果没有menuId，跳转中间页。
-        if (location.pathname !== '/user/login' && location.pathname !== '/dataFlowChart' && response.Datas.IsShowSysPage === '1') {
+        if (location.pathname !== '/user/login' && location.pathname !== '/dataFlowChart' && location.pathname !== '/autoLogin' && response.Datas.IsShowSysPage === '1') {
           if (!sessionStorage.getItem('sysMenuId')) {
             router.push('/sysTypeMiddlePage')
           }

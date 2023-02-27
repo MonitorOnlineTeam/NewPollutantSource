@@ -86,3 +86,15 @@ export async function ConfigIDisExisti(params) {
         data: null
     } : result;
 }
+
+// 导出数据源配置
+export async function ExportConsoleConfig(params) {
+    const result = post(API.autoFormApi.ExportConsoleConfig, [...params.keys])
+    return result;
+}
+
+// 导入数据源配置
+export async function ImportConsoleConfig(params) {
+    const result = post(API.autoFormApi.ImportConsoleConfig, [...params.keys])
+    return result;
+}

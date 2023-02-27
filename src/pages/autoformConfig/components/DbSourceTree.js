@@ -55,6 +55,10 @@ class DbSourceTree extends Component {
         // this.getTreeData();
     }
 
+    componentDidMount() {
+        // this.props.onRef && this.props.onRef(this);
+    }
+
     componentWillUnmount() {
         this.updateState({
             dbTreeArray: [],
@@ -100,7 +104,7 @@ class DbSourceTree extends Component {
             type: pageUrl.deleteTreeConfig,
             payload: {
                 callback: (result) => {
-                    if (result === "1") {
+                    if (result) {
                         message.success("删除成功");
                         this.reloadTreeData();
                     } else {
@@ -138,7 +142,7 @@ class DbSourceTree extends Component {
     }
 
     getTree = () => {
-        const { dbTreeArray, selectedKeys, expandedKeys, searchValue, autoExpandParent } = this.props;
+        const { dbTreeArray, selectedKeys, expandedKeys, searchValue, autoExpandParent, checkable } = this.props;
         if (dbTreeArray && dbTreeArray.length > 0) {
             const loop = data =>
                 data.map(item => {
@@ -157,12 +161,12 @@ class DbSourceTree extends Component {
                         );
                     if (item.children) {
                         return (
-                            <TreeNode icon={<FolderOpenOutlined />} key={item.key} title={title}>
+                            <TreeNode icon={<FolderOpenOutlined />} key={item.key} title={title} id={item.id}>
                                 {loop(item.children)}
                             </TreeNode>
                         );
                     }
-                    return <TreeNode key={item.key} title={title} icon={<FileOutlined />} />;
+                    return <TreeNode id={item.id} key={item.key} title={title} icon={<FileOutlined />} />;
                 });
 
             return (
@@ -172,9 +176,11 @@ class DbSourceTree extends Component {
                     }
                     <div>
                         <Tree
+                            checkable={checkable}
                             showIcon={true}
                             onExpand={this.onExpand}
                             onSelect={this.props.onSelect}
+                            onCheck={this.props.onCheck}
                             selectedKeys={selectedKeys}
                             expandedKeys={expandedKeys}
                             autoExpandParent={autoExpandParent}
@@ -201,7 +207,7 @@ class DbSourceTree extends Component {
             //     }
             // >
             <div style={{ width: '380px', float: 'left', height: 'calc(100vh - 64px)', overflow: 'auto', margin: '0 10px 0 -20px', backgroundColor: "#fff", padding: '10px', boxSizing: 'border-box' }}>
-                { this.getTree()}
+                {this.getTree()}
             </div>
             // </Card>
         )

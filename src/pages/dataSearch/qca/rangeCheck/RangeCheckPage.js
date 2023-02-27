@@ -108,7 +108,11 @@ class RangeCheckPage extends PureComponent {
       //   dataIndex: 'EndTime',
       // },
       {
-        title: '合格情况',
+        // title: '合格情况',
+        title: <span>
+          合格情况
+          <QuestionTooltip content="无效核查结果不参与24小时漂移计算，如果核查结果出现无效则漂移从核查结果连续2次为有效开始计算。" />
+        </span>,
         dataIndex: 'Result',
         render: (text, record, index) => {
           if (text == 2) {
@@ -221,7 +225,7 @@ class RangeCheckPage extends PureComponent {
     this.props.dispatch({
       type: "qcaCheck/getPollutantListByDgimn",
       payload: {
-        DGIMNs: this.props.DGIMN
+        DGIMN: this.props.DGIMN
       }
     })
   }

@@ -75,7 +75,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T1
-            <QuestionTooltip content="通入气体到仪表读数产生变化的时间段，精确到秒" />
+              <QuestionTooltip content="通入气体到仪表读数产生变化的时间段，精确到秒" />
             </span>,
             dataIndex: 't11',
             width: 80,
@@ -116,7 +116,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T2
-            <QuestionTooltip content="数值产生变化到分析仪数值上升至标准浓度标称值90%时的时间段，精确到秒" />
+              <QuestionTooltip content="数值产生变化到分析仪数值上升至标准浓度标称值90%时的时间段，精确到秒" />
             </span>,
             dataIndex: 't22',
             width: 80,
@@ -125,7 +125,7 @@ class resTimeCheckPage extends PureComponent {
           {
             title: <span>
               T=T1+T2
-            <QuestionTooltip content="上述T1+T2之和" />
+              <QuestionTooltip content="上述T1+T2之和" />
             </span>,
             dataIndex: 't23',
             width: 120,
@@ -169,7 +169,7 @@ class resTimeCheckPage extends PureComponent {
         // title: '平均值（s）',
         title: <span>
           平均值（s）
-              <QuestionTooltip content=" 按照零气、高浓度标准气体、零气、中浓度(50%~60%的
+          <QuestionTooltip content=" 按照零气、高浓度标准气体、零气、中浓度(50%~60%的
           满量程值)标准气体、零气、低浓度(20%~30%的满量程值)标准气体的顺序 通入标准气体。若低浓度标准气体浓度高于排放限值，则还需通入浓度低于排放 限值的标准气体，完成超低排放改造后的火电污染源还应通入浓度低于超低排放 水平的标准气体。待显示浓度值稳定后读取测定结果。重复测定 3 次，取平均值" />
         </span>,
         dataIndex: 'AvgTime',
@@ -292,7 +292,7 @@ class resTimeCheckPage extends PureComponent {
     this.props.dispatch({
       type: "qcaCheck/getPollutantListByDgimn",
       payload: {
-        DGIMNs: this.props.DGIMN
+        DGIMN: this.props.DGIMN
       }
     })
   }

@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import router from 'umi/router';
 
 @connect(state => ({
+  configInfo: global.configInfo,
 }))
 export default class AutoLogin extends Component {
   constructor(props) {
@@ -11,18 +12,13 @@ export default class AutoLogin extends Component {
   }
 
   componentDidMount() {
-    const { username, password } = this.props.location.query;
-    // const hostname = window.location.hostname;
-    // const begin = hostname.split(".")[0];
-    // begin !== "61" ? this.props.dispatch({
-    //   type: "userLogin/login",
-    //   payload: {
-    //     userName: "system",
-    //     password: "system",
-    //     redirctUrl:'/homepage'
-    //   }
-    // }) : router.push("/user/login")
+    if (window.configInfo) {
+      this.login();
+    }
+  }
 
+  login = () => {
+    const { username, password } = this.props.location.query;
     this.props.dispatch({
       type: "userLogin/login",
       payload: {
@@ -31,6 +27,13 @@ export default class AutoLogin extends Component {
       }
     })
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (JSON.stringify(this.props.configInfo) !== JSON.stringify(prevProps.configInfo)) {
+      this.login();
+    }
+  }
+
   render() {
     return (
       <Spin

@@ -3,9 +3,9 @@
  * 创建时间：2023.01.30
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Upload,Form, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Upload, Form, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined,UploadOutlined,ImportOutlined, ExportOutlined, } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, ImportOutlined, ExportOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -69,7 +69,7 @@ const Index = (props) => {
 
 
 
-    const { entList, entLoading, tableDatas, tableCol, tableLoading, } = props;
+    const { entList, entLoading, tableDatas, tableCol, tableLoading, showMode } = props;
     useEffect(() => {
         props.getAllEnterprise({}, (data) => {
             data && data[0] && form.setFieldsValue({ EntCode: data[0].EntCode })
@@ -178,7 +178,7 @@ const Index = (props) => {
     //     setPageIndex(PageIndex)
     //     props.getComparisonOfMonData({ ...values, PageIndex, PageSize })
     // }
-    
+
     const searchComponents = () => {
         return <Form
             form={form}
@@ -210,55 +210,64 @@ const Index = (props) => {
                 <Button type="primary" htmlType='submit' style={{ marginRight: 8 }} loading={tableLoading}>
                     查询
                 </Button>
-                <Button  icon={<ImportOutlined/>}  style={{ marginRight: 8 }}  onClick={()=>{setImpVisible(true)}}>
+                <Button icon={<ImportOutlined />} style={{ marginRight: 8 }} onClick={() => { setImpVisible(true) }}>
                     导入
                 </Button>
             </Form.Item>
         </Form>
     }
+
     const [impVisible, setImpVisible] = useState(false);
+
+    const getPageContent = () => {
+        return <Card title={searchComponents()}>
+            <SdlTable
+                title={() => { return <div style={{ fontSize: 22, textAlign: 'center', fontWeight: 'bold', }}>直测与核算碳排放量比对分析统计表</div> }}
+                loading={tableLoading}
+                bordered
+                dataSource={tableDatas}
+                columns={columns}
+                pagination={false}
+            // pagination={{
+            //     total: tableTotal,
+            //     pageSize: pageSize,
+            //     current: pageIndex,
+            //     showSizeChanger: true,
+            //     showQuickJumper: true,
+            //     onChange: handleTableChange,
+            // }}
+            />
+        </Card>
+    }
+
     return (
         <div>
-            <BreadcrumbWrapper>
-                <Card title={searchComponents()}>
-                    <SdlTable
-                        title={()=>{return <div style={{fontSize:22, textAlign:'center',fontWeight:'bold',}}>直测及核算碳排放量比对分析统计表</div>}}
-                        loading={tableLoading}
-                        bordered
-                        dataSource={tableDatas}
-                        columns={columns}
-                        pagination={false}
-                    // pagination={{
-                    //     total: tableTotal,
-                    //     pageSize: pageSize,
-                    //     current: pageIndex,
-                    //     showSizeChanger: true,
-                    //     showQuickJumper: true,
-                    //     onChange: handleTableChange,
-                    // }}
-                    />
-                </Card>
-         <Modal
-          title="导入"
-          visible={impVisible}
-          onOk={()=>{setImpVisible(false)}}
-          onCancel={()=>{setImpVisible(false)}}
-        >
-          <Row>
-            <Col span={18}>
-              <Upload {...props}>
-                <Button>
-                  <UploadOutlined /> 请选择文件
-                </Button>
-              </Upload>
-            </Col>
-            <Col span={6} style={{ marginTop: 6 }}>
-              <a onClick={() => {
-                props.exportTemplet({configId:'AEnterpriseTest'})
-              }}>下载导入模板</a></Col>
-          </Row>
-        </Modal>
-            </BreadcrumbWrapper>
+            {
+                showMode === 'modal' ? getPageContent() :
+                    <BreadcrumbWrapper>
+                        {getPageContent()}
+                    </BreadcrumbWrapper>
+            }
+            <Modal
+                title="导入"
+                visible={impVisible}
+                onOk={() => { setImpVisible(false) }}
+                onCancel={() => { setImpVisible(false) }}
+            >
+                <Row>
+                    <Col span={18}>
+                        <Upload {...props}>
+                            <Button>
+                                <UploadOutlined /> 请选择文件
+                            </Button>
+                        </Upload>
+                    </Col>
+                    <Col span={6} style={{ marginTop: 6 }}>
+                        <a onClick={() => {
+                            props.exportTemplet({ configId: 'AEnterpriseTest' })
+                        }}>下载导入模板</a></Col>
+                </Row>
+            </Modal>
         </div>
     );
 };

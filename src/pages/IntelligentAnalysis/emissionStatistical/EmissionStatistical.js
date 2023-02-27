@@ -48,7 +48,7 @@ const ImportantTypeList = [
 class Gas extends PureComponent {
   state = {
     time: [moment().subtract(1, 'days').startOf("day"), moment().subtract(1, 'days').endOf("day")],
-    DataType: configInfo.IsSingleEnt == '1' ? "ent" : 'region',
+    DataType: configInfo.IsSingleEnterprise ? "ent" : 'region',
     regionFlag: true,
     entFlag: false,
     pointFlag: false
@@ -559,6 +559,7 @@ class Gas extends PureComponent {
                   <SelectPollutantType
                     style={{ width: 200 }}
                     showDefaultValue
+                    // filterPollutantType={'1,2'}
                     filterInvalidData={'5,12'}
                     placeholder="请选择污染物类型"
                     onChange={value => {
@@ -606,7 +607,7 @@ class Gas extends PureComponent {
             this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
           }}>
             {
-              configInfo.IsSingleEnt !== '1' && <TabPane tab="辖区排放量" key="region">
+              !configInfo.IsSingleEnterprise && <TabPane tab="辖区排放量" key="region">
                 <SdlTable scroll={{ y: 'calc(100vh - 490px)' }} loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
               </TabPane>
             }

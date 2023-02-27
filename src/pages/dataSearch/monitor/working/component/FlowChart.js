@@ -5,6 +5,7 @@ import { Tag, Tooltip, Descriptions, Modal } from 'antd';
 import styles from "../index.less"
 import PageLoading from '@/components/PageLoading'
 import QuestionTooltip from "@/components/QuestionTooltip"
+import Realtimedata from '@/pages/monitoring/realtimedata'
 
 import { green, red, blue, yellow, grey, gold } from '@ant-design/colors';
 @connect(({ loading, working }) => ({
@@ -175,7 +176,6 @@ class FlowChart extends PureComponent {
 
   zhiyMorepar = () => {
     const { zhiyso2, zhiynox, zhiyo2, zhiyn2 } = this.state
-    console.log("state=", this.state)
     return <>
       {zhiyso2 != '-' || zhiynox != '-' || zhiyo2 != '-' || zhiyn2 != '-' ? <ul>
         {zhiyso2 !== '-' ? <li>SO2标气余量：{zhiyso2} </li> : null}
@@ -208,7 +208,8 @@ class FlowChart extends PureComponent {
     const KeMorepar = this.keMorepar;
     const ZhiyMorepar = this.zhiyMorepar;
     // 判断是否有二氧化碳
-    const isCO2 = visualizaData.isCO2;
+    // const isCO2 = visualizaData.isCO2;
+    const isCO2 = false;
     // 是否显示颗粒物
     const isShowKLW = visualizaData.isShowKLW;
     // 是否显示质控仪：0集成: 不显示，1独立: 显示
@@ -333,7 +334,8 @@ class FlowChart extends PureComponent {
             <li><span>温度：</span>{yanw}</li>
             <li><span>湿度：</span>{yans}</li>
             <li><span>静压：</span>{yanj}</li>
-            <li><span>流速：</span><Tag color="#108ee9" style={{}} onClick={() => this.setState({ visible: true })}>查看</Tag></li>
+            {/* <li><span>流速：</span><Tag color="#108ee9" style={{}} onClick={() => this.setState({ visible: true })}>查看</Tag></li> */}
+            <li><span>流速：</span>{yanls}</li>
             <li><span>流量：</span>{yanll}</li>
           </ul>
         }
@@ -376,12 +378,14 @@ class FlowChart extends PureComponent {
       <div className={styles.pollutantContent}>
         {
           visualizaData.pollutant.length ? visualizaData.pollutant.map((item, index) => {
-            return <div className={`${styles.so2} ${styles.commonSty}`} style={{ top: 311 + index * 90 }}>
-              <span>{item.PollutantName}：{item.value} {item.Unit}</span>
-              <Tooltip placement="top" title={this.renderParamList(item.params)} trigger='click'>
-                <span className={`${styles.more}`}>更多参数</span>
-              </Tooltip>
-            </div>
+            if (item.PollutantName) {
+              return <div className={`${styles.so2} ${styles.commonSty}`} style={{ top: 311 + index * 90 }}>
+                <span>{item.PollutantName}：{item.value} {item.Unit}</span>
+                <Tooltip placement="top" title={this.renderParamList(item.params)} trigger='click'>
+                  <span className={`${styles.more}`}>更多参数</span>
+                </Tooltip>
+              </div>
+            }
           }) : <span>暂无数据</span>
         }
       </div>
@@ -412,102 +416,108 @@ class FlowChart extends PureComponent {
         DGIMN: dgimn,
       },
       callback: (res) => {
-
         // res.map((item, index) => {
-
+        if (!res.isCO2) {
+          this.handleState(res);
+        }
         this.setState({
-          isStop: res.stop,//锅炉状态
-          tongxunState: res.status, // 通讯状态
+          isCO2: res.isCO2
         })
-
-        res.cems.map(item => {
-          if (item.Code === "a01016") { //烟道截面积
-            this.setState({ yan: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-          }
-          if (item.Code === "a01030") { //皮托管
-            this.setState({ pi: `${item.Value == null ? "-" : item.Value}` })
-          }
-          if (item.Code === "a01031") { //过量空气
-            this.setState({ kong: `${item.Value == null ? "-" : item.Value}` })
-          }
-          if (item.Code === "a01032") { //速度场
-            this.setState({ su: `${item.Value == null ? "-" : item.Value}` })
-          }
-          if (item.Code === "i33003") { //探头温度
-            this.setState({ tan: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-          }
-          if (item.Code === "i33001") { //管线温度
-            this.setState({ guan: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-          }
-          if (item.Code === "i33002") { //冷凝器温度
-            this.setState({ leng: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-          }
-          if (item.Code === "i32011") { //质控仪门状态
-            this.setState({ zhikongmenState: item.Value })
-          }
-          if (item.Code === "i32002") { //质控仪状态
-            this.setState({ zhikongState: item.Value })
-          }
-          if (item.Code === "i33060") { //质控仪标气余量  S02
-            this.setState({ zhiyso2: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-          }
-          if (item.Code === "i33061") { //质控仪标气余量  NOx标气余量
-            this.setState({ zhiynox: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-          }
-          if (item.Code === "i33062") { //质控仪标气余量  O2标气余量
-            this.setState({ zhiyo2: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-          }
-          if (item.Code === "i33063") { //质控仪标气余量  N2标气余量
-            this.setState({ zhiyn2: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-          }
-        })
-
-        // 烟囱参数
-        res.otherParams.map(item => {
-          // let item = pollutant[0];
-          if (item.PollutantCode === "a01012") { //烟气温度
-            this.setState({ yanw: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
-          }
-          if (item.PollutantCode === "a01014") { //烟气湿度
-            this.setState({ yans: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
-          }
-          if (item.PollutantCode === "a00000") { //烟气流量
-            this.setState({ yanll: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
-          }
-          if (item.PollutantCode === "a01011") { //烟气流速
-            this.setState({ yanls: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
-          }
-          if (item.PollutantCode === "a01013") { //烟气静压
-            this.setState({ yanj: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
-          }
-          //颗粒物分析仪
-          if (item.PollutantCode === "a34013") {
-            if (item.DynamicType !== "3") {
-              this.setState({ isKe: true })
-            }
-
-            if (item.DynamicType === "3") { //标气浓度
-              this.setState({ ycnd: `${item.Value == null ? "-" : item.Value}${item.Unit || ''}` })
-            }
-
-            if (item.Code === "i13055") { //稀释比
-              this.setState({ kelix: `${item.Value == null ? "-" : item.Value}${item.Unit == null ? "%" : item.Unit}` })
-            }
-            if (item.Code === "i13001") { //量程1
-              this.setState({ kelil1: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-            }
-            if (item.Code === "i13050") { //量程2
-              this.setState({ kelil2: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
-            }
-            if (item.Code === "i13054") { //颗粒物检测器信号强度
-              this.setState({ kelij: `${item.Value == null ? "-" : item.Value}` })
-            }
-          }
-        })
-
       }
     })
 
+  }
+
+  handleState = (res) => {
+    this.setState({
+      isStop: res.stop,//锅炉状态
+      tongxunState: res.status, // 通讯状态
+    })
+
+    res.cems.map(item => {
+      if (item.Code === "a01016") { //烟道截面积
+        this.setState({ yan: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+      }
+      if (item.Code === "a01030") { //皮托管
+        this.setState({ pi: `${item.Value == null ? "-" : item.Value}` })
+      }
+      if (item.Code === "a01031") { //过量空气
+        this.setState({ kong: `${item.Value == null ? "-" : item.Value}` })
+      }
+      if (item.Code === "a01032") { //速度场
+        this.setState({ su: `${item.Value == null ? "-" : item.Value}` })
+      }
+      if (item.Code === "i33003") { //探头温度
+        this.setState({ tan: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+      }
+      if (item.Code === "i33001") { //管线温度
+        this.setState({ guan: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+      }
+      if (item.Code === "i33002") { //冷凝器温度
+        this.setState({ leng: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+      }
+      if (item.Code === "i32011") { //质控仪门状态
+        this.setState({ zhikongmenState: item.Value })
+      }
+      if (item.Code === "i32002") { //质控仪状态
+        this.setState({ zhikongState: item.Value })
+      }
+      if (item.Code === "i33060") { //质控仪标气余量  S02
+        this.setState({ zhiyso2: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+      }
+      if (item.Code === "i33061") { //质控仪标气余量  NOx标气余量
+        this.setState({ zhiynox: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+      }
+      if (item.Code === "i33062") { //质控仪标气余量  O2标气余量
+        this.setState({ zhiyo2: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+      }
+      if (item.Code === "i33063") { //质控仪标气余量  N2标气余量
+        this.setState({ zhiyn2: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+      }
+    })
+
+    // 烟囱参数
+    res.otherParams.map(item => {
+      // let item = pollutant[0];
+      if (item.PollutantCode === "a01012") { //烟气温度
+        this.setState({ yanw: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
+      }
+      if (item.PollutantCode === "a01014") { //烟气湿度
+        this.setState({ yans: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
+      }
+      if (item.PollutantCode === "a00000") { //烟气流量
+        this.setState({ yanll: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
+      }
+      if (item.PollutantCode === "a01011") { //烟气流速
+        this.setState({ yanls: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
+      }
+      if (item.PollutantCode === "a01013") { //烟气静压
+        this.setState({ yanj: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
+      }
+      //颗粒物分析仪
+      if (item.PollutantCode === "a34013") {
+        if (item.DynamicType !== "3") {
+          this.setState({ isKe: true })
+        }
+
+        if (item.DynamicType === "3") { //标气浓度
+          this.setState({ ycnd: `${item.Value == null ? "-" : item.Value}${item.Unit || ''}` })
+        }
+
+        if (item.Code === "i13055") { //稀释比
+          this.setState({ kelix: `${item.Value == null ? "-" : item.Value}${item.Unit == null ? "%" : item.Unit}` })
+        }
+        if (item.Code === "i13001") { //量程1
+          this.setState({ kelil1: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+        }
+        if (item.Code === "i13050") { //量程2
+          this.setState({ kelil2: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
+        }
+        if (item.Code === "i13054") { //颗粒物检测器信号强度
+          this.setState({ kelij: `${item.Value == null ? "-" : item.Value}` })
+        }
+      }
+    })
   }
 
   // 渲染污染物参数列表
@@ -617,13 +627,32 @@ class FlowChart extends PureComponent {
     });
   };
 
+  // 根据是否是二氧化碳，判断显示
+  showContentByIsCO2 = () => {
+    const { isCO2 } = this.state;
+    if (isCO2 !== undefined) {
+      if (isCO2) {
+        return <Realtimedata
+          showMode="modal"
+          wrapperStyle={{ height: '100vh' }}
+          currentTreeItemData={
+            [{
+              "key": this.props.DGIMN,
+            }]
+          } />
+      } else {
+        return this.pageContent();
+      }
+    }
+    return <PageLoading />
+  }
+
   render() {
-    const PageContent = this.pageContent;
+    const ShowContentByIsCO2 = this.showContentByIsCO2;
     const { visualizaData } = this.props;
-    console.log('visualizaData', visualizaData)
     return (
       <>
-        {this.props.loading ? <PageLoading /> : <PageContent />}
+        {this.props.loading ? <PageLoading /> : <ShowContentByIsCO2 />}
         <Modal
           title="查看流速"
           width={'80vw'}
@@ -637,9 +666,6 @@ class FlowChart extends PureComponent {
                 return <Descriptions.Item label={item.PollutantName}>{item.Value} {item.Unit}</Descriptions.Item>
               })
             }
-            {/* <Descriptions.Item label="Billing Mode">Prepaid</Descriptions.Item>
-            <Descriptions.Item label="Automatic Renewal">YES</Descriptions.Item>
-            <Descriptions.Item label="Order time">2018-04-24 18:00:00</Descriptions.Item> */}
           </Descriptions>
         </Modal>
       </>

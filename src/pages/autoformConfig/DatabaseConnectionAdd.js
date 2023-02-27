@@ -132,8 +132,8 @@ class DatabaseConnectionAdd extends Component {
     render() {
         const formItemLayout = {
             labelCol: {
-                xs: { span: 12 },
-                sm: { span: 12 },
+                xs: { span: 8 },
+                sm: { span: 8 },
             },
             wrapperCol: {
                 xs: { span: 12 },
@@ -154,7 +154,7 @@ class DatabaseConnectionAdd extends Component {
 
         return (
             <>
-                { type === 1 ?
+                {type === 1 ?
                     <Tooltip title="编辑">
                         <a onClick={this.showModal}><EditIcon /></a>
                     </Tooltip> :
@@ -178,7 +178,7 @@ class DatabaseConnectionAdd extends Component {
 
                     <Form >
                         <Row gutter={8}>
-                            <Col span={8}>
+                            <Col span={12}>
                                 <FormItem
                                     style={{ textAlign: "left" }}
 
@@ -193,12 +193,12 @@ class DatabaseConnectionAdd extends Component {
                                                 message: '请输入数据库Code!'
                                             }]
 
-                                        })(<Input style={{ width: 200 }} placeholder="唯一识别码" />)
+                                        })(<Input style={{ width: 200 }} disabled={record && record.DB_KEY} placeholder="唯一识别码" />)
                                     }
                                 </FormItem>
 
                             </Col>
-                            <Col span={16}>
+                            <Col span={12}>
                                 <FormItem
                                     {...formItemLayout}
 
@@ -219,7 +219,7 @@ class DatabaseConnectionAdd extends Component {
                             </Col>
                         </Row>
                         <Row gutter={8}>
-                            <Col span={8}>
+                            <Col span={12}>
                                 <FormItem
                                     style={{ textAlign: "left" }}
 
@@ -240,7 +240,7 @@ class DatabaseConnectionAdd extends Component {
                                 </FormItem>
 
                             </Col>
-                            <Col span={16}>
+                            <Col span={12}>
                                 <FormItem
                                     {...formItemLayout}
 
@@ -262,7 +262,7 @@ class DatabaseConnectionAdd extends Component {
                             </Col>
                         </Row>
                         <Row gutter={8}>
-                            <Col span={8}>
+                            <Col span={12}>
                                 <FormItem
                                     style={{ textAlign: "left" }}
 
@@ -282,7 +282,7 @@ class DatabaseConnectionAdd extends Component {
                                 </FormItem>
 
                             </Col>
-                            <Col span={16}>
+                            <Col span={12}>
                                 <FormItem
                                     {...formItemLayout}
 
@@ -304,8 +304,7 @@ class DatabaseConnectionAdd extends Component {
                             </Col>
                         </Row>
                         <Row gutter={8}>
-
-                            <Col span={8}>
+                            <Col span={12}>
                                 <FormItem
                                     {...formItemLayout}
 

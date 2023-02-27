@@ -46,9 +46,7 @@ class YSYPTZ extends PureComponent {
   playViode = () => {
     const { appKey, appSecret } = this.props;
     let accessToken = Cookies.get(`YSYAccessToken-${appKey}-${appSecret}`);
-    debugger
     if (accessToken) {
-      debugger
       // this.onPlayClick()
     } else {
       this.getAccessToken();
@@ -65,7 +63,6 @@ class YSYPTZ extends PureComponent {
       .then(res => res.json())
       .catch(error => console.error('Error:', error))
       .then(response => {
-        console.log('response', response)
         if (response.code == '200') {
           Cookies.set(`YSYAccessToken-${appKey}-${appSecret}`, response.data.accessToken, { expires: 7 });
           this.setState({ accessToken: response.data.accessToken });

@@ -2,14 +2,14 @@
  * @Author: JiaQi 
  * @Date: 2023-02-08 11:34:48 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-02-08 11:35:09
+ * @Last Modified time: 2023-02-23 16:57:22
  * @Description: 二氧化碳工艺流程图
  */
 
 import React, { Component } from 'react';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './ProcessFlowChart.less';
-import { Card, Descriptions, Popover, Tabs, Modal, Spin, Table } from 'antd';
+import { Card, Descriptions, Popover, Tabs, Modal, Spin, Table, Empty } from 'antd';
 import { load_data } from '../_util'
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable';
@@ -120,51 +120,39 @@ class CO2Chart extends Component {
         //生成数据
         let points = []
 
-        // let max_x = 6
-        // let max_y = 8
-        // let count = 0;
-        // for (var i = 1; i < max_x - 1; i++) {
-        //     for (var j = 1; j < max_y - 1; j++) {
-        //         // count += 1;
-        //         points.push({
-        //             "x": i * 6,
-        //             "y": j * 4,
-        //             // "value": flows[count - 1].value
-        //             "value": flows[i * 6 - j].value
-        //         });
-        //     }
-        // }
-
-
         let max_x = 4
         let x_grid_len = 1103
         let max_y = 6
         let y_grid_len = 1044
         let count = 0;
-
-        for (var i = 0; i < max_x; i++) {
-            for (var j = 0; j < max_y; j++) {
-                console.log('i', i)
-                console.log('j', j)
-                points.push({
-                    "x": i * x_grid_len + x_grid_len / 2,
-                    "y": j * y_grid_len + y_grid_len / 2,
-                    // "value": flows[i + 1 * 6 - j].value
-                    "value": flows[i * 6 + j].value
-                });
+        if (flows.length) {
+            for (var i = 0; i < max_x; i++) {
+                for (var j = 0; j < max_y; j++) {
+                    console.log('i', i)
+                    console.log('j', j)
+                    points.push({
+                        "x": i * x_grid_len + x_grid_len / 2,
+                        "y": j * y_grid_len + y_grid_len / 2,
+                        // "value": flows[i + 1 * 6 - j].value
+                        "value": flows[i * 6 + j].value
+                    });
+                }
             }
-        }
-
-
-        console.log('points', points);
-        load_data(points, () => {
+            console.log('points', points);
+            load_data(points, () => {
+                setTimeout(() => {
+                    this.setState({
+                        modalLoading: false
+                    })
+                }, 0)
+            });
+        } else {
             setTimeout(() => {
                 this.setState({
                     modalLoading: false
                 })
             }, 0)
-        });
-        // })
+        }
     }
 
 
@@ -172,21 +160,24 @@ class CO2Chart extends Component {
         const { paramstatusInfo, paramsInfo } = this.props;
         //流速
         let flows = paramsInfo.filter(item => item.pollutantCode.indexOf('_') > -1);
-
+        debugger
         let max_x = 6
         let max_y = 8
-        let dataSource = [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-        ];
-        for (var i = 1; i < max_x - 1; i++) {
-            for (var j = 1; j < max_y - 1; j++) {
-                let value = flows.find(item => item.pollutantName === `流速${i}-${j}`).value;
-                dataSource[j - 1]['flow' + i] = value
+        let dataSource = [];
+        if (flows.length) {
+            dataSource = [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+            ];
+            for (var i = 1; i < max_x - 1; i++) {
+                for (var j = 1; j < max_y - 1; j++) {
+                    let value = flows.find(item => item.pollutantName === `流速${i}-${j}`).value;
+                    dataSource[j - 1]['flow' + i] = value
+                }
             }
         }
 
@@ -208,8 +199,11 @@ class CO2Chart extends Component {
 
     render() {
         const { translation, modalLoading } = this.state;
-        const { stateInfo, getParamsValue, CEMSOpen, QCStatus, valveStatus, CO2Rate, CO2SampleGasValue, O2SampleGasValue, wrapperStyle, vertical, scale } = this.props;
+        const { stateInfo, getParamsValue, paramsInfo, CEMSOpen, QCStatus, valveStatus, CO2Rate, CO2SampleGasValue, O2SampleGasValue, wrapperStyle, vertical, scale } = this.props;
         console.log('props', this.props)
+
+        let isFlowsData = paramsInfo.filter(item => item.pollutantCode.indexOf('_') > -1);
+
         return (
             <div className={styles.mapClass} style={wrapperStyle}>
                 <MapInteractionCSS
@@ -401,14 +395,20 @@ class CO2Chart extends Component {
                                     margin: '30px 60px', position: 'relative', width: 550,
                                     height: 690
                                 }}>
-                                    <canvas id="canvas_chart"></canvas>
-                                    <canvas id="canvas_x"></canvas>
-                                    <canvas id="canvas_y"></canvas>
-                                    <canvas id="canvas_lengend" className={styles.canvas_lengend}></canvas>
-                                    <div style={{ position: 'absolute', top: -28, left: -45, color: '#666666', fontWeight: 'bold', fontSize: 16 }}>z（m）</div>
-                                    <div style={{ position: 'absolute', bottom: 8, left: 428, color: '#666666', fontWeight: 'bold', fontSize: 16 }}>x（m）</div>
-                                    <div style={{ position: 'absolute', top: -30, left: 210, color: '#666666', fontWeight: 'bold', fontSize: 18 }}>
-                                        流速（m/s）</div>
+                                    {
+                                        isFlowsData.length ? <>
+                                            <canvas id="canvas_chart"></canvas>
+                                            <canvas id="canvas_x"></canvas>
+                                            <canvas id="canvas_y"></canvas>
+                                            <canvas id="canvas_lengend" className={styles.canvas_lengend}></canvas>
+                                            <div style={{ position: 'absolute', top: -28, left: -45, color: '#666666', fontWeight: 'bold', fontSize: 16 }}>z（m）</div>
+                                            <div style={{ position: 'absolute', bottom: 8, left: 428, color: '#666666', fontWeight: 'bold', fontSize: 16 }}>x（m）</div>
+                                            <div style={{ position: 'absolute', top: -30, left: 210, color: '#666666', fontWeight: 'bold', fontSize: 18 }}>
+                                                流速（m/s）
+                                            </div>
+                                        </> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                                    }
+
                                 </div>
                             </Spin>
                         </TabPane>

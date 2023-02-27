@@ -9,17 +9,29 @@ const BlindCheck = (props) => {
   const [DGIMN, setDGIMN] = useState()
   const [pointType, setPointType] = useState()
 
-  const { location } = props;
+  const { location, showMode } = props;
 
   useEffect(() => {
     if (location.query && location.query.type === 'alarm') {
       setPointName(location.query.title)
     }
   }, []);
+
+
+  const getPageContent = () => {
+    return <>
+      {
+        location.query && location.query.type === 'alarm' ?
+          <ErrorValuePage DGIMN={location.query.dgimn} initLoadData location={location} /> :
+          DGIMN ? <ErrorValuePage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
+      }
+    </>
+  }
+
   return (
     <>
       {location.query && location.query.type !== 'alarm' ?
-        <NavigationTree domId="#blindCheck" onItemClick={item => {
+        <NavigationTree getContainer={showMode === 'modal' ? false : 'body'} domId="#blindCheck" onItemClick={item => {
           if (!item[0].IsEnt) {
             setDGIMN(item[0].key)
             setPointType(item[0].Type)
@@ -31,13 +43,14 @@ const BlindCheck = (props) => {
         : null
       }
       <div id="blindCheck">
-        <BreadcrumbWrapper>
-          {
-            location.query && location.query.type === 'alarm' ?
-              <ErrorValuePage DGIMN={location.query.dgimn} initLoadData location={location} /> :
-              DGIMN ? <ErrorValuePage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
-          }
-        </BreadcrumbWrapper>
+        {
+          showMode === 'modal' ?
+            getPageContent() :
+            <BreadcrumbWrapper>
+              {getPageContent()}
+            </BreadcrumbWrapper>
+        }
+
       </div>
     </>
   );

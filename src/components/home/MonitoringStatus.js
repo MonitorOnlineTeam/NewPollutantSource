@@ -27,7 +27,6 @@ class MonitoringStatus extends Component {
 
   getOption = () => {
     const { pointData, theme } = this.props;
-    console.log('home=', this.props.home);
     let option = {
       color: ['#1bc78b', '#ffe400', '#f95d00', '#ababac',],
       // tooltip: {

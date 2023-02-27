@@ -68,7 +68,7 @@ export default Model.extend({
                     Id: selectedKeys[0]
                 }
                 const result = yield call(DeleteTreeConfig, body);
-                payload.callback(result.requstresult);
+                payload.callback(result.IsSuccess);
             } else {
                 message.info("请先选择树节点")
             }

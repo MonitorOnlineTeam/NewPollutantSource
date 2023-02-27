@@ -22,7 +22,7 @@ class Preview extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.tableConfigList !== prevProps.tableConfigList) {
+    if (this.props.tableConfigList !== prevProps.tableConfigList && this.props.tableConfigList.length) {
       this.props.dispatch({
         type: 'autoForm/getPageConfig',
         payload: {

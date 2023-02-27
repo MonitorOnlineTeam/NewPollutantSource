@@ -127,6 +127,7 @@ class AutoFormDataSource extends React.PureComponent {
     }
 
     onSelect = (selectedKeys) => {
+        console.log('selectedKeys', selectedKeys)
         const { selectedKey } = this.props
         this.updateTreeState({
             selectedKeys,
@@ -328,34 +329,32 @@ class AutoFormDataSource extends React.PureComponent {
     render() {
         const { PkByTable, tableList, tableConfigList, dbKey, GUID, selectedKeys, tableDatas, formDatas } = this.props
         const { seleKey, stateKey, checkedList } = this.state;
-
+        console.log('tableConfigList', tableConfigList)
         return (
             <div>
                 <DbSourceTree
                     onSelect={this.onSelect}
                 />
                 <div style={{ flex: 1, marginLeft: 370 }}>
-                    <BreadcrumbWrapper>
-                        <Card
-                            bordered={false}
-                        >
+                    <Card
+                        bordered={false}
+                    >
 
-                            <Tabs activeKey={stateKey} onChange={this.callback.bind(this)}>
-                                <TabPane tab="数据源配置" key="1">
-                                    <DataSourceConfig PkByTable={PkByTable} tableList={tableList} tableConfigList={tableConfigList} dbKey={dbKey} GUID={GUID} />
-                                </TabPane>
-                                <TabPane tab="字段配置" key="2" disabled={tableList.length > 0 ? true : false}>
-                                    <FieldConfig onRef={(ref) => { this.$Child = ref }} tableDatas={tableDatas} dbKey={this.state.dbKey} id={this.state.id} tableName={this.state.tableName} />
-                                </TabPane>
-                                <TabPane tab="其他配置" key="3" disabled={tableList.length > 0 ? true : false}>
-                                    <OtherConfig tableConfigList={tableConfigList} changeList={this.state.checkedList} pageConfig={this.props.formDatas} styleConfig={this.props.styleDatas} />
-                                </TabPane>
-                                <TabPane tab="预览" key="4" disabled={(tableConfigList.length && tableConfigList[0].DT_CONFIG_ID) ? false : true}>
-                                    <Preview tableConfigList={tableConfigList} />
-                                </TabPane>
-                            </Tabs>
-                        </Card>
-                    </BreadcrumbWrapper>
+                        <Tabs activeKey={stateKey} onChange={this.callback.bind(this)}>
+                            <TabPane tab="数据源配置" key="1">
+                                <DataSourceConfig PkByTable={PkByTable} tableList={tableList} tableConfigList={tableConfigList} dbKey={dbKey} GUID={GUID} />
+                            </TabPane>
+                            <TabPane tab="字段配置" key="2" disabled={tableList.length > 0 ? true : false}>
+                                <FieldConfig onRef={(ref) => { this.$Child = ref }} tableDatas={tableDatas} dbKey={this.state.dbKey} id={this.state.id} tableName={this.state.tableName} />
+                            </TabPane>
+                            <TabPane tab="其他配置" key="3" disabled={tableList.length > 0 ? true : false}>
+                                <OtherConfig tableConfigList={tableConfigList} changeList={this.state.checkedList} pageConfig={this.props.formDatas} styleConfig={this.props.styleDatas} />
+                            </TabPane>
+                            <TabPane tab="预览" key="4" disabled={(tableConfigList.length && tableConfigList[0].DT_CONFIG_ID) ? false : true}>
+                                <Preview tableConfigList={tableConfigList} />
+                            </TabPane>
+                        </Tabs>
+                    </Card>
                 </div>
             </div>
         );

@@ -88,7 +88,7 @@ class ZeroCheckPage extends PureComponent {
       {
         title: <span>
           相对误差（%）
-      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入零点气体，
+          <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入零点气体，
 仪器的读数与零点气体初始测量值之间的偏差相对于满量程的百分比。参考75标准，计算公式（测量浓度-标准浓度）/量程范围*100%" />
         </span>,
         dataIndex: 'Offset',
@@ -109,7 +109,11 @@ class ZeroCheckPage extends PureComponent {
       //   dataIndex: 'EndTime',
       // },
       {
-        title: '合格情况',
+        // title: '合格情况',
+        title: <span>
+          合格情况
+          <QuestionTooltip content="无效核查结果不参与24小时漂移计算，如果核查结果出现无效则漂移从核查结果连续2次为有效开始计算。" />
+        </span>,
         dataIndex: 'Result',
         render: (text, record, index) => {
           if (text == 2) {
@@ -150,7 +154,7 @@ class ZeroCheckPage extends PureComponent {
       {
         title: <span>
           相对误差（%）
-      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入零点气体，
+          <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入零点气体，
 仪器的读数与24小时前测量值之间的偏差相对于满量程的百分比。参考75标准，计算公式（本次测量浓度-24小时前的测量浓度）/量程范围*100%" />
         </span>,
         dataIndex: 'Offset',
@@ -216,7 +220,7 @@ class ZeroCheckPage extends PureComponent {
     this.props.dispatch({
       type: "qcaCheck/getPollutantListByDgimn",
       payload: {
-        DGIMNs: this.props.DGIMN,
+        DGIMN: this.props.DGIMN,
       }
     })
   }

@@ -9,7 +9,7 @@ const ZeroCheck = (props) => {
   const [DGIMN, setDGIMN] = useState()
   const [pointType, setPointType] = useState()
 
-  const { location } = props;
+  const { location, showMode } = props;
 
 
   // EntCode: "837bd06b-1653-4da9-ac54-6124f4885cbf"
@@ -21,7 +21,7 @@ const ZeroCheck = (props) => {
   // pointName: "1#窑尾（数采仪采购中）"
   return (
     <>
-      <NavigationTree domId="#zeroCheck" onItemClick={item => {
+      <NavigationTree getContainer={showMode === 'modal' ? false : 'body'} domId="#zeroCheck" onItemClick={item => {
         if (!item[0].IsEnt) {
           console.log('item=', item)
           setDGIMN(item[0].key)
@@ -32,11 +32,20 @@ const ZeroCheck = (props) => {
         console.log('item=', item)
       }} />
       <div id="zeroCheck">
-        <BreadcrumbWrapper>
+        {
+          showMode === 'modal' ?
+            DGIMN ? <ZeroCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading /> :
+            <BreadcrumbWrapper>
+              {
+                DGIMN ? <ZeroCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
+              }
+            </BreadcrumbWrapper>
+        }
+        {/* <BreadcrumbWrapper>
           {
             DGIMN ? <ZeroCheckPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
           }
-        </BreadcrumbWrapper>
+        </BreadcrumbWrapper> */}
       </div>
     </>
   );

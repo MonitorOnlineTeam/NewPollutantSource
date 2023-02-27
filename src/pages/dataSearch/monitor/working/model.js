@@ -51,16 +51,19 @@ export default Model.extend({
             })
           } else {
             isShowKLW = true;
-            otherParams.push(pollutant[key][0])
+            if (pollutant[key] && pollutant[key].length) {
+              otherParams.push(pollutant[key][0])
+            }
           }
         }
+        console.log('otherParams', otherParams)
         let visualizaData = {
           ...result.Datas,
           pollutant: newPollutant,
           flows: pollutant['a01011'] || [],
           otherParams: otherParams,
           isShowKLW: isShowKLW,
-          isCO2: !!newPollutant.find(item => item.PollutantCode === 'a05001')
+          isCO2: !!result.Datas.cems.find(item => item.PollutantCode === 'a05001')
         };
         console.log("visualizaData=", visualizaData)
         yield update({

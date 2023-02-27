@@ -84,21 +84,17 @@ class Index extends Component {
         paramsInfo.map(item => {
             if (item.pollutantCode === 'a05001') {
                 if (item.pollutantParamInfo && item.pollutantParamInfo.length) {
-                    // debugger
                     let current = item.pollutantParamInfo.find(itm => itm.stateCode === 'i13051');
-                    CO2Value = current.value;
+                    CO2Value = current ? current.value : '-';
                 }
             }
             if (item.pollutantCode === 'a19001') {
                 if (item.pollutantParamInfo && item.pollutantParamInfo.length) {
-                    // debugger
                     let current = item.pollutantParamInfo.find(itm => itm.stateCode === 'i13051');
-                    O2Value = current.value;
+                    O2Value = current ? current.value : '-';
                 }
             }
         })
-        console.log('CO2Value', CO2Value)
-        console.log('O2Value', O2Value)
         this.props.dispatch({
             type: 'realtimeserver/updateState',
             payload: {
@@ -378,7 +374,7 @@ class Index extends Component {
             //数据
             if (dataInfolist && dataInfolist.length > 0) {
                 let value = dataInfolist[0].value != null ? dataInfolist[0].value : '无数据';
-                let unit = dataInfolist[0].Unit != null ? dataInfolist[0].Unit : '';
+                let unit = dataInfolist[0].value != null && dataInfolist[0].Unit != null ? dataInfolist[0].Unit : '';
                 res.push(`${value}${unit}`)
 
                 // dataInfolist.map((item, key) => {
@@ -392,7 +388,8 @@ class Index extends Component {
             return res ? res : <div>无数据</div>;
         }
         else {
-            return <div style={{ margin: 'auto', textAlign: 'center', color: '#777' }}>无数据</div>;
+            return '无数据';
+            // return <div style={{ margin: 'auto', textAlign: 'center', color: '#777' }}>无数据</div>;
         }
     }
 
@@ -406,9 +403,9 @@ class Index extends Component {
         const { dgimn, pointName, entName } = this.state;
 
         if (dataInfo && dataInfo.pollutantType == '2') {
-
             // 二氧化碳
-            if (dataInfo['a05001']) {
+            let isCO2 = !!paramsInfo.find(item => item.pollutantCode === 'a05001');
+            if (isCO2) {
                 return <CO2Chart
                     paramstatusInfo={paramstatusInfo}
                     stateInfo={stateInfo}
@@ -436,9 +433,7 @@ class Index extends Component {
                         pollutantMonitingDataNew={this.pollutantMonitingDataNew}
                         getSystemStatesNew={this.getSystemStatesNew}
                         DGIMN={dgimn}
-                        valveStatus={this.props.valveStatus}
-                        pointName={pointName} entName={entName}
-                    />)
+                        pointName={pointName} entName={entName} />)
                     break;
                 case '2':
                     return (<VocChart
