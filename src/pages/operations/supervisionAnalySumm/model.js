@@ -84,7 +84,7 @@ export default Model.extend({
       }
     },
     *getOperationManageSummaryList({ payload, callback }, { call, put, update }) { //列表 全系统督查汇总 
-      const result = yield call(payload.InspectorType?  services.GetOperationManageSummaryTypeList : services.GetOperationManageSummaryList , payload);
+      const result = yield call(payload.InspectorType==1?  services.GetOperationManageSummaryListNew : payload.InspectorType==2? services.GetOperationManageSummaryList :  services.GetOperationManageSummaryList , {...payload,InspectorType: payload.InspectorType==1 || payload.InspectorType==2 ? undefined : payload.InspectorType});
       if (result.IsSuccess) {
         yield update({ operationManageSummaryList: result.Datas,operationManageSummaryTotal:result.Total })
         callback();
@@ -93,7 +93,7 @@ export default Model.extend({
       }
     },
     *exportOperationManageSummaryList({ payload, callback }, { call, put, update }) { //导出 全系统督查汇总 
-      const result = yield call(payload.InspectorType?  services.ExportOperationManageSummaryType : services.ExportOperationManageSummaryList , payload);
+      const result = yield call(payload.InspectorType==1? services.ExportOperationManageSummaryListNew :  payload.InspectorType==2? services.ExportOperationManageSummaryType : services.ExportOperationManageSummaryList , {...payload,InspectorType: payload.InspectorType==1 || payload.InspectorType==2 ? undefined : payload.InspectorType});
       if (result.IsSuccess) {
         message.success(result.Message)
         downloadFile(payload.InspectorType? `${result.Datas}` : `/upload${result.Datas}`)

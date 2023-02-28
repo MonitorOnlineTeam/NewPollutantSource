@@ -42,14 +42,14 @@ export async function ExportRemoteSummaryList(params) {
   return result;
 }
 
-//列表 全系统督查汇总 点位统计
+//列表 全系统督查汇总 点位统计2
 export async function GetOperationManageSummaryList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationManageSummaryList',params, null);
   return result;
 }
 
  
-//导出 全系统督查汇总 点位统计
+//导出 全系统督查汇总 点位统计2
 export async function ExportOperationManageSummaryList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationManageSummaryList',params, null);
   return result;
@@ -63,5 +63,15 @@ export async function GetOperationManageSummaryTypeList(params) {
 //导出 全系统督查汇总 问题统计
 export async function ExportOperationManageSummaryType(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationManageSummaryType',params, null);
+  return result;
+}
+//列表 全系统督查汇总 点位统计1
+export async function GetOperationManageSummaryListNew(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationManageSummaryListNew',params, null);
+  return result;
+}
+//导出 全系统督查汇总 点位统计1
+export async function ExportOperationManageSummaryListNew(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationManageSummaryListNew',params, null);
   return result;
 }

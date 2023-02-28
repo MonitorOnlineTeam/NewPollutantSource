@@ -438,9 +438,10 @@ class TaskRecord extends Component {
   }
   exportData = () => { //导出
     const par = this.props.form.getFieldsValue();
+    const { isHomeModal,DGIMN, } = this.props;
     this.props.dispatch({
       type: `task/ExportOperationTaskList`,
-      payload: { ...par },
+      payload: { ...par, DGIMN: isHomeModal ? DGIMN : '' },
     })
   }
 

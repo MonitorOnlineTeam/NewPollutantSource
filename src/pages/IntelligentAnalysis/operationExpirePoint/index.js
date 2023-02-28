@@ -71,6 +71,7 @@ const Index = (props) => {
 
   
   useEffect(() => {
+      setPollutantType(props.pollutantTypes?props.pollutantTypes:'')
       getOperationExpirePointList(props.pollutantTypes?props.pollutantTypes:'')
   },[]);
   const  codeList = {
@@ -240,7 +241,7 @@ const Index = (props) => {
 
  const exports = () =>{
 
-   props.exportOperationExpirePointList({Title:`${titleList[checkName]}${pollutantType==1?'废水':pollutantType==2? '废气':'全部'}监测点列表`,Code:codeList[checkName]})
+   props.exportOperationExpirePointList({Title:`${titleList[checkName]}${pollutantType==1?'废水':pollutantType==2? '废气':'全部'}监测点列表`,Code:codeList[checkName],PollutantType:pollutantType})
  }
 
 

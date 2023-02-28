@@ -72,28 +72,33 @@ const Index = (props) => {
 
     const [tableTitle, setTableTitle] = useState(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{moment().format('YYYY年')}全系统督查汇总表</span>)
 
-
+    const rowSpanFun = (value,record) =>{
+        let obj = {
+          children: <div>{value}</div>,
+          props: { rowSpan: record.Count},
+        };
+        return obj;
+      }
     const columns1_1 = [
         {
             title: tableTitle,
             align: 'center',
             children: [
-                {
-                    title: '序号',
-                    dataIndex: 'TypeNum',
-                    key: 'TypeNum',
-                    width: 70,
-                    align: 'center',
-                    render: (text, record, index) => {
-                        return index + 1
-                    }
-                },
+                // {
+                //     title: '序号',
+                //     dataIndex: 'TypeNum',
+                //     key: 'TypeNum',
+                //     width: 70,
+                //     align: 'center',
+                //     render:(text, record, index)=>rowSpanFun(text, record)
+                // },
                 {
                     title: '省区',
                     dataIndex: 'provinceName',
                     key: 'provinceName',
                     align: 'center',
                     width: 100,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 },
                 {
                     title: '地级市',
@@ -101,6 +106,7 @@ const Index = (props) => {
                     key: 'cityName',
                     align: 'center',
                     width: 100,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 },
                 {
                     title: '企业名称',
@@ -108,6 +114,7 @@ const Index = (props) => {
                     key: 'entName',
                     align: 'center',
                     width: 150,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 },
                 {
                     title: '监测点名称',
@@ -115,6 +122,7 @@ const Index = (props) => {
                     key: 'pointName',
                     align: 'center',
                     width: 100,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 },
 
                 {
@@ -123,6 +131,7 @@ const Index = (props) => {
                     key: 'createUserName',
                     align: 'center',
                     width: 100,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 },
                 {
                     title: '督查日期',
@@ -131,7 +140,8 @@ const Index = (props) => {
                     align: 'center',
                     width: 100,
                     render: (text, record, index) => {
-                        return text ? moment(text).format('YYYY-MM-DD') : null;
+                        const  data  = text ? moment(text).format('YYYY-MM-DD') : null;
+                           return rowSpanFun(data, record)
                     }
                 },
                 {
@@ -140,86 +150,93 @@ const Index = (props) => {
                     key: 'operationName',
                     align: 'center',
                     width: 100,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 },
                 {
-                    title: '原则性问题数量',
-                    dataIndex: 'principleProblemNum',
-                    key: 'principleProblemNum',
+                    title: '原则问题数量',
+                    dataIndex: 'PrincipleProblemNum',
+                    key: 'PrincipleProblemNum',
                     align: 'center',
                     width: 150,
                     ellipsis: true,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 },
                 {
-                    title: '严重问题数量',
+                    title: '重点问题数量',
                     dataIndex: 'importanProblemNum',
                     key: 'importanProblemNum',
                     align: 'center',
                     width: 120,
                     ellipsis: true,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 },
                 {
                     title: '一般问题数量',
-                    dataIndex: 'commonlyProblemNum',
-                    key: 'commonlyProblemNum',
+                    dataIndex: 'CommonlyProblemNum',
+                    key: 'CommonlyProblemNum',
                     align: 'center',
                     width: 120,
                     ellipsis: true,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 }, 
                 {
-                    title: '原则性问题',
-                    dataIndex: 'principleProblem',
-                    key: 'principleProblem',
+                    title: '原则问题',
+                    dataIndex: 'PrincipleProblem',
+                    key: 'PrincipleProblem',
                     align: 'center',
                     width: 120,
                     ellipsis: true,
                 },
                 {
-                    title: '严重问题',
+                    title: '重点问题',
                     dataIndex: 'importanProblem',
                     key: 'importanProblem',
                     align: 'center',
-                    width: 150,
+                    width: 120,
                     ellipsis: true,
                 },
                 {
                     title: '一般问题',
-                    dataIndex: 'commonlyProblem',
-                    key: 'commonlyProblem',
+                    dataIndex: 'CommonlyProblem',
+                    key: 'CommonlyProblem',
                     align: 'center',
-                    width: 150,
+                    width: 120,
                     ellipsis: true,
                 },
                 {
                     title: '扣分',
-                    dataIndex: 'aa',
-                    key: 'aa',
+                    dataIndex: 'Score',
+                    key: 'Score',
                     align: 'center',
                     width: 80,
                     ellipsis: true,
                 },
                 {
                     title: '说明',
-                    dataIndex: 'bb',
-                    key: 'bb',
+                    dataIndex: 'ProblemDescribe',
+                    key: 'ProblemDescribe',
                     align: 'center',
                     width: 150,
                     ellipsis: true,
                 },
                 {
                     title: '总分',
-                    dataIndex: 'cc',
-                    key: 'cc',
+                    dataIndex: 'TotalScore',
+                    key: 'TotalScore',
                     align: 'center',
                     width: 80,
                     ellipsis: true,
                 },
                 {
-                    title: '推动状态',
-                    dataIndex: 'cc',
-                    key: 'cc',
+                    title: '推送状态',
+                    dataIndex: 'StatusName',
+                    key: 'StatusName',
                     align: 'center',
                     width: 100,
                     ellipsis: true,
+                    render: (text, record, index) => {
+                        return <span style={{ color: text == '未推送' ? '#f5222d' : '#52c41a' }}>{text}</span>;
+                      }
                 },
             ]
         }
@@ -446,6 +463,8 @@ const Index = (props) => {
     ]
     
     const [col, setCol] = useState(columns1_2)
+    const [isPointStatistics1, setIsPointStatistics1] = useState(true)
+
     const onFinish = async (pageIndexs, pageSizes) => {  //查询 按原则性问题统计
         try {
             const values = await form.validateFields();
@@ -465,6 +484,7 @@ const Index = (props) => {
                 } else {
                     setTableTitle(<span style={{ fontWeight: 'bold', fontSize: 16 }}>{`${moment(values.time[0]).format('YYYY年MM月DD日')} ~ ${moment(values.time[1]).format('YYYY年MM月DD日')}${typeTitle}`}</span>)
                 }
+                values.InspectorType == 1 ? setIsPointStatistics1(true) : setIsPointStatistics1(false)
             })
 
 
@@ -474,7 +494,8 @@ const Index = (props) => {
     }
 
     useEffect(() => {
-        form.getFieldValue('InspectorType') ? setCol(columns2) : setCol(columns1_2)
+        const inspectorTypeVal = form.getFieldValue('InspectorType');
+        inspectorTypeVal==1? setCol(columns1_1) : inspectorTypeVal == 2? setCol(columns1_2) :  setCol(columns2)
     }, [tableTitle])
     const exports = async () => {
         const values = await form.validateFields();
@@ -510,6 +531,7 @@ const Index = (props) => {
     const statisTypeChange = (value) => {
         setStatisType(value)
     }
+    const inspectorTypeData = form.getFieldValue('InspectorType');
     return (
         <div className={styles.analysisSummarySty}>
             <Card
@@ -522,7 +544,7 @@ const Index = (props) => {
                         initialValues={{
                             DateType: 2,
                             time: moment(),
-                            InspectorType: '',
+                            InspectorType: 1,
                         }}
                         className={styles.queryForm}
                         onValuesChange={onValuesChange}
@@ -553,8 +575,8 @@ const Index = (props) => {
                         }
                         <Form.Item label='统计维度' name='InspectorType'>
                             <Select placeholder='请选择' style={{ width: 160 }} showSearch optionFilterProp="children" onChange={statisTypeChange}>
-                                {/* <Option key={''} value={''} >按点位统计1</Option> */}
-                                <Option key={''} value={''} >按点位统计</Option>    
+                                <Option key={1} value={1} >按点位统计1</Option>
+                                <Option key={2} value={2} >按点位统计2</Option>    
                                 <Option key={491} value={491} >按原则性问题统计</Option>
                                 <Option key={492} value={492} >按一般问题统计</Option>
                                 <Option key={493} value={493} >按重点问题统计</Option>
@@ -577,7 +599,7 @@ const Index = (props) => {
                     bordered
                     dataSource={tableDatas}
                     columns={col}
-                    pagination={{
+                    pagination={inspectorTypeData==1? false :  {
                         total: tableTotal,
                         pageSize: pageSize,
                         current: pageIndex,
@@ -587,17 +609,17 @@ const Index = (props) => {
                     }}
                     scroll={{ x: '100%', y: 'calc(100vh - 405px)' }}
                 />
-          {/* <Row style={{margin:'16px 24px 0 0 '}} justify='end'>
-              {tableTotal2 >0&&<Pagination 
-                  size='small'
-                  total= {tableTotal}
-                  pageSize= {pageSize}
-                  current = {pageIndex}
-                  showSizeChanger = {true}
-                  showQuickJumper = {true}
-                  onChange={ handleTableChange}
-            />}
-           </Row> */}
+               <Row style={{margin:'16px 24px 0 0 '}} justify='end'>
+                 {isPointStatistics1&&tableTotal>0&&<Pagination 
+                   size='small'
+                   total= {tableTotal}
+                   pageSize= {pageSize}
+                   current = {pageIndex}
+                   showSizeChanger = {true}
+                   showQuickJumper = {true}
+                   onChange={ handleTableChange}
+              />}
+           </Row>
             </Card>
         </div>
 
