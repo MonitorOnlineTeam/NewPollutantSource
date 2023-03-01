@@ -184,7 +184,7 @@ export default class UserInfoIndex extends Component {
         render: (text, row) => {
           return (
             <Fragment>
-              <Tooltip title="数据过滤">
+              <Tooltip title="设置点位访问权限">
                 <a
                   onClick={() => {
                     this.setState(
@@ -534,7 +534,7 @@ export default class UserInfoIndex extends Component {
   onSelectData = (selectedKey, info) => {
     this.setState({ selectedKey });
   };
-  /** 数据过滤切换污染物 */
+  /** 设置点位访问权限切换污染物 */
   handleSizeChange = e => {
     const keys = this.state.selectedRow.ID;
     this.setState({ pollutantType: e.target.value });
@@ -554,7 +554,7 @@ export default class UserInfoIndex extends Component {
       },
     });
   };
-  /** 数据过滤切换行政区 */
+  /** 设置点位访问权限切换行政区 */
   onChangeTree = value => {
     console.log('onChange================= ', value);
     const keys = this.state.selectedRow.ID;
@@ -855,7 +855,7 @@ export default class UserInfoIndex extends Component {
           />
 
           <Modal
-            title={`数据过滤-${this.state.selectedRow.userName}`}
+            title={`设置点位访问权限-${this.state.selectedRow.userName}`}
             visible={this.state.visibleData}
             onOk={this.handleDataOK}
             // destroyOnClose="true"

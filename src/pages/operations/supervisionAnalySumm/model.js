@@ -96,7 +96,7 @@ export default Model.extend({
       const result = yield call(payload.InspectorType==1? services.ExportOperationManageSummaryListNew :  payload.InspectorType==2? services.ExportOperationManageSummaryType : services.ExportOperationManageSummaryList , {...payload,InspectorType: payload.InspectorType==1 || payload.InspectorType==2 ? undefined : payload.InspectorType});
       if (result.IsSuccess) {
         message.success(result.Message)
-        downloadFile(payload.InspectorType? `${result.Datas}` : `/upload${result.Datas}`)
+        downloadFile(payload.InspectorType == 1 || payload.InspectorType == 2? `${result.Datas}` : `/upload${result.Datas}`)
       } else {
         message.error(result.Message)
       }

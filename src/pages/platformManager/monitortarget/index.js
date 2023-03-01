@@ -303,7 +303,7 @@ export default class MonitorTarget extends Component {
                                 }}><QrcodeOutlined style={{fontSize:16}}/></a>
                             </Tooltip>
                             <Divider type="vertical" />
-                           <Tooltip title="运维信息">
+                           <Tooltip title="运维任务">
                              <a onClick={() => {
                                  router.push({
                                    pathname:"/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/operationInfo",

@@ -81,15 +81,13 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-
   const { tableDatas,tableLoading, id, pollutantType, type, checkSaveLoading,infoData,} = props;
 
   const [form] = Form.useForm();
 
-
   useEffect(() => {
     props.getKeyParameterCheckDetailList({ id: id })
-    props.updateState({editCheckTime:infoData&&infoData.checkTime? moment(infoData.checkTime).format('YYYY-MM-DD HH:mm:ss') : moment() })  
+    props.updateState({editCheckTime:infoData&&infoData.checkTime? moment(infoData.checkTime) : moment() })  
   }, []);
 
   const TitleComponents = (props) => {
@@ -355,6 +353,7 @@ const Index = (props) => {
   useEffect(() => {
     form.validateFields(['checkRemark']);
   }, [checkResultVal]);
+ 
   return (
     <div className={'checkDetail'} >
       {/* <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>{type==1? '核查':'详情'}</div> */}
@@ -391,7 +390,7 @@ const Index = (props) => {
                   {type == 1 ? <DatePicker 
                   showTime
                   allowClear={false}
-                  defaultValue={infoData&&infoData.checkTime?  moment(infoData.checkTime) : props.editCheckTime}
+                  defaultValue={infoData&&infoData.checkTime? moment(infoData.checkTime) : moment()}
                   onChange={(date, dateString) => {
                      props.updateState({editCheckTime:date })  
                   }} />

@@ -426,9 +426,9 @@ const Index = (props) => {
             <RangePicker_
               style={{ width: 300 }}
               allowClear={false}
-              showTime={{
-                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-              }} 
+              // showTime={{
+              //   defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+              // }} 
               format="YYYY-MM-DD" />
           </Form.Item>
         </Row>

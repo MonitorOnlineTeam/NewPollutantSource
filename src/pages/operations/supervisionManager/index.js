@@ -4,7 +4,7 @@
  * 创建时间：2022.04.20
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Checkbox, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled, ToTopOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -508,13 +508,14 @@ const Index = (props) => {
         }
 
         const echoPrincipleProblemList = data.PrincipleProblemList && data.PrincipleProblemList; //原则问题
-        const uploadList1 = {}, uploadCuid1 = {};
+        const uploadList1 = {}, uploadCuid1 = {},principleDisabledData={};
         echoPrincipleProblemList.map(item => {
           tableForm.setFieldsValue({
             [`Inspector${item.Sort}`]: item.Inspector,
-            [`Remark${item.Sort}`]: item.Remark,
+            [`Remark${item.Sort}`]:item.Inspector? item.Remark : null,
             [`Files1${item.Sort}`]: item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid,
           })
+          principleDisabledData[`${item.Sort}`] = !item.Inspector;
           const problemFilesList1 = [];
           item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList.map(items => {
             if (!items.IsDelete) {
@@ -529,7 +530,7 @@ const Index = (props) => {
           uploadList1[`Files1${item.Sort}`] = problemFilesList1;
           uploadCuid1[`Files1${item.Sort}`] = item.AttachmentsList && item.AttachmentsList[0] && item.AttachmentsList[0].FileUuid ? item.AttachmentsList[0].FileUuid : cuid();
         })
-
+        setPrincipleDisabled(principleDisabledData)
         setFilesList1({ ...uploadList1 })
         setFilesCuidList1({ ...uploadCuid1 })
 
@@ -707,7 +708,7 @@ const Index = (props) => {
         InspectorContentID: item.InspectorContentID,
         InspectorNum: item.InspectorNum,
         ParentID: item.ParentID,
-        Inspector: tableForm.getFieldValue([`Inspector${item.Sort}`]),
+        Inspector: type==2 || type==3 ? tableForm.getFieldValue([`Inspector${item.Sort}`])? item.Score : null :  tableForm.getFieldValue([`Inspector${item.Sort}`]),
         Remark: tableForm.getFieldValue([`Remark${item.Sort}`]),
         Attachment: type == 1 ? tableForm.getFieldValue([`Files1${item.Sort}`]) : type == 2 ? tableForm.getFieldValue([`Files2${item.Sort}`]) : tableForm.getFieldValue([`Files3${item.Sort}`]),
       }
@@ -720,11 +721,10 @@ const Index = (props) => {
 
   const save = async (type) => {
 
-
+   
     const values = await form2.validateFields();
     try {
       type == 0 ? setSaveLoading0(true) : type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
-
       let principleProblemList = operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList || [];
       let importanProblemList = operationInfoList.importanProblemList && operationInfoList.importanProblemList || [];
       let commonlyProblemList = operationInfoList.CommonlyProblemList && operationInfoList.CommonlyProblemList || [];
@@ -738,7 +738,7 @@ const Index = (props) => {
       if (commonlyProblemList) {
         commonlyProblemList = formatData(commonlyProblemList, 3)
       }
-
+      console.log(tableForm.getFieldsValue())
       let devicePar = {} //设备信息参数
 
       const gas = deviceInfoList.filter(item => item.SystemName === "气态污染物CEMS")
@@ -752,7 +752,6 @@ const Index = (props) => {
         devicePar.PMManufacturer = pm.map(item => item.Manufacturer).join(',')
         devicePar.PMEquipment = pm.map(item => item.Equipment).join(',')
       }
-
       const data = {
         ...values,
         RegionCode: values.RegionCode.join(","),
@@ -765,7 +764,6 @@ const Index = (props) => {
         InspectorOperationInfoList: [...principleProblemList, ...importanProblemList, ...commonlyProblemList],
         ...devicePar,
       }
-
       if (type == 0 || type == 1) {
         props.addOrEditInspectorOperation(data, (isSuccess) => {
           type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : null;
@@ -1153,9 +1151,6 @@ const Index = (props) => {
     } else {
       setPrincipleDisabled({ ...principleDisabled, [sort]: false })
     }
-    setTimeout(() => {
-      console.log(principleDisabled)
-    }, 1000)
   }
   const supervisionCol1 = [{
     title: <span style={{ fontWeight: 'bold', fontSize: 14 }}>
@@ -1252,8 +1247,9 @@ const Index = (props) => {
         align: 'center',
         width: 200,
         render: (text, record) => {
-          return <Form.Item name={`Inspector${record.Sort}`}>
-            <InputNumber placeholder='请输入' max={-0.1} />
+          return <Form.Item name={`Inspector${record.Sort}`} valuePropName="checked">
+            {/* <InputNumber placeholder='请输入' max={-0.1} /> */}
+            <Checkbox />
           </Form.Item>
         },
       },
@@ -1315,8 +1311,9 @@ const Index = (props) => {
         align: 'center',
         width: 200,
         render: (text, record) => {
-          return <Form.Item name={`Inspector${record.Sort}`}>
-            <InputNumber placeholder='请输入' max={-0.1} />
+          return <Form.Item name={`Inspector${record.Sort}`} valuePropName="checked">
+            {/* <InputNumber placeholder='请输入' max={-0.1} /> */}
+            <Checkbox />
           </Form.Item>
         },
       },

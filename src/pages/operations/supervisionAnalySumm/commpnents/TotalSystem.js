@@ -127,7 +127,7 @@ const Index = (props) => {
 
                 {
                     title: '督查人员',
-                    dataIndex: 'operationName',
+                    dataIndex: 'createUserName',
                     key: 'createUserName',
                     align: 'center',
                     width: 100,
@@ -157,7 +157,7 @@ const Index = (props) => {
                     dataIndex: 'PrincipleProblemNum',
                     key: 'PrincipleProblemNum',
                     align: 'center',
-                    width: 150,
+                    width: 120,
                     ellipsis: true,
                     render:(text, record, index)=>rowSpanFun(text, record)
                 },
@@ -296,7 +296,7 @@ const Index = (props) => {
                 },
                 {
                     title: '督查人员',
-                    dataIndex: 'operationName',
+                    dataIndex: 'createUserName',
                     key: 'createUserName',
                     align: 'center',
                     width: 100,
@@ -407,8 +407,8 @@ const Index = (props) => {
                 },
                 {
                     title: '督查人员',
-                    dataIndex: 'operationName',
-                    key: 'operationName',
+                    dataIndex: 'createUserName',
+                    key: 'createUserName',
                     align: 'center',
                     width: 100,
                 },
@@ -576,7 +576,8 @@ const Index = (props) => {
                         <Form.Item label='统计维度' name='InspectorType'>
                             <Select placeholder='请选择' style={{ width: 160 }} showSearch optionFilterProp="children" onChange={statisTypeChange}>
                                 <Option key={1} value={1} >按点位统计1</Option>
-                                <Option key={2} value={2} >按点位统计2</Option>    
+                                <Option key={2} value={2} >按点位统计2</Option>
+                                {/* <Option key={2} value={2} >按点位统计</Option> */}
                                 <Option key={491} value={491} >按原则性问题统计</Option>
                                 <Option key={492} value={492} >按一般问题统计</Option>
                                 <Option key={493} value={493} >按重点问题统计</Option>
