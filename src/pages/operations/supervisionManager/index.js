@@ -181,7 +181,7 @@ const Index = (props) => {
 
   const userCookie = Cookie.get('currentUser');
 
-
+  const [tableValuesChange,setTableValuesChange] = useState(false)
 
   useEffect(() => {
     isDetailModal ? onFinish() : initData()
@@ -708,24 +708,23 @@ const Index = (props) => {
         InspectorContentID: item.InspectorContentID,
         InspectorNum: item.InspectorNum,
         ParentID: item.ParentID,
-        Inspector: type == 2 || type == 3 ? tableForm.getFieldValue([`Inspector${item.Sort}`]) ? item.Score : null : tableForm.getFieldValue([`Inspector${item.Sort}`]),
+        Inspector: type == 2 || type == 3 ? tableForm.getFieldValue([`Inspector${item.Sort}`]) ? -item.Score : null : tableForm.getFieldValue([`Inspector${item.Sort}`]),
         Remark: tableForm.getFieldValue([`Remark${item.Sort}`]),
         Attachment: type == 1 ? tableForm.getFieldValue([`Files1${item.Sort}`]) : type == 2 ? tableForm.getFieldValue([`Files2${item.Sort}`]) : tableForm.getFieldValue([`Files3${item.Sort}`]),
       }
     })
   }
-
+  // useEffect(() => {
+  //   tableForm.validateFields();
+  // }, [tableValuesChange]);
   const [saveLoading0, setSaveLoading0] = useState(false)
   const [saveLoading1, setSaveLoading1] = useState(false)
   const [saveLoading2, setSaveLoading2] = useState(false)
 
-  const save = async (type) => {
+  const save = (type) => {
+    form2.validateFields().then(values => {
 
-
-    const values = await form2.validateFields();
-    try {
-      const tableValues = await tableForm.validateFields();
-      try {
+      const saveFun = () =>{
         type == 0 ? setSaveLoading0(true) : type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
         let principleProblemList = operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList || [];
         let importanProblemList = operationInfoList.importanProblemList && operationInfoList.importanProblemList || [];
@@ -766,31 +765,40 @@ const Index = (props) => {
           ...devicePar,
         }
         type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : null;
-        // if (type == 0 || type == 1) {
-        //   props.addOrEditInspectorOperation(data, (isSuccess) => {
-        //     type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : null;
-        //     isSuccess && setFromVisible(false)
-        //     isSuccess && onFinish()
+        if (type == 0 || type == 1) {
+          props.addOrEditInspectorOperation(data, (isSuccess) => {
+            type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : null;
+            isSuccess && setFromVisible(false)
+            isSuccess && onFinish()
 
-        //   })
-        // } else { //推送
-        //   props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess) => {
-        //     setSaveLoading2(false)
-        //     isSuccess && setFromVisible(false)
-        //     isSuccess && onFinish()
-        //   })
-        // }
-      } catch (errorInfo) {
-        console.log('Failed:', errorInfo); //表格表单
+          })
+        } else { //推送
+          props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess) => {
+            setSaveLoading2(false)
+            isSuccess && setFromVisible(false)
+            isSuccess && onFinish()
+          })
+        }
       }
-    } catch (errorInfo) {
+      type==0? 
+      saveFun()//保存时不需要验证
+       :
+      tableForm.validateFields().then(()=>{ 
+        saveFun()
+      }).catch (errorInfo =>{
+        console.log('Failed:', errorInfo); //表格表单
+        type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
+      }) 
+
+    }).catch(errorInfo => {
       console.log('Failed:', errorInfo);
       type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
+    })
 
-
-    }
 
   }
+
+
 
 
   const [pointList, setPointList] = useState([])
@@ -1156,9 +1164,7 @@ const Index = (props) => {
       setPrincipleDisabled({ ...principleDisabled, [sort]: false })
     }
   }
-  useEffect(() => {
-    tableForm.validateFields();
-  }, [tableForm]);
+
   const supervisionCol1 = [{
     title: <span style={{ fontWeight: 'bold', fontSize: 14 }}>
       {operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList[0] && operationInfoList.PrincipleProblemList[0].Title}
@@ -1188,7 +1194,7 @@ const Index = (props) => {
         dataIndex: 'Inspector',
         key: 'Inspector',
         align: 'center',
-        width: 120,
+        width: 220,
         render: (text, record) => {
           return <Form.Item name={`Inspector${record.Sort}`}>
             <Select placeholder='请选择' onChange={(val, ) => principleChange(val, record.Sort)}> <Option value={'0'}>有</Option>   <Option value={null}>无</Option>     </Select>
@@ -1201,7 +1207,7 @@ const Index = (props) => {
         key: 'Remark',
         align: 'center',
         render: (text, record) => {
-          return <Form.Item name={`Remark${record.Sort}`}>
+          return <Form.Item className='remarkSty' name={`Remark${record.Sort}`} rules={[{ required: !principleDisabled[`${record.Sort}`], message: '请输入问题描述' }]}>
             <TextArea rows={1} placeholder='请输入' disabled={principleDisabled[`${record.Sort}`]} />
           </Form.Item>
         },
@@ -1211,7 +1217,7 @@ const Index = (props) => {
         dataIndex: 'Attachments',
         key: 'Attachments',
         align: 'center',
-        width:120,
+        width: 120,
         render: (text, record) => {
           return <Form.Item name={`Files1${record.Sort}`}>
             <a onClick={() => { setFileType(1); setFileVisible(true); setFiles1(`Files1${record.Sort}`); }}>{filesList1[`Files1${record.Sort}`] && filesList1[`Files1${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
@@ -1249,6 +1255,13 @@ const Index = (props) => {
         },
       },
       {
+        title: `扣分分值`,
+        dataIndex: 'Inspector',
+        key: 'Inspector',
+        align: 'center',
+        width: 100,
+      },
+      {
         title: `扣分`,
         dataIndex: 'Inspector',
         key: 'Inspector',
@@ -1261,11 +1274,13 @@ const Index = (props) => {
                 const remarkVal = getFieldValue(`Remark${record.Sort}`);
                 if (remarkVal && !value) {
                   return Promise.reject(new Error('请选择扣分'));
+                }else{
+                  return Promise.resolve()
                 }
               },
             })]}>
             {/* <InputNumber placeholder='请输入' max={-0.1} /> */}
-            <Checkbox />
+            <Checkbox>{record.Score? `${-record.Score}分` : null }</Checkbox>
           </Form.Item>
         },
       },
@@ -1281,6 +1296,8 @@ const Index = (props) => {
                 const inspectorVal = getFieldValue(`Inspector${record.Sort}`);
                 if (inspectorVal && !value) {
                   return Promise.reject(new Error('请输入说明'));
+                }else{
+                  return Promise.resolve()
                 }
               },
             })]}>
@@ -1293,7 +1310,7 @@ const Index = (props) => {
         dataIndex: 'Attachments',
         key: 'Attachments',
         align: 'center',
-        width:120,
+        width: 120,
         render: (text, record) => {
           return <Form.Item name={`Files2${record.Sort}`} >
             <a onClick={() => { setFileType(2); setFileVisible(true); setFiles2(`Files2${record.Sort}`); }}>{filesList2[`Files2${record.Sort}`] && filesList2[`Files2${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
@@ -1324,10 +1341,17 @@ const Index = (props) => {
         dataIndex: 'ContentItem',
         key: 'ContentItem',
         align: 'center',
-        width: 380,
+        width: 400,
         render: (text, record) => {
           return <div style={{ textAlign: "left" }}>{text}</div>
         },
+      },
+      {
+        title: `扣分分值`,
+        dataIndex: 'Inspector',
+        key: 'Inspector',
+        align: 'center',
+        width: 100,
       },
       {
         title: `扣分`,
@@ -1340,12 +1364,19 @@ const Index = (props) => {
             rules={[({ getFieldValue }) => ({//选择再取消时为false  required: true会通过  所以自定义检验
               validator(_, value) {
                 const remarkVal = getFieldValue(`Remark${record.Sort}`);
-                  if (remarkVal && !value) {
-                     return Promise.reject(new Error('请选择扣分'));
-                  }
-            },
-          })]}>
-            <Checkbox />
+                if (remarkVal && !value) {
+                  return Promise.reject(new Error('请选择扣分'));
+                }else{
+                  return Promise.resolve()
+                }
+              },
+            })]}>
+            <Checkbox onChange={(e)=>{
+                // setTableValuesChange(!tableValuesChange)
+                // tableForm.setFieldsValue({[`Score${record.Sort}`] :e.target.checked? record.Score : null })  
+            }}>
+              {record.Score? `${-record.Score}分` : null }
+          </Checkbox>
           </Form.Item>
         },
       },
@@ -1356,12 +1387,14 @@ const Index = (props) => {
         align: 'center',
         render: (text, record) => {
           return <Form.Item className='remarkSty' name={`Remark${record.Sort}`}
-                   rules={[({ getFieldValue }) => ({
-                     validator(_, value) {
-                      const inspectorVal = getFieldValue(`Inspector${record.Sort}`);
-                       if (inspectorVal && !value) {
-                          return Promise.reject(new Error('请输入说明'));
-                         }
+            rules={[({ getFieldValue }) => ({
+              validator(_, value) {
+                const inspectorVal = getFieldValue(`Inspector${record.Sort}`);
+                if (inspectorVal && !value) {
+                  return Promise.reject(new Error('请输入说明'));
+                }else{
+                  return Promise.resolve()
+                }
               },
             })]}>
             <TextArea rows={1} placeholder='请输入' />
@@ -1599,7 +1632,7 @@ const Index = (props) => {
   if (isDetailModal) {
     columns = columns.filter(item => item.title != '操作')
   }
-
+ 
   return (
     <div className={styles.supervisionManagerSty}>
       <BreadcrumbWrapper hideBreadcrumb={isDetailModal} >
@@ -1845,7 +1878,10 @@ const Index = (props) => {
 
           <div className={'supervisionContentSty'}>
             <Spin spinning={type == 'add' && infoloading}>
-              <Form name="tableForm" form={tableForm}>
+              <Form name="tableForms"
+                    form={tableForm}
+               >
+
                 <TitleComponents text='督查内容' />
                 {!(operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList[0]) && !(operationInfoList.importanProblemList && operationInfoList.importanProblemList[0]) && !(operationInfoList.CommonlyProblemList && operationInfoList.CommonlyProblemList[0]) ?
                   <Table
@@ -1864,6 +1900,7 @@ const Index = (props) => {
                       columns={supervisionCol1}
                       rowClassName="editable-row"
                       pagination={false}
+                      className="principleTableSty"
                     />}
                     {operationInfoList.importanProblemList && operationInfoList.importanProblemList[0] && <Table
                       bordered
