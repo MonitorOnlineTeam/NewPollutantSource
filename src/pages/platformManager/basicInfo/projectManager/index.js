@@ -15,6 +15,7 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
+import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import OperationCompanyList from '@/components/OperationCompanyList'
@@ -25,7 +26,7 @@ const namespace = 'projectManager'
 
 
 
-const dvaPropsData = ({ loading, projectManager }) => ({
+const dvaPropsData = ({ loading, projectManager,global, }) => ({
   tableDatas: projectManager.tableDatas,
   pointDatas: projectManager.pointDatas,
   pointDatasTotal: projectManager.pointDatasTotal,
@@ -35,7 +36,7 @@ const dvaPropsData = ({ loading, projectManager }) => ({
   pointLoading: loading.effects[`${namespace}/getProjectPointList`],
   exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
   exportPointLoading: loading.effects[`${namespace}/exportProjectPointList`],
-
+  configInfo: global.configInfo,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -116,13 +117,16 @@ const Index = (props) => {
 
   const isEditing = (record) => record.key === editingKey;
 
-  const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading } = props;
+  const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading,configInfo, } = props;
+  
+  const provinceShow = configInfo&&configInfo.IsShowProjectRegion;
+  
   useEffect(() => {
     onFinish(pageIndex, pageSize);
 
   }, []);
 
-  const columns = [
+  let columns = [
     {
       title: '合同名称',
       dataIndex: 'ProjectName',
@@ -134,6 +138,13 @@ const Index = (props) => {
       title: '项目编号',
       dataIndex: 'ProjectCode',
       key: 'ProjectCode',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '行政区',
+      dataIndex: 'ProvinceName',
+      key: 'ProvinceName',
       align: 'center',
       ellipsis: true,
     },
@@ -278,7 +289,7 @@ const Index = (props) => {
       ellipsis: true,
     },
   ]
-
+  
   const edit = async (record) => {
     setFromVisible(true)
     setType('edit')
@@ -286,6 +297,7 @@ const Index = (props) => {
     try {
       form2.setFieldsValue({
         ...record,
+        Province:record.isShow? record.Province&&record.Province.split(',') : undefined,
         BeginTime: moment(record.BeginTime),
         EndTime: moment(record.EndTime),
         SignName: record.SingName,
@@ -378,12 +390,13 @@ const Index = (props) => {
 
     try {
       const values = await form2.validateFields();//触发校验
-      if(!values.deleteFlag && type === 'edit' ){
+      if (!values.deleteFlag && type === 'edit') {
         message.warning('没有操作权限，请联系管理员')
         return;
       }
       props.addOrUpdateProjectInfo({
         ...values,
+        Province:values.Province && values.Province.toString(),
         BeginTime: values.BeginTime && moment(values.BeginTime).format('YYYY-MM-DD 00:00:00'),
         EndTime: values.EndTime && moment(values.EndTime).format('YYYY-MM-DD 23:59:59'),
         CreateUserID: type === 'add' ? JSON.parse(Cookie.get('currentUser')).UserId : values.CreateUserID,
@@ -565,7 +578,7 @@ const Index = (props) => {
             bordered
             scroll={{ y: expand ? 'calc(100vh - 470px)' : 'calc(100vh - 370px)' }}
             dataSource={tableDatas}
-            columns={columns}
+            columns={provinceShow ? columns : columns.filter(item=>item.title!='行政区')}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
@@ -607,8 +620,11 @@ const Index = (props) => {
                 <Input placeholder='请输入项目编号' allowClear />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            {provinceShow&&<Col span={12}>
+              <Form.Item label="行政区" name="Province" rules={[{ required: true, message: '请输入行政区!', },]} >
+               <SdlCascader noFilter selectType='3,是' />
+              </Form.Item>
+            </Col>}
             <Col span={12}>
               <Form.Item label="客户所在地" name="RegionCode" rules={[{ required: true, message: '请输入客户所在地!', },]} >
                 {/* <RegionList style={{ width: '100%' }} /> */}
@@ -620,9 +636,7 @@ const Index = (props) => {
                 <Input placeholder='请输入卖方公司' />
               </Form.Item>
             </Col>
-          </Row>
 
-          <Row>
             <Col span={12}>
               <Form.Item label="行业" name="IndustryCode" >
                 <Input placeholder='请输入行业' />
@@ -633,9 +647,6 @@ const Index = (props) => {
                 <Input placeholder='请输入签订人' />
               </Form.Item>
             </Col>
-          </Row>
-
-          <Row>
             <Col span={12}>
               <Form.Item label="运维合同起始日期" name="BeginTime" rules={[{ required: true, message: '请输入运维合同起始日期!', },]} >
                 <DatePicker disabledDate={startDisabledDate} />
@@ -646,10 +657,6 @@ const Index = (props) => {
                 <DatePicker disabledDate={endDisabledDate} />
               </Form.Item>
             </Col>
-          </Row>
-
-
-          <Row>
             <Col span={12}>
               <Form.Item label="运维套数" name="OperationCount" rules={[{ required: true, message: '请输入运维套数!', },]} >
                 <InputNumber placeholder='请输入运维套数' />
@@ -660,9 +667,6 @@ const Index = (props) => {
                 <InputNumber placeholder='请输入运维月数' />
               </Form.Item>
             </Col>
-          </Row>
-
-          <Row align='middle'>
             {/* <Col span={12}>
 
       <Form.Item label="合同总金额(万)" name="Money"  >

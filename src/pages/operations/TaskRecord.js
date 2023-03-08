@@ -42,7 +42,7 @@ import SdlTable from '@/components/SdlTable'
 import TaskRecordDetails from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout'
 import EntAtmoList from '@/components/EntAtmoList'
 import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal'
-
+import styles from './index.less'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -700,7 +700,7 @@ class TaskRecord extends Component {
     const { pointList, pointLoading, } = this.state;
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
-        <Card className="contentContainer">
+        <Card className={`contentContainer ${styles.taskRecordSty}`}>
           <Form layout="" className='searchForm' style={{ marginBottom: '10' }}>
             <Row>
               {!isHomeModal && <>
@@ -951,7 +951,7 @@ class TaskRecord extends Component {
             columns={columns}
             // scroll={{ y: isHomeModal? this.props.clientHeight - 480 :null }}
             scroll={{ y: this.state.expand ? "calc(100vh - 630px)" : this.props.tableHeight || undefined }}
-
+            tableLayout='auto'
           />
         </Card>
         <Modal

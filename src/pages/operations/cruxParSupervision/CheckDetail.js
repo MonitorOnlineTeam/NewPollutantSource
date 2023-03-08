@@ -149,7 +149,7 @@ const Index = (props) => {
       align: 'center',
       width: 200,
       render: (text, record) => {
-        return  <span style={{ color: text === '未通过' ? '#f5222d' : text === '已核查' ? '#52c41a' : ''}}>{text}</span> 
+        return  <span style={{ color: text === '未通过' ? '#f5222d' : text === '已通过' ? '#52c41a' : ''}}>{text}</span> 
       }
     },
     {
@@ -388,14 +388,13 @@ const Index = (props) => {
               <Col span={12}>
                 <Form.Item label="核查日期" >
                   {type == 1 ? <DatePicker 
-                  showTime
                   allowClear={false}
                   defaultValue={infoData&&infoData.checkTime? moment(infoData.checkTime) : moment()}
                   onChange={(date, dateString) => {
                      props.updateState({editCheckTime:date })  
                   }} />
                     :
-                    <div>{infoData&&infoData.checkTime&& moment(infoData.checkTime).format('YYYY-MM-DD HH:mm:ss')}</div>
+                    <div>{infoData&&infoData.checkTime&& moment(infoData.checkTime).format('YYYY-MM-DD')}</div>
                   }
                 </Form.Item>
               </Col >

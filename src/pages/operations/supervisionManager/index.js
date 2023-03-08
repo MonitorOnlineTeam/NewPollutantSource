@@ -1194,7 +1194,7 @@ const Index = (props) => {
         dataIndex: 'Inspector',
         key: 'Inspector',
         align: 'center',
-        width: 220,
+        width: 240,
         render: (text, record) => {
           return <Form.Item name={`Inspector${record.Sort}`}>
             <Select placeholder='请选择' onChange={(val, ) => principleChange(val, record.Sort)}> <Option value={'0'}>有</Option>   <Option value={null}>无</Option>     </Select>
@@ -1255,25 +1255,18 @@ const Index = (props) => {
         },
       },
       {
-        title: `扣分分值`,
-        dataIndex: 'Inspector',
-        key: 'Inspector',
-        align: 'center',
-        width: 100,
-      },
-      {
         title: `扣分`,
         dataIndex: 'Inspector',
         key: 'Inspector',
         align: 'center',
-        width: 120,
+        width: 140,
         render: (text, record) => {
           return <Form.Item className='deductPointSty' name={`Inspector${record.Sort}`} valuePropName="checked"
             rules={[({ getFieldValue }) => ({//选择再取消时为false  required: true会通过  所以自定义检验
               validator(_, value) {
                 const remarkVal = getFieldValue(`Remark${record.Sort}`);
                 if (remarkVal && !value) {
-                  return Promise.reject(new Error('请选择扣分'));
+                  return Promise.reject(new Error('请选择'));
                 }else{
                   return Promise.resolve()
                 }
@@ -1283,6 +1276,13 @@ const Index = (props) => {
             <Checkbox>{record.Score? `${-record.Score}分` : null }</Checkbox>
           </Form.Item>
         },
+      },
+      {
+        title: `扣分分值`,
+        dataIndex: 'Inspector',
+        key: 'Inspector',
+        align: 'center',
+        width: 100,
       },
       {
         title: '说明',
@@ -1347,25 +1347,18 @@ const Index = (props) => {
         },
       },
       {
-        title: `扣分分值`,
-        dataIndex: 'Inspector',
-        key: 'Inspector',
-        align: 'center',
-        width: 100,
-      },
-      {
         title: `扣分`,
         dataIndex: 'Inspector',
         key: 'Inspector',
         align: 'center',
-        width: 120,
+        width: 140,
         render: (text, record) => {
           return <Form.Item className='deductPointSty' name={`Inspector${record.Sort}`} valuePropName="checked"
             rules={[({ getFieldValue }) => ({//选择再取消时为false  required: true会通过  所以自定义检验
               validator(_, value) {
                 const remarkVal = getFieldValue(`Remark${record.Sort}`);
                 if (remarkVal && !value) {
-                  return Promise.reject(new Error('请选择扣分'));
+                  return Promise.reject(new Error('请选择'));
                 }else{
                   return Promise.resolve()
                 }
@@ -1379,6 +1372,13 @@ const Index = (props) => {
           </Checkbox>
           </Form.Item>
         },
+      },
+      {
+        title: `扣分分值`,
+        dataIndex: 'Inspector',
+        key: 'Inspector',
+        align: 'center',
+        width: 100,
       },
       {
         title: '说明',

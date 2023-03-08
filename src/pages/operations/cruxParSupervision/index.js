@@ -194,6 +194,9 @@ const Index = (props) => {
       key: 'checkTime',
       align: 'center',
       ellipsis: true,
+      render: (text, record, index) => {
+        return text ? moment(text).format('YYYY-MM-DD') : undefined
+      }
     },
     {
       title: '核查状态',
