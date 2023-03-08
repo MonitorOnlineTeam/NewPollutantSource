@@ -221,6 +221,7 @@ class ZeroCheckPage extends PureComponent {
       type: "qcaCheck/getPollutantListByDgimn",
       payload: {
         DGIMN: this.props.DGIMN,
+        State: 1
       }
     })
   }

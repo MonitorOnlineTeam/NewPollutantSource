@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
-import { Badge, Popover, message } from 'antd';
+import { Badge, Popover, message, Tag } from 'antd';
 import moment from 'moment';
 
 
@@ -411,4 +411,27 @@ export function getSysName(systemName) {
     return sysName[port] ? sysName[port] : sysName[-1];
   }
   return sysName[-1];
+}
+
+
+// 获取数据不可信信息
+export const getDataTruseMsg = (record) => {
+  if (record.DataTrusted === false && record.DeviceTrusted === false) {
+    // 两种数据不可信
+    return <Popover content={<span style={{ color: '#ff4d4f' }}>数据、身份不可信</span>}>
+      <Tag color="error">不可信</Tag>
+    </Popover>
+  } else if (record.DataTrusted === false) {
+    // 数据不可信
+    return <Popover content={<span style={{ color: '#ff4d4f' }}>数据不可信</span>}>
+      <Tag color="error">不可信</Tag>
+    </Popover>
+  } else if (record.DeviceTrusted === false) {
+    // 身份不可信
+    return <Popover content={<span style={{ color: '#ff4d4f' }}>身份不可信</span>}>
+      <Tag color="error">不可信</Tag>
+    </Popover>
+  } else {
+    return '';
+  }
 }

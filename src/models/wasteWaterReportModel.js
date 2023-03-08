@@ -8,6 +8,7 @@ import { GetEntByRegionAndAtt, GetPointByEntCode, GetAllTypeDataListWater, Expor
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
+import _ from 'lodash'
 
 export default Model.extend({
   namespace: 'wasteWaterReportModel',
@@ -97,7 +98,8 @@ export default Model.extend({
     *getReportColumns({ payload, callback }, { call, put, update, select }) {
       const result = yield call(getReportColumns, payload)
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        let data = _.sortBy(result.Datas, function (o) { return o.SortCode; });
+        callback && callback(data)
       } else {
         message.error(result.Message)
       }

@@ -2297,7 +2297,7 @@ const routes = [
               },
             ],
           },
-          // 质控 - 数据查询
+          // 数据查询
           {
             path: '/dataSearch',
             name: 'dataSearch',
@@ -2305,6 +2305,12 @@ const routes = [
               {
                 path: '/dataSearch',
                 redirect: "/dataSearch/monitor"
+              },
+              {
+                // 不可信数据查询
+                name: 'dataTrust',
+                path: '/dataSearch/dataTrust',
+                component: './dataSearch/DataTrust',
               },
               {
                 // 质控查询

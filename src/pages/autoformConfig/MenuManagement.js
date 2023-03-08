@@ -154,6 +154,9 @@ class MenuManagement extends Component {
                 Menu_Id: this.state.selectedRowKeys[0]
             }
         }).then(() => {
+            this.setState({
+                selectedRowKeys: []
+            })
             this.reloadData();
         }).catch(() => {
             this.reloadData();

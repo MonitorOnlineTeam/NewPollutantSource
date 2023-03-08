@@ -292,7 +292,8 @@ class resTimeCheckPage extends PureComponent {
     this.props.dispatch({
       type: "qcaCheck/getPollutantListByDgimn",
       payload: {
-        DGIMN: this.props.DGIMN
+        DGIMN: this.props.DGIMN,
+        State: 1
       }
     })
   }

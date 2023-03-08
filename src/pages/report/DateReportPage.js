@@ -17,7 +17,8 @@ import { getDirLevel } from '@/utils/utils';
 import CascaderMultiple from '@/components/CascaderMultiple';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { timeDifference } from '@/utils/utils';
+import { timeDifference, getDataTruseMsg } from '@/utils/utils';
+
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
@@ -187,6 +188,13 @@ class DateReportPage extends PureComponent {
         ...item,
         align: 'center',
         render: (text, row, index) => {
+          // 数据不可信处理
+          if (item.dataIndex === 'time') {
+            return <span>
+              {getDataTruseMsg(row)}
+              {text}
+            </span>
+          }
           if (text) {
             const _text = text.split('|');
             let val = _text[0];

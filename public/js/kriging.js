@@ -299,6 +299,7 @@ function kriging(id, pixelsize) {
         this.canvas.model.response = response;
         this.canvas.model.response_min = response.min();
         this.canvas.model.response_max = response.max();
+        
         this.canvas.model.response_range = response.max() - response.min();
         this.canvas.polygons = polygons;
 
@@ -409,7 +410,7 @@ function kriging(id, pixelsize) {
     /**
      * Set up the map properties, event handlers and initialize the map.
      */
-    this.map = function (w, h, center, zoom) {
+    this.map = function (w,h,center, zoom) {
 
         /* Set up the canvas frame */
         this.canvas.width = w //window.innerWidth - this.canvas.offsetLeft - 20;
@@ -443,7 +444,7 @@ function kriging(id, pixelsize) {
         /**
          * Calculate the ratio and pixel size for conversion 
          * between units.
-         * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½Ä±ï¿½ï¿½Êºï¿½ï¿½ï¿½ï¿½Ø´ï¿½Ð¡ï¿½ï¿½Î»Ö®ï¿½ä¡£
+         * ¼ÆËãÓÃÓÚ×ª»»µÄ±ÈÂÊºÍÏñËØ´óÐ¡µ¥Î»Ö®¼ä¡£
          */
         this.canvas.xratio = (this.canvas.xlim[1] - this.canvas.xlim[0]) / this.canvas.width;
         this.canvas.yratio = this.canvas.xratio * yxratio;
@@ -494,9 +495,9 @@ function kriging(id, pixelsize) {
     this.canvas.colorspectrum.cmcolors = ["#80FFFF", "#85FFFF", "#8AFFFF", "#8FFFFF", "#94FFFF", "#99FFFF", "#9EFFFF", "#A3FFFF", "#A8FFFF", "#ADFFFF", "#B3FFFF", "#B8FFFF", "#BDFFFF", "#C2FFFF", "#C7FFFF", "#CCFFFF", "#D1FFFF", "#D6FFFF", "#DBFFFF", "#E0FFFF", "#E6FFFF", "#EBFFFF", "#F0FFFF", "#F5FFFF", "#FAFFFF", "#FFFAFF", "#FFF5FF", "#FFF0FF", "#FFEBFF", "#FFE6FF", "#FFE0FF", "#FFDBFF", "#FFD6FF", "#FFD1FF", "#FFCCFF", "#FFC7FF", "#FFC2FF", "#FFBDFF", "#FFB8FF", "#FFB3FF", "#FFADFF", "#FFA8FF", "#FFA3FF", "#FF9EFF", "#FF99FF", "#FF94FF", "#FF8FFF", "#FF8AFF", "#FF85FF", "#FF80FF"];
 
 
-    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½
+    //¼ÆËãÑÕÉ«´ø
     function gradientColor(startColor, endColor, step) {
-        startRGB = this.colorRgb(startColor);//×ªï¿½ï¿½Îªrgbï¿½ï¿½ï¿½ï¿½Ä£Ê½
+        startRGB = this.colorRgb(startColor);//×ª»»ÎªrgbÊý×éÄ£Ê½
         startR = startRGB[0];
         startG = startRGB[1];
         startB = startRGB[2];
@@ -506,21 +507,21 @@ function kriging(id, pixelsize) {
         endG = endRGB[1];
         endB = endRGB[2];
 
-        sR = (endR - startR) / step;//ï¿½Ü²ï¿½Öµ
+        sR = (endR - startR) / step;//×Ü²îÖµ
         sG = (endG - startG) / step;
         sB = (endB - startB) / step;
 
         var colorArr = [];
         for (var i = 0; i < step; i++) {
-            //ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½hexÖµ 
+            //¼ÆËãÃ¿Ò»²½µÄhexÖµ 
             var hex = this.colorHex('rgb(' + parseInt((sR * i + startR)) + ',' + parseInt((sG * i + startG)) + ',' + parseInt((sB * i + startB)) + ')');
             colorArr.push(hex);
         }
-        console.log("ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½" + colorArr.toString())
+        //console.log("ÑÕÉ«´ø£º"+colorArr.toString())
         return colorArr;
     }
 
-    // ï¿½ï¿½hexï¿½ï¿½Ê¾ï¿½ï¿½Ê½×ªï¿½ï¿½Îªrgbï¿½ï¿½Ê¾ï¿½ï¿½Ê½(ï¿½ï¿½ï¿½ï·µï¿½ï¿½rgbï¿½ï¿½ï¿½ï¿½Ä£Ê½)
+    // ½«hex±íÊ¾·½Ê½×ª»»Îªrgb±íÊ¾·½Ê½(ÕâÀï·µ»ØrgbÊý×éÄ£Ê½)
     gradientColor.prototype.colorRgb = function (sColor) {
         var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
         var sColor = sColor.toLowerCase();
@@ -532,7 +533,7 @@ function kriging(id, pixelsize) {
                 }
                 sColor = sColorNew;
             }
-            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½É«Öµ
+            //´¦ÀíÁùÎ»µÄÑÕÉ«Öµ
             var sColorChange = [];
             for (var i = 1; i < 7; i += 2) {
                 sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
@@ -543,7 +544,7 @@ function kriging(id, pixelsize) {
         }
     };
 
-    // ï¿½ï¿½rgbï¿½ï¿½Ê¾ï¿½ï¿½Ê½×ªï¿½ï¿½Îªhexï¿½ï¿½Ê¾ï¿½ï¿½Ê½
+    // ½«rgb±íÊ¾·½Ê½×ª»»Îªhex±íÊ¾·½Ê½
     gradientColor.prototype.colorHex = function (rgb) {
         var _this = rgb;
         var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
@@ -552,7 +553,7 @@ function kriging(id, pixelsize) {
             var strHex = "#";
             for (var i = 0; i < aColor.length; i++) {
                 var hex = Number(aColor[i]).toString(16);
-                hex = hex < 10 ? 0 + '' + hex : hex;// ï¿½ï¿½Ö¤Ã¿ï¿½ï¿½rgbï¿½ï¿½ÖµÎª2Î»
+                hex = hex < 10 ? 0 + '' + hex : hex;// ±£Ö¤Ã¿¸örgbµÄÖµÎª2Î»
                 if (hex === "0") {
                     hex += hex;
                 }
@@ -578,7 +579,7 @@ function kriging(id, pixelsize) {
         }
     }
 
-    //ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½
+    //×Ô¶¨ÒåÑÕÉ«´ø
     this.canvas.colorspectrum.cloudcolors = new gradientColor('#008844', '#880000', 50);
 
 
@@ -613,10 +614,10 @@ function kriging(id, pixelsize) {
 
     /* Plot observed points */
     this.canvas.points = function () {
-        //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Î»
+        //ÏÔÊ¾Ëæ»úµãÎ»
         var i;
         for (i = 0; i < this.model.n; i++) {
-            this.focus(this.model.x[i], this.model.y[i], this.model.response[i], "#666");
+            this.focus(this.model.x[i], this.model.y[i], this.model.response[i], "#666666");
         }
     }
 
@@ -663,8 +664,8 @@ function kriging(id, pixelsize) {
                         this.pixel(j, k, this.colorspectrum.terraincolors[color])
                         //this.pixel(j, k, this.colorspectrum.topocolors[color])
                         //this.pixel(j, k, this.colorspectrum.cmcolors[color])
-                        // this.pixel(j, k, this.colorspectrum.cloudcolors[color])
-
+                        //this.pixel(j, k, this.colorspectrum.cloudcolors[color])
+                        
                     }
                 }
             }

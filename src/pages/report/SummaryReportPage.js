@@ -11,7 +11,7 @@ import SdlCascader from '../AutoFormManager/SdlCascader';
 import SdlTable from '@/components/SdlTable';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import YearPicker from '@/components/YearPicker';
-import { getDirLevel } from '@/utils/utils';
+import { getDirLevel, getDataTruseMsg } from '@/utils/utils';
 import CascaderMultiple from '@/components/CascaderMultiple';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 
@@ -184,6 +184,14 @@ class SummaryReportPage extends PureComponent {
       const columns = _columns.map(item => ({
         ...item,
         render: (text, row, index) => {
+          // 数据不可信处理
+          if (item.dataIndex === 'time') {
+            return <span>
+              {getDataTruseMsg(row)}
+              {text}
+            </span>
+
+          }
           if (text) {
             const _text = text.split('|');
             let val = _text[0];

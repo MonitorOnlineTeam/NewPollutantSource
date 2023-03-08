@@ -8,7 +8,7 @@ import {
 }
   from '../services/baseapi';
 import * as services from '../services/dataQueryApi'
-import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
+import { formatPollutantPopover, getDirLevel, getDataTruseMsg } from '@/utils/utils';
 import moment from 'moment';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 export default Model.extend({
@@ -210,32 +210,36 @@ export default Model.extend({
           title: '时间',
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
-          width: 160,
+          width: 220,
           fixed: payload.Type == 10 ? 'left' : false,
           align: 'center',
           render: (text, record) => {
-            let showDetail = "";
+            let _text = "";
             switch (historyparams.datatype) {
               case "month":
-                return moment(text).format("YYYY-MM");
+                _text = moment(text).format("YYYY-MM");
               case "quarter":
                 switch (moment(text).format("MM-DD")) {
                   case "01-01":
-                    return moment(text).format("YYYY") + "年第一季度";
+                    _text = moment(text).format("YYYY") + "年第一季度";
                   case "04-01":
-                    return moment(text).format("YYYY") + "年第二季度";
+                    _text = moment(text).format("YYYY") + "年第二季度";
                   case "07-01":
-                    return moment(text).format("YYYY") + "年第三季度";
+                    _text = moment(text).format("YYYY") + "年第三季度";
                   case "10-01":
-                    return moment(text).format("YYYY") + "年第四季度";
+                    _text = moment(text).format("YYYY") + "年第四季度";
                 }
-                return moment(text).format("YYYY-MM");
+                _text = moment(text).format("YYYY-MM");
               case "year":
-                return moment(text).format("YYYY");
+                _text = moment(text).format("YYYY");
               default:
-                return text;
+                _text = text;
 
             }
+            return <span>
+              {getDataTruseMsg(record)}
+              {_text}
+            </span>
           },
         }];
         if (result && result[0] && (result[0].PollutantType === '5AQI' || payload.searchDataType === 2) && configInfo.IsOpenAQI === '1') {

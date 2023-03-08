@@ -3,6 +3,7 @@ import moment from 'moment';
 import { message } from 'antd';
 import * as services from './service';
 import Model from '@/utils/model';
+import _ from 'lodash'
 // import { EnumRequstResult } from '../utils/enum';
 
 export default Model.extend({
@@ -382,7 +383,8 @@ export default Model.extend({
     *getReportColumns({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.getReportColumns, payload)
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        let data = _.sortBy(result.Datas, function (o) { return o.SortCode; });
+        callback && callback(data)
       } else {
         message.error(result.Message)
       }

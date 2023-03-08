@@ -9,6 +9,7 @@ import moment from 'moment';
 import * as services from '@/pages/monitoring/realtimedata/service.js';
 import {
     queryhistorydatalist,
+    GetMonitorPointList,
 } from '@/services/monitordata';
 import {
     querypollutantlist,
@@ -523,7 +524,7 @@ export default Model.extend({
         CEMSOpen: undefined,// CEMS阀门状态
         CEMSStatus: undefined, // CEMS通信状态
         QCStatus: '0', // 质控仪状态
-
+        currentPointData: {},
     },
     effects: {
         * GetProcessFlowChartStatus({
@@ -788,6 +789,30 @@ export default Model.extend({
             }
             yield update({ tablewidth, datalist: result, chartdata: option, columns, datatable: result, total: resultlist.total });
         },
+        * GetMonitorPointList({
+            payload, callback
+        }, { select, call, update }) {
+            const result = yield call(GetMonitorPointList, payload);
+            if (result.IsSuccess) {
+                if (result.Datas.length) {
+                    let data = result.Datas[0];
+                    yield update({
+                        currentPointData: {
+                            ...data,
+                            yNum: data.FlowHor,
+                            xNum: data.FlowVer,
+                            height: data.ChimneyHeight,
+                            width: data.ChimneyWidth,
+                            FlowMeterType: data.FlowMeterType
+                        }
+                    })
+                } else {
+                    yield update({
+                        currentPointData: {}
+                    })
+                }
+            }
+        },
     },
     reducers: {
         //更新最新一条数据
@@ -849,11 +874,9 @@ export default Model.extend({
                                 pollutantParamInfo: item.pollutantParamInfo,
                                 state: item.value > firstOrDefault.MonitorValue ? '1' : item.value == firstOrDefault.MonitorValue ? '0' : '1',
                                 MonitorTime: firstOrDefault.MonitorTime
-                            }
-                            )
+                            })
                         }
                     })
-
                     if (newInfo.length !== 0) {
                         return {
                             ...state,
@@ -879,19 +902,28 @@ export default Model.extend({
 
                     // let flows = [];
                     // 找到推送过来的流速数据,重新加到数组中
-                    _paramsInfo.map(item => {
+                    let newParamsInfo = _paramsInfo.map(item => {
                         let current = data.find(itm => itm.PollutantCode === item.pollutantCode);
                         if (current) {
-                            paramsInfo.push({
+                            // paramsInfo.push({
+                            //     ...item,
+                            //     MonitorTime: current.MonitorTime,
+                            //     value: current.MonitorValue
+                            // })
+                            return {
                                 ...item,
                                 MonitorTime: current.MonitorTime,
                                 value: current.MonitorValue
-                            })
+                            }
+                        }
+                        return {
+                            ...item,
                         }
                     })
+                    console.log('ParamsInfo-updateFlows', newParamsInfo)
                     return {
                         ...state,
-                        paramsInfo: paramsInfo
+                        paramsInfo: newParamsInfo
                     }
                 }
             }
@@ -899,7 +931,6 @@ export default Model.extend({
         },
         // 质控仪流程图 - 状态
         changeQCState(state, { payload }) {
-            console.log('currentDGIMN=', state.DGIMN)
             if (state.DGIMN) {
                 if (payload.DataGatherCode === state.DGIMN) {
                     console.log("changeQCState=", payload)
@@ -978,28 +1009,28 @@ export default Model.extend({
         // 图表数据
         updateRealChartData(state, { payload }) {
             console.log('测量浓度-payload', payload)
-            // let newTimeList = [...state.timeList];
-            // let newValueList = [...state.valueList];
-            // // let newStandardValueList = [...state.standardValueList];
-            // let realtimeData = payload.message;
+            let newTimeList = [...state.timeList];
+            let newValueList = [...state.valueList];
+            // let newStandardValueList = [...state.standardValueList];
+            let realtimeData = payload.message;
 
-            // if (state.currentPollutantCode && state.currentDGIMN) {
-            //   if (realtimeData[0].DGIMN === state.currentDGIMN) {
-            //     const filterPollutantCode = realtimeData.find(item => item.PollutantCode === state.currentPollutantCode);
-            //     // 污染物
-            //     newValueList.push(filterPollutantCode.MonitorValue);
-            //     newTimeList.push(filterPollutantCode.MonitorTime);
-            //     // newStandardValueList.push(filterPollutantCode.QCAStandardValue)
-            //   }
-            // }
+            if (state.currentPollutantCode && state.currentDGIMN) {
+                if (realtimeData[0].DGIMN === state.currentDGIMN) {
+                    const filterPollutantCode = realtimeData.find(item => item.PollutantCode === state.currentPollutantCode);
+                    // 污染物
+                    newValueList.push(filterPollutantCode.MonitorValue);
+                    newTimeList.push(filterPollutantCode.MonitorTime);
+                    // newStandardValueList.push(filterPollutantCode.QCAStandardValue)
+                }
+            }
             // console.log("newValueList =", newValueList)
             // console.log("newTimeList =", newTimeList)
-            // return {
-            //   ...state,
-            //   timeList: newTimeList,
-            //   valueList: newValueList,
-            //   // standardValueList: newStandardValueList
-            // }
+            return {
+                ...state,
+                timeList: newTimeList,
+                valueList: newValueList,
+                // standardValueList: newStandardValueList
+            }
         },
         //更新动态管控参数数据
         updateDynamicControl(state, action) {
@@ -1068,6 +1099,7 @@ export default Model.extend({
                 //不能写在一起*********
                 //更新参数
                 if (newparamsInfo.length !== 0) {
+                    console.log('paramsInfo-updateDynamicControl', newparamsInfo)
                     return {
                         ...state,
                         paramsInfo: newparamsInfo,
@@ -1102,7 +1134,7 @@ export default Model.extend({
             //纵坐标显示单位
             let unit = state.historyparams.unit ? `(${state.historyparams.unit})` : "";
             //MN号相同的代表是选中的进行数据更新
-            if (realtimedata && realtimedata[0].DGIMN === state.historyparams.DGIMN) {
+            if (realtimedata && realtimedata[0].DGIMN === state.historyparams.DGIMN && newDataByPollutant.length) {
                 let newChartInfo = new Object();
                 let legendData = [], xAxisdata = [], seriesData = [];
                 //如果原始数据初始不为空将固定数据反填到定义对象并进行更新

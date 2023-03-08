@@ -2,12 +2,12 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva';
-import { Select,TreeSelect} from 'antd';
+import { Select, TreeSelect } from 'antd';
 
 const { TreeNode } = TreeSelect;
 //行政区列表组件
-@connect(({  autoForm }) => ({
-    regionList: autoForm.regionList,
+@connect(({ autoForm }) => ({
+  regionList: autoForm.regionList,
 }))
 export default class Index extends Component {
   constructor(props) {
@@ -15,9 +15,9 @@ export default class Index extends Component {
 
     this.state = {
     };
-    
+
   }
-  regchildren=()=>{
+  regchildren = () => {
     const { regionList } = this.props;
     const selectList = [];
     // if (regionList.length > 0) {
@@ -31,36 +31,36 @@ export default class Index extends Component {
     //   return selectList;
     // }
 
-    
-   if (regionList.length > 0) {
-       regionList.map(item => {
+
+    if (regionList.length > 0) {
+      regionList.map(item => {
         selectList.push(
           <TreeNode value={item.RegionCode} title={item.RegionName} key={item.RegionCode}>
-            
-            {item.children&&item.children.map(childItem=>{
-               return  <TreeNode value={childItem.RegionCode} title={childItem.RegionName} key={childItem.RegionCode}>
-                  {childItem.children&&childItem.children.map(grandsonItem=>{
-                       return  <TreeNode value={grandsonItem.RegionCode} title={grandsonItem.RegionName} key={grandsonItem.RegionCode} />  
-                   })
-                  }
-                    </TreeNode>
-            })
-          
-          }
 
-        
-            </TreeNode>,
+            {item.children && item.children.map(childItem => {
+              return <TreeNode value={childItem.RegionCode} title={childItem.RegionName} key={childItem.RegionCode}>
+                {childItem.children && childItem.children.map(grandsonItem => {
+                  return <TreeNode value={grandsonItem.RegionCode} title={grandsonItem.RegionName} key={grandsonItem.RegionCode} />
+                })
+                }
+              </TreeNode>
+            })
+
+            }
+
+
+          </TreeNode>,
         );
       });
       return selectList;
     }
   }
   componentDidMount() {
-    this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
-  
-   }
+    this.props.dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2', }, });  //获取行政区列表
+
+  }
   render() {
-      const {RegionCode,changeRegion} = this.props
+    const { RegionCode, changeRegion } = this.props
     return (
       //   <Select
       //   allowClear
@@ -73,21 +73,20 @@ export default class Index extends Component {
       //   {this.regchildren()}
       // </Select>
       <TreeSelect
-      showSearch
-      allowClear
-      searchPlaceholder='输入你想要的字段'
-      placeholder="行政区"
-      autoExpandParent={false}
-      value={RegionCode ? RegionCode : undefined}
-      style={{ width: 150 }}
-      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-      treeNodeFilterProp='title'
-      onChange={changeRegion}
-      {...this.props}
-    >
-       {this.regchildren()}
+        showSearch
+        allowClear
+        // searchPlaceholder='输入你想要的字段'
+        placeholder="行政区"
+        // autoExpandParent={false}
+        value={RegionCode ? RegionCode : undefined}
+        style={{ width: 150 }}
+        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+        treeNodeFilterProp='title'
+        onChange={changeRegion}
+        {...this.props}
+      >
+        {this.regchildren()}
       </TreeSelect>
     );
   }
 }
-                                                                                             

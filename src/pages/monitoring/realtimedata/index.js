@@ -156,7 +156,6 @@ class Index extends Component {
                 CO2Rate: value.toFixed(0),
             },
         });
-        console.log('countCO2Rate=', value)
         // return value
     }
 
@@ -405,6 +404,8 @@ class Index extends Component {
         if (dataInfo && dataInfo.pollutantType == '2') {
             // 二氧化碳
             let isCO2 = !!paramsInfo.find(item => item.pollutantCode === 'a05001');
+            console.log('isCO2', isCO2)
+            console.log('isCO2-paramsInfo', paramsInfo)
             if (isCO2) {
                 return <CO2Chart
                     paramstatusInfo={paramstatusInfo}
@@ -550,7 +551,7 @@ class Index extends Component {
         return <div style={{ overflowX: 'hidden' }}>
             <Layout className={this.state.contentstyle} hasSider>
                 <Content>
-                    <Card className="contentContainer" >
+                    <Card className="contentContainer">
                         {isloading ? <Spin style={{
                             width: '100%',
                             marginTop: 100,
@@ -571,7 +572,6 @@ class Index extends Component {
                         </div>
                     </Sider>
                 }
-
             </Layout>
         </div>
     }

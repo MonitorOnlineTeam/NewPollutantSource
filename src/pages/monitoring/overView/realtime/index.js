@@ -26,7 +26,7 @@ import { getPointStatusImg } from '@/utils/getStatusImg';
 import { LegendIcon } from '@/utils/icon';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 import { router } from 'umi';
-import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
+import { formatPollutantPopover, getDirLevel, getDataTruseMsg } from '@/utils/utils';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -46,7 +46,7 @@ const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData']
   dataLoading: loading.effects['overview/getRealTimeDataView'],
   columnLoading: loading.effects['overview/getRealTimeColumn'],
 }))
-class index extends Component {
+class Realtime extends Component {
   constructor(props) {
     super(props);
     this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
@@ -74,6 +74,7 @@ class index extends Component {
       const realtimeColumns = nextProps.realtimeColumns.map((item, idx) => ({
         title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
         dataIndex: item.field,
+        key: item.field,
         name: item.name,
         // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
         width: item.width || undefined,
@@ -163,7 +164,6 @@ class index extends Component {
       }
 
       let { sortedInfo, filteredInfo, pollutantCode, pageIndex } = this.state;
-      console.log("pageIndex=", pageIndex)
       filteredInfo = filteredInfo || {};
       const columns = [
         {
@@ -219,30 +219,32 @@ class index extends Component {
           fixed,
           show: true,
           render: (text, record) => {
+            // 单企业不显示企业名称
+            let pointName = configInfo.IsSingleEnt == '1' ? text : `${record.abbreviation} - ${text}`;
             if (this.state.pollutantCode == 5) {
-              return (
-                <span>
-                  {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
-                </span>
-              );
+              pointName = text;
             }
-            return (
-              <span>
-                {/* 单企业不显示企业名称 */}
-                {!configInfo.IsSingleEnterprise && record.abbreviation + ' - '}{text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
-              </span>
-            );
+            let el = <span>
+              {pointName}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
+            </span>
+            return el;
           },
         },
         {
           title: '监测时间',
-          width: 140,
+          width: 220,
           // width: 10,
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           fixed,
           show: true,
           align: 'center',
+          render: (text, record) => {
+            return <span>
+              {getDataTruseMsg(record)}
+              {text}
+            </span>
+          }
           // sorter: (a, b) => a.MonitorTime - b.MonitorTime,
           // defaultSortOrder: 'descend'
         },
@@ -396,7 +398,6 @@ class index extends Component {
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     const wrwList = columns.filter(itm => itm.wrw);
 
-
     return (
       <BreadcrumbWrapper>
         <Card
@@ -492,7 +493,7 @@ class index extends Component {
                       {
                         wrwList.map((item, index) => {
                           if (item.wrw) {
-                            return <Col span={wrwList.length > 4 ? 6 : 24 / wrwList.length}>
+                            return <Col key={index} span={wrwList.length > 4 ? 6 : 24 / wrwList.length}>
                               <Checkbox onChange={e => {
                                 if (e.target.checked === false && wrwList.length < 2) {
                                   message.warning('最少显示一个污染物');
@@ -622,4 +623,4 @@ class index extends Component {
   }
 }
 
-export default index;
+export default Realtime;

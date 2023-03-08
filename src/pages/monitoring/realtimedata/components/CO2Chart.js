@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2023-02-08 11:34:48 
+ * @Author: JiaQi
+ * @Date: 2023-02-08 11:34:48
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-02-23 16:57:22
+ * @Last Modified time: 2023-03-01 15:32:34
  * @Description: 二氧化碳工艺流程图
  */
 
@@ -13,6 +13,7 @@ import { Card, Descriptions, Popover, Tabs, Modal, Spin, Table, Empty } from 'an
 import { load_data } from '../_util'
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable';
+import FLowMapModal from './FlowMapModal'
 
 const { TabPane } = Tabs;
 const columns = [
@@ -50,6 +51,7 @@ const columns = [
     CO2Rate: realtimeserver.CO2Rate,
     CO2SampleGasValue: realtimeserver.CO2SampleGasValue,
     O2SampleGasValue: realtimeserver.O2SampleGasValue,
+    currentPointData: realtimeserver.currentPointData
 }))
 class CO2Chart extends Component {
     constructor(props) {
@@ -61,11 +63,11 @@ class CO2Chart extends Component {
         };
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (JSON.stringify(this.props.paramsInfo) !== JSON.stringify(prevProps.paramsInfo) && this.state.visible === true) {
-            this.renderCanvas(false);
-        }
+    componentDidMount() {
+        this.getPointData();
+    }
 
+    componentDidUpdate(prevProps, prevState) {
         // 状态改变后，清空数据
         if (prevProps.QCStatus == 1 && this.props.QCStatus !== prevProps.QCStatus) {
             console.log("状态改变后，清空数据")
@@ -83,6 +85,10 @@ class CO2Chart extends Component {
                     // QCStatus: '0', // 质控仪状态
                 }
             })
+        }
+
+        if (this.props.DGIMN !== prevProps.DGIMN) {
+            this.getPointData();
         }
     }
 
@@ -103,87 +109,6 @@ class CO2Chart extends Component {
         return this.props.getSystemStatesNew()
     }
 
-
-    GetRandomNum = (Min, Max) => {
-        var Range = Max - Min;
-        var Rand = Math.random();
-        return (Min + Math.round(Rand * Range));
-    }
-
-    // 渲染canvas
-    renderCanvas = (isShowModal) => {
-        // this.setState({
-        // }, () => {
-        const { paramsInfo } = this.props;
-        let flows = paramsInfo.filter(item => item.pollutantCode.indexOf('_') > -1);
-        console.log('flows', flows)
-        //生成数据
-        let points = []
-
-        let max_x = 4
-        let x_grid_len = 1103
-        let max_y = 6
-        let y_grid_len = 1044
-        let count = 0;
-        if (flows.length) {
-            for (var i = 0; i < max_x; i++) {
-                for (var j = 0; j < max_y; j++) {
-                    console.log('i', i)
-                    console.log('j', j)
-                    points.push({
-                        "x": i * x_grid_len + x_grid_len / 2,
-                        "y": j * y_grid_len + y_grid_len / 2,
-                        // "value": flows[i + 1 * 6 - j].value
-                        "value": flows[i * 6 + j].value
-                    });
-                }
-            }
-            console.log('points', points);
-            load_data(points, () => {
-                setTimeout(() => {
-                    this.setState({
-                        modalLoading: false
-                    })
-                }, 0)
-            });
-        } else {
-            setTimeout(() => {
-                this.setState({
-                    modalLoading: false
-                })
-            }, 0)
-        }
-    }
-
-
-    renderFlows = (data) => {
-        const { paramstatusInfo, paramsInfo } = this.props;
-        //流速
-        let flows = paramsInfo.filter(item => item.pollutantCode.indexOf('_') > -1);
-        debugger
-        let max_x = 6
-        let max_y = 8
-        let dataSource = [];
-        if (flows.length) {
-            dataSource = [
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-            ];
-            for (var i = 1; i < max_x - 1; i++) {
-                for (var j = 1; j < max_y - 1; j++) {
-                    let value = flows.find(item => item.pollutantName === `流速${i}-${j}`).value;
-                    dataSource[j - 1]['flow' + i] = value
-                }
-            }
-        }
-
-        return <Table bordered pagination={false} dataSource={dataSource} columns={columns} />;
-    }
-
     showModal = () => {
         // onClick={() => {
         this.setState({
@@ -191,16 +116,29 @@ class CO2Chart extends Component {
             modalLoading: true,
         }, () => {
             setTimeout(() => {
-                this.renderCanvas()
+                // this.renderCanvas()
             }, 500)
+        })
+    }
+
+    // 获取排口信息
+    getPointData = () => {
+        // debugger
+        this.props.dispatch({
+            type: 'realtimeserver/GetMonitorPointList',
+            payload: {
+                dgimn: this.props.DGIMN,
+            },
+            callback: (res) => {
+
+            }
         })
     }
 
 
     render() {
-        const { translation, modalLoading } = this.state;
-        const { stateInfo, getParamsValue, paramsInfo, CEMSOpen, QCStatus, valveStatus, CO2Rate, CO2SampleGasValue, O2SampleGasValue, wrapperStyle, vertical, scale } = this.props;
-        console.log('props', this.props)
+        const { translation, modalLoading, visible } = this.state;
+        const { stateInfo, getParamsValue, paramsInfo, DGIMN, currentPointData, CEMSOpen, QCStatus, valveStatus, CO2Rate, CO2SampleGasValue, O2SampleGasValue, wrapperStyle, vertical, scale } = this.props;
 
         let isFlowsData = paramsInfo.filter(item => item.pollutantCode.indexOf('_') > -1);
 
@@ -375,49 +313,11 @@ class CO2Chart extends Component {
                     </div>
                     {/* </div> */}
                 </MapInteractionCSS>
-                <Modal
-                    title="查看烟道流场分布图及流速详情"
-                    width={'636px'}
-                    visible={this.state.visible}
-                    bodyStyle={{ padding: '0 20px 10px', height: 784, width: 636, overflow: 'auto' }}
-                    footer={false}
-                    wrapClassName={styles.myModal}
-                    onCancel={() => {
-                        this.setState({
-                            visible: false
-                        })
-                    }}
-                >
-                    <Tabs defaultActiveKey="1" >
-                        <TabPane tab="烟道流场分布图" key="1">
-                            <Spin spinning={modalLoading}>
-                                <div style={{
-                                    margin: '30px 60px', position: 'relative', width: 550,
-                                    height: 690
-                                }}>
-                                    {
-                                        isFlowsData.length ? <>
-                                            <canvas id="canvas_chart"></canvas>
-                                            <canvas id="canvas_x"></canvas>
-                                            <canvas id="canvas_y"></canvas>
-                                            <canvas id="canvas_lengend" className={styles.canvas_lengend}></canvas>
-                                            <div style={{ position: 'absolute', top: -28, left: -45, color: '#666666', fontWeight: 'bold', fontSize: 16 }}>z（m）</div>
-                                            <div style={{ position: 'absolute', bottom: 8, left: 428, color: '#666666', fontWeight: 'bold', fontSize: 16 }}>x（m）</div>
-                                            <div style={{ position: 'absolute', top: -30, left: 210, color: '#666666', fontWeight: 'bold', fontSize: 18 }}>
-                                                流速（m/s）
-                                            </div>
-                                        </> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                                    }
-
-                                </div>
-                            </Spin>
-                        </TabPane>
-                        <TabPane tab="流速数据" key="2">
-                            {this.renderFlows()}
-                        </TabPane>
-                    </Tabs>
-
-                </Modal>
+                {
+                    (visible && currentPointData.FlowMeterType == 2) && <FLowMapModal visible={visible} DGIMN={DGIMN} onCancel={() => {
+                        this.setState({ visible: false })
+                    }} />
+                }
             </div>
         );
     }

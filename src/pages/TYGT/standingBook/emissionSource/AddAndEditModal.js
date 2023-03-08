@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2022-11-21 15:59:50 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-12-27 11:48:46
+ * @Last Modified time: 2023-03-08 10:17:52
  * @Description: 排放源添加、编辑页面
  */
 import React, { PureComponent } from 'react'
@@ -188,14 +188,12 @@ class AddAndEditModal extends PureComponent {
 
 
   render() {
-    const { handleModalVisible, loading_set } = this.props;
+    const { handleModalVisible, loading_set, id } = this.props;
     const { emissionType, initialValues, Pfy_MaterialType, Pfy_ConveyingMode, Pfy_ClosedMode, Pfy_StorageMaterialType, Pfy_OperationMode } = this.state;
     const { EmissionTypeList } = this._CONST;
-    console.log('autoForm', this.props.autoForm)
-    console.log('initialValues', initialValues)
 
     return <Modal
-      title="添加"
+      title={id ? '编辑' : '添加'}
       visible={handleModalVisible}
       width={'80vw'}
       forceRender

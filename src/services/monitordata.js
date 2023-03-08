@@ -17,3 +17,9 @@ export async function queryhistorydatalist(params) {
     const result = await post(API.MonitorDataApi.GetAllTypeDataList, params);
     return result === null ? { data: null } : result;
 }
+
+export async function GetMonitorPointList(params) {
+    const result = await post(API.PointApi.GetMonitorPointList, params);
+    return result;
+}
+

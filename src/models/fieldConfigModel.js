@@ -23,7 +23,6 @@ export default Model.extend({
                 dbKey: payload.dbKey,
                 configId: payload.id
             };
-            console.log(body);
             const result = yield call(GetCfgFiledsData, body);
             if (result.IsSuccess && result.Datas) {
                 let data = result.Datas

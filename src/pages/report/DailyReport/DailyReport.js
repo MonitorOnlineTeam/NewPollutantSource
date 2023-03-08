@@ -21,19 +21,14 @@ import {
 } from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
-import ReactEcharts from 'echarts-for-react';
 import moment from 'moment'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import RegionList from '@/components/RegionList'
-
 import SdlTable from '@/components/SdlTable';
-import PageLoading from '@/components/PageLoading'
-import { routerRedux } from 'dva/router';
-import { Right } from '@/utils/icon';
 import style from '../tableClass.less'
+import { getDataTruseMsg } from '@/utils/utils';
+
 const { Option } = Select;
-const { TabPane } = Tabs;
-const { MonthPicker } = DatePicker;
 
 const pageUrl = {
     GetAttentionDegreeList: 'enterpriseMonitoringModel/GetAttentionDegreeList',
@@ -160,6 +155,21 @@ class index extends PureComponent {
             callback: (res) => {
                 let columns = [];
                 res.map(item => {
+                    if (item.ParenntColumnCode === 'Time') {
+                        columns.push({
+                            title: '时间',
+                            dataIndex: item.ParenntColumnCode,
+                            width: 240,
+                            align: 'center',
+                            render: (value, row, index) => {
+                                return <span>
+                                    {getDataTruseMsg(row)}
+                                    {value}
+                                </span>
+                            },
+                        })
+                        return;
+                    }
                     if (item.ChildColumnHeaders) {
                         let children = item.ChildColumnHeaders.map(itm => {
                             return {
@@ -207,7 +217,7 @@ class index extends PureComponent {
                 selectList.push(
                     <Option key={item.key} value={item.value} title={item.title}>
                         {item.title}
-                    </Option>,
+                    </Option>
                 );
             });
             return selectList;
@@ -285,40 +295,6 @@ class index extends PureComponent {
 
         return <>
             <label style={{ fontSize: 14 }}>行政区:</label>
-            {/* <Select
-                allowClear
-                showSearch
-                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                placeholder="行政区"
-                maxTagCount={2}
-                maxTagTextLength={5}
-                maxTagPlaceholder="..."
-                optionFilterProp="children"
-                filterOption={(input, option) => {
-                    if (option && option.props && option.props.title) {
-                        return option.props.title === input || option.props.title.indexOf(input) !== -1
-                    } else {
-                        return true
-                    }
-                }}
-                onChange={(value) => {
-                    //获取关注度列表
-                    this.props.dispatch({
-                        type: pageUrl.GetEntByRegionAndAtt,
-                        payload: {
-                            RegionCode: value,
-                            Attention: this.state.attentionValue,
-                            PollutantTypeCode: '1'
-                        },
-                    });
-                    this.setState({
-                        regionValue: value,
-                        entValue: undefined,
-                        pointValue: undefined
-                    })
-                }}>
-                {this.children()}
-            </Select> */}
             <RegionList
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 // RegionCode={this.props.form.getFieldValue('RegionCode')}

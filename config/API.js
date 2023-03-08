@@ -359,7 +359,8 @@ export const API = {
     GetPointModelInfo: before + '/MonitorPointApi/GetPointModelInfo',
     // 获取监测点列表
     GetViewPoint: before + '/MonitorPointApi/GetViewPoint',
-    // 
+    // 根据DGMIN查询单个站点详情
+    GetMonitorPointList: before + '/MonitorTargetApi/GetMonitorPointList',
   },
   // 仪器信息
   InstrumentApi: {
@@ -632,6 +633,8 @@ export const API = {
     GetOriginalData: before + '/MonBasicDataApi/GetOriginalData',
     // 月站点平均值分析
     GetMonthPoint: before + '/MonBasicDataApi/GetMonthPoint',
+    // 数据不可信列表
+    GetUnTrustedList: before + '/MonBasicDataApi/GetUnTrustedList',
     // 获取异常数据记录汇总
     GetExceptionModel: before + '/ExceptionDataApi/GetExceptionModel',
     // 获取异常数据列表
@@ -666,6 +669,7 @@ export const API = {
     UpdateDataAirFlag: before + '/DataQualityApi/UpdateDataAirFlag',
     // 导出数据审核接口。带Wry的接口参数IsWry传true，否则传false
     ExportAllTypeDataForFlag: before + '/DataQualityApi/ExportAllTypeDataForFlag',
+
 
 
 
@@ -864,7 +868,7 @@ export const API = {
     GetSummaryYearReport: before + '/MonBasicDataApi/GetSummaryYearReport',
     // 汇总季报
     GetSummaryQuarterReport: before + '/MonBasicDataApi/GetSummaryQuarterReport',
-    // 废气表头
+    // 报表表头
     GetPointPollutantColumnByDGIMN: before + '/MonBasicDataApi/GetPointPollutantColumnByDGIMN'
     //
   },

@@ -82,13 +82,13 @@ class PageContent extends PureComponent {
         },
         {
           title: '经度',
-          dataIndex: 'Latitude',
-          key: 'Latitude',
+          dataIndex: 'Longitude',
+          key: 'Longitude',
         },
         {
           title: '纬度',
-          dataIndex: 'Longitude',
-          key: 'Longitude',
+          dataIndex: 'Latitude',
+          key: 'Latitude',
         },
         {
           title: '操作',

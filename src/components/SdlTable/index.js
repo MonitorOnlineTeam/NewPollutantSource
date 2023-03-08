@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-04-22 09:24:20
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-03-06 10:15:25
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -186,14 +186,13 @@ class SdlTable extends PureComponent {
         onResize: resizable ? this.handleResize(index) : undefined,
       }),
     }))
-
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
       <div ref={el => this.sdlTableFrame = el}>
         <Table
-          ref={table => { this.sdlTable = table }}
+          // ref={table => { this.sdlTable = table }}
           id="sdlTable"
-          rowKey={record => record.id || record.ID}
+          rowKey={record => record.id || record.ID || record.DGIMN}
           size="middle"
           components={resizable ? this.components : undefined}
           // className={styles.dataTable}

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-02-18 15:16:30
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-02-17 15:35:41
+ * @Last Modified time: 2023-03-07 16:41:24
  * @desc
  */
 import React, { PureComponent } from 'react'
@@ -30,6 +30,7 @@ import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import RegionList from '@/components/RegionList'
+import { getDataTruseMsg } from '@/utils/utils';
 
 
 const FormItem = Form.Item;
@@ -173,39 +174,20 @@ class SmokeReportPage extends PureComponent {
       callback: (res) => {
         let columns = [];
         res.map(item => {
-          if (item.ParenntColumnCode === 'a05001') {
+          if (item.ParenntColumnCode === 'Time') {
             columns.push({
-              title: '二氧化碳',
-              // width: 330,
-              children: [
-                {
-                  title: '浓度(mg/m³)',
-                  dataIndex: item.ParenntColumnCode,
-                  width: 140,
-                  align: 'center',
-                  render: (value, row, index) => {
-                    const obj = {
-                      children: value,
-                      props: {},
-                    };
-                    return obj;
-                  },
-                },
-                {
-                  title: `排放量(Kg)`,
-                  dataIndex: item.ParenntColumnCode + 'sum',
-                  width: 140,
-                  align: 'center',
-                  render: (value, row, index) => {
-                    const obj = {
-                      children: value,
-                      props: {},
-                    };
-                    return value !== undefined ? value : '-';
-                  },
-                },
-              ],
+              title: '时间',
+              dataIndex: item.ParenntColumnCode,
+              width: 240,
+              align: 'center',
+              render: (value, row, index) => {
+                return <span>
+                  {getDataTruseMsg(row)}
+                  {value}
+                </span>
+              },
             })
+            return;
           }
 
           if (item.ChildColumnHeaders) {
@@ -237,7 +219,6 @@ class SmokeReportPage extends PureComponent {
             })
           }
         })
-        console.log('columns', columns)
         this.setState({
           columns: columns
         })

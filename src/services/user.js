@@ -222,20 +222,6 @@ export async function getUserInfo(params) {
 //     : result;
 // }
 
-// 获取登陆配置信息
-export async function getSystemConfigInfo() {
-    const body = {};
-    const result = authorpost(
-        '/api/rest/PollutantSourceApi/SystemSettingApi/getLoginInfo?authorCode=48f3889c-af8d-401f-ada2-c383031af92d',
-        body,
-        null,
-    );
-    return result === null
-        ? {
-            data: null,
-        }
-        : result;
-}
 
 // 验证旧密码是否一致
 export async function vertifyOldPwd(params) {

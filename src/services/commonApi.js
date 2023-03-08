@@ -41,7 +41,7 @@ export async function getPollutantTypeList(params) {
   }, null);
   return result;
 }
-let websocket = null;
+
 /**
  * 获取系统配置信息
  * @params {}

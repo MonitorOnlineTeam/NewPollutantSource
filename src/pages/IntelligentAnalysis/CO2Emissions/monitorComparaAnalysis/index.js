@@ -139,7 +139,7 @@ const Index = (props) => {
                 // pageSize: pageSize,
                 ...values,
                 BeginTime: values.Time && values.Time.startOf('M').format('YYYY-MM-DD'),
-                EndTime: values.Time && values.Time.endOf('M').format('YYYY-MM-DD'),
+                EndTime: values.Time && values.Time.add(1, 'month').startOf('M').format('YYYY-MM-DD'),
                 Time: undefined,
                 type: 'table',
             }, (col) => {

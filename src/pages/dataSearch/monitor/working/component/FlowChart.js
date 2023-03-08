@@ -420,6 +420,7 @@ class FlowChart extends PureComponent {
         if (!res.isCO2) {
           this.handleState(res);
         }
+        console.log('isCO2', res.isCO2)
         this.setState({
           isCO2: res.isCO2
         })
