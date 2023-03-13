@@ -101,10 +101,10 @@ const Index = (props) => {
   const { match: { path } } = props;
 
 
-  const inspectorType = path === '/operations/superviseRectification' ? 1 : 2 ; // 是否为现场督查 1 现场 2 远程  
+  const inspectorType = path === '/operations/superviseRectification' ? 1 : 2; // 是否为现场督查 1 现场 2 远程  
 
   const [form] = Form.useForm();
- 
+
 
 
   const [fromVisible, setFromVisible] = useState(false)
@@ -200,7 +200,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        return <span style={{color: text=='未开始整改'? '#f5222d': text=='整改进行中'? '#1890ff': '#52c41a' }}>{text}</span>;
+        return <span style={{ color: text == '未开始整改' ? '#f5222d' : text == '整改进行中' ? '#1890ff' : '#52c41a' }}>{text}</span>;
       }
     },
     {
@@ -271,8 +271,8 @@ const Index = (props) => {
 
     props.exportInspectorRectificationManage({
       ...values,
-      BTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-      ETime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+      BTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
       // InspectorType: inspectorType,
     })
@@ -317,7 +317,7 @@ const Index = (props) => {
     >
       <Row align='middle'>
         <Form.Item label='行政区' name='RegionCode' >
-          <RegionList noFilter levelNum={3} style={{ width: 150 }} />
+          <RegionList noFilter levelNum={3} style={{ width: 240 }} />
         </Form.Item>
         <Spin spinning={entLoading} size='small' style={{ top: -3, left: 28 }}>
           <Form.Item label='企业' name='EntCode'>
@@ -336,20 +336,27 @@ const Index = (props) => {
             </Select>
           </Form.Item>
         </Spin>
-      </Row>
-
-      <Row>
         <Form.Item label="督查人员" name="Inspector" >
           <OperationInspectoUserList type='2' style={{ width: 150 }} />
         </Form.Item>
-        {/* <Form.Item label="督查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
+      </Row>
+
+      <Row>
+        <Form.Item label="督查日期" name="time"  >
           <RangePicker_
-            style={{ width: 300 }}
+            style={{ width: 240 }}
             allowClear={false}
             format="YYYY-MM-DD" />
-        </Form.Item> */}
+        </Form.Item>
         <Form.Item label="运维人员" name="OperationUser">
           <OperationInspectoUserList noFirst style={{ width: 240 }} />
+        </Form.Item>
+        <Form.Item label='整改状态' name='StatusName' >
+          <Select placeholder='请选择' style={{ width: 150 }}>
+            <Option key='1' value='未开始整改'>未开始整改</Option>
+            <Option key='2' value='整改进行中'>整改进行中</Option>
+            <Option key='3' value='整改已完成'>整改已完成</Option>
+          </Select>
         </Form.Item>
         <Form.Item>
           <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 5 }}>

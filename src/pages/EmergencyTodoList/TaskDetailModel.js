@@ -131,62 +131,62 @@ class EmergencyDetailInfo extends Component {
                 if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
-                            this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.StopMachine:
-                            this.GoToForm(taskID, item.CnName, '2', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '2', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.YhpReplace:
-                            this.GoToForm(taskID, item.CnName, '3', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '3', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.StandardGasReplace:
-                            this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.CqfPatrol:
-                            this.GoToForm(taskID, item.CnName, '5', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '5', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.CyfPatrol:
-                            this.GoToForm(taskID, item.CnName, '6', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '6', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.ClfPatrol:
-                            this.GoToForm(taskID, item.CnName, '7', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '7', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.CheckRecord:
-                            this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.TestRecord:
-                            this.GoToForm(taskID, item.CnName, '9', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '9', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.DataException:
-                            this.GoToForm(taskID, item.CnName, '10', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '10', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.Maintain:
-                            this.GoToForm(taskID, item.CnName, '27', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '27', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.SparePartReplace:
-                            this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.Fault:
-                            this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.FaultWater:
-                            this.GoToForm(taskID, item.CnName, '59', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '59', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.FaultYan:
-                            this.GoToForm(taskID, item.CnName, '60', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '60', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         default:
                             break;
                     }
                 } else {
-                    this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                    this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID,item.Type);
                 }
             }
         });
         return rtnVal;
     }
 
-    GoToForm = (taskID, cnName, recordType, rtnVal, key, FormMainID) => {
+    GoToForm = (taskID, cnName, recordType, rtnVal, key, FormMainID,type) => {
         // let taskfrom = this.props.taskfrom || '';
         // if (taskfrom.indexOf("qcontrollist") > -1) {
         //     taskfrom = taskfrom.split('-')[0];
@@ -195,7 +195,8 @@ class EmergencyDetailInfo extends Component {
             style={{ marginBottom: '5px' }}
             icon={<CheckCircleOutlined />}
             onClick={() => {
-                if (recordType == '-1') {
+                // if (recordType == '-1') {
+                    if(type==1){
                     // 获取详情图片
                     this.props.dispatch({
                         type: 'common/getOperationImageList',

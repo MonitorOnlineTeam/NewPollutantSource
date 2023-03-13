@@ -26,7 +26,6 @@ class JzRecordContent extends Component {
     }
 
     componentDidMount() {
-        console.log(111)
         this.props.dispatch({
             type: 'task/GetJzRecord',
             payload: {
@@ -42,7 +41,7 @@ class JzRecordContent extends Component {
             if (Record != null && Record.length > 0) {
                 code.map((item, key) => {
                     let rd = Record.filter((item1) => item1.ItemID === item);
-                    if (rd) {
+                    if (rd&&rd[0]) { //校准项有数据
                         rtnVal.push(<table key={key} className={styles.FormTable}>
                             <tbody>
                                 <tr>
@@ -94,59 +93,17 @@ class JzRecordContent extends Component {
                                 </tr>
                             </tbody>
                         </table>);
-                    } else {
-                        rtnVal.push(<table key={`${key }a`} className={styles.FormTable}>
-                            <tbody>
-                                <tr>
-                                    <td colSpan="7" style={{ height: '30px', fontWeight: 'bold' }}>{item}分析仪校准</td>
-                                </tr>
-                                <tr>
-                                    <td style={{ width: '16%', height: '30px' }}>分析仪原理</td>
-                                    <td colSpan="2" />
-                                    <td style={{ width: '14%', height: '30px' }}>分析仪量程</td>
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }}>计量单位</td>
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                </tr>
-                                <tr>
-                                    <td rowSpan="2" style={{ width: '16%', height: '30px' }}>零点漂移校准</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{item !== '颗粒物' ? '零气浓度值' : '零气'}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>上次校准后测试值</td>
-                                    <td style={{ width: '14%', height: '30px' }}>校前测试值</td>
-                                    <td style={{ width: '14%', height: '30px' }}>零点漂移%F.S.</td>
-                                    <td style={{ width: '14%', height: '30px' }}>仪器校准是否正常</td>
-                                    <td style={{ width: '14%', height: '30px' }}>校准后测试值</td>
-                                </tr>
-                                <tr>
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                </tr>
-                                <tr>
-                                    <td rowSpan="2" style={{ width: '16%', height: '30px' }}>量程漂移校准</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{item !== '颗粒物' ? '标气浓度值' : '校准用量程值'}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>上次校准后测试值</td>
-                                    <td style={{ width: '14%', height: '30px' }}>校前测试值</td>
-                                    <td style={{ width: '14%', height: '30px' }}>量程漂移%F.S.</td>
-                                    <td style={{ width: '14%', height: '30px' }}>仪器校准是否正常</td>
-                                    <td style={{ width: '14%', height: '30px' }}>校准后测试值</td>
-                                </tr>
-                                <tr>
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                    <td style={{ width: '14%', height: '30px' }} />
-                                </tr>
-                            </tbody>
-                        </table>);
                     }
                 });
             }
+        }else{
+            rtnVal.push(<table key={'2'} className={styles.FormTable}>
+                <tbody>
+                    <tr>
+                        <td colSpan="7" style={{ height: '90px',textAlign:'center' }}>没有填写校准项</td>
+                    </tr>
+                </tbody>
+            </table>)
         }
         return rtnVal;
     }

@@ -170,120 +170,120 @@ class EmergencyDetailInfo extends Component {
                     || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67 || item.ID === 12 || item.ID === 14 || item.ID === 20 || item.ID === 75 || item.ID === 76) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
-                            this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.RepairWater:
-                            this.GoToForm(taskID, item.CnName, '12', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '12', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.StopMachine:
-                            this.GoToForm(taskID, item.CnName, '2', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '2', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.YhpReplace:
-                            this.GoToForm(taskID, item.CnName, '3', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '3', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.YhpReplaceWaterWater: //易耗品更换记录 废水
-                            this.GoToForm(taskID, item.CnName, '14', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '14', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.StandardGasReplace:
-                            this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.CqfPatrol://CEMS日常巡检记录表
-                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.CyfPatrol:
-                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.ClfPatrol:
-                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.CheckRecord:
-                            this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.TestRecord:
-                            this.GoToForm(taskID, item.CnName, '9', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '9', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.DataException://异常报告记录
-                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.Maintain:
-                            this.GoToForm(taskID, item.CnName, '27', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '27', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.SparePartReplace:
-                            this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.SparePartReplaceWater://备品备件更换记录表 废水
-                            this.GoToForm(taskID, item.CnName, '20', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '20', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.Fault:
-                            this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.FaultWater:
-                            this.GoToForm(taskID, item.CnName, '59', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '59', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.FaultYan:
-                            this.GoToForm(taskID, item.CnName, '60', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '60', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.ReagentReplace:
-                            this.GoToForm(taskID, item.CnName, '15', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '15', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.cooperaInspectionWater:
-                            this.GoToForm(taskID, item.CnName, '61', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '61', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.cooperaInspection:
-                            this.GoToForm(taskID, item.CnName, '62', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '62', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.dataConsistencyRealTime: //数据一致性  实时
-                            this.GoToForm(taskID, item.CnName, '63', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '63', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.dataConsistencyRealTimeWater: //数据一致性  实时 废水
-                            this.GoToForm(taskID, item.CnName, '18', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '18', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.dataConsistencyDate: //数据一致性  小时与日数据 废气
-                            this.GoToForm(taskID, item.CnName, '66', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '66', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.dataConsistencyDateWater: //数据一致性  小时与日数据 废水
-                            this.GoToForm(taskID, item.CnName, '74', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '74', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.ThirdPartyTestingData: //上月委托第三方检测次数
-                            this.GoToForm(taskID, item.CnName, '73', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '73', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.ThirdPartyTestingDataWater: //上月委托第三方检测次数 废水
-                            this.GoToForm(taskID, item.CnName, '65', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '65', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.WaterQualityCalibrationRecord: //水质校准记录表
-                            this.GoToForm(taskID, item.CnName, '16', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '16', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.StandardSolutionVerificationRecord: //准溶液核查记录表
-                            this.GoToForm(taskID, item.CnName, '70', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '70', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.DeviceParameterChangeRecord: //设备参数变动记录表 废水
-                            this.GoToForm(taskID, item.CnName, '72', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '72', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.GasDeviceParameterChangeRecord: //设备参数变动记录表 废气
-                            this.GoToForm(taskID, item.CnName, '64', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '64', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.ComparisonTestResultsRecord: //实际水样比对试验结果记录表
-                            this.GoToForm(taskID, item.CnName, '19', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '19', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.EquipmentNameplate: //设备铭牌
-                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         case EnumPsOperationForm.CheckRecordImg: //CEMS零点量程漂移与校准记录表 图片弹框类型
                         case EnumPsOperationForm.CheckRecordImg2: //CEMS零点量程漂移与校准记录表 废气 图片弹框类型 
-                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID,item.Type);
                             break;
                         default:
                             break;
                     }
                 } else {
-                    this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                    this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID,item.Type);
                 }
             }
         });
         return rtnVal;
     }
 
-    GoToForm = (taskID, cnName, recordType, rtnVal, key, FormMainID) => {
+    GoToForm = (taskID, cnName, recordType, rtnVal, key, FormMainID,type) => {
         // let taskfrom = this.props.taskfrom || '';
         // if (taskfrom.indexOf("qcontrollist") > -1) {
         //     taskfrom = taskfrom.split('-')[0];
@@ -292,7 +292,8 @@ class EmergencyDetailInfo extends Component {
             style={{ marginBottom: '5px' }}
             icon={<CheckCircleOutlined />}
             onClick={() => {
-                if (recordType == '-1') {
+                // if (recordType == '-1') {
+                    if(type==1){
                     // 获取详情图片
                     this.props.dispatch({
                         type: 'common/getOperationImageList',

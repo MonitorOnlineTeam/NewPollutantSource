@@ -229,6 +229,13 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '排口类型',
+      dataIndex: 'OutTypeName',
+      key: 'OutTypeName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '督查类别',
       dataIndex: 'InspectorTypeName',
       key: 'InspectorTypeName',
@@ -378,7 +385,8 @@ const Index = (props) => {
         if (isRecord) {
           return <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip>
         }
-        const flag = !record.IsFlag;
+        // const flag = !record.IsFlag;
+        const flag = false;
         // const pushStatusFlag = record.Status == 2; //推送状态  只能查看详情
         const pushStatusFlag = false;
         const noSubmitStatusFlag = record.Status == 0; //暂存状态  不可以推送

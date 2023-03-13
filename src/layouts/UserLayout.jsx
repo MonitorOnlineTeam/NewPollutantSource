@@ -136,7 +136,7 @@ const UserLayout = props => {
         {
           configInfo && configInfo.IsShowFooterMessages === 'true' && <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={links} />
         }
-        {configInfo && configInfo.TechnicalSupport && <p style={{ fontSize: 14, textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)', marginTop: -13 }}>{configInfo.TechnicalSupport}</p>}
+        {/* {configInfo && configInfo.TechnicalSupport && <p style={{ fontSize: 14, textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)', marginTop: -13 }}>{configInfo.TechnicalSupport}</p>} */} 
       </div>
     </DocumentTitle>
   );

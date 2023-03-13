@@ -171,7 +171,7 @@
 </html>
 <script>
  if(window.location.search && window.location.search.split('=')){ //小程序和移动端 电子表单 token
-    if(window.location.search.split('=')[0] && window.location.search.split('=')[0] === '?Ticket'){
+    if(window.location.search.split('=')[0] && window.location.search.split('=')[0] === '?Ticket'){  
       const token = window.location.search.split('=')[1]
       document.cookie=`ssToken9001=${token}`
     }
