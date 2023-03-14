@@ -226,9 +226,9 @@ class LogTimeList extends Component {
                     //   this.setState({ detailVisible:true,typeID:node.TypeID,taskID:node.TaskID, })
                     // }
                     if(node.RecordType==1){
-                      this.getOperationImageList(node); 
-                    }else{
                       this.setState({ detailVisible:true,typeID:node.TypeID,taskID:node.TaskID, })
+                    }else{
+                      this.getOperationImageList(node); 
                     }
                   }}
                 >

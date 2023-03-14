@@ -37,8 +37,8 @@ class JzRecordContent extends Component {
 
     renderItem = (Record, code) => {
         const rtnVal = [];
+        if (Record != null && Record.length > 0) {
         if (code != null && code.length > 0) {
-            if (Record != null && Record.length > 0) {
                 code.map((item, key) => {
                     let rd = Record.filter((item1) => item1.ItemID === item);
                     if (rd&&rd[0]) { //校准项有数据
@@ -100,7 +100,7 @@ class JzRecordContent extends Component {
             rtnVal.push(<table key={'2'} className={styles.FormTable}>
                 <tbody>
                     <tr>
-                        <td colSpan="7" style={{ height: '90px',textAlign:'center' }}>没有填写校准项</td>
+                        <td colSpan="7" style={{ height: '60px',textAlign:'center' }}>没有填写校准项</td>
                     </tr>
                 </tbody>
             </table>)

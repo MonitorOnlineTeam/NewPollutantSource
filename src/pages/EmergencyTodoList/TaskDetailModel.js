@@ -131,62 +131,62 @@ class EmergencyDetailInfo extends Component {
                 if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
-                            this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.StopMachine:
-                            this.GoToForm(taskID, item.CnName, '2', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '2', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.YhpReplace:
-                            this.GoToForm(taskID, item.CnName, '3', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '3', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.StandardGasReplace:
-                            this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.CqfPatrol:
-                            this.GoToForm(taskID, item.CnName, '5', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '5', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.CyfPatrol:
-                            this.GoToForm(taskID, item.CnName, '6', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '6', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.ClfPatrol:
-                            this.GoToForm(taskID, item.CnName, '7', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '7', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.CheckRecord:
-                            this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.TestRecord:
-                            this.GoToForm(taskID, item.CnName, '9', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '9', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.DataException:
-                            this.GoToForm(taskID, item.CnName, '10', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '10', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.Maintain:
-                            this.GoToForm(taskID, item.CnName, '27', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '27', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.SparePartReplace:
-                            this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.Fault:
-                            this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.FaultWater:
-                            this.GoToForm(taskID, item.CnName, '59', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '59', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.FaultYan:
-                            this.GoToForm(taskID, item.CnName, '60', rtnVal, key, item.FormMainID,item.Type);
+                            this.GoToForm(taskID, item.CnName, '60', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         default:
                             break;
                     }
                 } else {
-                    this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID,item.Type);
+                    this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID, item.RecordType);
                 }
             }
         });
         return rtnVal;
     }
 
-    GoToForm = (taskID, cnName, recordType, rtnVal, key, FormMainID,type) => {
+    GoToForm = (taskID, cnName, recordType, rtnVal, key, FormMainID, type) => {
         // let taskfrom = this.props.taskfrom || '';
         // if (taskfrom.indexOf("qcontrollist") > -1) {
         //     taskfrom = taskfrom.split('-')[0];
@@ -196,7 +196,9 @@ class EmergencyDetailInfo extends Component {
             icon={<CheckCircleOutlined />}
             onClick={() => {
                 // if (recordType == '-1') {
-                    if(type==1){
+                if (type == 1) {
+                    router.push(`/operations/recordForm/${recordType}/${taskID}`)
+                } else {
                     // 获取详情图片
                     this.props.dispatch({
                         type: 'common/getOperationImageList',
@@ -210,8 +212,6 @@ class EmergencyDetailInfo extends Component {
                             })
                         },
                     })
-                } else {
-                    router.push(`/operations/recordForm/${recordType}/${taskID}`)
                 }
                 // this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
             }}
@@ -429,7 +429,7 @@ class EmergencyDetailInfo extends Component {
         });
     }
 
-    GetHelpersPeople=data => {
+    GetHelpersPeople = data => {
         const PeopleArr = [];
 
         data.length > 0 && data.map(item => {
@@ -735,83 +735,83 @@ class EmergencyDetailInfo extends Component {
                         </div>}
                 > */}
 
-                    <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
-                        <Card style={{ paddingBottom: '1.5%' }} title={<span style={{ fontWeight: '900' }} >基本信息</span>}  extra={
+                <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
+                    <Card style={{ paddingBottom: '1.5%' }} title={<span style={{ fontWeight: '900' }} >基本信息</span>} extra={
                         <div>
                             <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
                         </div>}>
-                            <DescriptionList classNam={styles.headerList} size="large" col="3">
-                                <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
-                                <Description term="监控标">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
-                                <Description term="监测点名称">{isExistTask ? this.props.taskInfo.Datas[0].PointName : null}</Description>
-                            </DescriptionList>
-                            <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
-                                <Description term="任务来源">{isExistTask ? this.props.taskInfo.Datas[0].TaskFromText : null}</Description>
-                                {/* <Description term="紧急程度"><div style={{ color: 'red' }}>{isExistTask ? this.props.taskInfo.Datas[0].EmergencyStatusText : null}</div></Description> */}
-                                <Description term="任务状态"> <div style={{ color: '#32CD32' }}>{isExistTask ? this.props.taskInfo.Datas[0].TaskStatusText : null}</div></Description>
-                                <Description term="任务类型">{isExistTask ? this.props.taskInfo.Datas[0].TaskTypeText : null}</Description>
-                            </DescriptionList>
-                            <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
-                                <Description term="创建人">{isExistTask ? this.props.taskInfo.Datas[0].CreateUserName : null}{this.getUserIcon(this.props.taskInfo.Datas[0].PeopleCertificateInfos)}</Description>
-                                <Description term="创建时间">{isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}</Description>
-                            </DescriptionList>
-                            {
-                                (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null : (<Divider style={{ marginBottom: 20 }} />)
-                            }
+                        <DescriptionList classNam={styles.headerList} size="large" col="3">
+                            <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
+                            <Description term="监控标">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
+                            <Description term="监测点名称">{isExistTask ? this.props.taskInfo.Datas[0].PointName : null}</Description>
+                        </DescriptionList>
+                        <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
+                            <Description term="任务来源">{isExistTask ? this.props.taskInfo.Datas[0].TaskFromText : null}</Description>
+                            {/* <Description term="紧急程度"><div style={{ color: 'red' }}>{isExistTask ? this.props.taskInfo.Datas[0].EmergencyStatusText : null}</div></Description> */}
+                            <Description term="任务状态"> <div style={{ color: '#32CD32' }}>{isExistTask ? this.props.taskInfo.Datas[0].TaskStatusText : null}</div></Description>
+                            <Description term="任务类型">{isExistTask ? this.props.taskInfo.Datas[0].TaskTypeText : null}</Description>
+                        </DescriptionList>
+                        <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
+                            <Description term="创建人">{isExistTask ? this.props.taskInfo.Datas[0].CreateUserName : null}{this.getUserIcon(this.props.taskInfo.Datas[0].PeopleCertificateInfos)}</Description>
+                            <Description term="创建时间">{isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}</Description>
+                        </DescriptionList>
+                        {
+                            (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null : (<Divider style={{ marginBottom: 20 }} />)
+                        }
 
-                            {
+                        {
 
-                                (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
-                                    <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
-                            }
-                        </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
-                            <DescriptionList className={styles.headerList} size="large" col="1">
-                                <Description>
-                                    <TextArea rows={8} style={{ width: '600px' }} value={isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null} />
-                                </Description>
-                            </DescriptionList>
-                        </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>处理记录</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
-                            <DescriptionList className={styles.headerList} size="large" col="1">
-                                <Description>
-                                    {
-                                        this.renderItem(RecordTypeInfo, isExistTask ? this.props.taskInfo.Datas[0].TaskID : null, this.props.taskInfo.Datas[0].PollutantType)
-                                    }
-                                </Description>
-                            </DescriptionList>
-                            <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
-                                <Description term="处理人">
-                                    {isExistTask ? this.props.taskInfo.Datas[0].ExecuteUserName : null}
-                                </Description>
-                                <Description term="处理时间">
-                                    {isExistTask ? this.props.taskInfo.Datas[0].CompleteTime : null}
-                                </Description>
-                                <Description term="协助人">
-                                    {isExistTask ? this.GetHelpersPeople(this.props.taskInfo.Datas[0].TaskHelpersPeople) : null}
-                                </Description>
-                            </DescriptionList>
-                        </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
-                            {
-                                upload.fileList.length === 0 ? '没有上传附件' : (<Upload
-                                    {...upload}
-                                    onPreview={file => {
-                                        this.handlePreview(file, fileList);
-                                    }}
-                                />)
-                            }
-                        </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>日志表</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
-                            {
-                                <Steps width={this.stepsWidth(TaskLogList)} style={{ overflowX: 'scroll' }}>
-                                    {
-                                        this.TaskLogList(TaskLogList)
-                                    }
-                                </Steps>
-                            }
-                        </Card>
-                    </div>
+                            (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
+                                <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
+                        }
+                    </Card>
+                    <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                        <DescriptionList className={styles.headerList} size="large" col="1">
+                            <Description>
+                                <TextArea rows={8} style={{ width: '600px' }} value={isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null} />
+                            </Description>
+                        </DescriptionList>
+                    </Card>
+                    <Card title={<span style={{ fontWeight: '900' }}>处理记录</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                        <DescriptionList className={styles.headerList} size="large" col="1">
+                            <Description>
+                                {
+                                    this.renderItem(RecordTypeInfo, isExistTask ? this.props.taskInfo.Datas[0].TaskID : null, this.props.taskInfo.Datas[0].PollutantType)
+                                }
+                            </Description>
+                        </DescriptionList>
+                        <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
+                            <Description term="处理人">
+                                {isExistTask ? this.props.taskInfo.Datas[0].ExecuteUserName : null}
+                            </Description>
+                            <Description term="处理时间">
+                                {isExistTask ? this.props.taskInfo.Datas[0].CompleteTime : null}
+                            </Description>
+                            <Description term="协助人">
+                                {isExistTask ? this.GetHelpersPeople(this.props.taskInfo.Datas[0].TaskHelpersPeople) : null}
+                            </Description>
+                        </DescriptionList>
+                    </Card>
+                    <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                        {
+                            upload.fileList.length === 0 ? '没有上传附件' : (<Upload
+                                {...upload}
+                                onPreview={file => {
+                                    this.handlePreview(file, fileList);
+                                }}
+                            />)
+                        }
+                    </Card>
+                    <Card title={<span style={{ fontWeight: '900' }}>日志表</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                        {
+                            <Steps width={this.stepsWidth(TaskLogList)} style={{ overflowX: 'scroll' }}>
+                                {
+                                    this.TaskLogList(TaskLogList)
+                                }
+                            </Steps>
+                        }
+                    </Card>
+                </div>
                 {/* </Card> */}
                 <Modal
                     visible={this.state.cdvisible}

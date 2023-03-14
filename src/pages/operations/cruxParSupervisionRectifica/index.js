@@ -1,7 +1,7 @@
 /**
  * 功  能：运维督查管理 
  * 创建人：jab
- * 创建时间：2022.04.20
+ * 创建时间：2022.02.20
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
@@ -295,7 +295,7 @@ const Index = (props) => {
       onValuesChange={onValuesChange}
     >
       <Row align='middle'>
-        <Form.Item label='行政区' name='regionCode' >
+        <Form.Item label='行政区' name='regionCode' className='minWidth'>
           <RegionList noFilter levelNum={2} style={{ width: 150 }} />
         </Form.Item>
         <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
@@ -317,8 +317,8 @@ const Index = (props) => {
         </Spin>
       </Row>
 
-      <Row>
-        <Form.Item label="核查人" name="checkUser"  >
+      <Row style={{paddingTop:5}}>
+        <Form.Item label="核查人" name="checkUser"  className='minWidth'>
           <OperationInspectoUserList type='2' style={{ width: 150 }} />
         </Form.Item>
         <Form.Item label="核查日期" name="time"  >
@@ -379,7 +379,7 @@ const Index = (props) => {
   return (
     <div className={styles.supervisionManagerSty}>
       <BreadcrumbWrapper >
-        <Card title={searchComponents()} className={styles.supervisionManagerModalSty}>
+        <Card title={searchComponents()}>
           <SdlTable
             resizable
             loading={tableLoading}

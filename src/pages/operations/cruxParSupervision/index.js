@@ -405,7 +405,7 @@ const Index = (props) => {
         onValuesChange={onValuesChange}
       >
         <Row align='middle'>
-          <Form.Item label='行政区' name='regionCode' >
+          <Form.Item label='行政区' name='regionCode' className='minWidth'>
             <RegionList noFilter levelNum={2} style={{ width: 150 }} />
           </Form.Item>
           <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
@@ -437,7 +437,7 @@ const Index = (props) => {
         </Row>
 
         <Row style={{paddingTop:5}}>
-          <Form.Item label="核查人" name="checkUser"  >
+          <Form.Item label="核查人" name="checkUser"  className='minWidth'>
             <OperationInspectoUserList type='2' style={{ width: 150 }} />
           </Form.Item>
           <Form.Item label="核查日期" name="time2"  >
@@ -523,7 +523,7 @@ const Index = (props) => {
   return (
     <div className={styles.supervisionManagerSty}>
       <BreadcrumbWrapper >
-        <Card title={searchComponents()} className={styles.supervisionManagerModalSty}>
+        <Card title={searchComponents()}>
           <SdlTable
             resizable
             loading={tableLoading}

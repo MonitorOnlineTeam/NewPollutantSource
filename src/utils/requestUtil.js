@@ -74,14 +74,20 @@ const errorHandler = error => {
 /**
  * 配置request请求时的默认参数
  */
-const ssoToken = `${getCookie(configToken.cookieName)}`;
+
+let mobileToken;
+if(window.location.search && window.location.search.split('=')){ //小程序和移动端 电子表单 token
+  if(window.location.search.split('=')[0] && window.location.search.split('=')[0] === '?Ticket'){  
+    mobileToken = window.location.search.split('=')[1]
+  }
+}
+// const ssoToken = `${getCookie(configToken.cookieName)}`;
 const request = extend({
   errorHandler,
   // timeout: 30000,
   // 默认错误处理
   credentials: 'omit', // 默认请求是否带上cookie
 });
-
 request.interceptors.request.use(async (url, options) => {
   if (
     options.method === 'post' ||
@@ -92,7 +98,7 @@ request.interceptors.request.use(async (url, options) => {
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: (Cookie.get(configToken.cookieName) != "null" && Cookie.get(configToken.cookieName) != "") && `Bearer ${Cookie.get(configToken.cookieName)}`,
+      Authorization: Cookie.get(configToken.cookieName) ? `Bearer ${Cookie.get(configToken.cookieName)}` : `Bearer ${mobileToken}` ,
     };
     return {
       url,

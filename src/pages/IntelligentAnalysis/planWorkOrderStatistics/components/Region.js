@@ -2048,7 +2048,7 @@ useImperativeHandle(refInstance,() => {
         onCancel={()=>{setInsideWorkOrderVisible(false)}}
         footer={null}
         destroyOnClose
-        width='90%'
+        wrapClassName={`spreadOverModal`}
       >
      <Card title={  searchWorkComponents()}>
      <SdlTable
