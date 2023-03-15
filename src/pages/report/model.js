@@ -74,6 +74,7 @@ export default Model.extend({
             title: <>{item.name}<br />{unit}</>,
             dataIndex: item.name,
             align: 'center',
+            flag: 'pollutant'
           }
         })
         yield update({

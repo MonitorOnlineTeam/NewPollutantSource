@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-02-18 15:16:30
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-03-07 16:41:24
+ * @Last Modified time: 2023-03-10 09:59:19
  * @desc
  */
 import React, { PureComponent } from 'react'
@@ -30,7 +30,7 @@ import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import RegionList from '@/components/RegionList'
-import { getDataTruseMsg } from '@/utils/utils';
+import { getDataTruseMsg, getDataTruseItemMsg } from '@/utils/utils';
 
 
 const FormItem = Form.Item;
@@ -198,11 +198,8 @@ class SmokeReportPage extends PureComponent {
                 width: 140,
                 align: 'center',
                 render: (value, row, index) => {
-                  const obj = {
-                    children: value,
-                    props: {},
-                  };
-                  return obj;
+                  // let value = row[itm.ChildColumnCode];
+                  return getDataTruseItemMsg(row, itm.ChildColumnCode + '-revisionTime', value);
                 },
               }
             })

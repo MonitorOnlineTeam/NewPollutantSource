@@ -435,3 +435,38 @@ export const getDataTruseMsg = (record) => {
     return '';
   }
 }
+
+
+// 获取数据不可信信息
+export const getDataTruseItemMsg = (record, timeKey, value) => {
+  let errorStr = '';
+  if (record.DataTrusted === false && record.DeviceTrusted === false) {
+    // 两种数据不可信
+    errorStr = '数据、身份不可信'
+  } else if (record.DataTrusted === false) {
+    // 数据不可信
+    errorStr = '数据不可信'
+  } else if (record.DeviceTrusted === false) {
+    // 身份不可信
+    errorStr = '身份不可信'
+  }
+
+  let time = record[timeKey];
+  debugger
+  if (time) {
+    let content = <div>
+      <li style={{ listStyle: 'none', marginBottom: 10 }}>
+        <Badge status="warning" text={`不可信原因：${errorStr}`} />
+      </li>
+      <li style={{ listStyle: 'none' }}>
+        <Badge status="warning" text={`修约时间：${time}`} />
+      </li>
+    </div>;
+    return <Popover content={content}>
+      <span style={{ color: '#faad14' }}>{value}</span>
+    </Popover>
+  }
+  console.log('value', value)
+
+  return <span>{value}</span>
+}

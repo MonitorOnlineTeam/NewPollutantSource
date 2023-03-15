@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2023-03-03 15:40:27 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-03-07 16:25:27
+ * @Last Modified time: 2023-03-15 14:39:56
  * @Description: 数据不可信查询
  */
 
@@ -23,20 +23,8 @@ const dvaPropsData = ({ loading, dataSearch, }) => ({
   dataTrustTotal: dataSearch.dataTrustTotal,
   loading: loading.effects['dataSearch/getUnTrustedList']
 })
-const dvaDispatch = (dispatch) => {
-  return {
-    // 获取数据不可信列表
-    getUnTrustedList: (payload) => {
-      dispatch({
-        type: `dataSearch/GetUnTrustedList`,
-        payload: payload,
-      })
-    },
-  }
-}
 
 const DataTrust = (props) => {
-
   const { dataTrustDataSource, dataTrustTotal, loading } = props;
   const beginTime = moment().subtract(1, 'days').format('YYYY-MM-DD HH:00:00');
   const endTime = moment().format('YYYY-MM-DD HH:59:59');
@@ -52,8 +40,6 @@ const DataTrust = (props) => {
       getUnTrustedList();
     }
   }, [pageIndex, pageSize]);
-
-  console.log('props', props)
 
 
   // 获取数据不可信信息
@@ -111,11 +97,7 @@ const DataTrust = (props) => {
                 width: 140,
                 align: 'center',
                 render: (value, row, index) => {
-                  const obj = {
-                    children: value,
-                    props: {},
-                  };
-                  return obj;
+                  return value || '-';
                 },
               }
             })
@@ -129,6 +111,9 @@ const DataTrust = (props) => {
               dataIndex: item.ParenntColumnCode,
               // width: 200,
               align: 'center',
+              render: (value, row, index) => {
+                return value || '-';
+              },
             })
           }
         })
@@ -165,6 +150,7 @@ const DataTrust = (props) => {
     setDataType(value);
   }
 
+  // 分页
   const handleTableChange = (pagination, filters, sorter) => {
     setPageIndex(pagination.current);
     setPageSize(pagination.pageSize);
@@ -220,7 +206,7 @@ const DataTrust = (props) => {
             }
             getTableColumns();
             setPageIndex(1);
-            setPageSize(20)
+            setPageSize(20);
             if (pageIndex === 1 && pageSize === 20) {
               getUnTrustedList();
             }
@@ -231,7 +217,6 @@ const DataTrust = (props) => {
         loading={loading}
         style={{ marginTop: 20 }}
         rowKey={(record, index) => index}
-        // loading={loading}
         columns={columns}
         dataSource={dataTrustDataSource}
         onChange={handleTableChange}
@@ -244,10 +229,6 @@ const DataTrust = (props) => {
           current: pageIndex,
           pageSizeOptions: ['10', '20', '30', '40', '50'],
         }}
-        // pagination={false}
-        // rowClassName={""}
-        // defaultWidth={80}
-        // scroll={{ x: '1200px' }}
         bordered
       />
     </Card >

@@ -26,7 +26,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import RegionList from '@/components/RegionList'
 import SdlTable from '@/components/SdlTable';
 import style from '../tableClass.less'
-import { getDataTruseMsg } from '@/utils/utils';
+import { getDataTruseMsg, getDataTruseItemMsg } from '@/utils/utils';
 
 const { Option } = Select;
 
@@ -178,11 +178,7 @@ class index extends PureComponent {
                                 width: 140,
                                 align: 'center',
                                 render: (value, row, index) => {
-                                    const obj = {
-                                        children: value,
-                                        props: {},
-                                    };
-                                    return obj;
+                                    return getDataTruseItemMsg(row, itm.ChildColumnCode + '-revisionTime', value);
                                 },
                             }
                         })
