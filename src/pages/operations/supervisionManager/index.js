@@ -917,7 +917,7 @@ const Index = (props) => {
           time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
         }}
         className={styles["ant-advanced-search-form"]}
-        onFinish={onFinish}
+        onFinish={()=>{setPageIndex(1); onFinish(1,pageSize)}}
         onValuesChange={onValuesChange}
       >
         <Row align='middle'>

@@ -36,6 +36,7 @@ const dvaPropsData = ({ loading, referenceMaterial, global }) => ({
   loadingAddConfirm: loading.effects[`${namespace}/addStandardGas`],
   loadingEditConfirm: loading.effects[`${namespace}/editStandardGas`],
   clientHeight: global.clientHeight,
+  configInfo:global.configInfo,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -95,6 +96,7 @@ const Index = (props) => {
 
 
 
+  const provinceShow = props.configInfo&&props.configInfo.IsShowProjectRegion;
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
@@ -285,7 +287,7 @@ const Index = (props) => {
     // if(Object.keys(hangedValues).join() == 'PollutantType'){
     // }
   }
-  const searchComponents = () => {
+  const searchComponents = (provinceShow) => {
     return <Form
       form={form}
       name="advanced_search"
@@ -301,7 +303,7 @@ const Index = (props) => {
         <Form.Item label="存货编号" name="StandardGasCode" >
           <Input placeholder="请输入" style={{ width: 200 }} allowClear />
         </Form.Item>
-        <Form.Item label={typeRemark == 1 ? "标准气体名称" : "试剂名称"} name="StandardGasName" style={{ marginLeft: 16, marginRight: 16 }}>
+        <Form.Item label={typeRemark == 1 ? "标准气体名称" : "试剂名称"}  name="StandardGasName"  className={'standardGasWidth'} style={{ marginLeft: 16, marginRight: 16 }}>
           <Input placeholder="请输入" style={{ width: 200 }} allowClear />
         </Form.Item>
         <Form.Item label="规格型号" name="Component"  >
@@ -312,10 +314,10 @@ const Index = (props) => {
         <Form.Item label="供应商" name="Manufacturer">
           <Input placeholder="请输入" style={{ width: 200 }} allowClear />
         </Form.Item>
-        <Form.Item label="所属运维单位" name="OperationCompany" style={{ marginLeft: 16, }}  >
+        {!provinceShow&&<Form.Item label="所属运维单位" name="OperationCompany" style={{ marginLeft: 16, }}>
           <Input placeholder="请输入" style={{ width: 200 }} allowClear />
-        </Form.Item>
-        <Form.Item label="使用状态" name="IsUsed" style={{ marginLeft: 16, marginRight: 16 }} >
+        </Form.Item>}
+        <Form.Item label="使用状态" name="IsUsed" className={provinceShow? 'standardGasWidth' : ''} style={{ marginLeft: 16, marginRight: 16 }} >
           <Select placeholder='请选择状态' allowClear style={{ width: 200 }}>
             <Option key={1} value={1}>启用</Option>
             <Option key={2} value={2}>停用</Option>
@@ -369,12 +371,12 @@ const Index = (props) => {
   return (
     <div className={styles.referenceMaterialSty}>
       <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+        <Card title={searchComponents(provinceShow)}>
           <SdlTable
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={columns}
+            columns={provinceShow ? columns.filter(item=>item.title!='所属运维单位') : columns  }
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

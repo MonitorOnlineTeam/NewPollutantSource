@@ -23,7 +23,7 @@ import NavigationTree from '@/components/NavigationTree';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import styles from '../index.less';
 import config from '@/config';
-import Detail from '@/pages/operations/recordForm'
+import RecordForm from '@/pages/operations/recordForm'
 
 const { Option } = Select;
 
@@ -465,7 +465,7 @@ class LogTimeList extends Component {
         wrapClassName='spreadOverModal'
         footer={null}
       >
-        <Detail hideBreadcrumb isHomeModal  match={{params:{typeID: this.state.typeID,taskID:this.state.taskID}}}  />
+        <RecordForm hideBreadcrumb isHomeModal  match={{params:{typeID: this.state.typeID,taskID:this.state.taskID}}}  />
         </Modal>
       </>
     );

@@ -14,14 +14,10 @@ import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
-import RegionList from '@/components/RegionList'
-import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import EntAtmoList from '@/components/EntAtmoList'
-import OperationInspectoUserList from '@/components/OperationInspectoUserList'
-import RectificaDetail from './RectificaDetail';
+import RecordForm from '@/pages/operations/recordForm'
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -100,7 +96,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,regQueryPar, } = props;
+  const { DGIMN,tableDatas, tableTotal, tableLoading, exportLoading, entLoading,regQueryPar, } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -109,7 +105,7 @@ const Index = (props) => {
 
   useEffect(() => {
     onFinish(pageIndex,pageSize)
-  }, []);
+  }, [DGIMN]);
 
 
   const columns = [
@@ -184,42 +180,16 @@ const Index = (props) => {
       fixed: 'right',
       width: 150,
       ellipsis: true,
-      render: (text, record) => {
-        return (
-          <div>
-            {record.rectificationStatus!=='整改已完成'&&<>
-            <a onClick={() => { rectificaDetail(record, 1) }}>
-              核查整改
-              </a>
-           <Divider type="vertical" />
-            </>}
-            <a onClick={() => {
-              rectificaDetail(record, 2)
-            }}>
-              整改详情
-          </a>
-          </div>
-        )
-      }
-
+      render: (text, record) =><div> <a onClick={() => {detail(record)}}> 查看详情 </a> </div>
     }
   ];
 
 
 
 
+ 
 
 
-  const [entLoading2, setEntLoading2] = useState(false)
-  const [entList, setEntList] = useState([])
-  const getEntList = (pollutantType, callback) => {
-    setEntLoading2(true)
-    props.getEntNoFilterList({ RegionCode: '', PollutantType: pollutantType }, (data) => {
-      setEntList(data)
-      setEntLoading2(false);
-      callback && callback();
-    })
-  }
 
 
   const onFinish = async (pageIndexs, pageSizes,par) => {  //查询  par参数 分页需要的参数
@@ -257,89 +227,45 @@ const Index = (props) => {
 
 
 
-  const [pointList, setPointList] = useState([])
-  const [pointLoading, setPointLoading] = useState(false)
 
-  const onValuesChange = (hangedValues, allValues) => {
-    if (Object.keys(hangedValues).join() == 'entCode') {
-      if (!hangedValues.entCode) { //清空时 不走请求
-        form.setFieldsValue({ DGIMN: undefined })
-        setPointList([])
-        return;
-      }
-      setPointLoading(true)
-      props.getPointByEntCode({ EntCode: hangedValues.entCode }, (res) => {
-        setPointList(res)
-        setPointLoading(false)
-        form.setFieldsValue({ DGIMN: res[0].DGIMN })
-      })
-    }
-  }
+  
 
 
   const searchComponents = () => {
     return <Form
       form={form}
       name="advanced_search"
+      layout='inline'
       initialValues={{
         time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={()=>{setPageIndex(1); onFinish(1,pageSize)}}
-      onValuesChange={onValuesChange}
     >
-      <Row align='middle'>
-        <Form.Item label='行政区' name='regionCode' >
-          <RegionList noFilter levelNum={2} style={{ width: 150 }} />
+        <Form.Item label='运维日期' name='time' >
+        <RangePicker_ 
+         showTime={{format:'YYYY-MM-DD HH:mm:ss',
+         defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
+         style={{width:350}}
+         />
         </Form.Item>
-        <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
-          <Form.Item label='企业' name='entCode'>
-            <EntAtmoList noFilter style={{ width: 300 }} />
-          </Form.Item>
-        </Spin>
-        <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
-          <Form.Item label='监测点名称' name='DGIMN' >
-
-            <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 150 }}>
-              {
-                pointList[0] && pointList.map(item => {
-                  return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
-                })
-              }
-            </Select>
-          </Form.Item>
-        </Spin>
-      </Row>
-
-      <Row>
-        <Form.Item label="核查人" name="checkUser"  >
-          <OperationInspectoUserList type='2' style={{ width: 150 }} />
-        </Form.Item>
-        <Form.Item label="核查日期" name="time"  >
-            <RangePicker_
-              style={{ width: 300 }}
-              allowClear={false}
-              format="YYYY-MM-DD" />
-          </Form.Item>
-        <Form.Item label="整改状态" name="checkResult"  >
-          <Select placeholder='请选择' allowClear style={{ width: 150 }}>
-            <Option key={1} value={1} >整改待核实</Option>
-            <Option key={2} value={2} >整改未完成</Option>
-            <Option key={3} value={3} >整改已完成</Option>    
+          <Form.Item label='运维内容' name='DGIMN'>
+          <Select placeholder='请选择' allowClear  style={{width:150}}>
+            <Option key={1} value={1} >巡检</Option>
+            <Option key={2} value={2} >校准</Option>
+            <Option key={3} value={3} >维修</Option>    
           </Select>
-        </Form.Item>
-        <Form.Item style={{paddingLeft:16}}>
-          <Button type="primary" loading={tableLoading} htmlType='submit'>
+          </Form.Item>
+        <Form.Item>
+          <Button type="primary" loading={tableLoading} htmlType='submit'  style={{marginRight:8}}>
             查询
           </Button>
-          <Button onClick={() => { form.resetFields() }}   style={{ margin: '0 8px' }}>
-            重置
+          <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>
+            导出 
           </Button>
-          <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
 
         </Form.Item>
 
-      </Row>
     </Form>
   }
 
@@ -355,15 +281,14 @@ const Index = (props) => {
   const [pageIndex, setPageIndex] = useState(1)
 
 
-  const [rectificaDetailVisible, setRectificaDetailVisible] = useState(false)
-  const [rectificaDetailId, setRectificaDetailId] = useState(null)
-  const [rectificaDetailType, setRectificaDetailType] = useState(1)
-  const [infoData,setInfoData] = useState(null)
-  const rectificaDetail = (record, type) => { //核查 详情
-    setRectificaDetailId(record.id);
-    setRectificaDetailVisible(true)
-    setRectificaDetailType(type)
-    setInfoData(record)
+  const [detailVisible, setDetailVisible] = useState(false)
+  const [typeID, setTypeID] = useState(null)
+  const [taskID, setTaskID] = useState(1)
+  const detail = (record) => { //详情
+    setTypeID(record.typeId);
+    setTaskID(record.taskId)
+    setDetailVisible(true)
+    
   }
 
 
@@ -372,7 +297,6 @@ const Index = (props) => {
 
   return (
     <div className={styles.operationRecordListSty}>
-      <BreadcrumbWrapper >
         <Card title={searchComponents()}>
           <SdlTable
             resizable
@@ -391,20 +315,18 @@ const Index = (props) => {
             }}
           />
         </Card>
-      </BreadcrumbWrapper>
 
-
-
-      <Modal //核查和详情
-        visible={rectificaDetailVisible}
-        title={rectificaDetailType==1? '核查整改': '整改详情'}
+      <Modal //表单详情
+        visible={detailVisible}
+        title={'详情'}
+        wrapClassName='spreadOverModal'
         footer={null}
         width={'100%'}
         className={styles.fromModal}
-        onCancel={() => { setRectificaDetailVisible(false);rectificaDetailType==1&&infoData&&infoData.rectificationStatus!=='整改未完成'&&onFinish(pageIndex,pageSize); }}
+        onCancel={() => { setDetailVisible(false) }}
         destroyOnClose
       >
-        <RectificaDetail id={rectificaDetailId} type={rectificaDetailType} infoData={infoData}/>
+     <RecordForm hideBreadcrumb   match={{params:{typeID: typeID,taskID:taskID}}}  />
       </Modal>
     </div>
   );

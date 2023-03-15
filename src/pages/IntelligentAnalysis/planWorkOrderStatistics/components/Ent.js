@@ -154,13 +154,13 @@ const Index = (props,ref) => {
     },
     {
       title: '计划巡检工单',
-      width:200,
+      width:255,
       children: [
         {
           title: <span>总数<Tooltip  title={'日期条件内，完成的计划巡检工单数量。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'inspectionCount',
           key: 'inspectionCount',
-          width: 50,
+          width: 100,
           align:'center',
           render:(text,record,index)=>{
           return  <Button type="link" onClick={()=>{workOrderNum(1,record)}}>{text}</Button>
@@ -198,13 +198,13 @@ const Index = (props,ref) => {
     },
     {
       title: '计划校准工单',
-      width:200,
+      width:255,
       children: [
         {
           title: <span>总数<Tooltip  title={'日期条件内，完成、系统关闭的计划校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'calibrationCount',
           key: 'calibrationCount',
-          width: 50,
+          width: 100,
           align:'center',
           render:(text,record,index)=>{
           return  <Button type="link" onClick={()=>{workOrderNum(2,record)}}>{text}</Button>
@@ -434,7 +434,7 @@ const Index = (props,ref) => {
           title: <span>总数<Tooltip  title={'日期条件内完成的工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'allCompleteTaskCount',
           key: 'allCompleteTaskCount',
-          width: 80,
+          width: 100,
           align:'center',
         },
         {
@@ -969,7 +969,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         onCancel={()=>{setInsideWorkOrderVisible(false)}}
         footer={null}
         destroyOnClose
-        width='90%'
+        wrapClassName={`spreadOverModal`}
       >
      <Card title={  searchWorkComponents()}>
      <SdlTable
@@ -977,7 +977,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         bordered
         dataSource={insideOrOutsiderWorkTableDatas}
         columns={insideWorkType==1? insideWorkOrderColumns : insideWorkOrderColumns2}
-        scroll={{ y: clientHeight - 580}}
+        scroll={{ y: clientHeight - 450}}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,

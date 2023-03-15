@@ -117,9 +117,9 @@ const Index = (props) => {
 
   const isEditing = (record) => record.key === editingKey;
 
-  const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading,configInfo, } = props;
+  const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading, } = props;
   
-  const provinceShow = configInfo&&configInfo.IsShowProjectRegion;
+  const provinceShow = props.configInfo&&props.configInfo.IsShowProjectRegion;
   
   useEffect(() => {
     onFinish(pageIndex, pageSize);

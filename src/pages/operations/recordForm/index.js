@@ -193,7 +193,7 @@ class Index extends Component {
     render() {
         return (
             <BreadcrumbWrapper breadcrumb={[]} title="记录单详情" hideBreadcrumb={this.props.hideBreadcrumb}>
-                {!this.props.isHomeModal&& <div width="70%" style={{ backgroundColor: '#fff' }}>
+                {/* {!this.props.isHomeModal&& <div width="70%" style={{ backgroundColor: '#fff' }}>
                    <Button type="primary" ghost style={{ marginTop: 20, marginLeft: '85%' }} onClick={() => {
                         router.push(`/taskdetail/emergencydetailinfolayout/${this.props.match.params.taskID}/21`);
                     }}><FormIcon />任务单</Button>
@@ -201,7 +201,7 @@ class Index extends Component {
                         history.go(-1)
                     }}>返回</Button>
 
-                </div>}
+                </div>} */}
                 {this.getrecordForm()}
                 {/* <JzRecordContent TaskID={this.props.match.params.taskID} />  */}
             </BreadcrumbWrapper>

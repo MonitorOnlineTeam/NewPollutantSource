@@ -8,10 +8,11 @@ import styles from './style.less';
 import FileViewer from 'react-file-viewer';
 const { Tab, UserName, Password, Mobile, Captcha,VerificaCode, Submit } = LoginComponents;
 import Agreement from '../login/components/Agreement'
-@connect(({ userLogin, loading }) => ({
+@connect(({ userLogin, loading,login }) => ({
   userLogin,
   submitting: loading.effects['userLogin/login'],
   isAgree:userLogin.isAgree,
+  configInfo:login.configInfo
 }))
 class Login extends Component {
   loginForm = undefined;
@@ -109,6 +110,9 @@ class Login extends Component {
     const { userLogin, submitting,isAgree, } = this.props;
     const { status, type: loginType, message } = userLogin;
     const { type, autoLogin,agreementVisible,loginSuccess, } = this.state;
+
+    const provinceShow = this.props.configInfo&&this.props.configInfo.IsShowProjectRegion;
+  console.log(this.props.configInfo)
     return (
       <div className={styles.main}>
         <LoginComponents
@@ -241,9 +245,9 @@ class Login extends Component {
           </div> */}
          <Row justify='space-between' align='middle'>
 
-           <Checkbox checked={isAgree} onChange={(e)=>{  this.props.dispatch({  type: 'userLogin/changeLoginStatus',payload: {  isAgree:e.target.checked   }});}}>
+          {!provinceShow&&<Checkbox checked={isAgree} onChange={(e)=>{  this.props.dispatch({  type: 'userLogin/changeLoginStatus',payload: {  isAgree:e.target.checked   }});}}>
                阅读并接受<Button type='link'  style={{padding:0}} onClick={()=>{this.setState({agreementVisible:true})}}>《用户监测数据许可协议》</Button>
-            </Checkbox>
+            </Checkbox>}
             
              {/* <Checkbox className={styles.autoLoginSty}  checked={autoLogin} onChange={this.changeAutoLogin}>
               自动登录

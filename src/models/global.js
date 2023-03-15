@@ -406,7 +406,8 @@ export default Model.extend({
   subscriptions: {
     socket({ dispatch }) {
       console.log('initsocket1');
-      dispatch({
+      const token = Cookie.get(config.cookieName);
+      token!='null' && token!= 'undefined'&& token!= '' && dispatch({ //登录之后获取
         type: 'getSystemConfigInfo', payload: {
           listen: function () {
             console.log('initsocket2');
@@ -532,7 +533,7 @@ export default Model.extend({
             });
           }
         }
-      });
+      })
     },
     setup({ history }) {
       history.listen(({ pathname, search }) => {

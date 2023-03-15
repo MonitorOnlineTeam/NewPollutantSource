@@ -75,12 +75,14 @@ const errorHandler = error => {
  * 配置request请求时的默认参数
  */
 
-let mobileToken;
 if(window.location.search && window.location.search.split('=')){ //小程序和移动端 电子表单 token
   if(window.location.search.split('=')[0] && window.location.search.split('=')[0] === '?Ticket'){  
-    mobileToken = window.location.search.split('=')[1]
+    const mobileToken = window.location.search.split('=')[1]
+    Cookie.set(configToken.cookieName, mobileToken);
   }
 }
+
+
 // const ssoToken = `${getCookie(configToken.cookieName)}`;
 const request = extend({
   errorHandler,
@@ -95,10 +97,11 @@ request.interceptors.request.use(async (url, options) => {
     options.method === 'delete' ||
     options.method === 'get'
   ) {
+    const token = Cookie.get(configToken.cookieName);
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: Cookie.get(configToken.cookieName) ? `Bearer ${Cookie.get(configToken.cookieName)}` : `Bearer ${mobileToken}` ,
+      Authorization: token!='null' && token!= 'undefined'&& token!= '' ?  `Bearer ${Cookie.get(configToken.cookieName)}` : null,
     };
     return {
       url,

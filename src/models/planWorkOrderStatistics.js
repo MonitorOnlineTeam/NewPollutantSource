@@ -36,7 +36,7 @@ export default Model.extend({
     cityDetailTableDatas:[],
     entOutsidePointListTotal:[],
     entOutsidePointListDatas:[],
-    regPointTableDatasTotal:[],
+    regPointTableDatasTotal:0,
     exportActualRegLoading:false,
     exportActualRegDetailLoading:false,
     exportActualRegTaskLoading:false,

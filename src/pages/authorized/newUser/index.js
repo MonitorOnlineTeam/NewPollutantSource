@@ -58,7 +58,7 @@ import styles from './style.less';
 const { confirm } = Modal;
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
-@connect(({ loading, autoForm, newuserinfo, usertree }) => ({
+@connect(({ loading, autoForm, newuserinfo, usertree,global, }) => ({
   loading: newuserinfo.loading,
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
@@ -80,6 +80,7 @@ const { SHOW_PARENT } = TreeSelect;
   userManagePageIndex: newuserinfo.userManagePageIndex,
   userManagePageSize: newuserinfo.userManagePageSize,
   queryPar: newuserinfo.queryPar,
+  configInfo: global.configInfo,
 }))
 export default class UserInfoIndex extends Component {
   constructor(props) {
@@ -681,6 +682,7 @@ export default class UserInfoIndex extends Component {
         }
       }
     };
+    const provinceShow = this.props.configInfo&&this.props.configInfo.IsShowProjectRegion;
     return (
       <BreadcrumbWrapper title="用户管理">
         <Card>
@@ -715,9 +717,9 @@ export default class UserInfoIndex extends Component {
                 treeNodeFilterProp='title'
               />
             </Form.Item>
-            <Form.Item label='运维单位' >
+            {!provinceShow&&<Form.Item label='运维单位' >
               <Input onChange={this.onOperationChange} placeholder='请输入运维单位' allowClear />
-            </Form.Item>
+            </Form.Item>}
             <Form.Item>
               <Button type='primary' onClick={this.queryClick} style={{ marginLeft: 8 }}> 查询</Button>
               <Button onClick={this.restClick} style={{ marginLeft: 8 }} > 重置</Button>
@@ -842,7 +844,7 @@ export default class UserInfoIndex extends Component {
             rowKey={(record, index) => `complete${index}`}
             rowSelection={rowSelection}
             loading={this.props.loading}
-            columns={this.columns}
+            columns={provinceShow ? this.columns.filter(item=>item.title!='运维单位') : this.columns}
             dataSource={this.props.tableDatas}
             pagination={{
               showSizeChanger: true,

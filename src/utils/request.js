@@ -8,7 +8,7 @@ export async function get(url, params, flag) {
   //   url += '?authorCode=48f3889c-af8d-401f-ada2-c383031af92d';
   if (params) {
     const paramsArray = [];
-    Object.keys(params).forEach(key => paramsArray.push(`${key}=${params[key]}`));
+    Object.keys(params).forEach(key => paramsArray.push(`${key}=${encodeURIComponent(params[key])}`));
 
     if (url.indexOf('?') === -1) {
       if (url.search(/\?/) === -1) {
