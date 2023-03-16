@@ -112,7 +112,6 @@ class Login extends Component {
     const { type, autoLogin,agreementVisible,loginSuccess, } = this.state;
 
     const provinceShow = this.props.configInfo&&this.props.configInfo.IsShowProjectRegion;
-  console.log(this.props.configInfo)
     return (
       <div className={styles.main}>
         <LoginComponents

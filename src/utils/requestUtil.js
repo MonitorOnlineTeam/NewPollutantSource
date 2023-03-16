@@ -74,7 +74,6 @@ const errorHandler = error => {
 /**
  * 配置request请求时的默认参数
  */
-
 if(window.location.search && window.location.search.split('=')){ //小程序和移动端 电子表单 token
   if(window.location.search.split('=')[0] && window.location.search.split('=')[0] === '?Ticket'){  
     const mobileToken = window.location.search.split('=')[1]
@@ -101,7 +100,7 @@ request.interceptors.request.use(async (url, options) => {
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: token!='null' && token!= 'undefined'&& token!= '' ?  `Bearer ${Cookie.get(configToken.cookieName)}` : null,
+      Authorization: token&&token!='null' && token!= 'undefined'&& token!= '' ?  `Bearer ${token}` : null,
     };
     return {
       url,

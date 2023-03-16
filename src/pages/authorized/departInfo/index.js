@@ -293,8 +293,9 @@ class DepartIndex extends Component {
       visibleRegion: false,
       leafTreeDatas: [],
       visibleData: false,
-      pollutantType: '',
+      pollutantType: 2,
       DataTreeValue: [],
+      dataSelectedKeys:[],
       rolesID:'',
       alarmPushData:'',
       postCheckedKeys:'',
@@ -425,7 +426,7 @@ class DepartIndex extends Component {
                   <Divider type="vertical" />
                 </>
               )}
-              {/* <Tooltip title="数据过滤">
+              <Tooltip title="数据过滤">
                 <a
                   onClick={() => {
                     this.setState(
@@ -440,8 +441,8 @@ class DepartIndex extends Component {
                 >
                   <DatabaseOutlined style={{ fontSize: 16 }} />
                 </a>
-              </Tooltip> */}
-              {/* <Divider type="vertical" /> */}
+              </Tooltip> 
+              {/* <Divider type="vertical" />
               <Tooltip title="报警关联">
                 <a
                   style={{ cursor: 'pointer' }}
@@ -697,19 +698,146 @@ class DepartIndex extends Component {
     this.setState({ postCheckedKeys:checkedKeys});
 
   };
+  /*** 数据过滤 **/
+  showDataModal = () => {
+    // console.log('this.state.pollutantType=', this.state.pollutantType);
+    if (this.state.selectedRowKeys.length == 0) {
+      message.error('请选中一行');
+      return;
+    }
+    const keys = this.state.selectedRowKeys.key;
+    this.props.dispatch({
+      type: 'departinfo/getregioninfobytree',
+      payload: {},
+    });
+    this.setState({
+      visibleData: true,
+      DataTreeValue: [],
+      checkedKeys: this.props.RegionByDepID,
+    });
+    this.props.dispatch({
+      type: 'departinfo/getentandpoint',
+      payload: {
+        PollutantType: this.state.pollutantType,
+        RegionCode: '',
+      },
+    });
+    this.props.dispatch({
+      type: 'departinfo/getpointbydepid',
+      payload: {
+        UserGroup_ID: keys.toString(),
+        PollutantType: this.state.pollutantType,
+        RegionCode: [],
+      },
+    });
 
+    // console.log('pollutantType=', this.state.pollutantType);
+  };
   onChecks = checkedKeys => {
     console.log('select=', checkedKeys);
     console.log('this.state.leafTreeDatas=', this.state.leafTreeDatas);
+    // checkedKeys.map((item,index) => {
+    //   if (this.state.leafTreeDatas.indexOf(item) != -1) {
+    //     checkedKeys.splice(1,1,item)
+    //   }
+    // });
+    // console.log(checkedKeys)
+
     this.setState({ checkedKeys });
-    const leafTree = [];
-    checkedKeys.map(item => {
-      if (this.state.leafTreeDatas.indexOf(item) != -1) {
-        leafTree.push(item);
-      }
-    });
-    this.setState({ checkedKeySel: checkedKeys });
+
+    // this.setState({ checkedKeySel: checkedKeys });
   };
+    // onSelectData = (selectedKey, info) => { //选择监测点
+  //   console.log(selectedKey)
+  //   this.setState({ dataSelectedKeys:selectedKey });
+  // };
+  handleSizeChange = e => { //切换污染物
+    const keys = this.state.selectedRowKeys.key;
+    this.setState({ pollutantType: e.target.value });
+    this.props.dispatch({
+      type: 'departinfo/getpointbydepid',
+      payload: {
+        UserGroup_ID: keys.toString(),
+        PollutantType: e.target.value,
+        RegionCode: this.state.DataTreeValue.toString(),
+      },
+    });
+    this.props.dispatch({
+      type: 'departinfo/getentandpoint',
+      payload: {
+        RegionCode: this.state.DataTreeValue.toString(),
+        PollutantType: e.target.value,
+      },
+    });
+  };
+
+  
+  onChangeTree = value => {   //切换行政区
+    console.log('onChange================= ', value);
+    const keys = this.state.selectedRowKeys.key;
+    if (value == undefined) {
+      this.setState({
+        DataTreeValue: [],
+      });
+      this.props.dispatch({
+        type: 'departinfo/getentandpoint',
+        payload: {
+          RegionCode: '',
+          PollutantType: this.state.pollutantType,
+        },
+      });
+      this.props.dispatch({
+        type: 'departinfo/getpointbydepid',
+        payload: {
+          UserGroup_ID: keys.toString(),
+          PollutantType: this.state.pollutantType,
+          RegionCode: [],
+        },
+      });
+    } else {
+      this.setState({
+        DataTreeValue: value,
+      });
+      this.props.dispatch({
+        type: 'departinfo/getentandpoint',
+        payload: {
+          RegionCode: value.toString(),
+          PollutantType: this.state.pollutantType,
+        },
+      });
+      this.props.dispatch({
+        type: 'departinfo/getpointbydepid',
+        payload: {
+          UserGroup_ID: keys.toString(),
+          PollutantType: this.state.pollutantType,
+          RegionCode: this.state.DataTreeValue.toString(),
+        },
+      });
+    }
+  };
+  handleDataOK = e => { //提交
+    // console.log('regioncode=', this.state.DataTreeValue.toString());
+    // console.log('DGIMN=', this.state.checkedKeys);
+    // console.log('selectedRowKeys=', this.state.selectedRowKeys.key);
+    this.props.dispatch({
+      type: 'departinfo/insertpointfilterbydepid',
+      payload: {
+        Type: this.state.pollutantType,
+        DGIMN: this.state.checkedKeys,
+        UserGroup_ID: this.state.selectedRowKeys.key,
+        RegionCode: this.state.DataTreeValue.toString(),
+        callback: res => {
+          if (res.IsSuccess) {
+            message.success('成功');
+            this.handleCancel();
+          } else {
+            message.error(res.Message);
+          }
+        },
+      },
+    });
+  };
+/*** **/
 
   onSelect = (record, selected, selectedRows) => {
     console.log('record=', record.key);
@@ -719,9 +847,6 @@ class DepartIndex extends Component {
     this.setState({ selectedKey });
   };
 
-  onSelectData = (selectedKey, info) => {
-    this.setState({ selectedKey });
-  };
   // rowSelection =()=> {
 
   //     onSelect: (record, selected, selectedRows) => {
@@ -843,40 +968,7 @@ class DepartIndex extends Component {
     // });
   };
 
-  showDataModal = () => {
-    // console.log('this.state.pollutantType=', this.state.pollutantType);
-    // if (this.state.selectedRowKeys.length == 0) {
-    //   message.error('请选中一行');
-    //   return;
-    // }
-    // const keys = this.state.selectedRowKeys.key;
-    // this.props.dispatch({
-    //   type: 'departinfo/getregioninfobytree',
-    //   payload: {},
-    // });
-    // this.setState({
-    //   visibleData: true,
-    //   DataTreeValue: [],
-    //   checkedKey: this.props.RegionByDepID,
-    // });
-    // this.props.dispatch({
-    //   type: 'departinfo/getentandpoint',
-    //   payload: {
-    //     PollutantType: this.state.pollutantType,
-    //     RegionCode: '',
-    //   },
-    // });
-    // this.props.dispatch({
-    //   type: 'departinfo/getpointbydepid',
-    //   payload: {
-    //     UserGroup_ID: keys.toString(),
-    //     PollutantType: this.state.pollutantType,
-    //     RegionCode: [],
-    //   },
-    // });
 
-    // console.log('pollutantType=', this.state.pollutantType);
-  };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.UserByDepID !== nextProps.UserByDepID) {
@@ -984,95 +1076,7 @@ class DepartIndex extends Component {
     });
   };
 
-  handleDataOK = e => {
-    // console.log('regioncode=', this.state.DataTreeValue.toString());
-    // console.log('DGIMN=', this.state.checkedKeys);
-    // console.log('selectedRowKeys=', this.state.selectedRowKeys.key);
-    // this.props.dispatch({
-    //   type: 'departinfo/insertpointfilterbydepid',
-    //   payload: {
-    //     DGIMN: this.state.postCheckedKeys,
-    //     RegionFlagCode:this.state.checkedKeys,
-    //     UserGroup_ID: this.state.selectedRowKeys.key,
-    //     Type: this.state.pollutantType,
-    //     RegionCode: this.state.DataTreeValue.toString(),
-    //     callback: res => {
-    //       if (res.IsSuccess) {
-    //         message.success('成功');
-    //         this.handleCancel();
-    //       } else {
-    //         message.error(res.Message);
-    //       }
-    //     },
-    //   },
-    // });
-  };
 
-  /** 数据过滤切换污染物 */
-  handleSizeChange = e => {
-    const keys = this.state.selectedRowKeys.key;
-    this.setState({ pollutantType: e.target.value });
-    this.props.dispatch({
-      type: 'departinfo/getpointbydepid',
-      payload: {
-        UserGroup_ID: keys.toString(),
-        PollutantType: e.target.value,
-        RegionCode: this.state.DataTreeValue.toString(),
-      },
-    });
-    this.props.dispatch({
-      type: 'departinfo/getentandpoint',
-      payload: {
-        RegionCode: this.state.DataTreeValue.toString(),
-        PollutantType: e.target.value,
-      },
-    });
-  };
-
-  /** 数据过滤切换行政区 */
-  onChangeTree = value => {
-    console.log('onChange================= ', value);
-    const keys = this.state.selectedRowKeys.key;
-    if (value == undefined) {
-      this.setState({
-        DataTreeValue: '',
-      });
-      this.props.dispatch({
-        type: 'departinfo/getentandpoint',
-        payload: {
-          RegionCode: '',
-          PollutantType: this.state.pollutantType,
-        },
-      });
-      this.props.dispatch({
-        type: 'departinfo/getpointbydepid',
-        payload: {
-          UserGroup_ID: keys.toString(),
-          PollutantType: this.state.pollutantType,
-          RegionCode: [],
-        },
-      });
-    } else {
-      this.setState({
-        DataTreeValue: value,
-      });
-      this.props.dispatch({
-        type: 'departinfo/getentandpoint',
-        payload: {
-          RegionCode: value.toString(),
-          PollutantType: this.state.pollutantType,
-        },
-      });
-      this.props.dispatch({
-        type: 'departinfo/getpointbydepid',
-        payload: {
-          UserGroup_ID: keys.toString(),
-          PollutantType: this.state.pollutantType,
-          RegionCode: this.state.DataTreeValue.toString(),
-        },
-      });
-    }
-  };
 
   handleSubmit = e => {
     e.preventDefault();
@@ -1279,7 +1283,7 @@ class DepartIndex extends Component {
       onChange: this.onChangeTree,
       treeCheckable: true,
       showCheckedStrategy: SHOW_PARENT,
-      searchPlaceholder: '行政区',
+      placeholder: '行政区',
       treeDefaultExpandedKeys: ['0'],
       style: {
         width: 400,
@@ -1525,7 +1529,6 @@ class DepartIndex extends Component {
                 onOk={this.handleDataOK}
                 destroyOnClose={true}
                 onCancel={this.handleCancel}
-
                 width={900}
                 // destroyOnClose
               >
@@ -1553,6 +1556,7 @@ class DepartIndex extends Component {
                         defaultPollutantCode={this.state.pollutantType}
                         mode="multiple"
                         // showAll
+                        onlyShowEnt
                         onChange={this.handleSizeChange}
                       />
                       <TreeSelect
@@ -1586,7 +1590,7 @@ class DepartIndex extends Component {
                         onCheck={this.onChecks}
                         checkedKeys={this.state.checkedKeys}
                         onSelect={this.onSelectData}
-                        selectedKeys={this.state.selectedKeys}
+                        selectedKeys={this.state.dataSelectedKeys}
                         defaultExpandAll
                         // autoExpandParent={true}
                         // defaultExpandAll
