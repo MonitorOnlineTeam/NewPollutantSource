@@ -11,6 +11,7 @@ export default Model.extend({
   namespace: 'operationInfo',
   state: {
     tableDatas:[],
+    tableTotal:0,
     projectTableDatas:[],
     parametersList:[],
     tableLoading:true,
@@ -22,7 +23,7 @@ export default Model.extend({
       yield update({ tableLoading:true})
       const result = yield call(services.GetEntProjectRelationList, payload);
       if (result.IsSuccess) {
-        yield update({ tableDatas:result.Datas,tableLoading:false  })
+        yield update({ tableDatas:result.Datas,tableTotal:result.Total,tableLoading:false  })
       }else{
         message.error(result.Message)
         yield update({ tableLoading:false})

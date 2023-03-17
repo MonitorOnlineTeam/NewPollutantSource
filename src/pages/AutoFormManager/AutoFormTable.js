@@ -114,7 +114,12 @@ class AutoFormTable extends PureComponent {
     }
   }
   loadDataSource(params) {
-    if(this.props.configId=="TestPoint"&&!this.props.searchParams){return} //调试检测 污染源管理监测点特殊处理
+    const {isSearchParams,searchParams,noLoadDataSource,} = this.props;
+
+    //调试检测/污染源管理监测点  没有条件不让请求,防止请求多次   资产管理/设备台账/设备资料管理 不用请求
+    if((isSearchParams && !this.props.searchParams) || noLoadDataSource){
+      return 
+    }
     
     // console.log(this.props.configId,this.props.tableInfo,'-----',this.props.noLoad)
     // switch (this.props.configId) {

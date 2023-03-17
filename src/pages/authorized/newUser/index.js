@@ -94,6 +94,7 @@ export default class UserInfoIndex extends Component {
       leafTreeDatas: [],
       newEntAndPoint: [],
       okLoading: false,
+      pollutantType: 2,
     };
 
     this.columns = [
@@ -153,19 +154,19 @@ export default class UserInfoIndex extends Component {
       //   align: 'center',
       // },
       {
-        title: <span>业务属性</span>,
+        title: '业务属性',
         dataIndex: 'businessAttribute',
         key: 'businessAttribute',
         align: 'center',
       },
       {
-        title: <span>行业属性</span>,
+        title: '行业属性',
         dataIndex: 'industryAttribute',
         key: 'industryAttribute',
         align: 'center',
       },
       {
-        title: <span>拼音</span>,
+        title: '拼音',
         dataIndex: 'nameCode',
         key: 'nameCode',
         align: 'center',
@@ -295,6 +296,7 @@ export default class UserInfoIndex extends Component {
         newEntAndPoint: [
           {
             title: '全部',
+            key: '0-0',
             children: nextProps.EntAndPoint,
           },
         ],
@@ -336,7 +338,7 @@ export default class UserInfoIndex extends Component {
   renderDataTreeNodes = data =>
     data.map(item => {
       if (item.children) {
-        if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
+        if (this.state.leafTreeDatas.indexOf(item.key) == -1 || item.key=='0-0') {
           this.state.leafTreeDatas.push(item.key);
         }
       }
@@ -517,10 +519,10 @@ export default class UserInfoIndex extends Component {
     })
   }
   onChecks = checkedKeys => {
+    console.log(this.state.leafTreeDatas)
     checkedKeys.map((item, index) => {
       if (this.state.leafTreeDatas.indexOf(item) != -1) {
         checkedKeys.splice(index, 1)
-
       }
     });
     this.setState({ checkedKeys });
@@ -608,9 +610,9 @@ export default class UserInfoIndex extends Component {
     this.props.dispatch({
       type: 'newuserinfo/insertPointFilterByUser',
       payload: {
+        Type: this.state.pollutantType,
         DGIMN: this.state.checkedKeys,
         User_ID: this.state.selectedRow.ID,
-        Type: this.state.pollutantType,
         RegionCode: this.state.DataTreeValue.toString(),
         callback: res => {
           if (res.IsSuccess) {
@@ -844,7 +846,7 @@ export default class UserInfoIndex extends Component {
             rowKey={(record, index) => `complete${index}`}
             rowSelection={rowSelection}
             loading={this.props.loading}
-            columns={provinceShow ? this.columns.filter(item=>item.title!='运维单位') : this.columns}
+            columns={provinceShow ? this.columns.filter(item=>item.title!='运维单位'&&item.title!='业务属性'&&item.title!='行业属性') : this.columns}
             dataSource={this.props.tableDatas}
             pagination={{
               showSizeChanger: true,
@@ -905,7 +907,7 @@ export default class UserInfoIndex extends Component {
                     treeData={this.state.newEntAndPoint}
                     onCheck={this.onChecks}
                     checkedKeys={this.state.checkedKeys}
-                    onSelect={this.onSelectData}
+                    // onSelect={this.onSelectData}
                     // selectedKeys={this.state.selectedKeys}
                     defaultExpandAll
                   >

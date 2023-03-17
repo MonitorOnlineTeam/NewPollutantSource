@@ -327,7 +327,7 @@ const Index = (props) => {
                     ellipsis: true,
                 },
                 {
-                    title: '严重问题',
+                    title: '重点问题',
                     dataIndex: 'importanProblem',
                     key: 'importanProblem',
                     align: 'center',
@@ -531,7 +531,6 @@ const Index = (props) => {
     const statisTypeChange = (value) => {
         setStatisType(value)
     }
-    const inspectorTypeData = form.getFieldValue('InspectorType');
     return (
         <div className={styles.analysisSummarySty}>
             <Card
@@ -600,7 +599,7 @@ const Index = (props) => {
                     bordered
                     dataSource={tableDatas}
                     columns={col}
-                    pagination={inspectorTypeData==1? false :  {
+                    pagination={isPointStatistics1 ? false :  {
                         total: tableTotal,
                         pageSize: pageSize,
                         current: pageIndex,
@@ -610,7 +609,7 @@ const Index = (props) => {
                     }}
                     scroll={{ x: '100%', y: 'calc(100vh - 405px)' }}
                 />
-               <Row style={{margin:'16px 24px 0 0 '}} justify='end'>
+               <Row style={{marginTop:16}} justify='end'>
                  {isPointStatistics1&&tableTotal>0&&<Pagination 
                    size='small'
                    total= {tableTotal}

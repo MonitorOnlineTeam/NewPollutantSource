@@ -39,13 +39,33 @@ import {
     }
 
     componentDidMount() {
-      const {
-        configId,
-      } = this.props;
-      this.reloadPage(configId);
+
+      this.reloadPage();
     }
 
+    reloadPage = () => {
+      const { dispatch, configId,DGIMN} = this.props;
+      const DataWhere = [{
+        Key: '[dbo]__[T_Bas_EquipmentInfo]__PointCode',
+        Value: DGIMN,
+        Where: '$=',
+      },
+    ];
+    
+      this.setState({
+        DataWhere,
+    }, () => {
+      dispatch({
+        type: 'autoForm/getPageConfig',
+        payload: {
+            configId,
+        },
+    })
+    })
+  }
+
     componentWillReceiveProps(nextProps) {
+      
         if (nextProps.DGIMN !== this.props.DGIMN) {
             {
                 const { dispatch, configId } = this.props;
@@ -57,38 +77,18 @@ import {
                  ];
                  this.setState({
                      DataWhere,
-                 }, () => {
-                     dispatch({
-                       type: 'autoForm/getAutoFormData',
-                       payload: {
-                        configId,
-                        searchParams: this.state.DataWhere,
-                       },
-                     })
+                 }, () => { 
+                     /**AutoFormTable组件会自动判断 */
+                    //  dispatch({ 
+                    //    type: 'autoForm/getAutoFormData',
+                    //    payload: {
+                    //     configId,
+                    //     searchParams: DataWhere,
+                    //    },
+                    //  })
                  })
             }
         }
-    }
-
-    reloadPage = () => {
-        const { dispatch, configId,DGIMN} = this.props;
-        const DataWhere = [{
-          Key: '[dbo]__[T_Bas_EquipmentInfo]__PointCode',
-          Value: DGIMN,
-          Where: '$=',
-        },
-      ];
-      
-        this.setState({
-          DataWhere,
-      }, () => {
-        dispatch({
-          type: 'autoForm/getPageConfig',
-          payload: {
-              configId,
-          },
-      })
-      })
     }
 
     /** 逻辑删除 */
@@ -205,12 +205,15 @@ import {
                   <SearchWrapper
                       onSubmitForm={form => this.loadReportList(form)}
                       configId={configId}
+                      searchParams={DataWhere}
                   ></SearchWrapper>
                   <SdlTable
                       style={{ marginTop: 10 }}
+                      // getPageConfig
                       configId={configId}
                       parentcode="ddd"
                       searchParams={DataWhere}
+                      noLoadDataSource
                       appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
                           <Button icon={<PlusOutlined />} type="primary" onClick={() => {
                               this.setState({

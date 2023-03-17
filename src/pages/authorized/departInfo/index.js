@@ -240,6 +240,7 @@ const rightTableColumns = [
   CheckPointLoading: loading.effects['departinfo/getpointbydepid'],
   getentandpointLoading: loading.effects['departinfo/getentandpoint'],
   updateOperationAreaLoading: loading.effects['departinfo/updateOperationArea'],
+  dataLoading: loading.effects['departinfo/insertpointfilterbydepid'],  
   DepartInfoTree: departinfo.DepartInfoTree,
   DepartInfoOne: departinfo.DepartInfoOne,
   DepartTree: departinfo.DepartTree,
@@ -250,7 +251,7 @@ const rightTableColumns = [
   RegionInfoTree: autoForm.regionList,
   EntAndPoint: departinfo.EntAndPoint,
   CheckPoint: departinfo.CheckPoint,
-  ConfigInfo: global.configInfo,
+  configInfo: global.configInfo,
   pollutantType: common.defaultPollutantCode,
   showGroupRegionFilter: departinfo.showGroupRegionFilter,
   btnloading: loading.effects['departinfo/insertdepartinfo'],
@@ -423,10 +424,10 @@ class DepartIndex extends Component {
                       <FilterOutlined style={{ fontSize: 16 }} />
                     </a>
                   </Tooltip>
-                  <Divider type="vertical" />
+               
                 </>
               )}
-              <Tooltip title="数据过滤">
+              {this.props.configInfo&&this.props.configInfo.IsShowProjectRegion&&<><Divider type="vertical" /><Tooltip title="设置点位访问权限">
                 <a
                   onClick={() => {
                     this.setState(
@@ -441,7 +442,7 @@ class DepartIndex extends Component {
                 >
                   <DatabaseOutlined style={{ fontSize: 16 }} />
                 </a>
-              </Tooltip> 
+              </Tooltip></>}
               {/* <Divider type="vertical" />
               <Tooltip title="报警关联">
                 <a
@@ -698,7 +699,7 @@ class DepartIndex extends Component {
     this.setState({ postCheckedKeys:checkedKeys});
 
   };
-  /*** 数据过滤 **/
+  /*** 设置点位访问权限 **/
   showDataModal = () => {
     // console.log('this.state.pollutantType=', this.state.pollutantType);
     if (this.state.selectedRowKeys.length == 0) {
@@ -734,13 +735,13 @@ class DepartIndex extends Component {
     // console.log('pollutantType=', this.state.pollutantType);
   };
   onChecks = checkedKeys => {
-    console.log('select=', checkedKeys);
-    console.log('this.state.leafTreeDatas=', this.state.leafTreeDatas);
-    // checkedKeys.map((item,index) => {
-    //   if (this.state.leafTreeDatas.indexOf(item) != -1) {
-    //     checkedKeys.splice(1,1,item)
-    //   }
-    // });
+    console.log(this.state.leafTreeDatas);
+    // console.log('this.state.leafTreeDatas=', this.state.leafTreeDatas);
+    checkedKeys.map((item, index) => {
+      if (this.state.leafTreeDatas.indexOf(item) != -1) {
+        checkedKeys.splice(index, 1)
+      }
+    });
     // console.log(checkedKeys)
 
     this.setState({ checkedKeys });
@@ -1001,14 +1002,14 @@ class DepartIndex extends Component {
         newEntAndPoint: [
           {
             title: '全部',
-            // key: '0-0',
+            key: '0-0',
             children: nextProps.EntAndPoint,
           },
         ],
       });
     }
-    // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
-    //     var list = nextProps.ConfigInfo.SystemPollutantType ? nextProps.ConfigInfo.SystemPollutantType.split(',') : []
+    // if (this.props.configInfo !== nextProps.configInfo) {
+    //     var list = nextProps.configInfo.SystemPollutantType ? nextProps.configInfo.SystemPollutantType.split(',') : []
     //     var type = list.length > 0 ? list[0] : "";
     //     this.setState({
     //         pollutantType: type,
@@ -1017,7 +1018,7 @@ class DepartIndex extends Component {
     //     //   type: 'navigationtree/getentandpoint',
     //     //   payload: {
     //     //     Status: this.state.screenList,
-    //     //     PollutantType: nextProps.ConfigInfo.SystemPollutantType,
+    //     //     PollutantType: nextProps.configInfo.SystemPollutantType,
     //     //   }
     //     // })
     // }
@@ -1138,7 +1139,7 @@ class DepartIndex extends Component {
   renderDataTreeNodes = data =>
     data.map(item => {
       if (item.children) {
-        if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
+        if (this.state.leafTreeDatas.indexOf(item.key) == -1 || item.key == '0-0') {
           this.state.leafTreeDatas.push(item.key);
         }
       }
@@ -1256,8 +1257,9 @@ class DepartIndex extends Component {
     }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { btnloading, btnloading1,insertregionbyuserLoading,userDepApproveInfoList } = this.props;
+    const { btnloading, btnloading1,insertregionbyuserLoading,userDepApproveInfoList, } = this.props;
     const { targetKeys, disabled, showSearch,sortTitle,selectedRowKeys } = this.state;
+
     const formItemLayout = {
       labelCol: {
         span: 6,
@@ -1342,7 +1344,7 @@ class DepartIndex extends Component {
                             <Button
                                 onClick={this.showDataModal}
                                 style={{ marginLeft: "10px" }}
-                            >数据过滤</Button> */}
+                            >设置点位访问权限</Button> */}
               <DndProvider backend={HTML5Backend}>
               <Table
                 // rowKey={}
@@ -1524,12 +1526,13 @@ class DepartIndex extends Component {
               </Modal>
 
               <Modal
-                title={`数据过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
+                title={`设置点位访问权限-${this.state.selectedRowKeys.UserGroup_Name}`}
                 visible={this.state.visibleData}
                 onOk={this.handleDataOK}
                 destroyOnClose={true}
                 onCancel={this.handleCancel}
                 width={900}
+                confirmLoading={this.props.dataLoading}
                 // destroyOnClose
               >
                 {
@@ -1589,8 +1592,8 @@ class DepartIndex extends Component {
                         // autoExpandParent={this.state.autoExpandParent}
                         onCheck={this.onChecks}
                         checkedKeys={this.state.checkedKeys}
-                        onSelect={this.onSelectData}
-                        selectedKeys={this.state.dataSelectedKeys}
+                        // onSelect={this.onSelectData}
+                        // selectedKeys={this.state.dataSelectedKeys}
                         defaultExpandAll
                         // autoExpandParent={true}
                         // defaultExpandAll

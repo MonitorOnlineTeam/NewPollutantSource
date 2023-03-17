@@ -29,6 +29,7 @@ const namespace = 'operationInfo'
 
 const dvaPropsData = ({ loading, operationInfo, autoForm }) => ({
   tableDatas: operationInfo.tableDatas,
+  tableTotal:operationInfo.tableTotal,
   projectTableDatas: operationInfo.projectTableDatas,
   tableLoading: operationInfo.tableLoading,
   loadingConfirm: loading.effects[`${namespace}/updateOrAddProjectRelation`],
@@ -202,7 +203,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, projectTableDatas, loadingConfirm, tableLoading, exportLoading, projectNumListLoading, operationInfoList, entPointList } = props;
+  const { tableDatas,tableTotal,projectTableDatas, loadingConfirm, tableLoading, exportLoading, projectNumListLoading, operationInfoList, entPointList } = props;
 
 
   useEffect(() => {
@@ -217,7 +218,7 @@ const Index = (props) => {
   const [calibrationCycleList, setCalibrationCycleList] = useState([]);
 
   const initData = () => {
-    onFinish();
+    onFinish(pageIndex,pageSize);
     props.operationList();//运维列表
     props.getEntPointList({ EntID: props.location.query.p });//企业运维列表
 
@@ -507,14 +508,23 @@ const Index = (props) => {
   };
 
 
-  const onFinish = async () => {  //查询
+  const onFinish = async (pageIndexs,pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
-      props.getEntProjectRelationList({ ...values })
+      props.getEntProjectRelationList({ ...values,pageIndex:pageIndexs,pageSize:pageSizes })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
+
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
+  const handleTableChange = (PageIndex, PageSize) => {
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+    onFinish(PageIndex, PageSize)
+}
+  
   const onModalOk = async () => { //添加 or 编辑弹框
     try {
       const values = await form2.validateFields();
@@ -529,7 +539,7 @@ const Index = (props) => {
           DGIMN: type === 'edit' ? [values.DGIMN] : values.DGIMN,
         }, () => {
           setFromVisible(false);
-          onFinish();
+          onFinish(pageIndex,pageSize);
         })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -561,7 +571,7 @@ const Index = (props) => {
       name="advanced_search"
       className={styles['ant-advanced-search-form']}
       form={form}
-      onFinish={onFinish}
+      onFinish={()=>{setPageIndex(1);onFinish(1,pageSize)}}
       initialValues={{ EntID: props.location.query.p }}
     >
 
@@ -701,6 +711,14 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={columns}
+            pagination={{
+              total: tableTotal,
+              pageSize: pageSize,
+              current: pageIndex,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              onChange: handleTableChange,
+          }}
           />
         </Card>
       </BreadcrumbWrapper>
@@ -714,6 +732,7 @@ const Index = (props) => {
         className={styles.fromModal}
         destroyOnClose
       // centered
+
       >
         <Form
           name="basic2"

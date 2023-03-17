@@ -147,7 +147,7 @@ if (getPointExceptionLoading) {
   return <div style={{width: '100%', height: 'calc(100vh - 200px)'}}>
     <Map
    amapkey={config.amapKey}
-   mapStyle="amap://styles/macaron"
+  //  mapStyle="amap://styles/macaron"
    useAMapUI={!config.offlineMapUrl.domain}
    center={{longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude} } //center 地图中心点坐标值
    zoom={11}

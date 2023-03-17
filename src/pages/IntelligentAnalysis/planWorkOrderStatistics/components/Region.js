@@ -1374,7 +1374,6 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
   
       const values = await workRegForm.validateFields();
       setWorkPageIndex(1)
-      setWorkPageSize(10)
       insideOrOutsideWorkGetTaskWorkOrderList({
         ...values,
         regionCode:regionCode,
@@ -1386,7 +1385,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
   
   
   const [workPageIndex,setWorkPageIndex] = useState(1)
-  const [workPageSize,setWorkPageSize] = useState(10)
+  const [workPageSize,setWorkPageSize] = useState(20)
   
   const handleWorkTableChange =  (PageIndex, PageSize)=>{ //计划内 计划外 工单 分页
   

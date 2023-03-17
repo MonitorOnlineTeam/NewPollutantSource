@@ -175,7 +175,7 @@ export async function deluserandroledep(params) {
         data: null
     } : result;
 }
-// 获取数据过滤排口列表
+// 获取设置点位访问权限排口列表
 export async function userDgimnDataFilter(params) {
     const body = {
         UserId: params.UserId,

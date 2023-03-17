@@ -179,18 +179,19 @@ export async function getentandpoint(params) {
     : result;
 }
 // 获取当前部门的排口
-export async function getpointbydepid(params) {
+export async function getpointbydepid(params,isUser) {
   const body = {
     UserGroup_ID: params.UserGroup_ID,
     PollutantType: params.PollutantType,
   };
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetPointByDepIDBW', body, null);
+  const result = post(`/api/rest/PollutantSourceApi/AuthorApi/${isUser? 'GetPointByDepID': 'GetPointByDepIDBW'}`, body, null);
   return result === null
     ? {
         data: null,
       }
     : result;
 }
+
 // 给当前部门添加排口权限(可批量)
 export async function insertpointfilterbydepid(params) {
   const body = {

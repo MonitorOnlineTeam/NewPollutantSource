@@ -180,8 +180,8 @@ const Index = (props) => {
 
     };
 
-    const [pageSize, setPageSize] = useState(20)
     const [pageIndex, setPageIndex] = useState(1)
+    const [pageSize, setPageSize] = useState(20)
 
     const searchComponents = () => {
         return <><Form

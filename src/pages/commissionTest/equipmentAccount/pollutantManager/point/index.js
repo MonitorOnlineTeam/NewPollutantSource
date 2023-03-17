@@ -263,6 +263,7 @@ export default class Index extends Component {
                       keysParams={{ 'dbo.T_Bas_TestCommonPoint.ID': this.state.selectedPointCode }}
                       types='point'
                       isModal
+                      isSearchParams
                     />              
         </Modal>
         <Modal
