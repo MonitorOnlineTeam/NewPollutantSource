@@ -1,27 +1,17 @@
 import { post, get, getNew } from '@/utils/request';
 
-//关键参数核查整改信息
-export async function GetKeyParameterQuestionList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetKeyParameterQuestionList',params, null);
+//运维记录列表
+export async function GetOperationRecordListByDGIMN(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationRecordListByDGIMN',params, null);
   return result;
 }
-//关键参数核查整改信息 导出
-export async function ExportKeyParameterQuestionList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportKeyParameterQuestionList',params, null);
+//运维记录列表 导出
+export async function ExportOperationRecordListByDGIMN(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationRecordListByDGIMN',params, null);
   return result;
 }
-//关键参数核查整改详情
-export async function GetKeyParameterQuestionDetailList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetKeyParameterQuestionDetailList',params, null);
-  return result;
-}
-//关键参数核查整改
-export async function CheckItemKeyParameterQuestion(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/CheckItemKeyParameterQuestion',params, null);
-  return result;
-}
-//通过或驳回关键参数核查整改
-export async function UpdateKeyParameterQuestionStatus(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/UpdateKeyParameterQuestionStatus',params, null);
+//获取工单类型
+export async function GetTaskTypeList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetTaskTypeList',params, null);
   return result;
 }

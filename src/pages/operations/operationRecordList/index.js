@@ -50,7 +50,7 @@ class Index extends Component {
           }}
         />
         <BreadcrumbWrapper title={breadTitle} hideBreadcrumb={this.props.hideBreadcrumb}>
-          { this.state.dgimn && <ContentPage DGIMN={ this.props.DGIMN} PollutantType={this.props.type} {...this.props}/>}
+          { this.state.dgimn && <ContentPage DGIMN={ this.state.dgimn}  PollutantType={this.state.type} {...this.props}/>}
         
         </BreadcrumbWrapper>
       </div>

@@ -873,6 +873,7 @@ export default class MonitorPoint extends Component {
         saveLoadingEdit,
         saveSortLoading,
       } = this.props;
+      const provinceShow = this.props.configInfo&&this.props.configInfo.IsShowProjectRegion;
       const { getFieldDecorator } = this.props.form;
       const searchConditions = searchConfigItems[pointConfigId] || [];
       const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
@@ -1069,7 +1070,7 @@ export default class MonitorPoint extends Component {
                         }}><FileTextOutlined style={{ fontSize: 16 }} /></a>
                       </Tooltip>
 
-                      {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="vertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
+                      {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="v  ertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
                          <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
                          <Tooltip title="更多">  <EllipsisOutlined /></Tooltip>
                         </a>
@@ -1132,15 +1133,15 @@ export default class MonitorPoint extends Component {
                     <TabPane tab="污染物信息" key="2">
                       {this.getTabInfo()}
                     </TabPane>
-                    <TabPane tab="数据核查项" key="3">
+                   {!provinceShow&&<TabPane tab="数据核查项" key="3">
                       {this.getDataVerification()}
-                    </TabPane>
+                    </TabPane>}
                     <TabPane tab="设备参数项" key="4">
                       {this.getEquipmentPar()}
                     </TabPane>
-                    <TabPane tab="监测点系数" key="5">
+                    {!provinceShow&&<TabPane tab="监测点系数" key="5">
                       {this.getPointCoefficient()}
-                    </TabPane>
+                    </TabPane>}
                     <TabPane tab="电子围栏半径" key="6">
                       {this.radiusElectronicFence()}
                     </TabPane>

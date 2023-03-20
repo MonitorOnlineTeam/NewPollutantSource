@@ -31,9 +31,11 @@ const dvaPropsData = ({ loading, operationRecordList, global, common, point, aut
   clientHeight: global.clientHeight,
   entLoading: common.entLoading,
   tableDatas: operationRecordList.tableDatas,
-  tableLoading: loading.effects[`${namespace}/getKeyParameterQuestionList`],
+  tableLoading: loading.effects[`${namespace}/getOperationRecordListByDGIMN`],
   tableTotal: operationRecordList.tableTotal,
-  exportLoading: loading.effects[`${namespace}/exportKeyParameterQuestionList`],
+  exportLoading: loading.effects[`${namespace}/exportOperationRecordListByDGIMN`],
+  taskTypeList:operationRecordList.taskTypeList,
+  taskTypeLoading: loading.effects[`${namespace}/getTaskTypeList`],
   regQueryPar:operationRecordList.regQueryPar,
 
 })
@@ -46,143 +48,44 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    deleteAttach: (file) => { //删除照片
+    getTaskTypeList: (payload, callback) => { //获取工单类型
       dispatch({
-        type: "autoForm/deleteAttach",
-        payload: {
-          Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
-        }
-      })
-    },
-    getPointByEntCode: (payload, callback) => { //监测点
-      dispatch({
-        type: `remoteSupervision/getPointByEntCode`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    getEntNoFilterList: (payload, callback) => { //企业
-      dispatch({
-        type: `common/getEntNoFilterList`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    getKeyParameterQuestionList: (payload) => { //列表
-      dispatch({
-        type: `${namespace}/getKeyParameterQuestionList`,
+        type: `${namespace}/getTaskTypeList`,
         payload: payload,
       })
     },
-    exportKeyParameterQuestionList: (payload) => { //导出
+    getOperationRecordListByDGIMN: (payload,callback) => { //列表
       dispatch({
-        type: `${namespace}/exportKeyParameterQuestionList`,
+        type: `${namespace}/getOperationRecordListByDGIMN`,
         payload: payload,
+        callback:callback
       })
     },
-    checkItemKeyParameterQuestion: (payload, callback) => { //核查整改
+    exportOperationRecordListByDGIMN: (payload) => { //导出
       dispatch({
-        type: `${namespace}/checkItemKeyParameterQuestion`,
+        type: `${namespace}/exportOperationRecordListByDGIMN`,
         payload: payload,
-        callback: callback
       })
     },
   }
 }
 const Index = (props) => {
 
-  const { match: { path } } = props;
 
   const [form] = Form.useForm();
 
 
-  const { DGIMN,tableDatas, tableTotal, tableLoading, exportLoading, entLoading,regQueryPar, } = props;
-
-
-  const userCookie = Cookie.get('currentUser');
+  const { DGIMN,PollutantType,tableDatas, tableTotal, tableLoading,regQueryPar, exportLoading, taskTypeLoading,taskTypeList, } = props;
 
 
 
   useEffect(() => {
+    props.getTaskTypeList({DGIMN:DGIMN,PollutantType:PollutantType});
     onFinish(pageIndex,pageSize)
   }, [DGIMN]);
 
 
-  const columns = [
-    {
-      title: '省',
-      dataIndex: 'provinceName',
-      key: 'provinceName',
-      align: 'center',
-    },
-    {
-      title: '市',
-      dataIndex: 'cityName',
-      key: 'cityName',
-      align: 'center',
-    },
-    {
-      title: `企业名称`,
-      dataIndex: 'entName',
-      key: 'entName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '监测点名称',
-      dataIndex: 'pointName',
-      key: 'pointName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '运维人员',
-      dataIndex: 'operationUserName',
-      key: 'operationUserName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '核查人',
-      dataIndex: 'checkUserName',
-      key: 'checkUserName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '核查日期',
-      dataIndex: 'checkTime',
-      key: 'checkTime',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '状态',
-      dataIndex: 'rectificationStatus',
-      key: 'rectificationStatus',
-      align: 'center',
-      ellipsis: true,
-      render: (text, record) => {
-        return  <span style={{ color: text=='整改待核实'? '#f5222d': text=='整改已完成'? '#52c41a' : ''}}>{text}</span> 
-      }
-    },
-    {
-      title: '整改完成时间',
-      dataIndex: 'rectificationTime',
-      key: 'rectificationTime',
-      align: 'center',
-      ellipsis: true,
-    },
-
-    {
-      title: '操作',
-      align: 'center',
-      fixed: 'right',
-      width: 150,
-      ellipsis: true,
-      render: (text, record) =><div> <a onClick={() => {detail(record)}}> 查看详情 </a> </div>
-    }
-  ];
+  const [ columns , setColumn] = useState([]);
 
 
 
@@ -196,14 +99,30 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getKeyParameterQuestionList(par?par : {
+      props.getOperationRecordListByDGIMN(par?par : {
         ...values,
-        beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        DGIMN: DGIMN,
+        PollutantType: PollutantType,
+        Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         time2:undefined,
         pageIndex: pageIndexs,
         pageSize: pageSizes,
+      },(col)=>{
+        const cols = []
+        if(col&&col){
+          for(let key in col){
+            cols.push({
+                title: col[key],
+                dataIndex: key,
+                key: key,
+                align: 'center',
+                ellipsis: true, 
+            })
+          }
+          setColumn(cols)
+        }
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -249,11 +168,9 @@ const Index = (props) => {
          style={{width:350}}
          />
         </Form.Item>
-          <Form.Item label='运维内容' name='DGIMN'>
+          <Form.Item label='运维内容' name='TaskType'>
           <Select placeholder='请选择' allowClear  style={{width:150}}>
-            <Option key={1} value={1} >巡检</Option>
-            <Option key={2} value={2} >校准</Option>
-            <Option key={3} value={3} >维修</Option>    
+            {taskTypeList.map(item=><Option key={item.ID} value={item.ID} >{item.TypeName}</Option>)} 
           </Select>
           </Form.Item>
         <Form.Item>
