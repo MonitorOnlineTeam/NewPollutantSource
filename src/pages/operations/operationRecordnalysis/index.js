@@ -8,7 +8,6 @@ import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Popover, Typo
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, IssuesCloseOutlined, AuditOutlined, DownOutlined, ProfileOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled, ToTopOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import router from 'umi/router';
@@ -17,27 +16,31 @@ import moment from 'moment';
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import RecordForm from '@/pages/operations/recordForm'
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'operationRecordList'
+const namespace = 'operationRecordnalysis'
 
 
 
 
-const dvaPropsData = ({ loading, operationRecordList, global, common, point, autoForm }) => ({
+const dvaPropsData = ({ loading, operationRecordnalysis, global, common, point, autoForm }) => ({
   clientHeight: global.clientHeight,
-  entLoading: common.entLoading,
-  tableDatas: operationRecordList.tableDatas,
-  tableLoading: loading.effects[`${namespace}/getOperationRecordListByDGIMN`],
-  tableTotal: operationRecordList.tableTotal,
-  exportLoading: loading.effects[`${namespace}/exportOperationRecordListByDGIMN`],
-  taskTypeList: operationRecordList.taskTypeList,
+  taskTypeList: operationRecordnalysis.taskTypeList,
   taskTypeLoading: loading.effects[`${namespace}/getTaskTypeList`],
-  regQueryPar: operationRecordList.regQueryPar,
+  tableDatas: operationRecordnalysis.tableDatas,
+  tableLoading: loading.effects[`${namespace}/getoperationRecordnalysisByDGIMN`],
+  tableTotal: operationRecordnalysis.tableTotal,
+  exportLoading: loading.effects[`${namespace}/exportoperationRecordnalysisByDGIMN`],
+  tableDatas2: operationRecordnalysis.tableDatas,
+  tableLoading2: loading.effects[`${namespace}/getoperationRecordnalysisByDGIMN`],
+  tableTotal2: operationRecordnalysis.tableTotal,
+  exportLoading2: loading.effects[`${namespace}/exportoperationRecordnalysisByDGIMN`],
+  accountQueryPar: operationRecordnalysis.accountQueryPar,
   imageListVisible: common.imageListVisible,
 })
 
@@ -55,16 +58,16 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getOperationRecordListByDGIMN: (payload, callback) => { //列表
+    getoperationRecordnalysisByDGIMN: (payload, callback) => { //列表
       dispatch({
-        type: `${namespace}/getOperationRecordListByDGIMN`,
+        type: `${namespace}/getoperationRecordnalysisByDGIMN`,
         payload: payload,
         callback: callback
       })
     },
-    exportOperationRecordListByDGIMN: (payload) => { //导出
+    exportoperationRecordnalysisByDGIMN: (payload) => { //导出
       dispatch({
-        type: `${namespace}/exportOperationRecordListByDGIMN`,
+        type: `${namespace}/exportoperationRecordnalysisByDGIMN`,
         payload: payload,
       })
     },
@@ -82,33 +85,26 @@ const Index = (props) => {
 
 
   const [form] = Form.useForm();
+  const [form2] = Form.useForm();
 
 
-  const { DGIMN, PollutantType, tableDatas, tableTotal, tableLoading, regQueryPar, exportLoading, taskTypeLoading, taskTypeList, } = props;
+  const {  taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading,exportLoading, tableDatas2, tableTotal2, tableLoading2,exportLoading2,accountQueryPar,  } = props;
 
 
 
   useEffect(() => {
-    props.getTaskTypeList({ DGIMN: DGIMN, PollutantType: PollutantType });
-    onFinish(pageIndex, pageSize)
-  }, [DGIMN]);
+    props.getTaskTypeList({});
+    onFinish()
+  }, []);
 
 
   const [columns, setColumn] = useState([]);
 
-
-
-
-
-
-
-
-  const [open, setOpen] = useState(false);
-  const onFinish = async (pageIndexs, pageSizes, par) => {  //查询  par参数 分页需要的参数
+  const onFinish = async () => {  //查询  par参数 分页需要的参数
     try {
       const values = await form.validateFields();
 
-      props.getOperationRecordListByDGIMN(par ? par : {
+      props.getoperationRecordnalysisByDGIMN({
         ...values,
         DGIMN: DGIMN,
         PollutantType: PollutantType,
@@ -185,24 +181,17 @@ const Index = (props) => {
     })
   }
 
-
-
-
-
-
-
-
-
   const searchComponents = () => {
     return <Form
       form={form}
       name="advanced_search"
       layout='inline'
       initialValues={{
-        time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
+        time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")],
+        pointType:2,
       }}
       className={styles["ant-advanced-search-form"]}
-      onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
+      onFinish={() => { onFinish() }}
     >
       <Form.Item label='运维日期' name='time' >
         <RangePicker_
@@ -213,6 +202,12 @@ const Index = (props) => {
           style={{ width: 350 }}
         />
       </Form.Item>
+      <Form.Item label='监测点类型' name='pointType'>
+        <Select placeholder='请选择' allowClear style={{ width: 150 }}>
+          <Option key={2} value={2} >废气</Option>
+          <Option key={1} value={1} >废水</Option>
+        </Select>
+      </Form.Item> 
       <Spin spinning={taskTypeLoading} size='small'>
       <Form.Item label='运维内容' name='TaskType'>
         <Select placeholder='请选择' allowClear style={{ width: 150 }}>
@@ -234,22 +229,140 @@ const Index = (props) => {
   }
 
 
-  const handleTableChange = (PageIndex, PageSize) => {
-    setPageIndex(PageIndex)
-    setPageSize(PageSize)
-    onFinish(PageIndex, PageSize, { ...regQueryPar, pageIndex: PageIndex, pageSize: PageSize })
+
+ //上传台账、
+   const [columns2, setColumn2] = useState([]);
+   const [accountVisible, setAccountVisible] = useState(true);
+   const [accountTitle, setAccountTitle] = useState('');
+
+  const [open, setOpen] = useState(false);
+
+  const onFinish2 = async (pageIndexs, pageSizes, par) => {  //查询  par参数 分页需要的参数
+    try {
+      const values = await form.validateFields();
+
+      props.getoperationRecordnalysisByDGIMN(par ? par : {
+        ...values,
+        DGIMN: DGIMN,
+        PollutantType: PollutantType,
+        Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        time: undefined,
+        time2: undefined,
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
+      }, (col) => {
+        if (col && col) {
+          const cols = []
+          for (let key in col) {
+            cols.push({
+              title: col[key],
+              dataIndex: key,
+              key: key,
+              align: 'center',
+              ellipsis: true,
+              render: (text, record, index) => {
+                if (text && text != '-') {
+                  if (text instanceof Array) {
+                    return <Popover
+                      zIndex={800}
+                      onOpenChange={(newOpen) => { setOpen(newOpen) }}
+                      trigger="click"
+                      open={open}
+                      overlayClassName={styles.detailPopSty}
+                      content={
+                        <Table
+                          bordered
+                          size='small'
+                          columns={[
+                            {
+                              align: 'center',
+                              width: 50,
+                              render: (text, record, index) => index + 1
+                            },
+                            {
+                              align: 'center',
+                              width: 100,
+                              render: (text, record, index) => <a onClick={() => { detail(record) }}>查看详情</a>
+                            }
+                          ]}
+                          dataSource={text} pagination={false} />
+                      }>
+                      <a>查看详情</a>
+                    </Popover>
+                  } else {
+                    return text; //运维人员 运维内容 序号 运维日期 或工单类型为-
+                  }
+                }
+              }
+            })
+          }
+          setColumn(cols)
+        }
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+  const searchComponents2 = () => {
+    return <Form
+      form={form2}
+      name="advanced_search"
+      layout='inline'
+      initialValues={{
+        time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")],
+        pointType:2,
+      }}
+      className={styles["ant-advanced-search-form"]}
+      onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
+    >
+      <Form.Item  name='entName' >
+        <Input placeholder='请输入企业名称'/>
+      </Form.Item>
+      <Form.Item  name='pointName' >
+        <Input placeholder='请输入监测点名称'/>
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
+          查询
+          </Button>
+        <Button icon={<ExportOutlined />} onClick={() => { exports2() }} loading={exportLoading}>
+          导出
+          </Button>
+
+      </Form.Item>
+
+    </Form>
+  }
+
+  const [pageSize2, setPageSize2] = useState(20)
+  const [pageIndex2, setPageIndex2] = useState(1)
+  const handleTableChange2 = (PageIndex, PageSize) => {
+    setPageIndex2(PageIndex)
+    setPageSize2(PageSize)
+    onFinish(PageIndex, PageSize, { ...accountQueryPar, pageIndex: PageIndex, pageSize: PageSize })
+  }
+  const exports2 = async () => { //导出 上传台账
+    const values = await form.validateFields();
+    props.exportKeyParameterQuestionList({
+      ...values,
+      beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      checkBeginTime: values.time2 && moment(values.time2[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      checkEndTime: values.time2 && moment(values.time2[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      time: undefined,
+      time2: undefined,
+
+    })
   }
 
 
-  const [pageSize, setPageSize] = useState(20)
-  const [pageIndex, setPageIndex] = useState(1)
-
-
+ 
+  //表单
   const [detailVisible, setDetailVisible] = useState(false)
   const [typeID, setTypeID] = useState(null)
   const [taskID, setTaskID] = useState(1)
   const detail = (record) => { //详情
-    console.log(record)
     if (record.RecordType == 1) {
       setTypeID(record.TypeID);
       setTaskID(record.TaskID)
@@ -259,10 +372,9 @@ const Index = (props) => {
       props.getOperationImageList({ FormMainID : record.FormMainID })
       }
   }
-
-
   return (
-    <div className={styles.operationRecordListSty}>
+    <div className={styles.operationRecordnalysisSty}>
+    <BreadcrumbWrapper>
       <Card title={searchComponents()}>
         <SdlTable
           resizable
@@ -271,17 +383,37 @@ const Index = (props) => {
           dataSource={tableDatas}
           columns={columns}
           scroll={{ y: 'calc(100vh - 360px)' }}
-          pagination={{
-            total: tableTotal,
-            pageSize: pageSize,
-            current: pageIndex,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            onChange: handleTableChange,
-          }}
+          pagination={false}
         />
       </Card>
-
+      <Modal //台账详情
+        visible={accountVisible}
+        title={`${accountTitle}台账上传情况`}
+        wrapClassName='spreadOverModal'
+        footer={null}
+        width={'100%'}
+        onCancel={() => { setAccountVisible(false) }}
+        destroyOnClose
+      >
+      <Card title={searchComponents2()}>
+        <SdlTable
+          resizable
+          loading={tableLoading2}
+          bordered
+          dataSource={tableDatas2}
+          columns={columns2}
+          scroll={{ y: 'calc(100vh - 360px)' }}
+          pagination={{
+            total: tableTotal2,
+            pageSize: pageSize2,
+            current: pageIndex2,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            onChange: handleTableChange2,
+          }}
+        />
+      </Card>  
+      </Modal>
       <Modal //表单详情
         visible={detailVisible}
         title={'详情'}
@@ -294,7 +426,8 @@ const Index = (props) => {
         <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
       </Modal>
       {props.imageListVisible && <ViewImagesModal />}
-    </div>
+      </BreadcrumbWrapper>
+      </div>
   );
 };
 export default connect(dvaPropsData, dvaDispatch)(Index);
