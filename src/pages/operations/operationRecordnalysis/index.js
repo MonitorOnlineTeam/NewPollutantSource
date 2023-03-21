@@ -106,14 +106,9 @@ const Index = (props) => {
 
       props.getoperationRecordnalysisByDGIMN({
         ...values,
-        DGIMN: DGIMN,
-        PollutantType: PollutantType,
         Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
-        time2: undefined,
-        pageIndex: pageIndexs,
-        pageSize: pageSizes,
       }, (col) => {
         if (col && col) {
           const cols = []
@@ -171,12 +166,9 @@ const Index = (props) => {
     const values = await form.validateFields();
     props.exportKeyParameterQuestionList({
       ...values,
-      beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      checkBeginTime: values.time2 && moment(values.time2[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      checkEndTime: values.time2 && moment(values.time2[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
-      time2: undefined,
 
     })
   }
@@ -243,7 +235,6 @@ const Index = (props) => {
 
       props.getoperationRecordnalysisByDGIMN(par ? par : {
         ...values,
-        DGIMN: DGIMN,
         PollutantType: PollutantType,
         Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
@@ -314,7 +305,7 @@ const Index = (props) => {
         pointType:2,
       }}
       className={styles["ant-advanced-search-form"]}
-      onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
+      onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2) }}
     >
       <Form.Item  name='entName' >
         <Input placeholder='请输入企业名称'/>
@@ -346,12 +337,9 @@ const Index = (props) => {
     const values = await form.validateFields();
     props.exportKeyParameterQuestionList({
       ...values,
-      beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      checkBeginTime: values.time2 && moment(values.time2[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      checkEndTime: values.time2 && moment(values.time2[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+      Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
-      time2: undefined,
 
     })
   }

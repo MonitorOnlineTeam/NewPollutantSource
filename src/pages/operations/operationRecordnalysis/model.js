@@ -27,7 +27,7 @@ export default Model.extend({
       }
     },
     *getoperationRecordnalysisByDGIMN({ payload, callback }, { call, put, update }) { //列表
-      const result = yield call(services.GetoperationRecordnalysisByDGIMN, payload);
+      const result = yield call(services.GetOperationRecordListByDGIMN, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal: result.Total,
@@ -39,7 +39,7 @@ export default Model.extend({
       }
     },
     *exportoperationRecordnalysisByDGIMN({ payload, callback }, { call, put, update }) { // 导出
-      const result = yield call(services.ExportoperationRecordnalysisByDGIMN, payload);
+      const result = yield call(services.ExportOperationRecordListByDGIMN, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         downloadFile(`/upload${result.Datas}`)
