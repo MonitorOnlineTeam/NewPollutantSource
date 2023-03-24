@@ -352,7 +352,7 @@ const Index = (props) => {
           <OperationInspectoUserList noFirst style={{ width: 240 }} />
         </Form.Item>
         <Form.Item label='整改状态' name='StatusName' >
-          <Select placeholder='请选择' style={{ width: 150 }}>
+          <Select placeholder='请选择' style={{ width: 150 }} allowClear>
             <Option key='1' value='未开始整改'>未开始整改</Option>
             <Option key='2' value='整改进行中'>整改进行中</Option>
             <Option key='3' value='整改已完成'>整改已完成</Option>

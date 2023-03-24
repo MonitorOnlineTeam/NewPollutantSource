@@ -256,10 +256,10 @@ switch(type){
     }
   break;
   case 2 :
-    if(planOperaList.autoCalibrationRate=="-"){
+    if(planOperaList.calibrationRate=="-"){
      return '-'
     }else{
-      return `${planOperaList.autoCalibrationRate}%`
+      return `${planOperaList.calibrationRate}%`
     }
   break;
   
@@ -306,8 +306,8 @@ switch(type){
         avoidLabelOverlap: false,
         label: { normal: { show: false, position: 'center'  }, },
         data: [
-          { value: type == 1 ? `${planOperaList.inspectionRate} `: type == 2 ? planOperaList.autoCalibrationRate : planOperaList.actualCalibrationRate, name: '已完成' },
-          { value: type == 1 ? (100 - `${planOperaList.inspectionRate=='-'? 100 : planOperaList.inspectionRate  }`) : type == 2 ? (100  - `${planOperaList.autoCalibrationRate=='-'? 100 : planOperaList.autoCalibrationRate  }`) : (100 - `${planOperaList.actualCalibrationRate=='-'? 100 : planOperaList.actualCalibrationRate  }`), name: '未完成' },
+          { value: type == 1 ? `${planOperaList.inspectionRate} `: type == 2 ? planOperaList.calibrationRate : planOperaList.actualCalibrationRate, name: '已完成' },
+          { value: type == 1 ? (100 - `${planOperaList.inspectionRate=='-'? 100 : planOperaList.inspectionRate  }`) : type == 2 ? (100  - `${planOperaList.autoCalibrationRate=='-'? 100 : planOperaList.calibrationRate  }`) : (100 - `${planOperaList.actualCalibrationRate=='-'? 100 : planOperaList.actualCalibrationRate  }`), name: '未完成' },
         ],
         startAngle:330, //起始角度
       }
@@ -364,9 +364,9 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
      />
      <img  style={{padding:'0 24px'}} src='./homePlanSplitLine.png' />
      <div  className={styles.planOperaText} >
-       <div>计划内次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionAllCount}</span></div>
+       <div>计划内结束次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionCloseCount}</span></div>
        <div>计划内完成次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionCompleteCount}</span></div>
-       <div style={{color:'#4BF3F9'}}>计划外完成次数：<span style={{color:'#4BF3F9'}}>{planOperaList.inspectionOutCompleteCount }</span> </div>
+       <div style={{color:'#4BF3F9'}}>计划内待完成次数：<span style={{color:'#4BF3F9'}}>{planOperaList.inspectionIncompleteCount }</span> </div>
     </div>
    </Row>
      <div style={{ width:'100%', height: 1,marginLeft:-21, background:"rgba(65, 66, 69, 0.5)"}}></div>
@@ -378,9 +378,9 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
      />
      <img style={{padding:'0 24px'}} src='./homePlanSplitLine.png' />
      <div className={styles.planOperaText} >
-       <div>计划内次数：<span style={{color:'#FFDD54'}}>{planOperaList.autoCalibrationAllCount}</span></div>
-       <div>计划内完成次数：<span style={{color:'#FFDD54'}}>{planOperaList.autoCalibrationCompleteCount}</span></div>
-       <div style={{color:'#4BF3F9'}}>计划外完成次数：<span style={{color:'#4BF3F9'}}>{planOperaList.autoCalibrationOutCompleteCount  }</span> </div>
+       <div>计划内结束次数：<span style={{color:'#FFDD54'}}>{planOperaList.calibrationCloseCount}</span></div>
+       <div>计划内完成次数：<span style={{color:'#FFDD54'}}>{planOperaList.calibrationCompleteCount}</span></div>
+       <div style={{color:'#4BF3F9'}}>计划内待完成次数：<span style={{color:'#4BF3F9'}}>{planOperaList.calibrationIncompleteCount  }</span> </div>
     </div>
    </Row>
    {/* <Col span={8} align='middle'>
@@ -389,7 +389,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
          style={{ width: '100%', height: 120 }}
          onEvents={{click: actualCalibration }}
        />
-      <div className={styles.planOperaText}> <div  style={{fontWeight:'bold'}}>实际校准完成率</div><div>计划内次数： {planOperaList.autoCalibrationAllCount}</div> <div>完成次数： {planOperaList.actualCalibrationCount}</div></div>
+      <div className={styles.planOperaText}> <div  style={{fontWeight:'bold'}}>实际校准完成率</div><div>计划内结束次数： {planOperaList.autoCalibrationAllCount}</div> <div>完成次数： {planOperaList.actualCalibrationCount}</div></div>
    </Col> */}
    </div>
 },[planOperaList])
@@ -451,7 +451,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
 
           <Spin spinning={operationPlanTaskLoading}> {/**近30日运维情况 */}
           <div className={styles.planOpera }>
-           <CardHeader  title='近30日运维情况'/>
+           <CardHeader  title='近30日运维情况' isPopover/> 
             {planOperaEcharts}
           </div>
           </Spin>

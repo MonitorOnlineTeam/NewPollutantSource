@@ -362,8 +362,10 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
+        callback()
       } else {
         message.error(result.Message);
+        callback()
       }
     },
     /*** 自动生成采样时间 ***/

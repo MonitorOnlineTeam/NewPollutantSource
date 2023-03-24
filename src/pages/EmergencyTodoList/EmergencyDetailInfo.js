@@ -844,7 +844,7 @@ class EmergencyDetailInfo extends Component {
                 >
 
                     <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
-                        <Card style={{ paddingBottom: '1.5%' }} title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
+                        <Card title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
                             <DescriptionList classNam={styles.headerList} size="large" col="3">
                                 <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
                                 <Description term="监控标">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
@@ -876,7 +876,7 @@ class EmergencyDetailInfo extends Component {
                                     <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
                             }
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 8, }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
                                     {/* <TextArea rows={8} style={{ width: '600px' }} value={isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null} /> */}
@@ -884,7 +884,7 @@ class EmergencyDetailInfo extends Component {
                                 </Description>
                             </DescriptionList>
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 8,}}>
                             <Table
                                 bordered
                                 columns={this.column}
@@ -892,7 +892,7 @@ class EmergencyDetailInfo extends Component {
                                 pagination={false}
                             />
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>处理记录</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>处理记录</span>} style={{ marginTop: 8, }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
                                     {
@@ -912,7 +912,7 @@ class EmergencyDetailInfo extends Component {
                                 </Description>
                             </DescriptionList>
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 8, }}>
                             {
                                 upload.fileList.length === 0 ? '没有上传附件' : (<Upload
                                     {...upload}
@@ -922,7 +922,7 @@ class EmergencyDetailInfo extends Component {
                                 />)
                             }
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>日志表</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>日志表</span>} style={{ marginTop: 8, }}>
                             {
                                 <Steps width={this.stepsWidth(TaskLogList)} style={{ overflowX: 'scroll' }}>
                                     {

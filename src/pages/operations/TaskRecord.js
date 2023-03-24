@@ -1055,7 +1055,7 @@ class TaskRecord extends Component {
           }}
 
         >
-          <TaskRecordDetails
+          <TaskRecordDetails 
             match={{ params: { TaskID: TaskID, DGIMN: DGIMN } }}
             isHomeModal
             hideBreadcrumb

@@ -71,7 +71,7 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getOperationImageList: (payload,callback) => { //电子表单 图片类型
+    getOperationImageList: (payload, callback) => { //电子表单 图片类型
       dispatch({
         type: 'common/getOperationImageList',
         payload: payload,
@@ -88,7 +88,7 @@ const Index = (props) => {
   const [form2] = Form.useForm();
 
 
-  const {  taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading,exportLoading, tableDatas2, tableTotal2, tableLoading2,exportLoading2,accountQueryPar,  } = props;
+  const { taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, accountQueryPar, } = props;
 
 
 
@@ -97,8 +97,81 @@ const Index = (props) => {
     onFinish()
   }, []);
 
+  const column = [
+    {
+      title: '序号',
+      dataIndex: 'Sort',
+      key: 'Sort',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '省',
+      dataIndex: 'Time',
+      key: 'Time',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '市',
+      dataIndex: 'Time',
+      key: 'Time',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '运维企业数',
+      dataIndex: 'OperationName',
+      key: 'OperationName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '运维监测点数',
+      dataIndex: 'OperationTypeName',
+      key: 'OperationTypeName',
+      align: 'center',
+      ellipsis: true,
+    },
+  ];
 
-  const [columns, setColumn] = useState([]);
+  const [columns, setColumns] = useState([
+    {
+      title: '序号',
+      dataIndex: 'Sort',
+      key: 'Sort',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '省',
+      dataIndex: 'Time',
+      key: 'Time',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '市',
+      dataIndex: 'Time',
+      key: 'Time',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '运维企业数',
+      dataIndex: 'OperationName',
+      key: 'OperationName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '运维监测点数',
+      dataIndex: 'OperationTypeName',
+      key: 'OperationTypeName',
+      align: 'center',
+      ellipsis: true,
+    },
+  ]);
 
   const onFinish = async () => {  //查询  par参数 分页需要的参数
     try {
@@ -110,7 +183,7 @@ const Index = (props) => {
         Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
       }, (col) => {
-        if (col && col) {
+        if (col && Object.keys(col).length) {
           const cols = []
           for (let key in col) {
             cols.push({
@@ -122,40 +195,13 @@ const Index = (props) => {
               render: (text, record, index) => {
                 if (text && text != '-') {
                   if (text instanceof Array) {
-                    return <Popover
-                      zIndex={800}
-                      onOpenChange={(newOpen) => { setOpen(newOpen) }}
-                      trigger="click"
-                      open={open}
-                      overlayClassName={styles.detailPopSty}
-                      content={
-                        <Table
-                          bordered
-                          size='small'
-                          columns={[
-                            {
-                              align: 'center',
-                              width: 50,
-                              render: (text, record, index) => index + 1
-                            },
-                            {
-                              align: 'center',
-                              width: 100,
-                              render: (text, record, index) => <a onClick={() => { detail(record) }}>查看详情</a>
-                            }
-                          ]}
-                          dataSource={text} pagination={false} />
-                      }>
-                      <a>查看详情</a>
-                    </Popover>
-                  } else {
-                    return text; //运维人员 运维内容 序号 运维日期 或工单类型为-
+                    return <a>查看详情</a>
                   }
                 }
               }
             })
           }
-          setColumn(cols)
+          setColumns([...column, ...cols])
         }
       })
     } catch (errorInfo) {
@@ -180,7 +226,7 @@ const Index = (props) => {
       layout='inline'
       initialValues={{
         time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")],
-        pointType:2,
+        pointType: 2,
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { onFinish() }}
@@ -199,13 +245,13 @@ const Index = (props) => {
           <Option key={2} value={2} >废气</Option>
           <Option key={1} value={1} >废水</Option>
         </Select>
-      </Form.Item> 
-      <Spin spinning={taskTypeLoading} size='small'>
-      <Form.Item label='运维内容' name='TaskType'>
-        <Select placeholder='请选择' allowClear style={{ width: 150 }}>
-          {taskTypeList.map(item => <Option key={item.ID} value={item.ID} >{item.TypeName}</Option>)}
-        </Select>
       </Form.Item>
+      <Spin spinning={taskTypeLoading} size='small'>
+        <Form.Item label='运维内容' name='TaskType'>
+          <Select placeholder='请选择' allowClear style={{ width: 150 }}>
+            {taskTypeList.map(item => <Option key={item.ID} value={item.ID} >{item.TypeName}</Option>)}
+          </Select>
+        </Form.Item>
       </Spin>
       <Form.Item>
         <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
@@ -222,10 +268,55 @@ const Index = (props) => {
 
 
 
- //上传台账、
-   const [columns2, setColumn2] = useState([]);
-   const [accountVisible, setAccountVisible] = useState(true);
-   const [accountTitle, setAccountTitle] = useState('');
+  //上传台账
+  const column2 = [
+    {
+      title: '省',
+      dataIndex: 'Time',
+      key: 'Time',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '市',
+      dataIndex: 'OperationName',
+      key: 'OperationName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '企业名称',
+      dataIndex: 'entName',
+      key: 'entName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '监测点名称',
+      dataIndex: 'entName',
+      key: 'entName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '运维负责人',
+      dataIndex: 'entName',
+      key: 'entName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '运维负责人工号',
+      dataIndex: 'entName',
+      key: 'entName',
+      width: 100,
+      align: 'center',
+      ellipsis: true,
+    },
+  ];
+  const [columns2, setColumn2] = useState([]);
+  const [accountVisible, setAccountVisible] = useState(true);
+  const [accountTitle, setAccountTitle] = useState('');
 
   const [open, setOpen] = useState(false);
 
@@ -243,7 +334,7 @@ const Index = (props) => {
         pageIndex: pageIndexs,
         pageSize: pageSizes,
       }, (col) => {
-        if (col && col) {
+        if (col && Object.keys(col).length) {
           const cols = []
           for (let key in col) {
             cols.push({
@@ -288,7 +379,7 @@ const Index = (props) => {
               }
             })
           }
-          setColumn(cols)
+          setColumns([...column, ...cols])
         }
       })
     } catch (errorInfo) {
@@ -302,16 +393,16 @@ const Index = (props) => {
       layout='inline'
       initialValues={{
         time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")],
-        pointType:2,
+        pointType: 2,
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2) }}
     >
-      <Form.Item  name='entName' >
-        <Input placeholder='请输入企业名称'/>
+      <Form.Item name='entName' >
+        <Input placeholder='请输入企业名称' />
       </Form.Item>
-      <Form.Item  name='pointName' >
-        <Input placeholder='请输入监测点名称'/>
+      <Form.Item name='pointName' >
+        <Input placeholder='请输入监测点名称' />
       </Form.Item>
       <Form.Item>
         <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
@@ -345,7 +436,7 @@ const Index = (props) => {
   }
 
 
- 
+
   //表单
   const [detailVisible, setDetailVisible] = useState(false)
   const [typeID, setTypeID] = useState(null)
@@ -357,65 +448,64 @@ const Index = (props) => {
       setDetailVisible(true)
     } else {
       // 获取详情 图片类型表单
-      props.getOperationImageList({ FormMainID : record.FormMainID })
-      }
+      props.getOperationImageList({ FormMainID: record.FormMainID })
+    }
   }
   return (
     <div className={styles.operationRecordnalysisSty}>
-    <BreadcrumbWrapper>
-      <Card title={searchComponents()}>
-        <SdlTable
-          resizable
-          loading={tableLoading}
-          bordered
-          dataSource={tableDatas}
-          columns={columns}
-          scroll={{ y: 'calc(100vh - 360px)' }}
-          pagination={false}
-        />
-      </Card>
-      <Modal //台账详情
-        visible={accountVisible}
-        title={`${accountTitle}台账上传情况`}
-        wrapClassName='spreadOverModal'
-        footer={null}
-        width={'100%'}
-        onCancel={() => { setAccountVisible(false) }}
-        destroyOnClose
-      >
-      <Card title={searchComponents2()}>
-        <SdlTable
-          resizable
-          loading={tableLoading2}
-          bordered
-          dataSource={tableDatas2}
-          columns={columns2}
-          scroll={{ y: 'calc(100vh - 360px)' }}
-          pagination={{
-            total: tableTotal2,
-            pageSize: pageSize2,
-            current: pageIndex2,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            onChange: handleTableChange2,
-          }}
-        />
-      </Card>  
-      </Modal>
-      <Modal //表单详情
-        visible={detailVisible}
-        title={'详情'}
-        wrapClassName='spreadOverModal'
-        footer={null}
-        width={'100%'}
-        onCancel={() => { setDetailVisible(false) }}
-        destroyOnClose
-      >
-        <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
-      </Modal>
-      {props.imageListVisible && <ViewImagesModal />}
+      <BreadcrumbWrapper>
+        <Card title={searchComponents()}>
+          <SdlTable
+            resizable
+            loading={tableLoading}
+            bordered
+            dataSource={tableDatas}
+            columns={columns}
+            pagination={false}
+          />
+        </Card>
+        <Modal //台账详情
+          visible={accountVisible}
+          title={`${accountTitle}台账上传情况`}
+          wrapClassName='spreadOverModal'
+          footer={null}
+          width={'100%'}
+          onCancel={() => { setAccountVisible(false) }}
+          destroyOnClose
+        >
+          <Card title={searchComponents2()}>
+            <SdlTable
+              resizable
+              loading={tableLoading2}
+              bordered
+              dataSource={tableDatas2}
+              columns={columns2}
+              scroll={{ y: 'calc(100vh - 360px)' }}
+              pagination={{
+                total: tableTotal2,
+                pageSize: pageSize2,
+                current: pageIndex2,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                onChange: handleTableChange2,
+              }}
+            />
+          </Card>
+        </Modal>
+        <Modal //表单详情
+          visible={detailVisible}
+          title={'详情'}
+          wrapClassName='spreadOverModal'
+          footer={null}
+          width={'100%'}
+          onCancel={() => { setDetailVisible(false) }}
+          destroyOnClose
+        >
+          <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
+        </Modal>
+        {props.imageListVisible && <ViewImagesModal />}
       </BreadcrumbWrapper>
-      </div>
+    </div>
   );
 };
 export default connect(dvaPropsData, dvaDispatch)(Index);

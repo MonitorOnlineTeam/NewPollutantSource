@@ -622,7 +622,7 @@ const Index = (props) => {
             </Col>
             {provinceShow&&<Col span={12}>
               <Form.Item label="行政区" name="Province" rules={[{ required: true, message: '请输入行政区!', },]} >
-               <SdlCascader noFilter selectType='2,否' />
+               <SdlCascader  selectType='2,否' />
               </Form.Item>
             </Col>}
             <Col span={12}>

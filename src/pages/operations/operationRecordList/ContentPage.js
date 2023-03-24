@@ -19,6 +19,9 @@ import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RecordForm from '@/pages/operations/recordForm'
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
+import RecordFormPopover from '@/components/recordFormPopover';
+
+import { object } from 'prop-types';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -68,7 +71,7 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getOperationImageList: (payload,callback) => { //电子表单 图片类型
+    getOperationImageList: (payload, callback) => { //电子表单 图片类型
       dispatch({
         type: 'common/getOperationImageList',
         payload: payload,
@@ -93,8 +96,41 @@ const Index = (props) => {
     onFinish(pageIndex, pageSize)
   }, [DGIMN]);
 
-
-  const [columns, setColumn] = useState([]);
+  const column = [
+    {
+      title: '序号',
+      dataIndex: 'Sort',
+      key: 'Sort',
+      align: 'center',
+      ellipsis: true,
+      fixed:'left',
+    },
+    {
+      title: '运维日期',
+      dataIndex: 'Time',
+      key: 'Time',
+      align: 'center',
+      ellipsis: true,
+      fixed:'left',
+    },
+    {
+      title: '运维人员',
+      dataIndex: 'OperationName',
+      key: 'OperationName',
+      align: 'center',
+      ellipsis: true,
+      fixed:'left',
+    },
+    {
+      title: '运维内容',
+      dataIndex: 'OperationTypeName',
+      key: 'OperationTypeName',
+      align: 'center',
+      ellipsis: true,
+      fixed:'left',
+    },
+  ]
+  const [columns, setColumns] = useState([]);
 
 
 
@@ -118,7 +154,7 @@ const Index = (props) => {
         pageIndex: pageIndexs,
         pageSize: pageSizes,
       }, (col) => {
-        if (col && col) {
+        if (col && Object.keys(col).length) {
           const cols = []
           for (let key in col) {
             cols.push({
@@ -156,14 +192,12 @@ const Index = (props) => {
                       }>
                       <a>查看详情</a>
                     </Popover>
-                  } else {
-                    return text; //运维人员 运维内容 序号 运维日期 或工单类型为-
                   }
                 }
               }
             })
           }
-          setColumn(cols)
+          setColumns([...column, ...cols])
         }
       })
     } catch (errorInfo) {
@@ -172,7 +206,7 @@ const Index = (props) => {
   }
   const exports = async () => { //导出
     const values = await form.validateFields();
-    props.exportKeyParameterQuestionList({
+    props.exportOperationRecordListByDGIMN({
       ...values,
       DGIMN: DGIMN,
       PollutantType: PollutantType,
@@ -212,11 +246,11 @@ const Index = (props) => {
         />
       </Form.Item>
       <Spin spinning={taskTypeLoading} size='small'>
-      <Form.Item label='运维内容' name='TaskType'>
-        <Select placeholder='请选择' allowClear style={{ width: 150 }}>
-          {taskTypeList.map(item => <Option key={item.ID} value={item.ID} >{item.TypeName}</Option>)}
-        </Select>
-      </Form.Item>
+        <Form.Item label='运维内容' name='TaskType'>
+          <Select placeholder='请选择' allowClear style={{ width: 150 }}>
+            {taskTypeList.map(item => <Option key={item.ID} value={item.ID} >{item.TypeName}</Option>)}
+          </Select>
+        </Form.Item>
       </Spin>
       <Form.Item>
         <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
@@ -254,8 +288,8 @@ const Index = (props) => {
       setDetailVisible(true)
     } else {
       // 获取详情 图片类型表单
-      props.getOperationImageList({ FormMainID : record.FormMainID })
-      }
+      props.getOperationImageList({ FormMainID: record.FormMainID })
+    }
   }
 
 
@@ -268,7 +302,6 @@ const Index = (props) => {
           bordered
           dataSource={tableDatas}
           columns={columns}
-          scroll={{ y: 'calc(100vh - 360px)' }}
           pagination={{
             total: tableTotal,
             pageSize: pageSize,

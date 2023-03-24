@@ -40,8 +40,8 @@ export default Model.extend({
     *exportOperationRecordListByDGIMN({ payload, callback }, { call, put, update }) { // 导出
       const result = yield call(services.ExportOperationRecordListByDGIMN, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
-        downloadFile(`/upload${result.Datas}`)
+        message.success('下载成功')
+        downloadFile(`${result.Datas}`)
       } else {
         message.error(result.Message)
       }

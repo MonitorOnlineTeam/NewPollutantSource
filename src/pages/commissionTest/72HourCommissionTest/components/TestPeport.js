@@ -28,7 +28,7 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-  testReportLoading: loading.effects[`${namespace}/exportTestPeport`],
+  // testReportLoading: loading.effects[`${namespace}/exportTestPeport`],
 
 })
 
@@ -40,10 +40,11 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    exportTestPeport: (payload) => {
+    exportTestPeport: (payload,callback) => {
       dispatch({
         type: `${namespace}/exportTestPeport`,
         payload: payload,
+        callback:callback,
       })
     },
   }
@@ -53,23 +54,30 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-  const { pointId,  testReportLoading ,} = props;
+  const { pointId,} = props; 
 
   useEffect(() => {
   }, [])
 
 
+  const [testReportLoading1,setTestPortLoading1 ] = useState(false)
+  const [testReportLoading2,setTestPortLoading2 ] = useState(false)
 
-  const testReportClick = () => {
+  const testReportClick = (type) => {
+    type == 1 ? setTestPortLoading1(true) : setTestPortLoading2(true)
     props.exportTestPeport({
       PointCode: pointId,
+      ExportType:type,
+    },()=>{
+      type == 1 ? setTestPortLoading1(false) : setTestPortLoading2(false)
     })
   }
 
   return (
     <div className={styles.totalContentSty}>
 
-      <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading} style={{ marginRight: 10 }} onClick={testReportClick}>生成检测报告</Button>
+      <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading1} style={{ marginRight: 10 }} onClick={()=>{testReportClick(1)}}>生成Word检测报告</Button>
+      <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading2} style={{ marginRight: 10 }} onClick={()=>{testReportClick(2)}}>生成Pdf检测报告</Button>
 
     </div>
   );

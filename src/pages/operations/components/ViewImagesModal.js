@@ -81,7 +81,7 @@ class ViewImagesModal extends PureComponent {
       listType: 'picture-card',
       fileList: [...imageList],
     };
-
+    console.log(this.props.imageListVisible)
 
     return (
       <Modal

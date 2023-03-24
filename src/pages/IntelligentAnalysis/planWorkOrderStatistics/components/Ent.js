@@ -4,7 +4,7 @@
  * 创建时间：2021.09.27
  */
 import React, { useState,useEffect,Fragment,useRef,useImperativeHandle,forwardRef} from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs,Calendar,Tag,Spin    } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Popover, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs,Calendar,Tag,Spin    } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -17,9 +17,10 @@ import moment from 'moment';
 import RegionList from '@/components/RegionList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
+import RecordForm from '@/pages/operations/recordForm'
+import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
 const { TextArea } = Input;
 const { Option } = Select;
-
 const namespace = 'planWorkOrderStatistics'
 
 
@@ -128,7 +129,20 @@ const Index = (props,ref) => {
 
   </ol>
   }
-  
+  const [detailVisible, setDetailVisible] = useState(false)
+  const [typeID, setTypeID] = useState(null)
+  const [taskID, setTaskID] = useState(1)
+  const recordFormDetail = (record) => { //详情
+    console.log(record)
+    if (record.RecordType == 1) {
+      setTypeID(record.TypeID);
+      setTaskID(record.TaskID)
+      setDetailVisible(true)
+    } else {
+      // 获取详情 图片类型表单
+      props.getOperationImageList({ FormMainID: record.FormMainID })
+    }
+  }
   const columns = [
     {
       title: '省/市',
@@ -157,24 +171,31 @@ const Index = (props,ref) => {
       width:255,
       children: [
         {
-          title: <span>总数<Tooltip  title={'日期条件内，完成的计划巡检工单数量。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-          dataIndex: 'inspectionCount',
-          key: 'inspectionCount',
+          title:  <span>待完成数</span>,
+          dataIndex: 'inspectionIncompleteCount',
+          key: 'inspectionIncompleteCount',
+          width: 80,
+          align:'center',
+        },
+        {
+          title: <span>结束数<Tooltip  title={'系统关闭工单数、完成工单数'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          dataIndex: 'inspectionCloseCount',
+          key: 'inspectionCloseCount',
           width: 100,
           align:'center',
           render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{workOrderNum(1,record)}}>{text}</Button>
-          }
+            return  <Button type="link" onClick={()=>{workOrderNum(1,record)}}>{text}</Button>
+            }
         },
         {
           title:  <span>完成数</span>,
           dataIndex: 'inspectionCompleteCount',
           key: 'inspectionCompleteCount',
-          width: 50,
+          width: 70,
           align:'center',
         },
         {
-          title: '完成率',
+          title: <span>完成率<Tooltip  title={'（完成数/结束数）* 100%'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'inspectionRate',
           key: 'inspectionRate',
           width: 105,
@@ -201,29 +222,36 @@ const Index = (props,ref) => {
       width:255,
       children: [
         {
-          title: <span>总数<Tooltip  title={'日期条件内，完成、系统关闭的计划校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-          dataIndex: 'calibrationCount',
-          key: 'calibrationCount',
+          title:  <span>待完成数</span>,
+          dataIndex: 'calibrationIncompleteCount',
+          key: 'calibrationIncompleteCount',
+          width: 80,
+          align:'center',
+        },
+        {
+          title: <span>结束数<Tooltip  title={'系统关闭工单数、完成工单数'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          dataIndex: 'calibrationCloseCount',
+          key: 'calibrationCloseCount',
           width: 100,
           align:'center',
           render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{workOrderNum(2,record)}}>{text}</Button>
-          }
+            return  <Button type="link" onClick={()=>{workOrderNum(2,record)}}>{text}</Button>
+            }
         },
         {
           title:  <span>完成数</span>,
           dataIndex: 'calibrationCompleteCount',
           key: 'calibrationCompleteCount',
-          width: 50,
+          width: 70,
           align:'center',
         },
         {
-          title: '完成率',
+          title: <span>完成率<Tooltip  title={'（完成数/结束数）* 100%'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'calibrationRate',
           key: 'calibrationRate',
           width: 105,
           align:'center',
-          sorter: (a, b) => a.calibrationRate - b.calibrationRate,
+          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
           render: (text, record) => {
             return (
               <div>
@@ -280,21 +308,28 @@ const Index = (props,ref) => {
       width:200,
       children: [
         {
-          title: '总数',
-          dataIndex: 'taskCount',
-          key: 'taskCount',
-          width: 50,
+          title:  <span>待完成数</span>,
+          dataIndex: 'taskIncompleteCount',
+          key: 'taskIncompleteCount',
+          width: 80,
           align:'center',
         },
         {
-          title:  "完成数",
+          title: <span>结束数</span>,
+          dataIndex: 'taskCloseCount',
+          key: 'taskCloseCount',
+          width: 70,
+          align:'center',
+        },
+        {
+          title:  <span>完成数</span>,
           dataIndex: 'taskCompleteCount',
           key: 'taskCompleteCount',
-          width: 100,
+          width: 70,
           align:'center',
         },
         {
-          title: '完成率',
+          title: <span>完成率</span>,
           dataIndex: 'taskRate',
           key: 'taskRate',
           width: 105,
@@ -357,21 +392,28 @@ const Index = (props,ref) => {
       width:200,
       children: [
         {
-          title: '总数',
-          dataIndex: 'taskCount',
-          key: 'taskCount',
-          width: 50,
+          title:  <span>待完成数</span>,
+          dataIndex: 'taskIncompleteCount',
+          key: 'taskIncompleteCount',
+          width: 80,
           align:'center',
         },
         {
-          title:  "完成数",
+          title: <span>结束数</span>,
+          dataIndex: 'taskCloseCount',
+          key: 'taskCloseCount',
+          width: 70,
+          align:'center',
+        },
+        {
+          title:  <span>完成数</span>,
           dataIndex: 'taskCompleteCount',
           key: 'taskCompleteCount',
-          width: 100,
+          width: 70,
           align:'center',
         },
         {
-          title: '完成率',
+          title: <span>完成率</span>,
           dataIndex: 'taskRate',
           key: 'taskRate',
           width: 105,
@@ -383,7 +425,7 @@ const Index = (props,ref) => {
                 <Progress
                   percent={text=='-'? 0 : text}
                   size="small"
-                  style={{width:'85%'}}
+                  style={{width:'70%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
@@ -605,8 +647,12 @@ const exports = () => { //导出
      <div style={{display:'inline-block', background:'#bae7ff',width:24,height:12,marginRight:5}}></div>
        <span>运维周期内</span>
        </div>
+       <div style={{marginRight:8}}>
+       <div style={{display:'inline-block',background:'#faad14',width:24,height:12,marginRight:5}}></div>
+       <span>待完成工单</span>    
+       </div>
        <div  style={{ marginRight:8}}>
-     <div style={{ display:'inline-block',background:'#1890ff',width:24,height:12,marginRight:5}}></div>
+       <div style={{ display:'inline-block',background:'#1890ff',width:24,height:12,marginRight:5}}></div>
        <span>完成工单</span>
        </div>
        <div  style={{ marginRight:8}}>
@@ -614,11 +660,10 @@ const exports = () => { //导出
        <span>系统关闭工单</span>
        </div>
        <div >
-       <div style={{display:'inline-block',background:'#faad14',width:24,height:12,marginRight:5}}></div>
+       {/* <div style={{display:'inline-block',background:'#faad14',width:24,height:12,marginRight:5}}></div>
        <span>当日存在关闭和完成工单</span>
-       <Tooltip overlayClassName='customTooltipSty'  title={workOrderTip()}><QuestionCircleOutlined style={{paddingLeft:5,fontSize:10}}/></Tooltip>
+       <Tooltip overlayClassName='customTooltipSty' placement="bottom"   title={workOrderTip()}><QuestionCircleOutlined style={{paddingLeft:5,fontSize:10}}/></Tooltip> */}
        </div>
-
      </Row>
      </Col>
     </Row>
@@ -789,7 +834,7 @@ const dateCellRender = (value)=>{//日期
   let ele=[];
   if(entOutsidePointListDatas&&entOutsidePointListDatas[0]){
      entOutsidePointListDatas.map((item,index)=>{
-      if(moment(value).format("D") == item.day){
+      if(  moment(value).format("M") == item.month && moment(value).format("D") == item.day){
          for(let key in item){ //完成
           if(item[key] && outTypeObj[key]){ 
             ele.push(<Tag style={{minWidth:110,}} color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>)
@@ -845,6 +890,7 @@ const outPointClick = (record) =>{ //计划外 监测点名称
 const entOutsidePointGetTaskWorkOrderList = (par) =>{
   props.entOutsidePointGetTaskWorkOrderList({
     staticType: 4,
+    outOrInside:2,
     ...par,
   })
   setDete({
@@ -937,8 +983,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         onCancel={()=>{setOperaPointVisible(false)}}
         footer={null}
         destroyOnClose
-        width='80%'
-        wrapClassName={styles.pointModalSty}
+        wrapClassName={`${styles.pointModalSty} spreadOverModal`}
       >
      <Card title={`统计${ dete.beginTime&&dete.beginTime} ~ ${dete.endTime&&dete.endTime}内计划外工单情况`}
         style={{
@@ -949,7 +994,6 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
           
       <Spin spinning={entOutsidePointLoading}>
      <Calendar
-        
         dateCellRender={dateCellRender}
         monthCellRender={monthCellRender} 
         // onChange={onDateChange}
@@ -989,7 +1033,17 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
       />
    </Card>
       </Modal> 
- 
+      <Modal //表单详情
+        visible={detailVisible}
+        title={'详情'}
+        wrapClassName='spreadOverModal'
+        footer={null}
+        onCancel={() => { setDetailVisible(false) }}
+        destroyOnClose
+      >
+        <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
+      </Modal>
+      {props.imageListVisible && <ViewImagesModal />}
 
         </div>
   );
