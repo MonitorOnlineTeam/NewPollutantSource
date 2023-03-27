@@ -92,6 +92,7 @@ const Index = (props) => {
 
 
   useEffect(() => {
+    form.resetFields();
     props.getTaskTypeList({ DGIMN: DGIMN, PollutantType: PollutantType });
     onFinish(pageIndex, pageSize)
   }, [DGIMN]);
@@ -139,7 +140,7 @@ const Index = (props) => {
 
 
 
-  const [open, setOpen] = useState(false);
+  const [popVisible, setPopVisible] = useState(false);
   const onFinish = async (pageIndexs, pageSizes, par) => {  //查询  par参数 分页需要的参数
     try {
       const values = await form.validateFields();
@@ -168,9 +169,9 @@ const Index = (props) => {
                   if (text instanceof Array) {
                     return <Popover
                       zIndex={800}
-                      onOpenChange={(newOpen) => { setOpen(newOpen) }}
+                      onVisibleChange={(newVisible) => { setPopVisible(newVisible) }}
                       trigger="click"
-                      open={open}
+                      popVisible={popVisible}
                       overlayClassName={styles.detailPopSty}
                       content={
                         <Table

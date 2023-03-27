@@ -112,7 +112,7 @@ class RepalceRecordList extends Component {
                             <td colSpan={ColumnList&&ColumnList.length + 1 - 5} style={{minWidth:250, textAlign: 'center', fontSize: '14px' }}>
                                 {Content !== null ?Content.EnterpriseName  :null}
                             </td>
-                            <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                            <td  style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         监测点名称
                             </td>
                             <td style={{textAlign: 'center', fontSize: '14px'}}>
