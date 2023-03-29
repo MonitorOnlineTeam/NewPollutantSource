@@ -246,18 +246,18 @@ const Index = (props, ref) => {
       }
     } else { //同时存在两种工单
       let taskWorkNums1,taskWorkNums2;
+      const popData = data.taskList.filter(item=>item.TaskStatus!=3)
       if(data[taskTypeName] > 1 ){ 
-        const popData = data.taskList.filter(item=>item.TaskStatus!=3)
         taskWorkNums1 =  multipleNum(popData,taskWorkNum1,taskTypeName)
       }else{
-        taskWorkNums1 = oneNum(data.taskList,taskWorkNum1)
+        taskWorkNums1 = oneNum(popData,taskWorkNum1)
       }
       //完成工单
+      const popData2 = data.taskList.filter(item=>item.TaskStatus==3)
       if(data['taskCompleteCount'] > 1 ){
-        const popData = data.taskList.filter(item=>item.TaskStatus==3)
-        taskWorkNums2 =  multipleNum(popData,taskWorkNum2,'taskCompleteCount')
+        taskWorkNums2 =  multipleNum(popData2,taskWorkNum2,'taskCompleteCount')
       }else{
-        taskWorkNums2 =  oneNum(data.taskList,taskWorkNum2)
+        taskWorkNums2 =  oneNum(popData2,taskWorkNum2)
       }
       return <Row align='middle' justify='center' style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
             <div  style={{width:'50%', height:'100%',display:'flex',alignItems:'center', background: taskTypeName =='taskInCompleteCount'? '#faad14': '#f5222d'}}> {taskWorkNums1} </div>
@@ -1477,7 +1477,7 @@ const Index = (props, ref) => {
     setWorkPageSize(10)
     insideOrOutsideWorkGetTaskWorkOrderList({
       regionCode: record.regionCode,
-      taskType: outTypePar[outType]
+      taskType: type == 1 || type == 2? type : outTypePar[outType]
     })
 
 
