@@ -86,10 +86,11 @@ class ViewImagesModal extends PureComponent {
     return (
       <Modal
         title="详情"
-        visible={this.props.imageListVisible}
+        visible={this.props.visible || this.props.visible===false? this.props.visible : this.props.imageListVisible}
         footer=""
         // onOk={this.handleOk}
-        onCancel={this.modalHandleCancel}
+        onCancel={this.props.onCancel? this.props.onCancel : this.modalHandleCancel}
+        destroyOnClose={this.props.destroyOnClose}
       >
         <div style={{ overflow: "hidden" }}>
           {/* <Upload

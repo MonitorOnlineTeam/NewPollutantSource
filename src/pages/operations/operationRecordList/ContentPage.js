@@ -165,35 +165,37 @@ const Index = (props) => {
               render: (text, record, index) => {
                 if (text && text != '-') {
                   if (text instanceof Array) {
-                    // return  <RecordFormPopover dataSource={text} column={[...column, ...cols]}/>  
-                    return <div> <Popover
-                      zIndex={999}
-                      trigger="click"
-                      onVisibleChange={(newVisible) => {console.log(2222);console.log(newVisible); setPopVisible(newVisible) }}
-                      // visible={popVisible}
-                      // getPopupContainer={trigger => trigger.parentNode}
-                      overlayClassName={styles.detailPopSty}
-                      content={
-                        <Table
-                          bordered
-                          showHeader={false}
-                          size='small'
-                          columns={[
-                            {
-                              align: 'center',
-                              width: 50,
-                              render: (text, record, index) => index + 1
-                            },
-                            {
-                              align: 'center',
-                              width: 100,
-                              render: (text, record, index) => <a onClick={() => { detail(record) }}>查看详情</a>
-                            }
-                          ]}
-                          dataSource={text} pagination={false} />
-                      }>
-                        <a>查看详情</a>
-                    </Popover></div>
+                    let keys =''
+                    keys= key;
+                    return  <RecordFormPopover keys={keys} dataSource={text} column={[...column, ...cols]}/>  
+                    // return <div> <Popover
+                    //   zIndex={999}
+                    //   trigger="click"
+                    //   onVisibleChange={(newVisible) => {console.log(2222,key);setPopKey(key); setPopVisible(newVisible) }}
+                    //   visible={key==popKey&&popVisible}
+                    //   getPopupContainer={trigger => trigger.parentNode}
+                    //   overlayClassName={styles.detailPopSty}
+                    //   content={
+                    //     <Table
+                    //       bordered
+                    //       showHeader={false}
+                    //       size='small'
+                    //       columns={[
+                    //         {
+                    //           align: 'center',
+                    //           width: 50,
+                    //           render: (text, record, index) => index + 1
+                    //         },
+                    //         {
+                    //           align: 'center',
+                    //           width: 100,
+                    //           render: (text, record, index) => <a onClick={() => { detail(record) }}>查看详情</a>
+                    //         }
+                    //       ]}
+                    //       dataSource={text} pagination={false} />
+                    //   }>
+                    //     <a>查看详情</a>
+                    // </Popover></div>
                   }
                 }
               }

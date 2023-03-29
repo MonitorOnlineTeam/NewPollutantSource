@@ -249,7 +249,7 @@ const Index = (props) => {
     <div  className={styles.planWorkOrderStatisticsSty}>
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
     <Card title={searchComponents()}>
-      {showType==1? <Region pollutantType={form.getFieldValue('pollutantType')} isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
+      {showType==1? <Region pollutantType={form.getFieldValue('pollutantType')} isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent pollutantType={form.getFieldValue('pollutantType')} parentCallback={parentCallback}/>}
    </Card>
    </BreadcrumbWrapper>
    

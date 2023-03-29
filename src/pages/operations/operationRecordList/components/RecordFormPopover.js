@@ -17,7 +17,7 @@ const dvaPropsData = ({ loading, global, common, }) => ({
 })
 const dvaDispatch = (dispatch) => {
     return { 
-        updateState: (payload) => {
+        updateState: (namespace,payload) => {
             dispatch({
                 type: `${namespace}/updateState`,
                 payload: payload,
@@ -36,7 +36,7 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-    const { columns,key, } = props;
+    const { columns,keys, } = props;
     const [popVisible, setPopVisible] = useState(false);
     const [popKey, setPopKey] = useState(-1);
 
@@ -49,7 +49,6 @@ const Index = (props) => {
             setTypeID(record.TypeID);
             setTaskID(record.TaskID)
             setDetailVisible(true)
-            setPopVisible(true)
         } else {
             // 获取详情 图片类型表单
             props.getOperationImageList({ FormMainID: record.FormMainID })
@@ -59,11 +58,11 @@ const Index = (props) => {
        <div>
         <Popover
             zIndex={999}
-            onVisibleChange={(newVisible) => {console.log(key==popKey&&newVisible,1111,newVisible); setPopVisible(newVisible) }}
+            onVisibleChange={(newVisible) => {setPopVisible(newVisible) }}
             trigger="click"
-            visible={key==popKey&&popVisible}
+            visible={keys==popKey&&popVisible}
             overlayClassName={styles.detailPopSty}
-            getPopupContainer={trigger => trigger.parentNode}
+            // getPopupContainer={trigger => trigger.parentNode}
             content={
                 <Table
                     bordered
@@ -83,7 +82,7 @@ const Index = (props) => {
                     ]}
                     dataSource={props.dataSource} pagination={false} />
             }>
-            <a>查看详情</a>
+            <a onClick={()=>{ setPopKey(keys);}}>查看详情</a>
         </Popover>
         <Modal //表单详情
             visible={detailVisible}
@@ -91,12 +90,16 @@ const Index = (props) => {
             wrapClassName='spreadOverModal'
             footer={null}
             width={'100%'}
-            onCancel={() => { setDetailVisible(false) }}
+            onCancel={() => {setDetailVisible(false);setPopVisible(true) }}
             destroyOnClose
         >
             <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
         </Modal>
-        {props.imageListVisible && <ViewImagesModal />}
+        <ViewImagesModal visible={keys==popKey&&popVisible&&props.imageListVisible} destroyOnClose onCancel={()=>{
+                  console.log(keys,popKey)
+                  props.updateState('common',{ imageListVisible: false})
+                  setPopVisible(true)
+        }}/>
     </div>
     );
 };

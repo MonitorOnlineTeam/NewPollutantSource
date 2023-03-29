@@ -537,62 +537,140 @@ const Index = (props,ref) => {
           align:'center',
         },
         {
-          title:  <span>巡检</span>,
+          title: '巡检',
           dataIndex: 'inspectionCompleteCount',
           key: 'inspectionCompleteCount',
           width: 80,
-          align:'center',
+          align: 'center',
         },
         {
           title: '维护',
           dataIndex: 'maintainCompleteCount',
           key: 'maintainCompleteCount',
           width: 80,
-          align:'center',
+          align: 'center',
+        },
+        {
+          title: '备品备件更换',
+          dataIndex: 'sparePartsCompleteCount',
+          key: 'sparePartsCompleteCount',
+          width: 100,
+          align: 'center',
+        },
+        {
+          title: '易耗品更换',
+          dataIndex: 'consumablesCompleteCount',
+          key: 'consumablesCompleteCount',
+          width: 100,
+          align: 'center',
+        },
+        {
+          title: pollutantType == 1 ? '试剂更换' : '标准物质更换',
+          dataIndex: pollutantType == 1 ? 'reagentCompleteCount' : 'referenceMaterialsCompleteCount',
+          key: pollutantType == 1 ? 'reagentCompleteCount' : 'referenceMaterialsCompleteCount',
+          width: pollutantType == 1 ? 80 : 100,
+          align: 'center',
         },
         {
           title: '校准',
           dataIndex: 'calibrationCompleteCount',
           key: 'calibrationCompleteCount',
           width: 80,
-          align:'center',
+          align: 'center',
         },
         {
           title: '配合检查',
           dataIndex: 'cooperationInspectionCompleteCount',
           key: 'cooperationInspectionCompleteCount',
           width: 100,
-          align:'center',
+          align: 'center',
         },
         {
           title: '校验测试',
           dataIndex: 'calibrationTestCompleteCount',
           key: 'calibrationTestCompleteCount',
           width: 100,
-          align:'center',
+          align: 'center',
         },
         {
           title: '维修',
           dataIndex: 'repairCompleteCount',
           key: 'repairCompleteCount',
           width: 80,
-          align:'center',
+          align: 'center',
         },
-
+    
         {
           title: '参数核对',
           dataIndex: 'matchingComparisonCompleteCount',
           key: 'matchingComparisonCompleteCount',
           width: 100,
-          align:'center',
+          align: 'center',
         },
         {
           title: '配合比对',
           dataIndex: 'coordinationComparisonCompleteCount',
           key: 'coordinationComparisonCompleteCount',
           width: 120,
-          align:'center',
+          align: 'center',
         },
+        // {
+        //   title:  <span>巡检</span>,
+        //   dataIndex: 'inspectionCompleteCount',
+        //   key: 'inspectionCompleteCount',
+        //   width: 80,
+        //   align:'center',
+        // },
+        // {
+        //   title: '维护',
+        //   dataIndex: 'maintainCompleteCount',
+        //   key: 'maintainCompleteCount',
+        //   width: 80,
+        //   align:'center',
+        // },
+        // {
+        //   title: '校准',
+        //   dataIndex: 'calibrationCompleteCount',
+        //   key: 'calibrationCompleteCount',
+        //   width: 80,
+        //   align:'center',
+        // },
+        // {
+        //   title: '配合检查',
+        //   dataIndex: 'cooperationInspectionCompleteCount',
+        //   key: 'cooperationInspectionCompleteCount',
+        //   width: 100,
+        //   align:'center',
+        // },
+        // {
+        //   title: '校验测试',
+        //   dataIndex: 'calibrationTestCompleteCount',
+        //   key: 'calibrationTestCompleteCount',
+        //   width: 100,
+        //   align:'center',
+        // },
+        // {
+        //   title: '维修',
+        //   dataIndex: 'repairCompleteCount',
+        //   key: 'repairCompleteCount',
+        //   width: 80,
+        //   align:'center',
+        // },
+
+        // {
+        //   title: '参数核对',
+        //   dataIndex: 'matchingComparisonCompleteCount',
+        //   key: 'matchingComparisonCompleteCount',
+        //   width: 100,
+        //   align:'center',
+        // },
+        // {
+        //   title: '配合比对',
+        //   dataIndex: 'coordinationComparisonCompleteCount',
+        //   key: 'coordinationComparisonCompleteCount',
+        //   width: 120,
+        //   align:'center',
+        // },
       ],
     },
    
@@ -899,7 +977,7 @@ useImperativeHandle(refInstance,() => {
     }
 })
 
-const {entOutsidePointListTotal,entOutsidePointListDatas,entOutsidePointLoading} = props;
+const {entOutsidePointListTotal,entOutsidePointListDatas,entOutsidePointLoading,pollutantType,} = props;
 const [operaPointVisible, setOperaPointVisible] = useState(false)
 const [DGIMN, setDGIMN] = useState()
 const [dete, setDete] = useState({})
@@ -907,6 +985,10 @@ const [dete, setDete] = useState({})
 const outTypeObj = {
   "inspectionCount"  : "巡检工单",
   "maintainCompleteCount"  : "维护工单",
+  "sparePartsCompleteCount": "备品备件更换工单",
+  "consumablesCompleteCount":'易耗品更换更换工单',
+  "reagentCompleteCount" : "试剂更换工单",
+  "referenceMaterialsCompleteCount":"标准物质更换工单",
   "calibrationCount" :'校准工单',
   "cooperationInspectionCount" :'配合检查工单',
   "calibrationTestCount":'校验测试工单',
@@ -917,6 +999,10 @@ const outTypeObj = {
  const outTypeColor = {
   "inspectionCount"  : '#1890ff',
   "maintainCompleteCount"  : "#a0d911",
+  "sparePartsCompleteCount": "#eb2f96",
+  "consumablesCompleteCount":'#722ed1',
+  "reagentCompleteCount" : "#bfbfbf",
+  "referenceMaterialsCompleteCount":"#bfbfbf",
   "calibrationCount" :'#52c41a',
   "cooperationInspectionCount" :'#fa8c16',
   "calibrationTestCount":'#08979c',
