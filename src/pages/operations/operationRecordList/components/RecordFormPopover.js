@@ -9,14 +9,14 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import RecordForm from '@/pages/operations/recordForm'
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
-import styles from './styles.less';
+import styles from '../style.less';
 
 
 const dvaPropsData = ({ loading, global, common, }) => ({
     imageListVisible: common.imageListVisible,
 })
 const dvaDispatch = (dispatch) => {
-    return {
+    return { 
         updateState: (payload) => {
             dispatch({
                 type: `${namespace}/updateState`,
@@ -36,8 +36,9 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-    const { columns, detailText } = props;
-    const [open, setOpen] = useState(false);
+    const { columns,key, } = props;
+    const [popVisible, setPopVisible] = useState(false);
+    const [popKey, setPopKey] = useState(-1);
 
     //表单
     const [detailVisible, setDetailVisible] = useState(false)
@@ -48,6 +49,7 @@ const Index = (props) => {
             setTypeID(record.TypeID);
             setTaskID(record.TaskID)
             setDetailVisible(true)
+            setPopVisible(true)
         } else {
             // 获取详情 图片类型表单
             props.getOperationImageList({ FormMainID: record.FormMainID })
@@ -56,15 +58,17 @@ const Index = (props) => {
     return (
        <div>
         <Popover
-            zIndex={800}
-            onOpenChange={(newOpen) => { setOpen(newOpen) }}
+            zIndex={999}
+            onVisibleChange={(newVisible) => {console.log(key==popKey&&newVisible,1111,newVisible); setPopVisible(newVisible) }}
             trigger="click"
-            open={open}
-            overlayClassName={styles.popSty}
+            visible={key==popKey&&popVisible}
+            overlayClassName={styles.detailPopSty}
+            getPopupContainer={trigger => trigger.parentNode}
             content={
                 <Table
                     bordered
                     size='small'
+                    showHeader={false}
                     columns={columns? columns : [
                         {
                             align: 'center',
@@ -74,7 +78,7 @@ const Index = (props) => {
                         {
                             align: 'center',
                             width: 100,
-                        render: (text, record, index) => <a onClick={() => { detail(record) }}>{detailText? detailText : '查看详情'}</a>
+                        render: (text, record, index) => <a onClick={() => { detail(record) }}>查看详情</a>
                         }
                     ]}
                     dataSource={props.dataSource} pagination={false} />

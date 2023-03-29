@@ -210,6 +210,7 @@ const Index = (props, ref) => {
   const oneNum = (record,taskNumData)=>record&&record[0]? <div style={{width:'100%',lineHeight:'44.5px', cursor: 'pointer',color:'#fff' }} onClick={() => {setShowId(-1);taskDetail(record&&record[0]) }}>{taskNumData}</div> : <span style={{color:'#fff'}}>{taskNumData}</span>
   const multipleNum = (dataSource,taskNumData,typeName) => dataSource&&dataSource[0]? <Popover
     zIndex={999}
+    placement="right"
     onVisibleChange={(newVisible) => {setPopVisible(newVisible) }}
     trigger="click"
     visible={showId==`${id}${typeName}`&&popVisible }
@@ -1786,7 +1787,7 @@ const Index = (props, ref) => {
                   if (dateItem.taskCloseCount && dateItem.taskCompleteCount && dateItem.date == item.date) { //同时存在 关闭和完成工单
                     taskWorkNum1 = dateItem.taskCloseCount
                     taskWorkNum2 = dateItem.taskCompleteCount
-                     taskTypeName = 'taskCloseCount'
+                    taskTypeName = 'taskCloseCount'
                      return popContent(2,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, taskWorkNum1,taskWorkNum2)
                   }
 
@@ -1850,31 +1851,50 @@ const Index = (props, ref) => {
               width: 70,
               align: 'center',
               render: (text, row, index) => {
-                return row.datePick.map(dateItem => {
-                  if (dateItem.taskCloseCount && dateItem.taskCompleteCount && dateItem.date == item.date) { //同时存在
-                    return <Row align='middle' justify='center' style={{ background: '#faad14', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount + dateItem.taskCloseCount}</span>
-                    </Row>
-                  }
-                  if (dateItem.taskCloseCount && dateItem.date == item.date) { //关闭
-                    return <Row align='middle' justify='center' style={{ background: '#f5222d', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      <span style={{ color: '#fff' }}>{dateItem.taskCloseCount}</span>
-                    </Row>
+                let workNumEle,taskWorkNum1,taskWorkNum2,taskTypeName;
+                return row.datePick.map(dateItem=> {
+                  if (dateItem.taskInCompleteCount && dateItem.taskCompleteCount && dateItem.date == item.date) { //同时存在 待完成和完成工单
+                    taskWorkNum1 =  dateItem.taskInCompleteCount
+                    taskWorkNum2 =  dateItem.taskCompleteCount
+                    taskTypeName = 'taskInCompleteCount'
+                    return  popContent(2,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, taskWorkNum1,taskWorkNum2)
+                 }
+                  if (dateItem.taskCloseCount && dateItem.taskCompleteCount && dateItem.date == item.date) { //同时存在 关闭和完成工单
+                    taskWorkNum1 = dateItem.taskCloseCount
+                    taskWorkNum2 = dateItem.taskCompleteCount
+                    taskTypeName = 'taskCloseCount'
+                     return popContent(2,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, taskWorkNum1,taskWorkNum2)
                   }
 
+                  if (dateItem.taskInCompleteCount && dateItem.date == item.date) {//待完成
+                    workNumEle = <Row align='middle' justify='center' style={{ background: '#faad14', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                      <span style={{ color: '#fff' }}>{dateItem.taskInCompleteCount}</span>
+                    </Row>
+                    taskTypeName = 'taskCount'
+                    return popContent(1,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, workNumEle ) 
+                  }
                   if (dateItem.taskCompleteCount && dateItem.date == item.date) {//完成
-                    return <Row align='middle' justify='center' style={{ background: '#1890ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                    workNumEle = <Row align='middle' justify='center' style={{ background: '#1890ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
                       <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount}</span>
                     </Row>
+                    taskTypeName = 'taskCount'
+                    return popContent(1,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, workNumEle ) 
                   }
+                  if (dateItem.taskCloseCount && dateItem.date == item.date) { //关闭
+                    workNumEle = <Row align='middle' justify='center' style={{ background: '#f5222d', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                      <span style={{ color: '#fff' }}>{dateItem.taskCloseCount}</span>
+                    </Row>
+                    taskTypeName = 'taskCount'
+                    return popContent(1,`${row.DGIMN}${dateItem.date}`,taskTypeName ,dateItem, workNumEle ) 
+                  }
+
                   if (dateItem.operationStatus && dateItem.date == item.date) { //运维周期内
-                    return <Row align='middle' justify='center' style={{ background: '#bae7ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                    workNumEle = <Row align='middle' justify='center' style={{ background: '#bae7ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}></Row>
+                    return workNumEle
 
-                    </Row>
                   } else if (!dateItem.operationStatus && !dateItem.taskCount && dateItem.date == item.date) {
-                    return <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-
-                    </Row>
+                    workNumEle = <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}> </Row>
+                    return workNumEle
                   }
                 })
 

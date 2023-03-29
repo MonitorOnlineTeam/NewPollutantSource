@@ -17,8 +17,8 @@ import moment from 'moment';
 import RegionList from '@/components/RegionList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
-import RecordForm from '@/pages/operations/recordForm'
-import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
+import TaskRecordDetails from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout'
+
 const { TextArea } = Input;
 const { Option } = Select;
 const namespace = 'planWorkOrderStatistics'
@@ -129,19 +129,76 @@ const Index = (props,ref) => {
 
   </ol>
   }
-  const [detailVisible, setDetailVisible] = useState(false)
-  const [typeID, setTypeID] = useState(null)
-  const [taskID, setTaskID] = useState(1)
-  const recordFormDetail = (record) => { //详情
-    console.log(record)
-    if (record.RecordType == 1) {
-      setTypeID(record.TypeID);
-      setTaskID(record.TaskID)
-      setDetailVisible(true)
-    } else {
-      // 获取详情 图片类型表单
-      props.getOperationImageList({ FormMainID: record.FormMainID })
+  const [popVisible, setPopVisible] = useState(false)
+  const [showTaskID,setShowTaskID ] = useState()
+  const [showId,setShowId ] = useState(-1)
+
+  const popContent = (type,id,taskTypeName,data,taskWorkNum1,taskWorkNum2, ) => {
+  const oneNum = (record,taskNumData)=>record&&record[0]? <div style={{width:'100%',lineHeight:'44.5px', cursor: 'pointer',color:'#fff' }} onClick={() => {setShowId(-1);taskDetail(record&&record[0]) }}>{taskNumData}</div> : <span style={{color:'#fff'}}>{taskNumData}</span>
+  const multipleNum = (dataSource,taskNumData,typeName) => dataSource&&dataSource[0]? <Popover
+    zIndex={999}
+    placement="right"
+    onVisibleChange={(newVisible) => {setPopVisible(newVisible) }}
+    trigger="click"
+    visible={showId==`${id}${typeName}`&&popVisible }
+    overlayClassName={styles.popSty}
+    getPopupContainer={trigger => trigger.parentNode}
+    content={
+      <Table
+        bordered
+        size='small'
+        showHeader={false}
+        columns={[
+          {
+            align: 'center',
+            width: 180,
+            dataIndex:'TaskCode',
+            key:'TaskCode',
+          },
+          {
+            align: 'center',
+            width: 100,
+            render: (text, record, index) => <a onClick={() => {taskDetail(record) }}>查看详情</a>
+          }
+        ]}
+        dataSource={dataSource} pagination={false} />
+    }>
+    <div onClick={()=>{setShowId(`${id}${typeName}`)}} style={{width:'100%',lineHeight:'44.5px', cursor:'pointer',color:'#fff' }}>{taskNumData}</div>
+  </Popover> :  <span style={{color:'#fff'}}>{taskNumData}</span>
+    if (type == 1) {
+      if (data.taskID&&data.taskID.length > 1) {
+        return  multipleNum(data.taskList,taskWorkNum1,taskTypeName)
+      } else {
+       return  oneNum(data.taskList,taskWorkNum1)
+      }
+    } else { //同时存在两种工单
+      let taskWorkNums1,taskWorkNums2;
+      if(data[taskTypeName] > 1 ){ 
+        const popData = data.taskList.filter(item=>item.TaskStatus!=3)
+        taskWorkNums1 =  multipleNum(popData,taskWorkNum1,taskTypeName)
+      }else{
+        taskWorkNums1 = oneNum(data.taskList,taskWorkNum1)
+      }
+      //完成工单
+      if(data['taskCompleteCount'] > 1 ){
+        const popData = data.taskList.filter(item=>item.TaskStatus==3)
+        taskWorkNums2 =  multipleNum(popData,taskWorkNum2,'taskCompleteCount')
+      }else{
+        taskWorkNums2 =  oneNum(data.taskList,taskWorkNum2)
+      }
+      return <Row align='middle' justify='center' style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+            <div  style={{width:'50%', height:'100%',display:'flex',alignItems:'center', background: taskTypeName =='taskInCompleteCount'? '#faad14': '#f5222d'}}> {taskWorkNums1} </div>
+            <div  style={{width:'50%', height:'100%', display:'flex',alignItems:'center',background: '#1890ff' }}> {taskWorkNums2} </div>
+            </Row>;
     }
+
+  }
+
+  const [taskRecordDetailVisible, setTaskRecordDetailVisible] = useState(false)
+  const [taskID, setTaskID] = useState()
+  const taskDetail = (record) => { //详情
+      setTaskID(record.ID)
+      setTaskRecordDetailVisible(true)
   }
   const columns = [
     {
@@ -459,13 +516,13 @@ const Index = (props,ref) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
-      width: 100,
+      width: 120,
       render:(text,record,index)=>{
-        return  <Button type="link"
+        return  <a
          onClick={()=>{
            outPointClick(record)
          }}
-        >{text}</Button>
+        >{text}</a>
       }
     },
     {
@@ -697,34 +754,52 @@ const exports = () => { //导出
                  width: 70,
                  align:'center',
                  render:(text,row,index)=>{
-                     return row.datePick.map(dateItem=>{
-                             if(dateItem.taskCloseCount && dateItem.taskCompleteCount&&dateItem.date == item.date){ //同时存在
-                                  return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                                  <span style={{color:'#fff'}}>{dateItem.taskCloseCount + dateItem.taskCompleteCount}</span>
-                                </Row>
-                             } 
-                             if(dateItem.taskCloseCount&&dateItem.date == item.date){ //关闭
-                               return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                               <span style={{color:'#fff'}}>{dateItem.taskCloseCount}</span>
-                             </Row>
-                               }
- 
-                             if(dateItem.taskCompleteCount&&dateItem.date == item.date){//完成
-                             return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                             <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
-                           </Row>
-                             }
-                             if(dateItem.operationStatus&&dateItem.date == item.date){ //运维周期内
-                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                                       
-                                      </Row>
-                               }else if(!dateItem.operationStatus&&!dateItem.taskCount&&dateItem.date == item.date){
-                                return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                
-                                       </Row>
-                             }
-                      })
- 
+                  let workNumEle,taskWorkNum1,taskWorkNum2,taskTypeName;
+                  return row.datePick.map(dateItem=> {
+                    if (dateItem.taskInCompleteCount && dateItem.taskCompleteCount && dateItem.date == item.date) { //同时存在 待完成和完成工单
+                      taskWorkNum1 =  dateItem.taskInCompleteCount
+                      taskWorkNum2 =  dateItem.taskCompleteCount
+                      taskTypeName = 'taskInCompleteCount'
+                      return  popContent(2,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, taskWorkNum1,taskWorkNum2)
+                   }
+                    if (dateItem.taskCloseCount && dateItem.taskCompleteCount && dateItem.date == item.date) { //同时存在 关闭和完成工单
+                      taskWorkNum1 = dateItem.taskCloseCount
+                      taskWorkNum2 = dateItem.taskCompleteCount
+                      taskTypeName = 'taskCloseCount'
+                       return popContent(2,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, taskWorkNum1,taskWorkNum2)
+                    }
+  
+                    if (dateItem.taskInCompleteCount && dateItem.date == item.date) {//待完成
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#faad14', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                        <span style={{ color: '#fff' }}>{dateItem.taskInCompleteCount}</span>
+                      </Row>
+                      taskTypeName = 'taskCount'
+                      return popContent(1,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, workNumEle ) 
+                    }
+                    if (dateItem.taskCompleteCount && dateItem.date == item.date) {//完成
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#1890ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                        <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount}</span>
+                      </Row>
+                      taskTypeName = 'taskCount'
+                      return popContent(1,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, workNumEle ) 
+                    }
+                    if (dateItem.taskCloseCount && dateItem.date == item.date) { //关闭
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#f5222d', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                        <span style={{ color: '#fff' }}>{dateItem.taskCloseCount}</span>
+                      </Row>
+                      taskTypeName = 'taskCount'
+                      return popContent(1,`${row.DGIMN}${dateItem.date}`,taskTypeName ,dateItem, workNumEle ) 
+                    }
+  
+                    if (dateItem.operationStatus && dateItem.date == item.date) { //运维周期内
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#bae7ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}></Row>
+                      return workNumEle
+  
+                    } else if (!dateItem.operationStatus && !dateItem.taskCount && dateItem.date == item.date) {
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}> </Row>
+                      return workNumEle
+                    }
+                  })
      
                  }
              }]
@@ -753,33 +828,52 @@ const exports = () => { //导出
                  width: 70,
                  align:'center',
                  render:(text,row,index)=>{
-                     return row.datePick.map(dateItem=>{
-                             if(dateItem.taskCloseCount && dateItem.taskCompleteCount&&dateItem.date == item.date){ //同时存在
-                               return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                               <span style={{color:'#fff'}}>{dateItem.taskCloseCount + dateItem.taskCompleteCount}</span>
-                              </Row>
-                             }
-                             if(dateItem.taskCloseCount&&dateItem.date == item.date){ //关闭
-                               return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                               <span style={{color:'#fff'}}>{dateItem.taskCloseCount}</span>
-                             </Row>
-                               }
- 
-                             if(dateItem.taskCompleteCount&&dateItem.date == item.date){//完成
-                             return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                             <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
-                           </Row>
-                             }
-                             if(dateItem.operationStatus&&dateItem.date == item.date){ //运维周期内
-                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                                       
-                                      </Row>
-                               }else if(!dateItem.operationStatus&&!dateItem.taskCount&&dateItem.date == item.date){
-                               return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                
-                               </Row>
-                             }
-                      })
+                  let workNumEle,taskWorkNum1,taskWorkNum2,taskTypeName;
+                  return row.datePick.map(dateItem=> {
+                    if (dateItem.taskInCompleteCount && dateItem.taskCompleteCount && dateItem.date == item.date) { //同时存在 待完成和完成工单
+                      taskWorkNum1 =  dateItem.taskInCompleteCount
+                      taskWorkNum2 =  dateItem.taskCompleteCount
+                      taskTypeName = 'taskInCompleteCount'
+                      return  popContent(2,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, taskWorkNum1,taskWorkNum2)
+                   }
+                    if (dateItem.taskCloseCount && dateItem.taskCompleteCount && dateItem.date == item.date) { //同时存在 关闭和完成工单
+                      taskWorkNum1 = dateItem.taskCloseCount
+                      taskWorkNum2 = dateItem.taskCompleteCount
+                      taskTypeName = 'taskCloseCount'
+                       return popContent(2,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, taskWorkNum1,taskWorkNum2)
+                    }
+  
+                    if (dateItem.taskInCompleteCount && dateItem.date == item.date) {//待完成
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#faad14', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                        <span style={{ color: '#fff' }}>{dateItem.taskInCompleteCount}</span>
+                      </Row>
+                      taskTypeName = 'taskCount'
+                      return popContent(1,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, workNumEle ) 
+                    }
+                    if (dateItem.taskCompleteCount && dateItem.date == item.date) {//完成
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#1890ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                        <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount}</span>
+                      </Row>
+                      taskTypeName = 'taskCount'
+                      return popContent(1,`${row.DGIMN}${dateItem.date}`,taskTypeName,dateItem, workNumEle ) 
+                    }
+                    if (dateItem.taskCloseCount && dateItem.date == item.date) { //关闭
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#f5222d', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                        <span style={{ color: '#fff' }}>{dateItem.taskCloseCount}</span>
+                      </Row>
+                      taskTypeName = 'taskCount'
+                      return popContent(1,`${row.DGIMN}${dateItem.date}`,taskTypeName ,dateItem, workNumEle ) 
+                    }
+  
+                    if (dateItem.operationStatus && dateItem.date == item.date) { //运维周期内
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#bae7ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}></Row>
+                      return workNumEle
+  
+                    } else if (!dateItem.operationStatus && !dateItem.taskCount && dateItem.date == item.date) {
+                      workNumEle = <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}> </Row>
+                      return workNumEle
+                    }
+                  })
  
      
                  }
@@ -955,7 +1049,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
       />
     </Tabs.TabPane>
     <Tabs.TabPane tab="计划外工单统计" key="2">
-    <SdlTable
+    <SdlTable 
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
@@ -1033,17 +1127,24 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
       />
    </Card>
       </Modal> 
-      <Modal //表单详情
-        visible={detailVisible}
-        title={'详情'}
-        wrapClassName='spreadOverModal'
-        footer={null}
-        onCancel={() => { setDetailVisible(false) }}
-        destroyOnClose
-      >
-        <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
-      </Modal>
-      {props.imageListVisible && <ViewImagesModal />}
+      <Modal
+          title="任务详情"
+          visible={taskRecordDetailVisible}
+          destroyOnClose
+          wrapClassName='spreadOverModal'
+          footer={null}
+          onCancel={() => {
+            setTaskRecordDetailVisible(false)
+            setPopVisible(true)
+          }}
+
+        >
+          <TaskRecordDetails 
+            match={{ params: { TaskID: taskID, DGIMN: null } }}
+            isHomeModal
+            hideBreadcrumb
+          />
+        </Modal>
 
         </div>
   );

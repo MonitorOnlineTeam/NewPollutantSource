@@ -6,7 +6,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, IssuesCloseOutlined, AuditOutlined, DownOutlined, ProfileOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled, ToTopOutlined, } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, IssuesCloseOutlined, AuditOutlined, DownOutlined, ProfileOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled, ToTopOutlined, ConsoleSqlOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -17,11 +17,10 @@ import moment from 'moment';
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import RecordForm from '@/pages/operations/recordForm'
-import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
-import RecordFormPopover from '@/components/recordFormPopover';
+import RecordFormPopover  from './components/RecordFormPopover';
+// import RecordForm from '@/pages/operations/recordForm'
+// import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
 
-import { object } from 'prop-types';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -135,13 +134,12 @@ const Index = (props) => {
 
 
 
-
-
-
-
-
   const [popVisible, setPopVisible] = useState(false);
+  const [popKey, setPopKey] = useState(-1);
+
+
   const onFinish = async (pageIndexs, pageSizes, par) => {  //查询  par参数 分页需要的参数
+    
     try {
       const values = await form.validateFields();
 
@@ -158,7 +156,7 @@ const Index = (props) => {
         if (col && Object.keys(col).length) {
           const cols = []
           for (let key in col) {
-            cols.push({
+             cols.push({
               title: col[key],
               dataIndex: key,
               key: key,
@@ -167,15 +165,18 @@ const Index = (props) => {
               render: (text, record, index) => {
                 if (text && text != '-') {
                   if (text instanceof Array) {
-                    return <Popover
-                      zIndex={800}
-                      onVisibleChange={(newVisible) => { setPopVisible(newVisible) }}
+                    // return  <RecordFormPopover dataSource={text} column={[...column, ...cols]}/>  
+                    return <div> <Popover
+                      zIndex={999}
                       trigger="click"
-                      popVisible={popVisible}
+                      onVisibleChange={(newVisible) => {console.log(2222);console.log(newVisible); setPopVisible(newVisible) }}
+                      // visible={popVisible}
+                      // getPopupContainer={trigger => trigger.parentNode}
                       overlayClassName={styles.detailPopSty}
                       content={
                         <Table
                           bordered
+                          showHeader={false}
                           size='small'
                           columns={[
                             {
@@ -191,12 +192,13 @@ const Index = (props) => {
                           ]}
                           dataSource={text} pagination={false} />
                       }>
-                      <a>查看详情</a>
-                    </Popover>
+                        <a>查看详情</a>
+                    </Popover></div>
                   }
                 }
               }
             })
+
           }
           setColumns([...column, ...cols])
         }
@@ -260,7 +262,6 @@ const Index = (props) => {
         <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>
           导出
           </Button>
-
       </Form.Item>
 
     </Form>
@@ -282,7 +283,6 @@ const Index = (props) => {
   const [typeID, setTypeID] = useState(null)
   const [taskID, setTaskID] = useState(1)
   const detail = (record) => { //详情
-    console.log(record)
     if (record.RecordType == 1) {
       setTypeID(record.TypeID);
       setTaskID(record.TaskID)
@@ -314,7 +314,7 @@ const Index = (props) => {
         />
       </Card>
 
-      <Modal //表单详情
+      {/* <Modal //表单详情
         visible={detailVisible}
         title={'详情'}
         wrapClassName='spreadOverModal'
@@ -325,7 +325,7 @@ const Index = (props) => {
       >
         <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
       </Modal>
-      {props.imageListVisible && <ViewImagesModal />}
+      {props.imageListVisible && <ViewImagesModal />} */}
     </div>
   );
 };

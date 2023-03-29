@@ -90,11 +90,11 @@ export default class Index extends Component {
             return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
           },
         },
-        {
-          title: '污染物排放标准',
-          width: 480,
-          children: [],
-        },
+        // {
+        //   title: '污染物排放标准',
+        //   width: 480,
+        //   children: [],
+        // },
       ]
     };
 
@@ -117,6 +117,7 @@ export default class Index extends Component {
     dispatch({ type: 'standardData/getEntByRegion', payload: { RegionCode: '' }, });//获取企业列表
 
     this.updateQueryState({
+      disColumn:[],
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
@@ -141,7 +142,7 @@ export default class Index extends Component {
     const { dispatch, queryPar } = this.props;
     const col = this.state.columns;
     if(queryPar.PollutantType==2){
-      const gasCol =  col.filter(item=>item.title=='排口类型')
+      const gasCol = col.filter(item=>item.title=='排口类型')
       if(gasCol&&gasCol.length<=0){
        col.splice(3,0,{
           title: '排口类型',
@@ -151,6 +152,7 @@ export default class Index extends Component {
           width:120,
         })
       }
+      this.setState({columns:col})
       }else{
         const waterCol =  col.filter(item=>item.title!='排口类型')
         this.setState({columns:waterCol})
@@ -235,20 +237,20 @@ export default class Index extends Component {
   };
 
 
-  regchildren = () => {
-    const { regionList } = this.props;
-    const selectList = [];
-    if (regionList.length > 0) {
-      regionList[0].children.map(item => {
-        selectList.push(
-          <Option key={item.key} value={item.value}>
-            {item.title}
-          </Option>,
-        );
-      });
-      return selectList;
-    }
-  }
+  // regchildren = () => {
+  //   const { regionList } = this.props;
+  //   const selectList = [];
+  //   if (regionList.length > 0) {
+  //     regionList[0].children.map(item => {
+  //       selectList.push(
+  //         <Option key={item.key} value={item.value}>
+  //           {item.title}
+  //         </Option>,
+  //       );
+  //     });
+  //     return selectList;
+  //   }
+  // }
   attentchildren = () => {
     const { attentionList } = this.props;
     const selectList = [];
@@ -309,21 +311,23 @@ export default class Index extends Component {
       queryPar: { beginTime, endTime, EntCode, RegionCode, AttentionCode, PollutantType },
       disColumn
     } = this.props;
-    const { TabPane } = Tabs;
-    let columns = this.state.columns;
+    let column = this.state.columns;
     if (disColumn&&disColumn.length > 0) { //数据请求完成
       const num = PollutantType == 1 ? 3 : 4;
-      if(columns[num] && columns[num].title == '污染物排放标准' ){
-         columns[num].children = [];
-        disColumn.map(item => {
-         columns[num].children.push(
+      column[num] =  {
+        title: '污染物排放标准',
+        children: [],
+      },
+      disColumn.map(item => {
+         column[num].children.push(
            {
-            title: `${item.PollutantName}${item.Unit ? `(${item.Unit})` : ''}`, dataIndex: `${item.PollutantCode}`, key: `${item.PollutantCode}`,
-            width: 80, align: 'center'
+            title: `${item.PollutantName}${item.Unit ? `(${item.Unit})` : ''}`,
+            dataIndex: `${item.PollutantCode}`, 
+            key: `${item.PollutantCode}`,
+            width: 100, align: 'center'
           },
         )
       })
-    }
     }
     return (
       <Card
@@ -404,7 +408,7 @@ export default class Index extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={loading}
-            columns={columns}
+            columns={column}
             bordered={true}
             dataSource={this.props.disTableDatas}
             scroll={{ y: 'calc(100vh - 360px)' }}
