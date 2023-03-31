@@ -5,7 +5,8 @@
  */
 import React, { useState, useEffect, Fragment, useRef, useImperativeHandle, forwardRef } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card,Popover, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tabs } from 'antd';
-import SdlTable from '@/components/SdlTable'
+import SdlTable from '@/components/SdlTable';
+import MultipleHeadResizeTable from '@/components/MultipleHeadResizeTable';
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
@@ -209,7 +210,7 @@ const Index = (props, ref) => {
   const popContent = (type,id,taskTypeName,data,taskWorkNum1,taskWorkNum2, ) => {
   const oneNum = (record,taskNumData)=>record&&record[0]? <div style={{width:'100%',lineHeight:'44.5px', cursor: 'pointer',color:'#fff' }} onClick={() => {setShowId(-1);taskDetail(record&&record[0]) }}>{taskNumData}</div> : <span style={{color:'#fff'}}>{taskNumData}</span>
   const multipleNum = (dataSource,taskNumData,typeName) => dataSource&&dataSource[0]? <Popover
-    zIndex={999}
+    zIndex={9999}
     placement="right"
     onVisibleChange={(newVisible) => {setPopVisible(newVisible) }}
     trigger="click"
@@ -333,8 +334,9 @@ const Index = (props, ref) => {
           title: <span>待完成数</span>,
           dataIndex: 'inspectionIncompleteCount',
           key: 'inspectionIncompleteCount',
-          width: 80,
+          width: 100,
           align: 'center',
+          sorter: (a, b) => a.inspectionIncompleteCount - b.inspectionIncompleteCount,
         },
         {
           title: <span>结束数<Tooltip title={'系统关闭工单数、完成工单数'}><QuestionCircleOutlined style={{ paddingLeft: 5 }} /></Tooltip></span>,
@@ -384,8 +386,9 @@ const Index = (props, ref) => {
           title: <span>待完成数</span>,
           dataIndex: 'calibrationIncompleteCount',
           key: 'calibrationIncompleteCount',
-          width: 80,
+          width: 100,
           align: 'center',
+          sorter: (a, b) => a.calibrationIncompleteCount - b.calibrationIncompleteCount,
         },
         {
           title: <span>结束数<Tooltip title={'系统关闭工单数、完成工单数'}><QuestionCircleOutlined style={{ paddingLeft: 5 }} /></Tooltip></span>,
@@ -493,8 +496,9 @@ const Index = (props, ref) => {
           title: <span>待完成数</span>,
           dataIndex: 'inspectionIncompleteCount',
           key: 'inspectionIncompleteCount',
-          width: 80,
+          width: 100,
           align: 'center',
+          sorter: (a, b) => a.inspectionIncompleteCount - b.inspectionIncompleteCount,
         },
         {
           title: <span>结束数</span>,
@@ -544,8 +548,9 @@ const Index = (props, ref) => {
           title: <span>待完成数</span>,
           dataIndex: 'calibrationIncompleteCount',
           key: 'calibrationIncompleteCount',
-          width: 80,
+          width: 100,
           align: 'center',
+          sorter: (a, b) => a.calibrationIncompleteCount - b.calibrationIncompleteCount,
         },
         {
           title: <span>结束数</span>,
@@ -648,6 +653,7 @@ const Index = (props, ref) => {
       dataIndex: 'operationUserCode',
       key: 'operationUserCode',
       align: 'center',
+      width: 150,
     },
     {
       title: '巡检周期',
@@ -663,8 +669,9 @@ const Index = (props, ref) => {
           title: <span>待完成数</span>,
           dataIndex: 'taskIncompleteCount',
           key: 'taskIncompleteCount',
-          width: 80,
+          width: 100,
           align: 'center',
+          sorter: (a, b) => a.taskIncompleteCount - b.taskIncompleteCount,
         },
         {
           title: <span>结束数</span>,
@@ -784,8 +791,9 @@ const Index = (props, ref) => {
           title: <span>待完成数</span>,
           dataIndex: 'taskIncompleteCount',
           key: 'taskIncompleteCount',
-          width: 80,
+          width: 100,
           align: 'center',
+          sorter: (a, b) => a.taskIncompleteCount - b.taskIncompleteCount,
         },
         {
           title: <span>结束数</span>,
@@ -1425,7 +1433,7 @@ const Index = (props, ref) => {
     const pars = {
       ...queryPar,
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 20,
       taskType: outTypePar[outType],
       ...par,
       regionLevel: undefined,
@@ -1474,7 +1482,7 @@ const Index = (props, ref) => {
     setRegionCode(record.regionCode ? record.regionCode : cityDetailRegionCode)
 
     setWorkPageIndex(1)
-    setWorkPageSize(10)
+    setWorkPageSize(20)
     insideOrOutsideWorkGetTaskWorkOrderList({
       regionCode: record.regionCode,
       taskType: type == 1 || type == 2? type : outTypePar[outType]
@@ -1664,14 +1672,14 @@ const Index = (props, ref) => {
     props.regPointGetTaskWorkOrderList({
       ...queryPar,
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 20,
       regionLevel: undefined,
       staticType: 2,
       ...par
     })
   }
   //  const [regPointPageIndex,setRegPointPageIndex] = useState(1)
-  //  const [regPointPageSize,setRegPointPageSize] = useState(10)
+  //  const [regPointPageSize,setRegPointPageSize] = useState(20)
 
   // const handleRegPointTableChange =(PageIndex,PageSize)=>{ //监测点   分页
   //   setRegPointPageIndex(PageIndex)
@@ -1700,7 +1708,7 @@ const Index = (props, ref) => {
   const [operationStatus, setOperationStatus] = useState();
   const operaPointClick = (e) => {  //查询  运维监测点
     setRegPointPageIndex(1)
-    setRegPointPageSize(10)
+    setRegPointPageSize(20)
     setOperationStatus(e.target.value)
     regPointGetTaskWorkOrderList({
       regionCode: regionCode,
@@ -1769,12 +1777,14 @@ const Index = (props, ref) => {
             title: `${item.date.split('_')[0]}`,
             width: 70,
             align: 'center',
+            ellipsis:false,
             children: [{
               title: `${item.date.split('_')[1]}`,
               dataIndex: `${item.date.split('_')[1]}`,
               key: `${item.date.split('_')[1]}`,
               width: 70,
               align: 'center',
+              ellipsis:false,
               render: (text, row, index) => {
                 let workNumEle,taskWorkNum1,taskWorkNum2,taskTypeName;
                 return row.datePick.map(dateItem=> {
@@ -1844,12 +1854,14 @@ const Index = (props, ref) => {
             title: `${item.date.split('_')[0]}`,
             width: 70,
             align: 'center',
+            ellipsis:false,
             children: [{
               title: `${item.date.split('_')[1]}`,
               dataIndex: `${item.date.split('_')[1]}`,
               key: `${item.date.split('_')[1]}`,
               width: 70,
               align: 'center',
+              ellipsis:false,
               render: (text, row, index) => {
                 let workNumEle,taskWorkNum1,taskWorkNum2,taskTypeName;
                 return row.datePick.map(dateItem=> {
@@ -2151,7 +2163,7 @@ const Index = (props, ref) => {
         wrapClassName={`spreadOverModal`}
       >
         <Card title={searchCityRegComponents()}>
-          <SdlTable
+          <MultipleHeadResizeTable
             loading={!isActualCalibrationModal ? cityTableLoading : cityActualTableLoading}
             bordered
             dataSource={cityTableDatas}
@@ -2175,7 +2187,7 @@ const Index = (props, ref) => {
         wrapClassName={`spreadOverModal`}
       >
      <Card title={  searchOperaPointComponents()}>
-     <SdlTable
+     <MultipleHeadResizeTable
         loading = {regPointTableLoading}
         bordered
         dataSource={regPointTableDatas}
@@ -2206,7 +2218,7 @@ const Index = (props, ref) => {
         wrapClassName={`spreadOverModal`}
       >
         <Card title={searchWorkComponents()}>
-          <SdlTable
+          <MultipleHeadResizeTable
             loading={!isActualCalibrationModal ? insideOrOutsideWorkLoading : insideOrOutsideWorkActualLoading}
             bordered
             dataSource={insideOrOutsiderWorkTableDatas}
@@ -2238,12 +2250,12 @@ const Index = (props, ref) => {
 
       >
         <Card title={searchOutWorkComponents()}>
-          <SdlTable
+          <MultipleHeadResizeTable
             loading={insideOrOutsideWorkLoading}
             bordered
             dataSource={insideOrOutsiderWorkTableDatas}
             columns={outWorkOrderColumn}
-            scroll={{ y: clientHeight - 500 }}
+            scroll={{ y: clientHeight - 450 }}
             pagination={{
               showSizeChanger: true,
               showQuickJumper: true,
@@ -2267,13 +2279,13 @@ const Index = (props, ref) => {
         wrapClassName={`spreadOverModal`}
       >
         <Card title={searchCityDetailRegComponents()}>
-          <SdlTable
+          <MultipleHeadResizeTable
             loading={cityDetailTableLoading}
             bordered
             dataSource={cityDetailTableDatas}
             total={cityDetailTableTotal}
             columns={cityDetailOutRegColumns}
-            scroll={{ y: clientHeight - 500 }}
+            scroll={{ y: clientHeight - 450 }}
             pagination={false}
           />
         </Card>

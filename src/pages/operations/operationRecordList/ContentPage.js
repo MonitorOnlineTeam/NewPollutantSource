@@ -6,7 +6,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, IssuesCloseOutlined, AuditOutlined, DownOutlined, ProfileOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled, ToTopOutlined, ConsoleSqlOutlined, } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, IssuesCloseOutlined, AuditOutlined, DownOutlined, ProfileOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled, ToTopOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -196,8 +196,8 @@ const Index = (props) => {
                     //   }>
                     //     <a>查看详情</a>
                     // </Popover></div>
-                  }
-                }
+                 }
+               }
               }
             })
 
@@ -236,18 +236,19 @@ const Index = (props) => {
       name="advanced_search"
       layout='inline'
       initialValues={{
-        time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
+        time: [moment(new Date()).add(-30, 'day'), moment(),]
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
     >
       <Form.Item label='运维日期' name='time' >
         <RangePicker_
-          showTime={{
-            format: 'YYYY-MM-DD HH:mm:ss',
-            defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')]
-          }}
-          style={{ width: 350 }}
+          // showTime={{
+          //   format: 'YYYY-MM-DD HH:mm:ss',
+          //   defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')]
+          // }} 
+          format={'YYYY-MM-DD'}
+          style={{ width: 240 }}
         />
       </Form.Item>
       <Spin spinning={taskTypeLoading} size='small'>
@@ -281,19 +282,19 @@ const Index = (props) => {
   const [pageIndex, setPageIndex] = useState(1)
 
 
-  const [detailVisible, setDetailVisible] = useState(false)
-  const [typeID, setTypeID] = useState(null)
-  const [taskID, setTaskID] = useState(1)
-  const detail = (record) => { //详情
-    if (record.RecordType == 1) {
-      setTypeID(record.TypeID);
-      setTaskID(record.TaskID)
-      setDetailVisible(true)
-    } else {
-      // 获取详情 图片类型表单
-      props.getOperationImageList({ FormMainID: record.FormMainID })
-    }
-  }
+  // const [detailVisible, setDetailVisible] = useState(false)
+  // const [typeID, setTypeID] = useState(null)
+  // const [taskID, setTaskID] = useState(1)
+  // const detail = (record) => { //详情
+  //   if (record.RecordType == 1) {
+  //     setTypeID(record.TypeID);
+  //     setTaskID(record.TaskID)
+  //     setDetailVisible(true)
+  //   } else {
+  //     // 获取详情 图片类型表单
+  //     props.getOperationImageList({ FormMainID: record.FormMainID })
+  //   }
+  // }
 
 
   return (

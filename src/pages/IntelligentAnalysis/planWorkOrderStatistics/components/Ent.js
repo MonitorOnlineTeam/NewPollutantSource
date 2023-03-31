@@ -5,7 +5,8 @@
  */
 import React, { useState,useEffect,Fragment,useRef,useImperativeHandle,forwardRef} from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Popover, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs,Calendar,Tag,Spin    } from 'antd';
-import SdlTable from '@/components/SdlTable'
+import SdlTable from '@/components/SdlTable';
+import MultipleHeadResizeTable from '@/components/MultipleHeadResizeTable';
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
@@ -231,8 +232,9 @@ const Index = (props,ref) => {
           title:  <span>待完成数</span>,
           dataIndex: 'inspectionIncompleteCount',
           key: 'inspectionIncompleteCount',
-          width: 80,
+          width: 100,
           align:'center',
+          sorter: (a, b) => a.inspectionIncompleteCount - b.inspectionIncompleteCount,
         },
         {
           title: <span>结束数<Tooltip  title={'系统关闭工单数、完成工单数'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
@@ -282,8 +284,9 @@ const Index = (props,ref) => {
           title:  <span>待完成数</span>,
           dataIndex: 'calibrationIncompleteCount',
           key: 'calibrationIncompleteCount',
-          width: 80,
+          width: 100,
           align:'center',
+          sorter: (a, b) => a.calibrationIncompleteCount - b.calibrationIncompleteCount,
         },
         {
           title: <span>结束数<Tooltip  title={'系统关闭工单数、完成工单数'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
@@ -368,8 +371,9 @@ const Index = (props,ref) => {
           title:  <span>待完成数</span>,
           dataIndex: 'taskIncompleteCount',
           key: 'taskIncompleteCount',
-          width: 80,
+          width: 100,
           align:'center',
+          sorter: (a, b) => a.taskIncompleteCount - b.taskIncompleteCount,
         },
         {
           title: <span>结束数</span>,
@@ -452,8 +456,9 @@ const Index = (props,ref) => {
           title:  <span>待完成数</span>,
           dataIndex: 'taskIncompleteCount',
           key: 'taskIncompleteCount',
-          width: 80,
+          width: 100,
           align:'center',
+          sorter: (a, b) => a.taskIncompleteCount - b.taskIncompleteCount,
         },
         {
           title: <span>结束数</span>,
@@ -690,7 +695,7 @@ const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外�
   props.insideOrOutsideWorkGetTaskWorkOrderList({
     ...queryPar,
     pageIndex:1,
-    pageSize:10,
+    pageSize:20,
     taskType:insideWorkType,
     regionLevel:undefined,
     staticType:3,
@@ -699,7 +704,7 @@ const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外�
   })
 }
  const [insideWorkPageIndex,setInsideWorkPageIndex] = useState(1)
- const [insideWorkPageSize,setInsideWorkPageSize] =useState(10)
+ const [insideWorkPageSize,setInsideWorkPageSize] =useState(20)
    
 
   const handleInsideWorkTableChange =   (PageIndex, PageSize )=>{ //分页 打卡异常 响应超时 弹框
@@ -721,7 +726,7 @@ const workOrderNum = (type,record) =>{ //计划内 总数工单
   setRegName(`${record.entName} - ${record.pointName}`)
   setEntCode(record.entCode)
   setInsideWorkPageIndex(1)
-  setInsideWorkPageSize(10)
+  setInsideWorkPageSize(20)
   insideOrOutsideWorkGetTaskWorkOrderList({
    entCode:record.entCode,
    taskType:type
@@ -747,7 +752,7 @@ const exports = () => { //导出
   
   //     const values = await workRegForm.validateFields();
   //     setInsideWorkPageIndex(1)
-  //     setInsideWorkPageSize(10)
+  //     setInsideWorkPageSize(20)
   //     insideOrOutsideWorkGetTaskWorkOrderList({
   //       ...values,
   //     }) 
@@ -797,7 +802,7 @@ const exports = () => { //导出
        <div >
        {/* <div style={{display:'inline-block',background:'#faad14',width:24,height:12,marginRight:5}}></div>
        <span>当日存在关闭和完成工单</span>
-       <Tooltip overlayClassName='customTooltipSty' placement="bottom"   title={workOrderTip()}><QuestionCircleOutlined style={{paddingLeft:5,fontSize:10}}/></Tooltip> */}
+       <Tooltip overlayClassName='customTooltipSty' placement="bottom"   title={workOrderTip()}><QuestionCircleOutlined style={{paddingLeft:5,fontSize:20}}/></Tooltip> */}
        </div>
      </Row>
      </Col>
@@ -825,12 +830,14 @@ const exports = () => { //导出
              title: `${item.date.split('_')[0]}`,
              width: 70,
              align:'center',
+             ellipsis:false,
              children: [{
                  title: `${item.date.split('_')[1]}`,
                  dataIndex: `${item.date.split('_')[1]}`,
                  key: `${item.date.split('_')[1]}`,
                  width: 70,
                  align:'center',
+                 ellipsis:false,
                  render:(text,row,index)=>{
                   let workNumEle,taskWorkNum1,taskWorkNum2,taskTypeName;
                   return row.datePick.map(dateItem=> {
@@ -899,6 +906,7 @@ const exports = () => { //导出
              title: `${item.date.split('_')[0]}`,
              width: 70,
              align:'center',
+             ellipsis:false,
              children: [{
                  title: `${item.date.split('_')[1]}`,
                  dataIndex: `${item.date.split('_')[1]}`,
@@ -1085,13 +1093,13 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
 
   setTabType(key)
   setPageIndex(1)
-  setPageSize(10)
+  setPageSize(20)
   setTimeout(()=>{
     props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
     queryPar&&queryPar.beginTime&&props.regEntGetTaskWorkOrderList({
       ...queryPar,
       pageIndex:1,
-      pageSize:10,
+      pageSize:20,
       regionLevel: 1,
       staticType:2,
       outOrInside:key// 子组件调用的父组件方法
@@ -1101,7 +1109,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
  }
 
  const [pageIndex,setPageIndex] = useState(1)
- const [pageSize,setPageSize] = useState(10)
+ const [pageSize,setPageSize] = useState(20)
 
 
  const handleTableChange = (PageIndex, PageSize )=>{ //计划内 计划外
@@ -1196,7 +1204,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         wrapClassName={`spreadOverModal`}
       >
      <Card title={  searchWorkComponents()}>
-     <SdlTable
+     <MultipleHeadResizeTable
         loading = {insideOrOutsideWorkLoading}
         bordered
         dataSource={insideOrOutsiderWorkTableDatas}

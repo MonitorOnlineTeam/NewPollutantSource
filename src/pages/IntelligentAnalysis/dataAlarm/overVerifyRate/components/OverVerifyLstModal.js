@@ -97,7 +97,7 @@ export default class OverVerifyLstModal extends Component {
   }
   componentDidUpdate(props){
     if(props.TVisible!==this.props.TVisible&&this.props.TVisible){
-      this.initData();
+      this.initData(this.props.type);
       this.getPollutantByType(this.props.type, this.getExceptionList);
       this.setState({beginTime:props.beginTime,endTime:props.endTime,})
     }
@@ -127,7 +127,8 @@ export default class OverVerifyLstModal extends Component {
                   regionLevel: 2,
                   RegionCode: RegionCode
                 },()=>{
-                  this.initData();
+                  const {  overVerifyRateForm: {  PollutantType, }, } = this.props;
+                  this.initData(PollutantType);
                 })
               }else{
                 this.setState({
@@ -222,8 +223,8 @@ export default class OverVerifyLstModal extends Component {
       },
     });
   };
-  initData = () => {
-    const { dispatch, location, Atmosphere, type } = this.props;
+  initData = (type) => {
+    const { dispatch, location, Atmosphere, } = this.props;
    
     const {RegionCode,regionLevel } = this.state;
     // dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表

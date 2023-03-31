@@ -176,7 +176,7 @@ export default Model.extend({
       const result = yield call(services.getOperationImageList, payload);
       if (result.IsSuccess) {
         let imageList = [];
-        if (result.Datas) {
+        if (result.Datas&&result.Datas[0]) {
           imageList = result.Datas.map((item, index) => {
             return {
               uid: index,

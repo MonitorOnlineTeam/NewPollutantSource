@@ -61,7 +61,7 @@ class ViewImagesModal extends PureComponent {
       photoIndex: ImageList,
     });
   }
-
+ 
   render() {
     const { imageList } = this.props;
     const { photoIndex } = this.state;
@@ -76,54 +76,36 @@ class ViewImagesModal extends PureComponent {
       });
     }
 
-    const upload = {
-      showUploadList: { showPreviewIcon: true, showRemoveIcon: false },
-      listType: 'picture-card',
-      fileList: [...imageList],
-    };
-    console.log(this.props.imageListVisible)
+    // const upload = {
+    //   showUploadList: { showPreviewIcon: true, showRemoveIcon: false },
+    //   listType: 'picture-card',
+    //   fileList: [...imageList],
+    // };
 
+    let isShow = this.props.visible || this.props.visible===false? this.props.visible : this.props.imageListVisible;
     return (
-      <Modal
-        title="详情"
-        visible={this.props.visible || this.props.visible===false? this.props.visible : this.props.imageListVisible}
-        footer=""
-        // onOk={this.handleOk}
-        onCancel={this.props.onCancel? this.props.onCancel : this.modalHandleCancel}
-        destroyOnClose={this.props.destroyOnClose}
-      >
+      // <Modal
+      //   title="详情"
+      //   visible={this.props.visible || this.props.visible===false? this.props.visible : this.props.imageListVisible}
+      //   footer=""
+      //   // onOk={this.handleOk}
+      //   onCancel={this.props.onCancel? this.props.onCancel : this.modalHandleCancel}
+      //   destroyOnClose={this.props.destroyOnClose}
+      // >
         <div style={{ overflow: "hidden" }}>
           {/* <Upload
-            action=""
-            listType="picture-card"
-            fileList={this.props.imageList}
-            disabled
-            // onPreview={this.handlePreview}
-            onPreview={file => {
-              this.handlePreview(file, imageList);
-            }}
-          >
-          </Upload> */}
-          {/* <Modal visible={this.state.previewVisible} width={800} footer={null} onCancel={() => {
-            this.setState({
-              previewVisible: false
-            })
-          }}>
-            <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
-          </Modal> */}
-          <Upload
             {...upload}
             onPreview={file => {
               this.handlePreview(file, imageList);
             }}
-          />
+          /> */}
           {/* 放大的图片控件 */}
-          {this.state.previewVisible && (
+          {isShow && (
             <Lightbox
               mainSrc={UrlList[photoIndex]}
               nextSrc={UrlList[(photoIndex + 1) % UrlList.length]}
               prevSrc={UrlList[(photoIndex + UrlList.length - 1) % UrlList.length]}
-              onCloseRequest={() => this.setState({ previewVisible: false })}
+              onCloseRequest={this.props.onCloseRequest? this.props.onCloseRequest : this.modalHandleCancel}
               onPreMovePrevRequest={() =>
                 this.setState({
                   photoIndex: (photoIndex + UrlList.length - 1) % UrlList.length
@@ -137,7 +119,7 @@ class ViewImagesModal extends PureComponent {
             />
           )}
         </div>
-      </Modal>
+      // </Modal>
     );
   }
 }

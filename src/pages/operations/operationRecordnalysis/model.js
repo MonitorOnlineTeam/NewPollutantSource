@@ -26,8 +26,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *getoperationRecordnalysisByDGIMN({ payload, callback }, { call, put, update }) { //列表
-      const result = yield call(services.GetOperationRecordListByDGIMN, payload);
+    *getOperationRecordAnalyList({ payload, callback }, { call, put, update }) { //列表
+      const result = yield call(services.GetOperationRecordAnalyList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal: result.Total,
@@ -38,8 +38,29 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *exportoperationRecordnalysisByDGIMN({ payload, callback }, { call, put, update }) { // 导出
-      const result = yield call(services.ExportOperationRecordListByDGIMN, payload);
+    *getOperationRecordAnalyInfoList({ payload, callback }, { call, put, update }) { //列表详情
+      const result = yield call(services.GetOperationRecordAnalyInfoList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          tableTotal2: result.Total,
+          tableDatas2: result.Datas&&result.Datas.DataList ? result.Datas.DataList : [],
+        })
+        callback(result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [])
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *exportOperationRecordAnalyList({ payload, callback }, { call, put, update }) { // 运维分析列表 导出
+      const result = yield call(services.ExportOperationRecordAnalyList, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        downloadFile(`/upload${result.Datas}`)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *exportOperationRecordAnalyInfoList({ payload, callback }, { call, put, update }) { //运维分析详情列表 导出
+      const result = yield call(services.ExportOperationRecordAnalyInfoList, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         downloadFile(`/upload${result.Datas}`)

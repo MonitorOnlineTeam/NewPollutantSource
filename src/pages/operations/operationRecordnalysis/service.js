@@ -1,14 +1,24 @@
 import { post, get, getNew } from '@/utils/request';
 
 
-//运维记录列表
-export async function GetOperationRecordListByDGIMN(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationRecordListByDGIMN',params, null);
+//运维分析列表
+export async function GetOperationRecordAnalyList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationRecordAnalyList',params, null);
   return result;
 }
-//运维记录列表 导出
-export async function ExportOperationRecordListByDGIMN(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationRecordListByDGIMN',params, null);
+//运维分析详情列表
+export async function GetOperationRecordAnalyInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationRecordAnalyInfoList',params, null);
+  return result;
+}
+//运维分析列表 导出
+export async function ExportOperationRecordAnalyList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationRecordAnalyList',params, null);
+  return result;
+}
+//运维分析详情列表 导出
+export async function ExportOperationRecordAnalyInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationRecordAnalyInfoList',params, null);
   return result;
 }
 //获取工单类型

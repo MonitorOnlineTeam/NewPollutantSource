@@ -33,13 +33,13 @@ const dvaPropsData = ({ loading, operationRecordnalysis, global, common, point, 
   taskTypeList: operationRecordnalysis.taskTypeList,
   taskTypeLoading: loading.effects[`${namespace}/getTaskTypeList`],
   tableDatas: operationRecordnalysis.tableDatas,
-  tableLoading: loading.effects[`${namespace}/getoperationRecordnalysisByDGIMN`],
+  tableLoading: loading.effects[`${namespace}/getOperationRecordAnalyList`],
   tableTotal: operationRecordnalysis.tableTotal,
-  exportLoading: loading.effects[`${namespace}/exportoperationRecordnalysisByDGIMN`],
+  exportLoading: loading.effects[`${namespace}/exportOperationRecordAnalyList`],
   tableDatas2: operationRecordnalysis.tableDatas,
-  tableLoading2: loading.effects[`${namespace}/getoperationRecordnalysisByDGIMN`],
+  tableLoading2: loading.effects[`${namespace}/getOperationRecordAnalyInfoList`],
   tableTotal2: operationRecordnalysis.tableTotal,
-  exportLoading2: loading.effects[`${namespace}/exportoperationRecordnalysisByDGIMN`],
+  exportLoading2: loading.effects[`${namespace}/exportOperationRecordAnalyInfoList`],
   accountQueryPar: operationRecordnalysis.accountQueryPar,
   imageListVisible: common.imageListVisible,
 })
@@ -58,16 +58,29 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getoperationRecordnalysisByDGIMN: (payload, callback) => { //列表
+    getOperationRecordAnalyList: (payload, callback) => { //列表
       dispatch({
-        type: `${namespace}/getoperationRecordnalysisByDGIMN`,
+        type: `${namespace}/getOperationRecordAnalyList`,
         payload: payload,
         callback: callback
       })
     },
-    exportoperationRecordnalysisByDGIMN: (payload) => { //导出
+    getOperationRecordAnalyInfoList: (payload, callback) => { //列表详情
       dispatch({
-        type: `${namespace}/exportoperationRecordnalysisByDGIMN`,
+        type: `${namespace}/getOperationRecordAnalyInfoList`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    exportOperationRecordAnalyList: (payload) => { //列表导出
+      dispatch({
+        type: `${namespace}/exportOperationRecordAnalyList`,
+        payload: payload,
+      })
+    },
+    exportOperationRecordAnalyInfoList: (payload) => { //列表详情导出
+      dispatch({
+        type: `${namespace}/exportOperationRecordAnalyInfoList`,
         payload: payload,
       })
     },
@@ -93,7 +106,7 @@ const Index = (props) => {
 
 
   useEffect(() => {
-    props.getTaskTypeList({});
+    pollutantTypeChange(2)
     onFinish()
   }, []);
 
@@ -107,98 +120,79 @@ const Index = (props) => {
     },
     {
       title: '省',
-      dataIndex: 'Time',
-      key: 'Time',
+      dataIndex: 'ProvinceName',
+      key: 'ProvinceName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '市',
-      dataIndex: 'Time',
-      key: 'Time',
+      dataIndex: 'CityName',
+      key: 'CityName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '运维企业数',
-      dataIndex: 'OperationName',
-      key: 'OperationName',
+      dataIndex: 'EntCount',
+      key: 'EntCount',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '运维监测点数',
-      dataIndex: 'OperationTypeName',
-      key: 'OperationTypeName',
+      dataIndex: 'PointCount',
+      key: 'PointCount',
       align: 'center',
       ellipsis: true,
     },
   ];
-
-  const [columns, setColumns] = useState([
-    {
-      title: '序号',
-      dataIndex: 'Sort',
-      key: 'Sort',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '省',
-      dataIndex: 'Time',
-      key: 'Time',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '市',
-      dataIndex: 'Time',
-      key: 'Time',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '运维企业数',
-      dataIndex: 'OperationName',
-      key: 'OperationName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '运维监测点数',
-      dataIndex: 'OperationTypeName',
-      key: 'OperationTypeName',
-      align: 'center',
-      ellipsis: true,
-    },
-  ]);
-
+  const [columns, setColumns] = useState([]);
+  const getChildren = (children, key) => {
+    if (Array.isArray(children)) {
+      children.splice(0, 1)
+      return children.map(item => {
+        return {
+          title: item,
+          dataIndex: key,
+          key: key,
+          align: 'center',
+          ellipsis: true,
+          width:100,
+          render: (text, record, index) => {
+            if (text && text != '-') {
+              if (text instanceof Array) {
+                return <a>查看详情</a>
+              }
+            }
+          }
+        }
+      })
+    } else {
+      return []
+    }
+  }
   const onFinish = async () => {  //查询  par参数 分页需要的参数
     try {
       const values = await form.validateFields();
 
-      props.getoperationRecordnalysisByDGIMN({
+      props.getOperationRecordAnalyList({
         ...values,
         Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
       }, (col) => {
+
         if (col && Object.keys(col).length) {
           const cols = []
           for (let key in col) {
+            let titleArr = col[key] && col[key].split(',')
             cols.push({
-              title: col[key],
-              dataIndex: key,
-              key: key,
+              title: titleArr && titleArr[0],
+              dataIndex: 'x',
               align: 'center',
               ellipsis: true,
-              render: (text, record, index) => {
-                if (text && text != '-') {
-                  if (text instanceof Array) {
-                    return <a>查看详情</a>
-                  }
-                }
-              }
+              children: getChildren(titleArr, key),
             })
           }
           setColumns([...column, ...cols])
@@ -210,7 +204,7 @@ const Index = (props) => {
   }
   const exports = async () => { //导出
     const values = await form.validateFields();
-    props.exportKeyParameterQuestionList({
+    props.exportOperationRecordAnalyList({
       ...values,
       Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
@@ -219,29 +213,31 @@ const Index = (props) => {
     })
   }
 
+
+  const pollutantTypeChange = (value) => {
+    props.getTaskTypeList({ type: 1, PollutantType: value });
+    form.setFieldsValue({ taskType: undefined })
+  }
   const searchComponents = () => {
     return <Form
       form={form}
       name="advanced_search"
       layout='inline'
       initialValues={{
-        time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")],
-        pointType: 2,
+        time: [moment(new Date()).add(-30, 'day'), moment().endOf("day")],
+        PollutantType: 2,
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { onFinish() }}
     >
       <Form.Item label='运维日期' name='time' >
         <RangePicker_
-          showTime={{
-            format: 'YYYY-MM-DD HH:mm:ss',
-            defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')]
-          }}
-          style={{ width: 350 }}
+          format='YYYY-MM-DD'
+          style={{ width: 240 }}
         />
       </Form.Item>
-      <Form.Item label='监测点类型' name='pointType'>
-        <Select placeholder='请选择' allowClear style={{ width: 150 }}>
+      <Form.Item label='监测点类型' name='PollutantType'>
+        <Select placeholder='请选择' allowClear onChange={pollutantTypeChange} style={{ width: 150 }}>
           <Option key={2} value={2} >废气</Option>
           <Option key={1} value={1} >废水</Option>
         </Select>
@@ -315,7 +311,7 @@ const Index = (props) => {
     },
   ];
   const [columns2, setColumn2] = useState([]);
-  const [accountVisible, setAccountVisible] = useState(true);
+  const [accountVisible, setAccountVisible] = useState(false);
   const [accountTitle, setAccountTitle] = useState('');
 
   const [open, setOpen] = useState(false);
@@ -324,7 +320,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getoperationRecordnalysisByDGIMN(par ? par : {
+      props.getOperationRecordAnalyList(par ? par : {
         ...values,
         PollutantType: PollutantType,
         Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
@@ -393,7 +389,7 @@ const Index = (props) => {
       layout='inline'
       initialValues={{
         time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")],
-        pointType: 2,
+        pollutantType: 2,
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2) }}
@@ -408,7 +404,7 @@ const Index = (props) => {
         <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
           查询
           </Button>
-        <Button icon={<ExportOutlined />} onClick={() => { exports2() }} loading={exportLoading}>
+        <Button icon={<ExportOutlined />} onClick={() => { exports2() }} loading={exportLoading2}>
           导出
           </Button>
 
@@ -424,9 +420,9 @@ const Index = (props) => {
     setPageSize2(PageSize)
     onFinish(PageIndex, PageSize, { ...accountQueryPar, pageIndex: PageIndex, pageSize: PageSize })
   }
-  const exports2 = async () => { //导出 上传台账
-    const values = await form.validateFields();
-    props.exportKeyParameterQuestionList({
+  const exports2 = async () => { //详情导出 
+    const values = await form2.validateFields();
+    props.exportOperationRecordAnalyInfoList({
       ...values,
       Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),

@@ -36,15 +36,17 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-    const { columns,keys, } = props;
+    const {dataSource, keys, } = props;
     const [popVisible, setPopVisible] = useState(false);
     const [popKey, setPopKey] = useState(-1);
+    const [isPop, setIsPop] = useState(1);
 
     //表单
     const [detailVisible, setDetailVisible] = useState(false)
     const [typeID, setTypeID] = useState(null)
     const [taskID, setTaskID] = useState(1)
-    const detail = (record) => { //详情
+    const detail = (record,type,) => { //详情
+        setIsPop(type)
         if (record.RecordType == 1) {
             setTypeID(record.TypeID);
             setTaskID(record.TaskID)
@@ -52,11 +54,12 @@ const Index = (props) => {
         } else {
             // 获取详情 图片类型表单
             props.getOperationImageList({ FormMainID: record.FormMainID })
+
         }
     }
     return (
        <div>
-        <Popover
+        {dataSource.length&&dataSource.length>1? <Popover
             zIndex={999}
             onVisibleChange={(newVisible) => {setPopVisible(newVisible) }}
             trigger="click"
@@ -68,7 +71,7 @@ const Index = (props) => {
                     bordered
                     size='small'
                     showHeader={false}
-                    columns={columns? columns : [
+                    columns={[
                         {
                             align: 'center',
                             width: 50,
@@ -77,28 +80,29 @@ const Index = (props) => {
                         {
                             align: 'center',
                             width: 100,
-                        render: (text, record, index) => <a onClick={() => { detail(record) }}>查看详情</a>
+                        render: (text, record, index) => <a onClick={() => { detail(record,1) }}>查看详情</a>
                         }
                     ]}
-                    dataSource={props.dataSource} pagination={false} />
+                    dataSource={dataSource} pagination={false} />
             }>
             <a onClick={()=>{ setPopKey(keys);}}>查看详情</a>
-        </Popover>
+        </Popover>:
+          <a onClick={() => { setPopKey(keys);detail(dataSource[0],2) }}>查看详情</a>
+           }
         <Modal //表单详情
             visible={detailVisible}
             title={'详情'}
             wrapClassName='spreadOverModal'
             footer={null}
             width={'100%'}
-            onCancel={() => {setDetailVisible(false);setPopVisible(true) }}
+            onCancel={() => {setDetailVisible(false);isPop==1? setPopVisible(true) : setPopKey(-1); }}
             destroyOnClose
         >
             <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
         </Modal>
-        <ViewImagesModal visible={keys==popKey&&popVisible&&props.imageListVisible} destroyOnClose onCancel={()=>{
-                  console.log(keys,popKey)
+        <ViewImagesModal visible={isPop==1? keys==popKey&&popVisible&&props.imageListVisible : keys==popKey&&props.imageListVisible } destroyOnClose onCloseRequest={()=>{
                   props.updateState('common',{ imageListVisible: false})
-                  setPopVisible(true)
+                  isPop==1? setPopVisible(true) : setPopKey(-1); 
         }}/>
     </div>
     );

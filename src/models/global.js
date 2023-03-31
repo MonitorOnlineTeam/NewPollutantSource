@@ -407,7 +407,7 @@ export default Model.extend({
     socket({ dispatch }) {
       console.log('initsocket1');
       const token = Cookie.get(config.cookieName);
-      token!='null' && token!= 'undefined'&& token!= '' && dispatch({ //登录之后获取
+      token&&token!='null' && token!= 'undefined'&& token!= '' &&dispatch({ //登录之后获取
         type: 'getSystemConfigInfo', payload: {
           listen: function () {
             console.log('initsocket2');
