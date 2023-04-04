@@ -17,7 +17,6 @@ import moment from 'moment';
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-// import RecordFormPopover from './components/RecordFormPopover';
 import RecordForm from '@/pages/operations/recordForm'
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
 
