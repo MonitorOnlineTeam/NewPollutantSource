@@ -272,7 +272,7 @@ const Index = (props) => {
     return <div> {text.length && text.length > 1 ? <Popover
       zIndex={999}
       trigger="click"
-      onVisibleChange={(newVisible) => { console.log(newVisible); setPopVisible(newVisible); }}
+      onVisibleChange={(newVisible) => { setPopVisible(newVisible); }}
       visible={keys == popKey && popVisible}
       overlayClassName={styles.detailPopSty}
       content={
