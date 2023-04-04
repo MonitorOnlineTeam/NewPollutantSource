@@ -78,6 +78,7 @@ class CalendarPage extends PureComponent {
                   zIndex={99}
                   visible={itm === "打卡异常"}
                   getPopupContainer={trigger => trigger.parentNode}
+                  placement='right'
                 >
                   <Tag color={color}>{itm}</Tag>
                 </Popover>

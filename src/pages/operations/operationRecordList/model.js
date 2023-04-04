@@ -14,6 +14,7 @@ export default Model.extend({
     tableDatas: [],
     tableTotal: 0,
     regQueryPar:{},
+    recordListCol:[],
   },
   effects: {
     *getTaskTypeList({ payload, callback }, { call, put, update }) { //获取工单类型
@@ -31,8 +32,10 @@ export default Model.extend({
           tableTotal: result.Total,
           tableDatas: result.Datas&&result.Datas.DataList ? result.Datas.DataList : [],
           regQueryPar:payload,
+          recordListCol:result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : []
         })
         callback(result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [])
+      
       } else {
         message.error(result.Message)
       }

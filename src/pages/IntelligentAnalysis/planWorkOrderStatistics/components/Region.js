@@ -345,7 +345,7 @@ const Index = (props, ref) => {
           width: 100,
           align: 'center',
           render: (text, record, index) => {
-            return <Button type="link" onClick={() => { workOrderNum(1, record) }}>{text}</Button>
+            return <Button type="link" onClick={() => { workOrderNum(1, record,'inspectionCount') }}>{text}</Button>
           }
         },
         {
@@ -1491,12 +1491,10 @@ const Index = (props, ref) => {
 
   }
   const onFinishWorkOrder = async () => {  //计划内 计划外 查询 工单
-
-
     try {
-
       const values = await workRegForm.validateFields();
       setWorkPageIndex(1)
+
       insideOrOutsideWorkGetTaskWorkOrderList({
         ...values,
         regionCode: regionCode,
@@ -1948,6 +1946,7 @@ const Index = (props, ref) => {
               key: `${item.date.split('_')[1]}`,
               width: 70,
               align: 'center',
+              ellipsis:false,
               render: (text, row, index) => {
                 // const outTypeObj = {
                 //   "inspectionCount"  : "inspectionCompleteCount",
@@ -1957,18 +1956,21 @@ const Index = (props, ref) => {
                 //   "cooperationInspectionCount" :'cooperationInspectionCompleteCount',
                 //   "calibrationTestCount":'calibrationTestCompleteCount',
                 //  }
-                return row.datePick.map(dateItem => {
-                  //  for(let key in outTypeObj){ //完成
-                  //     if(outType=== key && dateItem[`${outTypeObj[key]}`]){ 
-                  if (dateItem.taskCompleteCount && dateItem.date == item.date) {
-                    return <Row align='middle' justify='center' style={{ background: '#1890ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      {/* <span style={{color:'#fff'}}>{dateItem[`${outTypeObj[key]}`]}</span> */}
-                      <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount}</span>
-                    </Row>
-                  }
-                  //     }
-
-                  // }
+                // return row.datePick.map(dateItem => {
+                    // for(let key in outTypeObj){ //完成
+                    //   if(outType=== key && dateItem[`${outTypeObj[key]}`]){ 
+                    //    if (dateItem.taskCompleteCount && dateItem.date == item.date) {
+                    //     return  <span style={{color:'#fff'}}>{dateItem[`${outTypeObj[key]}`]}</span>  }
+                    //   }
+                  let outWorkNumEle;
+                  return row.datePick.map(dateItem => {
+                    if (dateItem.taskCompleteCount && dateItem.date == item.date) {
+                      outWorkNumEle = <Row align='middle' justify='center' style={{ background: '#1890ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                        <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount}</span>
+                      </Row>
+                       return popContent(1,`${row.DGIMN}${dateItem.date}`,'taskCount',dateItem, outWorkNumEle ) 
+                    }
+  
                   if (dateItem.operationStatus && dateItem.date == item.date) { //运维周期内
                     return <Row align='middle' justify='center' style={{ background: '#bae7ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
 

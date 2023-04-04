@@ -54,18 +54,19 @@ const Index = (props) => {
         } else {
             // 获取详情 图片类型表单
             props.getOperationImageList({ FormMainID: record.FormMainID })
-
         }
     }
+    console.log(isPop)
     return (
        <div>
         {dataSource.length&&dataSource.length>1? <Popover
             zIndex={999}
-            onVisibleChange={(newVisible) => {setPopVisible(newVisible) }}
+            onVisibleChange={(newVisible) => { setPopVisible(newVisible);}}
             trigger="click"
             visible={keys==popKey&&popVisible}
             overlayClassName={styles.detailPopSty}
             // getPopupContainer={trigger => trigger.parentNode}
+            placement='right'
             content={
                 <Table
                     bordered
@@ -80,12 +81,12 @@ const Index = (props) => {
                         {
                             align: 'center',
                             width: 100,
-                        render: (text, record, index) => <a onClick={() => { detail(record,1) }}>查看详情</a>
+                            render: (text, record, index) => <a onClick={() => { detail(record,1) }}>查看详情</a>
                         }
                     ]}
                     dataSource={dataSource} pagination={false} />
             }>
-            <a onClick={()=>{ setPopKey(keys);}}>查看详情</a>
+            <a onClick={()=>{props.updateState('common',{ imageListVisible: false}); setPopKey(keys);}}>查看详情</a>
         </Popover>:
           <a onClick={() => { setPopKey(keys);detail(dataSource[0],2) }}>查看详情</a>
            }
@@ -95,15 +96,20 @@ const Index = (props) => {
             wrapClassName='spreadOverModal'
             footer={null}
             width={'100%'}
-            onCancel={() => {setDetailVisible(false);isPop==1? setPopVisible(true) : setPopKey(-1); }}
+            onCancel={() => {setDetailVisible(false);isPop==1? setPopVisible(true) : setPopKey(-1) }}
             destroyOnClose
         >
             <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
         </Modal>
-        <ViewImagesModal visible={isPop==1? keys==popKey&&popVisible&&props.imageListVisible : keys==popKey&&props.imageListVisible } destroyOnClose onCloseRequest={()=>{
+        {isPop==1? (props.imageListVisible&&popKey==keys&&popVisible)&&<ViewImagesModal  onCloseRequest={()=>{
                   props.updateState('common',{ imageListVisible: false})
-                  isPop==1? setPopVisible(true) : setPopKey(-1); 
-        }}/>
+                  console.log(popKey,'------------',keys)
+                  setPopVisible(true)
+        }}/> : (props.imageListVisible&&popKey==keys&&!popVisible)&&<ViewImagesModal  onCloseRequest={()=>{
+                props.updateState('common',{ imageListVisible: false})
+                setPopVisible(false)
+                setPopKey(-1)
+     }}/>} 
     </div>
     );
 };

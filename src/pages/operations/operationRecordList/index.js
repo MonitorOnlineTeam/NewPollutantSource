@@ -39,6 +39,8 @@ class Index extends Component {
         <NavigationTree
           runState='1'
           domId="#record"
+          polShow
+          type='ent'
           choice={false}
           onItemClick={value => {
             if (value.length > 0 && !value[0].IsEnt) {

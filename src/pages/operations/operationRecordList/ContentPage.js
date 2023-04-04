@@ -17,9 +17,9 @@ import moment from 'moment';
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import RecordFormPopover  from './components/RecordFormPopover';
-// import RecordForm from '@/pages/operations/recordForm'
-// import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
+// import RecordFormPopover from './components/RecordFormPopover';
+import RecordForm from '@/pages/operations/recordForm'
+import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
 
 
 const { TextArea } = Input;
@@ -41,16 +41,17 @@ const dvaPropsData = ({ loading, operationRecordList, global, common, point, aut
   taskTypeLoading: loading.effects[`${namespace}/getTaskTypeList`],
   regQueryPar: operationRecordList.regQueryPar,
   imageListVisible: common.imageListVisible,
+  recordListCol: operationRecordList.recordListCol,
 })
 
 const dvaDispatch = (dispatch) => {
   return {
-    updateState: (payload) => {
+    updateState: (namespace,payload) => {
       dispatch({
-        type: `${namespace}/updateState`,
-        payload: payload,
+          type: `${namespace}/updateState`,
+          payload: payload,
       })
-    },
+  },
     getTaskTypeList: (payload, callback) => { //获取工单类型
       dispatch({
         type: `${namespace}/getTaskTypeList`,
@@ -103,7 +104,7 @@ const Index = (props) => {
       key: 'Sort',
       align: 'center',
       ellipsis: true,
-      fixed:'left',
+      fixed: 'left',
     },
     {
       title: '运维日期',
@@ -111,7 +112,7 @@ const Index = (props) => {
       key: 'Time',
       align: 'center',
       ellipsis: true,
-      fixed:'left',
+      fixed: 'left',
     },
     {
       title: '运维人员',
@@ -119,7 +120,7 @@ const Index = (props) => {
       key: 'OperationName',
       align: 'center',
       ellipsis: true,
-      fixed:'left',
+      fixed: 'left',
     },
     {
       title: '运维内容',
@@ -127,17 +128,10 @@ const Index = (props) => {
       key: 'OperationTypeName',
       align: 'center',
       ellipsis: true,
-      fixed:'left',
+      fixed: 'left',
     },
   ]
   const [columns, setColumns] = useState([]);
-
-
-
-  const [popVisible, setPopVisible] = useState(false);
-  const [popKey, setPopKey] = useState(-1);
-
-
   const onFinish = async (pageIndexs, pageSizes, par) => {  //查询  par参数 分页需要的参数
     
     try {
@@ -153,57 +147,31 @@ const Index = (props) => {
         pageIndex: pageIndexs,
         pageSize: pageSizes,
       }, (col) => {
-        if (col && Object.keys(col).length) {
-          const cols = []
-          for (let key in col) {
-             cols.push({
-              title: col[key],
-              dataIndex: key,
-              key: key,
-              align: 'center',
-              ellipsis: true,
-              render: (text, record, index) => {
-                if (text && text != '-') {
-                  if (text instanceof Array) {
-                    let keys =''
-                    keys= key;
-                    return  <RecordFormPopover keys={keys} dataSource={text} column={[...column, ...cols]}/>  
-                    // return <div> <Popover
-                    //   zIndex={999}
-                    //   trigger="click"
-                    //   onVisibleChange={(newVisible) => {console.log(2222,key);setPopKey(key); setPopVisible(newVisible) }}
-                    //   visible={key==popKey&&popVisible}
-                    //   getPopupContainer={trigger => trigger.parentNode}
-                    //   overlayClassName={styles.detailPopSty}
-                    //   content={
-                    //     <Table
-                    //       bordered
-                    //       showHeader={false}
-                    //       size='small'
-                    //       columns={[
-                    //         {
-                    //           align: 'center',
-                    //           width: 50,
-                    //           render: (text, record, index) => index + 1
-                    //         },
-                    //         {
-                    //           align: 'center',
-                    //           width: 100,
-                    //           render: (text, record, index) => <a onClick={() => { detail(record) }}>查看详情</a>
-                    //         }
-                    //       ]}
-                    //       dataSource={text} pagination={false} />
-                    //   }>
-                    //     <a>查看详情</a>
-                    // </Popover></div>
-                 }
-               }
-              }
-            })
+        // if (col && Object.keys(col).length) {
+        //   const cols = []
+        //   for (let key in col) {
+        //     cols.push({
+        //       title: col[key],
+        //       dataIndex: key,
+        //       key: key,
+        //       align: 'center',
+        //       ellipsis: true,
+        //       render: (text, record, index) => {
 
-          }
-          setColumns([...column, ...cols])
-        }
+        //         if (text && text != '-') {
+        //           if (text instanceof Array) {
+        //             let keys = ''
+        //             keys = `${key}${index}`;
+        //             console.log(keys, popKey, popVisible)
+        //             return  <RecordFormPopover keys={keys} text={text}/>  
+        //           }
+        //         }
+        //       }
+        //     })
+
+        //   }
+          // setColumns([...column, ...cols])
+        // }
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -281,21 +249,86 @@ const Index = (props) => {
   const [pageSize, setPageSize] = useState(20)
   const [pageIndex, setPageIndex] = useState(1)
 
+  const [isPop, setIsPop] = useState(1);
+  const [detailVisible, setDetailVisible] = useState(false)
+  const [typeID, setTypeID] = useState(null)
+  const [taskID, setTaskID] = useState(1)
+  const detail = (record,type) => { //详情
+    setIsPop(type)
+    if (record.RecordType == 1) {
+      setTypeID(record.TypeID);
+      setTaskID(record.TaskID)
+      setDetailVisible(true)
+    } else {
+      // 获取详情 图片类型表单
+      props.getOperationImageList({ FormMainID: record.FormMainID })
+    }
+  }
+  const [popVisible, setPopVisible] = useState(false);
+  const [popKey, setPopKey] = useState(-1);
 
-  // const [detailVisible, setDetailVisible] = useState(false)
-  // const [typeID, setTypeID] = useState(null)
-  // const [taskID, setTaskID] = useState(1)
-  // const detail = (record) => { //详情
-  //   if (record.RecordType == 1) {
-  //     setTypeID(record.TypeID);
-  //     setTaskID(record.TaskID)
-  //     setDetailVisible(true)
-  //   } else {
-  //     // 获取详情 图片类型表单
-  //     props.getOperationImageList({ FormMainID: record.FormMainID })
-  //   }
-  // }
+  const  RecordFormPopover = (props) =>{
+    const text = props.text,keys = props.keys;
+    return <div> {text.length && text.length > 1 ? <Popover
+      zIndex={999}
+      trigger="click"
+      onVisibleChange={(newVisible) => { console.log(newVisible); setPopVisible(newVisible); }}
+      visible={keys == popKey && popVisible}
+      overlayClassName={styles.detailPopSty}
+      content={
+        <Table
+          bordered
+          showHeader={false}
+          size='small'
+          columns={[
+            {
+              align: 'center',
+              width: 50,
+              render: (text, record, index) => index + 1
+            },
+            {
+              align: 'center',
+              width: 100,
+              render: (text, record, index) => <a onClick={() => { detail(record,1) }}>查看详情</a>
+            }
+          ]}
+          dataSource={text} pagination={false} />
+      }>
+      <a onClick={() => { setPopKey(keys) }}>查看详情</a>
+    </Popover> :
+      <a onClick={() => { setPopKey(keys); detail(text[0],2) }}>查看详情</a>
+    }</div>
+  }
+ const getCol = () =>{
+   const col = props.recordListCol
+  if (col && Object.keys(col).length) {
+    const cols = []
+    for (let key in col) {
+      cols.push({
+        title: col[key],
+        dataIndex: key,
+        key: key,
+        align: 'center',
+        ellipsis: true,
+        render: (text, record, index) => {
 
+          if (text && text != '-') {
+            if (text instanceof Array) {
+              let keys = ''
+              keys = `${key}${index}`;   
+              return  <RecordFormPopover keys={keys} text={text}/>  
+            }
+          }
+        }
+      })
+
+    }
+    setColumns([...column, ...cols])
+  }
+ }
+ useEffect(()=>{
+  getCol()
+ },[props.recordListCol,popVisible,popKey])
 
   return (
     <div className={styles.operationRecordListSty}>
@@ -317,18 +350,21 @@ const Index = (props) => {
         />
       </Card>
 
-      {/* <Modal //表单详情
+      <Modal //表单详情
         visible={detailVisible}
         title={'详情'}
         wrapClassName='spreadOverModal'
         footer={null}
         width={'100%'}
-        onCancel={() => { setDetailVisible(false) }}
+        onCancel={() => { setDetailVisible(false);isPop==1? setPopVisible(true) : setPopKey(-1) }}
         destroyOnClose
       >
         <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
       </Modal>
-      {props.imageListVisible && <ViewImagesModal />} */}
+        {props.imageListVisible&&<ViewImagesModal  onCloseRequest={()=>{
+                  props.updateState('common',{ imageListVisible: false})
+                  isPop==1&&setPopVisible(true)
+        }}/>}
     </div>
   );
 };

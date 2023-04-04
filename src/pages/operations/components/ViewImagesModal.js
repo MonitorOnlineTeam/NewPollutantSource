@@ -81,8 +81,6 @@ class ViewImagesModal extends PureComponent {
     //   listType: 'picture-card',
     //   fileList: [...imageList],
     // };
-
-    let isShow = this.props.visible || this.props.visible===false? this.props.visible : this.props.imageListVisible;
     return (
       // <Modal
       //   title="详情"
@@ -100,7 +98,7 @@ class ViewImagesModal extends PureComponent {
             }}
           /> */}
           {/* 放大的图片控件 */}
-          {isShow && (
+          {this.props.imageListVisible && (
             <Lightbox
               mainSrc={UrlList[photoIndex]}
               nextSrc={UrlList[(photoIndex + 1) % UrlList.length]}

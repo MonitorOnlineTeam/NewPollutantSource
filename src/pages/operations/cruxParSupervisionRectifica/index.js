@@ -277,7 +277,7 @@ const Index = (props) => {
       props.getPointByEntCode({ EntCode: hangedValues.entCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
-        form.setFieldsValue({ DGIMN: res[0].DGIMN })
+        form.setFieldsValue({ DGIMN: undefined})
       })
     }
   }
@@ -306,7 +306,7 @@ const Index = (props) => {
         <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
           <Form.Item label='监测点名称' name='DGIMN' >
 
-            <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 150 }}>
+            <Select placeholder='请选择' showSearch allowClear optionFilterProp="children" style={{ width: 150 }}>
               {
                 pointList[0] && pointList.map(item => {
                   return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>

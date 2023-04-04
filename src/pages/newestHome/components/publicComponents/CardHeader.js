@@ -53,7 +53,7 @@ const Index = (props) => {
   const content =  <ul>
   <li>次数：系统按计划派发的工单数量</li>
   <li>计划内结束次数：系统关闭次数、完成次数</li>
-  <li>完成率：(计划内完成次数/计划内结束次数) * 100</li>
+  <li>完成率：(计划内完成次数/计划内结束次数) * 100%</li>
   </ul>
   
   const { showBtn, type,btnCheck,btnClick,dataType,latelyDays30,latelyDays7,isPopover, } = props;
