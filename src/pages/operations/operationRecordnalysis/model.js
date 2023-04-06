@@ -23,6 +23,7 @@ export default Model.extend({
     accountTableDatas:[],
     accountTableTotal:0,
     accountDetailQueryPar:{},
+    accountDetailCol:[],
   },
   effects: {
     *getTaskTypeList({ payload, callback }, { call, put, update }) { //获取工单类型
@@ -50,8 +51,7 @@ export default Model.extend({
            tableLoading:false,
         })
       }
-        yield update({recordAnalyListQueryPar: payload, })
-        callback(result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [])
+        callback(result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [],payload)
       } else {
         message.error(result.Message)
         yield update({
@@ -65,20 +65,23 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           accountTableTotal: result.Total,
-          accountTableDatas: result.Datas&&result.Datas.DataList ? result.Datas.DataList : [],
+          accountTableDatas: result.Datas ? result.Datas : [],
           accountDetailQueryPar:payload,
+          accountDetailCol:result.Datas[0]&&result.Datas[0].datePick
         })
-        callback(result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [])
       } else {
         message.error(result.Message)
       }
     },
     *exportOperationRecordAnalyList({ payload, callback }, { call, put, update }) { // 运维分析列表 导出
       const result = yield call(services.ExportOperationRecordAnalyList, payload);
+      payload.RegionCode? yield update({  exportLoading2:true }) : yield update({  exportLoading:true })
       if (result.IsSuccess) {
+        payload.RegionCode? yield update({  exportLoading2:false }) : yield update({  exportLoading:false })
         message.success(result.Message)
         downloadFile(`/upload${result.Datas}`)
       } else {
+        yield update({  exportLoading2:false, exportLoading:false  })
         message.error(result.Message)
       }
     },

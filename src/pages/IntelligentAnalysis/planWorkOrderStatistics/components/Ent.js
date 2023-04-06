@@ -207,6 +207,7 @@ const Index = (props,ref) => {
       dataIndex: 'regionName',
       key:'regionName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '企业名称',
@@ -214,6 +215,7 @@ const Index = (props,ref) => {
       key:'entName',
       align:'center',
       width: 150,
+      ellipsis:true,
       // render:(text,record,index)=>{
       //  return  <div style={{textAlign:"left"}}>{text}</div>
       // }
@@ -223,6 +225,7 @@ const Index = (props,ref) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '计划巡检工单',
@@ -505,6 +508,7 @@ const Index = (props,ref) => {
       dataIndex: 'regionName',
       key:'regionName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '企业名称',
@@ -512,6 +516,7 @@ const Index = (props,ref) => {
       key:'entName',
       align:'center',
       width: 150,
+      ellipsis:true,
       // render:(text,record,index)=>{
       //  return  <div style={{textAlign:"left"}}>{text}</div>
       // }
@@ -522,6 +527,7 @@ const Index = (props,ref) => {
       key:'pointName',
       align:'center',
       width: 120,
+      ellipsis:true,
       render:(text,record,index)=>{
         return  <a
          onClick={()=>{
@@ -822,7 +828,7 @@ const exports = () => { //导出
      if(dateCol&&dateCol[0]){ 
  
        col.push({
-         title: '工单分布(按工单完成时间、系统关闭时间分布)',
+         title: '工单分布（按待完成工单的创建时间、已完成工单的完成时间、已关闭工单的关闭时间分布）',
          width:200, 
          align:'center',
          children:dateCol.map((item,index)=>{
@@ -898,7 +904,7 @@ const exports = () => { //导出
      if(dateCol&&dateCol[0]){ 
  
        col.push({
-         title: '工单分布(按工单完成时间、系统关闭时间分布)',
+         title: '工单分布（按待完成工单的创建时间、已完成工单的完成时间、已关闭工单的关闭时间分布）',
          width:200, 
          align:'center',
          children:dateCol.map((item,index)=>{
@@ -1148,6 +1154,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         bordered
         dataSource={tableDatas}
         columns={outsideColumns}
+        className={styles.entPlanOutTableSty}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,

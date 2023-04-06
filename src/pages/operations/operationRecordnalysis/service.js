@@ -13,12 +13,12 @@ export async function GetOperationRecordAnalyInfoList(params) {
 }
 //运维分析列表 导出
 export async function ExportOperationRecordAnalyList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationRecordAnalyList',params, null);
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationRecordAnaly',params, null);
   return result;
 }
 //运维分析详情列表 导出
 export async function ExportOperationRecordAnalyInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationRecordAnalyInfoList',params, null);
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationRecordAnalyInfo',params, null);
   return result;
 }
 //获取工单类型

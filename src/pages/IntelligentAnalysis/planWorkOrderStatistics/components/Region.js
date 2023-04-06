@@ -1638,7 +1638,7 @@ const Index = (props, ref) => {
               <span>完成工单</span>
             </div>
 
-          </Row>
+          </Row> 
         </Col>
       </Row>
     </Form>
@@ -1767,7 +1767,7 @@ const Index = (props, ref) => {
     if (dateCol && dateCol[0]) {
 
       col.push({
-        title: '工单分布(按工单完成时间、系统关闭时间分布)',
+        title: '工单分布（按待完成工单的创建时间、已完成工单的完成时间、已关闭工单的关闭时间分布）',
         width: 200,
         align: 'center',
         children: dateCol.map((item, index) => {
@@ -1844,7 +1844,7 @@ const Index = (props, ref) => {
     if (dateCol && dateCol[0]) {
 
       col.push({
-        title: '工单分布(按工单完成时间、系统关闭时间分布)',
+        title: '工单分布（按待完成工单的创建时间、已完成工单的完成时间、已关闭工单的关闭时间分布）',
         width: 200,
         align: 'center',
         children: dateCol.map((item, index) => {

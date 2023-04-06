@@ -50,7 +50,7 @@ const dvaDispatch = (dispatch) => {
           type: `${namespace}/updateState`,
           payload: payload,
       })
-  },
+    },
     getTaskTypeList: (payload, callback) => { //获取工单类型
       dispatch({
         type: `${namespace}/getTaskTypeList`,
@@ -86,7 +86,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
 
-  const { DGIMN, PollutantType, tableDatas, tableTotal, tableLoading, regQueryPar, exportLoading, taskTypeLoading, taskTypeList, } = props;
+  const { DGIMN, PollutantType, tableDatas, tableTotal, tableLoading, regQueryPar, exportLoading, taskTypeLoading, taskTypeList,recordListCol, } = props;
 
 
 
@@ -267,8 +267,8 @@ const Index = (props) => {
   const [popKey, setPopKey] = useState(-1);
 
   const  RecordFormPopover = (props) =>{
-    const text = props.text,keys = props.keys;
-    return <div> {text.length && text.length > 1 ? <Popover
+    const dataSource = props.dataSource,keys = props.keys;
+    return <div> {dataSource.length && dataSource.length > 1 ? <Popover
       zIndex={999}
       trigger="click"
       onVisibleChange={(newVisible) => { setPopVisible(newVisible); }}
@@ -291,43 +291,41 @@ const Index = (props) => {
               render: (text, record, index) => <a onClick={() => { detail(record,1) }}>查看详情</a>
             }
           ]}
-          dataSource={text} pagination={false} />
+          dataSource={dataSource} pagination={false} />
       }>
       <a onClick={() => { setPopKey(keys) }}>查看详情</a>
     </Popover> :
-      <a onClick={() => { setPopKey(keys); detail(text[0],2) }}>查看详情</a>
+      <a onClick={() => { setPopKey(keys); detail(dataSource[0],2) }}>查看详情</a>
     }</div>
   }
  const getCol = () =>{
-   const col = props.recordListCol
-  if (col && Object.keys(col).length) {
-    const cols = []
-    for (let key in col) {
-      cols.push({
-        title: col[key],
+   const col = []
+  if (recordListCol && Object.keys(recordListCol).length) {
+    for (let key in recordListCol) {
+      col.push({
+        title: recordListCol[key],
         dataIndex: key,
         key: key,
         align: 'center',
         ellipsis: true,
         render: (text, record, index) => {
-
           if (text && text != '-') {
             if (text instanceof Array) {
               let keys = ''
               keys = `${key}${index}`;   
-              return  <RecordFormPopover keys={keys} text={text}/>  
+              return  <RecordFormPopover keys={keys} dataSource={text}/>  
             }
           }
         }
       })
 
     }
-    setColumns([...column, ...cols])
   }
+  setColumns([...column, ...col])
  }
  useEffect(()=>{
   getCol()
- },[props.recordListCol,popVisible,popKey])
+ },[recordListCol,popVisible,popKey])
 
   return (
     <div className={styles.operationRecordListSty}>
