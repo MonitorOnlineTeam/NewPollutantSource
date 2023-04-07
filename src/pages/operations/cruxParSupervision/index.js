@@ -47,6 +47,9 @@ const dvaPropsData = ({ loading, cruxParSupervision, global, common, point, auto
   checkDetailLoading: loading.effects[`${namespace}/getKeyParameterCheckDetailList`],
   editCheckTime:cruxParSupervision.editCheckTime,
   exportLoading:loading.effects[`${namespace}/exportKeyParameterCheckList`],
+  taskTableLoading: loading.effects[`${namespace}/issuedKeyParameter`],
+  taskTableDatas: cruxParSupervision.taskTableDatas,
+  taskTableTotal: cruxParSupervision.taskTableTotal,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -112,6 +115,13 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
+    retransmissionKeyParameter: (payload,callback) => { //转发任务单
+      dispatch({
+        type: `${namespace}/issuedKeyParameter`,
+        payload: payload,
+        callback: callback
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -121,12 +131,14 @@ const Index = (props) => {
   const isRecord = path === '/operations/cruxParSupervisionRecord' ? true : false;
 
   const [form] = Form.useForm();
+  const [taskForm] = Form.useForm();
+  const [forwardTaskForm] = Form.useForm();
+
+  
 
 
 
-
-
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,saveloading,regQueryPar, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,saveloading,regQueryPar,taskTableLoading,taskTableTotal,taskTableDatas, } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -138,7 +150,7 @@ const Index = (props) => {
   }, []);
 
 
-  let columns = [
+  const columns = [
     {
       title: '序号',
       align: 'center',
@@ -392,7 +404,6 @@ const Index = (props) => {
 
 
 
-
   const searchComponents = () => {
     return  <Form
         form={form}
@@ -452,14 +463,16 @@ const Index = (props) => {
             </Select>
           </Form.Item>
           <Form.Item style={{paddingLeft:16}}>
-            <Button type="primary" loading={tableLoading} htmlType='submit'>
+            <Button type="primary" loading={tableLoading} style={{ marginRight:8 }} htmlType='submit'>
               查询
             </Button>
-            <Button onClick={() => { form.resetFields() }}   style={{ margin: '0 8px' }}>
+            <Button onClick={() => { form.resetFields() }}   style={{ marginRight:8 }}>
               重置
             </Button>
-            <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
-
+            <Button icon={<ExportOutlined />} style={{ marginRight:8 }} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
+            {!isRecord&&<Button type="primary" onClick={()=>{setForwardTaskVisible(true);taskForm.resetFields(); }}>
+              转发任务单
+            </Button>}
           </Form.Item>
 
         </Row>
@@ -502,7 +515,6 @@ const Index = (props) => {
       onFinish(pageIndex, pageSize)
     })
   }
-
   const [pointList, setPointList] = useState([])
   const [pointLoading, setPointLoading] = useState(false)
   const onValuesChange = (hangedValues, allValues) => {
@@ -519,6 +531,145 @@ const Index = (props) => {
       })
       form.setFieldsValue({ DGIMN: undefined })
     }
+  }
+
+  /***转发任务单 */
+  const taskColumns = [
+    {
+      title: '序号',
+      align: 'center',
+      width: 80,
+      ellipsis: true,
+      render: (text, record, index) => {
+        return index + 1
+      }
+    },
+    {
+      title: '省',
+      dataIndex: 'provinceName',
+      key: 'provinceName',
+      align: 'center',
+    },
+    {
+      title: '市',
+      dataIndex: 'cityName',
+      key: 'cityName',
+      align: 'center',
+    },
+    {
+      title: `企业名称`,
+      dataIndex: 'entName',
+      key: 'entName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '监测点名称',
+      dataIndex: 'pointName',
+      key: 'pointName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '运维人员',
+      dataIndex: 'operationUserName',
+      key: 'operationUserName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '派单时间',
+      dataIndex: 'checkTime',
+      key: 'checkTime',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return text ? moment(text).format('YYYY-MM-DD') : undefined
+      }
+    },
+    {
+      title: '操作',
+      align: 'center',
+      fixed: 'right',
+      width: 150,
+      ellipsis: true,
+      render: (text, record) => {      
+         return  <a onClick={() => { forwardTask(record) }}>转发</a>      
+      }
+
+    }
+  ];
+  const searchTaskComponents = () => {
+    return  <Form
+        form={taskForm}
+        name="advanced_search2"
+        className={styles["ant-advanced-search-form"]}
+        onFinish={()=>{setPageIndex(1); onTaskFinish(1,pageSize)}}
+        onValuesChange={onTaskValuesChange}
+        layout='inline'
+      >
+          <Spin spinning={entLoading} size='small'>
+            <Form.Item label='企业' name='entCode' style={{  marginRight: 8 }}>
+              <EntAtmoList noFilter style={{ width: 300 }} />
+            </Form.Item>
+          </Spin>
+          <Spin spinning={taskPointLoading} size='small'>
+            <Form.Item label='监测点名称' name='DGIMN' >
+
+              <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 150 }}>
+                {
+                  taskPointList[0] && taskPointList.map(item => {
+                    return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                  })
+                }
+              </Select>
+            </Form.Item>
+          </Spin>
+          <Form.Item>
+            <Button type="primary" loading={taskTableLoading} htmlType='submit'>
+              查询
+            </Button>
+          </Form.Item>
+
+      </Form>
+  }
+  const onTaskFinish = async ()=>{
+    try {
+      const values = await taskForm.validateFields();
+      props.getKeyParameterCheckList({ 
+        ...values,
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+  const [taskPointList, setTaskPointList] = useState([])
+  const [taskPointLoading, setTaskPointLoading] = useState(false)
+  const onTaskValuesChange = (hangedValues, allValues) => {
+    if (Object.keys(hangedValues).join() == 'entCode') {
+      if (!hangedValues.entCode) { //清空时 不走请求
+        form.setFieldsValue({ DGIMN: undefined })
+        setTaskPointList([])
+        return;
+      }
+      setTaskPointLoading(true)
+      props.getPointByEntCode({ EntCode: hangedValues.entCode }, (res) => {
+        setTaskPointList(res)
+        setTaskPointLoading(false)
+      })
+      taskForm.setFieldsValue({ DGIMN: undefined })
+    }
+  }
+
+  const [forwardTaskVisible, setForwardTaskVisible] = useState(false)
+
+  const [forwardTaskOkVisible, setForwardTaskOkVisible] = useState(false)
+  const forwardTask = (record) =>{ //转发
+     setForwardTaskOkVisible(true)
+     forwardTaskForm.resetFields()
+  }
+  const forwardTaskOk = () =>{ //转发提交
+    
   }
   return (
     <div className={styles.supervisionManagerSty}>
@@ -565,6 +716,49 @@ const Index = (props) => {
         destroyOnClose
       >
         <CheckDetail id={checkDetailId} type={checkDetailType} infoData={infoData}/>
+      </Modal>
+      <Modal //转发任务单
+        visible={forwardTaskVisible}
+        footer={null}
+        title={searchTaskComponents()}
+        wrapClassName='spreadOverModal'
+        onCancel={() => { setForwardTaskVisible(false) }}
+        destroyOnClose
+      >
+          <SdlTable
+            resizable
+            loading={taskTableLoading}
+            bordered
+            dataSource={tableDatas}
+            columns={taskColumns}
+            scroll={{ y: 'calc(100vh - 360px)' }}
+            pagination={false}
+          />
+      </Modal>
+      <Modal
+        title="任务转发"
+        visible={forwardTaskOkVisible}
+        open={open}
+        onOk={forwardTaskOk}
+        onCancel={()=>{setForwardTaskOkVisible(false)}}
+      >
+        <Form
+        form={forwardTaskForm}
+        name="advanced_search3"
+      >
+        <Row>
+        <Col span={12}>
+        <Form.Item name='User' style={{paddingRight:6}}>
+        <Input  placeholder='转发人'/>
+        </Form.Item>
+        </Col>
+        <Col span={12}>
+        <Form.Item name='OperationUser' style={{paddingLeft:6}}>
+        <OperationInspectoUserList placeholder='运维人'/>
+        </Form.Item>
+        </Col>
+        </Row>
+      </Form>
       </Modal>
     </div>
   );

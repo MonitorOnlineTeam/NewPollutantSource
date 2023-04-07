@@ -302,12 +302,14 @@ const Index = (props) => {
    const col = []
   if (recordListCol && Object.keys(recordListCol).length) {
     for (let key in recordListCol) {
+      const dataIndexKey =  key&&key.replaceAll('_','');
       col.push({
         title: recordListCol[key],
-        dataIndex: key,
-        key: key,
+        dataIndex: dataIndexKey,
+        key: dataIndexKey,
         align: 'center',
         ellipsis: true,
+        width:recordListCol[key]&&recordListCol[key].length&&recordListCol[key].length>5 ? recordListCol[key].length*16 : 100,
         render: (text, record, index) => {
           if (text && text != '-') {
             if (text instanceof Array) {

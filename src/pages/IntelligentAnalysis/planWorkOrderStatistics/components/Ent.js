@@ -138,7 +138,7 @@ const Index = (props,ref) => {
   const oneNum = (record,taskNumData)=>record&&record[0]? <div style={{width:'100%',lineHeight:'44.5px', cursor: 'pointer',color:'#fff' }} onClick={() => {setShowId(-1);taskDetail(record&&record[0]) }}>{taskNumData}</div> : <span style={{color:'#fff'}}>{taskNumData}</span>
   const multipleNum = (dataSource,taskNumData,typeName) => dataSource&&dataSource[0]? <Popover
     zIndex={999}
-    placement="right"
+    placement="top"
     onVisibleChange={(newVisible) => {setPopVisible(newVisible) }}
     trigger="click"
     visible={showId==`${id}${typeName}`&&popVisible }

@@ -74,28 +74,24 @@ export default Model.extend({
       }
     },
     *exportOperationRecordAnalyList({ payload, callback }, { call, put, update }) { // 运维分析列表 导出
-      const result = yield call(services.ExportOperationRecordAnalyList, payload);
       payload.RegionCode? yield update({  exportLoading2:true }) : yield update({  exportLoading:true })
+      const result = yield call(services.ExportOperationRecordAnalyList, payload);
       if (result.IsSuccess) {
         payload.RegionCode? yield update({  exportLoading2:false }) : yield update({  exportLoading:false })
         message.success(result.Message)
-        downloadFile(`/upload${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       } else {
         yield update({  exportLoading2:false, exportLoading:false  })
         message.error(result.Message)
       }
     },
     *exportOperationRecordAnalyInfoList({ payload, callback }, { call, put, update }) { //运维分析详情列表 导出
-      payload.RegionCode? yield update({  exportLoading:true }) : yield update({  exportLoading2:true })
       const result = yield call(services.ExportOperationRecordAnalyInfoList, payload);
       if (result.IsSuccess) {
-        payload.RegionCode? yield update({  exportLoading:false }) : yield update({  exportLoading2:false })
         message.success(result.Message)
-        downloadFile(`/upload${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       } else {
         message.error(result.Message)
-        yield update({  exportLoading:false,exportLoading2:false  })
-
       }
     },
   },

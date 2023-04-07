@@ -16,6 +16,8 @@ export default Model.extend({
     checkDetailData: [],
     regQueryPar: '',
     editCheckTime:moment(),
+    taskTableDatas: [],
+    taskTableTotal: 0 ,
   },
   effects: {
     *getKeyParameterCheckList({ payload, callback }, { call, put, update }) { //获取关键参数核查列表
@@ -89,6 +91,27 @@ export default Model.extend({
     },
     *deleteKeyParameterItemCheck({ payload, callback }, { call, put, update }) { //删除关键参数核查项
       const result = yield call(services.DeleteKeyParameterItemCheck, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback(result.IsSuccess);
+      } else {
+        message.error(result.Message)
+        callback(result.IsSuccess);
+      }
+    },
+    // *retransmissionKeyParameter({ payload, callback }, { call, put, update }) { //删除关键参数核查项
+    //   const result = yield call(services.RetransmissionKeyParameter, payload);
+    //   if (result.IsSuccess) {
+    //     yield update({
+    //       taskTableTotal: result.Total,
+    //       taskTableDatas: result.Datas,
+    //     })
+    //   } else {
+    //     message.error(result.Message)
+    //   }
+    // },
+    *retransmissionKeyParameter({ payload, callback }, { call, put, update }) { //删除关键参数核查项
+      const result = yield call(services.RetransmissionKeyParameter, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback(result.IsSuccess);

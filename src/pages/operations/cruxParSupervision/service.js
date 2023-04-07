@@ -40,3 +40,8 @@ export async function IssuedKeyParameter(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/IssuedKeyParameter',params, null);
   return result;
 }
+//转发任务单
+export async function RetransmissionKeyParameter(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/RetransmissionKeyParameter',params, null);
+  return result;
+}

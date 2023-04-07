@@ -157,7 +157,7 @@ const Index = (props) => {
           width: 120,
         },
         {
-          title: '严重问题数量',
+          title: '重点问题数量',
           dataIndex: 'importanProblemNum',
           key: 'importanProblemNum',
           align: 'center',

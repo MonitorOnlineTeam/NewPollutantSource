@@ -130,6 +130,7 @@ const Index = (props) => {
       key: 'ProvinceName',
       align: 'center',
       fixed:'left',
+      width:120,
       ellipsis: true,
       render: (text, record, index) => {
         return text == '合计' ? text :  <a onClick={() => regDetail(record)}>{text}</a>
@@ -141,6 +142,7 @@ const Index = (props) => {
       key: 'EntCount',
       align: 'center',
       fixed:'left',
+      width:100,
       ellipsis: true,
     },
     {
@@ -149,6 +151,7 @@ const Index = (props) => {
       key: 'PointCount',
       align: 'center',
       fixed:'left',
+      width:100,
       ellipsis: true,
     },
   ];
@@ -163,7 +166,7 @@ const Index = (props) => {
           key: key,
           align: 'center',
           ellipsis: true,
-          width: 100,
+          width:children&&children.length>=2&&item&&item.length>5? item.length * 16 :  firstTitle&&firstTitle.length&&firstTitle.length>5? firstTitle.length * 16 :  100,
           render: (text, record, index) => {
             if(text){
             const textArr = text.split(',');
@@ -203,12 +206,13 @@ const Index = (props) => {
           const cols = []
           for (let key in col) {
             let titleArr = col[key] && col[key].split(',')
+            const dataIndexKey =  key&&key.replaceAll('_','');
             cols.push({
               title: titleArr && titleArr[0],
               dataIndex: 'x',
               align: 'center',
               ellipsis: true,
-              children: getChildren(titleArr, key, titleArr[0], par),
+              children: getChildren(titleArr, dataIndexKey, titleArr[0], par),
             })
           }
           regionCode ? setColumns2([...column2, ...cols]) : setColumns([...column, ...cols])
@@ -235,8 +239,8 @@ const Index = (props) => {
     form.setFieldsValue({ content: undefined })
   }
   const onTaskTypeChange = (value,option) =>{
-    form.setFieldsValue({ TaskType: option.taskType })
-    form.setFieldsValue({ type: option.type })
+    form.setFieldsValue({ TaskType:option&&option.taskType })
+    form.setFieldsValue({ type: option&&option.type })
 
   }
   const searchComponents = (isRegDetail) => {
@@ -245,7 +249,7 @@ const Index = (props) => {
       name="advanced_search"
       layout='inline'
       initialValues={{
-        time: [moment(new Date()).add(-30, 'day'), moment().endOf("day")],
+        time: [moment(new Date()).add(-7, 'day'), moment().endOf("day")],
         PollutantType: 2,
       }}
       className={styles["ant-advanced-search-form"]}
@@ -303,6 +307,7 @@ const Index = (props) => {
       key: 'ProvinceName',
       align: 'center',
       fixed:'left',
+      width:120,
       ellipsis: true,
       render: (text, record, index) => {
         if (text == '合计') {
@@ -334,6 +339,7 @@ const Index = (props) => {
       key: 'EntCount',
       align: 'center',
       fixed:'left',
+      width:100,
       ellipsis: true,
     },
     {
@@ -342,6 +348,7 @@ const Index = (props) => {
       key: 'PointCount',
       align: 'center',
       fixed:'left',
+      width:100,
       ellipsis: true,
     },
   ];
@@ -420,7 +427,6 @@ const Index = (props) => {
     accountFinish(1, accountPageSize, {
       ...par,
       ProvinceCode: record.ProvinceCode && record.ProvinceCode,
-      CityCode: record.CityCode && record.CityCode,
       RecordType: id,
       RecordName: title,
       pageIndex: 1,
@@ -429,7 +435,7 @@ const Index = (props) => {
     props.updateState(namespace,{
       recordAnalyListQueryPar: {
         ...par,
-        ProvinceCode: record.ProvinceCode, CityCode: record.CityCode, RecordType: id, RecordName: title,
+        ProvinceCode: record.ProvinceCode, RecordType: id, RecordName: title,
       }
     })
   }
@@ -456,7 +462,7 @@ const Index = (props) => {
     return <div> {dataSource.length && dataSource.length > 1 ? <Popover
       zIndex={999}
       trigger="click"
-      placement="bottom"
+      placement="top"
       onVisibleChange={(newVisible) => { setPopVisible(newVisible); }}
       visible={keys == popKey && popVisible}
       overlayClassName={styles.detailPopSty}
@@ -591,11 +597,10 @@ const Index = (props) => {
   }
   const accountExport = async () => { //详情导出 
     const values = await accountForm.validateFields();
+    console.log(recordAnalyListQueryPar,values)
     props.exportOperationRecordAnalyInfoList({
+      ...recordAnalyListQueryPar,
       ...values,
-      Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      time: undefined,
     })
   }
 
@@ -607,7 +612,6 @@ const Index = (props) => {
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
           <SdlTable
-            resizable
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
@@ -626,12 +630,10 @@ const Index = (props) => {
         >
           <Card title={searchComponents('regDetail')}>
             <SdlTable
-              resizable
               loading={tableLoading2}
               bordered
               dataSource={tableDatas2}
               columns={columns2}
-              scroll={{ y: 'calc(100vh - 420px)' }}
               pagination={false}
             />
           </Card>
@@ -670,7 +672,7 @@ const Index = (props) => {
           wrapClassName='spreadOverModal'
           footer={null}
           width={'100%'}
-          onCancel={() => { setRecordFormDetailVisible(false) }}
+          onCancel={() => { setRecordFormDetailVisible(false); isPop==1&&setPopVisible(true) }}
           destroyOnClose
         >
           <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />

@@ -19,7 +19,7 @@ export default Model.extend({
     operaOrderData: [],
     planOperaList:{actualCalibrationCount: 0, actualCalibrationRate: "0.00",autoCalibrationAllCount: 0,
                    autoCalibrationCompleteCount: 0,autoCalibrationRate: "0.00",  inspectionAllCount: 0,
-                   inspectionCompleteCount: 0,inspectionAllCount:0,inspectionOutCompleteCount:0 ,autoCalibrationOutCompleteCount:0, inspectionRate: "0.00"},
+                   inspectionCompleteCount: 0,inspectionAllCount:0,inspectionOutCompleteCount:0 ,autoCalibrationOutCompleteCount:0, inspectionRate: "0.00",inspectionCompleteCount:0,inspectionCloseCount:0,},
     planCompleteList:[],
     effectiveTransmissionList:[],
     dataAlarmResData:["0.00","0.00","0.00","0.00"],
