@@ -361,7 +361,7 @@ const Index = (props, ref) => {
           key: 'inspectionRate',
           width: 105,
           align: 'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) =>props.sortRate(a,b,'inspectionRate'),
           render: (text, record) => {
             return (
               <div>
@@ -413,7 +413,7 @@ const Index = (props, ref) => {
           key: 'calibrationRate',
           width: 105,
           align: 'center',
-          sorter: (a, b) => a.calibrationRate - b.calibrationRate,
+          sorter: (a, b) =>props.sortRate(a,b,'calibrationRate'),
           render: (text, record) => {
             return (
               <div>
@@ -523,7 +523,7 @@ const Index = (props, ref) => {
           key: 'inspectionRate',
           width: 105,
           align: 'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) =>props.sortRate(a,b,'inspectionRate'),
           render: (text, record) => {
             return (
               <div>
@@ -575,7 +575,7 @@ const Index = (props, ref) => {
           key: 'calibrationRate',
           width: 105,
           align: 'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) =>props.sortRate(a,b,'calibrationRate'),
           render: (text, record) => {
             return (
               <div>
@@ -693,7 +693,7 @@ const Index = (props, ref) => {
           key: 'taskRate',
           width: 105,
           align: 'center',
-          sorter: (a, b) => a.taskRate - b.taskRate,
+          sorter: (a, b) =>props.sortRate(a,b,'taskRate'),
           render: (text, record) => {
             return (
               <div>
@@ -815,7 +815,7 @@ const Index = (props, ref) => {
           key: 'taskRate',
           width: 105,
           align: 'center',
-          sorter: (a, b) => a.taskRate - b.taskRate,
+          sorter: (a, b) =>props.sortRate(a,b,'taskRate'),
           render: (text, record) => {
             return (
               <div>
@@ -1432,13 +1432,15 @@ const Index = (props, ref) => {
   const insideOrOutsideWorkGetTaskWorkOrderList = (par) => { //计划内or计划外弹框
     const pars = {
       ...queryPar,
-      pageIndex: 1,
-      pageSize: 20,
+      // pageIndex: 1,
+      // pageSize: 20,
       taskType: outTypePar[outType],
       ...par,
       regionLevel: undefined,
       staticType: 3,
       homePageIndex: isPlanInspectionModal ? 1 : isPlanCalibrationModal ? 2 : undefined,
+      pageIndex: undefined,
+      pageSize: undefined,
     }
     !isActualCalibrationModal ? props.insideOrOutsideWorkGetTaskWorkOrderList(pars)
       : props.insideOrOutsideWorkActualGetTaskWorkOrderList(pars)
@@ -1512,12 +1514,12 @@ const Index = (props, ref) => {
 
     setWorkPageIndex(PageIndex)
     setWorkPageSize(PageSize)
-    insideOrOutsideWorkGetTaskWorkOrderList({
-      regionCode: regionCode,
-      entName: workRegForm.getFieldValue('entName'),
-      pageIndex: PageIndex,
-      pageSize: PageSize
-    })
+    // insideOrOutsideWorkGetTaskWorkOrderList({
+    //   regionCode: regionCode,
+    //   entName: workRegForm.getFieldValue('entName'),
+    //   pageIndex: PageIndex,
+    //   pageSize: PageSize
+    // })
   }
   const workRegExports = () => { //导出 工单
     const par = {
@@ -2053,7 +2055,7 @@ const Index = (props, ref) => {
             key: 'taskRate',
             width: 150,
             align: 'center',
-            sorter: (a, b) => a.calibrationRate - b.calibrationRate,
+            sorter: (a, b) =>props.sortRate(a,b,'taskRate'),
             render: (text, record) => {
               return (
                 <div>
@@ -2096,7 +2098,7 @@ const Index = (props, ref) => {
             key: 'taskRate',
             width: 150,
             align: 'center',
-            sorter: (a, b) => a.calibrationRate - b.calibrationRate,
+            sorter: (a, b) =>props.sortRate(a,b,'taskRate'),
             render: (text, record) => {
               return (
                 <div>

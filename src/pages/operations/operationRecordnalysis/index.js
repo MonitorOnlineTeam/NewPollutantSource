@@ -229,6 +229,7 @@ const Index = (props) => {
       Btime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       Etime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       RegionCode: isRegDetail ? regionCode : undefined,
+      content:undefined,
       time: undefined,
     })
   }
@@ -249,7 +250,7 @@ const Index = (props) => {
       name="advanced_search"
       layout='inline'
       initialValues={{
-        time: [moment(new Date()).add(-7, 'day'), moment().endOf("day")],
+        time: [moment(new Date()).add(-7, 'day'), moment().add(-1, 'day')],
         PollutantType: 2,
       }}
       className={styles["ant-advanced-search-form"]}

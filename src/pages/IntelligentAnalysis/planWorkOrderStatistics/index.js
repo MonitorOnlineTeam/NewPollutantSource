@@ -134,8 +134,8 @@ const Index = (props) => {
           endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
           outOrInside:outOrInside,
           regionLevel:showType ==1? 1 : undefined,
-          pageIndex:showType ==2? 1 : undefined,
-          pageSize:showType ==2? 10 : undefined,
+          // pageIndex:showType ==2? 1 : undefined,
+          // pageSize:showType ==2? 10 : undefined,
           homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,
         }
         !isActualCalibrationModal?  props.regEntGetTaskWorkOrderList(par):
@@ -154,6 +154,11 @@ const Index = (props) => {
   const parentCallback = (val) =>{
     // pchildref.current._childFn(values); 
     setOutOrInside(val)
+  }
+  const sortRate = (a,b,attribute) =>{ //完成率排序 返回值为'-'
+    const data1 = a[attribute] == '-'?  0 :  a[attribute]
+    const data2 = b[attribute] == '-'?  0 :  b[attribute]
+    return data1 - data2;
   }
   const searchComponents = () =>{
      return <Form
@@ -249,7 +254,7 @@ const Index = (props) => {
     <div  className={styles.planWorkOrderStatisticsSty}>
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
     <Card title={searchComponents()}>
-      {showType==1? <Region pollutantType={form.getFieldValue('pollutantType')} isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent pollutantType={form.getFieldValue('pollutantType')} parentCallback={parentCallback}/>}
+      {showType==1? <Region pollutantType={form.getFieldValue('pollutantType')} isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref} sortRate={sortRate}/> : <Ent pollutantType={form.getFieldValue('pollutantType')} parentCallback={parentCallback} sortRate={sortRate}/>}
    </Card>
    </BreadcrumbWrapper>
    

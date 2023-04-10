@@ -41,15 +41,17 @@ const dvaPropsData = ({ loading, cruxParSupervision, global, common, point, auto
   entLoading: common.entLoading,
   clientHeight: global.clientHeight,
   tableDatas: cruxParSupervision.tableDatas,
-  tableLoading: loading.effects[`${namespace}/getKeyParameterCheckList`] || loading.effects[`${namespace}/deleteKeyParameterCheck`] || loading.effects[`${namespace}/issuedKeyParameter`] || false,
+  tableLoading: cruxParSupervision.tableLoading || loading.effects[`${namespace}/deleteKeyParameterCheck`] || loading.effects[`${namespace}/issuedKeyParameter`] || false,
   tableTotal: cruxParSupervision.tableTotal,
   regQueryPar:cruxParSupervision.regQueryPar,
   checkDetailLoading: loading.effects[`${namespace}/getKeyParameterCheckDetailList`],
   editCheckTime:cruxParSupervision.editCheckTime,
   exportLoading:loading.effects[`${namespace}/exportKeyParameterCheckList`],
-  taskTableLoading: loading.effects[`${namespace}/issuedKeyParameter`],
+  taskTableLoading: cruxParSupervision.taskTableLoading,
   taskTableDatas: cruxParSupervision.taskTableDatas,
   taskTableTotal: cruxParSupervision.taskTableTotal,
+  taskOkLoading:loading.effects[`${namespace}/retransmissionKeyParameter`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -117,7 +119,7 @@ const dvaDispatch = (dispatch) => {
     },
     retransmissionKeyParameter: (payload,callback) => { //转发任务单
       dispatch({
-        type: `${namespace}/issuedKeyParameter`,
+        type: `${namespace}/retransmissionKeyParameter`,
         payload: payload,
         callback: callback
       })
@@ -138,7 +140,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,saveloading,regQueryPar,taskTableLoading,taskTableTotal,taskTableDatas, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,saveloading,regQueryPar,taskTableLoading,taskTableTotal,taskTableDatas,taskOkLoading,} = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -349,7 +351,6 @@ const Index = (props) => {
   const onFinish = async (pageIndexs, pageSizes,par) => {  //查询
     try {
       const values = await form.validateFields();
-
       props.getKeyParameterCheckList(par? par: { 
         ...values,
         beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
@@ -470,7 +471,7 @@ const Index = (props) => {
               重置
             </Button>
             <Button icon={<ExportOutlined />} style={{ marginRight:8 }} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
-            {!isRecord&&<Button type="primary" onClick={()=>{setForwardTaskVisible(true);taskForm.resetFields(); }}>
+            {!isRecord&&<Button type="primary" onClick={()=>{forwardClick()}}>
               转发任务单
             </Button>}
           </Form.Item>
@@ -604,7 +605,7 @@ const Index = (props) => {
         form={taskForm}
         name="advanced_search2"
         className={styles["ant-advanced-search-form"]}
-        onFinish={()=>{setPageIndex(1); onTaskFinish(1,pageSize)}}
+        onFinish={onTaskFinish}
         onValuesChange={onTaskValuesChange}
         layout='inline'
       >
@@ -616,7 +617,7 @@ const Index = (props) => {
           <Spin spinning={taskPointLoading} size='small'>
             <Form.Item label='监测点名称' name='DGIMN' >
 
-              <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 150 }}>
+              <Select placeholder='请选择' showSearch allowClear optionFilterProp="children" style={{ width: 150 }}>
                 {
                   taskPointList[0] && taskPointList.map(item => {
                     return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
@@ -633,15 +634,12 @@ const Index = (props) => {
 
       </Form>
   }
-  const onTaskFinish = async ()=>{
-    try {
-      const values = await taskForm.validateFields();
+  const onTaskFinish = (values)=>{
       props.getKeyParameterCheckList({ 
+        ...regQueryPar,
         ...values,
+        retransmission:1,
       })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
   }
   const [taskPointList, setTaskPointList] = useState([])
   const [taskPointLoading, setTaskPointLoading] = useState(false)
@@ -660,16 +658,26 @@ const Index = (props) => {
       taskForm.setFieldsValue({ DGIMN: undefined })
     }
   }
-
   const [forwardTaskVisible, setForwardTaskVisible] = useState(false)
+ 
+  const forwardClick = () =>{
+    setForwardTaskVisible(true);
+    taskForm.resetFields(); 
+    onTaskFinish();
+  }
 
   const [forwardTaskOkVisible, setForwardTaskOkVisible] = useState(false)
+  const [forwardTaskID, setForwardTaskID] = useState(false)
   const forwardTask = (record) =>{ //转发
      setForwardTaskOkVisible(true)
+     setForwardTaskID(record.id)
      forwardTaskForm.resetFields()
   }
   const forwardTaskOk = () =>{ //转发提交
-    
+    const values =  forwardTaskForm.getFieldsValue();
+    props.retransmissionKeyParameter({ ID: forwardTaskID,...values }, (res) => {
+      setForwardTaskOkVisible(false)
+    })
   }
   return (
     <div className={styles.supervisionManagerSty}>
@@ -729,7 +737,7 @@ const Index = (props) => {
             resizable
             loading={taskTableLoading}
             bordered
-            dataSource={tableDatas}
+            dataSource={taskTableDatas}
             columns={taskColumns}
             scroll={{ y: 'calc(100vh - 360px)' }}
             pagination={false}
@@ -738,26 +746,18 @@ const Index = (props) => {
       <Modal
         title="任务转发"
         visible={forwardTaskOkVisible}
-        open={open}
         onOk={forwardTaskOk}
         onCancel={()=>{setForwardTaskOkVisible(false)}}
+        confirmLoading={taskOkLoading}
       >
         <Form
         form={forwardTaskForm}
         name="advanced_search3"
+        layout='inline'
       >
-        <Row>
-        <Col span={12}>
-        <Form.Item name='User' style={{paddingRight:6}}>
-        <Input  placeholder='转发人'/>
+        <Form.Item label='转发人' name='OperationUser' style={{width:'100%'}}>
+        <OperationInspectoUserList/>
         </Form.Item>
-        </Col>
-        <Col span={12}>
-        <Form.Item name='OperationUser' style={{paddingLeft:6}}>
-        <OperationInspectoUserList placeholder='运维人'/>
-        </Form.Item>
-        </Col>
-        </Row>
       </Form>
       </Modal>
     </div>

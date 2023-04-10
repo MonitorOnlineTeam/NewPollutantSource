@@ -1,6 +1,6 @@
 import { post, get, getNew } from '@/utils/request';
 
-//获取关键参数核查列表
+//获取关键参数核查列表 转发任务单列表
 export async function GetKeyParameterCheckList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetKeyParameterCheckList',params, null);
   return result;

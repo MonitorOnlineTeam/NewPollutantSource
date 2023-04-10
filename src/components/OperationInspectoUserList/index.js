@@ -54,7 +54,7 @@ export default class Index extends Component {
         allowClear
         showSearch
         optionFilterProp="children"
-        placeholder={'请输入'}
+        placeholder={'请选择'}
         style={{ width: '100%', ...style }}
         {...this.props}
       >

@@ -16,20 +16,32 @@ export default Model.extend({
     checkDetailData: [],
     regQueryPar: '',
     editCheckTime:moment(),
+    taskTableLoading:false,
     taskTableDatas: [],
     taskTableTotal: 0 ,
   },
   effects: {
-    *getKeyParameterCheckList({ payload, callback }, { call, put, update }) { //获取关键参数核查列表
+    *getKeyParameterCheckList({ payload, callback }, { call, put, update }) { //获取关键参数核查列表 转发任务单列表
+      payload.retransmission? yield update({  taskTableLoading: true, }) : yield update({  tableLoading: true, })
       const result = yield call(services.GetKeyParameterCheckList, payload);
       if (result.IsSuccess) {
+        if(payload.retransmission){
+        yield update({
+          taskTableTotal: result.Total,
+          taskTableDatas: result.Datas,
+          taskTableLoading: false,
+        })
+      }else{
         yield update({
           tableTotal: result.Total,
           tableDatas: result.Datas,
           regQueryPar: payload,
+          tableLoading:false
         })
+      }
       } else {
         message.error(result.Message)
+        yield update({  taskTableLoading: true, tableLoading:false})
       }
     },
     *exportKeyParameterCheckList({ payload, callback }, { call, put, update }) { //获取关键参数核查列表 导出
@@ -99,18 +111,7 @@ export default Model.extend({
         callback(result.IsSuccess);
       }
     },
-    // *retransmissionKeyParameter({ payload, callback }, { call, put, update }) { //删除关键参数核查项
-    //   const result = yield call(services.RetransmissionKeyParameter, payload);
-    //   if (result.IsSuccess) {
-    //     yield update({
-    //       taskTableTotal: result.Total,
-    //       taskTableDatas: result.Datas,
-    //     })
-    //   } else {
-    //     message.error(result.Message)
-    //   }
-    // },
-    *retransmissionKeyParameter({ payload, callback }, { call, put, update }) { //删除关键参数核查项
+    *retransmissionKeyParameter({ payload, callback }, { call, put, update }) { //转发任务单
       const result = yield call(services.RetransmissionKeyParameter, payload);
       if (result.IsSuccess) {
         message.success(result.Message)

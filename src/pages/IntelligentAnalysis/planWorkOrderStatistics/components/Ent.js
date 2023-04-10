@@ -130,6 +130,7 @@ const Index = (props,ref) => {
 
   </ol>
   }
+
   const [popVisible, setPopVisible] = useState(false)
   const [showTaskID,setShowTaskID ] = useState()
   const [showId,setShowId ] = useState(-1)
@@ -216,6 +217,7 @@ const Index = (props,ref) => {
       align:'center',
       width: 150,
       ellipsis:true,
+
       // render:(text,record,index)=>{
       //  return  <div style={{textAlign:"left"}}>{text}</div>
       // }
@@ -262,7 +264,7 @@ const Index = (props,ref) => {
           key: 'inspectionRate',
           width: 105,
           align:'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) =>props.sortRate(a,b,'inspectionRate'),
           render: (text, record) => {
             return (
               <div>
@@ -314,7 +316,7 @@ const Index = (props,ref) => {
           key: 'calibrationRate',
           width: 105,
           align:'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) =>props.sortRate(a,b,'calibrationRate'),
           render: (text, record) => {
             return (
               <div>
@@ -398,7 +400,7 @@ const Index = (props,ref) => {
           key: 'taskRate',
           width: 105,
           align:'center',
-          sorter: (a, b) => a.taskRate - b.taskRate,
+          sorter: (a, b) =>props.sortRate(a,b,'taskRate'),
           render: (text, record) => {
             return (
               <div>
@@ -483,7 +485,7 @@ const Index = (props,ref) => {
           key: 'taskRate',
           width: 105,
           align:'center',
-          sorter: (a, b) => a.taskRate - b.taskRate,
+          sorter: (a, b) =>props.sortRate(a,b,'taskRate'),
           render: (text, record) => {
             return (
               <div>
@@ -700,13 +702,15 @@ const Index = (props,ref) => {
 const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
   props.insideOrOutsideWorkGetTaskWorkOrderList({
     ...queryPar,
-    pageIndex:1,
-    pageSize:20,
+    // pageIndex:1,
+    // pageSize:20,
     taskType:insideWorkType,
     regionLevel:undefined,
     staticType:3,
     entCode: entCode,
     ...par,
+    pageIndex:undefined,
+    pageSize:undefined,
   })
 }
  const [insideWorkPageIndex,setInsideWorkPageIndex] = useState(1)
@@ -716,10 +720,10 @@ const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外�
   const handleInsideWorkTableChange =   (PageIndex, PageSize )=>{ //分页 打卡异常 响应超时 弹框
     setInsideWorkPageIndex(PageIndex)
     setInsideWorkPageSize(PageSize)
-    insideOrOutsideWorkGetTaskWorkOrderList({
-      pageIndex:PageIndex,
-      pageSize:PageSize
-     })
+    // insideOrOutsideWorkGetTaskWorkOrderList({
+    //   pageIndex:PageIndex,
+    //   pageSize:PageSize
+    //  })
   }
 const [insideWorkType, setInsideWorkType] = useState()
 const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState()
@@ -1104,8 +1108,8 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
     props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
     queryPar&&queryPar.beginTime&&props.regEntGetTaskWorkOrderList({
       ...queryPar,
-      pageIndex:1,
-      pageSize:20,
+      // pageIndex:1,
+      // pageSize:20,
       regionLevel: 1,
       staticType:2,
       outOrInside:key// 子组件调用的父组件方法
@@ -1121,12 +1125,12 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
  const handleTableChange = (PageIndex, PageSize )=>{ //计划内 计划外
   setPageIndex(PageIndex)
   setPageSize(PageSize)
-  props.regEntGetTaskWorkOrderList({
-    ...queryPar,
-    pageIndex:PageIndex,
-    pageSize:PageSize,
-    outOrInside:tabType
-  })
+  // props.regEntGetTaskWorkOrderList({
+  //   ...queryPar,
+  //   pageIndex:PageIndex,
+  //   pageSize:PageSize,
+  //   outOrInside:tabType,
+  // })
  }
   return (
       <div>
