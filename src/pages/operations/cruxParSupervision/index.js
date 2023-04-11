@@ -638,6 +638,8 @@ const Index = (props) => {
       props.getKeyParameterCheckList({ 
         ...regQueryPar,
         ...values,
+        pageIndex:undefined,
+        pageSize:undefined,
         retransmission:1,
       })
   }
