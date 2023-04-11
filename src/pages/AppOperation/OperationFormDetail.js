@@ -228,6 +228,7 @@ class OperationFormDetail extends PureComponent {
                                 photoIndex: (photoIndex + 1) % UrlTaskDitailsAttachmentList.length
                             })
                         }
+                        imageTitle={`${photoIndex+1}/${UrlTaskDitailsAttachmentList.length}`}
                     />
                 )}
                 {/* 附件 */}
@@ -247,6 +248,7 @@ class OperationFormDetail extends PureComponent {
                                 photoIndexAttach: (photoIndexAttach + 1) % URLattachment.length
                             })
                         }
+                        imageTitle={`${photoIndex+1}/${URLattachment.length}`}
                     />
                 )}
             </Card>

@@ -210,13 +210,13 @@ const Index = (props, ref) => {
   const popContent = (type,id,taskTypeName,data,taskWorkNum1,taskWorkNum2, ) => {
   const oneNum = (record,taskNumData)=>record&&record[0]? <div style={{width:'100%',lineHeight:'44.5px', cursor: 'pointer',color:'#fff' }} onClick={() => {setShowId(-1);taskDetail(record&&record[0]) }}>{taskNumData}</div> : <span style={{color:'#fff'}}>{taskNumData}</span>
   const multipleNum = (dataSource,taskNumData,typeName) => dataSource&&dataSource[0]? <Popover
-    zIndex={9999}
+    zIndex={1000}
     placement="top"
     onVisibleChange={(newVisible) => {setPopVisible(newVisible) }}
     trigger="click"
     visible={showId==`${id}${typeName}`&&popVisible }
-    overlayClassName={styles.popSty}
-    getPopupContainer={trigger => trigger.parentNode}
+    // overlayClassName={styles.popSty}
+    // getPopupContainer={trigger => trigger.parentNode}
     content={
       <Table
         bordered
@@ -308,7 +308,8 @@ const Index = (props, ref) => {
       width: 100,
     },
     {
-      title: <span>运维监测点数{!isActualCalibrationModal && !isPlanCalibrationModal && <Tooltip title={`点击运维监测点数，可以查看运维监测点在条件日期内完成的计划巡检工单、计划校准工单情况。`}><QuestionCircleOutlined style={{ paddingLeft: 5 }} /></Tooltip>}</span>,
+      // title: <span>运维监测点数{!isActualCalibrationModal && !isPlanCalibrationModal && <Tooltip title={`点击运维监测点数，可以查看运维监测点在条件日期内完成的计划巡检工单、计划校准工单情况。`}><QuestionCircleOutlined style={{ paddingLeft: 5 }} /></Tooltip>}</span>,
+      title: <span>运维监测点数</span>,
       dataIndex: 'pointCount',
       key: 'pointCount',
       align: 'center',
@@ -1465,7 +1466,7 @@ const Index = (props, ref) => {
     "matchingComparisonCount": '参数核对工单',
     "cooperationInspectionCount": '配合检查工单',
     "calibrationTestCount": '校验测试工单',
-    "coordinationComparisonCount": '配合比对完成工单数',
+    "coordinationComparisonCount": '配合比对工单数',
   }
 
   const workOrderNum = (type, record, outType) => { //计划内  计划外  总数工单

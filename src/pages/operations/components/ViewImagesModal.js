@@ -114,6 +114,7 @@ class ViewImagesModal extends PureComponent {
                   photoIndex: (photoIndex + 1) % UrlList.length
                 })
               }
+              imageTitle={`${photoIndex+1}/${UrlList.length}`}
             />
           )}
         </div>

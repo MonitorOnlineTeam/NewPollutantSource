@@ -138,13 +138,13 @@ const Index = (props,ref) => {
   const popContent = (type,id,taskTypeName,data,taskWorkNum1,taskWorkNum2, ) => {
   const oneNum = (record,taskNumData)=>record&&record[0]? <div style={{width:'100%',lineHeight:'44.5px', cursor: 'pointer',color:'#fff' }} onClick={() => {setShowId(-1);taskDetail(record&&record[0]) }}>{taskNumData}</div> : <span style={{color:'#fff'}}>{taskNumData}</span>
   const multipleNum = (dataSource,taskNumData,typeName) => dataSource&&dataSource[0]? <Popover
-    zIndex={999}
+    zIndex={9999}
     placement="top"
     onVisibleChange={(newVisible) => {setPopVisible(newVisible) }}
     trigger="click"
     visible={showId==`${id}${typeName}`&&popVisible }
-    overlayClassName={styles.popSty}
-    getPopupContainer={trigger => trigger.parentNode}
+    // overlayClassName={styles.popSty}
+    // getPopupContainer={trigger => trigger.parentNode}
     content={
       <Table
         bordered
@@ -1002,31 +1002,31 @@ const [dete, setDete] = useState({})
 // const [entName, setEntName] = useState({})
 const outTypeObj = {
   "inspectionCount"  : "巡检工单",
-  "maintainCompleteCount"  : "维护工单",
-  "sparePartsCompleteCount": "备品备件更换工单",
-  "consumablesCompleteCount":'易耗品更换更换工单',
-  "reagentCompleteCount" : "试剂更换工单",
-  "referenceMaterialsCompleteCount":"标准物质更换工单",
+  "maintainCount"  : "维护工单",
+  "sparePartsCount": "备品备件更换工单",
+  "consumablesCount":'易耗品更换工单',
+  "referenceMaterialsCount":"标准物质更换工单",
+  "reagentCount" : "试剂更换工单",
   "calibrationCount" :'校准工单',
   "cooperationInspectionCount" :'配合检查工单',
   "calibrationTestCount":'校验测试工单',
   "repairInfoCount" :'维修工单',
   "matchingComparisonCount" :'参数核对',
+  "coordinationComparisonCount": '配合比对完成工单数',
  }
- 
  const outTypeColor = {
   "inspectionCount"  : '#1890ff',
-  "maintainCompleteCount"  : "#a0d911",
-  "sparePartsCompleteCount": "#eb2f96",
-  "consumablesCompleteCount":'#722ed1',
-  "reagentCompleteCount" : "#bfbfbf",
-  "referenceMaterialsCompleteCount":"#bfbfbf",
+  "maintainCount"  : "#a0d911",
+  "sparePartsCount": "#eb2f96",
+  "consumablesCount":'#722ed1',
+  "referenceMaterialsCount":"#bfbfbf",
+  "reagentCount" : "#bfbfbf",
   "calibrationCount" :'#52c41a',
   "cooperationInspectionCount" :'#fa8c16',
   "calibrationTestCount":'#08979c',
   "repairInfoCount" :'#f5222d',
   "matchingComparisonCount" :'#13c2c2',
-
+  "coordinationComparisonCount": '#fa541c',
  }
 const dateCellRender = (value)=>{//日期
   let ele=[];

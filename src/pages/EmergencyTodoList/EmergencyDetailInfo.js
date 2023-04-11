@@ -884,15 +884,7 @@ class EmergencyDetailInfo extends Component {
                                 </Description>
                             </DescriptionList>
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 8,}}>
-                            <Table
-                                bordered
-                                columns={this.column}
-                                dataSource={isExistTask ? this.props.taskInfo.Datas[0].appList : []}
-                                pagination={false}
-                            />
-                        </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>处理记录</span>} style={{ marginTop: 8, }}>
+                        <Card title={<span style={{ fontWeight: '900' }}>运维台账记录</span>} style={{ marginTop: 8, }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
                                     {
@@ -921,6 +913,14 @@ class EmergencyDetailInfo extends Component {
                                     }}
                                 />)
                             }
+                        </Card>
+                        <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 8,}}>
+                            <Table
+                                bordered
+                                columns={this.column}
+                                dataSource={isExistTask ? this.props.taskInfo.Datas[0].appList : []}
+                                pagination={false}
+                            />
                         </Card>
                         <Card title={<span style={{ fontWeight: '900' }}>日志表</span>} style={{ marginTop: 8, }}>
                             {
@@ -969,6 +969,7 @@ class EmergencyDetailInfo extends Component {
                                 photoIndex: (photoIndex + 1) % ImageList.length,
                             })
                         }
+                        imageTitle={`${photoIndex+1}/${ImageList.length}`}
                     />
                 )}
 

@@ -269,7 +269,7 @@ const Index = (props) => {
   const  RecordFormPopover = (props) =>{
     const dataSource = props.dataSource,keys = props.keys;
     return <div> {dataSource.length && dataSource.length > 1 ? <Popover
-      zIndex={999}
+      zIndex={1000}
       trigger="click"
       onVisibleChange={(newVisible) => { setPopVisible(newVisible); }}
       visible={keys == popKey && popVisible}

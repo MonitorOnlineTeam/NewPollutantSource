@@ -133,7 +133,7 @@ const Index = (props) => {
       width:120,
       ellipsis: true,
       render: (text, record, index) => {
-        return text == '合计' ? text :  <a onClick={() => regDetail(record)}>{text}</a>
+       return text == '合计' ? <span style={{color:'rgba(0, 0, 0, 0.85)'}}>{text}</span> :  <a onClick={() => regDetail(record)}>{text}</a>
       }
     },
     {
@@ -237,7 +237,7 @@ const Index = (props) => {
 
   const pollutantTypeChange = (value) => {
     props.getTaskTypeList({ type: 1, PollutantType: value });
-    form.setFieldsValue({ content: undefined })
+    form.setFieldsValue({ content: undefined,TaskType:undefined,type:undefined })
   }
   const onTaskTypeChange = (value,option) =>{
     form.setFieldsValue({ TaskType:option&&option.taskType })
@@ -263,7 +263,7 @@ const Index = (props) => {
         />
       </Form.Item>
         <Form.Item label='监测点类型' name='PollutantType'>
-          <Select placeholder='请选择' allowClear onChange={pollutantTypeChange} style={{ width: 150 }}>
+          <Select placeholder='请选择'  onChange={pollutantTypeChange} style={{ width: 150 }}>
             <Option key={2} value={2} >废气</Option>
             <Option key={1} value={1} >废水</Option>
           </Select>
@@ -413,7 +413,6 @@ const Index = (props) => {
       ellipsis: true,
     },
   ];
-  const [open, setOpen] = useState(false);
   const [accountColumns, setAccountColumns] = useState([]);
   const [accountVisible, setAccountVisible] = useState(false);
   const [accountTitle, setAccountTitle] = useState('');
@@ -424,19 +423,24 @@ const Index = (props) => {
     setAccountTitle(`${record.ProvinceName}-统计${par.Btime&&moment(par.Btime).format('YYYY-MM-DD')}~${par.Etime&&moment(par.Etime).format('YYYY-MM-DD')}内${title}台账上传情况`)
     setAccountTypeName(`${title}台账分布`)
     setAccountPageIndex(1)
+    setAccountPageSize(20)
     accountForm.resetFields()
-    accountFinish(1, accountPageSize, {
+    accountFinish(1, 20, {
       ...par,
-      ProvinceCode: record.ProvinceCode && record.ProvinceCode,
+      RegionCode:undefined,
+      ProvinceCode:record.CityName=='合计'? par.RegionCode : record.ProvinceCode,
+      CityCode: record.CityCode,
       RecordType: id,
       RecordName: title,
       pageIndex: 1,
-      pageSize: accountPageSize,
+      pageSize:20,
+      // pageSize: accountDetailQueryPar.pageSize,
     })
     props.updateState(namespace,{
       recordAnalyListQueryPar: {
         ...par,
-        ProvinceCode: record.ProvinceCode, RecordType: id, RecordName: title,
+        RegionCode:undefined,
+        ProvinceCode:record.CityName=='合计'? par.RegionCode : record.ProvinceCode, CityCode: record.CityCode , RecordType: id, RecordName: title,
       }
     })
   }
@@ -461,13 +465,13 @@ const Index = (props) => {
   const  RecordFormPopover = (props) =>{
     const dataSource = props.dataSource,keys = props.keys;
     return <div> {dataSource.length && dataSource.length > 1 ? <Popover
-      zIndex={999}
+      zIndex={1000}
       trigger="click"
       placement="top"
       onVisibleChange={(newVisible) => { setPopVisible(newVisible); }}
       visible={keys == popKey && popVisible}
-      overlayClassName={styles.detailPopSty}
-      getPopupContainer={trigger => trigger.parentNode}
+      // overlayClassName={styles.detailPopSty}
+      // getPopupContainer={trigger => trigger.parentNode}
       content={
         <Table
           bordered
@@ -544,7 +548,7 @@ const Index = (props) => {
   }
   useEffect(()=>{
       getAccountColumns()
-   },[accountDetailCol,popVisible,popKey])
+   },[accountDetailCol,popVisible,popKey,accountDetailQueryPar])
   const accountFinish = async (pageIndexs, pageSizes, par) => {  //台账详情查询  par参数 分页需要的参数
     try {
       const values = await accountForm.validateFields();
@@ -598,7 +602,6 @@ const Index = (props) => {
   }
   const accountExport = async () => { //详情导出 
     const values = await accountForm.validateFields();
-    console.log(recordAnalyListQueryPar,values)
     props.exportOperationRecordAnalyInfoList({
       ...recordAnalyListQueryPar,
       ...values,
@@ -618,6 +621,7 @@ const Index = (props) => {
             dataSource={tableDatas}
             columns={columns}
             pagination={false}
+            className={styles.operationRecordRegTableSty}
           />
         </Card>
         <Modal //省级详情

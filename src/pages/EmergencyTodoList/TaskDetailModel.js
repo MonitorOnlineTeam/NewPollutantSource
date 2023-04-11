@@ -849,6 +849,7 @@ class EmergencyDetailInfo extends Component {
                                 photoIndex: (photoIndex + 1) % ImageList.length,
                             })
                         }
+                        imageTitle={`${photoIndex+1}/${ImageList.length}`}
                     />
                 )}
 

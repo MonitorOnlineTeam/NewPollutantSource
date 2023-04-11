@@ -1978,6 +1978,7 @@ const Index = (props) => {
         onPreMoveNextRequest={() =>
           setPhotoIndex((photoIndex + 1) % imgUrlList.length)
         }
+        imageTitle={`${photoIndex+1}/${imgUrlList.length}`}
       />}
       <Modal //详情
         visible={detailVisible}

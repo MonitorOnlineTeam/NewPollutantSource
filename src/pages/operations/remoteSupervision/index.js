@@ -2379,6 +2379,7 @@ const Index = (props) => {
               onPreMoveNextRequest={() =>
                 setPhotoIndex((photoIndex + 1) % imgUrlList.length)
               }
+              imageTitle={`${photoIndex+1}/${imgUrlList.length}`}
             />}
 
 
