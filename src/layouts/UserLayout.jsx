@@ -133,12 +133,13 @@ const UserLayout = props => {
               style={{ position: 'absolute', cursor: 'pointer', right: '58px', top: '22px', fontSize: 16 }} />
           </Popover>
         }
-         
+        <div className={styles.footer}>
+           <div style={{textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)',}}>请使用谷歌chrome浏览器访问系统</div>
         {
           configInfo && configInfo.IsShowFooterMessages === 'true' && <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={links} />
         }
-        {/* <div style={{  textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)',marginTop: -33  }}>请使用谷歌chrome浏览器访问系统</div> */}
         {/* {configInfo && configInfo.TechnicalSupport && <p style={{ fontSize: 14, textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)', marginTop: -13 }}>{configInfo.TechnicalSupport}</p>} */} 
+       </div>
       </div>
     </DocumentTitle>
   );
