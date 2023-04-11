@@ -443,7 +443,7 @@ class DepartIndex extends Component {
                   <DatabaseOutlined style={{ fontSize: 16 }} />
                 </a>
               </Tooltip></>}
-              {/* <Divider type="vertical" />
+              <Divider type="vertical" />
               <Tooltip title="报警关联">
                 <a
                   style={{ cursor: 'pointer' }}
