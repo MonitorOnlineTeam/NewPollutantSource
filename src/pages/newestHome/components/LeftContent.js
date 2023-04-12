@@ -300,14 +300,19 @@ switch(type){
     },
     series: [
       {
-        name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '实际校准完成率',
+        // name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '实际校准完成率',
+        name: type == 1 ? '计划巡检完成率' : '计划校准完成率',
         type: 'pie',
         radius: ['70%', '80%'],
         avoidLabelOverlap: false,
         label: { normal: { show: false, position: 'center'  }, },
+        // data: [
+        //   { value: type == 1 ? `${planOperaList.inspectionRate}`: type == 2 ? planOperaList.calibrationRate : planOperaList.actualCalibrationRate, name: '已完成' },
+        //   { value: type == 1 ? (100 - `${planOperaList.inspectionRate=='-'? 100 : planOperaList.inspectionRate  }`) : type == 2 ? (100  - `${planOperaList.calibrationRate=='-'? 100 : planOperaList.calibrationRate  }`) : (100 - `${planOperaList.actualCalibrationRate=='-'? 100 : planOperaList.actualCalibrationRate  }`), name: '未完成' },
+        // ],
         data: [
-          { value: type == 1 ? `${planOperaList.inspectionRate} `: type == 2 ? planOperaList.calibrationRate : planOperaList.actualCalibrationRate, name: '已完成' },
-          { value: type == 1 ? (100 - `${planOperaList.inspectionRate=='-'? 100 : planOperaList.inspectionRate  }`) : type == 2 ? (100  - `${planOperaList.autoCalibrationRate=='-'? 100 : planOperaList.calibrationRate  }`) : (100 - `${planOperaList.actualCalibrationRate=='-'? 100 : planOperaList.actualCalibrationRate  }`), name: '未完成' },
+          { value: type == 1 ? `${planOperaList.inspectionRate}`:  planOperaList.calibrationRate, name: '已完成' },
+          { value: type == 1 ? (100 - `${planOperaList.inspectionRate=='-'? 100 : planOperaList.inspectionRate }`) : (100  - `${planOperaList.calibrationRate=='-'? 100 : planOperaList.calibrationRate  }`) , name: '未完成' },
         ],
         startAngle:330, //起始角度
       }

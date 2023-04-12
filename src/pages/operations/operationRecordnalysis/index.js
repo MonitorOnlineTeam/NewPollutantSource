@@ -36,6 +36,7 @@ const dvaPropsData = ({ loading, operationRecordnalysis, global, common, point, 
   tableLoading: operationRecordnalysis.tableLoading,
   tableTotal: operationRecordnalysis.tableTotal,
   exportLoading: operationRecordnalysis.exportLoading,
+  regQueryPar:operationRecordnalysis.regQueryPar,
   tableDatas2: operationRecordnalysis.tableDatas2,
   tableLoading2: operationRecordnalysis.tableLoading2,
   tableTotal2: operationRecordnalysis.tableTotal2,
@@ -106,7 +107,7 @@ const Index = (props) => {
   const [accountForm] = Form.useForm();
 
 
-  const { taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, recordAnalyListQueryPar, accountTableDatas, accountTableTotal, accountTableLoading, accountDetailQueryPar, accountDetailCol,accountExportLoading, } = props;
+  const { taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading, exportLoading,regQueryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, recordAnalyListQueryPar, accountTableDatas, accountTableTotal, accountTableLoading, accountDetailQueryPar, accountDetailCol,accountExportLoading, } = props;
 
 
 
@@ -185,9 +186,8 @@ const Index = (props) => {
   const [regionCode, setRegionCode] = useState()
 
   const regDetail = (row) => {
-    const values = form.getFieldsValue();
     setRegDetailVisible(true)
-    setRegDetailTitle(`${row.ProvinceName}-统计${values.time && moment(values.time[0]).format('YYYY-MM-DD')}~${values.time && moment(values.time[1]).format('YYYY-MM-DD')}内运维记录`)
+    setRegDetailTitle(`${record.ProvinceName}-统计${regQueryPar.Btime&&moment(regQueryPar.Btime).format('YYYY-MM-DD')}~${regQueryPar.Etime&&moment(regQueryPar.Etime).format('YYYY-MM-DD')}内${title}内运维记录`)
     setRegionCode(row.ProvinceCode)
     onFinish(row.ProvinceCode)
   }
@@ -595,7 +595,7 @@ const Index = (props) => {
 
   const [accountPageSize, setAccountPageSize] = useState(20)
   const [accountPageIndex, setAccountPageIndex] = useState(1)
-  const handleTableChange2 = (PageIndex, PageSize) => {
+  const accountTableChange = (PageIndex, PageSize) => {
     setAccountPageIndex(PageIndex)
     setAccountPageSize(PageSize)
     accountFinish(PageIndex, PageSize, { ...accountDetailQueryPar, pageIndex: PageIndex, pageSize: PageSize })
@@ -666,7 +666,7 @@ const Index = (props) => {
                 current: accountPageIndex,
                 showSizeChanger: true,
                 showQuickJumper: true,
-                onChange: handleTableChange2,
+                onChange: accountTableChange,
               }}
             />
           </Card>
