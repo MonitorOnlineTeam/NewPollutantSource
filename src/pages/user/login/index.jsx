@@ -64,6 +64,14 @@ class Login extends Component {
         payload: { ...values,IsAgree:isAgree, type },
         callback:isSuccess=>{
            this.setState({loginSuccess:isSuccess})
+           dispatch({
+            type: 'common/updateState',
+            payload:{noFilterRegionList:[], testRegionList:[],}
+           })
+           dispatch({
+            type: 'autoForm/updateState',
+            payload:{regionList:[],}
+           })
         }
       });
     }

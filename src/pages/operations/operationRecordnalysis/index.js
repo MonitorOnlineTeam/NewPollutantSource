@@ -36,7 +36,6 @@ const dvaPropsData = ({ loading, operationRecordnalysis, global, common, point, 
   tableLoading: operationRecordnalysis.tableLoading,
   tableTotal: operationRecordnalysis.tableTotal,
   exportLoading: operationRecordnalysis.exportLoading,
-  regQueryPar:operationRecordnalysis.regQueryPar,
   tableDatas2: operationRecordnalysis.tableDatas2,
   tableLoading2: operationRecordnalysis.tableLoading2,
   tableTotal2: operationRecordnalysis.tableTotal2,
@@ -107,7 +106,7 @@ const Index = (props) => {
   const [accountForm] = Form.useForm();
 
 
-  const { taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading, exportLoading,regQueryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, recordAnalyListQueryPar, accountTableDatas, accountTableTotal, accountTableLoading, accountDetailQueryPar, accountDetailCol,accountExportLoading, } = props;
+  const { taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, recordAnalyListQueryPar, accountTableDatas, accountTableTotal, accountTableLoading, accountDetailQueryPar, accountDetailCol,accountExportLoading, } = props;
 
 
 
@@ -116,7 +115,7 @@ const Index = (props) => {
     onFinish()
   }, []);
 
-  const column = [
+  const column = (par) => [
     {
       title: '序号',
       dataIndex: 'Sort',
@@ -134,7 +133,7 @@ const Index = (props) => {
       width:120,
       ellipsis: true,
       render: (text, record, index) => {
-       return text == '合计' ? <span style={{color:'rgba(0, 0, 0, 0.85)'}}>{text}</span> :  <a onClick={() => regDetail(record)}>{text}</a>
+       return text == '合计' ? <span style={{color:'rgba(0, 0, 0, 0.85)'}}>{text}</span> :  <a onClick={() => regDetail(record,par)}>{text}</a>
       }
     },
     {
@@ -185,9 +184,9 @@ const Index = (props) => {
   const [regDetailTitle, setRegDetailTitle] = useState()
   const [regionCode, setRegionCode] = useState()
 
-  const regDetail = (row) => {
+  const regDetail = (row,par) => {
     setRegDetailVisible(true)
-    setRegDetailTitle(`${row.ProvinceName}-统计${regQueryPar.Btime&&moment(regQueryPar.Btime).format('YYYY-MM-DD')}~${regQueryPar.Etime&&moment(regQueryPar.Etime).format('YYYY-MM-DD')}内运维记录`)
+    setRegDetailTitle(`${row.ProvinceName}-统计${par.Btime&&moment(par.Btime).format('YYYY-MM-DD')}~${par.Etime&&moment(par.Etime).format('YYYY-MM-DD')}内运维记录`)
     setRegionCode(row.ProvinceCode)
     onFinish(row.ProvinceCode)
   }
@@ -215,7 +214,7 @@ const Index = (props) => {
               children: getChildren(titleArr, dataIndexKey, titleArr[0], par),
             })
           }
-          regionCode ? setColumns2([...column2, ...cols]) : setColumns([...column, ...cols])
+          regionCode ? setColumns2([...column2, ...cols]) : setColumns([...column(par), ...cols])
         }
       })
     } catch (errorInfo) {

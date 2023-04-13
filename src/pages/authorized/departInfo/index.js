@@ -52,7 +52,7 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 import SelectPollutantType from '@/components/SelectPollutantType';
-import AlarmPushRel from '@/components/AlarmPushRel';
+// import AlarmPushRel from '@/components/AlarmPushRel';
 import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel'
 import styles from './index.less';
 import { DndProvider, DragSource, DropTarget } from 'react-dnd';

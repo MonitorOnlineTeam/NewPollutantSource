@@ -196,7 +196,7 @@ const Index = (props) => {
                 <Input allowClear placeholder='请输入' />
             </Form.Item>
             <Form.Item label='行政区' name='regionCode' >
-                <RegionList levelNum={3} style={{width:165}}/>
+                <RegionList test levelNum={3} style={{width:165}}/>
             </Form.Item>
             <Form.Item>
                 <Button loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">

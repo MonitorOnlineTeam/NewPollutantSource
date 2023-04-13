@@ -14,6 +14,7 @@ const { Option } = Select;
   level: common.level,
   regionList: autoForm.regionList,
   noFilterRegionList:common.noFilterRegionList,
+  testRegionList:common.noFilterRegionList,
 }))
 class SdlCascader extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class SdlCascader extends Component {
   // }
 
   componentDidMount() {
-    const { dispatch, data, configId, itemValue, itemName,noFilterRegionList, } = this.props;
+    const { dispatch, data, configId, itemValue, itemName,noFilter,regionList,noFilterRegionList,testRegionList, } = this.props;
     // !data.length && dispatch({
     //   type: 'autoForm/getRegions',
     // })
@@ -47,7 +48,6 @@ class SdlCascader extends Component {
     //     PointMark: "2"
     //   }
     // })
-    if (itemName === 'dbo.T_Cod_Region.RegionName' || !configId || itemName === 'dbo.View_TestRegion.RegionName') {
       //   !data.length && this.props.dispatch({type: this.props.noFilter?"common/getCascaderNoFilterRegionList" : "common/getEnterpriseAndPoint",
       //   // payload: {
       //   //   ConfigId: configId,
@@ -59,11 +59,11 @@ class SdlCascader extends Component {
       //     this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
       //   }
       // })
-   
-      if(!data.length && this.props.noFilter){
-        if(noFilterRegionList&&noFilterRegionList[0]){
-          this.setState({ industryTreeList: this.industryTreeListFormat(noFilterRegionList, 1) })
-        }else{
+    if (itemName === 'dbo.T_Cod_Region.RegionName' || !configId ) {
+       if(noFilter){  //不用过滤行政区
+          if(noFilterRegionList&&noFilterRegionList[0]){
+           this.setState({ industryTreeList: this.industryTreeListFormat(noFilterRegionList, 1) })
+          }else{
           this.props.dispatch({
             type: "common/getCascaderNoFilterRegionList",
             payload: { PointMark: '2' },
@@ -71,9 +71,30 @@ class SdlCascader extends Component {
               this.setState({ industryTreeList: this.industryTreeListFormat(res, 1) })
             }
           })
+         }
+       } else{
+        if(regionList&&regionList.length<=0){ //普通行政区
+          this.props.dispatch({
+            type: "autoForm/getRegions",
+            payload: { PointMark: '2' },
+            callback: (res) => {
+              this.setState({ industryTreeList: this.industryTreeListFormat(res, 1) })
+            }
+          })
         }
-      }else{
-      setTimeout(() => { this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList, 1) }), 300 })
+        setTimeout(() => { this.setState({ industryTreeList: this.industryTreeListFormat(regionList, 1) }), 300 })
+       }
+    }else if(itemName === 'dbo.View_TestRegion.RegionName'){ //调试服务
+       if(testRegionList&&testRegionList[0]){
+        this.setState({ industryTreeList: this.industryTreeListFormat(testRegionList, 1) })
+       }else{
+        this.props.dispatch({
+          type: "common/getTestXuRegions",
+          payload: { PointMark: '2' },
+          callback: (res) => {
+            this.setState({ industryTreeList: this.industryTreeListFormat(res, 1) })
+          }
+        })
       }
     } else {
       !data.length && this.props.dispatch({
@@ -91,11 +112,13 @@ class SdlCascader extends Component {
 
   }
   componentDidUpdate(props) {
-    const { regionList, configId, itemName, data } = this.props;
-    if (props.regionList !== regionList && (itemName === 'dbo.T_Cod_Region.RegionName' || !configId || itemName === 'dbo.View_TestRegion.RegionName')) {
-      this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList, 1) })
+    const { regionList, configId, itemName,noFilter,noFilterRegionList,testRegionList, } = this.props;
+    if (props.regionList !== regionList || props.noFilterRegionList !== noFilterRegionList  && (itemName === 'dbo.T_Cod_Region.RegionName' || !configId)) {   //资产管理污染源管理 或 不需要过滤的行政区
+     this.setState({ industryTreeList: this.industryTreeListFormat(noFilter? noFilterRegionList : regionList, 1) })
     }
-
+    if(props.testRegionList !== testRegionList  && (itemName === 'dbo.View_TestRegion.RegionName')){ //调试服务 污染源管理
+      this.setState({ industryTreeList: this.industryTreeListFormat(this.props.testRegionList, 1) })
+    }
   }
   industryTreeListFormat = (data, i) => {
     const { selectType } = this.props;

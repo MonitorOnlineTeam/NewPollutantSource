@@ -244,7 +244,7 @@ const Index = (props) => {
       dataIndex: 'province',
       key: 'province',
       align: 'center',
-      width:'auto',
+      width:120,
       ellipsis: true,
     },
     {
@@ -252,7 +252,7 @@ const Index = (props) => {
       dataIndex: 'city',
       key: 'city',
       align: 'center',
-      width:'auto',
+      width:120,
       ellipsis: true,
     },
     {
@@ -260,7 +260,7 @@ const Index = (props) => {
       dataIndex: 'entName',
       key: 'entName',
       align: 'center',
-      width:'auto',
+      width:120,
       ellipsis: true,
     },
     {
@@ -268,7 +268,7 @@ const Index = (props) => {
       dataIndex: 'pointName',
       key: 'pointName',
       align: 'center',
-      width:'auto',
+      width:100,
       ellipsis: true,
     },
     {
@@ -276,7 +276,7 @@ const Index = (props) => {
       dataIndex: 'operationName',
       key: 'operationName',
       align: 'center',
-      width:'auto',
+      width:100,
       ellipsis: true,
     },
     {
@@ -284,20 +284,20 @@ const Index = (props) => {
       dataIndex: 'noCompleteCount',
       key: 'noCompleteCount',
       align: 'center',
-      width:'auto',
+      width:100,
     },
     {
       title: '完成数',
       dataIndex: 'completeCount',
       key: 'completeCount',
       align: 'center',
-      width:'auto',
+      width:100,
     },
     {
       title: '核查完成率',
       dataIndex: 'rate',
       key: 'rate',
-      width:150,
+      width: 105,
       align:'center',
       sorter: (a, b) => a.rate - b.rate,
       render: (text, record) => {

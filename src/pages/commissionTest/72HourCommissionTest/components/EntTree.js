@@ -145,7 +145,7 @@ const Index = (props) => {
 
         >
        <Form.Item  name="RegionCode">
-         <RegionList style={{width:'100%'}}/>
+         <RegionList test style={{width:'100%'}}/>
          </Form.Item>
          <Form.Item  name="Status">
          <Select placeholder='完成状态' allowClear>

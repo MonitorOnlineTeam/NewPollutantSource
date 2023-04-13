@@ -46,7 +46,7 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 import { Right } from '@/utils/icon';
-import AlarmPushRel from '@/components/AlarmPushRel';
+// import AlarmPushRel from '@/components/AlarmPushRel';
 import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel'
 
 const { Search } = Input;

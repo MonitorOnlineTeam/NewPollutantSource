@@ -147,3 +147,9 @@ export async function GetRoleCodeList(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetRoleCodeList', params, null);
   return result;
 }
+
+//行政区  列表  调试服务
+export async function GetTestXuRegions(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestXuRegions', params, null);
+  return result;
+}

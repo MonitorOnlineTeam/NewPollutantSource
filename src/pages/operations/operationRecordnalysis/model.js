@@ -14,7 +14,6 @@ export default Model.extend({
     tableDatas: [],
     tableLoading:false,
     tableTotal: 0,
-    regQueryPar:{},
     tableDatas2: [],
     tableTotal2: 0,
     tableLoading2:false,
@@ -50,7 +49,6 @@ export default Model.extend({
            tableTotal: result.Total,
            tableDatas: result.Datas&&result.Datas.DataList ? result.Datas.DataList : [],
            tableLoading:false,
-           regQueryPar:payload
         })
       }
         callback(result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [],payload)
