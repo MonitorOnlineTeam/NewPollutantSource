@@ -98,7 +98,7 @@ const Index = (props) => {
       dataIndex: 'regionName',
       key: 'regionName',
       align: 'center',
-      width:120,
+      width:'auto',
       ellipsis: true,
       render:(text,record)=>{
        return <a onClick={()=>{regDetail(record)}}>{text}</a>
@@ -109,7 +109,7 @@ const Index = (props) => {
       dataIndex: 'allCount',
       key: 'allCount',
       align: 'center',
-      width:100,
+      width:'auto',
       ellipsis: true,
     },
     {
@@ -117,7 +117,7 @@ const Index = (props) => {
       dataIndex: 'noCompleteCount',
       key: 'noCompleteCount',
       align: 'center',
-      width:100,
+      width:'auto',
       ellipsis: true,
     },
     {
@@ -125,14 +125,14 @@ const Index = (props) => {
       dataIndex: 'completeCount',
       key: 'completeCount',
       align: 'center',
-      width:100,
+      width:'auto',
       ellipsis: true,
     },
     {
       title: '核查完成率',
       dataIndex: 'rate',
       key: 'rate',
-      width: 105,
+      width: 200,
       align:'center',
       sorter: (a, b) => a.rate - b.rate,
       render: (text, record) => {
@@ -244,7 +244,7 @@ const Index = (props) => {
       dataIndex: 'province',
       key: 'province',
       align: 'center',
-      width:120,
+      width:'auto',
       ellipsis: true,
     },
     {
@@ -252,6 +252,7 @@ const Index = (props) => {
       dataIndex: 'city',
       key: 'city',
       align: 'center',
+      width:'auto',
       ellipsis: true,
     },
     {
@@ -259,7 +260,7 @@ const Index = (props) => {
       dataIndex: 'entName',
       key: 'entName',
       align: 'center',
-      width:100,
+      width:'auto',
       ellipsis: true,
     },
     {
@@ -267,7 +268,7 @@ const Index = (props) => {
       dataIndex: 'pointName',
       key: 'pointName',
       align: 'center',
-      width:100,
+      width:'auto',
       ellipsis: true,
     },
     {
@@ -275,7 +276,7 @@ const Index = (props) => {
       dataIndex: 'operationName',
       key: 'operationName',
       align: 'center',
-      width:100,
+      width:'auto',
       ellipsis: true,
     },
     {
@@ -283,20 +284,20 @@ const Index = (props) => {
       dataIndex: 'noCompleteCount',
       key: 'noCompleteCount',
       align: 'center',
-      width:100,
+      width:'auto',
     },
     {
       title: '完成数',
       dataIndex: 'completeCount',
       key: 'completeCount',
       align: 'center',
-      width:100,
+      width:'auto',
     },
     {
       title: '核查完成率',
       dataIndex: 'rate',
       key: 'rate',
-      width: 105,
+      width:150,
       align:'center',
       sorter: (a, b) => a.rate - b.rate,
       render: (text, record) => {

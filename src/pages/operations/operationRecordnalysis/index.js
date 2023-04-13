@@ -187,7 +187,7 @@ const Index = (props) => {
 
   const regDetail = (row) => {
     setRegDetailVisible(true)
-    setRegDetailTitle(`${record.ProvinceName}-统计${regQueryPar.Btime&&moment(regQueryPar.Btime).format('YYYY-MM-DD')}~${regQueryPar.Etime&&moment(regQueryPar.Etime).format('YYYY-MM-DD')}内${title}内运维记录`)
+    setRegDetailTitle(`${row.ProvinceName}-统计${regQueryPar.Btime&&moment(regQueryPar.Btime).format('YYYY-MM-DD')}~${regQueryPar.Etime&&moment(regQueryPar.Etime).format('YYYY-MM-DD')}内运维记录`)
     setRegionCode(row.ProvinceCode)
     onFinish(row.ProvinceCode)
   }

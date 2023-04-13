@@ -67,7 +67,7 @@ export default Model.extend({
       if (result.IsSuccess) { 
         let item = result.Datas;
         let data = [item.coordinationComparisonCount,item.cooperationInspectionCount,
-                     item.matchingComparisonCount,
+                    //  item.matchingComparisonCount,
                       item.calibrationTestCount, item.maintainCount,item.repairCount,
                       item.calibrationCount,item.inspectionCount,
                     ]

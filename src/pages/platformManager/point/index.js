@@ -832,7 +832,7 @@ export default class MonitorPoint extends Component {
             createTime3: res && res.CreateTime,
             updUserName3: res && res.UpdUserName,
             updTime3: res && res.UpdTime,
-            pointCoefficientFlag: res && res.PointCoefficient ? true : false,
+            pointCoefficientFlag: res && res.PointCoefficient && !this.state.isSuperAdministrator ? true : false,
           })
         }
       })
