@@ -990,7 +990,6 @@ class NavigationTree extends Component {
  
     return (
       <div>
-
         <Drawer
           // title="导航菜单"
           placement={floats == 'leftmenu' ? 'right' : 'left'}
@@ -1054,21 +1053,6 @@ class NavigationTree extends Component {
             <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
           </Radio.Group>
           <Divider />
-          <div visible style={{
-            position: 'absolute',
-            top: '30%',
-            right: floats == 'leftmenu' ? '320px' : null,
-            left: floats == 'topmenu' ? '320px' : null,
-            display: 'flex',
-            width: '18px',
-            height: '48px',
-            size: '16px',
-            align: 'center',
-            textAlign: 'center',
-            background: '#1890FF',
-            borderRadius: floats == 'topmenu' ? '0 4px 4px 0' : '4px 0 0 4px',
-            cursor: 'pointer',
-          }} onClick={this.changeState}><a ><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
           {this.state.treeVis ? <div >
             {
               this.props.EntAndPointLoading ? <Spin
@@ -1134,7 +1118,24 @@ class NavigationTree extends Component {
           }
 
         </Drawer>
-
+        <div visible style={{
+            position: 'absolute',
+            top: '50vh',
+            zIndex:1000,
+            right: floats == 'leftmenu' ?  this.state.visible ? '296px' : '-24px' : null,
+            left: floats == 'topmenu' ? this.state.visible ? '296px' : '-24px' : null,
+            transition: 'all  0.3s cubic-bezier(0.7, 0.3, 0.1, 1) 0s, box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1) 0s',
+            display: 'flex',
+            width: '18px',
+            height: '48px',
+            size: '16px',
+            align: 'center',
+            textAlign: 'center',
+            background: '#1890FF',
+            borderRadius: floats == 'topmenu' ? '0 4px 4px 0' : '4px 0 0 4px',
+            cursor: 'pointer',
+          }} onClick={this.changeState}><a><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a>
+          </div>
       </div>
     );
   }

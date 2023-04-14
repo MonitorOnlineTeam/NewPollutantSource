@@ -289,12 +289,12 @@ const Index = (props) => {
       key: 'calibrationCycleName',
       align: 'center',
     },
-    {
-      title: '参数核对派单频次',
-      dataIndex: 'parameterCheckName',
-      key: 'parameterCheckName',
-      align: 'center',
-    },
+    // {
+    //   title: '参数核对派单频次',
+    //   dataIndex: 'parameterCheckName',
+    //   key: 'parameterCheckName',
+    //   align: 'center',
+    // },
     {
       title: '运维合同起始日期',
       dataIndex: 'operationBeginTime',
@@ -825,7 +825,7 @@ const Index = (props) => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={12}>
+            {/* <Col span={12}>
               <Form.Item label="参数核对派单频次" name="ParameterCheck" rules={[{ required: true, message: '请选择参数核对频次!', },]} >
                 <Select placeholder="请选择参数核对频次" disabled>
                   {cycleList[0] && cycleList.map(item => {
@@ -834,7 +834,7 @@ const Index = (props) => {
                   }
                 </Select>
               </Form.Item>
-            </Col>
+            </Col> */}
             {/* </Row> */}
 
             {/* <Row> */}

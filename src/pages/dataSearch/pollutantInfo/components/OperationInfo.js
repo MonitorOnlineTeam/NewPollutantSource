@@ -178,13 +178,13 @@ const Index = (props) => {
             align: 'center',
             ellipsis:true,
         },
-        {
-            title: '参数核对派单频次',
-            dataIndex: 'parameterCheckName',
-            key: 'parameterCheckName',
-            align: 'center',
-            ellipsis:true,
-        },
+        // {
+        //     title: '参数核对派单频次',
+        //     dataIndex: 'parameterCheckName',
+        //     key: 'parameterCheckName',
+        //     align: 'center',
+        //     ellipsis:true,
+        // },
         {
             title: '运维单位',
             dataIndex: 'company',

@@ -551,7 +551,7 @@ const Index = (props) => {
       </Drawer>
       <div onClick={() => { setDrawerVisible(!drawerVisible) }} style={{ position: 'absolute', zIndex: 999, left: drawerVisible ? 'calc(320px - 24px)' : -24, top: '50vh', background: "#1890ff", cursor: 'pointer', padding: '5px 0', borderRadius: '0 2px 2px 0', transition: 'all .2s' }}> {drawerVisible ? <CaretLeftFilled style={{ color: '#fff' }} /> : <CaretRightFilled style={{ color: '#fff' }} />}</div>
       <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+        <Card title={searchComponents()} style={{ transition: 'all  0.3s cubic-bezier(0.7, 0.3, 0.1, 1) 0s, box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1) 0s',}} >
           <SdlTable
             loading={tableLoading}
             bordered

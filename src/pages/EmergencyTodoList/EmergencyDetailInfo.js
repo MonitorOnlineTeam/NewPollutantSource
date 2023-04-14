@@ -830,7 +830,7 @@ class EmergencyDetailInfo extends Component {
             fileList: [...fileList],
         };
 
-
+        const { taskInfo } = this.props;
         return (
             <div>
                 <Card
@@ -870,11 +870,6 @@ class EmergencyDetailInfo extends Component {
                                 (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null : (<Divider style={{ marginBottom: 20 }} />)
                             }
 
-                            {
-
-                                (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
-                                    <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
-                            }
                         </Card>
                         <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 8, }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
@@ -884,7 +879,7 @@ class EmergencyDetailInfo extends Component {
                                 </Description>
                             </DescriptionList>
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>运维台账记录</span>} style={{ marginTop: 8, }}>
+                        {isExistTask && this.renderItem(RecordTypeInfo, isExistTask ? this.props.taskInfo.Datas[0].TaskID : null, this.props.taskInfo.Datas[0].PollutantType) && this.renderItem(RecordTypeInfo, isExistTask ? this.props.taskInfo.Datas[0].TaskID : null, this.props.taskInfo.Datas[0].PollutantType)[0] && <Card title={<span style={{ fontWeight: '900' }}>运维台账记录</span>} style={{ marginTop: 8, }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
                                     {
@@ -903,6 +898,14 @@ class EmergencyDetailInfo extends Component {
                                     {isExistTask ? this.GetHelpersPeople(this.props.taskInfo.Datas[0].TaskHelpersPeople) : null}
                                 </Description>
                             </DescriptionList>
+                        </Card>}
+                        <Card title={<span style={{ fontWeight: '900' }}>报警记录</span>} style={{ marginTop: 8, }}>
+                            { //报警记录
+
+                                // (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
+                                   
+                                isExistTask&&taskInfo.Datas[0].TaskFromText==='报警记录'&&<Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
+                            }
                         </Card>
                         <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 8, }}>
                             {
@@ -914,14 +917,14 @@ class EmergencyDetailInfo extends Component {
                                 />)
                             }
                         </Card>
-                        <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 8,}}>
+                        {isExistTask && taskInfo.Datas[0].TaskFromText == '手动创建' && taskInfo.Datas[0].OperationEnt == '雪迪龙' && <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 8, }}>
                             <Table
                                 bordered
                                 columns={this.column}
                                 dataSource={isExistTask ? this.props.taskInfo.Datas[0].appList : []}
                                 pagination={false}
                             />
-                        </Card>
+                        </Card>}
                         <Card title={<span style={{ fontWeight: '900' }}>日志表</span>} style={{ marginTop: 8, }}>
                             {
                                 <Steps width={this.stepsWidth(TaskLogList)} style={{ overflowX: 'scroll' }}>
@@ -969,7 +972,7 @@ class EmergencyDetailInfo extends Component {
                                 photoIndex: (photoIndex + 1) % ImageList.length,
                             })
                         }
-                        imageTitle={`${photoIndex+1}/${ImageList.length}`}
+                        imageTitle={`${photoIndex + 1}/${ImageList.length}`}
                     />
                 )}
 
