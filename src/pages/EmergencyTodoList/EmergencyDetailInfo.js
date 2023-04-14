@@ -911,7 +911,7 @@ class EmergencyDetailInfo extends Component {
                          */
                          }
                         {isExistTask&&taskInfo.Datas[0].TaskFromText==='报警响应'&&<Card title={<span style={{ fontWeight: '900' }}>报警记录</span>} style={{ marginTop: 8, }}>
-                          <Table rowKey={(record, index) => `complete${index}`}  dataSource={AlarmList} pagination={false} columns={columns} />
+                          <Table rowKey={(record, index) => `complete${index}`} bordered dataSource={AlarmList} pagination={false} columns={columns} />
                         </Card>}
                         <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 8, }}>
                             {
