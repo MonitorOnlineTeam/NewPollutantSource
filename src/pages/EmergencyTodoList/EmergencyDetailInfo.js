@@ -730,16 +730,19 @@ class EmergencyDetailInfo extends Component {
             width: 100,
             dataIndex: 'FirstAlarmTime',
             key: 'FirstAlarmTime',
+            align: 'center',
         }, {
             title: '最后一次报警时间',
             width: 100,
             dataIndex: 'LastAlarmTime',
             key: 'LastAlarmTime',
+            align: 'center',
         }, {
             title: '报警类型',
             width: 100,
             dataIndex: 'AlarmType',
             key: 'AlarmType',
+            align: 'center',
             render: (text, row, index) => {
                 switch (text) {
                     case '0':
@@ -779,11 +782,13 @@ class EmergencyDetailInfo extends Component {
             dataIndex: 'AlarmCount',
             width: 100,
             key: 'AlarmCount',
+            align: 'center',
         }, {
             title: '异常描述',
             dataIndex: 'AlarmMsg',
             width: 200,
             key: 'AlarmMsg',
+            align: 'center',
         }];
         if (this.props.taskInfo.Datas[0].AlarmList && this.props.taskInfo.Datas[0].AlarmList.length > 0) {
             // 超标列
@@ -906,7 +911,7 @@ class EmergencyDetailInfo extends Component {
                          */
                          }
                         {isExistTask&&taskInfo.Datas[0].TaskFromText==='报警响应'&&<Card title={<span style={{ fontWeight: '900' }}>报警记录</span>} style={{ marginTop: 8, }}>
-                          <Table rowKey={(record, index) => `complete${index}`} style={{ backgroundColor: 'white' }} bordered={false} dataSource={AlarmList} pagination={false} columns={columns} />
+                          <Table rowKey={(record, index) => `complete${index}`}  dataSource={AlarmList} pagination={false} columns={columns} />
                         </Card>}
                         <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 8, }}>
                             {
