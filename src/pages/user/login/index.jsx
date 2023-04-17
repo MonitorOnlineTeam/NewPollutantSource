@@ -63,6 +63,7 @@ class Login extends Component {
         type: 'userLogin/login',
         payload: { ...values,IsAgree:isAgree, type },
         callback:isSuccess=>{
+           if(!isSuccess){this.child&&this.child.current&&this.child.current.click();}  //请求错误刷新验证码
            this.setState({loginSuccess:isSuccess})
            dispatch({
             type: 'common/updateState',
@@ -73,6 +74,7 @@ class Login extends Component {
             payload:{regionList:[],}
            })
         }
+      
       });
     }
   };

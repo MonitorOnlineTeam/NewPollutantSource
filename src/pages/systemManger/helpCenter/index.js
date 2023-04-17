@@ -34,7 +34,6 @@ const dvaPropsData = ({ loading, helpCenter }) => ({
   listData: helpCenter.questionListData,
   listDataTotal: helpCenter.questionListTotal,
   questionTypeTitle: helpCenter.questionTypeTitle,
-  // questTypeFirstLevel: helpCenter.questTypeFirstLevel,
   questTypeSecondLevel: helpCenter.questTypeSecondLevel,
 })
 
@@ -86,15 +85,14 @@ const Index = (props) => {
     props.getQuestionType({}, (data) => {
       const defaultExpandedKeys =  getExpandedKey(data, []) //默认全部展开
       setExpandedKeys(defaultExpandedKeys)
-      if (data[2] && data[2].children && data[2].children[0].children[0]) {
-        const selectKey = data[2].children[0].children[0].key
-        setSelectedKey([selectKey]) //默认选中 平台使用
-        props.updateState({
-          questionTypeTitle: data[2].children[0].children[0].title,
-          // questTypeFirstLevel: data[2].children[0].type,
-          questTypeSecondLevel: data[2].children[0].children[0].type,
-        })
-      }
+      // if (data[2] && data[2].children && data[2].children[0].children[0]) {
+      //   const selectKey = data[2].children[0].children[0].key
+      //   setSelectedKey([selectKey]) //默认选中 平台使用
+      //   props.updateState({
+      //     questionTypeTitle: data[2].children[0].children[0].title,
+      //     questTypeSecondLevel: data[2].children[0].children[0].type,
+      //   })
+      // }
     })
   }, []);
 
@@ -138,7 +136,6 @@ const Index = (props) => {
 
   const [expandedKeys, setExpandedKeys] = useState([])
   const onSelect = (selectedKeys, info) => {
-    console.log(info)
     if (info.node.children && info.node.children[0]) {
       if (info.node.expanded) { //展开状态 再次点击收缩
         const expandData = expandedKeys.filter(item => item != selectedKeys)
@@ -148,13 +145,11 @@ const Index = (props) => {
       }
       return;
     }
-
-    setSelectedKey(selectedKeys)
     const data = info.node;
+    setSelectedKey(selectedKeys)
     props.updateState({
-      questionTypeTitle: data.titles,
-      // questTypeFirstLevel: data.parentType,
-      questTypeSecondLevel: data.type,
+      questionTypeTitle: info.selected ? data.titles : '总览',
+      questTypeSecondLevel: info.selected ? data.type : undefined,
     })
   };
 
@@ -167,10 +162,10 @@ const Index = (props) => {
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState(20)
   useEffect(() => {
-    if (questTypeSecondLevel) {
+    // if (questTypeSecondLevel) {
       setPageIndex(1)
       getQuestionDetialListFun(1, pageSize, searchContent);
-    }
+    // }
 
   }, [questTypeSecondLevel,]);
 
@@ -193,8 +188,6 @@ const Index = (props) => {
       QuestionName: questionName,
       firstLevel:questTypeSecondLevel,
       status:1,
-      // firstLevel: questTypeFirstLevel,
-      // secondLevel: questTypeSecondLevel,
     }, () => { setListLoading(false) })
   }
 
@@ -230,7 +223,8 @@ const Index = (props) => {
               </Skeleton>
             </div>
             <div style={{ width: 'calc(100% - 165px)', }}>
-              {selectedKey && selectedKey[0] ? <QueList listLoading={listLoading} pageIndex={pageIndex} pageSize={pageSize} handleListChange={handleListChange} /> : <Empty style={{ height: 223, backgroundColor: '#fff', margin: 0, marginLeft: 14, paddingTop: 60, }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+              {/* {selectedKey && selectedKey[0] ? <QueList listLoading={listLoading} pageIndex={pageIndex} pageSize={pageSize} handleListChange={handleListChange} /> : <Empty style={{ height: 223, backgroundColor: '#fff', margin: 0, marginLeft: 14, paddingTop: 60, }} image={Empty.PRESENTED_IMAGE_SIMPLE} />} */}
+               <QueList listLoading={listLoading} pageIndex={pageIndex} pageSize={pageSize} handleListChange={handleListChange} /> 
             </div>
 
           </Row>

@@ -13,7 +13,7 @@ export default Model.extend({
     questTypeTreeData : [],
     questionListData:[],
     questionListTotal:0,
-    questionTypeTitle:undefined,
+    questionTypeTitle:'总览',
     questTypeFirstLevel:undefined,
     questTypeSecondLevel:undefined,
   },
@@ -24,7 +24,7 @@ export default Model.extend({
         const data = result.Datas.map(item=>{
           return {...item,content:item.QuestionName,key:item.ID }
         })
-        if(payload.firstLevel){ //防止弹框刷新
+        if(payload.pageSize!=100000){ //防止弹框刷新
          yield update({
           questionListTotal:result.Total,
           questionListData:data? data : [],

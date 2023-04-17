@@ -578,13 +578,13 @@ const Index = (props) => {
     },
     {
       title: '派单时间',
-      dataIndex: 'checkTime',
-      key: 'checkTime',
+      dataIndex: 'createTime',
+      key: 'createTime',
       align: 'center',
       ellipsis: true,
-      render: (text, record, index) => {
-        return text ? moment(text).format('YYYY-MM-DD') : undefined
-      }
+      // render: (text, record, index) => {
+      //   return text ? moment(text).format('YYYY-MM-DD') : undefined
+      // }
     },
     {
       title: '操作',
@@ -673,11 +673,15 @@ const Index = (props) => {
      setForwardTaskID(record.id)
      forwardTaskForm.resetFields()
   }
-  const forwardTaskOk = () =>{ //转发提交
-    const values =  forwardTaskForm.getFieldsValue();
-    props.retransmissionKeyParameter({ ID: forwardTaskID,...values }, (res) => {
-      setForwardTaskOkVisible(false)
-    })
+  const forwardTaskOk = async() =>{ //转发提交
+    try {
+      const values = await forwardTaskForm.validateFields();
+      props.retransmissionKeyParameter({ ID: forwardTaskID,...values }, (res) => {
+        setForwardTaskOkVisible(false)
+      })
+     } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
   }
   return (
     <div className={styles.supervisionManagerSty}>
@@ -755,7 +759,7 @@ const Index = (props) => {
         name="advanced_search3"
         layout='inline'
       >
-        <Form.Item label='转发人' name='OperationUser' style={{width:'100%'}}>
+        <Form.Item label='转发人' name='OperationUser' style={{width:'100%'}} rules={[{required:true,message:'请选择转发人'}]}>
         <OperationInspectoUserList/>
         </Form.Item>
       </Form>

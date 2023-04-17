@@ -110,8 +110,8 @@ const Index = (props) => {
         </Spin>
         :
         <Spin spinning={questionDetialLoading} active style={{ height: '100%' }}>
-          <div style={{ textAlign: 'left', fontWeight: 'bold', fontSize: 15, }}>{questionDetail.QuestionName}</div>
-          <div style={{ textAlign: 'left', color: 'rgb(194,194,194)', paddingTop: 8 }}><span>创建人：{questionDetail.CreateUserName}</span> <span style={{ paddingLeft: 22 }}>创建时间：{questionDetail.CreateTime}</span></div>
+          <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 15, }}>{questionDetail.QuestionName}</div>
+          <div style={{ textAlign: 'center', color: 'rgb(194,194,194)', paddingTop: 8 }}><span>创建人：{questionDetail.CreateUserName}</span> <span style={{ paddingLeft: 22 }}>创建时间：{questionDetail.CreateTime}</span></div>
           <div style={{ paddingTop: 12 }} dangerouslySetInnerHTML={{ __html: questionDetail.Content }}></div>
           {filesList && filesList[0] && <div>
             <span> 附件：</span>

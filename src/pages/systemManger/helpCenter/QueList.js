@@ -106,7 +106,8 @@ const Index = (props) => {
         onCancel={() => { sethelpVisible(false) }}
         className={styles.helpCenterModal}
         destroyOnClose
-        width='70%'
+        // width='70%'
+        wrapClassName='spreadOverModal'
         footer={null}
       >
         <QueDetail match={{ params: { id: id } }} /> {/*兼容移动端  */}
