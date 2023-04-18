@@ -19,11 +19,11 @@ export default class Index extends Component {
   }
   children = () => { // 运维人员 督查人员
 
-    const { type } = this.props;
+    const { type, } = this.props;
     const { operationUserList, inspectorUserList } = this.props;
     if (operationUserList.length > 0 && type == '1') { //运维人员
       return operationUserList.map(item => <Option key={item.UserId} value={item.UserId} title={item.UserName}>
-        {item.UserName}
+         {workNum? `${item.UserName} - ${item.UserAccount}` : `${item.UserName}`}
       </Option>
       );
     }

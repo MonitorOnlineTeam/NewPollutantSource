@@ -106,12 +106,13 @@ const Index = (props) => {
   const getData = (data) =>{
     const datas = [];
     if(data&&data[0]){
-     data.map(item=>{
+     data.map((item,index)=>{
       if(item.DataList&&item.DataList[0]){
          item.DataList.map((item2,index2)=>{
           datas.push({
              ...item,
              ...item2,
+             SerialNum:index + 1,
              DataList:undefined,
              count:index2==0? item.DataList.length : 0
           })
@@ -141,7 +142,7 @@ const Index = (props) => {
   const pass = (record,type) => { //整改或申诉通过
     props.updateRectificationStatus({
       ID: record.Id,
-      InspectorType:type,
+      Status:type,
     }, (isSuccess) => {
       isSuccess &&  initData('rectificat');
     })
@@ -151,8 +152,9 @@ const Index = (props) => {
   const [rejectTitle, setRejectTitle] = useState(null)
   const reject = (record,type) => { //驳回弹框
     setRejectVisible(true)
-    record.Status == '已整改'? setRejectTitle('整改驳回') : setRejectTitle('申诉驳回')
+    record.StatusName == '已整改'? setRejectTitle(`整改驳回`) : setRejectTitle(`申诉驳回`)
     form.resetFields();
+    setFilesList2([])
     form.setFieldsValue({
       ID: record.Id,
       InspectorType:type,
@@ -191,9 +193,11 @@ const Index = (props) => {
       {
         title: '序号',
         align: 'center',
+        dataIndex:'SerialNum',
+        key: 'SerialNum',
         width: 100,
         render: (text, record, index) => {
-          return rowSpanFun(index+1,record.count)
+          return rowSpanFun(text,record.count)
         }
       },
       {
@@ -271,18 +275,6 @@ const Index = (props) => {
         fixed: 'right',
         width: 180,
         ellipsis: true,
-        // render: (text, record) => {
-        //   return  <Fragment>
-        //    {(record.Status==1|| record.Status==4)&&<Popconfirm title="确定要整改通过？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,3) }} okText="是" cancelText="否">
-        //       <a>整改通过</a>
-        //     </Popconfirm>  }
-           
-        //     {record.Status==1&& <><Divider type="vertical" /><Popconfirm title="确定要整改驳回？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,4) }} okText="是" cancelText="否">
-        //       <a>整改驳回</a>
-        //     </Popconfirm></>}
-        //   </Fragment>
-           
-        // }
         render: (text, record) => {
           return (
           <div>{(text == '已整改' || text == '申诉中') &&

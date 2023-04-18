@@ -477,7 +477,7 @@ const Index = (props) => {
         />
       </Card>
   
-       <Modal wrapClassName={styles.regDetailModalSty} visible={regDetailVisible} title={regDetailTitle} onCancel={()=>{setRegDetailVisible(false)}}   width={'100%'} destroyOnClose>
+       <Modal wrapClassName={styles.regDetailModalSty} visible={regDetailVisible} title={regDetailTitle} onCancel={()=>{setRegDetailVisible(false)}} footer={null}   width={'100%'} destroyOnClose>
           <SupervisionManager isDetailModal regDetailPar={regDetailPar} match = { { path:''  } }/>
       </Modal> 
     </div>

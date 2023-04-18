@@ -171,7 +171,8 @@ const Index = (props) => {
 
 
   const [type, setType] = useState()
-  const [pushFlag, setPushFlag] = useState(true)
+  const [submitFlag, setSubmitFlag] = useState(false)
+  const [pushFlag, setPushFlag] = useState(false)
 
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
@@ -439,7 +440,8 @@ const Index = (props) => {
     tableForm.resetFields();
     setFilesList0([])
     setDetailLoading(true)
-    record.Status == 1 ? setPushFlag(false) : setPushFlag(true)
+    record.Status == 1 ? setSubmitFlag(true) : setSubmitFlag(false)
+    record.StatusName == '未推送'? setPushFlag(false) : setPushFlag(true)
     form2.setFieldsValue({
       ID: record.ID,
     })
@@ -660,7 +662,8 @@ const Index = (props) => {
     setFromVisible(true)
     setTimeout(() => {
       setType('add')
-      setPushFlag(true)
+      setSubmitFlag(false)
+      setPushFlag(false)
       setPollutantType("2");
       setDeviceInfoList([])
       form2.resetFields();
@@ -788,10 +791,10 @@ const Index = (props) => {
           })
         }else{ //提交并推送
           props.addOrEditInspectorOperation({...data, IsSubmit: 1,}, (isSuccess) => {
-            props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess) => {
+            isSuccess&&props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess2) => {
               setSaveLoading3(false)
-              isSuccess && setFromVisible(false)
-              isSuccess && onFinish()
+              isSuccess2 && setFromVisible(false)
+              isSuccess2 && onFinish()
             })
 
           })
@@ -1719,13 +1722,13 @@ const Index = (props) => {
           <Button onClick={() => { setFromVisible(false) }}>
             取消
           </Button>,
-         !pushFlag && <Button type="primary" onClick={() => { save(0) }} loading={saveLoading0 || detailLoading || pointLoading2 || false}>
+          !pushFlag&&<Button type="primary" onClick={() => { save(0) }} loading={saveLoading0 || detailLoading || pointLoading2 || false}>
             保存
           </Button>,
           <Button type="primary" onClick={() => save(pushFlag? 3 : 1)} loading={saveLoading3 || detailLoading || pointLoading2 || false} >
            {pushFlag? '提交并推送':'提交'}
           </Button>,
-          !pushFlag && <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || detailLoading || pointLoading2 || false} >
+          submitFlag && <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || detailLoading || pointLoading2 || false} >
             推送
          </Button>,
         ]}

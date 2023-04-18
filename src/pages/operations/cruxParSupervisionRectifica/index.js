@@ -319,7 +319,7 @@ const Index = (props) => {
 
       <Row style={{paddingTop:5}}>
         <Form.Item label="核查人" name="checkUser"  className='minWidth'>
-          <OperationInspectoUserList type='2' style={{ width: 150 }} />
+          <OperationInspectoUserList workNum type='2' style={{ width: 150 }} />
         </Form.Item>
         <Form.Item label="核查日期" name="time"  >
             <RangePicker_
