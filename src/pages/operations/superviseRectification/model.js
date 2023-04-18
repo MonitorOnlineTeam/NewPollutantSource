@@ -48,7 +48,7 @@ export default Model.extend({
       const result = yield call(services.UpdateRectificationStatus, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback();
+        callback(result.IsSuccess);
       } else {
         message.error(result.Message)
       }
@@ -57,7 +57,7 @@ export default Model.extend({
       const result = yield call(services.RejectInspectorRectificationInfo, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback();
+        callback(result.IsSuccess);
       } else {
         message.error(result.Message)
       }

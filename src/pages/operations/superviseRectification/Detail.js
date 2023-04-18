@@ -138,10 +138,10 @@ const Index = (props) => {
     }
     return fileList;
   }
-  const pass = (record,status) => { //整改或申诉通过
+  const pass = (record,type) => { //整改或申诉通过
     props.updateRectificationStatus({
       ID: record.Id,
-      Status:status,
+      InspectorType:type,
     }, (isSuccess) => {
       isSuccess &&  initData('rectificat');
     })
@@ -167,7 +167,7 @@ const Index = (props) => {
       }, (isSuccess) => {
         if(isSuccess){
           setRejectVisible(false)
-          props.getKeyParameterQuestionDetailList({ id: id })
+          isSuccess &&  initData('rectificat');
         }
       })
     } catch (errorInfo) {
@@ -287,7 +287,7 @@ const Index = (props) => {
           return (
           <div>{(text == '已整改' || text == '申诉中') &&
            <>
-            <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => rectification(record,record.checkStatus)} okText="是" cancelText="否">
+            <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record,text == '已整改' ? 3 : 6 )} okText="是" cancelText="否">
               <a> {text == '已整改' ? '整改通过' : '申诉通过'} </a>
             </Popconfirm>
             <Divider type="vertical" />
@@ -614,7 +614,6 @@ const Index = (props) => {
                 columns={supervisionCol(operationInfoList.PrincipleProblemList)}
                 rowClassName="editable-row"
                 pagination={false}
-                loading={tableLoading || passLoading}
               />}
               {operationInfoList.importanProblemList && operationInfoList.importanProblemList[0] && <Table
                 bordered
