@@ -303,12 +303,6 @@ const Index = (props) => {
         const issuesFlag = record.checkResult&&record.checkStatus==='提交';
         return (
           <>
-            <Tooltip title={"删除"} >
-              <Popconfirm title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                <a><DelIcon style={{ fontSize: 16 }} /></a>
-              </Popconfirm>
-            </Tooltip>
-            <Divider type="vertical" />
             <Tooltip title="核查">
               <a onClick={() => { checkDetail(record,1)  }}>
                 <AuditOutlined style={{ fontSize: 16 }} />
@@ -323,6 +317,12 @@ const Index = (props) => {
             {/* </>} */}
             <Divider type="vertical" />
             {detail}
+            <Divider type="vertical" />
+            <Tooltip title={"删除"} >
+              <Popconfirm title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                <a><DelIcon style={{ fontSize: 16 }} /></a>
+              </Popconfirm>
+            </Tooltip>
           </>
         )
       }
@@ -736,6 +736,7 @@ const Index = (props) => {
         wrapClassName='spreadOverModal'
         onCancel={() => { setForwardTaskVisible(false) }}
         destroyOnClose
+        zIndex={999}
       >
           <SdlTable
             resizable
@@ -760,7 +761,7 @@ const Index = (props) => {
         layout='inline'
       >
         <Form.Item label='转发人' name='OperationUser' style={{width:'100%'}} rules={[{required:true,message:'请选择转发人'}]}>
-        <OperationInspectoUserList/>
+        <OperationInspectoUserList workNum/>
         </Form.Item>
       </Form>
       </Modal>

@@ -462,7 +462,7 @@ const Index = (props) => {
         onPreMoveNextRequest={() =>
           setPhotoIndex((photoIndex + 1) % imgUrlList.length)
         }
-         imageTitle={`${photoIndex+1}/${ImageList.length}`}
+         imageTitle={`${photoIndex+1}/${imgUrlList.length}`}
       />}
       <Modal
         title={rejectTitle}

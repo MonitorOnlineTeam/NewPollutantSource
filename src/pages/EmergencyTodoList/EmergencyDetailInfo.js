@@ -789,6 +789,9 @@ class EmergencyDetailInfo extends Component {
             width: 200,
             key: 'AlarmMsg',
             align: 'center',
+            render:(text)=>{
+              return <div style={{textAlign:'left'}}>{text}</div>
+            }
         }];
         if (this.props.taskInfo.Datas[0].AlarmList && this.props.taskInfo.Datas[0].AlarmList.length > 0) {
             // 超标列
@@ -798,18 +801,21 @@ class EmergencyDetailInfo extends Component {
                     width: 100,
                     dataIndex: 'PollutantName',
                     key: 'PollutantName',
+                    align: 'center',
                 });
                 columns = columns.concat({
                     title: '超标值',
                     width: 100,
                     dataIndex: 'AlarmValue',
                     key: 'AlarmValue',
+                    align: 'center',
                 });
                 columns = columns.concat({
                     title: '标准值',
                     width: 100,
                     dataIndex: 'StandardValue',
                     key: 'StandardValue',
+                    align: 'center',
                 });
             }
             // 异常列
@@ -819,12 +825,14 @@ class EmergencyDetailInfo extends Component {
                     width: 100,
                     dataIndex: 'PollutantName',
                     key: 'PollutantName',
+                    align: 'center',
                 });
                 columns = columns.concat({
                     title: '异常类型',
                     width: 100,
                     dataIndex: 'MsgType',
                     key: 'MsgType',
+                    align: 'center',
                 });
             }
         }
@@ -871,9 +879,9 @@ class EmergencyDetailInfo extends Component {
                             </DescriptionList>
                             {/* <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
                             </DescriptionList> */}
-                            {
+                            {/* {
                                 (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null : (<Divider style={{ marginBottom: 20 }} />)
-                            }
+                            } */}
 
                         </Card>
                         <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 8, }}>
@@ -911,7 +919,7 @@ class EmergencyDetailInfo extends Component {
                          */
                          }
                         {isExistTask&&taskInfo.Datas[0].TaskFromText==='报警响应'&&<Card title={<span style={{ fontWeight: '900' }}>报警记录</span>} style={{ marginTop: 8, }}>
-                          <Table rowKey={(record, index) => `complete${index}`} bordered dataSource={AlarmList} pagination={false} columns={columns} />
+                          <Table size='small' rowKey={(record, index) => `complete${index}`} bordered dataSource={AlarmList} pagination={false} columns={columns} />
                         </Card>}
                         <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 8, }}>
                             {
@@ -925,6 +933,7 @@ class EmergencyDetailInfo extends Component {
                         </Card>
                         {isExistTask && taskInfo.Datas[0].TaskFromText == '手动创建' && taskInfo.Datas[0].OperationEnt == '雪迪龙' && <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 8, }}>
                             <Table
+                                size='small'
                                 bordered
                                 columns={this.column}
                                 dataSource={isExistTask ? this.props.taskInfo.Datas[0].appList : []}

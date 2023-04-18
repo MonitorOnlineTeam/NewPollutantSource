@@ -14,7 +14,6 @@ export default Model.extend({
     parametersList: [],
     tableLoading: false,
     tableTotal: 0,
-    operationInfoList:[],
   },
   effects: {
     *getInspectorRectificationManageList({ payload, callback }, { call, put, update }) { //列表
@@ -54,5 +53,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    *rejectInspectorRectificationInfo({ payload, callback }, { call, put, update }) { //整改驳回或申述驳回
+      const result = yield call(services.RejectInspectorRectificationInfo, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback();
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
+  
 })

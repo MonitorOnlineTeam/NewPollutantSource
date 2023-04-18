@@ -24,3 +24,8 @@ export async function UpdateRectificationStatus(params) {
   return result;
 }
 
+//整改驳回或申述驳回
+export async function RejectInspectorRectificationInfo (params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/RejectInspectorRectificationInfo ',params, null);
+  return result;
+}

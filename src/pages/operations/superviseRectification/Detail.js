@@ -4,7 +4,7 @@
  * 创建时间：2022.11.24
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tabs, Typography, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm,Upload, Form, Tabs, Typography, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -18,6 +18,7 @@ import { getAttachmentArrDataSource } from '@/utils/utils';
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import AttachmentView from '@/components/AttachmentView'
+import cuid from 'cuid';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -31,7 +32,8 @@ const namespace = 'superviseRectification'
 
 const dvaPropsData = ({ loading, superviseRectification, global, common }) => ({
   detailLoading: loading.effects[`${namespace}/getInspectorRectificationView`],
-  statusLoading: loading.effects[`${namespace}/updateRectificationStatus`] || false,
+  passLoading: loading.effects[`${namespace}/updateRectificationStatus`] || false,
+  saveLoading: loading.effects[`${namespace}/rejectInspectorRectificationInfo`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -57,6 +59,21 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
+    rejectInspectorRectificationInfo: (payload, callback) => { //整改驳回或申述驳回 
+      dispatch({
+        type: `${namespace}/rejectInspectorRectificationInfo`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    deleteAttach: (file) => { //删除照片
+      dispatch({
+        type: "autoForm/deleteAttach",
+        payload: {
+          Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
+        }
+      })
+    },
   }
 }
 
@@ -66,27 +83,45 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-  const { detailLoading, ID, pollutantType, statusLoading, } = props;
+  const { detailLoading, ID, pollutantType, statusLoading,saveLoading,passLoading, } = props;
 
-  const [operationInfoList, setOperationInfoList] = useState([])
-  const [infoList, seInfoList] = useState(null)
-
+  const [operationInfoList, setOperationInfoList] = useState({})
+  const [infoList, seInfoList] = useState(null) 
+  const [form] = Form.useForm();
 
   useEffect(() => {
     initData();
   }, []);
-   
+    
   const initData = (isRectificat) =>{
     props.getInspectorRectificationView({ ID: ID }, (data) => {
-      setOperationInfoList(data)
+      
+      const principleProblemData =  getData(data.PrincipleProblemList)
+      const importanProblemData  =  getData(data.importanProblemList)
+      const commonlyProblemData  =  getData(data.CommonlyProblemList)
+      setOperationInfoList({...data,CommonlyProblemList:commonlyProblemData,PrincipleProblemList:principleProblemData,importanProblemList:importanProblemData})
       !isRectificat&&seInfoList(data.Info && data.Info[0] ? data.Info[0] : null)
     })
   }
-  const rectification = (record,status) => { //整改通过 or  整改驳回 
-    props.updateRectificationStatus({ ID: record.Id,Status:status }, () => {
-      initData('rectificat');
+  const getData = (data) =>{
+    const datas = [];
+    if(data&&data[0]){
+     data.map(item=>{
+      if(item.DataList&&item.DataList[0]){
+         item.DataList.map((item2,index2)=>{
+          datas.push({
+             ...item,
+             ...item2,
+             DataList:undefined,
+             count:index2==0? item.DataList.length : 0
+          })
+        })
+      }
     })
   }
+    return datas;
+  }
+
 
   const TitleComponents = (props) => {
     return <div style={{ display: 'inline-block', fontWeight: 'bold', padding: '2px 4px', marginBottom: 16, borderBottom: '1px solid rgba(0,0,0,.1)' }}>{props.text}</div>
@@ -103,6 +138,50 @@ const Index = (props) => {
     }
     return fileList;
   }
+  const pass = (record,status) => { //整改或申诉通过
+    props.updateRectificationStatus({
+      ID: record.Id,
+      Status:status,
+    }, (isSuccess) => {
+      isSuccess &&  initData('rectificat');
+    })
+  }
+
+  const [rejectVisible, setRejectVisible] = useState(false)
+  const [rejectTitle, setRejectTitle] = useState(null)
+  const reject = (record,type) => { //驳回弹框
+    setRejectVisible(true)
+    record.Status == '已整改'? setRejectTitle('整改驳回') : setRejectTitle('申诉驳回')
+    form.resetFields();
+    form.setFieldsValue({
+      ID: record.Id,
+      InspectorType:type,
+    })
+ 
+  }
+  const jectOk = async () => {//整改或申诉通过 
+    try {
+      const values = await form.validateFields();
+      props.rejectInspectorRectificationInfo({
+        ...values,
+      }, (isSuccess) => {
+        if(isSuccess){
+          setRejectVisible(false)
+          props.getKeyParameterQuestionDetailList({ id: id })
+        }
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+
+  const rowSpanFun = (value,rowSpans) => {
+    let obj = {
+      children: value,
+      props: { rowSpan: rowSpans || rowSpans===0 ?rowSpans :value  },
+    };
+    return obj;
+  }
   const supervisionCol = (data) => [{
     title: <span style={{ fontWeight: 'bold', fontSize: 14 }}>
       {data[0].Title}
@@ -114,7 +193,7 @@ const Index = (props) => {
         align: 'center',
         width: 100,
         render: (text, record, index) => {
-          return index + 1
+          return rowSpanFun(index+1,record.count)
         }
       },
       {
@@ -123,12 +202,12 @@ const Index = (props) => {
         key: 'ContentItem',
         align: 'center',
         width: 380,
-        render: (text, record) => {
-          return <div style={{ textAlign: "left" }}>{text}</div>
-        },
+        render: (text, record, index) => {
+          return rowSpanFun(<div style={{ textAlign: "left" }}>{text}</div>,record.count)
+        }
       },
       {
-        title: '问题描述',
+        title: '问题/驳回描述',
         dataIndex: 'InspectorProblem',
         key: 'InspectorProblem',
         align: 'center',
@@ -137,7 +216,7 @@ const Index = (props) => {
         },
       },
       {
-        title: '问题附件',
+        title: '问题/驳回附件',
         dataIndex: 'InspectorAttachment',
         key: 'InspectorAttachment',
         align: 'center',
@@ -150,7 +229,7 @@ const Index = (props) => {
         },
       },
       {
-        title: '整改描述',
+        title: '整改/申诉描述',
         dataIndex: 'RectificationDescribe',
         key: 'RectificationDescribe',
         align: 'center',
@@ -159,7 +238,7 @@ const Index = (props) => {
         },
       },
       {
-        title: '整改附件',
+        title: '整改/申诉附件',
         dataIndex: 'RectificationAttachment',
         key: 'RectificationAttachment',
         align: 'center',
@@ -185,21 +264,39 @@ const Index = (props) => {
       },
       {
         title: <span>操作</span>,
+        
+        dataIndex: 'StatusName',
+        key:'StatusName',
         align: 'center',
         fixed: 'right',
         width: 180,
         ellipsis: true,
-        render: (text, record) => {
-          return  <Fragment>
-           {(record.Status==1|| record.Status==4)&&<Popconfirm title="确定要整改通过？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,3) }} okText="是" cancelText="否">
-              <a>整改通过</a>
-            </Popconfirm>  }
+        // render: (text, record) => {
+        //   return  <Fragment>
+        //    {(record.Status==1|| record.Status==4)&&<Popconfirm title="确定要整改通过？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,3) }} okText="是" cancelText="否">
+        //       <a>整改通过</a>
+        //     </Popconfirm>  }
            
-            {record.Status==1&& <><Divider type="vertical" /><Popconfirm title="确定要整改驳回？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,4) }} okText="是" cancelText="否">
-              <a>整改驳回</a>
-            </Popconfirm></>}
-          </Fragment>
-          
+        //     {record.Status==1&& <><Divider type="vertical" /><Popconfirm title="确定要整改驳回？" style={{ paddingRight: 5 }} onConfirm={() => { rectification(record,4) }} okText="是" cancelText="否">
+        //       <a>整改驳回</a>
+        //     </Popconfirm></>}
+        //   </Fragment>
+           
+        // }
+        render: (text, record) => {
+          return (
+          <div>{(text == '已整改' || text == '申诉中') &&
+           <>
+            <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => rectification(record,record.checkStatus)} okText="是" cancelText="否">
+              <a> {text == '已整改' ? '整改通过' : '申诉通过'} </a>
+            </Popconfirm>
+            <Divider type="vertical" />
+            <a onClick={() => { reject(record, text == '已整改' ? 1 : 2) }}>
+              <a> {text == '已整改' ? '整改驳回' : '申诉驳回'} </a>
+            </a>
+          </>
+          }</div>
+          )
         }
       },
     ]
@@ -368,12 +465,78 @@ const Index = (props) => {
   //     }
   //   },
   // ]
+  const filesCuid = form.getFieldValue('InspectorAttachment') ? form.getFieldValue('InspectorAttachment') : cuid()
+  const [filesList2, setFilesList2] = useState([])
 
+  const uploadProps2 = { // 核查问题照片附件 上传
+    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    listType: "picture-card",
+    accept: 'image/*',
+    data: {
+      FileUuid: filesCuid,
+      FileActualType: '0',
+    },
+    beforeUpload: (file) => {
+      const fileType = file?.type; //获取文件类型 type  image/*
+      if (!(/^image/g.test(fileType))) {
+        message.error(`请上传图片格式文件!`);
+        return;
+      }
+    },
+    onChange(info) {
+      const fileList = [];
+      info.fileList.map(item => {
+        if (item.response && item.response.IsSuccess) { //刚上传的
+          fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+        } else if(!item.response ){
+          fileList.push({ ...item})
+        }
+      })
+
+      if (info.file.status == 'uploading') {
+        setFilesList2(fileList)
+      }
+      if (info.file.status === 'done') {
+        form.setFieldsValue({ InspectorAttachment: filesCuid })
+        setFilesList2(fileList)
+        message.success(`${info.file.name} 上传成功`);
+      } else if (info.file.status === 'error') {
+        form.setFieldsValue({ InspectorAttachment:fileList&&fileList[0]?  filesCuid : undefined }) //有上传成功的取前面的uid 没有则表示没有上传成功的图片
+        message.error(`${info.file.name}${info.file&&info.file.response&&info.file.response.Message? info.file.response.Message : '上传失败'}`);
+        setFilesList2(fileList)
+      } else if (info.file.status === 'removed') { //删除状态
+        form.setFieldsValue({ InspectorAttachment:fileList&&fileList[0]?  filesCuid : undefined }) 
+        setFilesList2(fileList)
+      }
+    },
+    onRemove: (file) => {
+      if (!file.error) {
+        props.deleteAttach(file)
+      }
+
+    },
+    onPreview: file => { //预览
+      onPreviewImg(file, 2)
+    },
+    fileList: filesList2
+  };
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
   return (
     <div className={'detail'} >
       <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>督查整改详情</div>
 
-      <Spin spinning={detailLoading || statusLoading}>
+      <Spin spinning={detailLoading  || passLoading}>
 
         <Form
           name="basics"
@@ -451,6 +614,7 @@ const Index = (props) => {
                 columns={supervisionCol(operationInfoList.PrincipleProblemList)}
                 rowClassName="editable-row"
                 pagination={false}
+                loading={tableLoading || passLoading}
               />}
               {operationInfoList.importanProblemList && operationInfoList.importanProblemList[0] && <Table
                 bordered
@@ -481,7 +645,52 @@ const Index = (props) => {
         </div>
 
       </Spin>
+      <Modal
+        title={rejectTitle}
+        visible={rejectVisible}
+        onOk={() => { jectOk() }}
+        destroyOnClose
+        onCancel={() => { setRejectVisible(false) }}
+        width={'50%'}
+        wrapClassName={styles.rejectSty}
+        confirmLoading={props.saveLoading}
+      >
+        <Form
+          name="basics"
+          form={form}
+        >
+          <Form.Item name="ID" hidden >
+            <Input />
+          </Form.Item>
+          <Form.Item name="InspectorType" hidden >
+            <Input />
+          </Form.Item>
+          {/* <Form.Item name="AuditStatus" hidden >
+            <Input />
+          </Form.Item> */}
+          <Form.Item
+            label="核查问题描述"
+            name="InspectorProblem"
+            rules={[{ required: true, message: '请输入核查问题描述' }]}
+          >
+            <TextArea placeholder='请输入' rows={4} />
+          </Form.Item>
+          <Form.Item
+            label="核查问题照片附件"
+            name="InspectorAttachment"
+          >
+            <Upload
+              {...uploadProps2}
+            >
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>上传</div>
+              </div>
+            </Upload>
+          </Form.Item>
+        </Form>
 
+      </Modal>
     </div>
 
   );

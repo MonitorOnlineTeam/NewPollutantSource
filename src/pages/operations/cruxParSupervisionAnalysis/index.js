@@ -209,7 +209,7 @@ const Index = (props) => {
         />
       </Form.Item>
         <Form.Item label='监测点类型' name='PollutantType'>
-          <Select placeholder='请选择' style={{ width: 150 }}>
+          <Select placeholder='请选择' style={{ width: 150 }} allowClear>
             <Option key={2} value={2} >废气</Option>
             <Option key={1} value={1} >废水</Option>
           </Select>

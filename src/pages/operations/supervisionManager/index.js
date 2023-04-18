@@ -728,12 +728,13 @@ const Index = (props) => {
   const [saveLoading0, setSaveLoading0] = useState(false)
   const [saveLoading1, setSaveLoading1] = useState(false)
   const [saveLoading2, setSaveLoading2] = useState(false)
+  const [saveLoading3, setSaveLoading3] = useState(false)
 
   const save = (type) => {
     form2.validateFields().then(values => {
 
       const saveFun = () =>{
-        type == 0 ? setSaveLoading0(true) : type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
+        type == 0 ? setSaveLoading0(true) : type == 1 ? setSaveLoading1(true) :  type == 2 ? setSaveLoading2(true) : setSaveLoading3(true);
         let principleProblemList = operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList || [];
         let importanProblemList = operationInfoList.importanProblemList && operationInfoList.importanProblemList || [];
         let commonlyProblemList = operationInfoList.CommonlyProblemList && operationInfoList.CommonlyProblemList || [];
@@ -772,19 +773,27 @@ const Index = (props) => {
           InspectorOperationInfoList: [...principleProblemList, ...importanProblemList, ...commonlyProblemList],
           ...devicePar,
         }
-        type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : null;
-        if (type == 0 || type == 1) {
+        if (type == 0 || type == 1) { //保存或提交
           props.addOrEditInspectorOperation(data, (isSuccess) => {
             type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : null;
             isSuccess && setFromVisible(false)
             isSuccess && onFinish()
 
           })
-        } else { //推送
+        }else if(type == 2) { //推送
           props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess) => {
             setSaveLoading2(false)
             isSuccess && setFromVisible(false)
             isSuccess && onFinish()
+          })
+        }else{ //提交并推送
+          props.addOrEditInspectorOperation({...data, IsSubmit: 1,}, (isSuccess) => {
+            props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess) => {
+              setSaveLoading3(false)
+              isSuccess && setFromVisible(false)
+              isSuccess && onFinish()
+            })
+
           })
         }
       }
@@ -795,7 +804,7 @@ const Index = (props) => {
         saveFun()
       }).catch (errorInfo =>{
         console.log('Failed:', errorInfo); //表格表单
-        type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : setSaveLoading2(false);
+        type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) :  type == 2 ? setSaveLoading2(false) : setSaveLoading3(false);
       }) 
 
     }).catch(errorInfo => {
@@ -1182,7 +1191,7 @@ const Index = (props) => {
       {
         title: '序号',
         align: 'center',
-        width: 80,
+        width: 60,
         render: (text, record, index) => {
           return index + 1
         }
@@ -1205,7 +1214,7 @@ const Index = (props) => {
         width: 240,
         render: (text, record) => {
           return <Form.Item name={`Inspector${record.Sort}`}>
-            <Select placeholder='请选择' onChange={(val, ) => principleChange(val, record.Sort)}> <Option value={'0'}>有</Option>   <Option value={null}>无</Option>     </Select>
+            <Select  disabled={ record.Status == '已推送'} placeholder='请选择' onChange={(val, ) => principleChange(val, record.Sort)}> <Option value={'0'}>有</Option>   <Option value={null}>无</Option>     </Select>
           </Form.Item>
         },
       },
@@ -1216,19 +1225,31 @@ const Index = (props) => {
         align: 'center',
         render: (text, record) => {
           return <Form.Item className='remarkSty' name={`Remark${record.Sort}`} rules={[{ required: !principleDisabled[`${record.Sort}`], message: '请输入问题描述' }]}>
-            <TextArea rows={1} placeholder='请输入' disabled={principleDisabled[`${record.Sort}`]} />
+            <TextArea rows={1} placeholder='请输入' disabled={record.Status == '已推送' || principleDisabled[`${record.Sort}`]} />
           </Form.Item>
         },
+      },
+      {
+        title: '推送状态',
+        dataIndex: 'Status',
+        key: 'Status',
+        align: 'center',
+        width:110,
+        ellipsis: true,
+        render: (text, record, index) => {
+          return <span style={{ color: text == '未推送' ? '#f5222d' : '#52c41a' }}>{text}</span>;
+        }
       },
       {
         title: '附件',
         dataIndex: 'Attachments',
         key: 'Attachments',
         align: 'center',
-        width: 120,
+        width: 110,
         render: (text, record) => {
+          const flag = record.Status == '已推送';
           return <Form.Item name={`Files1${record.Sort}`}>
-            <a onClick={() => { setFileType(1); setFileVisible(true); setFiles1(`Files1${record.Sort}`); }}>{filesList1[`Files1${record.Sort}`] && filesList1[`Files1${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
+            <a style={{ cursor: flag && 'not-allowed', color: flag && 'rgba(0, 0, 0, 0.25) ',}}  onClick={() => { if(flag){return} setFileType(1); setFileVisible(true); setFiles1(`Files1${record.Sort}`); }}>{filesList1[`Files1${record.Sort}`] && filesList1[`Files1${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         },
       },
@@ -1247,7 +1268,7 @@ const Index = (props) => {
       {
         title: '序号',
         align: 'center',
-        width: 80,
+        width: 60,
         render: (text, record, index) => {
           return index + 1
         }
@@ -1281,7 +1302,7 @@ const Index = (props) => {
               },
             })]}>
             {/* <InputNumber placeholder='请输入' max={-0.1} /> */}
-            <Checkbox>{record.Score? `${-record.Score}分` : null }</Checkbox>
+            <Checkbox disabled={ record.Status == '已推送'}>{record.Score? `${-record.Score}分` : null }</Checkbox>
           </Form.Item>
         },
       },
@@ -1309,19 +1330,31 @@ const Index = (props) => {
                 }
               },
             })]}>
-            <TextArea rows={1} placeholder='请输入' />
+            <TextArea disabled={ record.Status == '已推送'} rows={1} placeholder='请输入' />
           </Form.Item>
         },
+      },
+      {
+        title: '推送状态',
+        dataIndex: 'Status',
+        key: 'Status',
+        align: 'center',
+        width:110,
+        ellipsis: true,
+        render: (text, record, index) => {
+          return <span style={{ color: text == '未推送' ? '#f5222d' : '#52c41a' }}>{text}</span>;
+        }
       },
       {
         title: '附件',
         dataIndex: 'Attachments',
         key: 'Attachments',
         align: 'center',
-        width: 120,
+        width: 110,
         render: (text, record) => {
+          const flag = record.Status == '已推送';
           return <Form.Item name={`Files2${record.Sort}`} >
-            <a onClick={() => { setFileType(2); setFileVisible(true); setFiles2(`Files2${record.Sort}`); }}>{filesList2[`Files2${record.Sort}`] && filesList2[`Files2${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
+            <a style={{ cursor: flag && 'not-allowed', color: flag && 'rgba(0, 0, 0, 0.25) ',}} onClick={() => {if(flag){return} setFileType(2); setFileVisible(true); setFiles2(`Files2${record.Sort}`); }}>{filesList2[`Files2${record.Sort}`] && filesList2[`Files2${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         },
       },
@@ -1339,7 +1372,7 @@ const Index = (props) => {
       {
         title: '序号',
         align: 'center',
-        width: 80,
+        width: 60,
         render: (text, record, index) => {
           return index + 1
         }
@@ -1372,7 +1405,7 @@ const Index = (props) => {
                 }
               },
             })]}>
-            <Checkbox onChange={(e)=>{
+            <Checkbox disabled={ record.Status == '已推送'} onChange={(e)=>{
                 // setTableValuesChange(!tableValuesChange)
                 // tableForm.setFieldsValue({[`Score${record.Sort}`] :e.target.checked? record.Score : null })  
             }}>
@@ -1405,19 +1438,31 @@ const Index = (props) => {
                 }
               },
             })]}>
-            <TextArea rows={1} placeholder='请输入' />
+            <TextArea disabled={ record.Status == '已推送'} rows={1} placeholder='请输入' />
           </Form.Item>
         },
+      },
+      {
+        title: '推送状态',
+        dataIndex: 'Status',
+        key: 'Status',
+        align: 'center',
+        width:110,
+        ellipsis: true,
+        render: (text, record, index) => {
+          return <span style={{ color: text == '未推送' ? '#f5222d' : '#52c41a' }}>{text}</span>;
+        }
       },
       {
         title: '附件',
         dataIndex: 'Attachments',
         key: 'Attachments',
         align: 'center',
-        width: 120,
+        width: 110,
         render: (text, record) => {
+          const flag = record.Status == '已推送';
           return <Form.Item name={`Files3${record.Sort}`} >
-            <a onClick={() => { setFileType(3); setFileVisible(true); setFiles3(`Files3${record.Sort}`); }}>{filesList3[`Files3${record.Sort}`] && filesList3[`Files3${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
+            <a style={{ cursor: flag && 'not-allowed', color: flag && 'rgba(0, 0, 0, 0.25) ',}} onClick={() => {if(flag){return} setFileType(3); setFileVisible(true); setFiles3(`Files3${record.Sort}`); }}>{filesList3[`Files3${record.Sort}`] && filesList3[`Files3${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         },
       },
@@ -1674,11 +1719,11 @@ const Index = (props) => {
           <Button onClick={() => { setFromVisible(false) }}>
             取消
           </Button>,
-          <Button type="primary" onClick={() => { save(0) }} loading={saveLoading0 || detailLoading || pointLoading2 || false}>
+         !pushFlag && <Button type="primary" onClick={() => { save(0) }} loading={saveLoading0 || detailLoading || pointLoading2 || false}>
             保存
           </Button>,
-          <Button type="primary" onClick={() => save(1)} loading={saveLoading1 || detailLoading || pointLoading2 || false} >
-            提交
+          <Button type="primary" onClick={() => save(pushFlag? 3 : 1)} loading={saveLoading3 || detailLoading || pointLoading2 || false} >
+           {pushFlag? '提交并推送':'提交'}
           </Button>,
           !pushFlag && <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || detailLoading || pointLoading2 || false} >
             推送

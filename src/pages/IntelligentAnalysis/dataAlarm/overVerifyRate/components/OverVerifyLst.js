@@ -116,6 +116,7 @@ export default class OverVerifyLst extends Component {
                   to={ level==2?
                     {
                     pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                    query: { regionCode: record.regionCode },
                   }:
                   {
                     pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel',
