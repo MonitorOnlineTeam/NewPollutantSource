@@ -52,7 +52,7 @@ const dvaDispatch = (dispatch) => {
       })
 
     },
-    updateRectificationStatus: (payload, callback) => { //修改状态
+    updateRectificationStatus: (payload, callback) => { //整改通过或申述通过 
       dispatch({
         type: `${namespace}/updateRectificationStatus`,
         payload: payload,

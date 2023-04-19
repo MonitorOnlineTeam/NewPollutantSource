@@ -46,20 +46,20 @@ export default Model.extend({
     },
     *updateRectificationStatus({ payload, callback }, { call, put, update }) { //修改状态
       const result = yield call(services.UpdateRectificationStatus, payload);
-      if (result.IsSuccess) {
+      if (result.Datas) {
         message.success(result.Message)
-        callback(result.IsSuccess);
+        callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error('数据发生改变，操作失败')
       }
     },
     *rejectInspectorRectificationInfo({ payload, callback }, { call, put, update }) { //整改驳回或申述驳回
       const result = yield call(services.RejectInspectorRectificationInfo, payload);
-      if (result.IsSuccess) {
+      if (result.Datas) {
         message.success(result.Message)
-        callback(result.IsSuccess);
+        callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error('数据发生改变，操作失败')
       }
     },
   },
