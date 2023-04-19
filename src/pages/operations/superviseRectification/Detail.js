@@ -1,5 +1,5 @@
 /**
- * 功  能：督查整改详情
+ * 功  能：核查整改详情
  * 创建人：jab
  * 创建时间：2022.11.24
  */
@@ -526,7 +526,7 @@ const Index = (props) => {
   );
   return (
     <div className={'detail'} >
-      <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>督查整改详情</div>
+      <div style={{ fontSize: 16, padding: 6, textAlign: 'center', fontWeight: 'bold' }}>核查整改详情</div>
 
       <Spin spinning={detailLoading  || passLoading}>
 

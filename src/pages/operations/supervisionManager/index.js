@@ -789,8 +789,8 @@ const Index = (props) => {
             isSuccess && setFromVisible(false)
             isSuccess && onFinish()
           })
-        }else{ //提交并推送
-          props.addOrEditInspectorOperation({...data, IsSubmit: 1,saveType:'submitPush'}, (isSuccess) => {
+        }else{ //提交并推送 IsPush 提交类型为提交并推送
+          props.addOrEditInspectorOperation({...data, IsSubmit: 1, IsPush :1, saveType:'submitPush'}, (isSuccess) => {
             isSuccess&&props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess2) => {
               setSaveLoading3(false)
               isSuccess2 && setFromVisible(false)

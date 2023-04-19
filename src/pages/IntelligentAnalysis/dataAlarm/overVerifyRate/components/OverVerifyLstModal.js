@@ -33,7 +33,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
-import PointVerifyLst from '../pointVerifyRate/components/PointVerifyLstModal'
+import PointVerifyLstModal from '../pointVerifyRate/components/PointVerifyLstModal'
 import RegionList from '@/components/RegionList';
 
 const { Search } = Input;
@@ -87,6 +87,8 @@ export default class OverVerifyLstModal extends Component {
       columns: [],
       beginTime:props.beginTime,
       endTime:props.endTime,
+      showDetails:false,
+      regionLevel:'',
     };
   }
 
@@ -121,16 +123,12 @@ export default class OverVerifyLstModal extends Component {
             render: (text, record) => {
               return <a onClick={()=>{
                 const {  overVerifyRateForm: {  PollutantType,RegionCode, }, } = this.props;
-                console.log(overVerifyRateForm,record.regionCode)
                 if(!this.state.regionLevel){ //省进入市
                   this.setState({
                   regionLevel: 2,
                   RegionCode: record.regionCode
                 },()=>{
-                  this.updateQueryState({
-                    RegionCode: record.regionCode,
-                  });
-                  this.initData(PollutantType);
+                  this.initData(PollutantType,record.regionCode);
                 })
               }else{  //进入监测点
                 console.log(overVerifyRateForm)
@@ -226,28 +224,45 @@ export default class OverVerifyLstModal extends Component {
       },
     });
   };
-  initData = (type) => {
+  initData = (type,regionCode) => {
     const { dispatch, location, Atmosphere, } = this.props;
    
-    const {RegionCode,regionLevel } = this.state;
+    const {regionLevel } = this.state;
     // dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
 
-    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: ''} }); //获取关注列表
-
+    if(!regionCode){ //初始页面
+      dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: ''} }); //获取关注列表
+      this.setState({showDetails:false,regionLevel:''})
+    }
     this.updateQueryState({
       PollutantType: type,
       OperationPersonnel:'',
-      RegionCode:'',
+      RegionCode:regionCode,
       regionLevel:'',
       // beginTime: moment()
       // .subtract(7, 'days')
       // .format('YYYY-MM-DD 00:00:00'),
       // endTime: moment().format('YYYY-MM-DD 23:59:59'),
     });
+    
     setTimeout(() => {
       this.getTableData();
     });
   };
+  originalData = () =>{
+    this.updateQueryState({
+      PollutantType: type,
+      OperationPersonnel:'',
+      RegionCode:regionCode,
+      regionLevel:'',
+      // beginTime: moment()
+      // .subtract(7, 'days')
+      // .format('YYYY-MM-DD 00:00:00'),
+      // endTime: moment().format('YYYY-MM-DD 23:59:59'),
+    });
+  }
+
+
   updateQueryState = payload => {
     const { overVerifyRateForm, dispatch } = this.props;
 
@@ -652,12 +667,12 @@ export default class OverVerifyLstModal extends Component {
           footer={null}
           wrapClassName='spreadOverModal'
           destroyOnClose
-          onCancel={TCancle}>
+          onCancel={()=>{TCancle(); }}>
             {
               !this.state.showDetails && this.showModal()
             }
             {
-              this.state.showDetails && <PointVerifyLst   RegionCode= {this.state.RegionCode }  onBack={() => {
+              this.state.showDetails && <PointVerifyLstModal   RegionCode= {this.state.RegionCode }  onBack={() => {
                 this.setState({
                   showDetails: false,
                   RegionCode: this.state.RegionCodeined,
