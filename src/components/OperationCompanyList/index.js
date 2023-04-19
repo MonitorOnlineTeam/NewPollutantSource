@@ -20,9 +20,11 @@ class Index extends Component {
 
   componentDidMount() {
     
-    const { operationCompanyList,noFirst, } = this.props;
- 
-    if(noFirst){ return }
+    const { operationCompanyList, } = this.props;
+    // if(operationCompanyList&&operationCompanyList[0]){ //已经请求的数据 不再请求 缓存数据 默认值问题
+    //   this.props.getDefaultOpration && this.props.getDefaultOpration(operationCompanyList[0].id)
+    //   return
+    // }
     this.props.dispatch({
       type: 'operations/getOperationCompanyList',//获取运维单位列表
       payload: { PointMark: '2', RegionCode: '' },

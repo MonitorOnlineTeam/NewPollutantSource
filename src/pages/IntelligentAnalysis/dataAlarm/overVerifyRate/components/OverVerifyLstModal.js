@@ -119,21 +119,24 @@ export default class OverVerifyLstModal extends Component {
             align: 'center',
             width: 200,
             render: (text, record) => {
-              let RegionCode = text =='全部合计'? '': record.regionCode;
               return <a onClick={()=>{
-
+                const {  overVerifyRateForm: {  PollutantType,RegionCode, }, } = this.props;
+                console.log(overVerifyRateForm,record.regionCode)
                 if(!this.state.regionLevel){ //省进入市
                   this.setState({
                   regionLevel: 2,
-                  RegionCode: RegionCode
+                  RegionCode: record.regionCode
                 },()=>{
-                  const {  overVerifyRateForm: {  PollutantType, }, } = this.props;
+                  this.updateQueryState({
+                    RegionCode: record.regionCode,
+                  });
                   this.initData(PollutantType);
                 })
-              }else{
+              }else{  //进入监测点
+                console.log(overVerifyRateForm)
                 this.setState({
                   regionLevel: '',
-                  RegionCode: RegionCode
+                  RegionCode:  text =='全部合计'? RegionCode: record.regionCode,
                 },()=>{
                   this.setState({
                      showDetails:true

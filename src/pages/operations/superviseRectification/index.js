@@ -1,5 +1,5 @@
 /**
- * 功  能：督查整改列表
+ * 功  能：系统设施核查整改
  * 创建人：jab
  * 创建时间：2022.11.24
  */
@@ -44,7 +44,7 @@ const dvaPropsData = ({ loading, superviseRectification, global, common, point, 
   pointParamesLoading: loading.effects[`${namespace}/getPointParames`],
   infoloading: loading.effects[`${namespace}/getInspectorOperationInfoList`],
   userLoading: loading.effects[`common/getUserList`],
-  entLoading: common.entLoading,
+  entLoading: common.noFilterEntLoading,
   clientHeight: global.clientHeight,
   exportLoading: loading.effects[`${namespace}/exportInspectorRectificationManage`],
 })
@@ -60,13 +60,6 @@ const dvaDispatch = (dispatch) => {
     getPointByEntCode: (payload, callback) => { //监测点
       dispatch({
         type: `remoteSupervision/getPointByEntCode`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    getEntNoFilterList: (payload, callback) => { //企业
-      dispatch({
-        type: `common/getEntNoFilterList`,
         payload: payload,
         callback: callback
       })
@@ -234,16 +227,6 @@ const Index = (props) => {
 
 
 
-  const [entLoading2, setEntLoading2] = useState(false)
-  const [entList, setEntList] = useState([])
-  const getEntList = (pollutantType, callback) => {
-    setEntLoading2(true)
-    props.getEntNoFilterList({ RegionCode: '', PollutantType: pollutantType }, (data) => {
-      setEntList(data)
-      setEntLoading2(false);
-      callback && callback();
-    })
-  }
 
 
 

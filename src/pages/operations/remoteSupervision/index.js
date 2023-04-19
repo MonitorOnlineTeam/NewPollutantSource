@@ -52,14 +52,13 @@ const dvaPropsData = ({ loading, remoteSupervision, global, common,autoForm }) =
   editLoading: loading.effects[`${namespace}/getConsistencyCheckInfo`] || false,
   pointListByEntCode: common.pointListByEntCode,
   clientHeight: global.clientHeight,
-  entList: remoteSupervision.entList,
   addDataConsistencyData: remoteSupervision.addDataConsistencyData,
   addRealTimeData: remoteSupervision.addRealTimeData,
   addParconsistencyData: remoteSupervision.addParconsistencyData,
   consistencyCheckDetail: remoteSupervision.consistencyCheckDetail,
   tableInfo:autoForm.tableInfo,
   exportLoading: loading.effects[`${namespace}/exportRemoteInspectorList`],
-
+  entLoading:common.noFilterEntLoading,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -1036,7 +1035,7 @@ const Index = (props) => {
     // }
   }
 
-  const { entList, entLoading } = props;
+  const {  entLoading } = props;
   const [dasChecked, setDasChecked] = useState(false)
   const onDasChange = (e) => { //DAS量程
     setDasChecked(e.target.checked)
@@ -2142,9 +2141,11 @@ const Index = (props) => {
               <Form.Item label='行政区' name='RegionCode' className='regSty'>
                 <RegionList noFilter  levelNum={2} style={{ width: 150}}/>
               </Form.Item>
+              <Spin spinning={entLoading} size='small' style={{ top: -8, left: 20 }}>
               <Form.Item label='企业' name='EntCode'>
                 <EntAtmoList noFilter style={{ width: 200}}/>
               </Form.Item>
+              </Spin>
               <Spin spinning={pointLoading} size='small' style={{ top: -8, left: 20 }}>
                 <Form.Item label='监测点名称' name='DGIMN' >
 
@@ -2236,9 +2237,11 @@ const Index = (props) => {
         >
 
           <Row className={styles.queryPar}>
+          <Spin spinning={entLoading} size='small' style={{ top: -8, left: '6%'  }}>
             <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称' }]}>
               <EntAtmoList noFilter allowClear={false} style={{width:200}}/>
             </Form.Item>
+            </Spin>
             <Spin spinning={pointLoading2} size='small' style={{ top: -8, left: '12.5%' }}>
               <Form.Item label='监测点名称' name='DGIMN'  style={{margin:'0 8px'}} rules={[{ required: true, message: '请选择监测点名称!' }]} >
                 <Select  placeholder='请选择' showSearch optionFilterProp="children" style={{width:200}}>

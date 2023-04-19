@@ -50,9 +50,9 @@ export default Model.extend({
       }
     },
     *addOrEditInspectorOperation({ payload, callback }, { call, put, update }) { //添加或修改督查模板
-      const result = yield call(services.AddOrEditInspectorOperation, payload);
+      const result = yield call(services.AddOrEditInspectorOperation, {...payload,saveType:undefined});
       if (result.IsSuccess) {
-        message.success(result.Message)
+        !payload.saveType&&message.success(result.Message)
         callback(result.IsSuccess)
       } else {
         message.error(result.Message)

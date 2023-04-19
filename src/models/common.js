@@ -17,13 +17,15 @@ export default Model.extend({
     industryTreeList: [],
     entAndPointList: [],
     atmoStationList: [],
-    priseList: [],
+    entList: [],
+    entLoading:true,
+    noFilterEntList:[],
+    noFilterEntLoading:[],
     attentionList: [],
     pointListByEntCode: [],
     pollutantListByDgimn: [],
     userList: [],
     userTotal:null,
-    entLoading:true,
     inspectorUserList:[],
     operationUserList:[],
     noFilterRegionList:[],
@@ -47,27 +49,27 @@ export default Model.extend({
       const response = yield call(services.GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          priseList: response.Datas,
+          entList: response.Datas,
           entLoading: false,
         });
       }else{
         message.error(response.Message)
-        yield update({ priseList: [], entLoading: false,  });
+        yield update({ entList: [], entLoading: false,  });
       }
     },
     *getEntNoFilterList({ payload,callback }, { call, put, update, select }) {
       //企业列表 未过滤的
-      yield update({ entLoading: true, });
+      yield update({ noFilterEntLoading: true, });
       const response = yield call(services.GetEntNoFilterList, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          priseList: response.Datas,
-          entLoading: false,
+          noFilterEntList: response.Datas,
+          noFilterEntLoading: false,
         });
         callback&&callback(response.Datas)
       }else{
         message.error(response.Message)
-        yield update({ priseList: [], entLoading: false,  });
+        yield update({ noFilterEntList: [], noFilterEntLoading: false,  });
       }
     },
     *getEntByRegionCallBack({ payload,callback }, { call, put, update, select }) {

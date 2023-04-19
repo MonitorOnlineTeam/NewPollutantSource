@@ -42,7 +42,8 @@ export default Model.extend({
     attentionList: [],
     priseList: [],
     airList: [],
-    tableDatil: { data: [] },
+    tableDatil: [],
+    tableDatilTotal:0,
   },
   subscriptions: {},
   effects: {
@@ -61,7 +62,8 @@ export default Model.extend({
       const response = yield call(GetDefectPointDetail, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          tableDatil: response.Datas,
+          tableDatil:response.Datas && response.Datas.data ? response.Datas.data : [],
+          tableDatilTotal:response.Total,
         });
       }
     },

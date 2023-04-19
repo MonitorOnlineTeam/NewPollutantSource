@@ -675,7 +675,7 @@ const Index = (props) => {
       </Col> */}
             <Col span={12}>
               <Form.Item label="所属运维单位" name="OperationCompany" rules={[{ required: true, message: '请选择所属运维单位!', },]}>
-                <OperationCompanyList getDefaultOpration={(defaultId) => { type === 'add' &&   !provinceShow && form2.setFieldsValue({ OperationCompany: defaultId })}} />
+                <OperationCompanyList getDefaultOpration={(defaultId) => {  type === 'add' &&   !provinceShow && form2.setFieldsValue({ OperationCompany: defaultId })}} />
               </Form.Item>
             </Col>
             <Col span={12}>

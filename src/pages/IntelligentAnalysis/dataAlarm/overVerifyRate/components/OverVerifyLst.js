@@ -109,14 +109,13 @@ export default class OverVerifyLst extends Component {
             align: 'center',
             width: 200,
             render: (text, record) => {
-              const { level } = this.props;
-            
+              const { level,overVerifyRateForm: {RegionCode} } = this.props;
               return (
                 <Link
                   to={ level==2?
                     {
                     pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
-                    query: { regionCode: record.regionCode },
+                    query: { regionCode: text=='全部合计'? RegionCode : record.regionCode },
                   }:
                   {
                     pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel',

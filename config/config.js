@@ -7,8 +7,8 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 // const apiHost = 'http://172.16.12.234:61002/';
-// const apiHost = 'http://172.16.12.134:63001/';     
-const apiHost = 'http://172.16.9.33:8800/'//py 本地
+const apiHost = 'http://172.16.12.134:63001/';     
+// const apiHost = 'http://172.16.9.33:8800/'//py 本地
 // const apiHost = 'http://172.16.12.53:8050' //hb 本地
 // const apiHost = 'http://172.16.12.91:61007/' //宝武集团
 // const apiHost = 'http://172.16.12.36:63003/';
@@ -1262,7 +1262,7 @@ export default {
                   component: './operations/supervisionAnalySumm',
                 },
                 {
-                  path: '/operations/superviseRectification', //督查整改列表 
+                  path: '/operations/superviseRectification', //系统设施核查整改 
                   name: 'superviseRectification',
                   component: './operations/superviseRectification',
                 },

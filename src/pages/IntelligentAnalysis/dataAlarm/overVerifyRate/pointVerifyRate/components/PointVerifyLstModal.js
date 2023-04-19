@@ -50,6 +50,7 @@ const pageUrl = {
   overVerifyRateForm: overVerifyRate.overVerifyRateForm,
   divisorList: overVerifyRate.divisorList,
   tableDatil: overVerifyRate.tableDatil,
+  tableDatilTotal: overVerifyRate.tableDatilTotal,
 }))
 export default class PointVerifyLst extends Component {
   constructor(props) {
@@ -58,6 +59,8 @@ export default class PointVerifyLst extends Component {
     this.state = {
       checkedValues: [],
       columns: [],
+      pageIndex:1,
+      pageSize:20,
     };
   }
 
@@ -183,7 +186,7 @@ export default class PointVerifyLst extends Component {
     const { dispatch, overVerifyRateForm } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...overVerifyRateForm, RegionCode: this.props.RegionCode,regionLevel:'' },
+      payload: { ...overVerifyRateForm, RegionCode: this.props.RegionCode,regionLevel:'',PageIndex:this.state.pageIndex,PageSize:this.state.pageSize, },
     });
   };
 
@@ -230,7 +233,14 @@ export default class PointVerifyLst extends Component {
   onRef1 = ref => {
     this.child = ref;
   };
-
+  handleTableChange = (PageIndex, PageSize) =>{
+    this.setState({
+      pageIndex:PageIndex,
+      pageSize:PageSize
+    },()=>{
+     this.queryClick()
+    })
+   }
   render() {
     let columns = [];
     return (
@@ -278,15 +288,16 @@ export default class PointVerifyLst extends Component {
           rowKey={(record, index) => `complete${index}`}
           loading={this.props.loading} 
           columns={this.state.columns}
-          dataSource={this.props.tableDatil.data}
+          dataSource={this.props.tableDatil}
           scroll={{  y: 'calc(100vh - 510px)',}}
-          // pagination={{
-            // showSizeChanger: true,
-            // showQuickJumper: true,
-            // sorter: true,
-            // total: this.props.total,
-            //defaultPageSize: 20,
-          // }}
+          pagination={{
+            total: this.props.tableDatilTotal,
+            pageSize: this.state.pageSize,
+            current: this.state.pageIndex,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            onChange: this.handleTableChange,
+          }}
         />
       </Card>
     );

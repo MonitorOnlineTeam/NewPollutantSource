@@ -29,7 +29,7 @@ const { RangePicker } = DatePicker;
 
 @connect(({ loading, autoForm, chaoStatistics, common }) => ({
   regionList: autoForm.regionList,
-  entList: common.priseList,
+  entList: common.entList,
   pointListByEntCode: common.pointListByEntCode,
   tableDataSource: chaoStatistics.tableDataSource,
   loading: loading.effects["chaoStatistics/getTableDataSource"],
@@ -355,13 +355,13 @@ class index extends PureComponent {
                 )} */}
                 <RegionList changeRegion={value => {
                     this.setState({ RegionCode: value }, () => { });
-                    dispatch({
+                    this.props.dispatch({
                       type: 'overAlarmDisposalRate/updateState',
                       payload: {
                         RegionCode: value,
                       },
                     });
-                  }} RegionCode={RegionCode} style={{ width: 165 }}/>
+                  }} style={{ width: 165 }}/>
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>关注程度</span>}>
                 {getFieldDecorator('AttentionCode', {

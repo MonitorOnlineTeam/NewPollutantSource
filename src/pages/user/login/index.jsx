@@ -65,20 +65,27 @@ class Login extends Component {
         callback:isSuccess=>{
            if(!isSuccess){this.child&&this.child.current&&this.child.current.click();}  //请求错误刷新验证码
            this.setState({loginSuccess:isSuccess})
-           dispatch({
-            type: 'common/updateState',
-            payload:{noFilterRegionList:[], testRegionList:[],}
-           })
-           dispatch({
-            type: 'autoForm/updateState',
-            payload:{regionList:[],}
-           })
+           this.clearCommonData();
         }
       
       });
     }
   };
-
+  clearCommonData = () =>{ //清除公共组件数据
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'common/updateState',
+      payload:{noFilterRegionList:[], testRegionList:[],operationUserList:[],inspectorUserList:[],roleList:[],entList:[],noFilterEntList:[],atmoStationList:[],}
+     })
+     dispatch({
+      type: 'autoForm/updateState',
+      payload:{regionList:[],}
+     })
+     dispatch({
+      type: 'operations/updateState',
+      payload:{operationCompanyList:[],}
+     })
+  }
   onTabChange = type => {
     this.setState({
       type,

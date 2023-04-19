@@ -28,12 +28,9 @@ export default class Index extends Component {
   }
   };
   componentDidMount() {
-      const {dispatch,noFirst,} = this.props;
-      if(!noFirst){
+      const {dispatch,roleList,} = this.props;
+      if(roleList&&roleList[0]){ return}
         dispatch({ type: 'common/getRoleCodeList', payload: {},  })  
-      }
-
-
    }
    componentDidUpdate(props) {
 

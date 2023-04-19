@@ -1,5 +1,5 @@
 /**
- * 功  能：运维督查管理 
+ * 功  能：关键参数核查整改
  * 创建人：jab
  * 创建时间：2022.02.20
  */
@@ -39,7 +39,7 @@ const namespace = 'cruxParSupervisionRectifica'
 
 const dvaPropsData = ({ loading, cruxParSupervisionRectifica, global, common, point, autoForm }) => ({
   clientHeight: global.clientHeight,
-  entLoading: common.entLoading,
+  entLoading: common.noFilterEntLoading,
   tableDatas: cruxParSupervisionRectifica.tableDatas,
   tableLoading: loading.effects[`${namespace}/getKeyParameterQuestionList`],
   tableTotal: cruxParSupervisionRectifica.tableTotal,
@@ -67,13 +67,6 @@ const dvaDispatch = (dispatch) => {
     getPointByEntCode: (payload, callback) => { //监测点
       dispatch({
         type: `remoteSupervision/getPointByEntCode`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    getEntNoFilterList: (payload, callback) => { //企业
-      dispatch({
-        type: `common/getEntNoFilterList`,
         payload: payload,
         callback: callback
       })
@@ -216,16 +209,7 @@ const Index = (props) => {
 
 
 
-  const [entLoading2, setEntLoading2] = useState(false)
-  const [entList, setEntList] = useState([])
-  const getEntList = (pollutantType, callback) => {
-    setEntLoading2(true)
-    props.getEntNoFilterList({ RegionCode: '', PollutantType: pollutantType }, (data) => {
-      setEntList(data)
-      setEntLoading2(false);
-      callback && callback();
-    })
-  }
+
 
 
   const onFinish = async (pageIndexs, pageSizes,par) => {  //查询  par参数 分页需要的参数

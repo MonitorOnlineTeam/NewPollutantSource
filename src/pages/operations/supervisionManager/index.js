@@ -44,7 +44,7 @@ const dvaPropsData = ({ loading, supervisionManager, global, common, point, auto
   pointParamesLoading: loading.effects[`${namespace}/getPointParames`],
   infoloading: loading.effects[`${namespace}/getInspectorOperationInfoList`],
   userLoading: loading.effects[`common/getUserList`],
-  entLoading: common.entLoading,
+  entLoading: common.noFilterEntLoading,
   clientHeight: global.clientHeight,
   monitoringTypeList: point.monitoringTypeList,
   systemModelList: point.systemModelList,
@@ -790,7 +790,7 @@ const Index = (props) => {
             isSuccess && onFinish()
           })
         }else{ //提交并推送
-          props.addOrEditInspectorOperation({...data, IsSubmit: 1,}, (isSuccess) => {
+          props.addOrEditInspectorOperation({...data, IsSubmit: 1,saveType:'submitPush'}, (isSuccess) => {
             isSuccess&&props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess2) => {
               setSaveLoading3(false)
               isSuccess2 && setFromVisible(false)
@@ -957,7 +957,7 @@ const Index = (props) => {
 
         <Row>
           <Form.Item label="督查人员" name="Inspector"  >
-            <OperationInspectoUserList type='2' style={{ width: 150 }} />
+            <OperationInspectoUserList  type='2' style={{ width: 150 }} />
           </Form.Item>
           <Form.Item label="督查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
             <RangePicker_
@@ -966,7 +966,7 @@ const Index = (props) => {
               format="YYYY-MM-DD" />
           </Form.Item>
           <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
-            <OperationInspectoUserList noFirst style={{ width: 150 }} />
+            <OperationInspectoUserList   noFirst style={{ width: 150 }} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
@@ -1825,7 +1825,7 @@ const Index = (props) => {
                 <Col span={12}>
                   {/* <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} > */}
                   <Form.Item label="督查人员" name="Inspector" rules={[{ required: true, message: '请输入督查人员' }]} >
-                    <OperationInspectoUserList noFirst type='2' allowClear={false} disabled />
+                    <OperationInspectoUserList   type='2' allowClear={false} disabled />
                   </Form.Item>
                   {/* </Spin> */}
                 </Col >
@@ -1837,7 +1837,7 @@ const Index = (props) => {
                 <Col span={12}>
                   {/* <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}}> */}
                   <Form.Item allowClear={false} label="运维人员" name="OperationUser" rules={[{ required: true, message: '请输入运维人员' }]}>
-                    <OperationInspectoUserList noFirst allowClear={false} />
+                    <OperationInspectoUserList   allowClear={false} />
                   </Form.Item>
                   {/* </Spin> */}
                 </Col>

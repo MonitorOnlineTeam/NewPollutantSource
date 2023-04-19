@@ -20,7 +20,7 @@ export default class Index extends Component {
   children = () => { // 运维人员 督查人员
 
     const { type, } = this.props;
-    const { operationUserList, inspectorUserList } = this.props;
+    const { operationUserList, inspectorUserList,workNum, } = this.props;
     if (operationUserList.length > 0 && type == '1') { //运维人员
       return operationUserList.map(item => <Option key={item.UserId} value={item.UserId} title={item.UserName}>
          {workNum? `${item.UserName} - ${item.UserAccount}` : `${item.UserName}`}
@@ -35,8 +35,8 @@ export default class Index extends Component {
     }
   };
   componentDidMount() {
-    const { dispatch,operationUserList,inspectorUserList,noFirst, } = this.props;
-      if(noFirst){ return }
+    const { dispatch,operationUserList,inspectorUserList,type,noFirst, } = this.props;
+      if((operationUserList && operationUserList[0]) || (inspectorUserList && inspectorUserList[0]) || noFirst){ return }
       dispatch({
         type: 'common/getInspectorUserList',
         payload: {},

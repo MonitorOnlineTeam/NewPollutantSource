@@ -1,5 +1,5 @@
 /**
- * 功  能：关键参数督查
+ * 功  能：关键参数核查（新）
  * 创建人：jab
  * 创建时间：2023.02.05
  */
@@ -38,7 +38,7 @@ const namespace = 'cruxParSupervision'
 
 
 const dvaPropsData = ({ loading, cruxParSupervision, global, common, point, autoForm }) => ({
-  entLoading: common.entLoading,
+  entLoading: common.noFilterEntLoading,
   clientHeight: global.clientHeight,
   tableDatas: cruxParSupervision.tableDatas,
   tableLoading: cruxParSupervision.tableLoading || loading.effects[`${namespace}/deleteKeyParameterCheck`] || loading.effects[`${namespace}/issuedKeyParameter`] || false,
@@ -72,13 +72,6 @@ const dvaDispatch = (dispatch) => {
     getPointByEntCode: (payload, callback) => { //监测点
       dispatch({
         type: `remoteSupervision/getPointByEntCode`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    getEntNoFilterList: (payload, callback) => { //企业
-      dispatch({
-        type: `common/getEntNoFilterList`,
         payload: payload,
         callback: callback
       })
@@ -335,16 +328,7 @@ const Index = (props) => {
 
 
 
-  const [entLoading2, setEntLoading2] = useState(false)
-  const [entList, setEntList] = useState([])
-  const getEntList = (pollutantType, callback) => {
-    setEntLoading2(true)
-    props.getEntNoFilterList({ RegionCode: '', PollutantType: pollutantType }, (data) => {
-      setEntList(data)
-      setEntLoading2(false);
-      callback && callback();
-    })
-  }
+
 
 
   const onFinish = async (pageIndexs, pageSizes,par) => {  //查询
