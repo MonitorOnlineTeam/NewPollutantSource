@@ -399,7 +399,7 @@ const Index = (props) => {
             }
             edit(record)
 
-          }} ><EditOutlined style={{ cursor: (flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') || (pushStatusFlag && 'rgba(0, 0, 0, 0.25) '), fontSize: 16 }} /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          }} ><EditOutlined style={{ cursor: (flag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) '), fontSize: 16 }} /></a> </Tooltip><Divider type="vertical" /> </Fragment>
           <Fragment>
             <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip> <Divider type="vertical" />
           </Fragment>

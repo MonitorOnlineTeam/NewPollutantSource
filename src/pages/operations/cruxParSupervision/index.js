@@ -728,7 +728,6 @@ const Index = (props) => {
             bordered
             dataSource={taskTableDatas}
             columns={taskColumns}
-            scroll={{ y: 'calc(100vh - 360px)' }}
             pagination={false}
           />
       </Modal>

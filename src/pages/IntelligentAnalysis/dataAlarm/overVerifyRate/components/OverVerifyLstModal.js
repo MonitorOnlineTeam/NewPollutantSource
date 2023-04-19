@@ -626,10 +626,11 @@ export default class OverVerifyLstModal extends Component {
               </Button>
               <Button onClick={() => {
                  this.setState({
-                  RegionCode:'',
+                   RegionCode:'',
                    regionLevel:''
                  },()=>{
-                  this.getTableData(2);
+                  // this.getTableData(2);
+                  this.initData(PollutantType);
                  })
              }} ><RollbackOutlined />返回</Button>
             </Form.Item>
