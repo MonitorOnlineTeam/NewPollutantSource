@@ -1,5 +1,5 @@
 /**
- * 功  能：设备异常率
+ * 功  能：设备完好率
  * 创建人：jab
  * 创建时间：2021.2.24
  */
@@ -34,6 +34,7 @@ const dvaPropsData =  ({ loading,equipmentAbnormalRate,global,point }) => ({
   queryPar:equipmentAbnormalRate.queryPar,
   paramCodeListLoading: loading.effects[`point/getParamCodeList`],
   coommonCol:equipmentAbnormalRate.coommonCol,
+  configInfo:global.configInfo,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -69,9 +70,9 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar,paramCodeListLoading,coommonCol } = props; 
+  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar,paramCodeListLoading,coommonCol,configInfo, } = props; 
   
-  
+  const provinceShow = configInfo&&configInfo.IsShowProjectRegion; 
   useEffect(() => {
     initData();
   
@@ -97,12 +98,12 @@ const Index = (props) => {
         beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
         endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
-        pointType:1,
+        pointType:statisType,
     })
 
  };
 
- const columns = [
+ const column =[
   {
     title: '序号',
     align:'center',
@@ -115,8 +116,9 @@ const Index = (props) => {
     dataIndex: 'regionName',
     key:'regionName',
     align:'center',
+    ellipsis:true,
     render:(text,record,index)=>{
-      return  <Button type="link" onClick={()=>{ regionDetail(record)  }} >{text}</Button>
+      return  statisType==1? <Button type="link" onClick={()=>{ regionDetail(record)  }} >{text}</Button> : text
     }
   },
   {
@@ -137,7 +139,7 @@ const Index = (props) => {
   ...coommonCol
 ]
 
-
+const [columns,setColumns] = useState([])
   const onFinish  = async () =>{  //查询
 
     try {
@@ -148,13 +150,23 @@ const Index = (props) => {
         beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
         endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
-        pointType:1,
+        pointType:statisType,
       }
         props.regGetExecptionRateList({ ...par  })
         props.updateState({
           queryPar:{ ...par }
         })
-        
+        if(statisType==1){
+          setColumns(column) 
+        }else{
+           column.splice(1,0,{
+            title: '大区',
+            dataIndex: 'largeRegionName',
+            key:'largeRegionName',
+            align:'center',
+          })
+          setColumns(column) 
+        }
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -182,18 +194,27 @@ const Index = (props) => {
       }) 
     }
   }
-
-
+  
+  const [statisType,setStatisType] = useState(1)
+  const statisTypeChange = ({ target: { value } }) =>{
+     setStatisType(value)
+  }
+  
+  useEffect(()=>{
+    props.updateState({tableDatas:[]})
+    onFinish();
+  },[statisType])
   
   return (
     <div  className={styles.equipmentAbnormalRateSty}>
    {!regionDetailVisible? <><Form
     form={form}
     name="advanced_search"
-    onFinish={onFinish}
+    onFinish={()=>{onFinish()}}
     initialValues={{
       pollutantType:type,
       time:time,
+      pointType:1,
     }}
     style={{paddingBottom:15}}
     loading={tableLoading}
@@ -211,13 +232,19 @@ const Index = (props) => {
            </Select>
        </Form.Item>
        <Form.Item>
-           <Button  type="primary" htmlType='submit' >
+           <Button  type="primary" htmlType='submit'  loading = {paramCodeListLoading || tableLoading } >
          查询
     </Button>
     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
     </Form.Item>
+    {!provinceShow&&<Form.Item>
+    <Radio.Group onChange={(e)=>{statisTypeChange(e)}} defaultValue={1} buttonStyle="solid">
+      <Radio.Button value={1}>按省统计</Radio.Button>
+      <Radio.Button value={4}>按大区统计</Radio.Button>
+    </Radio.Group>
+    </Form.Item>}
     </Row>
     <Row style={{paddingTop:8}}>
     <Form.Item label='设备参数类别' name='parameterCategory'>

@@ -154,7 +154,7 @@ export default Model.extend({
     }, 
     *exportExecptionRateList({ payload,callback }, { call, put, update }) { //导出
       const exportStatus = (flag) =>{
-        return payload.pointType==1? {exportRegLoading: flag}:
+        return payload.pointType==1 || payload.pointType==4? {exportRegLoading: flag}:
                payload.pointType==2 ? {exportRegDetailLoading: flag}:{exportPointLoading: flag}
         }
         yield update(exportStatus(true))

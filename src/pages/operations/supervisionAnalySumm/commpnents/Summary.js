@@ -447,7 +447,7 @@ const Index = (props) => {
             </Spin>}
             <Form.Item>
 
-              <Button type="primary" style={{ marginRight:8 }} loading={tableLoading} htmlType="submit">
+              <Button type="primary" style={{ marginRight:8 }} loading={radioType == 1 ? tableLoading : tableLoading2} htmlType="submit">
                 查询
           </Button>
               {/* <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
