@@ -1204,7 +1204,7 @@ const Index = (props) => {
         dataIndex: 'ContentItem',
         key: 'ContentItem',
         align: 'center',
-        width: 400,
+        width: 300,
         render: (text, record) => {
           return <div style={{ textAlign: "left" }}>{text}</div>
         },
@@ -1226,6 +1226,7 @@ const Index = (props) => {
         dataIndex: 'Remark',
         key: 'Remark',
         align: 'center',
+        width:160,
         render: (text, record) => {
           return <Form.Item className='remarkSty' name={`Remark${record.Sort}`} rules={[{ required: !principleDisabled[`${record.Sort}`], message: '请输入问题描述' }]}>
             <TextArea rows={1} placeholder='请输入' disabled={record.Status == '已推送' || principleDisabled[`${record.Sort}`]} />
@@ -1281,7 +1282,7 @@ const Index = (props) => {
         dataIndex: 'ContentItem',
         key: 'ContentItem',
         align: 'center',
-        width: 400,
+        width: 300,
         render: (text, record) => {
           return <div style={{ textAlign: "left" }}>{text}</div>
         },
@@ -1321,6 +1322,7 @@ const Index = (props) => {
         dataIndex: 'Remark',
         key: 'Remark',
         align: 'center',
+        width: 160,
         render: (text, record) => {
           return <Form.Item className='remarkSty' name={`Remark${record.Sort}`}
             rules={[({ getFieldValue }) => ({
@@ -1385,7 +1387,7 @@ const Index = (props) => {
         dataIndex: 'ContentItem',
         key: 'ContentItem',
         align: 'center',
-        width: 400,
+        width: 300,
         render: (text, record) => {
           return <div style={{ textAlign: "left" }}>{text}</div>
         },
@@ -1429,6 +1431,7 @@ const Index = (props) => {
         dataIndex: 'Remark',
         key: 'Remark',
         align: 'center',
+        width: 160,
         render: (text, record) => {
           return <Form.Item className='remarkSty' name={`Remark${record.Sort}`}
             rules={[({ getFieldValue }) => ({

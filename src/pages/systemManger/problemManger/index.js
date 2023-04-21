@@ -345,6 +345,7 @@ const Index = (props) => {
   const filesCuid = form2.getFieldValue('File') ? form2.getFieldValue('File') : cuid()
   const uploadProps = {
     name: 'file',
+    multiple: true,
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
     data: {
       FileUuid:filesCuid,

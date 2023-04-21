@@ -35,7 +35,7 @@ import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import PointVerifyLstModal from '../pointVerifyRate/components/PointVerifyLstModal'
 import RegionList from '@/components/RegionList';
-
+import styles from '../index.less'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -128,10 +128,9 @@ export default class OverVerifyLstModal extends Component {
                   regionLevel: 2,
                   RegionCode: record.regionCode
                 },()=>{
-                  this.initData(PollutantType,record.regionCode);
+                  this.initData(PollutantType,text =='全部合计'? 'all': record.regionCode);
                 })
               }else{  //进入监测点
-                console.log(overVerifyRateForm)
                 this.setState({
                   regionLevel: '',
                   RegionCode:  text =='全部合计'? RegionCode: record.regionCode,
@@ -237,7 +236,7 @@ export default class OverVerifyLstModal extends Component {
     this.updateQueryState({
       PollutantType: type,
       OperationPersonnel:'',
-      RegionCode:regionCode,
+      RegionCode:regionCode=='all'? '' : regionCode,
       regionLevel:'',
       // beginTime: moment()
       // .subtract(7, 'days')
@@ -600,7 +599,7 @@ export default class OverVerifyLstModal extends Component {
                   </Checkbox.Group>,
                 )}
                 <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
+                  <Button type="primary" onClick={this.queryClick} loading={this.props.loading}>
                     查询
                   </Button>
                   <Button
@@ -667,6 +666,7 @@ export default class OverVerifyLstModal extends Component {
           visible={TVisible}
           footer={null}
           wrapClassName='spreadOverModal'
+          className={styles.overVerifyModalSty}
           destroyOnClose
           onCancel={()=>{TCancle(); }}>
             {
