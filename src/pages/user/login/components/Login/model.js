@@ -8,33 +8,38 @@ const Model = {
   namespace: 'userLogin',
   state: {
     status: undefined,
-    configInfo: null
+    configInfo: null,
   },
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(systemLogin, payload);
-
       yield put({
         type: 'changeLoginStatus',
-        payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', message: response.Message },
+        payload: {
+          status: response.IsSuccess ? 'ok' : 'error',
+          type: 'account',
+          message: response.Message,
+        },
       });
       if (response.IsSuccess) {
         response.Datas.User_ID = response.Datas.UserId;
         let defaultNavigateUrl = '/user/login';
         let systemNavigateUrl = '';
         if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
-          if(response.Datas.MenuDatas[0].name === "首页"){
+          if (response.Datas.MenuDatas[0].name === '首页') {
             systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
-          }else{
-            if(response.Datas.MenuDatas[0].children.length){
+          } else {
+            if (response.Datas.MenuDatas[0].children.length) {
               systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
-            }else{
+            } else {
               systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
             }
           }
         }
-        defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;
-
+        defaultNavigateUrl =
+          response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length
+            ? response.Datas.MenuDatas[0].children[0].NavigateUrl
+            : response.Datas.MenuDatas[0].NavigateUrl;
 
         delete response.Datas.MenuDatas;
         delete response.Datas.Ticket;
@@ -45,9 +50,7 @@ const Model = {
         try {
           const { ws } = window;
           ws.send(response.Datas.UserAccount);
-        } catch (error) {
-
-        }
+        } catch (error) {}
         //大屏
         if (payload.redirctUrl) {
           router.push('/homepage');
@@ -59,8 +62,18 @@ const Model = {
       }
     },
 
-    *getSystemLoginConfigInfo({ payload }, { call, put }) {
+    // 后台新框架登录
+    *newLogin({ payload }, { call, put }) {
+      const response = yield call(getSystemLoginConfigInfo);
+      if (response.IsSuccess) {
+        yield put({
+          type: 'setConfigInfo',
+          payload: response.Datas,
+        });
+      }
+    },
 
+    *getSystemLoginConfigInfo({ payload }, { call, put }) {
       const response = yield call(getSystemLoginConfigInfo);
 
       if (response.IsSuccess) {
@@ -82,7 +95,7 @@ const Model = {
     },
     setConfigInfo(state, { payload }) {
       return { ...state, configInfo: { ...payload } };
-    }
+    },
   },
 };
 export default Model;

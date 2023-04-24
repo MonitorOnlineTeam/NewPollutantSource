@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-8-29 15:30:25 
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-29 15:30:51
+ * @Author: Jiaqi
+ * @Date: 2019-8-29 15:30:25
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-04-20 14:43:16
  * @desc: 查看附件组件
  */
 import React, { PureComponent } from 'react';
@@ -20,7 +20,7 @@ class index extends PureComponent {
           dataIndex: 'name'
         },
         {
-          title: "附件",
+          title: "操作",
           dataIndex: 'attach',
           render: (text, record) => {
             return (

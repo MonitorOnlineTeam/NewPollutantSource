@@ -2,8 +2,8 @@
  * @desc: form 组件
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-18 10:51:39
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-04-12 10:30:26
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -28,13 +28,13 @@ import {
   Carousel,
   Tabs,
   InputNumber,
-  Tooltip
+  Tooltip,
 } from 'antd';
 import { MapInteractionCSS } from 'react-map-interaction';
 import moment from 'moment';
 import cuid from 'cuid';
-import { handleFormData } from '@/utils/utils'
-import { getBase64 } from './utils'
+import { handleFormData } from '@/utils/utils';
+import { getBase64 } from './utils';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import router from 'umi/router';
@@ -47,12 +47,12 @@ import SearchSelect from './SearchSelect';
 import SdlCascader from './SdlCascader';
 import SdlRadio from './SdlRadio';
 import SdlCheckbox from './SdlCheckbox';
-import SdlUpload from './SdlUpload'
+import SdlUpload from './SdlUpload';
 import MapModal from './MapModal';
-import SdlMap from './SdlMap'
-import styles from './index.less'
-import config from '@/config'
-import IndustryTree from '@/components/IndustryTree'
+import SdlMap from './SdlMap';
+import styles from './index.less';
+import config from '@/config';
+import IndustryTree from '@/components/IndustryTree';
 
 const { RangePicker, MonthPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -68,7 +68,6 @@ const FormItem = Form.Item;
   fileLoading: loading.effects['autoForm/getFormData'],
   regionList: autoForm.regionList,
 }))
-
 class SdlForm extends PureComponent {
   constructor(props) {
     super(props);
@@ -102,7 +101,10 @@ class SdlForm extends PureComponent {
       inputPlaceholder: '请输入',
       selectPlaceholder: '请选择',
       // uid: props.isEdit ? (props.uid || (props.match && props.match.params.uid) || null) : cuid(),
-      uid: props.uid || (props.match && props.match.params.uid !== "null" && props.match.params.uid) || cuid(),
+      uid:
+        props.uid ||
+        (props.match && props.match.params.uid !== 'null' && props.match.params.uid) ||
+        cuid(),
       keysParams: props.keysParams || {},
       configId: props.configId,
       isEdit: props.isEdit,
@@ -112,28 +114,30 @@ class SdlForm extends PureComponent {
   }
 
   componentDidMount() {
+    this.props.onRef && this.props.onRef(this);
     const { addFormItems, dispatch, noLoad } = this.props;
     const { configId, isEdit, keysParams, uid } = this._SELF_;
     // if (!addFormItems || addFormItems.length === 0) {
-    !noLoad && dispatch({
-      type: 'autoForm/getPageConfig',
-      payload: {
-        configId,
-      },
-    });
+    !noLoad &&
+      dispatch({
+        type: 'autoForm/getPageConfig',
+        payload: {
+          configId,
+        },
+      });
     // }
 
     // 编辑时获取数据
     if (isEdit) {
       // 获取上传组件文件列表
       if (uid) {
-        this.props.form.setFieldsValue({ cuid: uid })
+        this.props.form.setFieldsValue({ cuid: uid });
         dispatch({
           type: 'autoForm/getAttachmentList',
           payload: {
             FileUuid: uid,
           },
-        })
+        });
       }
       // 获取编辑页面数据
       // !noLoad && dispatch({
@@ -143,7 +147,7 @@ class SdlForm extends PureComponent {
           configId,
           ...keysParams,
         },
-      })
+      });
     }
   }
 
@@ -151,27 +155,27 @@ class SdlForm extends PureComponent {
     if (this.props.fileList !== nextProps.fileList) {
       this.setState({
         fileList: nextProps.fileList,
-      })
+      });
     }
   }
 
-  disabledDate = (current) => {
+  disabledDate = current => {
     // Can not select days before today and today
     return current && current > moment().endOf('day');
   };
   // 处理时间控件
   _rtnDateEl = item => {
-
-    const isStart = item.fullFieldName == "dbo.T_Bas_TestCommonPoint.BeginTime";
-    const isEnd = item.fullFieldName == "dbo.T_Bas_TestCommonPoint.EndTime";
+    const isStart = item.fullFieldName == 'dbo.T_Bas_TestCommonPoint.BeginTime';
+    const isEnd = item.fullFieldName == 'dbo.T_Bas_TestCommonPoint.EndTime';
     const { dateFormat = 'YYYY-MM-DD HH:mm:ss' } = item;
     const format = dateFormat.toUpperCase();
     if (format === 'YYYY-MM' || format === 'MM') {
       // 年月 、 月
-      return <MonthPicker style={{ width: '100%' }} format={format} />
-    } if (format === 'YYYY') {
+      return <MonthPicker style={{ width: '100%' }} format={format} />;
+    }
+    if (format === 'YYYY') {
       // 年
-      return <DatePicker format={format} style={{ width: '100%' }} />
+      return <DatePicker format={format} style={{ width: '100%' }} />;
       // return <DatePicker
       //   mode="year"
       //   onPanelChange={(value, mode) => {
@@ -180,87 +184,141 @@ class SdlForm extends PureComponent {
       //   format={format} />
     }
     if (format === 'YYYY-MM-DD') {
-      return <DatePicker format={format} style={{ width: '100%' }} disabledDate={item.fullFieldName === "dbo.T_Bas_CommonPoint.Col10" ? this.disabledDate : null} /> //disabledDate 监测点监测设备安装日期选择范围显示/>
+      return (
+        <DatePicker
+          format={format}
+          style={{ width: '100%' }}
+          disabledDate={
+            item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col10' ? this.disabledDate : null
+          }
+        />
+      ); //disabledDate 监测点监测设备安装日期选择范围显示/>
     }
     // 年-月-日 时:分:秒
-    return <DatePicker showTime={{ defaultValue: isStart ? moment('00:00:00', 'HH:mm:ss') : isEnd ? moment('23:59:59', 'HH:mm:ss') : moment() }} format={'YYYY-MM-DD HH:mm:ss'} style={{ width: '100%' }} />
-  }
+    return (
+      <DatePicker
+        showTime={{
+          defaultValue: isStart
+            ? moment('00:00:00', 'HH:mm:ss')
+            : isEnd
+            ? moment('23:59:59', 'HH:mm:ss')
+            : moment(),
+        }}
+        format={'YYYY-MM-DD HH:mm:ss'}
+        style={{ width: '100%' }}
+      />
+    );
+  };
 
   // 检验重复
   handleCheckRepeat = (rule, value, callback) => {
     const { addFormItems, editFormData } = this.props;
     const { configId, isEdit } = this._SELF_;
     const formItems = addFormItems[configId] || [];
-    const formData = isEdit ? (editFormData[configId] || {}) : {};
+    const formData = isEdit ? editFormData[configId] || {} : {};
     if (value !== formData[rule.field]) {
       this.props.dispatch({
-        type: "autoForm/checkRepeat",
+        type: 'autoForm/checkRepeat',
         payload: {
           DT_Name: formItems[0].dtName,
           DF_Name: rule.field,
           DF_Value: value,
-          DT_ConfigID: configId
+          DT_ConfigID: configId,
         },
-        callback: (success) => {
+        callback: success => {
           if (success) {
-            callback(rule.message)
+            callback(rule.message);
           } else {
-            callback()
+            callback();
           }
-        }
-      })
+        },
+      });
     } else {
-      callback()
+      callback();
     }
-  }
+  };
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode, flag } = this.props;
+    const {
+      addFormItems,
+      dispatch,
+      form: { getFieldDecorator, setFieldsValue, getFieldValue },
+      editFormData,
+      fileList,
+      fileLoading,
+      corporationCode,
+      flag,
+    } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
-    const formData = isEdit ? (editFormData[configId] || {}) : {};
-    const isNumCode = configId === "OperationCycle";
+    const formData = isEdit ? editFormData[configId] || {} : {};
+    const isNumCode = configId === 'OperationCycle';
     // return addFormItems[configId].map((item) =>{
     return formItems.map((item, index) => {
       let validate = [];
       let element = '';
       let { placeholder, validator } = item;
+      // console.log('item', item);
       const { fieldName, labelText, required, fullFieldName, configDataItemValue } = item;
       // let initialValue = formData && Object.keys(formData).length && formData[fieldName];
-      let initialValue = (formData[fieldName] != undefined) && `${formData[fieldName]}`;
-      if (item.configId && item.fullFieldName) {
+      // let initialValue = formData[fieldName] != undefined && `${formData[fieldName]}`;
+
+      let initialValue =
+        formData[fieldName] != null && formData[fieldName] != undefined
+          ? `${formData[fieldName]}`
+          : undefined;
+      if (item.foreignType && item.fullFieldName) {
         // 有表连接时，取带表名的字段
         if (formData[item.fullFieldName] != undefined) {
-          let fieldValue = formData[item.fullFieldName] + "";
-          initialValue = fieldValue.split(',')
+          let fieldValue = formData[item.fullFieldName] + '';
+          // initialValue = fieldValue.split(',');
+          initialValue = fieldValue;
         }
-      };
-      let stationPlaceStr = '命名规则：空气站所在地级市名称+空气站、直辖市名+空气站，例如郑州市空气站、北京市空气站'
+      }
+      let stationPlaceStr =
+        '命名规则：空气站所在地级市名称+空气站、直辖市名+空气站，例如郑州市空气站、北京市空气站';
       // 判断类型
       switch (item.type) {
         case '文本框':
           validator = `${inputPlaceholder}`;
           if (item.labelText === '大气站名称') {
-            placeholder = stationPlaceStr
-          } else if (item.labelText === '登录名' && configId === 'UserInfoAdd') { //用户管理 基本信息
-            placeholder = `${inputPlaceholder}员工编号，例子：SDL0000`
+            placeholder = stationPlaceStr;
+          } else if (item.labelText === '登录名' && configId === 'UserInfoAdd') {
+            //用户管理 基本信息
+            placeholder = `${inputPlaceholder}员工编号，例子：SDL0000`;
           } else {
-            placeholder = inputPlaceholder
+            placeholder = inputPlaceholder;
           }
           placeholder = placeholder || inputPlaceholder;
-          element = <Input disabled={item.labelText === '设备编号(MN)' && isEdit ? true : false} placeholder={placeholder} title={item.labelText === '大气站名称' && stationPlaceStr} allowClear />;
+          element = (
+            <Input
+              disabled={item.labelText === '设备编号(MN)' && isEdit ? true : false}
+              placeholder={placeholder}
+              title={item.labelText === '大气站名称' && stationPlaceStr}
+              allowClear
+            />
+          );
           break;
         case '数字':
           validator = `${inputPlaceholder}`;
-          element = <InputNumber style={{ width: '100%' }} min={0} placeholder={'请输入' + item.labelText} allowClear />;
+          element = (
+            <InputNumber
+              style={{ width: '100%' }}
+              min={0}
+              placeholder={'请输入' + item.labelText}
+              allowClear
+            />
+          );
           break;
         case '下拉列表框':
         case '多选下拉列表':
           validator = `${selectPlaceholder}`;
           // initialValue = formData[fieldName] && (formData[fieldName] + "").split(",");
-          initialValue = formData[configDataItemValue || fieldName] && (`${formData[configDataItemValue || fieldName]}`).split(',');
+          initialValue =
+            formData[configDataItemValue || fieldName] &&
+            `${formData[configDataItemValue || fieldName]}`.split(',');
           placeholder = placeholder || selectPlaceholder;
           const mode = item.type === '多选下拉列表' ? 'multiple' : '';
           element = (
@@ -275,15 +333,19 @@ class SdlForm extends PureComponent {
           break;
         case '下拉搜索树':
           // initialValue = formData[item.fullFieldName] && formData[item.fullFieldName].split(',');
-          element = <IndustryTree
-            textField={item.configDataItemName}
-            valueField={item.configDataItemValue}
-            configId={item.configId}
-          />
+          element = (
+            <IndustryTree
+              textField={item.configDataItemName}
+              valueField={item.configDataItemValue}
+              configId={item.configId}
+            />
+          );
           break;
         case '多选下拉搜索树':
           placeholder = placeholder || selectPlaceholder;
-          // initialValue = formData[item.fullFieldName] && formData[item.fullFieldName].split(',');
+          initialValue = initialValue && initialValue.split(',');
+
+          console.log('item', item)
           element = (
             <SdlCascader
               itemName={item.configDataItemName}
@@ -293,36 +355,31 @@ class SdlForm extends PureComponent {
               selectType={labelText === '行政区' ? item.selectType : '999,是'}
               placeholder={placeholder}
             />
-          )
+          );
           break;
         case '日期框':
           initialValue = initialValue ? moment(initialValue) : undefined;
           element = this._rtnDateEl(item);
           break;
         case '单选':
-          initialValue = (formData[fieldName] != undefined) && formData[fieldName];
+          // initialValue = formData[fieldName] != undefined && formData[fieldName];
           if (item.value && !initialValue && !isEdit) {
-             initialValue =  configId === "GasOutput" && item.fullFieldName == "dbo.T_Bas_CommonPoint.Col4"? undefined :  item.value[0].key
+            if (configId === 'GasOutput' && item.fullFieldName == 'dbo.T_Bas_CommonPoint.Col4') {
+              initialValue = undefined;
+            } else {
+              console.log('item', item);
+              initialValue = item.value[0] ? item.value[0].key : undefined;
+            }
           }
-          element = (
-            <SdlRadio
-              data={item.value}
-              configId={item.configId}
-            />
-          )
+          element = <SdlRadio data={item.value} configId={item.configId} />;
           break;
         case '多选':
-          element = (
-            <SdlCheckbox
-              data={item.value}
-              configId={item.configId}
-            />
-          )
+          element = <SdlCheckbox data={item.value} configId={item.configId} />;
           break;
         case '经度':
           validator = `${inputPlaceholder}`;
           // placeholder = placeholder || inputPlaceholder;
-          placeholder = `${inputPlaceholder} 例如：112.236514`
+          placeholder = `${inputPlaceholder} 例如：112.236514`;
 
           // element = <Input
           //   suffix={<Icon
@@ -336,48 +393,54 @@ class SdlForm extends PureComponent {
           //   placeholder={placeholder}
           //   allowClear={true}
           // />;
-          element = <SdlMap
-            onOk={map => {
-              console.log('map=', map)
-              setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
-            }}
-            longitude={getFieldValue('Longitude') || formData.Longitude}
-            latitude={getFieldValue('Latitude') || formData.Latitude}
-            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
-            handleMarker
-            placeholder={placeholder}
-          />
+          element = (
+            <SdlMap
+              onOk={map => {
+                console.log('map=', map);
+                setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
+              }}
+              longitude={getFieldValue('Longitude') || formData.Longitude}
+              latitude={getFieldValue('Latitude') || formData.Latitude}
+              path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
+              handleMarker
+              placeholder={placeholder}
+            />
+          );
           break;
         case '纬度':
           validator = `${inputPlaceholder}`;
           // placeholder = placeholder || inputPlaceholder;
-          placeholder = `${inputPlaceholder} 例如：85.236589`
-          element = <SdlMap
-            onOk={map => {
-              console.log('map=', map)
-              setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
-            }}
-            longitude={getFieldValue('Longitude') || formData.Longitude}
-            latitude={getFieldValue('Latitude') || formData.Latitude}
-            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
-            handleMarker
-            placeholder={placeholder}
-          />;
+          placeholder = `${inputPlaceholder} 例如：85.236589`;
+          element = (
+            <SdlMap
+              onOk={map => {
+                console.log('map=', map);
+                setFieldsValue({ Longitude: map.longitude, Latitude: map.latitude });
+              }}
+              longitude={getFieldValue('Longitude') || formData.Longitude}
+              latitude={getFieldValue('Latitude') || formData.Latitude}
+              path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
+              handleMarker
+              placeholder={placeholder}
+            />
+          );
           break;
         case '坐标集合':
           validator = `${inputPlaceholder}`;
           placeholder = placeholder || inputPlaceholder;
-          element = <SdlMap
-            onOk={map => {
-              setFieldsValue({ [fieldName]: JSON.stringify(map.polygon) });
-            }}
-            longitude={getFieldValue('Longitude')}
-            latitude={getFieldValue('Latitude')}
-            path={getFieldValue(`${fieldName}`) || formData[fieldName] || corporationCode}
-            showMarker={true}
-            handlePolygon
-            placeholder={placeholder}
-          />;
+          element = (
+            <SdlMap
+              onOk={map => {
+                setFieldsValue({ [fieldName]: JSON.stringify(map.polygon) });
+              }}
+              longitude={getFieldValue('Longitude')}
+              latitude={getFieldValue('Latitude')}
+              path={getFieldValue(`${fieldName}`) || formData[fieldName] || corporationCode}
+              showMarker={true}
+              handlePolygon
+              placeholder={placeholder}
+            />
+          );
           break;
         // case "上传":
         //   const props = {
@@ -400,38 +463,46 @@ class SdlForm extends PureComponent {
             // let uploadElement = null;
             const props = {
               action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
-              onChange: (info) => {
+              onChange: info => {
                 if (info.file.status === 'done') {
-                  setFieldsValue({ cuid: uid })
-                  setFieldsValue({ [fieldName]: uid })
+                  setFieldsValue({ cuid: uid });
+                  setFieldsValue({ [fieldName]: uid });
                 } else if (info.file.status === 'error') {
-                  message.error('上传文件失败！')
+                  message.error('上传文件失败！');
                 }
                 this.setState({
-                  fileList: info.fileList
-                })
+                  fileList: info.fileList,
+                });
               },
               onRemove(file) {
                 dispatch({
-                  type: "autoForm/deleteAttach",
+                  type: 'autoForm/deleteAttach',
                   payload: {
                     Guid: file.uid,
-                  }
-                })
+                  },
+                });
               },
               onPreview: this.handlePreview,
               multiple: true,
-              listType: "picture-card",
+              listType: 'picture-card',
               data: {
                 FileUuid: uid,
                 FileActualType: '0',
               },
             };
 
-            element = <SdlUpload accept={flag == "img" ? "image/*" : ''} fileList={this.props.fileList} flags={flag} cuid={uid} uploadSuccess={(cuid) => {
-              setFieldsValue({ cuid: cuid })
-              setFieldsValue({ [fieldName]: uid })
-            }} />
+            element = (
+              <SdlUpload
+                accept={flag == 'img' ? 'image/*' : ''}
+                fileList={this.props.fileList}
+                flags={flag}
+                cuid={uid}
+                uploadSuccess={cuid => {
+                  setFieldsValue({ cuid: cuid });
+                  setFieldsValue({ [fieldName]: uid });
+                }}
+              />
+            );
             // element = <Upload {...props} fileList={this.state.fileList}>
             //   <div>
             //     <Icon type="plus" />
@@ -448,17 +519,17 @@ class SdlForm extends PureComponent {
         const currentUser = JSON.parse(Cookie.get('currentUser'));
         switch (item.defaultValue) {
           case 'AT-UserID':
-            console.log('AT-UserID=', currentUser.UserId)
-            initialValue = currentUser.UserId
+            console.log('AT-UserID=', currentUser.UserId);
+            initialValue = currentUser.UserId;
             break;
           case 'AT-UserName':
-            console.log('AT-UserName=', currentUser.UserName)
-            initialValue = currentUser.UserName
+            console.log('AT-UserName=', currentUser.UserName);
+            initialValue = currentUser.UserName;
             break;
           case 'AT-GetDate':
-            console.log('AT-GetDate=', moment().format(item.dateFormat || 'YYYY-MM-DD HH:mm:ss'))
+            console.log('AT-GetDate=', moment().format(item.dateFormat || 'YYYY-MM-DD HH:mm:ss'));
             // initialValue = moment().format(item.dateFormat || 'YYYY-MM-DD HH:mm:ss')
-            initialValue = moment()
+            initialValue = moment();
             break;
           default:
             break;
@@ -468,18 +539,22 @@ class SdlForm extends PureComponent {
       validate = item.validate.map(vid => {
         // 最大长度
         if (vid.indexOf('maxLength') > -1) {
-          const max = vid.replace(/[^\d]/g, '') * 1
+          const max = vid.replace(/[^\d]/g, '') * 1;
           return {
             max: max / 1,
             message: `最多输入${max}位`,
-          }
-        } if (vid.indexOf('minLength') > -1) { // 最小长度
-          const min = vid.replace(/[^\d]/g, '') * 1
+          };
+        }
+        if (vid.indexOf('minLength') > -1) {
+          // 最小长度
+          const min = vid.replace(/[^\d]/g, '') * 1;
           return {
             min: min / 1,
             message: `最少输入${min}位`,
-          }
-        } if (vid.indexOf('rangeLength') > -1) { // 最小最大长度限制
+          };
+        }
+        if (vid.indexOf('rangeLength') > -1) {
+          // 最小最大长度限制
           const range = vid.match(/\d+(,\d+)?/g);
           const max = range[1];
           const min = range[0];
@@ -487,32 +562,35 @@ class SdlForm extends PureComponent {
             max: max / 1,
             min: min / 1,
             message: `最少输入${min}位, 最多输入${max}位。`,
-          }
-        } if (vid.indexOf('reg') > -1) { // 自定义正则
+          };
+        }
+        if (vid.indexOf('reg') > -1) {
+          // 自定义正则
           const reg = vid.replace('reg', '');
           return {
             pattern: `/${reg}/`,
             message: '格式错误。',
-          }
+          };
         }
         if (checkRules[vid.replace(/\'/g, '')]) {
           return checkRules[vid.replace(/\'/g, '')];
         }
         if (vid.indexOf('isExistDiy[]') > -1) {
           return {
-            validator: this.handleCheckRepeat, message: '已有重复数据，请重新输入'
-          }
+            validator: this.handleCheckRepeat,
+            message: '已有重复数据，请重新输入',
+          };
         }
-        return {}
-      })
+        return {};
+      });
       if (element) {
         // 布局方式
         let colSpan = 12;
         let layout = formLayout;
         if (this.props.formItemLayout[configId]) {
-          colSpan = this.props.formItemLayout[configId]
+          colSpan = this.props.formItemLayout[configId];
         } else if (item.colSpan === 1 || item.colSpan === null) {
-          colSpan = 12
+          colSpan = 12;
         } else {
           colSpan = 24;
           layout = {
@@ -522,7 +600,7 @@ class SdlForm extends PureComponent {
             wrapperCol: {
               span: 19,
             },
-          }
+          };
         }
         if (item.type === '上传' && element) {
           colSpan = 24;
@@ -533,10 +611,14 @@ class SdlForm extends PureComponent {
             wrapperCol: {
               span: 19,
             },
-          }
+          };
         }
         return (
-          <Col className='searchForm' span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
+          <Col
+            className="searchForm"
+            span={colSpan}
+            style={{ display: item.isHide == 1 ? 'none' : '' }}
+          >
             <FormItem key={fieldName} {...layout} label={labelText}>
               {getFieldDecorator(`${fieldName}`, {
                 initialValue: initialValue || undefined,
@@ -569,7 +651,7 @@ class SdlForm extends PureComponent {
   _onSubmitForm() {
     const { form, onSubmitForm } = this.props;
     const { uid, configId, isEdit, keysParams } = this._SELF_;
-    console.log('submitFormData=', this.props.form.getFieldsValue())
+    console.log('submitFormData=', this.props.form.getFieldsValue());
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         // let formData = {};
@@ -586,8 +668,8 @@ class SdlForm extends PureComponent {
         // }
         // let cuid = isEdit ? uid : cuid();
         // values.uid = uid;
-        console.log('values====', values)
-        let formData = handleFormData(values, uid)
+        console.log('values====', values);
+        let formData = handleFormData(values, uid);
         console.log('!errAddSubmitFormData=', formData);
         // return;
         // 编辑时处理主键
@@ -595,12 +677,17 @@ class SdlForm extends PureComponent {
           const keys = keysParams;
           const primaryKey = {};
           for (const key in keys) {
-            primaryKey[key.split('.').pop().toString()] = keys[key];
+            primaryKey[
+              key
+                .split('.')
+                .pop()
+                .toString()
+            ] = keys[key];
           }
           formData = {
             ...formData,
             ...primaryKey,
-          }
+          };
           console.log('!errEditSubmitFormData=', formData);
         }
 
@@ -610,7 +697,13 @@ class SdlForm extends PureComponent {
   }
 
   renderContent() {
-    const { onSubmitForm, form, form: { getFieldDecorator, setFieldsValue, getFieldValue }, loadingEdit, loadingAdd } = this.props;
+    const {
+      onSubmitForm,
+      form,
+      form: { getFieldDecorator, setFieldsValue, getFieldValue },
+      loadingEdit,
+      loadingAdd,
+    } = this.props;
     const submitFormLayout = {
       wrapperCol: {
         xs: { span: 24, offset: 0 },
@@ -620,38 +713,37 @@ class SdlForm extends PureComponent {
     const loading = this._SELF_.isEdit ? loadingEdit : loadingAdd;
     return (
       <Card bordered={false}>
-        <Form onSubmit={e => {
-          e.preventDefault();
-          this._onSubmitForm();
-          // onSubmitForm()
-        }} hideRequiredMark={false} style={{ marginTop: 8 }}>
+        <Form
+          onSubmit={e => {
+            e.preventDefault();
+            this._onSubmitForm();
+            // onSubmitForm()
+          }}
+          hideRequiredMark={false}
+          style={{ marginTop: 8 }}
+        >
           <Row>
-            {
-              this.renderFormItem()
-            }
+            {this.renderFormItem()}
             <Col style={{ display: 'none' }}>
-              <FormItem key="cuid">
-                {getFieldDecorator('cuid', {
-                })(
-                  <Input />,
-                )}
-              </FormItem>
+              <FormItem key="cuid">{getFieldDecorator('cuid', {})(<Input />)}</FormItem>
             </Col>
           </Row>
-          {
-            this.props.children && this.props.children
-          }
-          {
-            !this.props.hideBtns && <Divider orientation="right">
-              <Button type="primary" htmlType="submit" loading={loading}>保存</Button>
+          {this.props.children && this.props.children}
+          {!this.props.hideBtns && (
+            <Divider orientation="right">
+              <Button type="primary" htmlType="submit" loading={loading}>
+                保存
+              </Button>
               <Button
                 style={{ marginLeft: 8 }}
                 onClick={() => {
                   history.go(-1);
                 }}
-              >返回</Button>
+              >
+                返回
+              </Button>
             </Divider>
-          }
+          )}
           {/* {(!this.props.hideBtns || this.props.children) ?
             this.props.children :
             <Divider orientation="right">
@@ -665,33 +757,42 @@ class SdlForm extends PureComponent {
             </Divider>
           } */}
         </Form>
-        <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
-          this.setState({ previewVisible: false })
-        }}>
+        <Modal
+          visible={this.state.previewVisible}
+          footer={null}
+          onCancel={() => {
+            this.setState({ previewVisible: false });
+          }}
+        >
           {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
-          <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
             <div className={styles.controller}>
               <LeftOutlined
                 onClick={() => {
-                  this.carousel.prev()
-                }} />
+                  this.carousel.prev();
+                }}
+              />
               <RightOutlined
                 onClick={() => {
-                  this.carousel.next()
-                }} />
+                  this.carousel.next();
+                }}
+              />
             </div>
             <MapInteractionCSS>
               <Carousel
                 dots={false}
-                ref={(carousel) => { this.carousel = carousel; }}
+                ref={carousel => {
+                  this.carousel = carousel;
+                }}
               >
-                {
-                  this.props.fileList && this.props.fileList.map(item => {
-                    return <div>
-                      <img alt="example" style={{ width: '100%' }} src={item.url} />
-                    </div>
-                  })
-                }
+                {this.props.fileList &&
+                  this.props.fileList.map(item => {
+                    return (
+                      <div>
+                        <img alt="example" style={{ width: '100%' }} src={item.url} />
+                      </div>
+                    );
+                  })}
               </Carousel>
             </MapInteractionCSS>
           </div>
@@ -699,7 +800,6 @@ class SdlForm extends PureComponent {
       </Card>
     );
   }
-
 
   render() {
     const { loadingAdd, loadingConfig, dispatch, breadcrumb } = this.props;
@@ -718,16 +818,15 @@ class SdlForm extends PureComponent {
     // }
     return (
       <Fragment>
-        <Spin spinning={this.props.isModal && this.props.isEdit ? this.props.fileLoading : false}> {/*弹框编辑的加载状态loading */}
+        <Spin spinning={this.props.isModal && this.props.isEdit ? this.props.fileLoading : false}>
+          {' '}
+          {/*弹框编辑的加载状态loading */}
           {this.renderContent()}
         </Spin>
       </Fragment>
     );
   }
-
-
 }
-
 
 SdlForm.propTypes = {
   // configId
@@ -743,9 +842,7 @@ SdlForm.propTypes = {
   // keysParams
   keysParams(props, propName, componentName) {
     if (props.isEdit && !props.keysParams) {
-      return new Error(
-        'keysParams cannot be empty in edit mode！',
-      );
+      return new Error('keysParams cannot be empty in edit mode！');
     }
   },
 };
@@ -753,6 +850,6 @@ SdlForm.propTypes = {
 SdlForm.defaultProps = {
   isEdit: false,
   hideBtns: false,
-}
+};
 
 export default SdlForm;

@@ -1,5 +1,6 @@
 import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import { Badge, Popover, message } from 'antd';
+import Cookie from 'js-cookie';
 import moment from 'moment';
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -279,48 +280,57 @@ export const GetDataType = dataType => {
 export function timeDifference(beginDates, endDates) {
   //时间格式为yyyy-mm-dd时
 
-  const beginDate = new Date(beginDates.replace(/-/g, '/')),endDate = new Date(endDates.replace(/-/g, '/'));
+  const beginDate = new Date(beginDates.replace(/-/g, '/')),
+    endDate = new Date(endDates.replace(/-/g, '/'));
 
-  let newYear = beginDate.getFullYear(), newMonth = beginDate.getMonth() + 2; //先计算其实日期2个月后的日期
+  let newYear = beginDate.getFullYear(),
+    newMonth = beginDate.getMonth() + 2; //先计算其实日期2个月后的日期
 
-  if (newMonth >= 11) { // 当年月份设置范围为0 ~ 11
+  if (newMonth >= 11) {
+    // 当年月份设置范围为0 ~ 11
 
-      newYear += 1;
-      newMonth -= 12;
+    newYear += 1;
+    newMonth -= 12;
   }
-    beginDate.setFullYear(newYear);
-    beginDate.setMonth(newMonth);
+  beginDate.setFullYear(newYear);
+  beginDate.setMonth(newMonth);
 
   if (beginDate.getTime() >= endDate.getTime()) {
-
     return true; //不超过2个月  开始时间加两个月的基础上不超过结束时间说明时间范围未超过
   } else {
-
     return false;
-    
   }
 }
 
-//截取小数点后两位  
-export  function interceptTwo(value){
+//截取小数点后两位
+export function interceptTwo(value) {
   const data = value.toString();
   // data.indexOf(".") ==-1 是整数时  补零
-  const result = data.indexOf(".") ==-1 ? `${value.toFixed(2)}` : data.split(".")[1].length<=2? `${value.toFixed(2)}` : data.substring(0,data.indexOf(".")+3)
+  const result =
+    data.indexOf('.') == -1
+      ? `${value.toFixed(2)}`
+      : data.split('.')[1].length <= 2
+      ? `${value.toFixed(2)}`
+      : data.substring(0, data.indexOf('.') + 3);
   return result;
 }
 
 //保持小数点 后三位
 export function toDecimal3(x) {
-  if(x && x!='-'){
-    let res = '', data = x.toString()
-    res = data.indexOf(".") ==-1 || data.split(".")[1].length<3 ? `${ Number(x).toFixed(3)}` :   data.substring(0,data.indexOf(".")+4); // 如果是整数 toFixed(3) 补三位
+  if (x && x != '-') {
+    let res = '',
+      data = x.toString();
+    res =
+      data.indexOf('.') == -1 || data.split('.')[1].length < 3
+        ? `${Number(x).toFixed(3)}`
+        : data.substring(0, data.indexOf('.') + 4); // 如果是整数 toFixed(3) 补三位
     return res;
-  }else{
+  } else {
     return x;
   }
 }
 
-export  function getBase64(file) {
+export function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -329,52 +339,67 @@ export  function getBase64(file) {
   });
 }
 
-export  function getAttachmentArrDataSource (fileInfo) {
-  if(fileInfo&&fileInfo[0]){
+export function getAttachmentArrDataSource(fileInfo) {
+  if (fileInfo && fileInfo[0]) {
     return fileInfo.map(item => {
       return {
         name: item.FileName,
         attach: item.FileName,
-      }
-    })
-  }else{
+      };
+    });
+  } else {
     return [];
   }
-
- 
 }
 
-export function getSum(arr) { //求和
-  return arr&&arr.length? eval(arr.join("+")) : 0;
+export function getSum(arr) {
+  //求和
+  return arr && arr.length ? eval(arr.join('+')) : 0;
 }
-export function getAve(arr) { //求平均值
-  return arr&&arr.length? eval(arr.join("+")/arr.length) : 0;
+export function getAve(arr) {
+  //求平均值
+  return arr && arr.length ? eval(arr.join('+') / arr.length) : 0;
 }
 
-export function numVerify (val,callback)  { //允许输入数字 负数 小数
-  const t = val.charAt(0)
-  if (!(/^([-])?\d+(\.[0-9]{1,2})?$/.test(val))) {
-      // 先把非数字的都替换掉，除了数字和.
-      val = val.replace(/[^\d.]/g, '')
-      // 必须保证第一个为数字而不是.
-      val = val.replace(/^\./g, '')
-      // 保证只有出现一个.-而没有多个.
-      val = val.replace(/\.{2,}/g, '.')
-      // 保证.只出现一次，-而不能出现两次以上
-      val = val.replace('.', '$#$').replace(/\./g, '').replace('$#$', '.')
+export function numVerify(val, callback) {
+  //允许输入数字 负数 小数
+  const t = val.charAt(0);
+  if (!/^([-])?\d+(\.[0-9]{1,2})?$/.test(val)) {
+    // 先把非数字的都替换掉，除了数字和.
+    val = val.replace(/[^\d.]/g, '');
+    // 必须保证第一个为数字而不是.
+    val = val.replace(/^\./g, '');
+    // 保证只有出现一个.-而没有多个.
+    val = val.replace(/\.{2,}/g, '.');
+    // 保证.只出现一次，-而不能出现两次以上
+    val = val
+      .replace('.', '$#$')
+      .replace(/\./g, '')
+      .replace('$#$', '.');
 
-      // val = val.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数
-      // 如果第一位是负号，则允许添加
-      if (t === '-') {
-          val = '-' + val
-      }
-      callback(val)
-  }else{
-    callback(val)
+    // val = val.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数
+    // 如果第一位是负号，则允许添加
+    if (t === '-') {
+      val = '-' + val;
+    }
+    callback(val);
+  } else {
+    callback(val);
   }
 }
-export function arrDistinctByProp(arr,prop){  //对象数组去重
-  return arr.filter(function(item,index,self){
-      return self.findIndex(el=>el[prop]==item[prop])===index
-  })
+export function arrDistinctByProp(arr, prop) {
+  //对象数组去重
+  return arr.filter(function(item, index, self) {
+    return self.findIndex(el => el[prop] == item[prop]) === index;
+  });
+}
+
+export function getCurrentUserId() {
+  // 获取当前登录人id
+  let currentUserId = '';
+  const userCookie = Cookie.get('currentUser');
+  if (userCookie) {
+    currentUserId = JSON.parse(userCookie).UserId;
+  }
+  return currentUserId;
 }

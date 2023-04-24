@@ -1,24 +1,15 @@
 import { async } from 'q';
 import { post, get } from '@/utils/request';
 
-
 //报警关联列表
 export async function GetAlarmPushDepOrRole(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/AuthorApi/GetAlarmPushDepOrRole',
-    params,
-    null,
-  );
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetAlarmPushDepOrRole', params, null);
 
   return result;
 }
 //报警关联  选择
 export async function InsertAlarmDepOrRole(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmDepOrRole',
-    params,
-    null,
-  );
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmDepOrRole', params, null);
 
   return result;
 }
@@ -126,14 +117,14 @@ export async function insertdepartbyuser(params) {
   //       data: null,
   //     }
   //   : result;
-   return result;
+  return result;
 }
 // 给部门添加行政区（可批量）
 export async function insertregionbyuser(params) {
   const body = {
     UserGroup_ID: params.UserGroup_ID,
     RegionCode: params.RegionCode,
-    ...params
+    ...params,
   };
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertRegionByUser', body, null);
   return result === null
@@ -179,12 +170,16 @@ export async function getentandpoint(params) {
     : result;
 }
 // 获取当前部门的排口
-export async function getpointbydepid(params,isUser) {
+export async function getpointbydepid(params, isUser) {
   const body = {
     UserGroup_ID: params.UserGroup_ID,
     PollutantType: params.PollutantType,
   };
-  const result = post(`/api/rest/PollutantSourceApi/AuthorApi/${isUser? 'GetPointByDepID': 'GetPointByDepIDBW'}`, body, null);
+  const result = post(
+    `/api/rest/PollutantSourceApi/AuthorApi/${isUser ? 'GetPointByDepID' : 'GetPointByDepIDBW'}`,
+    body,
+    null,
+  );
   return result === null
     ? {
         data: null,
@@ -219,7 +214,11 @@ export async function getGroupRegionFilter(params) {
 
 // 更新运维区域
 export async function UpdateOperationArea(params) {
-  const result = post('/api/rest/PollutantSourceApi/UserInfosApi/UpdateOperationArea', params, null);
+  const result = post(
+    '/api/rest/PollutantSourceApi/UserInfosApi/UpdateOperationArea',
+    params,
+    null,
+  );
   return result;
 }
 
@@ -231,7 +230,11 @@ export async function GetUserDepApproveInfo(params) {
 
 // 审核流程 添加or修改
 export async function AddOrUpdateUserDepApprove(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/AddOrUpdateUserDepApprove', params, null);
+  const result = post(
+    '/api/rest/PollutantSourceApi/AuthorApi/AddOrUpdateUserDepApprove',
+    params,
+    null,
+  );
   return result;
 }
 // 用户列表
@@ -242,5 +245,41 @@ export async function GetUserList(params) {
 // 审核流程 添加or修改
 export async function DeleteUserDepApprove(params) {
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/DeleteUserDepApprove', params, null);
+  return result;
+}
+// 获取省区
+export async function GetAllProvince(params) {
+  const result = post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/GetAllProvince',
+    params,
+    null,
+  );
+  return result;
+}
+// 添加/编辑大区经理或省区经理
+export async function InsOrUpdProvinceOrRegional(params) {
+  const result = post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/InsOrUpdProvinceOrRegional',
+    params,
+    null,
+  );
+  return result;
+}
+// 获取大区下的所有经理详情
+export async function GetProvinceOrRegionalList(params) {
+  const result = post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/GetProvinceOrRegionalList',
+    params,
+    null,
+  );
+  return result;
+}
+// 删除大区或省区经理
+export async function DeleteProvinceOrRegionalOne(params) {
+  const result = post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/DeleteProvinceOrRegionalOne',
+    params,
+    null,
+  );
   return result;
 }

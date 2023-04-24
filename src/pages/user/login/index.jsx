@@ -35,11 +35,11 @@ class Login extends Component {
     this.child&&this.child.current&&this.child.current.click(); // 3分钟刷新一次
   }, 1000 * 60 * 3  );
  }
-  
+
  componentWillUnmount(){
   clearInterval(this.timer)
  }
- verificaCodeChange=(code)=>{  
+ verificaCodeChange=(code)=>{
   this.setState({verificaCode:code})
 }
   handleSubmit = (err, values) => {
@@ -55,7 +55,7 @@ class Login extends Component {
         return;
       }
      }
-      if(!isAgree){ 
+      if(!isAgree){
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
       }
@@ -67,7 +67,14 @@ class Login extends Component {
            this.setState({loginSuccess:isSuccess})
            this.clearCommonData();
         }
-      
+
+      });
+      // 后台新框架登录
+      dispatch({
+        type: 'userLogin/newLogin',
+        payload: { ...values,IsAgree:isAgree, type },
+        callback:isSuccess=>{
+        }
       });
     }
   };
@@ -141,7 +148,7 @@ class Login extends Component {
           verificaCodeChange={this.verificaCodeChange}
           handleRef={(ref) => {
             this.child = ref;
-          }} 
+          }}
         >
           <Tab
             key="account"
@@ -172,7 +179,7 @@ class Login extends Component {
               ]}
               onPressEnter={() =>
                 this.loginForm && this.loginForm.validateFields(this.handleSubmit)
-              } 
+              }
             />
              <VerificaCode  //验证码
               name="verificaCode"
@@ -264,11 +271,11 @@ class Login extends Component {
           {!provinceShow&&<Checkbox checked={isAgree} onChange={(e)=>{  this.props.dispatch({  type: 'userLogin/changeLoginStatus',payload: {  isAgree:e.target.checked   }});}}>
                阅读并接受<Button type='link'  style={{padding:0}} onClick={()=>{this.setState({agreementVisible:true})}}>《用户监测数据许可协议》</Button>
             </Checkbox>}
-            
+
              {/* <Checkbox className={styles.autoLoginSty}  checked={autoLogin} onChange={this.changeAutoLogin}>
               自动登录
             </Checkbox>  */}
-            </Row> 
+            </Row>
         </LoginComponents>
         <Modal
         footer={false}
