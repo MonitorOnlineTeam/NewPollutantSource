@@ -44,7 +44,7 @@ const pageUrl = {
     GetEntByRegion:'exceedDataAlarmModel/GetEntByRegion',
     GetAlarmVerifyRate:'exceedDataAlarmModel/GetAlarmVerifyRate',
     GetAlarmVerifyRateDetail:'exceedDataAlarmModel/GetAlarmVerifyRateDetail',
-    GetAlarmVerifyDetail:'exceedDataAlarmModel/GetAlarmVerifyDetail',
+    GetAlarmVerifyDetail:'exceedDataAlarmModel/GetAlarmVerifyDetail', 
     GetPollutantCodeList:'exceedDataAlarmModel/GetPollutantCodeList',
     GetOverToExamineOperation:'exceedDataAlarmModel/GetOverToExamineOperation',
     ExportAlarmVerifyRate:'exceedDataAlarmModel/ExportAlarmVerifyRate',

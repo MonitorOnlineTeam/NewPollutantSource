@@ -28,7 +28,8 @@ export default Model.extend({
     ManagementDetail:[],
     pollutantCodeList:[],
     AlarmDealTypeList:[],
-    cityRegionCode:''
+    cityRegionCode:'',
+    alarmVerifyQueryPar:{},
   },
   subscriptions: {},
   effects: {
@@ -128,6 +129,7 @@ export default Model.extend({
       if (result.IsSuccess) {
           yield update({
               ManagementDetail: result.Datas,
+              alarmVerifyQueryPar:payload,
               //column: result.Datas.column,
           })
       }
@@ -156,7 +158,7 @@ export default Model.extend({
       }
     },
      //核实结果
-  *GetOverToExamineOperation({ payload }, { call, put, update, select }){
+  *GetOverToExamineOperation({ payload,callback }, { call, put, update, select }){
       const body = {
           PollutantType: payload.PollutantType,
       }
@@ -171,6 +173,7 @@ export default Model.extend({
               AlarmDealTypeList: [],
           })
       }
+      callback&&callback(result.Datas?result.Datas:[])
     },
     //超标报警核实
     *ExportAlarmVerifyRate({ payload }, { call, put, update, select }){

@@ -249,7 +249,7 @@ const Index = (props) => {
       name="advanced_search"
       layout='inline'
       initialValues={{
-        time: [moment(new Date()).add(-7, 'day'), moment().add(-1, 'day')],
+        time: [moment(new Date()).add(-7, 'day'), moment()],
         PollutantType: 2,
       }}
       className={styles["ant-advanced-search-form"]}
