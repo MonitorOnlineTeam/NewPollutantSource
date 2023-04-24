@@ -1,8 +1,8 @@
 ﻿/*
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-11-11 15:49:27
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-04-06 10:40:31
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -45,7 +45,7 @@ function getQueryParams(state, payload) {
               ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss')
               : searchForm[key].value.toString(),
           };
-          console.log(state.whereList)
+          console.log(state.whereList);
           for (const whereKey in state.whereList[configId]) {
             if (key === whereKey) {
               groupItem.Where = state.whereList[configId][whereKey];
@@ -116,11 +116,11 @@ export default Model.extend({
     regionList: [], // 联动数据
     fileList: null, // 文件列表
     formLayout: {}, // 添加编辑布局
-    thisPage:false,
+    thisPage: false,
   },
   effects: {
     // 获取数据
-    *getAutoFormData({ payload,callback }, { call, put, update, select }) {
+    *getAutoFormData({ payload, callback }, { call, put, update, select }) {
       let state = yield select(state => state.autoForm);
       const { configId } = payload;
       // const searchForm = state.searchForm[payload.configId]
@@ -209,7 +209,7 @@ export default Model.extend({
             },
           },
         });
-        callback&&callback(result.Datas.DataSource)
+        callback && callback(result.Datas.DataSource);
       }
     },
     // 根据configId 获取数据
@@ -227,7 +227,7 @@ export default Model.extend({
     },
     // FOREIGN_DF_NAME /// FOREIGN_DF_ID
     // 获取页面配置项
-    *getPageConfig({ payload,callback }, { call, put, update, select }) {
+    *getPageConfig({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.getPageConfigInfo, { ...payload });
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
@@ -297,6 +297,7 @@ export default Model.extend({
           value: item.ENUM_NAME ? JSON.parse(item.ENUM_NAME) : [],
           placeholder: item.DF_TOOLTIP,
           // configId: item.DT_CONFIG_ID,
+          foreignType: item.DF_FOREIGN_TYPE,
           where: item.DF_CONDITION,
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
@@ -308,7 +309,7 @@ export default Model.extend({
           dateFormat: item.DF_DATEFORMAT,
           isHide: item.DF_HIDDEN,
           defaultValue: item.DF_DEFAULTVALUE,
-          selectType:item.DF_OtherOptions&&item.DF_OtherOptions
+          selectType: item.DF_OtherOptions && item.DF_OtherOptions,
         }));
 
         // 主键
@@ -340,7 +341,7 @@ export default Model.extend({
             ...state.opreationButtons,
             [configId]: result.Datas.OpreationButtons,
           },
-          whereList:{...state.whereList,...whereList},
+          whereList: { ...state.whereList, ...whereList },
           keys: {
             ...state.keys,
             [configId]: keys,
@@ -355,7 +356,7 @@ export default Model.extend({
           },
         });
       }
-      callback&&callback()
+      callback && callback();
     },
 
     *del({ payload }, { call, update, put }) {
@@ -363,7 +364,7 @@ export default Model.extend({
         ...payload,
         searchParams: undefined,
       });
-      console.log(payload)
+      console.log(payload);
       if (result.IsSuccess) {
         message.success('删除成功！');
         yield put({
@@ -381,7 +382,7 @@ export default Model.extend({
         ...payload,
         FormData: JSON.stringify(payload.FormData),
       });
-      console.log(payload)
+      console.log(payload);
       if (result.IsSuccess) {
         message.success('添加成功！');
         yield put({
@@ -404,9 +405,16 @@ export default Model.extend({
       });
       if (result.IsSuccess) {
         message.success('修改成功！');
-        // yield put({
-        //   type: 'getAutoFormData'
-        // });
+        if (payload.reload === false) {
+        } else {
+          yield put({
+            type: 'getAutoFormData',
+            payload: {
+              configId: payload.configId,
+              searchParams: payload.searchParams,
+            },
+          });
+        }
         payload.callback && payload.callback(result);
       } else {
         message.error(result.Message);
@@ -427,11 +435,12 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *getFormDatas({ payload,callback }, { call, select, update, put }) { //特殊需求 列表用的正常接口 回显用的autoForm接口
+    *getFormDatas({ payload, callback }, { call, select, update, put }) {
+      //特殊需求 列表用的正常接口 回显用的autoForm接口
       const state = yield select(state => state.autoForm);
       const result = yield call(services.getFormData, { ...payload });
       if (result.IsSuccess && result.Datas.length) {
-        callback(result.Datas[0])
+        callback(result.Datas[0]);
       } else {
         message.error(result.Message);
       }
@@ -471,7 +480,7 @@ export default Model.extend({
 
     // 获取联动
     *getRegions({ payload, callback }, { call, update }) {
-      const result = yield call(commonServices.getEnterpriseAndPoint, {...payload});
+      const result = yield call(commonServices.getEnterpriseAndPoint, { ...payload });
       if (result.IsSuccess) {
         yield update({
           regionList: result.Datas.list,
@@ -502,7 +511,8 @@ export default Model.extend({
         });
       }
     },
-    *getAttachmentLists({ payload,callback }, { call, update }) { //特殊需求 列表用的正常接口 回显用的autoForm接口
+    *getAttachmentLists({ payload, callback }, { call, update }) {
+      //特殊需求 列表用的正常接口 回显用的autoForm接口
       if (payload.FileUuid && payload.FileUuid !== 'null') {
         const result = yield call(services.getAttachmentList, { ...payload });
         if (result.IsSuccess) {
@@ -513,7 +523,7 @@ export default Model.extend({
             status: 'done',
             url: `${item.Url}`,
           }));
-          callback(fileList)
+          callback(fileList);
         }
       } else {
         yield update({
@@ -557,7 +567,7 @@ export default Model.extend({
     *deleteAttach({ payload }, { call, update }) {
       const result = yield call(services.deleteAttach, { ...payload });
       if (result.IsSuccess) {
-        message.success("删除成功！")
+        message.success('删除成功！');
       } else {
         message.error(result.Message);
       }

@@ -7,7 +7,7 @@ import { notification } from 'antd';
 import Cookie from 'js-cookie';
 import router from 'umi/router';
 import { async } from 'q';
-import configToken from '@/config'
+import configToken from '@/config';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -47,6 +47,7 @@ const errorHandler = error => {
     if (status === 401) {
       Cookie.set(configToken.cookieName, null);
       Cookie.set('currentUser', null);
+      Cookie.set('newToken', null);
       router.push('/user/login');
       return data;
     }
@@ -61,26 +62,26 @@ const errorHandler = error => {
         description: errorText,
       });
     }
-    return data
+    return data;
   } else if (!response) {
     notification.error({
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
-    return data
+    return data;
   }
 };
 
 /**
  * 配置request请求时的默认参数
  */
-if(window.location.search && window.location.search.split('=')){ //小程序和移动端 电子表单 token
-  if(window.location.search.split('=')[0] && window.location.search.split('=')[0] === '?Ticket'){  
-    const mobileToken = window.location.search.split('=')[1]
+if (window.location.search && window.location.search.split('=')) {
+  //小程序和移动端 电子表单 token
+  if (window.location.search.split('=')[0] && window.location.search.split('=')[0] === '?Ticket') {
+    const mobileToken = window.location.search.split('=')[1];
     Cookie.set(configToken.cookieName, mobileToken);
   }
 }
-
 
 // const ssoToken = `${getCookie(configToken.cookieName)}`;
 const request = extend({
@@ -96,11 +97,19 @@ request.interceptors.request.use(async (url, options) => {
     options.method === 'delete' ||
     options.method === 'get'
   ) {
-    const token = Cookie.get(configToken.cookieName);
+    let token = Cookie.get(configToken.cookieName);
+
+    //
+    const urls = url.split('/');
+    if (urls[1] === 'newApi') {
+      token = Cookie.get('newToken');
+    }
+
     const headers = {
-      'Content-Type': 'application/json',
+      'Content-Type': options.headers['Content-Type'] || 'application/json',
       Accept: 'application/json',
-      Authorization: token&&token!='null' && token!= 'undefined'&& token!= '' ?  `Bearer ${token}` : null,
+      Authorization:
+        token && token != 'null' && token != 'undefined' && token != '' ? `Bearer ${token}` : null,
     };
     return {
       url,

@@ -1,0 +1,144 @@
+.workbench {
+  width: 100%;
+  min-height: 100%;
+  background: #f0f2f5;
+  padding: 14px 10px 0;
+  display: flex;
+
+  .leftWrapper {
+    flex: 1;
+    margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rightWrapper {
+    width: 36%;
+    padding-bottom: 16px;
+
+    .infoWrapper {
+      height: 100%;
+
+      .messageTimeLine {
+        padding: 30px 20px;
+
+        :global {
+          .ant-timeline-item-label {
+            width: 120px;
+            text-align: center;
+          }
+          .ant-timeline-item-tail,
+          .ant-timeline-item-head,
+          .ant-timeline-item-content {
+            left: 130px;
+          }
+        }
+      }
+    }
+  }
+
+  .topWrapper {
+    display: flex;
+    max-height: calc((100vh) / 2);
+    min-height: 500px;
+    .taskListWrapper {
+      flex: 1;
+      // margin-right: 20px;
+    }
+  }
+  .bottomWrapper {
+    margin-top: 10px !important;
+    // max-height: calc((50vh) - 130px);
+    // min-height: 400px;
+    flex: 1;
+  }
+
+  .title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    position: relative;
+    padding-left: 16px;
+    margin-bottom: 6px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 20px;
+      background: #5e9df8;
+    }
+    // color: #333333;
+  }
+  .taskList {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      .taskName {
+        cursor: pointer;
+        &:hover {
+          color: #1890ff;
+        }
+      }
+      .listItem {
+        padding: 16px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+    }
+  }
+
+  .manualList {
+    .title {
+      margin: 16px 0;
+    }
+    .content {
+      // height: 84px;
+      width: 100%;
+      margin: 0 !important;
+      padding: 10px 10px 20px;
+      .manualItem {
+        height: 100%;
+        cursor: pointer;
+        // background: url(/cuishou.png) no-repeat;
+        // background-size: 100%;
+        position: relative;
+        img {
+          width: 100%;
+        }
+        p {
+          position: absolute;
+          color: #fff;
+          margin-left: 16px;
+          border-left: 2px solid #fff;
+          padding-left: 10px;
+          margin-top: 8%;
+          line-height: 14px;
+          /* font-size: 88%; */
+          font-weight: bold;
+          top: 0;
+        }
+      }
+    }
+  }
+}
+
+.inspectionInfo {
+  margin-top: 20px;
+  list-style: initial;
+  li {
+    margin-bottom: 10px;
+
+    span {
+      color: #000;
+      font-weight: 500;
+    }
+  }
+}
+
+

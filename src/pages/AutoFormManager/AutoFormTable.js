@@ -1,7 +1,13 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { DeleteOutlined, DownOutlined, ExportOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  DownOutlined,
+  ExportOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
 import {
   Button,
   Input,
@@ -22,19 +28,21 @@ import {
   message,
   Upload,
 } from 'antd';
-import moment from 'moment';
-import { router } from "umi";
+import { router } from 'umi';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
-import AttachmentView from '@/components/AttachmentView'
-import TableText from '@/components/TableText'
-import { getAttachmentDataSource } from './utils'
+import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon';
+import AttachmentView from '@/components/AttachmentView';
+import TableText from '@/components/TableText';
+import { getAttachmentDataSource } from './utils';
 import { getRowCuid } from '@/utils/utils';
-import config from '@/config'
+import config from '@/config';
 import styles from './index.less';
-import SdlTable from '@/components/SdlTable'
-import defaultSettings from '../../../config/defaultSettings'
+import AutoFormAddModal from './AutoFormAddModal';
+import AutoFormEditModal from './AutoFormEditModal';
+import SdlTable from '@/components/SdlTable';
+import defaultSettings from '../../../config/defaultSettings';
+import moment from 'moment';
 
 const { confirm } = Modal;
 
@@ -50,14 +58,14 @@ const DEFAULT_WIDTH = 180;
   keys: autoForm.keys,
   btnsAuthority: global.btnsAuthority,
 }))
-
 class AutoFormTable extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       selectedRowKeys: [],
       delPostData: {},
-      otherParams: null,
+      otherParams: {},
+      editKeysParams: {},
     };
     this._SELF_ = { btnEl: [], configId: props.configId, moreBtns: [] };
 
@@ -74,53 +82,52 @@ class AutoFormTable extends PureComponent {
     const { onRef } = this.props;
     onRef && onRef(this);
 
-  //  if(this.props.location&&this.props.location.query&&this.props.location.query.thisPage){
-  //    console.log(this.props.searchForm)
-  //   return
-  //  }else if(this.props.configId==='GasOutputNew'){ //进入监测点
-  //   this.props.dispatch({
-  //     type: 'autoForm/updateState',
-  //     payload: {
-  //       searchForm: {...this.props.searchForm,GasOutputNew:null},
-  //     },
-  //   });
-  //  }else{
-  //   this.props.dispatch({
-  //     type: 'autoForm/updateState',
-  //     payload: {
-  //       searchForm: {},
-  //     },
-  //   });
-  //  }
-
+    //  if(this.props.location&&this.props.location.query&&this.props.location.query.thisPage){
+    //    console.log(this.props.searchForm)
+    //   return
+    //  }else if(this.props.configId==='GasOutputNew'){ //进入监测点
+    //   this.props.dispatch({
+    //     type: 'autoForm/updateState',
+    //     payload: {
+    //       searchForm: {...this.props.searchForm,GasOutputNew:null},
+    //     },
+    //   });
+    //  }else{
+    //   this.props.dispatch({
+    //     type: 'autoForm/updateState',
+    //     payload: {
+    //       searchForm: {},
+    //     },
+    //   });
+    //  }
   };
-  componentWillUnmount = () =>{
+  componentWillUnmount = () => {
     // this.props.dispatch({
     //   type: 'autoForm/updateState',
     //   payload: {
     //     tableInfo: [],
     //   },
     // });
-  }
+  };
   componentDidMount() {
-    this.loadDataSource()
+    this.loadDataSource();
     if (this.props.getPageConfig) {
       this.props.dispatch({
         type: 'autoForm/getPageConfig',
         payload: {
           configId: this.props.configId,
-        }
+        },
       });
     }
   }
   loadDataSource(params) {
-    const {isSearchParams,searchParams,noLoadDataSource,} = this.props;
+    const { isSearchParams, searchParams, noLoadDataSource } = this.props;
 
     //调试检测/污染源管理监测点  没有条件不让请求,防止请求多次   资产管理/设备台账/设备资料管理 不用请求
-    if((isSearchParams && !this.props.searchParams) || noLoadDataSource){
-      return 
+    if ((isSearchParams && !this.props.searchParams) || noLoadDataSource) {
+      return;
     }
-    
+
     // console.log(this.props.configId,this.props.tableInfo,'-----',this.props.noLoad)
     // switch (this.props.configId) {
     //   case 'GasOutputNew'://监测点  废气
@@ -138,7 +145,7 @@ class AutoFormTable extends PureComponent {
       payload: {
         configId: this.props.configId,
         searchParams: this.props.searchParams,
-        otherParams: params || this.state.otherParams||this.props.otherParams,
+        otherParams: params || this.state.otherParams || this.props.otherParams,
       },
     });
   }
@@ -168,11 +175,11 @@ class AutoFormTable extends PureComponent {
     const postData = {};
     keys[configId].map(item => {
       // if (record[item]) {
-      postData[item] = selectedRows.map(row => row[[item]]).toString()
+      postData[item] = selectedRows.map(row => row[[item]]).toString();
       // }
-    })
+    });
     this.setState({ selectedRowKeys, selectedRows, delPostData: postData });
-    this.props.rowChange && this.props.rowChange(selectedRowKeys, selectedRows)
+    this.props.rowChange && this.props.rowChange(selectedRowKeys, selectedRows);
   };
 
   handleOk = e => {
@@ -196,8 +203,8 @@ class AutoFormTable extends PureComponent {
         SortFileds: sorter.field,
       };
       this.setState({
-        otherParams: sorterObj
-      })
+        otherParams: sorterObj,
+      });
       // sorterObj.IsAsc = sorter.order === "ascend"
       // sorterObj.SortFileds = sorter.field;
     }
@@ -223,23 +230,26 @@ class AutoFormTable extends PureComponent {
   delRowData(record) {
     const { keys, dispatch, searchParams, configId } = this.props;
     if (this.props.onDelete) {
-      this.props.onDelete(record, record(keys[configId][0]));
+      this.props.onDelete(record, record[keys[configId][0]]);
       return;
     }
     const postData = {};
     keys[configId].map(item => {
       if (record[item]) {
-        postData[item] = record[item]
+        postData[item] = record[item];
       }
-    })
+    });
     dispatch({
       type: 'autoForm/del',
       payload: {
         configId,
         FormData: JSON.stringify(postData),
-        searchParams: searchParams
+        searchParams: searchParams,
       },
-    })
+      callback: res => {
+        this.props.onDeleteCallback && this.props.onDeleteCallback();
+      },
+    });
   }
   //批量删除
   batchDel() {
@@ -255,125 +265,190 @@ class AutoFormTable extends PureComponent {
             configId,
             FormData: JSON.stringify(postData),
           },
-        })
+        });
       },
     });
   }
-  _renderHandleButtons() {
-    const { opreationButtons, keys, dispatch, btnsAuthority, match, parentcode, configId } = this.props;
-    this._SELF_.btnEl = []; this._SELF_.moreBtns = [];
-    const { btnEl, moreBtns } = this._SELF_;
-    return opreationButtons[configId] ? opreationButtons[configId].map(btn => {
-      switch (btn.DISPLAYBUTTON) {
-        case 'add':
-          // if (btnsAuthority.includes('add')) {
-          return (
-            <Button
-              style={{ marginRight: 8 }}
-              key={btn.DISPLAYBUTTON}
-              icon={<PlusOutlined />}
-              type="primary"
-              onClick={() => {
-                //this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
-                this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
-              }}
-            >添加
-                    </Button>
-          );
-          // }
-          break;
-        case 'alldel':
-          return (
-            <Button
-              disabled={this.state.selectedRowKeys.length <= 0}
-              style={{ marginRight: 8 }}
-              icon={<DeleteOutlined />}
-              key={btn.DISPLAYBUTTON}
-              type="primary"
-              onClick={() => {
-                this.batchDel();
-              }}
-            >批量删除
-                           </Button>
-          );
-          break;
-        case 'print':
-          moreBtns.push({ type: 'printer', text: '打印' })
-          break;
-        // return <Button icon="printer" key={btn.DISPLAYBUTTON} type="primary">打印</Button>;
-        case 'exp':
-          if (opreationButtons[configId].length === 1) {
-            return (
-              <Button
-                style={{ marginRight: 8 }}
-                icon={<ExportOutlined />}
-                key={btn.DISPLAYBUTTON}
-                type="primary"
-                onClick={() => {
-                  this.export();
-                }}
-              >导出
-                           </Button>
-            );
-          } else {
-            moreBtns.push({ type: 'export', text: '导出' })
-          }
-          break;
-        //   return <Button
-        //     icon="export"
-        //     key={btn.DISPLAYBUTTON}
-        //     type="primary"
-        //     onClick={() => {
-        //       dispatch({
-        //         type: 'autoForm/exportDataExcel',
-        //         payload: {
-        //           configId
-        //         }
-        //       })
-        //     }}
-        //   >
-        //     导出
-        // </Button>;
-        case 'imp':
-          moreBtns.push({ type: 'import', text: '导入' })
-          break;
-        //   return <Button
-        //     icon="import"
-        //     key={btn.DISPLAYBUTTON}
-        //     type="primary"
-        //     onClick={() => {
-        //       this.setState({
-        //         visible: true,
-        //       })
-        //     }}
-        //   >
-        //     导入
-        // </Button>;
-        case 'edit':
-          btnEl.push({
-            type: 'edit',
-          });
-          break;
-        case 'view':
-          btnEl.push({
-            type: 'view',
-          });
-          break;
-        case 'del':
-          btnEl.push({
-            type: 'del',
-          });
-          break;
-        default:
-          break;
+
+  // 操作添加
+  onHandleAdd = () => {
+    const { dispatch, parentcode, match, configId } = this.props;
+    if (this.props.onAdd) {
+      this.props.onAdd();
+    } else {
+      if (this.props.handleMode === 'modal') {
+        this.setState({
+          handleAddVisible: true,
+        });
+      } else {
+        dispatch(
+          routerRedux.push(
+            `/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`,
+          ),
+        );
       }
-    }) : null;
+    }
+  };
+
+  // 操作编辑
+  onHandleEdit = (record, returnKey, postData, cuid) => {
+    const { dispatch, parentCode, configId } = this.props;
+    if (this.props.onEdit) {
+      this.props.onEdit(record, returnKey);
+    } else {
+      if (this.props.handleMode === 'modal') {
+        this.setState({
+          handleEditVisible: true,
+          editKeysParams: postData,
+        });
+      } else {
+        dispatch(
+          routerRedux.push(
+            `/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(
+              postData,
+            )}/${cuid}`,
+          ),
+        );
+      }
+    }
+    // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
+  };
+
+  // 关闭操作弹窗
+  onHandleCancel = () => {
+    this.setState({
+      handleAddVisible: false,
+      handleEditVisible: false,
+    });
+  };
+
+  _renderHandleButtons() {
+    const {
+      opreationButtons,
+      keys,
+      dispatch,
+      btnsAuthority,
+      match,
+      parentcode,
+      configId,
+    } = this.props;
+    this._SELF_.btnEl = [];
+    this._SELF_.moreBtns = [];
+    const { btnEl, moreBtns } = this._SELF_;
+    return opreationButtons[configId]
+      ? opreationButtons[configId].map(btn => {
+          switch (btn.DISPLAYBUTTON) {
+            case 'add':
+              // if (btnsAuthority.includes('add')) {
+              return (
+                <Button
+                  style={{ marginRight: 8 }}
+                  key={btn.DISPLAYBUTTON}
+                  icon={<PlusOutlined />}
+                  type="primary"
+                  onClick={this.onHandleAdd}
+                >
+                  添加
+                </Button>
+              );
+              // }
+              break;
+            case 'alldel':
+              return (
+                <Button
+                  disabled={this.state.selectedRowKeys.length <= 0}
+                  style={{ marginRight: 8 }}
+                  icon={<DeleteOutlined />}
+                  key={btn.DISPLAYBUTTON}
+                  type="primary"
+                  onClick={() => {
+                    this.batchDel();
+                  }}
+                >
+                  批量删除
+                </Button>
+              );
+              break;
+            case 'print':
+              moreBtns.push({ type: 'printer', text: '打印' });
+              break;
+            // return <Button icon="printer" key={btn.DISPLAYBUTTON} type="primary">打印</Button>;
+            case 'exp':
+              if (opreationButtons[configId].length === 1) {
+                return (
+                  <Button
+                    style={{ marginRight: 8 }}
+                    icon={<ExportOutlined />}
+                    key={btn.DISPLAYBUTTON}
+                    type="primary"
+                    onClick={() => {
+                      this.export();
+                    }}
+                  >
+                    导出
+                  </Button>
+                );
+              } else {
+                moreBtns.push({ type: 'export', text: '导出' });
+              }
+              break;
+            //   return <Button
+            //     icon="export"
+            //     key={btn.DISPLAYBUTTON}
+            //     type="primary"
+            //     onClick={() => {
+            //       dispatch({
+            //         type: 'autoForm/exportDataExcel',
+            //         payload: {
+            //           configId
+            //         }
+            //       })
+            //     }}
+            //   >
+            //     导出
+            // </Button>;
+            case 'imp':
+              moreBtns.push({ type: 'import', text: '导入' });
+              break;
+            //   return <Button
+            //     icon="import"
+            //     key={btn.DISPLAYBUTTON}
+            //     type="primary"
+            //     onClick={() => {
+            //       this.setState({
+            //         visible: true,
+            //       })
+            //     }}
+            //   >
+            //     导入
+            // </Button>;
+            case 'edit':
+              btnEl.push({
+                type: 'edit',
+              });
+              break;
+            case 'view':
+              btnEl.push({
+                type: 'view',
+              });
+              break;
+            case 'del':
+              btnEl.push({
+                type: 'del',
+              });
+              break;
+            default:
+              break;
+          }
+        })
+      : null;
   }
 
-
   componentWillReceiveProps(nextProps) {
-    // if ((JSON.stringify(this.props.searchParams) !== JSON.stringify(nextProps.searchParams)) || (this.props.configId !== nextProps.configId)) {
-    if (JSON.stringify(this.props.searchParams) !== JSON.stringify(nextProps.searchParams)) {
+    if (
+      JSON.stringify(this.props.searchParams) !== JSON.stringify(nextProps.searchParams) ||
+      this.props.configId !== nextProps.configId
+    ) {
       this.props.dispatch({
         type: 'autoForm/getAutoFormData',
         payload: {
@@ -390,17 +465,16 @@ class AutoFormTable extends PureComponent {
     let conditionWhere = {};
     if (searchParams) {
       conditionWhere = {
-        ConditionWhere: JSON.stringify(
-          {
-            rel: '$and',
-            group: [{
+        ConditionWhere: JSON.stringify({
+          rel: '$and',
+          group: [
+            {
               rel: '$and',
-              group: [
-                ...searchParams,
-              ],
-            }],
-          }),
-      }
+              group: [...searchParams],
+            },
+          ],
+        }),
+      };
     }
     dispatch({
       type: 'autoForm/exportDataExcel',
@@ -409,13 +483,14 @@ class AutoFormTable extends PureComponent {
         IsPaging: false,
         // ...conditionWhere
       },
-    })
-  }
+    });
+  };
 
   // 更多按钮点击
   moreClick(e) {
-    const { dispatch, configId,type } = this.props;
-    if(e.key==='import'&&type==='company'){ //企业导入 
+    const { dispatch, configId, type } = this.props;
+    if (e.key === 'import' && type === 'company') {
+      //企业导入
       // router.push(`/platformconfig/monitortarget/entImport`);
       router.push(`/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/entImport`);
       return;
@@ -423,17 +498,16 @@ class AutoFormTable extends PureComponent {
     switch (e.key) {
       // 打印
       case 'printer':
-
         break;
       // 导入
       case 'import':
         this.setState({
           visible: true,
-        })
+        });
         break;
       // 导出
       case 'export':
-        this.export()
+        this.export();
         break;
       default:
         break;
@@ -441,73 +515,111 @@ class AutoFormTable extends PureComponent {
   }
 
   render() {
-    const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter,resizable,noPaging,isFixedOpera,noDel, } = this.props;
-    const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
-    const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
-    const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {}
-    const parentCode = match && match.params && match.params.parentcode || parentcode;
+    const { loading, selectedRowKeys, handleAddVisible, handleEditVisible } = this.state;
+    const {
+      tableInfo,
+      searchForm,
+      keys,
+      dispatch,
+      configId,
+      btnsAuthority,
+      match,
+      parentcode,
+      isCenter,
+      resizable,
+      noPaging,
+      isFixedOpera,
+      noDel,
+      modalWidth,
+      hideBtns,
+    } = this.props;
+    const columns = tableInfo[configId] ? tableInfo[configId]['columns'] : [];
+    const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]['checkboxOrRadio'] * 1 : 1;
+    const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {};
+    const parentCode = (match && match.params && match.params.parentcode) || parentcode;
     // 计算长度
     const _columns = (columns || []).map(col => {
       if (col.type === '上传') {
         return {
           ...col,
           width: 200,
-          align:isCenter?'center':'',
+          align: isCenter ? 'center' : '',
           render: (text, record) => {
             const attachmentDataSource = getAttachmentDataSource(text);
-            return (
-              <AttachmentView dataSource={attachmentDataSource} />
-            )
+            return <AttachmentView dataSource={attachmentDataSource} />;
           },
-        }
+        };
       }
       return {
         ...col,
         width: col.width,
-        ellipsis:resizable?true:false,
-        align:isCenter&&col.dataIndex!=='dbo.T_Bas_EquipmentHandoverData.Remark'&&col.dataIndex!=='dbo.T_Bas_Storehouse.StorehouseRemark'?'center':'',
+        ellipsis: resizable ? true : false,
+        align:
+          isCenter &&
+          col.dataIndex !== 'dbo.T_Bas_EquipmentHandoverData.Remark' &&
+          col.dataIndex !== 'dbo.T_Bas_Storehouse.StorehouseRemark'
+            ? 'center'
+            : '',
         render: (text, record) => {
-          text = text ? text + "" : text;
+          text = text ? text + '' : text;
           const type = col.formatType;
-          if (type === "标签") {
-            const types = text ? (text.indexOf("|") ? text.split("|") : text.split(",")) : []
+          if (type === '标签') {
+            const types = text ? (text.indexOf('|') ? text.split('|') : text.split(',')) : [];
             return types.map(item => {
-              return <Tag>{item}</Tag>
-            })
+              let color = 'default';
+              if (col.otherConfig) {
+                color = JSON.parse(col.otherConfig)[text];
+              }
+              return <Tag color={color}>{item}</Tag>;
+            });
           }
-          if (type === "超链接") {
-            let porps = {}
+          if (type === '超链接') {
+            let porps = {};
             if (col.otherConfig) {
               porps = {
                 onClick: () => {
-                  router.push(`${col.otherConfig}/${text}`)
-                }
-              }
+                  router.push(`${col.otherConfig}/${text}`);
+                },
+              };
             }
             // return <TableText content={text} {...porps} />
-            return <a   title={text} className={styles.ellipsisText} style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
+            return (
+              <a
+                title={text}
+                className={styles.ellipsisText}
+                style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
+                {...porps}
+              >
+                {text}
+              </a>
+            );
           }
           // 格式化日期
           if (col.dateFormat) {
-            text = text? moment(text).format(col.dateFormat) : ''
+            text = text ? moment(text).format(col.dateFormat) : '';
           }
-          return text && <div title={!type && text}  className={styles.ellipsisText} style={{display:isCenter?'inline-block':""}}>
-            {/* {type === '超链接' &&
+          return (
+            text && (
+              <div
+                title={!type && text}
+                className={styles.ellipsisText}
+                style={{ display: isCenter ? 'inline-block' : '' }}
+              >
+                {/* {type === '超链接' &&
               <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
             } */}
-            {type == '小圆点' && <Badge status="warning" text={text} />}
-            {/* {type === '标签' && <Tag>{text}</Tag>} */}
-            {type === '进度条' && <Progress percent={text} />}
-            {!type && text}
-          </div>
-
-
+                {type == '小圆点' && <Badge status="warning" text={text} />}
+                {/* {type === '标签' && <Tag>{text}</Tag>} */}
+                {type === '进度条' && <Progress percent={text} />}
+                {!type && text}
+              </div>
+            )
+          );
         },
-      }
+      };
       // return col.width ? { width: DEFAULT_WIDTH, ...col } : { ...col, width: DEFAULT_WIDTH }
     });
-    const buttonsView = this._renderHandleButtons();
+    const buttonsView = !hideBtns ? this._renderHandleButtons() : '';
     // let rowKey = [];
     // if(this.props.children instanceof Array){
     //   rowKey = this.props.children.filter(item=>item.key === "row");
@@ -518,91 +630,111 @@ class AutoFormTable extends PureComponent {
     // console.log("showHandle=",showHandle)
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
-      let leftMenuWidth = config.isShowTabs && defaultSettings.layout === "sidemenu" ? 255 : 0
-      const isFixed = scrollXWidth > (window.innerWidth - 64 - 48 - leftMenuWidth) || isFixedOpera ? 'right' : ''
-      _columns.length && _columns.push({
-        align: 'center',
-        title: '操作',
-        width: 220,
-        fixed: isFixed,
-        render: (text, record) => {
-          const returnKey = keys[configId] && record[keys[configId][0]];
-          return <div>
-            {
-              this._SELF_.btnEl.map((item, index) => {
-                // if (item.type === 'edit' && btnsAuthority.includes('edit')) {
-                if (item.type === 'edit') {
-                  // const uid = record.
-                  return (
-                    <Fragment key={item.type}>
-                      <Tooltip title="编辑">
-                        <a onClick={() => {
-                          const filterList = columns.filter(itm => itm.type == '上传')[0] || {};
-                          const key = filterList.dataIndex;
-                          const cuid = getRowCuid(record, key)
-                          const postData = {};
-                          keys[configId].map(item => {
-                            if (record[item]) {
-                              postData[item] = record[item]
-                            }
-                          })
-                          this.props.onEdit ? this.props.onEdit(record, returnKey) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
-                          // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
-                        }}><EditIcon /></a>
-                      </Tooltip>
-                      {
-                        // this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('view') && <Divider type="vertical" />
-                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
-                      }
-                    </Fragment>);
-                }
-                // if (item.type === 'view' && btnsAuthority.includes('view')) {
-                if (item.type === "view") {
-                  return (<Fragment key={item.type}>
-                    <Tooltip title="详情">
-                      <a onClick={() => {
-                        const postData = {};
-                        keys[configId].map(item => {
-                          if (record[item]) {
-                            postData[item] = record[item]
-                          }
-                        })
-                        this.props.onView ? this.props.onView(record, returnKey) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(postData)}`))
-                      }} ><DetailIcon /></a>
+      let leftMenuWidth = config.isShowTabs && defaultSettings.layout === 'sidemenu' ? 255 : 0;
+      const isFixed =
+        scrollXWidth > window.innerWidth - 64 - 48 - leftMenuWidth || isFixedOpera ? 'right' : '';
+      _columns.length &&
+        _columns.push({
+          align: 'center',
+          title: '操作',
+          width: 220,
+          fixed: isFixed,
+          render: (text, record) => {
+            const returnKey = keys[configId] && record[keys[configId][0]];
+            return (
+              <div>
+                {this._SELF_.btnEl.map((item, index) => {
+                  // if (item.type === 'edit' && btnsAuthority.includes('edit')) {
+                  if (item.type === 'edit') {
+                    // const uid = record.
+                    return (
+                      <Fragment key={item.type}>
+                        <Tooltip title="编辑">
+                          <a
+                            onClick={() => {
+                              const filterList = columns.filter(itm => itm.type == '上传')[0] || {};
+                              const key = filterList.dataIndex;
+                              const cuid = getRowCuid(record, key);
+                              const postData = {};
+                              keys[configId].map(item => {
+                                if (record[item]) {
+                                  postData[item] = record[item];
+                                }
+                              });
+                              this.onHandleEdit(record, returnKey, postData, cuid);
+                              // this.props.onEdit ? this.props.onEdit(record, returnKey) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${cuid}`))
+                              // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
+                            }}
+                          >
+                            <EditIcon />
+                          </a>
+                        </Tooltip>
+                        {// this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('view') && <Divider type="vertical" />
+                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />}
+                      </Fragment>
+                    );
+                  }
+                  // if (item.type === 'view' && btnsAuthority.includes('view')) {
+                  if (item.type === 'view') {
+                    return (
+                      <Fragment key={item.type}>
+                        <Tooltip title="详情">
+                          <a
+                            onClick={() => {
+                              const postData = {};
+                              keys[configId].map(item => {
+                                if (record[item]) {
+                                  postData[item] = record[item];
+                                }
+                              });
+                              this.props.onView
+                                ? this.props.onView(record, returnKey)
+                                : dispatch(
+                                    routerRedux.push(
+                                      `/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(
+                                        postData,
+                                      )}`,
+                                    ),
+                                  );
+                            }}
+                          >
+                            <DetailIcon />
+                          </a>
+                        </Tooltip>
+                        {// this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('del') && <Divider type="vertical" />
+                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />}
+                      </Fragment>
+                    );
+                  }
+                  // if (item.type === 'del' && btnsAuthority.includes('del')) {
+                  if (item.type === 'del') {
+                    if (noDel) {
+                      return false;
+                    }
 
-                    </Tooltip>
-                    {
-                      // this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('del') && <Divider type="vertical" />
-                      this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
-                    }
-                  </Fragment>);
-                }
-                // if (item.type === 'del' && btnsAuthority.includes('del')) {
-                if (item.type === 'del') {
-                  
-                  if(noDel){return false}
-                  
-                  return (<Fragment key={item.type}>
-                    <Tooltip title="删除">
-                      <Popconfirm
-                        placement="left"
-                        title="确认是否删除?"
-                        onConfirm={() => {
-                          this.delRowData(record);
-                        }}
-                        okText="是"
-                        cancelText="否">
-                        <a ><DelIcon /></a>
-                      </Popconfirm>
-                    </Tooltip>
-                    {
-                      this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />
-                    }
-                  </Fragment>)
-                }
-              })
-            }
-            {/* {
+                    return (
+                      <Fragment key={item.type}>
+                        <Tooltip title="删除">
+                          <Popconfirm
+                            placement="left"
+                            title="确认是否删除?"
+                            onConfirm={() => {
+                              this.delRowData(record);
+                            }}
+                            okText="是"
+                            cancelText="否"
+                          >
+                            <a>
+                              <DelIcon />
+                            </a>
+                          </Popconfirm>
+                        </Tooltip>
+                        {this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />}
+                      </Fragment>
+                    );
+                  }
+                })}
+                {/* {
               React.Children.map(this.props.children, (child, i) => {
                 // if (child.props["data-position"] === "row") {
                 if (child.key === "row") {
@@ -610,21 +742,21 @@ class AutoFormTable extends PureComponent {
                 }
               })
             } */}
-            {
-              this.props.appendHandleRows && this.props.appendHandleRows(record, returnKey)
-            }
-          </div>
-        },
-      });
+                {this.props.appendHandleRows && this.props.appendHandleRows(record, returnKey)}
+              </div>
+            );
+          },
+        });
     }
 
-
-    const rowSelection = checkboxOrRadio ? {
-      type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
-      selections: true,
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-    } : false;
+    const rowSelection = checkboxOrRadio
+      ? {
+          type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
+          selections: true,
+          selectedRowKeys,
+          onChange: this.onSelectChange,
+        }
+      : false;
     const dataSource = tableInfo[configId] ? tableInfo[configId].dataSource : [];
     // const dataSource = _tabelInfo.dataSource
     const props = {
@@ -637,15 +769,15 @@ class AutoFormTable extends PureComponent {
       data: {
         ConfigID: configId,
       },
-      onChange: (info) => {
+      onChange: info => {
         if (info.file.status === 'done') {
           this.loadDataSource();
-          message.success("导入成功");
+          message.success('导入成功');
           this.setState({
-            visible: false
-          })
+            visible: false,
+          });
         } else if (info.file.status === 'error') {
-          message.error('上传文件失败！')
+          message.error('上传文件失败！');
         }
         // this.setState({
         //   fileList: info.fileList
@@ -667,29 +799,32 @@ class AutoFormTable extends PureComponent {
       <Fragment>
         <Row className={styles.buttonWrapper}>
           {buttonsView}
-          {this.props.appendHandleButtons && this.props.appendHandleButtons(this.state.selectedRowKeys, this.state.selectedRows)}
-          {
-            // 更多操作
-            this._SELF_.moreBtns.length ? <Dropdown overlay={() => <Menu onClick={this.moreClick}>
-              {
-                this._SELF_.moreBtns.map(item => {
-                  return (
-                    <Menu.Item key={item.type}>
-                      <LegacyIcon type={item.type} />
-                      {item.text}
-                    </Menu.Item>
-                  );
-                })
-              }
-            </Menu>}>
+          {this.props.appendHandleButtons &&
+            this.props.appendHandleButtons(this.state.selectedRowKeys, this.state.selectedRows)}
+          {// 更多操作
+          this._SELF_.moreBtns.length ? (
+            <Dropdown
+              overlay={() => (
+                <Menu onClick={this.moreClick}>
+                  {this._SELF_.moreBtns.map(item => {
+                    return (
+                      <Menu.Item key={item.type}>
+                        <LegacyIcon type={item.type} />
+                        {item.text}
+                      </Menu.Item>
+                    );
+                  })}
+                </Menu>
+              )}
+            >
               <Button>
                 更多操作 <DownOutlined />
               </Button>
-            </Dropdown> : null
-          }
-          {
-            this.props.promptText&&<span style={{color:'#f5222d',lineHeight:'32px'}}>{this.props.promptText}</span>
-          }
+            </Dropdown>
+          ) : null}
+          {this.props.promptText && (
+            <span style={{ color: '#f5222d', lineHeight: '32px' }}>{this.props.promptText}</span>
+          )}
           {/* {
             React.Children.map(this.props.children, (child, i) => {
               // if (child.props["data-position"] === "top") {
@@ -698,13 +833,12 @@ class AutoFormTable extends PureComponent {
               }
             })
           } */}
-
         </Row>
         <SdlTable
           rowKey={(record, index) => {
             if (keys[configId]) {
               // return record[keys[configId][0]];
-              return `${current}-${index}`
+              return `${current}-${index}`;
             }
           }}
           // size="small"
@@ -730,32 +864,39 @@ class AutoFormTable extends PureComponent {
               let rows = this.state.selectedRows || [];
               let keys = selectedRowKeys;
               if (selectedRowKeys.some(item => item == rowkey)) {
-                keys = keys.filter(item => item !== rowkey)
-                rows = rows.filter(item => item.rn !== (index + 1))
+                keys = keys.filter(item => item !== rowkey);
+                rows = rows.filter(item => item.rn !== index + 1);
                 // keys.splice(index, 1)
               } else {
                 // keys = keys.concat([index])
                 keys = checkboxOrRadio === 1 ? [rowkey] : keys.concat([rowkey]);
                 rows = checkboxOrRadio === 1 ? [record] : rows.concat([record]);
               }
-              this.setState({
-                selectedRowKeys: keys,
-                selectedRows: rows
-              }, () => {
-                this.props.rowChange && this.props.rowChange(this.state.selectedRowKeys, record)
-              })
+              this.setState(
+                {
+                  selectedRowKeys: keys,
+                  selectedRows: rows,
+                },
+                () => {
+                  this.props.rowChange && this.props.rowChange(this.state.selectedRowKeys, record);
+                },
+              );
             },
           })}
-          pagination={noPaging? false : {
-            showSizeChanger: true,
-            showQuickJumper: true,
-            pageSize,
-            current,
-            // onShowSizeChange: this.onTableChange,
-            onShowSizeChange: this.onTableChange,
-            pageSizeOptions: ['10', '20', '30', '40'],
-            total,
-          }}
+          pagination={
+            noPaging
+              ? false
+              : {
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  pageSize,
+                  current,
+                  // onShowSizeChange: this.onTableChange,
+                  onShowSizeChange: this.onTableChange,
+                  pageSizeOptions: ['10', '20', '30', '40'],
+                  total,
+                }
+          }
           {...this.props}
           // scroll={{ x: this.props.scroll.x || scrollXWidth, y: this.props.scroll.y || 'calc(100vh - 390px)' }}
           // scroll={scroll}
@@ -776,16 +917,37 @@ class AutoFormTable extends PureComponent {
               </Upload>
             </Col>
             <Col span={6} style={{ marginTop: 6 }}>
-              <a onClick={() => {
-                dispatch({
-                  type: 'autoForm/exportTemplet',
-                  payload: {
-                    configId,
-                  },
-                })
-              }}>下载导入模板</a></Col>
+              <a
+                onClick={() => {
+                  dispatch({
+                    type: 'autoForm/exportTemplet',
+                    payload: {
+                      configId,
+                    },
+                  });
+                }}
+              >
+                下载导入模板
+              </a>
+            </Col>
           </Row>
         </Modal>
+
+        <AutoFormAddModal
+          configId={configId}
+          visible={handleAddVisible}
+          width={modalWidth || 800}
+          onCancel={this.onHandleCancel}
+          successCallback={this.onHandleCancel}
+        />
+        <AutoFormEditModal
+          configId={configId}
+          visible={handleEditVisible}
+          width={modalWidth || 800}
+          keysParams={this.state.editKeysParams}
+          onCancel={this.onHandleCancel}
+          successCallback={this.onHandleCancel}
+        />
       </Fragment>
     );
   }

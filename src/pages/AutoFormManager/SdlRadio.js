@@ -1,10 +1,7 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-
-import {
-  Radio
-} from 'antd'
+import { Radio } from 'antd';
 import { connect } from 'dva';
 
 @connect(({ loading, autoForm }) => ({
@@ -18,31 +15,36 @@ class SdlRadio extends Component {
 
   componentDidMount() {
     const { dispatch, data } = this.props;
-    !data.length && dispatch({
-      type: 'autoForm/getConfigIdList',
-      payload: {
-        configId
-      }
-    })
+    !data.length &&
+      dispatch({
+        type: 'autoForm/getConfigIdList',
+        payload: {
+          configId,
+        },
+      });
   }
   render() {
     const { configId, configIdList, data, itemValue, itemName } = this.props;
     const dataList = data.length ? data : configIdList[configId];
+
     return (
       <Radio.Group {...this.props}>
-        {
-          this.props.all && <Radio key={""} value={null}>全部</Radio>
-        }
-        {
-          dataList.map(radio => {
-            return <Radio key={radio.key} value={radio.key}>{radio.value}</Radio>
-          })
-        }
+        {this.props.all && (
+          <Radio key={''} value={null}>
+            全部
+          </Radio>
+        )}
+        {dataList.map(radio => {
+          return (
+            <Radio key={radio.key} value={radio.key}>
+              {radio.value}
+            </Radio>
+          );
+        })}
       </Radio.Group>
     );
   }
 }
-
 
 // SearchSelect.propTypes = {
 //   // placeholder

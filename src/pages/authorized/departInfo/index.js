@@ -17,7 +17,8 @@ import {
   UsergroupAddOutlined,
   UndoOutlined,
   ConsoleSqlOutlined,
-  AuditOutlined
+  AuditOutlined,
+  ContactsOutlined,
 } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
@@ -45,7 +46,7 @@ import {
   Radio,
   Tooltip,
   Popover,
-  Select
+  Select,
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -58,10 +59,10 @@ import styles from './index.less';
 import { DndProvider, DragSource, DropTarget } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
-import SdlTable from '@/components/SdlTable'
+import SdlTable from '@/components/SdlTable';
+import SupervisionConfigModal from './SupervisionConfigModal';
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
-
 
 let dragingIndex = -1;
 
@@ -89,10 +90,10 @@ class BodyRow extends React.Component {
 const rowSource = {
   beginDrag(props) {
     // dragingIndex = props.index;
-    dragingIndex = props['data-row-key']
+    dragingIndex = props['data-row-key'];
     return {
       // index: props.index,
-      'data-row-key':props['data-row-key']
+      'data-row-key': props['data-row-key'],
     };
   },
 };
@@ -130,7 +131,7 @@ const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
 );
 
 // Customize Table Transfer
-const TableTransfer = ({ leftColumns, rightColumns,pagination, ...restProps }) => (
+const TableTransfer = ({ leftColumns, rightColumns, pagination, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
     {({
       direction,
@@ -165,15 +166,15 @@ const TableTransfer = ({ leftColumns, rightColumns,pagination, ...restProps }) =
           columns={columns}
           dataSource={filteredItems}
           size="small"
-          style={{ pointerEvents: listDisabled ? 'none' : null,paddingBottom:10 }}
-          scroll={{y:'calc(100vh - 550px)'}}
+          style={{ pointerEvents: listDisabled ? 'none' : null, paddingBottom: 10 }}
+          scroll={{ y: 'calc(100vh - 550px)' }}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
               if (itemDisabled || listDisabled) return;
               onItemSelect(key, !listSelectedKeys.includes(key));
             },
           })}
-          pagination={{...pagination}}
+          pagination={{ ...pagination }}
         />
       );
     }}
@@ -229,7 +230,7 @@ const rightTableColumns = [
     ellipsis: true,
   },
 ];
-@connect(({ departinfo, autoForm,loading, global, common }) => ({
+@connect(({ departinfo, autoForm, loading, global, common }) => ({
   // GetRegionInfoByTree: loading.effects['departinfo/getregioninfobytree'],
   GetRegionInfoByTree: loading.effects['autoForm/getregioninfobytree'],
   GetRegionByDepID: loading.effects['departinfo/getregionbydepid'],
@@ -240,7 +241,7 @@ const rightTableColumns = [
   CheckPointLoading: loading.effects['departinfo/getpointbydepid'],
   getentandpointLoading: loading.effects['departinfo/getentandpoint'],
   updateOperationAreaLoading: loading.effects['departinfo/updateOperationArea'],
-  dataLoading: loading.effects['departinfo/insertpointfilterbydepid'],  
+  dataLoading: loading.effects['departinfo/insertpointfilterbydepid'],
   DepartInfoTree: departinfo.DepartInfoTree,
   DepartInfoOne: departinfo.DepartInfoOne,
   DepartTree: departinfo.DepartTree,
@@ -260,9 +261,9 @@ const rightTableColumns = [
   userDepApproveInfoList: departinfo.userDepApproveInfoList,
   getUserDepApproveInfoLoading: loading.effects['departinfo/getUserDepApproveInfo'],
   addOrUpdateUserDepApproveLoading: loading.effects['departinfo/addOrUpdateUserDepApprove'],
-  userList:departinfo.userList,
+  userList: departinfo.userList,
   deleteUserDepApproveLoading: loading.effects['departinfo/deleteUserDepApprove'],
-  insertdepartbyuserLoading :loading.effects['departinfo/insertdepartbyuser'] || false,
+  insertdepartbyuserLoading: loading.effects['departinfo/insertdepartbyuser'] || false,
 }))
 @Form.create()
 class DepartIndex extends Component {
@@ -296,11 +297,11 @@ class DepartIndex extends Component {
       visibleData: false,
       pollutantType: 2,
       DataTreeValue: [],
-      dataSelectedKeys:[],
-      rolesID:'',
-      alarmPushData:'',
-      postCheckedKeys:'',
-      updateOperationVal:'1',
+      dataSelectedKeys: [],
+      rolesID: '',
+      alarmPushData: '',
+      postCheckedKeys: '',
+      updateOperationVal: '1',
       columns: [
         {
           title: '部门名称',
@@ -332,7 +333,7 @@ class DepartIndex extends Component {
           key: 'x',
           align: 'left',
           width: '280px',
-          render: (text, record,index) => (
+          render: (text, record, index) => (
             <span>
               <Tooltip title="编辑">
                 <a
@@ -364,12 +365,12 @@ class DepartIndex extends Component {
                             this.props.dispatch({
                               type: 'departinfo/getdepartinfobytree',
                               payload: {},
-                              callback:(res)=>{
-                                let data = this.handleData(res,0)
+                              callback: res => {
+                                let data = this.handleData(res, 0);
                                 this.setState({
-                                  departInfoTree:data
-                                })
-                              }
+                                  departInfoTree: data,
+                                });
+                              },
                             });
                           } else {
                             message.error(res.Message);
@@ -382,7 +383,7 @@ class DepartIndex extends Component {
                   okText="是"
                   cancelText="否"
                 >
-                  <a >
+                  <a>
                     <DeleteOutlined style={{ fontSize: 16 }} />
                   </a>
                 </Popconfirm>
@@ -424,7 +425,6 @@ class DepartIndex extends Component {
                       <FilterOutlined style={{ fontSize: 16 }} />
                     </a>
                   </Tooltip>
-               
                 </>
               )}
               {this.props.configInfo&&this.props.configInfo.IsShowProjectRegion&&<><Divider type="vertical" /><Tooltip title="设置点位访问权限">
@@ -464,20 +464,46 @@ class DepartIndex extends Component {
               </Tooltip>
               <Divider type="vertical" />
               <Tooltip title="更新运维区域">
-              <Popover   trigger="click" visible={this.state.operatioVisible && record.UserGroup_ID === this.state.updateOperationGroupId}  content={this.updateOperation} title="更新运维区域">
-                <a
-                  onClick={() => {
-                     this.setState({
-                       updateOperationGroupId:record.UserGroup_ID,
-                       operatioVisible:true,
-                       updateOperationVal:record.leve,
-                     })
-                  }}
+                <Popover
+                  trigger="click"
+                  visible={
+                    this.state.operatioVisible &&
+                    record.UserGroup_ID === this.state.updateOperationGroupId
+                  }
+                  content={this.updateOperation}
+                  title="更新运维区域"
                 >
-                  <UndoOutlined style={{ fontSize: 16 }} />
-                </a>
+                  <a
+                    onClick={() => {
+                      this.setState({
+                        updateOperationGroupId: record.UserGroup_ID,
+                        operatioVisible: true,
+                        updateOperationVal: record.leve,
+                      });
+                    }}
+                  >
+                    <UndoOutlined style={{ fontSize: 16 }} />
+                  </a>
                 </Popover>
               </Tooltip></>}
+              {record.leve === '1' && (
+                <>
+                  <Divider type="vertical" />
+                  <Tooltip title="省区/大区日常监管配置">
+                    <a
+                      onClick={() => {
+                        this.setState({
+                          superVisionConfigVisible: true,
+                          UserGroup_ID: record.UserGroup_ID,
+                          UserGroup_Name: record.UserGroup_Name,
+                        });
+                      }}
+                    >
+                      <ContactsOutlined style={{ fontSize: 16 }} />
+                    </a>
+                  </Tooltip>
+                </>
+              )}
               {/* <Divider type="vertical" />
               <Tooltip title="设置审批流程">
                 <a
@@ -493,23 +519,23 @@ class DepartIndex extends Component {
           ),
         },
       ],
-      departInfoTree:[],
-      sortTitle:'开启排序',
-      approvalProcessVisible:false, //审核流程
-      approvalProcessEditorAddVisible:false,
-      approvalUserID:undefined,
-      approvalNode:undefined,
-      depID:undefined,
+      departInfoTree: [],
+      sortTitle: '开启排序',
+      approvalProcessVisible: false, //审核流程
+      approvalProcessEditorAddVisible: false,
+      approvalUserID: undefined,
+      approvalNode: undefined,
+      depID: undefined,
     };
-    this.depApproveColumns=[
+    this.depApproveColumns = [
       {
         title: <span>序号</span>,
         dataIndex: 'x',
         key: 'x',
         align: 'center',
-        render:(text, record, index) => {
-          return index + 1
-        }
+        render: (text, record, index) => {
+          return index + 1;
+        },
       },
       {
         title: '审核人',
@@ -526,18 +552,18 @@ class DepartIndex extends Component {
         dataIndex: '',
         key: 'x',
         align: 'center',
-        render: (text, record,index) => (
+        render: (text, record, index) => (
           <span>
             <Tooltip title="编辑">
               <a
                 onClick={() => {
-                   this.setState({ 
-                     approvalProcessEdit:false,
-                     approvalProcessEditorAddVisible:true,
-                     UserID: record.userID,
-                     Node: record.node,
-                     approvalProcessEditId:record.id
-                    })
+                  this.setState({
+                    approvalProcessEdit: false,
+                    approvalProcessEditorAddVisible: true,
+                    UserID: record.userID,
+                    Node: record.node,
+                    approvalProcessEditId: record.id,
+                  });
                 }}
               >
                 <EditOutlined style={{ fontSize: 16 }} />
@@ -559,98 +585,119 @@ class DepartIndex extends Component {
                     payload: {
                       depID: record.depID,
                     },
-                  }) 
+                  });
                 }}
                 okText="是"
                 cancelText="否"
               >
-                <a >
+                <a>
                   <DeleteOutlined style={{ fontSize: 16 }} />
                 </a>
               </Popconfirm>
             </Tooltip>
-          </span>)
-      }
-    ]
+          </span>
+        ),
+      },
+    ];
   }
   //获取角色列表
-  getUserList=(params)=>{
+  getUserList = params => {
     this.props.dispatch({
       type: 'departinfo/getUserList',
-      payload: params? params : { roleListID:'', groupListID:'', userName:'',	userAccount:''}
+      payload: params ? params : { roleListID: '', groupListID: '', userName: '', userAccount: '' },
     });
-  }
-  approvalProcessClick = (row) =>{ //审核流程
+  };
+  approvalProcessClick = row => {
+    //审核流程
     this.setState({
-      approvalProcessVisible:true,
-      depID:row.key,
-    })
+      approvalProcessVisible: true,
+      depID: row.key,
+    });
     this.props.dispatch({
       type: 'departinfo/getUserDepApproveInfo',
       payload: {
         depID: row.key,
       },
-    })                     ;
-  }
-  updateOperation=()=>{
-    return <Form>
+    });
+  };
+  updateOperation = () => {
+    return (
+      <Form>
         <Row>
-        <Select
-       placeholder="更新类型"
-       onChange={this.updateChange}
-       value={this.state.updateOperationVal}
-       style={{ width: '100%'}}
-       allowClear
-     >
-       <Option value="1">一级</Option>
-       <Option value="2">二级</Option>
-       <Option value="3">其他</Option>
-     </Select>
+          <Select
+            placeholder="更新类型"
+            onChange={this.updateChange}
+            value={this.state.updateOperationVal}
+            style={{ width: '100%' }}
+            allowClear
+          >
+            <Option value="1">一级</Option>
+            <Option value="2">二级</Option>
+            <Option value="3">其他</Option>
+          </Select>
         </Row>
-         <Row style={{paddingTop:10}} justify='end'>
-         <Button type="primary"  loading={this.props.updateOperationAreaLoading} onClick={this.updateOperationSubmit}>
-           确定
-         </Button>  
-         <Button style={{marginLeft:5}} onClick={() => {this.setState({operatioVisible:false,updateOperationGroupId:''})}}>
-         取消
-         </Button>  
-         </Row>
+        <Row style={{ paddingTop: 10 }} justify="end">
+          <Button
+            type="primary"
+            loading={this.props.updateOperationAreaLoading}
+            onClick={this.updateOperationSubmit}
+          >
+            确定
+          </Button>
+          <Button
+            style={{ marginLeft: 5 }}
+            onClick={() => {
+              this.setState({ operatioVisible: false, updateOperationGroupId: '' });
+            }}
+          >
+            取消
+          </Button>
+        </Row>
       </Form>
-  }
+    );
+  };
 
-  updateChange=(value)=>{
+  updateChange = value => {
     this.setState({
-      updateOperationVal:value
-    })
-  }
-  handleUpdateOperationData=(data,id,i)=>{
-    if(data&&data.length>0){
-       i++;
+      updateOperationVal: value,
+    });
+  };
+  handleUpdateOperationData = (data, id, i) => {
+    if (data && data.length > 0) {
+      i++;
 
-       return  data.map(item=>{
-         return {...item,leve:item.UserGroup_ID===id? this.state.updateOperationVal : item.leve ,children:item.children.length>0 ? this.handleUpdateOperationData(item.children,id,i) : []}
-      })
+      return data.map(item => {
+        return {
+          ...item,
+          leve: item.UserGroup_ID === id ? this.state.updateOperationVal : item.leve,
+          children:
+            item.children.length > 0 ? this.handleUpdateOperationData(item.children, id, i) : [],
+        };
+      });
     }
-
-  }
-  updateOperationSubmit=()=>{
+  };
+  updateOperationSubmit = () => {
     this.props.dispatch({
       type: 'departinfo/updateOperationArea',
       payload: {
         LevelType: this.state.updateOperationVal,
         GroupId: this.state.updateOperationGroupId,
       },
-      callback:()=>{
-        this.setState({operatioVisible:false},()=>{
-         const data =  this.handleUpdateOperationData(this.state.departInfoTree,this.state.updateOperationGroupId,0)
-         console.log(data)  
-         this.setState({
-             departInfoTree:data,
-            })
-        })
-      }
+      callback: () => {
+        this.setState({ operatioVisible: false }, () => {
+          const data = this.handleUpdateOperationData(
+            this.state.departInfoTree,
+            this.state.updateOperationGroupId,
+            0,
+          );
+          console.log(data);
+          this.setState({
+            departInfoTree: data,
+          });
+        });
+      },
     });
-  }
+  };
   onChanges = nextTargetKeys => {
     // if (nextTargetKeys.length == 0) {
     //     message.error("请至少保留一个角色")
@@ -664,11 +711,12 @@ class DepartIndex extends Component {
         User_ID: nextTargetKeys,
         UserGroup_ID: this.state.selectedRowKeys.key,
       },
-      callback:(isSuccess)=>{
-        if(!isSuccess){ //不成功
-          this.showUserModal()
+      callback: isSuccess => {
+        if (!isSuccess) {
+          //不成功
+          this.showUserModal();
         }
-      }
+      },
     });
     this.setState({ targetKeys: nextTargetKeys });
   };
@@ -691,13 +739,12 @@ class DepartIndex extends Component {
     });
   };
 
-  onCheck = (checkedKey,info) => {
+  onCheck = (checkedKey, info) => {
     // console.log(checkedKey)
     // console.log(info)
-    this.setState({ checkedKey});
-    let checkedKeys = [...checkedKey,...info.halfCheckedKeys]
-    this.setState({ postCheckedKeys:checkedKeys});
-
+    this.setState({ checkedKey });
+    let checkedKeys = [...checkedKey, ...info.halfCheckedKeys];
+    this.setState({ postCheckedKeys: checkedKeys });
   };
   /*** 设置点位访问权限 **/
   showDataModal = () => {
@@ -739,7 +786,7 @@ class DepartIndex extends Component {
     // console.log('this.state.leafTreeDatas=', this.state.leafTreeDatas);
     checkedKeys.map((item, index) => {
       if (this.state.leafTreeDatas.indexOf(item) != -1) {
-        checkedKeys.splice(index, 1)
+        checkedKeys.splice(index, 1);
       }
     });
     // console.log(checkedKeys)
@@ -748,11 +795,12 @@ class DepartIndex extends Component {
 
     // this.setState({ checkedKeySel: checkedKeys });
   };
-    // onSelectData = (selectedKey, info) => { //选择监测点
+  // onSelectData = (selectedKey, info) => { //选择监测点
   //   console.log(selectedKey)
   //   this.setState({ dataSelectedKeys:selectedKey });
   // };
-  handleSizeChange = e => { //切换污染物
+  handleSizeChange = e => {
+    //切换污染物
     const keys = this.state.selectedRowKeys.key;
     this.setState({ pollutantType: e.target.value });
     this.props.dispatch({
@@ -772,8 +820,8 @@ class DepartIndex extends Component {
     });
   };
 
-  
-  onChangeTree = value => {   //切换行政区
+  onChangeTree = value => {
+    //切换行政区
     console.log('onChange================= ', value);
     const keys = this.state.selectedRowKeys.key;
     if (value == undefined) {
@@ -816,7 +864,8 @@ class DepartIndex extends Component {
       });
     }
   };
-  handleDataOK = e => { //提交
+  handleDataOK = e => {
+    //提交
     // console.log('regioncode=', this.state.DataTreeValue.toString());
     // console.log('DGIMN=', this.state.checkedKeys);
     // console.log('selectedRowKeys=', this.state.selectedRowKeys.key);
@@ -838,7 +887,7 @@ class DepartIndex extends Component {
       },
     });
   };
-/*** **/
+  /*** **/
 
   onSelect = (record, selected, selectedRows) => {
     console.log('record=', record.key);
@@ -858,23 +907,22 @@ class DepartIndex extends Component {
   //     },
   // };
 
-
   componentDidMount() {
     this.props.dispatch({
       type: 'departinfo/getdepartinfobytree',
       payload: {},
-      callback:(res)=>{
-        let data = this.handleData(res,0)
+      callback: res => {
+        let data = this.handleData(res, 0);
         this.setState({
-          departInfoTree:data
-        })
-      }
+          departInfoTree: data,
+        });
+      },
     });
     this.props.dispatch({
       type: 'departinfo/getGroupRegionFilter',
       payload: {},
     });
-    this.getUserList({})
+    this.getUserList({});
     // this.props.dispatch({
     //     type: 'roleinfo/getrolestreeandobj',
     //     payload: {}
@@ -887,15 +935,18 @@ class DepartIndex extends Component {
     //     }
     // })
   }
-  handleData=(data,i)=>{
-    if(data&&data.length>0){
-       i++;
-       return  data.map(item=>{
-         return {...item,flag:i,children:item.children.length>0 ? this.handleData(item.children,i) : []}
-      })
+  handleData = (data, i) => {
+    if (data && data.length > 0) {
+      i++;
+      return data.map(item => {
+        return {
+          ...item,
+          flag: i,
+          children: item.children.length > 0 ? this.handleData(item.children, i) : [],
+        };
+      });
     }
-
-  }
+  };
   showModal = () => {
     this.props.dispatch({
       type: 'departinfo/getdeparttreeandobj',
@@ -959,17 +1010,15 @@ class DepartIndex extends Component {
       payload: {
         UserGroup_ID: keys.toString(),
       },
-      callback:res=>{
-        this.setState({checkedKey:res.userFlagList,postCheckedKeys:res.userList})
-      }
+      callback: res => {
+        this.setState({ checkedKey: res.userFlagList, postCheckedKeys: res.userList });
+      },
     });
     // this.setState({
     //   visibleRegion: true,
     //   checkedKey: this.props.RegionByDepID,
     // });
   };
-
-
 
   componentWillReceiveProps(nextProps) {
     if (this.props.UserByDepID !== nextProps.UserByDepID) {
@@ -1062,8 +1111,8 @@ class DepartIndex extends Component {
     this.props.dispatch({
       type: 'departinfo/insertregionbyuser',
       payload: {
-        RegionFlagCode: this.state.checkedKey,//用来回显的参数
-        RegionCode:this.state.postCheckedKeys,//真正的参数  带父节点
+        RegionFlagCode: this.state.checkedKey, //用来回显的参数
+        RegionCode: this.state.postCheckedKeys, //真正的参数  带父节点
         UserGroup_ID: this.state.selectedRowKeys.key,
         callback: res => {
           if (res.IsSuccess) {
@@ -1076,8 +1125,6 @@ class DepartIndex extends Component {
       },
     });
   };
-
-
 
   handleSubmit = e => {
     e.preventDefault();
@@ -1106,12 +1153,12 @@ class DepartIndex extends Component {
                 this.props.dispatch({
                   type: 'departinfo/getdepartinfobytree',
                   payload: {},
-                  callback:(res)=>{
-                    let data = this.handleData(res,0)
+                  callback: res => {
+                    let data = this.handleData(res, 0);
                     this.setState({
-                      departInfoTree:data
-                    })
-                  }
+                      departInfoTree: data,
+                    });
+                  },
                 });
               } else {
                 message.error(res.Message);
@@ -1160,14 +1207,16 @@ class DepartIndex extends Component {
   };
 
   showAlarmModal = record => {
-    this.setState({
-      alarmPushData:record
-    },()=>{
-      this.setState({
-        visibleAlarm: true
-      });
-    })
-
+    this.setState(
+      {
+        alarmPushData: record,
+      },
+      () => {
+        this.setState({
+          visibleAlarm: true,
+        });
+      },
+    );
   };
   dragaComponents = {
     body: {
@@ -1175,90 +1224,125 @@ class DepartIndex extends Component {
     },
   };
 
-  moveRow = (dragIndex, hoverIndex) => { //拖拽事件
+  moveRow = (dragIndex, hoverIndex) => {
+    //拖拽事件
     const { departInfoTree } = this.state;
-    
-       let data = [...departInfoTree]
-       let lastData = this.recursion(data,dragIndex, hoverIndex);
-       this.setState(
-        update(this.state, {
-          departInfoTree: {
-            $splice: [[departInfoTree, lastData]],
-          },
-        }),
-      );
-      // let lastDatas = update(this.state.departInfoTree, {$splice:[[departInfoTree , lastData]]});
-      //  this.setState({
-      //   departInfoTree:lastDatas
-      //  })
+
+    let data = [...departInfoTree];
+    let lastData = this.recursion(data, dragIndex, hoverIndex);
+    this.setState(
+      update(this.state, {
+        departInfoTree: {
+          $splice: [[departInfoTree, lastData]],
+        },
+      }),
+    );
+    // let lastDatas = update(this.state.departInfoTree, {$splice:[[departInfoTree , lastData]]});
+    //  this.setState({
+    //   departInfoTree:lastDatas
+    //  })
   };
- recursion= (data, current,find)=>{
-      let totalData =[], currentData = null,currentIndexs=-1, findData = null,findIndexs=-1;
-      if(data&&data.length>0){
+  recursion = (data, current, find) => {
+    let totalData = [],
+      currentData = null,
+      currentIndexs = -1,
+      findData = null,
+      findIndexs = -1;
+    if (data && data.length > 0) {
       //  return  data.map((item,index)=>{
-          for(var index in data){
-            let item = data[index]
-           if(item.key === current) {currentData = item ; currentIndexs = index };
-           if(item.key === find){ findData = item ; findIndexs = index };
-         
-           if(currentData&&findData&&currentData.flag === findData.flag ){ //在同一个树下拖拽
-              data[currentIndexs] = data.splice(findIndexs,1,data[currentIndexs])[0]; //先删除替换  返回的删除元素再赋值到之前的位置  
-              console.log(findIndexs,data[findIndexs])
-              break; //拖拽完成后直接跳转循环 多次循环会导致错乱
-            }
-            totalData.push({
-              //  children: item.children&&item.children.length>0? this.recursion(item.children,current,find) : [],//必须在前面 第一次更新值
-               ...item,
-               children: item.children&&item.children.length>0? this.recursion(item.children,current,find) : [],//必须在前面 第一次更新值
+      for (var index in data) {
+        let item = data[index];
+        if (item.key === current) {
+          currentData = item;
+          currentIndexs = index;
+        }
+        if (item.key === find) {
+          findData = item;
+          findIndexs = index;
+        }
 
-           })
-          }
-        // })
+        if (currentData && findData && currentData.flag === findData.flag) {
+          //在同一个树下拖拽
+          data[currentIndexs] = data.splice(findIndexs, 1, data[currentIndexs])[0]; //先删除替换  返回的删除元素再赋值到之前的位置
+          console.log(findIndexs, data[findIndexs]);
+          break; //拖拽完成后直接跳转循环 多次循环会导致错乱
+        }
+        totalData.push({
+          //  children: item.children&&item.children.length>0? this.recursion(item.children,current,find) : [],//必须在前面 第一次更新值
+          ...item,
+          children:
+            item.children && item.children.length > 0
+              ? this.recursion(item.children, current, find)
+              : [], //必须在前面 第一次更新值
+        });
       }
+      // })
+    }
 
-      return totalData;
-    }
-    updateSort=()=>{
-      const { sortTitle } = this.state;
-      sortTitle==='开启排序'? this.setState({  sortTitle:'关闭排序'   }) : this.setState({  sortTitle:'开启排序'   })
-    }
-    saveSort=()=>{
-
-    }
-    addOrUpdateUserDepApprove = () =>{ //添加修改审核流程
-      const { approvalUserID,approvalNode,depID,approvalProcessEditId,approvalProcessEdit } = this.state;
-      if(approvalUserID&&approvalNode){
+    return totalData;
+  };
+  updateSort = () => {
+    const { sortTitle } = this.state;
+    sortTitle === '开启排序'
+      ? this.setState({ sortTitle: '关闭排序' })
+      : this.setState({ sortTitle: '开启排序' });
+  };
+  saveSort = () => {};
+  addOrUpdateUserDepApprove = () => {
+    //添加修改审核流程
+    const {
+      approvalUserID,
+      approvalNode,
+      depID,
+      approvalProcessEditId,
+      approvalProcessEdit,
+    } = this.state;
+    if (approvalUserID && approvalNode) {
       this.props.dispatch({
         type: 'departinfo/addOrUpdateUserDepApprove',
         payload: {
-          ID: approvalProcessEdit?'':approvalProcessEditId,
+          ID: approvalProcessEdit ? '' : approvalProcessEditId,
           UserID: approvalUserID,
           DepID: depID,
-          Node: approvalNode
+          Node: approvalNode,
         },
-        callback:()=>{
-         this.setState({approvalProcessEditorAddVisible:false})
-         this.props.dispatch({
-          type: 'departinfo/getUserDepApproveInfo',
-          payload: {
-            depID: depID,
-          },
-        })  
-        }
+        callback: () => {
+          this.setState({ approvalProcessEditorAddVisible: false });
+          this.props.dispatch({
+            type: 'departinfo/getUserDepApproveInfo',
+            payload: {
+              depID: depID,
+            },
+          });
+        },
       });
-    }else{
-      message.error('审核人和审核节点名不能为空')
+    } else {
+      message.error('审核人和审核节点名不能为空');
     }
-    }
-    approvalProcessEditOk=(e)=>{
-        const { approvalProcessEditId } = this.state;
-        e.preventDefault();    
-        this.addOrUpdateUserDepApprove()
-    }
+  };
+  approvalProcessEditOk = e => {
+    const { approvalProcessEditId } = this.state;
+    e.preventDefault();
+    this.addOrUpdateUserDepApprove();
+  };
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { btnloading, btnloading1,insertregionbyuserLoading,userDepApproveInfoList, } = this.props;
-    const { targetKeys, disabled, showSearch,sortTitle,selectedRowKeys } = this.state;
+    const {
+      btnloading,
+      btnloading1,
+      insertregionbyuserLoading,
+      userDepApproveInfoList,
+    } = this.props;
+    const {
+      targetKeys,
+      disabled,
+      showSearch,
+      sortTitle,
+      selectedRowKeys,
+      superVisionConfigVisible,
+      UserGroup_ID,
+      UserGroup_Name,
+    } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -1323,16 +1407,23 @@ class DepartIndex extends Component {
           // >
           <BreadcrumbWrapper>
             <Card bordered={false}>
-              <Button type="primary" style={{marginRight:8}} onClick={this.showModal}>
+              <Button type="primary" style={{ marginRight: 8 }} onClick={this.showModal}>
                 新增
               </Button>
               {/* <Button type="primary"  style={{marginRight:8}} onClick={this.updateSort}>
                 {sortTitle}
               </Button> */}
-              {sortTitle==='关闭排序'? <Button onClick={() => { this.saveSort()}} 
-                                        style={{marginRight:8}}   loading={this.props.dragLoading}  >
-                                       保存排序
-                                       </Button>:null}
+              {sortTitle === '关闭排序' ? (
+                <Button
+                  onClick={() => {
+                    this.saveSort();
+                  }}
+                  style={{ marginRight: 8 }}
+                  loading={this.props.dragLoading}
+                >
+                  保存排序
+                </Button>
+              ) : null}
               {/* <Button
                                 onClick={this.showUserModal}
                                 style={{ marginLeft: "10px" }}
@@ -1346,30 +1437,38 @@ class DepartIndex extends Component {
                                 style={{ marginLeft: "10px" }}
                             >设置点位访问权限</Button> */}
               <DndProvider backend={HTML5Backend}>
-              <Table
-                // rowKey={}
-                onRow={(record, index)  => ({
-                  onClick: event => {
-                    this.setState({
-                      selectedRowKeys: record,
-                      rowKeys: [record.key],
-                    });
-                  },
-                  index,
-                  moveRow: sortTitle==='关闭排序'? this.moveRow : null,
-                })}
-                components={sortTitle==='关闭排序'? this.dragaComponents : null}
-                style={{ marginTop: '20px' }}
-                //rowSelection={rowRadioSelection}
-                size="small"
-                columns={this.state.columns}
-                defaultExpandAllRows
-                // dataSource={this.props.DepartInfoTree}
-                dataSource={this.state.departInfoTree}
-              />
+                <Table
+                  // rowKey={}
+                  onRow={(record, index) => ({
+                    onClick: event => {
+                      this.setState({
+                        selectedRowKeys: record,
+                        rowKeys: [record.key],
+                      });
+                    },
+                    index,
+                    moveRow: sortTitle === '关闭排序' ? this.moveRow : null,
+                  })}
+                  components={sortTitle === '关闭排序' ? this.dragaComponents : null}
+                  style={{ marginTop: '20px' }}
+                  //rowSelection={rowRadioSelection}
+                  size="small"
+                  columns={this.state.columns}
+                  defaultExpandAllRows
+                  // dataSource={this.props.DepartInfoTree}
+                  dataSource={this.state.departInfoTree}
+                />
               </DndProvider>
             </Card>
             <div>
+              {superVisionConfigVisible && (
+                <SupervisionConfigModal
+                  visible={superVisionConfigVisible}
+                  UserGroup_ID={UserGroup_ID}
+                  UserGroup_Name={UserGroup_Name}
+                  onCancel={() => this.setState({ superVisionConfigVisible: false })}
+                />
+              )}
               <Modal
                 title={this.state.Tittle}
                 visible={this.state.visible}
@@ -1457,7 +1556,7 @@ class DepartIndex extends Component {
                   />
                 ) : ( */}
 
-                  <Spin spinning={this.props.insertdepartbyuserLoading || this.props.GetUserByDepID}>
+                <Spin spinning={this.props.insertdepartbyuserLoading || this.props.GetUserByDepID}>
                   <TableTransfer
                     rowKey={record => record.User_ID}
                     titles={['待分配用户', '已分配用户']}
@@ -1476,9 +1575,8 @@ class DepartIndex extends Component {
                     // style={{ width: '100%', height: '600px' }}
                     pagination={false}
                   />
-                    </Spin>
+                </Spin>
                 {/* )} */}
-              
               </Modal>
               <Modal
                 title={`区域过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
@@ -1488,7 +1586,6 @@ class DepartIndex extends Component {
                 onCancel={this.handleCancel}
                 width={900}
                 confirmLoading={insertregionbyuserLoading}
-                
               >
                 {this.props.GetRegionByDepID ? (
                   <Spin
@@ -1580,7 +1677,7 @@ class DepartIndex extends Component {
                         }}
                         size="large"
                       />
-                    ) : this.props.EntAndPoint&&this.props.EntAndPoint.length > 0 ? (
+                    ) : this.props.EntAndPoint && this.props.EntAndPoint.length > 0 ? (
                       <Tree
                         key="key"
                         style={{ height: '560px', overflow: 'auto' }}
@@ -1619,74 +1716,107 @@ class DepartIndex extends Component {
                   RoleIdOrDepId={this.state.selectedRowKeys.key}
                   FlagType="Dept"
                   cancelModal={this.cancelAlarmModal}
-                /> 
+                />
               </Modal>   */}
-             {this.state.visibleAlarm&&<NewAlarmPushRel type='Dept'  alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>}
-
+              {this.state.visibleAlarm && (
+                <NewAlarmPushRel
+                  type="Dept"
+                  alarmPushData={this.state.alarmPushData}
+                  visibleAlarm={this.state.visibleAlarm}
+                  cancelAlarmModal={this.cancelAlarmModal}
+                />
+              )}
             </div>
             {/* </MonitorContent> */}
             <Modal //审核流程弹框
-                title={selectedRowKeys&&selectedRowKeys.UserGroup_Name}
-                visible={this.state.approvalProcessVisible}
-                onCancel={()=>{this.setState({approvalProcessVisible:false})}}
-                width={'70%'}
-                destroyOnClose
-                footer={null}
+              title={selectedRowKeys && selectedRowKeys.UserGroup_Name}
+              visible={this.state.approvalProcessVisible}
+              onCancel={() => {
+                this.setState({ approvalProcessVisible: false });
+              }}
+              width={'70%'}
+              destroyOnClose
+              footer={null}
+            >
+              <Button
+                type="primary"
+                style={{ marginBottom: 15 }}
+                onClick={() => {
+                  this.setState({
+                    approvalProcessEdit: true,
+                    approvalProcessEditorAddVisible: true,
+                  });
+                }}
               >
-              <Button type="primary" style={{marginBottom:15}}
-                      onClick={()=>{
-                       this.setState({
-                        approvalProcessEdit:true,
-                        approvalProcessEditorAddVisible:true
-                       })
-                      }}>
                 新增
               </Button>
-               <SdlTable
-                    rowKey={(record, index) => `complete${index}`}
-                    bordered={false}
-                    loading={this.props.getUserDepApproveInfoLoading}
-                    columns={this.depApproveColumns}
-                    dataSource={userDepApproveInfoList}
-                    onCancel={()=>{this.setState({approvalProcessVisible:false})}}
-                    pagination={false}
-                    
-                />
-              </Modal>
-              <Modal //审核流程弹框 添加or修改
-                title={this.state.approvalProcessEdit? "添加": "编辑"}
-                visible={this.state.approvalProcessEditorAddVisible}
-                onCancel={()=>{this.setState({approvalProcessEditorAddVisible:false,approvalUserID:undefined,approvalNode:undefined})}}
-                width={'50%'}
-                destroyOnClose
-                okText= '保存'
-                wrapClassName={styles.approvalProcessEditSty}
-                onOk={this.approvalProcessEditOk}
-                confirmLoading={this.props.addOrUpdateUserDepApproveLoading}
-              >
-                  <Form   name="advanced_search" className={styles['ant-advanced-search-form']}>
-                        <Form.Item label="审核人"    >
-                            <Select showSearch
-                                filterOption={(input, option) =>
-                                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                              placeholder='请选择审核人' value={this.state.approvalUserID} onChange={(val)=>{this.setState({approvalUserID:val})}}>
-                              {this.props.userList[0]&&this.props.userList.map(item=>{
-                                return   <Option value={item.ID}>{`${item.userAccount} - ${item.userName}`}</Option>
-                              })}
-                            </Select>
-                        </Form.Item>
-                        <Form.Item
-                            label="审批节点"
-                        >
-                              <Select placeholder='请选择审核节点'   value={this.state.approvalNode} onChange={(val)=>{this.setState({approvalNode:val})}}>
-                                       <Option value="1">一级节点</Option>
-                                       <Option value="2">二级节点</Option>
-                                       <Option value="3">三级节点</Option>
-                               </Select>
-                        </Form.Item>
-                        </Form>
-              </Modal>
+              <SdlTable
+                rowKey={(record, index) => `complete${index}`}
+                bordered={false}
+                loading={this.props.getUserDepApproveInfoLoading}
+                columns={this.depApproveColumns}
+                dataSource={userDepApproveInfoList}
+                onCancel={() => {
+                  this.setState({ approvalProcessVisible: false });
+                }}
+                pagination={false}
+              />
+            </Modal>
+            <Modal //审核流程弹框 添加or修改
+              title={this.state.approvalProcessEdit ? '添加' : '编辑'}
+              visible={this.state.approvalProcessEditorAddVisible}
+              onCancel={() => {
+                this.setState({
+                  approvalProcessEditorAddVisible: false,
+                  approvalUserID: undefined,
+                  approvalNode: undefined,
+                });
+              }}
+              width={'50%'}
+              destroyOnClose
+              okText="保存"
+              wrapClassName={styles.approvalProcessEditSty}
+              onOk={this.approvalProcessEditOk}
+              confirmLoading={this.props.addOrUpdateUserDepApproveLoading}
+            >
+              <Form name="advanced_search" className={styles['ant-advanced-search-form']}>
+                <Form.Item label="审核人">
+                  <Select
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    placeholder="请选择审核人"
+                    value={this.state.approvalUserID}
+                    onChange={val => {
+                      this.setState({ approvalUserID: val });
+                    }}
+                  >
+                    {this.props.userList[0] &&
+                      this.props.userList.map(item => {
+                        return (
+                          <Option
+                            value={item.ID}
+                          >{`${item.userAccount} - ${item.userName}`}</Option>
+                        );
+                      })}
+                  </Select>
+                </Form.Item>
+                <Form.Item label="审批节点">
+                  <Select
+                    placeholder="请选择审核节点"
+                    value={this.state.approvalNode}
+                    onChange={val => {
+                      this.setState({ approvalNode: val });
+                    }}
+                  >
+                    <Option value="1">一级节点</Option>
+                    <Option value="2">二级节点</Option>
+                    <Option value="3">三级节点</Option>
+                  </Select>
+                </Form.Item>
+              </Form>
+            </Modal>
           </BreadcrumbWrapper>
         }
       </Fragment>

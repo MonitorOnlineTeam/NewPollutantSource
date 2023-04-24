@@ -7,7 +7,7 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 const apiHost = 'http://172.16.12.234:61002/';
-// const apiHost = 'http://172.16.12.134:63001/';     
+// const apiHost = 'http://172.16.12.134:63001/';
 // const apiHost = 'http://172.16.9.33:8800/'//py 本地
 // const apiHost = 'http://172.16.12.53:8050' //hb 本地
 // const apiHost = 'http://172.16.12.91:61007/' //宝武集团
@@ -44,11 +44,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false,
       // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
@@ -412,8 +412,8 @@ export default {
                   name: 'statisticsReportDataList',
                   path: '/SewagePlant/dataReportList/statisticsReportDataList',
                   component: './report/StatisticsReportDataList',
-                }
-              ]
+                },
+              ],
             },
             {
               path: '/operaAchiev', //运维绩效
@@ -421,34 +421,39 @@ export default {
               routes: [
                 {
                   path: '/operaAchiev',
-                  redirect: '/operaAchiev/personalAchiev', // 重定向 默认为 
+                  redirect: '/operaAchiev/personalAchiev', // 重定向 默认为
                 },
-                { // 个人绩效
+                {
+                  // 个人绩效
                   name: 'personalAchiev',
                   path: '/operaAchiev/personalAchiev',
                   component: './operaAchiev/personalAchiev',
                 },
-                { // 绩效信息
+                {
+                  // 绩效信息
                   name: 'achievInfo',
                   path: '/operaAchiev/achievInfo',
                   component: './operaAchiev/achievInfo',
                 },
-                { // 点位系数清单
+                {
+                  // 点位系数清单
                   name: 'pointCoefficientList',
                   path: '/operaAchiev/pointCoefficientList',
                   component: './operaAchiev/pointCoefficients',
                 },
-                { // 工单系数清单
+                {
+                  // 工单系数清单
                   name: 'workCoefficientList',
                   path: '/operaAchiev/workCoefficientList',
                   component: './operaAchiev/workCoefficients',
                 },
-                { // 绩效定时器
+                {
+                  // 绩效定时器
                   name: 'operaAchievTimer',
                   path: '/operaAchiev/operaAchievTimer',
                   component: './operaAchiev/operaAchievTimer',
                 },
-              ]
+              ],
             },
             {
               path: '/commissionTest', //调试检测
@@ -501,13 +506,12 @@ export default {
                       path: '/commissionTest/equipmentAccount/referenceInstruList',
                       component: './commissionTest/equipmentAccount/referenceInstruList',
                     },
-                  ]
+                  ],
                 },
                 {
                   name: '72HourCommissionTest', //72小时调试检测
                   path: '/commissionTest/72HourCommissionTest',
                   component: './commissionTest/72HourCommissionTest',
-
                 },
                 {
                   name: '72HourCommissionTestQuery', //72小时调试检测查询
@@ -519,8 +523,7 @@ export default {
                   path: '/commissionTest/areaPermissManage',
                   component: './commissionTest/areaPermissManage',
                 },
-
-              ]
+              ],
             },
             {
               path: '/systemManger', //系统管理
@@ -560,30 +563,32 @@ export default {
                   path: '/systemManger/pollutantMold', // 污染源模型
                   component: './systemManger/pollutantMold',
                 },
-              ]
-
+              ],
             },
             {
               path: '/assetManage/customOrder', //客户订单
               routes: [
                 {
                   path: '/assetManage/customOrder',
-                  redirect: '/assetManage/customOrder/custopmRenew', // 重定向 默认为 
+                  redirect: '/assetManage/customOrder/custopmRenew', // 重定向 默认为
                 },
-                { // 客户续费
+                {
+                  // 客户续费
                   name: 'custopmRenew',
                   path: '/assetManage/customOrder/custopmRenew',
                   component: './platformManager/assetManage/custopmRenew',
                 },
-                { // 续费日志
+                {
+                  // 续费日志
                   name: 'custopmRenew',
                   path: '/assetManage/customOrder/renewalLog',
                   component: './platformManager/assetManage/renewalLog',
                 },
-              ]
+              ],
             },
 
-            { //项目权限管理
+            {
+              //项目权限管理
               name: 'projectManageAuthor',
               path: '/assetManagement/equipmentAccount/projectManageAuthor',
               component: './platformManager/assetManage/equipmentAccount/projectManageAuthor',
@@ -596,7 +601,8 @@ export default {
                   path: '/platformconfig',
                   redirect: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2',
                 },
-                { //基础信息
+                {
+                  //基础信息
                   name: 'basicInfo',
                   path: '/platformconfig/basicInfo',
                   routes: [
@@ -616,47 +622,55 @@ export default {
                       path: '/platformconfig/basicInfo/projectManager/detail',
                       component: './platformManager/basicInfo/projectManager/detail',
                     },
-                    {  //污染源管理
+                    {
+                      //污染源管理
                       name: 'monitortarget',
-                      path: '/platformconfig/basicInfo/monitortarget/:configId/:targetType/:pollutantTypes',
+                      path:
+                        '/platformconfig/basicInfo/monitortarget/:configId/:targetType/:pollutantTypes',
                       component: './platformManager/monitortarget',
                     },
                     {
                       name: 'entOperationInfo', //企业下的运维信息
-                      path: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/operationInfo',
+                      path:
+                        '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/operationInfo',
                       component: './platformManager/monitortarget/operationInfo',
                     },
                     {
                       name: 'entImport', //企业导入
                       // path: '/platformconfig/monitortarget/entImport',
-                      path: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/entImport',
+                      path:
+                        '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/entImport',
                       component: './platformManager/monitortarget/entImport',
                     },
                     {
-                      name: 'dischargepermit',//排污许可证
+                      name: 'dischargepermit', //排污许可证
                       path:
                         '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
                       component: './platformManager/dischargepermit',
                     },
-                    { //维护点信息
-                      name: 'monitorpoint', 
+                    {
+                      //维护点信息
+                      name: 'monitorpoint',
                       path:
                         '/platformconfig/basicInfo/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
                       component: './platformManager/point',
                     },
-                    {  //仓库管理
+                    {
+                      //仓库管理
                       name: 'warehouse',
                       path: '/platformconfig/basicInfo/monitortarget/warehouse/:configId',
                       component: './platformManager/basicInfo/storehouseManager/AutoFormManager',
                     },
-                    {  //设备交接资料管理
+                    {
+                      //设备交接资料管理
                       name: 'equiptmentHandManager',
                       path: '/platformconfig/basicInfo/equiptmentHandManager',
                       component: './platformManager/basicInfo/equiptmentHandManager',
                     },
-                  ]
+                  ],
                 },
-                { //配置信息
+                {
+                  //配置信息
                   name: 'basicInfo',
                   path: '/platformconfig/configurationInfo',
                   routes: [
@@ -665,53 +679,55 @@ export default {
                       redirect: '/platformconfig/configurationInfo/OperationCycle',
                     },
                     {
-                      name: 'operationCycle',//运维频次管理
+                      name: 'operationCycle', //运维频次管理
                       path: '/platformconfig/configurationInfo/:configId',
                       component: './platformManager/configurationInfo/AutoFormManager',
                     },
                     {
-                      name: 'timerManage',//定时器管理
+                      name: 'timerManage', //定时器管理
                       path: '/platformconfig/configurationInfo/timer/timerManage',
                       component: './platformManager/configurationInfo/timerManage',
                     },
                     {
-                      name: 'equipmentFacturer',//设备厂家名录
+                      name: 'equipmentFacturer', //设备厂家名录
                       path: '/platformconfig/configurationInfo/deveice/equipmentFacturer',
                       component: './platformManager/configurationInfo/equipmentFacturer',
                     },
                     {
-                      name: 'systemMarker',//系统型号
+                      name: 'systemMarker', //系统型号
                       path: '/platformconfig/configurationInfo/deveice/systemMarker',
                       component: './platformManager/configurationInfo/systemMarker',
                     },
-                    {  //故障单元管理
+                    {
+                      //故障单元管理
                       name: 'faultUnitManager',
                       path: '/platformconfig/configurationInfo/faultUnit/faultUnitManager',
                       component: './platformManager/configurationInfo/faultUnitManager',
                     },
                     {
-                      name: 'checkInfo',//核查信息
+                      name: 'checkInfo', //核查信息
                       path: '/platformconfig/configurationInfo/check/checkInfo',
                       component: './platformManager/configurationInfo/checkInfo',
                     },
                     {
-                      name: 'pointMatchingSet',//点位匹配设置
+                      name: 'pointMatchingSet', //点位匹配设置
                       path: '/platformconfig/configurationInfo/pointMatching/pointMatchingSet',
                       component: './platformManager/configurationInfo/pointMatchingSet',
                     },
                     {
-                      name: 'pointMatchingSet',//台账填报设置
+                      name: 'pointMatchingSet', //台账填报设置
                       path: '/platformconfig/configurationInfo/accountFilling/accountFillingSet',
                       component: './platformManager/configurationInfo/accountFillingSet',
                     },
                     {
-                      name: 'noDataPointExport',//无数据点位导出
+                      name: 'noDataPointExport', //无数据点位导出
                       path: '/platformconfig/configurationInfo/noDataPoint/noDataPointExport',
                       component: './platformManager/configurationInfo/noDataPointExport',
                     },
-                  ]
+                  ],
                 },
-                { //资产管理
+                {
+                  //资产管理
                   name: 'assetManage',
                   path: '/platformconfig/assetManage',
                   routes: [
@@ -720,12 +736,12 @@ export default {
                       redirect: '/platformconfig/assetManage/deviceInfo',
                     },
                     {
-                      name: 'deviceInfo',//设备管理
+                      name: 'deviceInfo', //设备管理
                       path: '/platformconfig/assetManage/deviceInfo',
                       component: './platformManager/assetManage/deviceInfo',
                     },
                     {
-                      name: 'spareParts',//备品备件 
+                      name: 'spareParts', //备品备件
                       path: '/platformconfig/assetManage/spareParts/:configId',
                       component: './OperationSysManager/SparepartManage',
                     },
@@ -735,17 +751,16 @@ export default {
                     //   component: './OperationSysManager/StandardGasManage',
                     // },
                     {
-                      name: 'referenceMaterial',//标准物质
+                      name: 'referenceMaterial', //标准物质
                       path: '/platformconfig/assetManage/referenceMaterial',
                       component: './platformManager/assetManage/referenceMaterial',
                     },
                     {
-                      name: 'StandardLiquid',//试剂信息
+                      name: 'StandardLiquid', //试剂信息
                       path: '/platformconfig/assetManage/reagentInfo',
                       component: './platformManager/assetManage/referenceMaterial',
                     },
                   ],
-
                 },
 
                 {
@@ -899,7 +914,6 @@ export default {
                   path: '/platformconfig/emissionEnt',
                   component: './platformManager/emissionEnt/',
                 },
-
               ],
             },
             {
@@ -1025,7 +1039,8 @@ export default {
                   path: '/operations',
                   redirect: '/operations/log', // 重定向 默认为 运维日志页面
                 },
-                { //智慧运维 重定向
+                {
+                  //智慧运维 重定向
                   path: '/operations/wisdomOperations',
                   redirect: '/operations/calendar/index',
                 },
@@ -1101,18 +1116,18 @@ export default {
                     {
                       name: 'certificatemanage',
                       path: '/operations/usermanager/certificatemanage/:configId',
-                      component: './OperationSysManager/CertificateManage/',//人员证书
+                      component: './OperationSysManager/CertificateManage/', //人员证书
                     },
-
                   ],
                 },
-                {//运维资料
+                {
+                  //运维资料
                   name: 'maintenancedatabase',
                   path: '/operations/maintenancedatabase/:configId',
                   component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
                 {
-                  name: 'sparepartsstation',//服务站信息
+                  name: 'sparepartsstation', //服务站信息
                   path: '/operations/sparepartsstation/:configId',
                   component: './OperationSysManager/SparePartsStation/',
                 },
@@ -1192,7 +1207,8 @@ export default {
                   routes: [
                     {
                       path: '/operations/operationEntManage',
-                      redirect: '/operations/operationEntManage/operationUnit/OperationMaintenanceEnterprise',
+                      redirect:
+                        '/operations/operationEntManage/operationUnit/OperationMaintenanceEnterprise',
                     },
                     {
                       name: 'operationUnit', //运维单位管理
@@ -1206,10 +1222,12 @@ export default {
                     },
                     {
                       name: 'operationPerson', //运维人员管理  详情
-                      path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
-                      component: './operations/operationEntManage/operationPerson/OperationPersonDetail',
+                      path:
+                        '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
+                      component:
+                        './operations/operationEntManage/operationPerson/OperationPersonDetail',
                     },
-                  ]
+                  ],
                 },
                 {
                   path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
@@ -1262,12 +1280,12 @@ export default {
                   component: './operations/supervisionAnalySumm',
                 },
                 {
-                  path: '/operations/superviseRectification', //系统设施核查整改 
+                  path: '/operations/superviseRectification', //系统设施核查整改
                   name: 'superviseRectification',
                   component: './operations/superviseRectification',
                 },
                 {
-                  path: '/operations/cruxParSupervision', //关键参数督查 
+                  path: '/operations/cruxParSupervision', //关键参数督查
                   name: 'superviseRectification',
                   component: './operations/cruxParSupervision',
                 },
@@ -1424,8 +1442,8 @@ export default {
               ],
             },
 
-
-            {//异常追忆 重定向
+            {
+              //异常追忆 重定向
               path: '/abnormaRecall',
               redirect: '/monitoring/outputstopmanage/OutputStopNew',
             },
@@ -1442,8 +1460,8 @@ export default {
               redirect: '/platformconfig/monitoringstandard',
             },
 
-
-            { //监督核查 重定向 
+            {
+              //监督核查 重定向
               path: '/supervisionCheck',
               redirect: '/operations/remoteSupervision',
             },
@@ -1456,7 +1474,8 @@ export default {
               redirect: '/operations/siteInspector',
             },
 
-            { //资产管理 重定向 
+            {
+              //资产管理 重定向
               path: '/assetManagement',
               redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2',
             },
@@ -1491,12 +1510,12 @@ export default {
                   redirect: '/monitoring/realtimedata/ent',
                 },
                 {
-                  name: 'monitoringDataquery',//监控数据
+                  name: 'monitoringDataquery', //监控数据
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
                 {
-                  name: 'platformAnalysReport',//平台分析报告
+                  name: 'platformAnalysReport', //平台分析报告
                   path: '/monitoring/platformAnalysReport',
                   component: './monitoring/platformAnalysReport',
                 },
@@ -1572,7 +1591,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  }`,
                 },
                 {
                   name: 'realtimedata',
@@ -1591,7 +1610,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -1653,7 +1672,6 @@ export default {
                   path: '/monitoring/missingData/originaldata',
                   component: './monitoring/originaldata',
                 },
-
               ],
             },
             {
@@ -2182,7 +2200,8 @@ export default {
                     },
                     {
                       name: 'noAccountStatisticsEnt', //无台账上传统计 企业  城市级别
-                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent/cityLevel',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent/cityLevel',
                       component:
                         './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
                     },
@@ -2194,7 +2213,7 @@ export default {
                     //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/CityLevel',
                     // },
                     // {
-                    //   /** 运维工单统计-空气站  城市级别*/ 
+                    //   /** 运维工单统计-空气站  城市级别*/
                     //   name: 'AirWorkOrderStatistics',
                     //   path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
                     //   component:
@@ -2224,19 +2243,21 @@ export default {
                     //   component:
                     //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
                     // },
-                    { //异常工单统计
+                    {
+                      //异常工单统计
                       name: 'abnormalWorkStatistics',
                       path: '/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics',
                       component: './Intelligentanalysis/abnormalWorkStatistics',
                     },
-                    { //异常工单统计 市一级
+                    {
+                      //异常工单统计 市一级
                       name: 'abnormalWorkStatisticsDetail',
-                      path: '/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail',
                       component: './Intelligentanalysis/abnormalWorkStatistics/regionDetail',
                     },
                   ],
                 },
-
 
                 {
                   //空气质量状况统计
@@ -2244,26 +2265,25 @@ export default {
                   path: '/Intelligentanalysis/airQualityStatistics',
                   component: './Intelligentanalysis/airQualityStatistics/air',
                 },
-                { //运维区域账户访问率统计 大区
+                {
+                  //运维区域账户访问率统计 大区
                   name: 'AccessStatistics',
                   path: '/Intelligentanalysis/accessStatistics',
                   component: './Intelligentanalysis/accessStatistics',
                 },
-                { //运维区域账户访问率统计 服务区
+                {
+                  //运维区域账户访问率统计 服务区
                   name: 'AccessStatistics',
                   path: '/Intelligentanalysis/accessStatistics/missDataSecond',
                   component: './Intelligentanalysis/accessStatistics/missDataSecond',
                 },
-                { //运维到期点位统计
+                {
+                  //运维到期点位统计
                   name: 'operationExpirePoint',
                   path: '/Intelligentanalysis/operationExpirePoint',
                   component: './Intelligentanalysis/operationExpirePoint',
                 },
-
-
               ],
-
-
             },
             {
               path: '/dataSearch',
@@ -2378,7 +2398,6 @@ export default {
                   path: '/dataSearch/projectInfo',
                   component: './dataSearch/projectInfo',
                 },
-
               ],
             },
             {
@@ -2547,6 +2566,62 @@ export default {
                 },
               ],
             },
+            // 日常工作监管
+            {
+              path: '/workSupervision',
+              name: 'workSupervision',
+              routes: [
+                {
+                  // 工作台
+                  name: 'Standby',
+                  path: '/workSupervision/workbench',
+                  component: './workSupervision/workbench',
+                },
+                // 通用管理
+                {
+                  name: 'management',
+                  path: '/workSupervision/management',
+                  routes: [
+                    {
+                      // 备机管理
+                      name: 'Standby',
+                      path: '/workSupervision/management/Standby',
+                      component: './workSupervision/management/standby/Standby',
+                    },
+                    {
+                      // 备机借用
+                      name: 'StandbyBorrow',
+                      path: '/workSupervision/management/StandbyBorrow',
+                      component: './workSupervision/management/standby/StandbyBorrow',
+                    },
+                    {
+                      // 便携设备管理
+                      name: 'Portable',
+                      path: '/workSupervision/management/Portable',
+                      component: './workSupervision/management/Portable',
+                    },
+                    {
+                      // 便携设备借用
+                      name: 'PortableBorrow',
+                      path: '/workSupervision/management/PortableBorrow',
+                      component: './workSupervision/management/Portable/PortableBorrow',
+                    },
+                    {
+                      // 办事处管理
+                      name: 'Office',
+                      path: '/workSupervision/management/Office',
+                      component: './workSupervision/management/office',
+                    },
+                  ],
+                },
+                // 任务单提交记录查询
+                {
+                  name: 'taskRecordQuery',
+                  path: '/workSupervision/taskRecordQuery/:type',
+                  component: './workSupervision/taskRecordQuery',
+                },
+              ],
+            },
             /* 任务详情 */
             {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
@@ -2603,6 +2678,20 @@ export default {
   },
   chainWebpack: webpackPlugin,
   proxy: {
+    '/newApi': {
+      target: 'http://172.16.12.234:60061/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/newApi': '',
+      },
+    },
+    '/wwwroot': {
+      target: 'http://172.16.12.234:60061/',
+      changeOrigin: true,
+      // pathRewrite: {
+      //   '^/newApi': '',
+      // },
+    },
     '/api': {
       target: apiHost,
       changeOrigin: true,
