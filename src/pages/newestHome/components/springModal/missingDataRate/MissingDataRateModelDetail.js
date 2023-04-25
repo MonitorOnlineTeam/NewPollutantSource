@@ -30,8 +30,9 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { downloadFile,interceptTwo } from '@/utils/utils';
+import { downloadFile, interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
+import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -43,16 +44,16 @@ const pageUrl = {
   updateState: 'MissingRateDataModal/updateState',
   getData: 'MissingRateDataModal/getDefectPointDetailRate',
 };
-@connect(({ loading, MissingRateDataModal,autoForm }) => ({
+@connect(({ loading, MissingRateDataModal, autoForm }) => ({
   priseList: MissingRateDataModal.priseList,
-  exloading:MissingRateDataModal.exloading,
+  exloading: MissingRateDataModal.exloading,
   loading: loading.effects[pageUrl.getData],
   total: MissingRateDataModal.total,
   tableDatas: MissingRateDataModal.tableDatil,
   queryPar: MissingRateDataModal.queryPar,
   regionList: autoForm.regionList,
-  attentionList:MissingRateDataModal.attentionList,
-  type:MissingRateDataModal.type,
+  attentionList: MissingRateDataModal.attentionList,
+  type: MissingRateDataModal.type,
 }))
 @Form.create()
 export default class Index extends Component {
@@ -60,8 +61,11 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
+      visible:false,
+      DGIMN:'',
+      TaskID:'',
     };
-    
+
     this.columns = [
       {
         title: <span>行政区</span>,
@@ -73,13 +77,13 @@ export default class Index extends Component {
         },
       },
       {
-        title: <span>{ JSON.parse(this.props.location.query.queryPar).EntType==='1'? '企业名称': '大气站名称'}</span>,
+        title: <span>{JSON.parse(this.props.location.query.queryPar).EntType === '1' ? '企业名称' : '大气站名称'}</span>,
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+        },
       },
       {
         title: <span>监测点名称</span>,
@@ -87,9 +91,9 @@ export default class Index extends Component {
         key: 'pointName',
         // width: '10%',
         align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+        },
       },
       {
         title: '运维负责人',
@@ -103,7 +107,6 @@ export default class Index extends Component {
         key: 'alarmCount',
         // width: '10%',
         align: 'center',
-      
       },
       {
         title: <span>已响应报警次数</span>,
@@ -122,18 +125,31 @@ export default class Index extends Component {
         dataIndex: 'xiangyingRate',
         key: 'xiangyingRate',
         align: 'center',
-        render:(text,row)=>{
+        render: (text, row) => {
           return <span>{`${interceptTwo(Number(text))}%`}</span>
         }
-      }
+      },
+      {
+        title: <span>处理详情</span>,
+        dataIndex: 'status',
+        key: 'status',
+        align: 'center',
+        render:(text,record)=>{
+          return !text?
+           '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
+          }        
+      },
     ];
   }
+  detail=(record)=>{
+    this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID,visible:true})
 
+ }
   componentDidMount() {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere } = this.props;
+    const { dispatch, location, Atmosphere,status,} = this.props;
 
     this.updateQueryState({
       // beginTime: moment()
@@ -143,15 +159,15 @@ export default class Index extends Component {
       // AttentionCode: '',
       // EntCode: '',
       // RegionCode: '',
-      RegionCode:location.query.regionCode,
-      Status:'',
+      RegionCode: location.query.regionCode,
+      Status:status? status : '',
     });
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'MissingRateDataModal/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
- 
-     dispatch({ type: 'MissingRateDataModal/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-  
+    dispatch({ type: 'MissingRateDataModal/getEntByRegion', payload: { RegionCode: '' }, });//获取企业列表
+
+    dispatch({ type: 'MissingRateDataModal/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
+
 
     setTimeout(() => {
       this.getTableData();
@@ -199,17 +215,17 @@ export default class Index extends Component {
   };
 
   changeRegion = (value) => { //行政区事件
-    
+
     this.updateQueryState({
       RegionCode: value,
     });
   };
-  changeAttent=(value)=>{
+  changeAttent = (value) => {
     this.updateQueryState({
       AttentionCode: value,
     });
   }
-  changeEnt=(value,data)=>{ //企业事件
+  changeEnt = (value, data) => { //企业事件
     this.updateQueryState({
       EntCode: value,
     });
@@ -219,10 +235,10 @@ export default class Index extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateDataModal/exportDefectPointDetail',
-      payload: { ...queryPar,Rate:1, },
+      payload: { ...queryPar, Rate: 1, },
       callback: data => {
-         downloadFile(`/upload${data}`);
-        },
+        downloadFile(`/upload${data}`);
+      },
     });
   };
   //查询事件
@@ -231,7 +247,7 @@ export default class Index extends Component {
   };
 
 
-  regchildren=()=>{
+  regchildren = () => {
     const { regionList } = this.props;
     const selectList = [];
     if (regionList.length > 0) {
@@ -245,11 +261,11 @@ export default class Index extends Component {
       return selectList;
     }
   }
-  attentchildren=()=>{
+  attentchildren = () => {
     const { attentionList } = this.props;
     const selectList = [];
     if (attentionList.length > 0) {
-       attentionList.map(item => {
+      attentionList.map(item => {
         selectList.push(
           <Option key={item.AttentionCode} value={item.AttentionCode}>
             {item.AttentionName}
@@ -259,40 +275,40 @@ export default class Index extends Component {
       return selectList;
     }
   }
-  
-      /** 数据类型切换 */
- _handleDateTypeChange = value => {
-   
-    if( value === 'HourData'){
+
+  /** 数据类型切换 */
+  _handleDateTypeChange = value => {
+
+    if (value === 'HourData') {
       this.updateQueryState({
         dataType: value,
         beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
         endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-       
-        });
-      }else{
-        this.updateQueryState({
-          dataType: value,
-          beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
-          endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-          
-          });
-      }
-    }
-  dateChange=(date)=>{
+
+      });
+    } else {
       this.updateQueryState({
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        dataType: value,
+        beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+
       });
     }
-    dateOk=()=>{ 
+  }
+  dateChange = (date) => {
+    this.updateQueryState({
+      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+  }
+  dateOk = () => {
 
-   }
-   reponseChange=(e)=>{
+  }
+  reponseChange = (e) => {
     this.updateQueryState({
       Status: e.target.value,
     });
-    setTimeout(()=>{
+    setTimeout(() => {
       this.getTableData();
     })
   }
@@ -347,51 +363,51 @@ export default class Index extends Component {
   //     </Form.Item>
   //     </>
   // }
-  btnCompents=()=>{
+  btnCompents = () => {
     const { exloading } = this.props;
-   return (
-     <Form.Item>
-      {/* <Button type="primary" onClick={this.queryClick}>
+    return (
+      <Form.Item>
+        {/* <Button type="primary" onClick={this.queryClick}>
         查询
       </Button> */}
-      <Button
-        style={{ margin: '0 5px' }}
-        icon={<ExportOutlined />}
-        onClick={this.template}
-        loading={exloading}
-      >
-        导出
+        <Button
+          style={{ margin: '0 5px' }}
+          icon={<ExportOutlined />}
+          onClick={this.template}
+          loading={exloading}
+        >
+          导出
       </Button>
-      <Button  onClick={() => { this.props.detailBack()  }} >
-           <RollbackOutlined />
+        {!this.props.hideBreadcrumb&&<Button onClick={() => { this.props.detailBack() }} >
+          <RollbackOutlined />
                   返回
-       </Button>
-    </Form.Item>
-   );
+       </Button>}
+      </Form.Item>
+    );
   }
-  reponseComp = (type)=>{
-    const { queryPar:{ Status } } = this.props;
+  reponseComp = (type) => {
+    const { queryPar: { Status } } = this.props;
     return <Form.Item label=''>
-          <Radio.Group value={Status} onChange={this.reponseChange}>
-            <Radio.Button value="">全部</Radio.Button>
-            <Radio.Button value="1">已响应</Radio.Button>
-            <Radio.Button value="0">待响应</Radio.Button>
-          </Radio.Group>
-  </Form.Item> 
+      <Radio.Group value={Status} onChange={this.reponseChange}>
+        <Radio.Button value="">全部</Radio.Button>
+        <Radio.Button value="1">已响应</Radio.Button>
+        <Radio.Button value="0">待响应</Radio.Button>
+      </Radio.Group>
+    </Form.Item>
   }
   render() {
     // const {
     // // location:{ queryPar: { EntCode,PollutantType }},
     //   type
     // } = this.props;
-  //  debugger;
-    
+    //  debugger;
+
     return (<div> <>
-              <Form layout="inline" style={{paddingBottom:15}}>
-                
-                {this.reponseComp()}
-                 {this.btnCompents()}
-              {/* {type==='ent'?
+      <Form layout="inline" style={{ paddingBottom: 15 }}>
+
+        {this.reponseComp()}
+        {this.btnCompents()}
+        {/* {type==='ent'?
               <>
               <Row>
               {this.queryComponents(type)}
@@ -452,28 +468,38 @@ export default class Index extends Component {
                 </Row>
                 </>
               } */}
-              </Form>
-            </>
-          <>
-            <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={this.props.loading}
-              columns={this.columns}
-              // bordered={false}
-              dataSource={this.props.tableDatas}
-              // pagination={{
-              //   showSizeChanger: true,
-              //   showQuickJumper: true,
-                // sorter: true,
-                // total: this.props.total,
-                //defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              // }}
-            />
-          </>
-          </div>
+      </Form>
+    </>
+      <>
+        <SdlTable
+          rowKey={(record, index) => `complete${index}`}
+          loading={this.props.loading}
+          columns={this.columns}
+          // bordered={false}
+          dataSource={this.props.tableDatas}
+        // pagination={{
+        //   showSizeChanger: true,
+        //   showQuickJumper: true,
+        // sorter: true,
+        // total: this.props.total,
+        //defaultPageSize:20
+        // pageSize: PageSize,
+        // current: PageIndex,
+        // pageSizeOptions: ['10', '20', '30', '40', '50'],
+        // }}
+        />
+      </>
+      <Modal
+          title="任务详情"
+          visible={this.state.visible}
+          wrapClassName='spreadOverModal'
+          footer={null}
+          destroyOnClose={true}
+          onCancel={()=>{this.setState({visible:false})}}
+        >
+            <EmergencyDetailInfo DGIMN={this.state.DGIMN}  TaskID={this.state.TaskID}/>
+        </Modal>
+    </div>
     );
   }
 }

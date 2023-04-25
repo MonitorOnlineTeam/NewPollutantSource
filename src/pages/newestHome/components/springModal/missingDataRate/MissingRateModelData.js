@@ -3,8 +3,8 @@
  * 创建人：贾安波
  * 创建时间：2020.11
  */
-import React, { Component,PureComponent } from 'react';
-import { ExportOutlined,RollbackOutlined  } from '@ant-design/icons';
+import React, { Component, PureComponent } from 'react';
+import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -29,11 +29,12 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { downloadFile,interceptTwo } from '@/utils/utils';
+import { downloadFile, interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import MissingDataRateModelDetail from './MissingDataRateModelDetail'
 import EntType from '@/components/EntType'
 import RegionList from '@/components/RegionList'
+import MissDataSecond from './MissingDataRateModelDetail'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -45,17 +46,17 @@ const pageUrl = {
   updateState: 'MissingRateDataModal/updateState',
   getData: 'MissingRateDataModal/getDefectModel',
 };
-@connect(({ loading, MissingRateDataModal,autoForm,common}) => ({
+@connect(({ loading, MissingRateDataModal, autoForm, common }) => ({
   priseList: MissingRateDataModal.priseList,
-  exloading:MissingRateDataModal.exloading,
+  exloading: MissingRateDataModal.exloading,
   loading: loading.effects[pageUrl.getData],
   total: MissingRateDataModal.total,
   tableDatas: MissingRateDataModal.tableDatas,
   queryPar: MissingRateDataModal.queryPar,
   regionList: autoForm.regionList,
-  attentionList:MissingRateDataModal.attentionList,
-  atmoStationList:common.atmoStationList,
-  type:MissingRateDataModal.type
+  attentionList: MissingRateDataModal.attentionList,
+  atmoStationList: common.atmoStationList,
+  type: MissingRateDataModal.type
 }))
 @Form.create()
 export default class Index extends PureComponent {
@@ -63,27 +64,30 @@ export default class Index extends PureComponent {
     super(props);
 
     this.state = {
-      entVisible:false,
-      location:{
-        query:{}
+      entVisible: false,
+      location: {
+        query: {}
       },
-      level:'',
-      goback:false
-     
+      level: '',
+      goback: false,
+      missingAlarmVisible:false,
+      regionName:'',
+      regionCode:'',
+      status:'',
     };
-    
+
     this.columns = [
       {
         title: <span>行政区</span>,
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
-        render:(text, record) => { 
-            return <a href='javascript:;' onClick={()=>{this.detail(text,record)}} >{text} </a>
-          }
+        render: (text, record) => {
+          return <a href='javascript:;' onClick={() => { this.detail(text, record) }} >{text} </a>
+        }
       },
       {
-        title: <span>{this.props.types==='ent'? '缺失数据报警检测点数': '缺失数据报警空气检测点数'}</span>,
+        title: <span>{this.props.types === 'ent' ? '缺失数据报警检测点数' : '缺失数据报警空气检测点数'}</span>,
         dataIndex: 'pointCount',
         key: 'pointCount',
         align: 'center'
@@ -94,29 +98,37 @@ export default class Index extends PureComponent {
         key: 'exceptionCount',
         // width: '10%',
         align: 'center',
-      
+        render: (text, record) => {
+          return <a onClick={() => { this.missingAlarmNum(record) }}>{text} </a>
+        }
       },
       {
         title: <span>已响应报警次数</span>,
         dataIndex: 'xiangyingCount',
         key: 'xiangyingCount',
         align: 'center',
+        render: (text, record) => {
+          return <a onClick={() => { this.missingAlarmNum(record, '1') }}>{text} </a>
+        }
       },
       {
         title: <span>待响应报警次数</span>,
         dataIndex: 'weixiangyingCount',
         key: 'weixiangyingCount',
-        align: 'center'
+        align: 'center',
+        render: (text, record) => {
+          return <a onClick={() => { this.missingAlarmNum(record, '0') }}>{text} </a>
+        }
       },
       {
         title: <span>响应率</span>,
         dataIndex: 'responseRate',
         key: 'responseRate',
         align: 'center',
-        render:(text,row)=>{
+        render: (text, row) => {
           return <span>{`${interceptTwo(Number(text))}%`}</span>
         }
-      
+
       },
     ];
   }
@@ -124,50 +136,49 @@ export default class Index extends PureComponent {
   componentDidMount() {
     this.initData();
   }
-  detail=(text,record)=>{
+  detail = (text, record) => {
 
-     if(this.state.level){
+    if (this.state.level) {
       this.setState({
-        location:{ query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}
-       },()=>{
-        this.setState({entVisible:true})
-       })
-      }else{
+        location: { query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar) } }
+      }, () => {
+        this.setState({ entVisible: true })
+      })
+    } else {
 
-        const { dispatch,types,time } = this.props;
-        this.setState({level:2},()=>{
+      const { dispatch, types, time } = this.props;
+      this.setState({ level: 2 }, () => {
 
-          this.setState({regionCode:record.regionCode,level:2},()=>{ 
-            setTimeout(() => {
-              this.getTableData(record.regionCode);
-            });   
-          })
-
+        this.setState({ regionCode: record.regionCode, level: 2 }, () => {
+          setTimeout(() => {
+            this.getTableData(record.regionCode);
+          });
         })
 
-      }
+      })
+
+    }
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,types,time,defaultPollutantType, } = this.props;
+    const { dispatch, location, Atmosphere, types, time, defaultPollutantType, } = this.props;
     this.updateQueryState({
       RegionCode: '',
-      EntType: types==='ent'? "1":"2",
+      EntType: types === 'ent' ? "1" : "2",
       beginTime: time[0].format('YYYY-MM-DD 00:00:00'),
       endTime: time[1].format('YYYY-MM-DD 23:59:59'),
-      PollutantType:defaultPollutantType
+      PollutantType: defaultPollutantType,
       // OperationPersonnel:'',
     });
-    console.log('首次加载')
-    let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
+    let entObj = { title: <span>缺失数据报警企业数</span>, dataIndex: 'entCount', key: 'entCount', align: 'center', }
 
-    types ==='ent'? this.columns.splice(1,0,entObj) : null;
+    types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
 
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'MissingRateDataModal/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
- 
-     dispatch({ type: 'MissingRateDataModal/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-  
+    dispatch({ type: 'MissingRateDataModal/getEntByRegion', payload: { RegionCode: '' }, });//获取企业列表
+
+    dispatch({ type: 'MissingRateDataModal/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
+
 
     setTimeout(() => {
       this.getTableData();
@@ -186,35 +197,35 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: this.state.level? { ...queryPar,RegionCode:this.state.regionCode,regionLevel:this.state.level } :{ ...queryPar },
+      payload: this.state.level ? { ...queryPar, RegionCode: this.state.regionCode, regionLevel: this.state.level } : { ...queryPar },
     });
   };
 
 
   children = () => { //企业列表 or 大气站列表
-    const { priseList,atmoStationList,type } = this.props;
+    const { priseList, atmoStationList, type } = this.props;
 
     const selectList = [];
-    if(type==='ent'){
-     if (priseList.length > 0) {
-      priseList.map(item => {
-        selectList.push(
-          <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
-            {item.EntName}
-          </Option>,
-        );
-      });
-     }else{
-       if(atmoStationList.length > 0){
-        atmoStationList.map(item => {
+    if (type === 'ent') {
+      if (priseList.length > 0) {
+        priseList.map(item => {
           selectList.push(
-            <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
-              {item.StationName}
+            <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
+              {item.EntName}
             </Option>,
           );
-        }); 
-       }
-     }
+        });
+      } else {
+        if (atmoStationList.length > 0) {
+          atmoStationList.map(item => {
+            selectList.push(
+              <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
+                {item.StationName}
+              </Option>,
+            );
+          });
+        }
+      }
       return selectList;
     }
   };
@@ -226,22 +237,22 @@ export default class Index extends PureComponent {
   };
 
   changeRegion = (value) => { //行政区事件
-    
+
     this.updateQueryState({
       RegionCode: value,
     });
   };
-  changeAttent=(value)=>{
+  changeAttent = (value) => {
     this.updateQueryState({
       AttentionCode: value,
     });
   }
-  changePperation=(value)=>{
+  changePperation = (value) => {
     this.updateQueryState({
-      OperationPersonnel: value?value:'',
+      OperationPersonnel: value ? value : '',
     });
   }
-  changeEnt=(value,data)=>{ //企业事件
+  changeEnt = (value, data) => { //企业事件
     this.updateQueryState({
       EntCode: value,
     });
@@ -251,10 +262,10 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateDataModal/exportDefectDataSummary',
-      payload: this.state.level? { ...queryPar,RegionCode:this.state.regionCode,regionLevel:this.state.level,Rate:1, } :{ ...queryPar,Rate:1, },
+      payload: this.state.level ? { ...queryPar, RegionCode: this.state.regionCode, regionLevel: this.state.level, Rate: 1, } : { ...queryPar, Rate: 1, },
       callback: data => {
-         downloadFile(`/upload${data}`);
-        },
+        downloadFile(`/upload${data}`);
+      },
     });
   };
   //查询事件
@@ -263,7 +274,7 @@ export default class Index extends PureComponent {
   };
 
 
-  regchildren=()=>{
+  regchildren = () => {
     const { regionList } = this.props;
     const selectList = [];
     if (regionList.length > 0) {
@@ -277,11 +288,11 @@ export default class Index extends PureComponent {
       return selectList;
     }
   }
-  attentchildren=()=>{
+  attentchildren = () => {
     const { attentionList } = this.props;
     const selectList = [];
     if (attentionList.length > 0) {
-       attentionList.map(item => {
+      attentionList.map(item => {
         selectList.push(
           <Option key={item.AttentionCode} value={item.AttentionCode}>
             {item.AttentionName}
@@ -291,57 +302,66 @@ export default class Index extends PureComponent {
       return selectList;
     }
   }
-  
-      onRef1 = (ref) => {
-        this.child = ref;
-      }
-          /** 数据类型切换 */
-     _handleDateTypeChange = value => {
-       this.child.onDataTypeChange(value)
-        }
-      dateChange=(date,dataType)=>{
-          this.updateQueryState({
-            // dataType:dataType,
-            beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-            endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-          });
-        }
 
+  onRef1 = (ref) => {
+    this.child = ref;
+  }
+  /** 数据类型切换 */
+  _handleDateTypeChange = value => {
+    this.child.onDataTypeChange(value)
+  }
+  dateChange = (date, dataType) => {
+    this.updateQueryState({
+      // dataType:dataType,
+      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+  }
+  missingAlarmNum = (record, status) => { //缺失数据报警次数
+    this.setState({
+      missingAlarmVisible: true,
+      regionName: record.regionName,
+      regionCode: record.regionCode,
+      status: status
+    })
+  }
   render() {
     const {
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,OperationPersonnel },
-       time,
+      queryPar: { beginTime, endTime, EntCode, RegionCode, AttentionCode, dataType, PollutantType, OperationPersonnel },
+      time,
       types
     } = this.props;
-    const { entVisible,location,level } = this.state;
+    const { entVisible, location, level } = this.state;
     return <>
-    {entVisible? 
-      <MissingDataRateModelDetail location={location} detailBack={()=>{this.setState({
-        entVisible:false
-      })}}/>
-      :
-    <div>
-            <Form layout="inline"> 
-            <Row style={{paddingBottom:15}}>
-              {!level&&<><Form.Item>
+      {entVisible ?
+        <MissingDataRateModelDetail location={location} detailBack={() => {
+          this.setState({
+            entVisible: false
+          })
+        }} />
+        :
+        <div>
+          <Form layout="inline">
+            <Row style={{ paddingBottom: 15 }}>
+              {!level && <><Form.Item>
                 日期查询：
-                <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(time[0]),moment(time[1])]} 
-                callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+                <RangePicker_ allowClear={false} onRef={this.onRef1} dataType={''} style={{ minWidth: '200px', marginRight: '10px' }} dateValue={[moment(time[0]), moment(time[1])]}
+                  callback={(dates, dataType) => this.dateChange(dates, dataType)} />
               </Form.Item>
-              <Form.Item label='关注程度'>
-                <Select
-                  allowClear
-                  placeholder="关注程度"
-                  onChange={this.changeAttent}
-                  value={AttentionCode?AttentionCode:undefined} 
-                  style={{ width: 110 }}
-                >
-                  {this.attentchildren()}
-                </Select>
-              </Form.Item>
-              
-              {/* <Form.Item label='运维状态'>
+                <Form.Item label='关注程度'>
+                  <Select
+                    allowClear
+                    placeholder="关注程度"
+                    onChange={this.changeAttent}
+                    value={AttentionCode ? AttentionCode : undefined}
+                    style={{ width: 110 }}
+                  >
+                    {this.attentchildren()}
+                  </Select>
+                </Form.Item>
+
+                {/* <Form.Item label='运维状态'>
               <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -356,8 +376,8 @@ export default class Index extends PureComponent {
                 <Option value="2">未设置运维人员</Option>
               </Select>
               </Form.Item>  */}
-              <Form.Item label='行政区'>
-                {/* <Select
+                <Form.Item label='行政区'>
+                  {/* <Select
                   allowClear
                   placeholder="行政区"
                   onChange={this.changeRegion}
@@ -366,24 +386,24 @@ export default class Index extends PureComponent {
                 >
                   {this.regchildren()}
                 </Select> */}
-              <RegionList   style={{ width: 165 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+                  <RegionList style={{ width: 165 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
 
-              </Form.Item>
-             {types==='ent'? <Form.Item label='企业类型'>
-                <Select
-                  allowClear
-                  placeholder="企业类型"
-                  onChange={this.typeChange}
-                  value={PollutantType?PollutantType:undefined}
-                  style={{ width: 100 }}
-                >
-                  <Option value="2">废气</Option>
-                  <Option value="1">废水</Option>
-                </Select>
-              </Form.Item> : null }
+                </Form.Item>
+                {types === 'ent' ? <Form.Item label='企业类型'>
+                  <Select
+                    allowClear
+                    placeholder="企业类型"
+                    onChange={this.typeChange}
+                    value={PollutantType ? PollutantType : undefined}
+                    style={{ width: 100 }}
+                  >
+                    <Option value="2">废气</Option>
+                    <Option value="1">废水</Option>
+                  </Select>
+                </Form.Item> : null}
               </>}
               <Form.Item>
-              {!level&& <Button type="primary" onClick={this.queryClick}>
+                {!level && <Button type="primary" onClick={this.queryClick}>
                   查询
                 </Button>}
                 <Button
@@ -394,14 +414,14 @@ export default class Index extends PureComponent {
                 >
                   导出
                 </Button>
-                {level&& <Button onClick={() => {
-                  this.setState({level:'',regionCode:'',goback:true},()=>{
+                {level && <Button onClick={() => {
+                  this.setState({ level: '', regionCode: '', goback: true }, () => {
                     this.getTableData();
                   })
-             }} ><RollbackOutlined />返回</Button>}
+                }} ><RollbackOutlined />返回</Button>}
               </Form.Item>
-              </Row>
-            </Form>
+            </Row>
+          </Form>
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
@@ -410,8 +430,20 @@ export default class Index extends PureComponent {
             dataSource={this.props.tableDatas}
             pagination={false}
           />
-      </div>
-    }
+          <Modal
+            title={`${this.state.regionName} - ${this.props.types === 'ent' ? '缺失数据报警详情(企业)' : '缺失数据报警详情(空气站)'}`}
+            visible={this.state.missingAlarmVisible}
+            wrapClassName='spreadOverModal'
+            footer={null}
+            destroyOnClose={true}
+            onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
+            // className={styles.missDetailSty}
+          >
+            <MissDataSecond hideBreadcrumb status={this.state.status} location={{ query: { regionCode: this.state.regionCode, queryPar: JSON.stringify(this.props.queryPar) } }} />
+
+          </Modal>
+        </div>
+      }
     </>;
   }
 }

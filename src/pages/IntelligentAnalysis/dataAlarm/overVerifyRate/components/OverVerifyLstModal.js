@@ -907,7 +907,7 @@ export default class OverVerifyLstModal extends Component {
             this.setState({
               enterpriseValue: value
             })
-          }} EntCode={this.state.enterpriseValue} style={{ width: 200, marginLeft: 10, marginRight: 10 }} />
+          }} EntCode={this.state.enterpriseValue} style={{ width: 200, marginRight: 10 }} />
           <Radio.Group value={this.state.dealType} style={{ marginRight: 10, marginLeft: 10 }} onChange={(e) => {
             this.setState({
               dealType: e.target.value,

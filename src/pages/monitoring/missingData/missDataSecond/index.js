@@ -62,7 +62,7 @@ export default class Index extends Component {
     this.state = {
       visible:false,
       DGIMN:'',
-      TaskID:''
+      TaskID:'',
     };
     this.columns = [
       {
@@ -147,29 +147,18 @@ export default class Index extends Component {
           return !text?
            '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
           }        
-        // render:(text,record)=>{
-        //   return text==0?
-        //    '': <Link to={{  pathname: `/operations/taskRecord/details/${record.TaskID}/${record.DGIMN}` }} > 详情 </Link>
-        //   }
       },
     ];
   }
 
   detail=(record)=>{
-debugger;
-     this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID},()=>{
-
-      setTimeout(()=>{
-        this.setState({visible:true})
-
-      })
-     })
+     this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID,visible:true})
   }
   componentDidMount() {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,type,location:{query:{regionCode}} } = this.props;
+    const { dispatch, location,Atmosphere,type,location:{query:{regionCode}},status, } = this.props;
    
     // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
    
@@ -186,7 +175,7 @@ debugger;
       // DataType:'HourData',
       // EntType:'',
       RegionCode:regionCode,
-      Status:'',
+      Status:status? status : '',
      });
      
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
@@ -262,7 +251,7 @@ debugger;
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'missingData/exportDefectPointDetail',
-      payload: { ...queryPar },
+      payload: { ...queryPar,PageIndex:undefined, PageSize:undefined },
       callback: data => {
          downloadFile(`/upload${data}`);
         },
@@ -406,10 +395,10 @@ debugger;
       >
         导出
       </Button>
-        <Button  onClick={() => { this.props.history.go(-1);  }} >
+     {!this.props.hideBreadcrumb&&<Button  onClick={() => { this.props.history.go(-1);  }} >
            <RollbackOutlined />
                   返回
-       </Button>
+       </Button>}
     </Form.Item>
    );
   }
@@ -444,7 +433,7 @@ handleTableChange = (pagination, filters, sorter) => {
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper title={JSON.parse(location.query.queryPar).EntType==='1'? "缺失数据报警详情(企业)":"缺失数据报警详情(空气站)"}>
+        <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title={`${query.regionName} - ${JSON.parse(location.query.queryPar).EntType==='1'? '缺失数据报警详情(企业)':'缺失数据报警详情(空气站)'}`}>
         <Card
           bordered={false}
           title={
@@ -544,8 +533,7 @@ handleTableChange = (pagination, filters, sorter) => {
         <Modal
           title="任务详情"
           visible={this.state.visible}
-          width='98%'
-          style={{hegiht:'90%'}}
+          wrapClassName='spreadOverModal'
           footer={null}
           destroyOnClose={true}
           onCancel={()=>{this.setState({visible:false})}}

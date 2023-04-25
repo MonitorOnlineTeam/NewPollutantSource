@@ -850,8 +850,8 @@ class EmergencyDetailInfo extends Component {
                     title={!isHomeModal && <span style={{ fontWeight: '900' }}>任务详情</span>}
                     extra={
                         !isHomeModal && <div>
-                            <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
-                            {this.getGoBack()}
+                            {/* <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
+                            {this.getGoBack()} */}
                         </div>
                     }
                 >

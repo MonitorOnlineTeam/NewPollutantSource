@@ -33,8 +33,8 @@ import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
 import RegionList from '@/components/RegionList'
-
-
+import MissDataSecond from '../missDataSecond'
+import styles from '../style.less'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -62,6 +62,10 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
     
     this.state = {
+      missingAlarmVisible:false,
+      regionName:'',
+      regionCode:'',
+      status:'',
     };
     
     this.columns = [
@@ -74,12 +78,12 @@ export default class EntTransmissionEfficiency extends Component {
           // return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
           //          {text}
           //      </Link>
-           return <a href='javascript:;' onClick={
+           return <a onClick={
              ()=>{ //市级跳转
                if(this.props.level){
                 sessionStorage.setItem("missDataDetailPageIndex",1)
                 sessionStorage.setItem("missDataDetailPageSize",20)
-                this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}})); 
+                this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar),regionName:record.regionName}})); 
                }else{ //省级跳转
                  this.props.dispatch(routerRedux.push({
                     pathname: this.props.types==='ent'? '/monitoring/missingData/cityLevel/ent' :'/monitoring/missingData/cityLevel/air',query: {regionCode:record.regionCode}
@@ -96,21 +100,30 @@ export default class EntTransmissionEfficiency extends Component {
       },
       {
         title: <span>缺失数据报警次数</span>,
-        dataIndex: 'exceptionCount',
+        dataIndex: 'exceptionCount', 
         key: 'exceptionCount',
-        align: 'center'
+        align: 'center',
+        render: (text, record) => { 
+           return <a  onClick={()=>{this.missingAlarmNum(record)}}>{text} </a>
+        }
       },
       {
         title: <span>已响应报警次数</span>,
         dataIndex: 'xiangyingCount',
         key: 'xiangyingCount',
         align: 'center',
+        render: (text, record) => { 
+          return <a  onClick={()=>{this.missingAlarmNum(record,'1')}}>{text} </a>
+       }
       },
       {
         title: <span>待响应报警次数</span>,
         dataIndex: 'weixiangyingCount',
         key: 'weixiangyingCount',
         align: 'center',
+        render: (text, record) => { 
+          return <a  onClick={()=>{this.missingAlarmNum(record,'0')}}>{text} </a>
+       }
       },
     ];
   }
@@ -284,6 +297,14 @@ export default class EntTransmissionEfficiency extends Component {
         EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
       });
     }
+    missingAlarmNum = (record,status) =>{ //缺失数据报警次数
+     this.setState({
+      missingAlarmVisible:true,
+      regionName:record.regionName,
+      regionCode:record.regionCode,
+      status:status,
+     })
+    }
   render() {
     const {
       exloading,
@@ -386,7 +407,7 @@ export default class EntTransmissionEfficiency extends Component {
                   placeholder="企业类型"
                   onChange={this.typeChange}
                   value={PollutantType?PollutantType:undefined}
-                  style={{ width: 181 }}
+                  style={{ width: 231 }}
                 >  
                   <Option value="2">废气</Option>
                   <Option value="1">废水</Option>
@@ -438,6 +459,18 @@ export default class EntTransmissionEfficiency extends Component {
             // }}
           />
         </>
+        <Modal
+          title={`${this.state.regionName} - ${this.props.types==='ent'?'缺失数据报警详情(企业)':'缺失数据报警详情(空气站)'}`}
+          visible={this.state.missingAlarmVisible}
+          wrapClassName='spreadOverModal'
+          footer={null}
+          destroyOnClose={true}
+          onCancel={()=>{this.setState({missingAlarmVisible:false})}}
+          className={styles.missDetailSty}
+        >
+        <MissDataSecond hideBreadcrumb status={this.state.status} location ={{ query: {regionCode:this.state.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}}/>
+
+        </Modal>
       </Card>
     );
   }
