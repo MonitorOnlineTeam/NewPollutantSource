@@ -453,7 +453,6 @@ export default class Index extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              // bordered={false}
               dataSource={this.props.tableDatas}
               // pagination={{
               //   showSizeChanger: true,

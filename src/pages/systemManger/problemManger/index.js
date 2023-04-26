@@ -517,6 +517,15 @@ const Index = (props) => {
                 <Upload {...uploadProps}>
                   <Button icon={<UploadOutlined />} loading={filesLoading}>上传附件</Button>
                 </Upload>
+                <NumTips style={{right:'auto', left:120}} content={
+                <div>
+                   多选操作有以下两种方式：
+                  <ul>
+                   <li>1、按住Shift键同时鼠标左击</li>
+                   <li>2、鼠标左击进行拖动</li>
+                 </ul>
+                 </div>
+              }/>
               </Form.Item>
             </Col>
             <Col span={24}>

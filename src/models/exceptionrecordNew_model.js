@@ -2,6 +2,8 @@ import Model from '@/utils/model';
 import * as services from '@/services/exceptionrecordNew_Api';
 import moment from 'moment';
 import { message } from 'antd';
+import { downloadFile } from '@/utils/utils';
+
 export default Model.extend({
   namespace: 'exceptionrecordNew',
   state: {
@@ -55,7 +57,8 @@ export default Model.extend({
     *exportExceptionAlarm({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportExceptionAlarm, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message)
       }
@@ -95,7 +98,8 @@ export default Model.extend({
     *exportExceptionAlarmListForEnt({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportExceptionAlarmListForEnt, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message)
       }

@@ -1,5 +1,5 @@
 /**
- * 功  能：设备异常率
+ * 功  能：设备完好率
  * 创建人：jab
  * 创建时间：2021.2.24
  */
@@ -127,7 +127,9 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           regTableDatas:result.Datas,
+          queryPar:payload,
         })
+        callback&&callback()
       }else{
         message.error(result.Message)
       }

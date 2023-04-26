@@ -406,7 +406,6 @@ export default class Index extends PureComponent {
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
             columns={this.columns}
-            bordered={false}
             dataSource={this.props.tableDatas}
             pagination={false}
           />

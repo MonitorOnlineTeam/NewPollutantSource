@@ -121,7 +121,7 @@ const Index = (props) => {
 
   const [entName,setEntName ] = useState()
   return (
-    <div className={styles.equipmentAbnormalRateSty}>
+    <div>
        
        <Form layout='inline'>
       <Form.Item style={{ paddingBottom: '16px' }}>

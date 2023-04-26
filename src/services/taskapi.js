@@ -11,6 +11,7 @@ import { EnumRejectFlag } from '../utils/enum';
 export async function GetTaskRecord(params) {
     const body = {
         TaskID: params.TaskID,
+        IsEnableAlarm:1, //表示为pc端调用
     };
 
     const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetTaskDetails', body, null);

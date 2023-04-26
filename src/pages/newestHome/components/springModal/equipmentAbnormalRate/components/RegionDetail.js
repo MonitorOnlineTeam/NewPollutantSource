@@ -72,7 +72,7 @@ const Index = (props) => {
 
   const initData =  () => {
       props.regDetailGetExecptionRateList({
-        ...props.queryPar,
+        ...queryPar,
          pointType:2,
     })
  };
@@ -126,8 +126,8 @@ const Index = (props) => {
    const pointDetail = (row) =>{
     setPointVisible(true)
     props.updateState({
-         queryPar:{
-        ...props.queryPar,
+        queryPar:{
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
@@ -141,7 +141,7 @@ const Index = (props) => {
 
 
   return (
-    <div  className={styles.equipmentAbnormalRateSty}>
+    <div>
 
   <Form.Item   style={{paddingBottom:'16px'}}>
     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
@@ -150,6 +150,7 @@ const Index = (props) => {
     <Button  onClick={() => {props.onGoBack() }}> <RollbackOutlined />返回 </Button>
     </Form.Item>
     <SdlTable
+        className={styles.regDetailTableSty}
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}

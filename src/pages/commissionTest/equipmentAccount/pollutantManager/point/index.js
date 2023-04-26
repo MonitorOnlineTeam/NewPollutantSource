@@ -130,7 +130,7 @@ export default class Index extends Component {
             type:'autoForm/saveEdit',
             payload: {
               configId:pointConfigId,
-              FormData: {...values,ID:selectedPointCode},
+              FormData: {...values,InstallationTime:values.InstallationTime&&values.InstallationTime.format('YYYY-MM-DD HH:mm:ss'), BeginTime:values.BeginTime&&values.BeginTime.format('YYYY-MM-DD HH:mm:ss'), EndTime:values.EndTime&&values.EndTime.format('YYYY-MM-DD HH:mm:ss'),  ID:selectedPointCode},
               searchParams: pointDataWhere,
               callback: result => {
                 if (result.IsSuccess) {

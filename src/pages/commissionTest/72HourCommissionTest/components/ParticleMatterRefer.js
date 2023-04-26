@@ -208,7 +208,7 @@ const Index = (props) => {
             const startTimeData = form.getFieldValue(`BTime${index}`)
             const timeInterValue = form.getFieldValue('TimeIntervals')
             if (timeInterValue && startTime) { //间隔时间不为空
-                const generatEndTime = moment(moment(startTimeData).add(timeInterValue, 'minutes'));
+                const generatEndTime = moment(moment(startTimeData).add(timeInterValue-1, 'minutes'));
                 if (type === 'start') {
                     form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
                 } else {

@@ -73,6 +73,7 @@ class index extends PureComponent {
     operationpersonnel:'',
     pageIndex:1,
     pageSize:10,
+    RegionName:'',
   }
   _SELF_ = {
     formLayout: {
@@ -362,7 +363,7 @@ class index extends PureComponent {
     })
   }
 
-  onExport = () => {
+  onDetailExport = () => {
     this.props.dispatch({
       type: "exceptionrecordNew/exportExceptionAlarmListForEnt",
       payload: {
@@ -487,7 +488,7 @@ class index extends PureComponent {
 
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading,exportExceptionAlarmListForEntLoading } = this.props;
+    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading,exportExceptionAlarmListForEntLoading, } = this.props;
     const { formLayout, columns, detailsColumns } = this._SELF_;
     const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime } = this.state;
     let _detailsColumns = detailsColumns;
@@ -634,7 +635,7 @@ class index extends PureComponent {
           onCancel={() => { this.setState({ visible: false }) }}
         >
           <Row style={{ marginBottom: 10 }}>
-            <Button  icon={<ExportOutlined />} loading={exportExceptionAlarmListForEntLoading} onClick={this.onExport}>
+            <Button  icon={<ExportOutlined />} loading={exportExceptionAlarmListForEntLoading} onClick={this.onDetailExport}>
               导出
             </Button>
           </Row>
