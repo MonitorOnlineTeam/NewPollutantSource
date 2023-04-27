@@ -16,18 +16,19 @@ import {
     GetBdTestRecord, RevokeTask,
     GetPatrolType, GetRepairRecord, MaintainRecordDetail, GetSparePartReplaceRecord,
     GetOperationLogList, GetFailureHoursRecord,
-     GetOperationFormDetail, GetTaskDitailsAttachment, GetOperationTaskList,
-     GetStandardLiquidRepalceRecordList,
-     GetDataConsistencyRecordForPCList,
-     GetDataConsistencyRecordNewForPCList,
-     GetDetectionTimesRecordList,
-     GetWaterCalibrationRecordForPCList,
-     GetWaterCheckRecordRecordForPCList,
-     GetWaterParametersChangeRecordForPCList,
-     GetGasParametersChangeRecordForPCList,
-     GetWaterComparisonTestRecordForPCList,
-     GetCooperationInspectionRecordList,
-     ExportOperationTaskList, 
+    GetOperationFormDetail, GetTaskDitailsAttachment, GetOperationTaskList,
+    GetStandardLiquidRepalceRecordList,
+    GetDataConsistencyRecordForPCList,
+    GetDataConsistencyRecordNewForPCList,
+    GetDetectionTimesRecordList,
+    GetWaterCalibrationRecordForPCList,
+    GetWaterCheckRecordRecordForPCList,
+    GetWaterParametersChangeRecordForPCList,
+    GetGasParametersChangeRecordForPCList,
+    GetWaterComparisonTestRecordForPCList,
+    GetCooperationInspectionRecordList,
+    ExportOperationTaskList,
+    PostRetransmission,
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -48,19 +49,19 @@ export default Model.extend({
         StandardGasRepalceRecord: null, // 标气更换记录
         MaintainRecordDetailRecord: null, // 保养项更换记录
         SparePartReplaceRecord: null, // 备品更换记录
-        RepalceRecordList:null, // 试剂更换记录
+        RepalceRecordList: null, // 试剂更换记录
         RecordTypes: [], // 运维表单类型
         AlarmResponseList: [],
         operationLogList: null, // 运维记录列表
-        cooperatInspectionRecordList:null, //配合检查记录
-        dataConsistencyRecordList:null,//数据一致性检查表 实时
-        dataConsistencyDateRecordList:null,//数据一致性检查表 小时与日数据
-        detectionTimesRecordList:null,//上月委托第三方检测次数
-        waterCalibrationRecordList:null,//水质校准记录
-        WaterCheckRecordRecordForPCList:null,//标准溶液核查记录
-        WaterParametersChangeRecordForPCList:null,//设备参数变动记录 废水
-        GasParametersChangeRecordForPCList:null,//设备参数变动记录 废气
-        WaterComparisonTestRecordForPCList:null,//实际水样对比实验结果记录表
+        cooperatInspectionRecordList: null, //配合检查记录
+        dataConsistencyRecordList: null,//数据一致性检查表 实时
+        dataConsistencyDateRecordList: null,//数据一致性检查表 小时与日数据
+        detectionTimesRecordList: null,//上月委托第三方检测次数
+        waterCalibrationRecordList: null,//水质校准记录
+        WaterCheckRecordRecordForPCList: null,//标准溶液核查记录
+        WaterParametersChangeRecordForPCList: null,//设备参数变动记录 废水
+        GasParametersChangeRecordForPCList: null,//设备参数变动记录 废气
+        WaterComparisonTestRecordForPCList: null,//实际水样对比实验结果记录表
         // 运维记录参数
         operationRzWhere: {
             beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -82,12 +83,12 @@ export default Model.extend({
             OperationsUserId: '',
             TaskType: '',
             CompleteTime: '',
-            CreateTime:[moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+            CreateTime: [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
             pageIndex: 1,
             pageSize: 20,
             total: 0,
         },
-        TaskRecordLoading:true,
+        TaskRecordLoading: true,
 
     },
 
@@ -96,11 +97,11 @@ export default Model.extend({
         * GetTaskRecord({
             payload,
         }, { call, update, put, select, take }) {
-            yield update({ TaskRecordLoading:true });
+            yield update({ TaskRecordLoading: true });
             const taskInfo = yield call(GetTaskRecord, payload);
             if (taskInfo !== null && taskInfo.IsSuccess) {
                 if (taskInfo.Datas.length > 0) {
-                    yield update({ TaskRecordLoading:false });
+                    yield update({ TaskRecordLoading: false });
                     // yield put({
                     //     type: 'GetAlarmResponseList',
                     //     payload: {
@@ -120,14 +121,14 @@ export default Model.extend({
                     //         TaskRecord: taskInfo,
                     //     });
                     // }
-                    yield update({  TaskRecord: taskInfo,  });
+                    yield update({ TaskRecord: taskInfo, });
                 } else {
-                    yield update({  TaskRecord: null,  });
+                    yield update({ TaskRecord: null, });
                 }
 
-            }else{
+            } else {
                 message.error(taskInfo.Message)
-                yield update({ TaskRecordLoading:false });
+                yield update({ TaskRecordLoading: false });
             }
 
         },
@@ -383,32 +384,32 @@ export default Model.extend({
         }, { call, update }) {
             const DataInfo = yield call(GetAlarmResponseList, payload);
             if (DataInfo !== null && DataInfo.IsSuccess) {
-                yield update({ TaskRecordLoading:false });  
+                yield update({ TaskRecordLoading: false });
                 if (DataInfo.Datas !== null) {
                     yield update({ AlarmResponseList: DataInfo.Datas });
                 } else {
                     yield update({ AlarmResponseList: [] });
                 }
-            }else{
-                yield update({ TaskRecordLoading:false });  
+            } else {
+                yield update({ TaskRecordLoading: false });
             }
         },
         /** 获取任务列表 */
         * GetOperationTaskList({
             payload,
-          }, { call, update, select }) {
+        }, { call, update, select }) {
             const { gettasklistqueryparams } = yield select(_ => _.task);
             const result = yield call(GetOperationTaskList, gettasklistqueryparams);
             if (result.IsSuccess) {
-              yield update({
-                gettasklistqueryparams: {
-                  ...gettasklistqueryparams,
-                  total: result.Total,
-                },
-               datatable: result.Datas,
-              })
+                yield update({
+                    gettasklistqueryparams: {
+                        ...gettasklistqueryparams,
+                        total: result.Total,
+                    },
+                    datatable: result.Datas,
+                })
             }
-          },
+        },
         /** 任务列表 导出*/
         *ExportOperationTaskList({ payload, }, { call, update, select }) {
             const result = yield call(ExportOperationTaskList, payload);
@@ -416,8 +417,8 @@ export default Model.extend({
                 message.success('下载成功');
                 downloadFile(`/upload${result.Datas}`);
             }
-          },
-           
+        },
+
         // 获取运维记录
         * GetOperationLogList({
             payload,
@@ -449,8 +450,18 @@ export default Model.extend({
                 });
             }
         },
+        // 任务转发
+        *postRetransmission({ payload, callback }, { call, put, update }) {
+            const result = yield call(PostRetransmission, payload);
+            if (result.IsSuccess) {
+                message.success(result.Message);
+                callback && callback(result.Datas);
+            } else {
+                message.error(result.Message);
+            }
+        },
         // 试剂更换表单
-        * GetStandardLiquidRepalceRecordList ({ payload, }, {call, update,select,}) {
+        * GetStandardLiquidRepalceRecordList({ payload, }, { call, update, select, }) {
             const DataInfo = yield call(GetStandardLiquidRepalceRecordList, payload);
             if (DataInfo.IsSuccess) {
                 yield update({
@@ -458,8 +469,8 @@ export default Model.extend({
                 });
             }
         },
-       // 配合检查表单
-        * GetCooperationInspectionRecordList ({ payload, }, {call, update,select,}) {
+        // 配合检查表单
+        * GetCooperationInspectionRecordList({ payload, }, { call, update, select, }) {
             const DataInfo = yield call(GetCooperationInspectionRecordList, payload);
             if (DataInfo.IsSuccess) {
                 yield update({
@@ -468,7 +479,7 @@ export default Model.extend({
             }
         },
         //  数据一致性检查表 实时
-        * GetDataConsistencyRecordForPCList ({ payload, }, {call, update,select,}) {
+        * GetDataConsistencyRecordForPCList({ payload, }, { call, update, select, }) {
             const DataInfo = yield call(GetDataConsistencyRecordForPCList, payload);
             if (DataInfo.IsSuccess) {
                 yield update({
@@ -476,8 +487,8 @@ export default Model.extend({
                 });
             }
         },
-       //  数据一致性检查表 小时与与日数据
-        *GetDataConsistencyRecordNewForPCList ({ payload, }, {call, update,select,}) {
+        //  数据一致性检查表 小时与与日数据
+        *GetDataConsistencyRecordNewForPCList({ payload, }, { call, update, select, }) {
             const DataInfo = yield call(GetDataConsistencyRecordNewForPCList, payload);
             if (DataInfo.IsSuccess) {
                 yield update({
@@ -487,62 +498,62 @@ export default Model.extend({
         },
 
         //上月委托第三方检测次数
-        *GetDetectionTimesRecordList ({ payload, }, {call, update,select,}) {
-            const DataInfo = yield call(GetDetectionTimesRecordList, payload); 
+        *GetDetectionTimesRecordList({ payload, }, { call, update, select, }) {
+            const DataInfo = yield call(GetDetectionTimesRecordList, payload);
             if (DataInfo.IsSuccess) {
                 yield update({
                     detectionTimesRecordList: DataInfo.Datas,
                 });
             }
-          },
-         // 水质校准记录
-       *GetWaterCalibrationRecordForPCList ({ payload, }, {call, update,select,}) {
-        const DataInfo = yield call(GetWaterCalibrationRecordForPCList, payload); 
-        if (DataInfo.IsSuccess) {
-            yield update({
-                waterCalibrationRecordList: DataInfo.Datas,
-            });
-        }
-      },
-       //  标准溶液核查
-        *GetWaterCheckRecordRecordForPCList ({ payload, }, {call, update,select,}) {
-        const DataInfo = yield call(GetWaterCheckRecordRecordForPCList, payload); 
-        if (DataInfo.IsSuccess) {
-            yield update({
-                WaterCheckRecordRecordForPCList: DataInfo.Datas,
-            });
-        }
+        },
+        // 水质校准记录
+        *GetWaterCalibrationRecordForPCList({ payload, }, { call, update, select, }) {
+            const DataInfo = yield call(GetWaterCalibrationRecordForPCList, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    waterCalibrationRecordList: DataInfo.Datas,
+                });
+            }
+        },
+        //  标准溶液核查
+        *GetWaterCheckRecordRecordForPCList({ payload, }, { call, update, select, }) {
+            const DataInfo = yield call(GetWaterCheckRecordRecordForPCList, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    WaterCheckRecordRecordForPCList: DataInfo.Datas,
+                });
+            }
         },
         //  设备参数变动 废水
-        *GetWaterParametersChangeRecordForPCList ({ payload, }, {call, update,select,}) {
-            const DataInfo = yield call(GetWaterParametersChangeRecordForPCList, payload); 
+        *GetWaterParametersChangeRecordForPCList({ payload, }, { call, update, select, }) {
+            const DataInfo = yield call(GetWaterParametersChangeRecordForPCList, payload);
             if (DataInfo.IsSuccess) {
                 yield update({
                     WaterParametersChangeRecordForPCList: DataInfo.Datas,
                 });
             }
-            },
+        },
         //  设备参数变动 废气
-        *GetGasParametersChangeRecordForPCList ({ payload, }, {call, update,select,}) {
-            const DataInfo = yield call(GetGasParametersChangeRecordForPCList, payload); 
+        *GetGasParametersChangeRecordForPCList({ payload, }, { call, update, select, }) {
+            const DataInfo = yield call(GetGasParametersChangeRecordForPCList, payload);
             if (DataInfo.IsSuccess) {
                 yield update({
                     GasParametersChangeRecordForPCList: DataInfo.Datas,
                 });
             }
-            },
-        //  实际水样对比实验结果记录表
-        *GetWaterComparisonTestRecordForPCList ({ payload, }, {call, update,select,}) {
-        const DataInfo = yield call(GetWaterComparisonTestRecordForPCList, payload); 
-        if (DataInfo.IsSuccess) {
-            yield update({
-                WaterComparisonTestRecordForPCList: DataInfo.Datas,
-            });
-        }
         },
-                              
-            
+        //  实际水样对比实验结果记录表
+        *GetWaterComparisonTestRecordForPCList({ payload, }, { call, update, select, }) {
+            const DataInfo = yield call(GetWaterComparisonTestRecordForPCList, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    WaterComparisonTestRecordForPCList: DataInfo.Datas,
+                });
+            }
+        },
+
+
     },
 
-    
+
 });

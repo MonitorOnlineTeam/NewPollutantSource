@@ -12,6 +12,7 @@ import {
   ProfileOutlined,
   UpOutlined,
   ExportOutlined,
+  SendOutlined,
 } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -30,6 +31,7 @@ import {
   Tag,
   Badge,
   DatePicker,
+  message,
 } from 'antd';
 import moment from 'moment';
 import Cookie from 'js-cookie';
@@ -42,7 +44,9 @@ import SdlTable from '@/components/SdlTable'
 import TaskRecordDetails from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout'
 import EntAtmoList from '@/components/EntAtmoList'
 import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal'
+import UserList from '@/components/UserList'
 import styles from './index.less'
+
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -59,6 +63,7 @@ const { RangePicker } = DatePicker;
   clientHeight: global.clientHeight,
   operationCompanyList: operations.operationCompanyList,
   exportLoading: loading.effects['task/ExportOperationTaskList'],
+  taskForwardLoading: loading.effects['task/postRetransmission'],
 }))
 @Form.create()
 class TaskRecord extends Component {
@@ -74,6 +79,11 @@ class TaskRecord extends Component {
       pointList: [],
       pointLoading: false,
       abnormalTitle: '',
+      taskForwardVisible:false,
+      forwardTaskID: null,
+      forwardToFromUserId:null,
+      forwardToUserId:null,
+      forwardRemark:null,
     };
     this._SELF_ = {
       configId: 'TaskRecord',
@@ -438,7 +448,7 @@ class TaskRecord extends Component {
   }
   exportData = () => { //导出
     const par = this.props.form.getFieldsValue();
-    const { isHomeModal,DGIMN, } = this.props;
+    const { isHomeModal, DGIMN, } = this.props;
     this.props.dispatch({
       type: `task/ExportOperationTaskList`,
       payload: { ...par, DGIMN: isHomeModal ? DGIMN : '' },
@@ -465,6 +475,31 @@ class TaskRecord extends Component {
       )
     })
   }
+  taskForward=(record)=>{
+    this.setState({
+     taskForwardVisible:true,
+     forwardTaskID: record.ID,
+     forwardToFromUserId:record.OperationsUserId,
+    })
+   }
+   taskForwardOk=()=>{
+     const {forwardTaskID,forwardToFromUserId,forwardToUserId,forwardRemark,} = this.state;
+       if(!forwardToUserId){
+          message.error('请选择转发人')
+          return;
+       }
+        this.props.dispatch({
+          type: 'task/postRetransmission',
+          payload: {TaskId:forwardTaskID,FromUserId:forwardToFromUserId,ToUserId:forwardToUserId,Remark:forwardRemark},
+          callback:()=>{
+            this.setState({
+              taskForwardVisible:false,
+             })
+          }
+        });
+      
+
+   }
   render() {
     const { form: { getFieldDecorator }, operationsUserList, loading, LoadingData, gettasklistqueryparams, isHomeModal } = this.props;
     const { formLayout } = this._SELF_;
@@ -514,10 +549,10 @@ class TaskRecord extends Component {
           if (text) {
             if (text === '打卡异常') {
               return <a onClick={() => this.exceptionDetail(record)}>{text}</a>
-            } else if (text.split(',')[0]=='打卡异常') {
+            } else if (text.split(',')[0] == '打卡异常') {
               const str = text.substring(4) //截取第四位后面的字符串
               return <div><a onClick={() => this.exceptionDetail(record)}>{text.split(',')[0]}</a><span>{str}</span></div>
-           } else {
+            } else {
               return text;
             }
           }
@@ -639,15 +674,22 @@ class TaskRecord extends Component {
             const { DGIMN } = record;
             const TaskID = record.ID;
             const reslist = [];
-            reslist.push(
+            reslist.push(<>
               <Tooltip title="详情">
                 <a><ProfileOutlined
                   // onClick={() =>isHomeModal?this.taskRecordDetails(TaskID,DGIMN) : this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))}
                   onClick={() => this.taskRecordDetails(TaskID, DGIMN)}
 
                 /></a>
-              </Tooltip>,
-            )
+              </Tooltip>
+               <Divider type="vertical" />
+              <Tooltip title="任务转发">
+                <a><SendOutlined
+                  onClick={() => this.taskForward(record)}
+
+                /></a>
+              </Tooltip>
+            </>)
             if (time) {
               // console.log('timetimetimetimetimetime', moment().diff(time, 'days'));
               // 当前时间 > 完成时间显示驳回
@@ -1055,7 +1097,7 @@ class TaskRecord extends Component {
           }}
 
         >
-          <TaskRecordDetails 
+          <TaskRecordDetails
             match={{ params: { TaskID: TaskID, DGIMN: DGIMN } }}
             isHomeModal
             hideBreadcrumb
@@ -1063,6 +1105,25 @@ class TaskRecord extends Component {
         </Modal>
         {/** 打卡异常  监测点 弹框 */}
         <EntAbnormalMapModal abnormalTitle={this.state.abnormalTitle} />
+        <Modal
+          title="任务转发"
+          visible={this.state.taskForwardVisible}
+          width="560px"
+          destroyOnClose
+          confirmLoading={this.props.taskForwardLoading}
+          onOk={this.taskForwardOk}
+          onCancel={() => {
+            this.setState({ taskForwardVisible: false })
+          }}
+          className={styles.taskForwardModalSty}
+        >
+              <FormItem label="转发人" style={{ width: '100%', }}>
+                  <UserList onChange={(value)=>{this.setState({forwardToUserId:value})}}/>
+              </FormItem>
+              <FormItem label="备注" style={{ width: '100%', }}>
+                  <Input.TextArea placeholder='请输入' onChange={(e)=>{this.setState({forwardRemark:e.target.value})}}/>
+              </FormItem>
+        </Modal>
       </BreadcrumbWrapper>
     );
   }

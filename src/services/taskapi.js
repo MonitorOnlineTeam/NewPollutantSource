@@ -402,3 +402,8 @@ export async function GetWaterComparisonTestRecordForPCList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetWaterComparisonTestRecordForPCList', params , null);
     return result === null ? { Datas: null } : result;
 }
+/** 任务转发 */
+export async function PostRetransmission(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/PostRetransmission', params, null);
+    return result;
+  }

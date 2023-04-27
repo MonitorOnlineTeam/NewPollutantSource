@@ -41,6 +41,7 @@ import config from '@/config';
 import { EnumPropellingAlarmSourceType, EnumDYParameterException, EnumDataException, EnumDataLogicErr, EnumDYStatusException } from '@/utils/enum';
 import RecordForm from '@/pages/operations/recordForm'
 import SdlTable from '@/components/SdlTable';
+import UserList from '@/components/UserList'
 
 const { Description } = DescriptionList;
 const { TextArea } = Input;
@@ -54,6 +55,8 @@ let SCREEN_HEIGHT = "calc(100vh - 250px)";
     isloading: task.TaskRecordLoading,
     taskInfo: task.TaskRecord,
     alarmList: [],
+    taskForwardLoading: loading.effects['task/postRetransmission'],
+
 }))
 class EmergencyDetailInfo extends Component {
     constructor(props) {
@@ -76,7 +79,9 @@ class EmergencyDetailInfo extends Component {
             ImgListvisible: false,
             FileUuid: '',
             processRecordVisible: false,
-
+            taskForwardVisible:false,
+            forwardToUserId:null,
+            forwardRemark:null,
         };
         this.column = [
             {
@@ -544,7 +549,29 @@ class EmergencyDetailInfo extends Component {
         });
         return PeopleArr.join(',');
     }
-
+    taskForward=()=>{
+        this.setState({
+         taskForwardVisible:true,
+        })
+       }
+    taskForwardOk=()=>{
+         const {forwardTaskID,forwardToFromUserId,forwardToUserId,forwardRemark,} = this.state;
+         const { taskInfo } = this.props;
+         const isExistTask = taskInfo.IsSuccess && taskInfo.Datas !== null && taskInfo.Datas.length > 0;
+           if(!forwardToUserId){
+              message.error('请选择转发人')
+              return;
+           }
+            this.props.dispatch({
+              type: 'task/postRetransmission',
+              payload: {TaskId:isExistTask&&taskInfo.Datas[0].ID,FromUserId:isExistTask&&taskInfo.Datas[0].OperationsUserId,ToUserId:forwardToUserId,Remark:forwardRemark},
+              callback:()=>{
+                this.setState({
+                  taskForwardVisible:false,
+                 })
+              }
+            });
+       }
     render() {
         const { photoIndex, recordType, taskID } = this.state;
         const { getFieldDecorator } = this.props.form;
@@ -849,9 +876,12 @@ class EmergencyDetailInfo extends Component {
                 <Card
                     title={!isHomeModal && <span style={{ fontWeight: '900' }}>任务详情</span>}
                     extra={
-                        !isHomeModal && <div>
-                            {/* <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
-                            {this.getGoBack()} */}
+                        // !isHomeModal && <div>
+                            /* <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
+                            {this.getGoBack()} */
+                        // </div>
+                        <div>
+                            <Button type='primary' onClick={() => this.taskForward()}>任务转发</Button>
                         </div>
                     }
                 >
@@ -1036,6 +1066,25 @@ class EmergencyDetailInfo extends Component {
                         hideBreadcrumb
                     />
                 </Modal>
+                <Modal
+          title="任务转发"
+          visible={this.state.taskForwardVisible}
+          width="560px"
+          destroyOnClose
+          confirmLoading={this.props.taskForwardLoading}
+          onOk={this.taskForwardOk}
+          onCancel={() => {
+            this.setState({ taskForwardVisible: false })
+          }}
+          className={styles.taskForwardModalSty}
+        >
+              <FormItem label="转发人" style={{ width: '100%', }}>
+                  <UserList onChange={(value)=>{this.setState({forwardToUserId:value})}}/>
+              </FormItem>
+              <FormItem label="备注" style={{ width: '100%', }}>
+                  <Input.TextArea placeholder='请输入' onChange={(e)=>{this.setState({forwardRemark:e.target.value})}}/>
+              </FormItem>
+        </Modal>
             </div>
         );
     }
