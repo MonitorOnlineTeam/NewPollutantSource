@@ -1305,7 +1305,26 @@ export default {
                   name: 'cruxParSupervisionAnalysis',
                   component: './operations/cruxParSupervisionAnalysis',
                 },
+
+                {
+                  //运维任务管理 重定向
+                  path: '/operations/operaTaskManager',
+                  redirect: '/operations/operaTaskManager/operaTask',
+                },
+                {
+                  path: '/operations/operaTaskManager',
+                  name: 'operaTask',
+                  routes: [
+                    {
+                      path: '/operations/operaTaskManager/operaTask', //运维任务
+                      name: 'operaTask',
+                      component: './operations/operaTaskManager/operaTask',
+                    },
+                  ]
+                }
               ],
+
+              
             },
             {
               path: '/rolesmanager',

@@ -36,17 +36,17 @@ export default Model.extend({
                 return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
               }
             },
-            {
-              title: '在线监测系统停运',
-              dataIndex: 'onLineShutdownRate',
-              key: 'onLineShutdownRate',
-              width: 200,
-              align:'center',
-              sorter: (a, b) => a.onLineShutdownRate - b.onLineShutdownRate,
-              render: (text, record) => {
-                return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
-              }
-            },
+            // {
+            //   title: '在线监测系统停运',
+            //   dataIndex: 'onLineShutdownRate',
+            //   key: 'onLineShutdownRate',
+            //   width: 200,
+            //   align:'center',
+            //   sorter: (a, b) => a.onLineShutdownRate - b.onLineShutdownRate,
+            //   render: (text, record) => {
+            //     return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+            //   }
+            // },
             {
               title: '数据恒定值',
               dataIndex: 'dataConstantRate',
