@@ -4,7 +4,7 @@
  * 创建时间：2021.11
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Tabs, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -20,7 +20,7 @@ import Cookie from 'js-cookie';
 import NumTips from '@/components/NumTips'
 const { TextArea } = Input;
 const { Option } = Select;
-
+const { TabPane } = Tabs;
 const namespace = 'operaTask'
 
 
@@ -28,18 +28,14 @@ const namespace = 'operaTask'
 
 const dvaPropsData = ({ loading, operaTask }) => ({
   tableDatas: operaTask.tableDatas,
-  pointDatas: operaTask.pointDatas,
   tableLoading: operaTask.tableLoading,
-  tableTotal: operaTask.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addSystemModel`],
-  loadingEditConfirm: loading.effects[`${namespace}/editSystemModel`],
-  monitoringTypeList: operaTask.monitoringTypeList,
-  manufacturerList: operaTask.manufacturerList,
-  // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
-  maxNum: operaTask.maxNum,
-  systemModelNameList: operaTask.systemModelNameList,
-  systemModelNameListLoading: loading.effects[`${namespace}/getSystemModelNameList`],
-  exportLoading: loading.effects[`${namespace}/exportSystemModelList`],
+  tableTotal: operaTask.tableTotal2,
+  tableDatas2: operaTask.tableDatas2,
+  tableLoading2: operaTask.tableLoading2,
+  tableTotal2: operaTask.tableTotal,
+  loadingAddConfirm: loading.effects[`${namespace}/exportSystemModelList`],
+  loadingEditConfirm: loading.effects[`${namespace}/exportSystemModelList`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -50,7 +46,7 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    bWWebService: (payload) => { 
+    bWWebService: (payload) => {
       dispatch({
         type: `${namespace}/bWWebService`,
         payload: payload,
@@ -66,25 +62,17 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [data, setData] = useState([]);
-
-  const [editingKey, setEditingKey] = useState('');
-  const [count, setCount] = useState(513);
-  const [DGIMN, setDGIMN] = useState('')
-  const [expand, setExpand] = useState(false)
-  const [fromVisible, setFromVisible] = useState(false)
-  const [tableVisible, setTableVisible] = useState(false)
-
-  const [type, setType] = useState('add')
-  // const [pageSize,setPageSize] = useState(20)
-  // const [pageIndex,setPageIndex] = useState(1)
 
 
 
-  const { tableDatas, tableTotal, tableLoading, monitoringTypeList, manufacturerList, loadingAddConfirm, loadingEditConfirm, exportLoading, maxNum, systemModelNameList, systemModelNameListLoading } = props;
+
+
+
+
+  const { tableDatas, tableTotal, tableLoading,tableDatas2, tableTotal2, tableLoading2, loadingAddConfirm , loadingEditConfirm,  } = props;
   useEffect(() => {
-    onFinish();
-
+    onFinish(pageIndex);
+    onFinish2(pageIndex2)
   }, []);
 
   const columns = [
@@ -92,8 +80,8 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return  (index + 1) + (pageIndex-1)*pageSize;
-    }
+        return taskType==='1'? (index + 1) + (pageIndex - 1) * pageSize : (index + 1) + (pageIndex2 - 1) * pageSize2;
+      }
     },
     {
       title: '任务名称',
@@ -128,18 +116,28 @@ const Index = (props) => {
     {
       title: <span>操作</span>,
       align: 'center',
-      width: 180,
+      width: 190,
       fixed: 'right',
       render: (text, record) => {
-        return <span>
-          <Fragment><Tooltip title="编辑"> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-          <Fragment> <Tooltip title="删除">
-            <Popconfirm title="确定要删除此条信息吗？" style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
-              <a><DelIcon /></a>
+        return <>
+           <Fragment>
+            <a  style={{paddingRight:8}}>上传报告</a> 
+            </Fragment>
+            <Fragment>
+            <a  style={{paddingRight:8}} onClick={() => { edit(record) }} >任务编辑</a> 
+            </Fragment>
+            <Fragment>
+            <Popconfirm title="您确定要完结此运维任务吗？" style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
+              <a style={{paddingRight:8}}>任务完结</a>
             </Popconfirm>
-          </Tooltip>
-          </Fragment>
-        </span>
+            </Fragment>
+            <Fragment>
+            <a  style={{paddingRight:8}} onClick={() => { taskDetail(record) }} >任务详情</a> 
+            </Fragment>
+            <Fragment>
+            <a>异常终止</a> 
+            </Fragment>
+        </>
       }
     },
   ];
@@ -175,7 +173,8 @@ const Index = (props) => {
 
 
 
-
+  const [type,setType] = useState('add')
+  const [fromVisible,setFromVisible] = useState(false)
 
   const add = () => {
     setFromVisible(true)
@@ -190,26 +189,17 @@ const Index = (props) => {
       })
     }
   };
+  const [taskDetailVisible,setTaskDetailVisible] = useState(false)
+  const taskDetail =  (record) => { //任务详情
+    setTaskDetailVisible(true)
+    props.bWWebService({
+      functionName: 'M_GetOperationTaskByID',
+      paramList: {
+        OPTID: record.ID,
+      }
+    })
+  };
 
-
-
-  const onFinish = async (pageIndexs) => {  //查询
-
-    try {
-      const values = await form.validateFields();
-
-      pageIndexs && typeof pageIndexs === "number" ? setPageIndex(pageIndexs) : setPageIndex(1); //除编辑  每次查询页码重置为第一页
-
-      props.bWWebService({
-        pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : 1,
-        pageSize: pageSize,
-        functionName:'M_GetALLOperationTask',
-        ...values,
-      })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
   const onModalOk = async () => { //添加 or 编辑弹框
 
     try {
@@ -218,7 +208,7 @@ const Index = (props) => {
         ...values,
       }, () => {
         setFromVisible(false)
-        onFinish()
+        onFinish(1)
       })
         :
         props.editSystemModel({
@@ -232,52 +222,88 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
+  const onFinish = async (pageIndexs) => {  //查询
 
-  const exports = () => { //导出
-    const values = form.getFieldsValue();
-    props.exportSystemModelList({
-      ...values,
-    })
+    try {
+      const values = await form.validateFields();
+
+      setPageIndex(pageIndexs); //除编辑  每次查询页码重置为第一页
+      props.bWWebService({
+        pageIndex: pageIndexs,
+        pageSize: pageSize,
+        functionName: 'M_GetALLOperationTask',
+        ...values,
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
   }
+  const onFinish2 = async (pageIndexs) => {  //查询
+
+    try {
+      const values = await form2.validateFields();
+      setPageIndex2(pageIndexs); //除编辑  每次查询页码重置为第一页
+      props.bWWebService({
+        pageIndex: pageIndexs,
+        pageSize: pageSize,
+        functionName: 'M_GetOperationTaskDone',
+        ...values,
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+
+
+
+
 
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState(20)
-  const handleTableChange = async (PageIndex, PageSize) => { //分页
-    setPageSize(PageSize)
+  const handleTableChange = (PageIndex, PageSize) => { //分页 进行中的任务
     setPageIndex(PageIndex)
+    setPageSize(PageSize)
+  }
+  const [pageIndex2, setPageIndex2] = useState(1)
+  const [pageSize2, setPageSize2] = useState(20)
+  const handleTableChange2 =(PageIndex, PageSize) => { //分页 已完结的任务
+    setPageIndex2(PageIndex)
+    setPageSize2(PageSize)
   }
   const searchComponents = () => {
     return <Form
-      form={form}
+      form={taskType==='1'?  form : form2}
       name="advanced_search"
       initialValues={{
         // Status:1
       }}
       className={styles["ant-advanced-search-form"]}
-      onFinish={()=>{onFinish()}}
+      onFinish={() => {taskType==='1'? onFinish(1) : onFinish2(1) }}
       layout='inline'
     >
-     <Form.Item label="关键字" name="ManufacturerID" >
-          <Input placeholder='请输入'/>
-        </Form.Item>
-        <Form.Item label="任务状态" name="Status" style={{ margin: '0 16px' }} >
-          <Select placeholder='请选择状态' allowClear style={{ width: 200 }}>
-            <Option key={1} value={1}>启用</Option>
-            <Option key={2} value={2}>停用</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType='submit' loading={tableLoading} style={{ marginRight: 8 }}>
-            查询
+      <Form.Item label="关键字" name="ManufacturerID" >
+        <Input placeholder='请输入' />
+      </Form.Item>
+      <Form.Item label="任务状态" name="Status" style={{ margin: '0 16px' }} >
+        <Select placeholder='请选择状态' allowClear style={{ width: 200 }}>
+          <Option key={1} value={1}>启用</Option>
+          <Option key={2} value={2}>停用</Option>
+        </Select>
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType='submit' loading={ taskType==='1'? tableLoading : tableLoading2} style={{ marginRight: 8 }}>
+          查询
           </Button>
-        </Form.Item>
+      </Form.Item>
     </Form>
   }
-
+  const [ taskType,setTaskType ] = useState('1')
   return (
     <div className={styles.operaTaskSty}>
       <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+      <Card title={searchComponents()}>
+        <Tabs onChange={(key)=>{setTaskType(key)}}>
+          <TabPane tab="进行中的任务" key='1'>
           <SdlTable
             loading={tableLoading}
             bordered
@@ -292,6 +318,25 @@ const Index = (props) => {
               onChange: handleTableChange,
             }}
           />
+  
+        </TabPane>
+          <TabPane tab="已完结的任务" key='2'>
+          <SdlTable
+            loading={tableLoading2}
+            bordered
+            dataSource={tableDatas2}
+            columns={columns}
+            pagination={{
+              total: tableTotal2,
+              pageSize: pageSize2,
+              current: pageIndex2,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              onChange: handleTableChange2,
+            }}
+          />
+        </TabPane>
+        </Tabs>
         </Card>
       </BreadcrumbWrapper>
 
@@ -331,13 +376,8 @@ const Index = (props) => {
               <Form.Item label="设备厂家" name="ManufacturerID" rules={[{ required: true, message: '请选择设备厂家' }]} >
                 <Select placeholder='请选择设备厂家' allowClear showSearch
                   filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-
                 >
-                  {
-                    manufacturerList[0] && manufacturerList.map(item => {
-                      return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
-                    })
-                  }
+                    <Option key={1} value={1}>{1}</Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -347,26 +387,15 @@ const Index = (props) => {
             <Col span={12}>
               <Form.Item label="监测类别" name="MonitoringType" rules={[{ required: true, message: '请选择监测类别' }]} >
                 <Select placeholder='请选择监测类别' allowClear disabled>
-                  {
-                    monitoringTypeList[0] && monitoringTypeList.map(item => {
-                      return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
-                    })
-                  }
+                <Option key={1} value={1}>{1}</Option>
                 </Select>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label="系统名称" name="SystemName" rules={[{ required: true, message: '请选择系统名称' }]} >
-                {systemModelNameListLoading ? <Spin size='small' />
-                  :
                   <Select placeholder='请选择系统名称' allowClear>
-                    {
-                      systemModelNameList[0] && systemModelNameList.map(item => {
-                        return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
-                      })
-                    }
-                  </Select>
-                }
+                  <Option key={1} value={1}>{1}</Option>
+                  </Select> 
               </Form.Item>
             </Col>
           </Row>

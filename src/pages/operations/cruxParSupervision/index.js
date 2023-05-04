@@ -554,9 +554,9 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '运维人员',
-      dataIndex: 'operationUserName',
-      key: 'operationUserName',
+      title: '工单执行人',
+      dataIndex: 'executorUserName',
+      key: 'executorUserName',
       align: 'center',
       ellipsis: true,
     },

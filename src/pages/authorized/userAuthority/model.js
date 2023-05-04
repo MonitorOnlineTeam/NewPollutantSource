@@ -509,7 +509,7 @@ export default Model.extend({
                 }
                 const result = yield call(getpointbydepid, {
                     ...payload
-                });
+                },'user');
                 if (result.IsSuccess) {
                     yield update({
                         CheckPoint: result.Datas
