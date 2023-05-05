@@ -433,7 +433,7 @@ handleTableChange = (pagination, filters, sorter) => {
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title={`${location.query.regionName} - ${JSON.parse(location.query.queryPar).EntType==='1'? '缺失数据报警详情(企业)':'缺失数据报警详情(空气站)'}`}>
+        <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title={`${location.query&&location.query.regionName} - ${location.query&&location.query.queryPar&&JSON.parse(location.query.queryPar)&&JSON.parse(location.query.queryPar).EntType==='1'? '缺失数据报警详情(企业)':'缺失数据报警详情(空气站)'}`}>
         <Card
           bordered={false}
           title={

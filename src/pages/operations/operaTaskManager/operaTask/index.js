@@ -33,9 +33,10 @@ const dvaPropsData = ({ loading, operaTask }) => ({
   tableDatas2: operaTask.tableDatas2,
   tableLoading2: operaTask.tableLoading2,
   tableTotal2: operaTask.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/exportSystemModelList`],
-  loadingEditConfirm: loading.effects[`${namespace}/exportSystemModelList`],
-
+  taskDetailData: operaTask.taskDetailData,
+  taskDetailLoading: operaTask.taskDetailLoading,
+  taskAddPointData: [], 
+  taskAddPointLoading:false,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -69,7 +70,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableTotal, tableLoading,tableDatas2, tableTotal2, tableLoading2, loadingAddConfirm , loadingEditConfirm,  } = props;
+  const { tableDatas, tableTotal, tableLoading, tableDatas2, tableTotal2, tableLoading2, loadingAddConfirm, loadingEditConfirm, } = props;
   useEffect(() => {
     onFinish(pageIndex);
     onFinish2(pageIndex2)
@@ -80,7 +81,7 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return taskType==='1'? (index + 1) + (pageIndex - 1) * pageSize : (index + 1) + (pageIndex2 - 1) * pageSize2;
+        return taskType === '1' ? (index + 1) + (pageIndex - 1) * pageSize : (index + 1) + (pageIndex2 - 1) * pageSize2;
       }
     },
     {
@@ -120,45 +121,62 @@ const Index = (props) => {
       fixed: 'right',
       render: (text, record) => {
         return <>
-           <Fragment>
-            <a  style={{paddingRight:8}}>上传报告</a> 
-            </Fragment>
-            <Fragment>
-            <a  style={{paddingRight:8}} onClick={() => { edit(record) }} >任务编辑</a> 
-            </Fragment>
-            <Fragment>
+          <Fragment>
+            <a style={{ paddingRight: 8 }}>上传报告</a>
+          </Fragment>
+          <Fragment>
+            <a style={{ paddingRight: 8 }} onClick={() => { taskEdit(record) }} >任务编辑</a>
+          </Fragment>
+          <Fragment>
             <Popconfirm title="您确定要完结此运维任务吗？" style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
-              <a style={{paddingRight:8}}>任务完结</a>
+              <a style={{ paddingRight: 8 }}>任务完结</a>
             </Popconfirm>
-            </Fragment>
-            <Fragment>
-            <a  style={{paddingRight:8}} onClick={() => { taskDetail(record) }} >任务详情</a> 
-            </Fragment>
-            <Fragment>
-            <a>异常终止</a> 
-            </Fragment>
+          </Fragment>
+          <Fragment>
+            <a style={{ paddingRight: 8 }} onClick={() => { taskDetail(record) }} >任务详情</a>
+          </Fragment>
+          <Fragment>
+            <a>异常终止</a>
+          </Fragment>
         </>
       }
     },
   ];
+  const [type, setType] = useState('edit')
+  const [taskTitle, setTaskTitle] = useState()
+  const [taskEditVisible, setTaskEditVisible] = useState(false)
+  const [taskDetailVisible, setTaskDetailVisible] = useState(false)
 
+  const taskEdit = async (record, type) => {  //任务编辑
+    setTaskEditVisible(true)
+    setTaskTitle(`任务编辑 - ${record.RWMC}`)
+    setType(type)
+    
+    // props.bWWebService({ //关联点位
+    //   functionName: 'M_InsertOperationTaskScheme',
+    //   strXmlPlan
+    // })
+    props.bWWebService({ //点位列表
+      functionName: 'M_GetOperationSchemeList',
+    })
 
-  const edit = async (record) => {
-    setFromVisible(true)
-    setType('edit')
-    form2.resetFields();
-    try {
-      form2.setFieldsValue({
-        ...record,
-        SystemName: record.ChildID,
-        MonitoringType: record.MonitoringTypeID.toString()
-      })
-
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
   };
+  const taskDetail = async (record, type) => {  //任务详情
+    setTaskDetailVisible(true)
+    setTaskTitle(`任务详情 - ${record.RWMC}`)
+    setType(type)
 
+    props.bWWebService({ //任务详情
+      functionName: 'M_GetOperationTaskByID',
+      paramList: {
+        OPTID: record.ID,
+      }
+    })
+    // props.bWWebService({ //点位列表
+    //   functionName: 'M_GetOperationSchemeList',
+    // })
+
+  };
   const del = async (record) => {
     const values = await form.validateFields();
     props.delSystemModel({ ID: record.ID }, () => {
@@ -170,37 +188,7 @@ const Index = (props) => {
       })
     })
   };
-
-
-
-  const [type,setType] = useState('add')
-  const [fromVisible,setFromVisible] = useState(false)
-
-  const add = () => {
-    setFromVisible(true)
-    setType('add')
-    form2.resetFields();
-    form2.setFieldsValue({ SystemCode: maxNum })
-    if (monitoringTypeList && monitoringTypeList[0]) { //监测类别默认值
-      monitoringTypeList.map(item => {
-        if (item.Code == 266) {
-          form2.setFieldsValue({ MonitoringType: item.Code })
-        }
-      })
-    }
-  };
-  const [taskDetailVisible,setTaskDetailVisible] = useState(false)
-  const taskDetail =  (record) => { //任务详情
-    setTaskDetailVisible(true)
-    props.bWWebService({
-      functionName: 'M_GetOperationTaskByID',
-      paramList: {
-        OPTID: record.ID,
-      }
-    })
-  };
-
-  const onModalOk = async () => { //添加 or 编辑弹框
+  const taskOk = async () => { //任务编辑
 
     try {
       const values = await form2.validateFields();//触发校验
@@ -266,19 +254,19 @@ const Index = (props) => {
   }
   const [pageIndex2, setPageIndex2] = useState(1)
   const [pageSize2, setPageSize2] = useState(20)
-  const handleTableChange2 =(PageIndex, PageSize) => { //分页 已完结的任务
+  const handleTableChange2 = (PageIndex, PageSize) => { //分页 已完结的任务
     setPageIndex2(PageIndex)
     setPageSize2(PageSize)
   }
   const searchComponents = () => {
     return <Form
-      form={taskType==='1'?  form : form2}
+      form={taskType === '1' ? form : form2}
       name="advanced_search"
       initialValues={{
         // Status:1
       }}
       className={styles["ant-advanced-search-form"]}
-      onFinish={() => {taskType==='1'? onFinish(1) : onFinish2(1) }}
+      onFinish={() => { taskType === '1' ? onFinish(1) : onFinish2(1) }}
       layout='inline'
     >
       <Form.Item label="关键字" name="ManufacturerID" >
@@ -291,133 +279,130 @@ const Index = (props) => {
         </Select>
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType='submit' loading={ taskType==='1'? tableLoading : tableLoading2} style={{ marginRight: 8 }}>
+        <Button type="primary" htmlType='submit' loading={taskType === '1' ? tableLoading : tableLoading2} style={{ marginRight: 8 }}>
           查询
           </Button>
       </Form.Item>
     </Form>
   }
-  const [ taskType,setTaskType ] = useState('1')
+  const pointColumns = [
+    {
+      title: '序号',
+      dataIndex: 'RWMC',
+      key: 'RWMC',
+      align: 'center',
+    },
+    {
+      title: '污染源企业',
+      dataIndex: 'RWMC',
+      key: 'RWMC',
+      align: 'left',
+    },
+    {
+      title: '点位名称',
+      dataIndex: 'RWBH',
+      key: 'RWBH',
+      align: 'left',
+    },
+    {
+      title: '地址',
+      dataIndex: 'RWMC11',
+      key: 'RWMC22',
+      align: 'center',
+    },
+    {
+      title: '纬度',
+      dataIndex: 'RWRQKS',
+      key: 'RWRQKS',
+      align: 'center',
+    },
+    {
+      title: '经度',
+      dataIndex: 'RWRQJS',
+      key: 'RWRQJS',
+      align: 'center',
+    },
+  ];
+  const addPoint = () => {
+
+  }
+  const [taskType, setTaskType] = useState('1')
+  const [modelTabType, setModelTabType] = useState('1')
+
+
   return (
     <div className={styles.operaTaskSty}>
       <BreadcrumbWrapper>
-      <Card title={searchComponents()}>
-        <Tabs onChange={(key)=>{setTaskType(key)}}>
-          <TabPane tab="进行中的任务" key='1'>
-          <SdlTable
-            loading={tableLoading}
-            bordered
-            dataSource={tableDatas}
-            columns={columns}
-            pagination={{
-              total: tableTotal,
-              pageSize: pageSize,
-              current: pageIndex,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              onChange: handleTableChange,
-            }}
-          />
-  
-        </TabPane>
-          <TabPane tab="已完结的任务" key='2'>
-          <SdlTable
-            loading={tableLoading2}
-            bordered
-            dataSource={tableDatas2}
-            columns={columns}
-            pagination={{
-              total: tableTotal2,
-              pageSize: pageSize2,
-              current: pageIndex2,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              onChange: handleTableChange2,
-            }}
-          />
-        </TabPane>
-        </Tabs>
+        <Card title={searchComponents()}>
+          <Tabs onChange={(key) => { setTaskType(key) }}>
+            <TabPane tab="进行中的任务" key='1'>
+              <SdlTable
+                loading={tableLoading}
+                bordered
+                dataSource={tableDatas}
+                columns={columns}
+                pagination={{
+                  total: tableTotal,
+                  pageSize: pageSize,
+                  current: pageIndex,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange,
+                }}
+              />
+
+            </TabPane>
+            <TabPane tab="已完结的任务" key='2'>
+              <SdlTable
+                loading={tableLoading2}
+                bordered
+                dataSource={tableDatas2}
+                columns={columns}
+                pagination={{
+                  total: tableTotal2,
+                  pageSize: pageSize2,
+                  current: pageIndex2,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange2,
+                }}
+              />
+            </TabPane>
+          </Tabs>
         </Card>
       </BreadcrumbWrapper>
 
       <Modal
-        title={type === 'add' ? '添加' : '编辑'}
-        visible={fromVisible}
-        onOk={onModalOk}
-        confirmLoading={type === 'add' ? loadingAddConfirm : loadingEditConfirm}
-        onCancel={() => { setFromVisible(false) }}
+        title={taskTitle}
+        visible={taskEditVisible}
+        confirmLoading={loadingEditConfirm}
+        onCancel={() => { setTaskEditVisible(false) }}
         className={styles.fromModal}
         destroyOnClose
-        centered
+        wrapClassName='spreadOverModal'
+        okText='保存'
+        okText={taskOk}
       >
-        <Form
-          name="basic"
-          form={form2}
-          initialValues={{
-            Status: 1
-          }}
-        >
-          <Row>
-            <Col span={24}>
-              <Form.Item name="ID" hidden>
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
+        <Tabs type="card" onChange={(key) => { setModelTabType(key) }}>
+          <TabPane tab="运维点位" key='1'>
+            <Button type='primary' style={{ marginBottom: 8 }} onClick={addPoint}>添加点位</Button>
+            <SdlTable
+              loading={props.taskDetailLoading}
+              bordered
+              dataSource={tableDatas2}
+              columns={pointColumns}
+            />
+          </TabPane>
+          <TabPane tab="运维人员" key='2'>
 
-          <Row>
-            <Col span={12}>
-              <Form.Item label="编号" name="SystemCode" >
-                <InputNumber placeholder='请输入编号' />
-              </Form.Item>
-              <NumTips />
-            </Col>
-            <Col span={12}>
-              <Form.Item label="设备厂家" name="ManufacturerID" rules={[{ required: true, message: '请选择设备厂家' }]} >
-                <Select placeholder='请选择设备厂家' allowClear showSearch
-                  filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                >
-                    <Option key={1} value={1}>{1}</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
+          </TabPane>
+          <TabPane tab="运维设备" key='3'>
 
-          <Row>
-            <Col span={12}>
-              <Form.Item label="监测类别" name="MonitoringType" rules={[{ required: true, message: '请选择监测类别' }]} >
-                <Select placeholder='请选择监测类别' allowClear disabled>
-                <Option key={1} value={1}>{1}</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="系统名称" name="SystemName" rules={[{ required: true, message: '请选择系统名称' }]} >
-                  <Select placeholder='请选择系统名称' allowClear>
-                  <Option key={1} value={1}>{1}</Option>
-                  </Select> 
-              </Form.Item>
-            </Col>
-          </Row>
+          </TabPane>
+          <TabPane tab="运维计划" key='4'>
 
-          <Row>
-            <Col span={12}>
-              <Form.Item label="系统型号" name="SystemModel" rules={[{ required: true, message: '请输入系统型号' }]}>
-                <Input placeholder='请输入系统型号' allowClear />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="状态" name="Status" >
-                <Radio.Group>
-                  <Radio value={1}>启用</Radio>
-                  <Radio value={2}>停用</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col>
-          </Row>
-
-
-        </Form>
+          </TabPane>
+        </Tabs>
       </Modal>
     </div>
   );

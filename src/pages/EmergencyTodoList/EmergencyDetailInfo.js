@@ -553,7 +553,7 @@ class EmergencyDetailInfo extends Component {
         this.setState({
          taskForwardVisible:true,
         })
-       }
+    }
     taskForwardOk=()=>{
          const {forwardTaskID,forwardToFromUserId,forwardToUserId,forwardRemark,} = this.state;
          const { taskInfo } = this.props;
@@ -881,7 +881,7 @@ class EmergencyDetailInfo extends Component {
                             {this.getGoBack()} */
                         // </div>
                         <div>
-                            <Button type='primary' onClick={() => this.taskForward()}>任务转发</Button>
+                            <Button disabled={isExistTask&&taskInfo.Datas[0]!= '1'} type='primary' onClick={() => this.taskForward()}>任务转发</Button>
                         </div>
                     }
                 >

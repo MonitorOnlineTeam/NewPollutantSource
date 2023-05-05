@@ -521,7 +521,7 @@ const Index = (props) => {
                 <div>
                    多选有以下两种操作方式：
                   <ul>
-                   <li>1、按住Shift键同时鼠标左击</li>
+                   <li>1、按住Shift或者Ctrl键同时鼠标左击</li>
                    <li>2、鼠标左击进行拖动</li>
                  </ul>
                  </div>

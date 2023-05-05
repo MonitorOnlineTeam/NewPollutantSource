@@ -79,11 +79,11 @@ class TaskRecord extends Component {
       pointList: [],
       pointLoading: false,
       abnormalTitle: '',
-      taskForwardVisible:false,
+      taskForwardVisible: false,
       forwardTaskID: null,
-      forwardToFromUserId:null,
-      forwardToUserId:null,
-      forwardRemark:null,
+      forwardToFromUserId: null,
+      forwardToUserId: null,
+      forwardRemark: null,
     };
     this._SELF_ = {
       configId: 'TaskRecord',
@@ -475,31 +475,33 @@ class TaskRecord extends Component {
       )
     })
   }
-  taskForward=(record)=>{
-    this.setState({
-     taskForwardVisible:true,
-     forwardTaskID: record.ID,
-     forwardToFromUserId:record.OperationsUserId,
-    })
-   }
-   taskForwardOk=()=>{
-     const {forwardTaskID,forwardToFromUserId,forwardToUserId,forwardRemark,} = this.state;
-       if(!forwardToUserId){
-          message.error('请选择转发人')
-          return;
-       }
-        this.props.dispatch({
-          type: 'task/postRetransmission',
-          payload: {TaskId:forwardTaskID,FromUserId:forwardToFromUserId,ToUserId:forwardToUserId,Remark:forwardRemark},
-          callback:()=>{
-            this.setState({
-              taskForwardVisible:false,
-             })
-          }
-        });
-      
+  taskForward = (record) => {
+    if (record.IsForward == '1') {
+      this.setState({
+        taskForwardVisible: true,
+        forwardTaskID: record.ID,
+        forwardToFromUserId: record.OperationsUserId,
+      })
+    }
+  }
+  taskForwardOk = () => {
+    const { forwardTaskID, forwardToFromUserId, forwardToUserId, forwardRemark, } = this.state;
+    if (!forwardToUserId) {
+      message.error('请选择转发人')
+      return;
+    }
+    this.props.dispatch({
+      type: 'task/postRetransmission',
+      payload: { TaskId: forwardTaskID, FromUserId: forwardToFromUserId, ToUserId: forwardToUserId, Remark: forwardRemark },
+      callback: () => {
+        this.setState({
+          taskForwardVisible: false,
+        })
+      }
+    });
 
-   }
+
+  }
   render() {
     const { form: { getFieldDecorator }, operationsUserList, loading, LoadingData, gettasklistqueryparams, isHomeModal } = this.props;
     const { formLayout } = this._SELF_;
@@ -682,11 +684,10 @@ class TaskRecord extends Component {
 
                 /></a>
               </Tooltip>
-               <Divider type="vertical" />
+              <Divider type="vertical" />
               <Tooltip title="任务转发">
-                <a><SendOutlined
+                <a style={{ cursor: record.IsForward != '1' && 'not-allowed', color: record.IsForward != '1' && 'not-allowed' && 'rgba(0, 0, 0, 0.25) ', }}><SendOutlined
                   onClick={() => this.taskForward(record)}
-
                 /></a>
               </Tooltip>
             </>)
@@ -1117,12 +1118,12 @@ class TaskRecord extends Component {
           }}
           className={styles.taskForwardModalSty}
         >
-              <FormItem label="转发人" style={{ width: '100%', }}>
-                  <UserList onChange={(value)=>{this.setState({forwardToUserId:value})}}/>
-              </FormItem>
-              <FormItem label="备注" style={{ width: '100%', }}>
-                  <Input.TextArea placeholder='请输入' onChange={(e)=>{this.setState({forwardRemark:e.target.value})}}/>
-              </FormItem>
+          <FormItem label="转发人" style={{ width: '100%', }}>
+            <UserList onChange={(value) => { this.setState({ forwardToUserId: value }) }} />
+          </FormItem>
+          <FormItem label="备注" style={{ width: '100%', }}>
+            <Input.TextArea placeholder='请输入' onChange={(e) => { this.setState({ forwardRemark: e.target.value }) }} />
+          </FormItem>
         </Modal>
       </BreadcrumbWrapper>
     );

@@ -16,12 +16,17 @@ export default Model.extend({
     tableDatas2: [],
     tableLoading2: false,
     tableTotal2: 0,
+    taskAddPointLoading:false,
+    taskDetailData:[],
+    tableDetailLoading:false,
   },
   effects: {
     *bWWebService({ payload, callback }, { call, put, update }) {
       switch(payload.functionName){
         case 'M_GetALLOperationTask' :  yield update({ tableLoading: true }); break;
         case 'M_GetOperationTaskDone' : yield update({ tableLoading2: true }); break;
+        case 'M_InsertOperationTaskScheme' : yield update({ taskAddPointLoading: true }); break;
+        case 'M_GetOperationTaskByID' : yield update({ tableDetailLoading: true }); break;
       }
       const result = yield call(services.BWWebService, payload);
        const formatData = (resultData) =>{   
@@ -52,6 +57,21 @@ export default Model.extend({
           message.error(result.Message); yield update({ tableLoading2: false })
         }
          break;
+         case 'M_GetOperationTaskByID' :  //任务详情
+         if (result.IsSuccess) {
+          yield update({taskDetailData: formatData(result.Datas), tableDetailLoading: false,  })
+        } else {
+          message.error(result.Message); yield update({ tableDetailLoading: false })
+        }
+         break;
+         case 'M_InsertOperationTaskScheme' :  //任务 添加点位
+         if (result.IsSuccess) {
+          message.success(result.Message)
+        } else {
+          message.error(result.Message)
+        }
+        yield update({ taskAddPointLoading: false })
+        break;
         case 'M_GetALLOperationTask2' :  //
         if (result.IsSuccess) {
           message.success(result.Message)
