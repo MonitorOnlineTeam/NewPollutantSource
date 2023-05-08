@@ -60,9 +60,9 @@ export default class Index extends Component {
       this.props.dispatch({  type: 'common/getTestXuRegions',  payload: {  PointMark: '2', RegionCode:''}, });
       } 
     }else{
-      if(regionList&&regionList.length<=0){ //普通行政区
-        this.props.dispatch({   type: 'autoForm/getRegions',  payload: {  PointMark: '2', RegionCode: ''} });
-     }
+    //   if(regionList&&regionList.length<=0){ //普通行政区
+    //     this.props.dispatch({   type: 'autoForm/getRegions',  payload: {  PointMark: '2', RegionCode: ''} });
+    //  }
     }
    }
   render() {

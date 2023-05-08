@@ -881,7 +881,7 @@ class EmergencyDetailInfo extends Component {
                             {this.getGoBack()} */
                         // </div>
                         <div>
-                            <Button disabled={isExistTask&&taskInfo.Datas[0]!= '1'} type='primary' onClick={() => this.taskForward()}>任务转发</Button>
+                            <Button disabled={isExistTask&&taskInfo.Datas[0].IsForward!= '1'} type='primary' onClick={() => this.taskForward()}>任务转发</Button>
                         </div>
                     }
                 >

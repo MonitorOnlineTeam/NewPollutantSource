@@ -81,12 +81,12 @@ export default class EntTransmissionEfficiency extends Component {
            return <a onClick={
              ()=>{ //市级跳转
                if(this.props.level){
-                sessionStorage.setItem("missDataDetailPageIndex",1)
-                sessionStorage.setItem("missDataDetailPageSize",20)
+                // sessionStorage.setItem("missDataDetailPageIndex",1)
+                // sessionStorage.setItem("missDataDetailPageSize",20)
                 this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar),regionName:record.regionName}})); 
                }else{ //省级跳转
                  this.props.dispatch(routerRedux.push({
-                    pathname: this.props.types==='ent'? '/monitoring/missingData/cityLevel/ent' :'/monitoring/missingData/cityLevel/air',query: {regionCode:record.regionCode}
+                    pathname: this.props.types==='ent'? '/monitoring/missingData/cityLevel/ent' :'/monitoring/missingData/cityLevel/air',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar),}
                   }));
                }
               }}>{text}</a>      
@@ -132,13 +132,14 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, query,Atmosphere,types } = this.props;
+    const { dispatch, query,Atmosphere,types,location,queryPar, } = this.props;
 
     let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
 
     types==='ent'? this.columns.splice(1,0,entObj) : null;
-
-    this.updateQueryState({
+    const isReg = location&&location.pathname =='/monitoring/missingData/ent';
+    console.log(query)
+    this.updateQueryState(isReg? {
       // BeginTime: moment()
       //   .subtract(1, 'day')
       //   .format('YYYY-MM-DD HH:mm:ss'),
@@ -147,16 +148,17 @@ export default class EntTransmissionEfficiency extends Component {
       // EntCode: '',
       // RegionCode: '',
       // Atmosphere:Atmosphere
-      RegionCode: query&&query.regionCode,
+      // RegionCode:'',
       EntType: types==='ent'? "1":"2",
       OperationPersonnel:'',
-      regionLevel:this.props.level? '2': undefined
-    });
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    }:
+     query&&query.queryPar&&JSON.parse(query.queryPar)
+    );
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      //获取企业列表 or 大气站列表
     //  types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
-     dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: query&&query.regionCode },  });//获取关注列表
+    isReg&&dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
   
 
     setTimeout(() => {

@@ -174,7 +174,7 @@ export default class Index extends Component {
       // PollutantType:'',
       // DataType:'HourData',
       // EntType:'',
-      RegionCode:regionCode,
+      // RegionCode:regionCode,
       Status:status? status : '',
      });
      
@@ -413,19 +413,18 @@ reponseComp = ()=>{
 </Form.Item> 
 }
 
-handleTableChange = (pagination, filters, sorter) => {
+// handleTableChange = (pagination, filters, sorter) => {
 
-    this.updateQueryState({
-      // transmissionEffectiveRate: 'ascend',
-      PageIndex: pagination.current,
-      PageSize: pagination.pageSize,
-    });
-    sessionStorage.setItem("missDataDetailPageIndex",pagination.current)
-    sessionStorage.setItem("missDataDetailPageSize",pagination.pageSize)
+    // this.updateQueryState({
+    //   PageIndex: pagination.current,
+    //   PageSize: pagination.pageSize,
+    // });
+    // sessionStorage.setItem("missDataDetailPageIndex",pagination.current)
+    // sessionStorage.setItem("missDataDetailPageSize",pagination.pageSize)
   // setTimeout(() => {
   //   this.getTableData();
   // });
-};
+// };
   render() {
     const {
       queryPar: { EntCode,PollutantType,PageSize,PageIndex },
@@ -514,19 +513,18 @@ handleTableChange = (pagination, filters, sorter) => {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              // bordered={false}
               dataSource={this.props.tableDatas}
-              onChange={this.handleTableChange}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
+              // onChange={this.handleTableChange}
+              // pagination={{
+              //   showSizeChanger: true,
+              //   showQuickJumper: true,
                 // sorter: true,
                 // total: this.props.total,
                 //defaultPageSize:20,
-                pageSize:sessionStorage.getItem("missDataDetailPageSize"),
-                current:parseInt(sessionStorage.getItem("missDataDetailPageIndex")),
+                // pageSize:sessionStorage.getItem("missDataDetailPageSize"),
+                // current:sessionStorage.getItem("missDataDetailPageIndex"),
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
+              // }}
             />
           </>
         </Card>

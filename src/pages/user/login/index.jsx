@@ -84,10 +84,10 @@ class Login extends Component {
       type: 'common/updateState',
       payload:{noFilterRegionList:[], testRegionList:[],operationUserList:[],inspectorUserList:[],roleList:[],entList:[],noFilterEntList:[],atmoStationList:[],}
      })
-     dispatch({
-      type: 'autoForm/updateState',
-      payload:{regionList:[],}
-     })
+    //  dispatch({
+    //   type: 'autoForm/updateState',
+    //   payload:{regionList:[],}
+    //  })
      dispatch({
       type: 'operations/updateState',
       payload:{operationCompanyList:[],}
