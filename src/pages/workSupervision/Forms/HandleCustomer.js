@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2023-04-18 16:58:27 
+ * @Author: JiaQi
+ * @Date: 2023-04-18 16:58:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-18 16:58:53
+ * @Last Modified time: 2023-05-06 16:15:00
  * @Description: 客户操作页面
  */
 import React, { useState, useEffect } from 'react';
@@ -11,9 +11,12 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { Button, Modal, Form, Input, Select, Tooltip, Divider, Popconfirm } from 'antd';
 import SdlTable from '@/components/SdlTable';
 import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon';
+import Cookie from 'js-cookie';
+import moment from 'moment';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
-  customerList: wordSupervision.customerList,
+  // customerList: wordSupervision.customerList,
+  otherCustomerList: wordSupervision.otherCustomerList,
   RegionalAndProvince: wordSupervision.RegionalAndProvince,
   // messageList: wordSupervision.messageList,
   // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
@@ -21,7 +24,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 });
 
 const HandleCustomer = props => {
-  const { customerList, RegionalAndProvince, CustomID, onOk } = props;
+  const { otherCustomerList, RegionalAndProvince, CustomID, onOk } = props;
   const [visible, setVisible] = useState(false);
   const [addOrEditVisible, setAddOrEditVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -30,9 +33,10 @@ const HandleCustomer = props => {
 
   const formRef = React.createRef();
 
-  // useEffect(() => {
-  //   setSelectedRowKeys([CustomID]);
-  // }, [CustomID]);
+  useEffect(() => {
+    // setSelectedRowKeys([CustomID]);
+    getOtherCustomerList();
+  }, []);
 
   const getColumns = () => {
     return [
@@ -99,6 +103,14 @@ const HandleCustomer = props => {
     ];
   };
 
+  // 获取维护的客户
+  const getOtherCustomerList = () => {
+    props.dispatch({
+      type: 'wordSupervision/getOtherCustomerList',
+      payload: {},
+    });
+  };
+
   // 获取客户
   const getCustomerList = () => {
     props.dispatch({
@@ -117,7 +129,7 @@ const HandleCustomer = props => {
       callback: () => {
         setSelectedRowKeys([]);
         setSelectRow([]);
-        getCustomerList();
+        getOtherCustomerList();
       },
     });
   };
@@ -138,17 +150,26 @@ const HandleCustomer = props => {
 
   // 添加、编辑客户
   const InsOrUpdOtherCustomer = () => {
+    const currentUserStr = Cookie.get('currentUser');
+    let currentUser = {};
+    if (currentUserStr) {
+      currentUser = JSON.parse(currentUserStr);
+    }
+
     formRef.current.validateFields().then(values => {
       props.dispatch({
         type: 'wordSupervision/InsOrUpdOtherCustomer',
         payload: {
           ID: editRowData.ID,
+          CreateUser: editRowData.CreateUser || currentUser.UserId,
+          CreateTime: editRowData.CreateTime || moment().format('YYYY-MM-DD HH:mm:ss'),
+          UpdateUser: currentUser.UserId,
+          UpdateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
           ...values,
         },
         callback: () => {
-          debugger;
           setAddOrEditVisible(false);
-          getCustomerList();
+          getOtherCustomerList();
         },
       });
     });
@@ -161,8 +182,6 @@ const HandleCustomer = props => {
       setSelectRow(selectedRows);
     },
   };
-  console.log('selectedRowKeys', selectedRowKeys);
-  // console.log('CustomID', CustomID);
   return (
     <>
       <Button type="primary" onClick={() => setVisible(true)}>
@@ -174,9 +193,13 @@ const HandleCustomer = props => {
         title="客户信息"
         // footer={false}
         visible={visible}
-        onCancel={() => setVisible(false)}
+        onCancel={() => {
+          getCustomerList();
+          setVisible(false);
+        }}
         onOk={() => {
           setVisible(false);
+          getCustomerList();
           onOk(selectRow[0]);
         }}
         okButtonProps={{
@@ -200,7 +223,7 @@ const HandleCustomer = props => {
             ...rowSelection,
           }}
           columns={getColumns()}
-          dataSource={customerList}
+          dataSource={otherCustomerList}
           pagination={false}
         />
       </Modal>
@@ -209,7 +232,10 @@ const HandleCustomer = props => {
         title="添加/编辑客户"
         visible={addOrEditVisible}
         onOk={() => InsOrUpdOtherCustomer()}
-        onCancel={() => setAddOrEditVisible(false)}
+        onCancel={() => {
+          getColumns();
+          setAddOrEditVisible(false);
+        }}
       >
         <Form
           ref={formRef}
@@ -238,9 +264,6 @@ const HandleCustomer = props => {
             <Select
               placeholder="请选择省份"
               onChange={(value, option) => {
-                console.log('value', value);
-                console.log('option', option);
-
                 formRef.current.setFieldsValue({ UserGroup_ID: option['data-item'].UserGroup_ID });
               }}
             >

@@ -51,18 +51,33 @@ const CONFIGID = 'T_Bas_PortableInstrument';
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   todoList: wordSupervision.todoList,
   messageList: wordSupervision.messageList,
+  managerList: wordSupervision.managerList,
+  TYPE: wordSupervision.TYPE,
   todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
   messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
 });
 
 const Workbench = props => {
-  const { todoList, messageList, todoListLoading, messageListLoading } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
+  const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
+  const [forwardingUserId, setForwardingUserId] = useState('');
 
+  // const type = props.location.query.type;
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    props.dispatch({
+      type: 'wordSupervision/updateState',
+      payload: {
+        TYPE: props.location.query.type,
+      },
+    });
+    loadData();
+  }, [props.location.query.type]);
 
   // 加载工作台和我的消息数据
   const loadData = () => {
@@ -75,7 +90,7 @@ const Workbench = props => {
     props.dispatch({
       type: 'wordSupervision/GetToDoDailyWorks',
       payload: {
-        type: '',
+        type: props.location.query.type,
       },
     });
   };
@@ -84,7 +99,9 @@ const Workbench = props => {
   const GetWorkBenchMsg = () => {
     props.dispatch({
       type: 'wordSupervision/GetWorkBenchMsg',
-      payload: {},
+      payload: {
+        // type: TYPE,
+      },
     });
   };
 
@@ -108,12 +125,11 @@ const Workbench = props => {
 
   // 手动申请任务
   const manualTask = value => {
-    const type = props.location.query.type;
     props.dispatch({
       type: 'wordSupervision/manualTask',
       payload: {
         taskType: value,
-        type: type,
+        type: TYPE,
       },
       callback: () => {
         loadData();
@@ -144,34 +160,58 @@ const Workbench = props => {
 
   // 现场检查弹窗说明
   const onInspectionInfo = todoItem => {
-    const { standMNNum, overMNNum, standPersonNum, overPersonNum, BeginTime, EndTime } = todoItem;
+    const {
+      standMNNum,
+      overMNNum,
+      standPersonNum,
+      overPersonNum,
+      BeginTime,
+      EndTime,
+      qualify,
+    } = todoItem;
     let content = (
-      <ul className={styles.inspectionInfo}>
-        <li>
-          <span>任务类型：</span>现场检查任务。
-        </li>
-        <li>
-          <span>任务有效期：</span>
-          {moment(BeginTime).format('YYYY-MM-DD')} 至 {moment(EndTime).format('YYYY-MM-DD')}。
-        </li>
-        <li>
-          <span>任务要求：</span>需覆盖{standMNNum}个监测点，{standPersonNum}名运维人员。
-        </li>
-        <li>
-          <span>完成情况：</span>已覆盖{overMNNum}个检测点，{overPersonNum}名运维人员。
-        </li>
-        <li>
-          <span>填写位置：</span>请跳转到
-          <a href="/operations/siteInspector" target="_blank">
-            {' '}
-            “监督核查/现场监督核查/系统设施核查”{' '}
-          </a>
-          页面中填写。
-        </li>
-      </ul>
+      <div>
+        {/* <Tag color="error">未达标</Tag> */}
+        <ul className={styles.inspectionInfo}>
+          <li>
+            <span>任务类型：</span>现场检查任务。
+          </li>
+          <li>
+            <span>任务有效期：</span>
+            {moment(BeginTime).format('YYYY-MM-DD')} 至 {moment(EndTime).format('YYYY-MM-DD')}。
+          </li>
+          <li>
+            <span>任务要求：</span>需覆盖{standMNNum}个监测点，{standPersonNum}名运维人员。
+          </li>
+          <li>
+            <span>完成情况：</span>已覆盖{overMNNum}个检测点，{overPersonNum}名运维人员。
+          </li>
+          <li>
+            <span>填写位置：</span>请跳转到
+            <a href="/operations/siteInspector" target="_blank">
+              {' '}
+              “监督核查/现场监督核查/系统设施核查”{' '}
+            </a>
+            页面中填写。
+          </li>
+        </ul>
+      </div>
     );
     Modal.info({
-      title: '运维现场检查任务',
+      title: (
+        <div>
+          运维现场检查任务{' '}
+          {qualify === 1 ? (
+            <Tag style={{ marginLeft: 10 }} color="success">
+              达标
+            </Tag>
+          ) : (
+            <Tag style={{ marginLeft: 10 }} color="error">
+              未达标
+            </Tag>
+          )}
+        </div>
+      ),
       content: content,
       onOk() {
         console.log('OK');
@@ -179,14 +219,52 @@ const Workbench = props => {
     });
   };
 
+  // 显示转发弹窗，获取可转发的经理列表
+  const onShowForwardingModal = item => {
+    //     regional：大区经理
+    // province：省区经理
+    props.dispatch({
+      type: 'wordSupervision/GetManagerByType',
+      payload: {
+        type: TYPE ? 'regional' : 'province',
+      },
+      callback: res => {
+        setCurrentTodoItem(item);
+        setForwardingTaskVisible(true);
+      },
+    });
+  };
+
+  // 转发任务
+  const onForwardingTask = () => {
+    if (!forwardingUserId) {
+      message.error('请选择要转发的经理！');
+      return;
+    }
+    props.dispatch({
+      type: 'wordSupervision/RetransmissionTasks',
+      payload: {
+        ID: currentTodoItem.ID,
+        User_ID: forwardingUserId,
+      },
+      callback: res => {
+        setForwardingTaskVisible(false);
+      },
+    });
+  };
+
   // 渲染待办列表
   const renderTodoList = () => {
+    if (!todoList.length) {
+      return <Empty style={{ marginTop: '30px' }} />;
+    }
     return todoList.map(item => {
       const menu = (
         <Menu
           onClick={e => {
             if (e.key === '1') {
               // 转发任务
+              onShowForwardingModal(item);
             } else {
               // 结束任务
               endTask(item);
@@ -236,8 +314,9 @@ const Workbench = props => {
                 <div className={styles.taskList}>
                   <div className={styles.title}>日常监管待办</div>
 
-                  <div className={styles.content}>
+                  <div className={styles.content} style={{ textAlign: 'center' }}>
                     <Spin spinning={todoListLoading}>{renderTodoList()}</Spin>
+                    {/* <Spin spinning={true}>{renderTodoList()}</Spin> */}
                   </div>
                 </div>
                 {/* 手工申请 */}
@@ -311,14 +390,13 @@ const Workbench = props => {
               <div className={styles.title}>我的消息</div>
               <div className={styles.content}>
                 <Spin spinning={messageListLoading}>
-                  <Timeline mode={'left'} className={styles.messageTimeLine}>
-                    {renderMessageTimeLine()}
-                    {/* <Timeline.Item label={'03月01日 00:00'}>Create a services</Timeline.Item>
-                  <Timeline.Item label={'03月01日 00:00'}>Create a services</Timeline.Item>
-                  <Timeline.Item label={'03月01日 00:00'}>Create a services</Timeline.Item>
-                  <Timeline.Item label={'03月01日 00:00'}>Create a services</Timeline.Item>
-                  */}
-                  </Timeline>
+                  {messageList.length ? (
+                    <Timeline mode={'left'} className={styles.messageTimeLine}>
+                      {renderMessageTimeLine()}
+                    </Timeline>
+                  ) : (
+                    <Empty style={{ marginTop: '30px' }} />
+                  )}
                 </Spin>
               </div>
             </Card>
@@ -327,6 +405,32 @@ const Workbench = props => {
 
         {/* <Row gutter={[16, 16]}></Row> */}
       </div>
+      {/* 转发任务 */}
+      <Modal
+        title="转发任务单"
+        visible={forwardingTaskVisible}
+        onOk={() => onForwardingTask()}
+        onCancel={() => setForwardingTaskVisible(false)}
+      >
+        <label style={{ fontSize: 14 }}>
+          将任务单转发至：
+          <Select
+            style={{ marginLeft: 10, width: 200 }}
+            placeholder="请选择转发人"
+            onChange={value => {
+              setForwardingUserId(value);
+            }}
+          >
+            {managerList.map(item => {
+              return (
+                <Option value={item.User_ID} key={item.User_ID}>
+                  {item.User_Name}
+                </Option>
+              );
+            })}
+          </Select>
+        </label>
+      </Modal>
       <FromsModal
         visible={formsModalVisible}
         onCancel={() => {

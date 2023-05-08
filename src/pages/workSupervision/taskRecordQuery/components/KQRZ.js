@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-24 14:57:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-24 15:09:14
+ * @Last Modified time: 2023-05-08 16:59:41
  * @Description: 检查考勤和日志
  */
 import React, { useState, useEffect } from 'react';
@@ -10,9 +10,8 @@ import { connect } from 'dva';
 import { Card, Form, DatePicker, Button, Space, Tooltip, Popconfirm, Divider } from 'antd';
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
-import { DelIcon, EditIcon } from '@/utils/icon';
+import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon';
 import FromsModal from '@/pages/workSupervision/Forms/FromsModal';
-import Cookie from 'js-cookie';
 import { getCurrentUserId } from '@/utils/utils';
 import AttachmentView from '@/components/AttachmentView';
 
@@ -29,12 +28,12 @@ const KQRZ = props => {
   const [currentEditData, setCurrentEditData] = useState({});
   const [taskInfo, setTaskInfo] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
+  const [isDetail, setIsDetail] = useState(false);
   // 获取当前登录人id
   const currentUserId = getCurrentUserId();
-  console.log('currentUserId', currentUserId);
   useEffect(() => {
     onFinish();
-  }, []);
+  }, [type]);
 
   // 获取请求参数
   const getParams = values => {
@@ -145,56 +144,71 @@ const KQRZ = props => {
       },
       {
         title: '填表日期',
-        dataIndex: 'TrainTime',
-        key: 'TrainTime',
+        dataIndex: 'RecordTime',
+        key: 'RecordTime',
+        sorter: (a, b) => a.RecordTime - b.RecordTime,
         render: (text, record) => {
+          console.log('text', text);
           return moment(text).format('YYYY-MM-DD');
         },
       },
-    ];
-
-    if (flag === 'oneself') {
-      columns.push({
+      {
         title: '操作',
         dataIndex: 'handle',
         key: 'handle',
         render: (text, record) => {
-          // 本人并状态为进行中才可操作
-          if (record.TaskStatus === 1 && record.UserID === currentUserId) {
-            return (
-              <>
-                <Tooltip title="编辑">
-                  <a
-                    onClick={() => {
-                      onEdit(record);
-                    }}
-                  >
-                    <EditIcon />
-                  </a>
-                </Tooltip>
-                <Divider type="vertical" />
-                <Tooltip title="删除">
-                  <Popconfirm
-                    placement="left"
-                    title="确认是否删除?"
-                    onConfirm={() => {
-                      onDelete(record.ID);
-                    }}
-                    okText="是"
-                    cancelText="否"
-                  >
-                    <a>
-                      <DelIcon />
+          return (
+            <>
+              {record.TaskStatus === 1 && record.UserID === currentUserId && flag === 'oneself' && (
+                <>
+                  <Tooltip title="编辑">
+                    <a
+                      onClick={() => {
+                        setIsDetail(false);
+                        onEdit(record);
+                      }}
+                    >
+                      <EditIcon />
                     </a>
-                  </Popconfirm>
-                </Tooltip>
-              </>
-            );
-          }
-          return '-';
+                  </Tooltip>
+                  <Divider type="vertical" />
+                </>
+              )}
+              <Tooltip title="详情">
+                <a
+                  onClick={() => {
+                    setIsDetail(true);
+                    onEdit(record);
+                  }}
+                >
+                  <DetailIcon />
+                </a>
+              </Tooltip>
+              {record.TaskStatus === 1 && record.UserID === currentUserId && flag === 'oneself' && (
+                <>
+                  <Divider type="vertical" />
+                  <Tooltip title="删除">
+                    <Popconfirm
+                      placement="left"
+                      title="确认是否删除?"
+                      onConfirm={() => {
+                        onDelete(record.ID);
+                      }}
+                      okText="是"
+                      cancelText="否"
+                    >
+                      <a>
+                        <DelIcon />
+                      </a>
+                    </Popconfirm>
+                  </Tooltip>
+                </>
+              )}
+            </>
+          );
         },
-      });
-    }
+      },
+    ];
 
     return columns;
   };
@@ -246,6 +260,7 @@ const KQRZ = props => {
         visible={formsModalVisible}
         taskInfo={taskInfo}
         editData={currentEditData}
+        isDetail={isDetail}
         onCancel={() => {
           setFormsModalVisible(false);
         }}

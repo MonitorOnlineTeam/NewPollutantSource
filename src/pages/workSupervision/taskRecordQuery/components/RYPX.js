@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-20 15:11:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-24 15:11:23
+ * @Last Modified time: 2023-05-08 16:59:49
  * @Description: 人员培训任务单记录
  */
 import React, { useState, useEffect } from 'react';
@@ -15,6 +15,7 @@ import FromsModal from '@/pages/workSupervision/Forms/FromsModal';
 import Cookie from 'js-cookie';
 import { getCurrentUserId } from '@/utils/utils';
 import AttachmentView from '@/components/AttachmentView';
+import ImageLightboxView from '@/components/ImageLightboxView';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   queryLoading: loading.effects['wordSupervision/GetPersonTrainList'],
@@ -34,7 +35,7 @@ const RYPX = props => {
 
   useEffect(() => {
     onFinish();
-  }, []);
+  }, [type]);
 
   // 查询数据
   const onFinish = async () => {
@@ -129,6 +130,7 @@ const RYPX = props => {
         title: '培训日期',
         dataIndex: 'TrainTime',
         key: 'TrainTime',
+        sorter: (a, b) => a.TrainTime - b.TrainTime,
         render: (text, record) => {
           return moment(text).format('YYYY-MM-DD');
         },
@@ -138,8 +140,11 @@ const RYPX = props => {
         dataIndex: 'FileName',
         key: 'FileName',
         render: (text, record) => {
-          let fileList = getAttachmentDataSource(text);
-          return <AttachmentView dataSource={fileList} />;
+          // let fileList = getAttachmentDataSource(text);
+          // console.log('fileList', fileList);
+          // return <AttachmentView dataSource={fileList} />;
+
+          return <ImageLightboxView images={text.split(',')} />;
         },
       },
     ];
@@ -189,7 +194,6 @@ const RYPX = props => {
 
     return columns;
   };
-  console.log('formsModalVisible', formsModalVisible);
   // 获取附件列表数据
   const getAttachmentDataSource = value => {
     const fileInfo = value ? value.split(',') : [];

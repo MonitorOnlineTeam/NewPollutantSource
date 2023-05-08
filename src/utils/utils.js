@@ -398,7 +398,7 @@ export function getCurrentUserId() {
   // 获取当前登录人id
   let currentUserId = '';
   const userCookie = Cookie.get('currentUser');
-  if (userCookie) {
+  if (userCookie && userCookie !== 'null') {
     currentUserId = JSON.parse(userCookie).UserId;
   }
   return currentUserId;

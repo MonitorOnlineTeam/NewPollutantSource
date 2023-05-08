@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-20 16:43:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-24 15:08:20
+ * @Last Modified time: 2023-05-06 09:41:31
  * @Description: 办事处检查任务单填写、编辑
  */
 import React, { useState, useEffect } from 'react';
@@ -334,24 +334,6 @@ const OfficeInspection = props => {
                 </Select>
               </Form.Item>
             </Col>
-          </Row>
-          <Row style={{ width: '100%' }}>
-            <Col span={12}>
-              <Form.Item
-                label="企业文化是否上墙"
-                name="BusinessCulture"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Radio.Group>
-                  <Radio value={'1'}>是</Radio>
-                  <Radio value={'0'}>否</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col>
             <Col span={12}>
               <Form.Item
                 label="办事处整洁度（1-5分）"
@@ -369,6 +351,22 @@ const OfficeInspection = props => {
                   min={1}
                   placeholder="请填写办事处整洁度"
                 />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="企业文化是否上墙"
+                name="BusinessCulture"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Radio.Group>
+                  <Radio value={'1'}>是</Radio>
+                  <Radio value={'0'}>否</Radio>
+                </Radio.Group>
               </Form.Item>
             </Col>
           </Row>

@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2023-04-21 15:55:58 
+ * @Author: JiaQi
+ * @Date: 2023-04-21 15:55:58
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-21 16:23:03
+ * @Last Modified time: 2023-05-06 10:28:41
  * @Description: 现场工作 - 填写、编辑任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -21,8 +21,9 @@ import {
   Space,
 } from 'antd';
 import styles from './styles.less';
-import { taskType } from '../CONST';
-import moment from 'moment'
+import { taskType } from '../workSupervisionUtils';
+import moment from 'moment';
+import TaskAlartManual from './TaskAlartManual';
 
 const { TextArea } = Input;
 
@@ -52,6 +53,7 @@ const Fieldwork = props => {
       type: 'wordSupervision/InsOrUpdOtherWork',
       payload: body,
       callback: () => {
+        onCancel();
         onSubmitCallback();
       },
     });
@@ -59,29 +61,7 @@ const Fieldwork = props => {
 
   return (
     <>
-      {taskInfo.CreateTime && (
-        <Alert
-          message={
-            <>
-              {`任务类型：${taskType[taskInfo.TaskType]}，`}此任务为
-              <Tag color="processing">手动创建</Tag>，可手动撤销！。
-              <Popconfirm
-                title="撤销后次任务单将作废，是否确认撤销?"
-                // onConfirm={confirm}
-                okText="是"
-                cancelText="否"
-              >
-                <Button type="primary" danger size="small">
-                  撤销
-                </Button>
-              </Popconfirm>
-            </>
-          }
-          type="info"
-          showIcon
-          style={{ marginRight: 30 }}
-        />
-      )}
+      <TaskAlartManual taskInfo={taskInfo} onCancel={() => onCancel()} />
       <h2 className={styles.formTitle}>现场工作任务单</h2>
       <div className={styles.formContent}>
         <Form
@@ -144,10 +124,7 @@ const Fieldwork = props => {
               <Radio value={0}>未完成</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item
-            label="内容描述"
-            name="ContentDes"
-          >
+          <Form.Item label="内容描述" name="ContentDes">
             <TextArea rows={3} placeholder="请输入内容描述" />
           </Form.Item>
           <Divider orientation="right" style={{ color: '#d9d9d9' }}>

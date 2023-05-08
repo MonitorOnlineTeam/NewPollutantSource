@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:38:17
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-23 15:37:29
+ * @Last Modified time: 2023-05-08 16:59:30
  * @Description：部门内其他工作事项
  */
 
@@ -33,12 +33,11 @@ const BranchInside = props => {
 
   useEffect(() => {
     onFinish();
-  }, []);
+  }, [type]);
 
   // 获取请求参数
   const getParams = values => {
 
-    console.log('values', values)
     const beginTime = moment(values.date[0]).format('YYYY-MM-DD HH:mm:ss');
     const endTime = moment(values.date[1]).format('YYYY-MM-DD HH:mm:ss');
 
@@ -125,6 +124,7 @@ const BranchInside = props => {
         title: '现场工作时间',
         dataIndex: 'WorkTime',
         key: 'WorkTime',
+        sorter: (a, b) => a.WorkTime - b.WorkTime,
         render: (text, record) => {
           return moment(text).format('YYYY-MM-DD');
         },
@@ -139,8 +139,6 @@ const BranchInside = props => {
         dataIndex: 'WorkResults',
         key: 'WorkResults',
         render: (text, record) => {
-          // <Tag color="error">error</Tag>;
-          // <Tag color="warning">warning</Tag>
           if (text === 1) {
             return <Tag color="success">完成</Tag>;
           } else {

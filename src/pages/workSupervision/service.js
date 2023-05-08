@@ -111,8 +111,17 @@ export async function InsOrUpdReturnVisitCustomers(params) {
 // 获取所有客户
 export async function getCustomerList(params) {
   const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/GetAllOtherCustomList',
+    null,
+  );
+  return result;
+}
+
+// 获取维护的客户
+export async function getOtherCustomerList(params) {
+  const result = await post(
     '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/GetOtherCustomList',
-    params,
+    null,
   );
   return result;
 }
@@ -303,6 +312,126 @@ export async function GetCheckAttendanceLogList(params) {
   const result = await post(
     '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/GetCheckAttendanceLogList?ID=' + params.ID,
     {},
+  );
+  return result;
+}
+
+// 获取统计数据
+export async function getStatisticsData(params) {
+  const result = await post(
+    `/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/${params.apiName}`,
+    {
+      ...params,
+      apiName: undefined,
+    },
+  );
+  return result;
+}
+
+// 导出统计数据
+export async function exportStatisticsData(params) {
+  const result = await post(
+    `/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/${params.apiName}`,
+    {
+      ...params,
+      apiName: undefined,
+    },
+  );
+  return result;
+}
+
+// 获取 现场工作/其它工作/其他部门工作统计
+export async function StatisticsOtherWork(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/StatisticsOtherWork',
+    params,
+  );
+  return result;
+}
+
+// 导出 现场工作/其它工作/其他部门工作统计
+export async function ExportStatisticsOtherWork(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/ExportStatisticsOtherWork',
+    params,
+  );
+  return result;
+}
+
+// 获取行业
+export async function GetPollutantTypeList(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/GetPollutantTypeList',
+    params,
+  );
+  return result;
+}
+
+// 获取项目
+export async function GetProjectInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetProjectInfoList', params);
+  return result;
+}
+
+// 提交应收账款催收
+export async function InsOrUpdAccountsReceivable(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/InsOrUpdAccountsReceivable',
+    params,
+  );
+  return result;
+}
+
+// 删除应收账款催收记录
+export async function DeleteAccountsReceivable(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/DeleteAccountsReceivable?ID=' + params.ID,
+    {},
+  );
+  return result;
+}
+
+// 查询应收账款催收记录
+export async function GetAccountsReceivableList(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/GetAccountsReceivableList',
+    params,
+  );
+  return result;
+}
+
+// 应收账款催收统计
+export async function StatisticsAccountsReceivable(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/StatisticsAccountsReceivable',
+    params,
+  );
+  return result;
+}
+
+// 撤销任务
+export async function DeleteTasks(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/DeleteTasks',
+    params,
+  );
+  return result;
+}
+
+// 获取运维或省区经理
+export async function GetManagerByType(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/GetManagerByType?type=' + params.type,
+    {},
+  );
+  return result;
+}
+
+// 转发任务单
+export async function RetransmissionTasks(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/RetransmissionTasks',
+    params,
   );
   return result;
 }

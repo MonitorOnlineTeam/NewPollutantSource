@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-24 15:04:48
+ * @Last Modified time: 2023-05-06 15:57:22
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -25,7 +25,7 @@ import styles from './styles.less';
 import HandleCustomer from './HandleCustomer';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { taskType } from '../CONST';
+import { taskType } from '../workSupervisionUtils';
 
 const dataSource = [
   {
@@ -54,6 +54,7 @@ const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   customerList: wordSupervision.customerList,
+  otherCustomerList: wordSupervision.otherCustomerList,
   // messageList: wordSupervision.messageList,
   // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
   submitLoading: loading.effects['wordSupervision/InsOrUpdOtherCustomer'],
@@ -77,6 +78,14 @@ const CustomerInterview = props => {
       payload: {},
     });
   };
+
+  // // 获取维护的客户
+  // const getOtherCustomerList = () => {
+  //   props.dispatch({
+  //     type: 'wordSupervision/getOtherCustomerList',
+  //     payload: {},
+  //   });
+  // };
 
   const getColumns = () => {
     return [
@@ -239,6 +248,10 @@ const CustomerInterview = props => {
                       <Select
                         placeholder="请选择客户名称"
                         style={{ width: '100%' }}
+                        showSearch
+                        filterOption={(input, option) =>
+                          option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
                         onChange={(value, option) => {
                           // debugger;
                           // formRef.current.setFieldsValue({

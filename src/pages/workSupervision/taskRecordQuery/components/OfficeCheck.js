@@ -2,8 +2,8 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 10:49:21
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-24 15:09:44
- * @Description: 回访客户
+ * @Last Modified time: 2023-05-08 16:59:46
+ * @Description: 办事处检查
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
@@ -33,7 +33,7 @@ const OfficeCheck = props => {
 
   useEffect(() => {
     onFinish();
-  }, []);
+  }, [type]);
 
   // 获取请求参数
   const getParams = values => {
@@ -222,12 +222,12 @@ const OfficeCheck = props => {
         width: 200,
       },
     ];
-
     if (flag === 'oneself') {
       columns.push({
         title: '操作',
         dataIndex: 'handle',
         key: 'handle',
+        fixed: 'right',
         render: (text, record) => {
           // 本人并状态为进行中才可操作
           if (record.TaskStatus === 1 && record.UserId === currentUserId) {

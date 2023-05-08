@@ -10,17 +10,25 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'wordSupervision',
   state: {
+    TYPE: '',
     todoList: [],
     messageList: [],
     customerList: [],
+    otherCustomerList: [],
     RegionalAndProvince: [],
     officeList: [],
     allUser: [],
+    IndustryList: [],
+    managerList: [],
   },
   effects: {
     // 获取工作台待办
-    *GetToDoDailyWorks({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.GetToDoDailyWorks, payload);
+    *GetToDoDailyWorks({ payload, callback }, { call, select, update }) {
+      const state = yield select(state => state.wordSupervision);
+      let body = {
+        type: payload.type || state.TYPE,
+      };
+      const result = yield call(services.GetToDoDailyWorks, body);
       if (result.IsSuccess) {
         yield update({
           todoList: result.Datas,
@@ -72,7 +80,9 @@ export default Model.extend({
           // 重新加载数据
           yield put({
             type: 'GetToDoDailyWorks',
-            payload: {},
+            payload: {
+              // TYPE: state.TYPE,
+            },
           });
           yield put({
             type: 'GetWorkBenchMsg',
@@ -90,6 +100,18 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           customerList: result.Datas,
+        });
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取维护的客户
+    *getOtherCustomerList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.getOtherCustomerList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          otherCustomerList: result.Datas,
         });
         callback && callback();
       } else {
@@ -153,7 +175,7 @@ export default Model.extend({
       const result = yield call(services.InsOrUpdPersonTrain, payload);
       if (result.IsSuccess) {
         message.success('操作成功！');
-        
+
         // 编辑时不加载工作台
         if (!payload.ID) {
           // 重新加载数据
@@ -207,7 +229,7 @@ export default Model.extend({
       const result = yield call(services.InsOrUpdOfficeCheck, payload);
       if (result.IsSuccess) {
         message.success('操作成功！');
-      
+
         // 编辑时不加载工作台
         if (!payload.ID) {
           // 重新加载数据
@@ -249,7 +271,7 @@ export default Model.extend({
       const result = yield call(services.InsOrUpdOtherWork, payload);
       if (result.IsSuccess) {
         message.success('操作成功！');
-      
+
         // 编辑时不加载工作台
         if (!payload.ID) {
           // 重新加载数据
@@ -312,7 +334,7 @@ export default Model.extend({
       const result = yield call(services.InsOrUpdCheckAttendance, payload);
       if (result.IsSuccess) {
         message.success('操作成功！');
-        
+
         // 编辑时不加载工作台
         if (!payload.ID) {
           // 重新加载数据
@@ -361,6 +383,164 @@ export default Model.extend({
           };
         });
         callback && callback(datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取统计数据
+    *getStatisticsData({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.getStatisticsData, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 导出统计数据
+    *exportStatisticsData({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.exportStatisticsData, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        window.open(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取 现场工作/其它工作/其他部门工作统计
+    *StatisticsOtherWork({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.StatisticsOtherWork, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 导出 现场工作/其它工作/其他部门工作统计
+    *ExportStatisticsOtherWork({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.ExportStatisticsOtherWork, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        window.open(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取行业
+    *GetPollutantTypeList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetPollutantTypeList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          IndustryList: result.Datas,
+        });
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取项目
+    *GetProjectInfoList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetProjectInfoList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 提交应收账款催收
+    *InsOrUpdAccountsReceivable({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.InsOrUpdAccountsReceivable, payload);
+      if (result.IsSuccess) {
+        message.success('操作成功！');
+        // 编辑时不加载工作台
+        if (!payload.ID) {
+          // 重新加载数据
+          yield put({
+            type: 'GetToDoDailyWorks',
+            payload: {},
+          });
+          yield put({
+            type: 'GetWorkBenchMsg',
+            payload: {},
+          });
+        }
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 删除应收账款催收记录
+    *DeleteAccountsReceivable({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.DeleteAccountsReceivable, payload);
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 查询应收账款催收记录
+    *GetAccountsReceivableList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetAccountsReceivableList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 查询应收账款催收统计
+    *StatisticsAccountsReceivable({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.StatisticsAccountsReceivable, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 查询应收账款催收统计
+    *DeleteTasks({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.DeleteTasks, payload);
+      if (result.IsSuccess) {
+        message.success('任务已撤销！');
+        // 重新加载数据
+        yield put({
+          type: 'GetToDoDailyWorks',
+          payload: {},
+        });
+        yield put({
+          type: 'GetWorkBenchMsg',
+          payload: {},
+        });
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取大区经理或省区经理
+    *GetManagerByType({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetManagerByType, payload);
+      if (result.IsSuccess) {
+        yield update({
+          managerList: result.Datas,
+        });
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 转发任务单
+    *RetransmissionTasks({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.RetransmissionTasks, payload);
+      if (result.IsSuccess) {
+        message.success('转发成功！');
+        // 重新加载数据
+        yield put({
+          type: 'GetToDoDailyWorks',
+          payload: {},
+        });
+        yield put({
+          type: 'GetWorkBenchMsg',
+          payload: {},
+        });
+        callback && callback(result.Datas);
       } else {
         message.error(result.Message);
       }

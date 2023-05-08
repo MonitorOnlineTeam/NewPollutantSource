@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:56:52
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-24 15:03:41
+ * @Last Modified time: 2023-05-06 14:07:26
  * @Description: 任务单电子表单 - 操作弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -15,6 +15,7 @@ import Fieldwork from './Fieldwork';
 import Branch_Inside from './Branch_Inside';
 import Branch_Other from './Branch_Other';
 import AttendanceLog from './AttendanceLog';
+import AccountsReceivable from './AccountsReceivable';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   formsModalVisible: wordSupervision.formsModalVisible,
@@ -80,6 +81,7 @@ const FromsModal = props => {
         // 检查考勤和日志
         return (
           <AttendanceLog
+            isDetail={props.isDetail}
             taskInfo={taskInfo}
             editData={editData}
             onCancel={() => onCancel()}
@@ -116,11 +118,19 @@ const FromsModal = props => {
             onSubmitCallback={() => onSubmitCallback && onSubmitCallback()}
           />
         );
+      case 11:
+        // 应收账款催收
+        return (
+          <AccountsReceivable
+            taskInfo={taskInfo}
+            editData={editData}
+            onCancel={() => onCancel()}
+            onSubmitCallback={() => onSubmitCallback && onSubmitCallback()}
+          />
+        );
     }
   };
 
-  console.log('visible', props.visible);
-  console.log('state.visible', visible);
   return (
     <Modal
       centered

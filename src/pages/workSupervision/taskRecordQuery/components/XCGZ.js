@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:37:57
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-23 15:43:49
+ * @Last Modified time: 2023-05-08 16:59:55
  * @Description: 现场工作
  */
 
@@ -33,7 +33,7 @@ const XCGZ = props => {
 
   useEffect(() => {
     onFinish();
-  }, []);
+  }, [type]);
 
   // 获取请求参数
   const getParams = values => {
@@ -122,6 +122,7 @@ const XCGZ = props => {
         title: '现场工作时间',
         dataIndex: 'WorkTime',
         key: 'WorkTime',
+        sorter: (a, b) => a.WorkTime - b.WorkTime,
         render: (text, record) => {
           return moment(text).format('YYYY-MM-DD');
         },
@@ -170,7 +171,6 @@ const XCGZ = props => {
         render: (text, record) => {
           // 本人并时间在30天内可删除
           let diffDay = moment().diff(moment(record.WorkTime), 'days');
-          console.log('diffDay', diffDay);
           if (diffDay < 30 && record.UserId === currentUserId) {
             return (
               <>
@@ -226,28 +226,6 @@ const XCGZ = props => {
         <Form.Item label="时间" name="date">
           <RangePicker allowClear={false} />
         </Form.Item>
-        {/* <Form.Item label="时间" name="date1">
-          <RangePicker
-            picker="week"
-            onChange={(date, dateStr) => {
-              // let startDate = moment(date[0]).startOf("weeks")
-              // let endDate = moment(date[1]).endOf("weeks")
-              // console.log('startDate', startDate)
-              // console.log('date', startDate.format('YYYY-MM-DD HH:mm:ss'));
-              // console.log('date', endDate.format('YYYY-MM-DD HH:mm:ss'));
-              // console.log('dateStr', dateStr);
-
-
-              const year = 2023
-              const week = 13
-              let  weekdays = []
-              weekdays[0] = moment(`${year}-${week}`,'GGGG-WW').format('YYYY.MM.DD')
-              weekdays[1] = moment(`${year}-${14}`,'GGGG-WW').weekday(7).format('YYYY.MM.DD')
-
-              console.log('weekdays', weekdays)
-            }}
-          />
-        </Form.Item> */}
         <Space>
           <Button type="primary" onClick={() => onFinish()} loading={queryLoading}>
             查询

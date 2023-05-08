@@ -9,7 +9,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Alert, Form, Button, DatePicker, Divider, Space, Row, Col, Upload, message } from 'antd';
 import styles from './styles.less';
-import { taskType } from '../CONST';
+import { taskType } from '../workSupervisionUtils';
 import { InboxOutlined } from '@ant-design/icons';
 import Cookie from 'js-cookie';
 import moment from 'moment';

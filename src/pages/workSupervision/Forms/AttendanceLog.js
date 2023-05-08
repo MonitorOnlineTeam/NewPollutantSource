@@ -1,6 +1,13 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2023-05-06 13:57:18
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-05-06 14:19:20
+ * @Description: 检查考勤和日志
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Radio, Select, Button, Divider, Space, Popconfirm } from 'antd';
+import { Form, Input, Radio, Select, Button, Divider, Space, Popconfirm, message, Tag } from 'antd';
 import styles from './styles.less';
 import TaskAlart from './TaskAlart';
 import SdlTable from '@/components/SdlTable';
@@ -14,27 +21,8 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const AttendanceLog = props => {
   const [form] = Form.useForm();
-  const { taskInfo, editData, onCancel, onSubmitCallback, allUser } = props;
+  const { taskInfo, editData, onCancel, onSubmitCallback, allUser, isDetail } = props;
   const [dataSource, setDataSource] = useState(editData.dataSource || []);
-  // useState([
-  //   {
-  //     ID: 1,
-  //     RegionalArea: '1',
-  //     UserName: '1',
-  //     CheckInState: 1,
-  //     UnqualifiedDate: '1',
-  //     UnqualifiedReason: '1',
-  //     RecordUnqualifiedDate: '1',
-  //   },
-  //   {
-  //     ID: 2,
-  //     UserName: '1',
-  //     CheckInState: 0,
-  //     UnqualifiedDate: '1',
-  //     UnqualifiedReason: '1',
-  //     RecordUnqualifiedDate: '1',
-  //   },
-  // ]);
 
   useEffect(() => {
     getAllUser();
@@ -51,8 +39,10 @@ const AttendanceLog = props => {
   // 提交任务单
   const onFinish = async () => {
     const values = await form.validateFields();
-    console.log('values', values);
-    console.log('dataSource', dataSource);
+    if (!dataSource.length) {
+      message.error('数据不能为空！');
+      return;
+    }
     props.dispatch({
       type: 'wordSupervision/InsOrUpdCheckAttendance',
       payload: {
@@ -61,6 +51,7 @@ const AttendanceLog = props => {
         recordID: editData.ID,
       },
       callback: () => {
+        onCancel();
         onSubmitCallback();
       },
     });
@@ -103,7 +94,7 @@ const AttendanceLog = props => {
     // }
     setDataSource(tempDataSource);
   };
-  console.log('dataSource', dataSource)
+  console.log('taskInfo', taskInfo);
   //
   const getColumns = () => {
     const columns = [
@@ -112,6 +103,7 @@ const AttendanceLog = props => {
         dataIndex: 'index',
         key: 'index',
         width: 80,
+        align: 'center',
         render: (text, record, index) => {
           return index + 1;
         },
@@ -121,8 +113,11 @@ const AttendanceLog = props => {
         dataIndex: 'RegionalArea',
         key: 'RegionalArea',
         width: 140,
+        align: 'center',
         render: (text, record, index) => {
-          return (
+          return isDetail ? (
+            taskInfo.RegionName
+          ) : (
             <Form.Item
               name={'RegionalArea' + record.Key}
               style={{ marginBottom: 0 }}
@@ -144,8 +139,11 @@ const AttendanceLog = props => {
         dataIndex: 'UserID',
         key: 'UserID',
         width: 160,
+        align: 'center',
         render: (text, record, index) => {
-          return (
+          return isDetail ? (
+            record.User_Name
+          ) : (
             <Form.Item
               style={{ marginBottom: 0 }}
               name={'UserID' + record.Key}
@@ -159,6 +157,10 @@ const AttendanceLog = props => {
             >
               <Select
                 placeholder="请选择姓名！"
+                showSearch
+                filterOption={(input, option) =>
+                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
                 onChange={value => {
                   changeDataSource(value, index, 'UserID');
                 }}
@@ -180,8 +182,15 @@ const AttendanceLog = props => {
         dataIndex: 'CheckInState',
         key: 'CheckInState',
         width: 180,
+        align: 'center',
         render: (text, record, index) => {
-          return (
+          return isDetail ? (
+            text === 1 ? (
+              <Tag color="success">合格</Tag>
+            ) : (
+              <Tag color="error">不合格</Tag>
+            )
+          ) : (
             <Form.Item
               style={{ marginBottom: 0 }}
               name={'CheckInState' + record.Key}
@@ -206,7 +215,9 @@ const AttendanceLog = props => {
         key: 'UnqualifiedDate',
         width: 300,
         render: (text, record, index) => {
-          return (
+          return isDetail ? (
+            text
+          ) : (
             <Form.Item
               style={{ marginBottom: 0 }}
               name={'UnqualifiedDate' + record.Key}
@@ -229,7 +240,9 @@ const AttendanceLog = props => {
         key: 'UnqualifiedReason',
         width: 300,
         render: (text, record, index) => {
-          return (
+          return isDetail ? (
+            text
+          ) : (
             <Form.Item
               style={{ marginBottom: 0 }}
               name={'UnqualifiedReason' + record.Key}
@@ -253,7 +266,9 @@ const AttendanceLog = props => {
         key: 'RecordUnqualifiedDate',
         width: 300,
         render: (text, record, index) => {
-          return (
+          return isDetail ? (
+            text
+          ) : (
             <Form.Item
               style={{ marginBottom: 0 }}
               name={'RecordUnqualifiedDate' + record.Key}
@@ -270,7 +285,10 @@ const AttendanceLog = props => {
           );
         },
       },
-      {
+    ];
+
+    if (!isDetail) {
+      columns.push({
         title: '操作',
         render: (text, record, index) => {
           return (
@@ -286,8 +304,8 @@ const AttendanceLog = props => {
             </Popconfirm>
           );
         },
-      },
-    ];
+      });
+    }
 
     return columns;
   };
@@ -304,24 +322,30 @@ const AttendanceLog = props => {
             dataSource={dataSource}
             columns={getColumns()}
             pagination={false}
-            footer={() => (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-              >
-                <Button type="dashed" onClick={() => onAdd()}>
-                  添加一行
-                </Button>
-              </div>
-            )}
+            footer={() => {
+              return !isDetail ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Button type="dashed" onClick={() => onAdd()}>
+                    添加一行
+                  </Button>
+                </div>
+              ) : (
+                ''
+              );
+            }}
           />
           <Divider orientation="right" style={{ color: '#d9d9d9' }}>
             <Space>
-              <Button type="primary" htmlType="submit">
-                提交
-              </Button>
+              {!isDetail && (
+                <Button type="primary" htmlType="submit">
+                  提交
+                </Button>
+              )}
               <Button onClick={onCancel}>取消</Button>
             </Space>
           </Divider>

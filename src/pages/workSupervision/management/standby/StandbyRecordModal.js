@@ -35,7 +35,7 @@ const StandbyRecordModal = props => {
             Where: '$=',
           },
         ]}
-        pagination={false}
+        // pagination={false}
       />
     </Modal>
   );

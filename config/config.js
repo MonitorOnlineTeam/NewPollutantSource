@@ -1324,7 +1324,7 @@ export default {
                 }
               ],
 
-              
+
             },
             {
               path: '/rolesmanager',
@@ -2639,6 +2639,12 @@ export default {
                   name: 'taskRecordQuery',
                   path: '/workSupervision/taskRecordQuery/:type',
                   component: './workSupervision/taskRecordQuery',
+                },
+                // 日常监管统计
+                {
+                  name: 'statistics',
+                  path: '/workSupervision/statistics',
+                  component: './workSupervision/statistics',
                 },
               ],
             },

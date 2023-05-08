@@ -30,12 +30,12 @@ const PortableRecordModal = props => {
         hideBtns
         searchParams={[
           {
-            Key: 'dbo__T_Bas_StandUseTheRecord__InsCode',
+            Key: 'dbo__T_Bas_InsUseTheRecord__InsCode',
             Value: insCode,
             Where: '$=',
           },
         ]}
-        pagination={false}
+        // pagination={false}
       />
     </Modal>
   );

@@ -1,9 +1,9 @@
 /*
  * @Author: JiaQi
- * @Date: 2023-04-23 09:38:17
+ * @Date: 2023-04-26 11:30:13
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-08 16:59:31
- * @Description：支持其他部门工作
+ * @Last Modified time: 2023-05-08 17:00:01
+ * @Description：应收账款催收
  */
 
 import React, { useState, useEffect } from 'react';
@@ -12,17 +12,16 @@ import { Card, Form, DatePicker, Button, Space, Tooltip, Popconfirm, Divider, Ta
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import { DelIcon, EditIcon } from '@/utils/icon';
-import FromsModal from '@/pages/workSupervision/Forms/FromsModal';
 import { getCurrentUserId } from '@/utils/utils';
 
 const { RangePicker } = DatePicker;
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   exportLoading: loading.effects['wordSupervision/exportTaskRecord'],
-  queryLoading: loading.effects['wordSupervision/GetOtherWorkList'],
+  queryLoading: loading.effects['wordSupervision/GetAccountsReceivableList'],
 });
 
-const BranchOther = props => {
+const ZKCS = props => {
   const [form] = Form.useForm();
   const { flag, type, queryLoading, exportLoading } = props;
   const [dataSource, setDataSource] = useState([]);
@@ -45,7 +44,6 @@ const BranchOther = props => {
       endTime: endTime,
       flag: flag === 'oneself' ? true : false,
       type: type,
-      WorkType: 10,
     };
   };
 
@@ -55,7 +53,7 @@ const BranchOther = props => {
     const body = getParams(values);
 
     props.dispatch({
-      type: 'wordSupervision/GetOtherWorkList',
+      type: 'wordSupervision/GetAccountsReceivableList',
       payload: body,
       callback: res => {
         setDataSource(res);
@@ -71,7 +69,7 @@ const BranchOther = props => {
       type: 'wordSupervision/exportTaskRecord',
       payload: {
         ...body,
-        apiName: 'ExportOtherWorkList',
+        apiName: 'ExportAccountsReceivableList',
       },
     });
   };
@@ -79,7 +77,7 @@ const BranchOther = props => {
   // 删除
   const onDelete = ID => {
     props.dispatch({
-      type: 'wordSupervision/DeleteOtherWork',
+      type: 'wordSupervision/DeleteAccountsReceivable',
       payload: { ID },
       callback: res => {
         onFinish();
@@ -115,42 +113,65 @@ const BranchOther = props => {
         },
       },
       {
-        title: '经理姓名',
-        dataIndex: 'User_Name',
-        key: 'User_Name',
+        title: '项目编号',
+        dataIndex: 'ProjectCode',
+        key: 'ProjectCode',
       },
       {
-        title: '现场工作时间',
-        dataIndex: 'WorkTime',
-        key: 'WorkTime',
-        sorter: (a, b) => a.WorkTime - b.WorkTime,
-        render: (text, record) => {
-          return moment(text).format('YYYY-MM-DD');
+        title: '项目名称',
+        dataIndex: 'ProjectName',
+        key: 'ProjectName',
+      },
+      {
+        title: '行业',
+        dataIndex: 'PollutantTypeName',
+        key: 'PollutantTypeName',
+      },
+      {
+        title: '最终用户名称',
+        dataIndex: 'FinalllserName',
+        key: 'FinalllserName',
+        render: text => {
+          return text || '-';
         },
       },
       {
-        title: '内容项',
-        dataIndex: 'Content',
-        key: 'Content',
+        title: '项目接洽人',
+        children: [
+          {
+            title: '姓名',
+            dataIndex: 'UserName',
+            key: 'UserName',
+            align: 'center',
+            width: 120,
+          },
+          {
+            title: '职务',
+            dataIndex: 'UserPost',
+            width: 120,
+            align: 'center',
+            key: 'UserPost',
+          },
+          {
+            title: '联系电话',
+            dataIndex: 'UserPhone',
+            width: 120,
+            align: 'center',
+            key: 'UserPhone',
+          },
+        ],
       },
       {
-        title: '工作结果',
-        dataIndex: 'WorkResults',
-        key: 'WorkResults',
-        render: (text, record) => {
-          // <Tag color="error">error</Tag>;
-          // <Tag color="warning">warning</Tag>
-          if (text === 1) {
-            return <Tag color="success">完成</Tag>;
-          } else {
-            return <Tag color="error">未完成</Tag>;
-          }
-        },
+        title: '欠款金额',
+        dataIndex: 'AmountInArear',
+        key: 'AmountInArear',
+        sorter: (a, b) => a.AmountInArear - b.AmountInArear,
       },
       {
-        title: '内容描述',
-        dataIndex: 'ContentDes',
-        key: 'ContentDes',
+        title: '催收完成金额',
+        dataIndex: 'CompletionAmount',
+        key: 'CompletionAmount',
+        sorter: (a, b) => a.CompletionAmount - b.CompletionAmount,
       },
     ];
 
@@ -192,7 +213,7 @@ const BranchOther = props => {
   };
 
   return (
-    <Card title="支持其他部门工作" style={{ marginTop: -24 }}>
+    <Card title="应收账款催收" style={{ marginTop: -24 }}>
       <Form
         name="basic"
         form={form}
@@ -222,16 +243,8 @@ const BranchOther = props => {
         columns={getColumns()}
         dataSource={dataSource}
       />
-
-      <FromsModal
-        taskInfo={taskInfo}
-        editData={currentEditData}
-        onSubmitCallback={() => {
-          onFinish();
-        }}
-      />
     </Card>
   );
 };
 
-export default connect(dvaPropsData)(BranchOther);
+export default connect(dvaPropsData)(ZKCS);

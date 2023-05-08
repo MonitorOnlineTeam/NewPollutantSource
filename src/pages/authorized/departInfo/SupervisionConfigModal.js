@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-11 10:17:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-11 16:32:46
+ * @Last Modified time: 2023-05-06 09:32:58
  * @Description: 省区/大区日常监管配置
  */
 
@@ -224,7 +224,7 @@ const SupervisionConfigModal = props => {
         footer={false}
         onCancel={onCancel}
       >
-        <Card title="省区配置" bordered={false}>
+        <Card title="运维省区配置" bordered={false}>
           <Button
             type="primary"
             style={{ marginBottom: 10 }}

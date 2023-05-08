@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-10-22 15:47:51
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-04-25 15:59:44
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -118,7 +118,7 @@ class SdlTable extends PureComponent {
     };
 
     this.dragableComponents = { //拖拽功能
-      body: { 
+      body: {
         row: DragableBodyRow,
       },
     };
@@ -127,7 +127,7 @@ class SdlTable extends PureComponent {
         cell: ResizeableTitle,
       },
       body: {
-        row: DragableBodyRow, 
+        row: DragableBodyRow,
       },
     };
   }
@@ -271,9 +271,9 @@ class SdlTable extends PureComponent {
   }
   moveRow = (dragIndex, hoverIndex) => { //拖拽事件
     const { dataSource } = this.state;
- 
+
     const dragRow = dataSource[dragIndex];
-  
+
     this.setState(
       update(this.state, {
         dataSource: {

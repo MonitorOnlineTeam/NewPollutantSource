@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Alert } from 'antd';
-import { taskType } from '../CONST';
+import { taskType } from '../workSupervisionUtils';
 
 const TaskAlart = props => {
   const {

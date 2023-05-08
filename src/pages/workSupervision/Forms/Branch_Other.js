@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:54:42
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-23 11:33:06
+ * @Last Modified time: 2023-04-26 15:27:58
  * @Description：支持其他部门工作
  */
 import React, { useState, useEffect } from 'react';
@@ -21,8 +21,9 @@ import {
   Space,
 } from 'antd';
 import styles from './styles.less';
-import { taskType } from '../CONST';
+import { taskType } from '../workSupervisionUtils';
 import moment from 'moment';
+import TaskAlartManual from './TaskAlartManual';
 
 const { TextArea } = Input;
 
@@ -50,6 +51,7 @@ const Branch_Other = props => {
       type: 'wordSupervision/InsOrUpdOtherWork',
       payload: body,
       callback: () => {
+        onCancel();
         onSubmitCallback();
       },
     });
@@ -57,29 +59,7 @@ const Branch_Other = props => {
 
   return (
     <>
-      {taskInfo.CreateTime && (
-        <Alert
-          message={
-            <>
-              {`任务类型：${taskType[taskInfo.TaskType]}，`}此任务为
-              <Tag color="processing">手动创建</Tag>，可手动撤销！。
-              <Popconfirm
-                title="撤销后次任务单将作废，是否确认撤销?"
-                // onConfirm={confirm}
-                okText="是"
-                cancelText="否"
-              >
-                <Button type="primary" danger size="small">
-                  撤销
-                </Button>
-              </Popconfirm>
-            </>
-          }
-          type="info"
-          showIcon
-          style={{ marginRight: 30 }}
-        />
-      )}
+      <TaskAlartManual taskInfo={taskInfo} onCancel={() => onCancel()} />
       <h2 className={styles.formTitle}>支持其他部门工作</h2>
       <div className={styles.formContent}>
         <Form
