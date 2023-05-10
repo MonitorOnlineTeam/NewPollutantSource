@@ -107,6 +107,7 @@ class SdlTable extends PureComponent {
       columns: props.columns,
       computeHeight: null,
       headAndFooterHeight: 110,
+      pageIndex: 1,
       pageSize: 20,
       dataSource:[],
     };
@@ -334,15 +335,18 @@ class SdlTable extends PureComponent {
           }}
           bordered
           pagination={{
-            defaultCurrent: 1,
+            // defaultCurrent: 1,
+            current: this.state.pageIndex,
             pageSize: this.state.pageSize,
             // showQuickJumper: true,
             total: this.props.dataSource ? this.props.dataSource.length : 0,
             showSizeChanger: true,
-            onShowSizeChange: (current, size) => {
+            onChange: (current, size) => {
               this.setState({
+                pageIndex:current,
                 pageSize: size
               })
+              this.props.onPageChange&&this.props.onPageChange(current,size)
             },
             pageSizeOptions: [ '10', '20', '30', '40', '100'],
           }}

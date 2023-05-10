@@ -13,7 +13,7 @@ import SdlTable from '@/components/SdlTable';
 const Index = (props) => {
 
 
-    const TableTransfer = ({ leftColumns, rightColumns,loading,scroll,bordered, ...restProps }) => (
+    const TableTransfer = ({ leftColumns, rightColumns,loading,scroll,bordered,pagination, ...restProps }) => (
         <Transfer {...restProps}>
           {({
             direction,
@@ -50,15 +50,16 @@ const Index = (props) => {
                 style={{
                   pointerEvents: listDisabled ? 'none' : undefined,
                 }}
-                loading={loading}
-                scroll={scroll}
-                bordered={bordered}
                 onRow={({ key, disabled: itemDisabled }) => ({
                   onClick: () => {
                     if (itemDisabled || listDisabled) return;
                     onItemSelect(key, !listSelectedKeys.includes(key));
                   },
                 })}
+                loading={loading}
+                scroll={scroll}
+                bordered={bordered}
+                pagination={pagination}
               />
             );
           }}

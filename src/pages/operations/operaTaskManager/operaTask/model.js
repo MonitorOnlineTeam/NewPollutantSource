@@ -27,6 +27,12 @@ export default Model.extend({
     cityInfoList:[],
     pointList: [],
     pointListLoading: false,
+    operaUserList:[],
+    operaUserListLoading:false,
+    operaDeviceList:[],
+    operaDeviceListLoading:false,
+    operaContantListLoading:false,
+    operaContantList:[],
   },
   effects: {
     *bWWebService({ payload, callback }, { call, put, update }) {
@@ -39,6 +45,9 @@ export default Model.extend({
         case 'M_OpenationTaskType': yield update({ taskTypeListLoading: true }); break;
         case 'Z_CityInfo': yield update({ cityInfoListLoading: true }); break;
         case 'M_GetOperationSchemeList': yield update({ pointListLoading: true }); break;
+        case 'B_GetALLWorkersList': yield update({ operaUserListLoading: true }); break;
+        case 'B_GetALLDevicesList': yield update({ operaDeviceListLoading: true }); break;
+        case 'M_GetOperationDetailList': yield update({ operaContantListloading: true }); break;
 
       }
       const result = yield call(services.BWWebService, payload);
@@ -64,31 +73,36 @@ export default Model.extend({
       switch (payload.functionName) {
         case 'M_GetALLOperationTask':  //进行中 运维任务列表
           if (result.IsSuccess) {
-            yield update({ tableTotal: result.Total, tableDatas: formatData(result.Datas), tableLoading: false, })
+            yield update({ tableTotal: result.Total, tableDatas: formatData(result.Datas),})
           } else {
-            message.error(result.Message); yield update({ tableLoading: false })
+            message.error(result.Message); 
           }
+          yield update({ tableLoading: false })
           break;
         case 'M_GetOperationTaskDone':  //已完结 运维任务列表
           if (result.IsSuccess) {
-            yield update({ tableTotal2: result.Total, tableDatas2: formatData(result.Datas), tableLoading2: false, })
+            yield update({ tableTotal2: result.Total, tableDatas2: formatData(result.Datas), })
           } else {
-            message.error(result.Message); yield update({ tableLoading2: false })
+            message.error(result.Message); 
           }
+          yield update({ tableLoading2: false })
           break;
         case 'M_GetOperationTaskByID':  //任务详情
           if (result.IsSuccess) {
-            yield update({ taskDetailData: formatData(result.Datas), taskDetailLoading: false, })
+            yield update({ taskDetailData: formatData(result.Datas),})
           } else {
-            message.error(result.Message); yield update({ taskDetailLoading: false })
+            message.error(result.Message); 
           }
+          yield update({ taskDetailLoading: false })
           break;
         case 'C_GetALLContractList':  //合同列表
           if (result.IsSuccess) {
-            yield update({ contractTableData: formatData(result.Datas,'CONTRACTS','CONTRACT'), contractTableLoading: false, })
+            yield update({ contractTableData: formatData(result.Datas,'CONTRACTS','CONTRACT'), })
           } else {
-            message.error(result.Message); yield update({ contractTableLoading: false })
+            message.error(result.Message); 
           }
+          yield update({  contractTableLoading: false, })
+
           break;
           case 'M_OpenationTaskType':  //任务类别
           if (result.IsSuccess) {
@@ -135,6 +149,39 @@ export default Model.extend({
             message.error(result.Message)
           }
           yield update({  pointListLoading: false, })
+          break;
+          case 'B_GetALLWorkersList':  //运维人员列表
+          if (result.IsSuccess) {
+           const data =  formatData(result.Datas).map(item=>{
+                 return {...item,key:item.ID}
+            })
+            yield update({ operaUserList: data})
+          } else {
+            message.error(result.Message)
+          }
+          yield update({  operaUserListLoading: false, })
+          break;
+          case 'B_GetALLDevicesList':  //运维设备列表
+          if (result.IsSuccess) {
+           const data =  formatData(result.Datas).map(item=>{
+                 return {...item,key:item.ID}
+            })
+            yield update({ operaDeviceList: data})
+          } else {
+            message.error(result.Message)
+          }
+          yield update({  operaDeviceListLoading: false, })
+          break;
+          case 'M_GetOperationDetailList':  //运维内容
+          if (result.IsSuccess) {
+            const data =  formatData(result.Datas).map(item=>{
+              return  { label: item.DETAILNAME, value: item.ID}
+            })
+            yield update({ operaContantList: data,})
+          } else {
+            message.error(result.Message); 
+          }
+          yield update({ operaContantListLoading: false })
           break;
         case 'M_InsertOperationTaskScheme':  //任务 添加点位
           if (result.IsSuccess) {

@@ -33,7 +33,7 @@ class NewRangePicker extends Component {
             //     marginLeft: 5,
             //     marginRight: 5,
             // },
-            placeholder: ['开始时间', '结束时间'],
+            placeholder: this.props.format==='YYYY-MM-DD' ?['开始日期', '结束日期'] : ['开始时间', '结束时间'],
             Form: '',
             To: '',
         };

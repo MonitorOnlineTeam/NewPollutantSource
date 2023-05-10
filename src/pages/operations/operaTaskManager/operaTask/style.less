@@ -7,14 +7,28 @@
 
 
 .addFromModal  :global {
+    .ant-modal-content{
+      overflow-y: hidden;
+     }
+    .ant-modal-body{
+     overflow-y: auto;
+     height: calc(100vh - 170px);
+    } 
     .ant-form-item-label{
-        width:97px;
+        width:130px;
       } 
       .ant-form-item{
-       .ant-input, .ant-select,.ant-picker,.ant-cascader-picker{
+        .ant-form-item-control-input{
         width: 50% !important;
-        margin: 0 !important;
        }
+       .ant-picker {
+         width: 100% !important;
+         margin: 0 !important;
+       }
+     }
+     .ant-input-textarea-show-count::after{
+      position: absolute;
+      right: 0;
      }
      #add_form .ant-spin-nested-loading > div > .ant-spin{
       left: -20%;
@@ -30,13 +44,62 @@
        width: 100% !important;
       } 
    }
-      // .ant-picker{
-      //   width: 300px;
-      // }
       .contractPopoverSty {
         width: 1000px;
         .ant-popover-arrow{
-            left: 109px;
+            left: 150px;
         }
       }
- }  
+
+    }
+
+     .addPlanFormModal :global {
+      .ant-modal-body{
+        overflow-y: auto;
+        height: calc(100vh - 240px);
+      }
+      #plan_form{
+      .ant-form-item-label{
+        width:141px;
+      }
+      .ant-checkbox + span{
+        width: 254px;
+        display: inline-block;
+      }
+    }
+    }
+    .operaUserFormModal :global{
+      .ant-modal-body{
+        overflow-y: auto;
+        height: calc(100vh - 240px);
+      }
+      .ant-transfer{
+       display: block;
+      }
+      .ant-transfer-operation{
+        margin: 4px 0;
+      }
+      .ant-input{
+        width: 50%;
+       } 
+    }
+    .taskReportUploadformModal :global{
+      .ant-modal-body{
+        overflow-y: auto;
+        height: 50vh;
+       } 
+       .ant-form-item-label{
+           width:97px;
+         } 
+    }
+    .taskAbnormalTerminaModal :global{
+      .ant-modal-body{
+        overflow-y: auto;
+        height: 50vh;
+       } 
+      
+       .ant-form-item-label{
+           width:97px;
+         } 
+    }
+  
