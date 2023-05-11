@@ -10,9 +10,9 @@
     .ant-modal-content{
       overflow-y: hidden;
      }
-    .ant-modal-body{
+    .ant-tabs-content{
      overflow-y: auto;
-     height: calc(100vh - 170px);
+     height: calc(100vh - 220px);
     } 
     .ant-form-item-label{
         width:130px;
@@ -26,13 +26,20 @@
          margin: 0 !important;
        }
      }
+
      .ant-input-textarea-show-count::after{
       position: absolute;
       right: 0;
      }
-     #add_form .ant-spin-nested-loading > div > .ant-spin{
-      left: -20%;
-      top: -10px;
+     #add_form{
+      .ant-spin-nested-loading > div > .ant-spin{
+         left: -20%;
+         top: -10px;
+       }
+      .ant-popover-inner .ant-spin-nested-loading > div > .ant-spin{
+        left: 0;
+        top: 0;
+      }
     }
      .ant-pagination{
         .ant-select{
@@ -50,7 +57,11 @@
             left: 150px;
         }
       }
-
+      .contractName {
+        .ant-select-dropdown {
+          display: none;
+        }
+      }
     }
 
      .addPlanFormModal :global {
@@ -79,9 +90,9 @@
       .ant-transfer-operation{
         margin: 4px 0;
       }
-      .ant-input{
-        width: 50%;
-       } 
+      // .ant-transfer-list-body-search-wrapper{
+      //   width: 50%;
+      //  } 
     }
     .taskReportUploadformModal :global{
       .ant-modal-body{

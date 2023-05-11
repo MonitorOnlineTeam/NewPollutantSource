@@ -12,15 +12,13 @@ export default Model.extend({
   state: {
     tableDatas: [],
     tableLoading: false,
-    tableTotal: 0,
     tableDatas2: [],
     tableLoading2: false,
-    tableTotal2: 0,
-    taskAddPointLoading: false,
     taskDetailData: [],
     taskDetailLoading: false,
     contractTableLoading: false,
     contractTableData: [],
+    contractTableAllData:[],
     taskTypeListLoading:false,
     taskTypeList:[],
     cityInfoListLoading:false,
@@ -33,13 +31,17 @@ export default Model.extend({
     operaDeviceListLoading:false,
     operaContantListLoading:false,
     operaContantList:[],
+    operationTaskLoading:false,
+    addOperationTaskPlanData:[],
+    basicInfoTaskLoading:false,
+    taskId:'',
+    addPointLoading:false,
   },
   effects: {
     *bWWebService({ payload, callback }, { call, put, update }) {
       switch (payload.functionName) {
         case 'M_GetALLOperationTask': yield update({ tableLoading: true }); break;
         case 'M_GetOperationTaskDone': yield update({ tableLoading2: true }); break;
-        case 'M_InsertOperationTaskScheme': yield update({ taskAddPointLoading: true }); break;
         case 'M_GetOperationTaskByID': yield update({ taskDetailLoading: true }); break;
         case 'C_GetALLContractList': yield update({ contractTableLoading: true }); break;
         case 'M_OpenationTaskType': yield update({ taskTypeListLoading: true }); break;
@@ -48,7 +50,11 @@ export default Model.extend({
         case 'B_GetALLWorkersList': yield update({ operaUserListLoading: true }); break;
         case 'B_GetALLDevicesList': yield update({ operaDeviceListLoading: true }); break;
         case 'M_GetOperationDetailList': yield update({ operaContantListloading: true }); break;
+        case 'M_InsertOperationTaskPlan': yield update({ operationTaskLoading: true }); break;
+        case 'M_InsertOperationTask': yield update({ basicInfoTaskLoading: true }); break;
+        case 'M_InsertOperationTaskScheme': yield update({ addPointLoading: true }); break;
 
+        
       }
       const result = yield call(services.BWWebService, payload);
       const formatData = (resultData, itemsPar,itemPar) => {
@@ -73,7 +79,13 @@ export default Model.extend({
       switch (payload.functionName) {
         case 'M_GetALLOperationTask':  //进行中 运维任务列表
           if (result.IsSuccess) {
-            yield update({ tableTotal: result.Total, tableDatas: formatData(result.Datas),})
+             let data = [];
+             if(payload.keywords){
+                data = formatData(result.Datas).filter((item)=> item.RWMC.indexOf(payload.keywords)!=-1 || item.RWBH.indexOf(payload.keywords)!=-1 || item.RWMC.indexOf(payload.keywords)!=-1)
+              }else{
+                data = formatData(result.Datas)
+            }
+            yield update({  tableDatas: data,})
           } else {
             message.error(result.Message); 
           }
@@ -81,7 +93,13 @@ export default Model.extend({
           break;
         case 'M_GetOperationTaskDone':  //已完结 运维任务列表
           if (result.IsSuccess) {
-            yield update({ tableTotal2: result.Total, tableDatas2: formatData(result.Datas), })
+            let data = [];
+            if(payload.keywords){
+               data = formatData(result.Datas).filter((item)=> item.RWMC.indexOf(payload.keywords)!=-1 || item.RWBH.indexOf(payload.keywords)!=-1 || item.RWMC.indexOf(payload.keywords)!=-1)
+              }else{
+               data = formatData(result.Datas)
+           }
+            yield update({ tableDatas2: data, })
           } else {
             message.error(result.Message); 
           }
@@ -97,7 +115,8 @@ export default Model.extend({
           break;
         case 'C_GetALLContractList':  //合同列表
           if (result.IsSuccess) {
-            yield update({ contractTableData: formatData(result.Datas,'CONTRACTS','CONTRACT'), })
+            const data = formatData(result.Datas,'CONTRACTS','CONTRACT')
+            yield update({contractTableAllData:data, contractTableData: data, })
           } else {
             message.error(result.Message); 
           }
@@ -183,13 +202,34 @@ export default Model.extend({
           }
           yield update({ operaContantListLoading: false })
           break;
-        case 'M_InsertOperationTaskScheme':  //任务 添加点位
+          case 'M_InsertOperationTaskPlan':  //运维计划添加
           if (result.IsSuccess) {
             message.success(result.Message)
+            yield update({ addOperationTaskPlanData: formatData(result.Datas) })
+            callback();   
           } else {
             message.error(result.Message)
           }
-          yield update({ taskAddPointLoading: false })
+          yield update({ operationTaskLoading: false })
+          break;
+          case 'M_InsertOperationTask':  //任务基本信息添加
+          if (result.IsSuccess) {
+            message.success(result.Message)
+            yield update({ taskId: formatData(result.Datas) })
+            callback();   
+          } else {
+            message.error(result.Message)
+          }
+          yield update({ basicInfoTaskLoading: false })
+          break;
+          case 'M_InsertOperationTaskScheme':  //点位添加
+          if (result.IsSuccess) {
+            message.success(result.Message)
+            callback(formatData(result.Datas));   
+          } else {
+            message.error(result.Message)
+          }
+          yield update({ addPointLoading: false })
           break;
       }
     },
