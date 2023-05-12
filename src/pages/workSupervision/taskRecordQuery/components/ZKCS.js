@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-26 11:30:13
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-08 17:00:01
+ * @Last Modified time: 2023-05-12 09:36:30
  * @Description：应收账款催收
  */
 
@@ -32,12 +32,12 @@ const ZKCS = props => {
 
   useEffect(() => {
     onFinish();
-  }, [type]);
+  }, [type, flag]);
 
   // 获取请求参数
   const getParams = values => {
     const beginTime = moment(values.date[0]).format('YYYY-MM-DD HH:mm:ss');
-    const endTime = moment(values.date[1]).format('YYYY-MM-DD HH:mm:ss');
+    const endTime = moment(values.date[1]).format('YYYY-MM-DD 23:59:59');
 
     return {
       beginTime: beginTime,
@@ -114,13 +114,17 @@ const ZKCS = props => {
       },
       {
         title: '项目编号',
-        dataIndex: 'ProjectCode',
-        key: 'ProjectCode',
+        dataIndex: 'ProjectNo',
+        key: 'ProjectNo',
+        ellipsis: true,
+        width: 200,
       },
       {
         title: '项目名称',
         dataIndex: 'ProjectName',
         key: 'ProjectName',
+        ellipsis: true,
+        width: 200,
       },
       {
         title: '行业',
@@ -220,7 +224,12 @@ const ZKCS = props => {
         layout="inline"
         style={{ padding: '10px 0 20px' }}
         initialValues={{
-          date: [moment().startOf('month'), moment()],
+          date: [
+            moment()
+              .subtract(1, 'month')
+              .startOf('day'),
+            moment(),
+          ],
         }}
         onFinish={onFinish}
         autoComplete="off"

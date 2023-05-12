@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi 
+ * @Date: 2023-05-09 09:03:34 
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-05-09 14:22:59
+ * @Description：应收账款催收统计
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Card, Form, DatePicker, Button, Space, Tag, Radio, Divider } from 'antd';

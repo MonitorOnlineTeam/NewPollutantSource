@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-06 15:57:22
+ * @Last Modified time: 2023-05-12 09:13:27
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -54,14 +54,14 @@ const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   customerList: wordSupervision.customerList,
-  otherCustomerList: wordSupervision.otherCustomerList,
+  allUser: wordSupervision.allUser,
   // messageList: wordSupervision.messageList,
   // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
   submitLoading: loading.effects['wordSupervision/InsOrUpdOtherCustomer'],
 });
 
 const CustomerInterview = props => {
-  const { customerList, submitLoading, taskInfo, onCancel, editData, onSubmitCallback } = props;
+  const { customerList, submitLoading, taskInfo, onCancel, editData, onSubmitCallback, allUser } = props;
   const [form] = Form.useForm();
   // const formRef = React.createRef();
 
@@ -69,6 +69,7 @@ const CustomerInterview = props => {
 
   useEffect(() => {
     getCustomerList();
+    GetAllUser();
   }, []);
 
   // 获取客户
@@ -79,13 +80,13 @@ const CustomerInterview = props => {
     });
   };
 
-  // // 获取维护的客户
-  // const getOtherCustomerList = () => {
-  //   props.dispatch({
-  //     type: 'wordSupervision/getOtherCustomerList',
-  //     payload: {},
-  //   });
-  // };
+  // 获取所有客户
+  const GetAllUser = () => {
+    props.dispatch({
+      type: 'wordSupervision/GetAllUser',
+      payload: {},
+    });
+  };
 
   const getColumns = () => {
     return [
@@ -147,7 +148,7 @@ const CustomerInterview = props => {
       UserGroup_Name: undefined,
       ProvinceName: undefined,
       DailyTaskID: taskInfo.ID,
-      ReturnUser: JSON.parse(userCookie).UserId,
+      // ReturnUser: JSON.parse(userCookie).UserId,
       ID: editData.ID,
     };
     console.log('body', body);
@@ -164,7 +165,7 @@ const CustomerInterview = props => {
 
   const userCookie = Cookie.get('currentUser');
   if (userCookie) {
-    form.setFieldsValue({ ReturnUser: JSON.parse(userCookie).UserName });
+    form.setFieldsValue({ ReturnUser: JSON.parse(userCookie).UserId });
   }
 
   return (
@@ -342,7 +343,22 @@ const CustomerInterview = props => {
                   },
                 ]}
               >
-                <Input disabled />
+                <Select
+                  placeholder="请选择回访人！"
+                  style={{ width: '100%' }}
+                  showSearch
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {allUser.map(item => {
+                    return (
+                      <Option value={item.key} key={item.key}>
+                        {item.User_Name}
+                      </Option>
+                    );
+                  })}
+                </Select>
               </Form.Item>
             </Col>
             <Col span={12}>

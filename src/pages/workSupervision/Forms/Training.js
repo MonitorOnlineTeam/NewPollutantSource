@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 16:22:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-24 15:10:26
+ * @Last Modified time: 2023-05-12 10:52:48
  * @Description: 人员培训记录表
  */
 import React, { useState, useEffect } from 'react';
@@ -74,6 +74,7 @@ const Training = props => {
 
   const uploadProps = {
     name: 'file',
+    accept: '.png,.jpg,.gif,.jpeg',
     multiple: true,
     action: '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/UploadPersonTrainFiles',
     headers: {

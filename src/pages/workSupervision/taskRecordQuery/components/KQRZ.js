@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-24 14:57:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-08 16:59:41
+ * @Last Modified time: 2023-05-11 11:14:43
  * @Description: 检查考勤和日志
  */
 import React, { useState, useEffect } from 'react';
@@ -33,7 +33,7 @@ const KQRZ = props => {
   const currentUserId = getCurrentUserId();
   useEffect(() => {
     onFinish();
-  }, [type]);
+  }, [type, flag]);
 
   // 获取请求参数
   const getParams = values => {
@@ -146,9 +146,8 @@ const KQRZ = props => {
         title: '填表日期',
         dataIndex: 'RecordTime',
         key: 'RecordTime',
-        sorter: (a, b) => a.RecordTime - b.RecordTime,
+        sorter: (a, b) => moment(a.RecordTime).valueOf() - moment(b.RecordTime).valueOf(),
         render: (text, record) => {
-          console.log('text', text);
           return moment(text).format('YYYY-MM-DD');
         },
       },

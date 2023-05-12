@@ -184,7 +184,7 @@ const Workbench = props => {
             <span>任务要求：</span>需覆盖{standMNNum}个监测点，{standPersonNum}名运维人员。
           </li>
           <li>
-            <span>完成情况：</span>已覆盖{overMNNum}个检测点，{overPersonNum}名运维人员。
+            <span>完成情况：</span>已覆盖{overMNNum}个监测点，{overPersonNum}名运维人员。
           </li>
           <li>
             <span>填写位置：</span>请跳转到
@@ -280,7 +280,9 @@ const Workbench = props => {
           <Col flex="1" className={styles.taskName} onClick={() => onTodoItemClick(item)}>
             {item.TaskContent}
           </Col>
-          <Col flex="100px">{item.CreateUser}</Col>
+          <Col flex="200px">
+            <span className={styles.ellipsis} title={item.CreateUser}>{item.CreateUser}</span>
+          </Col>
           <Col flex="100px">{moment(item.CreateTime).format('YYYY-MM-DD')}</Col>
           <Col flex="40px" style={{ textAlign: 'right', cursor: 'pointer' }}>
             <Dropdown placement="bottomLeft" overlay={menu}>

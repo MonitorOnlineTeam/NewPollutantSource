@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:58:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-06 16:15:00
+ * @Last Modified time: 2023-05-11 11:18:57
  * @Description: 客户操作页面
  */
 import React, { useState, useEffect } from 'react';
@@ -192,6 +192,7 @@ const HandleCustomer = props => {
         width={800}
         title="客户信息"
         // footer={false}
+        destroyOnClose
         visible={visible}
         onCancel={() => {
           getCustomerList();
@@ -231,6 +232,7 @@ const HandleCustomer = props => {
       <Modal
         title="添加/编辑客户"
         visible={addOrEditVisible}
+        destroyOnClose
         onOk={() => InsOrUpdOtherCustomer()}
         onCancel={() => {
           getColumns();
