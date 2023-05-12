@@ -31,11 +31,13 @@ export default Model.extend({
     operaDeviceListLoading:false,
     operaContantListLoading:false,
     operaContantList:[],
-    operationTaskLoading:false,
-    addOperationTaskPlanData:[],
     basicInfoTaskLoading:false,
     taskId:'',
     addPointLoading:false,
+    addOperaUserLoading:false,
+    addOperaDeviceLoading:false,
+    operationTaskPlanLoading:false,
+    taskSubmitLoading:false,
   },
   effects: {
     *bWWebService({ payload, callback }, { call, put, update }) {
@@ -50,27 +52,32 @@ export default Model.extend({
         case 'B_GetALLWorkersList': yield update({ operaUserListLoading: true }); break;
         case 'B_GetALLDevicesList': yield update({ operaDeviceListLoading: true }); break;
         case 'M_GetOperationDetailList': yield update({ operaContantListloading: true }); break;
-        case 'M_InsertOperationTaskPlan': yield update({ operationTaskLoading: true }); break;
         case 'M_InsertOperationTask': yield update({ basicInfoTaskLoading: true }); break;
         case 'M_InsertOperationTaskScheme': yield update({ addPointLoading: true }); break;
+        case 'M_InsertOperationTaskWorkers': yield update({ addOperaUserLoading: true }); break;
+        case 'M_InsertOperationTaskDevices': yield update({ addOperaDeviceLoading: true }); break;
+        case 'M_InsertOperationTaskPlan': yield update({ operationTaskPlanLoading: true }); break;
+        case 'M_SubmitOperationTask': yield update({ taskSubmitLoading: true }); break;
 
         
       }
       const result = yield call(services.BWWebService, payload);
       const formatData = (resultData, itemsPar,itemPar) => {
 
-        const arrDataFormat = (data) => {
+        const arrDataFormat = (data,isOperate) => {
           let arrData = [];
           if (data instanceof Array) {
             arrData = data;
           } else { // 单条数据为对象的情况
             arrData.push(data)
           }
-          return arrData;
+          return isOperate? data : arrData;
         }
         if (itemPar&&itemPar) {
           return resultData && resultData['soap:Envelope'] && resultData['soap:Envelope']['soap:Body'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`][itemsPar] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`][itemsPar][itemPar] ? arrDataFormat(resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`][itemsPar][itemPar]) : []
 
+        }else if(itemsPar=='operate'){ //操作
+          return resultData && resultData['soap:Envelope'] && resultData['soap:Envelope']['soap:Body'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]  && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['ResultStruct'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['ResultStruct'].succes === "True" ? arrDataFormat(resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['ResultStruct'],'operate') : undefined
         } else {
           return resultData && resultData['soap:Envelope'] && resultData['soap:Envelope']['soap:Body'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['Items'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['Items']['Item'] ? arrDataFormat(resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['Items']['Item']) : []
 
@@ -87,7 +94,7 @@ export default Model.extend({
             }
             yield update({  tableDatas: data,})
           } else {
-            message.error(result.Message); 
+            message.error('操作失败'); 
           }
           yield update({ tableLoading: false })
           break;
@@ -101,24 +108,26 @@ export default Model.extend({
            }
             yield update({ tableDatas2: data, })
           } else {
-            message.error(result.Message); 
+            message.error('操作失败'); 
           }
           yield update({ tableLoading2: false })
           break;
         case 'M_GetOperationTaskByID':  //任务详情
           if (result.IsSuccess) {
-            yield update({ taskDetailData: formatData(result.Datas),})
+            yield update({ taskDetailData: formatData(result.Datas)})
+            callback&&callback(formatData(result.Datas));
           } else {
-            message.error(result.Message); 
+            message.error('操作失败'); 
           }
           yield update({ taskDetailLoading: false })
           break;
         case 'C_GetALLContractList':  //合同列表
           if (result.IsSuccess) {
-            const data = formatData(result.Datas,'CONTRACTS','CONTRACT')
-            yield update({contractTableAllData:data, contractTableData: data, })
+            const data = formatData(result.Datas,'CONTRACTS','CONTRACT')      
+            const listData = data.filter(item=>item.XZ == '运维')
+            yield update({contractTableAllData:listData, contractTableData: listData, })
           } else {
-            message.error(result.Message); 
+            message.error('操作失败'); 
           }
           yield update({  contractTableLoading: false, })
 
@@ -127,7 +136,7 @@ export default Model.extend({
           if (result.IsSuccess) {
             yield update({ taskTypeList: formatData(result.Datas), taskTypeListLoading: false, })
           } else {
-            message.error(result.Message); yield update({ taskTypeListLoading: false })
+            message.error('操作失败'); yield update({ taskTypeListLoading: false })
           }
           break; 
           case 'Z_CityInfo':  //任务所在区
@@ -154,7 +163,7 @@ export default Model.extend({
                 })
             yield update({ cityInfoList: cityData,})
           } else {
-            message.error(result.Message); 
+            message.error('操作失败'); 
           }
           yield update({ cityInfoListLoading: false })
           break;
@@ -165,7 +174,7 @@ export default Model.extend({
             })
             yield update({ pointList: data})
           } else {
-            message.error(result.Message)
+            message.error('操作失败')
           }
           yield update({  pointListLoading: false, })
           break;
@@ -176,7 +185,7 @@ export default Model.extend({
             })
             yield update({ operaUserList: data})
           } else {
-            message.error(result.Message)
+            message.error('操作失败')
           }
           yield update({  operaUserListLoading: false, })
           break;
@@ -187,49 +196,76 @@ export default Model.extend({
             })
             yield update({ operaDeviceList: data})
           } else {
-            message.error(result.Message)
+            message.error('操作失败')
           }
           yield update({  operaDeviceListLoading: false, })
           break;
           case 'M_GetOperationDetailList':  //运维内容
           if (result.IsSuccess) {
             const data =  formatData(result.Datas).map(item=>{
-              return  { label: item.DETAILNAME, value: item.ID}
+              return  { label: item.DETAILNAME, value: item.ID,CYCLE:item.CYCLE}
             })
             yield update({ operaContantList: data,})
+            callback&&callback(data);
           } else {
-            message.error(result.Message); 
+            message.error('操作失败'); 
           }
           yield update({ operaContantListLoading: false })
           break;
-          case 'M_InsertOperationTaskPlan':  //运维计划添加
-          if (result.IsSuccess) {
-            message.success(result.Message)
-            yield update({ addOperationTaskPlanData: formatData(result.Datas) })
-            callback();   
+          case 'M_InsertOperationTask':  //任务基本信息添加  
+          const res = formatData(result.Datas,'operate')
+          if (result.IsSuccess && res) {
+             message.success(result.Message)
+             yield update({ taskId: res.ID }) 
           } else {
-            message.error(result.Message)
-          }
-          yield update({ operationTaskLoading: false })
-          break;
-          case 'M_InsertOperationTask':  //任务基本信息添加
-          if (result.IsSuccess) {
-            message.success(result.Message)
-            yield update({ taskId: formatData(result.Datas) })
-            callback();   
-          } else {
-            message.error(result.Message)
+            message.error('操作失败')
           }
           yield update({ basicInfoTaskLoading: false })
           break;
           case 'M_InsertOperationTaskScheme':  //点位添加
-          if (result.IsSuccess) {
+          if (result.IsSuccess && formatData(result.Datas,'operate')) {
+            message.success(result.Message)
+            callback();   
+          } else {
+            message.error('操作失败')
+          }
+          yield update({ addPointLoading: false })
+          break;
+          case 'M_InsertOperationTaskWorkers':  //运维人员添加
+          if (result.IsSuccess && formatData(result.Datas,'operate')) {
+            message.success(result.Message)
+            callback();   
+          } else {
+            message.error('操作失败')
+          }
+          yield update({ addOperaUserLoading: false })
+          break;
+          case 'M_InsertOperationTaskDevices':  //运维设备添加
+          if (result.IsSuccess && formatData(result.Datas,'operate')) {
+            message.success(result.Message)
+            callback();   
+          } else {
+            message.error('操作失败')
+          }
+          yield update({ addOperaDeviceLoading: false })
+          break;
+          case 'M_InsertOperationTaskPlan':  //运维计划添加
+          if (result.IsSuccess && formatData(result.Datas,'operate') ) {
             message.success(result.Message)
             callback(formatData(result.Datas));   
           } else {
-            message.error(result.Message)
+            message.error('操作失败')
           }
-          yield update({ addPointLoading: false })
+          yield update({ operationTaskPlanLoading: false })
+          break;
+          case 'M_SubmitOperationTask':  //计划提交
+          if (result.IsSuccess && formatData(result.Datas,'operate') ) {
+            message.success(result.Message)
+            callback&&callback();   
+          } else {
+            message.error('操作失败')
+          }
+          yield update({ taskSubmitLoading: false })
           break;
       }
     },
@@ -240,7 +276,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`/upload${result.Datas}`);
       } else {
-        message.error(result.Message)
+        message.error('下载失败')
       }
     },
   },

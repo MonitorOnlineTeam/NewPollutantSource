@@ -3,7 +3,7 @@
  * 创建人：jab
  * 创建时间：2023.05
  */
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useDebugValue } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Checkbox, Form, Tag, Popover, Upload, Cascader, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Tabs, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, UploadOutlined, SearchOutlined, } from '@ant-design/icons';
@@ -52,11 +52,13 @@ const dvaPropsData = ({ loading, operaTask }) => ({
   operaDeviceListLoading: operaTask.operaDeviceListLoading,
   operaContantListLoading: operaTask.operaContantListLoading,
   operaContantList: operaTask.operaContantList,
-  operationTaskLoading: operaTask.operationTaskLoading,
-  addOperationTaskPlanData: operaTask.addOperationTaskPlanData,
   basicInfoTaskLoading: operaTask.basicInfoTaskLoading,
   taskId: operaTask.taskId,
-  addPointLoading:operaTask.addPointLoading,
+  addPointLoading: operaTask.addPointLoading,
+  addOperaUserLoading:operaTask.addOperaUserLoading,
+  addOperaDeviceLoading:operaTask.addOperaDeviceLoading,
+  operationTaskPlanLoading:operaTask.operationTaskPlanLoading,
+  taskSubmitLoading:operaTask.taskSubmitLoading,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -89,7 +91,7 @@ const Index = (props) => {
 
 
   const [taskType, setTaskType] = useState('1')
-  const [operaModelTabType, setOperaModelTabType] = useState('1')
+
   const [addTaskModelTabType, setAddTaskModelTabType] = useState('1')
 
 
@@ -98,12 +100,15 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableLoading, tableDatas2, tableLoading2, loadingAddConfirm, loadingEditConfirm, contractTableData, contractTableAllData, taskDetailData, pointList, operaUserList, operaDeviceList, taskId, } = props;
+  const { tableDatas, tableLoading, tableDatas2, tableLoading2, loadingAddConfirm, loadingEditConfirm, contractTableData, contractTableAllData, taskDetailData, pointList, operaUserList, operaDeviceList, taskId,taskDetailLoading,} = props;
   useEffect(() => {
-    onFinish(pageIndex);
-    onFinish2(pageIndex2)
+    initData();
   }, []);
-
+  
+  const initData = () =>{
+    onFinish(1);
+    onFinish2(1)
+  }
   const columns = [
     {
       title: '序号',
@@ -171,11 +176,35 @@ const Index = (props) => {
     },
   ];
   const restData = () => {
-    setPointTargetKeys([]); setAddPointList([])
-    setOperaUserTargetKeys([]); setAddOperaUserList([])
-    setOperaDeviceTargetKeys([]); setAddOperaDeviceList([])
+    props.updateState({ taskId: undefined })
+    setPointTargetKeys([]); setAddPointList([]);setAllAddPointList([]);
+    setOperaUserTargetKeys([]); setAddOperaUserList([]);setAllAddOperaUserList([]);
+    setOperaDeviceTargetKeys([]); setAddOperaDeviceList([]); setAllAddOperaDeviceList([]);
+    setAddOperaPlanList([]); setAllAddOperaPlanList([]);
     setContractSearchVal('');
+    setAddPointSearchVal('');
+    setAddOperaUserSearchVal('');
+    setAddDeviceSearchVal('');
+    setAddPlanSearchVal('');
+    basicInfoform.resetFields();
     planform.resetFields();
+  }
+  const taskDataFormat = (name, addData,type,isFirstLoad) => { //格式化添加运维项数据 type 1添加 2编辑 3详情
+    if (type == 1) { //添加
+      return addData;
+    } else  { //编辑或详情
+      let arrData = []; 
+      if(isFirstLoad){ //编辑详情首次加载
+        let data = addData[0][name].Item;
+        data instanceof Array ? arrData = data : arrData.push(data)
+        return  arrData;
+      }
+      if (taskDetailData && taskDetailData[0] && taskDetailData[0][name] && taskDetailData[0][name].Item) {
+        let data = taskDetailData[0][name].Item;
+        data instanceof Array ? arrData = data : arrData.push(data)
+        return  type == 2? [...arrData, ...addData] : arrData;
+      }
+    }
   }
   const [taskAddVisible, setTaskAddVisible] = useState(false)
   const taskAdd = () => {//任务添加
@@ -190,32 +219,42 @@ const Index = (props) => {
   }
   const [taskTitle, setTaskTitle] = useState()
   const [taskEditVisible, setTaskEditVisible] = useState(false)
-
   const taskEdit = async (record, type) => {  //任务编辑
     setTaskEditVisible(true)
     setTaskTitle(` ${record.RWMC} - 任务编辑`)
-    props.bWWebService({ //任务详情
-      functionName: 'M_GetOperationTaskByID',
-      paramList: {
-        OPTID: record.ID,
-      }
-    })
-    restData();
+    getTaskDetailData(record.ID,2)
   };
   const [taskDetailVisible, setTaskDetailVisible] = useState(false)
   const taskDetail = async (record, type) => {  //任务详情
     setTaskDetailVisible(true)
     setTaskTitle(`${record.RWMC} - 任务详情`)
+    getTaskDetailData(record.ID,3)
+  };
+  const getTaskDetailData = (id,type) =>{
     props.bWWebService({ //任务详情
       functionName: 'M_GetOperationTaskByID',
       paramList: {
-        OPTID: record.ID,
+        OPTID: id,
       }
+    },(data)=>{
+      props.updateState({taskId:id})
+      const pointData = taskDataFormat('SCHEMES',data,type,'firstLoad')
+      const operaUserData = taskDataFormat('WORKERS',data,type,'firstLoad')
+      const operaDeviceData = taskDataFormat('DEVICES',data,type,'firstLoad')
+      const operaPlanData = taskDataFormat('PLANS',data,type,'firstLoad')
+      setAddPointList(pointData); setAllAddPointList(pointData)
+      setAddOperaUserList(operaUserData); setAllAddOperaUserList(operaUserData)
+      setAddOperaDeviceList(operaDeviceData); setAllAddOperaDeviceList(operaDeviceData)
+      setAddOperaPlanList(operaPlanData); setAllAddOperaPlanList(operaPlanData)
+      const echoData = data && data[0]
+      echoData&&basicInfoform.setFieldsValue({
+        ...echoData,
+        location:`${echoData.PROVINCE}${echoData.CITY? '/'+echoData.CITY:''}${echoData.DISTRICT? '/'+echoData.DISTRICT:''}`,
+        // time:`${echoData.RWRQKS && moment(echoData.RWRQKS).format('YYYY/MM/DD')}至${echoData.RWRQJS && moment(echoData.RWRQJS).format('YYYY/MM/DD')}`,
+        time:`${echoData.RWRQKS}至${echoData.RWRQJS}`,
+      })
     })
-    // basicInfoform.setFieldsValue({
-
-    // })
-  };
+  }
   const [taskReportTitle, setTaskReportTitle] = useState()
   const [taskReportVisible, setTaskReportVisible] = useState(false)
   const taskUploadReport = (record) => { //上传报告
@@ -242,6 +281,9 @@ const Index = (props) => {
         paramList: {
           OPTID: record.ID,
         }
+      },()=>{
+        taskAddVisible?  setTaskAddVisible(false) : setTaskEditVisible(false);
+        initData();
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -364,11 +406,12 @@ const Index = (props) => {
   const contractComponents = () => {
     return <>
       <Form>
-        <Input placeholder='请输入内容项'
+        <Input placeholder='关键字'
+          value={contractSearchVal}
           onChange={(e) => {
             const val = e.target.value; setContractSearchVal(val)
             if (val) {
-              const data = contractTableAllData.filter((item) => item.BT.indexOf(val) != -1 || item.XZ.indexOf(val) != -1); props.updateState({ contractTableData: data })
+              const data = contractTableAllData.filter((item) => item.ID.indexOf(val) != -1 || item.BT.indexOf(val) != -1 || item.XZ.indexOf(val) != -1); props.updateState({ contractTableData: data })
             } else { props.updateState({ contractTableData: contractTableAllData }) }
           }} style={{ width: 200, marginBottom: 8 }} allowClear suffix={!contractSearchVal && <SearchOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />} />
       </Form>
@@ -381,7 +424,7 @@ const Index = (props) => {
         rowSelection={{
           type: 'radio',
           onChange: (selectedRowKeys, selectedRows) => {
-            basicInfoform.setFieldsValue({ contractId: selectedRowKeys })
+            basicInfoform.setFieldsValue({ CID: selectedRowKeys && selectedRowKeys.toString() })
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           },
           // selectedRowKeys: basicInfoform.getFieldValue('contractId'),
@@ -392,6 +435,7 @@ const Index = (props) => {
   const [contractVisible, setContractVisible] = useState(false)
   const contractVisibleChange = (newVisible) => {
     setContractVisible(newVisible)
+    setContractSearchVal('')
     if (newVisible) {
       props.bWWebService({
         functionName: 'C_GetALLContractList',
@@ -441,6 +485,8 @@ const Index = (props) => {
     },
   ];
 
+
+
   const [addPointVisible, setAddPointVisible] = useState(false);
   const [pointTargetKeys, setPointTargetKeys] = useState([]);
   const addPoint = () => {  //添加点位
@@ -450,29 +496,23 @@ const Index = (props) => {
       functionName: 'M_GetOperationSchemeList',
     })
   }
-  const dataFormat = (name, addData) => { //格式化添加运维项数据
-    let arrData = [];
-    if (operaModelTabType != 1 && taskDetailData && taskDetailData[0] && taskDetailData[0][name] && taskDetailData[0][name].Item) {
-      const data = taskDetailData[0][name].Item;
-      data instanceof Array ? arrData = data : arrData.push(data)
-      return operaModelTabType == 2 ? [...arrData, ...addData] : arrData;
-    } else { //添加
-      return addData;
-    }
-
-  }
   const [addPointList, setAddPointList] = useState([])
   const [addAllPointList, setAllAddPointList] = useState([])
   const addPointOk = () => {
-    const listData = [];
     props.bWWebService({ //点位添加
       functionName: 'M_InsertOperationTaskScheme',
-      xmlParamList: {
-        OPTID: "101154",
-        OTSID: pointTargetKeys.join('&'),
-      }
-    },(data)=>{
-      const list = dataFormat('SCHEMES', data)
+      xmlParamList: pointTargetKeys.map(item => ({
+        OPTID: taskId,
+        OTSID: item,
+      }))
+    }, () => {
+      const data = [];
+      pointList.map(item => {
+        pointTargetKeys.map(item2 => {
+          if (item.key == item2) {data.push(item) }
+         })
+      })
+      const list = taskDataFormat('SCHEMES',data,1)
       setAddPointList(list)
       setAllAddPointList(list)
       setAddPointVisible(false)
@@ -559,22 +599,35 @@ const Index = (props) => {
 
   const addOperaUser = () => {
     setAddOperaUserVisible(true)
+    setAddOperaUserPageIndex(1)
+    setAddOperaUserPageSize(20)
     props.bWWebService({ //运维人员
       functionName: 'B_GetALLWorkersList',
     })
   }
   const [addOperaUserList, setAddOperaUserList] = useState([])
-  const addOperaUserOk = (data) => {
-    const listData = [];
-    data.map(item => {
-      pointTargetKeys.map(item2 => {
-        if (item.key == item2) {
-          listData.push(item)
-        }
+  const [addAllOperaUserList, setAllAddOperaUserList] = useState([])
+
+  const addOperaUserOk = () => {
+    props.bWWebService({ //运维人员添加
+      functionName: 'M_InsertOperationTaskWorkers',
+      xmlParamList: operaUserTargetKeys.map(item => ({
+        OPTID: taskId,
+        OWID: item,
+      }))
+    }, () => {
+      const data = [];
+      operaUserList.map(item => {
+        operaUserTargetKeys.map(item2 => {
+          if (item.key == item2) {data.push(item) }
+         })
       })
+      const list = taskDataFormat('WORKERS',data,1)
+      setAddOperaUserList(list)
+      setAllAddOperaUserList(list)
+      setAddOperaUserVisible(false)
     })
-    setAddOperaUserList(listData)
-    setAddOperaUserVisible(false)
+
   }
   const [operaDevicePageIndex, setOperaDevicePageIndex] = useState(1);
   const [operaDevicePageSize, setOperaDevicePageSize] = useState(20);
@@ -635,22 +688,34 @@ const Index = (props) => {
   const [operaDeviceTargetKeys, setOperaDeviceTargetKeys] = useState([]);
   const addOperaDevice = () => {
     setAddOperaDeviceVisible(true)
+    setAddOperaDevicePageIndex(1)
+    setAddOperaDevicePageIndex(20)
     props.bWWebService({ //运维设备
       functionName: 'B_GetALLDevicesList',
     })
   }
   const [addOperaDeviceList, setAddOperaDeviceList] = useState([])
+  const [addAllOperaDeviceList, setAllAddOperaDeviceList] = useState([])
+
   const addOperaDeviceOk = (data) => {
-    const listData = [];
-    data.map(item => {
-      pointTargetKeys.map(item2 => {
-        if (item.key == item2) {
-          listData.push(item)
-        }
+    props.bWWebService({ //运维设备添加
+      functionName: 'M_InsertOperationTaskDevices',
+      xmlParamList: operaDeviceTargetKeys.map(item => ({
+        OPTID: taskId,
+        ODID: item,
+      }))
+    }, () => {
+      const data = [];
+      operaDeviceList.map(item => {
+        operaDeviceTargetKeys.map(item2 => {
+          if (item.key == item2) {data.push(item) }
+         })
       })
+      const list = taskDataFormat('DEVICES',data,1)
+      setAddOperaUserList(list)
+      setAllAddOperaDeviceList(list)
+      setAddOperaUserVisible(false)
     })
-    setAddOperaDeviceList(listData)
-    setAddOperaDeviceVisible(false)
   }
   const [operaPlanListPageIndex, setOperaPlanListPageIndex] = useState(1)
   const [operaPlanListPageSize, setOperaPlanListPageSize] = useState(20)
@@ -674,8 +739,6 @@ const Index = (props) => {
     },
     {
       title: '计划执行频次',
-      dataIndex: 'JHJG',
-      key: 'JHJG',
       align: 'center',
       width: 120,
       render: (text, row, index) => {
@@ -705,52 +768,96 @@ const Index = (props) => {
   ];
   const [planModalType, setPlanModalType] = useState('add')
   const [addOperaPlanVisible, setAddOperaPlanVisible] = useState(false)
-  const operaPlanAddDetail = (row) => { //计划添加详情
+  const [operaDetailList, setOperaDetailList] = useState([])
+  const operaPlanAddDetail = (row) => { // 计划 添加和详情
     setAddOperaPlanVisible(true)
+    planform.resetFields()
     row ? setPlanModalType('detail') : setPlanModalType('add')
+    if(row){
+      setPlanModalType('detail') 
+      planform.setFieldsValue({
+        ...row,
+        // time:`${row.JHRQKS && moment(row.JHRQKS).format('YYYY/MM/DD')}至${row.JHRQJS && moment(row.JHRQJS).format('YYYY/MM/DD')}`,
+        time:`${row.JHRQKS}至${row.JHRQJS}`,
+      })
+    }else{
+      setPlanModalType('add')
+      planform.resetFields();
+    }
+
     props.bWWebService({ //运维内容
       functionName: 'M_GetOperationDetailList',
+    },(res)=>{
+      let list = [];
+      if(row){
+      const data = row.Arrays&&row.Arrays.Item;
+      data&&planform.setFieldsValue({
+        DETAIL: data instanceof Array ?  data.map(item=>item.ID) : [data].map(item=>item.ID),
+      })
+      list = res.filter(item=>item.CYCLE.indexOf(row.JHZX)!=-1)
+     }else{
+      list = res.filter(item=>item.CYCLE==`每周`)
+     }
+     setOperaDetailList(list)
+
     })
   }
+  const [addOperaPlanList, setAddOperaPlanList] = useState([])
+  const [addAllOperaPlanList, setAllAddOperaPlanList] = useState([])
   const taskPlanOk = async () => { //计划添加提交
     try {
       const values = await planform.validateFields();
       props.bWWebService({
         functionName: 'M_InsertOperationTaskPlan',
-        xmlParamList:{
+        xmlParamList:  [{
           ...values,
+          OPTID:taskId,
+          DETAIL: values.DETAIL.join('&'),
           JHRQKS: values.time && moment(values.time[0]).format('YYYY-MM-DD'),
           JHRQJS: values.time && moment(values.time[1]).format('YYYY-MM-DD'),
-          DETAIL: values.DETAIL.join('&'),
           time: undefined,
-        }
-      }, () => {
+        }]
+      }, (data) => {
+        const list = taskDataFormat('PLANS',data,1)
         setAddOperaPlanVisible(false)
+        setAddOperaPlanList(data)
+        setAllAddOperaPlanList(data)
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
     }
   }
   const [addPointSearchVal, setAddPointSearchVal] = useState('')
+  const [addOperaUserSearchVal, setAddOperaUserSearchVal] = useState('')
+  const [addDeviceSearchVal, setAddDeviceSearchVal] = useState('')
+  const [addPlanSearchVal, setAddPlanSearchVal] = useState('')
+
+
   const taskAddEditDetailTab = (type) => {
-
-
-    return <Tabs type="card" onChange={(key) => { setOperaModelTabType(key) }}>
+    return <Tabs type="card">
       <TabPane tab="运维点位" key='1'>
-        <Input placeholder='请输入内容项'
+        <Input placeholder='关键字'
           onChange={(e) => {
             const val = e.target.value; setAddPointSearchVal(val)
             if (val) {
-              const data = addAllPointList.filter((item) => item.MC.indexOf(val) != -1 || item.ADDRESS.indexOf(val) != -1);
+              const data = addAllPointList.filter((item) =>item.ID&&item.ID.indexOf(val) != -1 || item.MC&&item.MC.indexOf(val) != -1 || item.ADDRESS&&item.ADDRESS.indexOf(val) != -1);
               setAddPointList(data)
             } else { setAddPointList(addAllPointList) }
           }} style={{ width: 200, marginBottom: 8, marginRight: 8 }} allowClear suffix={!addPointSearchVal && <SearchOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />} />
         {type != 3 && <Button type='primary' style={{ marginBottom: 8 }} onClick={addPoint}>添加点位</Button>}
-        <SdlTable dataSource={dataFormat('SCHEMES', addPointList)} loading={props.taskDetailLoading} columns={pointColumns} />
+        <SdlTable dataSource={addPointList}  columns={pointColumns} />
       </TabPane>
       <TabPane tab="运维人员" key='2'>
+        <Input placeholder='关键字'
+          onChange={(e) => {
+            const val = e.target.value; setAddOperaUserSearchVal(val)
+            if (val) {
+              const data = addAllOperaUserList.filter((item) => item.XM&&item.XM.indexOf(val) != -1 || item.XB&&item.XB.indexOf(val) != -1 || item.MC&&item.MC.indexOf(val) != -1 || item.XL&&item.XL.indexOf(val) != -1 || item.ZW&&item.ZW.indexOf(val) != -1);
+              setAddOperaUserList(data)
+            } else { setAddOperaUserList(addAllOperaUserList) }
+          }} style={{ width: 200, marginBottom: 8, marginRight: 8 }} allowClear suffix={!addOperaUserSearchVal && <SearchOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />} />
         {type != 3 && <Button type='primary' style={{ marginBottom: 8 }} onClick={addOperaUser}>添加人员</Button>}
-        <SdlTable dataSource={dataFormat('WORKERS', addOperaUserList)} loading={props.taskDetailLoading} columns={operaUserColumns(1)}
+        <SdlTable dataSource={addOperaUserList}  columns={operaUserColumns(1)}
           onPageChange={(PageIndex, PageSize) => {
             setOperaUserPageIndex(PageIndex)
             setOperaUserPageSize(PageSize)
@@ -758,8 +865,16 @@ const Index = (props) => {
         />
       </TabPane>
       <TabPane tab="运维设备" key='3'>
+        <Input placeholder='关键字'
+          onChange={(e) => {
+            const val = e.target.value; setAddDeviceSearchVal(val)
+            if (val) {
+              const data = addAllOperaDeviceList.filter((item) => item.SBBH&&item.SBBH.indexOf(val) != -1 || item.SBMC&&item.SBMC.indexOf(val) != -1 || item.CCBH&&item.CCBH.indexOf(val) != -1 || item.XH_GE&&item.XH_GE.indexOf(val) != -1 || item.SBMS&&item.SBMS.indexOf(val) != -1);
+              setAddOperaDeviceList(data)
+            } else { setAddOperaDeviceList(addAllOperaDeviceList) }
+          }} style={{ width: 200, marginBottom: 8, marginRight: 8 }} allowClear suffix={!addDeviceSearchVal && <SearchOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />} />
         {type != 3 && <Button type='primary' style={{ marginBottom: 8 }} onClick={addOperaDevice}>添加设备</Button>}
-        <SdlTable dataSource={dataFormat('DEVICES', addOperaDeviceList)} loading={props.taskDetailLoading} columns={operaDeviceColumns(1)}
+        <SdlTable dataSource={addOperaDeviceList} columns={operaDeviceColumns(1)}
           onPageChange={(PageIndex, PageSize) => {
             setDeviceListPageIndex(PageIndex)
             setDeviceListPageSize(PageSize)
@@ -767,8 +882,16 @@ const Index = (props) => {
         />
       </TabPane>
       <TabPane tab="运维计划" key='4'>
+        <Input placeholder='关键字'
+          onChange={(e) => {
+            const val = e.target.value; setAddPlanSearchVal(val)
+            if (val) {
+              const data = addAllOperaPlanList.filter((item) => item.JHBT&&item.JHBT.indexOf(val) != -1 || item.JHZX&&item.JHZX.indexOf(val) != -1 )
+              setAddOperaPlanList(data)
+            } else { setAddOperaPlanList(addAllOperaPlanList) }
+          }} style={{ width: 200, marginBottom: 8, marginRight: 8 }} allowClear suffix={!addPlanSearchVal && <SearchOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />} />
         {type != 3 && <Button type='primary' style={{ marginBottom: 8 }} onClick={() => operaPlanAddDetail()}>添加计划</Button>}
-        <SdlTable dataSource={dataFormat('PLANS', props.addOperationTaskPlanData)} loading={props.taskDetailLoading} columns={operaPlanColumns}
+        <SdlTable dataSource={addOperaPlanList}  columns={operaPlanColumns}
           onPageChange={(PageIndex, PageSize) => {
             setOperaPlanListPageIndex(PageIndex)
             setOperaPlanListPageSize(PageSize)
@@ -782,6 +905,7 @@ const Index = (props) => {
       form={basicInfoform}
       name="add_form"
       initialValues={{
+        ID: '0',
       }}
       className={styles.fromModal}
       onFinish={() => { basicInfoSave() }}
@@ -797,84 +921,101 @@ const Index = (props) => {
             overlayClassName='contractPopoverSty'
             placement='bottomLeft'
           >
-            <Form.Item label="合同名称" name="contractId" className='contractName' rules={[{ required: true, message: '请输入合同名称', }]} >
-              <Select placeholder='请选择' getPopupContainer={trigger => trigger.parentNode}>
+            <Form.Item label="合同名称" name="CID" className='contractName' rules={[{ required: true, message: '请输入合同名称', }]} >
+              {type == 1 ? <Select placeholder='请选择' getPopupContainer={trigger => trigger.parentNode}>
                 {contractTableAllData.map(item =>
                   <Option key={item.ID} value={item.ID}>
                     {item.BT}
                   </Option>
                 )}
               </Select>
-
+                :
+                basicInfoform.getFieldValue('CID')
+              }
             </Form.Item>
           </Popover>
         </Col>
+        <Form.Item name="ID" >
+        </Form.Item>
         <Col span={12}>
-          <Form.Item label="任务编号" name="ManufacturerID22" >
-            <Input placeholder='请输入' allowClear disabled={type == 2} />
+          <Form.Item label="任务编号" name="RWBH" >
+            {type == 1 ? <Input placeholder='请输入' allowClear /> : basicInfoform.getFieldValue('RWBH')}
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="任务名称" name="ManufacturerID3" rules={[{ required: true, message: '请输入任务名称', }]}>
-            <TextArea rows={1} placeholder='请输入' allowClear showCount maxLength={128} disabled={type == 2} />
+          <Form.Item label="任务名称" name="RWMC" rules={[{ required: true, message: '请输入任务名称', }]}>
+            {type == 1 ? <TextArea rows={1} placeholder='请输入' allowClear showCount maxLength={128} /> : basicInfoform.getFieldValue('RWMC')}
           </Form.Item>
         </Col>
         <Col span={12}>
           <Spin spinning={props.taskTypeListLoading} size='small'>
-            <Form.Item label="任务类别" name="ManufacturerID4" rules={[{ required: true, message: '请选择任务类别', }]}>
-              <Select allowClear showSearch placeholder='请选择' disabled={type == 2}>
+            <Form.Item label="任务类别" name="OTID" rules={[{ required: true, message: '请选择任务类别', }]}>
+              {type == 1 ? <Select allowClear showSearch placeholder='请选择' disabled={type == 2}>
                 {props.taskTypeList.map(item =>
                   <Option key={item.ID} value={item.ID}>
                     {item.NAME}
                   </Option>
                 )}
               </Select>
+                :
+                basicInfoform.getFieldValue('OTID')
+              }
             </Form.Item>
           </Spin>
         </Col>
         <Col span={12}>
-          <Form.Item label="任务来源" name="ManufacturerID5" rules={[{ required: true, message: '请选择任务来源', }]}>
-            <Select placeholder='请选择' disabled={type == 2}>
-              <Option key={1} value={1}> 政府委托 </Option>
-              <Option key={2} value={2}> 社会委托 </Option>
+          <Form.Item label="任务来源" name="RWLY" rules={[{ required: true, message: '请选择任务来源', }]}>
+            {type == 1 ? <Select placeholder='请选择' disabled={type == 2}>
+              <Option key={'政府委托'} value={'政府委托'}> 政府委托 </Option>
+              <Option key={'社会委托'} value={'社会委托'}> 社会委托 </Option>
             </Select>
+              :
+              basicInfoform.getFieldValue('RWLY')
+            }
           </Form.Item>
         </Col>
         <Col span={12}>
           <Spin spinning={props.cityInfoListLoading} size='small'>
-            <Form.Item label="任务所在地" name="ManufacturerID6">
-              <Cascader options={props.cityInfoList} placeholder="请选择" changeOnSelect showSearch disabled={type == 2} />
+            <Form.Item label="任务所在地" name="location">
+              {type == 1 ? <Cascader options={props.cityInfoList} placeholder="请选择" changeOnSelect showSearch /> : basicInfoform.getFieldValue('location')}
             </Form.Item>
           </Spin>
         </Col>
         <Col span={12}>
-          <Form.Item label="任务开始/结束日期" name="ManufacturerID7">
-            <RangePicker_ format='YYYY-MM-DD' disabled={type == 2} />
+          <Form.Item label="任务开始/结束日期" name="time">
+            {type == 1 ? <RangePicker_ format='YYYY-MM-DD' /> : basicInfoform.getFieldValue('time')}
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="任务概述" name="ManufacturerID7">
-            <TextArea placeholder='请输入' disabled={type == 2} />
+          <Form.Item label="任务概述" name="RWGS">
+            {type == 1 ? <TextArea placeholder='请输入' /> : basicInfoform.getFieldValue('RWGS')}
           </Form.Item>
         </Col>
-        {/* <Col span={12} ></Col> */}
-        <Col span={24}>
+        {type == 1 && <Col span={24}>
           <Form.Item style={{ marginLeft: 130 }}>
             <Button type='primary' htmlType='submit' loading={props.basicInfoTaskLoading}>保存</Button>
             <Button style={{ margin: '0 8px' }} disabled={!taskId} onClick={() => { setAddTaskModelTabType('2') }}>下一步</Button>
             {taskAddVisible && <span className='red'>*注：保存基本信息之后才能添加运维项</span>}
           </Form.Item>
-        </Col>
+        </Col>}
       </Row>
     </Form>
   }
   const basicInfoSave = async () => {
     try {
       const values = await basicInfoform.validateFields();
+      const location = values.location;
       props.bWWebService({
         functionName: 'M_InsertOperationTask', //保存基本信息
         paramList: {
           ...values,
+          RWRQKS: values.time && moment(values.time[0]).format('YYYY-MM-DD'),
+          RWRQJS: values.time && moment(values.time[1]).format('YYYY-MM-DD'),
+          PROVINCE: location && location[0],
+          CITY: location && location[1],
+          DISTRICT: location && location[2],
+          location: undefined,
+          time: undefined,
         }
       })
     } catch (errInfo) {
@@ -1000,9 +1141,12 @@ const Index = (props) => {
         className={styles.addFromModal}
         destroyOnClose
         wrapClassName='spreadOverModal'
+        okButtonProps={{
+          disabled: !taskId,
+        }}
         okText='提交'
         onOk={taskOk}
-        confirmLoading={false}
+        confirmLoading={props.taskSubmitLoading}
       >
         <Tabs tabPosition="left" activeKey={addTaskModelTabType} onChange={(key) => { setAddTaskModelTabType(key) }}>
           <TabPane tab="基础信息" key='1'>
@@ -1025,7 +1169,10 @@ const Index = (props) => {
         okText='提交'
         onOk={taskOk}
       >
+        <Spin spinning={taskDetailLoading}> 
+        {taskBasicInfoForm(2)}
         {taskAddEditDetailTab(2)}
+        </Spin>
       </Modal>
       <Modal
         title={taskTitle}
@@ -1036,8 +1183,10 @@ const Index = (props) => {
         wrapClassName='spreadOverModal'
         footer={null}
       >
+       <Spin spinning={taskDetailLoading}> 
         {taskBasicInfoForm(2)}
         {taskAddEditDetailTab(3)}
+        </Spin>
       </Modal>
       <Modal
         title={taskReportTitle}
@@ -1125,7 +1274,7 @@ const Index = (props) => {
         onOk={() => addPointOk()}
         confirmLoading={props.addPointLoading}
       >
-        <TableTransfer leftColumns={pointColumns} rightColumns={pointColumns} scroll={{ y: 'calc(100vh - 480px)' }} bordered={false} dataSource={pointList} loading={props.pointListLoading} targetKeys={pointTargetKeys} onChange={(checked) => { setPointTargetKeys(checked) }} showSearch filterOption={(inputValue, item) => item.MC.indexOf(inputValue) !== -1 || item.ADDRESS.indexOf(inputValue) !== -1} />
+        <TableTransfer leftColumns={pointColumns} rightColumns={pointColumns} scroll={{ y: 'calc(100vh - 480px)' }} bordered={false} dataSource={pointList} loading={props.pointListLoading} targetKeys={pointTargetKeys} onChange={(checked) => { setPointTargetKeys(checked) }} showSearch filterOption={(inputValue, item) => item.ID.indexOf(inputValue) !== -1 || item.MC.indexOf(inputValue) !== -1 || item.ADDRESS.indexOf(inputValue) !== -1} />
       </Modal>
       <Modal
         title={'人员添加'}
@@ -1134,7 +1283,8 @@ const Index = (props) => {
         className={styles.operaUserFormModal}
         destroyOnClose
         width='85%'
-        onOk={() => addOperaUserOk(operaUserList)}
+        confirmLoading={props.addOperaUserLoading}
+        onOk={() => addOperaUserOk() }
       >
         <TableTransfer
           leftColumns={operaUserColumns()} rightColumns={operaUserColumns()} scroll={{ y: 'calc(100vh - 480px)' }}
@@ -1157,7 +1307,8 @@ const Index = (props) => {
         className={styles.deviceFormModal}
         destroyOnClose
         width='85%'
-        onOk={() => addOperaDeviceOk(operaDeviceList)}
+        confirmLoading={props.addOperaDeviceLoading}
+        onOk={() => addOperaDeviceOk()}
       >
         <TableTransfer
           leftColumns={(operaDeviceColumns())} rightColumns={operaDeviceColumns()} scroll={{ y: 'calc(100vh - 480px)' }}
@@ -1174,45 +1325,53 @@ const Index = (props) => {
         />
       </Modal>
       <Modal
-        title={'计划添加'}
+        title={planModalType==='add'?'计划添加' : '计划详情'}
         visible={addOperaPlanVisible}
         onCancel={() => { setAddOperaPlanVisible(false) }}
         className={styles.addPlanFormModal}
         destroyOnClose
         width='85%'
+        confirmLoading={props.operationTaskPlanLoading}
         onOk={taskPlanOk}
-        confirmLoading={props.operationTaskLoading}
       >
         <Form
           form={planform}
           name="plan_form"
           initialValues={{
+            JHZX:'周',
           }}
           className={styles.fromModal}
         >
           <Form.Item label="计划标题" name="JHBT" rules={[{ required: true, message: '请输入计划标题', }]}>
-            <Input placeholder='请输入' allowClear style={{ width: 300 }} disabled={planModalType === 'detail'} />
+          {planModalType === 'add'? <Input placeholder='请输入' allowClear style={{ width: 300 }} /> :planform.getFieldValue('JHBT') }
           </Form.Item>
           <Form.Item label="执行" name="JHZX" rules={[{ required: true, message: '请选择执行', }]}>
-            <Select placeholder='请选择' style={{ width: 150 }} disabled={planModalType === 'detail'}>
+          {planModalType === 'add'?
+            <Select placeholder='请选择' style={{ width: 150 }} 
+             onChange={(val)=>{
+               const data = props.operaContantList.filter(item=>item.CYCLE==`每${val}`)
+               setOperaDetailList(data)
+             }}
+             >
               <Option key={'周'} value={'周'}>周</Option>
               <Option key={'月'} value={'月'}>月</Option>
             </Select>
+            :planform.getFieldValue('JHZX') }
           </Form.Item>
           <Form.Item label="间隔" name="JHJG" rules={[{ required: true, message: '请输入间隔', }]}>
-            <InputNumber placeholder='请输入' style={{ width: 150 }} allowClear disabled={planModalType === 'detail'} />
+          {planModalType === 'add'? <InputNumber placeholder='请输入' style={{ width: 150 }} allowClear /> :planform.getFieldValue('JHJG') }
           </Form.Item>
           <Form.Item label="计划开始/结束日期" name="time" rules={[{ required: true, message: '请选择计划开始/结束日期', }]}>
-            <RangePicker_ format='YYYY-MM-DD' style={{ width: 300 }} disabled={planModalType === 'detail'} />
+          {planModalType === 'add'? <RangePicker_ format='YYYY-MM-DD' style={{ width: 300 }} />:planform.getFieldValue('time') }
           </Form.Item>
 
           <Form.Item label="运维内容" name="DETAIL">
             {props.operaContantListloading ? <Spin size='small' />
-              : <Checkbox.Group options={props.operaContantList} disabled={planModalType === 'detail'} />
+              : <Checkbox.Group options={operaDetailList} disabled={planModalType === 'detail'} />
             }
           </Form.Item>
           <Form.Item label="计划描述" name="JHMR">
-            <TextArea placeholder='请输入' allowClear disabled={planModalType === 'detail'} />
+           {planModalType === 'add'? <TextArea placeholder='请输入' allowClear/>:planform.getFieldValue('JHMR') }
           </Form.Item>
         </Form>
       </Modal>
