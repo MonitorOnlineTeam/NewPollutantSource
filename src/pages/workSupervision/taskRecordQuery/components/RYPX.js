@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-20 15:11:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-08 16:59:49
+ * @Last Modified time: 2023-05-11 11:06:51
  * @Description: 人员培训任务单记录
  */
 import React, { useState, useEffect } from 'react';
@@ -35,7 +35,7 @@ const RYPX = props => {
 
   useEffect(() => {
     onFinish();
-  }, [type]);
+  }, [type, flag]);
 
   // 查询数据
   const onFinish = async () => {
@@ -130,7 +130,7 @@ const RYPX = props => {
         title: '培训日期',
         dataIndex: 'TrainTime',
         key: 'TrainTime',
-        sorter: (a, b) => a.TrainTime - b.TrainTime,
+        sorter: (a, b) => moment(a.TrainTime).valueOf() - moment(b.TrainTime).valueOf(),
         render: (text, record) => {
           return moment(text).format('YYYY-MM-DD');
         },
@@ -174,7 +174,7 @@ const RYPX = props => {
                     placement="left"
                     title="确认是否删除?"
                     onConfirm={() => {
-                      onDelete(record.ID);
+                      onDelete(record.AttachId);
                     }}
                     okText="是"
                     cancelText="否"

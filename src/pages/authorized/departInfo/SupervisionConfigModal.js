@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-11 10:17:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-06 09:32:58
+ * @Last Modified time: 2023-05-11 11:46:31
  * @Description: 省区/大区日常监管配置
  */
 
@@ -69,6 +69,9 @@ const SupervisionConfigModal = props => {
             key: 'InspectEquNum',
             align: 'center',
             width: 120,
+            render: text => {
+              return text + '次/月';
+            },
           },
           {
             title: '覆盖运维人员数量',
@@ -76,6 +79,9 @@ const SupervisionConfigModal = props => {
             key: 'InspectPersonNum',
             align: 'center',
             width: 120,
+            render: text => {
+              return text + '次/月';
+            },
           },
         ],
       },
@@ -84,24 +90,36 @@ const SupervisionConfigModal = props => {
         dataIndex: 'ReturnNum',
         key: 'ReturnNum',
         align: 'center',
+        render: text => {
+          return text + '次/月';
+        },
       },
       {
         title: '办事处检查次数',
         dataIndex: 'OfficeCheckNum',
         key: 'OfficeCheckNum',
         align: 'center',
+        render: text => {
+          return text + ' 次/月';
+        },
       },
       {
         title: '人员培训次数',
         dataIndex: 'PersonnelTrainingNum',
         key: 'PersonnelTrainingNum',
         align: 'center',
+        render: text => {
+          return text + ' 次/月';
+        },
       },
       {
         title: '检查考勤和日志',
         dataIndex: 'CheckAttendanceNum',
         key: 'CheckAttendanceNum',
         align: 'center',
+        render: text => {
+          return text + ' 次/周';
+        },
       },
       {
         title: '操作',
@@ -309,7 +327,7 @@ const SupervisionConfigModal = props => {
                 placeholder="请选择省区"
                 optionFilterProp="children"
                 filterOption={(input, option) =>
-                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
               >
                 {AllProvince.map(item => {
@@ -337,8 +355,11 @@ const SupervisionConfigModal = props => {
               placeholder="请选择经理"
               optionFilterProp="children"
               filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
+              // filterOption={(input, option) =>
+              //   (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              // }
             >
               {AllUser.map(item => {
                 return (
@@ -359,7 +380,7 @@ const SupervisionConfigModal = props => {
               },
             ]}
           >
-            <InputNumber addonAfter="次/月" style={{ width: '100%' }} />
+            <InputNumber min={0} addonAfter="次/月" style={{ width: '100%' }} />
           </FormItem>
           <FormItem
             label={<span>运维人员数量 (次/月)</span>}
@@ -371,7 +392,7 @@ const SupervisionConfigModal = props => {
               },
             ]}
           >
-            <InputNumber addonAfter="次/月" style={{ width: '100%' }} />
+            <InputNumber min={0} addonAfter="次/月" style={{ width: '100%' }} />
           </FormItem>
           <FormItem
             label={<span>回访客户 (次/月)</span>}
@@ -383,7 +404,7 @@ const SupervisionConfigModal = props => {
               },
             ]}
           >
-            <InputNumber addonAfter="次/月" style={{ width: '100%' }} />
+            <InputNumber min={0} addonAfter="次/月" style={{ width: '100%' }} />
           </FormItem>
           <FormItem
             label={<span>办事处检查 (次/月)</span>}
@@ -395,7 +416,7 @@ const SupervisionConfigModal = props => {
               },
             ]}
           >
-            <InputNumber addonAfter="次/月" style={{ width: '100%' }} />
+            <InputNumber min={0} addonAfter="次/月" style={{ width: '100%' }} />
           </FormItem>
           <FormItem
             label={<span>人员培训 (次/月)</span>}
@@ -407,7 +428,7 @@ const SupervisionConfigModal = props => {
               },
             ]}
           >
-            <InputNumber addonAfter="次/月" style={{ width: '100%' }} />
+            <InputNumber min={0} addonAfter="次/月" style={{ width: '100%' }} />
           </FormItem>
           <FormItem
             label={<span>检查考勤和日志 (次/周)</span>}
@@ -419,7 +440,7 @@ const SupervisionConfigModal = props => {
               },
             ]}
           >
-            <InputNumber addonAfter="次/周" style={{ width: '100%' }} />
+            <InputNumber min={0} addonAfter="次/周" style={{ width: '100%' }} />
           </FormItem>
         </Form>
       </Modal>

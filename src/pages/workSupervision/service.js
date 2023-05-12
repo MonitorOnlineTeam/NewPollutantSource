@@ -193,7 +193,7 @@ export async function GetPersonTrainList(params) {
 // 删除人员培训记录
 export async function DeletePersonTrain(params) {
   const result = await post(
-    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/DeletePersonTrain?ID=' + params.ID,
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/DeletePersonTrain?AttachId=' + params.ID,
     {},
   );
   return result;
@@ -301,8 +301,9 @@ export async function GetCheckAttendanceRecordList(params) {
 // 删除 检查考勤和日志记录
 export async function DeleteCheckAttendanceRecord(params) {
   const result = await post(
-    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/DeleteCheckAttendanceRecord',
-    params,
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/DeleteCheckAttendanceRecord?ID=' +
+    params.ID,
+    {},
   );
   return result;
 }

@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2023-05-09 09:05:04
+ * @Last Modified by:   JiaQi
+ * @Last Modified time: 2023-05-09 09:05:04
+ * @Description： 支持其他部门工作统计
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Card, Form, DatePicker, Button, Space, Tag, Radio, Divider } from 'antd';

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 10:49:21
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-08 16:59:25
+ * @Last Modified time: 2023-05-11 11:16:34
  * @Description: 回访客户
  */
 import React, { useState, useEffect } from 'react';
@@ -33,7 +33,7 @@ const HFKH = props => {
 
   useEffect(() => {
     onFinish();
-  }, [type]);
+  }, [type, flag]);
 
   // 获取请求参数
   const getParams = values => {
@@ -173,6 +173,7 @@ const HFKH = props => {
         title: '问题及建议',
         dataIndex: 'ProblemsAndAdvice',
         key: 'ProblemsAndAdvice',
+        ellipsis: true,
       },
       {
         title: '回访人',
@@ -183,7 +184,7 @@ const HFKH = props => {
         title: '回访日期',
         dataIndex: 'ReturnTime',
         key: 'ReturnTime',
-        sorter: (a, b) => a.ReturnTime - b.ReturnTime,
+        sorter: (a, b) => moment(a.ReturnTime).valueOf() - moment(b.ReturnTime).valueOf(),
         render: text => {
           return moment(text).format('YYYY-MM-DD');
         },

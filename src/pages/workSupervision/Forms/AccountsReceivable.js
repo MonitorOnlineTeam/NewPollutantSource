@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-26 09:54:05
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-26 15:28:32
+ * @Last Modified time: 2023-05-12 09:34:11
  * @Description：应收账款催收
  */
 
@@ -154,8 +154,7 @@ const AccountsReceivable = props => {
 
   const setPorjectInfo = record => {
     form.setFieldsValue({
-      ProjectNo: record.ID,
-      ProjectCode: record.ProjectCode,
+      ProjectNo: record.ProjectCode,
       ProjectName: record.ProjectName,
     });
     // setChoiceData(record.ProjectCode);
@@ -166,11 +165,11 @@ const AccountsReceivable = props => {
 
   //
   const renderProjectNoSelect = () => {
-    const ProjectCode = form.getFieldValue('ProjectCode');
+    const ProjectNo = form.getFieldValue('ProjectNo');
     return (
       <Form.Item
         label="项目编号"
-        name="ProjectCode"
+        name="ProjectNo"
         rules={[{ required: true, message: '请输入项目编号!' }]}
       >
         {isProjectSelect ? (
@@ -223,13 +222,20 @@ const AccountsReceivable = props => {
               // onChange={onClearChoice}
               allowClear
               showSearch={false}
-              value={ProjectCode}
+              value={ProjectNo}
               dropdownClassName={styles.projectNumSty}
               placeholder="请选择项目编号"
             ></Select>
           </Popover>
         ) : (
-          <Input placeholder="请输入项目编号" />
+          <Input
+            placeholder="请输入项目编号"
+            onChange={e => {
+              form.setFieldsValue({
+                ProjectNo: e.target.value,
+              });
+            }}
+          />
         )}
       </Form.Item>
     );

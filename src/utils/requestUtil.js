@@ -49,6 +49,7 @@ const errorHandler = error => {
       Cookie.set('currentUser', null);
       Cookie.set('newToken', null);
       router.push('/user/login');
+      console.log('401Data=', data);
       return data;
     }
     if (status === 403) {

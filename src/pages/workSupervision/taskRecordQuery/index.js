@@ -2,12 +2,13 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:53:26
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-08 16:58:28
+ * @Last Modified time: 2023-05-11 16:13:59
  * @Description：
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import styles from '../styles.less';
 import HFKH from './components/HFKH';
 import RYPX from './components/RYPX';
 import OfficeCheck from './components/OfficeCheck';
@@ -47,11 +48,9 @@ const TaskRecordQuery = props => {
     setType(props.location.query.type);
   }, [props.location.query.type]);
 
-  //
-  console.log('props', props);
   return (
     <BreadcrumbWrapper>
-      <Tabs tabPosition="left" style={{ marginTop: 16 }}>
+      <Tabs tabPosition="left" style={{ marginTop: 16 }} className={styles.workSupervision}>
         <TabPane tab="回访客户" key="1">
           <HFKH flag={flag} type={type} />
         </TabPane>

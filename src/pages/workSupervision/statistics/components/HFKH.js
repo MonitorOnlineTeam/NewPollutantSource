@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2023-05-09 09:04:50
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-05-12 09:51:32
+ * @Description： 回访客户统计
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Card, Form, DatePicker, Button, Space, Tag, Radio, Divider } from 'antd';
@@ -88,12 +95,12 @@ const HFKH = props => {
         key: 'User_Name',
       },
       {
-        title: '应回访次数',
+        title: '应回访次数（次/月）',
         dataIndex: 'standNum',
         key: 'standNum',
       },
       {
-        title: '实际回访次数',
+        title: '实际回访次数（次/月）',
         dataIndex: 'overNum',
         key: 'overNum',
       },
@@ -121,7 +128,6 @@ const HFKH = props => {
         title: !type ? '省区' : '大区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        sorter: (a, b) => a.RegionName - b.RegionName,
       },
       {
         title: '经理姓名',

@@ -29,7 +29,7 @@ const TaskAlartManual = props => {
             </Tag>
             ，可手动撤销！
             <Popconfirm
-              title="撤销后次任务单将作废，是否确认撤销?"
+              title="撤销后此任务单将作废，是否确认撤销?"
               onConfirm={() => onDeleteTasks()}
               okText="是"
               cancelText="否"

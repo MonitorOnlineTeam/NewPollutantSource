@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-21 15:55:58
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-06 10:28:41
+ * @Last Modified time: 2023-05-12 10:40:09
  * @Description: 现场工作 - 填写、编辑任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -44,6 +44,7 @@ const Fieldwork = props => {
     console.log('values', values);
     let body = {
       ...values,
+      WorkTime: moment(values.WorkTime).format('YYYY-MM-DD HH:mm:ss'),
       DailyTaskID: taskInfo.ID,
       ID: editData.ID,
     };

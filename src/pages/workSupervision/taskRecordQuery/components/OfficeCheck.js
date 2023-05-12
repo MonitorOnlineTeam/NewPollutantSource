@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 10:49:21
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-08 16:59:46
+ * @Last Modified time: 2023-05-11 11:17:08
  * @Description: 办事处检查
  */
 import React, { useState, useEffect } from 'react';
@@ -33,7 +33,7 @@ const OfficeCheck = props => {
 
   useEffect(() => {
     onFinish();
-  }, [type]);
+  }, [type, flag]);
 
   // 获取请求参数
   const getParams = values => {
@@ -220,6 +220,7 @@ const OfficeCheck = props => {
         dataIndex: 'Remark',
         key: 'Remark',
         width: 200,
+        ellipsis: true,
       },
     ];
     if (flag === 'oneself') {

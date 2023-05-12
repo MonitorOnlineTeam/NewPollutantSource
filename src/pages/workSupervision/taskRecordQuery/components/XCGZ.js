@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:37:57
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-08 16:59:55
+ * @Last Modified time: 2023-05-12 09:19:58
  * @Description: 现场工作
  */
 
@@ -33,12 +33,12 @@ const XCGZ = props => {
 
   useEffect(() => {
     onFinish();
-  }, [type]);
+  }, [type, flag]);
 
   // 获取请求参数
   const getParams = values => {
     const beginTime = moment(values.date[0]).format('YYYY-MM-DD HH:mm:ss');
-    const endTime = moment(values.date[1]).format('YYYY-MM-DD HH:mm:ss');
+    const endTime = moment(values.date[1]).format('YYYY-MM-DD 23:59:59');
 
     return {
       beginTime: beginTime,
@@ -218,7 +218,7 @@ const XCGZ = props => {
         layout="inline"
         style={{ padding: '10px 0 20px' }}
         initialValues={{
-          date: [moment().startOf('month'), moment()],
+          date: [moment().subtract(1, 'month').startOf('day'), moment()],
         }}
         onFinish={onFinish}
         autoComplete="off"

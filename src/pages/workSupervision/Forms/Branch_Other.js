@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:54:42
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-26 15:27:58
+ * @Last Modified time: 2023-05-12 10:41:06
  * @Description：支持其他部门工作
  */
 import React, { useState, useEffect } from 'react';
@@ -43,6 +43,7 @@ const Branch_Other = props => {
     const values = await form.validateFields();
     let body = {
       ...values,
+      WorkTime: moment(values.WorkTime).format('YYYY-MM-DD HH:mm:ss'),
       DailyTaskID: taskInfo.ID,
       ID: editData.ID,
     };

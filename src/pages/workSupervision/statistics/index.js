@@ -2,12 +2,13 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:53:26
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-08 17:01:39
+ * @Last Modified time: 2023-05-11 16:13:33
  * @Description：
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import styles from '../styles.less';
 import XCJC from './components/XCJC';
 import HFKH from './components/HFKH';
 import RYPX from './components/RYPX';
@@ -42,7 +43,7 @@ const Statistics = props => {
   //
   return (
     <BreadcrumbWrapper>
-      <Tabs tabPosition="left" style={{ marginTop: 16 }}>
+      <Tabs tabPosition="left" style={{ marginTop: 16 }} className={styles.workSupervision}>
         <TabPane tab="现场检查" key="0">
           <XCJC type={type} />
         </TabPane>
