@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:54:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-26 15:27:38
+ * @Last Modified time: 2023-05-12 10:41:00
  * @Description：部门内其他工作事项
  */
 import React, { useState, useEffect } from 'react';
@@ -44,6 +44,7 @@ const Branch_Inside = props => {
     console.log('values', values);
     let body = {
       ...values,
+      WorkTime: moment(values.WorkTime).format('YYYY-MM-DD HH:mm:ss'),
       DailyTaskID: taskInfo.ID,
       ID: editData.ID,
     };

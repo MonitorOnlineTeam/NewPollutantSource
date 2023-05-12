@@ -108,7 +108,7 @@ const Workbench = props => {
   // 结束任务
   const endTask = todoItem => {
     if (todoItem.qualify !== 1) {
-      message.error('完成任务后，才能结束此关闭！');
+      message.error('完成任务后，才能结束此任务！');
       return;
     }
     props.dispatch({
