@@ -1,15 +1,14 @@
-import React, { PureComponent } from 'react'
-import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Row, Col, Button, Card, Tooltip, Form, Select, Modal, DatePicker, Spin } from 'antd'
+import React, { PureComponent } from 'react';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import { Row, Col, Button, Card, Tooltip, Form, Select, Modal, DatePicker, Spin } from 'antd';
 import { DownloadOutlined, FileZipTwoTone, FolderViewOutlined } from '@ant-design/icons';
-import { connect } from 'dva'
-import moment from 'moment'
+import { connect } from 'dva';
+import moment from 'moment';
 import FileViewer from 'react-file-viewer';
 import { CustomErrorComponent } from 'custom-error';
 
 const { Meta } = Card;
 const { Option } = Select;
-
 
 @connect(({ loading, CO2Material, common }) => ({
   loading: loading.effects['CO2Material/getCO2ReportList'],
@@ -23,48 +22,46 @@ class index extends PureComponent {
     this.state = {
       isModalVisible: false,
       fileViewVisible: false,
-      fileInfo: {}
+      fileInfo: {},
     };
   }
 
   componentDidMount() {
     this.props.dispatch({
       type: 'common/getEntList',
-      payload: {}
-    })
+      payload: {},
+    });
 
     this.props.dispatch({
       type: 'CO2Material/getCO2ReportList',
-      payload: {}
-    })
+      payload: {},
+    });
   }
-
 
   handleCancel = () => {
     this.setState({ isModalVisible: false, fileViewVisible: false });
-  }
+  };
 
-  onFileView = (fileInfo) => {
+  onFileView = fileInfo => {
     // let suffix = fileInfo.FileName.split(".")[1];
-    this.setState({ fileViewVisible: true, fileInfo: fileInfo })
-  }
+    this.setState({ fileViewVisible: true, fileInfo: fileInfo });
+  };
 
   // 生成报告
   onModalOk = () => {
-    this.formRef.current.validateFields().then((values) => {
+    this.formRef.current.validateFields().then(values => {
       this.props.dispatch({
         type: 'CO2Material/createReportCO2',
         payload: {
           EntCode: values.EntCode,
-          YearTime: values.YearTime.format('YYYY')
+          YearTime: values.YearTime.format('YYYY'),
         },
         callback: () => {
           this.setState({ isModalVisible: false });
-        }
-      })
-    })
-
-  }
+        },
+      });
+    });
+  };
 
   render() {
     const { isModalVisible, fileViewVisible, fileInfo } = this.state;
@@ -72,21 +69,27 @@ class index extends PureComponent {
     return (
       <BreadcrumbWrapper>
         <Row style={{ background: '#f0f2f5' }}>
-          <Button type='primary' onClick={() => this.setState({ isModalVisible: true })}>生成排放报告</Button>
+          <Button type="primary" onClick={() => this.setState({ isModalVisible: true })}>
+            生成排放报告
+          </Button>
         </Row>
         <div style={{ background: '#f0f2f5', height: 'calc(100vh - 162px)', paddingTop: 20 }}>
           <Spin spinning={loading}>
             <Row gutter={16} style={{ width: '100%' }}>
-              {
-                CO2ReportList.map(item => {
-                  return <Col span={8}>
+              {CO2ReportList.map(item => {
+                return (
+                  <Col span={8}>
                     <Card
                       style={{ border: '1px solid #f0f0f0' }}
                       actions={[
                         <Tooltip title="下载">
-                          <a href={'/publish'+item.FilePath} download onClick={(e) => {
-                            e.stopPropagation()
-                          }}>
+                          <a
+                            href={item.FilePath}
+                            download
+                            onClick={e => {
+                              e.stopPropagation();
+                            }}
+                          >
                             <DownloadOutlined style={{ fontSize: 20 }} />
                           </a>
                         </Tooltip>,
@@ -97,22 +100,29 @@ class index extends PureComponent {
                     >
                       <Meta
                         avatar={<FileZipTwoTone style={{ fontSize: 36, marginBottom: 16 }} />}
-                        title={<div style={{ lineHeight: '40px' }}>
-                          <Tooltip title={item.FileName}>
-                            <p className="textOverflow">{item.FileName}</p>
-                          </Tooltip>
-                        </div>}
-                      // description="This is the description"
+                        title={
+                          <div style={{ lineHeight: '40px' }}>
+                            <Tooltip title={item.FileName}>
+                              <p className="textOverflow">{item.FileName}</p>
+                            </Tooltip>
+                          </div>
+                        }
+                        // description="This is the description"
                       />
                     </Card>
                   </Col>
-                })
-              }
-
+                );
+              })}
             </Row>
           </Spin>
         </div>
-        <Modal title="生成温室气体排放报告" visible={isModalVisible} confirmLoading={loading} onOk={this.onModalOk} onCancel={this.handleCancel}>
+        <Modal
+          title="生成温室气体排放报告"
+          visible={isModalVisible}
+          confirmLoading={loading}
+          onOk={this.onModalOk}
+          onCancel={this.handleCancel}
+        >
           <Form
             ref={this.formRef}
             initialValues={{
@@ -132,30 +142,32 @@ class index extends PureComponent {
               rules={[{ required: true, message: '请选择企业!' }]}
             >
               <Select placeholder="请选择企业" style={{ width: '300px' }}>
-                {
-                  entList.map(item => {
-                    return <Option value={item.EntCode} key={item.EntCode}>{item.EntName}</Option>
-                  })
-                }
+                {entList.map(item => {
+                  return (
+                    <Option value={item.EntCode} key={item.EntCode}>
+                      {item.EntName}
+                    </Option>
+                  );
+                })}
               </Select>
             </Form.Item>
           </Form>
         </Modal>
         <Modal
-          width={"70vw"}
+          width={'70vw'}
           destroyOnClose
-          bodyStyle={{ height: "72vh" }}
+          bodyStyle={{ height: '72vh' }}
           footer={false}
           visible={fileViewVisible}
           onCancel={this.handleCancel}
         >
           <FileViewer
-            fileType={fileInfo.FileName ? fileInfo.FileName.split(".")[1] : ''}
+            fileType={fileInfo.FileName ? fileInfo.FileName.split('.')[1] : ''}
             filePath={fileInfo.FilePath}
             // errorComponent={message.error("文件打开失败")}
             errorComponent={CustomErrorComponent}
             onError={() => {
-              message.error("文件打开失败")
+              message.error('文件打开失败');
             }}
           />
         </Modal>

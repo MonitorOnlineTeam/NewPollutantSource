@@ -1,22 +1,14 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import {
-  Card,
-  Row,
-  Select,
-  Tabs,
-  Button,
-  message,
-  DatePicker,
-} from 'antd';
+import { Card, Row, Select, Tabs, Button, message, DatePicker } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { connect } from 'dva'
-import SdlTable from '@/components/SdlTable'
-import moment from 'moment'
-import IndustryTree from '@/components/IndustryTree'
-import RegionList from '@/components/RegionList'
+import { connect } from 'dva';
+import SdlTable from '@/components/SdlTable';
+import moment from 'moment';
+import IndustryTree from '@/components/IndustryTree';
+import RegionList from '@/components/RegionList';
 import SelectPollutantType from '@/components/SelectPollutantType';
 
 const { RangePicker } = DatePicker;
@@ -24,13 +16,12 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-
 const ImportantTypeList = [
-  { text: "污染处理厂", value: "1" },
-  { text: "水重点", value: "2" },
-  { text: "气重点", value: "3" },
-  { text: "垃圾焚烧", value: "4" },
-]
+  { text: '污染处理厂', value: '1' },
+  { text: '水重点', value: '2' },
+  { text: '气重点', value: '3' },
+  { text: '垃圾焚烧', value: '4' },
+];
 
 @connect(({ loading, autoForm, emissionsStatistics, common }) => ({
   regionList: autoForm.regionList,
@@ -50,25 +41,24 @@ const ImportantTypeList = [
 @Form.create()
 class Chain extends PureComponent {
   state = {
-    DataType: configInfo.IsSingleEnterprise ? "ent" : 'region',
+    DataType: configInfo.IsSingleEnterprise ? 'ent' : 'region',
     regionFlag: true,
     entFlag: false,
-    pointFlag: false
-  }
+    pointFlag: false,
+  };
   _SELF_ = {
     formLayout: {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
     },
-  }
+  };
 
   componentDidMount() {
     // 获取行政区列表
     this.props.dispatch({
       type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2', }
+      payload: { RegionCode: '', PointMark: '2' },
     });
-
 
     // this.getTableData("region");
     // this.getTableData("ent");
@@ -82,13 +72,13 @@ class Chain extends PureComponent {
       type: 'common/getAllPollutantCode',
       payload: {
         pollutantTypes: values.PollutantType,
-        dataType: 'dis'
-      }
-    })
-  }
+        dataType: 'dis',
+      },
+    });
+  };
 
   // 获取table数据
-  getTableData = (DataType) => {
+  getTableData = DataType => {
     let values = this.props.form.getFieldsValue();
     // if (values.time2 && values.time1) {
     //   if (values.time2[0] <= values.time1[1]) {
@@ -99,20 +89,23 @@ class Chain extends PureComponent {
     //   message.error("请将时间填写完整");
     //   return;
     // }
-    console.log("values=", values)
+    console.log('values=', values);
     this.props.dispatch({
-      type: "emissionsStatistics/getEmissionsListForChain",
+      type: 'emissionsStatistics/getEmissionsListForChain',
       payload: {
         AttentionCode: values.AttentionCode,
-        TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
+        TradeCode:
+          values.TradeCode && values.TradeCode.length
+            ? values.TradeCode[values.TradeCode.length - 1]
+            : undefined,
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
         PollutantType: values.PollutantType,
         beginTime: moment(values.time1).format('YYYY-MM-01 00:00:00'),
         DataType: DataType,
-      }
-    })
-  }
+      },
+    });
+  };
 
   // 导出
   onExport = () => {
@@ -127,30 +120,49 @@ class Chain extends PureComponent {
     //   return;
     // }
     this.props.dispatch({
-      type: "emissionsStatistics/exportContrastTableDataByType",
+      type: 'emissionsStatistics/exportContrastTableDataByType',
       payload: {
         AttentionCode: values.AttentionCode,
-        TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
+        TradeCode:
+          values.TradeCode && values.TradeCode.length
+            ? values.TradeCode[values.TradeCode.length - 1]
+            : undefined,
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
         PollutantType: values.PollutantType,
         beginTime: moment(values.time1).format('YYYY-MM-01 00:00:00'),
         DataType: this.state.DataType,
-      }
-    })
-  }
+        ExportType: 2,
+      },
+    });
+  };
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, pollutantCodeList, regionChainLoading, entChainLoading, pointChainLoading, regionChainExportLoading, entChainExportLoading, pointChainExportLoading, regionList, attentionList, regionChainTableDataSource, entChainTableDataSource, pointChainTableDataSource } = this.props;
+    const {
+      form: { getFieldDecorator, getFieldValue },
+      pollutantCodeList,
+      regionChainLoading,
+      entChainLoading,
+      pointChainLoading,
+      regionChainExportLoading,
+      entChainExportLoading,
+      pointChainExportLoading,
+      regionList,
+      attentionList,
+      regionChainTableDataSource,
+      entChainTableDataSource,
+      pointChainTableDataSource,
+    } = this.props;
     const { DataType, regionFlag, entFlag, pointFlag } = this.state;
     let loading = regionChainLoading || entChainLoading || pointChainLoading;
-    let exportLoading = regionChainExportLoading || entChainExportLoading || pointChainExportLoading;
+    let exportLoading =
+      regionChainExportLoading || entChainExportLoading || pointChainExportLoading;
     let _regionList = regionList.length ? regionList[0].children : [];
     const _style = {
       width: 60,
       textAlign: 'right',
       display: 'inline-block',
-    }
+    };
     let PFL = pollutantCodeList.map(item => {
       return {
         title: item.name,
@@ -176,9 +188,9 @@ class Chain extends PureComponent {
             width: 120,
             align: 'center',
           },
-        ]
-      }
-    })
+        ],
+      };
+    });
 
     let RegionColumns = [
       {
@@ -228,7 +240,7 @@ class Chain extends PureComponent {
         width: 60,
         render: (text, record, index) => {
           return index + 1;
-        }
+        },
       },
       {
         title: '企业',
@@ -242,8 +254,8 @@ class Chain extends PureComponent {
         key: 'TradeName',
         width: 180,
         render: (text, record) => {
-          return text ? text : "-"
-        }
+          return text ? text : '-';
+        },
       },
       ...PFL,
       {
@@ -260,7 +272,7 @@ class Chain extends PureComponent {
         width: 120,
         align: 'center',
       },
-    ]
+    ];
     let PointColumns = [
       {
         title: '行政区',
@@ -275,7 +287,7 @@ class Chain extends PureComponent {
         width: 60,
         render: (text, record, index) => {
           return index + 1;
-        }
+        },
       },
       {
         title: '企业',
@@ -289,8 +301,8 @@ class Chain extends PureComponent {
         key: 'TradeName',
         width: 180,
         render: (text, record) => {
-          return text ? text : "-"
-        }
+          return text ? text : '-';
+        },
         // width: 200,
       },
       {
@@ -314,7 +326,7 @@ class Chain extends PureComponent {
         width: 180,
         align: 'center',
       },
-    ]
+    ];
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -322,32 +334,28 @@ class Chain extends PureComponent {
             <Row>
               <FormItem label={<span style={{ ..._style }}>时间</span>}>
                 {getFieldDecorator('time1', {
-                  initialValue: moment()
-                })(
-                  <DatePicker picker="month" />
-                )}
+                  initialValue: moment(),
+                })(<DatePicker picker="month" />)}
               </FormItem>
               <FormItem label={<span style={{ ..._style, width: 74 }}>污染物类型</span>}>
-                {getFieldDecorator('PollutantType', {
-                })(
+                {getFieldDecorator('PollutantType', {})(
                   <SelectPollutantType
                     style={{ width: 160 }}
                     showDefaultValue
                     placeholder="请选择污染物类型"
-                    initCallback={(value) => {
-                      this.props.form.setFieldsValue({ 'PollutantType': value })
+                    initCallback={value => {
+                      this.props.form.setFieldsValue({ PollutantType: value });
                       this.getAllPollutantCode();
                       this.getTableData(DataType);
                       // this.getTableData("ent");
                       // this.getTableData("point");
                     }}
-                  />
+                  />,
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>行政区</span>}>
-                {getFieldDecorator('RegionCode', {
-                })(
-                  <RegionList RegionCode={this.props.form.getFieldValue('RegionCode')} />
+                {getFieldDecorator('RegionCode', {})(
+                  <RegionList RegionCode={this.props.form.getFieldValue('RegionCode')} />,
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>行业</span>}>
@@ -356,27 +364,32 @@ class Chain extends PureComponent {
                 })(
                   <IndustryTree
                     style={{ width: 200 }}
-                    textField={"dbo.T_Cod_IndustryType.IndustryTypeName"}
-                    valueField={"dbo.T_Cod_IndustryType.IndustryTypeCode"}
-                    configId={"IndustryType"}
-                  />
+                    textField={'dbo.T_Cod_IndustryType.IndustryTypeName'}
+                    valueField={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
+                    configId={'IndustryType'}
+                  />,
                 )}
               </FormItem>
-              <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={() => {
-                  // let values = this.props.form.getFieldsValue();
-                  // if (values.time2.length && values.time1.length) {
-                  //   if (values.time2[0] <= values.time1[1]) {
-                  //     message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
-                  //     return;
-                  //   }
-                  // } else {
-                  //   message.error("请将时间填写完整");
-                  //   return;
-                  // }
-                  this.getAllPollutantCode();
-                  this.getTableData(DataType);
-                }}>
+              <div style={{ display: 'inline-block', lineHeight: '40px' }}>
+                <Button
+                  loading={loading}
+                  type="primary"
+                  style={{ marginLeft: 10 }}
+                  onClick={() => {
+                    // let values = this.props.form.getFieldsValue();
+                    // if (values.time2.length && values.time1.length) {
+                    //   if (values.time2[0] <= values.time1[1]) {
+                    //     message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
+                    //     return;
+                    //   }
+                    // } else {
+                    //   message.error("请将时间填写完整");
+                    //   return;
+                    // }
+                    this.getAllPollutantCode();
+                    this.getTableData(DataType);
+                  }}
+                >
                   查询
                 </Button>
                 <Button
@@ -394,7 +407,7 @@ class Chain extends PureComponent {
                     //   message.error("请将时间填写完整");
                     //   return;
                     // }
-                    this.onExport()
+                    this.onExport();
                   }}
                 >
                   导出
@@ -403,23 +416,47 @@ class Chain extends PureComponent {
             </Row>
           </Form>
           {/* <Divider /> */}
-          <Tabs defaultActiveKey="region" onChange={(key) => {
-            if (!regionFlag || !entFlag || !pointFlag) {
-              this.getTableData(key);
-            }
-            this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
-          }}>
-            {
-              !configInfo.IsSingleEnterprise &&
+          <Tabs
+            defaultActiveKey="region"
+            onChange={key => {
+              if (!regionFlag || !entFlag || !pointFlag) {
+                this.getTableData(key);
+              }
+              this.setState({
+                DataType: key,
+                [key + 'Flag']: true,
+                renderNum: Math.ceil(Math.random() * 10),
+              });
+            }}
+          >
+            {!configInfo.IsSingleEnterprise && (
               <TabPane tab="辖区排放量" key="region">
-                <SdlTable loading={regionChainLoading} pagination={false} align="center" dataSource={regionChainTableDataSource} columns={RegionColumns} />
+                <SdlTable
+                  loading={regionChainLoading}
+                  pagination={false}
+                  align="center"
+                  dataSource={regionChainTableDataSource}
+                  columns={RegionColumns}
+                />
               </TabPane>
-            }
+            )}
             <TabPane tab="企业排放量" key="ent">
-              <SdlTable loading={entChainLoading} pagination={false} align="center" dataSource={entChainTableDataSource} columns={EntColumns} />
+              <SdlTable
+                loading={entChainLoading}
+                pagination={false}
+                align="center"
+                dataSource={entChainTableDataSource}
+                columns={EntColumns}
+              />
             </TabPane>
             <TabPane tab="监测点排放量" key="point">
-              <SdlTable loading={pointChainLoading} pagination={false} align="center" dataSource={pointChainTableDataSource} columns={PointColumns} />
+              <SdlTable
+                loading={pointChainLoading}
+                pagination={false}
+                align="center"
+                dataSource={pointChainTableDataSource}
+                columns={PointColumns}
+              />
             </TabPane>
           </Tabs>
         </Card>

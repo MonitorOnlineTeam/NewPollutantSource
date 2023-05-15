@@ -75,7 +75,7 @@ class Index extends Component {
     this.props.dispatch({
       type: "qcaCheck/getPollutantListByDgimn",
       payload: {
-        DGIMNs: dgimn,
+        DGIMN: dgimn,
       },
       callback: (data) => {
         console.log('adssadasd=', data);

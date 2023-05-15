@@ -2,11 +2,11 @@
  * @Author: Jiaqi
  * @Date: 2020-02-18 15:16:30
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-03-10 09:59:19
+ * @Last Modified time: 2023-04-06 16:53:03
  * @desc
  */
-import React, { PureComponent } from 'react'
-import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
+import React, { PureComponent } from 'react';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -29,9 +29,8 @@ import style from './index.less';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
-import RegionList from '@/components/RegionList'
+import RegionList from '@/components/RegionList';
 import { getDataTruseMsg, getDataTruseItemMsg } from '@/utils/utils';
-
 
 const FormItem = Form.Item;
 const { MonthPicker } = DatePicker;
@@ -40,7 +39,7 @@ const pageUrl = {
   getRegions: 'autoForm/getRegions',
   GetEntByRegionAndAtt: 'wasteWaterReportModel/GetEntByRegionAndAtt',
   GetPointByEntCode: 'wasteWaterReportModel/GetPointByEntCode',
-}
+};
 @Form.create()
 @connect(({ loading, report, enterpriseMonitoringModel, autoForm, wasteWaterReportModel }) => ({
   smokeReportFrom: report.smokeReportFrom,
@@ -67,7 +66,7 @@ class SmokeReportPage extends PureComponent {
       attentionValue: '',
       outletValue: '',
       entValue: undefined,
-      pointValue: undefined
+      pointValue: undefined,
     };
     this._SELF_ = {
       pollutantType: 2,
@@ -77,7 +76,7 @@ class SmokeReportPage extends PureComponent {
         wrapperCol: { span: 17 },
       },
     };
-    this.switchInfo(props.match.params.reportType)
+    this.switchInfo(props.match.params.reportType);
   }
 
   componentDidMount() {
@@ -88,7 +87,7 @@ class SmokeReportPage extends PureComponent {
     let beginTime;
     let endTime;
     let strMsg;
-    console.log('reportType=', reportType)
+    console.log('reportType=', reportType);
     switch (reportType) {
       case 'day':
         this.title = '小时平均日报表';
@@ -98,20 +97,27 @@ class SmokeReportPage extends PureComponent {
         this.unit1 = 'kg/h';
         this.unit2 = 'm³/h';
         beginTime = moment().format('YYYY-MM-DD 01:00:00');
-        endTime = moment().add(1, 'day').format('YYYY-MM-DD 00:00:00');
+        endTime = moment()
+          .add(1, 'day')
+          .format('YYYY-MM-DD 00:00:00');
         reportType = 'dayanddate';
-        strMsg = '排放量为小时均值*小时流量'
+        // strMsg = '排放量为小时均值*小时流量';
+        strMsg = '排放量为小时cou值或小时均值*小时流量';
         break;
       case 'month':
         this.title = '日平均月报表';
-        this.format = 'YYYY-MM'
+        this.format = 'YYYY-MM';
         // this.timeEle = <MonthPicker allowClear={false} style={{ width: '100%' }} />
         this.tableFooter = '';
         this.unit1 = 't/d';
         this.unit2 = '×10⁴m³/h';
         beginTime = moment().format('YYYY-MM-01 00:00:00');
-        endTime = moment(moment().format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
-        strMsg = '排放量为日均值*日流量'
+        endTime = moment(moment().format('YYYY-MM-01 00:00:00'))
+          .add(1, 'month')
+          .add(-1, 'second')
+          .format('YYYY-MM-DD 23:59:59');
+        // strMsg = '排放量为日均值*日流量';
+        strMsg = '排放量为日cou值或日均值*日流量';
         break;
       case 'quarter':
         this.title = '月平均季报表';
@@ -121,22 +127,22 @@ class SmokeReportPage extends PureComponent {
         const month = moment().format('MM');
         if (month >= 1 && month <= 3) {
           beginTime = moment().format('YYYY-01-01 00:00:00');
-          endTime = moment().format('YYYY-03-31 23:59:59')
+          endTime = moment().format('YYYY-03-31 23:59:59');
         } else if (month >= 4 && month <= 6) {
           beginTime = moment().format('YYYY-04-01 00:00:00');
-          endTime = moment().format('YYYY-06-30 23:59:59')
+          endTime = moment().format('YYYY-06-30 23:59:59');
         } else if (month >= 7 && month <= 9) {
           beginTime = moment().format('YYYY-07-01 00:00:00');
-          endTime = moment().format('YYYY-09-30 23:59:59')
+          endTime = moment().format('YYYY-09-30 23:59:59');
         } else if (month >= 10 && month <= 12) {
           beginTime = moment().format('YYYY-10-01 00:00:00');
-          endTime = moment().format('YYYY-12-31 23:59:59')
+          endTime = moment().format('YYYY-12-31 23:59:59');
         }
         strMsg = '排放量为日均值*日流量';
         break;
       case 'year':
         this.title = '月平均年报表';
-        this.format = 'YYYY-MM'
+        this.format = 'YYYY-MM';
         // this.timeEle = <YearPicker
         //   allowClear={false}
         //   style={{ width: '100%' }}
@@ -145,7 +151,10 @@ class SmokeReportPage extends PureComponent {
         //   }}
         // />
         beginTime = moment().format('YYYY-01-01 00:00:00');
-        endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
+        endTime = moment(moment().format('YYYY-01-01 00:00:00'))
+          .add(1, 'year')
+          .add(-1, 'second')
+          .format('YYYY-MM-DD 23:59:59');
         this.tableFooter = '';
         strMsg = '排放量为日均值*日流量';
         break;
@@ -157,21 +166,28 @@ class SmokeReportPage extends PureComponent {
           beginTime,
           endTime,
         },
-        msg: strMsg
+        msg: strMsg,
       },
-    })
-    this.props.form.setFieldsValue({ "time": moment() })
-    this.timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />
-  }
+    });
+    this.props.form.setFieldsValue({ time: moment() });
+    this.timeEle = (
+      <DatePickerTool
+        allowClear={false}
+        picker={reportType}
+        style={{ width: '100%' }}
+        callback={this.dateOnchange}
+      />
+    );
+  };
 
   // 获取表头
   getTableColumns = () => {
     this.props.dispatch({
       type: 'report/getReportColumns',
       payload: {
-        DGIMN: this.state.pointValue
+        DGIMN: this.state.pointValue,
       },
-      callback: (res) => {
+      callback: res => {
         let columns = [];
         res.map(item => {
           if (item.ParenntColumnCode === 'Time') {
@@ -181,17 +197,21 @@ class SmokeReportPage extends PureComponent {
               width: 240,
               align: 'center',
               render: (value, row, index) => {
-                return <span>
-                  {getDataTruseMsg(row)}
-                  {value}
-                </span>
+                return (
+                  <span>
+                    {getDataTruseMsg(row)}
+                    {value}
+                  </span>
+                );
               },
-            })
+            });
             return;
           }
 
           if (item.ChildColumnHeaders) {
             let children = item.ChildColumnHeaders.map(itm => {
+              // let dataIndex =
+              //   itm[itm.ChildColumnCode + '-revisionDischargeVolume'] || itm.ChildColumnCode;
               return {
                 title: itm.ChildColumnName,
                 dataIndex: itm.ChildColumnCode,
@@ -199,29 +219,29 @@ class SmokeReportPage extends PureComponent {
                 align: 'center',
                 render: (value, row, index) => {
                   // let value = row[itm.ChildColumnCode];
-                  return getDataTruseItemMsg(row, itm.ChildColumnCode + '-revisionTime', value);
+                  return getDataTruseItemMsg(row, itm.ChildColumnCode, value);
                 },
-              }
-            })
+              };
+            });
             columns.push({
               title: item.ParenntColumnName,
-              children: children
-            })
+              children: children,
+            });
           } else {
             columns.push({
               title: item.ParenntColumnName,
               dataIndex: item.ParenntColumnCode,
               // width: 200,
               align: 'center',
-            })
+            });
           }
-        })
+        });
         this.setState({
-          columns: columns
-        })
-      }
-    })
-  }
+          columns: columns,
+        });
+      },
+    });
+  };
 
   dateOnchange = (dates, beginTime, endTime) => {
     this.props.form.setFieldsValue({ time: dates });
@@ -233,17 +253,16 @@ class SmokeReportPage extends PureComponent {
           endTime,
         },
       },
-    })
-  }
+    });
+  };
   initData = () => {
     //获取行政区列表
     this.props.dispatch({
       type: pageUrl.getRegions,
       payload: {
         PointMark: '2',
-        RegionCode: ''
+        RegionCode: '',
       },
-
     });
     //获取关注度列表
     this.props.dispatch({
@@ -254,11 +273,11 @@ class SmokeReportPage extends PureComponent {
       //获取企业列表
       type: pageUrl.GetEntByRegionAndAtt,
       payload: { RegionCode: '', Attention: '', PollutantTypeCode: '2' },
-      callback: (res) => {
+      callback: res => {
         if (res.length) {
           this.onChangeEntSelect(res[0].EntCode);
         }
-      }
+      },
     });
   };
 
@@ -291,7 +310,7 @@ class SmokeReportPage extends PureComponent {
       });
       return selectList;
     }
-  }
+  };
   //获取企业列表
   entList = () => {
     const { EntByRegionAndAttList } = this.props;
@@ -315,25 +334,25 @@ class SmokeReportPage extends PureComponent {
     if (PointByEntCodeList.length > 0) {
       PointByEntCodeList.map(item => {
         selectList.push(
-          <Option key={item.DGIMN} value={item.DGIMN} >
+          <Option key={item.DGIMN} value={item.DGIMN}>
             {item.PointName}
           </Option>,
         );
       });
       return selectList;
     }
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname) {
       this.switchInfo(nextProps.match.params.reportType);
-      console.log("props=", this.props)
+      console.log('props=', this.props);
       this.props.dispatch({
         type: 'report/updateState',
         payload: {
           smokeReportData: [],
         },
-      })
+      });
       // this.getSmokeReportData(nextProps.match.params.reportType);
     }
     if (this.props.smokeReportData !== nextProps.smokeReportData) {
@@ -344,14 +363,13 @@ class SmokeReportPage extends PureComponent {
         //   quarter: dayColumns,
         // },
         pointName: nextProps.pointName,
-      })
+      });
     }
   }
 
-
   // 导出报表
   exportReport = () => {
-    const { time, pointValue } = this.state
+    const { time, pointValue } = this.state;
     this.props.dispatch({
       type: 'report/exportSmokeReport',
       payload: {
@@ -360,13 +378,13 @@ class SmokeReportPage extends PureComponent {
         dataType: this.props.match.params.reportType,
         // pointName: this.props.pointName,
       },
-    })
-  }
+    });
+  };
   //查询数据
-  getSmokeReportData = (dataType) => {
-    const { time, pointValue } = this.state
+  getSmokeReportData = dataType => {
+    const { time, pointValue } = this.state;
     if (pointValue == '' || pointValue == undefined) {
-      return message.error('请选择监测点')
+      return message.error('请选择监测点');
     }
     this.props.dispatch({
       type: 'report/getSmokeReportData',
@@ -375,9 +393,9 @@ class SmokeReportPage extends PureComponent {
         dataType: dataType || this.props.match.params.reportType,
         time: moment(this.props.form.getFieldValue('time')).format('YYYY-MM-DD HH:mm:ss'),
         // ...payload,
-      }
-    })
-  }
+      },
+    });
+  };
   // //
   // getSmokeReportData = (payload = {}) => {
   //   this.props.dispatch({
@@ -391,31 +409,39 @@ class SmokeReportPage extends PureComponent {
   //   })
   // }
 
-
   // 企业列表改变事件
-  onChangeEntSelect = (value) => {
+  onChangeEntSelect = value => {
     //获取企业列表
     this.props.dispatch({
       type: pageUrl.GetPointByEntCode,
       payload: {
         EntCode: value,
-        PollutantTypeCode: '2'
+        PollutantTypeCode: '2',
       },
     });
     this.setState({
       entValue: value,
-      pointValue: undefined
-    })
-  }
+      pointValue: undefined,
+    });
+  };
 
   // 搜索
-  filter = (inputValue, path) => path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1)
+  filter = (inputValue, path) =>
+    path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
 
   render() {
     const { formLayout } = this._SELF_;
-    const { form: { getFieldDecorator }, smokeReportFrom, entAndPointList, defaultEntAndPoint, smokeReportData, loading, exportLoading } = this.props;
+    const {
+      form: { getFieldDecorator },
+      smokeReportFrom,
+      entAndPointList,
+      defaultEntAndPoint,
+      smokeReportData,
+      loading,
+      exportLoading,
+    } = this.props;
     const { dataSource, columns } = this.state;
-    const { reportType } = this.props.match.params
+    const { reportType } = this.props.match.params;
     // const _columns = (reportType === 'day' || reportType === 'month') ? columns.day : columns.quarter
 
     // console.log("columns-", _columns)
@@ -463,46 +489,48 @@ class SmokeReportPage extends PureComponent {
               <RegionList
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 // RegionCode={this.props.form.getFieldValue('RegionCode')}
-                changeRegion={(value) => {
+                changeRegion={value => {
                   //获取关注度列表
                   this.props.dispatch({
                     type: pageUrl.GetEntByRegionAndAtt,
                     payload: {
                       RegionCode: value,
                       Attention: this.state.attentionValue,
-                      PollutantTypeCode: '2'
+                      PollutantTypeCode: '2',
                     },
                   });
                   this.setState({
                     regionValue: value,
                     entValue: undefined,
-                    pointValue: undefined
-                  })
+                    pointValue: undefined,
+                  });
                 }}
               />
-              <label style={{ lineHeight: '32px' }}>关注程度:</label><Select
+              <label style={{ lineHeight: '32px' }}>关注程度:</label>
+              <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="关注度"
                 maxTagCount={2}
                 maxTagTextLength={5}
                 maxTagPlaceholder="..."
-                onChange={(value) => {
+                onChange={value => {
                   //获取企业列表
                   this.props.dispatch({
                     type: pageUrl.GetEntByRegionAndAtt,
                     payload: {
                       RegionCode: this.state.regionValue,
                       Attention: value,
-                      PollutantTypeCode: '2'
+                      PollutantTypeCode: '2',
                     },
                   });
                   this.setState({
                     attentionValue: value,
                     entValue: undefined,
-                    pointValue: undefined
-                  })
-                }}>
+                    pointValue: undefined,
+                  });
+                }}
+              >
                 {this.attention()}
               </Select>
               <label style={{ lineHeight: '32px' }}>企业列表:</label>
@@ -518,14 +546,16 @@ class SmokeReportPage extends PureComponent {
                 maxTagTextLength={5}
                 value={this.state.entValue}
                 maxTagPlaceholder="..."
-                onChange={(value) => {
-                  this.onChangeEntSelect(value)
-                }}>
+                onChange={value => {
+                  this.onChangeEntSelect(value);
+                }}
+              >
                 {this.entList()}
               </Select>
             </Row>
             <Row>
-              <label style={{ lineHeight: '32px' }}>监测点:</label><Select
+              <label style={{ lineHeight: '32px' }}>监测点:</label>
+              <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="监测点列表"
@@ -533,13 +563,17 @@ class SmokeReportPage extends PureComponent {
                 maxTagTextLength={5}
                 value={this.state.pointValue}
                 maxTagPlaceholder="..."
-                onChange={(value) => {
-                  this.setState({
-                    pointValue: value,
-                  }, () => {
-                    this.getTableColumns()
-                  })
-                }}>
+                onChange={value => {
+                  this.setState(
+                    {
+                      pointValue: value,
+                    },
+                    () => {
+                      this.getTableColumns();
+                    },
+                  );
+                }}
+              >
                 {this.pointList()}
               </Select>
               <FormItem {...formLayout} label="监测日期" style={{ width: 250, marginTop: -6 }}>
@@ -555,9 +589,22 @@ class SmokeReportPage extends PureComponent {
                   this.timeEle,
                 )}
               </FormItem>
-              <Button type="primary" style={{ marginRight: 10 }} onClick={() => { this.getSmokeReportData() }}>查询</Button>
-              <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
-              <span style={{ fontSize: 14, color: 'red', lineHeight: '34px' }}>{this.props.msg}</span>
+              <Button
+                type="primary"
+                style={{ marginRight: 10 }}
+                onClick={() => {
+                  this.getSmokeReportData();
+                }}
+              >
+                查询
+              </Button>
+              <Button style={{ marginRight: 10 }} onClick={this.exportReport}>
+                <ExportOutlined />
+                导出
+              </Button>
+              <span style={{ fontSize: 14, color: 'red', lineHeight: '34px' }}>
+                {this.props.msg}
+              </span>
             </Row>
           </Form>
           <SdlTable
@@ -571,7 +618,7 @@ class SmokeReportPage extends PureComponent {
             // defaultWidth={80}
             scroll={{ x: '1800px' }}
             bordered
-          // footer={() => this.tableFooter}
+            // footer={() => this.tableFooter}
           />
         </Card>
         {/* </Spin> */}

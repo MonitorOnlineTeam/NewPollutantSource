@@ -220,7 +220,7 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'missingData/exportDefectDataSummary',
       payload: { ...queryPar, HasOperation:true},
       callback: data => {
-         downloadFile(`/upload${data}`);
+         downloadFile(`${data}`);
         },
     });
   };

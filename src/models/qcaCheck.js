@@ -1,9 +1,7 @@
-
 import * as services from '@/services/qcaCheckApi';
-import { getQCAPollutantByDGIMN } from "@/services/commonApi"
+import { getQCAPollutantByDGIMN } from '@/services/commonApi';
 import Model from '@/utils/model';
 import { message } from 'antd';
-
 
 export default Model.extend({
   namespace: 'qcaCheck',
@@ -23,13 +21,13 @@ export default Model.extend({
     zeroCheck24TableData: [],
     zeroCheckChartAllData: [],
     zeroChartData: {
-      PollutantCode: "",
+      PollutantCode: '',
       dataList: [],
       standard: { top: 0, lower: 0 },
       timeList: [],
     },
     rangeChartData: {
-      PollutantCode: "",
+      PollutantCode: '',
       dataList: [],
       standard: { top: 0, lower: 0 },
       timeList: [],
@@ -40,19 +38,18 @@ export default Model.extend({
       coordMax: [],
       coordMin: [],
       data: [],
-      formatter: ""
-    }
-
+      formatter: '',
+    },
   },
 
   effects: {
     // 获取响应时间核查数据
-    *getResTimeCheckTableData({ payload, }, { call, update, put, take, select }) {
+    *getResTimeCheckTableData({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getResTimeCheckTableData, payload);
       if (result.IsSuccess) {
-        yield update({ resTimeCheckTableData: result.Datas })
+        yield update({ resTimeCheckTableData: result.Datas });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取污染物类型
@@ -60,64 +57,67 @@ export default Model.extend({
       const result = yield call(services.getQCAPollutantByDGIMN, { ...payload });
       if (result.IsSuccess) {
         let pollutantList = [];
-        const pollutantCode = result.Datas.filter((item, index) => {
-          if (item.GasCode !== 'n00000') {
+        let pollutantCode = [];
+        result.Datas.filter((item, index) => {
+          if (item.GasCode !== 'n00000' && item.State === 1) {
             pollutantList.push({
-              "PollutantCode": item.GasCode,
-              "PollutantName": item.PollutantName,
+              PollutantCode: item.GasCode,
+              PollutantName: item.PollutantName,
               Unit: item.Unit,
-              StandardCode: item.GasCode
-            })
-            return item.GasCode;
+              StandardCode: item.GasCode,
+            });
+            pollutantCode.push(item.GasCode);
           }
-        })
-        yield update({ pollutantList: pollutantList, pollutantCode: pollutantCode })
-        callback && callback(pollutantList)
+        });
+        yield update({ pollutantList: pollutantList, pollutantCode: pollutantCode });
+        callback && callback(pollutantList);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取零点核查数据
-    *getZeroCheckTableData({ payload, }, { call, update, put, take, select }) {
+    *getZeroCheckTableData({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getZeroCheckTableData, payload);
       if (result.IsSuccess) {
         yield update({
           zeroCheckTableData: result.Datas.rtnData,
           zeroCheck24TableData: result.Datas.rtnData24,
           zeroCheckChartAllData: result.Datas.codeList,
-          zeroChartData: result.Datas.codeList[0] ? result.Datas.codeList[0] : {
-            PollutantCode: "",
-            dataList: [],
-            standard: { top: 0, lower: 0 },
-            timeList: [],
-          }
-        })
+          zeroChartData: result.Datas.codeList[0]
+            ? result.Datas.codeList[0]
+            : {
+                PollutantCode: '',
+                dataList: [],
+                standard: { top: 0, lower: 0 },
+                timeList: [],
+              },
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取污染物类型
-    *getKeyParameterList({ payload, }, { call, update, put, take, select }) {
+    *getKeyParameterList({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getKeyParameterList, payload);
       if (result.IsSuccess) {
-        yield update({ keyParameterList: result.Datas })
+        yield update({ keyParameterList: result.Datas });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取质控日志
-    *getQCLog({ payload, }, { call, update, put, take, select }) {
+    *getQCLog({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getQCLog, payload);
       if (result.IsSuccess) {
         yield update({
           qcaLogDataList: result.Datas.recordList,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取质控过程
-    *getQCProcessData({ payload, }, { call, update, put, take, select }) {
+    *getQCProcessData({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getQCProcessData, payload);
       if (result.IsSuccess) {
         yield update({
@@ -130,69 +130,75 @@ export default Model.extend({
             coordMin: result.Datas.coordMin,
             formatter: result.Datas.formula,
             data: result.Datas.linearData,
-          }
-        })
+          },
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取量程核查数据
-    *getRangeDataList({ payload, }, { call, update, put, take, select }) {
+    *getRangeDataList({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getRangeDataList, payload);
       if (result.IsSuccess) {
         yield update({
           rangeCheckTableData: result.Datas.rtnData,
           rangeCheck24TableData: result.Datas.rtnData24,
           rangeCheckChartAllData: result.Datas.codeList,
-          rangeChartData: result.Datas.codeList[0] ? result.Datas.codeList[0] : {
-            PollutantCode: "",
-            dataList: [],
-            standard: { top: 0, lower: 0 },
-            timeList: [],
-          }
-        })
+          rangeChartData: result.Datas.codeList[0]
+            ? result.Datas.codeList[0]
+            : {
+                PollutantCode: '',
+                dataList: [],
+                standard: { top: 0, lower: 0 },
+                timeList: [],
+              },
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取盲样核查数据
-    *getBlindDataList({ payload, }, { call, update, put, take, select }) {
+    *getBlindDataList({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getBlindDataList, payload);
       if (result.IsSuccess) {
         yield update({
           blindCheckTableData: result.Datas.rtnData,
           blindCheckChartAllData: result.Datas.codeList,
-          blindChartData: result.Datas.codeList[0] ? result.Datas.codeList[0] : {
-            PollutantCode: "",
-            dataList: [],
-            standard: { top: 0, lower: 0 },
-            timeList: [],
-          }
-        })
+          blindChartData: result.Datas.codeList[0]
+            ? result.Datas.codeList[0]
+            : {
+                PollutantCode: '',
+                dataList: [],
+                standard: { top: 0, lower: 0 },
+                timeList: [],
+              },
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取示值误差核查数据
-    *getErrorValueDataList({ payload, }, { call, update, put, take, select }) {
+    *getErrorValueDataList({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getErrorValueDataList, payload);
       if (result.IsSuccess) {
         yield update({
           errorValueCheckTableData: result.Datas.rtnData,
           errorValueCheckChartAllData: result.Datas.codeList,
-          errorValueChartData: result.Datas.codeList[0] ? result.Datas.codeList[0] : {
-            PollutantCode: "",
-            dataList: [],
-            standard: { top: 0, lower: 0 },
-            timeList: [],
-          }
-        })
+          errorValueChartData: result.Datas.codeList[0]
+            ? result.Datas.codeList[0]
+            : {
+                PollutantCode: '',
+                dataList: [],
+                standard: { top: 0, lower: 0 },
+                timeList: [],
+              },
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取线性核查数据
-    *getLinearDataList({ payload, }, { call, update, put, take, select }) {
+    *getLinearDataList({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getLinearDataList, payload);
       if (result.IsSuccess) {
         yield update({
@@ -204,32 +210,31 @@ export default Model.extend({
           //   standard: { top: 0, lower: 0 },
           //   timeList: [],
           // }
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 核查导出
-    *qcaCheckExport({ payload, }, { call, update, put, take, select }) {
+    *qcaCheckExport({ payload }, { call, update, put, take, select }) {
       const result = yield call(services[payload.exportType], payload);
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        window.open(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
-
   },
   reducers: {
     // 更新chartData
     updateCheckChartData(state, { payload }) {
-      let key = payload.type + "CheckChartAllData";
+      let key = payload.type + 'CheckChartAllData';
       let checkChartAllData = state[key];
-      let chartData = checkChartAllData.find(item => item.PollutantCode === payload.code)
+      let chartData = checkChartAllData.find(item => item.PollutantCode === payload.code);
       return {
         ...state,
-        [payload.type + "ChartData"]: chartData
+        [payload.type + 'ChartData']: chartData,
       };
     },
-  }
+  },
 });

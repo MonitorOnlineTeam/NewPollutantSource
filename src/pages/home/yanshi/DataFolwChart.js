@@ -15,8 +15,6 @@ class DataFolwChart extends Component {
   }
 
   render() {
-    console.log('props', this.props)
-    const { data } = this.state;
     const { MN, vertical, scale } = this.props.location.query;
     console.log('vertical', vertical)
     return <>

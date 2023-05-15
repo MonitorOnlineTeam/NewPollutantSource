@@ -29,8 +29,6 @@ body,
   input {
     // line-height: 1 !important;
   }
-
-
 }
 
 // a:visited {
@@ -38,7 +36,7 @@ body,
 // }
 
 .clickRowStyl {
-  background-color: #a3ccfd
+  background-color: #a3ccfd;
 }
 
 .colorWeak {
@@ -72,8 +70,6 @@ p {
   padding: 0;
 }
 
-
-
 .sdlTable {
   .ant-table-body {
     // min-height: 100px;
@@ -81,7 +77,6 @@ p {
 }
 
 :global {
-
   // 面包屑 -- start
   .ant-pro-page-header-wrap-page-header-warp {
     background-color: transparent;
@@ -114,7 +109,7 @@ p {
     table-layout: fixed; //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
   }
 
-  .ant-table-tbody>tr>td {
+  .ant-table-tbody > tr > td {
     //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
     word-wrap: break-word;
     word-break: break-all;
@@ -134,7 +129,6 @@ p {
     cursor: col-resize;
     z-index: 1;
   }
-
 
   .ant-layout {
     .ant-pro-fixed-header {
@@ -166,21 +160,21 @@ p {
     }
   }
 
-  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content>.ant-tabs-tabpane,
-  .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content>.ant-tabs-tabpane {
+  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content > .ant-tabs-tabpane,
+  .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content > .ant-tabs-tabpane {
     transition: opacity 0.45s !important;
   }
 
-  .ant-pro-sider-menu-logo+.ant-menu-light {
+  .ant-pro-sider-menu-logo + .ant-menu-light {
     height: calc(100vh - 64px);
     overflow: hidden;
     overflow-y: auto;
   }
 
-  .ant-table-thead>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
-  .ant-table-tbody>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
-  .ant-table-thead>tr:hover:not(.ant-table-expanded-row)>td,
-  .ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+  .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
     background: #e6f7ff;
   }
 
@@ -193,7 +187,6 @@ p {
     .ant-pro-grid-content {
       padding-left: 320px;
     }
-
   }
 }
 
@@ -217,14 +210,13 @@ a:hover {
     width: 100%;
     overflow-x: auto;
 
-    &-thead>tr,
-    &-tbody>tr {
-
-      >th,
-      >td {
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
         white-space: pre;
 
-        >span {
+        > span {
           display: block;
         }
       }
@@ -248,7 +240,6 @@ a:hover {
   transition: width 0.2s;
 }
 
-
 ::-webkit-scrollbar-track-piece {
   -webkit-border-radius: 0;
 }
@@ -259,7 +250,6 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-
   border-radius: 10px;
   background-color: @scrollbar-track-color;
 }
@@ -278,9 +268,8 @@ a:hover {
   -webkit-border-radius: 4px;
 }
 
-
 .light {
-  background-color: #f0f2f5
+  background-color: #f0f2f5;
 }
 
 #contentWrapper {
@@ -289,9 +278,11 @@ a:hover {
 }
 
 :global {
-
+  .ant-layout .ant-layout-header:first-child {
+    display: none;
+  }
   // button - loading
-  .ant-btn>.ant-btn-loading-icon .anticon {
+  .ant-btn > .ant-btn-loading-icon .anticon {
     margin-right: 8px;
     padding-right: 0;
   }
@@ -309,7 +300,7 @@ a:hover {
   // }
 
   // 隐藏系统默认菜单
-  .ant-pro-top-nav-header-main .ant-pro-top-nav-header-menu .ant-menu {
+  .ant-pro-basicLayout .ant-pro-top-nav-header-main .ant-pro-top-nav-header-menu .ant-menu {
     display: none;
   }
 
@@ -320,10 +311,10 @@ a:hover {
 
   .ant-table.ant-table-middle .ant-table-title,
   .ant-table.ant-table-middle .ant-table-footer,
-  .ant-table.ant-table-middle .ant-table-thead>tr>th,
-  .ant-table.ant-table-middle .ant-table-tbody>tr>td,
-  .ant-table.ant-table-middle tfoot>tr>th,
-  .ant-table.ant-table-middle tfoot>tr>td {
+  .ant-table.ant-table-middle .ant-table-thead > tr > th,
+  .ant-table.ant-table-middle .ant-table-tbody > tr > td,
+  .ant-table.ant-table-middle tfoot > tr > th,
+  .ant-table.ant-table-middle tfoot > tr > td {
     padding: 8px;
   }
 
@@ -342,11 +333,10 @@ a:hover {
     z-index: 1;
   }
 
-
   // 菜单选中样式
 
-  .ant-menu-item .anticon+span,
-  .ant-menu-submenu-title .anticon+span {
+  .ant-menu-item .anticon + span,
+  .ant-menu-submenu-title .anticon + span {
     font-weight: 500;
   }
 
@@ -359,13 +349,12 @@ a:hover {
     // border-bottom: 2px solid #1890FF;
   }
 
-
   .ant-menu-dark .ant-menu-submenu-selected {
     background-color: transparent;
     /* background-color: white; */
     font-weight: 900;
-    color: #1890FF !important;
-    border-bottom: 2px solid #1890FF !important;
+    color: #1890ff !important;
+    border-bottom: 2px solid #1890ff !important;
   }
 
   // 地图气泡样式
@@ -386,22 +375,20 @@ a:hover {
     top: 6px;
 
     ::after {
-      display: none
+      display: none;
     }
 
     ::before {
-      display: none
+      display: none;
     }
   }
 
   .amap-info .amap_markers_pop_window::before,
   .amap-info .amap_markers_pop_window::after {
-    display: none
+    display: none;
   }
 
-
   .ant-layout {
-
     // 面包屑样式 - start
     .ant-page-header {
       padding: 11px 20px;
@@ -448,7 +435,7 @@ a:hover {
 
     .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active {
       height: 33px;
-      color: #2F54EB;
+      color: #2f54eb;
       background: #fff;
       border-color: #e8e8e8;
       border-bottom: 1px solid #fff;
@@ -464,7 +451,7 @@ a:hover {
 }
 
 .mapInput {
-  &>.ant-input:not(:last-child) {
+  & > .ant-input:not(:last-child) {
     padding-right: 50px;
   }
 }
@@ -490,7 +477,7 @@ a:hover {
   }
 }
 
-#root>div {
+#root > div {
   height: 100%;
 }
 
@@ -598,11 +585,10 @@ a:hover {
 .notBorder {
   .ant-table-small {
     border: 0;
-
   }
 
   .ant-table-header {
-    background-color: #f0f2f5
+    background-color: #f0f2f5;
   }
 }
 
@@ -618,7 +604,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center
+  align-items: center;
 }
 
 // .ontEntDetailPhoto{
@@ -653,7 +639,6 @@ a:hover {
   flex-direction: column;
 }
 
-
 .home-dark-theme {
   // 亮色主题颜色全局变量
   --page-bg-img: url('/home/bg.jpg');
@@ -661,7 +646,7 @@ a:hover {
   --header-bg-img: transparent;
   --back-img: url(/home/back.png);
   --back-color: #67d7fd;
-  --box-border: 1px solid #2F4F60;
+  --box-border: 1px solid #2f4f60;
   --box-bg-color: rgba(2, 21, 51, 0.47);
   --box-box-shadow: 0px 0px 14px 1px rgba(23, 60, 144, 0.29);
   --box-after: url(/home/lt.png) no-repeat;
@@ -669,16 +654,15 @@ a:hover {
   --box-lb: url(/home/lb.png) no-repeat;
   --box-rb: url(/home/rb.png) no-repeat;
   --title-color: #e5e9f3;
-  --operations-font-color: #ADCEEC;
-  --progressInfo-font-color: #ADCEEC;
+  --operations-font-color: #adceec;
+  --progressInfo-font-color: #adceec;
   --echartsTitle-color: #fff;
-  --line-border-color: #354B57;
+  --line-border-color: #354b57;
   --marquee-font-color: #d5d9e2;
   --marquee-font-hover-color: #fff;
   --scrollbar-track-color: #021e39;
   --scrollbar-thumb-color: #305090;
 }
-
 
 .home-light-theme {
   // 暗色主题颜色全局变量
@@ -701,15 +685,12 @@ a:hover {
   --line-border-color: #d4d3d3;
   --marquee-font-color: #666;
   --marquee-font-hover-color: #000;
-  --scrollbar-track-color: #CACDD1;
-  --scrollbar-thumb-color: #D6D4D4;
+  --scrollbar-track-color: #cacdd1;
+  --scrollbar-thumb-color: #d6d4d4;
 }
 
-
 #innerSystem {
-
   :global {
-
     .ant-layout-header,
     .ant-pro-top-nav-header-menu .ant-menu.ant-menu-horizontal,
     .ant-pro-top-nav-header-logo {
@@ -749,7 +730,7 @@ a:hover {
     }
 
     .ant-pro-top-nav-header-logo img {
-      height: 68px !important
+      height: 68px !important;
     }
 
     .ant-menu-item .anticon,
@@ -757,7 +738,7 @@ a:hover {
       font-size: 18px !important;
     }
 
-    .ant-table-thead>tr>th {
+    .ant-table-thead > tr > th {
       background: #f7f7f7;
       color: #000;
     }
@@ -779,7 +760,9 @@ a:hover {
       font-size: 16px;
     }
 
-    .antd-pro-components-global-header-index-right .antd-pro-components-global-header-index-account .antd-pro-components-global-header-index-name {
+    .antd-pro-components-global-header-index-right
+      .antd-pro-components-global-header-index-account
+      .antd-pro-components-global-header-index-name {
       width: 80px;
     }
 
@@ -787,7 +770,9 @@ a:hover {
       font-size: 18px;
     }
 
-    .antd-pro-components-sdl-menu-index-wrySubMenu .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+    .antd-pro-components-sdl-menu-index-wrySubMenu
+      .ant-menu:not(.ant-menu-horizontal)
+      .ant-menu-item-selected {
       font-size: 16px;
     }
 

@@ -2,12 +2,12 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-21 15:22:46
+ * @Last Modified time: 2023-03-22 08:59:07
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
 import config from '@/config';
-import moment from 'moment'
+import moment from 'moment';
 import * as services from '@/services/autoformapi';
 
 function formatDateFormat(format) {
@@ -43,25 +43,31 @@ function getQueryParams(state, payload) {
       if (searchForm[key] && searchForm[key].value && searchForm[key].value.length + '') {
         // 是否是moment对象
         const isMoment = moment.isMoment(searchForm[key].value);
-        const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
+        const isArrMoment =
+          Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
         let format = state.dateFormat[configId][key] || 'YYYY-MM-DD HH:mm:ss';
         let _format = formatDateFormat(format);
         if (isArrMoment) {
-          console.log("searchForm[key]=", searchForm[key])
-          groupItem = [{
-            Key: key,
-            Value: moment(searchForm[key].value[0]).format(_format),
-            Where: '$gte',
-          }, {
-            Key: key,
-            Value: moment(searchForm[key].value[1]).format(_format),
-            Where: '$lte',
-          }]
+          console.log('searchForm[key]=', searchForm[key]);
+          groupItem = [
+            {
+              Key: key,
+              Value: moment(searchForm[key].value[0]).format(_format),
+              Where: '$gte',
+            },
+            {
+              Key: key,
+              Value: moment(searchForm[key].value[1]).format(_format),
+              Where: '$lte',
+            },
+          ];
           group.push(...groupItem);
         } else {
           groupItem = {
             Key: key,
-            Value: isMoment ? moment(searchForm[key].value).format(_format) : searchForm[key].value.toString(),
+            Value: isMoment
+              ? moment(searchForm[key].value).format(_format)
+              : searchForm[key].value.toString(),
           };
           for (const whereKey in state.whereList[configId]) {
             if (key === whereKey) {
@@ -69,7 +75,7 @@ function getQueryParams(state, payload) {
             }
           }
           console.log('groupItem=', groupItem);
-          if (groupItem.Value !== "" && groupItem.Value !== undefined) {
+          if (groupItem.Value !== '' && groupItem.Value !== undefined) {
             group.push(groupItem);
           }
         }
@@ -87,21 +93,21 @@ function getQueryParams(state, payload) {
     ...payload.otherParams,
   };
   const searchParams = payload.searchParams || [];
-  (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
-    // group.length? postData.ConditionWhere = JSON.stringify({
-    rel: '$and',
-    group: [{
-      rel: '$and',
-      group: [
-        ...group,
-        ...searchParams,
-      ],
-    }],
-  }) : '';
+  group.length || searchParams.length
+    ? (postData.ConditionWhere = JSON.stringify({
+        // group.length? postData.ConditionWhere = JSON.stringify({
+        rel: '$and',
+        group: [
+          {
+            rel: '$and',
+            group: [...group, ...searchParams],
+          },
+        ],
+      }))
+    : '';
 
   return postData;
 }
-
 
 export default Model.extend({
   namespace: 'autoForm',
@@ -120,7 +126,8 @@ export default Model.extend({
     routerConfig: '',
     tableInfo: {},
     searchForm: {},
-    searchConfigItems: { // 搜索条件配置项
+    searchConfigItems: {
+      // 搜索条件配置项
       searchConditions: [],
     },
     configIdList: {}, // 获取下拉列表数据
@@ -138,7 +145,7 @@ export default Model.extend({
   },
   effects: {
     // 获取数据
-    * getAutoFormData({ payload, callback }, { call, put, update, select }) {
+    *getAutoFormData({ payload, callback }, { call, put, update, select }) {
       let state = yield select(state => state.autoForm);
       const { configId } = payload;
 
@@ -148,7 +155,7 @@ export default Model.extend({
       const result = yield call(services.getListPager, { ...postData });
       if (result.IsSuccess) {
         state = yield select(state => state.autoForm);
-        callback && callback();
+        callback && callback(result.Datas);
         yield update({
           // configIdList: {
           //   [payload.configId]: result.data
@@ -171,7 +178,7 @@ export default Model.extend({
       }
     },
     // 根据configId 获取数据
-    * getConfigIdList({ payload }, { call, update, select }) {
+    *getConfigIdList({ payload }, { call, update, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       // let postData = {
       //   params: payload,
@@ -191,7 +198,7 @@ export default Model.extend({
     },
     // FOREIGN_DF_NAME /// FOREIGN_DF_ID
     // 获取页面配置项
-    * getPageConfig({ payload }, { call, put, update, select }) {
+    *getPageConfig({ payload }, { call, put, update, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       // let postData = {
       //   params: { ...payload },
@@ -201,55 +208,62 @@ export default Model.extend({
       const result = yield call(services.getPageConfigInfo, postData);
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
-        const columns = result.Datas.ColumnFields.filter(itm => itm.FOREIGH_DT_CONFIGID === '' && itm.DF_WIDTH !== '0').map((item, index) => ({
+        const columns = result.Datas.ColumnFields.filter(
+          itm => itm.FOREIGH_DT_CONFIGID === '' && itm.DF_WIDTH !== '0',
+        ).map((item, index) => ({
           title: item.DF_NAME_CN,
           dataIndex: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : item.FullFieldName,
           key: item.FullFieldNameVerticalBar,
           align: item.DF_ALIGN,
           width: item.DF_WIDTH ? item.DF_WIDTH * 1 : item.DF_WIDTH,
-          sorter: item.DF_ISSORT === 1 ? (a, b) => a[item.FullFieldName] - b[item.FullFieldName] : false,
-          fixed: result.Datas.FixedFields.filter(m => m.FullFieldName === item.FullFieldName).length > 0 ? 'left' : '',
+          sorter:
+            item.DF_ISSORT === 1 ? (a, b) => a[item.FullFieldName] - b[item.FullFieldName] : false,
+          fixed:
+            result.Datas.FixedFields.filter(m => m.FullFieldName === item.FullFieldName).length > 0
+              ? 'left'
+              : '',
           dateFormat: item.DF_DATEFORMAT,
           formatType: item.DF_ISFormat,
           otherConfig: item.DF_OtherOptions,
           type: item.DF_CONTROL_TYPE,
-        }),
-        );
+        }));
         const checkboxOrRadio = result.Datas.MulType;
 
         const whereList = {};
         let dateFormat = {};
         let dateInitialValues = {};
-        const searchConditions = result.Datas.ColumnFields.filter(itm => itm.DF_ISQUERY === 1).map((item, index) => {
-          index === 0 ? whereList[configId] = {} : '';
-          whereList[result.Datas.ConfigId][item.FullFieldNameVerticalBar] = item.DF_CONDITION;
-          if (item.DF_QUERY_TIME_TYPE && item.LIST_TIME) {
-            dateInitialValues = {
-              [item.FullFieldNameVerticalBar]: {
-                value: [moment().subtract(item.LIST_TIME, item.DF_QUERY_TIME_TYPE), moment()]
-              }
+        const searchConditions = result.Datas.ColumnFields.filter(itm => itm.DF_ISQUERY === 1).map(
+          (item, index) => {
+            index === 0 ? (whereList[configId] = {}) : '';
+            whereList[result.Datas.ConfigId][item.FullFieldNameVerticalBar] = item.DF_CONDITION;
+            if (item.DF_QUERY_TIME_TYPE && item.LIST_TIME) {
+              dateInitialValues = {
+                [item.FullFieldNameVerticalBar]: {
+                  value: [moment().subtract(item.LIST_TIME, item.DF_QUERY_TIME_TYPE), moment()],
+                },
+              };
             }
-          }
-          // 日期格式化
-          if (item.DF_DATEFORMAT) {
-            dateFormat = {
-              [item.FullFieldNameVerticalBar]: item.DF_DATEFORMAT
+            // 日期格式化
+            if (item.DF_DATEFORMAT) {
+              dateFormat = {
+                [item.FullFieldNameVerticalBar]: item.DF_DATEFORMAT,
+              };
             }
-          }
-          return {
-            type: item.DF_QUERY_CONTROL_TYPE,
-            labelText: item.DF_NAME_CN,
-            fieldName: item.FullFieldNameVerticalBar,
-            value: item.ENUM_NAME ? JSON.parse(item.ENUM_NAME) : [],
-            placeholder: item.DF_TOOLTIP,
-            where: item.DF_CONDITION,
-            configId: item.FOREIGH_DT_CONFIGID,
-            configDataItemName: item.FOREIGN_DF_NAME,
-            configDataItemValue: item.FOREIGN_DF_ID,
-            dateFormat: item.DF_DATEFORMAT,
-            ...item,
-          };
-        });
+            return {
+              type: item.DF_QUERY_CONTROL_TYPE,
+              labelText: item.DF_NAME_CN,
+              fieldName: item.FullFieldNameVerticalBar,
+              value: item.ENUM_NAME ? JSON.parse(item.ENUM_NAME) : [],
+              placeholder: item.DF_TOOLTIP,
+              where: item.DF_CONDITION,
+              configId: item.FOREIGH_DT_CONFIGID,
+              configDataItemName: item.FOREIGN_DF_NAME,
+              configDataItemValue: item.FOREIGN_DF_ID,
+              dateFormat: item.DF_DATEFORMAT,
+              ...item,
+            };
+          },
+        );
         // 添加
         let addCfgField = result.Datas.CfgField.filter(cfg => cfg.DF_ISADD === 1);
         if (payload.isEdit) {
@@ -259,12 +273,15 @@ export default Model.extend({
         let layout = 12;
         if (addCfgField.filter(item => item.DF_ROWSPAN === null).length == addCfgField.length) {
           // 显示两列
-          layout = 12
-        } else if (addCfgField.filter(item => item.DF_ROWSPAN === 1 || item.DF_ROWSPAN === 2).length == addCfgField.length) {
+          layout = 12;
+        } else if (
+          addCfgField.filter(item => item.DF_ROWSPAN === 1 || item.DF_ROWSPAN === 2).length ==
+          addCfgField.length
+        ) {
           // 显示一列
-          layout = 24
+          layout = 24;
         } else {
-          layout = false
+          layout = false;
         }
         const addFormItems = addCfgField.map(item => ({
           type: item.DF_CONTROL_TYPE,
@@ -292,9 +309,8 @@ export default Model.extend({
           uploadNumber: item.DF_UpNum,
         }));
 
-
         // 主键
-        const keys = result.Datas.Keys.map(item => item.FullFieldName)
+        const keys = result.Datas.Keys.map(item => item.FullFieldName);
         // let keys = {
         //   fullFieldName: result.Datas.Keys.map(item => item.FullFieldName),
         //   names: result.Datas.Keys.map(item => item.DF_NAME),
@@ -303,13 +319,13 @@ export default Model.extend({
         const state = yield select(state => state.autoForm);
         yield put({
           type: 'saveConfigIdList',
-        })
+        });
         yield update({
           searchForm: {
             ...state.searchForm,
             [configId]: {
               ...state.searchForm[configId],
-              ...dateInitialValues
+              ...dateInitialValues,
             },
           },
           searchConfigItems: {
@@ -330,7 +346,7 @@ export default Model.extend({
           },
           whereList: {
             ...state.whereList,
-            ...whereList
+            ...whereList,
           },
           dateFormat: {
             ...state.dateFormat,
@@ -352,7 +368,7 @@ export default Model.extend({
       }
     },
     // autoForm列表删除
-    * del({ payload, callback }, { call, update, put, select }) {
+    *del({ payload, callback }, { call, update, put, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       let postData = payload;
       let configId = payload.configId;
@@ -369,10 +385,10 @@ export default Model.extend({
               ...state.searchForm,
               [configId]: {
                 ...state.searchForm[configId],
-                current: 1
+                current: 1,
               },
             },
-          })
+          });
         }
         yield put({
           type: 'getAutoFormData',
@@ -385,7 +401,7 @@ export default Model.extend({
       }
     },
 
-    * add({ payload }, { call, update, put, select }) {
+    *add({ payload }, { call, update, put, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       // let postData = {
       //   params: { ...payload, FormData: JSON.stringify(payload.FormData) },
@@ -408,7 +424,7 @@ export default Model.extend({
       }
     },
 
-    * saveEdit({ payload }, { call, update, put, select }) {
+    *saveEdit({ payload }, { call, update, put, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       // let postData = {
       //   params: { ...payload, FormData: JSON.stringify(payload.FormData) },
@@ -419,7 +435,6 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('修改成功！');
         if (payload.reload === false) {
-
         } else {
           yield put({
             type: 'getAutoFormData',
@@ -435,7 +450,7 @@ export default Model.extend({
       }
     },
 
-    * getFormData({ payload, callback }, { call, select, update, put }) {
+    *getFormData({ payload, callback }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
       const sysConfig = yield select(state => state.global.configInfo);
       // let postData = {
@@ -445,20 +460,20 @@ export default Model.extend({
       let postData = payload;
       const result = yield call(services.getFormData, postData);
       if (result.IsSuccess && result.Datas.length) {
-        callback && callback(result.Datas[0])
+        callback && callback(result.Datas[0]);
         yield update({
           editFormData: {
             ...state.editFormData,
             [payload.configId]: result.Datas[0],
           },
-        })
+        });
       } else {
         message.error(result.Message);
       }
     },
 
     // 获取详情页面配置
-    * getDetailsConfigInfo({ payload }, { call, select, update, put }) {
+    *getDetailsConfigInfo({ payload }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
       const sysConfig = yield select(state => state.global.configInfo);
       // let postData = {
@@ -468,41 +483,48 @@ export default Model.extend({
       let postData = payload;
       const result = yield call(services.getPageConfigInfo, postData);
       if (result.IsSuccess) {
-        const detailFormItems = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1).map(item => ({
-          type: item.DF_CONTROL_TYPE,
-          labelText: item.DF_NAME_CN,
-          fieldName: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : (item.FOREIGH_DT_CONFIGID ? item.FOREIGN_DF_NAME : item.DF_NAME), // 判断是否是外键或表连接
-          // configId: item.DT_CONFIG_ID,
-          isHide: item.DF_HIDDEN,
-          configId: item.FOREIGH_DT_CONFIGID,
-          configDataItemName: item.FOREIGN_DF_NAME,
-          configDataItemValue: item.FOREIGN_DF_ID,
-          FullFieldName: item.FullFieldName,
-        }));
+        const detailFormItems = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1).map(
+          item => ({
+            type: item.DF_CONTROL_TYPE,
+            labelText: item.DF_NAME_CN,
+            fieldName:
+              item.DF_FOREIGN_TYPE === 2
+                ? `${item.FullFieldName}_Name`
+                : item.FOREIGH_DT_CONFIGID
+                ? item.FOREIGN_DF_NAME
+                : item.DF_NAME, // 判断是否是外键或表连接
+            // configId: item.DT_CONFIG_ID,
+            isHide: item.DF_HIDDEN,
+            configId: item.FOREIGH_DT_CONFIGID,
+            configDataItemName: item.FOREIGN_DF_NAME,
+            configDataItemValue: item.FOREIGN_DF_ID,
+            FullFieldName: item.FullFieldName,
+          }),
+        );
         yield update({
           detailConfigInfo: {
             ...state.detailConfigInfo,
             [payload.configId]: detailFormItems,
           },
-        })
+        });
       } else {
         message.error(result.Message);
       }
     },
 
     // 获取联动
-    * getRegions({ payload, callback }, { call, update }) {
+    *getRegions({ payload, callback }, { call, update }) {
       const result = yield call(services.getRegions, { ...payload });
       if (result.IsSuccess) {
         yield update({
           regionList: result.Datas,
-        })
-        callback && callback(result)
+        });
+        callback && callback(result);
       }
     },
 
     // 获取联动
-    * getAttachmentList({ payload, callback }, { call, update }) {
+    *getAttachmentList({ payload, callback }, { call, update }) {
       if (payload.FileUuid && payload.FileUuid !== 'null') {
         const result = yield call(services.getAttachmentList, { ...payload });
         if (result.IsSuccess) {
@@ -512,22 +534,22 @@ export default Model.extend({
             name: item.FileName,
             status: 'done',
             url: '/' + item.Url,
-          }))
-          callback && callback(fileList)
+          }));
+          callback && callback(fileList);
           yield update({
             fileList,
-          })
+          });
         }
       } else {
-        callback && callback([])
+        callback && callback([]);
         yield update({
           fileList: [],
-        })
+        });
       }
     },
 
     // 文件上传
-    * fileUpload({ payload }, { call, update, select }) {
+    *fileUpload({ payload }, { call, update, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       // let body = {
       //   params: { ...payload },
@@ -538,12 +560,12 @@ export default Model.extend({
       if (result.IsSuccess) {
         // result.Datas && window.open(result.Datas)
       } else {
-        message.error(result.Datas)
+        message.error(result.Datas);
       }
     },
 
     // 导出报表
-    * exportDataExcel({ payload }, { call, select, update }) {
+    *exportDataExcel({ payload }, { call, select, update }) {
       const state = yield select(state => state.autoForm);
       const postData = getQueryParams(state, payload);
       const sysConfig = yield select(state => state.global.configInfo);
@@ -555,14 +577,14 @@ export default Model.extend({
 
       const result = yield call(services.exportDataExcel, body);
       if (result.IsSuccess) {
-        console.log('suc=', result)
-        result.Datas && window.open(result.Datas)
+        console.log('suc=', result);
+        result.Datas && window.open(result.Datas);
       } else {
-        message.error(result.reason)
+        message.error(result.reason);
       }
     },
     // 下载导入模板
-    * exportTemplet({ payload }, { call, update, select }) {
+    *exportTemplet({ payload }, { call, update, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       // let body = {
       //   params: payload,
@@ -571,23 +593,23 @@ export default Model.extend({
       let body = payload;
       const result = yield call(services.exportTemplet, body);
       if (result.IsSuccess) {
-        result.Datas && window.open(result.Datas)
+        result.Datas && window.open(result.Datas);
       } else {
-        message.error(result.Datas)
+        message.error(result.Datas);
       }
     },
 
     // 下载导入模板
-    * deleteAttach({ payload }, { call, update }) {
+    *deleteAttach({ payload }, { call, update }) {
       const result = yield call(services.deleteAttach, { ...payload });
       if (result.IsSuccess) {
-        message.success("删除成功！")
+        message.success('删除成功！');
       } else {
-        message.error(result.Datas)
+        message.error(result.Datas);
       }
     },
     // 校验重复
-    * checkRepeat({ payload, callback }, { call, update, select }) {
+    *checkRepeat({ payload, callback }, { call, update, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       // let body = {
       //   params: payload,
@@ -596,7 +618,7 @@ export default Model.extend({
       let body = payload;
       const result = yield call(services.checkRepeat, body);
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        callback && callback(result.Datas);
       } else {
       }
     },

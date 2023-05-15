@@ -1,7 +1,6 @@
-
 export const before = '/rest/PollutantSourceApi';
 export const API = {
-  // 
+  //
   systemApi: {
     // 获取系统配置
     GetSystemConfigInfo: before + '/ConfigureApi/GetSystemConfigInfo',
@@ -26,7 +25,8 @@ export const API = {
     // 获取数据源树
     GetTables: before + '/AutoFormConfigApi/GetTables',
     // 获取字段配置信息
-    GetCfgFiledsDataFromDbByTableName: before + '/AutoFormConfigApi/GetCfgFiledsDataFromDbByTableName',
+    GetCfgFiledsDataFromDbByTableName:
+      before + '/AutoFormConfigApi/GetCfgFiledsDataFromDbByTableName',
     // 根据表id获取数据源基础信息
     TableConfig: before + '/AutoFormConfigApi/TableConfig',
     // 根据表名返回该表的主键
@@ -87,8 +87,6 @@ export const API = {
     ImportDataExcel: before + '/AutoFormDataApi/ImportDataExcel',
     // 校验数据重复
     VerificationData: before + '/AutoFormDataApi/VerificationData',
-
-
   },
   // 通用Api
   commonApi: {
@@ -102,9 +100,9 @@ export const API = {
     GetAirOrDustPollutantAQI: before + '/MonitorPollutantApi/GetAirOrDustPollutantAQI',
     // 获取污染物因子 数据一览的表头
     GetPollutantTypeCode: before + '/MonitorPollutantApi/GetPollutantTypeCode',
-    // 获取污染物列表 
+    // 获取污染物列表
     GetPollutantCodeList: before + '/MonitorPollutantApi/GetPollutantCodeList',
-    // 根据企业类型查询监测因子 
+    // 根据企业类型查询监测因子
     GetPollutantByType: before + '/MonitorPollutantApi/GetPollutantByType',
     // 获取关注程度
     GetAttentionDegreeList: before + '/RegionApi/GetAttentionDegreeList',
@@ -119,8 +117,7 @@ export const API = {
     // 文件上传
     UploadFiles: before + '/UploadApi/UploadFiles',
 
-    // 
-
+    //
   },
   UploadApi: {
     // 删除文件
@@ -130,7 +127,8 @@ export const API = {
     // 根据MN号获取污染物类型并获取污染物
     GetPollutantByDGIMN: before + '/MonitorPollutantApi/GetPollutantByDGIMN',
     // 根据MN号获取监测点污染物类型下的关联的污染物
-    GetMonitorRelationPollutantByDGIMN: before + '/MonitorPollutantApi/GetMonitorRelationPollutantByDGIMN',
+    GetMonitorRelationPollutantByDGIMN:
+      before + '/MonitorPollutantApi/GetMonitorRelationPollutantByDGIMN',
   },
   LoginApi: {
     // 登录
@@ -171,7 +169,6 @@ export const API = {
     ExportEmissionEnt: before + '/EnterpriseApi/ExportEmissionEnt',
     // 企业排放量设置参与不参与
     UpdateEntFlag: before + '/EnterpriseApi/UpdateEntFlag',
-
 
     // 排放标准查询
     GetDischargeStandValue: before + '/MonitorPointApi/GetDischargeStandValue',
@@ -221,8 +218,7 @@ export const API = {
     // 修改知识库查看或下载次数
     UpdateKnowledgeBaseViewCount: before + '/KnowledgeBase/UpdateKnowledgeBaseViewCount',
 
-    // 
-
+    //
   },
   // 质控Api
   QualityControlApi: {
@@ -256,7 +252,6 @@ export const API = {
     // 导出示值误差核查
     ExportErrorValueDataList: before + '/ErrorValueCheck/ExportErrorValueDataList',
 
-
     // 获取标气下拉框
     GetQCGasBottle: before + '/QCAStandardGas/GetQCGasBottle',
     // 获取标气瓶子对应关系设置列表
@@ -274,9 +269,6 @@ export const API = {
     // 删除标气方案
     DeleteGasProOne: before + '/QCAStandardGas/DeleteGasProOne',
 
-
-
-
     // 获取质控仪数据(获取单个质控基本信息)
     GetQCAnalyzerAndPoint: before + '/QCAnalyzerManagement/GetQCAnalyzerAndPoint',
     // 质控基本信息与关联信息添加
@@ -289,9 +281,6 @@ export const API = {
     GetAlarmDataList: before + '/QCAlarmApi/GetAlarmDataList',
     // 导出报警数据列表
     ExportGetAlarmDataList: before + '/QCAlarmApi/ExportGetAlarmDataList',
-
-
-
 
     // 获取运维人列表
     GetOperatorList: before + '/QCAOperator/GetOperatorList',
@@ -311,7 +300,6 @@ export const API = {
     GetQCStandard: before + '/QCAStandardGas/GetQCStandard',
     // 导出标准气信息
     ExportQCStandard: before + '/QCAStandardGas/ExportQCStandard',
-
 
     // 获取质控方案
     GetQCAPlanList: before + '/QCCheckConfig/GetQCAPlanList',
@@ -359,7 +347,7 @@ export const API = {
     GetPointModelInfo: before + '/MonitorPointApi/GetPointModelInfo',
     // 获取监测点列表
     GetViewPoint: before + '/MonitorPointApi/GetViewPoint',
-    // 根据DGMIN查询单个站点详情
+    // 根据DGIMN查询单个站点详情
     GetMonitorPointList: before + '/MonitorTargetApi/GetMonitorPointList',
   },
   // 仪器信息
@@ -399,7 +387,8 @@ export const API = {
     // 查询历史参数列表
     GetHistoryParaCodeList: before + '/DymaicParameter/GetHistoryParaCodeList',
     // 获取历史工况参数
-    GetProcessFlowTableHistoryDataList: before + '/DymaicParameter/GetProcessFlowTableHistoryDataList',
+    GetProcessFlowTableHistoryDataList:
+      before + '/DymaicParameter/GetProcessFlowTableHistoryDataList',
     // 获取关键参数
     GetParameterSnapshot: before + '/DymaicParameter/GetParameterSnapshot',
     // 数据提取
@@ -463,9 +452,11 @@ export const API = {
     // 获取综合指数范围同比报表
     GetTimeSlotCompositeCompare: before + '/ComparisonComposite/GetTimeSlotCompositeCompare',
     // 综合指数范围同比报表 - 导出
-    ExportTimeSlotCompositeCompareNum: before + '/ComparisonComposite/ExportTimeSlotCompositeCompareNum',
+    ExportTimeSlotCompositeCompareNum:
+      before + '/ComparisonComposite/ExportTimeSlotCompositeCompareNum',
     // 导出-多时间段对比综合指数
-    ExportTimeComparisonCompositeNum: before + '/ComparisonComposite/ExportTimeComparisonCompositeNum',
+    ExportTimeComparisonCompositeNum:
+      before + '/ComparisonComposite/ExportTimeComparisonCompositeNum',
     // 导出综合指数年报
     ExportYearCompositeNum: before + '/ComparisonComposite/ExportYearCompositeNum',
     // 获取多时间段对比综合指数
@@ -478,7 +469,7 @@ export const API = {
     ExportMonthCompositeNum: before + '/ComparisonComposite/ExportMonthCompositeNum',
     // 获取月综合指数
     GetMonthComposite: before + '/ComparisonComposite/GetMonthComposite',
-    // 
+    //
   },
   // 碳排放
   CO2EmissionsApi: {
@@ -556,8 +547,6 @@ export const API = {
     // 新报警设置 包含部门和角色（列表）
     GetAlarmPushDepOrRole: before + '/AuthorizeApi/GetAlarmPushDepOrRole',
 
-
-
     // 获取部门详细信息及层级关系
     GetDepInfoByTree: before + '/DepartmentApi/GetDepInfoByTree',
     // 获取部门树(带根结点)
@@ -597,10 +586,6 @@ export const API = {
     // 获取菜单列表层级关系
     GetRoleMenuTree: before + '/MenuApi/GetRoleMenuTree',
 
-
-
-
-
     // 获取所有用户
     GetAllUser: before + '/UserApi/GetAllUser',
     // 给用户添加角色和部门
@@ -617,9 +602,8 @@ export const API = {
     GetUserRolesGroupList: before + '/UserApi/GetUserRolesGroupList',
     // // 获取用户信息
     // GetUserList: before + '/UserApi/GetUserList',
-
   },
-  // 监控Api 
+  // 监控Api
   MonitorDataApi: {
     // 获取各种类型数据列表
     GetAllTypeDataList: before + '/MonBasicDataApi/GetAllTypeDataList',
@@ -670,15 +654,10 @@ export const API = {
     // 导出数据审核接口。带Wry的接口参数IsWry传true，否则传false
     ExportAllTypeDataForFlag: before + '/DataQualityApi/ExportAllTypeDataForFlag',
 
-
-
-
     // 异常数据报告查询
     GetExceptionReportedList: before + '/ExceptionDataApi/GetExceptionReportedList',
 
-
-    // 
-
+    //
   },
   // 电力Api
   ElectricEnergyApi: {
@@ -717,12 +696,13 @@ export const API = {
     GetExceptionAlarmListForRegion: before + '/ExceptionAlarmApi/GetExceptionAlarmListForRegion',
     // 实时报警
     GetRealAlarmDataList: before + '/AlarmMessagesApi/GetRealAlarmDataList',
-    // 
+    //
     GetAlarmDealType: before + '/AlarmVerifyManageApi/GetAlarmDealType',
     // 运维报警核实关联
     GetOverToExamineOperation: before + '/AlarmVerifyManageApi/GetOverToExamineOperation',
     // 获取报警异常记录
-    GetLocalMemoryExceptionProcessing: before + '/AlarmVerifyManageApi/GetLocalMemoryExceptionProcessing',
+    GetLocalMemoryExceptionProcessing:
+      before + '/AlarmVerifyManageApi/GetLocalMemoryExceptionProcessing',
     // 报警核实添加
     AlarmVerifyAdd: before + '/AlarmVerifyManageApi/AlarmVerifyAdd',
     // 查看某个排口下处置后的报警信息
@@ -735,37 +715,42 @@ export const API = {
     GetAlarmRecord: before + '/AlarmVerifyManageApi/GetAlarmAndExDetail',
 
     // GetDefectPointDetail: before + '/ExceptionAlarmApi/GetDefectPointDetail',
-
   },
   // 统计分析Api
   StatisticAnalysisApi: {
     // 获取行政区下传输有效率
-    GetTransmissionEfficiencyForRegion: before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyForRegion',
+    GetTransmissionEfficiencyForRegion:
+      before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyForRegion',
     // 获取企业下传输有效率
-    GetTransmissionEfficiencyForEnt: before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyForEnt',
+    GetTransmissionEfficiencyForEnt:
+      before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyForEnt',
     // 获取排口下传输有效率
-    GetTransmissionEfficiencyForPoint: before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyForPoint',
+    GetTransmissionEfficiencyForPoint:
+      before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyForPoint',
     // --------------------------------------------------------------------------------
     // 根据数据类型查询排放量-师一级
     GetEmissionsListForRegion: before + '/EmissionsApi/GetEmissionsListForRegion',
     // 根据数据类型查询排放量--企业一级
     GetEmissionsListForEnt: before + '/EmissionsApi/GetEmissionsListForEnt',
-    // 根据数据类型查询排放量--排口一级 
+    // 根据数据类型查询排放量--排口一级
     GetEmissionsListForPoint: before + '/EmissionsApi/GetEmissionsListForPoint',
     //  排放量变化趋势--查询企业、排口、因子
     GetEmissionsEntPointPollutant: before + '/EmissionsApi/GetEmissionsEntPointPollutant',
     // 排放量变化趋势
     GetEmissionsTrendList: before + '/EmissionsApi/GetEmissionsTrendList',
     // 废水、废气排放量时间段对比---师一级
-    GetEmissionsListForRegionComparison: before + '/EmissionsApi/GetEmissionsListForRegionComparison',
+    GetEmissionsListForRegionComparison:
+      before + '/EmissionsApi/GetEmissionsListForRegionComparison',
     // 废水、废气排放量时间段对比---企业一级
     GetEmissionsListForEntComparison: before + '/EmissionsApi/GetEmissionsListForEntComparison',
     // 废水、废气排放量时间段对比---排口一级
     GetEmissionsListForPointComparison: before + '/EmissionsApi/GetEmissionsListForPointComparison',
     // 异常数据报警响应率--排口一级
-    GetExceptionAlarmRateListForPoint: before + '/ExceptionResponseRateApi/GetExceptionAlarmRateListForPoint',
+    GetExceptionAlarmRateListForPoint:
+      before + '/ExceptionResponseRateApi/GetExceptionAlarmRateListForPoint',
     // 异常数据报警响应率--师一级
-    GetExceptionAlarmRateListForRegion: before + '/ExceptionResponseRateApi/GetExceptionAlarmRateListForRegion',
+    GetExceptionAlarmRateListForRegion:
+      before + '/ExceptionResponseRateApi/GetExceptionAlarmRateListForRegion',
     // 异常记录详情
     GetExceptionReportedView: before + '/ExceptionResponseRateApi/GetExceptionReportedView',
     // 获取特征污染物排放量
@@ -787,7 +772,7 @@ export const API = {
     // 废气、废水排放量同比---师一级
     GetEmissionsListForRegionYear: before + '/EmissionsApi/GetEmissionsListForRegionYear',
 
-    // 
+    //
     // GetTransmissionEfficiencyForRegion: before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyForRegion',
   },
   // 首页Api
@@ -869,7 +854,7 @@ export const API = {
     // 汇总季报
     GetSummaryQuarterReport: before + '/MonBasicDataApi/GetSummaryQuarterReport',
     // 报表表头
-    GetPointPollutantColumnByDGIMN: before + '/MonBasicDataApi/GetPointPollutantColumnByDGIMN'
+    GetPointPollutantColumnByDGIMN: before + '/MonBasicDataApi/GetPointPollutantColumnByDGIMN',
     //
   },
   // 导出Api
@@ -899,9 +884,6 @@ export const API = {
     // 导出超标次数
     ExportOverStandardNum: before + '/OverDataApi/ExportOverStandardNum',
 
-
-
-
     // 缺失数据报警导出
     ExportDefectDataSummary: before + '/ExceptionAlarmApi/ExportDefectDataSummary',
     // 缺失数据报警详情导出
@@ -919,33 +901,41 @@ export const API = {
     // 超标报警处置详细导出
     ExportAlarmManagementDetail: before + '/OverAlarmApi/ExportAlarmManagementDetail',
     // 异常数据报警导出
-    ExportExceptionAlarmListForRegion: before + '/ExceptionAlarmApi/ExportExceptionAlarmListForRegion',
+    ExportExceptionAlarmListForRegion:
+      before + '/ExceptionAlarmApi/ExportExceptionAlarmListForRegion',
     // 异常数据查询导出
     ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList',
     // 导出-行政区下传输有效率
-    ExportTransmissionEfficiencyForRegion: before + '/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForRegion',
+    ExportTransmissionEfficiencyForRegion:
+      before + '/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForRegion',
     // 导出-企业下传输有效率
-    ExportTransmissionEfficiencyForEnt: before + '/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForEnt',
+    ExportTransmissionEfficiencyForEnt:
+      before + '/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForEnt',
     // 导出-根据数据类型查询排放量--师一级
     ExportEmissionsListForRegion: before + '/EmissionsApi/ExportEmissionsListForRegion',
     // 导出-根据数据类型查询排放量--企业一级
     ExportEmissionsListForEnt: before + '/EmissionsApi/ExportEmissionsListForEnt',
-    // 导出-根据数据类型查询排放量--排口一级 
+    // 导出-根据数据类型查询排放量--排口一级
     ExportEmissionsListForPoint: before + '/EmissionsApi/ExportEmissionsListForPoint',
     // 导出-废水、废气排放量时间段对比---师一级
-    ExportEmissionsListForRegionComparison: before + '/EmissionsApi/ExportEmissionsListForRegionComparison',
+    ExportEmissionsListForRegionComparison:
+      before + '/EmissionsApi/ExportEmissionsListForRegionComparison',
     // 导出-废水、废气排放量时间段对比---企业一级
-    ExportEmissionsListForEntComparison: before + '/EmissionsApi/ExportEmissionsListForEntComparison',
+    ExportEmissionsListForEntComparison:
+      before + '/EmissionsApi/ExportEmissionsListForEntComparison',
     // 导出-废水、废气排放量时间段对比---排口一级
-    ExportEmissionsListForPointComparison: before + '/EmissionsApi/ExportEmissionsListForPointComparison',
+    ExportEmissionsListForPointComparison:
+      before + '/EmissionsApi/ExportEmissionsListForPointComparison',
     // 导出-异常数据报警响应率--师一级
-    ExportExceptionAlarmRateListForRegion: before + '/ExceptionResponseRateApi/ExportExceptionAlarmRateListForRegion',
+    ExportExceptionAlarmRateListForRegion:
+      before + '/ExceptionResponseRateApi/ExportExceptionAlarmRateListForRegion',
     // 导出-异常数据报警响应率--排口一级
-    ExportExceptionAlarmRateListForPoint: before + '/ExceptionResponseRateApi/ExportExceptionAlarmRateListForPoint',
+    ExportExceptionAlarmRateListForPoint:
+      before + '/ExceptionResponseRateApi/ExportExceptionAlarmRateListForPoint',
     // 停运导出
     ExportStopList: before + '/OutputStopApi/ExportStopList',
     // 导出 - 异常数据报告
-    ExportExceptionReported: before + '/OutputStopApi/ExportExceptionReported',
+    ExportExceptionReported: before + '/ExceptionDataApi/ExportExceptionReported',
     // 超标报警核实率导出
     ExportAlarmVerifyRate: before + '/OverAlarmApi/ExportAlarmVerifyRate',
     // 缺失数据导出
@@ -960,10 +950,10 @@ export const API = {
     ExportExceptionAlarmListForEnt: before + '/ExceptionAlarmApi/ExportExceptionAlarmListForEnt',
     // 站点统计（企业或者空气站）导出
     ExportPointSummary: before + '/MonitorPointApi/ExportPointSummary',
+    // 数据不可信导出
+    ExportUnTrustedList: before + '/MonBasicDataApi/ExportUnTrustedList',
 
-
-    // 
-
+    //
   },
   // 新疆Api
   XJApi: {
@@ -988,7 +978,7 @@ export const API = {
     DeleteVideoDeviceOne: before + '/VideoApi/DeleteVideoDeviceOne',
     // 获取单个设备信息
     GetVideoDeviceOne: before + '/VideoApi/GetVideoDeviceOne',
-    // 更新单个设备信息 
+    // 更新单个设备信息
     UpdateVideoDeviceOne: before + '/VideoApi/UpdateVideoDeviceOne',
     // 获取乐橙云KitToken
     GetLeChengKITToken: before + '/VideoApi/GetLeChengKITToken',
@@ -1003,7 +993,6 @@ export const API = {
     GetPlaybackURL: before + '/VideoApi/PlaybackURL',
     // 海康云台操作
     PTZControl: before + '/VideoApi/PTZControl',
-
   },
   TYGTApi: {
     // 获取排放源下设施列表(治理设施,生产,环保点位) InstallationType: 1=治理设施,2=生产,3=环保点位
@@ -1020,7 +1009,6 @@ export const API = {
     GetFacByPoint: before + '/EmissionsApi/GetFacByPoint',
     // 根据DGIMN，设施，参数查询数据
     GetDataByParams: before + '/EmissionsApi/GetDataByParams',
-
   },
   // console Api
   ConsoleApi: {
@@ -1048,10 +1036,7 @@ export const API = {
     ModifyTransmitSet: '/DataTransmit/api/DataTransmitSet/ModifyTransmitSet',
     // 重启转发服务
     RestartTransmit: '/DataTransmit/api/DataTransmitSet/RestartTransmit',
-
   },
-}
+};
 
-export const UPLOAD = {
-
-}
+export const UPLOAD = {};

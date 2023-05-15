@@ -8,10 +8,8 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import logo from '../../public/sdlicon.png';
 import Cookie from 'js-cookie';
 import { Tabs, Dropdown, Menu, message } from 'antd';
-import PageLoading from '@/components/PageLoading'
-import _ from "lodash"
-import webConfig from "../../public/webConfig"
-import SdlMenu from "@/components/SdlMenu"
+import webConfig from '../../public/webConfig';
+import SdlMenu from '@/components/SdlMenu';
 
 class BasicLayout extends Component {
   constructor(props) {
@@ -28,7 +26,7 @@ class BasicLayout extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.onWindowResize)
+    window.addEventListener('resize', this.onWindowResize);
     const { dispatch, configInfo } = this.props;
     // dispatch({
     //   type: 'global/getSystemConfigInfo',
@@ -39,27 +37,27 @@ class BasicLayout extends Component {
       payload: {},
     });
     dispatch({
-      type: "global/updateState",
+      type: 'global/updateState',
       payload: {
-        clientHeight: document.body.clientHeight
+        clientHeight: document.body.clientHeight,
       },
-    })
+    });
 
     if (!this.props.sysPollutantTypeList.length && configInfo.IsShowSysPage === '1') {
       dispatch({
         type: 'global/getSysPollutantTypeList',
-      })
+      });
     }
   }
 
   onWindowResize = () => {
     this.props.dispatch({
-      type: "global/updateState",
+      type: 'global/updateState',
       payload: {
-        clientHeight: document.body.clientHeight
+        clientHeight: document.body.clientHeight,
       },
-    })
-  }
+    });
+  };
 
   render() {
     const { dispatch, children, settings, currentMenu, configInfo, loading } = this.props;
@@ -79,44 +77,47 @@ class BasicLayout extends Component {
         menuList = currentMenu[0].children.map(item => {
           return {
             ...item,
-            NavigateUrl: `${currentMenu[0]}/${item.NavigateUrl}`
-          }
-        })
+            NavigateUrl: `${currentMenu[0]}/${item.NavigateUrl}`,
+          };
+        });
       }
       return menuList;
     };
 
     const logoRender = Item => {
-      if (configInfo && configInfo.IsShowLogo === "true") {
+      if (configInfo && configInfo.IsShowLogo === 'true') {
         return settings.layout === 'topmenu' ? (
-          <img style={{ height: 60 }} src={configInfo.Logo ? `${configInfo.Logo}` : logo} alt="logo" />
+          <img
+            style={{ height: 60 }}
+            src={configInfo.Logo ? `${configInfo.Logo}` : logo}
+            alt="logo"
+          />
         ) : (
           <img src={`${configInfo.Logo}`} alt="logo" />
         );
-      }
-      else {
-        return <div></div>
+      } else {
+        return <div></div>;
       }
     };
 
     let userCookie = Cookie.get('currentUser');
     if (!userCookie) {
-      router.push("/user/login");
+      router.push('/user/login');
     }
     let _settings = settings;
     if (sessionStorage.getItem('sysName')) {
-      _settings.title = sessionStorage.getItem('sysName')
+      _settings.title = sessionStorage.getItem('sysName');
     }
     return (
       <>
-        <SdlMenu match={this.props.match} location={this.props.location} />
+        <SdlMenu title={_settings.title} match={this.props.match} location={this.props.location} />
         <ProLayout
           logo={logoRender}
           onCollapse={handleMenuCollapse}
           menuItemRender={(menuItemProps, defaultDom) => {
-            if (menuItemProps.replace && userCookie !== "null") {
-            } else if (userCookie === "null") {
-              router.push("/user/login");
+            if (menuItemProps.replace && userCookie !== 'null') {
+            } else if (userCookie === 'null') {
+              router.push('/user/login');
             }
             if (menuItemProps.isUrl) {
               return defaultDom;
@@ -124,15 +125,16 @@ class BasicLayout extends Component {
             return <Link to={menuItemProps.path}>{defaultDom}</Link>;
           }}
           breadcrumbRender={(routers = []) => {
-            return [{
-              path: '/',
-              breadcrumbName: formatMessage({
-                id: 'menu.home',
-                defaultMessage: 'Home',
-              }),
-            },
-            ...routers,
-            ]
+            return [
+              {
+                path: '/',
+                breadcrumbName: formatMessage({
+                  id: 'menu.home',
+                  defaultMessage: 'Home',
+                }),
+              },
+              ...routers,
+            ];
           }}
           footerRender={() => {
             return <div></div>;
@@ -142,11 +144,13 @@ class BasicLayout extends Component {
           {...this.props}
           {..._settings}
         >
-          {
-            (webConfig.isShowBreadcrumb ? <div id="basicLayout">{children}</div> : <div id="notBreadcrumbLayout"> {children} </div>)
-          }
+          {webConfig.isShowBreadcrumb ? (
+            <div id="basicLayout">{children}</div>
+          ) : (
+            <div id="notBreadcrumbLayout"> {children} </div>
+          )}
         </ProLayout>
-        {process.env.NODE_ENV === "development" &&
+        {process.env.NODE_ENV === 'development' && (
           <SettingDrawer
             settings={_settings}
             onSettingChange={config =>
@@ -156,7 +160,7 @@ class BasicLayout extends Component {
               })
             }
           />
-        }
+        )}
       </>
     );
   }
@@ -169,6 +173,6 @@ export default connect(({ global, settings, user, loading }) => ({
   currentMenu: user.currentMenu,
   configInfo: global.configInfo,
   unfoldMenuList: user.unfoldMenuList,
-  loading: loading.effects["global/getSystemConfigInfo"],
+  loading: loading.effects['global/getSystemConfigInfo'],
   sysPollutantTypeList: global.sysPollutantTypeList,
 }))(BasicLayout);

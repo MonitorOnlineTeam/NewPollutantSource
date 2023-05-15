@@ -1,17 +1,14 @@
 import defaultSettings from './defaultSettings'; // https://umijs.org/config/
 // import slash from 'slash2';
 import webpackPlugin from './plugin.config';
-import routes from './router.config.js'
-import path from 'path'
-
+import routes from './router.config.js';
+import path from 'path';
 
 // 新框架
-const API_HOST = 'http://172.16.12.60:6001/';  // 测试 - 志鹏
-// const API_HOST = 'http://172.16.12.39:9090/';  // 唐银钢铁 - 开发
-const CONSOLE_HOST = 'http://172.16.12.39:33622/';  // 
-// const API_HOST = 'http://172.16.12.209:33688/';  // 霍达
-// const API_HOST = 'http://172.16.9.3:33688/';  // 志鹏
-
+// const API_HOST = 'http://172.16.12.39:6003/'; // 正式
+// const API_HOST = 'http://172.16.12.39:9090/'; // 唐银钢铁 - 开发
+const CONSOLE_HOST = 'http://172.16.12.39:33622/'; //
+const API_HOST = 'http://172.16.12.60:6001/';  // 志鹏
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
@@ -40,11 +37,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -134,7 +131,7 @@ export default {
   },
   alias: {
     '@config': path.resolve(__dirname, '../config'),
-    '@public': path.resolve(__dirname, '../public')
+    '@public': path.resolve(__dirname, '../public'),
   },
   manifest: {
     basePath: '/',
@@ -148,7 +145,7 @@ export default {
     },
     '/wwwroot': {
       target: API_HOST, // 接口的域名
-      changeOrigin: true, //   
+      changeOrigin: true, //
       // pathRewrite: { '^/wwwroot': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
     // 乐橙云

@@ -19,7 +19,7 @@ import {
   message,
 } from 'antd';
 import { connect } from 'dva';
-import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
 import { getPointStatusImg } from '@/utils/getStatusImg';
@@ -30,13 +30,12 @@ import { formatPollutantPopover, getDirLevel, getDataTruseMsg } from '@/utils/ut
 import _ from 'lodash';
 import moment from 'moment';
 
-import $ from 'jquery'
+import $ from 'jquery';
 import styles from '../index.less';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
-const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData']
-
+const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData'];
 
 @connect(({ loading, overview, global, common }) => ({
   noticeList: global.notices,
@@ -49,7 +48,9 @@ const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData']
 class Realtime extends Component {
   constructor(props) {
     super(props);
-    this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
+    this.config = this.props.location.query.config
+      ? JSON.parse(this.props.location.query.config)
+      : undefined;
     this.state = {
       columns: [],
       pageIndex: 1,
@@ -58,21 +59,34 @@ class Realtime extends Component {
       realTimeDataView: [],
       filteredInfo: null,
       currentHour: moment().hour(),
-      time: moment().hour() > 1 ? moment(new Date()).add(-1, 'hour').format('YYYY-MM-DD HH:00:00') : moment(new Date()).format('YYYY-MM-DD HH:00:00'),
+      time:
+        moment().hour() > 1
+          ? moment(new Date())
+              .add(-1, 'hour')
+              .format('YYYY-MM-DD HH:00:00')
+          : moment(new Date()).format('YYYY-MM-DD HH:00:00'),
       dayTime: moment(new Date()).add(-1, 'day'),
     };
   }
 
-  componentDidMount() { }
+  componentDidMount() {}
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      let fixed = (nextProps.realtimeColumns.length * 94 + 50 + 70 + 210 + 160) > $("#sdlTable").width();
+      let fixed =
+        nextProps.realtimeColumns.length * 94 + 50 + 70 + 210 + 160 > $('#sdlTable').width();
       // const fixed = false;
       const width = 200;
 
       const realtimeColumns = nextProps.realtimeColumns.map((item, idx) => ({
-        title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
+        title: item.unit ? (
+          <>
+            {item.name}
+            <br />({item.unit})
+          </>
+        ) : (
+          item.title
+        ),
         dataIndex: item.field,
         key: item.field,
         name: item.name,
@@ -91,7 +105,7 @@ class Realtime extends Component {
             return IAQIPopover(text, record, item.field);
           }
           if (item.title === '空气质量') {
-            return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-'
+            return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-';
           }
           // 风向转换
           if (item.name === '风向') {
@@ -142,7 +156,10 @@ class Realtime extends Component {
       ];
 
       // 大气站状态筛选
-      if (this.state.pollutantCode === 5 || this.state.pollutantCode === 12) {
+      if (
+        this.state.pollutantCode === 5 ||
+        (this.state.pollutantCode === 12 && configInfo.IsOpenAQI === '1')
+      ) {
         statusFilters = airLevel.map(item => ({
           text: (
             <span>
@@ -174,7 +191,7 @@ class Realtime extends Component {
           align: 'center',
           fixed,
           show: true,
-          render: (value, record, index) => ((this.state.pageIndex - 1) * 50) + index + 1,
+          render: (value, record, index) => (this.state.pageIndex - 1) * 50 + index + 1,
         },
         {
           title: '状态',
@@ -188,7 +205,10 @@ class Realtime extends Component {
           filters: statusFilters,
           filteredValue: filteredInfo.Status || null,
           onFilter: (value, record) => {
-            if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
+            if (
+              record.pollutantTypeCode == 5 ||
+              (record.pollutantTypeCode == 12 && configInfo.IsOpenAQI === '1')
+            ) {
               if (value != 0) {
                 return record.AirLevel == value;
               }
@@ -197,7 +217,10 @@ class Realtime extends Component {
             return record.status == value;
           },
           render: (value, record, index) => {
-            if (record.pollutantTypeCode == 5 || record.pollutantTypeCode == 12) {
+            if (
+              record.pollutantTypeCode == 5 ||
+              (record.pollutantTypeCode == 12 && configInfo.IsOpenAQI === '1')
+            ) {
               const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
               const color = airLevelObj.color || '#999999';
               return (
@@ -220,13 +243,17 @@ class Realtime extends Component {
           show: true,
           render: (text, record) => {
             // 单企业不显示企业名称
-            let pointName = configInfo.IsSingleEnt == '1' ? text : `${record.abbreviation} - ${text}`;
+            let pointName =
+              configInfo.IsSingleEnt == '1' ? text : `${record.abbreviation} - ${text}`;
             if (this.state.pollutantCode == 5) {
               pointName = text;
             }
-            let el = <span>
-              {pointName}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
-            </span>
+            let el = (
+              <span>
+                {pointName}
+                {record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
+              </span>
+            );
             return el;
           },
         },
@@ -240,11 +267,13 @@ class Realtime extends Component {
           show: true,
           align: 'center',
           render: (text, record) => {
-            return <span>
-              {getDataTruseMsg(record)}
-              {text}
-            </span>
-          }
+            return (
+              <span>
+                {getDataTruseMsg(record)}
+                {text}
+              </span>
+            );
+          },
           // sorter: (a, b) => a.MonitorTime - b.MonitorTime,
           // defaultSortOrder: 'descend'
         },
@@ -267,7 +296,8 @@ class Realtime extends Component {
   getPageData = pollutantCode => {
     this.setState(
       {
-        pollutantCode, pageIndex: 1
+        pollutantCode,
+        pageIndex: 1,
       },
       () => {
         this.getColumns();
@@ -326,69 +356,89 @@ class Realtime extends Component {
   // 1-23之间：currentTime - 当天；nextDayTime - 第二天
   getHourTimeOptions = () => {
     const options = [];
-    const currentTime = moment().hour() > 1 ? moment().format('YYYY-MM-DD') : moment().add(-1, 'day').format('YYYY-MM-DD')
-    const nextDayTime = moment().hour() > 1 ? moment().add(1, 'day').format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
+    const currentTime =
+      moment().hour() > 1
+        ? moment().format('YYYY-MM-DD')
+        : moment()
+            .add(-1, 'day')
+            .format('YYYY-MM-DD');
+    const nextDayTime =
+      moment().hour() > 1
+        ? moment()
+            .add(1, 'day')
+            .format('YYYY-MM-DD')
+        : moment().format('YYYY-MM-DD');
     for (let i = 1; i < 24; i++) {
       const label = i >= 10 ? `${i}:00:00` : `0${i}:00:00`;
-      options.push(<Option value={`${currentTime} ${label}`}>{label}</Option>)
+      options.push(<Option value={`${currentTime} ${label}`}>{label}</Option>);
     }
     return options.concat(<Option value={`${nextDayTime} 00:00:00`}>00:00:00</Option>);
-  }
+  };
 
   // 根据地址栏参数，判断显示时间类别
   getOptionByDateType = () => {
     const { pollutantCode } = this.state;
     if (this.config[pollutantCode]) {
-      const dateTypeList = this.config[pollutantCode].split(',')
+      const dateTypeList = this.config[pollutantCode].split(',');
       //   this.setState({
       //     currentDataType
       //   })
-      return <>
-        {
-          dateTypeList.includes('1') && <Radio.Button key={1} value="RealTimeData">
-            实时
-          </Radio.Button>
-        }
-        {(dateTypeList.includes('2') && this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
-          <Radio.Button key={2} value="MinuteData">
-            分钟
-          </Radio.Button>
-        )}
-        {
-          dateTypeList.includes('3') && <Radio.Button key={3} value="HourData">
-            小时
-          </Radio.Button>
-        }
-        {
-          dateTypeList.includes('4') && <Radio.Button key={4} value="DayData">
-            日均
-          </Radio.Button>
-        }
-      </>
+      return (
+        <>
+          {dateTypeList.includes('1') && (
+            <Radio.Button key={1} value="RealTimeData">
+              实时
+            </Radio.Button>
+          )}
+          {dateTypeList.includes('2') &&
+            this.state.pollutantCode != 5 &&
+            this.state.pollutantCode != 12 && (
+              <Radio.Button key={2} value="MinuteData">
+                分钟
+              </Radio.Button>
+            )}
+          {dateTypeList.includes('3') && (
+            <Radio.Button key={3} value="HourData">
+              小时
+            </Radio.Button>
+          )}
+          {dateTypeList.includes('4') && (
+            <Radio.Button key={4} value="DayData">
+              日均
+            </Radio.Button>
+          )}
+        </>
+      );
     }
-    return <>
-      {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
+    return (
+      <>
+        {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
           <Radio.Button key={2} value="MinuteData">
             分钟
           </Radio.Button>
         )} */}
-      <Radio.Button key={3} value="HourData">
-        小时
-      </Radio.Button>
-      <Radio.Button key={4} value="DayData">
-        日均
-      </Radio.Button>
-    </>
-  }
+        <Radio.Button key={3} value="HourData">
+          小时
+        </Radio.Button>
+        <Radio.Button key={4} value="DayData">
+          日均
+        </Radio.Button>
+      </>
+    );
+  };
 
   // 分页
   onTableChange = (current, pageSize) => {
-    this.setState({
-      pageIndex: current, pageSize: pageSize
-    }, () => {
-      this.getRealTimeDataView();
-    })
-  }
+    this.setState(
+      {
+        pageIndex: current,
+        pageSize: pageSize,
+      },
+      () => {
+        this.getRealTimeDataView();
+      },
+    );
+  };
 
   render() {
     const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode } = this.state;
@@ -412,10 +462,10 @@ class Realtime extends Component {
                   let dataType = this.state.currentDataType;
                   // 如果有config，切换时默认选择第一个
                   if (this.config && this.config[e.target.value]) {
-                    const dateTypeList = this.config[e.target.value].split(',')
+                    const dateTypeList = this.config[e.target.value].split(',');
                     this.setState({
                       currentDataType: DateTypeList[dateTypeList[0] - 1],
-                    })
+                    });
                     dataType = DateTypeList[dateTypeList[0] - 1];
                   } else if (e.target.value == 5 || e.target.value == 12) {
                     this.setState({
@@ -435,12 +485,11 @@ class Realtime extends Component {
                   // this.setState({
                   //   currentDataType: e.target.value
                   // })
-                }
-                }
+                }}
                 initCallback={defaultPollutantCode => {
                   this.getPageData(defaultPollutantCode);
                 }}
-              // defaultValue={selectpollutantTypeCode}
+                // defaultValue={selectpollutantTypeCode}
               />
               <Radio.Group
                 value={currentDataType}
@@ -466,9 +515,9 @@ class Realtime extends Component {
                   );
                 }}
               >
-                {this.config ?
+                {this.config ? (
                   this.getOptionByDateType()
-                  :
+                ) : (
                   <>
                     {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
                       <Radio.Button key={2} value="MinuteData">
@@ -484,32 +533,38 @@ class Realtime extends Component {
                     {/*<Radio.Button key={1} value="RealTimeData">*/}
                     {/*实时*/}
                     {/*</Radio.Button>*/}
-                  </>}
+                  </>
+                )}
               </Radio.Group>
-              {
-                wrwList.length ? <Popover
+              {wrwList.length ? (
+                <Popover
                   content={
                     <Row style={{ maxWidth: 700, minWidth: 300 }}>
-                      {
-                        wrwList.map((item, index) => {
-                          if (item.wrw) {
-                            return <Col key={index} span={wrwList.length > 4 ? 6 : 24 / wrwList.length}>
-                              <Checkbox onChange={e => {
-                                if (e.target.checked === false && wrwList.length < 2) {
-                                  message.warning('最少显示一个污染物');
-                                  return;
-                                }
-                                const newColumns = columns;
-                                const num = (pollutantCode == 5 || pollutantCode == 12) ? 7 : 4;
-                                newColumns[index + num].show = e.target.checked;
-                                this.setState({
-                                  columns: newColumns,
-                                })
-                              }} checked={item.show}>{item.name}</Checkbox>
+                      {wrwList.map((item, index) => {
+                        if (item.wrw) {
+                          return (
+                            <Col key={index} span={wrwList.length > 4 ? 6 : 24 / wrwList.length}>
+                              <Checkbox
+                                onChange={e => {
+                                  if (e.target.checked === false && wrwList.length < 2) {
+                                    message.warning('最少显示一个污染物');
+                                    return;
+                                  }
+                                  const newColumns = columns;
+                                  const num = pollutantCode == 5 || pollutantCode == 12 ? 7 : 4;
+                                  newColumns[index + num].show = e.target.checked;
+                                  this.setState({
+                                    columns: newColumns,
+                                  });
+                                }}
+                                checked={item.show}
+                              >
+                                {item.name}
+                              </Checkbox>
                             </Col>
-                          }
-                        })
-                      }
+                          );
+                        }
+                      })}
                     </Row>
                   }
                   trigger="click"
@@ -519,8 +574,8 @@ class Realtime extends Component {
                   }}
                 >
                   <Button type="primary">污染物</Button>
-                </Popover> : null
-              }
+                </Popover>
+              ) : null}
               {currentDataType === 'HourData' && (
                 // <TimePicker
                 //   onChange={(time, timeString) => {
@@ -545,7 +600,8 @@ class Realtime extends Component {
                   onChange={time => {
                     this.setState(
                       {
-                        time, pageIndex: 1
+                        time,
+                        pageIndex: 1,
                       },
                       () => {
                         this.getRealTimeDataView();
@@ -573,7 +629,7 @@ class Realtime extends Component {
                 onChange={e => {
                   this.setState({
                     pointName: e.target.value,
-                    pageIndex: 1
+                    pageIndex: 1,
                   });
                 }}
                 onSearch={val => {
@@ -588,37 +644,40 @@ class Realtime extends Component {
               value="data"
               buttonStyle="solid"
               onChange={e => {
-                e.target.value === 'map' && router.push('/monitoring/mapview?tabName=数据总览 - 地图');
+                e.target.value === 'map' &&
+                  router.push('/monitoring/mapview?tabName=数据总览 - 地图');
               }}
             >
               <Radio.Button value="data">数据</Radio.Button>
               <Radio.Button value="map">地图</Radio.Button>
-            </Radio.Group >
+            </Radio.Group>
           }
         >
           <SdlTable
-            rowClassName={(record, index, indent) => {
-
-            }}
+            rowClassName={(record, index, indent) => {}}
             defaultWidth={94}
             loading={dataLoading || columnLoading}
             size="middle"
             bordered
-            pagination={this.props.realTimeTotal > 50 ? {
-              showQuickJumper: true,
-              showSizeChanger: false,
-              pageSize: 50, // this.props.pageSize,
-              current: this.state.pageIndex,
-              onChange: this.onTableChange,
-              total: this.props.realTimeTotal,
-            } : false}
+            pagination={
+              this.props.realTimeTotal > 50
+                ? {
+                    showQuickJumper: true,
+                    showSizeChanger: false,
+                    pageSize: 50, // this.props.pageSize,
+                    current: this.state.pageIndex,
+                    onChange: this.onTableChange,
+                    total: this.props.realTimeTotal,
+                  }
+                : false
+            }
             dataSource={realTimeDataView}
             columns={_columns}
             // scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
           />
-        </Card >
-      </BreadcrumbWrapper >
+        </Card>
+      </BreadcrumbWrapper>
     );
   }
 }

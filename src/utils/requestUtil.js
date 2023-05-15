@@ -6,7 +6,7 @@ import { extend } from 'umi-request';
 import { notification } from 'antd';
 import Cookie from 'js-cookie';
 import router from 'umi/router';
-import configToken from '@/config'
+import configToken from '@/config';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -35,21 +35,20 @@ const errorHandler = error => {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
     if (status === 401) {
-
       Cookie.set(configToken.cookieName, null);
       Cookie.set('currentUser', null);
       router.push('/user/login');
       return {
         IsSuccess: false,
         Datas: {},
-        Message: '登录超时，请重新登录！'
+        Message: '登录超时，请重新登录！',
       };
     }
     if (status === 403) {
       router.push('/exception/403');
       return data;
     }
-    if (status >= 404 && status < 422 || status === 500) {
+    if ((status >= 404 && status < 422) || status === 500) {
       // router.push('/exception/404');
       //  notification.error({
       //    message: `请求错误 ${status}: ${url}`,
@@ -60,13 +59,13 @@ const errorHandler = error => {
     //   message: `请求错误 ${status}: ${url}`,
     //   description: errorText,
     // });
-    return data
+    return data;
   } else if (!response) {
     notification.error({
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
-    return data
+    return data;
   }
 };
 
@@ -78,7 +77,10 @@ const request = extend({
   // timeout: 30000,
   headers: {
     //  Accept: 'application/json',
-    Authorization: (Cookie.get(configToken.cookieName) != "null" && Cookie.get(configToken.cookieName) != "") && `Bearer ${Cookie.get(configToken.cookieName)}`,
+    Authorization:
+      Cookie.get(configToken.cookieName) != 'null' &&
+      Cookie.get(configToken.cookieName) != '' &&
+      `Bearer ${Cookie.get(configToken.cookieName)}`,
     //  'Content-Type': 'application/json',
   },
   // 默认错误处理
@@ -95,7 +97,10 @@ request.interceptors.request.use(async (url, options) => {
     const headers = {
       'Content-Type': options.headers['Content-Type'] || 'application/json',
       //  Accept: 'application/json',
-      Authorization: (Cookie.get(configToken.cookieName) != "null" && Cookie.get(configToken.cookieName) != "") && `Bearer ${Cookie.get(configToken.cookieName)}`,
+      Authorization:
+        Cookie.get(configToken.cookieName) != 'null' &&
+        Cookie.get(configToken.cookieName) != '' &&
+        `Bearer ${Cookie.get(configToken.cookieName)}`,
     };
     return {
       url,

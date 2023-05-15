@@ -1,4 +1,3 @@
-
 const routes = [
   // {
   //   path: '/auto',
@@ -24,7 +23,7 @@ const routes = [
         path: '/ControlCabin/QualityControl',
         component: './ControlCabin/QualityControl',
       },
-    ]
+    ],
   },
   {
     path: '/console',
@@ -32,7 +31,7 @@ const routes = [
     routes: [
       {
         path: '/console',
-        redirect: '/console/baseConfig'
+        redirect: '/console/baseConfig',
       },
       /* 配置中心-AutoForm配置 */
       {
@@ -47,7 +46,7 @@ const routes = [
           // 数据采集
           {
             path: '/console/baseConfig',
-            redirect: '/console/baseConfig/database'
+            redirect: '/console/baseConfig/database',
           },
           {
             name: 'collect',
@@ -69,34 +68,31 @@ const routes = [
           // 数据库配置
           {
             path: '/console/baseConfig/database',
-            component: './autoformConfig/DatabaseConfig'
+            component: './autoformConfig/DatabaseConfig',
           },
           /* 配置中心-系统配置-菜单管理 */
           {
             path: '/console/baseConfig/menuManagement',
-            component: './autoformConfig/MenuManagement'
+            component: './autoformConfig/MenuManagement',
           },
           /* 配置中心-AutoForm配置-AutoForm数据源配置 */
           {
             path: '/console/baseConfig/datasource',
-            component: './autoformConfig/AutoFormDataSource'
+            component: './autoformConfig/AutoFormDataSource',
           },
           /* 配置中心-AutoForm配置-AutoForm数据源配置 */
           {
             path: '/console/baseConfig/datasource2',
-            component: './autoformConfig/AutoFormDataSource2'
+            component: './autoformConfig/AutoFormDataSource2',
           },
           // 数据源备份还原
           {
             path: '/console/baseConfig/SyncBackSE',
-            component: './autoformConfig/DataSourceSyncBackSE'
+            component: './autoformConfig/DataSourceSyncBackSE',
           },
-        ]
+        ],
       },
-
-
-
-    ]
+    ],
   },
   {
     path: '/',
@@ -104,8 +100,13 @@ const routes = [
     routes: [
       {
         path: '/autoLogin',
-        component: './user/login/AutoLogin'
+        component: './user/login/AutoLogin',
       },
+      // {
+      //   name: 'homepage',
+      //   path: '/homepage',
+      //   component: './home_ys',
+      // },
       {
         name: 'homepage',
         path: '/homepage',
@@ -237,7 +238,7 @@ const routes = [
         ],
       },
       {
-        name: 'oneEntsOneArchives',  //一企一档进入进入页面 企业列表
+        name: 'oneEntsOneArchives', //一企一档进入进入页面 企业列表
         path: '/oneEntsOneArchives/entList',
         component: './oneEntsOneArchives/entList',
       },
@@ -262,7 +263,17 @@ const routes = [
                 path: '/Demo/video/live',
                 component: './Demo/Video/Live',
               },
-            ]
+              {
+                name: 'video',
+                path: '/Demo/yuanxing/tongji',
+                component: './Demo/yuanxing',
+              },
+              {
+                name: 'video',
+                path: '/Demo/yuanxing/1',
+                component: './Demo/yuanxing/index2',
+              },
+            ],
           },
           // 唐银钢铁项目 - 台账
           {
@@ -299,7 +310,7 @@ const routes = [
                 path: '/standingBook/greenCar',
                 component: './TYGT/standingBook/GreenCar',
               },
-            ]
+            ],
           },
           // 唐银钢铁项目 - 生产及环保数据管理
           {
@@ -312,7 +323,7 @@ const routes = [
                 path: '/EPAndProduction/facilityAndProductionData',
                 component: './TYGT/EPAndProduction/FacilityAndProductionData',
               },
-            ]
+            ],
           },
           // 报警
           {
@@ -325,7 +336,7 @@ const routes = [
                 path: '/alarm/alarmRecord',
                 component: './Alarm/alarmRecord',
               },
-            ]
+            ],
           },
           // 视频
           {
@@ -339,7 +350,7 @@ const routes = [
               //   component: './Video/HKPlatform/index',
               // component: './Video/HKPlatform/Live',
               // },
-            ]
+            ],
           },
           // 克里斯金差值图
           {
@@ -406,7 +417,7 @@ const routes = [
                 path: '/airQualityAnalysis/weatherAnalysis',
                 component: './airQualityAnalysis/weatherAnalysis',
               },
-            ]
+            ],
           },
           // 目标考核台账
           {
@@ -484,7 +495,7 @@ const routes = [
                 path: '/emergency/dutyPlan',
                 component: './emergency/dutyPlan',
               },
-            ]
+            ],
           },
           // 地理信息系统
           {
@@ -526,7 +537,7 @@ const routes = [
                 path: '/map/characteristicPollutant',
                 component: './mapPages/CharacteristicPollutant',
               },
-            ]
+            ],
           },
           {
             path: '/:parentcode/autoformmanager/:configId',
@@ -545,14 +556,12 @@ const routes = [
               },
               {
                 name: 'edit',
-                path:
-                  '/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
+                path: '/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
                 component: './AutoFormManager/AutoFormEdit',
               },
               {
                 name: 'view',
-                path:
-                  '/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
+                path: '/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
                 component: './AutoFormManager/AutoFormView',
               },
             ],
@@ -581,8 +590,7 @@ const routes = [
               },
               {
                 name: 'view',
-                path:
-                  '/:parentcode/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
+                path: '/:parentcode/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
                 component: './AutoFormManager/AutoFormView',
               },
             ],
@@ -700,7 +708,8 @@ const routes = [
               },
               {
                 name: 'UnitInfoPage',
-                path: '/platformconfig/monitortarget/AEnterpriseTest/1/unitInfoPage/:entCode/:entName',
+                path:
+                  '/platformconfig/monitortarget/AEnterpriseTest/1/unitInfoPage/:entCode/:entName',
                 component: './platformManager/point/UnitInfoPage',
               },
               {
@@ -964,7 +973,7 @@ const routes = [
                     path: '/report/water/YearReport',
                     component: './report/YearReport/YearReport',
                   },
-                ]
+                ],
               },
 
               {
@@ -1077,7 +1086,6 @@ const routes = [
                     path: '/operations/usermanager/certificatemanage/:configId',
                     component: './OperationSysManager/CertificateManage/',
                   },
-
                 ],
               },
               {
@@ -1161,7 +1169,8 @@ const routes = [
               {
                 name: 'operationPerson', //运维人员管理  详情
                 path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
-                component: './OperationSysManager/operationEntManage/operationPerson/OperationPersonDetail',
+                component:
+                  './OperationSysManager/operationEntManage/operationPerson/OperationPersonDetail',
               },
             ],
           },
@@ -1276,7 +1285,7 @@ const routes = [
                 name: 'alarmverifyrecord',
                 path: '/alarmmanager/alarmverifyrecord/exceptionVerify',
                 component: './monitoring/alarmverifyrecord/index',
-              }
+              },
             ],
           },
 
@@ -1486,7 +1495,8 @@ const routes = [
                     //超标数据报警记录查询
                     name: 'exceedDataAlarm',
                     path: '/monitoring/alarmInfo/exceedDataAlarmOnlyQuery',
-                    component: './monitoring/alarmInfo/exceedDataAlarmRecord/exceedDataAlarm_onlyQuery',
+                    component:
+                      './monitoring/alarmInfo/exceedDataAlarmRecord/exceedDataAlarm_onlyQuery',
                   },
                   {
                     //异常报警响应查询
@@ -1509,9 +1519,9 @@ const routes = [
                     //超标报警处置查询
                     name: 'exceedDataDispositionRecord',
                     path: '/monitoring/alarmInfo/exceedDataDispositionRecord',
-                    component: './monitoring/alarmInfo/exceedDataDispositionRecord/exceedDataDispositionRecord',
+                    component:
+                      './monitoring/alarmInfo/exceedDataDispositionRecord/exceedDataDispositionRecord',
                   },
-
                 ],
               },
               // 企业异常记录
@@ -1772,7 +1782,8 @@ const routes = [
               {
                 name: 'Intelligentanalysis',
                 path: '/Intelligentanalysis/carbonQuartDataCaptureRate',
-                component: './IntelligentAnalysis/newTransmissionefficiency/CarbonQuartDataCaptureRate',
+                component:
+                  './IntelligentAnalysis/newTransmissionefficiency/CarbonQuartDataCaptureRate',
               },
               {
                 name: 'IntelligentanalysisDetail',
@@ -1878,9 +1889,10 @@ const routes = [
                     name: 'RegionOverAlarmDisposalRate',
                     path:
                       '/Intelligentanalysis/dataAlarm/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
-                    component: './Intelligentanalysis/dataAlarm/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                    component:
+                      './Intelligentanalysis/dataAlarm/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                   },
-                ]
+                ],
               },
               // 统计-运维工单
               {
@@ -1896,14 +1908,18 @@ const routes = [
                   {
                     //行政区运维工单统计（企业）
                     name: 'regionStaticstics',
-                    path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                    component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                    path:
+                      '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                    component:
+                      './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
                   },
                   {
                     //企业运维工单统计（企业）
                     name: 'entWorkOrderStatistics',
-                    path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                    component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                    path:
+                      '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                    component:
+                      './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
                   },
                   /* 缺失台账工单统计 空气站 */
                   {
@@ -1919,21 +1935,24 @@ const routes = [
                   /* 缺失台账照片统计 */
                   {
                     name: 'noAccountAirStatisticsPhoto',
-                    path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                    component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                    path:
+                      '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                    component:
+                      './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
                   },
                   /* 缺失台账工单详情 */
                   {
                     name: 'noAccountAirStatisticsDetails',
-                    path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                    component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                    path:
+                      '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                    component:
+                      './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
                   },
                   {
                     /** 运维工单统计-空气站 */
                     name: 'AirWorkOrderStatistics',
                     path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
-                    component:
-                      './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
+                    component: './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
                   },
                   {
                     /** 单区域 运维工单统计-空气站 排口 */
@@ -1965,7 +1984,7 @@ const routes = [
               {
                 name: 'emissions',
                 path: '/Intelligentanalysis/emissions',
-                component: './Intelligentanalysis/emissions',
+                component: './IntelligentAnalysis/emissions',
               },
               {
                 name: 'effluentFee',
@@ -2114,7 +2133,8 @@ const routes = [
                   },
                   {
                     path: '/Intelligentanalysis/CO2Material/supplementData/addOrEditPage',
-                    component: './IntelligentAnalysis/CO2Emissions/electricity/supplementData/AddOrEditPage',
+                    component:
+                      './IntelligentAnalysis/CO2Emissions/electricity/supplementData/AddOrEditPage',
                   },
                   {
                     path: '/Intelligentanalysis/CO2Material/fossilFuel',
@@ -2169,7 +2189,7 @@ const routes = [
                     path: '/Intelligentanalysis/CO2Material/monitorLineAnalysis',
                     component: './IntelligentAnalysis/CO2Emissions/monitorLineAnalysis',
                   },
-                ]
+                ],
               },
               // 水泥行业
               {
@@ -2190,7 +2210,8 @@ const routes = [
                   },
                   {
                     path: '/Intelligentanalysis/cement/supplementData/addOrEditPage',
-                    component: './IntelligentAnalysis/CO2Emissions/cement/supplementData/AddOrEditPage',
+                    component:
+                      './IntelligentAnalysis/CO2Emissions/cement/supplementData/AddOrEditPage',
                   },
                   // 净购入电力
                   {
@@ -2232,7 +2253,7 @@ const routes = [
                     path: '/Intelligentanalysis/cement/XTCZFQW',
                     component: './IntelligentAnalysis/CO2Emissions/cement/XTCZFQW',
                   },
-                ]
+                ],
               },
               // 钢铁行业
               {
@@ -2268,7 +2289,7 @@ const routes = [
                     path: '/Intelligentanalysis/steel/CO2DischargeSum',
                     component: './IntelligentAnalysis/CO2Emissions/steel/CO2DischargeSum',
                   },
-                ]
+                ],
               },
             ],
           },
@@ -2304,7 +2325,7 @@ const routes = [
             routes: [
               {
                 path: '/dataSearch',
-                redirect: "/dataSearch/monitor"
+                redirect: '/dataSearch/monitor',
               },
               {
                 // 不可信数据查询
@@ -2319,7 +2340,7 @@ const routes = [
                 routes: [
                   {
                     path: '/dataSearch/qca',
-                    redirect: "/dataSearch/qca/zeroCheck"
+                    redirect: '/dataSearch/qca/zeroCheck',
                   },
                   {
                     // 零点核查
@@ -2357,7 +2378,7 @@ const routes = [
                     path: '/dataSearch/qca/errorValueCheck',
                     component: './dataSearch/qca/errorValueCheck',
                   },
-                ]
+                ],
               },
               // {
               //   // 碳排放查询
@@ -2382,7 +2403,7 @@ const routes = [
                     path: '/dataSearch/siteData/QCARecordManager',
                     component: './dataSearch/siteData/QCARecordManager',
                   },
-                ]
+                ],
               },
               {
                 // 监测数据
@@ -2391,7 +2412,7 @@ const routes = [
                 routes: [
                   {
                     path: '/dataSearch/monitor',
-                    redirect: "/dataSearch/monitor/datavisualization"
+                    redirect: '/dataSearch/monitor/datavisualization',
                   },
                   {
                     // 工况模拟
@@ -2404,25 +2425,25 @@ const routes = [
                     name: 'alarmInfo',
                     path: '/dataSearch/monitor/alarm',
                     component: './dataSearch/monitor/alarmInfo',
-
                   },
                   {
-                    name: 'historyparame',  //报警信息跳转详情页 历史管控参数
+                    name: 'historyparame', //报警信息跳转详情页 历史管控参数
                     path: '/dataSearch/monitor/historyparameDetail',
                     component: './dynamicControl/controlData/historyparame',
-
                   },
-                  { //超标数据
+                  {
+                    //超标数据
                     name: 'alarmOverrecord',
                     path: '/dataSearch/monitor/alarm/overrecord',
                     component: './dataSearch/monitor/alarmInfo/overRecord',
                   },
-                  { //异常数据
+                  {
+                    //异常数据
                     name: 'alarmExceptionRecord',
                     path: '/dataSearch/monitor/alarm/exceptionRecord',
                     component: './dataSearch/monitor/alarmInfo/exceptionRecord',
                   },
-                ]
+                ],
               },
               {
                 name: 'dischargeStandard',
@@ -2442,7 +2463,7 @@ const routes = [
                 path: '/dataSearch/enterpriseInquiryDetail/:RegionCode',
                 component: './dataSearch/enterpriseInquiryDetail',
               },
-            ]
+            ],
           },
           //质控核查
           {
@@ -2451,7 +2472,7 @@ const routes = [
             routes: [
               {
                 path: '/qualityCheck',
-                redirect: "/qualityCheck/qualityManualCheck/manualQuality"
+                redirect: '/qualityCheck/qualityManualCheck/manualQuality',
               },
               {
                 // 质控管理
@@ -2460,7 +2481,7 @@ const routes = [
                 routes: [
                   {
                     path: '/qualityCheck/qualityMange',
-                    redirect: "/qualityCheck/qualityMange/standardAtmosMange"
+                    redirect: '/qualityCheck/qualityMange/standardAtmosMange',
                   },
                   {
                     // 质控运维人管理
@@ -2480,7 +2501,7 @@ const routes = [
                     path: '/qualityCheck/qualityMange/standardAtmosMange',
                     component: './qualityCheck/qualityMange/standardAtmosMange',
                   },
-                ]
+                ],
               },
               {
                 // 质控核查设置
@@ -2489,34 +2510,34 @@ const routes = [
                 routes: [
                   {
                     path: '/qualityCheck/qualitySetting',
-                    redirect: "/qualityCheck/qualitySetting/zeroPointSet"
+                    redirect: '/qualityCheck/qualitySetting/zeroPointSet',
                   },
                   {
-                    name: 'zeroPointSet',  //零点核查设置
+                    name: 'zeroPointSet', //零点核查设置
                     path: '/qualityCheck/qualitySetting/zeroPointSet',
                     component: './qualityCheck/qualitySetting/zeroPointSet',
                   },
                   {
-                    name: 'rangeSet',  //量程核查设置
+                    name: 'rangeSet', //量程核查设置
                     path: '/qualityCheck/qualitySetting/rangeSet',
                     component: './qualityCheck/qualitySetting/rangeSet',
                   },
                   {
-                    name: 'linearSet',  //线性核查设置
+                    name: 'linearSet', //线性核查设置
                     path: '/qualityCheck/qualitySetting/linearSet',
                     component: './qualityCheck/qualitySetting/linearSet',
                   },
                   {
-                    name: 'blindSet',  //盲样核查设置
+                    name: 'blindSet', //盲样核查设置
                     path: '/qualityCheck/qualitySetting/blindSet',
                     component: './qualityCheck/qualitySetting/blindSet',
                   },
                   {
-                    name: 'resTimeSet',  //响应时间设置
+                    name: 'resTimeSet', //响应时间设置
                     path: '/qualityCheck/qualitySetting/resTimeSet',
                     component: './qualityCheck/qualitySetting/resTimeSet',
                   },
-                ]
+                ],
               },
               {
                 // 手动质控核查
@@ -2525,22 +2546,21 @@ const routes = [
                 routes: [
                   {
                     path: '/qualityCheck/qualityManualCheck',
-                    redirect: "/qualityCheck/qualityManualCheck/manualQuality"
+                    redirect: '/qualityCheck/qualityManualCheck/manualQuality',
                   },
                   {
-                    name: 'manualQuality',  // 手动质控
+                    name: 'manualQuality', // 手动质控
                     path: '/qualityCheck/qualityManualCheck/manualQuality',
                     component: './qualityCheck/qualityManualCheck/manualQuality',
                   },
                   {
-                    name: 'dataExtract',  // 数据提取
+                    name: 'dataExtract', // 数据提取
                     path: '/qualityCheck/qualityManualCheck/dataExtract',
                     component: './qualityCheck/qualityManualCheck/dataExtract',
-                  }
-                ]
+                  },
+                ],
               },
             ],
-
           },
           // 质控 - 知识库
           {
@@ -2554,7 +2574,7 @@ const routes = [
             name: 'basicsManage',
             routes: [
               {
-                name: 'wry',  // 污染源管理
+                name: 'wry', // 污染源管理
                 path: '/basicsManage/wry',
                 routes: [
                   // {
@@ -2568,12 +2588,12 @@ const routes = [
                   //   component: './basicsManage/wry/entManage/Point',
                   // },
                   {
-                    name: 'KBS',  // 知识库管理
+                    name: 'KBS', // 知识库管理
                     path: '/basicsManage/wry/KBS',
                     component: './KBS/KBSManage',
                   },
-                ]
-              }
+                ],
+              },
             ],
           },
           {
@@ -2769,35 +2789,33 @@ const routes = [
             name: 'dynamicControl',
             routes: [
               {
-                name: 'reportManage',  // 报备管理
+                name: 'reportManage', // 报备管理
                 path: '/dynamicControl/reportManage',
                 routes: [
                   {
-                    name: 'paramFiling',  //管控参数备案
+                    name: 'paramFiling', //管控参数备案
                     path: '/dynamicControl/reportManage/paramFiling',
                     component: './dynamicControl/reportManage/paramFiling',
                   },
-                ]
+                ],
               },
               {
-                name: 'dynamicDataManage',  // 管控数据
+                name: 'dynamicDataManage', // 管控数据
                 path: '/dynamicControl/dynamicDataManage',
                 routes: [
                   {
-                    name: 'realtimedynamicData',  //实时管控参数
+                    name: 'realtimedynamicData', //实时管控参数
                     path: '/dynamicControl/dynamicDataManage/realtimedynamicData',
                     component: './dataSearch/monitor/working/realtimeParam',
-
                   },
                   {
-                    name: 'historyparame',  //历史管控参数
+                    name: 'historyparame', //历史管控参数
                     path: '/dynamicControl/dynamicDataManage/controlData/historyparame',
                     component: './dynamicControl/controlData/historyparame',
                   },
-                ]
-              }
-            ]
-
+                ],
+              },
+            ],
           },
           /* 任务详情 */
           {
@@ -2805,17 +2823,16 @@ const routes = [
             component: './EmergencyTodoList/EmergencyDetailInfoLayout',
           },
           {
-            name: 'OneEntsOneArchives',  // 一企一档
+            name: 'OneEntsOneArchives', // 一企一档
             path: '/oneEntsOneArchives',
             routes: [
               {
                 path: '/oneEntsOneArchives',
                 redirect: '/oneEntsOneArchives/entList',
-
               },
 
               {
-                name: 'EssentialInfo',  // 基本信息
+                name: 'EssentialInfo', // 基本信息
                 path: '/oneEntsOneArchives/essentialInfo',
                 routes: [
                   {
@@ -2823,59 +2840,58 @@ const routes = [
                     redirect: '/oneEntsOneArchives/essentialInfo/entInfoDetail',
                   },
                   {
-                    name: 'EntInfoDetail',  //企业列表详情
+                    name: 'EntInfoDetail', //企业列表详情
                     path: '/oneEntsOneArchives/essentialInfo/entInfoDetail',
                     component: './oneEntsOneArchives/essentialInfo/entInfoDetail',
                   },
                   {
-                    name: 'EntInfoEdit',  //企业列表详情 编辑
+                    name: 'EntInfoEdit', //企业列表详情 编辑
                     path: '/oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit',
                     component: './oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit',
                   },
                   {
-                    name: 'OutfallInfo',  //排污口信息管理
+                    name: 'OutfallInfo', //排污口信息管理
                     path: '/oneEntsOneArchives/essentialInfo/outfallInfo',
-                    component: './oneEntsOneArchives/essentialInfo/outfallInfo'
+                    component: './oneEntsOneArchives/essentialInfo/outfallInfo',
                   },
                   {
-                    name: 'WasteWaterGovern',  //废水治理设施
+                    name: 'WasteWaterGovern', //废水治理设施
                     path: '/oneEntsOneArchives/essentialInfo/wasteWaterGovern/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
-                    name: 'OperationInfo',  //运维信息管理
+                    name: 'OperationInfo', //运维信息管理
                     path: '/oneEntsOneArchives/essentialInfo/operationInfo/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
-                    name: 'EquipmentManufacturer',  //设备生产厂商信息管理
+                    name: 'EquipmentManufacturer', //设备生产厂商信息管理
                     path: '/oneEntsOneArchives/essentialInfo/equipmentManufacturer/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
-                    name: 'OutfallInfo',  //废气治理设施
+                    name: 'OutfallInfo', //废气治理设施
                     path: '/oneEntsOneArchives/essentialInfo/wasteGasGovern/:configId',
-                    component: './oneEntsOneArchives/autoformSearchTemplate'
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
-                    name: 'StatisticalAnalysis',  //一企一档进入 统计分析
+                    name: 'StatisticalAnalysis', //一企一档进入 统计分析
                     path: '/oneEntsOneArchives/essentialInfo/statisticalAnalysis',
-                    component: './oneEntsOneArchives/essentialInfo/statisticalAnalysis'
+                    component: './oneEntsOneArchives/essentialInfo/statisticalAnalysis',
                   },
-                ]
+                ],
               },
 
               {
-                name: 'DischargeStandard',  //排污许可管理
+                name: 'DischargeStandard', //排污许可管理
                 path: '/oneEntsOneArchives/sewageDisposal',
                 routes: [
                   {
                     path: '/oneEntsOneArchives/sewageDisposal',
                     redirect: '/oneEntsOneArchives/sewageDisposal/dischargeStandLimit',
-
                   },
                   {
-                    name: 'dischargeStandLimit',//排污许可管理 - 排放标准限值
+                    name: 'dischargeStandLimit', //排污许可管理 - 排放标准限值
                     path: '/oneEntsOneArchives/sewageDisposal/dischargeStandLimit',
                     component: './platformManager/monitoringstandard',
                   },
@@ -2883,53 +2899,49 @@ const routes = [
                     name: 'dischargeNumLimit', //排污许可管理 - 排放量限值
                     path: '/oneEntsOneArchives/sewageDisposal/dischargeNumLimit/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
-                  }
-
-                ]
+                  },
+                ],
               },
               {
-                name: 'MonitoringData',  //监控数据
+                name: 'MonitoringData', //监控数据
                 path: '/oneEntsOneArchives/monitoringData',
 
                 routes: [
                   {
                     path: '/oneEntsOneArchives/monitoringData',
                     redirect: '/oneEntsOneArchives/monitoringData/monitorExhibition',
-
                   },
                   {
                     name: 'MonitorExhibition',
                     path: '/oneEntsOneArchives/monitoringData/monitorExhibition',
                     component: './monitoring/dataquery',
                   },
-
-                ]
+                ],
               },
               {
-                name: 'EnvironEmergency',  //环境应急预案
+                name: 'EnvironEmergency', //环境应急预案
                 path: '/oneEntsOneArchives/environEmergency',
                 routes: [
                   {
                     path: '/oneEntsOneArchives/environEmergency',
-                    redirect: '/oneEntsOneArchives/environEmergency/factorSitua/Bas_EnvironmentalEmergencyPlan',
-
+                    redirect:
+                      '/oneEntsOneArchives/environEmergency/factorSitua/Bas_EnvironmentalEmergencyPlan',
                   },
                   {
                     name: 'FactorSitua',
                     path: '/oneEntsOneArchives/environEmergency/factorSitua/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
-
-                ]
+                ],
               },
               {
-                name: 'CharacteristicFactor',  //特征因子
+                name: 'CharacteristicFactor', //特征因子
                 path: '/oneEntsOneArchives/characteristicFactor',
                 routes: [
                   {
                     path: '/oneEntsOneArchives/characteristicFactor',
-                    redirect: '/oneEntsOneArchives/characteristicFactor/wasterWater/Bas_WaterEigenfactor',
-
+                    redirect:
+                      '/oneEntsOneArchives/characteristicFactor/wasterWater/Bas_WaterEigenfactor',
                   },
                   {
                     name: 'Voc',
@@ -2946,16 +2958,16 @@ const routes = [
                     path: '/oneEntsOneArchives/characteristicFactor/wasterAir/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
-                ]
+                ],
               },
               {
-                name: 'LawInfo',  //执法信息管理
+                name: 'LawInfo', //执法信息管理
                 path: '/oneEntsOneArchives/lawInfo',
                 routes: [
                   {
                     path: '/oneEntsOneArchives/lawInfo',
-                    redirect: '/oneEntsOneArchives/lawInfo/administration/Bas_AdministrationTasksRecord',
-
+                    redirect:
+                      '/oneEntsOneArchives/lawInfo/administration/Bas_AdministrationTasksRecord',
                   },
                   {
                     name: 'Administration', //执法信息管理-行政任务记录
@@ -2963,42 +2975,43 @@ const routes = [
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
-                    name: 'LawEnforcement',//执法信息管理-执法任务记录
+                    name: 'LawEnforcement', //执法信息管理-执法任务记录
                     path: '/oneEntsOneArchives/lawInfo/lawEnforcement/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
-                  }
-                ]
+                  },
+                ],
               },
               {
-                name: 'HazardousWaste',  //危废管理
+                name: 'HazardousWaste', //危废管理
                 path: '/oneEntsOneArchives/hazardousWaste',
                 routes: [
                   {
                     path: '/oneEntsOneArchives/hazardousWaste',
-                    redirect: '/oneEntsOneArchives/hazardousWaste/hazardousWasteInfo/Bas_HazardousWasteManagement'
+                    redirect:
+                      '/oneEntsOneArchives/hazardousWaste/hazardousWasteInfo/Bas_HazardousWasteManagement',
                   },
                   {
-                    name: 'HazardousWasteInfo',  //危废管理-危废管理
+                    name: 'HazardousWasteInfo', //危废管理-危废管理
                     path: '/oneEntsOneArchives/hazardousWaste/hazardousWasteInfo/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
-                    name: 'PlatformAccount',//危废管理-危废台账
+                    name: 'PlatformAccount', //危废管理-危废台账
                     path: '/oneEntsOneArchives/hazardousWaste/platformAccount/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
-                ]
+                ],
               },
               {
-                name: 'EiaInfo',  //环评信息管理
+                name: 'EiaInfo', //环评信息管理
                 path: '/oneEntsOneArchives/eiaInfo',
                 routes: [
                   {
                     path: '/oneEntsOneArchives/eiaInfo',
-                    redirect: '/oneEntsOneArchives/eiaInfo/approval/Bas_ProjectApproval'
+                    redirect: '/oneEntsOneArchives/eiaInfo/approval/Bas_ProjectApproval',
                   },
                   {
-                    name: 'Approval',   //环评信息管理  建设环评审批
+                    name: 'Approval', //环评信息管理  建设环评审批
                     path: '/oneEntsOneArchives/eiaInfo/approval/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
@@ -3007,24 +3020,24 @@ const routes = [
                     path: '/oneEntsOneArchives/eiaInfo/acceptanceCheck/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
-                ]
+                ],
               },
               {
-                name: 'PetitionComplaints',  //信访投诉
+                name: 'PetitionComplaints', //信访投诉
                 path: '/oneEntsOneArchives/petitionComplaints',
                 routes: [
                   {
                     path: '/oneEntsOneArchives/petitionComplaints',
-                    redirect: '/oneEntsOneArchives/petitionComplaints/situa/:configId'
+                    redirect: '/oneEntsOneArchives/petitionComplaints/situa/:configId',
                   },
                   {
-                    name: 'petitionComplaints',   //信访投诉情况
+                    name: 'petitionComplaints', //信访投诉情况
                     path: '/oneEntsOneArchives/petitionComplaints/situa/:configId',
                     component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
-                ]
+                ],
               },
-            ]
+            ],
           },
         ],
       },

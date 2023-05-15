@@ -263,7 +263,7 @@ export default class Index extends Component {
       type: 'missingData/exportDefectPointDetail',
       payload: { ...queryPar, HasOperation:true },
       callback: data => {
-         downloadFile(`/upload${data}`);
+         downloadFile(`${data}`);
         },
     });
   };

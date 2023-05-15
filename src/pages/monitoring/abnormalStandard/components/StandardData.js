@@ -193,7 +193,7 @@ export default class Index extends Component {
       type: 'abnormalStandard/exportExceptionStandValue',
       payload: { ...queryPar },
       callback: data => {
-          downloadFile(`/upload${data}`);
+          downloadFile(`${data}`);
         },
     });
   };

@@ -2,14 +2,16 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-12-27 09:48:49
+ * @Last Modified time: 2023-03-21 09:18:13
  * @desc: 主页model
  */
 import moment from 'moment';
 import * as services from '@/services/homeApi';
-import * as commonApi from '@/services/commonApi'
+import * as commonApi from '@/services/commonApi';
+import { getComparisonOfMonData } from '@/pages/IntelligentAnalysis/CO2Emissions/service';
 import Model from '@/utils/model';
 import { message } from 'antd';
+import { result } from 'lodash';
 
 export default Model.extend({
   namespace: 'home',
@@ -22,7 +24,9 @@ export default Model.extend({
     isOnlyCO2: false,
     AllMonthEmissionsByPollutant: {
       beginTime: moment().format('YYYY-01-01 00:00:00'),
-      endTime: moment().add(1, 'years').format('YYYY-MM-01 HH:mm:ss'),
+      endTime: moment()
+        .add(1, 'years')
+        .format('YYYY-MM-01 HH:mm:ss'),
       // beginTime: moment().add(2, 'years').format('YYYY-MM-01 HH:mm:ss'),
       // endTime: moment().add(3, 'years').format('YYYY-MM-01 HH:mm:ss'),
       pollutantCode: ['01', '02', '03', '30'],
@@ -49,12 +53,12 @@ export default Model.extend({
     pointData: {},
     // 报警信息参数
     warningInfoParams: {
-      beginTime: moment().format("YYYY-MM-DD 00:00:00"),
+      beginTime: moment().format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       entCode: null,
       pageIndex: 1,
       pageSize: 100,
-      PollutantType: "2",
+      PollutantType: '2',
     },
     warningInfoList: [],
     // 运维 - 任务数量统计
@@ -76,13 +80,15 @@ export default Model.extend({
     // 运维 - 异常报警及响应情况
     alarmAnalysisParams: {
       beginTime: moment().format('YYYY-MM-01 HH:mm:ss'),
-      endTime: moment().add(1, 'months').format('YYYY-MM-01 HH:mm:ss'),
-      aaData: []
+      endTime: moment()
+        .add(1, 'months')
+        .format('YYYY-MM-01 HH:mm:ss'),
+      aaData: [],
     },
     alarmAnalysis: {},
     // 超标汇总
     mounthOverDataParams: {
-      beginTime: moment().format("YYYY-MM-01 00:00:00"),
+      beginTime: moment().format('YYYY-MM-01 00:00:00'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       EntCode: null,
       DGIMN: null,
@@ -91,9 +97,17 @@ export default Model.extend({
     // 排污税
     taxInfo: {},
     homePage: null,
-    GHGandEmissionContrastData: { allSumDis: 0, disSum: 0 },
+    GHGandEmissionContrastData: { allSumDis: 0, disSum: 0, disGHG: 0 },
     // 视频列表
-    homeVideoList: []
+    homeVideoList: [],
+    paramsInfo: { '62030231rdep11': [], '62030231rdep12': [] },
+    CO2RateAll: {},
+    yanshiVisible: false,
+    comparisonOfMonData: {
+      lineAcc: [],
+      lineDis: [],
+      lineTime: [],
+    },
   },
   effects: {
     *getHomePage({ payload }, { call, update, take }) {
@@ -103,20 +117,18 @@ export default Model.extend({
       }
     },
     // 获取企业及排口信息
-    *getAllEntAndPoint({ payload }, {
-      call, update, take, select
-    }) {
+    *getAllEntAndPoint({ payload }, { call, update, take, select }) {
       let global = yield select(state => state.global);
       if (!global.configInfo) {
         yield take('global/getSystemConfigInfo/@@end');
         global = yield select(state => state.global);
         payload = {
           PollutantTypes: global.configInfo.SystemPollutantType,
-        }
+        };
       } else {
         payload = {
           PollutantTypes: global.configInfo.SystemPollutantType,
-        }
+        };
       }
       const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3], ...payload });
       if (result.IsSuccess) {
@@ -125,18 +137,16 @@ export default Model.extend({
           // currentEntInfo: result.Datas[0],
           // currentMarkersList: result.Datas[0].children,
           currentMarkersList: result.Datas,
-        })
+        });
       }
     },
     // 获取污染物类型
-    *getPollutantTypeList({ payload }, {
-      update, call
-    }) {
+    *getPollutantTypeList({ payload }, { update, call }) {
       const result = yield call(commonApi.getPollutantTypeList, payload);
       if (result.IsSuccess) {
         yield update({
-          pollutantTypeList: result.Datas
-        })
+          pollutantTypeList: result.Datas,
+        });
       }
     },
 
@@ -145,16 +155,16 @@ export default Model.extend({
       const rateStatisticsData = yield select(state => state.home.rateStatisticsByEnt);
       const postData = {
         ...rateStatisticsData,
-        ...payload
-      }
+        ...payload,
+      };
       const result = yield call(services.getRateStatisticsByEnt, postData);
       if (result.IsSuccess) {
         yield update({
           rateStatisticsByEnt: {
             ...rateStatisticsData,
-            rateData: result.Datas && result.Datas[0]
-          }
-        })
+            rateData: result.Datas && result.Datas[0],
+          },
+        });
       }
     },
 
@@ -163,8 +173,23 @@ export default Model.extend({
       const result = yield call(services.getStatisticsPointStatus, payload);
       if (result.IsSuccess) {
         yield update({
-          pointData: result.Datas
-        })
+          pointData: result.Datas,
+        });
+      }
+    },
+
+    *GetProcessFlowChartStatus({ payload }, { call, update, select }) {
+      const result = yield call(services.GetProcessFlowChartStatus, payload);
+      if (result.IsSuccess) {
+        const paramsInfo = yield select(state => state.home.paramsInfo);
+        let _paramsInfo = {
+          ...paramsInfo,
+          [payload.dgimn]: result.Datas.paramsInfo,
+        };
+        console.log('_paramsInfo', _paramsInfo);
+        yield update({
+          paramsInfo: _paramsInfo,
+        });
       }
     },
 
@@ -173,69 +198,88 @@ export default Model.extend({
       const warningInfoParams = yield select(state => state.home.warningInfoParams);
       const postData = {
         ...warningInfoParams,
-        ...payload
-      }
+        ...payload,
+      };
       const result = yield call(services.getWarningInfo, postData);
       if (result.IsSuccess) {
-        let data = result.Datas ? result.Datas[0].map(item => {
-          // return { "desc": `${item.PointName}：<span style="color: #ffcb5b">${item.PollutantName}</span> 从 <span style="color: #3ccafc">${item.FirstTime}</span> 发生了 <span style="color: #f30201; font-size: 16px">${item.AlarmCount}</span> 次报警。`, url: "" }
-          if (item.AlarmType == 16) {
-            // 配额超标报警
-            let paramsData = item.PollutantName.split('|');
-            return {
-              "desc": <div>
-                <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
-                <br />
-                <div style={{ marginLeft: 10 }}>
-                  <span style={{ color: '#3ccafc' }}>{paramsData[0]}月</span> 核算法温室气体排放量为
-                  <span style={{ color: '#f30201' }}>{paramsData[1]}</span>
-                  <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span> ，
-                  <br />
-                  <span style={{ color: '#f30201' }}>超出平均每月排放总额90%。</span>
-                </div>
-              </div>
-              , url: ""
-            }
-          }
-          if (item.AlarmType == 17) {
-            // 数据造假报警
-            let paramsData = item.PollutantName.split('|');
-            let time = '';
-            if (paramsData.length && paramsData[0]) {
-              let times = paramsData[0].split('至');
-              time = moment(times[0]).format('YYYY-MM-DD HH') + '时 至 ' + moment(times[1]).format('YYYY-MM-DD HH') + '时'
-            }
-            return {
-              "desc": <div>
-                <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
-                <br />
-                <div style={{ marginLeft: 10 }}>
-                  <span style={{ color: '#3ccafc', width: '100%', display: 'inline-block', }}>{time}，</span>
-                  <br />
-                  <span style={{ color: '#ffcb5b' }}>{paramsData[1]}</span>
-                  分钟数据相似度超过80% ，
-                  {/* <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span>, */}
-                  <br />
-                  <span style={{ color: '#f30201' }}>疑似为造假数据。</span>
-                </div>
-              </div>
-              , url: ""
-            }
-          }
-          return {
-            "desc": <div>
-              <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
-              <br />
-              <div style={{ marginLeft: 10 }}>
-                <span style={{ color: '#ffcb5b' }}>{item.PollutantName}</span> 从
-                <span style={{ color: '#3ccafc' }}>{item.FirstTime}</span>
-                发生了
-                <span style={{ color: '#f30201', fontSize: 16 }}>{item.AlarmCount}</span> 次报警。
-              </div>
-            </div>
-            , url: ""
-          }
-        }) : [];
+        let data = result.Datas
+          ? result.Datas[0].map(item => {
+              // return { "desc": `${item.PointName}：<span style="color: #ffcb5b">${item.PollutantName}</span> 从 <span style="color: #3ccafc">${item.FirstTime}</span> 发生了 <span style="color: #f30201; font-size: 16px">${item.AlarmCount}</span> 次报警。`, url: "" }
+              if (item.AlarmType == 16) {
+                // 配额超标报警
+                let paramsData = item.PollutantName.split('|');
+                return {
+                  desc: (
+                    <div>
+                      <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
+                      <br />
+                      <div style={{ marginLeft: 10 }}>
+                        <span style={{ color: '#3ccafc' }}>{paramsData[0]}月</span>{' '}
+                        核算法温室气体排放量为
+                        <span style={{ color: '#f30201' }}>{paramsData[1]}</span>
+                        <span style={{ color: '#ffcb5b' }}>
+                          [{paramsData[2]}平均每月排放总额]
+                        </span>{' '}
+                        ，
+                        <br />
+                        <span style={{ color: '#f30201' }}>超出平均每月排放总额90%。</span>
+                      </div>
+                    </div>
+                  ),
+                  url: '',
+                };
+              }
+              if (item.AlarmType == 17) {
+                // 数据造假报警
+                let paramsData = item.PollutantName.split('|');
+                let time = '';
+                if (paramsData.length && paramsData[0]) {
+                  let times = paramsData[0].split('至');
+                  time =
+                    moment(times[0]).format('YYYY-MM-DD HH') +
+                    '时 至 ' +
+                    moment(times[1]).format('YYYY-MM-DD HH') +
+                    '时';
+                }
+                return {
+                  desc: (
+                    <div>
+                      <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
+                      <br />
+                      <div style={{ marginLeft: 10 }}>
+                        <span style={{ color: '#3ccafc', width: '100%', display: 'inline-block' }}>
+                          {time}，
+                        </span>
+                        <br />
+                        <span style={{ color: '#ffcb5b' }}>{paramsData[1]}</span>
+                        分钟数据相似度超过80% ，
+                        {/* <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span>, */}
+                        <br />
+                        <span style={{ color: '#f30201' }}>疑似为造假数据。</span>
+                      </div>
+                    </div>
+                  ),
+                  url: '',
+                };
+              }
+              return {
+                desc: (
+                  <div>
+                    <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
+                    <br />
+                    <div style={{ marginLeft: 10 }}>
+                      <span style={{ color: '#ffcb5b' }}>{item.PollutantName}</span> 从
+                      <span style={{ color: '#3ccafc' }}>{item.FirstTime}</span>
+                      发生了
+                      <span style={{ color: '#f30201', fontSize: 16 }}>{item.AlarmCount}</span>{' '}
+                      次报警。
+                    </div>
+                  </div>
+                ),
+                url: '',
+              };
+            })
+          : [];
         // "AlarmMsg": "[XX热力-电力电位1]实时功率为71.236KW，启停阈值为50KW，属于正常生产状态，关联的治污设施低温燃烧总电电源的实时功率为0KW，启停阈值为10KW，未正常运行,治污设施异常,首次异常时间：2022/7/15 1:00:00。",
         yield update({
           warningInfoList: [
@@ -306,8 +350,8 @@ export default Model.extend({
             //   , url: ""
             // },
             ...data,
-          ]
-        })
+          ],
+        });
       }
     },
 
@@ -316,13 +360,18 @@ export default Model.extend({
       const taskCountParams = yield select(state => state.home.taskCountParams);
       const postData = {
         ...taskCountParams,
-        ...payload
-      }
-      const result = yield call(services.getTaskCount, postData);
-      if (result.IsSuccess) {
+        ...payload,
+      };
+      // const result = yield call(services.getTaskCount, postData);
+      // if (result.IsSuccess) {
+      if (true) {
         yield update({
-          taskCountData: result.Datas && result.Datas[0]
-        })
+          taskCountData: {
+            TaskSum: 8,
+            CompletedTaskSum: 8,
+            NoCompletedTaskSum: 0,
+          },
+        });
       }
     },
 
@@ -331,13 +380,17 @@ export default Model.extend({
       const operationsWarningParams = yield select(state => state.home.operationsWarningParams);
       const postData = {
         ...operationsWarningParams,
-        ...payload
-      }
+        ...payload,
+      };
       const result = yield call(services.getExceptionProcessing, postData);
       if (result.IsSuccess) {
+        let data = result.Datas && result.Datas[0] ? result.Datas[0] : {};
         yield update({
-          operationsWarningData: result.Datas && result.Datas[0]
-        })
+          operationsWarningData: {
+            ...data,
+            ThisMonthEP: 5,
+          },
+        });
       }
     },
 
@@ -346,47 +399,51 @@ export default Model.extend({
       const alarmAnalysisParams = yield select(state => state.home.alarmAnalysisParams);
       const postData = {
         ...alarmAnalysisParams,
-        ...payload
-      }
+        ...payload,
+      };
       const result = yield call(services.getAlarmAnalysis, postData);
       if (result.IsSuccess) {
+        let data = result.Datas && result.Datas[0] ? result.Datas[0] : {};
         yield update({
-          alarmAnalysis: result.Datas && result.Datas[0]
-        })
+          alarmAnalysis: {
+            ...data,
+            LessThan2Hour: 5,
+            GreaterThan8Hour: 0,
+            OtherTime: 0,
+          },
+        });
       }
     },
 
     // 获取排污许可情况数据
-    * getAllMonthEmissionsByPollutant({ payload }, {
-      call,
-      put,
-      update,
-      select
-    }) {
-      const {
-        AllMonthEmissionsByPollutant
-      } = yield select(state => state.home);
+    *getAllMonthEmissionsByPollutant({ payload }, { call, put, update, select }) {
+      const { AllMonthEmissionsByPollutant } = yield select(state => state.home);
       let body = {
         beginTime: AllMonthEmissionsByPollutant.beginTime,
         endTime: AllMonthEmissionsByPollutant.endTime,
-        pollutantCode: AllMonthEmissionsByPollutant.pollutantCode,
+        // pollutantCode: AllMonthEmissionsByPollutant.pollutantCode,
+        pollutantCode: ['a05001'],
         EntCode: payload.entCode,
-        ...payload
+        ...payload,
       };
       const response = yield call(services.GetAllMonthEmissionsByPollutant, body);
       if (response.IsSuccess && response.Datas) {
         // 判断是否只有二氧化碳
         let isOnlyCO2 = false;
-        if (!response.Datas['01'] && !response.Datas['02'] && !response.Datas['03'] && response.Datas['a05001']) {
+        if (
+          !response.Datas['01'] &&
+          !response.Datas['02'] &&
+          !response.Datas['03'] &&
+          response.Datas['a05001']
+        ) {
           isOnlyCO2 = true;
         }
-
 
         let ycdate = [];
         let ycdata = [];
         // 烟尘
         if (response.Datas['01']) {
-          response.Datas['01'].monthList.map((ele) => {
+          response.Datas['01'].monthList.map(ele => {
             ycdate.push(`${ele.DataDate.split('-')[1]}月`);
             ycdata.push(ele.Emissions.toFixed(2));
           });
@@ -395,7 +452,7 @@ export default Model.extend({
         let eyhldata = [];
         // 二氧化硫
         if (response.Datas['02']) {
-          response.Datas['02'].monthList.map((ele) => {
+          response.Datas['02'].monthList.map(ele => {
             eyhldate.push(`${ele.DataDate.split('-')[1]}月`);
             eyhldata.push(ele.Emissions.toFixed(2));
           });
@@ -404,7 +461,7 @@ export default Model.extend({
         let dyhwdata = [];
         // 氮氧化物
         if (response.Datas['03']) {
-          response.Datas['03'].monthList.map((ele) => {
+          response.Datas['03'].monthList.map(ele => {
             dyhwdate.push(`${ele.DataDate.split('-')[1]}月`);
             dyhwdata.push(ele.Emissions.toFixed(2));
           });
@@ -413,11 +470,12 @@ export default Model.extend({
         let eyhtdata = [];
         // 二氧化碳
         if (response.Datas['a05001']) {
-          response.Datas['a05001'].monthList.map((ele) => {
+          response.Datas['a05001'].monthList.map(ele => {
             eyhtdate.push(`${ele.DataDate.split('-')[1]}月`);
             eyhtdata.push(ele.Emissions);
           });
         }
+        console.log('response', response.Datas);
         yield update({
           isOnlyCO2: isOnlyCO2,
           AllMonthEmissionsByPollutant: {
@@ -434,7 +492,7 @@ export default Model.extend({
             eyhtdate: eyhtdate,
             eyhtdata: eyhtdata,
             eyhtAnalData: response.Datas['a05001'] || {},
-          }
+          },
         });
       }
     },
@@ -443,8 +501,8 @@ export default Model.extend({
       const mounthOverDataParams = yield select(state => state.home.mounthOverDataParams);
       const postData = {
         ...mounthOverDataParams,
-        ...payload
-      }
+        ...payload,
+      };
       const result = yield call(services.getMounthOverData, postData);
       if (result.IsSuccess) {
         const mounthOverData = [];
@@ -453,28 +511,29 @@ export default Model.extend({
             case '01':
               mounthOverData.push({
                 ...item,
-                pollutantName: "烟尘"
-              })
+                pollutantName: '烟尘',
+              });
               break;
             case '02':
               mounthOverData.push({
                 ...item,
-                pollutantName: "二氧化硫"
-              })
+                pollutantName: '二氧化硫',
+              });
               break;
             case '03':
               mounthOverData.push({
                 ...item,
-                pollutantName: "氮氧化物"
-              })
+                pollutantName: '氮氧化物',
+              });
               break;
-            default: break;
+            default:
+              break;
           }
-        })
-        console.log('mounthOverData=', mounthOverData)
+        });
+        console.log('mounthOverData=', mounthOverData);
         yield update({
-          mounthOverData
-        })
+          mounthOverData,
+        });
       }
     },
 
@@ -483,8 +542,8 @@ export default Model.extend({
       const result = yield call(services.getAllTax, payload);
       if (result.IsSuccess) {
         yield update({
-          taxInfo: result.Datas || {}
-        })
+          taxInfo: result.Datas || {},
+        });
       }
     },
     // 排污税 - 单个企业
@@ -492,8 +551,8 @@ export default Model.extend({
       const result = yield call(services.getEntTax, payload);
       if (result.IsSuccess) {
         yield update({
-          taxInfo: result.Datas || {}
-        })
+          taxInfo: result.Datas || {},
+        });
       }
     },
     // 排污税 - 单个排口
@@ -501,28 +560,76 @@ export default Model.extend({
       const result = yield call(services.getPointTax, payload);
       if (result.IsSuccess) {
         yield update({
-          taxInfo: result.Datas || {}
-        })
+          taxInfo: result.Datas || {},
+        });
       }
     },
     // 年度排放量对比分析 - 碳排放
     *getGHGandEmissionContrast({ payload }, { call, update, select }) {
+      // const result = yield call(services.GetGHGandEmissionContrastOther, payload);
       const result = yield call(services.getGHGandEmissionContrast, payload);
       if (result.IsSuccess) {
         yield update({
-          GHGandEmissionContrastData: result.Datas
-        })
+          GHGandEmissionContrastData: result.Datas,
+        });
       }
     },
     // 获取首页视频列表
     *getHomePageVideo({ payload }, { call, update, select }) {
       const result = yield call(services.getHomePageVideo, {});
       if (result.IsSuccess) {
+        console.log('homeVideoList', result.Datas);
         yield update({
-          homeVideoList: result.Datas
-        })
+          homeVideoList: result.Datas,
+        });
       }
     },
+    // 获取碳排放对比分析图
+    *getComparisonOfMonData({ payload }, { call, update, select }) {
+      const result = yield call(getComparisonOfMonData, payload);
+      if (result.IsSuccess) {
+        yield update({
+          comparisonOfMonData: {
+            lineAcc: result.Datas['Line-Acc'],
+            lineDis: result.Datas['Line-Dis'],
+            lineTime: result.Datas['Line-Time'],
+          },
+        });
+      }
+    },
+  },
+  reducers: {
+    // 更新流速参数
+    updateFlows(state, { payload }) {
+      let data = payload.data;
+      let currentDGIMN = data[0].DGIMN;
 
-  }
-})
+      if (state.paramsInfo[currentDGIMN] && state.paramsInfo[currentDGIMN].length) {
+        let _paramsInfo = [...state.paramsInfo[currentDGIMN]];
+        // let paramsInfo = _paramsInfo.filter(item => item.pollutantName.indexOf('流速') <= -1 && item.pollutantCode.indexOf('_') <= -1);;
+        let paramsInfo = [];
+
+        // let flows = [];
+        // 找到推送过来的流速数据,重新加到数组中
+        _paramsInfo.map(item => {
+          let current = data.find(itm => itm.PollutantCode === item.pollutantCode);
+          if (current) {
+            paramsInfo.push({
+              ...item,
+              MonitorTime: current.MonitorTime,
+              value: current.MonitorValue,
+            });
+          }
+        });
+        return {
+          ...state,
+          paramsInfo: {
+            ...state.paramsInfo,
+            [currentDGIMN]: paramsInfo,
+          },
+        };
+      }
+      return { ...state };
+    },
+  },
+});

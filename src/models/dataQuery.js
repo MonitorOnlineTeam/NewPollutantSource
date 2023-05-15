@@ -1,13 +1,8 @@
 import Model from '@/utils/model';
-import { message } from 'antd'
-import {
-  queryhistorydatalist,
-} from '../services/monitordata';
-import {
-  querypollutantlist,
-}
-  from '../services/baseapi';
-import * as services from '../services/dataQueryApi'
+import { message } from 'antd';
+import { queryhistorydatalist } from '../services/monitordata';
+import { querypollutantlist } from '../services/baseapi';
+import * as services from '../services/dataQueryApi';
 import { formatPollutantPopover, getDirLevel, getDataTruseMsg } from '@/utils/utils';
 import moment from 'moment';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
@@ -42,11 +37,10 @@ export default Model.extend({
     CO2SumData: [],
   },
   effects: {
-    * querypollutantlist({ payload, callback,
-    }, { call, update, put, take, select }) {
+    *querypollutantlist({ payload, callback }, { call, update, put, take, select }) {
       const body = {
         DGIMNs: payload.dgimn,
-      }
+      };
       const result = yield call(querypollutantlist, body);
       let { historyparams } = yield select(_ => _.dataquery);
       const { pollutantlist } = yield select(_ => _.dataquery);
@@ -59,11 +53,11 @@ export default Model.extend({
             pollutantNames: result.map(item => item.PollutantName).toString(),
             unit: result[0].Unit,
             DGIMN: payload.dgimn,
-          }
+          };
           yield update({
             historyparams,
           });
-          callback && callback(historyparams)
+          callback && callback(historyparams);
           if (!payload.notLoad) {
             yield put({
               type: 'queryhistorydatalist',
@@ -73,12 +67,18 @@ export default Model.extend({
           }
         }
       } else {
-        yield update({ pollutantlist: [], datalist: null, chartdata: null, columns: null, datatable: null, total: 0, DGIMN: payload.dgimn });
+        yield update({
+          pollutantlist: [],
+          datalist: null,
+          chartdata: null,
+          columns: null,
+          datatable: null,
+          total: 0,
+          DGIMN: payload.dgimn,
+        });
       }
     },
-    * queryhistorydatalist({
-      payload, from,
-    }, { select, call, update }) {
+    *queryhistorydatalist({ payload, from }, { select, call, update }) {
       const dataqueryData = yield select(_ => _.dataquery);
       let historyparams = dataqueryData.historyparams;
       let _pollutantlist = dataqueryData.pollutantlist;
@@ -88,12 +88,20 @@ export default Model.extend({
       if (payload.Type == 37) {
         if (_historyparams.datatype === 'realtime') {
           pollutantlist = _pollutantlist.filter(item => item.PollutantCode !== 'e0011');
-          _historyparams.pollutantCodes = _historyparams.pollutantCodes ?
-            _historyparams.pollutantCodes.split(',').filter(item => item !== 'e0011').toString() : '';
+          _historyparams.pollutantCodes = _historyparams.pollutantCodes
+            ? _historyparams.pollutantCodes
+                .split(',')
+                .filter(item => item !== 'e0011')
+                .toString()
+            : '';
         } else {
           pollutantlist = _pollutantlist.filter(item => item.PollutantCode === 'e0011');
-          _historyparams.pollutantCodes = _historyparams.pollutantCodes ?
-            _historyparams.pollutantCodes.split(',').filter(item => item === 'e0011').toString() : '';
+          _historyparams.pollutantCodes = _historyparams.pollutantCodes
+            ? _historyparams.pollutantCodes
+                .split(',')
+                .filter(item => item === 'e0011')
+                .toString()
+            : '';
         }
       }
 
@@ -105,11 +113,11 @@ export default Model.extend({
         _historyparams.DGIMNs = payload.dgimn;
       }
       if (!_historyparams.DGIMNs) {
-        _historyparams.DGIMNs = _historyparams.DGIMN
+        _historyparams.DGIMNs = _historyparams.DGIMN;
       }
 
       if (from) {
-        _historyparams = payload
+        _historyparams = payload;
       }
       // // 如果是初次加载的话
       // if (!historyparams.payloadpollutantCode && pollutantlist.length > 0) {
@@ -118,10 +126,12 @@ export default Model.extend({
       // }
       const resultlist = yield call(queryhistorydatalist, {
         ..._historyparams,
-        DGIMNs: payload.searchDataType === 2 ? _historyparams.DGIMNs + '_check' : _historyparams.DGIMNs,
-        DGIMN: payload.searchDataType === 2 ? _historyparams.DGIMNs + '_check' : _historyparams.DGIMNs
+        DGIMNs:
+          payload.searchDataType === 2 ? _historyparams.DGIMNs + '_check' : _historyparams.DGIMNs,
+        DGIMN:
+          payload.searchDataType === 2 ? _historyparams.DGIMNs + '_check' : _historyparams.DGIMNs,
       });
-      console.log('resultlist', resultlist)
+      console.log('resultlist', resultlist);
       const result = resultlist.Datas;
       if (result && result.length === 0) {
         yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
@@ -130,13 +140,13 @@ export default Model.extend({
       let xAxis = [];
       const arr = [];
       let i = 0;
-      if (result[0].PollutantType === "5AQI") {
-        _historyparams.pollutantCodes = "AQI," + _historyparams.pollutantCodes;
-        _historyparams.pollutantNames = "AQI," + _historyparams.pollutantNames;
+      if (result[0].PollutantType === '5AQI') {
+        _historyparams.pollutantCodes = 'AQI,' + _historyparams.pollutantCodes;
+        _historyparams.pollutantNames = 'AQI,' + _historyparams.pollutantNames;
       }
-      if (result[0].PollutantType === "5IQI") {
-        _historyparams.pollutantCodes = "IQI," + _historyparams.pollutantCodes;
-        _historyparams.pollutantNames = "IQI," + _historyparams.pollutantNames;
+      if (result[0].PollutantType === '5IQI') {
+        _historyparams.pollutantCodes = 'IQI,' + _historyparams.pollutantCodes;
+        _historyparams.pollutantNames = 'IQI,' + _historyparams.pollutantNames;
       }
       const arrname = _historyparams.pollutantNames.split(',');
       _historyparams.pollutantCodes.split(',').map((item, key) => {
@@ -148,18 +158,20 @@ export default Model.extend({
           markLine: [],
         };
         let markLine = {};
-        const polluntinfo = pollutantlist.find((value, index, arr) =>
-          value.PollutantCode === item) || {};
+        const polluntinfo =
+          pollutantlist.find((value, index, arr) => value.PollutantCode === item) || {};
         if (polluntinfo.StandardValue) {
           markLine = {
             symbol: 'none', // 去掉警戒线最后面的箭头
-            data: [{
-              // lineStyle: {
-              //     type: 'dash',
-              //     // color: polluntinfo.Color,
-              // },
-              yAxis: polluntinfo.UpperValue,
-            }],
+            data: [
+              {
+                // lineStyle: {
+                //     type: 'dash',
+                //     // color: polluntinfo.Color,
+                // },
+                yAxis: polluntinfo.UpperValue,
+              },
+            ],
           };
         }
 
@@ -172,10 +184,10 @@ export default Model.extend({
           name: arrname[i],
           data: seriesdata,
           markLine,
-        }
+        };
         arr.push(series);
         i++;
-      })
+      });
       result.map((item1, key) => {
         xAxis = xAxis.concat(item1.MonitorTime);
       });
@@ -190,9 +202,15 @@ export default Model.extend({
         }
         tablewidth = width * pollutantlist.length + 200;
         pollutantlist.map((item, key) => {
-          const unit = item.Unit ? `(${item.Unit})` : ''
+          const unit = item.Unit ? `(${item.Unit})` : '';
           pollutantcols = pollutantcols.concat({
-            title: <>{item.PollutantName}<br />{unit}</>,
+            title: (
+              <>
+                {item.PollutantName}
+                <br />
+                {unit}
+              </>
+            ),
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
             align: 'center',
@@ -200,49 +218,65 @@ export default Model.extend({
             render: (value, record, index) => {
               let text = value;
               if (item.PollutantName === '风向') {
-                text = getDirLevel(text)
+                text = getDirLevel(text);
               }
-              return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
+              return formatPollutantPopover(text, record[`${item.PollutantCode}_params`]);
             },
           });
         });
-        columns = [{
-          title: '时间',
-          dataIndex: 'MonitorTime',
-          key: 'MonitorTime',
-          width: 220,
-          fixed: payload.Type == 10 ? 'left' : false,
-          align: 'center',
-          render: (text, record) => {
-            let _text = "";
-            switch (historyparams.datatype) {
-              case "month":
-                _text = moment(text).format("YYYY-MM");
-              case "quarter":
-                switch (moment(text).format("MM-DD")) {
-                  case "01-01":
-                    _text = moment(text).format("YYYY") + "年第一季度";
-                  case "04-01":
-                    _text = moment(text).format("YYYY") + "年第二季度";
-                  case "07-01":
-                    _text = moment(text).format("YYYY") + "年第三季度";
-                  case "10-01":
-                    _text = moment(text).format("YYYY") + "年第四季度";
-                }
-                _text = moment(text).format("YYYY-MM");
-              case "year":
-                _text = moment(text).format("YYYY");
-              default:
-                _text = text;
-
-            }
-            return <span>
-              {getDataTruseMsg(record)}
-              {_text}
-            </span>
+        columns = [
+          {
+            title: '时间',
+            dataIndex: 'MonitorTime',
+            key: 'MonitorTime',
+            width: 220,
+            fixed: payload.Type == 10 ? 'left' : false,
+            align: 'center',
+            render: (text, record) => {
+              let _text = '';
+              switch (historyparams.datatype) {
+                case 'month':
+                  _text = moment(text).format('YYYY-MM');
+                  break;
+                case 'quarter':
+                  switch (moment(text).format('MM-DD')) {
+                    case '01-01':
+                      _text = moment(text).format('YYYY') + '年第一季度';
+                      break;
+                    case '04-01':
+                      _text = moment(text).format('YYYY') + '年第二季度';
+                      break;
+                    case '07-01':
+                      _text = moment(text).format('YYYY') + '年第三季度';
+                      break;
+                    case '10-01':
+                      _text = moment(text).format('YYYY') + '年第四季度';
+                      break;
+                  }
+                  _text = moment(text).format('YYYY-MM');
+                  break;
+                case 'year':
+                  _text = moment(text).format('YYYY');
+                  break;
+                default:
+                  _text = text;
+                  break;
+              }
+              return (
+                <span>
+                  {getDataTruseMsg(record)}
+                  {_text}
+                </span>
+              );
+            },
           },
-        }];
-        if (result && result[0] && (result[0].PollutantType === '5AQI' || payload.searchDataType === 2) && configInfo.IsOpenAQI === '1') {
+        ];
+        if (
+          result &&
+          result[0] &&
+          (result[0].PollutantType === '5AQI' || payload.searchDataType === 2) &&
+          configInfo.IsOpenAQI === '1'
+        ) {
           columns = columns.concat({
             title: 'AQI',
             dataIndex: 'AQI',
@@ -263,7 +297,12 @@ export default Model.extend({
             align: 'center',
           });
         }
-        if (result && result[0] && result[0].PollutantType === '5IQI' && configInfo.IsOpenAQI === '1') {
+        if (
+          result &&
+          result[0] &&
+          result[0].PollutantType === '5IQI' &&
+          configInfo.IsOpenAQI === '1'
+        ) {
           columns = columns.concat({
             title: '综合指数',
             dataIndex: 'IQI',
@@ -276,9 +315,15 @@ export default Model.extend({
         columns = columns.concat(pollutantcols);
       } else {
         pollutantlist.map((item, key) => {
-          const unit = item.Unit ? `(${item.Unit})` : ''
+          const unit = item.Unit ? `(${item.Unit})` : '';
           pollutantcols = pollutantcols.concat({
-            title: <>{item.PollutantName}<br />{unit}</>,
+            title: (
+              <>
+                {item.PollutantName}
+                <br />
+                {unit}
+              </>
+            ),
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
             align: 'center',
@@ -286,43 +331,58 @@ export default Model.extend({
             render: (value, record, index) => {
               let text = value;
               if (item.PollutantName === '风向') {
-                text = getDirLevel(text)
+                text = getDirLevel(text);
               }
-              return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
+              return formatPollutantPopover(text, record[`${item.PollutantCode}_params`]);
             },
           });
         });
-        columns = [{
-          title: '时间',
-          dataIndex: 'MonitorTime',
-          key: 'MonitorTime',
-          width: 160,
-          align: 'center',
-          render: (text, record) => {
-            let showDetail = "";
-            switch (historyparams.datatype) {
-              case "month":
-                return moment(text).format("YYYY-MM");
-              case "quarter":
-                switch (moment(text).format("MM-DD")) {
-                  case "01-01":
-                    return moment(text).format("YYYY") + "年第一季度";
-                  case "04-01":
-                    return moment(text).format("YYYY") + "年第二季度";
-                  case "07-01":
-                    return moment(text).format("YYYY") + "年第三季度";
-                  case "10-01":
-                    return moment(text).format("YYYY") + "年第四季度";
-                }
-                return moment(text).format("YYYY-MM");
-              case "year":
-                return moment(text).format("YYYY");
-              default:
-                return text;
-
-            }
+        columns = [
+          {
+            title: '时间',
+            dataIndex: 'MonitorTime',
+            key: 'MonitorTime',
+            width: 160,
+            align: 'center',
+            render: (text, record) => {
+              let time = '';
+              switch (historyparams.datatype) {
+                case 'month':
+                  time = moment(text).format('YYYY-MM');
+                  break;
+                case 'quarter':
+                  switch (moment(text).format('MM-DD')) {
+                    case '01-01':
+                      time = moment(text).format('YYYY') + '年第一季度';
+                      break;
+                    case '04-01':
+                      time = moment(text).format('YYYY') + '年第二季度';
+                      break;
+                    case '07-01':
+                      time = moment(text).format('YYYY') + '年第三季度';
+                      break;
+                    case '10-01':
+                      time = moment(text).format('YYYY') + '年第四季度';
+                      break;
+                  }
+                  time = moment(text).format('YYYY-MM');
+                  break;
+                case 'year':
+                  time = moment(text).format('YYYY');
+                  break;
+                default:
+                  time = text;
+                  break;
+              }
+              return (
+                <span>
+                  {getDataTruseMsg(record)}
+                  {time}
+                </span>
+              );
+            },
           },
-        }];
+        ];
         if (result && result[0] && result[0].PollutantType === '5AQI') {
           columns = columns.concat({
             title: 'AQI',
@@ -334,7 +394,7 @@ export default Model.extend({
             render: (text, record) => {
               return AQIPopover(text, record);
             },
-          })
+          });
           columns = columns.concat({
             title: '级别',
             dataIndex: 'AirQuality',
@@ -342,7 +402,7 @@ export default Model.extend({
             width: 160,
             // fixed: 'left',
             align: 'center',
-          })
+          });
         }
         if (result && result[0] && result[0].PollutantType === '5IQI') {
           columns = columns.concat({
@@ -371,11 +431,13 @@ export default Model.extend({
           },
           tooltip: {
             trigger: 'axis',
-            formatter: function (params) {
-              let html = params[0].name
+            formatter: function(params) {
+              let html = params[0].name;
               params.forEach((item, index) => {
-                html += (`<br/>${item.marker + item.seriesName}: ${item.value == undefined ? 0 : item.value}`)
-              })
+                html += `<br/>${item.marker + item.seriesName}: ${
+                  item.value == undefined ? 0 : item.value
+                }`;
+              });
               return html;
             },
           },
@@ -390,8 +452,7 @@ export default Model.extend({
             right: 40,
             show: true,
             feature: {
-              saveAsImage: {
-              },
+              saveAsImage: {},
             },
           },
           xAxis: {
@@ -400,7 +461,7 @@ export default Model.extend({
             boundaryGap: false,
             data: xAxis,
             nameTextStyle: {
-              padding: [10, 16]
+              padding: [10, 16],
             },
             splitLine: {
               show: true,
@@ -432,24 +493,31 @@ export default Model.extend({
           series: arr,
         };
       }
-      yield update({ tablewidth, datalist: result, chartdata: option, columns, datatable: result, total: resultlist.Total });
+      yield update({
+        tablewidth,
+        datalist: result,
+        chartdata: option,
+        columns,
+        datatable: result,
+        total: resultlist.Total,
+      });
     },
 
     // 导出报表
     *exportHistoryReport({ payload }, { call, put, update, select }) {
       const { historyparams } = yield select(state => state.dataquery);
-      console.log('historyparams=', historyparams)
+      console.log('historyparams=', historyparams);
       const postData = {
         ...historyparams,
         DGIMNs: historyparams.DGIMN,
         ...payload,
-      }
+      };
       const result = yield call(services.exportHistoryReport, postData);
       if (result.IsSuccess) {
-        window.open(result.Datas)
-        message.success('导出成功')
+        window.open(result.Datas);
+        message.success('导出成功');
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取数据获取率 - 详情污染物列表
@@ -458,9 +526,9 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           pollutantList: result.Datas,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取数据
@@ -469,9 +537,9 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           dataAuditDataSource: result.Datas,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取数据标识
@@ -479,9 +547,9 @@ export default Model.extend({
       const result = yield call(services.updateDataFlag, payload);
       if (result.IsSuccess) {
         message.success('修改成功');
-        callback && callback()
+        callback && callback();
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 导出报表
@@ -489,9 +557,9 @@ export default Model.extend({
       const result = yield call(services.exportDataAuditReport, payload);
       if (result.IsSuccess) {
         message.success('导出成功');
-        window.open(result.Datas)
+        window.open(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 数据标记 - 获取数据
@@ -502,29 +570,33 @@ export default Model.extend({
           // dataAuditDataSource: result.Datas,
           dataFlagDataSource: result.Datas,
           tagTableTotal: result.Total,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 数据标记 - 修改
     *updateDataWryFlag({ payload, callback }, { call, put, update }) {
       const result = yield call(services.updateDataWryFlag, payload);
       if (result.IsSuccess) {
-        message.success('修改成功')
-        callback && callback()
+        message.success('修改成功');
+        callback && callback();
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 数据标记 - 导出
     *exportDataFlagReport({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.exportDataFlagReport, { ...payload, pageSize: null, pageIndex: null });
+      const result = yield call(services.exportDataFlagReport, {
+        ...payload,
+        pageSize: null,
+        pageIndex: null,
+      });
       if (result.IsSuccess) {
-        message.success('导出成功')
-        window.open(result.Datas)
+        message.success('导出成功');
+        window.open(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
@@ -535,9 +607,9 @@ export default Model.extend({
         yield update({
           // dataAuditDataSource: result.Datas,
           CO2SumData: result.Datas,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
   },

@@ -2,7 +2,6 @@ import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import { Badge, Popover, message, Tag } from 'antd';
 import moment from 'moment';
 
-
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 export const encryptKey =
@@ -308,15 +307,24 @@ export function timeDifference(beginDates, endDates) {
 export function interceptTwo(value) {
   const data = value.toString();
   // data.indexOf(".") ==-1 是整数时  补零
-  const result = data.indexOf(".") == -1 ? `${value.toFixed(2)}` : data.split(".")[1].length <= 1 ? `${value.toFixed(2)}` : data.substring(0, data.indexOf(".") + 3)
+  const result =
+    data.indexOf('.') == -1
+      ? `${value.toFixed(2)}`
+      : data.split('.')[1].length <= 1
+      ? `${value.toFixed(2)}`
+      : data.substring(0, data.indexOf('.') + 3);
   return result;
 }
 
 //保持小数点 后三位
 export function toDecimal3(x) {
   if (x && x != '-') {
-    let res = '', data = x.toString()
-    res = data.indexOf(".") == -1 || data.split(".")[1].length < 3 ? `${Number(x).toFixed(3)}` : data.substring(0, data.indexOf(".") + 4); // 如果是整数 toFixed(3) 补三位
+    let res = '',
+      data = x.toString();
+    res =
+      data.indexOf('.') == -1 || data.split('.')[1].length < 3
+        ? `${Number(x).toFixed(3)}`
+        : data.substring(0, data.indexOf('.') + 4); // 如果是整数 toFixed(3) 补三位
     return res;
   } else {
     return x;
@@ -328,13 +336,17 @@ export function isInsidePolygon(lng, lat, poly) {
   if (poly[0].lng) {
     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
       ((poly[i].lng <= lng && lng < poly[j].lng) || (poly[j].lng <= lng && lng < poly[i].lng)) &&
-        (lat < (poly[j].lat - poly[i].lat) * (lng - poly[i].lng) / (poly[j].lng - poly[i].lng) + poly[i].lat) &&
+        lat <
+          ((poly[j].lat - poly[i].lat) * (lng - poly[i].lng)) / (poly[j].lng - poly[i].lng) +
+            poly[i].lat &&
         (c = !c);
     return c;
   } else {
     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
       ((poly[i][0] <= lng && lng < poly[j][0]) || (poly[j][0] <= lng && lng < poly[i][0])) &&
-        (lat < (poly[j][1] - poly[i][1]) * (lng - poly[i][0]) / (poly[j][0] - poly[i][0]) + poly[i][1]) &&
+        lat <
+          ((poly[j][1] - poly[i][1]) * (lng - poly[i][0])) / (poly[j][0] - poly[i][0]) +
+            poly[i][1] &&
         (c = !c);
     return c;
   }
@@ -342,8 +354,7 @@ export function isInsidePolygon(lng, lat, poly) {
 
 // /* 判断是否是内网IP */
 export function isInnerIPFn() {
-
-  let isInnerIp = false;// 默认给定IP不是内网IP
+  let isInnerIp = false; // 默认给定IP不是内网IP
   // var returnIP = '';
   // const innerIp = webSocketPushURL.split(',')[0];
   // const outIp = webSocketPushURL.split(',')[1];
@@ -354,14 +365,12 @@ export function isInnerIPFn() {
     // returnIP = innerIp;
     isInnerIp = true;
   } else {
-    const reg1 = /(http|ftp|https|www):\/\//g;// 去掉前缀
+    const reg1 = /(http|ftp|https|www):\/\//g; // 去掉前缀
     curPageUrl = curPageUrl.replace(reg1, '');
 
-    const reg2 = /\:+/g;// 替换冒号为一点
+    const reg2 = /\:+/g; // 替换冒号为一点
     curPageUrl = curPageUrl.replace(reg2, '.');
-    curPageUrl = curPageUrl.split('.');// 通过一点来划分数组
-
-
+    curPageUrl = curPageUrl.split('.'); // 通过一点来划分数组
 
     const ipAddress = `${curPageUrl[0]}.${curPageUrl[1]}.${curPageUrl[2]}.${curPageUrl[3]}`;
 
@@ -374,7 +383,11 @@ export function isInnerIPFn() {
     const cEnd = getIpNum('192.168.255.255');
     const dBegin = getIpNum('127.0.0.0');
     const dEnd = getIpNum('127.255.255.255');
-    isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || isInner(ipNum, dBegin, dEnd);
+    isInnerIp =
+      isInner(ipNum, aBegin, aEnd) ||
+      isInner(ipNum, bBegin, bEnd) ||
+      isInner(ipNum, cBegin, cEnd) ||
+      isInner(ipNum, dBegin, dEnd);
     // console.log('是否是内网:' + isInnerIp);
     // if (isInnerIp) {
     //   returnIP = innerIp;
@@ -383,9 +396,10 @@ export function isInnerIPFn() {
     // }
   }
   // return returnIP;
-  return isInnerIp
+  return isInnerIp;
 }
-function getIpNum(ipAddress) { /* 获取IP数 */
+function getIpNum(ipAddress) {
+  /* 获取IP数 */
   const ip = ipAddress.split('.');
   const a = parseInt(ip[0]);
   const b = parseInt(ip[1]);
@@ -396,9 +410,8 @@ function getIpNum(ipAddress) { /* 获取IP数 */
 }
 
 function isInner(userIp, begin, end) {
-  return (userIp >= begin) && (userIp <= end);
+  return userIp >= begin && userIp <= end;
 }
-
 
 // 根据端口获取系统名称
 export function getSysName(systemName) {
@@ -413,60 +426,101 @@ export function getSysName(systemName) {
   return sysName[-1];
 }
 
-
 // 获取数据不可信信息
-export const getDataTruseMsg = (record) => {
+export const getDataTruseMsg = record => {
   if (record.DataTrusted === false && record.DeviceTrusted === false) {
     // 两种数据不可信
-    return <Popover content={<span style={{ color: '#ff4d4f' }}>数据、身份不可信</span>}>
-      <Tag color="error">不可信</Tag>
-    </Popover>
+    return (
+      <Popover content={<span style={{ color: '#ff4d4f' }}>数据、身份不可信</span>}>
+        <Tag color="error">不可信</Tag>
+      </Popover>
+    );
   } else if (record.DataTrusted === false) {
     // 数据不可信
-    return <Popover content={<span style={{ color: '#ff4d4f' }}>数据不可信</span>}>
-      <Tag color="error">不可信</Tag>
-    </Popover>
+    return (
+      <Popover content={<span style={{ color: '#ff4d4f' }}>数据不可信</span>}>
+        <Tag color="error">不可信</Tag>
+      </Popover>
+    );
   } else if (record.DeviceTrusted === false) {
     // 身份不可信
-    return <Popover content={<span style={{ color: '#ff4d4f' }}>身份不可信</span>}>
-      <Tag color="error">不可信</Tag>
-    </Popover>
+    return (
+      <Popover content={<span style={{ color: '#ff4d4f' }}>身份不可信</span>}>
+        <Tag color="error">不可信</Tag>
+      </Popover>
+    );
   } else {
     return '';
   }
-}
-
+};
 
 // 获取数据不可信信息
-export const getDataTruseItemMsg = (record, timeKey, value) => {
-  let errorStr = '';
-  if (record.DataTrusted === false && record.DeviceTrusted === false) {
-    // 两种数据不可信
-    errorStr = '数据、身份不可信'
-  } else if (record.DataTrusted === false) {
-    // 数据不可信
-    errorStr = '数据不可信'
-  } else if (record.DeviceTrusted === false) {
-    // 身份不可信
-    errorStr = '身份不可信'
+export const getDataTruseItemMsg = (record, key, value) => {
+  // let errorStr = '';
+  // if (record.DataTrusted === false && record.DeviceTrusted === false) {
+  //   // 两种数据不可信
+  //   errorStr = '数据、身份不可信';
+  // } else if (record.DataTrusted === false) {
+  //   // 数据不可信
+  //   errorStr = '数据不可信';
+  // } else if (record.DeviceTrusted === false) {
+  //   // 身份不可信
+  //   errorStr = '身份不可信';
+  // }
+
+  // dicRes.Add(code + "sum-revisionTime", model.RevisionDate); // 修约时间
+  // dicRes.Add(code + "sum-revisionDischargeVolume", model.RevisionDischargeVolume);//修约值
+  // dicRes.Add(code + "sum-revisionUser", model.RevisionUser);//修约人
+  // dicRes.Add(code + "sum-revisionCause", model.RevisionCause);//修约原因
+  // dicRes.Add(code + "sum-revisionRule", model.RevisionRule);//修约规则
+  // 是否修约
+  let isRevision = !!record[key + '-revisionDischargeVolume'];
+  let revisionTime = record[key + '-revisionTime']; // 修约时间
+  let revisionDischargeVolume = record[key + '-revisionDischargeVolume']; // 修约值
+  let revisionUser = record[key + '-revisionUser']; // 修约人
+  let revisionCause = record[key + '-revisionCause']; // 修约原因
+  let revisionRule = record[key + '-revisionRule']; // 修约规则
+  if (isRevision) {
+    let content = (
+      <div>
+        {revisionTime && (
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`修约时间：${revisionTime}`} />
+          </li>
+        )}
+        {revisionUser && (
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`修约人：${revisionUser}`} />
+          </li>
+        )}
+        {revisionDischargeVolume && (
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`修约值：${revisionDischargeVolume}`} />
+          </li>
+        )}
+        <li style={{ listStyle: 'none', marginBottom: 10 }}>
+          <Badge status="warning" text={`原始值：${value}`} />
+        </li>
+        {revisionCause && (
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`修约原因：${revisionCause}`} />
+          </li>
+        )}
+        {revisionRule && (
+          <li style={{ listStyle: 'none' }}>
+            <Badge status="warning" text={`修约规则：${revisionRule}`} />
+          </li>
+        )}
+      </div>
+    );
+    return (
+      <Popover content={content}>
+        <span style={{ color: '#faad14' }}>{revisionDischargeVolume}</span>
+      </Popover>
+    );
   }
 
-  let time = record[timeKey];
-  debugger
-  if (time) {
-    let content = <div>
-      <li style={{ listStyle: 'none', marginBottom: 10 }}>
-        <Badge status="warning" text={`不可信原因：${errorStr}`} />
-      </li>
-      <li style={{ listStyle: 'none' }}>
-        <Badge status="warning" text={`修约时间：${time}`} />
-      </li>
-    </div>;
-    return <Popover content={content}>
-      <span style={{ color: '#faad14' }}>{value}</span>
-    </Popover>
-  }
-  console.log('value', value)
+  console.log('value', value);
 
-  return <span>{value}</span>
-}
+  return <span>{value}</span>;
+};

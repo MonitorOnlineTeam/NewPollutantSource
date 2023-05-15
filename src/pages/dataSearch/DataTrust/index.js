@@ -1,32 +1,34 @@
 /*
- * @Author: JiaQi 
- * @Date: 2023-03-03 15:40:27 
+ * @Author: JiaQi
+ * @Date: 2023-03-03 15:40:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-03-15 14:39:56
+ * @Last Modified time: 2023-03-22 16:58:17
  * @Description: 数据不可信查询
  */
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, Col, Row, Button, Space, Select, DatePicker, message, Tag } from 'antd'
-import SelectEntAndPoint from '@/components/Select-entAndPoint'
-import SdlTable from '@/components/SdlTable'
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import { Card, Col, Row, Button, Space, Select, DatePicker, message, Tag, Radio } from 'antd';
+import SelectEntAndPoint from '@/components/Select-entAndPoint';
+import SdlTable from '@/components/SdlTable';
 import moment from 'moment';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const { RangePicker } = DatePicker;
 
-
-
-const dvaPropsData = ({ loading, dataSearch, }) => ({
+const dvaPropsData = ({ loading, dataSearch }) => ({
   dataTrustDataSource: dataSearch.dataTrustDataSource,
   dataTrustTotal: dataSearch.dataTrustTotal,
-  loading: loading.effects['dataSearch/getUnTrustedList']
-})
+  loading: loading.effects['dataSearch/getUnTrustedList'],
+  exportLoading: loading.effects['dataSearch/exportUnTrustedList'],
+});
 
-const DataTrust = (props) => {
-  const { dataTrustDataSource, dataTrustTotal, loading } = props;
-  const beginTime = moment().subtract(1, 'days').format('YYYY-MM-DD HH:00:00');
+const DataTrust = props => {
+  const { dataTrustDataSource, dataTrustTotal, loading, exportLoading } = props;
+  const beginTime = moment()
+    .subtract(1, 'days')
+    .format('YYYY-MM-DD HH:00:00');
   const endTime = moment().format('YYYY-MM-DD HH:59:59');
   const [time, setTime] = useState([moment(beginTime), moment(endTime)]);
   const [dataType, setDataType] = useState('HourData');
@@ -39,24 +41,23 @@ const DataTrust = (props) => {
     if (DGIMN) {
       getUnTrustedList();
     }
-  }, [pageIndex, pageSize]);
-
+  }, [pageIndex, pageSize, dataType]);
 
   // 获取数据不可信信息
-  const getDataTruseMsg = (record) => {
+  const getDataTruseMsg = record => {
     if (record.DataTrusted === false && record.DeviceTrusted === false) {
       // 两种数据不可信
-      return <Tag color="error">数据、身份不可信</Tag>
+      return <Tag color="error">数据、身份不可信</Tag>;
     } else if (record.DataTrusted === false) {
       // 数据不可信
-      return <Tag color="error">数据不可信</Tag>
+      return <Tag color="error">数据不可信</Tag>;
     } else if (record.DeviceTrusted === false) {
       // 身份不可信
-      return <Tag color="error">身份不可信</Tag>
+      return <Tag color="error">身份不可信</Tag>;
     } else {
       return '-';
     }
-  }
+  };
 
   // 根据MN获取表头
   const getTableColumns = () => {
@@ -64,30 +65,37 @@ const DataTrust = (props) => {
       type: 'dataSearch/getReportColumns',
       payload: {
         DGIMN: DGIMN,
-        ColumnType: "UnTrustedColumn"
+        ColumnType: 'UnTrustedColumn',
       },
-      callback: (res) => {
-        let columns = [{
-          title: '监测点',
-          dataIndex: 'PointName',
-          key: 'PointName',
-          width: 240,
-          render: (text, record) => {
-            return `${record.EntName} - ${text}`
-          }
-        }, {
-          title: '时间',
-          dataIndex: 'Time',
-          key: 'Time',
-        },
-        {
-          title: '原因',
-          dataIndex: 'DataTrusted',
-          key: 'DataTrusted',
-          render: (text, record) => {
-            return getDataTruseMsg(record)
-          }
-        }];
+      callback: res => {
+        let columns = [
+          {
+            title: '监测点',
+            dataIndex: 'PointName',
+            key: 'PointName',
+            width: 240,
+            render: (text, record) => {
+              return `${record.EntName} - ${text}`;
+            },
+          },
+          {
+            title: '时间',
+            dataIndex: 'Time',
+            key: 'Time',
+            render: (text, record) => {
+              let format = dataType === 'DayData' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm';
+              return moment(text).format(format);
+            },
+          },
+          {
+            title: '原因',
+            dataIndex: 'DataTrusted',
+            key: 'DataTrusted',
+            render: (text, record) => {
+              return getDataTruseMsg(record);
+            },
+          },
+        ];
         res.map(item => {
           if (item.ChildColumnHeaders) {
             let children = item.ChildColumnHeaders.map(itm => {
@@ -99,12 +107,12 @@ const DataTrust = (props) => {
                 render: (value, row, index) => {
                   return value || '-';
                 },
-              }
-            })
+              };
+            });
             columns.push({
               title: item.ParenntColumnName,
-              children: children
-            })
+              children: children,
+            });
           } else {
             columns.push({
               title: item.ParenntColumnName,
@@ -114,125 +122,172 @@ const DataTrust = (props) => {
               render: (value, row, index) => {
                 return value || '-';
               },
-            })
+            });
           }
-        })
-        setColumns(columns)
-      }
-    })
-  }
+        });
+        setColumns(columns);
+      },
+    });
+  };
 
   // 获取table数据
   const getUnTrustedList = () => {
     props.dispatch({
       type: `dataSearch/getUnTrustedList`,
       payload: {
-        BeginTime: time[0].format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: time[1].format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: time[0].format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: time[1].format('YYYY-MM-DD HH:mm:ss'),
         IsAsc: true,
         DGIMN: DGIMN,
         Type: dataType,
         PageIndex: pageIndex,
-        PageSize: pageSize
+        PageSize: pageSize,
       },
-    })
-  }
+    });
+  };
+
+  const exportUnTrustedList = () => {
+    props.dispatch({
+      type: `dataSearch/exportUnTrustedList`,
+      payload: {
+        BeginTime: time[0].format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: time[1].format('YYYY-MM-DD HH:mm:ss'),
+        IsAsc: true,
+        DGIMN: DGIMN,
+        Type: dataType,
+        PageIndex: pageIndex,
+        PageSize: pageSize,
+      },
+    });
+  };
 
   // 数据类型改变事件
-  const onDataTypeChange = value => {
-    let beginTime = moment().subtract(1, 'days').format('YYYY-MM-DD HH:00:00');
-    let endTime = moment().format('YYYY-MM-DD HH:59:59');
-    if (value === 'DayData') {
-      beginTime = moment().subtract(1, 'month').format('YYYY-MM-DD HH:00:00');
-      endTime = moment().format('YYYY-MM-DD 23:59:59');
-    }
-    setTime([moment(beginTime), moment(endTime)])
-    setDataType(value);
-  }
+  const onDataTypeChange = e => {
+    // let beginTime = moment()
+    //   .subtract(1, 'days')
+    //   .format('YYYY-MM-DD HH:00:00');
+    // let endTime = moment().format('YYYY-MM-DD HH:59:59');
+    // if (value === 'DayData') {
+    //   beginTime = moment()
+    //     .subtract(1, 'month')
+    //     .format('YYYY-MM-DD HH:00:00');
+    //   endTime = moment().format('YYYY-MM-DD 23:59:59');
+    // }
+    // setTime([moment(beginTime), moment(endTime)]);
+
+    DataTrust.rangePicker.onDataTypeChange(e.target.value);
+    setDataType(e.target.value);
+    getTableColumns();
+  };
 
   // 分页
   const handleTableChange = (pagination, filters, sorter) => {
     setPageIndex(pagination.current);
     setPageSize(pagination.pageSize);
   };
-
-  return <BreadcrumbWrapper>
-    <Card>
-      <Row align="middle">
-        <Space>
-          <Col>
-            <label style={{ marginLeft: 20 }}>时间：</label>
-            <RangePicker
-              value={time}
-              showTime
-              onChange={(value, dateString) => {
+  return (
+    <BreadcrumbWrapper>
+      <Card>
+        <Row align="middle">
+          <Space>
+            <Col>
+              <label style={{ marginLeft: 20 }}>时间：</label>
+              <RangePicker_
+                allowClear={false}
+                onRef={ref => {
+                  DataTrust.rangePicker = ref;
+                }}
+                isVerification={true}
+                dataType={dataType}
+                style={{ width: '360px' }}
+                dateValue={time}
+                callback={(dates, dataType) => setTime(dates)}
+              />
+            </Col>
+            <Col>
+              <label style={{ marginLeft: 20 }}>监测点：</label>
+              <SelectEntAndPoint
+                style={{ width: 300 }}
+                onChange={value => {
+                  setDGIMN(value[1]);
+                }}
+              />
+            </Col>
+            {/* <Col>
+              <label style={{ marginLeft: 20 }}>数据类型：</label>
+              <Select
+                defaultValue={dataType}
+                style={{
+                  width: 120,
+                }}
+                allowClear
+                options={[
+                  {
+                    value: 'HourData',
+                    label: '小时',
+                  },
+                  {
+                    value: 'DayData',
+                    label: '日',
+                  },
+                ]}
+                onChange={onDataTypeChange}
+              />
+            </Col> */}
+            <Button
+              type="primary"
+              loading={loading}
+              onClick={() => {
+                if (!DGIMN) {
+                  message.error('请选择监测点！');
+                  return;
+                }
+                getTableColumns();
+                setPageIndex(1);
+                setPageSize(20);
+                if (pageIndex === 1 && pageSize === 20) {
+                  getUnTrustedList();
+                }
               }}
-              onOk={value => {
-                setTime(value)
+            >
+              查询
+            </Button>
+            <Button
+              loading={exportLoading}
+              style={{ marginRight: 10 }}
+              onClick={() => {
+                exportUnTrustedList();
               }}
-            />
-          </Col>
-          <Col>
-            <label style={{ marginLeft: 20 }}>监测点：</label>
-            <SelectEntAndPoint style={{ width: 300 }} onChange={value => {
-              setDGIMN(value[1]);
-            }} />
-          </Col>
-          <Col>
-            <label style={{ marginLeft: 20 }}>数据类型：</label>
-            <Select
-              defaultValue={dataType}
-              style={{
-                width: 120,
-              }}
-              allowClear
-              options={[
-                {
-                  value: 'HourData',
-                  label: '小时',
-                },
-                {
-                  value: 'DayData',
-                  label: '日',
-                },
-              ]}
-              onChange={onDataTypeChange}
-            />
-          </Col>
-          <Button type="primary" loading={loading} style={{ marginRight: 10 }} onClick={() => {
-            if (!DGIMN) {
-              message.error('请选择监测点！');
-              return;
-            }
-            getTableColumns();
-            setPageIndex(1);
-            setPageSize(20);
-            if (pageIndex === 1 && pageSize === 20) {
-              getUnTrustedList();
-            }
-          }}>查询</Button>
-        </Space>
-      </Row>
-      <SdlTable
-        loading={loading}
-        style={{ marginTop: 20 }}
-        rowKey={(record, index) => index}
-        columns={columns}
-        dataSource={dataTrustDataSource}
-        onChange={handleTableChange}
-        pagination={{
-          showSizeChanger: true,
-          showQuickJumper: true,
-          sorter: true,
-          total: dataTrustTotal,
-          pageSize: pageSize,
-          current: pageIndex,
-          pageSizeOptions: ['10', '20', '30', '40', '50'],
-        }}
-        bordered
-      />
-    </Card >
-  </BreadcrumbWrapper >
-}
+            >
+              导出
+            </Button>
+            <Radio.Group onChange={onDataTypeChange} defaultValue="HourData">
+              <Radio.Button value="HourData">小时</Radio.Button>
+              <Radio.Button value="DayData">日均</Radio.Button>
+            </Radio.Group>
+          </Space>
+        </Row>
+        <SdlTable
+          loading={loading}
+          style={{ marginTop: 20 }}
+          rowKey={(record, index) => index}
+          columns={columns}
+          dataSource={dataTrustDataSource}
+          onChange={handleTableChange}
+          pagination={{
+            showSizeChanger: true,
+            showQuickJumper: true,
+            sorter: true,
+            total: dataTrustTotal,
+            pageSize: pageSize,
+            current: pageIndex,
+            pageSizeOptions: ['10', '20', '30', '40', '50'],
+          }}
+          bordered
+        />
+      </Card>
+    </BreadcrumbWrapper>
+  );
+};
 
 export default connect(dvaPropsData)(DataTrust);
