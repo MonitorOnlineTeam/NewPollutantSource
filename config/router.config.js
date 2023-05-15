@@ -263,16 +263,16 @@ const routes = [
                 path: '/Demo/video/live',
                 component: './Demo/Video/Live',
               },
-              {
-                name: 'video',
-                path: '/Demo/yuanxing/tongji',
-                component: './Demo/yuanxing',
-              },
-              {
-                name: 'video',
-                path: '/Demo/yuanxing/1',
-                component: './Demo/yuanxing/index2',
-              },
+              // {
+              //   name: 'video',
+              //   path: '/Demo/yuanxing/tongji',
+              //   component: './Demo/yuanxing',
+              // },
+              // {
+              //   name: 'video',
+              //   path: '/Demo/yuanxing/1',
+              //   component: './Demo/yuanxing/index2',
+              // },
             ],
           },
           // 唐银钢铁项目 - 台账
