@@ -67,7 +67,7 @@ export default Model.extend({
     // 获取运维日志信息
     *getOperationLogList({ payload, callback }, { call, put, update, select }) {
       const postData = {
-        RecordType: '',
+        RecordType: '2',
         beginTime: moment().format('YYYY-MM-DD 00:00:00'),
         endTime: moment().format('YYYY-MM-DD 23:59:59'),
         ...payload,
@@ -77,7 +77,7 @@ export default Model.extend({
         yield update({
           recordTypeList: result.Datas&&result.Datas.RecordType? result.Datas.RecordType : [],
         });
-        callback && callback();
+        callback && callback(result.Datas&&result.Datas.RecordType? result.Datas.RecordType : []);
       }
     },
     // 获取运维日志信息

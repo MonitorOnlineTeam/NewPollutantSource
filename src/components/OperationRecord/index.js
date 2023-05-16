@@ -170,15 +170,16 @@ class OperationRecord extends Component {
 
   // 获取数据
   getOperationrecordData = props => {
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({ 
       type: 'operationform/getOperationLogList',
       payload: {
         DGIMN: props.DGIMN,
         // RecordType: this.props.currentRecordType
       },
-      callback: () => {
+      callback: (res) => {
         // 获取table数据
-        this.props.dispatch({
+        dispatch({
           type: 'autoForm/getPageConfig',
           payload: {
             configId: this.getRecordType(),

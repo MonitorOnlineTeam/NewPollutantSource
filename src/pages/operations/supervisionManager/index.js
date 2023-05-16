@@ -223,7 +223,7 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '站点名称',
+      title: '点位名称',
       dataIndex: 'PointName',
       key: 'PointName',
       align: 'center',
@@ -942,7 +942,7 @@ const Index = (props) => {
             </Form.Item>
           </Spin>
           <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
-            <Form.Item label='站点名称' name='DGIMN' >
+            <Form.Item label='点位名称' name='DGIMN' >
 
               <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 150 }}>
                 {
@@ -1787,7 +1787,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={12}>
                   <Spin spinning={pointLoading2} size='small' style={{ top: -3 }}>
-                    <Form.Item label='站点名称' name='DGIMN' rules={[{ required: true, message: '请选择站点名称' }]}>
+                    <Form.Item label='点位名称' name='DGIMN' rules={[{ required: true, message: '请选择站点名称' }]}>
 
                       <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
                         {

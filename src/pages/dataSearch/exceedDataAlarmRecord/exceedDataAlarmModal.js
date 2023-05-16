@@ -1194,6 +1194,13 @@ class exceedDataAlarmModal extends PureComponent {
                 key: 'pollutantName',
             },
             {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
+            {
                 title: "报警信息",
                 width: 200,
                 align: 'left',
@@ -1324,6 +1331,13 @@ class exceedDataAlarmModal extends PureComponent {
                 key: 'pollutantName',
             },
             {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
+            {
                 title: "报警信息",
                 width: 200,
                 align: 'center',
@@ -1445,6 +1459,13 @@ class exceedDataAlarmModal extends PureComponent {
                 dataIndex: 'pollutantName',
                 key: 'pollutantName',
             },
+            {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
             {
                 title: "报警信息",
                 width: 200,
@@ -1581,6 +1602,13 @@ class exceedDataAlarmModal extends PureComponent {
                 dataIndex: 'pollutantName',
                 key: 'pollutantName',
             },
+            {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
             {
                 title: "报警信息",
                 width: 200,

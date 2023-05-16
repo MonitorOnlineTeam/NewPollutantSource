@@ -1141,6 +1141,13 @@ class index extends PureComponent {
                 key: 'pollutantName',
             },
             {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
+            {
                 title: "报警信息",
                 width: 200,
                 align: 'left',
@@ -1273,6 +1280,13 @@ class index extends PureComponent {
                 dataIndex: 'pollutantName',
                 key: 'pollutantName',
             },
+            {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
             {
                 title: "报警信息",
                 width: 200,
@@ -1541,6 +1555,13 @@ class index extends PureComponent {
                 key: 'pollutantName',
             },
             {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
+            {
                 title: "报警信息",
                 width: 200,
                 align: 'left',
@@ -1637,7 +1658,7 @@ class index extends PureComponent {
                         title={this.state.ModalTitle}
                         visible={this.state.regVisible}
                         footer={null}
-                        width={1300}
+                        width={'90%'}
                         onCancel={this.RegCancelHandel}
                     >
                         <div style={{ marginBottom: 10 }}>
@@ -1696,7 +1717,7 @@ class index extends PureComponent {
                         title={this.state.ModalTitle}
                         visible={this.state.regVisibleAlready}
                         footer={null}
-                        width={1300}
+                        width={'90%'}
                         onCancel={this.RegCancelHandel}
                     >
                         <div style={{ marginBottom: 10 }}>
@@ -1746,7 +1767,7 @@ class index extends PureComponent {
                         title={this.state.ModalTitle}
                         visible={this.state.regVisibleStay}
                         footer={null}
-                        width={1300}
+                        width={'90%'}
                         onCancel={this.RegCancelHandel}
                     >
                         <div style={{ marginBottom: 10 }}>
@@ -1786,7 +1807,7 @@ class index extends PureComponent {
                         title={this.state.ModalTitle}
                         visible={this.state.entVisible}
                         footer={null}
-                        width={1300}
+                        width={'90%'}
                         onCancel={this.RegCancelHandel}
                     >
                         <div style={{ marginBottom: 10 }}>
