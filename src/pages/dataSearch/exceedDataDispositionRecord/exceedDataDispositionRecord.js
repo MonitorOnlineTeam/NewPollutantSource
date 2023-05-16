@@ -1290,7 +1290,7 @@ class index extends PureComponent {
             {
                 title: "报警信息",
                 width: 200,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'message',
                 key: 'message',
