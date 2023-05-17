@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 10:49:21
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-11 11:16:34
+ * @Last Modified time: 2023-05-16 16:12:05
  * @Description: 回访客户
  */
 import React, { useState, useEffect } from 'react';
@@ -128,8 +128,8 @@ const HFKH = props => {
       },
       {
         title: '客户姓名',
-        dataIndex: 'CustomName',
-        key: 'CustomName',
+        dataIndex: 'CustomRealName',
+        key: 'CustomRealName',
       },
       {
         title: '部门',
