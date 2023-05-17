@@ -1,23 +1,17 @@
 
-// .operaTaskSty {
-
-
-
-// }
-
-
-.addFromModal  :global {
+  .addFromModal  :global, .editDetailFromModal :global {
     .ant-modal-content{
       overflow-y: hidden;
      }
-    .ant-tabs-content{
-     overflow-y: auto;
-     height: calc(100vh - 220px);
-    } 
+    //  .ant-tabs-content{
+    //   overflow-y: auto;
+    //   height: calc(100vh - 220px);
+    //  } 
     .ant-form-item-label{
-        width:130px;
+        width:141px;
       } 
       .ant-form-item{
+        // margin-bottom: 18px;
         .ant-form-item-control-input{
         width: 50% !important;
        }
@@ -25,6 +19,7 @@
          width: 100% !important;
          margin: 0 !important;
        }
+      
      }
 
      .ant-input-textarea-show-count::after{
@@ -51,19 +46,18 @@
        width: 100% !important;
       } 
    }
-      .contractPopoverSty {
-        width: 1000px;
-        .ant-popover-arrow{
-            left: 150px;
-        }
-      }
       .contractName {
         .ant-select-dropdown {
           display: none;
         }
       }
     }
-
+    // .editDetailFromModal :global{ //任务编辑详情表单弹出框
+    //   .ant-tabs-content{
+    //     overflow-y: auto;
+    //     height: calc(100vh - 220px);
+    //    } 
+    // }
      .addPlanFormModal :global {
       .ant-modal-body{
         overflow-y: auto;
@@ -77,6 +71,15 @@
         width: 254px;
         display: inline-block;
       }
+      // .ant-form-item{
+      //   margin-bottom: 18px;
+      // }
+    }
+    .ant-checkbox-disabled .ant-checkbox-inner{
+      background-color: #fff;
+    }
+    .ant-checkbox-disabled + span{
+      color: rgba(0, 0, 0, 0.85)
     }
     }
     .operaUserFormModal :global{
@@ -100,7 +103,7 @@
         height: 50vh;
        } 
        .ant-form-item-label{
-           width:97px;
+           width:108px;
          } 
     }
     .taskAbnormalTerminaModal :global{
@@ -113,4 +116,9 @@
            width:97px;
          } 
     }
-  
+    .contractPopoverSty  :global{
+      width: 1000px;
+      .ant-popover-arrow{
+          left: 150px !important;
+      }
+    }

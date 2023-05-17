@@ -55,6 +55,9 @@ const pageUrl = {
     loading: loading.effects['exceedDataAlarmModel/GetAlarmVerifyRate'],
     loadingRateDetail:loading.effects['exceedDataAlarmModel/GetAlarmVerifyRateDetail'],
     loadingDetail:loading.effects['exceedDataAlarmModel/GetAlarmVerifyDetail'],
+    exportLoading1:loading.effects[  pageUrl.ExportAlarmVerifyRate],
+    exportLoading2:loading.effects[  pageUrl.ExportAlarmVerifyRateDetail],
+    exportLoading3:loading.effects[  pageUrl.ExportAlarmVerifyDetail],
     regionList: autoForm.regionList,
     attention: enterpriseMonitoringModel.attention,
     total: enterpriseMonitoringModel.total,
@@ -278,8 +281,8 @@ class index extends PureComponent {
         this.childrenHand = ref;
       }
     cardTitle = () => {
-        const { time,regionValue,regionLevel} = this.state;
-        const {pollutantCodeList} = this.props
+        const { time,regionValue,regionLevel,exportRegion,} = this.state;
+        const {pollutantCodeList,exportLoading1,exportLoading2,} = this.props
         return <>
             {/* <Select
                 allowClear
@@ -381,7 +384,7 @@ class index extends PureComponent {
                 </Checkbox.Group>
 
                <Button type="primary" style={{ marginRight: 10 }} onClick={()=>{this.getChartAndTableData()}}>查询</Button></>}
-            <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+            <Button style={{ marginRight: 10 }} onClick={this.exportReport} loading={exportRegion == '1'? exportLoading1 : exportLoading2}><ExportOutlined />导出</Button>
             {regionLevel&&<Button  onClick={() => {
                 this.setState({regionValue:''},()=>{
                     this.props.dispatch({
@@ -1130,7 +1133,7 @@ class index extends PureComponent {
         downloadFile(filePath)
     }
     render() {
-        const { loading,priseList ,AlarmDealTypeList,ManagementDetail,loadingDetail} = this.props
+        const { loading,priseList ,AlarmDealTypeList,ManagementDetail,loadingDetail,exportLoading3,} = this.props
         const fixed = false
         const columns2 = [
             {
@@ -1183,6 +1186,13 @@ class index extends PureComponent {
                 dataIndex: 'pollutantName',
                 key: 'pollutantName',
             },
+            {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
             {
                 title: "报警信息",
                 width: 200,
@@ -1317,9 +1327,16 @@ class index extends PureComponent {
                 key: 'pollutantName',
             },
             {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
+            {
                 title: "报警信息",
                 width: 200,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'message',
                 key: 'message',
@@ -1440,6 +1457,13 @@ class index extends PureComponent {
                 dataIndex: 'pollutantName',
                 key: 'pollutantName',
             },
+            {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
             {
                 title: "报警信息",
                 width: 200,
@@ -1577,6 +1601,13 @@ class index extends PureComponent {
                 key: 'pollutantName',
             },
             {
+                title: "报警生成时间",
+                width: 120,
+                align: 'center',
+                dataIndex: 'createTime',
+                key: 'createTime',
+              },
+            {
                 title: "报警信息",
                 width: 200,
                 align: 'left',
@@ -1678,7 +1709,7 @@ class index extends PureComponent {
                         title={this.state.ModalTitle}
                         visible={this.state.regVisible}
                         footer={null}
-                        width={1300}
+                        width={'90%'}
                         onCancel={this.RegCancelHandel}
                     >
                         <div style={{ marginBottom: 10 }}>
@@ -1715,7 +1746,7 @@ class index extends PureComponent {
                                 <Radio.Button value="0">待核实</Radio.Button>
                             </Radio.Group>
                             <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlertsButtonHandle}> 查询</Button>
-                            <Button onClick={this.ButtonHandleExpor}><ExportOutlined /> 导出</Button>
+                            <Button onClick={this.ButtonHandleExpor} loading={exportLoading3}><ExportOutlined /> 导出</Button>
                             <div style={{marginTop:10}}>
                             {this.state.DealType === '1'?
                                 <div>
@@ -1740,7 +1771,7 @@ class index extends PureComponent {
                         title={this.state.ModalTitle}
                         visible={this.state.regVisibleAlready}
                         footer={null}
-                        width={1300}
+                        width={'90%'}
                         onCancel={this.RegCancelHandel}
                     >
                         <div style={{ marginBottom: 10 }}>
@@ -1768,7 +1799,7 @@ class index extends PureComponent {
                                 {this.entList()}
                             </Select>
                             <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlreadyButtonCountHandle}> 查询</Button>
-                            <Button onClick={this.AlreadyButtonHandleExpor}><ExportOutlined /> 导出</Button>
+                            <Button onClick={this.AlreadyButtonHandleExpor} loading={exportLoading3}><ExportOutlined /> 导出</Button>
                             <div style={{marginTop:10}}>
                                 <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
                                 <Checkbox.Group defaultValue={AlarmDealTypeList.map(item=>item.code)} onChange={this.AlarmDealCheckBoxChange}>
@@ -1790,7 +1821,7 @@ class index extends PureComponent {
                         title={this.state.ModalTitle}
                         visible={this.state.regVisibleStay}
                         footer={null}
-                        width={1300}
+                        width={'90%'}
                         onCancel={this.RegCancelHandel}
                     >
                         <div style={{ marginBottom: 10 }}>
@@ -1818,7 +1849,7 @@ class index extends PureComponent {
                                 {this.entList()}
                             </Select>
                             <Button type='primary' style={{ marginRight: 10 }} onClick={this.StayButtonCountHandle}> 查询</Button>
-                            <Button onClick={this.StayButtonHandleExpor}><ExportOutlined /> 导出</Button>
+                            <Button onClick={this.StayButtonHandleExpor} loading={exportLoading3}><ExportOutlined /> 导出</Button>
                         </div>
                         {
                             <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns4} dataSource={ManagementDetail} pagination={false} />
@@ -1830,11 +1861,11 @@ class index extends PureComponent {
                         title={this.state.ModalTitle}
                         visible={this.state.entVisible}
                         footer={null}
-                        width={1300}
+                        width={'90%'}
                         onCancel={this.RegCancelHandel}
                     >
                         <div style={{ marginBottom: 10 }}>
-                            <Button onClick={this.ButtonCountHandleExpor}><ExportOutlined /> 导出</Button>
+                            <Button onClick={this.ButtonCountHandleExpor} loading={exportLoading3}><ExportOutlined /> 导出</Button>
                         </div>
                         {
                             <SdlTable loading={loadingDetail} columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />

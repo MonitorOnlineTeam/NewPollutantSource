@@ -317,8 +317,6 @@ class LogTimeList extends Component {
   };
   onDateChange = date => {
     const { logForm } = this.props;
-
-    // console.log("我是日期哈哈哈" + date)
     this.props.dispatch({
       type: 'operations/updateState',
       payload: {

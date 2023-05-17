@@ -362,7 +362,12 @@ class Index extends PureComponent {
         key: 'FirstTime',
       },
       {
-        title: '报警信息',
+        title: '报警生成时间',
+        dataIndex: 'CreateTime',
+        key: 'CreateTime',
+      },
+      {
+        title: '报警生成时间',
         dataIndex: 'AlarmMsg',
         key: 'AlarmMsg',
         width: 300

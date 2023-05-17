@@ -106,6 +106,12 @@ export default class Index extends Component {
       //  },
       },
       {
+        title: <span>报警生成时间</span>,
+        dataIndex: 'CreateTime',
+        key: 'CreateTime',
+        align: 'center',
+      },
+      {
         title: <span>报警信息</span>,
         dataIndex: 'message',
         key: 'message',
