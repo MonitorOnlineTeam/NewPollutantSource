@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:37:57
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-12 09:19:58
+ * @Last Modified time: 2023-05-12 16:18:59
  * @Description: 现场工作
  */
 
@@ -122,7 +122,7 @@ const XCGZ = props => {
         title: '现场工作时间',
         dataIndex: 'WorkTime',
         key: 'WorkTime',
-        sorter: (a, b) => a.WorkTime - b.WorkTime,
+        sorter: (a, b) => moment(a.WorkTime).valueOf() - moment(b.WorkTime).valueOf(),
         render: (text, record) => {
           return moment(text).format('YYYY-MM-DD');
         },

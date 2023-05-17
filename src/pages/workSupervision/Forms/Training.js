@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 16:22:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-12 11:19:52
+ * @Last Modified time: 2023-05-12 16:15:24
  * @Description: 人员培训记录表
  */
 import React, { useState, useEffect } from 'react';
@@ -138,7 +138,12 @@ const Training = props => {
                   },
                 ]}
               >
-                <DatePicker style={{ width: '200px' }} />
+                <DatePicker
+                  disabledDate={current => {
+                    return current && current > moment().endOf('day');
+                  }}
+                  style={{ width: '200px' }}
+                />
               </Form.Item>
             </Col>
             <Col span={24} className={styles.uploadWrapper}>

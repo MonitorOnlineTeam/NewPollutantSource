@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-21 15:55:58
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-12 10:40:09
+ * @Last Modified time: 2023-05-12 16:16:34
  * @Description: 现场工作 - 填写、编辑任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -87,7 +87,12 @@ const Fieldwork = props => {
               },
             ]}
           >
-            <DatePicker style={{ width: '100%' }} />
+            <DatePicker
+              disabledDate={current => {
+                return current && current > moment().endOf('day');
+              }}
+              style={{ width: '100%' }}
+            />
           </Form.Item>
           <Form.Item
             label="内容项"

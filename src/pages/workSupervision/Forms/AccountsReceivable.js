@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-26 09:54:05
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-12 09:34:11
+ * @Last Modified time: 2023-05-16 15:15:28
  * @Description：应收账款催收
  */
 
@@ -43,7 +43,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 const AccountsReceivable = props => {
   const [form] = Form.useForm();
   const { taskInfo, IndustryList, submitLoading, onCancel, GetProjectInfoListLoading } = props;
-  const [projectInfoList, setProjectInfoList] = useState({});
+  const [projectInfoList, setProjectInfoList] = useState([]);
   const [projectNum, setProjectNum] = useState('');
   const [popVisible, setPopVisible] = useState(false);
   const [isProjectSelect, setIsProjectSelect] = useState(false);

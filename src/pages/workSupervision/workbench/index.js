@@ -281,7 +281,9 @@ const Workbench = props => {
             {item.TaskContent}
           </Col>
           <Col flex="200px">
-            <span className={styles.ellipsis} title={item.CreateUser}>{item.CreateUser}</span>
+            <span className={styles.ellipsis} title={item.CreateUser}>
+              {item.CreateUser}
+            </span>
           </Col>
           <Col flex="100px">{moment(item.CreateTime).format('YYYY-MM-DD')}</Col>
           <Col flex="40px" style={{ textAlign: 'right', cursor: 'pointer' }}>
@@ -388,9 +390,12 @@ const Workbench = props => {
         </div>
         <div className={styles.rightWrapper}>
           <div className={styles.infoWrapper}>
-            <Card bodyStyle={{ padding: 0 }} style={{ height: '100%' }}>
+            <Card bodyStyle={{ padding: 0, height: '100%' }} style={{ height: '100%' }}>
               <div className={styles.title}>我的消息</div>
-              <div className={styles.content}>
+              <div
+                className={styles.content}
+                style={{ height: 'calc(100% - 44px)', overflowY: 'auto' }}
+              >
                 <Spin spinning={messageListLoading}>
                   {messageList.length ? (
                     <Timeline mode={'left'} className={styles.messageTimeLine}>

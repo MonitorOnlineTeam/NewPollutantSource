@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-25 15:59:44
+ * @Last Modified time: 2023-05-16 14:54:49
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -109,7 +109,7 @@ class SdlTable extends PureComponent {
       headAndFooterHeight: 110,
       pageIndex: 1,
       pageSize: 20,
-      dataSource:[],
+      dataSource: [],
     };
 
     this.components = {
@@ -118,12 +118,14 @@ class SdlTable extends PureComponent {
       },
     };
 
-    this.dragableComponents = { //拖拽功能
+    this.dragableComponents = {
+      //拖拽功能
       body: {
         row: DragableBodyRow,
       },
     };
-    this.totalComponents = {//拖拽功能&&表头伸缩
+    this.totalComponents = {
+      //拖拽功能&&表头伸缩
       header: {
         cell: ResizeableTitle,
       },
@@ -238,7 +240,7 @@ class SdlTable extends PureComponent {
         {
           computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
         },
-        () => { },
+        () => {},
       );
     }
 
@@ -250,7 +252,7 @@ class SdlTable extends PureComponent {
         {
           computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
         },
-        () => { },
+        () => {},
       );
     }
   }
@@ -267,10 +269,11 @@ class SdlTable extends PureComponent {
       });
     }
     if (this.props.dragable !== prevProps.dragable) {
-      this.setState({dataSource:this.props.dataSource})
+      this.setState({ dataSource: this.props.dataSource });
     }
   }
-  moveRow = (dragIndex, hoverIndex) => { //拖拽事件
+  moveRow = (dragIndex, hoverIndex) => {
+    //拖拽事件
     const { dataSource } = this.state;
 
     const dragRow = dataSource[dragIndex];
@@ -278,14 +281,17 @@ class SdlTable extends PureComponent {
     this.setState(
       update(this.state, {
         dataSource: {
-          $splice: [[dragIndex, 1], [hoverIndex, 0, dragRow]],
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragRow],
+          ],
         },
       }),
     );
-    this.props.dragData(this.state.dataSource)
+    this.props.dragData(this.state.dataSource);
   };
   render() {
-    const { defaultWidth, resizable, clientHeight, pagination, align,dragable, } = this.props;
+    const { defaultWidth, resizable, clientHeight, pagination, align, dragable } = this.props;
     const { _props, columns, headAndFooterHeight } = this.state;
 
     const fixedHeight = this.state.computeHeight;
@@ -293,15 +299,22 @@ class SdlTable extends PureComponent {
       this.props.scroll && this.props.scroll.y
         ? this.props.scroll.y
         : fixedHeight
-          ? clientHeight - fixedHeight - headAndFooterHeight
-          : '';
-    console.log("scrollYHeight=", scrollYHeight)
+        ? clientHeight - fixedHeight - headAndFooterHeight
+        : '';
     // 没有分页高度 + 40
-    const scrollY = pagination === false ? scrollYHeight + 40 : scrollYHeight;
+    const scrollY =
+      pagination === false && typeof scrollYHeight === 'number' ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
     const _columns = (columns || []).map((col, index) => ({
       render: (text, record) =>
-      text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} className={col.ellipsis? 'ant-table-cell-ellipsis' : null}>{text}</div>,
+        text && (
+          <div
+            style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
+            className={col.ellipsis ? 'ant-table-cell-ellipsis' : null}
+          >
+            {text}
+          </div>
+        ),
       align: align,
       ...col,
       width: this.getInitialColWidth(col),
@@ -314,57 +327,66 @@ class SdlTable extends PureComponent {
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
       <DndProvider backend={HTML5Backend}>
-      <div ref={el => (this.sdlTableFrame = el)}>
-        <Table
-          ref={table => {
-            this.sdlTable = table;
-          }}
-          id="sdlTable"
-          rowKey={(record, index) => record.id || record.ID || index}
-          size="middle"
-          // components={resizable ? this.components : undefined}
-          components={resizable&&dragable? this.totalComponents :resizable ? this.components : dragable?  this.dragableComponents: undefined}
-          // className={styles.dataTable}
-          rowClassName={(record, index, indent) => {
-            if (index === 0) {
-              return;
+        <div ref={el => (this.sdlTableFrame = el)}>
+          <Table
+            ref={table => {
+              this.sdlTable = table;
+            }}
+            id="sdlTable"
+            rowKey={(record, index) => record.id || record.ID || index}
+            size="middle"
+            // components={resizable ? this.components : undefined}
+            components={
+              resizable && dragable
+                ? this.totalComponents
+                : resizable
+                ? this.components
+                : dragable
+                ? this.dragableComponents
+                : undefined
             }
-            if (index % 2 !== 0) {
-              return 'light';
-            }
-          }}
-          bordered
-          pagination={{
-            // defaultCurrent: 1,
-            current: this.state.pageIndex,
-            pageSize: this.state.pageSize,
-            // showQuickJumper: true,
-            total: this.props.dataSource ? this.props.dataSource.length : 0,
-            showSizeChanger: true,
-            onChange: (current, size) => {
-              this.setState({
-                pageIndex:current,
-                pageSize: size
-              })
-              this.props.onPageChange&&this.props.onPageChange(current,size)
-            },
-            pageSizeOptions: [ '10', '20', '30', '40', '100'],
-          }}
-          {...this.props}
-          defaultWidth={80}
-          scroll={{
-            x: (this.props.scroll && this.props.scroll.x && this.props.scroll.x) || scrollXWidth,
-            y: scrollY,
-          }}
-          columns={_columns}
-          onRow={(record, index) => ({  //拖拽功能
-            index,
-            moveRow: this.moveRow,
-          })}
-          dataSource={dragable?this.state.dataSource : this.props.dataSource}
-          {..._props}
-        />
-      </div>
+            // className={styles.dataTable}
+            rowClassName={(record, index, indent) => {
+              if (index === 0) {
+                return;
+              }
+              if (index % 2 !== 0) {
+                return 'light';
+              }
+            }}
+            bordered
+            pagination={{
+              // defaultCurrent: 1,
+              current: this.state.pageIndex,
+              pageSize: this.state.pageSize,
+              // showQuickJumper: true,
+              total: this.props.dataSource ? this.props.dataSource.length : 0,
+              showSizeChanger: true,
+              onChange: (current, size) => {
+                this.setState({
+                  pageIndex: current,
+                  pageSize: size,
+                });
+                this.props.onPageChange && this.props.onPageChange(current, size);
+              },
+              pageSizeOptions: ['10', '20', '30', '40', '100'],
+            }}
+            {...this.props}
+            defaultWidth={80}
+            scroll={{
+              x: (this.props.scroll && this.props.scroll.x && this.props.scroll.x) || scrollXWidth,
+              y: scrollY,
+            }}
+            columns={_columns}
+            onRow={(record, index) => ({
+              //拖拽功能
+              index,
+              moveRow: this.moveRow,
+            })}
+            dataSource={dragable ? this.state.dataSource : this.props.dataSource}
+            {..._props}
+          />
+        </div>
       </DndProvider>
     );
   }
@@ -374,6 +396,6 @@ SdlTable.defaultProps = {
   defaultWidth: 130,
   resizable: false,
   dataSource: [],
-}
+};
 
 export default SdlTable;

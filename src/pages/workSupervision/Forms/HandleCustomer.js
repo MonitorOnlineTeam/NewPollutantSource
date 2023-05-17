@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:58:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-11 11:18:57
+ * @Last Modified time: 2023-05-12 16:46:29
  * @Description: 客户操作页面
  */
 import React, { useState, useEffect } from 'react';
@@ -40,12 +40,12 @@ const HandleCustomer = props => {
 
   const getColumns = () => {
     return [
-      {
-        title: '客户全称',
-        dataIndex: 'CustomFullName',
-        key: 'customFullName',
-        align: 'center',
-      },
+      // {
+      //   title: '客户全称',
+      //   dataIndex: 'CustomFullName',
+      //   key: 'customFullName',
+      //   align: 'center',
+      // },
       {
         title: '客户名称',
         dataIndex: 'CustomName',
@@ -298,7 +298,7 @@ const HandleCustomer = props => {
               })}
             </Select>
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="客户全称"
             name="CustomFullName"
             rules={[
@@ -309,7 +309,7 @@ const HandleCustomer = props => {
             ]}
           >
             <Input placeholder="请输入客户全称!" />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="客户名称"
             name="CustomName"

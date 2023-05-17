@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2023-04-25 16:33:51 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-12 09:51:51
+ * @Last Modified time: 2023-05-15 09:56:36
  * @Description： 办事处统计
  */
 import React, { useState, useEffect } from 'react';
@@ -106,12 +106,12 @@ const OfficeCheck = props => {
         key: 'User_Name',
       },
       {
-        title: '应完成次数（次/月）',
+        title: '应完成数量（个/月）',
         dataIndex: 'standNum',
         key: 'standNum',
       },
       {
-        title: '实际完成次数（次/月）',
+        title: '实际完成数量（个/月）',
         dataIndex: 'overNum',
         key: 'overNum',
       },

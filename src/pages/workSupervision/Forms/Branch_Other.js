@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:54:42
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-12 10:41:06
+ * @Last Modified time: 2023-05-12 16:17:17
  * @Description：支持其他部门工作
  */
 import React, { useState, useEffect } from 'react';
@@ -85,7 +85,12 @@ const Branch_Other = props => {
               },
             ]}
           >
-            <DatePicker style={{ width: '100%' }} />
+            <DatePicker
+              disabledDate={current => {
+                return current && current > moment().endOf('day');
+              }}
+              style={{ width: '100%' }}
+            />
           </Form.Item>
           <Form.Item
             label="内容项"

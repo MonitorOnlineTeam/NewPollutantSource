@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-12 09:13:27
+ * @Last Modified time: 2023-05-16 16:01:47
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -54,14 +54,14 @@ const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   customerList: wordSupervision.customerList,
-  allUser: wordSupervision.allUser,
+  // otherCustomerList: wordSupervision.otherCustomerList,
   // messageList: wordSupervision.messageList,
   // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
   submitLoading: loading.effects['wordSupervision/InsOrUpdOtherCustomer'],
 });
 
 const CustomerInterview = props => {
-  const { customerList, submitLoading, taskInfo, onCancel, editData, onSubmitCallback, allUser } = props;
+  const { customerList, submitLoading, taskInfo, onCancel, editData, onSubmitCallback } = props;
   const [form] = Form.useForm();
   // const formRef = React.createRef();
 
@@ -69,7 +69,6 @@ const CustomerInterview = props => {
 
   useEffect(() => {
     getCustomerList();
-    GetAllUser();
   }, []);
 
   // 获取客户
@@ -80,13 +79,13 @@ const CustomerInterview = props => {
     });
   };
 
-  // 获取所有客户
-  const GetAllUser = () => {
-    props.dispatch({
-      type: 'wordSupervision/GetAllUser',
-      payload: {},
-    });
-  };
+  // // 获取维护的客户
+  // const getOtherCustomerList = () => {
+  //   props.dispatch({
+  //     type: 'wordSupervision/getOtherCustomerList',
+  //     payload: {},
+  //   });
+  // };
 
   const getColumns = () => {
     return [
@@ -148,7 +147,7 @@ const CustomerInterview = props => {
       UserGroup_Name: undefined,
       ProvinceName: undefined,
       DailyTaskID: taskInfo.ID,
-      // ReturnUser: JSON.parse(userCookie).UserId,
+      ReturnUser: JSON.parse(userCookie).UserId,
       ID: editData.ID,
     };
     console.log('body', body);
@@ -165,7 +164,7 @@ const CustomerInterview = props => {
 
   const userCookie = Cookie.get('currentUser');
   if (userCookie) {
-    form.setFieldsValue({ ReturnUser: JSON.parse(userCookie).UserId });
+    form.setFieldsValue({ ReturnUser: JSON.parse(userCookie).UserName });
   }
 
   return (
@@ -292,6 +291,39 @@ const CustomerInterview = props => {
             </Col>
             <Col span={12}>
               <Form.Item
+                label="回访日期"
+                name="ReturnTime"
+                rules={[
+                  {
+                    required: true,
+                    message: '请选择回访日期！',
+                  },
+                ]}
+              >
+                <DatePicker
+                  disabledDate={current => {
+                    return current && current > moment().endOf('day');
+                  }}
+                  style={{ width: '100%' }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="客户姓名"
+                name="CustomRealName"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入客户姓名！',
+                  },
+                ]}
+              >
+                <Input placeholder="请输入客户姓名！" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
                 label="部门"
                 name="Depart"
                 rules={[
@@ -332,7 +364,7 @@ const CustomerInterview = props => {
                 <Input placeholder="请填写联系方式" />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={12} style={{ display: 'none' }}>
               <Form.Item
                 label="回访人"
                 name="ReturnUser"
@@ -343,38 +375,10 @@ const CustomerInterview = props => {
                   },
                 ]}
               >
-                <Select
-                  placeholder="请选择回访人！"
-                  style={{ width: '100%' }}
-                  showSearch
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {allUser.map(item => {
-                    return (
-                      <Option value={item.key} key={item.key}>
-                        {item.User_Name}
-                      </Option>
-                    );
-                  })}
-                </Select>
+                <Input disabled />
               </Form.Item>
             </Col>
-            <Col span={12}>
-              <Form.Item
-                label="回访日期"
-                name="ReturnTime"
-                rules={[
-                  {
-                    required: true,
-                    message: '请选择回访日期！',
-                  },
-                ]}
-              >
-                <DatePicker style={{ width: '100%' }} />
-              </Form.Item>
-            </Col>
+           
           </Row>
           <Table
             size="small"

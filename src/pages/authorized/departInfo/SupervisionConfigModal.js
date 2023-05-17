@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-11 10:17:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-11 11:46:31
+ * @Last Modified time: 2023-05-15 09:54:58
  * @Description: 省区/大区日常监管配置
  */
 
@@ -95,12 +95,12 @@ const SupervisionConfigModal = props => {
         },
       },
       {
-        title: '办事处检查次数',
+        title: '办事处检查个数',
         dataIndex: 'OfficeCheckNum',
         key: 'OfficeCheckNum',
         align: 'center',
         render: text => {
-          return text + ' 次/月';
+          return text + ' 个/月';
         },
       },
       {
@@ -225,9 +225,9 @@ const SupervisionConfigModal = props => {
     });
   };
 
-  let title = '添加省区经理及日常监管配置';
+  let title = '运维省区经理日常监管配置';
   if (handleType === 2) {
-    title = '添加大区经理及日常监管配置';
+    title = '大区经理日常监管配置';
   }
 
   console.log('currentRow', currentRow);
@@ -242,7 +242,7 @@ const SupervisionConfigModal = props => {
         footer={false}
         onCancel={onCancel}
       >
-        <Card title="运维省区配置" bordered={false}>
+        <Card title="运维省区经理日常监管配置" bordered={false}>
           <Button
             type="primary"
             style={{ marginBottom: 10 }}
@@ -261,7 +261,7 @@ const SupervisionConfigModal = props => {
             pagination={false}
           />
         </Card>
-        <Card title="大区配置" bordered={false} style={{ marginTop: 10 }}>
+        <Card title="大区经理日常监管配置" bordered={false} style={{ marginTop: 10 }}>
           <Button
             type="primary"
             style={{ marginBottom: 10 }}

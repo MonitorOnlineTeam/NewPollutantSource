@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-06 13:57:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-06 14:19:20
+ * @Last Modified time: 2023-05-16 15:03:02
  * @Description: 检查考勤和日志
  */
 import React, { useState, useEffect } from 'react';
@@ -322,6 +322,9 @@ const AttendanceLog = props => {
             dataSource={dataSource}
             columns={getColumns()}
             pagination={false}
+            scroll={{
+              y: 'calc(100vh - 400px)',
+            }}
             footer={() => {
               return !isDetail ? (
                 <div
