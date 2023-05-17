@@ -34,7 +34,8 @@ import ButtonGroup_ from '@/components/ButtonGroup'
 import MissingDataRateModelDetail from './MissingDataRateModelDetail'
 import EntType from '@/components/EntType'
 import RegionList from '@/components/RegionList'
-import MissDataSecond from './MissingDataRateModelDetail'
+import MissDataSecond from '@/pages/monitoring/missingData/MissDataSecond'
+import styles from '@/pages/monitoring/missingData/style.less'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -70,10 +71,11 @@ export default class Index extends PureComponent {
       },
       level: '',
       goback: false,
-      missingAlarmVisible:false,
-      regionName:'',
-      regionCode:'',
-      status:'',
+      regionDetailCode: '',
+      missingAlarmVisible: false,
+      alarmNumRegionCode: '',
+      regionName: '',
+      status: '',
     };
 
     this.columns = [
@@ -87,7 +89,7 @@ export default class Index extends PureComponent {
         }
       },
       {
-        title: <span>{this.props.types === 'ent' ? '缺失数据报警检测点数' : '缺失数据报警空气检测点数'}</span>,
+        title: <span>{this.props.types === 'ent' ? '缺失数据报警监测点数' : '缺失数据报警空气检测点数'}</span>,
         dataIndex: 'pointCount',
         key: 'pointCount',
         align: 'center'
@@ -137,24 +139,19 @@ export default class Index extends PureComponent {
     this.initData();
   }
   detail = (text, record) => {
-
-    if (this.state.level) {
+    const { queryPar } = this.props;
+    if (this.state.level) { //监测点
       this.setState({
-        location: { query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar) } }
+        location: { query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.RegionCode, }) } }
       }, () => {
         this.setState({ entVisible: true })
       })
-    } else {
-
+    } else { //省级详情
       const { dispatch, types, time } = this.props;
-      this.setState({ level: 2 }, () => {
-
-        this.setState({ regionCode: record.regionCode, level: 2 }, () => {
-          setTimeout(() => {
-            this.getTableData(record.regionCode);
-          });
-        })
-
+      this.setState({ regionDetailCode: record.regionCode, level: 2 }, () => {
+        setTimeout(() => {
+          this.getTableData(record.regionCode);
+        });
       })
 
     }
@@ -193,11 +190,11 @@ export default class Index extends PureComponent {
     });
   };
 
-  getTableData = () => {
+  getTableData = (regionCode) => {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: this.state.level ? { ...queryPar, RegionCode: this.state.regionCode, regionLevel: this.state.level } : { ...queryPar },
+      payload: this.state.level ? { ...queryPar, RegionCode: regionCode, regionLevel: this.state.level } : { ...queryPar },
     });
   };
 
@@ -262,7 +259,7 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateDataModal/exportDefectDataSummary',
-      payload: this.state.level ? { ...queryPar, RegionCode: this.state.regionCode, regionLevel: this.state.level, Rate: 1, } : { ...queryPar, Rate: 1, },
+      payload: this.state.level ? { ...queryPar, RegionCode: this.state.regionDetailCode, regionLevel: this.state.level, Rate: 1, } : { ...queryPar, Rate: 1, },
       callback: data => {
         downloadFile(`/upload${data}`);
       },
@@ -321,8 +318,8 @@ export default class Index extends PureComponent {
     this.setState({
       missingAlarmVisible: true,
       regionName: record.regionName,
-      regionCode: record.regionCode,
-      status: status
+      alarmNumRegionCode: record.regionCode,
+      status: status? status : '',
     })
   }
   render() {
@@ -330,12 +327,12 @@ export default class Index extends PureComponent {
       exloading,
       queryPar: { beginTime, endTime, EntCode, RegionCode, AttentionCode, dataType, PollutantType, OperationPersonnel },
       time,
-      types
+      types,
     } = this.props;
     const { entVisible, location, level } = this.state;
     return <>
       {entVisible ?
-        <MissingDataRateModelDetail location={location} detailBack={() => {
+        <MissingDataRateModelDetail types={types} location={location} detailBack={() => {
           this.setState({
             entVisible: false
           })
@@ -415,7 +412,7 @@ export default class Index extends PureComponent {
                   导出
                 </Button>
                 {level && <Button onClick={() => {
-                  this.setState({ level: '', regionCode: '', goback: true }, () => {
+                  this.setState({ level: '', regionDetailCode: '', goback: true }, () => {
                     this.getTableData();
                   })
                 }} ><RollbackOutlined />返回</Button>}
@@ -426,7 +423,6 @@ export default class Index extends PureComponent {
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
             columns={this.columns}
-            bordered={false}
             dataSource={this.props.tableDatas}
             pagination={false}
           />
@@ -437,10 +433,9 @@ export default class Index extends PureComponent {
             footer={null}
             destroyOnClose={true}
             onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
-            // className={styles.missDetailSty}
+            className={styles.missDetailSty}
           >
-            <MissDataSecond hideBreadcrumb status={this.state.status} location={{ query: { regionCode: this.state.regionCode, queryPar: JSON.stringify(this.props.queryPar) } }} />
-
+            <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, status: this.state.status }) } }} />
           </Modal>
         </div>
       }

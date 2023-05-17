@@ -83,7 +83,7 @@ export default class Index extends PureComponent {
           }
       },
       {
-        title: <span>{this.props.types==='ent'? '缺失数据报警检测点数': '缺失数据报警空气检测点数'}</span>,
+        title: <span>{this.props.types==='ent'? '缺失数据报警监测点数': '缺失数据报警空气检测点数'}</span>,
         dataIndex: 'pointCount',
         key: 'pointCount',
         align: 'center'

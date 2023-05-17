@@ -179,32 +179,38 @@ class OperationRecord extends Component {
       },
       callback: (res) => {
         // 获取table数据
-        dispatch({
-          type: 'autoForm/getPageConfig',
-          payload: {
-            configId: this.getRecordType(),
-          },
-        });
+        // dispatch({
+        //   type: 'autoForm/getPageConfig',
+        //   payload: {
+        //     configId: this.getRecordType(),
+        //   },
+        // });
       },
     });
   };
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.DGIMN != nextProps.DGIMN) {
+      this.setState({maintenanceSelectValue:null})
+    }
     if (this.props.PollutantType != nextProps.PollutantType) {
-      this.getOperationrecordData(nextProps);
+        this.getOperationrecordData(nextProps) 
     }
-    if (
-      this.props.DGIMN !== nextProps.DGIMN &&
-      this.props.PollutantType === nextProps.PollutantType
-    ) {
-      // 获取table数据
-      this.props.dispatch({
-        type: 'autoForm/getPageConfig',
-        payload: {
-          configId: this.getRecordType(nextProps.DGIMN),
-        },
-      });
-    }
+    // if (
+    //   this.props.DGIMN !== nextProps.DGIMN 
+    //   // &&
+    //   // this.props.PollutantType === nextProps.PollutantType
+    // ) {
+    //   this.setState({maintenanceSelectValue:null},()=>{
+    //   // 获取table数据
+    //   this.props.dispatch({
+    //     type: 'autoForm/getPageConfig',
+    //     payload: {
+    //       configId: this.getRecordType(nextProps.DGIMN),
+    //     },
+    //   })
+    // }); 
+    // }
   }
 
   //根据表单类型获取configid
@@ -376,22 +382,20 @@ class OperationRecord extends Component {
       DGIMN,
       PollutantType,
     } = this.props;
-    const { columns, searchParams, maintenanceFlag, maintenanceSelectValue } = this.state;
-    // const defaultValue = currentRecordType ? currentRecordType : (recordTypeList[0] ? recordTypeList[0].TypeId : undefined);
+    const { columns, searchParams, maintenanceFlag, maintenanceSelectValue, } = this.state;
     const currentType = currentRecordType || 1;
     const currentDate = this.props.currentDate;
-
-    const defaultValue = (() => {
-      if (currentRecordType) {
-        return currentRecordType;
-      } else if (recordTypeList[0] && maintenanceFlag === 'operationrecord') {
-        return recordTypeList[0].TypeId;
-      } else if (recordTypeList[0] && maintenanceFlag === 'log') {
-        return null;
-      } else {
-        return undefined;
-      }
-    })();
+    // const defaultValue = (() => {
+    //   if (currentRecordType && maintenanceFlag === 'log') {
+    //     return currentRecordType;
+    //   } else if (recordTypeList[0] && maintenanceFlag === 'operationrecord') {
+    //     return recordTypeList[0].TypeId;
+    //   } else if (recordTypeList[0] && maintenanceFlag === 'log') {
+    //     return null;
+    //   } else {
+    //     return undefined;
+    //   }
+    // })();
     return (
       <div>
         <Card
@@ -401,7 +405,7 @@ class OperationRecord extends Component {
                 style={{ width: 220, marginRight: 10 }}
                 onChange={this.onTreeChange}
                 // onSearch={this.onTreeSearch}
-                value={defaultValue}
+                value={maintenanceSelectValue}
                 placeholder="请选择表单类型"
                 loading={this.props.RecordTypeTreeLoading}
               >

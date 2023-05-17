@@ -43,7 +43,7 @@ function getBase64(file) {
   imageList: common.imageList,
   imageListVisible: common.imageListVisible,
   logForm: operations.logForm,
-  loading: loading.effects['operations/getOperationLogList'],
+  // loading: loading.effects['operations/getOperationLogList'],
   currentRecordType: operationform.currentRecordType,
   currentDate: operationform.currentDate,
   // mainSelectDate:operationform.mainSelectDate
@@ -64,6 +64,7 @@ class LogTimeList extends Component {
       detailVisible:false,
       typeID:'',
       taskID:'',
+      loading:false,
     };
   }
 
@@ -101,7 +102,7 @@ class LogTimeList extends Component {
       });
     }
 
-    if (this.props.mainSelectValue !== nextProps.mainSelectValue) {
+    if (this.props.mainSelectValue !== nextProps.mainSelectValue && this.props.DGIMN == nextProps.DGIMN) {
       this.setState(
         {
           mainSelectValue: nextProps.mainSelectValue,
@@ -111,7 +112,7 @@ class LogTimeList extends Component {
         },
       );
     }
-    if (this.props.currentDate !== nextProps.currentDate) {
+    if (this.props.currentDate !== nextProps.currentDate && this.props.DGIMN == nextProps.DGIMN) {
       this.setState(
         {
           currentDate: nextProps.currentDate,
@@ -155,7 +156,7 @@ class LogTimeList extends Component {
   // 渲染时间轴
   renderTimeLineItem = () => {
     const timelineItems = [];
-    console.log('typeiD', this.props.timeLineList);
+    // console.log('typeiD', this.props.timeLineList);
     this.props.timeLineList.map(item => {
       timelineItems.push(
         <Timeline.Item
@@ -253,6 +254,7 @@ class LogTimeList extends Component {
   // 获取运维日志数据
   getOperationLogList = flag => {
     const { dateValues, DGIMN, currentRecordType } = this.state;
+    this.setState({loading:true})
     this.props.dispatch({
       type: 'operations/getOperationLogList',
       payload: {
@@ -264,6 +266,9 @@ class LogTimeList extends Component {
         // "RecordType": flag ? "" : this.props.logForm.RecordType
         RecordType: flag ? '' : this.props.currentRecordType,
       },
+      callback:()=>{
+        this.setState({loading:false})
+      }
     });
   };
 
@@ -350,10 +355,9 @@ class LogTimeList extends Component {
       imageList,
       style,
       logForm,
-      loading,
       currentRecordType,
     } = this.props;
-    const { dateValues, current, previewVisible, previewImage } = this.state;
+    const { dateValues, current, previewVisible, previewImage,loading, } = this.state;
     // let defaultValue = logForm.RecordType || undefined;
     // let defaultValue = currentRecordType || undefined;
     // console.log("defaultValue=", defaultValue)

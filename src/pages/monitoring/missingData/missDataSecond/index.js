@@ -1,6 +1,5 @@
 /**
  * 功  能：缺失数据报警响应
- * 创建人：贾安波
  * 创建时间：2020/10
  */
 import React, { Component } from 'react';
@@ -63,6 +62,7 @@ export default class Index extends Component {
       visible:false,
       DGIMN:'',
       TaskID:'',
+      status:'',
     };
     this.columns = [
       {
@@ -94,7 +94,7 @@ export default class Index extends Component {
        },
       },
       {
-        title: <span>{JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次缺失时间' : '首次缺失时间' }</span>,
+        title: <span>{this.props.location&&this.props.location.query&&JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次缺失时间' : '首次缺失时间' }</span>,
         dataIndex: 'firstTime',
         key: 'firstTime',
         // width: '10%',
@@ -164,12 +164,12 @@ export default class Index extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,type,location:{query:{regionCode}},status, } = this.props;
+    const { dispatch, location,Atmosphere,type, } = this.props;
    
     // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
    
 
-    this.updateQueryState({
+    // this.updateQueryState({
       // BeginTime: moment()
       // .subtract(1, 'day')
       // .format('YYYY-MM-DD 00:00:00'),
@@ -181,8 +181,8 @@ export default class Index extends Component {
       // DataType:'HourData',
       // EntType:'',
       // RegionCode:regionCode,
-      Status:status? status : '',
-     });
+    //   Status:status? status : '',
+    //  });
      
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
@@ -190,13 +190,16 @@ export default class Index extends Component {
  
     //  dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: regionCode },  });//获取关注列表
   
+    const  status = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar).status : '';
+    this.setState({
+      status: status,
+    },()=>{
+      this.getTableData(status);
+    })
 
-    setTimeout(() => {
-      this.getTableData();
-    });
   };
   updateQueryState = payload => {
-    const { queryPar, dispatch } = this.props;
+    const { queryPar, dispatch,location:{query} } = this.props;
 
     dispatch({
       type: pageUrl.updateState,
@@ -204,11 +207,12 @@ export default class Index extends Component {
     });
   };
 
-  getTableData = () => {
-    const { dispatch, queryPar } = this.props;
+  getTableData = (status) => {
+    const { dispatch,location, } = this.props;
+    let par = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar) : {};  
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...par,Status:status, },
     });
   };
 
@@ -378,12 +382,9 @@ export default class Index extends Component {
   //     </>
   // }
   reponseChange=(e)=>{
-      this.updateQueryState({
-        Status: e.target.value,
-      });
-      setTimeout(()=>{
-        this.getTableData();
-      })
+    this.setState({status:e.target.value },()=>{
+      this.getTableData(e.target.value); 
+    })
      
   }
   btnCompents=()=>{
@@ -409,9 +410,9 @@ export default class Index extends Component {
    );
   }
 reponseComp = ()=>{
-  const {queryPar:{Status} } = this.props;
+
   return <Form.Item label=''>
-        <Radio.Group value={Status} onChange={this.reponseChange}>
+        <Radio.Group value={this.state.status} onChange={this.reponseChange}>
           <Radio.Button value="">全部</Radio.Button>
           <Radio.Button value="1">已响应</Radio.Button>
           <Radio.Button value="0">待响应</Radio.Button>
@@ -520,17 +521,6 @@ reponseComp = ()=>{
               loading={this.props.loading}
               columns={this.columns}
               dataSource={this.props.tableDatas}
-              // onChange={this.handleTableChange}
-              // pagination={{
-              //   showSizeChanger: true,
-              //   showQuickJumper: true,
-                // sorter: true,
-                // total: this.props.total,
-                //defaultPageSize:20,
-                // pageSize:sessionStorage.getItem("missDataDetailPageSize"),
-                // current:sessionStorage.getItem("missDataDetailPageIndex"),
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              // }}
             />
           </>
         </Card>

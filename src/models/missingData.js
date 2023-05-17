@@ -1,6 +1,5 @@
 /**
- * 功  能：传输有效率
- * 创建人：贾安波
+ * 功  能：缺失数据
  * 创建时间：2020.09.27
  */
 
@@ -11,8 +10,8 @@ import {
   GetAttentionDegreeList,
   ExportDefectDataSummary,
   ExportDefectPointDetail,
-  GetDefectPointDetail
-} from './service';
+  GetDefectPointDetail,
+} from '@/services/missingData';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({

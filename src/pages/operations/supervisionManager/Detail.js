@@ -361,7 +361,7 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-            <Form.Item label='站点名称' >
+            <Form.Item label='点位名称' >
             {infoList&&infoList.PointName}
           </Form.Item>
             </Col>

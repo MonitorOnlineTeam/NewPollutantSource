@@ -908,6 +908,7 @@ export default class OverVerifyLstModal extends Component {
         footer={null}
         wrapClassName='spreadOverModal'
         onCancel={() => { this.setState({ alarmNumVisible: false }) }}
+        zIndex={1001}
       >
         <div style={{ marginBottom: 10 }}>
           <EntAtmoList placeholder="企业列表" regionCode={this.state.regionCode} onChange={(value) => {

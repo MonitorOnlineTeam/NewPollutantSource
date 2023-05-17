@@ -1,6 +1,5 @@
 /**
  * 功  能：缺失报警响应率详情
- * 创建人：贾安波
  * 创建时间：2020.11
  */
 import React, { Component } from 'react';
@@ -33,6 +32,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile, interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
+import EntAtmoList from '@/components/EntAtmoList'
+
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -61,9 +62,10 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      visible:false,
-      DGIMN:'',
-      TaskID:'',
+      visible: false,
+      DGIMN: '',
+      TaskID: '',
+      entCode:'',
     };
 
     this.columns = [
@@ -134,39 +136,39 @@ export default class Index extends Component {
         dataIndex: 'status',
         key: 'status',
         align: 'center',
-        render:(text,record)=>{
-          return !text?
-           '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
-          }        
+        render: (text, record) => {
+          return !text ?
+            '' : <a href='javascript:;' onClick={this.detail.bind(this, record)}>详情</a>
+        }
       },
     ];
   }
-  detail=(record)=>{
-    this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID,visible:true})
+  detail = (record) => {
+    this.setState({ DGIMN: record.DGIMN, TaskID: record.TaskID, visible: true })
 
- }
+  }
   componentDidMount() {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location, Atmosphere,status,} = this.props;
+    const { dispatch, location, Atmosphere, } = this.props;
 
-    this.updateQueryState({
-      // beginTime: moment()
-      //   .subtract(1, 'day')
-      //   .format('YYYY-MM-DD HH:mm:ss'),
-      // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      // AttentionCode: '',
-      // EntCode: '',
-      // RegionCode: '',
-      RegionCode: location.query.regionCode,
-      Status:status? status : '',
-    });
+    // this.updateQueryState({
+    // beginTime: moment()
+    //   .subtract(1, 'day')
+    //   .format('YYYY-MM-DD HH:mm:ss'),
+    // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+    // AttentionCode: '',
+    // EntCode: '',
+    // RegionCode: '',
+    // RegionCode: location.query.regionCode,
+    // Status:status? status : '',
+    // });
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-    dispatch({ type: 'MissingRateDataModal/getEntByRegion', payload: { RegionCode: '' }, });//获取企业列表
+    // dispatch({ type: 'MissingRateDataModal/getEntByRegion', payload: { RegionCode: '' }, });//获取企业列表
 
-    dispatch({ type: 'MissingRateDataModal/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
+    // dispatch({ type: 'MissingRateDataModal/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
 
 
     setTimeout(() => {
@@ -183,10 +185,11 @@ export default class Index extends Component {
   };
 
   getTableData = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar, location: { query } } = this.props;
+    const par = JSON.parse(query.queryPar)
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...par, EntCode:this.state.entCode,},
     });
   };
 
@@ -225,17 +228,13 @@ export default class Index extends Component {
       AttentionCode: value,
     });
   }
-  changeEnt = (value, data) => { //企业事件
-    this.updateQueryState({
-      EntCode: value,
-    });
-  }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar, location: { query } } = this.props;
+    const par = JSON.parse(query.queryPar)
     dispatch({
       type: 'MissingRateDataModal/exportDefectPointDetail',
-      payload: { ...queryPar, Rate: 1, },
+      payload: { ...par, Rate: 1,EntCode:this.state.entCode, },
       callback: data => {
         downloadFile(`/upload${data}`);
       },
@@ -305,10 +304,9 @@ export default class Index extends Component {
 
   }
   reponseChange = (e) => {
-    this.updateQueryState({
-      Status: e.target.value,
-    });
-    setTimeout(() => {
+    this.setState({
+      status: e.target.value,
+    }, () => {
       this.getTableData();
     })
   }
@@ -364,12 +362,16 @@ export default class Index extends Component {
   //     </>
   // }
   btnCompents = () => {
-    const { exloading } = this.props;
+    const { loading,exloading } = this.props;
     return (
       <Form.Item>
-        {/* <Button type="primary" onClick={this.queryClick}>
-        查询
-      </Button> */}
+       <Button
+          onClick={this.queryClick}
+          loading={loading}
+          type='primary'
+        >
+          查询
+      </Button>
         <Button
           style={{ margin: '0 5px' }}
           icon={<ExportOutlined />}
@@ -378,7 +380,7 @@ export default class Index extends Component {
         >
           导出
       </Button>
-        {!this.props.hideBreadcrumb&&<Button onClick={() => { this.props.detailBack() }} >
+        {!this.props.hideBreadcrumb && <Button onClick={() => { this.props.detailBack() }} >
           <RollbackOutlined />
                   返回
        </Button>}
@@ -386,9 +388,8 @@ export default class Index extends Component {
     );
   }
   reponseComp = (type) => {
-    const { queryPar: { Status } } = this.props;
     return <Form.Item label=''>
-      <Radio.Group value={Status} onChange={this.reponseChange}>
+      <Radio.Group defaultValue="" onChange={this.reponseChange}>
         <Radio.Button value="">全部</Radio.Button>
         <Radio.Button value="1">已响应</Radio.Button>
         <Radio.Button value="0">待响应</Radio.Button>
@@ -396,78 +397,39 @@ export default class Index extends Component {
     </Form.Item>
   }
   render() {
-    // const {
-    // // location:{ queryPar: { EntCode,PollutantType }},
-    //   type
-    // } = this.props;
-    //  debugger;
-
+    const { types   } = this.props;
+    console.log(types)
     return (<div> <>
       <Form layout="inline" style={{ paddingBottom: 15 }}>
+        {types == 'ent' ?
+          <>
+            <Row>
 
-        {this.reponseComp()}
-        {this.btnCompents()}
-        {/* {type==='ent'?
-              <>
-              <Row>
-              {this.queryComponents(type)}
-              </Row>
-                <Row>
+              <Form.Item label='企业列表'>
+                <EntAtmoList  placeholder="请选择" onChange={(value) => {
+                  this.setState({
+                    entCode: value
+                  })
+                }} style={{ width: 350 }} />
+              </Form.Item>
 
-               <Form.Item label='企业类型'>
-                  <Select
-                    placeholder="企业类型"
-                    onChange={this.typeChange}
-                    value={PollutantType}
-                    style={{ width: 200 }}
-                  >
-                    <Option value="">全部</Option>
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                  </Select>
-                </Form.Item> 
-                <Form.Item label='企业列表'>
-                  <Select
-                    showSearch
-                    optionFilterProp="children"
-                    allowClear
-                    placeholder="企业列表"
-                    onChange={this.changeEnt}
-                    value={EntCode ? EntCode : undefined}
-                    style={{ width: 350  }}
-                  >
-                    {this.children()}
-                  </Select>
-                </Form.Item>
-                 {this.reponseComp(type)}
-                 {this.btnCompents()}
-                </Row>
-                </>:
-                <>
-                <Row>
-                {this.queryComponents(type)}
-                </Row>
-                <Row>
+              {this.btnCompents()}
+            </Row>
+          </> :
+          <>
+            <Row>
+              <Form.Item label='大气站列表'>
+              <EntAtmoList placeholder="请选择" onChange={(value) => {
+                  this.setState({
+                    entCode: value
+                  })
+                }} style={{ width: 350 }} />
+              </Form.Item>
+              {this.btnCompents()}
 
-                {this.reponseComp(type)}
-                <Form.Item label='大气站列表'>
-                <Select
-                  showSearch
-                  optionFilterProp="children"
-                  allowClear
-                  placeholder="大气站列表"
-                  onChange={this.changeEnt}
-                  value={EntCode ? EntCode : undefined}
-                  style={{ width: 336  }}
-                >
-                  {this.children()}
-                </Select>
-                </Form.Item>
-                {this.btnCompents()}
-
-                </Row>
-                </>
-              } */}
+            </Row>
+          </>
+        }
       </Form>
     </>
       <>
@@ -475,30 +437,19 @@ export default class Index extends Component {
           rowKey={(record, index) => `complete${index}`}
           loading={this.props.loading}
           columns={this.columns}
-          // bordered={false}
           dataSource={this.props.tableDatas}
-        // pagination={{
-        //   showSizeChanger: true,
-        //   showQuickJumper: true,
-        // sorter: true,
-        // total: this.props.total,
-        //defaultPageSize:20
-        // pageSize: PageSize,
-        // current: PageIndex,
-        // pageSizeOptions: ['10', '20', '30', '40', '50'],
-        // }}
         />
       </>
       <Modal
-          title="任务详情"
-          visible={this.state.visible}
-          wrapClassName='spreadOverModal'
-          footer={null}
-          destroyOnClose={true}
-          onCancel={()=>{this.setState({visible:false})}}
-        >
-            <EmergencyDetailInfo DGIMN={this.state.DGIMN}  TaskID={this.state.TaskID}/>
-        </Modal>
+        title="任务详情"
+        visible={this.state.visible}
+        wrapClassName='spreadOverModal'
+        footer={null}
+        destroyOnClose={true}
+        onCancel={() => { this.setState({ visible: false }) }}
+      >
+        <EmergencyDetailInfo DGIMN={this.state.DGIMN} TaskID={this.state.TaskID} />
+      </Modal>
     </div>
     );
   }

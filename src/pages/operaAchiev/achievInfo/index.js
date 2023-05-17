@@ -97,7 +97,7 @@ const Index = (props) => {
       align: 'center',
       width: 50,
       render: (text, record, index) => {
-        return index + 1;
+        return  (index + 1) + (pageIndex-1)*pageSize;
       }
     },
     {
@@ -214,7 +214,7 @@ const Index = (props) => {
       render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
-      title: '站点名称',
+      title: '点位名称',
       dataIndex: 'PointName',
       key: 'PointName',
       align: 'center',

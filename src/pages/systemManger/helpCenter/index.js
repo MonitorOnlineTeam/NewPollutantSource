@@ -209,7 +209,7 @@ const Index = (props) => {
       <BreadcrumbWrapper>
         <Card>
           <Row justify='end'><Search loading={listLoading} value={searchContent} onChange={onChange} onSearch={onSearch} allowClear style={{ marginBottom: 14, width: '20%' }} placeholder="请输入问题" /></Row>
-          <Row style={{ overflowY: 'auto', height: 'calc(100vh - 185px)' }}>
+          <Row>
             <div className={styles.treeSty}>
               <Skeleton loading={treeLoading} active paragraph={{ rows: 5, }}>
                 <Tree
@@ -222,7 +222,7 @@ const Index = (props) => {
                 />
               </Skeleton>
             </div>
-            <div style={{ width: 'calc(100% - 165px)', }}>
+            <div style={{ width: 'calc(100% - 165px)',}}>
               {/* {selectedKey && selectedKey[0] ? <QueList listLoading={listLoading} pageIndex={pageIndex} pageSize={pageSize} handleListChange={handleListChange} /> : <Empty style={{ height: 223, backgroundColor: '#fff', margin: 0, marginLeft: 14, paddingTop: 60, }} image={Empty.PRESENTED_IMAGE_SIMPLE} />} */}
                <QueList listLoading={listLoading} pageIndex={pageIndex} pageSize={pageSize} handleListChange={handleListChange} /> 
             </div>

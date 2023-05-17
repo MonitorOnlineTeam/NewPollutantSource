@@ -4,8 +4,8 @@
 .helpCenterModal  :global {
   .ant-modal-body {
       padding: 1% 2%;
-      height: calc(100vh - 280px);
-      overflow-y: auto; 
+      // height: calc(100vh - 280px);
+      // overflow-y: auto; 
     }
     .ant-spin-nested-loading{
       height: 100%;
@@ -55,7 +55,9 @@
       padding:0 !important;
      }
      .ant-tree-list{
-       border: 1px solid #f0f0e0;
+      overflow-y: auto;
+      height: calc(100vh - 190px);
+      border: 1px solid #f0f0e0;
      }
      .ant-tree-title:last-child{
       padding-bottom: 0;
@@ -67,6 +69,8 @@
   .questListSty  :global {
      padding-left: 20px;
     .ant-list {
+      overflow-y: auto;
+      max-height: calc(100vh - 262px);
       .ant-list-items>.ant-list-item:last-child{
             border-bottom: 0 !important;
             padding-bottom: 0;

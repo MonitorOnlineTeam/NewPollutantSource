@@ -24,7 +24,16 @@ export async function GetDefectPointDetailRate(params) {
 
   return result;
 }
+//缺失数据查询响应 二级
+export async function GetDefectPointDetail(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectPointDetail',
+    params,
+    null,
+  );
 
+  return result;
+}
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(
@@ -50,6 +59,16 @@ export async function ExportDefectDataSummary(params) {
 export async function ExportDefectPointDetailRate(params) {
   const result = post(
     '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectPointDetailRate',
+    params,
+    null,
+  );
+
+  return result;
+}
+//导出 缺失数据报警响应  详情
+export async function ExportDefectPointDetail(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectPointDetail',
     params,
     null,
   );

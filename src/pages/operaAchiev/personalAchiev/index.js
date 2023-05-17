@@ -208,7 +208,7 @@ const Index = (props) => {
       render:(text, record, index)=>rowSpanFun(text, record)
     },
     {
-      title: '站点名称',
+      title: '点位名称',
       dataIndex: 'PointName',
       key: 'PointName',
       align: 'center',

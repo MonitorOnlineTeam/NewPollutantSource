@@ -443,7 +443,7 @@ class DepartIndex extends Component {
                   <DatabaseOutlined style={{ fontSize: 16 }} />
                 </a>
               </Tooltip></>}
-              {this.props.configInfo&&!this.props.configInfo.IsShowProjectRegion&&<><Divider type="vertical" />
+              <Divider type="vertical" />
               <Tooltip title="报警关联">
                 <a
                   style={{ cursor: 'pointer' }}
@@ -462,7 +462,7 @@ class DepartIndex extends Component {
                   <BellOutlined style={{ fontSize: 16 }} />
                 </a>
               </Tooltip>
-              <Divider type="vertical" />
+              {this.props.configInfo&&!this.props.configInfo.IsShowProjectRegion&&<> <Divider type="vertical" />
               <Tooltip title="更新运维区域">
                 <Popover
                   trigger="click"

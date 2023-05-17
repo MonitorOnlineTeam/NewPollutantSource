@@ -1787,7 +1787,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={12}>
                   <Spin spinning={pointLoading2} size='small' style={{ top: -3 }}>
-                    <Form.Item label='点位名称' name='DGIMN' rules={[{ required: true, message: '请选择站点名称' }]}>
+                    <Form.Item label='点位名称' name='DGIMN' rules={[{ required: true, message: '请选择点位名称' }]}>
 
                       <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
                         {

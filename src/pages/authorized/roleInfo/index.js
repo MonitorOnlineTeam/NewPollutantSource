@@ -353,7 +353,7 @@ class RoleIndex extends Component {
                                     })
                                 }}><MenuUnfoldOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
-                            <Divider type="vertical" />
+                            {/* <Divider type="vertical" />
                             <Tooltip title="报警关联">
                                 <a href="javascript:;" style={{ cursor: 'pointer' }} onClick={() => {
                                     console.log(record.Roles_ID)
@@ -363,7 +363,7 @@ class RoleIndex extends Component {
                                         this.showAlarmModal(record)
                                     })
                                 }}><BellOutlined style={{ fontSize: 16 }} /></a>
-                            </Tooltip>
+                            </Tooltip> */}
                         </span>,
                 },
             ],

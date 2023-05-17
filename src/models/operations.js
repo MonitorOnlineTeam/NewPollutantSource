@@ -119,7 +119,7 @@ export default Model.extend({
     },
 
     // 获取运维日志信息
-    *getOperationLogList({ payload }, { call, put, update, select }) {
+    *getOperationLogList({ payload,callback }, { call, put, update, select }) {
       const logForm = yield select(state => state.operations.logForm);
       const time = yield select(state => state.operationform.currentDate);
       const recordTypeList = yield select(state => state.operations.recordTypeList);
@@ -147,6 +147,7 @@ export default Model.extend({
           timeLineTotal: result.Total,
         });
       }
+      callback&&callback();
     },
     // 获取运维日志详情图片
     *getOperationImageList({ payload, callback }, { call, put, update }) {
