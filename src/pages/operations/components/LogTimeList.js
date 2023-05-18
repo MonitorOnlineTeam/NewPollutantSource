@@ -253,8 +253,8 @@ class LogTimeList extends Component {
 
   // 获取运维日志数据
   getOperationLogList = flag => {
-    const { dateValues, DGIMN, currentRecordType } = this.state;
-    this.setState({loading:true})
+    const { dateValues, DGIMN, currentRecordType,mainSelectValue, } = this.state;
+    this.setState({loading:true},()=>{
     this.props.dispatch({
       type: 'operations/getOperationLogList',
       payload: {
@@ -264,13 +264,14 @@ class LogTimeList extends Component {
         // "beginTime": dateValues[0].format('YYYY-MM-DD 00:00:00'),
         // "endTime": dateValues[1].format('YYYY-MM-DD 23:59:59'),
         // "RecordType": flag ? "" : this.props.logForm.RecordType
-        RecordType: flag ? '' : this.props.currentRecordType,
+        RecordType: flag ? '' : this.props.mainSelectValue,
       },
       callback:()=>{
         this.setState({loading:false})
       }
-    });
-  };
+    })
+  });
+  }
 
   // 获取详情图片
   getOperationImageList = data => {

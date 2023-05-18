@@ -121,7 +121,7 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '非驻场',
+      title: '非驻厂',
       align: 'center',
       children: [
         {
@@ -141,7 +141,7 @@ const Index = (props) => {
       ]
     },
     {
-      title: '驻场',
+      title: '驻厂',
       align: 'center',
       children: [
         {
@@ -325,7 +325,7 @@ const Index = (props) => {
         Sort:sortPar,
       }
       props.getPersonalPerformanceRateList({ ...par },(isSuccess)=>{
-        isSuccess&&setSortField(sortPar)
+        isSuccess&&setSortField(sortPar? sortPar : '')
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
