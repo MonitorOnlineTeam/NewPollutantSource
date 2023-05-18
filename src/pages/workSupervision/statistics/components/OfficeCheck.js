@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2023-04-25 16:33:51 
+ * @Author: JiaQi
+ * @Date: 2023-04-25 16:33:51
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-15 09:56:36
+ * @Last Modified time: 2023-05-18 15:25:36
  * @Description： 办事处统计
  */
 import React, { useState, useEffect } from 'react';
@@ -21,7 +21,6 @@ const OfficeCheck = props => {
   const [form] = Form.useForm();
   const { flag, type, queryLoading, exportLoading } = props;
   const [dataSource, setDataSource] = useState([]);
-  const [officeYearDataSource, setOfficeYearDataSource] = useState([]);
   const [userYearDataSource, setUserYearDataSource] = useState([]);
   // const [timeType, setTimeType] = useState('month');
 
@@ -57,12 +56,7 @@ const OfficeCheck = props => {
         apiName: 'StatisticsOfficeCheck',
       },
       callback: res => {
-        if (body.timeType === 'month') {
-          setDataSource(res);
-        } else {
-          setOfficeYearDataSource(res.officeYear);
-          setUserYearDataSource(res.userYear);
-        }
+        setDataSource(res);
       },
     });
   };
@@ -94,11 +88,6 @@ const OfficeCheck = props => {
         title: !type ? '省区' : '大区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-      },
-      {
-        title: '办事处',
-        dataIndex: 'OfficeName',
-        key: 'OfficeName',
       },
       {
         title: '经理姓名',
@@ -136,9 +125,8 @@ const OfficeCheck = props => {
   // 获取年列头
   const getYearColumns = value => {
     const { timeType, date } = form.getFieldsValue();
-
-    // 办事处
-    let columns1 = [
+    // 经理
+    let columns2 = [
       {
         title: '序号',
         dataIndex: 'index',
@@ -151,37 +139,6 @@ const OfficeCheck = props => {
         title: !type ? '省区' : '大区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-      },
-      {
-        title: '办事处',
-        dataIndex: 'OfficeName',
-        key: 'OfficeName',
-      },
-      {
-        title: '经理姓名',
-        dataIndex: 'User_Name',
-        key: 'User_Name',
-      },
-      {
-        title: '达标率',
-        dataIndex: 'Rate',
-        key: 'Rate',
-        sorter: (a, b) => a.Rate - b.Rate,
-        render: text => {
-          return text ? text + '%' : '-';
-        },
-      },
-    ];
-
-    // 经理
-    let columns2 = [
-      {
-        title: '序号',
-        dataIndex: 'index',
-        key: 'index',
-        render: (text, record, index) => {
-          return index + 1;
-        },
       },
       {
         title: '经理姓名',
@@ -198,18 +155,11 @@ const OfficeCheck = props => {
         },
       },
     ];
-
-    if (value === 1) {
-      let months = getMonthColumnsByYear(date);
-      return columns1.concat(months);
-    } else {
-      let months = getMonthColumnsByYear(date);
-      return columns2.concat(months);
-    }
+    let months = getMonthColumnsByYear(date);
+    return columns2.concat(months);
   };
 
   const timeType = form.getFieldValue('timeType');
-  console.log('timeType', timeType);
   return (
     <Card title="办事处检查统计" style={{ marginTop: -24 }}>
       <Form
@@ -260,24 +210,12 @@ const OfficeCheck = props => {
         />
       )}
       {timeType === 'year' && (
-        <Tabs defaultActiveKey="1">
-          <Tabs.TabPane tab="按办事处统计" key="1">
-            <SdlTable
-              loading={queryLoading}
-              align="center"
-              columns={getYearColumns(1)}
-              dataSource={officeYearDataSource}
-            />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="按经理统计" key="2">
-            <SdlTable
-              loading={queryLoading}
-              align="center"
-              columns={getYearColumns(2)}
-              dataSource={userYearDataSource}
-            />
-          </Tabs.TabPane>
-        </Tabs>
+        <SdlTable
+          loading={queryLoading}
+          align="center"
+          columns={getYearColumns(2)}
+          dataSource={dataSource}
+        />
       )}
     </Card>
   );

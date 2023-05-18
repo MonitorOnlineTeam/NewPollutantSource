@@ -1320,11 +1320,9 @@ export default {
                       name: 'operaTask',
                       component: './operations/operaTaskManager/operaTask',
                     },
-                  ]
-                }
+                  ],
+                },
               ],
-
-
             },
             {
               path: '/rolesmanager',
@@ -2647,6 +2645,12 @@ export default {
                   component: './workSupervision/statistics',
                 },
               ],
+            },
+            // 运维评价报告
+            {
+              name: 'OperationReport',
+              path: '/OperationReport',
+              component: './OperationReport',
             },
             /* 任务详情 */
             {

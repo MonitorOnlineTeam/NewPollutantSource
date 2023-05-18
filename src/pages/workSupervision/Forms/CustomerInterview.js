@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-16 16:01:47
+ * @Last Modified time: 2023-05-17 08:57:46
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -63,7 +63,6 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 const CustomerInterview = props => {
   const { customerList, submitLoading, taskInfo, onCancel, editData, onSubmitCallback } = props;
   const [form] = Form.useForm();
-  // const formRef = React.createRef();
 
   const [customID, setCustomID] = useState();
 
@@ -140,7 +139,6 @@ const CustomerInterview = props => {
   //
   const onFinish = async () => {
     const values = await form.validateFields();
-    console.log('values', values);
     let body = {
       ...values,
       ReturnTime: moment(values.ReturnTime).format('YYYY-MM-DD 00:00:00'),
@@ -150,8 +148,6 @@ const CustomerInterview = props => {
       ReturnUser: JSON.parse(userCookie).UserId,
       ID: editData.ID,
     };
-    console.log('body', body);
-    // return;
     props.dispatch({
       type: 'wordSupervision/InsOrUpdReturnVisitCustomers',
       payload: body,
@@ -182,23 +178,12 @@ const CustomerInterview = props => {
       <h2 className={styles.formTitle}>回访客户记录表</h2>
       <div className={styles.formContent}>
         <Form
-          // name="basic"
-          // layout="inline"
           form={form}
-          // ref={formRef}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 14 }}
-          // labelCol={{
-          //   span: 12,
-          // }}
-          // wrapperCol={{
-          //   span: 10,
-          // }}
           initialValues={{
             ...editData,
             ReturnTime: moment(editData.ReturnTime),
-            // ServiceResponse: 1,
-            // TechnicalLevel: 2,
           }}
           onFinish={onFinish}
           autoComplete="off"
@@ -253,8 +238,6 @@ const CustomerInterview = props => {
                           option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
                         onChange={(value, option) => {
-                          // debugger;
-                          // formRef.current.setFieldsValue({
                           setCustomID(value);
                           form.setFieldsValue({
                             UserGroup_Name: option['data-item'].UserGroup_Name,
@@ -272,7 +255,6 @@ const CustomerInterview = props => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  {console.log('customID.', customID)}
                   <Col span={10}>
                     <HandleCustomer
                       CustomID={customID}

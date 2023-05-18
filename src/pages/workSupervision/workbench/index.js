@@ -342,8 +342,8 @@ const Workbench = props => {
                             okText="是"
                             cancelText="否"
                           >
-                            <div className={styles.manualItem}>
-                              <img src={item.img} />
+                            <div className={styles.manualItem} style={{backgroundImage: `url(${item.img})`}}>
+                              {/* <img src={item.img} /> */}
                               <p>{item.label}</p>
                             </div>
                           </Popconfirm>

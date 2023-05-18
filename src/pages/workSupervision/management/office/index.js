@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2023-04-11 17:00:58 
+ * @Author: JiaQi
+ * @Date: 2023-04-11 17:00:58
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-12 10:29:53
+ * @Last Modified time: 2023-05-18 10:33:19
  * @Description: 办事处管理
  */
 import React, { useState, useEffect } from 'react';
@@ -242,7 +242,7 @@ const Office = props => {
                     <UsergroupAddOutlined style={{ fontSize: 16 }} />
                   </a>
                 </Tooltip>
-                <Divider type="vertical" />
+                {/* <Divider type="vertical" />
                 <Tooltip title="设置成套大区经理/省区运维经理">
                   <a
                     onClick={() => {
@@ -254,7 +254,7 @@ const Office = props => {
                   >
                     <UserSwitchOutlined style={{ fontSize: 16 }} />
                   </a>
-                </Tooltip>
+                </Tooltip> */}
               </>
             );
           }}
