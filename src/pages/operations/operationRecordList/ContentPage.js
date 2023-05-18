@@ -195,7 +195,7 @@ const Index = (props) => {
 
 
 
-
+ const [selectDate,setSelectDate] = useState([moment(new Date()).add(-30, 'day'), moment()])
 
   const searchComponents = () => {
     return <Form
@@ -203,19 +203,18 @@ const Index = (props) => {
       name="advanced_search"
       layout='inline'
       initialValues={{
-        time: [moment(new Date()).add(-30, 'day'), moment(),]
+        time: selectDate,
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
     >
       <Form.Item label='运维日期' name='time' >
         <RangePicker_
-          // showTime={{
-          //   format: 'YYYY-MM-DD HH:mm:ss',
-          //   defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')]
-          // }} 
           format={'YYYY-MM-DD'}
           style={{ width: 240 }}
+          onChange={(value)=>{
+            setSelectDate(value)
+          }}
         />
       </Form.Item>
       <Spin spinning={taskTypeLoading} size='small'>

@@ -111,6 +111,14 @@ const Index = (props) => {
       align: 'center',
     },
     {
+      title: '人员属性',
+      dataIndex: 'businessAttribute',
+      key: 'businessAttribute',
+      align: 'center',
+      width:150,
+      ellipsis: true,
+    },
+    {
       title: '非驻场',
       align: 'center',
       children: [
@@ -118,13 +126,15 @@ const Index = (props) => {
           title: '污染源气绩效套数',
           dataIndex: 'GasPerformance',
           key: 'GasPerformance',
-          align: 'center'
+          align: 'center',
+          sorter:true,
         },
         {
           title: '污染源水绩效套数',
           dataIndex: 'WaterPerformance',
           key: 'WaterPerformance',
-          align: 'center'
+          align: 'center',
+          sorter:true,
         },
       ]
     },
@@ -136,13 +146,15 @@ const Index = (props) => {
           title: '污染源气绩效套数',
           dataIndex: 'GasPerformanceZ',
           key: 'GasPerformanceZ',
-          align: 'center'
+          align: 'center',
+          sorter:true,
         },
         {
           title: '污染源水绩效套数',
           dataIndex: 'WaterPerformanceZ',
           key: 'WaterPerformanceZ',
-          align: 'center'
+          align: 'center',
+          sorter:true,
         },
       ]
     },
@@ -295,7 +307,7 @@ const Index = (props) => {
       }
     },
   ];
-  const onFinish = async (pageIndexs,pageSizes) => {  //查询 绩效汇总
+  const onFinish = async (pageIndexs,pageSizes,sortPar) => {  //查询 绩效汇总
     try {
       const values = await form.validateFields();
       const par = {
@@ -305,7 +317,9 @@ const Index = (props) => {
         Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
         UserId: userId,
       }
-      props.getPersonalPerformanceRateList({ ...par })
+      props.getPersonalPerformanceRateList({ ...par },(isSuccess)=>{
+        isSuccess&&setSortField(sortPar)
+      })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -326,17 +340,20 @@ const Index = (props) => {
     }
   }
 
-  const [pageSize, setPageSize] = useState(20)
+  const [sortField,setSortField] = useState('')
   const [pageIndex, setPageIndex] = useState(1)
-  const handleTableChange = (PageIndex, PageSize) => { //绩效汇总 分页
-    setPageIndex(PageIndex)
-    setPageSize(PageSize)
-    onFinish(PageIndex, PageSize)
+  const [pageSize, setPageSize] = useState(20)
+  const handleTableChange = (pagination, filters, sorter) => { //绩效汇总 分页
+    const sortPar = sorter.order? `${sorter.field},${sorter.order==='ascend'? 1 : 0}` : '';
+    const pageIndex = sortPar == sortField? pagination.current : 1 ;
+    setPageIndex(pageIndex)
+    setPageSize(pagination.pageSize)
+    onFinish(pageIndex, pagination.pageSize,sortPar)
 
   }
 
-  const [pageSize2, setPageSize2] = useState(20)
   const [pageIndex2, setPageIndex2] = useState(1)
+  const [pageSize2, setPageSize2] = useState(20)
   const handleTableChange2 = (PageIndex, PageSize) => { //绩效明细 分页
     setPageIndex2(PageIndex)
     setPageSize2(PageSize)
@@ -366,6 +383,7 @@ const Index = (props) => {
       ...values,
       UserId: userId,
       Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+      Sort:sortField,
     }
     props.exportPersonalPerformanceRate({ ...par })
   };
@@ -386,7 +404,7 @@ const Index = (props) => {
       name="advanced_search"
       form={form}
       layout='inline'
-      onFinish={() => { onFinish(1,pageSize) }}
+      onFinish={() => { onFinish(1,pageSize,sortField) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
@@ -468,13 +486,14 @@ const Index = (props) => {
                 bordered
                 dataSource={tableDatas}
                 columns={columns}
+                onChange = {handleTableChange}
                 pagination={{
                   total: tableTotal,
                   pageSize: pageSize,
                   current: pageIndex,
                   showSizeChanger: true,
                   showQuickJumper: true,
-                  onChange: handleTableChange,
+                  // onChange: handleTableChange,
                 }}
               />
             </Card>

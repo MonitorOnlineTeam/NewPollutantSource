@@ -902,8 +902,12 @@ class EmergencyDetailInfo extends Component {
 
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
-                                <Description term="创建人">{isExistTask ? this.props.taskInfo.Datas[0].CreateUserName : null}{this.getUserIcon(this.props.taskInfo.Datas[0].PeopleCertificateInfos)}</Description>
+                                <Description term="运维人">{isExistTask ? this.props.taskInfo.Datas[0].OperationsUserName : null}</Description>
                                 <Description term="创建时间">{isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}</Description>
+                                <Description term="审批状态">{isExistTask ? this.props.taskInfo.Datas[0].AuditStatusName : null}</Description>
+
+                            </DescriptionList>
+                            <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
                                 <Description term="审批状态">{isExistTask ? this.props.taskInfo.Datas[0].AuditStatusName : null}</Description>
 
                             </DescriptionList>

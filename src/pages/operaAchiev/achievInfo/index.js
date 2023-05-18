@@ -50,10 +50,11 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getPersonalPerformanceRateList: (payload) => { //绩效汇总 列表
+    getPersonalPerformanceRateList: (payload,callback) => { //绩效汇总 列表
       dispatch({
         type: `${namespace}/getPersonalPerformanceRateList`,
         payload: payload,
+        callback:callback,
       })
     },
     exportPersonalPerformanceRate: (payload) => { //绩效汇总 导出
@@ -90,7 +91,6 @@ const Index = (props) => {
 
   }, [])
 
-
   const columns = [
     {
       title: '序号',
@@ -113,6 +113,14 @@ const Index = (props) => {
       align: 'center',
     },
     {
+      title: '人员属性',
+      dataIndex: 'businessAttribute',
+      key: 'businessAttribute',
+      align: 'center',
+      width:150,
+      ellipsis: true,
+    },
+    {
       title: '非驻场',
       align: 'center',
       children: [
@@ -120,13 +128,15 @@ const Index = (props) => {
           title: '污染源气绩效套数',
           dataIndex: 'GasPerformance',
           key: 'GasPerformance',
-          align: 'center'
+          align: 'center',
+          sorter:true,
         },
         {
           title: '污染源水绩效套数',
           dataIndex: 'WaterPerformance',
           key: 'WaterPerformance',
-          align: 'center'
+          align: 'center',
+          sorter:true,
         },
       ]
     },
@@ -138,13 +148,15 @@ const Index = (props) => {
           title: '污染源气绩效套数',
           dataIndex: 'GasPerformanceZ',
           key: 'GasPerformanceZ',
-          align: 'center'
+          align: 'center',
+          sorter:true,
         },
         {
           title: '污染源水绩效套数',
           dataIndex: 'WaterPerformanceZ',
           key: 'WaterPerformanceZ',
-          align: 'center'
+          align: 'center',
+          sorter:true,
         },
       ]
     },
@@ -301,7 +313,7 @@ const Index = (props) => {
       }
     },
   ];
-  const onFinish = async (pageIndexs, pageSizes) => {  //查询
+  const onFinish = async (pageIndexs, pageSizes,sortPar) => {  //查询
     try {
       const values = await form.validateFields();
       setPageIndex(pageIndexs)
@@ -310,8 +322,11 @@ const Index = (props) => {
         pageIndex: pageIndexs,
         pageSize: pageSizes,
         Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+        Sort:sortPar,
       }
-      props.getPersonalPerformanceRateList({ ...par })
+      props.getPersonalPerformanceRateList({ ...par },(isSuccess)=>{
+        isSuccess&&setSortField(sortPar)
+      })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -330,19 +345,20 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-
+  const [sortField,setSortField] = useState('')
   const [pageSize, setPageSize] = useState(20)
   const [pageIndex, setPageIndex] = useState(1)
-  const handleTableChange = (PageIndex, PageSize) => { //绩效汇总 分页
-    setPageIndex(PageIndex)
-    setPageSize(PageSize)
-    onFinish(PageIndex, PageSize)
-
+  const handleTableChange = (pagination, filters, sorter) => { //绩效汇总 排序   
+    const sortPar = sorter.order? `${sorter.field},${sorter.order==='ascend'? 1 : 0}` : '';
+    const pageIndex = sortPar == sortField? pagination.current : 1 ;
+    setPageIndex(pageIndex)
+    setPageSize(pagination.pageSize)
+    onFinish(pageIndex, pagination.pageSize,sortPar)
   }
 
   const [pageSize2, setPageSize2] = useState(20)
   const [pageIndex2, setPageIndex2] = useState(1)
-  const handleTableChange2 = (PageIndex, PageSize) => { //绩效明细 分页
+  const handleTableChange2 = (PageIndex,PageSize) => { //绩效明细 分页
     setPageIndex2(PageIndex)
     setPageSize2(PageSize)
     onFinish2(PageIndex, PageSize)
@@ -377,6 +393,7 @@ const Index = (props) => {
     const par = {
       ...values,
       Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+      Sort:sortField,
     }
     props.exportPersonalPerformanceRate({ ...par })
   };
@@ -395,7 +412,7 @@ const Index = (props) => {
       name="advanced_search"
       form={form}
       layout='inline'
-      onFinish={() => { onFinish(1, pageSize) }}
+      onFinish={() => { onFinish(1, pageSize,sortField) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
@@ -418,7 +435,7 @@ const Index = (props) => {
         <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}  >
           重置
       </Button>
-      <Button icon={<ExportOutlined />} loading={exportLoading2} onClick={() => { exports() }}>
+      <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
             导出
       </Button>
       </Form.Item>
@@ -447,7 +464,7 @@ const Index = (props) => {
           <Input placeholder='请输入' allowClear={true} />
         </Form.Item>
       </Row>
-      <Row style={{ marginTop: 6 }}>
+      <Row>
         <Form.Item label='运维项目号' name='ProjectNum'  className='form2ItemWidth'>
           <Input placeholder='请输入' allowClear={true}/>
         </Form.Item>
@@ -483,13 +500,14 @@ const Index = (props) => {
                 bordered
                 dataSource={tableDatas}
                 columns={columns}
+                onChange = {handleTableChange}
                 pagination={{
                   total: tableTotal,
                   pageSize: pageSize,
                   current: pageIndex,
                   showSizeChanger: true,
                   showQuickJumper: true,
-                  onChange: handleTableChange,
+                  // onChange: handleTableChange,
                 }}
               />
             </Card>

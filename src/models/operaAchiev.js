@@ -109,6 +109,7 @@ export default Model.extend({
         message.error(result.Message)
         yield update({ tableLoading: false })
       }
+      callback&&callback(result.IsSuccess)
     },
     *exportPersonalPerformanceRate({ payload }, { call, put, update, select }) { //绩效信息 导出
       const result = yield call(services.ExportPersonalPerformanceRate, { ...payload });
@@ -168,7 +169,6 @@ export default Model.extend({
       yield update({ tableLoading: true })
       const result = yield call(services.GetPersonalPerformanceRateInfoList, payload);
       if (result.IsSuccess) {
-        console.log(result.Datas)
         yield update({
           personalPerformanceRateInfoList: result.Datas,
           personalPerformanceRateInfoTotal: result.Total,
