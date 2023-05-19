@@ -142,16 +142,14 @@ export default class Index extends PureComponent {
     const { queryPar } = this.props;
     if (this.state.level) { //监测点
       this.setState({
-        location: { query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.RegionCode, }) } }
+        location: { query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : this.state.regionDetailCode, }) } }
       }, () => {
         this.setState({ entVisible: true })
       })
     } else { //省级详情
       const { dispatch, types, time } = this.props;
       this.setState({ regionDetailCode: record.regionCode, level: 2 }, () => {
-        setTimeout(() => {
           this.getTableData(record.regionCode);
-        });
       })
 
     }

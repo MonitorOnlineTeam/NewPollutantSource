@@ -192,7 +192,7 @@ export default class Index extends Component {
   
     const  status = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar).status : '';
     this.setState({
-      status: status,
+      status: status? status : '',
     },()=>{
       this.getTableData(status);
     })
@@ -426,8 +426,6 @@ reponseComp = ()=>{
     //   PageIndex: pagination.current,
     //   PageSize: pagination.pageSize,
     // });
-    // sessionStorage.setItem("missDataDetailPageIndex",pagination.current)
-    // sessionStorage.setItem("missDataDetailPageSize",pagination.pageSize)
   // setTimeout(() => {
   //   this.getTableData();
   // });

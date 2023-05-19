@@ -81,7 +81,7 @@ class Index extends PureComponent {
         render: (text, record) => {
           return <a onClick={() => {
             let queryConditions = this.state.queryCondition;
-            queryConditions.RegionCode = record.CityCode;
+            queryConditions.RegionCode = record.CityCode ? record.CityCode : queryConditions.RegionCode;
             queryConditions.RegionName = record.RegionName;
             queryConditions = JSON.stringify(queryConditions)
             this.props.onRegionClick ? this.props.onRegionClick(queryConditions) :

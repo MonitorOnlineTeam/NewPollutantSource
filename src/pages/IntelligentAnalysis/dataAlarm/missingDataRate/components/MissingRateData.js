@@ -76,10 +76,11 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => {
+          const { queryPar } = this.props;
           if (this.props.level) {//二级页面
             return <Link to={{
               pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-              query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar) }
+              query: { regionCode: record.regionCode ? record.regionCode : queryPar.RegionCode , queryPar: JSON.stringify(queryPar) }
             }} >
               {text}
             </Link>
@@ -87,7 +88,7 @@ export default class EntTransmissionEfficiency extends Component {
             return this.props.types === 'ent' ? //一级页面
               <Link to={{
                 pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
-                query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar) }
+                query: { regionCode: record.regionCode, queryPar: JSON.stringify(queryPar) }
               }} >
                 {text}
               </Link> :

@@ -144,7 +144,7 @@ class CalendarPage extends PureComponent {
   }
   exceptionDetail = (row) => { //打卡异常详情
     this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: true, }, })
-    this.setState({ abnormalTitle: `${row.EnterpriseName} - ${row.PointName}`})
+    this.setState({ abnormalTitle: `${row.EnterpriseName} - ${row.PointName}` })
     setTimeout(() => {
 
       // 根据统计周期，计算开始及结束时间
@@ -159,7 +159,7 @@ class CalendarPage extends PureComponent {
           beginTime: beginTime,
           endTime: endTime,
           DGIMN: row.DGIMN,
-          taskID:row.TaskID,
+          taskID: row.TaskID,
         },
       }
       )
@@ -385,13 +385,13 @@ class CalendarPage extends PureComponent {
         if (item.HaveInHandTaskNum) {
           listData.push({ color: '#2db7f5', content: `进行中任务${item.HaveInHandTaskNum}个`, type: 2, date: item.ExcetionDate, text: "进行中任务" })
         }
-        // 无异常
-        if (!item.ExceptionTaskNum && !item.CompleteTaskNum && !item.ExecutedTaskNum && !item.HaveInHandTaskNum) {
-          listData.push({ notAbnormal: true, date: item.ExcetionDate, type: 0 })
-        }
         // 系统关闭任务
-        if (item.HaveInHandTaskNum) {
+        if (item.ColseTaskNum) {
           listData.push({ color: '#bfbfbf', content: `系统关闭任务${item.ColseTaskNum}个`, type: 10, date: item.ExcetionDate, text: "系统关闭任务" })
+        }
+        // 无异常
+        if (!item.ExceptionTaskNum && !item.CompleteTaskNum && !item.ExecutedTaskNum && !item.HaveInHandTaskNum && !item.ColseTaskNum ) {
+          listData.push({ notAbnormal: true, date: item.ExcetionDate, type: 0 })
         }
       }
       // 未来 0全部  1 备件更换  2 易耗品更换 3标气更换 4 清理点位（保养）
@@ -445,7 +445,7 @@ class CalendarPage extends PureComponent {
     // }
     // 无异常显示绿点
     if (listData.filter(item => item.notAbnormal).length) {
-      return <div style={{ marginTop: -22 }}>
+      return <div>
         <Badge status={"success"} />
       </div>
     }
@@ -524,7 +524,7 @@ class CalendarPage extends PureComponent {
 
   // 分页
   onTableChange = (current, pageSize) => {
-    this.updateState({ current, pageSize})
+    this.updateState({ current, pageSize })
     setTimeout(() => {
       // 获取表格数据
       this.abnormalItemClick(this.state.currentCellInfo, true)
@@ -597,7 +597,7 @@ class CalendarPage extends PureComponent {
                     current: abnormalForm.current,
                     onChange: this.onTableChange,
                     total: abnormalForm.total,
-                    pageSizeOptions:[6,10,20,50,100]
+                    pageSizeOptions: [6, 10, 20, 50, 100]
                   }}
                   dataSource={listData}
                   renderItem={item => (
@@ -673,7 +673,7 @@ class CalendarPage extends PureComponent {
             />
           </Modal>
           {/** 打卡异常  监测点 弹框 */}
-          <EntAbnormalMapModal  abnormalTitle={abnormalTitle} />
+          <EntAbnormalMapModal abnormalTitle={abnormalTitle} />
         </div>
       </BreadcrumbWrapper>
     );

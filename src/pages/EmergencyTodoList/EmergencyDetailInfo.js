@@ -874,16 +874,17 @@ class EmergencyDetailInfo extends Component {
         return (
             <div>
                 <Card
-                    title={!isHomeModal && <span style={{ fontWeight: '900' }}>任务详情</span>}
-                    extra={
+                    title={<Row justify='space-between'> 
+                        <span style={{ fontWeight: '900' }}>任务详情</span>
+                        <Button disabled={isExistTask&&taskInfo.Datas[0].IsForward!= '1'} type='primary' onClick={() => this.taskForward()}>任务转发</Button>
+                         </Row>}
+                    // extra={
                         // !isHomeModal && <div>
                             /* <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
                             {this.getGoBack()} */
                         // </div>
-                        <div>
-                            <Button disabled={isExistTask&&taskInfo.Datas[0].IsForward!= '1'} type='primary' onClick={() => this.taskForward()}>任务转发</Button>
-                        </div>
-                    }
+
+                    // }
                 >
 
                     <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
@@ -903,8 +904,8 @@ class EmergencyDetailInfo extends Component {
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
                                 <Description term="运维人">{isExistTask ? this.props.taskInfo.Datas[0].OperationsUserName : null}</Description>
+                                <Description term="创建人">{isExistTask ? this.props.taskInfo.Datas[0].CreateUserName : null}</Description>
                                 <Description term="创建时间">{isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}</Description>
-                                <Description term="审批状态">{isExistTask ? this.props.taskInfo.Datas[0].AuditStatusName : null}</Description>
 
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">

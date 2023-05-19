@@ -618,10 +618,9 @@ const Index = (props) => {
   }
   const onTaskFinish = (values)=>{
       props.getKeyParameterCheckList({ 
-        ...regQueryPar,
         ...values,
-        pageIndex:undefined,
-        pageSize:undefined,
+        beginTime:regQueryPar.beginTime,
+        endTime:regQueryPar.endTime,
         retransmission:1,
       })
   }

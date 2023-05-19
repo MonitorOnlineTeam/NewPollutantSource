@@ -37,7 +37,7 @@ export default Model.extend({
     attentionList:[],
     priseList: [],
     airList:[],
-    tableDatil:[]
+    tableDatil:[],
   },
   subscriptions: {},
   effects: {

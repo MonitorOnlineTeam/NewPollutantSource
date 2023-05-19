@@ -398,7 +398,6 @@ export default class Index extends Component {
   }
   render() {
     const { types   } = this.props;
-    console.log(types)
     return (<div> <>
       <Form layout="inline" style={{ paddingBottom: 15 }}>
         {types == 'ent' ?

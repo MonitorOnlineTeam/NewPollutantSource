@@ -54,7 +54,8 @@ const pageUrl = {
   queryPar: missingData.queryPar,
   regionList: autoForm.regionList,
   attentionList: missingData.attentionList,
-  atmoStationList: common.atmoStationList
+  atmoStationList: common.atmoStationList,
+  regionDetailCode:common.regionDetailCode,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -79,14 +80,14 @@ export default class EntTransmissionEfficiency extends Component {
           //          {text}
           //      </Link>
           return <a onClick={
-            () => { //市级跳转
+            () => {
+              const { queryPar, } = this.props
+              //市级跳转
               if (this.props.level) {
-                // sessionStorage.setItem("missDataDetailPageIndex",1)
-                // sessionStorage.setItem("missDataDetailPageSize",20)
-                this.props.dispatch(routerRedux.push({ pathname: '/monitoring/missingData/missDataSecond', query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar), regionName: record.regionName } }));
+                this.props.dispatch(routerRedux.push({ pathname: '/monitoring/missingData/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.regionDetailCode}), regionName: record.regionName } }));
               } else { //省级跳转
                 this.props.dispatch(routerRedux.push({
-                  pathname: this.props.types === 'ent' ? '/monitoring/missingData/cityLevel/ent' : '/monitoring/missingData/cityLevel/air', query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar), }
+                  pathname: this.props.types === 'ent' ? '/monitoring/missingData/cityLevel/ent' : '/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar,regionDetailCode: record.regionCode }), regionCode: record.regionCode }
                 }));
               }
             }}>{text}</a>
@@ -138,7 +139,6 @@ export default class EntTransmissionEfficiency extends Component {
 
     types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
     const isReg = location && location.pathname == '/monitoring/missingData/ent';
-    console.log(query)
     this.updateQueryState(isReg ? {
       // BeginTime: moment()
       //   .subtract(1, 'day')
@@ -148,22 +148,20 @@ export default class EntTransmissionEfficiency extends Component {
       // EntCode: '',
       // RegionCode: '',
       // Atmosphere:Atmosphere
-      // RegionCode:'',
+      // RegionCode:query.,
       EntType: types === 'ent' ? "1" : "2",
       OperationPersonnel: '',
     } :
       query && query.queryPar && JSON.parse(query.queryPar)
     );
-    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
     //获取企业列表 or 大气站列表
     //  types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
     isReg && dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
 
+    const regCode = isReg ? queryPar.RegionCode : query.regionCode;
+    this.getTableData(regCode, isReg ? 1 : 2);
 
-    setTimeout(() => {
-      this.getTableData();
-    });
   };
   updateQueryState = payload => {
     const { queryPar, dispatch } = this.props;
@@ -174,11 +172,11 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
-  getTableData = () => {
+  getTableData = (regCode, regionLevel) => {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...queryPar, RegionCode: regCode, regionLevel: regionLevel },
     });
   };
 
@@ -253,7 +251,8 @@ export default class EntTransmissionEfficiency extends Component {
   };
   //查询事件
   queryClick = () => {
-    this.getTableData();
+    const { queryPar } = this.props;
+    this.getTableData(queryPar.RegionCode, 1);
   };
 
 
@@ -304,7 +303,7 @@ export default class EntTransmissionEfficiency extends Component {
       missingAlarmVisible: true,
       regionName: record.regionName,
       alarmNumRegionCode: record.regionCode,
-      status: status? status : '',
+      status: status ? status : '',
     })
   }
   render() {
