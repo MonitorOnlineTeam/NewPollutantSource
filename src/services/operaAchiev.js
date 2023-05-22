@@ -93,3 +93,26 @@ export async function ExportPersonalPerformanceRateInfo(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPersonalPerformanceRateInfo',params, null);
   return result;
 }
+
+/**运维人员积分 */
+
+//一级页面
+export async function GetOperationIntegralList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralList',params, null);
+  return result;
+}
+//二级页面
+export async function GetOperationIntegralInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralInfoList',params, null);
+  return result;
+}
+//三级页面
+export async function GetOperationIntegralInfoViewList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralInfoViewList',params, null);
+  return result;
+}
+//导入积分
+export async function ImportOperationIntegral(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ImportOperationIntegral',params, null);
+  return result;
+}

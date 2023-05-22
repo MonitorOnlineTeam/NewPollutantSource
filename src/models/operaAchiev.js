@@ -22,7 +22,14 @@ export default Model.extend({
     individualTaskInfo: [], //个人工单详情
     individualTaskTotal: 0,
     personalPerformanceRateInfoList: [],
-    personalPerformanceRateInfoTotal: [],
+    personalPerformanceRateInfoTotal: [], 
+    operationIntegralList:[],
+    operationIntegralTotal:0,
+    integralInfoList:[],
+    integralInfoTotal:0,
+    integralInfoViewList:[],
+    integralInfoViewTotal:0,
+    integralQueryPar:{},
   },
   effects: {
     *getPointCoefficientList({ payload,callback }, { call, put, update }) { //获取所有排口监测点系数列表
@@ -92,7 +99,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.warning(result.Message)
+        message.error(result.Message)
       }
 
     },
@@ -117,7 +124,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.warning(result.Message)
+        message.error(result.Message)
       }
     },
     *getIndividualApportionmentList({ payload, callback }, { call, put, update }) { //个人分摊套数列表
@@ -139,7 +146,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.warning(result.Message)
+        message.error(result.Message)
       }
     },
     *getIndividualTaskInfo({ payload, callback }, { call, put, update }) { //获取个人工单详细
@@ -161,7 +168,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.warning(result.Message)
+        message.error(result.Message)
       }
     },
 
@@ -184,8 +191,46 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.warning(result.Message)
+        message.error(result.Message)
       }
+    },
+    *getOperationIntegralList({ payload, callback }, { call, put, update }) { //运维人员积分 列表
+      const result = yield call(services.GetOperationIntegralList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          operationIntegralList: result.Datas,
+          operationIntegralTotal: result.Total,
+          integralQueryPar:payload,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *getOperationIntegralInfoList({ payload, callback }, { call, put, update }) { //运维人员积分 详情
+      const result = yield call(services.GetOperationIntegralInfoList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          integralInfoList: result.Datas,
+          integralInfoTotal: result.Total,
+        })
+      } else {
+        message.error(result.Message)
+        yield update({ tableLoading: false })
+      }
+    },
+    *getOperationIntegralInfoViewList({ payload, callback }, { call, put, update }) { //运维人员积分 加减分详情
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetOperationIntegralInfoViewList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          integralInfoViewList: result.Datas,
+          integralInfoViewTotal: result.Total,
+        })
+      } else {
+        message.error(result.Message)
+        yield update({ tableLoading: false })
+      }
+      callback&&callback(result.IsSuccess)
     },
   } 
 

@@ -472,7 +472,7 @@ const Index = (props) => {
       const fileType = file?.type; //获取文件类型 type  image/*
       if (!(/^image/g.test(fileType))) {
         message.error(`请上传图片格式文件!`);
-        return;
+        return false;
       }
     },
     onChange(info) {

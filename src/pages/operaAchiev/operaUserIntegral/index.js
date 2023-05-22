@@ -4,9 +4,9 @@
  * 创建时间：2023.05.19
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Tabs, Pagination, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Upload, Tag, Tabs, Pagination, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined,ImportOutlined, ProfileOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -15,7 +15,7 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
-import NumTips from '@/components/NumTips'
+import config from '@/config';
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
 import styles from "../style.less";
@@ -23,22 +23,18 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-import AssessScoreAdd from './components/AssessScoreAdd'
-import AssessScoreReduce from './components/AssessScoreReduce'
-
-let userId;
+import AssessScoreAddReeuce from './components/AssessScoreAddReeuce'
 
 const namespace = 'operaAchiev'
 const dvaPropsData = ({ loading, operaAchiev, global }) => ({
-  tableTotal: operaAchiev.personalPerformanceRateTotal,
-  tableDatas: operaAchiev.personalPerformanceRateList,
-  tableLoading: loading.effects[`${namespace}/getPersonalPerformanceRateList`],
-  exportLoading: loading.effects[`${namespace}/exportPersonalPerformanceRate`],
-  tableTotal2: operaAchiev.personalPerformanceRateInfoTotal,
-  tableDatas2: operaAchiev.personalPerformanceRateInfoList,
-  tableLoading2: loading.effects[`${namespace}/getPersonalPerformanceRateInfoList`],
-  exportLoading2: loading.effects[`${namespace}/exportPersonalPerformanceRateInfo`],
-  clientHeight: global.clientHeight
+  tableDatas: operaAchiev.operationIntegralList,
+  tableTotal: operaAchiev.operationIntegralTotal,
+  tableLoading: loading.effects[`${namespace}/getOperationIntegralList`],
+  tableDatas2: operaAchiev.integralInfoList,
+  tableTotal2: operaAchiev.integralInfoTotal,
+  tableLoading2: loading.effects[`${namespace}/getOperationIntegralInfoList`],
+  integralQueryPar: operaAchiev.integralQueryPar,
+  clientHeight: global.clientHeight,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -49,27 +45,15 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getPersonalPerformanceRateList: (payload) => { //绩效汇总 列表
+    getOperationIntegralList: (payload) => { //运维人员积分 列表
       dispatch({
-        type: `${namespace}/getPersonalPerformanceRateList`,
+        type: `${namespace}/getOperationIntegralList`,
         payload: payload,
       })
     },
-    exportPersonalPerformanceRate: (payload) => { //绩效汇总 导出
+    getOperationIntegralInfoList: (payload) => { //运维人员积分 详情列表
       dispatch({
-        type: `${namespace}/exportPersonalPerformanceRate`,
-        payload: payload
-      })
-    },
-    getPersonalPerformanceRateInfoList: (payload) => { //绩效明细 列表
-      dispatch({
-        type: `${namespace}/getPersonalPerformanceRateInfoList`,
-        payload: payload,
-      })
-    },
-    exportPersonalPerformanceRateInfo: (payload) => { //绩效明细 导出
-      dispatch({
-        type: `${namespace}/exportPersonalPerformanceRateInfo`,
+        type: `${namespace}/getOperationIntegralInfoList`,
         payload: payload
       })
     },
@@ -79,90 +63,55 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
   const [form] = Form.useForm();
-  const [form2] = Form.useForm();
 
-  const { clientHeight, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, } = props;
+  const { clientHeight, tableDatas, tableTotal, tableLoading, tableDatas2, tableTotal2, tableLoading2, integralQueryPar, } = props;
 
   useEffect(() => {
     onFinish(pageIndex, pageSize)
-    onFinish2(pageIndex2, pageSize2, 'initData') //initData tab没切换之前获取不到form2
-    userId = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId;
   }, [])
 
   const columns = [
     {
-      title: '序号',
+      title: '考核排名',
       align: 'center',
-      width: 50,
-      render: (text, record, index) => {
-        return index + 1;
-      }
+      dataIndex: 'Ranking',
+      key: 'Ranking',
+      width: 80,
     },
     {
-      title: '员工编号',
-      dataIndex: 'UserAccount',
-      key: 'UserAccount',
-      align: 'center',
-    },
-    {
-      title: '姓名',
+      title: '运维人员姓名',
       dataIndex: 'UserName',
       key: 'UserName',
       align: 'center',
-    },
-    {
-      title: '人员属性',
-      dataIndex: 'businessAttribute',
-      key: 'businessAttribute',
-      align: 'center',
-      width: 150,
+      width: 100,
       ellipsis: true,
     },
     {
-      title: '非驻厂',
+      title: '工号',
+      dataIndex: 'UserAccount',
+      key: 'UserAccount',
       align: 'center',
-      children: [
-        {
-          title: '污染源气绩效套数',
-          dataIndex: 'GasPerformance',
-          key: 'GasPerformance',
-          align: 'center',
-          sorter: true,
-        },
-        {
-          title: '污染源水绩效套数',
-          dataIndex: 'WaterPerformance',
-          key: 'WaterPerformance',
-          align: 'center',
-          sorter: true,
-        },
-      ]
+      width: 150,
     },
     {
-      title: '驻厂',
-      align: 'center',
-      children: [
-        {
-          title: '污染源气绩效套数',
-          dataIndex: 'GasPerformanceZ',
-          key: 'GasPerformanceZ',
-          align: 'center',
-          sorter: true,
-        },
-        {
-          title: '污染源水绩效套数',
-          dataIndex: 'WaterPerformanceZ',
-          key: 'WaterPerformanceZ',
-          align: 'center',
-          sorter: true,
-        },
-      ]
+      title: '大区',
+      dataIndex: 'UserGroupName',
+      key: 'UserGroupName',
+      align: 'left',
+      width: 'auto',
+      ellipsis: true,
     },
     {
-      title: <span>操作</span>,
-      dataIndex: 'x',
-      key: 'x',
+      title: '运维人员积分',
+      dataIndex: 'Integral',
+      key: 'Integral',
       align: 'center',
+      width: 100,
+    },
+    {
+      title: '操作',
+      align: 'center',
+      width: 70,
       render: (text, record) => {
         return <span>
           <Fragment>
@@ -174,124 +123,66 @@ const Index = (props) => {
       }
     },
   ];
-
-  const rowSpanFun = (value, record) => {
-    let obj = {
-      children: <div>{value}</div>,
-      props: { rowSpan: record.Count },
-    };
-    return obj;
+  const [visible, setVisible] = useState(false)
+  const [title, setTitle] = useState(null)
+  const detail = (record) => {
+    setVisible(true)
+    setTitle(`${record.UserName} - 积分详情`)
+    props.getOperationIntegralInfoList({
+      UserId: record.UserId,
+    })
   }
   const columns2 = [
     {
-      title: '省份',
-      dataIndex: 'RegionName',
-      key: 'RegionName',
+      title: '考核排名',
       align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
+      dataIndex: 'Ranking',
+      key: 'Ranking',
+      width: 80,
     },
     {
-      title: '地级市',
-      dataIndex: 'CityName',
-      key: 'CityName',
-      align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: '运维项目号',
-      dataIndex: 'ProjectCode',
-      key: 'ProjectCode',
-      align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: '项目名称',
-      dataIndex: 'ProjectName',
-      key: 'ProjectName',
-      align: 'center',
-      width: 160,
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'EntName',
-      key: 'EntName',
-      align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: '点位名称',
-      dataIndex: 'PointName',
-      key: 'PointName',
-      align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: 'MN号',
-      dataIndex: 'DGIMN',
-      key: 'DGIMN',
-      align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: '分类',
-      dataIndex: 'PollutantTypeName',
-      key: 'PollutantTypeName',
-      align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: '设备类别系数',
-      dataIndex: 'PointCoefficient',
-      key: 'PointCoefficient',
-      align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: '巡检周期',
-      dataIndex: 'InspectionTypeName',
-      key: 'InspectionTypeName',
-      align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: '巡检周期系数',
-      dataIndex: 'RecordCoefficient',
-      key: 'RecordCoefficientx',
-      align: 'center',
-      render: (text, record, index) => rowSpanFun(text, record)
-    },
-    {
-      title: '实际运维人员',
+      title: '运维人员姓名',
       dataIndex: 'UserName',
       key: 'UserName',
-      align: 'center'
+      align: 'center',
+      width: 100,
+      ellipsis: true,
     },
     {
       title: '工号',
       dataIndex: 'UserAccount',
       key: 'UserAccount',
-      align: 'center'
-    },
-    {
-      title: '个人分摊套数/点位数',
-      dataIndex: 'OrderExecutionRatio',
-      key: 'OrderExecutionRatio',
       align: 'center',
-      width: 160,
+      width: 150,
     },
     {
-      title: '执行比例/工单完成比例',
-      dataIndex: 'ExecutionRatio',
-      key: 'ExecutionRatio',
+      title: '大区',
+      dataIndex: 'UserGroupName',
+      key: 'UserGroupName',
       align: 'center',
-      width: 180,
+      width: 'auto',
+      ellipsis: true,
     },
     {
-      title: '绩效套数',
-      dataIndex: 'UserCoefficient',
-      key: 'UserCoefficient',
-      align: 'center'
+      title: `4月考核分数`,
+      dataIndex: 'MinusPoints',
+      key: 'MinusPoints',
+      align: 'center',
+      width: 110,
+    },
+    {
+      title: `4月加分`,
+      dataIndex: 'BonusPoints',
+      key: 'BonusPoints',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '运维人员积分',
+      dataIndex: 'Integral',
+      key: 'Integral',
+      align: 'center',
+      width: 150,
     },
     {
       title: <span>操作</span>,
@@ -300,84 +191,50 @@ const Index = (props) => {
         return <span>
           <Fragment>
             <Tooltip title="详情">
-              <a onClick={() => { detail(record, 'isDetailed') }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
+              <a onClick={() => { scoreDetail(record, 'isDetailed') }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
             </Tooltip>
           </Fragment>
         </span>
       }
     },
   ];
-  const onFinish = async (pageIndexs, pageSizes, sortPar) => {  //查询 绩效汇总
+  const onFinish = async (pageIndexs, pageSizes, queryPar) => {  //查询 运维人员积分
     try {
       const values = await form.validateFields();
+      setPageIndex(pageIndexs);
       const par = {
         ...values,
         pageIndex: pageIndexs,
         pageSize: pageSizes,
-        Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
-        UserId: userId,
       }
-      props.getPersonalPerformanceRateList({ ...par }, (isSuccess) => {
-        isSuccess && setSortField(sortPar ? sortPar : '')
-      })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
-  const onFinish2 = async (pageIndexs, pageSizes, initData) => {  //查询 绩效明细
-    try {
-      const values = await form2.validateFields();
-      const par = {
-        ...values,
-        pageIndex: pageIndexs,
-        pageSize: pageSizes,
-        Month: initData ? moment().add(-1, 'M').format("YYYY-MM-01 00:00:00") : values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
-        UserId: userId,
-      }
-      props.getPersonalPerformanceRateInfoList({ ...par })
+      props.getOperationIntegralList(queryPar ? queryPar : par)
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
 
-  const [sortField, setSortField] = useState('')
+
+
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState(20)
-  const handleTableChange = (pagination, filters, sorter) => { //绩效汇总 分页
-    const sortPar = sorter.order ? `${sorter.field},${sorter.order === 'ascend' ? 1 : 0}` : '';
-    const pageIndex = sortPar == sortField ? pagination.current : 1;
-    setPageIndex(pageIndex)
-    setPageSize(pagination.pageSize)
-    onFinish(pageIndex, pagination.pageSize, sortPar)
-
-  }
-
-  const [pageIndex2, setPageIndex2] = useState(1)
-  const [pageSize2, setPageSize2] = useState(20)
-  const handleTableChange2 = (PageIndex, PageSize) => { //绩效明细 分页
-    setPageIndex2(PageIndex)
-    setPageSize2(PageSize)
-    onFinish2(PageIndex, PageSize)
+  const handleTableChange = (PageIndex, PageSize) => { //运维人员积分 分页
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+    onFinish(PageIndex, PageSize, integralQueryPar)
 
   }
 
 
-  const [visible, setVisible] = useState(false)
-  const [title, setTitle] = useState(null)
-  const [detailPar, setDetailPar] = useState(null)
-
-  const detail = (record) => {
-    setVisible(true)
-    setDetailPar({
-      Month: form.getFieldValue('Month').format("YYYY-MM-01 00:00:00"),
-      UserAccount: record.UserAccount,
-      UserName: record.UserName,
-      UserId: record.UserId,
-    })
-    setTitle(`${record.UserName}`)
+  const [scoreVisible, setScoreVisible] = useState(false)
+  const [scoreTitle, setScoreTitle] = useState(null)
+  const [scoreDetailPar, setDetailPar] = useState(null)
+  const scoreDetail = (record) => {
+    setScoreVisible(true)
+    setScoreTitle(`${record.UserName} - 分数详情`)
+    setDetailPar({ UserId: record.UserId,})
   }
 
-  const exports = () => {
+  const importData = () => {
     const values = form.getFieldsValue();
     const par = {
       ...values,
@@ -388,33 +245,52 @@ const Index = (props) => {
     props.exportPersonalPerformanceRate({ ...par })
   };
 
-  const exports2 = () => {
-    const values = form2.getFieldsValue();
-    const par = {
-      ...values,
-      UserId: userId,
-      Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+ const [importLoading,setImportLoading] = useState(false)
+ const uplodProps = {
+  name: 'file',
+  accept: '.xls,.xlsx',
+  showUploadList:false,
+  action: '/api/rest/PollutantSourceApi/BaseDataApi/ImportOperationIntegral',
+  headers: {
+    Authorization: "Bearer " + Cookie.get(config.cookieName),
+  },
+  beforeUpload: (file) => {
+    const fileType = file?.name; //获取文件类型 type xls/*1
+    if (!(/.xls/g.test(fileType))) {
+      message.error(`请上传xls或xlsx文件!`);
+      return false;
     }
-    props.exportPersonalPerformanceRateInfo({ ...par })
-  };
+  },
+  onChange:(info)=>{
+    if (info.file.status === 'uploading') {
+      setImportLoading(true)
+    }else if (info.file.status === 'done') {
+      message.success(`${info.file.name}导入成功`);
+      onFinish(1,pageSize)
+      setImportLoading(false)
+                                                           
+    } else if(info.file.status === 'error') {
+      message.error(`${info.file.name}${info.file&&info.file.response&&info.file.response.Message? info.file.response.Message : '导入失败'}`);
+      setImportLoading(false)  
+    }
+  },
 
+}
 
   const searchComponents = () => {
     return <Form
       name="advanced_search"
       form={form}
       layout='inline'
-      onFinish={() => { onFinish(1, pageSize, sortField) }}
+      onFinish={() => { onFinish(1, pageSize) }}
       initialValues={{
       }}
     >
-
-
-      <Form.Item label='员工编号' name='Month'>
+      <Form.Item label='员工编号' name='UserNum'>
         <Input placeholder='请输入' allowClear={true} />
       </Form.Item>
-      <Form.Item label='姓名' name='Month2'>
-        <Input placeholder='请输入'  allowClear={true} />
+      <Form.Item label='姓名' name='UserName'>
+        <Input placeholder='请输入' allowClear={true} />
       </Form.Item>
       <Form.Item style={{ marginBottom: 0 }}>
         <Button type="primary" htmlType="submit" loading={tableLoading}>
@@ -423,59 +299,20 @@ const Index = (props) => {
         <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}  >
           重置
       </Button>
-        <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
-          导出
-     </Button>
+        <Upload {...uplodProps}>
+          <Button
+            icon={<ImportOutlined />}
+            loading={importLoading}
+          >
+            导入
+        </Button>
+        </Upload>
       </Form.Item>
 
     </Form>
   }
 
-  const searchComponents2 = () => {
-    return <Form
-      name="advanced_search2"
-      form={form2}
-      onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2) }}
-      initialValues={{
-        Month: moment().add(-1, 'M'),
-      }}
-    >
 
-      <Row>
-        <Form.Item label='统计月份' name='Month' className='form2ItemWidth'>
-          <DatePicker picker="month" allowClear={false} style={{ width: 200 }} />
-        </Form.Item>
-        <Form.Item label='员工编号' name='UserAccount'>
-          <Input placeholder='请输入' allowClear={true} />
-        </Form.Item>
-        <Form.Item label='姓名' name='UserName' className='form2ItemWidth'>
-          <Input placeholder='请输入' allowClear={true} />
-        </Form.Item>
-      </Row>
-      <Row>
-        <Form.Item label='运维项目号' name='ProjectNum' className='form2ItemWidth'>
-          <Input placeholder='请输入' allowClear={true} />
-        </Form.Item>
-        <Form.Item label='企业名称' name='EntName'>
-          <Input placeholder='请输入' allowClear={true} />
-        </Form.Item>
-        <Form.Item label='监测点名称' name='PointName' className='form2ItemWidth'>
-          <Input placeholder='请输入' allowClear={true} />
-        </Form.Item>
-        <Form.Item style={{ marginBottom: 0 }}>
-          <Button type="primary" htmlType="submit" loading={tableLoading2}>
-            查询
-      </Button>
-          <Button style={{ margin: '0 8px', }} onClick={() => { form2.resetFields(); }}  >
-            重置
-         </Button>
-          <Button icon={<ExportOutlined />} loading={exportLoading2} onClick={() => { exports2() }}>
-            导出
-         </Button>
-        </Form.Item>
-      </Row>
-    </Form>
-  }
   return (
     <div className={styles.achievQuerySty}>
       <BreadcrumbWrapper>
@@ -504,37 +341,23 @@ const Index = (props) => {
           wrapClassName='spreadOverModal'
         >
           <SdlTable
-            loading={tableLoading}
+            loading={tableLoading2}
             bordered
             dataSource={tableDatas2}
-            columns={columns}
-            pagination={{
-              total: tableTotal2,
-              pageSize: pageSize2,
-              current: pageIndex2,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              onChange: handleTableChange2,
-            }}
+            columns={columns2}
+            pagination={false}
           />
         </Modal>
-      <Modal
-        title={title}
-        visible={visible}
-        footer={null}
-        onCancel={() => { setVisible(false) }}
-        destroyOnClose
-        wrapClassName='spreadOverModal'
-      >
-        <Tabs tabPosition='left'>
-          <TabPane tab="考核加分项" key="1">
-            <AssessScoreAdd props detailPar={detailPar} />
-          </TabPane>
-          <TabPane tab='考核减分项' key="2">
-            <AssessScoreReduce props detailPar={detailPar} />
-          </TabPane>
-        </Tabs>
-      </Modal>
+        <Modal
+          title={scoreTitle}
+          visible={scoreVisible}
+          footer={null}
+          onCancel={() => { setScoreVisible(false) }}
+          destroyOnClose
+          wrapClassName='spreadOverModal'
+        >
+          <AssessScoreAddReeuce props detailPar={scoreDetailPar} />
+        </Modal>
       </BreadcrumbWrapper>
 
 

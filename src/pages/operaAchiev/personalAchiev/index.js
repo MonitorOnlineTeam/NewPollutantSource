@@ -310,6 +310,7 @@ const Index = (props) => {
   const onFinish = async (pageIndexs,pageSizes,sortPar) => {  //查询 绩效汇总
     try {
       const values = await form.validateFields();
+      setPageIndex(pageIndexs)
       const par = {
         ...values,
         pageIndex: pageIndexs,
@@ -404,7 +405,7 @@ const Index = (props) => {
       name="advanced_search"
       form={form}
       layout='inline'
-      onFinish={() => { onFinish(1,pageSize,sortField) }}
+      onFinish={() => {onFinish(1,pageSize,sortField) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}

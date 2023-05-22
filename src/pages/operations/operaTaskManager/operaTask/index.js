@@ -1168,8 +1168,8 @@ const Index = (props) => {
     customRequest:({ action, data, file,  filename, headers,onError,  onProgress,onSuccess, withCredentials,})=>{
       const fileType = file?.type; //获取文件类型 type  PDF/*
       if (!(/pdf$/g.test(fileType))) {
-        message.error(`请上传PDF文件!`);
-        return;
+        message.error(`请上传pdf文件!`);
+        return false;
       }
       file.status='uploading'
       setFileLoading(true)
