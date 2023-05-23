@@ -317,7 +317,7 @@ class SdlTable extends PureComponent {
         ),
       align: align,
       ...col,
-      width: this.getInitialColWidth(col),
+      width: col.width=='auto'? false : this.getInitialColWidth(col),
       onHeaderCell: column => ({
         width: column.width,
         onResize: resizable ? this.handleResize(index) : undefined,
@@ -373,10 +373,6 @@ class SdlTable extends PureComponent {
             }}
             {...this.props}
             defaultWidth={80}
-            scroll={{
-              x: (this.props.scroll && this.props.scroll.x && this.props.scroll.x) || scrollXWidth,
-              y: scrollY,
-            }}
             columns={_columns}
             onRow={(record, index) => ({
               //拖拽功能
@@ -385,6 +381,10 @@ class SdlTable extends PureComponent {
             })}
             dataSource={dragable ? this.state.dataSource : this.props.dataSource}
             {..._props}
+            scroll={{
+              x: (this.props.scroll && this.props.scroll.x && this.props.scroll.x) || scrollXWidth,
+              y: scrollY,
+            }}
           />
         </div>
       </DndProvider>

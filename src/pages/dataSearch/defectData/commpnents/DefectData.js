@@ -308,8 +308,8 @@ export default class EntTransmissionEfficiency extends Component {
     
       this.updateQueryState({
         dataType:dataType,
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
+        endTime: date[1].format('YYYY-MM-DD 23:59:59'),
       });
     }
    btnComponents=()=>{
@@ -367,7 +367,7 @@ export default class EntTransmissionEfficiency extends Component {
 
             <Form layout="inline">
             <Form.Item>
-                <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                <RangePicker_  format='YYYY-MM-DD' showTime={false} allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item>
@@ -403,7 +403,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
                 <Form.Item>
                   日期查询：
-                <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                <RangePicker_  format='YYYY-MM-DD' showTime={false}  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='行政区'>
@@ -461,7 +461,7 @@ export default class EntTransmissionEfficiency extends Component {
                 placeholder="企业列表"
                 onChange={this.changeEnt}
                 value={EntCode ? EntCode : undefined}
-                style={{ width: 394  }}
+                style={{ width: 272 }}
               >
                 {this.children()}
               </Select>

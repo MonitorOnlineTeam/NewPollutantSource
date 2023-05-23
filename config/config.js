@@ -1328,6 +1328,22 @@ export default {
                     },
                   ],
                 },
+                {
+                  //运维任务报告
+                  path: '/operations/operaTaskReportManager',
+                  redirect: '/operations/operaTaskReportManager/operaTaskReport',
+                },
+                {
+                  path: '/operations/operaTaskReportManager',
+                  name: 'operaTask',
+                  routes: [
+                    {
+                      path: '/operations/operaTaskReportManager/operaTaskReport', //运维任务报告
+                      name: 'operaTask',
+                      component: './operations/operaTaskReportManager/operaTaskReport',
+                    },
+                  ],
+                },
               ],
             },
             {

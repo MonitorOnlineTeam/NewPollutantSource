@@ -35,6 +35,7 @@ const dvaPropsData = ({ loading, operaAchiev, global }) => ({
   tableLoading2: loading.effects[`${namespace}/getOperationIntegralInfoList`],
   integralQueryPar: operaAchiev.integralQueryPar,
   clientHeight: global.clientHeight,
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -69,7 +70,6 @@ const Index = (props) => {
   useEffect(() => {
     onFinish(pageIndex, pageSize)
   }, [])
-
   const columns = [
     {
       title: '考核排名',
@@ -97,8 +97,7 @@ const Index = (props) => {
       title: '大区',
       dataIndex: 'UserGroupName',
       key: 'UserGroupName',
-      align: 'left',
-      width: 'auto',
+      align: 'center',
       ellipsis: true,
     },
     {
@@ -160,7 +159,6 @@ const Index = (props) => {
       dataIndex: 'UserGroupName',
       key: 'UserGroupName',
       align: 'center',
-      width: 'auto',
       ellipsis: true,
     },
     {
@@ -207,7 +205,7 @@ const Index = (props) => {
         pageIndex: pageIndexs,
         pageSize: pageSizes,
       }
-      props.getOperationIntegralList(queryPar ? queryPar : par)
+      props.getOperationIntegralList(queryPar ? {...queryPar,pageIndex:pageIndexs,pageSize:pageSizes} : par)
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -339,6 +337,7 @@ const Index = (props) => {
           onCancel={() => { setVisible(false) }}
           destroyOnClose
           wrapClassName='spreadOverModal'
+          zIndex={998}
         >
           <SdlTable
             loading={tableLoading2}
@@ -355,6 +354,7 @@ const Index = (props) => {
           onCancel={() => { setScoreVisible(false) }}
           destroyOnClose
           wrapClassName='spreadOverModal'
+          zIndex={999}
         >
           <AssessScoreAddReeuce props detailPar={scoreDetailPar} />
         </Modal>
