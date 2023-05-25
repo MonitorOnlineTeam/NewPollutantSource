@@ -107,10 +107,10 @@ class Index extends Component {
     componentDidMount() {
         const { dispatch, alarmPushParam, FlagType,type,alarmPushData,alarmPushFlag } = this.props;
        
-        
+        const alarmType = (flag)=>flag? "" : '1'
         dispatch({
           type: 'alarmPush/getFirstAlarmpar',
-          payload: {   Type: type, RegionCode: "", ID:alarmPushData.key,AlarmType:  "1,2,5,6,7,8,9" },
+          payload: {   Type: type, RegionCode: "", ID:alarmPushData.key,AlarmType:  alarmType(alarmPushFlag)},
           callback:(flag)=>{
              dispatch({
               type: 'alarmPush/updateState',
@@ -119,7 +119,7 @@ class Index extends Component {
                       Type: type,
                       RegionCode: "",
                       ID:alarmPushData.key,
-                      AlarmType: flag? "1,2,5,6,7,8,9" : '1'
+                      AlarmType: alarmType(flag)
                   },
               },
             })
@@ -175,7 +175,7 @@ class Index extends Component {
                 loading={this.props.alarmPushLoading}
                 style={{ pointerEvents: listDisabled ? 'none' : null }}
                 scroll={{y:'calc(100vh - 550px)'}}
-                pagination={false}
+                // pagination={false}
                 onRow={({ key, disabled: itemDisabled }) => ({
                   onClick: () => {
                     if (itemDisabled || listDisabled) return;
@@ -322,7 +322,7 @@ class Index extends Component {
                                     <RegionList style={{width:165}} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                                     <div style={{display:'inline-block', padding: '0 10px' }}>
                                     {!alarmPushParLoading?  <>{alarmPushFlag?  <Checkbox.Group
-                                      defaultValue={["1","2","5","6","7","8","9"]}
+                                      // defaultValue={["1","2","5","6","7","8","9"]}
                                       options={options}
                                       onChange={this.changeCheckboxGroup}
                                      />

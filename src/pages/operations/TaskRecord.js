@@ -987,7 +987,7 @@ class TaskRecord extends Component {
               pageSize: gettasklistqueryparams.pageSize,
               current: gettasklistqueryparams.pageIndex,
               onChange: this.onChange,
-              onShowSizeChange: this.onShowSizeChange,
+              // onShowSizeChange: this.onShowSizeChange,
               // pageSizeOptions: ['20', '30', '40', '100'],
               total: gettasklistqueryparams.total,
             }}

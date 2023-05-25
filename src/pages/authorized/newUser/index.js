@@ -53,7 +53,7 @@ import { sdlMessage, downloadFile } from '@/utils/utils';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
 import SdlTable from '@/components/SdlTable';
 import SelectPollutantType from '@/components/SelectPollutantType';
-
+import TreeTransfer from '@/components/TreeTransfer'
 import styles from './style.less';
 const { confirm } = Modal;
 const { TreeNode } = Tree;
@@ -288,7 +288,6 @@ export default class UserInfoIndex extends Component {
         visibleData: true,
         checkedKeys: nextProps.CheckPoint,
       });
-      console.log('DGIMN=', nextProps.CheckPoint);
     }
 
     if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
@@ -864,7 +863,7 @@ export default class UserInfoIndex extends Component {
             onOk={this.handleDataOK}
             // destroyOnClose="true"
             onCancel={() => { this.setState({ visibleData: false }) }}
-            width={900}
+            width={'90%'}
             confirmLoading={this.state.okLoading}
           >
             {
@@ -901,18 +900,18 @@ export default class UserInfoIndex extends Component {
                 ) : this.props.EntAndPoint.length > 0 ? (
                   <Tree
                     key="key"
-                    style={{ height: '560px', overflow: 'auto' }}
+                    style={{ overflow: 'auto' }}
                     checkable
                     onExpand={this.onExpands}
                     treeData={this.state.newEntAndPoint}
                     onCheck={this.onChecks}
                     checkedKeys={this.state.checkedKeys}
-                    // onSelect={this.onSelectData}
-                    // selectedKeys={this.state.selectedKeys}
+                    height={555}
                     defaultExpandAll
                   >
                     {this.renderDataTreeNodes(this.state.newEntAndPoint)}
                   </Tree>
+                  // <TreeTransfer  treeData={this.state.newEntAndPoint} checkStrictly={false} key="key" style={{ overflow: 'auto' }}   height={555} />
                 ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}

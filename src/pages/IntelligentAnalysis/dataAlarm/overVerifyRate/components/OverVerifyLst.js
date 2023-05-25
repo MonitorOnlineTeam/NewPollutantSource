@@ -646,6 +646,7 @@ export default class OverVerifyLst extends Component {
          ...query,
          EntCode:enterpriseValue,
          Status:dealType,
+         VerifyStatus: this.state.alarmDealTypeListCode,
       }
   })
   }
@@ -838,8 +839,8 @@ export default class OverVerifyLst extends Component {
               {this.state.dealType === '1' ?
                 <div>
                   <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
-                  <Checkbox.Group defaultValue={this.props.alarmDealTypeList.map(item => item.code)} 
-                   onChange={()=>{(checkedValues)=>{this.setState({alarmDealTypeList:checkedValues })}}}>
+                  <Checkbox.Group value={this.state.alarmDealTypeListCode}
+                   onChange={(checkedValues)=>{this.setState({alarmDealTypeListCode:checkedValues })}}>
                     {
                       this.props.alarmDealTypeList.map(poll =>
                         <Checkbox value={poll.code}>{poll.name}</Checkbox>

@@ -65,6 +65,7 @@ export default Model.extend({
                     return item.DGIMN
                 });
               yield update({
+                alarmPushFlag:response.Datas.IsFlag,
                 alarmPushDepOrRoleList: totalData,
                 alarmPushLoading:false,
                 alarmPushSelect:selectData

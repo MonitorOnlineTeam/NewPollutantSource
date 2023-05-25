@@ -127,7 +127,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'xiangyingCount',
         align: 'center',
         render: (text, record) => {
-          return <a onClick={() => { this.missingAlarmNum(record) }}>{text} </a>
+          return <a onClick={() => { this.missingAlarmNum(record,'1') }}>{text} </a>
         }
       },
       {
@@ -136,7 +136,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'weixiangyingCount',
         align: 'center',
         render: (text, record) => {
-          return <a onClick={() => { this.missingAlarmNum(record) }}>{text} </a>
+          return <a onClick={() => { this.missingAlarmNum(record,'0') }}>{text} </a>
         }
       },
       {

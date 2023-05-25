@@ -191,6 +191,7 @@ export default class Index extends Component {
     //  dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: regionCode },  });//获取关注列表
   
     const  status = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar).status : '';
+    console.log(JSON.parse(location.query.queryPar) )
     this.setState({
       status: status? status : '',
     },()=>{
@@ -258,13 +259,14 @@ export default class Index extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch,location, } = this.props;
+    let par = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar) : {};  
     dispatch({
       type: 'missingData/exportDefectPointDetail',
-      payload: { ...queryPar,PageIndex:undefined, PageSize:undefined },
+      payload: { ...par,Status:status,PageIndex:undefined, PageSize:undefined },
       callback: data => {
-         downloadFile(`/upload${data}`);
-        },
+        downloadFile(`/upload${data}`);
+       },
     });
   };
   //查询事件

@@ -131,7 +131,7 @@ const Index = (props) => {
         <RegionList levelNum={2}  selectType={'2,是'} style={{ width: 200 }}  changeRegion={(val)=>{setRegionCode(val)}} />
         </Form.Item>
         <Form.Item style={{ paddingBottom: '16px' }}>
-        <Button type='primary' loading={tableLoading} style={{ margin: '0 8px', }} onClick={() => { initData() }}>
+        <Button type='primary' loading={tableLoading} style={{ margin: '0 8px', }} onClick={() => {setPageIndex(1); initData(1) }}>
           查询
      </Button>
         <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>

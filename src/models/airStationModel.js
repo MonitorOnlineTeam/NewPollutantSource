@@ -58,7 +58,6 @@ export default Model.extend({
                 EntType:payload.EntType,
                 OperationPersonnel:payload.operationpersonnel,
             }
-            console.log(body)
             const result = yield call(ExportPointSummary,body,null)
             if(result.IsSuccess)
             {
