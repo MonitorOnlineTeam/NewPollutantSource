@@ -448,7 +448,6 @@ class DepartIndex extends Component {
                 <a
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
-                    console.log(record.Roles_ID);
                     this.setState(
                       {
                         selectedRowKeys: record,
@@ -486,7 +485,7 @@ class DepartIndex extends Component {
                   </a>
                 </Popover>
               </Tooltip></>}
-              {record.leve === '1' && (
+              {/* {record.leve === '1' && (
                 <>
                   <Divider type="vertical" />
                   <Tooltip title="省区/大区日常监管配置">
@@ -503,7 +502,7 @@ class DepartIndex extends Component {
                     </a>
                   </Tooltip>
                 </>
-              )}
+              )} */}
               {/* <Divider type="vertical" />
               <Tooltip title="设置审批流程">
                 <a
@@ -1207,13 +1206,12 @@ class DepartIndex extends Component {
   };
 
   showAlarmModal = record => {
-    this.setState(
-      {
-        alarmPushData: record,
-      },
-      () => {
+    this.setState({
+     
+        visibleAlarm: true,
+      }, () => {
         this.setState({
-          visibleAlarm: true,
+          alarmPushData: record,
         });
       },
     );

@@ -21,6 +21,7 @@ import {
   Button,
   Checkbox,
   Select,
+  Radio,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -32,6 +33,10 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
+import EntAtmoList from '@/components/EntAtmoList';
+import VerifyDetailsPop from '@/pages/dataSearch/exceedDataAlarmRecord/VerifyDetailsPop';
+
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -41,8 +46,11 @@ const monthFormat = 'YYYY-MM';
 const pageUrl = {
   updateState: 'overVerifyRate/updateState',
   getData: 'overVerifyRate/getDefectPointDetail',
+  GetOverToExamineOperation:'exceedDataAlarmModel/GetOverToExamineOperation',
+  GetAlarmVerifyDetail: 'exceedDataAlarmModel/GetAlarmVerifyDetail',
+  ExportAlarmVerifyDetail:'exceedDataAlarmModel/ExportAlarmVerifyDetail',
 };
-@connect(({ loading, overVerifyRate, autoForm, common }) => ({
+@connect(({ loading, overVerifyRate, autoForm, common,exceedDataAlarmModel}) => ({
   priseList: overVerifyRate.priseList,
   loading: loading.effects[pageUrl.getData],
   exloading: overVerifyRate.exloading,
@@ -50,6 +58,11 @@ const pageUrl = {
   divisorList: overVerifyRate.divisorList,
   tableDatil: overVerifyRate.tableDatil,
   tableDatilTotal: overVerifyRate.tableDatilTotal,
+  alarmDealTypeList:exceedDataAlarmModel.AlarmDealTypeList,
+  managementDetail:exceedDataAlarmModel.ManagementDetail,
+  alarmVerifyQueryPar:exceedDataAlarmModel.alarmVerifyQueryPar,
+  alarmVerifyDetailLoaing:loading.effects[pageUrl.GetAlarmVerifyDetail],
+  exportAlarmVerifyDetailLoaing:loading.effects[pageUrl.ExportAlarmVerifyDetail],
 }))
 export default class PointVerifyLst extends Component {
   constructor(props) {
@@ -60,6 +73,143 @@ export default class PointVerifyLst extends Component {
       columns: [],
       pageIndex:1,
       pageSize:20,
+      alarmNumVisible: false,
+      alarmNumModalTitle: '',
+      PollutantCode:'',
+      dealType:'2',
+      alarmDealTypeListCode:[],
+      enterpriseValue:'',
+      regionCode:'',
+      columns2 :[
+        {
+            title: "行政区",
+            width: 100,
+            align: 'center',
+            fixed: 'left',
+            dataIndex: 'regionName',
+            key: 'regionName',
+        },
+        {
+            title: "企业名称",
+            width: 100,
+            align: 'left',
+            fixed: 'left',
+            dataIndex: 'entName',
+            key: 'entName',
+        },
+        {
+            title: "监测点名称",
+            width: 100,
+            align: 'left',
+            fixed: 'left',
+            dataIndex: 'pointName',
+            key: 'pointName',
+        },
+        {
+            title: "数据类型",
+            width: 100,
+            align: 'center',
+            dataIndex: 'dataType',
+            key: 'dataType',
+        },
+        {
+            title: "首次报警时间",
+            width: 100,
+            align: 'center',
+            dataIndex: 'firstTime',
+            key: 'firstTime',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+        },
+        {
+            title: "报警因子",
+            width: 90,
+            align: 'center',
+            dataIndex: 'pollutantName',
+            key: 'pollutantName',
+        },
+        {
+          title: "报警生成时间",
+          width: 120,
+          align: 'center',
+          dataIndex: 'createTime',
+          key: 'createTime',
+        },
+        {
+            title: "报警信息",
+            width: 200,
+            align: 'left',
+            dataIndex: 'message',
+            key: 'message',
+        },
+        {
+            title: "核实人",
+            width: 90,
+            align: 'center',
+            dataIndex: 'dealPerson',
+            key: 'dealPerson',
+            render:(text)=>{
+                return text == ''?'-':text
+                }
+        },
+        {
+            title: "核实时间",
+            width: 100,
+            align: 'center',
+            dataIndex: 'verifyTime',
+            key: 'verifyTime',
+            render:(text)=>{
+                return text == ''?'-':text
+                }
+        },
+        {
+            title: "核实状态",
+            width: 90,
+            align: 'center',
+            dataIndex: 'status',
+            key: 'status',
+            render:(text)=>{
+                return text == ''?'-':text == 0?'待核实':'已核实'
+                }
+        },
+        {
+            title: "核实结果",
+            width: 90,
+            align: 'center',
+            dataIndex: 'verifymessage',
+            key: 'verifymessage',
+            render:(text)=>{
+                return text == ''?'-':text
+                }
+        },
+        {
+            title: "核实详情",
+            width: 100,
+            align: 'center',
+            dataIndex: 'remark',
+            key: 'remark',
+            render:(text,record)=>{
+                let sourc = []
+                 if(!record.verifyImage&&!record.remark )
+                 {
+                    sourc = []
+                 }
+                 else
+                 {
+                    let obj = {};
+                    record.verifyImage&&record.verifyImage.map(item=>{
+                        obj = {
+                            name:item.FileName,
+                            attach:'/upload/'+item.FileName
+                        }
+                    })
+                    obj.remark = text;
+                    sourc.push(obj)
+                 }
+                 return sourc.length>0? <VerifyDetailsPop dataSource={sourc}/>:'-'
+            }
+        },
+    ],
     };
   }
 
@@ -128,6 +278,9 @@ export default class PointVerifyLst extends Component {
               dataIndex: item.PollutantCode + '_alarmCount',
               key: item.PollutantCode + '_alarmCount',
               align: 'center',
+              render: (text, record) => {
+                return <a onClick={() => { this.entAlarmNum(record,item.PollutantCode,'2') }}>{text}</a>
+              }
             },
             {
               title: <span>已核实报警次数</span>,
@@ -135,6 +288,9 @@ export default class PointVerifyLst extends Component {
               dataIndex: item.PollutantCode + '_respondedCount',
               key: item.PollutantCode + '_respondedCount',
               align: 'center',
+              render: (text, record) => {
+                return <a onClick={() => { this.entAlarmNum(record,item.PollutantCode,'1') }}>{text}</a>
+              }
             },
             {
               title: <span>待核实报警次数</span>,
@@ -142,6 +298,9 @@ export default class PointVerifyLst extends Component {
               dataIndex: item.PollutantCode + '_noRespondedCount',
               key: item.PollutantCode + '_noRespondedCount',
               align: 'center',
+              render: (text, record) => {
+                return <a onClick={() => { this.entAlarmNum(record,item.PollutantCode,'0') }}>{text}</a>
+              }
             },
             {
               title: <span>核实率</span>,
@@ -171,6 +330,19 @@ export default class PointVerifyLst extends Component {
     setTimeout(() => {
       this.getTableData();
     });
+        //获取核实结果
+        dispatch({
+          type: pageUrl.GetOverToExamineOperation,
+          payload: { PollutantType: '' },
+          callback: (data) => {
+            if (data.length > 0) {
+              this.setState({
+                alarmDealTypeListCode: data.map(poll => poll.code)
+              })
+            }
+    
+          }
+        })
   };
   updateQueryState = payload => {
     const { overVerifyRateForm, dispatch } = this.props;
@@ -240,6 +412,58 @@ export default class PointVerifyLst extends Component {
      this.queryClick()
     })
    }
+   entAlarmNum = (record,pollutantCode,status) => { //报警次数 弹框
+    const {overVerifyRateForm: {beginTime,  endTime, EntCode,PollutantList, RegionCode,  AttentionCode,  PollutantType, OperationPersonnel } } = this.props;
+    this.setState({
+      alarmNumVisible:true,
+      PollutantCode:pollutantCode,
+      dealType:status,
+      alarmNumModalTitle:record.regionName + moment(beginTime).format('YYYY年MM月DD号HH时') + '至'+moment(endTime).format('YYYY年MM月DD号HH时')+'超标报警情况',
+    })
+  this.props.dispatch({
+      type:pageUrl.GetAlarmVerifyDetail,
+      payload: {
+          RegionCode: record.regionCode,
+          attentionCode: record.attentionValue,
+          PollutantType: record.outletValue,
+          // DataType: record.dataType == '日'? 'DayData' : 'HourData',
+          DataType:'',
+          BeginTime: moment(beginTime).format("YYYY-MM-DD HH:mm:ss"),
+          EndTime: moment(endTime).format("YYYY-MM-DD HH:mm:ss"),
+          PollutantCode: pollutantCode,
+          Status:status==2? '' : status,
+          EntCode:'',
+          VerifyStatus:this.state.alarmDealTypeListCode,
+          operationpersonnel:OperationPersonnel,
+          DGIMN:record.DGIMN,
+      }
+  })
+  }
+  entAlarmNumQuery = (query) =>{ //报警次数 点击查询
+
+    const {enterpriseValue,dealType,} = this.state;
+    this.props.dispatch({
+      type:pageUrl.GetAlarmVerifyDetail,
+      payload: {
+         ...query,
+         EntCode:enterpriseValue,
+         Status:dealType,
+         VerifyStatus: this.state.alarmDealTypeListCode,
+      }
+  })
+  }
+  //报警次数数据   导出
+  entAlarmNumExport=(query)=>{
+    const {enterpriseValue,dealType,} = this.state;
+        this.props.dispatch({
+            type:pageUrl.ExportAlarmVerifyDetail,
+            payload: {
+              ...query,
+              EntCode:enterpriseValue,
+              Status:dealType,
+            }
+        })
+    }
   render() {
     let columns = [];
     return (
@@ -297,6 +521,51 @@ export default class PointVerifyLst extends Component {
             onChange: this.handleTableChange,
           }}
         />
+         <Modal
+          centered
+          title={this.state.alarmNumModalTitle}
+          visible={this.state.alarmNumVisible}
+          footer={null}
+          wrapClassName='spreadOverModal'
+          onCancel={() => { this.setState({ alarmNumVisible: false }) }}
+        >
+          <div style={{ marginBottom: 10 }}>
+            <EntAtmoList placeholder="企业列表" regionCode={this.state.regionCode} onChange={(value) => {
+              this.setState({
+                enterpriseValue: value
+              })
+            }} EntCode={this.state.enterpriseValue} style={{ width: 200,  marginRight: 10 }} />
+            <Radio.Group value={this.state.dealType} style={{ marginRight: 10, marginLeft: 10 }} onChange={(e) => {
+              this.setState({
+                dealType: e.target.value,
+              })
+            }}>
+              <Radio.Button value="2">全部</Radio.Button>
+              <Radio.Button value="1">已核实</Radio.Button>
+              <Radio.Button value="0">待核实</Radio.Button>
+            </Radio.Group>
+            <Button type='primary' loading={this.props.alarmVerifyDetailLoaing} style={{ marginRight: 10 }} onClick={()=>{this.entAlarmNumQuery(this.props.alarmVerifyQueryPar)}}> 查询</Button>
+            <Button loading={this.props.exportAlarmVerifyDetailLoaing} onClick={()=>{this.entAlarmNumExport(this.props.alarmVerifyQueryPar)}}><ExportOutlined /> 导出</Button>
+            <div style={{ marginTop: 10 }}>
+              {this.state.dealType === '1' ?
+                <div>
+                  <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
+                  <Checkbox.Group value={this.state.alarmDealTypeListCode}
+                   onChange={(checkedValues)=>{this.setState({alarmDealTypeListCode:checkedValues })}}>
+                    {
+                      this.props.alarmDealTypeList.map(poll =>
+                        <Checkbox value={poll.code}>{poll.name}</Checkbox>
+                      )
+                    }
+                  </Checkbox.Group>
+                </div>
+                : null}
+            </div>
+          </div>
+          {
+            <SdlTable loading={this.props.alarmNumLoadingDetail} columns={this.state.columns2} dataSource={this.props.managementDetail} pagination={false} />
+          }
+        </Modal>
       </Card>
     );
   }

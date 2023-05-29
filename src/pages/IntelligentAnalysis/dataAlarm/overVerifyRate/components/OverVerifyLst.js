@@ -97,6 +97,7 @@ export default class OverVerifyLst extends Component {
       columns: [],
       alarmNumVisible: false,
       alarmNumModalTitle: '',
+      PollutantCode:'',
       dealType:'2',
       alarmDealTypeListCode:[],
       enterpriseValue:'',

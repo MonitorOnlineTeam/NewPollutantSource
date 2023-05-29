@@ -455,7 +455,7 @@ export default {
                   component: './operaAchiev/operaAchievTimer',
                 },
                 {
-                  // 运维人员积分
+                  // 积分信息查询
                   name: 'operaUserIntegral',
                   path: '/operaAchiev/operaUserIntegral',
                   component: './operaAchiev/operaUserIntegral',

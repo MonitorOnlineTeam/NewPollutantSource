@@ -126,7 +126,7 @@ const Index = (props) => {
     ];
 
 
-    const onFinish = async (pageIndexs, pageSizes, queryPar) => {  //查询 运维人员积分
+    const onFinish = async (pageIndexs, pageSizes, queryPar) => {  //查询 积分信息查询
         try {
             const values = await form.validateFields();
             setPageIndex(pageIndexs);
@@ -146,7 +146,7 @@ const Index = (props) => {
 
     const [pageIndex, setPageIndex] = useState(1)
     const [pageSize, setPageSize] = useState(20)
-    const handleTableChange = (PageIndex, PageSize) => { //运维人员积分 分页
+    const handleTableChange = (PageIndex, PageSize) => { //积分信息查询 分页
         setPageIndex(PageIndex)
         setPageSize(PageSize)
         onFinish(PageIndex, PageSize, queryPar)

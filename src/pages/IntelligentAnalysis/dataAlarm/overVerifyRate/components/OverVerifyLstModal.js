@@ -103,6 +103,7 @@ export default class OverVerifyLstModal extends Component {
       regionLevel: '',
       alarmNumVisible: false,
       alarmNumModalTitle: '',
+      PollutantCode:'',
       dealType: '2',
       alarmDealTypeListCode: [],
       enterpriseValue: '',

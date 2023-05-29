@@ -4,9 +4,9 @@
  * 创建时间：2023.05.19
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form,Upload, Tag, Tabs, Pagination, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Tabs, Pagination, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined,ImportOutlined, ProfileOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ImportOutlined, ProfileOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -27,15 +27,21 @@ import AssessScoreAddReeuce from './components/AssessScoreAddReeuce'
 
 const namespace = 'operaAchiev'
 const dvaPropsData = ({ loading, operaAchiev, global }) => ({
-  tableDatas: operaAchiev.operationIntegralList,
-  tableTotal: operaAchiev.operationIntegralTotal,
-  tableLoading: loading.effects[`${namespace}/getOperationIntegralList`],
+  summaryTableDatas: operaAchiev.integralGroupList,
+  summaryTableTotal: operaAchiev.integralGroupTotal,
+  summaryTableLoading: loading.effects[`${namespace}/getOperationIntegralGroupList`],
+  integralQueryPar: operaAchiev.integralQueryPar,
+  detailedTableDatas: operaAchiev.operationIntegralList,
+  detailedTableTotal: operaAchiev.operationIntegralTotal,
+  detailedTableLoading: loading.effects[`${namespace}/getOperationIntegralList`],
+  integralDetailedQueryPar: operaAchiev.integralDetailedQueryPar,
   tableDatas2: operaAchiev.integralInfoList,
   tableTotal2: operaAchiev.integralInfoTotal,
   tableLoading2: loading.effects[`${namespace}/getOperationIntegralInfoList`],
-  integralQueryPar: operaAchiev.integralQueryPar,
   clientHeight: global.clientHeight,
-
+  tableDatas3: operaAchiev.integralGroupInfoList,
+  tableTotal3: operaAchiev.integralGroupInfoTotal,
+  tableLoading3: loading.effects[`${namespace}/getOperationIntegralGroupInfoList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -46,15 +52,27 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getOperationIntegralList: (payload) => { //运维人员积分 列表
+    getOperationIntegralList: (payload) => { //积分信息查询 汇总列表
       dispatch({
         type: `${namespace}/getOperationIntegralList`,
         payload: payload,
       })
     },
-    getOperationIntegralInfoList: (payload) => { //运维人员积分 详情列表
+    getOperationIntegralInfoList: (payload) => { //积分信息查询  汇总详情列表
       dispatch({
         type: `${namespace}/getOperationIntegralInfoList`,
+        payload: payload
+      })
+    },
+    getOperationIntegralGroupList: (payload) => { //积分信息查询 明细列表
+      dispatch({
+        type: `${namespace}/getOperationIntegralGroupList`,
+        payload: payload,
+      })
+    },
+    getOperationIntegralGroupInfoList: (payload) => { //积分信息查询  明细详情列表
+      dispatch({
+        type: `${namespace}/getOperationIntegralGroupInfoList`,
         payload: payload
       })
     },
@@ -65,21 +83,84 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
   const [form] = Form.useForm();
 
-  const { clientHeight, tableDatas, tableTotal, tableLoading, tableDatas2, tableTotal2, tableLoading2, integralQueryPar, } = props;
+  const { clientHeight, summaryTableDatas, summaryTableTotal, summaryTableLoading, integralQueryPar, detailedTableDatas, detailedTableTotal, detailedTableLoading, integralDetailedQueryPar, tableDatas2, tableTotal2, tableLoading2, tableDatas3, tableTotal3, tableLoading3, } = props;
 
   useEffect(() => {
-    onFinish(pageIndex, pageSize)
+    onFinish(summaryPageIndex, summaryPageSize)
+    onFinish2(detailedPageIndex, detailedPageSize)
+
   }, [])
-  const columns = [
+
+  const summaryColumns = [
     {
-      title: '考核排名',
+      title: '运维积分排名',
+      align: 'center',
+      width: 80,
+      render: (text, record, index) => {
+        return (index + 1) + (detailedPageIndex - 1) * detailedPageSize;
+      }
+    },
+    {
+      title: '大区',
+      dataIndex: 'UserGroupName',
+      key: 'UserGroupName',
+      align: 'center',
+      width: 150,
+    },
+    {
+      title: '负责人',
+      dataIndex: 'GroupManager',
+      key: 'GroupManager',
+      align: 'center',
+      width: 100,
+      ellipsis: true,
+    },
+    {
+      title: '运维人员数量',
+      dataIndex: 'OperationNum',
+      key: 'OperationNum',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '平均分',
+      dataIndex: 'Average',
+      key: 'Average',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '操作',
+      align: 'center',
+      width: 70,
+      render: (text, record) => {
+        return <span>
+          <Fragment>
+            <Tooltip title="详情">
+              <a onClick={() => { detail(record) }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
+            </Tooltip>
+          </Fragment>
+        </span>
+      }
+    },
+  ];
+  const detailedColumns = [
+    {
+      title: '倒序排名',
       align: 'center',
       dataIndex: 'Ranking',
       key: 'Ranking',
       width: 80,
     },
     {
-      title: '运维人员姓名',
+      title: '员工编号',
+      dataIndex: 'UserAccount',
+      key: 'UserAccount',
+      align: 'center',
+      width: 150,
+    },
+    {
+      title: '姓名',
       dataIndex: 'UserName',
       key: 'UserName',
       align: 'center',
@@ -87,14 +168,14 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '工号',
-      dataIndex: 'UserAccount',
-      key: 'UserAccount',
+      title: '业务属性',
+      dataIndex: 'Business',
+      key: 'Business',
       align: 'center',
-      width: 150,
+      ellipsis: true,
     },
     {
-      title: '大区',
+      title: '所属大区',
       dataIndex: 'UserGroupName',
       key: 'UserGroupName',
       align: 'center',
@@ -126,21 +207,38 @@ const Index = (props) => {
   const [title, setTitle] = useState(null)
   const detail = (record) => {
     setVisible(true)
-    setTitle(`${record.UserName} - 积分详情`)
-    props.getOperationIntegralInfoList({
-      UserId: record.UserId,
-    })
+    if (tabType == 1) {
+      setTitle(`${record.UserGroupName} - 积分汇总详情`)
+      props.getOperationIntegralGroupInfoList({
+        GroupName: record.UserGroupName,
+      })
+    } else {
+      setTitle(`${record.UserName} - 积分明细详情`)
+      props.getOperationIntegralInfoList({
+        UserId: record.UserId,
+      })
+    }
   }
-  const columns2 = [
+  const detailCols = [
     {
-      title: '考核排名',
+      title: '倒序排名',
       align: 'center',
       dataIndex: 'Ranking',
       key: 'Ranking',
       width: 80,
+      render:(text,record,index)=>{
+          return index + 1;
+      }
     },
     {
-      title: '运维人员姓名',
+      title: '员工编号',
+      dataIndex: 'UserAccount',
+      key: 'UserAccount',
+      align: 'center',
+      width: 150,
+    },
+    {
+      title: '姓名',
       dataIndex: 'UserName',
       key: 'UserName',
       align: 'center',
@@ -148,28 +246,28 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '工号',
-      dataIndex: 'UserAccount',
-      key: 'UserAccount',
+      title: '业务属性',
+      dataIndex: 'Business',
+      key: 'Business',
       align: 'center',
-      width: 150,
+      ellipsis: true,
     },
     {
-      title: '大区',
+      title: '所属大区',
       dataIndex: 'UserGroupName',
       key: 'UserGroupName',
       align: 'center',
       ellipsis: true,
     },
     {
-      title: `4月考核分数`,
+      title: `4月考核扣分`,
       dataIndex: 'MinusPoints',
       key: 'MinusPoints',
       align: 'center',
       width: 110,
     },
     {
-      title: `4月加分`,
+      title: `4月考核加分`,
       dataIndex: 'BonusPoints',
       key: 'BonusPoints',
       align: 'center',
@@ -183,7 +281,7 @@ const Index = (props) => {
       width: 150,
     },
     {
-      title: <span>操作</span>,
+      title: '操作',
       align: 'center',
       render: (text, record) => {
         return <span>
@@ -196,32 +294,29 @@ const Index = (props) => {
       }
     },
   ];
-  const onFinish = async (pageIndexs, pageSizes, queryPar) => {  //查询 运维人员积分
-    try {
-      const values = await form.validateFields();
-      setPageIndex(pageIndexs);
-      const par = {
-        ...values,
-        pageIndex: pageIndexs,
-        pageSize: pageSizes,
-      }
-      props.getOperationIntegralList(queryPar ? {...queryPar,pageIndex:pageIndexs,pageSize:pageSizes} : par)
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
+  const onFinish =  (pageIndexs, pageSizes, queryPar) => {  //查询 积分汇总信息查询
+      const values =  form.getFieldsValue();
+      setSummaryPageIndex(pageIndexs);
+      const par = queryPar ? { ...queryPar, pageIndex: pageIndexs, pageSize: pageSizes } : { ...values, pageIndex: pageIndexs, pageSize: pageSizes };
+      props.getOperationIntegralGroupList(par)
+  }
+  const onFinish2 =   (pageIndexs, pageSizes, queryPar) => {  //查询 积分明细信息查询
+      const values =  form.getFieldsValue();
+      setDetailedPageIndex(pageIndexs);
+      const par = queryPar ? { ...queryPar, pageIndex: pageIndexs, pageSize: pageSizes } : { ...values, UserName: values.UserName2, UserName2: undefined, pageIndex: pageIndexs, pageSize: pageSizes };
+      props.getOperationIntegralList(par)
+    
   }
 
 
-
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
-  const handleTableChange = (PageIndex, PageSize) => { //运维人员积分 分页
-    setPageIndex(PageIndex)
-    setPageSize(PageSize)
+  const [summaryPageIndex, setSummaryPageIndex] = useState(1)
+  const [summaryPageSize, setSummaryPageSize] = useState(20)
+  const summaryHandleTableChange = (PageIndex, PageSize) => { //积分汇总 分页
+    setSummaryPageIndex(PageIndex)
+    setSummaryPageSize(PageSize)
     onFinish(PageIndex, PageSize, integralQueryPar)
 
   }
-
 
   const [scoreVisible, setScoreVisible] = useState(false)
   const [scoreTitle, setScoreTitle] = useState(null)
@@ -229,7 +324,16 @@ const Index = (props) => {
   const scoreDetail = (record) => {
     setScoreVisible(true)
     setScoreTitle(`${record.UserName} - 分数详情`)
-    setDetailPar({ UserId: record.UserId,})
+    setDetailPar({ UserId: record.UserId, })
+  }
+
+  const [detailedPageIndex, setDetailedPageIndex] = useState(1)
+  const [detailedPageSize, setDetailedPageSize] = useState(20)
+  const detailedHandleTableChange = (PageIndex, PageSize) => { //积分明细 分页
+    setDetailedPageIndex(PageIndex)
+    setDetailedPageSize(PageSize)
+    onFinish2(PageIndex, PageSize, integralDetailedQueryPar)
+
   }
 
   const importData = () => {
@@ -243,93 +347,134 @@ const Index = (props) => {
     props.exportPersonalPerformanceRate({ ...par })
   };
 
- const [importLoading,setImportLoading] = useState(false)
- const uplodProps = {
-  name: 'file',
-  accept: '.xls,.xlsx',
-  showUploadList:false,
-  action: '/api/rest/PollutantSourceApi/BaseDataApi/ImportOperationIntegral',
-  headers: {
-    Authorization: "Bearer " + Cookie.get(config.cookieName),
-  },
-  beforeUpload: (file) => {
-    const fileType = file?.name; //获取文件类型 type xls/*1
-    if (!(/.xls/g.test(fileType))) {
-      message.error(`请上传xls或xlsx文件!`);
-      return false;
-    }
-  },
-  onChange:(info)=>{
-    if (info.file.status === 'uploading') {
-      setImportLoading(true)
-    }else if (info.file.status === 'done') {
-      message.success(`${info.file.name}导入成功`);
-      onFinish(1,pageSize)
-      setImportLoading(false)
-                                                           
-    } else if(info.file.status === 'error') {
-      message.error(`${info.file.name}${info.file&&info.file.response&&info.file.response.Message? info.file.response.Message : '导入失败'}`);
-      setImportLoading(false)  
-    }
-  },
+  const [importLoading, setImportLoading] = useState(false)
+  const uplodProps = {
+    name: 'file',
+    accept: '.xls,.xlsx',
+    showUploadList: false,
+    action: '/api/rest/PollutantSourceApi/BaseDataApi/ImportOperationIntegral',
+    headers: {
+      Authorization: "Bearer " + Cookie.get(config.cookieName),
+    },
+    beforeUpload: (file) => {
+      const fileType = file?.name; //获取文件类型 type xls/*1
+      if (!(/.xls/g.test(fileType))) {
+        message.error(`请上传xls或xlsx文件!`);
+        return false;
+      }
+    },
+    onChange: (info) => {
+      if (info.file.status === 'uploading') {
+        setImportLoading(true)
+      } else if (info.file.status === 'done') {
+        message.success(`${info.file.name}导入成功`);
+        onFinish(1, summaryPageSize)
+        onFinish2(1, detailedPageSize)
+        setImportLoading(false)
 
-}
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '导入失败'}`);
+        setImportLoading(false)
+      }
+    },
 
-  const searchComponents = () => {
+  }
+  const QueryFormItem = ({type}) => <Form.Item>
+    <Button type="primary" htmlType="submit" loading={type == 1?  summaryTableLoading : detailedTableLoading}>
+      查询
+    </Button>
+    <Button style={{ margin: '0 8px', }}
+     onClick={() => { type == 1?    
+      form.setFieldsValue({GroupName:'',UserName:''}) :  form.setFieldsValue({UserNum:'',UserName2:''})}} 
+     >
+      重置
+    </Button>
+    {/* <Upload {...uplodProps}>
+      <Button
+        icon={<ImportOutlined />}
+        loading={importLoading}
+      >
+        导入
+    </Button>
+    </Upload> */}
+  </Form.Item>
+  const searchComponents = (type) => {
     return <Form
       name="advanced_search"
       form={form}
       layout='inline'
-      onFinish={() => { onFinish(1, pageSize) }}
+      onFinish={() => {type == 1 ? onFinish(1, summaryPageSize) :  onFinish2(1, detailedPageSize)}}
       initialValues={{
       }}
     >
-      <Form.Item label='员工编号' name='UserNum'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item label='姓名' name='UserName'>
-        <Input placeholder='请输入' allowClear={true} />
-      </Form.Item>
-      <Form.Item style={{ marginBottom: 0 }}>
-        <Button type="primary" htmlType="submit" loading={tableLoading}>
-          查询
-      </Button>
-        <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}  >
-          重置
-      </Button>
-        <Upload {...uplodProps}>
-          <Button
-            icon={<ImportOutlined />}
-            loading={importLoading}
-          >
-            导入
-        </Button>
-        </Upload>
-      </Form.Item>
+      {type == 1 ?
+        <>
+          <Form.Item label='大区名称' name='GroupName'>
+            <Input placeholder='请输入' allowClear={true} />
+          </Form.Item>
+          <Form.Item label='姓名' name='UserName'>
+            <Input placeholder='请输入' allowClear={true} />
+          </Form.Item>
+          <QueryFormItem />
+        </>
+        :
+        <>
+          <Form.Item label='员工编号' name='UserNum'>
+            <Input placeholder='请输入' allowClear={true} />
+          </Form.Item>
+          <Form.Item label='姓名' name='UserName2'>
+            <Input placeholder='请输入' allowClear={true} />
+          </Form.Item>
+          <QueryFormItem type/>
+        </>
+      }
 
     </Form>
   }
 
-
+  const [tabType, setTabType] = useState('1')
   return (
-    <div className={styles.achievQuerySty}>
+    <div className={styles.operaUserIntegralSty}>
       <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
-          <SdlTable
-            loading={tableLoading}
-            bordered
-            dataSource={tableDatas}
-            columns={columns}
-            pagination={{
-              total: tableTotal,
-              pageSize: pageSize,
-              current: pageIndex,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              onChange: handleTableChange,
-            }}
-          />
-        </Card>
+          <Tabs tabPosition='left' onChange={(key) => { setTabType(key) }}>
+            <TabPane tab="积分汇总" key="1">
+            <Card title={searchComponents(1) }>
+              <SdlTable
+                loading={summaryTableLoading}
+                bordered
+                dataSource={summaryTableDatas}
+                columns={summaryColumns}
+                pagination={{
+                  total: summaryTableTotal,
+                  current: summaryPageIndex,
+                  summaryPageSize: summaryPageSize,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: summaryHandleTableChange,
+                }}
+              />
+              </Card>
+            </TabPane>
+            <TabPane tab='积分明细' key="2">
+            <Card title={searchComponents(2) }>
+              <SdlTable
+                loading={detailedTableLoading}
+                bordered
+                dataSource={detailedTableDatas}
+                columns={detailedColumns}
+                pagination={{
+                  total: detailedTableTotal,
+                  current: detailedPageIndex,
+                  summaryPageSize: detailedPageSize,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: detailedHandleTableChange,
+                }}
+              />
+                </Card>
+            </TabPane>
+          </Tabs>
+        
         <Modal
           title={title}
           visible={visible}
@@ -339,13 +484,23 @@ const Index = (props) => {
           wrapClassName='spreadOverModal'
           zIndex={998}
         >
-          <SdlTable
-            loading={tableLoading2}
+          {tabType == 1 ?
+            <SdlTable
+            loading={tableLoading3}
             bordered
-            dataSource={tableDatas2}
-            columns={columns2}
+            dataSource={tableDatas3}
+            columns={detailCols.filter(item => item.title != '4月考核扣分' && item.title != '4月考核加分' && item.title != '操作')}
             pagination={false}
           />
+            :
+            <SdlTable
+              loading={tableLoading2}
+              bordered
+              dataSource={tableDatas2}
+              columns={detailCols}
+              pagination={false}
+            />
+          }
         </Modal>
         <Modal
           title={scoreTitle}
@@ -354,6 +509,7 @@ const Index = (props) => {
           onCancel={() => { setScoreVisible(false) }}
           destroyOnClose
           wrapClassName='spreadOverModal'
+          className={styles.scoreModalSty}
           zIndex={999}
         >
           <AssessScoreAddReeuce props detailPar={scoreDetailPar} />

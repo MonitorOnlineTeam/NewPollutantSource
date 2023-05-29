@@ -70,12 +70,12 @@ class Login extends Component {
 
       });
       // 后台新框架登录
-      dispatch({
-        type: 'userLogin/newLogin',
-        payload: { ...values,IsAgree:isAgree, type },
-        callback:isSuccess=>{
-        }
-      });
+      // dispatch({
+      //   type: 'userLogin/newLogin',
+      //   payload: { ...values,IsAgree:isAgree, type },
+      //   callback:isSuccess=>{
+      //   }
+      // });
     }
   };
   clearCommonData = () =>{ //清除公共组件数据

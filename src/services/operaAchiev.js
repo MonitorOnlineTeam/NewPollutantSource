@@ -94,19 +94,19 @@ export async function ExportPersonalPerformanceRateInfo(params) {
   return result;
 }
 
-/**运维人员积分 */
+/**积分信息查询 */
 
-//一级页面
+//积分汇总 一级页面
 export async function GetOperationIntegralList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralList',params, null);
   return result;
 }
-//二级页面
+//积分汇总 二级页面
 export async function GetOperationIntegralInfoList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralInfoList',params, null);
   return result;
 }
-//三级页面
+//积分汇总 三级页面
 export async function GetOperationIntegralInfoViewList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralInfoViewList',params, null);
   return result;
@@ -114,5 +114,15 @@ export async function GetOperationIntegralInfoViewList(params) {
 //导入积分
 export async function ImportOperationIntegral(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ImportOperationIntegral',params, null);
+  return result;
+}
+//积分明细 一级页面
+export async function GetOperationIntegralGroupList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralGroupList',params, null);
+  return result;
+}
+//积分明细 二级页面
+export async function GetOperationIntegralGroupInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralGroupInfoList',params, null);
   return result;
 }

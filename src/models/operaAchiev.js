@@ -30,6 +30,11 @@ export default Model.extend({
     integralInfoViewList:[],
     integralInfoViewTotal:0,
     integralQueryPar:{},
+    integralGroupList: [],
+    integralGroupTotal: 0,
+    integralDetailedQueryPar:{},
+    integralGroupInfoList: [],
+    integralGroupInfoTotal: 0,
   },
   effects: {
     *getPointCoefficientList({ payload,callback }, { call, put, update }) { //获取所有排口监测点系数列表
@@ -194,7 +199,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *getOperationIntegralList({ payload, callback }, { call, put, update }) { //运维人员积分 列表
+    *getOperationIntegralList({ payload, callback }, { call, put, update }) { //积分信息查询 汇总列表
       const result = yield call(services.GetOperationIntegralList, payload);
       if (result.IsSuccess) {
         yield update({
@@ -206,7 +211,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *getOperationIntegralInfoList({ payload, callback }, { call, put, update }) { //运维人员积分 详情
+    *getOperationIntegralInfoList({ payload, callback }, { call, put, update }) { //积分信息查询 汇总详情
       const result = yield call(services.GetOperationIntegralInfoList, payload);
       if (result.IsSuccess) {
         yield update({
@@ -218,8 +223,7 @@ export default Model.extend({
         yield update({ tableLoading: false })
       }
     },
-    *getOperationIntegralInfoViewList({ payload, callback }, { call, put, update }) { //运维人员积分 加减分详情
-      yield update({ tableLoading: true })
+    *getOperationIntegralInfoViewList({ payload, callback }, { call, put, update }) { //积分信息查询 汇总 加减分详情
       const result = yield call(services.GetOperationIntegralInfoViewList, payload);
       if (result.IsSuccess) {
         yield update({
@@ -228,10 +232,34 @@ export default Model.extend({
         })
       } else {
         message.error(result.Message)
-        yield update({ tableLoading: false })
+      }
+      callback&&callback(result.IsSuccess)
+    },  
+    *getOperationIntegralGroupList({ payload, callback }, { call, put, update }) { //积分信息查询 明细列表
+      const result = yield call(services.GetOperationIntegralGroupList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          integralGroupList: result.Datas,
+          integralGroupTotal: result.Total,
+          integralDetailedQueryPar:payload,
+        })
+      } else {
+        message.error(result.Message)
       }
       callback&&callback(result.IsSuccess)
     },
+    *getOperationIntegralGroupInfoList({ payload, callback }, { call, put, update }) { //积分信息查询 明细详情
+      const result = yield call(services.GetOperationIntegralGroupInfoList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          integralGroupInfoList: result.Datas,
+          integralGroupInfoTotal: result.Total,
+        })
+      } else {
+        message.error(result.Message)
+      }
+      callback&&callback(result.IsSuccess)
+    }
   } 
 
 })
