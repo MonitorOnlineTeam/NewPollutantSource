@@ -2674,6 +2674,32 @@ export default {
               path: '/OperationReport',
               component: './OperationReport',
             },
+            // 成套服务管理系统
+            {
+              path: '/completeSetManage',
+              name: 'completeSetManage',
+              routes: [
+                // 专家系统
+                {
+                  name: 'expert',
+                  path: '/completeSetManage/expert',
+                  routes: [
+                    {
+                      // 专家管理
+                      name: 'expertManagement',
+                      path: '/completeSetManage/expert/management',
+                      component: './/completeSetManage/expert/Management',
+                    },
+                    {
+                      // 专家库
+                      name: 'View',
+                      path: '/completeSetManage/expert/view',
+                      component: './/completeSetManage/expert/View',
+                    },
+                  ],
+                },
+              ],
+            },
             /* 任务详情 */
             {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
