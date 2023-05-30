@@ -51,10 +51,10 @@ ol {
   //   overflow-x: auto;
   // }
   .ant-table-fixed {
-    table-layout: fixed;  //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
+    table-layout: fixed; //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
   }
 
-  .ant-table-tbody>tr>td {
+  .ant-table-tbody > tr > td {
     //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
     word-wrap: break-word;
     word-break: break-all;
@@ -64,7 +64,7 @@ ol {
   //   table-layout: fixed;
   // }
 
-  .ant-table-tbody>tr>td {
+  .ant-table-tbody > tr > td {
     word-wrap: break-word;
     word-break: break-all;
   }
@@ -83,12 +83,12 @@ ol {
     cursor: col-resize;
     z-index: 1;
   }
-  .searchForm .ant-legacy-form-item{
-     margin-bottom: 8px;
+  .searchForm .ant-legacy-form-item {
+    margin-bottom: 8px;
   }
-  .ant-legacy-form{
-    .ant-divider-horizontal.ant-divider-with-text{
-      color: rgba(217, 217, 217, .5)
+  .ant-legacy-form {
+    .ant-divider-horizontal.ant-divider-with-text {
+      color: rgba(217, 217, 217, 0.5);
     }
   }
   .ant-layout {
@@ -120,24 +120,24 @@ ol {
     }
   }
 
-  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content>.ant-tabs-tabpane,
-  .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content>.ant-tabs-tabpane {
+  #root .ant-tabs.ant-tabs-card .ant-tabs-card-content > .ant-tabs-tabpane,
+  .ant-tabs.ant-tabs-editable-card .ant-tabs-card-content > .ant-tabs-tabpane {
     transition: opacity 0.45s !important;
   }
 
-  .ant-pro-sider-menu-logo+.ant-menu-light {
+  .ant-pro-sider-menu-logo + .ant-menu-light {
     height: calc(100vh - 64px);
     overflow: hidden;
     overflow-y: auto;
   }
 
-  .ant-table-thead>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
-  .ant-table-tbody>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
-  .ant-table-thead>tr:hover:not(.ant-table-expanded-row)>td,
-  .ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+  .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
     background: #e6f7ff !important;
   }
-  .ant-form-hidden{
+  .ant-form-hidden {
     display: none;
   }
 }
@@ -162,14 +162,13 @@ a:hover {
     width: 100%;
     overflow-x: auto;
 
-    &-thead>tr,
-    &-tbody>tr {
-
-      >th,
-      >td {
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
         white-space: pre;
 
-        >span {
+        > span {
           display: block;
         }
       }
@@ -180,7 +179,7 @@ a:hover {
 /*滚动条轨道颜色*/
 @scrollbar-track-color: #ececec;
 /*滚动条颜色*/
-@scrollbar-thumb-color: rgba(214, 212, 212,.8);
+@scrollbar-thumb-color: rgba(214, 212, 212, 0.8);
 
 /*滚动条大小*/
 @scrollbar-width: 6px;
@@ -211,7 +210,7 @@ a:hover {
 ::-webkit-scrollbar-thumb {
   height: 50px;
   background-color: @scrollbar-thumb-color;
-  border-radius: 4px; 
+  border-radius: 4px;
   -webkit-border-radius: 4px;
   outline-offset: -2px;
 }
@@ -224,8 +223,9 @@ a:hover {
 .light {
   background-color: #f0f2f5;
 }
-.ant-table-row:nth-child(2n+1){
-  .ant-table-cell-fix-left, .ant-table-cell-fix-right{
+.ant-table-row:nth-child(2n + 1) {
+  .ant-table-cell-fix-left,
+  .ant-table-cell-fix-right {
     background-color: #f0f2f5;
   }
 }
@@ -236,7 +236,6 @@ a:hover {
 }
 
 :global {
-
   // 多选下拉样式
   .ant-form-item-control {
     // line-height: normal;
@@ -250,30 +249,118 @@ a:hover {
   }
 
   // table样式
-  .ant-table-middle>.ant-table-title,
-  .ant-table-middle>.ant-table-footer {
+  .ant-table-middle > .ant-table-title,
+  .ant-table-middle > .ant-table-footer {
     padding: 10px 8px !important;
   }
 
-  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th {
+  .ant-table-middle > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th,
+  .ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-scroll
+    > .ant-table-header
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-scroll
+    > .ant-table-body
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-left
+    > .ant-table-header
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-right
+    > .ant-table-header
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-left
+    > .ant-table-body-outer
+    > .ant-table-body-inner
+    > table
+    > .ant-table-thead
+    > tr
+    > th,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-right
+    > .ant-table-body-outer
+    > .ant-table-body-inner
+    > table
+    > .ant-table-thead
+    > tr
+    > th {
     padding: 5px !important;
   }
 
-  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td {
+  .ant-table-middle > .ant-table-content > .ant-table-header > table > .ant-table-tbody > tr > td,
+  .ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-scroll
+    > .ant-table-header
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-scroll
+    > .ant-table-body
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-left
+    > .ant-table-header
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-right
+    > .ant-table-header
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-left
+    > .ant-table-body-outer
+    > .ant-table-body-inner
+    > table
+    > .ant-table-tbody
+    > tr
+    > td,
+  .ant-table-middle
+    > .ant-table-content
+    > .ant-table-fixed-right
+    > .ant-table-body-outer
+    > .ant-table-body-inner
+    > table
+    > .ant-table-tbody
+    > tr
+    > td {
     padding: 8px !important;
   }
 
@@ -331,7 +418,6 @@ a:hover {
   }
 
   .ant-layout {
-
     // 面包屑样式 - start
     .ant-page-header {
       padding: 10px 14px;
@@ -443,7 +529,6 @@ a:hover {
     height: calc(100vh - 116px);
 
     .ant-tabs-tabpane-active {
-
       .ant-card:not(.notAdaptive):not(.antd-pro-pages-monitoring-realtimedata-components-process-flow-chart-maincard):not(.ant-card-type-inner),
       .contentContainer {
         height: calc(100vh - 116px);
@@ -466,11 +551,16 @@ a:hover {
     height: calc(100vh - 126px);
     background: #fff;
     overflow-y: auto;
-
     .ant-card-body,
-    .ant-card-bordered {
+    & > .ant-card-bordered {
+      // .ant-card-bordered {
       box-shadow: none;
       border: none;
+      padding-bottom: 0;
+      padding-top: 10px;
+    }
+    .ant-card-bordered {
+      box-shadow: none;
       padding-bottom: 0;
       padding-top: 10px;
     }
@@ -482,10 +572,10 @@ a:hover {
 }
 
 .hideBreadcrumb {
-  .ant-pro-page-header-wrap-page-header-warp{
+  .ant-pro-page-header-wrap-page-header-warp {
     display: none;
   }
-  .ant-pro-page-header-wrap-children-content{
+  .ant-pro-page-header-wrap-children-content {
     margin: 0;
   }
   margin: 0 !important;
@@ -501,7 +591,7 @@ a:hover {
   }
 
   .hideBreadcrumb {
-    .ant-pro-page-header-wrap-page-header-warp{
+    .ant-pro-page-header-wrap-page-header-warp {
       display: none;
     }
   }
@@ -535,34 +625,41 @@ a:hover {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.newHomeWrapCascaderPop,.newHomeWrapDropdown{
+.newHomeWrapCascaderPop,
+.newHomeWrapDropdown {
   background-color: rgba(11, 26, 48, 0.5) !important;
-  .ant-cascader-menu-item-expand-icon{
-    color: #fff  !important;
+  .ant-cascader-menu-item-expand-icon {
+    color: #fff !important;
   }
-  .ant-cascader-menu-item,.ant-select-item {
+  .ant-cascader-menu-item,
+  .ant-select-item {
     color: #fff;
-   }
-   .ant-cascader-menu-item:hover,.ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled), .ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled):hover,
-   .ant-select-item-option-active,.ant-select-item-option-selected:not(.ant-select-item-option-disabled){
+  }
+  .ant-cascader-menu-item:hover,
+  .ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled),
+  .ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled):hover,
+  .ant-select-item-option-active,
+  .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
     background-color: rgba(11, 26, 48, 0.1);
-   }
+  }
 }
-.operationFormDetail  :global{
- .am-card.am-card-full::after { //监测点 二维码扫描详情最底下的横线
-   height: 0 !important;
- }
+.operationFormDetail :global {
+  .am-card.am-card-full::after {
+    //监测点 二维码扫描详情最底下的横线
+    height: 0 !important;
+  }
 }
 :global {
-  .customTooltipSty{
-   .ant-tooltip-inner{
+  .customTooltipSty {
+    .ant-tooltip-inner {
       padding-left: 25px;
-   }
- }
- }
- .spreadOverModal{ //铺满页面的弹框
-   :global{
-    .ant-modal{
+    }
+  }
+}
+.spreadOverModal {
+  //铺满页面的弹框
+  :global {
+    .ant-modal {
       max-width: 100vw;
       width: 100vw !important;
       position: fixed;
@@ -571,88 +668,104 @@ a:hover {
       bottom: 0;
       left: 0;
     }
-    .ant-modal-content{
-     height: calc(100vh - 64px);
-     overflow-y: auto;
+    .ant-modal-content {
+      height: calc(100vh - 64px);
+      overflow-y: auto;
     }
-   }
- }
- .spreadOverHiddenModal{ //铺满页面的弹框 长度隐藏
-  :global{
-    .ant-modal-content{
+  }
+}
+.spreadOverHiddenModal {
+  //铺满页面的弹框 长度隐藏
+  :global {
+    .ant-modal-content {
       overflow-y: hidden;
-     }
+    }
   }
 }
- .fullScreenModal{ //全面屏弹框
-  :global{
-   .ant-modal{
-     max-width: 100vw;
-     width: 100vw !important;
-     position: fixed;
-     height: 100vh;
-     top: 0;
-     bottom: 0;
-     left: 0;
-   }
-   .ant-modal-content{
-    height: 100vh;
-   }
+.fullScreenModal {
+  //全面屏弹框
+  :global {
+    .ant-modal {
+      max-width: 100vw;
+      width: 100vw !important;
+      position: fixed;
+      height: 100vh;
+      top: 0;
+      bottom: 0;
+      left: 0;
+    }
+    .ant-modal-content {
+      height: 100vh;
+    }
   }
 }
- .popSelectSty{ //下拉弹出框表格 默认下拉列表隐藏
+.popSelectSty {
+  //下拉弹出框表格 默认下拉列表隐藏
   display: none;
- }
- .compactTableSty :global{ //form 表格 缩小边距
-  .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td{
+}
+.compactTableSty :global {
+  //form 表格 缩小边距
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td,
+  .ant-table tfoot > tr > th,
+  .ant-table tfoot > tr > td {
     padding: 4px 16px;
   }
-  .ant-table.ant-table-middle .ant-table-title, .ant-table.ant-table-middle .ant-table-footer, .ant-table.ant-table-middle .ant-table-thead > tr > th, .ant-table.ant-table-middle .ant-table-tbody > tr > td, .ant-table.ant-table-middle tfoot > tr > th, .ant-table.ant-table-middle tfoot > tr > td{
+  .ant-table.ant-table-middle .ant-table-title,
+  .ant-table.ant-table-middle .ant-table-footer,
+  .ant-table.ant-table-middle .ant-table-thead > tr > th,
+  .ant-table.ant-table-middle .ant-table-tbody > tr > td,
+  .ant-table.ant-table-middle tfoot > tr > th,
+  .ant-table.ant-table-middle tfoot > tr > td {
     padding: 4px 16px; //左侧固定
   }
-  .ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder{
+  .ant-select-single.ant-select-show-arrow .ant-select-selection-item,
+  .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder {
     text-align: left;
   }
-  .ant-table-row:nth-child(2n+1) .ant-table-cell-fix-left, .ant-table-row:nth-child(2n+1) .ant-table-cell-fix-right{
-    background-color: #fff;//左侧固定
+  .ant-table-row:nth-child(2n + 1) .ant-table-cell-fix-left,
+  .ant-table-row:nth-child(2n + 1) .ant-table-cell-fix-right {
+    background-color: #fff; //左侧固定
   }
 }
-.red{
-  color:#f5222d;
+.red {
+  color: #f5222d;
 }
-.tabLayoutOverhiddenSty{
+.tabLayoutOverhiddenSty {
   :global {
-    .ant-layout{
+    .ant-layout {
       min-height: auto;
     }
   }
 }
-.MsoNormal{ //用户监测数据许可协议
+.MsoNormal {
+  //用户监测数据许可协议
   margin-bottom: 0;
   color: #000;
 }
-.drawerNoVirtualSty{
+.drawerNoVirtualSty {
   height: calc(100vh - 64px);
-  .ant-drawer-body :global{
+  .ant-drawer-body :global {
     overflow: hidden;
   }
-  .ant-tree-list-holder:global{
+  .ant-tree-list-holder:global {
     max-height: 100% !important;
     overflow-y: hidden !important;
   }
 }
 .hidden-tbody {
-  .ant-table-tbody{
-     display: none;
+  .ant-table-tbody {
+    display: none;
   }
 }
 .hidden-thead {
-  .ant-table-thead{
-     display: none;
+  .ant-table-thead {
+    display: none;
   }
 }
-.ql-container{ //富文本内容框
-  padding:8px;
+.ql-container {
+  //富文本内容框
+  padding: 8px;
 }
 //富文本字体大小
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value='12px']::before,
@@ -683,64 +796,112 @@ a:hover {
 .ql-snow .ql-picker.ql-size .ql-picker-item[data-value='36px']::before {
   content: '36px';
 }
-.ql-container.ql-snow,.ql-toolbar.ql-snow{
+.ql-container.ql-snow,
+.ql-toolbar.ql-snow {
   border: 1px solid #d9d9d9 !important;
 }
-.ql-toolbar.ql-snow + .ql-container.ql-snow{
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
   border-top: 0 !important;
 }
-.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options,.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label{
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options,
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
   border-color: #d9d9d9 !important;
 }
-.ql-snow .ql-picker.ql-expanded .ql-picker-label{ //选中下拉时
-  color: #bfbfbf !important; 
+.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+  //选中下拉时
+  color: #bfbfbf !important;
 }
-.ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button:hover .ql-stroke, .ql-snow.ql-toolbar button:focus .ql-stroke, .ql-snow .ql-toolbar button:focus .ql-stroke, .ql-snow.ql-toolbar button.ql-active .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow.ql-toolbar button:hover .ql-stroke-miter, .ql-snow .ql-toolbar button:hover .ql-stroke-miter, .ql-snow.ql-toolbar button:focus .ql-stroke-miter, .ql-snow .ql-toolbar button:focus .ql-stroke-miter, .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
-  stroke: #1890FF !important;
+.ql-snow.ql-toolbar button:hover .ql-stroke,
+.ql-snow .ql-toolbar button:hover .ql-stroke,
+.ql-snow.ql-toolbar button:focus .ql-stroke,
+.ql-snow .ql-toolbar button:focus .ql-stroke,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-snow.ql-toolbar button:hover .ql-stroke-miter,
+.ql-snow .ql-toolbar button:hover .ql-stroke-miter,
+.ql-snow.ql-toolbar button:focus .ql-stroke-miter,
+.ql-snow .ql-toolbar button:focus .ql-stroke-miter,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
+  stroke: #1890ff !important;
 }
-.ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:focus, .ql-snow .ql-toolbar button:focus, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected{
-  color: #1890FF !important;
+.ql-snow.ql-toolbar button:hover,
+.ql-snow .ql-toolbar button:hover,
+.ql-snow.ql-toolbar button:focus,
+.ql-snow .ql-toolbar button:focus,
+.ql-snow.ql-toolbar button.ql-active,
+.ql-snow .ql-toolbar button.ql-active,
+.ql-snow.ql-toolbar .ql-picker-label:hover,
+.ql-snow .ql-toolbar .ql-picker-label:hover,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker-item:hover,
+.ql-snow .ql-toolbar .ql-picker-item:hover,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+  color: #1890ff !important;
 }
-.ql-editor{
+.ql-editor {
   padding: 0 !important;
 }
-.resizable_quill_sty{ 
-   margin-bottom: 12px;
-  .quill{
+.resizable_quill_sty {
+  margin-bottom: 12px;
+  .quill {
     height: 100%;
     overflow-y: visible !important;
   }
- .react-resizable-handle{//富文本伸缩杆
+  .react-resizable-handle {
+    //富文本伸缩杆
     cursor: n-resize;
     position: absolute;
     left: 0;
     width: 100%;
     height: 10px;
-    bottom:-5px;
+    bottom: -5px;
   }
-  .ant-form-item,.ant-form-item-control,.ant-form-item-control-input,.ant-form-item-control-input-content{
+  .ant-form-item,
+  .ant-form-item-control,
+  .ant-form-item-control-input,
+  .ant-form-item-control-input-content {
     height: 100%;
   }
-  .ql-container{
+  .ql-container {
     height: calc(100% - 66px);
   }
   ::-webkit-scrollbar-thumb {
     height: 20px;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     height: 20px;
   }
 }
-.popAttachFixWidthSty :global{
-  .ant-popover-content{
+.popAttachFixWidthSty :global {
+  .ant-popover-content {
     width: 360px;
   }
 }
-.disabledSty{
-  cursor:not-allowed;
-  color:rgba(0, 0, 0, 0.25) !important;
+.disabledSty {
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.25) !important;
 }
-.ReactModal__Overlay{ //图片预览组件样式
-   z-index: 10000 !important;
+.ReactModal__Overlay {
+  //图片预览组件样式
+  z-index: 10000 !important;
 }

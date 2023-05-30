@@ -19,7 +19,7 @@ const { TreeNode } = TreeSelect;
     testRegLoading: loading.effects[`common/getTestXuRegions`],
 }))
 export default class Index extends Component {
-  static defaultProps = { 
+  static defaultProps = {
     levelNum: 3,
     selectType:'3,是'
   }
@@ -28,37 +28,37 @@ export default class Index extends Component {
 
     this.state = {
     };
-    
+
   }
 
-  regchildren=(data,i)=>{
+  regchildren=(data,i, parentTitle)=>{
 
     const { levelNum } = this.props;
 
     if (data&&data.length > 0 && i<= levelNum) {
       i++;
       return data.map(item => {
-        return <TreeNode key={item.value} value={item.value} title={item.label}>
-             {this.regchildren(item.children,i)}
+        return <TreeNode key={item.value} value={item.value} title={item.label} parentTitle={parentTitle}>
+             {this.regchildren(item.children,i, item.label)}
            </TreeNode>
     });
   }
- 
+
 
 
 }
-  
+
 
   componentDidMount() {
      const {regionList,noFilter,noFilterRegionList,test,testRegionList,} = this.props;
      if(noFilter){
        if(noFilterRegionList&&noFilterRegionList.length<=0){
          this.props.dispatch({  type: 'common/getNoFilterRegionList',  payload: {  PointMark: '2', RegionCode:''}, });
-       } 
+       }
     }else if(test){ //调试服务行政区列表
       if(testRegionList&&testRegionList.length<=0){
       this.props.dispatch({  type: 'common/getTestXuRegions',  payload: {  PointMark: '2', RegionCode:''}, });
-      } 
+      }
     }else{
     //   if(regionList&&regionList.length<=0){ //普通行政区
     //     this.props.dispatch({   type: 'autoForm/getRegions',  payload: {  PointMark: '2', RegionCode: ''} });
@@ -74,8 +74,8 @@ export default class Index extends Component {
 //        allowClear
 //        selectType={selectType}
 //        onChange={changeRegion}
-// /> 
-// spinning={noFilter? noFilteRegLoading : regLoading} 
+// />
+// spinning={noFilter? noFilteRegLoading : regLoading}
      <Spin spinning={noFilter? noFilteRegLoading : test? testRegLoading : regLoading} size='small' style={{...spinSty}}>
       <TreeSelect
       virtual={false}
@@ -97,4 +97,3 @@ export default class Index extends Component {
     );
   }
 }
-                                                                                             
