@@ -389,14 +389,14 @@ const Index = (props) => {
      >
       重置
     </Button>
-    {/* <Upload {...uplodProps}>
+     {type==2&&<Upload {...uplodProps}>
       <Button
         icon={<ImportOutlined />}
         loading={importLoading}
       >
         导入
     </Button>
-    </Upload> */}
+    </Upload>}
   </Form.Item>
   const searchComponents = (type) => {
     return <Form
@@ -415,7 +415,7 @@ const Index = (props) => {
           <Form.Item label='姓名' name='UserName'>
             <Input placeholder='请输入' allowClear={true} />
           </Form.Item>
-          <QueryFormItem />
+          <QueryFormItem type={type}/>
         </>
         :
         <>
@@ -425,7 +425,7 @@ const Index = (props) => {
           <Form.Item label='姓名' name='UserName2'>
             <Input placeholder='请输入' allowClear={true} />
           </Form.Item>
-          <QueryFormItem type/>
+          <QueryFormItem type={type}/>
         </>
       }
 

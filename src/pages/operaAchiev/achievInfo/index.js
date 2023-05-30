@@ -526,7 +526,7 @@ const Index = (props) => {
                 bordered
                 dataSource={tableDatas2}
                 columns={columns2}
-                scroll={{ y: clientHeight - 440 }}
+                scroll={{ y: clientHeight - 410 }}
                 rowClassName={{}}
                 pagination={false}
               />

@@ -899,20 +899,20 @@ export default class UserInfoIndex extends Component {
                     size="large"
                   />
                 ) : this.props.EntAndPoint.length > 0 ? (
-                  // <Tree
-                  //   key="key"
-                  //   style={{ overflow: 'auto' }}
-                  //   checkable
-                  //   onExpand={this.onExpands}
-                  //   treeData={this.state.newEntAndPoint}
-                  //   onCheck={this.onChecks}
-                  //   checkedKeys={this.state.checkedKeys}
-                  //   height={555}
-                  //   defaultExpandAll
-                  // >
-                  //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
-                  // </Tree>
-                  <TreeTransfer  treeData={this.state.newEntAndPoint} checkStrictly={false} key="key" style={{ overflow: 'auto' }}   height={555} />
+                  <Tree
+                    key="key"
+                    style={{ overflow: 'auto' }}
+                    checkable
+                    onExpand={this.onExpands}
+                    treeData={this.state.newEntAndPoint}
+                    onCheck={this.onChecks}
+                    checkedKeys={this.state.checkedKeys}
+                    height={555}
+                    defaultExpandAll
+                  >
+                    {this.renderDataTreeNodes(this.state.newEntAndPoint)}
+                  </Tree>
+                  // <TreeTransfer  treeData={this.state.newEntAndPoint}  key="key" style={{ overflow: 'auto' }}   height={555} />
                 ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}

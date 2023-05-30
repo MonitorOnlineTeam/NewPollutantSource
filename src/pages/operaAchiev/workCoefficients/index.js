@@ -238,7 +238,7 @@ const Index = (props) => {
       name="advanced_search"
     >
 
-      <Form.Item>
+      <Form.Item style={{marginBottom:0}}>
         <Button type='primary' icon={<PlusOutlined />} onClick={() => { add() }} >
           添加
      </Button>
