@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi 
+ * @Date: 2023-05-30 14:29:12 
+ * @Last Modified by:   JiaQi 
+ * @Last Modified time: 2023-05-30 14:29:12 
+ * @Description：运维情况统计
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Card, Row, Col, Badge, Skeleton } from 'antd';

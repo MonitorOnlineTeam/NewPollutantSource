@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi 
+ * @Date: 2023-05-30 14:26:09 
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-05-30 14:26:33
+ * @Description: 柱状图
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import ReactEcharts from 'echarts-for-react';

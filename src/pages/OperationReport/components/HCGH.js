@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi 
+ * @Date: 2023-05-30 14:27:21 
+ * @Last Modified by:   JiaQi 
+ * @Last Modified time: 2023-05-30 14:27:21 
+ * @Description：耗材更换统计
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Card, Menu, Empty, Badge, Skeleton } from 'antd';
