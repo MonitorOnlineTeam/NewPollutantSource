@@ -293,11 +293,12 @@ export default class UserInfoIndex extends Component {
     if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
       this.setState({
         newEntAndPoint: [
-          {
-            title: '全部',
-            key: '0-0',
-            children: nextProps.EntAndPoint,
-          },
+          // {
+          //   title: '全部',
+          //   key: '0-0',
+          //   children: nextProps.EntAndPoint,
+          // },
+          ...nextProps.EntAndPoint,
         ],
       });
     }

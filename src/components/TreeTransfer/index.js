@@ -5,35 +5,12 @@ const Index = (props) => {
   const [targetKeys, setTargetKeys] = useState([])
   const [rightTreeData, setRightTreeData] = useState([])
   const { treeData } = props;
-//   const treeData = [
-//     { key: '0-0', title: '0-0' },
-//     {
-//       key: '0-1',
-//       title: '0-1',
-//       children: [
-//         { key: '0-1-0', title: '0-1-0' },
-//         { key: '0-1-1', title: '0-1-1' },
-//         { key: '0-1-2', title: '0-1-2' },
-//       ],
-//     },
-//     {
-//       key: '0-2',
-//       title: '0-2',
-//       children: [
-//         { key: '0-2-0', title: '0-2-0' },
-//         { key: '0-2-1', title: '0-2-1' },
-//         { key: '0-2-2', title: '0-2-2' },
-//       ],
-//     },
-//   ]
-
   const generateTree = (treeNodes = [], checkedKeys = []) =>
     treeNodes.map(({ children, ...props }) => ({
       ...props,
       disabled: checkedKeys.includes(props.key),
       children: generateTree(children?children : [], checkedKeys),
     }))
- 
   const dealCheckboxSeleted = ({ node, onItemSelect, onItemSelectAll }) => {
     let {
       checked,
@@ -83,7 +60,6 @@ const Index = (props) => {
       })
     }
     flatten(dataSource)
- 
     return (
       <Transfer
         {...restProps}
@@ -91,7 +67,7 @@ const Index = (props) => {
         dataSource={transferDataSource}
         className="tree-transfer"
         render={item => item.title}
-        showSelectAll={false}
+        showSelectAll={true}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
           if (direction === 'left') {

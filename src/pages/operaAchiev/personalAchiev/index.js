@@ -1,5 +1,5 @@
 /**
- * 功  能：运维绩效  个人绩效查询
+ * 功  能：绩效排名  个人绩效查询
  * 创建人：jab
  * 创建时间：2022.05.17
  */
@@ -111,11 +111,18 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '人员属性',
+      title: '业务属性',
       dataIndex: 'businessAttribute',
       key: 'businessAttribute',
       align: 'center',
       width:150,
+      ellipsis: true,
+    },
+    {
+      title: '所属大区',
+      dataIndex: 'DaQuName',
+      key: 'DaQuName',
+      align: 'center',
       ellipsis: true,
     },
     {

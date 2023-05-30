@@ -190,8 +190,7 @@ export default class Index extends Component {
  
     //  dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: regionCode },  });//获取关注列表
   
-    const  status = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar).status : '';
-    console.log(JSON.parse(location.query.queryPar) )
+    const  status = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar).Status : '';
     this.setState({
       status: status? status : '',
     },()=>{
@@ -263,16 +262,16 @@ export default class Index extends Component {
     let par = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar) : {};  
     dispatch({
       type: 'missingData/exportDefectPointDetail',
-      payload: { ...par,Status:status,PageIndex:undefined, PageSize:undefined },
+      payload: { ...par,Status:this.state.status,PageIndex:undefined, PageSize:undefined },
       callback: data => {
         downloadFile(`/upload${data}`);
        },
     });
   };
   //查询事件
-  queryClick = () => {
-    this.getTableData();
-  };
+  // queryClick = () => {
+  //   this.getTableData();
+  // };
 
 
   regchildren=()=>{

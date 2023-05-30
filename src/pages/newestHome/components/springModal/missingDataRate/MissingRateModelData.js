@@ -433,7 +433,7 @@ export default class Index extends PureComponent {
             onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
             className={styles.missDetailSty}
           >
-            <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, status: this.state.status }) } }} />
+            <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status }) } }} />
           </Modal>
         </div>
       }

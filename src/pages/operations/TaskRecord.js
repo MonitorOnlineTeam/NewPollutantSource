@@ -686,9 +686,8 @@ class TaskRecord extends Component {
               </Tooltip>
               <Divider type="vertical" />
               <Tooltip title="任务转发">
-                <a style={{ cursor: record.IsForward != '1' && 'not-allowed', color: record.IsForward != '1' && 'not-allowed' && 'rgba(0, 0, 0, 0.25) ', }}><SendOutlined
-                  onClick={() => this.taskForward(record)}
-                /></a>
+                <a style={{ cursor: record.IsForward != '1' && 'not-allowed', color: record.IsForward != '1' && 'rgba(0, 0, 0, 0.25) ', }}>
+                  <SendOutlined  style={{ cursor: record.IsForward != '1' && 'not-allowed', }} onClick={() => this.taskForward(record)} /></a>
               </Tooltip>
             </>)
             if (time) {
