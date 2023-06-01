@@ -93,7 +93,7 @@ const Index = (props) => {
 
   const summaryColumns = [
     {
-      title: '运维积分排名',
+      title: '运维质量积分排名',
       align: 'center',
       width: 80,
       render: (text, record, index) => {
@@ -123,9 +123,23 @@ const Index = (props) => {
       width: 100,
     },
     {
-      title: '平均分',
+      title: '运维质量平均分',
       dataIndex: 'Average',
       key: 'Average',
+      align: 'center',
+      width: 120,
+    },
+    {
+      title: '平均绩效套数',
+      dataIndex: 'AvgPersonalPerformance',
+      key: 'AvgPersonalPerformance',
+      align: 'center',
+      width: 120,
+    },
+    {
+      title: '绩效套数排名',
+      dataIndex: 'Num',
+      key: 'Num',
       align: 'center',
       width: 100,
     },
@@ -438,7 +452,7 @@ const Index = (props) => {
       <BreadcrumbWrapper>
           <Tabs tabPosition='left' onChange={(key) => { setTabType(key) }}>
             <TabPane tab="积分汇总" key="1">
-            <Card title={searchComponents(1) }>
+            <Card title={searchComponents(tabType) }>
               <SdlTable
                 loading={summaryTableLoading}
                 bordered
@@ -456,7 +470,7 @@ const Index = (props) => {
               </Card>
             </TabPane>
             <TabPane tab='积分明细' key="2">
-            <Card title={searchComponents(2) }>
+            <Card title={searchComponents(tabType) }>
               <SdlTable
                 loading={detailedTableLoading}
                 bordered

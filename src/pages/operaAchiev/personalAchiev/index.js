@@ -146,6 +146,12 @@ const Index = (props) => {
       ]
     },
     {
+      title: '综合绩效套数',
+      dataIndex: 'SumUserCoefficient',
+      key: 'SumUserCoefficient',
+      align: 'center',
+    },
+    {
       title: '驻厂',
       align: 'center',
       children: [

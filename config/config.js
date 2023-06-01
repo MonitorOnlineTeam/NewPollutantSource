@@ -1483,7 +1483,7 @@ export default {
             },
 
             {
-              //异常追忆 重定向
+              //智能诊断 重定向
               path: '/abnormaRecall',
               redirect: '/monitoring/outputstopmanage/OutputStopNew',
             },

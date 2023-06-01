@@ -463,7 +463,7 @@ export default class EntTransmissionEfficiency extends Component {
         <Modal
           title={`${this.state.regionName} - ${this.props.types === 'ent' ? '缺失数据报警详情(企业)' : '缺失数据报警详情(空气站)'}`}
           visible={this.state.missingAlarmVisible}
-          wrapClassName='spreadOverModal'
+          wrapClassName='spreadOverModal spreadOverHiddenModal'
           footer={null}
           destroyOnClose={true}
           onCancel={() => { this.setState({ missingAlarmVisible: false }) }}

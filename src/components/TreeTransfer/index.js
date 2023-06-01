@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Transfer, Tree } from 'antd'
  
 const Index = (props) => {
-  const [targetKeys, setTargetKeys] = useState([])
+
+  const { treeData,checkedKeys,height, } = props;
+  const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
-  const { treeData } = props;
   const generateTree = (treeNodes = [], checkedKeys = []) =>
     treeNodes.map(({ children, ...props }) => ({
       ...props,
@@ -67,7 +68,7 @@ const Index = (props) => {
         dataSource={transferDataSource}
         className="tree-transfer"
         render={item => item.title}
-        showSelectAll={true}
+        showSelectAll={false}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
           if (direction === 'left') {
@@ -185,6 +186,9 @@ const Index = (props) => {
       setRightTreeData(arr)
     }
   }
+  useEffect(()=>{
+    getRightTreeData(checkedKeys, 1)
+  },[checkedKeys])
  
   const onChange = (keys, direction, moveKeys) => {
     let changeArrType = 1 // 0-删除  1-新增
@@ -207,7 +211,6 @@ const Index = (props) => {
     let keysList = changeArrType === 1 ? keys : moveKeys
     getRightTreeData(keysList, changeArrType)
   }
- 
   return <TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} />
 }
  

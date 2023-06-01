@@ -12,7 +12,7 @@ export default Model.extend({
   state: {
     tableDatas: [],
     tableTotal: 0,
-    queryPar:{},
+    queryPar: {},
   },
   effects: {
     //运维任务报告 列表
@@ -22,8 +22,18 @@ export default Model.extend({
         yield update({
           tableDatas: result.Datas,
           tableTotal: result.Total,
-          queryPar:payload,
+          queryPar: payload,
         });
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 生成报告
+    *exportOperationReport({ payload }, { call, put, update, select }) {
+      const result = yield call(services.ExportOperationReport, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
       } else {
         message.error(result.Message)
       }

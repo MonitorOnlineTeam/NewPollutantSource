@@ -864,7 +864,8 @@ export default class UserInfoIndex extends Component {
             onOk={this.handleDataOK}
             // destroyOnClose="true"
             onCancel={() => { this.setState({ visibleData: false }) }}
-            width={'90%'}
+            // width={'80%'}
+            width={800}
             confirmLoading={this.state.okLoading}
           >
             {
@@ -912,7 +913,7 @@ export default class UserInfoIndex extends Component {
                   >
                     {this.renderDataTreeNodes(this.state.newEntAndPoint)}
                   </Tree>
-                  // <TreeTransfer  treeData={this.state.newEntAndPoint}  key="key" style={{ overflow: 'auto' }}   height={555} />
+                  // <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} key="key"  style={{ overflow: 'auto' }}   height={510} />
                 ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}

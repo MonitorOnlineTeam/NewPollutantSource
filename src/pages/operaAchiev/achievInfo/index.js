@@ -128,6 +128,12 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '综合绩效套数',
+      dataIndex: 'SumUserCoefficient',
+      key: 'SumUserCoefficient',
+      align: 'center',
+    },
+    {
       title: '非驻厂',
       align: 'center',
       children: [

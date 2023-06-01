@@ -13,6 +13,8 @@ import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import moment from 'moment'
 import EntAtmoList from '@/components/EntAtmoList'
+import styles from '../styles.less'
+
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -25,6 +27,7 @@ const dvaPropsData = ({ loading, operaTaskReportManager, global }) => ({
     tableTotal: operaTaskReportManager.tableTotal,
     tableLoading: loading.effects[`${namespace}/getOperationReportList`],
     queryPar: operaTaskReportManager.queryPar,
+    exportLoading: loading.effects[`${namespace}/exportOperationReport`],
     clientHeight: global.clientHeight,
 
 })
@@ -43,6 +46,12 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
+        exportOperationReport: (payload) => { //生成报告
+            dispatch({
+                type: `${namespace}/exportOperationReport`,
+                payload: payload,
+            })
+        },
     }
 }
 
@@ -50,7 +59,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
     const [form] = Form.useForm();
 
-    const { tableDatas, tableTotal, tableLoading, queryPar, } = props;
+    const { tableDatas, tableTotal, tableLoading, queryPar, exportLoading,} = props;
 
     useEffect(() => {
 
@@ -114,13 +123,9 @@ const Index = (props) => {
             align: 'center',
             width: 70,
             render: (text, record) => {
-                return <span>
-                    <Fragment>
-                        <Tooltip title="详情">
-                            <a onClick={() => { detail(record) }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
-                        </Tooltip>
-                    </Fragment>
-                </span>
+                return <Spin spinning={exportLoading} size='small'>
+                            <a onClick={() => { generateReport(record) }}>生成报告</a>
+                       </Spin>
             }
         },
     ];
@@ -143,6 +148,14 @@ const Index = (props) => {
     }
 
 
+    const generateReport =  (record) =>{
+        props.exportOperationReport({
+            ...queryPar,
+            EntID:record.EntID,
+            ProjectID: record.projectID,
+        })
+    }
+  
 
     const [pageIndex, setPageIndex] = useState(1)
     const [pageSize, setPageSize] = useState(20)
@@ -156,19 +169,18 @@ const Index = (props) => {
 
 
 
-
-
     const searchComponents = () => {
         return <Form
             name="advanced_search"
             form={form}
+            className={styles['form_query_sty']}
             layout='inline'
             onFinish={() => { onFinish(1, pageSize) }}
             initialValues={{
                 ReportDate: moment().add(-1, 'month'),
             }}
         >
-            <Form.Item label='企业名称' name='EntID'>
+            <Form.Item label='企业名称' name='EntID' rules={[{ required: true, message: '请选择企业名称' }]}>
               <EntAtmoList style={{width:300}} noFilterEntList/>
             </Form.Item>
             <Form.Item label='报告时间' name='ReportDate'>
