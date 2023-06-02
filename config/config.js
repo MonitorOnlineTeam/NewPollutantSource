@@ -7,8 +7,8 @@ import path from 'path';
 // 新框架
 // const API_HOST = 'http://172.16.12.39:6003/'; // 正式
 // const API_HOST = 'http://172.16.12.39:9090/'; // 唐银钢铁 - 开发
-const CONSOLE_HOST = 'http://172.16.12.39:33622/'; //
-const API_HOST = 'http://172.16.12.60:6001/';  // 志鹏
+const CONSOLE_HOST = 'http://172.16.12.39:9090/'; //
+const API_HOST = 'http://172.16.12.39:9090/';  // 志鹏
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。

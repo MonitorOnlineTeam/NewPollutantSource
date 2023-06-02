@@ -1,0 +1,1000 @@
+@normal : rgb(14, 218, 173); // 正常
+@abnormal : rgb(255, 204, 68); // 异常
+@offline : rgb(204, 204, 204); // 离线
+@overproof : rgb(253, 108, 108); // 超标
+@NOx : #40ccdd;
+@smoke : #0edaad;
+@SO2 : #03b3ff;
+@CO2 : #cddc39;
+@titleColor: #d5d9e2;
+
+/*滚动条轨道颜色*/
+@scrollbar-track-color: var(--scrollbar-track-color);
+/*滚动条颜色*/
+@scrollbar-thumb-color: var(--scrollbar-thumb-color);
+/*滚动条大小*/
+@scrollbar-width: 9px;
+
+.mappointicon {
+  // border: #03b3ff 1px solid;
+  width: 30px;
+  height: 45px;
+  color: #fff;
+
+  &>span{
+    margin: 2px auto;
+    float: left;
+    width: 30px;
+    text-align: center;
+  }
+}
+
+.normal {
+  background-image: url(/home/tangyin/normal.png);
+}
+
+.offline {
+  background-image: url(/home/tangyin/offline.png);
+}
+
+.exceed {
+  background-image: url(/home/tangyin/exceed.png);
+}
+
+.abnormal {
+  background-image: url(/home/tangyin/abnormal.png);
+}
+
+.homeWrapper {
+  // background-color: #001529 !important;
+  font-size: 14px;
+  position: relative;
+  background: url('/home/tangyin/bg.png');
+  background-size: cover;
+  overflow-x: hidden;
+
+  .contentWrapper {
+    &>div {
+      height: 100%;
+    }
+  }
+
+  &>div:last-child {
+    height: calc(100vh - 64px) !important;
+  }
+
+  :global {
+    .amap-container {
+      background-color: #001529 !important;
+    }
+  }
+
+
+  .overproofWrapper {
+    width: 36%;
+    // height    : 200px;
+    // background: red;
+    position: absolute;
+    left: 50%;
+    right: 0;
+    bottom: 10px;
+    transform: translateX(-50%);
+    color: #fff;
+
+    .title {
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .content {
+      text-align: center;
+
+      ul {
+        display: flex;
+        margin-bottom: 10px;
+
+        li {
+          // background: #29486d;
+          background: rgba(75, 126, 187, 0.8);
+          // width     : 100px;
+          line-height: 28px;
+          margin-right: 10px;
+          // flex-wrap
+          flex: 1;
+        }
+      }
+
+      .colum {
+        margin-bottom: 10px;
+        font-size: 15px;
+        font-weight: 600;
+
+        li {
+          background: transparent;
+        }
+      }
+
+    }
+  }
+
+
+  .homeHeader {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    font-size: 26px;
+    height: 64px;
+    line-height: 54px;
+    padding: 0;
+    font-weight: 700;
+    background: var(--header-bg-img);
+    padding: 10px 120px 0 120px;
+
+    // background-position: 3px 6px;
+    p {
+      background-image: url(/home/tangyin/header_bg.png);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .backMenu {
+      position: absolute;
+      top: 18px;
+      right: 28px;
+      font-size: 14px;
+      // background-image: url(/home/back.png);
+      background-image: url(/home/back.png);
+      width: 73px;
+      line-height: 24px;
+      font-weight: bold;
+      // color: #67d7fd;
+      color: var(--back-color);
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+  }
+
+  // .NOx {
+  //   color: @NOx;
+  // }
+
+  // .smoke {
+  //   color: @smoke;
+  // }
+
+  // .SO2 {
+  //   color: @SO2;
+  // }
+
+  :global {
+
+    // 单选按钮样式
+    .ant-radio-button-wrapper {
+      background: #163666;
+      border-color: #3b6aaa;
+      color: #fff;
+    }
+
+    .ant-radio-button-wrapper:not(:first-child)::before {
+      background-color: #3b6aaa;
+    }
+
+    .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+      background: #2b5288;
+    }
+  }
+
+  .contentTitle {
+    position: relative;
+    padding-left: 6px;
+
+    &>p {
+      padding-left: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--title-color);
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      /* top        : 8px; */
+      /* left       : 6px; */
+      width: 4px;
+      height: 20px;
+      /* z-index    : 7; */
+      /* border-top : 4px solid red; */
+      /* border-left: 10px; */
+      background: #efb314;
+    }
+  }
+
+  .leftWrapper {
+    left: 10px;
+
+    .operationsWrapper {
+      padding: 10px;
+      padding-bottom: 0;
+
+      .line {
+        height: 1px;
+        border-top: 1px solid var(--line-border-color);
+        margin: 0 12px;
+        box-sizing: border-box;
+      }
+
+      .content {
+        // padding: 10px 0;
+        padding-top: 16px;
+
+        .operationsNumber {
+          // color     : #adceec;
+          color: var(--operations-font-color);
+          text-align: center;
+          font-size: 15px;
+          line-height: 32px;
+          margin-bottom: 0;
+          font-weight: 500;
+
+          span {
+            color: #F5D958;
+            font-size: 22px;
+            margin: 0 6px;
+            font-weight: 500;
+          }
+        }
+
+        .progressInfo {
+          font-size: 18px;
+          font-weight: 500;
+          color: var(--progressInfo-font-color);
+          display: flex;
+          justify-content: space-between;
+          padding: 14px;
+
+          p {
+            font-size: 14px;
+            // margin-bottom: 1em;
+
+            span {
+              font-size: 16px;
+              margin: 0 4px;
+              font-weight: bold;
+            }
+          }
+
+        }
+
+        .progressContent {
+          display: flex;
+          margin-top: 10px;
+          padding: 0 20px;
+
+          .startIcon {
+            width: 30px;
+            height: 28px;
+            background: url(/zc.png) no-repeat 50%;
+            flex: 1;
+          }
+
+          .progress {
+            flex: 4;
+          }
+
+          .endIcon {
+            width: 30px;
+            height: 28px;
+            background: url(/yq.png) no-repeat 50%;
+            flex: 1;
+          }
+        }
+
+        .statisticContent {
+          font-size: 15px;
+          width: 100%;
+          /* padding   : 10px 53px 6px 30px; */
+          color: #fff;
+          padding-left: 10px;
+          font-weight: 500;
+          // margin-top: -16px;
+          margin-bottom: 8px;
+
+          &>p {
+            padding-top: 10px;
+            font-size: 15px;
+            margin-bottom: 6px;
+            color: var(--operations-font-color);
+            text-align: center;
+
+            &>span {
+              color: #F5D958;
+              font-size: 22px;
+              margin: 0 6px;
+              font-weight: bold;
+            }
+          }
+
+          .statisticInfo {
+            display: flex;
+            justify-content: space-between;
+            color: #fff;
+            padding: 0 10px;
+
+            :global {
+              .ant-statistic-title {
+                span {
+                  color: var(--progressInfo-font-color)
+                }
+              }
+            }
+          }
+        }
+
+        .abnormalAlarmContent {
+          margin-top: 20px;
+
+          &>p {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--operations-font-color);
+            line-height: 40px;
+            text-align: center;
+          }
+
+          .content {
+            display: flex;
+            margin-bottom: 0;
+
+            &>div {
+              flex: 1;
+            }
+
+            .chartDescription {
+              font-size: 14px;
+              align-self: center;
+
+              &>div {
+                margin-bottom: 10px;
+                position: relative;
+                padding-left: 16px;
+                color: #2cc78e;
+                font-weight: 500;
+
+                &::before {
+                  content: "";
+                  position: absolute;
+                  left: 0;
+                  top: 4px;
+                  width: 7px;
+                  height: 16px;
+                  background: #2cc78e;
+                }
+              }
+
+              .eightHours {
+                color: #3ccafc;
+
+                &::before {
+                  background: #3ccafc;
+                }
+              }
+
+              .other {
+                color: #eecc2c;
+
+                &::before {
+                  background: #eecc2c;
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+  .currentInfoWrapper {
+    position: absolute;
+    width: calc(100vw - 800px);
+    height: 146px;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    // background: red
+    display: flex;
+    z-index: 1;
+    padding: 28px;
+
+    &>div {
+      text-align: center;
+      flex: 1;
+      align-self: center;
+
+      // background: rgba(0, 21, 42, 0.71);
+      // margin    : 0 10px;
+      // height    : 100%;
+      &>span {
+        line-height: 40px;
+        font-size: 16px;
+        color: #ffcb5b;
+        font-weight: 500;
+      }
+
+      span:last-child {
+        font-weight: 600;
+        font-size: 16px;
+        color: white;
+
+      }
+    }
+  }
+
+  .leftWrapper,
+  .rightWrapper,
+  .centerWrapper {
+    .title {
+      height: 36px;
+      line-height: 36px;
+      font-size: 20px;
+      font-weight: 700;
+      // background  : url(/title_bg.png) no-repeat 98px;
+      position: relative;
+      // padding-left: 17px;
+      padding-left: 0px;
+      // background: url(/title_bg.png) no-repeat 0 3px;
+
+      p {
+        padding-left: 25px;
+        margin-left: 5px;
+        /* border   : 1px solid #053569; */
+        color: var(--title-color);
+        font-size: 16px;
+        display: block;
+        line-height: 36px;
+        background: url(/home/tangyin/small_title.png) no-repeat;
+      }
+    }
+  }
+
+  .leftWrapper,
+  .rightWrapper {
+    width: 100%;
+    height: 100%;
+    float: left;
+    // background : red;
+    display: flex;
+    flex-direction: column;
+
+    ::-webkit-scrollbar-track-piece {
+      -webkit-border-radius: 0;
+    }
+
+    ::-webkit-scrollbar {
+      width: 3px;
+      height: 9px;
+    }
+
+    ::-webkit-scrollbar-track {
+
+      border-radius: 10px;
+      background-color: @scrollbar-track-color;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      height: 50px;
+      background-color: @scrollbar-thumb-color;
+      -webkit-border-radius: 4px;
+      outline-offset: -2px;
+      border: 2px solid @scrollbar-thumb-color;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      height: 50px;
+      background-color: @scrollbar-thumb-color;
+      -webkit-border-radius: 4px;
+    }
+
+    &>div {
+      // border: 1px solid #274073;
+      margin-bottom: 10px;
+      color: #fff;
+      overflow: hidden;
+      // background: rgba(0, 21, 42, 0.71);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &>.echartsContent {
+        display: flex;
+        flex-direction: row;
+
+        .echartItem {
+          flex: 1;
+
+          .echartsTitle {
+            text-align: center;
+            color: var(--echartsTitle-color);
+            margin-top: -6px;
+            font-weight: 500;
+          }
+
+          // .echarts{
+          //   height: calc(100% - 40px);
+          //   width : 100%;
+          // }
+        }
+      }
+
+
+    }
+
+    .effectiveRate {
+      // flex: 1;
+      height: 146px;
+    }
+
+    .operationsWrapper {
+      flex: 1;
+      // overflow-y: auto;
+    }
+
+    .excessiveAbnormalWrapper {
+      // flex: 2;
+      height: calc((100vh - 64px) / 3.5);
+
+      .marqueeContent {
+        font-size: 14px;
+        height: calc(100% - 30px);
+
+        &>div {
+          height: 100%;
+        }
+
+
+      }
+    }
+  }
+
+  .notData {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .centerContainer {
+    // flex: 2;
+  }
+
+  .rightWrapper {
+    // flex : 1;
+    // position: absolute;
+    // right: 10px;
+    // // width: 400px;
+    // float: right;
+    // display: flex;
+
+    // 智能监控
+    .monitoringContent {
+      // flex       : 1;
+      height: 146px;
+      display: flex;
+      flex-direction: column;
+
+      .content {
+        padding: 12px 16px 0px 16px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+
+        i {
+          width: 12px;
+          display: inline-block;
+          height: 12px;
+          border: 3px solid #1BC78B;
+          border-radius: 50%;
+          margin-right: 6px;
+          /* margin-top: 2px; */
+          vertical-align: inherit;
+        }
+
+
+      }
+    }
+
+    .statusNumber1 {
+      color: var(--echartsTitle-color);
+      font-size: 14px;
+      // border-bottom: 2px dashed #D4D3D3;
+      padding-bottom: 4px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    // 排放
+    .emissionsContent {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+
+      .NOx {
+
+        .contentTitle::before {
+          background: @NOx;
+        }
+
+        .desc {
+          color: @NOx
+        }
+      }
+
+      .smoke {
+
+        .contentTitle::before {
+          background: @smoke;
+        }
+
+        .desc {
+          color: @smoke
+        }
+      }
+
+      .SO2 {
+
+        .contentTitle::before {
+          background: @SO2;
+        }
+
+        .desc {
+          color: @SO2
+        }
+      }
+
+      .CO2 {
+
+        .contentTitle::before {
+          background: @CO2;
+        }
+
+        .desc {
+          color: @CO2
+        }
+      }
+
+      &.pointEmissionsContent>div {
+        .content {
+          &>div:first-child {
+            width: 200px;
+            flex: none;
+          }
+        }
+      }
+
+      div.content {
+        flex: 1;
+        width: 100%;
+        min-height: 154px;
+        max-height: 200px;
+        display: flex;
+        flex-direction: column;
+
+
+        .pointcontent {
+          display: flex;
+          flex: 1;
+          padding: 10px 4px;
+
+          // padding-left: 20px;
+          // padding-top : 10px;
+          &>div {
+            width: 230px;
+            flex: none;
+          }
+
+          .echartBox {
+            border-bottom: 1px solid #277696;
+          }
+
+          .desc {
+            /* padding  : 58px 5px 5px; */
+            // font-size: 18px;
+            // color    : #40ccdd;
+            font-size: 15px;
+            font-weight: 600;
+            margin-left: 20px;
+            margin-top: 6px;
+            align-self: flex-end;
+          }
+        }
+
+
+        .content {
+          display: flex;
+          flex: 1;
+          padding: 20px 4px;
+
+          // padding-left: 20px;
+          // padding-top : 10px;
+          &>div {
+            flex: 1;
+          }
+
+          .echartBox {
+            border-bottom: 1px solid #277696;
+          }
+
+          .desc {
+            /* padding  : 58px 5px 5px; */
+            // font-size: 18px;
+            // color    : #40ccdd;
+            font-size: 15px;
+            font-weight: 600;
+            margin-left: 20px;
+            margin-top: 6px;
+            align-self: flex-end;
+          }
+        }
+      }
+    }
+
+    // 排污税
+    .effluentFeeContent {
+      height: calc((100vh - 64px) / 3.5);
+
+      .content {
+        padding: 10px;
+      }
+
+      .yjTax {
+        font-size: 19px;
+        text-align: left;
+        margin-top: 4%;
+        margin-bottom: 2%;
+      }
+
+      .quarterTax {
+        margin-top: 6%;
+
+        &>div {
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  .container {
+    position: relative;
+    width: 20px;
+    height: 20px;
+
+    /*border: 1px solid #000; hovertree.com */
+    .pulse1 {
+      position: absolute;
+      width: 49px;
+      height: 49px;
+      left: -13px;
+      top: -13px;
+      border: 6px solid red;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      z-index: 1;
+      opacity: 0;
+      -webkit-animation: warn1 2s ease-out;
+      -moz-animation: warn1 2s ease-out;
+      animation: warn1 2s ease-out;
+      -webkit-animation-iteration-count: infinite;
+      -moz-animation-iteration-count: infinite;
+      animation-iteration-count: infinite;
+      box-shadow: 1px 1px 30px red;
+    }
+  }
+
+  .box {
+    position: relative;
+    border: var(--box-border);
+    box-shadow: var(--box-box-shadow);
+    width: 100%;
+    // height: 514px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: var(--box-bg-color);
+    /* box-shadow: 0px 0px 14px 1px rgb(23 60 144 / 29%); */
+    // background: url(/home/box_bg.png) no-repeat 0 0;
+    // background-size: 100% 100%;
+    box-sizing: border-box;
+
+    &::after {
+      position: absolute;
+      content: "";
+      width: 15px;
+      height: 16px;
+      left: 0;
+      top: 0;
+      background: url(/home/tangyin/lt.png) no-repeat;
+      background-size: cover;
+    }
+
+    &::before {
+      position: absolute;
+      content: "";
+      width: 15px;
+      height: 16px;
+      right: 0;
+      top: 0;
+      background: url(/home/tangyin/rt.png) no-repeat;
+      background-size: cover;
+    }
+
+    .lb {
+      position: absolute;
+      content: "";
+      width: 15px;
+      height: 16px;
+      left: 0;
+      bottom: 0;
+      background: url(/home/tangyin/lb.png) no-repeat;
+      background-size: cover;
+    }
+
+    .rb {
+      position: absolute;
+      content: "";
+      width: 15px;
+      height: 16px;
+      right: 0;
+      bottom: 0;
+      background: url(/home/tangyin/rb.png) no-repeat;
+      background-size: cover;
+    }
+  }
+
+  .centerWrapper {
+    display: flex;
+    flex-direction: column;
+
+    // 地图
+    .mapBox {
+      flex: 1;
+      border: var(--box-border);
+      margin-bottom: 10px;
+      // box-shadow: 0px 0px 14px 1px rgba(23, 60, 144, 0.29);
+    }
+
+
+    .videoContainer {
+      height: calc((100vh - 64px) / 3.5);
+      // border:1px solid gray;
+
+      .content {
+        height: calc((100vh - 64px) / 3.5);
+      }
+    }
+
+    .videoBox {
+      height: calc((100vh - 64px) / 3.5);
+      color: #fff;
+      // border:1px solid red;
+
+      .box {
+        height: 100%;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // .alarmContent {
+  .item-div {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--line-border-color);
+    padding: 5px 0;
+  }
+
+  .item-div a:hover {
+    text-decoration: none;
+    color: var(--marquee-font-hover-color);
+  }
+
+  .item-a {
+    text-decoration: none;
+    color: var(--marquee-font-color);
+    line-height: 28px;
+    font-weight: 600;
+  }
+
+
+  #scrolldocker {
+    height: calc(100vh - 60px);
+    // border:1px solid red;
+    width: 100%
+  }
+
+  // }
+  .pointtabletitle {
+    height: 30px;
+    line-height: 30px;
+    background-color: #112756;
+    // border:1px solid red;
+    margin-top: 5px;
+    color: #1E99CF;
+
+
+    span {
+      padding-left: 10px;
+      // border: 1px solid red;
+    }
+
+    .title1 {
+      width: calc((100% - 30px) * 5 / 7);
+      display: block;
+      float: left;
+    }
+
+    .title2 {
+      width: calc((100% - 10px) / 7);
+      display: block;
+      float: left;
+    }
+
+    .title3 {
+      width: calc((100% - 30px) / 7);
+      display: block;
+      float: left;
+    }
+
+    .clearboth {
+      float: none;
+      clear: both;
+    }
+
+  }
+
+
+  .pointtablecon {
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+
+    span {
+      padding-left: 10px;
+      // border: 1px solid red;
+    }
+
+    .con1 {
+      width: calc((100% - 30px) * 5 / 7);
+      display: block;
+      float: left;
+    }
+
+    .con2 {
+      width: calc((100% - 10px) / 7);
+      display: block;
+      float: left;
+    }
+
+    .con3 {
+      width: calc((100% - 30px) / 7);
+      display: block;
+      float: left;
+    }
+
+    .clearboth {
+      float: none;
+      clear: both;
+    }
+
+  }
+
+}

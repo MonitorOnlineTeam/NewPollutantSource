@@ -218,7 +218,14 @@ export const API = {
     // 修改知识库查看或下载次数
     UpdateKnowledgeBaseViewCount: before + '/KnowledgeBase/UpdateKnowledgeBaseViewCount',
 
-    //
+    //唐银项目获取治理设备
+    GetTyMonitoringSituation: before + '/EnterpriseApi/GetTyMonitoringSituation',
+    //唐银项目首页环保点位
+    GetTyMonitorpollutantValues: `${before}/EnterpriseApi/GetTyMonitorpollutantValues`,
+    //唐银项目获取地图图例
+    Getlegends: `${before}/EnterpriseApi/GetTyMonitorpollutants`,
+    //唐银项目所有点位监控信息 - 单个企业
+    GetDataForSingleEnt: `${before}/EnterpriseApi/GetTyEntAndPoint`
   },
   // 质控Api
   QualityControlApi: {
