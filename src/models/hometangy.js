@@ -52,6 +52,7 @@ export default Model.extend({
     },
     *getDataForSingleEnt({ payload }, { call, update, take }) {
       const result = yield call(services.getDataForSingleEnt, payload);
+      console.log(result);
       if (result.IsSuccess) {
         const childs = result.Datas.filter(t => t.key == payload.entcode);
       const children = childs.length > 0 ? childs[0].children : [];
