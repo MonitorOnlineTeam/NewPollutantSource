@@ -123,7 +123,7 @@ const Index = (props) => {
             align: 'center',
             width: 70,
             render: (text, record) => {
-                return <Spin spinning={exportLoading} size='small'>
+                return <Spin spinning={exportLoading || false} size='small'>
                             <a onClick={() => { generateReport(record) }}>生成报告</a>
                        </Spin>
             }

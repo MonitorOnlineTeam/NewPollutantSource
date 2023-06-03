@@ -1,23 +1,46 @@
 import React, { useState, useEffect } from 'react'
 import { Transfer, Tree } from 'antd'
- 
+import { ConsoleSqlOutlined } from '@ant-design/icons';
+import styles from './styles.less'
 const Index = (props) => {
 
-  const { treeData,checkedKeys,height, } = props;
+  const { treeData, checkedKeys, height, } = props;
   const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
+  const [isAll, setIsAll] = useState(false)
   const generateTree = (treeNodes = [], checkedKeys = []) =>
-    treeNodes.map(({ children, ...props }) => ({
+    treeNodes?.length && treeNodes.map(({ children, ...props }) => ({
       ...props,
       disabled: checkedKeys.includes(props.key),
-      children: generateTree(children?children : [], checkedKeys),
+      children: generateTree(children, checkedKeys),
     }))
+
   const dealCheckboxSeleted = ({ node, onItemSelect, onItemSelectAll }) => {
     let {
       checked,
       halfCheckedKeys,
-      node: { key, children },
+      node: { key, children, title },
     } = node
+    // title === '全部' ? setIsAll(true) :  setIsAll(false)
+    // if (title === '全部') {
+    //   const getKeys = (data) => {
+    //     const keys = [];
+    //     if (data.children) {
+    //       data.children.forEach(item => {
+    //         keys.push(item.key);
+    //         if (item.children) {
+    //           keys.push(...getKeys(item));
+    //         }
+    //       });
+    //     }
+    //     return keys;
+    //   }
+    //   const selectAllKey = getKeys(treeData[0])
+    //   onItemSelectAll([...selectAllKey, key], checked)
+      
+    //   return;
+
+    // }
     // 勾选的是父节点
     if (children?.length > 0) {
       let keys = []
@@ -33,7 +56,7 @@ const Index = (props) => {
         onItemSelectAll([...parentKeys, key], checked)
       } else {
         let parentKey = ''
-        treeData.forEach(tree => {
+        treeData && treeData[0]?.children?.forEach(tree => {
           if (tree?.children) {
             tree.children?.forEach(child => {
               if (child?.key === key) {
@@ -42,7 +65,6 @@ const Index = (props) => {
             })
           }
         })
- 
         if (!halfCheckedKeys?.includes(parentKey)) {
           onItemSelectAll([key, parentKey], checked)
         } else {
@@ -51,7 +73,7 @@ const Index = (props) => {
       }
     }
   }
- 
+
   const TreeTransfer = ({ dataSource, targetKeys, ...restProps }) => {
     const transferDataSource = []
     function flatten(list = []) {
@@ -66,9 +88,9 @@ const Index = (props) => {
         {...restProps}
         targetKeys={targetKeys}
         dataSource={transferDataSource}
-        className="tree-transfer"
+        className={styles["tree-transfer"]}
         render={item => item.title}
-        showSelectAll={false}
+        // showSelectAll={false}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
           if (direction === 'left') {
@@ -98,7 +120,7 @@ const Index = (props) => {
                 checkable
                 defaultExpandAll
                 {...props}
-                checkedKeys={checkedKeys}  
+                checkedKeys={checkedKeys}
                 treeData={rightTreeData}
                 onCheck={(_, node) => {
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
@@ -113,7 +135,7 @@ const Index = (props) => {
       </Transfer>
     )
   }
- 
+
   /**
    * 改变右边tree数据
    * @param {*右边tree需要处理的keys集合} keys
@@ -122,9 +144,19 @@ const Index = (props) => {
   const getRightTreeData = (keys, type) => {
     let arr = [...rightTreeData]
     if (keys?.length > 0) {
-      // console.log('keys:==', keys)
       keys.forEach(key => {
-        treeData.forEach(data => {
+        if (isAll) {
+          treeData.forEach(data => {
+            if (type === 1) {
+                arr=[]
+                arr.push(data)  
+            } else if (type === 0) {
+                arr=[]
+            }
+          })
+        }
+        // treeData && treeData[0]?.children?.forEach(data => {
+          treeData.forEach(data => {
           if (key === data.key) {
             let index = arr.findIndex(i => {
               return i.key === key
@@ -153,7 +185,7 @@ const Index = (props) => {
                 }
               })
             }
- 
+
             if (Object.keys(selectedObj)?.length > 0) {
               let newData = {}
               let index = arr.findIndex(item => {
@@ -186,10 +218,12 @@ const Index = (props) => {
       setRightTreeData(arr)
     }
   }
-  useEffect(()=>{
-    getRightTreeData(checkedKeys, 1)
-  },[checkedKeys])
- 
+  useEffect(() => {
+    if (checkedKeys?.length > 0) {
+      getRightTreeData(checkedKeys, 1)
+    }
+  }, [])
+
   const onChange = (keys, direction, moveKeys) => {
     let changeArrType = 1 // 0-删除  1-新增
     if (direction === 'left') {
@@ -208,10 +242,20 @@ const Index = (props) => {
       }
     }
     setTargetKeys(keys)
+    props.targetKeysChange(keys)
     let keysList = changeArrType === 1 ? keys : moveKeys
     getRightTreeData(keysList, changeArrType)
   }
-  return <TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} />
+  const onSelectChange =(key,targetSelectedKeys) =>{
+   const arr =  key.filter(item => item !== "")
+  //  console.log(1111111)
+  //  if(arr&&arr?.[0] === treeData[0].key){
+  //    setIsAll(true)
+  //  }else{
+  //    setIsAll(false)
+  //  }
+  }
+  return <TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} onSelectChange={onSelectChange} />
 }
- 
+
 export default Index

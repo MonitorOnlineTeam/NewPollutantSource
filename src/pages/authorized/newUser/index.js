@@ -519,7 +519,7 @@ export default class UserInfoIndex extends Component {
     })
   }
   onChecks = checkedKeys => {
-    console.log(this.state.leafTreeDatas)
+    // console.log(this.state.leafTreeDatas)
     checkedKeys.map((item, index) => {
       if (this.state.leafTreeDatas.indexOf(item) != -1) {
         checkedKeys.splice(index, 1)
@@ -559,7 +559,7 @@ export default class UserInfoIndex extends Component {
   };
   /** 设置点位访问权限切换行政区 */
   onChangeTree = value => {
-    console.log('onChange================= ', value);
+    // console.log('onChange================= ', value);
     const keys = this.state.selectedRow.ID;
     if (value == undefined) {
       this.setState({
@@ -864,13 +864,13 @@ export default class UserInfoIndex extends Component {
             onOk={this.handleDataOK}
             // destroyOnClose="true"
             onCancel={() => { this.setState({ visibleData: false }) }}
-            // width={'80%'}
-            width={800}
+            width={1100}
+            // width={800}
             confirmLoading={this.state.okLoading}
           >
             {
 
-              <div style={{ height: '600px', overflow: 'hidden' }}>
+              <div style={{ height: '620px', overflow: 'hidden' }}>
                 <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
 
                   <SelectPollutantType
@@ -900,20 +900,20 @@ export default class UserInfoIndex extends Component {
                     size="large"
                   />
                 ) : this.props.EntAndPoint.length > 0 ? (
-                  <Tree
-                    key="key"
-                    style={{ overflow: 'auto' }}
-                    checkable
-                    onExpand={this.onExpands}
-                    treeData={this.state.newEntAndPoint}
-                    onCheck={this.onChecks}
-                    checkedKeys={this.state.checkedKeys}
-                    height={555}
-                    defaultExpandAll
-                  >
-                    {this.renderDataTreeNodes(this.state.newEntAndPoint)}
-                  </Tree>
-                  // <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} key="key"  style={{ overflow: 'auto' }}   height={510} />
+                  // <Tree
+                  //   key="key"
+                  //   style={{ overflow: 'auto' }}
+                  //   checkable
+                  //   onExpand={this.onExpands}
+                  //   treeData={this.state.newEntAndPoint}
+                  //   onCheck={this.onChecks}
+                  //   checkedKeys={this.state.checkedKeys}
+                  //   height={555}
+                  //   defaultExpandAll
+                  // >
+                  //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
+                  // </Tree>
+                  <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} targetKeysChange={(key)=>this.setState({checkedKeys:key})} key="key"  style={{ overflow: 'auto' }}   height={510} />
                 ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}
