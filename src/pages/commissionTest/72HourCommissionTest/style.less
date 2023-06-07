@@ -106,7 +106,7 @@
    }
 
    .reqSty :global{ //必填
-    .ant-picker,.ant-input-number,.ant-input,.ant-input-affix-wrapper{
+    .ant-picker,.ant-input-number,.ant-input,.ant-input-affix-wrapper,.ant-picker-clear{
       background-color: #fff1f0;
     }
    }
@@ -118,6 +118,29 @@
       span.ant-radio + *{
         padding-right: 0;
       }
+    }
+   }
+   .warnSty :global{ //警示 样式
+    .ant-picker,.ant-input-number,.ant-input,.ant-input-affix-wrapper,.ant-picker-clear{
+      background-color: #ff4d4f;
+    }
+   }
+   .timeComparWarnMessAlertSty :global{
+     .ant-message-custom-content{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+     }
+    .ant-message-notice-content{
+      padding: 18px 28px;
+    }
+    .anticon {
+      font-size: 20px;
+      line-height: 100%;
+    }
+     span:last-child{
+      line-height: 100%;
     }
    }
    .importSty :global{ //导入

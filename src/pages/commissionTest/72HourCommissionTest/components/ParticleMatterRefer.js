@@ -160,6 +160,7 @@ const Index = (props) => {
             // setAutoDateFlag(false)
         }
     }
+    const [warnArr, setWarnArr] = useState([])
     const onTimeChange = (index, type) => {
         // const startTime = form.getFieldValue(`BTime${index}`)
         // const endTime = form.getFieldValue(`ETime${index}`)
@@ -198,17 +199,26 @@ const Index = (props) => {
         // }
         const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
         const endTime = form.getFieldValue(`ETime${index}`) && form.getFieldValue(`ETime${index}`).format('HH:mm')
-        props.timeCompare(startTime,endTime,()=>{
+        props.timeCompare(startTime, endTime, () => {
             if (type === 'start') {
                 form.setFieldsValue({ [`BTime${index}`]: '' })
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
-        },()=>{
+        }, (startTimeVal, endTimeVal) => {
+            const duration = endTimeVal - startTimeVal;
+
+            if (duration && duration < 20) {
+                props.timeComparWarnMessAlert('采样时长过短，请核实')
+                setWarnArr([...warnArr, index])
+                return
+            }
+            const list = warnArr.filter(item => item != index); setWarnArr(list)
+
             const startTimeData = form.getFieldValue(`BTime${index}`)
             const timeInterValue = form.getFieldValue('TimeIntervals')
             if (timeInterValue && startTime) { //间隔时间不为空
-                const generatEndTime = moment(moment(startTimeData).add(timeInterValue-1, 'minutes'));
+                const generatEndTime = moment(moment(startTimeData).add(timeInterValue - 1, 'minutes'));
                 if (type === 'start') {
                     form.setFieldsValue({ [`ETime${index}`]: generatEndTime })
                 } else {
@@ -218,7 +228,7 @@ const Index = (props) => {
                             content: '选择采样时长与前一样品不同，是否确认修改?',
                             okText: '确定',
                             cancelText: '取消',
-                            centered:true,
+                            centered: true,
                             onOk() {
                                 console.log('OK');
                             },
@@ -229,7 +239,7 @@ const Index = (props) => {
                     }
 
                 }
-            } 
+            }
         })
     }
     const [isReg, setIsReg] = useState(false)
@@ -266,7 +276,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 140,
                     render: (text, record, index) => {
-                        return <Form.Item className={styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item className={warnArr.includes(index) ? styles.warnSty : styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
                     }
                 },
             ]
@@ -308,7 +318,7 @@ const Index = (props) => {
                     title: '标干浓度(mg/m3)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item className={styles.importSty} name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onChange={() => { weightVolumeBlur(index) }} disabled /></Form.Item>;
+                        return <Form.Item className={styles.importSty} name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>;
                     }
                 },
                 {
@@ -358,24 +368,24 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('ConfidenceHalfWidth')&&4,background:form.getFieldValue('Col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('ConfidenceHalfWidth')}</span >,
+                    title: <span style={{ color: '#fff', padding: !isClears && form.getFieldValue('ConfidenceHalfWidth') && 4, background: form.getFieldValue('Col2') == 1 ? '#73d13d' : '#ff4d4f' }}>{!isClears && form.getFieldValue('ConfidenceHalfWidth')}</span >,
                     align: 'center',
                     render: (text, record, index) => {
                         const evaluationArr = !isClears && form.getFieldValue('Evaluation') && form.getFieldValue('Evaluation').split(';')
-                        
-                        const col1 = form.getFieldValue('Col1'),col2=form.getFieldValue('Col2'),col3=form.getFieldValue('Col3');
-                        let evaluation1,evaluation2,evaluation3;
-                        if(evaluationArr){
+
+                        const col1 = form.getFieldValue('Col1'), col2 = form.getFieldValue('Col2'), col3 = form.getFieldValue('Col3');
+                        let evaluation1, evaluation2, evaluation3;
+                        if (evaluationArr) {
                             evaluation1 = evaluationArr[0];
                             evaluation2 = evaluationArr[1];
                             evaluation3 = evaluationArr[2];
                         }
                         const obj = {
-                            children: <ol style={{textAlign:'left'}}>
-                                       <li style={{lineHeight:'24px',margin:4}}> <span style={{color:'#fff',padding:evaluation1&&4,background:col1==1? '#73d13d':'#ff4d4f',}}>{evaluation1}</span></li>
-                                       <li style={{lineHeight:'24px',margin:4}}> <span style={{color:'#fff',padding:evaluation2&&4,background:col2==1? '#73d13d':'#ff4d4f', }}>{evaluation2}</span></li>
-                                       <li style={{lineHeight:'24px',margin:4}}> <span style={{color:'#fff',padding:evaluation3&&4,background:col3==1? '#73d13d':'#ff4d4f',}}>{evaluation3}</span> </li>
-                                      </ol>,
+                            children: <ol style={{ textAlign: 'left' }}>
+                                <li style={{ lineHeight: '24px', margin: 4 }}> <span style={{ color: '#fff', padding: evaluation1 && 4, background: col1 == 1 ? '#73d13d' : '#ff4d4f', }}>{evaluation1}</span></li>
+                                <li style={{ lineHeight: '24px', margin: 4 }}> <span style={{ color: '#fff', padding: evaluation2 && 4, background: col2 == 1 ? '#73d13d' : '#ff4d4f', }}>{evaluation2}</span></li>
+                                <li style={{ lineHeight: '24px', margin: 4 }}> <span style={{ color: '#fff', padding: evaluation3 && 4, background: col3 == 1 ? '#73d13d' : '#ff4d4f', }}>{evaluation3}</span> </li>
+                            </ol>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -403,11 +413,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('CorrelationCoefficient')&&4,background:form.getFieldValue('Col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('CorrelationCoefficient')}</span>,
+            title: <span style={{ color: '#fff', padding: !isClears && form.getFieldValue('CorrelationCoefficient') && 4, background: form.getFieldValue('Col1') == 1 ? '#73d13d' : '#ff4d4f' }}>{!isClears && form.getFieldValue('CorrelationCoefficient')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('AllowHalfWidth')&&4,background:form.getFieldValue('Col3')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('AllowHalfWidth')}</span>,
+                    title: <span style={{ color: '#fff', padding: !isClears && form.getFieldValue('AllowHalfWidth') && 4, background: form.getFieldValue('Col3') == 1 ? '#73d13d' : '#ff4d4f' }}>{!isClears && form.getFieldValue('AllowHalfWidth')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
@@ -536,10 +546,21 @@ const Index = (props) => {
         })
     }
 
-
+    const [weightVolumeAsk, setWeightVolumeAsk] = useState([])
     const weightVolumeBlur = (index) => {
-        operatingCalcula(index)
+        const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
+        if (weight && volume) {
+            if (weight >= 1 || volume >= 1000) {
+                operatingCalcula(index)
+            } else {
+                props.timeComparWarnMessAlert('颗粒物重≥1mg，采样体积≥1000NL，二者至少满足其一')
+                form.setFieldsValue({
+                    [`PMWeight${index}`]: '',
+                    [`BenchmarkVolume${index}`]: '',
+                })
+            }
 
+        }
     }
 
     const operatingCalcula = (index) => {
@@ -571,12 +592,12 @@ const Index = (props) => {
             operatingCalcula(index)
         })
     }
-    const numCheck = (e, name,min) => {
+    const numCheck = (e, name, min) => {
         const value = e.target.value
         if (value) {
             numVerify(value, (data) => {
-                if(min){
-                    if(data<=min){
+                if (min) {
+                    if (data <= min) {
                         form.setFieldsValue({ [name]: '' })
                         return;
                     }
@@ -621,7 +642,7 @@ const Index = (props) => {
             <Row gutter={36} className={styles.particleMatterReferTimeSty}>
                 <Col span={recordType == 1 ? conversionVal == 1 ? 6 : 8 : 24}>
                     <Form.Item label="采样时长" name="TimeIntervals" rules={[{ required: false, message: '' }]}>
-                        <Input placeholder='请输入' suffix="min" onKeyUp={(e) => { numCheck(e, 'TimeIntervals','0') }} allowClear />{/* style={{width:recordType==1? '100%' : '282px'}} */}
+                        <Input placeholder='请输入' suffix="min" onKeyUp={(e) => { numCheck(e, 'TimeIntervals', '0') }} allowClear />{/* style={{width:recordType==1? '100%' : '282px'}} */}
                     </Form.Item>
                 </Col>
             </Row>

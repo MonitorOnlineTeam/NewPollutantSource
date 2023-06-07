@@ -37,7 +37,7 @@ const Index = (props) => {
     //   }
     //   const selectAllKey = getKeys(treeData[0])
     //   onItemSelectAll([...selectAllKey, key], checked)
-      
+
     //   return;
 
     // }
@@ -90,7 +90,7 @@ const Index = (props) => {
         dataSource={transferDataSource}
         className={styles["tree-transfer"]}
         render={item => item.title}
-        // showSelectAll={false}
+      // showSelectAll={false}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
           if (direction === 'left') {
@@ -148,15 +148,15 @@ const Index = (props) => {
         if (isAll) {
           treeData.forEach(data => {
             if (type === 1) {
-                arr=[]
-                arr.push(data)  
+              arr = []
+              arr.push(data)
             } else if (type === 0) {
-                arr=[]
+              arr = []
             }
           })
         }
         // treeData && treeData[0]?.children?.forEach(data => {
-          treeData.forEach(data => {
+        treeData.forEach(data => {
           if (key === data.key) {
             let index = arr.findIndex(i => {
               return i.key === key
@@ -219,11 +219,23 @@ const Index = (props) => {
     }
   }
   useEffect(() => {
+    initData()
+  }, [])
+  const initData = () => {
     if (checkedKeys?.length > 0) {
       getRightTreeData(checkedKeys, 1)
     }
-  }, [])
-
+    let keys = [];
+    treeData.forEach(tree => {
+      if (tree?.children?.length > 0) {
+        const isIncludes  =  tree.children.every(item=>targetKeys.includes(item.key))
+        if(isIncludes){
+          keys.push(tree.key)
+        }
+      }   
+    })
+    setTargetKeys([...targetKeys,...keys])
+  }
   const onChange = (keys, direction, moveKeys) => {
     let changeArrType = 1 // 0-删除  1-新增
     if (direction === 'left') {
@@ -246,14 +258,13 @@ const Index = (props) => {
     let keysList = changeArrType === 1 ? keys : moveKeys
     getRightTreeData(keysList, changeArrType)
   }
-  const onSelectChange =(key,targetSelectedKeys) =>{
-   const arr =  key.filter(item => item !== "")
-  //  console.log(1111111)
-  //  if(arr&&arr?.[0] === treeData[0].key){
-  //    setIsAll(true)
-  //  }else{
-  //    setIsAll(false)
-  //  }
+  const onSelectChange = (key, targetSelectedKeys) => {
+    const arr = key.filter(item => item !== "")
+    //  if(arr&&arr?.[0] === treeData[0].key){
+    //    setIsAll(true)
+    //  }else{
+    //    setIsAll(false)
+    //  }
   }
   return <TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} onSelectChange={onSelectChange} />
 }

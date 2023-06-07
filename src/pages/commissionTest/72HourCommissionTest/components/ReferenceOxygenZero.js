@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, numVerify, arrDistinctByProp,timeCompare, } from '@/utils/utils'
+import { getSum, getAve, numVerify, arrDistinctByProp, timeCompare, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -32,7 +32,7 @@ const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
     pollutantLoading: loading.effects[`${namespace}/get72TestRecordPollutant`],
     timeLoading: loading.effects[`${namespace}/getTimesListByPollutant`],
     delLoading: loading.effects[`${namespace}/deleteGasReferenceMethodAccuracyRecord`],
-    pointStatus:hourCommissionTest.pointStatus,
+    pointStatus: hourCommissionTest.pointStatus,
 
 })
 
@@ -99,7 +99,7 @@ const Index = (props) => {
 
 
 
-    const { pointId, pollutantLoading, timeLoading, pointStatus,} = props;
+    const { pointId, pollutantLoading, timeLoading, pointStatus, } = props;
 
 
     const [recordName, setRecordName] = useState()
@@ -132,7 +132,7 @@ const Index = (props) => {
 
         })
     }
-    const getTimeFormData = (pollCode,selectDateCode) => {
+    const getTimeFormData = (pollCode, selectDateCode) => {
         setFormLoading(true)
         props.getTimesListByPollutant({
             PointCode: pointId,
@@ -140,8 +140,8 @@ const Index = (props) => {
         }, (dateData, defaultDateCode) => {
             if (dateData[0]) {
                 setDateOptions(dateData)
-                setSelectDate( selectDateCode? selectDateCode : defaultDateCode)
-                getFormData(pollCode, selectDateCode? selectDateCode : defaultDateCode)
+                setSelectDate(selectDateCode ? selectDateCode : defaultDateCode)
+                getFormData(pollCode, selectDateCode ? selectDateCode : defaultDateCode)
             } else {
                 setFormLoading(false)
                 setDateOptions([])
@@ -158,18 +158,15 @@ const Index = (props) => {
             ID: form.getFieldValue('ID'),
         }, (res) => {
             if (res) {
-                form.resetFields()  
+                form.resetFields()
                 setIsClears(false);
                 setRecordName(res.RecordName)
-                
+
                 if (res.MainTable) {
                     form.resetFields();
                     form.setFieldsValue({
                         ...res.MainTable,
                         PollutantCode: pollCode,
-                        StandardGasName0: res.MainTable.PollutantName,
-                        StandardGasName1: res.MainTable.PollutantName,
-                        StandardGasName2: res.MainTable.PollutantName,
                     })
 
 
@@ -203,36 +200,36 @@ const Index = (props) => {
     const onTimeChange = (index, type) => {
         const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
         const endTime = form.getFieldValue(`ETime${index}`) && form.getFieldValue(`ETime${index}`).format('HH:mm')
-        props.timeCompare(startTime,endTime,()=>{
+        props.timeCompare(startTime, endTime, () => {
             if (type === 'start') {
                 form.setFieldsValue({ [`BTime${index}`]: '' })
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
-        })   
+        })
 
     }
 
 
     const collectionBlur = (i) => {
-    
-        const guaranteedVal = form.getFieldValue(`GuaranteedValue${i}`),  beforeVal = form.getFieldValue(`BeforeCollection${i}`), afterVal = form.getFieldValue(`AfterCollection${i}`)
+
+        const guaranteedVal = form.getFieldValue(`GuaranteedValue${i}`), beforeVal = form.getFieldValue(`BeforeCollection${i}`), afterVal = form.getFieldValue(`AfterCollection${i}`)
 
         if (guaranteedVal || guaranteedVal == 0) {
-                 if(afterVal || afterVal == 0 ){
-                    const val = ((afterVal - guaranteedVal) / guaranteedVal  * 100 ).toFixed(2);
-                    form.setFieldsValue({[`AfterRelativeCollection${i}`]:val})
-                  }else{
-                    form.setFieldsValue({[`AfterRelativeCollection${i}`]:undefined})
-                  }        
-                 if(beforeVal || beforeVal == 0){
-                    const val = ((beforeVal - guaranteedVal) / guaranteedVal  * 100 ).toFixed(2);
-                    form.setFieldsValue({[`BeforeRelativeCollection${i}`]:val})
-                 }else{
-                    form.setFieldsValue({[`BeforeRelativeCollection${i}`]:undefined})
-                 }     
-        }else{
-            form.setFieldsValue({ [`AfterRelativeCollection${i}`]: undefined,[`BeforeRelativeCollection${i}`]:undefined, })
+            if (afterVal || afterVal == 0) {
+                const val = ((afterVal - guaranteedVal) / guaranteedVal * 100).toFixed(2);
+                form.setFieldsValue({ [`AfterRelativeCollection${i}`]: val })
+            } else {
+                form.setFieldsValue({ [`AfterRelativeCollection${i}`]: undefined })
+            }
+            if (beforeVal || beforeVal == 0) {
+                const val = ((beforeVal - guaranteedVal) / guaranteedVal * 100).toFixed(2);
+                form.setFieldsValue({ [`BeforeRelativeCollection${i}`]: val })
+            } else {
+                form.setFieldsValue({ [`BeforeRelativeCollection${i}`]: undefined })
+            }
+        } else {
+            form.setFieldsValue({ [`AfterRelativeCollection${i}`]: undefined, [`BeforeRelativeCollection${i}`]: undefined, })
         }
     }
     const [isReg, setIsReg] = useState(false)
@@ -311,9 +308,9 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item className={styles.reqSty} name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => measuredValBlur(index)} placeholder='请输入' /></Form.Item>
+                    return <Form.Item className={styles.reqSty} name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => measuredValBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {!isClears&&form.getFieldValue('ReferenceAvg')} </span>
+                    return <span> {!isClears && form.getFieldValue('ReferenceAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
                     let value;
                     if (index == tableDatas.length + 1) { value = form.getFieldValue('AbsoluteError') }
@@ -321,7 +318,7 @@ const Index = (props) => {
                     if (index == tableDatas.length + 3) { value = form.getFieldValue('RelativeAccuracy') }
                     if (index == tableDatas.length + 4) { value = form.getFieldValue('Evaluation') }
                     return {
-                        children: <span style={!isClears&&value&&value!='/'? {color:'#fff',padding:4,background:form.getFieldValue(`Col1`)==1 ? '#73d13d':'#ff4d4f' }  : {}}> {!isClears&&value} </span>,
+                        children: <span style={!isClears && value && value != '/' ? { color: '#fff', padding: 4, background: form.getFieldValue(`Col1`) == 1 ? '#73d13d' : '#ff4d4f' } : {}}> {!isClears && value} </span>,
                         props: { colSpan: 3 },
                     };
                 }
@@ -333,9 +330,9 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item className={styles.importSty} name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>
+                    return <Form.Item className={styles.importSty} name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请导入' /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {!isClears&&form.getFieldValue('MeasuredAvg')} </span>
+                    return <span> {!isClears && form.getFieldValue('MeasuredAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
                     return {
                         props: { colSpan: 0 },
@@ -350,9 +347,9 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item  className={styles.calculaSty} name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
+                    return <Form.Item className={styles.calculaSty} name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {!isClears&&form.getFieldValue('AlignmentAvg')}  </span>
+                    return <span> {!isClears && form.getFieldValue('AlignmentAvg')}  </span>
                 } else if (index >= tableDatas.length + 1) {
                     return {
                         props: { colSpan: 0 },
@@ -378,7 +375,7 @@ const Index = (props) => {
         },
         {
             align: 'center',
-            width:280,
+            width: 280,
             render: (text, record, index) => {
                 const obj = {
                     children: null,
@@ -391,10 +388,25 @@ const Index = (props) => {
                 if (index == 1) {
                     obj.props.rowSpan = 0;
                 }
-                if (index >= 2 ) {
-                    obj.children = <span> {form.getFieldValue(`StandardGasName${index-2}`)}  </span>
-                    
-                    // <Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input disabled  title={form.getFieldValue('StandardGasName')} /></Form.Item>
+                if (index >= 2) {
+                    if (pollutantCode === '513') {
+                        form.setFieldsValue({ [`StandardGasName${index - 2}`]: 'NOx' })
+                        obj.children = <Form.Item name={`StandardGasName${index - 2}`}>
+                            <Select>
+                                <Option value='NOx'>NOx</Option>
+                                <Option value='NO'>NO</Option>
+                                <Option value='NO₂'>NO2 </Option>
+                            </Select>
+                        </Form.Item>
+                    } else {
+                        const pollName = pollOptions.filter(item => item.value === pollutantCode)?.[0]?.label
+                        form.setFieldsValue({ [`StandardGasName${index - 2}`]: pollName })
+                        obj.children = <span>
+                            <Form.Item name={`StandardGasName${index - 2}`} hidden></Form.Item>
+                            {form.getFieldValue(`StandardGasName${index - 2}`)}
+                        </span>
+                    }
+
                 }
                 return obj;
             }
@@ -415,7 +427,7 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`GuaranteedValue${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index-2) }}  placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`GuaranteedValue${index - 2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
                 }
                 return obj;
             }
@@ -437,7 +449,7 @@ const Index = (props) => {
                     obj.children = '采样前'
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`BeforeCollection${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur(index-2) }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`BeforeCollection${index - 2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -460,7 +472,7 @@ const Index = (props) => {
 
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`AfterCollection${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur(index-2) }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`AfterCollection${index - 2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -481,7 +493,7 @@ const Index = (props) => {
                     obj.children = '采样前'
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.calculaSty} name={`BeforeRelativeCollection${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
+                    obj.children = <Form.Item className={styles.calculaSty} name={`BeforeRelativeCollection${index - 2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>
                 }
                 return obj;
             }
@@ -502,7 +514,7 @@ const Index = (props) => {
 
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.calculaSty} name={`AfterRelativeCollection${index-2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled/></Form.Item>
+                    obj.children = <Form.Item className={styles.calculaSty} name={`AfterRelativeCollection${index - 2}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>
 
                 }
                 return obj;
@@ -543,7 +555,7 @@ const Index = (props) => {
 
                 let mainValue = { ...values }
                 Object.keys(mainValue).map((item, index) => { //去除主表 多余字段 多余字段不包含标准气体表格字段
-                    if (/\d/g.test(item) &&!(/^GuaranteedValue/g.test(item))  && !(/^After/g.test(item)) && !(/^Before/g.test(item))) {
+                    if (/\d/g.test(item) && !(/^GuaranteedValue/g.test(item)) && !(/^After/g.test(item)) && !(/^Before/g.test(item)) && !(/^StandardGasName/g.test(item))) {
                         delete mainValue[item];
                     }
                 })
@@ -578,7 +590,7 @@ const Index = (props) => {
                 })
                 props.addGasReferenceMethodAccuracyRecord(data, (isSuccess) => {
                     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                    if(isSuccess){
+                    if (isSuccess) {
                         setFormLoading(true)
                         getFormData(pollutantCode, selectDate)
                     }
@@ -594,13 +606,13 @@ const Index = (props) => {
 
     }
 
-    const [isClears,setIsClears] = useState(false)
+    const [isClears, setIsClears] = useState(false)
     const clears = () => {
         const value = form.getFieldsValue()
         Object.keys(value).map((item, index) => { //清除表格表单数据
-            if(/\d/g.test(item)){
-                form.setFieldsValue({[item]:undefined})
-             }
+            if (/\d/g.test(item)) {
+                form.setFieldsValue({ [item]: undefined })
+            }
         })
         setIsClears(true)//清除算法结果数据
     }
@@ -622,7 +634,7 @@ const Index = (props) => {
         if ((valueA || valueA == 0) && (valueB || valueB == 0)) {
             const relativeError = valueB - valueA
             form.setFieldsValue({ [`AlignmentValue${index}`]: relativeError.toFixed(2) }) //数据对差=B-A
-        }else{
+        } else {
             form.setFieldsValue({ [`AlignmentValue${index}`]: undefined })
         }
     }
@@ -799,19 +811,19 @@ const Index = (props) => {
                                     })
                                 }
                             })
-                            let list =  resData.map(item => item.key)
+                            let list = resData.map(item => item.key)
                             let list2 = importReturnData.map(item => item.key)
-                            const differentKey =  list.concat(list2).filter(function(v, i, arr) {
-                                return arr.indexOf(v) === arr.lastIndexOf(v);   
+                            const differentKey = list.concat(list2).filter(function (v, i, arr) {
+                                return arr.indexOf(v) === arr.lastIndexOf(v);
                             });
-                            resData.filter((item) =>{ //取key不同的对象
-                                 differentKey.map(itemKey=>{
-                                    if(item.key === itemKey){
-                                      mergeData2.push(item)
+                            resData.filter((item) => { //取key不同的对象
+                                differentKey.map(itemKey => {
+                                    if (item.key === itemKey) {
+                                        mergeData2.push(item)
                                     }
                                 })
                             })
-                            mergeData2 = [...mergeData,...mergeData2]
+                            mergeData2 = [...mergeData, ...mergeData2]
 
 
                             mergeData3 = mergeData2.map((item1) => {
@@ -851,7 +863,6 @@ const Index = (props) => {
     }
 
     const onPollChange = ({ target: { value } }) => {
-        console.log('radio1 checked', value);
         setPollutantCode(value)
         getTimeFormData(value)
     };
@@ -879,10 +890,10 @@ const Index = (props) => {
             <TimePicker style={{ width: '100%' }} defaultOpenValue={moment('00:00', 'HH:mm')} format='HH:mm' />
         </Form.Item>
         <Form.Item name='DataGroups' label='数组组数'>
-            <InputNumber   min={5} max={16} style={{ width: '100%' }} placeholder='请输入' />
+            <InputNumber min={5} max={16} style={{ width: '100%' }} placeholder='请输入' />
         </Form.Item>
         <Form.Item name='DataTimes' label='数组对时长'>
-            <Input style={{ width: '100%' }} placeholder='请输入' suffix="分钟" onKeyUp={(e) => { e.target.value && numVerify(e.target.value, (data) => {  addForm.setFieldsValue({ 'DataTimes': data<=0? '' : data}) }) }} />
+            <Input style={{ width: '100%' }} placeholder='请输入' suffix="分钟" onKeyUp={(e) => { e.target.value && numVerify(e.target.value, (data) => { addForm.setFieldsValue({ 'DataTimes': data <= 0 ? '' : data }) }) }} />
         </Form.Item>
         <Form.Item>
             <Button type="primary" style={{ width: '100%', marginTop: 8 }} loading={addLoading} onClick={addSubmits} >确定</Button>
@@ -899,13 +910,13 @@ const Index = (props) => {
         addForm.validateFields().then((values) => {
 
 
-            if(values.RecordDate && dateOptions && dateOptions[0] ){
-             let sameDate =  dateOptions.filter(item=>item.label == values.RecordDate.format('YYYY-MM-DD'))
-              if(sameDate[0]){
-                 message.warning('添加日期不能重复')
-                 return;
-             }
-          }
+            if (values.RecordDate && dateOptions && dateOptions[0]) {
+                let sameDate = dateOptions.filter(item => item.label == values.RecordDate.format('YYYY-MM-DD'))
+                if (sameDate[0]) {
+                    message.warning('添加日期不能重复')
+                    return;
+                }
+            }
             setAddLoading(true)
             props.addGasReferenceMethodAccuracyInfo({
                 ...values,
@@ -922,7 +933,7 @@ const Index = (props) => {
                     }, () => {
                         setAddLoading(false)
                         setAddVisible(false)
-                        getTimeFormData(pollutantCode,values.RecordDate && values.RecordDate.format('YYYY-MM-DD 00:00:00'))
+                        getTimeFormData(pollutantCode, values.RecordDate && values.RecordDate.format('YYYY-MM-DD 00:00:00'))
 
                     })
                 }
@@ -948,7 +959,7 @@ const Index = (props) => {
                         visible={addVisible}
                         overlayClassName={styles.popSty2}
                         onVisibleChange={(newVisible) => { addForm.resetFields(); setAddVisible(newVisible) }}
-                    >  <Button style={{ margin: '0 0 10px 10px' }} disabled={pointStatus==2}>添加</Button></Popover>
+                    >  <Button style={{ margin: '0 0 10px 10px' }} disabled={pointStatus == 2}>添加</Button></Popover>
                     <Spin spinning={formLoading}>
                         {dateOptions[0] ? <Form
                             form={form}
@@ -969,7 +980,7 @@ const Index = (props) => {
                             <Table
                                 size="small"
                                 bordered
-                                dataSource={[1, 2, 3,4,5]}
+                                dataSource={[1, 2, 3, 4, 5]}
                                 columns={columns2()}
                                 pagination={false}
                                 className={'hidden-thead  tableSty2'}

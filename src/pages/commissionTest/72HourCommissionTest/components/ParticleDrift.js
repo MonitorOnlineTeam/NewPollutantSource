@@ -137,12 +137,12 @@ const Index = (props) => {
     };
 
     // const [autoDateFlag, setAutoDateFlag] = useState(true)
-    const onDateChange = (name) => {
+    const onDateChange = (name, index) => {
         const values = form.getFieldValue('CreateDate0')
         // if (name == 'CreateDate0'  && autoDateFlag ) {
         if (name == 'CreateDate0') {
-            if(!values){
-                form.setFieldsValue({ CreateDate1: undefined, CreateDate2: undefined, CreateDate3: undefined,})
+            if (!values) {
+                form.setFieldsValue({ CreateDate1: undefined, CreateDate2: undefined, CreateDate3: undefined, })
                 return;
             }
             form.setFieldsValue({
@@ -152,6 +152,8 @@ const Index = (props) => {
             })
             // setAutoDateFlag(false)
         }
+        const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
+        timeComparison(index, startTime)
     }
     const onTimeChange = (index, type) => {
         // const dateData = form.getFieldValue(`CreateDate${index}`)? form.getFieldValue(`CreateDate${index}`).format('YYYY-MM-DD') : moment(new Date()).format('YYYY-MM-DD')
@@ -171,64 +173,91 @@ const Index = (props) => {
         // }
         const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
         const endTime = form.getFieldValue(`ETime${index}`) && form.getFieldValue(`ETime${index}`).format('HH:mm')
-        props.timeCompare(startTime,endTime,()=>{
+        props.timeCompare(startTime, endTime, () => {
             if (type === 'start') {
                 form.setFieldsValue({ [`BTime${index}`]: '' })
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
-        })    
+        }, () => {
+            if (type === 'start') {
+                timeComparison(index, startTime)
+            }
+        })
     }
-
+    
+    const timeComparison = (index, time) => {
+        const createDate1 = form.getFieldValue(`CreateDate${index - 1}`) && form.getFieldValue(`CreateDate${index - 1}`).format('YYYY-MM-DD')
+        const createDate2 = form.getFieldValue(`CreateDate${index}`) && form.getFieldValue(`CreateDate${index}`).format('YYYY-MM-DD')
+        const createDate3 = form.getFieldValue(`CreateDate${index + 1}`) && form.getFieldValue(`CreateDate${index + 1}`).format('YYYY-MM-DD')
+        const time1 = form.getFieldValue(`BTime${index - 1}`) && form.getFieldValue(`BTime${index - 1}`).format('HH:mm')
+        const time2 = time
+        const time3 = form.getFieldValue(`BTime${index + 1}`) && form.getFieldValue(`BTime${index + 1}`).format('HH:mm')
+        
+        const createDateTime1 = createDate1 && time1 && moment(createDate1 + ' ' + time1);
+        const createDateTime2 = createDate2 && time2 && moment(createDate2 + ' ' + time2);
+        const createDateTime3 = createDate3 && time3 && moment(createDate3 + ' ' + time3);
+        if (createDateTime2) {
+            if (createDateTime1 && !createDateTime3) { //填入时间 和上一列时间表比较
+                props.timeColCompareFun(1, index, createDateTime1, createDateTime2);
+            }
+            if (createDateTime3 && !createDateTime1) { //填入时间 和下一列时间表比较
+                props.timeColCompareFun(2, index + 1, createDateTime2, createDateTime3);
+            }
+            if (createDateTime1 && createDateTime3) {
+                props.timeColCompareFun(3, index, createDateTime1, createDateTime2, createDateTime3);
+            }
+        }
+    }
     const zeroReadBlur = (index, type, positionType) => {
         let value1, value2;
         if (type == 1) { //零点漂移绝对误差	
             value1 = form.getFieldValue(`ZeroBegin${index}`), value2 = form.getFieldValue(`ZeroEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
                 form.setFieldsValue({ [`ZeroChange${index}`]: (value2 - value1).toFixed(2) })
-            }else{
+            } else {
                 form.setFieldsValue({ [`ZeroChange${index}`]: undefined })
             }
-            if(positionType && form.getFieldValue(`ZeroCalibration${index}`) ==2 ){ //下一列起始值 赋值
-                form.setFieldsValue({ [`ZeroBegin${index+1}`]: form.getFieldValue(`ZeroEnd${index}`) })
+            if (positionType && form.getFieldValue(`ZeroCalibration${index}`) == 2) { //下一列起始值 赋值
+                form.setFieldsValue({ [`ZeroBegin${index + 1}`]: form.getFieldValue(`ZeroEnd${index}`) })
             }
         } else {
             value1 = form.getFieldValue(`CalibrationBegin${index}`), value2 = form.getFieldValue(`CalibrationEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
                 form.setFieldsValue({ [`DriftAbsolute${index}`]: (value2 - value1).toFixed(2) })
-            }else{
+            } else {
                 form.setFieldsValue({ [`DriftAbsolute${index}`]: undefined })
             }
-            if(positionType && form.getFieldValue(`AdjustSpan${index}`) ==2 ){ //下一列起始值 赋值
-                form.setFieldsValue({ [`CalibrationBegin${index+1}`]: form.getFieldValue(`CalibrationEnd${index}`) })
+            if (positionType && form.getFieldValue(`AdjustSpan${index}`) == 2) { //下一列起始值 赋值
+                form.setFieldsValue({ [`CalibrationBegin${index + 1}`]: form.getFieldValue(`CalibrationEnd${index}`) })
             }
         }
 
     }
 
-    const adjustChang = (name,name2,name3,index) =>{
-      const value = form.getFieldValue(`${name}${index}`)
-      const value2 = form.getFieldValue(`${name2}${index}`)
+    const adjustChang = (name, name2, name3, index) => {
+        const value = form.getFieldValue(`${name}${index}`)
+        const value2 = form.getFieldValue(`${name2}${index}`)
 
-       if(value==2){
-         value2&&form.setFieldsValue({[`${name3}${index+1}`] : value2})
-       }
-        
+        if (value == 2) {
+            value2 && form.setFieldsValue({ [`${name3}${index + 1}`]: value2 })
+        }
+
     }
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
 
 
-    const smallFont = (text) =>{
-        return <span style={{fontSize:12}}>{text}</span>
-      }
+    const smallFont = (text) => {
+        return <span style={{ fontSize: 12 }}>{text}</span>
+    }
     const columns = [
         {
             title: '日期',
             align: 'center',
             width: 140,
             render: (text, record, index) => {
-                return <Form.Item className={styles.reqSty} name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>;
+                return <Form.Item className={styles.reqSty} name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`, index)} format="YYYY-MM-DD" /></Form.Item>;
             }
         },
         {
@@ -240,7 +269,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 115,
                     render: (text, record, index) => {
-                        return <Form.Item className={styles.reqSty} name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item className={props.warnArr.includes(index) ? styles.warnSty : styles.reqSty} name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
                 },
                 {
@@ -248,8 +277,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 115,
                     render: (text, record, index) => {
-                        return <Form.Item  className={styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>
-                      ;
+                        return <Form.Item className={styles.reqSty} name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item> ;
                     }
                 },
             ]
@@ -267,8 +295,8 @@ const Index = (props) => {
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                if(index==0){ return '/'  }
-                                return <Form.Item className={styles.reqSty} name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
+                                if (index == 0) { return '/' }
+                                return <Form.Item className={styles.reqSty} name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
@@ -276,7 +304,7 @@ const Index = (props) => {
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item  className={styles.reqSty} name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1,'end')} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item className={styles.reqSty} name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 1, 'end')} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -290,8 +318,8 @@ const Index = (props) => {
                             width: 130,
                             align: 'center',
                             render: (text, record, index) => {
-                                if(index==0){ return '/'  }
-                                return <Form.Item  className={styles.calculaSty} name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     disabled /></Form.Item>;
+                                if (index == 0) { return '/' }
+                                return <Form.Item className={styles.calculaSty} name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>;
                             }
                         },
                     ]
@@ -301,7 +329,7 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         return <Form.Item className={styles.reqRadioSty} name={`ZeroCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
-                            <Radio.Group onChange={()=>{adjustChang(`ZeroCalibration`,'ZeroEnd','ZeroBegin',index)}}>
+                            <Radio.Group onChange={() => { adjustChang(`ZeroCalibration`, 'ZeroEnd', 'ZeroBegin', index) }}>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>
                             </Radio.Group>
@@ -313,12 +341,12 @@ const Index = (props) => {
                     align: 'center',
                     children: [
                         {
-                            title:<span>起始(S{smallFont('0')})</span>,
+                            title: <span>起始(S{smallFont('0')})</span>,
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                if(index==0){ return '/'  }
-                                return <Form.Item className={styles.reqSty} name={`CalibrationBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                                if (index == 0) { return '/' }
+                                return <Form.Item className={styles.reqSty} name={`CalibrationBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
@@ -326,7 +354,7 @@ const Index = (props) => {
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item className={styles.reqSty} name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2,'end')} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item className={styles.reqSty} name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 2, 'end')} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -340,8 +368,8 @@ const Index = (props) => {
                             width: 130,
                             align: 'center',
                             render: (text, record, index) => {
-                                if(index==0){ return '/'  }
-                                return <Form.Item className={styles.calculaSty} name={`DriftAbsolute${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     disabled /></Form.Item>;
+                                if (index == 0) { return '/' }
+                                return <Form.Item className={styles.calculaSty} name={`DriftAbsolute${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>;
                             }
                         },
                     ]
@@ -351,7 +379,7 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         return <Form.Item className={styles.reqRadioSty} name={`AdjustSpan${index}`} rules={[{ required: isReg, message: '' }]}>
-                            <Radio.Group onChange={()=>{adjustChang(`AdjustSpan`,'CalibrationEnd','CalibrationBegin',index)}}>
+                            <Radio.Group onChange={() => { adjustChang(`AdjustSpan`, 'CalibrationEnd', 'CalibrationBegin', index) }}>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>
                             </Radio.Group>
@@ -402,15 +430,15 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('ZeroErrorMaximum')}</span>,
+            title: <span>{!isClears && form.getFieldValue('ZeroErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('ZeroValue')&&4,background:form.getFieldValue('Col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears&&form.getFieldValue('ZeroValue')}</span>,
+                    title: <span style={{ color: '#fff', padding: !isClears && form.getFieldValue('ZeroValue') && 4, background: form.getFieldValue('Col1') == 1 ? '#73d13d' : '#ff4d4f' }}>{!isClears && form.getFieldValue('ZeroValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
-                            children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('EvaluationBasis')&&4,background:form.getFieldValue('Col1')==1&&form.getFieldValue('Col2')==1? '#73d13d':'#ff4d4f'}}>{!isClears&&form.getFieldValue('EvaluationBasis')}</span>,
+                            children: <span style={{ color: '#fff', padding: !isClears && form.getFieldValue('EvaluationBasis') && 4, background: form.getFieldValue('Col1') == 1 && form.getFieldValue('Col2') == 1 ? '#73d13d' : '#ff4d4f' }}>{!isClears && form.getFieldValue('EvaluationBasis')}</span>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -438,11 +466,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('SpanErrorMaximum')}</span>,
+            title: <span>{!isClears && form.getFieldValue('SpanErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('SpanValue')&&4,background:form.getFieldValue('Col2')==1? '#52c41a':'#f5222d'}}>{!isClears&&form.getFieldValue('SpanValue')}</span>,
+                    title: <span style={{ color: '#fff', padding: !isClears && form.getFieldValue('SpanValue') && 4, background: form.getFieldValue('Col2') == 1 ? '#52c41a' : '#f5222d' }}>{!isClears && form.getFieldValue('SpanValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
@@ -519,7 +547,7 @@ const Index = (props) => {
                 })
                 props.addPMZeroRangeRecord(data, (isSuccess) => {
                     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                    isSuccess&&initData()
+                    isSuccess && initData()
                 })
             }).catch((errorInfo) => {
                 console.log('Failed:', errorInfo);
@@ -532,12 +560,12 @@ const Index = (props) => {
 
     }
 
-    const [isClears,setIsClears] = useState(false)
+    const [isClears, setIsClears] = useState(false)
     const clears = () => {
         const value = form.getFieldsValue()
         Object.keys(value).map((item, index) => { //清除表格表单数据
-            if(/\d/g.test(item)){
-               form.setFieldsValue({[item]:undefined})
+            if (/\d/g.test(item)) {
+                form.setFieldsValue({ [item]: undefined })
             }
         })
         setIsClears(true)//清除算法结果数据
@@ -597,7 +625,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="量程校准值" name="RangeCalibrationValue" >
-                        <InputNumber disabled    placeholder='请输入' allowClear />
+                        <InputNumber disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -608,13 +636,13 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Row>
-                    <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程<span style={{padding:'0 8px 0 2px'}}>:</span></label>
+                        <label style={{ width: 125, textAlign: 'right', lineHeight: '32px', }}>量程<span style={{ padding: '0 8px 0 2px' }}>:</span></label>
                         <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber disabled      placeholder='最小值' allowClear />
+                            <InputNumber disabled placeholder='最小值' allowClear />
                         </Form.Item>
                         <div style={{ width: 15, paddingTop: 4, textAlign: 'center' }}>-</div>
                         <Form.Item name="MaxRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber disabled   placeholder='最大值' allowClear />
+                            <InputNumber disabled placeholder='最大值' allowClear />
                         </Form.Item>
                     </Row>
                 </Col>

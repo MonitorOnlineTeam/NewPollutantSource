@@ -20,6 +20,7 @@ import {
   DatePicker,
   InputNumber,
   Tooltip,
+  Radio,
 } from 'antd';
 import styles from "../style.less"
 import MonitorContent from '@/components/MonitorContent/index';
@@ -32,18 +33,20 @@ import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, Ellips
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import { handleFormData } from '@/utils/utils';
+import Cookie from 'js-cookie';
+import moment from 'moment'
 import DeviceManager from './DeviceManager'
 const pointConfigId = 'TestPoint'
-@connect(({ loading, autoForm,commissionTestPoint,global, }) => ({
+const FormItem = Form.Item;
+@connect(({ loading, autoForm, commissionTestPoint, global, }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   autoForm: autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   tableInfo: autoForm.tableInfo,
   searchForm: autoForm.searchForm,
   routerConfig: autoForm.routerConfig,
-  pointDataWhere:commissionTestPoint.pointDataWhere,
-  loadingAddConfirm: loading.effects['autoForm/add'],
-  loadingEditConfirm: loading.effects['autoForm/saveEdit'],
+  pointDataWhere: commissionTestPoint.pointDataWhere,
+  loadingAddEditConfirm: loading.effects['commissionTestPoint/addOrUpdateTestPoint'],
   configInfo: global.configInfo,
 }))
 @Form.create()
@@ -52,13 +55,14 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      visible:false,
-      isEdit:false,
+      visible: false,
+      isEdit: false,
       deviceManagerVisible: false,
       deviceManagerMN: '',
       deviceManagerGasType: '',
-      selectedPointCode:'',
-      deviceMangerVisible:false,
+      selectedPointCode: '',
+      deviceMangerVisible: false,
+      thirdParty:true,
     };
 
   }
@@ -77,7 +81,7 @@ export default class Index extends Component {
 
   reloadPage = (configId) => {
     const { dispatch } = this.props;
-    const { location: { query: { targetId} }  } = this.props;
+    const { location: { query: { targetId } } } = this.props;
     dispatch({
       type: 'autoForm/getPageConfig',
       payload: {
@@ -98,75 +102,70 @@ export default class Index extends Component {
     });
   }
   deviceManager = (row) => {
-
-
     this.setState({
       deviceManagerVisible: true,
       deviceManagerMN: row["dbo.T_Bas_TestCommonPoint.ID"],
     })
   }
-  addPoint = () =>{ //添加监测点 弹框
-    this.setState({visible:true,isEdit:false,})
+  addPoint = () => { //添加监测点 弹框
+    const { form, } = this.props;
+    this.setState({ visible: true, isEdit: false,selectedPointCode:'',thirdParty:true })
+    form.resetFields();
   }
-  editPoint = (row) =>{
-    const {dispatch, } = this.props;
-    this.setState({visible:true,isEdit:true,})
+  editPoint = (row) => {
+    const { dispatch, form, } = this.props;
+    this.setState({ visible: true, isEdit: true, })
     const pointCode = row['dbo.T_Bas_TestCommonPoint.ID']
     this.setState({
       visible: true,
       isEdit: true,
       selectedPointCode: pointCode,
     });
+    const echoData = {}
+    for(const key in row){
+      const attr = key.replaceAll('dbo.T_Bas_TestCommonPoint.','')
+      echoData[attr] = row[key]
+    } 
+    this.setState({ thirdParty:echoData.ReferenceMethodSource === '2' ? false : true   });
+    form.setFieldsValue({
+      ...echoData,
+      InstallationTime: echoData.InstallationTime && moment(echoData.InstallationTime), 
+      BeginTime: echoData.BeginTime && moment(echoData.BeginTime),
+      EndTime: echoData.EndTime && moment(echoData.EndTime),
+     })
   }
-  savePointSubmitForm = () =>{  //保存监测点 确认
-    const { form,dispatch,pointDataWhere,} = this.props;
-    const { location: { query: { targetName, targetId} }  } = this.props;
-    const { isEdit,selectedPointCode, } = this.state;
+  savePointSubmitForm = () => {  //保存监测点 确认
+    const { form, dispatch, pointDataWhere, } = this.props;
+    const { location: { query: { targetName, targetId } } } = this.props;
+    const { isEdit, selectedPointCode, } = this.state;
     form.validateFields((err, values) => {
-      if (!err) { 
+      if (!err) {
         values.EntID = targetId;
-        if(isEdit){ //编辑
           dispatch({
-            type:'autoForm/saveEdit',
+            type: 'commissionTestPoint/addOrUpdateTestPoint',
             payload: {
-              configId:pointConfigId,
-              FormData: {...values,InstallationTime:values.InstallationTime&&values.InstallationTime.format('YYYY-MM-DD HH:mm:ss'), BeginTime:values.BeginTime&&values.BeginTime.format('YYYY-MM-DD HH:mm:ss'), EndTime:values.EndTime&&values.EndTime.format('YYYY-MM-DD HH:mm:ss'),  ID:selectedPointCode},
-              searchParams: pointDataWhere,
-              callback: result => {
-                if (result.IsSuccess) {
-                  this.setState({  visible: false, })  }
-                  dispatch({
-                  type: 'autoForm/getAutoFormData',
-                  payload: {
-                    configId:pointConfigId,
-                    searchParams:  pointDataWhere
-                  },
+              ...values, InstallationTime: values.InstallationTime && values.InstallationTime.format('YYYY-MM-DD HH:mm:ss'), BeginTime: values.BeginTime && values.BeginTime.format('YYYY-MM-DD HH:mm:ss'), EndTime: values.EndTime && values.EndTime.format('YYYY-MM-DD HH:mm:ss'), ID: selectedPointCode 
+            },
+            callback: result => {
+              this.setState({ visible: false, })
+              dispatch({
+                type: 'autoForm/getAutoFormData',
+                payload: {
+                  configId: pointConfigId,
+                  searchParams: pointDataWhere
+                },
               });
-              },
             },
           });
-        }else{ //添加
-        dispatch({
-          type:  'autoForm/add',
-          payload: {
-            configId:pointConfigId,
-            FormData: {...values,},
-            searchParams: pointDataWhere,
-            callback: result => {
-              if (result.IsSuccess) {
-                this.setState({ visible: false, }) }
-            },
-          },
-        });
-      }
       }
     })
   }
   render() {
-    const { searchConfigItems, searchForm, tableInfo, dispatch,pointDataWhere, loadingEditConfirm , loadingAddConfirm ,configInfo,} = this.props;
-    const { location: { query: { targetName, targetId} }  } = this.props;
-    const { isEdit } = this.state;
-    const noDelFlag = configInfo&&configInfo.DeleteTestUser==0? true : false;
+    const { searchConfigItems, searchForm, tableInfo, dispatch, pointDataWhere, loadingAddEditConfirm, configInfo, } = this.props;
+    const { location: { query: { targetName, targetId } } } = this.props;
+    const { isEdit, thirdParty } = this.state;
+    const noDelFlag = configInfo && configInfo.DeleteTestUser == 0 ? true : false;
+    const { getFieldDecorator } = this.props.form;
     if (this.props.loading) {
       return (<Spin
         style={{
@@ -181,7 +180,7 @@ export default class Index extends Component {
     }
     return (
       <BreadcrumbWrapper title="监测点维护">
-      <div className={styles.pointSty}>
+        <div className={styles.pointSty}>
           <Card
             title={
               <span>
@@ -199,62 +198,63 @@ export default class Index extends Component {
                 </Button>
               </span>
             }>
-          <SearchWrapper
-            searchParams={pointDataWhere}
-            onSubmitForm={form => this.loadReportList(form)}
-            configId={pointConfigId}
-            isCoustom
-            selectType='3,是'
-          ></SearchWrapper>
-          <AutoFormTable
-            style={{ marginTop: 10 }}
-            configId={pointConfigId}
-            resizable
-            isCenter
-            isFixedOpera
-            {...this.props}
-            type='company'
-            searchParams={pointDataWhere}
-            onAdd={() => { //添加
-              this.addPoint();
-            }}
-            noDel={noDelFlag}
-            appendHandleRows={row => (
-              <Fragment>
-                {!noDelFlag&&<Divider type="vertical" />}
-                <Tooltip title="编辑">
-                  <a
-                    onClick={() => {
-                      this.editPoint(row)
-                    }}
-                  >
-                    <EditIcon />
-                  </a>
-                </Tooltip>
+            <SearchWrapper
+              searchParams={pointDataWhere}
+              onSubmitForm={form => this.loadReportList(form)}
+              configId={pointConfigId}
+              isCoustom
+              selectType='3,是'
+            ></SearchWrapper>
+            <AutoFormTable
+              style={{ marginTop: 10 }}
+              configId={pointConfigId}
+              resizable
+              isCenter
+              isFixedOpera
+              {...this.props}
+              type='company'
+              searchParams={pointDataWhere}
+              onAdd={() => { //添加
+                this.addPoint();
+              }}
+              noDel={noDelFlag}
+              appendHandleRows={row => (
+                <Fragment>
+                  {!noDelFlag && <Divider type="vertical" />}
+                  <Tooltip title="编辑">
+                    <a
+                      onClick={() => {
+                        this.editPoint(row)
+                      }}
+                    >
+                      <EditIcon />
+                    </a>
+                  </Tooltip>
 
-          
-                <Divider type="vertical" />
-                <Tooltip title="设备管理">
-                  <a onClick={() => {
-                    this.deviceManager(row);
-                  }}><FileTextOutlined style={{ fontSize: 16 }} /></a>
-                </Tooltip>
 
-              </Fragment>
-            )}
-          />
-        </Card>
-      </div>
-      <Modal
-            title={isEdit? '编辑监测点' : '添加监测点'}
-            visible={this.state.visible}
-            onOk={this.savePointSubmitForm.bind(this)}
-            onCancel={()=>{this.setState({visible:false})}}
-            width={'80%'}
-            confirmLoading={isEdit? loadingEditConfirm : loadingAddConfirm}
-            destroyOnClose
-            bodyStyle={{ paddingBottom: 0 }}>
-         <SdlForm
+                  <Divider type="vertical" />
+                  <Tooltip title="设备管理">
+                    <a onClick={() => {
+                      this.deviceManager(row);
+                    }}><FileTextOutlined style={{ fontSize: 16 }} /></a>
+                  </Tooltip>
+
+                </Fragment>
+              )}
+            />
+          </Card>
+        </div>
+        <Modal
+          title={isEdit ? '编辑监测点' : '添加监测点'}
+          visible={this.state.visible}
+          onOk={this.savePointSubmitForm.bind(this)}
+          onCancel={() => { this.setState({ visible: false }) }}
+          width={'80%'}
+          confirmLoading={loadingAddEditConfirm}
+          destroyOnClose
+          className={styles.formModalSty}
+          bodyStyle={{ paddingBottom: 0 }}>
+          {/* <SdlForm
                       configId={pointConfigId}
                       form={this.props.form}
                       noLoad
@@ -264,17 +264,162 @@ export default class Index extends Component {
                       types='point'
                       isModal
                       isSearchParams
-                    />              
+                    />               */}
+          <Form>
+            <Row>
+            <Col span={12}>
+            <FormItem label="监测点名称" >
+              {getFieldDecorator("PointName", {
+                rules: [  {required: true, message: "请输入监测点名称",  } ],
+              })(   <Input placeholder='请输入' allowClear/>   )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem label="调试次数" >
+              {getFieldDecorator("TestCount", {
+                rules: [  {required: true, message: "请输入调试次数",  } ],
+              })( <InputNumber placeholder='请输入' allowClear/>)}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem label="测试人员" >
+              {getFieldDecorator("TestUser", {
+                rules: [  {required: true, message: "请输入测试人员",  } ],
+              })(   <Input placeholder='请输入' allowClear/>   )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem label="编制人" >
+              {getFieldDecorator("OrganizationUser", {
+                initialValue:  Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserName,
+                rules: [  {required: true, message: "请输入编制人",  } ],
+              })(   <Input placeholder='请输入' allowClear/>   )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem label="校验人" >
+              {getFieldDecorator("CalibrationUser", {
+                rules: [  {required: true, message: "请输入校验人",  } ],
+              })(   <Input placeholder='请输入' allowClear/>   )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem label="批准人" >
+              {getFieldDecorator("ApprovalUser", {
+                rules: [  {required: true, message: "请输入批准人",  } ],
+              })(   <Input placeholder='请输入' allowClear/>   )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem  label="安装完成时间">
+              {getFieldDecorator("InstallationTime", {
+                rules: [{  required: true,   message: "请选择安装完成时间",  }],
+              })(
+                <DatePicker />
+              )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem  label="检测开始日期">
+              {getFieldDecorator("BeginTime", {
+                rules: [{  required: true,   message: "请选择检测开始日期",  }],
+              })(
+                <DatePicker />
+              )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem  label="检测结束日期">
+              {getFieldDecorator("EndTime", {
+                rules: [{  required: true,   message: "请选择检测结束日期",  }],
+              })(
+                <DatePicker />
+              )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem  label="校准颗粒物方法">
+              {getFieldDecorator("CalibrationCEMS", {
+                initialValue: '1',
+                rules: [{  required: true,   message: "请选择校准颗粒物方法",  }],
+              })(
+                <Radio.Group>
+                <Radio value={'1'}>一元线性方程法</Radio>
+                <Radio value={'2'}>K系数法</Radio>
+              </Radio.Group>
+              )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem  label="流速CMS调试检测">
+              {getFieldDecorator("FlowCEMS", {
+                initialValue: '1',
+                rules: [{  required: true,   message: "请选择流速CEMS调试检测",  }],
+              })(
+                <Radio.Group>
+                <Radio value={'1'}>不带准确度</Radio>
+                <Radio value={'2'}>带准确度</Radio>
+              </Radio.Group>
+              )}
+            </FormItem>
+             <span className='red' style={{position:'absolute',top:10,left:360}}>(除监管部门明确要求外，不选择此项)</span>
+            </Col>
+            <Col span={12}>
+            <FormItem  label="检测完成状态">
+              {getFieldDecorator("Status", {
+                initialValue:'1',
+                rules: [{  required: true,   message: "请选择检测完成状态",  }],
+              })(
+                <Radio.Group>
+                <Radio value={'1'}>检测中</Radio>
+                <Radio value={'2'}>已完成</Radio>
+              </Radio.Group>
+              )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem  label="参比方法数据来源">
+              {getFieldDecorator("ReferenceMethodSource", {
+                initialValue:'1',
+                rules: [{  required: true,   message: "请选择检测完成状态",  }],
+              })(
+                <Radio.Group onChange={(e)=>{
+                  this.setState({
+                    thirdParty : e.target.value==='2'? false : true
+                  })
+                }}>
+                <Radio value={'1'}>自测</Radio>
+                <Radio value={'2'}>第三方报告</Radio>
+              </Radio.Group>
+              )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem label="第三方检测公司的名称" hidden={thirdParty}>
+              {getFieldDecorator("TestCompanyName", {
+                rules: [  {required: !thirdParty, message: "请输入第三方检测公司的名称",  } ],
+              })(   <Input placeholder='请输入' allowClear/>   )}
+            </FormItem>
+            </Col>
+            <Col span={12}>
+            <FormItem label="报告编号" hidden={thirdParty}>
+              {getFieldDecorator("TestReportNumber", {
+                rules: [  {required: !thirdParty, message: "请输入报告编号",  } ],
+              })(   <Input placeholder='请输入' allowClear/>   )}
+            </FormItem>
+            </Col>
+            </Row>
+          </Form>
         </Modal>
         <Modal
-            title={'设备管理'}
-            visible={this.state.deviceManagerVisible}
-            onCancel={()=>{this.setState({deviceManagerVisible:false})}}
-            destroyOnClose
-            footer={null}
-            wrapClassName={`spreadOverModal spreadOverHiddenModal`}
-          >  
-          <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN}/>         
+          title={'设备管理'}
+          visible={this.state.deviceManagerVisible}
+          onCancel={() => { this.setState({ deviceManagerVisible: false }) }}
+          destroyOnClose
+          footer={null}
+          wrapClassName={`spreadOverModal spreadOverHiddenModal`}
+        >
+          <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} />
         </Modal>
       </BreadcrumbWrapper>
     );

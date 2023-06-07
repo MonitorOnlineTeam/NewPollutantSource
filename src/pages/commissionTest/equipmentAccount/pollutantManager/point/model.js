@@ -10,8 +10,8 @@ export default Model.extend({
     systemModelList: [],
     systemModelListTotal: null,
     equipmentInfoList: [],
-    equipmentInfoListTotal:null,
-    paramInfoList:[],
+    equipmentInfoListTotal: null,
+    paramInfoList: [],
     paramInfoListTotal: null,
   },
   effects: {
@@ -33,20 +33,20 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           equipmentInfoList: result.Datas ? result.Datas.mlist : [],
-          equipmentInfoListTotal:result.Total,
+          equipmentInfoListTotal: result.Total,
         });
       } else {
         message.error(result.Message)
       }
     },
     //参比仪器 - 生产厂家(弹框) 
-    *getTestParamInfoList({ payload, callback }, { call, put, update }) { 
+    *getTestParamInfoList({ payload, callback }, { call, put, update }) {
       yield update({ tableLoading: true })
       const result = yield call(services.GetTestParamInfoList, payload);
       if (result.IsSuccess) {
         yield update({
           paramInfoListTotal: result.Total,
-          paramInfoList:result.Datas? result.Datas.mlist:[],
+          paramInfoList: result.Datas ? result.Datas.mlist : [],
         })
       } else {
         message.error(result.Message)
@@ -54,16 +54,16 @@ export default Model.extend({
       }
     },
     //获取站点CEMS参数信息
-    *getCEMSSystemList({ payload,callback }, { call, put, update, select }) {
+    *getCEMSSystemList({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.GetCEMSSystemList, { ...payload });
       if (result.IsSuccess) {
-          callback(result.Datas)
+        callback(result.Datas)
       } else {
         message.error(result.Message)
       }
     },
     //操作站点CEMS参数信息 
-    *operationCEMSSystem({ payload,callback }, { call, put, update, select }) {
+    *operationCEMSSystem({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.OperationCEMSSystem, { ...payload });
       if (result.IsSuccess) {
         callback()
@@ -72,7 +72,7 @@ export default Model.extend({
       }
     },
     //获取参比仪器信息
-    *getParamList({ payload,callback }, { call, put, update, select }) {
+    *getParamList({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.GetParamList, { ...payload });
       if (result.IsSuccess) {
         callback(result.Datas)
@@ -81,7 +81,7 @@ export default Model.extend({
       }
     },
     //操作站点参比仪器信息 
-    *operationParam({ payload,callback }, { call, put, update, select }) {
+    *operationParam({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.OperationParam, { ...payload });
       if (result.IsSuccess) {
         callback()
@@ -89,7 +89,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
-
+    //添加或修改调试检测排口
+    *addOrUpdateTestPoint({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.AddOrUpdateTestPoint, { ...payload });
+      if (result.IsSuccess) {
+        message.success(result.IsSuccess)
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 });

@@ -171,7 +171,7 @@ const Index = (props) => {
         //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
     // const [autoDateFlag, setAutoDateFlag] = useState(true)
-    const onDateChange = (name) => {
+    const onDateChange = (name,index) => {
         const values = form.getFieldValue('CreateDate0')
         // const date1 = form.getFieldValue('CreateDate1'),date2=form.getFieldValue('CreateDate2'),date3=form.getFieldValue('CreateDate3');
         // if (name == 'CreateDate0' &&  !date1 && !date2 && !date3) {
@@ -187,6 +187,8 @@ const Index = (props) => {
             })
             // setAutoDateFlag(false)
         }
+        const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
+        timeComparison(index,startTime)
     }
     const onTimeChange = (index, type) => {
         const startTime = form.getFieldValue(`BTime${index}`) && form.getFieldValue(`BTime${index}`).format('HH:mm')
@@ -197,9 +199,37 @@ const Index = (props) => {
             } else {
                 form.setFieldsValue({ [`ETime${index}`]: '' })
             }
+        },()=>{
+            if (type === 'start') {          
+                timeComparison(index,startTime)
+              }
+            
         })
     }
-
+     const timeComparison = (index, time) => {
+            const createDate1 = form.getFieldValue(`CreateDate${index - 1}`) && form.getFieldValue(`CreateDate${index - 1}`).format('YYYY-MM-DD')
+            const createDate2 = form.getFieldValue(`CreateDate${index}`) && form.getFieldValue(`CreateDate${index}`).format('YYYY-MM-DD')
+            const createDate3 = form.getFieldValue(`CreateDate${index + 1}`) && form.getFieldValue(`CreateDate${index + 1}`).format('YYYY-MM-DD')
+            const time1 = form.getFieldValue(`BTime${index - 1}`) && form.getFieldValue(`BTime${index - 1}`).format('HH:mm')
+            const time2 = time
+            const time3 = form.getFieldValue(`BTime${index + 1}`) && form.getFieldValue(`BTime${index + 1}`).format('HH:mm')
+            
+            const createDateTime1 = createDate1 && time1 && moment(createDate1 + ' ' + time1);
+            const createDateTime2 = createDate2 && time2 && moment(createDate2 + ' ' + time2);
+            const createDateTime3 = createDate3 && time3 && moment(createDate3 + ' ' + time3);
+            if (createDateTime2) {
+                if (createDateTime1 && !createDateTime3) { //填入时间 和上一列时间表比较
+                    props.timeColCompareFun(1, index, createDateTime1, createDateTime2);
+                }
+                if (createDateTime3 && !createDateTime1) { //填入时间 和下一列时间表比较
+                    props.timeColCompareFun(2, index + 1, createDateTime2, createDateTime3);
+                }
+                if (createDateTime1 && createDateTime3) {
+                    props.timeColCompareFun(3, index, createDateTime1, createDateTime2, createDateTime3);
+                }
+            }
+        }
+    
     const zeroReadBlur = (index, type, positionType) => {
         let value1, value2;
         if (type == 1) { //零点漂移绝对误差	
@@ -246,7 +276,7 @@ const Index = (props) => {
             align: 'center',
             width: 140,
             render: (text, record, index) => {
-                return <Form.Item className={styles.reqSty} name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>;
+                return <Form.Item className={styles.reqSty} name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`,index)} format="YYYY-MM-DD" /></Form.Item>;
             }
         },
         {
@@ -258,7 +288,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 120,
                     render: (text, record, index) => {
-                        return <Form.Item className={styles.reqSty} name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
+                        return <Form.Item className={ props.warnArr.includes(index) ? styles.warnSty : styles.reqSty } name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
                 },
                 {

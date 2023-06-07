@@ -70,7 +70,7 @@ const { SHOW_PARENT } = TreeSelect;
   depInfoList: usertree.DepartTree,
   rolesList: usertree.RolesTree,
   userPar: newuserinfo.userPar,
-  RegionInfoTree: newuserinfo.RegionInfoTree,
+  RegionInfoTree: autoForm.regionList,
   GetRegionInfoByTree: loading.effects['newuserinfo/getregioninfobytree'],
   CheckPointLoading: loading.effects['newuserinfo/getpointbydepid'],
   getentandpointLoading: loading.effects['newuserinfo/getentandpoint'],

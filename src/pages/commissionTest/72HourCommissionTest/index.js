@@ -79,27 +79,73 @@ const Index = (props) => {
       RecordDate: "",
       Flag: ""
     })
+    setWarnArr([])
   }
   
-  const timeCompare  = (startTime,endTime,callback,callback2)=>{  //比较时间大小
+  const timeCompare  = (startTime,endTime,callback,callback2,sampling)=>{  //比较时间大小
     const startTimeVal = startTime&&startTime.replaceAll(':','')
     const endTimeVal = endTime&&endTime.replaceAll(':','')
     if(startTimeVal&&endTimeVal&&startTimeVal>=endTimeVal){
-        message.warning('结束时间必须大于开始时间1111')
-        callback()
+        message.warning('结束时间必须大于开始时间')
+        callback&&callback()
     }else{
-        callback2()
+        callback2&&callback2(startTimeVal,endTimeVal)
     }
   }
+  const [warnArr, setWarnArr] = useState([])
+  const timeColCompareFun = (type, index, createDateBefore, createDateAfter, createDate) => {
+    switch (type) {
+        case 1:
+        case 2:
+            const diffMinutes = createDateAfter.diff(createDateBefore, 'minutes');
+            if (diffMinutes < 24 * 60) {
+                timeComparWarnMessAlert()
+                setWarnArr([...warnArr, index])
+            } else {
+                const list = warnArr.filter(item => item != index)
+                setWarnArr(list)
+            }
+            break;
+        case 3:
+            const diffMinutes1 = createDateAfter.diff(createDateBefore, 'minutes');
+            const diffMinutes2 = createDate.diff(createDateAfter, 'minutes');
+            let list = warnArr;
+            if (diffMinutes1 < 24 * 60 || diffMinutes2 < 24 * 60) {
+                timeComparWarnMessAlert('间隔时间不足24h')
+                if (diffMinutes1 < 24 * 60) {
+                    list = [...list, index]
+                }
+                if (diffMinutes2 < 24 * 60) {
+                    list = [...list, index + 1]
+                }
 
+            }
+            if (diffMinutes1 >= 24 * 60) {
+                list = list.filter(item => item != index)
+            }
+            if (diffMinutes2 >= 24 * 60) {
+                list = list.filter(item => item != index + 1)
+            }
+            setWarnArr(list)
+            break;
+    }
+}
+  const timeComparWarnMessAlert = (content) =>{
+    message.warning({
+        content: content,
+        style: { marginTop: '50vh', },
+        className:`${styles.timeComparWarnMessAlertSty}`,
+        duration: 3,
+      });
+   }
   const tabContet = (key) => {
     switch (key) {
       case "1":
-        return <ParticleDrift {...props} pointId={pointId}  timeCompare={timeCompare}/> //颗粒物CEMS零点和量程漂移检测
+        return <ParticleDrift {...props} pointId={pointId} warnArr={warnArr} timeColCompareFun={timeColCompareFun}  timeCompare={timeCompare}/> //颗粒物CEMS零点和量程漂移检测
       case "2":
-        return <ParticleMatterRefer {...props} pointId={pointId}  timeCompare={timeCompare}/> //参比方法校准颗粒物CEMS
+        return <ParticleMatterRefer {...props} pointId={pointId} timeComparWarnMessAlert={timeComparWarnMessAlert} timeCompare={timeCompare}/> //参比方法校准颗粒物CEMS
       case "3":
-        return <CemsOxygenZero {...props} pointId={pointId}  timeCompare={timeCompare}/> //气态污染物CEMS（含氧量）零点和量程漂移检测
+        return <CemsOxygenZero {...props} pointId={pointId} warnArr={warnArr} timeColCompareFun={timeColCompareFun} timeCompare={timeCompare}/> //气态污染物CEMS（含氧量）零点和量程漂移检测
       case "4":
         return <CemsResponseTime {...props} pointId={pointId}/> // 气态污染物CEMS示值误差和系统响应时间检测
       case "5":
