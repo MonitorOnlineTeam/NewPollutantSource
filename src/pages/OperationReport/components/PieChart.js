@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2023-05-30 14:27:44
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-05-30 15:30:51
+ * @Description：饼状图
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {} from 'antd';

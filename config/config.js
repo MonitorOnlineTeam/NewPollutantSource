@@ -2688,13 +2688,58 @@ export default {
                       // 专家管理
                       name: 'expertManagement',
                       path: '/completeSetManage/expert/management',
-                      component: './/completeSetManage/expert/Management',
+                      component: './completeSetManage/expert/Management',
                     },
                     {
                       // 专家库
                       name: 'View',
                       path: '/completeSetManage/expert/view',
-                      component: './/completeSetManage/expert/View',
+                      component: './completeSetManage/expert/View',
+                    },
+                  ],
+                },
+              ],
+            },
+            // 数据分析预警模型
+            {
+              path: '/DataAnalyticalWarningModel',
+              name: 'DataAnalyticalWarningModel',
+              routes: [
+                // 智能预警
+                {
+                  name: 'Warning',
+                  path: '/DataAnalyticalWarningModel/Warning',
+                  routes: [
+                    {
+                      // 预警记录
+                      name: 'expertManagement',
+                      path: '/DataAnalyticalWarningModel/Warning',
+                      component: './DataAnalyticalWarningModel/Warning',
+                    },
+                    {
+                      // 预警核实
+                      name: 'WarningVerify',
+                      path: '/DataAnalyticalWarningModel/Warning/WarningVerify/:id',
+                      component: './DataAnalyticalWarningModel/Warning/WarningVerify',
+                    },
+                  ],
+                },
+                // 模型管理
+                {
+                  name: 'ModelManagement',
+                  path: '/DataAnalyticalWarningModel/Model',
+                  routes: [
+                    {
+                      // 模型管理 - 列表
+                      name: 'Model',
+                      path: '/DataAnalyticalWarningModel/Model',
+                      component: './DataAnalyticalWarningModel/ModelManagement',
+                    },
+                    {
+                      // 模型编辑
+                      name: 'setting',
+                      path: '/DataAnalyticalWarningModel/Model/setting',
+                      component: './DataAnalyticalWarningModel/ModelManagement/Setting',
                     },
                   ],
                 },
