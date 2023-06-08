@@ -20,8 +20,6 @@ import Cookie from 'js-cookie';
 import cuid from 'cuid';
 const { TabPane } = Tabs;
 const { Option } = Select;
-
-
 const namespace = 'commissionTestPoint'
 
 
@@ -32,6 +30,7 @@ const dvaPropsData = ({ loading, commissionTestPoint, commissionTest, }) => ({
   systemModelList: commissionTestPoint.systemModelList,
   loadingSystemModel: loading.effects[`${namespace}/testGetSystemModelList`] || false,
   pollutantTypeList: commissionTest.pollutantTypeList,
+  pollutantTypeList2: commissionTest.pollutantTypeList2,
   loadingGetPollutantById: loading.effects[`commissionTest/getPollutantById`] || false,
   equipmentInfoList: commissionTestPoint.equipmentInfoList,
   equipmentInfoListTotal: commissionTestPoint.equipmentInfoListTotal,
@@ -126,8 +125,8 @@ const dvaDispatch = (dispatch) => {
 
 
 const Index = (props) => {
-
-  const { DGIMN, pollutantType, manufacturerList, systemModelList, systemModelListTotal, equipmentInfoList, pointSystemInfo, equipmentInfoListTotal, pbList, pbListLoading, gasType, pollutantTypeList, } = props;
+  
+  const { DGIMN, pollutantType, manufacturerList, systemModelList, systemModelListTotal, equipmentInfoList, pointSystemInfo, equipmentInfoListTotal, pbList, pbListLoading, gasType, pollutantTypeList, pollutantTypeList2 ,} = props;
   
   const { paramInfoList, paramInfoListTotal, paramInfoListLoading,} = props;
 
@@ -144,7 +143,6 @@ const Index = (props) => {
   const [formReferInstru ]  = Form.useForm();
   useEffect(() => {
     initData()
-
   }, [DGIMN]);
 
   const initData = () => {
@@ -152,6 +150,7 @@ const Index = (props) => {
     props.getManufacturerList({})  // 弹框 厂家列表
 
     props.getPollutantById({})  //cems 监测设备  默认加载监测参数
+    props.getPollutantById({type:1})  //cems 监测设备  默认加载监测参数
 
     props.getCEMSSystemList({DGIMN:DGIMN},(data)=>{ //cems 系统信息 监测设备 表格数据
       setSystemData(data.systemModelList?data.systemModelList :[] )
@@ -1064,7 +1063,6 @@ const handleSystemAdd = () => { //添加系统信息
       }
       setDeviceData([...deviceData, newData])
       setIsManual(false)
-      props.updateState({ pollutantTypeList2: defaultPollData })
     }
   };
 
@@ -1185,18 +1183,30 @@ const handleSystemAdd = () => { //添加系统信息
               >
                 <InputNumber placeholder={`最大值`} />
               </Form.Item>
-            </Form.Item> : dataIndex === 'PollutantCode' ? //监测参数
+            </Form.Item> : dataIndex === 'PollutantCode'&&!name? // 监测参数 监测设备
 
               <>{parLoading ? <Spin size='small' style={{ textAlign: 'left' }} />
                 :
                 <Form.Item name={`${dataIndex}`} style={{ margin: 0 }}>
-                  <Select placeholder='请选择' disabled={  isManual&&!name ? isManual : isRefManual? isRefManual : false} allowClear={false} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
+                  <Select placeholder='请选择' disabled={  isManual } allowClear={false} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
                     {
                       pollutantTypeList[0] && pollutantTypeList.map(item => {
                         return <Option key={item.ChildID} value={item.ChildID}>{item.Name}</Option>
                       })
                     }
                   </Select></Form.Item>}</>
+                  : dataIndex === 'PollutantCode'&&name==='参比仪器监测参数' ? //监测参数 参比仪器信息
+
+                  <>{parLoading ? <Spin size='small' style={{ textAlign: 'left' }} />
+                    :
+                    <Form.Item name={`${dataIndex}`} style={{ margin: 0 }}>
+                      <Select placeholder='请选择' disabled={isRefManual} allowClear={false} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
+                        {
+                          pollutantTypeList2[0] && pollutantTypeList2.map(item => {
+                            return <Option key={item.ChildID} value={item.ChildID}>{item.Name}</Option>
+                          })
+                        }
+                      </Select></Form.Item>}</>
               : dataIndex === 'ManufactorName' ?  //CEMS-系统信息 生产厂家
                 <Form.Item name={`${dataIndex}`} style={{ margin: 0 }}>
                   <Select onClick={() => { manufacturerPopVisibleClick() }} onChange={onManufacturerClearChoice} allowClear showSearch={false} dropdownClassName={'popSelectSty'} placeholder="请选择"> </Select>

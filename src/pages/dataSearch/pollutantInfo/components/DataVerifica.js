@@ -295,7 +295,7 @@ const Index = (props) => {
          </Button>
             </Form.Item>
         </Form>
-            <div style={{ color: '#f5222d', paddingTop: 12, fontSize: 14 }}> 数据核查项根据监测点现场真实情况进行设置，设置的选项作为APP数据一致性核查电子表单中的检查项字段，设置后，运维工程师才能在APP上填写数据一致性核查电子表单。</div>
+            <div style={{ color: '#f5222d',fontSize: 14 }}> 数据核查项根据监测点现场真实情况进行设置，设置的选项作为APP数据一致性核查电子表单中的检查项字段，设置后，运维工程师才能在APP上填写数据一致性核查电子表单。</div>
         </>
     }
     return (

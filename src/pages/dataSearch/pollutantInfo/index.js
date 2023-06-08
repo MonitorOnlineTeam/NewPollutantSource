@@ -67,7 +67,6 @@ const Index = (props) => {
   return (
     <div  className={styles.pollutantInfoSty}>
     <BreadcrumbWrapper>
-  <Card>
     <Tabs tabPosition='left'>
           <TabPane tab="企业信息" key="1">
           <EntInfo props/>
@@ -103,7 +102,6 @@ const Index = (props) => {
             <PointMatchingSet props />
           </TabPane>
         </Tabs>
-   </Card>
    </BreadcrumbWrapper>
 
 

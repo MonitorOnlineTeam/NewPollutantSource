@@ -315,13 +315,13 @@ const Index = (props) => {
             name="advanced_search"
             form={form}
             onFinish={() => { onFinish(1, pageSize) }}
-        >
-
+            layout='inline'
+             >
             <Row>
                 <Form.Item name='EntName' label='企业名称' >
                     <Input placeholder="请输入" allowClear/>
                 </Form.Item>
-                <Form.Item label='行政区' name='regionCode' style={{ margin: '0 8px', }}>
+                <Form.Item label='行政区' name='regionCode'>
                     <RegionList levelNum={2} style={{width:165}} />
                 </Form.Item>
 
@@ -329,14 +329,14 @@ const Index = (props) => {
                     <RangePicker_
                         format="YYYY-MM-DD HH:mm:ss"
                         showTime="YYYY-MM-DD HH:mm:ss"
-                        style={{minWidth:350}}
+                        style={{minWidth:300}}
                         allowClear />
                 </Form.Item>
-                <Form.Item label='实际运维日期' name='ActualTime' style={{ marginLeft: 8, }}>
+                <Form.Item label='实际运维日期' name='ActualTime'>
                     <RangePicker_
                         format="YYYY-MM-DD HH:mm:ss"
                         showTime="YYYY-MM-DD HH:mm:ss"
-                        style={{minWidth:350}}
+                        style={{minWidth:300}}
                         allowClear />
                 </Form.Item>
             </Row>

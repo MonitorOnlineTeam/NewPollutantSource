@@ -415,13 +415,13 @@ const onDetailValuesChange = (hangedValues, allValues) =>{
     </Row>
 
     <Row >
-      <Form.Item label='匹配状态' name='Status' className='checkSty'>
+      <Form.Item label='匹配状态' name='Status' className='checkSty' style={{marginBottom:0}}>
         <Select placeholder='请选择' allowClear style={{ marginLeft: 0,width: 200}}>
           <Option key={1} value={1} >已匹配</Option>
           <Option key={2} value={2} >待匹配</Option>
         </Select>
       </Form.Item>
-      <Form.Item>
+      <Form.Item  style={{marginBottom:0}}>
         <Button type="primary" loading={tableLoading} htmlType="submit">
           查询
        </Button>

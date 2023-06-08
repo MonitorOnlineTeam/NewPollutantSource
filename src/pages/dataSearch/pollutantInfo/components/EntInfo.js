@@ -219,7 +219,7 @@ const Index = (props) => {
          </Button>
             </Form.Item>
         </Form>
-            <div style={{ color: '#f5222d', paddingTop: 12, fontSize: 14 }}>
+            <div style={{ color: '#f5222d', fontSize: 14 }}>
             下面列表只展示当前在运维的企业，运维到期的企业将不显示。
 </div>
         </>

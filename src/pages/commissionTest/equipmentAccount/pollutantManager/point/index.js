@@ -126,7 +126,7 @@ export default class Index extends Component {
       const attr = key.replaceAll('dbo.T_Bas_TestCommonPoint.','')
       echoData[attr] = row[key]
     } 
-    this.setState({ thirdParty:echoData.ReferenceMethodSource === '2' ? false : true   });
+    this.setState({ thirdParty:echoData.ReferenceMethodSource == 2 ? false : true   });
     form.setFieldsValue({
       ...echoData,
       InstallationTime: echoData.InstallationTime && moment(echoData.InstallationTime), 
@@ -144,9 +144,11 @@ export default class Index extends Component {
           dispatch({
             type: 'commissionTestPoint/addOrUpdateTestPoint',
             payload: {
-              ...values, InstallationTime: values.InstallationTime && values.InstallationTime.format('YYYY-MM-DD HH:mm:ss'), BeginTime: values.BeginTime && values.BeginTime.format('YYYY-MM-DD HH:mm:ss'), EndTime: values.EndTime && values.EndTime.format('YYYY-MM-DD HH:mm:ss'), ID: selectedPointCode 
+              ...values, InstallationTime: values.InstallationTime && values.InstallationTime.format('YYYY-MM-DD HH:mm:ss'), BeginTime: values.BeginTime && values.BeginTime.format('YYYY-MM-DD HH:mm:ss'), EndTime: values.EndTime && values.EndTime.format('YYYY-MM-DD HH:mm:ss'), ID: selectedPointCode,
+              TestCompanyName: values.ReferenceMethodSource==2? values.TestCompanyName : undefined,
+              TestReportNumber: values.ReferenceMethodSource==2? values.TestReportNumber: undefined,
             },
-            callback: result => {
+            callback: () => {
               this.setState({ visible: false, })
               dispatch({
                 type: 'autoForm/getAutoFormData',
@@ -380,16 +382,16 @@ export default class Index extends Component {
             <Col span={12}>
             <FormItem  label="参比方法数据来源">
               {getFieldDecorator("ReferenceMethodSource", {
-                initialValue:'1',
+                initialValue:1,
                 rules: [{  required: true,   message: "请选择检测完成状态",  }],
               })(
                 <Radio.Group onChange={(e)=>{
                   this.setState({
-                    thirdParty : e.target.value==='2'? false : true
+                    thirdParty : e.target.value==2? false : true
                   })
                 }}>
-                <Radio value={'1'}>自测</Radio>
-                <Radio value={'2'}>第三方报告</Radio>
+                <Radio value={1}>自测</Radio>
+                <Radio value={2}>第三方报告</Radio>
               </Radio.Group>
               )}
             </FormItem>

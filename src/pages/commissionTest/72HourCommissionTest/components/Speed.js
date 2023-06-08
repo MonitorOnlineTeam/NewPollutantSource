@@ -194,7 +194,7 @@ const Index = (props) => {
     }
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
-
+    const col1 = form.getFieldValue('Col1')?.split(','), col2 = form.getFieldValue('Col2')?.split(',');
     const columns = [
         {
             title: '日期',
@@ -360,9 +360,12 @@ const Index = (props) => {
 
                         if ((index + 1) % 7 == 0) { //相对误差（%）
                             let i = (index + 1) / 7
+                            const relativeErrorVal = form.getFieldValue(`RelativeError${i}`)
+                            const findIndexs = col2?.indexOf(relativeErrorVal) //是否存在对应的值 找到其位置
+                            const dimIndex = col1&&col1[findIndexs]
                             return {
                                 // children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>,
-                                children: <span>{!isClears && form.getFieldValue(`RelativeError${i}`)}</span>,
+                                children: <span style={{ color:  dimIndex == 1 || dimIndex == 0 && '#fff', padding: !isClears && relativeErrorVal && 4, background: dimIndex== 1 ? '#73d13d' : dimIndex == 0 ? '#ff4d4f' :'' }}>{!isClears && relativeErrorVal}</span>,
                                 props: { colSpan: 3 },
                             }
                         }
@@ -420,11 +423,22 @@ const Index = (props) => {
             title: <span>{!isClears && form.getFieldValue('VelocityCoefficientAVG')}</span>,
             align: 'center',
             render: (text, record, index) => {
-                const obj = {
-                    children: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('Evaluation')&&4,background:form.getFieldValue('Col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('Evaluation')}</span>,
-                    props: { colSpan: 5 },
-                };
-                return obj;
+                    const evaluationArr = !isClears && form.getFieldValue('Evaluation') && form.getFieldValue('Evaluation').split(';')
+                    let evaluation1, evaluation2, evaluation3;
+                    if (evaluationArr) {
+                        evaluation1 = evaluationArr[0];
+                        evaluation2 = evaluationArr[1];
+                        evaluation3 = evaluationArr[2];
+                    }
+                    const obj = {
+                        children: <ol style={{ textAlign: 'left' }}>
+                            <li style={{ lineHeight: '24px', margin: 4 }}> <span style={{ color: '#fff', padding: evaluation1 && 4, background: col1&&col1[0] == 1 ? '#73d13d' : '#ff4d4f', }}>{evaluation1}</span></li>
+                            <li style={{ lineHeight: '24px', margin: 4 }}> <span style={{ color: '#fff', padding: evaluation2 && 4, background: col1&&col1[1] == 1 ? '#73d13d' : '#ff4d4f', }}>{evaluation2}</span></li>
+                            <li style={{ lineHeight: '24px', margin: 4 }}> <span style={{ color: '#fff', padding: evaluation3 && 4, background: col1&&col1[2] == 1 ? '#73d13d' : '#ff4d4f', }}>{evaluation3}</span> </li>
+                        </ol>,
+                        props: { colSpan: 5 },
+                    };
+                    return obj;
             }
 
 
@@ -462,7 +476,7 @@ const Index = (props) => {
             }
         },
         {
-            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('RelativeDeviation')&&4,background:form.getFieldValue('Col1')==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('RelativeDeviation')}</span>,
+            title: <span style={{color:'#fff',padding:!isClears&&form.getFieldValue('RelativeDeviation')&&4,background:col1&&col1[0]==1? '#73d13d':'#ff4d4f'}}>{!isClears && form.getFieldValue('RelativeDeviation')}</span>,
             align: 'center',
             render: (text, record, index) => {
                 const obj = {

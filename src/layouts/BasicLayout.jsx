@@ -63,7 +63,7 @@ class BasicLayout extends Component {
     window.addEventListener('resize', this.onWindowResize)
     const  token = Cookie.get(config.cookieName);
     const  tokenFlag =  token&& token!='null' && token!= 'undefined'&& token!= '';
-    const { dispatch } = this.props;
+    const { dispatch , location:{pathname} ,} = this.props;
     if(!tokenFlag){return}
     dispatch({
       type: 'global/getSystemConfigInfo',
@@ -72,6 +72,9 @@ class BasicLayout extends Component {
     dispatch({
       type: 'user/fetchCurrent',
       payload: {},
+      callback:(menu)=>{
+        console.log(menu,'菜单')
+      }
     });
     dispatch({
       type: 'global/updateState',
@@ -93,6 +96,7 @@ class BasicLayout extends Component {
       window._AMapSecurityConfig = {
         securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
       }
+    
   }
 
   onWindowResize = () => {
@@ -251,9 +255,8 @@ class BasicLayout extends Component {
         type: 'global/changeLayoutCollapsed',
         payload,
       });
-
     const menuDataRender = list => {
-      let menuList = currentMenu;
+      let menuList = currentMenu; 
       // 如果只有一个，平铺展示子菜单
       if (currentMenu && currentMenu.length === 1) {
         menuList = currentMenu[0].children.map(item => ({

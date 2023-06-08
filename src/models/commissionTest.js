@@ -13,6 +13,7 @@ export default Model.extend({
     state: {
         manufacturerList: [],
         pollutantTypeList: [],
+        pollutantTypeList2:[],
         systemModelNameList:[],
     },
     effects: {
@@ -29,7 +30,7 @@ export default Model.extend({
 
             const result = yield call(services.GetPollutantById, payload);
             if (result.IsSuccess) {
-                yield update({ pollutantTypeList: result.Datas ? result.Datas : [] })
+                payload.type==1?    yield update({ pollutantTypeList2: result.Datas ? result.Datas : [] }) :  yield update({ pollutantTypeList: result.Datas ? result.Datas : [] }) 
             } else {
                 message.error(result.Message)
             }

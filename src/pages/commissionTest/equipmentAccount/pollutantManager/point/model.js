@@ -93,8 +93,8 @@ export default Model.extend({
     *addOrUpdateTestPoint({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.AddOrUpdateTestPoint, { ...payload });
       if (result.IsSuccess) {
-        message.success(result.IsSuccess)
-        callback(result.Datas)
+        message.success(result.Message)
+        callback()
       } else {
         message.error(result.Message)
       }

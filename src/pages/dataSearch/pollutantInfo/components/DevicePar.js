@@ -259,7 +259,7 @@ const Index = (props) => {
          </Button> 
       </Form.Item>
   </Form>
-  <div style={{color:'#f5222d',paddingTop:12,fontSize:14}}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写异常小时数记录电子表单。
+  <div style={{color:'#f5222d',fontSize:14}}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写异常小时数记录电子表单。
 </div>
   </>
   }

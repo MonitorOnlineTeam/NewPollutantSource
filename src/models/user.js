@@ -107,6 +107,7 @@ export default Model.extend({
               menuDescList: filterDescList.map(item => item.desc.replace("ReactPD", ""))
             },
           });
+          _&&_.callback&& _.callback(cMenu)
         } else {
           // message.info('菜单获取失败，请联系系统管理员！');
         }
