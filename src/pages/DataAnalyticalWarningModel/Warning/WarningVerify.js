@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-07 10:50:48
+ * @Last Modified time: 2023-06-09 11:05:52
  * @Description：报警核实详情
  */
 
@@ -15,6 +15,7 @@ import { RollbackOutlined } from '@ant-design/icons';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import ImageView from '@/components/ImageView';
 import ModelChart from './components/ModelChart';
+import ModelTable from './components/ModelTable';
 
 const chartData = {
   title: 'O2范围(19.00~21.50)%',
@@ -158,6 +159,10 @@ const WarningVerify = props => {
   const [warningInfo, setWarningInfo] = useState({});
   const [fileList, setFileList] = useState([]);
   const [modelChartDatas, setModelChartDatas] = useState([]);
+  const [modelTableDatas, setModelTableDatas] = useState({
+    Column: [],
+    Data: [],
+  });
   const [modelDescribe, setModelDescribe] = useState();
 
   useEffect(() => {
@@ -174,15 +179,17 @@ const WarningVerify = props => {
       },
       callback: res => {
         setWarningInfo(res);
-        let _fileList = res.CheckedMaterial.map((item, index) => {
-          return {
-            uid: index,
-            index: index,
-            status: 'done',
-            url: '/wwwroot' + item.FilePath,
-          };
-        });
-
+        let _fileList = [];
+        if(res.CheckedMaterial && res.CheckedMaterial.length) {
+          _fileList = res.CheckedMaterial.map((item, index) => {
+            return {
+              uid: index,
+              index: index,
+              status: 'done',
+              url: '/wwwroot' + item.FilePath,
+            };
+          });
+        }
         setFileList(_fileList);
       },
     });
@@ -194,14 +201,21 @@ const WarningVerify = props => {
         ID: warningId,
       },
       callback: res => {
-        setModelChartDatas(res.chartData);
+        if (res.chartData) {
+          setModelChartDatas(res.chartData);
+        } else {
+          setModelTableDatas({
+            Column: res.Column,
+            Data: res.Data,
+          });
+        }
         setModelDescribe(res.describe);
       },
     });
   };
 
   return (
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper titles=" / 报警核实">
       <div className={styles.WarningVerifyWrapper}>
         <Card
           title="报警详情"
@@ -234,15 +248,29 @@ const WarningVerify = props => {
           {modelDescribe ? (
             <>
               <p>{modelDescribe}</p>
-              <Row className={styles.chartWrapper}>
-                {modelChartDatas.map((item, index) => {
-                  return (
-                    <Col span={8}>
-                      <ModelChart chartData={item} color={COLOR[index]} />
-                    </Col>
-                  );
-                })}
-              </Row>
+
+              {/* 图表模型 */}
+              {modelChartDatas.length ? (
+                <Row className={styles.chartWrapper}>
+                  {modelChartDatas.map((item, index) => {
+                    return (
+                      <Col span={8}>
+                        <ModelChart chartData={item} color={COLOR[index]} />
+                      </Col>
+                    );
+                  })}
+                </Row>
+              ) : (
+                ''
+              )}
+              {/* 表格模型 */}
+              {modelTableDatas.Column.length ? (
+                <Row className={styles.chartWrapper} style={{ height: 'auto' }}>
+                  <ModelTable tableData={modelTableDatas} />
+                </Row>
+              ) : (
+                ''
+              )}
             </>
           ) : (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
