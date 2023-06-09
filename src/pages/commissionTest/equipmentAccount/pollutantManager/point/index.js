@@ -47,6 +47,7 @@ const FormItem = Form.Item;
   routerConfig: autoForm.routerConfig,
   pointDataWhere: commissionTestPoint.pointDataWhere,
   loadingAddEditConfirm: loading.effects['commissionTestPoint/addOrUpdateTestPoint'],
+  getFormDataLoading: loading.effects['autoForm/getFormData'],
   configInfo: global.configInfo,
 }))
 @Form.create()
@@ -121,18 +122,23 @@ export default class Index extends Component {
       isEdit: true,
       selectedPointCode: pointCode,
     });
-    const echoData = {}
-    for(const key in row){
-      const attr = key.replaceAll('dbo.T_Bas_TestCommonPoint.','')
-      echoData[attr] = row[key]
-    } 
-    this.setState({ thirdParty:echoData.ReferenceMethodSource == 2 ? false : true   });
-    form.setFieldsValue({
-      ...echoData,
-      InstallationTime: echoData.InstallationTime && moment(echoData.InstallationTime), 
-      BeginTime: echoData.BeginTime && moment(echoData.BeginTime),
-      EndTime: echoData.EndTime && moment(echoData.EndTime),
-     })
+    dispatch({
+      type: 'autoForm/getFormData',
+      payload: {
+          configId: 'TestPoint',
+          'dbo.T_Bas_TestCommonPoint.ID': pointCode,
+      },
+      callback:(echoData)=>{
+        this.setState({ thirdParty:echoData.ReferenceMethodSource == '2' ? false : true   });
+        form.setFieldsValue({
+          ...echoData,
+          InstallationTime: echoData.InstallationTime && moment(echoData.InstallationTime), 
+          BeginTime: echoData.BeginTime && moment(echoData.BeginTime),
+          EndTime: echoData.EndTime && moment(echoData.EndTime),
+         })
+      }
+  })
+
   }
   savePointSubmitForm = () => {  //保存监测点 确认
     const { form, dispatch, pointDataWhere, } = this.props;
@@ -163,7 +169,7 @@ export default class Index extends Component {
     })
   }
   render() {
-    const { searchConfigItems, searchForm, tableInfo, dispatch, pointDataWhere, loadingAddEditConfirm, configInfo, } = this.props;
+    const { searchConfigItems, searchForm, tableInfo, dispatch, pointDataWhere, loadingAddEditConfirm,getFormDataLoading, configInfo, } = this.props;
     const { location: { query: { targetName, targetId } } } = this.props;
     const { isEdit, thirdParty } = this.state;
     const noDelFlag = configInfo && configInfo.DeleteTestUser == 0 ? true : false;
@@ -252,7 +258,7 @@ export default class Index extends Component {
           onOk={this.savePointSubmitForm.bind(this)}
           onCancel={() => { this.setState({ visible: false }) }}
           width={'80%'}
-          confirmLoading={loadingAddEditConfirm}
+          confirmLoading={loadingAddEditConfirm || getFormDataLoading}
           destroyOnClose
           className={styles.formModalSty}
           bodyStyle={{ paddingBottom: 0 }}>
@@ -267,6 +273,7 @@ export default class Index extends Component {
                       isModal
                       isSearchParams
                     />               */}
+          <Spin spinning={getFormDataLoading}>
           <Form>
             <Row>
             <Col span={12}>
@@ -412,6 +419,7 @@ export default class Index extends Component {
             </Col>
             </Row>
           </Form>
+          </Spin>
         </Modal>
         <Modal
           title={'设备管理'}

@@ -421,7 +421,7 @@ export default Model.extend({
       }
     },
 
-    *getFormData({ payload }, { call, select, update, put }) {
+    *getFormData({ payload, callback }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
       const result = yield call(services.getFormData, { ...payload });
       if (result.IsSuccess && result.Datas.length) {
@@ -431,6 +431,7 @@ export default Model.extend({
             [payload.configId]: result.Datas[0],
           },
         });
+        callback&&callback(result.Datas[0]);
       } else {
         message.error(result.Message);
       }
