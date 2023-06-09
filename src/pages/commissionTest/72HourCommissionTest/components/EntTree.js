@@ -140,7 +140,7 @@ const Index = (props) => {
             initialValues={{
               Status:isQuery? 2 :1,
             }}
-            className={styles["ant-advanced-search-form"]}
+            className={styles["tree-search-form"]}
             onValuesChange={onValuesChange}
 
         >

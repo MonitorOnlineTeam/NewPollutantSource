@@ -62,7 +62,18 @@ const Model = {
         } else {
           defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
         }
-
+        const meunArr = [];
+        const meunData = (data) => {
+          if (data?.length>0) {
+            data.map(item => {
+              meunArr.push(item.path)
+              meunData(item.children)
+            })
+          }
+          return meunArr
+        }
+        const meunList = meunData(response.Datas.MenuDatas)
+        sessionStorage.setItem('menuDatas',meunList?.length>0? JSON.stringify(meunList) : '')
         delete response.Datas.MenuDatas;
         delete response.Datas.Ticket;
         delete response.Datas.DepIds;

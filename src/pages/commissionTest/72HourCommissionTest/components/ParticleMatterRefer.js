@@ -615,7 +615,7 @@ const Index = (props) => {
         return <>
             <Row gutter={36}>
                 <Col span={recordType == 1 ? conversionVal == 1 ? 6 : 8 : 24}>
-                    <Form.Item className={styles.reqSty} label="当前大气压" name="Atmos" rules={[{ required: isReg, message: '' }]}>
+                    <Form.Item className={styles.reqSty} label="当地大气压" name="Atmos" rules={[{ required: isReg, message: '' }]}>
                         <Input placeholder='请输入' allowClear suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
                     </Form.Item>
                 </Col>

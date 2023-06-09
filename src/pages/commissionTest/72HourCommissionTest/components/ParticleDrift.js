@@ -97,6 +97,8 @@ const Index = (props) => {
 
                     form.setFieldsValue({
                         ...res.MainTable,
+                        MinRange: res.MainTable.MinRange? Number(res.MainTable.MinRange) : undefined,
+                        MaxRange: res.MainTable.MaxRange? Number(res.MainTable.MaxRange) : undefined,
                     })
 
                     if (res.ChildTable) {

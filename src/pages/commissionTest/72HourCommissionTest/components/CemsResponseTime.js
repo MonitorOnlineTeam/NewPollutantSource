@@ -133,6 +133,8 @@ const Index = (props) => {
                         ...res.MainTable,
                         PollutantCode: pollCode,
                         PollutantName: res.MainTable.PollutantName,
+                        MinRange: res.MainTable.MinRange? Number(res.MainTable.MinRange)  : undefined,
+                        MaxRange: res.MainTable.MaxRange? Number(res.MainTable.MaxRange) : undefined,
                     })
 
 
@@ -499,7 +501,7 @@ const Index = (props) => {
                     AddType: type,
                     MainTable: {
                         ...mainValue,
-                        Range: `${form.getFieldValue('MinRange') ? form.getFieldValue('MinRange') : ''},${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : ''}`,
+                        Range: `${form.getFieldValue('MinRange') || form.getFieldValue('MinRange')==0 ? form.getFieldValue('MinRange') : ''},${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : ''}`,
                         PointId: pointId,
                         PollutantCode: pollutantCode,
                         // EvaluationBasis: form.getFieldValue('EvaluationBasis'),

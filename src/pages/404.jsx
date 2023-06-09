@@ -9,7 +9,7 @@ const NoFoundPage = () => (
     title="404"
     subTitle="Sorry, the page you visited does not exist."
     extra={
-      <Button type="primary" onClick={() => router.push('/')}>
+      <Button type="primary" onClick={() => router.push('/newestHome')}>
         Back Home
       </Button>
     }

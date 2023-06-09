@@ -11,7 +11,7 @@ import config from '@/config';
 import Item from 'antd/lib/list/Item';
 import Cookie from 'js-cookie';
 import Title from 'antd/lib/typography/Title';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import { Tabs, Dropdown, Menu, message } from 'antd';
 import PageLoading from '@/components/PageLoading'
 import _ from 'lodash'
@@ -59,12 +59,65 @@ class BasicLayout extends Component {
     });
   }
 
+  menuPermissions = () => {
+    const { dispatch, location: { pathname }, } = this.props;
+    let meunList = sessionStorage.getItem('menuDatas')
+    const menuComparison = (meunData) => {
+      if (meunData.includes(pathname)) {
+        console.log('路由存在')
+        return;
+      } else {
+        const regeMatch = pathname.match(/TestEnterprise/); //调试服务autoForm详情页面
+        if (regeMatch?.length > 0) {
+          console.log(regeMatch)
+          const meunStr = JSON.stringify(meunData)
+          if (new RegExp(regeMatch[0]).test(meunStr)) {
+            console.log('父组件存在这个路由')
+            return;
+          } else {
+            router.push('/404')
+          }
+
+        } else {
+          router.push('/404')
+        }
+      }
+    }
+
+    if (meunList?.length > 0) {
+      menuComparison(meunList)
+    } else {
+      dispatch({
+        type: 'user/fetchCurrent',
+        payload: {},
+        callback: (menu) => {
+          const meunArr = [];
+          const meunData = (data) => {
+            if (data?.length > 0) {
+              data.map(item => {
+                meunArr.push(item.path)
+                meunData(item.children)
+              })
+            }
+            return meunArr
+          }
+          meunList = meunData(menu)
+          if (meunList?.length > 0) {
+
+          }
+        }
+      });
+    }
+  }
+  componentWillMount() {
+    // this.menuPermissions()
+  }
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize)
-    const  token = Cookie.get(config.cookieName);
-    const  tokenFlag =  token&& token!='null' && token!= 'undefined'&& token!= '';
-    const { dispatch , location:{pathname} ,} = this.props;
-    if(!tokenFlag){return}
+    const token = Cookie.get(config.cookieName);
+    const tokenFlag = token && token != 'null' && token != 'undefined' && token != '';
+    const { dispatch, } = this.props;
+    if (!tokenFlag) { return }
     dispatch({
       type: 'global/getSystemConfigInfo',
       payload: {},
@@ -72,9 +125,6 @@ class BasicLayout extends Component {
     dispatch({
       type: 'user/fetchCurrent',
       payload: {},
-      callback:(menu)=>{
-        console.log(menu,'菜单')
-      }
     });
     dispatch({
       type: 'global/updateState',
@@ -89,14 +139,15 @@ class BasicLayout extends Component {
       contentElement.style.margin = '8px'
     }
 
-    this.props.dispatch({  
-      type: 'autoForm/getRegions', 
-      payload: {  PointMark: '2', RegionCode: ''} }); //获取行政区列表
+    this.props.dispatch({
+      type: 'autoForm/getRegions',
+      payload: { PointMark: '2', RegionCode: '' }
+    }); //获取行政区列表
 
-      window._AMapSecurityConfig = {
-        securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
-      }
-    
+    window._AMapSecurityConfig = {
+      securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
+    }
+
   }
 
   onWindowResize = () => {
@@ -256,7 +307,7 @@ class BasicLayout extends Component {
         payload,
       });
     const menuDataRender = list => {
-      let menuList = currentMenu; 
+      let menuList = currentMenu;
       // 如果只有一个，平铺展示子菜单
       if (currentMenu && currentMenu.length === 1) {
         menuList = currentMenu[0].children.map(item => ({
@@ -329,7 +380,7 @@ class BasicLayout extends Component {
             },
             ...routers,
           ]
-        }
+          }
           footerRender={() => <div></div>}
           menuDataRender={menuDataRender}
           // formatMessage={formatMessage}

@@ -62,7 +62,6 @@ const Index = (props) => {
   return (
     <div  className={styles.pollutantQuerySty}>
     <BreadcrumbWrapper>
-  <Card>
     <Tabs tabPosition='left'>
           <TabPane tab="企业信息" key="1">
           <EntInfo props/>
@@ -80,7 +79,6 @@ const Index = (props) => {
             <ReferenceInstruList props filteredHandle={filteredHandle}/>
           </TabPane>
         </Tabs>
-   </Card>
    </BreadcrumbWrapper>
 
 
