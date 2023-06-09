@@ -84,9 +84,9 @@ export default Model.extend({
       // });
     },
     *fetchCurrent(_, { call, put }) {
-      const currentUser = Cookie.get('currentUser');
+      let currentUser = Cookie.get('currentUser');
       if (currentUser) {
-        const currentUser = JSON.parse(Cookie.get('currentUser'));
+        currentUser = JSON.parse(currentUser);
 
         const response = yield call(getMenuData);
         // ;

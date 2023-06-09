@@ -14,14 +14,22 @@ const ModelChart = props => {
   console.log('chartData', chartData);
   useEffect(() => {}, []);
 
-  //
-  const loadData = () => {};
-
   const getOption = () => {
     const { date, data, pollutantName, standardUpper, standardLower, max, min } = chartData.data[
       legendIndex
     ];
 
+    let seriesMarkLine = [];
+    if (standardLower !== null) {
+      seriesMarkLine.push({
+        yAxis: standardLower,
+      });
+    }
+    if (standardUpper !== null) {
+      seriesMarkLine.push({
+        yAxis: standardUpper,
+      });
+    }
     let xAxisData = date.map(item => moment(item).format('MM-DD HH:mm'));
     return {
       color: color,
@@ -75,19 +83,7 @@ const ModelChart = props => {
           // smooth: true,
           markLine: {
             silent: true,
-            data: [
-              {
-                yAxis: standardUpper,
-              },
-              {
-                yAxis: standardLower,
-                // label: {
-                //   normal: {
-                //     formatter: `200`, // 基线名称
-                //   },
-                // },
-              },
-            ],
+            data: seriesMarkLine,
           },
         },
         // {
@@ -127,9 +123,9 @@ const ModelChart = props => {
     setLegendIndex(value);
   };
 
-  const onEvents = {
-    legendselectchanged: onChartLegendChange,
-  };
+  // const onEvents = {
+  //   legendselectchanged: onChartLegendChange,
+  // };
 
   return (
     <div className={styles.chartBox}>
@@ -137,7 +133,7 @@ const ModelChart = props => {
         option={getOption()}
         lazyUpdate
         style={{ height: '100%', width: '100%' }}
-        onEvents={onEvents}
+        // onEvents={onEvents}
       />
       <div className={styles.legendBox}>
         {chartData.data.map((item, index) => {
