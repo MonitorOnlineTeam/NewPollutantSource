@@ -61,18 +61,19 @@ class BasicLayout extends Component {
 
   menuPermissions = () => {
     const { dispatch, location: { pathname }, } = this.props;
-    let meunList = sessionStorage.getItem('menuDatas')
+    
+
     const menuComparison = (meunData) => {
       if (meunData.includes(pathname)) {
         console.log('路由存在')
         return;
       } else {
-        const regeMatch = pathname.match(/TestEnterprise/); //调试服务autoForm详情页面
+        const regeMatch = pathname.match(/TestEnterprise/) || pathname.match(/AEnterpriseTest/); //autoForm详情页面
+        console.log(regeMatch)
         if (regeMatch?.length > 0) {
-          console.log(regeMatch)
           const meunStr = JSON.stringify(meunData)
           if (new RegExp(regeMatch[0]).test(meunStr)) {
-            console.log('父组件存在这个路由')
+            console.log('存在上级页面')
             return;
           } else {
             router.push('/404')
@@ -83,7 +84,7 @@ class BasicLayout extends Component {
         }
       }
     }
-
+    let meunList = sessionStorage.getItem('menuDatas') ? JSON.parse(sessionStorage.getItem('menuDatas')) : []
     if (meunList?.length > 0) {
       menuComparison(meunList)
     } else {
@@ -110,7 +111,7 @@ class BasicLayout extends Component {
     }
   }
   componentWillMount() {
-    // this.menuPermissions()
+    this.menuPermissions()
   }
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize)
