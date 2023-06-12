@@ -230,6 +230,7 @@ const Index = (props) => {
     // const selectData = firstLevelList.filter(item => item.type == record.FirstLevelID)
     // selectData[0] && setSecondLevelList(selectData[0].children) //二级类别下拉列表赋值
     form2.resetFields();
+    setFilesList([])
     if(record.FileList&&record.FileList[0]){ //文件列表
       const fileList =[]
       record.FileList.map(item=>{

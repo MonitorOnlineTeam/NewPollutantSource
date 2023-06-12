@@ -61,24 +61,41 @@ class BasicLayout extends Component {
 
   menuPermissions = () => {
     const { dispatch, location: { pathname }, } = this.props;
-    
+    const mateObj = {
+      'noticeManger/detail':'/systemManger/noticeManger',
+      '/problemManger/detail':'/systemManger/problemManger',
+      'equipmentAccount/point':'/commissionTest/equipmentAccount/pollutantManager/TestEnterprise',
+    }
 
     const menuComparison = (meunData) => {
+      console.log(meunData,pathname)
+      if(!pathname || pathname=='/'){
+          return
+      } 
       if (meunData.includes(pathname)) {
+        // alert('路由存在')
         console.log('路由存在')
         return;
       } else {
-        const regeMatch = pathname.match(/TestEnterprise/) || pathname.match(/AEnterpriseTest/); //autoForm详情页面
-        console.log(regeMatch)
-        if (regeMatch?.length > 0) {
+        const autoFormDetailRegeMatch = pathname.match(/TestEnterprise/) || pathname.match(/AEnterpriseTest/) //autoForm详情 存在上级页面
+        const subPagesRegeMatch =  pathname.match(/equipmentAccount\/point/) || pathname.match(/noticeManger\/detail/) ; //存在上级页面
+
+        if (autoFormDetailRegeMatch?.length > 0) {
           const meunStr = JSON.stringify(meunData)
-          if (new RegExp(regeMatch[0]).test(meunStr)) {
-            console.log('存在上级页面')
+          if (new RegExp(autoFormDetailRegeMatch[0]).test(meunStr)) {
+            alert('autoFormDetail  -  存在上级页面')
             return;
           } else {
             router.push('/404')
           }
 
+        }else if(subPagesRegeMatch?.length > 0 ){
+          if (meunData.includes(mateObj[subPagesRegeMatch[0]])) {
+            alert('子页面  -  存在上级页面')
+            return;
+          } else {
+            router.push('/404')
+          }
         } else {
           router.push('/404')
         }
@@ -104,14 +121,14 @@ class BasicLayout extends Component {
           }
           meunList = meunData(menu)
           if (meunList?.length > 0) {
-
+            menuComparison(meunList)
           }
         }
       });
     }
   }
   componentWillMount() {
-    this.menuPermissions()
+    // this.menuPermissions()
   }
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize)

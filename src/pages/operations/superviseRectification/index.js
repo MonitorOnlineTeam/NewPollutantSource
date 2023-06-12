@@ -416,7 +416,7 @@ const Index = (props) => {
         visible={detailVisible}
         title={'详情'}
         footer={null}
-        width={'90%'}
+        wrapClassName='spreadOverModal'
         className={styles.fromModal}
         onCancel={() => { setDetailVisible(false) }}
         destroyOnClose

@@ -167,9 +167,9 @@ const Index = (props) => {
                     form.setFieldsValue({
                         ...res.MainTable,
                         PollutantCode: pollCode,
-                        StandardGasName0: res.MainTable.StandardGasName0? res.MainTable.StandardGasName0 : 'NOx' ,
-                        StandardGasName1: res.MainTable.StandardGasName1? res.MainTable.StandardGasName1 : 'NOx' ,
-                        StandardGasName2: res.MainTable.StandardGasName2? res.MainTable.StandardGasName2 : 'NOx' ,
+                        StandardGasName0: res.MainTable.StandardGasName0 ? res.MainTable.StandardGasName0 : 'NOx',
+                        StandardGasName1: res.MainTable.StandardGasName1 ? res.MainTable.StandardGasName1 : 'NOx',
+                        StandardGasName2: res.MainTable.StandardGasName2 ? res.MainTable.StandardGasName2 : 'NOx',
                     })
 
 
@@ -393,8 +393,8 @@ const Index = (props) => {
                 }
                 if (index >= 2) {
                     if (pollutantCode === '513') {
-                        obj.children = <Form.Item name={`StandardGasName${index - 2}`} rules={[{ required:index-2==0? isReg : false, message: '' }]}>
-                            <Select allowClear={index-2==0? false : true} placeholder='请选择'>
+                        obj.children = <Form.Item name={`StandardGasName${index - 2}`} rules={[{ required: index - 2 == 0 ? isReg : false, message: '' }]}>
+                            <Select allowClear={index - 2 == 0 ? false : true} placeholder='请选择'>
                                 <Option value='NOx'>NOx</Option>
                                 <Option value='NO'>NO</Option>
                                 <Option value='NO₂'>NO2 </Option>
@@ -429,8 +429,7 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index >= 2) {
-                    if (pollutantCode === '513') 
-                    obj.children = <Form.Item className={styles.reqSty} name={`GuaranteedValue${index - 2}`} rules={[{ required:pollutantCode === '513'&&index-2>0? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`GuaranteedValue${index - 2}`} rules={[{ required: index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
                 }
                 return obj;
             }
@@ -452,7 +451,7 @@ const Index = (props) => {
                     obj.children = '采样前'
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`BeforeCollection${index - 2}`} rules={[{ required: pollutantCode === '513'&&index-2>0? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`BeforeCollection${index - 2}`} rules={[{ required: index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -475,7 +474,7 @@ const Index = (props) => {
 
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`AfterCollection${index - 2}`} rules={[{ required: pollutantCode === '513'&&index-2>0? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`AfterCollection${index - 2}`} rules={[{ required:  index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -496,7 +495,7 @@ const Index = (props) => {
                     obj.children = '采样前'
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.calculaSty} name={`BeforeRelativeCollection${index - 2}`} rules={[{ required: pollutantCode === '513'&&index-2>0? false : isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>
+                    obj.children = <Form.Item className={styles.calculaSty} name={`BeforeRelativeCollection${index - 2}`} rules={[{ required:  index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>
                 }
                 return obj;
             }
@@ -517,7 +516,7 @@ const Index = (props) => {
 
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.calculaSty} name={`AfterRelativeCollection${index - 2}`} rules={[{ required: pollutantCode === '513'&&index-2>0? false : isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>
+                    obj.children = <Form.Item className={styles.calculaSty} name={`AfterRelativeCollection${index - 2}`} rules={[{ required:  index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>
 
                 }
                 return obj;

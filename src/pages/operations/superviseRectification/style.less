@@ -25,8 +25,7 @@
 
     .fromModal  :global {
       .ant-modal-body{
-        padding: 10px  70px 10px  90px;
-        height: calc(100vh - 250px);
+        padding: 10px  80px;
         overflow-y: auto;
       }
 
@@ -47,7 +46,9 @@
         .ant-form-item-label{
           width: 80px;
        }
-
+       .ant-form-item-control-input,.ant-spin-spinning{
+        width:calc(100% - 20px) !important;
+      }
       }
 
       .deviceInfoSty{
@@ -101,7 +102,7 @@
           }
           .impTableSty,.commonlyTableSty,.summaryTableSty{
             .ant-table.ant-table-bordered > .ant-table-container{
-              border-top: 0;
+              border-bottom: 0;
             } 
           }
           .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
@@ -112,10 +113,14 @@
         .detail{ //详情
           .ant-form-item{
             margin-bottom: 4px;
+            .ant-form-item-control-input,.ant-spin-spinning{
+              width:calc(100% - 12px) !important;
+            }
           }
          .ant-table-tbody .ant-table-cell-fix-right{
             background-color: #fff;
           }
+
         }
     } 
 

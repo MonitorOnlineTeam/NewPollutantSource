@@ -195,7 +195,7 @@ const Index = (props) => {
         align: 'center',
         dataIndex:'SerialNum',
         key: 'SerialNum',
-        width: 100,
+        width:60,
         render: (text, record, index) => {
           return rowSpanFun(text,record.count)
         }
@@ -205,7 +205,7 @@ const Index = (props) => {
         dataIndex: 'ContentItem',
         key: 'ContentItem',
         align: 'center',
-        width: 380,
+        width: 'auto',
         render: (text, record, index) => {
           return rowSpanFun(<div style={{ textAlign: "left" }}>{text}</div>,record.count)
         }
@@ -215,6 +215,7 @@ const Index = (props) => {
         dataIndex: 'InspectorProblem',
         key: 'InspectorProblem',
         align: 'center',
+        width: 'auto',
         render: (text, record) => {
           return <div style={{ textAlign: "left" }}>{text}</div>
         },
@@ -224,7 +225,7 @@ const Index = (props) => {
         dataIndex: 'InspectorAttachment',
         key: 'InspectorAttachment',
         align: 'center',
-        width: 120,
+        width: 'auto',
         render: (text, record) => {
           const attachmentDataSource = getAttachmentDataSource(text);
           return <div>
@@ -237,6 +238,7 @@ const Index = (props) => {
         dataIndex: 'RectificationDescribe',
         key: 'RectificationDescribe',
         align: 'center',
+        width: 'auto',
         render: (text, record) => {
           return <div style={{ textAlign: "left" }}>{text}</div>
         },
@@ -246,7 +248,7 @@ const Index = (props) => {
         dataIndex: 'RectificationAttachment',
         key: 'RectificationAttachment',
         align: 'center',
-        width: 120,
+        width: 'auto',
         render: (text, record) => {
           const attachmentDataSource = getAttachmentDataSource(text);
           return <div>
@@ -259,30 +261,30 @@ const Index = (props) => {
         dataIndex: 'StatusName',
         key: 'StatusName',
         align: 'center',
+        width: 90,
       },
       {
         title: '整改日期',
         dataIndex: 'RectificationDateTime',
         key: 'RectificationDateTime',
         align: 'center',
+        width: 'auto',
       },
       {
         title: <span>操作</span>,
-        
         dataIndex: 'StatusName',
         key:'StatusName',
         align: 'center',
         fixed: 'right',
-        width: 180,
+        width: 146,
         ellipsis: true,
         render: (text, record) => {
           return (
           <div>{(text == '已整改' || text == '申诉中') &&
            <>
             <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record,text == '已整改' ? 3 : 6 )} okText="是" cancelText="否">
-              <a> {text == '已整改' ? '整改通过' : '申诉通过'} </a>
+              <a style={{paddingRight:6}}> {text == '已整改' ? '整改通过' : '申诉通过'} </a>
             </Popconfirm>
-            <Divider type="vertical" />
             <a onClick={() => { reject(record, text == '已整改' ? 1 : 2) }}>
               <a> {text == '已整改' ? '整改驳回' : '申诉驳回'} </a>
             </a>
@@ -536,7 +538,7 @@ const Index = (props) => {
 
           <div className={'essentialInfoSty'}>
             <TitleComponents text='基本信息' />
-            <Row>
+            <Row style={{padding:'0 20%'}}>
               <Col span={12}>
                 <Form.Item label="企业名称" >
                   {infoList && infoList.EntName}
@@ -606,6 +608,7 @@ const Index = (props) => {
                 columns={supervisionCol(operationInfoList.PrincipleProblemList)}
                 rowClassName="editable-row"
                 pagination={false}
+                scroll={{x: 1100}}
               />}
               {operationInfoList.importanProblemList && operationInfoList.importanProblemList[0] && <Table
                 bordered
@@ -614,6 +617,7 @@ const Index = (props) => {
                 rowClassName="editable-row"
                 className="impTableSty"
                 pagination={false}
+                scroll={{x: 1100}}
               />}
               {operationInfoList.CommonlyProblemList && operationInfoList.CommonlyProblemList[0] && <> <Table
                 bordered
@@ -622,6 +626,7 @@ const Index = (props) => {
                 rowClassName="editable-row"
                 pagination={false}
                 className={'commonlyTableSty'}
+                scroll={{x: 1100}}
               /></>}
               {/* <Table
                 bordered

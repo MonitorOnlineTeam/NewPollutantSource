@@ -1217,6 +1217,7 @@ const handleSystemAdd = () => { //添加系统信息
                 <Form.Item
                   name={`${dataIndex}`}
                   style={{ margin: 0 }}
+                  rules={ [ { required: dataIndex === 'CEMSNum' , message: '请输入CEMS编号',   }, ]}
                 >
                   {inputNode}
                 </Form.Item>
@@ -1307,6 +1308,7 @@ const handleSystemAdd = () => { //添加系统信息
                 rowClassName="editable-row"
                 scroll={{ y: 'auto' }}
                 loading={props.cEMSSystemListLoading}
+                className={styles.systemListSty}
                 pagination={false}
               />
             </div>
