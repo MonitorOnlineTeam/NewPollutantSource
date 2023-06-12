@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-08 16:13:09
+ * @Last Modified time: 2023-06-12 09:43:44
  * @Description：报警记录
  */
 
@@ -75,6 +75,7 @@ const WarningRecord = props => {
         key: 'WarningTime',
         width: 180,
         ellipsis: true,
+        sorter: (a, b) => moment(a.WarningTime).valueOf() - moment(b.WarningTime).valueOf()
       },
       {
         title: '报警类型',
@@ -82,6 +83,13 @@ const WarningRecord = props => {
         key: 'WarningTypeName',
         width: 180,
         ellipsis: true,
+        render: (text, record) => {
+          return (
+            <Tooltip title={text}>
+              <span style={textStyle}>{text}</span>
+            </Tooltip>
+          );
+        },
       },
       {
         title: '报警内容',
