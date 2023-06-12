@@ -167,9 +167,9 @@ const Index = (props) => {
                     form.setFieldsValue({
                         ...res.MainTable,
                         PollutantCode: pollCode,
-                        StandardGasName0: res.MainTable.StandardGasName0 ? res.MainTable.StandardGasName0 : 'NOx',
-                        StandardGasName1: res.MainTable.StandardGasName1 ? res.MainTable.StandardGasName1 : 'NOx',
-                        StandardGasName2: res.MainTable.StandardGasName2 ? res.MainTable.StandardGasName2 : 'NOx',
+                        StandardGasName0: res.MainTable.StandardGasName0 ? res.MainTable.StandardGasName0 : undefined,
+                        StandardGasName1: res.MainTable.StandardGasName1 ? res.MainTable.StandardGasName1 : undefined,
+                        StandardGasName2: res.MainTable.StandardGasName2 ? res.MainTable.StandardGasName2 : undefined,
                     })
 
 
@@ -392,23 +392,21 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index >= 2) {
-                    if (pollutantCode === '513') {
+                    const pollutantNames = form.getFieldValue('PollutantName')
+                    const pollOptions = pollutantNames === 'NOx'? ['NOx','NO','NO₂'] :   [pollutantNames]
+                    // if (pollutantNames === 'NOx') {
                         obj.children = <Form.Item name={`StandardGasName${index - 2}`} rules={[{ required: index - 2 == 0 ? isReg : false, message: '' }]}>
                             <Select allowClear={index - 2 == 0 ? false : true} placeholder='请选择'>
-                                <Option value='NOx'>NOx</Option>
-                                <Option value='NO'>NO</Option>
-                                <Option value='NO₂'>NO2 </Option>
+                                {pollOptions.map(item=> <Option value={item}>{item}</Option>)}
                             </Select>
                         </Form.Item>
-                    } else {
-                        const pollName = pollOptions.filter(item => item.value === pollutantCode)?.[0]?.label
-                        form.setFieldsValue({ [`StandardGasName${index - 2}`]: pollName })
-                        obj.children = <span>
-                            <Form.Item name={`StandardGasName${index - 2}`} hidden></Form.Item>
-                            {form.getFieldValue(`StandardGasName${index - 2}`)}
-                        </span>
-                    }
-
+                    // } else {
+                        // form.setFieldsValue({ [`StandardGasName${index - 2}`]: pollutantNames })
+                        // obj.children = <span>
+                        //     <Form.Item name={`StandardGasName${index - 2}`} hidden></Form.Item>
+                        //     {form.getFieldValue(`StandardGasName${index - 2}`)}
+                        // </span>
+                    // }
                 }
                 return obj;
             }
