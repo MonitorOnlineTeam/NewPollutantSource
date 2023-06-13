@@ -56,14 +56,14 @@ const Index = (props) => {
   const { pointStatus } = props;
   const [imortForm] = Form.useForm();
 
-  const importContent = () => <Form form={imortForm} name="imprts_advanced_search">
-    <Form.Item name='rowVal' label='行' style={props.isPm&&{marginTop:8}}>
+  const importContent = () => <Form form={imortForm} name="imprts_advanced_search" >
+    <Form.Item name='rowVal' label='行' style={{marginBottom:8}}>
       <InputNumber mix={1}  style={{ width: '100%' }} placeholder='从第几行读取' />
     </Form.Item>
-     {!props.isPm&&<Form.Item name='colVal' label='列'>
+     <Form.Item name='colVal' label='列'   style={{marginBottom:8}}>
       <InputNumber mix={1}  style={{width: '100%'  }} placeholder='读取到第几列' />
-    </Form.Item>}
-    <Form.Item>
+    </Form.Item>
+    <Form.Item style={{marginBottom:8}}>
       <Row>
         <Upload maxCount={1} {...props.uploadProps}  >
         <Button  style={{width:'206px',marginTop:15}} icon={<UploadOutlined />}>导入</Button>
@@ -80,7 +80,7 @@ const Index = (props) => {
 
   return ( <>{!isQuery&&<div style={{ paddingBottom: 16 }}>
       {props.isImport && <Popover
-        placement="right"
+        placement="bottom"
         content={importContent()}
         trigger="click"
         visible={props.importVisible}

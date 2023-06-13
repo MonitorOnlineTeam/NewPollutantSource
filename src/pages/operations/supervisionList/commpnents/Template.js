@@ -648,7 +648,7 @@ const Index = (props) => {
         onCancel={() => { setDetailVisible(false); }}
         width='80%'
         footer={null}
-        wrapClassName='spreadOverModal'
+        wrapClassName={`spreadOverModal ${styles.detailModal}`}
       >
         <Spin spinning={detailLoading}>
        <Card
@@ -656,17 +656,17 @@ const Index = (props) => {
           <Form>
           <Row>
             <Col span={8}>
-          <Form.Item label="点位类别" name="PollutantType" >
+          <Form.Item label="点位类别" name="PollutantType" style={{marginBottom:0}}>
             <span>{inspectorTemplateView.PollutantTypeName} </span>
           </Form.Item>
           </Col>
           <Col span={8}>
-           <Form.Item label='督查表名称' name='InspectorName'>
+           <Form.Item label='督查表名称' name='InspectorName' style={{marginBottom:0}}>
            <span>{inspectorTemplateView.InspectorName} </span>
           </Form.Item>
           </Col>
           <Col span={8}>
-          <Form.Item label="生效日期" name="EffectiveDate"  >
+          <Form.Item label="生效日期" name="EffectiveDate"  style={{marginBottom:0}}>
             <span>{inspectorTemplateView.EffectiveDate} </span>
           </Form.Item>
           </Col>
@@ -675,7 +675,6 @@ const Index = (props) => {
           bordered
           dataSource={inspectorTemplateView.InspectorTypeModelList}
           columns={detailCol}
-          scroll={{ y: clientHeight - 500 }}
           pagination={false}
         />
       </Card>

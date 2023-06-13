@@ -436,7 +436,7 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: <span style={{ color: '#fff', padding: !isClears && form.getFieldValue('ZeroValue') && 4, background: form.getFieldValue('Col1') == 1 ? '#73d13d' : '#ff4d4f' }}>{!isClears && form.getFieldValue('ZeroValue')}</span>,
+                    title: <span style={{ color: '#fff', padding: !isClears && (form.getFieldValue('ZeroValue') || form.getFieldValue('ZeroValue')==0) && 4, background: form.getFieldValue('Col1') == 1 ? '#73d13d' : '#ff4d4f' }}>{!isClears && form.getFieldValue('ZeroValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {

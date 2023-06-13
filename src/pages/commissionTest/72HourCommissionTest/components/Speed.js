@@ -741,8 +741,8 @@ const Index = (props) => {
         setIsTimeReg(true)
         setTimeout(() => {
             form.validateFields().then((values) => {
+                setUploading(true);
                 const timeData = []
-
 
                 let index1, index2, dateNum;
                 if (recordType == 1) {
@@ -779,7 +779,6 @@ const Index = (props) => {
                 formData.append('firstColumn', value.colVal);
                 formData.append('PollutantCode', pollutantCode);
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
-                setUploading(true);
                 fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportDataNew', {
                     method: 'POST',
                     body: formData,

@@ -726,8 +726,8 @@ const Index = (props) => {
     const [mergeData, setMergeData] = useState([])
 
     const importOK = (value) => {
-        if (!value.rowVal) {
-            message.warning('请输入行数')
+        if (!value.rowVal || !value.colVal) {
+            message.warning('请输入行数和列数')
             return;
         }
         if (fileList.length <= 0) {
@@ -738,6 +738,7 @@ const Index = (props) => {
         setIsTimeReg(true)
         setTimeout(() => {
             form.validateFields().then((values) => {
+                setUploading(true);
                 const timeData = []
                 let i = -1;
                 Object.keys(values).map((item, index) => {
@@ -763,10 +764,9 @@ const Index = (props) => {
                     formData.append('files', file);
                 });
                 formData.append('firstRow', value.rowVal);
-                formData.append('firstColumn', 100);
+                formData.append('firstColumn', value.colVal);
                 formData.append('PollutantCode', '');
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
-                setUploading(true);
                 fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
                     method: 'POST',
                     body: formData,
