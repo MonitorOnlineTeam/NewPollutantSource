@@ -105,17 +105,17 @@ class Login extends Component {
         return;
       }
 
-      this.loginForm.validateFields(['mobile'], {}, (err, values) => {
+      this.loginForm.validateFields(['userName'], {}, (err, values) => {
         if (err) {
           reject(err);
         } else {
           const { dispatch } = this.props;
-          dispatch({
-            type: 'userLogin/getCaptcha',
-            payload: values.mobile,
-          })
-            .then(resolve)
-            .catch(reject);
+          // dispatch({
+          //   type: 'userLogin/getCaptcha',
+          //   payload: values.mobile,
+          // })
+          //   .then(resolve)
+          //   .catch(reject);
         }
       });
     });
@@ -180,6 +180,28 @@ class Login extends Component {
               onPressEnter={() =>
                 this.loginForm && this.loginForm.validateFields(this.handleSubmit)
               }
+            />
+           <Captcha
+              name="captcha"
+              placeholder={formatMessage({
+                id: 'user-login.verification-code.placeholder',
+              })}
+              countDown={120}
+              onGetCaptcha={this.onGetCaptcha}
+              getCaptchaButtonText={formatMessage({
+                id: 'user-login.form.get-captcha',
+              })}
+              getCaptchaSecondText={formatMessage({
+                id: 'user-login.captcha.second',
+              })}
+              rules={[
+                {
+                  required: true,
+                  message: formatMessage({
+                    id: 'user-login.verification-code.required',
+                  }),
+                },
+              ]}
             />
              <VerificaCode  //验证码
               name="verificaCode"

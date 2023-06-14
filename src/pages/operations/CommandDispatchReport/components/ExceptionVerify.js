@@ -37,7 +37,6 @@ class ExceptionVerify extends Component {
     }
 
     render() {
-        console.log('22222=', this.props.DataWhere1)
 
         return (
             <>

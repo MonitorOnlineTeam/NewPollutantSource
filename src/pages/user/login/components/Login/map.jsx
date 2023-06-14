@@ -52,12 +52,12 @@ export default {
     props: {
       size: 'large',
       prefix: <MailOutlined className={styles.prefixIcon} />,
-      placeholder: 'captcha',
+      placeholder: '请输入手机验证码',
     },
     rules: [
       {
         required: true,
-        message: 'Please enter Captcha!',
+        message: '请输入手机验证码',
       },
     ],
   },

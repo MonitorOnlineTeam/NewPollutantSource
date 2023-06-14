@@ -173,10 +173,11 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   getTableData = (regCode, regionLevel) => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar, query } = this.props;
+    const par = regionLevel==1? queryPar :  query && query.queryPar && JSON.parse(query.queryPar)
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar, RegionCode: regCode, regionLevel: regionLevel },
+      payload: { ...par, RegionCode: regCode, regionLevel: regionLevel },
     });
   };
 

@@ -149,7 +149,7 @@ class RegionDetails extends PureComponent {
               导出
             </Button>
             <Button onClick={() => {
-              this.props.onBack ? this.props.onBack() : router.push("/monitoring/missingData/exceptionrecord")
+              this.props.onBack ? this.props.onBack() :   history.go(-1);
             }}>
               <RollbackOutlined />
               返回

@@ -235,7 +235,7 @@ class index extends PureComponent {
         {isHomeModal&&<><Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10,marginTop:10  }} loading={exportLoading} onClick={this.exportReport}><ExportOutlined />导出</Button></>}
 
-        {!isHomeModal&&<div style={{ marginTop: 10,fontSize:14 }}>
+        {!isHomeModal&&<div style={{fontSize:14 }}>
                 
                 <label>企业列表:</label><Select
                     allowClear

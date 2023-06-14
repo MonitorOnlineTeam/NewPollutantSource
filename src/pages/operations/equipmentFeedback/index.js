@@ -375,7 +375,6 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={ columns}
-        scroll={{ y: clientHeight - 500}}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,

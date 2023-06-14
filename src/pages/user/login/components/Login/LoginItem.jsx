@@ -38,13 +38,12 @@ class WrapFormItem extends Component {
   onGetCaptcha = () => {
     const { onGetCaptcha } = this.props;
     const result = onGetCaptcha ? onGetCaptcha() : null;
-
     if (result === false) {
       return;
     }
 
     if (result instanceof Promise) {
-      result.then(this.runGetCaptchaCountDown);
+      result.then(this.runGetCaptchaCountDown());
     } else {
       this.runGetCaptchaCountDown();
     }

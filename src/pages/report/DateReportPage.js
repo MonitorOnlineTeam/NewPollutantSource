@@ -46,6 +46,7 @@ class DateReportPage extends PureComponent {
       defaultRegionCode: [],
       beginTime: moment().format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      defalutPollCode:2,
     };
     this.SELF = {
       formLayout: {
@@ -53,7 +54,7 @@ class DateReportPage extends PureComponent {
         wrapperCol: { span: 17 },
       },
       defaultSearchForm: {
-        PollutantSourceType: 1,
+        PollutantSourceType: 2,
         EntCode: '',
         ReportTime: moment(),
         airReportTime: [moment(), moment()],
@@ -72,7 +73,7 @@ class DateReportPage extends PureComponent {
     this.props.dispatch({
       type: 'report/getPollutantTypeList',
       callback: data => {
-        const defalutVal = data.Datas[0].pollutantTypeCode;
+        const defalutVal = this.state.defalutPollCode;
         this.props.dispatch({
           type: 'report/getPointReportEntAndPointList',
           payload: {
@@ -395,7 +396,7 @@ class DateReportPage extends PureComponent {
             <Form layout="" style={{ marginBottom: 20 }}>
               <Row>
                 <Col xxl={4} md={6} xs={24}>
-                  <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="报表类型" style={{ width: '100%',marginBottom:0 }}>
                     {getFieldDecorator('reportType', {
                       initialValue: 'siteDaily',
                       rules: [
@@ -427,10 +428,10 @@ class DateReportPage extends PureComponent {
                   </FormItem>
                 </Col>
                 <Col xxl={4} md={4} xs={24}>
-                  <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="类型" style={{ width: '100%',marginBottom:0 }}>
                     {getFieldDecorator('PollutantSourceType', {
                       initialValue: pollutantTypeList.length
-                        ? pollutantTypeList[0].pollutantTypeCode
+                        ? this.state.defalutPollCode
                         : undefined,
                       rules: [
                         {
@@ -441,6 +442,7 @@ class DateReportPage extends PureComponent {
                     })(
                       <SelectPollutantType
                         placeholder="请选择污染物类型"
+                        onlyShowEnt
                         onChange={value => {
                           this.props.dispatch({
                             type: 'report/updateState',
@@ -481,7 +483,7 @@ class DateReportPage extends PureComponent {
                 </Col>
                 {getFieldValue('PollutantSourceType') && (
                   <Col xxl={7} md={8} xs={24}>
-                    <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
+                    <FormItem {...formLayout} label="监控目标" style={{ width: '100%',marginBottom:0 }}>
                       {getFieldDecorator('DGIMN', {
                         initialValue: this.props.form.getFieldValue('DGIMN'),
                         rules: [
@@ -505,7 +507,7 @@ class DateReportPage extends PureComponent {
                   xs={24}
                   style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'block' : 'none' }}
                 >
-                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%',marginBottom:0 }}>
                     {getFieldDecorator('airReportTime', {
                       initialValue: defaultSearchForm.airReportTime,
                       rules: [
@@ -523,7 +525,7 @@ class DateReportPage extends PureComponent {
                   xs={24}
                   style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'none' : 'block' }}
                 >
-                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%',marginBottom:0 }}>
                     {getFieldDecorator('ReportTime', {
                       initialValue: defaultSearchForm.ReportTime,
                       rules: [
@@ -536,7 +538,7 @@ class DateReportPage extends PureComponent {
                   </FormItem>
                 </Col>
                 <Col xxl={4} md={10} xs={24}>
-                  <FormItem label="" style={{ width: '100%' }}>
+                  <FormItem label="" style={{ width: '100%',marginBottom:0 }}>
                     <Button
                       type="primary"
                       style={{ margin: '0 10px' }}
