@@ -85,8 +85,6 @@ class BasicLayout extends Component {
       '/transmissionefficiency/cityLevel':'/Intelligentanalysis/transmissionefficiency',
       '/transmissionefficiency/qutDetail':'/Intelligentanalysis/transmissionefficiency',
       '/accessStatistics/missDataSecond':'/Intelligentanalysis/accessStatistics',
-      // /accessStatistics/missDataSecond?
-      // /abnormal/cityLevel
     }
 
     const menuComparison = (meunData) => {
@@ -95,22 +93,20 @@ class BasicLayout extends Component {
           return
       } 
       if (meunData.includes(pathname)) {
-        alert('路由存在')
-        // console.log('路由存在')
+        console.log('路由存在')
         return;
       } else {                                               
         const autoFormDetailRegeMatch = pathname.match(/TestEnterprise/) || pathname.match(/AEnterpriseTest/) || pathname.match(/OperationMaintenanceEnterprise/) || pathname.match(/MaintenanceDatabase/)  || pathname.match(/OperationMaintenancePersonnel/) || pathname.match(/OperationCycle/) || pathname.match(/Storehouse/) || pathname.match(/OutputStopNew/) || 
-                                         pathname.match(/aa/) || pathname.match(/aa/) || pathname.match(/aa/)//autoForm详情 存在上级页面 通过configId匹配
+                                        pathname.match(/aa/) || pathname.match(/aa/) || pathname.match(/aa/)//autoForm详情 存在上级页面 通过configId匹配
         const subPagesRegeMatch =  pathname.match(/\/noticeManger\/detail/) || pathname.match(/\/problemManger\/detail/) || pathname.match(/\/equipmentAccount\/point/) || pathname.match(/\/TestPoint\/detail/)  || pathname.match(/\/projectManager\/AutoFormView/)  || pathname.match(/\/user\/userinfoview/) || pathname.match(/\/user\/userinfoedit/) || pathname.match(/\/equipmentFeedback\/detail/) ||
                                    pathname.match(/\/overVerifyRate\/cityLevel/) || pathname.match(/\/overVerifyRate\/pointVerifyRate/) || pathname.match(/\/missingData\/cityLevel\/ent/) || pathname.match(/\/missingData\/missDataSecond/) || pathname.match(/\/missingDataRate\/ent\/citylevel/) || pathname.match(/\/missingDataRate\/missRateDataSecond/) ||
                                    pathname.match(/\/exceptionrecord\/cityLevel/) || pathname.match(/\/exceptionrecord\/details/) ||pathname.match(/\/abnormal\/cityLevel/) || pathname.match(/\/abnormal\/details/) || pathname.match(/\/abnormalWorkStatistics\/regionDetail/) || pathname.match(/\/transmissionefficiency\/cityLevel/)  || pathname.match(/\/transmissionefficiency\/qutDetail/) ||
-                                   pathname.match(/\/accessStatistics\/missDataSecond/)
-                                   ; //存在上级页面
+                                   pathname.match(/\/accessStatistics\/missDataSecond/) ; //存在上级页面
 
         if (autoFormDetailRegeMatch?.length > 0) {
           const meunStr = JSON.stringify(meunData)
           if (new RegExp(autoFormDetailRegeMatch[0]).test(meunStr)) {
-            alert('autoFormDetail  -  存在上级页面')
+            console.log('autoFormDetail  -  存在上级页面')
             return;
           } else {
             router.push('/404')
@@ -118,7 +114,7 @@ class BasicLayout extends Component {
 
         }else if(subPagesRegeMatch?.length > 0 ){
           if (meunData.includes(mateObj[subPagesRegeMatch[0]])) {
-            alert('子页面  -  存在上级页面')
+            console.log('子页面  -  存在上级页面')
             return;
           } else {
             router.push('/404')
