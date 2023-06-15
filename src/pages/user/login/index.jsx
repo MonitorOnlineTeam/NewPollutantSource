@@ -66,8 +66,6 @@ class Login extends Component {
           ...values,
           IsAgree:isAgree,
           type,
-          // VerificationStatus:values.verificaCode,
-          // VerificationCode:
          },
         callback:isSuccess=>{
            if(!isSuccess){this.child&&this.child.current&&this.child.current.click();}  //请求错误刷新验证码
