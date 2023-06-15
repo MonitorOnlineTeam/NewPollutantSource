@@ -51,6 +51,7 @@ export default {
   Captcha: {
     props: {
       size: 'large',
+      id: 'verificationCode',
       prefix: <MailOutlined className={styles.prefixIcon} />,
       placeholder: '请输入手机验证码',
     },

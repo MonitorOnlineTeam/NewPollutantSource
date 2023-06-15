@@ -21,26 +21,6 @@ const Index = (props) => {
       halfCheckedKeys,
       node: { key, children, title },
     } = node
-    // title === '全部' ? setIsAll(true) :  setIsAll(false)
-    // if (title === '全部') {
-    //   const getKeys = (data) => {
-    //     const keys = [];
-    //     if (data.children) {
-    //       data.children.forEach(item => {
-    //         keys.push(item.key);
-    //         if (item.children) {
-    //           keys.push(...getKeys(item));
-    //         }
-    //       });
-    //     }
-    //     return keys;
-    //   }
-    //   const selectAllKey = getKeys(treeData[0])
-    //   onItemSelectAll([...selectAllKey, key], checked)
-
-    //   return;
-
-    // }
     // 勾选的是父节点
     if (children?.length > 0) {
       let keys = []

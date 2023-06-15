@@ -14,6 +14,8 @@ export default Model.extend({
     tableLoading: false,
     tableDatas2: [],
     tableLoading2: false,
+    tableDatas3: [],
+    tableLoading3: false,
     taskDetailData: [],
     taskDetailLoading: false,
     contractTableLoading: false,
@@ -48,6 +50,7 @@ export default Model.extend({
       switch (payload.functionName) {
         case 'M_GetALLOperationTask': yield update({ tableLoading: true }); break;
         case 'M_GetOperationTaskDone': yield update({ tableLoading2: true }); break;
+        case 'M_GetALLOperationTaskUnSubmited': yield update({ tableLoading3: true }); break;
         case 'M_GetOperationTaskByID': yield update({ taskDetailLoading: true }); break;
         case 'C_GetALLContractList': yield update({ contractTableLoading: true }); break;
         case 'M_OpenationTaskType': yield update({ taskTypeListLoading: true }); break;
@@ -136,6 +139,20 @@ export default Model.extend({
             message.error(result.Message); 
           }
           yield update({ tableLoading2: false })
+          break;
+          case 'M_GetALLOperationTaskUnSubmited':  //未提交 运维任务列表
+          if (result.IsSuccess) {
+            let data = [];
+            if(payload.keywords){
+               data = formatData(result.Datas).filter((item)=> item.RWMC.indexOf(payload.keywords)!=-1 || item.RWBH.indexOf(payload.keywords)!=-1 || item.RWMC.indexOf(payload.keywords)!=-1)
+              }else{
+               data = formatData(result.Datas)
+           }
+            yield update({ tableDatas3: data, })
+          } else {
+            message.error(result.Message); 
+          }
+          yield update({ tableLoading3: false })
           break;
         case 'M_GetOperationTaskByID':  //任务详情
           if (result.IsSuccess) {

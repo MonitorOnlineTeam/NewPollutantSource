@@ -17,6 +17,8 @@ export async function systemLogin(params) {
     UserPwd: params.password,
     MenuId: '99dbc722-033f-481a-932a-3c6436e17245', //子系统ID 固定  污染源在线监控
     IsAgree: params.IsAgree,
+    VerificationStatus:params.verificationCode&&1,
+    VerificationCode:params.verificationCode,
   };
   const body = Object.assign(defaults);
   const result = await post('/api/rest/PollutantSourceApi/LoginApi/Login', body);
@@ -47,7 +49,11 @@ export async function getToken(params) {
   }
   return result;
 }
-
+//手机验证
+export async function PostMessageCode(body) {
+  const result = await post('/api/rest/PollutantSourceApi/LoginApi/PostMessageCode', body);
+  return result;
+}
 // export async function fakeAccountLogin(params) {
 //   return request('/api/login/account', {
 //     method: 'POST',

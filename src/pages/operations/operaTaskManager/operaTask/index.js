@@ -36,6 +36,8 @@ const dvaPropsData = ({ loading, operaTask }) => ({
   tableLoading: operaTask.tableLoading,
   tableDatas2: operaTask.tableDatas2,
   tableLoading2: operaTask.tableLoading2,
+  tableDatas3: operaTask.tableDatas3,
+  tableLoading3: operaTask.tableLoading3,
   taskDetailData: operaTask.taskDetailData,
   taskDetailLoading: operaTask.taskDetailLoading,
   contractTableLoading: operaTask.contractTableLoading,
@@ -104,7 +106,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableLoading, tableDatas2, tableLoading2, loadingAddConfirm, loadingEditConfirm, contractTableData, contractTableAllData, taskDetailData, pointList, operaUserList, operaDeviceList, taskId,taskDetailLoading,taskTypeList,endTaskLoading,} = props;
+  const { tableDatas, tableLoading, tableDatas2, tableLoading2,  tableDatas3, tableLoading3, loadingAddConfirm, loadingEditConfirm, contractTableData, contractTableAllData, taskDetailData, pointList, operaUserList, operaDeviceList, taskId,taskDetailLoading,taskTypeList,endTaskLoading,} = props;
   useEffect(() => {
     initData();
     props.bWWebService({ //任务类别
@@ -115,13 +117,14 @@ const Index = (props) => {
   const initData = () =>{
     onFinish(1);
     onFinish2(1)
+    onFinish3(1)
   }
   const columns = [
     {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return taskType === '1' ? (index + 1) + (pageIndex - 1) * pageSize : (index + 1) + (pageIndex2 - 1) * pageSize2;
+        return taskType === '1' ? (index + 1) + (pageIndex - 1) * pageSize :  taskType === '2' ? (index + 1) + (pageIndex2 - 1) * pageSize2 : (index + 1) + (pageIndex3 - 1) * pageSize3;
       }
     },
     {
@@ -324,7 +327,7 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
-  const onFinish = (pageIndexs) => {  //查询
+  const onFinish = (pageIndexs) => {  //查询 进行中的任务
     const values = form.getFieldsValue();
     setPageIndex(pageIndexs); //除编辑  每次查询页码重置为第一页
     props.bWWebService({
@@ -334,18 +337,25 @@ const Index = (props) => {
       // pageSize: pageSize,
     })
   }
-  const onFinish2 = (pageIndexs) => {  //查询
+  const onFinish2 = (pageIndexs) => {  //查询 已完结的任务
 
     const values = form.getFieldsValue();
-    setPageIndex2(pageIndexs); //除编辑  每次查询页码重置为第一页
+    setPageIndex2(pageIndexs); 
     props.bWWebService({
       functionName: 'M_GetOperationTaskDone',
       ...values,
-      // pageIndex: pageIndexs,
-      // pageSize: pageSize,
     })
   }
 
+  const onFinish3 = (pageIndexs) => {  //查询 未提交的任务
+
+    const values = form.getFieldsValue();
+    setPageIndex3(pageIndexs);
+    props.bWWebService({
+      functionName: 'M_GetALLOperationTaskUnSubmited',
+      ...values,
+    })
+  }
 
 
 
@@ -362,6 +372,13 @@ const Index = (props) => {
     setPageIndex2(PageIndex)
     setPageSize2(PageSize)
   }
+
+  const [pageIndex3, setPageIndex3] = useState(1)
+  const [pageSize3, setPageSize3] = useState(20)
+  const handleTableChange3 = (PageIndex, PageSize) => { //分页 未提交的任务
+    setPageIndex3(PageIndex)
+    setPageSize3(PageSize)
+  }
   const searchComponents = () => {
     return <Form
       form={form}
@@ -370,7 +387,7 @@ const Index = (props) => {
         // Status:1
       }}
       className={styles["ant-advanced-search-form"]}
-      onFinish={() => { taskType === '1' ? onFinish(1) : onFinish2(1) }}
+      onFinish={() => { taskType === '1' ? onFinish(1) : taskType === '2' ?  onFinish2(1) :  onFinish3(1)  }}
       layout='inline'
     >
       <Form.Item label="关键字" name="keywords" >
@@ -1245,6 +1262,22 @@ const Index = (props) => {
                   onChange: handleTableChange2,
                 }}
               />
+            </TabPane>
+            <TabPane tab="未提交的任务" key='3'>
+              <SdlTable
+                loading={tableLoading3 || endTaskLoading}
+                bordered
+                dataSource={tableDatas3}
+                columns={columns}
+                pagination={{
+                  pageSize: pageSize3,
+                  current: pageIndex3,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange3,
+                }}
+              />
+
             </TabPane>
           </Tabs>
         </Card>

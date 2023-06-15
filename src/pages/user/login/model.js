@@ -8,6 +8,7 @@ import {
   getSystemLoginConfigInfo,
   newLogin,
   getToken,
+  PostMessageCode,
 } from './service';
 import { getPageQuery, setAuthority } from './utils/utils';
 const Model = {
@@ -132,6 +133,15 @@ const Model = {
     },
     *getCaptcha({ payload }, { call }) {
       yield call(getFakeCaptcha, payload);
+    },
+    *postMessageCode({ payload,callback }, { call, put }) {
+      const response = yield call(PostMessageCode,payload);
+
+      if (response.IsSuccess) {
+        message.success('发送成功');
+      }else{
+        message.error(response.Message);
+      }
     },
   },
   reducers: {

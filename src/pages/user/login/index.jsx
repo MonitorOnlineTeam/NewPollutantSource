@@ -42,11 +42,11 @@ class Login extends Component {
  verificaCodeChange=(code)=>{
   this.setState({verificaCode:code})
 }
-  handleSubmit = (err, values) => {
+ handleSubmit = (err, values) => {
     const { type,verificaCode, } = this.state;
     const { isAgree } = this.props;
     console.log('values=', values);
-    if (!err) {
+    // if (!err) {
       const { dispatch } = this.props;
       if(!this.state.loginSuccess){
        if(values.verificaCode.toLowerCase() != verificaCode){
@@ -59,9 +59,16 @@ class Login extends Component {
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
       }
+      console.log(values)
       dispatch({
         type: 'userLogin/login',
-        payload: { ...values,IsAgree:isAgree, type },
+        payload: { 
+          ...values,
+          IsAgree:isAgree,
+          type,
+          // VerificationStatus:values.verificaCode,
+          // VerificationCode:
+         },
         callback:isSuccess=>{
            if(!isSuccess){this.child&&this.child.current&&this.child.current.click();}  //请求错误刷新验证码
            this.setState({loginSuccess:isSuccess})
@@ -76,7 +83,7 @@ class Login extends Component {
       //   callback:isSuccess=>{
       //   }
       // });
-    }
+    // }
   };
   clearCommonData = () =>{ //清除公共组件数据
     const { dispatch } = this.props;
@@ -110,12 +117,12 @@ class Login extends Component {
           reject(err);
         } else {
           const { dispatch } = this.props;
-          // dispatch({
-          //   type: 'userLogin/getCaptcha',
-          //   payload: values.mobile,
-          // })
-          //   .then(resolve)
-          //   .catch(reject);
+          dispatch({
+            type: 'userLogin/postMessageCode',
+            payload: {UserAccount : values.userName},
+          })
+            .then(resolve)
+            .catch(reject);
         }
       });
     });
@@ -182,7 +189,7 @@ class Login extends Component {
               }
             />
            <Captcha
-              name="captcha"
+              name="verificationCode"
               placeholder={formatMessage({
                 id: 'user-login.verification-code.placeholder',
               })}
