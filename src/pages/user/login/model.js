@@ -74,7 +74,6 @@ const Model = {
           return meunArr
         }
         const meunList = meunData(response.Datas.MenuDatas)
-        console.log(meunList)
         sessionStorage.setItem('menuDatas',meunList?.length>0? JSON.stringify(meunList) : '')
         delete response.Datas.MenuDatas;
         delete response.Datas.Ticket;

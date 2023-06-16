@@ -60,6 +60,10 @@ export default {
         required: true,
         message: '请输入手机验证码',
       },
+      {
+        pattern:  /^[0-9]{4}$/,
+        message: '请输入4位数的验证码',
+      },
     ],
   },
   VerificaCode: {
@@ -76,7 +80,7 @@ export default {
       },
       {
         pattern:  /^[A-Za-z0-9]{4}$/,
-        message: '请输入4位数的验证码',
+        message: '请输入4位验证码',
       },
     ]
   },

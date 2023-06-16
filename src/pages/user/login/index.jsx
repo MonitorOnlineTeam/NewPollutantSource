@@ -46,7 +46,7 @@ class Login extends Component {
     const { type,verificaCode, } = this.state;
     const { isAgree } = this.props;
     console.log('values=', values);
-    // if (!err) {
+    if (!err) {
       const { dispatch } = this.props;
       if(!this.state.loginSuccess){
        if(values.verificaCode.toLowerCase() != verificaCode){
@@ -81,7 +81,7 @@ class Login extends Component {
       //   callback:isSuccess=>{
       //   }
       // });
-    // }
+    }
   };
   clearCommonData = () =>{ //清除公共组件数据
     const { dispatch } = this.props;
@@ -186,7 +186,7 @@ class Login extends Component {
                 this.loginForm && this.loginForm.validateFields(this.handleSubmit)
               }
             />
-           <Captcha
+           {/* <Captcha
               name="verificationCode"
               placeholder={formatMessage({
                 id: 'user-login.verification-code.placeholder',
@@ -199,15 +199,7 @@ class Login extends Component {
               getCaptchaSecondText={formatMessage({
                 id: 'user-login.captcha.second',
               })}
-              rules={[
-                {
-                  required: true,
-                  message: formatMessage({
-                    id: 'user-login.verification-code.required',
-                  }),
-                },
-              ]}
-            />
+            /> */}
              <VerificaCode  //验证码
               name="verificaCode"
               loginSuccess={loginSuccess}

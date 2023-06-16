@@ -88,7 +88,7 @@ class BasicLayout extends Component {
     }
 
     const menuComparison = (meunData) => {
-      console.log(meunData,pathname)
+      // console.log(meunData,pathname)
       if(!pathname || pathname=='/'){
           return
       } 
