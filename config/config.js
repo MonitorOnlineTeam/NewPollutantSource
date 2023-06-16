@@ -2722,6 +2722,12 @@ export default {
                       path: '/DataAnalyticalWarningModel/Warning/WarningVerify/:id',
                       component: './DataAnalyticalWarningModel/Warning/WarningVerify',
                     },
+                    {
+                      // 排口参数配置
+                      name: 'PointParams',
+                      path: '/DataAnalyticalWarningModel/Warning/PointParams',
+                      component: './DataAnalyticalWarningModel/Warning/PointParams',
+                    },
                   ],
                 },
                 // 模型管理
@@ -2738,7 +2744,7 @@ export default {
                     {
                       // 模型编辑
                       name: 'setting',
-                      path: '/DataAnalyticalWarningModel/Model/setting',
+                      path: '/DataAnalyticalWarningModel/Model/setting/:ID',
                       component: './DataAnalyticalWarningModel/ModelManagement/Setting',
                     },
                   ],

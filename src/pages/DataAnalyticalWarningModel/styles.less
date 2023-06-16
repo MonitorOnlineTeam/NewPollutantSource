@@ -1,3 +1,41 @@
+// 排口参数配置
+.CardPageWrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: #f0f2f5;
+  padding: 0 10px;
+  padding-bottom: 10px;
+
+  .title {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 12px;
+    line-height: 26px;
+    &::before {
+      position: absolute;
+      left: 0;
+      display: table;
+      content: ' ';
+      width: 4px;
+      height: 14px;
+      background-color: #1890ff;
+    }
+  }
+
+  :global {
+    .ant-card-bordered {
+      padding-top: 0 !important;
+      margin-bottom: 12px;
+    }
+
+    .ant-descriptions-item-label {
+      font-weight: 500;
+    }
+  }
+}
+
 // 告警核实详情
 .WarningVerifyWrapper {
   width: 100%;
@@ -31,7 +69,6 @@
     padding: 20px 0;
     height: 320px;
   }
-
 }
 
 // 模型设置

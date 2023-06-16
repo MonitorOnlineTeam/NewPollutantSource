@@ -172,6 +172,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:1,
         PageSize:this.state.pageSize,
+        ...this.props.propsParams
       },
       callback: data => {
         this.loadCallback(data)
@@ -191,7 +192,7 @@ class NavigationTree extends Component {
     // })
   }
 
- 
+
 
   loadCallback = data => {
     this.setState({
@@ -209,11 +210,11 @@ class NavigationTree extends Component {
     let clientHeight = document.documentElement.clientHeight; //可视区域高度
     let scrollTop  = document.documentElement.scrollTop;  //滚动条滚动高度
     let scrollHeight =document.documentElement.scrollHeight; //滚动内容高度
- 
-    
+
+
   //  if(document.querySelector('.antd-pro-components-navigation-tree-index-table')){
   //   let tableScollTop = document.querySelector('.antd-pro-components-navigation-tree-index-table').scrollTop
-  //  }  
+  //  }
 }
   componentWillReceiveProps(nextProps) {
     if (this.props.PollutantType !== nextProps.PollutantType) {
@@ -443,6 +444,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:1,
         PageSize:this.state.pageSize,
+        ...this.props.propsParams
       },
       callback: data => {
         this.loadCallback(data)
@@ -466,6 +468,7 @@ class NavigationTree extends Component {
        isFilter: this.props.isMap,
        PageIndex:1,
        PageSize:this.state.pageSize,
+       ...this.props.propsParams
      },
      callback: data => {
        this.loadCallback(data)
@@ -523,7 +526,7 @@ class NavigationTree extends Component {
     // })
     const entList = entAndPoint.filter(item => item.title.toUpperCase().indexOf(msg) > -1 && item.IsEnt == 1);
     const filterList = this.state.panelDataListAys.filter(item => item.pointName.toUpperCase().indexOf(msg) > -1 || item.entName.toUpperCase().indexOf(msg) > -1);
-   
+
     this.setState({
       // expandedKeys,
       EntAndPoint: entList,
@@ -577,6 +580,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:1,
         PageSize:this.state.pageSize,
+        ...this.props.propsParams
       },
       callback: data => {
         this.loadCallback(data)
@@ -668,6 +672,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:1,
         PageSize:this.state.pageSize,
+        ...this.props.propsParams
       },
       callback: data => {
         this.loadCallback(data)
@@ -814,7 +819,7 @@ class NavigationTree extends Component {
       this.setState({
         selectedKeys: [record.key],
       }, () => {
-         this.returnData([record.key]) 
+         this.returnData([record.key])
         });
     },
   })
@@ -890,7 +895,7 @@ class NavigationTree extends Component {
               key:item.key,
               children:item.children&&item.children.length>0?  this.loop(item.children) : ''
           }
-        } 
+        }
         if (item.Type == '1') { //监测点
           return { title:(
             <div style={{ width: '253px', position: 'relative'}}>
@@ -901,10 +906,10 @@ class NavigationTree extends Component {
                 : ''}
             </div>
            ),
-            key:item.key, 
+            key:item.key,
             children:item.children&&item.children.length>0?  this.loop(item.children) : ''
           }
-         
+
         }
       });
     //  return data.map((item, idx) => {
@@ -946,7 +951,7 @@ class NavigationTree extends Component {
     }
 
     panelDatas = () => {
-       
+
       return <Table   id="treeTable" className={styles.table} rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
         style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: this.props.type=='ent'?'calc(100vh - 330px)':'calc(100vh - 290px)' }}
         onRow={this.onClickRow}
@@ -969,6 +974,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:pageIndex,
         PageSize:this.state.pageSize,
+        ...this.props.propsParams
       },
       callback: data => {
         this.loadCallback(data)
@@ -987,7 +993,7 @@ class NavigationTree extends Component {
     } else {
       _props = { expandedKeys }
     }
- 
+
     return (
       <div>
         <Drawer
@@ -1029,14 +1035,14 @@ class NavigationTree extends Component {
           />
             : ''}
 
-               {  this.props.type=='ent' ? 
+               {  this.props.type=='ent' ?
                 <Select  style={{ width: '100%', marginBottom: 10 }} onChange={this.handleChange} allowClear placeholder="请选择监测点类型" >
                   <Option key={1} value={1}>废水</Option>
                   <Option key={2} value={2}>废气</Option>
-              </Select> : 
+              </Select> :
                null
-                } 
-              
+                }
+
           {/* {false ? <EnterprisePointCascadeMultiSelect
             searchRegion
             onChange={this.regionChange}
@@ -1084,7 +1090,7 @@ class NavigationTree extends Component {
               </div>
                  /* {this.loop(this.state.EntAndPoint)}
                  </Tree> */
-               : 
+               :
                <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                 </div>
             }
@@ -1112,7 +1118,7 @@ class NavigationTree extends Component {
                   }}
                   size="large"
                 /> : this.panelDatas()}</div>
-                
+
                  : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                   </div>}</div>
           }
@@ -1143,6 +1149,7 @@ class NavigationTree extends Component {
 // 如果传入的domId为空则默认使用以下id
 NavigationTree.defaultProps = {
   domId: '#contentWrapper',
+  propsParams: {}
 }
 
 export default NavigationTree

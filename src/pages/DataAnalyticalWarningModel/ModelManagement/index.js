@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-01 09:07:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-07 11:23:09
+ * @Last Modified time: 2023-06-16 09:30:42
  * @Description：模型管理
  */
 
@@ -13,6 +13,7 @@ import styles from '../styles.less';
 import { SettingOutlined } from '@ant-design/icons';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
+import { router } from 'umi';
 
 const dvaPropsData = ({ loading, dataModel }) => ({
   modelList: dataModel.modelList,
@@ -151,7 +152,14 @@ const ModelManagement = props => {
         render: (text, record) => {
           return (
             <Tooltip title={'设置'}>
-              <a style={{ fontSize: 16 }}>
+              <a
+                style={{ fontSize: 16 }}
+                onClick={() => {
+                  router.push(
+                    `/DataAnalyticalWarningModel/Model/setting/${record.ModelGuid}`,
+                  );
+                }}
+              >
                 <SettingOutlined />
               </a>
             </Tooltip>
