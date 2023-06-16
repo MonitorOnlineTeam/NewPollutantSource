@@ -1,12 +1,8 @@
 
-  .addFromModal  :global, .editDetailFromModal :global {
+  .addFromModal  :global ,.editDetailFromModal :global{
     .ant-modal-content{
       overflow-y: hidden;
      }
-    //  .ant-tabs-content{
-    //   overflow-y: auto;
-    //   height: calc(100vh - 220px);
-    //  } 
     .ant-form-item-label{
         width:141px;
       } 
@@ -52,16 +48,25 @@
         }
       }
     }
-    // .editDetailFromModal :global{ //任务编辑详情表单弹出框
-    //   .ant-tabs-content{
-    //     overflow-y: auto;
-    //     height: calc(100vh - 220px);
-    //    } 
-    // }
-     .addPlanFormModal :global {
+    .editDetailFromModal :global { //任务编辑详情表单弹出框
       .ant-modal-body{
         overflow-y: auto;
-        height: calc(100vh - 240px);
+        max-height: calc(100vh - 64px - 55px + 16px);
+       } 
+      .ant-form-item{
+        margin-bottom: 12px;
+       }
+      //  .ant-form-item-label{
+      //   width:auto;
+      // } 
+      .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before{
+        display: none;
+      }
+    }
+     .addPlanFormModal :global, .detailPlanFormModal  :global {
+      .ant-modal-body{
+        overflow-y: auto;
+        max-height: calc(100vh - 240px);
       }
       #plan_form{
       .ant-form-item-label{
@@ -80,8 +85,17 @@
     }
     .ant-checkbox-disabled + span{
       color: rgba(0, 0, 0, 0.85)
+     }
     }
+
+    .detailPlanFormModal  :global {
+     .ant-form-item{
+       margin-bottom: 12px;
+     }
+     .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before{
+      display: none;
     }
+   }
     .operaUserFormModal :global{
       .ant-modal-body{
         overflow-y: auto;

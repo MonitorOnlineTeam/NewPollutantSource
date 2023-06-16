@@ -167,9 +167,9 @@ const Index = (props) => {
           <Fragment>
             <a style={{ paddingRight: 8 }} onClick={() => { taskUploadReport(record) }} >上传报告</a>
           </Fragment>
-          {/* <Fragment>
+          {taskType==3&&<Fragment>
             <a style={{ paddingRight: 8 }} onClick={() => { taskEdit(record) }} >任务编辑</a>
-          </Fragment> */}
+          </Fragment>}
           <Fragment>
             <Popconfirm title="您确定要完结此运维任务吗？" style={{ paddingRight: 5 }} onConfirm={() => { endTask(record) }} okText="是" cancelText="否">
               <a style={{ paddingRight: 8 }}>任务完结</a>
@@ -210,16 +210,14 @@ const Index = (props) => {
       if(isFirstLoad){ //编辑详情首次加载
         if(addData[0]&&addData[0][name]&&addData[0][name].Item){
          let data = addData[0][name].Item;
-         data instanceof Array ? arrData = data : arrData.push(data)
+         data instanceof Array ? arrData = data : arrData.push(data) 
          return  arrData;
         }else{
           return  [];
         }
-        
-      }
-      if (taskDetailData && taskDetailData[0] && taskDetailData[0][name] && taskDetailData[0][name].Item) {
-        let data = taskDetailData[0][name].Item;
-        data instanceof Array ? arrData = data : arrData.push(data)
+      }else{
+        let data = taskDetailData?.[0]?.[name]?.Item;
+        data ?  data instanceof Array ? arrData = data : arrData.push(data) : undefined
         return  type == 2? [...arrData, ...addData] : arrData;
       }
     }
@@ -321,7 +319,9 @@ const Index = (props) => {
         }
       },()=>{
         taskAddVisible?  setTaskAddVisible(false) : setTaskEditVisible(false);
-        initData();
+        setTaskType('1')
+        onFinish(1)
+        onFinish3(1)
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -1087,6 +1087,8 @@ const Index = (props) => {
           location: undefined,
           time: undefined,
         }
+      },()=>{
+        onFinish3(1)
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -1148,7 +1150,8 @@ const Index = (props) => {
         }
       },()=>{
         setTaskReportUploadVisible(false);
-        initData();
+        setTaskType('3')
+        onFinish3(1);
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -1231,7 +1234,7 @@ const Index = (props) => {
     <div className={styles.operaTaskSty}>
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
-          <Tabs onChange={(key) => { setTaskType(key) }}>
+          <Tabs activeKey={taskType} onChange={(key) => { setTaskType(key) }}>
             <TabPane tab="进行中的任务" key='1'>
               <SdlTable
                 loading={tableLoading || endTaskLoading}
@@ -1482,7 +1485,7 @@ const Index = (props) => {
         title={planModalType==='add'?'计划添加' : '计划详情'}
         visible={addOperaPlanVisible}
         onCancel={() => { setAddOperaPlanVisible(false) }}
-        className={ styles.addPlanFormModal}
+        className={ planModalType==='add'? styles.addPlanFormModal : styles.detailPlanFormModal}
         destroyOnClose
         width='85%'
         confirmLoading={props.operationTaskPlanLoading}

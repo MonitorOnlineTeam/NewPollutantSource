@@ -247,6 +247,7 @@ export default Model.extend({
             const data =  formatData(result.Datas).map(item=>{
               return  {...item, label: item.DETAILNAME, value: item.ID,CYCLE:item.CYCLE}
             })
+            console.log(payload.OTID,data)
             const listData = payload.OTID? data.filter(item=>item.OTID == payload.OTID) :  data
             yield update({ operaContantList:listData})
             callback&&callback();
@@ -259,6 +260,7 @@ export default Model.extend({
           const res = formatData(result.Datas,'operate')
           if (result.IsSuccess && res) {
              yield update({ taskId: res.ID }) 
+             callback&&callback();   
           }
           yield update({ basicInfoTaskLoading: false })
           break;

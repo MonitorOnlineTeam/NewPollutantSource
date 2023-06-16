@@ -404,8 +404,11 @@ export default Model.extend({
     },
   },
   subscriptions: {
-    socket({ dispatch }) {
+    socket({ dispatch, history }) {
       console.log('initsocket1');
+      if(history.location?.pathname==='/hrefLogin'){
+        return
+      }
       // const token = Cookie.get(config.cookieName);
       // token&&token!='null' && token!= 'undefined'&& token!= '' &&
       dispatch({ //登录之后获取
