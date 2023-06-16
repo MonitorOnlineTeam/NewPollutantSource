@@ -32,3 +32,39 @@ export async function SetMoldStatus(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Mold/SetMoldStatus', params);
   return result;
 }
+
+// 获取点位参数配置
+export async function GetPointParamsRange(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetPointParamsRange', params);
+  return result;
+}
+
+// 保存点位参数配置
+export async function SavePointParamsRange(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/SavePointParamsRange', params);
+  return result;
+}
+
+// 获取模型基础信息和参数配置
+export async function GetModelInfoAndParams(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetModelInfoAndParams', params);
+  return result;
+}
+
+// 保存模型基础信息和参数配置
+export async function SaveModelInfoAndParams(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/SaveModelInfoAndParams', params);
+  return result;
+}
+
+// 获取已关联排口
+export async function GetModelRelationDGIMN(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetModelRelationDGIMN', params);
+  return result;
+}
+
+// 保存关联排口
+export async function SaveModelRelationDGIMN(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/SaveModelRelationDGIMN', params);
+  return result;
+}
