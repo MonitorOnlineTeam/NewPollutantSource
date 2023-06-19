@@ -81,13 +81,16 @@ export default Model.extend({
           } else { // 单条数据为对象的情况
             arrData.push(data)
           }
+
           return isOperate? data : arrData;
         }
+        const resData =  resultData && resultData['soap:Envelope'] && resultData['soap:Envelope']['soap:Body'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]  && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['ResultStruct'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['ResultStruct']
         if (itemPar&&itemPar) {
+          if(resData&&resData.succes === "False" ){
+            message.error(resData.message)
+          }
           return resultData && resultData['soap:Envelope'] && resultData['soap:Envelope']['soap:Body'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`][itemsPar] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`][itemsPar][itemPar] ? arrDataFormat(resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`][itemsPar][itemPar]) : []
-
         }else if(itemsPar=='operate' || itemsPar=='operateData' || itemsPar=='operateFile'  ){ //操作
-           const resData =  resultData && resultData['soap:Envelope'] && resultData['soap:Envelope']['soap:Body'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]  && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['ResultStruct'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['ResultStruct']
            if(itemsPar=='operateFile'){
              if(resData.succes === "True"){
               return true
@@ -107,18 +110,23 @@ export default Model.extend({
           }
         
         } else {
+          if(resData&&resData.succes === "False" ){
+            message.error(resData.message)
+          }
           return resultData && resultData['soap:Envelope'] && resultData['soap:Envelope']['soap:Body'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['Items'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['Items']['Item'] ? arrDataFormat(resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['Items']['Item']) : []
 
         }
+
       }
       switch (payload.functionName) {
         case 'M_GetALLOperationTask':  //进行中 运维任务列表
           if (result.IsSuccess) {
              let data = [];
+             const resData = formatData(result.Datas)
              if(payload.keywords){
-                data = formatData(result.Datas).filter((item)=> item.RWMC.indexOf(payload.keywords)!=-1 || item.RWBH.indexOf(payload.keywords)!=-1 || item.RWMC.indexOf(payload.keywords)!=-1)
+                data = resData.filter((item)=> item.RWMC.indexOf(payload.keywords)!=-1 || item.RWBH.indexOf(payload.keywords)!=-1 || item.RWMC.indexOf(payload.keywords)!=-1)
               }else{
-                data = formatData(result.Datas)
+                data = resData
             }
             yield update({  tableDatas: data,})
           } else {
@@ -129,10 +137,11 @@ export default Model.extend({
         case 'M_GetOperationTaskDone':  //已完结 运维任务列表
           if (result.IsSuccess) {
             let data = [];
+            const resData = formatData(result.Datas)
             if(payload.keywords){
-               data = formatData(result.Datas).filter((item)=> item.RWMC.indexOf(payload.keywords)!=-1 || item.RWBH.indexOf(payload.keywords)!=-1 || item.RWMC.indexOf(payload.keywords)!=-1)
+               data = resData.filter((item)=> item.RWMC.indexOf(payload.keywords)!=-1 || item.RWBH.indexOf(payload.keywords)!=-1 || item.RWMC.indexOf(payload.keywords)!=-1)
               }else{
-               data = formatData(result.Datas)
+               data = resData
            }
             yield update({ tableDatas2: data, })
           } else {
@@ -143,10 +152,11 @@ export default Model.extend({
           case 'M_GetALLOperationTaskUnSubmited':  //未提交 运维任务列表
           if (result.IsSuccess) {
             let data = [];
+            const resData = formatData(result.Datas)
             if(payload.keywords){
-               data = formatData(result.Datas).filter((item)=> item.RWMC.indexOf(payload.keywords)!=-1 || item.RWBH.indexOf(payload.keywords)!=-1 || item.RWMC.indexOf(payload.keywords)!=-1)
+               data = resData.filter((item)=> item.RWMC.indexOf(payload.keywords)!=-1 || item.RWBH.indexOf(payload.keywords)!=-1 || item.RWMC.indexOf(payload.keywords)!=-1)
               }else{
-               data = formatData(result.Datas)
+               data = resData
            }
             yield update({ tableDatas3: data, })
           } else {
@@ -156,8 +166,9 @@ export default Model.extend({
           break;
         case 'M_GetOperationTaskByID':  //任务详情
           if (result.IsSuccess) {
-            yield update({ taskDetailData: formatData(result.Datas)})
-            callback&&callback(formatData(result.Datas));
+            const resData = formatData(result.Datas)
+            yield update({ taskDetailData: resData})
+            callback&&callback(resData);
           } else {
             message.error(result.Message); 
           }
