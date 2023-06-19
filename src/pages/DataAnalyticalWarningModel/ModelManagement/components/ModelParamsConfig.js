@@ -1,9 +1,17 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2023-06-19 09:10:50
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-06-19 09:11:30
+ * @Description：模型参数配置
+ */
 import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { connect } from 'dva';
 import { Card, Form, Select, InputNumber, Row, Col, Divider, message } from 'antd';
 import styles from '../../styles.less';
 
 const PollutantList = {
+  // 机组停运
   '928ec327-d30d-4803-ae83-eab3a93538c1': [
     {
       pollutantCode: 's02',
@@ -21,6 +29,7 @@ const PollutantList = {
       unit: '℃',
     },
   ],
+  // 检测样品为空气（拔管）
   '9104ab9f-d3f3-4bd9-a0d9-898d87def4dd': [
     {
       pollutantCode: 's01',
@@ -55,7 +64,6 @@ const ModelParamsConfig = props => {
       }
     });
 
-    console.log('range', range);
     form.setFieldsValue({
       ...range,
       AbnormalNum: modelInfo.AbnormalNum,
@@ -97,7 +105,6 @@ const ModelParamsConfig = props => {
         dataAttribute: data,
       };
     } catch (errorInfo) {
-      debugger;
       console.log('errorInfo', errorInfo);
       // message.warning('请输入完整的数据');
       return false;
@@ -109,15 +116,6 @@ const ModelParamsConfig = props => {
       onFinish: onFinish,
     };
   });
-
-  const getParamsByModelType = () => {
-    switch (
-      ModelID
-      // modelType
-      // case ''
-    ) {
-    }
-  };
 
   const renderPage = () => {
     switch (ModelID) {
@@ -259,7 +257,6 @@ const ModelParamsConfig = props => {
             </Card>
           </>
         );
-        break;
       default:
         return <></>;
     }
