@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2023-06-19 09:11:57
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-06-19 10:57:24
+ * @Description：模型设置页面
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
@@ -134,6 +141,7 @@ const Setting = props => {
         outputType: values.outputType,
         regionCode: values.regionCode,
         entCode: values.entCode,
+        StopPointFlag: true,
       },
       callback: res => {
         // setTreeData(res);

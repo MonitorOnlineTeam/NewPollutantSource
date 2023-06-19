@@ -1,10 +1,19 @@
 import * as services from './services';
 import Model from '@/utils/model';
 import { message } from 'antd';
+import moment from 'moment';
 
 export default Model.extend({
   namespace: 'dataModel',
   state: {
+    warningForm: {
+      date: [
+        moment()
+          .subtract(1, 'month')
+          .startOf('day'),
+        moment().endOf('day'),
+      ],
+    },
     modelList: [],
     relationDGIMN: [],
     ModelInfoAndParams: {
