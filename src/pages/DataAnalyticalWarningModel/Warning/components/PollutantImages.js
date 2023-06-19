@@ -58,7 +58,7 @@ const Index = props => {
           pollutantCode: key,
         });
       }
-      console.log('images', images);
+      // console.log('images', images);
     }
 
     if (images['b02']) {
@@ -71,9 +71,9 @@ const Index = props => {
     } else {
       setTopImages([]);
     }
-    console.log('topImages', topImages);
-    console.log('leftImages', leftImages);
-    console.log('rightImages', rightImages);
+    // console.log('topImages', topImages);
+    // console.log('leftImages', leftImages);
+    // console.log('rightImages', rightImages);
 
     setLeftImages(leftImages.sort((a, b) => a.order - b.order));
     setRightImages(rightImages.sort((a, b) => a.order - b.order));

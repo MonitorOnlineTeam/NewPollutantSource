@@ -163,6 +163,7 @@ const PointParams = props => {
           // ModelFlag: 'ModelFlag',
           industryTypeCode: '1',
           outputType: 0,
+          StopPointFlag: true,
         }}
         checkpPol="2"
         polShow

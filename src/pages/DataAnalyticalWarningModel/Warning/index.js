@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-12 09:43:44
+ * @Last Modified time: 2023-06-19 14:06:10
  * @Description：报警记录
  */
 
@@ -27,6 +27,7 @@ const textStyle = {
 };
 
 const dvaPropsData = ({ loading, dataModel }) => ({
+  warningForm: dataModel.warningForm,
   modelList: dataModel.modelList,
   modelListLoading: loading.effects['dataModel/GetModelList'],
   queryLoading: loading.effects['dataModel/GetWarningList'],
@@ -34,7 +35,7 @@ const dvaPropsData = ({ loading, dataModel }) => ({
 
 const WarningRecord = props => {
   const [form] = Form.useForm();
-  const { dispatch, modelList, modelListLoading, queryLoading } = props;
+  const { dispatch, warningForm, modelList, modelListLoading, queryLoading } = props;
   const [dataSource, setDataSource] = useState([]);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -75,7 +76,7 @@ const WarningRecord = props => {
         key: 'WarningTime',
         width: 180,
         ellipsis: true,
-        sorter: (a, b) => moment(a.WarningTime).valueOf() - moment(b.WarningTime).valueOf()
+        sorter: (a, b) => moment(a.WarningTime).valueOf() - moment(b.WarningTime).valueOf(),
       },
       {
         title: '报警类型',
@@ -147,6 +148,7 @@ const WarningRecord = props => {
   // 查询数据
   const onFinish = (pageIndex = 1, pageSize = 20) => {
     const values = form.getFieldsValue();
+    console.log('values', values);
     props.dispatch({
       type: 'dataModel/GetWarningList',
       payload: {
@@ -176,7 +178,6 @@ const WarningRecord = props => {
     setPageSize(pageSize);
     onFinish(current, pageSize);
   };
-
   return (
     <BreadcrumbWrapper>
       <Card>
@@ -185,16 +186,22 @@ const WarningRecord = props => {
           form={form}
           layout="inline"
           style={{ padding: '10px 0 20px' }}
-          initialValues={{
-            date: [
-              moment()
-                .subtract(1, 'month')
-                .startOf('day'),
-              moment().endOf('day'),
-            ],
-          }}
+          initialValues={warningForm}
           autoComplete="off"
           // onValuesChange={onValuesChange}
+          onValuesChange={(changedFields, allFields) => {
+            console.log('changedFields', changedFields);
+            console.log('allFields', allFields);
+            dispatch({
+              type: 'dataModel/updateState',
+              payload: {
+                warningForm: {
+                  ...props.warningForm,
+                  ...changedFields,
+                },
+              },
+            });
+          }}
         >
           <Form.Item label="日期" name="date">
             <RangePicker_
