@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-19 14:06:10
+ * @Last Modified time: 2023-06-19 15:09:39
  * @Description：报警记录
  */
 
@@ -168,8 +168,13 @@ const WarningRecord = props => {
 
   // 重置表单
   const onReset = () => {
-    form.resetFields();
-    onTableChange(1, 20);
+    dispatch({
+      type: 'dataModel/onReset',
+      payload: {},
+    }).then(() => {
+      form.resetFields();
+      onTableChange(1, 20);
+    });
   };
 
   // 分页
@@ -186,7 +191,9 @@ const WarningRecord = props => {
           form={form}
           layout="inline"
           style={{ padding: '10px 0 20px' }}
-          initialValues={warningForm}
+          initialValues={{
+            ...warningForm,
+          }}
           autoComplete="off"
           // onValuesChange={onValuesChange}
           onValuesChange={(changedFields, allFields) => {
