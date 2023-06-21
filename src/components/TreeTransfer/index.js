@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Transfer, Tree } from 'antd'
+import { Transfer, Tree, Spin, } from 'antd'
 import { ConsoleSqlOutlined } from '@ant-design/icons';
 import styles from './styles.less'
 const Index = (props) => {
@@ -8,13 +8,22 @@ const Index = (props) => {
   const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
   const [isAll, setIsAll] = useState(false)
-  const generateTree = (treeNodes = [], checkedKeys = []) =>
-    treeNodes?.length && treeNodes.map(({ children, ...props }) => ({
-      ...props,
-      disabled: checkedKeys.includes(props.key),
-      children: generateTree(children, checkedKeys),
-    }))
-
+  const generateTree = (treeNodes = [], checkedKeys = []) => {
+    //  return treeNodes?.length && treeNodes.map(({ children, ...props }) => {
+    //    return  {
+    //     ...props,
+    //     disabled: checkedKeys.includes(props.key),
+    //     children: generateTree(children, checkedKeys),
+    //   }
+    //   })
+    return treeNodes?.length && treeNodes.filter(item => checkedKeys.indexOf(item.key) == -1).map(item => {
+      item = { ...item }
+      if (item.children?.length) {
+        item.children = generateTree(item.children, checkedKeys)
+      }
+      return item
+    })
+  }
   const dealCheckboxSeleted = ({ node, onItemSelect, onItemSelectAll }) => {
     let {
       checked,
@@ -36,7 +45,7 @@ const Index = (props) => {
         onItemSelectAll([...parentKeys, key], checked)
       } else {
         let parentKey = ''
-        treeData && treeData[0]?.children?.forEach(tree => {
+        treeData && treeData[0] && treeData.forEach(tree => {
           if (tree?.children) {
             tree.children?.forEach(child => {
               if (child?.key === key) {
@@ -86,9 +95,9 @@ const Index = (props) => {
                 onCheck={(_, node) => {
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
                 }}
-                onSelect={(_, node) => {
-                  dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
-                }}
+              // onSelect={(_, node) => {
+              //   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
+              // }}
               />
             )
           }
@@ -105,9 +114,9 @@ const Index = (props) => {
                 onCheck={(_, node) => {
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
                 }}
-                onSelect={(_, node) => {
-                  dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
-                }}
+              // onSelect={(_, node) => {
+              //   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
+              // }}
               />
             )
           }
@@ -198,23 +207,28 @@ const Index = (props) => {
       setRightTreeData(arr)
     }
   }
+  const [initDataLoading, setInitDataLoading] = useState(false)
   useEffect(() => {
     initData()
   }, [])
   const initData = () => {
+    setInitDataLoading(true)
     if (checkedKeys?.length > 0) {
       getRightTreeData(checkedKeys, 1)
     }
     let keys = [];
     treeData.forEach(tree => {
       if (tree?.children?.length > 0) {
-        const isIncludes  =  tree.children.every(item=>targetKeys.includes(item.key))
-        if(isIncludes){
+        const isIncludes = tree.children.every(item => targetKeys.includes(item.key))
+        if (isIncludes) {
           keys.push(tree.key)
         }
-      }   
+      }
     })
-    setTargetKeys([...targetKeys,...keys])
+    setTargetKeys([...targetKeys, ...keys])
+    setTimeout(()=>{
+      setInitDataLoading(false)
+    },3000)
   }
   const onChange = (keys, direction, moveKeys) => {
     let changeArrType = 1 // 0-删除  1-新增
@@ -246,7 +260,7 @@ const Index = (props) => {
     //    setIsAll(false)
     //  }
   }
-  return <TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} onSelectChange={onSelectChange} />
+  return <Spin spinning={initDataLoading}><TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} onSelectChange={onSelectChange} /> </Spin>
 }
 
 export default Index
