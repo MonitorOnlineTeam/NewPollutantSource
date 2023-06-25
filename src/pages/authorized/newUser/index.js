@@ -81,6 +81,7 @@ const { SHOW_PARENT } = TreeSelect;
   userManagePageSize: newuserinfo.userManagePageSize,
   queryPar: newuserinfo.queryPar,
   configInfo: global.configInfo,
+  clientHeight: global.clientHeight,
 }))
 export default class UserInfoIndex extends Component {
   constructor(props) {
@@ -316,13 +317,14 @@ export default class UserInfoIndex extends Component {
     });
     this.setState({
       visibleData: true,
+      pollutantType:2,
       DataTreeValue: [],
       checkedKey: this.props.RegionByDepID,
     });
     this.props.dispatch({
       type: 'newuserinfo/getentandpoint',
       payload: {
-        PollutantType: this.state.pollutantType,
+        PollutantType: 2,
         RegionCode: '',
       },
     });
@@ -865,12 +867,16 @@ export default class UserInfoIndex extends Component {
             // destroyOnClose="true"
             onCancel={() => { this.setState({ visibleData: false }) }}
             width={1100}
-            // width={800}
+            // width={900}
             confirmLoading={this.state.okLoading}
+            bodyStyle={{
+              overflowY:'auto',
+              maxHeight:this.props.clientHeight - 240,
+            }}
           >
             {
 
-              <div style={{ height: '620px', overflow: 'hidden' }}>
+              <div>
                 <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
 
                   <SelectPollutantType
@@ -913,7 +919,7 @@ export default class UserInfoIndex extends Component {
                   // >
                   //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
                   // </Tree>
-                  <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} targetKeysChange={(key)=>this.setState({checkedKeys:key})} key="key"  style={{ overflow: 'auto' }}   height={510} />
+                  <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} targetKeysChange={(key)=>this.setState({checkedKeys:key})} key="key"   />
                 ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}

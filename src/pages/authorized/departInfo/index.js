@@ -61,6 +61,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
 import SdlTable from '@/components/SdlTable';
 import SupervisionConfigModal from './SupervisionConfigModal';
+import TreeTransfer from '@/components/TreeTransfer' 
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
 
@@ -167,7 +168,7 @@ const TableTransfer = ({ leftColumns, rightColumns, pagination, ...restProps }) 
           dataSource={filteredItems}
           size="small"
           style={{ pointerEvents: listDisabled ? 'none' : null, paddingBottom: 10 }}
-          scroll={{ y: 'calc(100vh - 550px)' }}
+          scroll={{ y: 'calc(100vh - 430px)' }}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
               if (itemDisabled || listDisabled) return;
@@ -264,6 +265,7 @@ const rightTableColumns = [
   userList: departinfo.userList,
   deleteUserDepApproveLoading: loading.effects['departinfo/deleteUserDepApprove'],
   insertdepartbyuserLoading: loading.effects['departinfo/insertdepartbyuser'] || false,
+  clientHeight: global.clientHeight,
 }))
 @Form.create()
 class DepartIndex extends Component {
@@ -759,13 +761,14 @@ class DepartIndex extends Component {
     });
     this.setState({
       visibleData: true,
+      pollutantType:2,
       DataTreeValue: [],
       checkedKeys: this.props.RegionByDepID,
     });
     this.props.dispatch({
       type: 'departinfo/getentandpoint',
       payload: {
-        PollutantType: this.state.pollutantType,
+        PollutantType: 2,
         RegionCode: '',
       },
     });
@@ -1048,11 +1051,12 @@ class DepartIndex extends Component {
     if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
       this.setState({
         newEntAndPoint: [
-          {
-            title: '全部',
-            key: '0-0',
-            children: nextProps.EntAndPoint,
-          },
+          // {
+          //   title: '全部',
+          //   key: '0-0',
+          //   children: nextProps.EntAndPoint,
+          // },
+          ...nextProps.EntAndPoint,
         ],
       });
     }
@@ -1540,6 +1544,7 @@ class DepartIndex extends Component {
                 destroyOnClose="true"
                 onCancel={this.handleCancel}
                 width={'70%'}
+                footer={null}
               >
                 {/* {this.props.GetUserByDepID ? (
                   <Spin
@@ -1626,8 +1631,12 @@ class DepartIndex extends Component {
                 onOk={this.handleDataOK}
                 destroyOnClose={true}
                 onCancel={this.handleCancel}
-                width={900}
+                width={1100}
                 confirmLoading={this.props.dataLoading}
+                bodyStyle={{
+                  overflowY:'auto',
+                  maxHeight:this.props.clientHeight - 240,
+                }}
                 // destroyOnClose
               >
                 {
@@ -1642,7 +1651,7 @@ class DepartIndex extends Component {
                   //     }}r
                   //     size="large"
                   // /> :
-                  <div style={{ height: '600px', overflow: 'hidden' }}>
+                  <div>
                     <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
                       {/* <Radio.Group value={this.state.pollutantType} onChange={this.handleSizeChange}>
                                                     <Radio.Button value="1">废水</Radio.Button>
@@ -1676,25 +1685,26 @@ class DepartIndex extends Component {
                         size="large"
                       />
                     ) : this.props.EntAndPoint && this.props.EntAndPoint.length > 0 ? (
-                      <Tree
-                        key="key"
-                        style={{ height: '560px', overflow: 'auto' }}
-                        checkable
-                        // checkStrictly={false}
-                        onExpand={this.onExpands}
-                        treeData={this.state.newEntAndPoint}
-                        // expandedKeys={this.state.expandedKey}
-                        // autoExpandParent={this.state.autoExpandParent}
-                        onCheck={this.onChecks}
-                        checkedKeys={this.state.checkedKeys}
-                        // onSelect={this.onSelectData}
-                        // selectedKeys={this.state.dataSelectedKeys}
-                        defaultExpandAll
-                        // autoExpandParent={true}
-                        // defaultExpandAll
-                      >
-                        {this.renderDataTreeNodes(this.state.newEntAndPoint)}
-                      </Tree>
+                      // <Tree
+                      //   key="key"
+                      //   style={{ height: '560px', overflow: 'auto' }}
+                      //   checkable
+                      //   // checkStrictly={false}
+                      //   onExpand={this.onExpands}
+                      //   treeData={this.state.newEntAndPoint}
+                      //   // expandedKeys={this.state.expandedKey}
+                      //   // autoExpandParent={this.state.autoExpandParent}
+                      //   onCheck={this.onChecks}
+                      //   checkedKeys={this.state.checkedKeys}
+                      //   // onSelect={this.onSelectData}
+                      //   // selectedKeys={this.state.dataSelectedKeys}
+                      //   defaultExpandAll
+                      //   // autoExpandParent={true}
+                      //   // defaultExpandAll
+                      // >
+                      //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
+                      // </Tree>
+                     <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} targetKeysChange={(key)=>this.setState({checkedKeys:key})} key="key"  />
                     ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}

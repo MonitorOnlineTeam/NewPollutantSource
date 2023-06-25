@@ -1095,7 +1095,6 @@ class TaskRecord extends Component {
           onCancel={() => {
             this.setState({ taskRecordDetailVisible: false })
           }}
-
         >
           <TaskRecordDetails
             match={{ params: { TaskID: TaskID, DGIMN: DGIMN } }}

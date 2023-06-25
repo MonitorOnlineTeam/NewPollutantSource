@@ -41,9 +41,12 @@ class WrapFormItem extends Component {
     if (result === false) {
       return;
     }
-
     if (result instanceof Promise) {
-      result.then(this.runGetCaptchaCountDown());
+      result.then(()=>{
+        this.runGetCaptchaCountDown();
+      }).catch(()=>{
+        return;
+      })
     } else {
       this.runGetCaptchaCountDown();
     }

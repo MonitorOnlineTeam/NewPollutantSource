@@ -48,7 +48,7 @@ const { TextArea } = Input;
 const FormItem = Form.Item;
 const { Step } = Steps;
 // let SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 250;
-let SCREEN_HEIGHT = "calc(100vh - 250px)";
+let SCREEN_HEIGHT = "calc(100vh - 168px)";
 @Form.create()
 @connect(({ task, loading }) => ({
     // isloading: loading.effects['task/GetTaskRecord'],
@@ -872,7 +872,7 @@ class EmergencyDetailInfo extends Component {
 
         const { taskInfo } = this.props;
         return (
-            <div>
+            <div style={{ height: SCREEN_HEIGHT,overflowY:'auto' }}>
                 <Card
                     title={<Row justify='space-between'> 
                         <span style={{ fontWeight: '900' }}>任务详情</span>
@@ -887,7 +887,7 @@ class EmergencyDetailInfo extends Component {
                     // }
                 >
 
-                    <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
+                    <div style={{overflowY:'hidden'}} className={styles.ExceptionDetailDiv}>
                         <Card title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
                             <DescriptionList classNam={styles.headerList} size="large" col="3">
                                 <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>

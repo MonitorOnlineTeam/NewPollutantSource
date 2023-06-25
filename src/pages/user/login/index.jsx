@@ -59,7 +59,6 @@ class Login extends Component {
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
       }
-      console.log(values)
       dispatch({
         type: 'userLogin/login',
         payload: { 
@@ -109,18 +108,18 @@ class Login extends Component {
       if (!this.loginForm) {
         return;
       }
-
       this.loginForm.validateFields(['userName'], {}, (err, values) => {
         if (err) {
-          reject(err);
+          message.error('请输入用户名')
+          reject(false);
         } else {
           const { dispatch } = this.props;
           dispatch({
             type: 'userLogin/postMessageCode',
             payload: {UserAccount : values.userName},
           })
-            .then(resolve)
-            .catch(reject);
+            .then(resolve(true))
+            .catch(reject(false));
         }
       });
     });
@@ -186,7 +185,7 @@ class Login extends Component {
                 this.loginForm && this.loginForm.validateFields(this.handleSubmit)
               }
             />
-           {/* <Captcha
+              <Captcha
               name="verificationCode"
               placeholder={formatMessage({
                 id: 'user-login.verification-code.placeholder',
@@ -199,7 +198,7 @@ class Login extends Component {
               getCaptchaSecondText={formatMessage({
                 id: 'user-login.captcha.second',
               })}
-            /> */}
+            />  
              <VerificaCode  //验证码
               name="verificaCode"
               loginSuccess={loginSuccess}

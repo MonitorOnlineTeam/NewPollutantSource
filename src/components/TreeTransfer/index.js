@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import { Transfer, Tree, Spin, } from 'antd'
+import { Transfer, Tree, Spin, Empty,} from 'antd'
 import { ConsoleSqlOutlined } from '@ant-design/icons';
+import { connect } from 'dva';
 import styles from './styles.less'
+
+const dvaPropsData = ({global }) => ({
+  clientHeight: global.clientHeight,
+})
+const dvaDispatch = (dispatch) => {
+  return {
+    updateState: (payload) => {
+      dispatch({
+        type: `${namespace}/updateState`,
+        payload: payload,
+      })
+    },
+  }
+}
 const Index = (props) => {
 
-  const { treeData, checkedKeys, height, } = props;
+  const { treeData, checkedKeys, height,clientHeight, } = props;
   const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
   const [isAll, setIsAll] = useState(false)
@@ -85,10 +100,11 @@ const Index = (props) => {
           if (direction === 'left') {
             const checkedKeys = [...selectedKeys, ...targetKeys]
             return (
-              <Tree
+              treeData?.length ? <Tree
                 blockNode
                 checkable
                 defaultExpandAll
+                height={510}
                 {...props}
                 checkedKeys={checkedKeys}
                 treeData={generateTree(dataSource, targetKeys)}
@@ -99,15 +115,17 @@ const Index = (props) => {
               //   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
               // }}
               />
-            )
+              :
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> )
           }
           if (direction === 'right') {
             const checkedKeys = [...selectedKeys]
             return (
-              <Tree
+              rightTreeData?.length ? <Tree
                 blockNode
                 checkable
                 defaultExpandAll
+                height={510}
                 {...props}
                 checkedKeys={checkedKeys}
                 treeData={rightTreeData}
@@ -118,7 +136,8 @@ const Index = (props) => {
               //   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
               // }}
               />
-            )
+              :
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> )
           }
         }}
       </Transfer>
@@ -263,4 +282,4 @@ const Index = (props) => {
   return <Spin spinning={initDataLoading}><TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} onSelectChange={onSelectChange} /> </Spin>
 }
 
-export default Index
+export default connect(dvaPropsData, dvaDispatch)(Index);
