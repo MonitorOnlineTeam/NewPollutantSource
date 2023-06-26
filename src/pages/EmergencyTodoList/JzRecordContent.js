@@ -179,7 +179,7 @@ class JzRecordContent extends Component {
                                 {Content!==null?Content.KlwCemsCode:null}
                             </td>
                             <td style={{ width: '16%', height: '30px' }}>
-                                        校准开始日期
+                                        校准开始时间
                             </td>
                             <td style={{ width: '16%', height: '30px' }}>
                                 {Content!==null?Content.AdjustStartTime:null}

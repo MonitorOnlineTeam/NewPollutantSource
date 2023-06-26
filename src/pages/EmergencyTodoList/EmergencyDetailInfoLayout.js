@@ -60,9 +60,9 @@ class EmergencyDetailInfoLayout extends Component {
         return (
             //breadCrumbList={this.renderBreadCrumb()}
             <div>
-                <BreadcrumbWrapper title="任务单详情"  hideBreadcrumb={hideBreadcrumb}>
+                {/* <BreadcrumbWrapper title="任务单详情"  hideBreadcrumb={hideBreadcrumb}> */}
                     <EmergencyDetailInfo isHomeModal={isHomeModal} {...match.params} history={this.props.history} />
-                </BreadcrumbWrapper>
+                {/* </BreadcrumbWrapper> */}
             </div>
         );
     }

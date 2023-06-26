@@ -1218,7 +1218,7 @@ const Index = (props) => {
   const [reportTerminaTaskId, setReportTerminaTaskId] = useState('')
   const taskUploadReport = (record) => { //上传报告
     setTaskReportVisible(true)
-
+    setReportTerminaTaskId(record.ID)
   };
   const [taskReportUploadVisible, setTaskReportUploadVisible] = useState(false)
   const taskReportUploadOk = async () => { //上传报告提交
@@ -1299,9 +1299,9 @@ const Index = (props) => {
             setFileList([file])
             // setFileList([{...file, name: file.name, url:fileBuffer}])
             if (type == 7) {
-              taskReportUploadform.setFieldsValue({ FILENAME: data.message, FILENAMEOLD: file.name, })
+              taskReportUploadform.setFieldsValue({ FILENAMEOLD: data.message, FILENAME: file.name, })
             } else {
-              taskAbnormalTerminaform.setFieldsValue({ FILENAME: data.message, FILENAMEOLD: file.name })
+              taskAbnormalTerminaform.setFieldsValue({ FILENAMEOLD: data.message, FILENAME:file.name ,  })
             }
           } else {
             file.status = 'error'

@@ -144,7 +144,7 @@ if (getPointExceptionLoading) {
     size="large"
   />);
 }
-  return <div style={{width: '100%', height: 'calc(100vh - 200px)'}}>
+  return <div style={{width: '100%', height: 'calc(100vh - 112px)'}}>
     <Map
    amapkey={config.amapKey}
   //  mapStyle="amap://styles/macaron"
@@ -191,12 +191,10 @@ if (getPointExceptionLoading) {
         visible={props.entAbnormalNumVisible}
         onCancel={()=>{ props.updateState({entAbnormalNumVisible:false})}}
         footer={null}
-        destroyOnClose
-        width='90%'
+        destroyOnClose 
+        wrapClassName="spreadOverModal"
       > 
-     <Card title={''} className={styles.mapContentSty}>
        { entMap() }
-      </Card>
    </Modal>
         </div>
   );

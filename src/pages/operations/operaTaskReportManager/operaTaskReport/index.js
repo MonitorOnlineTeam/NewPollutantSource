@@ -137,7 +137,7 @@ const Index = (props) => {
             setPageIndex(pageIndexs);
             const par = {
                 ...values,
-                ReportDate:moment(values.ReportDate).format('YYYY-MM-DD 00:00:00'),
+                ReportDate:moment(values.ReportDate).format('YYYY-MM-01 00:00:00'),
                 pageIndex: pageIndexs,
                 pageSize: pageSizes,
             }

@@ -96,7 +96,7 @@ class WaterQualityCalibrationRecord extends Component {
         }
         else {
             style = {
-                height: 'calc(100vh - 200px)'
+                height: 'calc(100vh - 170px)'
             }
         }
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
@@ -123,7 +123,7 @@ class WaterQualityCalibrationRecord extends Component {
                     <tbody>
                          <tr>
                             <td colSpan="11"  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>
-                             校准记录 
+                            水污染源自动监测仪校准记录表 
                             </td>
                         </tr> 
                         <tr>
