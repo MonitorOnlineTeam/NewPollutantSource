@@ -211,7 +211,7 @@ const Index = (props) => {
         if ((timeT1 || timeT1 == 0) && (timeT2 || timeT2 == 0)) {
             console.log(timeT1,timeT2)
             form.setFieldsValue({
-                [`ResponseTime${index}`]: (Number(timeT1) + Number(timeT2)).toFixed(2)
+                [`ResponseTime${index}`]: (Number(timeT1) + Number(timeT2)).toFixed()
             })
         }else{
             form.setFieldsValue({
@@ -221,7 +221,7 @@ const Index = (props) => {
         const resTime1 = form.getFieldValue(`ResponseTime0`), resTime2 = form.getFieldValue(`ResponseTime1`), resTime3 = form.getFieldValue(`ResponseTime2`);
 
         if ((resTime1 || resTime1 == 0) && (resTime2 || resTime2 == 0) && (resTime3 || resTime3 == 0)) {
-            const resAvg = ((Number(resTime1) + Number(resTime2) + Number(resTime3) ) / 3).toFixed(2)
+            const resAvg = ((Number(resTime1) + Number(resTime2) + Number(resTime3) ) / 3).toFixed()
             form.setFieldsValue({ AVG: resAvg })
         }else{
             form.setFieldsValue({ AVG: undefined })
@@ -417,7 +417,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
                 return <Form.Item  className={styles.reqSty}  name={`TimeT1${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <InputNumber step='0.01' placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
+                    <InputNumber  placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
                 </Form.Item>
             }
         },
@@ -427,7 +427,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
                 return <Form.Item  className={styles.reqSty} name={`TimeT2${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <InputNumber step='0.01' placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
+                    <InputNumber  placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
                 </Form.Item>
             }
         },
@@ -437,7 +437,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
                 return <Form.Item  className={styles.calculaSty} name={`ResponseTime${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <Input  disabled  />
+                    <InputNumber  disabled  />
                 </Form.Item>
             }
         },

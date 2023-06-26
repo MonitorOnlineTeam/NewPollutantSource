@@ -28,8 +28,7 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-  // testReportLoading: loading.effects[`${namespace}/exportTestPeport`],
-
+  testReportLoading: loading.effects[`${namespace}/exportTestPeport`] || false,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -54,12 +53,12 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-  const { pointId,} = props; 
+  const { pointId,testReportLoading,} = props; 
 
   useEffect(() => {
   }, [])
 
-
+  const [reportType,setReportType] = useState(1)
   const [testReportLoading1,setTestPortLoading1 ] = useState(false)
   const [testReportLoading2,setTestPortLoading2 ] = useState(false)
 
@@ -71,14 +70,15 @@ const Index = (props) => {
     },()=>{
       type == 1 ? setTestPortLoading1(false) : setTestPortLoading2(false)
     })
+    setReportType(type)
   }
 
   return (
-    <div className={styles.totalContentSty}>
-
+    <div className={styles.testReportContentSty}>
+    <Spin spinning={testReportLoading} tip={`生成${reportType==1?'Word':'Pdf' }检测报告中...`}  style={{height:'calc(100vh - 240px)'}}>
       <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading1} style={{ marginRight: 10 }} onClick={()=>{testReportClick(1)}}>生成Word检测报告</Button>
       <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading2} style={{ marginRight: 10 }} onClick={()=>{testReportClick(2)}}>生成Pdf检测报告</Button>
-
+    </Spin>
     </div>
   );
 };

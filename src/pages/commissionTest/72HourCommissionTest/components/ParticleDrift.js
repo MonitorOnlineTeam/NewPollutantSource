@@ -472,7 +472,7 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: <span style={{ color: '#fff', padding: !isClears && form.getFieldValue('SpanValue') && 4, background: form.getFieldValue('Col2') == 1 ? '#52c41a' : '#f5222d' }}>{!isClears && form.getFieldValue('SpanValue')}</span>,
+                    title: <span style={{ color: '#fff', padding: !isClears && (form.getFieldValue('SpanValue') || form.getFieldValue('SpanValue') ==0) && 4, background: form.getFieldValue('Col2') == 1 ? '#52c41a' : '#f5222d' }}>{!isClears && form.getFieldValue('SpanValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {

@@ -31,7 +31,7 @@ import ReferenceOxygenZero from './components/ReferenceOxygenZero'
 import Speed from './components/Speed'
 import Temperature from './components/Temperature'
 import Humidity from './components/Humidity'
-import TestPeport from './components/TestPeport'
+import TestReport from './components/TestReport'
 const namespace = 'hourCommissionTest'
 
 
@@ -157,7 +157,7 @@ const Index = (props) => {
       case "8":
         return <Humidity {...props} pointId={pointId}  timeCompare={timeCompare}/> //湿度CMS准确度检测
       case "9":
-        return <TestPeport pointId={pointId} /> //检测报告
+        return <TestReport pointId={pointId} /> //检测报告
       default:
         return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     }

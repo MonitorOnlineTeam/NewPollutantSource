@@ -123,7 +123,7 @@ const Index = (props) => {
             align: 'center',
             width: 70,
             render: (text, record) => {
-                return <Spin spinning={exportLoading || false} size='small'>
+                return <Spin spinning={projectID==record.projectID&&exportLoading} size='small'>
                             <a onClick={() => { generateReport(record) }}>生成报告</a>
                        </Spin>
             }
@@ -147,11 +147,12 @@ const Index = (props) => {
         }
     }
 
-
+    const [projectID,setProjectID] = useState()
     const generateReport =  (record) =>{
+        setProjectID(record.projectID)
         props.exportOperationReport({
             ...queryPar,
-            EntID:record.EntID,
+            EntID:record.entID,
             ProjectID: record.projectID,
         })
     }
@@ -179,7 +180,7 @@ const Index = (props) => {
             initialValues={{
                 ReportDate: moment().add(-1, 'month'),
             }}
-        >
+        >   
             <Form.Item label='企业名称' name='EntID' rules={[{ required: true, message: '请选择企业名称' }]}>
               <EntAtmoList style={{width:300}} noFilterEntList/>
             </Form.Item>
@@ -194,7 +195,6 @@ const Index = (props) => {
                     重置
                  </Button>
             </Form.Item>
-
         </Form>
     }
 
@@ -208,15 +208,17 @@ const Index = (props) => {
                         bordered
                         dataSource={tableDatas}
                         columns={columns}
-                        pagination={{
-                            total: tableTotal,
-                            pageSize: pageSize,
-                            current: pageIndex,
-                            showSizeChanger: true,
-                            showQuickJumper: true,
-                            onChange: handleTableChange,
-                        }}
                         scroll={{ x: 'calc(680px - 48px - 24px)', }}
+                        pagination={false}
+                        // pagination={{
+                        //     total: tableTotal,
+                        //     pageSize: pageSize,
+                        //     current: pageIndex,
+                        //     showSizeChanger: true,
+                        //     showQuickJumper: true,
+                        //     onChange: handleTableChange,
+                        // }}
+                        
                     />
                 </Card>
             </BreadcrumbWrapper>

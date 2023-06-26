@@ -76,7 +76,6 @@
     }
      
     .totalContentSty {
-
      .ant-advanced-search-form  :global{
       .ant-form-item{
         margin-bottom: 16px;
@@ -100,7 +99,11 @@
    }
 
    }
-
+   .testReportContentSty :global{
+    .ant-spin-nested-loading > div > .ant-spin{
+      max-height: none;
+    }
+   }
    .referenceOxygenTestDataSty :global{ //参比方法评估气态污染物CEMS（含氧量）准确度 基础表单
     .ant-form-item:nth-last-child(1) .ant-form-item-label{
       min-width: 100px !important;

@@ -185,7 +185,7 @@ class Login extends Component {
                 this.loginForm && this.loginForm.validateFields(this.handleSubmit)
               }
             />
-              <Captcha
+              {/* <Captcha
               name="verificationCode"
               placeholder={formatMessage({
                 id: 'user-login.verification-code.placeholder',
@@ -198,7 +198,7 @@ class Login extends Component {
               getCaptchaSecondText={formatMessage({
                 id: 'user-login.captcha.second',
               })}
-            />  
+            />   */}
              <VerificaCode  //验证码
               name="verificaCode"
               loginSuccess={loginSuccess}

@@ -365,7 +365,7 @@ const Index = (props) => {
                             const dimIndex = col1&&col1[findIndexs]
                             return {
                                 // children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>,
-                                children: <span style={{ color:  dimIndex == 1 || dimIndex == 0 && '#fff', padding: !isClears && relativeErrorVal && 4, background: dimIndex== 1 ? '#73d13d' : dimIndex == 0 ? '#ff4d4f' :'' }}>{!isClears && relativeErrorVal}</span>,
+                                children: <span style={{ color:  dimIndex == 1 || dimIndex == 0 ? '#fff' : 'rgba(0, 0, 0, 0.85)', padding: !isClears && relativeErrorVal && 4, background: dimIndex== 1 ? '#73d13d' : dimIndex == 0 ? '#ff4d4f' :'' }}>{!isClears && relativeErrorVal}</span>,
                                 props: { colSpan: 3 },
                             }
                         }
@@ -431,7 +431,7 @@ const Index = (props) => {
                         evaluation3 = evaluationArr[2];
                     }
                     const obj = {
-                        children: <ol style={{ textAlign: 'left' }}>
+                        children: <ol>
                             <li style={{ lineHeight: '24px', margin: 4 }}> <span style={{ color: '#fff', padding: evaluation1 && 4, background: col1&&col1[0] == 1 ? '#73d13d' : '#ff4d4f', }}>{evaluation1}</span></li>
                             <li style={{ lineHeight: '24px', margin: 4 }}> <span style={{ color: '#fff', padding: evaluation2 && 4, background: col1&&col1[1] == 1 ? '#73d13d' : '#ff4d4f', }}>{evaluation2}</span></li>
                             <li style={{ lineHeight: '24px', margin: 4 }}> <span style={{ color: '#fff', padding: evaluation3 && 4, background: col1&&col1[2] == 1 ? '#73d13d' : '#ff4d4f', }}>{evaluation3}</span> </li>

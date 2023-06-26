@@ -220,13 +220,13 @@ const Index = (props) => {
 
         if (guaranteedVal || guaranteedVal == 0) {
             if (afterVal || afterVal == 0) {
-                const val = ((afterVal - guaranteedVal) / guaranteedVal * 100).toFixed(2);
+                const val = ((afterVal - guaranteedVal) / guaranteedVal * 100).toFixed(1);
                 form.setFieldsValue({ [`AfterRelativeCollection${i}`]: val })
             } else {
                 form.setFieldsValue({ [`AfterRelativeCollection${i}`]: undefined })
             }
             if (beforeVal || beforeVal == 0) {
-                const val = ((beforeVal - guaranteedVal) / guaranteedVal * 100).toFixed(2);
+                const val = ((beforeVal - guaranteedVal) / guaranteedVal * 100).toFixed(1);
                 form.setFieldsValue({ [`BeforeRelativeCollection${i}`]: val })
             } else {
                 form.setFieldsValue({ [`BeforeRelativeCollection${i}`]: undefined })
@@ -427,7 +427,7 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`GuaranteedValue${index - 2}`} rules={[{ required: index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`GuaranteedValue${index - 2}`} rules={[{ required: index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.1' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
                 }
                 return obj;
             }
@@ -449,7 +449,7 @@ const Index = (props) => {
                     obj.children = '采样前'
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`BeforeCollection${index - 2}`} rules={[{ required: index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`BeforeCollection${index - 2}`} rules={[{ required: index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.1' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -472,7 +472,7 @@ const Index = (props) => {
 
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.reqSty} name={`AfterCollection${index - 2}`} rules={[{ required:  index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item className={styles.reqSty} name={`AfterCollection${index - 2}`} rules={[{ required:  index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.1' onBlur={() => { collectionBlur(index - 2) }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -493,7 +493,7 @@ const Index = (props) => {
                     obj.children = '采样前'
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.calculaSty} name={`BeforeRelativeCollection${index - 2}`} rules={[{ required:  index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>
+                    obj.children = <Form.Item className={styles.calculaSty} name={`BeforeRelativeCollection${index - 2}`} rules={[{ required:  index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.1' disabled /></Form.Item>
                 }
                 return obj;
             }
@@ -514,7 +514,7 @@ const Index = (props) => {
 
                 }
                 if (index >= 2) {
-                    obj.children = <Form.Item className={styles.calculaSty} name={`AfterRelativeCollection${index - 2}`} rules={[{ required:  index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.01' disabled /></Form.Item>
+                    obj.children = <Form.Item className={styles.calculaSty} name={`AfterRelativeCollection${index - 2}`} rules={[{ required:  index - 2 > 0 ? false : isReg, message: '' }]}><InputNumber step='0.1' disabled /></Form.Item>
 
                 }
                 return obj;
