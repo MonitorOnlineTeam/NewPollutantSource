@@ -431,6 +431,19 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    // 重置报警记录form
+    *onReset({ payload, callback }, { call, select, update }) {
+      yield update({
+        warningForm: {
+          date: [
+            moment()
+              .subtract(1, 'month')
+              .startOf('day'),
+            moment().endOf('day'),
+          ],
+        },
+      });
+    },
     // 获取模型列表
     *GetModelList({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetModelList, payload);
