@@ -236,7 +236,8 @@ const Index = (props) => {
     </Form>
   }
 
-
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
   const handleTableChange = (PageIndex, PageSize) => {
     setPageIndex(PageIndex)
     setPageSize(PageSize)
@@ -244,8 +245,7 @@ const Index = (props) => {
   }
 
 
-  const [pageSize, setPageSize] = useState(20)
-  const [pageIndex, setPageIndex] = useState(1)
+
 
   const [isPop, setIsPop] = useState(1);
   const [detailVisible, setDetailVisible] = useState(false)

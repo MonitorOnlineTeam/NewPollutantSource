@@ -1086,6 +1086,11 @@ export default {
                   component: './operations/operationRecordnalysis',
                 },
                 {
+                  path: '/operations/alarmResponseTimelyRate', //报警响应及时率
+                  name: 'alarmResponseTimelyRate',
+                  component: './operations/alarmResponseTimelyRate',
+                },
+                {
                   name: 'materielmanager',
                   path: '/operations/materielmanager',
                   routes: [

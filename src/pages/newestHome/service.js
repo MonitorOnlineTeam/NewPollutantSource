@@ -74,9 +74,3 @@ export async function GetInfoWindowData(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AllTypeSummaryList', params, null);
   return result;
 }
-
-// 报警响应及时率 
-export async function GetResponseList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetResponseList', params, null);
-  return result;
-}

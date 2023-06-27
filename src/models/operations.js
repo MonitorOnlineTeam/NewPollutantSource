@@ -75,8 +75,10 @@ export default Model.extend({
       CommandDispatchType: '',
 
     },
-    operationCompanyList:[]
-
+    operationCompanyList: [],
+    alarmResTimelyResNumTableTotal: 0,
+    alarmResTimelyResNumQueryPar: {},
+    alarmResTimelyRegQueryPar: {},
   },
   effects: {
     // 获取日历信息
@@ -119,7 +121,7 @@ export default Model.extend({
     },
 
     // 获取运维日志信息
-    *getOperationLogList({ payload,callback }, { call, put, update, select }) {
+    *getOperationLogList({ payload, callback }, { call, put, update, select }) {
       const logForm = yield select(state => state.operations.logForm);
       const time = yield select(state => state.operationform.currentDate);
       const recordTypeList = yield select(state => state.operations.recordTypeList);
@@ -142,12 +144,12 @@ export default Model.extend({
           });
         }
         yield update({
-          recordTypeList:result.Datas&&result.Datas.RecordType? result.Datas.RecordType : [],
-          timeLineList: result.Datas&&result.Datas.FormList?result.Datas.FormList : [],
+          recordTypeList: result.Datas && result.Datas.RecordType ? result.Datas.RecordType : [],
+          timeLineList: result.Datas && result.Datas.FormList ? result.Datas.FormList : [],
           timeLineTotal: result.Total,
         });
       }
-      callback&&callback();
+      callback && callback();
     },
     // 获取运维日志详情图片
     *getOperationImageList({ payload, callback }, { call, put, update }) {
@@ -244,18 +246,18 @@ export default Model.extend({
       if (result.IsSuccess) {
         payload.type === '0'
           ? yield update({
-              applyVehicleList: result.Datas,
-            })
+            applyVehicleList: result.Datas,
+          })
           : yield update({
-              vehicleList: result.Datas,
-            });
+            vehicleList: result.Datas,
+          });
       }
     },
 
     // 申请车辆
     *addVehicleApplication({ payload }, { call, put, update }) {
       const postData = {
-        Applicant:Cookie.get('currentUser')&&JSON.parse(Cookie.get('currentUser'))&& JSON.parse(Cookie.get('currentUser')).UserId,
+        Applicant: Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId,
         ...payload,
       };
       const result = yield call(services.addVehicleApplication, postData);
@@ -447,17 +449,31 @@ export default Model.extend({
       }
     },
     //查询公司运维单位列表信息
-    *getOperationCompanyList({ payload,callback }, { call, put, update, select }) {
+    *getOperationCompanyList({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.getOperationCompanyList, payload);
       if (result.IsSuccess) {
         yield update({
           operationCompanyList: result.Datas,
         });
-        callback&&callback(result.Datas)
+        callback && callback(result.Datas)
       } else {
         message.error(result.Message);
       }
-    },      
+    },
+    *getResponseList({ payload, callback }, { call, put, update }) { //报警响应及时
+      const result = yield call(services.GetResponseList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+        if (payload.pointType == 1) {
+          yield update({ alarmResTimelyRegQueryPar: payload, });
+        }
+        if (payload.pointType == 3) {
+          yield update({  alarmResTimelyResNumTableTotal: result.Total,alarmResTimelyResNumQueryPar: payload, });
+        }
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
   reducers: {
     // 更新车辆申请state

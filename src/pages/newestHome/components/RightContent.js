@@ -25,8 +25,8 @@ import OperationalExpiraModal from './springModal/operationalExpiration'
 import OverVerifyLstModal from '@/pages/IntelligentAnalysis/dataAlarm/overVerifyRate/components/OverVerifyLstModal'
 import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/EntIndexModal'
 import NetworkRateStatisticsModal from './springModal/networkRateStatistics'
-// import AlarmResponseTimeoutRateModal from './springModal/abnormalWorkStatistics'
-import AlarmResponseTimelyRateModal from './springModal/alarmResponseTimelyRateModal'
+import AlarmResponseTimeoutRateModal from './springModal/abnormalWorkStatistics'
+// import AlarmResponseTimelyRateModal from './springModal/alarmResponseTimelyRateModal'
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -344,8 +344,8 @@ const Index = (props) => {
     xAxis: { show: false, type: 'value' },
     yAxis: {
       type: 'category',
-      data: ['报警响应及时率', '缺失报警响应率', '异常报警响应率', '超标报警核实率'],
-      // data: ['报警响应超时率', '缺失报警响应率', '异常报警响应率', '超标报警核实率'],
+      // data: ['报警响应及时率', '缺失报警响应率', '异常报警响应率', '超标报警核实率'],
+      data: ['报警响应超时率', '缺失报警响应率', '异常报警响应率', '超标报警核实率'],
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: {
@@ -478,12 +478,12 @@ const Index = (props) => {
       case '超标报警核实率':
         setOverVisible(true);
         break;
-      case '报警响应及时率':
-        setAlarmResponseTimelyVisible(true);
-        break;
-      // case'报警响应超时率':
-      // setAlarmResponseVisible(true)
-      // break;
+      // case '报警响应及时率':
+      //   setAlarmResponseTimelyVisible(true);
+      //   break;
+      case'报警响应超时率':
+      setAlarmResponseVisible(true)
+      break;
     }
   }
   const { effectiveTransmissionLoading } = props;  //有效传输率
@@ -496,8 +496,8 @@ const Index = (props) => {
   const [OverVisible, setOverVisible] = useState(false)
   const [TVisible, setTVisible] = useState(false)
   const [networkVisible, setNetworkVisible] = useState(false)
-  // const [alarmResponseVisible,setAlarmResponseVisible] = useState(false)
-  const [alarmResponseTimelyVisible, setAlarmResponseTimelyVisible] = useState(false)
+  const [alarmResponseVisible,setAlarmResponseVisible] = useState(false)
+  // const [alarmResponseTimelyVisible, setAlarmResponseTimelyVisible] = useState(false)
 
 
   const pollutantType = pollType[props.type]
@@ -622,19 +622,19 @@ const Index = (props) => {
           setNetworkVisible(false)
         }}
       />
-      <AlarmResponseTimelyRateModal  //报警响应及时率弹框
+       {/* <AlarmResponseTimelyRateModal  //报警响应及时率弹框
         visible={alarmResponseTimelyVisible}
         type={pollutantType}
         onCancel={() => { setAlarmResponseTimelyVisible(false) }}
         time={[moment(dataAlarmResBtnCheck.beginTime), moment(dataAlarmResBtnCheck.endTime)]}
-      />
-      {/* <AlarmResponseTimeoutRateModal  //报警响应超时率弹框
+      />  */}
+       <AlarmResponseTimeoutRateModal  //报警响应超时率弹框
         modalType="alarmResponse"
         visible={alarmResponseVisible}
         type={pollutantType}
         onCancel={()=>{setAlarmResponseVisible(false)}}
         time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
-      />         */}
+      />
     </div>
   );
 };

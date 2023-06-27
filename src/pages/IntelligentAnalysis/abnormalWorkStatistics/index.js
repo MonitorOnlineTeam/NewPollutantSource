@@ -186,7 +186,7 @@ const Index = (props) => {
        {!isResponseModal&&!isClockAbnormalModal&&<Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
             <Select style={{width:150}} placeholder='请选择'>
                 <Option value={1}>打卡异常</Option>
-                {/* <Option value={2}>报警响应超时率</Option> */}
+                <Option value={2}>报警响应超时率</Option>
             </Select>
         </Form.Item>}
         <Form.Item>
@@ -224,7 +224,7 @@ const Index = (props) => {
        <Form.Item name='exceptionType'  label='异常类型' style={{paddingRight:'16px'}}>
            <Select placeholder='请选择' style={{width:150}}>
              <Option value={1}>打卡异常</Option>
-             {/* <Option value={2}>报警响应超时率</Option> */}
+             <Option value={2}>报警响应超时率</Option>
            </Select>
        </Form.Item>
        <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
