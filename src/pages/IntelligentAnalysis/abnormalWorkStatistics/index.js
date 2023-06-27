@@ -178,15 +178,15 @@ const Index = (props) => {
            />
      </Form.Item>
       <Form.Item label = '监测点类型'  name='pollutantType' style={{padding:'0 8px'}} >
-          <Select placeholder='监测点类型' style={{width:120}} allowClear>
+          <Select placeholder='请选择' style={{width:120}} allowClear>
             <Option value={2}>废气</Option>
             <Option value={1}>废水</Option> 
       </Select>
         </Form.Item>
        {!isResponseModal&&!isClockAbnormalModal&&<Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
-            <Select style={{width:150}} placeholder='异常类型'>
+            <Select style={{width:150}} placeholder='请选择'>
                 <Option value={1}>打卡异常</Option>
-                <Option value={2}>报警响应超时率</Option>
+                {/* <Option value={2}>报警响应超时率</Option> */}
             </Select>
         </Form.Item>}
         <Form.Item>
@@ -222,13 +222,13 @@ const Index = (props) => {
        </Row>
        <Row style={{paddingTop:8}}>
        <Form.Item name='exceptionType'  label='异常类型' style={{paddingRight:'16px'}}>
-           <Select placeholder='异常类型' style={{width:150}}>
+           <Select placeholder='请选择' style={{width:150}}>
              <Option value={1}>打卡异常</Option>
-             <Option value={2}>报警响应超时率</Option>
+             {/* <Option value={2}>报警响应超时率</Option> */}
            </Select>
        </Form.Item>
        <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
-        <Select placeholder='监测点类型' style={{width:150}} allowClear>
+        <Select placeholder='请选择' style={{width:150}} allowClear>
            <Option value={2}>废气</Option>
            <Option value={1}>废水</Option>
            </Select>

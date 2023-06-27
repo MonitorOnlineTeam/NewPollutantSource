@@ -100,7 +100,7 @@ const Index = (props) => {
           if (direction === 'left') {
             const checkedKeys = [...selectedKeys, ...targetKeys]
             return (
-              treeData?.length ? <Tree
+              generateTree(dataSource, targetKeys)?.length ? <Tree
                 blockNode
                 checkable
                 defaultExpandAll

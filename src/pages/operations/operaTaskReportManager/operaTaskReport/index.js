@@ -138,8 +138,8 @@ const Index = (props) => {
             const par = {
                 ...values,
                 ReportDate:moment(values.ReportDate).format('YYYY-MM-01 00:00:00'),
-                pageIndex: pageIndexs,
-                pageSize: pageSizes,
+                // pageIndex: pageIndexs,
+                // pageSize: pageSizes,
             }
             props.getOperationReportList(queryPar ?  {...queryPar,pageIndex:pageIndexs,pageSize:pageSizes} : par )
         } catch (errorInfo) {

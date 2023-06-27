@@ -41,6 +41,7 @@ export default Model.extend({
     smallResolution:false,
     mapStatusRegData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0},
     mapStatusEntData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0},
+    alarmResponseTimelyList:11121212,
   },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运维信息统计
@@ -210,6 +211,15 @@ export default Model.extend({
       } else {
         message.error(result.Message)
       }
-    },     
+    },  
+    *getResponseList({ payload,callback }, { call, put, update }) { //报警响应及时
+      const result = yield call(services.GetResponseList, payload);
+      if (result.IsSuccess) { 
+        yield update({ alarmResponseTimelyList: result.Datas });
+        callback&&callback(result.Datas)
+      }else{
+        message.error(result.Message)
+       }    
+      },   
   },
 })

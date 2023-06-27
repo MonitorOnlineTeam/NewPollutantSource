@@ -19,6 +19,7 @@ import {
 
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
+import TreeTransfer from '@/components/TreeTransfer'
 
 import {
   Button,
@@ -268,10 +269,11 @@ export default class UserAuthority extends Component {
     if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
       this.setState({
         newEntAndPoint: [
-          {
-            title: '全部',
-            children: nextProps.EntAndPoint,
-          },
+          // {
+          //   title: '全部',
+          //   children: nextProps.EntAndPoint,
+          // },
+          ...nextProps.EntAndPoint,
         ],
       });
     }
@@ -291,11 +293,12 @@ export default class UserAuthority extends Component {
       visibleData: true,
       DataTreeValue: [],
       checkedKey: this.props.RegionByDepID,
+      pollutantType:2,
     });
     this.props.dispatch({
       type: 'newuserinfo/getentandpoint',
       payload: {
-        PollutantType: this.state.pollutantType,
+        PollutantType: 2,
         RegionCode: '',
       },
     });
@@ -303,7 +306,7 @@ export default class UserAuthority extends Component {
       type: 'newuserinfo/getpointbydepid',
       payload: {
         UserGroup_ID: keys.toString(),
-        PollutantType: this.state.pollutantType,
+        PollutantType: 2,
         RegionCode: [],
       },
     });
@@ -798,17 +801,23 @@ export default class UserAuthority extends Component {
                 onOk={this.handleDataOK}
                 // destroyOnClose="true"
                 onCancel={()=>{this.setState({visibleData:false})}}
-                width={900}
+                width={1100}
+                // width={900}
                 confirmLoading={this.state.okLoading}
+                bodyStyle={{
+                  overflowY:'auto',
+                  maxHeight:this.props.clientHeight - 240,
+                }}
               >
                 {
 
-                  <div style={{ height: '600px', overflow: 'hidden' }}>
+                  <div>
                     <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
 
                       <SelectPollutantType
                         showType="radio"
                         mode="multiple"
+                        value={this.state.pollutantType}
                         onChange={this.handleSizeChange}
                         onlyShowEnt
                       />
@@ -832,20 +841,21 @@ export default class UserAuthority extends Component {
                         size="large"
                       />
                     ) : this.props.EntAndPoint&&this.props.EntAndPoint.length > 0 ? (
-                      <Tree
-                        key="key"
-                        style={{ height: '560px', overflow: 'auto' }}
-                        checkable
-                        onExpand={this.onExpands}
-                        treeData={this.state.newEntAndPoint}
-                        onCheck={this.onChecks}
-                        checkedKeys={this.state.checkedKeys}
-                        onSelect={this.onSelectData}
-                        // selectedKeys={this.state.selectedKeys}
-                        defaultExpandAll
-                      >
-                        {this.renderDataTreeNodes(this.state.newEntAndPoint)}
-                      </Tree>
+                      // <Tree
+                      //   key="key"
+                      //   style={{ height: '560px', overflow: 'auto' }}
+                      //   checkable
+                      //   onExpand={this.onExpands}
+                      //   treeData={this.state.newEntAndPoint}
+                      //   onCheck={this.onChecks}
+                      //   checkedKeys={this.state.checkedKeys}
+                      //   onSelect={this.onSelectData}
+                      //   // selectedKeys={this.state.selectedKeys}
+                      //   defaultExpandAll
+                      // >
+                      //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
+                      // </Tree>
+                    <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} targetKeysChange={(key)=>this.setState({checkedKeys:key})} key="key"   />
                     ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}

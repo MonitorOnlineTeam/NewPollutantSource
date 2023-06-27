@@ -881,8 +881,8 @@ export default class UserInfoIndex extends Component {
 
                   <SelectPollutantType
                     showType="radio"
-                    defaultPollutantCode={this.state.pollutantType}
                     mode="multiple"
+                    value={this.state.pollutantType}
                     onChange={this.handleSizeChange}
                     onlyShowEnt
                   />

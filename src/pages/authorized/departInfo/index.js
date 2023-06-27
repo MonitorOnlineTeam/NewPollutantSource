@@ -776,7 +776,7 @@ class DepartIndex extends Component {
       type: 'departinfo/getpointbydepid',
       payload: {
         UserGroup_ID: keys.toString(),
-        PollutantType: this.state.pollutantType,
+        PollutantType: 2,
         RegionCode: [],
       },
     });
@@ -1660,9 +1660,8 @@ class DepartIndex extends Component {
                       <SelectPollutantType
                         // style={{ marginLeft: 50, float: 'left' }}
                         showType="radio"
-                        defaultPollutantCode={this.state.pollutantType}
+                        value={this.state.pollutantType}
                         mode="multiple"
-                        // showAll
                         onlyShowEnt
                         onChange={this.handleSizeChange}
                       />
