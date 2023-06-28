@@ -146,7 +146,7 @@ const Index = (props) => {
       key: 'provinceName',
       align: 'center',
       render: (text, record, index) => {
-        if (text == '合计') {
+        if (text == '全部合计') {
           return { children: text, props: { colSpan: 2 }, };
         } else {
           return text
@@ -159,7 +159,7 @@ const Index = (props) => {
       key: 'cityName',
       align: 'center',
       render: (text, record, index) => {
-        return { props: { colSpan: text == '合计' ? 2 : 1 }, children: text, };
+        return { props: { colSpan: text == '全部合计' ? 0 : 1 }, children: text, };
       }
     },
     ...commonCol('city'),
@@ -310,16 +310,16 @@ const Index = (props) => {
   }
 
 
-  const resNumQuest = (pageIndexs, pageSizes,regionCode, status, par) => {
+  const resNumQuest = (pageIndexs, pageSizes,regionCode, status,entName, par) => {
     setResNumLoading(true)
     setPageIndex(pageIndexs)
     setPageSize(pageSizes)
-    props.getResponseList(par ? par : {
+    props.getResponseList(par? par : {
       ...regQueryPar,
       regionCode:regionCode,
       pointType: 3,
       status: status,
-      entName: resNumEntName,
+      entName: entName,
       pageIndex: pageIndexs,
       pageSize: pageSizes,
     }, (res) => {
@@ -335,15 +335,16 @@ const Index = (props) => {
   const responseNum = (record, status,type) => {
     setResNumVisible(true)
     setResNumTitle(`${record.provinceName}${type=='city' ? record.cityName : ''}-报警响应情况`)
+    setResNumEntName('')
     setResNumStatus(status)
     setResNumRegionCode(record.regionCode)
-    resNumQuest(1, 20,record.regionCode,status)
+    resNumQuest(1, 20,record.regionCode,status,'')
   }
   const [resNumEntName, setResNumEntName] = useState()
   const [resNumStatus, setResNumStatus] = useState('')
   const resStatusChange = (e) => {
     setResNumStatus(e.target.value)
-    resNumQuest(1, 20,resNumRegionCode, status)
+    resNumQuest(1, 20,resNumRegionCode, e.target.value,resNumEntName)
   }
   const resNumSearchComponents = () => {
     return <Form
@@ -354,7 +355,7 @@ const Index = (props) => {
       }}
     >
       <Form.Item>
-        <Input placeholder='请输入企业名称' allowClear onChange={(e) => setResNumEntName(e.target.value)} />
+        <Input placeholder='请输入企业名称' allowClear  onChange={(e) => setResNumEntName(e.target.value)} />
       </Form.Item>
       <Form.Item >
         <Radio.Group value={resNumStatus} onChange={resStatusChange}>
@@ -364,7 +365,7 @@ const Index = (props) => {
         </Radio.Group>
       </Form.Item>
       <Form.Item>
-        <Button type='primary' loading={resNumLoading} onClick={()=>{resNumQuest(1, 20, resNumRegionCode,resNumStatus)}}>查询</Button>
+        <Button type='primary' loading={resNumLoading} onClick={()=>{resNumQuest(1, 20, resNumRegionCode,resNumStatus,resNumEntName)}}>查询</Button>
       </Form.Item>
     </Form>
 
@@ -374,12 +375,12 @@ const Index = (props) => {
   const handleTableChange = (PageIndex, PageSize) => {
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    resNumQuest(PageIndex, PageSize,resNumRegionCode, resNumStatus, { ...resNumQueryPar, pageIndex: PageIndex, pageSize: PageSize })
+    resNumQuest(PageIndex, PageSize,resNumRegionCode, resNumStatus,resNumEntName, { ...resNumQueryPar, pageIndex: PageIndex, pageSize: PageSize })
   }
 
 
   return (
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
       <Card title={searchComponents()}>
         <SdlTable
           loading={regTableLoading}
@@ -391,6 +392,7 @@ const Index = (props) => {
         <Modal
           title={cityDetailTitle}
           wrapClassName='spreadOverModal'
+          destroyOnClose
           visible={cityDetailVisible}
           onCancel={() => { setCityDetailVisible(false) }}
           footer={null}
@@ -408,6 +410,7 @@ const Index = (props) => {
           title={resNumTitle}
           wrapClassName={`spreadOverModal`}
           className={ styles.resNumModalSty}
+          destroyOnClose
           visible={resNumVisible}
           onCancel={() => { setResNumVisible(false) }}
           footer={null}

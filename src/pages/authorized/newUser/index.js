@@ -58,7 +58,7 @@ import styles from './style.less';
 const { confirm } = Modal;
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
-@connect(({ loading, autoForm, newuserinfo, usertree,global, }) => ({
+@connect(({ loading, autoForm, newuserinfo, usertree, global, }) => ({
   loading: newuserinfo.loading,
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
@@ -259,11 +259,11 @@ export default class UserInfoIndex extends Component {
   }
 
   componentDidMount() {
-    const { match, userPar, dispatch, goDetail, depInfoList, rolesList,queryPar, } = this.props;
-    if (depInfoList.length<=0) {
+    const { match, userPar, dispatch, goDetail, depInfoList, rolesList, queryPar, } = this.props;
+    if (depInfoList.length <= 0) {
       this.getDepInfoByTree()
     }
-    if (rolesList.length<=0) {
+    if (rolesList.length <= 0) {
       this.getRolesTree()
     }
     if (goDetail) {
@@ -317,7 +317,7 @@ export default class UserInfoIndex extends Component {
     });
     this.setState({
       visibleData: true,
-      pollutantType:2,
+      pollutantType: 2,
       DataTreeValue: [],
       checkedKey: this.props.RegionByDepID,
     });
@@ -340,7 +340,7 @@ export default class UserInfoIndex extends Component {
   renderDataTreeNodes = data =>
     data.map(item => {
       if (item.children) {
-        if (this.state.leafTreeDatas.indexOf(item.key) == -1 || item.key=='0-0') {
+        if (this.state.leafTreeDatas.indexOf(item.key) == -1 || item.key == '0-0') {
           this.state.leafTreeDatas.push(item.key);
         }
       }
@@ -425,7 +425,7 @@ export default class UserInfoIndex extends Component {
     const { dispatch, userPar } = this.props;
     dispatch({
       type: 'newuserinfo/updateState',
-      payload: { userPar: { roleListID: '', groupListID: '', userName: '', userAccount: '' },queryPar:null, },
+      payload: { userPar: { roleListID: '', groupListID: '', userName: '', userAccount: '' }, queryPar: null, },
     })
   }
   loginNameChange = (e) => {
@@ -603,7 +603,7 @@ export default class UserInfoIndex extends Component {
       });
     }
   };
-  handleDataOK = e => {
+  handleDataOK = (state, callback) => {
     // console.log('regioncode=', this.state.DataTreeValue.toString());
     // console.log('DGIMN=', this.state.checkedKeys);
     // console.log('selectedRowKeys=', this.state.selectedRow.ID);
@@ -616,10 +616,12 @@ export default class UserInfoIndex extends Component {
         DGIMN: this.state.checkedKeys,
         User_ID: this.state.selectedRow.ID,
         RegionCode: this.state.DataTreeValue.toString(),
+        state: state,
         callback: res => {
           if (res.IsSuccess) {
+            callback()
             message.success('操作成功');
-            this.handleCancel();
+            // this.handleCancel();
           } else {
             message.error(res.Message);
           }
@@ -630,7 +632,6 @@ export default class UserInfoIndex extends Component {
       },
     });
   };
-
   onTableChange = (userManagePageIndex, userManagePageSize) => {
     this.props.dispatch({
       type: 'newuserinfo/updateState',
@@ -686,7 +687,7 @@ export default class UserInfoIndex extends Component {
         }
       }
     };
-    const provinceShow = this.props.configInfo&&this.props.configInfo.IsShowProjectRegion;
+    const provinceShow = this.props.configInfo && this.props.configInfo.IsShowProjectRegion;
     return (
       <BreadcrumbWrapper title="用户管理">
         <Card>
@@ -721,7 +722,7 @@ export default class UserInfoIndex extends Component {
                 treeNodeFilterProp='title'
               />
             </Form.Item>
-            {!provinceShow&&<Form.Item label='运维单位' >
+            {!provinceShow && <Form.Item label='运维单位' >
               <Input onChange={this.onOperationChange} placeholder='请输入运维单位' allowClear />
             </Form.Item>}
             <Form.Item>
@@ -848,7 +849,7 @@ export default class UserInfoIndex extends Component {
             rowKey={(record, index) => `complete${index}`}
             rowSelection={rowSelection}
             loading={this.props.loading}
-            columns={provinceShow ? this.columns.filter(item=>item.title!='运维单位'&&item.title!='业务属性'&&item.title!='行业属性') : this.columns}
+            columns={provinceShow ? this.columns.filter(item => item.title != '运维单位' && item.title != '业务属性' && item.title != '行业属性') : this.columns}
             dataSource={this.props.tableDatas}
             pagination={{
               showSizeChanger: true,
@@ -863,16 +864,16 @@ export default class UserInfoIndex extends Component {
           <Modal
             title={`设置点位访问权限-${this.state.selectedRow.userName}`}
             visible={this.state.visibleData}
-            onOk={this.handleDataOK}
-            // destroyOnClose="true"
+            destroyOnClose={true}
             onCancel={() => { this.setState({ visibleData: false }) }}
             width={1100}
-            // width={900}
-            confirmLoading={this.state.okLoading}
             bodyStyle={{
-              overflowY:'auto',
-              maxHeight:this.props.clientHeight - 240,
+              overflowY: 'auto',
+              maxHeight: this.props.clientHeight - 240,
             }}
+            // onOk={this.handleDataOK}
+            // confirmLoading={this.state.okLoading}
+            footer={null}
           >
             {
 
@@ -919,7 +920,15 @@ export default class UserInfoIndex extends Component {
                   // >
                   //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
                   // </Tree>
-                  <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} targetKeysChange={(key)=>this.setState({checkedKeys:key})} key="key"   />
+                  <Spin spinning={this.state.okLoading}>
+                    <TreeTransfer
+                      key="key"
+                      treeData={this.state.newEntAndPoint}
+                      checkedKeys={this.state.checkedKeys}
+                      targetKeysChange={(key, type, callback) => this.setState({ checkedKeys: key }, () => {
+                        this.handleDataOK(type == 1 ? 1 : 2, callback)
+                      })} />
+                  </Spin>
                 ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Transfer, Tree, Spin, Empty,} from 'antd'
-import { ConsoleSqlOutlined } from '@ant-design/icons';
+import { Transfer, Tree, Spin, Empty, } from 'antd'
+import { ConsoleSqlOutlined, CalculatorFilled } from '@ant-design/icons';
 import { connect } from 'dva';
 import styles from './styles.less'
 
-const dvaPropsData = ({global }) => ({
+const dvaPropsData = ({ global }) => ({
   clientHeight: global.clientHeight,
 })
 const dvaDispatch = (dispatch) => {
@@ -19,7 +19,7 @@ const dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
-  const { treeData, checkedKeys, height,clientHeight, } = props;
+  const { treeData, checkedKeys, height, clientHeight, } = props;
   const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
   const [isAll, setIsAll] = useState(false)
@@ -94,6 +94,7 @@ const Index = (props) => {
         dataSource={transferDataSource}
         className={styles["tree-transfer"]}
         render={item => item.title}
+        titles={['待分配点位','分配点位']}
       // showSelectAll={false}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
@@ -115,8 +116,8 @@ const Index = (props) => {
               //   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
               // }}
               />
-              :
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> )
+                :
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />)
           }
           if (direction === 'right') {
             const checkedKeys = [...selectedKeys]
@@ -136,8 +137,8 @@ const Index = (props) => {
               //   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
               // }}
               />
-              :
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> )
+                :
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />)
           }
         }}
       </Transfer>
@@ -245,9 +246,9 @@ const Index = (props) => {
       }
     })
     setTargetKeys([...targetKeys, ...keys])
-    setTimeout(()=>{
+    setTimeout(() => {
       setInitDataLoading(false)
-    },3000)
+    }, 3000)
   }
   const onChange = (keys, direction, moveKeys) => {
     let changeArrType = 1 // 0-删除  1-新增
@@ -267,17 +268,13 @@ const Index = (props) => {
       }
     }
     setTargetKeys(keys)
-    props.targetKeysChange(keys)
     let keysList = changeArrType === 1 ? keys : moveKeys
-    getRightTreeData(keysList, changeArrType)
+    props.targetKeysChange? props.targetKeysChange(keysList,changeArrType,()=>{
+       getRightTreeData(keysList, changeArrType)
+    }) :  getRightTreeData(keysList, changeArrType)
   }
   const onSelectChange = (key, targetSelectedKeys) => {
     const arr = key.filter(item => item !== "")
-    //  if(arr&&arr?.[0] === treeData[0].key){
-    //    setIsAll(true)
-    //  }else{
-    //    setIsAll(false)
-    //  }
   }
   return <Spin spinning={initDataLoading}><TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} onSelectChange={onSelectChange} /> </Spin>
 }
