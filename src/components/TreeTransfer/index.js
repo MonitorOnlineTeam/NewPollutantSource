@@ -105,7 +105,7 @@ const Index = (props) => {
                 blockNode
                 checkable
                 defaultExpandAll
-                height={510}
+                height={550}
                 {...props}
                 checkedKeys={checkedKeys}
                 treeData={generateTree(dataSource, targetKeys)}
@@ -126,7 +126,7 @@ const Index = (props) => {
                 blockNode
                 checkable
                 defaultExpandAll
-                height={510}
+                height={550}
                 {...props}
                 checkedKeys={checkedKeys}
                 treeData={rightTreeData}
@@ -267,14 +267,20 @@ const Index = (props) => {
         })
       }
     }
+    // let addKeys = [];
+    // keys.forEach((item) => {
+    //     if (addKeys.indexOf(item) === -1) {
+    //       addKeys.push(item)
+    //     }
+    // })
     setTargetKeys(keys)
     let keysList = changeArrType === 1 ? keys : moveKeys
-    props.targetKeysChange? props.targetKeysChange(keysList,changeArrType,()=>{
+    props.targetKeysChange? props.targetKeysChange(moveKeys,changeArrType,()=>{
        getRightTreeData(keysList, changeArrType)
     }) :  getRightTreeData(keysList, changeArrType)
   }
+  
   const onSelectChange = (key, targetSelectedKeys) => {
-    const arr = key.filter(item => item !== "")
   }
   return <Spin spinning={initDataLoading}><TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} onSelectChange={onSelectChange} /> </Spin>
 }

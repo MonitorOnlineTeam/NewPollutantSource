@@ -96,6 +96,7 @@ export default class UserInfoIndex extends Component {
       newEntAndPoint: [],
       okLoading: false,
       pollutantType: 2,
+      entPointName:'',
     };
 
     this.columns = [
@@ -548,13 +549,13 @@ export default class UserInfoIndex extends Component {
       payload: {
         UserGroup_ID: keys.toString(),
         PollutantType: e.target.value,
-        RegionCode: this.state.DataTreeValue.toString(),
+        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
       },
     });
     this.props.dispatch({
       type: 'newuserinfo/getentandpoint',
       payload: {
-        RegionCode: this.state.DataTreeValue.toString(),
+        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
         PollutantType: e.target.value,
       },
     });
@@ -603,6 +604,17 @@ export default class UserInfoIndex extends Component {
       });
     }
   };
+  pointAccessClick = () =>{
+    console.log(this.state.entPointName)
+    this.props.dispatch({
+      type: 'newuserinfo/getentandpoint',
+      payload: {
+        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
+        PollutantType: this.state.pollutantType,
+        Name:this.state.entPointName,
+      },
+    });
+  }
   handleDataOK = (state, callback) => {
     // console.log('regioncode=', this.state.DataTreeValue.toString());
     // console.log('DGIMN=', this.state.checkedKeys);
@@ -619,8 +631,8 @@ export default class UserInfoIndex extends Component {
         state: state,
         callback: res => {
           if (res.IsSuccess) {
-            callback()
             message.success('操作成功');
+            callback()
             // this.handleCancel();
           } else {
             message.error(res.Message);
@@ -671,7 +683,7 @@ export default class UserInfoIndex extends Component {
       searchPlaceholder: '行政区',
       treeDefaultExpandedKeys: ['0'],
       style: {
-        width: 400,
+        width: 200,
         marginLeft: 16,
       },
       dropdownStyle: {
@@ -867,13 +879,14 @@ export default class UserInfoIndex extends Component {
             destroyOnClose={true}
             onCancel={() => { this.setState({ visibleData: false }) }}
             width={1100}
+            footer={null}
             bodyStyle={{
               overflowY: 'auto',
               maxHeight: this.props.clientHeight - 240,
             }}
-            // onOk={this.handleDataOK}
-            // confirmLoading={this.state.okLoading}
-            footer={null}
+          // onOk={this.handleDataOK}
+          // confirmLoading={this.state.okLoading}
+
           >
             {
 
@@ -894,6 +907,10 @@ export default class UserInfoIndex extends Component {
                     allowClear
                     placeholder='请选择行政区'
                   />
+                  <Input.Group  compact  style={{  width: 265,marginLeft:16, display:'inline-block'  }}>
+                    <Input style={{  width: 200}} allowClear placeholder='请输入企业或监测点名称'  onBlur={(e)=>this.setState({entPointName:e.target.value})}/>
+                    <Button type="primary" onClick={this.pointAccessClick}>查询</Button>
+                  </Input.Group>
                 </Row>
                 {this.props.CheckPointLoading || this.props.getentandpointLoading ? (
                   <Spin

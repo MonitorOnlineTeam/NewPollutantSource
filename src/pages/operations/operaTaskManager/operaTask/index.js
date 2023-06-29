@@ -1251,7 +1251,7 @@ const Index = (props) => {
         }
       }, () => {
         setTaskAbnormalTerminaVisible(false);
-        initData();
+         onFinish(1)
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);

@@ -810,13 +810,13 @@ class DepartIndex extends Component {
       payload: {
         UserGroup_ID: keys.toString(),
         PollutantType: e.target.value,
-        RegionCode: this.state.DataTreeValue.toString(),
+        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
       },
     });
     this.props.dispatch({
       type: 'departinfo/getentandpoint',
       payload: {
-        RegionCode: this.state.DataTreeValue.toString(),
+        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
         PollutantType: e.target.value,
       },
     });
@@ -866,7 +866,7 @@ class DepartIndex extends Component {
       });
     }
   };
-  handleDataOK = e => {
+  handleDataOK = (state, callback)  => {
     //提交
     // console.log('regioncode=', this.state.DataTreeValue.toString());
     // console.log('DGIMN=', this.state.checkedKeys);
@@ -878,10 +878,12 @@ class DepartIndex extends Component {
         DGIMN: this.state.checkedKeys,
         UserGroup_ID: this.state.selectedRowKeys.key,
         RegionCode: this.state.DataTreeValue.toString(),
+        state: state,
         callback: res => {
           if (res.IsSuccess) {
             message.success('成功');
-            this.handleCancel();
+            callback()
+            // this.handleCancel();
           } else {
             message.error(res.Message);
           }
@@ -1374,7 +1376,7 @@ class DepartIndex extends Component {
       placeholder: '行政区',
       treeDefaultExpandedKeys: ['0'],
       style: {
-        width: 400,
+        width: 200,
         marginLeft: 16,
       },
       dropdownStyle: {
@@ -1628,16 +1630,17 @@ class DepartIndex extends Component {
               <Modal
                 title={`设置点位访问权限-${this.state.selectedRowKeys.UserGroup_Name}`}
                 visible={this.state.visibleData}
-                onOk={this.handleDataOK}
-                destroyOnClose={true}
+                destroyOnClose
                 onCancel={this.handleCancel}
                 width={1100}
-                confirmLoading={this.props.dataLoading}
+                footer={null}
                 bodyStyle={{
                   overflowY:'auto',
                   maxHeight:this.props.clientHeight - 240,
                 }}
-                // destroyOnClose
+                // confirmLoading={this.props.dataLoading}
+                // onOk={this.handleDataOK}
+
               >
                 {
                   // (this.props.GetRegionInfoByTree && this.props.CheckPointLoading) ? <Spin
@@ -1703,7 +1706,15 @@ class DepartIndex extends Component {
                       // >
                       //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
                       // </Tree>
-                     <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} targetKeysChange={(key)=>this.setState({checkedKeys:key})} key="key"  />
+                      <Spin spinning={this.props.dataLoading}>
+                      <TreeTransfer
+                        key="key"
+                        treeData={this.state.newEntAndPoint}
+                        checkedKeys={this.state.checkedKeys}
+                        targetKeysChange={(key, type, callback) => this.setState({ checkedKeys: key }, () => {
+                          this.handleDataOK(type == 1 ? 1 : 2, callback)
+                        })} />
+                    </Spin>
                     ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}

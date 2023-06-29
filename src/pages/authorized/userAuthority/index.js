@@ -509,13 +509,13 @@ export default class UserAuthority extends Component {
       payload: {
         UserGroup_ID: keys.toString(),
         PollutantType: e.target.value,
-        RegionCode: this.state.DataTreeValue.toString(),
+        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
       },
     });
     this.props.dispatch({
       type: 'newuserinfo/getentandpoint',
       payload: {
-        RegionCode: this.state.DataTreeValue.toString(),
+        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
         PollutantType: e.target.value,
       },
     });
@@ -564,7 +564,7 @@ export default class UserAuthority extends Component {
       });
     }
   };
-  handleDataOK = e => {
+  handleDataOK = (state, callback)  => {
     // console.log('regioncode=', this.state.DataTreeValue.toString());
     // console.log('DGIMN=', this.state.checkedKeys);
     // console.log('selectedRowKeys=', this.state.selectedRow.ID);
@@ -577,10 +577,12 @@ export default class UserAuthority extends Component {
         User_ID: this.state.selectedRow.ID,
         Type: this.state.pollutantType,
         RegionCode: this.state.DataTreeValue.toString(),
+        state: state,
         callback: res => {
           if (res.IsSuccess) {
             message.success('操作成功');
-            this.handleCancel();
+            callback()
+            // this.handleCancel();
           } else {
             message.error(res.Message);
           }
@@ -621,7 +623,7 @@ export default class UserAuthority extends Component {
       searchPlaceholder: '行政区',
       treeDefaultExpandedKeys: ['0'],
       style: {
-        width: 400,
+        width: 200,
         marginLeft: 16,
       },
       dropdownStyle: {
@@ -797,17 +799,17 @@ export default class UserAuthority extends Component {
 
             <Modal
                 title={`设置点位访问权限-${this.state.selectedRow.userName}`}
-                visible={this.state.visibleData}
-                onOk={this.handleDataOK}
-                // destroyOnClose="true"
+                visible={this.state.visibleData}        
+                destroyOnClose
                 onCancel={()=>{this.setState({visibleData:false})}}
                 width={1100}
-                // width={900}
-                confirmLoading={this.state.okLoading}
+                footer={null}
                 bodyStyle={{
                   overflowY:'auto',
                   maxHeight:this.props.clientHeight - 240,
                 }}
+                // onOk={this.handleDataOK}
+                // confirmLoading={this.state.okLoading}
               >
                 {
 
@@ -855,7 +857,15 @@ export default class UserAuthority extends Component {
                       // >
                       //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
                       // </Tree>
-                    <TreeTransfer  treeData={this.state.newEntAndPoint}  checkedKeys={this.state.checkedKeys} targetKeysChange={(key)=>this.setState({checkedKeys:key})} key="key"   />
+                      <Spin spinning={this.state.okLoading}>
+                      <TreeTransfer
+                        key="key"
+                        treeData={this.state.newEntAndPoint}
+                        checkedKeys={this.state.checkedKeys}
+                        targetKeysChange={(key, type, callback) => this.setState({ checkedKeys: key }, () => {
+                          this.handleDataOK(type == 1 ? 1 : 2, callback)
+                        })} />
+                    </Spin>
                     ) : (
                       <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     )}
