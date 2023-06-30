@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Modal, Row, Col } from 'antd';
+import { Modal, Empty, Row, Col } from 'antd';
 // import styles from '../styles.less';
 
 const pollutantOrder = {
@@ -85,17 +85,11 @@ const Index = props => {
     });
   };
 
-  return (
-    <Modal
-      centered
-      // title="超标报警核实率"
-      visible={visible}
-      footer={null}
-      wrapClassName="spreadOverModal"
-      destroyOnClose
-      onCancel={onCancel}
-    >
-      <h1 style={{ textAlign: 'center' }}>{title}</h1>
+  const getPageContent = () => {
+    if (!images.length) {
+      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+    }
+    return (
       <Row>
         <Col span={24}>
           <Row>
@@ -106,7 +100,28 @@ const Index = props => {
         <Col span={12}>{renderImages(leftImages)}</Col>
         <Col span={12}>{renderImages(rightImages)}</Col>
       </Row>
-    </Modal>
+    );
+  };
+
+  return (
+    <>
+      {visible !== undefined ? (
+        <Modal
+          centered
+          // title="超标报警核实率"
+          visible={visible}
+          footer={null}
+          wrapClassName="spreadOverModal"
+          destroyOnClose
+          onCancel={onCancel}
+        >
+          <h1 style={{ textAlign: 'center' }}>{title}</h1>
+          {getPageContent()}
+        </Modal>
+      ) : (
+        <>{getPageContent()}</>
+      )}
+    </>
   );
 };
 

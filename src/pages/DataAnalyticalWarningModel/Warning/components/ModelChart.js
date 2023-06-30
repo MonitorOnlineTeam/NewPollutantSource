@@ -11,7 +11,6 @@ const ModelChart = props => {
   const { chartData, color } = props;
   const [legendIndex, setLegendIndex] = useState(0);
 
-  console.log('chartData', chartData);
   useEffect(() => {}, []);
 
   const getOption = () => {
@@ -20,17 +19,21 @@ const ModelChart = props => {
     ];
 
     let seriesMarkLine = [];
-    if (standardLower !== null) {
+    if (standardLower !== null && standardLower !== undefined) {
       seriesMarkLine.push({
         yAxis: standardLower,
       });
     }
-    if (standardUpper !== null) {
+    if (standardUpper !== null && standardUpper !== undefined) {
       seriesMarkLine.push({
         yAxis: standardUpper,
       });
     }
     let xAxisData = date.map(item => moment(item).format('MM-DD HH:mm'));
+
+    // 获取非正常图表配置
+    const abnormalObj = abnormalChartOption();
+
     return {
       color: color,
       title: {
@@ -46,6 +49,7 @@ const ModelChart = props => {
       // },
       tooltip: {
         trigger: 'axis',
+        ...abnormalObj.tooltipFormatter,
         // axisPointer: {
         //   type: 'cross',
         //   label: {
@@ -85,6 +89,7 @@ const ModelChart = props => {
             silent: true,
             data: seriesMarkLine,
           },
+          ...abnormalObj.symbolObj,
         },
         // {
         //   name: '上限',
@@ -116,6 +121,51 @@ const ModelChart = props => {
         // },
       ],
     };
+  };
+
+  // 获取非正常图表配置
+  const abnormalChartOption = () => {
+    const { dataFlagName, workingFlagName, unit } = chartData.data[legendIndex];
+    // 判断是否是非正常标记图表
+    let abnormalObj = { symbolObj: {}, tooltipFormatter: {} };
+    if (dataFlagName && workingFlagName) {
+      // 数据异常标记为三角形
+      abnormalObj.symbolObj = {
+        symbol: (value, params) => {
+          // console.log('params', params);
+          let flag = dataFlagName[params.dataIndex];
+          if (flag === '正常' || flag === '') {
+            return 'circle';
+          } else {
+            return 'triangle';
+          }
+        },
+        symbolSize: (value, params) => {
+          let flag = dataFlagName[params.dataIndex];
+          if (flag === '正常' || flag === '') {
+            return 4;
+          } else {
+            return 16;
+          }
+        },
+      };
+
+      // 处理tooltip
+      abnormalObj.tooltipFormatter = {
+        formatter: function(params) {
+          let { axisValue, dataIndex, marker, seriesName, value } = params[0];
+          let date = axisValue;
+          let WorkCon = `工况：${workingFlagName[dataIndex]}`;
+          //内容
+          let content = '';
+          content = `${marker} ${seriesName}: ${value}${unit}
+        (${dataFlagName[dataIndex]})<br />`;
+          return date + '<br />' + WorkCon + '<br />' + content;
+        },
+      };
+    }
+
+    return abnormalObj;
   };
 
   //

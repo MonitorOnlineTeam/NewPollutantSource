@@ -549,5 +549,27 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    // 获取已关联排口
+    *GetAllTypeDataListForModel({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetAllTypeDataListForModel, payload);
+      if (result.IsSuccess) {
+        yield update({
+          allTypeDataList: result.Datas,
+        });
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 导出报警关联数据
+    *ExportHourDataForModel({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.ExportHourDataForModel, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        window.open(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
   },
 });

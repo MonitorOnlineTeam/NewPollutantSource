@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import {} from 'antd';
+import { Divider, Space } from 'antd';
 import SdlTable from '@/components/SdlTable';
+import styles from '../../styles.less';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({});
 
 const ModelTable = props => {
-  const { tableData } = props;
+  const { tableData, WarningTypeCode } = props;
   const [columns, set] = useState({});
 
   useEffect(() => {}, []);
@@ -40,13 +41,46 @@ const ModelTable = props => {
     ];
   };
 
+  const getFormula = () => {
+    if (WarningTypeCode === 'a59cce2a-8558-4c42-8a45-4d8402e4b29d') {
+      console.log('tableData.Column.length', tableData.Column.length)
+      if (tableData.Column.length === 6) {
+        return (
+          <div className={styles.formulaBox}>
+            <p className={styles.title}>折算值计算公式</p>
+            <img src="/dataModal/1.png" />
+          </div>
+        );
+      } else {
+        return (
+          <>
+            <div className={styles.formulaBox}>
+              <p className={styles.title}>烟气流量计算公式</p>
+              <img src="/dataModal/2.png" />
+            </div>
+            {/* <Divider type='vertical' /> */}
+            <div className={styles.formulaBox}>
+              <p className={styles.title}>湿烟气流量计算公式</p>
+              <img src="/dataModal/3.png" />
+            </div>
+          </>
+        );
+      }
+    }
+  };
+
   return (
-    <SdlTable
-      align="center"
-      columns={getColumns()}
-      dataSource={tableData.Data}
-      pagination={false}
-    />
+    <>
+      <SdlTable
+        align="center"
+        columns={getColumns()}
+        dataSource={tableData.Data}
+        pagination={false}
+      />
+      <div className={styles.formulaImageWrapper}>
+        <Space size={20}>{getFormula()}</Space>
+      </div>
+    </>
   );
 };
 
