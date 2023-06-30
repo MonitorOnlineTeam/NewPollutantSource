@@ -68,6 +68,11 @@
   .chartWrapper {
     padding: 20px 0;
     height: 320px;
+    width: 100%;
+
+    & > div {
+      width: 100%;
+    }
   }
 }
 
@@ -124,6 +129,10 @@
       cursor: pointer;
       color: rgb(204, 204, 204);
 
+      &:last-child {
+        margin-right: 0;
+      }
+
       &.active {
         color: rgba(0, 0, 0, 0.85);
       }
@@ -137,6 +146,31 @@
         // background: #5e9df8;
         background: rgb(204, 204, 204);
       }
+    }
+  }
+}
+
+.WarningDataTable {
+  :global {
+    .ant-table-tbody td {
+      padding: 0 !important;
+    }
+  }
+
+  .tdBox {
+    padding: 8px;
+  }
+}
+
+// 公式
+.formulaImageWrapper {
+  padding: 0 20px;
+  margin-top: 20px;
+  .formulaBox {
+    display: inline-block;
+    .title {
+      font-size: 16px;
+      font-weight: bold;
     }
   }
 }

@@ -47,24 +47,48 @@ export async function SavePointParamsRange(params) {
 
 // 获取模型基础信息和参数配置
 export async function GetModelInfoAndParams(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetModelInfoAndParams', params);
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/GetModelInfoAndParams',
+    params,
+  );
   return result;
 }
 
 // 保存模型基础信息和参数配置
 export async function SaveModelInfoAndParams(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/SaveModelInfoAndParams', params);
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/SaveModelInfoAndParams',
+    params,
+  );
   return result;
 }
 
 // 获取已关联排口
 export async function GetModelRelationDGIMN(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetModelRelationDGIMN', params);
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/GetModelRelationDGIMN',
+    params,
+  );
   return result;
 }
 
 // 保存关联排口
 export async function SaveModelRelationDGIMN(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/SaveModelRelationDGIMN', params);
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/SaveModelRelationDGIMN',
+    params,
+  );
+  return result;
+}
+
+// 获取报警数据
+export async function GetAllTypeDataListForModel(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetAllTypeDataListForModel', params);
+  return result;
+}
+
+// 导出报警数据
+export async function ExportHourDataForModel(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/ExportHourDataForModel', params);
   return result;
 }
