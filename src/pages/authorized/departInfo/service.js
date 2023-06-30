@@ -195,6 +195,7 @@ export async function insertpointfilterbydepid(params) {
     DGIMN: params.DGIMN,
     Type: params.Type,
     RegionCode: params.RegionCode,
+    state:params.state,
   };
   const result = post(
     '/api/rest/PollutantSourceApi/AuthorApi/InsertPointFilterByDepID',

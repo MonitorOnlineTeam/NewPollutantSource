@@ -5,6 +5,7 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config';
+import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
   namespace: 'operations',
@@ -470,6 +471,16 @@ export default Model.extend({
         if (payload.pointType == 3) {
           yield update({  alarmResTimelyResNumTableTotal: result.Total,alarmResTimelyResNumQueryPar: payload, });
         }
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *exportResponseList({ payload, callback }, { call, put, update }) { //报警响应及时 导出
+      const result = yield call(services.ExportResponseList, payload);
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+        callback()
       } else {
         message.error(result.Message)
       }

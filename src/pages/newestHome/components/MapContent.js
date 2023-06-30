@@ -83,7 +83,7 @@ class Index extends PureComponent {
           mapInstance.setFitView();//自动适应显示你想显示的范围区域
 
         }
-
+        // aMap.setFeatures(['bg','point','road','building'])
         console.log(mapInstance)
       },
       zoomchange: (value) => {
@@ -198,8 +198,12 @@ class Index extends PureComponent {
       Markers = amap.Markers;
       InfoWindow = amap.InfoWindow;
     }
+
   }
   componentDidMount() {
+    window._AMapSecurityConfig = {
+      securityJsCode: 'a74ee5d040647b0512c842cff7d76517',
+    }
     this.initData()
   }
 
@@ -1004,11 +1008,13 @@ class Index extends PureComponent {
       <PageLoading />
       :
       <Map
-        amapkey={config.amapKey}
+        amapkey={'a6202668a4412c04000baaf7625752bf'}
         events={this.amapEvents}
-        mapStyle="amap://styles/darkblue"
-        // useAMapUI={!config.offlineMapUrl.domain}
         version='1.4.19'
+        mapStyle='amap://styles/a0e33cc065bb7d9cb66b1fe3d9810781'
+        // amapkey={config.amapKey}
+        // mapStyle="amap://styles/darkblue"
+        // useAMapUI={!config.offlineMapUrl.domain}
 
       >
 

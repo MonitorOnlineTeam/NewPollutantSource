@@ -142,3 +142,9 @@ export async function GetResponseList(params) {
   const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetResponseList', params, null);
   return result;
 }
+
+// 报警响应及时率 导出
+export async function ExportResponseList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/ExportResponseList', params, null);
+  return result;
+}

@@ -294,6 +294,7 @@ export default class UserAuthority extends Component {
       DataTreeValue: [],
       checkedKey: this.props.RegionByDepID,
       pollutantType:2,
+      entPointName:'',
     });
     this.props.dispatch({
       type: 'newuserinfo/getentandpoint',
@@ -564,6 +565,16 @@ export default class UserAuthority extends Component {
       });
     }
   };
+  pointAccessClick = () =>{
+    this.props.dispatch({
+      type: 'newuserinfo/getentandpoint',
+      payload: {
+        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
+        PollutantType: this.state.pollutantType,
+        Name:this.state.entPointName,
+      },
+    });
+  }
   handleDataOK = (state, callback)  => {
     // console.log('regioncode=', this.state.DataTreeValue.toString());
     // console.log('DGIMN=', this.state.checkedKeys);
@@ -830,6 +841,10 @@ export default class UserAuthority extends Component {
                         allowClear
                         placeholder='请选择行政区'
                       />
+                     <Input.Group compact style={{ width: 265, marginLeft: 16, display: 'inline-block' }}>
+                        <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onBlur={(e) => this.setState({ entPointName: e.target.value })} />
+                        <Button type="primary" onClick={this.pointAccessClick}>查询</Button>
+                      </Input.Group>
                     </Row>
                     {this.props.CheckPointLoading || this.props.getentandpointLoading ? (
                       <Spin

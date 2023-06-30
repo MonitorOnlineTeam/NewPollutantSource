@@ -41,6 +41,13 @@ const dvaDispatch = (dispatch) => {
         callback: callback,
       })
     },
+    exportResponseList: (payload, callback) => {
+      dispatch({
+        type: `${namespace}/exportResponseList`,
+        payload: payload,
+        callback: callback,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -54,7 +61,7 @@ const Index = (props) => {
     onFinish(1)
   }, [])
 
-  const commonCol = (type) =>[
+  const commonCol = (type) => [
     {
       title: '报警响应情况',
       width: 200,
@@ -66,7 +73,7 @@ const Index = (props) => {
           width: 50,
           align: 'center',
           render: (text, record) => {
-            return <Button type="link" onClick={() => { responseNum(record, '',type) }}>{text}</Button>
+            return <Button type="link" onClick={() => { responseNum(record, '', type) }}>{text}</Button>
           }
         },
         {
@@ -76,7 +83,7 @@ const Index = (props) => {
           width: 100,
           align: 'center',
           render: (text, record) => {
-            return <Button type="link" onClick={() => { responseNum(record, 1,type) }}>{text}</Button>
+            return <Button type="link" onClick={() => { responseNum(record, 1, type) }}>{text}</Button>
           }
         },
         {
@@ -86,7 +93,7 @@ const Index = (props) => {
           width: 100,
           align: 'center',
           render: (text, record) => {
-            return <Button type="link" onClick={() => { responseNum(record, 2,type) }}>{text}</Button>
+            return <Button type="link" onClick={() => { responseNum(record, 2, type) }}>{text}</Button>
           }
         },
         {
@@ -137,7 +144,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        return index+1
+        return index + 1
       }
     },
     {
@@ -219,6 +226,20 @@ const Index = (props) => {
     },
     {
       title: '报警生成时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '响应人',
+      dataIndex: 'responseName',
+      key: 'responseName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '报警响应时间',
       dataIndex: 'responseTime',
       key: 'responseTime',
       align: 'center',
@@ -259,16 +280,17 @@ const Index = (props) => {
         </Select>
       </Form.Item>
       <Form.Item label='报警类型' name='exceptionType'>
-        <Select style={{ width: 220 }} placeholder='请选择' allowClear  mode="multiple"  maxTagCount={2}  maxTagPlaceholder="...">
+        <Select style={{ width: 220 }} placeholder='请选择' allowClear mode="multiple" maxTagCount={2} maxTagPlaceholder="...">
           <Option value={0}>超标报警</Option>
           <Option value={2}>异常报警</Option>
           <Option value={12}>缺失报警</Option>
         </Select>
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType='submit' loading={regTableLoading}>
+        <Button type="primary" htmlType='submit' loading={regTableLoading} style={{ marginRight: 8 }}>
           查询
        </Button>
+        <Button icon={<ExportOutlined />} loading={regExportLoading} onClick={() => { exportClick(1) }} >导出 </Button>
       </Form.Item>
     </Form>
 
@@ -298,25 +320,51 @@ const Index = (props) => {
         }
       })
     } catch (errorInfo) {
+      setRegTableLoading(false)
+      setCityTableLoading(false)
+      console.log('Failed:', errorInfo);
+    }
+  }
+  const [regExportLoading, setRegExportLoading] = useState(false)
+  const [cityExportLoading, setCityExportLoading] = useState(false)
+  const exportClick = async (type, regionCode) => {
+    type == 1 ? setRegExportLoading(true) : setCityExportLoading(true)
+    try {
+      const values = await form.validateFields();
+      props.exportResponseList(type == 1 ? {
+        ...values,
+        pointType: 1,
+        beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        time: undefined,
+      } : { ...regQueryPar, pointType: 2, regionCode: regionCode },
+      () => {
+        type == 1 ? setRegExportLoading(false) : setCityExportLoading(false);
+      })
+    } catch (errorInfo) {
+      setRegExportLoading(false)
+      setCityExportLoading(false)
       console.log('Failed:', errorInfo);
     }
   }
   const [cityDetailVisible, setCityDetailVisible] = useState(false)
   const [cityDetailTitle, setCityDetailTitle] = useState()
+  const [cityCode, setCityCode] = useState()
   const regDetail = (record) => {
     setCityDetailVisible(true)
     setCityDetailTitle(`${record.provinceName}-报警响应及时率详情`)
+    setCityCode(record.regionCode)
     onFinish(2, record.regionCode)
   }
 
-
-  const resNumQuest = (pageIndexs, pageSizes,regionCode, status,entName, par) => {
+  const [resNumLoading, setResNumLoading] = useState(false)
+  const resNumQuest = (pageIndexs, pageSizes, regionCode, status, entName, par) => {
     setResNumLoading(true)
     setPageIndex(pageIndexs)
     setPageSize(pageSizes)
-    props.getResponseList(par? par : {
+    props.getResponseList(par ? par : {
       ...regQueryPar,
-      regionCode:regionCode,
+      regionCode: regionCode,
       pointType: 3,
       status: status,
       entName: entName,
@@ -329,22 +377,38 @@ const Index = (props) => {
   }
   const [resNumVisible, setResNumVisible] = useState(false)
   const [resNumTitle, setResNumTitle] = useState()
-  const [resNumLoading, setResNumLoading] = useState(false)
   const [resNumTable, setResNumTable] = useState([])
   const [resNumRegionCode, setResNumRegionCode] = useState()
-  const responseNum = (record, status,type) => {
+  const responseNum = (record, status, type) => {
     setResNumVisible(true)
-    setResNumTitle(`${record.provinceName}${type=='city' ? record.cityName : ''}-报警响应情况`)
+    setResNumTitle(`${record.provinceName}${type == 'city' ? record.cityName : ''}-报警响应情况`)
     setResNumEntName('')
     setResNumStatus(status)
-    setResNumRegionCode(record.regionCode)
-    resNumQuest(1, 20,record.regionCode,status,'')
+    console.log(record,type,resNumQueryPar)
+    const regCode  = type == 'city'&&record.cityName=='全部合计'? resNumQueryPar.regionCode : record.regionCode
+    setResNumRegionCode(regCode)
+    resNumQuest(1, 20, regCode, status, '')
   }
+
   const [resNumEntName, setResNumEntName] = useState()
   const [resNumStatus, setResNumStatus] = useState('')
-  const resStatusChange = (e) => {
+  const resStatusChange = ( regionCode, status, entName,) => {
     setResNumStatus(e.target.value)
-    resNumQuest(1, 20,resNumRegionCode, e.target.value,resNumEntName)
+    resNumQuest(1, 20, resNumRegionCode, e.target.value, resNumEntName)
+  }
+  const [resNumExportLoading, setResNumExportLoading] = useState(false)
+
+  const resNumExport = ( regionCode, status, entName,) =>{
+    setResNumExportLoading(true)
+    props.exportResponseList({
+      ...regQueryPar,
+      regionCode: regionCode,
+      pointType: 3,
+      status: status,
+      entName: entName,
+    }, () => {
+      setResNumExportLoading(false)
+    })
   }
   const resNumSearchComponents = () => {
     return <Form
@@ -355,7 +419,7 @@ const Index = (props) => {
       }}
     >
       <Form.Item>
-        <Input placeholder='请输入企业名称' allowClear  onChange={(e) => setResNumEntName(e.target.value)} />
+        <Input placeholder='请输入企业名称' allowClear onChange={(e) => setResNumEntName(e.target.value)} />
       </Form.Item>
       <Form.Item >
         <Radio.Group value={resNumStatus} onChange={resStatusChange}>
@@ -365,7 +429,9 @@ const Index = (props) => {
         </Radio.Group>
       </Form.Item>
       <Form.Item>
-        <Button type='primary' loading={resNumLoading} onClick={()=>{resNumQuest(1, 20, resNumRegionCode,resNumStatus,resNumEntName)}}>查询</Button>
+        <Button type='primary' loading={resNumLoading} onClick={() => { resNumQuest(1, 20, resNumRegionCode, resNumStatus, resNumEntName) }} style={{marginRight:8}}>查询</Button>
+        <Button icon={<ExportOutlined />} loading={resNumExportLoading} onClick={() => { resNumExport(resNumRegionCode, resNumStatus, resNumEntName) }}  >导出 </Button>
+
       </Form.Item>
     </Form>
 
@@ -375,7 +441,7 @@ const Index = (props) => {
   const handleTableChange = (PageIndex, PageSize) => {
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    resNumQuest(PageIndex, PageSize,resNumRegionCode, resNumStatus,resNumEntName, { ...resNumQueryPar, pageIndex: PageIndex, pageSize: PageSize })
+    resNumQuest(PageIndex, PageSize, resNumRegionCode, resNumStatus, resNumEntName, { ...resNumQueryPar, pageIndex: PageIndex, pageSize: PageSize })
   }
 
 
@@ -397,6 +463,7 @@ const Index = (props) => {
           onCancel={() => { setCityDetailVisible(false) }}
           footer={null}
         >
+           <Button icon={<ExportOutlined />} loading={cityExportLoading} onClick={() => { exportClick(2,cityCode) }} style={{marginBottom:12}} >导出 </Button>
           <SdlTable
             loading={cityTableLoading}
             bordered
@@ -409,7 +476,7 @@ const Index = (props) => {
         <Modal
           title={resNumTitle}
           wrapClassName={`spreadOverModal`}
-          className={ styles.resNumModalSty}
+          className={styles.resNumModalSty}
           destroyOnClose
           visible={resNumVisible}
           onCancel={() => { setResNumVisible(false) }}

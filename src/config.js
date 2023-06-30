@@ -44,6 +44,7 @@ module.exports = {
   prefix: 'monitorEnterprise',
   // footerText: '污染源智能分析平台   2018 sdl',
   amapKey: '5e60171b820065e7e9a1d6ea45abaee9',
+  // amapKey:'a6202668a4412c04000baaf7625752bf',
   apiHost,
   uploadHost,
   XinJiang,

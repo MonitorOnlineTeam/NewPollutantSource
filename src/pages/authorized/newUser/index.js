@@ -321,6 +321,7 @@ export default class UserInfoIndex extends Component {
       pollutantType: 2,
       DataTreeValue: [],
       checkedKey: this.props.RegionByDepID,
+      entPointName:'',
     });
     this.props.dispatch({
       type: 'newuserinfo/getentandpoint',
@@ -605,7 +606,6 @@ export default class UserInfoIndex extends Component {
     }
   };
   pointAccessClick = () =>{
-    console.log(this.state.entPointName)
     this.props.dispatch({
       type: 'newuserinfo/getentandpoint',
       payload: {
@@ -908,7 +908,7 @@ export default class UserInfoIndex extends Component {
                     placeholder='请选择行政区'
                   />
                   <Input.Group  compact  style={{  width: 265,marginLeft:16, display:'inline-block'  }}>
-                    <Input style={{  width: 200}} allowClear placeholder='请输入企业或监测点名称'  onBlur={(e)=>this.setState({entPointName:e.target.value})}/>
+                    <Input style={{  width: 200}} allowClear placeholder='请输入企业名称'  onBlur={(e)=>this.setState({entPointName:e.target.value})}/>
                     <Button type="primary" onClick={this.pointAccessClick}>查询</Button>
                   </Input.Group>
                 </Row>
