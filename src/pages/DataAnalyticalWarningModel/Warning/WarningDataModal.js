@@ -7,7 +7,7 @@ import SdlTable from '@/components/SdlTable';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import PollutantImages from '@/pages/DataAnalyticalWarningModel/Warning/components/PollutantImages';
-import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
+import { formatPollutantPopover } from '@/utils/utils';
 
 const COLOR = '#e6b8b7';
 let tempSelectedNames = [];
@@ -31,6 +31,7 @@ const WarningData = props => {
     allTypeDataList,
     tableLoading,
     exportLoading,
+    PointName,
   } = props;
   const [columns, setColumns] = useState([]);
   const [selectedNames, setSelectedNames] = useState([]);
@@ -218,7 +219,7 @@ const WarningData = props => {
             }
             return (
               <div className={styles.tdBox} style={{ background: backgroundColor }}>
-                {text}
+                {text || '-'}
               </div>
             );
           },
@@ -442,7 +443,7 @@ const WarningData = props => {
 
   return (
     <Modal
-      title="报警关联数据"
+      title={`报警关联数据（${PointName}）`}
       destroyOnClose
       visible={visible}
       wrapClassName="spreadOverModal"

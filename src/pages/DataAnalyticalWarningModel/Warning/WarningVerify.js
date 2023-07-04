@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-29 14:19:06
+ * @Last Modified time: 2023-06-30 16:55:52
  * @Description：报警核实详情
  */
 
@@ -235,6 +235,7 @@ const WarningVerify = props => {
         {/* 报警数据弹窗 */}
         {dataModalVisible && (
           <WarningDataModal
+            PointName={`${warningInfo.EntNmae} - ${warningInfo.PointName}`}
             DGIMN={warningInfo.Dgimn}
             visible={dataModalVisible}
             date={warningDataDate}
