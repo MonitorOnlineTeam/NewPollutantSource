@@ -39,6 +39,8 @@ import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import CustomIcon from '@/components/CustomIcon'
 import RegionList from '@/components/RegionList'
+import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
+
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -172,6 +174,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:1,
         PageSize:this.state.pageSize,
+        industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
       callback: data => {
@@ -444,6 +447,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:1,
         PageSize:this.state.pageSize,
+       industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
       callback: data => {
@@ -468,6 +472,33 @@ class NavigationTree extends Component {
        isFilter: this.props.isMap,
        PageIndex:1,
        PageSize:this.state.pageSize,
+       industryTypeCode: this.state.industryTypeCode,
+       ...this.props.propsParams
+     },
+     callback: data => {
+       this.loadCallback(data)
+     },
+   })
+
+  }
+
+  changeIndustryType=(value)=>{ //行业筛选
+    this.setState({
+      industryTypeCode: value? value : '',
+      pageIndex:1,
+    })
+    this.props.dispatch({
+      type: 'navigationtree/getentandpoint',
+      payload: {
+       PollutantTypes: this.state.PollutantTypes,
+       RegionCode: this.state.RegionCode,
+       Name: this.state.Name,
+       Status: this.state.screenList,
+       RunState: this.state.RunState,
+       isFilter: this.props.isMap,
+      //  PageIndex:1,
+      //  PageSize:this.state.pageSize,
+       industryTypeCode: value,
        ...this.props.propsParams
      },
      callback: data => {
@@ -580,6 +611,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:1,
         PageSize:this.state.pageSize,
+        industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
       callback: data => {
@@ -672,6 +704,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:1,
         PageSize:this.state.pageSize,
+        industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
       callback: data => {
@@ -974,6 +1007,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
         PageIndex:pageIndex,
         PageSize:this.state.pageSize,
+        industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
       callback: data => {
@@ -984,7 +1018,7 @@ class NavigationTree extends Component {
   // ></Table>
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
-    const { configInfo,pageType } = this.props;
+    const { configInfo,pageType, showIndustry } = this.props;
 
     const SelectPollutantProps = this.props.defaultPollutant === 'undefined' ? {} : { mode: 'multiple' }
     let _props = {}
@@ -1048,6 +1082,19 @@ class NavigationTree extends Component {
             onChange={this.regionChange}
             placeholder="请选择区域"
           /> : ''} */}
+          {
+            showIndustry && 
+                <SearchSelect
+                  placeholder="请选择行业"
+                  style={{ width: '100%' }}
+                  configId={'IndustryType'}
+                  itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
+                  itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
+                  onChange={value => {
+                    this.changeIndustryType(value)
+                  }}
+                />
+          }
           <Search
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
