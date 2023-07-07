@@ -159,9 +159,10 @@ const PointParams = props => {
   return (
     <>
       <NavigationTree
+        showIndustry
         propsParams={{
           // ModelFlag: 'ModelFlag',
-          industryTypeCode: '1',
+          // industryTypeCode: '1',
           outputType: 0,
           StopPointFlag: true,
         }}

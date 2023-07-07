@@ -96,8 +96,6 @@ const WarningData = props => {
   // 获取报警数据
   const GetAllTypeDataList = () => {
     const values = form.getFieldsValue();
-    console.log('values', values);
-    // return;
     let beginTime = values.time[0].format('YYYY-MM-DD HH:mm:ss');
     let endTime = values.time[1].format('YYYY-MM-DD HH:mm:ss');
     dispatch({
@@ -345,12 +343,24 @@ const WarningData = props => {
       data: markAreaData,
     };
 
+    // series.map(item => {
+    //   item.markArea = {
+    //     itemStyle: {
+    //       color: 'rgba(0,0,0, .1)',
+    //     },
+    //     data: markAreaData,
+    //   };
+    // })
+
     console.log('yxisData', yxisData);
-    // console.log('series', series);
+    console.log('series', series);
     // console.log('xAxisData', xAxisData);
     // console.log('legendSelected', legendSelected);
     // console.log('seriesFlag', seriesFlag);
     let option = {
+      color: ['#38a2da', '#32c5e9', '#e062ae', '#e690d1', '#8279ea', '#9D97F6', '#9fe6b8', '#ffdb5c', '#ff9f7f', '#c23531', '#c4ccd3', '#61a0a8'],
+      // color: ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
+      // color: ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'],
       tooltip: {
         trigger: 'axis',
         formatter: function(params, ticket) {
@@ -360,10 +370,8 @@ const WarningData = props => {
 
           //值
           let value = '';
-          console.log('params', params);
-          console.log('ticket', ticket);
           params.map(item => {
-            value += `${item.marker} ${item.seriesName}: ${item.value} ${units[item.seriesName]}
+            value += `${item.marker} ${item.seriesName}: ${item.value || '-'} ${units[item.seriesName]}
             ${seriesFlag[item.seriesName][item.dataIndex]}<br />`;
           });
 

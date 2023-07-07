@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-30 16:55:52
+ * @Last Modified time: 2023-07-07 17:28:16
  * @Description：报警核实详情
  */
 
@@ -15,6 +15,7 @@ import { RollbackOutlined } from '@ant-design/icons';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import ImageView from '@/components/ImageView';
 import ModelChart from './components/ModelChart';
+import ModelChartMultiple from './components/ModelChart-multiple';
 import ModelTable from './components/ModelTable';
 import WarningDataModal from './WarningDataModal';
 import moment from 'moment';
@@ -167,13 +168,28 @@ const WarningVerify = props => {
               {/* 图表模型 */}
               {modelChartDatas.length ? (
                 <Row className={styles.chartWrapper}>
-                  {modelChartDatas.map((item, index) => {
-                    return (
-                      <Col span={8}>
-                        <ModelChart chartData={item} color={COLOR[index]} />
-                      </Col>
-                    );
-                  })}
+                  {warningInfo.WarningTypeCode === 'c0af25fb-220b-45c6-a3de-f6c8142de8f1' ||
+                  warningInfo.WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402'
+                    ? modelChartDatas.map((item, index) => {
+                        return (
+                          <Col span={12}>
+                            {/* 图例多选 */}
+                            <ModelChartMultiple chartData={item} />
+                          </Col>
+                        );
+                      })
+                    : modelChartDatas.map((item, index) => {
+                        return (
+                          <Col span={modelChartDatas.length <= 3 ? 24 / modelChartDatas.length : 8}>
+                            {/* 图例单选，显示一条线 */}
+                            <ModelChart
+                              chartData={item}
+                              color={COLOR[index]}
+                              WarningTypeCode={warningInfo.WarningTypeCode}
+                            />
+                          </Col>
+                        );
+                      })}
                 </Row>
               ) : (
                 ''

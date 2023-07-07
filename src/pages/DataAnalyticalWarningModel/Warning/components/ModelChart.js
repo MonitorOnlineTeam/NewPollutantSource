@@ -4,49 +4,174 @@ import {} from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import styles from '../../styles.less';
+import _ from 'lodash';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({});
 
 const ModelChart = props => {
-  const { chartData, color } = props;
+  const { chartData, color, WarningTypeCode } = props;
   const [legendIndex, setLegendIndex] = useState(0);
 
   useEffect(() => {}, []);
 
   const getOption = () => {
-    const { date, data, pollutantName, standardUpper, standardLower, max, min } = chartData.data[
-      legendIndex
-    ];
+    const {
+      date,
+      data,
+      pollutantName,
+      standardUpper,
+      standardLower,
+      max,
+      min,
+      defaultValue,
+      monitorValue,
+      dateHistory,
+      dataHistory,
+    } = chartData.data[legendIndex];
 
     let seriesMarkLine = [];
+    // 下限
     if (standardLower !== null && standardLower !== undefined) {
       seriesMarkLine.push({
         yAxis: standardLower,
       });
     }
+    // 上限
     if (standardUpper !== null && standardUpper !== undefined) {
       seriesMarkLine.push({
         yAxis: standardUpper,
       });
     }
-    let xAxisData = date.map(item => moment(item).format('MM-DD HH:mm'));
+
+    // 预设值
+    if (defaultValue !== null && defaultValue !== undefined) {
+      seriesMarkLine.push({
+        yAxis: defaultValue,
+        name: '预设值',
+        label: {
+          formatter: `预设值 ${defaultValue}`,
+        },
+      });
+    }
+    // 标准值
+    if (monitorValue !== null && monitorValue !== undefined) {
+      seriesMarkLine.push({
+        yAxis: monitorValue,
+        name: '标准值',
+        label: {
+          formatter: `标准值 ${monitorValue}`,
+        },
+      });
+    }
 
     // 获取非正常图表配置
     const abnormalObj = abnormalChartOption();
 
+    // y轴最大值
+    let _max = max;
+    if (monitorValue && defaultValue) {
+      _max = _.max([...data, monitorValue, defaultValue]);
+    }
+
+    // 处理x和y轴/grid
+    let appendSeries = { type: 'line' };
+    let xAxisData = date.map(item => moment(item).format('MM-DD HH:mm'));
+    let xAxis = {
+      type: 'category',
+      data: xAxisData,
+      splitLine: {
+        show: true,
+      },
+    };
+    let yAxis = {
+      type: 'value',
+      splitLine: {
+        show: true,
+      },
+      max: _max,
+      min: min,
+    };
+
+    let grid = {
+      left: '5%',
+      right: '10%',
+      bottom: 30,
+      top: 50,
+      containLabel: true,
+    };
+    // 双x轴图表
+    if (dateHistory && dataHistory) {
+      xAxis = [
+        {
+          type: 'category',
+          splitLine: {
+            show: true,
+          },
+          data: xAxisData,
+        },
+        {
+          gridIndex: 1,
+          type: 'category',
+          splitLine: {
+            show: true,
+          },
+          data: dateHistory.map(item => moment(item).format('MM-DD HH:mm')),
+          position: 'bottom',
+        },
+      ];
+
+      yAxis = [
+        {
+          type: 'value',
+          splitLine: {
+            show: true,
+          },
+          max: _max,
+          min: min,
+        },
+        {
+          gridIndex: 1,
+          type: 'value',
+          splitLine: {
+            show: true,
+          },
+          max: _max,
+          min: min,
+        },
+      ];
+
+      grid = [
+        {
+          left: 60,
+          right: 50,
+          height: '35%',
+        },
+        {
+          left: 60,
+          right: 50,
+          top: '55%',
+          height: '35%',
+        },
+      ];
+
+      appendSeries = {
+        name: pollutantName,
+        data: dataHistory,
+        type: 'line',
+        xAxisIndex: 1,
+        yAxisIndex: 1,
+      };
+    }
+
+    console.log('yAxis', yAxis);
+    console.log('xAxis', xAxis);
+    console.log('appendSeries', appendSeries);
     return {
       color: color,
       title: {
         text: chartData.title,
         left: 'left',
       },
-      // legend: {
-      //   selectedMode: 'single',
-      //   x: 'center', // 可设定图例在左、右、居中
-      //   y: 'bottom', // 可设定图例在上、下、居中
-      //   padding: [15, 30, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
-      //   // data: ['Email'],
-      // },
       tooltip: {
         trigger: 'axis',
         ...abnormalObj.tooltipFormatter,
@@ -57,28 +182,10 @@ const ModelChart = props => {
         //   },
         // },
       },
-      grid: {
-        left: '5%',
-        right: '10%',
-        bottom: 30,
-        top: 50,
-        containLabel: true,
-      },
-      xAxis: {
-        type: 'category',
-        data: xAxisData,
-        splitLine: {
-          show: true,
-        },
-      },
-      yAxis: {
-        type: 'value',
-        splitLine: {
-          show: true,
-        },
-        max: max,
-        min: min,
-      },
+      ...abnormalObj.optionObj,
+      grid: grid,
+      xAxis: xAxis,
+      yAxis: yAxis,
       series: [
         {
           name: pollutantName,
@@ -89,48 +196,29 @@ const ModelChart = props => {
             silent: true,
             data: seriesMarkLine,
           },
-          ...abnormalObj.symbolObj,
+          ...abnormalObj.seriesObj,
         },
-        // {
-        //   name: '上限',
-        //   data: [standardUpper],
-        //   type: 'line',
-        //   // smooth: true,
-        //   markLine: {
-        //     silent: true,
-        //     data: [
-        //       {
-        //         yAxis: standardUpper,
-        //       },
-        //     ],
-        //   },
-        // },
-        // {
-        //   name: '下限',
-        //   data: [standardLower],
-        //   type: 'line',
-        //   // smooth: true,
-        //   markLine: {
-        //     silent: true,
-        //     data: [
-        //       {
-        //         yAxis: standardLower,
-        //       },
-        //     ],
-        //   },
-        // },
+        { ...appendSeries },
       ],
     };
   };
 
   // 获取非正常图表配置
   const abnormalChartOption = () => {
-    const { dataFlagName, workingFlagName, unit } = chartData.data[legendIndex];
+    const {
+      dataFlagName,
+      workingFlagName,
+      unit,
+      defaultValue,
+      monitorValue,
+      dateHistory,
+      dataHistory,
+    } = chartData.data[legendIndex];
     // 判断是否是非正常标记图表
-    let abnormalObj = { symbolObj: {}, tooltipFormatter: {} };
+    let abnormalObj = { seriesObj: {}, tooltipFormatter: {}, optionObj: {} };
     if (dataFlagName && workingFlagName) {
       // 数据异常标记为三角形
-      abnormalObj.symbolObj = {
+      abnormalObj.seriesObj = {
         symbol: (value, params) => {
           // console.log('params', params);
           let flag = dataFlagName[params.dataIndex];
@@ -143,14 +231,29 @@ const ModelChart = props => {
         symbolSize: (value, params) => {
           let flag = dataFlagName[params.dataIndex];
           if (flag === '正常' || flag === '') {
-            return 4;
+            return 6;
           } else {
             return 16;
           }
         },
       };
 
-      // 处理tooltip
+      // 超出标准值显示红点
+      if (defaultValue && monitorValue) {
+        abnormalObj.seriesObj.itemStyle = {
+          // borderWidth: 3,
+          // borderColor: 'yellow',
+          color: function(params) {
+            let _color = color;
+            if (params.data > defaultValue) {
+              _color = '#ff0000';
+            }
+            return _color;
+          },
+        };
+      }
+
+      // 处理显示工况的tooltip
       abnormalObj.tooltipFormatter = {
         formatter: function(params) {
           let { axisValue, dataIndex, marker, seriesName, value } = params[0];
@@ -161,6 +264,15 @@ const ModelChart = props => {
           content = `${marker} ${seriesName}: ${value}${unit}
         (${dataFlagName[dataIndex]})<br />`;
           return date + '<br />' + WorkCon + '<br />' + content;
+        },
+      };
+    }
+
+    // 双x轴
+    if (dateHistory && dataHistory) {
+      abnormalObj.optionObj = {
+        axisPointer: {
+          link: { xAxisIndex: 'all' },
         },
       };
     }
@@ -177,12 +289,19 @@ const ModelChart = props => {
   //   legendselectchanged: onChartLegendChange,
   // };
 
+  const { trend } = chartData.data[legendIndex];
+
   return (
     <div className={styles.chartBox}>
+      {trend && <span className={styles.trend} style={{top: 60}}>趋势相似度 {trend}</span>}
       <ReactEcharts
         option={getOption()}
         lazyUpdate
-        style={{ height: '100%', width: '100%' }}
+        style={{
+          height: WarningTypeCode === 'd5dea4cc-bd6c-44fa-a122-a1f44514b465' ? '440px' : '100%',
+          width: '100%',
+        }}
+        // style={{ height: '700px', width: '100%' }}
         // onEvents={onEvents}
       />
       <div className={styles.legendBox}>
