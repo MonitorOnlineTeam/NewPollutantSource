@@ -35,7 +35,7 @@ class EquipmentManage extends Component {
               pollType:value[0].Type,
             })
           }
-        }} />}
+        }} />
         
         <div id='contentWrapper'  className='equipmentParmars'>
           <BreadcrumbWrapper >

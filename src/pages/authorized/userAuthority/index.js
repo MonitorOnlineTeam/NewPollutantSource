@@ -566,12 +566,23 @@ export default class UserAuthority extends Component {
     }
   };
   pointAccessClick = () =>{
+    const dataTreeValue = this.state.DataTreeValue
+    const { pollutantType } = this.state; 
+    // this.props.dispatch({
+    //   type: 'newuserinfo/getentandpoint',
+    //   payload: {
+    //     RegionCode: dataTreeValue&&dataTreeValue.toString(),
+    //     PollutantType: pollutantType,
+    //     Name:this.state.entPointName,
+    //   },
+    // });
+    const keys = this.state.selectedRow.ID;
     this.props.dispatch({
-      type: 'newuserinfo/getentandpoint',
+      type: 'newuserinfo/getpointbydepid',
       payload: {
-        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
-        PollutantType: this.state.pollutantType,
-        Name:this.state.entPointName,
+        UserGroup_ID: keys&&keys.toString(),
+        PollutantType: pollutantType,
+        RegionCode: dataTreeValue&&dataTreeValue.toString(),
       },
     });
   }
@@ -841,9 +852,9 @@ export default class UserAuthority extends Component {
                         allowClear
                         placeholder='请选择行政区'
                       />
-                     <Input.Group compact style={{ width: 265, marginLeft: 16, display: 'inline-block' }}>
+                     <Input.Group compact style={{ width: 290, marginLeft: 16, display: 'inline-block' }}>
                         <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onBlur={(e) => this.setState({ entPointName: e.target.value })} />
-                        <Button type="primary" onClick={this.pointAccessClick}>查询</Button>
+                        <Button type="primary"  loading={this.props.CheckPointLoading} onClick={this.pointAccessClick}>查询</Button>
                       </Input.Group>
                     </Row>
                     {this.props.CheckPointLoading || this.props.getentandpointLoading ? (

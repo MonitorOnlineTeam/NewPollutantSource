@@ -423,7 +423,7 @@ const Index = (props) => {
       {
         name: '点位统计',
         type: 'pie',
-        radius: ['52%', '82%'],
+        radius: ['50%', '80%'],
         avoidLabelOverlap: false,
         hoverAnimation: false,
         minAngle: 90,//最小角度
@@ -431,7 +431,7 @@ const Index = (props) => {
           position: 'outer',
           alignTo: 'edge', // 'edge'：文字对齐，文字的边距由 label.margin 决定。
           formatter: '{name|{b}}\n{num|{c}个}',
-          margin: 12,
+          margin: 0,
           lineHeight: 20,
           rich: {
             name: {
@@ -449,7 +449,6 @@ const Index = (props) => {
             show: true, //高亮是标签的样式
           }
         },
-
         labelLine: {
           normal: {
             length: '3%',  // 视觉引导线第一段的长度。
@@ -564,7 +563,7 @@ const Index = (props) => {
       <Spin spinning={operationExpireLoading}>
         <div className={styles.operationExpira}>{/**运维到期点位 */}
           <CardHeader btnClick={dataAlarmResClick} title='运维到期点位' />
-          <div style={{ height: '100%', padding: '10px 17px 30px 0' }}>
+          <div style={{ height: '100%', padding: '0 15px 15px 0' }}>
             <ReactEcharts
               option={operationExpiraOption}
               style={{ height: '100%', width: '100%' }}

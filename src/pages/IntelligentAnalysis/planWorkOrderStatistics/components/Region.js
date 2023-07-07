@@ -1497,7 +1497,6 @@ const Index = (props, ref) => {
     try {
       const values = await workRegForm.validateFields();
       setWorkPageIndex(1)
-
       insideOrOutsideWorkGetTaskWorkOrderList({
         ...values,
         regionCode: regionCode,
@@ -1554,14 +1553,16 @@ const Index = (props, ref) => {
             <Form.Item name='entName' >
               <Input placeholder='请输入企业名称' allowClear />
             </Form.Item>
-
+            <Form.Item name='pointName' >
+              <Input placeholder='请输入监测点名称' allowClear />
+            </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType='submit'>
                 查询
-     </Button>
+              </Button>
               <Button icon={<ExportOutlined />} style={{ margin: '0 8px' }} loading={!isActualCalibrationModal ? workRegExportLoading : isActualCalibrationModal && cityVisible ? exportActualRegDetailTaskLoading : exportActualRegTaskLoading} onClick={() => { workRegExports() }}>
                 导出
-     </Button>
+              </Button>
 
             </Form.Item>
           </Row>

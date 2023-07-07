@@ -85,7 +85,7 @@ class EditPollutant extends Component {
       const that = this;
       if (this.state.PollutantCode !== null && this.state.DGIMN !== null) {
         if (values.AbnormalUpperLimit < values.AbnormalLowerLimit) {
-          message.error('错误：检出上限小于检出下限！', 3).then(() => {
+          message.error('错误：量程上限小于量程下限！', 3).then(() => {
             flag = false;
           });
           flag = false;
@@ -159,7 +159,7 @@ class EditPollutant extends Component {
             defaultActiveKey={['1', '2']}
             expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
           >
-            <Panel header="报警设置" key="1" style={customPanelStyle}>
+            <Panel header="超标报警设置" key="1" style={customPanelStyle}>
               <Row gutter={48}>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警类型">
@@ -227,7 +227,7 @@ class EditPollutant extends Component {
                 </Col>
               </Row>
             </Panel>
-            <Panel header="异常设置" key="2" style={customPanelStyle}>
+            <Panel header="异常报警设置" key="2" style={customPanelStyle}>
               <Row>
                 <Col span={24}>
                   <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 15 }} label="异常类型">
@@ -248,14 +248,14 @@ class EditPollutant extends Component {
               </Row>
               <Row>
                 <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="检出上限">
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="量程上限">
                     {getFieldDecorator('AbnormalUpperLimit', {
                       initialValue: 0,
                     })(<InputNumber min={-10000000} max={10000000} step={1} />)}
                   </FormItem>
                 </Col>
                 <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="检出下限">
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="量程下限">
                     {getFieldDecorator('AbnormalLowerLimit', {
                       initialValue: 0,
                     })(<InputNumber min={-10000000} max={10000000} step={1} />)}
@@ -271,14 +271,14 @@ class EditPollutant extends Component {
                   </FormItem>
                 </Col>
                 <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="连续值计数">
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="恒定值计数">
                     {getFieldDecorator('SerialContinuityCount', {
                       initialValue: 2,
                     })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
                 <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超限计数">
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超量程计数">
                     {getFieldDecorator('OverrunContinuityCount', {
                       initialValue: 1,
                     })(<InputNumber min={0} max={100000} step={1} />)}

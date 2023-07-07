@@ -868,12 +868,23 @@ class DepartIndex extends Component {
     }
   };
   pointAccessClick = () =>{
+    const dataTreeValue = this.state.DataTreeValue
+    const { pollutantType } = this.state; 
+    // this.props.dispatch({
+    //   type: 'newuserinfo/getentandpoint',
+    //   payload: {
+    //     RegionCode: dataTreeValue&&dataTreeValue.toString(),
+    //     PollutantType: pollutantType,
+    //     Name:this.state.entPointName,
+    //   },
+    // });
+    const keys = this.state.selectedRowKeys.key;
     this.props.dispatch({
-      type: 'departinfo/getentandpoint',
+      type: 'newuserinfo/getpointbydepid',
       payload: {
-        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
-        PollutantType: this.state.pollutantType,
-        Name:this.state.entPointName,
+        UserGroup_ID: keys&&keys.toString(),
+        PollutantType: pollutantType,
+        RegionCode: dataTreeValue&&dataTreeValue.toString(),
       },
     });
   }
@@ -1685,9 +1696,9 @@ class DepartIndex extends Component {
                         treeCheckable={false}
                         allowClear
                       />
-                      <Input.Group compact style={{ width: 265, marginLeft: 16, display: 'inline-block' }}>
+                      <Input.Group compact style={{ width: 290, marginLeft: 16, display: 'inline-block' }}>
                         <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onBlur={(e) => this.setState({ entPointName: e.target.value })} />
-                        <Button type="primary" onClick={this.pointAccessClick}>查询</Button>
+                        <Button type="primary" loading={this.props.CheckPointLoading} onClick={this.pointAccessClick}>查询</Button>
                       </Input.Group>
                     </Row>
                     {this.props.CheckPointLoading || this.props.getentandpointLoading ? (

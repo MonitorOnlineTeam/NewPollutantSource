@@ -50,7 +50,7 @@ class MonitoringStandard extends Component {
             title: '',
             width: '500',
             PollutantCode: null,
-            PollutantName:null,
+            PollutantName: null,
             standardLibraryModal: false,
         };
     }
@@ -147,124 +147,180 @@ class MonitoringStandard extends Component {
                 title: '污染物编号',
                 dataIndex: 'PollutantCode',
                 key: 'PollutantCode',
-                // width: '10%',
-                align: 'left',
-                fixed:'left',
+                width: 120,
+                align: 'center',
+                fixed: 'left',
                 render: (text, record) => text,
             },
             {
                 title: '污染物名称',
                 dataIndex: 'PollutantName',
                 key: 'PollutantName',
-                // width: '10%',
-                align: 'left',
-                fixed:'left',
-                render: (text, record) => text,
-            },
-
-            {
-                title: '报警类型',
-                dataIndex: 'AlarmType',
-                key: 'AlarmType',
-                // width: 200,
-                render: (text, record) => {
-                    if (text === 0) {
-                        return (
-                            <span>
-                                {' '}
-                                <Tag> 无报警 </Tag>{' '}
-                            </span>
-                        );
-                    }
-                    if (text === 1) {
-                        return (
-                            <span>
-                                {' '}
-                                <Tag color="green"> 上限报警 </Tag>{' '}
-                            </span>
-                        );
-                    }
-                    if (text === 2) {
-                        return (
-                            <span>
-                                {' '}
-                                <Tag color="cyan"> 下限报警 </Tag>{' '}
-                            </span>
-                        );
-                    }
-                    if (text === 3) {
-                        return (
-                            <span>
-                                {' '}
-                                <Tag color="lime"> 区间报警 </Tag>{' '}
-                            </span>
-                        );
-                    }
-                },
-            },
-            {
-                title: '检出上限',
-                dataIndex: 'AbnormalUpperLimit',
-                key: 'AbnormalUpperLimit',
-                // width: '10%',
+                width: 110,
                 align: 'center',
+                fixed: 'left',
                 render: (text, record) => text,
             },
             {
-                title: '检出下限',
-                dataIndex: 'AbnormalLowerLimit',
-                key: 'AbnormalLowerLimit',
-                // width: '10%',
+                title: '超标报警设置',
                 align: 'center',
-                render: (text, record) => text,
+                children: [
+                    {
+                        title: '报警类型',
+                        dataIndex: 'AlarmType',
+                        key: 'AlarmType',
+                        align: 'center',
+                        width: 100,
+                        render: (text, record) => {
+                            if (text === 0) {
+                                return (
+                                    <span>
+                                        {' '}
+                                        <Tag> 无报警 </Tag>{' '}
+                                    </span>
+                                );
+                            }
+                            if (text === 1) {
+                                return (
+                                    <span>
+                                        {' '}
+                                        <Tag color="green"> 上限报警 </Tag>{' '}
+                                    </span>
+                                );
+                            }
+                            if (text === 2) {
+                                return (
+                                    <span>
+                                        {' '}
+                                        <Tag color="cyan"> 下限报警 </Tag>{' '}
+                                    </span>
+                                );
+                            }
+                            if (text === 3) {
+                                return (
+                                    <span>
+                                        {' '}
+                                        <Tag color="lime"> 区间报警 </Tag>{' '}
+                                    </span>
+                                );
+                            }
+                        },
+                    },
+                    {
+                        title: '排放值标准',
+                        dataIndex: 'StandardValue',
+                        key: 'StandardValue',
+                        align: 'center',
+                        width: 110,
+                        render: (text, record) =>text === 0 ? '-' : text     
+                    },
+                    {
+                        title: '报警连续计数',
+                        dataIndex: 'AlarmContinuityCount',
+                        key: 'AlarmContinuityCount',
+                        align: 'center',
+                        width: 120,
+                    },
+                ]
             },
-            {
-                title: '报警上限',
-                dataIndex: 'UpperLimit',
-                key: 'UpperLimit',
-                // width: '10%',
-                align: 'center',
-                render: (text, record) => {
-                    if (text === '0') {
-                        return '-';
-                    }
 
-                    return text;
-                },
-            },
             {
-                title: '报警下限',
-                dataIndex: 'LowerLimit',
-                key: 'LowerLimit',
-                // width: '10%',
+                title: '异常报警设置',
                 align: 'center',
-                render: (text, record) => {
-                    if (text === '0') {
-                        return '-';
-                    }
+                children: [
+                    {
+                        title: '异常类型',
+                        dataIndex: 'ExceptionName',
+                        key: 'ExceptionName',
+                        width: 150,
+                        align: 'center',
+                        render:(text)=><div style={{textAlign:'left'}}>{text}</div>
+                    },
+                    {
+                        title: '量程上限',
+                        dataIndex: 'AbnormalUpperLimit',
+                        key: 'AbnormalUpperLimit',
+                        width: 100,
+                        align: 'center',
+                    },
+                    {
+                        title: '量程下限',
+                        dataIndex: 'AbnormalLowerLimit',
+                        key: 'AbnormalLowerLimit',
+                        width: 100,
+                        align: 'center',
+                    },
+                    {
+                        title: '超量程计数',
+                        dataIndex: 'OverrunContinuityCount',
+                        key: 'OverrunContinuityCount',
+                        width: 110,
+                        align: 'center',
+                    },
+                    {
+                        title: '零值计数',
+                        dataIndex: 'ZeroContinuityCount',
+                        key: 'ZeroContinuityCount',
+                        width: 100,
+                        align: 'center',
+                    },
+                    {
+                        title: '恒定值计数',
+                        dataIndex: 'SerialContinuityCount',
+                        key: 'SerialContinuityCount',
+                        width: 100,
+                        align: 'center',
+                    },
+                    // {
+                    //     title: '报警上限',
+                    //     dataIndex: 'UpperLimit',
+                    //     key: 'UpperLimit',
+                    //     // width: '10%',
+                    //     align: 'center',
+                    //     render: (text, record) => {
+                    //         if (text === '0') {
+                    //             return '-';
+                    //         }
 
-                    return text;
-                },
-            },
-            {
-                title: '标准值',
-                dataIndex: 'StandardValue',
-                key: 'StandardValue',
-                // width: '10%',
-                align: 'center',
-                render: (text, record) => {
-                    if (text === 0) {
-                        return '-';
-                    }
+                    //         return text;
+                    //     },
+                    // },
+                    // {
+                    //     title: '报警下限',
+                    //     dataIndex: 'LowerLimit',
+                    //     key: 'LowerLimit',
+                    //     // width: '10%',
+                    //     align: 'center',
+                    //     render: (text, record) => {
+                    //         if (text === '0') {
+                    //             return '-';
+                    //         }
 
-                    return text;
-                },
+                    //         return text;
+                    //     },
+                    // },
+                    // {
+                    //     title: '标准值',
+                    //     dataIndex: 'StandardValue',
+                    //     key: 'StandardValue',
+                    //     // width: '10%',
+                    //     align: 'center',
+                    //     render: (text, record) => {
+                    //         if (text === 0) {
+                    //             return '-';
+                    //         }
+
+                    //         return text;
+                    //     },
+                    // },
+                ]
             },
+
             {
                 title: '监测状态',
                 dataIndex: 'IsUse',
                 key: 'IsUse',
-                // width: '10%',
+                width: 110,
                 align: 'center',
                 render: (text, record) => {
                     if (text === '0') {
@@ -288,7 +344,7 @@ class MonitoringStandard extends Component {
                     }
                     return (
                         <span>
-                            { ' '}
+                            {' '}
                             < Button size="small" color="blue" >
                                 {' '}
                                 <a a title="单击从监测中移除" onClick={() => {
@@ -316,7 +372,7 @@ class MonitoringStandard extends Component {
             },
             {
                 title: '操作',
-                // width: '10%',
+                width: 80,
                 align: 'center',
                 render: (text, record) => {
                     if (record.IsUse === '1') {
@@ -381,11 +437,10 @@ class MonitoringStandard extends Component {
             >
                 <SdlTable
                     rowKey={(record, index) => `complete${index}`}
-                    bordered={false}
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
                     columns={columns}
                     dataSource={standardTableDatas}
-                    scroll={{ y:!this.props.isPage&&'calc(100vh - 480px)' }}
+                    scroll={{ x:800 }}
                 //  pagination={{ pageSize: 20 }}
                 />
                 <Modal

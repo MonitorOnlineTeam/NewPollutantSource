@@ -4,6 +4,7 @@ import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Input, Modal, Spin, Divider, Button } from 'antd';
 import Cookie from 'js-cookie';
+import { RollbackOutlined } from '@ant-design/icons';
 
 const FormItem = Form.Item;
 const response = Cookie.get('currentUser');
@@ -100,12 +101,12 @@ class ChangePwdView extends PureComponent {
         }
         callback();
     };
-    validatePassStrenth=(rule,value,callback)=>{
+    validatePassStrenth = (rule, value, callback) => {
 
         // let strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
         // let mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z])) | ((?=.*[A-Z])(?=.*[0-9])) | ((?=.*[a-z])(?=.*[0-9]))).*$", "g");
         // let enoughRegex = new RegExp("(?=.{6,}).*", "g");
-  
+
         // let strength=1;
         // if (enoughRegex.test(value) == false) {
         //     //密码小于六位的时候，密码强度图片都为灰色
@@ -131,15 +132,15 @@ class ChangePwdView extends PureComponent {
 
         //?=.*[a-z])表示任意字符拼接小写字母
         let regex = /^(?=.*[\d])(?=.*[a-zA-Z])(?=.*[^\da-zA-Z]).{8,}$/
-                    //拼接数字      拼接字母         拼接非数字和字母(特殊字符) 
+        //拼接数字      拼接字母         拼接非数字和字母(特殊字符) 
         if (regex.test(value)) {
             callback();
-        }else{
+        } else {
             // callback("密码强度不够，密码要求最少8位并且包含字母、数字、特殊字符三项中有两项");
             callback("密码强度不够，密码要求最少8位并且包含字母、数字、特殊字符");
 
         }
-  
+
     }
     compareToFirstPassword = (rule, value, callback) => {
         const form = this.props.form;
@@ -222,6 +223,7 @@ class ChangePwdView extends PureComponent {
                     )}
                 </FormItem>
                 <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                    <Button onClick={() => {  history.go(-1)  }}style={{marginRight:12}} ><RollbackOutlined />返回</Button>
                     <Button
                         type="primary"
                         htmlType="submit"

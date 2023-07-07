@@ -44,7 +44,6 @@ const UserLayout = props => {
   } = props;
   const { breadcrumb } = getMenuData(routes);
   const title = configInfo ? `登录 - ${configInfo.SystemName}` : '登录';
-
   const QRCode = require('qrcode.react');
   // 获取当前ip地址和端口号
   let getIp = '';
@@ -101,9 +100,10 @@ const UserLayout = props => {
         {
           configInfo && configInfo.IsShowQRcode === 'true' &&
           <Popover
+            placement='rightTop'
             content={
               <Row gutter={48}>
-                 <Col span={12} style={{ textAlign: 'center' }}>
+                {!configInfo.IsShowProjectRegion && <Col span={12} style={{ textAlign: 'center' }}>
                   <div style={{ marginBottom: '10px' }}>
                     <Button type="danger" icon={<DownloadOutlined />} size="small">企业运维版下载</Button>
                   </div>
@@ -112,8 +112,8 @@ const UserLayout = props => {
                   <div style={{paddingTop:6,fontSize:16,}}>企业业主使用</div>
 
                   </div>
-                </Col> 
-                <Col span={12} style={{ textAlign: 'center' }}>
+                </Col>}
+                <Col span={!configInfo.IsShowProjectRegion? 12 : 24} style={{ textAlign: 'center' }}>
                 <div style={{ marginBottom: '10px' }}>
                     <Button type="danger" icon={<DownloadOutlined />} size="small">运维APP下载</Button>
                   </div>
@@ -123,7 +123,7 @@ const UserLayout = props => {
                     alt=""
                     src="/yunweicode.png"
                   />
-                  <div style={{position:'absolute',right:0,width:'100%',bottom:24,fontSize:16,background:'#fff'}}>运维工程师使用</div>
+                 {!configInfo.IsShowProjectRegion && <div style={{position:'absolute',width:200,left:24,bottom:24,fontSize:16,background:'#fff'}}>运维工程师使用</div>}
                   </div>
                 </Col>
               </Row>

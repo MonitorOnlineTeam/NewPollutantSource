@@ -18,7 +18,7 @@ export default Model.extend({
     pointDatas:[],
     entTableDatas:[],
     abnormalList:[],
-    queryPar:null,
+    queryPar:{},
     dateCol:[],
     cityTableTotal:0,
     cityTableDatas:[],
@@ -51,7 +51,7 @@ export default Model.extend({
           tableTotal:result.Total,
           tableDatas:result.Datas,
           tableLoading:false,
-          queryPar:{...payload,entCode:undefined,entName:undefined},
+          queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })    
       }else{
         message.error(result.Message)
@@ -65,7 +65,7 @@ export default Model.extend({
         yield update({
           cityTableTotal:result.Total,
           cityTableDatas:result.Datas,
-          queryPar:{...payload,entCode:undefined,entName:undefined},
+          queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })  
       }else{
         message.error(result.Message)
@@ -90,7 +90,7 @@ export default Model.extend({
           insideOrOutsiderWorkTableDatas:result.Datas,
           insideOrOutsiderWorkTableTotal:result.Total,
           dateCol:result.Datas[0]&&result.Datas[0].datePick,
-          queryPar:{...payload,entCode:undefined,entName:undefined},
+          queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })  
       }else{
         message.error(result.Message)
@@ -102,7 +102,7 @@ export default Model.extend({
         yield update({
           cityDetailTableTotal:result.Total,
           cityDetailTableDatas:result.Datas,
-          queryPar:{...payload,entCode:undefined,entName:undefined},
+          queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })  
       }else{
         message.error(result.Message)
@@ -184,7 +184,7 @@ export default Model.extend({
           tableTotal:result.Total,
           tableDatas:result.Datas,
           tableLoading:false,
-          queryPar:{...payload,entCode:undefined,entName:undefined},
+          queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })    
       }else{
         message.error(result.Message)
@@ -197,7 +197,7 @@ export default Model.extend({
         yield update({
           cityTableTotal:result.Total,
           cityTableDatas:result.Datas,
-          queryPar:{...payload,entCode:undefined,entName:undefined},
+          queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })    
       }else{
         message.error(result.Message)
@@ -211,7 +211,7 @@ export default Model.extend({
           insideOrOutsiderWorkTableDatas:result.Datas,
           insideOrOutsiderWorkTableTotal:result.Total,
           dateCol:result.Datas[0]&&result.Datas[0].datePick,
-          queryPar:{...payload,entCode:undefined,entName:undefined},
+          queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })  
       }else{
         message.error(result.Message)

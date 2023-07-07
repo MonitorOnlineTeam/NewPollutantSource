@@ -93,8 +93,7 @@ const Index = (props) => {
 
   const { match: { path } } = props;
 
-
-  const inspectorType = path === '/operations/superviseRectification' ? 1 : 2; // 是否为现场督查 1 现场 2 远程  
+  const  inspectorType = path === '/operations/superviseRectification'? 1 : 2; // 是否为现场督查 1 现场 2 远程  
 
   const [form] = Form.useForm();
 
@@ -391,7 +390,7 @@ const Index = (props) => {
 
   return (
     <div className={styles.superviseRectificationSty}>
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
         <Card title={searchComponents()}>
           <SdlTable
             resizable

@@ -110,6 +110,11 @@ export default {
       ],
     },
     {
+      name: 'changePassword',
+      path: '/user/changePassword',  //修改密码
+      component: './account/settings',
+    },
+    {
       path: '/',
       component: '../layouts/BlankLayout',
       routes: [

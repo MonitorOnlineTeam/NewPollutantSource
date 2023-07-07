@@ -87,9 +87,9 @@ const Model = {
         } catch (error) {}
         if (!response.Datas.Complexity) {
           //判断密码复杂程度
-          message.warning('密码过于简单，请修改密码！');
+          message.error('密码过于简单，请修改密码！');
           setTimeout(() => {
-            router.push('/account/settings');
+            router.push('/user/changePassword');
           }, 1000);
           return;
         }

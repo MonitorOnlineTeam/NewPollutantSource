@@ -87,6 +87,9 @@ const Index = (props) => {
       })
     }
     flatten(dataSource)
+
+    const leftData = generateTree(dataSource, targetKeys)
+    const leftTreeData = leftData?.length && leftData.filter(item=>item.children[0])
     return (
       <Transfer
         {...restProps}
@@ -94,21 +97,21 @@ const Index = (props) => {
         dataSource={transferDataSource}
         className={styles["tree-transfer"]}
         render={item => item.title}
-        titles={['待分配点位','分配点位']}
+        titles={['待分配点位','已分配点位']}
       // showSelectAll={false}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
           if (direction === 'left') {
             const checkedKeys = [...selectedKeys, ...targetKeys]
             return (
-              generateTree(dataSource, targetKeys)?.length ? <Tree
+              leftTreeData?.length ? <Tree
                 blockNode
                 checkable
                 defaultExpandAll
                 height={550}
                 {...props}
                 checkedKeys={checkedKeys}
-                treeData={generateTree(dataSource, targetKeys)}
+                treeData={leftTreeData}
                 onCheck={(_, node) => {
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
                 }}
@@ -267,12 +270,6 @@ const Index = (props) => {
         })
       }
     }
-    // let addKeys = [];
-    // keys.forEach((item) => {
-    //     if (addKeys.indexOf(item) === -1) {
-    //       addKeys.push(item)
-    //     }
-    // })
     setTargetKeys(keys)
     let keysList = changeArrType === 1 ? keys : moveKeys
     props.targetKeysChange? props.targetKeysChange(moveKeys,changeArrType,()=>{

@@ -311,13 +311,13 @@ export default class Index extends Component {
           {
            title: '超量程异常',
             children: [{
-            title: '检出上限',
+            title: '量程上限',
             dataIndex: `${item.PollutantCode}_overrunup`,
             key: `${item.PollutantCode}_overrunup`,
             width: 100, align:'center' 
           },
           {
-           title: '检出下限',
+           title: '量程下限',
            dataIndex: `${item.PollutantCode}_overrunlow`,
            key: `${item.PollutantCode}_overrunlow`,
            width: 100, align:'center' 
