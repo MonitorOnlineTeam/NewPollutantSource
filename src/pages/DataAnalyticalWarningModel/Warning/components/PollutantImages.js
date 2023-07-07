@@ -86,7 +86,7 @@ const Index = props => {
   };
 
   const getPageContent = () => {
-    if (!images.length) {
+    if (!Object.keys(images).length) {
       return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
     }
     return (
@@ -113,6 +113,7 @@ const Index = props => {
           footer={null}
           wrapClassName="spreadOverModal"
           destroyOnClose
+          bodyStyle={{ maxHeight: '100%', overflowY: 'auto' }}
           onCancel={onCancel}
         >
           <h1 style={{ textAlign: 'center' }}>{title}</h1>

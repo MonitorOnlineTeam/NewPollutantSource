@@ -371,7 +371,7 @@ const WarningData = props => {
           //值
           let value = '';
           params.map(item => {
-            value += `${item.marker} ${item.seriesName}: ${item.value} ${units[item.seriesName]}
+            value += `${item.marker} ${item.seriesName}: ${item.value || '-'} ${units[item.seriesName]}
             ${seriesFlag[item.seriesName][item.dataIndex]}<br />`;
           });
 
