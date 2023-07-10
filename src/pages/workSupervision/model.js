@@ -20,6 +20,7 @@ export default Model.extend({
     allUser: [],
     IndustryList: [],
     managerList: [],
+    operaServiceList: []
   },
   effects: {
     // 获取工作台待办
@@ -541,6 +542,18 @@ export default Model.extend({
           payload: {},
         });
         callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 运维服务列表
+    *GetStagingInspectorRectificationList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetStagingInspectorRectificationList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          operaServiceList: result.Datas,
+        });
+        callback && callback();
       } else {
         message.error(result.Message);
       }

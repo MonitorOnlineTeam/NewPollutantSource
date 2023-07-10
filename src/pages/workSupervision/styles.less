@@ -40,8 +40,9 @@
 
   .topWrapper {
     display: flex;
-    max-height: calc((100vh) / 2);
+    // max-height: calc((100vh) / 2);
     min-height: 500px;
+    height: calc(100vh - 541px);
     .taskListWrapper {
       flex: 1;
       // margin-right: 20px;
@@ -129,6 +130,20 @@
       }
     }
   }
+  .operaServiceSty{
+    padding:6px 16px 30px 16px;
+    :global {
+      .ant-col  {
+        color: #333;
+        cursor: pointer;
+       }
+      .ant-row{
+        &:hover {
+          .ant-col {color: #1890ff;}
+        }
+      }
+    }
+  }
 }
 
 .inspectionInfo {
@@ -158,4 +173,11 @@
       font-weight: bold;
     }
   }
+}
+.workbenchBreadSty{
+  :global {
+  .ant-pro-page-header-wrap-children-content{
+   background: none !important;
+  }
+}
 }

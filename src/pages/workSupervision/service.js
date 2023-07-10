@@ -436,3 +436,11 @@ export async function RetransmissionTasks(params) {
   );
   return result;
 }
+// 运维服务
+export async function GetStagingInspectorRectificationList(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/TaskFormApi/GetStagingInspectorRectificationList',
+    params,
+  );
+  return result;
+}
