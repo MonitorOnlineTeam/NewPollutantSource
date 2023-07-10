@@ -24,6 +24,9 @@ import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import styles from '../styles.less';
 import moment from 'moment';
 import FromsModal from '../Forms/FromsModal';
+import SuperviseRectification from '@/pages/operations/superviseRectification'
+import SuperviseRectificationDetail from '@/pages/operations/superviseRectification/Detail';
+import superviseRectificaSty from '@/pages/operations/superviseRectification/style.less';
 
 const manualList = [
   {
@@ -55,10 +58,13 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
   TYPE: wordSupervision.TYPE,
   todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
   messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
+  operaServiceList: wordSupervision.operaServiceList,
+  operaServiceLoading: loading.effects['wordSupervision/GetStagingInspectorRectificationList'],
+
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading,operaServiceList, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
@@ -70,6 +76,7 @@ const Workbench = props => {
   }, []);
 
   useEffect(() => {
+    if(props.location.query?.type){
     props.dispatch({
       type: 'wordSupervision/updateState',
       payload: {
@@ -77,12 +84,14 @@ const Workbench = props => {
       },
     });
     loadData();
+  }
   }, [props.location.query.type]);
 
-  // 加载工作台和我的消息数据
+  // 加载工作台和我的消息数据 运维服务列表
   const loadData = () => {
     GetToDoDailyWorks();
     GetWorkBenchMsg();
+    GetStagingInspectorRectificationList()
   };
 
   // 获取工作台待办
@@ -134,6 +143,13 @@ const Workbench = props => {
       callback: () => {
         loadData();
       },
+    });
+  };
+  //获取运维服务列表
+  const GetStagingInspectorRectificationList = () => {
+    props.dispatch({
+      type: 'wordSupervision/GetStagingInspectorRectificationList',
+      payload: {pageIndex:1,pageSize:8},
     });
   };
 
@@ -206,10 +222,10 @@ const Workbench = props => {
               达标
             </Tag>
           ) : (
-            <Tag style={{ marginLeft: 10 }} color="error">
-              未达标
-            </Tag>
-          )}
+              <Tag style={{ marginLeft: 10 }} color="error">
+                未达标
+              </Tag>
+            )}
         </div>
       ),
       content: content,
@@ -303,149 +319,193 @@ const Workbench = props => {
       return <Timeline.Item label={date}>{item.Title}</Timeline.Item>;
     });
   };
+ const [superviseRectificaVisible,setSuperviseRectificaVisible] = useState(false)
+ const [superviseRectificaDetailVisible,setSuperviseRectificaDetailVisible] = useState(false)
+ const [superviseRectificaDetailId,setSuperviseRectificaDetailId] = useState()
 
+ 
+ const operaServiceClick = (id) =>{
+  setSuperviseRectificaDetailVisible(true)
+  setSuperviseRectificaDetailId(id)
+ }
+ 
   return (
-    <BreadcrumbWrapper>
-      <div className={styles.workbench}>
-        <div className={styles.leftWrapper}>
-          <div className={styles.topWrapper}>
-            <div className={styles.taskListWrapper}>
-              <Card
-                style={{ height: '100%' }}
-                bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}
-              >
-                {/* 待办任务列表 */}
-                <div className={styles.taskList}>
-                  <div className={styles.title}>日常监管待办</div>
+    <div className={styles.workbenchBreadSty}>
+      <BreadcrumbWrapper>
+        <div className={styles.workbench}>
+          <div className={styles.leftWrapper}>
+            <div className={styles.topWrapper}>
+              <div className={styles.taskListWrapper}>
+                <Card
+                  style={{ height: '100%' }}
+                  bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}
+                >
+                  {/* 待办任务列表 */}
+                  <div className={styles.taskList}>
+                    <div className={styles.title}>日常监管待办</div>
 
-                  <div className={styles.content} style={{ textAlign: 'center' }}>
-                    <Spin spinning={todoListLoading}>{renderTodoList()}</Spin>
-                    {/* <Spin spinning={true}>{renderTodoList()}</Spin> */}
+                    <div className={styles.content} style={{ textAlign: 'center' }}>
+                      <Spin spinning={todoListLoading}>{renderTodoList()}</Spin>
+                      {/* <Spin spinning={true}>{renderTodoList()}</Spin> */}
+                    </div>
                   </div>
-                </div>
-                {/* 手工申请 */}
-                <div className={styles.manualList}>
-                  <div className={styles.title}>手工申请</div>
-                  <Row
-                    gutter={32}
-                    className={styles.content}
+                  {/* 手工申请 */}
+                  <div className={styles.manualList}>
+                    <div className={styles.title}>手工申请</div>
+                    <Row
+                      gutter={32}
+                      className={styles.content}
                     // style={{ height: '100%', width: '100%' }}
-                  >
-                    {manualList.map(item => {
-                      return (
-                        <Col span={6}>
-                          <Popconfirm
-                            title={`确认申请${item.label}任务单？`}
-                            onConfirm={e => {
-                              manualTask(item.value);
-                            }}
-                            okText="是"
-                            cancelText="否"
-                          >
-                            <div className={styles.manualItem} style={{backgroundImage: `url(${item.img})`}}>
-                              {/* <img src={item.img} /> */}
-                              <p>{item.label}</p>
-                            </div>
-                          </Popconfirm>
-                        </Col>
-                      );
-                    })}
+                    >
+                      {manualList.map(item => {
+                        return (
+                          <Col span={6}>
+                            <Popconfirm
+                              title={`确认申请${item.label}任务单？`}
+                              onConfirm={e => {
+                                manualTask(item.value);
+                              }}
+                              okText="是"
+                              cancelText="否"
+                            >
+                              <div className={styles.manualItem} style={{ backgroundImage: `url(${item.img})` }}>
+                                {/* <img src={item.img} /> */}
+                                <p>{item.label}</p>
+                              </div>
+                            </Popconfirm>
+                          </Col>
+                        );
+                      })}
+                    </Row>
+                  </div>
+                </Card>
+              </div>
+            </div>
+            <Row gutter={[16, 16]} className={styles.bottomWrapper}>
+              <Col flex="1" span={12} style={{ height: 382 }}>
+                <Card
+                  style={{ height: '100%' }}
+                  bodyStyle={{
+                    padding: 0,
+                    height: '100%',
+                  }}
+                >
+                  {/* 预留 */}
+                  <Row justify='space-between'>
+                    <div className={styles.title}>运维服务</div>
+                    <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() =>setSuperviseRectificaVisible(true)} />
                   </Row>
+                  <div className={styles.operaServiceSty} style={{ padding: '6px 24px 4px 16px' }}>
+                    <Spin spinning={operaServiceLoading}>
+                      {operaServiceList?.length ? operaServiceList.map(item =>
+                        (<Row justify='space-between' style={{ paddingBottom: 18,cursor:'pointer' }} onClick={()=>{operaServiceClick()}}>
+                          <Col style={{ width: 'calc(100% - 126px)' }} className='textOverflow' title={item.content}>{item.content}</Col>
+                          <Col>{item.time}</Col>
+                        </Row>)
+                      )  :
+                      <Empty style={{ marginTop: '30px' }} /> }
+                    </Spin>
+                  </div>
+                </Card>
+              </Col>
+              <Col flex="1" span={12} style={{ height: 382 }}>
+                <Card
+                  style={{ height: '100%' }}
+                  bodyStyle={{
+                    padding: 0,
+                    height: '100%',
+                  }}
+                >
+                  {/* 预留 */}
+                  <div className={styles.title}>预留</div>
+                  <div>
+                    <Empty style={{ marginTop: '30px' }} />
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+          <div className={styles.rightWrapper}>
+            <div className={styles.infoWrapper}>
+              <Card bodyStyle={{ padding: 0, height: '100%' }} style={{ height: '100%' }}>
+                <div className={styles.title}>我的消息</div>
+                <div
+                  className={styles.content}
+                  style={{ height: 'calc(100% - 44px)', overflowY: 'auto' }}
+                >
+                  <Spin spinning={messageListLoading}>
+                    {messageList.length ? (
+                      <Timeline mode={'left'} className={styles.messageTimeLine}>
+                        {renderMessageTimeLine()}
+                      </Timeline>
+                    ) : (
+                        <Empty style={{ marginTop: '30px' }} />
+                      )}
+                  </Spin>
                 </div>
               </Card>
             </div>
           </div>
-          <Row gutter={[16, 16]} className={styles.bottomWrapper}>
-            <Col flex="1">
-              <Card
-                style={{ height: '100%' }}
-                bodyStyle={{
-                  padding: 0,
-                  height: '100%',
-                }}
-              >
-                {/* 预留 */}
-                <div className={styles.title}>预留</div>
-                <div>
-                  <Empty style={{ marginTop: '30px' }} />
-                </div>
-              </Card>
-            </Col>
-            <Col flex="1">
-              <Card
-                style={{ height: '100%' }}
-                bodyStyle={{
-                  padding: 0,
-                  height: '100%',
-                }}
-              >
-                {/* 预留 */}
-                <div className={styles.title}>预留</div>
-                <div>
-                  <Empty style={{ marginTop: '30px' }} />
-                </div>
-              </Card>
-            </Col>
-          </Row>
-        </div>
-        <div className={styles.rightWrapper}>
-          <div className={styles.infoWrapper}>
-            <Card bodyStyle={{ padding: 0, height: '100%' }} style={{ height: '100%' }}>
-              <div className={styles.title}>我的消息</div>
-              <div
-                className={styles.content}
-                style={{ height: 'calc(100% - 44px)', overflowY: 'auto' }}
-              >
-                <Spin spinning={messageListLoading}>
-                  {messageList.length ? (
-                    <Timeline mode={'left'} className={styles.messageTimeLine}>
-                      {renderMessageTimeLine()}
-                    </Timeline>
-                  ) : (
-                    <Empty style={{ marginTop: '30px' }} />
-                  )}
-                </Spin>
-              </div>
-            </Card>
-          </div>
-        </div>
 
-        {/* <Row gutter={[16, 16]}></Row> */}
-      </div>
-      {/* 转发任务 */}
-      <Modal
-        title="转发任务单"
-        visible={forwardingTaskVisible}
-        onOk={() => onForwardingTask()}
-        onCancel={() => setForwardingTaskVisible(false)}
-      >
-        <label style={{ fontSize: 14 }}>
-          将任务单转发至：
+          {/* <Row gutter={[16, 16]}></Row> */}
+        </div>
+        {/* 转发任务 */}
+        <Modal
+          title="转发任务单"
+          visible={forwardingTaskVisible}
+          onOk={() => onForwardingTask()}
+          onCancel={() => setForwardingTaskVisible(false)}
+        >
+          <label style={{ fontSize: 14 }}>
+            将任务单转发至：
           <Select
-            style={{ marginLeft: 10, width: 200 }}
-            placeholder="请选择转发人"
-            onChange={value => {
-              setForwardingUserId(value);
-            }}
-          >
-            {managerList.map(item => {
-              return (
-                <Option value={item.User_ID} key={item.User_ID}>
-                  {item.User_Name}
-                </Option>
-              );
-            })}
-          </Select>
-        </label>
+              style={{ marginLeft: 10, width: 200 }}
+              placeholder="请选择转发人"
+              onChange={value => {
+                setForwardingUserId(value);
+              }}
+            >
+              {managerList.map(item => {
+                return (
+                  <Option value={item.User_ID} key={item.User_ID}>
+                    {item.User_Name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </label>
+        </Modal>
+        <FromsModal
+          visible={formsModalVisible}
+          onCancel={() => {
+            setFormsModalVisible(false);
+          }}
+          taskInfo={currentTodoItem}
+        />
+        <Modal
+          centered
+          visible={superviseRectificaVisible}
+          title={'运维服务'}
+          footer={null}
+          wrapClassName="spreadOverModal"
+          destroyOnClose
+          onCancel={() =>setSuperviseRectificaVisible(false)}
+        >
+          <SuperviseRectification hideBreadcrumb match={{path:'/operations/superviseRectification'}}/>
+        </Modal>
+        <Modal //详情
+        visible={superviseRectificaDetailVisible}
+        title={'详情'}
+        footer={null}
+        wrapClassName='spreadOverModal'
+        className={superviseRectificaSty.fromModal}
+        onCancel={() => { setSuperviseRectificaDetailVisible(false) }}
+        destroyOnClose
+      >
+        <SuperviseRectificationDetail ID={superviseRectificaDetailId} />
       </Modal>
-      <FromsModal
-        visible={formsModalVisible}
-        onCancel={() => {
-          setFormsModalVisible(false);
-        }}
-        taskInfo={currentTodoItem}
-      />
-    </BreadcrumbWrapper>
+      </BreadcrumbWrapper>
+    </div>
   );
 };
 
