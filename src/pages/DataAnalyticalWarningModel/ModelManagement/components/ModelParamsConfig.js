@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:10:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-19 09:11:30
+ * @Last Modified time: 2023-07-10 14:30:50
  * @Description：模型参数配置
  */
 import React, { useState, useEffect, useImperativeHandle } from 'react';
@@ -13,6 +13,24 @@ import styles from '../../styles.less';
 const PollutantList = {
   // 机组停运
   '928ec327-d30d-4803-ae83-eab3a93538c1': [
+    {
+      pollutantCode: 's02',
+      pollutantName: '流速',
+      unit: 'm/s',
+    },
+    {
+      pollutantCode: 's01',
+      pollutantName: 'O2',
+      unit: '%',
+    },
+    {
+      pollutantCode: 's03',
+      pollutantName: '温度',
+      unit: '℃',
+    },
+  ],
+  // 机组停运虚假标识
+  '3568b3c6-d8db-42f1-bbff-e76406a67f7f': [
     {
       pollutantCode: 's02',
       pollutantName: '流速',
@@ -121,6 +139,8 @@ const ModelParamsConfig = props => {
     switch (ModelID) {
       // 机组停运
       case '928ec327-d30d-4803-ae83-eab3a93538c1':
+      // 机组停运虚假标识
+      case '3568b3c6-d8db-42f1-bbff-e76406a67f7f':
       // 检测样品为空气（拔管）
       case '9104ab9f-d3f3-4bd9-a0d9-898d87def4dd':
         return (

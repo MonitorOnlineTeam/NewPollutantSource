@@ -120,7 +120,7 @@ const Index = props => {
           {getPageContent()}
         </Modal>
       ) : (
-        <>{getPageContent()}</>
+        <div style={{ overflowY: 'auto', height: ' calc(100vh - 205px)' }}>{getPageContent()}</div>
       )}
     </>
   );

@@ -82,7 +82,7 @@ const WarningData = props => {
         // 处理图例
         let legendSelected = {};
         pollutantNames.map((item, index) => {
-          if (index < 6) {
+          if (index < 1) {
             legendSelected[item] = true;
           } else {
             legendSelected[item] = false;
@@ -556,7 +556,7 @@ const WarningData = props => {
             />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane tab="波动范围" key="2">
+        <Tabs.TabPane tab="波动范围" key="2" style={{overflowY: 'auto'}}>
           <PollutantImages images={images} />
         </Tabs.TabPane>
       </Tabs>
