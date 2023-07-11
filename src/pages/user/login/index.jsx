@@ -31,12 +31,14 @@ class Login extends Component {
     });
   };
  componentDidMount(){
+
   this.timer = setInterval(() => {
     this.child&&this.child.current&&this.child.current.click(); // 3分钟刷新一次
   }, 1000 * 60 * 3  );
  }
 
  componentWillUnmount(){
+  this.props.dispatch({type: 'userLogin/changeLoginStatus',payload: {status: '', type: '', message: ''} });
   clearInterval(this.timer)
  }
  verificaCodeChange=(code)=>{

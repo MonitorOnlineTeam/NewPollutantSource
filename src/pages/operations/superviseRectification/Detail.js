@@ -123,7 +123,11 @@ const Index = (props) => {
     return datas;
   }
 
-
+  const userCookie = Cookie.get('currentUser');
+  let userId = '';
+  if (userCookie) {
+    userId = JSON.parse(userCookie).User_ID;
+  }
   const TitleComponents = (props) => {
     return <div style={{ display: 'inline-block', fontWeight: 'bold', padding: '2px 4px', marginBottom: 16, borderBottom: '1px solid rgba(0,0,0,.1)' }}>{props.text}</div>
 
@@ -139,7 +143,7 @@ const Index = (props) => {
     }
     return fileList;
   }
-  const pass = (record,type) => { //整改或申诉通过
+  const pass =  (record,type) => { //整改或申诉通过
     props.updateRectificationStatus({
       ID: record.Id,
       Status:type,
@@ -184,7 +188,7 @@ const Index = (props) => {
     };
     return obj;
   }
-  const supervisionCol = (data) => [{
+  const supervisionCol = (data,totalData) => [{
     title: <span style={{ fontWeight: 'bold', fontSize: 14 }}>
       {data[0].Title}
     </span>,
@@ -261,7 +265,7 @@ const Index = (props) => {
         dataIndex: 'StatusName',
         key: 'StatusName',
         align: 'center',
-        width: 90,
+        width: 150,
       },
       {
         title: '整改日期',
@@ -272,25 +276,36 @@ const Index = (props) => {
       },
       {
         title: <span>操作</span>,
-        dataIndex: 'StatusName',
-        key:'StatusName',
+        dataIndex: 'Status',
+        key:'Status',
         align: 'center',
         fixed: 'right',
         width: 146,
         ellipsis: true,
-        render: (text, record) => {
-          return (
-          <div>{(text == '已整改' || text == '申诉中') &&
-           <>
-            <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record,text == '已整改' ? 3 : 6 )} okText="是" cancelText="否">
-              <a style={{paddingRight:6}}> {text == '已整改' ? '整改通过' : '申诉通过'} </a>
+        render: (text, record) => {  // 1已整改  8整改通过(省区经理) 5申诉中
+           const provincialManager = totalData?.Info?.length ?  totalData.Info[0].ProvincialManager :''
+           const inspector = totalData?.Info?.length ?  totalData.Info[0].Inspector :''
+
+           if((text == 1 && userId == provincialManager) || (text == 8 && userId==inspector || (text == 5 && userId==inspector))){
+            return <div>
+               <Popconfirm title={text == 1 || text == 8 ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record,text==8 ? 3 :  text == 1 ?  8 : 6)} okText="是" cancelText="否">
+              <a style={{paddingRight:6}}> {text == 1 || text == 8 ? '整改通过' : '申诉通过'} </a>
             </Popconfirm>
-            <a onClick={() => { reject(record, text == '已整改' ? 1 : 2) }}>
-              <a> {text == '已整改' ? '整改驳回' : '申诉驳回'} </a>
-            </a>
-          </>
-          }</div>
-          )
+               <a  onClick={() => { reject(record ,text==1 || text == 8  ? 1 :  2) }}> { text == 1 || text== 8  ? '整改驳回' : '申诉驳回'} </a>
+            </div>
+           }
+          // return (
+          // <div>{(text == '已整改' || text == '申诉中') &&
+          //  <>
+          //   <Popconfirm title={text == '已整改' ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record,text == '已整改' ? 3 : 6 )} okText="是" cancelText="否">
+          //     <a style={{paddingRight:6}}> {text == '已整改' ? '整改通过' : '申诉通过'} </a>
+          //   </Popconfirm>
+          //   <a onClick={() => { reject(record, text == '已整改' ? 1 : 2) }}>
+          //     <a> {text == '已整改' ? '整改驳回' : '申诉驳回'} </a>
+          //   </a>
+          // </>
+          // }</div>
+          // )
         }
       },
     ]
@@ -575,15 +590,18 @@ const Index = (props) => {
               <Col span={12}>
                 <Form.Item label="运维人员"  >
                   {infoList && infoList.OperationUserName}
-
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="得分"  >
                   {infoList && infoList.TotalScore}
-
                 </Form.Item>
               </Col>
+              <Col span={12}>
+               <Form.Item label="省区经理"  >
+               {infoList&&infoList.ProvincialManagerName}
+               </Form.Item>
+            </Col>
             </Row>
           </div>
 
@@ -605,7 +623,7 @@ const Index = (props) => {
               {operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList[0] && <Table
                 bordered
                 dataSource={operationInfoList.PrincipleProblemList}
-                columns={supervisionCol(operationInfoList.PrincipleProblemList)}
+                columns={supervisionCol(operationInfoList.PrincipleProblemList,operationInfoList)}
                 rowClassName="editable-row"
                 pagination={false}
                 scroll={{x: 1100}}
@@ -613,7 +631,7 @@ const Index = (props) => {
               {operationInfoList.importanProblemList && operationInfoList.importanProblemList[0] && <Table
                 bordered
                 dataSource={operationInfoList.importanProblemList}
-                columns={supervisionCol(operationInfoList.importanProblemList)}
+                columns={supervisionCol(operationInfoList.importanProblemList,operationInfoList)}
                 rowClassName="editable-row"
                 className="impTableSty"
                 pagination={false}
@@ -622,7 +640,7 @@ const Index = (props) => {
               {operationInfoList.CommonlyProblemList && operationInfoList.CommonlyProblemList[0] && <> <Table
                 bordered
                 dataSource={operationInfoList.CommonlyProblemList}
-                columns={supervisionCol(operationInfoList.CommonlyProblemList)}
+                columns={supervisionCol(operationInfoList.CommonlyProblemList,operationInfoList)}
                 rowClassName="editable-row"
                 pagination={false}
                 className={'commonlyTableSty'}

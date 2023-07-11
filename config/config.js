@@ -1302,6 +1302,11 @@ export default {
                   component: './operations/superviseRectification',
                 },
                 {
+                  path: '/operations/provincialManager', //省区经理管理
+                  name: 'provincialManager',
+                  component: './operations/provincialManager',
+                },
+                {
                   path: '/operations/cruxParSupervision', //关键参数督查
                   name: 'superviseRectification',
                   component: './operations/cruxParSupervision',

@@ -487,7 +487,7 @@ class DepartIndex extends Component {
                     </a>
                   </Popover>
                 </Tooltip></>}
-              {/* {record.leve === '1' && (
+               {record.leve === '1' && (
                 <>
                   <Divider type="vertical" />
                   <Tooltip title="省区/大区日常监管配置">
@@ -504,7 +504,7 @@ class DepartIndex extends Component {
                     </a>
                   </Tooltip>
                 </>
-              )} */}
+              )} 
               {/* <Divider type="vertical" />
               <Tooltip title="设置审批流程">
                 <a

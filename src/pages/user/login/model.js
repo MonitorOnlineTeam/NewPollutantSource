@@ -21,7 +21,6 @@ const Model = {
   effects: {
     *login({ payload, callback }, { call, put, update, select }) {
       const response = yield call(systemLogin, payload);
-
       yield put({
         type: 'changeLoginStatus',
         payload: {
@@ -32,6 +31,14 @@ const Model = {
       });
       callback && callback(response.IsSuccess);
       if (response.IsSuccess) {
+        if (!(response.Datas&&response.Datas.Complexity)) {
+          //判断密码复杂程度
+          yield put({ type: 'changeLoginStatus', payload: {status: 'error', type: 'account', message: '密码过于简单，请修改密码！'} });
+          setTimeout(() => {
+            router.push('/user/changePassword');
+          }, 1500);
+          return;
+        }
         response.Datas.User_ID = response.Datas.UserId;
         let defaultNavigateUrl = '/user/login';
         let systemNavigateUrl = '';
@@ -85,14 +92,6 @@ const Model = {
           const { ws } = window;
           ws.send(response.Datas.UserAccount);
         } catch (error) {}
-        if (!response.Datas.Complexity) {
-          //判断密码复杂程度
-          message.error('密码过于简单，请修改密码！');
-          setTimeout(() => {
-            router.push('/user/changePassword');
-          }, 1000);
-          return;
-        }
         //大屏
         if (payload.redirctUrl) {
           router.push('/newestHome');

@@ -390,13 +390,16 @@ const Index = (props) => {
             <Col span={12}>
               <Form.Item label="督查日期" >
              {infoList&&infoList.InspectorDate}
-               
               </Form.Item>
               </Col >
             <Col span={12}>
                <Form.Item label="运维人员"  >
                {infoList&&infoList.OperationUserName}
-              
+               </Form.Item>
+            </Col>
+            <Col span={12}>
+               <Form.Item label="省区经理"  >
+               {infoList&&infoList.ProvincialManagerName}
                </Form.Item>
             </Col>
             </Row>

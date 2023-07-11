@@ -77,7 +77,7 @@ const Workbench = props => {
 
   useEffect(() => {
     if(props.location.query?.type){
-    props.dispatch({
+     props.dispatch({
       type: 'wordSupervision/updateState',
       payload: {
         TYPE: props.location.query.type,
@@ -145,6 +145,7 @@ const Workbench = props => {
       },
     });
   };
+
   //获取运维服务列表
   const GetStagingInspectorRectificationList = () => {
     props.dispatch({
@@ -328,7 +329,9 @@ const Workbench = props => {
   setSuperviseRectificaDetailVisible(true)
   setSuperviseRectificaDetailId(id)
  }
- 
+ useEffect(() => { //关闭详情弹框 刷新列表
+  !superviseRectificaDetailVisible&&GetStagingInspectorRectificationList()
+}, [superviseRectificaDetailVisible]);
   return (
     <div className={styles.workbenchBreadSty}>
       <BreadcrumbWrapper>
@@ -398,9 +401,9 @@ const Workbench = props => {
                   <div className={styles.operaServiceSty} style={{ padding: '6px 24px 4px 16px' }}>
                     <Spin spinning={operaServiceLoading}>
                       {operaServiceList?.length ? operaServiceList.map(item =>
-                        (<Row justify='space-between' style={{ paddingBottom: 18,cursor:'pointer' }} onClick={()=>{operaServiceClick()}}>
-                          <Col style={{ width: 'calc(100% - 126px)' }} className='textOverflow' title={item.content}>{item.content}</Col>
-                          <Col>{item.time}</Col>
+                        (<Row justify='space-between' style={{ paddingBottom: 18,cursor:'pointer' }} onClick={()=>{operaServiceClick(item.ID)}}>
+                          <Col style={{ width: 'calc(100% - 146px)' }} className='textOverflow' title={item.EntNamePointName}>{item.EntNamePointName}</Col>
+                          <Col>{item.Time}</Col>
                         </Row>)
                       )  :
                       <Empty style={{ marginTop: '30px' }} /> }

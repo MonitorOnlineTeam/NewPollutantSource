@@ -169,6 +169,13 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '省区经理',
+      dataIndex: 'ProvincialManagerName',
+      key: 'ProvincialManagerName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '督查日期',
       dataIndex: 'InspectorDate',
       key: 'InspectorDate',

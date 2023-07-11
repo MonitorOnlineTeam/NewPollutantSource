@@ -259,6 +259,13 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '省区经理',
+      dataIndex: 'ProvincialManagerName',
+      key: 'ProvincialManagerName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '督查日期',
       dataIndex: 'InspectorDate',
       key: 'InspectorDate',
@@ -1844,6 +1851,11 @@ const Index = (props) => {
                   </Form.Item>
                   {/* </Spin> */}
                 </Col>
+                <Col span={12}>
+                  <Form.Item label="省区经理" name="ProvincialManager" rules={[{ required: true, message: '请选择省区经理' }]} >
+                  <OperationInspectoUserList   type='2' allowClear={false}  />
+                  </Form.Item>
+                </Col >
               </Row>
             </div>
 

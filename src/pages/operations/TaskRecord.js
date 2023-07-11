@@ -822,7 +822,7 @@ class TaskRecord extends Component {
                     >
                       <Option key="1" value="1">打卡异常</Option>
                       <Option key="2" value="2">报警响应超时</Option>
-                      <Option key="3" value="3">工作超时</Option>
+                      {/* <Option key="3" value="3">工作超时</Option> */}
                     </Select>,
                   )}
                 </FormItem>
