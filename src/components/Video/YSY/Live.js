@@ -69,7 +69,7 @@ class Video extends PureComponent {
   onPlayClick = async (accessToken) => {
     const { deviceSerial, channelNo, template, id } = this.props;
     if (deviceSerial && channelNo) {
-      let url = `ezopen://open.ys7.com/${deviceSerial}/${channelNo}.live` // 高清地址
+      let url = `ezopen://open.ys7.com/${deviceSerial}/${channelNo}.live` // 播放地址，hd：高清
       this.playr = new EZUIKit.EZUIKitPlayer({
         id: id, // 准备的dom元素的id，画面就在这里面播放
         autoplay: true, // 开启自动播放

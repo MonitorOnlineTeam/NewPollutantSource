@@ -1,11 +1,10 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent } from 'react';
 import { message } from 'antd';
 // import YSYPlaybackVideo from './YSY/Playback'
 // import LCYPlaybackVideo from './LCY/Live'
 // import LCYPlaybackVideo from './LCY/Playback'
-import PrivateCloudPlaybackVideo from './PrivateCloud/Playback'
-import HKPlaybackVideo from './HK/Playback'
-
+import PrivateCloudPlaybackVideo from './PrivateCloud/Playback';
+import HKPlaybackVideo from './HK/Playback';
 
 class PlaybackVideo extends PureComponent {
   constructor(props) {
@@ -14,7 +13,7 @@ class PlaybackVideo extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.onRef(this)
+    this.props.onRef(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -37,37 +36,50 @@ class PlaybackVideo extends PureComponent {
       }
       // console.log('startDate.format(format), endDate.format(format)', startDate.format(format), endDate.format(format))
       // return;
-      this.playbackVideo.onPlayClick(startDate.format(format), endDate.format(format))
+      this.playbackVideo.onPlayClick(startDate.format(format), endDate.format(format));
     } else {
-      message.error('请选择时间后播放！')
+      message.error('请选择时间后播放！');
     }
-  }
+  };
 
   switchVideo = () => {
     const { videoInfo } = this.props;
     const { startDate, endDate } = this.state;
-    debugger
+    debugger;
     switch (videoInfo.InputType) {
       case 1:
         // 萤石云
         const YSYPlaybackVideo = require('./YSY/Playback.js').default;
-        return <YSYPlaybackVideo onRef={ref => this.playbackVideo = ref} appKey={videoInfo.AppKey} appSecret={videoInfo.AppSecret} deviceSerial={videoInfo.VedioCamera_No} channelNo={videoInfo.ChannelNo} />
+        return (
+          <YSYPlaybackVideo
+            onRef={ref => (this.playbackVideo = ref)}
+            appKey={videoInfo.AppKey}
+            appSecret={videoInfo.AppSecret}
+            deviceSerial={videoInfo.VedioCamera_No}
+            channelNo={videoInfo.ChannelNo}
+          />
+        );
       case 2:
         // 乐橙云
         const LCYPlaybackVideo = require('./LCY/Playback.js').default;
-        return <LCYPlaybackVideo
-          // id="LCYPlaybackVideo"
-          onRef={ref => this.playbackVideo = ref}
-          appKey={videoInfo.AppKey} appSecret={videoInfo.AppSecret}
-          deviceSerial={videoInfo.VedioCamera_No} channelNo={videoInfo.ChannelNo}
-          type={1}
-          kitToken={videoInfo.KitToken}
-          accessToken={videoInfo.AccessToken}
-          startDate={startDate} endDate={endDate}
-        />
+        return (
+          <LCYPlaybackVideo
+            // id="LCYPlaybackVideo"
+            onRef={ref => (this.playbackVideo = ref)}
+            appKey={videoInfo.AppKey}
+            appSecret={videoInfo.AppSecret}
+            deviceSerial={videoInfo.VedioCamera_No}
+            channelNo={videoInfo.ChannelNo}
+            type={1}
+            kitToken={videoInfo.KitToken}
+            accessToken={videoInfo.AccessToken}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        );
       case 3:
         // 私有云
-        return <PrivateCloudPlaybackVideo />
+        return <PrivateCloudPlaybackVideo />;
       case 4:
         // 海康IE
         break;
@@ -76,21 +88,19 @@ class PlaybackVideo extends PureComponent {
         break;
       case 6:
         // 海康
-        return <HKPlaybackVideo
-          id="HKPlayback"
-          onRef={ref => this.playbackVideo = ref}
-          CameraCode={videoInfo.VedioCamera_No}
-        />
+        return (
+          <HKPlaybackVideo
+            id="HKPlayback"
+            onRef={ref => (this.playbackVideo = ref)}
+            CameraCode={videoInfo.VedioCamera_No}
+          />
+        );
         break;
     }
-  }
+  };
 
   render() {
-    return (
-      <>
-        {this.switchVideo()}
-      </>
-    );
+    return <div style={{ height: '100%' }}>{this.switchVideo()}</div>;
   }
 }
 

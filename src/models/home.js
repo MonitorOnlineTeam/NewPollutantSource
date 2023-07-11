@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-03-21 09:18:13
+ * @Last Modified time: 2023-06-27 17:33:21
  * @desc: 主页model
  */
 import moment from 'moment';
@@ -14,7 +14,7 @@ import { message } from 'antd';
 import { result } from 'lodash';
 
 export default Model.extend({
-  namespace: 'home',
+  namespace: 'home', 
   state: {
     theme: 'dark',
     allEntAndPointList: [],
@@ -566,8 +566,7 @@ export default Model.extend({
     },
     // 年度排放量对比分析 - 碳排放
     *getGHGandEmissionContrast({ payload }, { call, update, select }) {
-      // const result = yield call(services.GetGHGandEmissionContrastOther, payload);
-      const result = yield call(services.getGHGandEmissionContrast, payload);
+      const result = yield call(services.GetGHGandEmissionContrastOther, payload);
       if (result.IsSuccess) {
         yield update({
           GHGandEmissionContrastData: result.Datas,
