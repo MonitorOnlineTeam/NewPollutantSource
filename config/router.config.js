@@ -113,6 +113,11 @@ const routes = [
         component: './home',
       },
       {
+        name: 'hometangy',
+        path: '/hometangy',
+        component: './hometangy',
+      },
+      {
         name: 'sysTypeMiddlePage',
         path: '/sysTypeMiddlePage',
         component: './sysTypeMiddlePage',

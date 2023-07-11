@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from '@/pages/home/index.less';
+import styles from '../index.less';
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
 import config from "@/config";
@@ -235,29 +235,21 @@ class OperationAnalysis extends Component {
         <div className={styles.title}>
           <p>运行分析</p>
         </div>
-        <div className={styles.echartsContent}>
-          <div className={styles.echartItem}>
+        <div className={styles.echartsContent} style={{ height: '90%', width: '100%', maxHeight:'100%' }}>
+          <div className={styles.echartItem} style={{ height: '90%', width: '100%', maxHeight:'100%' }}>
             <ReactEcharts
               ref={echart => { this.myChart = echart }}
               option={this.getOption(1)}
               lazyUpdate={true}
-              style={{ height: '94px', width: '100%' }}
+              style={{ height: '100%', width: '100%' }}
             // theme={this.props.theme === 'dark' ? 'dark' : 'default'}
             />
             <div className={styles.echartsTitle}>实时联网率</div>
           </div>
-          {/* <div className={styles.echartItem}>
-              <ReactEcharts
-                option={this.getOption(2)}
-                style={{ height: '94px', width: '100%' }}
-                theme="my_theme"
-              />
-              <div className={styles.echartsTitle}>{currentMonth}月设备运转率</div>
-            </div> */}
-          <div className={styles.echartItem}>
+          <div className={styles.echartItem} style={{ height: '90%', width: '100%', maxHeight:'100%' }}>
             <ReactEcharts
               option={this.getOption(3)}
-              style={{ height: '94px', width: '100%' }}
+              style={{ height: '100%', width: '100%' }}
               theme="my_theme"
             />
             <div className={styles.echartsTitle}>{currentMonth}月传输有效率</div>
