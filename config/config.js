@@ -873,6 +873,12 @@ export default {
                   path: '/platformconfig/videomanager',
                   component: './platformManager/videomanager',
                 },
+                // {
+                //   //视频管理 （新）
+                //   name: 'videomanagerNew',
+                //   path: '/platformconfig/videomanagerNew',
+                //   component: './Video/videomanager',
+                // },
                 {
                   //运维周期
                   name: 'maintenancecycle',
@@ -1639,7 +1645,7 @@ export default {
                   // component: './monitoring/mapview',
                   component: './newHome/ElectronicMap',
                 },
-                {
+                { //视频监控
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
                   component: `${
@@ -1647,6 +1653,11 @@ export default {
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
                   }`,
+                },
+                { //视频监控（新）
+                  name: 'videopreviewNew',
+                  path: '/monitoring/videopreviewNew',
+                  component: './Video/videoView',
                 },
                 {
                   name: 'realtimedata',
