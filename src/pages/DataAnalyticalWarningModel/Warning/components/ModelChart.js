@@ -27,6 +27,8 @@ const ModelChart = props => {
       monitorValue,
       dateHistory,
       dataHistory,
+      splitDate,
+      splitTime,
     } = chartData.data[legendIndex];
 
     let seriesMarkLine = [];
@@ -163,9 +165,63 @@ const ModelChart = props => {
       };
     }
 
+    // 波动范围变小
+    if (splitTime) {
+      // 获取最大值
+      let UpperLimitMax = _.maxBy(splitDate, 'UpperLimit');
+      let dataMax = _.max([...data, UpperLimitMax]);
+
+      seriesMarkLine.push([
+        {
+          // lineStyle: { color: '#ff0000' },
+          coord: [moment(splitTime).format('MM-DD HH:mm'), 0],
+          symbol: 'none',
+          symbolSize: 0,
+        },
+        {
+          coord: [moment(splitTime).format('MM-DD HH:mm'), dataMax],
+          symbol: 'arrow',
+          symbolSize: 1,
+          lineStyle: { color: '#ff0000' },
+        },
+      ]);
+    }
+
+    if (splitDate) {
+      splitDate.map((item, index) => {
+        let lineColor = ['#ff0000', '#ff00ff'];
+        let startIndex = date.findIndex(_ => _ === item.startTime);
+        let endIndex = date.findIndex(_ => _ === item.endTime);
+        seriesMarkLine.push(
+          [
+            {
+              name: '波动上限',
+              lineStyle: { color: lineColor[index] },
+              // [坐标轴]
+              coord: [startIndex, item.UpperLimit],
+            },
+            {
+              coord: [endIndex, item.UpperLimit],
+            },
+          ],
+          [
+            {
+              name: '波动下限',
+              lineStyle: { color: lineColor[index] },
+              coord: [startIndex, item.LowLimit],
+            },
+            {
+              coord: [endIndex, item.LowLimit],
+            },
+          ],
+        );
+      });
+    }
+
     console.log('yAxis', yAxis);
     console.log('xAxis', xAxis);
     console.log('appendSeries', appendSeries);
+    console.log('seriesMarkLine', seriesMarkLine);
     return {
       color: color,
       title: {
@@ -293,7 +349,11 @@ const ModelChart = props => {
 
   return (
     <div className={styles.chartBox}>
-      {trend && <span className={styles.trend} style={{top: 60}}>趋势相似度 {trend}</span>}
+      {trend && (
+        <span className={styles.trend} style={{ top: 60 }}>
+          趋势相似度 {trend}
+        </span>
+      )}
       <ReactEcharts
         option={getOption()}
         lazyUpdate

@@ -17,7 +17,7 @@ const ModelChart2 = props => {
 
     let seriesData = data.map(item => {
       return {
-        name: `${item.PointName}`,
+        name: `${item.PointName || item.pollutantName}`,
         data: item.data,
         type: 'line',
       };
@@ -38,7 +38,7 @@ const ModelChart2 = props => {
         padding: [15, 30, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
         // data: ['Email'],
       },
-      tooltip: {
+      tooltip: { 
         trigger: 'axis',
       },
       grid: {

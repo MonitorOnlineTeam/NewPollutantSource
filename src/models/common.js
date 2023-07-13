@@ -239,10 +239,10 @@ export default Model.extend({
     *getPollutantListByDgimn({ payload, callback }, { call, update }) {
       const result = yield call(services.getPollutantListByDgimn, payload);
       if (result.IsSuccess) {
+        callback && callback(result.Datas);
         yield update({
           pollutantListByDgimn: result.Datas,
         });
-        callback && callback(result.Datas);
       }
     },
     /**

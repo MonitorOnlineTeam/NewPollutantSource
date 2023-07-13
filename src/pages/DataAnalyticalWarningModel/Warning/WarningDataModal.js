@@ -332,16 +332,27 @@ const WarningData = props => {
 
         markAreaData.push(continuousItem);
         continuousItem = [];
+      } else if (item.WorkCon_Status && idx === allTypeDataList.length - 1) {
+        continuousItem.push({
+          name: '异常工况',
+          xAxis: item.MonitorTime,
+        });
+
+        markAreaData.push(continuousItem);
+        continuousItem = [];
       }
     });
 
-    // 绘制异常工况阴影
-    series[0].markArea = {
-      itemStyle: {
-        color: 'rgba(0,0,0, .1)',
-      },
-      data: markAreaData,
-    };
+    let showIndex = yxisData.findIndex(item => item.show === true);
+    if (showIndex > -1) {
+      // 绘制异常工况阴影
+      series[showIndex].markArea = {
+        itemStyle: {
+          color: 'rgba(0,0,0, .1)',
+        },
+        data: markAreaData,
+      };
+    }
 
     // series.map(item => {
     //   item.markArea = {
@@ -355,10 +366,24 @@ const WarningData = props => {
     console.log('yxisData', yxisData);
     console.log('series', series);
     // console.log('xAxisData', xAxisData);
-    // console.log('legendSelected', legendSelected);
+    console.log('legendSelected', legendSelected);
     // console.log('seriesFlag', seriesFlag);
+    console.log('markAreaData', markAreaData);
     let option = {
-      color: ['#38a2da', '#32c5e9', '#e062ae', '#e690d1', '#8279ea', '#9D97F6', '#9fe6b8', '#ffdb5c', '#ff9f7f', '#c23531', '#c4ccd3', '#61a0a8'],
+      color: [
+        '#38a2da',
+        '#32c5e9',
+        '#e062ae',
+        '#e690d1',
+        '#8279ea',
+        '#9D97F6',
+        '#9fe6b8',
+        '#ffdb5c',
+        '#ff9f7f',
+        '#c23531',
+        '#c4ccd3',
+        '#61a0a8',
+      ],
       // color: ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
       // color: ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'],
       tooltip: {
@@ -371,7 +396,9 @@ const WarningData = props => {
           //值
           let value = '';
           params.map(item => {
-            value += `${item.marker} ${item.seriesName}: ${item.value || '-'} ${units[item.seriesName]}
+            value += `${item.marker} ${item.seriesName}: ${item.value || '-'} ${
+              units[item.seriesName]
+            }
             ${seriesFlag[item.seriesName][item.dataIndex]}<br />`;
           });
 
@@ -390,7 +417,11 @@ const WarningData = props => {
       },
       toolbox: {
         feature: {
-          saveAsImage: {},
+          // dataView: { show: true, readOnly: false },
+          // magicType: { show: true, type: ['line', 'bar'] },
+          dataZoom: { show: true },
+          restore: { show: true },
+          saveAsImage: { show: true },
         },
       },
       xAxis: {
@@ -556,7 +587,7 @@ const WarningData = props => {
             />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane tab="波动范围" key="2" style={{overflowY: 'auto'}}>
+        <Tabs.TabPane tab="波动范围" key="2" style={{ overflowY: 'auto' }}>
           <PollutantImages images={images} />
         </Tabs.TabPane>
       </Tabs>

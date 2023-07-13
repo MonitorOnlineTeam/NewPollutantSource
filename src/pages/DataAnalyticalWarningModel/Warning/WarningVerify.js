@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-07 17:28:16
+ * @Last Modified time: 2023-07-12 15:25:18
  * @Description：报警核实详情
  */
 
@@ -102,7 +102,7 @@ const WarningVerify = props => {
         setWarningDataDate(date);
         setDataModalVisible(true);
       } else {
-        message.error('报警快照无数据，无法查看报警数据！');
+        message.error('异常特征无数据，无法查看报警数据！');
       }
     } else {
       // 图表模型
@@ -110,14 +110,16 @@ const WarningVerify = props => {
         modelChartDatas.length &&
         modelChartDatas[0].data.length &&
         modelChartDatas[0].data[0].date.length
+        // true
       ) {
         let startDate = modelChartDatas[0].data[0].date[0];
+        // let startDate = [moment('2023-05-24 00:00:00'), moment('2023-05-31 23:59:59')][0].Time;
 
         let date = [moment(startDate).subtract(3, 'day'), moment(startDate).add(3, 'day')];
         setWarningDataDate(date);
         setDataModalVisible(true);
       } else {
-        message.error('报警快照无数据，无法查看报警数据！');
+        message.error('异常特征无数据，无法查看报警数据！');
       }
     }
   };
@@ -169,7 +171,9 @@ const WarningVerify = props => {
               {modelChartDatas.length ? (
                 <Row className={styles.chartWrapper}>
                   {warningInfo.WarningTypeCode === 'c0af25fb-220b-45c6-a3de-f6c8142de8f1' ||
-                  warningInfo.WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402'
+                  warningInfo.WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
+                  // 引用错误、虚假的原始信号值
+                  warningInfo.WarningTypeCode === 'f021147d-e7c6-4c1d-9634-1d814ff9880a'
                     ? modelChartDatas.map((item, index) => {
                         return (
                           <Col span={12}>
