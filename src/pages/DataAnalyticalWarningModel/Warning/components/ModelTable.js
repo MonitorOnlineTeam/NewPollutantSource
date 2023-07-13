@@ -8,7 +8,6 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({});
 
 const ModelTable = props => {
   const { tableData, WarningTypeCode } = props;
-  const [columns, set] = useState({});
 
   useEffect(() => {}, []);
 

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-19 15:09:39
+ * @Last Modified time: 2023-07-13 14:48:58
  * @Description：报警记录
  */
 
@@ -15,6 +15,7 @@ import SdlTable from '@/components/SdlTable';
 import moment from 'moment';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
+import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
 
@@ -219,22 +220,17 @@ const WarningRecord = props => {
             />
           </Form.Item>
           <Form.Item label="行政区" name="regionCode">
-            <RegionList
-              noFilter
-              // levelNum={2}
-              style={{ width: 150 }}
-              onSelect={(value, node, extra) => {
-                // let ragionName = node.parentTitle ? node.parentTitle + node.title : node.title;
-                // setCurrentTitleName(ragionName);
-              }}
-            />
+            <RegionList noFilter style={{ width: 150 }} />
+          </Form.Item>
+          <Form.Item label="企业" name="EntCode">
+            <EntAtmoList noFilter style={{ width: 200 }} />
           </Form.Item>
           <Spin spinning={modelListLoading} size="small">
             <Form.Item label="报警类型" name="warningTypeCode">
               <Select
                 allowClear
                 placeholder="请选择报警类型"
-                style={{ width: 200 }}
+                style={{ width: 240 }}
                 showSearch
                 filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
