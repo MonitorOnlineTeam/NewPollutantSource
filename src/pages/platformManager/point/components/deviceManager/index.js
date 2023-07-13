@@ -491,7 +491,7 @@ const gasSyatemCancel = (record,type) =>{
       title: '创建人',
       dataIndex: 'CreateUser',
       align: 'center',
-      editable: true,
+      editable: false,
     },  
     {
       title: '创建时间',
@@ -1185,13 +1185,13 @@ const gasSyatemCancel = (record,type) =>{
         onFinish={() => {setPageIndex3(1); onFinish3(1,pageSize3) }}
         onValuesChange={onValuesChange3}
         initialValues={{
-          ManufacturerId: manufacturerList[0] && manufacturerList[0].ID,
+          // ManufacturerId: manufacturerList[0] && manufacturerList[0].ID,
         }}
       >
         <Row>
           <span>
           <Form.Item style={{ marginRight: 8 }} name='ManufacturerId' >
-            <Select placeholder='请选择设备厂家' showSearch  filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 150 }}>
+            <Select placeholder='请选择设备厂家' showSearch  filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 150 }} allowClear>
               {
                 manufacturerList[0] && manufacturerList.map(item => {
                   return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>

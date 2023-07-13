@@ -19,6 +19,7 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 import AttachmentView from '@/components/AttachmentView'
 import cuid from 'cuid';
+import Lightbox from "react-image-lightbox-rotate";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -474,6 +475,31 @@ const Index = (props) => {
   //     }
   //   },
   // ]
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [photoIndex, setPhotoIndex] = useState(0); //预览附件Index
+  const [imgUrlList, setImgUrlList] = useState([]);//预览附件列表
+  const [previewTitle, setPreviewTitle] = useState([]);//预览附件名称
+
+  const onPreviewImg = (file) => {
+    const imageList =  filesList2
+    let imageListIndex = 0;
+    imageList.map((item, index) => {
+      if (item.uid === file.uid) {
+        imageListIndex = index;
+      }
+    });
+    if (imageList && imageList[0]) {
+      //拼接放大的图片地址列表
+      const imgData = [];
+      imageList.map((item, key) => {
+        imgData.push(item.url)
+      })
+      setImgUrlList(imgData)
+    }
+    setPhotoIndex(imageListIndex)
+    setPreviewVisible(true)
+    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
+  }
   const filesCuid = form.getFieldValue('InspectorAttachment') ? form.getFieldValue('InspectorAttachment') : cuid()
   const [filesList2, setFilesList2] = useState([])
 
@@ -525,7 +551,7 @@ const Index = (props) => {
 
     },
     onPreview: file => { //预览
-      onPreviewImg(file, 2)
+      onPreviewImg(file)
     },
     fileList: filesList2
   };
@@ -703,8 +729,20 @@ const Index = (props) => {
             </Upload>
           </Form.Item>
         </Form>
-
       </Modal>
+      {previewVisible && <Lightbox
+        mainSrc={imgUrlList[photoIndex]}
+        nextSrc={imgUrlList[(photoIndex + 1) % imgUrlList.length]}
+        prevSrc={imgUrlList[(photoIndex + imgUrlList.length - 1) % imgUrlList.length]}
+        onCloseRequest={() => setPreviewVisible(false)}
+        onPreMovePrevRequest={() =>
+          setPhotoIndex((photoIndex + imgUrlList.length - 1) % imgUrlList.length)
+        }
+        onPreMoveNextRequest={() =>
+          setPhotoIndex((photoIndex + 1) % imgUrlList.length)
+        }
+        imageTitle={`${photoIndex+1}/${imgUrlList.length}`}
+      />}
     </div>
 
   );

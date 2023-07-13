@@ -608,23 +608,23 @@ export default class UserInfoIndex extends Component {
   pointAccessClick = () =>{
     const dataTreeValue = this.state.DataTreeValue
     const { pollutantType } = this.state; 
-    // this.props.dispatch({
-    //   type: 'newuserinfo/getentandpoint',
-    //   payload: {
-    //     RegionCode: dataTreeValue&&dataTreeValue.toString(),
-    //     PollutantType: pollutantType,
-    //     Name:this.state.entPointName,
-    //   },
-    // });
-    const keys = this.state.selectedRow.ID;
     this.props.dispatch({
-      type: 'newuserinfo/getpointbydepid',
+      type: 'newuserinfo/getentandpoint',
       payload: {
-        UserGroup_ID: keys&&keys.toString(),
-        PollutantType: pollutantType,
         RegionCode: dataTreeValue&&dataTreeValue.toString(),
+        PollutantType: pollutantType,
+        Name:this.state.entPointName,
       },
     });
+    // const keys = this.state.selectedRow.ID;
+    // this.props.dispatch({
+    //   type: 'newuserinfo/getpointbydepid',
+    //   payload: {
+    //     UserGroup_ID: keys&&keys.toString(),
+    //     PollutantType: pollutantType,
+    //     RegionCode: dataTreeValue&&dataTreeValue.toString(),
+    //   },
+    // });
   }
   handleDataOK = (state, callback) => {
     // console.log('regioncode=', this.state.DataTreeValue.toString());

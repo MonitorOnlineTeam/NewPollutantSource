@@ -111,7 +111,7 @@ export default Model.extend({
         
         } else {
           if(resData&&resData.succes === "False" ){
-            message.error(resData.message)
+            resData.message!=='错误代码：-3;错误信息：未查询到数据！'&&message.error(resData.message)
           }
           return resultData && resultData['soap:Envelope'] && resultData['soap:Envelope']['soap:Body'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['Items'] && resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['Items']['Item'] ? arrDataFormat(resultData['soap:Envelope']['soap:Body'][`${payload.functionName}Response`][`${payload.functionName}Result`]['Items']['Item']) : []
 
@@ -197,7 +197,7 @@ export default Model.extend({
              const cityData = [];
              const data = formatData(result.Datas);
                  data&&data[0]&&data.map(item1=>{
-                  if(item1.PROVINCE && !item1.CITY&&!item1.DISTRICT){
+                  if(item1.PROVINCE && !item1.CITY&&!item1.DISTRICT&&item1.PROVINCE==='上海市'){
                       cityData.push({value: item1.PROVINCE,label: item1.PROVINCE ,
                        children:data.map(item2=>{
                         if(item2.PROVINCE ===item1.PROVINCE && item2.CITY && !item2.DISTRICT){
@@ -256,12 +256,11 @@ export default Model.extend({
           case 'M_GetOperationDetailList':  //运维内容
           if (result.IsSuccess) {
             const data =  formatData(result.Datas).map(item=>{
-              return  {...item, label: item.DETAILNAME, value: item.ID,CYCLE:item.CYCLE}
+              return  {...item, label: item.DETAILNAME, value: item.DETAILNAME,CYCLE:item.CYCLE}
             })
-            console.log(payload.OTID,data)
             const listData = payload.OTID? data.filter(item=>item.OTID == payload.OTID) :  data
             yield update({ operaContantList:listData})
-            callback&&callback();
+            callback&&callback(listData);
           } else {
             message.error(result.Message); 
           }

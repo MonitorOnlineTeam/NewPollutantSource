@@ -878,7 +878,7 @@ class EmergencyDetailInfo extends Component {
                 </Modal>
 
 
-                {/* <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancels}>
+                {/* <Modal visible={this.state.previewVisible} ={null} onCancel={this.handleCancels}>
                     <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
                 </Modal> */}
             </div>
