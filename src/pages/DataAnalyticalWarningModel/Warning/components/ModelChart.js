@@ -169,22 +169,25 @@ const ModelChart = props => {
     if (splitTime) {
       // 获取最大值
       let UpperLimitMax = _.maxBy(splitDate, 'UpperLimit');
-      let dataMax = _.max([...data, UpperLimitMax]);
-
-      seriesMarkLine.push([
-        {
-          // lineStyle: { color: '#ff0000' },
-          coord: [moment(splitTime).format('MM-DD HH:mm'), 0],
-          symbol: 'none',
-          symbolSize: 0,
-        },
-        {
-          coord: [moment(splitTime).format('MM-DD HH:mm'), dataMax],
-          symbol: 'arrow',
-          symbolSize: 1,
-          lineStyle: { color: '#ff0000' },
-        },
-      ]);
+      let dataMax = _.max([...data, UpperLimitMax, monitorValue]);
+      splitTime.map(item => {
+        seriesMarkLine.push([
+          {
+            // lineStyle: { color: '#ff0000' },
+            coord: [moment(item).format('MM-DD HH:mm'), 0],
+            symbol: 'none',
+            symbolSize: 0,
+          },
+          {
+            coord: [moment(item).format('MM-DD HH:mm'), dataMax],
+            // symbol: 'arrow',
+            // type: 'max',
+            // yAxis: 'max',
+            // symbolSize: 1,
+            lineStyle: { color: '#ff0000' },
+          },
+        ]);
+      });
     }
 
     if (splitDate) {
