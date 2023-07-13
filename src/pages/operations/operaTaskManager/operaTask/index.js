@@ -577,6 +577,7 @@ const Index = (props) => {
         OTSID: item,
       }))
     }, () => {
+      setAddPointVisible(false)
       const data = [];
       pointList.map(item => {
         pointTargetKeys.map(item2 => {
@@ -587,7 +588,6 @@ const Index = (props) => {
       const datas = uniqueFunc([...addAllPointList,...list],'OTSID')
       setAddPointList(datas)
       setAddAllPointList(datas)
-      setAddPointVisible(false)
     })
 
   }
@@ -692,6 +692,7 @@ const Index = (props) => {
         OWID: item,
       }))
     }, () => {
+      setAddOperaUserVisible(false)
       const data = [];
       operaUserList.map(item => {
         operaUserTargetKeys.map(item2 => {
@@ -702,7 +703,6 @@ const Index = (props) => {
       const datas = uniqueFunc([...addAllOperaUserList,...list],'ODID')
       setAddOperaUserList(datas)
       setAddAllOperaUserList(datas)
-      setAddOperaUserVisible(false)
     })
 
   }
@@ -786,6 +786,7 @@ const Index = (props) => {
         ODID: item,
       }))
     }, () => {
+      setAddOperaDeviceVisible(false)
       const data = [];
       operaDeviceList.map(item => {
         operaDeviceTargetKeys.map(item2 => {
@@ -796,7 +797,6 @@ const Index = (props) => {
       const datas = uniqueFunc([...addAllOperaDeviceList,...list],'ODID')
       setAddOperaDeviceList(datas)
       setAddAllOperaDeviceList(datas)
-      setAddOperaDeviceVisible(false)
 
     })
   }
