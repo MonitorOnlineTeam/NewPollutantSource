@@ -7,7 +7,7 @@ import styles from '../../styles.less';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({});
 
-const ModelChart2 = props => {
+const ModelChartMultiple = props => {
   const { chartData, color } = props;
 
   useEffect(() => {}, []);
@@ -71,11 +71,11 @@ const ModelChart2 = props => {
       <ReactEcharts
         option={getOption()}
         lazyUpdate
-        style={{ height: '240px', width: '100%', margin: '10px 0' }}
+        style={{ height: '260px', width: '100%', margin: '10px 0' }}
         // onEvents={onEvents}
       />
     </div>
   );
 };
 
-export default connect(dvaPropsData)(ModelChart2);
+export default connect(dvaPropsData)(ModelChartMultiple);

@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi 
+ * @Date: 2023-07-14 10:37:27 
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-07-14 10:38:09
+ * @Description: 报警数据 - 弹窗
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Modal, Tabs, Form, Space, Button, Select, Radio, message, Spin } from 'antd';
@@ -363,12 +370,12 @@ const WarningData = props => {
     //   };
     // })
 
-    console.log('yxisData', yxisData);
-    console.log('series', series);
+    // console.log('yxisData', yxisData);
+    // console.log('series', series);
     // console.log('xAxisData', xAxisData);
-    console.log('legendSelected', legendSelected);
+    // console.log('legendSelected', legendSelected);
     // console.log('seriesFlag', seriesFlag);
-    console.log('markAreaData', markAreaData);
+    // console.log('markAreaData', markAreaData);
     let option = {
       color: [
         '#38a2da',
@@ -475,9 +482,9 @@ const WarningData = props => {
     legendselectchanged: onChartLegendChange,
   };
 
-  console.log('legendSelected', legendSelected);
-  console.log('selectedNames', selectedNames);
-  console.log('units', units);
+  // console.log('legendSelected', legendSelected);
+  // console.log('selectedNames', selectedNames);
+  // console.log('units', units);
   // console.log('option', option);
 
   return (

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-13 14:48:58
+ * @Last Modified time: 2023-07-14 09:05:55
  * @Description：报警记录
  */
 
@@ -186,12 +186,12 @@ const WarningRecord = props => {
   };
   return (
     <BreadcrumbWrapper>
-      <Card>
+      <Card className={styles.warningWrapper}>
         <Form
           name="basic"
           form={form}
           layout="inline"
-          style={{ padding: '10px 0 20px' }}
+          style={{ padding: '10px 0' }}
           initialValues={{
             ...warningForm,
           }}
@@ -253,19 +253,21 @@ const WarningRecord = props => {
               <Option value="3">未核实</Option>
             </Select>
           </Form.Item>
-          <Space>
-            <Button
-              type="primary"
-              loading={queryLoading}
-              onClick={() => {
-                setPageIndex(1);
-                onFinish();
-              }}
-            >
-              查询
-            </Button>
-            <Button onClick={() => onReset()}>重置</Button>
-          </Space>
+          <Form.Item>
+            <Space>
+              <Button
+                type="primary"
+                loading={queryLoading}
+                onClick={() => {
+                  setPageIndex(1);
+                  onFinish();
+                }}
+              >
+                查询
+              </Button>
+              <Button onClick={() => onReset()}>重置</Button>
+            </Space>
+          </Form.Item>
         </Form>
         <SdlTable
           rowKey="ModelWarningGuid"
