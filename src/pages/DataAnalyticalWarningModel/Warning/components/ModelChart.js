@@ -274,6 +274,7 @@ const ModelChart = props => {
       monitorValue,
       dateHistory,
       dataHistory,
+      OutDefaultTimes,
     } = chartData.data[legendIndex];
     // 判断是否是非正常标记图表
     let abnormalObj = { seriesObj: {}, tooltipFormatter: {}, optionObj: {} };
@@ -299,21 +300,6 @@ const ModelChart = props => {
         },
       };
 
-      // 超出标准值显示红点
-      if (defaultValue && monitorValue) {
-        abnormalObj.seriesObj.itemStyle = {
-          // borderWidth: 3,
-          // borderColor: 'yellow',
-          color: function(params) {
-            let _color = color;
-            if (params.data >= defaultValue) {
-              _color = '#ff0000';
-            }
-            return _color;
-          },
-        };
-      }
-
       // 处理显示工况的tooltip
       abnormalObj.tooltipFormatter = {
         formatter: function(params) {
@@ -337,6 +323,23 @@ const ModelChart = props => {
         },
       };
     }
+
+    // 显示红点
+    if (OutDefaultTimes && OutDefaultTimes.length) {
+      abnormalObj.seriesObj.itemStyle = {
+        // borderWidth: 3,
+        // borderColor: 'yellow',
+        color: function(params) {
+          console.log('params', params);
+          let _color = color;
+          if (OutDefaultTimes.includes(date[params.dataIndex])) {
+            _color = '#ff0000';
+          }
+          return _color;
+        },
+      };
+    }
+
     let markAreaData = [];
     // 异常工况
     if (workingFlagName) {
