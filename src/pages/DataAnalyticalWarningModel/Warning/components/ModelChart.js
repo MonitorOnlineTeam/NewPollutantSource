@@ -190,6 +190,7 @@ const ModelChart = props => {
       });
     }
 
+    // x轴分割线
     if (splitDate) {
       splitDate.map((item, index) => {
         let lineColor = ['#ff0000', '#ff00ff'];
@@ -265,6 +266,7 @@ const ModelChart = props => {
   // 获取非正常图表配置
   const abnormalChartOption = () => {
     const {
+      date,
       dataFlagName,
       workingFlagName,
       unit,
@@ -272,6 +274,7 @@ const ModelChart = props => {
       monitorValue,
       dateHistory,
       dataHistory,
+      OutDefaultTimes,
     } = chartData.data[legendIndex];
     // 判断是否是非正常标记图表
     let abnormalObj = { seriesObj: {}, tooltipFormatter: {}, optionObj: {} };
@@ -297,21 +300,6 @@ const ModelChart = props => {
         },
       };
 
-      // 超出标准值显示红点
-      if (defaultValue && monitorValue) {
-        abnormalObj.seriesObj.itemStyle = {
-          // borderWidth: 3,
-          // borderColor: 'yellow',
-          color: function(params) {
-            let _color = color;
-            if (params.data > defaultValue) {
-              _color = '#ff0000';
-            }
-            return _color;
-          },
-        };
-      }
-
       // 处理显示工况的tooltip
       abnormalObj.tooltipFormatter = {
         formatter: function(params) {
@@ -336,6 +324,67 @@ const ModelChart = props => {
       };
     }
 
+    // 显示红点
+    if (OutDefaultTimes && OutDefaultTimes.length) {
+      abnormalObj.seriesObj.itemStyle = {
+        // borderWidth: 3,
+        // borderColor: 'yellow',
+        color: function(params) {
+          console.log('params', params);
+          let _color = color;
+          if (OutDefaultTimes.includes(date[params.dataIndex])) {
+            _color = '#ff0000';
+          }
+          return _color;
+        },
+      };
+    }
+
+    let markAreaData = [];
+    // 异常工况
+    if (workingFlagName) {
+      let continuousItem = [];
+
+      workingFlagName.map((item, index) => {
+        let _date = moment(date[index]).format('MM-DD HH:mm');
+
+        // 异常工况开始
+        if (item !== '正常' && !continuousItem.length) {
+          continuousItem.push({
+            name: '异常工况',
+            xAxis: _date,
+          });
+        }
+
+        // 异常工况结束
+        if (item == '正常' && continuousItem.length) {
+          continuousItem.push({
+            name: '异常工况',
+            xAxis: _date,
+          });
+
+          markAreaData.push(continuousItem);
+          continuousItem = [];
+        } else if (item !== '正常' && index === workingFlagName.length - 1) {
+          continuousItem.push({
+            name: '异常工况',
+            xAxis: _date,
+          });
+
+          markAreaData.push(continuousItem);
+          continuousItem = [];
+        }
+      });
+    }
+
+    if (markAreaData.length) {
+      abnormalObj.seriesObj.markArea = {
+        itemStyle: {
+          color: 'rgba(0,0,0, .1)',
+        },
+        data: markAreaData,
+      };
+    }
     return abnormalObj;
   };
 
