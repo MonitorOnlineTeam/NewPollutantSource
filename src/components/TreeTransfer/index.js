@@ -251,7 +251,7 @@ const Index = (props) => {
     setTargetKeys([...targetKeys, ...keys])
     setTimeout(() => {
       setInitDataLoading(false)
-    }, 3000)
+    }, 1000)
   }
   const onChange = (keys, direction, moveKeys) => {
     let changeArrType = 1 // 0-删除  1-新增

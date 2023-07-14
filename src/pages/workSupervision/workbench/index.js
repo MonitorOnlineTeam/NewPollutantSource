@@ -150,7 +150,7 @@ const Workbench = props => {
   const GetStagingInspectorRectificationList = () => {
     props.dispatch({
       type: 'wordSupervision/GetStagingInspectorRectificationList',
-      payload: {pageIndex:1,pageSize:8},
+      payload: {pageIndex:1,pageSize:9999},
     });
   };
 

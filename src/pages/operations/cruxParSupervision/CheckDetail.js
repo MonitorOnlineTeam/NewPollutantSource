@@ -485,7 +485,6 @@ const Index = (props) => {
             </Upload>
           </Form.Item>
         </Form>
-
       </Modal>
     </div>
 

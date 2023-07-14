@@ -51,7 +51,8 @@
     .editFromModal  :global ,.detailFromModal :global{ //任务编辑详情表单弹出框
       .ant-modal-body{
         overflow-y: auto;
-        max-height: calc(100vh - 64px - 55px + 16px);
+        padding-bottom: 0;
+        max-height: calc(100vh - 64px - 55px - 16px - 30px);
        } 
 
     }
@@ -97,19 +98,13 @@
     }
    }
     .operaUserFormModal :global{
-      .ant-modal-body{
-        overflow-y: auto;
-        height: calc(100vh - 240px);
-      }
-      .ant-transfer{
-       display: block;
-      }
       .ant-transfer-operation{
         margin: 4px 0;
       }
-      // .ant-transfer-list-body-search-wrapper{
-      //   width: 50%;
-      //  } 
+       .ant-transfer-list {
+        width: calc(50% - 20px);
+
+    }
     }
     .taskReportUploadformModal :global{
       .ant-modal-body{

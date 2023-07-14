@@ -392,7 +392,8 @@ const Index = (props) => {
 
   const [resNumEntName, setResNumEntName] = useState()
   const [resNumStatus, setResNumStatus] = useState('')
-  const resStatusChange = ( regionCode, status, entName,) => {
+  const resStatusChange = (e) => {
+    console.log(e)
     setResNumStatus(e.target.value)
     resNumQuest(1, 20, resNumRegionCode, e.target.value, resNumEntName)
   }

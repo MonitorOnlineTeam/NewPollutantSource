@@ -107,12 +107,12 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableLoading, tableDatas2, tableLoading2, tableDatas3, tableLoading3, taskSubmitLoading, contractTableData, contractTableAllData, taskDetailData, pointList, operaUserList, operaDeviceList, taskId, taskDetailLoading, taskTypeList, endTaskLoading, basicInfoTaskLoading, } = props;
+  const { tableDatas, tableLoading, tableDatas2, tableLoading2, tableDatas3, tableLoading3, taskSubmitLoading, contractTableData, contractTableAllData, taskDetailData, pointList, operaUserList, operaDeviceList, taskId, taskDetailLoading, taskTypeList, endTaskLoading, basicInfoTaskLoading, operaContantList, } = props;
   useEffect(() => {
     initData();
-    props.bWWebService({  functionName: 'M_OpenationTaskType',})//任务类别
+    props.bWWebService({ functionName: 'M_OpenationTaskType', })//任务类别
     props.bWWebService({ functionName: 'Z_CityInfo' }) //任务所在地
-    props.bWWebService({functionName: 'C_GetALLContractList',}) //合同列表
+    props.bWWebService({ functionName: 'C_GetALLContractList', }) //合同列表
   }, []);
 
   const initData = () => {
@@ -166,7 +166,7 @@ const Index = (props) => {
       render: (text, record) => {
         return <>
           {taskType == 1 && <Fragment>
-            <a style={{ paddingRight: 8  }} onClick={() => { taskUploadReport(record) }} >上传报告</a>
+            <a style={{ paddingRight: 8 }} onClick={() => { taskUploadReport(record) }} >上传报告</a>
           </Fragment>}
           {taskType == 3 && <Fragment>
             <a style={{ paddingRight: 8 }} onClick={() => { taskEdit(record) }} >任务编辑</a>
@@ -177,10 +177,10 @@ const Index = (props) => {
             </Popconfirm>
           </Fragment>}
           <Fragment>
-            <a style={{ paddingRight: 8 , whiteSpace: 'nowrap'}} onClick={() => { taskDetail(record) }} >任务详情</a>
+            <a style={{ paddingRight: 8, whiteSpace: 'nowrap' }} onClick={() => { taskDetail(record) }} >任务详情</a>
           </Fragment>
           {taskType == 1 && <Fragment>
-            <a style={{ paddingRight: 8 , whiteSpace: 'nowrap'}} onClick={() => { taskAbnormalTermina(record) }} >异常终止</a>
+            <a style={{ paddingRight: 8, whiteSpace: 'nowrap' }} onClick={() => { taskAbnormalTermina(record) }} >异常终止</a>
           </Fragment>}
         </>
       }
@@ -189,15 +189,15 @@ const Index = (props) => {
   const restOperaList = (value) => {
     setPointTargetKeys([]);
     if (value === rememTaskCategoryId) {
-      setAddPointList(rememPointList); setAllAddPointList(rememPointList);
+      setAddPointList(rememPointList); setAddAllPointList(rememPointList);
     } else {
-      setAddPointList([]); setAllAddPointList([]);
+      setAddPointList([]); setAddAllPointList([]);
     }
     setOperaUserTargetKeys([]);
-    // setAddOperaUserList([]);setAllAddOperaUserList([]);
+    // setAddOperaUserList([]);setAddAllOperaUserList([]);
     setOperaDeviceTargetKeys([]);
-    // setAddOperaDeviceList([]); setAllAddOperaDeviceList([]);
-    // setAddOperaPlanList([]); setAllAddOperaPlanList([]);
+    // setAddOperaDeviceList([]); setAddAllOperaDeviceList([]);
+    // setAddOperaPlanList([]); setAddAllOperaPlanList([]);
     setContractSearchVal('');
     setAddPointSearchVal('');
     setAddOperaUserSearchVal('');
@@ -240,7 +240,7 @@ const Index = (props) => {
   }
   const [taskTitle, setTaskTitle] = useState()
   const [taskEditVisible, setTaskEditVisible] = useState(false)
-  const [taskOTID, setTaskOTID] = useState(false)
+  const [taskOTID, setTaskOTID] = useState()
 
   const taskEdit = async (record) => {  //任务编辑
     setTaskEditVisible(true)
@@ -256,6 +256,7 @@ const Index = (props) => {
     setTaskOperateType(3)
     basicInfoformDetail.resetFields()
     setTaskTitle(`${record.RWMC} - 任务详情`)
+    setTaskOTID(record.OTID)
     getTaskDetailData(record.ID, 3)
   };
   const [rememTaskCategoryId, setRememTaskCategoryId] = useState()
@@ -273,23 +274,23 @@ const Index = (props) => {
       const operaUserData = taskDataFormat('WORKERS', data, type, 'firstLoad')
       const operaDeviceData = taskDataFormat('DEVICES', data, type, 'firstLoad')
       const operaPlanData = taskDataFormat('PLANS', data, type, 'firstLoad')
-      setAddPointList(pointData); setAllAddPointList(pointData)
-      setAddOperaUserList(operaUserData); setAllAddOperaUserList(operaUserData)
-      setAddOperaDeviceList(operaDeviceData); setAllAddOperaDeviceList(operaDeviceData)
-      setAddOperaPlanList(operaPlanData); setAllAddOperaPlanList(operaPlanData)
+      setAddPointList(pointData); setAddAllPointList(pointData)
+      setAddOperaUserList(operaUserData); setAddAllOperaUserList(operaUserData)
+      setAddOperaDeviceList(operaDeviceData); setAddAllOperaDeviceList(operaDeviceData)
+      setAddOperaPlanList(operaPlanData); setAddAllOperaPlanList(operaPlanData)
       type == 2 ? setRememPointList(pointData) : setRememPointList([]) //记住监测点列表
       const echoData = data && data[0]
-      if(type==2){ //编辑
+      if (type == 2) { //编辑
         echoData && basicInfoform.setFieldsValue({
           ...echoData,
           location: [echoData.PROVINCE, echoData.CITY, echoData.DISTRICT],
-          time: echoData.RWRQKS && echoData.RWRQJS ? [moment(echoData.RWRQKS), moment(echoData.RWRQJS)] : [] ,
+          time: echoData.RWRQKS && echoData.RWRQJS ? [moment(echoData.RWRQKS), moment(echoData.RWRQJS)] : [],
         })
-      }else{ //详情
+      } else { //详情
         echoData && basicInfoformDetail.setFieldsValue({
           ...echoData,
-          location:  `${echoData.PROVINCE}${echoData.CITY ? '/' + echoData.CITY : ''}${echoData.DISTRICT ? '/' + echoData.DISTRICT : ''}`,
-          time:  `${echoData.RWRQKS}至${echoData.RWRQJS}`,
+          location: `${echoData.PROVINCE}${echoData.CITY ? '/' + echoData.CITY : ''}${echoData.DISTRICT ? '/' + echoData.DISTRICT : ''}`,
+          time: `${echoData.RWRQKS}至${echoData.RWRQJS}`,
         })
       }
 
@@ -504,7 +505,10 @@ const Index = (props) => {
     setContractVisible(newVisible)
     setContractSearchVal('')
   }
-
+  const uniqueFunc = (arr, uniId) =>{
+    const res = new Map();
+    return arr.filter((item) => !res.has(item[uniId]) && res.set(item[uniId], 1));
+  }
   const pointColumns = [
     {
       title: '序号',
@@ -560,7 +564,7 @@ const Index = (props) => {
     })
   }
   const [addPointList, setAddPointList] = useState([])
-  const [addAllPointList, setAllAddPointList] = useState([])
+  const [addAllPointList, setAddAllPointList] = useState([])
   const addPointOk = () => {
     if (!(pointTargetKeys && pointTargetKeys[0])) {
       message.error('请选择运维点位')
@@ -573,6 +577,7 @@ const Index = (props) => {
         OTSID: item,
       }))
     }, () => {
+      setAddPointVisible(false)
       const data = [];
       pointList.map(item => {
         pointTargetKeys.map(item2 => {
@@ -580,9 +585,9 @@ const Index = (props) => {
         })
       })
       const list = taskDataFormat('SCHEMES', data, taskOperateType)
-      setAddPointList(list)
-      setAllAddPointList(list)
-      setAddPointVisible(false)
+      const datas = uniqueFunc([...addAllPointList,...list],'OTSID')
+      setAddPointList(datas)
+      setAddAllPointList(datas)
     })
 
   }
@@ -673,7 +678,7 @@ const Index = (props) => {
     })
   }
   const [addOperaUserList, setAddOperaUserList] = useState([])
-  const [addAllOperaUserList, setAllAddOperaUserList] = useState([])
+  const [addAllOperaUserList, setAddAllOperaUserList] = useState([])
 
   const addOperaUserOk = () => {
     if (!(operaUserTargetKeys && operaUserTargetKeys[0])) {
@@ -687,6 +692,7 @@ const Index = (props) => {
         OWID: item,
       }))
     }, () => {
+      setAddOperaUserVisible(false)
       const data = [];
       operaUserList.map(item => {
         operaUserTargetKeys.map(item2 => {
@@ -694,9 +700,9 @@ const Index = (props) => {
         })
       })
       const list = taskDataFormat('WORKERS', data, taskOperateType)
-      setAddOperaUserList(list)
-      setAllAddOperaUserList(list)
-      setAddOperaUserVisible(false)
+      const datas = uniqueFunc([...addAllOperaUserList,...list],'ODID')
+      setAddOperaUserList(datas)
+      setAddAllOperaUserList(datas)
     })
 
   }
@@ -766,7 +772,7 @@ const Index = (props) => {
     })
   }
   const [addOperaDeviceList, setAddOperaDeviceList] = useState([])
-  const [addAllOperaDeviceList, setAllAddOperaDeviceList] = useState([])
+  const [addAllOperaDeviceList, setAddAllOperaDeviceList] = useState([])
 
   const addOperaDeviceOk = () => {
     if (!(operaDeviceTargetKeys && operaDeviceTargetKeys[0])) {
@@ -780,6 +786,7 @@ const Index = (props) => {
         ODID: item,
       }))
     }, () => {
+      setAddOperaDeviceVisible(false)
       const data = [];
       operaDeviceList.map(item => {
         operaDeviceTargetKeys.map(item2 => {
@@ -787,9 +794,10 @@ const Index = (props) => {
         })
       })
       const list = taskDataFormat('DEVICES', data, taskOperateType)
-      setAddOperaDeviceList(list)
-      setAllAddOperaDeviceList(list)
-      setAddOperaDeviceVisible(false)
+      const datas = uniqueFunc([...addAllOperaDeviceList,...list],'ODID')
+      setAddOperaDeviceList(datas)
+      setAddAllOperaDeviceList(datas)
+
     })
   }
   const [operaPlanListPageIndex, setOperaPlanListPageIndex] = useState(1)
@@ -858,43 +866,63 @@ const Index = (props) => {
       setPlanModalType('add')
       planform.resetFields();
     }
-
     props.bWWebService({ //运维内容
       functionName: 'M_GetOperationDetailList',
       OTID: taskOTID,
-    }, () => {
+    }, (resData) => {
       let list = [];
       if (row) {
-        const data = row.Arrays && row.Arrays.Item;
-        data && planform.setFieldsValue({
-          DETAIL: data instanceof Array ? data.map(item => item.ID) : [data].map(item => item.ID),
-        })
-        // list = res.filter(item=>item.CYCLE.indexOf(row.JHZX)!=-1)
+         if(row.DETAIL){ //刚添加没提交的情况
+          let operaContentList = [];
+           row.DETAIL.split('&').map(item => {
+            resData.filter(data => {
+              if (data.ID === item) {
+                operaContentList.push(data.DETAILNAME)
+              }
+            })
+          })
+           planform.setFieldsValue({  DETAIL: operaContentList })
+         }else{
+          const data = row.Arrays && row.Arrays.Item;
+           data && planform.setFieldsValue({
+            DETAIL: data instanceof Array ? data.map(item => item.DETAILNAME) : [data].map(item => item.DETAILNAME),
+          })
+         }
+
       }
 
     })
   }
   const [addOperaPlanList, setAddOperaPlanList] = useState([])
-  const [addAllOperaPlanList, setAllAddOperaPlanList] = useState([])
+  const [addAllOperaPlanList, setAddAllOperaPlanList] = useState([])
   const taskPlanOk = async () => { //计划添加提交
     try {
       const values = await planform.validateFields();
+      let operaContentKeys = [];
+      values.DETAIL?.map(item => {
+        operaContantList.filter(data => {
+          if (data.DETAILNAME === item) {
+            operaContentKeys.push(data.ID)
+          }
+        })
+      })
       props.bWWebService({
         functionName: 'M_InsertOperationTaskPlan',
         xmlParamList: [{
           ...values,
           JHMR: values.JHMR ? values.JHMR : '',
           OPTID: taskId,
-          DETAIL: values.DETAIL ? values.DETAIL.join('&') : '',
-          JHRQKS: values.time && moment(values.time[0]).format('YYYY-MM-DD'),
-          JHRQJS: values.time && moment(values.time[1]).format('YYYY-MM-DD'),
+          DETAIL: operaContentKeys?.length ? operaContentKeys.join('&') : '',
+          JHRQKS: values.time && moment(values.time[0]).format('YYYY-MM-DD 0:00:00'),
+          JHRQJS: values.time && moment(values.time[1]).format('YYYY-MM-DD 0:00:00'),
           time: undefined,
         }]
       }, (data) => {
-        const list = taskDataFormat('PLANS', data, taskOperateType)
         setAddOperaPlanVisible(false)
-        setAddOperaPlanList(list)
-        setAllAddOperaPlanList(list)
+        const list = taskDataFormat('PLANS', data, taskOperateType)
+        const datas = uniqueFunc([...addAllOperaPlanList,...list],'JHBT')
+        setAddOperaPlanList(datas)
+        setAddAllOperaPlanList(datas)
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -1008,18 +1036,18 @@ const Index = (props) => {
         <Form.Item name="ID" > </Form.Item>
         <Col span={12}>
           <Form.Item label="任务编号" name="RWBH" >
-             <Input placeholder='请输入' allowClear />
+            <Input placeholder='请输入' allowClear />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item label="任务名称" name="RWMC" rules={[{ required: true, message: '请输入任务名称', }]}>
-             <TextArea rows={1} placeholder='请输入' allowClear showCount maxLength={128} />
+            <TextArea rows={1} placeholder='请输入' allowClear showCount maxLength={128} />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Spin spinning={props.taskTypeListLoading} size='small'>
             <Form.Item label="任务类别" name="OTID" rules={[{ required: true, message: '请选择任务类别', }]}>
-               <Select allowClear showSearch placeholder='请选择'
+              <Select allowClear showSearch placeholder='请选择'
                 onChange={(value) => {
                   setTaskOTID(value)
                   restOperaList(value);
@@ -1035,7 +1063,7 @@ const Index = (props) => {
         </Col>
         <Col span={12}>
           <Form.Item label="任务来源" name="RWLY" rules={[{ required: true, message: '请选择任务来源', }]}>
-             <Select placeholder='请选择' disabled={type == 2}>
+            <Select placeholder='请选择' disabled={type == 2}>
               <Option key={'政府委托'} value={'政府委托'}> 政府委托 </Option>
               <Option key={'社会委托'} value={'社会委托'}> 社会委托 </Option>
             </Select>
@@ -1050,7 +1078,7 @@ const Index = (props) => {
         </Col>
         <Col span={12}>
           <Form.Item label="任务开始/结束日期" name="time" rules={[{ required: true, message: '请选择任务开始/结束日期', }]}>
-           <RangePicker_ format='YYYY-MM-DD' />
+            <RangePicker_ format='YYYY-MM-DD' />
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -1074,9 +1102,9 @@ const Index = (props) => {
     >
       <Row>
         <Col span={12}>
-            <Form.Item label="合同名称" name="CID" className='contractName' rules={[{ required: true, message: '请输入合同名称', }]} >
-              {contractTableAllData.filter(item => item.ID == basicInfoformDetail.getFieldValue('CID')) && contractTableAllData.filter(item => item.ID == basicInfoformDetail.getFieldValue('CID'))[0] && contractTableAllData.filter(item => item.ID == basicInfoformDetail.getFieldValue('CID'))[0].BT}
-            </Form.Item>
+          <Form.Item label="合同名称" name="CID" className='contractName' rules={[{ required: true, message: '请输入合同名称', }]} >
+            {contractTableAllData.filter(item => item.ID == basicInfoformDetail.getFieldValue('CID')) && contractTableAllData.filter(item => item.ID == basicInfoformDetail.getFieldValue('CID'))[0] && contractTableAllData.filter(item => item.ID == basicInfoformDetail.getFieldValue('CID'))[0].BT}
+          </Form.Item>
         </Col>
         <Form.Item name="ID" > </Form.Item>
         <Col span={12}>
@@ -1090,31 +1118,31 @@ const Index = (props) => {
           </Form.Item>
         </Col>
         <Col span={12}>
-            <Form.Item label="任务类别" name="OTID" rules={[{ required: true, message: '请选择任务类别', }]}>
-             {taskTypeList.filter(item => item.ID == basicInfoformDetail.getFieldValue('OTID')) && taskTypeList.filter(item => item.ID == basicInfoformDetail.getFieldValue('OTID'))[0] && taskTypeList.filter(item => item.ID == basicInfoformDetail.getFieldValue('OTID'))[0].NAME}
-            </Form.Item>
-      
+          <Form.Item label="任务类别" name="OTID" rules={[{ required: true, message: '请选择任务类别', }]}>
+            {taskTypeList.filter(item => item.ID == basicInfoformDetail.getFieldValue('OTID')) && taskTypeList.filter(item => item.ID == basicInfoformDetail.getFieldValue('OTID'))[0] && taskTypeList.filter(item => item.ID == basicInfoformDetail.getFieldValue('OTID'))[0].NAME}
+          </Form.Item>
+
         </Col>
         <Col span={12}>
           <Form.Item label="任务来源" name="RWLY" rules={[{ required: true, message: '请选择任务来源', }]}>
-            { basicInfoformDetail.getFieldValue('RWLY') }
+            {basicInfoformDetail.getFieldValue('RWLY')}
           </Form.Item>
         </Col>
         <Col span={12}>
           <Spin spinning={props.cityInfoListLoading} size='small'>
             <Form.Item label="任务所在地" name="location">
-              { basicInfoformDetail.getFieldValue('location')}
+              {basicInfoformDetail.getFieldValue('location')}
             </Form.Item>
           </Spin>
         </Col>
         <Col span={12}>
           <Form.Item label="任务开始/结束日期" name="time" rules={[{ required: true, message: '请选择任务开始/结束日期', }]}>
-            {  basicInfoformDetail.getFieldValue('time')} 
+            {basicInfoformDetail.getFieldValue('time')}
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item label="任务概述" name="RWGS">
-            { basicInfoformDetail.getFieldValue('RWGS')}
+            {basicInfoformDetail.getFieldValue('RWGS')}
           </Form.Item>
         </Col>
       </Row>
@@ -1137,6 +1165,7 @@ const Index = (props) => {
           time: undefined,
         }
       }, () => {
+        setTaskEditVisible(false) 
         onFinish3(1)
       })
     } catch (errInfo) {
@@ -1232,8 +1261,7 @@ const Index = (props) => {
         }
       }, () => {
         setTaskReportUploadVisible(false);
-        setTaskType('3')
-        onFinish3(1);
+        onFinish(1);
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -1251,7 +1279,7 @@ const Index = (props) => {
         }
       }, () => {
         setTaskAbnormalTerminaVisible(false);
-         onFinish(1)
+        onFinish(1)
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -1301,7 +1329,7 @@ const Index = (props) => {
             if (type == 7) {
               taskReportUploadform.setFieldsValue({ FILENAMEOLD: data.message, FILENAME: file.name, })
             } else {
-              taskAbnormalTerminaform.setFieldsValue({ FILENAMEOLD: data.message, FILENAME:file.name ,  })
+              taskAbnormalTerminaform.setFieldsValue({ FILENAMEOLD: data.message, FILENAME: file.name, })
             }
           } else {
             file.status = 'error'
@@ -1506,7 +1534,6 @@ const Index = (props) => {
         title={'点位添加'}
         visible={addPointVisible}
         onCancel={() => { setAddPointVisible(false) }}
-        className={styles.fromModal}
         destroyOnClose
         width='85%'
         onOk={() => addPointOk()}
@@ -1519,14 +1546,15 @@ const Index = (props) => {
         visible={addOperaUserVisible}
         onCancel={() => { setAddOperaUserVisible(false) }}
         className={styles.operaUserFormModal}
+        wrapClassName={`spreadOverModal spreadOverHiddenModal`}
         destroyOnClose
-        width='85%'
         confirmLoading={props.addOperaUserLoading}
         onOk={() => addOperaUserOk()}
       >
         <TableTransfer
-          leftColumns={operaUserColumns()} rightColumns={operaUserColumns()} scroll={{ y: 'calc(100vh - 480px)' }}
+          leftColumns={operaUserColumns()} rightColumns={operaUserColumns()} scroll={{ y: 'calc(100vh - 415px)', }}
           bordered={false} dataSource={operaUserList} loading={props.operaUserListLoading} targetKeys={operaUserTargetKeys} onChange={(checked) => { setOperaUserTargetKeys(checked) }} showSearch filterOption={(inputValue, item) => item.XM.indexOf(inputValue) !== -1 || item.XB.indexOf(inputValue) !== -1 || item.XL.indexOf(inputValue) !== -1}
+          width={800}
           pagination={{
             current: addOperaUserPageIndex,
             pageSize: addOperaUserPageSize,
@@ -1542,7 +1570,6 @@ const Index = (props) => {
         title={'设备添加'}
         visible={addOperaDeviceVisible}
         onCancel={() => { setAddOperaDeviceVisible(false) }}
-        className={styles.deviceFormModal}
         destroyOnClose
         width='85%'
         confirmLoading={props.addOperaDeviceLoading}
@@ -1569,8 +1596,16 @@ const Index = (props) => {
         className={planModalType === 'add' ? styles.addPlanFormModal : styles.detailPlanFormModal}
         destroyOnClose
         width='85%'
-        confirmLoading={props.operationTaskPlanLoading}
+        // confirmLoading={props.operationTaskPlanLoading}
         onOk={taskPlanOk}
+        footer={planModalType === 'add' ? [
+          <Button key="cancel" onClick={() => setAddOperaPlanVisible(false)}>
+            取消
+          </Button>,
+          <Button key="submit" type="primary" loading={props.operationTaskPlanLoading} onClick={taskPlanOk}>
+            提交
+          </Button>,
+        ] : null}
       >
         <Form
           form={planform}
@@ -1600,7 +1635,7 @@ const Index = (props) => {
 
           <Form.Item label="运维内容" name="DETAIL">
             {props.operaContantListLoading ? <Spin size='small' />
-              : <Checkbox.Group options={props.operaContantList} disabled={planModalType === 'detail'} />
+              : <Checkbox.Group options={operaContantList} disabled={planModalType === 'detail'} />
             }
           </Form.Item>
           <Form.Item label="计划描述" name="JHMR">
