@@ -61,13 +61,11 @@ export default class Index extends Component {
     switch(type) {
         case 1: //企业
            if(noFilter){ //不用过滤的企业列表
-             if(!(noFilterEntList&&noFilterEntList[0]&&regionCode&&pollutantType)){
+             if(noFilterEntList&&noFilterEntList.length){return}
                dispatch({ type:'common/getEntNoFilterList', payload: { RegionCode: regionCode, PollutantType: pollutantType },  }) 
-              }
            }else{
-             if(!(entList&&entList[0]&&regionCode&&pollutantType)){
+            if(entList&&entList.length){return}
               dispatch({ type:'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType },  }) 
-            }
           }
              break;
          case 2: //空气站

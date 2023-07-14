@@ -183,10 +183,13 @@ class BasicLayout extends Component {
       payload: { PointMark: '2', RegionCode: '' }
     }); //获取行政区列表
 
+    // window._AMapSecurityConfig = {
+    //   securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
+    // }
     window._AMapSecurityConfig = {
-      securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
+      securityJsCode: 'a74ee5d040647b0512c842cff7d76517',
     }
-
+    
   }
 
   onWindowResize = () => {

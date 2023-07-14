@@ -6,6 +6,7 @@ import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config'
 import { downloadFile } from '@/utils/utils';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 export default Model.extend({
   namespace: 'remoteSupervision',

@@ -585,7 +585,7 @@ const Index = (props) => {
         })
       })
       const list = taskDataFormat('SCHEMES', data, taskOperateType)
-      const datas = uniqueFunc([...addAllPointList,...list],'OTSID')
+      const datas = uniqueFunc([...addAllPointList,...list],'ID')
       setAddPointList(datas)
       setAddAllPointList(datas)
     })
@@ -671,6 +671,7 @@ const Index = (props) => {
 
   const addOperaUser = () => {
     setAddOperaUserVisible(true)
+    setOperaUserTargetKeys([])
     setAddOperaUserPageIndex(1)
     setAddOperaUserPageSize(20)
     props.bWWebService({ //运维人员
@@ -700,7 +701,7 @@ const Index = (props) => {
         })
       })
       const list = taskDataFormat('WORKERS', data, taskOperateType)
-      const datas = uniqueFunc([...addAllOperaUserList,...list],'ODID')
+      const datas = uniqueFunc([...addAllOperaUserList,...list],'ID')
       setAddOperaUserList(datas)
       setAddAllOperaUserList(datas)
     })
@@ -765,6 +766,7 @@ const Index = (props) => {
   const [operaDeviceTargetKeys, setOperaDeviceTargetKeys] = useState([]);
   const addOperaDevice = () => {
     setAddOperaDeviceVisible(true)
+    setOperaDeviceTargetKeys([])
     setAddOperaDevicePageIndex(1)
     setAddOperaDevicePageSize(20)
     props.bWWebService({ //运维设备
@@ -794,7 +796,7 @@ const Index = (props) => {
         })
       })
       const list = taskDataFormat('DEVICES', data, taskOperateType)
-      const datas = uniqueFunc([...addAllOperaDeviceList,...list],'ODID')
+      const datas = uniqueFunc([...addAllOperaDeviceList,...list],'ID')
       setAddOperaDeviceList(datas)
       setAddAllOperaDeviceList(datas)
 
