@@ -878,15 +878,15 @@ class DepartIndex extends Component {
         Name:this.state.entPointName,
       },
     });
-    // const keys = this.state.selectedRowKeys.key;
-    // this.props.dispatch({
-    //   type: 'newuserinfo/getpointbydepid',
-    //   payload: {
-    //     UserGroup_ID: keys&&keys.toString(),
-    //     PollutantType: pollutantType,
-    //     RegionCode: dataTreeValue&&dataTreeValue.toString(),
-    //   },
-    // });
+    const keys = this.state.selectedRowKeys.key;
+    this.props.dispatch({
+      type: 'newuserinfo/getpointbydepid',
+      payload: {
+        UserGroup_ID: keys&&keys.toString(),
+        PollutantType: pollutantType,
+        RegionCode: dataTreeValue&&dataTreeValue.toString(),
+      },
+    });
   }
   handleDataOK = (state, callback) => {
     //提交

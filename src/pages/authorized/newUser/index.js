@@ -616,15 +616,15 @@ export default class UserInfoIndex extends Component {
         Name:this.state.entPointName,
       },
     });
-    // const keys = this.state.selectedRow.ID;
-    // this.props.dispatch({
-    //   type: 'newuserinfo/getpointbydepid',
-    //   payload: {
-    //     UserGroup_ID: keys&&keys.toString(),
-    //     PollutantType: pollutantType,
-    //     RegionCode: dataTreeValue&&dataTreeValue.toString(),
-    //   },
-    // });
+    const keys = this.state.selectedRow.ID;
+    this.props.dispatch({
+      type: 'newuserinfo/getpointbydepid',
+      payload: {
+        UserGroup_ID: keys&&keys.toString(),
+        PollutantType: pollutantType,
+        RegionCode: dataTreeValue&&dataTreeValue.toString(),
+      },
+    });
   }
   handleDataOK = (state, callback) => {
     // console.log('regioncode=', this.state.DataTreeValue.toString());
