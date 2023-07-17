@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi
  * @Date: 2020-08-24 11:02:20
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-10-12 16:18:29
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-07-14 19:47:42
  * @Description: 手动质控 - 页面
  */
 import React, { Component } from 'react';
@@ -16,6 +16,8 @@ import PageLoading from "@/components/PageLoading"
 import { gasPollutantList } from "@/utils/CONST"
 const pollutantCodeList = {
   "a21026": { name: "SO₂", unit: "mg/m³" },
+  "02": { name: "SO₂", unit: "mg/m³" },
+  "03": { name: "NOx", unit: "mg/m³" },
   "a21002": { name: "NOx", unit: "mg/m³" },
   "a19001": { name: "O₂", unit: "%" },
   "30": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳

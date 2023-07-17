@@ -80,7 +80,7 @@ class Video extends PureComponent {
     }
   }
 
-  render() {
+  render() { 
     const { deviceSerial, channelNo, id } = this.props;
     console.log("ysy=", this.props)
     return (

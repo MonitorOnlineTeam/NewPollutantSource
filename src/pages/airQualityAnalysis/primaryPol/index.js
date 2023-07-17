@@ -172,7 +172,7 @@ class primaryPol extends PureComponent {
                     emphasis: {
                         focus: 'series'
                     },
-                    
+
                     data: PrimaryData['SO2']
                 },
                 {
@@ -196,7 +196,7 @@ class primaryPol extends PureComponent {
                     emphasis: {
                         focus: 'series'
                     },
-                    
+
                     data: PrimaryData['NO2']
                 },
                 {
@@ -220,7 +220,7 @@ class primaryPol extends PureComponent {
                     emphasis: {
                         focus: 'series'
                     },
-                   
+
                     data: PrimaryData['PM10']
                 },
                 {
@@ -244,7 +244,7 @@ class primaryPol extends PureComponent {
                     emphasis: {
                         focus: 'series'
                     },
-                    
+
                     data: PrimaryData['PM2.5']
                 },
                 {
@@ -268,7 +268,7 @@ class primaryPol extends PureComponent {
                     emphasis: {
                         focus: 'series'
                     },
-                   
+
                     data: PrimaryData['CO']
                 },
                 {
@@ -292,7 +292,7 @@ class primaryPol extends PureComponent {
                     emphasis: {
                         focus: 'series'
                     },
-                   
+
                     data: PrimaryData['O3']
                 }
             ]

@@ -270,6 +270,7 @@ class DataQuery extends Component {
             selectP: '',
             dgimn,
         })
+       this.onResetPage();
         const {
             dispatch,
         } = this.props;

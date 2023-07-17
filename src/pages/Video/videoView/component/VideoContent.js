@@ -103,10 +103,11 @@ class VideoContent extends PureComponent {
   };
 
   onDateChange2 = (value, dateString) => {
+    console.log('value', value);
     if (value) {
       this.setState({
-        startDate: value,
-        endDate: value,
+        startDate: value.startOf('day'),
+        endDate: value.endOf('day'),
       });
       this.child.startPlay(
         moment(value, 'YYYY-MM-DD 00:00:00'),
@@ -229,7 +230,7 @@ class VideoContent extends PureComponent {
                   })}
                 </Select>
               </Row>
-              {/* <Row style={{ marginTop: 10 }}>
+              <Row style={{ marginTop: 10 }}>
                 <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
                   选择时间段：
                 </label>
@@ -240,8 +241,8 @@ class VideoContent extends PureComponent {
                   placeholder={['开始时间', '结束时间']}
                   onChange={this.onDateChange}
                 />
-              </Row> */}
-              <Row style={{ marginTop: 10 }}>
+              </Row>
+              {/* <Row style={{ marginTop: 10 }}>
                 <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
                   请选择时间：
                 </label>
@@ -249,7 +250,7 @@ class VideoContent extends PureComponent {
                   onChange={this.onDateChange2}
                   style={{ width: '260px', marginRight: 10 }}
                 />
-              </Row>
+              </Row> */}
               <Divider orientation="right">
                 <Button type="primary" onClick={this.onPlaybackClick}>
                   播放
