@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-13 16:40:12
+ * @Last Modified time: 2023-07-17 17:13:09
  * @Description：报警核实详情
  */
 
@@ -171,6 +171,7 @@ const WarningVerify = props => {
               {modelChartDatas.length ? (
                 <Row className={styles.chartWrapper}>
                   {warningInfo.WarningTypeCode === 'c0af25fb-220b-45c6-a3de-f6c8142de8f1' ||
+                  // 同一现场借用其他合格监测设备数据
                   warningInfo.WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
                   // 引用错误、虚假的原始信号值
                   warningInfo.WarningTypeCode === 'f021147d-e7c6-4c1d-9634-1d814ff9880a'
@@ -178,7 +179,10 @@ const WarningVerify = props => {
                         return (
                           <Col span={12}>
                             {/* 图例多选 */}
-                            <ModelChartMultiple chartData={item} />
+                            <ModelChartMultiple
+                              chartData={item}
+                              WarningTypeCode={warningInfo.WarningTypeCode}
+                            />
                           </Col>
                         );
                       })
