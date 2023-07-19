@@ -88,7 +88,7 @@ class BasicLayout extends Component {
     }
 
     const menuComparison = (meunData) => {
-      if(!pathname || pathname=='/' || pathname=='/hrefLogin'){
+      if(!pathname || pathname=='/' || pathname=='/hrefLogin' || pathname=='/account/settings'){
           return
       } 
       if (meunData.includes(pathname)) {

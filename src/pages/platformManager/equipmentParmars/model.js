@@ -19,6 +19,7 @@ export default Model.extend({
         yield update({
           tableDatas:result.Datas
         })
+        console.log(result.Datas,11111)
         callback(result.Datas)
       }
 

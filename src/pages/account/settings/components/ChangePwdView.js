@@ -186,7 +186,7 @@ class ChangePwdView extends PureComponent {
                             //     validator: this.validateToOldPassword,
                             // },
                         ],
-                    })(<Input type="password" placeholder="请输入旧密码" />)}
+                    })(<Input.Password   placeholder="请输入旧密码" />)}
                 </FormItem>
                 <FormItem {...formItemLayout} label="新密码">
                     {getFieldDecorator('password', {
@@ -201,7 +201,7 @@ class ChangePwdView extends PureComponent {
                                 validator: this.validatePassStrenth
                             }
                         ],
-                    })(<Input type="text" placeholder="请输入新密码" />)}
+                    })(<Input.Password   placeholder="请输入新密码" />)}
                 </FormItem>
                 <FormItem {...formItemLayout} label="确认密码">
                     {getFieldDecorator('confirm', {
@@ -215,8 +215,7 @@ class ChangePwdView extends PureComponent {
                             },
                         ],
                     })(
-                        <Input
-                            type="password"
+                        <Input.Password 
                             onBlur={this.handleConfirmBlur}
                             placeholder="请再次输入新密码"
                         />,

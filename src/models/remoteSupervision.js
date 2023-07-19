@@ -18,6 +18,7 @@ export default Model.extend({
     addDataConsistencyData:[],
     addRealTimeData:[],
     addParconsistencyData: [],
+    getPointConsistencyParamLoading:false,
   },
   effects: {
     // 根据企业获取排口
@@ -48,11 +49,11 @@ export default Model.extend({
     },
     //获取数据 添加参数列表
     *getPointConsistencyParam({ payload,callback }, { call, update, select, put }) {
+      yield update({ getPointConsistencyParamLoading: true });
       const result = yield call(services.GetPointConsistencyParam, { ...payload });
       if (result.IsSuccess) {
         let pollutantList = [],addRealTimeList=[],paramList=[];
         let resultPollList = result.Datas.pollutantList, resultParList = result.Datas.paramList;
-
         let kArr = [];
         if(resultPollList && resultPollList[0]){
          
@@ -79,6 +80,7 @@ export default Model.extend({
         }
         yield update({  addDataConsistencyData: pollutantList, addRealTimeData:addRealTimeList,
                         addParconsistencyData : paramList});
+        yield update({ getPointConsistencyParamLoading: false });
         callback(pollutantList,addRealTimeList,paramList,result.Datas&&result.Datas.operationName||null)
       } else {
         yield update({  addDataConsistencyData: [], addParconsistencyData : [],addRealTimeData:[], });

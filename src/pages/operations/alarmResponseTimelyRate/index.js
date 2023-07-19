@@ -281,8 +281,8 @@ const Index = (props) => {
       </Form.Item>
       <Form.Item label='报警类型' name='exceptionType'>
         <Select style={{ width: 220 }} placeholder='请选择' allowClear mode="multiple" maxTagCount={2} maxTagPlaceholder="...">
-          <Option value={0}>超标报警</Option>
-          <Option value={2}>异常报警</Option>
+          <Option value={0}>异常报警</Option>
+          <Option value={2}>超标报警</Option>
           <Option value={12}>缺失报警</Option>
         </Select>
       </Form.Item>

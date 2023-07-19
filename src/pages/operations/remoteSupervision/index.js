@@ -49,6 +49,7 @@ const dvaPropsData = ({ loading, remoteSupervision, global, common, autoForm }) 
   tableLoading: loading.effects[`${namespace}/getRemoteInspectorList`],
   tableTotal: remoteSupervision.tableTotal,
   parLoading: loading.effects[`${namespace}/getPointConsistencyParam`] || false,
+  // parLoading: remoteSupervision.getPointConsistencyParamLoading,
   editLoading: loading.effects[`${namespace}/getConsistencyCheckInfo`] || false,
   pointListByEntCode: common.pointListByEntCode,
   clientHeight: global.clientHeight,
@@ -196,20 +197,21 @@ const Index = (props) => {
 
 
 
+
   const isRecord = props.match.path === '/operations/remoteSupervisionRecord' ? true : false;
 
 
 
-  const [filePar, setFilePar] = useState() //参数一致性核查表 上传附件 点击字段
-  const [filesCuidList, setFilesCuidList] = useState({}) //参数一致性核查表 上传附件
-  const [filesList3, setFilesList3] = useState({}) //参数一致性核查表 参数附件列表
+  // const [filePar, setFilePar] = useState() //参数一致性核查表 上传附件 点击字段
+  // const [filesCuidList, setFilesCuidList] = useState({}) //参数一致性核查表 上传附件
+  // const [filesList3, setFilesList3] = useState({}) //参数一致性核查表 参数附件列表
 
   const [analyzerFilePar, setAnalyzerFilePar] = useState() //分析仪量程照片
   const [analyzerFileCuidList, setAnalyzerFileCuidList] = useState({})
   const [analyzerFileList, setAnalyzerFileList] = useState({})
 
   const [dasFilePar, setDasFilePar] = useState() //das量程照片
-  const [dasFileCuidList, setDASFileCuidList] = useState({})
+  const [dasFileCuidList, setDasFileCuidList] = useState({})
   const [dasFileList, setDasFileList] = useState({})
 
   const [rangeFilePar, setRangeFilePar] = useState() //数采仪量程照片
@@ -222,9 +224,9 @@ const Index = (props) => {
   const [settingFileCuidList, setSettingFileCuidList] = useState({})
   const [settingFileList, setSettingFileList] = useState({})
 
-  const [instrumentFilePar, setInstrumenFilePar] = useState() //DAS设定值照片
-  const [instrumenFileCuidList, setInstrumenFileCuidList] = useState({})
-  const [instrumenFileList, setInstrumenFileList] = useState({})
+  const [instrumentFilePar, setInstrumentFilePar] = useState() //DAS设定值照片
+  const [instrumentFileCuidList, setInstrumentFileCuidList] = useState({})
+  const [instrumentFileList, setInstrumentFileList] = useState({})
 
   const [traceabilityFilePar, setTraceabilityFilePar] = useState() //溯源值照片
   const [traceabilityFileCuidList, setTraceabilityFileCuidList] = useState({})
@@ -451,7 +453,7 @@ const Index = (props) => {
         const updateflag = record.updateflag;
         const flag = record.flag;
         const issue = record.issue;
-
+        const isCheckUser = record.isCheckUser;
         let detail = <Tooltip title="详情">
           <a onClick={() => {
             details(record)
@@ -484,8 +486,8 @@ const Index = (props) => {
             </Tooltip>
             <Divider type="vertical" />
             <Tooltip title={"下发"} > {/* title={!issue||issue==='已下发'?  null : "下发"}*/}
-              <Popconfirm disabled={!issue || issue === '已下发' ? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
-                <a style={{ cursor: !issue || issue === '已下发' ? 'not-allowed' : 'pointer', color: !issue || issue === '已下发' ? 'rgba(0, 0, 0, 0.25) ' : '#1890ff', }}><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
+              <Popconfirm disabled={!issue || issue === '已下发' || !isCheckUser ? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
+                <a style={{ cursor: !issue || issue === '已下发' || !isCheckUser ? 'not-allowed' : 'pointer', color: !issue || issue === '已下发' || !isCheckUser ? 'rgba(0, 0, 0, 0.25) ' : '#1890ff', }}><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
           </>
@@ -500,7 +502,7 @@ const Index = (props) => {
 
 
 
-  const echoForamt = (code, val) => { //格式化 编辑回显
+  const echoForamt = (code, val,item) => { //格式化 编辑回显
     form2.setFieldsValue({
       [`${code}AnalyzerRang1`]: val.AnalyzerMin,
       [`${code}AnalyzerRang2`]: val.AnalyzerMax,
@@ -525,7 +527,9 @@ const Index = (props) => {
       [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
       [`${code}Remark2`]: val.CouRemrak,
       [`${code}OperationDataRemark`]: val.OperationDataRemark,
-
+      [`${code}AnalyzerFilePar`]: item.AnalyzerFileList?.[0] && item.AnalyzerFileList?.[0].FileUuid,
+      [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
+      [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
     })
   }
 
@@ -542,7 +546,8 @@ const Index = (props) => {
       commonForm.setFieldsValue({
         OperationUserID: data.operationUserID,
         EntCode: data.entCode,
-        month: moment(moment(data.dateTime).format("YYYY-MM-DD"))
+        month: moment(moment(data.dateTime).format("YYYY-MM-DD")),
+        Commitment:undefined,
       })
       setPointLoading2(true)
       props.getPointByEntCode({ EntCode: data.entCode }, (res) => {
@@ -551,9 +556,9 @@ const Index = (props) => {
         commonForm.setFieldsValue({
           DGIMN: data.DGIMN,
         })
-        dgimnEchoDataFun(data.DGIMN, data)
+       
       })
-
+      dgimnEchoDataFun(data.DGIMN, data)
 
     })
   }
@@ -561,22 +566,25 @@ const Index = (props) => {
   const dgimnEchoDataFun = (mn, data) => { //通过监测点获取回显数据
 
     let analyzerUploadList = {}, analyzerUploadFilesListObj = {};
+    let dasUploadList = {}, dasUploadFilesListObj = {};
+    let rangeUploadList = {}, rangeUploadFilesListObj = {};
     getPointConsistencyParamFun(mn, () => {
       let echoData = []
       data.consistencyCheckList.map(item => { //数据一致性核查表
+
         let val = item.DataList;
         let code = item.DataList.PollutantCode
 
         if (item.PollutantName == '颗粒物') {
           if (val.Special) {
             if (val.Special == 1) { //有显示屏
-              echoForamt(code, val)
+              echoForamt(code, val,item)
               setIsDisPlayCheck1(true)
               isDisplayChange({ target: { checked: true } }, 'isDisplay1')
               onManualChange(val.RangeStatus && [val.RangeStatus], item, `${code}`, 1)
             }
             if (val.Special == 2) { //无显示屏
-              echoForamt(`${code}a`, val)
+              echoForamt(`${code}a`, val,item)
               isDisplayChange({ target: { checked: true } }, 'isDisplay2')
               onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}a` }, `${code}RangCheck`, 1)
 
@@ -585,11 +593,11 @@ const Index = (props) => {
           if (val.CouType) {
 
             if (val.CouType == 1) { //原始浓度
-              echoForamt(`${code}c`, val)
+              echoForamt(`${code}c`, val,item)
               onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}c` }, `${code}RangCheck2`, 2)
             }
             if (val.CouType == 2) { //标杆浓度
-              echoForamt(`${code}d`, val)
+              echoForamt(`${code}d`, val,item)
               onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}d` }, `${code}RangCheck2`, 2)
             }
 
@@ -608,18 +616,18 @@ const Index = (props) => {
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)
 
           if (val.Special == 1) { //差压法
-            echoForamt(code, val)
+            echoForamt(code, val,item)
             isDisplayChange2({ target: { checked: true } }, 'isDisplay3')
             onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1)
           } else if (val.Special == 2) { //直测流速法
-            echoForamt(`${code}b`, val)
+            echoForamt(`${code}b`, val,item)
             isDisplayChange2({ target: { checked: true } }, 'isDisplay4')
             onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}b` }, `${code}RangCheck`, 1)
 
           }
 
         } else {
-          echoForamt(code, val)
+          echoForamt(code, val,item)
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
           onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
         }
@@ -627,54 +635,50 @@ const Index = (props) => {
         setNumRealTimeChecked(val.DataStatus == 1 ? true : false)
         setDasChecked(val.DASStatus == 1 ? true : false)
 
-        const enchFileList = (uploadList,uploadListPar, uploadFilesListObj) =>{ //附件回显
-          let parFileList = [];
-          uploadList?.length && item.uploadList.map(item => {
-            if (!item.IsDelete) {
+        const enchFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => { //附件回显
+       
+          if (code == '411' && item.DataList && !item.DataList.Special) { return }
+
+          let parFileList = []; 
+          uploadList?.length && uploadList.map(uploadItem => {
+            if (!uploadItem.IsDelete) {
               parFileList.push({
-                uid: item.GUID,
-                name: item.FileName,
+                uid: uploadItem.GUID,
+                name: uploadItem.FileName,
                 status: 'done',
-                url: `\\upload\\${item.FileName}`,
+                url: `\\upload\\${uploadItem.FileName}`,
               })
             }
           })
-          uploadListPar[`${code}ParFiles`] = parFileList;
-          uploadFilesListObj[`${code}ParFiles`] = item.Upload ? item.Upload : cuid();
+          uploadListPar[`${code}${filePar}`] = parFileList;
+          uploadFilesListObj[`${code}${filePar}`] = uploadList?.[0]?.FileUuid ? uploadList[0].FileUuid : cuid(); //添加过的照片 再次编辑时
         }
-        enchFileList(item.UploadList,analyzerUploadList,analyzerUploadFilesListObj)
+        enchFileList(item.AnalyzerFileList, analyzerUploadList, analyzerUploadFilesListObj, 'AnalyzerFilePar') //分析仪量程照片	
+        enchFileList(item.DASFileList, dasUploadList, dasUploadFilesListObj, 'DasFilePar') //DAS量程照片	
+        enchFileList(item.RangeFileList, rangeUploadList, rangeUploadFilesListObj, 'RangeFilePar') //数采仪量程照片	
+
       })
+      console.log(analyzerUploadList,analyzerUploadFilesListObj)
       setAnalyzerFileList({ ...analyzerUploadList })
       setAnalyzerFileCuidList({ ...analyzerUploadFilesListObj })
 
-      // if (data.rangeUpload && data.rangeUpload[0]) {  //量程一致性核查表 附件
-      //   form2.setFieldsValue({ files1: data.rangeUpload[0].FileUuid })
-      //   setFilesCuid1(data.rangeUpload[0].FileUuid)
-      //   const fileList = []
-      //   data.rangeUpload.map(item => {
-      //     if (!item.IsDelete) {
-      //       fileList.push({
-      //         uid: item.GUID,
-      //         name: item.FileName,
-      //         status: 'done',
-      //         url: `/upload/${item.FileName}`,
-      //       })
-      //     }
-      //   })
-      //   setFileList1(fileList)
-      // }
+      setDasFileList({ ...dasUploadList })
+      setDasFileCuidList({ ...dasUploadFilesListObj })
+
+      setRangeFileList({ ...rangeUploadList })
+      setRangeFileCuidList({ ...rangeUploadFilesListObj })
 
       if (data.couUpload && data.couUpload[0]) { //实时数据一致性核查表 附件
         form2.setFieldsValue({ files2: data.couUpload[0].FileUuid })
         setFilesCuid2(data.couUpload[0].FileUuid)
         const fileList = []
-        data.couUpload.map(item => {
-          if (!item.IsDelete) {
+        data.couUpload.map(uploadItem => {
+          if (!uploadItem.IsDelete) {
             fileList.push({
-              uid: item.GUID,
-              name: item.FileName,
+              uid: uploadItem.GUID,
+              name: uploadItem.FileName,
               status: 'done',
-              url: `/upload/${item.FileName}`,
+              url: `/upload/${uploadItem.FileName}`,
             })
 
           }
@@ -683,40 +687,7 @@ const Index = (props) => {
       }
       setEchoLoading(false)
 
-      /***参数一致性核查表***/
-      let uploadList = {}, uploadFilesListObj = {};
-      data.consistentParametersCheckList.map(item => {
-        let code = item.CheckItem
-        form3.setFieldsValue({
-          [`${code}IsEnable`]: item.Status ? [item.Status] : [],
-          [`${code}SetVal`]: item.SetValue,
-          [`${code}InstrumentSetVal`]: item.InstrumentSetValue,
-          [`${code}TraceVal`]: item.TraceabilityValue,
-          [`${code}Uniform`]: item.AutoUniformity,
-          [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
-          [`${code}Remark3`]: item.Remark,
-          [`${code}OperationReamrk`]: item.OperationReamrk,
-          [`${code}ParFiles`]: item.Upload,
-        })
-        const enchFileList = (uploadList) =>{
-          let parFileList = [];
-          uploadList?.length && item.UploadList.map(item => {
-            if (!item.IsDelete) {
-              parFileList.push({
-                uid: item.GUID,
-                name: item.FileName,
-                status: 'done',
-                url: `\\upload\\${item.FileName}`,
-              })
-            }
-          })
-          uploadList[`${code}ParFiles`] = parFileList;
-          uploadFilesListObj[`${code}ParFiles`] = item.Upload ? item.Upload : cuid();
-        }
-        enchFileList(item.UploadList)
-      })
-      setFilesList3({ ...uploadList })
-      setFilesCuidList({ ...uploadFilesListObj })
+
     })
   }
 
@@ -727,27 +698,36 @@ const Index = (props) => {
       echoUnit(pollutantList) //默认显示单位默认值
       echoUnit(addRealTimeList)
       // if (data && data[0] && title === '添加') { //附件 cuid
-        // let filesCuidObj = {}, filesListObj = {};
-        // paramList.map((item, index) => {
-        //   filesCuidObj[`${item.par}ParFiles`] = cuid();
-        //   filesListObj[`${item.par}ParFiles`] = [];
-        // })
-        // setFilesCuidList(filesCuidObj)
-        // setFilesList3(filesListObj)
-       // }
-        const filesCuidObjFun = (data,parFiles,callFun) => { //照片默认展示
-          if (data && data[0] && title === '添加') { //附件 cuid
-            let filesCuidObj = {}, filesListObj = {};
-             data.map((item, index) => {
-             filesCuidObj[`${item.par}${parFiles}`] = cuid();
-             filesListObj[`${item.par}${parFiles}`] = [];
-           })
-           callFun&&callFun(filesCuidObj,filesListObj)
-         }
-        }
-        filesCuidObjFun(pollutantList,'AnalyzerFilePar',(cuidObj,listObj)=>{setAnalyzerFileCuidList(cuidObj);setAnalyzerFileList(listObj) }) 
+      // let filesCuidObj = {}, filesListObj = {};
+      // paramList.map((item, index) => {
+      //   filesCuidObj[`${item.par}ParFiles`] = cuid();
+      //   filesListObj[`${item.par}ParFiles`] = [];
+      // })
+      // setFilesCuidList(filesCuidObj)
+      // setFilesList3(filesListObj)
+      // }
+      const filesCuidObjFun = (data, filePar, callFun) => { //照片默认展示
 
-    
+          let filesCuidObj = {}, filesListObj = {}; //附件 cuid
+          data.map((item, index) => {
+            filesCuidObj[`${item.par}${filePar}`] = cuid();
+            filesListObj[`${item.par}${filePar}`] = [];
+          })
+          callFun && callFun(filesCuidObj, filesListObj)
+        
+      }
+      if (title === '添加') {
+        if (pollutantList?.[0]) {
+          filesCuidObjFun(pollutantList, 'AnalyzerFilePar', (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
+          filesCuidObjFun(pollutantList, 'DasFilePar', (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
+          filesCuidObjFun(pollutantList, 'RangeFilePar', (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
+        }
+        if (paramList?.[0]) {
+          filesCuidObjFun(paramList, 'SettingFilePar', (cuidObj, listObj) => { setSettingFileCuidList(cuidObj); setSettingFileList(listObj) })
+          filesCuidObjFun(paramList, 'InstrumentFilePar', (cuidObj, listObj) => { setInstrumentFileCuidList(cuidObj); setInstrumentFileList(listObj) })
+          filesCuidObjFun(paramList, 'TraceabilityPar', (cuidObj, listObj) => { setTraceabilityFileCuidList(cuidObj); setTraceabilityFileList(listObj) })
+        }
+      }
       callback && callback()
     })
   }
@@ -799,7 +779,9 @@ const Index = (props) => {
     setIsDisPlayCheck2(false)
     setIsDisPlayCheck3(false)
     setIsDisPlayCheck4(false)
-    setFileList1([]); setFileList2([]); //清除附件
+    // setFileList1([]); 
+    setPointList2([])
+    setFileList2([]); //清除附件
     commonForm.resetFields();
     setAddId();
     props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
@@ -811,7 +793,7 @@ const Index = (props) => {
 
     setTitle('添加')
     setVisible(true)
-    setFilesCuid1(cuid())
+    // setFilesCuid1(cuid())
     setFilesCuid2(cuid())
     resetData()
   }
@@ -825,11 +807,13 @@ const Index = (props) => {
   const save = (type) => {
 
     commonForm.validateFields().then(commonValues => {
+
       const commonData = {
         ...commonValues,
         ID: title === '添加' ? addId : editId,
         month: undefined,
         DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-DD 00:00:00") : undefined,
+        Commitment:commonValues.Commitment ? 1 :  undefined,
       }
       if (tabType == 1) { //数据一致性核查表
 
@@ -856,6 +840,9 @@ const Index = (props) => {
               DASStatus: dasChecked ? 1 : 2,
               DataRangeStatus: numChecked ? 1 : 2, //数采仪量程
               DataStatus: numRealTimeChecked ? 1 : 2, //数采仪实时数据
+              AnalyzerFile: values[`${item.par}AnalyzerFilePar`],
+              DASFile: values[`${item.par}DasFilePar`],
+              RangeFile: values[`${item.par}RangeFilePar`],
             }
           })
           const dataList2 = addRealTimeData.map(item => {
@@ -906,7 +893,11 @@ const Index = (props) => {
 
           props.addOrUpdConsistencyCheck({
             AddType: type,
-            Data: { ...commonData, RangeUpload: values.files1, CouUpload: values.files2, },
+            Data: {
+              ...commonData,
+              //  RangeUpload: values.files1,
+              CouUpload: values.files2,
+            },
             DataList: dataList,
           }, (id) => {
             title === '添加' && id && setAddId(id)
@@ -939,12 +930,19 @@ const Index = (props) => {
               Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
               Remark: values[`${item.par}Remark3`],
               OperationReamrk: values[`${item.par}OperationReamrk`],
-              Upload: values[`${item.par}ParFiles`],
+              SetFile: values[`${item.par}SettingFilePar`],
+              InstrumentFile: values[`${item.par}InstrumentFilePar`],
+              TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
+              // Upload: values[`${item.par}ParFiles`],
             }
           })
           props.addOrUpdParamCheck({
             AddType: type,
-            Data: { ...commonData, RangeUpload: form2.getFieldValue('files1'), CouUpload: form2.getFieldValue('files2') },
+            Data: {
+              ...commonData,
+              //  RangeUpload: form2.getFieldValue('files1'),
+              CouUpload: form2.getFieldValue('files2')
+            },
             ParamDataList: paramDataList,
           }, (id) => {
             title === '添加' && setAddId(id)
@@ -1060,7 +1058,55 @@ const Index = (props) => {
 
   const tabsChange = (key) => {
     setTabType(key)
+    if (key == 2) {
+      /***参数一致性核查表***/
+      let settingUploadList = {}, settingUploadFilesListObj = {};
+      let instrumentUploadList = {}, instrumentUploadFilesListObj = {};
+      let traceabilityUploadList = {}, traceabilityUploadFilesListObj = {};
+      consistencyCheckDetail?.consistentParametersCheckList.map(item => {
+        let code = item.CheckItem
+        form3.setFieldsValue({
+          [`${code}IsEnable`]: item.Status ? [item.Status] : [],
+          [`${code}SetVal`]: item.SetValue,
+          [`${code}InstrumentSetVal`]: item.InstrumentSetValue,
+          [`${code}TraceVal`]: item.TraceabilityValue,
+          [`${code}Uniform`]: item.AutoUniformity,
+          [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
+          [`${code}Remark3`]: item.Remark,
+          [`${code}OperationReamrk`]: item.OperationReamrk,
+          [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
+          [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
+          [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
+          // [`${code}ParFiles`]: item.Upload,
+        })
+        const enchFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
+          let parFileList = [];
+          uploadList?.length && uploadList.map(uploadItem => {
+            if (!uploadItem.IsDelete) {
+              parFileList.push({
+                uid: uploadItem.GUID,
+                name: uploadItem.FileName,
+                status: 'done',
+                url: `\\upload\\${uploadItem.FileName}`,
+              })
+            }
+          })
+          uploadListPar[`${code}${filePar}`] = parFileList;
+          uploadFilesListObj[`${code}${filePar}`] = uploadList?.[0]?.FileUuid ? uploadList[0].FileUuid : cuid();
+        }
+        enchFileList(item.SetFileList, settingUploadList, settingUploadFilesListObj, 'SettingFilePar') //仪表设定值照片	
+        enchFileList(item.InstrumentFileList, instrumentUploadList, instrumentUploadFilesListObj, 'InstrumentFilePar') //DAS设定值照片	
+        enchFileList(item.TraceabilityFileList, traceabilityUploadList, traceabilityUploadFilesListObj, 'TraceabilityFilePar') //溯源值照片	
+      })
+      setSettingFileList({ ...settingUploadList })
+      setSettingFileCuidList({ ...settingUploadFilesListObj })
 
+      setInstrumentFileList({ ...instrumentUploadList })
+      setInstrumentFileCuidList({ ...instrumentUploadFilesListObj })
+
+      setTraceabilityFileList({ ...traceabilityUploadList })
+      setTraceabilityFileCuidList({ ...traceabilityUploadFilesListObj })
+    }
 
   }
 
@@ -1080,10 +1126,10 @@ const Index = (props) => {
   }
   const [fileType, setFileType] = useState(1)
 
-  const [filesCuid1, setFilesCuid1] = useState(cuid())
+  // const [filesCuid1, setFilesCuid1] = useState(cuid())
   const [filesCuid2, setFilesCuid2] = useState(cuid())
 
-  const [fileList1, setFileList1] = useState([])
+  // const [fileList1, setFileList1] = useState([])
   const [fileList2, setFileList2] = useState([])
 
 
@@ -1093,14 +1139,14 @@ const Index = (props) => {
   const [photoIndex, setPhotoIndex] = useState(0); //预览附件Index
   const [imgUrlList, setImgUrlList] = useState([]);//预览附件列表
 
-  const filesCuid3 = () => {
-    for (var key in filesCuidList) {
-      if (key == filePar) {
-        return filesCuidList[key]
-      }
-    }
-  }
-  const filesCuidFun = (filesCuidList,filePar) => {
+  // const filesCuid3 = () => {
+  //   for (var key in filesCuidList) {
+  //     if (key == filePar) {
+  //       return filesCuidList[key]
+  //     }
+  //   }
+  // }
+  const filesCuidFun = (filesCuidList, filePar) => {
     for (var key in filesCuidList) {
       if (key == filePar) {
         return filesCuidList[key]
@@ -1112,7 +1158,17 @@ const Index = (props) => {
     accept: 'image/*',
     data: {
       // FileUuid: fileType == 1 ? filesCuid1 : fileType == 2 ? filesCuid2 : filesCuid3(),
-      FileUuid: fileType == 2 ? filesCuid2 : fileType == 'analyzerFile' ? filesCuidFun(analyzerFileCuidList,analyzerFilePar) : null,
+      FileUuid: function () {
+        switch (fileType) {
+          case 2: return filesCuid2;
+          case 'analyzerFile': return filesCuidFun(analyzerFileCuidList, analyzerFilePar);
+          case 'dasFile': return filesCuidFun(dasFileCuidList, dasFilePar);
+          case 'rangeFile': return filesCuidFun(rangeFileCuidList, rangeFilePar);
+          case 'settingFile': return filesCuidFun(settingFileCuidList, settingFilePar);
+          case 'instrumentFile': return filesCuidFun(instrumentFileCuidList, instrumentFilePar);
+          case 'traceabilityFile': return filesCuidFun(traceabilityFileCuidList, traceabilityFilePar);
+        }
+      }(),
       FileActualType: '0',
     },
     listType: "picture-card",
@@ -1142,21 +1198,36 @@ const Index = (props) => {
         // }
         switch (fileType) {
           case 2: setFileList2(fileList); break;
-          case 'analyzerFile': setAnalyzerFileList({ ...analyzerFileList, [analyzerFilePar]: fileList })
+          case 'analyzerFile': setAnalyzerFileList({ ...analyzerFileList, [analyzerFilePar]: fileList }); break;
+          case 'dasFile': setDasFileList({ ...dasFileList, [dasFilePar]: fileList }); break;
+          case 'rangeFile': setRangeFileList({ ...rangeFileList, [rangeFilePar]: fileList }); break;
+          case 'settingFile': setSettingFileList({ ...settingFileList, [settingFilePar]: fileList }); break;
+          case 'instrumentFile': setInstrumentFileList({ ...instrumentFileList, [instrumentFilePar]: fileList }); break;
+          case 'traceabilityFile': setTraceabilityFileList({ ...traceabilityFileList, [traceabilityFilePar]: fileList }); break;
 
         }
       }
+
       if (info.file.status === 'done' || info.file.status === 'removed' || info.file.status === 'error') {
         switch (fileType) {
-          case 2: setFileList2(fileList); break;
-          case 'analyzerFile': setAnalyzerFileList({ ...analyzerFileList, [analyzerFilePar]: fileList })
+          case 2: setFileList2(fileList); form2.setFieldsValue({ files2: fileList && fileList[0] ? filesCuid2 : undefined }); break;
+          case 'analyzerFile': setAnalyzerFileList({ ...analyzerFileList, [analyzerFilePar]: fileList }); form2.setFieldsValue({ [analyzerFilePar]: filesCuidFun(analyzerFileCuidList, analyzerFilePar) }); break;
+          case 'dasFile': setDasFileList({ ...dasFileList, [dasFilePar]: fileList }); form2.setFieldsValue({ [dasFilePar]: filesCuidFun(dasFileCuidList, dasFilePar) }); break;
+          case 'rangeFile': setRangeFileList({ ...rangeFileList, [rangeFilePar]: fileList }); form2.setFieldsValue({ [rangeFilePar]: filesCuidFun(rangeFileCuidList, rangeFilePar) }); break;
+          case 'settingFile': setSettingFileList({ ...settingFileList, [settingFilePar]: fileList }); form3.setFieldsValue({ [settingFilePar]: filesCuidFun(settingFileCuidList, settingFilePar) }); break;
+          case 'instrumentFile': setInstrumentFileList({ ...instrumentFileList, [instrumentFilePar]: fileList }); form3.setFieldsValue({ [instrumentFilePar]: filesCuidFun(instrumentFileCuidList, instrumentFilePar) }); break;
+          case 'traceabilityFile': setTraceabilityFileList({ ...traceabilityFileList, [traceabilityFilePar]: fileList }); form3.setFieldsValue({ [traceabilityFilePar]: filesCuidFun(traceabilityFileCuidList, traceabilityFilePar) }); break;
           // case 3: setFilesList3({  ...filesList3,  [filePar]: fileList });
         }
-        switch (fileType) {
-          case 2: form2.setFieldsValue({ files2: fileList && fileList[0] ? filesCuid2 : undefined }); break;
-          case 'analyzerFile': form2.setFieldsValue({ [analyzerFilePar]: filesCuidFun(analyzerFileCuidList) }); break;
-          // case 3: form3.setFieldsValue({ [filePar]: filesCuid3() });  break;
-        }
+        // switch (fileType) {
+        //   case 2: form2.setFieldsValue({ files2: fileList && fileList[0] ? filesCuid2 : undefined }); break;
+        //   case 'analyzerFile': form2.setFieldsValue({ [analyzerFilePar]: filesCuidFun(analyzerFileCuidList) }); break;
+        //   case 'dasFile': form2.setFieldsValue({ [dasFilePar]: filesCuidFun(dasFileCuidList) }); break;
+        //   case 'rangeFile': form2.setFieldsValue({ [rangeFilePar]: filesCuidFun(rangeFileCuidList) }); break;
+        //   case 'settingFile': form2.setFieldsValue({ [settingFilePar]: filesCuidFun(settingFileCuidList) }); break;
+        //   case 'instrumentFile': form2.setFieldsValue({ [instrumentFilePar]: filesCuidFun(instrumentFileCuidList) }); break;
+        //   case 'traceabilityFile': form2.setFieldsValue({ [traceabilityFilePar]: filesCuidFun(analyzerFileCuidList) }); break;
+        // }
         info.file.status === 'done' && message.success('上传成功！')
         info.file.status === 'error' && message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
 
@@ -1175,8 +1246,12 @@ const Index = (props) => {
       let imageList = []
       switch (fileType) {
         case 2: imageList = fileList2; break;
-        case 'analyzerFile': imageList =  analyzerFileList[analyzerFilePar]
-        // case 3: setFilesList3({  ...filesList3,  [filePar]: fileList });
+        case 'analyzerFile': imageList = analyzerFileList[analyzerFilePar]; break;
+        case 'dasFile': imageList = dasFileList[dasFilePar]; break;
+        case 'rangeFile': imageList = rangeFileList[rangeFilePar]; break;
+        case 'settingFile': imageList = settingFileList[settingFilePar]; break;
+        case 'instrumentFile': imageList = instrumentFileList[instrumentFilePar]; break;
+        case 'traceabilityFile': imageList = traceabilityFileList[traceabilityFilePar]; break;
       }
       let imageListIndex = 0;
       imageList.map((item, index) => {
@@ -1196,7 +1271,17 @@ const Index = (props) => {
       setPreviewVisible(true)
       setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
     },
-    fileList: fileType == 2 ? fileList2 : fileType == 'analyzerFile'? analyzerFileList[analyzerFilePar] : [],
+    fileList: function () {
+      switch (fileType) {
+        case 2: return fileList2;
+        case 'analyzerFile': return analyzerFileList[analyzerFilePar];
+        case 'dasFile': return dasFileList[dasFilePar];
+        case 'rangeFile': return rangeFileList[rangeFilePar];
+        case 'settingFile': return settingFileList[settingFilePar];
+        case 'instrumentFile': return instrumentFileList[instrumentFilePar];
+        case 'traceabilityFile': return traceabilityFileList[traceabilityFilePar];
+      }
+    }()
   };
   const [manualOptions, setManualOptions] = useState([
     { label: '是', value: 1 },
@@ -1617,8 +1702,8 @@ const Index = (props) => {
                   break;
               }
               return <Row justify='center' align='middle'>
-                <Form.Item name={`${record.par}AnalyzerFile`}>
-                  <a   style={{ cursor: disabledFlag && 'not-allowed', color: disabledFlag && 'rgba(0, 0, 0, 0.25) ' , }}  onClick={() => { if(disabledFlag){return}; setFileType('analyzerFile'); setAnalyzerFilePar(`${record.par}AnalyzerFilePar`); setFileVisible(true); }}>{analyzerFileList[`${record.par}AnalyzerFile`] && analyzerFileList[`${record.par}AnalyzerFile`][0] ? '查看附件' : '上传附件'}</a>
+                <Form.Item name={`${record.par}AnalyzerFilePar`}>
+                  <a style={{ cursor: disabledFlag && 'not-allowed', color: disabledFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag) { return }; setFileType('analyzerFile'); setAnalyzerFilePar(`${record.par}AnalyzerFilePar`); setFileVisible(true); }}>{analyzerFileList[`${record.par}AnalyzerFilePar`] && analyzerFileList[`${record.par}AnalyzerFilePar`][0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </Row>
             }
@@ -1667,6 +1752,33 @@ const Index = (props) => {
           }
         },
         {
+          title: 'DAS量程照片',
+          align: 'center',
+          dataIndex: 'par',
+          key: 'par',
+          width: 130,
+          render: (text, record) => {
+            if (record.Name === 'NOx' || record.Name === '标干流量') {
+              return '—'
+            } else {
+              let disabledFlag = false;
+              switch (record.isDisplay) {
+                case 1: case 2:
+                  disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                  break;
+                case 3: case 4:
+                  disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                  break;
+              }
+              return <Row justify='center' align='middle'>
+                <Form.Item name={`${record.par}DasFilePar`}>
+                  <a style={{ cursor: disabledFlag && 'not-allowed', color: disabledFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag) { return }; setFileType('dasFile'); setDasFilePar(`${record.par}DasFilePar`); setFileVisible(true); }}>{dasFileList[`${record.par}DasFilePar`] && dasFileList[`${record.par}DasFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                </Form.Item>
+              </Row>
+            }
+          }
+        },
+        {
           title: <Row align='middle' justify='center'><Checkbox checked={numChecked} onChange={onNumChange}>数采仪量程</Checkbox></Row>,
           align: 'center',
           dataIndex: 'par',
@@ -1702,6 +1814,33 @@ const Index = (props) => {
                   <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
                     {unitFormat(record)}
                   </Select>
+                </Form.Item>
+              </Row>
+            }
+          }
+        },
+        {
+          title: '数采仪量程照片',
+          align: 'center',
+          dataIndex: 'par',
+          key: 'par',
+          width: 130,
+          render: (text, record) => {
+            if (record.Name === 'NOx' || record.Name === '标干流量') {
+              return '—'
+            } else {
+              let disabledFlag = false;
+              switch (record.isDisplay) {
+                case 1: case 2:
+                  disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                  break;
+                case 3: case 4:
+                  disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                  break;
+              }
+              return <Row justify='center' align='middle'>
+                <Form.Item name={`${record.par}RangeFilePar`}>
+                  <a style={{ cursor: disabledFlag && 'not-allowed', color: disabledFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag) { return }; setFileType('rangeFile'); setRangeFilePar(`${record.par}RangeFilePar`); setFileVisible(true); }}>{rangeFileList[`${record.par}RangeFilePar`] && rangeFileList[`${record.par}RangeFilePar`][0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </Row>
             }
@@ -1973,6 +2112,31 @@ const Index = (props) => {
           }
         },
         {
+          title: '附件',
+          align: 'center',
+          dataIndex: 'par',
+          key: 'par',
+          width: 100,
+          render: (text, record, index) => {
+            const obj = {
+              children: <div>
+                <Form.Item name='files2' >
+                  <a onClick={() => { setFileType(2); setFileVisible(true) }}>{fileList2[0] ? '查看附件' : '上传附件'}</a>
+                </Form.Item>
+              </div>,
+              props: {},
+            };
+            if (index === 0) {
+              obj.props.rowSpan = addRealTimeData.length;
+            } else {
+              obj.props.rowSpan = 0;
+            }
+
+            return obj;
+
+          }
+        },
+        {
           title: '数据一致性(自动判断)',
           align: 'center',
           dataIndex: 'par',
@@ -2025,31 +2189,6 @@ const Index = (props) => {
             return <Form.Item name={`${record.par}Remark2`}>
               <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
-          }
-        },
-        {
-          title: '附件',
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 100,
-          render: (text, record, index) => {
-            const obj = {
-              children: <div>
-                <Form.Item name='files2' >
-                  <a onClick={() => { setFileType(2); setFileVisible(true) }}>{fileList2[0] ? '查看附件' : '上传附件'}</a>
-                </Form.Item>
-              </div>,
-              props: {},
-            };
-            if (index === 0) {
-              obj.props.rowSpan = addRealTimeData.length;
-            } else {
-              obj.props.rowSpan = 0;
-            }
-
-            return obj;
-
           }
         },
       ]
@@ -2108,11 +2247,11 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'par',
       key: 'par',
-      width: 100,
+      width: 125,
       render: (text, record, index) => {
         return <div>
-          <Form.Item name={`${record.par}ParFiles`} >
-            <a style={{ paddingRight: 8 }} onClick={() => { setFileType(3); setFilePar(`${record.par}ParFiles`); setFileVisible(true); }}>{filesList3[`${record.par}ParFiles`] && filesList3[`${record.par}ParFiles`][0] ? '查看附件' : '上传附件'}</a>
+          <Form.Item name={`${record.par}SettingFilePar`} >
+            <a style={{ paddingRight: 8 }} onClick={() => { setFileType('settingFile'); setSettingFilePar(`${record.par}SettingFilePar`); setFileVisible(true); }}>{settingFileList[`${record.par}SettingFilePar`] && settingFileList[`${record.par}SettingFilePar`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         </div>;
 
@@ -2138,11 +2277,11 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'par',
       key: 'par',
-      width: 100,
+      width: 125,
       render: (text, record, index) => {
         return <div>
-          <Form.Item name={`${record.par}ParFiles`} >
-            <a style={{ paddingRight: 8 }} onClick={() => { setFileType(3); setFilePar(`${record.par}ParFiles`); setFileVisible(true); }}>{filesList3[`${record.par}ParFiles`] && filesList3[`${record.par}ParFiles`][0] ? '查看附件' : '上传附件'}</a>
+          <Form.Item name={`${record.par}InstrumentFilePar`} >
+            <a style={{ paddingRight: 8 }} onClick={() => { setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         </div>;
 
@@ -2171,9 +2310,12 @@ const Index = (props) => {
       key: 'par',
       width: 100,
       render: (text, record, index) => {
+        if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
+          return '—'
+        }
         return <div>
-          <Form.Item name={`${record.par}ParFiles`} >
-            <a style={{ paddingRight: 8 }} onClick={() => { setFileType(3); setFilePar(`${record.par}ParFiles`); setFileVisible(true); }}>{filesList3[`${record.par}ParFiles`] && filesList3[`${record.par}ParFiles`][0] ? '查看附件' : '上传附件'}</a>
+          <Form.Item name={`${record.par}TraceabilityFilePar`} >
+            <a style={{ paddingRight: 8 }} onClick={() => { setFileType('traceabilityFile'); setTraceabilityFilePar(`${record.par}TraceabilityFilePar`); setFileVisible(true); }}>{traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         </div>;
 
@@ -2513,6 +2655,14 @@ const Index = (props) => {
                 </TabPane>
               </Tabs>
             </Spin>
+            <div style={{ color: '#f5222d', marginTop: 4, fontSize: 16 }}>
+              我承诺：当月上传的全部量程、参数设定值和溯源值均已核对无误，现场实时数据保持一致，上传的各项数据和照片如有任何问题，本人愿接受相应处罚。
+        </div>
+            <Form.Item name='Commitment' valuePropName="checked" style={{ marginBottom: 0 }}>
+              <Checkbox   className={styles.commitmentSty}>
+                已阅读已承诺！
+            </Checkbox>
+            </Form.Item>
           </Form>
         </Spin>
       </Modal>
@@ -2524,6 +2674,7 @@ const Index = (props) => {
         destroyOnClose
         onCancel={() => { setFileVisible(false) }}
         width={'50%'}
+        footer={null}
       >
         <Upload {...uploadProps} style={{ width: '100%' }} >
           <div>

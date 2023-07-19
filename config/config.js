@@ -598,7 +598,20 @@ export default {
                 },
               ],
             },
-
+            {
+              path: '/assetManage/basicSet', //基础设置
+              routes: [
+                {
+                  path: '/assetManage/basicSet',
+                  redirect: '/assetManage/basicSet/OperationProjectUser', // 重定向 默认为
+                },
+                {         
+                  name: 'operationProjectUser', // 合同变更设置
+                  path: '/assetManage/basicSet/:configId',
+                  component: './AutoFormManager',
+                },
+              ],
+            },
             {
               //项目权限管理
               name: 'projectManageAuthor',
@@ -2835,6 +2848,7 @@ export default {
   proxy: {
     '/newApi': {
       target: 'http://172.16.12.234:60061/',
+      // target: 'http://172.16.12.134:63002/',
       changeOrigin: true,
       pathRewrite: {
         '^/newApi': '',

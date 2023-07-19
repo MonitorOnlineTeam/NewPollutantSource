@@ -56,7 +56,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
   messageList: wordSupervision.messageList,
   managerList: wordSupervision.managerList,
   TYPE: wordSupervision.TYPE,
-  todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
+  todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'] || false,
   messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
   operaServiceList: wordSupervision.operaServiceList,
   operaServiceLoading: loading.effects['wordSupervision/GetStagingInspectorRectificationList'],
@@ -89,7 +89,7 @@ const Workbench = props => {
 
   // 加载工作台和我的消息数据 运维服务列表
   const loadData = () => {
-    GetToDoDailyWorks();
+    // GetToDoDailyWorks();
     GetWorkBenchMsg();
     GetStagingInspectorRectificationList()
   };
@@ -316,7 +316,7 @@ const Workbench = props => {
   // 渲染消息时间轴
   const renderMessageTimeLine = () => {
     return messageList.map(item => {
-      const date = moment(item.CreateTime).format('MM月DD日 HH:ss');
+      const date = moment(item.CreateTime).format('MM月DD日 HH:mm');
       return <Timeline.Item label={date}>{item.Title}</Timeline.Item>;
     });
   };
@@ -329,9 +329,6 @@ const Workbench = props => {
   setSuperviseRectificaDetailVisible(true)
   setSuperviseRectificaDetailId(id)
  }
- useEffect(() => { //关闭详情弹框 刷新列表
-  !superviseRectificaDetailVisible&&GetStagingInspectorRectificationList()
-}, [superviseRectificaDetailVisible]);
   return (
     <div className={styles.workbenchBreadSty}>
       <BreadcrumbWrapper>
@@ -353,12 +350,11 @@ const Workbench = props => {
                     </div>
                   </div>
                   {/* 手工申请 */}
-                  <div className={styles.manualList}>
+                  {/* <div className={styles.manualList}>
                     <div className={styles.title}>手工申请</div>
                     <Row
                       gutter={32}
                       className={styles.content}
-                    // style={{ height: '100%', width: '100%' }}
                     >
                       {manualList.map(item => {
                         return (
@@ -372,7 +368,6 @@ const Workbench = props => {
                               cancelText="否"
                             >
                               <div className={styles.manualItem} style={{ backgroundImage: `url(${item.img})` }}>
-                                {/* <img src={item.img} /> */}
                                 <p>{item.label}</p>
                               </div>
                             </Popconfirm>
@@ -380,7 +375,7 @@ const Workbench = props => {
                         );
                       })}
                     </Row>
-                  </div>
+                  </div> */}
                 </Card>
               </div>
             </div>
@@ -502,7 +497,7 @@ const Workbench = props => {
         footer={null}
         wrapClassName='spreadOverModal'
         className={superviseRectificaSty.fromModal}
-        onCancel={() => { setSuperviseRectificaDetailVisible(false) }}
+        onCancel={() => { setSuperviseRectificaDetailVisible(false); GetStagingInspectorRectificationList() }}
         destroyOnClose
       >
         <SuperviseRectificationDetail ID={superviseRectificaDetailId} />
