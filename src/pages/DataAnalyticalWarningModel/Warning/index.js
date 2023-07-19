@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-14 09:05:55
+ * @Last Modified time: 2023-07-14 15:49:07
  * @Description：报警记录
  */
 
@@ -276,6 +276,7 @@ const WarningRecord = props => {
           dataSource={dataSource}
           loading={queryLoading}
           pagination={{
+            showSizeChanger: true,
             showQuickJumper: true,
             pageSize: pageSize,
             current: pageIndex,
