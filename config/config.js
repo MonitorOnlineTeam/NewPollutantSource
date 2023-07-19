@@ -1516,22 +1516,74 @@ export default {
               ],
             },
 
-            {
-              //智能诊断 重定向
-              path: '/abnormaRecall',
-              redirect: '/monitoring/outputstopmanage/OutputStopNew',
-            },
+
+            
             {
               path: '/abnormaRecall/abnormalDataManage', ///异常数据处置 重定向
               redirect: '/monitoring/outputstopmanage/OutputStopNew',
             },
-            {
-              path: '/abnormaRecall/abnormalDataAnalysis', ///异常数据分析 重定向
-              redirect: '/dataSearch/exceedData',
-            },
+
             {
               path: '/abnormaRecall/exceptionRule', ///异常规则 重定向
               redirect: '/platformconfig/monitoringstandard',
+            },
+            {
+              name: 'abnormaRecall',
+              path: '/abnormaRecall',
+              routes: [
+                {
+                  //智能诊断 重定向
+                  path: '/abnormaRecall',
+                  redirect: '/monitoring/outputstopmanage/OutputStopNew',
+                },
+                {
+                  path: '/abnormaRecall/abnormalDataAnalysis', ///异常数据分析 重定向
+                  redirect: '/dataSearch/exceedData',
+                },
+                {
+                  name: 'exceptionrecord',
+                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
+                  // component: './monitoring/exceptionrecord',
+                  component: './monitoring/exceptionrecordNew',
+                },
+                {
+                  name: 'exceptionrecordCity', //异常数据报警 城市级页面
+                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/cityLevel',
+                  component: './monitoring/exceptionrecordNew/cityLevel',
+                },
+    
+                {
+                  name: 'exceptionrecordDetails',
+                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details',
+                  component: './monitoring/exceptionrecordNew/RegionDetails',
+                },
+
+                {
+                  //缺失数据报警  企业
+                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent',
+                  component: './monitoring/missingData/ent',
+                },
+                {
+                  //缺失数据报警  城市级别 企业
+                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel',
+                  component: './monitoring/missingData/cityLevel/index',
+                },
+                {
+                  //缺失数据报警 二级页面
+                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond',
+                  component: './monitoring/missingData/missDataSecond',
+                },
+                {
+                  //缺失数据报警 空气站
+                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/air',
+                  component: './monitoring/missingData/air',
+                },
+                {
+                  //缺失数据报警 城市级别 空气站
+                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air',
+                  component: './monitoring/missingData/cityLevel/index',
+                },
+              ]
             },
 
             {
@@ -1597,23 +1649,6 @@ export default {
                   name: 'outputstopmanage',
                   path: '/monitoring/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
-                },
-                {
-                  name: 'exceptionrecord',
-                  path: '/monitoring/missingData/exceptionrecord',
-                  // component: './monitoring/exceptionrecord',
-                  component: './monitoring/exceptionrecordNew',
-                },
-                {
-                  name: 'exceptionrecordCityLevel', //异常数据报警 城市级页面
-                  path: '/monitoring/missingData/exceptionrecord/cityLevel',
-                  component: './monitoring/exceptionrecordNew/cityLevel',
-                },
-
-                {
-                  name: 'exceptionrecordDetails',
-                  path: '/monitoring/missingData/exceptionrecord/details',
-                  component: './monitoring/exceptionrecordNew/RegionDetails',
                 },
                 {
                   name: 'alarmrecord',
@@ -1700,31 +1735,6 @@ export default {
                   //视频监控 大气
                   path: '/monitoring/videoMonitor/air',
                   component: './monitoring/videoMonitor/air',
-                },
-                {
-                  //缺失数据报警  企业
-                  path: '/monitoring/missingData/ent',
-                  component: './monitoring/missingData/ent',
-                },
-                {
-                  //缺失数据报警 空气站
-                  path: '/monitoring/missingData/air',
-                  component: './monitoring/missingData/air',
-                },
-                {
-                  //缺失数据报警  城市级别 企业
-                  path: '/monitoring/missingData/cityLevel/ent',
-                  component: './monitoring/missingData/cityLevel/index',
-                },
-                {
-                  //缺失数据报警 城市级别 空气站
-                  path: '/monitoring/missingData/cityLevel/air',
-                  component: './monitoring/missingData/cityLevel/index',
-                },
-                {
-                  //缺失数据报警 二级页面
-                  path: '/monitoring/missingData/missDataSecond',
-                  component: './monitoring/missingData/missDataSecond',
                 },
                 {
                   name: 'alarmrecord',

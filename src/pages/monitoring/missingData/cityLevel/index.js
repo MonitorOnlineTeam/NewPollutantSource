@@ -22,14 +22,14 @@ export default class Index extends Component {
     const { dispatch,match:{path} } = this.props;
     dispatch({
       type: 'missingData/updateState',
-      payload: {type: path === '/monitoring/missingData/cityLevel/ent'? 'ent' : 'air'},
+      payload: {type: path === '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel'? 'ent' : 'air'},
     });
    }
   render() {
     const { match:{path} } = this.props;
     return (
         <BreadcrumbWrapper title="数据缺失报警(企业)">
-          { path === '/monitoring/missingData/cityLevel/ent'?
+          { path === '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel'?
            <MissingData types='ent'  level='2'  query={this.props.location.query}/>
            :
            <MissingData types='air'  level='2' query={this.props.location.query}/>

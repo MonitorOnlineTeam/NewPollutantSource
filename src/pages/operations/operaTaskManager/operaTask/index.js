@@ -159,7 +159,7 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: <span>操作</span>,
+      title: '操作',
       align: 'center',
       width: taskType == 2 ? 80 : taskType == 3 ? 100 : 160,
       fixed: 'right',
@@ -234,6 +234,7 @@ const Index = (props) => {
   const [taskOperateType, setTaskOperateType] = useState(1)
   const taskAdd = () => {//任务添加
     setTaskAddVisible(true)
+    setAddTaskModelTabType('1')
     basicInfoform.resetFields()
     setTaskOperateType(1)
     restData();
@@ -283,7 +284,7 @@ const Index = (props) => {
       if (type == 2) { //编辑
         echoData && basicInfoform.setFieldsValue({
           ...echoData,
-          location: [echoData.PROVINCE, echoData.CITY, echoData.DISTRICT],
+          location: echoData.PROVINCE&&!echoData.CITY? [echoData.PROVINCE] : echoData.PROVINCE&&echoData.CITY&&!echoData.DISTRICT? [echoData.PROVINCE, echoData.CITY] : echoData.PROVINCE&&echoData.CITY&&echoData.DISTRICT? [echoData.PROVINCE, echoData.CITY, echoData.DISTRICT] : [],
           time: echoData.RWRQKS && echoData.RWRQJS ? [moment(echoData.RWRQKS), moment(echoData.RWRQJS)] : [],
         })
       } else { //详情
@@ -334,6 +335,7 @@ const Index = (props) => {
         setTaskType('1')
         onFinish(1)
         onFinish3(1)
+        setIsSave(false)
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -483,7 +485,7 @@ const Index = (props) => {
         loading={props.contractTableLoading}
         bordered
         dataSource={contractTableData}
-        scroll={{ y: 'calc(100vh - 500px)' }}
+        scroll={{ y: 'calc(100vh - 380px)' }}
         columns={contractColumns}
         rowSelection={{
           type: 'radio',
@@ -1090,7 +1092,7 @@ const Index = (props) => {
         </Col>
         {type == 1 && <Col span={24}>
           <Form.Item style={{ marginLeft: 130 }}>
-            <Button type='primary' htmlType='submit' loading={basicInfoTaskLoading}>保存</Button>
+            <Button type='primary' htmlType='submit' disabled={isSave} loading={basicInfoTaskLoading}>保存</Button>
             <Button style={{ margin: '0 8px' }} disabled={!taskId} onClick={() => { nextStep() }}>下一步</Button>
             {taskAddVisible && <span className='red'>*注：保存基本信息之后才能添加运维项</span>}
           </Form.Item>
@@ -1150,6 +1152,7 @@ const Index = (props) => {
       </Row>
     </Form>
   }
+  const [isSave,setIsSave] = useState(false)
   const basicInfoSave = async () => {
     try {
       const values = await basicInfoform.validateFields();
@@ -1168,6 +1171,7 @@ const Index = (props) => {
         }
       }, () => {
         setTaskEditVisible(false) 
+        setIsSave(true)
         onFinish3(1)
       })
     } catch (errInfo) {
@@ -1382,7 +1386,7 @@ const Index = (props) => {
                 loading={tableLoading2 || endTaskLoading}
                 bordered
                 dataSource={tableDatas2}
-                columns={columns}
+                columns={columns.filter(item=>item.title!='操作')}
                 pagination={{
                   pageSize: pageSize2,
                   current: pageIndex2,
@@ -1398,7 +1402,7 @@ const Index = (props) => {
       <Modal
         title={'添加任务'}
         visible={taskAddVisible}
-        onCancel={() => { setTaskAddVisible(false) }}
+        onCancel={() => { setTaskAddVisible(false);setIsSave(false); }}
         className={styles.addFromModal}
         destroyOnClose
         wrapClassName='spreadOverModal'

@@ -91,9 +91,8 @@ class index extends PureComponent {
             let queryCondition = this.state.queryCondition;
             queryCondition.RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
             queryCondition = JSON.stringify(queryCondition)
-            // this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
-              // router.push(`/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
-              router.push(`/monitoring/missingData/exceptionrecord/cityLevel?regionCode=${record.RegionCode?record.RegionCode : ''}`);
+
+              router.push(`/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/cityLevel?regionCode=${record.RegionCode?record.RegionCode : ''}`);
           }}>{text}</a>
         }
       },

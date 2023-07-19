@@ -73,12 +73,12 @@ class BasicLayout extends Component {
       '/overVerifyRate/cityLevel':'/Intelligentanalysis/dataAlarm/overVerifyRate',
       '/overVerifyRate/pointVerifyRate':'/Intelligentanalysis/dataAlarm/overVerifyRate',
       '/overVerifyRate/pointVerifyRate':'/Intelligentanalysis/dataAlarm/overVerifyRate',
-      '/missingData/cityLevel/ent':'/monitoring/missingData/ent',
-      '/missingData/missDataSecond':'/monitoring/missingData/ent',
+      '/missingData/ent/cityLevel':'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent',
+      '/missingData/ent/missDataSecond':'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent',
       '/missingDataRate/ent/citylevel':'/Intelligentanalysis/dataAlarm/missingDataRate/ent',
       '/missingDataRate/missRateDataSecond':'/Intelligentanalysis/dataAlarm/missingDataRate/ent',
-      '/exceptionrecord/cityLevel':'/monitoring/missingData/exceptionrecord',
-      '/exceptionrecord/details':'/monitoring/missingData/exceptionrecord',
+      '/exceptionrecord/cityLevel':'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
+      '/exceptionrecord/details':'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
       '/abnormal/cityLevel':'/Intelligentanalysis/dataAlarm/abnormal',
       '/abnormal/details':'/Intelligentanalysis/dataAlarm/abnormal',
       '/abnormalWorkStatistics/regionDetail':'/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics',
@@ -97,7 +97,7 @@ class BasicLayout extends Component {
       } else {                                               
         const autoFormDetailRegeMatch = pathname.match(/TestEnterprise/) || pathname.match(/AEnterpriseTest/) || pathname.match(/OperationMaintenanceEnterprise/) || pathname.match(/MaintenanceDatabase/)  || pathname.match(/OperationMaintenancePersonnel/) || pathname.match(/OperationCycle/) || pathname.match(/Storehouse/) || pathname.match(/OutputStopNew/)   //autoForm详情 存在上级页面 通过configId匹配
         const subPagesRegeMatch =  pathname.match(/\/noticeManger\/detail/) || pathname.match(/\/problemManger\/detail/) || pathname.match(/\/equipmentAccount\/point/) || pathname.match(/\/TestPoint\/detail/)  || pathname.match(/\/projectManager\/AutoFormView/)  || pathname.match(/\/user\/userinfoview/) || pathname.match(/\/user\/userinfoedit/) || pathname.match(/\/equipmentFeedback\/detail/) ||
-                                   pathname.match(/\/overVerifyRate\/cityLevel/) || pathname.match(/\/overVerifyRate\/pointVerifyRate/) || pathname.match(/\/missingData\/cityLevel\/ent/) || pathname.match(/\/missingData\/missDataSecond/) || pathname.match(/\/missingDataRate\/ent\/citylevel/) || pathname.match(/\/missingDataRate\/missRateDataSecond/) ||
+                                   pathname.match(/\/overVerifyRate\/cityLevel/) || pathname.match(/\/overVerifyRate\/pointVerifyRate/) || pathname.match(/\/missingData\/ent\/cityLevel/) || pathname.match(/\/missingData\/ent\/missDataSecond/) || pathname.match(/\/missingDataRate\/ent\/citylevel/) || pathname.match(/\/missingDataRate\/missRateDataSecond/) ||
                                    pathname.match(/\/exceptionrecord\/cityLevel/) || pathname.match(/\/exceptionrecord\/details/) ||pathname.match(/\/abnormal\/cityLevel/) || pathname.match(/\/abnormal\/details/) || pathname.match(/\/abnormalWorkStatistics\/regionDetail/) || pathname.match(/\/transmissionefficiency\/cityLevel/)  || pathname.match(/\/transmissionefficiency\/qutDetail/) ||
                                    pathname.match(/\/accessStatistics\/missDataSecond/) ; //存在上级页面
 

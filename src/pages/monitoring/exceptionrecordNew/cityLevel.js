@@ -90,8 +90,8 @@ class index extends PureComponent {
             queryCondition.RegionCode = record.CityCode || this.props.location.query.regionCode;
             queryCondition = JSON.stringify(queryCondition)
             this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
-              router.push(`/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
-
+              router.push(`/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
+       
           }}>{record.CityName ? `${text}/${record.CityName}` : text}</a>
         }
       },
@@ -612,7 +612,7 @@ class index extends PureComponent {
                </Button>
                 <Button onClick={() => {
                   history.go(-1);
-                  //   this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/air'}))
+                  //   this.props.dispatch(routerRedux.push({pathname:'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/air'}))
                 }}>
                   <RollbackOutlined />返回 </Button>
                 {/* <span style={{ color: "red", marginLeft: 20 }}>已响应指：运维人员响应报警，并完成响应报警生成的运维工单。</span> */}

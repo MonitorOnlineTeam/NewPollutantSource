@@ -84,10 +84,10 @@ export default class EntTransmissionEfficiency extends Component {
               const { queryPar, } = this.props
               //市级跳转
               if (this.props.level) {
-                this.props.dispatch(routerRedux.push({ pathname: '/monitoring/missingData/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.regionDetailCode}), regionName: record.regionName } }));
+                this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.regionDetailCode}), regionName: record.regionName } }));
               } else { //省级跳转
                 this.props.dispatch(routerRedux.push({
-                  pathname: this.props.types === 'ent' ? '/monitoring/missingData/cityLevel/ent' : '/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar,regionDetailCode: record.regionCode }), regionCode: record.regionCode }
+                  pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar,regionDetailCode: record.regionCode }), regionCode: record.regionCode }
                 }));
               }
             }}>{text}</a>
@@ -138,7 +138,7 @@ export default class EntTransmissionEfficiency extends Component {
     let entObj = { title: <span>缺失数据报警企业数</span>, dataIndex: 'entCount', key: 'entCount', align: 'center', }
 
     types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
-    const isReg = location && location.pathname == '/monitoring/missingData/ent';
+    const isReg = location && location.pathname == '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent';
     this.updateQueryState(isReg ? {
       // BeginTime: moment()
       //   .subtract(1, 'day')
@@ -381,7 +381,7 @@ export default class EntTransmissionEfficiency extends Component {
                     导出
                 </Button>
                   {this.props.level && <Button onClick={() => {
-                    // this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/air'}))
+                    // this.props.dispatch(routerRedux.push({pathname:'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/air'}))
                     history.go(-1)
                   }}>
                     <RollbackOutlined />返回 </Button>
