@@ -222,10 +222,10 @@ const ModelChart = props => {
       });
     }
 
-    console.log('yAxis', yAxis);
-    console.log('xAxis', xAxis);
-    console.log('appendSeries', appendSeries);
-    console.log('seriesMarkLine', seriesMarkLine);
+    // console.log('yAxis', yAxis);
+    // console.log('xAxis', xAxis);
+    // console.log('appendSeries', appendSeries);
+    // console.log('seriesMarkLine', seriesMarkLine);
     return {
       color: color,
       title: {
@@ -266,6 +266,7 @@ const ModelChart = props => {
   // 获取非正常图表配置
   const abnormalChartOption = () => {
     const {
+      data,
       date,
       dataFlagName,
       workingFlagName,
@@ -326,18 +327,23 @@ const ModelChart = props => {
 
     // 显示红点
     if (OutDefaultTimes && OutDefaultTimes.length) {
-      abnormalObj.seriesObj.itemStyle = {
-        // borderWidth: 3,
-        // borderColor: 'yellow',
-        color: function(params) {
-          console.log('params', params);
-          let _color = color;
-          if (OutDefaultTimes.includes(date[params.dataIndex])) {
-            _color = '#ff0000';
-          }
-          return _color;
-        },
+      let markPointData = OutDefaultTimes.map(item => {
+        let valueIndex = date.findIndex(itm => itm === item);
+        return {
+          xAxis: moment(item).format('MM-DD HH:mm'),
+          yAxis: data[valueIndex],
+          symbolSize: 6,
+          symbol: 'circle',
+          itemStyle: {
+            color: 'rgba(242, 10, 10, 1)',
+          },
+        };
+      });
+      abnormalObj.seriesObj.markPoint = {
+        data: markPointData,
       };
+
+      // console.log('markPointData', markPointData);
     }
 
     let markAreaData = [];
@@ -401,11 +407,11 @@ const ModelChart = props => {
 
   return (
     <div className={styles.chartBox}>
-      {trend && (
+      {/* {trend && (
         <span className={styles.trend} style={{ top: 60 }}>
           趋势相似度 {trend}
         </span>
-      )}
+      )} */}
       <ReactEcharts
         option={getOption()}
         lazyUpdate

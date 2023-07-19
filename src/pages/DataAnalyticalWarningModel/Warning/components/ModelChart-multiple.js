@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-18 10:37:30
+ * @Last Modified time: 2023-07-18 17:06:08
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
@@ -70,7 +70,6 @@ const ModelChartMultiple = props => {
         x: 'center', // 可设定图例在左、右、居中
         y: 'bottom', // 可设定图例在上、下、居中
         padding: [15, 30, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
-        // data: ['Email'],
       },
       tooltip: {
         trigger: 'axis',
@@ -96,7 +95,7 @@ const ModelChartMultiple = props => {
 
   return (
     <div className={styles.chartBox}>
-      {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>}
+      {/* {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>} */}
       <ReactEcharts
         option={getOption()}
         lazyUpdate

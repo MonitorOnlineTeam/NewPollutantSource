@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-17 17:13:09
+ * @Last Modified time: 2023-07-19 16:55:21
  * @Description：报警核实详情
  */
 
@@ -16,6 +16,7 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import ImageView from '@/components/ImageView';
 import ModelChart from './components/ModelChart';
 import ModelChartMultiple from './components/ModelChart-multiple';
+import ModelChartLinear from './components/ModelChart-Linear';
 import ModelTable from './components/ModelTable';
 import WarningDataModal from './WarningDataModal';
 import moment from 'moment';
@@ -36,6 +37,7 @@ const WarningVerify = props => {
   const [warningInfo, setWarningInfo] = useState({});
   const [fileList, setFileList] = useState([]);
   const [modelChartDatas, setModelChartDatas] = useState([]);
+  const [linearDatas, setLinearDatas] = useState([]);
   const [modelTableDatas, setModelTableDatas] = useState({
     Column: [],
     Data: [],
@@ -68,10 +70,13 @@ const WarningVerify = props => {
           });
         }
         setFileList(_fileList);
+        GetSnapshotData(res.WarningTypeCode);
       },
     });
+  };
 
-    // 获取模型快照数据
+  // 获取模型快照数据
+  const GetSnapshotData = WarningTypeCode => {
     dispatch({
       type: 'dataModel/GetSnapshotData',
       payload: {
@@ -80,6 +85,7 @@ const WarningVerify = props => {
       callback: res => {
         if (res.chartData) {
           setModelChartDatas(res.chartData);
+          handleLinearDatas(res.chartData, WarningTypeCode);
         } else {
           setModelTableDatas({
             Column: res.Column,
@@ -89,6 +95,61 @@ const WarningVerify = props => {
         setModelDescribe(res.describe);
       },
     });
+  };
+
+  // 处理线性系数数据
+  const handleLinearDatas = (chartData, WarningTypeCode) => {
+    let linearDatas = [];
+    chartData.map(chart => {
+      if (chart.linear) {
+        let data = [];
+        let names = [];
+        if (chart.data.length > 1) {
+          // let allData = [];
+          let values = chart.data.map(item => {
+            // allData = allData.concat(item.data);
+            // allData = _.concat(allData, item.data);
+            names.push(item.PointName || item.pollutantName);
+            return item.data;
+          });
+          // console.log('allData', allData);
+          console.log('values', values);
+          data = values[0].map((item, index) => {
+            let arr = [];
+            chart.data.map(itm => {
+              arr.push(itm.data[index]);
+            });
+            return arr;
+          });
+        }
+        console.log('data', data);
+        linearDatas.push({
+          title: chart.title.replace('趋势', '线性'),
+          linear: chart.linear,
+          data: data,
+          names: names,
+          startPoint: chart.startPoint,
+          endPoint: chart.endPoint,
+        });
+      } else if (WarningTypeCode === 'd5dea4cc-bd6c-44fa-a122-a1f44514b465') {
+        debugger;
+        chart.data.map(item => {
+          let data = [];
+          item.data.map((itm, index) => {
+            data.push([itm, item.dataHistory[index]]);
+          });
+          linearDatas.push({
+            title: item.pollutantName + '数据与历史线性一致或重合',
+            linear: item.linear,
+            data: data,
+            names: [item.pollutantName, item.pollutantName + '历史'],
+          });
+        });
+      }
+    });
+
+    setLinearDatas(linearDatas);
+    console.log('linearDatas', linearDatas);
   };
 
   // 查看报警数据
@@ -170,6 +231,15 @@ const WarningVerify = props => {
               {/* 图表模型 */}
               {modelChartDatas.length ? (
                 <Row className={styles.chartWrapper}>
+                  {// 线性系数图表
+                  linearDatas.map(item => {
+                    return (
+                      <Col span={12}>
+                        <ModelChartLinear chartData={item} />
+                      </Col>
+                    );
+                  })}
+
                   {warningInfo.WarningTypeCode === 'c0af25fb-220b-45c6-a3de-f6c8142de8f1' ||
                   // 同一现场借用其他合格监测设备数据
                   warningInfo.WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||

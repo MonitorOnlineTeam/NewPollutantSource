@@ -269,10 +269,17 @@ const PointParams = props => {
                       );
                     })}
                   </Row>
+                  <Divider orientation="right" style={{ color: '#d9d9d9' }}>
+                    <Space>
+                      <Button type="primary" htmlType="submit" loading={saveLoading}>
+                        提交
+                      </Button>
+                    </Space>
+                  </Divider>
                 </Card>
                 {/* <Divider /> */}
                 <Card
-                  style={{ marginTop: 16 }}
+                  style={{ marginTop: 16, display: 'none' }}
                   bordered={false}
                   bodyStyle={{ paddingTop: 20, height: 'calc(100vh - 530px)' }}
                   title={<div className={styles.title}>排口参数</div>}
