@@ -110,8 +110,24 @@ export default {
       ],
     },
     {
+      path: '/autoLogin',
+      component: '../layouts/BlankLayout',
+      routes: [
+        {
+          path: '/autoLogin',
+          component: './user/login/AutoLogin',
+        },
+        {
+          // 预警核实
+          name: 'WarningVerify',
+          path: '/autoLogin/WarningVerify/:id',
+          component: './DataAnalyticalWarningModel/Warning/WarningVerify',
+        },
+      ],
+    },
+    {
       name: 'changePassword',
-      path: '/user/changePassword',  //修改密码
+      path: '/user/changePassword', //修改密码
       component: './account/settings',
     },
     {
@@ -605,7 +621,7 @@ export default {
                   path: '/assetManage/basicSet',
                   redirect: '/assetManage/basicSet/OperationProjectUser', // 重定向 默认为
                 },
-                {         
+                {
                   name: 'operationProjectUser', // 合同变更设置
                   path: '/assetManage/basicSet/:configId',
                   component: './AutoFormManager',
@@ -1516,8 +1532,6 @@ export default {
               ],
             },
 
-
-            
             {
               path: '/abnormaRecall/abnormalDataManage', ///异常数据处置 重定向
               redirect: '/monitoring/outputstopmanage/OutputStopNew',
@@ -1542,19 +1556,22 @@ export default {
                 },
                 {
                   name: 'exceptionrecord',
-                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
+                  path:
+                    '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
                   // component: './monitoring/exceptionrecord',
                   component: './monitoring/exceptionrecordNew',
                 },
                 {
                   name: 'exceptionrecordCity', //异常数据报警 城市级页面
-                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/cityLevel',
+                  path:
+                    '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/cityLevel',
                   component: './monitoring/exceptionrecordNew/cityLevel',
                 },
-    
+
                 {
                   name: 'exceptionrecordDetails',
-                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details',
+                  path:
+                    '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details',
                   component: './monitoring/exceptionrecordNew/RegionDetails',
                 },
 
@@ -1570,7 +1587,8 @@ export default {
                 },
                 {
                   //缺失数据报警 二级页面
-                  path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond',
+                  path:
+                    '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond',
                   component: './monitoring/missingData/missDataSecond',
                 },
                 {
@@ -1583,7 +1601,7 @@ export default {
                   path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air',
                   component: './monitoring/missingData/cityLevel/index',
                 },
-              ]
+              ],
             },
 
             {
@@ -1693,7 +1711,8 @@ export default {
                   // component: './monitoring/mapview',
                   component: './newHome/ElectronicMap',
                 },
-                { //视频监控
+                {
+                  //视频监控
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
                   component: `${
@@ -1702,7 +1721,8 @@ export default {
                       : './monitoring/videopreview/ysyvideo/index'
                   }`,
                 },
-                { //视频监控（新）
+                {
+                  //视频监控（新）
                   name: 'videopreviewNew',
                   path: '/monitoring/videopreviewNew',
                   component: './Video/videoView',
@@ -2777,6 +2797,12 @@ export default {
                       path: '/DataAnalyticalWarningModel/Warning/PointParams',
                       component: './DataAnalyticalWarningModel/Warning/PointParams',
                     },
+                    // {
+                    //   // 排口参数配置
+                    //   name: 'Test',
+                    //   path: '/DataAnalyticalWarningModel/Warning/Test',
+                    //   component: './DataAnalyticalWarningModel/Warning/Test',
+                    // },
                   ],
                 },
                 // 模型管理

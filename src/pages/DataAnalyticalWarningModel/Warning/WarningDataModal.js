@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-14 10:38:09
+ * @Last Modified time: 2023-07-20 16:46:01
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -39,6 +39,7 @@ const WarningData = props => {
     tableLoading,
     exportLoading,
     PointName,
+    wrapClassName,
   } = props;
   const [columns, setColumns] = useState([]);
   const [selectedNames, setSelectedNames] = useState([]);
@@ -492,7 +493,7 @@ const WarningData = props => {
       title={`报警关联数据（${PointName}）`}
       destroyOnClose
       visible={visible}
-      wrapClassName="spreadOverModal"
+      wrapClassName={wrapClassName}
       footer={false}
       onCancel={() => onCancel()}
       bodyStyle={{ paddingTop: 6 }}

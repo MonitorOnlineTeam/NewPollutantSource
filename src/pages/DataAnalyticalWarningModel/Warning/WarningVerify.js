@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-19 16:55:21
+ * @Last Modified time: 2023-07-20 16:42:59
  * @Description：报警核实详情
  */
 
@@ -185,6 +185,7 @@ const WarningVerify = props => {
     }
   };
 
+  const isShowBack = location.pathname.indexOf('autoLogin') <= -1;
   return (
     <BreadcrumbWrapper titles=" / 报警核实">
       <div className={styles.WarningVerifyWrapper}>
@@ -193,10 +194,14 @@ const WarningVerify = props => {
           bodyStyle={{ paddingTop: 16 }}
           loading={warningInfoLoading}
           extra={
-            <Button onClick={() => router.goBack()}>
-              <RollbackOutlined />
-              返回上级
-            </Button>
+            isShowBack ? (
+              <Button onClick={() => router.goBack()}>
+                <RollbackOutlined />
+                返回上级
+              </Button>
+            ) : (
+              ''
+            )
           }
         >
           <Descriptions column={4}>
@@ -240,7 +245,8 @@ const WarningVerify = props => {
                     );
                   })}
 
-                  {warningInfo.WarningTypeCode === 'c0af25fb-220b-45c6-a3de-f6c8142de8f1' ||
+                  {// 使用其它排放口烟气代替本排放口烟气进行监测
+                  warningInfo.WarningTypeCode === 'c0af25fb-220b-45c6-a3de-f6c8142de8f1' ||
                   // 同一现场借用其他合格监测设备数据
                   warningInfo.WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
                   // 引用错误、虚假的原始信号值
@@ -333,6 +339,7 @@ const WarningVerify = props => {
             DGIMN={warningInfo.Dgimn}
             visible={dataModalVisible}
             date={warningDataDate}
+            wrapClassName={isShowBack ? 'spreadOverModal' : 'fullScreenModal'}
             onCancel={() => {
               setDataModalVisible(false);
             }}

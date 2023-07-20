@@ -2,14 +2,7 @@
 import router from 'umi/router';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
-import {
-  systemLogin,
-  getFakeCaptcha,
-  getSystemLoginConfigInfo,
-  newLogin,
-  getToken,
-  PostMessageCode,
-} from './service';
+import { systemLogin, getFakeCaptcha, getSystemLoginConfigInfo, PostMessageCode } from './service';
 import { getPageQuery, setAuthority } from './utils/utils';
 const Model = {
   namespace: 'userLogin',
@@ -31,9 +24,12 @@ const Model = {
       });
       callback && callback(response.IsSuccess);
       if (response.IsSuccess) {
-        if (!(response.Datas&&response.Datas.Complexity)) {
+        if (!(response.Datas && response.Datas.Complexity)) {
           //判断密码复杂程度
-          yield put({ type: 'changeLoginStatus', payload: {status: 'error', type: 'account', message: '密码过于简单，请修改密码！'} });
+          yield put({
+            type: 'changeLoginStatus',
+            payload: { status: 'error', type: 'account', message: '密码过于简单，请修改密码！' },
+          });
           setTimeout(() => {
             router.push('/user/changePassword');
           }, 1500);
@@ -71,17 +67,17 @@ const Model = {
           defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
         }
         const meunArr = [];
-        const meunData = (data) => {
-          if (data?.length>0) {
+        const meunData = data => {
+          if (data?.length > 0) {
             data.map(item => {
-              meunArr.push(item.path)
-              meunData(item.children)
-            })
+              meunArr.push(item.path);
+              meunData(item.children);
+            });
           }
-          return meunArr
-        }
-        const meunList = meunData(response.Datas.MenuDatas)
-        sessionStorage.setItem('menuDatas',meunList?.length>0? JSON.stringify(meunList) : '')
+          return meunArr;
+        };
+        const meunList = meunData(response.Datas.MenuDatas);
+        sessionStorage.setItem('menuDatas', meunList?.length > 0 ? JSON.stringify(meunList) : '');
         delete response.Datas.MenuDatas;
         delete response.Datas.Ticket;
         delete response.Datas.DepIds;
@@ -97,25 +93,7 @@ const Model = {
           router.push('/newestHome');
           return;
         }
-        router.push(defaultNavigateUrl);
-      }
-    },
-
-    // 后台新框架登录
-    *newLogin({ payload }, { call, put }) {
-      const response = yield call(newLogin, {
-        LoginFlag: 'true',
-        MenuId: '',
-        RememberMe: true,
-        UserAccount: payload.userName,
-        UserPwd: payload.password,
-      });
-      if (response.IsSuccess) {
-        // 后台新框架获取token
-        yield call(getToken, {
-          username: payload.userName,
-          password: payload.password,
-        });
+        if (!payload.butRedirct) router.push(defaultNavigateUrl);
       }
     },
 
@@ -132,12 +110,12 @@ const Model = {
     *getCaptcha({ payload }, { call }) {
       yield call(getFakeCaptcha, payload);
     },
-    *postMessageCode({ payload,callback }, { call, put }) {
-      const response = yield call(PostMessageCode,payload);
+    *postMessageCode({ payload, callback }, { call, put }) {
+      const response = yield call(PostMessageCode, payload);
 
       if (response.IsSuccess) {
         message.success('发送成功');
-      }else{
+      } else {
         message.error(response.Message);
       }
     },

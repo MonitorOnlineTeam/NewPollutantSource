@@ -77,7 +77,7 @@ class Login extends Component {
       });
       // 后台新框架登录
       dispatch({
-        type: 'userLogin/newLogin',
+        type: 'login/newLogin',
         payload: { ...values, IsAgree: isAgree, type },
         callback: isSuccess => {},
       });

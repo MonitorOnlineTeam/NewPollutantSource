@@ -327,6 +327,17 @@ const ModelChart = props => {
 
     // 显示红点
     if (OutDefaultTimes && OutDefaultTimes.length) {
+      abnormalObj.seriesObj.itemStyle = {
+        color: function(params) {
+          // console.log('params', params);
+          let _color = color;
+          if (OutDefaultTimes.includes(date[params.dataIndex])) {
+            _color = '#ff0000';
+          }
+          return _color;
+        },
+      };
+
       let markPointData = OutDefaultTimes.map(item => {
         let valueIndex = date.findIndex(itm => itm === item);
         return {

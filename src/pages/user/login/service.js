@@ -30,25 +30,7 @@ export async function systemLogin(params) {
   return result;
 }
 
-export async function newLogin(body) {
-  const result = await post('/newApi/rest/PollutantSourceApi/LoginApi/Login', body);
-  return result;
-}
 
-export async function getToken(params) {
-  const urlencoded = encodeURI(
-    `client_id=WryWebClient&client_secret=Web_P@ssw0rd_!@#$%&grant_type=password&username=${params.username}&password=${params.password}`,
-  );
-  const result = await post('/newApi/rest/PollutantSourceOAuth/connect/token', urlencoded, {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' },
-  });
-  if (result) {
-    Cookie.set('newToken', result.access_token);
-  } else {
-    Cookie.set('newToken', '');
-  }
-  return result;
-}
 //手机验证
 export async function PostMessageCode(body) {
   const result = await post('/api/rest/PollutantSourceApi/LoginApi/PostMessageCode', body,{credentials:'include'});

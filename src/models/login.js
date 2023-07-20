@@ -1,10 +1,6 @@
 import { parse, stringify } from 'qs';
 import { routerRedux } from 'dva/router';
-import {
-
-  getSystemLoginConfigInfo,
-  IfSpecial,
-} from '@/services/login';
+import { getSystemLoginConfigInfo, IfSpecial, newLogin, getToken } from '@/services/login';
 export function getPageQuery() {
   return parse(window.location.href.split('?')[1]);
 }
@@ -16,6 +12,25 @@ const LoginModel = {
     appFlag: '',
   },
   effects: {
+    // 后台新框架登录
+    *newLogin({ payload, callback }, { call, put }) {
+      debugger;
+      const response = yield call(newLogin, {
+        LoginFlag: 'true',
+        MenuId: '',
+        RememberMe: true,
+        UserAccount: payload.userName,
+        UserPwd: payload.password,
+      });
+      if (response.IsSuccess) {
+        // 后台新框架获取token
+        yield call(getToken, {
+          username: payload.userName,
+          password: payload.password,
+          callback: callback,
+        });
+      }
+    },
     *logout(_, { put }) {
       const { redirect } = getPageQuery(); // redirect
       if (window.location.pathname !== '/user/login' && !redirect) {
