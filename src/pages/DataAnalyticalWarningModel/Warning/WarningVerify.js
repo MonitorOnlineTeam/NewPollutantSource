@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-20 16:42:59
+ * @Last Modified time: 2023-07-21 10:21:23
  * @Description：报警核实详情
  */
 
@@ -237,11 +237,20 @@ const WarningVerify = props => {
               {modelChartDatas.length ? (
                 <Row className={styles.chartWrapper}>
                   {// 线性系数图表
-                  linearDatas.map(item => {
+                  linearDatas.map((item, index) => {
                     return (
-                      <Col span={12}>
-                        <ModelChartLinear chartData={item} />
-                      </Col>
+                      <>
+                        <Col span={12}>
+                          <ModelChartLinear chartData={item} />
+                        </Col>
+                        <Col span={12}>
+                          {/* 图例多选 */}
+                          <ModelChartMultiple
+                            chartData={modelChartDatas[index]}
+                            WarningTypeCode={warningInfo.WarningTypeCode}
+                          />
+                        </Col>
+                      </>
                     );
                   })}
 
@@ -251,7 +260,8 @@ const WarningVerify = props => {
                   warningInfo.WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
                   // 引用错误、虚假的原始信号值
                   warningInfo.WarningTypeCode === 'f021147d-e7c6-4c1d-9634-1d814ff9880a'
-                    ? modelChartDatas.map((item, index) => {
+                    ? !linearDatas.length &&
+                      modelChartDatas.map((item, index) => {
                         return (
                           <Col span={12}>
                             {/* 图例多选 */}
