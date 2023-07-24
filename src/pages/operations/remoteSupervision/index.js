@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined, IssuesCloseOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined, IssuesCloseOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -558,12 +558,12 @@ const Index = (props) => {
         })
        
       })
-      dgimnEchoDataFun(data.DGIMN, data)
+      dgimnEchoDataFun(data.DGIMN, data,'编辑')
 
     })
   }
 
-  const dgimnEchoDataFun = (mn, data) => { //通过监测点获取回显数据
+  const dgimnEchoDataFun = (mn, data,title) => { //通过监测点获取回显数据
 
     let analyzerUploadList = {}, analyzerUploadFilesListObj = {};
     let dasUploadList = {}, dasUploadFilesListObj = {};
@@ -580,13 +580,13 @@ const Index = (props) => {
             if (val.Special == 1) { //有显示屏
               echoForamt(code, val,item)
               setIsDisPlayCheck1(true)
-              isDisplayChange({ target: { checked: true } }, 'isDisplay1')
-              onManualChange(val.RangeStatus && [val.RangeStatus], item, `${code}`, 1)
+              isDisplayChange({ target: { checked: true } }, 'isDisplay1','firstDefault')
+              onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1)
             }
             if (val.Special == 2) { //无显示屏
               echoForamt(`${code}a`, val,item)
-              isDisplayChange({ target: { checked: true } }, 'isDisplay2')
-              onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}a` }, `${code}RangCheck`, 1)
+              isDisplayChange({ target: { checked: true } }, 'isDisplay2','firstDefault')
+              onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}a` }, `${code}aRangCheck`, 1)
 
             }
           }
@@ -594,11 +594,11 @@ const Index = (props) => {
 
             if (val.CouType == 1) { //原始浓度
               echoForamt(`${code}c`, val,item)
-              onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}c` }, `${code}RangCheck2`, 2)
+              onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}c` }, `${code}cRangCheck2`, 2)
             }
             if (val.CouType == 2) { //标杆浓度
               echoForamt(`${code}d`, val,item)
-              onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}d` }, `${code}RangCheck2`, 2)
+              onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}d` }, `${code}dRangCheck2`, 2)
             }
 
           }
@@ -617,12 +617,12 @@ const Index = (props) => {
 
           if (val.Special == 1) { //差压法
             echoForamt(code, val,item)
-            isDisplayChange2({ target: { checked: true } }, 'isDisplay3')
+            isDisplayChange2({ target: { checked: true } }, 'isDisplay3','firstDefault')
             onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1)
           } else if (val.Special == 2) { //直测流速法
             echoForamt(`${code}b`, val,item)
-            isDisplayChange2({ target: { checked: true } }, 'isDisplay4')
-            onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}b` }, `${code}RangCheck`, 1)
+            isDisplayChange2({ target: { checked: true } }, 'isDisplay4','firstDefault')
+            onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}b` }, `${code}bRangCheck`, 1)
 
           }
 
@@ -638,7 +638,6 @@ const Index = (props) => {
         const enchFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => { //附件回显
        
           if (code == '411' && item.DataList && !item.DataList.Special) { return }
-
           let parFileList = []; 
           uploadList?.length && uploadList.map(uploadItem => {
             if (!uploadItem.IsDelete) {
@@ -653,12 +652,12 @@ const Index = (props) => {
           uploadListPar[`${code}${filePar}`] = parFileList;
           uploadFilesListObj[`${code}${filePar}`] = uploadList?.[0]?.FileUuid ? uploadList[0].FileUuid : cuid(); //添加过的照片 再次编辑时
         }
-        enchFileList(item.AnalyzerFileList, analyzerUploadList, analyzerUploadFilesListObj, 'AnalyzerFilePar') //分析仪量程照片	
-        enchFileList(item.DASFileList, dasUploadList, dasUploadFilesListObj, 'DasFilePar') //DAS量程照片	
-        enchFileList(item.RangeFileList, rangeUploadList, rangeUploadFilesListObj, 'RangeFilePar') //数采仪量程照片	
+        const pars  = item.PollutantName == '颗粒物'&&val.Special == 2 ? 'a':  item.PollutantName === '流速'&&val.Special == 2 ? 'b'  : ''
+        enchFileList(item.AnalyzerFileList, analyzerUploadList, analyzerUploadFilesListObj,`${pars}AnalyzerFilePar`) //分析仪量程照片	
+        enchFileList(item.DASFileList, dasUploadList, dasUploadFilesListObj, `${pars}DasFilePar`) //DAS量程照片	
+        enchFileList(item.RangeFileList, rangeUploadList, rangeUploadFilesListObj, `${pars}RangeFilePar`) //数采仪量程照片	
 
       })
-      console.log(analyzerUploadList,analyzerUploadFilesListObj)
       setAnalyzerFileList({ ...analyzerUploadList })
       setAnalyzerFileCuidList({ ...analyzerUploadFilesListObj })
 
@@ -688,10 +687,19 @@ const Index = (props) => {
       setEchoLoading(false)
 
 
-    })
+    },title)
   }
+  const filesCuidObjFun = (data, filePar, callFun) => { //照片默认展示
+    let filesCuidObj = {}, filesListObj = {}; //附件 cuid
 
-  const getPointConsistencyParamFun = (mn, callback) => {// 添加或编辑参数列表
+    data.map((item, index) => {
+      filesCuidObj[`${item.par}${filePar}`] = cuid();
+      filesListObj[`${item.par}${filePar}`] = [];
+    })
+    callFun && callFun(filesCuidObj, filesListObj)
+  
+}
+  const getPointConsistencyParamFun = (mn, callback,title) => {// 添加或编辑参数列表
     props.getPointConsistencyParam({ DGIMN: mn }, (pollutantList, addRealTimeList, paramList, operationName) => {
       // resetData(true)//防止提交完之后 切换tab栏 提交下一个 数据清空的情况
       commonForm.setFieldsValue({ OperationUserID: operationName })
@@ -706,21 +714,13 @@ const Index = (props) => {
       // setFilesCuidList(filesCuidObj)
       // setFilesList3(filesListObj)
       // }
-      const filesCuidObjFun = (data, filePar, callFun) => { //照片默认展示
 
-          let filesCuidObj = {}, filesListObj = {}; //附件 cuid
-          data.map((item, index) => {
-            filesCuidObj[`${item.par}${filePar}`] = cuid();
-            filesListObj[`${item.par}${filePar}`] = [];
-          })
-          callFun && callFun(filesCuidObj, filesListObj)
-        
-      }
       if (title === '添加') {
         if (pollutantList?.[0]) {
-          filesCuidObjFun(pollutantList, 'AnalyzerFilePar', (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
-          filesCuidObjFun(pollutantList, 'DasFilePar', (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
-          filesCuidObjFun(pollutantList, 'RangeFilePar', (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
+          const pars = isDisPlayCheck2?'a':isDisPlayCheck4? 'b' : ''
+          filesCuidObjFun(pollutantList, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
+          filesCuidObjFun(pollutantList, `${pars}DasFilePar`, (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
+          filesCuidObjFun(pollutantList, `${pars}RangeFilePar`, (cuidObj, listObj) => { setRangeFileCuidList(cuidObj); setRangeFileList(listObj) })
         }
         if (paramList?.[0]) {
           filesCuidObjFun(paramList, 'SettingFilePar', (cuidObj, listObj) => { setSettingFileCuidList(cuidObj); setSettingFileList(listObj) })
@@ -816,9 +816,8 @@ const Index = (props) => {
         Commitment:commonValues.Commitment ? 1 :  undefined,
       }
       if (tabType == 1) { //数据一致性核查表
-
+          
         type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
-
         form2.validateFields().then((values) => {
           const dataList1 = addDataConsistencyData.map(item => {
             return {
@@ -1283,21 +1282,25 @@ const Index = (props) => {
       }
     }()
   };
+  const [selectManualVal,setSelectManualVal] = useState({})
   const [manualOptions, setManualOptions] = useState([
     { label: '是', value: 1 },
     { label: '否', value: 2 },
     { label: '不适用', value: 3 },
   ])
-  const onManualChange = (val, row, name, type) => { //手工修正结果
-    if (!val) { return }
+  
 
-    const ele = type == 1 ? document.getElementById(`advanced_search_${name}`) : type == 2 ? document.getElementById(`advanced_search_${name}`) : document.getElementById(`advanced_search_${name}`);
+  const onManualChange = (val, row, name, type) => { //手工修正结果
+
+    if (!val) { return }
+     
+    const ele = document.getElementById(`advanced_search_${name}`)
     if (!ele) { return }
     for (var i = 0; i < ele.childNodes.length; i++) {
       if (val.toString() != i + 1) {
         ele.childNodes && ele.childNodes[i] && ele.childNodes[i].getElementsByTagName('input')[0].setAttribute("disabled", true)
       }
-      if (!val[0]) {
+      if (!val[0]) { //点击取消复选框
         ele.childNodes && ele.childNodes[i] && ele.childNodes[i].getElementsByTagName('input')[0].removeAttribute("disabled")
       }
     }
@@ -1509,45 +1512,62 @@ const Index = (props) => {
   //颗粒物 有无显示屏
   const [isDisPlayCheck1, setIsDisPlayCheck1] = useState(false)
   const [isDisPlayCheck2, setIsDisPlayCheck2] = useState(false)
-  const isDisplayChange = (e, name) => {
-    const displayEle1 = document.getElementById(`advanced_search_isDisplay1`);
-    const displayEle2 = document.getElementById(`advanced_search_isDisplay2`);
+  const isDisplayChange = (e, name,firstDefault) => {
+    // const displayEle1 = document.getElementById(`advanced_search_isDisplay1`);
+    // const displayEle2 = document.getElementById(`advanced_search_isDisplay2`);
     if (name === 'isDisplay1') {
-      setIsDisPlayCheck1(e.target.checked || true)
-      displayEle2 && displayEle2.setAttribute("disabled", true)
+      setIsDisPlayCheck1(e.target.checked)
+      setIsDisPlayCheck2(false)
+      // displayEle2 && displayEle2.setAttribute("disabled", true)
     }
     if (name === 'isDisplay2') {
       setIsDisPlayCheck2(e.target.checked)
-      displayEle1 && displayEle1.setAttribute("disabled", true)
+      setIsDisPlayCheck1(false)
+      // displayEle1 && displayEle1.setAttribute("disabled", true)
     }
-    if (!e.target.checked) { //取消选中状态
-      setIsDisPlayCheck1(e.target.checked)
-      setIsDisPlayCheck2(e.target.checked)
-      displayEle1 && displayEle1.removeAttribute("disabled")
-      displayEle2 && displayEle2.removeAttribute("disabled")
+    
+    if(!firstDefault && addDataConsistencyData&&addDataConsistencyData[0]){
+    const pars = name === 'isDisplay2'?'a': ''
+    filesCuidObjFun(addDataConsistencyData, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
+    filesCuidObjFun(addDataConsistencyData, `${pars}DasFilePar`, (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
+    filesCuidObjFun(addDataConsistencyData, `${pars}RangeFilePar`, (cuidObj, listObj) => { setRangeFileCuidList(cuidObj); setRangeFileList(listObj) })
     }
+    // if (!e.target.checked) { //取消选中状态
+    //   setIsDisPlayCheck1(e.target.checked)
+    //   setIsDisPlayCheck2(e.target.checked)
+    //   displayEle1 && displayEle1.removeAttribute("disabled")
+    //   displayEle2 && displayEle2.removeAttribute("disabled")
+    // }
   }
 
   //流速 
   const [isDisPlayCheck3, setIsDisPlayCheck3] = useState(false)
   const [isDisPlayCheck4, setIsDisPlayCheck4] = useState(false)
-  const isDisplayChange2 = (e, name) => {
-    const displayEle3 = document.getElementById(`advanced_search_isDisplay3`);
-    const displayEle4 = document.getElementById(`advanced_search_isDisplay4`);
+  const isDisplayChange2 = (e, name,firstDefault) => {
+    // const displayEle3 = document.getElementById(`advanced_search_isDisplay3`);
+    // const displayEle4 = document.getElementById(`advanced_search_isDisplay4`);
     if (name === 'isDisplay3') {
       setIsDisPlayCheck3(e.target.checked)
-      displayEle4 && displayEle4.setAttribute("disabled", true)
+      setIsDisPlayCheck4(false)
+      // displayEle4 && displayEle4.setAttribute("disabled", true)
     }
     if (name === 'isDisplay4') {
       setIsDisPlayCheck4(e.target.checked)
-      displayEle3 && displayEle3.setAttribute("disabled", true)
+      setIsDisPlayCheck3(false)
+      // displayEle3 && displayEle3.setAttribute("disabled", true)
     }
-    if (!e.target.checked) { //取消选中状态
-      setIsDisPlayCheck3(e.target.checked)
-      setIsDisPlayCheck4(e.target.checked)
-      displayEle3.removeAttribute("disabled")
-      displayEle4.removeAttribute("disabled")
-    }
+    if(!firstDefault && addParconsistencyData&&addParconsistencyData[0]){
+      const pars = name === 'isDisplay4'?'b': ''
+      filesCuidObjFun(addParconsistencyData, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
+      filesCuidObjFun(addParconsistencyData, `${pars}DasFilePar`, (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
+      filesCuidObjFun(addParconsistencyData, `${pars}RangeFilePar`, (cuidObj, listObj) => { setRangeFileCuidList(cuidObj); setRangeFileList(listObj) })
+      }
+    // if (!e.target.checked) { //取消选中状态
+    //   setIsDisPlayCheck3(e.target.checked )
+    //   setIsDisPlayCheck4(e.target.checked)
+    //   displayEle3.removeAttribute("disabled")
+    //   displayEle4.removeAttribute("disabled")
+    // }
   }
 
   const unitFormat = (record) => {
@@ -1887,7 +1907,7 @@ const Index = (props) => {
             }
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
               <Form.Item name={[`${record.par}RangCheck`]}>
-                <Checkbox.Group disabled={disabledFlag} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck`, 1) }} />
+                <Checkbox.Group disabled={disabledFlag} options={manualOptions}  onChange={(val) => {onManualChange(val, record, `${record.par}RangCheck`, 1) }} />
               </Form.Item>
             </Row>
           }
@@ -2249,6 +2269,9 @@ const Index = (props) => {
       key: 'par',
       width: 125,
       render: (text, record, index) => {
+        if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
+          return '—'
+        }
         return <div>
           <Form.Item name={`${record.par}SettingFilePar`} >
             <a style={{ paddingRight: 8 }} onClick={() => { setFileType('settingFile'); setSettingFilePar(`${record.par}SettingFilePar`); setFileVisible(true); }}>{settingFileList[`${record.par}SettingFilePar`] && settingFileList[`${record.par}SettingFilePar`][0] ? '查看附件' : '上传附件'}</a>
@@ -2279,6 +2302,9 @@ const Index = (props) => {
       key: 'par',
       width: 125,
       render: (text, record, index) => {
+        if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
+          return '—'
+        }
         return <div>
           <Form.Item name={`${record.par}InstrumentFilePar`} >
             <a style={{ paddingRight: 8 }} onClick={() => { setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>

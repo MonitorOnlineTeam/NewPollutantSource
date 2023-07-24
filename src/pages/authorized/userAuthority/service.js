@@ -263,6 +263,7 @@ export async function insertPointFilterByUser(params) {
       DGIMN: params.DGIMN,
       Type: params.Type,
       RegionCode: params.RegionCode,
+      state:params.state,
     };
     const result = post(
       '/api/rest/PollutantSourceApi/AuthorApi/InsertPointFilterByUser',

@@ -58,25 +58,25 @@ import styles from './style.less';
 const { confirm } = Modal;
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
-@connect(({ loading, autoForm,newuserinfo,usertree }) => ({
-  loading: newuserinfo.loading,
+@connect(({ loading, autoForm,userAuthority,usertree }) => ({
+  loading: userAuthority.loading,
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
   tableInfo: autoForm.tableInfo,
   searchForm: autoForm.searchForm,
   routerConfig: autoForm.routerConfig,
-  tableDatas:newuserinfo.tableDatas,
+  tableDatas:userAuthority.tableDatas,
   depInfoList:usertree.DepartTree,
   rolesList:usertree.RolesTree,
-  userPar:newuserinfo.userPar,
+  userPar:userAuthority.userPar,
   RegionInfoTree: autoForm.regionList,
-  GetRegionInfoByTree: loading.effects['newuserinfo/getregioninfobytree'],
-  CheckPointLoading: loading.effects['newuserinfo/getpointbydepid'],
-  getentandpointLoading: loading.effects['newuserinfo/getentandpoint'],
-  EntAndPoint: newuserinfo.EntAndPoint,
-  RegionByDepID: newuserinfo.RegionByDepID,
-  CheckPoint:newuserinfo.CheckPoint,
+  GetRegionInfoByTree: loading.effects['userAuthority/getregioninfobytree'],
+  CheckPointLoading: loading.effects['userAuthority/getpointbydepid'],
+  getentandpointLoading: loading.effects['userAuthority/getentandpoint'],
+  EntAndPoint: userAuthority.EntAndPoint,
+  RegionByDepID: userAuthority.RegionByDepID,
+  CheckPoint:userAuthority.CheckPoint,
 
 
 }))
@@ -286,7 +286,7 @@ export default class UserAuthority extends Component {
     }
     const keys = this.state.selectedRow.ID;
     this.props.dispatch({
-      type: 'newuserinfo/getregioninfobytree',
+      type: 'userAuthority/getregioninfobytree',
       payload: {},
     });
     this.setState({
@@ -297,14 +297,14 @@ export default class UserAuthority extends Component {
       entPointName:'',
     });
     this.props.dispatch({
-      type: 'newuserinfo/getentandpoint',
+      type: 'userAuthority/getentandpoint',
       payload: {
         PollutantType: 2,
         RegionCode: '',
       },
     });
     this.props.dispatch({
-      type: 'newuserinfo/getpointbydepid',
+      type: 'userAuthority/getpointbydepid',
       payload: {
         UserGroup_ID: keys.toString(),
         PollutantType: 2,
@@ -346,7 +346,7 @@ export default class UserAuthority extends Component {
 
   confirm(userid) {
     this.props.dispatch({
-      type: 'newuserinfo/deluserandroledep',
+      type: 'userAuthority/deluserandroledep',
       payload: {
         User_ID: userid,
       },
@@ -371,7 +371,7 @@ export default class UserAuthority extends Component {
         let str = [];
         selectedRows.map(item => str.push(item['ID']));
         dispatch({
-          type: 'newuserinfo/resetpwd',
+          type: 'userAuthority/resetpwd',
           payload: {
             User_ID: str,
           },
@@ -392,7 +392,7 @@ export default class UserAuthority extends Component {
   restClick=()=>{
     const {dispatch,userPar } = this.props;
     dispatch({
-      type: 'newuserinfo/updateState',
+      type: 'userAuthority/updateState',
       payload: {userPar:{ roleListID:'', groupListID:'', userName:'',	userAccount:''}},
   })
   }
@@ -400,14 +400,14 @@ export default class UserAuthority extends Component {
 
     const {dispatch,userPar } = this.props;
     dispatch({
-      type: 'newuserinfo/updateState',
+      type: 'userAuthority/updateState',
       payload: {userPar:{...userPar,userAccount:e.target.value}},
    })
   }
   realNameChange=(e)=>{
     const {dispatch,userPar } = this.props;
     dispatch({
-      type: 'newuserinfo/updateState',
+      type: 'userAuthority/updateState',
       payload: {userPar:{...userPar,userName:e.target.value}},
    })
   }
@@ -415,7 +415,7 @@ export default class UserAuthority extends Component {
     onDepartChange = value => {
       const {dispatch,userPar } = this.props;
       dispatch({
-        type: 'newuserinfo/updateState',
+        type: 'userAuthority/updateState',
         payload: {userPar:{...userPar,groupListID:value&&value!=='0'?value.split():''}},
      })
     }
@@ -423,14 +423,14 @@ export default class UserAuthority extends Component {
  onRolesChange = value => {
   const {dispatch,userPar } = this.props;
   dispatch({
-    type: 'newuserinfo/updateState',
+    type: 'userAuthority/updateState',
     payload: {userPar:{...userPar,roleListID:value&&value!=='0'?value.split():''}},
      })
  }
   //获取角色列表
   getUserList=(params)=>{
     this.props.dispatch({
-      type: 'newuserinfo/getUserList',
+      type: 'userAuthority/getUserList',
       payload: params? params : { roleListID:'', groupListID:'', userName:'',	userAccount:''}
     });
   }
@@ -438,7 +438,7 @@ export default class UserAuthority extends Component {
  onOperationChange = e =>{
   const {dispatch,userPar } = this.props;
   dispatch({
-    type: 'newuserinfo/updateState',
+    type: 'userAuthority/updateState',
     payload: {userPar:{...userPar,companyName:e.target.value? e.target.value:''}},
      })
  }
@@ -473,7 +473,7 @@ export default class UserAuthority extends Component {
   exports = ()=>{
     const { dispatch, userPar } = this.props;
     dispatch({
-      type: 'newuserinfo/exportUserList',
+      type: 'userAuthority/exportUserList',
       payload: {...userPar},
     })
    }
@@ -506,7 +506,7 @@ export default class UserAuthority extends Component {
     const keys = this.state.selectedRow.ID;
     this.setState({ pollutantType: e.target.value });
     this.props.dispatch({
-      type: 'newuserinfo/getpointbydepid',
+      type: 'userAuthority/getpointbydepid',
       payload: {
         UserGroup_ID: keys.toString(),
         PollutantType: e.target.value,
@@ -514,7 +514,7 @@ export default class UserAuthority extends Component {
       },
     });
     this.props.dispatch({
-      type: 'newuserinfo/getentandpoint',
+      type: 'userAuthority/getentandpoint',
       payload: {
         RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
         PollutantType: e.target.value,
@@ -530,14 +530,14 @@ export default class UserAuthority extends Component {
         DataTreeValue: [],
       });
       this.props.dispatch({
-        type: 'newuserinfo/getentandpoint',
+        type: 'userAuthority/getentandpoint',
         payload: {
           RegionCode: '',
           PollutantType: this.state.pollutantType,
         },
       });
       this.props.dispatch({
-        type: 'newuserinfo/getpointbydepid',
+        type: 'userAuthority/getpointbydepid',
         payload: {
           UserGroup_ID: keys.toString(),
           PollutantType: this.state.pollutantType,
@@ -549,14 +549,14 @@ export default class UserAuthority extends Component {
         DataTreeValue: value,
       });
       this.props.dispatch({
-        type: 'newuserinfo/getentandpoint',
+        type: 'userAuthority/getentandpoint',
         payload: {
           RegionCode: value.toString(),
           PollutantType: this.state.pollutantType,
         },
       });
       this.props.dispatch({
-        type: 'newuserinfo/getpointbydepid',
+        type: 'userAuthority/getpointbydepid',
         payload: {
           UserGroup_ID: keys.toString(),
           PollutantType: this.state.pollutantType,
@@ -569,7 +569,7 @@ export default class UserAuthority extends Component {
     const dataTreeValue = this.state.DataTreeValue
     const { pollutantType } = this.state; 
     this.props.dispatch({
-      type: 'newuserinfo/getentandpoint',
+      type: 'userAuthority/getentandpoint',
       payload: {
         RegionCode: dataTreeValue&&dataTreeValue.toString(),
         PollutantType: pollutantType,
@@ -578,7 +578,7 @@ export default class UserAuthority extends Component {
     });
     const keys = this.state.selectedRow.ID;
     this.props.dispatch({
-      type: 'newuserinfo/getpointbydepid',
+      type: 'userAuthority/getpointbydepid',
       payload: {
         UserGroup_ID: keys&&keys.toString(),
         PollutantType: pollutantType,
@@ -593,7 +593,7 @@ export default class UserAuthority extends Component {
     // return;
     this.setState({okLoading:true,})
     this.props.dispatch({
-      type: 'newuserinfo/insertPointFilterByUser',
+      type: 'userAuthority/insertPointFilterByUser',
       payload: {
         DGIMN: this.state.checkedKeys,
         User_ID: this.state.selectedRow.ID,

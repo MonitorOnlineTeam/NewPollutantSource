@@ -222,6 +222,23 @@ const Index = (props) => {
             }
           }
         },
+
+        {
+          title: '分析仪量程照片',
+          align: 'center',
+          dataIndex: 'AnalyzerFileList',
+          key: 'AnalyzerFileList',
+          width: 120,
+          render: (text, record, index) => {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
+              return '—'
+            }
+            const attachmentDataSource = getAttachmentDataSource(text);
+            return <div>
+             {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
+            </div>;
+          }
+        },
         {
           title: <Row align='middle' justify='center'> <Checkbox checked={dasRangStatus}></Checkbox><span style={{paddingLeft:5}}>DAS量程</span></Row>,
           align: 'center',
@@ -237,6 +254,22 @@ const Index = (props) => {
           }
         },
         {
+          title: 'DAS量程照片',
+          align: 'center',
+          dataIndex: 'DASFileList',
+          key: 'DASFileList',
+          width: 120,
+          render: (text, record, index) => {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
+              return '—'
+            }
+            const attachmentDataSource = getAttachmentDataSource(text);
+            return <div>
+             {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
+            </div>;
+          }
+        },
+        {
           title: <Row align='middle' justify='center'><Checkbox checked={dataRangStatus}  ></Checkbox><span style={{paddingLeft:5}}>数采仪量程</span></Row>,
           align: 'center',
           dataIndex: 'PollutantName',
@@ -249,6 +282,22 @@ const Index = (props) => {
               return record.DataList.DataMin||record.DataList.DataMin==0? `${record.DataList.DataMin}-${record.DataList.DataMax}（${record.DataList.DataUnit}）` : null;
 
             }
+          }
+        },
+        {
+          title: '数采仪量程照片',
+          align: 'center',
+          dataIndex: 'RangeFileList',
+          key: 'RangeFileList',
+          width: 120,
+          render: (text, record, index) => {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
+              return '—'
+            }
+            const attachmentDataSource = getAttachmentDataSource(text);
+            return <div>
+             {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
+            </div>;
           }
         },
         {
@@ -281,6 +330,21 @@ const Index = (props) => {
           }
         },
         {
+          title: '运维人员量程备注',
+          align: 'center',
+          dataIndex: 'PollutantName',
+          key: 'PollutantName',
+          width: 150,
+          render: (text, record) => {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
+              return '—'
+            }else{
+              return record.DataList.OperationRangeRemark
+            }
+            
+          }
+        },
+        {
           title: '备注',
           align: 'center',
           dataIndex: 'PollutantName',
@@ -295,30 +359,30 @@ const Index = (props) => {
             
           }
         },
-        {
-          title: '附件',
-          align: 'center',
-          dataIndex: 'PollutantName',
-          key: 'PollutantName',
-          width: 150,
-          render: (text, record, index) => {
-            const attachmentDataSource = getAttachmentDataSource(rangeUpload);
-            const obj = {
-              children: <div>
-                {rangeUpload&&rangeUpload[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
-              </div>,
-              props: {},
-            };
-            if (index === 0) {
-              obj.props.rowSpan = tableData1.length;
-            } else {
-              obj.props.rowSpan = 0;
-            }
+        // {
+        //   title: '附件',
+        //   align: 'center',
+        //   dataIndex: 'PollutantName',
+        //   key: 'PollutantName',
+        //   width: 150,
+        //   render: (text, record, index) => {
+        //     const attachmentDataSource = getAttachmentDataSource(rangeUpload);
+        //     const obj = {
+        //       children: <div>
+        //         {rangeUpload&&rangeUpload[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
+        //       </div>,
+        //       props: {},
+        //     };
+        //     if (index === 0) {
+        //       obj.props.rowSpan = tableData1.length;
+        //     } else {
+        //       obj.props.rowSpan = 0;
+        //     }
 
-            return obj;
+        //     return obj;
 
-          }
-        },
+        //   }
+        // },
       ]
     },
   ]
@@ -404,6 +468,30 @@ const Index = (props) => {
           }
         },
         {
+          title: '附件',
+          align: 'center',
+          dataIndex: 'par',
+          key: 'par',
+          width: 150,
+          render: (text, record, index) => {
+            const attachmentDataSource = getAttachmentDataSource(couUpload);
+            const obj = {
+              children: <div>
+                   {couUpload&&couUpload[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
+              </div>,
+              props: {},
+            };
+            if (index === 0) {
+              obj.props.rowSpan = tableData2.length;
+            } else {
+              obj.props.rowSpan = 0;
+            }
+
+            return obj;
+
+          }
+        },
+        {
           title: '数据一致性(自动判断)',
           align: 'center',
           dataIndex: 'PollutantName',
@@ -427,6 +515,16 @@ const Index = (props) => {
 
         },
         {
+          title: '运维人员核查备注',
+          align: 'center',
+          dataIndex: 'par',
+          key: 'par',
+          width: 180,
+          render: (text, record) => {
+              return record.DataList.OperationDataRemark
+          }
+        },
+        {
           title: '备注',
           align: 'center',
           dataIndex: 'PollutantName',
@@ -434,30 +532,6 @@ const Index = (props) => {
           width:150,
           render: (text, record) => {
               return record.DataList.CouRemrak
-          }
-        },
-        {
-          title: '附件',
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 150,
-          render: (text, record, index) => {
-            const attachmentDataSource = getAttachmentDataSource(couUpload);
-            const obj = {
-              children: <div>
-                   {couUpload&&couUpload[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
-              </div>,
-              props: {},
-            };
-            if (index === 0) {
-              obj.props.rowSpan = tableData2.length;
-            } else {
-              obj.props.rowSpan = 0;
-            }
-
-            return obj;
-
           }
         },
       ]
@@ -494,13 +568,54 @@ const Index = (props) => {
       }
     },
     {
-      title: '设定值',
+      title: '仪表设定值',
       align: 'center',
       dataIndex: 'SetValue',
       key: 'SetValue',
-      width: 70,
+      width: 100,
       render: (text, record, index) => {
          return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : text;       
+      }
+    },
+    {
+      title: '仪表设定值照片',
+      align: 'center',
+      dataIndex: 'SetFileList',
+      key: 'SetFileList',
+      width: 120,
+      render: (text, record, index) => {
+        if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+          return '—' 
+        }
+        const attachmentDataSource = getAttachmentDataSource(text);
+        return <div>
+         {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
+        </div>;
+      }
+    },
+    {
+      title: 'DAS设定值',
+      align: 'center',
+      dataIndex: 'InstrumentSetValue',
+      key: 'InstrumentSetValue',
+      render: (text, record, index) => {
+        return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : text;       
+     }
+    },
+    {
+      title: 'DAS设定值照片',
+      align: 'center',
+      dataIndex: 'InstrumentFileList',
+      key: 'InstrumentFileList',
+      width: 125,
+      render: (text, record, index) => {
+        if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+          return '—' 
+        }
+        const attachmentDataSource = getAttachmentDataSource(text);
+        return <div>
+         {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
+        </div>;
       }
     },
     {
@@ -512,6 +627,22 @@ const Index = (props) => {
       render: (text, record, index) => {
         return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : text;       
      }
+    },
+    {
+      title: '溯源值照片',
+      align: 'center',
+      dataIndex: 'TraceabilityFileList',
+      key: 'TraceabilityFileList',
+      width: 120,
+      render: (text, record, index) => {
+        if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+          return '—' 
+        }
+        const attachmentDataSource = getAttachmentDataSource(text);
+        return <div>
+         {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
+        </div>;
+      }
     },
     {
       title: '一致性(自动判断)',
@@ -538,27 +669,19 @@ const Index = (props) => {
       }
     },
     {
+      title: '运维人员核查备注',
+      align: 'center',
+      dataIndex: 'OperationReamrk',
+      key: 'OperationReamrk',
+      width: 180,
+    },
+    {
       title: '备注',
       align: 'center',
       dataIndex: 'Remark',
       key: 'Remark',
       width: 100,
       width: 150,
-    },
-    {
-      title: '附件',
-      align: 'center',
-      dataIndex: 'UploadList',
-      key: 'UploadList',
-      width: 120,
-      render: (text, record, index) => {
-        const attachmentDataSource = getAttachmentDataSource(text);
-
-        return <div>
-         {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
-        </div>;
-
-      }
     },
     {
       title: '判断依据',
@@ -644,7 +767,7 @@ const Index = (props) => {
                 columns={columns3}
                 dataSource={consistencyCheckDetail.consistentParametersCheckList}
                 pagination={false}
-                scroll={{ y: clientHeight - 480}}
+                scroll={{ y: clientHeight - 380}}
               />
             </TabPane>
           </Tabs>

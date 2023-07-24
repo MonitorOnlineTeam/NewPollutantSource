@@ -376,11 +376,15 @@ const Index = (props) => {
       align: 'center',
       fixed:'right',
       render: (text, record) => {
+        const flag =   !record.deleteFlag
+        const tipText = '没有操作权限，请联系管理员'
+        const placement= flag?  'left' :'top'
+        const disSty = { cursor: (flag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ')}
         return <span>
-          <Fragment><Tooltip title="编辑"> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-          <Fragment> <Tooltip title="删除">
-            <Popconfirm title="确定要删除此条信息吗？" style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
-              <a ><DelIcon /></a>
+          <Fragment><Tooltip placement={placement} title={flag? `${tipText}` : "编辑" }> <a  style={{...disSty}} onClick={() => {if(flag){return}; edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          <Fragment> <Tooltip  placement={placement}  title={flag? `${tipText}` : "删除" }>
+            <Popconfirm title="确定要删除此条信息吗？" disabled={flag} style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
+              <a style={{...disSty}}><DelIcon/></a>
             </Popconfirm>
           </Tooltip>
           </Fragment>
@@ -449,11 +453,6 @@ const Index = (props) => {
     setChoiceData(value)
   }
   const del = (record) => {
-
-    if(!record.deleteFlag){
-      message.warning('没有操作权限，请联系管理员')
-      return;
-   }
     props.deleteOperationPoint({ ID: record.ID }, () => {
       onFinish()
     })

@@ -719,13 +719,13 @@ const gasSyatemCancel = (record,type) =>{
   onFinish={() => {setPageIndex2(1); onFinish2(1,pageSize2,cemsVal) }}
   initialValues={{
     MonitoringType:266,
-    ManufacturerID: manufacturerList[0] && manufacturerList[0].ID,
+    // ManufacturerID: manufacturerList[0] && manufacturerList[0].ID,
   }}
 
 >
   <Row>
     <Form.Item style={{ marginRight: 8 }} name='ManufacturerID' >
-      <Select placeholder='请选择设备厂家' showSearch  filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 200 }}>
+      <Select placeholder='请选择设备厂家' showSearch  allowClear filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 200 }}>
         {
           manufacturerList[0] && manufacturerList.map(item => {
             return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
@@ -752,7 +752,7 @@ const gasSyatemCancel = (record,type) =>{
      </Button>
     </Form.Item>
   </Row>
-  <SdlTable scroll={{ y: 'calc(100vh - 500px)' }} style={{ width: 800 }} 
+  <SdlTable scroll={{ y: 'calc(100vh - 400px)' }} style={{ width: 800 }} 
             loading={props.loadingSystemModel} bordered dataSource={ systemModelList} columns={generatorCol}
             pagination={{
               total:systemModelListTotal,

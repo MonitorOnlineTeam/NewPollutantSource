@@ -21,7 +21,7 @@ add by jab
 modify by
 */
 export default Model.extend({
-    namespace: 'newuserinfo',
+    namespace: 'userAuthority',
     state: {
         editUser: null,
         requstresult: null,

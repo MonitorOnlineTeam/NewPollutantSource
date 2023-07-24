@@ -187,28 +187,27 @@ const Index = (props) => {
     },
   ];
   const restOperaList = (value) => {
-    setPointTargetKeys([]);
     if (value === rememTaskCategoryId) {
       setAddPointList(rememPointList); setAddAllPointList(rememPointList);
     } else {
       setAddPointList([]); setAddAllPointList([]);
     }
-    setOperaUserTargetKeys([]);
-    // setAddOperaUserList([]);setAddAllOperaUserList([]);
-    setOperaDeviceTargetKeys([]);
-    // setAddOperaDeviceList([]); setAddAllOperaDeviceList([]);
-    // setAddOperaPlanList([]); setAddAllOperaPlanList([]);
+    setAddOperaUserList([]);setAddAllOperaUserList([]);
+    setAddOperaDeviceList([]); setAddAllOperaDeviceList([]);
+    setAddOperaPlanList([]); setAddAllOperaPlanList([]);
+
+    setPointTargetKeys([]); setAddPointSearchVal('');
+    setOperaUserTargetKeys([]);  setAddOperaUserSearchVal('');
+    setOperaDeviceTargetKeys([]);   setAddDeviceSearchVal('');
+   
     setContractSearchVal('');
-    setAddPointSearchVal('');
-    setAddOperaUserSearchVal('');
-    setAddDeviceSearchVal('');
-    setAddPlanSearchVal('');
+    planform.resetFields();
   }
   const restData = () => {
     props.updateState({ taskId: undefined })
     restOperaList();
     basicInfoform.resetFields();
-    planform.resetFields();
+  
   }
   const taskDataFormat = (name, addData, type, isFirstLoad) => { //格式化添加运维项数据 type 1添加 2编辑 3详情
     if (type == 1) { //添加
@@ -485,7 +484,7 @@ const Index = (props) => {
         loading={props.contractTableLoading}
         bordered
         dataSource={contractTableData}
-        scroll={{ y: 'calc(100vh - 380px)' }}
+        scroll={{ y: 'calc(100vh - 400px)' }}
         columns={contractColumns}
         rowSelection={{
           type: 'radio',
@@ -1013,7 +1012,7 @@ const Index = (props) => {
         ID: '0',
       }}
       className={styles.fromModal}
-      onFinish={() => { basicInfoSave() }}
+      onFinish={() => { basicInfoSave(true) }}
     >
       <Row>
         <Col span={12}>
@@ -1153,7 +1152,7 @@ const Index = (props) => {
     </Form>
   }
   const [isSave,setIsSave] = useState(false)
-  const basicInfoSave = async () => {
+  const basicInfoSave = async (isSave) => {
     try {
       const values = await basicInfoform.validateFields();
       const location = values.location;
@@ -1171,7 +1170,7 @@ const Index = (props) => {
         }
       }, () => {
         setTaskEditVisible(false) 
-        setIsSave(true)
+        setIsSave(isSave)
         onFinish3(1)
       })
     } catch (errInfo) {
@@ -1431,7 +1430,7 @@ const Index = (props) => {
         wrapClassName='spreadOverModal'
         footer={[
           <Button onClick={() => { setTaskEditVisible(false) }}>取消</Button>,
-          <Button type="primary" loading={basicInfoTaskLoading} onClick={basicInfoSave}>保存</Button>,
+          <Button type="primary" loading={basicInfoTaskLoading} onClick={()=>{basicInfoSave(false)}}>保存</Button>,
           <Button type="primary" loading={taskSubmitLoading} onClick={taskOk}>提交</Button>
         ]}
       >
