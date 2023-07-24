@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-14 15:49:07
+ * @Last Modified time: 2023-07-24 10:07:18
  * @Description：报警记录
  */
 
@@ -57,6 +57,16 @@ const WarningRecord = props => {
 
   const getColumns = () => {
     return [
+      {
+        title: '编号',
+        dataIndex: 'index',
+        key: 'index',
+        width: 80,
+        ellipsis: true,
+        render: (text, record, index) => {
+          return (pageIndex - 1) * pageSize + index + 1;
+        },
+      },
       {
         title: '企业',
         dataIndex: 'EntNmae',

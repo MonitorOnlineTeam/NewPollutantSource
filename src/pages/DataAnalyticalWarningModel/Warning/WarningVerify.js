@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-21 10:21:23
+ * @Last Modified time: 2023-07-24 11:44:09
  * @Description：报警核实详情
  */
 
@@ -188,7 +188,10 @@ const WarningVerify = props => {
   const isShowBack = location.pathname.indexOf('autoLogin') <= -1;
   return (
     <BreadcrumbWrapper titles=" / 报警核实">
-      <div className={styles.WarningVerifyWrapper}>
+      <div
+        className={styles.WarningVerifyWrapper}
+        style={{ height: isShowBack ? '100%' : 'calc(100vh - 22px)' }}
+      >
         <Card
           title="报警详情"
           bodyStyle={{ paddingTop: 16 }}
