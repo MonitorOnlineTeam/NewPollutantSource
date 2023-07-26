@@ -19,13 +19,25 @@ class DetailsPage extends PureComponent {
   _SELF_ = {
     queryCondition: this.props.location && this.props.location.query && Object.keys(this.props.location.query.queryCondition).length != 0 && JSON.parse(this.props.location.query.queryCondition),
     columns: [
+      // {
+      //   title: '行政区',
+      //   dataIndex: 'RegionName',
+      //   key: 'RegionName',
+      //   render: (text, record) => {
+      //     return <span>{text}{record.CityName ? '/' + record.CityName : ''} </span>
+      //   }
+      // },
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        render: (text, record) => {
-          return <span>{text}{record.CityName ? '/' + record.CityName : ''} </span>
-        }
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
       },
       {
         title: '企业名称',

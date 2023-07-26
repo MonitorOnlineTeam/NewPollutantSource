@@ -667,14 +667,30 @@ class exceedDataAlarmModal extends PureComponent {
             {
                 const fixed = false
                 const columns = [
+                    // {
+                    //     title: "行政区",
+                    //     width: 100,
+                    //     align: 'center',
+                    //     fixed: fixed,
+                    //     dataIndex: 'regionName',
+                    //     key: 'regionName',
+                    // },
                     {
-                        title: "行政区",
+                        title: '省',
+                        dataIndex: 'ProvinceName',
+                        key: 'ProvinceName',
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'regionName',
-                        key: 'regionName',
-                    },
+                      },
+                      {
+                        title: '市',
+                        dataIndex: 'CityName',
+                        key: 'CityName',
+                        width: 100,
+                        align: 'center',
+                        fixed: fixed,
+                      },
                     {
                         title: "企业名称",
                         width: 150,
@@ -885,7 +901,23 @@ class exceedDataAlarmModal extends PureComponent {
                 key: 'dataType',
             },
         ]
-
+        this.state.regionValue&&columns.splice(0,1,{
+            title: '省',
+            dataIndex: 'ProvinceName',
+            key: 'ProvinceName',
+            align: 'center',
+            fixed: fixed,
+          },
+          {
+            title: '市',
+            dataIndex: 'CityName',
+            key: 'CityName',
+            align: 'center',
+            fixed: fixed,
+            render: (text, record) => {
+                return <a onClick={this.paneAdd.bind(this,text,record.ProvinceName == '全部合计'? this.state.regionValue : record.CityCode)}> {text} </a>
+            }
+          },)
         column.map(col=>{
             let addColumns ={
                 title: col.PollutantName,
@@ -900,7 +932,7 @@ class exceedDataAlarmModal extends PureComponent {
                         dataIndex: col.PollutantCode+'_alarmCount',
                         key: col.PollutantCode+'_alarmCount',
                         render: (text,record) => {
-                            return <a onClick={this.AlarmNumHandle.bind(this,record.regionCode,col.PollutantCode,record.regionName)}>{text}</a>
+                            return <a onClick={this.AlarmNumHandle.bind(this,record.ProvinceName == '全部合计'? this.state.regionValue : record.regionCode,col.PollutantCode,record.regionName)}>{text}</a>
                         }
                     },
                     {
@@ -911,7 +943,7 @@ class exceedDataAlarmModal extends PureComponent {
                         dataIndex: col.PollutantCode+'_respondedCount',
                         key: col.PollutantCode+'_respondedCount',
                         render: (text,record) => {
-                            return <a onClick={this.AlreadyAlarmNumHandle.bind(this,record.regionCode,col.PollutantCode,record.regionName)}>{text}</a>
+                            return <a onClick={this.AlreadyAlarmNumHandle.bind(this,record.ProvinceName == '全部合计'? this.state.regionValue : record.regionCode,col.PollutantCode,record.regionName)}>{text}</a>
                         }
                     },
                     {
@@ -922,7 +954,7 @@ class exceedDataAlarmModal extends PureComponent {
                         dataIndex: col.PollutantCode+'_noRespondedCount',
                         key: col.PollutantCode+'_noRespondedCount',
                         render: (text,record) => {
-                            return <a onClick={this.StayAlarmNumHandle.bind(this,record.regionCode,col.PollutantCode,record.regionName)}>{text}</a>
+                            return <a onClick={this.StayAlarmNumHandle.bind(this,record.ProvinceName == '全部合计'? this.state.regionValue : record.regionCode,col.PollutantCode,record.regionName)}>{text}</a>
                         }
                     },
                 ]
@@ -1145,14 +1177,30 @@ class exceedDataAlarmModal extends PureComponent {
         const {alarmVisible,alarmCancle} = this.props
         const fixed = false
         const columns2 = [
+            // {
+            //     title: "行政区",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'regionName',
+            //     key: 'regionName',
+            // },
             {
-                title: "行政区",
+                title: '省',
+                dataIndex: 'ProvinceName',
+                key: 'ProvinceName',
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'regionName',
-                key: 'regionName',
-            },
+              },
+              {
+                title: '市',
+                dataIndex: 'CityName',
+                key: 'CityName',
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+              },
             {
                 title: "企业名称",
                 width: 100,
@@ -1282,14 +1330,30 @@ class exceedDataAlarmModal extends PureComponent {
             },
         ]
         const columns3 = [
+            // {
+            //     title: "行政区",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'regionName',
+            //     key: 'regionName',
+            // },
             {
-                title: "行政区",
+                title: '省',
+                dataIndex: 'ProvinceName',
+                key: 'ProvinceName',
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'regionName',
-                key: 'regionName',
-            },
+              },
+              {
+                title: '市',
+                dataIndex: 'CityName',
+                key: 'CityName',
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+              },
             {
                 title: "企业名称",
                 width: 100,
@@ -1419,14 +1483,30 @@ class exceedDataAlarmModal extends PureComponent {
             },
         ]
         const columns4 = [
+            // {
+            //     title: "行政区",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'regionName',
+            //     key: 'regionName',
+            // },
             {
-                title: "行政区",
+                title: '省',
+                dataIndex: 'ProvinceName',
+                key: 'ProvinceName',
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'regionName',
-                key: 'regionName',
-            },
+              },
+              {
+                title: '市',
+                dataIndex: 'CityName',
+                key: 'CityName',
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+              },
             {
                 title: "企业名称",
                 width: 100,
@@ -1548,14 +1628,30 @@ class exceedDataAlarmModal extends PureComponent {
             },
         ]
         const columns5 = [
+            // {
+            //     title: "行政区",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'regionName',
+            //     key: 'regionName',
+            // },
             {
-                title: "行政区",
+                title: '省',
+                dataIndex: 'ProvinceName',
+                key: 'ProvinceName',
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'regionName',
-                key: 'regionName',
-            },
+              },
+              {
+                title: '市',
+                dataIndex: 'CityName',
+                key: 'CityName',
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+              },
             {
                 title: "企业名称",
                 width: 100,

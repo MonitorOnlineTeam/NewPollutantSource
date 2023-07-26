@@ -69,42 +69,7 @@ export default class EntTransmissionEfficiency extends Component {
       status: '',
     };
 
-    this.columns = [
-      {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
-        align: 'center',
-        render: (text, record) => {
-          const { queryPar } = this.props;
-          if (this.props.level) {//二级页面
-            return <Link to={{
-              pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-              query: { regionCode: record.regionCode ? record.regionCode : queryPar.RegionCode , queryPar: JSON.stringify(queryPar) }
-            }} >
-              {text}
-            </Link>
-          } else {
-            return this.props.types === 'ent' ? //一级页面
-              <Link to={{
-                pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
-                query: { regionCode: record.regionCode, queryPar: JSON.stringify(queryPar) }
-              }} >
-                {text}
-              </Link> :
-
-              <Link to={{
-                pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
-                query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar) }
-              }} >
-                {text}
-              </Link>
-
-          }
-
-
-        },
-      },
+    this.commonCol = [
       {
         title: <span>{this.props.types === 'ent' ? '缺失数据报警监测点数' : '缺失数据报警空气检测点数'}</span>,
         dataIndex: 'pointCount',
@@ -150,6 +115,109 @@ export default class EntTransmissionEfficiency extends Component {
 
       },
     ];
+    this.columns=[
+      {
+        title: <span>行政区</span>,
+        dataIndex: 'regionName',
+        key: 'regionName',
+        align: 'center',
+        render: (text, record) => {
+          const { queryPar } = this.props;
+          // if (this.props.level) {//二级页面
+          //   return <Link to={{
+          //     pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+          //     query: { regionCode: record.regionCode ? record.regionCode : queryPar.RegionCode , queryPar: JSON.stringify(queryPar) }
+          //   }} >
+          //     {text}
+          //   </Link>
+          // } else {
+            return this.props.types === 'ent' ? //一级页面
+              <Link to={{
+                pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
+                query: { regionCode: record.regionCode, queryPar: JSON.stringify(queryPar) }
+              }} >
+                {text}
+              </Link> 
+              :
+              <Link to={{
+                pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
+                query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar) }
+              }} >
+                {text}
+              </Link>
+
+          // }
+
+        },
+      },
+      ...this.commonCol
+    ]
+    this.columns2=[
+      // {
+      //   title: <span>行政区</span>,
+      //   dataIndex: 'regionName',
+      //   key: 'regionName',
+      //   align: 'center',
+      //   render: (text, record) => {
+      //     const { queryPar } = this.props;
+      //     if (this.props.level) {//二级页面
+      //       return <Link to={{
+      //         pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+      //         query: { regionCode: record.regionCode ? record.regionCode : queryPar.RegionCode , queryPar: JSON.stringify(queryPar) }
+      //       }} >
+      //         {text}
+      //       </Link>
+      //     } else {
+      //       return this.props.types === 'ent' ? //一级页面
+      //         <Link to={{
+      //           pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
+      //           query: { regionCode: record.regionCode, queryPar: JSON.stringify(queryPar) }
+      //         }} >
+      //           {text}
+      //         </Link> :
+
+      //         <Link to={{
+      //           pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
+      //           query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar) }
+      //         }} >
+      //           {text}
+      //         </Link>
+
+      //     }
+
+      //   },
+      // },
+      {
+      title: '省',
+      dataIndex: 'ProvinceName',
+      key: 'ProvinceName',
+      align: 'center',
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { props: { colSpan: 0 }, };
+        }
+        return text;
+      },
+    },
+    {
+      title: '市',
+      dataIndex: 'CityName',
+      key: 'CityName',
+      align: 'center',
+      render: (text, record) => {
+        const { queryPar } = this.props;
+        return  { props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
+        children: <Link to={{
+        pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+        query: { regionCode: record.regionCode ? record.regionCode : queryPar.RegionCode , queryPar: JSON.stringify(queryPar) }
+      }} >
+        {record.ProvinceName == '全部合计' ? '全部合计' : text}
+      </Link>
+     }
+    }
+    },
+    ...this.commonCol
+   ]
   }
 
   componentDidMount() {
@@ -428,7 +496,7 @@ export default class EntTransmissionEfficiency extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
-            columns={this.columns}
+            columns={!level? this.columns : this.columns2}
             dataSource={this.props.tableDatas}
             pagination={false}
           />

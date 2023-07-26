@@ -5,7 +5,7 @@
  * @Last Modified time: 2020-11-11 11:02:46
  * @Description: 异常报警响应率弹框
  */
-import React, { PureComponent } from 'react';
+import React, { PureComponent, cloneElement } from 'react';
 import { Modal } from "antd"
 import { connect } from "dva"
 import Ent from "@/pages/monitoring/overView/realtime/Ent"
@@ -24,14 +24,22 @@ class Index extends PureComponent {
       show: true
     };
   }
-
-  componentWillUnmount() {
-    this.setState({
-      regionCodeOneLevel: undefined,
-      queryConditions:undefined,
-      cityLevel:true
-    })
+  componentDidUpdate(props) {
+    if (props.visible !== this.props.visible) {
+      this.setState({
+        regionCodeOneLevel: undefined,
+        queryConditions: undefined,
+        show: true,
+        cityLevel: false,
+      })
+    }
   }
+  // componentWillUnmount() {
+  //   this.setState({
+  //     regionCodeOneLevel: undefined,
+  //     queryConditions: undefined,
+  //   })
+  // }
 
   // 关闭弹窗
   onCancel = () => {
@@ -39,8 +47,9 @@ class Index extends PureComponent {
   }
 
   render() {
-    const { status, stopStatus, type, time,visible } = this.props
-    const { regionCodeOneLevel,queryConditions, show,cityLevel } = this.state;
+    const { status, stopStatus, type, time, visible } = this.props
+    const { regionCodeOneLevel, queryConditions, show, cityLevel } = this.state;
+    console.log(regionCodeOneLevel, queryConditions, cityLevel, show)
     return (
       <Modal
         title="异常报警响应率"
@@ -62,39 +71,39 @@ class Index extends PureComponent {
           time && show && <AbnormalResRate defaultPollutantCode={type} time={time} hideBreadcrumb onRegionClick={(regionCode) => {
             this.setState({
               regionCodeOneLevel: regionCode,
-              cityLevel:true,
+              cityLevel: true,
               show: false
             })
           }} />
         }
         {
-          cityLevel && <CityLevel hideBreadcrumb 
-          location={{ query: {  regionCode: regionCodeOneLevel } }}
-          onRegionClick={(queryCondition) => {
-            this.setState({
-              queryConditions: queryCondition,
-              cityLevel:false,
-              show: false
-            })
-          }}
-          onBack={() => {
-            this.setState({
-              queryCondition: undefined,
-              cityLevel:false,
-              show: true
-            })
-          }} />
+          cityLevel && <CityLevel hideBreadcrumb
+            location={{ query: { regionCode: regionCodeOneLevel } }}
+            onRegionClick={(queryCondition) => {
+              this.setState({
+                queryConditions: queryCondition,
+                cityLevel: false,
+                show: false
+              })
+            }}
+            onBack={() => {
+              this.setState({
+                queryCondition: undefined,
+                cityLevel: false,
+                show: true
+              })
+            }} />
         }
-                {
-          queryConditions &&  !cityLevel&&<RegionDetails hideBreadcrumb 
-          location={{ query: { queryCondition: queryConditions } }}
-          onBack={() => {
-            this.setState({
-              queryConditions: undefined,
-              cityLevel: true,
-              show: false
-            })
-          }} />
+        {
+          queryConditions && !cityLevel && <RegionDetails hideBreadcrumb
+            location={{ query: { queryCondition: queryConditions } }}
+            onBack={() => {
+              this.setState({
+                queryConditions: undefined,
+                cityLevel: true,
+                show: false
+              })
+            }} />
         }
       </Modal>
     );

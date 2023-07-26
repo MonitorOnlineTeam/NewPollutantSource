@@ -974,7 +974,7 @@ const gasSyatemCancel = (record,type) =>{
   }
  const popVisibleClick = () =>{
   setParPopVisible(!parPopVisible);
-  // form3.resetFields();
+  form3.resetFields();
   form3.setFieldsValue({
     // ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
     PollutantType: defaultParId,
@@ -986,7 +986,7 @@ const gasSyatemCancel = (record,type) =>{
  const [manufacturerPopVisible,setManufacturerPopVisible] = useState(false)
  const manufacturerPopVisibleClick = () =>{ //cems设备生产商
   setManufacturerPopVisible(true)
-  // form2.resetFields();
+  form2.resetFields();
   form.setFieldsValue({'systemName': cemsVal})
   // form2.setFieldsValue({ ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,})
   setTimeout(()=>{

@@ -97,6 +97,7 @@ export default class OverVerifyLstModal extends Component {
     this.state = {
       checkedValues: [],
       columns: [],
+      cityColumns:[],
       beginTime: props.beginTime,
       endTime: props.endTime,
       showDetails: false,
@@ -109,13 +110,29 @@ export default class OverVerifyLstModal extends Component {
       enterpriseValue: '',
       regionCode: '',
       columns2: [
+        // {
+        //   title: "行政区",
+        //   width: 100,
+        //   align: 'center',
+        //   fixed: 'left',
+        //   dataIndex: 'regionName',
+        //   key: 'regionName',
+        // },
         {
-          title: "行政区",
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
           width: 100,
           align: 'center',
           fixed: 'left',
-          dataIndex: 'regionName',
-          key: 'regionName',
+        },
+        {
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
+          width: 100,
+          align: 'center',
+          fixed: 'left',
         },
         {
           title: "企业名称",
@@ -296,7 +313,6 @@ export default class OverVerifyLstModal extends Component {
             title: <span>{'数据超标报警企业数'}</span>,
             dataIndex: 'entCount',
             key: 'entCount',
-
             align: 'center',
           },
           {
@@ -367,8 +383,44 @@ export default class OverVerifyLstModal extends Component {
             return <div>{text == '-' ? text : `${text}%`}</div>;
           },
         });
+        let newCloum2 = []; newCloum2.push(...newCloum);
+         newCloum2.splice(0,1,{
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
+          align: 'center',
+          render: (text, record, index) => {
+            if (text == '全部合计') {
+              return { props: { colSpan: 0 }, };
+            }
+            return text;
+          },
+        },
+        {
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
+          align: 'center',
+          render: (text, record) => {
+            return { props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
+                children:  <a onClick={() => { //进入监测点
+              const { overVerifyRateForm: { PollutantType, RegionCode, }, } = this.props;
+                this.setState({
+                  regionLevel: '',
+                  RegionCode: record.ProvinceName == '全部合计'  ? RegionCode : record.regionCode,
+                }, () => {
+                  this.setState({
+                    showDetails: true
+                  })
+                }) 
+            }}>
+             {record.ProvinceName == '全部合计' ? '全部合计' : text}
+            </a>
+          }
+        }
+        })
         this.setState(
-          { checkedValues: res.map(item => item.PollutantCode), columns: newCloum },
+          { checkedValues: res.map(item => item.PollutantCode), columns: newCloum , cityColumns: newCloum2 },
           () => {
             this.updateQueryState({
               PollutantList: this.state.checkedValues,
@@ -811,7 +863,7 @@ export default class OverVerifyLstModal extends Component {
         <SdlTable
           rowKey={(record, index) => `complete${index}`}
           loading={this.props.loading}
-          columns={this.state.columns}
+          columns={!this.state.regionLevel? this.state.columns : this.state.cityColumns}
           dataSource={this.props.tableDatas.data}
         // pagination={{
         // showSizeChanger: true,
@@ -838,7 +890,7 @@ export default class OverVerifyLstModal extends Component {
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
-        RegionCode: record.regionCode,
+        RegionCode:  record.ProvinceName == '全部合计' ? RegionCode : record.regionCode,
         attentionCode: record.attentionValue,
         PollutantType: record.outletValue,
         // DataType: record.dataType == '日'? 'DayData' : 'HourData',

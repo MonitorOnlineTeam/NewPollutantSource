@@ -79,21 +79,51 @@ class index extends PureComponent {
       wrapperCol: { span: 16 },
     },
     columns: [
+      // {
+      //   title: '行政区',
+      //   dataIndex: 'RegionName',
+      //   key: 'RegionName',
+      //   width: 150,
+      //   render: (text, record) => {
+      //     return <a onClick={() => {
+      //       let queryCondition = this.state.queryCondition;
+      //       queryCondition.RegionCode = record.CityCode || this.props.location.query.regionCode;
+      //       queryCondition = JSON.stringify(queryCondition)
+      //       this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
+      //         router.push(`/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
+       
+      //     }}>{record.CityName ? `${text}/${record.CityName}` : text}</a>
+      //   }
+      // },
       {
-        title: '行政区',
+        title: '省',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        width: 150,
+        align: 'center',
+        render: (text, record, index) => {
+          if (text == '全部合计') {
+            return { props: { colSpan: 0 }, };
+          }
+          return text;
+        },
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
         render: (text, record) => {
-          return <a onClick={() => {
+          return {
+            props: { colSpan: record.RegionName == '全部合计' ? 2 : 1 },
+            children: <a onClick={() => {
             let queryCondition = this.state.queryCondition;
             queryCondition.RegionCode = record.CityCode || this.props.location.query.regionCode;
             queryCondition = JSON.stringify(queryCondition)
             this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
               router.push(`/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
-       
-          }}>{record.CityName ? `${text}/${record.CityName}` : text}</a>
+          }}>{record.RegionName == '全部合计' ? '全部合计' : text}</a>
         }
+      }
       },
       {
         title: '数据异常报警企业数',
@@ -256,10 +286,22 @@ class index extends PureComponent {
       },
     ],
     detailsColumns: [
+      // {
+      //   title: '行政区',
+      //   dataIndex: 'RegionName',
+      //   key: 'RegionName',
+      // },
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
       },
       {
         title: '企业名称',

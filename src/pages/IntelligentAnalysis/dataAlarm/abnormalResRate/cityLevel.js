@@ -73,20 +73,50 @@ class Index extends PureComponent {
   }
   _SELF_ = {
     columns: [
+      // {
+      //   title: '行政区',
+      //   dataIndex: 'RegionName',
+      //   key: 'RegionName',
+      //   width: 200,
+      //   render: (text, record) => {
+      //     return <a onClick={() => {
+      //       let queryConditions = this.state.queryCondition;
+      //       queryConditions.RegionCode = record.CityCode ? record.CityCode : queryConditions.RegionCode;
+      //       queryConditions.RegionName = record.RegionName;
+      //       queryConditions = JSON.stringify(queryConditions)
+      //       this.props.onRegionClick ? this.props.onRegionClick(queryConditions) :
+      //         router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryConditions}`);
+      //     }}>{text==='全部合计'? text :`${text}/${record.CityName}` }</a>
+      //   }
+      // },
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        width: 200,
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+        render: (text, record, index) => {
+          if (text == '全部合计') {
+            return { props: { colSpan: 0 }, };
+          }
+          return text;
+        },
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
         render: (text, record) => {
-          return <a onClick={() => {
-            let queryConditions = this.state.queryCondition;
-            queryConditions.RegionCode = record.CityCode ? record.CityCode : queryConditions.RegionCode;
-            queryConditions.RegionName = record.RegionName;
-            queryConditions = JSON.stringify(queryConditions)
-            this.props.onRegionClick ? this.props.onRegionClick(queryConditions) :
-              router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryConditions}`);
-          }}>{text==='全部合计'? text :`${text}/${record.CityName}` }</a>
+            return { props: { colSpan: record.RegionName == '全部合计' ? 2 : 1 }, children: <a onClick={() => {
+              let queryConditions = this.state.queryCondition;
+              queryConditions.RegionCode = record.CityCode ? record.CityCode : queryConditions.RegionCode;
+              queryConditions.RegionName = record.RegionName;
+              queryConditions = JSON.stringify(queryConditions)
+              this.props.onRegionClick ? this.props.onRegionClick(queryConditions) :
+                router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryConditions}`);
+            }}>{record.RegionName == '全部合计' ?'全部合计':text}</a>
+            }
+          
         }
       },
       {

@@ -81,13 +81,29 @@ export default class PointVerifyLst extends Component {
       enterpriseValue:'',
       regionCode:'',
       columns2 :[
+        // {
+        //     title: "行政区",
+        //     width: 100,
+        //     align: 'center',
+        //     fixed: 'left',
+        //     dataIndex: 'regionName',
+        //     key: 'regionName',
+        // },
         {
-            title: "行政区",
-            width: 100,
-            align: 'center',
-            fixed: 'left',
-            dataIndex: 'regionName',
-            key: 'regionName',
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
+          width: 100,
+          align: 'center',
+          fixed: 'left',
+        },
+        {
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
+          width: 100,
+          align: 'center',
+          fixed: 'left',
         },
         {
             title: "企业名称",
@@ -228,12 +244,26 @@ export default class PointVerifyLst extends Component {
       payload: { RegionCode: this.props.RegionCode },
     });
     let newColumns = [
+      // {
+      //   title: <span>行政区</span>,
+      //   dataIndex: 'regionName',
+      //   key: 'regionName',
+      //   width: 200,
+      //   align: 'center',
+      // },
       {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
-        width: 200,
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
         align: 'center',
+        fixed: 'left',
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
+        fixed: 'left',
       },
       {
         title: <span>{'企业名称'}</span>,

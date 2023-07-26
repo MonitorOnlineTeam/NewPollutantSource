@@ -103,13 +103,29 @@ export default class OverVerifyLst extends Component {
       enterpriseValue:'',
       regionCode:'',
       columns2 :[
+        // {
+        //     title: "行政区",
+        //     width: 100,
+        //     align: 'center',
+        //     fixed: 'left',
+        //     dataIndex: 'regionName',
+        //     key: 'regionName',
+        // },
         {
-            title: "行政区",
-            width: 100,
-            align: 'center',
-            fixed: 'left',
-            dataIndex: 'regionName',
-            key: 'regionName',
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
+          width: 100,
+          align: 'center',
+          fixed: 'left',
+        },
+        {
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
+          width: 100,
+          align: 'center',
+          fixed: 'left',
         },
         {
             title: "企业名称",
@@ -259,8 +275,7 @@ export default class OverVerifyLst extends Component {
             width: 200,
             render: (text, record) => {
               const { level, overVerifyRateForm: { RegionCode } } = this.props;
-              return (
-                <Link
+              return <Link
                   to={level == 2 ?
                     {
                       pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
@@ -274,7 +289,18 @@ export default class OverVerifyLst extends Component {
                 >
                   {text}
                 </Link>
-              );
+              // return (
+              //   <Link
+              //     to={
+              //       {
+              //         pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel',
+              //         query: { regionCode: record.regionCode },
+              //       }
+              //     }
+              //   >
+              //     {text}
+              //   </Link>
+              // );
             },
           },
           {
@@ -290,6 +316,39 @@ export default class OverVerifyLst extends Component {
             align: 'center',
           },
         ];
+        this.props.level==2&&newCloum.splice(0,1,{
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
+          align: 'center',
+          render: (text, record, index) => {
+            if (text == '全部合计') {
+              return { props: { colSpan: 0 }, };
+            }
+            return text;
+          },
+        },
+        {
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
+          align: 'center',
+          render: (text, record) => {
+            const {  overVerifyRateForm: { RegionCode } } = this.props; 
+            return { props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
+                children:  <Link to={
+                  {
+                    pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                    query: { regionCode: record.ProvinceName == '全部合计' ? RegionCode : record.CityCode },
+                  } 
+                }
+              >
+                {record.ProvinceName == '全部合计' ? '全部合计' : text}
+              </Link>
+            }
+         
+          },
+        })
         res.map(item => {
           newCloum.push({
             title: <span>{item.PollutantName}</span>,
@@ -522,6 +581,7 @@ export default class OverVerifyLst extends Component {
           );
         },
       },
+      
       {
         title: <span>{'数据超标报警企业数'}</span>,
         dataIndex: 'entCount',
@@ -622,7 +682,7 @@ export default class OverVerifyLst extends Component {
   this.props.dispatch({
       type:pageUrl.GetAlarmVerifyDetail,
       payload: {
-          RegionCode: record.regionCode,
+          RegionCode: record.ProvinceName == '全部合计' ? RegionCode :record.regionCode,
           attentionCode: record.attentionValue,
           PollutantType: record.outletValue,
           // DataType: record.dataType == '日'? 'DayData' : 'HourData',

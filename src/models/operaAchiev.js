@@ -259,7 +259,17 @@ export default Model.extend({
         message.error(result.Message)
       }
       callback&&callback(result.IsSuccess)
-    }
+    },
+    *updatePersonalPerformanceRateInfo({ payload,callback }, { call, put, update }) { //工作总量绩效 修改
+      const result = yield call(services.UpdatePersonalPerformanceRateInfo, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    }, 
+    
   } 
 
 })

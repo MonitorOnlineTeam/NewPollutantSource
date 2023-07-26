@@ -55,7 +55,6 @@ const pageUrl = {
   regionList: autoForm.regionList,
   attentionList: missingData.attentionList,
   atmoStationList: common.atmoStationList,
-  regionDetailCode:common.regionDetailCode,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -67,32 +66,10 @@ export default class EntTransmissionEfficiency extends Component {
       alarmNumRegionCode: '',
       regionName: '',
       status: '',
+      regCode:'',
+      regLevel:'',
     };
-
-    this.columns = [
-      {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
-        align: 'center',
-        render: (text, record) => {
-          // return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
-          //          {text}
-          //      </Link>
-          return <a onClick={
-            () => {
-              const { queryPar, } = this.props
-              //市级跳转
-              if (this.props.level) {
-                this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.regionDetailCode}), regionName: record.regionName } }));
-              } else { //省级跳转
-                this.props.dispatch(routerRedux.push({
-                  pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar,regionDetailCode: record.regionCode }), regionCode: record.regionCode }
-                }));
-              }
-            }}>{text}</a>
-        },
-      },
+    this.commonCol = [
       {
         title: <span>{this.props.types === 'ent' ? '缺失数据报警监测点数' : '缺失数据报警空气监测点数'}</span>,
         dataIndex: 'pointCount',
@@ -126,7 +103,91 @@ export default class EntTransmissionEfficiency extends Component {
           return <a onClick={() => { this.missingAlarmNum(record, '0') }}>{text} </a>
         }
       },
+    ]
+    this.columns = [
+      {
+        title: '行政区',
+        dataIndex: 'regionName',
+        key: 'regionName',
+        align: 'center',
+        render: (text, record) => {
+          // return <a onClick={
+          //   () => {
+          //     const { queryPar, } = this.props
+          //     //市级跳转
+          //     if (this.props.level) {
+          //       this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.regionDetailCode}), regionName: record.regionName } }));
+          //     } else { //省级跳转
+          //       this.props.dispatch(routerRedux.push({
+          //         pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar,regionDetailCode: record.regionCode }), regionCode: record.regionCode }
+          //       }));
+          //     }
+          //   }}>{text}</a>
+          return <a onClick={
+            () => {
+              const { queryPar, } = this.props
+              //省级跳转
+              this.props.dispatch(routerRedux.push({
+                pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar, regionDetailCode: record.regionCode }), regionCode: record.regionCode }
+              }));
+
+            }}>{text}</a>
+        },
+      },
+      ...this.commonCol
     ];
+    this.columns2 = [
+      // {
+      //   title: '行政区',
+      //   dataIndex: 'regionName',
+      //   key: 'regionName',
+      //   align: 'center',
+      //   render: (text, record) => {
+      //     return <a onClick={
+      //       () => {
+      //         const { queryPar, } = this.props
+      //         //市级跳转
+      //         if (this.props.level) {
+      //           this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.regionDetailCode}), regionName: record.regionName } }));
+      //         } else { //省级跳转
+      //           this.props.dispatch(routerRedux.push({
+      //             pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar,regionDetailCode: record.regionCode }), regionCode: record.regionCode }
+      //           }));
+      //         }
+      //       }}>{text}</a>
+      //   },
+      // },
+      {
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+        render: (text, record, index) => {
+          if (text == '全部合计') {
+            return { props: { colSpan: 0 }, };
+          }
+          return text;
+        },
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
+        render: (text, record) => {
+          return {
+            props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
+            children: <a onClick={
+              () => {
+                const { queryPar, } = this.props
+                //市级跳转
+                this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.CityCode ? record.CityCode : queryPar.regionDetailCode }), regionName: record.regionName } }));
+              }}>{record.ProvinceName == '全部合计' ? '全部合计' : text}</a>
+          }
+        },
+      },
+      ...this.commonCol
+    ]
   }
 
   componentDidMount() {
@@ -161,6 +222,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     const regCode = isReg ? queryPar.RegionCode : query.regionCode;
     this.getTableData(regCode, isReg ? 1 : 2);
+    this.setState({regCode:regCode, regLevel:isReg ? 1 : 2})
 
   };
   updateQueryState = payload => {
@@ -174,10 +236,10 @@ export default class EntTransmissionEfficiency extends Component {
 
   getTableData = (regCode, regionLevel) => {
     const { dispatch, queryPar, query } = this.props;
-    const par = regionLevel==1? queryPar :  query && query.queryPar && JSON.parse(query.queryPar)
+    const par = regionLevel == 1 ? queryPar : query && query.queryPar && JSON.parse(query.queryPar)
     dispatch({
       type: pageUrl.getData,
-      payload: { ...par, RegionCode: regCode, regionLevel: regionLevel },
+      payload: { ...par, RegionCode: regCode, regionLevel: regionLevel,},
     });
   };
 
@@ -241,10 +303,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar, } = this.props;
     dispatch({
       type: 'missingData/exportDefectDataSummary',
-      payload: { ...queryPar },
+      payload: { ...queryPar,regionDetailCode:undefined,RegionCode:this.state.regCode?this.state.regCode : '' ,regionLevel:this.state.regLevel },
       callback: data => {
         downloadFile(`/upload${data}`);
       },
@@ -300,10 +362,11 @@ export default class EntTransmissionEfficiency extends Component {
     });
   }
   missingAlarmNum = (record, status) => { //缺失数据报警次数
+    const { queryPar: { regionDetailCode, },} = this.props;
     this.setState({
       missingAlarmVisible: true,
       regionName: record.regionName,
-      alarmNumRegionCode: record.regionCode,
+      alarmNumRegionCode:record.ProvinceName == '全部合计' ? regionDetailCode : record.regionCode,
       status: status ? status : '',
     })
   }
@@ -312,8 +375,10 @@ export default class EntTransmissionEfficiency extends Component {
       exloading,
       queryPar: { BeginTime, EndTime, EntCode, RegionCode, AttentionCode, DataType, PollutantType, OperationPersonnel },
       types,
-      tableDatas
+      tableDatas,
+      level,
     } = this.props;
+
     return (
       <Card
         bordered={false}
@@ -380,7 +445,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                 </Button>
-                  {this.props.level && <Button onClick={() => {
+                  {level && <Button onClick={() => {
                     // this.props.dispatch(routerRedux.push({pathname:'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/air'}))
                     history.go(-1)
                   }}>
@@ -390,7 +455,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Row>
 
               {types === 'ent' ? <Row>
-                {!this.props.level && <>
+                {!level && <>
                   <Form.Item label='关注程度'>
                     <Select
                       allowClear
@@ -417,7 +482,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Form.Item>
                 </>}
                 <Form.Item>
-                  {!this.props.level && <Button type="primary" onClick={this.queryClick}>
+                  {!level && <Button type="primary" onClick={this.queryClick}>
                     查询
                 </Button>}
 
@@ -429,7 +494,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                 </Button>
-                  {this.props.level && <Button onClick={() => {
+                  {level && <Button onClick={() => {
                     //  this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/ent'}))
                     history.go(-1)
                   }}>
@@ -446,7 +511,7 @@ export default class EntTransmissionEfficiency extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
-            columns={this.columns}
+            columns={!level ? this.columns : this.columns2}
             dataSource={this.props.tableDatas}
             pagination={false}
           // pagination={{

@@ -301,8 +301,9 @@ export default class Index extends Component {
       let  addCol=[];
       column.map(item=>{
         addCol.push({
-           title:`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,
-           children: [
+          //  title:<Badge.Ribbon style={{top:-12,right:-16,zIndex:99}} text="监测中" color="#faad14">{`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`}</Badge.Ribbon>,
+          title: `${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,
+          children: [
           {
            title: '零值异常',
            align:'center',

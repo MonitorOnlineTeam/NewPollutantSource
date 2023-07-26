@@ -65,14 +65,26 @@ export default class Index extends Component {
       status:'',
     };
     this.columns = [
+      // {
+      //   title: <span>行政区</span>,
+      //   dataIndex: 'regionName',
+      //   key: 'regionName',
+      //   align: 'center',
+      //   render: (text, record) => {
+      //     return <span>{text}</span>;
+      //   },
+      // },
       {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
         align: 'center',
-        render: (text, record) => {
-          return <span>{text}</span>;
-        },
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
       },
       {
         title: <span>{ JSON.parse(this.props.location.query.queryPar).EntType==='1'? '企业名称': '大气站名称'}</span>,
@@ -212,7 +224,7 @@ export default class Index extends Component {
     let par = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar) : {};  
     dispatch({
       type: pageUrl.getData,
-      payload: { ...par,Status:status, },
+      payload: { ...par,Status:status,regionDetailCode:undefined, },
     });
   };
 

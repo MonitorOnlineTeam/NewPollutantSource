@@ -257,10 +257,22 @@ class index extends PureComponent {
       },
     ],
     detailsColumns: [
+      // {
+      //   title: '行政区',
+      //   dataIndex: 'RegionName',
+      //   key: 'RegionName',
+      // },
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
       },
       {
         title: '企业名称',
