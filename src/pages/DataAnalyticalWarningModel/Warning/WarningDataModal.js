@@ -2,12 +2,12 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-20 16:46:01
+ * @Last Modified time: 2023-07-26 09:32:09
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Modal, Tabs, Form, Space, Button, Select, Radio, message, Spin } from 'antd';
+import { Modal, Tabs, Form, Space, Button, Select, Radio, message, Spin, Alert } from 'antd';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import styles from '../styles.less';
 import SdlTable from '@/components/SdlTable';
@@ -40,6 +40,7 @@ const WarningData = props => {
     exportLoading,
     PointName,
     wrapClassName,
+    describe,
   } = props;
   const [columns, setColumns] = useState([]);
   const [selectedNames, setSelectedNames] = useState([]);
@@ -498,6 +499,7 @@ const WarningData = props => {
       onCancel={() => onCancel()}
       bodyStyle={{ paddingTop: 6 }}
     >
+      <Alert message={describe.replace(',下图为模型判断的过程', '。')} type="info" showIcon />
       <Tabs defaultActiveKey="1">
         <Tabs.TabPane tab="数据列表" key="1">
           <Form

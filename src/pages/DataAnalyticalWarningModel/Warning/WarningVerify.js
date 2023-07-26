@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-24 11:44:09
+ * @Last Modified time: 2023-07-26 09:30:14
  * @Description：报警核实详情
  */
 
@@ -353,6 +353,7 @@ const WarningVerify = props => {
             visible={dataModalVisible}
             date={warningDataDate}
             wrapClassName={isShowBack ? 'spreadOverModal' : 'fullScreenModal'}
+            describe={modelDescribe}
             onCancel={() => {
               setDataModalVisible(false);
             }}

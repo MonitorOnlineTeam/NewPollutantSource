@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:11:57
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-19 10:57:24
+ * @Last Modified time: 2023-07-26 15:10:42
  * @Description：模型设置页面
  */
 import React, { useState, useEffect } from 'react';
@@ -96,7 +96,6 @@ const Setting = props => {
     setPageIndex(1);
     setPageSize(20);
     const values = pointForm.getFieldsValue();
-    console.log('values', values);
     dispatch({
       type: 'dataModel/GetModelRelationDGIMN',
       payload: {
@@ -189,7 +188,7 @@ const Setting = props => {
         key: 'Region',
       },
       {
-        title: '行业',
+        title: '排口所属行业',
         dataIndex: 'IndustryType',
         key: 'IndustryType',
       },
@@ -215,7 +214,7 @@ const Setting = props => {
           }}
         >
           <SearchSelect
-            placeholder="请选择行业"
+            placeholder="请选择排口所属行业"
             style={{ width: 200 }}
             configId={'IndustryType'}
             itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
@@ -258,8 +257,6 @@ const Setting = props => {
     baseForm
       .validateFields()
       .then(async values => {
-        console.log('values', values);
-
         let modelParamsData = await childRef.current.onFinish();
         if (modelParamsData.dataAttribute !== false) {
           let body = {
@@ -272,7 +269,7 @@ const Setting = props => {
             },
             dataAttribute: modelParamsData.dataAttribute,
           };
-          console.log('body', body);
+          // console.log('body', body);
           // return;
           dispatch({
             type: 'dataModel/SaveModelInfoAndParams',
@@ -291,18 +288,16 @@ const Setting = props => {
 
   // 获取已关联排口
   const onPointFormFinish = values => {
-    console.log('values', values);
     GetModelRelationDGIMN();
   };
 
   // 关联排口 - 弹窗form
   const onEntAndPointFormFinish = async () => {
     const values = await entAndPointForm.validateFields();
-    console.log('values', values);
     getEntAndPointList(values);
   };
 
-  console.log('checkedKeys', checkedKeys);
+  // console.log('checkedKeys', checkedKeys);
 
   return (
     <BreadcrumbWrapper titles=" / 模型设置">
@@ -532,8 +527,6 @@ const Setting = props => {
               //   console.log('selected', selectedKeys, info);
               // }}
               onCheck={(keys, info) => {
-                console.log('info', info);
-                console.log('keys', keys);
                 if (info.checked == true) {
                   let _keys = [];
 
