@@ -19,10 +19,20 @@ class RegionDetails extends PureComponent {
       visible: false,
       queryCondition: JSON.parse(this.props.location.query.queryCondition),
       columns: [
+        // {
+        //   title: '行政区',
+        //   dataIndex: 'RegionName',
+        //   key: 'RegionName',
+        // },
+       {
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
+        },
         {
-          title: '行政区',
-          dataIndex: 'RegionName',
-          key: 'RegionName',
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
         },
         {
           title: '企业名称',
@@ -49,6 +59,11 @@ class RegionDetails extends PureComponent {
           dataIndex: 'CreateTime',
           key: 'CreateTime',
         },
+        // {
+        //   title: '报警类型',
+        //   dataIndex: 'x',
+        //   key: 'x',
+        // },
         {
           title: '报警信息',
           dataIndex: 'AlarmMsg',

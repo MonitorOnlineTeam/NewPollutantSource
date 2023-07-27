@@ -281,6 +281,12 @@ const columns2 = [
     key:'replaceDate',
     align:'center',
   },
+  {
+    title: 'CIS申请单据号',
+    dataIndex: 'CisNum',
+    key:'CisNum',
+    align:'center',
+  },
 ]
 
   const Content = () =>{

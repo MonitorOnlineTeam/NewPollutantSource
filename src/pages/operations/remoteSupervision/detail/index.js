@@ -645,6 +645,32 @@ const Index = (props) => {
       }
     },
     {
+      title: '数采仪设定值',
+      align: 'center',
+      dataIndex: 'DataValue',
+      key: 'DataValue',
+      width: 100,
+      render: (text, record, index) => {
+        return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : text;       
+     }
+    },
+    {
+      title: '数采仪设定值照片',
+      align: 'center',
+      dataIndex: 'DataFileList',
+      key: 'DataFileList',
+      width: 140,
+      render: (text, record, index) => {
+        if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+          return '—' 
+        }
+        const attachmentDataSource = getAttachmentDataSource(text);
+        return <div>
+         {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
+        </div>;
+      }
+    },
+    {
       title: '一致性(自动判断)',
       align: 'center',
       dataIndex: 'AutoUniformity',

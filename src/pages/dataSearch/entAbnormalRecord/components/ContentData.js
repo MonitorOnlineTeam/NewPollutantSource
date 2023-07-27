@@ -89,10 +89,22 @@ export default class EntTransmissionEfficiency extends Component {
     };
     
     this.columns = [
+      // {
+      //   title: '行政区',
+      //   dataIndex: 'RegionName',
+      //   key: 'RegionName',
+      //   align: 'center',
+      // },
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
         align: 'center',
       },
       {

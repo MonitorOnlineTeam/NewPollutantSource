@@ -363,14 +363,30 @@ class index extends PureComponent {
         const { StopList ,loading,isHomeModal} = this.props
         const fixed = false
         const columns = [
+            // {
+            //     title: "行政区",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'regionName',
+            //     key: 'regionName',
+            // },
             {
-                title: "行政区",
-                width: 100,
+                title: '省',
+                dataIndex: 'ProvinceName',
+                key: 'ProvinceName',
                 align: 'center',
+                width: 100,
                 fixed: fixed,
-                dataIndex: 'regionName',
-                key: 'regionName',
-            },
+              },
+              {
+                title: '市',
+                dataIndex: 'CityName',
+                key: 'CityName',
+                align: 'center',
+                width: 100,
+                fixed: fixed,
+              },
             {
                 title: "企业名称",
                 width: 100,

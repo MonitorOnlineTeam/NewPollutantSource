@@ -280,7 +280,12 @@ const columns2 = [
     dataIndex: 'replaceDate',
     key:'replaceDate',
     align:'center',
-    width:150,
+  },
+  {
+    title: 'CIS申请单据号',
+    dataIndex: 'CisNum',
+    key:'CisNum',
+    align:'center',
   },
 ]
 

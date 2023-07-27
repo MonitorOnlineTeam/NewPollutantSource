@@ -126,3 +126,9 @@ export async function GetOperationIntegralGroupInfoList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralGroupInfoList',params, null);
   return result;
 }
+
+//工作总量绩效 修改
+export async function UpdatePersonalPerformanceRateInfo(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/UpdatePersonalPerformanceRateInfo',params, null);
+  return result;
+}

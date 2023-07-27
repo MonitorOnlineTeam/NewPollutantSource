@@ -70,9 +70,9 @@ class index extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        render: (text, record) => {
-          return <span>{text}{ record.CityName? '/'+record.CityName : ''} </span>
-        }
+        // render: (text, record) => {
+        //   return <span>{text}{ record.CityName? '/'+record.CityName : ''} </span>
+        // }
       },
       {
         title: '数据异常企业数',

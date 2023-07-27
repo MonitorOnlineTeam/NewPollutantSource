@@ -77,17 +77,7 @@ export default class Index extends PureComponent {
       regionName: '',
       status: '',
     };
-
-    this.columns = [
-      {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
-        align: 'center',
-        render: (text, record) => {
-          return <a href='javascript:;' onClick={() => { this.detail(text, record) }} >{text} </a>
-        }
-      },
+    this.commonCol = [
       {
         title: <span>{this.props.types === 'ent' ? '缺失数据报警监测点数' : '缺失数据报警空气检测点数'}</span>,
         dataIndex: 'pointCount',
@@ -132,6 +122,54 @@ export default class Index extends PureComponent {
         }
 
       },
+    ]
+    this.columns = [
+      {
+        title: <span>行政区</span>,
+        dataIndex: 'regionName',
+        key: 'regionName',
+        align: 'center',
+        render: (text, record) => {
+          return <a href='javascript:;' onClick={() => { this.detail(text, record) }} >{text} </a>
+        }
+      },
+      ...this.commonCol
+    ];
+    this.columns2 = [
+      // {
+      //   title: <span>行政区</span>,
+      //   dataIndex: 'regionName',
+      //   key: 'regionName',
+      //   align: 'center',
+      //   render: (text, record) => {
+      //     return <a href='javascript:;' onClick={() => { this.detail(text, record) }} >{text} </a>
+      //   }
+      // },
+      {
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+        render: (text, record, index) => {
+          if (text == '全部合计') {
+            return { props: { colSpan: 0 }, };
+          }
+          return text;
+        },
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
+        render: (text, record) => {
+          return {
+            props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
+            children:  <a href='javascript:;' onClick={() => { this.detail(text, record) }} >{record.ProvinceName == '全部合计' ? '全部合计' : text} </a>
+          }
+        }
+      },
+      ...this.commonCol
     ];
   }
 
@@ -316,7 +354,7 @@ export default class Index extends PureComponent {
     this.setState({
       missingAlarmVisible: true,
       regionName: record.regionName,
-      alarmNumRegionCode: record.regionCode,
+      alarmNumRegionCode: record.regionCode ? record.regionCode : this.state.regionDetailCode,
       status: status? status : '',
     })
   }
@@ -420,7 +458,7 @@ export default class Index extends PureComponent {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
-            columns={this.columns}
+            columns={ !level ? this.columns : this.columns2}
             dataSource={this.props.tableDatas}
             pagination={false}
           />

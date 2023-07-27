@@ -2883,8 +2883,8 @@ export default {
   chainWebpack: webpackPlugin,
   proxy: {
     '/newApi': {
-      target: 'http://172.16.12.234:60061/',
-      // target: 'http://172.16.12.134:63002/',
+      // target: 'http://172.16.12.234:60061/',
+      target: 'http://172.16.12.134:63002/',
       changeOrigin: true,
       pathRewrite: {
         '^/newApi': '',

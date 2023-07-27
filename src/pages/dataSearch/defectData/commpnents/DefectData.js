@@ -65,14 +65,26 @@ export default class EntTransmissionEfficiency extends Component {
     };
     
     this.columns = [
-      {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
-        align: 'center',
+      // {
+      //   title: <span>行政区</span>,
+      //   dataIndex: 'regionName',
+      //   key: 'regionName',
+      //   align: 'center',
       //   render: (text, record) => {     
       //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
       //  },
+      // },
+      {
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
       },
       {
         title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,

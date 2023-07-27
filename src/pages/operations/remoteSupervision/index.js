@@ -231,6 +231,10 @@ const Index = (props) => {
   const [traceabilityFilePar, setTraceabilityFilePar] = useState() //溯源值照片
   const [traceabilityFileCuidList, setTraceabilityFileCuidList] = useState({})
   const [traceabilityFileList, setTraceabilityFileList] = useState({})
+
+  const [dataFilePar, setDataFilePar] = useState() //数采仪设定值照片
+  const [dataFileCuidList, setDataFileCuidList] = useState({})
+  const [dataFileList, setDataFileList] = useState({})
   useEffect(() => {
 
     onFinish(pageIndex, pageSize)
@@ -726,6 +730,8 @@ const Index = (props) => {
           filesCuidObjFun(paramList, 'SettingFilePar', (cuidObj, listObj) => { setSettingFileCuidList(cuidObj); setSettingFileList(listObj) })
           filesCuidObjFun(paramList, 'InstrumentFilePar', (cuidObj, listObj) => { setInstrumentFileCuidList(cuidObj); setInstrumentFileList(listObj) })
           filesCuidObjFun(paramList, 'TraceabilityPar', (cuidObj, listObj) => { setTraceabilityFileCuidList(cuidObj); setTraceabilityFileList(listObj) })
+          filesCuidObjFun(paramList, 'DataPar', (cuidObj, listObj) => { setDataFileCuidList(cuidObj); setDataFileList(listObj) })
+       
         }
       }
       callback && callback()
@@ -925,6 +931,7 @@ const Index = (props) => {
               SetValue: values[`${item.par}SetVal`],
               InstrumentSetValue: values[`${item.par}InstrumentSetVal`],
               TraceabilityValue: values[`${item.par}TraceVal`],
+              DataValue: values[`${item.par}DataVal`],
               AutoUniformity: values[`${item.par}Uniform`],
               Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
               Remark: values[`${item.par}Remark3`],
@@ -932,6 +939,8 @@ const Index = (props) => {
               SetFile: values[`${item.par}SettingFilePar`],
               InstrumentFile: values[`${item.par}InstrumentFilePar`],
               TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
+              DataFile: values[`${item.par}DataFilePar`],
+
               // Upload: values[`${item.par}ParFiles`],
             }
           })
@@ -961,8 +970,6 @@ const Index = (props) => {
 
 
 
-  }
-  const changeEnt = (val) => {
   }
 
   const [pointList, setPointList] = useState([])
@@ -1057,56 +1064,63 @@ const Index = (props) => {
 
   const tabsChange = (key) => {
     setTabType(key)
-    if (key == 2) {
-      /***参数一致性核查表***/
-      let settingUploadList = {}, settingUploadFilesListObj = {};
-      let instrumentUploadList = {}, instrumentUploadFilesListObj = {};
-      let traceabilityUploadList = {}, traceabilityUploadFilesListObj = {};
-      consistencyCheckDetail?.consistentParametersCheckList.map(item => {
-        let code = item.CheckItem
-        form3.setFieldsValue({
-          [`${code}IsEnable`]: item.Status ? [item.Status] : [],
-          [`${code}SetVal`]: item.SetValue,
-          [`${code}InstrumentSetVal`]: item.InstrumentSetValue,
-          [`${code}TraceVal`]: item.TraceabilityValue,
-          [`${code}Uniform`]: item.AutoUniformity,
-          [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
-          [`${code}Remark3`]: item.Remark,
-          [`${code}OperationReamrk`]: item.OperationReamrk,
-          [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
-          [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
-          [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
-          // [`${code}ParFiles`]: item.Upload,
-        })
-        const enchFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
-          let parFileList = [];
-          uploadList?.length && uploadList.map(uploadItem => {
-            if (!uploadItem.IsDelete) {
-              parFileList.push({
-                uid: uploadItem.GUID,
-                name: uploadItem.FileName,
-                status: 'done',
-                url: `\\upload\\${uploadItem.FileName}`,
-              })
-            }
+      if (key == 2) {
+        /***参数一致性核查表***/
+        let settingUploadList = {}, settingUploadFilesListObj = {};
+        let instrumentUploadList = {}, instrumentUploadFilesListObj = {};
+        let traceabilityUploadList = {}, traceabilityUploadFilesListObj = {};
+        let dataUploadList = {}, dataUploadFilesListObj = {};
+  
+        consistencyCheckDetail?.consistentParametersCheckList.map(item => {
+          let code = item.CheckItem
+          form3.setFieldsValue({
+            [`${code}IsEnable`]: item.Status ? [item.Status] : [],
+            [`${code}SetVal`]: item.SetValue,
+            [`${code}InstrumentSetVal`]: item.InstrumentSetValue,
+            [`${code}TraceVal`]: item.TraceabilityValue,
+            [`${code}DataVal`]: item.DataValue,
+            [`${code}Uniform`]: item.AutoUniformity,
+            [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
+            [`${code}Remark3`]: item.Remark,
+            [`${code}OperationReamrk`]: item.OperationReamrk,
+            [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
+            [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
+            [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
+            [`${code}DataFilePar`]: item.DataFileList?.[0] && item.DataFileList?.[0].FileUuid,
+            
+            // [`${code}ParFiles`]: item.Upload,
           })
-          uploadListPar[`${code}${filePar}`] = parFileList;
-          uploadFilesListObj[`${code}${filePar}`] = uploadList?.[0]?.FileUuid ? uploadList[0].FileUuid : cuid();
-        }
-        enchFileList(item.SetFileList, settingUploadList, settingUploadFilesListObj, 'SettingFilePar') //仪表设定值照片	
-        enchFileList(item.InstrumentFileList, instrumentUploadList, instrumentUploadFilesListObj, 'InstrumentFilePar') //DAS设定值照片	
-        enchFileList(item.TraceabilityFileList, traceabilityUploadList, traceabilityUploadFilesListObj, 'TraceabilityFilePar') //溯源值照片	
-      })
-      setSettingFileList({ ...settingUploadList })
-      setSettingFileCuidList({ ...settingUploadFilesListObj })
-
-      setInstrumentFileList({ ...instrumentUploadList })
-      setInstrumentFileCuidList({ ...instrumentUploadFilesListObj })
-
-      setTraceabilityFileList({ ...traceabilityUploadList })
-      setTraceabilityFileCuidList({ ...traceabilityUploadFilesListObj })
-    }
-
+          const enchFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
+            let parFileList = [];
+            uploadList?.length && uploadList.map(uploadItem => {
+              if (!uploadItem.IsDelete) {
+                parFileList.push({
+                  uid: uploadItem.GUID,
+                  name: uploadItem.FileName,
+                  status: 'done',
+                  url: `\\upload\\${uploadItem.FileName}`,
+                })
+              }
+            })
+            uploadListPar[`${code}${filePar}`] = parFileList;
+            uploadFilesListObj[`${code}${filePar}`] = uploadList?.[0]?.FileUuid ? uploadList[0].FileUuid : cuid();
+          }
+          enchFileList(item.SetFileList, settingUploadList, settingUploadFilesListObj, 'SettingFilePar') //仪表设定值照片	
+          enchFileList(item.InstrumentFileList, instrumentUploadList, instrumentUploadFilesListObj, 'InstrumentFilePar') //DAS设定值照片	
+          enchFileList(item.TraceabilityFileList, traceabilityUploadList, traceabilityUploadFilesListObj, 'TraceabilityFilePar') //溯源值照片	
+        })
+        setSettingFileList({ ...settingUploadList })
+        setSettingFileCuidList({ ...settingUploadFilesListObj })
+  
+        setInstrumentFileList({ ...instrumentUploadList })
+        setInstrumentFileCuidList({ ...instrumentUploadFilesListObj })
+  
+        setTraceabilityFileList({ ...traceabilityUploadList })
+        setTraceabilityFileCuidList({ ...traceabilityUploadFilesListObj })
+  
+        setDataFileList({ ...dataUploadList })
+        setDataFileCuidList({ ...dataUploadFilesListObj })
+      }
   }
 
   const { entLoading } = props;
@@ -1166,6 +1180,7 @@ const Index = (props) => {
           case 'settingFile': return filesCuidFun(settingFileCuidList, settingFilePar);
           case 'instrumentFile': return filesCuidFun(instrumentFileCuidList, instrumentFilePar);
           case 'traceabilityFile': return filesCuidFun(traceabilityFileCuidList, traceabilityFilePar);
+          case 'dataFile': return filesCuidFun(dataFileCuidList, dataFilePar);
         }
       }(),
       FileActualType: '0',
@@ -1203,6 +1218,7 @@ const Index = (props) => {
           case 'settingFile': setSettingFileList({ ...settingFileList, [settingFilePar]: fileList }); break;
           case 'instrumentFile': setInstrumentFileList({ ...instrumentFileList, [instrumentFilePar]: fileList }); break;
           case 'traceabilityFile': setTraceabilityFileList({ ...traceabilityFileList, [traceabilityFilePar]: fileList }); break;
+          case 'dataFile': setDataFileList({ ...dataFileList, [dataFilePar]: fileList }); break;
 
         }
       }
@@ -1216,17 +1232,9 @@ const Index = (props) => {
           case 'settingFile': setSettingFileList({ ...settingFileList, [settingFilePar]: fileList }); form3.setFieldsValue({ [settingFilePar]: filesCuidFun(settingFileCuidList, settingFilePar) }); break;
           case 'instrumentFile': setInstrumentFileList({ ...instrumentFileList, [instrumentFilePar]: fileList }); form3.setFieldsValue({ [instrumentFilePar]: filesCuidFun(instrumentFileCuidList, instrumentFilePar) }); break;
           case 'traceabilityFile': setTraceabilityFileList({ ...traceabilityFileList, [traceabilityFilePar]: fileList }); form3.setFieldsValue({ [traceabilityFilePar]: filesCuidFun(traceabilityFileCuidList, traceabilityFilePar) }); break;
-          // case 3: setFilesList3({  ...filesList3,  [filePar]: fileList });
+          case 'dataFile': setDataFileList({ ...dataFileList, [dataFilePar]: fileList }); form3.setFieldsValue({ [dataFilePar]: filesCuidFun(dataFileCuidList, dataFilePar) }); break;
+        
         }
-        // switch (fileType) {
-        //   case 2: form2.setFieldsValue({ files2: fileList && fileList[0] ? filesCuid2 : undefined }); break;
-        //   case 'analyzerFile': form2.setFieldsValue({ [analyzerFilePar]: filesCuidFun(analyzerFileCuidList) }); break;
-        //   case 'dasFile': form2.setFieldsValue({ [dasFilePar]: filesCuidFun(dasFileCuidList) }); break;
-        //   case 'rangeFile': form2.setFieldsValue({ [rangeFilePar]: filesCuidFun(rangeFileCuidList) }); break;
-        //   case 'settingFile': form2.setFieldsValue({ [settingFilePar]: filesCuidFun(settingFileCuidList) }); break;
-        //   case 'instrumentFile': form2.setFieldsValue({ [instrumentFilePar]: filesCuidFun(instrumentFileCuidList) }); break;
-        //   case 'traceabilityFile': form2.setFieldsValue({ [traceabilityFilePar]: filesCuidFun(analyzerFileCuidList) }); break;
-        // }
         info.file.status === 'done' && message.success('上传成功！')
         info.file.status === 'error' && message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
 
@@ -1251,6 +1259,8 @@ const Index = (props) => {
         case 'settingFile': imageList = settingFileList[settingFilePar]; break;
         case 'instrumentFile': imageList = instrumentFileList[instrumentFilePar]; break;
         case 'traceabilityFile': imageList = traceabilityFileList[traceabilityFilePar]; break;
+        case 'dataFile': imageList = dataFileList[dataFilePar]; break;
+
       }
       let imageListIndex = 0;
       imageList.map((item, index) => {
@@ -1279,6 +1289,8 @@ const Index = (props) => {
         case 'settingFile': return settingFileList[settingFilePar];
         case 'instrumentFile': return instrumentFileList[instrumentFilePar];
         case 'traceabilityFile': return traceabilityFileList[traceabilityFilePar];
+        case 'dataFile': return dataFileList[dataFilePar];
+
       }
     }()
   };
@@ -2308,6 +2320,40 @@ const Index = (props) => {
         return <div>
           <Form.Item name={`${record.par}InstrumentFilePar`} >
             <a style={{ paddingRight: 8 }} onClick={() => { setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>
+          </Form.Item>
+        </div>;
+
+      }
+    },
+    {
+      title: '数采仪设定值',
+      align: 'center',
+      dataIndex: 'par',
+      key: 'par',
+      width: 120,
+      render: (text, record) => {
+        if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
+          return '—'
+        }
+        return <Form.Item name={`${record.par}DataVal`}>
+          <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
+        </Form.Item>
+
+      }
+    },
+    {
+      title: '数采仪设定值照片',
+      align: 'center',
+      dataIndex: 'par',
+      key: 'par',
+      width: 140,
+      render: (text, record, index) => {
+        if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
+          return '—'
+        }
+        return <div>
+          <Form.Item name={`${record.par}DataFilePar`} >
+            <a style={{ paddingRight: 8 }} onClick={() => { setFileType('dataFile'); setDataFilePar(`${record.par}DataFilePar`); setFileVisible(true); }}>{dataFileList[`${record.par}DataFilePar`] && dataFileList[`${record.par}DataFilePar`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         </div>;
 

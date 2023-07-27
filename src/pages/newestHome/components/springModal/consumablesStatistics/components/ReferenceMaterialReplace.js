@@ -268,14 +268,12 @@ const columns2 = [
     dataIndex: 'replaceDate',
     key:'replaceDate',
     align:'center',
-    width:150,
   },
   {
     title: '有效日期',
     dataIndex: 'overdueDate',
     key:'overdueDate',
     align:'center',
-    width:150,
   },
 ]
 
