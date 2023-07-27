@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-26 09:30:14
+ * @Last Modified time: 2023-07-27 14:44:14
  * @Description：报警核实详情
  */
 
@@ -42,7 +42,7 @@ const WarningVerify = props => {
     Column: [],
     Data: [],
   });
-  const [modelDescribe, setModelDescribe] = useState();
+  const [modelDescribe, setModelDescribe] = useState('');
 
   useEffect(() => {
     loadData();
@@ -350,6 +350,8 @@ const WarningVerify = props => {
           <WarningDataModal
             PointName={`${warningInfo.EntNmae} - ${warningInfo.PointName}`}
             DGIMN={warningInfo.Dgimn}
+            CompareDGIMN={warningInfo.CompareDGIMN}
+            ComparePointName={`${warningInfo.CompareEntNmae} - ${warningInfo.ComparePointName}`}
             visible={dataModalVisible}
             date={warningDataDate}
             wrapClassName={isShowBack ? 'spreadOverModal' : 'fullScreenModal'}

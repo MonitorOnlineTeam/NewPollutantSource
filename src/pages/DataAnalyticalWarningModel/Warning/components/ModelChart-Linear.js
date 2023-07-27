@@ -14,6 +14,10 @@ const ModelChartLinear = props => {
 
   const getOption = () => {
     const { startPoint, endPoint, data } = chartData;
+    if (!startPoint || !endPoint) {
+      return {};
+    }
+
     let minArr = _.min(data);
     console.log('minArr', minArr);
     const markLineOpt = {

@@ -571,5 +571,14 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    // 获取直方图数据
+    *StatisPolValueNumsByDGIMN({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.StatisPolValueNumsByDGIMN, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
   },
 });

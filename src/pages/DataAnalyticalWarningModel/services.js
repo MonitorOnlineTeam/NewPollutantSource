@@ -92,3 +92,9 @@ export async function ExportHourDataForModel(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Warning/ExportHourDataForModel', params);
   return result;
 }
+
+// 获取直方图数据
+export async function StatisPolValueNumsByDGIMN(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisPolValueNumsByDGIMN', params);
+  return result;
+}
