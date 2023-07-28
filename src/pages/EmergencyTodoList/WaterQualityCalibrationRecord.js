@@ -53,25 +53,25 @@ class WaterQualityCalibrationRecord extends Component {
                         {item.CompletionTime}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.FirstV}
+                        {item.FirstV}{item.FirstU}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                         {item.FirstS}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.SecondV}
+                        {item.SecondV}{item.SecondU}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                         {item.SecondS}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.ThirdV}
+                        {item.ThirdV}{item.ThirdU}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                         {item.ThirdS}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.FourthV}
+                        {item.FourthV}{item.FourthU}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                         {item.FourthS}

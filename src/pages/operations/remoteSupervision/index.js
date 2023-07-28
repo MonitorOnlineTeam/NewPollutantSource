@@ -572,8 +572,22 @@ const Index = (props) => {
     let analyzerUploadList = {}, analyzerUploadFilesListObj = {};
     let dasUploadList = {}, dasUploadFilesListObj = {};
     let rangeUploadList = {}, rangeUploadFilesListObj = {};
-    getPointConsistencyParamFun(mn, () => {
+    getPointConsistencyParamFun(mn, (pollutantList) => {
       let echoData = []
+
+      if(!data.consistencyCheckList || data.consistencyCheckList?.length==0){ //回显数据为空数组时
+        console.log(pollutantList)
+        pollutantList.map(item=>{
+          echoForamt(item.par,[],[])
+        })
+        setIsDisPlayCheck1(false)
+        setIsDisPlayCheck2(false)
+        setIsDisPlayCheck3(false)
+        setIsDisPlayCheck4(false)
+        setDasChecked(false)
+        setNumChecked(false)
+        setNumRealTimeChecked(false)
+      }else{
       data.consistencyCheckList.map(item => { //数据一致性核查表
 
         let val = item.DataList;
@@ -662,6 +676,7 @@ const Index = (props) => {
         enchFileList(item.RangeFileList, rangeUploadList, rangeUploadFilesListObj, `${pars}RangeFilePar`) //数采仪量程照片	
 
       })
+    }
       setAnalyzerFileList({ ...analyzerUploadList })
       setAnalyzerFileCuidList({ ...analyzerUploadFilesListObj })
 
@@ -734,7 +749,7 @@ const Index = (props) => {
        
         }
       }
-      callback && callback()
+      callback && callback(pollutantList)
     })
   }
 
@@ -1041,12 +1056,14 @@ const Index = (props) => {
 
     }
     if (Object.keys(hangedValues).join() == 'DGIMN' && hangedValues.DGIMN) { //切换监测点
-      setTimeout(() => {
-        getPointConsistencyParamFun(hangedValues.DGIMN)
-        // props.getConsistencyCheckInfo({ ID: title=='添加'? addId : editId }, (data) => {
-        //   dgimnEchoDataFun(hangedValues.DGIMN,data)
-        // })
-      }, 180)
+        // getPointConsistencyParamFun(hangedValues.DGIMN)
+        if(title=='添加' && !addId){
+          getPointConsistencyParamFun(hangedValues.DGIMN)
+        }else{
+        props.getConsistencyCheckInfo({ ID: title=='添加' ? addId : editId }, (data) => {
+          dgimnEchoDataFun(hangedValues.DGIMN,data)
+        })
+      }
     }
   }
   const [visible, setVisible] = useState(false)
@@ -1070,8 +1087,7 @@ const Index = (props) => {
         let instrumentUploadList = {}, instrumentUploadFilesListObj = {};
         let traceabilityUploadList = {}, traceabilityUploadFilesListObj = {};
         let dataUploadList = {}, dataUploadFilesListObj = {};
-  
-        consistencyCheckDetail?.consistentParametersCheckList.map(item => {
+        consistencyCheckDetail?.[0]&&consistencyCheckDetail.consistentParametersCheckList.map(item => {
           let code = item.CheckItem
           form3.setFieldsValue({
             [`${code}IsEnable`]: item.Status ? [item.Status] : [],
@@ -1108,6 +1124,8 @@ const Index = (props) => {
           enchFileList(item.SetFileList, settingUploadList, settingUploadFilesListObj, 'SettingFilePar') //仪表设定值照片	
           enchFileList(item.InstrumentFileList, instrumentUploadList, instrumentUploadFilesListObj, 'InstrumentFilePar') //DAS设定值照片	
           enchFileList(item.TraceabilityFileList, traceabilityUploadList, traceabilityUploadFilesListObj, 'TraceabilityFilePar') //溯源值照片	
+          enchFileList(item.DataFileList, dataUploadList, dataUploadFilesListObj, 'DataFilePar') //数采仪设定值照片	
+        
         })
         setSettingFileList({ ...settingUploadList })
         setSettingFileCuidList({ ...settingUploadFilesListObj })
@@ -1525,6 +1543,7 @@ const Index = (props) => {
   const [isDisPlayCheck1, setIsDisPlayCheck1] = useState(false)
   const [isDisPlayCheck2, setIsDisPlayCheck2] = useState(false)
   const isDisplayChange = (e, name,firstDefault) => {
+    
     // const displayEle1 = document.getElementById(`advanced_search_isDisplay1`);
     // const displayEle2 = document.getElementById(`advanced_search_isDisplay2`);
     if (name === 'isDisplay1') {
@@ -1537,12 +1556,31 @@ const Index = (props) => {
       setIsDisPlayCheck1(false)
       // displayEle1 && displayEle1.setAttribute("disabled", true)
     }
-    
-    if(!firstDefault && addDataConsistencyData&&addDataConsistencyData[0]){
-    const pars = name === 'isDisplay2'?'a': ''
-    filesCuidObjFun(addDataConsistencyData, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
-    filesCuidObjFun(addDataConsistencyData, `${pars}DasFilePar`, (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
-    filesCuidObjFun(addDataConsistencyData, `${pars}RangeFilePar`, (cuidObj, listObj) => { setRangeFileCuidList(cuidObj); setRangeFileList(listObj) })
+      const code = name === 'isDisplay2'?'411': '411a'
+      form2.setFieldsValue({
+      [`${code}AnalyzerRang1`]: undefined,
+      [`${code}AnalyzerRang2`]: undefined,
+      [`${code}DsRang1`]: undefined,
+      [`${code}DsRang2`]: undefined,
+      [`${code}ScyRang1`]: undefined,
+      [`${code}ScyRang2`]: undefined,
+      [`${code}RangUniformity`]: undefined,
+      [`${code}RangCheck`]:  [],
+      [`${code}Remark`]: undefined,
+      [`${code}OperationRangeRemark`]: undefined,
+      [`${code}AnalyzerFilePar`]: undefined,
+      [`${code}DasFilePar`]: undefined,
+      [`${code}RangeFilePar`]: undefined,
+    })
+    if(!firstDefault && addDataConsistencyData&&addDataConsistencyData[0]){ //切换 附件id 需要重新赋值
+      const pars = '411'
+      setAnalyzerFileCuidList({...analyzerFileCuidList,[`${pars}aAnalyzerFilePar`]:cuid(),[`${pars}AnalyzerFilePar`]:cuid()})
+      setAnalyzerFileList({...analyzerFileList,[`${pars}aAnalyzerFilePar`]:[],[`${pars}AnalyzerFilePar`]:[]})
+
+      // const pars = name === 'isDisplay2'?'a': ''
+    // filesCuidObjFun(addDataConsistencyData, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
+    // filesCuidObjFun(addDataConsistencyData, `${pars}DasFilePar`, (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
+    // filesCuidObjFun(addDataConsistencyData, `${pars}RangeFilePar`, (cuidObj, listObj) => { setRangeFileCuidList(cuidObj); setRangeFileList(listObj) })
     }
     // if (!e.target.checked) { //取消选中状态
     //   setIsDisPlayCheck1(e.target.checked)
@@ -1568,6 +1606,22 @@ const Index = (props) => {
       setIsDisPlayCheck3(false)
       // displayEle3 && displayEle3.setAttribute("disabled", true)
     }
+    const code = name === 'isDisplay2'?'415': '415b'
+    form2.setFieldsValue({
+      [`${code}AnalyzerRang1`]: undefined,
+      [`${code}AnalyzerRang2`]: undefined,
+      [`${code}DsRang1`]: undefined,
+      [`${code}DsRang2`]: undefined,
+      [`${code}ScyRang1`]: undefined,
+      [`${code}ScyRang2`]: undefined,
+      [`${code}RangUniformity`]: undefined,
+      [`${code}RangCheck`]:  [],
+      [`${code}Remark`]: undefined,
+      [`${code}OperationRangeRemark`]: undefined,
+      [`${code}AnalyzerFilePar`]: undefined,
+      [`${code}DasFilePar`]: undefined,
+      [`${code}RangeFilePar`]: undefined,
+    })
     if(!firstDefault && addParconsistencyData&&addParconsistencyData[0]){
       const pars = name === 'isDisplay4'?'b': ''
       filesCuidObjFun(addParconsistencyData, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })

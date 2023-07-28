@@ -619,12 +619,12 @@ export default {
               routes: [
                 {
                   path: '/assetManage/basicSet',
-                  redirect: '/assetManage/basicSet/OperationProjectUser', // 重定向 默认为
+                  redirect: '/assetManage/basicSet/contractChangeSet', // 重定向 默认为
                 },
                 {
                   name: 'operationProjectUser', // 合同变更设置
-                  path: '/assetManage/basicSet/:configId',
-                  component: './AutoFormManager',
+                  path: '/assetManage/basicSet/contractChangeSet',
+                  component: './assetManage/basicSet/contractChangeSet',
                 },
               ],
             },

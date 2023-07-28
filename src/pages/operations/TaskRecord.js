@@ -202,6 +202,7 @@ class TaskRecord extends Component {
       dispatch, gettasklistqueryparams,
       isHomeModal, DGIMN
     } = this.props;
+    
     dispatch({
       type: 'task/updateState',
       payload: {
@@ -222,6 +223,8 @@ class TaskRecord extends Component {
         },
       },
     })
+    dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: false, }, })
+
     dispatch({
       type: 'task/GetOperationTaskList',
     });

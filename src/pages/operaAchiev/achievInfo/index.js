@@ -322,21 +322,21 @@ const Index = (props) => {
       key: 'UserCoefficient',
       align: 'center'
     },
-    // {
-    //   title: '修改原因',
-    //   dataIndex: 'UpdateCause',
-    //   key: 'UpdateCause',
-    //   align: 'center'
-    // },
+    {
+      title: '修改原因',
+      dataIndex: 'UpdateCause',
+      key: 'UpdateCause',
+      align: 'center'
+    },
     {
       title: <span>操作</span>,
       align: 'center',
       render: (text, record) => {
         return <span>
           <Fragment>
-            {/* <Tooltip title="修改">
+            <Tooltip title="修改">
               <a onClick={() => { edit(record) }} style={{ paddingRight: 12 }}>  <EditOutlined style={{ fontSize: 16 }} /></a>
-            </Tooltip> */}
+            </Tooltip> 
             <Tooltip title="详情">
               <a onClick={() => { detail(record, 'isDetailed') }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
             </Tooltip>

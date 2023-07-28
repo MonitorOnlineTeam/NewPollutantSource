@@ -48,8 +48,7 @@ class Index extends PureComponent {
 
   render() {
     const { status, stopStatus, type, time, visible } = this.props
-    const { regionCodeOneLevel, queryConditions, show, cityLevel } = this.state;
-    console.log(regionCodeOneLevel, queryConditions, cityLevel, show)
+    const { regionCodeOneLevel, queryConditions, show, cityLevel } = this.state;    
     return (
       <Modal
         title="异常报警响应率"

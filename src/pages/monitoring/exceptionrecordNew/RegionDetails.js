@@ -59,11 +59,11 @@ class RegionDetails extends PureComponent {
           dataIndex: 'CreateTime',
           key: 'CreateTime',
         },
-        // {
-        //   title: '报警类型',
-        //   dataIndex: 'x',
-        //   key: 'x',
-        // },
+        {
+          title: '报警类型',
+          dataIndex: 'ExceptionTypeName',
+          key: 'ExceptionTypeName',
+        },
         {
           title: '报警信息',
           dataIndex: 'AlarmMsg',

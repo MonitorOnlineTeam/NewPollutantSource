@@ -255,7 +255,7 @@ const Index = (props) => {
             </Popconfirm>
           </Tooltip>
             <Divider type="vertical" />
-            <Fragment> <Tooltip placement={placement} title={flag? `${tipText}` : "运维监测点信息" } >  <a style={{...disSty}} href="javasctipt:;" onClick={() => { if(flag){return}; operaInfo(record)  }} ><PointIcon /></a></Tooltip></Fragment>
+            <Fragment> <Tooltip placement={'top'} title={"运维监测点信息" } >  <a  href="javasctipt:;" onClick={() => { operaInfo(record)  }} ><PointIcon /></a></Tooltip></Fragment>
 
           </Fragment>
         </span>

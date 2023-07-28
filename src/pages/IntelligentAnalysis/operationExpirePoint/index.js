@@ -318,7 +318,7 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
-        scroll={{ y:props.hideBreadcrumb?'calc(100vh - 670px)' : 'calc(100vh - 645px)' }}
+        scroll={{ y:props.hideBreadcrumb?'calc(100vh - 680px)' : 'calc(100vh - 645px)' }}
       />  
    </Card>
    </BreadcrumbWrapper>
