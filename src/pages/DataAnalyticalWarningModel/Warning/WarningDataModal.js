@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-26 09:32:09
+ * @Last Modified time: 2023-07-27 14:52:48
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -14,6 +14,7 @@ import SdlTable from '@/components/SdlTable';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import PollutantImages from '@/pages/DataAnalyticalWarningModel/Warning/components/PollutantImages';
+import Histogram from '@/pages/DataAnalyticalWarningModel/Warning/components/Histogram';
 import { formatPollutantPopover } from '@/utils/utils';
 
 const COLOR = '#e6b8b7';
@@ -32,7 +33,7 @@ const WarningData = props => {
     dispatch,
     onCancel,
     visible,
-    DGIMN,
+    // DGIMN,
     pollutantListByDgimn,
     date,
     allTypeDataList,
@@ -41,6 +42,8 @@ const WarningData = props => {
     PointName,
     wrapClassName,
     describe,
+    CompareDGIMN,
+    ComparePointName,
   } = props;
   const [columns, setColumns] = useState([]);
   const [selectedNames, setSelectedNames] = useState([]);
@@ -48,6 +51,7 @@ const WarningData = props => {
   const [units, setUnits] = useState({});
   const [images, setImages] = useState([]);
   const [showType, setShowType] = useState('data');
+  const [DGIMN, setDGIMN] = useState(props.DGIMN);
 
   useEffect(() => {
     getPollutantListByDgimn();
@@ -489,9 +493,36 @@ const WarningData = props => {
   // console.log('units', units);
   // console.log('option', option);
 
+  const getTitle = () => {
+    if (CompareDGIMN) {
+      return (
+        <>
+          报警关联数据
+          <Select
+            style={{ width: 420, marginLeft: 20 }}
+            value={DGIMN}
+            onChange={value => {
+              console.log('value', value);
+              setDGIMN(value);
+            }}
+          >
+            <Option value={props.DGIMN} key={1}>
+              {PointName}
+            </Option>
+            <Option value={props.CompareDGIMN} key={1}>
+              {ComparePointName}
+            </Option>
+          </Select>
+        </>
+      );
+    } else {
+      return `报警关联数据（${PointName}）`;
+    }
+  };
+
   return (
     <Modal
-      title={`报警关联数据（${PointName}）`}
+      title={getTitle()}
       destroyOnClose
       visible={visible}
       wrapClassName={wrapClassName}
@@ -599,6 +630,9 @@ const WarningData = props => {
         </Tabs.TabPane>
         <Tabs.TabPane tab="波动范围" key="2" style={{ overflowY: 'auto' }}>
           <PollutantImages images={images} />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="直方图" key="3" style={{ overflowY: 'auto' }}>
+          <Histogram DGIMN={DGIMN} />
         </Tabs.TabPane>
       </Tabs>
     </Modal>

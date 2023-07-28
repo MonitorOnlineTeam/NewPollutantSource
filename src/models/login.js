@@ -14,7 +14,6 @@ const LoginModel = {
   effects: {
     // 后台新框架登录
     *newLogin({ payload, callback }, { call, put }) {
-      debugger;
       const response = yield call(newLogin, {
         LoginFlag: 'true',
         MenuId: '',
