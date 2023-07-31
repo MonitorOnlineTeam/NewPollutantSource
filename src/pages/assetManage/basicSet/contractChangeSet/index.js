@@ -200,12 +200,13 @@ const Index = (props) => {
       }}
       onFinish={onFinish}
     >
-      <Form.Item label="员工编号" name="ManufactorName"  >
-        <Input placeholder='请输入' allowClear style={{ width: 200 }} />
-      </Form.Item>
-      <Form.Item label="姓名" name="Status" >
+            <Form.Item label="姓名" name="UserName" >
        <Input placeholder='请输入' allowClear style={{ width: 200 }} />
       </Form.Item>
+      <Form.Item label="员工编号" name="UserAccount"  >
+        <Input placeholder='请输入' allowClear style={{ width: 200 }} />
+      </Form.Item>
+
       <Form.Item>
         <Button type="primary" htmlType='submit' loading={tableLoading} style={{ marginRight: 8 }}>
           查询

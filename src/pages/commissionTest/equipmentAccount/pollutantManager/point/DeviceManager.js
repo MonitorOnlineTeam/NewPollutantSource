@@ -332,6 +332,7 @@ const Index = (props) => {
       align: 'center',
       width: 120,
       editable: true,
+      name:'监测设备',
       render: (text, row) => row.PollutantName,
     },
     {
@@ -382,7 +383,7 @@ const Index = (props) => {
       title: '测试量程',
       dataIndex: 'Range',
       align: 'center',
-      width: 240,
+      width: 244,
       editable: true,
       render: (text, row) => {
         if(row.MinRange ||  row.MaxRange){
@@ -394,7 +395,7 @@ const Index = (props) => {
       title: '量程校准气体/标准装置值',
       dataIndex: 'RangeCalibration',
       align: 'center',
-      width: 240,
+      width: 180,
       inputType:'number',
       editable: true,
     },
@@ -402,14 +403,13 @@ const Index = (props) => {
       title: '计量单位',
       dataIndex: 'Unit',
       align: 'center',
-      width: 240,
       editable: true,
     },
     {
       title: '评价依据',
       dataIndex: 'EvaluationBasis',
       align: 'center',
-      width: 240,
+      width: 180,
       editable: true,
       render: (text, row) => {
         const data = evaluationBasisList.filter((item) => item.value === text)
@@ -1168,18 +1168,21 @@ const handleSystemAdd = () => { //添加系统信息
       <td {...restProps}>
         {editing ? (
           inputType === 'range' ?
-            <Form.Item style={{ margin: 0 }}>
-              <Form.Item style={{ display: 'inline-block', margin: 0 }}
+            <Form.Item style={{ margin: 0 }} className={'rangeSty'}>
+              <Form.Item 
+                style={{ display: 'inline-block', margin: 0,width:108 }}
                 name={`Min${dataIndex}`}
+                rules={ [ { required: true , message: `请输入`,   }, ]}
               >
                 <InputNumber placeholder={`最小值`} />
               </Form.Item>
-              <span style={{ display: 'inline-block', width: '24px', lineHeight: '32px', textAlign: 'center' }}>
+              <span style={{ display: 'inline-block', width: 8, lineHeight: '32px', textAlign: 'center' }}>
                 ~
-        </span>
+             </span>
               <Form.Item
                 name={`Max${dataIndex}`}
-                style={{ display: 'inline-block', margin: 0 }}
+                style={{ display: 'inline-block', margin: 0,width:108 }}
+                rules={ [ { required: true , message: `请输入`,   }, ]}
               >
                 <InputNumber placeholder={`最大值`} />
               </Form.Item>
@@ -1217,7 +1220,7 @@ const handleSystemAdd = () => { //添加系统信息
                 <Form.Item
                   name={`${dataIndex}`}
                   style={{ margin: 0 }}
-                  rules={ [ { required: dataIndex === 'CEMSNum' , message: '请输入CEMS编号',   }, ]}
+                  rules={ [ { required: dataIndex === 'CEMSNum' || dataIndex === 'FactoryNumber' || dataIndex === 'Unit' ||  (dataIndex==='RangeCalibration' && formDevice.getFieldValue('PollutantCode')!='508' && formDevice.getFieldValue('PollutantCode')!='509' && formDevice.getFieldValue('PollutantCode')!='510') || dataIndex === 'Number'  , message: `请输入`,   }, ]}
                 >
                   {inputNode}
                 </Form.Item>
@@ -1308,8 +1311,9 @@ const handleSystemAdd = () => { //添加系统信息
                 rowClassName="editable-row"
                 scroll={{ y: 'auto' }}
                 loading={props.cEMSSystemListLoading}
-                className={styles.systemListSty}
+                className={`${styles.systemListSty}`}
                 pagination={false}
+                size='small'
               />
             </div>
               <Button style={{ margin: '10px 0 15px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleSystemAdd()} >
@@ -1329,7 +1333,9 @@ const handleSystemAdd = () => { //添加系统信息
               columns={deviceColumns}
               rowClassName="editable-row"
               loading={props.cEMSSystemListLoading}
+              className={`${styles.deviceSty}`}
               pagination={false}
+              size='small'
             />
           </Form>
           <Button style={{ margin: '10px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleDeviceAdd()} >
@@ -1351,7 +1357,9 @@ const handleSystemAdd = () => { //添加系统信息
             columns={referInstruInfoCols}
             rowClassName="editable-row"
             loading={props.paramListLoading}
+            className={`${styles.formReferInstruSty}`}
             pagination={false}
+            size='small'
           />
           <Button style={{ margin: '10px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleReferInstruAdd()} >
             添加参比仪器信息

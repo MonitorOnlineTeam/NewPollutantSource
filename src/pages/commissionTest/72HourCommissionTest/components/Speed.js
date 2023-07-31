@@ -23,7 +23,6 @@ import GenerateTime from './GenerateTime'
 const { TextArea } = Input;
 const { Option } = Select;
 import config from '@/config'
-import { func } from 'prop-types';
 const namespace = 'hourCommissionTest'
 
 

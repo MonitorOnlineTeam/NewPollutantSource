@@ -1574,13 +1574,13 @@ const Index = (props) => {
     })
     if(!firstDefault && addDataConsistencyData&&addDataConsistencyData[0]){ //切换 附件id 需要重新赋值
       const pars = '411'
+      console.log(analyzerFileCuidList)
       setAnalyzerFileCuidList({...analyzerFileCuidList,[`${pars}aAnalyzerFilePar`]:cuid(),[`${pars}AnalyzerFilePar`]:cuid()})
       setAnalyzerFileList({...analyzerFileList,[`${pars}aAnalyzerFilePar`]:[],[`${pars}AnalyzerFilePar`]:[]})
-
-      // const pars = name === 'isDisplay2'?'a': ''
-    // filesCuidObjFun(addDataConsistencyData, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
-    // filesCuidObjFun(addDataConsistencyData, `${pars}DasFilePar`, (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
-    // filesCuidObjFun(addDataConsistencyData, `${pars}RangeFilePar`, (cuidObj, listObj) => { setRangeFileCuidList(cuidObj); setRangeFileList(listObj) })
+      setDasFileCuidList({...dasFileCuidList,[`${pars}aDasFilePar`]:cuid(),[`${pars}DasFilePar`]:cuid()})
+      setDasFileList({...dasFileList,[`${pars}aDasFilePar`]:[],[`${pars}DasFilePar`]:[]})
+      setRangeFileCuidList({...rangeFileCuidList,[`${pars}aRangeFilePar`]:cuid(),[`${pars}RangeFilePar`]:cuid()})
+      setRangeFileList({...rangeFileList,[`${pars}aRangeFilePar`]:[],[`${pars}RangeFilePar`]:[]})
     }
     // if (!e.target.checked) { //取消选中状态
     //   setIsDisPlayCheck1(e.target.checked)
@@ -1606,7 +1606,7 @@ const Index = (props) => {
       setIsDisPlayCheck3(false)
       // displayEle3 && displayEle3.setAttribute("disabled", true)
     }
-    const code = name === 'isDisplay2'?'415': '415b'
+    const code = name === 'isDisplay4'?'415': '415b'
     form2.setFieldsValue({
       [`${code}AnalyzerRang1`]: undefined,
       [`${code}AnalyzerRang2`]: undefined,
@@ -1623,10 +1623,13 @@ const Index = (props) => {
       [`${code}RangeFilePar`]: undefined,
     })
     if(!firstDefault && addParconsistencyData&&addParconsistencyData[0]){
-      const pars = name === 'isDisplay4'?'b': ''
-      filesCuidObjFun(addParconsistencyData, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
-      filesCuidObjFun(addParconsistencyData, `${pars}DasFilePar`, (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
-      filesCuidObjFun(addParconsistencyData, `${pars}RangeFilePar`, (cuidObj, listObj) => { setRangeFileCuidList(cuidObj); setRangeFileList(listObj) })
+      const pars = '415'
+      setAnalyzerFileCuidList({...analyzerFileCuidList,[`${pars}bAnalyzerFilePar`]:cuid(),[`${pars}AnalyzerFilePar`]:cuid()})
+      setAnalyzerFileList({...analyzerFileList,[`${pars}bAnalyzerFilePar`]:[],[`${pars}AnalyzerFilePar`]:[]})
+      setDasFileCuidList({...dasFileCuidList,[`${pars}bDasFilePar`]:cuid(),[`${pars}DasFilePar`]:cuid()})
+      setDasFileList({...dasFileList,[`${pars}bDasFilePar`]:[],[`${pars}DasFilePar`]:[]})
+      setRangeFileCuidList({...rangeFileCuidList,[`${pars}bRangeFilePar`]:cuid(),[`${pars}RangeFilePar`]:cuid()})
+      setRangeFileList({...rangeFileList,[`${pars}bRangeFilePar`]:[],[`${pars}RangeFilePar`]:[]})
       }
     // if (!e.target.checked) { //取消选中状态
     //   setIsDisPlayCheck3(e.target.checked )

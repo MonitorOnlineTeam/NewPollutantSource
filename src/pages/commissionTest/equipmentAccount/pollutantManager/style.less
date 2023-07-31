@@ -31,13 +31,21 @@
     max-height: none !important;
    }
   }
-  .systemListSty :global{
+  .systemListSty :global,.deviceSty :global, .formReferInstruSty :global{
     .editable-row .ant-form-item-explain {
       top: 6px;
       right: 12px;
+   }
   }
   }
+  .deviceSty :global{
+    .rangeSty{
+      .ant-input-number{
+        width: 104px;
+      }
+    }
   }
+  
   .contentContainerSty,.pointSty,.deviceManagerSty{
     :global{
       ::-webkit-scrollbar {

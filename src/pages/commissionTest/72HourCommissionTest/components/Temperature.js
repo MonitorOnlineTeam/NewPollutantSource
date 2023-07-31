@@ -249,7 +249,7 @@ const Index = (props) => {
                             // return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
                             return <span>{!isClears && form.getFieldValue(`AVG${i}`)}</span>
                         }
-                        return <Form.Item className={styles.reqSty} name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.1' placeholder='请输入'  onBlur={(e) => { numCheck(e, `Manual${index}`) }} /></Form.Item>;
                     }
                 },
                 {
@@ -389,12 +389,12 @@ const Index = (props) => {
 
     const numCheck = (e, name) => {
         const value = e.target.value
+       
         if (value) {
-            numVerify(value, (data) => {
-                form.setFieldsValue({ [name]: data })
-            })
+         const data = value.slice(0, value.indexOf('.') + 2) 
+        //  const res =  data&&data.split('.')[1]? data : `${data}0`
+         form.setFieldsValue({ [name]:parseFloat(data) })
         }
-
     }
     const SearchComponents = () => {
         return <>

@@ -23,7 +23,6 @@ import GenerateTime from './GenerateTime'
 const { TextArea } = Input;
 const { Option } = Select;
 import config from '@/config'
-import { func } from 'prop-types';
 const namespace = 'hourCommissionTest'
 
 
@@ -254,7 +253,7 @@ const Index = (props) => {
                             // return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
                             return <span>{!isClears && form.getFieldValue(`AVG${i}`)}</span>
                         }
-                        return <Form.Item className={styles.reqSty} name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' /></Form.Item>;
+                        return <Form.Item className={styles.reqSty} name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.1' placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {

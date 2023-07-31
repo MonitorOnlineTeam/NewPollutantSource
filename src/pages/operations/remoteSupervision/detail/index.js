@@ -218,7 +218,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
-              return record.DataList.AnalyzerMin||record.DataList.AnalyzerMin==0 || record.DataList.AnalyzerMax||record.DataList.AnalyzerMax==0? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMax}（${record.DataList.AnalyzerUnit}）` : null;
+              return record.DataList.AnalyzerMin||record.DataList.AnalyzerMin==0 || record.DataList.AnalyzerMax||record.DataList.AnalyzerMax==0? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMax}${record.DataList.AnalyzerUnit ? `（${record.DataList.AnalyzerUnit}）` :''}` : null;
             }
           }
         },
@@ -249,7 +249,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
-               return record.DataList.DASMin||record.DataList.DASMin==0 || record.DataList.DASMax||record.DataList.DASMax==0? `${record.DataList.DASMin}-${record.DataList.DASMax}（${record.DataList.DASUnit}）` : null;
+               return record.DataList.DASMin||record.DataList.DASMin==0 || record.DataList.DASMax||record.DataList.DASMax==0? `${record.DataList.DASMin}-${record.DataList.DASMax}${record.DataList.DASUnit ? `（${record.DataList.DASUnit}）` :''}` : null;
             }
           }
         },
@@ -279,7 +279,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
-              return record.DataList.DataMin||record.DataList.DataMin==0? `${record.DataList.DataMin}-${record.DataList.DataMax}（${record.DataList.DataUnit}）` : null;
+              return record.DataList.DataMin||record.DataList.DataMin==0? `${record.DataList.DataMin}-${record.DataList.DataMax}${record.DataList.DataUnit ? `（${record.DataList.DataUnit}）` :''}` : null;
 
             }
           }
@@ -780,12 +780,14 @@ const Index = (props) => {
                 dataSource={tableData1}
                 pagination={false}
                 scroll={{ y: 'auto'}}
+                size='small'
               />
                <SdlTable
                 columns={columns2}
                 dataSource={tableData2}
                 pagination={false}
                 scroll={{ y: '100vh' }}
+                size='small'
               />
             </TabPane>
             <TabPane tab="参数一致性核查表" key="2">

@@ -119,7 +119,8 @@ const Index = (props) => {
 
   const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading, } = props;
   
-  const provinceShow = props.configInfo&&props.configInfo.IsShowProjectRegion; 
+  // const provinceShow = props.configInfo&&props.configInfo.IsShowProjectRegion; 
+  const provinceShow = true; 
   
   useEffect(() => {
     onFinish(pageIndex, pageSize);
