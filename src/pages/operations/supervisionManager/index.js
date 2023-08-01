@@ -742,7 +742,7 @@ const Index = (props) => {
 
   const save = (type) => {
     form2.validateFields().then(values => {
-
+   
       const saveFun = () =>{
         type == 0 ? setSaveLoading0(true) : type == 1 ? setSaveLoading1(true) :  type == 2 ? setSaveLoading2(true) : setSaveLoading3(true);
         let principleProblemList = operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList || [];
@@ -771,11 +771,13 @@ const Index = (props) => {
           devicePar.PMManufacturer = pm.map(item => item.Manufacturer).join(',')
           devicePar.PMEquipment = pm.map(item => item.Equipment).join(',')
         }
+        // const filterPointData = pointList2.filter(item=>item.DGIMN == values.DGIMN)
         const data = {
           ...values,
-          RegionCode: values.RegionCode.join(","),
-          PollutantCode: values.PollutantCode.join(","),
-          InspectorDate: moment(values.InspectorDate).format("YYYY-MM-DD HH:mm:ss"),
+          // DGIMN:filterPointData?.[0]?.PointCode,
+          RegionCode:  values.RegionCode&&values.RegionCode.join(","),
+          PollutantCode: values.PollutantCode&&values.PollutantCode.join(","),
+          InspectorDate: values.InspectorDate&&moment(values.InspectorDate).format("YYYY-MM-DD HH:mm:ss"),
           IsSubmit: type,
           TotalScore: tableForm.getFieldValue([`TotalScore`]),
           Files: tableForm.getFieldValue([`Files`]),
@@ -890,6 +892,7 @@ const Index = (props) => {
           RegionCode: data.RegionCode ? data.RegionCode.split(',') : undefined,
           PollutantCode: data.PollutantCode ? data.PollutantCode.split(',') : undefined,
         })
+     
         setDeviceInfoList(data.MonitorPointEquipmentList)
         // setGaschoiceData(data.GasManufacturerName? data.GasManufacturerName : undefined)
         // setPmchoiceData(data.PMManufacturerName? data.PMManufacturerName : undefined)
@@ -943,7 +946,7 @@ const Index = (props) => {
           <Form.Item label='行政区' name='RegionCode' >
             <RegionList noFilter levelNum={3} style={{ width: 150 }} />
           </Form.Item>
-          <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
+          <Spin spinning={entLoading && !entLoading2} size='small' style={{ top: -3, left: 39 }}>
             <Form.Item label='企业' name='EntCode' style={{ marginLeft: 8, marginRight: 8 }}>
               <EntAtmoList noFilter style={{ width: 300 }} />
             </Form.Item>

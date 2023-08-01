@@ -255,9 +255,7 @@ const Index = (props) => {
 
 
 
-  // useEffect(()=>{
-  //   reqinit()
-  // },[addDataConsistencyData,addParconsistencyData])
+
 
   const reqinit = () => { //初始化是否校验
     if (addDataConsistencyData && addDataConsistencyData[0]) { //动态生成判断量程 是否 是否必填的
@@ -490,8 +488,8 @@ const Index = (props) => {
             </Tooltip>
             <Divider type="vertical" />
             <Tooltip title={"下发"} > {/* title={!issue||issue==='已下发'?  null : "下发"}*/}
-              <Popconfirm disabled={!issue || issue === '已下发' || !isCheckUser ? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
-                <a style={{ cursor: !issue || issue === '已下发' || !isCheckUser ? 'not-allowed' : 'pointer', color: !issue || issue === '已下发' || !isCheckUser ? 'rgba(0, 0, 0, 0.25) ' : '#1890ff', }}><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
+              <Popconfirm disabled={(!issue) || issue === '已下发' || (!isCheckUser) ? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
+                <a style={{ cursor: (!issue) || issue === '已下发' || (!isCheckUser) ? 'not-allowed' : 'pointer', color: !issue || issue === '已下发' || !isCheckUser ? 'rgba(0, 0, 0, 0.25) ' : '#1890ff', }}><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
           </>
@@ -503,30 +501,32 @@ const Index = (props) => {
   const [title, setTitle] = useState('添加')
   const [editId, setEditId] = useState()
 
-
-
-
-  const echoForamt = (code, val,item) => { //格式化 编辑回显
+  const echoForamtUnit = (code, val,item) => { //格式化 除单位外的所有单位 数据一致性核查表
+    form2.setFieldsValue({
+      [`${code}AnalyzerUnit`]: val.AnalyzerUnit,
+      [`${code}DsUnit`]: val.DASUnit,
+      [`${code}ScyUnit`]: val.DataUnit,
+      [`${code}IndicaUnit`]: val.AnalyzerCouUnit,
+      [`${code}DsDataUnit`]: val.DASCouUnit,
+      [`${code}ScyDataUnit`]: val.DataCouUnit,
+    })
+  }
+  const echoForamtData = (code, val,item) => { //格式化 除单位外的所有数据 数据一致性核查表
     form2.setFieldsValue({
       [`${code}AnalyzerRang1`]: val.AnalyzerMin,
       [`${code}AnalyzerRang2`]: val.AnalyzerMax,
-      [`${code}AnalyzerUnit`]: val.AnalyzerUnit,
       [`${code}DsRang1`]: val.DASMin,
       [`${code}DsRang2`]: val.DASMax,
-      [`${code}DsUnit`]: val.DASUnit,
       [`${code}ScyRang1`]: val.DataMin,
       [`${code}ScyRang2`]: val.DataMax,
-      [`${code}ScyUnit`]: val.DataUnit,
       [`${code}RangUniformity`]: val.RangeAutoStatus,
       [`${code}RangCheck`]: val.RangeStatus ? [val.RangeStatus] : [],
       [`${code}Remark`]: val.RangeRemark,
       [`${code}OperationRangeRemark`]: val.OperationRangeRemark,
       [`${code}IndicaVal`]: val.AnalyzerCou,//实时数据一致性核查表
-      [`${code}IndicaUnit`]: val.AnalyzerCouUnit,
       [`${code}DsData`]: val.DASCou,
       [`${code}DsDataUnit`]: val.DASCouUnit,
       [`${code}ScyData`]: val.DataCou,
-      [`${code}ScyDataUnit`]: val.DataCouUnit,
       [`${code}DataUniformity`]: val.CouAutoStatus,
       [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
       [`${code}Remark2`]: val.CouRemrak,
@@ -535,6 +535,39 @@ const Index = (props) => {
       [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
       [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
     })
+  }
+
+  const echoForamt = (code, val,item) => { //格式化 编辑回显
+    // form2.setFieldsValue({
+    //   [`${code}AnalyzerRang1`]: val.AnalyzerMin,
+    //   [`${code}AnalyzerRang2`]: val.AnalyzerMax,
+    //   [`${code}AnalyzerUnit`]: val.AnalyzerUnit,
+    //   [`${code}DsRang1`]: val.DASMin,
+    //   [`${code}DsRang2`]: val.DASMax,
+    //   [`${code}DsUnit`]: val.DASUnit,
+    //   [`${code}ScyRang1`]: val.DataMin,
+    //   [`${code}ScyRang2`]: val.DataMax,
+    //   [`${code}ScyUnit`]: val.DataUnit,
+    //   [`${code}RangUniformity`]: val.RangeAutoStatus,
+    //   [`${code}RangCheck`]: val.RangeStatus ? [val.RangeStatus] : [],
+    //   [`${code}Remark`]: val.RangeRemark,
+    //   [`${code}OperationRangeRemark`]: val.OperationRangeRemark,
+    //   [`${code}IndicaVal`]: val.AnalyzerCou,//实时数据一致性核查表
+    //   [`${code}IndicaUnit`]: val.AnalyzerCouUnit,
+    //   [`${code}DsData`]: val.DASCou,
+    //   [`${code}DsDataUnit`]: val.DASCouUnit,
+    //   [`${code}ScyData`]: val.DataCou,
+    //   [`${code}ScyDataUnit`]: val.DataCouUnit,
+    //   [`${code}DataUniformity`]: val.CouAutoStatus,
+    //   [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
+    //   [`${code}Remark2`]: val.CouRemrak,
+    //   [`${code}OperationDataRemark`]: val.OperationDataRemark,
+    //   [`${code}AnalyzerFilePar`]: item.AnalyzerFileList?.[0] && item.AnalyzerFileList?.[0].FileUuid,
+    //   [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
+    //   [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
+    // })
+    echoForamtData(code, val,item)
+    echoForamtUnit(code, val,item)
   }
 
   const [echoLoading, setEchoLoading] = useState(false)
@@ -567,16 +600,14 @@ const Index = (props) => {
     })
   }
 
-  const dgimnEchoDataFun = (mn, data,title) => { //通过监测点获取回显数据
+  const dgimnEchoDataFun = (mn, data,title) => { //通过监测点获取回显数据  编辑时
 
     let analyzerUploadList = {}, analyzerUploadFilesListObj = {};
     let dasUploadList = {}, dasUploadFilesListObj = {};
     let rangeUploadList = {}, rangeUploadFilesListObj = {};
-    getPointConsistencyParamFun(mn, (pollutantList) => {
+    getPointConsistencyParamFun(mn, (pollutantList,paramList) => {
       let echoData = []
-
-      if(!data.consistencyCheckList || data.consistencyCheckList?.length==0){ //回显数据为空数组时
-        console.log(pollutantList)
+      if(!data.consistencyCheckList || data.consistencyCheckList?.length==0){ //数据一致性核查表 回显数据为空数组时
         pollutantList.map(item=>{
           echoForamt(item.par,[],[])
         })
@@ -653,7 +684,7 @@ const Index = (props) => {
         setNumRealTimeChecked(val.DataStatus == 1 ? true : false)
         setDasChecked(val.DASStatus == 1 ? true : false)
 
-        const enchFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => { //附件回显
+        const echoFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => { //附件回显
        
           if (code == '411' && item.DataList && !item.DataList.Special) { return }
           let parFileList = []; 
@@ -671,9 +702,9 @@ const Index = (props) => {
           uploadFilesListObj[`${code}${filePar}`] = uploadList?.[0]?.FileUuid ? uploadList[0].FileUuid : cuid(); //添加过的照片 再次编辑时
         }
         const pars  = item.PollutantName == '颗粒物'&&val.Special == 2 ? 'a':  item.PollutantName === '流速'&&val.Special == 2 ? 'b'  : ''
-        enchFileList(item.AnalyzerFileList, analyzerUploadList, analyzerUploadFilesListObj,`${pars}AnalyzerFilePar`) //分析仪量程照片	
-        enchFileList(item.DASFileList, dasUploadList, dasUploadFilesListObj, `${pars}DasFilePar`) //DAS量程照片	
-        enchFileList(item.RangeFileList, rangeUploadList, rangeUploadFilesListObj, `${pars}RangeFilePar`) //数采仪量程照片	
+        echoFileList(item.AnalyzerFileList, analyzerUploadList, analyzerUploadFilesListObj,`${pars}AnalyzerFilePar`) //分析仪量程照片	
+        echoFileList(item.DASFileList, dasUploadList, dasUploadFilesListObj, `${pars}DasFilePar`) //DAS量程照片	
+        echoFileList(item.RangeFileList, rangeUploadList, rangeUploadFilesListObj, `${pars}RangeFilePar`) //数采仪量程照片	
 
       })
     }
@@ -724,16 +755,6 @@ const Index = (props) => {
       commonForm.setFieldsValue({ OperationUserID: operationName })
       echoUnit(pollutantList) //默认显示单位默认值
       echoUnit(addRealTimeList)
-      // if (data && data[0] && title === '添加') { //附件 cuid
-      // let filesCuidObj = {}, filesListObj = {};
-      // paramList.map((item, index) => {
-      //   filesCuidObj[`${item.par}ParFiles`] = cuid();
-      //   filesListObj[`${item.par}ParFiles`] = [];
-      // })
-      // setFilesCuidList(filesCuidObj)
-      // setFilesList3(filesListObj)
-      // }
-
       if (title === '添加') {
         if (pollutantList?.[0]) {
           const pars = isDisPlayCheck2?'a':isDisPlayCheck4? 'b' : ''
@@ -744,12 +765,12 @@ const Index = (props) => {
         if (paramList?.[0]) {
           filesCuidObjFun(paramList, 'SettingFilePar', (cuidObj, listObj) => { setSettingFileCuidList(cuidObj); setSettingFileList(listObj) })
           filesCuidObjFun(paramList, 'InstrumentFilePar', (cuidObj, listObj) => { setInstrumentFileCuidList(cuidObj); setInstrumentFileList(listObj) })
-          filesCuidObjFun(paramList, 'TraceabilityPar', (cuidObj, listObj) => { setTraceabilityFileCuidList(cuidObj); setTraceabilityFileList(listObj) })
-          filesCuidObjFun(paramList, 'DataPar', (cuidObj, listObj) => { setDataFileCuidList(cuidObj); setDataFileList(listObj) })
+          filesCuidObjFun(paramList, 'TraceabilityFilePar', (cuidObj, listObj) => { setTraceabilityFileCuidList(cuidObj); setTraceabilityFileList(listObj) })
+          filesCuidObjFun(paramList, 'DataFilePar', (cuidObj, listObj) => { setDataFileCuidList(cuidObj); setDataFileList(listObj) })
        
         }
       }
-      callback && callback(pollutantList)
+      callback && callback(pollutantList,paramList)
     })
   }
 
@@ -814,6 +835,7 @@ const Index = (props) => {
 
     setTitle('添加')
     setVisible(true)
+    setTabType('1')
     // setFilesCuid1(cuid())
     setFilesCuid2(cuid())
     resetData()
@@ -950,7 +972,7 @@ const Index = (props) => {
               AutoUniformity: values[`${item.par}Uniform`],
               Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
               Remark: values[`${item.par}Remark3`],
-              OperationReamrk: values[`${item.par}OperationReamrk`],
+              OperationReamrk: values[`${item.par}OperationReamrk`], 
               SetFile: values[`${item.par}SettingFilePar`],
               InstrumentFile: values[`${item.par}InstrumentFilePar`],
               TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
@@ -1034,13 +1056,9 @@ const Index = (props) => {
   }
 
 
-
-
-
-
   const [pointList2, setPointList2] = useState([])
   const [pointLoading2, setPointLoading2] = useState(false)
-  const onValuesChange2 = async (hangedValues, allValues) => { //添加 编辑
+  const onValuesChange2 =  (hangedValues, allValues) => { //添加 编辑
     if (Object.keys(hangedValues).join() == 'EntCode') {
       if (!hangedValues.EntCode) {//清空时 
         setPointList2([])
@@ -1056,14 +1074,29 @@ const Index = (props) => {
 
     }
     if (Object.keys(hangedValues).join() == 'DGIMN' && hangedValues.DGIMN) { //切换监测点
-        // getPointConsistencyParamFun(hangedValues.DGIMN)
-        if(title=='添加' && !addId){
-          getPointConsistencyParamFun(hangedValues.DGIMN)
-        }else{
-        props.getConsistencyCheckInfo({ ID: title=='添加' ? addId : editId }, (data) => {
-          dgimnEchoDataFun(hangedValues.DGIMN,data)
+      getPointConsistencyParamFun(hangedValues.DGIMN,(pollutantList,paramList)=>{
+        pollutantList.map(item=>{
+          echoForamtData(item.par,[],[])
         })
-      }
+        setIsDisPlayCheck1(false)
+        setIsDisPlayCheck2(false)
+        setIsDisPlayCheck3(false)
+        setIsDisPlayCheck4(false)
+        setDasChecked(false)
+        setNumChecked(false)
+        setNumRealTimeChecked(false)
+        paramList.map(item=>{
+          echoFilePar(item.ChildID,item)
+        })
+      },'添加')
+    //     if(title=='添加' && !addId){
+    //       getPointConsistencyParamFun(hangedValues.DGIMN,()=>{
+    //       },'添加')
+    //     }else{
+    //     props.getConsistencyCheckInfo({ ID: title=='添加' ? addId : editId }, (data) => {
+    //       dgimnEchoDataFun(hangedValues.DGIMN,data,title)
+    //     })
+    //  }
     }
   }
   const [visible, setVisible] = useState(false)
@@ -1077,36 +1110,33 @@ const Index = (props) => {
     setPageSize(PageSize)
     onFinish(PageIndex, PageSize)
   }
-
-
-  const tabsChange = (key) => {
-    setTabType(key)
-      if (key == 2) {
+   const echoFilePar = (code,item) =>{
+      form3.setFieldsValue({
+        [`${code}IsEnable`]: item.Status ? [item.Status] : [],
+        [`${code}SetVal`]: item.SetValue,
+        [`${code}InstrumentSetVal`]: item.InstrumentSetValue,
+        [`${code}TraceVal`]: item.TraceabilityValue,
+        [`${code}DataVal`]: item.DataValue,
+        [`${code}Uniform`]: item.AutoUniformity,
+        [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
+        [`${code}Remark3`]: item.Remark,
+        [`${code}OperationReamrk`]: item.OperationReramk,
+        [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
+        [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
+        [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
+        [`${code}DataFilePar`]: item.DataFileList?.[0] && item.DataFileList?.[0].FileUuid,
+      })
+   }
+   const echoParFun = (data) =>{ //格式化 编辑回显     参数一致性核查表
         /***参数一致性核查表***/
         let settingUploadList = {}, settingUploadFilesListObj = {};
         let instrumentUploadList = {}, instrumentUploadFilesListObj = {};
         let traceabilityUploadList = {}, traceabilityUploadFilesListObj = {};
         let dataUploadList = {}, dataUploadFilesListObj = {};
-        consistencyCheckDetail?.[0]&&consistencyCheckDetail.consistentParametersCheckList.map(item => {
-          let code = item.CheckItem
-          form3.setFieldsValue({
-            [`${code}IsEnable`]: item.Status ? [item.Status] : [],
-            [`${code}SetVal`]: item.SetValue,
-            [`${code}InstrumentSetVal`]: item.InstrumentSetValue,
-            [`${code}TraceVal`]: item.TraceabilityValue,
-            [`${code}DataVal`]: item.DataValue,
-            [`${code}Uniform`]: item.AutoUniformity,
-            [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
-            [`${code}Remark3`]: item.Remark,
-            [`${code}OperationReamrk`]: item.OperationReamrk,
-            [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
-            [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
-            [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
-            [`${code}DataFilePar`]: item.DataFileList?.[0] && item.DataFileList?.[0].FileUuid,
-            
-            // [`${code}ParFiles`]: item.Upload,
-          })
-          const enchFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
+        data.map(item => {
+          const code = item.CheckItem;
+          echoFilePar(code,item)
+          const echoFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
             let parFileList = [];
             uploadList?.length && uploadList.map(uploadItem => {
               if (!uploadItem.IsDelete) {
@@ -1121,11 +1151,13 @@ const Index = (props) => {
             uploadListPar[`${code}${filePar}`] = parFileList;
             uploadFilesListObj[`${code}${filePar}`] = uploadList?.[0]?.FileUuid ? uploadList[0].FileUuid : cuid();
           }
-          enchFileList(item.SetFileList, settingUploadList, settingUploadFilesListObj, 'SettingFilePar') //仪表设定值照片	
-          enchFileList(item.InstrumentFileList, instrumentUploadList, instrumentUploadFilesListObj, 'InstrumentFilePar') //DAS设定值照片	
-          enchFileList(item.TraceabilityFileList, traceabilityUploadList, traceabilityUploadFilesListObj, 'TraceabilityFilePar') //溯源值照片	
-          enchFileList(item.DataFileList, dataUploadList, dataUploadFilesListObj, 'DataFilePar') //数采仪设定值照片	
-        
+          echoFileList(item.SetFileList, settingUploadList, settingUploadFilesListObj, 'SettingFilePar') //仪表设定值照片	
+          echoFileList(item.InstrumentFileList, instrumentUploadList, instrumentUploadFilesListObj, 'InstrumentFilePar') //DAS设定值照片	
+          echoFileList(item.TraceabilityFileList, traceabilityUploadList, traceabilityUploadFilesListObj, 'TraceabilityFilePar') //溯源值照片	
+          echoFileList(item.DataFileList, dataUploadList, dataUploadFilesListObj, 'DataFilePar') //数采仪设定值照片	
+          setTimeout(()=>{
+            item.Uniformity&&onManualChange(item.Uniformity && [item.Uniformity], item, `${code}RangCheck3`, 1)
+          })
         })
         setSettingFileList({ ...settingUploadList })
         setSettingFileCuidList({ ...settingUploadFilesListObj })
@@ -1138,6 +1170,11 @@ const Index = (props) => {
   
         setDataFileList({ ...dataUploadList })
         setDataFileCuidList({ ...dataUploadFilesListObj })
+   }
+  const tabsChange = (key) => {
+    setTabType(key)
+      if (key == 2 && title=='编辑') {
+        consistencyCheckDetail?.consistentParametersCheckList?.[0]&& echoParFun(consistencyCheckDetail.consistentParametersCheckList)
       }
   }
 
@@ -1221,13 +1258,6 @@ const Index = (props) => {
         }
       })
       if (info.file.status === 'uploading') {
-        // if (fileType == 1) {
-        //   setFileList1(fileList)
-        // } else if (fileType == 2) {
-        //   setFileList2(fileList)
-        // } else {
-        //   setFilesList3({ ...filesList3, [filePar]: fileList })
-        // }
         switch (fileType) {
           case 2: setFileList2(fileList); break;
           case 'analyzerFile': setAnalyzerFileList({ ...analyzerFileList, [analyzerFilePar]: fileList }); break;
@@ -1574,7 +1604,6 @@ const Index = (props) => {
     })
     if(!firstDefault && addDataConsistencyData&&addDataConsistencyData[0]){ //切换 附件id 需要重新赋值
       const pars = '411'
-      console.log(analyzerFileCuidList)
       setAnalyzerFileCuidList({...analyzerFileCuidList,[`${pars}aAnalyzerFilePar`]:cuid(),[`${pars}AnalyzerFilePar`]:cuid()})
       setAnalyzerFileList({...analyzerFileList,[`${pars}aAnalyzerFilePar`]:[],[`${pars}AnalyzerFilePar`]:[]})
       setDasFileCuidList({...dasFileCuidList,[`${pars}aDasFilePar`]:cuid(),[`${pars}DasFilePar`]:cuid()})
@@ -2718,7 +2747,7 @@ const Index = (props) => {
                     name={"advanced_search"}
                     initialValues={{}}
                     className={styles.queryForm2}
-                    onValuesChange={onValuesChange2}
+                    // onValuesChange={onValuesChange2}
                   >
                     <SdlTable
                       // loading={parLoading}
@@ -2761,7 +2790,7 @@ const Index = (props) => {
                     name={"advanced_search"}
                     initialValues={{}}
                     className={styles.queryForm2}
-                    onValuesChange={onValuesChange2}
+                    // onValuesChange={onValuesChange2}
                   >
                     <SdlTable
                       loading={parLoading}

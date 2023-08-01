@@ -697,8 +697,8 @@ const Index = (props) => {
     {
       title: '运维人员核查备注',
       align: 'center',
-      dataIndex: 'OperationReamrk',
-      key: 'OperationReamrk',
+      dataIndex: 'OperationReramk',
+      key: 'OperationReramk',
       width: 180,
     },
     {

@@ -8,9 +8,10 @@
 
   .leftWrapper {
     flex: 1;
-    margin-right: 20px;
+    margin-right: 12px;
     display: flex;
     flex-direction: column;
+    max-width: calc(100% - 36%);
   }
 
   .rightWrapper {
@@ -41,7 +42,7 @@
   .topWrapper {
     display: flex;
     // max-height: calc((100vh) / 2);
-    min-height: 500px;
+    min-height: 400px;
     height: calc(100vh - 541px);
     .taskListWrapper {
       flex: 1;
@@ -49,7 +50,7 @@
     }
   }
   .bottomWrapper {
-    margin-top: 10px !important;
+    margin-top: 12px !important;
     // max-height: calc((50vh) - 130px);
     // min-height: 400px;
     flex: 1;
@@ -61,8 +62,8 @@
     line-height: 20px;
     position: relative;
     padding-left: 16px;
-    margin-bottom: 6px;
-
+    // margin-bottom: 6px;
+    padding-bottom: 6px;
     &::after {
       content: '';
       position: absolute;
@@ -131,8 +132,8 @@
     }
   }
   .operaServiceSty{
-    padding:6px 16px 30px 16px;
-    height: calc(100% - 36px);
+    padding:6px 16px 30px 12px;
+    height: calc(100% - 92px);
     overflow-y: auto;
     :global {
       .ant-col  {
@@ -182,4 +183,28 @@
    background: none !important;
   }
 }
+}
+.quickNavWrapper :global{
+ margin-bottom: 12px;
+}
+.btnSty{
+  padding: 5px 16px;
+  border-radius: 15px;
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 16px;
+  margin-right: 6px;
+}
+.selectBtnSty  :global{
+   margin: 2px 0 12px;
+  .btnItem{
+  .btnSty;
+   background: #F5F6FA;
+   color: #333;
+  }
+  .btnItemActive{
+   .btnSty;
+   background: #4090FF;
+   color: #fff;
+  }
 }

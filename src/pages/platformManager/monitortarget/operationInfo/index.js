@@ -4,7 +4,7 @@
  * 创建时间：2021.08.24
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Upload, Tooltip, Divider, Modal, DatePicker, Popover } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Radio, Typography, Card, Button, Select, message, Row, Col, Upload, Tooltip, Divider, Modal, DatePicker, Popover } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, CodeSandboxCircleFilled } from '@ant-design/icons';
 import { connect } from "dva";
@@ -29,7 +29,7 @@ const namespace = 'operationInfo'
 
 const dvaPropsData = ({ loading, operationInfo, autoForm }) => ({
   tableDatas: operationInfo.tableDatas,
-  tableTotal:operationInfo.tableTotal,
+  tableTotal: operationInfo.tableTotal,
   projectTableDatas: operationInfo.projectTableDatas,
   tableLoading: operationInfo.tableLoading,
   loadingConfirm: loading.effects[`${namespace}/updateOrAddProjectRelation`],
@@ -41,7 +41,7 @@ const dvaPropsData = ({ loading, operationInfo, autoForm }) => ({
 
 const dvaDispatch = (dispatch) => {
   return {
-    updateState: (payload) => { 
+    updateState: (payload) => {
       dispatch({
         type: `${namespace}/updateState`,
         payload: payload,
@@ -104,7 +104,7 @@ const dvaDispatch = (dispatch) => {
         payload: payload
       })
     },
- 
+
     cycle: (payload, callback) => { //总频次
       dispatch({
         type: 'autoForm/getAutoFormData',
@@ -203,7 +203,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas,tableTotal,projectTableDatas, loadingConfirm, tableLoading, exportLoading, projectNumListLoading, operationInfoList, entPointList } = props;
+  const { tableDatas, tableTotal, projectTableDatas, loadingConfirm, tableLoading, exportLoading, projectNumListLoading, operationInfoList, entPointList } = props;
 
 
   useEffect(() => {
@@ -218,7 +218,7 @@ const Index = (props) => {
   const [calibrationCycleList, setCalibrationCycleList] = useState([]);
 
   const initData = () => {
-    onFinish(pageIndex,pageSize);
+    onFinish(pageIndex, pageSize);
     props.operationList();//运维列表
     props.getEntPointList({ EntID: props.location.query.p });//企业运维列表
 
@@ -337,7 +337,7 @@ const Index = (props) => {
       width: 150,
       render: (text, record, index) => {
         const attachmentDataSource = getAttachmentArrDataSource(text);
-        return text&&text[0]? <AttachmentView dataSource={attachmentDataSource} /> : null;
+        return text && text[0] ? <AttachmentView dataSource={attachmentDataSource} /> : null;
 
       }
     },
@@ -374,17 +374,17 @@ const Index = (props) => {
     {
       title: <span>操作</span>,
       align: 'center',
-      fixed:'right',
+      fixed: 'right',
       render: (text, record) => {
-        const flag =   !record.deleteFlag
+        const flag = !record.deleteFlag
         const tipText = '没有操作权限，请联系管理员'
-        const placement= flag?  'left' :'top'
-        const disSty = { cursor: (flag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ')}
+        const placement = flag ? 'left' : 'top'
+        const disSty = { cursor: (flag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') }
         return <span>
-          <Fragment><Tooltip placement={placement} title={flag? `${tipText}` : "编辑" }> <a  style={{...disSty}} onClick={() => {if(flag){return}; edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-          <Fragment> <Tooltip  placement={placement}  title={flag? `${tipText}` : "删除" }>
+          <Fragment><Tooltip placement={placement} title={flag ? `${tipText}` : "编辑"}> <a style={{ ...disSty }} onClick={() => { if (flag) { return }; edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          <Fragment> <Tooltip placement={placement} title={flag ? `${tipText}` : "删除"}>
             <Popconfirm title="确定要删除此条信息吗？" disabled={flag} style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
-              <a style={{...disSty}}><DelIcon/></a>
+              <a style={{ ...disSty }}><DelIcon /></a>
             </Popconfirm>
           </Tooltip>
           </Fragment>
@@ -475,8 +475,8 @@ const Index = (props) => {
     if (record.uploadInfo && record.uploadInfo[0]) {  // 运维接收确认单附件
       form2.setFieldsValue({ Enclosure: record.uploadID })
       setFilesCuid1(record.uploadID)
-      const fileList =[]
-       record.uploadInfo.map(item => {
+      const fileList = []
+      record.uploadInfo.map(item => {
         if (!item.IsDelete) {
           fileList.push({
             uid: item.GUID,
@@ -507,10 +507,10 @@ const Index = (props) => {
   };
 
 
-  const onFinish = async (pageIndexs,pageSizes) => {  //查询
+  const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
-      props.getEntProjectRelationList({ ...values,pageIndex:pageIndexs,pageSize:pageSizes })
+      props.getEntProjectRelationList({ ...values, pageIndex: pageIndexs, pageSize: pageSizes })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -522,23 +522,23 @@ const Index = (props) => {
     setPageIndex(PageIndex)
     setPageSize(PageSize)
     onFinish(PageIndex, PageSize)
-}
-  
+  }
+
   const onModalOk = async () => { //添加 or 编辑弹框
     try {
       const values = await form2.validateFields();
-      if(!values.deleteFlag && type === 'edit' ){
-          message.warning('没有操作权限，请联系管理员')
-          return;
+      if (!values.deleteFlag && type === 'edit') {
+        message.warning('没有操作权限，请联系管理员')
+        return;
       }
       props.updateOrAddProjectRelation(
         {
           ...values,
-          BeginTime: values.BeginTime&&values.BeginTime.format('YYYY-MM-DD 00:00:00'), EndTime: values.EndTime&&values.EndTime.format('YYYY-MM-DD 23:59:59'),
+          BeginTime: values.BeginTime && values.BeginTime.format('YYYY-MM-DD 00:00:00'), EndTime: values.EndTime && values.EndTime.format('YYYY-MM-DD 23:59:59'),
           DGIMN: type === 'edit' ? [values.DGIMN] : values.DGIMN,
         }, () => {
           setFromVisible(false);
-          onFinish(pageIndex,pageSize);
+          onFinish(pageIndex, pageSize);
         })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -570,12 +570,12 @@ const Index = (props) => {
       name="advanced_search"
       className={styles['ant-advanced-search-form']}
       form={form}
-      onFinish={()=>{setPageIndex(1);onFinish(1,pageSize)}}
-      initialValues={{ EntID: props.location.query.p }}
+      onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
+      initialValues={{ EntID: props.location.query.p,Status:1 }}
     >
 
       <Row>
-        <Form.Item name='DGIMN' label='监测点' >
+        <Form.Item name='DGIMN' label='监测点' style={{ margin: '4px 6px 8px 0' }} >
           <Select placeholder="请选择监测点列表" style={{ width: 180 }} allowClear showSearch optionFilterProp="children">
             {entPointList[0] && entPointList.map(item => {
               return <Option value={item.DGIMN}>{item.PointName}</Option>
@@ -583,20 +583,26 @@ const Index = (props) => {
             }
           </Select>
         </Form.Item>
-        <Form.Item name='ProjectID' style={{ margin: '20px 12px' }} label='项目编号' >
+        <Form.Item name='ProjectID' style={{ margin: '4px 6px 12px' }} label='项目编号' >
           <Input placeholder="请输入项目编号" allowClear />
         </Form.Item>
-        <Form.Item name='OperationCompany' style={{ margin: '20px 12px 20px 0' }} label='运维单位' >
+        <Form.Item name='OperationCompany' style={{ margin: '4px 6px 12px' }} label='运维单位' >
           <Input placeholder="请输入运维单位" allowClear />
+        </Form.Item>
+        <Form.Item name='Status' style={{ margin: '4px 6px 12px' }}>
+        <Radio.Group defaultValue={1}>
+          <Radio.Button value={1}>进行中任务</Radio.Button>
+          <Radio.Button value={2}>已结束任务</Radio.Button>
+        </Radio.Group>
         </Form.Item>
         <Form.Item label="" name="EntID" hidden>
           <Input />
         </Form.Item>
-        <Form.Item>
+        <Form.Item style={{ margin: '4px 6px 12px' }}>
           <Button type="primary" htmlType="submit">
             查询
           </Button>
-          <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}  >
+          <Button style={{ margin: '0 6px', }} onClick={() => { form.resetFields(); }}  >
             重置
           </Button>
           <Button onClick={() => { props.history.go(-1); }} ><RollbackOutlined />返回</Button>
@@ -604,13 +610,13 @@ const Index = (props) => {
       </Row>
 
       <Row align='middle'>
-        <Form.Item style={{ margin: '0 8px 20px 0' }} >
+        <Form.Item style={{ margin: '0 6px 12px 0' }} >
           <Button icon={<PlusOutlined />} type="primary" onClick={() => { add() }} >
             添加
      </Button>
           <Button icon={<ExportOutlined />} loading={exportLoading} style={{ margin: '0 8px', }} onClick={() => { exports() }}>
             导出
-          </Button>
+          </Button>     
         </Form.Item>
       </Row>
 
@@ -717,7 +723,7 @@ const Index = (props) => {
               showSizeChanger: true,
               showQuickJumper: true,
               onChange: handleTableChange,
-          }}
+            }}
           />
         </Card>
       </BreadcrumbWrapper>
@@ -789,7 +795,7 @@ const Index = (props) => {
       <Form.Item label="省份名称" name="RegionCode" rules={[  { required: true, message: '请选择省份名称!',  },]} >
        <RegionList     levelNum={1} selectType = '1,是' style={{width:'100%'}}/>
       </Form.Item>
-      </Col> */}            
+      </Col> */}
             <Col span={12}>
               <Form.Item label="巡检类型" name="inspectionType" rules={[{ required: true, message: '请选择巡检类型!', },]} >
                 <Select placeholder="请选择巡检类型" >
@@ -871,7 +877,7 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item  name="deleteFlag" hidden>
+              <Form.Item name="deleteFlag" hidden>
                 <Input />
               </Form.Item>
             </Col>

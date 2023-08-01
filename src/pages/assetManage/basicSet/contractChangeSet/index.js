@@ -30,7 +30,7 @@ const namespace = 'contractChangeSet'
 const dvaPropsData = ({ loading, contractChangeSet }) => ({
   tableDatas: contractChangeSet.tableDatas,
   pointDatas: contractChangeSet.pointDatas,
-  tableLoading: loading.effects[`${namespace}/getOperationUserList`],
+  tableLoading: loading.effects[`${namespace}/getOperationUserList`] || loading.effects[`${namespace}/deleteOperationUser`], 
   tableTotal: contractChangeSet.tableTotal,
   loadingAddConfirm: loading.effects[`${namespace}/updateOperationUser`],
 })

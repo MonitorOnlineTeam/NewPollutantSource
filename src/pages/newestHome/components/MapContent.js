@@ -660,9 +660,7 @@ class Index extends PureComponent {
     const { showType, entTitleShow, pointTitleShow, isMassive } = this.state;
     const alarmStatus = extData.position.alarmStatus;
     if (showType == 1) {
-      return <div style={{ position: 'relative', width: 110, height: 110, background: 'url("/homeMapBorder.png")', backgroundSize: '100% 100%', cursor: 'default' }}>
-        {/* <Popover overlayClassName={styles.regPopSty} title={() => <Row justify='space-between' align='middle'><span> {extData.position && extData.position.regionName} </span>  <RightOutlined onClick={() => { this.goEnt(extData) }} /> </Row>} getPopupContainer={trigger => trigger.parentNode} visible={showType == 1} placement="top" content={this.regPopovercontent(extData)} > */}
-        {/* </Popover> */}
+      return <div style={{ position: 'relative', width: 110, height: 110,marginLeft:-55,marginTop:-110, background: 'url("/homeMapBorder.png")', backgroundSize: '100% 100%', cursor: 'default' }}>
         <div title={extData.position && extData.position.regionName} className='textOverflow' style={{ color: "#4BF3F9", position: 'absolute', left: 10, top: 18, fontSize: 12, lineHeight: '12px', width: 'calc(100% - 14px - 10px - 14px)' }}> {extData.position && extData.position.regionName} </div>
         <img src='/location.png' style={{ position: 'absolute', top: '100%', left: 'calc(50% - 10px)', width: 20, height: 20 }} />
         <RightOutlined onClick={() => { this.goEnt(extData) }} style={{ color: "#4BF3F9", position: 'absolute', top: 18, right: 8, fontSize: 14 }} />
@@ -671,7 +669,7 @@ class Index extends PureComponent {
     } else if (showType == 2) {
 
       const entName = extData.position.entName;
-      return <div style={{ position: 'relative' }}>
+      return <div style={{ position: 'relative',marginTop:24,  }}>
         <EntIcon />
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
         {entTitleShow && <div className={styles.titlePopSty}>
@@ -679,7 +677,7 @@ class Index extends PureComponent {
         </div>}
       </div>
     } else { //监测点
-      return <div style={{ position: 'relative' }}>
+      return <div style={{ position: 'relative',marginTop:24,}}>
         {this.getIcon(extData.position.Status)}
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
         {pointTitleShow && isMassive ?
@@ -1060,7 +1058,7 @@ class Index extends PureComponent {
           visible={hoverEntTitleShow}
           position={hoverTitleLngLat}
           autoMove
-          offset={isMassive ? [10, -5] : [4, -35]}
+          offset={isMassive ? [10, -5] : [4, -10]}
           className={styles.titleInfoWindow}
         >
           <div style={{ whiteSpace: "nowrap" }} >企业名称：{hoverEntTitle}</div>
@@ -1069,7 +1067,7 @@ class Index extends PureComponent {
           visible={hoverTitleShow}
           position={hoverTitleLngLat}
           autoMove
-          offset={isMassive ? [10, -5] : [4, -35]}
+          offset={isMassive ? [10, -5] : [4, -10]}
           className={styles.titleInfoWindow}
         >
           <div style={{ whiteSpace: "nowrap" }} >企业名称：{hoverEntTitle}</div>
@@ -1079,7 +1077,7 @@ class Index extends PureComponent {
 
           position={infoWindowPos}
           visible={pointInfoWindowVisible}
-          offset={isMassive ? [10, -5] : [4, -35]}
+          offset={isMassive ? [10, -5] : [4, -10]}
           autoMove
           showShadow
           closeWhenClickMap={false}

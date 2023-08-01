@@ -64,7 +64,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading,operaServiceList, } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
@@ -76,15 +76,15 @@ const Workbench = props => {
   }, []);
 
   useEffect(() => {
-    if(props.location.query?.type){
-     props.dispatch({
-      type: 'wordSupervision/updateState',
-      payload: {
-        TYPE: props.location.query.type,
-      },
-    });
-    loadData();
-  }
+    if (props.location.query?.type) {
+      props.dispatch({
+        type: 'wordSupervision/updateState',
+        payload: {
+          TYPE: props.location.query.type,
+        },
+      });
+      loadData();
+    }
   }, [props.location.query.type]);
 
   // 加载工作台和我的消息数据 运维服务列表
@@ -150,7 +150,7 @@ const Workbench = props => {
   const GetStagingInspectorRectificationList = () => {
     props.dispatch({
       type: 'wordSupervision/GetStagingInspectorRectificationList',
-      payload: {pageIndex:1,pageSize:9999},
+      payload: { pageIndex: 1, pageSize: 9999 },
     });
   };
 
@@ -320,15 +320,27 @@ const Workbench = props => {
       return <Timeline.Item label={date}>{item.Title}</Timeline.Item>;
     });
   };
- const [superviseRectificaVisible,setSuperviseRectificaVisible] = useState(false)
- const [superviseRectificaDetailVisible,setSuperviseRectificaDetailVisible] = useState(false)
- const [superviseRectificaDetailId,setSuperviseRectificaDetailId] = useState()
+  const [superviseRectificaVisible, setSuperviseRectificaVisible] = useState(false)
+  const [superviseRectificaDetailVisible, setSuperviseRectificaDetailVisible] = useState(false)
+  const [superviseRectificaDetailId, setSuperviseRectificaDetailId] = useState()
 
- 
- const operaServiceClick = (id) =>{
-  setSuperviseRectificaDetailVisible(true)
-  setSuperviseRectificaDetailId(id)
- }
+
+  const operaServiceClick = (id) => {
+    setSuperviseRectificaDetailVisible(true)
+    setSuperviseRectificaDetailId(id)
+  }
+  const [selectMyVal,setSelectMyVal] = useState(1)
+  const [selectOperaVal,setSelectOperaVal] = useState(1)
+
+  const [operaServiceBtnList,setOperaServiceBtnList] = useState([{name:'监督核查',value:1}])
+  const [myRemindBtnList,setMyBtnRemindList] = useState([{name:'数据报警',value:1},{name:'标气更换',value:2}])
+  const btnComponents = (data,val,callBack) =>{
+   return <Row className={styles.selectBtnSty}>
+      {data.map(item=>{
+         return <div className={item.value==val? 'btnItemActive': 'btnItem'} onClick={()=>callBack(item.value)}>{item.name}</div>
+      })}
+   </Row>
+  }
   return (
     <div className={styles.workbenchBreadSty}>
       <BreadcrumbWrapper>
@@ -340,18 +352,9 @@ const Workbench = props => {
                   style={{ height: '100%' }}
                   bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}
                 >
-                  {/* 待办任务列表 */}
-                  <div className={styles.taskList}>
-                    <div className={styles.title}>日常监管待办</div>
-
-                    <div className={styles.content} style={{ textAlign: 'center' }}>
-                      <Spin spinning={todoListLoading}>{renderTodoList()}</Spin>
-                      {/* <Spin spinning={true}>{renderTodoList()}</Spin> */}
-                    </div>
-                  </div>
                   {/* 手工申请 */}
-                  {/* <div className={styles.manualList}>
-                    <div className={styles.title}>手工申请</div>
+                  <div className={styles.title}>日常监督</div>
+                   {/* <div className={styles.manualList}>
                     <Row
                       gutter={32}
                       className={styles.content}
@@ -376,11 +379,18 @@ const Workbench = props => {
                       })}
                     </Row>
                   </div> */}
+                  {/* 待办任务列表 */}
+                  <div className={styles.taskList}>
+                    <div className={styles.content} style={{ textAlign: 'center' }}>
+                      <Spin spinning={todoListLoading}>{renderTodoList()}</Spin>
+                      {/* <Spin spinning={true}>{renderTodoList()}</Spin> */}
+                    </div>
+                  </div>
                 </Card>
               </div>
             </div>
-            <Row gutter={[16, 16]} className={styles.bottomWrapper}>
-              <Col flex="1" span={12} style={{ height: 382 }}>
+            <Row className={`${styles.bottomWrapper}`}>
+              <Col flex="1" span={24} style={{ height: 360 }}>
                 <Card
                   style={{ height: '100%' }}
                   bodyStyle={{
@@ -388,25 +398,29 @@ const Workbench = props => {
                     height: '100%',
                   }}
                 >
-                  {/* 预留 */}
+                  {/* 运维服务 */}
                   <Row justify='space-between'>
                     <div className={styles.title}>运维服务</div>
-                    <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() =>setSuperviseRectificaVisible(true)} />
+                    <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />
                   </Row>
-                  <div className={styles.operaServiceSty} style={{ padding: '6px 24px 4px 16px' }}>
+                  {btnComponents(operaServiceBtnList,selectOperaVal,(val)=>{setSelectOperaVal(val) })}
+                  <div className={styles.operaServiceSty} style={{ padding: '0 24px 0 16px' }}>
                     <Spin spinning={operaServiceLoading}>
                       {operaServiceList?.length ? operaServiceList.map(item =>
-                        (<Row justify='space-between' style={{ paddingBottom: 18,cursor:'pointer' }} onClick={()=>{operaServiceClick(item.ID)}}>
+                        (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }} onClick={() => { operaServiceClick(item.ID) }}>
                           <Col style={{ width: 'calc(100% - 146px)' }} className='textOverflow' title={item.EntNamePointName}>{item.EntNamePointName}</Col>
                           <Col>{item.Time}</Col>
                         </Row>)
-                      )  :
-                      <Empty style={{ marginTop: '30px' }} /> }
+                      ) :
+                        <Empty style={{ marginTop: '30px' }} />}
                     </Spin>
                   </div>
                 </Card>
               </Col>
-              <Col flex="1" span={12} style={{ height: 382 }}>
+              </Row>
+               {/* 我的提醒 */}
+              <Row  className={styles.bottomWrapper}>
+              <Col flex="1" span={24} style={{ height: 360 }}>
                 <Card
                   style={{ height: '100%' }}
                   bodyStyle={{
@@ -414,8 +428,9 @@ const Workbench = props => {
                     height: '100%',
                   }}
                 >
-                  {/* 预留 */}
-                  <div className={styles.title}>预留</div>
+                 
+                  <div className={styles.title}>预留我的提醒</div>
+                     {btnComponents(myRemindBtnList,selectMyVal,(val)=>{ setSelectMyVal(val)   })}
                   <div>
                     <Empty style={{ marginTop: '30px' }} />
                   </div>
@@ -424,6 +439,25 @@ const Workbench = props => {
             </Row>
           </div>
           <div className={styles.rightWrapper}>
+           <div className={styles.quickNavWrapper}>
+                <Card style={{ height: '100%' }} bodyStyle={{  padding: 0,  height: '100%', }} >
+                  <Row justify='space-between'>
+                    <div className={styles.title}>预留快捷导航</div>
+                    <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />
+                  </Row>
+                  <div className={styles.operaServiceSty} style={{ padding: '6px 24px 4px 16px' }}>
+                    <Spin spinning={operaServiceLoading}>
+                      {operaServiceList?.length ? operaServiceList.map(item =>
+                        (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }} onClick={() => { operaServiceClick(item.ID) }}>
+                          <Col style={{ width: 'calc(100% - 146px)' }} className='textOverflow' title={item.EntNamePointName}>{item.EntNamePointName}</Col>
+                          <Col>{item.Time}</Col>
+                        </Row>)
+                      ) :
+                        <Empty style={{ marginTop: '30px' }} />}
+                    </Spin>
+                  </div>
+                </Card>
+              </div>
             <div className={styles.infoWrapper}>
               <Card bodyStyle={{ padding: 0, height: '100%' }} style={{ height: '100%' }}>
                 <div className={styles.title}>我的消息</div>
@@ -487,21 +521,21 @@ const Workbench = props => {
           footer={null}
           wrapClassName="spreadOverModal"
           destroyOnClose
-          onCancel={() =>setSuperviseRectificaVisible(false)}
+          onCancel={() => setSuperviseRectificaVisible(false)}
         >
-          <SuperviseRectification hideBreadcrumb match={{path:'/operations/superviseRectification'}}/>
+          <SuperviseRectification hideBreadcrumb match={{ path: '/operations/superviseRectification' }} />
         </Modal>
         <Modal //详情
-        visible={superviseRectificaDetailVisible}
-        title={'详情'}
-        footer={null}
-        wrapClassName='spreadOverModal'
-        className={superviseRectificaSty.fromModal}
-        onCancel={() => { setSuperviseRectificaDetailVisible(false); GetStagingInspectorRectificationList() }}
-        destroyOnClose
-      >
-        <SuperviseRectificationDetail ID={superviseRectificaDetailId} />
-      </Modal>
+          visible={superviseRectificaDetailVisible}
+          title={'详情'}
+          footer={null}
+          wrapClassName='spreadOverModal'
+          className={superviseRectificaSty.fromModal}
+          onCancel={() => { setSuperviseRectificaDetailVisible(false); GetStagingInspectorRectificationList() }}
+          destroyOnClose
+        >
+          <SuperviseRectificationDetail ID={superviseRectificaDetailId} />
+        </Modal>
       </BreadcrumbWrapper>
     </div>
   );
