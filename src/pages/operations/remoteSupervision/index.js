@@ -572,11 +572,9 @@ const Index = (props) => {
     let analyzerUploadList = {}, analyzerUploadFilesListObj = {};
     let dasUploadList = {}, dasUploadFilesListObj = {};
     let rangeUploadList = {}, rangeUploadFilesListObj = {};
-    getPointConsistencyParamFun(mn, (pollutantList) => {
+    getPointConsistencyParamFun(mn, (pollutantList,paramList) => {
       let echoData = []
-
       if(!data.consistencyCheckList || data.consistencyCheckList?.length==0){ //回显数据为空数组时
-        console.log(pollutantList)
         pollutantList.map(item=>{
           echoForamt(item.par,[],[])
         })
@@ -587,6 +585,10 @@ const Index = (props) => {
         setDasChecked(false)
         setNumChecked(false)
         setNumRealTimeChecked(false)
+        paramList.map(item=>{
+          echoForamt2(item.ChildID,[])
+        })
+       
       }else{
       data.consistencyCheckList.map(item => { //数据一致性核查表
 
@@ -724,16 +726,6 @@ const Index = (props) => {
       commonForm.setFieldsValue({ OperationUserID: operationName })
       echoUnit(pollutantList) //默认显示单位默认值
       echoUnit(addRealTimeList)
-      // if (data && data[0] && title === '添加') { //附件 cuid
-      // let filesCuidObj = {}, filesListObj = {};
-      // paramList.map((item, index) => {
-      //   filesCuidObj[`${item.par}ParFiles`] = cuid();
-      //   filesListObj[`${item.par}ParFiles`] = [];
-      // })
-      // setFilesCuidList(filesCuidObj)
-      // setFilesList3(filesListObj)
-      // }
-
       if (title === '添加') {
         if (pollutantList?.[0]) {
           const pars = isDisPlayCheck2?'a':isDisPlayCheck4? 'b' : ''
@@ -749,7 +741,7 @@ const Index = (props) => {
        
         }
       }
-      callback && callback(pollutantList)
+      callback && callback(pollutantList,paramList)
     })
   }
 
@@ -814,6 +806,7 @@ const Index = (props) => {
 
     setTitle('添加')
     setVisible(true)
+    setTabType('1')
     // setFilesCuid1(cuid())
     setFilesCuid2(cuid())
     resetData()
@@ -1034,13 +1027,9 @@ const Index = (props) => {
   }
 
 
-
-
-
-
   const [pointList2, setPointList2] = useState([])
   const [pointLoading2, setPointLoading2] = useState(false)
-  const onValuesChange2 = async (hangedValues, allValues) => { //添加 编辑
+  const onValuesChange2 =  (hangedValues, allValues) => { //添加 编辑
     if (Object.keys(hangedValues).join() == 'EntCode') {
       if (!hangedValues.EntCode) {//清空时 
         setPointList2([])
@@ -1056,14 +1045,29 @@ const Index = (props) => {
 
     }
     if (Object.keys(hangedValues).join() == 'DGIMN' && hangedValues.DGIMN) { //切换监测点
-        // getPointConsistencyParamFun(hangedValues.DGIMN)
-        if(title=='添加' && !addId){
-          getPointConsistencyParamFun(hangedValues.DGIMN)
-        }else{
-        props.getConsistencyCheckInfo({ ID: title=='添加' ? addId : editId }, (data) => {
-          dgimnEchoDataFun(hangedValues.DGIMN,data)
+      getPointConsistencyParamFun(hangedValues.DGIMN,(pollutantList,paramList)=>{
+        pollutantList.map(item=>{
+          echoForamt(item.par,[],[])
         })
-      }
+        setIsDisPlayCheck1(false)
+        setIsDisPlayCheck2(false)
+        setIsDisPlayCheck3(false)
+        setIsDisPlayCheck4(false)
+        setDasChecked(false)
+        setNumChecked(false)
+        setNumRealTimeChecked(false)
+        paramList.map(item=>{
+          echoForamt2(item.ChildID,[])
+        })
+      },'添加')
+    //     if(title=='添加' && !addId){
+    //       getPointConsistencyParamFun(hangedValues.DGIMN,()=>{
+    //       },'添加')
+    //     }else{
+    //     props.getConsistencyCheckInfo({ ID: title=='添加' ? addId : editId }, (data) => {
+    //       dgimnEchoDataFun(hangedValues.DGIMN,data,title)
+    //     })
+    //  }
     }
   }
   const [visible, setVisible] = useState(false)
@@ -1077,7 +1081,24 @@ const Index = (props) => {
     setPageSize(PageSize)
     onFinish(PageIndex, PageSize)
   }
-
+  const echoForamt2 = (code,item) => { //格式化 编辑回显     参数一致性核查表
+ 
+    form3.setFieldsValue({
+      [`${code}IsEnable`]: item.Status ? [item.Status] : [],
+      [`${code}SetVal`]: item.SetValue,
+      [`${code}InstrumentSetVal`]: item.InstrumentSetValue,
+      [`${code}TraceVal`]: item.TraceabilityValue,
+      [`${code}DataVal`]: item.DataValue,
+      [`${code}Uniform`]: item.AutoUniformity,
+      [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
+      [`${code}Remark3`]: item.Remark,
+      [`${code}OperationReamrk`]: item.OperationReamrk,
+      [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
+      [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
+      [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
+      [`${code}DataFilePar`]: item.DataFileList?.[0] && item.DataFileList?.[0].FileUuid,
+    })
+  }
 
   const tabsChange = (key) => {
     setTabType(key)
@@ -1087,25 +1108,24 @@ const Index = (props) => {
         let instrumentUploadList = {}, instrumentUploadFilesListObj = {};
         let traceabilityUploadList = {}, traceabilityUploadFilesListObj = {};
         let dataUploadList = {}, dataUploadFilesListObj = {};
-        consistencyCheckDetail?.[0]&&consistencyCheckDetail.consistentParametersCheckList.map(item => {
+        consistencyCheckDetail?.consistentParametersCheckList?.[0]&&consistencyCheckDetail.consistentParametersCheckList.map(item => {
           let code = item.CheckItem
-          form3.setFieldsValue({
-            [`${code}IsEnable`]: item.Status ? [item.Status] : [],
-            [`${code}SetVal`]: item.SetValue,
-            [`${code}InstrumentSetVal`]: item.InstrumentSetValue,
-            [`${code}TraceVal`]: item.TraceabilityValue,
-            [`${code}DataVal`]: item.DataValue,
-            [`${code}Uniform`]: item.AutoUniformity,
-            [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
-            [`${code}Remark3`]: item.Remark,
-            [`${code}OperationReamrk`]: item.OperationReamrk,
-            [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
-            [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
-            [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
-            [`${code}DataFilePar`]: item.DataFileList?.[0] && item.DataFileList?.[0].FileUuid,
-            
-            // [`${code}ParFiles`]: item.Upload,
-          })
+          // form3.setFieldsValue({
+          //   [`${code}IsEnable`]: item.Status ? [item.Status] : [],
+          //   [`${code}SetVal`]: item.SetValue,
+          //   [`${code}InstrumentSetVal`]: item.InstrumentSetValue,
+          //   [`${code}TraceVal`]: item.TraceabilityValue,
+          //   [`${code}DataVal`]: item.DataValue,
+          //   [`${code}Uniform`]: item.AutoUniformity,
+          //   [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
+          //   [`${code}Remark3`]: item.Remark,
+          //   [`${code}OperationReamrk`]: item.OperationReamrk,
+          //   [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
+          //   [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
+          //   [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
+          //   [`${code}DataFilePar`]: item.DataFileList?.[0] && item.DataFileList?.[0].FileUuid,
+          // })
+          echoForamt2(code,item)
           const enchFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
             let parFileList = [];
             uploadList?.length && uploadList.map(uploadItem => {
@@ -1574,7 +1594,6 @@ const Index = (props) => {
     })
     if(!firstDefault && addDataConsistencyData&&addDataConsistencyData[0]){ //切换 附件id 需要重新赋值
       const pars = '411'
-      console.log(analyzerFileCuidList)
       setAnalyzerFileCuidList({...analyzerFileCuidList,[`${pars}aAnalyzerFilePar`]:cuid(),[`${pars}AnalyzerFilePar`]:cuid()})
       setAnalyzerFileList({...analyzerFileList,[`${pars}aAnalyzerFilePar`]:[],[`${pars}AnalyzerFilePar`]:[]})
       setDasFileCuidList({...dasFileCuidList,[`${pars}aDasFilePar`]:cuid(),[`${pars}DasFilePar`]:cuid()})
@@ -2718,7 +2737,7 @@ const Index = (props) => {
                     name={"advanced_search"}
                     initialValues={{}}
                     className={styles.queryForm2}
-                    onValuesChange={onValuesChange2}
+                    // onValuesChange={onValuesChange2}
                   >
                     <SdlTable
                       // loading={parLoading}
@@ -2761,7 +2780,7 @@ const Index = (props) => {
                     name={"advanced_search"}
                     initialValues={{}}
                     className={styles.queryForm2}
-                    onValuesChange={onValuesChange2}
+                    // onValuesChange={onValuesChange2}
                   >
                     <SdlTable
                       loading={parLoading}

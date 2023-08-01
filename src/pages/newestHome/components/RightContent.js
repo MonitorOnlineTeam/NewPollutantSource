@@ -563,7 +563,7 @@ const Index = (props) => {
       <Spin spinning={operationExpireLoading}>
         <div className={styles.operationExpira}>{/**运维到期点位 */}
           <CardHeader btnClick={dataAlarmResClick} title='运维到期点位' />
-          <div style={{ height: '100%', padding: '0 15px 26px 0' }}>
+          <div style={{ height: '100%', margin: '0 15px 26px 0' }}>
             <ReactEcharts
               option={operationExpiraOption}
               style={{ height: '100%', width: '100%' }}

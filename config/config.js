@@ -591,6 +591,11 @@ export default {
                   path: '/systemManger/pollutantMold', // 污染源模型
                   component: './systemManger/pollutantMold',
                 },
+                {
+                  name: 'logManger',
+                  path: '/systemManger/logManger', // 日志管理
+                  component: './systemManger/logManger',
+                },
               ],
             },
             {

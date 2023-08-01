@@ -8,7 +8,7 @@
 import React, { PureComponent } from 'react';
 import { Popover, Table, Divider } from "antd"
 import { uploadHost } from '@/config'
-
+import styles from '../../style.less'
 class index extends PureComponent {
   constructor(props) {
     super(props);
@@ -48,7 +48,7 @@ class index extends PureComponent {
       <Table style={{ fontSize: 20 }} dataSource={dataSource} columns={columns} size="small" bordered={false} pagination={false} />
     );
     return (
-      <Popover content={content} title="附件详情" trigger="click">
+      <Popover content={content} title="附件详情" trigger="click" getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.popSty}>
         <a onClick={(e) => {
           e.stopPropagation()
         }}>{dataSource&&dataSource[0]? "查看附件" : ''}</a>

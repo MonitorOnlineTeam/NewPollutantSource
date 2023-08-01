@@ -63,6 +63,7 @@ class RegionDetails extends PureComponent {
           title: '报警类型',
           dataIndex: 'ExceptionTypeName',
           key: 'ExceptionTypeName',
+          width:100,
         },
         {
           title: '报警信息',
