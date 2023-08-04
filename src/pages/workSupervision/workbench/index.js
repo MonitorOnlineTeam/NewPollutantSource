@@ -19,6 +19,7 @@ import {
   Menu,
   Popconfirm,
   Spin,
+  Pagination,
 } from 'antd';
 import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import styles from '../styles.less';
@@ -51,7 +52,7 @@ const manualList = [
   },
 ];
 const CONFIGID = 'T_Bas_PortableInstrument';
-const dvaPropsData = ({ loading, wordSupervision }) => ({
+const dvaPropsData = ({ loading, wordSupervision,global }) => ({
   todoList: wordSupervision.todoList,
   messageList: wordSupervision.messageList,
   managerList: wordSupervision.managerList,
@@ -60,11 +61,14 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
   messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
   operaServiceList: wordSupervision.operaServiceList,
   operaServiceLoading: loading.effects['wordSupervision/GetStagingInspectorRectificationList'],
-
+  workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'],
+  workAlarmPushList: wordSupervision.workAlarmPushList,
+  workAlarmTotal: wordSupervision.workAlarmPushList,
+  configInfo: global.configInfo,
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList, } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList,configInfo,workAlarmPushLoading,workAlarmPushList,workAlarmTotal, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
@@ -92,6 +96,7 @@ const Workbench = props => {
     // GetToDoDailyWorks();
     GetWorkBenchMsg();
     GetStagingInspectorRectificationList()
+    GetWorkAlarmPushList(dataAlarmVal,(total)=>{})
   };
 
   // 获取工作台待办
@@ -153,6 +158,7 @@ const Workbench = props => {
       payload: { pageIndex: 1, pageSize: 9999 },
     });
   };
+
 
   // 任务点击
   const onTodoItemClick = todoItem => {
@@ -329,24 +335,80 @@ const Workbench = props => {
     setSuperviseRectificaDetailVisible(true)
     setSuperviseRectificaDetailId(id)
   }
-  const [selectMyVal,setSelectMyVal] = useState(1)
-  const [selectOperaVal,setSelectOperaVal] = useState(1)
 
-  const [operaServiceBtnList,setOperaServiceBtnList] = useState([{name:'监督核查',value:1}])
-  const [myRemindBtnList,setMyBtnRemindList] = useState([{name:'数据报警',value:1},{name:'标气更换',value:2}])
-  const btnComponents = (data,val,callBack) =>{
-   return <Row className={styles.selectBtnSty}>
-      {data.map(item=>{
-         return <div className={item.value==val? 'btnItemActive': 'btnItem'} onClick={()=>callBack(item.value)}>{item.name}</div>
+  const dataAlarmTypeChange = (val) => {
+    setDataAlarmVal(val)
+    setAlarmPageIndex(1)
+    GetWorkAlarmPushList(val,1)
+  }
+  const [selectMyVal, setSelectMyVal] = useState(1)
+  const [selectOperaVal, setSelectOperaVal] = useState(1)
+
+  const [operaServiceBtnList, setOperaServiceBtnList] = useState([{ name: '监督核查', value: 1 }])
+  const [myRemindBtnList, setMyBtnRemindList] = useState([{ name: '数据报警', value: 1 }, { name: '标气更换', value: 2 }])
+  const btnComponents = (data, val, callBack) => {
+    return <div className={styles.selectBtnSty}>
+      {data.map(item => {
+        return <div className={item.value == val ? 'btnItemActive' : 'btnItem'} onClick={() => callBack(item.value)}>{item.name}</div>
       })}
-   </Row>
+    </div>
+  }
+  const [dataAlarmTypeList, setDataAlarmTypeList] = useState([{ name: '全部', value: 1 }, { name: '待处理', value: 2 }, { name: '已处理', value: 3 }])
+  const [dataAlarmVal, setDataAlarmVal] = useState(1)
+  const [allClose, setAllClose] = useState(1)
+
+  const btnSquareComponents = (data, val, callBack) => {
+    return <div className={styles.selectSquareBtnSty}>
+      {data.map(item => {
+        return <div className={item.value == val ? 'btnItemActive' : 'btnItem'} onClick={() => callBack(item.value)}>{item.name}</div>
+      })}
+    </div>
+  }
+
+    //获取数据报警
+ const GetWorkAlarmPushList = (status,pageIndex,pageSize,) =>{
+  props.dispatch({
+    type: 'wordSupervision/GetWorkAlarmPushList',
+    payload: {status:status, pageIndex:pageIndex?pageIndex: alarmPageIndex, pageSize:pageSize?pageSize : alarmPageSize },
+  });
+ }
+  const delAlarm = (item) =>{ //删除报警
+    props.dispatch({
+      type: 'wordSupervision/UpdateWorkPushStatus',
+      payload: {
+        alarmID: item.alarmID,
+        User_ID: forwardingUserId,
+      },
+      callback: res => {
+        GetWorkAlarmPushList(dataAlarmVal)
+      },
+    });
+  }
+  const closeAllAlarmChange = () => { //关闭全部报警
+    props.dispatch({
+      type: 'wordSupervision/UpdateWorkPushStatus',
+      payload: {
+        // alarmID: item.alarmID,
+      },
+      callback: res => {
+        setAlarmPageIndex(1)
+        GetWorkAlarmPushList(dataAlarmVal,1)
+      },
+    });
+  }
+  const [alarmPageIndex,setAlarmPageIndex] = useState(1)
+  const [alarmPageSize,setAlarmPageSize] = useState(10)
+  const alarmPageChange = (pageIndex,pageSize) =>{
+   setAlarmPageIndex(pageIndex)
+   setAlarmPageSize(pageSize)
+   GetWorkAlarmPushList(dataAlarmVal,pageIndex,pageSize)
   }
   return (
     <div className={styles.workbenchBreadSty}>
       <BreadcrumbWrapper>
         <div className={styles.workbench}>
           <div className={styles.leftWrapper}>
-            <div className={styles.topWrapper}>
+           {!configInfo.IsShowProjectRegion&&<div className={styles.topWrapper}>
               <div className={styles.taskListWrapper}>
                 <Card
                   style={{ height: '100%' }}
@@ -354,7 +416,7 @@ const Workbench = props => {
                 >
                   {/* 手工申请 */}
                   <div className={styles.title}>日常监督</div>
-                   {/* <div className={styles.manualList}>
+                  {/* <div className={styles.manualList}>
                     <Row
                       gutter={32}
                       className={styles.content}
@@ -388,7 +450,7 @@ const Workbench = props => {
                   </div>
                 </Card>
               </div>
-            </div>
+            </div>}
             <Row className={`${styles.bottomWrapper}`}>
               <Col flex="1" span={24} style={{ height: 360 }}>
                 <Card
@@ -403,7 +465,7 @@ const Workbench = props => {
                     <div className={styles.title}>运维服务</div>
                     <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />
                   </Row>
-                  {btnComponents(operaServiceBtnList,selectOperaVal,(val)=>{setSelectOperaVal(val) })}
+                  {btnComponents(operaServiceBtnList, selectOperaVal, (val) => { setSelectOperaVal(val) })}
                   <div className={styles.operaServiceSty} style={{ padding: '0 24px 0 16px' }}>
                     <Spin spinning={operaServiceLoading}>
                       {operaServiceList?.length ? operaServiceList.map(item =>
@@ -417,10 +479,10 @@ const Workbench = props => {
                   </div>
                 </Card>
               </Col>
-              </Row>
-               {/* 我的提醒 */}
-              <Row  className={styles.bottomWrapper}>
-              <Col flex="1" span={24} style={{ height: 360 }}>
+            </Row>
+            {/* 我的提醒 */}
+            <Row className={`${styles.bottomWrapper} ${styles.myRemindSty}`}>
+              <Col flex="1" span={24} style={{ height: 380 }}>
                 <Card
                   style={{ height: '100%' }}
                   bodyStyle={{
@@ -428,36 +490,64 @@ const Workbench = props => {
                     height: '100%',
                   }}
                 >
-                 
-                  <div className={styles.title}>预留我的提醒</div>
-                     {btnComponents(myRemindBtnList,selectMyVal,(val)=>{ setSelectMyVal(val)   })}
-                  <div>
-                    <Empty style={{ marginTop: '30px' }} />
+
+                <div className={styles.title}>预留我的提醒</div>
+                  {/* <Empty style={{ marginTop: '30px' }} /> */}
+                <Row justify='space-between'>
+                    {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val) })}
+                    {workAlarmTotal&&btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) })}
+                  </Row>
+                  <div className={'dataAlarmSty'} style={{ padding: '0 24px 0 16px' }}>
+                    <Spin spinning={workAlarmPushLoading} style={{height:'100%'}}>
+                      {workAlarmPushList?.length ? workAlarmPushList.map(item =>
+                        (<Row justify='space-between' style={{ paddingBottom: 12, cursor: 'pointer' }}>
+                          <Col style={{paddingTop:4}}><img src='/work_alarm.png'/></Col>
+                          <Col style={{width:'calc(100% - 100px)'}}>
+                            <div>{item.EntNamePointName}</div>
+                            <div style={{color:'#666',fontSize:13,paddingTop:4}}><span>报警生成时间：{}</span> <span>报警生成时间：{}</span> <span>报警生成时间：{}</span> <span>报警生成时间：{}</span></div>
+                          </Col>
+                          <Col>
+                          <Popconfirm placement="left" title={'确定要删除这条报警？'} onConfirm={()=>delAlarm(item)} okText="是" cancelText="否">
+                            <a>删除</a>
+                          </Popconfirm>
+                          </Col>
+                        </Row>)
+                      )
+                        :
+                        <Empty style={{ marginTop: '30px' }} />}
+                    </Spin>
                   </div>
+                  {workAlarmTotal&&<Row justify='space-between'  style={{ paddingTop: 12 }}>
+                   <Popconfirm placement="topLeft" title={'确定要关闭全部报警？'} onConfirm={closeAllAlarmChange()} okText="是" cancelText="否">
+                    <div>{btnSquareComponents([{ name: '关闭全部', value: 1 }], allClose, () => {  })}</div>
+                    </Popconfirm>
+                    <Pagination
+                      size="small"
+                      style={{paddingRight:12}}
+                      showSizeChanger
+                      showQuickJumper
+                      total={workAlarmTotal}
+                      current={alarmPageIndex}
+                      pageSize={alarmPageSize}
+                      onChange={alarmPageChange}
+                    />
+                  </Row>}
                 </Card>
               </Col>
             </Row>
           </div>
           <div className={styles.rightWrapper}>
-           <div className={styles.quickNavWrapper}>
-                <Card style={{ height: '100%' }} bodyStyle={{  padding: 0,  height: '100%', }} >
-                  <Row justify='space-between'>
-                    <div className={styles.title}>预留快捷导航</div>
-                    <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />
-                  </Row>
-                  <div className={styles.operaServiceSty} style={{ padding: '6px 24px 4px 16px' }}>
-                    <Spin spinning={operaServiceLoading}>
-                      {operaServiceList?.length ? operaServiceList.map(item =>
-                        (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }} onClick={() => { operaServiceClick(item.ID) }}>
-                          <Col style={{ width: 'calc(100% - 146px)' }} className='textOverflow' title={item.EntNamePointName}>{item.EntNamePointName}</Col>
-                          <Col>{item.Time}</Col>
-                        </Row>)
-                      ) :
-                        <Empty style={{ marginTop: '30px' }} />}
-                    </Spin>
-                  </div>
-                </Card>
-              </div>
+            <div className={styles.quickNavWrapper}>
+              <Card style={{ height: '100%' }} bodyStyle={{ padding: 0, height: '100%', }} >
+                <Row justify='space-between'>
+                  <div className={styles.title}>预留快捷导航</div>
+                  <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={()=>{}} />
+                </Row>
+                <div className={styles.operaServiceSty} style={{ padding: '6px 24px 4px 16px' }}>
+                 <Empty style={{ marginTop: '30px' }} />
+                </div>
+              </Card>
+            </div>
             <div className={styles.infoWrapper}>
               <Card bodyStyle={{ padding: 0, height: '100%' }} style={{ height: '100%' }}>
                 <div className={styles.title}>我的消息</div>

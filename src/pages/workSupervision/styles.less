@@ -11,7 +11,7 @@
     margin-right: 12px;
     display: flex;
     flex-direction: column;
-    max-width: calc(100% - 36%);
+    max-width: calc(100% - 36% - 2px);
   }
 
   .rightWrapper {
@@ -44,16 +44,17 @@
     // max-height: calc((100vh) / 2);
     min-height: 400px;
     height: calc(100vh - 541px);
+    padding-bottom: 12px;
     .taskListWrapper {
       flex: 1;
       // margin-right: 20px;
     }
   }
   .bottomWrapper {
-    margin-top: 12px !important;
+    padding-bottom: 12px !important;
     // max-height: calc((50vh) - 130px);
     // min-height: 400px;
-    flex: 1;
+    // flex: 1;
   }
 
   .title {
@@ -132,7 +133,6 @@
     }
   }
   .operaServiceSty{
-    padding:6px 16px 30px 12px;
     height: calc(100% - 92px);
     overflow-y: auto;
     :global {
@@ -195,16 +195,48 @@
   margin-left: 16px;
   margin-right: 6px;
 }
-.selectBtnSty  :global{
+.defaultBtnSty{
+  background: #F5F6FA;
+  color: #333;
+}
+.activeBtnSty{
+  background: #4090FF;
+  color: #fff;
+}
+.selectBtnSty  :global, .selectSquareBtnSty :global{
    margin: 2px 0 12px;
   .btnItem{
   .btnSty;
-   background: #F5F6FA;
-   color: #333;
+  .defaultBtnSty;
   }
   .btnItemActive{
    .btnSty;
-   background: #4090FF;
-   color: #fff;
+   .activeBtnSty;
+  }
+}
+.selectSquareBtnSty :global {
+  margin-right: 12px;
+  .btnItem{
+    border-radius: 4px;
+   }
+   .btnItemActive{
+    border-radius: 4px;
+   }
+}
+
+.myRemindSty :global {
+  .ant-spin-nested-loading{
+   height: 100%;
+  }
+  .dataAlarmSty {
+    padding:6px 16px 30px 12px;
+    height: calc(100% - 130px);
+    overflow-y: auto; 
+  }
+  .ant-pagination-item-active{
+    background-color: #1890FF;
+    a{
+      color: #fff;
+    }
   }
 }

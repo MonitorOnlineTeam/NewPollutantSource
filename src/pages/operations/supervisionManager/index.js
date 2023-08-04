@@ -644,6 +644,9 @@ const Index = (props) => {
     data.PrincipleProblemList && data.PrincipleProblemList.map((item, index) => {
       filesCuidObj1[`Files1${item.Sort}`] = cuid();
       filesListObj1[`Files1${item.Sort}`] = [];
+      tableForm.setFieldsValue({ //有无原则问题 默认
+        [`Inspector${item.Sort}`]: null,
+      })
     })
     setFilesCuidList1(filesCuidObj1)
     setFilesList1(filesListObj1)
@@ -771,10 +774,10 @@ const Index = (props) => {
           devicePar.PMManufacturer = pm.map(item => item.Manufacturer).join(',')
           devicePar.PMEquipment = pm.map(item => item.Equipment).join(',')
         }
-        // const filterPointData = pointList2.filter(item=>item.DGIMN == values.DGIMN)
+        const filterPointData = pointList2.filter(item=>item.DGIMN == values.DGIMN)
         const data = {
           ...values,
-          // DGIMN:filterPointData?.[0]?.PointCode,
+          DGIMN:filterPointData?.[0]?.PointCode,
           RegionCode:  values.RegionCode&&values.RegionCode.join(","),
           PollutantCode: values.PollutantCode&&values.PollutantCode.join(","),
           InspectorDate: values.InspectorDate&&moment(values.InspectorDate).format("YYYY-MM-DD HH:mm:ss"),

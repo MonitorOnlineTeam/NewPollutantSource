@@ -444,3 +444,29 @@ export async function GetStagingInspectorRectificationList(params) {
   );
   return result;
 }
+
+// 数据报警列表
+export async function GetWorkAlarmPushList(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/OperationHomeApi/GetWorkAlarmPushList',
+    params,
+  );
+  return result;
+}
+// 删除数据报警
+export async function UpdateWorkPushStatus(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/OperationHomeApi/UpdateWorkPushStatus',
+    params,
+  );
+  return result;
+}
+
+// 删除所有数据报警
+export async function UpdateAllWorkPushStatus(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/OperationHomeApi/UpdateAllWorkPushStatus',
+    params,
+  );
+  return result;
+}

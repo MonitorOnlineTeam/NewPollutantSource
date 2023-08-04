@@ -102,7 +102,7 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return index + 1;
+        return  (index + 1) + (pageIndex-1)*pageSize;
       }
     },
     {
