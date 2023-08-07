@@ -101,8 +101,8 @@ const Index = (props) => {
       children: [
         {
           title: '序号',
-          width: 70,
           align: 'center',
+          width:60,
           render: (text, record, index) => {
             return index + 1
           }
@@ -209,8 +209,8 @@ const Index = (props) => {
       children: [
         {
           title: '序号',
-          width: 70,
           align: 'center',
+          width:60,
           render: (text, record, index) => {
             return index + 1
           }

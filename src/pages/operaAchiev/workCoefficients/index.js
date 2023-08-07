@@ -99,7 +99,6 @@ const Index = (props) => {
     {
       title: '序号',
       align: 'center',
-      width: 60,
       render: (text, record, index) => {
         return index + 1
       }

@@ -118,10 +118,7 @@ const Index = (props,ref) => {
   const columns = [
     {
       title: '序号',
-      dataIndex: 'x',
-      key:'x',
       align:'center',
-      width: 50,
       render:(text,record,index)=>{
         return index + 1;
       }
@@ -291,10 +288,7 @@ const Index = (props,ref) => {
   const alarmColumns = [
     {
       title: '序号',
-      dataIndex: 'x',
-      key:'x',
       align:'center',
-      width: 50,
       render:(text,record,index)=>{
         return index + 1;
       }
@@ -557,6 +551,7 @@ useImperativeHandle(refInstance,() => {
         columns={ abnormalTypes ==1? columns :alarmColumns }
         scroll={{ y:props.hideBreadcrumb?clientHeight - 420: clientHeight - 370}}
         pagination={false}
+        size='small'
       />
       {/*打卡异常 响应超时 弹框*/}
       <Modal

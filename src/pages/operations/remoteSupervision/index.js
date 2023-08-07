@@ -1689,7 +1689,6 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       fixed: 'left',
-      width: 80,
       render: (text, record, index) => {
         return index + 1;
       }
@@ -2119,7 +2118,6 @@ const Index = (props) => {
     {
       title: '序号',
       align: 'center',
-      width: 80,
       fixed: 'left',
       render: (text, record, index) => {
         return index + 1;
@@ -2317,7 +2315,6 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       fixed: 'left',
-      width: 80,
       render: (text, record, index) => {
         return index + 1;
       }

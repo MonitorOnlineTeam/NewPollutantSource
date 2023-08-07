@@ -38,8 +38,8 @@ class EntWorkOrderStatistics extends PureComponent {
     columns:[
       {
         title: '序号',
-        dataIndex: 'num',
-        key: 'num',
+        // dataIndex: 'num',
+        // key: 'num',
         render:(text, record,index)=>{
           return index + 1
         }

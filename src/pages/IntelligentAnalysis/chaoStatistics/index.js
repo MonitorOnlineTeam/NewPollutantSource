@@ -163,11 +163,11 @@ class index extends PureComponent {
     return [
       {
         title: '序号',
-        key: 'index',
-        width: 60,
-        render: (text, record, index) => {
-          return index + 1;
-        }
+        // key: 'index',
+        // width: 60,
+        // render: (text, record, index) => {
+        //   return index + 1;
+        // }
       },
       {
         title: '行政区',
@@ -241,11 +241,11 @@ class index extends PureComponent {
     return [
       {
         title: '序号',
-        key: 'index',
-        width: 60,
-        render: (text, record, index) => {
-          return index + 1;
-        }
+        // key: 'index',
+        // width: 60,
+        // render: (text, record, index) => {
+        //   return index + 1;
+        // }
       },
       {
         title: '行政区',

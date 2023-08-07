@@ -156,10 +156,7 @@ const Index = (props) => {
   const columns = [
     {
       title: '序号',
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
-      width: 50,
       render: (text, record, index) => {
         return index + 1;
       }
@@ -293,10 +290,7 @@ const Index = (props) => {
   const alarmColumns = [
     {
       title: '序号',
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
-      width: 50,
       render: (text, record, index) => {
         return index + 1;
       }
@@ -595,13 +589,10 @@ const Index = (props) => {
   const reponseNumColumns = [
     {
       title: '序号',
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
-      width: 50,
       fixed: 'left',
       render: (text, record, index) => {
-        return index + 1;
+        return (index + 1) + (pageIndex-1)*pageSize;
       }
     },
     {
@@ -856,6 +847,7 @@ const Index = (props) => {
         columns={abnormalTypes == 1 ? columns : alarmColumns}
         pagination={false}
         scroll={{ y: props.hideBreadcrumb ? clientHeight - 450 : clientHeight - 400 }}
+        size='small'
       />
     </Card>
     {/*工单异常  城市 详情 弹框*/}

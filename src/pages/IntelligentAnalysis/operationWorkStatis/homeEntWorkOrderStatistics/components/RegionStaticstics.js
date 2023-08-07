@@ -99,11 +99,7 @@ class RegionStaticstics extends PureComponent {
   getColumns=()=>{
     const columns = [{
       title: '序号',
-      dataIndex: 'num',
-      key: 'num',
-      render:(text, record,index)=>{
-        return index + 1
-      }
+      align:'center',
    },];
     this.props.secondTableTitleData.map((item,index)=>{
       columns.push({
@@ -111,6 +107,7 @@ class RegionStaticstics extends PureComponent {
         dataIndex: item.ID,
         key: item.ID,
         width: 120,
+        align:'center',
         sorter: index>=3? (a, b) => a[item.ID] - b[item.ID] : undefined,
       });
     })

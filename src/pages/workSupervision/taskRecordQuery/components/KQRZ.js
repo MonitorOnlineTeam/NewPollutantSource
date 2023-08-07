@@ -126,11 +126,11 @@ const KQRZ = props => {
     let columns = [
       {
         title: '序号',
-        dataIndex: 'index',
-        key: 'index',
-        render: (text, record, index) => {
-          return index + 1;
-        },
+        // dataIndex: 'index',
+        // key: 'index',
+        // render: (text, record, index) => {
+        //   return index + 1;
+        // },
       },
       {
         title: !type ? '省区' : '大区',

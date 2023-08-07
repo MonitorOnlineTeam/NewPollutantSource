@@ -100,9 +100,9 @@ const AttendanceLog = props => {
     const columns = [
       {
         title: '序号',
-        dataIndex: 'index',
-        key: 'index',
-        width: 80,
+        // dataIndex: 'index',
+        // key: 'index',
+        // width: 80,
         align: 'center',
         render: (text, record, index) => {
           return index + 1;

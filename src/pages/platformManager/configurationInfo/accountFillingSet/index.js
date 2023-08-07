@@ -108,7 +108,6 @@ const Index = (props) => {
       title: '序号',
       align:'center',
       ellipsis:true,
-      width:70,
       render:(row,text,index)=>{
         return (index + 1) + ((pageIndex - 1) * pageSize)
       }

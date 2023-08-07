@@ -256,12 +256,10 @@ const Index = (props) => {
   const alarmColumns = [
     {
       title: '序号',
-      dataIndex: 'x',
-      key:'x',
       align:'center',
       width: 50,
       render:(text,record,index)=>{
-        return index + 1;
+        return props.pagination && (index + 1) + (props.pagination.current-1)*props.pagination.pageSize;
       }
     },
     {

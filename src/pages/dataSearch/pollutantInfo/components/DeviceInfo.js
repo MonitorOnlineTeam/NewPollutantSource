@@ -116,7 +116,6 @@ const Index = (props) => {
             dataIndex: 'Sort',
             key: 'Sort',
             align: 'center',
-            width: 50,
             ellipsis:true,
         },
         {

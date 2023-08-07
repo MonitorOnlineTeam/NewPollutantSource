@@ -279,10 +279,7 @@ const Index = (props, ref) => {
   const columns = [
     {
       title: '序号',
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
-      width: 50,
       render: (text, record, index) => {
         return index + 1;
       }
@@ -437,10 +434,7 @@ const Index = (props, ref) => {
   const cityInsideRegColumns = [ //计划内  市级别 二级弹框
     {
       title: '序号',
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
-      width: 50,
       render: (text, record, index) => {
         return index + 1;
       }
@@ -952,10 +946,7 @@ const Index = (props, ref) => {
   const outsideColumns = [ //计划外 首页面
     {
       title: '序号',
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
-      width: 50,
       render: (text, record, index) => {
         return index + 1;
       }
@@ -1006,10 +997,7 @@ const Index = (props, ref) => {
   const cityOutRegColumns = [ //计划外  市级别 二级弹框
     {
       title: '序号',
-      dataIndex: 'x',
-      key: 'x',
       align: 'center',
-      width: 50,
       render: (text, record, index) => {
         return index + 1;
       }

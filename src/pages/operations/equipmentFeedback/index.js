@@ -101,11 +101,9 @@ const Index = (props) => {
  const columns = [
   {
     title: '序号',
-    dataIndex: 'x',
-    key:'x',
     align:'center',
     render:(text,record,index)=>{
-     return  index + 1 
+     return  (index + 1) + (pageIndex-1)*pageSize
     }
   },
   {

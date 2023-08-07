@@ -297,8 +297,8 @@ class GasContrast extends PureComponent {
       },
       {
         title: '序号',
-        key: 'index',
-        width: 60,
+        // key: 'index',
+        // width: 60,
         render: (text, record, index) => {
           return index + 1;
         }
@@ -442,8 +442,8 @@ class GasContrast extends PureComponent {
       },
       {
         title: '序号',
-        key: 'index',
-        width: 60,
+        // key: 'index',
+        // width: 60,
         render: (text, record, index) => {
           return index + 1;
         }

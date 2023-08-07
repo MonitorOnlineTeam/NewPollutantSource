@@ -220,8 +220,8 @@ class Water extends PureComponent {
     let EntColumns = [
       {
         title: '序号',
-        key: 'index',
-        width: 80,
+        // key: 'index',
+        // width: 80,
         render: (text, record, index) => {
           return index + 1;
         }
@@ -334,8 +334,8 @@ class Water extends PureComponent {
     let PointColumns = [
       {
         title: '序号',
-        key: 'index',
-        width: 80,
+        // key: 'index',
+        // width: 80,
         render: (text, record, index) => {
           return index + 1;
         }

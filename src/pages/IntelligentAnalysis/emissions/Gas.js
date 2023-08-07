@@ -214,7 +214,6 @@ class Gas extends PureComponent {
       {
         title: '序号',
         key: 'index',
-        width: 80,
         render: (text, record, index) => {
           return index + 1;
         }
@@ -320,8 +319,8 @@ class Gas extends PureComponent {
     let PointColumns = [
       {
         title: '序号',
-        key: 'index',
-        width: 70,
+        // key: 'index',
+        // width: 70,
         render: (text, record, index) => {
           return index + 1;
         }

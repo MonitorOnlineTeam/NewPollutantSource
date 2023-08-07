@@ -165,9 +165,9 @@ class index extends Component {
       const columns = [
         {
           title: '序号',
-          dataIndex: 'index',
-          key: 'index',
-          width: 50,
+          // dataIndex: 'index',
+          // key: 'index',
+          // width: 50,
           align: 'center',
           fixed,
           show: true,

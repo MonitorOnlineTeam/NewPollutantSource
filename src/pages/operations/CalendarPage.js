@@ -182,7 +182,7 @@ class CalendarPage extends PureComponent {
       endTime: endTime,
       DGIMN: item.DGIMN,
     }
-
+    const { modalTableCurrent } = this.state;
     this.setState({
       currentClickTagParams: payload,
       modalTableCurrent: 1,
@@ -197,11 +197,11 @@ class CalendarPage extends PureComponent {
         columns = [
           {
             title: '序号',
-            dataIndex: 'index',
-            key: 'index',
-            width: 60,
+            // dataIndex: 'index',
+            // key: 'index',
+            // width: 60,
             render: (text, record, index) => {
-              return index + 1;
+              return (index + 1) + (modalTableCurrent-1)*10;
             }
           }, {
             title: '上次更换日期',
@@ -235,11 +235,11 @@ class CalendarPage extends PureComponent {
         columns = [
           {
             title: '序号',
-            dataIndex: 'index',
-            key: 'index',
-            width: 60,
+            // dataIndex: 'index',
+            // key: 'index',
+            // width: 60,
             render: (text, record, index) => {
-              return index + 1;
+              return (index + 1) + (modalTableCurrent-1)*10;
             }
           }, {
             title: '上次更换日期',
@@ -273,11 +273,11 @@ class CalendarPage extends PureComponent {
         columns = [
           {
             title: '序号',
-            dataIndex: 'index',
-            key: 'index',
-            width: 60,
+            // dataIndex: 'index',
+            // key: 'index',
+            // width: 60,
             render: (text, record, index) => {
-              return index + 1;
+              return (index + 1) + (modalTableCurrent-1)*10;
             }
           }, {
             title: '上次更换日期',
@@ -311,11 +311,11 @@ class CalendarPage extends PureComponent {
         columns = [
           {
             title: '序号',
-            dataIndex: 'index',
-            key: 'index',
-            width: 60,
+            // dataIndex: 'index',
+            // key: 'index',
+            // width: 60,
             render: (text, record, index) => {
-              return index + 1;
+              return (index + 1) + (modalTableCurrent-1)*10;
             }
           }, {
             title: '上次更换日期',

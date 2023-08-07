@@ -159,10 +159,10 @@ const Setting = props => {
     return [
       {
         title: '序号',
-        dataIndex: 'index',
-        key: 'index',
-        width: 80,
         align: 'center',
+        // dataIndex: 'index',
+        // key: 'index',
+        // width: 80,
         // render: (text, record, index) => {
         //   return index + 1;
         // },

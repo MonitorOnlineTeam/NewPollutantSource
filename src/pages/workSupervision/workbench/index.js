@@ -63,7 +63,7 @@ const dvaPropsData = ({ loading, wordSupervision,global }) => ({
   operaServiceLoading: loading.effects['wordSupervision/GetStagingInspectorRectificationList'],
   workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'],
   workAlarmPushList: wordSupervision.workAlarmPushList,
-  workAlarmTotal: wordSupervision.workAlarmPushList,
+  workAlarmTotal: wordSupervision.workAlarmTotal,
   configInfo: global.configInfo,
 });
 
@@ -481,7 +481,7 @@ const Workbench = props => {
               </Col>
             </Row>
             {/* 我的提醒 */}
-            <Row className={`${styles.bottomWrapper} ${styles.myRemindSty}`}>
+            <Row className={`${styles.myRemindSty}`}>
               <Col flex="1" span={24} style={{ height: 380 }}>
                 <Card
                   style={{ height: '100%' }}
@@ -507,7 +507,7 @@ const Workbench = props => {
                             <div style={{color:'#666',fontSize:13,paddingTop:4}}><span>报警生成时间：{}</span> <span>报警生成时间：{}</span> <span>报警生成时间：{}</span> <span>报警生成时间：{}</span></div>
                           </Col>
                           <Col>
-                          <Popconfirm placement="left" title={'确定要删除这条报警？'} onConfirm={()=>delAlarm(item)} okText="是" cancelText="否">
+                          <Popconfirm placement="left" title={'确定要删除这条报警吗？'} onConfirm={()=>delAlarm(item)} okText="是" cancelText="否">
                             <a>删除</a>
                           </Popconfirm>
                           </Col>
@@ -517,8 +517,8 @@ const Workbench = props => {
                         <Empty style={{ marginTop: '30px' }} />}
                     </Spin>
                   </div>
-                  {workAlarmTotal&&<Row justify='space-between'  style={{ paddingTop: 12 }}>
-                   <Popconfirm placement="topLeft" title={'确定要关闭全部报警？'} onConfirm={closeAllAlarmChange()} okText="是" cancelText="否">
+                  {workAlarmTotal?<Row justify='space-between'  style={{ paddingTop: 12 }}>
+                   <Popconfirm placement="topLeft" title={'确定要关闭全部报警吗？'} onConfirm={()=>closeAllAlarmChange()} okText="是" cancelText="否">
                     <div>{btnSquareComponents([{ name: '关闭全部', value: 1 }], allClose, () => {  })}</div>
                     </Popconfirm>
                     <Pagination
@@ -531,7 +531,7 @@ const Workbench = props => {
                       pageSize={alarmPageSize}
                       onChange={alarmPageChange}
                     />
-                  </Row>}
+                  </Row> : null}
                 </Card>
               </Col>
             </Row>

@@ -92,8 +92,6 @@ const Index = (props) => {
  const columns = [
   {
     title: '序号',
-    dataIndex: 'x',
-    key:'x',
     align:'center',
     render:(text,record,index)=>{
      return  index +1 
@@ -244,6 +242,7 @@ const Index = (props) => {
         dataSource={tableDatas}
         columns={ columns}
         pagination={false}
+        size='small'
       />
        <Modal
         title={`${regionName} - 监测点`}

@@ -429,7 +429,6 @@ const Index = (props) => {
       dataIndex: 'ID',
       key: 'ID',
       align: 'center',
-      width: 80,
     },
     {
       title: '合同标题',
@@ -516,7 +515,6 @@ const Index = (props) => {
       dataIndex: 'ID',
       key: 'ID',
       align: 'center',
-      width: 80,
     },
     {
       title: '点位名称',

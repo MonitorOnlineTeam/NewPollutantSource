@@ -86,11 +86,8 @@ export default class EntTransmissionEfficiency extends Component {
     };
     this.columns = (queryPar) => [
       {
-        title: <span>序号</span>,
-        dataIndex: 'x',
-        key: 'x',
+        title: '序号',
         align: 'center',
-        width:50,
         render:(text, record, index) => {
           return index + 1
         }
@@ -180,11 +177,8 @@ export default class EntTransmissionEfficiency extends Component {
 
     this.accountCol = [
       {
-        title: <span>序号</span>,
-        dataIndex: 'x',
-        key: 'x',
+        title: '序号',
         align: 'center',
-        width:50,
         render:(text, record, index) => {
           return index + 1
         }

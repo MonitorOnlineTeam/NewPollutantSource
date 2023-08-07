@@ -114,11 +114,6 @@ class EntStaticstics extends PureComponent {
   getColumns=()=>{
     const columns = [{
       title: '序号',
-      dataIndex: 'num',
-      key: 'num',
-      render:(text, record,index)=>{
-        return index + 1
-      }
    },];
     const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
     

@@ -105,12 +105,12 @@ const OfficeCheck = props => {
     let columns = [
       {
         title: '序号',
-        dataIndex: 'index',
-        key: 'index',
-        width: 80,
-        render: (text, record, index) => {
-          return index + 1;
-        },
+        // dataIndex: 'index',
+        // key: 'index',
+        // width: 60,
+        // render: (text, record, index) => {
+        //   return index + 1;
+        // },
       },
       {
         title: '大区',

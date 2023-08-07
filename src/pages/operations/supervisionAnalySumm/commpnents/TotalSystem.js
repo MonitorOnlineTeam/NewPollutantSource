@@ -249,12 +249,11 @@ const Index = (props) => {
             children: [
                 {
                     title: '序号',
-                    dataIndex: 'TypeNum',
-                    key: 'TypeNum',
-                    width: 70,
+                    // dataIndex: 'TypeNum',
+                    // key: 'TypeNum',
                     align: 'center',
                     render: (text, record, index) => {
-                        return index + 1
+                        return (index + 1) + (pageIndex-1)*pageSize
                     }
                 },
                 {
@@ -355,10 +354,9 @@ const Index = (props) => {
                     title: '序号',
                     dataIndex: 'TypeNum',
                     key: 'TypeNum',
-                    width: 70,
                     align: 'center',
                     render: (text, record, index) => {
-                        return index + 1
+                        return (index + 1) + (pageIndex-1)*pageSize
                     }
                 },
                 {

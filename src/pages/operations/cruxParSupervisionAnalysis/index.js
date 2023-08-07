@@ -1,5 +1,5 @@
 /**
- * 功  能：运维记录
+ * 功  能：关键参数核查分析
  * 创建人：jab
  * 创建时间：2022.04.20
  */
@@ -85,10 +85,10 @@ const Index = (props) => {
   const columns = [
     {
       title: '序号',
-      dataIndex: 'Sort',
-      key: 'Sort',
       align: 'center',
       ellipsis: true,
+      // dataIndex: 'Sort',
+      // key: 'Sort',
       render:(text,record,index)=>{
         return index + 1 
        }
@@ -231,13 +231,13 @@ const Index = (props) => {
   const columns2 = [
     {
       title: '序号',
-      dataIndex: 'Sort',
-      key: 'Sort',
       align: 'center',
       ellipsis: true,
-      render:(text,record,index)=>{
-        return index + 1 
-       }
+      // dataIndex: 'Sort',
+      // key: 'Sort',
+      // render:(text,record,index)=>{
+      //  return index + 1 
+      // }
     },
     {
       title: '省',

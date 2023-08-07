@@ -76,7 +76,7 @@ export default Model.extend({
       },
 
     ],
-    workAlarmTotal:1,
+    workAlarmTotal:50,
   },
   effects: {
     // 获取工作台待办

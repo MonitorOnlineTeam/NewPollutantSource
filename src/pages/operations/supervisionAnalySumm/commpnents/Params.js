@@ -81,9 +81,8 @@ const Index = (props) => {
       dataIndex: 'TypeNum',
       key: 'TypeNum',
       align: 'center',
-      width:70,
       render:(text,record,index)=>{
-        return index + 1
+        return (index + 1) + (pageIndex-1)*pageSize
       }
     },
     {

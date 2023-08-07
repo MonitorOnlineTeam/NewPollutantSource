@@ -379,9 +379,7 @@ class Index extends Component {
     };
     this.depApproveColumns = [
       {
-        title: <span>序号</span>,
-        dataIndex: 'x',
-        key: 'x',
+        title: '序号',
         align: 'center',
         render: (text, record, index) => {
           return index + 1
@@ -399,7 +397,7 @@ class Index extends Component {
       },
       {
         title: '操作',
-        dataIndex: '',
+        dataIndex: 'x',
         key: 'x',
         align: 'center',
         render: (text, record, index) => (

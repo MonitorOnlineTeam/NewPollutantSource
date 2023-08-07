@@ -217,7 +217,7 @@ const Index = (props) => {
       className={styles['ant-advanced-search-form']}
       layout='inline'
       initialValues={{
-        // Status:1
+        time: [moment(new Date()).add(-7, 'day').startOf("day"), moment().endOf("day"),]
       }}
       onFinish={()=>{setPageIndex(1);onFinish(1,pageSize)}}
     >

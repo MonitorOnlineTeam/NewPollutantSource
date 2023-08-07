@@ -530,9 +530,7 @@ class DepartIndex extends Component {
     };
     this.depApproveColumns = [
       {
-        title: <span>序号</span>,
-        dataIndex: 'x',
-        key: 'x',
+        title: '序号',
         align: 'center',
         render: (text, record, index) => {
           return index + 1;

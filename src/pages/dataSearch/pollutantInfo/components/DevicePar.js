@@ -134,7 +134,6 @@ const Index = (props) => {
     {
         title: '序号',
         align: 'center',
-        width: 50,
         ellipsis:true,
         render: (text, record, index) => {
           return  (index + 1) + (pageIndex-1)*pageSize;

@@ -116,7 +116,6 @@ const Index = (props) => {
       align: 'center',
       dataIndex:'level',
       key:'level',
-      width: 80,
       render: (text, record, index) => {
         return rowSpanFun(text,record.count)
       }
