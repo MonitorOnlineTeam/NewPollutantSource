@@ -305,13 +305,14 @@ class SdlTable extends PureComponent {
     const scrollY =
       pagination === false && typeof scrollYHeight === 'number' ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
+    
     const _columns = (columns || []).map((col, index) => ({
       render: (text, record,index) =>
-        text && (
-          col.title=='序号' && !col.dataIndex? 
-          (index + 1) + (this.state.pageIndex-1)*this.state.pageSize
+        (
+          col.title=='序号' && !col.dataIndex && !col.key && !col.render? 
+          (index + 1) + (this.state.pageIndex-1) * this.state.pageSize
           :
-          <div
+          text &&  <div
             style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
             className={col.ellipsis ? 'ant-table-cell-ellipsis' : null}
           >
