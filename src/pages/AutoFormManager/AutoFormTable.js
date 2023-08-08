@@ -64,7 +64,7 @@ class AutoFormTable extends PureComponent {
     this.state = {
       selectedRowKeys: [],
       delPostData: {},
-      otherParams: {},
+      otherParams: '',
       editKeysParams: {},
     };
     this._SELF_ = { btnEl: [], configId: props.configId, moreBtns: [] };

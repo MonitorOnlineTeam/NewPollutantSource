@@ -96,7 +96,7 @@ const Workbench = props => {
     // GetToDoDailyWorks();
     GetWorkBenchMsg();
     GetStagingInspectorRectificationList()
-    GetWorkAlarmPushList(dataAlarmVal,(total)=>{})
+    // GetWorkAlarmPushList(dataAlarmVal)
   };
 
   // 获取工作台待办
@@ -156,6 +156,9 @@ const Workbench = props => {
     props.dispatch({
       type: 'wordSupervision/GetStagingInspectorRectificationList',
       payload: { pageIndex: 1, pageSize: 9999 },
+      callback:(total)=>{
+        operaServiceBtnList.splice(0,1,{name: `监督核查（${total}）`, value: 1 })
+      }
     });
   };
 
@@ -345,7 +348,7 @@ const Workbench = props => {
   const [selectOperaVal, setSelectOperaVal] = useState(1)
 
   const [operaServiceBtnList, setOperaServiceBtnList] = useState([{ name: '监督核查', value: 1 }])
-  const [myRemindBtnList, setMyBtnRemindList] = useState([{ name: '数据报警', value: 1 }, { name: '标气更换', value: 2 }])
+  const [myRemindBtnList, setMyBtnRemindList] = useState([{ name: '数据报警', value: 1 },])
   const btnComponents = (data, val, callBack) => {
     return <div className={styles.selectBtnSty}>
       {data.map(item => {
@@ -353,8 +356,8 @@ const Workbench = props => {
       })}
     </div>
   }
-  const [dataAlarmTypeList, setDataAlarmTypeList] = useState([{ name: '全部', value: 1 }, { name: '待处理', value: 2 }, { name: '已处理', value: 3 }])
-  const [dataAlarmVal, setDataAlarmVal] = useState(1)
+  const [dataAlarmTypeList, setDataAlarmTypeList] = useState([{ name: '全部', value: '' }, { name: '待处理', value: 1 }, { name: '已处理', value: 2 }])
+  const [dataAlarmVal, setDataAlarmVal] = useState('')
   const [allClose, setAllClose] = useState(1)
 
   const btnSquareComponents = (data, val, callBack) => {
@@ -370,6 +373,9 @@ const Workbench = props => {
   props.dispatch({
     type: 'wordSupervision/GetWorkAlarmPushList',
     payload: {status:status, pageIndex:pageIndex?pageIndex: alarmPageIndex, pageSize:pageSize?pageSize : alarmPageSize },
+    callback:(total)=>{
+      myRemindBtnList.splice(0,1,{name: `数据报警（${total}）`, value: 1 })
+    }
   });
  }
   const delAlarm = (item) =>{ //删除报警
@@ -377,7 +383,6 @@ const Workbench = props => {
       type: 'wordSupervision/UpdateWorkPushStatus',
       payload: {
         alarmID: item.alarmID,
-        User_ID: forwardingUserId,
       },
       callback: res => {
         GetWorkAlarmPushList(dataAlarmVal)
@@ -388,7 +393,7 @@ const Workbench = props => {
     props.dispatch({
       type: 'wordSupervision/UpdateWorkPushStatus',
       payload: {
-        // alarmID: item.alarmID,
+        alarmID: '',
       },
       callback: res => {
         setAlarmPageIndex(1)
@@ -492,19 +497,25 @@ const Workbench = props => {
                 >
 
                 <div className={styles.title}>预留我的提醒</div>
-                  {/* <Empty style={{ marginTop: '30px' }} /> */}
-                <Row justify='space-between'>
+                  <Empty style={{ marginTop: '30px' }} />
+                {/* <Row justify='space-between'>
                     {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val) })}
                     {workAlarmTotal&&btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) })}
                   </Row>
                   <div className={'dataAlarmSty'} style={{ padding: '0 24px 0 16px' }}>
-                    <Spin spinning={workAlarmPushLoading} style={{height:'100%'}}>
+                    <Spin spinning={workAlarmPushLoading}>
                       {workAlarmPushList?.length ? workAlarmPushList.map(item =>
                         (<Row justify='space-between' style={{ paddingBottom: 12, cursor: 'pointer' }}>
                           <Col style={{paddingTop:4}}><img src='/work_alarm.png'/></Col>
                           <Col style={{width:'calc(100% - 100px)'}}>
-                            <div>{item.EntNamePointName}</div>
-                            <div style={{color:'#666',fontSize:13,paddingTop:4}}><span>报警生成时间：{}</span> <span>报警生成时间：{}</span> <span>报警生成时间：{}</span> <span>报警生成时间：{}</span></div>
+                            <div>{item.message}</div>
+                            <div className='statusSty' style={{color:'#666',fontSize:13,paddingTop:4}}><span>报警生成时间：{item.alarmCreateTime}</span>
+                            {item.alarmType==0 || item.alarmType==12 ? 
+                            <><Tag color={item.status==3? "success" : "warning"}>{item.status==3?'已响应':'待响应'}</Tag>{item.status==3&&<><span>响应人{item.userName}</span> <span>响应时间：{item.responseTime}</span></>}</>
+                            :
+                            <><Tag color={item.status==3? "success" : "warning"}>{item.status==3?'已响应':'待响应'}</Tag>{item.status==3&&<><span>核实人：{item.userName}</span> <span>核实时间：{item.responseTime}</span></>}</>}
+                            
+                            </div>
                           </Col>
                           <Col>
                           <Popconfirm placement="left" title={'确定要删除这条报警吗？'} onConfirm={()=>delAlarm(item)} okText="是" cancelText="否">
@@ -531,10 +542,10 @@ const Workbench = props => {
                       pageSize={alarmPageSize}
                       onChange={alarmPageChange}
                     />
-                  </Row> : null}
+                  </Row> : null}*/}
                 </Card>
               </Col>
-            </Row>
+            </Row> 
           </div>
           <div className={styles.rightWrapper}>
             <div className={styles.quickNavWrapper}>

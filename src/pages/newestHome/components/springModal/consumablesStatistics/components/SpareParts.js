@@ -273,15 +273,21 @@ const columns2 = [
     align:'center',
   },
   {
+    title: 'CIS申请单据号',
+    dataIndex: 'CisNum',
+    key:'CisNum',
+    align:'center',
+  },
+  {
     title: '更换时间',
     dataIndex: 'replaceDate',
     key:'replaceDate',
     align:'center',
   },
   {
-    title: 'CIS申请单据号',
-    dataIndex: 'CisNum',
-    key:'CisNum',
+    title: '更换原因说明',
+    dataIndex: 'remark',
+    key:'remark',
     align:'center',
   },
 ]

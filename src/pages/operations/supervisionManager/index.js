@@ -639,14 +639,16 @@ const Index = (props) => {
 
 
   const foramtProblemFilesList = (data) => {
-    const filesCuidObj1 = {}, filesListObj1 = {};
+    const filesCuidObj1 = {}, filesListObj1 = {},  principleDisabledData = {};
     data.PrincipleProblemList && data.PrincipleProblemList.map((item, index) => {
       filesCuidObj1[`Files1${item.Sort}`] = cuid();
       filesListObj1[`Files1${item.Sort}`] = [];
       tableForm.setFieldsValue({ //有无原则问题 默认
         [`Inspector${item.Sort}`]: null,
       })
+        principleDisabledData[`${item.Sort}`] = true;
     })
+    setPrincipleDisabled(principleDisabledData)
     setFilesCuidList1(filesCuidObj1)
     setFilesList1(filesListObj1)
 

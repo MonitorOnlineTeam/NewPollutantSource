@@ -703,7 +703,11 @@ class TaskRecord extends Component {
                     <Tooltip title="驳回">
                       <Popconfirm
                         placement="left"
-                        title="确认是否驳回?"
+                        title={
+                        <div>
+                           <Row>确认是否驳回?</Row>
+                           {/* <Row className='red'>驳回后，请通知运维人员在3日内修改工单内容。</Row> */}
+                          </div>}
                         onConfirm={() => {
                           this.rejectTask(TaskID);
                         }}

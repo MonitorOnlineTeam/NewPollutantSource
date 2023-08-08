@@ -28,7 +28,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-import { blue,red } from '@ant-design/colors';
+import { blue, red } from '@ant-design/colors';
 import RegionList from '@/components/RegionList'
 
 const { Search } = Input;
@@ -41,20 +41,20 @@ const pageUrl = {
   updateState: 'abnormalStandard/updateState',
   getData: 'abnormalStandard/getExceptionStandValue',
 };
-@connect(({ loading, abnormalStandard,autoForm }) => ({
+@connect(({ loading, abnormalStandard, autoForm }) => ({
   priseList: abnormalStandard.priseList,
-  exloading:abnormalStandard.exloading,
+  exloading: abnormalStandard.exloading,
   loading: abnormalStandard.loading,
   total: abnormalStandard.total,
   tableDatas: abnormalStandard.tableDatas,
   queryPar: abnormalStandard.queryPar,
   regionList: autoForm.regionList,
-  attentionList:abnormalStandard.attentionList,
-  pointName:abnormalStandard.pointName,
-  chartExport:abnormalStandard.chartExport,
-  chartImport:abnormalStandard.chartImport,
-  chartTime:abnormalStandard.chartTime,
-  column:abnormalStandard.column,
+  attentionList: abnormalStandard.attentionList,
+  pointName: abnormalStandard.pointName,
+  chartExport: abnormalStandard.chartExport,
+  chartImport: abnormalStandard.chartImport,
+  chartTime: abnormalStandard.chartTime,
+  column: abnormalStandard.column,
 }))
 @Form.create()
 export default class Index extends Component {
@@ -63,48 +63,48 @@ export default class Index extends Component {
 
     this.state = {
     };
-    
+
     this.columns = [
       {
         title: '行政区',
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
-        width:100,
+        width: 100,
       },
       {
         title: '企业名称',
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
-        width:200,
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+        width: 200,
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+        },
       },
       {
         title: '监测点名称',
         dataIndex: 'pointName',
         key: 'pointName',
         align: 'center',
-        width:150,
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+        width: 150,
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+        },
       },
       {
         title: '排口类型',
         dataIndex: 'outputType',
         key: 'outputType',
         align: 'center',
-        width:100,
+        width: 100,
       },
       {
         title: '已设置异常类型',
         dataIndex: 'exceptionType',
         key: 'exceptionType',
         align: 'center',
-        width:150,
+        width: 150,
       },
     ]
   }
@@ -114,21 +114,21 @@ export default class Index extends Component {
   }
   initData = () => {
     const { dispatch, location } = this.props;
-    
+
 
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
- 
-     dispatch({ type: 'abnormalStandard/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
 
-     dispatch({   type: 'abnormalStandard/getEntByRegion',payload: { RegionCode: '' },  });//获取企业列表
+    dispatch({ type: 'abnormalStandard/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
 
-     this.updateQueryState({
+    dispatch({ type: 'abnormalStandard/getEntByRegion', payload: { RegionCode: '' }, });//获取企业列表
+
+    this.updateQueryState({
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantCode:'',
-      PollutantType:'2',
+      PollutantCode: '',
+      PollutantType: '2',
     });
     setTimeout(() => {
       this.getTableData();
@@ -177,22 +177,22 @@ export default class Index extends Component {
   };
 
   changeRegion = (value) => { //行政区事件
-    
+
     this.updateQueryState({
       RegionCode: value,
     });
   };
-  changeAttent=(value)=>{
+  changeAttent = (value) => {
     this.updateQueryState({
       AttentionCode: value,
     });
   }
-  changeEnt=(value,data)=>{ //企业事件
+  changeEnt = (value, data) => { //企业事件
     this.updateQueryState({
       EntCode: value,
     });
   }
-  changePoll=(value,data)=>{ //污染物改变事件
+  changePoll = (value, data) => { //污染物改变事件
     this.updateQueryState({
       PollutantType: value,
     });
@@ -205,21 +205,21 @@ export default class Index extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'abnormalStandard/exportExceptionStandValue',
-      payload: { ...queryPar,PageIndex:undefined,PageSize:undefined, },
+      payload: { ...queryPar, PageIndex: undefined, PageSize: undefined, },
       callback: data => {
-          downloadFile(`/upload${data}`);
-        },
+        downloadFile(`/upload${data}`);
+      },
     });
   };
   //查询事件
   queryClick = () => {
     this.getTableData();
 
-    const {  queryPar:{ PollutantType } } = this.props;
+    const { queryPar: { PollutantType } } = this.props;
   };
 
 
-  regchildren=()=>{
+  regchildren = () => {
     const { regionList } = this.props;
     const selectList = [];
     if (regionList.length > 0) {
@@ -233,11 +233,11 @@ export default class Index extends Component {
       return selectList;
     }
   }
-  attentchildren=()=>{
+  attentchildren = () => {
     const { attentionList } = this.props;
     const selectList = [];
     if (attentionList.length > 0) {
-       attentionList.map(item => {
+      attentionList.map(item => {
         selectList.push(
           <Option key={item.AttentionCode} value={item.AttentionCode}>
             {item.AttentionName}
@@ -247,110 +247,129 @@ export default class Index extends Component {
       return selectList;
     }
   }
-  
-      /** 数据类型切换 */
- _handleDateTypeChange = value => {
-   
-    if( value === 'HourData'){
+
+  /** 数据类型切换 */
+  _handleDateTypeChange = value => {
+
+    if (value === 'HourData') {
       this.updateQueryState({
         dataType: value,
         beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
         endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-       
-        });
-      }else{
-        this.updateQueryState({
-          dataType: value,
-          beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
-          endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-          
-          });
-      }
-    }
-  dateChange=(date)=>{
+
+      });
+    } else {
       this.updateQueryState({
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        dataType: value,
+        beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+
       });
     }
-    dateOk=()=>{ 
+  }
+  dateChange = (date) => {
+    this.updateQueryState({
+      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+  }
+  dateOk = () => {
 
-   }
-   onTableChange = (PageIndex,PageSize) =>{
-      this.updateQueryState({
-      PageIndex:PageIndex,
+  }
+  onTableChange = (PageIndex, PageSize) => {
+    this.updateQueryState({
+      PageIndex: PageIndex,
       PageSize: PageSize,
     });
-    setTimeout(()=>{
+    setTimeout(() => {
       this.queryClick();
     })
-   }
-
+  }
+  resData = (text) =>text ==='未设置'? <Badge.Ribbon style={{top:-34,right:-16,zIndex:99}} text="未设置" color="#faad14" /> : text ;
   render() {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantType,PageSize,PageIndex },
+      queryPar: { beginTime, endTime, EntCode, RegionCode, AttentionCode, PollutantType, PageSize, PageIndex },
       column,
       tableDatas
     } = this.props;
     const { TabPane } = Tabs;
     let columns = [];
 
-    if(column.length>0){
-      let  addCol=[];
-      column.map(item=>{
+    if (column.length > 0) {
+      let addCol = [];
+      column.map(item => {
         addCol.push({
-          //  title:<Badge.Ribbon style={{top:-12,right:-16,zIndex:99}} text="监测中" color="#faad14">{`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`}</Badge.Ribbon>,
-          title: `${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,
+          title: `${item.PollutantName}${item.Unit ? `(${item.Unit})` : ''}`,
           children: [
-          {
-           title: '零值异常',
-           align:'center',
-           children: [{  title: '零值计数',   dataIndex: `${item.PollutantCode}_zero`,  key:`${item.PollutantCode}_zero`,  width: 100, align:'center' }]
-          },
-          {
-           title: '超量程异常',
-            children: [{
-            title: '量程上限',
-            dataIndex: `${item.PollutantCode}_overrunup`,
-            key: `${item.PollutantCode}_overrunup`,
-            width: 100, align:'center' 
-          },
-          {
-           title: '量程下限',
-           dataIndex: `${item.PollutantCode}_overrunlow`,
-           key: `${item.PollutantCode}_overrunlow`,
-           width: 100, align:'center' 
-        },
-        {
-         title: '超量程计数',
-         dataIndex: `${item.PollutantCode}_overrun`,
-         key: `${item.PollutantCode}_overrun`,
-         width: 100, align:'center' 
-         }]
-        },
-        {
-          title: '恒定值异常',
-          align:'center',
-          children: [{  title: '恒定值计数',   dataIndex: `${item.PollutantCode}_continuity`,  key:`${item.PollutantCode}_continuity`,  width: 100, align:'center' }]
-         },  
-        ],
+            {
+              title: '零值异常',
+              align: 'center',
+              children: [{
+                title: '零值计数',
+                dataIndex: `${item.PollutantCode}_zero`,
+                key: `${item.PollutantCode}_zero`,
+                width: 100,
+                align: 'center',
+                render: (text) =>this.resData(text)
+              }]
+            },
+            {
+              title: '超量程异常',
+              children: [{
+                title: '量程上限',
+                dataIndex: `${item.PollutantCode}_overrunup`,
+                key: `${item.PollutantCode}_overrunup`,
+                width: 100,
+                align: 'center',
+                render: (text) =>this.resData(text)
+              },
+              {
+                title: '量程下限',
+                dataIndex: `${item.PollutantCode}_overrunlow`,
+                key: `${item.PollutantCode}_overrunlow`,
+                width: 100,
+                align: 'center',
+                render: (text) =>this.resData(text)
+              },
+              {
+                title: '超量程计数',
+                dataIndex: `${item.PollutantCode}_overrun`,
+                key: `${item.PollutantCode}_overrun`,
+                width: 100,
+                align: 'center',
+                render: (text) =>this.resData(text)
+              }]
+            },
+            {
+              title: '恒定值异常',
+              align: 'center',
+              children: [{
+                title: '恒定值计数',
+                dataIndex: `${item.PollutantCode}_continuity`,
+                key: `${item.PollutantCode}_continuity`,
+                width: 100,
+                align: 'center',
+                render: (text) =>this.resData(text)
+              }]
+            },
+          ],
 
         })
-    })
+      })
 
-    columns = [...this.columns,...addCol]
-  }else{
-    columns = this.columns
-  }
+      columns = [...this.columns, ...addCol]
+    } else {
+      columns = this.columns
+    }
     return (
       <Card
         bordered={false}
         title={
           <>
             <Form layout="inline">
-             <Form.Item label='行政区' >
+              <Form.Item label='行政区' >
                 {/* <Select
                   allowClear
                   placeholder="行政区"
@@ -360,14 +379,14 @@ export default class Index extends Component {
                 >
                   {this.regchildren()}
                 </Select> */}
-              <RegionList style={{width:170}} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+                <RegionList style={{ width: 170 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
               </Form.Item>
               <Form.Item label='关注程度'>
                 <Select
-                   allowClear
+                  allowClear
                   placeholder="关注程度"
                   onChange={this.changeAttent}
-                  value={AttentionCode?AttentionCode:undefined} 
+                  value={AttentionCode ? AttentionCode : undefined}
                   style={{ width: 170 }}
                 >
                   {this.attentchildren()}
@@ -381,23 +400,23 @@ export default class Index extends Component {
                   style={{ width: 170 }}
                 >
                   <Option value="2">废气</Option>
-                  <Option value="1">废水</Option>       
+                  <Option value="1">废水</Option>
                 </Select>
               </Form.Item>
               <Form.Item>
-              <Form.Item label='企业列表'>
-                <Select
-                  showSearch
-                  allowClear
-                  optionFilterProp="children"
-                  placeholder="企业名称"
-                  onChange={this.changeEnt}
-                  value={EntCode? EntCode : undefined }
-                  style={{ width: 170  }}
-                >
-                  {this.children()}
-                </Select>
-              </Form.Item>
+                <Form.Item label='企业列表'>
+                  <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="企业名称"
+                    onChange={this.changeEnt}
+                    value={EntCode ? EntCode : undefined}
+                    style={{ width: 170 }}
+                  >
+                    {this.children()}
+                  </Select>
+                </Form.Item>
 
                 <Button type="primary" onClick={this.queryClick}>
                   查询
@@ -417,13 +436,13 @@ export default class Index extends Component {
       >
         <div id=''>
 
-           <SdlTable
+          <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={loading}
             columns={columns}
             bordered={true}
             dataSource={tableDatas}
-            scroll={{ y: column.length>0&&'calc(100vh - 400px)' }}
+            scroll={{ y: column.length > 0 && 'calc(100vh - 400px)' }}
             pagination={{
               showSizeChanger: true,
               showQuickJumper: true,

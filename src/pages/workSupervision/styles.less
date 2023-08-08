@@ -231,8 +231,11 @@
   }
   .dataAlarmSty {
     padding:6px 16px 30px 12px;
-    height: calc(100% - 130px);
+    max-height: calc(100% - 130px);
     overflow-y: auto; 
+    .statusSty span{
+      padding-right: 6;
+    }
   }
   .ant-pagination-item-active{
     background-color: #1890FF;
