@@ -107,8 +107,8 @@ const Index = (props) => {
   const columns = [
     {
       title: '行政区',
-      dataIndex: 'ProvinceName',
-      key:'ProvinceName',
+      dataIndex: 'provinceName',
+      key:'provinceName',
       align:'center'
     },
     {

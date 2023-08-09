@@ -61,14 +61,17 @@ const dvaPropsData = ({ loading, wordSupervision,global }) => ({
   messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
   operaServiceList: wordSupervision.operaServiceList,
   operaServiceLoading: loading.effects['wordSupervision/GetStagingInspectorRectificationList'],
-  workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'],
+  workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
   workAlarmTotal: wordSupervision.workAlarmTotal,
+  contractLoading: loading.effects['wordSupervision/GetProjectRemindList'] || loading.effects['wordSupervision/UpdateProjectPushStatus'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
+  contractList: wordSupervision.contractList,
+  contractTotal: wordSupervision.contractTotal,
   configInfo: global.configInfo,
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList,configInfo,workAlarmPushLoading,workAlarmPushList,workAlarmTotal, } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList,configInfo,workAlarmPushLoading,workAlarmPushList,workAlarmTotal,contractList,contractTotal,contractLoading, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
@@ -96,7 +99,8 @@ const Workbench = props => {
     // GetToDoDailyWorks();
     GetWorkBenchMsg();
     GetStagingInspectorRectificationList()
-    // GetWorkAlarmPushList(dataAlarmVal)
+    GetWorkAlarmPushList(dataAlarmVal) //我的提醒 数据报警
+    GetProjectRemindList() //我的提醒 合同到期
   };
 
   // 获取工作台待办
@@ -348,7 +352,7 @@ const Workbench = props => {
   const [selectOperaVal, setSelectOperaVal] = useState(1)
 
   const [operaServiceBtnList, setOperaServiceBtnList] = useState([{ name: '监督核查', value: 1 }])
-  const [myRemindBtnList, setMyBtnRemindList] = useState([{ name: '数据报警', value: 1 },])
+  const [myRemindBtnList, setMyBtnRemindList] = useState([{ name: '数据报警', value: 1 },{ name: '合同到期', value: 4 },])
   const btnComponents = (data, val, callBack) => {
     return <div className={styles.selectBtnSty}>
       {data.map(item => {
@@ -356,7 +360,7 @@ const Workbench = props => {
       })}
     </div>
   }
-  const [dataAlarmTypeList, setDataAlarmTypeList] = useState([{ name: '全部', value: '' }, { name: '待处理', value: 1 }, { name: '已处理', value: 2 }])
+  const [dataAlarmTypeList, setDataAlarmTypeList] = useState([{ name: '全部', value: '' }, { name: '待处理', value: 1 }, { name: '已处理', value: 3}])
   const [dataAlarmVal, setDataAlarmVal] = useState('')
   const [allClose, setAllClose] = useState(1)
 
@@ -382,20 +386,18 @@ const Workbench = props => {
     props.dispatch({
       type: 'wordSupervision/UpdateWorkPushStatus',
       payload: {
-        alarmID: item.alarmID,
+        alarmID: item.ID,
       },
-      callback: res => {
+      callback: () => {
         GetWorkAlarmPushList(dataAlarmVal)
       },
     });
   }
   const closeAllAlarmChange = () => { //关闭全部报警
     props.dispatch({
-      type: 'wordSupervision/UpdateWorkPushStatus',
-      payload: {
-        alarmID: '',
-      },
-      callback: res => {
+      type: 'wordSupervision/UpdateAllWorkPushStatus',
+      payload: {},
+      callback: () => {
         setAlarmPageIndex(1)
         GetWorkAlarmPushList(dataAlarmVal,1)
       },
@@ -407,6 +409,46 @@ const Workbench = props => {
    setAlarmPageIndex(pageIndex)
    setAlarmPageSize(pageSize)
    GetWorkAlarmPushList(dataAlarmVal,pageIndex,pageSize)
+  }
+
+
+//获取合同到期
+ const GetProjectRemindList = (pageIndex,pageSize,) =>{
+  props.dispatch({
+    type: 'wordSupervision/GetProjectRemindList',
+    payload: {pageIndex:pageIndex?pageIndex: contractPageIndex, pageSize:pageSize?pageSize : contractPageSize },
+    callback:(total)=>{
+      myRemindBtnList.splice(1,1,{name: `合同到期（${total}）`, value: 4 })
+    }
+  });
+ }
+  const delContract = (item) =>{ //删除合同到期
+    props.dispatch({
+      type: 'wordSupervision/UpdateProjectPushStatus',
+      payload: {
+        ID: item.ID,
+      },
+      callback: () => {
+        GetProjectRemindList()
+      },
+    });
+  }
+  const delAllContract= () => { //删除全部合同到期
+    props.dispatch({
+      type: 'wordSupervision/UpdateAllProjectPushStatus',
+      payload: {},
+      callback: () => {
+        setContractPageIndex(1)
+        GetProjectRemindList(1)
+      },
+    });
+  }
+  const [contractPageIndex,setContractPageIndex] = useState(1)
+  const [contractPageSize,setContractPageSize] = useState(10)
+  const contractPageChange = (pageIndex,pageSize) =>{
+   setContractPageIndex(pageIndex)
+   setContractPageSize(pageSize)
+   GetProjectRemindList(pageIndex,pageSize)
   }
   return (
     <div className={styles.workbenchBreadSty}>
@@ -497,15 +539,15 @@ const Workbench = props => {
                 >
 
                 <div className={styles.title}>预留我的提醒</div>
-                  <Empty style={{ marginTop: '30px' }} />
-                {/* <Row justify='space-between'>
-                    {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val) })}
-                    {workAlarmTotal&&btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) })}
+                  {/* <Empty style={{ marginTop: '30px' }} /> */}
+                 <Row justify='space-between'>
+                    {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val); })}
+                    {selectMyVal==1&&workAlarmTotal? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
                   </Row>
-                  <div className={'dataAlarmSty'} style={{ padding: '0 24px 0 16px' }}>
-                    <Spin spinning={workAlarmPushLoading}>
+                  <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
+                   {selectMyVal==1&&<Spin spinning={workAlarmPushLoading}>
                       {workAlarmPushList?.length ? workAlarmPushList.map(item =>
-                        (<Row justify='space-between' style={{ paddingBottom: 12, cursor: 'pointer' }}>
+                        (<Row justify='space-between' style={{ paddingBottom: 12,}}>
                           <Col style={{paddingTop:4}}><img src='/work_alarm.png'/></Col>
                           <Col style={{width:'calc(100% - 100px)'}}>
                             <div>{item.message}</div>
@@ -526,9 +568,26 @@ const Workbench = props => {
                       )
                         :
                         <Empty style={{ marginTop: '30px' }} />}
-                    </Spin>
+                    </Spin>}
+                    {selectMyVal==4&&<Spin spinning={contractLoading}>
+                      {contractList?.length ? contractList.map(item =>
+                        (<Row justify='space-between' style={{ paddingBottom: 12,transition: '0.5s all ease-in' }}>
+                          <Col style={{paddingTop:4}}><img src='/work_contract.png'/></Col>
+                          <Col style={{width:'calc(100% - 100px)'}}>
+                            <div>{item.Msg}</div>
+                          </Col>
+                          <Col>
+                          <Popconfirm placement="left" title={'确定要删除这条合同到期吗？'} onConfirm={()=>delContract(item)} okText="是" cancelText="否">
+                            <a>删除</a>
+                          </Popconfirm>
+                          </Col>
+                        </Row>)
+                      )
+                        :
+                        <Empty style={{ marginTop: '30px' }} />}
+                    </Spin>}
                   </div>
-                  {workAlarmTotal?<Row justify='space-between'  style={{ paddingTop: 12 }}>
+                  {selectMyVal==1&&<>{workAlarmTotal?<Row justify='space-between'  style={{ paddingTop: 12 }}>
                    <Popconfirm placement="topLeft" title={'确定要关闭全部报警吗？'} onConfirm={()=>closeAllAlarmChange()} okText="是" cancelText="否">
                     <div>{btnSquareComponents([{ name: '关闭全部', value: 1 }], allClose, () => {  })}</div>
                     </Popconfirm>
@@ -542,7 +601,22 @@ const Workbench = props => {
                       pageSize={alarmPageSize}
                       onChange={alarmPageChange}
                     />
-                  </Row> : null}*/}
+                  </Row> : null}</>}
+                  {selectMyVal==4&&<>{contractTotal?<Row justify='space-between'  style={{ paddingTop: 12 }}>
+                   <Popconfirm placement="topLeft" title={'确定要删除全部合同到期吗？'} onConfirm={()=>delAllContract()} okText="是" cancelText="否">
+                    <div>{btnSquareComponents([{ name: '删除全部', value: 1 }], allClose, () => {  })}</div>
+                    </Popconfirm>
+                    <Pagination
+                      size="small"
+                      style={{paddingRight:12}}
+                      showSizeChanger
+                      showQuickJumper
+                      total={contractTotal}
+                      current={contractPageIndex}
+                      pageSize={contractPageSize}
+                      onChange={contractPageChange}
+                    />
+                  </Row> : null}</>}
                 </Card>
               </Col>
             </Row> 

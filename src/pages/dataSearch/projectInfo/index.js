@@ -114,9 +114,11 @@ const Index = (props) => {
   const [pageSize,setPageSize] = useState(20)
 
   
-  
-  const isEditing = (record) => record.key === editingKey;
-  
+
+  // const provinceShow = props.configInfo&&props.configInfo.IsShowProjectRegion; 
+  const provinceShow = true; 
+
+
   const  { tableDatas,tableTotal,loadingConfirm,pointDatas,pointDatasTotal,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
   useEffect(() => {
     onFinish(pageIndex,pageSize)
@@ -137,6 +139,13 @@ const Index = (props) => {
       key:'ProjectCode',
       align:'center',
       ellipsis:true,
+    },
+    {
+      title: '行政区',
+      dataIndex: 'ProvinceName',
+      key: 'ProvinceName',
+      align: 'center',
+      ellipsis: true,
     },
     {
       title: '客户所在地',
@@ -400,7 +409,7 @@ const Index = (props) => {
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
-        columns={columns}
+        columns={provinceShow ? columns : columns.filter(item=>item.title!='行政区')}
         scroll={{ y:expand? 'calc(100vh - 420px)' : 'calc(100vh - 370px)'}}
         pagination={{
           total:tableTotal,

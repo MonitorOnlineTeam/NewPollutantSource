@@ -445,6 +445,9 @@ export async function GetStagingInspectorRectificationList(params) {
   return result;
 }
 
+/**我的提醒 */
+
+
 // 数据报警列表
 export async function GetWorkAlarmPushList(params) {
   const result = await post(
@@ -466,6 +469,32 @@ export async function UpdateWorkPushStatus(params) {
 export async function UpdateAllWorkPushStatus(params) {
   const result = await post(
     '/api/rest/PollutantSourceApi/OperationHomeApi/UpdateAllWorkPushStatus',
+    params,
+  );
+  return result;
+}
+
+//合同到期列表
+export async function GetProjectRemindList(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/OperationHomeApi/GetProjectRemindList',
+    params,
+  );
+  return result;
+}
+// 删除合同到期
+export async function UpdateProjectPushStatus(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/OperationHomeApi/UpdateProjectPushStatus',
+    params,
+  );
+  return result;
+}
+
+// 删除所有合同到期
+export async function UpdateAllProjectPushStatus(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/OperationHomeApi/UpdateAllProjectPushStatus',
     params,
   );
   return result;

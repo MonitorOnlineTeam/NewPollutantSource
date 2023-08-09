@@ -22,7 +22,9 @@ export default Model.extend({
     managerList: [],
     operaServiceList: [],
     workAlarmPushList: [],
-    workAlarmTotal:'',
+    workAlarmTotal: 0,
+    contractList: [],
+    contractTotal: 0,
   },
   effects: {
     // 获取工作台待办
@@ -555,7 +557,7 @@ export default Model.extend({
         yield update({
           operaServiceList: result.Datas,
         });
-        callback && callback( result.Total);
+        callback && callback(result.Total);
       } else {
         message.error(result.Message);
       }
@@ -573,7 +575,7 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 删除应收账款催收记录
+    // 删除数据报警
     *UpdateWorkPushStatus({ payload, callback }, { call, put, update }) {
       const result = yield call(services.UpdateWorkPushStatus, payload);
       if (result.IsSuccess) {
@@ -586,6 +588,39 @@ export default Model.extend({
     // 删除所有数据报警
     *UpdateAllWorkPushStatus({ payload, callback }, { call, put, update }) {
       const result = yield call(services.UpdateAllWorkPushStatus, payload);
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 合同到期列表
+    *GetProjectRemindList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetProjectRemindList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          contractList: result.Datas,
+          contractTotal: result.Total,
+        });
+        callback && callback(result.Total);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 删除合同到期
+    *UpdateProjectPushStatus({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.UpdateProjectPushStatus, payload);
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 删除所有合同到期
+    *UpdateAllProjectPushStatus({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.UpdateAllProjectPushStatus, payload);
       if (result.IsSuccess) {
         message.success('删除成功！');
         callback && callback();
