@@ -83,18 +83,60 @@ export async function SaveModelRelationDGIMN(params) {
 
 // 获取报警数据
 export async function GetAllTypeDataListForModel(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetAllTypeDataListForModel', params);
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/GetAllTypeDataListForModel',
+    params,
+  );
   return result;
 }
 
 // 导出报警数据
 export async function ExportHourDataForModel(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/ExportHourDataForModel', params);
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/ExportHourDataForModel',
+    params,
+  );
   return result;
 }
 
 // 获取直方图数据
 export async function StatisPolValueNumsByDGIMN(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisPolValueNumsByDGIMN', params);
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/StatisPolValueNumsByDGIMN',
+    params,
+  );
+  return result;
+}
+
+// 获取相关系数图表数据
+export async function StatisLinearCoefficient(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/StatisLinearCoefficient',
+    params,
+  );
+  return result;
+}
+
+// 根据企业获取排口
+export async function getPointByEntCode(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
+    params,
+  );
+  return result;
+}
+
+// 获取模型精度版本列表
+export async function GetEvaluationVersionList(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/GetEvaluationVersionList',
+    null,
+  );
+  return result;
+}
+
+// 获取模型精度数据
+export async function GetEvaluationList(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetEvaluationList', params);
   return result;
 }

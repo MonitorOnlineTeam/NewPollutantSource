@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-01 09:07:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-16 09:30:42
+ * @Last Modified time: 2023-08-08 09:50:22
  * @Description：模型管理
  */
 
@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Card, Tooltip, Switch } from 'antd';
 import styles from '../styles.less';
-import { SettingOutlined } from '@ant-design/icons';
+import { SettingOutlined, MinusCircleTwoTone } from '@ant-design/icons';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
 import { router } from 'umi';
@@ -55,14 +55,49 @@ const ModelManagement = props => {
         title: '编号',
         dataIndex: 'index',
         key: 'index',
-        width: 80,
+        width: 100,
         align: 'center',
         render: (text, record, index) => {
-          return index + 1;
+          return <span style={{ fontWeight: 'bold' }}>{index + 1}</span>;
         },
       },
       {
-        title: '模型名称',
+        title: '场景名称',
+        dataIndex: 'ModelTypeName',
+        key: 'ModelTypeName',
+        ellipsis: true,
+        width: 1300,
+        render: (text, record) => {
+          return (
+            <Tooltip title={text}>
+              <span className={styles.textOverflow} style={{ fontWeight: 'bold' }}>
+                {text}
+              </span>
+            </Tooltip>
+          );
+        },
+      },
+    ];
+  };
+
+  const expandedRowRender = (record, index, indent, expanded) => {
+    console.log('record', record);
+    console.log('index', index);
+    console.log('indent', indent);
+    console.log('expanded', expanded);
+    const columns = [
+      {
+        title: '编号',
+        dataIndex: 'index',
+        key: 'index',
+        width: 80,
+        align: 'center',
+        render: (text, record, idx) => {
+          return `${index + 1}.${idx + 1}`;
+        },
+      },
+      {
+        title: '场景名称',
         dataIndex: 'ModelName',
         key: 'ModelName',
         ellipsis: true,
@@ -76,7 +111,7 @@ const ModelManagement = props => {
         },
       },
       {
-        title: '模型描述',
+        title: '场景描述',
         dataIndex: 'ModelDes',
         key: 'ModelDes',
         ellipsis: true,
@@ -89,20 +124,20 @@ const ModelManagement = props => {
           );
         },
       },
-      {
-        title: '适用场景',
-        dataIndex: 'SuitScene',
-        key: 'SuitScene',
-        ellipsis: true,
-        width: 180,
-        render: (text, record) => {
-          return (
-            <Tooltip title={text}>
-              <span className={styles.textOverflow}>{text}</span>
-            </Tooltip>
-          );
-        },
-      },
+      // {
+      //   title: '适用场景',
+      //   dataIndex: 'SuitScene',
+      //   key: 'SuitScene',
+      //   ellipsis: true,
+      //   width: 180,
+      //   render: (text, record) => {
+      //     return (
+      //       <Tooltip title={text}>
+      //         <span className={styles.textOverflow}>{text}</span>
+      //       </Tooltip>
+      //     );
+      //   },
+      // },
       {
         title: '数据特征',
         dataIndex: 'DataAttr',
@@ -118,7 +153,7 @@ const ModelManagement = props => {
         },
       },
       {
-        title: '模型准确度',
+        title: '准确度',
         dataIndex: 'Accuracy',
         key: 'Accuracy',
         ellipsis: true,
@@ -155,9 +190,7 @@ const ModelManagement = props => {
               <a
                 style={{ fontSize: 16 }}
                 onClick={() => {
-                  router.push(
-                    `/DataAnalyticalWarningModel/Model/setting/${record.ModelGuid}`,
-                  );
+                  router.push(`/DataAnalyticalWarningModel/Model/setting/${record.ModelGuid}`);
                 }}
               >
                 <SettingOutlined />
@@ -167,16 +200,34 @@ const ModelManagement = props => {
         },
       },
     ];
+    return (
+      <SdlTable
+        columns={columns}
+        dataSource={record.ModelList}
+        pagination={false}
+        scroll={{ y: 10000 }}
+        rowClassName={{}}
+      />
+    );
   };
 
   return (
     <BreadcrumbWrapper>
-      <Card>
+      <Card loading={loading} className={styles.ModelTableWrapper}>
         <SdlTable
           loading={loading}
           columns={getColumns()}
           dataSource={modelList}
           pagination={false}
+          scroll={{ y: 'calc(100vh - 200px)' }}
+          rowClassName={{}}
+          expandable={{
+            indentSize: 1000,
+            expandedRowRender,
+            childrenColumnName: 'childrenColumnName',
+            defaultExpandAllRows: true,
+            // defaultExpandedRowKeys: ['0'],
+          }}
         />
       </Card>
     </BreadcrumbWrapper>

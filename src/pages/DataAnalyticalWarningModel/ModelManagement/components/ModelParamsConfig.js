@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:10:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-10 14:30:50
+ * @Last Modified time: 2023-08-04 09:02:44
  * @Description：模型参数配置
  */
 import React, { useState, useEffect, useImperativeHandle } from 'react';
@@ -146,7 +146,7 @@ const ModelParamsConfig = props => {
         return (
           <>
             <Divider style={{ margin: 0 }} />
-            <Card title={<div className={styles.title}>模型参数配置</div>} bordered={false}>
+            <Card title={<div className={styles.title}>参数配置</div>} bordered={false}>
               <Form
                 name="basic"
                 form={form}

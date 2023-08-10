@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-27 14:44:14
+ * @Last Modified time: 2023-08-10 14:31:03
  * @Description：报警核实详情
  */
 
@@ -20,6 +20,7 @@ import ModelChartLinear from './components/ModelChart-Linear';
 import ModelTable from './components/ModelTable';
 import WarningDataModal from './WarningDataModal';
 import moment from 'moment';
+import { ChartDefaultSelected } from '../CONST';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   warningInfoLoading: loading.effects['dataModel/GetSingleWarning'],
@@ -33,6 +34,7 @@ const WarningVerify = props => {
   const [isOpen, setIsOpen] = useState(false);
   const [dataModalVisible, setDataModalVisible] = useState(false);
   const [warningDataDate, setWarningDataDate] = useState();
+  const [warningDate, setWarningDate] = useState([]);
   const [imageIndex, setImageIndex] = useState();
   const [warningInfo, setWarningInfo] = useState({});
   const [fileList, setFileList] = useState([]);
@@ -43,6 +45,7 @@ const WarningVerify = props => {
     Data: [],
   });
   const [modelDescribe, setModelDescribe] = useState('');
+  const [defaultChartSelected, setDefaultChartSelected] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -158,9 +161,18 @@ const WarningVerify = props => {
     if (modelTableDatas.Column && modelTableDatas.Column.length) {
       if (modelTableDatas.Data.length && modelTableDatas.Data[0]) {
         let startDate = modelTableDatas.Data[0].Time;
+        // let endData = modelTableDatas.Data.slice(-1).Time;
 
-        let date = [moment(startDate).subtract(3, 'day'), moment(startDate).add(3, 'day')];
+        let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
         setWarningDataDate(date);
+
+        // let warningDate = [
+        //   moment(startDate).format('YYYY-MM-DD HH:mm'),
+        //   moment(endData[0]).format('YYYY-MM-DD HH:mm'),
+        // ];
+        // console.log('warningDate', warningDate);
+        // setWarningDate(warningDate);
+
         setDataModalVisible(true);
       } else {
         message.error('异常特征无数据，无法查看报警数据！');
@@ -174,15 +186,42 @@ const WarningVerify = props => {
         // true
       ) {
         let startDate = modelChartDatas[0].data[0].date[0];
+        let endData = modelChartDatas[0].data[0].date.slice(-1);
         // let startDate = [moment('2023-05-24 00:00:00'), moment('2023-05-31 23:59:59')][0].Time;
 
         let date = [moment(startDate).subtract(3, 'day'), moment(startDate).add(3, 'day')];
         setWarningDataDate(date);
+        let warningDate = [
+          moment(startDate).format('YYYY-MM-DD HH:mm'),
+          moment(endData[0]).format('YYYY-MM-DD HH:mm'),
+        ];
+        console.log('warningDate', warningDate);
+        setWarningDate(warningDate);
+        handleDefaultLegendSelected();
         setDataModalVisible(true);
       } else {
         message.error('异常特征无数据，无法查看报警数据！');
       }
     }
+  };
+
+  // 处理图表污染物默认选中
+  const handleDefaultLegendSelected = () => {
+    let defaultSelected = [];
+    // 疑似超过标准标记数据无效
+    if (warningInfo.WarningTypeCode === '6675e28e-271a-4fb7-955b-79bf0b858e8e') {
+      if (
+        modelChartDatas.length &&
+        modelChartDatas[0].data.length &&
+        modelChartDatas[0].data[0].length
+      ) {
+        defaultSelected = [modelChartDatas[0].data[0].pollutantName];
+      }
+    } else {
+      defaultSelected = ChartDefaultSelected[warningInfo.WarningTypeCode] || [];
+    }
+    console.log('defaultSelected', defaultSelected)
+    setDefaultChartSelected(defaultSelected);
   };
 
   const isShowBack = location.pathname.indexOf('autoLogin') <= -1;
@@ -193,7 +232,7 @@ const WarningVerify = props => {
         style={{ height: isShowBack ? '100%' : 'calc(100vh - 22px)' }}
       >
         <Card
-          title="报警详情"
+          title="线索详情"
           bodyStyle={{ paddingTop: 16 }}
           loading={warningInfoLoading}
           extra={
@@ -214,20 +253,24 @@ const WarningVerify = props => {
               </Tooltip>
             </Descriptions.Item>
             <Descriptions.Item label="报警排口">{warningInfo.PointName}</Descriptions.Item>
-            <Descriptions.Item label="报警类型">
+            <Descriptions.Item label="场景类别">
               <Tooltip title={warningInfo.WarningTypeName}>
                 <span className={styles.textOverflow}>{warningInfo.WarningTypeName}</span>
               </Tooltip>
             </Descriptions.Item>
-            <Descriptions.Item label="预警时间">{warningInfo.WarningTime}</Descriptions.Item>
-            <Descriptions.Item label="报警内容">{warningInfo.WarningContent}</Descriptions.Item>
+            <Descriptions.Item label="发现线索时间">{warningInfo.WarningTime}</Descriptions.Item>
+            <Descriptions.Item label="线索内容">{warningInfo.WarningContent}</Descriptions.Item>
           </Descriptions>
         </Card>
         <Card
           title="异常特征"
-          loading={modelChartsLoading}
+          loading={modelChartsLoading || warningInfoLoading}
           extra={
-            <Button loading={modelChartsLoading} type="primary" onClick={() => onViewWarningData()}>
+            <Button
+              loading={modelChartsLoading || warningInfoLoading}
+              type="primary"
+              onClick={() => onViewWarningData()}
+            >
               报警数据
             </Button>
           }
@@ -307,19 +350,22 @@ const WarningVerify = props => {
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
         </Card>
-        <Card title="预警核实" loading={warningInfoLoading}>
-          <Descriptions column={3}>
+        <Card title="线索核实" loading={warningInfoLoading}>
+          <Descriptions column={4}>
             <Descriptions.Item label="核实结果">
               {warningInfo.CheckedResultCode === '1' && <Tag color="error">报警不实</Tag>}
               {warningInfo.CheckedResultCode === '2' && <Tag color="success">报警属实</Tag>}
               {warningInfo.CheckedResultCode === '3' && <Tag>未核实</Tag>}
             </Descriptions.Item>
+            <Descriptions.Item label="不实原因">
+              {warningInfo.UntruthReason || '-'}
+            </Descriptions.Item>
             <Descriptions.Item label="核实人">{warningInfo.CheckedUser || '-'}</Descriptions.Item>
             <Descriptions.Item label="核实时间">{warningInfo.CheckedTime || '-'}</Descriptions.Item>
-            <Descriptions.Item span={3} label="核实描述">
+            <Descriptions.Item span={4} label="核实描述">
               {warningInfo.CheckedDes || '-'}
             </Descriptions.Item>
-            <Descriptions.Item span={3} label="核实材料">
+            <Descriptions.Item span={4} label="核实材料">
               {fileList.length ? (
                 <Upload
                   listType="picture-card"
@@ -354,8 +400,10 @@ const WarningVerify = props => {
             ComparePointName={`${warningInfo.CompareEntNmae} - ${warningInfo.ComparePointName}`}
             visible={dataModalVisible}
             date={warningDataDate}
+            warningDate={warningDate}
             wrapClassName={isShowBack ? 'spreadOverModal' : 'fullScreenModal'}
             describe={modelDescribe}
+            defaultChartSelected={defaultChartSelected}
             onCancel={() => {
               setDataModalVisible(false);
             }}

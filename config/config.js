@@ -8,6 +8,8 @@ const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 
 const apiHost = 'http://172.16.12.234:61002/';
+// const apiHost = 'http://61.50.135.114:63001/'; // 运维外网
+// const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:63001/';
 // const apiHost = 'http://172.16.9.33:8800/'//运维 py 本地
 // const apiHost = 'http://172.16.12.234:61010/' //宝武集团 测试
@@ -2791,6 +2793,19 @@ export default {
                       component: './DataAnalyticalWarningModel/Warning',
                     },
                     {
+                      // 根据编号查看预警记录
+                      name: 'expertManagement',
+                      path: '/DataAnalyticalWarningModel/Warning/ModelType/:modelNumber',
+                      // component: './DataAnalyticalWarningModel/Warning/ModelType',
+                      component: './DataAnalyticalWarningModel/Warning',
+                    },
+                    {
+                      // 监测数据阈值异常研判
+                      name: 'AbnormalJudgmentPage',
+                      path: '/DataAnalyticalWarningModel/Warning/AbnormalJudgmentPage',
+                      component: './DataAnalyticalWarningModel/Warning/AbnormalJudgmentPage',
+                    },
+                    {
                       // 预警核实
                       name: 'WarningVerify',
                       path: '/DataAnalyticalWarningModel/Warning/WarningVerify/:id',
@@ -2829,6 +2844,13 @@ export default {
                     },
                   ],
                 },
+                {
+                  // 模型精度
+                  name: 'Accuracy',
+                  path: '/DataAnalyticalWarningModel/Accuracy',
+                  component: './DataAnalyticalWarningModel/AccuracyPage/index.js',
+                },
+
               ],
             },
             /* 任务详情 */
@@ -2888,8 +2910,9 @@ export default {
   chainWebpack: webpackPlugin,
   proxy: {
     '/newApi': {
-      // target: 'http://172.16.12.234:60061/',
-      target: 'http://172.16.12.134:63002/',
+      // target: 'http://61.50.135.114:63002/',
+      // target: 'http://172.16.12.134:63002/',
+      target: 'http://172.16.12.234:60061/', // 模型外网
       changeOrigin: true,
       pathRewrite: {
         '^/newApi': '',

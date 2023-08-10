@@ -19,7 +19,7 @@ const leftImagesOrder = {
   '01': 2, // 实测烟尘、颗粒物
   '02': 4, // 实测so2
   '03': 6, // 实测NOx
-  s01: 8, // O2
+  s01: 8, // O2,
 };
 
 const rightImagesOrder = {
@@ -35,7 +35,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 });
 
 const Index = props => {
-  const { title, images, visible, onCancel } = props;
+  const { title, images, visible, onCancel, height } = props;
   const [topImages, setTopImages] = useState([]);
   const [leftImages, setLeftImages] = useState([]);
   const [rightImages, setRightImages] = useState([]);
@@ -120,7 +120,9 @@ const Index = props => {
           {getPageContent()}
         </Modal>
       ) : (
-        <div style={{ overflowY: 'auto', height: ' calc(100vh - 205px)' }}>{getPageContent()}</div>
+        <div style={{ overflowY: 'auto', height: height || 'calc(100vh - 205px)' }}>
+          {getPageContent()}
+        </div>
       )}
     </>
   );
