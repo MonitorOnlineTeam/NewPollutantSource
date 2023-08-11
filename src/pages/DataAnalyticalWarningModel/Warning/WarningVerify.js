@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-10 14:31:03
+ * @Last Modified time: 2023-08-11 10:37:42
  * @Description：报警核实详情
  */
 
@@ -189,7 +189,7 @@ const WarningVerify = props => {
         let endData = modelChartDatas[0].data[0].date.slice(-1);
         // let startDate = [moment('2023-05-24 00:00:00'), moment('2023-05-31 23:59:59')][0].Time;
 
-        let date = [moment(startDate).subtract(3, 'day'), moment(startDate).add(3, 'day')];
+        let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
         setWarningDataDate(date);
         let warningDate = [
           moment(startDate).format('YYYY-MM-DD HH:mm'),
