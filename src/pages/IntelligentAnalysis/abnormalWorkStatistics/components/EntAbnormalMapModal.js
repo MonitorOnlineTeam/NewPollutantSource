@@ -105,7 +105,7 @@ const Index = (props) => {
   
 
 
-  const  { entAbnormalList,getPointExceptionLoading,taskList,abnormalTitle, }  = props; 
+  const  { entAbnormalList,getPointExceptionLoading,taskList,abnormalTitle,noPoint,entAbnormalNumVisible, }  = props; 
 
   const renderMarker = (extData) =>{
     return <div>
@@ -115,7 +115,7 @@ const Index = (props) => {
            </div>
   }
 
- const entMap = () =>{
+ const EntMap = () =>{
   const styleA= {
     position: 'absolute',
     top: 0,
@@ -130,8 +130,7 @@ const Index = (props) => {
     color: '#fff',
     backgroundColor: "rgba(0,0,0,.4)"
 }
-
-
+console.log(abnormalTitle,noPoint,1111111111111)
 if (getPointExceptionLoading) {
   return (<Spin
     style={{
@@ -154,21 +153,21 @@ if (getPointExceptionLoading) {
  >
         <Markers markers={taskList? taskList : []} render={taskList? renderMarker : ''}  />
         {/*企业监测点 */}
-        <Marker position={{longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude}} >
+        {!noPoint&&<Marker position={{longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude}} >
         <div style={{textAlign:'center',}}>
           <div style={{whiteSpace:"nowrap",padding:'0 5px',background:'#fff',position:'absolute',transform: 'translateX(calc(-50% + 10px))'}}>
             {entAbnormalList.pointName}
           </div>
                 <div style={{display:'inline-block',marginTop:28}}> {entAbnormalList.pollutantType ==1 ?getWaterIcon(1) : getGasIcon(1)} </div>
           </div> 
-        </Marker>
+        </Marker>}
 
         {/*半径 */}
-        <Circle 
+        {!noPoint&&<Circle 
             center={ { longitude:  entAbnormalList.longitude, latitude:entAbnormalList.latitude} } 
             radius={ Number(entAbnormalList.operationRadius) }
             style={  {fillColor:"rgba(60,147,147,.1)", strokeColor: '#86befe',strokeWeight : 1}}
-          />
+          />}
 
       <div style={styleA}>
         <span>{abnormalTitle}</span>
@@ -188,13 +187,13 @@ if (getPointExceptionLoading) {
       <div>
   <Modal
         title={ '' } 
-        visible={props.entAbnormalNumVisible}
+        visible={entAbnormalNumVisible}
         onCancel={()=>{ props.updateState({entAbnormalNumVisible:false})}}
         footer={null}
         destroyOnClose 
         wrapClassName="spreadOverModal"
       > 
-       { entMap() }
+       {entAbnormalNumVisible&&<EntMap />}
    </Modal>
         </div>
   );

@@ -141,9 +141,16 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
-      title: '行政区',
+      title: '省',
       dataIndex: 'ProvinceName',
       key: 'ProvinceName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '市',
+      dataIndex: 'CityName',
+      key: 'CityName',
       align: 'center',
       ellipsis: true,
     },

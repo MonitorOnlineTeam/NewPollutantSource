@@ -10,7 +10,7 @@ import Lightbox from 'react-image-lightbox-rotate';
 import 'react-image-lightbox/style.css';
 
 const ImageView = props => {
-  const { images, imageIndex, isOpen, onCloseRequest } = props;
+  const { images, imageIndex, isOpen, onCloseRequest,isMobile } = props;
   const [photoIndex, setPhotoIndex] = useState({});
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const ImageView = props => {
           }
           onPreMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
           imageTitle={
-            <div
+            isMobile?  `${photoIndex+1}/${images.length}`: <div
               style={{
                 width: '100vw',
                 textAlign: 'center',

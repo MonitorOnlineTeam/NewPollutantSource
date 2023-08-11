@@ -148,7 +148,7 @@ export default {
               path: '/appoperation/appRemoteSupervisionDetail/:id',
               component: './AppOperation/AppRemoteSupervisionDetail',
             },
-            /* 帮助中心详情 移动端 */
+            /*帮助中心详情 移动端 */
             {
               path: '/appoperation/appQuestionDetail/:id',
               component: './systemManger/helpCenter/QueDetail',
@@ -505,8 +505,8 @@ export default {
                       component: './commissionTest/equipmentAccount/pollutantManager',
                     },
                     {
-                      name: 'point', //调试检测 污染源管理 监测点
-                      path: '/commissionTest/equipmentAccount/point',
+                      name: 'commissionTestPoint', //调试检测 污染源管理 监测点
+                      path: '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise/point',
                       component: './commissionTest/equipmentAccount/pollutantManager/point',
                     },
                     {

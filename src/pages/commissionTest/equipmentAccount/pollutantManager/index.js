@@ -86,7 +86,7 @@ export default class Index extends Component {
 
     goPointInfo = (row) => {
         router.push({
-            pathname: `/commissionTest/equipmentAccount/point`,
+            pathname: `/commissionTest/equipmentAccount/pollutantManager/TestEnterprise/point`,
             query: {
                 targetId :row['dbo.T_Bas_TestEnterprise.ID'],
                 targetName : row['dbo.T_Bas_TestEnterprise.EntName'],

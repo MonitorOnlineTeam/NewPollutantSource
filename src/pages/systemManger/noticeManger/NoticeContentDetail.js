@@ -18,6 +18,7 @@ import RegionList from '@/components/RegionList'
 import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
+import ImageView from '@/components/ImageView';
 
 
 
@@ -83,6 +84,39 @@ const Index = (props) => {
 
   },[]);
 
+  const [isOpenImg,setIsOpenImg] = useState()
+  const [imgList,setImgList] = useState([])
+  const [imgIndex,setImgIndex] = useState(1)
+  useEffect(() => {
+    setImgIndex([])
+    if (noticeContentDetail?.Content) {
+      const imgEleArr = document.querySelectorAll('.mobileContentSty img')
+      if (imgEleArr?.[0]) { 
+        let imgUrl = []
+        // 循环遍历每个元素  
+        for (let i = 0; i < imgEleArr.length; i++) {
+          const img = new Image();
+          let imgEle = imgEleArr[i]
+          let url = imgEle.getAttribute('src')      
+          // 改变图片的src
+          img.src = url;
+          img.onload = () =>{
+            imgEle.setAttribute('width',img.width/2)
+           };
+          imgEle.style.cursor = 'pointer'
+          imgUrl.push(url)
+          // 为每个元素添加点击事件  
+          imgEle.addEventListener('click', () => {
+            setIsOpenImg(true)
+            setImgIndex(i)
+          });
+
+        }
+        setImgList(imgUrl)
+      }
+
+    }
+  }, [noticeContentDetail]);
 
   return (
     <div className={styles.noticeContentDetailSty} style={{padding:12,height:'100vh',overflowY:'auto',backgroundColor:'#fff'}}>
@@ -90,8 +124,17 @@ const Index = (props) => {
        <div style={{textAlign:'center',fontWeight:'bold',fontSize:15,}}>{noticeContentDetail.NoticeTitle}</div>
        <div style={{textAlign:'left',color:'rgb(194,194,194)',paddingTop:8}}> <span>发布时间：{noticeContentDetail.CreateTime}</span></div>
        {/* <div style={{textAlign:'center',color:'rgb(194,194,194)',paddingTop:8}}><span>创建人：{noticeContentDetail.CreateUserName}</span> <span style={{paddingLeft:22}}>创建时间：{noticeContentDetail.CreateTime}</span></div> */}
-       <div style={{paddingTop:12}} dangerouslySetInnerHTML={{__html:noticeContentDetail.Content}}></div> 
+       <div style={{paddingTop:12}} dangerouslySetInnerHTML={{__html:`<div class='mobileContentSty'>${noticeContentDetail.Content}</div>`}}></div> 
        </Spin>
+       <ImageView
+        isMobile
+        isOpen={isOpenImg}
+        images={imgList}
+        imageIndex={imgIndex}
+        onCloseRequest={() => {
+          setIsOpenImg(false)
+        }}
+      />
  </div>
   );
 };

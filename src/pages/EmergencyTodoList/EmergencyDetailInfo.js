@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { CheckCircleOutlined, CloseCircleOutlined, LeftOutlined, RollbackOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, LeftOutlined, RollbackOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -42,6 +42,8 @@ import { EnumPropellingAlarmSourceType, EnumDYParameterException, EnumDataExcept
 import RecordForm from '@/pages/operations/recordForm'
 import SdlTable from '@/components/SdlTable';
 import UserList from '@/components/UserList'
+import { Map, MouseTool, Marker, Markers, Polygon, Circle } from 'react-amap';
+import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal'
 
 const { Description } = DescriptionList;
 const { TextArea } = Input;
@@ -50,13 +52,14 @@ const { Step } = Steps;
 // let SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 250;
 let SCREEN_HEIGHT = "calc(100vh - 168px)";
 @Form.create()
-@connect(({ task, loading }) => ({
+@connect(({ task, loading, abnormalWorkStatistics }) => ({
     // isloading: loading.effects['task/GetTaskRecord'],
     isloading: task.TaskRecordLoading,
     taskInfo: task.TaskRecord,
     alarmList: [],
     taskForwardLoading: loading.effects['task/postRetransmission'],
-
+    queryPar: abnormalWorkStatistics.queryPar,
+    gettasklistqueryparams: task.gettasklistqueryparams,
 }))
 class EmergencyDetailInfo extends Component {
     constructor(props) {
@@ -79,9 +82,10 @@ class EmergencyDetailInfo extends Component {
             ImgListvisible: false,
             FileUuid: '',
             processRecordVisible: false,
-            taskForwardVisible:false,
-            forwardToUserId:null,
-            forwardRemark:null,
+            taskForwardVisible: false,
+            forwardToUserId: null,
+            forwardRemark: null,
+            signTitle: '',
         };
         this.column = [
             {
@@ -377,7 +381,7 @@ class EmergencyDetailInfo extends Component {
             returnStepList.push(
                 <Step
                     status="finish"
-                    title={item.TaskStatusText}
+                    title={item.TaskStatusText == '现场签到' ? <span>{item.TaskStatusText}<EnvironmentOutlined onClick={() => this.signInDetail(item)} title='签到详情' style={{ color: '#1890ff', paddingLeft: 4, cursor: 'pointer' }} /></span> : item.TaskStatusText}
                     description={this.description(item)}
                     icon={<LegacyIcon type={
                         this.showIcon(item.TaskStatusText)
@@ -388,7 +392,26 @@ class EmergencyDetailInfo extends Component {
         });
         return returnStepList;
     }
-
+    signInDetail = (row) => {
+        const { DGIMN, gettasklistqueryparams,queryPar, } = this.props;
+        this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: true, }, })
+        setTimeout(() => {
+        this.setState({ signTitle: `${row.CreateUserName} - 现场签到` })
+        const date = gettasklistqueryparams.CreateTime
+        const beginTime = date && date[0].format("YYYY-MM-DD HH:mm:ss");
+        const endTime = date && date[1].format("YYYY-MM-DD HH:mm:ss");
+        this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { queryPar: { ...queryPar, beginTime: beginTime, endTime: endTime, } } })
+        this.props.dispatch({
+            type: `abnormalWorkStatistics/getPointExceptionSignList`,
+            payload: {
+                beginTime: beginTime,
+                endTime: endTime,
+                DGIMN: DGIMN,
+                taskID: row.TaskID,
+            },
+        })
+    })
+    }
     // 图标
     showIcon = TaskStatusText => {
         switch (TaskStatusText) {
@@ -549,29 +572,29 @@ class EmergencyDetailInfo extends Component {
         });
         return PeopleArr.join(',');
     }
-    taskForward=()=>{
+    taskForward = () => {
         this.setState({
-         taskForwardVisible:true,
+            taskForwardVisible: true,
         })
     }
-    taskForwardOk=()=>{
-         const {forwardTaskID,forwardToFromUserId,forwardToUserId,forwardRemark,} = this.state;
-         const { taskInfo } = this.props;
-         const isExistTask = taskInfo.IsSuccess && taskInfo.Datas !== null && taskInfo.Datas.length > 0;
-           if(!forwardToUserId){
-              message.error('请选择转发人')
-              return;
-           }
-            this.props.dispatch({
-              type: 'task/postRetransmission',
-              payload: {TaskId:isExistTask&&taskInfo.Datas[0].ID,FromUserId:isExistTask&&taskInfo.Datas[0].OperationsUserId,ToUserId:forwardToUserId,Remark:forwardRemark},
-              callback:()=>{
+    taskForwardOk = () => {
+        const { forwardTaskID, forwardToFromUserId, forwardToUserId, forwardRemark, } = this.state;
+        const { taskInfo } = this.props;
+        const isExistTask = taskInfo.IsSuccess && taskInfo.Datas !== null && taskInfo.Datas.length > 0;
+        if (!forwardToUserId) {
+            message.error('请选择转发人')
+            return;
+        }
+        this.props.dispatch({
+            type: 'task/postRetransmission',
+            payload: { TaskId: isExistTask && taskInfo.Datas[0].ID, FromUserId: isExistTask && taskInfo.Datas[0].OperationsUserId, ToUserId: forwardToUserId, Remark: forwardRemark },
+            callback: () => {
                 this.setState({
-                  taskForwardVisible:false,
-                 })
-              }
-            });
-       }
+                    taskForwardVisible: false,
+                })
+            }
+        });
+    }
     render() {
         const { photoIndex, recordType, taskID } = this.state;
         const { getFieldDecorator } = this.props.form;
@@ -816,8 +839,8 @@ class EmergencyDetailInfo extends Component {
             width: 200,
             key: 'AlarmMsg',
             align: 'center',
-            render:(text)=>{
-              return <div style={{textAlign:'left'}}>{text}</div>
+            render: (text) => {
+                return <div style={{ textAlign: 'left' }}>{text}</div>
             }
         }];
         if (this.props.taskInfo.Datas[0].AlarmList && this.props.taskInfo.Datas[0].AlarmList.length > 0) {
@@ -872,22 +895,22 @@ class EmergencyDetailInfo extends Component {
 
         const { taskInfo } = this.props;
         return (
-            <div style={{ height: SCREEN_HEIGHT,overflowY:'auto' }}>
+            <div style={{ height: SCREEN_HEIGHT, overflowY: 'auto' }}>
                 <Card
-                    title={<Row justify='space-between'> 
+                    title={<Row justify='space-between'>
                         <span style={{ fontWeight: '900' }}>任务详情</span>
-                        <Button disabled={isExistTask&&taskInfo.Datas[0].IsForward!= '1'} type='primary' onClick={() => this.taskForward()}>任务转发</Button>
-                         </Row>}
-                    // extra={
-                        // !isHomeModal && <div>
-                            /* <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
-                            {this.getGoBack()} */
-                        // </div>
+                        <Button disabled={isExistTask && taskInfo.Datas[0].IsForward != '1'} type='primary' onClick={() => this.taskForward()}>任务转发</Button>
+                    </Row>}
+                // extra={
+                // !isHomeModal && <div>
+                /* <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
+                {this.getGoBack()} */
+                // </div>
 
-                    // }
+                // }
                 >
 
-                    <div style={{overflowY:'hidden'}} className={styles.ExceptionDetailDiv}>
+                    <div style={{ overflowY: 'hidden' }} className={styles.ExceptionDetailDiv}>
                         <Card title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
                             <DescriptionList classNam={styles.headerList} size="large" col="3">
                                 <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
@@ -948,13 +971,13 @@ class EmergencyDetailInfo extends Component {
                             </DescriptionList>
                         </Card>}
 
-                         {
-                        /** 报警记录 (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
-                         * 
-                         */
-                         }
-                        {isExistTask&&taskInfo.Datas[0].TaskFromText==='报警响应'&&<Card title={<span style={{ fontWeight: '900' }}>报警记录</span>} style={{ marginTop: 8, }}>
-                          <Table size='small' rowKey={(record, index) => `complete${index}`} bordered dataSource={AlarmList} pagination={false} columns={columns} />
+                        {
+                            /** 报警记录 (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
+                             * 
+                             */
+                        }
+                        {isExistTask && taskInfo.Datas[0].TaskFromText === '报警响应' && <Card title={<span style={{ fontWeight: '900' }}>报警记录</span>} style={{ marginTop: 8, }}>
+                            <Table size='small' rowKey={(record, index) => `complete${index}`} bordered dataSource={AlarmList} pagination={false} columns={columns} />
                         </Card>}
                         <Card title={<span style={{ fontWeight: '900' }}>附件</span>} style={{ marginTop: 8, }}>
                             {
@@ -1072,24 +1095,27 @@ class EmergencyDetailInfo extends Component {
                     />
                 </Modal>
                 <Modal
-          title="任务转发"
-          visible={this.state.taskForwardVisible}
-          width="560px"
-          destroyOnClose
-          confirmLoading={this.props.taskForwardLoading}
-          onOk={this.taskForwardOk}
-          onCancel={() => {
-            this.setState({ taskForwardVisible: false })
-          }}
-          className={styles.taskForwardModalSty}
-        >
-              <FormItem label="转发人" style={{ width: '100%', }}>
-                  <UserList onChange={(value)=>{this.setState({forwardToUserId:value})}}/>
-              </FormItem>
-              <FormItem label="备注" style={{ width: '100%', }}>
-                  <Input.TextArea placeholder='请输入' onChange={(e)=>{this.setState({forwardRemark:e.target.value})}}/>
-              </FormItem>
-        </Modal>
+                    title="任务转发"
+                    visible={this.state.taskForwardVisible}
+                    width="560px"
+                    destroyOnClose
+                    confirmLoading={this.props.taskForwardLoading}
+                    onOk={this.taskForwardOk}
+                    onCancel={() => {
+                        this.setState({ taskForwardVisible: false })
+                    }}
+                    className={styles.taskForwardModalSty}
+                >
+                    <FormItem label="转发人" style={{ width: '100%', }}>
+                        <UserList onChange={(value) => { this.setState({ forwardToUserId: value }) }} />
+                    </FormItem>
+                    <FormItem label="备注" style={{ width: '100%', }}>
+                        <Input.TextArea placeholder='请输入' onChange={(e) => { this.setState({ forwardRemark: e.target.value }) }} />
+                    </FormItem>
+                </Modal>
+
+                {/** 现场签到 弹框 */}
+                <EntAbnormalMapModal abnormalTitle={this.state.signTitle} noPoint />
             </div>
         );
     }

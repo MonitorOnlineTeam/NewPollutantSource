@@ -18,7 +18,7 @@ import RegionList from '@/components/RegionList'
 import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
-
+import ImageView from '@/components/ImageView';
 
 
 const { TextArea, Search, } = Input;
@@ -97,14 +97,56 @@ const Index = (props) => {
     })
 
   }, []);
+ 
 
+  const [isOpenImg,setIsOpenImg] = useState()
+  const [imgList,setImgList] = useState([])
+  const [imgIndex,setImgIndex] = useState(1)
 
+  useEffect(() => {
+    setImgIndex([])
+    if (questionDetail?.Content) {
+      const imgEleArr = isMobile? document.querySelectorAll('.mobileContentSty img') :  document.querySelectorAll('.ant-modal-content img')
+      if (imgEleArr?.[0]) {
+     
+        let imgUrl = []
+     
+        // 循环遍历每个元素  
+        for (let i = 0; i < imgEleArr.length; i++) {
+          const img = new Image();
+          let imgEle = imgEleArr[i]
+          let url = imgEle.getAttribute('src')      
+          // 改变图片的src
+          img.src = url;
+          img.onload = () =>{
+            imgEle.setAttribute('width',img.width/2)
+            imgEle.setAttribute('height',img.height/2)
+           };
+          imgEle.style.cursor = 'pointer'
+          imgUrl.push(url)
+          // 为每个元素添加点击事件  
+          imgEle.addEventListener('click', () => {
+            // var iframe = `<iframe width='100%' height='100%' src=${url}  frameborder='0' scrolling='no'></iframe>`
+            // var x = window.open()
+            // x.document.open()
+            // x.document.write(iframe)
+            // x.document.close()
+            setIsOpenImg(true)
+            setImgIndex(i)
+          });
+
+        }
+        setImgList(imgUrl)
+      }
+
+    }
+  }, [questionDetail]);
   return (
     <div className={questionDetialLoading ? styles.questLoadingSty : isMobile ? styles.mobileSty : styles.quesDetailSty} style={{ height: isMobile ? '100vh' : '100%', backgroundColor: isMobile ? '#f2f2f2' : '#fff' }}>
       {isMobile ?
         <Spin spinning={questionDetialLoading} active style={{ height: '100vh', maxHeight: '100vh' }}>
           <div style={{ textAlign: 'left', fontWeight: 'bold', lineHeight: '14px' }}>{questionDetail.QuestionName}</div>
-      <div style={{ textAlign: 'left', color: 'rgb(194,194,194)', paddingTop: 8 }}><span>{questionDetail.CreateTime&&`创建时间：${questionDetail.CreateTime}`}</span></div>
+          <div style={{ textAlign: 'left', color: 'rgb(194,194,194)', paddingTop: 8 }}><span>{questionDetail.CreateTime && `创建时间：${questionDetail.CreateTime}`}</span></div>
           <Divider style={{ margin: '12px  0' }} />
           <div dangerouslySetInnerHTML={{ __html: `<div class='mobileContentSty'>${questionDetail.Content}</div>` }}></div>
         </Spin>
@@ -115,11 +157,20 @@ const Index = (props) => {
           <div style={{ paddingTop: 12 }} dangerouslySetInnerHTML={{ __html: questionDetail.Content }}></div>
           {filesList && filesList[0] && <div>
             <span> 附件：</span>
-            <Upload fileList={filesList}  showUploadList={{ showRemoveIcon: false,}} />
+            <Upload fileList={filesList} showUploadList={{ showRemoveIcon: false, }} />
           </div>}
         </Spin>
       }
-
+       <ImageView
+        isMobile={isMobile}
+        isOpen={isOpenImg}
+        images={imgList}
+        imageIndex={imgIndex}
+        imageTitle={`${imgIndex+1}/${imgList.length}`}
+        onCloseRequest={() => {
+          setIsOpenImg(false)
+        }}
+      />
     </div>
   );
 };

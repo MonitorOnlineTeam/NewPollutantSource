@@ -258,7 +258,7 @@ export default class Index extends Component {
           onOk={this.savePointSubmitForm.bind(this)}
           onCancel={() => { this.setState({ visible: false }) }}
           width={'80%'}
-          confirmLoading={loadingAddEditConfirm || getFormDataLoading}
+          confirmLoading={loadingAddEditConfirm || getFormDataLoading }
           destroyOnClose
           className={styles.formModalSty}
           bodyStyle={{ paddingBottom: 0 }}>
@@ -273,7 +273,7 @@ export default class Index extends Component {
                       isModal
                       isSearchParams
                     />               */}
-          <Spin spinning={getFormDataLoading}>
+          <Spin spinning={isEdit? getFormDataLoading : false}>
           <Form>
             <Row>
             <Col span={12}>
