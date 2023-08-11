@@ -42,7 +42,8 @@ const ModelTable = props => {
 
   const getFormula = () => {
     if (WarningTypeCode === 'a59cce2a-8558-4c42-8a45-4d8402e4b29d') {
-      console.log('tableData.Column.length', tableData.Column.length)
+      // 疑似计算公式错误
+      console.log('tableData.Column.length', tableData.Column.length);
       if (tableData.Column.length === 6) {
         return (
           <div className={styles.formulaBox}>
@@ -51,6 +52,10 @@ const ModelTable = props => {
           </div>
         );
       } else {
+        if (tableData.Column.length === 5) {
+          // 污染物排放量不显示公式图片
+          return '';
+        }
         return (
           <>
             <div className={styles.formulaBox}>

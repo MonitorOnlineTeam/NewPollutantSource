@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-24 10:07:18
+ * @Last Modified time: 2023-08-10 09:16:29
  * @Description：报警记录
  */
 
@@ -29,30 +29,139 @@ const textStyle = {
 
 const dvaPropsData = ({ loading, dataModel }) => ({
   warningForm: dataModel.warningForm,
-  modelList: dataModel.modelList,
+  // modelList: dataModel.modelList,
   modelListLoading: loading.effects['dataModel/GetModelList'],
   queryLoading: loading.effects['dataModel/GetWarningList'],
 });
 
 const WarningRecord = props => {
   const [form] = Form.useForm();
-  const { dispatch, warningForm, modelList, modelListLoading, queryLoading } = props;
+  const { dispatch, warningForm, modelListLoading, queryLoading } = props;
+  const modelNumber = props.match.params.modelNumber;
+  const [modelList, setModelList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
+  const [modelIdDatas, setModelIdDatas] = useState();
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(0);
-
   useEffect(() => {
+    getModelIdsByModelNumber(true);
     onFinish();
     GetModelList();
-  }, []);
+  }, [modelNumber]);
 
   // 获取数据模型列表
   const GetModelList = () => {
+    const modelIds = form.getFieldValue('warningTypeCode');
     dispatch({
       type: 'dataModel/GetModelList',
       payload: {},
+      callback: (res, unfoldModelList) => {
+        let _modelList = unfoldModelList;
+        console.log('unfoldModelList', unfoldModelList);
+        if (modelNumber) {
+          _modelList = _modelList.filter(item => modelIds.includes(item.ModelGuid));
+          // _modelList = modelType.split(',')
+        }
+        setModelList(_modelList);
+      },
     });
+  };
+
+  // 根据模型类型编号获取模型id
+  const getModelIdsByModelNumber = isInitValue => {
+    if (!modelNumber) return;
+
+    let modelIds = '';
+    switch (modelNumber) {
+      // 波动范围异常分析
+      case '2.2':
+        // 疑似篡改分析仪量程
+        // 疑似人为修改颗粒物斜率截距
+        modelIds = ['069ab699-428a-4f4b-8df7-915d6b4f3215', '5bfd23c7-03da-4f4b-a258-a9c618774ab9'];
+        break;
+
+      // 样气异常识别
+      case '4.1':
+        // 疑似监测样品为空气,
+        // 疑似监测样品混入氮气,
+        // 疑似监测样品混入空气,
+        // 疑似监测样品混入氧混合气
+        modelIds = [
+          '9104ab9f-d3f3-4bd9-a0d9-898d87def4dd',
+          '1fed575c-48d7-4eef-9266-735fe4bbdb2a',
+          '5520e6f2-ac4a-4f24-bafd-48746a13f4a4',
+          '1b9afa8d-1200-4fb1-aab0-a59936c3f22d',
+        ];
+        break;
+
+      // 参数变化识别
+      case '5.1':
+        // 疑似人为修改烟道截面积
+        // 疑似人为修改过量空气系数
+        // 疑似人为修改速度场系数
+        // 疑似计算公式错误
+        modelIds = [
+          'c934b575-a357-4a2c-b493-02849ce9cee3',
+          '3d209ce2-da92-44c4-916b-8874d05da558',
+          'ce61d9a9-5d0d-4b66-abbd-72a89e823ee2',
+          'a59cce2a-8558-4c42-8a45-4d8402e4b29d',
+        ];
+        break;
+
+      // 模拟监测数据
+      case '5.2':
+        // 疑似超过预设值数据恒定
+        // 疑似疑似使用随机数产生数据
+        // 疑似按预设公式处理数据
+        // 疑似远程控制监测数据
+        modelIds = [
+          '1a606047-6f21-4357-a459-03ef7788e09a',
+          '39680c93-e03f-42cf-a21f-115255251d4e',
+          '983cd7b9-55e1-47f3-b369-2df7bc0a6111',
+          'b52087fb-563c-4939-a11f-f86b10da63c1',
+        ];
+        break;
+
+      // 多排放源数据一致性分析
+      case '6.1':
+        // 疑似借用其他合格监测设备数据
+        // 疑似替换分析仪监测样气
+        modelIds = ['c0af25fb-220b-45c6-a3de-f6c8142de8f1', 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402'];
+        break;
+
+      // 同一排放源时间序列数据相似分析
+      case '6.2':
+        // 疑似借用本设备合格历史数据
+        modelIds = ['d5dea4cc-bd6c-44fa-a122-a1f44514b465'];
+        break;
+
+      // 多组分数据相关性分析
+      case '6.3':
+        // 疑似引用错误、虚假原始信号值
+        modelIds = ['f021147d-e7c6-4c1d-9634-1d814ff9880a'];
+        break;
+
+      // 虚假标记异常识别
+      case '7.1':
+        // 疑似机组停运未及时上报
+        // 疑似机组停运虚假标记
+        // 疑似超过标准标记数据无效
+        modelIds = [
+          '928ec327-d30d-4803-ae83-eab3a93538c1',
+          '3568b3c6-d8db-42f1-bbff-e76406a67f7f',
+          '6675e28e-271a-4fb7-955b-79bf0b858e8e',
+        ];
+        break;
+    }
+    // 初始化场景类别默认值
+    isInitValue &&
+      form.setFieldsValue({
+        warningTypeCode: modelIds,
+      });
+
+    setModelIdDatas(modelIds);
+    // return modelIds;
   };
 
   const getColumns = () => {
@@ -82,7 +191,7 @@ const WarningRecord = props => {
         ellipsis: true,
       },
       {
-        title: '报警时间',
+        title: '发现线索时间',
         dataIndex: 'WarningTime',
         key: 'WarningTime',
         width: 180,
@@ -90,7 +199,7 @@ const WarningRecord = props => {
         sorter: (a, b) => moment(a.WarningTime).valueOf() - moment(b.WarningTime).valueOf(),
       },
       {
-        title: '报警类型',
+        title: '场景类别',
         dataIndex: 'WarningTypeName',
         key: 'WarningTypeName',
         width: 180,
@@ -104,7 +213,7 @@ const WarningRecord = props => {
         },
       },
       {
-        title: '报警内容',
+        title: '线索内容',
         dataIndex: 'WarningContent',
         key: 'WarningContent',
         width: 240,
@@ -160,10 +269,17 @@ const WarningRecord = props => {
   const onFinish = (pageIndex = 1, pageSize = 20) => {
     const values = form.getFieldsValue();
     console.log('values', values);
+    let warningTypeCode = values.warningTypeCode.toString();
+
+    if (modelNumber && !warningTypeCode) {
+      warningTypeCode = modelIdDatas.toString();
+    }
+
     props.dispatch({
       type: 'dataModel/GetWarningList',
       payload: {
         ...values,
+        warningTypeCode: warningTypeCode,
         date: undefined,
         beginTime: values.date[0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.date[1].format('YYYY-MM-DD HH:mm:ss'),
@@ -194,6 +310,7 @@ const WarningRecord = props => {
     setPageSize(pageSize);
     onFinish(current, pageSize);
   };
+
   return (
     <BreadcrumbWrapper>
       <Card className={styles.warningWrapper}>
@@ -226,21 +343,25 @@ const WarningRecord = props => {
               allowClear={false}
               dataType="day"
               format="YYYY-MM-DD"
-              style={{ width: '100%' }}
+              style={{ width: 250 }}
             />
           </Form.Item>
           <Form.Item label="行政区" name="regionCode">
-            <RegionList noFilter style={{ width: 150 }} />
+            <RegionList noFilter style={{ width: 140 }} />
           </Form.Item>
           <Form.Item label="企业" name="EntCode">
             <EntAtmoList noFilter style={{ width: 200 }} />
           </Form.Item>
           <Spin spinning={modelListLoading} size="small">
-            <Form.Item label="报警类型" name="warningTypeCode">
+            <Form.Item label="场景类别" name="warningTypeCode">
               <Select
                 allowClear
-                placeholder="请选择报警类型"
-                style={{ width: 240 }}
+                mode="multiple"
+                maxTagCount={2}
+                maxTagTextLength={6}
+                maxTagPlaceholder="..."
+                placeholder="请选择场景类别"
+                style={{ width: 340 }}
                 showSearch
                 filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0

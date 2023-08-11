@@ -13,6 +13,7 @@ export default Model.extend({
           .startOf('day'),
         moment().endOf('day'),
       ],
+      warningTypeCode: [],
     },
     modelList: [],
     relationDGIMN: [],
@@ -20,6 +21,7 @@ export default Model.extend({
       modelInfo: {},
       dataAttribute: {},
     },
+    allTypeDataList: [],
   },
   effects: {
     // 获取报警记录
@@ -441,6 +443,7 @@ export default Model.extend({
               .startOf('day'),
             moment().endOf('day'),
           ],
+          warningTypeCode: [],
         },
       });
     },
@@ -448,8 +451,15 @@ export default Model.extend({
     *GetModelList({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetModelList, payload);
       if (result.IsSuccess) {
+        let unfoldModelList = [];
+        result.Datas.map(item => {
+          unfoldModelList = unfoldModelList.concat(item.ModelList);
+        });
+        console.log('unfoldModelList', unfoldModelList);
+        let modelList = result.Datas.sort((a, b) => a.ModelTypeCode - b.ModelTypeCode);
+        callback && callback(modelList, unfoldModelList);
         yield update({
-          modelList: result.Datas.sort((a, b) => a.ModelNumber - b.ModelNumber),
+          modelList: modelList,
         });
       } else {
         message.error(result.Message);
@@ -574,6 +584,42 @@ export default Model.extend({
     // 获取直方图数据
     *StatisPolValueNumsByDGIMN({ payload, callback }, { call, select, update }) {
       const result = yield call(services.StatisPolValueNumsByDGIMN, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取相关系数图数据
+    *StatisLinearCoefficient({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.StatisLinearCoefficient, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 根据企业获取排口
+    *getPointByEntCode({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.getPointByEntCode, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取模型精度版本列表
+    *GetEvaluationVersionList({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetEvaluationVersionList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取模型精度数据
+    *GetEvaluationList({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetEvaluationList, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {

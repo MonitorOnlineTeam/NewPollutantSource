@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-18 17:06:08
+ * @Last Modified time: 2023-08-03 09:16:24
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
@@ -93,6 +93,14 @@ const ModelChartMultiple = props => {
     };
   };
 
+  const onEvents = {
+    click: e => onShowMoreDataModal(e),
+  };
+
+  const onShowMoreDataModal = e => {
+    console.log('e', e)
+  }
+
   return (
     <div className={styles.chartBox}>
       {/* {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>} */}
@@ -100,7 +108,7 @@ const ModelChartMultiple = props => {
         option={getOption()}
         lazyUpdate
         style={{ height: '300px', width: '100%', margin: '10px 0' }}
-        // onEvents={onEvents}
+        onEvents={onEvents}
       />
     </div>
   );

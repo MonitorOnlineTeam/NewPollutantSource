@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:11:57
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-26 15:10:42
+ * @Last Modified time: 2023-08-04 09:02:30
  * @Description：模型设置页面
  */
 import React, { useState, useEffect } from 'react';
@@ -300,11 +300,11 @@ const Setting = props => {
   // console.log('checkedKeys', checkedKeys);
 
   return (
-    <BreadcrumbWrapper titles=" / 模型设置">
+    <BreadcrumbWrapper titles=" / 设置">
       <div className={styles.CardPageWrapper}>
         <div style={{ background: '#fff', paddingBottom: '2px' }}>
           <Card
-            title={<div className={styles.title}>模型基础信息</div>}
+            title={<div className={styles.title}>基础信息</div>}
             bordered={false}
             extra={
               <Button onClick={() => router.goBack()}>
@@ -326,16 +326,16 @@ const Setting = props => {
               <Row>
                 <Col span={10}>
                   <Form.Item
-                    label="模型名称"
+                    label="场景名称"
                     name="ModelName"
                     rules={[
                       {
                         required: true,
-                        message: '请输入模型名称',
+                        message: '请输入场景名称',
                       },
                     ]}
                   >
-                    <Input placeholder="请输入模型名称" />
+                    <Input placeholder="请输入场景名称" />
                   </Form.Item>
                 </Col>
                 <Col span={10}>
@@ -384,18 +384,18 @@ const Setting = props => {
                 </Col>
                 <Col span={10}>
                   <Form.Item
-                    label="模型描述"
+                    label="场景描述"
                     name="ModelDes"
                     // labelCol={{ span: 5 }}
                     // wrapperCol={{ span: 15 }}
                     rules={[
                       {
                         required: true,
-                        message: '请输入模型描述',
+                        message: '请输入场景描述',
                       },
                     ]}
                   >
-                    <TextArea rows={4} placeholder="请输入模型描述" />
+                    <TextArea rows={4} placeholder="请输入场景描述" />
                   </Form.Item>
                 </Col>
 

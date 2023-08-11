@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-27 14:52:48
+ * @Last Modified time: 2023-08-10 10:32:05
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -15,6 +15,7 @@ import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import PollutantImages from '@/pages/DataAnalyticalWarningModel/Warning/components/PollutantImages';
 import Histogram from '@/pages/DataAnalyticalWarningModel/Warning/components/Histogram';
+import CorrelationCoefficient from '@/pages/DataAnalyticalWarningModel/Warning/components/CorrelationCoefficient';
 import { formatPollutantPopover } from '@/utils/utils';
 
 const COLOR = '#e6b8b7';
@@ -23,6 +24,7 @@ let tempSelectedNames = [];
 const dvaPropsData = ({ loading, dataModel, common }) => ({
   pollutantListByDgimn: common.pollutantListByDgimn,
   allTypeDataList: dataModel.allTypeDataList,
+  pollutantLoading: loading.effects['common/getPollutantListByDgimn'],
   tableLoading: loading.effects['dataModel/GetAllTypeDataListForModel'],
   exportLoading: loading.effects['dataModel/ExportHourDataForModel'],
 });
@@ -37,6 +39,7 @@ const WarningData = props => {
     pollutantListByDgimn,
     date,
     allTypeDataList,
+    pollutantLoading,
     tableLoading,
     exportLoading,
     PointName,
@@ -44,13 +47,15 @@ const WarningData = props => {
     describe,
     CompareDGIMN,
     ComparePointName,
+    warningDate,
+    defaultChartSelected,
   } = props;
   const [columns, setColumns] = useState([]);
   const [selectedNames, setSelectedNames] = useState([]);
   const [legendSelected, setLegendSelected] = useState({});
   const [units, setUnits] = useState({});
   const [images, setImages] = useState([]);
-  const [showType, setShowType] = useState('data');
+  const [showType, setShowType] = useState('chart');
   const [DGIMN, setDGIMN] = useState(props.DGIMN);
 
   useEffect(() => {
@@ -94,12 +99,26 @@ const WarningData = props => {
 
         // 处理图例
         let legendSelected = {};
+        console.log('pollutantNames', pollutantNames);
+        // 氧含量、烟气湿度、烟气温度、流速
         pollutantNames.map((item, index) => {
-          if (index < 1) {
+          if (item === '氧含量' || item === '烟气湿度' || item === '烟气温度' || item === '流速') {
             legendSelected[item] = true;
           } else {
             legendSelected[item] = false;
           }
+
+          // 根据不同模型选中污染物
+          if (defaultChartSelected.length) {
+            if (defaultChartSelected.includes(item)) {
+              legendSelected[item] = true;
+            }
+          }
+          // if (index < 1) {
+          //   legendSelected[item] = true;
+          // } else {
+          //   legendSelected[item] = false;
+          // }
         });
         setLegendSelected(legendSelected);
       },
@@ -244,7 +263,7 @@ const WarningData = props => {
 
   const getOption = () => {
     const values = form.getFieldsValue();
-    const { pollutantCodes } = values;
+    const { pollutantCodes = [] } = values;
     let series = [];
     let seriesFlag = {};
     let xAxisData = [];
@@ -266,7 +285,8 @@ const WarningData = props => {
         name: name,
         position: idx <= 3 ? 'left' : 'right',
         alignTicks: true,
-        offset: idx <= 3 ? idx * 60 : (idx - 3) * 60,
+        offset: idx <= 3 ? (idx - 1) * 60 : (idx - 4) * 60,
+        // offset: idx % 3 * 60,
         nameLocation: 'end',
         show: legendSelected[name],
         axisLine: {
@@ -296,6 +316,7 @@ const WarningData = props => {
           formatter: pollutant.Unit,
           show: false,
         },
+
         symbol: (value, params) => {
           // console.log('params', params);
           let flag = seriesFlag[params.seriesName][params.dataIndex];
@@ -355,7 +376,7 @@ const WarningData = props => {
         continuousItem = [];
       }
     });
-
+    console.log('markAreaData', markAreaData);
     let showIndex = yxisData.findIndex(item => item.show === true);
     if (showIndex > -1) {
       // 绘制异常工况阴影
@@ -365,6 +386,34 @@ const WarningData = props => {
         },
         data: markAreaData,
       };
+
+      if (warningDate.length) {
+        series[showIndex].markLine = {
+          // silent: true,
+          data: [
+            {
+              name: '发现异常开始时间',
+              xAxis: warningDate[0],
+              lineStyle: { color: '#ff0000' },
+              label: {
+                formatter: function(params) {
+                  return '发现异常';
+                },
+              },
+            },
+            {
+              name: '发现异常结束时间',
+              xAxis: warningDate[1],
+              lineStyle: { color: '#ff0000' },
+              label: {
+                formatter: function(params) {
+                  return '发现异常';
+                },
+              },
+            },
+          ],
+        };
+      }
     }
 
     // series.map(item => {
@@ -423,8 +472,8 @@ const WarningData = props => {
         selected: legendSelected,
       },
       grid: {
-        left: 150,
-        right: 150,
+        left: 100,
+        right: 100,
         bottom: '3%',
         containLabel: true,
       },
@@ -538,6 +587,7 @@ const WarningData = props => {
             layout="inline"
             initialValues={{
               time: date,
+              pollutantCodes: [],
             }}
             autoComplete="off"
           >
@@ -593,7 +643,7 @@ const WarningData = props => {
             </Space>
             <Spin spinning={tableLoading}>
               <Radio.Group
-                defaultValue={'data'}
+                defaultValue={showType}
                 optionType="button"
                 buttonStyle="solid"
                 style={{ marginLeft: 20 }}
@@ -616,7 +666,7 @@ const WarningData = props => {
               align="center"
               loading={tableLoading}
             />
-          ) : (
+          ) : tableLoading == false && pollutantLoading === false ? (
             <ReactEcharts
               theme="light"
               option={getOption()}
@@ -624,15 +674,20 @@ const WarningData = props => {
               notMerge
               id="rightLine"
               onEvents={onEvents}
-              style={{ marginTop: 34, width: '100%', height: 'calc(100vh - 278px)' }}
+              style={{ marginTop: 34, width: '100%', height: 'calc(100vh - 304px)' }}
             />
+          ) : (
+            <Spin></Spin>
           )}
         </Tabs.TabPane>
         <Tabs.TabPane tab="波动范围" key="2" style={{ overflowY: 'auto' }}>
           <PollutantImages images={images} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="直方图" key="3" style={{ overflowY: 'auto' }}>
+        <Tabs.TabPane tab="密度分布直方图" key="3" style={{ overflowY: 'auto' }}>
           <Histogram DGIMN={DGIMN} />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="相关系数表" key="4" style={{ overflowY: 'auto' }}>
+          <CorrelationCoefficient DGIMN={DGIMN} />
         </Tabs.TabPane>
       </Tabs>
     </Modal>
