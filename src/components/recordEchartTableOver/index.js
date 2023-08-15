@@ -492,6 +492,7 @@ class Index extends Component {
                                             width: '100%',
                                             height: 'calc(100vh - 520px)',
                                             maxHeight: 280,
+                                            minHeight:90,
                                         }}
                                     />
 

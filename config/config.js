@@ -2911,8 +2911,8 @@ export default {
   proxy: {
     '/newApi': {
       // target: 'http://61.50.135.114:63002/',
-      // target: 'http://172.16.12.134:63002/',
-      target: 'http://172.16.12.234:60061/', // 模型外网
+      target: 'http://172.16.12.134:63002/',
+      // target: 'http://172.16.12.234:60061/', // 模型外网
       changeOrigin: true,
       pathRewrite: {
         '^/newApi': '',

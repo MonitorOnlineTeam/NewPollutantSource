@@ -51,7 +51,7 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-@connect(({ loading, operations, task, global }) => ({
+@connect(({ loading, operations, task, global,abnormalWorkStatistics, }) => ({
   operationsUserList: operations.operationsUserList,
   loading: loading.effects['operations/addTask'],
   recordType: operations.recordType,
@@ -64,6 +64,7 @@ const { RangePicker } = DatePicker;
   operationCompanyList: operations.operationCompanyList,
   exportLoading: loading.effects['task/ExportOperationTaskList'],
   taskForwardLoading: loading.effects['task/postRetransmission'],
+  entAbnormalNumVisible: abnormalWorkStatistics.entAbnormalNumVisible,
 }))
 @Form.create()
 class TaskRecord extends Component {
@@ -461,7 +462,6 @@ class TaskRecord extends Component {
   exceptionDetail = (row) => { //打卡异常详情
     this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: true, }, })
     this.setState({ abnormalTitle: `${row.EntName} - ${row.PointName}` })
-    setTimeout(() => {
       const baseReportSearchForm = this.props.form.getFieldsValue();
       const beginTime = baseReportSearchForm.CreateTime && moment(baseReportSearchForm.CreateTime[0]).format("YYYY-MM-DD HH:mm:ss");
       const endTime = baseReportSearchForm.CreateTime && moment(baseReportSearchForm.CreateTime[1]).format("YYYY-MM-DD HH:mm:ss");
@@ -476,7 +476,6 @@ class TaskRecord extends Component {
         },
       }
       )
-    })
   }
   taskForward = (record) => {
     if (record.IsForward == '1') {
@@ -999,7 +998,7 @@ class TaskRecord extends Component {
             }}
             columns={columns}
             // scroll={{ y: isHomeModal? this.props.clientHeight - 480 :null }}
-            scroll={{ y: this.state.expand ? "calc(100vh - 630px)" : this.props.tableHeight || undefined }}
+            scroll={{ y: this.state.expand ? "calc(100vh - 434px)" : this.props.tableHeight || undefined }}
             tableLayout='auto'
           />
         </Card>
@@ -1110,7 +1109,7 @@ class TaskRecord extends Component {
           />
         </Modal>
         {/** 打卡异常  监测点 弹框 */}
-        <EntAbnormalMapModal abnormalTitle={this.state.abnormalTitle} />
+        {this.state.abnormalTitle&&<EntAbnormalMapModal abnormalTitle={this.state.abnormalTitle} onCancel={()=>{this.setState({abnormalTitle:undefined})}}/>}
         <Modal
           title="任务转发"
           visible={this.state.taskForwardVisible}

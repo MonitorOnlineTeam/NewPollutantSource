@@ -388,6 +388,9 @@ export async function editmonitorpointPollutant(params) {
     AbnormalLowerLimit: params.AbnormalLowerLimit,
     ExceptionType: params.ExceptionType,
     IsStatisti: params.IsStatisti,
+    NormalRangeUpper: params.NormalRangeUpper,
+    NormalRangeLower: params.NormalRangeLower,
+    OverNormalRangeCount: params.OverNormalRangeCount,
   };
   const result = post(
     '/api/rest/PollutantSourceApi/StandardLibraryApi/EditMonitorPointPollutant',

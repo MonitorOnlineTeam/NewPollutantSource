@@ -315,7 +315,7 @@ const detailCol = [{
         BTime: values.Time&&moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss"),
         ETime: values.Time&&moment(values.Time[1]).format("YYYY-MM-DD HH:mm:ss"),
         Time:undefined,
-        Status:values.Status? values.Status : '',
+        Status:values.Status || values.Status == 0 ? values.Status : '',
         pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
         pageSize:pageSizes?pageSizes:pageSize
       })
@@ -399,13 +399,13 @@ const detailCol = [{
  
               <Select placeholder='请选择' allowClear style={{width:200}}>
                   <Option value={1}>进行中</Option>
-                  <Option value={2}>已过期</Option>
+                  <Option value={0}>已过期</Option>
               </Select>
       </Form.Item>
       </Row>
       <Row>
       <Form.Item label="服务时间" name="Time"  style={{marginRight:16}} >
-      <RangePicker_   format="YYYY-MM-DD HH:mm:ss"  showTime="YYYY-MM-DD HH:mm:ss"style={{minWidth:450}}   allowClear />
+      <RangePicker_   showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}  format="YYYY-MM-DD HH:mm:ss"   style={{minWidth:450}}   allowClear />
       </Form.Item>
       <Form.Item>
       <Button loading={tableLoading}  type="primary" htmlType='submit' style={{marginRight:8}}>

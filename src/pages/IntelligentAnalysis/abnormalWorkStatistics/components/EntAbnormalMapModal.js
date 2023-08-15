@@ -115,7 +115,7 @@ const Index = (props) => {
            </div>
   }
 
- const EntMap = () =>{
+ const entMap = () =>{
   const styleA= {
     position: 'absolute',
     top: 0,
@@ -130,7 +130,6 @@ const Index = (props) => {
     color: '#fff',
     backgroundColor: "rgba(0,0,0,.4)"
 }
-console.log(abnormalTitle,noPoint,1111111111111)
 if (getPointExceptionLoading) {
   return (<Spin
     style={{
@@ -188,12 +187,12 @@ if (getPointExceptionLoading) {
   <Modal
         title={ '' } 
         visible={entAbnormalNumVisible}
-        onCancel={()=>{ props.updateState({entAbnormalNumVisible:false})}}
+        onCancel={()=>{ props.updateState({entAbnormalNumVisible:false,entAbnormalList:[],taskList:[]});props.onCancel(); }}
         footer={null}
         destroyOnClose 
         wrapClassName="spreadOverModal"
       > 
-       {entAbnormalNumVisible&&<EntMap />}
+       {entAbnormalNumVisible&&entMap()}
    </Modal>
         </div>
   );

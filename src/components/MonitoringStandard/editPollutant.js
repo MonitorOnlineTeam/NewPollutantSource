@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import { isNullOrUndefined } from 'util';
-
+import NumTips from '@/components/NumTips'
 const FormItem = Form.Item;
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -68,7 +68,10 @@ class EditPollutant extends Component {
               AbnormalUpperLimit: this.props.editpollutant.AbnormalUpperLimit,
               AbnormalLowerLimit: this.props.editpollutant.AbnormalLowerLimit,
               ExceptionType: !this.props.editpollutant.ExceptionType ? [] : this.props.editpollutant.ExceptionType&&this.props.editpollutant.ExceptionType.split(','),
-            
+              NormalRangeUpper: this.props.editpollutant.NormalRangeUpper,
+              NormalRangeLower: this.props.editpollutant.NormalRangeLower,
+              OverNormalRangeCount: this.props.editpollutant.OverNormalRangeCount,
+
             });
           },
         },
@@ -120,6 +123,12 @@ class EditPollutant extends Component {
               AlarmDescription: values.AlarmDescription,
               IsStatisti: values.IsStatisti,
               ExceptionType: values.ExceptionType.length > 0 ? values.ExceptionType.join(',') : '',
+              NormalRangeUpper:
+              values.NormalRangeUpper === isNullOrUndefined ? 0 : values.NormalRangeUpper,
+              NormalRangeLower:
+              values.NormalRangeLower === isNullOrUndefined ? 0 : values.NormalRangeLower,
+              OverNormalRangeCount:
+              values.OverNormalRangeCount === isNullOrUndefined ? 0 : values.OverNormalRangeCount,
               callback: res => {
                 if (res.IsSuccess) {
                   this.props.oncancel();
@@ -241,47 +250,72 @@ class EditPollutant extends Component {
                         <Option value="1">零值异常</Option>
                         <Option value="2">超量程异常</Option>
                         <Option value="3">恒定值异常</Option>
+                        <Option value="5">超出正常范围异常</Option>
                       </Select>,
                     )}
                   </FormItem>
                 </Col>
               </Row>
               <Row>
-                <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="量程上限">
-                    {getFieldDecorator('AbnormalUpperLimit', {
-                      initialValue: 0,
-                    })(<InputNumber min={-10000000} max={10000000} step={1} />)}
-                  </FormItem>
-                </Col>
-                <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="量程下限">
-                    {getFieldDecorator('AbnormalLowerLimit', {
-                      initialValue: 0,
-                    })(<InputNumber min={-10000000} max={10000000} step={1} />)}
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
+              <Col span={8}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="零值计数">
                     {getFieldDecorator('ZeroContinuityCount', {
                       initialValue: 1,
                     })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
-                <Col span={12}>
+                <Col span={8}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="恒定值计数">
                     {getFieldDecorator('SerialContinuityCount', {
                       initialValue: 2,
                     })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
-                <Col span={12}>
+              </Row>
+              <Row>
+              <Col span={8}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="量程上限">
+                    {getFieldDecorator('AbnormalUpperLimit', {
+                      initialValue: 0,
+                    })(<InputNumber min={-10000000} max={10000000} step={1} />)}
+                  </FormItem>
+                </Col>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="量程下限">
+                    {getFieldDecorator('AbnormalLowerLimit', {
+                      initialValue: 0,
+                    })(<InputNumber min={-10000000} max={10000000} step={1} />)}
+                  </FormItem>
+                </Col>
+                <Col span={8}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超量程计数">
                     {getFieldDecorator('OverrunContinuityCount', {
                       initialValue: 1,
                     })(<InputNumber min={0} max={100000} step={1} />)}
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="正常范围最大值">
+                    {getFieldDecorator('NormalRangeUpper', {
+                      initialValue: 0,
+                    })(<InputNumber min={-10000000} max={10000000}  step={1} />)}
+                    <NumTips style={{ top: 4, right: -18, zIndex: 1 }} content={'正常值范围（3%、97%小时历史数据区间）'} />
+                  </FormItem>
+                </Col>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="正常范围最小值">
+                    {getFieldDecorator('NormalRangeLower', {
+                      initialValue: 0,
+                    })(<InputNumber  min={-10000000} max={10000000}  step={1}/>)}
+                  </FormItem>
+                </Col>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超出正常范围计数">
+                    {getFieldDecorator('OverNormalRangeCount', {
+                      initialValue: 1,
+                    })(<InputNumber  min={0} max={100000}  step={1} />)}
                   </FormItem>
                 </Col>
               </Row>

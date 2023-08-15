@@ -12,13 +12,13 @@ import SdlMap from '@/pages/AutoFormManager/SdlMap'
 import config from "@/config"
 import moment from 'moment'
 import OperationRecord from '@/pages/operations/TaskRecord' //运维记录
-import  OperationLog from '@/pages/operations/operationRecord' //运维日志
+import OperationLog from '@/pages/operations/operationRecord' //运维日志
 import OverRecord from '@/pages/monitoring/overRecord' //超标数据
 import ExceptionRecord from '@/pages/monitoring/exceptionRecord' //异常数据
 import StopRecord from '@/pages/report/StopRecord/stopRecord' //停运记录
-import  DefectDataEnt  from '@/pages/dataSearch/defectData/ent' //缺失数据
+import DefectDataEnt from '@/pages/dataSearch/defectData/ent' //缺失数据
 const { TabPane } = Tabs;
-let tabList = ["监控数据", "运维记录", "运维日志", "停运记录","视频预览", "超标数据","异常数据", "缺失数据","基本信息"];
+let tabList = ["监控数据", "运维记录", "运维日志", "停运记录", "视频预览", "超标数据", "异常数据", "缺失数据", "基本信息"];
 const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
 
 @connect(({ loading, newestHome }) => ({
@@ -53,44 +53,43 @@ class SiteDetailsModal extends PureComponent {
     // }
 
   }
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.dispatch({
       type: "newestHome/updateState",
-       payload: { siteDetailsVisible:false, }
-     })
-  }
-  componentDidUpdate(props){
-    if(props.siteDetailsVisible!==this.props.siteDetailsVisible&&this.props.siteDetailsVisible){
-         // 获取infoWindow数据
-    const { data } = this.props;
-    this.props.dispatch({
-      type: "newestHome/getInfoWindowData",
-      payload: {
-        DGIMNs: data.DGIMN,
-        dataType: "HourData",
-        isLastest: true,
-        // type: PollutantType,
-        isAirOrSite: true,
-        pollutantTypes: data.PollutantType
-      }
+      payload: { siteDetailsVisible: false, }
     })
-    if (data.PollutantType === "5") {
-      tabList = ["监控数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
+  }
+  componentDidUpdate(props) {
+    if (props.siteDetailsVisible !== this.props.siteDetailsVisible && this.props.siteDetailsVisible) {
+      // 获取infoWindow数据
+      const { data } = this.props;
+      this.props.dispatch({
+        type: "newestHome/getInfoWindowData",
+        payload: {
+          DGIMNs: data.DGIMN,
+          dataType: "HourData",
+          isLastest: true,
+          // type: PollutantType,
+          isAirOrSite: true,
+          pollutantTypes: data.PollutantType
+        }
+      })
+      if (data.PollutantType === "5") {
+        tabList = ["监控数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
+      }
     }
-    }
-   }
+  }
 
   footerItemClick = (key) => {
     this.setState({ currentKey: key + 1, itemTitle: tabList[key] })
   }
 
   renderModalFooter = () => {
-    const { currentKey } = this.state;
     return <div className={styles.modalFooter}>
       <ul>
         {
           tabList.map((item, index) => {
-            return item ? <li className={currentKey === index+1? `${styles.selectSty}` : '' } onClick={() => { this.footerItemClick(index) }}>
+            return item ? <li className={currentKey === index + 1 ? `${styles.selectSty}` : ''} onClick={() => { this.footerItemClick(index) }}>
               {/* <img src={`/xj/0${index + 1}.png`} alt="" /> */}
               <p>{item}</p>
             </li> : ""
@@ -127,7 +126,115 @@ class SiteDetailsModal extends PureComponent {
       </ul>
     </div>
   }
+  tabListContnetPage = (data, infoWindowData,imgName,currentKey) => {
+    return <>{
+      currentKey === 1 && <div>
+        <DataQuery
+          DGIMN={data.DGIMN}
+          initLoadData
+          chartHeight='calc(100vh - 312px)'
+          // style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }}
+          tableHeight={"calc(100vh - 434px)"}
+          pointName={data.PointName}
+          pollutantTypes={data.PollutantType}
+          entName={data.ParentName}
+        />
+      </div>
+    }
+    {  // 运维记录
+      currentKey === 2 && <div>
+        <OperationRecord
+          DGIMN={data.DGIMN}
+          isHomeModal
+          hideBreadcrumb
+          initLoadData
+          tableHeight={"calc(100vh - 300px)"}
+        />
+      </div>
+    }
+    { //运维日志
+      currentKey === 3 && <div style={{ overflow: 'auto' }}>
+        <OperationLog
+          DGIMN={data.DGIMN}
+          type={data.PollutantType}
+          isHomeModal
+          hideBreadcrumb
+        />
+      </div>
+    }
+    { //停运记录
+      currentKey === 4 &&
+        <div style={{ overflow: 'auto' }}>
+          <StopRecord DGIMN={data.DGIMN} isHomeModal hideBreadcrumb tableHeight={"calc(100vh - 324px)"} />
+        </div>
+    }
+    {
+      currentKey === 5 && <div style={{ overflow: 'auto' }}> {/**视频预览 */}
+        <YsyShowVideo DGIMN={data.DGIMN} initLoadData />
+      </div>
+    }
+    {
+      currentKey === 6 && data.PollutantType != "5" &&//超标数据
+        <div style={{ overflow: 'auto' }}>
+          <RecordEchartTableOver tableHeight={"calc(100vh - 390px)"} DGIMN={data.DGIMN} noticeState={0} hideButtons={['realtime', 'minute']} firsttime={moment(moment().format('YYYY-MM-DD HH:00:00'))}
+            lasttime={moment(moment().format('YYYY-MM-DD HH:59:59'))} initLoadData />
+        </div>
+    }
+    {
+      currentKey === 7 && //异常数据
+        <div style={{ overflow: 'auto' }}>
+          <RecordEchartTable tableHeight={"calc(100vh - 390px)"} noticeState={0} DGIMN={data.DGIMN} hideButtons={['realtime', 'minute']} initLoadData />
+        </div>
+    }
+    {
+      currentKey === 8 && data.PollutantType != "5" && //缺失数据 企业
+        <div style={{ overflow: 'auto' }}>
+          <DefectDataEnt entCode={data.ParentCode} isHomeModal hideBreadcrumb tableHeight={"calc(100vh - 320px)"} />
+        </div>
+    }
 
+    {
+      currentKey === 9 && //基本信息
+        <div style={{ overflow: 'auto',maxHeight:'calc(100vh - 140px)' }}>
+          <div className={styles.basisInfo}>
+            <div>
+              <img src={imgName} alt="" width="100%" />
+            </div>
+            <div>
+              <Descriptions title={infoWindowData.pointName}>
+                <Descriptions.Item label="区域">{infoWindowData.Abbreviation}</Descriptions.Item>
+                <Descriptions.Item label="经度">{infoWindowData.longitude}</Descriptions.Item>
+                <Descriptions.Item label="纬度">{infoWindowData.latitude}</Descriptions.Item>
+                <Descriptions.Item label="运维单位">{infoWindowData.operationCompany}</Descriptions.Item>
+                <Descriptions.Item label="运维负责人">{infoWindowData.operationPerson}</Descriptions.Item>
+                <Descriptions.Item label="污染物类型">{infoWindowData.pollutantType}</Descriptions.Item>
+              </Descriptions>
+            </div>
+          </div>
+          <Divider />
+          {
+            data.PollutantType !== "5" && <Descriptions title="企业信息">
+              <Descriptions.Item label="企业名称">{infoWindowData.entName}</Descriptions.Item>
+              <Descriptions.Item label="行业">{infoWindowData.industryName}</Descriptions.Item>
+              <Descriptions.Item label="控制级别名称">{infoWindowData.attentionName}</Descriptions.Item>
+              <Descriptions.Item label="环保负责人">{infoWindowData.entlinkman}</Descriptions.Item>
+              <Descriptions.Item label="移动电话">{infoWindowData.entphone}</Descriptions.Item>
+              <Descriptions.Item label="企业地址">{infoWindowData.entadress}</Descriptions.Item>
+            </Descriptions>
+          }
+          <SdlMap
+            mode="map"
+            longitude={infoWindowData.longitude}
+            latitude={infoWindowData.latitude}
+            path={infoWindowData.entCoordinateSet || []}
+            handleMarker={true}
+            handlePolygon={true}
+            style={{ height: data.PollutantType !== "5" ? 'calc(100vh - 440px)' : 'calc(100vh - 310px)',minHeight:300 }}
+            zoom={12}
+          />
+        </div>
+    }</>
+  }
   render() {
     const { data, infoWindowData } = this.props;
     const { currentKey, itemTitle } = this.state;
@@ -143,9 +250,10 @@ class SiteDetailsModal extends PureComponent {
         title={`${data.ParentName} - ${itemTitle}`}
         className={styles.detailsModal}
         destroyOnClose
-        width="90%"
+        // width="90%"
         bodyStyle={{ paddingBottom: 0 }}
-        footer={this.renderModalFooter()}
+        // footer={this.renderModalFooter()}
+        footer={null}
         visible={this.props.siteDetailsVisible}
         onCancel={() => {
           this.props.dispatch({
@@ -155,113 +263,20 @@ class SiteDetailsModal extends PureComponent {
         }}
         wrapClassName='spreadOverModal'
       >
-        {
-          currentKey === 1 && <div>
-            <DataQuery
-              DGIMN={data.DGIMN}
-              initLoadData
-              chartHeight='calc(100vh - 410px)'
-              // style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }}
-              tableHeight={"calc(100vh - 525px)"}
-              pointName={data.PointName}
-              pollutantTypes={data.PollutantType}
-              entName={data.ParentName}
-            />
-          </div>
-        }
-       {  // 运维记录
-          currentKey === 2 && <div>
-            <OperationRecord
-              DGIMN={data.DGIMN}
-              isHomeModal
-              hideBreadcrumb
-              initLoadData
-              tableHeight={"calc(100vh - 480px)"}
-            />
-          </div>
-        }
-        { //运维日志
-          currentKey === 3 && <div style={{ overflow: 'auto' }}>
-            <OperationLog 
-            DGIMN={data.DGIMN}
-            type={data.PollutantType}
-            isHomeModal
-            hideBreadcrumb
-            />
-          </div>
-        }
-         { //停运记录
-          currentKey === 4 &&
-          <div style={{  overflow: 'auto' }}>
-            <StopRecord DGIMN={data.DGIMN} isHomeModal  hideBreadcrumb  tableHeight={"calc(100vh - 480px)"}/>
-          </div>
-        }
-        {
-          currentKey === 5 && <div style={{ overflow: 'auto' }}> {/**视频预览 */}
-            <YsyShowVideo DGIMN={data.DGIMN} initLoadData />
-          </div>
-        }
-        {
-          currentKey === 6 && data.PollutantType != "5" &&//超标数据
-          <div style={{ overflow: 'auto' }}>
-            <RecordEchartTableOver tableHeight={"calc(100vh - 480px)"} DGIMN={data.DGIMN} noticeState={0} hideButtons={['realtime', 'minute']} firsttime={moment(moment().format('YYYY-MM-DD HH:00:00'))}
-               lasttime={moment(moment().format('YYYY-MM-DD HH:59:59'))} initLoadData />
-          </div>
-        }
-        {
-          currentKey === 7 && //异常数据
-          <div style={{ overflow: 'auto' }}>
-            <RecordEchartTable tableHeight={"calc(100vh - 480px)"} noticeState={0} DGIMN={data.DGIMN} hideButtons={['realtime', 'minute']} initLoadData  />
-          </div>
-        }
-         {
-          currentKey === 8 && data.PollutantType != "5" && //缺失数据 企业
-          <div style={{ overflow: 'auto' }}>
-            <DefectDataEnt  entCode={data.ParentCode} isHomeModal  hideBreadcrumb   tableHeight={"calc(100vh - 480px)"}/>
-          </div>
-        }
-
-        {
-          currentKey === 9 && //基本信息
-          <div style={{  overflow: 'auto' }}>
-            <div className={styles.basisInfo}>
-              <div>
-                <img src={imgName} alt="" width="100%" />
-              </div>
-              <div>
-                <Descriptions title={infoWindowData.pointName}>
-                  <Descriptions.Item label="区域">{infoWindowData.Abbreviation}</Descriptions.Item>
-                  <Descriptions.Item label="经度">{infoWindowData.longitude}</Descriptions.Item>
-                  <Descriptions.Item label="纬度">{infoWindowData.latitude}</Descriptions.Item>
-                  <Descriptions.Item label="运维单位">{infoWindowData.operationCompany}</Descriptions.Item>
-                  <Descriptions.Item label="运维负责人">{infoWindowData.operationPerson}</Descriptions.Item>
-                  <Descriptions.Item label="污染物类型">{infoWindowData.pollutantType}</Descriptions.Item>
-                </Descriptions>
-              </div>
-            </div>
-            <Divider />
-            {
-              data.PollutantType !== "5" && <Descriptions title="企业信息">
-                <Descriptions.Item label="企业名称">{infoWindowData.entName}</Descriptions.Item>
-                <Descriptions.Item label="行业">{infoWindowData.industryName}</Descriptions.Item>
-                <Descriptions.Item label="控制级别名称">{infoWindowData.attentionName}</Descriptions.Item>
-                <Descriptions.Item label="环保负责人">{infoWindowData.entlinkman}</Descriptions.Item>
-                <Descriptions.Item label="移动电话">{infoWindowData.entphone}</Descriptions.Item>
-                <Descriptions.Item label="企业地址">{infoWindowData.entadress}</Descriptions.Item>
-              </Descriptions>
-            }
-            <SdlMap
-              mode="map"
-              longitude={infoWindowData.longitude}
-              latitude={infoWindowData.latitude}
-              path={infoWindowData.entCoordinateSet || []}
-              handleMarker={true}
-              handlePolygon={true}
-              style={{ height: data.PollutantType !== "5" ? 500 : 630 }}
-              zoom={12}
-            />
-          </div>
-        }
+        <Tabs
+          defaultActiveKey={1}
+          tabPosition={'left'}
+          // onChange={(key)=>{
+          //   this.setState({ currentKey: key + 1, })
+          // }}
+        >
+          {tabList.map((item, i) => {
+            return <Tabs.TabPane tab={item} key={i}>
+                {this.tabListContnetPage(data, infoWindowData,imgName,i + 1)}
+              </Tabs.TabPane>
+          })
+          }
+        </Tabs>
       </Modal >
     );
   }

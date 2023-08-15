@@ -60,6 +60,7 @@ let SCREEN_HEIGHT = "calc(100vh - 168px)";
     taskForwardLoading: loading.effects['task/postRetransmission'],
     queryPar: abnormalWorkStatistics.queryPar,
     gettasklistqueryparams: task.gettasklistqueryparams,
+    entAbnormalNumVisible:abnormalWorkStatistics.entAbnormalNumVisible,
 }))
 class EmergencyDetailInfo extends Component {
     constructor(props) {
@@ -395,7 +396,6 @@ class EmergencyDetailInfo extends Component {
     signInDetail = (row) => {
         const { DGIMN, gettasklistqueryparams,queryPar, } = this.props;
         this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: true, }, })
-        setTimeout(() => {
         this.setState({ signTitle: `${row.CreateUserName} - 现场签到` })
         const date = gettasklistqueryparams.CreateTime
         const beginTime = date && date[0].format("YYYY-MM-DD HH:mm:ss");
@@ -410,7 +410,6 @@ class EmergencyDetailInfo extends Component {
                 taskID: row.TaskID,
             },
         })
-    })
     }
     // 图标
     showIcon = TaskStatusText => {
@@ -1115,7 +1114,7 @@ class EmergencyDetailInfo extends Component {
                 </Modal>
 
                 {/** 现场签到 弹框 */}
-                <EntAbnormalMapModal abnormalTitle={this.state.signTitle} noPoint />
+                {this.state.signTitle&&<EntAbnormalMapModal  abnormalTitle={this.state.signTitle} noPoint onCancel={()=>{this.setState({signTitle:undefined})}}/>}
             </div>
         );
     }

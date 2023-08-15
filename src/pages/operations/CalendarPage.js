@@ -673,7 +673,7 @@ class CalendarPage extends PureComponent {
             />
           </Modal>
           {/** 打卡异常  监测点 弹框 */}
-          <EntAbnormalMapModal abnormalTitle={abnormalTitle} />
+          <EntAbnormalMapModal abnormalTitle={abnormalTitle} onCancel={()=>{this.setState({abnormalTitle:undefined})}}/>
         </div>
       </BreadcrumbWrapper>
     );
