@@ -107,6 +107,11 @@ const routes = [
       //   path: '/homepage',
       //   component: './home_ys',
       // },
+      // {
+      //   name: 'homepage',
+      //   path: '/homepage',
+      //   component: './home',
+      // },
       {
         name: 'homepage',
         path: '/homepage',
@@ -344,19 +349,19 @@ const routes = [
             ],
           },
           // 视频
-          {
-            name: 'video',
-            path: '/video',
-            routes: [
-              // 海康视频 - 预览
-              // {
-              //   name: 'emissionSource',
-              //   path: '/video/HK/view',
-              //   component: './Video/HKPlatform/index',
-              // component: './Video/HKPlatform/Live',
-              // },
-            ],
-          },
+          // {
+          //   name: 'video',
+          //   path: '/video',
+          //   routes: [
+          //     // 海康视频 - 预览
+          //     // {
+          //     //   name: 'emissionSource',
+          //     //   path: '/video/HK/view',
+          //     //   component: './Video/HKPlatform/index',
+          //     // component: './Video/HKPlatform/Live',
+          //     // },
+          //   ],
+          // },
           // 克里斯金差值图
           {
             name: 'krigingMap',
@@ -374,11 +379,11 @@ const routes = [
             path: '/realtimeLive',
             component: './SC/realtimeLive/M3U8Video',
           },
-          // {
-          //   name: 'test',
-          //   path: '/test',
-          //   component: './Test/Test',
-          // },
+          {
+            name: 'test',
+            path: '/test',
+            component: './Test/Test',
+          },
           {
             name: 'home',
             path: '/home',
@@ -1390,6 +1395,12 @@ const routes = [
                 name: 'realtimeDataView',
                 path: '/monitoring/mapview/realtimeDataView',
                 component: './monitoring/overView/realtime',
+              },
+              // 数据一览 - 唐银钢铁
+              {
+                name: 'realtimeDataView',
+                path: '/monitoring/mapview/realtime_TY',
+                component: './monitoring/overView/realtime/index_TYGT',
               },
               // 电能数据一览
               {

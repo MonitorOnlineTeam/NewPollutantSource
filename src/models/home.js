@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-06-27 17:33:21
+ * @Last Modified time: 2023-08-15 15:20:15
  * @desc: 主页model
  */
 import moment from 'moment';
@@ -14,7 +14,7 @@ import { message } from 'antd';
 import { result } from 'lodash';
 
 export default Model.extend({
-  namespace: 'home', 
+  namespace: 'home',
   state: {
     theme: 'dark',
     allEntAndPointList: [],
@@ -362,15 +362,10 @@ export default Model.extend({
         ...taskCountParams,
         ...payload,
       };
-      // const result = yield call(services.getTaskCount, postData);
-      // if (result.IsSuccess) {
-      if (true) {
+      const result = yield call(services.getTaskCount, postData);
+      if (result.IsSuccess) {
         yield update({
-          taskCountData: {
-            TaskSum: 8,
-            CompletedTaskSum: 8,
-            NoCompletedTaskSum: 0,
-          },
+          taskCountData: result.Datas && result.Datas[0],
         });
       }
     },
