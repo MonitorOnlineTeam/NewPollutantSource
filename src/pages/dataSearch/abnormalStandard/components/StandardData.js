@@ -343,6 +343,33 @@ export default class Index extends Component {
               }]
             },
             {
+              title: '超出正常范围异常',
+              children: [{
+                title: '正常范围上限',
+                dataIndex: `${item.PollutantCode}_overnormal`,
+                key: `${item.PollutantCode}_overnormal`,
+                width: 100,
+                align: 'center',
+                render: (text) =>this.resData(text)
+              },
+              {
+                title: '正常范围下限',
+                dataIndex: `${item.PollutantCode}_overnormallow`,
+                key: `${item.PollutantCode}_overnormallow`,
+                width: 100,
+                align: 'center',
+                render: (text) =>this.resData(text)
+              },
+              {
+                title: '超正常范围计数',
+                dataIndex: `${item.PollutantCode}_overnormalup`,
+                key: `${item.PollutantCode}_overnormalup`,
+                width: 110,
+                align: 'center',
+                render: (text) =>this.resData(text)
+              }]
+            },
+            {
               title: '恒定值异常',
               align: 'center',
               children: [{

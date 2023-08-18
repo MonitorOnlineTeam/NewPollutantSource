@@ -272,7 +272,7 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '运维人员',
+      title: '执行人员',
       dataIndex: 'operationName',
       key: 'operationName',
       align: 'center',

@@ -1,5 +1,5 @@
 import { Tooltip, Popover } from 'antd';
-import React from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
 import Avatar from './AvatarDropdown';
@@ -8,6 +8,7 @@ import SelectLang from '../SelectLang';
 import styles from './index.less';
 import config from '@/config';
 import NoticeIconView from './NoticeIconView'
+import { ExpandOutlined, CompressOutlined, } from '@ant-design/icons';
 
 const GlobalHeaderRight = props => {
   const { theme, layout, configInfo, appFlag } = props;
@@ -28,6 +29,41 @@ const GlobalHeaderRight = props => {
     getIp = "http://" + window.location.host + "/appoperation/appqrcodemain";
   }
 
+  useEffect(()=>{
+    // window.addEventListener('keydown', function(event) {  
+    //   if (event.key === 'F11') {  
+    //     if (!document.fullscreenElement) {  //默认状态下执行操作   非全面屏状态 变 全面屏    
+    //        console.log('非全面屏状态')
+    //        setIsFullscreen(true)
+    //     }
+        //  else {    //全屏状态下执行操作   全面屏状态 变 非全面屏
+        //   console.log('全面屏状态')
+        //   setIsFullscreen(false)
+        // }  
+      // }  
+    // });
+    window.addEventListener('resize', function(event) {  
+        if (!document.fullscreenElement) {  //全面屏 - 非全面屏  手动打开  esc关闭的情况 f11关闭的情况
+          setIsFullscreen(false)
+        }
+      
+    });
+  },[])
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggleFullscreen = () => {
+     
+    if (!document.fullscreenElement) { //默认状态
+      const element = document.documentElement;
+      element.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) { //全屏状态
+        document.exitFullscreen();
+      }
+    }
+    setIsFullscreen(!isFullscreen);
+  };
   return (
     <div className={className}>
       {/* <HeaderSearch
@@ -83,7 +119,7 @@ const GlobalHeaderRight = props => {
       }
 
       {/** 污水处理厂权限去掉铃铛<NoticeIconView /> */}
-      
+      <Popover zIndex={9999} overlayClassName={styles.expandPopSty} content={isFullscreen ? '退出全屏' : '全屏展示'}> <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }} >{isFullscreen ? <CompressOutlined style={{ color: '#fff' }} /> : <ExpandOutlined style={{ color: '#fff' }} />}</span></Popover>
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}
     </div>

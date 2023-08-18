@@ -542,7 +542,7 @@ const Workbench = props => {
                   {/* <Empty style={{ marginTop: '30px' }} /> */}
                  <Row justify='space-between'>
                     {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val); })}
-                    {selectMyVal==1&&workAlarmTotal? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
+                    {selectMyVal==1? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
                   </Row>
                   <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
                    {selectMyVal==1&&<Spin spinning={workAlarmPushLoading}>
@@ -553,7 +553,7 @@ const Workbench = props => {
                             <div>{item.message}</div>
                             <div className='statusSty' style={{color:'#666',fontSize:13,paddingTop:4}}><span>报警生成时间：{item.alarmCreateTime}</span>
                             {item.alarmType==0 || item.alarmType==12 ? 
-                            <><Tag color={item.status==3? "success" : "warning"}>{item.status==3?'已响应':'待响应'}</Tag>{item.status==3&&<><span>响应人{item.userName}</span> <span>响应时间：{item.responseTime}</span></>}</>
+                            <><Tag color={item.status==3? "success" : "warning"}>{item.status==3?'已响应':'待响应'}</Tag>{item.status==3&&<><span>响应人：{item.userName}</span> <span>响应时间：{item.responseTime}</span></>}</>
                             :
                             <><Tag color={item.status==3? "success" : "warning"}>{item.status==3?'已响应':'待响应'}</Tag>{item.status==3&&<><span>核实人：{item.userName}</span> <span>核实时间：{item.responseTime}</span></>}</>}
                             
@@ -575,6 +575,10 @@ const Workbench = props => {
                           <Col style={{paddingTop:4}}><img src='/work_contract.png'/></Col>
                           <Col style={{width:'calc(100% - 100px)'}}>
                             <div>{item.Msg}</div>
+                            <div>如合同不再续签请参考以下注意事项：</div>
+                            <div>1、如涉及物联网卡销号请及时提交CIS申请《物联网卡新增或销号申请》</div>
+                            <div>2、办事处、备件库、车辆等如有变动请同服务管理部对应同事沟通</div>
+                            <div>3、如有人员跨行业调整请记得考取对应行业运营上岗证</div>
                           </Col>
                           <Col>
                           <Popconfirm placement="left" title={'确定要删除这条合同到期吗？'} onConfirm={()=>delContract(item)} okText="是" cancelText="否">
