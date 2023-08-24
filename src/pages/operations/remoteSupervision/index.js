@@ -25,7 +25,7 @@ import Detail from "./detail";
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import Lightbox from "react-image-lightbox-rotate";
 import "react-image-lightbox/style.css";
-
+import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -46,7 +46,7 @@ function getBase64(file) {
 
 const dvaPropsData = ({ loading, remoteSupervision, global, common, autoForm }) => ({
   tableDatas: remoteSupervision.tableData,
-  tableLoading: loading.effects[`${namespace}/getRemoteInspectorList`],
+  tableLoading: remoteSupervision.tableLoading,
   tableTotal: remoteSupervision.tableTotal,
   parLoading: loading.effects[`${namespace}/getPointConsistencyParam`] || false,
   // parLoading: remoteSupervision.getPointConsistencyParamLoading,
@@ -60,6 +60,15 @@ const dvaPropsData = ({ loading, remoteSupervision, global, common, autoForm }) 
   tableInfo: autoForm.tableInfo,
   exportLoading: loading.effects[`${namespace}/exportRemoteInspectorList`],
   entLoading: common.noFilterEntLoading,
+  getRemoteInspectorPointLoading: loading.effects[`${namespace}/getRemoteInspectorPointList`],
+  remoteInspectorPointList: remoteSupervision.remoteInspectorPointList,
+  addRemoteInspectorPointLoading: loading.effects[`${namespace}/addRemoteInspectorPoint`],
+  regQueryPar: remoteSupervision.regQueryPar,
+  forwardTableData: remoteSupervision.forwardTableData,
+  forwardTableTotal: remoteSupervision.forwardTableTotal,
+  forwardTableLoading: remoteSupervision.forwardTableLoading,
+  forwardOkLoading: loading.effects[`${namespace}/forwardRemoteInspector`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -180,6 +189,34 @@ const dvaDispatch = (dispatch) => {
         },
       })
     },
+    addRemoteInspector: (payload, callback) => {  //保存 新 
+      dispatch({
+        type: `${namespace}/addRemoteInspector`,
+        payload: payload,
+        callback: callback,
+      })
+    },
+    getRemoteInspectorPointList: (payload, callback) => {  //可申请工单站点
+      dispatch({
+        type: `${namespace}/getRemoteInspectorPointList`,
+        payload: payload,
+        callback: callback,
+      })
+    },
+    addRemoteInspectorPoint: (payload, callback) => {  //手工申请工单
+      dispatch({
+        type: `${namespace}/addRemoteInspectorPoint`,
+        payload: payload,
+        callback: callback,
+      })
+    },
+    forwardRemoteInspector: (payload, callback) => {  // 转发工单 提交
+      dispatch({
+        type: `${namespace}/forwardRemoteInspector`,
+        payload: payload,
+        callback: callback,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -190,7 +227,7 @@ const Index = (props) => {
   const [commonForm] = Form.useForm();
 
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, } = props;
+  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, forwardTableLoading, forwardTableData, forwardOkLoading, regQueryPar,getRemoteInspectorPointLoading,remoteInspectorPointList,addRemoteInspectorPointLoading,forwardTableTotal, } = props;
 
   const [tabType, setTabType] = useState('1')
 
@@ -498,6 +535,199 @@ const Index = (props) => {
 
     }
   ]
+  const [taskForm] = Form.useForm();
+  const [forwardTaskVisible, setForwardTaskVisible] = useState(false)
+
+  const forwardClick = () => {
+    setForwardTaskVisible(true);
+    taskForm.resetFields();
+    setPageIndex(1)
+    onTaskFinish({},1,forwardpageSize);
+  }
+
+  const [forwardTaskForm] = Form.useForm();
+  const [forwardTaskOkVisible, setForwardTaskOkVisible] = useState(false)
+  const [forwardTaskID, setForwardTaskID] = useState(false)
+  const forwardTask = (record) => { //转发
+    setForwardTaskOkVisible(true)
+    setForwardTaskID(record.id)
+    forwardTaskForm.resetFields()
+  }
+  const forwardTaskOk = async () => { //转发提交
+    try {
+      const values = await forwardTaskForm.validateFields();
+      props.forwardRemoteInspector({ ID: forwardTaskID, ...values }, (res) => {
+        setForwardTaskOkVisible(false)
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+  const onTaskFinish = (values,pageIndex,pageSize) => {
+    props.getRemoteInspectorList({
+      ...values,
+      beginTime: regQueryPar.BeginTime,
+      endTime: regQueryPar.EndTime,
+      isForward: 1,
+      pageIndex:pageIndex,
+      pageSize:pageSize,
+    })
+  }
+
+  
+  const [forwardpageIndex, setForwardPageIndex] = useState(1)
+  const [forwardpageSize, setForwardPageSize] = useState(20)
+
+  const forwardHandleTableChange = (PageIndex, PageSize) =>{
+    setForwardPageIndex(PageIndex)
+    setForwardPageSize(PageSize)
+    onTaskFinish({},PageIndex, PageSize)
+  }
+
+  const [taskPointList, setTaskPointList] = useState([])
+  const [taskPointLoading, setTaskPointLoading] = useState(false)
+  const onTaskValuesChange = (hangedValues, allValues) => {
+    if (Object.keys(hangedValues).join() == 'entCode') {
+      if (!hangedValues.entCode) { //清空时 不走请求
+        form.setFieldsValue({ DGIMN: undefined })
+        setTaskPointList([])
+        return;
+      }
+      setTaskPointLoading(true)
+      props.getPointByEntCode({ EntCode: hangedValues.entCode }, (res) => {
+        setTaskPointList(res)
+        setTaskPointLoading(false)
+      })
+      taskForm.setFieldsValue({ DGIMN: undefined })
+    }
+  }
+  /***转发任务单 */
+  const taskColumns = [
+    {
+      title: '序号',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return index + 1
+      }
+    },
+    // {
+    //   title: '省',
+    //   dataIndex: 'provinceName',
+    //   key: 'provinceName',
+    //   align: 'center',
+    // },
+    // {
+    //   title: '市',
+    //   dataIndex: 'cityName',
+    //   key: 'cityName',
+    //   align: 'center',
+    // },
+    {
+      title: '省/市',
+      dataIndex: 'regionName',
+      key: 'regionName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: `企业名称`,
+      dataIndex: 'entName',
+      key: 'entName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '监测点名称',
+      dataIndex: 'pointName',
+      key: 'pointName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '点位运维负责人',
+      dataIndex: 'operationUserName',
+      key: 'operationUserName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '派单时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      align: 'center',
+      ellipsis: true,
+      // render: (text, record, index) => {
+      //   return text ? moment(text).format('YYYY-MM-DD') : undefined
+      // }
+    },
+    {
+      title: '操作',
+      align: 'center',
+      fixed: 'right',
+      width: 150,
+      ellipsis: true,
+      render: (text, record) => {
+        return <a onClick={() => { forwardTask(record) }}>转发</a>
+      }
+
+    }
+  ];
+  const searchTaskComponents = () => {
+    return <Form
+      form={taskForm}
+      name="advanced_search2"
+      className={styles["ant-advanced-search-form"]}
+      onFinish={(value)=>{setForwardPageIndex(1);onTaskFinish(value,1,forwardpageSize)}}
+      onValuesChange={onTaskValuesChange}
+      layout='inline'
+    >
+      <Spin spinning={entLoading} size='small'>
+        <Form.Item label='企业' name='entCode' style={{ marginRight: 8 }}>
+          <EntAtmoList noFilter style={{ width: 300 }} />
+        </Form.Item>
+      </Spin>
+      <Spin spinning={taskPointLoading} size='small'>
+        <Form.Item label='监测点名称' name='DGIMN' >
+
+          <Select placeholder='请选择' showSearch allowClear optionFilterProp="children" style={{ width: 150 }}>
+            {
+              taskPointList[0] && taskPointList.map(item => {
+                return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+              })
+            }
+          </Select>
+        </Form.Item>
+      </Spin>
+      <Form.Item>
+        <Button type="primary" loading={forwardTableLoading} htmlType='submit'>
+          查询
+            </Button>
+      </Form.Item>
+
+    </Form>
+  }
+  const [requestTaskForm] = Form.useForm();
+  const [requestTaskVisible, setRequestTaskVisible] = useState(false)
+  const requestTask = () => { //申请任务单
+    setRequestTaskVisible(true)
+    requestTaskForm.resetFields()
+    props.getRemoteInspectorPointList({
+      beginTime: regQueryPar.BeginTime,
+      endTime: regQueryPar.EndTime,
+    })
+  } 
+  const requestTaskOk = async () =>{
+    try {
+      const values = await requestTaskForm.validateFields();
+      props.addRemoteInspectorPoint({ ...values }, (res) => {
+        setRequestTaskVisible(false)
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+
   const [title, setTitle] = useState('添加')
   const [editId, setEditId] = useState()
 
@@ -525,7 +755,6 @@ const Index = (props) => {
       [`${code}OperationRangeRemark`]: val.OperationRangeRemark,
       [`${code}IndicaVal`]: val.AnalyzerCou,//实时数据一致性核查表
       [`${code}DsData`]: val.DASCou,
-      [`${code}DsDataUnit`]: val.DASCouUnit,
       [`${code}ScyData`]: val.DataCou,
       [`${code}DataUniformity`]: val.CouAutoStatus,
       [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
@@ -597,7 +826,7 @@ const Index = (props) => {
       })
       dgimnEchoDataFun(data.DGIMN, data, '编辑')
       data?.consistentParametersCheckList?.[0] && echoParFun(data.consistentParametersCheckList)
-      
+
     })
   }
 
@@ -844,8 +1073,6 @@ const Index = (props) => {
   const [saveLoading1, setSaveLoading1] = useState(false)
   const [saveLoading2, setSaveLoading2] = useState(false)
 
-  const [saveLoading11, setSaveLoading11] = useState(false)
-  const [saveLoading22, setSaveLoading22] = useState(false)
 
   const [addId, setAddId] = useState();
   const save = (type) => {
@@ -859,10 +1086,11 @@ const Index = (props) => {
         DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-DD 00:00:00") : undefined,
         Commitment: commonValues.Commitment ? 1 : undefined,
       }
-      if (tabType == 1) { //数据一致性核查表
+      // if (tabType == 1) { //数据一致性核查表
 
-        type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
-        form2.validateFields().then((values) => {
+      type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
+      form2.validateFields().then((values) => {
+        form3.validateFields().then(values2 => {
           const dataList1 = addDataConsistencyData.map(item => {
             return {
               PollutantCode: item.ChildID,
@@ -934,35 +1162,8 @@ const Index = (props) => {
           dataList.push(obj1, obj2, obj3)
           dataList = dataList.filter(item => item) //去除值为空的情况
 
-          props.addOrUpdConsistencyCheck({
-            AddType: type,
-            Data: {
-              ...commonData,
-              //  RangeUpload: values.files1,
-              CouUpload: values.files2,
-            },
-            DataList: dataList,
-          }, (id) => {
-            title === '添加' && id && setAddId(id)
-            type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-            onFinish(pageIndex, pageSize)
-          })
-
-
-
-
-        }).catch((info) => {
-          console.log('Validate Failed2:', info);
-        });
-
-
-
-
-      } else {  //参数一致性核查表
-
-        type == 1 ? setSaveLoading11(true) : setSaveLoading22(true)
-        form3.validateFields().then(values => {
           const paramDataList = addParconsistencyData.map(item => {
+            const values = values2
             return {
               CheckItem: item.ChildID,
               Status: values[`${item.par}IsEnable`] && values[`${item.par}IsEnable`][0] == 1 ? 1 : 2,
@@ -978,30 +1179,83 @@ const Index = (props) => {
               InstrumentFile: values[`${item.par}InstrumentFilePar`],
               TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
               DataFile: values[`${item.par}DataFilePar`],
-
-              // Upload: values[`${item.par}ParFiles`],
+              SetStatus: values[`${item.par}SetStatus`] && values[`${item.par}SetStatus`][0] == 1 ? 1 : 2,
+              InstrumentStatus: values[`${item.par}InstrumentStatus`] && values[`${item.par}InstrumentStatus`][0] == 1 ? 1 : 2,
+              DataStatus: values[`${item.par}DataStatus`] && values[`${item.par}DataStatus`][0] == 1 ? 1 : 2,
             }
           })
-          props.addOrUpdParamCheck({
+          props.addRemoteInspector({
             AddType: type,
             Data: {
               ...commonData,
-              //  RangeUpload: form2.getFieldValue('files1'),
-              CouUpload: form2.getFieldValue('files2')
+              CouUpload: values.files2,
             },
+            DataList: dataList,
             ParamDataList: paramDataList,
           }, (id) => {
-            title === '添加' && setAddId(id)
+            title === '添加' && id && setAddId(id)
+            type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
             onFinish(pageIndex, pageSize)
-            type == 1 ? setSaveLoading11(false) : setSaveLoading22(false)
           })
+
+
         }).catch((info) => {
           console.log('Validate Failed3:', info);
         });
 
-      }
-    }).catch((info) => {
-      console.log('Validate Failed:', info);
+
+
+
+
+
+      }).catch((info) => {
+        console.log('Validate Failed2:', info);
+      });
+
+
+
+
+      // } else {  //参数一致性核查
+      // form3.validateFields().then(values => {
+      //   const paramDataList = addParconsistencyData.map(item => {
+      //     return {
+      //       CheckItem: item.ChildID,
+      //       Status: values[`${item.par}IsEnable`] && values[`${item.par}IsEnable`][0] == 1 ? 1 : 2,
+      //       SetValue: values[`${item.par}SetVal`],
+      //       InstrumentSetValue: values[`${item.par}InstrumentSetVal`],
+      //       TraceabilityValue: values[`${item.par}TraceVal`],
+      //       DataValue: values[`${item.par}DataVal`],
+      //       AutoUniformity: values[`${item.par}Uniform`],
+      //       Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
+      //       Remark: values[`${item.par}Remark3`],
+      //       OperationReamrk: values[`${item.par}OperationReamrk`],
+      //       SetFile: values[`${item.par}SettingFilePar`],
+      //       InstrumentFile: values[`${item.par}InstrumentFilePar`],
+      //       TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
+      //       DataFile: values[`${item.par}DataFilePar`],
+      //       SetStatus: values[`${item.par}SetStatus`] && values[`${item.par}SetStatus`][0] == 1 ? 1 : 2,
+      //       InstrumentStatus: values[`${item.par}InstrumentStatus`] && values[`${item.par}InstrumentStatus`][0] == 1 ? 1 : 2,
+      //       DataStatus: values[`${item.par}DataStatus`] && values[`${item.par}DataStatus`][0] == 1 ? 1 : 2,
+      //     }
+      //   })
+      //   props.addOrUpdParamCheck({
+      //     AddType: type,
+      //     Data: {
+      //       ...commonData,
+      //     },
+      //     ParamDataList: paramDataList,
+      //   }, (id) => {
+      //     title === '添加' && setAddId(id)
+      //     onFinish(pageIndex, pageSize)
+      //     type == 1 ? setSaveLoading11(false) : setSaveLoading22(false)
+      //   })
+      // }).catch((info) => {
+      //   console.log('Validate Failed3:', info);
+      // });
+
+      // }
+      // }).catch((info) => {
+      //   console.log('Validate Failed:', info);
     });
 
 
@@ -1126,6 +1380,9 @@ const Index = (props) => {
       [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
       [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
       [`${code}DataFilePar`]: item.DataFileList?.[0] && item.DataFileList?.[0].FileUuid,
+      [`${code}SetStatus`]: item.SetStatus ? [item.SetStatus] : [],
+      [`${code}InstrumentStatus`]: item.InstrumentStatus ? [item.InstrumentStatus] : [],
+      [`${code}DataStatus`]: item.DataStatus ? [item.DataStatus] : [],
     })
   }
   const echoParFun = (data) => { //格式化 编辑回显     参数一致性核查表
@@ -1551,21 +1808,39 @@ const Index = (props) => {
         break;
       case 3: // 参数一致性核查表 自动判断
         const setVal = form3.getFieldValue(`${row.par}SetVal`),
+          instrumentSetVal = form3.getFieldValue(`${row.par}InstrumentSetVal`),
+          dataVal = form3.getFieldValue(`${row.par}DataVal`),
           traceVal = form3.getFieldValue(`${row.par}TraceVal`),
-          isEnableVal = form3.getFieldValue(`${row.par}IsEnable`);
-
-        if ((setVal || setVal == 0) && (traceVal || traceVal == 0) && (isEnableVal && isEnableVal[0] && isEnableVal[0] == 1)) {
-          if (setVal == traceVal) {
-            form3.setFieldsValue({ [`${row.par}Uniform`]: 1 })
+          setStatusVal = form3.getFieldValue(`${row.par}SetStatus`),
+          instrumentStatusVal = form3.getFieldValue(`${row.par}InstrumentStatus`),
+          dataStatusVal = form3.getFieldValue(`${row.par}DataStatus`);
+        if (traceVal) {
+          if ((setStatusVal?.[0] == 1 || instrumentStatusVal?.[0] == 1 || dataStatusVal?.[0] == 1) && (setVal || instrumentSetVal || dataVal)) {
+            props.judgeParamCheck({
+              PollutantCode: row.ChildID,
+              SetValue: setVal, InstrumentSetValue: instrumentSetVal, DataValue: dataVal,
+              TraceabilityValue: traceVal,
+              SetStatus: setStatusVal?.length && setStatusVal[0],
+              InstrumentStatus: instrumentStatusVal?.length && instrumentStatusVal[0],
+              DataStatus: dataStatusVal?.length && dataStatusVal[0],
+            }, (data) => {
+              form3.setFieldsValue({ [`${row.par}Uniform`]: data })
+            })
           } else {
-            form3.setFieldsValue({ [`${row.par}Uniform`]: 2 })
+            form3.setFieldsValue({ [`${row.par}Uniform`]: undefined })
           }
-          //  props.judgeParamCheck({ PollutantCode:row.ChildID,   SetValue: setVal,   TraceabilityValue: traceVal, },(data)=>{
-          //   form3.setFieldsValue({[`${row.par}Uniform`] :data })
-          //  })
-        } else if ((!setVal) && (!traceVal)) {
+        } else {
           form3.setFieldsValue({ [`${row.par}Uniform`]: undefined })
         }
+        // if ((setVal || setVal == 0) && (traceVal || traceVal == 0) && (setStatusVal && setStatusVal[0] && setStatusVal[0] == 1)) {
+        //   if (setVal == traceVal) {
+        //     form3.setFieldsValue({ [`${row.par}Uniform`]: 1 })
+        //   } else {
+        //     form3.setFieldsValue({ [`${row.par}Uniform`]: 2 })
+        //   }
+        // } else if ((!setVal) && (!traceVal)) {
+        //   form3.setFieldsValue({ [`${row.par}Uniform`]: undefined })
+        // }
 
         break;
     }
@@ -2333,37 +2608,37 @@ const Index = (props) => {
     {
       title: '参数一致性核查表',
       children: [
-        {
-          title: '是否启用',
-          align: 'center',
-          dataIndex: 'isDisplay',
-          key: 'isDisplay',
-          width: 80,
-          render: (text, record) => {
+        // {
+        //   title: '是否启用',
+        //   align: 'center',
+        //   dataIndex: 'isDisplay',
+        //   key: 'isDisplay',
+        //   width: 80,
+        //   render: (text, record) => {
 
-            return <Form.Item name={`${record.par}IsEnable`}>
-              <Checkbox.Group onChange={(value) => { isEnableChange(value, `${record.par}`) }}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
-            </Form.Item>
+        //     return <Form.Item name={`${record.par}IsEnable`}>
+        //       <Checkbox.Group onChange={(value) => { isEnableChange(value, `${record.par}`) }}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
+        //     </Form.Item>
 
-          }
-        },
+        //   }
+        // },
         {
           title: '仪表设定值',
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 150,
+          width: 140,
           render: (text, record) => {
             if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
               return '—'
             }
-            return <Row style={{ flexWrap: 'nowrap', }}>
-            <Form.Item name={`${record.par}IsEnable`} style={{ paddingRight:4 }}>
-              <Checkbox.Group> <Checkbox value={1} ></Checkbox></Checkbox.Group>
-            </Form.Item>
-            <Form.Item name={`${record.par}SetVal`} >
-              <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
-            </Form.Item>
+            return <Row style={{ flexWrap: 'nowrap' }}>
+              <Form.Item name={`${record.par}SetStatus`} style={{ paddingRight: 4 }}>
+                <Checkbox.Group onChange={() => { isJudge(record, 3) }}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
+              </Form.Item>
+              <Form.Item name={`${record.par}SetVal`} >
+                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
+              </Form.Item>
             </Row>
           }
         },
@@ -2374,14 +2649,10 @@ const Index = (props) => {
           key: 'par',
           width: 120,
           render: (text, record, index) => {
-            if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
-              return '—'
-            }
-            return <div>
-              <Form.Item name={`${record.par}SettingFilePar`} >
-                <a style={{ paddingRight: 8 }} onClick={() => { setFileType('settingFile'); setSettingFilePar(`${record.par}SettingFilePar`); setFileVisible(true); }}>{settingFileList[`${record.par}SettingFilePar`] && settingFileList[`${record.par}SettingFilePar`][0] ? '查看附件' : '上传附件'}</a>
-              </Form.Item>
-            </div>;
+            return <Form.Item name={`${record.par}SettingFilePar`} >
+              <a style={{ paddingRight: 8 }} onClick={() => { setFileType('settingFile'); setSettingFilePar(`${record.par}SettingFilePar`); setFileVisible(true); }}>{settingFileList[`${record.par}SettingFilePar`] && settingFileList[`${record.par}SettingFilePar`][0] ? '查看附件' : '上传附件'}</a>
+            </Form.Item>
+
 
           }
         },
@@ -2390,15 +2661,19 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 110,
+          width: 140,
           render: (text, record) => {
             if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
               return '—'
             }
-            return <Form.Item name={`${record.par}InstrumentSetVal`} >
-              <InputNumber placeholder='请输入' style={{ width: '100%' }} />
-            </Form.Item>
-
+            return <Row style={{ flexWrap: 'nowrap' }}>
+              <Form.Item name={`${record.par}InstrumentStatus`} style={{ paddingRight: 4 }}>
+                <Checkbox.Group onChange={() => { isJudge(record, 3) }}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
+              </Form.Item>
+              <Form.Item name={`${record.par}InstrumentSetVal`} >
+                <InputNumber onBlur={() => { isJudge(record, 3) }} placeholder='请输入' style={{ width: '100%' }} />
+              </Form.Item>
+            </Row>
           }
         },
         {
@@ -2408,9 +2683,6 @@ const Index = (props) => {
           key: 'par',
           width: 120,
           render: (text, record, index) => {
-            if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
-              return '—'
-            }
             return <div>
               <Form.Item name={`${record.par}InstrumentFilePar`} >
                 <a style={{ paddingRight: 8 }} onClick={() => { setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>
@@ -2424,15 +2696,19 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 110,
+          width: 140,
           render: (text, record) => {
             if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
               return '—'
             }
-            return <Form.Item name={`${record.par}DataVal`}>
-              <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
-            </Form.Item>
-
+            return <Row style={{ flexWrap: 'nowrap' }}>
+              <Form.Item name={`${record.par}DataStatus`} style={{ paddingRight: 4 }}>
+                <Checkbox.Group onChange={() => { isJudge(record, 3) }}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
+              </Form.Item>
+              <Form.Item name={`${record.par}DataVal`}>
+                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
+              </Form.Item>
+            </Row>
           }
         },
         {
@@ -2442,9 +2718,6 @@ const Index = (props) => {
           key: 'par',
           width: 130,
           render: (text, record, index) => {
-            if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
-              return '—'
-            }
             return <div>
               <Form.Item name={`${record.par}DataFilePar`} >
                 <a style={{ paddingRight: 8 }} onClick={() => { setFileType('dataFile'); setDataFilePar(`${record.par}DataFilePar`); setFileVisible(true); }}>{dataFileList[`${record.par}DataFilePar`] && dataFileList[`${record.par}DataFilePar`][0] ? '查看附件' : '上传附件'}</a>
@@ -2458,7 +2731,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 110,
+          width: 140,
           render: (text, record) => {
             if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
               return '—'
@@ -2467,7 +2740,6 @@ const Index = (props) => {
             return <Form.Item name={`${record.par}TraceVal`}>
               <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
             </Form.Item>
-
           }
         },
         {
@@ -2477,9 +2749,6 @@ const Index = (props) => {
           key: 'par',
           width: 100,
           render: (text, record, index) => {
-            if (record.Name === '停炉信号接入有备案材料' || record.Name === '停炉信号激活时工况真实性') {
-              return '—'
-            }
             return <div>
               <Form.Item name={`${record.par}TraceabilityFilePar`} >
                 <a style={{ paddingRight: 8 }} onClick={() => { setFileType('traceabilityFile'); setTraceabilityFilePar(`${record.par}TraceabilityFilePar`); setFileVisible(true); }}>{traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0] ? '查看附件' : '上传附件'}</a>
@@ -2574,10 +2843,17 @@ const Index = (props) => {
       ]
     }
   ]
-
-  const ModalCommonContent = () => {
-
+  const onAllChange = (e) => { //参数一致性核查表 
+    const checked = e.target.checked
+    addParconsistencyData.map(item => {
+      form3.setFieldsValue({
+        [`${item.ChildID}SetStatus`]: checked ? [1] : [],
+        [`${item.ChildID}InstrumentStatus`]: checked ? [1] : [],
+        [`${item.ChildID}DataStatus`]: checked ? [1] : [],
+      })
+    })
   }
+
   const [id, setId] = useState()
   const [detailVisible, setDetailVisible] = useState(false)
   const [detailTitle, setDetailTitle] = useState()
@@ -2653,10 +2929,17 @@ const Index = (props) => {
                 </Button>
                 {!isRecord && <Button style={{ marginRight: 8 }} onClick={add}>
                   添加
-            </Button>}
+                </Button>}
                 <Button loading={exportLoading} icon={<ExportOutlined />} onClick={() => { exports() }}  >
                   导出
                 </Button>
+                {!isRecord && <><Button type="primary" style={{ margin: '0 8px' }} onClick={() => { forwardClick() }}>
+                  转发任务单
+               </Button>
+                  <Button type="primary" onClick={() => { requestTask() }}  >
+                    申请任务单
+                 </Button></>
+                }
               </Form.Item>
             </Row>
           </Form>}>
@@ -2690,10 +2973,10 @@ const Index = (props) => {
           <Button onClick={() => { setVisible(false) }}>
             取消
           </Button>,
-          <Button type="primary" onClick={() => { save(1) }} loading={tabType == 1 ? saveLoading1 || echoLoading || parLoading || false : saveLoading11 || echoLoading || parLoading || false}>
+          <Button type="primary" onClick={() => { save(1) }} loading={saveLoading1 || echoLoading || parLoading || false}>
             保存
           </Button>,
-          <Button type="primary" onClick={() => save(2)} loading={tabType == 1 ? saveLoading2 || echoLoading || parLoading || false : saveLoading22 || echoLoading || parLoading || false} >
+          <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || echoLoading || parLoading || false} >
             提交
           </Button>,
         ]}
@@ -2709,7 +2992,7 @@ const Index = (props) => {
             onValuesChange={onValuesChange2}
           >
 
-            <Row className={styles.queryPar}  style={{paddingTop:12}}>
+            <Row className={styles.queryPar} style={{ paddingTop: 12 }}>
               <Spin spinning={entLoading} size='small' style={{ top: -2, left: '6%' }}>
                 <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称' }]}>
                   <EntAtmoList noFilter allowClear={false} style={{ width: 200 }} />
@@ -2783,7 +3066,7 @@ const Index = (props) => {
                 />
                 <Row style={{ color: '#f5222d', marginTop: 10 }}>
                   <span style={{ paddingRight: 12 }}>注：</span>
-                  <ol type="1" style={{ listStyle: 'auto',paddingBottom:8 }}>
+                  <ol type="1" style={{ listStyle: 'auto', paddingBottom: 8 }}>
                     <li>填写数值，带单位；</li>
                     <li>项目无DAS，可只填写实时数据内容；若使用我司数采仪，仍需简单核算、确认历史数据情况；</li>
                     <li>数字里传输数据须完全一致；模拟量传输，实时数据数据差值/量程≤1‰ (参考HJ/T 477-2009)；</li>
@@ -2803,6 +3086,7 @@ const Index = (props) => {
                 className={styles.queryForm2}
               // onValuesChange={onValuesChange2}
               >
+                <Checkbox onChange={onAllChange}>全选</Checkbox>
                 <SdlTable
                   loading={parLoading}
                   columns={columns4}
@@ -2905,6 +3189,76 @@ const Index = (props) => {
         footer={null}
       >
         <Detail match={{ params: { id: id } }} />
+      </Modal>
+      <Modal //转发任务单
+        visible={forwardTaskVisible}
+        footer={null}
+        title={searchTaskComponents()}
+        wrapClassName='spreadOverModal'
+        onCancel={() => { setForwardTaskVisible(false) }}
+        destroyOnClose
+        zIndex={999}
+      >
+        <SdlTable
+          resizable
+          loading={forwardTableLoading}
+          bordered
+          dataSource={forwardTableData}
+          columns={taskColumns}
+          pagination={{
+            showSizeChanger: true,
+            showQuickJumper: true,
+            total: forwardTableTotal,
+            pageSize: forwardpageSize,
+            current: forwardpageIndex,
+            onChange:  forwardHandleTableChange,
+          }}
+        />
+      </Modal>
+      <Modal
+        title="任务转发"
+        visible={forwardTaskOkVisible}
+        onOk={forwardTaskOk}
+        onCancel={() => { setForwardTaskOkVisible(false) }}
+        confirmLoading={forwardOkLoading}
+      >
+        <Form
+          form={forwardTaskForm}
+          name="advanced_search3"
+          layout='inline'
+        >
+          <Form.Item label='转发人' name='ForwardUserID' style={{ width: '100%' }} rules={[{ required: true, message: '请选择转发人' }]}>
+            <OperationInspectoUserList workNum />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="申请任务单"
+        visible={requestTaskVisible}
+        onOk={requestTaskOk}
+        onCancel={() => { setRequestTaskVisible(false) }}
+        confirmLoading={addRemoteInspectorPointLoading}
+        wrapClassName={styles.requestTaskModal}
+        width={650}
+      >
+        <Form
+          form={requestTaskForm}
+          name="advanced_search3"
+        >
+           <Spin spinning={getRemoteInspectorPointLoading} size='small' style={{top:-4}}>
+          <Form.Item label='监测点' name='DGIMN' rules={[{ required: true, message: '请选择监测点' }]}>
+            <Select placeholder='请选择' showSearch optionFilterProp="children"  >
+              {remoteInspectorPointList.map(item => {
+                return <Option key={item.DGIMN} value={item.DGIMN} >
+                  {`${item.ParentName} - ${item.PointName}`}
+                </Option>
+              })
+              }
+            </Select>
+          </Form.Item>
+          </Spin>
+        </Form>
+       
       </Modal>
     </div>
 

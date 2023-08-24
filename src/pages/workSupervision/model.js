@@ -25,6 +25,7 @@ export default Model.extend({
     workAlarmTotal: 0,
     contractList: [],
     contractTotal: 0,
+    menuList:[],
   },
   effects: {
     // 获取工作台待办

@@ -1114,7 +1114,7 @@ class EmergencyDetailInfo extends Component {
                 </Modal>
 
                 {/** 现场签到 弹框 */}
-                {this.state.signTitle&&<EntAbnormalMapModal  abnormalTitle={this.state.signTitle} noPoint onCancel={()=>{this.setState({signTitle:undefined})}}/>}
+                {this.state.signTitle&&<EntAbnormalMapModal  abnormalTitle={this.state.signTitle}  onCancel={()=>{this.setState({signTitle:undefined})}}/>}
             </div>
         );
     }

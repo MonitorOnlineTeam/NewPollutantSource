@@ -453,7 +453,7 @@ const Index = (props) => {
               重置
             </Button>
             <Button icon={<ExportOutlined />} style={{ marginRight:8 }} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
-              {!isRecord&&<Button type="primary" onClick={()=>{forwardClick()}}>
+             {!isRecord&&<Button type="primary" onClick={()=>{forwardClick()}}>
               转发任务单
             </Button>}
           </Form.Item>

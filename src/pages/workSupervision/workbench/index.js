@@ -68,10 +68,11 @@ const dvaPropsData = ({ loading, wordSupervision,global }) => ({
   contractList: wordSupervision.contractList,
   contractTotal: wordSupervision.contractTotal,
   configInfo: global.configInfo,
+  menuList:wordSupervision.menuList,
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList,configInfo,workAlarmPushLoading,workAlarmPushList,workAlarmTotal,contractList,contractTotal,contractLoading, } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList,configInfo,workAlarmPushLoading,workAlarmPushList,workAlarmTotal,contractList,contractTotal,contractLoading,menuList, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
@@ -450,6 +451,10 @@ const Workbench = props => {
    setContractPageSize(pageSize)
    GetProjectRemindList(pageIndex,pageSize)
   }
+
+  const addMeun = () =>{ //添加快捷菜单
+
+  }
   return (
     <div className={styles.workbenchBreadSty}>
       <BreadcrumbWrapper>
@@ -538,7 +543,7 @@ const Workbench = props => {
                   }}
                 >
 
-                <div className={styles.title}>预留我的提醒</div>
+                <div className={styles.title}>我的提醒</div>
                   {/* <Empty style={{ marginTop: '30px' }} /> */}
                  <Row justify='space-between'>
                     {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val); })}
@@ -632,8 +637,12 @@ const Workbench = props => {
                   <div className={styles.title}>预留快捷导航</div>
                   <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={()=>{}} />
                 </Row>
-                <div className={styles.operaServiceSty} style={{ padding: '6px 24px 4px 16px' }}>
-                 <Empty style={{ marginTop: '30px' }} />
+                <div className={styles.menuSty} style={{ padding: '0 24px 16px 16px' }}>
+                 {/* <Empty style={{ marginTop: '30px' }} /> */}
+                 <Row>
+                   {menuList.map((item,index)=> <Col span={6} style={{paddingTop:index<=3? 6 :12,display:'flex',alignItems:'center'}}><img src='/work_meun.png' style={{ paddingRight:8}}/><span className='meunTitle'>可视化看板</span></Col>)}
+                   <Col span={6} style={{paddingTop:menuList?.length<=3? 6 : 12,display:'flex',alignItems:'center'}}  onClick={addMeun}  className='meunAddWrap'><img src='/work_meun_add.png' style={{ paddingRight:8,cursor:'pointer'}} /><span className='meunAdd'>添加</span></Col>
+                </Row>
                 </div>
               </Card>
             </div>

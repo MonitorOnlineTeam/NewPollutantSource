@@ -241,3 +241,18 @@
     }
   }
 }
+.menuSty  :global{
+  .meunTitle:hover{
+    cursor: pointer;
+    color: #1890FF;
+  }
+  .meunAdd:hover{
+    cursor: pointer;
+    color: #1890FF;
+  }
+  .meunAddWrap{
+    &:hover {
+      .meunAdd {color: #1890ff;}
+    }
+  }
+}

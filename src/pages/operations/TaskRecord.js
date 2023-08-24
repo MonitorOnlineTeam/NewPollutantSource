@@ -705,7 +705,7 @@ class TaskRecord extends Component {
                         title={
                         <div>
                            <Row>确认是否驳回?</Row>
-                           {/* <Row className='red'>驳回后，请通知运维人员在3日内修改工单内容。</Row> */}
+                           <Row className='red'>驳回后，请通知运维人员在3日内修改工单内容。</Row>
                           </div>}
                         onConfirm={() => {
                           this.rejectTask(TaskID);

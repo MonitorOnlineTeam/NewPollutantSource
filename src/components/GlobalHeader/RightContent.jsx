@@ -1,4 +1,4 @@
-import { Tooltip, Popover } from 'antd';
+import { Tooltip, Popover, Dropdown, Menu, Button  } from 'antd';
 import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -8,10 +8,11 @@ import SelectLang from '../SelectLang';
 import styles from './index.less';
 import config from '@/config';
 import NoticeIconView from './NoticeIconView'
-import { ExpandOutlined, CompressOutlined, } from '@ant-design/icons';
+import { ExpandOutlined, CompressOutlined, UnorderedListOutlined, RollbackOutlined } from '@ant-design/icons';
+
 
 const GlobalHeaderRight = props => {
-  const { theme, layout, configInfo, appFlag } = props;
+  const { theme, layout, configInfo, appFlag, sysPollutantTypeList } = props;
   // console.log("changePwdVisible=",props);
   let className = styles.right;
 
@@ -30,18 +31,6 @@ const GlobalHeaderRight = props => {
   }
 
   useEffect(()=>{
-    // window.addEventListener('keydown', function(event) {  
-    //   if (event.key === 'F11') {  
-    //     if (!document.fullscreenElement) {  //默认状态下执行操作   非全面屏状态 变 全面屏    
-    //        console.log('非全面屏状态')
-    //        setIsFullscreen(true)
-    //     }
-        //  else {    //全屏状态下执行操作   全面屏状态 变 非全面屏
-        //   console.log('全面屏状态')
-        //   setIsFullscreen(false)
-        // }  
-      // }  
-    // });
     window.addEventListener('resize', function(event) {  
         if (!document.fullscreenElement) {  //全面屏 - 非全面屏  手动打开  esc关闭的情况 f11关闭的情况
           setIsFullscreen(false)
@@ -64,6 +53,36 @@ const GlobalHeaderRight = props => {
     }
     setIsFullscreen(!isFullscreen);
   };
+  const menu = (
+    <Menu selectedKeys={[sessionStorage.getItem('sysMenuId')]}>
+      {
+        sysPollutantTypeList.map(item => {
+          return <Menu.Item key={item.ID}>
+            <a target="_blank" rel="noopener noreferrer" onClick={() => {
+              let url = item.Url ? new URL(item.Url) : item.Url;
+              if (item.ID !== sessionStorage.getItem('sysMenuId')) {
+                if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
+                  if (webConfig.middlePageOpenMode === 'single') {
+                    window.location.href = url.href;
+                  } else {
+                    window.open(url);
+                  }
+                } else {
+                  if (webConfig.middlePageOpenMode === 'single') {
+                    router.push(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+                  } else {
+                    window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+                  }
+                }
+              }
+            }}>
+              {item.Name}
+            </a>
+          </Menu.Item>
+        })
+      }
+    </Menu>
+  );
   return (
     <div className={className}>
       {/* <HeaderSearch
@@ -120,6 +139,17 @@ const GlobalHeaderRight = props => {
 
       {/** 污水处理厂权限去掉铃铛<NoticeIconView /> */}
       <Popover zIndex={9999} overlayClassName={styles.expandPopSty} content={isFullscreen ? '退出全屏' : '全屏展示'}> <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }} >{isFullscreen ? <CompressOutlined style={{ color: '#fff' }} /> : <ExpandOutlined style={{ color: '#fff' }} />}</span></Popover>
+   
+      <Dropdown overlay={menu} trigger={['click']}>
+            <Tooltip title="切换系统">
+              <a
+                rel="noopener noreferrer"
+                className={styles.action}
+              >
+                <UnorderedListOutlined />
+              </a>
+            </Tooltip>
+          </Dropdown>
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}
     </div>

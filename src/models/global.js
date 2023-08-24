@@ -36,7 +36,8 @@ export default Model.extend({
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       DGIMN: '',
     },
-    clientHeight: null
+    clientHeight: null,
+    sysPollutantTypeList: [],
   },
   effects: {
     // 首次加载获取当天报警消息

@@ -480,4 +480,5 @@ export default connect(({ global, settings, user, loading }) => ({
   configInfo: global.configInfo,
   unfoldMenuList: user.unfoldMenuList,
   loading: loading.effects['global/getSystemConfigInfo'],
+  sysPollutantTypeList: global.sysPollutantTypeList,
 }))(BasicLayout);

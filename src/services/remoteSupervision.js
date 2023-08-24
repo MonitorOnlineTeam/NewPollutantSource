@@ -81,3 +81,26 @@ export async function IssueRemoteInspector(params) {
   const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/IssueRemoteInspector`, params, null);
   return result;
 }
+
+//关键参数核查 新的保存
+export async function AddRemoteInspector(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/AddRemoteInspector`, params, null);
+  return result;
+}
+
+//关键参数核查 可申请工单站点
+export async function GetRemoteInspectorPointList(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/GetRemoteInspectorPointList`, params, null);
+  return result;
+}
+
+//关键参数核查 手工申请工单
+export async function AddRemoteInspectorPoint(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/AddRemoteInspectorPoint`, params, null);
+  return result;
+}
+//关键参数核查 转发工单
+export async function ForwardRemoteInspector(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/ForwardRemoteInspector`, params, null);
+  return result;
+}
