@@ -25,7 +25,8 @@ export default Model.extend({
     workAlarmTotal: 0,
     contractList: [],
     contractTotal: 0,
-    menuList:[],
+    menuList: [],
+    allMenuList: []
   },
   effects: {
     // 获取工作台待办
@@ -629,5 +630,67 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    //获取工作台快捷导航列表 以及 可添加菜单列表
+    *GetUserMenuList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetUserMenuList, payload);
+      if (result.IsSuccess) {
+        const menuList = result.Datas?.menuList? result.Datas.menuList :[]
+        const allMenuListFun = (data) => {
+          if (data?.length) {
+             return data.map(item => {
+              return {
+                selectable:item.children?.length? false : true,
+                title: item.breadcrumbNames,
+                key: item.id,
+                children: allMenuListFun(item.children) ?  allMenuListFun(item.children) : [],
+                icon:item.children?.length? null : <img src='/work_meun.png' style={{ paddingRight: 8 }} />
+              }
+            })
+          }
+        }
+        
+        const allMenuList = result.Datas?.allMenuList?.length ?  allMenuListFun(result.Datas.allMenuList) :[]
+        const menuFilterTree = (treeNodes = [], checkedKeys = []) => {
+          return treeNodes?.length && treeNodes.filter(item => checkedKeys.indexOf(item.key) == -1).map(item => {
+            item = { ...item }
+            if (item.children?.length && (!treeNodes.selectable)) {
+              item.children = menuFilterTree(item.children, checkedKeys)
+            }
+            return item
+          })
+        }
+        const allMenuData = menuFilterTree(allMenuList,menuList.map(item=>item.id))
+        // const filterEmptyChildren = (treeNodes) =>{
+        //   return treeNodes?.length&&treeNodes.children&&treeNodes.children.length&&(!treeNodes.selectable)&&treeNodes.map(item => {
+        //     item = { ...item }
+        //     if (item.children?.length) {
+        //       item.children = menuFilterTree(item.children)
+        //     }
+        //     return item
+        //   })
+        // }
+        // console.log(filterEmptyChildren(allMenuData))
+        // const filteredTree = filterEmptyChildren(allMenuData);
+        // console.log(filteredTree);
+        yield update({
+          menuList: menuList,
+          allMenuList: allMenuData,
+        });
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 添加快捷菜单
+    *AddUserMenu({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.AddUserMenu, payload);
+      if (result.IsSuccess) {
+        message.success('添加成功！');
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
   },
+
 });

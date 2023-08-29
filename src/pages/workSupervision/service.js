@@ -499,3 +499,21 @@ export async function UpdateAllProjectPushStatus(params) {
   );
   return result;
 }
+
+
+// 获取工作台快捷导航列表 以及 可添加菜单列表
+export async function GetUserMenuList(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/OperationHomeApi/GetUserMenuList',
+    params,
+  );
+  return result;
+}
+// 添加快捷菜单
+export async function AddUserMenu (params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/OperationHomeApi/AddUserMenu',
+    params,
+  );
+  return result;
+}

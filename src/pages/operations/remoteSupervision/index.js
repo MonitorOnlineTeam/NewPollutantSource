@@ -227,7 +227,7 @@ const Index = (props) => {
   const [commonForm] = Form.useForm();
 
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, forwardTableLoading, forwardTableData, forwardOkLoading, regQueryPar,getRemoteInspectorPointLoading,remoteInspectorPointList,addRemoteInspectorPointLoading,forwardTableTotal, } = props;
+  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, forwardTableLoading, forwardTableData, forwardOkLoading, regQueryPar, getRemoteInspectorPointLoading, remoteInspectorPointList, addRemoteInspectorPointLoading, forwardTableTotal, } = props;
 
   const [tabType, setTabType] = useState('1')
 
@@ -542,7 +542,7 @@ const Index = (props) => {
     setForwardTaskVisible(true);
     taskForm.resetFields();
     setPageIndex(1)
-    onTaskFinish({},1,forwardpageSize);
+    onTaskFinish({}, 1, forwardpageSize);
   }
 
   const [forwardTaskForm] = Form.useForm();
@@ -563,25 +563,25 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-  const onTaskFinish = (values,pageIndex,pageSize) => {
+  const onTaskFinish = (values, pageIndex, pageSize) => {
     props.getRemoteInspectorList({
       ...values,
       beginTime: regQueryPar.BeginTime,
       endTime: regQueryPar.EndTime,
       isForward: 1,
-      pageIndex:pageIndex,
-      pageSize:pageSize,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
     })
   }
 
-  
+
   const [forwardpageIndex, setForwardPageIndex] = useState(1)
   const [forwardpageSize, setForwardPageSize] = useState(20)
 
-  const forwardHandleTableChange = (PageIndex, PageSize) =>{
+  const forwardHandleTableChange = (PageIndex, PageSize) => {
     setForwardPageIndex(PageIndex)
     setForwardPageSize(PageSize)
-    onTaskFinish({},PageIndex, PageSize)
+    onTaskFinish({}, PageIndex, PageSize)
   }
 
   const [taskPointList, setTaskPointList] = useState([])
@@ -678,7 +678,7 @@ const Index = (props) => {
       form={taskForm}
       name="advanced_search2"
       className={styles["ant-advanced-search-form"]}
-      onFinish={(value)=>{setForwardPageIndex(1);onTaskFinish(value,1,forwardpageSize)}}
+      onFinish={(value) => { setForwardPageIndex(1); onTaskFinish(value, 1, forwardpageSize) }}
       onValuesChange={onTaskValuesChange}
       layout='inline'
     >
@@ -713,11 +713,11 @@ const Index = (props) => {
     setRequestTaskVisible(true)
     requestTaskForm.resetFields()
     props.getRemoteInspectorPointList({
-      beginTime: regQueryPar.BeginTime,
-      endTime: regQueryPar.EndTime,
+      beginTime: moment().startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+      endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
     })
-  } 
-  const requestTaskOk = async () =>{
+  }
+  const requestTaskOk = async () => {
     try {
       const values = await requestTaskForm.validateFields();
       props.addRemoteInspectorPoint({ ...values }, (res) => {
@@ -845,9 +845,9 @@ const Index = (props) => {
         setIsDisPlayCheck2(false)
         setIsDisPlayCheck3(false)
         setIsDisPlayCheck4(false)
-        setDasChecked(false)
-        setNumChecked(false)
-        setNumRealTimeChecked(false)
+        // setDasChecked(false)
+        // setNumChecked(false)
+        // setNumRealTimeChecked(false)
       } else {
         data.consistencyCheckList.map(item => { //数据一致性核查表
 
@@ -910,9 +910,9 @@ const Index = (props) => {
             onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
             onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
           }
-          setNumChecked(val.DataRangeStatus == 1 ? true : false)
-          setNumRealTimeChecked(val.DataStatus == 1 ? true : false)
-          setDasChecked(val.DASStatus == 1 ? true : false)
+          // setNumChecked(val.DataRangeStatus == 1 ? true : false)
+          // setNumRealTimeChecked(val.DataStatus == 1 ? true : false)
+          // setDasChecked(val.DASStatus == 1 ? true : false)
 
           const echoFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => { //附件回显
 
@@ -1045,8 +1045,9 @@ const Index = (props) => {
   const resetData = (flag) => {
     form2.resetFields();
     form3.resetFields();
-    setDasChecked(false)
-    setNumChecked(false)
+    // setDasChecked(false)
+    // setNumChecked(false)
+    // setNumRealTimeChecked(false)
     setIsDisPlayCheck1(false)
     setIsDisPlayCheck2(false)
     setIsDisPlayCheck3(false)
@@ -1337,9 +1338,9 @@ const Index = (props) => {
         setIsDisPlayCheck2(false)
         setIsDisPlayCheck3(false)
         setIsDisPlayCheck4(false)
-        setDasChecked(false)
-        setNumChecked(false)
-        setNumRealTimeChecked(false)
+        // setDasChecked(false)
+        // setNumChecked(false)
+        // setNumRealTimeChecked(false)
         paramList.map(item => {
           echoFilePar(item.ChildID, item)
         })
@@ -1437,16 +1438,16 @@ const Index = (props) => {
   // }
 
   const { entLoading } = props;
-  const [dasChecked, setDasChecked] = useState(false)
+  const [dasChecked, setDasChecked] = useState(true)
   const onDasChange = (e) => { //DAS量程
     setDasChecked(e.target.checked)
   }
 
-  const [numChecked, setNumChecked] = useState(false)
+  const [numChecked, setNumChecked] = useState(true)
   const onNumChange = (e) => { //数采仪量程
     setNumChecked(e.target.checked)
   }
-  const [numRealTimeChecked, setNumRealTimeChecked] = useState(false)
+  const [numRealTimeChecked, setNumRealTimeChecked] = useState(true)
   const onNumRealTimeChange = (e) => { //数采仪实时数据
     setNumRealTimeChecked(e.target.checked)
   }
@@ -1814,8 +1815,8 @@ const Index = (props) => {
           setStatusVal = form3.getFieldValue(`${row.par}SetStatus`),
           instrumentStatusVal = form3.getFieldValue(`${row.par}InstrumentStatus`),
           dataStatusVal = form3.getFieldValue(`${row.par}DataStatus`);
-        if (traceVal) {
-          if ((setStatusVal?.[0] == 1 || instrumentStatusVal?.[0] == 1 || dataStatusVal?.[0] == 1) && (setVal || instrumentSetVal || dataVal)) {
+        if (traceVal || traceVal == 0) {
+          if ((setStatusVal?.[0] == 1 || instrumentStatusVal?.[0] == 1 || dataStatusVal?.[0] == 1) && ((setVal || setVal == 0) || (instrumentSetVal || instrumentSetVal == 0) || (dataVal || dataVal == 0))) {
             props.judgeParamCheck({
               PollutantCode: row.ChildID,
               SetValue: setVal, InstrumentSetValue: instrumentSetVal, DataValue: dataVal,
@@ -2103,7 +2104,10 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'> <Checkbox checked={dasChecked} onChange={onDasChange}>DAS量程</Checkbox></Row>,
+          title: <Row align='middle' justify='center'>
+            {/* <Checkbox checked={dasChecked} onChange={onDasChange}>DAS量程</Checkbox> */}
+                 DAS量程
+                </Row>,
           align: 'center',
           dataIndex: 'par',
           key: 'par',
@@ -2172,7 +2176,10 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'><Checkbox checked={numChecked} onChange={onNumChange}>数采仪量程</Checkbox></Row>,
+          title: <Row align='middle' justify='center'>
+            {/* <Checkbox checked={numChecked} onChange={onNumChange}>数采仪量程</Checkbox> */}
+                数采仪量程
+                </Row>,
           align: 'center',
           dataIndex: 'par',
           key: 'par',
@@ -2459,7 +2466,10 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'><Checkbox checked={dasChecked} onChange={onDasChange}>DAS示值</Checkbox></Row>,
+          title: <Row align='middle' justify='center'>
+            {/* <Checkbox checked={dasChecked} onChange={onDasChange}>DAS示值</Checkbox> */}
+                 DAS示值
+                 </Row>,
           align: 'center',
           dataIndex: 'par',
           key: 'par',
@@ -2480,7 +2490,10 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'><Checkbox checked={numRealTimeChecked} onChange={onNumRealTimeChange}>数采仪实时数据</Checkbox></Row>,
+          title: <Row align='middle' justify='center'>
+            {/* <Checkbox checked={numRealTimeChecked} onChange={onNumRealTimeChange}>数采仪实时数据</Checkbox> */}
+                 数采仪实时数据
+                 </Row>,
           align: 'center',
           dataIndex: 'par',
           key: 'par',
@@ -2995,12 +3008,12 @@ const Index = (props) => {
             <Row className={styles.queryPar} style={{ paddingTop: 12 }}>
               <Spin spinning={entLoading} size='small' style={{ top: -2, left: '6%' }}>
                 <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称' }]}>
-                  <EntAtmoList noFilter allowClear={false} style={{ width: 200 }} />
+                  <EntAtmoList noFilter disabled={title === '编辑'} allowClear={false} style={{ width: 200 }} />
                 </Form.Item>
               </Spin>
               <Spin spinning={pointLoading2} size='small' style={{ top: -2, left: '12.5%' }}>
                 <Form.Item label='监测点名称' name='DGIMN' style={{ margin: '0 8px' }} rules={[{ required: true, message: '请选择监测点名称!' }]} >
-                  <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 200 }}>
+                  <Select placeholder='请选择' disabled={title === '编辑'} showSearch optionFilterProp="children" style={{ width: 200 }}>
                     {
                       pointList2[0] && pointList2.map(item => {
                         return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
@@ -3011,12 +3024,12 @@ const Index = (props) => {
               </Spin>
 
               <Form.Item label='核查日期' name='month' rules={[{ required: true, message: '请选择核查月份!' }]}>
-                <DatePicker allowClear={false} picker="day" style={{ width: 200 }} />
+                <DatePicker disabled={title === '编辑'} allowClear={false} picker="day" style={{ width: 200 }} />
               </Form.Item>
 
               <Spin size='small' spinning={title === '编辑' ? false : parLoading || false} style={{ top: -2, left: '15%' }}>
                 <Form.Item label='点位运维负责人' name='OperationUserID' rules={[{ required: true, message: '请设置点位的负责运维人!' }]}>
-                  <Select placeholder='请选择' showSearch optionFilterProp="children">
+                  <Select disabled={title === '编辑'} placeholder='请选择' showSearch optionFilterProp="children">
                     {userlist.map(item => {
                       return <Option key={item['dbo.View_User.User_ID']} value={item['dbo.View_User.User_ID']} >
                         {item['dbo.View_User.User_Name']}
@@ -3211,7 +3224,7 @@ const Index = (props) => {
             total: forwardTableTotal,
             pageSize: forwardpageSize,
             current: forwardpageIndex,
-            onChange:  forwardHandleTableChange,
+            onChange: forwardHandleTableChange,
           }}
         />
       </Modal>
@@ -3245,20 +3258,20 @@ const Index = (props) => {
           form={requestTaskForm}
           name="advanced_search3"
         >
-           <Spin spinning={getRemoteInspectorPointLoading} size='small' style={{top:-4}}>
-          <Form.Item label='监测点' name='DGIMN' rules={[{ required: true, message: '请选择监测点' }]}>
-            <Select placeholder='请选择' showSearch optionFilterProp="children"  >
-              {remoteInspectorPointList.map(item => {
-                return <Option key={item.DGIMN} value={item.DGIMN} >
-                  {`${item.ParentName} - ${item.PointName}`}
-                </Option>
-              })
-              }
-            </Select>
-          </Form.Item>
+          <Spin spinning={getRemoteInspectorPointLoading} size='small' style={{ top: -4 }}>
+            <Form.Item label='监测点' name='DGIMN' rules={[{ required: true, message: '请选择监测点' }]}>
+              <Select placeholder='请选择' showSearch optionFilterProp="children"  >
+                {remoteInspectorPointList.map(item => {
+                  return <Option key={item.DGIMN} value={item.DGIMN} >
+                    {`${item.ParentName} - ${item.PointName}`}
+                  </Option>
+                })
+                }
+              </Select>
+            </Form.Item>
           </Spin>
         </Form>
-       
+
       </Modal>
     </div>
 

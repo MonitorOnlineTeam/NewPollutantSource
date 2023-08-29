@@ -142,6 +142,16 @@ export default {
           component: './home',
         }, // appoperation
         {
+          name: 'sysTypeMiddlePage',
+          path: '/sysTypeMiddlePage',
+          component: './sysTypeMiddlePage',
+        },
+        {
+          name: 'sessionMiddlePage',
+          path: '/sessionMiddlePage',
+          component: './sysTypeMiddlePage/SaveSessionPage',
+        },
+        {
           path: '/appoperation',
           component: '../layouts/BlankLayout',
           routes: [

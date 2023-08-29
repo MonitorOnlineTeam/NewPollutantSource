@@ -1227,11 +1227,13 @@ class exceedDataAlarmModal extends PureComponent {
             },
             {
                 title: "首次报警时间",
-                width: 100,
+                width: 130,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+
             },
             {
                 title: "报警因子",
@@ -1380,11 +1382,13 @@ class exceedDataAlarmModal extends PureComponent {
             },
             {
                 title: "首次报警时间",
-                width: 100,
+                width: 130,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+
             },
             {
                 title: "报警因子",

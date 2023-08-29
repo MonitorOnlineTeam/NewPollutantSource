@@ -100,7 +100,7 @@ class JzRecordContent extends Component {
             rtnVal.push(<table key={'2'} className={styles.FormTable}>
                 <tbody>
                     <tr>
-                        <td colSpan="7" style={{ height: '60px',textAlign:'center' }}>没有填写校准项</td>
+                        <td colSpan="6" style={{ height: '60px',textAlign:'center',minWidth:900 }}>没有填写校准项</td>
                     </tr>
                 </tbody>
             </table>)

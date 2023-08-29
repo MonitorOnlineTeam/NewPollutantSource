@@ -1218,7 +1218,7 @@ class index extends PureComponent {
             },
             {
                 title: "首次报警时间",
-                width: 100,
+                width: 130,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'firstTime',
@@ -1372,7 +1372,7 @@ class index extends PureComponent {
             },
             {
                 title: "首次报警时间",
-                width: 100,
+                width: 130,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'firstTime',
