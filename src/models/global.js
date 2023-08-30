@@ -4,13 +4,13 @@ import * as services from '@/services/commonApi';
 import Model from '@/utils/model';
 import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
-import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
+import { getAlarmNotices, mymessagelist, getSysPollutantTypeList, } from '@/services/globalApi';
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
 import { array } from 'prop-types';
 import Cookie from 'js-cookie';
 import config from '@/config';
-
+import { message } from 'antd';
 
 /**
  * 功  能：报警消息和推送相关model
@@ -120,6 +120,21 @@ export default Model.extend({
           type: 'settings/getSetting',
           payload: response.Datas,
         });
+      }
+    },
+    // 获取系统入口
+    *getSysPollutantTypeList({ payload }, { call, update, select }) {
+      const result = yield call(getSysPollutantTypeList);
+      if (result.IsSuccess) {
+        let sysPollutantTypeList = result.Datas;
+        if (process.env.NODE_ENV === 'production') {
+          sysPollutantTypeList = sysPollutantTypeList.filter(item => item.Name.indexOf("Autoform") === -1)
+        }
+        yield update({
+          sysPollutantTypeList: sysPollutantTypeList,
+        })
+      } else {
+        message.error(result.Message)
       }
     },
   },
@@ -407,7 +422,7 @@ export default Model.extend({
   subscriptions: {
     socket({ dispatch, history }) {
       console.log('initsocket1');
-      if(history.location?.pathname==='/hrefLogin'){
+      if (history.location?.pathname === '/hrefLogin') {
         return
       }
       // const token = Cookie.get(config.cookieName);

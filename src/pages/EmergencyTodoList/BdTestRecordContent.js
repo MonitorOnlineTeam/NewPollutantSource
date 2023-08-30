@@ -93,7 +93,7 @@ class BdTestRecordContent extends Component {
                         let evaluateResult = result !== null && result.length > 0 ? result[0].EvaluateResults === "1" ? "合格" : "不合格" : '';
                         rtnVal.push(
                             <tr key={key}>
-                                <td>{item.EndTime? `${item.TestTime}~${item.EndTime}` : item.TestTime}</td>
+                                <td>{item.EndTime ? `${item.TestTime}~${item.EndTime}` : item.TestTime}</td>
                                 <td>{item.CbValue}</td>
                                 <td>{item.CemsTextValue}</td>
                                 <td rowSpan={record.length + 1} style={{ textAlign: 'center' }}>{result !== null && result.length > 0 ? result[0].WcValue : ''}</td>
@@ -104,7 +104,7 @@ class BdTestRecordContent extends Component {
                     } else {
                         rtnVal.push(
                             <tr key={`${key}a`}>
-                                <td>{item.EndTime? `${item.TestTime}~${item.EndTime}` : item.TestTime}</td>
+                                <td>{item.EndTime ? `${item.TestTime}~${item.EndTime}` : item.TestTime}</td>
                                 <td>{item.CbValue}</td>
                                 <td>{item.CemsTextValue}</td>
                             </tr>
@@ -223,9 +223,10 @@ class BdTestRecordContent extends Component {
     renderGasInfo = (record) => {
         const rtnVal = [];
         rtnVal.push(<tr key="0">
-            <td style={{ width: '33%' }} className={styles.tdTitle}>标准气体名称</td>
-            <td style={{ width: '33%' }} className={styles.tdTitle}>浓度值</td>
-            <td style={{ width: '34%' }} className={styles.tdTitle}>生产厂商名称</td>
+            <td style={{ width: '25%' }} className={styles.tdTitle}>标准气体名称</td>
+            <td style={{ width: '25%' }} className={styles.tdTitle}>浓度值</td>
+            <td style={{ width: '25%' }} className={styles.tdTitle}>单位</td>
+            <td style={{ width: '25%' }} className={styles.tdTitle}>生产厂商名称</td>
         </tr>);
         if (record !== null && record !== undefined) {
             record.map((item, key) => {
@@ -233,6 +234,7 @@ class BdTestRecordContent extends Component {
                     <tr key={key + 1}>
                         <td>{item.Name}</td>
                         <td>{item.ConcentrationValue}</td>
+                        <td>{item.Unit}</td>
                         <td>{item.Manufacturer}</td>
                     </tr>
                 );
@@ -299,7 +301,7 @@ class BdTestRecordContent extends Component {
         const StandardGasList = this.props.BdRecord !== null ? this.props.BdRecord.StandardGasList : null;
         const TestEquipmentList = this.props.BdRecord !== null ? this.props.BdRecord.TestEquipmentList : null;
         const EquipmentInfoList = this.props.BdRecord !== null ? this.props.BdRecord.EquipmentInfoList : null;
-       let SignContent = Record !== null ? Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}` : null;
+        let SignContent = Record !== null ? Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}` : null;
         if (this.props.isloading) {
             return (<Spin
                 style={{
@@ -495,7 +497,7 @@ class BdTestRecordContent extends Component {
                                 <table style={{ width: '100%', marginTop: '0', marginBottom: '0' }} className={styles.FormTable}>
                                     <tbody>
                                         {
-                                            this.renderGasInfo(StandardGasList )
+                                            this.renderGasInfo(StandardGasList)
                                         }
                                     </tbody>
                                 </table>

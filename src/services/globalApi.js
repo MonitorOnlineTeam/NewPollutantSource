@@ -1,5 +1,8 @@
 import { post, get } from '@/utils/request';
 import { async } from 'q';
+
+import { API } from '../../config/API'
+
 export async function getAlarmNotices(params) {
    const result = await post('/api/rest/PollutantSourceApi/AlarmDataApi/GetAlarmNotices', params, null);
    return result;
@@ -30,5 +33,11 @@ export async function InsertAlarmDepOrRole(params) {
     null,
   );
 
+  return result;
+}
+
+// 获取系统入口
+export async function getSysPollutantTypeList() {
+  const result = await post(API.systemApi.GetSysList, {}, null);
   return result;
 }

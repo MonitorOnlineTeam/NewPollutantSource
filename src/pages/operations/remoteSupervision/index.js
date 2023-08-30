@@ -1732,8 +1732,8 @@ const Index = (props) => {
           analyzerUnit = form2.getFieldValue(`400AnalyzerUnit`);
         } else {
           analyzerRang1 = form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
-            analyzerRang2 = form2.getFieldValue(`${row.ChildID}AnalyzerRang2`),
-            analyzerUnit = form2.getFieldValue(`${row.ChildID}AnalyzerUnit`);
+          analyzerRang2 = form2.getFieldValue(`${row.ChildID}AnalyzerRang2`),
+          analyzerUnit = form2.getFieldValue(`${row.ChildID}AnalyzerUnit`);
         }
 
 

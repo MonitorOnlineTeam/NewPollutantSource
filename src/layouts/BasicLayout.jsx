@@ -88,6 +88,11 @@ class BasicLayout extends Component {
     }
 
     const menuComparison = (meunData) => {
+      // const sysName = sessionStorage.getItem("sysName")
+
+      // if(sysName!='设备运维管理平台'){
+      //   return
+      // }
       if(!pathname || pathname=='/' || pathname=='/hrefLogin' || pathname=='/account/settings'){
           return
       } 
@@ -155,16 +160,22 @@ class BasicLayout extends Component {
     window.addEventListener('resize', this.onWindowResize)
     const token = Cookie.get(config.cookieName);
     const tokenFlag = token && token != 'null' && token != 'undefined' && token != '';
-    const { dispatch, } = this.props;
+    const { dispatch, configInfo,sysPollutantTypeList, } = this.props;
     if (!tokenFlag) { return }
+    if (!sysPollutantTypeList.length) {
+      dispatch({
+        type: 'global/getSysPollutantTypeList',
+      });
+    }
     dispatch({
       type: 'global/getSystemConfigInfo',
       payload: {},
     });
-    dispatch({
-      type: 'user/fetchCurrent',
-      payload: {},
-    });
+    // let sysName = sessionStorage.getItem("sysName")
+    // dispatch({
+    //   type: 'user/fetchCurrent',
+    //   payload: {},
+    // });
     dispatch({
       type: 'global/updateState',
       payload: {

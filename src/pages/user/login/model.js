@@ -93,7 +93,8 @@ const Model = {
           router.push('/newestHome');
           return;
         }
-        if (!payload.butRedirct) router.push(defaultNavigateUrl);
+        // if (!payload.butRedirct) router.push(defaultNavigateUrl);
+        router.push('/sysTypeMiddlePage');
       }
     },
 

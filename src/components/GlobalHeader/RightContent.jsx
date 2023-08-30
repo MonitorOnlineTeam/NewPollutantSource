@@ -10,6 +10,7 @@ import config from '@/config';
 import NoticeIconView from './NoticeIconView'
 import { ExpandOutlined, CompressOutlined, UnorderedListOutlined, RollbackOutlined } from '@ant-design/icons';
 import webConfig from '../../../public/webConfig'
+import router from 'umi/router';
 
 
 const GlobalHeaderRight = props => {

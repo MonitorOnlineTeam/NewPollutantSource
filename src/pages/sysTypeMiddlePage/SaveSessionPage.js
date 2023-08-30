@@ -28,7 +28,7 @@ class SaveSessionPage extends PureComponent {
         menu_id: menuId
       },
       callback: (response) => {
-        let defaultNavigateUrl = response.Datas[0].children && response.Datas[0].children.length ? response.Datas[0].children[0].NavigateUrl : response.Datas[0].NavigateUrl;
+        let defaultNavigateUrl = response[0].children && response[0].children.length ? response[0].children[0].NavigateUrl : response[0].NavigateUrl;
         let systemNavigateUrl = '';
         if (response.Datas && response.Datas.length > 1) {
           if (response.Datas[0].name === "首页") {
@@ -44,22 +44,9 @@ class SaveSessionPage extends PureComponent {
         Cookie.set('systemNavigateUrl', systemNavigateUrl);
 
         let sysName = sessionStorage.getItem("sysName")
-        // if (sysName === "一厂一档管理系统") {
-        if (sysName === "一企一档管理系统") {
-          if (sysInfo.EntCode && sysInfo.EntName) {
-            sessionStorage.setItem("oneEntCode", sysInfo.EntCode)
-            sessionStorage.setItem("oneEntName", sysInfo.EntName)
-            sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
-            router.push(defaultNavigateUrl)
-          } else {
-            sessionStorage.setItem('defaultNavigateUrl', '/oneEntsOneArchives/entList')
-            router.push('/oneEntsOneArchives/entList')
-          }
-        } else {
+        // if (sysName === "一厂一档管理系统") {}
           sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
           router.push(defaultNavigateUrl)
-        }
-
       }
     });
   }

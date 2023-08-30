@@ -21,7 +21,7 @@ export async function queryNotices() {
 export async function getMenuData() {
   // ;
   const body = {
-    menu_id: '99dbc722-033f-481a-932a-3c6436e17245',
+    menu_id: sessionStorage.getItem("sysMenuId") || '99dbc722-033f-481a-932a-3c6436e17245',
   };
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetSysMenuByUserID', body);
   // ;

@@ -47,11 +47,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false,
       // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
@@ -1736,7 +1736,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   //视频监控（新）
@@ -1761,7 +1761,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                  }`,
+                    }`,
                 },
                 {
                   //视频监控 企业
@@ -2859,6 +2859,38 @@ export default {
                   name: 'Accuracy',
                   path: '/DataAnalyticalWarningModel/Accuracy',
                   component: './DataAnalyticalWarningModel/AccuracyPage/index.js',
+                },
+
+              ],
+            },
+            /*  设备调试及售后服务管理平台 成套   */  
+            
+            // 项目执行进度
+            {
+              path: '/projectExecuProgress',
+              name: 'ProjectExecuProgress',
+              
+              routes: [
+                {
+                  path: '/projectExecuProgress',
+                  redirect: '/projectExecuProgress/projectExecution/dispatchQuery',
+                },
+                // 项目执行
+                {
+                  name: 'ProjectExecution',
+                  path: '/projectExecuProgress/projectExecution',
+                  routes: [
+                    {
+                      path: '/projectExecuProgress/projectExecution',
+                      redirect: '/projectExecuProgress/projectExecution/dispatchQuery',
+                    }, 
+                    {
+                      // 派单查询
+                      name: 'DispatchQuery',
+                      path: '/projectExecuProgress/projectExecution/dispatchQuery',
+                      component: './projectExecuProgress/projectExecution/dispatchQuery',
+                    },
+                  ],
                 },
 
               ],

@@ -33,14 +33,16 @@ class index extends PureComponent {
     this.props.dispatch({
       type: 'global/getSysPollutantTypeList',
     }).then(() => {
-      // 如果中间页只有一个菜单，直接进入该菜单
-      if (this.props.sysPollutantTypeList.length === 1) {
-        sessionStorage.setItem("isShowSelectSystem", 0);
-        this.onSysItemClick(this.props.sysPollutantTypeList[0])
-      } else {
-        sessionStorage.setItem("isShowSelectSystem", 1);
-        this.setState({ loading: false });
-      }
+      // // 如果中间页只有一个菜单，直接进入该菜单
+      // if (this.props.sysPollutantTypeList.length === 1) {
+      //   sessionStorage.setItem("isShowSelectSystem", 0);
+      //   this.onSysItemClick(this.props.sysPollutantTypeList[0])
+      // } else {
+      //   sessionStorage.setItem("isShowSelectSystem", 1);
+      //   this.setState({ loading: false });
+      // }
+      sessionStorage.setItem("isShowSelectSystem", 1);
+      this.onSysItemClick(this.props.sysPollutantTypeList[0])
     })
   }
 
@@ -55,7 +57,6 @@ class index extends PureComponent {
       }
     } else {
       if (webConfig.middlePageOpenMode === 'single') {
-
         router.push(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
       } else {
         window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
@@ -72,7 +73,6 @@ class index extends PureComponent {
   render() {
     const { sysPollutantTypeList, configInfo } = this.props;
     let currentUser = Cookie.get('currentUser');
-    console.log('currentUser-', currentUser);
     let userName = (currentUser != undefined && currentUser != 'null') ? JSON.parse(currentUser).UserName : '';
     const bgImageType = configInfo.LAMImgType;
     const bgImageUrl = bgImageType ? `url('/bgImage/${bgImageType}/middlePage_bg.jpg')` : `url('/middlePage/bg.jpg')`;
