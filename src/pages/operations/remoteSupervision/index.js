@@ -1737,8 +1737,9 @@ const Index = (props) => {
         }
 
 
-        analyzerFlag = (analyzerRang1 || analyzerRang1 == 0) && (analyzerRang2 || analyzerRang2 == 0) && analyzerUnit || row.Name == '流速' || row.Name == '标干流量' || row.Name == 'NO' || row.Name == 'NO2' ? true : false;
-
+        // analyzerFlag = (analyzerRang1 || analyzerRang1 == 0) && (analyzerRang2 || analyzerRang2 == 0) && analyzerUnit || row.Name == '流速' || row.Name == '标干流量' || row.Name == 'NO' || row.Name == 'NO2' ? true : false;
+        analyzerFlag = true;
+        
         const indicaVal = (row.Name == 'NO' && !form2.getFieldValue(`${row.par}IndicaVal`)) || (row.Name == 'NO2' && !form2.getFieldValue(`${row.par}IndicaVal`)) ? '0' : form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
         const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
         const scyData = form2.getFieldValue(`${row.par}ScyData`), scyDataUnit = form2.getFieldValue(`${row.par}ScyDataUnit`);
