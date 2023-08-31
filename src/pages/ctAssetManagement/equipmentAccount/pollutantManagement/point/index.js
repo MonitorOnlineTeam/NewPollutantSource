@@ -64,6 +64,10 @@ export default class Index extends Component {
       selectedPointCode: '',
       deviceMangerVisible: false,
       thirdParty:true,
+      dragDatas: [],
+      sortTitle: '开启排序',
+      noPaging: false,
+      sortLoading: false,
     };
 
   }
@@ -138,6 +142,56 @@ export default class Index extends Component {
          })
       }
   })
+
+  }
+  updateSort = () => { //更新排序
+    const { sortTitle } = this.state;
+    if (sortTitle === '开启排序') {
+
+      this.setState({ noPaging: true, sortLoading: true, })
+      this.getAutoFormDataNoPage(() => {
+        this.setState({ sortTitle: '关闭排序', sortLoading: false, })
+      })
+
+
+    } else {
+      this.setState({ sortTitle: '开启排序', noPaging: false, })
+    }
+
+  }
+  saveSort = () => { //保存排序
+    const { dragDatas } = this.state;
+    const mnList = dragDatas.map(item => item['dbo.T_Bas_CommonPoint.DGIMN'])
+    if (mnList && mnList[0]) {
+      this.props.dispatch({
+        type: `point/pointSort`,
+        payload: {
+          mnList: mnList,
+        },
+        callback: (isSuccess) => {
+          if (isSuccess) {
+            this.props.dispatch({
+              type: `autoForm/getAutoFormData`,
+              payload: {
+                configId: pointConfigId,
+                searchParams: this.props.pointDataWhere,
+                otherParams: {
+                  SortFileds: 'Sort',
+                  IsAsc: true,
+                }
+              },
+              callback: () => {
+                this.setState({ sortTitle: '开启排序', noPaging: false, })
+              }
+            })
+          } else {
+            this.getAutoFormDataNoPage();
+          }
+        }
+      })
+    } else {
+      message.warning('请先排序')
+    }
 
   }
   savePointSubmitForm = () => {  //保存监测点 确认
