@@ -178,7 +178,7 @@ class OperationFormDetail extends PureComponent {
                 <Card.Body>
                     <List renderHeader={() => '基本信息'} className="my-list">
                         <Item ><span style={{ fontSize: 13 }}> 任务单号：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskCode : null}</span></Item>
-                        <Item ><span style={{ fontSize: 13 }}> 监控标：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].EnterpriseName : null}</span></Item>
+                        <Item ><span style={{ fontSize: 13 }}> 监控目标：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].EnterpriseName : null}</span></Item>
                         <Item ><span style={{ fontSize: 13 }}> 监测点名称：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].PointName : null}</span></Item>
                         <Item ><span style={{ fontSize: 13 }}> 任务来源：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskFromText : null}</span></Item>
                         <Item ><span style={{ fontSize: 13 }}> 任务状态：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskStatusText : null}</span></Item>

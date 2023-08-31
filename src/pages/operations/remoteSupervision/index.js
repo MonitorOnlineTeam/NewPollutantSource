@@ -1743,7 +1743,7 @@ const Index = (props) => {
         const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
         const scyData = form2.getFieldValue(`${row.par}ScyData`), scyDataUnit = form2.getFieldValue(`${row.par}ScyDataUnit`);
 
-        const indicaValFlag = (indicaVal || indicaVal == 0) && indicaUnit || row.concentrationType == '标杆浓度' || row.Name == '流速' || row.Name == 'NOx' || row.Name == '标干流量' ? true : false;
+        const indicaValFlag = (indicaVal || indicaVal == 0) && indicaUnit || row.concentrationType == '标杆浓度' || row.Name == '流速' || row.Name == 'NOx' || row.Name == '标干流量' || row.Name == '温度' || row.Name == '压力'? true : false;
         const dsDataFlag = (dsData || dsData == 0) && dsDataUnit ? true : false; //只判断DAS示值填完的状态
         const scyDataFlag = (scyData || scyData == 0) && scyDataUnit ? true : false;
 
@@ -3077,7 +3077,7 @@ const Index = (props) => {
                   rowClassName={null}
                   sticky
                 />
-                <Row style={{ color: '#f5222d', marginTop: 10 }}>
+                <Row style={{ color: '#f5222d', marginTop: 10,fontSize:16 }}>
                   <span style={{ paddingRight: 12 }}>注：</span>
                   <ol type="1" style={{ listStyle: 'auto', paddingBottom: 8 }}>
                     <li>填写数值，带单位；</li>
@@ -3110,7 +3110,7 @@ const Index = (props) => {
                   sticky
                   rowClassName={null}
                 />
-                <Row style={{ color: '#f5222d', marginTop: 10 }}>
+                <Row style={{ color: '#f5222d', marginTop: 10,fontSize:16  }}>
                   <span style={{ paddingRight: 10 }}>注：</span>
                   <ol type="1" style={{ listStyle: 'auto' }}>
                     <li>设定值一般在DAS查阅；若现场无DAS，应在其他对应设备查阅，如数采仪；</li>
@@ -3148,7 +3148,7 @@ const Index = (props) => {
                 </TabPane> */}
               {/* </Tabs> */}
             </Spin>
-            <div style={{ color: '#f5222d', marginTop: 4, fontSize: 16 }}>
+            <div style={{ color: '#f5222d', marginTop: 4, fontSize: 18 }}>
               我承诺：当月上传的全部量程、参数设定值和溯源值均已核对无误，现场实时数据保持一致，上传的各项数据和照片如有任何问题，本人愿接受相应处罚。
         </div>
             <Form.Item name='Commitment' valuePropName="checked" style={{ marginBottom: 0 }}>

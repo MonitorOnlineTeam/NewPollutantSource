@@ -42,11 +42,22 @@ class SaveSessionPage extends PureComponent {
           }
         }
         Cookie.set('systemNavigateUrl', systemNavigateUrl);
-
         let sysName = sessionStorage.getItem("sysName")
         // if (sysName === "一厂一档管理系统") {}
-          sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
-          router.push(defaultNavigateUrl)
+        const meunArr = [];
+        const meunData = data => {
+          if (data?.length > 0) {
+            data.map(item => {
+              meunArr.push(item.path);
+              meunData(item.children);
+            });
+          }
+          return meunArr;
+        };
+        const meunList = meunData(response);
+        sessionStorage.setItem('menuDatas', meunList?.length > 0 ? JSON.stringify(meunList) : '');
+        sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
+        router.push(defaultNavigateUrl)
       }
     });
   }

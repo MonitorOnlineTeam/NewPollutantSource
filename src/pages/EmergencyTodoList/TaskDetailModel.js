@@ -742,7 +742,7 @@ class EmergencyDetailInfo extends Component {
                         </div>}>
                         <DescriptionList classNam={styles.headerList} size="large" col="3">
                             <Description term="任务单号">{isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}</Description>
-                            <Description term="监控标">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
+                            <Description term="监控目标">{isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}</Description>
                             <Description term="监测点名称">{isExistTask ? this.props.taskInfo.Datas[0].PointName : null}</Description>
                         </DescriptionList>
                         <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">

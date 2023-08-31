@@ -359,7 +359,7 @@ class TaskRecord extends Component {
     this.props.form.setFieldsValue({ taskparent: undefined, taskpoint: undefined })
   }
 
-  // 监控标选择
+  // 监控目标选择
   taskParentChange = val => {
     this.props.dispatch({
       type: 'operations/getPointInfoList',
@@ -379,7 +379,7 @@ class TaskRecord extends Component {
     })
   }
 
-  // 获取监控标下拉框
+  // 获取监控目标下拉框
   getTargetInfoList = () => {
     const { targetInfoList } = this.props;
     const res = [];

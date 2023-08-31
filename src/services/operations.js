@@ -110,7 +110,7 @@ export async function getTaskType(params) {
 }
 
 
-// 获取监控标列表
+// 获取监控目标列表
 export async function getTargetInfoList(params) {
   const result = post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetTargetInfoList', params, null);
   return result;

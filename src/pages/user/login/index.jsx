@@ -10,7 +10,7 @@ const { Tab, UserName, Password, Mobile, Captcha,VerificaCode, Submit } = LoginC
 import Agreement from '../login/components/Agreement'
 @connect(({ userLogin, loading,login }) => ({
   userLogin,
-  submitting: loading.effects['userLogin/login'],
+  submitting: loading.effects['userLogin/login'] || loading.effects['userLogin/newLogin'],
   isAgree:userLogin.isAgree,
   configInfo:login.configInfo
 }))
@@ -61,26 +61,28 @@ class Login extends Component {
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
       }
-      dispatch({
-        type: 'userLogin/login',
-        payload: {
-          ...values,
-          IsAgree:isAgree,
-          type,
-         },
-        callback:isSuccess=>{
-           if(!isSuccess){this.child&&this.child.current&&this.child.current.click();}  //请求错误刷新验证码
-           this.setState({loginSuccess:isSuccess})
-           this.clearCommonData();
-        }
-
-      });
       // 后台新框架登录
       dispatch({
         type: 'login/newLogin',
         payload: { ...values, IsAgree: isAgree, type },
-        callback: isSuccess => {},
+        callback: isSuccess => {
+          dispatch({
+            type: 'userLogin/login',
+            payload: {
+              ...values,
+              IsAgree:isAgree,
+              type,
+             },
+            callback:isSuccess=>{
+               if(!isSuccess){this.child&&this.child.current&&this.child.current.click();}  //请求错误刷新验证码
+               this.setState({loginSuccess:isSuccess})
+               this.clearCommonData();
+            }
+    
+          });
+        },
       });
+
     }
   };
   clearCommonData = () =>{ //清除公共组件数据
