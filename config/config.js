@@ -2863,13 +2863,13 @@ export default {
 
               ],
             },
-            /*  设备调试及售后服务管理平台 成套   */  
-            
+            /*  设备调试及售后服务管理平台 成套   */
+
             // 项目执行进度
             {
               path: '/projectExecuProgress',
               name: 'ProjectExecuProgress',
-              
+
               routes: [
                 {
                   path: '/projectExecuProgress',
@@ -2883,12 +2883,47 @@ export default {
                     {
                       path: '/projectExecuProgress/projectExecution',
                       redirect: '/projectExecuProgress/projectExecution/dispatchQuery',
-                    }, 
+                    },
                     {
                       // 派单查询
                       name: 'DispatchQuery',
                       path: '/projectExecuProgress/projectExecution/dispatchQuery',
                       component: './projectExecuProgress/projectExecution/dispatchQuery',
+                    },
+                  ],
+                },
+
+              ],
+            },
+            // 资产管理
+            {
+              path: '/ctAssetManagement',
+              name: 'CtAssetManagement',
+
+              routes: [
+                {
+                  path: '/ctAssetManagement',
+                  redirect: '/ctAssetManagement/equipmentManagement/pollutantManagement/CTEnterprise',
+                },
+                // 设备台账
+                {
+                  name: 'EquipmentAccount',
+                  path: '/ctAssetManagement/equipmentAccount',
+                  routes: [
+                    {
+                      path: '/ctAssetManagement/equipmentAccount',
+                      redirect: '/ctAssetManagement/equipmentAccount/pollutantManagement/CTEnterprise',
+                    },
+                    {
+                      // 污染源管理
+                      name: 'pollutantManagement',
+                      path: '/ctAssetManagement/equipmentAccount/pollutantManagement/:configId',
+                      component: './ctAssetManagement/equipmentAccount/pollutantManagement',
+                    },
+                    {
+                      name: 'ctPoint', // 污染源管理 监测点
+                      path: '/ctAssetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
+                      component: './ctAssetManagement/equipmentAccount/pollutantManagement/point',
                     },
                   ],
                 },
