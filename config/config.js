@@ -518,7 +518,8 @@ export default {
                     },
                     {
                       name: 'commissionTestPoint', //调试检测 污染源管理 监测点
-                      path: '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise/point',
+                      path:
+                        '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise/point',
                       component: './commissionTest/equipmentAccount/pollutantManager/point',
                     },
                     {
@@ -2822,17 +2823,18 @@ export default {
                       component: './DataAnalyticalWarningModel/Warning/WarningVerify',
                     },
                     {
+                      // 预警核实2
+                      name: 'WarningVerify2',
+                      path:
+                        '/DataAnalyticalWarningModel/Warning/ModelType/:modelNumber/WarningVerify/:id',
+                      component: './DataAnalyticalWarningModel/Warning/WarningVerify',
+                    },
+                    {
                       // 排口参数配置
                       name: 'PointParams',
                       path: '/DataAnalyticalWarningModel/Warning/PointParams',
                       component: './DataAnalyticalWarningModel/Warning/PointParams',
                     },
-                    // {
-                    //   // 排口参数配置
-                    //   name: 'Test',
-                    //   path: '/DataAnalyticalWarningModel/Warning/Test',
-                    //   component: './DataAnalyticalWarningModel/Warning/Test',
-                    // },
                   ],
                 },
                 // 模型管理
@@ -2860,7 +2862,31 @@ export default {
                   path: '/DataAnalyticalWarningModel/Accuracy',
                   component: './DataAnalyticalWarningModel/AccuracyPage/index.js',
                 },
-
+                // 模型分析
+                {
+                  name: 'Statistics',
+                  path: '/DataAnalyticalWarningModel/Statistics',
+                  routes: [
+                    {
+                      // 场景模型分析
+                      name: 'WarningModelAnalysis',
+                      path: '/DataAnalyticalWarningModel/Statistics/WarningModelAnalysis',
+                      component: './DataAnalyticalWarningModel/Statistics/WarningModelAnalysis',
+                    },
+                    {
+                      // 场景模型分析报告
+                      name: 'AnalysisReport',
+                      path: '/DataAnalyticalWarningModel/Statistics/AnalysisReport',
+                      component: './DataAnalyticalWarningModel/Statistics/AnalysisReport',
+                    },
+                    {
+                      // 全企业波动范围
+                      name: 'FluctuateRange',
+                      path: '/DataAnalyticalWarningModel/Statistics/FluctuateRange',
+                      component: './DataAnalyticalWarningModel/Statistics/FluctuateRange',
+                    },
+                  ],
+                },
               ],
             },
             /*  设备调试及售后服务管理平台 成套   */
@@ -2988,8 +3014,8 @@ export default {
   proxy: {
     '/newApi': {
       // target: 'http://61.50.135.114:63002/',
-      target: 'http://172.16.12.134:63002/',
-      // target: 'http://172.16.12.234:60061/', // 模型外网
+      // target: 'http://172.16.12.134:63002/',
+      target: 'http://172.16.12.234:60061/', // 模型外网
       changeOrigin: true,
       pathRewrite: {
         '^/newApi': '',

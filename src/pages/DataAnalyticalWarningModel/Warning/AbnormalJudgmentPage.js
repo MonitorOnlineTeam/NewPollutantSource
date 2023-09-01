@@ -2,25 +2,27 @@
  * @Author: JiaQi
  * @Date: 2023-08-07 14:04:08
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-07 14:04:33
+ * @Last Modified time: 2023-08-30 18:32:34
  * @Description：监测数据阈值异常研判
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Card, Form, Tabs, Row, Col, Space, Button, Divider, message, Spin, Tooltip } from 'antd';
+import moment from 'moment';
 import styles from '../styles.less';
 import NavigationTree from '@/components/NavigationTree';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import PollutantImages from './components/PollutantImages';
 import Histogram from '@/pages/DataAnalyticalWarningModel/Warning/components/Histogram';
 import CorrelationCoefficient from '@/pages/DataAnalyticalWarningModel/Warning/components/CorrelationCoefficient';
+import WarningDataAndChart from '@/pages/DataAnalyticalWarningModel/Warning/components/WarningDataAndChart';
 
 const dvaPropsData = ({ loading, dataModel }) => ({});
 
 const AbnormalJudgmentPage = props => {
   const [form] = Form.useForm();
-  const { dispatch, loadLoading, saveLoading } = props;
-  const [DGIMN, setDGIMN] = useState();
+  const { dispatch, displayType, loadLoading, saveLoading } = props;
+  const [DGIMN, setDGIMN] = useState(props.DGIMN);
   const [images, setImages] = useState([]);
 
   useEffect(() => {
@@ -41,6 +43,36 @@ const AbnormalJudgmentPage = props => {
       });
     }
   };
+
+  const getPageContent = () => {
+    return (
+      <Card>
+        <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '5'}>
+          <Tabs.TabPane tab="数据工况" key="5" style={{ overflowY: 'auto' }}>
+            <WarningDataAndChart
+              DGIMN={DGIMN}
+              date={[moment().subtract(1, 'week'), moment()]}
+              defaultChartSelected={['氧含量', '烟气湿度', '烟气温度', '流速']}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="正常范围" key="2" style={{ overflowY: 'auto' }}>
+            <PollutantImages images={images} height="calc(100vh - 216px)" />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="密度分布直方图" key="3" style={{ overflowY: 'auto' }}>
+            <Histogram DGIMN={DGIMN} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="相关系数表" key="4" style={{ overflowY: 'auto' }}>
+            <CorrelationCoefficient DGIMN={DGIMN} />
+          </Tabs.TabPane>
+        </Tabs>
+      </Card>
+    );
+  };
+
+  // 弹窗
+  if (displayType === 'modal') {
+    return getPageContent();
+  }
 
   return (
     <>
@@ -63,21 +95,7 @@ const AbnormalJudgmentPage = props => {
         }}
       />
       <div id="AbnormalJudgmentPage">
-        <BreadcrumbWrapper>
-          <Card>
-            <Tabs defaultActiveKey="1">
-              <Tabs.TabPane tab="正常范围" key="2" style={{ overflowY: 'auto' }}>
-                <PollutantImages images={images} height="calc(100vh - 216px)" />
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="密度分布直方图" key="3" style={{ overflowY: 'auto' }}>
-                <Histogram DGIMN={DGIMN} />
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="相关系数表" key="4" style={{ overflowY: 'auto' }}>
-                <CorrelationCoefficient DGIMN={DGIMN} />
-              </Tabs.TabPane>
-            </Tabs>
-          </Card>
-        </BreadcrumbWrapper>
+        <BreadcrumbWrapper>{getPageContent()}</BreadcrumbWrapper>
       </div>
     </>
   );

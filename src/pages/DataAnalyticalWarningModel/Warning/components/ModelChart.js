@@ -12,6 +12,7 @@ const ModelChart = props => {
   const { chartData, color, WarningTypeCode } = props;
   const [legendIndex, setLegendIndex] = useState(0);
 
+  console.log('chartData', chartData);
   useEffect(() => {}, []);
 
   const getOption = () => {
@@ -75,6 +76,16 @@ const ModelChart = props => {
       _max = _.max([...data, monitorValue, defaultValue]);
     }
 
+    let _min = min;
+    // 判断没有最大最小值情况
+    if (max === 0 && min === 0) {
+      // _max = 'dataMax';
+      // _min = 'dataMin';
+
+      _max = null;
+      _min = null;
+    }
+
     // 处理x和y轴/grid
     let appendSeries = { type: 'line' };
     let xAxisData = date.map(item => moment(item).format('MM-DD HH:mm'));
@@ -129,7 +140,7 @@ const ModelChart = props => {
             show: true,
           },
           max: _max,
-          min: min,
+          min: _min,
         },
         {
           gridIndex: 1,
@@ -138,7 +149,7 @@ const ModelChart = props => {
             show: true,
           },
           max: _max,
-          min: min,
+          min: _min,
         },
       ];
 
@@ -413,7 +424,7 @@ const ModelChart = props => {
   // const onEvents = {
   //   legendselectchanged: onChartLegendChange,
   // };
-
+  console.log('legendIndex', legendIndex);
   const { trend } = chartData.data[legendIndex];
 
   return (

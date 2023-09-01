@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-31 16:44:15
+ * @Last Modified time: 2023-08-07 14:09:13
  * @Description：报警记录
  */
 
@@ -18,7 +18,6 @@ import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { ModelNumberIdsDatas } from '../CONST';
 
 const textStyle = {
   width: '100%',
@@ -30,119 +29,30 @@ const textStyle = {
 
 const dvaPropsData = ({ loading, dataModel }) => ({
   warningForm: dataModel.warningForm,
-  modelMenuNumber: dataModel.modelMenuNumber,
-  // modelList: dataModel.modelList,
+  modelList: dataModel.modelList,
   modelListLoading: loading.effects['dataModel/GetModelList'],
   queryLoading: loading.effects['dataModel/GetWarningList'],
-  pointListLoading: loading.effects['dataModel/GetNoFilterPointByEntCode'],
 });
 
-const WarningRecord = props => {
+const ModelType = props => {
   const [form] = Form.useForm();
-  const {
-    dispatch,
-    warningForm,
-    modelListLoading,
-    queryLoading,
-    modelMenuNumber,
-    pointListLoading,
-  } = props;
-  const modelNumber = props.match.params.modelNumber;
-  const [modelList, setModelList] = useState([]);
+  const { dispatch, warningForm, modelList, modelListLoading, queryLoading } = props;
   const [dataSource, setDataSource] = useState([]);
-  const [pointList, setPointList] = useState([]);
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(0);
 
-  console.log('warningForm', warningForm);
   useEffect(() => {
-    // getModelIdsByModelNumber(false);
-    // handleLocationParams();
-    if (modelNumber) {
-      if (modelMenuNumber === modelNumber) {
-        // 页面没跳转
-        debugger;
-        onFinish();
-      } else {
-        // 页面跳转，清空查询条件并重置分页
-        if (props.history.location.query.notResetForm) {
-          onReset(true);
-        } else {
-          onReset();
-        }
-        // form.setFieldsValue({ warningTypeCode: [] });
-        // onTableChange(1, 20);
-      }
-    } else {
-      onFinish();
-    }
+    onFinish();
     GetModelList();
-    if (warningForm[modelNumber].EntCode) {
-      getPointList(warningForm[modelNumber].EntCode);
-    }
-
-    props.dispatch({
-      type: 'dataModel/updateState',
-      payload: {
-        modelMenuNumber: modelNumber,
-      },
-    });
-
-    console.log('modelNumber', modelNumber);
-  }, [modelNumber]);
-
-  // useEffect(() => {
-  //   onFinish();
-  //   console.log('pageIndex', warningForm[modelNumber].pageIndex);
-  // }, [warningForm[modelNumber].pageIndex, warningForm[modelNumber].pageSize]);
-
-  // 处理地址栏参数
-  const handleLocationParams = () => {
-    let locationParams = props.history.location.query.params;
-    if (locationParams) {
-      // onReset();
-      let values = JSON.parse(locationParams);
-      values.date = [moment(values.date[0]), moment(values.date[1])];
-      form.setFieldsValue(values);
-      if (values.EntCode) {
-        getPointList(values.EntCode);
-      }
-      // onFinish();
-    }
-  };
+  }, []);
 
   // 获取数据模型列表
   const GetModelList = () => {
-    const modelIds = form.getFieldValue('warningTypeCode');
     dispatch({
       type: 'dataModel/GetModelList',
       payload: {},
-      callback: (res, unfoldModelList) => {
-        let _modelList = unfoldModelList;
-        console.log('unfoldModelList', unfoldModelList);
-        if (modelNumber && modelNumber !== 'all') {
-          _modelList = _modelList.filter(item =>
-            ModelNumberIdsDatas[modelNumber].includes(item.ModelGuid),
-          );
-          // _modelList = modelType.split(',')
-        }
-        setModelList(_modelList);
-      },
     });
-  };
-
-  // 根据模型类型编号获取模型id
-  const getModelIdsByModelNumber = isInitValue => {
-    if (!modelNumber) return;
-
-    let modelIds = ModelNumberIdsDatas[modelNumber];
-    // 初始化场景类别默认值
-    isInitValue &&
-      form.setFieldsValue({
-        warningTypeCode: modelIds,
-      });
-
-    // setModelIdDatas(modelIds);
-    // return modelIds;
   };
 
   const getColumns = () => {
@@ -154,9 +64,7 @@ const WarningRecord = props => {
         width: 80,
         ellipsis: true,
         render: (text, record, index) => {
-          return (
-            (warningForm[modelNumber].pageIndex - 1) * warningForm[modelNumber].pageSize + index + 1
-          );
+          return (pageIndex - 1) * pageSize + index + 1;
         },
       },
       {
@@ -219,9 +127,9 @@ const WarningRecord = props => {
             case '3':
               return <Badge status="default" text="未核实" />;
             case '2':
-              return <Badge status="warning" text="有异常" />;
+              return <Badge status="success" text="属实" />;
             case '1':
-              return <Badge status="error" text="系统误报" />;
+              return <Badge status="error" text="不实" />;
           }
         },
       },
@@ -235,7 +143,7 @@ const WarningRecord = props => {
               <a
                 onClick={e => {
                   router.push(
-                    `/DataAnalyticalWarningModel/Warning/ModelType/${modelNumber}/WarningVerify/${record.ModelWarningGuid}`,
+                    '/DataAnalyticalWarningModel/Warning/WarningVerify/' + record.ModelWarningGuid,
                   );
                 }}
               >
@@ -249,25 +157,18 @@ const WarningRecord = props => {
   };
 
   // 查询数据
-  const onFinish = () => {
+  const onFinish = (pageIndex = 1, pageSize = 20) => {
     const values = form.getFieldsValue();
-    let warningTypeCode = values.warningTypeCode.toString();
-
-    if (modelNumber && !warningTypeCode && modelNumber !== 'all') {
-      warningTypeCode = ModelNumberIdsDatas[modelNumber].toString();
-    }
+    console.log('values', values);
     props.dispatch({
       type: 'dataModel/GetWarningList',
       payload: {
         ...values,
-        Dgimn: values.DGIMN,
-        warningTypeCode: warningTypeCode,
         date: undefined,
         beginTime: values.date[0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.date[1].format('YYYY-MM-DD HH:mm:ss'),
-        modelNumber: modelNumber,
-        // pageSize: warningForm[modelNumber].pageSize,
-        // pageIndex: warningForm[modelNumber].pageIndex,
+        pageIndex,
+        pageSize,
       },
       callback: res => {
         setDataSource(res.Datas);
@@ -277,49 +178,22 @@ const WarningRecord = props => {
   };
 
   // 重置表单
-  const onReset = notResetForm => {
+  const onReset = () => {
     dispatch({
       type: 'dataModel/onReset',
-      payload: {
-        modelNumber,
-      },
+      payload: {},
     }).then(() => {
-      !notResetForm && form.resetFields();
+      form.resetFields();
       onTableChange(1, 20);
     });
   };
 
   // 分页
   const onTableChange = (current, pageSize) => {
-    props.dispatch({
-      type: 'dataModel/updateState',
-      payload: {
-        warningForm: {
-          ...warningForm,
-          [modelNumber]: {
-            ...warningForm[modelNumber],
-            pageSize,
-            pageIndex: current,
-          },
-        },
-      },
-    });
-    onFinish();
+    setPageIndex(current);
+    setPageSize(pageSize);
+    onFinish(current, pageSize);
   };
-
-  // 根据企业获取排口
-  const getPointList = EntCode => {
-    dispatch({
-      type: 'dataModel/GetNoFilterPointByEntCode',
-      payload: {
-        EntCode,
-      },
-      callback: res => {
-        setPointList(res);
-      },
-    });
-  };
-  console.log('pointListLoading', pointListLoading);
   return (
     <BreadcrumbWrapper>
       <Card className={styles.warningWrapper}>
@@ -329,7 +203,7 @@ const WarningRecord = props => {
           layout="inline"
           style={{ padding: '10px 0' }}
           initialValues={{
-            ...warningForm[modelNumber],
+            ...warningForm,
           }}
           autoComplete="off"
           // onValuesChange={onValuesChange}
@@ -340,11 +214,8 @@ const WarningRecord = props => {
               type: 'dataModel/updateState',
               payload: {
                 warningForm: {
-                  ...warningForm,
-                  [modelNumber]: {
-                    ...props.warningForm[modelNumber],
-                    ...changedFields,
-                  },
+                  ...props.warningForm,
+                  ...changedFields,
                 },
               },
             });
@@ -355,55 +226,21 @@ const WarningRecord = props => {
               allowClear={false}
               dataType="day"
               format="YYYY-MM-DD"
-              style={{ width: 250 }}
+              style={{ width: '100%' }}
             />
           </Form.Item>
           <Form.Item label="行政区" name="regionCode">
-            <RegionList noFilter style={{ width: 140 }} />
+            <RegionList noFilter style={{ width: 150 }} />
           </Form.Item>
           <Form.Item label="企业" name="EntCode">
-            <EntAtmoList
-              noFilter
-              style={{ width: 200 }}
-              onChange={value => {
-                if (!value) {
-                  form.setFieldsValue({ DGIMN: undefined });
-                } else {
-                  form.setFieldsValue({ DGIMN: undefined });
-                  getPointList(value);
-                }
-              }}
-            />
+            <EntAtmoList noFilter style={{ width: 200 }} />
           </Form.Item>
-          <Spin spinning={!!pointListLoading} size="small">
-            <Form.Item label="监测点名称" name="DGIMN">
-              <Select
-                placeholder="请选择"
-                showSearch
-                allowClear
-                optionFilterProp="children"
-                style={{ width: 150 }}
-              >
-                {pointList.map(item => {
-                  return (
-                    <Option key={item.DGIMN} value={item.DGIMN}>
-                      {item.PointName}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Spin>
           <Spin spinning={modelListLoading} size="small">
             <Form.Item label="场景类别" name="warningTypeCode">
               <Select
                 allowClear
-                mode="multiple"
-                maxTagCount={2}
-                maxTagTextLength={6}
-                maxTagPlaceholder="..."
                 placeholder="请选择场景类别"
-                style={{ width: 340 }}
+                style={{ width: 240 }}
                 showSearch
                 filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -421,8 +258,8 @@ const WarningRecord = props => {
           </Spin>
           <Form.Item label="核实结果" name="checkedResultCode">
             <Select allowClear style={{ width: 120 }} placeholder="请选择核实结果">
-              <Option value="2">有异常</Option>
-              <Option value="1">系统误报</Option>
+              <Option value="2">属实</Option>
+              <Option value="1">不实</Option>
               <Option value="3">未核实</Option>
             </Select>
           </Form.Item>
@@ -432,8 +269,8 @@ const WarningRecord = props => {
                 type="primary"
                 loading={queryLoading}
                 onClick={() => {
-                  onTableChange(1, 20);
-                  // onFinish();
+                  setPageIndex(1);
+                  onFinish();
                 }}
               >
                 查询
@@ -451,8 +288,8 @@ const WarningRecord = props => {
           pagination={{
             showSizeChanger: true,
             showQuickJumper: true,
-            pageSize: warningForm[modelNumber].pageSize,
-            current: warningForm[modelNumber].pageIndex,
+            pageSize: pageSize,
+            current: pageIndex,
             onChange: onTableChange,
             total: total,
           }}
@@ -462,4 +299,4 @@ const WarningRecord = props => {
   );
 };
 
-export default connect(dvaPropsData)(WarningRecord);
+export default connect(dvaPropsData)(ModelType);

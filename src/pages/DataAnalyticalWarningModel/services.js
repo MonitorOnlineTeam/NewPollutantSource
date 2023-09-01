@@ -140,3 +140,72 @@ export async function GetEvaluationList(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetEvaluationList', params);
   return result;
 }
+
+// 报警统计 - 线索信息统计
+export async function StatisAlarmInfo(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfo', params);
+  return result;
+}
+
+// 报警统计 - 统计核实、异常原因
+export async function StatisAlarmInfoCheck(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfoCheck', params);
+  return result;
+}
+
+// 报警统计 - 核实次数及企业及模型执行率
+export async function StatisAlarmInfoRate(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfoRate', params);
+  return result;
+}
+
+// 报警统计 - 已选择行统计
+export async function StatisAlarmInfoSum(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfoSum', params);
+  return result;
+}
+
+// 线索信息统计
+export async function StatisAlarmInfoIndiz(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfoIndiz', params);
+  return result;
+}
+
+// 获取全企业波动范围
+export async function StatisNormalRange(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisNormalRange', params);
+  return result;
+}
+
+// 全企业波动范围 - 导出
+export async function ExportStatisNormalRange(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/ExportStatisNormalRange',
+    params,
+  );
+  return result;
+}
+
+// 场景模型分析报告 - 导出
+export async function ExportStatisAlarmReport(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/ExportStatisAlarmReport',
+    params,
+  );
+  return result;
+}
+
+// 场景模型分析 - 导出
+export async function ExportStatisAlarm(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/ExportStatisAlarm', params);
+  return result;
+}
+
+// 根据企业获取排口
+export async function GetNoFilterPointByEntCode(params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
+    params,
+  );
+  return result;
+}
