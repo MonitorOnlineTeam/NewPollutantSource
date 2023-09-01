@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-03 09:16:24
+ * @Last Modified time: 2023-08-15 10:59:10
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
@@ -11,10 +11,18 @@ import {} from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import styles from '../../styles.less';
+import _ from 'lodash';
+import ModelChartMultipleMore from './ModelChartMultipleMore';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({});
 
 const ModelChartMultiple = props => {
+  const [DGIMNs, setDGIMNs] = useState([]);
+  const [pollutantCodes, setPollutantCodes] = useState([]);
+  const [PointNames, setPointNames] = useState([]);
+  const [date, setDate] = useState([]);
+  const [moreModalVisible, setMoreModalVisible] = useState(false);
+
   const { chartData, color, WarningTypeCode } = props;
 
   useEffect(() => {}, []);
@@ -93,24 +101,62 @@ const ModelChartMultiple = props => {
     };
   };
 
-  const onEvents = {
-    click: e => onShowMoreDataModal(e),
-  };
+  // const onEvents = {
+  //   click: e => onShowMoreDataModal(e),
+  // };
 
+  // 双排口可点击
   const onShowMoreDataModal = e => {
-    console.log('e', e)
-  }
-
+    let DGIMNs = [],
+      pollutantCodes = [],
+      date = [],
+      PointNames = [];
+    chartData.data.map(item => {
+      DGIMNs.push(item.DGIMN);
+      pollutantCodes.push(item.pollutantCode);
+      PointNames.push(item.PointName);
+      date = [item.date[0], item.date.slice(-1)[0]];
+    });
+    if (_.uniq(DGIMNs).length > 1) {
+      setDGIMNs(DGIMNs);
+      setPollutantCodes(pollutantCodes);
+      setPointNames(_.uniq(PointNames));
+      setDate(date);
+      setMoreModalVisible(true);
+      console.log('DGIMNs', _.uniq(DGIMNs));
+      console.log('pollutantCodes', _.uniq(pollutantCodes));
+      console.log('date', date);
+    }
+  };
+  console.log('chartData', chartData);
   return (
-    <div className={styles.chartBox}>
-      {/* {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>} */}
-      <ReactEcharts
-        option={getOption()}
-        lazyUpdate
-        style={{ height: '300px', width: '100%', margin: '10px 0' }}
-        onEvents={onEvents}
-      />
-    </div>
+    <>
+      <div className={styles.chartBox} onClick={onShowMoreDataModal}>
+        {/* {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>} */}
+        <ReactEcharts
+          option={getOption()}
+          lazyUpdate
+          style={{ height: '300px', width: '100%', margin: '10px 0' }}
+          // onEvents={onEvents}
+        />
+      </div>
+      {moreModalVisible && (
+        <ModelChartMultipleMore
+          title={chartData.title}
+          visible={moreModalVisible}
+          PointNames={PointNames}
+          WarningTypeCode={WarningTypeCode}
+          params={{
+            DGIMNs: DGIMNs,
+            pollutantCodes: pollutantCodes,
+            date: date,
+          }}
+          onCancel={() => {
+            setMoreModalVisible(false);
+          }}
+        />
+      )}
+    </>
   );
 };
 

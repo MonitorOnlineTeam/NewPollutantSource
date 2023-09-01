@@ -2,11 +2,13 @@ import * as services from './services';
 import Model from '@/utils/model';
 import { message } from 'antd';
 import moment from 'moment';
+import { downloadFile } from '@/utils/utils';
+import { ModelNumberIdsDatas } from './CONST';
 
-export default Model.extend({
-  namespace: 'dataModel',
-  state: {
-    warningForm: {
+function initWarningForm() {
+  let warningForm = {};
+  for (const key in ModelNumberIdsDatas) {
+    warningForm[key] = {
       date: [
         moment()
           .subtract(1, 'month')
@@ -14,7 +16,18 @@ export default Model.extend({
         moment().endOf('day'),
       ],
       warningTypeCode: [],
-    },
+      pageSize: 20,
+      pageIndex: 1,
+    };
+  }
+  console.log('warningForm2', warningForm);
+  return warningForm;
+}
+
+export default Model.extend({
+  namespace: 'dataModel',
+  state: {
+    warningForm: initWarningForm(),
     modelList: [],
     relationDGIMN: [],
     ModelInfoAndParams: {
@@ -26,7 +39,22 @@ export default Model.extend({
   effects: {
     // 获取报警记录
     *GetWarningList({ payload, callback }, { call, select, update }) {
-      const result = yield call(services.GetWarningList, payload);
+      const state = yield select(state => state.dataModel);
+
+      // ...values,
+      // Dgimn: values.DGIMN,
+      // warningTypeCode: warningTypeCode,
+      // date: undefined,
+      // beginTime: values.date[0].format('YYYY-MM-DD HH:mm:ss'),
+      // endTime: values.date[1].format('YYYY-MM-DD HH:mm:ss'),
+      // modelNumber: modelNumber,
+
+      let currentForm = state.warningForm[payload.modelNumber];
+      const result = yield call(services.GetWarningList, {
+        ...payload,
+        pageSize: currentForm.pageSize,
+        pageIndex: currentForm.pageIndex,
+      });
       if (result.IsSuccess) {
         callback && callback(result);
         // callback({
@@ -435,15 +463,20 @@ export default Model.extend({
     },
     // 重置报警记录form
     *onReset({ payload, callback }, { call, select, update }) {
+      let state = yield select(state => state.dataModel);
+      let current = state.warningForm[payload.modelNumber];
       yield update({
         warningForm: {
-          date: [
-            moment()
-              .subtract(1, 'month')
-              .startOf('day'),
-            moment().endOf('day'),
-          ],
-          warningTypeCode: [],
+          ...state.warningForm,
+          [payload.modelNumber]: {
+            date: [
+              moment()
+                .subtract(1, 'month')
+                .startOf('day'),
+              moment().endOf('day'),
+            ],
+            warningTypeCode: [],
+          },
         },
       });
     },
@@ -559,13 +592,22 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 获取已关联排口
+    // 获取报警数据
     *GetAllTypeDataListForModel({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetAllTypeDataListForModel, payload);
       if (result.IsSuccess) {
         yield update({
           allTypeDataList: result.Datas,
         });
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取报警数据
+    *GetAllTypeDataListForModel2({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetAllTypeDataListForModel, payload);
+      if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
         message.error(result.Message);
@@ -620,6 +662,111 @@ export default Model.extend({
     // 获取模型精度数据
     *GetEvaluationList({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetEvaluationList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 报警统计 - 线索信息统计
+    *StatisAlarmInfo({ payload, callback, errorCallback }, { call, select, update }) {
+      const result = yield call(services.StatisAlarmInfo, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        errorCallback && errorCallback();
+        message.error(result.Message);
+      }
+    },
+    // 报警统计 - 统计核实、异常原因
+    *StatisAlarmInfoCheck({ payload, callback, errorCallback }, { call, select, update }) {
+      const result = yield call(services.StatisAlarmInfoCheck, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        errorCallback && errorCallback();
+        message.error(result.Message);
+      }
+    },
+    // 报警统计 - 核实次数及企业及模型执行率
+    *StatisAlarmInfoRate({ payload, callback, errorCallback }, { call, select, update }) {
+      const result = yield call(services.StatisAlarmInfoRate, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        errorCallback && errorCallback();
+        message.error(result.Message);
+      }
+    },
+    // 报警统计 - 已选择行统计
+    *StatisAlarmInfoSum({ payload, callback, errorCallback }, { call, select, update }) {
+      const result = yield call(services.StatisAlarmInfoSum, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        errorCallback && errorCallback();
+        message.error(result.Message);
+      }
+    },
+    // 线索信息统计
+    *StatisAlarmInfoIndiz({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.StatisAlarmInfoIndiz, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取全企业波动范围
+    *StatisNormalRange({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.StatisNormalRange, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 全企业波动范围 - 导出
+    *ExportStatisNormalRange({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.ExportStatisNormalRange, payload);
+      if (result.IsSuccess) {
+        window.open(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 场景模型分析报告 - 导出
+    *ExportStatisAlarmReport({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.ExportStatisAlarmReport, payload);
+      if (result.IsSuccess) {
+        // var a = document.createElement('a');
+        // let sUrl = result.Datas;
+        // a.href = sUrl;
+        // var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
+        // a.download = fileName;
+        // a.rel = 'noopener noreferrer';
+        // a.click();
+        // setTimeout(() => {
+        //   a.remove();
+        // }, 1000);
+        downloadFile(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 场景模型分析 - 导出
+    *ExportStatisAlarm({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.ExportStatisAlarm, payload);
+      if (result.IsSuccess) {
+        downloadFile(result.Datas);
+        // window.open(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 根据企业获取排口
+    *GetNoFilterPointByEntCode({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetNoFilterPointByEntCode, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {

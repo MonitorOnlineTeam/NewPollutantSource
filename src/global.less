@@ -673,7 +673,7 @@ a:hover {
       height: calc(100vh - 64px);
       // overflow-y: auto;
     }
-    .ant-modal-body{
+    .ant-modal-body {
       max-height: calc(100% - 55px);
       // overflow-y: auto;
     }
@@ -910,30 +910,48 @@ a:hover {
   //图片预览组件样式
   z-index: 10000 !important;
 }
-.ant-tree-list-scrollbar :global { //树控件 虚拟滚动条
+.ant-tree-list-scrollbar :global {
+  //树控件 虚拟滚动条
   // display: block !important;
   background-color: @scrollbar-track-color !important;
   border-radius: @scrollbar-width;
-  .ant-tree-list-scrollbar-thumb{
-  // height: auto !important;
-  background-color:@scrollbar-thumb-color !important; 
+  .ant-tree-list-scrollbar-thumb {
+    // height: auto !important;
+    background-color: @scrollbar-thumb-color !important;
   }
 }
-.parentNodePopSty :global{
-  .ant-table{
-   margin: 0 !important;
+.parentNodePopSty :global {
+  .ant-table {
+    margin: 0 !important;
   }
-  .ant-popover-inner-content{
+  .ant-popover-inner-content {
     width: 430px;
   }
   .ant-table-container::after {
-     box-shadow: none !important;
+    box-shadow: none !important;
+  }
 }
-}
-.ant-form  :global{
-  .ant-form-item{
+.ant-form :global {
+  .ant-form-item {
     margin-bottom: 12px;
   }
+}
+
+.example {
+  text-align: center;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  margin: 20px 0;
+}
+
+.notData {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
 }
 .ant-card :global{
  .ant-card-head-title{

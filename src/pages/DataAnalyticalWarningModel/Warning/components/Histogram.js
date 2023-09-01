@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-31 09:22:06
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-03 09:06:17
+ * @Last Modified time: 2023-08-21 11:11:36
  * @Description：频数分布直方图
  */
 import React, { useState, useEffect } from 'react';
@@ -106,6 +106,7 @@ const Histogram = props => {
         },
       };
     });
+    console.log('data', data)
     return {
       color: '#546FC5',
       title: {

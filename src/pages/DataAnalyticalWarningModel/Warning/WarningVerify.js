@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-11 10:37:42
+ * @Last Modified time: 2023-08-31 18:33:34
  * @Description：报警核实详情
  */
 
@@ -29,23 +29,35 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const WarningVerify = props => {
   const warningId = props.match.params.id;
-  const COLOR = ['#5470c6', '#91cc75', '#ea7ccc'];
+  const COLOR = [
+    '#5470c6',
+    '#91cc75',
+    '#ea7ccc',
+    '#5470c6',
+    '#91cc75',
+    '#ea7ccc',
+    '#5470c6',
+    '#91cc75',
+    '#ea7ccc',
+    '#5470c6',
+    '#91cc75',
+    '#ea7ccc',
+  ];
   const { dispatch, warningInfoLoading, modelChartsLoading } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [dataModalVisible, setDataModalVisible] = useState(false);
   const [warningDataDate, setWarningDataDate] = useState();
   const [warningDate, setWarningDate] = useState([]);
+  const [rtnFinal, setRtnFinal] = useState([]);
   const [imageIndex, setImageIndex] = useState();
   const [warningInfo, setWarningInfo] = useState({});
   const [fileList, setFileList] = useState([]);
   const [modelChartDatas, setModelChartDatas] = useState([]);
   const [linearDatas, setLinearDatas] = useState([]);
-  const [modelTableDatas, setModelTableDatas] = useState({
-    Column: [],
-    Data: [],
-  });
+  const [modelTableDatas, setModelTableDatas] = useState([]);
   const [modelDescribe, setModelDescribe] = useState('');
   const [defaultChartSelected, setDefaultChartSelected] = useState([]);
+  const [timeList, setTimeList] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -90,14 +102,54 @@ const WarningVerify = props => {
           setModelChartDatas(res.chartData);
           handleLinearDatas(res.chartData, WarningTypeCode);
         } else {
-          setModelTableDatas({
-            Column: res.Column,
-            Data: res.Data,
-          });
+          setRtnFinal(res.rtnFinal);
+          let tableDatas = processJSONData(res.rtnFinal);
+          console.log('tableDatas', tableDatas);
+          setModelTableDatas(tableDatas);
+          // setModelTableDatas({
+          //   Column: res.Column,
+          //   Data: res.Data,
+          // });
         }
         setModelDescribe(res.describe);
+
+        // 处理恒定值报警时间线
+        if (res.timeListByCode) {
+          let timeList = res.timeListByCode;
+          let newTimeList = [];
+          for (const key in timeList) {
+            let timeArr = timeList[key][0].split('~');
+            newTimeList.push(timeArr);
+          }
+          console.log('newTimeList', newTimeList);
+          setTimeList(newTimeList);
+        }
       },
     });
+  };
+
+  // 表格数据：相同Column数据合并
+  const processJSONData = data => {
+    // 创建一个空数组用于存储处理后的数据
+    let mergedData = [];
+
+    // 遍历原始数据对象数组
+    data.forEach(function(obj) {
+      // 检查当前数据对象的Column是否存在于mergedData中
+      let existingData = mergedData.find(function(item) {
+        return JSON.stringify(item.Column) === JSON.stringify(obj.Column);
+      });
+
+      // 如果存在相同的Column，则将Data合并到已存在的数据中
+      if (existingData) {
+        existingData.Data = existingData.Data.concat(obj.Data);
+      } else {
+        // 如果不存在相同的Column，则将整个数据对象添加到mergedData中
+        mergedData.push(obj);
+      }
+    });
+
+    return mergedData;
   };
 
   // 处理线性系数数据
@@ -158,21 +210,46 @@ const WarningVerify = props => {
   // 查看报警数据
   const onViewWarningData = () => {
     // 表格模型
-    if (modelTableDatas.Column && modelTableDatas.Column.length) {
-      if (modelTableDatas.Data.length && modelTableDatas.Data[0]) {
-        let startDate = modelTableDatas.Data[0].Time;
-        // let endData = modelTableDatas.Data.slice(-1).Time;
-
+    if (modelTableDatas.length) {
+      let tableData = modelTableDatas[0];
+      if (tableData.Data.length && tableData.Data[0]) {
+        let startDate = tableData.Data[0].Time;
         let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
         setWarningDataDate(date);
 
-        // let warningDate = [
-        //   moment(startDate).format('YYYY-MM-DD HH:mm'),
-        //   moment(endData[0]).format('YYYY-MM-DD HH:mm'),
-        // ];
-        // console.log('warningDate', warningDate);
-        // setWarningDate(warningDate);
+        let warningDate = [];
+        if (rtnFinal.length > 1) {
+          // 多个表格的情况
+          modelTableDatas.map(item => {
+            item.Data.map(itm => {
+              warningDate.push({
+                name: '0',  //零值报警显示0
+                date: itm.Time,
+              });
+            });
+          });
+        } else {
+          // 一个表格的情况
 
+          let endData = tableData.Data.slice(-1).Time;
+          console.log('endData', endData);
+          warningDate = [
+            {
+              name: endData ? '开始' : '报警',
+              date: moment(startDate).format('YYYY-MM-DD HH:mm'),
+            },
+          ];
+          if (endData) {
+            warningDate.push({
+              name: '结束',
+              date: endData[0],
+            });
+          }
+        }
+
+        console.log('warningDate', warningDate);
+        setWarningDate(warningDate);
+        handleDefaultLegendSelected();
         setDataModalVisible(true);
       } else {
         message.error('异常特征无数据，无法查看报警数据！');
@@ -186,15 +263,41 @@ const WarningVerify = props => {
         // true
       ) {
         let startDate = modelChartDatas[0].data[0].date[0];
-        let endData = modelChartDatas[0].data[0].date.slice(-1);
-        // let startDate = [moment('2023-05-24 00:00:00'), moment('2023-05-31 23:59:59')][0].Time;
-
         let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
         setWarningDataDate(date);
-        let warningDate = [
-          moment(startDate).format('YYYY-MM-DD HH:mm'),
-          moment(endData[0]).format('YYYY-MM-DD HH:mm'),
-        ];
+
+        let warningDate = [];
+        if (timeList.length) {
+          // 恒定值
+          timeList.map(item => {
+            warningDate = warningDate.concat([
+              {
+                name: '开始',
+                date: moment(item[0]).format('YYYY-MM-DD HH:00'),
+              },
+              {
+                name: '结束',
+                date: moment(item[1]).format('YYYY-MM-DD HH:00'),
+              },
+            ]);
+          });
+        } else {
+          // 其他
+          let endData = modelChartDatas[0].data[0].date.slice(-1);
+          warningDate = [
+            {
+              // name: '异常开始时间',
+              name: '开始',
+              date: moment(startDate).format('YYYY-MM-DD HH:mm'),
+            },
+            {
+              // name: '异常结束时间',
+              name: '结束',
+              date: moment(endData[0]).format('YYYY-MM-DD HH:mm'),
+            },
+          ];
+        }
+
         console.log('warningDate', warningDate);
         setWarningDate(warningDate);
         handleDefaultLegendSelected();
@@ -208,25 +311,51 @@ const WarningVerify = props => {
   // 处理图表污染物默认选中
   const handleDefaultLegendSelected = () => {
     let defaultSelected = [];
-    // 疑似超过标准标记数据无效
-    if (warningInfo.WarningTypeCode === '6675e28e-271a-4fb7-955b-79bf0b858e8e') {
-      if (
-        modelChartDatas.length &&
-        modelChartDatas[0].data.length &&
-        modelChartDatas[0].data[0].length
-      ) {
-        defaultSelected = [modelChartDatas[0].data[0].pollutantName];
+
+    if (
+      // 疑似超过标准标记数据无效
+      warningInfo.WarningTypeCode === '6675e28e-271a-4fb7-955b-79bf0b858e8e' ||
+      // 疑似恒定值微小波动
+      warningInfo.WarningTypeCode === 'cda1f2e2-ec5f-425b-93d2-94ba62b17146'
+    ) {
+      // 默认选中异常特征图表中的污染物
+      if (modelChartDatas.length && modelChartDatas[0].data.length) {
+        defaultSelected = modelChartDatas[0].data.map(item => {
+          return item.pollutantName;
+        });
+      }
+    } else if (warningInfo.WarningTypeCode === '0fa091a3-7a19-4c9e-91bd-c5a4bf2e9827') {
+      let firstTableData = modelTableDatas[0];
+      // 疑似零值微小波动
+      if (firstTableData.Data && firstTableData.Data.length) {
+        let _defaultSelected = [];
+        firstTableData.Column.map(item => {
+          // 去掉括号及内容，将“烟气排放量”替换为“流量”
+          let name = item.PollutantName.replace(/\((?:.*)\)/g, '').replace('烟气排放量', '流量');
+          if (name.indexOf('波动范围') === -1) {
+            _defaultSelected.push(name);
+          }
+        });
+        // 最多取前两个
+        defaultSelected = _defaultSelected.slice(0, 6);
       }
     } else {
-      defaultSelected = ChartDefaultSelected[warningInfo.WarningTypeCode] || [];
+      // 默认选中氧含量、烟气湿度、烟气温度、流速
+      // 固定污染物：根据WarningTypeCode获取,
+      defaultSelected = (ChartDefaultSelected[warningInfo.WarningTypeCode] || []).concat([
+        '氧含量',
+        '烟气湿度',
+        '烟气温度',
+        '流速',
+      ]);
     }
-    console.log('defaultSelected', defaultSelected)
+    console.log('defaultSelected', defaultSelected);
     setDefaultChartSelected(defaultSelected);
   };
 
   const isShowBack = location.pathname.indexOf('autoLogin') <= -1;
   return (
-    <BreadcrumbWrapper titles=" / 报警核实">
+    <BreadcrumbWrapper titles=" / 线索核实">
       <div
         className={styles.WarningVerifyWrapper}
         style={{ height: isShowBack ? '100%' : 'calc(100vh - 22px)' }}
@@ -247,12 +376,12 @@ const WarningVerify = props => {
           }
         >
           <Descriptions column={4}>
-            <Descriptions.Item label="报警企业">
+            <Descriptions.Item label="企业">
               <Tooltip title={warningInfo.EntNmae}>
                 <span className={styles.textOverflow}>{warningInfo.EntNmae}</span>
               </Tooltip>
             </Descriptions.Item>
-            <Descriptions.Item label="报警排口">{warningInfo.PointName}</Descriptions.Item>
+            <Descriptions.Item label="排口">{warningInfo.PointName}</Descriptions.Item>
             <Descriptions.Item label="场景类别">
               <Tooltip title={warningInfo.WarningTypeName}>
                 <span className={styles.textOverflow}>{warningInfo.WarningTypeName}</span>
@@ -271,7 +400,7 @@ const WarningVerify = props => {
               type="primary"
               onClick={() => onViewWarningData()}
             >
-              报警数据
+              线索数据
             </Button>
           }
         >
@@ -335,12 +464,13 @@ const WarningVerify = props => {
                 ''
               )}
               {/* 表格模型 */}
-              {modelTableDatas.Column.length ? (
+              {modelTableDatas.length ? (
                 <Row className={styles.chartWrapper} style={{ height: 'auto' }}>
-                  <ModelTable
-                    WarningTypeCode={warningInfo.WarningTypeCode}
-                    tableData={modelTableDatas}
-                  />
+                  {modelTableDatas.map(item => {
+                    return (
+                      <ModelTable WarningTypeCode={warningInfo.WarningTypeCode} tableData={item} />
+                    );
+                  })}
                 </Row>
               ) : (
                 ''
@@ -353,16 +483,19 @@ const WarningVerify = props => {
         <Card title="线索核实" loading={warningInfoLoading}>
           <Descriptions column={4}>
             <Descriptions.Item label="核实结果">
-              {warningInfo.CheckedResultCode === '1' && <Tag color="error">报警不实</Tag>}
-              {warningInfo.CheckedResultCode === '2' && <Tag color="success">报警属实</Tag>}
+              {warningInfo.CheckedResultCode === '1' && <Tag color="error">系统误报</Tag>}
+              {warningInfo.CheckedResultCode === '2' && <Tag color="warning">有异常</Tag>}
               {warningInfo.CheckedResultCode === '3' && <Tag>未核实</Tag>}
             </Descriptions.Item>
-            <Descriptions.Item label="不实原因">
+            <Descriptions.Item label="异常原因">
               {warningInfo.UntruthReason || '-'}
             </Descriptions.Item>
             <Descriptions.Item label="核实人">{warningInfo.CheckedUser || '-'}</Descriptions.Item>
             <Descriptions.Item label="核实时间">{warningInfo.CheckedTime || '-'}</Descriptions.Item>
-            <Descriptions.Item span={4} label="核实描述">
+            <Descriptions.Item span={1} label="暂停报警截止时间">
+              {warningInfo.StopAlarmEndTime || '-'}
+            </Descriptions.Item>
+            <Descriptions.Item span={3} label="核实描述">
               {warningInfo.CheckedDes || '-'}
             </Descriptions.Item>
             <Descriptions.Item span={4} label="核实材料">
