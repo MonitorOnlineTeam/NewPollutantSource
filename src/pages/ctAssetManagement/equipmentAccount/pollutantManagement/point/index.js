@@ -21,6 +21,7 @@ import {
   InputNumber,
   Tooltip,
   Radio,
+  Steps,
 } from 'antd';
 import styles from "../style.less"
 import MonitorContent from '@/components/MonitorContent/index';
@@ -36,8 +37,10 @@ import { handleFormData } from '@/utils/utils';
 import Cookie from 'js-cookie';
 import moment from 'moment'
 import DeviceManager from './DeviceManager'
+import SdlMap from '@/pages/AutoFormManager/SdlMap'
 const pointConfigId = 'CTPoint'
 const FormItem = Form.Item;
+const { Step } = Steps;
 @connect(({ loading, autoForm, commissionTestPoint, global, }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   autoForm: autoForm,
@@ -50,6 +53,7 @@ const FormItem = Form.Item;
   getFormDataLoading: loading.effects['autoForm/getFormData'],
   configInfo: global.configInfo,
 }))
+
 @Form.create()
 export default class Index extends Component {
   constructor(props) {
@@ -63,11 +67,20 @@ export default class Index extends Component {
       deviceManagerGasType: '',
       selectedPointCode: '',
       deviceMangerVisible: false,
-      thirdParty:true,
+      thirdParty: true,
       dragDatas: [],
       sortTitle: '开启排序',
       noPaging: false,
       sortLoading: false,
+      current: 0,
+      pointSaveFlag:false,
+      steps: [
+        '监测点信息',
+        '系统信息',
+        '系统更换记录',
+        '仪表信息',
+        '仪表更换记录',
+      ]
     };
 
   }
@@ -114,7 +127,7 @@ export default class Index extends Component {
   }
   addPoint = () => { //添加监测点 弹框
     const { form, } = this.props;
-    this.setState({ visible: true, isEdit: false,selectedPointCode:'',thirdParty:true })
+    this.setState({ visible: true, isEdit: false, selectedPointCode: '', thirdParty: true })
     form.resetFields();
   }
   editPoint = (row) => {
@@ -129,19 +142,19 @@ export default class Index extends Component {
     dispatch({
       type: 'autoForm/getFormData',
       payload: {
-          configId: 'TestPoint',
-          'dbo.T_Bas_TestCommonPoint.ID': pointCode,
+        configId: 'TestPoint',
+        'dbo.T_Bas_TestCommonPoint.ID': pointCode,
       },
-      callback:(echoData)=>{
-        this.setState({ thirdParty:echoData.ReferenceMethodSource == '2' ? false : true   });
+      callback: (echoData) => {
+        this.setState({ thirdParty: echoData.ReferenceMethodSource == '2' ? false : true });
         form.setFieldsValue({
           ...echoData,
-          InstallationTime: echoData.InstallationTime && moment(echoData.InstallationTime), 
+          InstallationTime: echoData.InstallationTime && moment(echoData.InstallationTime),
           BeginTime: echoData.BeginTime && moment(echoData.BeginTime),
           EndTime: echoData.EndTime && moment(echoData.EndTime),
-         })
+        })
       }
-  })
+    })
 
   }
   updateSort = () => { //更新排序
@@ -201,33 +214,171 @@ export default class Index extends Component {
     form.validateFields((err, values) => {
       if (!err) {
         values.EntID = targetId;
-          dispatch({
-            type: 'commissionTestPoint/addOrUpdateTestPoint',
-            payload: {
-              ...values, InstallationTime: values.InstallationTime && values.InstallationTime.format('YYYY-MM-DD HH:mm:ss'), BeginTime: values.BeginTime && values.BeginTime.format('YYYY-MM-DD HH:mm:ss'), EndTime: values.EndTime && values.EndTime.format('YYYY-MM-DD HH:mm:ss'), ID: selectedPointCode,
-              TestCompanyName: values.ReferenceMethodSource==2? values.TestCompanyName : undefined,
-              TestReportNumber: values.ReferenceMethodSource==2? values.TestReportNumber: undefined,
-            },
-            callback: () => {
-              this.setState({ visible: false, })
-              dispatch({
-                type: 'autoForm/getAutoFormData',
-                payload: {
-                  configId: pointConfigId,
-                  searchParams: pointDataWhere
-                },
-              });
-            },
-          });
+        dispatch({
+          type: 'commissionTestPoint/addOrUpdateTestPoint',
+          payload: {
+            ...values, InstallationTime: values.InstallationTime && values.InstallationTime.format('YYYY-MM-DD HH:mm:ss'), BeginTime: values.BeginTime && values.BeginTime.format('YYYY-MM-DD HH:mm:ss'), EndTime: values.EndTime && values.EndTime.format('YYYY-MM-DD HH:mm:ss'), ID: selectedPointCode,
+            TestCompanyName: values.ReferenceMethodSource == 2 ? values.TestCompanyName : undefined,
+            TestReportNumber: values.ReferenceMethodSource == 2 ? values.TestReportNumber : undefined,
+          },
+          callback: () => {
+            this.setState({ visible: false, })
+            dispatch({
+              type: 'autoForm/getAutoFormData',
+              payload: {
+                configId: pointConfigId,
+                searchParams: pointDataWhere
+              },
+            });
+          },
+        });
       }
     })
   }
-  render() {
-    const { searchConfigItems, searchForm, tableInfo, dispatch, pointDataWhere, loadingAddEditConfirm,getFormDataLoading, configInfo, } = this.props;
-    const { location: { query: { targetName, targetId } } } = this.props;
-    const { isEdit, thirdParty } = this.state;
-    const noDelFlag = configInfo && configInfo.DeleteTestUser == 0 ? true : false;
+
+
+  pointInfo = () => {
+    const { getFormDataLoading, } = this.props;
+    const { isEdit, } = this.state;
     const { getFieldDecorator } = this.props.form;
+    return <Spin spinning={isEdit ? getFormDataLoading : false}>
+      <Form>
+        <Row>
+          <Col span={12}>
+            <FormItem label="监测点名称" >
+              {getFieldDecorator("PointName", {
+                rules: [{ required: true, message: "请输入监测点名称", }],
+              })(<Input placeholder='请输入' allowClear />)}
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="监测点编号（MN）" >
+              {getFieldDecorator("TestCount", {
+                rules: [{ required: true, message: "请输入监测点编号（MN）", }],
+              })(<InputNumber placeholder='请输入' allowClear />)}
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="经度" >
+              {getFieldDecorator("TestUser", {
+                rules: [{ required: true, message: "请输入经度", }],
+              })(<SdlMap
+                // longitude={SparePartsStationInfo ? SparePartsStationInfo.Longitude : null}
+                // latitude={SparePartsStationInfo ? SparePartsStationInfo.Latitude : null}
+                handleMarker
+                handlePolygon
+                zoom={12}
+                placeholder='请输入 例如：112.236514'
+              />)}
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="维度" >
+              {getFieldDecorator("TestUser1", {
+                rules: [{ required: true, message: "请输入维度", }],
+              })(<SdlMap
+              // longitude={SparePartsStationInfo ? SparePartsStationInfo.Longitude : null}
+              // latitude={SparePartsStationInfo ? SparePartsStationInfo.Latitude : null}
+              handleMarker
+              handlePolygon
+              zoom={12}
+              placeholder='请输入 例如：85.236589'
+            />)}
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="行业">
+              {getFieldDecorator("CalibrationCEMS", {
+                rules: [{ required: true, message: "请选择行业", }],
+              })(
+                <Select placeholder='请选择' allowClear> 
+                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
+                  <Option key={'2'} value={'2'}>K系数法</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="监测点类型" >
+              {getFieldDecorator("CalibrationCEMS", {
+                rules: [{ required: true, message: "请选择监测点类型", }],
+              })(
+                <Select placeholder='请选择' allowClear>
+                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
+                  <Option key={'2'} value={'2'}>K系数法</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="脱销工艺类型">
+              {getFieldDecorator("CalibrationCEMS", {
+                rules: [{ required: true, message: "请选择脱销工艺类型", }],
+              })(
+                <Select placeholder='请选择' allowClear>
+                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
+                  <Option key={'2'} value={'2'}>K系数法</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="脱硫工艺类型">
+              {getFieldDecorator("CalibrationCEMS", {
+                rules: [{ required: true, message: "请选择脱硫工艺类型", }],
+              })(
+                <Select placeholder='请选择'>
+                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
+                  <Option key={'2'} value={'2'}>K系数法</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="除尘工艺类型">
+              {getFieldDecorator("CalibrationCEMS", {
+                rules: [{ required: true, message: "请选择除尘工艺类型", }],
+              })(
+                <Select placeholder='请选择' allowClear>
+                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
+                  <Option key={'2'} value={'2'}>K系数法</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+    </Spin>
+  }
+
+  next = () => {
+    this.setState({
+      current: this.state.current + 1
+    })
+  };
+  prev = () => {
+    this.setState({
+      current: this.state.current - 1
+    })
+  };
+  onStepsChange = (value) =>{
+    const { pointSaveFlag } = this.state
+    if(!pointSaveFlag){
+     message.error('请先添加监测点信息')
+     return;
+    }
+    this.setState({
+      current: value
+    })
+  }
+  render() {
+    const { searchConfigItems, searchForm, tableInfo, dispatch, pointDataWhere, loadingAddEditConfirm, getFormDataLoading, configInfo, } = this.props;
+    const { location: { query: { targetName, targetId } } } = this.props;
+    const { isEdit, thirdParty, current, steps, pointSaveFlag,} = this.state;
+    const noDelFlag = configInfo && configInfo.DeleteTestUser == 0 ? true : false;
+    const { getFieldDecorator } = this.props.form
+
+
     if (this.props.loading) {
       return (<Spin
         style={{
@@ -311,169 +462,39 @@ export default class Index extends Component {
           visible={this.state.visible}
           onOk={this.savePointSubmitForm.bind(this)}
           onCancel={() => { this.setState({ visible: false }) }}
-          width={'80%'}
-          confirmLoading={loadingAddEditConfirm || getFormDataLoading }
+          wrapClassName={`spreadOverModal`}
+          confirmLoading={loadingAddEditConfirm || getFormDataLoading}
           destroyOnClose
           className={styles.formModalSty}
-          bodyStyle={{ paddingBottom: 0 }}>
-          {/* <SdlForm
-                      configId={pointConfigId}
-                      form={this.props.form}
-                      noLoad
-                      hideBtns
-                      isEdit={this.state.isEdit}
-                      keysParams={{ 'dbo.T_Bas_TestCommonPoint.ID': this.state.selectedPointCode }}
-                      types='point'
-                      isModal
-                      isSearchParams
-                    />               */}
-          <Spin spinning={isEdit? getFormDataLoading : false}>
-          <Form>
-            <Row>
-            <Col span={12}>
-            <FormItem label="监测点名称" >
-              {getFieldDecorator("PointName", {
-                rules: [  {required: true, message: "请输入监测点名称",  } ],
-              })(   <Input placeholder='请输入' allowClear/>   )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem label="调试次数" >
-              {getFieldDecorator("TestCount", {
-                rules: [  {required: true, message: "请输入调试次数",  } ],
-              })( <InputNumber placeholder='请输入' allowClear/>)}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem label="测试人员" >
-              {getFieldDecorator("TestUser", {
-                rules: [  {required: true, message: "请输入测试人员",  } ],
-              })(   <Input placeholder='请输入' allowClear/>   )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem label="编制人" >
-              {getFieldDecorator("OrganizationUser", {
-                initialValue:  Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserName,
-                rules: [  {required: true, message: "请输入编制人",  } ],
-              })(   <Input placeholder='请输入' allowClear/>   )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem label="校验人" >
-              {getFieldDecorator("CalibrationUser", {
-                rules: [  {required: true, message: "请输入校验人",  } ],
-              })(   <Input placeholder='请输入' allowClear/>   )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem label="批准人" >
-              {getFieldDecorator("ApprovalUser", {
-                rules: [  {required: true, message: "请输入批准人",  } ],
-              })(   <Input placeholder='请输入' allowClear/>   )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem  label="安装完成时间">
-              {getFieldDecorator("InstallationTime", {
-                rules: [{  required: true,   message: "请选择安装完成时间",  }],
-              })(
-                <DatePicker />
-              )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem  label="检测开始日期">
-              {getFieldDecorator("BeginTime", {
-                rules: [{  required: true,   message: "请选择检测开始日期",  }],
-              })(
-                <DatePicker />
-              )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem  label="检测结束日期">
-              {getFieldDecorator("EndTime", {
-                rules: [{  required: true,   message: "请选择检测结束日期",  }],
-              })(
-                <DatePicker />
-              )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem  label="校准颗粒物方法">
-              {getFieldDecorator("CalibrationCEMS", {
-                initialValue: '1',
-                rules: [{  required: true,   message: "请选择校准颗粒物方法",  }],
-              })(
-                <Radio.Group>
-                <Radio value={'1'}>一元线性方程法</Radio>
-                <Radio value={'2'}>K系数法</Radio>
-              </Radio.Group>
-              )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem  label="流速CMS调试检测">
-              {getFieldDecorator("FlowCEMS", {
-                initialValue: '1',
-                rules: [{  required: true,   message: "请选择流速CEMS调试检测",  }],
-              })(
-                <Radio.Group>
-                <Radio value={'1'}>不带准确度</Radio>
-                <Radio value={'2'}>带准确度</Radio>
-              </Radio.Group>
-              )}
-            </FormItem>
-             <span className='red' style={{position:'absolute',top:10,left:360}}>(除监管部门明确要求外，不选择此项)</span>
-            </Col>
-            <Col span={12}>
-            <FormItem  label="检测完成状态">
-              {getFieldDecorator("Status", {
-                initialValue:'1',
-                rules: [{  required: true,   message: "请选择检测完成状态",  }],
-              })(
-                <Radio.Group>
-                <Radio value={'1'}>检测中</Radio>
-                <Radio value={'2'}>已完成</Radio>
-              </Radio.Group>
-              )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem  label="参比方法数据来源">
-              {getFieldDecorator("ReferenceMethodSource", {
-                initialValue:1,
-                rules: [{  required: true,   message: "请选择检测完成状态",  }],
-              })(
-                <Radio.Group onChange={(e)=>{
-                  this.setState({
-                    thirdParty : e.target.value==2? false : true
-                  })
-                }}>
-                <Radio value={1}>自测</Radio>
-                <Radio value={2}>第三方报告</Radio>
-              </Radio.Group>
-              )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem label="第三方检测公司的名称" hidden={thirdParty}>
-              {getFieldDecorator("TestCompanyName", {
-                rules: [  {required: !thirdParty, message: "请输入第三方检测公司的名称",  } ],
-              })(   <Input placeholder='请输入' allowClear/>   )}
-            </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem label="报告编号" hidden={thirdParty}>
-              {getFieldDecorator("TestReportNumber", {
-                rules: [  {required: !thirdParty, message: "请输入报告编号",  } ],
-              })(   <Input placeholder='请输入' allowClear/>   )}
-            </FormItem>
-            </Col>
-            </Row>
-          </Form>
-          </Spin>
+          footer={
+            <div className="steps-action">
+            {current <= steps.length - 1 && (
+              <Button type="primary" onClick={() => this.next()}>
+                 {current === steps.length - 1 ? '保存' : '保存并下一步'}
+              </Button>
+            )}
+            {pointSaveFlag &&current < steps.length - 1 ? (
+              <Button  onClick={() => this.next()}>
+                跳过
+              </Button>
+            ) : null}
+            {current > 0 && (
+              <Button
+                onClick={() => this.prev()}
+              >
+                上一步
+              </Button>
+            )}
+          </div>
+        }
+          >
+          <Steps current={current} size='small'  onChange={this.onStepsChange} >
+           {steps.map((item) => <Step title={item}   />)}
+          </Steps>
+          <div style={{paddingTop:12}}>
+            {current==0&&this.pointInfo()}
+          </div>
+       
         </Modal>
         <Modal
           title={'设备管理'}
