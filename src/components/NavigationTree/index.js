@@ -558,9 +558,29 @@ class NavigationTree extends Component {
     const entList = entAndPoint.filter(item => item.title.toUpperCase().indexOf(msg) > -1 && item.IsEnt == 1);
     const filterList = this.state.panelDataListAys.filter(item => item.pointName.toUpperCase().indexOf(msg) > -1 || item.entName.toUpperCase().indexOf(msg) > -1);
 
+    // 搜索排口
+    let pointResultList = [];
+    entAndPoint.map(item => {
+      for (let index = 0; index < item.children.length; index++) {
+        if( item.children[index].title.indexOf(msg) > -1) {
+          pointResultList.push(item);
+          break;
+        }
+      }
+    })
+
+    let tempEntAndPoint = entList.length ? entList : pointResultList;
+    if(msg) {
+      let expandedKeys = tempEntAndPoint.map(item => item.key);
+      this.setState({
+        expandedKeys
+      })
+    }
+    console.log(' this.state.panelDataListAys',  this.state.panelDataListAys)
+
     this.setState({
       // expandedKeys,
-      EntAndPoint: entList,
+      EntAndPoint: tempEntAndPoint,
       useChioce: false,
       searchValue: value,
       autoExpandParent: true,
@@ -1129,6 +1149,7 @@ class NavigationTree extends Component {
                 // style={{ overflow: 'hidden', overflowY: 'auto', width: '100%' }}
                 onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
+                autoExpandParent={true}
                 height={this.props.clientHeight - 320}
                 // height={this.props.clientHeight - 350} //虚拟滚动 解决打开卡顿 分页高度
                 treeData={this.loop(this.state.EntAndPoint)}

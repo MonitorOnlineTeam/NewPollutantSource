@@ -44,7 +44,9 @@ const WarningDataAndChart = props => {
   // const [visible, setVisible] = useState([]);
 
   useEffect(() => {
-    getPollutantListByDgimn();
+    if(DGIMN) {
+      getPollutantListByDgimn();
+    }
   }, [DGIMN]);
 
   // 根据mn获取污染物
@@ -461,7 +463,7 @@ const WarningDataAndChart = props => {
           //值
           let value = '';
           params.map(item => {
-            value += `${item.marker} ${item.seriesName}: ${item.value || '-'} ${
+            value += `${item.marker} ${item.seriesName}: ${item.value || '-'}${
               units[item.seriesName]
             }
           ${seriesFlag[item.seriesName][item.dataIndex]}<br />`;
