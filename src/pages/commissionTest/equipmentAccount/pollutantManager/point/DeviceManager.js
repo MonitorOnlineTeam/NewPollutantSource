@@ -751,6 +751,8 @@ const Index = (props) => {
   const [pmchoiceData, setPmchoiceData] = useState()
 
   const [systemManufactorID, setSystemManufactorID] = useState()
+  const [choiceManufacturer, setChoiceManufacturer] = useState(false); //系统信息 选择生产商
+
   const systemColChoice = (record) => {
 
     form.setFieldsValue({ ManufactorName: record.ManufactorName, SystemModel: record.SystemModel, });
@@ -763,8 +765,6 @@ const Index = (props) => {
 
 
   const [devicePollutantName, setDevicePollutantName] = useState()
-
-  const [choiceManufacturer, setChoiceManufacturer] = useState(false); // 选择生产商
 
   const [isManual, setIsManual] = useState(false) //是否手填
 
@@ -1373,11 +1373,11 @@ const handleSystemAdd = () => { //添加系统信息
 
 
 
-      {/**cems 系统信息  cems生产厂家弹框 */}
+    {/**cems参数信息  系统信息 生产厂家弹框 */}
       <Modal visible={manufacturerPopVisible} getContainer={false} onCancel={() => { setManufacturerPopVisible(false) }} destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }}  wrapClassName='noSpreadOverModal'>
         {systemPopContent}
       </Modal>
-      {/**cems 系统信息   监测设备生产厂家弹框 */}
+     {/**cems参数信息   监测设备 生产厂家弹框 */}
       <Modal visible={devicePopVisible}  getContainer={false} onCancel={() => { setDevicePopVisible(false) }}  destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }} wrapClassName='noSpreadOverModal'>
         {devicePopContent}
       </Modal>

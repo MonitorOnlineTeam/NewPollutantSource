@@ -38,49 +38,50 @@ import Cookie from 'js-cookie';
 import moment from 'moment'
 import DeviceManager from './DeviceManager'
 import SdlMap from '@/pages/AutoFormManager/SdlMap'
+import SystemInfo from '../components/SystemInfo'
 const pointConfigId = 'CTPoint'
 const FormItem = Form.Item;
 const { Step } = Steps;
-@connect(({ loading, autoForm, commissionTestPoint, global, }) => ({
-  loading: loading.effects['autoForm/getPageConfig'],
+@connect(({ loading, autoForm, ctPollutantManger, global, }) => ({
+  loading: loading.effects['autoForm/getPageConfig'] || false,
   autoForm: autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   tableInfo: autoForm.tableInfo,
   searchForm: autoForm.searchForm,
   routerConfig: autoForm.routerConfig,
-  pointDataWhere: commissionTestPoint.pointDataWhere,
-  loadingAddEditConfirm: loading.effects['commissionTestPoint/addOrUpdateTestPoint'],
+  pointDataWhere: ctPollutantManger.pointDataWhere,
   getFormDataLoading: loading.effects['autoForm/getFormData'],
   configInfo: global.configInfo,
+  addOrEditCommonPointLoading: loading.effects['ctPollutantManger/addOrEditCommonPointList'],
+  pointIndustryLoading: loading.effects['ctPollutantManger/getPointIndustryList'],
+  operationCEMSSystemLoading: loading.effects[`ctPollutantManger/addOrEditCEMSSystem`],
+  systemEditingKey:ctPollutantManger.systemEditingKey,
+  systemData:ctPollutantManger.systemData,
 }))
 
 @Form.create()
 export default class Index extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       visible: false,
       isEdit: false,
-      deviceManagerVisible: false,
-      deviceManagerMN: '',
-      deviceManagerGasType: '',
-      selectedPointCode: '',
-      deviceMangerVisible: false,
+      dgimn: '',
       thirdParty: true,
       dragDatas: [],
       sortTitle: '开启排序',
-      noPaging: false,
       sortLoading: false,
       current: 0,
-      pointSaveFlag:false,
+      pointSaveFlag: false,
       steps: [
         '监测点信息',
         '系统信息',
         '系统更换记录',
         '仪表信息',
         '仪表更换记录',
-      ]
+      ],
+      pointIndustryList: [],
+      pointTypeList: [],
     };
 
   }
@@ -92,8 +93,9 @@ export default class Index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname) {
-      if (nextProps.location.query.configId !== this.props.location.query.configId)
+      if (nextProps.location.query.configId !== this.props.location.query.configId) {
         this.reloadPage(nextProps.location.query.configId);
+      }
     }
   }
 
@@ -107,54 +109,59 @@ export default class Index extends Component {
       }
     })
     dispatch({
-      type: 'commissionTestPoint/updateState',
+      type: 'ctPollutantManger/updateState',
       payload: {
         pointDataWhere: [
           {
-            Key: 'dbo__T_Bas_TestCommonPoint__EntID',
+            Key: 'dbo__T_Bas_CTCommonPoint__EntID',
             Value: targetId,
             Where: '$=',
           },
         ],
       },
     });
-  }
-  deviceManager = (row) => {
-    this.setState({
-      deviceManagerVisible: true,
-      deviceManagerMN: row["dbo.T_Bas_TestCommonPoint.ID"],
+    dispatch({
+      type: 'ctPollutantManger/getPointIndustryList',
+      payload: {},
+      callback: (res) => {
+        this.setState({ pointIndustryList: res, })
+      }
     })
   }
+
   addPoint = () => { //添加监测点 弹框
     const { form, } = this.props;
-    this.setState({ visible: true, isEdit: false, selectedPointCode: '', thirdParty: true })
+    this.setState({ visible: true, isEdit: false, dgimn: '', pointSaveFlag: false, current: 0 })
     form.resetFields();
   }
   editPoint = (row) => {
     const { dispatch, form, } = this.props;
-    this.setState({ visible: true, isEdit: true, })
-    const pointCode = row['dbo.T_Bas_TestCommonPoint.ID']
+    const { pointIndustryList } = this.state;
+    const dgimn = row['dbo.T_Bas_CTCommonPoint.DGIMN'];
+    const industry = row['dbo.T_Bas_CTCommonPoint.Industry']
+    const pointTypeData = pointIndustryList.filter(item => item.ChildID === industry)
     this.setState({
       visible: true,
       isEdit: true,
-      selectedPointCode: pointCode,
+      dgimn: dgimn,
+      pointSaveFlag: true,
+      pointTypeList: pointTypeData?.length ? pointTypeData[0].clist : [],
+      current: 0,
+    }, () => {
+      form.setFieldsValue({
+        id: row['dbo.T_Bas_CTCommonPoint.ID'],
+        pointName: row['dbo.T_Bas_CTCommonPoint.PointName'],
+        dgimn: dgimn,
+        longitude: row['dbo.T_Bas_CTCommonPoint.Longitude'],
+        latitude: row['dbo.T_Bas_CTCommonPoint.Latitude'],
+        industry: industry,
+        pointType: row['dbo.T_Bas_CTCommonPoint.PointType'],
+        denitrationProcess: row['dbo.T_Bas_CTCommonPoint.DenitrationProcess'],
+        desulfurizationProcess: row['dbo.T_Bas_CTCommonPoint.DesulfurizationProcess'],
+        dustRemovalProcess: row['dbo.T_Bas_CTCommonPoint.DustRemovalProcess'],
+      })
     });
-    dispatch({
-      type: 'autoForm/getFormData',
-      payload: {
-        configId: 'TestPoint',
-        'dbo.T_Bas_TestCommonPoint.ID': pointCode,
-      },
-      callback: (echoData) => {
-        this.setState({ thirdParty: echoData.ReferenceMethodSource == '2' ? false : true });
-        form.setFieldsValue({
-          ...echoData,
-          InstallationTime: echoData.InstallationTime && moment(echoData.InstallationTime),
-          BeginTime: echoData.BeginTime && moment(echoData.BeginTime),
-          EndTime: echoData.EndTime && moment(echoData.EndTime),
-        })
-      }
-    })
+
 
   }
   updateSort = () => { //更新排序
@@ -207,148 +214,134 @@ export default class Index extends Component {
     }
 
   }
-  savePointSubmitForm = () => {  //保存监测点 确认
-    const { form, dispatch, pointDataWhere, } = this.props;
-    const { location: { query: { targetName, targetId } } } = this.props;
-    const { isEdit, selectedPointCode, } = this.state;
-    form.validateFields((err, values) => {
-      if (!err) {
-        values.EntID = targetId;
-        dispatch({
-          type: 'commissionTestPoint/addOrUpdateTestPoint',
-          payload: {
-            ...values, InstallationTime: values.InstallationTime && values.InstallationTime.format('YYYY-MM-DD HH:mm:ss'), BeginTime: values.BeginTime && values.BeginTime.format('YYYY-MM-DD HH:mm:ss'), EndTime: values.EndTime && values.EndTime.format('YYYY-MM-DD HH:mm:ss'), ID: selectedPointCode,
-            TestCompanyName: values.ReferenceMethodSource == 2 ? values.TestCompanyName : undefined,
-            TestReportNumber: values.ReferenceMethodSource == 2 ? values.TestReportNumber : undefined,
-          },
-          callback: () => {
-            this.setState({ visible: false, })
-            dispatch({
-              type: 'autoForm/getAutoFormData',
-              payload: {
-                configId: pointConfigId,
-                searchParams: pointDataWhere
-              },
-            });
-          },
-        });
-      }
-    })
+  industryChange = (value) => {
+    const { pointIndustryList } = this.state;
+    const pointTypeData = pointIndustryList.filter(item => item.ChildID === value)
+    this.setState({ pointTypeList: pointTypeData?.length ? pointTypeData[0].clist : [] })
   }
 
-
-  pointInfo = () => {
-    const { getFormDataLoading, } = this.props;
-    const { isEdit, } = this.state;
+  pointInfo = (current) => {
+    const { getFormDataLoading, form, location: { query: { targetId } }, } = this.props;
+    const { isEdit, pointIndustryList, pointTypeList, } = this.state;
     const { getFieldDecorator } = this.props.form;
-    return <Spin spinning={isEdit ? getFormDataLoading : false}>
-      <Form>
-        <Row>
-          <Col span={12}>
-            <FormItem label="监测点名称" >
-              {getFieldDecorator("PointName", {
-                rules: [{ required: true, message: "请输入监测点名称", }],
-              })(<Input placeholder='请输入' allowClear />)}
-            </FormItem>
-          </Col>
-          <Col span={12}>
-            <FormItem label="监测点编号（MN）" >
-              {getFieldDecorator("TestCount", {
-                rules: [{ required: true, message: "请输入监测点编号（MN）", }],
-              })(<InputNumber placeholder='请输入' allowClear />)}
-            </FormItem>
-          </Col>
-          <Col span={12}>
-            <FormItem label="经度" >
-              {getFieldDecorator("TestUser", {
-                rules: [{ required: true, message: "请输入经度", }],
-              })(<SdlMap
-                // longitude={SparePartsStationInfo ? SparePartsStationInfo.Longitude : null}
-                // latitude={SparePartsStationInfo ? SparePartsStationInfo.Latitude : null}
-                handleMarker
-                handlePolygon
-                zoom={12}
-                placeholder='请输入 例如：112.236514'
-              />)}
-            </FormItem>
-          </Col>
-          <Col span={12}>
-            <FormItem label="维度" >
-              {getFieldDecorator("TestUser1", {
-                rules: [{ required: true, message: "请输入维度", }],
-              })(<SdlMap
-              // longitude={SparePartsStationInfo ? SparePartsStationInfo.Longitude : null}
-              // latitude={SparePartsStationInfo ? SparePartsStationInfo.Latitude : null}
+    return <Form style={{ display: current == 0 ? 'block' : 'none' }}>
+      <Row>
+        <FormItem hidden>
+          {getFieldDecorator("id", (<Input />))}
+        </FormItem>
+        <FormItem hidden>
+          {getFieldDecorator("entID", {
+            initialValue: targetId,
+          })(<Input />)}
+        </FormItem>
+        <Col span={12}>
+          <FormItem label="监测点名称" >
+            {getFieldDecorator("pointName", {
+              rules: [{ required: true, message: "请输入监测点名称", }],
+            })(<Input placeholder='请输入' allowClear />)}
+          </FormItem>
+        </Col>
+        <Col span={12}>
+          <FormItem label="监测点编号（MN）" >
+            {getFieldDecorator("dgimn", {
+              rules: [{ required: true, message: "请输入监测点编号（MN）", }],
+            })(<Input placeholder='请输入' allowClear />)}
+          </FormItem>
+        </Col>
+        <Col span={12}>
+          <FormItem label="经度" >
+            {getFieldDecorator("longitude", {
+              rules: [{ required: true, message: "请输入经度", }],
+            })(<SdlMap
+              longitude={form.getFieldValue('longitude') ? form.getFieldValue('longitude') : null}
+              latitude={form.getFieldValue('latitude') ? form.getFieldValue('latitude') : null}
+              onOk={map => {
+                form.setFieldsValue({ longitude: map.longitude, latitude: map.latitude });
+              }}
+              handleMarker
+              handlePolygon
+              zoom={12}
+              placeholder='请输入 例如：112.236514'
+            />)}
+          </FormItem>
+        </Col>
+        <Col span={12}>
+          <FormItem label="纬度" >
+            {getFieldDecorator("latitude", {
+              rules: [{ required: true, message: "请输入维度", }],
+            })(<SdlMap
+              longitude={form.getFieldValue('longitude') ? form.getFieldValue('longitude') : null}
+              latitude={form.getFieldValue('latitude') ? form.getFieldValue('latitude') : null}
+              onOk={map => {
+                form.setFieldsValue({ longitude: map.longitude, latitude: map.latitude });
+              }}
               handleMarker
               handlePolygon
               zoom={12}
               placeholder='请输入 例如：85.236589'
             />)}
-            </FormItem>
-          </Col>
-          <Col span={12}>
+          </FormItem>
+        </Col>
+        <Col span={12}>
+          <Spin spinning={this.props.pointIndustryLoading} size='small' style={{ top: -4 }}>
             <FormItem label="行业">
-              {getFieldDecorator("CalibrationCEMS", {
+              {getFieldDecorator("industry", {
                 rules: [{ required: true, message: "请选择行业", }],
               })(
-                <Select placeholder='请选择' allowClear> 
-                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
-                  <Option key={'2'} value={'2'}>K系数法</Option>
+                <Select placeholder='请选择' allowClear onChange={(value) => this.industryChange(value)}>
+                  {pointIndustryList.map(item => <Option key={item.ChildID} value={item.ChildID}>{item.Name}</Option>)}
                 </Select>
               )}
             </FormItem>
-          </Col>
-          <Col span={12}>
-            <FormItem label="监测点类型" >
-              {getFieldDecorator("CalibrationCEMS", {
-                rules: [{ required: true, message: "请选择监测点类型", }],
-              })(
-                <Select placeholder='请选择' allowClear>
-                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
-                  <Option key={'2'} value={'2'}>K系数法</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col span={12}>
-            <FormItem label="脱销工艺类型">
-              {getFieldDecorator("CalibrationCEMS", {
-                rules: [{ required: true, message: "请选择脱销工艺类型", }],
-              })(
-                <Select placeholder='请选择' allowClear>
-                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
-                  <Option key={'2'} value={'2'}>K系数法</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col span={12}>
-            <FormItem label="脱硫工艺类型">
-              {getFieldDecorator("CalibrationCEMS", {
-                rules: [{ required: true, message: "请选择脱硫工艺类型", }],
-              })(
-                <Select placeholder='请选择'>
-                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
-                  <Option key={'2'} value={'2'}>K系数法</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col span={12}>
-            <FormItem label="除尘工艺类型">
-              {getFieldDecorator("CalibrationCEMS", {
-                rules: [{ required: true, message: "请选择除尘工艺类型", }],
-              })(
-                <Select placeholder='请选择' allowClear>
-                  <Option key={'1'} value={'1'}>一元线性方程法</Option>
-                  <Option key={'2'} value={'2'}>K系数法</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-    </Spin>
+          </Spin>
+        </Col>
+        <Col span={12}>
+          <FormItem label="监测点类型" >
+            {getFieldDecorator("pointType", {
+              rules: [{ required: true, message: "请选择监测点类型", }],
+            })(
+              <Select placeholder='请选择' allowClear>
+                {pointTypeList.map(item => <Option key={item.ChildID} value={item.ChildID}>{item.Name}</Option>)}
+              </Select>
+            )}
+          </FormItem>
+        </Col>
+        <Col span={12}>
+          <FormItem label="脱销工艺类型">
+            {getFieldDecorator("denitrationProcess", {
+              rules: [{ required: true, message: "请选择脱销工艺类型", }],
+            })(
+              <Select placeholder='请选择' allowClear>
+                <Option key={'1'} value={'1'}>脱销工艺类型1</Option>
+              </Select>
+            )}
+          </FormItem>
+        </Col>
+        <Col span={12}>
+          <FormItem label="脱硫工艺类型">
+            {getFieldDecorator("desulfurizationProcess", {
+              rules: [{ required: true, message: "请选择脱硫工艺类型", }],
+            })(
+              <Select placeholder='请选择'>
+                <Option key={'1'} value={'1'}>脱硫工艺类型1</Option>
+              </Select>
+            )}
+          </FormItem>
+        </Col>
+        <Col span={12}>
+          <FormItem label="除尘工艺类型">
+            {getFieldDecorator("dustRemovalProcess", {
+              rules: [{ required: true, message: "请选择除尘工艺类型", }],
+            })(
+              <Select placeholder='请选择' allowClear>
+                <Option key={'1'} value={'1'}>除尘工艺类型1</Option>
+              </Select>
+            )}
+          </FormItem>
+        </Col>
+      </Row>
+    </Form>
+
   }
 
   next = () => {
@@ -361,21 +354,97 @@ export default class Index extends Component {
       current: this.state.current - 1
     })
   };
-  onStepsChange = (value) =>{
+  onStepsChange = (value) => {
     const { pointSaveFlag } = this.state
-    if(!pointSaveFlag){
-     message.error('请先添加监测点信息')
-     return;
+    if (!pointSaveFlag) {
+      message.error('请先添加监测点信息')
+      return;
     }
     this.setState({
       current: value
     })
   }
+
+  saveNext = () => {
+    const { dgimn,current} = this.state;
+    switch (current) {
+      case 0: //监测点信息
+        this.savePoint()
+        break;
+      case 1: //系统信息
+        this.saveSystemInfo(dgimn)
+        break;
+
+    }
+  }
+  savePoint = () => { //监测点信息
+    const { dispatch, match, pointDataWhere, form } = this.props;
+    const { FormData } = this.state;
+    form.validateFields((err, values) => { //监测点
+      if (!err) {
+        const formData = handleFormData(values);
+        dispatch({
+          type: 'ctPollutantManger/addOrEditCommonPointList',
+          payload: { ...formData, },
+          callback: () => {
+            dispatch({
+              type: 'autoForm/getAutoFormData',
+              payload: {
+                configId: pointConfigId,
+                searchParams: pointDataWhere
+              },
+            });
+            this.setState({ pointSaveFlag: true }, () => {
+              this.setState({ current: 1,dgimn:formData.dgimn })
+            })
+          }
+        });
+
+      }
+
+    })
+  }
+  saveSystemInfo = (dgimn) => { //系统信息
+    const { dispatch,systemData,systemEditingKey, } = this.props;
+    if (systemEditingKey) {
+      message.warning('请先保存未保存的数据')
+      return;
+    }
+    const systemList = systemData.map(item => { // 系统信息
+      return {
+        id:item.ID,
+        systemNameID: item.SystemNameID,
+        manufactorID: item.ManufactorID,
+        cemsNum: item.CEMSNum,
+        dgimn: dgimn,
+      }
+    })
+    const par = {
+      dgimn: dgimn,
+      systemList: systemList,
+    }
+    dispatch({
+      type: 'ctPollutantManger/addOrEditCEMSSystem',
+      payload: { ...par },
+      callback:()=>{
+        this.setState({ current: 2 })
+      }
+    });
+  }
+  loadingStatus = () => {
+    const { current } = this.state;
+    const { addOrEditCommonPointLoading,operationCEMSSystemLoading, } = this.props;
+    switch (current) {
+      case 0:
+        return addOrEditCommonPointLoading;
+      case 1 :
+        return operationCEMSSystemLoading;
+    }
+  }
   render() {
-    const { searchConfigItems, searchForm, tableInfo, dispatch, pointDataWhere, loadingAddEditConfirm, getFormDataLoading, configInfo, } = this.props;
+    const { searchConfigItems, searchForm, tableInfo, dispatch, pointDataWhere, addOrEditCommonPointLoading, getFormDataLoading, configInfo, } = this.props;
     const { location: { query: { targetName, targetId } } } = this.props;
-    const { isEdit, thirdParty, current, steps, pointSaveFlag,} = this.state;
-    const noDelFlag = configInfo && configInfo.DeleteTestUser == 0 ? true : false;
+    const { isEdit, thirdParty, current, steps, pointSaveFlag, dgimn, } = this.state;
     const { getFieldDecorator } = this.props.form
 
 
@@ -430,10 +499,9 @@ export default class Index extends Component {
               onAdd={() => { //添加
                 this.addPoint();
               }}
-              noDel={noDelFlag}
               appendHandleRows={row => (
                 <Fragment>
-                  {!noDelFlag && <Divider type="vertical" />}
+                  <Divider type="vertical" />
                   <Tooltip title="编辑">
                     <a
                       onClick={() => {
@@ -444,14 +512,6 @@ export default class Index extends Component {
                     </a>
                   </Tooltip>
 
-
-                  <Divider type="vertical" />
-                  <Tooltip title="设备管理">
-                    <a onClick={() => {
-                      this.deviceManager(row);
-                    }}><FileTextOutlined style={{ fontSize: 16 }} /></a>
-                  </Tooltip>
-
                 </Fragment>
               )}
             />
@@ -460,51 +520,40 @@ export default class Index extends Component {
         <Modal
           title={isEdit ? '编辑监测点' : '添加监测点'}
           visible={this.state.visible}
-          onOk={this.savePointSubmitForm.bind(this)}
           onCancel={() => { this.setState({ visible: false }) }}
           wrapClassName={`spreadOverModal`}
-          confirmLoading={loadingAddEditConfirm || getFormDataLoading}
           destroyOnClose
           className={styles.formModalSty}
           footer={
             <div className="steps-action">
-            {current <= steps.length - 1 && (
-              <Button type="primary" onClick={() => this.next()}>
-                 {current === steps.length - 1 ? '保存' : '保存并下一步'}
-              </Button>
-            )}
-            {pointSaveFlag &&current < steps.length - 1 ? (
-              <Button  onClick={() => this.next()}>
-                跳过
-              </Button>
-            ) : null}
-            {current > 0 && (
-              <Button
-                onClick={() => this.prev()}
-              >
-                上一步
-              </Button>
-            )}
-          </div>
-        }
-          >
-          <Steps current={current} size='small'  onChange={this.onStepsChange} >
-           {steps.map((item) => <Step title={item}   />)}
-          </Steps>
-          <div style={{paddingTop:12}}>
-            {current==0&&this.pointInfo()}
-          </div>
-       
-        </Modal>
-        <Modal
-          title={'设备管理'}
-          visible={this.state.deviceManagerVisible}
-          onCancel={() => { this.setState({ deviceManagerVisible: false }) }}
-          destroyOnClose
-          footer={null}
-          wrapClassName={`spreadOverModal spreadOverHiddenModal`}
+              {current <= steps.length - 1 && (
+                <Button type="primary" loading={this.loadingStatus()} onClick={() => this.saveNext()}>
+                  {current === steps.length - 1 ? '保存' : '保存并下一步'}
+                </Button>
+              )}
+              {pointSaveFlag && current < steps.length - 1 ? (
+                <Button onClick={() => this.next()}>
+                  跳过
+                </Button>
+              ) : null}
+              {current > 0 && (
+                <Button
+                  onClick={() => this.prev()}
+                >
+                  上一步
+                </Button>
+              )}
+            </div>
+          }
         >
-          <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} />
+          <Steps current={current} size='small' onChange={this.onStepsChange} >
+            {steps.map((item) => <Step title={item} />)}
+          </Steps>
+          <div style={{ paddingTop: 12 }}>
+            {this.pointInfo(current)}
+            {<SystemInfo current={current} dgimn={dgimn} submits={this.saveSystemInfo} />}
+          </div>
+
         </Modal>
       </BreadcrumbWrapper>
     );

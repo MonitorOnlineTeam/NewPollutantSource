@@ -266,6 +266,8 @@ const rightTableColumns = [
   deleteUserDepApproveLoading: loading.effects['departinfo/deleteUserDepApprove'],
   insertdepartbyuserLoading: loading.effects['departinfo/insertdepartbyuser'] || false,
   clientHeight: global.clientHeight,
+  testRegionByDepIDLoading: loading.effects['departinfo/getTestRegionByDepID'],
+  insertTestRegionByUserLoading: loading.effects['departinfo/insertTestRegionByUser'],
 }))
 @Form.create()
 class DepartIndex extends Component {
@@ -304,6 +306,9 @@ class DepartIndex extends Component {
       alarmPushData: '',
       postCheckedKeys: '',
       updateOperationVal: '1',
+      selectedTestRowKeys: '',
+      testVisibleRegion: false,
+      testCheckedKey: [],
       columns: [
         {
           title: '部门名称',
@@ -487,7 +492,25 @@ class DepartIndex extends Component {
                     </a>
                   </Popover>
                 </Tooltip></>}
-               {/* {record.leve === '1' && (
+              {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && <>
+                <Divider type="vertical" />
+                <Tooltip title="调试检测区域过滤">
+                  <a
+                    onClick={() => {
+                      this.setState(
+                        {
+                          selectedTestRowKeys: record,
+                        },
+                        () => {
+                          this.showTestRegionModal();
+                        },
+                      );
+                    }}
+                  >
+                    <FilterOutlined style={{ fontSize: 16 }} />
+                  </a>
+                </Tooltip></>}
+              {/* {record.leve === '1' && (
                 <>
                   <Divider type="vertical" />
                   <Tooltip title="省区/大区日常监管配置">
@@ -762,7 +785,7 @@ class DepartIndex extends Component {
       pollutantType: 2,
       DataTreeValue: [],
       checkedKeys: this.props.RegionByDepID,
-      entPointName:'',
+      entPointName: '',
     });
     this.props.dispatch({
       type: 'departinfo/getentandpoint',
@@ -865,24 +888,24 @@ class DepartIndex extends Component {
       });
     }
   };
-  pointAccessClick = () =>{
+  pointAccessClick = () => {
     const dataTreeValue = this.state.DataTreeValue
-    const { pollutantType } = this.state; 
+    const { pollutantType } = this.state;
     this.props.dispatch({
       type: 'newuserinfo/getentandpoint',
       payload: {
-        RegionCode: dataTreeValue&&dataTreeValue.toString(),
+        RegionCode: dataTreeValue && dataTreeValue.toString(),
         PollutantType: pollutantType,
-        Name:this.state.entPointName,
+        Name: this.state.entPointName,
       },
     });
     const keys = this.state.selectedRowKeys.key;
     this.props.dispatch({
       type: 'newuserinfo/getpointbydepid',
       payload: {
-        UserGroup_ID: keys&&keys.toString(),
+        UserGroup_ID: keys && keys.toString(),
         PollutantType: pollutantType,
-        RegionCode: dataTreeValue&&dataTreeValue.toString(),
+        RegionCode: dataTreeValue && dataTreeValue.toString(),
       },
     });
   }
@@ -1032,7 +1055,7 @@ class DepartIndex extends Component {
     this.props.dispatch({
       type: 'departinfo/getregionbydepid',
       payload: {
-        UserGroup_ID: keys.toString(),
+        UserGroup_ID: keys && keys.toString(),
       },
       callback: res => {
         this.setState({ checkedKey: res.userFlagList, postCheckedKeys: res.userList });
@@ -1043,7 +1066,48 @@ class DepartIndex extends Component {
     //   checkedKey: this.props.RegionByDepID,
     // });
   };
+  renderTestTreeNodes = data =>
+   data.map(item => {
+    return <TreeNode title={item.label} key={item.value} dataRef={item}></TreeNode>;
+  });
+  showTestRegionModal = () => {
+    if (this.state.selectedTestRowKeys?.length == 0) {
+      message.error('请选中一行');
+      return;
+    }
+    this.setState({
+      testVisibleRegion: true,
+    },()=>{
+      const keys = this.state.selectedTestRowKeys.key;
+      this.props.dispatch({
+        type: 'departinfo/getTestRegionByDepID',
+        payload: {
+          UserGroup_ID: keys && keys.toString(),
+        },
+        callback: res => {
+          this.setState({ testCheckedKey: res, });
+        },
+      });
+    });
 
+  }
+
+  onTestCheck = (checkedKey, info) => {
+    this.setState({ testCheckedKey: checkedKey });
+  };
+
+  handleTestRegionOK = (e) => {
+    this.props.dispatch({
+      type: 'departinfo/insertTestRegionByUser',
+      payload: {
+        RegionCode: this.state.testCheckedKey, 
+        UserGroup_ID: this.state.selectedTestRowKeys?.key,
+      },
+      callback: res => {
+        this.setState({ testVisibleRegion: false })
+      },
+    });
+  }
   componentWillReceiveProps(nextProps) {
     if (this.props.UserByDepID !== nextProps.UserByDepID) {
       const selectId = nextProps.UserByDepID.map(item => item.key);
@@ -1207,7 +1271,6 @@ class DepartIndex extends Component {
       }
       return <TreeNode {...item} />;
     });
-
   renderDataTreeNodes = data =>
     data.map(item => {
       if (item.children) {
@@ -1356,6 +1419,8 @@ class DepartIndex extends Component {
       btnloading1,
       insertregionbyuserLoading,
       userDepApproveInfoList,
+      testRegionByDepIDLoading,
+      insertTestRegionByUserLoading,
     } = this.props;
     const {
       targetKeys,
@@ -1858,6 +1923,39 @@ class DepartIndex extends Component {
                   </Select>
                 </Form.Item>
               </Form>
+            </Modal>
+            <Modal
+              title={`调试检测区域过滤-${this.state.selectedTestRowKeys?.UserGroup_Name}`}
+              visible={this.state.testVisibleRegion}
+              onOk={this.handleTestRegionOK}
+              destroyOnClose="true"
+              onCancel={() => { this.setState({ testVisibleRegion: false }) }}
+              width={900}
+              confirmLoading={insertTestRegionByUserLoading}
+            >
+              {this.props.testRegionByDepIDLoading ? (
+                <Spin
+                  style={{
+                    width: '100%',
+                    height: 'calc(100vh/2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  size="large"
+                />
+              ) : (
+                  <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                    <Tree
+                      key="key"
+                      checkable
+                      onCheck={this.onTestCheck}
+                      checkedKeys={this.state.testCheckedKey}
+                    >
+                      {this.renderTestTreeNodes(this.props.RegionInfoTree)}
+                    </Tree>
+                  </div>
+                )}
             </Modal>
           </BreadcrumbWrapper>
         }

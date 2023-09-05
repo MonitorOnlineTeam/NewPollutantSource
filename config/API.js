@@ -223,12 +223,12 @@ export const API = {
     //唐银项目所有点位监控信息 - 单个企业
     GetDataForSingleEnt: `${before}/EnterpriseApi/GetTyEntAndPoint`
   },
-  
+
   // 首页Api
   HomeApi: {
-    
+
   },
- 
+
   // 报表Api
   ReportApi: {
     // 站点日报查询
@@ -384,7 +384,7 @@ export const API = {
     // 海康云台操作
     PTZControl: before + '/VideoApi/PTZControl',
   },
-  
+
   // console Api
   ConsoleApi: {
     // 获取采集服务配置及基本信息
@@ -412,6 +412,23 @@ export const API = {
     // 重启转发服务
     RestartTransmit: '/DataTransmit/api/DataTransmitSet/RestartTransmit',
   },
+  /**成套 */
+
+  //资产管理 Api
+  ctAssetManagementApi: {
+    //添加或修改监测点
+    AddOrEditCommonPointList: before + '/CTBaseDataApi/AddOrEditCommonPointList',
+    //获取行业和监测点类型信息
+    GetPointIndustryList: before + '/CTBaseDataApi/GetPointIndustryList',
+    // 获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
+    GetCEMSSystemList: before + '/CTBaseDataApi/GetCEMSSystemList',
+    // 添加或修改系统型号
+    AddOrEditCEMSSystem: before + '/CTBaseDataApi/AddOrEditCEMSSystem',
+    //添加或修改仪表信息更换信息
+    AddOrEditCEMSSystemChange: before + '/CTBaseDataApi/AddOrEditCEMSSystemChange',
+    // 添加或修仪表信息
+    AddOrEditEquipment: before + '/CTBaseDataApi/AddOrEditEquipment',
+  }
 };
 
 export const UPLOAD = {};

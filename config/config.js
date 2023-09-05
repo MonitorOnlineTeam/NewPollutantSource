@@ -6,8 +6,9 @@ import webpackPlugin from './plugin.config';
 import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-
+import path from 'path';
 const apiHost = 'http://172.16.12.234:61002/';
+// const apiHost = 'http://172.16.12.152:50089/';
 // const apiHost = 'http://61.50.135.114:63001/'; // 运维外网
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:63001/';
@@ -3006,6 +3007,10 @@ export default {
 
       return localName;
     },
+  },
+  alias: {
+    '@config': path.resolve(__dirname, '../config'),
+    '@public': path.resolve(__dirname, '../public'),
   },
   manifest: {
     basePath: '/',

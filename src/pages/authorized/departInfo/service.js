@@ -285,3 +285,14 @@ export async function DeleteProvinceOrRegionalOne(params) {
   );
   return result;
 }
+
+// 调试检测区域过滤 获取选中
+export async function getTestRegionByDepID(params) {
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetTestRegionByDepID', params, null);
+  return result;
+}
+// 调试检测区域过滤 提交
+export async function insertTestRegionByUser(params) {
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertTestRegionByUser', params, null);
+  return result;
+}

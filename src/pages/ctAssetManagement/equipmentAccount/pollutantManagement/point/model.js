@@ -3,12 +3,14 @@ import * as services from './service';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'commissionTestPoint',
+  namespace: 'ctPollutantManger',
   state: {
     pointDataWhere: null,
     commissionTestPointTime: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")],
     systemModelList: [],
     systemModelListTotal: null,
+    systemData:[],
+    systemEditingKey:'',
     equipmentInfoList: [],
     equipmentInfoListTotal: null,
     paramInfoList: [],
@@ -53,15 +55,6 @@ export default Model.extend({
         yield update({ tableLoading: false })
       }
     },
-    //获取站点CEMS参数信息
-    *getCEMSSystemList({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(services.GetCEMSSystemList, { ...payload });
-      if (result.IsSuccess) {
-        callback(result.Datas)
-      } else {
-        message.error(result.Message)
-      }
-    },
     //操作站点CEMS参数信息 
     *operationCEMSSystem({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.OperationCEMSSystem, { ...payload });
@@ -89,9 +82,40 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    //添加或修改调试检测排口
-    *addOrUpdateTestPoint({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(services.AddOrUpdateTestPoint, { ...payload });
+    //添加或修改监测点信息
+    *addOrEditCommonPointList({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.addOrEditCommonPointList, { ...payload });
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //获取行业和监测点类型信息
+    *getPointIndustryList({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.getPointIndustryList, { ...payload });
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
+    *getCEMSSystemList({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.getCEMSSystemList, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          cEMSSystemList: result.Datas ? result.Datas : [],
+        })
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //添加或修改系统型号
+    *addOrEditCEMSSystem({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.addOrEditCEMSSystem, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()

@@ -27,6 +27,8 @@ import {
   InsOrUpdProvinceOrRegional,
   GetProvinceOrRegionalList,
   DeleteProvinceOrRegionalOne,
+  getTestRegionByDepID,
+  insertTestRegionByUser,
 } from './service';
 import { message } from 'antd';
 /*
@@ -65,7 +67,7 @@ export default Model.extend({
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      history.listen(location => {});
+      history.listen(location => { });
     },
   },
   effects: {
@@ -422,6 +424,25 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('删除成功！');
         callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    //调试检测区域过滤 获取选中
+    *getTestRegionByDepID({ payload, callback }, { call, update }) {
+      const result = yield call(getTestRegionByDepID, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 调试检测区域过滤 提交
+    *insertTestRegionByUser({ payload, callback }, { call, update }) {
+      const result = yield call(insertTestRegionByUser, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback(result);
       } else {
         message.error(result.Message);
       }

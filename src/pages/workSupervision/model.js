@@ -640,7 +640,7 @@ export default Model.extend({
              return data.map(item => {
               return {
                 selectable:item.children?.length? false : true,
-                title: item.breadcrumbNames,
+                title: item.name,
                 key: item.id,
                 children: allMenuListFun(item.children) ?  allMenuListFun(item.children) : [],
                 icon:item.children?.length? null : <img src='/work_meun.png' style={{ paddingRight: 8 }} />

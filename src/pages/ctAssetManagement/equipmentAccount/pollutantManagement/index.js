@@ -88,8 +88,8 @@ export default class Index extends Component {
         router.push({
             pathname: `/ctAssetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point`,
             query: {
-                targetId :row['dbo.T_Bas_Enterprise.ID'],
-                targetName : row['dbo.T_Bas_Enterprise.EntName'],
+                targetId :row['dbo.T_Bas_CTEnterprise.ID'],
+                targetName : row['dbo.T_Bas_CTEnterprise.EntName'],
             },
         });
     }
