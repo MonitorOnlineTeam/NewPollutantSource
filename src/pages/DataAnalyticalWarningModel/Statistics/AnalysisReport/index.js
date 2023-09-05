@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-31 13:34:39
+ * @Last Modified time: 2023-09-04 11:37:13
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -551,8 +551,6 @@ const Index = props => {
     ];
   }
   let EmptyDescription = modelGuid ? '暂无数据' : '请选择场景后查询！';
-  console.log('modelInfoLoading', modelInfoLoading);
-  console.log('modelInfo.ModelName', modelInfo.ModelName);
   return (
     <BreadcrumbWrapper>
       <div className={styles.AnalysisReport}>

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:47:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-31 19:45:41
+ * @Last Modified time: 2023-09-01 11:07:22
  * @Description:
  */
 import React, { useState, useEffect } from 'react';
@@ -45,7 +45,7 @@ const Index = props => {
   const [selectPollutant, setSelectPollutant] = useState(PollutantListConst);
   const [dataSource, setDataSource] = useState([]);
   const [chartData, setChartData] = useState([]);
-  const [zoomInChartData, setZoomInChartData] = useState([]); // 存放放大图表的数据
+  const [zoomInChartData, setZoomInChartData] = useState(); // 存放放大图表的数据
   const [currentData, setCurrentData] = useState({}); // 当前点击的柱状图数据
   const [visible, setVisible] = useState(false);
   const [zoomInVisible, setZoomInVisible] = useState(false); // 放大图标弹窗是否显示
@@ -108,6 +108,10 @@ const Index = props => {
   };
 
   const getOption = (data, flag) => {
+    if(!data) {
+      return {};
+    }
+
     let otherOptions = {};
     // 大图增加配置
     if (flag) {
@@ -121,6 +125,13 @@ const Index = props => {
         },
       };
     }
+
+    //
+    let xAxisData = [];
+    if (data && data.Datas)
+      for (let index = 0; index < data.Datas.length; index++) {
+        xAxisData.push(index);
+      }
 
     let option = {
       color: '#5470c6',
@@ -158,7 +169,7 @@ const Index = props => {
       },
       xAxis: {
         type: 'category',
-        data: data.xData,
+        data: xAxisData,
       },
       yAxis: {
         type: 'value',
