@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-04 11:37:13
+ * @Last Modified time: 2023-09-04 14:44:00
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -47,6 +47,7 @@ const dvaPropsData = ({ loading, dataModel }) => ({
   modelListLoading: loading.effects['dataModel/GetModelList'],
   modelInfoLoading: loading.effects['dataModel/StatisAlarmInfoSum'],
   exportLoading: loading.effects['dataModel/ExportStatisAlarmReport'],
+  allExportLoading: loading.effects['dataModel/ExportStatisAlarmAllReport'],
   queryLoading:
     loading.effects[
       ('dataModel/StatisAlarmInfoSum',
@@ -66,6 +67,7 @@ const Index = props => {
     modelInfoLoading,
     queryLoading,
     exportLoading,
+    allExportLoading,
     warningForm,
   } = props;
   const [modelList, setModelList] = useState([]);
@@ -193,13 +195,14 @@ const Index = props => {
   const onExportStatisAlarmReport = type => {
     let reqBody = getRequestBody();
     let modelGuid = [reqBody.modelGuid];
-
+    let actionType = 'dataModel/ExportStatisAlarmReport';
     // 全模型导出
     if (type === 'all') {
+      actionType = 'dataModel/ExportStatisAlarmAllReport';
       modelGuid = modelList.map(item => item.ModelGuid);
     }
     dispatch({
-      type: 'dataModel/ExportStatisAlarmReport',
+      type: actionType,
       payload: {
         ...reqBody,
         modelGuid: modelGuid,
@@ -668,7 +671,7 @@ const Index = props => {
                   <Button
                     type="primary"
                     onClick={() => onExportStatisAlarmReport('all')}
-                    loading={exportLoading}
+                    loading={allExportLoading}
                   >
                     全模型导出
                   </Button>

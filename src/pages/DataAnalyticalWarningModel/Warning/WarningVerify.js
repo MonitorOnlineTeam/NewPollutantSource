@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-31 18:33:34
+ * @Last Modified time: 2023-09-06 15:37:47
  * @Description：报警核实详情
  */
 
@@ -186,21 +186,22 @@ const WarningVerify = props => {
           startPoint: chart.startPoint,
           endPoint: chart.endPoint,
         });
-      } else if (WarningTypeCode === 'd5dea4cc-bd6c-44fa-a122-a1f44514b465') {
-        debugger;
-        chart.data.map(item => {
-          let data = [];
-          item.data.map((itm, index) => {
-            data.push([itm, item.dataHistory[index]]);
-          });
-          linearDatas.push({
-            title: item.pollutantName + '数据与历史线性一致或重合',
-            linear: item.linear,
-            data: data,
-            names: [item.pollutantName, item.pollutantName + '历史'],
-          });
-        });
       }
+      // else if (WarningTypeCode === 'd5dea4cc-bd6c-44fa-a122-a1f44514b465') {
+      //   debugger;
+      //   chart.data.map(item => {
+      //     let data = [];
+      //     item.data.map((itm, index) => {
+      //       data.push([itm, item.dataHistory[index]]);
+      //     });
+      //     linearDatas.push({
+      //       title: item.pollutantName + '数据与历史线性一致或重合',
+      //       linear: item.linear,
+      //       data: data,
+      //       names: [item.pollutantName, item.pollutantName + '历史'],
+      //     });
+      //   });
+      // }
     });
 
     setLinearDatas(linearDatas);
