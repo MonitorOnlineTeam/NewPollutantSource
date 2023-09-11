@@ -428,7 +428,12 @@ const ModelChart = props => {
   const { trend } = chartData.data[legendIndex];
 
   return (
-    <div className={styles.chartBox}>
+    <div
+      className={styles.chartBox}
+      style={{
+        height: WarningTypeCode === 'd5dea4cc-bd6c-44fa-a122-a1f44514b465' ? '440px' : '320px',
+      }}
+    >
       {/* {trend && (
         <span className={styles.trend} style={{ top: 60 }}>
           趋势相似度 {trend}
@@ -438,7 +443,7 @@ const ModelChart = props => {
         option={getOption()}
         lazyUpdate
         style={{
-          height: WarningTypeCode === 'd5dea4cc-bd6c-44fa-a122-a1f44514b465' ? '440px' : '100%',
+          height: '100%',
           width: '100%',
         }}
         // style={{ height: '700px', width: '100%' }}

@@ -20,7 +20,6 @@ function initWarningForm() {
       pageIndex: 1,
     };
   }
-  console.log('warningForm2', warningForm);
   return warningForm;
 }
 
@@ -730,6 +729,7 @@ export default Model.extend({
     *ExportStatisNormalRange({ payload, callback }, { call, select, update }) {
       const result = yield call(services.ExportStatisNormalRange, payload);
       if (result.IsSuccess) {
+        message.success('导出成功！');
         window.open(result.Datas);
       } else {
         message.error(result.Message);
@@ -739,16 +739,17 @@ export default Model.extend({
     *ExportStatisAlarmReport({ payload, callback }, { call, select, update }) {
       const result = yield call(services.ExportStatisAlarmReport, payload);
       if (result.IsSuccess) {
-        // var a = document.createElement('a');
-        // let sUrl = result.Datas;
-        // a.href = sUrl;
-        // var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
-        // a.download = fileName;
-        // a.rel = 'noopener noreferrer';
-        // a.click();
-        // setTimeout(() => {
-        //   a.remove();
-        // }, 1000);
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 场景模型分析报告 - 全模型导出
+    *ExportStatisAlarmAllReport({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.ExportStatisAlarmReport, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功！');
         downloadFile(result.Datas);
       } else {
         message.error(result.Message);
@@ -758,6 +759,7 @@ export default Model.extend({
     *ExportStatisAlarm({ payload, callback }, { call, select, update }) {
       const result = yield call(services.ExportStatisAlarm, payload);
       if (result.IsSuccess) {
+        message.success('导出成功！');
         downloadFile(result.Datas);
         // window.open(result.Datas);
       } else {
