@@ -1,6 +1,6 @@
 /**
  * 功  能：烟气参数备案
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2021.3.2
  */
 import React, { useState,useEffect  } from 'react';

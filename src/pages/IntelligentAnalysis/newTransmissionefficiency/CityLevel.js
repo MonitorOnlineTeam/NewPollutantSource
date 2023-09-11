@@ -1,6 +1,6 @@
 /**
  * 功  能：有效传输率
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020
  */
 import React, { Component } from 'react';

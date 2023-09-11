@@ -7,14 +7,20 @@ export default Model.extend({
   state: {
     pointDataWhere: null,
     commissionTestPointTime: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")],
-    systemModelList: [],
-    systemModelListTotal: null,
     systemData:[],
     systemEditingKey:'',
+    systemModelList: [],
+    systemModelListTotal: null,
+    systemChangeData:[],
+    systemChangeEditingKey:'',
+    projectModelList:[],
+    deviceData:[],
+    deviceEditingKey:'',
+    manufacturerList:[],
     equipmentInfoList: [],
     equipmentInfoListTotal: null,
-    paramInfoList: [],
-    paramInfoListTotal: null,
+    deviceChangeData:[],
+    deviceChangeEditingKey:'',
   },
   effects: {
     // cems 系统信息 - CEMS生产厂家(弹框) 
@@ -41,53 +47,12 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    //参比仪器 - 生产厂家(弹框) 
-    *getTestParamInfoList({ payload, callback }, { call, put, update }) {
-      yield update({ tableLoading: true })
-      const result = yield call(services.GetTestParamInfoList, payload);
-      if (result.IsSuccess) {
-        yield update({
-          paramInfoListTotal: result.Total,
-          paramInfoList: result.Datas ? result.Datas.mlist : [],
-        })
-      } else {
-        message.error(result.Message)
-        yield update({ tableLoading: false })
-      }
-    },
-    //操作站点CEMS参数信息 
-    *operationCEMSSystem({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(services.OperationCEMSSystem, { ...payload });
-      if (result.IsSuccess) {
-        callback()
-      } else {
-        message.error(result.Message)
-      }
-    },
-    //获取参比仪器信息
-    *getParamList({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(services.GetParamList, { ...payload });
-      if (result.IsSuccess) {
-        callback(result.Datas)
-      } else {
-        message.error(result.Message)
-      }
-    },
-    //操作站点参比仪器信息 
-    *operationParam({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(services.OperationParam, { ...payload });
-      if (result.IsSuccess) {
-        callback()
-      } else {
-        message.error(result.Message)
-      }
-    },
     //添加或修改监测点信息
     *addOrEditCommonPointList({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.addOrEditCommonPointList, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result)
       } else {
         message.error(result.Message)
       }
@@ -113,9 +78,49 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    //添加或修改系统型号
+    //添加或修改系统型信息
     *addOrEditCEMSSystem({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.addOrEditCEMSSystem, { ...payload });
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //添加或修改系统更换记录
+    *addOrEditCEMSSystemChange({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.addOrEditCEMSSystemChange, { ...payload });
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //添加或修改仪表信息
+    *addOrEditEquipment({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.addOrEditEquipment, { ...payload });
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+     //添加或修改仪表更换记录
+    *addOrEditEquipmentChange({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.addOrEditEquipmentChange, { ...payload });
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //监测点排序
+    *pointSort({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.pointSort, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()

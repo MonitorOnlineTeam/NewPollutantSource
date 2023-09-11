@@ -1,6 +1,6 @@
 /**
  * 功  能：联网率
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2021.06.22
  */
 import React, { Component } from 'react';

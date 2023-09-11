@@ -1,6 +1,6 @@
 /**
  * 功  能：空气质量状况统计
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.12.28
  */
 import React, { Component } from 'react';

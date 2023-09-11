@@ -1,7 +1,7 @@
 
 /**
  * 功  能：首页弹框
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';

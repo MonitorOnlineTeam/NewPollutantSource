@@ -1,6 +1,6 @@
 /**
  * 功  能：远程督查 详情
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2022.3.16
  */
 import React, { useState,useEffect,Fragment  } from 'react';

@@ -1,6 +1,6 @@
 /**
  * 功  能：统计量变化趋势
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2019.10.19
  */
 import React, { Component } from 'react';

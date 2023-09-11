@@ -1,6 +1,6 @@
 /**
  * 功  能：新报警推送关联组件
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.12.30
  */
 import React, { Component } from 'react';

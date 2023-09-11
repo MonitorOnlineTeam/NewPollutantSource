@@ -1,6 +1,6 @@
 /**
  * 功  能：排放量变化趋势
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.10.19
  */
 import React, { Component } from 'react';

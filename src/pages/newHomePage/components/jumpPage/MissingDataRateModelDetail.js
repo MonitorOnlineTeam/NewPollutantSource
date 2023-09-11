@@ -1,6 +1,6 @@
 /**
  * 功  能：缺失报警响应率详情
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.11
  */
 import React, { Component } from 'react';

@@ -880,7 +880,6 @@ const Index = (props) => {
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
-    [`Recursion${item.deptId}`]
     }
   }
 
@@ -1121,7 +1120,7 @@ const handleSystemAdd = () => { //添加系统信息
   const [manufacturerPopVisible, setManufacturerPopVisible] = useState(false)
   const manufacturerPopVisibleClick = () => { // cems-系统信息 设备生产厂家
     setManufacturerPopVisible(true)
-    form.setFieldsValue({ 'SystemName': cemsVal })
+    form.setFieldsValue({ SystemName: cemsVal })
     setTimeout(() => {
       onFinish2(1, 10, cemsVal)
     })

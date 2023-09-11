@@ -1,6 +1,6 @@
 /**
  * 功  能：设备异常
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';

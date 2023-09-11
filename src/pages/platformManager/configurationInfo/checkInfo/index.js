@@ -1,6 +1,6 @@
 /**
  * 功  能：核查设置
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2022.04.13
  */
 import React, { useState,useEffect,Fragment  } from 'react';

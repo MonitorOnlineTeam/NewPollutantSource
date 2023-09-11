@@ -1,6 +1,6 @@
 /**
  * 功  能：标准气体 试剂信息
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2022.02.21 02.28
  */
 import React, { useState, useEffect, Fragment } from 'react';

@@ -2952,6 +2952,12 @@ export default {
                       path: '/ctAssetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
                       component: './ctAssetManagement/equipmentAccount/pollutantManagement/point',
                     },
+                    {
+                      // 项目管理
+                      name: 'ctProjectManager',
+                      path: '/ctAssetManagement/equipmentAccount/projectManager',
+                      component: './ctAssetManagement/equipmentAccount/projectManager',
+                    },
                   ],
                 },
 

@@ -1,6 +1,6 @@
 /**
  * 功  能：设备信息
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2021.11.11
  */
 import React, { useState, useEffect, Fragment } from 'react';

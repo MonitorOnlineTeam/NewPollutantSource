@@ -4,7 +4,7 @@ import { GetAlarmPushDepOrRole,InsertAlarmDepOrRole } from '@/services/globalApi
 import { message } from 'antd';
 /*
 报警关联
-add by 贾安波
+add by jab
 modify by
 */
 export default Model.extend({

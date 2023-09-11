@@ -492,7 +492,7 @@ class DepartIndex extends Component {
                     </a>
                   </Popover>
                 </Tooltip></>}
-              {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && <>
+              {/* {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && <>
                 <Divider type="vertical" />
                 <Tooltip title="调试检测区域过滤">
                   <a
@@ -509,7 +509,7 @@ class DepartIndex extends Component {
                   >
                     <FilterOutlined style={{ fontSize: 16 }} />
                   </a>
-                </Tooltip></>}
+                </Tooltip></>} */}
               {/* {record.leve === '1' && (
                 <>
                   <Divider type="vertical" />

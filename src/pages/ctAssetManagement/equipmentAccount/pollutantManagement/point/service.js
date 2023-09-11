@@ -15,53 +15,47 @@ export async function GetTestEquipmentInfoList(params) {
   return result;
 }
 
-//参比仪器设备清单 列表
-export async function GetTestParamInfoList (params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestParamInfoList',params, null);
-  return result;
-} 
 
-// 操作站点CEMS参数信息
-export async function OperationCEMSSystem(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/OperationCEMSSystem', params);
-  return result;
-}
-
-// 获取参比仪器信息
-export async function GetParamList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetParamList', params);
-  return result;
-}
-
-// 操作站点参比仪器信息
-export async function OperationParam(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/OperationParam', params);
-  return result;
-}
-
-// 添加或修改调试检测排口
-export async function AddOrUpdateTestPoint(params) {
-  const result = post('/api/rest/PollutantSourceApi/TaskFormApi/AddOrUpdateTestPoint', params);
-  return result;
-}	
 //添加或修改 监测点
 export async function addOrEditCommonPointList(params) {
-  const result = post(API.ctAssetManagementApi.AddOrEditCommonPointList, params);
+  const result = post(API.CtAssetManagementApi.AddOrEditCommonPointList, params);
   return result;
 }
 
 //获取行业和监测点类型信息
 export async function getPointIndustryList(params) {
-  const result = post(API.ctAssetManagementApi.GetPointIndustryList, params);
+  const result = post(API.CtAssetManagementApi.GetPointIndustryList, params);
   return result;
 }
 //获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
 export async function getCEMSSystemList(params) {
-  const result = post(API.ctAssetManagementApi.GetCEMSSystemList, params);
+  const result = post(API.CtAssetManagementApi.GetCEMSSystemList, params);
   return result;
 }
 //添加或修改系统型号
 export async function addOrEditCEMSSystem(params) {
-  const result = post(API.ctAssetManagementApi.AddOrEditCEMSSystem, params);
+  const result = post(API.CtAssetManagementApi.AddOrEditCEMSSystem, params);
   return result;
 }
+//添加或修改系统更换记录
+export async function addOrEditCEMSSystemChange(params) {
+  const result = post(API.CtAssetManagementApi.AddOrEditCEMSSystemChange, params);
+  return result;
+}
+//添加或修改仪表信息
+export async function addOrEditEquipment(params) {
+  const result = post(API.CtAssetManagementApi.AddOrEditEquipment, params);
+  return result;
+}
+//添加或修改仪表更换记录
+export async function addOrEditEquipmentChange(params) {
+  const result = post(API.CtAssetManagementApi.AddOrEditEquipmentChange, params);
+  return result;
+}
+
+//监测点排序
+export async function pointSort(params) {
+  const result = post(API.CtAssetManagementApi.PointSort, params);
+  return result;
+}
+

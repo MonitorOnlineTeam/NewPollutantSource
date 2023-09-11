@@ -1,6 +1,6 @@
 /**
  * 功  能：统计分析 流量对比分析
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020 10
  */
 import React, { Component } from 'react';

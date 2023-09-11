@@ -39,6 +39,10 @@ import moment from 'moment'
 import DeviceManager from './DeviceManager'
 import SdlMap from '@/pages/AutoFormManager/SdlMap'
 import SystemInfo from '../components/SystemInfo'
+import SystemReplaceRecord from '../components/SystemReplaceRecord'
+import InstrumentInfo from '../components/InstrumentInfo'
+import InstrumentReplaceRecord from '../components/InstrumentReplaceRecord'
+
 const pointConfigId = 'CTPoint'
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -54,11 +58,20 @@ const { Step } = Steps;
   configInfo: global.configInfo,
   addOrEditCommonPointLoading: loading.effects['ctPollutantManger/addOrEditCommonPointList'],
   pointIndustryLoading: loading.effects['ctPollutantManger/getPointIndustryList'],
-  operationCEMSSystemLoading: loading.effects[`ctPollutantManger/addOrEditCEMSSystem`],
-  systemEditingKey:ctPollutantManger.systemEditingKey,
-  systemData:ctPollutantManger.systemData,
+  addOrEditCEMSSystemLoading: loading.effects[`ctPollutantManger/addOrEditCEMSSystem`],
+  systemEditingKey: ctPollutantManger.systemEditingKey,
+  systemData: ctPollutantManger.systemData,
+  addOrEditCEMSSystemChangeLoading: loading.effects[`ctPollutantManger/addOrEditCEMSSystemChange`],
+  systemChangeEditingKey: ctPollutantManger.systemChangeEditingKey,
+  systemChangeData: ctPollutantManger.systemChangeData,
+  addOrEditEquipmentLoading: loading.effects[`ctPollutantManger/addOrEditEquipment`],
+  deviceEditingKey: ctPollutantManger.deviceEditingKey,
+  deviceData: ctPollutantManger.deviceData,
+  addOrEditEquipmentChangeLoading: loading.effects[`ctPollutantManger/addOrEditEquipmentChange`],
+  deviceChangeEditingKey: ctPollutantManger.deviceChangeEditingKey,
+  deviceChangeData: ctPollutantManger.deviceChangeData,
+  saveSortLoading: loading.effects[`ctPollutantManger/pointSort`],
 }))
-
 @Form.create()
 export default class Index extends Component {
   constructor(props) {
@@ -82,6 +95,7 @@ export default class Index extends Component {
       ],
       pointIndustryList: [],
       pointTypeList: [],
+      loadFlag: false,
     };
 
   }
@@ -124,20 +138,20 @@ export default class Index extends Component {
       type: 'ctPollutantManger/getPointIndustryList',
       payload: {},
       callback: (res) => {
-        this.setState({ pointIndustryList: res, })
+        this.setState({ pointIndustryList: res,loadFlag:true, })
       }
     })
   }
 
   addPoint = () => { //添加监测点 弹框
     const { form, } = this.props;
-    this.setState({ visible: true, isEdit: false, dgimn: '', pointSaveFlag: false, current: 0 })
+    this.setState({ visible: true, isEdit: false, dgimn: '', pointId: '', pointSaveFlag: false, current: 0 })
     form.resetFields();
   }
   editPoint = (row) => {
     const { dispatch, form, } = this.props;
     const { pointIndustryList } = this.state;
-    const dgimn = row['dbo.T_Bas_CTCommonPoint.DGIMN'];
+    const dgimn = row['dbo.T_Bas_CTCommonPoint.ID'];
     const industry = row['dbo.T_Bas_CTCommonPoint.Industry']
     const pointTypeData = pointIndustryList.filter(item => item.ChildID === industry)
     this.setState({
@@ -151,7 +165,7 @@ export default class Index extends Component {
       form.setFieldsValue({
         id: row['dbo.T_Bas_CTCommonPoint.ID'],
         pointName: row['dbo.T_Bas_CTCommonPoint.PointName'],
-        dgimn: dgimn,
+        dgimn: row['dbo.T_Bas_CTCommonPoint.DGIMN'],
         longitude: row['dbo.T_Bas_CTCommonPoint.Longitude'],
         latitude: row['dbo.T_Bas_CTCommonPoint.Latitude'],
         industry: industry,
@@ -163,6 +177,29 @@ export default class Index extends Component {
     });
 
 
+  }
+  dragData = (data) => {
+    this.setState({
+      dragDatas: data
+    })
+  }
+  getAutoFormDataNoPage = (callback) => {
+    this.props.dispatch({
+      type: `autoForm/getAutoFormData`,
+      payload: {
+        configId: pointConfigId,
+        searchParams: this.props.pointDataWhere,
+        otherParams: {
+          SortFileds: 'Sort',
+          IsAsc: true,
+          pageIndex: 1,
+          pageSize: 100000,
+        }
+      },
+      callback: () => {
+        callback && callback()
+      }
+    })
   }
   updateSort = () => { //更新排序
     const { sortTitle } = this.state;
@@ -181,12 +218,12 @@ export default class Index extends Component {
   }
   saveSort = () => { //保存排序
     const { dragDatas } = this.state;
-    const mnList = dragDatas.map(item => item['dbo.T_Bas_CommonPoint.DGIMN'])
-    if (mnList && mnList[0]) {
+    const pointIdList = dragDatas.map(item => item['dbo.T_Bas_CTCommonPoint.ID'])
+    if (pointIdList && pointIdList[0]) {
       this.props.dispatch({
-        type: `point/pointSort`,
+        type: `ctPollutantManger/pointSort`,
         payload: {
-          mnList: mnList,
+          ListPointId: pointIdList,
         },
         callback: (isSuccess) => {
           if (isSuccess) {
@@ -244,7 +281,7 @@ export default class Index extends Component {
         <Col span={12}>
           <FormItem label="监测点编号（MN）" >
             {getFieldDecorator("dgimn", {
-              rules: [{ required: true, message: "请输入监测点编号（MN）", }],
+              // rules: [{ required: false, message: "请输入监测点编号（MN）", }],
             })(<Input placeholder='请输入' allowClear />)}
           </FormItem>
         </Col>
@@ -366,7 +403,7 @@ export default class Index extends Component {
   }
 
   saveNext = () => {
-    const { dgimn,current} = this.state;
+    const { dgimn, current, } = this.state;
     switch (current) {
       case 0: //监测点信息
         this.savePoint()
@@ -374,7 +411,15 @@ export default class Index extends Component {
       case 1: //系统信息
         this.saveSystemInfo(dgimn)
         break;
-
+      case 2: //系统更换记录
+        this.saveSystemChangeInfo(dgimn)
+        break;
+      case 3: //仪表信息
+        this.saveInstrumentInfo(dgimn)
+        break;
+      case 4: //仪表更换记录
+        this.saveInstrumentChangeInfo(dgimn)
+        break;
     }
   }
   savePoint = () => { //监测点信息
@@ -386,7 +431,10 @@ export default class Index extends Component {
         dispatch({
           type: 'ctPollutantManger/addOrEditCommonPointList',
           payload: { ...formData, },
-          callback: () => {
+          callback: (res) => {
+            this.setState({ pointSaveFlag: true }, () => {
+              this.setState({ current: 1, dgimn: res.Datas })
+            })
             dispatch({
               type: 'autoForm/getAutoFormData',
               payload: {
@@ -394,9 +442,6 @@ export default class Index extends Component {
                 searchParams: pointDataWhere
               },
             });
-            this.setState({ pointSaveFlag: true }, () => {
-              this.setState({ current: 1,dgimn:formData.dgimn })
-            })
           }
         });
 
@@ -405,18 +450,18 @@ export default class Index extends Component {
     })
   }
   saveSystemInfo = (dgimn) => { //系统信息
-    const { dispatch,systemData,systemEditingKey, } = this.props;
+    const { dispatch, systemData, systemEditingKey, } = this.props;
     if (systemEditingKey) {
       message.warning('请先保存未保存的数据')
       return;
     }
     const systemList = systemData.map(item => { // 系统信息
       return {
-        id:item.ID,
+        id: item.ID?.length == 25 ? '' : item.ID,
+        dgimn: dgimn,
         systemNameID: item.SystemNameID,
         manufactorID: item.ManufactorID,
         cemsNum: item.CEMSNum,
-        dgimn: dgimn,
       }
     })
     const par = {
@@ -426,25 +471,150 @@ export default class Index extends Component {
     dispatch({
       type: 'ctPollutantManger/addOrEditCEMSSystem',
       payload: { ...par },
-      callback:()=>{
+      callback: () => {
         this.setState({ current: 2 })
+      }
+    });
+  }
+  saveSystemChangeInfo = (dgimn) => { //系统更换记录
+    const { dispatch, systemChangeData, systemChangeEditingKey, } = this.props;
+    if (systemChangeEditingKey) {
+      message.warning('请先保存未保存的数据')
+      return;
+    }
+    const systemChangeList = systemChangeData.map(item => { // 系统信息
+      return {
+        id: item.ID?.length == 25 ? '' : item.ID,
+        dgimn: dgimn,
+        projectId: '',
+        aSystemNameID: item.ASystemNameID,
+        aManufactorID: item.AManufactorID,
+        acemsNum: item.ACEMSNum,
+        bSystemNameID: item.BSystemNameID,
+        bManufactorID: item.BManufactorID,
+        bcemsNum: item.BCEMSNum,
+      }
+    })
+    const par = {
+      dgimn: dgimn,
+      systemChangeList: systemChangeList,
+    }
+    dispatch({
+      type: 'ctPollutantManger/addOrEditCEMSSystemChange',
+      payload: { ...par },
+      callback: () => {
+        this.setState({ current: 3 })
+        dispatch({
+          type: 'ctPollutantManger/getCEMSSystemList',
+          payload: { dgimn: dgimn },
+          callback: (data) => {
+            dispatch({
+              type: 'ctPollutantManger/updateState',
+              payload: { systemChangeData: data.systemModelChangeList?.length ? data.systemModelChangeList : [] },
+            });
+          }
+        });
+      }
+    });
+  }
+  saveInstrumentInfo = (dgimn) => { //仪表信息
+    const { dispatch, deviceData, deviceEditingKey, } = this.props;
+    if (deviceEditingKey) {
+      message.warning('请先保存未保存的数据')
+      return;
+    }
+    const deviceList = deviceData.map(item => { // 系统信息
+      return {
+        id: item.ID?.length == 25 ? '' : item.ID,
+        pointId: dgimn,
+        pollutantCode: item.PollutantCode,
+        manufactorID: item.ManufactorID,
+        factoryNumber: item.FactoryNumber,
+      }
+    })
+    const par = {
+      dgimn: dgimn,
+      equipmentList: deviceList,
+    }
+    dispatch({
+      type: 'ctPollutantManger/addOrEditEquipment',
+      payload: { ...par },
+      callback: () => {
+        this.setState({ current: 4 })
+        dispatch({
+          type: 'ctPollutantManger/getCEMSSystemList',
+          payload: { dgimn: dgimn },
+          callback: (data) => {
+            dispatch({
+              type: 'ctPollutantManger/updateState',
+              payload: { deviceData: data.eqModelList?.length ? data.eqModelList : [] },
+            });
+          }
+        });
+      }
+    });
+  }
+  saveInstrumentChangeInfo = (dgimn) => {
+    const { dispatch, deviceChangeData, deviceChangeEditingKey, } = this.props;
+    if (deviceChangeEditingKey) {
+      message.warning('请先保存未保存的数据')
+      return;
+    }
+    const deviceChangeList = deviceChangeData.map(item => { // 系统信息
+      return {
+        id: item.ID?.length == 25 ? '' : item.ID,
+        pointId: dgimn,
+        projectId: item.projectId,
+        aPollutantCode: item.PollutantCode,
+        aManufactorID: item.AManufactorID,
+        aFactoryNumber: item.AFactoryNumber,
+        bPollutantCode: item.PollutantCode,
+        bManufactorID: item.BManufactorID,
+        bFactoryNumber: item.BFactoryNumber,
+      }
+    })
+    const par = {
+      dgimn: dgimn,
+      equipmentChangeList: deviceChangeList,
+    }
+    console.log(deviceChangeList)
+    dispatch({
+      type: 'ctPollutantManger/addOrEditEquipmentChange',
+      payload: { ...par },
+      callback: () => {
+        dispatch({
+          type: 'ctPollutantManger/getCEMSSystemList',
+          payload: { dgimn: dgimn },
+          callback: (data) => {
+            dispatch({
+              type: 'ctPollutantManger/updateState',
+              payload: { deviceChangeData: data.eqModelChangeList?.length ? data.eqModelChangeList : [] },
+            });
+          }
+        });
       }
     });
   }
   loadingStatus = () => {
     const { current } = this.state;
-    const { addOrEditCommonPointLoading,operationCEMSSystemLoading, } = this.props;
+    const { addOrEditCommonPointLoading, addOrEditCEMSSystemLoading, addOrEditCEMSSystemChangeLoading, addOrEditEquipmentLoading, addOrEditEquipmentChangeLoading, } = this.props;
     switch (current) {
       case 0:
         return addOrEditCommonPointLoading;
-      case 1 :
-        return operationCEMSSystemLoading;
+      case 1:
+        return addOrEditCEMSSystemLoading;
+      case 2:
+        return addOrEditCEMSSystemChangeLoading;
+      case 3:
+        return addOrEditEquipmentLoading;
+      case 4:
+        return addOrEditEquipmentChangeLoading;
     }
   }
   render() {
-    const { searchConfigItems, searchForm, tableInfo, dispatch, pointDataWhere, addOrEditCommonPointLoading, getFormDataLoading, configInfo, } = this.props;
+    const { searchConfigItems, searchForm, tableInfo, dispatch, pointDataWhere, addOrEditCommonPointLoading, getFormDataLoading, configInfo, saveSortLoading, } = this.props;
     const { location: { query: { targetName, targetId } } } = this.props;
-    const { isEdit, thirdParty, current, steps, pointSaveFlag, dgimn, } = this.state;
+    const { isEdit, thirdParty, current, steps, pointSaveFlag, dgimn, sortTitle,loadFlag, } = this.state;
     const { getFieldDecorator } = this.props.form
 
 
@@ -486,19 +656,50 @@ export default class Index extends Component {
               configId={pointConfigId}
               isCoustom
               selectType='3,是'
+              otherParams={{ SortFileds: 'Sort', IsAsc: true, }}
             ></SearchWrapper>
-            <AutoFormTable
+            {loadFlag&&<AutoFormTable
+              dragable={sortTitle === '关闭排序' ? true : false}
+              dragData={(data) => { this.dragData(data) }}
+              noPaging={this.state.noPaging}
+              saveSortLoading={saveSortLoading}
               style={{ marginTop: 10 }}
               configId={pointConfigId}
               resizable
               isCenter
               isFixedOpera
+              otherParams={{ SortFileds: 'Sort', IsAsc: true, }}
               {...this.props}
               type='company'
               searchParams={pointDataWhere}
               onAdd={() => { //添加
                 this.addPoint();
               }}
+              appendHandleButtons={(selectedRowKeys, selectedRows) => (
+                <Fragment>
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      this.updateSort()
+                    }}
+                    style={{ marginRight: 8 }}
+                    loading={this.state.sortLoading}
+                    disabled={tableInfo[pointConfigId] && tableInfo[pointConfigId].dataSource && tableInfo[pointConfigId].dataSource.length >= 2 ? false : true}
+                  >
+                    {sortTitle}
+                  </Button>
+                  {sortTitle === '关闭排序' ?
+                    <Button
+                      onClick={() => {
+                        this.saveSort()
+                      }}
+                      style={{ marginRight: 8 }}
+                      loading={saveSortLoading}
+                    >
+                      保存排序
+                </Button> : null}
+                </Fragment>
+              )}
               appendHandleRows={row => (
                 <Fragment>
                   <Divider type="vertical" />
@@ -514,7 +715,7 @@ export default class Index extends Component {
 
                 </Fragment>
               )}
-            />
+            />}
           </Card>
         </div>
         <Modal
@@ -551,7 +752,11 @@ export default class Index extends Component {
           </Steps>
           <div style={{ paddingTop: 12 }}>
             {this.pointInfo(current)}
-            {<SystemInfo current={current} dgimn={dgimn} submits={this.saveSystemInfo} />}
+            {<SystemInfo current={current} dgimn={dgimn} />}
+            {<SystemReplaceRecord current={current} dgimn={dgimn} />}
+            {<InstrumentInfo current={current} dgimn={dgimn} />}
+            {<InstrumentReplaceRecord current={current} dgimn={dgimn} />}
+
           </div>
 
         </Modal>

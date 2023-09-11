@@ -1,6 +1,6 @@
 /**
  * 功  能：监测设备
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2021.02.11
  */
 import React, { useState, useEffect, useRef, Fragment, useMemo } from 'react';

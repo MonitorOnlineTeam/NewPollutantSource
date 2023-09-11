@@ -1,6 +1,7 @@
 import { parse, stringify } from 'qs';
 import { routerRedux } from 'dva/router';
 import { getSystemLoginConfigInfo, IfSpecial, newLogin, getToken } from '@/services/login';
+import { message } from 'antd';
 export function getPageQuery() {
   return parse(window.location.href.split('?')[1]);
 }

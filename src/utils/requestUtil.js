@@ -49,8 +49,11 @@ const errorHandler = error => {
       Cookie.set('currentUser', null);
       Cookie.set('newToken', null);
       router.push('/user/login');
-      console.log('401Data=', data);
-      return data;
+      return {
+        IsSuccess: false,
+        Datas: {},
+        Message: '登录超时，请重新登录！',
+      };
     }
     if (status === 403) {
       router.push('/exception/403');

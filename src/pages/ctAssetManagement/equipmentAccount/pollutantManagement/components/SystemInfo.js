@@ -58,7 +58,7 @@ const dvaDispatch = (dispatch) => {
         callback: callback,
       })
     },
-    getCEMSSystemList: (payload, callback) => { // CEMS参数信息列表
+    getCEMSSystemList: (payload, callback) => { // 获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
       dispatch({
         type: `${namespace}/getCEMSSystemList`,
         payload: payload,
@@ -87,14 +87,22 @@ const Index = (props) => {
 
   const initData = () => {
     props.updateState({ systemEditingKey: '' })
+    props.updateState({ systemChangeEditingKey: '' })
+    props.updateState({ deviceEditingKey: '' })
+    props.updateState({ deviceChangeEditingKey: '' })
     props.getManufacturerList({})  // 弹框 厂家列表
 
     if (dgimn) {
       props.getCEMSSystemList({ dgimn: dgimn }, (data) => { //cems 系统信息 表格数据
         props.updateState({ systemData: data.systemModelList?.length ? data.systemModelList : [] })
+        props.updateState({ systemChangeData: data.systemModelChangeList?.length ? data.systemModelChangeList : [] })
+        props.updateState({ deviceData: data.eqModelList?.length ? data.eqModelList : [] })
+        props.updateState({ deviceChangeData: data.eqModelChangeList?.length ? data.eqModelChangeList : [] })
+       
       })
     } else {
       props.updateState({ systemData:[]})
+      props.updateState({ systemChangeData: [] })
     }
   }
 
@@ -111,28 +119,6 @@ const Index = (props) => {
     props.updateState({ systemEditingKey: record.ID })
   }
 
-  const [deviceData, setDeviceData] = useState([]);
-  const [deviceEditingKey, setDeviceEditingKey] = useState('');
-  const isDeviceEditing = (record) => record.ID === deviceEditingKey;
-
-  const deviceEdit = (record) => {
-
-
-    formDevice.setFieldsValue({
-      ...record,
-      EquipmentManufacturer: record.ManufactorName,
-    });
-    setDevicePollutantName(record.PollutantName) //监测设备
-
-
-
-
-    if (record.type != "add") {
-      setDeviceManufactorID(record.ManufactorID)//设备厂家
-    }
-    setDeviceEditingKey(record.ID)
-
-  };
 
 
 
@@ -185,7 +171,7 @@ const Index = (props) => {
     title: 'CEMS系统名称',
     dataIndex: 'SystemName',
     align: 'center',
-    width: 100,
+    width: 120,
     editable: true,
   },
   {
@@ -414,7 +400,7 @@ const Index = (props) => {
   const [manufacturerPopVisible, setManufacturerPopVisible] = useState(false)
   const manufacturerPopVisibleClick = () => { // cems-系统信息 设备生产厂家
     setManufacturerPopVisible(true)
-    form.setFieldsValue({ 'SystemName': cemsVal })
+    form.setFieldsValue({ SystemName: cemsVal })
     setTimeout(() => {
       onFinish2(1, 10, cemsVal)
     })
@@ -438,11 +424,7 @@ const Index = (props) => {
     ...restProps
   }) => {
     let inputNode = '';
-    if (dataIndex === 'EquipmentManufacturer') {
-      inputNode = <Select onClick={() => { devicePopVisibleClick(dataIndex) }} onChange={onDeviceClearChoice} allowClear showSearch={false} dropdownClassName={'popSelectSty'} placeholder="请选择"> </Select>;
-    } else if (dataIndex === 'ReferInstruManufacturer') {
-      inputNode = <Select onClick={() => { refPopVisibleClick(dataIndex) }} onChange={onRefClearChoice} allowClear showSearch={false} dropdownClassName={'popSelectSty'} placeholder="请选择"> </Select>;
-    } else if (dataIndex === 'SystemName') {
+     if (dataIndex === 'SystemName') {
       inputNode = <Select placeholder='请选择' onChange={cemsChange} disabled={choiceManufacturer}>
         <Option value={465}>气态污染物CEMS</Option>
         <Option value={466}>颗粒物污染物CEMS</Option>
@@ -450,7 +432,7 @@ const Index = (props) => {
     } else if (inputType === 'number') {
       inputNode = <InputNumber style={{ width: '100%' }} placeholder={`请输入`} />
     } else {
-      inputNode = <Input disabled={title === 'CEMS系统名称' || title === 'CEMS型号' ? choiceManufacturer : false} placeholder={`请输入`} />
+      inputNode = <Input disabled={ title === 'CEMS型号' ? choiceManufacturer : false} placeholder={`请输入`} />
     }
     return (
       <td {...restProps}>
@@ -463,7 +445,7 @@ const Index = (props) => {
             <Form.Item
               name={`${dataIndex}`}
               style={{ margin: 0 }}
-              rules={[{ required: dataIndex === 'CEMSNum' || dataIndex === 'FactoryNumber' || dataIndex === 'Unit' || (dataIndex === 'RangeCalibration' && formDevice.getFieldValue('PollutantCode') != '508' && formDevice.getFieldValue('PollutantCode') != '509' && formDevice.getFieldValue('PollutantCode') != '510') || dataIndex === 'Number', message: `请输入`, },]}
+              rules={[{ required: dataIndex === 'CEMSNum' || dataIndex === 'FactoryNumber' || dataIndex === 'Number', message: `请输入`, },]}
             >
               {inputNode}
             </Form.Item>
@@ -480,7 +462,6 @@ const Index = (props) => {
     <div className={styles.deviceManagerSty} style={{ display: current == 1 ? 'block' : 'none' }}>
       <Form form={form} name="advanced_search" >
         <><div>
-          <div style={{ fontWeight: 'bold', paddingBottom: 5 }}> 系统信息</div>
           <SdlTable
             components={{
               body: {

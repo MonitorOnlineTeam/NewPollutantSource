@@ -415,7 +415,7 @@ export const API = {
   /**成套 */
 
   //资产管理 Api
-  ctAssetManagementApi: {
+  CtAssetManagementApi: {
     //添加或修改监测点
     AddOrEditCommonPointList: before + '/CTBaseDataApi/AddOrEditCommonPointList',
     //获取行业和监测点类型信息
@@ -424,10 +424,14 @@ export const API = {
     GetCEMSSystemList: before + '/CTBaseDataApi/GetCEMSSystemList',
     // 添加或修改系统型号
     AddOrEditCEMSSystem: before + '/CTBaseDataApi/AddOrEditCEMSSystem',
-    //添加或修改仪表信息更换信息
+    //添加或修改系统更换记录
     AddOrEditCEMSSystemChange: before + '/CTBaseDataApi/AddOrEditCEMSSystemChange',
     // 添加或修仪表信息
     AddOrEditEquipment: before + '/CTBaseDataApi/AddOrEditEquipment',
+    // 添加或修仪仪表更换记录
+    AddOrEditEquipmentChange: before + '/CTBaseDataApi/AddOrEditEquipmentChange',
+    // 监测点排序
+    PointSort: before + '/CTBaseDataApi/PointSort',
   }
 };
 
