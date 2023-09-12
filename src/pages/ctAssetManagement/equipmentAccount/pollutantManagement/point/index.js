@@ -36,7 +36,6 @@ import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import { handleFormData } from '@/utils/utils';
 import Cookie from 'js-cookie';
 import moment from 'moment'
-import DeviceManager from './DeviceManager'
 import SdlMap from '@/pages/AutoFormManager/SdlMap'
 import SystemInfo from '../components/SystemInfo'
 import SystemReplaceRecord from '../components/SystemReplaceRecord'
@@ -46,7 +45,7 @@ import InstrumentReplaceRecord from '../components/InstrumentReplaceRecord'
 const pointConfigId = 'CTPoint'
 const FormItem = Form.Item;
 const { Step } = Steps;
-@connect(({ loading, autoForm, ctPollutantManger, global, }) => ({
+@connect(({ loading, autoForm, ctPollutantManger, global,common, }) => ({
   loading: loading.effects['autoForm/getPageConfig'] || false,
   autoForm: autoForm,
   searchConfigItems: autoForm.searchConfigItems,
@@ -71,6 +70,7 @@ const { Step } = Steps;
   deviceChangeEditingKey: ctPollutantManger.deviceChangeEditingKey,
   deviceChangeData: ctPollutantManger.deviceChangeData,
   saveSortLoading: loading.effects[`ctPollutantManger/pointSort`],
+  projectModelList: common.ctProjectList,
 }))
 @Form.create()
 export default class Index extends Component {
@@ -482,11 +482,12 @@ export default class Index extends Component {
       message.warning('请先保存未保存的数据')
       return;
     }
+
     const systemChangeList = systemChangeData.map(item => { // 系统信息
       return {
         id: item.ID?.length == 25 ? '' : item.ID,
         dgimn: dgimn,
-        projectId: '',
+        projectId: item.ProjectID,
         aSystemNameID: item.ASystemNameID,
         aManufactorID: item.AManufactorID,
         acemsNum: item.ACEMSNum,
@@ -564,7 +565,7 @@ export default class Index extends Component {
       return {
         id: item.ID?.length == 25 ? '' : item.ID,
         pointId: dgimn,
-        projectId: item.projectId,
+        projectId: item.ProjectID,
         aPollutantCode: item.PollutantCode,
         aManufactorID: item.AManufactorID,
         aFactoryNumber: item.AFactoryNumber,

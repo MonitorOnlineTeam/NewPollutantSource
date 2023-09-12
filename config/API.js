@@ -412,8 +412,19 @@ export const API = {
     // 重启转发服务
     RestartTransmit: '/DataTransmit/api/DataTransmitSet/RestartTransmit',
   },
-  /**成套 */
 
+
+  /*********** 成套 ***********/
+
+   
+  //通用 Api
+   CtCommonApi: {
+
+    //站点信息
+    GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList',
+    //项目列表
+    GetCTProjectList: before + '/CTBaseDataApi/GetCTProjectList',
+   },
   //资产管理 Api
   CtAssetManagementApi: {
     //添加或修改监测点
@@ -432,6 +443,14 @@ export const API = {
     AddOrEditEquipmentChange: before + '/CTBaseDataApi/AddOrEditEquipmentChange',
     // 监测点排序
     PointSort: before + '/CTBaseDataApi/PointSort',
+    //修改成套项目信息
+    UpdateCTProject: before + '/CTBaseDataApi/UpdateCTProject',
+    //获取成套项目与站点管理关系
+    GetrojectPointRelationList: before + '/CTBaseDataApi/GetrojectPointRelationList',
+    //添加成套项目与站点关联关系
+    AddProjectPointRelation: before + '/CTBaseDataApi/AddProjectPointRelation',
+    //项目列表 导出
+    ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',
   }
 };
 

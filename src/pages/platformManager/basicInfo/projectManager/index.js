@@ -262,10 +262,9 @@ const Index = (props) => {
               <a style={{...disSty}}><DelIcon /></a>
             </Popconfirm>
           </Tooltip>
+          </Fragment>
             <Divider type="vertical" />
             <Fragment> <Tooltip placement={'top'} title={"运维监测点信息" } >  <a  href="javasctipt:;" onClick={() => { operaInfo(record)  }} ><PointIcon /></a></Tooltip></Fragment>
-
-          </Fragment>
         </span>
       }
     },

@@ -2930,7 +2930,7 @@ export default {
               routes: [
                 {
                   path: '/ctAssetManagement',
-                  redirect: '/ctAssetManagement/equipmentManagement/pollutantManagement/CTEnterprise',
+                  redirect: '/ctAssetManagement/equipmentAccount/projectQuery',
                 },
                 // 设备台账
                 {
@@ -2939,11 +2939,17 @@ export default {
                   routes: [
                     {
                       path: '/ctAssetManagement/equipmentAccount',
-                      redirect: '/ctAssetManagement/equipmentAccount/pollutantManagement/CTEnterprise',
+                      redirect: '/ctAssetManagement/equipmentAccount/projectQuery',
+                    },
+                    {
+                      // 项目查询
+                      name: 'ctProjectQuery',
+                      path: '/ctAssetManagement/equipmentAccount/projectQuery',
+                      component: './ctAssetManagement/equipmentAccount/projectQuery',
                     },
                     {
                       // 污染源管理
-                      name: 'pollutantManagement',
+                      name: 'ctPollutantManagement',
                       path: '/ctAssetManagement/equipmentAccount/pollutantManagement/:configId',
                       component: './ctAssetManagement/equipmentAccount/pollutantManagement',
                     },
@@ -2951,12 +2957,6 @@ export default {
                       name: 'ctPoint', // 污染源管理 监测点
                       path: '/ctAssetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
                       component: './ctAssetManagement/equipmentAccount/pollutantManagement/point',
-                    },
-                    {
-                      // 项目管理
-                      name: 'ctProjectManager',
-                      path: '/ctAssetManagement/equipmentAccount/projectManager',
-                      component: './ctAssetManagement/equipmentAccount/projectManager',
                     },
                   ],
                 },

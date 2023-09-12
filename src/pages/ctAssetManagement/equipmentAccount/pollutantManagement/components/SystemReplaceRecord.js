@@ -81,7 +81,6 @@ const Index = (props) => {
 
     const [form] = Form.useForm();
     const [form2] = Form.useForm();
-    const [form3] = Form.useForm();
 
     useEffect(() => {
 
@@ -95,12 +94,14 @@ const Index = (props) => {
             ...record,
             ASystemName: Number(record.ASystemNameID),
             BSystemName: Number(record.BSystemNameID),
+            ProjectCode:record.ProjectCode ? record.ProjectCode : record.ItemCode
         });
         if (record.type != "add") { //获取接口原有列表数据
             setAsystemManufactorID(record.AManufactorID) //CEMS设备生产商 后
             setAcemsVal(Number(record.ASystemNameID))//系统名称 后
             setBsystemManufactorID(record.BManufactorID) //CEMS设备生产商 前
             setBcemsVal(Number(record.BSystemNameID))//系统名称 前
+            setProjectID(record.ProjectID)
         }
         props.updateState({ systemChangeEditingKey: record.ID })
     }
@@ -132,6 +133,7 @@ const Index = (props) => {
                     BSystemName: bcemsVal == 465 ? '气态污染物CEMS' : '颗粒物污染物CEMS',
                     BSystemNameID: bcemsVal,
                     BManufactorID: bsystemManufactorID,
+                    ProjectID:projectID,
                 };
 
                 const item = record.type === 'add' ? { ...newData[index], ID: cuid() } : { ...newData[index] }
@@ -156,11 +158,12 @@ const Index = (props) => {
     const systemCol = [
         {
             title: '项目号',
-            dataIndex: 'ProjectId',
+            dataIndex: 'ProjectCode',
             align: 'center',
-            width: 100,
             editable: true,
-            render: (text, row) => row.PollutantName,
+            render:(text,record)=>{
+                return text ? text : record.ItemCode
+            }
         },
         {
             title: '变更前系统信息',
@@ -361,10 +364,6 @@ const Index = (props) => {
     ]
 
 
-    const [gaschoiceData, setGaschoiceData] = useState()
-
-    const [pmchoiceData, setPmchoiceData] = useState()
-
     const [asystemManufactorID, setAsystemManufactorID] = useState()
     const [bsystemManufactorID, setBsystemManufactorID] = useState()
 
@@ -515,9 +514,11 @@ const Index = (props) => {
 
 
     const [projectPopVisible,setProjectPopVisible]= useState(false)
+    const [projectID,setProjectID]= useState('')
+
     const projectColChoice = (record) =>{
-      console.log(record)
-      form.setFieldsValue({ ProjectId: cemsVal })
+      form.setFieldsValue({ ProjectCode: record.ProjectCode?  record.ProjectCode : record.ItemCode  })
+      setProjectID(record.ID)
       setProjectPopVisible(false)
     }
 
@@ -553,9 +554,9 @@ const Index = (props) => {
                             <Select onClick={() => { manufacturerPopVisibleClick(infoType) }} onChange={(value) => { onManufacturerClearChoice(value, infoType) }} allowClear showSearch={false} dropdownClassName={'popSelectSty'} placeholder="请选择"> </Select>
                         </Form.Item>
                         :
-                        dataIndex === 'ProjectId' ?  //项目号
+                        dataIndex === 'ProjectCode' ?  //项目号
                             <Form.Item name={`${dataIndex}`} style={{ margin: 0 }}>
-                                <Select onClick={() => { setProjectPopVisible(true)}} onChange={(value) => {  form.setFieldsValue({ ProjectId: value, })}} allowClear showSearch={false} dropdownClassName={'popSelectSty'} placeholder="请选择"> </Select>
+                                <Select onClick={() => { setProjectPopVisible(true)}} onChange={(value) => {  form.setFieldsValue({ ProjectCode: value, });setProjectID('')}} allowClear showSearch={false} dropdownClassName={'popSelectSty'} placeholder="请选择"> </Select>
                             </Form.Item>
                             :
                             <Form.Item
@@ -597,7 +598,7 @@ const Index = (props) => {
                 </div>
                     <Button style={{ margin: '10px 0 15px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleSystemAdd()} >
                         添加系统变更信息
-       </Button></>
+                   </Button></>
             </Form>
 
             {/**cems 系统信息  cems生产厂家弹框 */}
@@ -605,7 +606,7 @@ const Index = (props) => {
                 {systemPopContent}
             </Modal>
             {/** 项目信息 弹框 */}
-            <ProjectInfo projectPopVisible={projectPopVisible} projectColChoice={projectColChoice} onProjectCancel={()=>{setProjectPopVisible(false)}}/>
+            <ProjectInfo projectPopVisible={projectPopVisible} projectColChoice={projectColChoice} onProjectCancel={()=>{setProjectPopVisible(false)}} type={1}/>
         </div>
     );
 };

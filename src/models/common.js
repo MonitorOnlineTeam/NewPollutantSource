@@ -31,6 +31,10 @@ export default Model.extend({
     noFilterRegionList: [],
     roleList: [],
     testRegionList: [],
+    ctEntAndPointList:[],
+    ctProjectList:[],
+    ctProjectTotal:0,
+    ctProjectQueryPar:null,
   },
 
   effects: {
@@ -338,6 +342,31 @@ export default Model.extend({
         callback && callback(result.Datas ? result.Datas.list : []);
       } else {
         message.error(result.Message);
+      }
+    },
+    //成套获取 企业和监测点
+    *getCtEntAndPointList({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetCtEntAndPointList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          ctEntAndPointList: result.Datas ? result.Datas : [],
+        });
+        callback && callback(result.Datas ? result.Datas : []);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *getCTProjectList({ payload, callback }, { call, put, update }) { //项目列表
+      const result = yield call(services.GetCTProjectList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          ctProjectList: result.Datas,
+          ctProjectTotal: result.Total,
+          ctProjectQueryPar:payload,
+        })
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message)
       }
     },
   },

@@ -1,5 +1,5 @@
 import { post, get } from '@/utils/request';
-
+import { API } from '@config/API'
 //根据行政区获取 大气站列表
 
 export async function GetStationByRegion(params) {
@@ -151,5 +151,26 @@ export async function GetRoleCodeList(params) {
 //行政区  列表  调试服务
 export async function GetTestXuRegions(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestXuRegions', params, null);
+  return result;
+}
+
+// 导出 运维监测点信息
+export async function ExportProjectPointList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportProjectPointList',params, null);
+  return result;
+}
+
+/*** 成套 ****/
+
+//站点信息
+export async function GetCtEntAndPointList(params) {
+  const result = post(API.CtCommonApi.GetEntAndPointList, params);
+  return result;
+}
+
+
+//项目列表
+export async function GetCTProjectList(params) {
+  const result = post(API.CtCommonApi.GetCTProjectList, params);
   return result;
 }

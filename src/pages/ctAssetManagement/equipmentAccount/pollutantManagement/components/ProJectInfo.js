@@ -25,8 +25,11 @@ const namespace = 'ctPollutantManger'
 
 
 
-const dvaPropsData = ({ loading, ctPollutantManger, commissionTest, }) => ({
-    projectModelList: ctPollutantManger.projectModelList,
+const dvaPropsData = ({ loading,ctPollutantManger, common, }) => ({
+    projectLoading: loading.effects[`common/getCTProjectList`],
+    projectModelList: common.ctProjectList,
+    projectTotal: common.ctProjectTotal,
+    queryPar: common.ctProjectQueryPar,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -37,9 +40,9 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        getManufacturerList: (payload, callback) => { //厂家下拉列表
+        getProjectInfoList : (payload, callback) => { //项目列表
             dispatch({
-                type: `commissionTest/getManufacturerList`,
+                type: `common/getCTProjectList`,
                 payload: payload,
                 callback: callback
             })
@@ -52,31 +55,33 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-    const { projectPopVisible, projectModelList, } = props;
+    const { projectPopVisible,projectLoading, projectModelList,projectTotal,queryPar,type } = props;
 
     const [form] = Form.useForm();
 
 
     useEffect(() => {
-        onFinish()
+        if(type==1){
+        onFinish(pageIndex,pageSize)
+        }
     }, []);
     const projectCol = [
         {
             title: '项目编号',
-            dataIndex: 'ManufactorName',
-            key: 'ManufactorName',
+            dataIndex: 'ProjectCode',
+            key: 'ProjectCode',
             align: 'center',
         },
         {
             title: '立项号',
-            dataIndex: 'SystemName',
-            key: 'SystemName',
+            dataIndex: 'ItemCode',
+            key: 'ItemCode',
             align: 'center',
         },
         {
             title: '项目名称',
-            dataIndex: 'SystemModel',
-            key: 'SystemModel',
+            dataIndex: 'ProjectName',
+            key: 'ProjectName',
             align: 'center',
         },
         {
@@ -91,34 +96,45 @@ const Index = (props) => {
     const projectPopContent = <Form //项目号 弹框
         form={form}
         name="advanced_search3"
-        onFinish={() => { onFinish() }}
+        onFinish={() => {setPageIndex(1); onFinish(1,pageSize) }}
         initialValues={{
         }}
 
     >
         <Row>
-            <Form.Item style={{ marginRight: 8,width:'calc(100% - 73px)' }} name="ProjectName">
-                <Input allowClear placeholder="请输入项目编号、立项号、项目编号" style={{width:'100%'}}/>
+            <Form.Item style={{ marginRight: 8, width:  'calc(100% - 98px)' }} name="projectCode">
+                <Input allowClear placeholder="请输入项目编号、立项号、项目编号" style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item>
-                <Button type="primary" htmlType='submit'>
+                <Button type="primary" htmlType='submit' loading={projectLoading}>
                     查询
               </Button>
             </Form.Item>
         </Row>
         <SdlTable scroll={{ y: 'calc(100vh - 500px)' }}
-            loading={props.loadingChangeSystemModel} bordered dataSource={projectModelList} columns={projectCol}
+            loading={projectLoading} bordered dataSource={projectModelList} columns={projectCol}
             pagination={false}
+            // pagination={{
+            //     total: projectTotal,
+            //     pageSize: pageSize,
+            //     current: pageIndex,
+            //     showSizeChanger: true,
+            //     showQuickJumper: true,
+            //     onChange: handleTableChange,
+            // }}
         />
     </Form>
 
-    const onFinish = async () => { //项目信息 查询
+    const onFinish = async (PageIndex, PageSize,queryPar) => { //项目信息 查询
         try {
-            const values = await form.validateFields();
-            // props.testGetSystemModelList({
-            //     SystemName: cemsVal,
-            //     ...values,
-            // })
+            // const par = queryPar ?  queryPar : await form.validateFields()
+            const par =  await form.validateFields()
+            props.getProjectInfoList({
+                ...par,
+                "beginTime":"2023-09-01 00:00:00","endTime":"2023-09-30 23:59:59",
+                pageIndex: 1,
+                pageSize: 10,
+            })
         } catch (errorInfo) {
             console.log('Failed:', errorInfo);
         }
@@ -127,7 +143,13 @@ const Index = (props) => {
         props.projectColChoice(record)
     }
 
-   
+    const [pageIndex, setPageIndex] = useState(1)
+    const [pageSize, setPageSize] = useState(20)
+    const handleTableChange =  (PageIndex, PageSize) => { //分页
+        setPageSize(PageSize)
+        setPageIndex(PageIndex)
+        onFinish(PageIndex, PageSize, queryPar)
+    }
 
 
     return (

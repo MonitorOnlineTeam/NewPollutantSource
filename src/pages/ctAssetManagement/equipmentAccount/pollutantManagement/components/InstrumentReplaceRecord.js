@@ -93,13 +93,14 @@ const Index = (props) => {
       PollutantCode: record.APollutantCode,
       AEquipmentManufacturer: record.AManufactorName,
       BEquipmentManufacturer: record.BManufactorName,
+      ProjectCode:record.ProjectCode ? record.ProjectCode : record.ItemCode
     });
     setDevicePollutantName(record.APollutantName) //监测设备
 
     if (record.type != "add") {
       setAdeviceManufactorID(record.AManufactorID)//设备厂家 后
       setBdeviceManufactorID(record.BManufactorID)//设备厂家 前
-
+      setProjectID(record.ProjectID)
     }
     props.updateState({ deviceChangeEditingKey: record.ID })
   };
@@ -133,6 +134,7 @@ const Index = (props) => {
           AManufactorID: adeviceManufactorID, //设备厂家 后
           BManufactorName: row.BEquipmentManufacturer,
           BManufactorID: bdeviceManufactorID, //设备厂家 前
+          ProjectID:projectID,
         };
         const item = record.type === 'add' ? { ...newData[index], ID: cuid() } : { ...newData[index] }
         newData.splice(index, 1, { ...item, ...row, ...editRow });
@@ -162,11 +164,12 @@ const Index = (props) => {
     },
     {
       title: '项目号',
-      dataIndex: 'ProjectId',
+      dataIndex: 'ProjectCode',
       align: 'center',
-      width: 120,
       editable: true,
-      // render: (text, row) => row.PollutantName,
+      render:(text,record)=>{
+        return text ? text : record.ItemCode
+    }
     },
     {
       title: '变更前设备仪器信息',
@@ -510,8 +513,11 @@ const Index = (props) => {
   }
 
   const [projectPopVisible, setProjectPopVisible] = useState(false)
+  const [projectID,setProjectID]= useState('')
+
   const projectColChoice = (record) => {
-    formDevice.setFieldsValue({ ProjectId: cemsVal })
+    formDevice.setFieldsValue({ ProjectCode: record.ProjectCode?  record.ProjectCode : record.ItemCode  })
+    setProjectID(record.ID)
     setProjectPopVisible(false)
   }
   const EditableCell = ({
@@ -550,9 +556,9 @@ const Index = (props) => {
                   }
                 </Select></Form.Item>}</>
             :
-            dataIndex === 'ProjectId' ?  //项目号
+            dataIndex === 'ProjectCode' ?  //项目号
               <Form.Item name={`${dataIndex}`} style={{ margin: 0 }}>
-                <Select onClick={() => { setProjectPopVisible(true) }} onChange={(value) => { formDevice.setFieldsValue({ ProjectId: value, }) }} allowClear showSearch={false} dropdownClassName={'popSelectSty'} placeholder="请选择"> </Select>
+                <Select onClick={() => { setProjectPopVisible(true) }} onChange={(value) => { formDevice.setFieldsValue({ ProjectCode: value, });setProjectID('') }} allowClear showSearch={false} dropdownClassName={'popSelectSty'} placeholder="请选择"> </Select>
               </Form.Item>
               :
               <Form.Item
