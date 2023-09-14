@@ -561,15 +561,17 @@ export default class Index extends Component {
       message.warning('请先保存未保存的数据')
       return;
     }
-    const deviceChangeList = deviceChangeData.map(item => { // 系统信息
+    const deviceChangeList = deviceChangeData.map(item => { // 仪表更换记录
+
+      const pollutantCode =  item.PollutantCode ? item.PollutantCode :  item.APollutantCode;//APollutantCode 返回来的数据
       return {
         id: item.ID?.length == 25 ? '' : item.ID,
         pointId: dgimn,
         projectId: item.ProjectID,
-        aPollutantCode: item.PollutantCode,
+        aPollutantCode:pollutantCode,
         aManufactorID: item.AManufactorID,
         aFactoryNumber: item.AFactoryNumber,
-        bPollutantCode: item.PollutantCode,
+        bPollutantCode: pollutantCode,
         bManufactorID: item.BManufactorID,
         bFactoryNumber: item.BFactoryNumber,
       }
@@ -578,7 +580,6 @@ export default class Index extends Component {
       dgimn: dgimn,
       equipmentChangeList: deviceChangeList,
     }
-    console.log(deviceChangeList)
     dispatch({
       type: 'ctPollutantManger/addOrEditEquipmentChange',
       payload: { ...par },

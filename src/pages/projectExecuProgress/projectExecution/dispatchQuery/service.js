@@ -1,5 +1,7 @@
 import { post, get, getNew } from '@/utils/request';
 
+import { API } from '@config/API'
+
 // 获取项目管理列表
 export async function GetProjectInfoList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetProjectInfoList',params, null);
@@ -36,5 +38,10 @@ export async function ExportProjectInfoList(params) {
 // 导出 运维监测点信息
 export async function ExportProjectPointList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportProjectPointList',params, null);
+  return result;
+}
+//派单信息查询
+export async function getServiceDispatch(params) {
+  const result = post(API.ProjectExecuProgressApi.GetServiceDispatch, params);
   return result;
 }

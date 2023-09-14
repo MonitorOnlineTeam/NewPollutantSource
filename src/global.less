@@ -562,7 +562,7 @@ a:hover {
     .ant-card-bordered {
       box-shadow: none;
       padding-bottom: 0;
-      padding-top: 10px;
+      padding-top: 8px;
       border: 0;
     }
   }
@@ -679,12 +679,18 @@ a:hover {
     }
   }
   .ant-modal-header{
-    padding: 8px 24px;
+    padding: 8px 16px;
   }
   .ant-modal-body{
-    padding: 12px 24px;
+    padding: 12px 16px;
   }
 }
+// .ant-modal-header :global{
+//   padding: 8px 16px;
+// }
+// .ant-modal-body :global{
+//   padding: 12px 16px;
+// }
 .spreadOverHiddenModal {
   //铺满页面的弹框 长度隐藏
   :global {
@@ -963,4 +969,13 @@ a:hover {
  .ant-card-head-title{
   padding: 8px 0;
  }
+}
+ .ant-tabs-left> .ant-tabs-nav :global{
+  .ant-tabs-tab{
+    margin: 0 0 12px 0 !important;
+  }
+}
+
+.ant-tabs-left>.ant-tabs-content-holder>.ant-tabs-content>.ant-tabs-tabpane:global{
+    padding-left: 16px  !important;
 }

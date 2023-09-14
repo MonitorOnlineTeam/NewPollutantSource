@@ -425,6 +425,10 @@ export const API = {
     //项目列表
     GetCTProjectList: before + '/CTBaseDataApi/GetCTProjectList',
    },
+   //项目执行进度 Api
+   ProjectExecuProgressApi:{
+    GetServiceDispatch: before + '/CTBaseDataApi/GetServiceDispatch', //获取服务派单信息
+   },
   //资产管理 Api
   CtAssetManagementApi: {
     //添加或修改监测点
@@ -451,7 +455,8 @@ export const API = {
     AddProjectPointRelation: before + '/CTBaseDataApi/AddProjectPointRelation',
     //项目列表 导出
     ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',
-  }
+  },
+
 };
 
 export const UPLOAD = {};

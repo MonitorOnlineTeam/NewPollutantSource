@@ -42,7 +42,7 @@ class index extends PureComponent {
       //   this.setState({ loading: false });
       // }
       sessionStorage.setItem("isShowSelectSystem", 1);
-      this.onSysItemClick(this.props.sysPollutantTypeList[0])
+      this.props.sysPollutantTypeList?.[0]&&this.onSysItemClick(this.props.sysPollutantTypeList[0])
     })
   }
 

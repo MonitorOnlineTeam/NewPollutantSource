@@ -61,7 +61,7 @@ const Index = (props) => {
 
   
   return (
-    <div>
+    <div className={styles.supervisionSty}>
     <BreadcrumbWrapper>
     <Card>
     <Tabs tabPosition={'left'}>

@@ -87,7 +87,6 @@ const Index = (props) => {
   const isDeviceEditing = (record) => record.ID === deviceChangeEditingKey;
 
   const deviceEdit = (record) => {
-
     formDevice.setFieldsValue({
       ...record,
       PollutantCode: record.APollutantCode,

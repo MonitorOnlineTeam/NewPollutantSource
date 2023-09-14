@@ -18,7 +18,7 @@ import RegionList from '@/components/RegionList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
-import OperationCompanyList from '@/components/OperationCompanyList'
+import Detail from './Detail'
 const { Option } = Select;
 
 const namespace = 'dispatchQuery'
@@ -27,15 +27,9 @@ const namespace = 'dispatchQuery'
 
 
 const dvaPropsData = ({ loading, dispatchQuery, global, }) => ({
+  tableLoading: loading.effects[`${namespace}/getServiceDispatch`],
   tableDatas: dispatchQuery.tableDatas,
-  pointDatas: dispatchQuery.pointDatas,
-  pointDatasTotal: dispatchQuery.pointDatasTotal,
-  tableLoading: dispatchQuery.tableLoading,
   tableTotal: dispatchQuery.tableTotal,
-  loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
-  pointLoading: loading.effects[`${namespace}/getProjectPointList`],
-  exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
-  exportPointLoading: loading.effects[`${namespace}/exportProjectPointList`],
   configInfo: global.configInfo,
 })
 
@@ -47,48 +41,15 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getProjectInfoList: (payload) => { //项目管理列表
+    getServiceDispatch: (payload) => { //派单信息列表
       dispatch({
-        type: `${namespace}/getProjectInfoList`,
-        payload: payload,
-      })
-    },
-    addOrUpdateProjectInfo: (payload, callback) => { //修改 or 添加
-      dispatch({
-        type: `${namespace}/addOrUpdateProjectInfo`,
-        payload: payload,
-        callback: callback
-      })
-
-    },
-    getParametersInfo: (payload) => { //下拉列表测量参数
-      dispatch({
-        type: `${namespace}/getParametersInfo`,
-        payload: payload
-      })
-    },
-    deleteProjectInfo: (payload, callback) => { //删除
-      dispatch({
-        type: `${namespace}/deleteProjectInfo`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    getProjectPointList: (payload) => { //运维监测点信息
-      dispatch({
-        type: `${namespace}/getProjectPointList`,
+        type: `${namespace}/getServiceDispatch`,
         payload: payload,
       })
     },
     exportProjectInfoList: (payload) => { //导出
       dispatch({
         type: `${namespace}/exportProjectInfoList`,
-        payload: payload,
-      })
-    },
-    exportProjectPointList: (payload) => { //导出 运维信息监测点
-      dispatch({
-        type: `${namespace}/exportProjectPointList`,
         payload: payload,
       })
     },
@@ -99,28 +60,15 @@ const Index = (props) => {
 
 
   const [form] = Form.useForm();
-  const [form2] = Form.useForm();
 
-  const [data, setData] = useState([]);
-
-  const [editingKey, setEditingKey] = useState('');
-  const [count, setCount] = useState(513);
-  const [DGIMN, setDGIMN] = useState('')
-  const [expand, setExpand] = useState(false)
-  const [fromVisible, setFromVisible] = useState(false)
-  const [tableVisible, setTableVisible] = useState(false)
-
-  const [type, setType] = useState('add')
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
+  const [expand, setExpand] = useState(false);
 
 
-  const isEditing = (record) => record.key === editingKey;
 
-  const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading, } = props;
 
-  // const provinceShow = props.configInfo&&props.configInfo.IsShowProjectRegion; 
-  const provinceShow = true;
+  const { tableDatas, tableTotal,  tableLoading, exportLoading,  } = props;
+
+
 
   useEffect(() => {
     onFinish(pageIndex, pageSize);
@@ -138,8 +86,8 @@ const Index = (props) => {
     },
     {
       title: '派工单号',
-      dataIndex: 'ProjectName',
-      key: 'ProjectName',
+      dataIndex: 'Num',
+      key: 'Num',
       align: 'center',
       ellipsis: true,
     },
@@ -152,80 +100,80 @@ const Index = (props) => {
     },
     {
       title: '立项号',
-      dataIndex: 'ProvinceName',
-      key: 'ProvinceName',
+      dataIndex: 'itemCode',
+      key: 'itemCode',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '项目名称',
-      dataIndex: 'CityName',
-      key: 'CityName',
+      dataIndex: 'projectName',
+      key: 'projectName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '工程助理',
-      dataIndex: 'RegionName',
-      key: 'RegionName',
+      dataIndex: 'AssistantName',
+      key: 'AssistantName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '服务工程师',
-      dataIndex: 'SellCompanyName',
-      key: 'SellCompanyName',
+      dataIndex: 'WorkerName',
+      key: 'WorkerName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '服务申请人',
-      dataIndex: 'BeginTime',
-      key: 'BeginTime',
+      dataIndex: 'ApplicantUser',
+      key: 'ApplicantUser',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '下单日期',
-      dataIndex: 'EndTime',
-      key: 'EndTime',
+      dataIndex: 'OrderDate',
+      key: 'OrderDate',
       align: 'center',
       ellipsis: true,
 
     },
     {
       title: '项目所属行业',
-      dataIndex: 'OperationCount',
-      key: 'OperationCount',
+      dataIndex: 'Industry',
+      key: 'Industry',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '流程状态',
-      dataIndex: 'operationCompanyName',
-      key: 'operationCompanyName',
+      dataIndex: 'Status',
+      key: 'Status',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '任务状态',
-      dataIndex: 'UserName',
-      key: 'UserName',
+      dataIndex: 'TaskStatus',
+      key: 'TaskStatus',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '提交人',
-      dataIndex: 'CreateTime',
-      key: 'CreateTime',
+      dataIndex: 'CommitUserName',
+      key: 'CommitUserName',
       align: 'center',
       defaultSortOrder: 'descend',
       ellipsis: true,
     },
     {
       title: '提交时间',
-      dataIndex: 'UpdUserName',
-      key: 'UpdUserName',
+      dataIndex: 'CommitDate',
+      key: 'CommitDate',
       align: 'center',
       ellipsis: true,
     },
@@ -240,7 +188,7 @@ const Index = (props) => {
           <Tooltip title="详情">
             <a
               onClick={() => {
-                // router.push('/operations/recordForm/' + record.TypeID + '/' + record.TaskID);
+                detail(record)
               }}
             >
               <ProfileOutlined style={{ fontSize: 16 }} />
@@ -251,123 +199,36 @@ const Index = (props) => {
       }
     },
   ];
+  const [detailVisible, setDetailVisible] = useState(false)
+  const [detailTitle, setDetailTitle] = useState('详情')
+  const [detailData, setDetailData] = useState()
 
-  const pointColumns = [
-    {
-      title: '监控目标',
-      dataIndex: 'entName',
-      key: 'entName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '监测点',
-      dataIndex: 'pointName',
-      key: 'pointName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '实际运维开始日期',
-      dataIndex: 'beginTime',
-      key: 'beginTime',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '实际运维结束日期',
-      dataIndex: 'endTime',
-      key: 'endTime',
-      align: 'center',
-      ellipsis: true,
-    },
-  ]
-
-  const edit = async (record) => {
-    setFromVisible(true)
-    setType('edit')
-    form2.resetFields();
-    try {
-      form2.setFieldsValue({
-        ...record,
-        Province: record.isShow ? record.Province && record.Province.split(',') : undefined,
-        BeginTime: moment(record.BeginTime),
-        EndTime: moment(record.EndTime),
-        SignName: record.SingName,
-        OperationCompany: record.operationCompanyID,
-      })
-
-
-
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
-  };
-
-  const del = (record) => {
-    props.deleteProjectInfo({ ID: record.ID }, () => {
-      setPageIndex(1);
-      onFinish(1, pageSize);
-    })
-  };
-
-
-  const [ID, setID] = useState();
-  const [ProjectCode, setProjectCode] = useState();
-  const [ProjectName, setProjectName] = useState();
-
-  const operaInfo = (record) => {
-    setTableVisible(true)
-    setID(record.ID)
-    setProjectCode(record.ProjectCode)
-    setProjectName(record.ProjectName)
-    setPageIndex2(1)
-    setPageSize2(10)
-    props.getProjectPointList({ ID: record.ID, ProjectCode: record.ProjectCode, PageIndex: 1, PageSize: 10, })
-  };
-
-
-
-
-  const add = () => {
-    setFromVisible(true)
-    setType('add')
-    form2.resetFields();
-
-  };
+  const detail = (record) => {
+    setDetailVisible(true)
+    setDetailTitle(`派工单号${record.ProjectCode? ` - ${record.ProjectCode}` : record.ItemCode ? ` - ${record.ItemCode}` : ''}`)
+    setDetailData(record)
+  }
   const exports = async () => {
     const values = await form.validateFields();
     props.exportProjectInfoList({
       ...values,
       BegBeginTime: values.BegTime && moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
       BegEndTime: values.BegTime && moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
-      // EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-      // EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
       BegTime: undefined,
-      // EndTime:undefined,
 
     })
   };
 
-  const pointExports = () => { //监测点信息  导出
-    props.exportProjectPointList({
-      ID: ID, ProjectCode: ProjectCode
-    })
-  };
+
   const onFinish = async (PageIndex, PageSize) => {  //查询
 
     try {
       const values = await form.validateFields();
-
-      props.getProjectInfoList({
+      props.getServiceDispatch({
         ...values,
-        BegBeginTime: values.BegTime && moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-        BegEndTime: values.BegTime && moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
-        // EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-        // EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
-        BegTime: undefined,
-        // EndTime:undefined,
-        Author: 1,
+        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        time: undefined,
         PageIndex: PageIndex,
         PageSize: PageSize,
       })
@@ -375,30 +236,8 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-  const onModalOk = async () => { //添加 or 编辑弹框
-
-    try {
-      const values = await form2.validateFields();//触发校验
-      if (!values.deleteFlag && type === 'edit') {
-        message.warning('没有操作权限，请联系管理员')
-        return;
-      }
-      props.addOrUpdateProjectInfo({
-        ...values,
-        Province: values.Province && values.Province.toString(),
-        BeginTime: values.BeginTime && moment(values.BeginTime).format('YYYY-MM-DD 00:00:00'),
-        EndTime: values.EndTime && moment(values.EndTime).format('YYYY-MM-DD 23:59:59'),
-        CreateUserID: type === 'add' ? JSON.parse(Cookie.get('currentUser')).UserId : values.CreateUserID,
-      }, () => {
-        setFromVisible(false)
-        onFinish(pageIndex, pageSize)
-      })
-
-
-    } catch (errInfo) {
-      console.log('错误信息:', errInfo);
-    }
-  }
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
   const handleTableChange = async (PageIndex, PageSize) => { //分页
     const values = await form.validateFields();
     setPageSize(PageSize)
@@ -406,25 +245,6 @@ const Index = (props) => {
     onFinish(PageIndex, PageSize)
   }
 
-
-  const [pageIndex2, setPageIndex2] = useState(1)
-  const [pageSize2, setPageSize2] = useState(10)
-
-  const handleTableChange2 = async (PageIndex, PageSize) => { //分页 监测点
-    const values = await form.validateFields();
-    setPageSize2(PageSize)
-    setPageIndex2(PageIndex)
-    props.getProjectPointList({ ID: ID, ProjectCode: ProjectCode, PageIndex: PageIndex, PageSize: PageSize, })
-  }
-
-  const startDisabledDate = (current) => {
-    const time = form2.getFieldValue('EndTime')
-    return time && current && current > moment(time).startOf('day');
-  }
-  const endDisabledDate = (current) => {
-    const time = form2.getFieldValue('BeginTime')
-    return time && current && current < moment(time).endOf('day');
-  }
 
   const searchComponents = () => {
     return <Form
@@ -435,83 +255,71 @@ const Index = (props) => {
     >
       <Row align='middle'>
         <Col span={8}>
-          <Form.Item name='ProjectName' label='派工单号'>
+          <Form.Item name='num' label='派工单号'>
+            <Input placeholder="请输入" allowClear />
+          </Form.Item>
+        </Col>
+        <Col span={8} className='minWidth'>
+          <Form.Item name='projectCode' label='合同编号' >
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='ProjectCode' label='合同编号' >
+          <Form.Item name='itemCode' label='立项号' >
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='ProjectCode' label='立项号' >
-            <Input placeholder="请输入" allowClear />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item name='ProjectCode' label='项目名称' >
+          <Form.Item name='projectName' label='项目名称' >
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
         {expand && <> <Col span={8}>
-          <Form.Item name='ProjectCode' label='服务工程师' >
+          <Form.Item name='serviceUserName' label='服务工程师' >
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
           <Col span={8}>
-            <Form.Item name='BegTime' label='下单日期' >
+            <Form.Item name='time' label='下单日期' >
               <RangePicker style={{ width: '100%' }}
                 showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
               />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name='ProjectCode' label='流程状态' >
+            <Form.Item name='status' label='流程状态' >
               <Select allowClear placeholder="请选择" >
                 <Option value="1">已结束</Option>
-                <Option value="2">进行中</Option>
+                <Option value="2">未结束</Option>
+                <Option value="3">终止</Option>
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8}>
-            <Form.Item name='ProjectCode21' label='任务状态' >
+          <Col span={8} className='minWidth'>
+            <Form.Item name='taskStatus' label='任务状态' >
               <Select allowClear placeholder="请选择" >
-                <Option value="1">已结束</Option>
+                <Option value="1">待执行</Option>
                 <Option value="2">进行中</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item name='ProjectCode231' label='审批状态' >
-              <Select allowClear placeholder="请选择" >
-                <Option value="1">已结束</Option>
-                <Option value="2">进行中</Option>
+                <Option value="3">已完成</Option>
               </Select>
             </Form.Item>
           </Col></>}
         <Col span={8} >
-          <Form.Item style={{ marginLeft: 30 }}>
-            <Button type="primary" htmlType="submit">
+          <Form.Item style={{ marginLeft: 4 }}>
+            <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
-            <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}  >
+            <Button style={{margin: '0 8px',}} onClick={() => { form.resetFields(); }}  >
               重置
          </Button>
-
+         <Button icon={<ExportOutlined />} loading={exportLoading} style={{ marginRight: 8, }} onClick={() => { exports() }}>
+          导出
+         </Button>
             <a onClick={() => { setExpand(!expand); }} >
               {expand ? <>收起 <UpOutlined /></> : <>展开 <DownOutlined /></>}
             </a>
           </Form.Item>
         </Col>
-      </Row>
-      <Row align='middle'>
-        <Button icon={<PlusOutlined />} type="primary" onClick={() => { add() }} >
-          添加
-    </Button>
-        <Button icon={<ExportOutlined />} loading={exportLoading} style={{ margin: '0 8px', }} onClick={() => { exports() }}>
-          导出
-         </Button>
       </Row>
     </Form>
   }
@@ -523,9 +331,9 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 470px)' : 'calc(100vh - 370px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 450px)' : 'calc(100vh - 370px)' }}
             dataSource={tableDatas}
-            columns={provinceShow ? columns : columns.filter(item => item.title != '行政区')}
+            columns={columns}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
@@ -536,140 +344,17 @@ const Index = (props) => {
             }}
           />
         </Card>
-      </BreadcrumbWrapper>
-
-      <Modal
-        title={type === 'edit' ? '编辑项目' : '添加项目'}
-        visible={fromVisible}
-        onOk={onModalOk}
-        confirmLoading={loadingConfirm}
-        onCancel={() => { setFromVisible(false) }}
-        className={styles.fromModal}
-        destroyOnClose
-        centered
-      >
-        <Form
-          name="basic"
-          form={form2}
-          initialValues={{
-            //  CreateUserID:JSON.parse(Cookie.get('currentUser')).UserId
-          }}
-        >
-
-          <Row>
-            <Col span={12}>
-              <Form.Item label="合同名称" name="ProjectName" rules={[{ required: true, message: '请输入合同名称!', },]} >
-                <Input placeholder='请输入合同名称' allowClear />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="项目编号" name="ProjectCode" rules={[{ required: true, message: '请输入项目编号!', },]} >
-                <Input placeholder='请输入项目编号' allowClear />
-              </Form.Item>
-            </Col>
-            {provinceShow && <Col span={12}>
-              <Form.Item label="行政区" name="Province" rules={[{ required: true, message: '请输入行政区!', },]} >
-                <SdlCascader selectType='2,否' />
-              </Form.Item>
-            </Col>}
-            <Col span={12}>
-              <Form.Item label="客户所在地" name="RegionCode" rules={[{ required: true, message: '请输入客户所在地!', },]} >
-                {/* <RegionList style={{ width: '100%' }} /> */}
-                <Input placeholder='请输入客户所在地' />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="卖方公司" name="SellCompanyName" rules={[{ required: true, message: '请输入卖方公司!', },]} >
-                <Input placeholder='请输入卖方公司' />
-              </Form.Item>
-            </Col>
-
-            <Col span={12}>
-              <Form.Item label="行业" name="IndustryCode" >
-                <Input placeholder='请输入行业' />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="签订人" name="SignName" rules={[{ required: true, message: '请输入签订人!', },]} >
-                <Input placeholder='请输入签订人' />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="运维合同起始日期" name="BeginTime" rules={[{ required: true, message: '请输入运维合同起始日期!', },]} >
-                <DatePicker disabledDate={startDisabledDate} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="运维合同结束日期" name="EndTime" rules={[{ required: true, message: '请输入运维合同结束日期!', },]} >
-                <DatePicker disabledDate={endDisabledDate} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="运维套数" name="OperationCount" rules={[{ required: true, message: '请输入运维套数!', },]} >
-                <InputNumber placeholder='请输入运维套数' />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="运维月数" name="OperationMonth" rules={[{ required: true, message: '请输入运维月数!', },]} >
-                <InputNumber placeholder='请输入运维月数' />
-              </Form.Item>
-            </Col>
-            {/* <Col span={12}>
-
-      <Form.Item label="合同总金额(万)" name="Money"  >
-        <Input placeholder='请输入合同总金额'/>
-      </Form.Item>
-      </Col> */}
-            <Col span={12}>
-              <Form.Item label="所属运维单位" name="OperationCompany" rules={[{ required: true, message: '请选择所属运维单位!', },]}>
-                <OperationCompanyList getDefaultOpration={(defaultId) => { type === 'add' && !provinceShow && form2.setFieldsValue({ OperationCompany: defaultId }) }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="备注" name="Remark"  >
-                <Input placeholder='请输入备注' />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item name="ID" hidden>
-            <Input />
-          </Form.Item>
-          <Form.Item name="CreateUserID" hidden>
-            <Input />
-          </Form.Item>
-          <Form.Item name="deleteFlag" hidden>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      <Modal
-        title={`${ProjectName} - ${ProjectCode}`}
-        visible={tableVisible}
-        onCancel={() => { setTableVisible(false) }}
+        <Modal
+        visible={detailVisible}
+        title={detailTitle}
+        onCancel={() => { setDetailVisible(false) }}
         footer={null}
         destroyOnClose
-        width='90%'
+        wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
       >
-        <Button style={{ marginBottom: 10 }} icon={<ExportOutlined />} loading={exportPointLoading} onClick={() => { pointExports() }}>
-          导出
-          </Button>
-        <SdlTable
-          resizable
-          loading={pointLoading}
-          bordered
-          dataSource={pointDatas}
-          columns={pointColumns}
-          pagination={{
-            total: pointDatasTotal,
-            pageSize: pageSize2,
-            current: pageIndex2,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            onChange: handleTableChange2,
-          }}
-        />
+        <Detail data={detailData ? detailData : {}} />
       </Modal>
+      </BreadcrumbWrapper>
     </div>
   );
 };

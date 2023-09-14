@@ -290,7 +290,7 @@ const Index = (props) => {
 
   const detail = (record) => {
     setDetailVisible(true)
-    setDetailTitle(record.ProjectCode)
+    setDetailTitle(`${record.ProjectCode? record.ProjectCode : record.ItemCode ? record.ItemCode : ''}`)
     setDetailData(record)
   }
   const pointColumns = [
@@ -545,7 +545,6 @@ const Index = (props) => {
                     form2.setFieldsValue({ longitude: map.longitude, latitude: map.latitude });
                   }}
                   handleMarker
-                  handlePolygon
                   zoom={12}
                   placeholder='请输入 例如：112.236514'
                 />
@@ -560,7 +559,6 @@ const Index = (props) => {
                     form2.setFieldsValue({ longitude: map.longitude, latitude: map.latitude });
                   }}
                   handleMarker
-                  handlePolygon
                   zoom={12}
                   placeholder='请输入 例如：112.236514'
                 />
