@@ -72,9 +72,9 @@ const ModelChart = props => {
 
     // y轴最大值
     let _max = max;
-    if (monitorValue && defaultValue) {
-      _max = _.max([...data, monitorValue, defaultValue]);
-    }
+    // if (monitorValue && defaultValue) {
+    //   _max = _.max([...data, monitorValue, defaultValue]);
+    // }
 
     let _min = min;
     // 判断没有最大最小值情况
@@ -179,31 +179,27 @@ const ModelChart = props => {
     // 波动范围变小
     if (splitTime) {
       // 获取最大值
-      let UpperLimitMax = _.maxBy(splitDate, 'UpperLimit');
-      let dataMax = _.max([...data, UpperLimitMax, monitorValue]);
+      // let UpperLimitMax = _.maxBy(splitDate, 'UpperLimit');
+      // let dataMax = _.max([...data, UpperLimitMax, monitorValue]);
       splitTime.map(item => {
-        seriesMarkLine.push([
-          {
-            // lineStyle: { color: '#ff0000' },
-            coord: [moment(item).format('MM-DD HH:mm'), 0],
-            symbol: 'none',
-            symbolSize: 0,
+        seriesMarkLine.push({
+          label: {
+            show: false,
           },
-          {
-            coord: [moment(item).format('MM-DD HH:mm'), dataMax],
-            // symbol: 'arrow',
-            // type: 'max',
-            // yAxis: 'max',
-            // symbolSize: 1,
-            lineStyle: { color: '#ff0000' },
-          },
-        ]);
+          xAxis: moment(item).format('MM-DD HH:mm'),
+          symbol: 'none',
+          // type: 'max',
+          // yAxis: 'max',
+          // symbolSize: 1,
+          lineStyle: { color: '#ff0000' },
+        });
       });
     }
 
     // x轴分割线
     if (splitDate) {
-      splitDate.map((item, index) => {
+      let _splitDate = _.sortBy(splitDate, o => o.startTime);
+      _splitDate.map((item, index) => {
         let lineColor = ['#ff0000', '#ff00ff'];
         let startIndex = date.findIndex(_ => _ === item.startTime);
         let endIndex = date.findIndex(_ => _ === item.endTime);

@@ -153,6 +153,12 @@ export default {
           component: './sysTypeMiddlePage/SaveSessionPage',
         },
         {
+          // 大屏
+          name: 'ModelStatisticsScreen',
+          path: '/ModelStatisticsScreen',
+          component: './DataAnalyticalWarningModel/Statistics/Screen',
+        },
+        {
           path: '/appoperation',
           component: '../layouts/BlankLayout',
           routes: [
@@ -2886,6 +2892,7 @@ export default {
                       path: '/DataAnalyticalWarningModel/Statistics/FluctuateRange',
                       component: './DataAnalyticalWarningModel/Statistics/FluctuateRange',
                     },
+
                   ],
                 },
               ],
@@ -3026,7 +3033,8 @@ export default {
     '/newApi': {
       // target: 'http://61.50.135.114:63002/',
       // target: 'http://172.16.12.134:63002/',
-      target: 'http://172.16.12.234:60061/', // 模型外网
+      target: 'http://172.16.12.234:60061/', // 模型
+      // target: 'http://172.16.12.165:50012/', // 江西
       changeOrigin: true,
       pathRewrite: {
         '^/newApi': '',

@@ -82,7 +82,9 @@ const ModelChartMultipleBig = props => {
           type: 'value',
           name: PointNames[index],
           alignTicks: true,
-          nameLocation: 'end',
+          nameLocation: 'middle',
+          nameGap: 35,
+          // nameLocation: 'end',
           axisLine: {
             show: true,
           },

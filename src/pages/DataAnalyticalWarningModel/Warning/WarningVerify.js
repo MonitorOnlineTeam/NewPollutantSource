@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-06 15:37:47
+ * @Last Modified time: 2023-09-11 13:59:52
  * @Description：报警核实详情
  */
 
@@ -208,13 +208,38 @@ const WarningVerify = props => {
     console.log('linearDatas', linearDatas);
   };
 
+  // 判断小时是否连续
+  function isTimeContinuous(data) {
+    // 将数据按照Time字段进行升序排序
+    // data.sort((a, b) => new Date(a.Time) - new Date(b.Time));
+
+    if (data.length !== 24) {
+      return false;
+    }
+    // 遍历数据，判断每个Time是否连续
+    for (let i = 1; i < data.length; i++) {
+      const currentTime = new Date(data[i].Time);
+      const previousTime = new Date(data[i - 1].Time);
+
+      // 如果当前Time与前一个Time的差值不是1小时，则说明不连续
+      if (Math.abs(currentTime - previousTime) !== 3600000) {
+        return false;
+      }
+    }
+    return true;
+
+    // 所有Time都连续
+  }
+
   // 查看报警数据
   const onViewWarningData = () => {
     // 表格模型
     if (modelTableDatas.length) {
       let tableData = modelTableDatas[0];
       if (tableData.Data.length && tableData.Data[0]) {
-        let startDate = tableData.Data[0].Time;
+        // 排序
+        let sortTableData = tableData.Data.sort((a, b) => new Date(a.Time) - new Date(b.Time));
+        let startDate = sortTableData[0].Time;
         let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
         setWarningDataDate(date);
 
@@ -224,28 +249,51 @@ const WarningVerify = props => {
           modelTableDatas.map(item => {
             item.Data.map(itm => {
               warningDate.push({
-                name: '0',  //零值报警显示0
+                name: '0', //零值报警显示0
                 date: itm.Time,
               });
             });
           });
         } else {
           // 一个表格的情况
-
-          let endData = tableData.Data.slice(-1).Time;
-          console.log('endData', endData);
-          warningDate = [
-            {
-              name: endData ? '开始' : '报警',
-              date: moment(startDate).format('YYYY-MM-DD HH:mm'),
-            },
-          ];
-          if (endData) {
-            warningDate.push({
-              name: '结束',
-              date: endData[0],
+          // console.log('endData', endData);
+          if (isTimeContinuous(sortTableData)) {
+            let endData = tableData.Data.slice(-1)[0].Time;
+            console.log('startDate', startDate);
+            console.log('endData', endData);
+            warningDate = [
+              {
+                name: '开始',
+                date: moment(startDate).format('YYYY-MM-DD HH:mm'),
+              },
+              {
+                name: '结束',
+                date: endData,
+              },
+            ];
+          } else {
+            modelTableDatas.map(item => {
+              item.Data.map(itm => {
+                warningDate.push({
+                  name: '报警', //零值报警显示0
+                  date: itm.Time,
+                });
+              });
             });
           }
+
+          // warningDate = [
+          //   {
+          //     name: endData ? '开始' : '报警',
+          //     date: moment(startDate).format('YYYY-MM-DD HH:mm'),
+          //   },
+          // ];
+          // if (endData) {
+          //   warningDate.push({
+          //     name: '结束',
+          //     date: endData[0],
+          //   });
+          // }
         }
 
         console.log('warningDate', warningDate);

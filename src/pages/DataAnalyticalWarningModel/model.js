@@ -775,5 +775,32 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    // 首页 - 数据统计分析
+    *StatisForData({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.StatisForData, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 首页 - 线索核实情况和企业排名
+    *StatisVeriAndEr({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.StatisVeriAndEr, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 首页 - 线索统计
+    *StatisTipMsg({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.StatisTipMsg, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
   },
 });

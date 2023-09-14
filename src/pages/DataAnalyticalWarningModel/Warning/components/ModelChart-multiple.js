@@ -2,12 +2,12 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-15 10:59:10
+ * @Last Modified time: 2023-09-14 10:37:10
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import {} from 'antd';
+import { Tooltip } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import styles from '../../styles.less';
@@ -50,8 +50,10 @@ const ModelChartMultiple = props => {
         yAxisData.push({
           type: 'value',
           name: item.PointName || item.pollutantName,
+          nameLocation: 'middle',
+          nameGap: 35,
           alignTicks: true,
-          nameLocation: 'end',
+          // nameLocation: 'end',
           axisLine: {
             show: true,
           },
@@ -83,7 +85,7 @@ const ModelChartMultiple = props => {
         trigger: 'axis',
       },
       grid: {
-        left: 40,
+        left: 60,
         right: 60,
         bottom: 30,
         top: 70,
@@ -101,9 +103,9 @@ const ModelChartMultiple = props => {
     };
   };
 
-  // const onEvents = {
-  //   click: e => onShowMoreDataModal(e),
-  // };
+  const onEvents = {
+    click: e => onShowMoreDataModal(e),
+  };
 
   // 双排口可点击
   const onShowMoreDataModal = e => {
@@ -131,7 +133,10 @@ const ModelChartMultiple = props => {
   console.log('chartData', chartData);
   return (
     <>
-      <div className={styles.chartBox} onClick={onShowMoreDataModal}>
+      <div className={styles.chartBox}>
+        <Tooltip title="点击放大图表" onClick={() => onShowMoreDataModal()}>
+          <div style={{ height: 34, width: '100%', position: 'absolute', zIndex: 1 }}></div>
+        </Tooltip>
         {/* {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>} */}
         <ReactEcharts
           option={getOption()}

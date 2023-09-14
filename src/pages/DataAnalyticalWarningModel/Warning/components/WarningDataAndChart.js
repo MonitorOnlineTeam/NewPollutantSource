@@ -44,7 +44,7 @@ const WarningDataAndChart = props => {
   // const [visible, setVisible] = useState([]);
 
   useEffect(() => {
-    if(DGIMN) {
+    if (DGIMN) {
       getPollutantListByDgimn();
     }
   }, [DGIMN]);
@@ -72,36 +72,46 @@ const WarningDataAndChart = props => {
         tempSelectedNames = pollutantNames;
         GetAllTypeDataList();
         getColumns(res);
-
-        // 处理图例
-        let legendSelected = {};
-        console.log('pollutantNames', pollutantNames);
-        // 默认选中氧含量、烟气湿度、烟气温度、流速
-        pollutantNames.map((item, index) => {
-          // if (item === '氧含量' || item === '烟气湿度' || item === '烟气温度' || item === '流速') {
-          //   legendSelected[item] = true;
-          // } else {
-          //   legendSelected[item] = false;
-          // }
-          console.log('defaultChartSelected', defaultChartSelected);
-          // 根据不同模型选中污染物
-          if (defaultChartSelected.length) {
-            debugger;
-            if (defaultChartSelected.includes(item)) {
-              legendSelected[item] = true;
-            } else {
-              legendSelected[item] = false;
-            }
-          }
-          // if (index < 1) {
-          //   legendSelected[item] = true;
-          // } else {
-          //   legendSelected[item] = false;
-          // }
-        });
-        setLegendSelected(legendSelected);
+        // handleLegendSelected();
       },
     }).then(() => {});
+  };
+
+  useEffect(() => {
+    handleLegendSelected();
+  }, [selectedNames]);
+
+  // 处理选中的图例
+  const handleLegendSelected = () => {
+    let pollutantNames = selectedNames;
+    console.log('selectedNames', selectedNames);
+    // 处理图例
+    let legendSelected = {};
+    console.log('pollutantNames', pollutantNames);
+    // 默认选中氧含量、烟气湿度、烟气温度、流速
+    pollutantNames.map((item, index) => {
+      // if (item === '氧含量' || item === '烟气湿度' || item === '烟气温度' || item === '流速') {
+      //   legendSelected[item] = true;
+      // } else {
+      //   legendSelected[item] = false;
+      // }
+      console.log('defaultChartSelected', defaultChartSelected);
+      // 根据不同模型选中污染物
+      if (defaultChartSelected.length) {
+        debugger;
+        if (defaultChartSelected.includes(item)) {
+          legendSelected[item] = true;
+        } else {
+          legendSelected[item] = false;
+        }
+      }
+      // if (index < 1) {
+      //   legendSelected[item] = true;
+      // } else {
+      //   legendSelected[item] = false;
+      // }
+    });
+    setLegendSelected(legendSelected);
   };
 
   // 获取报警数据
@@ -241,6 +251,7 @@ const WarningDataAndChart = props => {
   };
 
   const getOption = () => {
+    debugger;
     const values = form.getFieldsValue();
     const { pollutantCodes = [] } = values;
     let series = [];
@@ -249,6 +260,10 @@ const WarningDataAndChart = props => {
     let WorkConData = {};
     let yxisData = [];
     let idx = 0;
+
+    if (!pollutantCodes || !pollutantCodes.length) {
+      return {};
+    }
 
     pollutantCodes.map((pollutant, index) => {
       let seriesdata = [];
@@ -329,7 +344,7 @@ const WarningDataAndChart = props => {
       // 异常工况数据
 
       // 异常工况开始
-      if (item.WorkCon_Status && !continuousItem.length) {
+      if (item.WorkCon_Status && item.WorkCon && !continuousItem.length) {
         continuousItem.push({
           name: '异常工况',
           xAxis: item.MonitorTime,
@@ -337,7 +352,7 @@ const WarningDataAndChart = props => {
       }
 
       // 异常工况结束
-      if (!item.WorkCon_Status && continuousItem.length) {
+      if (!item.WorkCon_Status && item.WorkCon && continuousItem.length) {
         continuousItem.push({
           name: '异常工况',
           xAxis: item.MonitorTime,
@@ -345,7 +360,7 @@ const WarningDataAndChart = props => {
 
         markAreaData.push(continuousItem);
         continuousItem = [];
-      } else if (item.WorkCon_Status && idx === allTypeDataList.length - 1) {
+      } else if (item.WorkCon_Status && item.WorkCon && idx === allTypeDataList.length - 1) {
         continuousItem.push({
           name: '异常工况',
           xAxis: item.MonitorTime,
@@ -383,10 +398,12 @@ const WarningDataAndChart = props => {
               // width: 20,
               // overflow: 'truncate',
               formatter: function(params) {
-                return item.name
-                  .split('')
-                  // .reverse()
-                  .join('\n');
+                return (
+                  item.name
+                    .split('')
+                    // .reverse()
+                    .join('\n')
+                );
               },
             },
           };
@@ -499,6 +516,7 @@ const WarningDataAndChart = props => {
       yAxis: yxisData,
       series: series,
     };
+    console.log('option', option);
     return option;
   };
 

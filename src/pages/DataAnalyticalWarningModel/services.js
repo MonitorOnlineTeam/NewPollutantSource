@@ -209,3 +209,21 @@ export async function GetNoFilterPointByEntCode(params) {
   );
   return result;
 }
+
+// 首页 - 数据统计分析
+export async function StatisForData(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisForData', params);
+  return result;
+}
+
+// 首页 - 线索和企业排名
+export async function StatisVeriAndEr(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisVeriAndEr', params);
+  return result;
+}
+
+// 首页 - 线索统计
+export async function StatisTipMsg(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisTipMsg', params);
+  return result;
+}

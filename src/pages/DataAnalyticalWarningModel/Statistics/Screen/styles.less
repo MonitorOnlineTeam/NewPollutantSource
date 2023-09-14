@@ -1,0 +1,261 @@
+.ScreenWrapper {
+  height: 100vh;
+  width: 100vw;
+  min-width: 1500px;
+  background: url(/dataModal/statistics/BG.png) no-repeat;
+  background-size: cover;
+
+  :global {
+    .ant-spin-nested-loading,
+    .ant-spin-container {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  header {
+    height: 80px;
+    text-align: center;
+    background: url(/dataModal/statistics/top.png) no-repeat;
+    background-size: 100% 100%;
+
+    font-size: 26px;
+    font-weight: bold;
+    color: #ffffff;
+    line-height: 60px;
+  }
+
+  main {
+    padding: 10px 20px;
+  }
+  .boxWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 14px;
+
+    .boxItem {
+      height: 320px;
+      // background: rgba(0, 188, 255, 0.1);
+      // border: 1px solid #00bcff;
+      /* opacity: 0.5; */
+      background: rgba(29, 123, 158, 0.1);
+      border: 1px solid rgba(0, 188, 255, 0.5);
+      display: flex;
+      flex-direction: column;
+
+      .title {
+        height: 37px;
+        background: linear-gradient(90deg, rgba(14, 119, 157, 0.4), rgba(11, 26, 69, 0));
+        color: #65d9ff;
+        line-height: 37px;
+        padding: 0 10px;
+        font-weight: bold;
+        font-size: 15px;
+      }
+      .boxItemContent {
+        flex: 1;
+      }
+    }
+    // 数据统计分析
+    .dataCountStatistics {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      .countBox {
+        width: 240px;
+        height: 240px;
+        margin-left: 4%;
+        background: url(/dataModal/statistics/count_bg.png) no-repeat 0 -20px;
+        background-size: contain;
+        color: #fff;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 70px;
+        cursor: pointer;
+
+        p.text {
+          width: 90px;
+          height: 20px;
+          background: rgba(0, 89, 255, 0.6);
+          margin-left: -28px;
+          font-size: 13px;
+        }
+
+        p.count {
+          font-size: 30px;
+          margin-left: -28px;
+          font-weight: bold;
+        }
+      }
+
+      .groupNums {
+        flex: 2;
+        color: #26b0ff;
+        text-align: center;
+        .text {
+          margin-bottom: 0;
+          line-height: 30px;
+          height: 30px;
+          overflow: hidden;
+          vertical-align: middle;
+          font-weight: bold;
+          // display: flex;
+          // align-items: center;
+
+          i {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            margin-right: 4px;
+            background: url(/dataModal/statistics/icon.png) no-repeat;
+          }
+        }
+        .count {
+          line-height: 40px;
+          background: linear-gradient(
+            90deg,
+            rgba(11, 26, 69, 0),
+            rgba(14, 119, 157, 0.4),
+            rgba(11, 26, 69, 0)
+          );
+          border-top: 1px solid;
+          border-image: linear-gradient(
+              to right,
+              rgba(0, 188, 255, 0.1),
+              #0893ff,
+              rgba(0, 188, 255, 0.1)
+            )
+            1;
+          margin: 0 10px;
+          border-bottom: 1px solid;
+          padding: 0 30px;
+          text-align: center;
+          min-width: 110px;
+          height: 46px;
+          line-height: 46px;
+          overflow: hidden;
+          vertical-align: middle;
+          span {
+            color: #26e3ff;
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 6px;
+          }
+        }
+      }
+    }
+
+    // 线索核实情况
+    .checkBox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+
+      .legendInfo {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        margin-bottom: 30px;
+        span {
+          display: inline-block;
+        }
+        span:first-child {
+          width: 14px;
+          height: 14px;
+          margin-right: 10px;
+        }
+
+        .num {
+          color: #26e3ff;
+        }
+      }
+    }
+
+    // 线索数量企业排名
+    .entRankBox {
+      padding: 20px;
+      height: 280px;
+      overflow-y: auto;
+      .rankItem {
+        margin-bottom: 12px;
+        .info {
+          display: flex;
+          justify-content: space-between;
+          color: #fff;
+          font-weight: 500;
+          margin-bottom: 10px;
+          .text {
+          }
+          .num {
+          }
+        }
+
+        .progress {
+          background: #0f255d;
+          height: 20px;
+          .inner {
+            height: 100%;
+            background: linear-gradient(-90deg, #138ff4, #26afd5);
+          }
+        }
+      }
+    }
+
+    // 核实信息
+    .checkInfoWrapper {
+      :global {
+        .ant-table {
+          background: rgba(29, 123, 158, 0.1);
+        }
+
+        .ant-table-thead > tr > th {
+          font-weight: 500;
+          text-align: left;
+          background: #143778;
+          color: #71cdf9;
+          border: none;
+        }
+
+        .ant-table-column-sorter {
+          color: #71cdf9;
+        }
+
+        .ant-table-cell {
+          border: none;
+        }
+
+        .ant-empty-image {
+          display: none;
+        }
+        .ant-empty-description {
+          color: #ccc;
+          font-weight: bold;
+        }
+
+        .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+          background: rgba(29, 123, 158, 0.1) !important;
+        }
+
+        .ant-table-placeholder:hover {
+          .ant-table-expanded-row-fixed {
+            background: rgba(29, 123, 158, 0.1) !important;
+          }
+        }
+
+        .ant-table-tbody > tr > td {
+          background: transparent;
+          color: #fff;
+        }
+
+        .light {
+          background-color: rgba(15, 83, 157, 0.2) !important;
+        }
+      }
+    }
+  }
+}

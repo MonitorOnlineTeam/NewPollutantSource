@@ -33,6 +33,7 @@ const ModelChartLinear = props => {
       },
       tooltip: {
         formatter: `R² = ${chartData.linear}`,
+        confine: true,
       },
       data: [
         [
@@ -57,6 +58,11 @@ const ModelChartLinear = props => {
       tooltip: {
         formatter: ' {a}: ({c})',
       },
+      grid: {
+        left: 80,
+        // right: 50,
+        // height: '35%',
+      },
       xAxis: [
         {
           name: chartData.names[0],
@@ -75,7 +81,7 @@ const ModelChartLinear = props => {
         {
           name: chartData.names[1],
           nameLocation: 'middle',
-          nameGap: 35,
+          nameGap: 65,
           gridIndex: 0,
           // min: Math.floor(minArr[1]),
           min: startPoint[1] < 0 ? startPoint[1] - 5 : startPoint[1],

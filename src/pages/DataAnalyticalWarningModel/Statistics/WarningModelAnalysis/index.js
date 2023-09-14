@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:34:04
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-31 16:50:52
+ * @Last Modified time: 2023-09-14 10:32:54
  * @Description：场景模型分析
  */
 import React, { useState, useEffect } from 'react';
@@ -187,7 +187,10 @@ const Index = props => {
     let reqBody = getRequestBody();
     dispatch({
       type: 'dataModel/StatisAlarmInfoRate',
-      payload: reqBody,
+      payload: {
+        ...reqBody,
+        modelGuid: [],
+      },
       callback: res => {
         setDataSource(res);
         let newSelectedRowKeys = res.map(item => item.ModelGuid);

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-21 10:46:15
+ * @Last Modified time: 2023-09-07 17:18:49
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -14,7 +14,6 @@ import PollutantImages from '@/pages/DataAnalyticalWarningModel/Warning/componen
 import Histogram from '@/pages/DataAnalyticalWarningModel/Warning/components/Histogram';
 import CorrelationCoefficient from '@/pages/DataAnalyticalWarningModel/Warning/components/CorrelationCoefficient';
 import WarningDataAndChart from './components/WarningDataAndChart';
-
 
 const dvaPropsData = ({ loading, dataModel, common }) => ({});
 

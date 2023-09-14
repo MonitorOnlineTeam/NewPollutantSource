@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2023-08-07 14:03:36 
- * @Last Modified by:   JiaQi 
- * @Last Modified time: 2023-08-07 14:03:36 
+ * @Author: JiaQi
+ * @Date: 2023-08-07 14:03:36
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-09-07 09:38:47
  * @Description：相关关系表
  */
 import React, { useState, useEffect } from 'react';
@@ -17,10 +17,15 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({});
 const CorrelationCoefficient = props => {
   const { dispatch, DGIMN } = props;
   const [chartData, setChartData] = useState({ data: [], name: [] });
+  const [option, setOption] = useState({});
 
   useEffect(() => {
     StatisLinearCoefficient();
   }, [DGIMN]);
+
+  useEffect(() => {
+    getOption();
+  }, [chartData]);
 
   // 获取相关系数图数据源
   const StatisLinearCoefficient = () => {
@@ -35,17 +40,18 @@ const CorrelationCoefficient = props => {
     });
   };
 
+
+
   //
   const getOption = () => {
-    let el = document.querySelector('#CorrelationCoefficient');
+    let el = document.querySelector('.ant-tabs-tabpane-active');
     let height = 0;
-    if (el) height = el.clientHeight - el.clientHeight * 0.16;
-
+    if (el) height = el.clientHeight - el.clientHeight * 0.2;
     const { name, data } = chartData;
     const xData = name;
     const yData = _.reverse([...name]);
     const seriesData = data;
-    return {
+    let option = {
       // tooltip: {
       //   position: 'top'
       // },
@@ -110,13 +116,15 @@ const CorrelationCoefficient = props => {
         },
       ],
     };
+
+    setOption(option);
   };
 
   return (
     <Row id="CorrelationCoefficient" style={{ overflowY: 'auto', height: 'calc(100vh - 238px)' }}>
       {chartData.data.length ? (
         <ReactEcharts
-          option={getOption()}
+          option={option}
           style={{ height: '100%', width: '100%' }}
           className="echarts-for-echarts"
           theme="my_theme"
