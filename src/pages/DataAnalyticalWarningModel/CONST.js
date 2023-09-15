@@ -83,7 +83,9 @@ export const ModelNumberIdsDatas = {
     '928ec327-d30d-4803-ae83-eab3a93538c1',
     '3568b3c6-d8db-42f1-bbff-e76406a67f7f',
     '6675e28e-271a-4fb7-955b-79bf0b858e8e',
-    '178fd470-ca31-480a-835a-3322fd57a4f0',
+    // '178fd470-ca31-480a-835a-3322fd57a4f0',
+    'cda1f2e2-ec5f-425b-93d2-94ba62b17146',
+    '0fa091a3-7a19-4c9e-91bd-c5a4bf2e9827',
   ],
   //疑似行业数据波动范围异常
   8.1: ['b9601a0f-22af-4a07-927f-82d6369f2e12'],
