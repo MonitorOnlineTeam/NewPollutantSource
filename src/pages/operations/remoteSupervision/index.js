@@ -825,7 +825,8 @@ const Index = (props) => {
 
       })
       dgimnEchoDataFun(data.DGIMN, data, '编辑')
-      data?.consistentParametersCheckList?.[0] && echoParFun(data.consistentParametersCheckList)
+      const paramData =  data?.consistentParametersCheckList?.[0] ?  data?.consistentParametersCheckList : addParconsistencyData
+      paramData?.[0]&&echoParFun(paramData)
 
     })
   }
@@ -1393,7 +1394,7 @@ const Index = (props) => {
     let traceabilityUploadList = {}, traceabilityUploadFilesListObj = {};
     let dataUploadList = {}, dataUploadFilesListObj = {};
     data.map(item => {
-      const code = item.CheckItem;
+      const code = item.CheckItem ?  item.CheckItem : item.ChildID;
       echoFilePar(code, item)
       const echoFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
         let parFileList = [];

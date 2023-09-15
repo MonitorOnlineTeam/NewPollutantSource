@@ -191,7 +191,8 @@ const Index = (props) => {
         columns={acceptanceServicesCol}
         pagination={false}
       />
-      {workRecordData && <div><TitleComponents text='工作记录' />
+      {workRecordData && <div>
+       <TitleComponents text='工作记录' />
         <SdlTable
           resizable
           loading={false}
@@ -199,7 +200,11 @@ const Index = (props) => {
           dataSource={workRecordData}
           columns={workRecordsCol}
           pagination={false}
-        /></div>}
+        />
+      <Form.Item label="离开现场时间">
+        {data.Num}
+      </Form.Item>
+      </div>}
     </>
   }
   //通用表格组件  只需要替换验收服务报告照片字段的表格 例如项目交接单这种
@@ -371,9 +376,6 @@ const Index = (props) => {
 
     return <Form name="detail">
       <ServiceReportWorkRecord serviceReportData={[]} workRecordData={[]} />
-      <Form.Item label="离开现场时间">
-        {data.Num}
-      </Form.Item>
     </Form>
   }
   //静态调试
@@ -498,12 +500,18 @@ const Index = (props) => {
       />
     </Form>
   }
+  //动态运行
+  const DynamicOperation = () =>{
+    return <Form name="detail">
+      <ServiceReportWorkRecord serviceReportData={[]} workRecordData={[]} />
+    </Form>
+  }
   const fillContentTabContent = {
     '前期勘查': <EarlyStageCheck />,
     '设备验货': <EquipmentInspection />,
     '指导安装': <GuideInstallation />,
     '静态调试': <StaticDebugging />,
-    '动态投运': '',
+    '动态投运': <DynamicOperation />,
     '168/试运行': '',
     '72小时调试检测': '',
     '联网': '',

@@ -11,10 +11,12 @@ const LoginModel = {
     status: undefined,
     configInfo: null,
     appFlag: '',
+    newTokenFlag:false,
   },
   effects: {
     // 后台新框架登录
-    *newLogin({ payload, callback }, { call, put }) {
+    *newLogin({ payload, callback }, { call, put, update, select  }) {
+      yield put({ type: 'setNewTokenFlag',payload: false, });
       const response = yield call(newLogin, {
         LoginFlag: 'true',
         MenuId: '',
@@ -24,11 +26,14 @@ const LoginModel = {
       });
       if (response.IsSuccess) {
         // 后台新框架获取token
-        yield call(getToken, {
+        const getTokenRes = yield call(getToken, {
           username: payload.userName,
           password: payload.password,
-          callback: callback,
+          callback:callback,
         });
+        if(getTokenRes.access_token){
+          yield put({ type: 'setNewTokenFlag',payload: true, });
+        }
       }
     },
     *logout(_, { put }) {
@@ -74,6 +79,9 @@ const LoginModel = {
     setAppFlagInfo(state, { payload }) {
       return { ...state, appFlag: payload };
     },
+    setNewTokenFlag(state, { payload }){
+      return { ...state, newTokenFlag: payload }; 
+    }
   },
 };
 export default LoginModel;

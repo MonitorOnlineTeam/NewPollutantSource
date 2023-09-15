@@ -7,9 +7,10 @@ import webConfig from '../../../public/webConfig'
 import PageLoading from '@/components/PageLoading'
 import { router } from 'umi'
 
-@connect(({ global }) => ({
+@connect(({ global,login, }) => ({
   sysPollutantTypeList: global.sysPollutantTypeList,
   configInfo: global.configInfo,
+  newTokenFlag:login.newTokenFlag,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -25,9 +26,15 @@ class index extends PureComponent {
       router.push('/user/login');
       return;
     }
-    this.getSysPollutantTypeList();
   }
-
+  componentDidUpdate(props){
+  //   const {newTokenFlag } = this.props;
+  //  if(props.newTokenFlag!== newTokenFlag){
+  //    if( newTokenFlag){
+  //      this.getSysPollutantTypeList();
+  //    }
+  //  }
+ }
   // 获取系统的污染物类型
   getSysPollutantTypeList = () => {
     this.props.dispatch({

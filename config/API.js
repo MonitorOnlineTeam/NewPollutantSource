@@ -428,6 +428,7 @@ export const API = {
    //项目执行进度 Api
    ProjectExecuProgressApi:{
     GetServiceDispatch: before + '/CTBaseDataApi/GetServiceDispatch', //获取服务派单信息
+    GetServiceDispatchTypeAndRecord: before + '/CTBaseDataApi/GetServiceDispatchTypeAndRecord', //服务填报内容 
    },
   //资产管理 Api
   CtAssetManagementApi: {

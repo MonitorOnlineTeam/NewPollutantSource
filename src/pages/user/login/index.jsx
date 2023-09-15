@@ -10,7 +10,7 @@ const { Tab, UserName, Password, Mobile, Captcha, VerificaCode, Submit } = Login
 import Agreement from '../login/components/Agreement'
 @connect(({ userLogin, loading, login }) => ({
   userLogin,
-  submitting: loading.effects['userLogin/login'] || loading.effects['userLogin/newLogin'],
+  submitting: loading.effects['userLogin/login'],
   isAgree: userLogin.isAgree,
   configInfo: login.configInfo
 }))
