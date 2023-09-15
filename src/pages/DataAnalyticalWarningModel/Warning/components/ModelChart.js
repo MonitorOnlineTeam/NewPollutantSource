@@ -30,6 +30,7 @@ const ModelChart = props => {
       dataHistory,
       splitDate,
       splitTime,
+      unit,
     } = chartData.data[legendIndex];
 
     let seriesMarkLine = [];
@@ -241,6 +242,15 @@ const ModelChart = props => {
       },
       tooltip: {
         trigger: 'axis',
+        formatter: function(params) {
+          let { axisValue, dataIndex, marker, seriesName, value } = params[0];
+          let date = axisValue;
+          //内容
+          let content = '';
+          content = `${marker} ${seriesName}: ${value}${unit}
+        <br />`;
+          return date + '<br />' + content;
+        },
         ...abnormalObj.tooltipFormatter,
         // axisPointer: {
         //   type: 'cross',
@@ -455,6 +465,7 @@ const ModelChart = props => {
             >
               <i style={legendIndex === index ? { background: color } : {}}></i>
               {item.pollutantName}
+              {item.unit ? '(' + item.unit + ')' : ''}
             </div>
           );
         })}

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-04 14:44:00
+ * @Last Modified time: 2023-09-14 15:34:28
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -373,7 +373,7 @@ const Index = props => {
               家企业{modelInfo.AllDGIMNCount}
               个排放口{dateString[0]}至{dateString[1]}的小时数据进行分析，共发现
               {modelInfo.UniqueParentCodeCount}家企业{modelInfo.DGIMNCount}
-              个排放口符合数据特征，发生线索{modelInfo.DisCulesNum}次，已核实
+              个排放口符合数据特征，发现线索{modelInfo.DisCulesNum}次，已核实
               {modelInfo.VerifiedNum}次，经核发现有异常{modelInfo.CheckedResult2Count}次。
             </p>
             <Descriptions bordered column={1} size="small" className={styles.DescriptionsWrapper}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Alert, Tooltip, Spin, Button } from 'antd';
+import { Row, Col, Alert, Tooltip, Spin, Button, Empty } from 'antd';
 import styles from './styles.less';
 import BoxItem from './BoxItem';
 import ReactEcharts from 'echarts-for-react';
@@ -9,6 +9,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
+import { RollbackOutlined } from '@ant-design/icons';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   // todoList: wordSupervision.todoList,
@@ -92,7 +93,10 @@ const Index = props => {
       type: 'dataModel/StatisVeriAndEr',
       payload: body,
       callback: res => {
-        let max = _.maxBy(res.reasonResult, 'Count').Count;
+        let max = 0;
+        if (res.reasonResult.length) {
+          max = _.maxBy(res.reasonResult, 'Count').Count;
+        }
         setCheckInfoAndEntRank({
           checkInfo: res.finalResult, //线索核实情况
           entRank: res.reasonResult, // 企业排名
@@ -276,20 +280,20 @@ const Index = props => {
       dataIndex: 'UniqueParentCodeCount',
       sorter: (a, b) => a.UniqueParentCodeCount - b.UniqueParentCodeCount,
     },
-    {
-      title: '异常原因',
-      dataIndex: 'ExceptionReason',
-      ellipsis: true,
-      width: 200,
-      render: (text, record) => {
-        let _text = text || '-';
-        return (
-          <Tooltip title={_text}>
-            <span>{_text}</span>
-          </Tooltip>
-        );
-      },
-    },
+    // {
+    //   title: '异常原因',
+    //   dataIndex: 'ExceptionReason',
+    //   ellipsis: true,
+    //   width: 200,
+    //   render: (text, record) => {
+    //     let _text = text || '-';
+    //     return (
+    //       <Tooltip title={_text}>
+    //         <span>{_text}</span>
+    //       </Tooltip>
+    //     );
+    //   },
+    // },
     {
       title: '操作',
       dataIndex: 'address',
@@ -344,17 +348,35 @@ const Index = props => {
   return (
     <div className={styles.ScreenWrapper}>
       <header className={styles.header}>异常数据智能精准识别系统</header>
-      <Button
+      {/* <Button
         type="primary"
         size="small"
         ghost
-        style={{ position: 'absolute', zIndex: 1, right: 22, top: 24, color: 'rgb(101, 217, 255)' }}
         onClick={() => {
-          router.push('/DataAnalyticalWarningModel/Statistics/WarningModelAnalysis')
+          router.push('/DataAnalyticalWarningModel/Statistics/WarningModelAnalysis');
         }}
       >
         返回
-      </Button>
+      </Button> */}
+      <Tooltip title="返回">
+        <RollbackOutlined
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+            border: '2px solid rgb(49 97 141)',
+            fontSize: 16,
+            padding: 4,
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            right: 22,
+            top: 34,
+            color: 'rgb(101, 217, 255)',
+          }}
+          onClick={() => {
+            router.push('/DataAnalyticalWarningModel/Statistics/WarningModelAnalysis');
+          }}
+        />
+      </Tooltip>
       <main>
         <div className={styles.boxWrapper}>
           <BoxItem title="数据统计分析" style={{ flex: 2, marginRight: 14 }}>
@@ -435,28 +457,42 @@ const Index = props => {
           <BoxItem title="线索数量企业排名" style={{ flex: 1, minWidth: 400 }}>
             <Spin spinning={StatisVeriAndErLoading}>
               <div className={styles.entRankBox}>
-                {checkInfoAndEntRank.entRank.map(item => {
-                  return (
-                    <div className={styles.rankItem}>
-                      <div className={styles.info}>
-                        <span>{item.EntName}</span>
-                        <span style={{ color: '#30D8E5' }}>{item.Count}个</span>
+                {checkInfoAndEntRank.entRank.length ? (
+                  checkInfoAndEntRank.entRank.map(item => {
+                    return (
+                      <div className={styles.rankItem}>
+                        <div className={styles.info}>
+                          <span>{item.EntName}</span>
+                          <span style={{ color: '#30D8E5' }}>{item.Count}个</span>
+                        </div>
+                        <div className={styles.progress}>
+                          <div
+                            className={styles.inner}
+                            style={{
+                              width:
+                                checkInfoAndEntRank.entMaxNum > 0
+                                  ? (item.Count / checkInfoAndEntRank.entMaxNum).toFixed(2) * 100 +
+                                    '%'
+                                  : 0,
+                            }}
+                          ></div>
+                        </div>
                       </div>
-                      <div className={styles.progress}>
-                        <div
-                          className={styles.inner}
-                          style={{
-                            width:
-                              checkInfoAndEntRank.entMaxNum > 0
-                                ? (item.Count / checkInfoAndEntRank.entMaxNum).toFixed(2) * 100 +
-                                  '%'
-                                : 0,
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  <p
+                    style={{
+                      color: '#71cdf9',
+                      textAlign: 'center',
+                      marginTop: 20,
+                      fontSize: 15,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    暂无数据
+                  </p>
+                )}
               </div>
             </Spin>
           </BoxItem>
@@ -469,7 +505,7 @@ const Index = props => {
                   banner
                   message={
                     <div style={{ color: '#65D9FF', fontWeight: 500 }}>
-                      已选择{selectedRowKeys.length}项{' '}
+                      已选择{selectedRowKeys.length}项&nbsp;&nbsp;&nbsp;&nbsp;
                       {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，核实为异常${tableSelectedCount.CheckedResult2Count}个，准确率${tableSelectedCount.AccuracyRate}%；
                     涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个`}
                     </div>

@@ -5,6 +5,41 @@
   background: url(/dataModal/statistics/BG.png) no-repeat;
   background-size: cover;
 
+  /*滚动条轨道颜色*/
+  @scrollbar-track-color: #021e39;
+  /*滚动条颜色*/
+  @scrollbar-thumb-color: #305090;
+  /*滚动条大小*/
+  @scrollbar-width: 9px;
+
+  ::-webkit-scrollbar-track-piece {
+    -webkit-border-radius: 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: @scrollbar-width;
+    height: 9px;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: @scrollbar-track-color;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: @scrollbar-thumb-color;
+    -webkit-border-radius: 4px;
+    outline-offset: -2px;
+    border: 2px solid @scrollbar-thumb-color;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    height: 50px;
+    background-color: @scrollbar-thumb-color;
+    -webkit-border-radius: 4px;
+  }
+
   :global {
     .ant-spin-nested-loading,
     .ant-spin-container {
@@ -138,6 +173,8 @@
           line-height: 46px;
           overflow: hidden;
           vertical-align: middle;
+          font-weight: bold;
+
           span {
             color: #26e3ff;
             font-weight: bold;
