@@ -31,6 +31,7 @@ const dvaPropsData = ({ loading, dispatchQuery, global, }) => ({
   tableDatas: dispatchQuery.tableDatas,
   tableTotal: dispatchQuery.tableTotal,
   configInfo: global.configInfo,
+  
 })
 
 const dvaDispatch = (dispatch) => {
@@ -53,6 +54,7 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
+
   }
 }
 const Index = (props) => {
@@ -66,7 +68,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableTotal,  tableLoading, exportLoading,  } = props;
+  const { tableDatas, tableTotal,  tableLoading,serviceDispatchTypeAndRecordLoading,serviceDispatchTypeAndRecord, exportLoading,  } = props;
 
 
 
@@ -202,11 +204,13 @@ const Index = (props) => {
   const [detailVisible, setDetailVisible] = useState(false)
   const [detailTitle, setDetailTitle] = useState('详情')
   const [detailData, setDetailData] = useState()
+  const [detailId, setDetailId] = useState()
 
   const detail = (record) => {
     setDetailVisible(true)
     setDetailTitle(`派工单号${record.ProjectCode? ` - ${record.ProjectCode}` : record.ItemCode ? ` - ${record.ItemCode}` : ''}`)
     setDetailData(record)
+    setDetailId(record.ID)
   }
   const exports = async () => {
     const values = await form.validateFields();
@@ -352,7 +356,7 @@ const Index = (props) => {
         destroyOnClose
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
       >
-        <Detail data={detailData ? detailData : {}} />
+        <Detail data={detailData ? detailData : {}} id={detailId}/>
       </Modal>
       </BreadcrumbWrapper>
     </div>

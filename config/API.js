@@ -427,8 +427,12 @@ export const API = {
    },
    //项目执行进度 Api
    ProjectExecuProgressApi:{
-    GetServiceDispatch: before + '/CTBaseDataApi/GetServiceDispatch', //获取服务派单信息
-    GetServiceDispatchTypeAndRecord: before + '/CTBaseDataApi/GetServiceDispatchTypeAndRecord', //服务填报内容 
+    //获取服务派单信息
+    GetServiceDispatch: before + '/CTBaseDataApi/GetServiceDispatch', 
+    //服务填报内容 要加载的项
+    GetServiceDispatchTypeAndRecord: before + '/CTBaseDataApi/GetServiceDispatchTypeAndRecord',
+    //服务填报内容 详情内容
+    GetAcceptanceServiceRecord: before + '/CTBaseDataApi/GetAcceptanceServiceRecord',
    },
   //资产管理 Api
   CtAssetManagementApi: {

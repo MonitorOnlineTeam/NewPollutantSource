@@ -837,7 +837,6 @@ const Index = (props) => {
     let dasUploadList = {}, dasUploadFilesListObj = {};
     let rangeUploadList = {}, rangeUploadFilesListObj = {};
     getPointConsistencyParamFun(mn, (pollutantList, paramList) => {
-      let echoData = []
       if (!data.consistencyCheckList || data.consistencyCheckList?.length == 0) { //数据一致性核查表 回显数据为空数组时
         pollutantList.map(item => {
           echoForamt(item.par, [], [])

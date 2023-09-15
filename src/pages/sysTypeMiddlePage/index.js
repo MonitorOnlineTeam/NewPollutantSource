@@ -28,12 +28,12 @@ class index extends PureComponent {
     }
   }
   componentDidUpdate(props){
-  //   const {newTokenFlag } = this.props;
-  //  if(props.newTokenFlag!== newTokenFlag){
-  //    if( newTokenFlag){
-  //      this.getSysPollutantTypeList();
-  //    }
-  //  }
+    const {newTokenFlag } = this.props;
+     if(props.newTokenFlag!== newTokenFlag){
+      if( newTokenFlag){
+       this.getSysPollutantTypeList();
+     }
+   }
  }
   // 获取系统的污染物类型
   getSysPollutantTypeList = () => {
@@ -49,7 +49,10 @@ class index extends PureComponent {
       //   this.setState({ loading: false });
       // }
       sessionStorage.setItem("isShowSelectSystem", 1);
+      this.setState({ loading: false });
+      this.props.dispatch({ type: 'login/updateState', payload: {newTokenFlag:false}});
       this.props.sysPollutantTypeList?.[0]&&this.onSysItemClick(this.props.sysPollutantTypeList[0])
+
     })
   }
 

@@ -4,7 +4,7 @@
  * 创建时间：2023.08.29
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Tabs } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Tabs, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -17,13 +17,16 @@ import styles from "./style.less"
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-const namespace = 'projectManager'
+const namespace = 'dispatchQuery'
 
 
 
 
-const dvaPropsData = ({ loading, projectManager }) => ({
-  detailLoading: loading.effects[`${namespace}/getProjectInfo`],
+const dvaPropsData = ({ loading, dispatchQuery }) => ({
+  serviceDispatchTypeAndRecordLoading: loading.effects[`${namespace}/getServiceDispatchTypeAndRecord`],
+  serviceDispatchTypeAndRecord: dispatchQuery.serviceDispatchTypeAndRecord,
+  acceptanceServiceRecordLoading: loading.effects[`${namespace}/getAcceptanceServiceRecord`],
+  acceptanceServiceRecord: dispatchQuery.getAcceptanceServiceRecord,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -33,28 +36,41 @@ const dvaDispatch = (dispatch) => {
         type: `${namespace}/getProjectInfo`,
         payload: payload,
       })
-
     },
-
+    getServiceDispatchTypeAndRecord: (payload, callback) => { //派单信息 服务填报内容 需要加载的项
+      dispatch({
+        type: `${namespace}/getServiceDispatchTypeAndRecord`,
+        payload: payload,
+        callback: callback,
+      })
+    },
+    getAcceptanceServiceRecord: (payload, callback) => { //派单信息 服务填报内容 详情内容
+      dispatch({
+        type: `${namespace}/getAcceptanceServiceRecord`,
+        payload: payload,
+        callback: callback,
+      })
+    },
   }
 }
 const Index = (props) => {
-  const { data } = props;
+  const { id, data, serviceDispatchTypeAndRecordLoading, serviceDispatchTypeAndRecord, acceptanceServiceRecordLoading, acceptanceServiceRecord } = props;
 
   const [isOpen, setIsOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState();
   const [imageList, setImageList] = useState([]);
 
-
+  const [fillContentTab, setFillContentTab] = useState([])
   useEffect(() => {
-
+    props.getServiceDispatchTypeAndRecord({ dispatchId: id}, (res) => {
+      setFillContentTab(res)
+    })
   }, []);
   const TitleComponents = (props) => {
     // position:'sticky',top: 0,zIndex:998,background: '#fff',
     return <div style={{ display: 'inline-block', fontWeight: 'bold', marginTop: 4, padding: '2px 0', marginBottom: 12, borderBottom: '1px solid rgba(0,0,0,.1)' }}>{props.text}</div>
   }
-  const [fillContentTab, setFillContent] = useState(['前期勘查', '设备验货', '指导安装', '静态调试', '动态投运', '168/试运行', '72小时调试检测',
-    '联网', '比对监测', '项目验收', '配合检查', '维修', '培训', '其他',])
+
 
 
   const acceptanceServicesCol = [ //验收服务报告列
@@ -182,17 +198,17 @@ const Index = (props) => {
   //验收服务报告 和 工作记录 组件
   const ServiceReportWorkRecord = ({ serviceReportData, workRecordData }) => {
     return <>
-      <TitleComponents text='验收服务报告' />
-      <SdlTable
-        resizable
-        loading={false}
-        scroll={{ x: 800 }}
-        dataSource={serviceReportData}
-        columns={acceptanceServicesCol}
-        pagination={false}
-      />
+      {serviceReportData && <><TitleComponents text='验收服务报告' />
+        <SdlTable
+          resizable
+          loading={false}
+          scroll={{ x: 800 }}
+          dataSource={serviceReportData}
+          columns={acceptanceServicesCol}
+          pagination={false}
+        /></>}
       {workRecordData && <div>
-       <TitleComponents text='工作记录' />
+        <TitleComponents text='工作记录' />
         <SdlTable
           resizable
           loading={false}
@@ -201,9 +217,9 @@ const Index = (props) => {
           columns={workRecordsCol}
           pagination={false}
         />
-      <Form.Item label="离开现场时间">
-        {data.Num}
-      </Form.Item>
+        <Form.Item label="离开现场时间">
+          {data.Num}
+        </Form.Item>
       </div>}
     </>
   }
@@ -211,8 +227,8 @@ const Index = (props) => {
   const CommonReplaceContent = ({ text, col, dataSource }) => {
 
     let columns = []
-        columns = acceptanceServicesCol.map(item=>item)
-        columns.splice(3, 1, col)
+    columns = acceptanceServicesCol.map(item => item)
+    columns.splice(3, 1, col)
     return <>
       <TitleComponents text={text} />
       <SdlTable
@@ -225,45 +241,44 @@ const Index = (props) => {
       />
     </>
   }
-  //前期勘查
-  const EarlyStageCheck = () => <Form name="detail">
-    <TitleComponents text='验收服务报告' />
-    <Row>
-      <Col span={8}>
-        <Form.Item label="验收服务报告照片" >
-          {data.Num}
-        </Form.Item>
-      </Col>
-      <Col span={8}>
-        <Form.Item label="照片上传时间" >
-          {data.Num}
-        </Form.Item>
-      </Col>
-      <Col span={8}>
-        <Form.Item label="备注" >
-          {data.Num}
-        </Form.Item>
-      </Col>
-    </Row>
-    <TitleComponents text='现场勘查信息' />
-    <Row>
-      <Col span={8}>
-        <Form.Item label="现场勘查照片" >
-          {data.Num}
-        </Form.Item>
-      </Col>
-      <Col span={8}>
-        <Form.Item label="照片上传时间" >
-          {data.Num}
-        </Form.Item>
-      </Col>
-      <Col span={8}>
-        <Form.Item label="备注" >
-          {data.Num}
-        </Form.Item>
-      </Col>
-    </Row>
-    <TitleComponents text='工作记录' />
+
+  //验收服务表单
+  const ServiceReportForm = () => {
+      return <>
+        <TitleComponents text='验收服务报告' />
+        <Row>
+          <Col span={8}>
+            <Form.Item label="验收服务报告照片" >
+              {/* {aa.map((item,index)=><img
+              width={20}
+              height={20}
+              style={{cursor: 'pointer' }}
+              src={`/upload/${item}`}
+              onClick={() => {
+                setIsOpen(true)
+                setImageList(Content.PictureFilesList?.LowimgList.map(item => `/upload/${item}`))
+                setImageIndex(index)
+              }}
+            />)
+            } */}
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="照片上传时间" >
+              {data?.Num}
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="备注" >
+              {data?.Num}
+            </Form.Item>
+          </Col>
+        </Row>
+      </>
+
+  }
+  //工作记录表单
+  const WorkRecordForm = ({ data }) => <><TitleComponents text='工作记录' />
     <Row>
       <Col span={8}>
         <Form.Item label="实际工作（小时）" >
@@ -291,26 +306,25 @@ const Index = (props) => {
         </Form.Item>
       </Col>
     </Row>
-  </Form>
-  //设备验货
-  const EquipmentInspection = () =>
-    <Form name="detail">
-      <TitleComponents text='验收服务报告' />
+  </>
+  //前期勘查
+  const [earlyStaCheckReportId,setEarlyStaCheckReportId] = useState('')
+  useEffect(()=>{
+    console.log(earlyStaCheckReportId)
+   if(earlyStaCheckReportId){
+    props.getAcceptanceServiceRecord({mainId:id,serviceId:'9',serviceId:earlyStaCheckReportId},()=>{
+
+    })
+   }
+  },[earlyStaCheckReportId])
+  const EarlyStageCheck = ({ data }) => {
+
+    const SiteInvestigation = ({ data }) => <>
+      <TitleComponents text='现场勘查信息' />
       <Row>
         <Col span={8}>
-          <Form.Item label="验收服务报告照片" >
-            {/* {aa.map((item,index)=><img
-              width={20}
-              height={20}
-              style={{cursor: 'pointer' }}
-              src={`/upload/${item}`}
-              onClick={() => {
-                setIsOpen(true)
-                setImageList(Content.PictureFilesList?.LowimgList.map(item => `/upload/${item}`))
-                setImageIndex(index)
-              }}
-            />)
-            } */}
+          <Form.Item label="现场勘查照片" >
+            {data.Num}
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -323,7 +337,35 @@ const Index = (props) => {
             {data.Num}
           </Form.Item>
         </Col>
-      </Row>
+      </Row></>
+    return <Form name="detail">
+      {data.map(item => {
+        switch (item.RecordId) {
+          case '9': 
+          if(item.RecordStatus == 1){
+            console.log(item)
+            setEarlyStaCheckReportId(item.RecordId);
+            return <ServiceReportForm />; //验收服务报告
+          }
+          case '10': 
+          if(item.RecordStatus == 1){
+            return <SiteInvestigation />;  //现场勘查信息
+          }
+          case '11': 
+          if(item.RecordStatus == 1){
+            return <WorkRecordForm  />;//工作记录
+          }
+        
+        }
+
+      })}
+
+    </Form>
+  }
+  //设备验货
+  const EquipmentInspection = () =>
+    <Form name="detail">
+      <ServiceReportForm data={{ Num: 1 }} />
       <TitleComponents text='验货单' />
       <Row>
         <Col span={8}>
@@ -342,34 +384,7 @@ const Index = (props) => {
           </Form.Item>
         </Col>
       </Row>
-      <TitleComponents text='工作记录' />
-      <Row>
-        <Col span={8}>
-          <Form.Item label="实际工时（小时）" >
-            {data.Num}
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="完成状态" >
-            {data.Num}
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="完成时间" >
-            {data.Num}
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="离开现场时间" >
-            {data.Num}
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="备注" >
-            {data.Num}
-          </Form.Item>
-        </Col>
-      </Row>
+      <WorkRecordForm data={{ Num: 1 }} />
     </Form>
   //指导安装
   const GuideInstallation = () => {
@@ -380,9 +395,9 @@ const Index = (props) => {
   }
   //静态调试
 
- const [installPhotosPageIndex,setInstallPhotosPageIndex] = useState(1);
-  const [installPhotosPageSize,setInstallPhotosPageSize] = useState(8);
-  const installPhotosTableChange = (PageIndex, PageSize) =>{
+  const [installPhotosPageIndex, setInstallPhotosPageIndex] = useState(1);
+  const [installPhotosPageSize, setInstallPhotosPageSize] = useState(8);
+  const installPhotosTableChange = (PageIndex, PageSize) => {
     setInstallPhotosPageSize(PageSize)
     setInstallPhotosPageIndex(PageIndex)
     // onFinish(PageIndex, PageSize)
@@ -403,10 +418,10 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
     }
-    const rowSpanFun = (value, record,index) => {
+    const rowSpanFun = (value, record, index) => {
       let obj = {
         children: <div>{value}</div>,
-        props: { rowSpan: index==0? 8 : 0},
+        props: { rowSpan: index == 0 ? 8 : 0 },
       };
       return obj;
     }
@@ -423,7 +438,7 @@ const Index = (props) => {
         align: 'center',
         ellipsis: true,
         width: 'auto',
-        render: (text, record, index) => rowSpanFun(text, record,index)
+        render: (text, record, index) => rowSpanFun(text, record, index)
       },
       {
         title: '监测点名称',
@@ -432,7 +447,7 @@ const Index = (props) => {
         align: 'center',
         ellipsis: true,
         width: 'auto',
-        render: (text, record, index) => rowSpanFun(text, record,index)
+        render: (text, record, index) => rowSpanFun(text, record, index)
       },
       {
         title: '安装项',
@@ -448,8 +463,8 @@ const Index = (props) => {
         key: 'itemCode',
         align: 'center',
         ellipsis: true,
-        render: (text,record,index) => {
-          const imgEle =  <a onClick={() => {
+        render: (text, record, index) => {
+          const imgEle = <a onClick={() => {
             setIsOpen(true)
             setImageList(row.PictureFilesList?.LowimgList.map(item => `/upload/${item}`))
             setImageIndex(0)
@@ -458,7 +473,7 @@ const Index = (props) => {
             </a>
 
         }
-  
+
       },
       {
         title: '照片上传时间',
@@ -486,7 +501,7 @@ const Index = (props) => {
         loading={false}
         scroll={{ x: 850 }}
         rowClassName={null}
-        dataSource={[{aa:'2023-08-10 12:56:25'},{aa:'2023-08-10 12:56:25'},{aa:'2023-08-10 12:56:25'},{aa:'2023-08-10 12:56:25'},{aa:'2023-08-10 12:56:25'},{aa:'2023-08-10 12:56:25'},{aa:'2023-08-10 12:56:25'},{aa:'2023-08-10 12:56:25'},{aa:'2023-08-10 12:56:25'},{aa:'2023-08-10 12:56:25'}]}
+        dataSource={[{ aa: '2023-08-10 12:56:25' }, { aa: '2023-08-10 12:56:25' }, { aa: '2023-08-10 12:56:25' }, { aa: '2023-08-10 12:56:25' }, { aa: '2023-08-10 12:56:25' }, { aa: '2023-08-10 12:56:25' }, { aa: '2023-08-10 12:56:25' }, { aa: '2023-08-10 12:56:25' }, { aa: '2023-08-10 12:56:25' }, { aa: '2023-08-10 12:56:25' }]}
         columns={installationPhotosCol}
         pagination={{
           total: 11,
@@ -495,36 +510,46 @@ const Index = (props) => {
           showSizeChanger: true,
           showQuickJumper: true,
           onChange: installPhotosTableChange,
-          pageSizeOptions:[8],
+          pageSizeOptions: [8],
         }}
       />
     </Form>
   }
   //动态运行
-  const DynamicOperation = () =>{
+  const DynamicOperation = () => {
     return <Form name="detail">
       <ServiceReportWorkRecord serviceReportData={[]} workRecordData={[]} />
     </Form>
   }
-  const fillContentTabContent = {
-    '前期勘查': <EarlyStageCheck />,
-    '设备验货': <EquipmentInspection />,
-    '指导安装': <GuideInstallation />,
-    '静态调试': <StaticDebugging />,
-    '动态投运': <DynamicOperation />,
-    '168/试运行': '',
-    '72小时调试检测': '',
-    '联网': '',
-    '比对监测': '',
-    '项目验收': '',
-    '配合检查': '',
-    '维修': '',
-    '培训': '',
-    '其他': '',
+  const fillContentTabContent = (item) => {
+    const tabContent = {
+      '前期勘查': <EarlyStageCheck data={item.RecordList} />,
+      '设备验货': <EquipmentInspection data={item.RecordList} />,
+      '指导安装': <GuideInstallation data={item.RecordList} />,
+      '静态调试': <StaticDebugging data={item.RecordList} />,
+      '动态投运': <DynamicOperation data={item.RecordList} />,
+      '168/试运行': '',
+      '72小时调试检测': '',
+      '联网': '',
+      '比对监测': '',
+      '项目验收': '',
+      '配合检查': '',
+      '维修': '',
+      '培训': '',
+      '其他': '',
+    }
+    return item.ItemName && tabContent[item.ItemName]
   }
+
   const ServiceFillContent = () => {
     return <Tabs type='card'>
-      {fillContentTab.map(item => <TabPane tab={item} key={item}> {fillContentTabContent[item]}</TabPane>)}
+      {fillContentTab?.[0] && fillContentTab.map(item => {
+        if (item.ItemStatus == 1) {
+          return <TabPane tab={item.ItemName} key={item.ItemId}>
+            <Spin spinning={serviceDispatchTypeAndRecordLoading}>{fillContentTabContent(item)}</Spin>
+          </TabPane>
+        }
+      })}
     </Tabs>
   }
 
