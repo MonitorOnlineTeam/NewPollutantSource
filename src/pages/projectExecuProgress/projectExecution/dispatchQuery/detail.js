@@ -26,7 +26,6 @@ const dvaPropsData = ({ loading, dispatchQuery }) => ({
   serviceDispatchTypeAndRecordLoading: loading.effects[`${namespace}/getServiceDispatchTypeAndRecord`],
   serviceDispatchTypeAndRecord: dispatchQuery.serviceDispatchTypeAndRecord,
   acceptanceServiceRecordLoading: loading.effects[`${namespace}/getAcceptanceServiceRecord`],
-  acceptanceServiceRecord: dispatchQuery.getAcceptanceServiceRecord,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -265,12 +264,12 @@ const Index = (props) => {
           </Col>
           <Col span={8}>
             <Form.Item label="照片上传时间" >
-              {data?.Num}
+              {data?.UploadFileTime}
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item label="备注" >
-              {data?.Num}
+              {data?.Remark}
             </Form.Item>
           </Col>
         </Row>
@@ -309,11 +308,16 @@ const Index = (props) => {
   </>
   //前期勘查
   const [earlyStaCheckReportId,setEarlyStaCheckReportId] = useState('')
+  const [earlyStaCheckReportLoading,setEarlyStaCheckReportLoading] = useState(false)
+  const [earlyStaCheckReportData,setEarlyStaCheckReportData] = useState([])
+
   useEffect(()=>{
     console.log(earlyStaCheckReportId)
    if(earlyStaCheckReportId){
-    props.getAcceptanceServiceRecord({mainId:id,serviceId:'9',serviceId:earlyStaCheckReportId},()=>{
-
+    setEarlyStaCheckReportLoading(true)
+    props.getAcceptanceServiceRecord({mainId:id,serviceId:'1',recordId:earlyStaCheckReportId},(data)=>{
+      setEarlyStaCheckReportLoading(false)
+      setEarlyStaCheckReportData()
     })
    }
   },[earlyStaCheckReportId])
@@ -329,17 +333,18 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item label="照片上传时间" >
-            {data.Num}
+            {data.UploadFileTime}
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item label="备注" >
-            {data.Num}
+            {data.Remark}
           </Form.Item>
         </Col>
       </Row></>
     return <Form name="detail">
-      {data.map(item => {
+      <Spin spinning={earlyStaCheckReportLoading}>
+      {earlyStaCheckReportData.map(item => {
         switch (item.RecordId) {
           case '9': 
           if(item.RecordStatus == 1){
@@ -359,7 +364,7 @@ const Index = (props) => {
         }
 
       })}
-
+     </Spin>
     </Form>
   }
   //设备验货
@@ -542,15 +547,16 @@ const Index = (props) => {
   }
 
   const ServiceFillContent = () => {
-    return <Tabs type='card'>
+    return <Spin spinning={true}><Tabs type='card'>     
       {fillContentTab?.[0] && fillContentTab.map(item => {
         if (item.ItemStatus == 1) {
           return <TabPane tab={item.ItemName} key={item.ItemId}>
-            <Spin spinning={serviceDispatchTypeAndRecordLoading}>{fillContentTabContent(item)}</Spin>
+            {fillContentTabContent(item)}
           </TabPane>
         }
       })}
     </Tabs>
+    </Spin>
   }
 
 

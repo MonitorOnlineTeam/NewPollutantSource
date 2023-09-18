@@ -35,6 +35,7 @@ class Login extends Component {
     this.timer = setInterval(() => {
       this.child && this.child.current && this.child.current.click(); // 3分钟刷新一次
     }, 1000 * 60 * 3);
+    this.props.dispatch({ type: 'login/updateState', payload: {newTokenFlag:false}});
   }
 
   componentWillUnmount() {

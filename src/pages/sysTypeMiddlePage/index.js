@@ -26,6 +26,7 @@ class index extends PureComponent {
       router.push('/user/login');
       return;
     }
+    const {newTokenFlag } = this.props;
   }
   componentDidUpdate(props){
     const {newTokenFlag } = this.props;
@@ -50,7 +51,6 @@ class index extends PureComponent {
       // }
       sessionStorage.setItem("isShowSelectSystem", 1);
       this.setState({ loading: false });
-      this.props.dispatch({ type: 'login/updateState', payload: {newTokenFlag:false}});
       this.props.sysPollutantTypeList?.[0]&&this.onSysItemClick(this.props.sysPollutantTypeList[0])
 
     })
@@ -78,6 +78,7 @@ class index extends PureComponent {
     this.props.dispatch({
       type: "login/logout",
     })
+    this.props.dispatch({ type: 'login/updateState', payload: {newTokenFlag:false}});
   }
 
   render() {

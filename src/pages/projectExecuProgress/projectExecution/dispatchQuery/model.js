@@ -14,7 +14,6 @@ export default Model.extend({
     tableLoading:false,
     tableTotal:0,
     serviceDispatchTypeAndRecord:[],
-    acceptanceServiceRecord:[],
   },
   effects: {
     *getServiceDispatch({ payload,callback }, { call, put, update }) { //派单信息
@@ -42,9 +41,6 @@ export default Model.extend({
     *getAcceptanceServiceRecord({ payload,callback }, { call, put, update }) { //派单信息 服务填报内容 详情内容
       const result = yield call(services.getAcceptanceServiceRecord, payload);
       if (result.IsSuccess) {
-        yield update({
-          acceptanceServiceRecord:result.Datas,
-        })
         callback&&callback(result.Datas)
       }else{
         message.error(result.Message)
