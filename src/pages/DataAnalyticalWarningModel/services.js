@@ -227,3 +227,12 @@ export async function StatisTipMsg(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisTipMsg', params);
   return result;
 }
+
+// 重新生成正常范围
+export async function RegenerateNomalRangeTime(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/RegenerateNomalRangeTime',
+    params,
+  );
+  return result;
+}

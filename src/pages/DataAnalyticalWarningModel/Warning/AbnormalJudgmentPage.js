@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-07 14:04:08
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-30 18:32:34
+ * @Last Modified time: 2023-09-15 17:03:25
  * @Description：监测数据阈值异常研判
  */
 import React, { useState, useEffect } from 'react';
@@ -23,31 +23,32 @@ const AbnormalJudgmentPage = props => {
   const [form] = Form.useForm();
   const { dispatch, displayType, loadLoading, saveLoading } = props;
   const [DGIMN, setDGIMN] = useState(props.DGIMN);
-  const [images, setImages] = useState([]);
+  // const [images, setImages] = useState([]);
 
-  useEffect(() => {
-    getImages();
-  }, [DGIMN]);
+  // useEffect(() => {
+  //   getImages();
+  // }, [DGIMN]);
 
-  // 获取波动范围图表
-  const getImages = () => {
-    if (DGIMN) {
-      dispatch({
-        type: 'dataModel/GetPointParamsRange',
-        payload: {
-          DGIMN,
-        },
-        callback: res => {
-          setImages(res.image);
-        },
-      });
-    }
-  };
+  // // 获取波动范围图表
+  // const getImages = () => {
+  //   if (DGIMN) {
+  //     dispatch({
+  //       type: 'dataModel/GetPointParamsRange',
+  //       payload: {
+  //         DGIMN,
+  //       },
+  //       callback: res => {
+  //         setImages(res.image);
+  //       },
+  //     });
+  //   }
+  // };
 
   const getPageContent = () => {
     return (
       <Card>
         <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '5'}>
+          {/* <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '2'}> */}
           <Tabs.TabPane tab="数据工况" key="5" style={{ overflowY: 'auto' }}>
             <WarningDataAndChart
               DGIMN={DGIMN}
@@ -56,7 +57,7 @@ const AbnormalJudgmentPage = props => {
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="正常范围" key="2" style={{ overflowY: 'auto' }}>
-            <PollutantImages images={images} height="calc(100vh - 216px)" />
+            <PollutantImages DGIMN={DGIMN} height="calc(100vh - 216px)" />
           </Tabs.TabPane>
           <Tabs.TabPane tab="密度分布直方图" key="3" style={{ overflowY: 'auto' }}>
             <Histogram DGIMN={DGIMN} />

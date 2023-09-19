@@ -186,7 +186,7 @@ const Index = props => {
       // },
       series: [
         {
-          name: '线索核实情况',
+          name: '异常线索核实情况',
           type: 'pie',
           radius: ['66%', '87%'],
           avoidLabelOverlap: false,
@@ -197,7 +197,7 @@ const Index = props => {
               show: true,
               position: 'center',
               formatter: '线索核实情况',
-              fontSize: 15,
+              fontSize: 18,
               color: '#fff',
               rich: {
                 total: {
@@ -379,7 +379,7 @@ const Index = props => {
       </Tooltip>
       <main>
         <div className={styles.boxWrapper}>
-          <BoxItem title="数据统计分析" style={{ flex: 2, marginRight: 14 }}>
+          <BoxItem title="异常线索统计分析" style={{ flex: 1, marginRight: 14 }}>
             <Spin spinning={StatisForDataLoading}>
               <div className={styles.dataCountStatistics}>
                 <div className={styles.countBox} onClick={() => getDataByModelGuid([])}>
@@ -392,7 +392,7 @@ const Index = props => {
                       return (
                         <Col
                           span={8}
-                          style={{ cursor: 'pointer', marginBottom: 10 }}
+                          style={{ cursor: 'pointer', marginBottom: 30 }}
                           onClick={() => {
                             getDataByModelGuid(item.ModelIDList);
                           }}
@@ -419,10 +419,14 @@ const Index = props => {
               </div>
             </Spin>
           </BoxItem>
-          <BoxItem title="线索核实情况" style={{ flex: 1, marginRight: 14, minWidth: 400 }}>
+          {/* <BoxItem title="线索核实情况" style={{ flex: 1, marginRight: 14, minWidth: 400 }}> */}
+          <BoxItem
+            title="异常线索核实情况"
+            style={{ width: '40%', minWidth: 400 }}
+          >
             <Spin spinning={StatisVeriAndErLoading}>
               <div className={styles.checkBox}>
-                <div style={{ width: '40%', height: 200 }}>
+                <div style={{ width: '40%', height: 260 }}>
                   <ReactEcharts
                     option={getOption()}
                     lazyUpdate
@@ -434,27 +438,27 @@ const Index = props => {
                     // onEvents={onEvents}
                   />
                 </div>
-                <div style={{ width: '60%', paddingLeft: '5%', marginTop: 40 }}>
+                <div style={{ width: '60%', paddingLeft: '8%', marginTop: 40 }}>
                   <p className={styles.legendInfo}>
                     <span style={{ background: '#0078FF' }}></span>
-                    <span style={{ width: 120 }}>待核实数据</span>
+                    <span style={{ width: 150 }}>待核实线索</span>
                     <span className={styles.num}>{checkInfoAndEntRank.checkInfo[2].Count}个</span>
                   </p>
                   <p className={styles.legendInfo}>
                     <span style={{ background: '#21F087' }}></span>
-                    <span style={{ width: 120 }}>核实为误报数据</span>
+                    <span style={{ width: 150 }}>核实为误报线索</span>
                     <span className={styles.num}>{checkInfoAndEntRank.checkInfo[0].Count}个</span>
                   </p>
                   <p className={styles.legendInfo}>
                     <span style={{ background: '#EDE022' }}></span>
-                    <span style={{ width: 120 }}>核实为异常数据</span>
+                    <span style={{ width: 150 }}>核实为异常线索</span>
                     <span className={styles.num}>{checkInfoAndEntRank.checkInfo[1].Count}个</span>
                   </p>
                 </div>
               </div>
             </Spin>
           </BoxItem>
-          <BoxItem title="线索数量企业排名" style={{ flex: 1, minWidth: 400 }}>
+          {/* <BoxItem title="线索数量企业排名" style={{ flex: 1, minWidth: 400 }}>
             <Spin spinning={StatisVeriAndErLoading}>
               <div className={styles.entRankBox}>
                 {checkInfoAndEntRank.entRank.length ? (
@@ -495,16 +499,16 @@ const Index = props => {
                 )}
               </div>
             </Spin>
-          </BoxItem>
+          </BoxItem> */}
         </div>
         <div className={styles.boxWrapper} style={{}}>
-          <BoxItem title="核实信息" style={{ flex: 1, height: 'calc(100vh - 460px)' }}>
+          <BoxItem title="核实信息" style={{ flex: 1, height: 'calc(100vh - 542px)' }}>
             <div className={styles.checkInfoWrapper}>
               <Spin spinning={alertLoading}>
                 <Alert
                   banner
                   message={
-                    <div style={{ color: '#65D9FF', fontWeight: 500 }}>
+                    <div style={{ color: '#65D9FF', fontWeight: 500, fontSize: 16 }}>
                       已选择{selectedRowKeys.length}项&nbsp;&nbsp;&nbsp;&nbsp;
                       {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，核实为异常${tableSelectedCount.CheckedResult2Count}个，准确率${tableSelectedCount.AccuracyRate}%；
                     涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个`}
@@ -527,7 +531,7 @@ const Index = props => {
                   align="center"
                   pagination={false}
                   scroll={{
-                    y: 'calc(100vh - 610px)',
+                    y: 'calc(100vh - 700px)',
                   }}
                 />
               </Spin>

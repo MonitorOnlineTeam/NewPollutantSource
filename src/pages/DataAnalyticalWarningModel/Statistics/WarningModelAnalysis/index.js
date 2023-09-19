@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:34:04
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-14 10:32:54
+ * @Last Modified time: 2023-09-18 10:53:47
  * @Description：场景模型分析
  */
 import React, { useState, useEffect } from 'react';
@@ -19,6 +19,7 @@ import SdlTable from '@/components/SdlTable';
 import { DetailIcon } from '@/utils/icon';
 import moment from 'moment';
 import { router } from 'umi';
+import _ from 'lodash'
 
 const noData = {
   value: 0,
@@ -35,7 +36,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
   clueInfoChartLoading: loading.effects['dataModel/StatisAlarmInfo'],
   reasonsAndCheckChartLoading: loading.effects['dataModel/StatisAlarmInfoCheck'],
   ExportStatisAlarm: loading.effects['dataModel/ExportStatisAlarm'],
-  tableLoading: loading.effects['dataModel/StatisAlarmInfoRate', 'dataModel/StatisAlarmInfoSum'],
+  tableLoading: loading.effects[('dataModel/StatisAlarmInfoRate', 'dataModel/StatisAlarmInfoSum')],
 });
 
 const Index = props => {
@@ -313,20 +314,20 @@ const Index = props => {
       dataIndex: 'UniqueParentCodeCount',
       sorter: (a, b) => a.UniqueParentCodeCount - b.UniqueParentCodeCount,
     },
-    {
-      title: '异常原因',
-      dataIndex: 'ExceptionReason',
-      ellipsis: true,
-      width: 200,
-      render: (text, record) => {
-        let _text = text || '-';
-        return (
-          <Tooltip title={_text}>
-            <span>{_text}</span>
-          </Tooltip>
-        );
-      },
-    },
+    // {
+    //   title: '异常原因',
+    //   dataIndex: 'ExceptionReason',
+    //   ellipsis: true,
+    //   width: 200,
+    //   render: (text, record) => {
+    //     let _text = text || '-';
+    //     return (
+    //       <Tooltip title={_text}>
+    //         <span>{_text}</span>
+    //       </Tooltip>
+    //     );
+    //   },
+    // },
     {
       title: '操作',
       dataIndex: 'address',
@@ -352,7 +353,6 @@ const Index = props => {
       ...form.getFieldsValue(),
       modelGuid: row.ModelGuid,
     };
-    console.log('values', values);
     router.push(
       '/DataAnalyticalWarningModel/Statistics/AnalysisReport?params=' + JSON.stringify(values),
     );
@@ -526,7 +526,7 @@ const Index = props => {
       yAxis: {
         type: 'category',
         data: reasonsAndCheckData.reasonsData.yAxisData.length
-          ? reasonsAndCheckData.reasonsData.yAxisData
+          ? _.reverse(reasonsAndCheckData.reasonsData.yAxisData)
           : ['暂无数据'],
       },
       series: [
@@ -536,7 +536,7 @@ const Index = props => {
           showBackground: true,
           barWidth: '70%',
           data: reasonsAndCheckData.reasonsData.seriesData.length
-            ? reasonsAndCheckData.reasonsData.seriesData
+            ? _.reverse(reasonsAndCheckData.reasonsData.seriesData)
             : ['-'],
           label: {
             show: true,
@@ -686,7 +686,7 @@ const Index = props => {
                     已选择 <span style={{ color: 'blue' }}>{selectedRowKeys.length}</span> 项{' '}
                     <Divider type="vertical" />
                     {`总数：发现线索次数${tableSelectedCount.DisCulesNum}次，已核实${tableSelectedCount.VerifiedNum}次，
-                  发现异常${tableSelectedCount.CheckedResult2Count}次，准确率${tableSelectedCount.AccuracyRate}；
+                  发现异常${tableSelectedCount.CheckedResult2Count}次，准确率${tableSelectedCount.AccuracyRate}%；
                   涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个。`}
                   </>
                 }

@@ -70,7 +70,7 @@
     margin-bottom: 14px;
 
     .boxItem {
-      height: 320px;
+      height: 420px;
       // background: rgba(0, 188, 255, 0.1);
       // border: 1px solid #00bcff;
       /* opacity: 0.5; */
@@ -80,13 +80,13 @@
       flex-direction: column;
 
       .title {
-        height: 37px;
+        height: 44px;
         background: linear-gradient(90deg, rgba(14, 119, 157, 0.4), rgba(11, 26, 69, 0));
         color: #65d9ff;
-        line-height: 37px;
+        line-height: 44px;
         padding: 0 10px;
         font-weight: bold;
-        font-size: 15px;
+        font-size: 20px;
       }
       .boxItemContent {
         flex: 1;
@@ -98,8 +98,8 @@
       align-items: center;
       height: 100%;
       .countBox {
-        width: 240px;
-        height: 240px;
+        width: 280px;
+        height: 280px;
         margin-left: 4%;
         background: url(/dataModal/statistics/count_bg.png) no-repeat 0 -20px;
         background-size: contain;
@@ -108,19 +108,21 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 70px;
+        padding-top: 90px;
         cursor: pointer;
 
         p.text {
-          width: 90px;
-          height: 20px;
+          // width: 94px;
+          // line-height: 24px;
+          padding: 1px 6px;
           background: rgba(0, 89, 255, 0.6);
           margin-left: -28px;
-          font-size: 13px;
+          font-size: 17px;
+          font-weight: 900;
         }
 
         p.count {
-          font-size: 30px;
+          font-size: 32px;
           margin-left: -28px;
           font-weight: bold;
         }
@@ -132,17 +134,19 @@
         text-align: center;
         .text {
           margin-bottom: 0;
-          line-height: 30px;
-          height: 30px;
+          line-height: 38px;
+          height: 38px;
           overflow: hidden;
           vertical-align: middle;
           font-weight: bold;
+          font-size: 18px;
+          margin-bottom: 10px;
           // display: flex;
           // align-items: center;
 
           i {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             display: inline-block;
             margin-right: 4px;
             background: url(/dataModal/statistics/icon.png) no-repeat;
@@ -166,11 +170,11 @@
             1;
           margin: 0 10px;
           border-bottom: 1px solid;
-          padding: 0 30px;
+          padding: 0 22px;
           text-align: center;
-          min-width: 110px;
-          height: 46px;
-          line-height: 46px;
+          min-width: 130px;
+          height: 50px;
+          line-height: 50px;
           overflow: hidden;
           vertical-align: middle;
           font-weight: bold;
@@ -178,8 +182,8 @@
           span {
             color: #26e3ff;
             font-weight: bold;
-            font-size: 16px;
             margin-right: 6px;
+            font-size: 22px;
           }
         }
       }
@@ -197,7 +201,9 @@
         display: flex;
         align-items: center;
         font-weight: 500;
-        margin-bottom: 30px;
+        margin-bottom: 50px;
+        font-size: 18px;
+
         span {
           display: inline-block;
         }
@@ -209,6 +215,7 @@
 
         .num {
           color: #26e3ff;
+          font-size: 19px;
         }
       }
     }
@@ -251,11 +258,12 @@
         }
 
         .ant-table-thead > tr > th {
-          font-weight: 500;
+          font-weight: bold;
           text-align: left;
           background: #143778;
           color: #71cdf9;
           border: none;
+          font-size: 16px;
         }
 
         .ant-table-column-sorter {
@@ -287,6 +295,8 @@
         .ant-table-tbody > tr > td {
           background: transparent;
           color: #fff;
+          font-size: 16px;
+          font-weight: 500;
         }
 
         .light {

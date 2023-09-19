@@ -390,7 +390,8 @@ const PointParams = props => {
           title={currentPoint}
           visible={visible}
           onCancel={() => setVisible(false)}
-          images={images}
+          // images={images}
+          DGIMN={DGIMN}
         />
       </div>
     </>

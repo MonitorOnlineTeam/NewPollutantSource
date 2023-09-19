@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-07 17:18:49
+ * @Last Modified time: 2023-09-15 16:03:37
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -34,27 +34,27 @@ const WarningData = props => {
     defaultChartSelected,
   } = props;
 
-  const [images, setImages] = useState([]);
   const [DGIMN, setDGIMN] = useState(props.DGIMN);
+  // const [images, setImages] = useState([]);
 
-  useEffect(() => {
-    getImages();
-  }, [DGIMN]);
+  // useEffect(() => {
+  //   getImages();
+  // }, [DGIMN]);
 
-  // 获取波动范围图表
-  const getImages = () => {
-    if (DGIMN) {
-      dispatch({
-        type: 'dataModel/GetPointParamsRange',
-        payload: {
-          DGIMN,
-        },
-        callback: res => {
-          setImages(res.image);
-        },
-      });
-    }
-  };
+  // // 获取波动范围图表
+  // const getImages = () => {
+  //   if (DGIMN) {
+  //     dispatch({
+  //       type: 'dataModel/GetPointParamsRange',
+  //       payload: {
+  //         DGIMN,
+  //       },
+  //       callback: res => {
+  //         setImages(res.image);
+  //       },
+  //     });
+  //   }
+  // };
 
   // console.log('legendSelected', legendSelected);
   // console.log('selectedNames', selectedNames);
@@ -115,7 +115,7 @@ const WarningData = props => {
           />
         </Tabs.TabPane>
         <Tabs.TabPane tab="波动范围" key="2" style={{ overflowY: 'auto' }}>
-          <PollutantImages images={images} />
+          <PollutantImages DGIMN={DGIMN} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="密度分布直方图" key="3" style={{ overflowY: 'auto' }}>
           <Histogram DGIMN={DGIMN} />

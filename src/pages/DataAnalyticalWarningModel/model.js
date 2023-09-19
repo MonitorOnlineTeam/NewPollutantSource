@@ -802,5 +802,15 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    // 重新生成正常范围
+    *RegenerateNomalRangeTime({ payload, callback }, { call, select, update }) {
+      debugger
+      const result = yield call(services.RegenerateNomalRangeTime, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
   },
 });
