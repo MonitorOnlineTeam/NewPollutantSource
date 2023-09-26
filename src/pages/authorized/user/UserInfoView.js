@@ -14,9 +14,10 @@ import { Input, Button, Card, Spin, Row, Col } from 'antd';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 
-@connect(({ userinfo, loading }) => ({
+@connect(({ userinfo, loading,global }) => ({
     UserRolesName: userinfo.UserRolesName,
-    UserDepName: userinfo.UserDepName
+    UserDepName: userinfo.UserDepName,
+    userGoDetail:global.userGoDetail,
 }))
 class UserInfoView extends Component {
     constructor(props) {
@@ -36,6 +37,10 @@ class UserInfoView extends Component {
             payload: {
                 User_ID: this.props.match.params.userid,
             }
+        })
+        this.props.dispatch({
+            type: 'global/updateState',
+            payload: {userGoDetail:true},
         })
     }
     render() {

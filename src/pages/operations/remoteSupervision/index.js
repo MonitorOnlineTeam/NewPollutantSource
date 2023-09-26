@@ -431,7 +431,7 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '点位运维负责人',
+      title: '任务执行人',
       dataIndex: 'operationUserName',
       key: 'operationUserName',
       align: 'center',
@@ -645,7 +645,7 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '点位运维负责人',
+      title: '任务执行人',
       dataIndex: 'operationUserName',
       key: 'operationUserName',
       align: 'center',
@@ -800,6 +800,8 @@ const Index = (props) => {
   }
 
   const [echoLoading, setEchoLoading] = useState(false)
+  const [isCheckUser, setIsCheckUser] = useState(false)
+
   const edit = (record) => { //编辑
     setTitle('编辑')
     setVisible(true)
@@ -807,13 +809,15 @@ const Index = (props) => {
     setEchoLoading(true)
     resetData();
     setTabType("1")
+    setIsCheckUser(record.isCheckUser)
+    // setIsCheckUser(true)
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
       //共同的字段
       commonForm.setFieldsValue({
         OperationUserID: data.operationUserID,
         EntCode: data.entCode,
         month: moment(moment(data.dateTime).format("YYYY-MM-DD")),
-        Commitment: undefined,
+        Commitment: data.Commitment,
       })
       setPointLoading2(true)
       props.getPointByEntCode({ EntCode: data.entCode }, (res) => {
@@ -825,22 +829,22 @@ const Index = (props) => {
 
       })
       dgimnEchoDataFun(data.DGIMN, data, '编辑')
-      const paramData =  data?.consistentParametersCheckList?.[0] ?  data?.consistentParametersCheckList : addParconsistencyData
-      paramData?.[0]&&echoParFun(paramData)
 
     })
   }
 
   const dgimnEchoDataFun = (mn, data, title) => { //通过监测点获取回显数据  编辑时
 
-    let analyzerUploadList = {}, analyzerUploadFilesListObj = {};
-    let dasUploadList = {}, dasUploadFilesListObj = {};
-    let rangeUploadList = {}, rangeUploadFilesListObj = {};
-    getPointConsistencyParamFun(mn, (pollutantList, paramList) => {
+    getPointConsistencyParamFun(mn, (pollutantList, paramList, addRealTimeList) => {
       if (!data.consistencyCheckList || data.consistencyCheckList?.length == 0) { //数据一致性核查表 回显数据为空数组时
-        pollutantList.map(item => {
-          echoForamt(item.par, [], [])
-        })
+        if (pollutantList?.[0]) {
+          pollutantList.map(item => {
+            echoForamtData(item.par, [], [])
+          })
+          echoUnit(pollutantList) //默认显示单位默认值
+          echoUnit(addRealTimeList)
+          defaultRangeTimeFilesCuid(pollutantList)
+        }
         setIsDisPlayCheck1(false)
         setIsDisPlayCheck2(false)
         setIsDisPlayCheck3(false)
@@ -849,6 +853,11 @@ const Index = (props) => {
         // setNumChecked(false)
         // setNumRealTimeChecked(false)
       } else {
+
+        let analyzerUploadList = {}, analyzerUploadFilesListObj = {};
+        let dasUploadList = {}, dasUploadFilesListObj = {};
+        let rangeUploadList = {}, rangeUploadFilesListObj = {};
+
         data.consistencyCheckList.map(item => { //数据一致性核查表
 
           let val = item.DataList;
@@ -909,6 +918,7 @@ const Index = (props) => {
             echoForamt(code, val, item)
             onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
             onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
+
           }
           // setNumChecked(val.DataRangeStatus == 1 ? true : false)
           // setNumRealTimeChecked(val.DataStatus == 1 ? true : false)
@@ -937,15 +947,16 @@ const Index = (props) => {
           echoFileList(item.RangeFileList, rangeUploadList, rangeUploadFilesListObj, `${pars}RangeFilePar`) //数采仪量程照片	
 
         })
+        setAnalyzerFileList({ ...analyzerUploadList })
+        setAnalyzerFileCuidList({ ...analyzerUploadFilesListObj })
+
+        setDasFileList({ ...dasUploadList })
+        setDasFileCuidList({ ...dasUploadFilesListObj })
+
+        setRangeFileList({ ...rangeUploadList })
+        setRangeFileCuidList({ ...rangeUploadFilesListObj })
       }
-      setAnalyzerFileList({ ...analyzerUploadList })
-      setAnalyzerFileCuidList({ ...analyzerUploadFilesListObj })
 
-      setDasFileList({ ...dasUploadList })
-      setDasFileCuidList({ ...dasUploadFilesListObj })
-
-      setRangeFileList({ ...rangeUploadList })
-      setRangeFileCuidList({ ...rangeUploadFilesListObj })
 
       if (data.couUpload && data.couUpload[0]) { //实时数据一致性核查表 附件
         form2.setFieldsValue({ files2: data.couUpload[0].FileUuid })
@@ -963,7 +974,14 @@ const Index = (props) => {
           }
         })
         setFileList2(fileList)
+      } else {
+        setFilesCuid2(cuid())
       }
+
+      //参数一致性核查 回显数据
+      const paramData = data?.consistentParametersCheckList?.[0] ? data?.consistentParametersCheckList : paramList
+      paramData?.[0] && echoParFun(paramData)
+
       setEchoLoading(false)
 
 
@@ -971,13 +989,24 @@ const Index = (props) => {
   }
   const filesCuidObjFun = (data, filePar, callFun) => { //照片默认展示
     let filesCuidObj = {}, filesListObj = {}; //附件 cuid
-
     data.map((item, index) => {
       filesCuidObj[`${item.par}${filePar}`] = cuid();
       filesListObj[`${item.par}${filePar}`] = [];
     })
     callFun && callFun(filesCuidObj, filesListObj)
 
+  }
+  const defaultRangeTimeFilesCuid = (pollutantList) => { //默认量程一致性和实时数据一致性附件id
+    const pars = isDisPlayCheck2 ? 'a' : isDisPlayCheck4 ? 'b' : ''
+    filesCuidObjFun(pollutantList, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
+    filesCuidObjFun(pollutantList, `${pars}DasFilePar`, (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
+    filesCuidObjFun(pollutantList, `${pars}RangeFilePar`, (cuidObj, listObj) => { setRangeFileCuidList(cuidObj); setRangeFileList(listObj) })
+  }
+  const defaultParCuid = (paramList) => { //默认参数一致性核查附件id
+    filesCuidObjFun(paramList, 'SettingFilePar', (cuidObj, listObj) => { setSettingFileCuidList(cuidObj); setSettingFileList(listObj) })
+    filesCuidObjFun(paramList, 'InstrumentFilePar', (cuidObj, listObj) => { setInstrumentFileCuidList(cuidObj); setInstrumentFileList(listObj) })
+    filesCuidObjFun(paramList, 'TraceabilityFilePar', (cuidObj, listObj) => { setTraceabilityFileCuidList(cuidObj); setTraceabilityFileList(listObj) })
+    filesCuidObjFun(paramList, 'DataFilePar', (cuidObj, listObj) => { setDataFileCuidList(cuidObj); setDataFileList(listObj) })
   }
   const getPointConsistencyParamFun = (mn, callback, title) => {// 添加或编辑参数列表
     props.getPointConsistencyParam({ DGIMN: mn }, (pollutantList, addRealTimeList, paramList, operationName) => {
@@ -987,20 +1016,13 @@ const Index = (props) => {
       echoUnit(addRealTimeList)
       if (title === '添加') {
         if (pollutantList?.[0]) {
-          const pars = isDisPlayCheck2 ? 'a' : isDisPlayCheck4 ? 'b' : ''
-          filesCuidObjFun(pollutantList, `${pars}AnalyzerFilePar`, (cuidObj, listObj) => { setAnalyzerFileCuidList(cuidObj); setAnalyzerFileList(listObj) })
-          filesCuidObjFun(pollutantList, `${pars}DasFilePar`, (cuidObj, listObj) => { setDasFileCuidList(cuidObj); setDasFileList(listObj) })
-          filesCuidObjFun(pollutantList, `${pars}RangeFilePar`, (cuidObj, listObj) => { setRangeFileCuidList(cuidObj); setRangeFileList(listObj) })
+          defaultRangeTimeFilesCuid(pollutantList)
         }
         if (paramList?.[0]) {
-          filesCuidObjFun(paramList, 'SettingFilePar', (cuidObj, listObj) => { setSettingFileCuidList(cuidObj); setSettingFileList(listObj) })
-          filesCuidObjFun(paramList, 'InstrumentFilePar', (cuidObj, listObj) => { setInstrumentFileCuidList(cuidObj); setInstrumentFileList(listObj) })
-          filesCuidObjFun(paramList, 'TraceabilityFilePar', (cuidObj, listObj) => { setTraceabilityFileCuidList(cuidObj); setTraceabilityFileList(listObj) })
-          filesCuidObjFun(paramList, 'DataFilePar', (cuidObj, listObj) => { setDataFileCuidList(cuidObj); setDataFileList(listObj) })
-
+          defaultParCuid(paramList)
         }
       }
-      callback && callback(pollutantList, paramList)
+      callback && callback(pollutantList, paramList, addRealTimeList)
     })
   }
 
@@ -1393,7 +1415,7 @@ const Index = (props) => {
     let traceabilityUploadList = {}, traceabilityUploadFilesListObj = {};
     let dataUploadList = {}, dataUploadFilesListObj = {};
     data.map(item => {
-      const code = item.CheckItem ?  item.CheckItem : item.ChildID;
+      const code = item.CheckItem ? item.CheckItem : item.ChildID;
       echoFilePar(code, item)
       const echoFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
         let parFileList = [];
@@ -1414,9 +1436,7 @@ const Index = (props) => {
       echoFileList(item.InstrumentFileList, instrumentUploadList, instrumentUploadFilesListObj, 'InstrumentFilePar') //DAS设定值照片	
       echoFileList(item.TraceabilityFileList, traceabilityUploadList, traceabilityUploadFilesListObj, 'TraceabilityFilePar') //溯源值照片	
       echoFileList(item.DataFileList, dataUploadList, dataUploadFilesListObj, 'DataFilePar') //数采仪设定值照片	
-      setTimeout(() => {
-        item.Uniformity && onManualChange(item.Uniformity && [item.Uniformity], item, `${code}RangCheck3`, 1)
-      })
+      item.Uniformity && onManualChange([item.Uniformity], item, `${code}RangCheck3`, 3) //编辑 手工修正结果 参数一致性核查
     })
     setSettingFileList({ ...settingUploadList })
     setSettingFileCuidList({ ...settingUploadFilesListObj })
@@ -1436,7 +1456,6 @@ const Index = (props) => {
   //     consistencyCheckDetail?.consistentParametersCheckList?.[0] && echoParFun(consistencyCheckDetail.consistentParametersCheckList)
   //   }
   // }
-
   const { entLoading } = props;
   const [dasChecked, setDasChecked] = useState(true)
   const onDasChange = (e) => { //DAS量程
@@ -1607,12 +1626,9 @@ const Index = (props) => {
     { label: '否', value: 2 },
     { label: '不适用', value: 3 },
   ])
-
-
   const onManualChange = (val, row, name, type) => { //手工修正结果
 
     if (!val) { return }
-
     const ele = document.getElementById(`advanced_search_${name}`)
     if (!ele) { return }
     for (var i = 0; i < ele.childNodes.length; i++) {
@@ -1732,19 +1748,19 @@ const Index = (props) => {
           analyzerUnit = form2.getFieldValue(`400AnalyzerUnit`);
         } else {
           analyzerRang1 = form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
-          analyzerRang2 = form2.getFieldValue(`${row.ChildID}AnalyzerRang2`),
-          analyzerUnit = form2.getFieldValue(`${row.ChildID}AnalyzerUnit`);
+            analyzerRang2 = form2.getFieldValue(`${row.ChildID}AnalyzerRang2`),
+            analyzerUnit = form2.getFieldValue(`${row.ChildID}AnalyzerUnit`);
         }
 
 
         // analyzerFlag = (analyzerRang1 || analyzerRang1 == 0) && (analyzerRang2 || analyzerRang2 == 0) && analyzerUnit || row.Name == '流速' || row.Name == '标干流量' || row.Name == 'NO' || row.Name == 'NO2' ? true : false;
         analyzerFlag = true;
-        
+
         const indicaVal = (row.Name == 'NO' && !form2.getFieldValue(`${row.par}IndicaVal`)) || (row.Name == 'NO2' && !form2.getFieldValue(`${row.par}IndicaVal`)) ? '0' : form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
         const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
         const scyData = form2.getFieldValue(`${row.par}ScyData`), scyDataUnit = form2.getFieldValue(`${row.par}ScyDataUnit`);
 
-        const indicaValFlag = (indicaVal || indicaVal == 0) && indicaUnit || row.concentrationType == '标杆浓度' || row.Name == '流速' || row.Name == 'NOx' || row.Name == '标干流量' || row.Name == '温度' || row.Name == '压力'? true : false;
+        const indicaValFlag = (indicaVal || indicaVal == 0) && indicaUnit || row.concentrationType == '标杆浓度' || row.Name == '流速' || row.Name == 'NOx' || row.Name == '标干流量' || row.Name == '温度' || row.Name == '压力' || row.Name == '湿度' ? true : false;
         const dsDataFlag = (dsData || dsData == 0) && dsDataUnit ? true : false; //只判断DAS示值填完的状态
         const scyDataFlag = (scyData || scyData == 0) && scyDataUnit ? true : false;
 
@@ -2045,6 +2061,7 @@ const Index = (props) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             } else {
+              // type=='edit'&&isCheckUser
               let disabledFlag = false;
               switch (record.isDisplay) {
                 case 1: case 2:
@@ -2058,18 +2075,18 @@ const Index = (props) => {
                 {/* <Form.Item name={`${record.par}AnalyzerRang1`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}
                 <Form.Item name={`${record.par}AnalyzerRang1`} >
 
-                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
+                  <InputNumber placeholder='最小值' disabled={disabledFlag || isCheckUser} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
                 {/* <Form.Item name={`${record.par}AnalyzerRang2`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}
                 <Form.Item name={`${record.par}AnalyzerRang2`} >
 
-                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
+                  <InputNumber placeholder='最大值' disabled={disabledFlag || isCheckUser} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 {/* <Form.Item name={`${record.par}AnalyzerUnit`} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}> */}
                 <Form.Item name={`${record.par}AnalyzerUnit`} style={{ marginLeft: 5 }} >
 
-                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
+                  <Select allowClear placeholder='单位列表' disabled={disabledFlag || isCheckUser} onChange={() => { isJudge(record, 1) }}>
                     {unitFormat(record)}
                   </Select>
                 </Form.Item>
@@ -2090,10 +2107,13 @@ const Index = (props) => {
               let disabledFlag = false;
               switch (record.isDisplay) {
                 case 1: case 2:
-                  disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                  disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1) || (record.isDisplay == 2 && !isDisPlayCheck2) || (isCheckUser) ? true : false
                   break;
                 case 3: case 4:
-                  disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                  disabledFlag = (record.isDisplay == 3 && !isDisPlayCheck3) || (record.isDisplay == 4 && !isDisPlayCheck4) || (isCheckUser) ? true : false
+                  break;
+                default:
+                  disabledFlag = isCheckUser;
                   break;
               }
               return <Row justify='center' align='middle'>
@@ -2119,29 +2139,26 @@ const Index = (props) => {
             } else {
               let disabledFlag = false;
               switch (record.isDisplay) {
-
                 case 1: case 2:
                   disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1 || !dasChecked) || (record.isDisplay == 2 && !isDisPlayCheck2 || !dasChecked) ? true : false
                   break;
                 case 3: case 4:
                   disabledFlag = (record.isDisplay == 3 && !isDisPlayCheck3 || !dasChecked) || (record.isDisplay == 4 && !isDisPlayCheck4 || !dasChecked) ? true : false
                   break;
-                default:
-                  disabledFlag = !dasChecked
               }
               return <Row justify='center' align='middle'>
                 {/* <Form.Item name={[`${record.par}DsRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]} > */}
                 <Form.Item name={[`${record.par}DsRang1`]} >
-                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
+                  <InputNumber placeholder='最小值' disabled={disabledFlag || isCheckUser} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
                 {/* <Form.Item name={[`${record.par}DsRang2`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}
                 <Form.Item name={[`${record.par}DsRang2`]}>
-                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
+                  <InputNumber placeholder='最大值' disabled={disabledFlag || isCheckUser} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 {/* <Form.Item name={[`${record.par}DsUnit`]} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}> */}
                 <Form.Item name={[`${record.par}DsUnit`]} style={{ marginLeft: 5 }} >
-                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
+                  <Select allowClear placeholder='单位列表' disabled={disabledFlag || isCheckUser} onChange={() => { isJudge(record, 1) }}>
                     {unitFormat(record)}
                   </Select>
                 </Form.Item>
@@ -2162,10 +2179,13 @@ const Index = (props) => {
               let disabledFlag = false;
               switch (record.isDisplay) {
                 case 1: case 2:
-                  disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                  disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1) || (record.isDisplay == 2 && !isDisPlayCheck2) || (isCheckUser) ? true : false
                   break;
                 case 3: case 4:
-                  disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                  disabledFlag = (record.isDisplay == 3 && !isDisPlayCheck3) || (record.isDisplay == 4 && !isDisPlayCheck4) || (isCheckUser) ? true : false
+                  break;
+                default:
+                  disabledFlag = isCheckUser;
                   break;
               }
               return <Row justify='center' align='middle'>
@@ -2192,10 +2212,10 @@ const Index = (props) => {
               let disabledFlag = false;
               switch (record.isDisplay) {
                 case 1: case 2:
-                  disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1 || !numChecked) || (record.isDisplay == 2 && !isDisPlayCheck2 || !numChecked) ? true : false
+                  disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1 || !numChecked) || (record.isDisplay == 2 && !isDisPlayCheck2 || !numChecked) || (isCheckUser) ? true : false
                   break;
                 case 3: case 4:
-                  disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || !numChecked || (record.isDisplay == 4 && !isDisPlayCheck4 || !numChecked) ? true : false
+                  disabledFlag = (record.isDisplay == 3 && !isDisPlayCheck3 || !numChecked) || (record.isDisplay == 4 && !isDisPlayCheck4 || !numChecked) || (isCheckUser) ? true : false
                   break;
                 default:
                   disabledFlag = !numChecked
@@ -2203,16 +2223,16 @@ const Index = (props) => {
               return <Row justify='center' align='middle'>
                 {/* <Form.Item name={[`${record.par}ScyRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}
                 <Form.Item name={[`${record.par}ScyRang1`]}>
-                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
+                  <InputNumber placeholder='最小值' disabled={disabledFlag || isCheckUser} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
                 {/* <Form.Item name={[`${record.par}ScyRang2`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}
                 <Form.Item name={[`${record.par}ScyRang2`]} >
-                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
+                  <InputNumber placeholder='最大值' disabled={disabledFlag || isCheckUser} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 {/* <Form.Item name={[`${record.par}ScyUnit`]} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}> */}
                 <Form.Item name={[`${record.par}ScyUnit`]} style={{ marginLeft: 5 }} >
-                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
+                  <Select allowClear placeholder='单位列表' disabled={disabledFlag || isCheckUser} onChange={() => { isJudge(record, 1) }}>
                     {unitFormat(record)}
                   </Select>
                 </Form.Item>
@@ -2233,10 +2253,13 @@ const Index = (props) => {
               let disabledFlag = false;
               switch (record.isDisplay) {
                 case 1: case 2:
-                  disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                  disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1) || (record.isDisplay == 2 && !isDisPlayCheck2) || (isCheckUser) ? true : false
                   break;
                 case 3: case 4:
-                  disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                  disabledFlag = (record.isDisplay == 3 && !isDisPlayCheck3) || (record.isDisplay == 4 && !isDisPlayCheck4) || (isCheckUser) ? true : false
+                  break;
+                default:
+                  disabledFlag = isCheckUser;
                   break;
               }
               return <Row justify='center' align='middle'>
@@ -2313,7 +2336,7 @@ const Index = (props) => {
                 break;
             }
             return <Form.Item name={`${record.par}OperationRangeRemark`}>
-              <TextArea rows={1} disabled={disabledFlag} placeholder='请输入' style={{ width: '100%' }} />
+              <TextArea rows={1} disabled={disabledFlag || isCheckUser} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
         },
@@ -2455,11 +2478,11 @@ const Index = (props) => {
             return <Row justify='center' align='middle'>
               {/* <Form.Item name={`${record.par}IndicaVal`} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}> */}
               <Form.Item name={`${record.par}IndicaVal`}>
-                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 2) }} />
+                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 2) }} disabled={isCheckUser} />
               </Form.Item>
               {/* <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请选择' }]}> */}
               <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }}>
-                <Select allowClear placeholder='单位列表' onChange={() => { isJudge(record, 2) }}>
+                <Select allowClear placeholder='单位列表' onChange={() => { isJudge(record, 2) }} disabled={isCheckUser}>
                   {unitFormat(record)}
                 </Select>
               </Form.Item>
@@ -2479,11 +2502,11 @@ const Index = (props) => {
             return <Row justify='center' align='middle'>
               {/* <Form.Item name={[`${record.par}DsData`]} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请输入' }]} > */}
               <Form.Item name={[`${record.par}DsData`]} >
-                <InputNumber placeholder='请输入' disabled={!dasChecked} onBlur={() => { isJudge(record, 2) }} />
+                <InputNumber placeholder='请输入' disabled={!dasChecked || isCheckUser} onBlur={() => { isJudge(record, 2) }} />
               </Form.Item>
               {/* <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请选择' }]}> */}
               <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }}>
-                <Select allowClear placeholder='单位列表' disabled={!dasChecked} onChange={() => { isJudge(record, 2) }}>
+                <Select allowClear placeholder='单位列表' disabled={!dasChecked || isCheckUser} onChange={() => { isJudge(record, 2) }}>
                   {unitFormat(record)}
                 </Select>
               </Form.Item>
@@ -2506,11 +2529,11 @@ const Index = (props) => {
             return <Row justify='center' align='middle'>
               {/* <Form.Item name={[`${record.par}ScyData`]} rules={[{ required: numRealTimeChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numRealTimeChecked, message: '请输入' }]}> */}
               <Form.Item name={[`${record.par}ScyData`]}>
-                <InputNumber placeholder='请输入' style={{ minWidth: 85 }} disabled={!numRealTimeChecked} onBlur={() => { isJudge(record, 2) }} />
+                <InputNumber placeholder='请输入' style={{ minWidth: 85 }} disabled={!numRealTimeChecked || isCheckUser} onBlur={() => { isJudge(record, 2) }} />
               </Form.Item>
               {/* <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: numRealTimeChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numRealTimeChecked, message: '请选择' }]}> */}
               <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }}>
-                <Select allowClear placeholder='单位列表' disabled={!numRealTimeChecked} onChange={() => { isJudge(record, 2) }}>
+                <Select allowClear placeholder='单位列表' disabled={!numRealTimeChecked || isCheckUser} onChange={() => { isJudge(record, 2) }}>
                   {unitFormat(record)}
                 </Select>
               </Form.Item>
@@ -2527,7 +2550,7 @@ const Index = (props) => {
             const obj = {
               children: <div>
                 <Form.Item name='files2' >
-                  <a onClick={() => { setFileType(2); setFileVisible(true) }}>{fileList2[0] ? '查看附件' : '上传附件'}</a>
+                  <a style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType(2); setFileVisible(true) }}>{fileList2[0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </div>,
               props: {},
@@ -2581,7 +2604,7 @@ const Index = (props) => {
           width: 180,
           render: (text, record) => {
             return <Form.Item name={`${record.par}OperationDataRemark`}>
-              <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
+              <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} disabled={isCheckUser} />
             </Form.Item>
           }
         },
@@ -2648,10 +2671,10 @@ const Index = (props) => {
             }
             return <Row style={{ flexWrap: 'nowrap' }}>
               <Form.Item name={`${record.par}SetStatus`} style={{ paddingRight: 4 }}>
-                <Checkbox.Group onChange={() => { isJudge(record, 3) }}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
+                <Checkbox.Group onChange={() => { isJudge(record, 3) }} disabled={isCheckUser}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
               </Form.Item>
               <Form.Item name={`${record.par}SetVal`} >
-                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
+                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} disabled={isCheckUser} style={{ width: '100%' }} />
               </Form.Item>
             </Row>
           }
@@ -2664,7 +2687,7 @@ const Index = (props) => {
           width: 120,
           render: (text, record, index) => {
             return <Form.Item name={`${record.par}SettingFilePar`} >
-              <a style={{ paddingRight: 8 }} onClick={() => { setFileType('settingFile'); setSettingFilePar(`${record.par}SettingFilePar`); setFileVisible(true); }}>{settingFileList[`${record.par}SettingFilePar`] && settingFileList[`${record.par}SettingFilePar`][0] ? '查看附件' : '上传附件'}</a>
+              <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType('settingFile'); setSettingFilePar(`${record.par}SettingFilePar`); setFileVisible(true); }}>{settingFileList[`${record.par}SettingFilePar`] && settingFileList[`${record.par}SettingFilePar`][0] ? '查看附件' : '上传附件'}</a>
             </Form.Item>
 
 
@@ -2682,10 +2705,10 @@ const Index = (props) => {
             }
             return <Row style={{ flexWrap: 'nowrap' }}>
               <Form.Item name={`${record.par}InstrumentStatus`} style={{ paddingRight: 4 }}>
-                <Checkbox.Group onChange={() => { isJudge(record, 3) }}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
+                <Checkbox.Group onChange={() => { isJudge(record, 3) }} disabled={isCheckUser}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
               </Form.Item>
               <Form.Item name={`${record.par}InstrumentSetVal`} >
-                <InputNumber onBlur={() => { isJudge(record, 3) }} placeholder='请输入' style={{ width: '100%' }} />
+                <InputNumber onBlur={() => { isJudge(record, 3) }} placeholder='请输入' disabled={isCheckUser} style={{ width: '100%' }} />
               </Form.Item>
             </Row>
           }
@@ -2699,7 +2722,7 @@ const Index = (props) => {
           render: (text, record, index) => {
             return <div>
               <Form.Item name={`${record.par}InstrumentFilePar`} >
-                <a style={{ paddingRight: 8 }} onClick={() => { setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>
               </Form.Item>
             </div>;
 
@@ -2717,10 +2740,10 @@ const Index = (props) => {
             }
             return <Row style={{ flexWrap: 'nowrap' }}>
               <Form.Item name={`${record.par}DataStatus`} style={{ paddingRight: 4 }}>
-                <Checkbox.Group onChange={() => { isJudge(record, 3) }}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
+                <Checkbox.Group onChange={() => { isJudge(record, 3) }} disabled={isCheckUser}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
               </Form.Item>
               <Form.Item name={`${record.par}DataVal`}>
-                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
+                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} disabled={isCheckUser} style={{ width: '100%' }} />
               </Form.Item>
             </Row>
           }
@@ -2734,7 +2757,7 @@ const Index = (props) => {
           render: (text, record, index) => {
             return <div>
               <Form.Item name={`${record.par}DataFilePar`} >
-                <a style={{ paddingRight: 8 }} onClick={() => { setFileType('dataFile'); setDataFilePar(`${record.par}DataFilePar`); setFileVisible(true); }}>{dataFileList[`${record.par}DataFilePar`] && dataFileList[`${record.par}DataFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType('dataFile'); setDataFilePar(`${record.par}DataFilePar`); setFileVisible(true); }}>{dataFileList[`${record.par}DataFilePar`] && dataFileList[`${record.par}DataFilePar`][0] ? '查看附件' : '上传附件'}</a>
               </Form.Item>
             </div>;
 
@@ -2752,7 +2775,7 @@ const Index = (props) => {
             }
             // return <Form.Item name={`${record.par}TraceVal`} rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
             return <Form.Item name={`${record.par}TraceVal`}>
-              <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
+              <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} disabled={isCheckUser} style={{ width: '100%' }} />
             </Form.Item>
           }
         },
@@ -2765,7 +2788,7 @@ const Index = (props) => {
           render: (text, record, index) => {
             return <div>
               <Form.Item name={`${record.par}TraceabilityFilePar`} >
-                <a style={{ paddingRight: 8 }} onClick={() => { setFileType('traceabilityFile'); setTraceabilityFilePar(`${record.par}TraceabilityFilePar`); setFileVisible(true); }}>{traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType('traceabilityFile'); setTraceabilityFilePar(`${record.par}TraceabilityFilePar`); setFileVisible(true); }}>{traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0] ? '查看附件' : '上传附件'}</a>
               </Form.Item>
             </div>;
 
@@ -2813,7 +2836,7 @@ const Index = (props) => {
           width: 150,
           render: (text, record) => {
             return <Form.Item name={`${record.par}OperationReamrk`}>
-              <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
+              <TextArea rows={1} placeholder='请输入' disabled={isCheckUser} style={{ width: '100%' }} />
             </Form.Item>
           }
         },
@@ -2881,8 +2904,6 @@ const Index = (props) => {
   const [fileVisible, setFileVisible] = useState(false)
 
   const userlist = tableInfo && tableInfo['View_UserOperation'] && tableInfo['View_UserOperation'].dataSource || [];
-
-
 
 
   return (
@@ -3029,7 +3050,7 @@ const Index = (props) => {
               </Form.Item>
 
               <Spin size='small' spinning={title === '编辑' ? false : parLoading || false} style={{ top: -2, left: '15%' }}>
-                <Form.Item label='点位运维负责人' name='OperationUserID' rules={[{ required: true, message: '请设置点位的负责运维人!' }]}>
+                <Form.Item label='任务执行人' name='OperationUserID' rules={[{ required: true, message: '请设置点位的负责运维人!' }]}>
                   <Select disabled={title === '编辑'} placeholder='请选择' showSearch optionFilterProp="children">
                     {userlist.map(item => {
                       return <Option key={item['dbo.View_User.User_ID']} value={item['dbo.View_User.User_ID']} >
@@ -3078,7 +3099,7 @@ const Index = (props) => {
                   rowClassName={null}
                   sticky
                 />
-                <Row style={{ color: '#f5222d', marginTop: 10,fontSize:16 }}>
+                <Row style={{ color: '#f5222d', marginTop: 10, fontSize: 16 }}>
                   <span style={{ paddingRight: 12 }}>注：</span>
                   <ol type="1" style={{ listStyle: 'auto', paddingBottom: 8 }}>
                     <li>填写数值，带单位；</li>
@@ -3111,7 +3132,7 @@ const Index = (props) => {
                   sticky
                   rowClassName={null}
                 />
-                <Row style={{ color: '#f5222d', marginTop: 10,fontSize:16  }}>
+                <Row style={{ color: '#f5222d', marginTop: 10, fontSize: 16 }}>
                   <span style={{ paddingRight: 10 }}>注：</span>
                   <ol type="1" style={{ listStyle: 'auto' }}>
                     <li>设定值一般在DAS查阅；若现场无DAS，应在其他对应设备查阅，如数采仪；</li>

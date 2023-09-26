@@ -153,7 +153,7 @@ class BasicLayout extends Component {
     }
   }
   componentWillMount() {
-    this.menuPermissions()
+    // this.menuPermissions()
   }
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize)

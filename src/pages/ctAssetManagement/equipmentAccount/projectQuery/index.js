@@ -33,12 +33,13 @@ const dvaPropsData = ({ loading, ctProjectQuery, global, common }) => ({
   queryPar: common.ctProjectQueryPar,
   entAndPoint: common.ctEntAndPointList,
   loadingConfirm: loading.effects[`${namespace}/updateCTProject`],
-  exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
+  exportLoading: loading.effects[`${namespace}/exportCTProjectList`],
   entAndPointLoading: loading.effects[`common/getCtEntAndPointList`] || false,
   rojectPointRelationLoading: loading.effects[`${namespace}/getrojectPointRelationList`] || false,
   addProjectPointRelationLoading: loading.effects[`${namespace}/addProjectPointRelation`] || false,
   configInfo: global.configInfo,
   clientHeight: global.clientHeight,
+  checkPoint:ctProjectQuery.checkPoint,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -102,7 +103,7 @@ const Index = (props) => {
   const [fromVisible, setFromVisible] = useState(false)
   const [tableVisible, setTableVisible] = useState(false)
 
-  const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, entAndPoint, rojectPointRelationLoading, addProjectPointRelationLoading, } = props;
+  const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, entAndPoint, rojectPointRelationLoading, addProjectPointRelationLoading,checkPoint, } = props;
 
 
   useEffect(() => {
@@ -126,15 +127,15 @@ const Index = (props) => {
     },
     {
       title: '项目名称',
-      dataIndex: 'ProjectCode',
-      key: 'ProjectCode',
+      dataIndex: 'ProjectName',
+      key: 'ProjectName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '合同编号',
-      dataIndex: 'ProvinceName',
-      key: 'ProvinceName',
+      dataIndex: 'ProjectCode',
+      key: 'ProjectCode',
       align: 'center',
       ellipsis: true,
     },
@@ -160,7 +161,7 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '最后用户单位',
+      title: '最终用户单位',
       dataIndex: 'CustomEnt',
       key: 'CustomEnt',
       align: 'center',
@@ -349,21 +350,18 @@ const Index = (props) => {
     setAssociaePointVisible(true)
     setProjectCode(record.ProjectCode)
     setProjectID(record.ID)
-    props.getEntAndPoint({ regionCode: '', entName: '', })
     getrojectPointRelationListQues(record.ID)
+    props.getEntAndPoint({ regionCode: '', entName: '', })
   };
-
-
-
 
 
   const exports = async () => {
     const values = await form.validateFields();
     props.exportProjectInfoList({
       ...values,
-      BegBeginTime: values.BegTime && moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-      BegEndTime: values.BegTime && moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
-      BegTime: undefined,
+      beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'), 
+      endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'), 
+      time: undefined,
 
     })
   };
@@ -412,11 +410,17 @@ const Index = (props) => {
       setCheckedKeys(keys)
     })
   }
+
+  // useEffect(()=>{
+  //   console.log(checkPoint)
+  //   setCheckedKeys(checkPoint)
+  // },[checkPoint])
+  
   const [regionCode, setRegionCode] = useState('')
   const [entPointName, setEntPointName] = useState('')
   const handlePointQuery = () => {
-    props.getEntAndPoint({ regionCode: regionCode, entName: entPointName, })
     getrojectPointRelationListQues(projectID)
+    props.getEntAndPoint({ regionCode: regionCode, entName: entPointName, })
 
   }
   //关联监测点 提交
@@ -464,16 +468,18 @@ const Index = (props) => {
           </Col>
           <Col span={8}>
             <Form.Item name='projectType' label='合同类型' >
-              <Select placeholder='请选择' allowClear>
+              {/* <Select placeholder='请选择' allowClear>
                 <Option></Option>
-              </Select>
+              </Select> */}
+              <Input placeholder='请输入'/>
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item name='region' label='提供大区服务' >
-              <Select placeholder='请选择' allowClear>
+              {/* <Select placeholder='请选择' allowClear>
                 <Option></Option>
-              </Select>
+              </Select> */}
+              <Input placeholder='请输入'/>
             </Form.Item>
           </Col>
 
@@ -533,6 +539,9 @@ const Index = (props) => {
         <Form
           name="basic"
           form={form2}
+          initialValues={{
+            range:3,
+          }}
         >
 
           <Row>
@@ -608,8 +617,9 @@ const Index = (props) => {
                 <Button type="primary" loading={entAndPointLoading} onClick={handlePointQuery}>查询</Button>
               </Input.Group>
             </Row>
+            
             <Spin spinning={entAndPointLoading || rojectPointRelationLoading || addProjectPointRelationLoading  }>
-              {entAndPoint?.length > 0 ?
+              {entAndPoint?.length > 0 && !entAndPointLoading &&!rojectPointRelationLoading?
                 <TreeTransfer
                   key="key"
                   treeData={entAndPoint}

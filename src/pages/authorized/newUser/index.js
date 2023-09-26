@@ -82,6 +82,7 @@ const { SHOW_PARENT } = TreeSelect;
   queryPar: newuserinfo.queryPar,
   configInfo: global.configInfo,
   clientHeight: global.clientHeight,
+  userGoDetail:global.userGoDetail,
 }))
 export default class UserInfoIndex extends Component {
   constructor(props) {
@@ -208,10 +209,6 @@ export default class UserInfoIndex extends Component {
               <Tooltip title="编辑">
                 <a
                   onClick={() => {
-                    this.props.dispatch({
-                      type: 'newuserinfo/updateState',
-                      payload: { goDetail: true, },
-                    })
                     this.props.dispatch(
                       routerRedux.push(
                         '/rolesmanager/user/userinfoedit/' + row['ID'] + "?tabName=用户管理 - 编辑",
@@ -260,18 +257,18 @@ export default class UserInfoIndex extends Component {
   }
 
   componentDidMount() {
-    const { match, userPar, dispatch, goDetail, depInfoList, rolesList, queryPar, } = this.props;
+    const { match, userPar, dispatch, userGoDetail, depInfoList, rolesList, queryPar, } = this.props;
     if (depInfoList.length <= 0) {
       this.getDepInfoByTree()
     }
     if (rolesList.length <= 0) {
       this.getRolesTree()
     }
-    if (goDetail) {
+    if (userGoDetail) {
+      this.getUserList(queryPar);
+    } else {
       this.restClick();
       this.getUserList();
-    } else {
-      this.getUserList(queryPar);
     }
   }
 
@@ -304,6 +301,12 @@ export default class UserInfoIndex extends Component {
         ],
       });
     }
+  }
+  componentWillUnmount(){
+    this.props.dispatch({
+      type: 'global/updateState',
+      payload: { userGoDetail: false, },
+    })
   }
   showDataModal = () => {
 
@@ -427,7 +430,7 @@ export default class UserInfoIndex extends Component {
     const { dispatch, userPar } = this.props;
     dispatch({
       type: 'newuserinfo/updateState',
-      payload: { userPar: { roleListID: '', groupListID: '', userName: '', userAccount: '' }, queryPar: null, },
+      payload: { userPar: { roleListID: '', groupListID: '', userName: '', userAccount: '',companyName:'' }, queryPar: null, },
     })
   }
   loginNameChange = (e) => {
@@ -473,7 +476,7 @@ export default class UserInfoIndex extends Component {
   getUserList = (params, callback) => {
     this.props.dispatch({
       type: 'newuserinfo/getUserList',
-      payload: params ? params : { roleListID: '', groupListID: '', userName: '', userAccount: '' },
+      payload: params ? params : { roleListID: '', groupListID: '', userName: '', userAccount: '',companyName:'' },
       callback: () => {
         callback && callback();
       }
@@ -504,10 +507,6 @@ export default class UserInfoIndex extends Component {
   addClick = () => {
 
     const { dispatch } = this.props;
-    this.props.dispatch({
-      type: 'newuserinfo/updateState',
-      payload: { goDetail: true, },
-    })
     dispatch(routerRedux.push('/rolesmanager/user/userinfoadd?tabName=用户管理 - 添加'));
   }
   exports = () => {
@@ -675,7 +674,7 @@ export default class UserInfoIndex extends Component {
       dispatch,
       depInfoList,
       rolesList,
-      userPar: { roleListID, groupListID, userName, userAccount },
+      userPar: { roleListID, groupListID, userName, userAccount,companyName },
     } = this.props;
     const searchConditions = searchConfigItems[configId] || [];
     const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
@@ -746,7 +745,7 @@ export default class UserInfoIndex extends Component {
               />
             </Form.Item>
             {!provinceShow && <Form.Item label='运维单位' >
-              <Input onChange={this.onOperationChange} placeholder='请输入运维单位' allowClear />
+              <Input onChange={this.onOperationChange} value={companyName} placeholder='请输入运维单位' allowClear />
             </Form.Item>}
             <Form.Item>
               <Button type='primary' onClick={this.queryClick} style={{ marginLeft: 8 }}> 查询</Button>

@@ -28,6 +28,6 @@ export async function addProjectPointRelation(params) {
 
 //获取项目列表 导出
 export async function exportCTProjectList(params) {
-  const result = post(API.CtCommonApi.ExportCTProjectList, params);
+  const result = post(API.CtAssetManagementApi.ExportCTProjectList, params);
   return result;
 }

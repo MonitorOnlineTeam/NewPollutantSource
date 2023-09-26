@@ -475,7 +475,7 @@ const Index = (props) => {
             const attachmentDataSource = getAttachmentDataSource(couUpload);
             const obj = {
               children: <div>
-                   {couUpload&&couUpload[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
+                   {couUpload&&couUpload[0]&&<AttachmentView style={{ marginTop: 10 }}  dataSource={attachmentDataSource} />}
               </div>,
               props: {},
             };
@@ -581,9 +581,9 @@ const Index = (props) => {
       key: 'SetFileList',
       width: 120,
       render: (text, record, index) => {
-        if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
-          return '—' 
-        }
+        // if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+        //   return '—' 
+        // }
         const attachmentDataSource = getAttachmentDataSource(text);
         return <div>
          {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
@@ -606,9 +606,9 @@ const Index = (props) => {
       key: 'InstrumentFileList',
       width: 125,
       render: (text, record, index) => {
-        if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
-          return '—' 
-        }
+        // if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+        //   return '—' 
+        // }
         const attachmentDataSource = getAttachmentDataSource(text);
         return <div>
          {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
@@ -632,9 +632,9 @@ const Index = (props) => {
       key: 'TraceabilityFileList',
       width: 120,
       render: (text, record, index) => {
-        if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
-          return '—' 
-        }
+        // if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+        //   return '—' 
+        // }
         const attachmentDataSource = getAttachmentDataSource(text);
         return <div>
          {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
@@ -658,9 +658,9 @@ const Index = (props) => {
       key: 'DataFileList',
       width: 140,
       render: (text, record, index) => {
-        if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
-          return '—' 
-        }
+        // if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+        //   return '—' 
+        // }
         const attachmentDataSource = getAttachmentDataSource(text);
         return <div>
          {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
@@ -764,7 +764,7 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={8} style={{paddingRight:5}}>
-      <Form.Item label="点位运维负责人"  >
+      <Form.Item label="任务执行人"  >
         {consistencyCheckDetail.operationUserName  }
       </Form.Item>
       </Col> 

@@ -87,10 +87,11 @@ const Index = (props) => {
     const [columns,setColumns]= useState([
         {
             title: '序号',
-            dataIndex: 'Sort',
-            key: 'Sort',
             align: 'center',
             ellipsis:true,
+            render: (text, record, index) => {
+                return  (index + 1) + (pageIndex-1)*pageSize;
+            }
         },
 
         {

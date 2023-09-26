@@ -169,6 +169,7 @@ const Index = (props) => {
 
       props.getOperationUserList({
         ...values,
+        Type:1,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);

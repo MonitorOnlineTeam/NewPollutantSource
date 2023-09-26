@@ -110,23 +110,19 @@ class Index extends Component {
         const alarmType = (flag)=>flag? "" : '1'
         dispatch({
           type: 'alarmPush/getFirstAlarmpar',
-          payload: {   Type: type, RegionCode: "", ID:alarmPushData.key,AlarmType:  alarmType(alarmPushFlag)},
+          payload: {   Type: type, RegionCode: "", ID:alarmPushData.key,AlarmType: ''},
           callback:(flag)=>{
+            const par = {
+              Type: type,
+              RegionCode: "",
+              ID:alarmPushData.key,
+              AlarmType: alarmType(flag)
+          }
              dispatch({
               type: 'alarmPush/updateState',
-              payload: {
-                  alarmPushParam: {
-                      Type: type,
-                      RegionCode: "",
-                      ID:alarmPushData.key,
-                      AlarmType: alarmType(flag)
-                  },
-              },
+              payload: { alarmPushParam:{...alarmPushParam, ...par}}
             })
-           setTimeout(()=>{
-                this.getData();
-  
-          })
+            this.getData( {Type: type, RegionCode: "", ID:alarmPushData.key,AlarmType:  alarmType(flag)});
           }
         });
 
@@ -193,11 +189,11 @@ class Index extends Component {
 
 
 
-    getData = () => {
+    getData = (data) => {
         const { dispatch, alarmPushParam } = this.props;
         dispatch({
             type: 'alarmPush/getAlarmPushDepOrRole',
-            payload: { ...alarmPushParam },
+            payload: data? data : { ...alarmPushParam },
             callback:(targetKeys)=>{
                 this.setState({targetKeys})
             }
@@ -240,21 +236,13 @@ class Index extends Component {
       
        if(data.target){ //单选
            const {alarmPushParam:{AlarmType}} = this.props;
-        
            const selectType = data.target.value
-
            this.updateQueryState({AlarmType: selectType });
            setTimeout(()=>{
             this.getData();
            })
-        //    if(AlarmType&&AlarmType === selectType){
-        //     this.updateQueryState({AlarmType: '' });
-        //  }
        }else{
         this.updateQueryState({ AlarmType: data.join(","), });
-        // setTimeout(()=>{
-        //   this.getData();
-        //  })
        }
     }
     handleOk=()=>{

@@ -18,8 +18,9 @@ import RegionList from '@/components/RegionList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
+
 import Detail from './Detail'
-const { Option } = Select;
+const { Option } = Select; 
 
 const namespace = 'dispatchQuery'
 
@@ -31,7 +32,7 @@ const dvaPropsData = ({ loading, dispatchQuery, global, }) => ({
   tableDatas: dispatchQuery.tableDatas,
   tableTotal: dispatchQuery.tableTotal,
   configInfo: global.configInfo,
-  
+  exportLoading: loading.effects[`${namespace}/exportServiceDispatch`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -48,9 +49,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    exportProjectInfoList: (payload) => { //导出
+    exportServiceDispatch: (payload) => { //导出
       dispatch({
-        type: `${namespace}/exportProjectInfoList`,
+        type: `${namespace}/exportServiceDispatch`,
         payload: payload,
       })
     },
@@ -68,7 +69,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableTotal,  tableLoading,serviceDispatchTypeAndRecordLoading,serviceDispatchTypeAndRecord, exportLoading,  } = props;
+  const { tableDatas, tableTotal,  tableLoading, exportLoading,  } = props;
 
 
 
@@ -102,15 +103,15 @@ const Index = (props) => {
     },
     {
       title: '立项号',
-      dataIndex: 'itemCode',
-      key: 'itemCode',
+      dataIndex: 'ItemCode',
+      key: 'ItemCode',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '项目名称',
-      dataIndex: 'projectName',
-      key: 'projectName',
+      dataIndex: 'ProjectName',
+      key: 'ProjectName',
       align: 'center',
       ellipsis: true,
     },
@@ -130,8 +131,8 @@ const Index = (props) => {
     },
     {
       title: '服务申请人',
-      dataIndex: 'ApplicantUser',
-      key: 'ApplicantUser',
+      dataIndex: 'ApplicantUserName',
+      key: 'ApplicantUserName',
       align: 'center',
       ellipsis: true,
     },
@@ -159,8 +160,8 @@ const Index = (props) => {
     },
     {
       title: '任务状态',
-      dataIndex: 'TaskStatus',
-      key: 'TaskStatus',
+      dataIndex: 'TaskStatusName',
+      key: 'TaskStatusName',
       align: 'center',
       ellipsis: true,
     },
@@ -208,18 +209,17 @@ const Index = (props) => {
 
   const detail = (record) => {
     setDetailVisible(true)
-    setDetailTitle(`派工单号${record.ProjectCode? ` - ${record.ProjectCode}` : record.ItemCode ? ` - ${record.ItemCode}` : ''}`)
+    setDetailTitle(`${record.Num}${record.ProjectCode? ` - ${record.ProjectCode}` : record.ItemCode ? ` - ${record.ItemCode}` : ''}`)
     setDetailData(record)
     setDetailId(record.ID)
   }
   const exports = async () => {
     const values = await form.validateFields();
-    props.exportProjectInfoList({
+    props.exportServiceDispatch({
       ...values,
-      BegBeginTime: values.BegTime && moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-      BegEndTime: values.BegTime && moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
-      BegTime: undefined,
-
+      beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+      endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+      time: undefined,
     })
   };
 
@@ -335,7 +335,7 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 450px)' : 'calc(100vh - 370px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 375px)' : 'calc(100vh - 335px)' }}
             dataSource={tableDatas}
             columns={columns}
             pagination={{

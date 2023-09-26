@@ -48,7 +48,7 @@ export default Model.extend({
       const response = yield call(services.exportCTProjectList, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${response.Datas}`);
+        downloadFile(`${response.Datas}`);
       } else {
         message.warning(response.Message);
       }

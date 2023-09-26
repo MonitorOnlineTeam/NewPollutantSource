@@ -26,15 +26,17 @@ class index extends PureComponent {
       router.push('/user/login');
       return;
     }
-    const {newTokenFlag } = this.props;
+    setTimeout(()=>{
+      this.getSysPollutantTypeList();
+    },300)
   }
   componentDidUpdate(props){
-    const {newTokenFlag } = this.props;
-     if(props.newTokenFlag!== newTokenFlag){
-      if( newTokenFlag){
-       this.getSysPollutantTypeList();
-     }
-   }
+  //   const {newTokenFlag } = this.props;
+  //    if(props.newTokenFlag!== newTokenFlag){
+  //     if(newTokenFlag){
+  //      this.getSysPollutantTypeList();
+  //    }
+  //  }
  }
   // 获取系统的污染物类型
   getSysPollutantTypeList = () => {
@@ -50,6 +52,7 @@ class index extends PureComponent {
       //   this.setState({ loading: false });
       // }
       sessionStorage.setItem("isShowSelectSystem", 1);
+      this.props.dispatch({ type: 'login/setNewTokenFlag', payload: false});
       this.setState({ loading: false });
       this.props.sysPollutantTypeList?.[0]&&this.onSysItemClick(this.props.sysPollutantTypeList[0])
 
@@ -78,7 +81,6 @@ class index extends PureComponent {
     this.props.dispatch({
       type: "login/logout",
     })
-    this.props.dispatch({ type: 'login/updateState', payload: {newTokenFlag:false}});
   }
 
   render() {

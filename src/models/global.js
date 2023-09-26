@@ -38,6 +38,7 @@ export default Model.extend({
     },
     clientHeight: null,
     sysPollutantTypeList: [],
+    userGoDetail:false,
   },
   effects: {
     // 首次加载获取当天报警消息

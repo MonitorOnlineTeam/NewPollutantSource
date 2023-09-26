@@ -83,6 +83,11 @@ export default class UserInfoEdit extends Component {
                 User_ID: this.props.match.params.userid,
             },
         })
+        this.props.dispatch({
+            type: 'global/updateState',
+            payload: {userGoDetail:true},
+        })
+        
     }
 
     componentWillReceiveProps(nextProps) {
