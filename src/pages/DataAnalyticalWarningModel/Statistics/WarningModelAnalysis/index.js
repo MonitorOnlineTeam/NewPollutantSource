@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:34:04
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-18 10:53:47
+ * @Last Modified time: 2023-09-27 14:33:02
  * @Description：场景模型分析
  */
 import React, { useState, useEffect } from 'react';
@@ -19,7 +19,7 @@ import SdlTable from '@/components/SdlTable';
 import { DetailIcon } from '@/utils/icon';
 import moment from 'moment';
 import { router } from 'umi';
-import _ from 'lodash'
+import _ from 'lodash';
 
 const noData = {
   value: 0,
@@ -60,9 +60,11 @@ const Index = props => {
     AccuracyRate: '0',
     UniqueParentCodeCount: 0,
     DGIMNCount: 0,
+    VerifiedRate: 0
   });
   const [clueInfoData, setClueInfoData] = useState({});
   const [reasonsAndCheckData, setReasonsAndCheckData] = useState({
+    checkData: [{}, {}, {}],
     reasonsData: { yAxisData: [], seriesData: [] },
   });
   const [date, setDate] = useState([
@@ -136,7 +138,7 @@ const Index = props => {
               data: normal,
             },
             {
-              name: '企业',
+              name: '企业数量',
               type: 'bar',
               data: entCount,
             },
@@ -272,15 +274,15 @@ const Index = props => {
         );
       },
     },
-    {
-      title: '有效执行率',
-      dataIndex: 'EffeRate',
-      ellipsis: true,
-      sorter: (a, b) => a.EffeRate - b.EffeRate,
-      render: (text, record) => {
-        return text + '%';
-      },
-    },
+    // {
+    //   title: '有效执行率',
+    //   dataIndex: 'EffeRate',
+    //   ellipsis: true,
+    //   sorter: (a, b) => a.EffeRate - b.EffeRate,
+    //   render: (text, record) => {
+    //     return text + '%';
+    //   },
+    // },
     {
       title: '发现线索次数',
       dataIndex: 'DisCulesNum',
@@ -299,20 +301,44 @@ const Index = props => {
       dataIndex: 'CheckedResult2Count',
       sorter: (a, b) => a.CheckedResult2Count - b.CheckedResult2Count,
     },
+    // {
+    //   title: '准确率',
+    //   ellipsis: true,
+    //   dataIndex: 'AccuracyRate',
+    //   sorter: (a, b) => a.AccuracyRate - b.AccuracyRate,
+    //   render: (text, record) => {
+    //     return text + '%';
+    //   },
+    // },
     {
-      title: '准确率',
+      title: '核实率',
       ellipsis: true,
-      dataIndex: 'AccuracyRate',
-      sorter: (a, b) => a.AccuracyRate - b.AccuracyRate,
+      dataIndex: 'VerifiedRate',
+      sorter: (a, b) => a.VerifiedRate - b.VerifiedRate,
       render: (text, record) => {
         return text + '%';
       },
     },
+    // {
+    //   title: '整改率',
+    //   ellipsis: true,
+    //   dataIndex: 'AccuracyRate',
+    //   sorter: (a, b) => a.AccuracyRate - b.AccuracyRate,
+    //   render: (text, record) => {
+    //     return text + '%';
+    //   },
+    // },
     {
       title: '企业',
       ellipsis: true,
       dataIndex: 'UniqueParentCodeCount',
       sorter: (a, b) => a.UniqueParentCodeCount - b.UniqueParentCodeCount,
+    },
+    {
+      title: '排口',
+      ellipsis: true,
+      dataIndex: 'DGIMNCount',
+      sorter: (a, b) => a.DGIMNCount - b.DGIMNCount,
     },
     // {
     //   title: '异常原因',
@@ -373,9 +399,9 @@ const Index = props => {
   // 线索信息统计
   const getClueInfoOption = () => {
     return {
-      color: ['#5470c6', '#91cc75', '#fac858', '#ee6666'],
+      color: ['#5470c6', '#fac858', '#91cc75', '#ee6666'],
       title: {
-        text: '线索信息统计',
+        text: '异常线索信息统计',
         left: 'left',
       },
       tooltip: {
@@ -398,7 +424,7 @@ const Index = props => {
         },
       },
       legend: {
-        data: ['待核实', '核实有异常', '工况正常', '企业'],
+        data: ['工况正常', '核实有异常', '待核实', '企业数量'],
       },
       grid: {
         left: '3%',
@@ -434,16 +460,49 @@ const Index = props => {
         trigger: 'item',
         formatter: '{a} <br/>{b} : {c} ({d}%)',
       },
+      legend: {
+        type: 'plain',
+        orient: 'vertical',
+        left: '60%',
+        top: 110,
+        align: 'left',
+        itemGap: 36,
+        itemWidth: 16, // 设置宽度
+        itemHeight: 10, // 设置高度
+        // icon: 'circle',
+        symbolKeepAspect: false,
+        textStyle: {
+          fontSize: 13,
+        },
+        formatter: function(name) {
+          let data = reasonsAndCheckData.checkData;
+          // console.log(data, 'data')
+          let total = 0;
+          let tarValue;
+          for (let i = 0; i < data.length; i++) {
+            total += data[i].value;
+            if (data[i].name == name) {
+              tarValue = data[i].value;
+            }
+          }
+          let v = tarValue + '个';
+          //计算出百分比
+          let p = Math.round((tarValue / total) * 100);
+          p = isNaN(p) ? '0%' : p + '%';
+          return `${name}  ${v}  (${p})`;
+          //name是名称，v是数值
+        },
+      },
       grid: {
-        bottom: '6%',
+        // bottom: '6%',
         containLabel: true,
       },
       series: [
         {
           name: '统计核实',
           type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
+          radius: '60%',
+          center: ['36%', '54%'],
           data: reasonsAndCheckData.checkData,
           itemStyle: {
             normal: {
@@ -456,7 +515,7 @@ const Index = props => {
                   fontWeight: 500,
                   fontSize: 13, //文字的字体大小
                 },
-                formatter: '{d}%',
+                formatter: '{c}个',
               },
 
               labelLine: {
@@ -477,8 +536,8 @@ const Index = props => {
           // 设置指示线和指示线上的文字的饼状图
           name: '统计核实',
           type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
+          radius: '60%',
+          center: ['36%', '54%'],
           itemStyle: {
             normal: {
               label: {
@@ -681,12 +740,21 @@ const Index = props => {
           <Card bodyStyle={{ paddingBottom: 20 }}>
             <Spin spinning={tableLoading}>
               <Alert
+                // message={
+                //   <>
+                //     已选择 <span style={{ color: 'blue' }}>{selectedRowKeys.length}</span> 项{' '}
+                //     <Divider type="vertical" />
+                //     {`总数：发现线索次数${tableSelectedCount.DisCulesNum}次，已核实${tableSelectedCount.VerifiedNum}次，
+                //   发现异常${tableSelectedCount.CheckedResult2Count}次，准确率${tableSelectedCount.AccuracyRate}%；
+                //   涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个。`}
+                //   </>
+                // }
                 message={
                   <>
                     已选择 <span style={{ color: 'blue' }}>{selectedRowKeys.length}</span> 项{' '}
                     <Divider type="vertical" />
                     {`总数：发现线索次数${tableSelectedCount.DisCulesNum}次，已核实${tableSelectedCount.VerifiedNum}次，
-                  发现异常${tableSelectedCount.CheckedResult2Count}次，准确率${tableSelectedCount.AccuracyRate}%；
+                  发现异常${tableSelectedCount.CheckedResult2Count}次，核实率${tableSelectedCount.VerifiedRate}%；
                   涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个。`}
                   </>
                 }

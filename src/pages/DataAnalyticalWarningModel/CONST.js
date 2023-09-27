@@ -47,6 +47,39 @@ export const PollutantListConst = [
   { PollutantName: '流量', PollutantCode: 'b02' },
 ];
 
+// 根据污染物code获取name
+export const getPollutantNameByCode = {
+  '01': '实测烟尘',
+  zs01: '折算烟尘',
+  '02': '实测SO₂',
+  zs02: '折算SO₂',
+  '03': '实测NOx',
+  zs03: '折算NOx',
+  s01: '氧含量',
+  s03: '烟气温度',
+  s08: '烟气静压',
+  s05: '烟气湿度',
+  s02: '流速',
+  b02: '流量',
+};
+
+// 根据污染物code获取颜色
+export const getColorByName = {
+  实测烟尘: '#38a2da',
+  折算烟尘: '#32c5e9',
+  '实测SO₂': '#e062ae',
+  '折算SO₂': '#e690d1',
+  实测NOx: '#8279ea',
+  折算NOx: '#9D97F6',
+  氧含量: '#9fe6b8',
+  烟气温度: '#ffdb5c',
+  烟气静压: '#ff9f7f',
+  // 烟气湿度: '#c23531',
+  烟气湿度: '#13c2c2',
+  流速: '#c4ccd3',
+  流量: '#61a0a8',
+};
+
 export const ModelNumberIdsDatas = {
   all: [],
   // 波动范围异常分析：疑似篡改分析仪量程、疑似人为修改颗粒物斜率截距
