@@ -812,5 +812,23 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    // 我的待办数据
+    *GetMyModelExceptionByPManager({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetMyModelExceptionByPManager, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 复核详情
+    *GetWarningVerifyCheckInfo({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetWarningVerifyCheckInfo, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
   },
 });

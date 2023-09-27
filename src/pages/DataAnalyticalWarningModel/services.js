@@ -236,3 +236,23 @@ export async function RegenerateNomalRangeTime(params) {
   );
   return result;
 }
+
+// 我的待办
+export async function GetMyModelExceptionByPManager(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/GetMyModelExceptionByPManager',
+    params,
+  );
+  return result;
+}
+
+// 复核详情
+export async function GetWarningVerifyCheckInfo(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/GetWarningVerifyCheckInfo',
+    params,
+  );
+  return result;
+}
+
+

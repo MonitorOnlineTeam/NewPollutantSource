@@ -7,6 +7,7 @@ import styles from '../../styles.less';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { RightOutlined } from '@ant-design/icons';
+import { getColorByName } from '../../CONST';
 
 const COLOR = '#e6b8b7';
 let tempSelectedNames = [];
@@ -98,7 +99,6 @@ const WarningDataAndChart = props => {
       console.log('defaultChartSelected', defaultChartSelected);
       // 根据不同模型选中污染物
       if (defaultChartSelected.length) {
-        debugger;
         if (defaultChartSelected.includes(item)) {
           legendSelected[item] = true;
         } else {
@@ -299,7 +299,7 @@ const WarningDataAndChart = props => {
         let flag = item1[pollutant + '_Flag'] || '';
         seriesFlagdata = seriesFlagdata.concat(flag);
       });
-
+      console.log('seriesdata', seriesdata);
       series.push({
         type: 'line',
         name: selectedNames[index],
@@ -310,7 +310,9 @@ const WarningDataAndChart = props => {
           formatter: pollutant.Unit,
           show: false,
         },
-
+        itemStyle: {
+          color: getColorByName[selectedNames[index]],
+        },
         symbol: (value, params) => {
           // console.log('params', params);
           let flag = seriesFlag[params.seriesName][params.dataIndex];
@@ -383,18 +385,28 @@ const WarningDataAndChart = props => {
 
       // 绘制报警时间线
       if (warningDate.length) {
-        let abnormalMarkLine = warningDate.map(item => {
+        // 过滤出warningDate中的pollutantCode 如果在legendSelected为true的数据, 报警时间线随着图例联动
+        let selectedPollutantCodes = Object.keys(legendSelected).filter(
+          code => legendSelected[code],
+        );
+        console.log('selectedPollutantCodes', selectedPollutantCodes);
+        let filteredWarningDate = warningDate.filter(item =>
+          selectedPollutantCodes.includes(item.pollutantName),
+        );
+        let newFilteredWarningDate = filteredWarningDate.length ? filteredWarningDate : warningDate;
+        let abnormalMarkLine = newFilteredWarningDate.map(item => {
+          let color = filteredWarningDate.length ? getColorByName[item.name] : '#c23531';
           return {
             name: item.name,
             xAxis: item.date,
             // lineStyle: { color: '#ff0000' },
-            lineStyle: { color: '#c23531' },
+            lineStyle: { color: color },
             label: {
               position: 'end',
               // padding: [0, -120, 0, 0],
               // fontWeight: 'bold',
               fontSize: 13,
-              color: '#ff0000',
+              color: color,
               // width: 20,
               // overflow: 'truncate',
               formatter: function(params) {
@@ -454,20 +466,20 @@ const WarningDataAndChart = props => {
     // console.log('seriesFlag', seriesFlag);
     // console.log('markAreaData', markAreaData);
     let option = {
-      color: [
-        '#38a2da',
-        '#32c5e9',
-        '#e062ae',
-        '#e690d1',
-        '#8279ea',
-        '#9D97F6',
-        '#9fe6b8',
-        '#ffdb5c',
-        '#ff9f7f',
-        '#c23531',
-        '#c4ccd3',
-        '#61a0a8',
-      ],
+      // color: [
+      //   '#38a2da',
+      //   '#32c5e9',
+      //   '#e062ae',
+      //   '#e690d1',
+      //   '#8279ea',
+      //   '#9D97F6',
+      //   '#9fe6b8',
+      //   '#ffdb5c',
+      //   '#ff9f7f',
+      //   '#c23531',
+      //   '#c4ccd3',
+      //   '#61a0a8',
+      // ],
       // color: ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
       // color: ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'],
       tooltip: {
@@ -548,7 +560,7 @@ const WarningDataAndChart = props => {
   // const onCancel = () => {
   //   setVisible(false);
   // };
-
+  console.log('legendSelected', legendSelected);
   return (
     <>
       {describe && (

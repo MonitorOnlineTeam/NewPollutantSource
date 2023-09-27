@@ -48,6 +48,7 @@ const Index = props => {
     AccuracyRate: '0',
     UniqueParentCodeCount: 0,
     DGIMNCount: 0,
+    VerifiedRate: 0,
   });
 
   useEffect(() => {
@@ -265,11 +266,20 @@ const Index = props => {
       dataIndex: 'CheckedResult2Count',
       sorter: (a, b) => a.CheckedResult2Count - b.CheckedResult2Count,
     },
+    // {
+    //   title: '准确率',
+    //   ellipsis: true,
+    //   dataIndex: 'AccuracyRate',
+    //   sorter: (a, b) => a.AccuracyRate - b.AccuracyRate,
+    //   render: (text, record) => {
+    //     return text + '%';
+    //   },
+    // },
     {
-      title: '准确率',
+      title: '核实率',
       ellipsis: true,
-      dataIndex: 'AccuracyRate',
-      sorter: (a, b) => a.AccuracyRate - b.AccuracyRate,
+      dataIndex: 'VerifiedRate',
+      sorter: (a, b) => a.VerifiedRate - b.VerifiedRate,
       render: (text, record) => {
         return text + '%';
       },
@@ -279,6 +289,12 @@ const Index = props => {
       ellipsis: true,
       dataIndex: 'UniqueParentCodeCount',
       sorter: (a, b) => a.UniqueParentCodeCount - b.UniqueParentCodeCount,
+    },
+    {
+      title: '排口',
+      ellipsis: true,
+      dataIndex: 'DGIMNCount',
+      sorter: (a, b) => a.DGIMNCount - b.DGIMNCount,
     },
     // {
     //   title: '异常原因',
@@ -510,7 +526,7 @@ const Index = props => {
                   message={
                     <div style={{ color: '#65D9FF', fontWeight: 500, fontSize: 16 }}>
                       已选择{selectedRowKeys.length}项&nbsp;&nbsp;&nbsp;&nbsp;
-                      {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，核实为异常${tableSelectedCount.CheckedResult2Count}个，准确率${tableSelectedCount.AccuracyRate}%；
+                      {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，核实为异常${tableSelectedCount.CheckedResult2Count}个，核实率${tableSelectedCount.VerifiedRate}%；
                     涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个`}
                     </div>
                   }

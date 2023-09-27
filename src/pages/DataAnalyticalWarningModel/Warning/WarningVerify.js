@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-11 13:59:52
+ * @Last Modified time: 2023-09-27 14:37:58
  * @Description：报警核实详情
  */
 
@@ -20,7 +20,7 @@ import ModelChartLinear from './components/ModelChart-Linear';
 import ModelTable from './components/ModelTable';
 import WarningDataModal from './WarningDataModal';
 import moment from 'moment';
-import { ChartDefaultSelected } from '../CONST';
+import { ChartDefaultSelected, getPollutantNameByCode } from '../CONST';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   warningInfoLoading: loading.effects['dataModel/GetSingleWarning'],
@@ -58,6 +58,7 @@ const WarningVerify = props => {
   const [modelDescribe, setModelDescribe] = useState('');
   const [defaultChartSelected, setDefaultChartSelected] = useState([]);
   const [timeList, setTimeList] = useState([]);
+  const [snapshotData, setSnapshotData] = useState({});
 
   useEffect(() => {
     loadData();
@@ -104,7 +105,6 @@ const WarningVerify = props => {
         } else {
           setRtnFinal(res.rtnFinal);
           let tableDatas = processJSONData(res.rtnFinal);
-          console.log('tableDatas', tableDatas);
           setModelTableDatas(tableDatas);
           // setModelTableDatas({
           //   Column: res.Column,
@@ -112,14 +112,18 @@ const WarningVerify = props => {
           // });
         }
         setModelDescribe(res.describe);
-
+        setSnapshotData(res);
         // 处理恒定值报警时间线
         if (res.timeListByCode) {
           let timeList = res.timeListByCode;
           let newTimeList = [];
           for (const key in timeList) {
-            let timeArr = timeList[key][0].split('~');
-            newTimeList.push(timeArr);
+            timeList[key].map(item => {
+              newTimeList.push({
+                pollutantCode: key,
+                time: item.split('~'),
+              });
+            });
           }
           console.log('newTimeList', newTimeList);
           setTimeList(newTimeList);
@@ -168,7 +172,6 @@ const WarningVerify = props => {
             return item.data;
           });
           // console.log('allData', allData);
-          console.log('values', values);
           data = values[0].map((item, index) => {
             let arr = [];
             chart.data.map(itm => {
@@ -177,7 +180,6 @@ const WarningVerify = props => {
             return arr;
           });
         }
-        console.log('data', data);
         linearDatas.push({
           title: chart.title.replace('趋势', '线性'),
           linear: chart.linear,
@@ -205,7 +207,6 @@ const WarningVerify = props => {
     });
 
     setLinearDatas(linearDatas);
-    console.log('linearDatas', linearDatas);
   };
 
   // 判断小时是否连续
@@ -244,7 +245,10 @@ const WarningVerify = props => {
         setWarningDataDate(date);
 
         let warningDate = [];
-        if (rtnFinal.length > 1) {
+        if (
+          // 零值
+          warningInfo.WarningTypeCode === '0fa091a3-7a19-4c9e-91bd-c5a4bf2e9827'
+        ) {
           // 多个表格的情况
           modelTableDatas.map(item => {
             item.Data.map(itm => {
@@ -301,10 +305,12 @@ const WarningVerify = props => {
         handleDefaultLegendSelected();
         setDataModalVisible(true);
       } else {
-        message.error('异常特征无数据，无法查看报警数据！');
+        message.error('异常特征无数据，无法查看线索数据！');
       }
     } else {
       // 图表模型
+      let warningDate = [];
+      console.log('modelChartDatas', modelChartDatas);
       if (
         modelChartDatas.length &&
         modelChartDatas[0].data.length &&
@@ -313,20 +319,59 @@ const WarningVerify = props => {
       ) {
         let startDate = modelChartDatas[0].data[0].date[0];
         let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
+
+        // 如果接口直接返回数据时间，直接取
+        if (snapshotData.BeginTime && snapshotData.EndTime) {
+          date = [
+            moment(snapshotData.BeginTime).subtract(2, 'day'),
+            moment(snapshotData.EndTime).add(6, 'day'),
+          ];
+        }
         setWarningDataDate(date);
 
-        let warningDate = [];
-        if (timeList.length) {
+        if (
+          // 疑似机组停运未及时上报
+          warningInfo.WarningTypeCode === '928ec327-d30d-4803-ae83-eab3a93538c1' ||
+          // 疑似机组停运虚假标记
+          warningInfo.WarningTypeCode === '3568b3c6-d8db-42f1-bbff-e76406a67f7f'
+        ) {
+          // 每3个为一组
+          modelChartDatas.map((item, index) => {
+            if (index % 3 === 0) {
+              if (item.data[0].date.length === 1) {
+                // 只有一个时间点显示报警(没有结束时间)
+                warningDate.push({
+                  name: '报警',
+                  date: moment(item.data[0].date[0]).format('YYYY-MM-DD HH:00'),
+                });
+              } else {
+                let endData = item.data[0].date.slice(-1);
+                warningDate.push(
+                  {
+                    name: '开始',
+                    date: moment(item.data[0].date[0]).format('YYYY-MM-DD HH:00'),
+                  },
+                  {
+                    name: '结束',
+                    date: moment(endData[0]).format('YYYY-MM-DD HH:00'),
+                  },
+                );
+              }
+            }
+          });
+        } else if (timeList.length) {
           // 恒定值
           timeList.map(item => {
             warningDate = warningDate.concat([
               {
                 name: '开始',
-                date: moment(item[0]).format('YYYY-MM-DD HH:00'),
+                pollutantName: getPollutantNameByCode[item.pollutantCode],
+                date: moment(item.time[0]).format('YYYY-MM-DD HH:00'),
               },
               {
                 name: '结束',
-                date: moment(item[1]).format('YYYY-MM-DD HH:00'),
+                pollutantName: getPollutantNameByCode[item.pollutantCode],
+                date: moment(item.time[1]).format('YYYY-MM-DD HH:00'),
               },
             ]);
           });
@@ -352,7 +397,7 @@ const WarningVerify = props => {
         handleDefaultLegendSelected();
         setDataModalVisible(true);
       } else {
-        message.error('异常特征无数据，无法查看报警数据！');
+        message.error('异常特征无数据，无法查看线索数据！');
       }
     }
   };
@@ -531,6 +576,19 @@ const WarningVerify = props => {
         </Card>
         <Card title="线索核实" loading={warningInfoLoading}>
           <Descriptions column={4}>
+            <Descriptions.Item label="核实状态">
+              <Tag
+                color={
+                  warningInfo.Status === 3
+                    ? 'success'
+                    : warningInfo.Status === 2
+                    ? 'orange'
+                    : 'volcano'
+                }
+              >
+                {warningInfo.StatusName}
+              </Tag>
+            </Descriptions.Item>
             <Descriptions.Item label="核实结果">
               {warningInfo.CheckedResultCode === '1' && <Tag color="error">系统误报</Tag>}
               {warningInfo.CheckedResultCode === '2' && <Tag color="warning">有异常</Tag>}
@@ -540,11 +598,13 @@ const WarningVerify = props => {
               {warningInfo.UntruthReason || '-'}
             </Descriptions.Item>
             <Descriptions.Item label="核实人">{warningInfo.CheckedUser || '-'}</Descriptions.Item>
-            <Descriptions.Item label="核实时间">{warningInfo.CheckedTime || '-'}</Descriptions.Item>
-            <Descriptions.Item span={1} label="暂停报警截止时间">
+            <Descriptions.Item span={1} label="核实时间">
+              {warningInfo.CheckedTime || '-'}
+            </Descriptions.Item>
+            <Descriptions.Item span={3} label="暂停报警截止时间">
               {warningInfo.StopAlarmEndTime || '-'}
             </Descriptions.Item>
-            <Descriptions.Item span={3} label="核实描述">
+            <Descriptions.Item span={4} label="核实描述">
               {warningInfo.CheckedDes || '-'}
             </Descriptions.Item>
             <Descriptions.Item span={4} label="核实材料">

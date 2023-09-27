@@ -305,12 +305,46 @@
   }
 }
 
-.spinWrapper {
+.spinWrapper,
+.spinWrapperFlex {
   position: relative;
   height: 100%;
   :global {
     .ant-spin-container {
       height: 100%;
     }
+  }
+}
+
+.spinWrapperFlex {
+  :global {
+    .ant-spin-container {
+      display: flex;
+      width: 100%;
+      height: calc(100% - 60px);
+    }
+  }
+}
+
+.legendInfo {
+  // color: #fff;
+  display: flex;
+  align-items: center;
+  // font-weight: 500;
+  margin-bottom: 50px;
+  font-size: 15px;
+
+  span {
+    display: inline-block;
+  }
+  span:first-child {
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+  }
+
+  .num {
+    color: #26e3ff;
+    font-size: 14px;
   }
 }
