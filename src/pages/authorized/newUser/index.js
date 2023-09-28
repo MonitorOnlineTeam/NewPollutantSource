@@ -425,6 +425,7 @@ export default class UserInfoIndex extends Component {
         payload: { userManagePageIndex: 1, },
       })
     })
+    this.setState({ selectedRowKeys: [], selectedRows: [] })
   }
   restClick = () => {
     const { dispatch, userPar } = this.props;
@@ -662,6 +663,7 @@ export default class UserInfoIndex extends Component {
         userManagePageSize,
       },
     })
+    this.setState({ selectedRowKeys: [], selectedRows: [] })
   }
   render() {
     const {

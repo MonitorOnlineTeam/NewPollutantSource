@@ -198,14 +198,6 @@ const Index = (props) => {
       width: 'auto',
     },
     {
-      title: '设备型号',
-      dataIndex: 'SystemModelName',
-      key: 'SystemModelName',
-      align: 'center',
-      ellipsis: true,
-      width: 'auto',
-    },
-    {
       title: '实际工时（小时）',
       dataIndex: 'ActualHour',
       key: 'ActualHour',
@@ -241,7 +233,7 @@ const Index = (props) => {
     return <div>
       <TitleComponents text='验收服务报告' />
       <SdlTable
-        resizable
+        // resizable
         loading={loading}
         scroll={{ x: 800, y: 'auto' }}
         rowClassName={null}
@@ -252,7 +244,7 @@ const Index = (props) => {
     </div>
   }
   //工作记录 组件
-  const WorkRecordTable = ({ data, loading }) => {
+  const WorkRecordTable = ({ data, loading,col }) => {
     return <div>
       <TitleComponents text='工作记录' />
       <SdlTable
@@ -261,7 +253,7 @@ const Index = (props) => {
         scroll={{ x: 900, y: 'auto' }}
         rowClassName={null}
         dataSource={data}
-        columns={workRecordsCol}
+        columns={col?col : workRecordsCol}
         pagination={false}
       />
       <Form.Item label="离开现场时间">
@@ -280,7 +272,7 @@ const Index = (props) => {
     return <>
       <TitleComponents text={text} />
       <SdlTable
-        resizable
+        // resizable
         loading={loading}
         scroll={{ x: scrollX ? scrollX : 800, y: 'auto' }}
         rowClassName={null}
@@ -361,7 +353,7 @@ const Index = (props) => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="离开完成时间" >
+          <Form.Item label="离开现场时间" >
             {data?.DepartureTime}
           </Form.Item>
         </Col>
@@ -752,7 +744,7 @@ const Index = (props) => {
       return <div>
         <TitleComponents text='安装照片' />
         <SdlTable
-          resizable
+          // resizable
           loading={loading}
           scroll={{ x: 850, y: 'auto' }}
           rowClassName={null}
@@ -780,8 +772,18 @@ const Index = (props) => {
             }
           case '11':
             if (item.RecordStatus == 1) {
+              let columns = []
+              columns = workRecordsCol.map(item => item)
+              columns.splice(3, 0,{
+                title: '设备型号',
+                dataIndex: 'SystemModelName',
+                key: 'SystemModelName',
+                align: 'center',
+                ellipsis: true,
+                width: 'auto',
+              },)
               setStaticWorkId(item.RecordId);
-              return <WorkRecordTable data={staticWorkData} loading={staticWorkLoading} />;//工作记录
+              return <WorkRecordTable data={staticWorkData} loading={staticWorkLoading} col={columns}/>;//工作记录
             }
           case '13':
             if (item.RecordStatus == 1) {
@@ -989,8 +991,8 @@ const Index = (props) => {
       },
       {
         title: '客户告知函及函件发送方式截图',
-        dataIndex: 'setPhoto',
-        key: 'setPhoto',
+        dataIndex: 'SetPhotoList',
+        key: 'SetPhotoList',
         align: 'center',
         ellipsis: true,
         width: 200,
@@ -1007,8 +1009,17 @@ const Index = (props) => {
             }
           case '11':
             if (item.RecordStatus == 1) {
+              let columns = []
+              columns = workRecordsCol.map(item => item)
+              columns.splice(4, 0,{
+                  title: '是否调试完成',
+                  dataIndex: 'Col1',
+                  key: 'Col1',
+                  align: 'center',
+                  ellipsis: true,
+                },)
               setDebugWorkId(item.RecordId);
-              return <WorkRecordTable data={debugWorkData} loading={debugWorkLoading} />;//工作记录
+              return <WorkRecordTable data={debugWorkData} loading={debugWorkLoading} col={columns}/>;//工作记录
             }
           case '19':
             if (item.RecordStatus == 1) {
@@ -1150,7 +1161,7 @@ const Index = (props) => {
   const [projectAccepReportData, setProjectAccepReportData] = useState([])
   //工作记录
   const [projectAccepWorkId, setProjectAccepWorkId] = useState('')
-  const [projectAccepWorkLoading, seProjectAccepWorkLoading] = useState(false)
+  const [projectAccepWorkLoading, setProjectAccepWorkLoading] = useState(false)
   const [projectAccepWorkData, setProjectAccepWorkData] = useState([])
   //验收资料
   const [projectAccepInfoId, setProjectAccepInfoId] = useState('')
@@ -1307,7 +1318,7 @@ const Index = (props) => {
       return <div>
         <TitleComponents text='第三方检查汇报' />
         <SdlTable
-          resizable
+          // resizable
           loading={loading}
           scroll={{ x: 700, y: 'auto' }}
           rowClassName={null}
@@ -1509,7 +1520,7 @@ const Index = (props) => {
       return <div>
         <TitleComponents text='维修记录' />
         <SdlTable
-          resizable
+          // resizable
           loading={loading}
           scroll={{ y:'auto'  }}
           rowClassName={null}
@@ -1529,8 +1540,19 @@ const Index = (props) => {
             }
           case '11':
             if (item.RecordStatus == 1) {
+              let columns = []
+              columns = workRecordsCol.map(item => item)
+              columns.splice(3, 0,{
+                  title: '设备型号',
+                  dataIndex: 'SystemModelName',
+                  key: 'SystemModelName',
+                  align: 'center',
+                  ellipsis: true,
+                  width: 'auto',
+                },)
+              
               setMaintenWorkId(item.RecordId);
-              return <WorkRecordTable data={maintenWorkData} loading={maintenWorkLoading} />;//工作记录
+              return <WorkRecordTable data={maintenWorkData} loading={maintenWorkLoading} col={columns}/>;//工作记录
             }
           case '25':
             if (item.RecordStatus == 1) {
@@ -1646,7 +1668,7 @@ const Index = (props) => {
       '指导安装': <GuideInstallation data={item.RecordList ? item.RecordList : []} />,
       '静态调试': <StaticDebug data={item.RecordList ? item.RecordList : []} />,
       '动态投运': <DynamicOperation data={item.RecordList ? item.RecordList : []} />,
-      '168/试运行': <TestRun data={item.RecordList ? item.RecordList : []} />,
+      '168试运行': <TestRun data={item.RecordList ? item.RecordList : []} />,
       '72小时调试检测': <DebugTest data={item.RecordList ? item.RecordList : []} />,
       '联网': <Networking data={item.RecordList ? item.RecordList : []} />,
       '比对监测': <ComparativeMonitoring data={item.RecordList ? item.RecordList : []} />,

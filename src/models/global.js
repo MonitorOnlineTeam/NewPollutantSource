@@ -39,6 +39,7 @@ export default Model.extend({
     clientHeight: null,
     sysPollutantTypeList: [],
     userGoDetail:false,
+    permisBtnTip:'您暂无操作权限',
   },
   effects: {
     // 首次加载获取当天报警消息

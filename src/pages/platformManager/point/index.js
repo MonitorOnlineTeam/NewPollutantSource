@@ -363,7 +363,7 @@ export default class MonitorPoint extends Component {
                   });
                 }
                 this.setState({
-                  FormData: { ...FormData, },
+                  FormData: { ...FormData,DGIMN:result.Datas },
                 })
               },
             },

@@ -22,6 +22,7 @@ import SdlMap from '@/pages/AutoFormManager/SdlMap'
 import Detail from './Detail'
 import TreeTransfer from '@/components/TreeTransfer'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import { permissionButton } from '@/utils/utils';
 const { Option } = Select;
 
 const namespace = 'ctProjectQuery'
@@ -40,6 +41,7 @@ const dvaPropsData = ({ loading, ctProjectQuery, global, common }) => ({
   configInfo: global.configInfo,
   clientHeight: global.clientHeight,
   checkPoint:ctProjectQuery.checkPoint,
+  permisBtnTip:global.permisBtnTip,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -105,8 +107,17 @@ const Index = (props) => {
 
   const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, entAndPoint, rojectPointRelationLoading, addProjectPointRelationLoading,checkPoint, } = props;
 
+  const [editPermisPoint,setPermisEditPoint] = useState(true)
+  const [associaePermisPoint,setAssociaePermisPoint] = useState(true)
 
   useEffect(() => {
+    const buttonList = permissionButton(props.match.path)
+    buttonList.map(item=>{
+      switch (item){
+        case 'oprationPoint':  setAssociaePermisPoint(false); break;
+        case 'addPoint': setPermisEditPoint(false); break;
+      }
+    })
     onFinish(pageIndex, pageSize);
   }, []);
 
@@ -274,8 +285,7 @@ const Index = (props) => {
       ellipsis: true,
       render: (text, record) => {
         return <span>
-          <Fragment><Tooltip title={"编辑"}> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-
+          <Fragment><Tooltip title={editPermisPoint?props.permisBtnTip : '编辑'}> <a className={editPermisPoint&&'disabled_a'} onClick={() => { if(!editPermisPoint) edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
           <Fragment> <Tooltip title="详情">
             <a onClick={() => detail(record)}  ><DetailIcon /></a>
           </Tooltip><Divider type="vertical" /></Fragment>
@@ -291,39 +301,11 @@ const Index = (props) => {
 
   const detail = (record) => {
     setDetailVisible(true)
-    setDetailTitle(`${record.ProjectCode? record.ProjectCode : record.ItemCode ? record.ItemCode : ''}`)
+    setDetailTitle(`${record.ProjectCode? `${record.ProjectCode}-详情` : record.ItemCode ? `${record.ItemCode}-详情` : '详情'}`)
     setDetailData(record)
   }
-  const pointColumns = [
-    {
-      title: '监控目标',
-      dataIndex: 'entName',
-      key: 'entName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '监测点',
-      dataIndex: 'pointName',
-      key: 'pointName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '实际运维开始日期',
-      dataIndex: 'beginTime',
-      key: 'beginTime',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '实际运维结束日期',
-      dataIndex: 'endTime',
-      key: 'endTime',
-      align: 'center',
-      ellipsis: true,
-    },
-  ]
+  
+ 
 
   const [editTitle, setEditTitle] = useState('')
   const edit = async (record) => {
@@ -334,7 +316,7 @@ const Index = (props) => {
       form2.setFieldsValue({
         latitude: record.Latitude,
         longitude: record.Longitude,
-        range: record.Range,
+        range: record.Range? record.Range : 3,
         id: record.ID,
       })
     } catch (errInfo) {
@@ -368,7 +350,7 @@ const Index = (props) => {
 
 
   const onFinish = async (PageIndex, PageSize, queryPar) => {  //查询
-
+    
     try {
       const values = await form.validateFields();
       const par = queryPar ? queryPar :
@@ -539,9 +521,6 @@ const Index = (props) => {
         <Form
           name="basic"
           form={form2}
-          initialValues={{
-            range:3,
-          }}
         >
 
           <Row>
@@ -622,13 +601,15 @@ const Index = (props) => {
               {entAndPoint?.length > 0 && !entAndPointLoading &&!rojectPointRelationLoading?
                 <TreeTransfer
                   key="key"
+                  permission={associaePermisPoint}
                   treeData={entAndPoint}
                   checkedKeys={checkedKeys}
                   targetKeysChange={(key, type, callback) => {
                     setCheckedKeys(key)
                     handlePointOK(key, type == 1 ? 1 : 2, callback)
                   }
-                  } />
+                  } 
+                  />
                 :
                 <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
               }

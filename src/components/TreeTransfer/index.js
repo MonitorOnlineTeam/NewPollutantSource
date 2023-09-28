@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Transfer, Tree, Spin, Empty, } from 'antd'
+import { Transfer, Tree, Spin, Empty,message, } from 'antd'
 import { ConsoleSqlOutlined, CalculatorFilled } from '@ant-design/icons';
 import { connect } from 'dva';
 import styles from './styles.less'
 
 const dvaPropsData = ({ global }) => ({
   clientHeight: global.clientHeight,
+  permisBtnTip:global.permisBtnTip,
 })
 const dvaDispatch = (dispatch) => {
   return {
@@ -19,7 +20,7 @@ const dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
-  const { treeData, checkedKeys, height, clientHeight, } = props;
+  const { treeData, checkedKeys, height, clientHeight,permission,permisBtnTip,titles, } = props;
   const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
   const [isAll, setIsAll] = useState(false)
@@ -97,7 +98,7 @@ const Index = (props) => {
         dataSource={transferDataSource}
         className={styles["tree-transfer"]}
         render={item => item.title}
-        titles={['待分配点位','已分配点位']}
+        titles={titles? titles : ['待分配点位','已分配点位']}
       // showSelectAll={false}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
@@ -113,6 +114,10 @@ const Index = (props) => {
                 checkedKeys={checkedKeys}
                 treeData={leftTreeData}
                 onCheck={(_, node) => {
+                  if(permission){
+                    message.warning(permisBtnTip)
+                    return;
+                  }
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
                 }}
               // onSelect={(_, node) => {
@@ -134,6 +139,10 @@ const Index = (props) => {
                 checkedKeys={checkedKeys}
                 treeData={rightTreeData}
                 onCheck={(_, node) => {
+                  if(permission){
+                    message.warning(permisBtnTip)
+                    return;
+                  }
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
                 }}
               // onSelect={(_, node) => {

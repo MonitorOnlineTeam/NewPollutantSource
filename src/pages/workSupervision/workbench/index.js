@@ -30,6 +30,7 @@ import SuperviseRectification from '@/pages/operations/superviseRectification'
 import SuperviseRectificationDetail from '@/pages/operations/superviseRectification/Detail';
 import superviseRectificaSty from '@/pages/operations/superviseRectification/style.less';
 import router from 'umi/router';
+import { PageLoading } from '@ant-design/pro-layout';
 
 const { DirectoryTree } = Tree;
 const manualList = [
@@ -76,16 +77,24 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   userMenuListLoading: loading.effects['wordSupervision/GetUserMenuList'],
   addUserMenuLoading: loading.effects['wordSupervision/AddUserMenu'],
   clientHeight: global.clientHeight,
+  workbenchesModuleLoading:loading.effects['wordSupervision/GetWorkbenchesModuleList'] || false,
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractTotal, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading,clientHeight, } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractTotal, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading,clientHeight,workbenchesModuleLoading, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
   const [forwardingUserId, setForwardingUserId] = useState('');
 
   // const type = props.location.query.type;
+  const [daily,SetDaily] = useState(false)
+  const [opera,SetOpera] = useState(false)
+  const [operaSupervisionCheck,SetOperaSupervisionCheck] = useState(false)
+  const [remind,SetRemind] = useState(false)
+  const [remindDataAlarm,SetRemindDataAlarm] = useState(false)
+  const [remindExpire,SetRemindExpire] = useState(false)
+
   useEffect(() => {
     loadData();
   }, []);
@@ -103,17 +112,62 @@ const Workbench = props => {
   }, [props.location.query.type]);
  
   const [userAllMenuListLoading,setAllUserMenuLoading] = useState(true)
-  // 加载工作台和我的消息数据 运维服务列表
+  // 加载工作台和我的消息数据 运维服务列表 根据权限
   const loadData = () => {
-    // GetToDoDailyWorks();
-    GetWorkBenchMsg();
-    GetStagingInspectorRectificationList()
-    GetWorkAlarmPushList(dataAlarmVal) //我的提醒 数据报警
-    GetProjectRemindList() //我的提醒 合同到期
-    GetUserMenuList(()=>{
-      setAllUserMenuLoading(false)
-    });//快捷菜单
+    props.dispatch({
+      type: 'wordSupervision/GetWorkbenchesModuleList',
+      payload: {},
+      callback:(res)=>{
+        res.map(item=>{
+          switch(item.PName){
+            case '日常监督':
+            if(item?.CList[0]){ 
+              SetDaily(true)
+              // GetToDoDailyWorks();
+             }else{
+               SetDaily(false)
+             }
+            break;
+            case '运维服务':
+            if(item?.CList[0]){
+              SetOpera(true)
+              item.CList.map(clItem=>{
+                if(clItem.CName=='监督核查'){
+                  SetOperaSupervisionCheck(true)
+                  GetStagingInspectorRectificationList()
+                }
+              })
+            }else{
+              SetOpera(false)
+            }
+            break;
+            case '我的提醒':
+            if(item?.CList[0]){
+              SetRemind(true)
+              item.CList.map(clItem=>{
+                if(clItem.CName=='数据报警'){
+                  SetRemindDataAlarm(true)
+                  GetWorkAlarmPushList(dataAlarmVal) //我的提醒 数据报警
+                }
+                if(clItem.CName=='合同到期'){
+                  SetRemindExpire(true)
+                  GetProjectRemindList() //我的提醒 合同到期
+                }
+              })
+            }else{
+              SetRemind(false)
+            }
+            break;
+          }
+
+          
+        })
+      }
+    });
+    GetUserMenuList(()=>{ setAllUserMenuLoading(false) });//快捷菜单
+    GetWorkBenchMsg(); //我的消息
   };
+  
 
   // 获取工作台待办
   const GetToDoDailyWorks = () => {
@@ -167,7 +221,7 @@ const Workbench = props => {
     });
   };
 
-  //获取运维服务列表
+  //获取运维服务列表 监督核查
   const GetStagingInspectorRectificationList = () => {
     props.dispatch({
       type: 'wordSupervision/GetStagingInspectorRectificationList',
@@ -497,9 +551,13 @@ const Workbench = props => {
     <div className={styles.workbenchBreadSty}>
       <BreadcrumbWrapper>
         <div className={styles.workbench}>
+        {workbenchesModuleLoading?
+             <div className={styles.leftWrapper} style={{background:'#fff'}}> <PageLoading size='default'/> </div>
+              :
+             <>
           <div className={styles.leftWrapper}>
-            {!configInfo.IsShowProjectRegion && <div className={styles.topWrapper}>
-              <div className={styles.taskListWrapper}>
+           {daily&&<div className={styles.topWrapper}>
+             <div className={styles.taskListWrapper}>
                 <Card
                   style={{ height: '100%' }}
                   bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}
@@ -541,8 +599,8 @@ const Workbench = props => {
                 </Card>
               </div>
             </div>}
-            <Row className={`${styles.bottomWrapper}`}>
-              <Col flex="1" span={24} style={{ height: 360 }}>
+           <Row className={`${styles.bottomWrapper}`}>
+              {opera&&<Col flex="1" span={24} style={{ height: 360 }}>
                 <Card
                   style={{ height: '100%' }}
                   bodyStyle={{
@@ -551,7 +609,7 @@ const Workbench = props => {
                   }}
                 >
                   {/* 运维服务 */}
-                  <Row justify='space-between'>
+                  {operaSupervisionCheck&&<><Row justify='space-between'>
                     <div className={styles.title}>运维服务</div>
                     <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />
                   </Row>
@@ -566,12 +624,12 @@ const Workbench = props => {
                       ) :
                         <Empty style={{ marginTop: '30px' }} />}
                     </Spin>
-                  </div>
+                  </div></>}
                 </Card>
-              </Col>
+              </Col>}
             </Row>
             {/* 我的提醒 */}
-            <Row className={`${styles.myRemindSty}`}>
+            {remind&&<Row className={`${styles.myRemindSty}`}>
               <Col flex="1" span={24} style={{ height: 380 }}>
                 <Card
                   style={{ height: '100%' }}
@@ -582,13 +640,12 @@ const Workbench = props => {
                 >
 
                   <div className={styles.title}>我的提醒</div>
-                  {/* <Empty style={{ marginTop: '30px' }} /> */}
-                  <Row justify='space-between'>
+                  {remindDataAlarm&&<Row justify='space-between'>
                     {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val); })}
                     {selectMyVal == 1 ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
-                  </Row>
+                  </Row>}
                   <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
-                    {selectMyVal == 1 && <Spin spinning={workAlarmPushLoading}>
+                   {remindDataAlarm&&<>{selectMyVal == 1 && <Spin spinning={workAlarmPushLoading}> {/*数据报警 */}
                       {workAlarmPushList?.length ? workAlarmPushList.map(item =>
                         (<Row justify='space-between' style={{ paddingBottom: 12, }}>
                           <Col style={{ paddingTop: 4 }}><img src='/work_alarm.png' /></Col>
@@ -611,8 +668,8 @@ const Workbench = props => {
                       )
                         :
                         <Empty style={{ marginTop: '30px' }} />}
-                    </Spin>}
-                    {selectMyVal == 4 && <Spin spinning={contractLoading}>
+                    </Spin>}</>}
+                    {remindExpire&&<> {selectMyVal == 4 && <Spin spinning={contractLoading}> {/*合同到期 */}
                       {contractList?.length ? contractList.map(item =>
                         (<Row justify='space-between' style={{ paddingBottom: 12, transition: '0.5s all ease-in' }}>
                           <Col style={{ paddingTop: 4 }}><img src='/work_contract.png' /></Col>
@@ -632,7 +689,7 @@ const Workbench = props => {
                       )
                         :
                         <Empty style={{ marginTop: '30px' }} />}
-                    </Spin>}
+                    </Spin>}</>}
                   </div>
                   {selectMyVal == 1 && <>{workAlarmTotal ? <Row justify='space-between' style={{ paddingTop: 12 }}>
                     <Popconfirm placement="topLeft" title={'确定要关闭全部报警吗？'} onConfirm={() => closeAllAlarmChange()} okText="是" cancelText="否">
@@ -666,8 +723,10 @@ const Workbench = props => {
                   </Row> : null}</>}
                 </Card>
               </Col>
-            </Row>
+            </Row>}
           </div>
+          </>
+        }
           <div className={styles.rightWrapper}>
             <div className={styles.quickNavWrapper}>
            

@@ -616,6 +616,7 @@ export default {
                   path: '/systemManger/logManger', // 日志管理
                   component: './systemManger/logManger',
                 },
+
               ],
             },
             {
@@ -789,6 +790,11 @@ export default {
                       name: 'noDataPointExport', //无数据点位导出
                       path: '/platformconfig/configurationInfo/noDataPoint/noDataPointExport',
                       component: './platformManager/configurationInfo/noDataPointExport',
+                    },
+                    {
+                      name: 'newOldProtocolConversManger',// 新老协议转换管理
+                      path: '/platformconfig/configurationInfo/newOldProtocol/newOldProtocolConversManger', 
+                      component: './platformManager/configurationInfo/newOldProtocolConversManger',
                     },
                   ],
                 },

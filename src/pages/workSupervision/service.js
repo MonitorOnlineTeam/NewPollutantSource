@@ -517,3 +517,12 @@ export async function AddUserMenu (params) {
   );
   return result;
 }
+
+// 动态加载工作台模块
+export async function GetWorkbenchesModuleList (params) {
+  const result = await post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetWorkbenchesModuleList',
+    params,
+  );
+  return result;
+}

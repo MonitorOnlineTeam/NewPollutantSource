@@ -70,7 +70,7 @@ class EditPollutant extends Component {
               ExceptionType: !this.props.editpollutant.ExceptionType ? [] : this.props.editpollutant.ExceptionType&&this.props.editpollutant.ExceptionType.split(','),
               NormalRangeUpper: this.props.editpollutant.NormalRangeUpper,
               NormalRangeLower: this.props.editpollutant.NormalRangeLower,
-              OverNormalRangeCount: this.props.editpollutant.OverNormalRangeCount,
+              OverNormalRangeCount: this.props.editpollutant.OverNormalRangeCount? this.props.editpollutant.OverNormalRangeCount : 3,
 
             });
           },
@@ -314,7 +314,7 @@ class EditPollutant extends Component {
                 <Col span={8}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超出正常范围计数">
                     {getFieldDecorator('OverNormalRangeCount', {
-                      initialValue: 1,
+                      // initialValue: 3,
                     })(<InputNumber  min={0} max={100000}  step={1} />)}
                   </FormItem>
                 </Col>

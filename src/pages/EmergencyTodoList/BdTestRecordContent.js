@@ -93,7 +93,7 @@ class BdTestRecordContent extends Component {
                         let evaluateResult = result !== null && result.length > 0 ? result[0].EvaluateResults === "1" ? "合格" : "不合格" : '';
                         rtnVal.push(
                             <tr key={key}>
-                                <td>{item.EndTime ? `${item.TestTime}~${item.EndTime}` : item.TestTime}</td>
+                                <td>{item.EndTime ? `${moment(item.TestTime).format('HH:mm:ss')}~${moment(item.EndTime).format('HH:mm:ss')}` : moment(item.TestTime).format('HH:mm:ss')}</td>
                                 <td>{item.CbValue}</td>
                                 <td>{item.CemsTextValue}</td>
                                 <td rowSpan={record.length + 1} style={{ textAlign: 'center' }}>{result !== null && result.length > 0 ? result[0].WcValue : ''}</td>
@@ -104,7 +104,7 @@ class BdTestRecordContent extends Component {
                     } else {
                         rtnVal.push(
                             <tr key={`${key}a`}>
-                                <td>{item.EndTime ? `${item.TestTime}~${item.EndTime}` : item.TestTime}</td>
+                                <td>{item.EndTime ? `${moment(item.TestTime).format('HH:mm:ss')}~${moment(item.EndTime).format('HH:mm:ss')}` : moment(item.TestTime).format('HH:mm:ss')}</td>
                                 <td>{item.CbValue}</td>
                                 <td>{item.CemsTextValue}</td>
                             </tr>

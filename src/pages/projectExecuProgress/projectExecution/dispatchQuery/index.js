@@ -153,8 +153,8 @@ const Index = (props) => {
     },
     {
       title: '流程状态',
-      dataIndex: 'Status',
-      key: 'Status',
+      dataIndex: 'StatusName',
+      key: 'StatusName',
       align: 'center',
       ellipsis: true,
     },
@@ -302,7 +302,7 @@ const Index = (props) => {
           <Col span={8} className='minWidth'>
             <Form.Item name='taskStatus' label='任务状态' >
               <Select allowClear placeholder="请选择" >
-                <Option value="1">待执行</Option>
+                <Option value="1">待完成</Option>
                 <Option value="2">进行中</Option>
                 <Option value="3">已完成</Option>
               </Select>

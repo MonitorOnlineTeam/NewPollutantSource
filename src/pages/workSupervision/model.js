@@ -691,6 +691,15 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    // 动态加载工作台模块
+    *GetWorkbenchesModuleList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetWorkbenchesModuleList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
   },
-
+  
 });

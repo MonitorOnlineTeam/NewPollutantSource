@@ -364,7 +364,7 @@ class SdlForm extends PureComponent {
         case '单选':
           // initialValue = formData[fieldName] != undefined && formData[fieldName];
           if (item.value && !initialValue && !isEdit) {
-            if (configId === 'GasOutput' && item.fullFieldName == 'dbo.T_Bas_CommonPoint.Col4') {
+            if (configId === 'GasOutput' && (item.fullFieldName == 'dbo.T_Bas_CommonPoint.Col4' || item.fullFieldName == 'dbo.T_Bas_CommonPoint.OutputType')) {
               initialValue = undefined;
             } else {
               console.log('item', item);

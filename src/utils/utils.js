@@ -121,8 +121,8 @@ export function formatPollutantPopover(value, additional) {
   ) : value === 0 ? (
     0
   ) : (
-    '-'
-  );
+        '-'
+      );
 }
 export function asc(a, b) {
   //数字类型
@@ -310,8 +310,8 @@ export function interceptTwo(value) {
     data.indexOf('.') == -1
       ? `${value.toFixed(2)}`
       : data.split('.')[1].length <= 2
-      ? `${value.toFixed(2)}`
-      : data.substring(0, data.indexOf('.') + 3);
+        ? `${value.toFixed(2)}`
+        : data.substring(0, data.indexOf('.') + 3);
   return result;
 }
 
@@ -389,7 +389,7 @@ export function numVerify(val, callback) {
 }
 export function arrDistinctByProp(arr, prop) {
   //对象数组去重
-  return arr.filter(function(item, index, self) {
+  return arr.filter(function (item, index, self) {
     return self.findIndex(el => el[prop] == item[prop]) === index;
   });
 }
@@ -402,4 +402,25 @@ export function getCurrentUserId() {
     currentUserId = JSON.parse(userCookie).UserId;
   }
   return currentUserId;
+}
+export function permissionButton(router) {
+  //权限按钮
+  let currentUser = Cookie.get('currentUser') ? JSON.parse(Cookie.get('currentUser')) : null;;
+  let meunList = currentUser && sessionStorage.getItem(currentUser.UserName) ? JSON.parse(sessionStorage.getItem(currentUser.UserName)) : null;
+  if (meunList?.length > 0) {
+    const filterData = [];
+    (function filterFun(meunList) {
+      for (let i = 0; i < meunList.length; i++) {
+        let item = meunList[i];
+        if (item.path == router) {
+          for (let j = 0; j < item.buttonList.length; j++) {
+            const buttoItem = item.buttonList[j]
+            buttoItem?.code && filterData.push(buttoItem.code);
+          }
+          break;
+        }
+      }
+    }(meunList))
+    return filterData;
+  }
 }

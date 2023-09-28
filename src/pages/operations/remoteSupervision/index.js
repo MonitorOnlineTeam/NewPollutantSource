@@ -1701,7 +1701,7 @@ const Index = (props) => {
             form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
           })
         }
-        if (analyzerFlag && scyRangFlag && !(dsRang1 || dsRang1 == 0) && !(dsRang2 || dsRang2 == 0)) { //同上
+        else if (analyzerFlag && scyRangFlag && !(dsRang1 || dsRang1 == 0) && !(dsRang2 || dsRang2 == 0)) { //同上
           props.judgeConsistencyRangeCheck({
             PollutantCode: row.ChildID,
             Special: row.isDisplay == 1 || row.isDisplay == 3 ? 1 : row.isDisplay == 2 || row.isDisplay == 4 ? 2 : undefined,
@@ -1714,7 +1714,7 @@ const Index = (props) => {
             form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
           })
         }
-        if (analyzerFlag && dsRangFlag && scyRangFlag) {
+        else if (analyzerFlag && dsRangFlag && scyRangFlag) {
           props.judgeConsistencyRangeCheck({
             PollutantCode: row.ChildID,
             Special: row.isDisplay == 1 || row.isDisplay == 3 ? 1 : row.isDisplay == 2 || row.isDisplay == 4 ? 2 : undefined,
@@ -1727,6 +1727,8 @@ const Index = (props) => {
             form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
           })
 
+        }else{
+          form2.setFieldsValue({ [`${row.par}RangUniformity`]: undefined })
         }
 
         break;
