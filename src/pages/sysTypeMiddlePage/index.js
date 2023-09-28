@@ -30,14 +30,6 @@ class index extends PureComponent {
       this.getSysPollutantTypeList();
     },300)
   }
-  componentDidUpdate(props){
-  //   const {newTokenFlag } = this.props;
-  //    if(props.newTokenFlag!== newTokenFlag){
-  //     if(newTokenFlag){
-  //      this.getSysPollutantTypeList();
-  //    }
-  //  }
- }
   // 获取系统的污染物类型
   getSysPollutantTypeList = () => {
     this.props.dispatch({
