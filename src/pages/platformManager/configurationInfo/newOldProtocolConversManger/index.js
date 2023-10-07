@@ -30,6 +30,8 @@ const namespace = 'newOldProtocolConvers'
 
 const dvaPropsData = ({ loading, newOldProtocolConvers, global, common }) => ({
   tableDatas: newOldProtocolConvers.tableDatas,
+  tableTotal: newOldProtocolConvers.tableTotal,
+  queryPar: newOldProtocolConvers.queryPar,
   delLoading: loading.effects[`${namespace}/deleteAgreementTransfer`],
   addAgreementTransferLoading: loading.effects[`${namespace}/addAgreementTransfer`] || false,
   entAndPointLoading: loading.effects[`common/getEntAndPointList`] || false,
@@ -91,13 +93,13 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, entAndPointLoading,delLoading, addAgreementTransferLoading, } = props;
+  const { tableDatas, entAndPointLoading,delLoading, addAgreementTransferLoading,tableTotal,queryPar, } = props;
 
 
 
 
   useEffect(() => {
-    onFinish();
+    onFinish(pageIndex,pageSize);
   }, []);
 
   let columns = [
@@ -105,13 +107,13 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return index + 1;
+        return  (index + 1) + (pageIndex-1)*pageSize;
       }
     },
     {
       title: '行政区',
-      dataIndex: 'EntName',
-      key: 'ProjectName',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
       align: 'center',
       ellipsis: true,
     },
@@ -174,12 +176,14 @@ const Index = (props) => {
 
 
   const [tableLoading,setTableLoading] = useState(false)
-  const onFinish = async () => {  //查询
+  const onFinish = async (pageIndexs, pageSizes,par) => {  //查询
     setTableLoading(true)
     try {
       const values = await form.validateFields();
-      props.getAgreementTransferList({
+      props.getAgreementTransferList(par?{...par,pageIndex:pageIndexs, pageSize:pageSizes,}:{
         ...values,
+        pageIndex:pageIndexs,
+        pageSize:pageSizes,
       },()=>{
         setTableLoading(false)
       })
@@ -234,7 +238,7 @@ const Index = (props) => {
 
   //删除
   const del = (id) => {
-   props.deleteAgreementTransfer({ ID: id }, () => { onFinish() })
+   props.deleteAgreementTransfer({ ID: id }, () => { onFinish(pageIndex,pageSize) })
   }
 
 
@@ -255,13 +259,19 @@ const Index = (props) => {
       })
     }
   }
-
+  const [pageIndex,setPageIndex] = useState(1)
+  const [pageSize,setPageSize] = useState(20)
+   const handleTableChange =   (PageIndex, PageSize )=>{ //分页 打卡异常 响应超时 弹框
+     setPageIndex(PageIndex)
+     setPageSize(PageSize)
+     onFinish(PageIndex,PageSize,queryPar)
+   }
   const searchComponents = () => {
     return <Form
       form={form}
       name="advanced_search"
       className={styles['ant-advanced-search-form']}
-      onFinish={() => { onFinish() }}
+      onFinish={()=>{setPageIndex(1);onFinish(1,pageSize)}}
       onValuesChange={onValuesChange}
       layout='inline'
     >
@@ -305,7 +315,14 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={columns}
-            pagination={false}
+            pagination={{
+              total: tableTotal,
+              pageSize: pageSize,
+              current: pageIndex,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              onChange: handleTableChange,
+          }}
           />
         </Card>
       </BreadcrumbWrapper>
@@ -314,7 +331,7 @@ const Index = (props) => {
         title={addTitle}
         visible={addVisible}
         destroyOnClose={true}
-        onCancel={() => { setAddVisible(false);onFinish() }}
+        onCancel={() => { setAddVisible(false);onFinish(pageIndex,pageSize) }}
         width={1100}
         footer={null}
         bodyStyle={{

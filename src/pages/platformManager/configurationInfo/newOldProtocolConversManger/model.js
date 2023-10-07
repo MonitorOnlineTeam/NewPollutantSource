@@ -20,6 +20,8 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           tableDatas:result.Datas?result.Datas : [],
+          tableTotal:result.Total,
+          queryPar:payload,
         })
         callback && callback(result)
       } else {

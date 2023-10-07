@@ -374,7 +374,7 @@ const Index = (props) => {
 
   
 
-  const [type, setType] = useState(1)
+  const [type, setType] = useState(2)
   const onValuesChange = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'DateType') {
       setType(hangedValues.DateType)
@@ -386,7 +386,7 @@ const Index = (props) => {
 
     }
   }
-  const [radioType, setRadioType] = useState(1);
+  const [radioType, setRadioType] = useState(2);
   const onRadioChange = (e) => {
     setRadioType(e.target.value);
   }
@@ -404,8 +404,8 @@ const Index = (props) => {
             onFinish={() => { onFinish() }}
             layout='inline'
             initialValues={{
-              DateType: 1,
-              time: moment(),
+              DateType: 2,
+              time: moment(new Date()).add(-1, 'month').startOf('month'),
             }}
             className={styles.queryForm}
             onValuesChange={onValuesChange}
@@ -457,7 +457,7 @@ const Index = (props) => {
                 导出
             </Button>
             </Form.Item>
-            <Radio.Group defaultValue={1} buttonStyle="solid" onChange={onRadioChange}>
+            <Radio.Group defaultValue={2} buttonStyle="solid" onChange={onRadioChange}>
               <Radio.Button value={1}>按人统计</Radio.Button>
               <Radio.Button value={2}>按省统计</Radio.Button>
             </Radio.Group>

@@ -140,12 +140,13 @@ class AutoFormTable extends PureComponent {
     //     if (!this.props.tableInfo['AEnterpriseTest']) { return }
     //     break;
     // }
+    console.log( (params&&Object.keys(params).length !== 0? params : null) || (this.state.otherParams&&Object.keys(this.state.otherParams).length !== 0 ? this.state.otherParams : '') || (this.props.otherParams&&Object.keys(this.props.otherParams).length !== 0 ? this.props.otherParams : ''))
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',
       payload: {
         configId: this.props.configId,
         searchParams: this.props.searchParams,
-        otherParams: params || this.state.otherParams || this.props.otherParams,
+        otherParams: (params&&Object.keys(params).length !== 0? params : null) || (this.state.otherParams&&Object.keys(this.state.otherParams).length !== 0 ? this.state.otherParams : '') || (this.props.otherParams&&Object.keys(this.props.otherParams).length !== 0 ? this.props.otherParams : ''),
       },
     });
   }
