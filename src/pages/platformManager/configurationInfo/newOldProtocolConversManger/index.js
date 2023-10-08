@@ -22,8 +22,6 @@ import SdlMap from '@/pages/AutoFormManager/SdlMap'
 // import Detail from './Detail'
 import TreeTransfer from '@/components/TreeTransfer'
 import EntAtmoList from '@/components/EntAtmoList'
-
-import { permissionButton } from '@/utils/utils';
 const { Option } = Select;
 
 const namespace = 'newOldProtocolConvers'
