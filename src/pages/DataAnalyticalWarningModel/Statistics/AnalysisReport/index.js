@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-14 15:34:28
+ * @Last Modified time: 2023-10-08 10:42:36
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -613,8 +613,8 @@ const Index = props => {
               </Form.Item>
               <Form.Item label="行业" name="IndustryTypeCode">
                 <SearchSelect
-                  placeholder="请选择排口所属行业"
-                  style={{ width: 200 }}
+                  placeholder="排口所属行业"
+                  style={{ width: 130 }}
                   configId={'IndustryType'}
                   itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
                   itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}

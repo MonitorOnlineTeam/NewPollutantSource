@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:47:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-01 11:07:22
+ * @Last Modified time: 2023-10-08 10:42:45
  * @Description:
  */
 import React, { useState, useEffect } from 'react';
@@ -108,7 +108,7 @@ const Index = props => {
   };
 
   const getOption = (data, flag) => {
-    if(!data) {
+    if (!data) {
       return {};
     }
 
@@ -306,6 +306,7 @@ const Index = props => {
               style={{ padding: '10px 0', marginBottom: 10 }}
               initialValues={{
                 pollutantCode: PollutantListConst.map(item => item.PollutantCode),
+                IndustryTypeCode: '1',
               }}
               autoComplete="off"
               onValuesChange={(changedFields, allFields) => {}}
@@ -328,8 +329,8 @@ const Index = props => {
               </Spin>
               <Form.Item label="行业" name="IndustryTypeCode">
                 <SearchSelect
-                  placeholder="请选择排口所属行业"
-                  style={{ width: 200 }}
+                  placeholder="排口所属行业"
+                  style={{ width: 130 }}
                   configId={'IndustryType'}
                   itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
                   itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}

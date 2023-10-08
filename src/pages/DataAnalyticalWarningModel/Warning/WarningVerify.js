@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-27 14:37:58
+ * @Last Modified time: 2023-10-08 09:07:58
  * @Description：报警核实详情
  */
 
@@ -30,15 +30,6 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 const WarningVerify = props => {
   const warningId = props.match.params.id;
   const COLOR = [
-    '#5470c6',
-    '#91cc75',
-    '#ea7ccc',
-    '#5470c6',
-    '#91cc75',
-    '#ea7ccc',
-    '#5470c6',
-    '#91cc75',
-    '#ea7ccc',
     '#5470c6',
     '#91cc75',
     '#ea7ccc',
@@ -446,7 +437,6 @@ const WarningVerify = props => {
     console.log('defaultSelected', defaultSelected);
     setDefaultChartSelected(defaultSelected);
   };
-
   const isShowBack = location.pathname.indexOf('autoLogin') <= -1;
   return (
     <BreadcrumbWrapper titles=" / 线索核实">
@@ -547,7 +537,7 @@ const WarningVerify = props => {
                             {/* 图例单选，显示一条线 */}
                             <ModelChart
                               chartData={item}
-                              color={COLOR[index]}
+                              color={COLOR[index % 3]}
                               WarningTypeCode={warningInfo.WarningTypeCode}
                             />
                           </Col>

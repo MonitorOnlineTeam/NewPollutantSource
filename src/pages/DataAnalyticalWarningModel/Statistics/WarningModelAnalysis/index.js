@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:34:04
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-27 14:33:02
+ * @Last Modified time: 2023-10-08 10:41:54
  * @Description：场景模型分析
  */
 import React, { useState, useEffect } from 'react';
@@ -240,6 +240,7 @@ const Index = props => {
             AccuracyRate: '0',
             UniqueParentCodeCount: 0,
             DGIMNCount: 0,
+            VerifiedRate: 0,
           });
         },
       });
@@ -251,6 +252,7 @@ const Index = props => {
         AccuracyRate: '0',
         UniqueParentCodeCount: 0,
         DGIMNCount: 0,
+        VerifiedRate: 0
       });
     }
   };
@@ -487,8 +489,10 @@ const Index = props => {
           }
           let v = tarValue + '个';
           //计算出百分比
-          let p = Math.round((tarValue / total) * 100);
-          p = isNaN(p) ? '0%' : p + '%';
+          let p = (tarValue / total) * 100;
+          console.log('p', p)
+          p = isNaN(p) ? '0%' : p.toFixed(2) + '%';
+          // return `${name}  ${v}  (${p})`;
           return `${name}  ${v}  (${p})`;
           //name是名称，v是数值
         },
@@ -662,8 +666,8 @@ const Index = props => {
               </Spin>
               <Form.Item label="行业" name="IndustryTypeCode">
                 <SearchSelect
-                  placeholder="请选择排口所属行业"
-                  style={{ width: 200 }}
+                  placeholder="排口所属行业"
+                  style={{ width: 130 }}
                   configId={'IndustryType'}
                   itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
                   itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}

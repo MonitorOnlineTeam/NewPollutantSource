@@ -247,7 +247,7 @@ const ModelChart = props => {
           let date = axisValue;
           //内容
           let content = '';
-          content = `${marker} ${seriesName}: ${value}${unit}
+          content = `${marker} ${seriesName}: ${value || '-'}${unit || ''}
         <br />`;
           return date + '<br />' + content;
         },

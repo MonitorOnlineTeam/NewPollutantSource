@@ -146,6 +146,7 @@ const Index = props => {
             AccuracyRate: '0',
             UniqueParentCodeCount: 0,
             DGIMNCount: 0,
+            VerifiedRate: 0,
           });
         },
       });
@@ -157,6 +158,7 @@ const Index = props => {
         AccuracyRate: '0',
         UniqueParentCodeCount: 0,
         DGIMNCount: 0,
+        VerifiedRate: 0,
       });
     }
   };
