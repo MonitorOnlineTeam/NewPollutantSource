@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-31 16:44:15
+ * @Last Modified time: 2023-10-09 10:13:21
  * @Description：报警记录
  */
 
@@ -234,6 +234,18 @@ const WarningRecord = props => {
             <Tooltip title="查看">
               <a
                 onClick={e => {
+                  props.dispatch({
+                    type: 'dataModel/updateState',
+                    payload: {
+                      warningForm: {
+                        ...warningForm,
+                        [modelNumber]: {
+                          ...warningForm[modelNumber],
+                          rowKey: record.ModelWarningGuid,
+                        },
+                      },
+                    },
+                  });
                   router.push(
                     `/DataAnalyticalWarningModel/Warning/ModelType/${modelNumber}/WarningVerify/${record.ModelWarningGuid}`,
                   );
@@ -272,6 +284,16 @@ const WarningRecord = props => {
       callback: res => {
         setDataSource(res.Datas);
         setTotal(res.Total);
+
+        // 设置滚动条高度，定位到点击详情的行号
+        let currentForm = warningForm[modelNumber];
+        if (currentForm.rowKey) {
+          let el = document.querySelector(`[data-row-key="${currentForm.rowKey}"]`);
+          console.log('el', el);
+          el
+            ? el.scrollIntoView({ block: 'center' })
+            : document.querySelector('.ant-table-body').scrollTop = 0;
+        }
       },
     });
   };
@@ -300,6 +322,7 @@ const WarningRecord = props => {
             ...warningForm[modelNumber],
             pageSize,
             pageIndex: current,
+            rowKey: undefined,
           },
         },
       },
