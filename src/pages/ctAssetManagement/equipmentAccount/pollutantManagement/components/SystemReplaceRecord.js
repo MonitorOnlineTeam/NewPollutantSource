@@ -82,13 +82,6 @@ const Index = (props) => {
     const [form] = Form.useForm();
     const [form2] = Form.useForm();
 
-    useEffect(() => {
-
-    }, []);
-
-
-
-
     const systemEdit = (record) => {
         form.setFieldsValue({
             ...record,
@@ -606,7 +599,7 @@ const Index = (props) => {
                 {systemPopContent}
             </Modal>
             {/** 项目信息 弹框 */}
-            <ProjectInfo projectPopVisible={projectPopVisible} projectColChoice={projectColChoice} onProjectCancel={()=>{setProjectPopVisible(false)}} type={1}/>
+            <ProjectInfo projectPopVisible={projectPopVisible} projectColChoice={projectColChoice} onProjectCancel={()=>{setProjectPopVisible(false)}}/>
         </div>
     );
 };

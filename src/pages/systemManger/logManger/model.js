@@ -11,25 +11,26 @@ export default Model.extend({
   namespace: 'logManger',
   state: {
     tableDatas:[],
-    tableLoading:false,
     tableTotal:0,
     queryPar:{},
+    tableDatas2:[],
+    tableTotal2:0,
+    queryPar2:{},
   },
   effects: {
-    *getSystemExceptionList({ payload,callback }, { call, put, update }) { //列表
+    *getSystemExceptionList({ payload,callback }, { call, put, update }) { //异常日志 列表
       const result = yield call(services.GetSystemExceptionList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal:result.Total,
           tableDatas:result.Datas?result.Datas : [],
-          tableLoading:false,
           queryPar:payload,
         })
       }else{
         message.error(result.Message)
       }
     },
-    *deleteSystemException({ payload,callback }, { call, put, update }) { //删除
+    *deleteSystemException({ payload,callback }, { call, put, update }) { //异常日志 删除
       const result = yield call(services.DeleteSystemException, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
@@ -38,6 +39,26 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    *getSystemLongInLogs({ payload,callback }, { call, put, update }) { //登录日志 列表
+      const result = yield call(services.GetSystemLongInLogs, payload);
+      if (result.IsSuccess) {
+        yield update({
+          tableTotal2:result.Total,
+          tableDatas2:result.Datas?result.Datas : [],
+          queryPar2:payload,
+        })
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *deleteSystemLongInLogs({ payload,callback }, { call, put, update }) { //登录日志 删除
+      const result = yield call(services.DeleteSystemLongInLogs, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    },
   },
 })

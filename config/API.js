@@ -412,8 +412,17 @@ export const API = {
     // 重启转发服务
     RestartTransmit: '/DataTransmit/api/DataTransmitSet/RestartTransmit',
   },
+  /*资产管理 Api */
+  AssetManagementApi: {
+    //交接和报告
+    //列表
+    GetProjectReportList: before + '/CTBaseDataApi/GetProjectReportList',
+    //编辑
+    GetCTProjectList: before + '/CTBaseDataApi/AddOrUpdProjectReportInfo',
+    //导出
+    ExportProjectReportList: before + '/CTBaseDataApi/ExportProjectReportList'
 
-
+  },
   /*********** 成套 ***********/
 
 

@@ -121,6 +121,7 @@ const Index = (props) => {
     onFinish(pageIndex, pageSize);
   }, []);
 
+
   let columns = [
     {
       title: '序号',
@@ -393,13 +394,8 @@ const Index = (props) => {
     })
   }
 
-  // useEffect(()=>{
-  //   console.log(checkPoint)
-  //   setCheckedKeys(checkPoint)
-  // },[checkPoint])
-  
   const [regionCode, setRegionCode] = useState('')
-  const [entPointName, setEntPointName] = useState('')
+  const [entPointName, setEntPointName] = useState()
   const handlePointQuery = () => {
     getrojectPointRelationListQues(projectID)
     props.getEntAndPoint({ regionCode: regionCode, entName: entPointName, })
@@ -457,7 +453,7 @@ const Index = (props) => {
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name='region' label='提供大区服务' >
+            <Form.Item name='region' label='提供服务大区' >
               {/* <Select placeholder='请选择' allowClear>
                 <Option></Option>
               </Select> */}
@@ -598,7 +594,7 @@ const Index = (props) => {
             </Row>
             
             <Spin spinning={entAndPointLoading || rojectPointRelationLoading || addProjectPointRelationLoading  }>
-              {entAndPoint?.length > 0 && !entAndPointLoading &&!rojectPointRelationLoading?
+              {entAndPoint?.length > 0 && (!entAndPointLoading) && (!rojectPointRelationLoading) ?
                 <TreeTransfer
                   key="key"
                   permission={associaePermisPoint}

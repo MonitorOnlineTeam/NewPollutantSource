@@ -55,16 +55,16 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-    const { projectPopVisible,projectLoading, projectModelList,projectTotal,queryPar,type } = props;
+    const { projectPopVisible,projectLoading, projectModelList,projectTotal,queryPar } = props;
 
     const [form] = Form.useForm();
 
 
     useEffect(() => {
-        if(type==1){
+     if(projectPopVisible){
         onFinish(pageIndex,pageSize)
         }
-    }, []);
+    }, [projectPopVisible]);
     const projectCol = [
         {
             title: '项目编号',

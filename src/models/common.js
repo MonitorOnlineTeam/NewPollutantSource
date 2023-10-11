@@ -348,10 +348,11 @@ export default Model.extend({
     *getCtEntAndPointList({ payload, callback }, { call, update }) {
       const result = yield call(services.GetCtEntAndPointList, payload);
       if (result.IsSuccess) {
+        const data = result.Datas ? result.Datas : [];
         yield update({
-          ctEntAndPointList: result.Datas ? result.Datas : [],
+          ctEntAndPointList: data,
         });
-        callback && callback(result.Datas ? result.Datas : []);
+        callback && callback(data);
       } else {
         message.error(result.Message);
       }

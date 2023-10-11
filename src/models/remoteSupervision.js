@@ -189,9 +189,9 @@ export default Model.extend({
     //关键参数核查 保存 新
     *addRemoteInspector({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.AddRemoteInspector, { ...payload });
+      callback(result.IsSuccess)
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
       } else {
         message.error(result.Message)
       }
@@ -213,7 +213,7 @@ export default Model.extend({
       const result = yield call(services.AddRemoteInspectorPoint, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback&&callback()
       } else {
         message.error(result.Message)
       }

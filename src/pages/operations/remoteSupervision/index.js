@@ -30,7 +30,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
 import cuid from 'cuid';
-import { IfSpecial } from '@/services/login';
+import { permissionButton } from '@/utils/utils';
 
 const namespace = 'remoteSupervision'
 
@@ -68,6 +68,7 @@ const dvaPropsData = ({ loading, remoteSupervision, global, common, autoForm }) 
   forwardTableTotal: remoteSupervision.forwardTableTotal,
   forwardTableLoading: remoteSupervision.forwardTableLoading,
   forwardOkLoading: loading.effects[`${namespace}/forwardRemoteInspector`],
+  permisBtnTip: global.permisBtnTip,
 
 })
 
@@ -272,8 +273,16 @@ const Index = (props) => {
   const [dataFilePar, setDataFilePar] = useState() //数采仪设定值照片
   const [dataFileCuidList, setDataFileCuidList] = useState({})
   const [dataFileList, setDataFileList] = useState({})
-  useEffect(() => {
 
+  const [delPermis, setDelPermis] = useState(true)
+
+  useEffect(() => {
+    const buttonList = permissionButton(props.match.path)
+    buttonList.map(item => {
+      switch (item) {
+        case 'delete': setDelPermis(false); break;
+      }
+    })
     onFinish(pageIndex, pageSize)
     props.getUserList()
 
@@ -418,15 +427,15 @@ const Index = (props) => {
     },
     {
       title: '核查人',
-      dataIndex: 'userName',
-      key: 'userName',
+      dataIndex: 'CheckUser',
+      key: 'CheckUser',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '核查日期',
-      dataIndex: 'dateTime',
-      key: 'dateTime',
+      dataIndex: 'CheckTime',
+      key: 'CheckTime',
       align: 'center',
       ellipsis: true,
     },
@@ -489,8 +498,8 @@ const Index = (props) => {
       width: 150,
       ellipsis: true,
       render: (text, record) => {
-        const updateflag = record.updateflag;
-        const flag = record.flag;
+        // const updateflag = record.updateflag;
+        // const flag = record.flag;
         const issue = record.issue;
         const isCheckUser = record.isCheckUser;
         let detail = <Tooltip title="详情">
@@ -507,20 +516,26 @@ const Index = (props) => {
           <>
             <Tooltip title={'编辑'}> {/* title={updateflag && flag? "编辑" : null  } */}
               <a onClick={() => {
-                if (updateflag && flag) {
-                  edit(record)
-                }
-                return;
+                // if (updateflag && flag) {
+                //   edit(record)
+                // }
+                // return;
+                edit(record)
               }}  >
-                <EditOutlined style={{ cursor: updateflag && flag ? 'pointer' : 'not-allowed', color: updateflag && flag ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', fontSize: 16 }} />
+                {/* <EditOutlined style={{ cursor: updateflag && flag ? 'pointer' : 'not-allowed', color: updateflag && flag ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', fontSize: 16 }} /> */}
+                <EditOutlined style={{ fontSize: 16 }} />
+
               </a>
             </Tooltip>
             <Divider type="vertical" />
             {detail}
             <Divider type="vertical" />
-            <Tooltip title={"删除"} >{/* title={ updateflag && flag? "删除": null  } */}
-              <Popconfirm disabled={!(updateflag && flag)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                <a style={{ cursor: updateflag && flag ? 'pointer' : 'not-allowed', color: updateflag && flag ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
+            <Tooltip title={delPermis ? props.permisBtnTip : '删除'} >{/* title={ updateflag && flag? "删除": null  } */}
+              {/* <Popconfirm disabled={!(updateflag && flag && !isCheckUser)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                <a style={{ cursor: updateflag && flag && !isCheckUser? 'pointer' : 'not-allowed', color: updateflag && flag && !isCheckUser? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
+              </Popconfirm>  */}
+              <Popconfirm disabled={isCheckUser && delPermis} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                <a style={{ cursor: !isCheckUser || !delPermis ? 'pointer' : 'not-allowed', color: !isCheckUser || !delPermis ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
             <Divider type="vertical" />
@@ -722,6 +737,8 @@ const Index = (props) => {
       const values = await requestTaskForm.validateFields();
       props.addRemoteInspectorPoint({ ...values }, (res) => {
         setRequestTaskVisible(false)
+        setPageIndex(1)
+        onFinish(1, pageSize)
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -1101,10 +1118,14 @@ const Index = (props) => {
   const save = (type) => {
 
     commonForm.validateFields().then(commonValues => {
-
+      if (type == 2 && !isCheckUser && !commonValues.Commitment) { //运维人员不在结尾的“已阅读已承诺”打勾，不能提交
+        message.error(`请确认“已阅读已承诺”!`)
+        return;
+      }
       const commonData = {
         ...commonValues,
-        ID: title === '添加' ? addId : editId,
+        // ID: title === '添加' ? addId : editId,
+        ID: editId,
         month: undefined,
         DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-DD 00:00:00") : undefined,
         Commitment: commonValues.Commitment ? 1 : undefined,
@@ -1209,16 +1230,17 @@ const Index = (props) => {
           })
           props.addRemoteInspector({
             AddType: type,
+            isCheckUser: isCheckUser,
             Data: {
               ...commonData,
               CouUpload: values.files2,
             },
             DataList: dataList,
             ParamDataList: paramDataList,
-          }, (id) => {
-            title === '添加' && id && setAddId(id)
+          }, (isSuccess) => {
+            // title === '添加' && id && setAddId(id)
             type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-            onFinish(pageIndex, pageSize)
+            isSuccess && onFinish(pageIndex, pageSize)
           })
 
 
@@ -1682,52 +1704,45 @@ const Index = (props) => {
       case 1: // 量程一致性核查表 自动判断
         analyzerRang1 = form2.getFieldValue(`${row.par}AnalyzerRang1`), analyzerRang2 = form2.getFieldValue(`${row.par}AnalyzerRang2`), analyzerUnit = form2.getFieldValue(`${row.par}AnalyzerUnit`);
         analyzerFlag = (analyzerRang1 || analyzerRang1 == 0) && (analyzerRang2 || analyzerRang2 == 0) && analyzerUnit || row.Name == 'NOx' || row.Name == '标干流量' ? true : false;
-        const dsRang1 = form2.getFieldValue(`${row.par}DsRang1`), dsRang2 = form2.getFieldValue(`${row.par}DsRang2`), dsUnit = form2.getFieldValue(`${row.par}DsUnit`);
-        const scyRang1 = form2.getFieldValue(`${row.par}ScyRang1`), scyRang2 = form2.getFieldValue(`${row.par}ScyRang2`), scyUnit = form2.getFieldValue(`${row.par}ScyUnit`);
+        let dsRang1 = form2.getFieldValue(`${row.par}DsRang1`), dsRang2 = form2.getFieldValue(`${row.par}DsRang2`), dsUnit = form2.getFieldValue(`${row.par}DsUnit`);
+        let scyRang1 = form2.getFieldValue(`${row.par}ScyRang1`), scyRang2 = form2.getFieldValue(`${row.par}ScyRang2`), scyUnit = form2.getFieldValue(`${row.par}ScyUnit`);
 
-        const dsRangFlag = (dsRang1 || dsRang1 == 0) && (dsRang2 || dsRang2 == 0) && dsUnit ? true : false;
-        const scyRangFlag = (scyRang1 || scyRang1 == 0) && (scyRang2 || scyRang2 == 0) && scyUnit ? true : false;
-        if (analyzerFlag && dsRangFlag && !(scyRang1 || scyRang1 == 0) && !(scyRang2 || scyRang2 == 0)) { //只判断分析仪和DAS量程填完的状态
+        let dsRangFlag = (dsRang1 || dsRang1 == 0) && (dsRang2 || dsRang2 == 0) && dsUnit ? true : false;
+        let scyRangFlag = (scyRang1 || scyRang1 == 0) && (scyRang2 || scyRang2 == 0) && scyUnit ? true : false;
+        const judgeConsistencyRangeCheckFun = (par) => {
           props.judgeConsistencyRangeCheck({
             PollutantCode: row.ChildID,
             Special: row.isDisplay == 1 || row.isDisplay == 3 ? 1 : row.isDisplay == 2 || row.isDisplay == 4 ? 2 : undefined,
+            DASStatus: dasChecked ? 1 : 2,
+            DataRangeStatus: numChecked ? 1 : 2,
+            DataStatus: numRealTimeChecked ? 1 : 2,
+            ...par
+          }, (data) => {
+            form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
+          })
+        }
+        if (analyzerFlag && dsRangFlag && !(scyRang1 || scyRang1 == 0) && !(scyRang2 || scyRang2 == 0)) { //只判断分析仪和DAS量程填完的状态
+          judgeConsistencyRangeCheckFun({
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             DASMin: dsRang1, DASMax: dsRang2, DASUnit: dsUnit,
-            DASStatus: dasChecked ? 1 : 2,
-            DataRangeStatus: numChecked ? 1 : 2,
-            DataStatus: numRealTimeChecked ? 1 : 2,
-
-          }, (data) => {
-            form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
           })
-        }
-        else if (analyzerFlag && scyRangFlag && !(dsRang1 || dsRang1 == 0) && !(dsRang2 || dsRang2 == 0)) { //同上
-          props.judgeConsistencyRangeCheck({
-            PollutantCode: row.ChildID,
-            Special: row.isDisplay == 1 || row.isDisplay == 3 ? 1 : row.isDisplay == 2 || row.isDisplay == 4 ? 2 : undefined,
+        } else if (analyzerFlag && scyRangFlag && !(dsRang1 || dsRang1 == 0) && !(dsRang2 || dsRang2 == 0)) { //只判断分析仪和数采仪量程填完的状态
+          judgeConsistencyRangeCheckFun({
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             DataMin: scyRang1, DataMax: scyRang2, DataUnit: scyUnit,
-            DASStatus: dasChecked ? 1 : 2,
-            DataRangeStatus: numChecked ? 1 : 2,
-            DataStatus: numRealTimeChecked ? 1 : 2,
-          }, (data) => {
-            form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
           })
-        }
-        else if (analyzerFlag && dsRangFlag && scyRangFlag) {
-          props.judgeConsistencyRangeCheck({
-            PollutantCode: row.ChildID,
-            Special: row.isDisplay == 1 || row.isDisplay == 3 ? 1 : row.isDisplay == 2 || row.isDisplay == 4 ? 2 : undefined,
+        } else if (dsRangFlag && scyRangFlag && !(analyzerRang1 || analyzerRang1 == 0) && !(analyzerRang2 || analyzerRang2 == 0)) { //只判断DAS量程和数采仪量程填完的状态
+          judgeConsistencyRangeCheckFun({
+            DASMin: dsRang1, DASMax: dsRang2, DASUnit: dsUnit,
+            DataMin: scyRang1, DataMax: scyRang2, DataUnit: scyUnit,
+          })
+        } else if (analyzerFlag && dsRangFlag && scyRangFlag) { //三项都填完的判断
+          judgeConsistencyRangeCheckFun({
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
-            DASMin: dsRang1, DASMax: dsRang2, DASUnit: dsUnit, DataMin: scyRang1, DataMax: scyRang2, DataUnit: scyUnit,
-            DASStatus: dasChecked ? 1 : 2,
-            DataRangeStatus: numChecked ? 1 : 2,
-            DataStatus: numRealTimeChecked ? 1 : 2,
-          }, (data) => {
-            form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
+            DASMin: dsRang1, DASMax: dsRang2, DASUnit: dsUnit,
+            DataMin: scyRang1, DataMax: scyRang2, DataUnit: scyUnit,
           })
-
-        }else{
+        } else {
           form2.setFieldsValue({ [`${row.par}RangUniformity`]: undefined })
         }
 
@@ -1756,7 +1771,6 @@ const Index = (props) => {
 
 
         // analyzerFlag = (analyzerRang1 || analyzerRang1 == 0) && (analyzerRang2 || analyzerRang2 == 0) && analyzerUnit || row.Name == '流速' || row.Name == '标干流量' || row.Name == 'NO' || row.Name == 'NO2' ? true : false;
-        analyzerFlag = true;
 
         const indicaVal = (row.Name == 'NO' && !form2.getFieldValue(`${row.par}IndicaVal`)) || (row.Name == 'NO2' && !form2.getFieldValue(`${row.par}IndicaVal`)) ? '0' : form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
         const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
@@ -1765,52 +1779,44 @@ const Index = (props) => {
         const indicaValFlag = (indicaVal || indicaVal == 0) && indicaUnit || row.concentrationType == '标杆浓度' || row.Name == '流速' || row.Name == 'NOx' || row.Name == '标干流量' || row.Name == '温度' || row.Name == '压力' || row.Name == '湿度' ? true : false;
         const dsDataFlag = (dsData || dsData == 0) && dsDataUnit ? true : false; //只判断DAS示值填完的状态
         const scyDataFlag = (scyData || scyData == 0) && scyDataUnit ? true : false;
+        const judgeConsistencyCouCheckFun = (par) => {
+          props.judgeConsistencyCouCheck({
+            PollutantCode: row.ChildID,
+            Special: isDisPlayCheck1 || isDisPlayCheck3 ? 1 : isDisPlayCheck2 || isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
+            CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
+            // AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
+            DASStatus: dasChecked ? 1 : 2,
+            DataRangeStatus: numChecked ? 1 : 2,
+            DataStatus: numRealTimeChecked ? 1 : 2,
+            ...par,
+          }, (data) => {
+            form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
+          })
+        }
 
-
-        if (analyzerFlag && indicaValFlag && dsDataFlag && !(scyData || scyData == 0)) {
-          props.judgeConsistencyCouCheck({
-            PollutantCode: row.ChildID,
-            Special: isDisPlayCheck1 || isDisPlayCheck3 ? 1 : isDisPlayCheck2 || isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
-            CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
-            AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
-            AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
-            DASCou: dsData, DASCouUnit: dsDataUnit, //DAS示值和单位
-            DASStatus: dasChecked ? 1 : 2,
-            DataRangeStatus: numChecked ? 1 : 2,
-            DataStatus: numRealTimeChecked ? 1 : 2,
-          }, (data) => {
-            form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
+        if (indicaValFlag && dsDataFlag && !(scyData || scyData == 0)) { //只判断分析仪示值和DAS示值
+          judgeConsistencyCouCheckFun({
+            AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,
+            DASCou: dsData, DASCouUnit: dsDataUnit,
           })
-        } else if (analyzerFlag && indicaValFlag && scyDataFlag && !(dsData || dsData == 0)) {
-          props.judgeConsistencyCouCheck({
-            PollutantCode: row.ChildID,
-            Special: isDisPlayCheck1 || isDisPlayCheck3 ? 1 : isDisPlayCheck2 || isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
-            CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
-            AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
-            AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
-            DataCou: scyData, DataCouUnit: scyDataUnit, //数采仪
-            DASStatus: dasChecked ? 1 : 2,
-            DataRangeStatus: numChecked ? 1 : 2,
-            DataStatus: numRealTimeChecked ? 1 : 2,
-          }, (data) => {
-            form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
+        } else if (indicaValFlag && scyDataFlag && !(dsData || dsData == 0)) { //只判断分析仪示值和数采仪
+          judgeConsistencyCouCheckFun({
+            AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,
+            DataCou: scyData, DataCouUnit: scyDataUnit,
           })
-        } else if (analyzerFlag && indicaValFlag && dsDataFlag && scyDataFlag) {
-          props.judgeConsistencyCouCheck({
-            PollutantCode: row.ChildID,
-            Special: isDisPlayCheck1 || isDisPlayCheck3 ? 1 : isDisPlayCheck2 || isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
-            CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
-            AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
-            AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
-            DASCou: dsData, DASCouUnit: dsDataUnit, //DAS示值和单位
-            DataCou: scyData, DataCouUnit: scyDataUnit, //数采仪
-            DASStatus: dasChecked ? 1 : 2,
-            DataRangeStatus: numChecked ? 1 : 2,
-            DataStatus: numRealTimeChecked ? 1 : 2,
-          }, (data) => {
-            form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
+        } else if (indicaValFlag && scyDataFlag && !(dsData || dsData == 0)) { //只判断DAS示值和数采仪
+          judgeConsistencyCouCheckFun({
+            DASCou: dsData, DASCouUnit: dsDataUnit,
+            DataCou: scyData, DataCouUnit: scyDataUnit,
           })
-        } else {
+        } else if (indicaValFlag && dsDataFlag && scyDataFlag) { //三项都填完的判断
+          judgeConsistencyCouCheckFun({
+            AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,
+            DASCou: dsData, DASCouUnit: dsDataUnit,
+            DataCou: scyData, DataCouUnit: scyDataUnit,
+          })
+        }
+        else {
           form2.setFieldsValue({ [`${row.par}DataUniformity`]: undefined })
         }
 
@@ -2305,10 +2311,10 @@ const Index = (props) => {
             let disabledFlag = false;
             switch (record.isDisplay) {
               case 1: case 2:
-                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 || (!isCheckUser) ? true : false
                 break;
               case 3: case 4:
-                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 || (!isCheckUser) ? true : false
                 break;
             }
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
@@ -2355,11 +2361,14 @@ const Index = (props) => {
             let disabledFlag = false;
             switch (record.isDisplay) {
               case 1: case 2:
-                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 || (!isCheckUser) ? true : false
                 break;
               case 3: case 4:
-                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 || (!isCheckUser) ? true : false
                 break;
+              default:
+                disabledFlag = !isCheckUser;
+                break
             }
             return <Form.Item name={`${record.par}Remark`}>
               <TextArea rows={1} disabled={disabledFlag} placeholder='请输入' style={{ width: '100%' }} />
@@ -2593,7 +2602,7 @@ const Index = (props) => {
           render: (text, record, index) => {
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
               <Form.Item name={[`${record.par}RangCheck2`]}>
-                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck2`, 2) }} />
+                <Checkbox.Group disabled={!isCheckUser} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck2`, 2) }} />
               </Form.Item>
             </Row>
           }
@@ -2618,7 +2627,7 @@ const Index = (props) => {
           width: 180,
           render: (text, record) => {
             return <Form.Item name={`${record.par}Remark2`}>
-              <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
+              <TextArea disabled={!isCheckUser} rows={1} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
         },
@@ -2825,7 +2834,7 @@ const Index = (props) => {
           render: (text, record, index) => {
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
               <Form.Item name={`${record.par}RangCheck3`}>
-                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck3`, 3) }} />
+                <Checkbox.Group disabled={!isCheckUser} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck3`, 3) }} />
               </Form.Item>
             </Row>
           }
@@ -2850,7 +2859,7 @@ const Index = (props) => {
           width: 150,
           render: (text, record) => {
             return <Form.Item name={`${record.par}Remark3`}>
-              <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
+              <TextArea disabled={!isCheckUser} rows={1} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
         },
@@ -3123,7 +3132,7 @@ const Index = (props) => {
                 className={styles.queryForm2}
               // onValuesChange={onValuesChange2}
               >
-                <Checkbox onChange={onAllChange}>全选</Checkbox>
+                <Checkbox disabled={isCheckUser} onChange={onAllChange}>全选</Checkbox>
                 <SdlTable
                   loading={parLoading}
                   columns={columns4}
@@ -3176,7 +3185,7 @@ const Index = (props) => {
               我承诺：当月上传的全部量程、参数设定值和溯源值均已核对无误，现场实时数据保持一致，上传的各项数据和照片如有任何问题，本人愿接受相应处罚。
         </div>
             <Form.Item name='Commitment' valuePropName="checked" style={{ marginBottom: 0 }}>
-              <Checkbox className={styles.commitmentSty}>
+              <Checkbox disabled={isCheckUser} className={styles.commitmentSty}>
                 已阅读已承诺！
             </Checkbox>
             </Form.Item>
@@ -3283,7 +3292,7 @@ const Index = (props) => {
           name="advanced_search3"
         >
           <Spin spinning={getRemoteInspectorPointLoading} size='small' style={{ top: -4 }}>
-            <Form.Item label='监测点' name='DGIMN' rules={[{ required: true, message: '请选择监测点' }]}>
+            <Form.Item label='监测点' name='DGIMN' rules={[{ required: !isCheckUser, message: '请选择监测点' }]}>
               <Select placeholder='请选择' showSearch optionFilterProp="children"  >
                 {remoteInspectorPointList.map(item => {
                   return <Option key={item.DGIMN} value={item.DGIMN} >

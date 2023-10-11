@@ -112,7 +112,63 @@ export default class Index extends Component {
       }
     }
   }
+  componentDidUpdate(prevProps, prevState) {
+    const { visible } = this.state;
+    if (prevState.visible != visible) {
+      if(visible){
+      this.initTableData()
+      }
+    }
+  }
+   initTableData = () => {
+     const { dispatch } = this.props;
+     const { dgimn } = this.state;
+     const updateState = (payload) => {
+      dispatch({
+        type: `ctPollutantManger/updateState`,
+        payload: payload,
+      })
+    }
+    const getManufacturerList = (payload, callback) => { //厂家下拉列表
+      dispatch({
+        type: `commissionTest/getManufacturerList`,
+        payload: payload,
+        callback: callback
+      })
+    }
+    const getCEMSSystemList = (payload, callback) => { // 获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
+      dispatch({
+        type: `ctPollutantManger/getCEMSSystemList`,
+        payload: payload,
+        callback: callback,
+      })
+    }
+    const getPollutantById = (payload) => { //监测类型
+      dispatch({
+        type: `commissionTest/getPollutantById`,
+        payload: payload,
 
+      })
+    }
+    updateState({ systemEditingKey: '' })
+    updateState({ systemChangeEditingKey: '' })
+    updateState({ deviceEditingKey: '' })
+    updateState({ deviceChangeEditingKey: '' })
+    getManufacturerList({})  // 弹框 厂家列表
+    getPollutantById({})  //仪表信息-监测参数
+    if (dgimn) {
+      getCEMSSystemList({ dgimn: dgimn }, (data) => { //cems 系统信息 表格数据
+        updateState({ systemData: data.systemModelList?.length ? data.systemModelList : [] })
+        updateState({ systemChangeData: data.systemModelChangeList?.length ? data.systemModelChangeList : [] })
+        updateState({ deviceData: data.eqModelList?.length ? data.eqModelList : [] })
+        updateState({ deviceChangeData: data.eqModelChangeList?.length ? data.eqModelChangeList : [] })
+       
+      })
+    } else {
+      updateState({ systemData:[]})
+      updateState({ systemChangeData: [] })
+    }
+  }
   reloadPage = (configId) => {
     const { dispatch } = this.props;
     const { location: { query: { targetId } } } = this.props;
@@ -295,8 +351,7 @@ export default class Index extends Component {
               onOk={map => {
                 form.setFieldsValue({ longitude: map.longitude, latitude: map.latitude });
               }}
-              handleMarker
-              handlePolygon
+              handleMarker          
               zoom={12}
               placeholder='请输入 例如：112.236514'
             />)}
@@ -305,7 +360,7 @@ export default class Index extends Component {
         <Col span={12}>
           <FormItem label="纬度" >
             {getFieldDecorator("latitude", {
-              rules: [{ required: true, message: "请输入维度", }],
+              rules: [{ required: true, message: "请输入纬度", }],
             })(<SdlMap
               longitude={form.getFieldValue('longitude') ? form.getFieldValue('longitude') : null}
               latitude={form.getFieldValue('latitude') ? form.getFieldValue('latitude') : null}
@@ -313,7 +368,6 @@ export default class Index extends Component {
                 form.setFieldsValue({ longitude: map.longitude, latitude: map.latitude });
               }}
               handleMarker
-              handlePolygon
               zoom={12}
               placeholder='请输入 例如：85.236589'
             />)}
@@ -424,7 +478,7 @@ export default class Index extends Component {
   }
   savePoint = () => { //监测点信息
     const { dispatch, match, pointDataWhere, form } = this.props;
-    const { FormData } = this.state;
+    const {isEdit, FormData } = this.state;
     form.validateFields((err, values) => { //监测点
       if (!err) {
         const formData = handleFormData(values);
@@ -433,7 +487,7 @@ export default class Index extends Component {
           payload: { ...formData, },
           callback: (res) => {
             this.setState({ pointSaveFlag: true }, () => {
-              this.setState({ current: 1, dgimn: res.Datas })
+              this.setState({ current: 1, dgimn: isEdit?  formData.id : res.Datas   })
             })
             dispatch({
               type: 'autoForm/getAutoFormData',
@@ -753,11 +807,11 @@ export default class Index extends Component {
             {steps.map((item) => <Step title={item} />)}
           </Steps>
           <div style={{ paddingTop: 12 }}>
-            {this.pointInfo(current)}
-            {<SystemInfo current={current} dgimn={dgimn} />}
-            {<SystemReplaceRecord current={current} dgimn={dgimn} />}
-            {<InstrumentInfo current={current} dgimn={dgimn} />}
-            {<InstrumentReplaceRecord current={current} dgimn={dgimn} />}
+            {current==0&&this.pointInfo(current)}
+            {current==1&&<SystemInfo current={current} dgimn={dgimn} />}
+            {current==2&&<SystemReplaceRecord current={current} dgimn={dgimn} />}
+            {current==3&&<InstrumentInfo current={current} dgimn={dgimn} />}
+            {current==4&&<InstrumentReplaceRecord current={current} dgimn={dgimn} />}
 
           </div>
 

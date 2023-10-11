@@ -1013,8 +1013,8 @@ const Index = (props) => {
               columns = workRecordsCol.map(item => item)
               columns.splice(4, 0,{
                   title: '是否调试完成',
-                  dataIndex: 'Col1',
-                  key: 'Col1',
+                  dataIndex: 'Col1Name',
+                  key: 'Col1Name',
                   align: 'center',
                   ellipsis: true,
                 },)

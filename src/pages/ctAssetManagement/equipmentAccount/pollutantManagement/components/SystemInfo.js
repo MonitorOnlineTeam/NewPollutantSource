@@ -82,30 +82,8 @@ const Index = (props) => {
   const [form2] = Form.useForm();
 
   useEffect(() => {
-    initData()
-  }, [dgimn]);
 
-  const initData = () => {
-    props.updateState({ systemEditingKey: '' })
-    props.updateState({ systemChangeEditingKey: '' })
-    props.updateState({ deviceEditingKey: '' })
-    props.updateState({ deviceChangeEditingKey: '' })
-    props.getManufacturerList({})  // 弹框 厂家列表
-
-    if (dgimn) {
-      props.getCEMSSystemList({ dgimn: dgimn }, (data) => { //cems 系统信息 表格数据
-        props.updateState({ systemData: data.systemModelList?.length ? data.systemModelList : [] })
-        props.updateState({ systemChangeData: data.systemModelChangeList?.length ? data.systemModelChangeList : [] })
-        props.updateState({ deviceData: data.eqModelList?.length ? data.eqModelList : [] })
-        props.updateState({ deviceChangeData: data.eqModelChangeList?.length ? data.eqModelChangeList : [] })
-       
-      })
-    } else {
-      props.updateState({ systemData:[]})
-      props.updateState({ systemChangeData: [] })
-    }
-  }
-
+  }, []);
 
   const systemEdit = (record) => {
     form.setFieldsValue({

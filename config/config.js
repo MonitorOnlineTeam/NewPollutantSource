@@ -796,6 +796,11 @@ export default {
                       path: '/platformconfig/configurationInfo/newOldProtocol/newOldProtocolConversManger', 
                       component: './platformManager/configurationInfo/newOldProtocolConversManger',
                     },
+                    {
+                      name: 'newOldProtocolConversManger',// 交接和报告
+                      path: '/platformconfig/configurationInfo/handoverReporting/handoverReport', 
+                      component: './platformManager/configurationInfo/handoverReport',
+                    },
                   ],
                 },
                 {

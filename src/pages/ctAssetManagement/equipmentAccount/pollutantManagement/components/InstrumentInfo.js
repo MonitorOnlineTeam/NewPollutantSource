@@ -77,13 +77,9 @@ const Index = (props) => {
 
   const [formDevice] = Form.useForm();
   useEffect(() => {
-    initData()
-  }, [dgimn]);
 
-  const initData = () => {
+  }, []);
 
-    props.getPollutantById({})  //监测设备  默认加载监测参数
-  }
 
   const isDeviceEditing = (record) => record.ID === deviceEditingKey;
 

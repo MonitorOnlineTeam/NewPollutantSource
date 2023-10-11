@@ -422,5 +422,7 @@ export function permissionButton(router) {
       }
     }(meunList))
     return filterData;
+  }else{
+    return [];
   }
 }

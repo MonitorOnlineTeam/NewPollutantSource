@@ -275,14 +275,15 @@ const Index = (props) => {
     }
     setImageIndex(imageListIndex)
   }
-  const [fromVisible, setFromVisible] = useState(false)
+  const [formVisible, setFormVisible] = useState(false)
   const [title, setTitle] = useState()
 
   const edit = async (record) => {
-    setFromVisible(true)
+    setFormVisible(true)
     setTitle(`${record.ProjectCode}-编辑`)
     form2.resetFields();
     setFilesList1([])
+    return
     if(record.ReceiveFile&&record.ReceiveFile[0]){ //运维接收-运维交接单 照片
       const fileList =[]
       record.ReceiveFile.map(item=>{
@@ -375,7 +376,7 @@ const Index = (props) => {
       props.addOrUpdProjectReportInfo({
         ...values,
       }, () => {
-        setFromVisible(false)
+        setFormVisible(false)
         onFinish(pageIndex, pageSize)
       })
 
@@ -495,6 +496,7 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={columns}
+            scroll={{ y:'calc(100vh - 288px)' }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
@@ -509,11 +511,11 @@ const Index = (props) => {
 
       <Modal
         title={title}
-        visible={fromVisible}
+        visible={formVisible}
         onOk={onModalOk}
         confirmLoading={loadingConfirm}
-        onCancel={() => { setFromVisible(false) }}
-        className={styles.fromModal}
+        onCancel={() => { setFormVisible(false) }}
+        className={styles.formModal}
         destroyOnClose
       >
         <Form

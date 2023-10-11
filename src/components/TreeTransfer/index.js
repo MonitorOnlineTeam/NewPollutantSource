@@ -40,6 +40,27 @@ const Index = (props) => {
       return item
     })
   }
+  function findParentNodeByKey(nodes, childNodeKey) {  //通过子节点的key 查找父节点  并返回其key  以数组形式返回
+    for (let i = 0; i < nodes.length; i++) {  
+      let node = nodes[i];  
+      if (node.children && node.children.length > 0) {  
+        for (let j = 0; j < node.children.length; j++) {  
+          let childNode = node.children[j];  
+    
+          if (childNode.key === childNodeKey) {  
+            return node.key? [node.key] : [];  
+          } else {  
+            let result = findParentNodeByKey(node.children, childNodeKey);  
+            if (result !== null) {  
+              return result;  
+            }  
+          }  
+        }  
+      }  
+    }  
+    
+    return null;  
+  }
   const dealCheckboxSeleted = ({ node, onItemSelect, onItemSelectAll }) => {
     let {
       checked,
@@ -57,8 +78,8 @@ const Index = (props) => {
       // 勾选的是子节点
       if (!checked) {
         // 查找该元素的父元素
-        let parentKeys = [halfCheckedKeys?.[0]] || []
-        onItemSelectAll([...parentKeys, key], checked)
+        let parentKeys = halfCheckedKeys?.[0]&&[halfCheckedKeys?.[0]] || findParentNodeByKey(treeData,key) || []
+        onItemSelectAll([...parentKeys,key], checked)
       } else {
         let parentKey = ''
         treeData && treeData[0] && treeData.forEach(tree => {
@@ -90,7 +111,8 @@ const Index = (props) => {
     flatten(dataSource)
 
     const leftData = generateTree(dataSource, targetKeys)
-    const leftTreeData = leftData?.length && leftData.filter(item=>item.children[0])
+    const leftTreeData = leftData?.length? leftData.filter(item=>item.children[0]) : []
+
     return (
       <Transfer
         {...restProps}
@@ -156,14 +178,25 @@ const Index = (props) => {
       </Transfer>
     )
   }
-
+  function deepCopyTree(tree) {  
+    if (Array.isArray(tree)) {  
+      return tree.map((node) => deepCopyTree(node));  
+    } else if (typeof tree === 'object' && tree !== null) {  
+      return {  
+        ...tree,  
+        children: deepCopyTree(tree.children),  
+      };  
+    } else {  
+      return tree;  
+    }  
+  }  
   /**
    * 改变右边tree数据
    * @param {*右边tree需要处理的keys集合} keys
    * @param {*0-删除以上的keys 1-新增以上的keys} type
    */
   const getRightTreeData = (keys, type) => {
-    let arr = [...rightTreeData]
+    let arr =  [...rightTreeData]
     if (keys?.length > 0) {
       keys.forEach(key => {
         if (isAll) {
@@ -176,8 +209,9 @@ const Index = (props) => {
             }
           })
         }
+        const treeList = deepCopyTree(treeData)
         // treeData && treeData[0]?.children?.forEach(data => {
-        treeData.forEach(data => {
+        treeList.forEach(data => {
           if (key === data.key) {
             let index = arr.findIndex(i => {
               return i.key === key
@@ -257,7 +291,8 @@ const Index = (props) => {
         }
       }
     })
-    setTargetKeys([...targetKeys, ...keys])
+    // setTargetKeys([...targetKeys, ...keys])
+    setTargetKeys([...new Set([...targetKeys, ...keys])])
     setTimeout(() => {
       setInitDataLoading(false)
     }, 1000)
@@ -287,6 +322,7 @@ const Index = (props) => {
   }
   
   const onSelectChange = (key, targetSelectedKeys) => {
+
   }
   return <Spin spinning={initDataLoading}><TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} onSelectChange={onSelectChange} /> </Spin>
 }
