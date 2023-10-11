@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:47:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-08 10:42:45
+ * @Last Modified time: 2023-10-08 16:49:30
  * @Description:
  */
 import React, { useState, useEffect } from 'react';
@@ -11,7 +11,6 @@ import { Form, Card, Spin, Button, Space, Tooltip, Row, Select, Col, Radio, Moda
 import styles from '../../styles.less';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
-import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import ReactEcharts from 'echarts-for-react';
