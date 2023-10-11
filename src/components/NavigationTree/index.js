@@ -569,7 +569,21 @@ class NavigationTree extends Component {
       }
     })
 
-    let tempEntAndPoint = entList.length ? entList : pointResultList;
+    // 搜索mn
+    let DGIMNResultList = [];
+    entAndPoint.map(item => {
+      for (let index = 0; index < item.children.length; index++) {
+        if( item.children[index].DGIMN.indexOf(msg) > -1) {
+          DGIMNResultList.push({
+            ...item,
+            children: [{...item.children[index]}]
+          });
+          break;
+        }
+      }
+    })
+
+    let tempEntAndPoint = entList.length ? entList : (pointResultList.length ? pointResultList : DGIMNResultList);
     if(msg) {
       let expandedKeys = tempEntAndPoint.map(item => item.key);
       this.setState({
@@ -1103,7 +1117,7 @@ class NavigationTree extends Component {
             placeholder="请选择区域"
           /> : ''} */}
           {
-            showIndustry && 
+            showIndustry &&
                 <SearchSelect
                   placeholder="请选择行业"
                   style={{ width: '100%' }}

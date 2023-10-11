@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-09 10:13:21
+ * @Last Modified time: 2023-10-10 09:44:05
  * @Description：报警记录
  */
 
@@ -19,7 +19,7 @@ import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
 import { ModelNumberIdsDatas } from '../CONST';
-
+31;
 const textStyle = {
   width: '100%',
   display: 'inline-block',
@@ -234,6 +234,9 @@ const WarningRecord = props => {
             <Tooltip title="查看">
               <a
                 onClick={e => {
+                  let scrollTop = 0;
+                  let el = document.querySelector('.ant-table-body');
+                  el ? (scrollTop = el.scrollTop) : '';
                   props.dispatch({
                     type: 'dataModel/updateState',
                     payload: {
@@ -242,6 +245,7 @@ const WarningRecord = props => {
                         [modelNumber]: {
                           ...warningForm[modelNumber],
                           rowKey: record.ModelWarningGuid,
+                          scrollTop: scrollTop,
                         },
                       },
                     },
@@ -287,13 +291,20 @@ const WarningRecord = props => {
 
         // 设置滚动条高度，定位到点击详情的行号
         let currentForm = warningForm[modelNumber];
-        if (currentForm.rowKey) {
-          let el = document.querySelector(`[data-row-key="${currentForm.rowKey}"]`);
-          console.log('el', el);
-          el
-            ? el.scrollIntoView({ block: 'center' })
-            : document.querySelector('.ant-table-body').scrollTop = 0;
-        }
+        // if (currentForm.scrollTop !== undefined && currentForm.rowKey) {
+        //   let tableBody = document.querySelector('.ant-table-body');
+        //   let rowEl = document.querySelector(`[data-row-key="${currentForm.rowKey}"]`);
+        //   el
+        //     ? el.scrollIntoView({ block: 'nearest' })
+        //     : (document.querySelector('.ant-table-body').scrollTop = 0);
+        //   debugger;
+        //   el && (el.scrollTop = currentForm.scrollTop);
+        // }
+        let el = document.querySelector(`[data-row-key="${currentForm.rowKey}"]`);
+        console.log('el', el);
+        el
+          ? (document.querySelector('.ant-table-body').scrollTop = currentForm.scrollTop)
+          : (document.querySelector('.ant-table-body').scrollTop = 0);
       },
     });
   };
@@ -323,11 +334,15 @@ const WarningRecord = props => {
             pageSize,
             pageIndex: current,
             rowKey: undefined,
+            scrollTop: 0,
           },
         },
       },
     });
-    onFinish();
+    setTimeout(() => {
+      onFinish();
+    }, 0);
+    // onFinish();
   };
 
   // 根据企业获取排口
@@ -342,7 +357,6 @@ const WarningRecord = props => {
       },
     });
   };
-  console.log('pointListLoading', pointListLoading);
   return (
     <BreadcrumbWrapper>
       <Card className={styles.warningWrapper}>
