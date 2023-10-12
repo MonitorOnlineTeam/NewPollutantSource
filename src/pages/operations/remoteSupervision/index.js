@@ -1029,7 +1029,6 @@ const Index = (props) => {
   const getPointConsistencyParamFun = (mn, callback, title) => {// 添加或编辑参数列表
     props.getPointConsistencyParam({ DGIMN: mn }, (pollutantList, addRealTimeList, paramList, operationName) => {
       // resetData(true)//防止提交完之后 切换tab栏 提交下一个 数据清空的情况
-      commonForm.setFieldsValue({ OperationUserID: operationName })
       echoUnit(pollutantList) //默认显示单位默认值
       echoUnit(addRealTimeList)
       if (title === '添加') {
