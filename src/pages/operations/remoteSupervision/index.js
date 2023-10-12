@@ -31,6 +31,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 import cuid from 'cuid';
 import { permissionButton } from '@/utils/utils';
+import { DevOpsGuru } from 'aws-sdk';
 
 const namespace = 'remoteSupervision'
 
@@ -1804,7 +1805,7 @@ const Index = (props) => {
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,
             DataCou: scyData, DataCouUnit: scyDataUnit,
           })
-        } else if (indicaValFlag && scyDataFlag && !(indicaVal || indicaVal == 0)) { //只判断DAS示值和数采仪
+        } else if (dsDataFlag && scyDataFlag && !(indicaVal || indicaVal == 0)) { //只判断DAS示值和数采仪
           judgeConsistencyCouCheckFun({
             DASCou: dsData, DASCouUnit: dsDataUnit,
             DataCou: scyData, DataCouUnit: scyDataUnit,
