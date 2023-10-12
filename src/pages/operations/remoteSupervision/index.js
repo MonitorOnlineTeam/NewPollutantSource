@@ -1804,7 +1804,7 @@ const Index = (props) => {
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,
             DataCou: scyData, DataCouUnit: scyDataUnit,
           })
-        } else if (indicaValFlag && scyDataFlag && !(dsData || dsData == 0)) { //只判断DAS示值和数采仪
+        } else if (indicaValFlag && scyDataFlag && !(indicaVal || indicaVal == 0)) { //只判断DAS示值和数采仪
           judgeConsistencyCouCheckFun({
             DASCou: dsData, DASCouUnit: dsDataUnit,
             DataCou: scyData, DataCouUnit: scyDataUnit,
@@ -1815,8 +1815,7 @@ const Index = (props) => {
             DASCou: dsData, DASCouUnit: dsDataUnit,
             DataCou: scyData, DataCouUnit: scyDataUnit,
           })
-        }
-        else {
+        } else {
           form2.setFieldsValue({ [`${row.par}DataUniformity`]: undefined })
         }
 
@@ -2030,25 +2029,25 @@ const Index = (props) => {
               case 1:
                 return <Row align='middle' justify='center'>
                   <Form.Item name='isDisplay1'>
-                    <Checkbox checked={isDisPlayCheck1} onChange={(e) => { isDisplayChange(e, 'isDisplay1') }}>有显示屏</Checkbox>
+                    <Checkbox disabled={isCheckUser} checked={isDisPlayCheck1} onChange={(e) => { isDisplayChange(e, 'isDisplay1') }}>有显示屏</Checkbox>
                   </Form.Item></Row>
                 break;
               case 2:
                 return <Row align='middle' justify='center'>
                   <Form.Item name='isDisplay2'>
-                    <Checkbox checked={isDisPlayCheck2} onChange={(e) => { isDisplayChange(e, 'isDisplay2') }}>无显示屏</Checkbox>
+                    <Checkbox disabled={isCheckUser} checked={isDisPlayCheck2} onChange={(e) => { isDisplayChange(e, 'isDisplay2') }}>无显示屏</Checkbox>
                   </Form.Item> <NumTips style={{ top: 'auto', right: 12, zIndex: 1 }} content={'1、颗粒物分析仪无显示屏时，分析仪量程填写铭牌量程'} /></Row>
                 break;
               case 3:
                 return <Row align='middle' style={{ paddingLeft: 10 }}>
                   <Form.Item name='isDisplay3' rules={[{ required: false, message: '请选择' }]}>
-                    <Checkbox checked={isDisPlayCheck3} onChange={(e) => { isDisplayChange2(e, 'isDisplay3') }}>差压法</Checkbox>
+                    <Checkbox disabled={isCheckUser} checked={isDisPlayCheck3} onChange={(e) => { isDisplayChange2(e, 'isDisplay3') }}>差压法</Checkbox>
                   </Form.Item></Row>
                 break;
               case 4:
                 return <Row align='middle' style={{ paddingLeft: 9 }}>
                   <Form.Item name='isDisplay4' rules={[{ required: false, message: '请选择' }]}>
-                    <Checkbox checked={isDisPlayCheck4} onChange={(e) => { isDisplayChange2(e, 'isDisplay4') }}>直测流速法</Checkbox>
+                    <Checkbox disabled={isCheckUser} checked={isDisPlayCheck4} onChange={(e) => { isDisplayChange2(e, 'isDisplay4') }}>直测流速法</Checkbox>
                   </Form.Item></Row>
                 break;
               default:
@@ -2315,6 +2314,9 @@ const Index = (props) => {
                 break;
               case 3: case 4:
                 disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 || (!isCheckUser) ? true : false
+                break;
+              default:
+                disabledFlag = !isCheckUser;
                 break;
             }
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
