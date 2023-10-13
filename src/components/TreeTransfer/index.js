@@ -100,14 +100,14 @@ const Index = (props) => {
   }
 
   const TreeTransfer = ({ dataSource, targetKeys, ...restProps }) => {
-    const transferDataSource = []
-    function flatten(list = []) {
-      list.forEach(item => {
-        transferDataSource.push(item)
-        flatten(item.children ? item.children : [])
-      })
-    } 
-    flatten(dataSource)
+    // const transferDataSource = []
+    // function flatten(list = []) {
+    //   list.forEach(item => {
+    //     transferDataSource.push(item)
+    //     flatten(item.children ? item.children : [])
+    //   })
+    // } 
+    // flatten(dataSource)
     const leftData = generateTree(dataSource, targetKeys)
     const leftTreeData = leftData?.length? leftData.filter(item=>item.children[0]) : []
 
@@ -115,11 +115,10 @@ const Index = (props) => {
       <Transfer
         {...restProps}
         targetKeys={targetKeys}
-        dataSource={transferDataSource}
+        // dataSource={transferDataSource}
         className={styles["tree-transfer"]}
         render={item => item.title}
         titles={titles? titles : ['待分配点位','已分配点位']}
-      // showSelectAll={false}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
           if (direction === 'left') {
