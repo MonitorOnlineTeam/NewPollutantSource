@@ -23,7 +23,6 @@ const Index = (props) => {
   const { treeData, checkedKeys, height, clientHeight,permission,permisBtnTip,titles, } = props;
   const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
-  const [isAll, setIsAll] = useState(false)
   const generateTree = (treeNodes = [], checkedKeys = []) => {
     //  return treeNodes?.length && treeNodes.map(({ children, ...props }) => {
     //    return  {
@@ -107,9 +106,8 @@ const Index = (props) => {
         transferDataSource.push(item)
         flatten(item.children ? item.children : [])
       })
-    }
+    } 
     flatten(dataSource)
-
     const leftData = generateTree(dataSource, targetKeys)
     const leftTreeData = leftData?.length? leftData.filter(item=>item.children[0]) : []
 
@@ -178,18 +176,8 @@ const Index = (props) => {
       </Transfer>
     )
   }
-  function deepCopyTree(tree) {  
-    if (Array.isArray(tree)) {  
-      return tree.map((node) => deepCopyTree(node));  
-    } else if (typeof tree === 'object' && tree !== null) {  
-      return {  
-        ...tree,  
-        children: deepCopyTree(tree.children),  
-      };  
-    } else {  
-      return tree;  
-    }  
-  }  
+
+    
   /**
    * 改变右边tree数据
    * @param {*右边tree需要处理的keys集合} keys
@@ -199,19 +187,8 @@ const Index = (props) => {
     let arr =  [...rightTreeData]
     if (keys?.length > 0) {
       keys.forEach(key => {
-        if (isAll) {
-          treeData.forEach(data => {
-            if (type === 1) {
-              arr = []
-              arr.push(data)
-            } else if (type === 0) {
-              arr = []
-            }
-          })
-        }
-        const treeList = deepCopyTree(treeData)
         // treeData && treeData[0]?.children?.forEach(data => {
-        treeList.forEach(data => {
+          treeData.forEach(data => {
           if (key === data.key) {
             let index = arr.findIndex(i => {
               return i.key === key
