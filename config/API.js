@@ -412,6 +412,18 @@ export const API = {
     // 重启转发服务
     RestartTransmit: '/DataTransmit/api/DataTransmitSet/RestartTransmit',
   },
+  
+
+
+  /*监督核查 Api */
+  SupervisionVerificaApi: {
+    //关键参数核查统计
+    //列表
+    GetKeyParameterAnalyseList: before + '/CTBaseDataApi/GetKeyParameterAnalyseList',
+    //导出
+    ExportKeyParameterAnalyseList: before + '/CTBaseDataApi/ExportKeyParameterAnalyseList'
+
+  },
   /*资产管理 Api */
   AssetManagementApi: {
     //交接和报告

@@ -172,7 +172,7 @@ export default Model.extend({
         })
       }
     },//导出超标数据列表
-    *ExportExceedDataList({ payload }, { call, put, update, select }) {
+    *ExportExceedDataList({ payload,callback }, { call, put, update, select }) {
 
       const body = {
         RegionCode: payload.RegionCode,
@@ -196,6 +196,7 @@ export default Model.extend({
         }
 
       }
+      callback&&callback()
     },//导出超标次数
     *ExportExceedNum({ payload }, { call, put, update, select }) {
       const body = {

@@ -4,7 +4,7 @@
  * 创建时间：2020.10.14
  */
 import React, { PureComponent, Fragment } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,UpOutlined,DownOutlined, } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -36,7 +36,7 @@ import CheckboxGroup from 'antd/lib/checkbox/Group';
 import style from '@/pages/dataSearch/tableClass.less'
 import point from '@/models/point';
 import { toDecimal3 } from '@/utils/utils';
-import RegionList from '@/components/RegionList'
+import RegionList from '@/components/RegionList';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -121,6 +121,8 @@ class index extends PureComponent {
             pagePollutantType:'',
             exportRegion:'',
             modalEntCode:'',
+            expand:false,
+            tableExportLoading:false,
         };
     }
 
@@ -185,13 +187,14 @@ class index extends PureComponent {
     };
     handleSummit=(e)=>{
         const { PollutantByType } = this.props
-        const {operationpersonnel} = this.state
+        const {operationpersonnel,expand,} = this.state
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
             let pollutionData = []
             let selectPollution = []
-            PollutantByType.map(item=>{
+            if(expand){
+             PollutantByType.map(item=>{
                 let obj = {}
                 let Min = null
                 let Max = null
@@ -227,7 +230,10 @@ class index extends PureComponent {
                     pollutionData.push(obj)
                 }
             })
-
+        }else{
+            pollutionData = PollutantByType.map(item=>{return{ PollutantCode: item.PollutantCode }})
+            selectPollution = PollutantByType.map(item=>{return{ PollutantName: item.PollutantName, PollutantCode: item.PollutantCode, }})
+        }
 
               this.setState({
                   selectPollution: selectPollution,
@@ -267,13 +273,15 @@ class index extends PureComponent {
     // 导出
     exportReport = (e) => {
         const { PollutantByType } = this.props
-        const {operationpersonnel} = this.state
+        const {operationpersonnel, expand,} = this.state
         e.preventDefault();
+        this.setState({tableExportLoading:true})
         this.props.form.validateFields((err, values) => {
           if (!err) {
             let pollutionData = []
             let selectPollution = []
-            PollutantByType.map(item=>{
+            if(expand){
+             PollutantByType.map(item=>{
                 let obj = {}
                 let Min = null
                 let Max = null
@@ -308,7 +316,11 @@ class index extends PureComponent {
                     }
                     pollutionData.push(obj)
                 }
-            })
+               })
+             }else{
+                pollutionData = PollutantByType.map(item=>{return{ PollutantCode: item.PollutantCode }})
+                selectPollution = PollutantByType.map(item=>{return{ PollutantName: item.PollutantName, PollutantCode: item.PollutantCode, }})
+            }
               this.setState({
                   selectPollution: selectPollution,
                   RegionCode: values.Region == undefined ? '' : values.Region,
@@ -333,7 +345,9 @@ class index extends PureComponent {
                     // TabType: values.outlet == undefined ? '1' : this.state.exportRegion,
                     PollutantList: pollutionData,
                     operationpersonnel:operationpersonnel,
-
+                },
+                callback:()=>{
+                    this.setState({tableExportLoading:false})
                 }
             })
           }
@@ -783,6 +797,7 @@ class index extends PureComponent {
     cardTitle = () => {
         const { PollutantByType } = this.props
         const { getFieldDecorator  } = this.props.form;
+        const { expand } = this.state;
         return <>
             <Form onSubmit={this.handleSummit} layout="inline">
 
@@ -812,7 +827,7 @@ class index extends PureComponent {
                             //     }}>
                             //     {this.children()}
                             // </Select>
-                         <RegionList changeRegion={''} RegionCode={''}  style={{ width: 200,marginRight: 20,}}/>
+                         <RegionList changeRegion={''} RegionCode={''}  style={{ width: 200}}/>
                             
                         )
                     }
@@ -825,7 +840,7 @@ class index extends PureComponent {
                         })(
                             <Select
                                 allowClear
-                                style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                style={{ width: 200, }}
                                 placeholder="关注程度"
                                 maxTagCount={2}
                                 maxTagTextLength={5}
@@ -845,7 +860,7 @@ class index extends PureComponent {
                             initialValue: '2'
                         })(
                             <Select
-                                style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                style={{ width: 200,}}
                                 //defaultValue={'1'}
                                 placeholder="企业类型"
                                 maxTagCount={2}
@@ -875,7 +890,7 @@ class index extends PureComponent {
                         getFieldDecorator('dataType', {
                             initialValue: 'Hour'
                         })(
-                            <Radio.Group style={{ marginRight: 20, marginLeft: 10 }} onChange={(e) => {
+                            <Radio.Group  onChange={(e) => {
                                 this.setState({
                                     dataType: e.target.value,
                                     time: e.target.value === 'Day' ? [moment().add(-1, "month").startOf('day')] : [moment().add(-24, "hour").startOf('day'), moment().endOf('day')]
@@ -925,16 +940,18 @@ class index extends PureComponent {
 
             
                 <Form.Item >
-                    <Button type="primary" style={{ marginRight: 10 }} htmlType='submit' >查询</Button>
+                    <Button style={{ marginRight: 8 }}  type="primary" htmlType='submit'>查询</Button>
+                    <Button style={{ marginRight: 6 }} htmlType='submit' onClick={this.exportReport}  loading={this.state.tableExportLoading}><ExportOutlined />导出</Button>
+                    <a onClick={() => {this.setState({expand:!expand}) }} >
+                      {expand ? <>收起 <UpOutlined /></> : <>展开 <DownOutlined /></>}
+                      </a>
                 </Form.Item>
-                <Form.Item >
-                    <Button style={{ marginRight: 10 }} htmlType='submit' onClick={this.exportReport}><ExportOutlined />导出</Button>
-                </Form.Item>
-                <div>
-                    {/* <Form.Item label='监测因子'></Form.Item> */}
 
+                {expand && <div>
+                    {/* <Form.Item label='监测因子'></Form.Item> */}
+                 
                     {
-                        this.state.entType == '1' &&
+                        this.state.entType == '1' && 
                         PollutantByType.map((item, i) =>
                             (i + 1) % 6 == 0 ?
                                 <span>
@@ -1028,7 +1045,7 @@ class index extends PureComponent {
                        
                         this.state.entType == '2' &&
                         PollutantByType.map((item, i) =>
-                            (i + 1) % 6 == 0 ? < Col span={6}>
+                            (i + 1) % 6 == 0 ? < Col  xxl={6} xl={8} lg={12}>
                                 {/* <br /> */}
                                 <div>
                                         <Form.Item>
@@ -1079,7 +1096,7 @@ class index extends PureComponent {
 
                                 </div>
                             </Col>
-                                : < Col span={6}>
+                                : < Col xxl={6} xl={8} lg={12}>
                                     <div>
                                         <Form.Item>
                                             {
@@ -1133,7 +1150,8 @@ class index extends PureComponent {
                        
                     }
                      </Row>
-                </div>
+           
+                </div>}
             </Form>
         </>;
     }

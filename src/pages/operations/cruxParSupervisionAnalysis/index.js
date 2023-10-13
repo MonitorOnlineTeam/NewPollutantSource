@@ -1,7 +1,7 @@
 /**
- * 功  能：关键参数核查分析
+ * 功  能：关键参数核查分析 关键参数核查统计
  * 创建人：jab
- * 创建时间：2022.04.20
+ * 创建时间：2022.04.20 2023.10.13
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Progress, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
@@ -75,9 +75,7 @@ const Index = (props) => {
 
 
   const { tableDatas, tableTotal, tableLoading, exportLoading,regQueryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, regDetailQueryPar, } = props;
-
-
-
+  const { route :{name } } = props;
   useEffect(() => {
     onFinish()
   }, []);
@@ -87,8 +85,6 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       ellipsis: true,
-      // dataIndex: 'Sort',
-      // key: 'Sort',
       render:(text,record,index)=>{
         return index + 1 
        }
@@ -132,7 +128,7 @@ const Index = (props) => {
       title: '核查完成率',
       dataIndex: 'rate',
       key: 'rate',
-      width: 200,
+      width: 150,
       align:'center',
       sorter: (a, b) => a.rate - b.rate,
       render: (text, record) => {
@@ -141,7 +137,7 @@ const Index = (props) => {
             <Progress
               percent={text=='-'? 0 : text}
               size="small"
-              style={{width:'85%'}}
+              style={{width:'80%'}}
               status='normal'
               format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
             />
@@ -150,7 +146,67 @@ const Index = (props) => {
       }
     }
   ];
-
+const statisticColumns = [
+  ...columns,
+  {
+    title: '合格数',
+    dataIndex: 'qualifiedCount',
+    key: 'qualifiedCount',
+    align: 'center',
+    ellipsis: true,
+  },
+  {
+    title: '核查合格率',
+    dataIndex: 'qualifiedRate',
+    key: 'qualifiedRate',
+    width: 160,
+    align:'center',
+    sorter: (a, b) => a.qualifiedRate - b.qualifiedRate,
+    render: (text, record) => {
+      return (
+        <div>
+          <Progress
+            percent={text=='-'? 0 : text}
+            size="small"
+            style={{width:'80%'}}
+            status='normal'
+            format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+          />
+        </div>
+      );
+    }
+  },
+  {
+    title: '督查人员待核查数',
+    dataIndex: 'supervisionCount',
+    key: 'supervisionCount',
+    align: 'center',
+    width:'auto',
+    ellipsis: true,
+  },
+  {
+    title: '督查人员核查率',
+    dataIndex: 'supervisionRate',
+    key: 'supervisionRate',
+    align: 'center',
+    width: 150,
+    ellipsis: true,
+    sorter: (a, b) => a.supervisionRate - b.supervisionRate,
+    render: (text, record) => {
+      return (
+        <div>
+          <Progress
+            percent={text=='-'? 0 : text}
+            size="small"
+            style={{width:'80%'}}
+            status='normal'
+            format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+          />
+        </div>
+      );
+    }
+  },
+]
   const [regDetailVisible, setRegDetailVisible] = useState(false)
   const [regDetailTitle, setRegDetailTitle] = useState()
   const [regionCode, setRegionCode] = useState()
@@ -171,6 +227,7 @@ const Index = (props) => {
         endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         staticType:1,
+        type:name=='cruxParSupervisionAnalysis'? 'Analysis' : 'statistics'
       }, ( par) => {
       })
     } catch (errorInfo) {
@@ -233,11 +290,6 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       ellipsis: true,
-      // dataIndex: 'Sort',
-      // key: 'Sort',
-      // render:(text,record,index)=>{
-      //  return index + 1 
-      // }
     },
     {
       title: '省',
@@ -297,7 +349,7 @@ const Index = (props) => {
       title: '核查完成率',
       dataIndex: 'rate',
       key: 'rate',
-      width: 105,
+      width: 150,
       align:'center',
       sorter: (a, b) => a.rate - b.rate,
       render: (text, record) => {
@@ -306,7 +358,7 @@ const Index = (props) => {
             <Progress
               percent={text=='-'? 0 : text}
               size="small"
-              style={{width:'85%'}}
+              style={{width:'75%'}}
               status='normal'
               format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
             />
@@ -315,6 +367,69 @@ const Index = (props) => {
       }
     }
   ];
+  const statisticColumns2 = [
+    ...columns2,
+    {
+      title: '合格数',
+      dataIndex: 'qualifiedCount',
+      key: 'qualifiedCount',
+      align: 'center',
+      width:120,
+      ellipsis: true,
+    },
+    {
+      title: '核查合格率',
+      dataIndex: 'qualifiedRate',
+      key: 'qualifiedRate',
+      width: 150,
+      align:'center',
+      sorter: (a, b) => a.qualifiedRate - b.qualifiedRate,
+      render: (text, record) => {
+        return (
+          <div>
+            <Progress
+              percent={text=='-'? 0 : text}
+              size="small"
+              style={{width:'80%'}}
+              status='normal'
+              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+            />
+          </div>
+        );
+      }
+    },
+    {
+      title: '督查人员待核查数',
+      dataIndex: 'supervisionCount',
+      key: 'supervisionCount',
+      align: 'center',
+      width:140,
+      ellipsis: true,
+    },
+    {
+      title: '督查人员核查率',
+      dataIndex: 'supervisionRate',
+      key: 'supervisionRate',
+      align: 'center',
+      width: 150,
+      ellipsis: true,
+      sorter: (a, b) => a.supervisionRate - b.supervisionRate,
+      render: (text, record) => {
+        return (
+          <div>
+            <Progress
+              percent={text=='-'? 0 : text}
+              size="small"
+              style={{width:'80%'}}
+              status='normal'
+              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+            />
+          </div>
+        );
+      }
+    },
+  ]
+
   const searchComponents2 = () => {
     return <Form
       form={form2}
@@ -391,9 +506,10 @@ const Index = (props) => {
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={columns}
+            columns={name=='cruxParSupervisionAnalysis'? columns : statisticColumns}
             pagination={false}
             className={styles.cruxParAnalysisRegTableSty}
+            scroll={{ x:name=='cruxParSupervisionAnalysis'? 700 : 1050}}
           />
         </Card>
         <Modal //省级详情
@@ -410,7 +526,7 @@ const Index = (props) => {
               loading={tableLoading2}
               bordered
               dataSource={tableDatas2}
-              columns={columns2}
+              columns={name=='cruxParSupervisionAnalysis'? columns2 : statisticColumns2}
               // pagination={{
               //   total: tableTotal2,
               //   pageSize: pageSize,

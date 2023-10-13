@@ -898,7 +898,7 @@ class EmergencyDetailInfo extends Component {
                 <Card
                     title={<Row justify='space-between'>
                         <span style={{ fontWeight: '900' }}>任务详情</span>
-                        <Button disabled={isExistTask && taskInfo.Datas[0].IsForward != '1'} type='primary' onClick={() => this.taskForward()}>任务转发</Button>
+                       {this.state.forwardPermis&&<Button disabled={isExistTask && taskInfo.Datas[0].IsForward != '1'} type='primary' onClick={() => this.taskForward()}>任务转发</Button>}
                     </Row>}
                 // extra={
                 // !isHomeModal && <div>

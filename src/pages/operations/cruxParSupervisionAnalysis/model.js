@@ -24,7 +24,7 @@ export default Model.extend({
   effects: {
     *getKeyParameterAnalyseList({ payload, callback }, { call, put, update }) { //关键参数核查分析 列表
       payload.staticType==1 ? yield update({  tableLoading:true }) : yield update({  tableLoading2:true })
-      const result = yield call(services.GetKeyParameterAnalyseList, payload);  
+      const result = yield call(payload.type=='analysis'? services.GetKeyParameterAnalyseList : services.GetKeyParameterStatisticsList, {...payload,type:undefined,});  
       if (result.IsSuccess) {
         if(payload.staticType==1){
           yield update({
@@ -49,7 +49,7 @@ export default Model.extend({
     },
     *exportKeyParameterAnalyseList({ payload, callback }, { call, put, update }) { // 关键参数核查分析 导出
       payload.staticType==1? yield update({  exportLoading:true }) : yield update({  exportLoading2:true })
-      const result = yield call(services.ExportKeyParameterAnalyseList, payload);
+      const result = yield call(payload.type=='analysis'? services.ExportKeyParameterAnalyseList : services.ExportKeyParameterStatisticsList, {...payload,type:undefined,});
       if (result.IsSuccess) {
         payload.staticType==1? yield update({  exportLoading:false }) : yield update({  exportLoading2:false })
         message.success(result.Message)

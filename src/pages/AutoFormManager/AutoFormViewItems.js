@@ -42,7 +42,6 @@ class AutoFormViewItems extends Component {
   }
 
   componentDidMount() {
-    debugger;
     const { dispatch, detailConfigInfo, editFormData } = this.props;
     const { configId, keysParams } = this._SELF_;
     // 获取页面配置项

@@ -598,9 +598,10 @@ export default class MonitorPoint extends Component {
       return <Spin spinning={this.props.getPointElectronicFenceInfoLoading}>
         <div className={styles.pointCoefficientSty}>
           <Form.Item label='电子围栏半径' className='inputSty'>
-            <InputNumber min={0.00001} disabled={!this.state.radiusElectronicFlag} value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入' onChange={(e) => { this.radiusElectronicChange(e) }} />
+            {/* <InputNumber min={0.00001} disabled={!this.state.radiusElectronicFlag} value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入' onChange={(e) => { this.radiusElectronicChange(e) }} /> */}
+            <InputNumber min={0.00001}  value={this.state.radiusElectronicFenceVal} style={{ width: 200 }} placeholder='请输入' onChange={(e) => { this.radiusElectronicChange(e) }} />
             <span style={{ paddingLeft: 5 }} >KM</span>
-            {!this.state.isSuperAdministrator&&<span style={{ paddingLeft: 10 }} className='red'>如需修改，请联系管理员</span>}
+            {/* {!this.state.isSuperAdministrator&&<span style={{ paddingLeft: 10 }} className='red'>如需修改，请联系管理员</span>} */}
           </Form.Item>
           {this.createComponents(this.state.createUserName4, this.state.createTime4, this.state.updUserName4, this.state.updTime4)}
         </div>

@@ -1397,7 +1397,11 @@ export default {
                   name: 'cruxParSupervisionAnalysis',
                   component: './operations/cruxParSupervisionAnalysis',
                 },
-
+                {
+                  path: '/operations/cruxParSupervisionStatistics', //关键参数核查统计
+                  name: 'cruxParSupervisionStatistics',
+                  component: './operations/cruxParSupervisionAnalysis',
+                },
                 {
                   //运维任务管理 重定向
                   path: '/operations/operaTaskManager',

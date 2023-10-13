@@ -293,9 +293,15 @@ const Index = (props) => {
           <Col span={8}>
             <Form.Item name='status' label='流程状态' >
               <Select allowClear placeholder="请选择" >
-                <Option value="1">已结束</Option>
-                <Option value="2">未结束</Option>
-                <Option value="3">终止</Option>
+                <Option value="1">待发</Option>
+                <Option value="2">已发</Option>
+                <Option value="3">待办</Option>
+                <Option value="4">已办</Option>
+                <Option value="5">取消</Option>
+                <Option value="6">回退</Option>
+                <Option value="7">取回</Option>
+                <Option value="8">竞争执行</Option>
+                <Option value="15">终止</Option>
               </Select>
             </Form.Item>
           </Col>
@@ -335,7 +341,7 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 375px)' : 'calc(100vh - 335px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 390px)' : 'calc(100vh - 350px)' }}
             dataSource={tableDatas}
             columns={columns}
             pagination={{

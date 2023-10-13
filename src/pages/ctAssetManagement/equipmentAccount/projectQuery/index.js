@@ -132,8 +132,8 @@ const Index = (props) => {
     },
     {
       title: '服务流水号',
-      dataIndex: 'ProjectName',
-      key: 'ProjectName',
+      dataIndex: 'SerialNum',
+      key: 'SerialNum',
       align: 'center',
       ellipsis: true,
     },
@@ -405,6 +405,11 @@ const Index = (props) => {
 
   const [checkedKeys, setCheckedKeys] = useState([])
   const handlePointOK = (checkedKeys, state, callback) => {
+    entAndPoint.map(item=>{
+      if(checkedKeys.includes(item.key)){
+        checkedKeys = checkedKeys.filter(filterItem => filterItem !== item.key); 
+      }
+    })
     props.addProjectPointRelation({projectID:projectID, dgimn: checkedKeys, state: state }, () => { callback() })
   }
 

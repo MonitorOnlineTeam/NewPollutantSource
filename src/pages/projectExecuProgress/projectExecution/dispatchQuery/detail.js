@@ -583,7 +583,18 @@ const Index = (props) => {
           case '11':
             if (item.RecordStatus == 1) {
               setInstallWorkId(item.RecordId);
-              return <WorkRecordTable data={installWorkData} loading={installWorkLoading} />;//工作记录
+              let columns = []
+              columns = workRecordsCol.map(item => item)
+              columns.splice(3, 0,{
+                  title: '设备型号',
+                  dataIndex: 'SystemModelName',
+                  key: 'SystemModelName',
+                  align: 'center',
+                  ellipsis: true,
+                  width: 'auto',
+                },)
+              
+              return <WorkRecordTable data={installWorkData} loading={installWorkLoading} col={columns}/>;//工作记录
             }
 
         }
@@ -1540,19 +1551,8 @@ const Index = (props) => {
             }
           case '11':
             if (item.RecordStatus == 1) {
-              let columns = []
-              columns = workRecordsCol.map(item => item)
-              columns.splice(3, 0,{
-                  title: '设备型号',
-                  dataIndex: 'SystemModelName',
-                  key: 'SystemModelName',
-                  align: 'center',
-                  ellipsis: true,
-                  width: 'auto',
-                },)
-              
               setMaintenWorkId(item.RecordId);
-              return <WorkRecordTable data={maintenWorkData} loading={maintenWorkLoading} col={columns}/>;//工作记录
+              return <WorkRecordTable data={maintenWorkData} loading={maintenWorkLoading}/>;//工作记录
             }
           case '25':
             if (item.RecordStatus == 1) {
@@ -1709,7 +1709,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item label="服务申请人">
-            {data.ApplicantUser}
+            {data.ApplicantUserName}
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -1778,7 +1778,7 @@ const Index = (props) => {
         </Col>
         <Col span={24}>
           <Form.Item label="派工内容描述" >
-            {data.Remark}
+            {data.DispatchContent}
           </Form.Item>
         </Col>
         <Col span={24}>

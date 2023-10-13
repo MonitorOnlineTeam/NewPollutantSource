@@ -197,6 +197,7 @@ const Index = (props) => {
     props.getAgreementTransferList({}, (res) => {
       if(res.IsSuccess){
       const keys = res?.Datas && res.Datas.map(item => item.DGIMN)
+      console.log(keys)
       setCheckedKeys(keys)
       }
       setSelectDataLoading(false)
@@ -223,7 +224,6 @@ const Index = (props) => {
   const [entPointName, setEntPointName] = useState('')
   const handlePointQuery = () => {
     props.getEntAndPoint({ Status: [0, 1, 2, 3], RegionCode: regionCode, Name: entPointName, },(res)=>{
-      console.log(res)
       setEntAndPoint(res)
     })
     getSelectDatatFun()
@@ -294,7 +294,7 @@ const Index = (props) => {
         <Button type="primary" htmlType="submit" loading={tableLoading}>
           查询
          </Button>
-        <Button onClick={() => { form.resetFields(); }} style={{ margin: '0 8px' }}  >
+        <Button onClick={() => { form.resetFields();setPointList([]); }} style={{ margin: '0 8px' }}  >
           重置
          </Button>
         <Button onClick={() => { add() }} >

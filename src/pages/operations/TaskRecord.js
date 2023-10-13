@@ -46,6 +46,7 @@ import EntAtmoList from '@/components/EntAtmoList'
 import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal'
 import UserList from '@/components/UserList'
 import styles from './index.less'
+import { permissionButton } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -85,6 +86,8 @@ class TaskRecord extends Component {
       forwardToFromUserId: null,
       forwardToUserId: null,
       forwardRemark: null,
+      rejectPermis:false,
+      forwardPermis:false,
     };
     this._SELF_ = {
       configId: 'TaskRecord',
@@ -105,6 +108,13 @@ class TaskRecord extends Component {
     //     RolesID: '2b345cf3-1440-4898-84c8-93f9a64f8daf',
     //   },
     // })
+    const buttonList = permissionButton(this.props.match.path)
+    buttonList.map(item=>{
+      switch (item){
+        case 'reject': this.setState({rejectPermis: true }); break;
+        case 'forward': this.setState({forwardPermis: true }); break;
+      }
+    })
     this.LoadData();
   }
 
@@ -673,6 +683,7 @@ class TaskRecord extends Component {
         align: 'center',
         ellipsis: true,
         render: (text, record, index) => {
+          const {forwardPermis,rejectPermis,} = this.state;
           {
             const time = record.CompleteTime;
             const { DGIMN } = record;
@@ -683,16 +694,15 @@ class TaskRecord extends Component {
                 <a><ProfileOutlined
                   // onClick={() =>isHomeModal?this.taskRecordDetails(TaskID,DGIMN) : this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))}
                   onClick={() => this.taskRecordDetails(TaskID, DGIMN)}
-
                 /></a>
               </Tooltip>
-              <Divider type="vertical" />
-              <Tooltip title="任务转发">
+             
+              {forwardPermis&&<><Divider type="vertical" /><Tooltip title="任务转发">
                 <a style={{ cursor: record.IsForward != '1' && 'not-allowed', color: record.IsForward != '1' && 'rgba(0, 0, 0, 0.25) ', }}>
                   <SendOutlined  style={{ cursor: record.IsForward != '1' && 'not-allowed', }} onClick={() => this.taskForward(record)} /></a>
-              </Tooltip>
+              </Tooltip></>}
             </>)
-            if (time) {
+            if (time&&rejectPermis) {
               // console.log('timetimetimetimetimetime', moment().diff(time, 'days'));
               // 当前时间 > 完成时间显示驳回
               if (moment().diff(time, 'days') < 7) {
@@ -1106,6 +1116,7 @@ class TaskRecord extends Component {
             match={{ params: { TaskID: TaskID, DGIMN: DGIMN } }}
             isHomeModal
             hideBreadcrumb
+            forwardPermis={this.state.forwardPermis}
           />
         </Modal>
         {/** 打卡异常  监测点 弹框 */}

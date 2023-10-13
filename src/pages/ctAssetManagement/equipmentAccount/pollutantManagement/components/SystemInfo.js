@@ -75,7 +75,7 @@ const Index = (props) => {
 
   const { manufacturerList, systemModelList, systemModelListTotal, systemEditingKey, systemData, } = props;
 
-  const { dgimn, current } = props;
+  const { dgimn, current,isDetail, } = props;
 
 
   const [form] = Form.useForm();
@@ -439,7 +439,7 @@ const Index = (props) => {
   return (
     <div className={styles.deviceManagerSty} style={{ display: current == 1 ? 'block' : 'none' }}>
       <Form form={form} name="advanced_search" >
-        <><div>
+        <div>
           <SdlTable
             components={{
               body: {
@@ -448,7 +448,7 @@ const Index = (props) => {
             }}
             bordered
             dataSource={systemData}
-            columns={systemCols}
+            columns={!isDetail? systemCols : systemCols.filter(item=>item.title!=='操作')}
             rowClassName="editable-row"
             scroll={{ y: 'auto' }}
             loading={props.cEMSSystemListLoading}
@@ -457,9 +457,9 @@ const Index = (props) => {
             size='small'
           />
         </div>
-          <Button style={{ margin: '10px 0 15px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleSystemAdd()} >
+          {!isDetail&&<Button style={{ margin: '10px 0 15px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleSystemAdd()} >
             添加系统信息
-       </Button></>
+         </Button>}
       </Form>
 
       {/**cems 系统信息  cems生产厂家弹框 */}

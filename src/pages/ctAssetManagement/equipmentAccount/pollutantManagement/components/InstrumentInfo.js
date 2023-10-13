@@ -69,9 +69,9 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-  const { current, dgimn, manufacturerList, equipmentInfoList, equipmentInfoListTotal, pollutantTypeList, deviceData, deviceEditingKey, } = props;
+  const { manufacturerList, equipmentInfoList, equipmentInfoListTotal, pollutantTypeList, deviceData, deviceEditingKey, } = props;
 
-
+  const { dgimn, current,isDetail, } = props;
 
   const [form3] = Form.useForm();
 
@@ -494,7 +494,7 @@ const Index = (props) => {
           }}
           bordered
           dataSource={deviceData}
-          columns={deviceColumns}
+          columns={!isDetail? deviceColumns : deviceColumns.filter(item=>item.title!=='操作')}
           rowClassName="editable-row"
           loading={props.cEMSSystemListLoading}
           className={`${styles.deviceSty}`}
@@ -502,9 +502,9 @@ const Index = (props) => {
           size='small'
         />
       </Form>
-      <Button style={{ margin: '10px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleDeviceAdd()} >
+      {!isDetail&&<Button style={{ margin: '10px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleDeviceAdd()} >
         添加仪表信息
-       </Button>
+       </Button>}
       {/**  监测设备 生产厂家弹框 */}
       <Modal visible={devicePopVisible} getContainer={false} onCancel={() => { setDevicePopVisible(false) }} destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }} wrapClassName='noSpreadOverModal'>
         {devicePopContent}

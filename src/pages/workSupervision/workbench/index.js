@@ -121,12 +121,12 @@ const Workbench = props => {
         res.map(item=>{
           switch(item.PName){
             case '日常监督':
-            if(item?.CList[0]){ 
               SetDaily(true)
-              // GetToDoDailyWorks();
-             }else{
-               SetDaily(false)
-             }
+            // if(item?.CList[0]){ 
+            //   SetDaily(true)
+            //  }else{
+            //    SetDaily(false)
+            //  }
             break;
             case '运维服务':
             if(item?.CList[0]){

@@ -535,8 +535,8 @@ const Index = (props) => {
               {/* <Popconfirm disabled={!(updateflag && flag && !isCheckUser)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
                 <a style={{ cursor: updateflag && flag && !isCheckUser? 'pointer' : 'not-allowed', color: updateflag && flag && !isCheckUser? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
               </Popconfirm>  */}
-              <Popconfirm disabled={isCheckUser && delPermis} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                <a style={{ cursor: !isCheckUser || !delPermis ? 'pointer' : 'not-allowed', color: !isCheckUser || !delPermis ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
+              <Popconfirm disabled={!isCheckUser && !delPermis ? false : true} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                <a style={{ cursor: !isCheckUser && !delPermis ? 'pointer' : 'not-allowed', color: !isCheckUser && !delPermis ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
             <Divider type="vertical" />
