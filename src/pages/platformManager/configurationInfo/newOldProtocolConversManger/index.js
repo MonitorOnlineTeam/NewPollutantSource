@@ -357,7 +357,7 @@ const Index = (props) => {
                   treeData={entAndPoint}
                   checkedKeys={checkedKeys}
                   targetKeysChange={(key, type, callback) => {
-                    setCheckedKeys(key)
+                    // setCheckedKeys(key)
                     handlePointOK(key, type == 1 ? 1 : 2, callback)
                   }
                   }

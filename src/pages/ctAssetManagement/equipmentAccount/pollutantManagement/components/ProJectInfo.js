@@ -103,7 +103,7 @@ const Index = (props) => {
     >
         <Row>
             <Form.Item style={{ marginRight: 8, width:  'calc(100% - 98px)' }} name="projectCode">
-                <Input allowClear placeholder="请输入项目编号、立项号、项目编号" style={{ width: '100%' }} />
+                <Input allowClear placeholder="请输入项目编号、立项号、项目名称" style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType='submit' loading={projectLoading}>
@@ -131,7 +131,6 @@ const Index = (props) => {
             const par =  await form.validateFields()
             props.getProjectInfoList({
                 ...par,
-                "beginTime":"2023-09-01 00:00:00","endTime":"2023-09-30 23:59:59",
                 pageIndex: 1,
                 pageSize: 10,
             })

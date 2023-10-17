@@ -1,7 +1,7 @@
 import Model from '@/utils/model';
 import {
     getroleinfobytree, getroleinfobyid, insertroleinfo, delroleinfo, updroleinfo, getrolestreeandobj, getalluser, getuserbyroleid, insertrolebyuser
-    , getparenttree, getrolemenutree, getmenubyroleid, insertmenubyroleid
+    , getparenttree, getrolemenutree, getmenubyroleid, insertmenubyroleid,addSetLongInAppRole,getSetLongInAppRoleId,addSetRole,getSetRoleId,
 } from './service';
 import { message } from 'antd';
 /*
@@ -21,6 +21,7 @@ export default Model.extend({
         SelectMenu: [],
         MenuTree: [],
         CheckMenu: [],
+        setRegOrAppRoleId:[],
     },
     subscriptions: {
         setup({
@@ -229,7 +230,7 @@ export default Model.extend({
                 yield update({
                     CheckMenu: result.Datas
                 });
-            }else{
+            } else {
                 message.error(result.Message)
             }
         },
@@ -244,6 +245,28 @@ export default Model.extend({
                 ...payload
             });
             payload.callback(result);
+        },
+        *addSetRegOrAppRole({ payload, callback }, { call, put, update }) { //设置角色 1行政区 2运维App
+            yield update({ tableLoading: true })
+            const result = yield call(payload.type==1? addSetLongInAppRole : addSetRole , {...payload,type:undefined});
+            if (result.IsSuccess) {
+                message.success(result.Message)
+                callback && callback()
+            } else {
+                message.error(result.Message)
+            }
+        },
+        *getSetRegOrAppRoleId({ payload, callback }, { call, put, update }) { //获取设置角色 1 行政区 2运维App
+            yield update({ tableLoading: true })
+            const result = yield call(payload.type==1? getSetLongInAppRoleId : getSetRoleId, {...payload,type:undefined});
+            if (result.IsSuccess) {
+                yield update({
+                    setRegOrAppRoleId: result.Datas,
+                })
+                callback && callback(result.Datas)
+            } else {
+                message.error(result.Message)
+            }
         },
     },
     reducers: {

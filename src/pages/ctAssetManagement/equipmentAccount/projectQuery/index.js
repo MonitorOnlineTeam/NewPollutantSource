@@ -107,15 +107,15 @@ const Index = (props) => {
 
   const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, entAndPoint, rojectPointRelationLoading, addProjectPointRelationLoading,checkPoint, } = props;
 
-  const [editPermisPoint,setPermisEditPoint] = useState(true)
-  const [associaePermisPoint,setAssociaePermisPoint] = useState(true)
+  const [editPermisPoint,setPermisEditPoint] = useState(false)
+  const [associaePermisPoint,setAssociaePermisPoint] = useState(false)
 
   useEffect(() => {
     const buttonList = permissionButton(props.match.path)
     buttonList.map(item=>{
       switch (item){
-        case 'oprationPoint':  setAssociaePermisPoint(false); break;
-        case 'addPoint': setPermisEditPoint(false); break;
+        case 'oprationPoint':  setAssociaePermisPoint(true); break;
+        case 'addPoint': setPermisEditPoint(true); break;
       }
     })
     onFinish(pageIndex, pageSize);
@@ -286,11 +286,11 @@ const Index = (props) => {
       ellipsis: true,
       render: (text, record) => {
         return <span>
-          <Fragment><Tooltip title={editPermisPoint?props.permisBtnTip : '编辑'}> <a className={editPermisPoint&&'disabled_a'} onClick={() => { if(!editPermisPoint) edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          {editPermisPoint&&<Fragment><Tooltip title={'编辑'}> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>}
           <Fragment> <Tooltip title="详情">
             <a onClick={() => detail(record)}  ><DetailIcon /></a>
-          </Tooltip><Divider type="vertical" /></Fragment>
-          <Fragment> <Tooltip title={"关联监测点"} >  <a onClick={() => { associaePoint(record) }} ><PointIcon /></a></Tooltip></Fragment>
+          </Tooltip></Fragment>
+          {associaePermisPoint&&<Fragment><Divider type="vertical" /><Tooltip title={"关联监测点"} >  <a onClick={() => { associaePoint(record) }} ><PointIcon /></a></Tooltip></Fragment>}
 
         </span>
       }
@@ -454,7 +454,7 @@ const Index = (props) => {
               {/* <Select placeholder='请选择' allowClear>
                 <Option></Option>
               </Select> */}
-              <Input placeholder='请输入'/>
+              <Input placeholder='请输入' allowClear/>
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -462,7 +462,7 @@ const Index = (props) => {
               {/* <Select placeholder='请选择' allowClear>
                 <Option></Option>
               </Select> */}
-              <Input placeholder='请输入'/>
+              <Input placeholder='请输入' allowClear/>
             </Form.Item>
           </Col>
 
@@ -606,7 +606,7 @@ const Index = (props) => {
                   treeData={entAndPoint}
                   checkedKeys={checkedKeys}
                   targetKeysChange={(key, type, callback) => {
-                    setCheckedKeys(key)
+                    // setCheckedKeys(key)
                     handlePointOK(key, type == 1 ? 1 : 2, callback)
                   }
                   } 

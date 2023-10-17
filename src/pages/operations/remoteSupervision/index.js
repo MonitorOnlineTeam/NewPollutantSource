@@ -275,13 +275,13 @@ const Index = (props) => {
   const [dataFileCuidList, setDataFileCuidList] = useState({})
   const [dataFileList, setDataFileList] = useState({})
 
-  const [delPermis, setDelPermis] = useState(true)
+  const [delPermis, setDelPermis] = useState(false)
 
   useEffect(() => {
     const buttonList = permissionButton(props.match.path)
     buttonList.map(item => {
       switch (item) {
-        case 'delete': setDelPermis(false); break;
+        case 'delete': setDelPermis(true); break;
       }
     })
     onFinish(pageIndex, pageSize)
@@ -530,15 +530,16 @@ const Index = (props) => {
             </Tooltip>
             <Divider type="vertical" />
             {detail}
-            <Divider type="vertical" />
-            <Tooltip title={delPermis ? props.permisBtnTip : '删除'} >{/* title={ updateflag && flag? "删除": null  } */}
+            {delPermis&&<><Divider type="vertical" />
+            <Tooltip title={'删除'} >
+              {/* title={ updateflag && flag? "删除": null  } */}
               {/* <Popconfirm disabled={!(updateflag && flag && !isCheckUser)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
                 <a style={{ cursor: updateflag && flag && !isCheckUser? 'pointer' : 'not-allowed', color: updateflag && flag && !isCheckUser? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
               </Popconfirm>  */}
-              <Popconfirm disabled={!isCheckUser && !delPermis ? false : true} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                <a style={{ cursor: !isCheckUser && !delPermis ? 'pointer' : 'not-allowed', color: !isCheckUser && !delPermis ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
+              <Popconfirm disabled={!isCheckUser? false : true} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                <a style={{ cursor: !isCheckUser ? 'pointer' : 'not-allowed', color: !isCheckUser ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
               </Popconfirm>
-            </Tooltip>
+            </Tooltip></>}
             <Divider type="vertical" />
             <Tooltip title={"下发"} > {/* title={!issue||issue==='已下发'?  null : "下发"}*/}
               <Popconfirm disabled={(!issue) || issue === '已下发' || (!isCheckUser) ? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">

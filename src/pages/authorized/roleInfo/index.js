@@ -39,6 +39,7 @@ import {
     Tag,
     Select,
     Pagination,
+    Empty,
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '@/components/MonitorContent';
@@ -48,11 +49,13 @@ import difference from 'lodash/difference';
 import { Right } from '@/utils/icon';
 // import AlarmPushRel from '@/components/AlarmPushRel';
 import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel'
+import { copyObjectArrayTreeAndRenameProperty,permissionButton } from '@/utils/utils';
+import TreeTransferSingle from '@/components/TreeTransferSingle'
 
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
 // Customize Table Transfer
-const TableTransfer = ({ leftColumns, rightColumns,tableChange,pageNumber,pageSize, ...restProps }) => (
+const TableTransfer = ({ leftColumns, rightColumns, tableChange, pageNumber, pageSize, ...restProps }) => (
     <Transfer {...restProps} showSelectAll={false}>
         {({
             direction,
@@ -87,8 +90,8 @@ const TableTransfer = ({ leftColumns, rightColumns,tableChange,pageNumber,pageSi
                     columns={columns}
                     dataSource={filteredItems}
                     size="small"
-                    scroll={{y:'calc(100vh - 550px)'}} 
-                    style={{ pointerEvents: listDisabled ? 'none' : null,paddingBottom:10 }}
+                    scroll={{ y: 'calc(100vh - 550px)' }}
+                    style={{ pointerEvents: listDisabled ? 'none' : null, paddingBottom: 10 }}
                     onRow={({ key, disabled: itemDisabled }) => ({
                         onClick: () => {
                             if (itemDisabled || listDisabled) return;
@@ -96,9 +99,9 @@ const TableTransfer = ({ leftColumns, rightColumns,tableChange,pageNumber,pageSi
                         },
                     })}
                     pagination={{
-                        onChange:tableChange,
-                        pageNumber:pageNumber,
-                        pageSize:pageSize
+                        onChange: tableChange,
+                        pageNumber: pageNumber,
+                        pageSize: pageSize
                     }}
                 />
             );
@@ -174,6 +177,11 @@ const rightTableColumns = [
     btnloading: loading.effects['roleinfo/insertroleinfo'],
     btnloading1: loading.effects['roleinfo/updroleinfo'],
     insertmenubyroleidLoading: loading.effects['roleinfo/insertmenubyroleid'],
+    setRegOrAppRoleId:roleinfo.setRegOrAppRoleId,
+    addSetRegOrAppRoleLoading: loading.effects['roleinfo/addSetRegOrAppRole'] || false,
+    getSetRegOrAppRoleIdLoading: loading.effects['roleinfo/getSetRegOrAppRoleId']  || false,
+
+    
 }))
 @Form.create()
 
@@ -199,9 +207,9 @@ class RoleIndex extends Component {
             buttonState: [],
             selectedRowKeysMenu: [],
             expandRows: false,
-            alarmPushData:'',
-            pageNumber:1,
-            pageSize:10,
+            alarmPushData: '',
+            pageNumber: 1,
+            pageSize: 10,
             menucolumns: [
                 {
                     title: '菜单名称',
@@ -234,13 +242,13 @@ class RoleIndex extends Component {
                                                 this.state.selectButton.push(item.ID)
                                                 this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
                                             } else if (this.state.selectButton.indexOf(item.ID) == -1) {
-                                                    this.state.selectButton.push(item.ID)
-                                                    this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
-                                                } else {
-                                                    const index = this.state.selectButton.indexOf(item.ID)
-                                                    this.state.selectButton.splice(index, 1)
-                                                    this.state.buttonState.find(cc => cc.ID == item.ID).State = '0'
-                                                }
+                                                this.state.selectButton.push(item.ID)
+                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
+                                            } else {
+                                                const index = this.state.selectButton.indexOf(item.ID)
+                                                this.state.selectButton.splice(index, 1)
+                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '0'
+                                            }
                                             this.setState({
                                                 buttonState: this.state.buttonState,
                                             })
@@ -328,7 +336,7 @@ class RoleIndex extends Component {
                                     okText="是"
                                     cancelText="否"
                                 >
-                                    <a  style={{ cursor: 'pointer' }} ><DeleteOutlined style={{ fontSize: 16 }} /></a>
+                                    <a style={{ cursor: 'pointer' }} ><DeleteOutlined style={{ fontSize: 16 }} /></a>
                                 </Popconfirm>
                             </Tooltip>
                             <Divider type="vertical" />
@@ -367,6 +375,11 @@ class RoleIndex extends Component {
                         </span>,
                 },
             ],
+            settingRoleTitle:'',
+            settingRoleVisible:false,
+            settingType:1,
+            settingRolePermis:false,
+            settingAppRolePermis:false,
         };
     }
 
@@ -412,6 +425,14 @@ class RoleIndex extends Component {
     //     },
     // };
     componentDidMount() {
+        const buttonList = permissionButton(this.props.match.path)
+        buttonList.map(item=>{
+          switch (item){
+            case 'SetRole': this.setState({settingRolePermis: true }); break;
+            case 'SetAppRole': this.setState({settingAppRolePermis: true }); break;
+
+          }
+        })
         this.props.dispatch({
             type: 'roleinfo/getroleinfobytree',
             payload: {
@@ -581,7 +602,7 @@ class RoleIndex extends Component {
                     if (res.IsSuccess) {
                         message.success('修改成功');
                         this.handleCancelMenu()
-                    }else{
+                    } else {
                         message.error(res.Message)
                     }
                 },
@@ -635,16 +656,53 @@ class RoleIndex extends Component {
 
     showAlarmModal = record => {
         this.setState({
-            alarmPushData:record
-          },()=>{
+            alarmPushData: record
+        }, () => {
             this.setState({
-              visibleAlarm: true
+                visibleAlarm: true
             });
-          })
+        })
     }
-    tableChange=(pageNumber,pageSize)=>{
-      this.setState({pageNumber,pageSize})
+    tableChange = (pageNumber, pageSize) => {
+        this.setState({ pageNumber, pageSize })
     }
+    copyArrayTree(arr) {  
+        // 创建一个新的数组来存储复制后的元素  
+        const newArr = [];  
+        
+        // 遍历原数组  
+        for (let i = 0; i < arr.length; i++) {  
+          // 如果当前元素是对象或数组，则递归复制  
+          if (typeof arr[i] === 'object' && arr[i] !== null) {  
+            newArr.push(copyArrayTree(arr[i]));  
+          } else {  
+            // 直接复制元素  
+            newArr.push(arr[i]);  
+          }  
+        }  
+        
+        return newArr;  
+      }
+      settingRole = (type,title) =>{
+        this.setState({
+            settingRoleVisible:true,
+            settingRoleTitle:title,
+            settingType:type,
+        })
+        this.props.dispatch({
+            type: 'roleinfo/getSetRegOrAppRoleId',
+            payload: {type:type},
+        })
+      }
+     settingRoleOk = (roleIdChecked, state,callback) =>{
+        this.props.dispatch({
+            type: 'roleinfo/addSetRegOrAppRole',
+            payload: {type:this.state.settingType,RoleIdList:roleIdChecked,State:state},
+            callback:()=>{
+                callback()
+            }
+        })
+     }
     render() {
         const { getFieldDecorator } = this.props.form;
         const { targetKeys, disabled, showSearch } = this.state;
@@ -680,7 +738,6 @@ class RoleIndex extends Component {
                 name: record.name,
             }),
         };
-
         return (
             <Fragment>
                 {
@@ -697,6 +754,13 @@ class RoleIndex extends Component {
                             <Button type="primary"
                                 onClick={this.showModal}
                             >新增</Button>
+                            {this.state.settingRolePermis&&<Button type="primary"
+                                onClick={()=>this.settingRole(1,'设置行政区获取点位角色')}
+                                style={{ margin: '0 8px' }}
+                            >设置行政区获取点位角色</Button>}
+                             {this.state.settingAppRolePermis&&<Button type="primary"
+                                onClick={()=>this.settingRole(2,'设置允许登录运维APP角色')}
+                            >设置允许登录运维APP角色</Button>}
                             {/* <Button
                                 onClick={this.showUserModal}
                                 style={{ marginLeft: "10px" }}
@@ -718,20 +782,20 @@ class RoleIndex extends Component {
                                 /> :
                                     <Table
                                         onRow={record => ({
-                                                onClick: event => {
-                                                    console.log('onClick=', record)
-                                                    this.setState({
-                                                        selectedRowKeys: record,
-                                                        rowKeys: [record.key],
-                                                    })
-                                                },
-                                            })}
+                                            onClick: event => {
+                                                console.log('onClick=', record)
+                                                this.setState({
+                                                    selectedRowKeys: record,
+                                                    rowKeys: [record.key],
+                                                })
+                                            },
+                                        })}
                                         size="small"
                                         style={{ marginTop: '20px' }}
                                         //rowSelection={rowRadioSelection}
-                                        defaultExpandAllRows columns={this.state.columns} dataSource={this.props.RoleInfoTree} 
+                                        defaultExpandAllRows columns={this.state.columns} dataSource={this.props.RoleInfoTree}
                                         pagination={false}
-                                        />
+                                    />
                             }
                         </Card>
                         <div>
@@ -740,7 +804,7 @@ class RoleIndex extends Component {
                                 visible={this.state.visible}
                                 onOk={this.handleSubmit}
                                 destroyOnClose="true"
-                                confirmLoading={ this.state.IsEdit === true ? btnloading1 : btnloading}
+                                confirmLoading={this.state.IsEdit === true ? btnloading1 : btnloading}
                                 onCancel={this.handleCancel}
                             >
                                 {
@@ -899,17 +963,17 @@ class RoleIndex extends Component {
                                         /> :
                                             <Table
                                                 onRow={record => ({
-                                                        onClick: event => {
-                                                            console.log('onClick=', this.props.CheckMenu)
-                                                        },
-                                                    })}
+                                                    onClick: event => {
+                                                        console.log('onClick=', this.props.CheckMenu)
+                                                    },
+                                                })}
                                                 size="small"
-                                                 rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
+                                                rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
                                     }
 
                                 </div>
                             </Modal>
-{/* 
+                            {/* 
                             <Modal
                                 title="报警关联"
                                 visible={this.state.visibleAlarm}
@@ -921,10 +985,40 @@ class RoleIndex extends Component {
 
                                 <AlarmPushRel RoleIdOrDepId={this.state.selectedRowKeys.key} FlagType="Role" cancelModal={this.cancelAlarmModal} />
                             </Modal> */}
-                         {this.state.visibleAlarm&&<NewAlarmPushRel type='Role'  alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>}
+                            {this.state.visibleAlarm && <NewAlarmPushRel type='Role' alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal} />}
 
                         </div>
                         {/* </MonitorContent> */}
+                        <Modal
+                            title={this.state.settingRoleTitle}
+                            visible={this.state.settingRoleVisible}
+                            destroyOnClose={true}
+                            onCancel={() => { this.setState({settingRoleVisible:false}) }}
+                            width={1100}
+                            footer={null}
+                            bodyStyle={{
+                                overflowY: 'auto',
+                                maxHeight: this.props.clientHeight - 240,
+                            }}
+
+                        >
+                            <Spin spinning={ this.props.RoleInfoTreeLoading || this.props.addSetRegOrAppRoleLoading || this.props.getSetRegOrAppRoleIdLoading}>
+                                {this.props.RoleInfoTree?.length > 0 && !this.props.RoleInfoTreeLoading && !this.props.getSetRegOrAppRoleIdLoading?
+                                    <TreeTransferSingle
+                                        key="key"
+                                        titles={['待设置角色', '已设置角色']}
+                                        treeData={copyObjectArrayTreeAndRenameProperty(this.props.RoleInfoTree,'Roles_Name','title')}
+                                        checkedKeys={this.props.setRegOrAppRoleId}
+                                        targetKeysChange={(key, type,callback) => {
+                                            this.settingRoleOk(key, type == 1 ? 1 : 2,callback)
+                                        }
+                                    }
+                                    />
+                                    :
+                                    <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                                }
+                            </Spin>
+                        </Modal>
                     </BreadcrumbWrapper>
                 }
             </Fragment>

@@ -1,3 +1,6 @@
+/*
+*两个节点穿梭框  适用于企业监测点树
+*/
 import React, { useState, useEffect } from 'react'
 import { Transfer, Tree, Spin, Empty,message, } from 'antd'
 import { ConsoleSqlOutlined, CalculatorFilled } from '@ant-design/icons';
@@ -110,7 +113,6 @@ const Index = (props) => {
     // flatten(dataSource)
     const leftData = generateTree(dataSource, targetKeys)
     const leftTreeData = leftData?.length? leftData.filter(item=>item.children[0]) : []
-
     return (
       <Transfer
         {...restProps}
@@ -258,17 +260,17 @@ const Index = (props) => {
     if (checkedKeys?.length > 0) {
       getRightTreeData(checkedKeys, 1)
     }
-    let keys = [];
-    treeData.forEach(tree => {
-      if (tree?.children?.length > 0) {
-        const isIncludes = tree.children.every(item => targetKeys.includes(item.key))
-        if (isIncludes) {
-          keys.push(tree.key)
-        }
-      }
-    })
+    // let keys = [];
+    // treeData.forEach(tree => {
+    //   if (tree?.children?.length > 0) {
+    //     const isIncludes = tree.children.every(item => targetKeys.includes(item.key))
+    //     if (isIncludes) {
+    //       keys.push(tree.key)
+    //     }
+    //   }
+    // })
     // setTargetKeys([...targetKeys, ...keys])
-    setTargetKeys([...new Set([...targetKeys, ...keys])])
+    // setTargetKeys([...new Set([...targetKeys, ...keys])])
     setTimeout(() => {
       setInitDataLoading(false)
     }, 1000)
@@ -289,7 +291,12 @@ const Index = (props) => {
           }
         })
       }
-    }
+    }  
+    treeData.map(item=>{
+      if(keys.includes(item.key)){
+        keys = keys.filter(filterItem => filterItem !== item.key); 
+      }
+    })
     setTargetKeys(keys)
     let keysList = changeArrType === 1 ? keys : moveKeys
     props.targetKeysChange? props.targetKeysChange(moveKeys,changeArrType,()=>{
@@ -297,10 +304,7 @@ const Index = (props) => {
     }) :  getRightTreeData(keysList, changeArrType)
   }
   
-  const onSelectChange = (key, targetSelectedKeys) => {
-
-  }
-  return <Spin spinning={initDataLoading}><TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} onSelectChange={onSelectChange} /> </Spin>
+  return <Spin spinning={initDataLoading}><TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} /> </Spin>
 }
 
 export default connect(dvaPropsData, dvaDispatch)(Index);

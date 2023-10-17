@@ -430,7 +430,7 @@ export const API = {
     //列表
     GetProjectReportList: before + '/CTBaseDataApi/GetProjectReportList',
     //编辑
-    GetCTProjectList: before + '/CTBaseDataApi/AddOrUpdProjectReportInfo',
+    AddOrUpdProjectReportInfo: before + '/CTBaseDataApi/AddOrUpdProjectReportInfo',
     //导出
     ExportProjectReportList: before + '/CTBaseDataApi/ExportProjectReportList'
 

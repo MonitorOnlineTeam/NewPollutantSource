@@ -902,8 +902,7 @@ export default class MonitorPoint extends Component {
       );
       const { tabKey, pointCoefficientFlag, pollutantType, deviceManagerGasType, sortTitle, isSuperAdministrator, } = this.state;
       const pointFlag = tabKey == 5 && pointCoefficientFlag;
-      const radiusFlag = tabKey == 6 && !isSuperAdministrator;
-
+      // const radiusFlag = tabKey == 6 && !isSuperAdministrator;
       return (
         <BreadcrumbWrapper title="监测点维护">
           <div className={styles.cardTitle}>
@@ -1098,7 +1097,7 @@ export default class MonitorPoint extends Component {
             </Button>,
 
                   <>
-                    {pointFlag || radiusFlag ?
+                    {pointFlag ?
                       <Button key="submit" onClick={this.modelClose}>
                         取消
                   </Button>

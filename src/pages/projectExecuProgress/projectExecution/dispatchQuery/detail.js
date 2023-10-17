@@ -1663,22 +1663,22 @@ const Index = (props) => {
 
   const fillContentTabContent = (item) => {
     const tabContent = {
-      '前期勘查': <EarlyStageCheck data={item.RecordList?.length ? item.RecordList : []} />,
-      '设备验货': <EquipmentInspection data={item.RecordList ? item.RecordList : []} />,
-      '指导安装': <GuideInstallation data={item.RecordList ? item.RecordList : []} />,
-      '静态调试': <StaticDebug data={item.RecordList ? item.RecordList : []} />,
-      '动态投运': <DynamicOperation data={item.RecordList ? item.RecordList : []} />,
-      '168试运行': <TestRun data={item.RecordList ? item.RecordList : []} />,
-      '72小时调试检测': <DebugTest data={item.RecordList ? item.RecordList : []} />,
-      '联网': <Networking data={item.RecordList ? item.RecordList : []} />,
-      '比对监测': <ComparativeMonitoring data={item.RecordList ? item.RecordList : []} />,
-      '项目验收': <ProjectAcceptance data={item.RecordList ? item.RecordList : []} />,
-      '配合检查': <CooperateInspection data={item.RecordList ? item.RecordList : []} />,
-      '维修': <Maintenance data={item.RecordList ? item.RecordList : []} />,
-      '培训': <Train data={item.RecordList ? item.RecordList : []} />,
-      '其它': <Other data={item.RecordList ? item.RecordList : []} />,
+      '1': <EarlyStageCheck data={item.RecordList?.length ? item.RecordList : []} />, //前期勘查
+      '2': <EquipmentInspection data={item.RecordList ? item.RecordList : []} />,//设备验货
+      '3': <GuideInstallation data={item.RecordList ? item.RecordList : []} />,//指导安装
+      '4': <StaticDebug data={item.RecordList ? item.RecordList : []} />,//静态调试
+      '5': <DynamicOperation data={item.RecordList ? item.RecordList : []} />,//前期勘查
+      '6': <TestRun data={item.RecordList ? item.RecordList : []} />,//168试运行
+      '7': <DebugTest data={item.RecordList ? item.RecordList : []} />,//72小时调试检测
+      '8': <Networking data={item.RecordList ? item.RecordList : []} />,//联网
+      '9': <ComparativeMonitoring data={item.RecordList ? item.RecordList : []} />,//比对监测
+      '10': <ProjectAcceptance data={item.RecordList ? item.RecordList : []} />,//项目验收
+      '11': <CooperateInspection data={item.RecordList ? item.RecordList : []} />,//配合检查
+      '12': <Maintenance data={item.RecordList ? item.RecordList : []} />,//维修
+      '13': <Train data={item.RecordList ? item.RecordList : []} />,//培训
+      '14': <Other data={item.RecordList ? item.RecordList : []} />,//其他
     }
-    return item.ItemName && tabContent[item.ItemName]
+    return item.ItemId && tabContent[item.ItemId]
   }
 
   const ServiceFillContent = () => {

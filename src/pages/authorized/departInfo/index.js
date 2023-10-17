@@ -416,7 +416,7 @@ class DepartIndex extends Component {
               {// 控制显示隐藏区域过滤
                 this.props.showGroupRegionFilter && (
                   <>
-                    <Tooltip title="区域过滤">
+                    <Tooltip title="运维区域过滤">
                       <a
                         onClick={() => {
                           this.setState(
@@ -434,6 +434,25 @@ class DepartIndex extends Component {
                     </Tooltip>
                   </>
                 )}
+                                
+               {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && <>
+                <Divider type="vertical" />
+                <Tooltip title="成套区域过滤">
+                  <a
+                    onClick={() => {
+                      this.setState(
+                        {
+                          selectedTestRowKeys: record,
+                        },
+                        () => {
+                          this.showTestRegionModal();
+                        },
+                      );
+                    }}
+                  >
+                    <FilterOutlined style={{ fontSize: 16 }} />
+                  </a>
+                </Tooltip></>}
               {this.props.configInfo && this.props.configInfo.IsShowProjectRegion && <><Divider type="vertical" /><Tooltip title="设置点位访问权限">
                 <a
                   onClick={() => {
@@ -492,25 +511,7 @@ class DepartIndex extends Component {
                     </a>
                   </Popover>
                 </Tooltip></>}
-                
-               {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && <>
-                <Divider type="vertical" />
-                <Tooltip title="调试检测区域过滤">
-                  <a
-                    onClick={() => {
-                      this.setState(
-                        {
-                          selectedTestRowKeys: record,
-                        },
-                        () => {
-                          this.showTestRegionModal();
-                        },
-                      );
-                    }}
-                  >
-                    <FilterOutlined style={{ fontSize: 16 }} />
-                  </a>
-                </Tooltip></>}
+
 
 
               {/* {record.leve === '1' && (
@@ -1518,7 +1519,7 @@ class DepartIndex extends Component {
                             <Button
                                 onClick={this.showRegionModal}
                                 style={{ marginLeft: "10px" }}
-                            >区域过滤</Button>
+                            >运维区域过滤</Button>
                             <Button
                                 onClick={this.showDataModal}
                                 style={{ marginLeft: "10px" }}
@@ -1667,7 +1668,7 @@ class DepartIndex extends Component {
                 {/* )} */}
               </Modal>
               <Modal
-                title={`区域过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
+                title={`运维区域过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
                 visible={this.state.visibleRegion}
                 onOk={this.handleRegionOK}
                 destroyOnClose="true"
@@ -1923,7 +1924,7 @@ class DepartIndex extends Component {
               </Form>
             </Modal>
             <Modal
-              title={`调试检测区域过滤-${this.state.selectedTestRowKeys?.UserGroup_Name}`}
+              title={`成套区域过滤-${this.state.selectedTestRowKeys?.UserGroup_Name}`}
               visible={this.state.testVisibleRegion}
               onOk={this.handleTestRegionOK}
               destroyOnClose="true"

@@ -126,3 +126,23 @@ export async function insertmenubyroleid(params) {
         data: null
     } : result;
 }
+//设置角色 行政区
+export async function addSetLongInAppRole(params) {
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/AddSetLongInAppRole', params);
+    return  result;
+}
+//获取设置角色 行政区
+export async function getSetLongInAppRoleId(params) {
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetSetLongInAppRoleId', params);
+    return  result;
+}
+//设置角色 运维APP
+export async function getSetRoleId(params) {
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetSetRoleId', params);
+    return  result;
+}
+//获取设置角色 运维APP
+export async function addSetRole(params) {
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/AddSetRole', params);
+    return  result;
+}

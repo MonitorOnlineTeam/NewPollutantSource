@@ -1,5 +1,5 @@
 /**
- * 功  能：交接报告
+ * 功  能：交接和报告
  * 创建人：jab
  * 创建时间：2023.10.08
  */
@@ -108,12 +108,12 @@ const Index = (props) => {
 
   const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, } = props;
 
-  const [editPermis,setPermisEdit] = useState(true)
+  const [editPermis,setPermisEdit] = useState(false)
   useEffect(() => {
     const buttonList = permissionButton(props.match.path)
     buttonList.map(item=>{
       switch (item){
-        case 'allotAuthority': setPermisEdit(false); break;
+        case 'allotAuthority': setPermisEdit(true); break;
         // case 'handoverReport': setPermisEdit(false); break;
       }
     })
@@ -214,14 +214,14 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: <span>操作</span>,
+      title: '操作',
       align: 'center',
       fixed: 'right',
       width: 180,
       ellipsis: true,
       render: (text, record) => {
         return <Fragment>
-          <Tooltip title={editPermis?props.permisBtnTip : '编辑'}> <a  className={editPermis&&'disabled_a'} onClick={() => { if(!editPermis) edit(record) }} ><EditIcon /></a> </Tooltip>
+          <Tooltip title={'编辑'}> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip>
         </Fragment>
 
 
@@ -495,7 +495,7 @@ const Index = (props) => {
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={columns}
+            columns={editPermis? columns : columns.filter(item=>item.title!='操作')  }
             scroll={{ y:'calc(100vh - 288px)' }}
             pagination={{
               total: tableTotal,

@@ -364,7 +364,7 @@ const Index = (props) => {
       layout='inline'
       initialValues={{
         Time: [moment(new Date()).startOf("day"), moment().endOf("day")],
-        LoginType: 2,
+        // LoginType: 2,
       }}
       onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2) }}
     >
@@ -521,7 +521,7 @@ const Index = (props) => {
           name="basic"
           form={form3}
           initialValues={{
-            DeleteType: 1,
+            // DeleteType: 1,
           }}
         >
           <Form.Item name='DeleteType' label="来源" rules={[{ required: true, message: '请选择来源' }]}>
