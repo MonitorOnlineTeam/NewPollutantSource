@@ -426,3 +426,25 @@ export function permissionButton(router) {
     return [];
   }
 }
+export function copyObjectArrayTreeAndRenameProperty(arr, oldPropertyName, newPropertyName) {  
+  // 创建一个新的数组来存储复制后的对象  
+  const newArr = [];  
+  
+  // 遍历原数组  
+  for (let i = 0; i < arr.length; i++) {  
+    // 复制当前对象，并递归复制其子数组  
+    const newObj = { ...arr[i] };  
+    if (Array.isArray(newObj.children)) {  
+      newObj.children = copyObjectArrayTreeAndRenameProperty(newObj.children, oldPropertyName, newPropertyName);  
+    }  
+    // 如果当前对象包含需要改变的属性名称，则替换为新的名称  
+    if (newObj.hasOwnProperty(oldPropertyName)) {  
+      newObj[newPropertyName] = newObj[oldPropertyName];  
+      delete newObj[oldPropertyName];  
+    }  
+    // 将复制后的对象添加到新数组中  
+    newArr.push(newObj);  
+  }  
+  
+  return newArr;  
+}
