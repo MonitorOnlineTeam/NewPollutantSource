@@ -15,6 +15,7 @@ import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentNam
     GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetMonitoringTypeList,
     GetManufacturerList,GetSystemModelList,GetPollutantById,GetPollutantById2,GetEquipmentInfoList,GetMonitoringTypeList2,
     GetMonitoringCategoryType,GetPBList,PointSort,GetPointCoefficientByDGIMN,GetPointElectronicFenceInfo,AddOrUpdatePointElectronicFenceInfo,
+    UpdatePointOprationStatus,GetOprationStatusList,
     
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
@@ -48,6 +49,7 @@ export default Model.extend({
         pointSystemInfo:[],//系统信息 回显
         monitoringCategoryTypeList:[],
         pbList:[], //废气 配备
+        oprationStatusList:[],
     },
     effects: {
 
@@ -476,6 +478,24 @@ export default Model.extend({
             const result = yield call(AddOrUpdatePointElectronicFenceInfo, payload);
             if (result.IsSuccess) {
                 message.success(result.Message)
+                callback&&callback(result.Datas)
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *updatePointOprationStatus({ payload, callback }, { call, put, update }) { // 修改运维状态
+            const result = yield call(UpdatePointOprationStatus, payload);
+            if (result.IsSuccess) {
+                message.success(result.Message)
+                callback&&callback(result.Datas)
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *getOprationStatusList({ payload, callback }, { call, put, update }) { // 运维状态 修改记录
+            const result = yield call(GetOprationStatusList, payload);
+            if (result.IsSuccess) {
+                yield update({ oprationStatusList: result.Datas,oprationStatusListTotal:result.Total, })
                 callback&&callback(result.Datas)
             } else {
               message.error(result.Message)

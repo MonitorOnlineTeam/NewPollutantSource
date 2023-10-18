@@ -13,6 +13,7 @@ export default Model.extend({
     tableDatas:[],
     tableLoading:false,
     tableTotal:0,
+    queryPar:{},
     serviceDispatchTypeAndRecordData:[],
   },
   effects: {
@@ -20,6 +21,7 @@ export default Model.extend({
       const result = yield call(services.getServiceDispatch, payload);
       if (result.IsSuccess) {
         yield update({
+          queryPar:payload,
           tableDatas:result.Datas,
           tableTotal:result.Total,
         })

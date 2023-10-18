@@ -135,7 +135,7 @@ const Index = (props) => {
                 checkedKeys={checkedKeys}
                 treeData={leftTreeData}
                 onCheck={(_, node) => {
-                  if(permission){
+                  if(!permission){
                     message.warning(permisBtnTip)
                     return;
                   }
@@ -160,10 +160,10 @@ const Index = (props) => {
                 checkedKeys={checkedKeys}
                 treeData={rightTreeData}
                 onCheck={(_, node) => {
-                  if(permission){
-                    message.warning(permisBtnTip)
-                    return;
-                  }
+                  // if(permission){
+                  //   message.warning(permisBtnTip)
+                  //   return;
+                  // }
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
                 }}
               // onSelect={(_, node) => {
@@ -277,9 +277,9 @@ const Index = (props) => {
   }
   const onChange = (keys, direction, moveKeys) => {
     let changeArrType = 1 // 0-删除  1-新增
-    if (direction === 'left') {
+    if (direction === 'left') { 
       changeArrType = 0
-      if (keys?.length > 0) {
+      if (keys?.length > 0) {//去掉父节点的key
         treeData.forEach(tree => {
           let index = keys.indexOf(tree?.key)
           if (index > -1 && tree?.children?.length > 0) {

@@ -602,7 +602,7 @@ const Index = (props) => {
               {entAndPoint?.length > 0 && (!entAndPointLoading) && (!rojectPointRelationLoading) ?
                 <TreeTransfer
                   key="key"
-                  permission={associaePermisPoint}
+                  // permission={!associaePermisPoint}
                   treeData={entAndPoint}
                   checkedKeys={checkedKeys}
                   targetKeysChange={(key, type, callback) => {

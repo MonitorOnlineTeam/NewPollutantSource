@@ -31,6 +31,7 @@ const dvaPropsData = ({ loading, dispatchQuery, global, }) => ({
   tableLoading: loading.effects[`${namespace}/getServiceDispatch`],
   tableDatas: dispatchQuery.tableDatas,
   tableTotal: dispatchQuery.tableTotal,
+  queryPar:dispatchQuery.queryPar,
   configInfo: global.configInfo,
   exportLoading: loading.effects[`${namespace}/exportServiceDispatch`],
 })
@@ -224,11 +225,11 @@ const Index = (props) => {
   };
 
 
-  const onFinish = async (PageIndex, PageSize) => {  //查询
+  const onFinish = async (PageIndex, PageSize,queryPar) => {  //查询
 
     try {
-      const values = await form.validateFields();
-      props.getServiceDispatch({
+      const values =   await form.validateFields();
+      props.getServiceDispatch(queryPar?{...queryPar, PageIndex: PageIndex, PageSize: PageSize,} : {
         ...values,
         beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
@@ -243,10 +244,9 @@ const Index = (props) => {
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState(20)
   const handleTableChange = async (PageIndex, PageSize) => { //分页
-    const values = await form.validateFields();
     setPageSize(PageSize)
     setPageIndex(PageIndex)
-    onFinish(PageIndex, PageSize)
+    onFinish(PageIndex, PageSize,props.queryPar)
   }
 
 

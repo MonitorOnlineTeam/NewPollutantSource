@@ -323,3 +323,11 @@ export async function AddOrUpdatePointElectronicFenceInfo(params) {   //电子�
     const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdatePointElectronicFenceInfo', params, null);
     return result;
 }
+export async function UpdatePointOprationStatus(params) {   //修改运维状态
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/UpdatePointOprationStatus', params, null);
+    return result;
+}
+export async function GetOprationStatusList(params) {   //运维状态 修改记录
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOprationStatusList', params, null);
+    return result;
+}

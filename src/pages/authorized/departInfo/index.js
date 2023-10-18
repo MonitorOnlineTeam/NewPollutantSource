@@ -64,6 +64,8 @@ import SupervisionConfigModal from './SupervisionConfigModal';
 import TreeTransfer from '@/components/TreeTransfer'
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
+import TreeTransferSingle from '@/components/TreeTransferSingle'
+import { copyObjectArrayTreeAndRenameProperty, permissionButton } from '@/utils/utils';
 
 let dragingIndex = -1;
 
@@ -268,6 +270,10 @@ const rightTableColumns = [
   clientHeight: global.clientHeight,
   testRegionByDepIDLoading: loading.effects['departinfo/getTestRegionByDepID'],
   insertTestRegionByUserLoading: loading.effects['departinfo/insertTestRegionByUser'],
+  setOperationGroupId: departinfo.setOperationGroupId,
+  addSetOperationGroupLoading: loading.effects['departinfo/addSetOperationGroup'] || false,
+  getSetOperationGroupLoading: loading.effects['departinfo/getSetOperationGroup'] || false,
+
 }))
 @Form.create()
 class DepartIndex extends Component {
@@ -434,8 +440,8 @@ class DepartIndex extends Component {
                     </Tooltip>
                   </>
                 )}
-                                
-               {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && <>
+
+              {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && this.state.testRegionPermis &&<>
                 <Divider type="vertical" />
                 <Tooltip title="成套区域过滤">
                   <a
@@ -554,6 +560,10 @@ class DepartIndex extends Component {
       approvalUserID: undefined,
       approvalNode: undefined,
       depID: undefined,
+      settingOperationGroupVisible:false,
+      settingOperationGrouptitle:'设置运维小组',
+      settingOperationGroupPermis:false,
+      testRegionPermis:false,
     };
     this.depApproveColumns = [
       {
@@ -959,6 +969,13 @@ class DepartIndex extends Component {
   // };
 
   componentDidMount() {
+    const buttonList = permissionButton(this.props.match.path)
+    buttonList.map(item=>{
+      switch (item){
+        case 'testRegion': this.setState({testRegionPermis: true }); break;
+        case 'SetOperationGroup': this.setState({settingOperationGroupPermis: true }); break;
+      }
+    })
     this.props.dispatch({
       type: 'departinfo/getdepartinfobytree',
       payload: {},
@@ -1071,9 +1088,9 @@ class DepartIndex extends Component {
     // });
   };
   renderTestTreeNodes = data =>
-   data.map(item => {
-    return <TreeNode title={item.label} key={item.value} dataRef={item}></TreeNode>;
-  });
+    data.map(item => {
+      return <TreeNode title={item.label} key={item.value} dataRef={item}></TreeNode>;
+    });
   showTestRegionModal = () => {
     if (this.state.selectedTestRowKeys?.length == 0) {
       message.error('请选中一行');
@@ -1081,7 +1098,7 @@ class DepartIndex extends Component {
     }
     this.setState({
       testVisibleRegion: true,
-    },()=>{
+    }, () => {
       const keys = this.state.selectedTestRowKeys.key;
       this.props.dispatch({
         type: 'departinfo/getTestRegionByDepID',
@@ -1104,7 +1121,7 @@ class DepartIndex extends Component {
     this.props.dispatch({
       type: 'departinfo/insertTestRegionByUser',
       payload: {
-        RegionCode: this.state.testCheckedKey, 
+        RegionCode: this.state.testCheckedKey,
         UserGroup_ID: this.state.selectedTestRowKeys?.key,
       },
       callback: res => {
@@ -1411,6 +1428,21 @@ class DepartIndex extends Component {
     e.preventDefault();
     this.addOrUpdateUserDepApprove();
   };
+  settingOperationGroup = () =>{
+    this.setState({
+      settingOperationGroupVisible:true,
+    })
+    this.props.dispatch({
+      type: 'departinfo/getSetOperationGroup',
+      payload: {},
+  })
+  }
+  settingOperationGroupOk = (operationGroupChecked, state)=>{
+    this.props.dispatch({
+      type: 'departinfo/addSetOperationGroup',
+      payload: {GroupIdList:operationGroupChecked,State:state},
+  })
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const {
@@ -1498,6 +1530,10 @@ class DepartIndex extends Component {
               <Button type="primary" style={{ marginRight: 8 }} onClick={this.showModal}>
                 新增
               </Button>
+              {this.state.settingOperationGroupPermis && <Button type="primary"
+                onClick={() => this.settingOperationGroup()}
+                style={{ margin: '0 8px' }}
+              >设置运维小组</Button>}
               {/* <Button type="primary"  style={{marginRight:8}} onClick={this.updateSort}>
                 {sortTitle}
               </Button> */}
@@ -1955,6 +1991,36 @@ class DepartIndex extends Component {
                     </Tree>
                   </div>
                 )}
+            </Modal>
+            <Modal
+              title={this.state.settingOperationGrouptitle}
+              visible={this.state.settingOperationGroupVisible}
+              destroyOnClose={true}
+              onCancel={() => { this.setState({ settingOperationGroupVisible: false }) }}
+              width={1100}
+              footer={null}
+              bodyStyle={{
+                overflowY: 'auto',
+                maxHeight: this.props.clientHeight - 240,
+              }}
+
+            >
+              <Spin spinning={this.props.GetDepartInfoByTree || this.props.addSetOperationGroupLoading || this.props.getSetOperationGroupLoading}>
+                {this.state.departInfoTree?.length > 0 && !this.props.GetDepartInfoByTree && !this.props.getSetOperationGroupLoading ?
+                  <TreeTransferSingle
+                    key="key"
+                    titles={['待设置运维小组', '已设置运维小组']}
+                    treeData={copyObjectArrayTreeAndRenameProperty(this.state.departInfoTree, 'UserGroup_Name', 'title')}
+                    checkedKeys={this.props.setOperationGroupId}
+                    targetKeysChange={(key, type) => {
+                      this.settingOperationGroupOk(key, type == 1 ? 1 : 2)
+                    }
+                    }
+                  />
+                  :
+                  <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                }
+              </Spin>
             </Modal>
           </BreadcrumbWrapper>
         }

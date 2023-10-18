@@ -10,7 +10,6 @@ export async function GetAlarmPushDepOrRole(params) {
 //报警关联  选择
 export async function InsertAlarmDepOrRole(params) {
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmDepOrRole', params, null);
-
   return result;
 }
 // 获取部门详细信息及层级关系
@@ -294,5 +293,17 @@ export async function getTestRegionByDepID(params) {
 // 调试检测区域过滤 提交
 export async function insertTestRegionByUser(params) {
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertTestRegionByUser', params, null);
+  return result;
+}
+
+//部门管理 设置运维小组
+export async function addSetOperationGroup(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/AddSetOperationGroup', params, null);
+  return result;
+}
+
+//部门管理 获取设置运维小组
+export async function getSetOperationGroup(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetSetOperationGroup', params, null);
   return result;
 }

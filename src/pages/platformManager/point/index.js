@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, EllipsisOutlined, FileTextOutlined, UnlockFilled, RotateLeftOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, EllipsisOutlined, FileTextOutlined, UnlockFilled, RotateLeftOutlined,HddOutlined,DatabaseOutlined,FileProtectOutlined, } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -43,6 +43,8 @@ import SelectPollutantType from '@/components/SelectPollutantType'
 import AnalyzerManage from './AnalyzerManage';
 import MonitoringStandard from '@/components/MonitoringStandard';
 import DeviceManager from './components/deviceManager';
+import EditOperationStatus from './components/editOperationStatus';
+
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 let pointConfigId = '';
@@ -77,8 +79,7 @@ let pointConfigIdEdit = '';
   paramCodeList: point.paramCodeList,
   updatePointDGIMNLoading: loading.effects['point/updatePointDGIMN'],
   saveSortLoading: loading.effects['point/pointSort'],
-  equipmentPol:[],
-
+  clientHeight: global.clientHeight,
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -111,7 +112,9 @@ export default class MonitorPoint extends Component {
       radiusElectronicFenceVal: '',//电子围栏半径
       radiusElectronicFlag: true,
       isSuperAdministrator: false,
-
+      editOperationStatusTitle:'',
+      editOperationStatusVisible:false,
+      editOperationStatusData:{},
     };
   }
 
@@ -705,12 +708,17 @@ export default class MonitorPoint extends Component {
       })
     }
     deviceManager = (row) => {
-
-
       this.setState({
         deviceManagerVisible: true,
         deviceManagerMN: row["dbo.T_Bas_CommonPoint.DGIMN"],
         deviceManagerGasType: row["dbo.T_Bas_CommonPoint.Col4"]
+      })
+    }
+    editOperationStatus = (row) =>{ //修改运维状态
+      this.setState({
+        editOperationStatusVisible:true,
+        editOperationStatusTitle:`${row["dbo.T_Bas_CommonPoint.PointName"]} - 修改运维状态`,
+        editOperationStatusData:row,
       })
     }
     onSubmitMN = e => {
@@ -1067,9 +1075,14 @@ export default class MonitorPoint extends Component {
                       <Tooltip title="设备管理">
                         <a onClick={() => {
                           this.deviceManager(row);
-                        }}><FileTextOutlined style={{ fontSize: 16 }} /></a>
+                        }}><HddOutlined style={{ fontSize: 16 }} /></a>
                       </Tooltip>
-
+                      <Divider type="vertical" />
+                      <Tooltip title="修改运维状态">
+                        <a onClick={() => {
+                          this.editOperationStatus(row);
+                        }}><FileProtectOutlined  style={{ fontSize: 16 }} /></a>
+                      </Tooltip>
                       {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="v  ertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
                          <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
                          <Tooltip title="更多">  <EllipsisOutlined /></Tooltip>
@@ -1196,10 +1209,24 @@ export default class MonitorPoint extends Component {
               onCancel={() => { this.setState({ deviceManagerVisible: false }) }}
               width="95%"
               destroyOnClose
-              footer={false}
+              footer={null}
               wrapClassName={styles.deviceManagerSty}
             >
               <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} gasType={deviceManagerGasType} pollutantType={pollutantType} />
+            </Modal>
+            <Modal  //设备管理
+              title={this.state.editOperationStatusTitle}
+              visible={this.state.editOperationStatusVisible}
+              onCancel={() => { this.setState({ editOperationStatusVisible: false }) }}
+              width="95%"
+              destroyOnClose
+              footer={null}
+              bodyStyle={{
+                overflowY: 'auto',
+                maxHeight: this.props.clientHeight - 180,
+              }}
+            >
+            <EditOperationStatus data={this.state.editOperationStatusData}/>
             </Modal>
           </div>
           {/* </MonitorContent> */}

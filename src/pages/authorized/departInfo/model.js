@@ -29,6 +29,8 @@ import {
   DeleteProvinceOrRegionalOne,
   getTestRegionByDepID,
   insertTestRegionByUser,
+  addSetOperationGroup,
+  getSetOperationGroup,
 } from './service';
 import { message } from 'antd';
 /*
@@ -64,6 +66,7 @@ export default Model.extend({
     AllProvince: [],
     provinceList: [],
     regionalList: [],
+    setOperationGroupId:[],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -442,6 +445,28 @@ export default Model.extend({
       const result = yield call(insertTestRegionByUser, payload);
       if (result.IsSuccess) {
         message.success(result.Message);
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    //部门管理 设置运维小组
+    *addSetOperationGroup({ payload, callback }, { call, update }) {
+      const result = yield call(addSetOperationGroup, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    //部门管理 获取设置运维小组
+    *getSetOperationGroup({ payload, callback }, { call, update }) {
+      const result = yield call(getSetOperationGroup, payload);
+      if (result.IsSuccess) {
+        yield update({
+          setOperationGroupId: result.Datas,
+        });
         callback && callback(result);
       } else {
         message.error(result.Message);

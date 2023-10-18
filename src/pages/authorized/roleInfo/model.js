@@ -248,7 +248,7 @@ export default Model.extend({
         },
         *addSetRegOrAppRole({ payload, callback }, { call, put, update }) { //设置角色 1行政区 2运维App
             yield update({ tableLoading: true })
-            const result = yield call(payload.type==1? addSetLongInAppRole : addSetRole , {...payload,type:undefined});
+            const result = yield call(payload.type==1?  addSetRole : addSetLongInAppRole , {...payload,type:undefined});
             if (result.IsSuccess) {
                 message.success(result.Message)
                 callback && callback()
@@ -256,9 +256,9 @@ export default Model.extend({
                 message.error(result.Message)
             }
         },
-        *getSetRegOrAppRoleId({ payload, callback }, { call, put, update }) { //获取设置角色 1 行政区 2运维App
+        *getSetRegOrAppRoleId({ payload, callback }, { call, put, update }) { //获取设置角色 1行政区 2运维App
             yield update({ tableLoading: true })
-            const result = yield call(payload.type==1? getSetLongInAppRoleId : getSetRoleId, {...payload,type:undefined});
+            const result = yield call(payload.type==1? getSetRoleId :getSetLongInAppRoleId , {...payload,type:undefined});
             if (result.IsSuccess) {
                 yield update({
                     setRegOrAppRoleId: result.Datas,

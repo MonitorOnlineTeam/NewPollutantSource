@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Transfer, Tree, Spin, Empty,message, } from 'antd'
+import { Transfer, Tree, Spin, Empty, message, } from 'antd'
 import { ConsoleSqlOutlined, CalculatorFilled } from '@ant-design/icons';
 import { connect } from 'dva';
 import styles from './styles.less'
 
 const dvaPropsData = ({ global }) => ({
   clientHeight: global.clientHeight,
-  permisBtnTip:global.permisBtnTip,
+  permisBtnTip: global.permisBtnTip,
 })
 const dvaDispatch = (dispatch) => {
   return {
@@ -20,7 +20,7 @@ const dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
-  const { treeData, checkedKeys, height, clientHeight,permission,permisBtnTip,titles, } = props;
+  const { treeData, checkedKeys, height, clientHeight, permission, permisBtnTip, titles, } = props;
   const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
   const generateTree = (treeNodes = [], checkedKeys = []) => {
@@ -33,25 +33,25 @@ const Index = (props) => {
     })
   }
   function findParentNodeByKey(nodes, childNodeKey) {  //通过子节点的key 查找父节点  并返回其key  以数组形式返回
-    for (let i = 0; i < nodes.length; i++) {  
-      let node = nodes[i];  
-      if (node.children && node.children.length > 0) {  
-        for (let j = 0; j < node.children.length; j++) {  
-          let childNode = node.children[j];  
-    
-          if (childNode.key === childNodeKey) {  
-            return node.key? [node.key] : [];  
-          } else {  
-            let result = findParentNodeByKey(node.children, childNodeKey);  
-            if (result !== null) {  
-              return result;  
-            }  
-          }  
-        }  
-      }  
-    }  
-    
-    return null;  
+    for (let i = 0; i < nodes.length; i++) {
+      let node = nodes[i];
+      if (node.children && node.children.length > 0) {
+        for (let j = 0; j < node.children.length; j++) {
+          let childNode = node.children[j];
+
+          if (childNode.key === childNodeKey) {
+            return node.key ? [node.key] : [];
+          } else {
+            let result = findParentNodeByKey(node.children, childNodeKey);
+            if (result !== null) {
+              return result;
+            }
+          }
+        }
+      }
+    }
+
+    return null;
   }
   const dealCheckboxSeleted = ({ node, onItemSelect, onItemSelectAll }) => {
     let {
@@ -61,17 +61,26 @@ const Index = (props) => {
     } = node
     // 勾选的是父节点
     if (children?.length > 0) {
+      const getKeys = (node) => {
+        const keyArr = [];
+        const keysValue = (node) => {
+          node?.[0] && node.forEach(child => {
+            keyArr.push(child.key)
+            keysValue(child.children)
+          })
+        }
+        keysValue(node)
+        return keyArr;
+      }
       let keys = []
-      children?.forEach(child => {
-        keys.push(child.key)
-      })
+      keys = getKeys(children)
       onItemSelectAll([...keys, key], checked)
     } else {
       // 勾选的是子节点
       if (!checked) {
         // 查找该元素的父元素
-        let parentKeys = halfCheckedKeys?.[0]&&[halfCheckedKeys?.[0]] || findParentNodeByKey(treeData,key) || []
-        onItemSelectAll([...parentKeys,key], checked)
+        let parentKeys = halfCheckedKeys?.[0] && [halfCheckedKeys?.[0]] || findParentNodeByKey(treeData, key) || []
+        onItemSelectAll([...parentKeys, key], checked)
       } else {
         let parentKey = ''
         treeData && treeData[0] && treeData.forEach(tree => {
@@ -91,17 +100,17 @@ const Index = (props) => {
       }
     }
   }
- const [ leftData,setLeftData ] = useState([])
+  const [leftData, setLeftData] = useState([])
 
- const TreeTransfer = ({ dataSource, targetKeys, ...restProps }) => {
-    
+  const TreeTransfer = ({ dataSource, targetKeys, ...restProps }) => {
+
     const transferDataSource = []
     function flatten(list = []) {
       list.forEach(item => {
         transferDataSource.push(item)
         flatten(item.children ? item.children : [])
       })
-    } 
+    }
     flatten(dataSource)
     return (
       <Transfer
@@ -110,7 +119,7 @@ const Index = (props) => {
         className={styles["tree-transfer"]}
         render={item => item.title}
         dataSource={transferDataSource}
-        titles={titles? titles : ['待分配点位','已分配点位']}
+        titles={titles ? titles : ['待分配点位', '已分配点位']}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
           if (direction === 'left') {
@@ -125,7 +134,7 @@ const Index = (props) => {
                 checkedKeys={checkedKeys}
                 treeData={leftData}
                 onCheck={(_, node) => {
-                  if(permission){
+                  if (permission) {
                     message.warning(permisBtnTip)
                     return;
                   }
@@ -141,52 +150,52 @@ const Index = (props) => {
   }
 
   function findParentNodes(tree, targetKeys) {  //所有子节点被选中的 父节点
-    const parentNodes = [];  
-    
-    function dfs(nodes, parentNode) {  
-      for (let i = 0; i < nodes.length; i++) {  
+    const parentNodes = [];
+
+    function dfs(nodes, parentNode) {
+      for (let i = 0; i < nodes.length; i++) {
         const isIncludes = nodes.every(item => targetKeys.includes(item.key))
-        if (parentNode&&isIncludes) {  //parentNode 只添加有子节点的父节点
-            parentNodes.push(parentNode.key);  
-        }  
-        const node = nodes[i];  
-        if (node.children && node.children.length > 0) {  
-          dfs(node.children, node);  
-        }  
-      }  
-    }  
-    
-    dfs(tree, null);  
-    return parentNodes;  
-  } 
+        if (parentNode && isIncludes) {  //parentNode 只添加有子节点的父节点
+          parentNodes.push(parentNode.key);
+        }
+        const node = nodes[i];
+        if (node.children && node.children.length > 0) {
+          dfs(node.children, node);
+        }
+      }
+    }
+
+    dfs(tree, null);
+    return parentNodes;
+  }
   const [initDataLoading, setInitDataLoading] = useState(false)
   useEffect(() => {
     initData()
   }, [targetKeys])
- 
-    
+
+
   const initData = () => {
 
-    let keys = findParentNodes(treeData,targetKeys)
+    let keys = findParentNodes(treeData, targetKeys)
     const leftDatas = generateTree(treeData, [...targetKeys, ...keys])
     setLeftData(leftDatas)
   }
-  function getLastChildKeys(tree) {  
-    const lastChildKeys = [];  
-    
-    function dfs(nodes) {  
-      for (let i = nodes.length - 1; i >= 0; i--) {  
-        const node = nodes[i];  
-        if (node.children && node.children.length > 0) {  
-          dfs(node.children);  
-        } else {  
-          lastChildKeys.push(node.key);  
-        }  
-      }  
-    }  
-    
-    dfs(tree);  
-    return lastChildKeys;  
+  function getLastChildKeys(tree) { //所有父节点 
+    const lastChildKeys = [];
+
+    function dfs(nodes) {
+      for (let i = nodes.length - 1; i >= 0; i--) {
+        const node = nodes[i];
+        if (node.children && node.children.length > 0) {
+          dfs(node.children);
+        } else {
+          lastChildKeys.push(node.key);
+        }
+      }
+    }
+
+    dfs(tree);
+    return lastChildKeys;
   }
   const onChange = (keys, direction, moveKeys) => {
     let changeArrType = 1 // 0-删除  1-新增
@@ -204,17 +213,17 @@ const Index = (props) => {
           }
         })
       }
-    } 
+    }
     // 获取两个数组的相同值  
     keys = keys.filter(value => getLastChildKeys(treeData).includes(value)); //所有移除的key
     moveKeys = moveKeys.filter(value => getLastChildKeys(treeData).includes(value));//本次需要移除的key
     setTargetKeys(keys)
     let keysList = changeArrType === 1 ? keys : moveKeys
-    props.targetKeysChange&&props.targetKeysChange(moveKeys,changeArrType,()=>{
+    props.targetKeysChange && props.targetKeysChange(moveKeys, changeArrType, () => {
 
     })
   }
-  
+
 
   return <TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} />
 }

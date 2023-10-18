@@ -371,7 +371,7 @@ class SdlForm extends PureComponent {
               initialValue = item.value[0] ? item.value[0].key : undefined;
             }
           }
-          element = <SdlRadio data={item.value} configId={item.configId} />;
+          element = <SdlRadio  disabled={((configId === 'GasOutput'|| configId === 'WaterOutput') && item.fullFieldName === "dbo.T_Bas_CommonPoint.Col5" && isEdit) ? true : false} data={item.value} configId={item.configId} />;
           break;
         case '多选':
           element = <SdlCheckbox data={item.value} configId={item.configId} />;

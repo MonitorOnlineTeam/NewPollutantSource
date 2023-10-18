@@ -102,7 +102,7 @@ const Index = (props) => {
 
     >
         <Row>
-            <Form.Item style={{ marginRight: 8, width:  'calc(100% - 98px)' }} name="projectCode">
+            <Form.Item style={{ marginRight: 8, width:  'calc(100% - 98px)' }} name="ProjectInfoStr">
                 <Input allowClear placeholder="请输入项目编号、立项号、项目名称" style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item>
