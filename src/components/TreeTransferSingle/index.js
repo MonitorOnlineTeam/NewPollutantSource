@@ -20,7 +20,7 @@ const dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
-  const { treeData, checkedKeys, height, clientHeight, permission, permisBtnTip, titles, } = props;
+  const { treeData, checkedKeys, height, clientHeight,titles, } = props;
   const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
   const generateTree = (treeNodes = [], checkedKeys = []) => {
@@ -134,10 +134,6 @@ const Index = (props) => {
                 checkedKeys={checkedKeys}
                 treeData={leftData}
                 onCheck={(_, node) => {
-                  if (permission) {
-                    message.warning(permisBtnTip)
-                    return;
-                  }
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
                 }}
               />

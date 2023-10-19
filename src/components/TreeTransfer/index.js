@@ -135,10 +135,10 @@ const Index = (props) => {
                 checkedKeys={checkedKeys}
                 treeData={leftTreeData}
                 onCheck={(_, node) => {
-                  if(!permission){
-                    message.warning(permisBtnTip)
-                    return;
-                  }
+                  // if(!permission){
+                  //   message.warning(permisBtnTip)
+                  //   return;
+                  // }
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll })
                 }}
               // onSelect={(_, node) => {

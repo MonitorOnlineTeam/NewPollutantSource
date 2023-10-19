@@ -250,7 +250,7 @@ class EditPollutant extends Component {
                         <Option value="1">零值异常</Option>
                         <Option value="2">超量程异常</Option>
                         <Option value="3">恒定值异常</Option>
-                        <Option value="5">超出正常范围异常</Option>
+                        {/* <Option value="5">超出正常范围异常</Option> */}
                       </Select>,
                     )}
                   </FormItem>
@@ -295,7 +295,7 @@ class EditPollutant extends Component {
                   </FormItem>
                 </Col>
               </Row>
-              <Row>
+              {/* <Row>
                 <Col span={8}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="正常范围最大值">
                     {getFieldDecorator('NormalRangeUpper', {
@@ -314,11 +314,10 @@ class EditPollutant extends Component {
                 <Col span={8}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超出正常范围计数">
                     {getFieldDecorator('OverNormalRangeCount', {
-                      // initialValue: 3,
                     })(<InputNumber  min={0} max={100000}  step={1} />)}
                   </FormItem>
                 </Col>
-              </Row>
+              </Row> */}
             </Panel>
           </Collapse>
           <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>

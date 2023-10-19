@@ -495,7 +495,7 @@ export default Model.extend({
           *getOprationStatusList({ payload, callback }, { call, put, update }) { // 运维状态 修改记录
             const result = yield call(GetOprationStatusList, payload);
             if (result.IsSuccess) {
-                yield update({ oprationStatusList: result.Datas,oprationStatusListTotal:result.Total, })
+                yield update({ oprationStatusList:result?.Datas?.dataList?  result.Datas.dataList :[],oprationStatusListTotal:result.Total, });
                 callback&&callback(result.Datas)
             } else {
               message.error(result.Message)

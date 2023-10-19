@@ -208,9 +208,9 @@ class TaskRecord extends Component {
   }
 
   /** 加载列表 */
-  LoadData = () => {
+  LoadData = (par) => {
     const {
-      dispatch, gettasklistqueryparams,
+      dispatch,
       isHomeModal, DGIMN
     } = this.props;
     
@@ -218,7 +218,6 @@ class TaskRecord extends Component {
       type: 'task/updateState',
       payload: {
         gettasklistqueryparams: {
-          ...gettasklistqueryparams,
           TaskCode: '',
           ExceptionType: '',
           TaskFrom: '',
@@ -230,7 +229,8 @@ class TaskRecord extends Component {
           pageIndex: 1,
           pageSize: 20,
           total: 0,
-          DGIMN: isHomeModal ? DGIMN : ''
+          DGIMN: isHomeModal ? DGIMN : '',
+          ...par,
         },
       },
     })
@@ -345,7 +345,7 @@ class TaskRecord extends Component {
         taskId: key,
       },
     })
-    this.LoadData();
+    this.LoadData(this.props.gettasklistqueryparams);
   }
 
   // 监控类型选择
@@ -685,7 +685,8 @@ class TaskRecord extends Component {
         render: (text, record, index) => {
           const {forwardPermis,rejectPermis,} = this.state;
           {
-            const time = record.CompleteTime;
+            const nowTime = record.nowDate;
+            const completeTime = record.CompleteTime;
             const { DGIMN } = record;
             const TaskID = record.ID;
             const reslist = [];
@@ -702,10 +703,10 @@ class TaskRecord extends Component {
                   <SendOutlined  style={{ cursor: record.IsForward != '1' && 'not-allowed', }} onClick={() => this.taskForward(record)} /></a>
               </Tooltip></>}
             </>)
-            if (time&&rejectPermis) {
+            if (completeTime&&rejectPermis) {
               // console.log('timetimetimetimetimetime', moment().diff(time, 'days'));
               // 当前时间 > 完成时间显示驳回
-              if (moment().diff(time, 'days') < 7) {
+              if (moment(nowTime).diff(completeTime, 'days') <= 30) {
                 reslist.push(
                   <>
                     <Divider type="vertical" />

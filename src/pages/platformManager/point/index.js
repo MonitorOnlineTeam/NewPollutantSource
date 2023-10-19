@@ -1214,7 +1214,7 @@ export default class MonitorPoint extends Component {
             >
               <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} gasType={deviceManagerGasType} pollutantType={pollutantType} />
             </Modal>
-            <Modal  //设备管理
+            <Modal  //修改运维状态
               title={this.state.editOperationStatusTitle}
               visible={this.state.editOperationStatusVisible}
               onCancel={() => { this.setState({ editOperationStatusVisible: false }) }}
@@ -1226,7 +1226,7 @@ export default class MonitorPoint extends Component {
                 maxHeight: this.props.clientHeight - 180,
               }}
             >
-            <EditOperationStatus data={this.state.editOperationStatusData}/>
+            <EditOperationStatus data={this.state.editOperationStatusData} pointConfigId={pointConfigId} pointDataWhere={pointDataWhere} onCancel={() => { this.setState({ editOperationStatusVisible: false }) }}/>
             </Modal>
           </div>
           {/* </MonitorContent> */}

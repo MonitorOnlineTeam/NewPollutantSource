@@ -142,7 +142,7 @@ const GlobalHeaderRight = props => {
       {/** 污水处理厂权限去掉铃铛<NoticeIconView /> */}
       <Popover zIndex={9999} overlayClassName={styles.expandPopSty} content={isFullscreen ? '退出全屏' : '全屏展示'}> <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }} >{isFullscreen ? <CompressOutlined style={{ color: '#fff' }} /> : <ExpandOutlined style={{ color: '#fff' }} />}</span></Popover>
    
-          <Dropdown overlay={menu} trigger={['click']}>
+          <Dropdown overlay={menu}>
             <Tooltip title="切换系统">
               <a
                 rel="noopener noreferrer"
