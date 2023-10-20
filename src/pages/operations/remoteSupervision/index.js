@@ -2976,9 +2976,9 @@ const Index = (props) => {
                 <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
                   重置
                 </Button>
-                {!isRecord && <Button style={{ marginRight: 8 }} onClick={add}>
+                {/* {!isRecord && <Button style={{ marginRight: 8 }} onClick={add}>
                   添加
-                </Button>}
+                </Button>} */}
                 <Button loading={exportLoading} icon={<ExportOutlined />} onClick={() => { exports() }}  >
                   导出
                 </Button>

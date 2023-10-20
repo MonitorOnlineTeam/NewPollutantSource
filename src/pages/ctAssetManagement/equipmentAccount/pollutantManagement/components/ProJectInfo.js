@@ -62,6 +62,7 @@ const Index = (props) => {
 
     useEffect(() => {
      if(projectPopVisible){
+        form.resetFields();
         onFinish(pageIndex,pageSize)
         }
     }, [projectPopVisible]);
