@@ -8,17 +8,10 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'logManger',
+  namespace: 'operationBasConfig',
   state: {
     tableDatas:[],
-    tableTotal:0,
-    queryPar:{},
-    tableDatas2:[],
-    tableTotal2:0,
-    queryPar2:{},
-    tableDatas3:[],
-    tableTotal3:0,
-    queryPar3:{},
+ 
   },
   effects: {
     *getSystemExceptionList({ payload,callback }, { call, put, update }) { //异常日志 列表
@@ -41,27 +34,7 @@ export default Model.extend({
       }else{
         message.error(result.Message)
       }
-    },
-    *getSystemLongInLogs({ payload,callback }, { call, put, update }) { //登录日志 列表
-      const result = yield call(services.GetSystemLongInLogs, payload);
-      if (result.IsSuccess) {
-        yield update({
-          tableTotal2:result.Total,
-          tableDatas2:result.Datas?result.Datas : [],
-          queryPar2:payload,
-        })
-      }else{
-        message.error(result.Message)
-      }
-    },
-    *deleteSystemLongInLogs({ payload,callback }, { call, put, update }) { //登录日志 删除
-      const result = yield call(services.DeleteSystemLongInLogs, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
-      }else{
-        message.error(result.Message)
-      }
-    },
+    }
   },
+   
 })

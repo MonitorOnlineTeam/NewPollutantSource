@@ -143,14 +143,14 @@ const GlobalHeaderRight = props => {
       <Popover zIndex={9999} overlayClassName={styles.expandPopSty} content={isFullscreen ? '退出全屏' : '全屏展示'}> <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }} >{isFullscreen ? <CompressOutlined style={{ color: '#fff' }} /> : <ExpandOutlined style={{ color: '#fff' }} />}</span></Popover>
    
           <Dropdown overlay={menu}>
-            <Tooltip title="切换系统">
+            {/* <Tooltip title="切换系统"> */}
               <a
                 rel="noopener noreferrer"
                 className={styles.action}
               >
                 <UnorderedListOutlined />
               </a>
-            </Tooltip>
+            {/* </Tooltip> */}
           </Dropdown>  
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}

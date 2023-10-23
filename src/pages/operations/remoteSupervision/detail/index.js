@@ -737,7 +737,7 @@ const Index = (props) => {
     <Form
       name="detail"
     >
-      <Row style={{paddingTop: isMobile? 16 : 0}}>
+      <Row style={{paddingTop: isMobile? 16 : 12}}>
       <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="企业名称">
         {consistencyCheckDetail.entName }

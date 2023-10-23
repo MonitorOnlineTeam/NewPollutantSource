@@ -2124,9 +2124,10 @@ const Index = (props) => {
                   disabledFlag = isCheckUser;
                   break;
               }
+              const fileFlag = !(analyzerFileList[`${record.par}AnalyzerFilePar`] && analyzerFileList[`${record.par}AnalyzerFilePar`][0])
               return <Row justify='center' align='middle'>
                 <Form.Item name={`${record.par}AnalyzerFilePar`}>
-                  <a style={{ cursor: disabledFlag && 'not-allowed', color: disabledFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag) { return }; setFileType('analyzerFile'); setAnalyzerFilePar(`${record.par}AnalyzerFilePar`); setFileVisible(true); }}>{analyzerFileList[`${record.par}AnalyzerFilePar`] && analyzerFileList[`${record.par}AnalyzerFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                  <a style={{ cursor: disabledFlag && fileFlag && 'not-allowed', color:  disabledFlag && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag&&fileFlag) { return }; setFileType('analyzerFile'); setAnalyzerFilePar(`${record.par}AnalyzerFilePar`); setFileVisible(true); }}>{analyzerFileList[`${record.par}AnalyzerFilePar`] && analyzerFileList[`${record.par}AnalyzerFilePar`][0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </Row>
             }
@@ -2196,9 +2197,10 @@ const Index = (props) => {
                   disabledFlag = isCheckUser;
                   break;
               }
+              const fileFlag = !(dasFileList[`${record.par}DasFilePar`] && dasFileList[`${record.par}DasFilePar`][0])
               return <Row justify='center' align='middle'>
                 <Form.Item name={`${record.par}DasFilePar`}>
-                  <a style={{ cursor: disabledFlag && 'not-allowed', color: disabledFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag) { return }; setFileType('dasFile'); setDasFilePar(`${record.par}DasFilePar`); setFileVisible(true); }}>{dasFileList[`${record.par}DasFilePar`] && dasFileList[`${record.par}DasFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                  <a style={{ cursor: disabledFlag && fileFlag && 'not-allowed', color: disabledFlag &&  fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag && fileFlag) { return }; setFileType('dasFile'); setDasFilePar(`${record.par}DasFilePar`); setFileVisible(true); }}>{dasFileList[`${record.par}DasFilePar`] && dasFileList[`${record.par}DasFilePar`][0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </Row>
             }
@@ -2270,9 +2272,11 @@ const Index = (props) => {
                   disabledFlag = isCheckUser;
                   break;
               }
+              const fileFlag = !(rangeFileList[`${record.par}RangeFilePar`] && rangeFileList[`${record.par}RangeFilePar`][0])
+
               return <Row justify='center' align='middle'>
                 <Form.Item name={`${record.par}RangeFilePar`}>
-                  <a style={{ cursor: disabledFlag && 'not-allowed', color: disabledFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag) { return }; setFileType('rangeFile'); setRangeFilePar(`${record.par}RangeFilePar`); setFileVisible(true); }}>{rangeFileList[`${record.par}RangeFilePar`] && rangeFileList[`${record.par}RangeFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                  <a style={{ cursor: disabledFlag && fileFlag && 'not-allowed', color: disabledFlag && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag&&fileFlag) { return }; setFileType('rangeFile'); setRangeFilePar(`${record.par}RangeFilePar`); setFileVisible(true); }}>{rangeFileList[`${record.par}RangeFilePar`] && rangeFileList[`${record.par}RangeFilePar`][0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </Row>
             }
@@ -2561,10 +2565,11 @@ const Index = (props) => {
           key: 'par',
           width: 100,
           render: (text, record, index) => {
+            const fileFlag = !(fileList2 && fileList2[0]);
             const obj = {
               children: <div>
                 <Form.Item name='files2' >
-                  <a style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType(2); setFileVisible(true) }}>{fileList2[0] ? '查看附件' : '上传附件'}</a>
+                  <a style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser && fileFlag) { return }; setFileType(2); setFileVisible(true) }}>{fileList2[0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </div>,
               props: {},
@@ -2700,8 +2705,9 @@ const Index = (props) => {
           key: 'par',
           width: 120,
           render: (text, record, index) => {
+            const fileFlag = !(settingFileList[`${record.par}SettingFilePar`] && settingFileList[`${record.par}SettingFilePar`][0])
             return <Form.Item name={`${record.par}SettingFilePar`} >
-              <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType('settingFile'); setSettingFilePar(`${record.par}SettingFilePar`); setFileVisible(true); }}>{settingFileList[`${record.par}SettingFilePar`] && settingFileList[`${record.par}SettingFilePar`][0] ? '查看附件' : '上传附件'}</a>
+              <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser && fileFlag) { return }; setFileType('settingFile'); setSettingFilePar(`${record.par}SettingFilePar`); setFileVisible(true); }}>{settingFileList[`${record.par}SettingFilePar`] && settingFileList[`${record.par}SettingFilePar`][0] ? '查看附件' : '上传附件'}</a>
             </Form.Item>
 
 
@@ -2734,9 +2740,10 @@ const Index = (props) => {
           key: 'par',
           width: 120,
           render: (text, record, index) => {
+            const fileFlag = !(instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0])
             return <div>
               <Form.Item name={`${record.par}InstrumentFilePar`} >
-                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser&&fileFlag) { return }; setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>
               </Form.Item>
             </div>;
 
@@ -2769,9 +2776,11 @@ const Index = (props) => {
           key: 'par',
           width: 130,
           render: (text, record, index) => {
+            const fileFlag = !(dataFileList[`${record.par}DataFilePar`] && dataFileList[`${record.par}DataFilePar`][0])
+
             return <div>
               <Form.Item name={`${record.par}DataFilePar`} >
-                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType('dataFile'); setDataFilePar(`${record.par}DataFilePar`); setFileVisible(true); }}>{dataFileList[`${record.par}DataFilePar`] && dataFileList[`${record.par}DataFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser && fileFlag) { return }; setFileType('dataFile'); setDataFilePar(`${record.par}DataFilePar`); setFileVisible(true); }}>{dataFileList[`${record.par}DataFilePar`] && dataFileList[`${record.par}DataFilePar`][0] ? '查看附件' : '上传附件'}</a>
               </Form.Item>
             </div>;
 
@@ -2800,9 +2809,10 @@ const Index = (props) => {
           key: 'par',
           width: 100,
           render: (text, record, index) => {
+            const fileFlag = !(traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0])
             return <div>
               <Form.Item name={`${record.par}TraceabilityFilePar`} >
-                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && 'not-allowed', color: isCheckUser && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser) { return }; setFileType('traceabilityFile'); setTraceabilityFilePar(`${record.par}TraceabilityFilePar`); setFileVisible(true); }}>{traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser&&fileFlag) { return }; setFileType('traceabilityFile'); setTraceabilityFilePar(`${record.par}TraceabilityFilePar`); setFileVisible(true); }}>{traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0] ? '查看附件' : '上传附件'}</a>
               </Form.Item>
             </div>;
 
@@ -3206,10 +3216,10 @@ const Index = (props) => {
         footer={null}
       >
         <Upload {...uploadProps} style={{ width: '100%' }} >
-          <div>
+          {!isCheckUser&&<div>
             <PlusOutlined />
             <div style={{ marginTop: 8 }}>上传</div>
-          </div>
+          </div>}
         </Upload>
       </Modal>
       {previewVisible && <Lightbox

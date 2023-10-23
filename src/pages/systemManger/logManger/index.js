@@ -31,16 +31,21 @@ const namespace = 'logManger'
 
 const dvaPropsData = ({ loading, logManger, usertree }) => ({
   tableDatas: logManger.tableDatas,
-  tableLoading: loading.effects[`${namespace}/getSystemExceptionList`] || loading.effects[`${namespace}/deleteSystemException`],
   tableTotal: logManger.tableTotal,
+  tableLoading: loading.effects[`${namespace}/getSystemExceptionList`] || loading.effects[`${namespace}/deleteSystemException`],
   queryPar: logManger.queryPar,
   rolesList: usertree.RolesTree,
   rolesTreeLoading: loading.effects[`usertree/getRolesTree`],
   tableDatas2: logManger.tableDatas2,
-  tableLoading2: loading.effects[`${namespace}/getSystemLongInLogs`],
-  deleteSystemLongInLogsLoading: loading.effects[`${namespace}/deleteSystemLongInLogs`],
   tableTotal2: logManger.tableTotal2,
+  tableLoading2: loading.effects[`${namespace}/getSystemLongInLogs`],
   queryPar2: logManger.queryPar2,
+  deleteSystemLongInLogsLoading: loading.effects[`${namespace}/deleteSystemLongInLogs`],
+  tableDatas3: logManger.tableDatas3,
+  tableLoading3: loading.effects[`${namespace}/getSystemLongInLogs`],
+  queryPar3: logManger.queryPar2,
+  // deleteSystemLongInLogsLoading: loading.effects[`${namespace}/deleteSystemLongInLogs`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -95,7 +100,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableTotal, tableLoading, queryPar, rolesList, rolesTreeLoading, tableDatas2, tableTotal2, tableLoading2, queryPar2, } = props;
+  const { tableDatas, tableTotal, tableLoading, queryPar, rolesList, rolesTreeLoading, tableDatas2, tableTotal2, tableLoading2, queryPar2, tableDatas3, tableTotal3, tableLoading3, queryPar3,} = props;
   useEffect(() => {
     onFinish(pageIndex, pageSize);
     onFinish2(pageIndex2, pageSize2);
@@ -121,7 +126,7 @@ const Index = (props) => {
   //     }
   //     return ret;
   // }
-  const columns = [
+  const columns = [ //异常日志
     {
       title: '序号',
       align: 'center',
@@ -192,48 +197,6 @@ const Index = (props) => {
   ];
 
 
-
-
-  const del = (record) => {
-    props.deleteSystemException({ ID: record.ID }, () => {
-      onFinish(pageIndex, pageSize)
-    })
-  };
-
-
-
-
-  const [detailVisible, setDetailVisible] = useState(false)
-  const [detailData, setDetailData] = useState()
-  const detail = (record) => {
-    setDetailVisible(true)
-    setDetailData(record)
-  };
-
-  const onFinish = async (pageIndexs, pageSizes, par) => {  //异常日志 查询
-
-    try {
-      const values = await form.validateFields(); q
-
-      props.getSystemExceptionList(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
-        ...values,
-        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD HH:mm:ss'),
-        pageIndex: pageIndexs,
-        pageSize: pageSizes,
-        Time: undefined,
-      })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
-  const handleTableChange = (PageIndex, PageSize) => {
-    setPageIndex(PageIndex)
-    setPageSize(PageSize)
-    onFinish(PageIndex, PageSize, queryPar)
-  }
   const searchComponents = () => {
     return <Form
       form={form}
@@ -264,8 +227,45 @@ const Index = (props) => {
       </Form.Item>
     </Form>
   }
+  const onFinish = async (pageIndexs, pageSizes, par) => {  //异常日志 查询
 
-  const columns2 = [
+    try {
+      const values = await form.validateFields(); q
+
+      props.getSystemExceptionList(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
+        ...values,
+        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
+        Time: undefined,
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
+  const handleTableChange = (PageIndex, PageSize) => {
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+    onFinish(PageIndex, PageSize, queryPar)
+  }
+  
+
+  const del = (record) => {
+    props.deleteSystemException({ ID: record.ID }, () => {
+      onFinish(pageIndex, pageSize)
+    })
+  };
+  const [detailVisible, setDetailVisible] = useState(false)
+  const [detailData, setDetailData] = useState()
+  const detail = (record) => {
+    setDetailVisible(true)
+    setDetailData(record)
+  };
+
+  const columns2 = [ //登录日志
     {
       title: '序号',
       align: 'center',
@@ -332,35 +332,12 @@ const Index = (props) => {
     },
   ];
 
-  const onFinish2 = async (pageIndexs, pageSizes, par) => {  //登录日志 查询
 
-    try {
-      const values = await form2.validateFields();
-
-      props.getSystemLongInLogs(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
-        ...values,
-        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD HH:mm:ss'),
-        pageIndex: pageIndexs,
-        pageSize: pageSizes,
-        Time: undefined,
-      })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
-  const [pageIndex2, setPageIndex2] = useState(1)
-  const [pageSize2, setPageSize2] = useState(20)
-  const handleTableChange2 = (PageIndex, PageSize) => { //分页 打卡异常 响应超时 弹框
-    setPageIndex2(PageIndex)
-    setPageSize2(PageSize)
-    onFinish2(PageIndex, PageSize, queryPar2)
-  }
   const searchComponents2 = () => {
     return <Form
       form={form2}
       name="advanced_search"
-      className={styles['ant-advanced-search-form']}
+      className={styles['ant-advanced-search-form2']}
       layout='inline'
       initialValues={{
         Time: [moment(new Date()).startOf("day"), moment().endOf("day")],
@@ -418,8 +395,32 @@ const Index = (props) => {
       </Row>
     </Form>
   }
-  const [formVisible, setFormVisible] = useState(false)
-  const onModalOk = async () => {
+  const onFinish2 = async (pageIndexs, pageSizes, par) => {  //登录日志 查询
+
+    try {
+      const values = await form2.validateFields();
+
+      props.getSystemLongInLogs(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
+        ...values,
+        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
+        Time: undefined,
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+  const [pageIndex2, setPageIndex2] = useState(1)
+  const [pageSize2, setPageSize2] = useState(20)
+  const handleTableChange2 = (PageIndex, PageSize) => { //分页 打卡异常 响应超时 弹框
+    setPageIndex2(PageIndex)
+    setPageSize2(PageSize)
+    onFinish2(PageIndex, PageSize, queryPar2)
+  } 
+  const [formVisible, setFormVisible] = useState(false) 
+  const onModalOk = async () => { //日志清理
 
     try {
       const values = await form3.validateFields();//触发校验
@@ -434,6 +435,175 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
+  const columns3 = [ //操作日志
+    {
+      title: '序号',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return (index + 1) + (pageIndex2 - 1) * pageSize2;
+      }
+    },
+    {
+      title: '登录账号',
+      dataIndex: 'UserAccount',
+      key: 'UserAccount',
+      align: 'center',
+      ellipsis: true,
+      width: 120,
+    },
+    {
+      title: '姓名',
+      dataIndex: 'UserName',
+      key: 'UserName',
+      align: 'center',
+      ellipsis: true,
+      width: 'auto',
+    },
+    {
+      title: '功能模块',
+      dataIndex: 'UserRolesName',
+      key: 'UserRolesName',
+      align: 'center',
+      ellipsis: true,
+      width: 'auto',
+    },
+    {
+      title: '操作类型',
+      dataIndex: 'LoginIP',
+      key: 'LoginIP',
+      align: 'center',
+      ellipsis: true,
+      width: 120,
+    },
+    {
+      title: '操作内容',
+      dataIndex: 'Attribution',
+      key: 'Attribution',
+      align: 'center',
+      ellipsis: true,
+      width: 'auto',
+    },
+    {
+      title: '操作时间',
+      dataIndex: 'LoginTime',
+      key: 'LoginTime',
+      align: 'center',
+      ellipsis: true,
+
+    },
+    {
+      title: '操作',
+      align: 'center',
+      width: 110,
+      render: (text, record) => {
+        return <span>
+          <Fragment>
+            <Fragment> <Tooltip title="详情">  <a style={{ paddingRight: 5 }} onClick={() => { detail3(record) }} ><DetailIcon /></a></Tooltip><Divider type="vertical" /></Fragment>
+            <Popconfirm placement='left' title="确定要删除此条信息吗？" onConfirm={() => { del(record) }} okText="是" cancelText="否">
+              <Tooltip title="删除">   <a><DelIcon /></a></Tooltip>
+            </Popconfirm>
+          </Fragment>
+        </span>
+      }
+    },
+  ];
+  const searchComponents3 = () =>{
+    return <Form
+    form={form3}
+    name="advanced_search"
+    className={styles['ant-advanced-search-form3']}
+    layout='inline'
+    initialValues={{
+      Time: [moment(new Date()).startOf("day"), moment().endOf("day")],
+      // LoginType: 2,
+    }}
+    onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2) }}
+  >
+    <Row style={{ flex: 1 }}>
+      <Col span={8}>
+        <Form.Item label="登录账号/姓名" name="UserAccount" style={{ marginBottom: 8 }}>
+          <Input placeholder='请输入' allowClear />
+        </Form.Item>
+      </Col>
+      <Col span={8}>
+        <Form.Item label="操作时间" name="Time" style={{ marginBottom: 8, marginRight: 0 }} >
+          <RangePicker_ style={{ width: '100%' }} showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }} />
+        </Form.Item>
+      </Col>
+      <Col span={8}>
+        <Form.Item label="功能模块" name="RoleId" style={{ marginBottom: 8 }}>
+          {rolesTreeLoading ? <Spin size='small' />
+            :
+            <TreeSelect
+              placeholder="请选择"
+              allowClear
+              treeData={rolesList}
+              showSearch
+              treeNodeFilterProp='title'
+            />
+          }
+        </Form.Item>
+      </Col>
+      <Col span={8}>
+        <Form.Item label="操作类型" name="LoginType" className='minWidthLabel3' >
+          <Select placeholder='请选择' allowClear>
+            <Option value={1}>网页</Option>
+            <Option value={2}>APP</Option>
+            <Option value={3}>小程序</Option>
+          </Select>
+        </Form.Item>
+      </Col>
+      <Col span={8}>
+        <Form.Item>
+          <Button type="primary" htmlType='submit' loading={tableLoading2} style={{ marginRight: 8 }}>
+            查询
+    </Button>
+          <Button onClick={() => { form2.resetFields() }} style={{ marginRight: 8 }} >
+            重置
+    </Button>
+          <Button type="primary" onClick={() => { setFormVisible(true);form3.resetFields(); }}>
+            日志清理
+         </Button>
+        </Form.Item>
+      </Col>
+    </Row>
+  </Form>
+  }
+
+  const onFinish3 = async (pageIndexs, pageSizes, par) => {  //操作日志 查询
+
+    try {
+      const values = await form2.validateFields();
+
+      props.getSystemLongInLogs(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
+        ...values,
+        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
+        Time: undefined,
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+  const [pageIndex3, setPageIndex3] = useState(1)
+  const [pageSize3, setPageSize3] = useState(20)
+  const handleTableChange3 = (PageIndex, PageSize) => { //分页 打卡异常  弹框
+    setPageIndex3(PageIndex)
+    setPageSize3(PageSize)
+    onFinish2(PageIndex, PageSize, queryPar3)
+  }
+  const [detailVisible3, setDetailVisible3] = useState(false) 
+  const [detailData3, setDetailData3] = useState()
+  const detail3 = (record) => {//操作日志 详情
+    setDetailVisible3(true)
+    setDetailData3(record)
+  };
+
+
+
   return (
     <div className={styles.logMangerSty}>
       <BreadcrumbWrapper>
@@ -479,11 +649,58 @@ const Index = (props) => {
               />
             </Card>
           </Tabs.TabPane>
+          <Tabs.TabPane tab="操作日志" key="3">
+             <Card title={searchComponents3()}>
+              <SdlTable
+                loading={tableLoading3}
+                bordered
+                dataSource={tableDatas3}
+                columns={columns3}
+                size='small'
+                scroll={{ x: 810, y: 'calc(100vh - 280px)' }}
+                resizable
+                pagination={{
+                  total: tableTotal3,
+                  pageSize: pageSize3,
+                  current: pageIndex3,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange3,
+                }}
+              /> 
+            </Card>
+          </Tabs.TabPane>
         </Tabs>
       </BreadcrumbWrapper>
 
       <Modal
-        title={'详情'}
+        title={'登录日志清理'}
+        visible={formVisible}
+        onCancel={() => { setFormVisible(false) }}
+        destroyOnClose
+        confirmLoading={props.deleteSystemLongInLogsLoading}
+        onOk={onModalOk}
+      >
+        <Form
+          name="basic"
+          form={form3}
+          initialValues={{
+            // DeleteType: 1,
+          }}
+        >
+          <Form.Item name='DeleteType' label="来源" rules={[{ required: true, message: '请选择来源' }]}>
+            <Select placeholder='请选择'>
+              <Option value={1}>清理一周之前日志数据</Option>
+              <Option value={2}>清理一个月之前日志数据</Option>
+              <Option value={3}>清理三个月之前日志数据</Option>
+              <Option value={4}>清理六个月之前日志数据</Option>
+              <Option value={5}>清理一年之前日志数据</Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title={'登录日志详情'}
         visible={detailVisible}
         onCancel={() => { setDetailVisible(false) }}
         className={styles.fromModal}
@@ -510,29 +727,46 @@ const Index = (props) => {
       </Modal>
 
       <Modal
-        title={'日志清理'}
-        visible={formVisible}
-        onCancel={() => { setFormVisible(false) }}
+        title={'操作日志详情'}
+        visible={detailVisible3}
+        onCancel={() => { setDetailVisible3(false) }}
+        className={styles.fromModal}
         destroyOnClose
-        confirmLoading={props.deleteSystemLongInLogsLoading}
-        onOk={onModalOk}
+        footer={null}
       >
-        <Form
-          name="basic"
-          form={form3}
-          initialValues={{
-            // DeleteType: 1,
-          }}
-        >
-          <Form.Item name='DeleteType' label="来源" rules={[{ required: true, message: '请选择来源' }]}>
-            <Select placeholder='请选择'>
-              <Option value={1}>清理一周之前日志数据</Option>
-              <Option value={2}>清理一个月之前日志数据</Option>
-              <Option value={3}>清理三个月之前日志数据</Option>
-              <Option value={4}>清理六个月之前日志数据</Option>
-              <Option value={5}>清理一年之前日志数据</Option>
-            </Select>
+        <Form name="basic_detail" >
+        <Row>
+          <Col span={8}>
+          <Form.Item label="登录账号">
+            {detailData3 && detailData3.ExUrl}
           </Form.Item>
+          </Col>
+          <Col span={8}>
+          <Form.Item label="姓名">
+            {detailData3 && detailData3.ExMessage}
+          </Form.Item>
+          </Col>
+          <Col span={8}>
+          <Form.Item label="功能模块">
+           {detailData3 && detailData3.UserName}
+          </Form.Item>
+          </Col>
+          <Col span={8}>
+          <Form.Item label="操作类型">
+            {detailData3 && detailData3.UserName}
+          </Form.Item>
+          </Col>
+          <Col span={8}>
+          <Form.Item label="操作时间">
+            {detailData3 && detailData3.UserName}
+          </Form.Item>
+          </Col>
+          <Col>
+          <Form.Item label="操作内容">
+           {detailData3 && <TextArea rows={12} value={detailData3.StackTrace} />}
+          </Form.Item>
+          </Col>
+          </Row>
         </Form>
       </Modal>
     </div>

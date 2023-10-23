@@ -73,7 +73,7 @@ class JzRecordContent extends Component {
                                     <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LdCalibrationIsOk}</td>
                                     <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LdCalibrationSufValue}</td>
                                 </tr>
-                                <tr>
+                                {item!=='流速'&&<><tr>
                                     <td rowSpan="2" style={{ width: '16%' }}>量程漂移校准</td>
                                     {/* <td style={{ width: '14%', height: '30px' }}>{item !== '颗粒物' ? '标气浓度值' : '量程校准参考值'}</td> */}
                                     <td style={{ width: '14%', height: '30px' }}>{'标气浓度值'}</td>
@@ -90,7 +90,7 @@ class JzRecordContent extends Component {
                                     <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LcPy}</td>
                                     <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LcCalibrationIsOk}</td>
                                     <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LcCalibrationSufValue}</td>
-                                </tr>
+                                </tr></>}
                             </tbody>
                         </table>);
                     }

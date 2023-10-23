@@ -26,6 +26,8 @@ import {
   Spin,
   Tag,
   Pagination,
+  Popover,
+  Checkbox,
 } from 'antd';
 import { connect } from 'dva';
 import $ from 'jquery'
@@ -40,7 +42,7 @@ import SelectPollutantType from '@/components/SelectPollutantType'
 import CustomIcon from '@/components/CustomIcon'
 import RegionList from '@/components/RegionList'
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
-
+import { FilterOutlined, } from '@ant-design/icons';
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -104,10 +106,12 @@ class NavigationTree extends Component {
       panelDataListAys: [],
       RunState: '',
       useChioce: true,
-      isLoading:false,
+      isLoading: false,
       // panelSelKey:"",
-      pageIndex:1,
-      pageSize:20,
+      pageIndex: 1,
+      pageSize: 20,
+      stopPointFlag:'',
+      dataType:'',
       panelColumn: [
         {
           title: 'Name',
@@ -162,7 +166,7 @@ class NavigationTree extends Component {
     const state = this.props.runState == undefined ? '' : this.props.runState
     this.setState({
       RunState: state,
-      pageSize:1,
+      pageSize: 1,
     })
 
     dispatch({
@@ -170,10 +174,10 @@ class NavigationTree extends Component {
       payload: {
         Status: screenList,
         RunState: state,
-        PollutantTypes: this.props.polShow&&this.props.type=='ent'? '1,2' :this.props.polShow&&this.props.type=='air'?'5' : this.state.PollutantTypes,
+        PollutantTypes: this.props.polShow && this.props.type == 'ent' ? '1,2' : this.props.polShow && this.props.type == 'air' ? '5' : this.state.PollutantTypes,
         isFilter: this.props.isMap,
-        PageIndex:1,
-        PageSize:this.state.pageSize,
+        PageIndex: 1,
+        PageSize: this.state.pageSize,
         industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
@@ -181,7 +185,7 @@ class NavigationTree extends Component {
         this.loadCallback(data)
       },
     })
-    window.addEventListener('scroll', this.handleScroll,true);
+    window.addEventListener('scroll', this.handleScroll, true);
     // this.onChangeSearch(null)
 
     // panelDataList.splice(0, panelDataList.length)
@@ -207,18 +211,18 @@ class NavigationTree extends Component {
       this.onChangeSearch({ target: { value: this.state.searchValue } }, data)
     })
   }
-  handleScroll=(event)=>{
+  handleScroll = (event) => {
     //滚动条高度
-    let ctx=this;
+    let ctx = this;
     let clientHeight = document.documentElement.clientHeight; //可视区域高度
-    let scrollTop  = document.documentElement.scrollTop;  //滚动条滚动高度
-    let scrollHeight =document.documentElement.scrollHeight; //滚动内容高度
+    let scrollTop = document.documentElement.scrollTop;  //滚动条滚动高度
+    let scrollHeight = document.documentElement.scrollHeight; //滚动内容高度
 
 
-  //  if(document.querySelector('.antd-pro-components-navigation-tree-index-table')){
-  //   let tableScollTop = document.querySelector('.antd-pro-components-navigation-tree-index-table').scrollTop
-  //  }
-}
+    //  if(document.querySelector('.antd-pro-components-navigation-tree-index-table')){
+    //   let tableScollTop = document.querySelector('.antd-pro-components-navigation-tree-index-table').scrollTop
+    //  }
+  }
   componentWillReceiveProps(nextProps) {
     if (this.props.PollutantType !== nextProps.PollutantType) {
       nextProps.PollutantType.map(m => children.push(<Option key={m.pollutantTypeCode}>{m.pollutantTypeName}</Option>));
@@ -426,13 +430,13 @@ class NavigationTree extends Component {
 
   // 污染物筛选
   handleChange = value => {
-    value = value? value.toString() : '';
+    value = value ? value.toString() : '';
     if (value == '') {
-      value = this.props.type=='ent'? '1,2' : this.props.ConfigInfo.SystemPollutantType
+      value = this.props.type == 'ent' ? '1,2' : this.props.ConfigInfo.SystemPollutantType
     }
     this.setState({
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,
-      pageIndex:1,
+      pageIndex: 1,
     })
     value = this.props.checkpPol ? this.props.checkpPol : value;
     this.defaultKey = 0;
@@ -445,9 +449,9 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-        PageIndex:1,
-        PageSize:this.state.pageSize,
-       industryTypeCode: this.state.industryTypeCode,
+        PageIndex: 1,
+        PageSize: this.state.pageSize,
+        industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
       callback: data => {
@@ -455,56 +459,56 @@ class NavigationTree extends Component {
       },
     })
   }
-  changeRegion=(value)=>{ //行政区筛选
+  changeRegion = (value) => { //行政区筛选
 
     this.setState({
-      RegionCode: value? value : '',
-      pageIndex:1,
+      RegionCode: value ? value : '',
+      pageIndex: 1,
     })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
-       PollutantTypes: '1,2',
-       RegionCode: value,
-       Name: this.state.Name,
-       Status: this.state.screenList,
-       RunState: this.state.RunState,
-       isFilter: this.props.isMap,
-       PageIndex:1,
-       PageSize:this.state.pageSize,
-       industryTypeCode: this.state.industryTypeCode,
-       ...this.props.propsParams
-     },
-     callback: data => {
-       this.loadCallback(data)
-     },
-   })
+        PollutantTypes: '1,2',
+        RegionCode: value,
+        Name: this.state.Name,
+        Status: this.state.screenList,
+        RunState: this.state.RunState,
+        isFilter: this.props.isMap,
+        PageIndex: 1,
+        PageSize: this.state.pageSize,
+        industryTypeCode: this.state.industryTypeCode,
+        ...this.props.propsParams
+      },
+      callback: data => {
+        this.loadCallback(data)
+      },
+    })
 
   }
 
-  changeIndustryType=(value)=>{ //行业筛选
+  changeIndustryType = (value) => { //行业筛选
     this.setState({
-      industryTypeCode: value? value : '',
-      pageIndex:1,
+      industryTypeCode: value ? value : '',
+      pageIndex: 1,
     })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
-       PollutantTypes: this.state.PollutantTypes,
-       RegionCode: this.state.RegionCode,
-       Name: this.state.Name,
-       Status: this.state.screenList,
-       RunState: this.state.RunState,
-       isFilter: this.props.isMap,
-      //  PageIndex:1,
-      //  PageSize:this.state.pageSize,
-       industryTypeCode: value,
-       ...this.props.propsParams
-     },
-     callback: data => {
-       this.loadCallback(data)
-     },
-   })
+        PollutantTypes: this.state.PollutantTypes,
+        RegionCode: this.state.RegionCode,
+        Name: this.state.Name,
+        Status: this.state.screenList,
+        RunState: this.state.RunState,
+        isFilter: this.props.isMap,
+        //  PageIndex:1,
+        //  PageSize:this.state.pageSize,
+        industryTypeCode: value,
+        ...this.props.propsParams
+      },
+      callback: data => {
+        this.loadCallback(data)
+      },
+    })
 
   }
   // 搜索框改变查询数据
@@ -530,7 +534,7 @@ class NavigationTree extends Component {
   // }
 
   // 搜索框改变查询数据
-  onChangeSearch =(e, data) => {
+  onChangeSearch = (e, data) => {
     // this.state.panelDataList.splice(0, this.state.panelDataList.length)
     // console.log('1111')
     // console.log('pan1=',this.state.panelDataList);
@@ -562,7 +566,7 @@ class NavigationTree extends Component {
     let pointResultList = [];
     entAndPoint.map(item => {
       for (let index = 0; index < item.children.length; index++) {
-        if( item.children[index].title.indexOf(msg) > -1) {
+        if (item.children[index].title.indexOf(msg) > -1) {
           pointResultList.push(item);
           break;
         }
@@ -573,10 +577,10 @@ class NavigationTree extends Component {
     let DGIMNResultList = [];
     entAndPoint.map(item => {
       for (let index = 0; index < item.children.length; index++) {
-        if( item.children[index].DGIMN.indexOf(msg) > -1) {
+        if (item.children[index].DGIMN.indexOf(msg) > -1) {
           DGIMNResultList.push({
             ...item,
-            children: [{...item.children[index]}]
+            children: [{ ...item.children[index] }]
           });
           break;
         }
@@ -584,13 +588,13 @@ class NavigationTree extends Component {
     })
 
     let tempEntAndPoint = entList.length ? entList : (pointResultList.length ? pointResultList : DGIMNResultList);
-    if(msg) {
+    if (msg) {
       let expandedKeys = tempEntAndPoint.map(item => item.key);
       this.setState({
         expandedKeys
       })
     }
-    console.log(' this.state.panelDataListAys',  this.state.panelDataListAys)
+    console.log(' this.state.panelDataListAys', this.state.panelDataListAys)
 
     this.setState({
       // expandedKeys,
@@ -632,7 +636,7 @@ class NavigationTree extends Component {
     value = value.toString()
     this.setState({
       RegionCode: value,
-      pageIndex:1,
+      pageIndex: 1,
     })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
@@ -643,8 +647,8 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-        PageIndex:1,
-        PageSize:this.state.pageSize,
+        PageIndex: 1,
+        PageSize: this.state.pageSize,
         industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
@@ -726,18 +730,18 @@ class NavigationTree extends Component {
     } else {
       typeList.splice(index, 1)
     }
-    this.setState({ screenList: typeList, offState, normalState, overState, exceState, zState, cState,pageIndex:1, })
+    this.setState({ screenList: typeList, offState, normalState, overState, exceState, zState, cState, pageIndex: 1, })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
         Name: this.state.Name,
-        PollutantTypes: this.props.polShow&&this.props.type=='ent'? '1,2' :this.props.polShow&&this.props.type=='air'?'5' : this.state.PollutantTypes,
+        PollutantTypes: this.props.polShow && this.props.type == 'ent' ? '1,2' : this.props.polShow && this.props.type == 'air' ? '5' : this.state.PollutantTypes,
         RegionCode: this.state.RegionCode,
         Status: typeList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-        PageIndex:1,
-        PageSize:this.state.pageSize,
+        PageIndex: 1,
+        PageSize: this.state.pageSize,
         industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
@@ -868,13 +872,13 @@ class NavigationTree extends Component {
       })
       this.setState({
         treeVis: false,
-        isLoading:true,
+        isLoading: true,
       })
-      setTimeout(()=>{
-      this.setState({
-        isLoading:false,
-      })
-      },500)
+      setTimeout(() => {
+        this.setState({
+          isLoading: false,
+        })
+      }, 500)
 
 
     }
@@ -886,8 +890,8 @@ class NavigationTree extends Component {
       this.setState({
         selectedKeys: [record.key],
       }, () => {
-         this.returnData([record.key])
-        });
+        this.returnData([record.key])
+      });
     },
   })
 
@@ -937,48 +941,49 @@ class NavigationTree extends Component {
     return true;
   }
 
-    // 渲染数据及企业排口图标和运行状态
-    loop = (data) =>{
-      const { searchValue } = this.state;
-      return data.map((item, idx) => {
-        const index = item.title.indexOf(searchValue);
-        const beforeStr = item.title.substr(0, index);
-        const afterStr = item.title.substr(index + searchValue.length);
-        const title =
-          index > -1 ? (
-            <span style={{ marginLeft: 8 }}>
-              {beforeStr}
-              <span style={{ color: '#FF3030' }}>{searchValue}</span>
-              {afterStr}
-            </span>
-          ) : (
-              <span style={{ marginLeft: 3 }}>{item.title}</span>
-            );
-        if (item.Type == '0') {
-          return {
-            title:(
-              <><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', width: 10, height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}</>
-             ),
-              key:item.key,
-              children:item.children&&item.children.length>0?  this.loop(item.children) : ''
-          }
+  // 渲染数据及企业排口图标和运行状态
+  loop = (data) => {
+    const { searchValue } = this.state;
+    return data.map((item, idx) => {
+      const index = item.title.indexOf(searchValue);
+      const beforeStr = item.title.substr(0, index);
+      const afterStr = item.title.substr(index + searchValue.length);
+      const title =
+        index > -1 ? (
+          <span style={{ marginLeft: 8 }}>
+            {beforeStr}
+            <span style={{ color: '#FF3030' }}>{searchValue}</span>
+            {afterStr}
+          </span>
+        ) : (
+            <span style={{ marginLeft: 3 }}>{item.title}</span>
+          );
+      if (item.Type == '0') {
+        return {
+          title: (
+            <><div title={item.title} className={styles.titleStyle}>{this.getEntIcon(item.MonitorObjectType)}{title}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', width: 10, height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}</>
+          ),
+          key: item.key,
+          children: item.children && item.children.length > 0 ? this.loop(item.children) : ''
         }
-        if (item.Type == '1') { //监测点
-          return { title:(
-            <div style={{ width: '253px', position: 'relative'}}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50" style={{marginLeft:-33}}>停运</Tag> : ''}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
+      }
+      if (item.Type == '1') { //监测点
+        return {
+          title: (
+            <div style={{ width: '253px', position: 'relative' }}>
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50" style={{ marginLeft: -33 }}>停运</Tag> : ''}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
                   <BellIcon className={styles['bell-shake-delay']} style={{ fontSize: 10, marginTop: 7, marginRight: 4, float: 'right', color: 'red' }} />
                 </div>
                 : ''}
             </div>
-           ),
-            key:item.key,
-            children:item.children&&item.children.length>0?  this.loop(item.children) : ''
-          }
-
+          ),
+          key: item.key,
+          children: item.children && item.children.length > 0 ? this.loop(item.children) : ''
         }
-      });
+
+      }
+    });
     //  return data.map((item, idx) => {
     //     const index = item.title.indexOf(searchValue);
     //     const beforeStr = item.title.substr(0, index);
@@ -1015,32 +1020,32 @@ class NavigationTree extends Component {
     //       </TreeNode>
     //     }
     //   });
-    }
+  }
 
-    panelDatas = () => {
+  panelDatas = () => {
 
-      return <Table   id="treeTable" className={styles.table} rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-        style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: this.props.type=='ent'?'calc(100vh - 330px)':'calc(100vh - 290px)' }}
-        onRow={this.onClickRow}
-          rowClassName={this.setRowClassName}/>
-    }
+    return <Table id="treeTable" className={styles.table} rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+      style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: this.props.type == 'ent' ? 'calc(100vh - 330px)' : 'calc(100vh - 290px)' }}
+      onRow={this.onClickRow}
+      rowClassName={this.setRowClassName} />
+  }
 
-    pageChange = (pageIndex,pageSize) =>{ //分页
-     this.setState({
-      pageIndex:pageIndex,
-      pageIndex:pageSize,
+  pageChange = (pageIndex, pageSize) => { //分页
+    this.setState({
+      pageIndex: pageIndex,
+      pageIndex: pageSize,
     })
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
         Name: this.state.Name,
         PollutantTypes: this.state.PollutantTypes,
-        RegionCode:  this.state.RegionCode,
+        RegionCode: this.state.RegionCode,
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-        PageIndex:pageIndex,
-        PageSize:this.state.pageSize,
+        PageIndex: pageIndex,
+        PageSize: this.state.pageSize,
         industryTypeCode: this.state.industryTypeCode,
         ...this.props.propsParams
       },
@@ -1048,11 +1053,33 @@ class NavigationTree extends Component {
         this.loadCallback(data)
       },
     })
-    }
+  }
+  dataSourceFilterModel = () => { //数据来源过滤弹框
+    return <Form className={styles.dataSourceFilterModelSty}>
+      <Form.Item label='监测点范围' style={{marginBottom:0}}>
+      <Checkbox onChange={(e)=>{
+         this.setState({stopPointFlag:e.target.checked? '' : 1})
+      }}>涵盖运维到期点位</Checkbox>
+      </Form.Item>
+      <Form.Item label='数据来源范围' style={{marginBottom:8}}>
+        <Select placeholder='请选择' allowClear onChange={(value)=>{
+           this.setState({dataType:value})
+        }}>
+          <Option value={1}>抓取数据</Option>
+          <Option value={2}>直传数据</Option>
+        </Select>
+      </Form.Item>
+      <Form.Item style={{textAlign:'right',marginBottom:0}}>
+        <Button style={{marginRight:6}}  onClick={this.onCancel}>取消</Button>
+        <Button type="primary" onClick={this.dataSourceFilterOK}> 确定 </Button>
+      </Form.Item>
+
+    </Form>
+  }
   // ></Table>
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
-    const { configInfo,pageType, showIndustry } = this.props;
+    const { configInfo, pageType, showIndustry } = this.props;
 
     const SelectPollutantProps = this.props.defaultPollutant === 'undefined' ? {} : { mode: 'multiple' }
     let _props = {}
@@ -1092,9 +1119,9 @@ class NavigationTree extends Component {
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: '#e94', fontSize: '20px', verticalAlign: 'middle', marginBottom: '2px' }} />异常</Col>
             </Row>
           </div>
-         {/* {  this.props.type!='air' ?   <RegionList placeholder="请选择行政区" style={{ width: '100%', marginBottom: 10  }} changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/> : null} */}
-         <RegionList style={{ width: '100%', marginBottom: 10  }} spinSty={{top:-4}}  changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/>
-         {!this.props.polShow ? <SelectPollutantType
+          {/* {  this.props.type!='air' ?   <RegionList placeholder="请选择行政区" style={{ width: '100%', marginBottom: 10  }} changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/> : null} */}
+          <RegionList style={{ width: '100%', marginBottom: 10 }} spinSty={{ top: -4 }} changeRegion={this.changeRegion} RegionCode={this.state.RegionCode} />
+          {!this.props.polShow ? <SelectPollutantType
             // mode="multiple"
             {...SelectPollutantProps}
             showDefaultValue={this.props.defaultPollutant === 'undefined'}
@@ -1103,13 +1130,13 @@ class NavigationTree extends Component {
           />
             : ''}
 
-               {  this.props.type=='ent' ?
-                <Select  style={{ width: '100%', marginBottom: 10 }} onChange={this.handleChange} allowClear placeholder="请选择监测点类型" >
-                  <Option key={1} value={1}>废水</Option>
-                  <Option key={2} value={2}>废气</Option>
-              </Select> :
-               null
-                }
+          {this.props.type == 'ent' ?
+            <Select style={{ width: '100%', marginBottom: 10 }} onChange={this.handleChange} allowClear placeholder="请选择监测点类型" >
+              <Option key={1} value={1}>废水</Option>
+              <Option key={2} value={2}>废气</Option>
+            </Select> :
+            null
+          }
 
           {/* {false ? <EnterprisePointCascadeMultiSelect
             searchRegion
@@ -1118,27 +1145,36 @@ class NavigationTree extends Component {
           /> : ''} */}
           {
             showIndustry &&
-                <SearchSelect
-                  placeholder="请选择行业"
-                  style={{ width: '100%' }}
-                  configId={'IndustryType'}
-                  itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
-                  itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
-                  onChange={value => {
-                    this.changeIndustryType(value)
-                  }}
-                />
+            <SearchSelect
+              placeholder="请选择行业"
+              style={{ width: '100%' }}
+              configId={'IndustryType'}
+              itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
+              itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
+              onChange={value => {
+                this.changeIndustryType(value)
+              }}
+            />
           }
-          <Search
-            placeholder="请输入关键字查询"
-            onChange={this.onChangeSearch}
-            style={{ marginTop: 10, width: '60%' }}
-
-          />
-          <Radio.Group defaultValue={this.props.IsTree ? 'tree' : 'panel'} buttonStyle="solid" style={{ marginTop: 10, marginLeft: 15, cursor: 'pointer', width: '35%' }} onChange={this.onRadioChange}>
-            <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>
-            <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
-          </Radio.Group>
+          <Row align='middle'>
+            <Search
+              placeholder="请输入关键字查询"
+              onChange={this.onChangeSearch}
+              style={{ width: 180 }}
+            //202
+            />
+            <Radio.Group defaultValue={this.props.IsTree ? 'tree' : 'panel'} buttonStyle="solid" style={{ marginLeft: 6, cursor: 'pointer', }} onChange={this.onRadioChange}>
+              <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>
+              <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
+            </Radio.Group>
+            <Popover trigger="click" placement="bottom" content={this.dataSourceFilterModel()}>
+            <Tooltip title="数据来源过滤">
+              <a  style={{marginLeft: 6 }}>
+                <FilterOutlined style={{ fontSize: 16,}} />
+              </a>
+            </Tooltip>
+            </Popover>
+          </Row>
           <Divider />
           {this.state.treeVis ? <div >
             {
@@ -1170,13 +1206,13 @@ class NavigationTree extends Component {
                 {..._props}
               />
               </div>
-                 /* {this.loop(this.state.EntAndPoint)}
-                 </Tree> */
-               :
-               <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                /* {this.loop(this.state.EntAndPoint)}
+                </Tree> */
+                :
+                <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                 </div>
             }
-           {/* {this.state.EntAndPoint.length? <Pagination  onChange={this.pageChange}  showLessItems className={styles.navTreePaginationSty} size="small" showSizeChanger={false} total={this.state.EntAndPoint.length} showTotal={(total)=>{ return `共${total}条`}} /> : null} */}
+            {/* {this.state.EntAndPoint.length? <Pagination  onChange={this.pageChange}  showLessItems className={styles.navTreePaginationSty} size="small" showSizeChanger={false} total={this.state.EntAndPoint.length} showTotal={(total)=>{ return `共${total}条`}} /> : null} */}
 
           </div> : <div >
               {
@@ -1190,40 +1226,40 @@ class NavigationTree extends Component {
                   }}
                   size="large"
                 /> : <div> {this.state.panelDataListAys.length ?
-                <div   ref='panes'  > { this.state.isLoading&&this.props.type!=='air'?<Spin
-                  style={{
-                    width: '100%',
-                    height: 'calc(100vh/2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                  size="large"
-                /> : this.panelDatas()}</div>
+                  <div ref='panes'  > {this.state.isLoading && this.props.type !== 'air' ? <Spin
+                    style={{
+                      width: '100%',
+                      height: 'calc(100vh/2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                    size="large"
+                  /> : this.panelDatas()}</div>
 
-                 : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                  : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                   </div>}</div>
           }
 
         </Drawer>
         <div visible style={{
-            position: 'absolute',
-            top: '50vh',
-            zIndex:1000,
-            right: floats == 'leftmenu' ?  this.state.visible ? '296px' : '-24px' : null,
-            left: floats == 'topmenu' ? this.state.visible ? '296px' : '-24px' : null,
-            transition: 'all  0.3s cubic-bezier(0.7, 0.3, 0.1, 1) 0s, box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1) 0s',
-            display: 'flex',
-            width: '18px',
-            height: '48px',
-            size: '16px',
-            align: 'center',
-            textAlign: 'center',
-            background: '#1890FF',
-            borderRadius: floats == 'topmenu' ? '0 4px 4px 0' : '4px 0 0 4px',
-            cursor: 'pointer',
-          }} onClick={this.changeState}><a><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a>
-          </div>
+          position: 'absolute',
+          top: '50vh',
+          zIndex: 1000,
+          right: floats == 'leftmenu' ? this.state.visible ? '296px' : '-24px' : null,
+          left: floats == 'topmenu' ? this.state.visible ? '296px' : '-24px' : null,
+          transition: 'all  0.3s cubic-bezier(0.7, 0.3, 0.1, 1) 0s, box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1) 0s',
+          display: 'flex',
+          width: '18px',
+          height: '48px',
+          size: '16px',
+          align: 'center',
+          textAlign: 'center',
+          background: '#1890FF',
+          borderRadius: floats == 'topmenu' ? '0 4px 4px 0' : '4px 0 0 4px',
+          cursor: 'pointer',
+        }} onClick={this.changeState}><a><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a>
+        </div>
       </div>
     );
   }

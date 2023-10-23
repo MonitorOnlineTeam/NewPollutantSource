@@ -616,7 +616,11 @@ export default {
                   path: '/systemManger/logManger', // 日志管理
                   component: './systemManger/logManger',
                 },
-
+                {
+                  name: 'operationBasConfig',
+                  path: '/systemManger/operationBasConfig', // 运维基础配置
+                  component: './systemManger/operationBasConfig',
+                },
               ],
             },
             {

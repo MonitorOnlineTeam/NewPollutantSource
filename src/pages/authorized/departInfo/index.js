@@ -1437,10 +1437,13 @@ class DepartIndex extends Component {
       payload: {},
   })
   }
-  settingOperationGroupOk = (operationGroupChecked, state)=>{
+  settingOperationGroupOk = (operationGroupChecked, state,callback)=>{   
     this.props.dispatch({
       type: 'departinfo/addSetOperationGroup',
       payload: {GroupIdList:operationGroupChecked,State:state},
+      callback:()=>{
+        callback()
+      }
   })
   }
   render() {
@@ -2012,8 +2015,8 @@ class DepartIndex extends Component {
                     titles={['待设置运维小组', '已设置运维小组']}
                     treeData={copyObjectArrayTreeAndRenameProperty(this.state.departInfoTree, 'UserGroup_Name', 'title')}
                     checkedKeys={this.props.setOperationGroupId}
-                    targetKeysChange={(key, type) => {
-                      this.settingOperationGroupOk(key, type == 1 ? 1 : 2)
+                    targetKeysChange={(key, type,callback) => {
+                      this.settingOperationGroupOk(key, type == 1 ? 1 : 2,callback)
                     }
                     }
                   />
