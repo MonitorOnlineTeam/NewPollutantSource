@@ -121,8 +121,8 @@ export function formatPollutantPopover(value, additional) {
   ) : value === 0 ? (
     0
   ) : (
-        '-'
-      );
+    '-'
+  );
 }
 export function asc(a, b) {
   //数字类型
@@ -310,8 +310,8 @@ export function interceptTwo(value) {
     data.indexOf('.') == -1
       ? `${value.toFixed(2)}`
       : data.split('.')[1].length <= 2
-        ? `${value.toFixed(2)}`
-        : data.substring(0, data.indexOf('.') + 3);
+      ? `${value.toFixed(2)}`
+      : data.substring(0, data.indexOf('.') + 3);
   return result;
 }
 
@@ -328,6 +328,88 @@ export function toDecimal3(x) {
   } else {
     return x;
   }
+}
+
+//判断经纬度是否在多边形中
+export function isInsidePolygon(lng, lat, poly) {
+  if (poly[0].lng) {
+    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+      ((poly[i].lng <= lng && lng < poly[j].lng) || (poly[j].lng <= lng && lng < poly[i].lng)) &&
+        lat <
+          ((poly[j].lat - poly[i].lat) * (lng - poly[i].lng)) / (poly[j].lng - poly[i].lng) +
+            poly[i].lat &&
+        (c = !c);
+    return c;
+  } else {
+    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+      ((poly[i][0] <= lng && lng < poly[j][0]) || (poly[j][0] <= lng && lng < poly[i][0])) &&
+        lat <
+          ((poly[j][1] - poly[i][1]) * (lng - poly[i][0])) / (poly[j][0] - poly[i][0]) +
+            poly[i][1] &&
+        (c = !c);
+    return c;
+  }
+}
+
+// /* 判断是否是内网IP */
+export function isInnerIPFn() {
+  let isInnerIp = false; // 默认给定IP不是内网IP
+  // var returnIP = '';
+  // const innerIp = webSocketPushURL.split(',')[0];
+  // const outIp = webSocketPushURL.split(',')[1];
+  var returnIP = '';
+  // 获取当前页面url
+  let curPageUrl = window.location.href;
+  if (curPageUrl.indexOf('localhost') !== -1) {
+    // returnIP = innerIp;
+    isInnerIp = true;
+  } else {
+    const reg1 = /(http|ftp|https|www):\/\//g; // 去掉前缀
+    curPageUrl = curPageUrl.replace(reg1, '');
+
+    const reg2 = /\:+/g; // 替换冒号为一点
+    curPageUrl = curPageUrl.replace(reg2, '.');
+    curPageUrl = curPageUrl.split('.'); // 通过一点来划分数组
+
+    const ipAddress = `${curPageUrl[0]}.${curPageUrl[1]}.${curPageUrl[2]}.${curPageUrl[3]}`;
+
+    const ipNum = getIpNum(ipAddress);
+    const aBegin = getIpNum('10.0.0.0');
+    const aEnd = getIpNum('10.255.255.255');
+    const bBegin = getIpNum('172.16.0.0');
+    const bEnd = getIpNum('172.31.255.255');
+    const cBegin = getIpNum('192.168.0.0');
+    const cEnd = getIpNum('192.168.255.255');
+    const dBegin = getIpNum('127.0.0.0');
+    const dEnd = getIpNum('127.255.255.255');
+    isInnerIp =
+      isInner(ipNum, aBegin, aEnd) ||
+      isInner(ipNum, bBegin, bEnd) ||
+      isInner(ipNum, cBegin, cEnd) ||
+      isInner(ipNum, dBegin, dEnd);
+    // console.log('是否是内网:' + isInnerIp);
+    // if (isInnerIp) {
+    //   returnIP = innerIp;
+    // } else {
+    //   returnIP = outIp;
+    // }
+  }
+  // return returnIP;
+  return isInnerIp;
+}
+function getIpNum(ipAddress) {
+  /* 获取IP数 */
+  const ip = ipAddress.split('.');
+  const a = parseInt(ip[0]);
+  const b = parseInt(ip[1]);
+  const c = parseInt(ip[2]);
+  const d = parseInt(ip[3]);
+  const ipNum = a * 256 * 256 * 256 + b * 256 * 256 + c * 256 + d;
+  return ipNum;
+}
+
+function isInner(userIp, begin, end) {
+  return userIp >= begin && userIp <= end;
 }
 
 export function getBase64(file) {
@@ -389,7 +471,7 @@ export function numVerify(val, callback) {
 }
 export function arrDistinctByProp(arr, prop) {
   //对象数组去重
-  return arr.filter(function (item, index, self) {
+  return arr.filter(function(item, index, self) {
     return self.findIndex(el => el[prop] == item[prop]) === index;
   });
 }
@@ -405,8 +487,11 @@ export function getCurrentUserId() {
 }
 export function permissionButton(router) {
   //权限按钮
-  let currentUser = Cookie.get('currentUser') ? JSON.parse(Cookie.get('currentUser')) : null;;
-  let meunList = currentUser && sessionStorage.getItem(currentUser.UserName) ? JSON.parse(sessionStorage.getItem(currentUser.UserName)) : null;
+  let currentUser = Cookie.get('currentUser') ? JSON.parse(Cookie.get('currentUser')) : null;
+  let meunList =
+    currentUser && sessionStorage.getItem(currentUser.UserName)
+      ? JSON.parse(sessionStorage.getItem(currentUser.UserName))
+      : null;
   if (meunList?.length > 0) {
     const filterData = [];
     (function filterFun(meunList) {
@@ -414,37 +499,42 @@ export function permissionButton(router) {
         let item = meunList[i];
         if (item.path == router) {
           for (let j = 0; j < item.buttonList.length; j++) {
-            const buttoItem = item.buttonList[j]
+            const buttoItem = item.buttonList[j];
             buttoItem?.code && filterData.push(buttoItem.code);
           }
           break;
         }
       }
-    }(meunList))
+    })(meunList);
     return filterData;
-  }else{
+  } else {
     return [];
   }
 }
-export function copyObjectArrayTreeAndRenameProperty(arr, oldPropertyName, newPropertyName) {  
-  // 创建一个新的数组来存储复制后的对象  
-  const newArr = [];  
-  
-  // 遍历原数组  
-  for (let i = 0; i < arr.length; i++) {  
-    // 复制当前对象，并递归复制其子数组  
-    const newObj = { ...arr[i] };  
-    if (Array.isArray(newObj.children)) {  
-      newObj.children = copyObjectArrayTreeAndRenameProperty(newObj.children, oldPropertyName, newPropertyName);  
-    }  
-    // 如果当前对象包含需要改变的属性名称，则替换为新的名称  
-    if (newObj.hasOwnProperty(oldPropertyName)) {  
-      newObj[newPropertyName] = newObj[oldPropertyName];  
-      delete newObj[oldPropertyName];  
-    }  
-    // 将复制后的对象添加到新数组中  
-    newArr.push(newObj);  
-  }  
-  
-  return newArr;  
+
+export function copyObjectArrayTreeAndRenameProperty(arr, oldPropertyName, newPropertyName) {
+  // 创建一个新的数组来存储复制后的对象
+  const newArr = [];
+
+  // 遍历原数组
+  for (let i = 0; i < arr.length; i++) {
+    // 复制当前对象，并递归复制其子数组
+    const newObj = { ...arr[i] };
+    if (Array.isArray(newObj.children)) {
+      newObj.children = copyObjectArrayTreeAndRenameProperty(
+        newObj.children,
+        oldPropertyName,
+        newPropertyName,
+      );
+    }
+    // 如果当前对象包含需要改变的属性名称，则替换为新的名称
+    if (newObj.hasOwnProperty(oldPropertyName)) {
+      newObj[newPropertyName] = newObj[oldPropertyName];
+      delete newObj[oldPropertyName];
+    }
+    // 将复制后的对象添加到新数组中
+    newArr.push(newObj);
+  }
+
+  return newArr;
 }

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-08 10:42:36
+ * @Last Modified time: 2023-10-25 15:29:07
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -374,7 +374,9 @@ const Index = props => {
               个排放口{dateString[0]}至{dateString[1]}的小时数据进行分析，共发现
               {modelInfo.UniqueParentCodeCount}家企业{modelInfo.DGIMNCount}
               个排放口符合数据特征，发现线索{modelInfo.DisCulesNum}次，已核实
-              {modelInfo.VerifiedNum}次，经核发现有异常{modelInfo.CheckedResult2Count}次。
+              {modelInfo.VerifiedNum}次
+              {/* ，经核发现有异常{modelInfo.CheckedResult2Count}次 */}
+              。
             </p>
             <Descriptions bordered column={1} size="small" className={styles.DescriptionsWrapper}>
               <Descriptions.Item label="数据特征">{modelInfo.DataAttr}</Descriptions.Item>
@@ -390,20 +392,20 @@ const Index = props => {
               </Descriptions.Item>
               <Descriptions.Item label="有效执行次数">{modelInfo.EffNum}次</Descriptions.Item>
               <Descriptions.Item label="发现线索次数">{modelInfo.DisCulesNum}次</Descriptions.Item>
-              <Descriptions.Item label="已核实">{modelInfo.VerifiedNum}次</Descriptions.Item>
+              {/* <Descriptions.Item label="已核实">{modelInfo.VerifiedNum}次</Descriptions.Item>
               <Descriptions.Item label="工况正常">
                 {modelInfo.CheckedResult1Count}次
               </Descriptions.Item>
               <Descriptions.Item label="有异常">
                 {modelInfo.CheckedResult2Count}次
               </Descriptions.Item>
-              <Descriptions.Item label="异常原因">{modelInfo.Reason || '-'}</Descriptions.Item>
+              <Descriptions.Item label="异常原因">{modelInfo.Reason || '-'}</Descriptions.Item> */}
             </Descriptions>
           </Card>
         </Spin>
         <Card title={<div className={styles.title}>线索信息统计</div>} style={{ marginTop: 10 }}>
           <Row className={styles.ClueInfoChartWrapper}>
-            <Col span={8}>
+            <Col span={24}>
               <ReactEcharts
                 theme="light"
                 option={getEntOption()}
@@ -412,7 +414,7 @@ const Index = props => {
                 style={{ width: '100%', height: '100%' }}
               />
             </Col>
-            <Col span={8}>
+            {/* <Col span={8}>
               <ReactEcharts
                 theme="light"
                 option={getOption(reasonsAndCheckData.checkData, '核实情况')}
@@ -429,7 +431,7 @@ const Index = props => {
                 notMerge
                 style={{ width: '100%', height: '100%' }}
               />
-            </Col>
+            </Col> */}
           </Row>
           <SdlTable
             columns={columns}
@@ -472,21 +474,21 @@ const Index = props => {
       ellipsis: true,
       sorter: (a, b) => a.VerifiedNum - b.VerifiedNum,
     },
-    {
-      title: '核实有异常',
-      ellipsis: true,
-      dataIndex: 'CheckedResult2Count',
-      sorter: (a, b) => a.CheckedResult2Count - b.CheckedResult2Count,
-    },
-    {
-      ellipsis: true,
-      title: '异常原因',
-      dataIndex: 'ExceptionReason',
-      width: 200,
-      render: (text, record) => {
-        return text || '-';
-      },
-    },
+    // {
+    //   title: '核实有异常',
+    //   ellipsis: true,
+    //   dataIndex: 'CheckedResult2Count',
+    //   sorter: (a, b) => a.CheckedResult2Count - b.CheckedResult2Count,
+    // },
+    // {
+    //   ellipsis: true,
+    //   title: '异常原因',
+    //   dataIndex: 'ExceptionReason',
+    //   width: 200,
+    //   render: (text, record) => {
+    //     return text || '-';
+    //   },
+    // },
     {
       title: '操作',
       dataIndex: 'handle',

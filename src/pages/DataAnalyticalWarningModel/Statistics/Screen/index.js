@@ -262,12 +262,12 @@ const Index = props => {
       dataIndex: 'VerifiedNum',
       sorter: (a, b) => a.VerifiedNum - b.VerifiedNum,
     },
-    {
-      title: '核实为异常个数',
-      ellipsis: true,
-      dataIndex: 'CheckedResult2Count',
-      sorter: (a, b) => a.CheckedResult2Count - b.CheckedResult2Count,
-    },
+    // {
+    //   title: '核实为异常个数',
+    //   ellipsis: true,
+    //   dataIndex: 'CheckedResult2Count',
+    //   sorter: (a, b) => a.CheckedResult2Count - b.CheckedResult2Count,
+    // },
     // {
     //   title: '准确率',
     //   ellipsis: true,
@@ -400,7 +400,7 @@ const Index = props => {
             color: 'rgb(101, 217, 255)',
           }}
           onClick={() => {
-            router.push('/DataAnalyticalWarningModel/Statistics/WarningModelAnalysis');
+            router.push('/DataAnalyticalWarningModel/Statistics/FluctuateRange');
           }}
         />
       </Tooltip>
@@ -450,6 +450,44 @@ const Index = props => {
           <BoxItem title="异常线索核实情况" style={{ width: '40%', minWidth: 400 }}>
             <Spin spinning={StatisVeriAndErLoading}>
               <div className={styles.checkBox}>
+              <div className={styles.legendInfo}>
+                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>
+                    {/* 核实为误报线索 */}
+                    核实存在异常
+                  </p>
+                  <div className={styles.content}>
+                    <Progress
+                      style={{ width: '100%' }}
+                      strokeWidth={18}
+                      percent={
+                        checkInfoAndEntRank.checkInfo[0].Count
+                          ? (
+                              checkInfoAndEntRank.checkInfo[0].Count /
+                              checkInfoAndEntRank.checkInfoMaxNum
+                            ).toFixed(2) *
+                              100 >
+                            2
+                            ? (
+                                checkInfoAndEntRank.checkInfo[0].Count /
+                                checkInfoAndEntRank.checkInfoMaxNum
+                              ).toFixed(2) * 100
+                            : 2
+                          : 0
+                      }
+                      steps={50}
+                      showInfo={false}
+                      strokeColor={'#EBE051'}
+                      trailColor="rgba(52,84,119,.85)"
+                    />
+                    <span className={styles.num}>{checkInfoAndEntRank.checkInfo[0].Count}个</span>
+                    <p className={styles.ent}>
+                      涉及企业
+                      <span className={styles.entCount}>
+                        {checkInfoAndEntRank.checkInfo[0].EntCount}个
+                      </span>
+                    </p>
+                  </div>
+                </div>
                 <div className={styles.legendInfo}>
                   <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>待核实线索</p>
                   <div className={styles.content}>
@@ -485,42 +523,10 @@ const Index = props => {
                   </div>
                 </div>
                 <div className={styles.legendInfo}>
-                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>核实为误报线索</p>
-                  <div className={styles.content}>
-                    <Progress
-                      style={{ width: '100%' }}
-                      strokeWidth={18}
-                      percent={
-                        checkInfoAndEntRank.checkInfo[0].Count
-                          ? (
-                              checkInfoAndEntRank.checkInfo[0].Count /
-                              checkInfoAndEntRank.checkInfoMaxNum
-                            ).toFixed(2) *
-                              100 >
-                            2
-                            ? (
-                                checkInfoAndEntRank.checkInfo[0].Count /
-                                checkInfoAndEntRank.checkInfoMaxNum
-                              ).toFixed(2) * 100
-                            : 2
-                          : 0
-                      }
-                      steps={50}
-                      showInfo={false}
-                      strokeColor={'#72ED91'}
-                      trailColor="rgba(52,84,119,.85)"
-                    />
-                    <span className={styles.num}>{checkInfoAndEntRank.checkInfo[0].Count}个</span>
-                    <p className={styles.ent}>
-                      涉及企业
-                      <span className={styles.entCount}>
-                        {checkInfoAndEntRank.checkInfo[0].EntCount}个
-                      </span>
-                    </p>
-                  </div>
-                </div>
-                <div className={styles.legendInfo}>
-                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>核实为异常线索</p>
+                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>
+                    {/* 核实为异常线索 */}
+                    核实无异常
+                  </p>
                   <div className={styles.content}>
                     <Progress
                       style={{ width: '100%' }}
@@ -542,7 +548,7 @@ const Index = props => {
                       }
                       steps={50}
                       showInfo={false}
-                      strokeColor={'#EBE051'}
+                      strokeColor={'#72ED91'}
                       trailColor="rgba(52,84,119,.85)"
                     />
                     <span className={styles.num}>{checkInfoAndEntRank.checkInfo[1].Count}个</span>
@@ -609,7 +615,13 @@ const Index = props => {
                   message={
                     <div style={{ color: '#65D9FF', fontWeight: 500, fontSize: 16 }}>
                       已选择{selectedRowKeys.length}项&nbsp;&nbsp;&nbsp;&nbsp;
-                      {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，核实为异常${tableSelectedCount.CheckedResult2Count}个，核实率${tableSelectedCount.VerifiedRate}%；
+                      {/* {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，
+                      核实为异常${tableSelectedCount.CheckedResult2Count}个，
+                      核实率${tableSelectedCount.VerifiedRate}%；
+                    涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个`} */}
+                      {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，
+                      核实无异常${tableSelectedCount.CheckedResult2Count}个，
+                      核实率${tableSelectedCount.VerifiedRate}%；
                     涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个`}
                     </div>
                   }
