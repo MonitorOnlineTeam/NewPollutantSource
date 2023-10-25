@@ -228,9 +228,10 @@ const Workbench = props => {
       type: 'wordSupervision/GetStagingInspectorRectificationList',
       payload: { pageIndex: 1, pageSize: 9999 },
       callback: (total) => {
-        const btnData = [...operaServiceBtnList, { name: `监督核查（${total}）`, value: 1 }]
-        setOperaServiceBtnList(btnData)
         // operaServiceBtnList.splice(0, 1, { name: `监督核查（${total}）`, value: 1 })
+        let btnData = [...operaServiceBtnList, { name: `监督核查（${total}）`, value: 1 }]
+              btnData = uniqueArr(btnData)
+              setOperaServiceBtnList(btnData)
       }
     });
   };
@@ -447,7 +448,11 @@ const Workbench = props => {
       })}
     </div>
   }
-
+  const uniqueArr = (arr)=> arr.filter((obj, index) => {  
+    return arr.find((compareObj) => {  
+      return compareObj.name === obj.name;  
+    }) === obj;  
+  }); 
   //获取数据报警
   const GetWorkAlarmPushList = (status, pageIndex, pageSize, ) => {
     props.dispatch({
@@ -455,8 +460,9 @@ const Workbench = props => {
       payload: { status: status, pageIndex: pageIndex ? pageIndex : alarmPageIndex, pageSize: pageSize ? pageSize : alarmPageSize },
       callback: (total) => {
         // myRemindBtnList.splice(0, 1, { name: `数据报警（${total}）`, value: 1 })
-        const btnData = [...myRemindBtnList, { name: `数据报警（${total}）`, value: 1 }]
-        setMyRemindBtnList(btnData)
+        let btnData = [...myRemindBtnList, { name: `数据报警（${total}）`, value: 1 }]
+            btnData = uniqueArr(btnData)
+            setMyRemindBtnList(btnData)
       }
     });
   }
@@ -497,7 +503,8 @@ const Workbench = props => {
       payload: { pageIndex: pageIndex ? pageIndex : contractPageIndex, pageSize: pageSize ? pageSize : contractPageSize },
       callback: (total) => {
         // myRemindBtnList.splice(1, 1, { name: `合同到期（${total}）`, value: 4 })
-        const btnData = [...myRemindBtnList, { name: `合同到期（${total}）`, value: 4 }]
+        let btnData = [...myRemindBtnList, { name: `合同到期（${total}）`, value: 4 }]
+            btnData = uniqueArr(btnData)
         setMyRemindBtnList(btnData)
       }
     });
