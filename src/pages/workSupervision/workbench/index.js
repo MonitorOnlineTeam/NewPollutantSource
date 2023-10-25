@@ -119,6 +119,7 @@ const Workbench = props => {
       payload: {},
       callback:(res)=>{
         res.map(item=>{
+          
           switch(item.PName){
             case '日常监督':
               SetDaily(true)
@@ -227,7 +228,9 @@ const Workbench = props => {
       type: 'wordSupervision/GetStagingInspectorRectificationList',
       payload: { pageIndex: 1, pageSize: 9999 },
       callback: (total) => {
-        operaServiceBtnList.splice(0, 1, { name: `监督核查（${total}）`, value: 1 })
+        const btnData = [...operaServiceBtnList, { name: `监督核查（${total}）`, value: 1 }]
+        setOperaServiceBtnList(btnData)
+        // operaServiceBtnList.splice(0, 1, { name: `监督核查（${total}）`, value: 1 })
       }
     });
   };
@@ -424,8 +427,8 @@ const Workbench = props => {
   const [selectMyVal, setSelectMyVal] = useState(1)
   const [selectOperaVal, setSelectOperaVal] = useState(1)
 
-  const [operaServiceBtnList, setOperaServiceBtnList] = useState([{ name: '监督核查', value: 1 }])
-  const [myRemindBtnList, setMyBtnRemindList] = useState([{ name: '数据报警', value: 1 }, { name: '合同到期', value: 4 },])
+  const [operaServiceBtnList, setOperaServiceBtnList] = useState([])
+  const [myRemindBtnList, setMyRemindBtnList] = useState([])
   const btnComponents = (data, val, callBack) => {
     return <div className={styles.selectBtnSty}>
       {data.map(item => {
@@ -451,7 +454,9 @@ const Workbench = props => {
       type: 'wordSupervision/GetWorkAlarmPushList',
       payload: { status: status, pageIndex: pageIndex ? pageIndex : alarmPageIndex, pageSize: pageSize ? pageSize : alarmPageSize },
       callback: (total) => {
-        myRemindBtnList.splice(0, 1, { name: `数据报警（${total}）`, value: 1 })
+        // myRemindBtnList.splice(0, 1, { name: `数据报警（${total}）`, value: 1 })
+        const btnData = [...myRemindBtnList, { name: `数据报警（${total}）`, value: 1 }]
+        setMyRemindBtnList(btnData)
       }
     });
   }
@@ -491,7 +496,9 @@ const Workbench = props => {
       type: 'wordSupervision/GetProjectRemindList',
       payload: { pageIndex: pageIndex ? pageIndex : contractPageIndex, pageSize: pageSize ? pageSize : contractPageSize },
       callback: (total) => {
-        myRemindBtnList.splice(1, 1, { name: `合同到期（${total}）`, value: 4 })
+        // myRemindBtnList.splice(1, 1, { name: `合同到期（${total}）`, value: 4 })
+        const btnData = [...myRemindBtnList, { name: `合同到期（${total}）`, value: 4 }]
+        setMyRemindBtnList(btnData)
       }
     });
   }

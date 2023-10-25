@@ -162,7 +162,6 @@ export default Model.extend({
           return item != '风向';
         })
         .toString();
-debugger;
       const arrname = _historyparams.pollutantNames.split(',');
       _historyparams.pollutantCodes.split(',').map((item, key) => {
         if (item !== 'a01008') {

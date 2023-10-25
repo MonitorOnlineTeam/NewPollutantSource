@@ -17,23 +17,27 @@
     }
   }
 }
-
+.fromModal :global, .fromModal3 :global{
+  width:90% !important;
+  min-width: 900px;
+  .ant-form-item{
+    margin-bottom: 12px;
+    align-items: baseline;
+  }
+}
 .fromModal  :global {
-    width:90% !important;
-    min-width: 900px;
       .ant-modal-body{
         padding: 24px 10%;
-
-        .ant-form-item{
-          margin-bottom: 20px;
-        }
         .ant-row:nth-last-child(1){
           .ant-form-item{
             margin-bottom: 0;
           }
         }
       }
-
+      .ant-form-item{
+        align-items:flex-start;
+      }
+   
       .ant-input,.ant-select,.ant-picker,.ant-input-number{
         width:100%;
       }
@@ -43,4 +47,4 @@
       .ant-form-hidden{
         display: none;
       }
-  }      
+  } 

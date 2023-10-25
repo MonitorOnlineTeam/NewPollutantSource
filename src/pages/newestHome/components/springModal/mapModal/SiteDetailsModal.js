@@ -127,7 +127,7 @@ class SiteDetailsModal extends PureComponent {
     </div>
   }
   tabListContnetPage = (data, infoWindowData,imgName,currentKey) => {
-    return <>{
+    return <>{ // 监控数据
       currentKey === 1 && <div>
         <DataQuery
           DGIMN={data.DGIMN}

@@ -755,7 +755,7 @@ const Index = (props) => {
       </Col>
         <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="核查人">
-        {consistencyCheckDetail.userName }
+        {consistencyCheckDetail.checkUserName }
       </Form.Item>
       </Col>
       <Col span={8} style={{paddingRight:5}}>

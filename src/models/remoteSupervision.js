@@ -14,18 +14,18 @@ export default Model.extend({
     entList: [],
     tableData: [],
     tableTotal: null,
-    tableLoading:false,
+    tableLoading: false,
     consistencyCheckDetail: [],
     addDataConsistencyData: [],
     addRealTimeData: [],
     addParconsistencyData: [],
     getPointConsistencyParamLoading: false,
     remoteInspectorPointList: [],
-    remoteInspectorPointTotal:0,
-    forwardTableData:[],
-    forwardTableTotal:0,
-    forwardTableLoading:false,
-    regQueryPar:null,
+    remoteInspectorPointTotal: 0,
+    forwardTableData: [],
+    forwardTableTotal: 0,
+    forwardTableLoading: false,
+    regQueryPar: null,
   },
   effects: {
     // 根据企业获取排口
@@ -36,13 +36,13 @@ export default Model.extend({
       }
     },
     //列表
-    *getRemoteInspectorList({ payload,callback }, { call, update, select, put }) {
-      payload.isForward? yield update({ forwardTableLoading: true }) : yield update({ tableLoading: true });
+    *getRemoteInspectorList({ payload, callback }, { call, update, select, put }) {
+      payload.isForward ? yield update({ forwardTableLoading: true }) : yield update({ tableLoading: true });
       const result = yield call(services.GetRemoteInspectorList, { ...payload });
       if (result.IsSuccess) {
-        payload.isForward? yield update({ forwardTableData: result.Datas, forwardTableTotal: result.Total,forwardTableLoading: false }) : yield update({ tableData: result.Datas, tableTotal: result.Total,tableLoading:false,regQueryPar:payload });
+        payload.isForward ? yield update({ forwardTableData: result.Datas, forwardTableTotal: result.Total, forwardTableLoading: false }) : yield update({ tableData: result.Datas, tableTotal: result.Total, tableLoading: false, regQueryPar: payload });
       } else {
-        payload.isForward? yield update({ forwardTableLoading: false }) : yield update({ tableLoading: false });
+        payload.isForward ? yield update({ forwardTableLoading: false }) : yield update({ tableLoading: false });
         message.error(result.Message)
       }
     },
@@ -202,7 +202,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           remoteInspectorPointList: result.Datas,
-          remoteInspectorPointTotal:result.Total,
+          remoteInspectorPointTotal: result.Total,
         });
       } else {
         message.error(result.Message)
@@ -213,7 +213,7 @@ export default Model.extend({
       const result = yield call(services.AddRemoteInspectorPoint, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback&&callback()
+        callback && callback()
       } else {
         message.error(result.Message)
       }
@@ -223,6 +223,16 @@ export default Model.extend({
       const result = yield call(services.ForwardRemoteInspector, { ...payload });
       if (result.IsSuccess) {
         callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //添加或修改数据一致性核查
+    *exportRangeParam({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.ExportRangeParam, { ...payload });
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback(result.Datas)
       } else {
         message.error(result.Message)
       }

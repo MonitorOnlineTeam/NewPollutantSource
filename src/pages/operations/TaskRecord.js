@@ -108,7 +108,8 @@ class TaskRecord extends Component {
     //     RolesID: '2b345cf3-1440-4898-84c8-93f9a64f8daf',
     //   },
     // })
-    const buttonList = permissionButton(this.props.match.path)
+    // const buttonList = permissionButton(this.props.match.path)
+    const buttonList =  permissionButton('/operations/taskRecord')
     buttonList.map(item=>{
       switch (item){
         case 'reject': this.setState({rejectPermis: true }); break;

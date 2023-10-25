@@ -148,3 +148,14 @@ export async function ExportResponseList(params) {
   const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/ExportResponseList', params, null);
   return result;
 }
+
+// 近30日运维工单统计
+export async function GetOperationPlanTaskList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetOperationPlanTaskList', params, null);
+  return result;
+}
+// 近30日运维工单统计 导出
+export async function ExportOperationPlanTaskList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/ExportOperationPlanTaskList', params, null);
+  return result;
+}

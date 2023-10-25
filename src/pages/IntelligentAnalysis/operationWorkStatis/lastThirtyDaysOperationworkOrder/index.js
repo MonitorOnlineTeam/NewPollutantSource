@@ -6,7 +6,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Tag, Spin, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -15,10 +15,12 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import EntAtmoList from '@/components/EntAtmoList';
 import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
-import { Resizable,ResizableBox } from 'react-resizable';
+import { Resizable, ResizableBox } from 'react-resizable';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import RoleList from '@/components/RoleList'
@@ -27,19 +29,26 @@ import OperationCompanyList from '@/components/OperationCompanyList'
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'noticeManger'
+const namespace = 'operations'
 
 
 
 
 
-const dvaPropsData = ({ loading, noticeManger }) => ({
-  tableDatas: noticeManger.tableDatas,
-  pointDatas: noticeManger.pointDatas,
-  tableLoading: loading.effects[`${namespace}/getNoticeContentList`],
-  tableTotal: noticeManger.tableTotal,
-  loadingConfirm: loading.effects[`${namespace}/addOrUpdNoticeContent`],
-  delLoading: loading.effects[`${namespace}/deleteNoticeContent`],
+const dvaPropsData = ({ loading, operations }) => ({
+  tableDatas: operations.operationPlanTaskTable,
+  tableTotal: operations.operationPlanTaskTotal,
+  tableLoading: operations.operationPlanTaskTableLoading,
+  exportLoading: operations.exportOperationPlanTaskTableLoading,
+  tableDatas2: operations.operationPlanTaskTable2,
+  tableTotal2: operations.operationPlanTaskTotal2,
+  tableLoading2: operations.operationPlanTaskTableLoading2,
+  exportLoading2: operations.exportOperationPlanTaskTableLoading2,
+  tableDatas3: operations.operationPlanTaskTable3,
+  tableTotal3: operations.operationPlanTaskTotal3,
+  tableLoading3: operations.operationPlanTaskTableLoading3,
+  exportLoading3: operations.exportOperationPlanTaskTableLoading3,
+  queryPar: operations.operationPlanTaskQueryPar,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -50,25 +59,16 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getNoticeContentList: (payload) => { //列表
+    getOperationPlanTaskList: (payload) => { //列表
       dispatch({
-        type: `${namespace}/getNoticeContentList`,
+        type: `${namespace}/getOperationPlanTaskList`,
         payload: payload,
       })
     },
-    addOrUpdNoticeContent: (payload, callback) => { // 添加 or 修改
+    exportOperationPlanTaskList: (payload) => { //导出
       dispatch({
-        type: `${namespace}/addOrUpdNoticeContent`,
+        type: `${namespace}/exportOperationPlanTaskList`,
         payload: payload,
-        callback: callback
-      })
-
-    },
-    deleteNoticeContent: (payload, callback) => { //删除
-      dispatch({
-        type: `${namespace}/deleteNoticeContent`,
-        payload: payload,
-        callback: callback
       })
     },
   }
@@ -86,360 +86,329 @@ const Index = (props) => {
 
 
 
-  const [fromVisible, setFromVisible] = useState(false)
-
-  const [type, setType] = useState('add')
 
 
 
-
-  const { tableDatas, tableTotal, tableLoading, loadingConfirm,delLoading, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, queryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, tableDatas3, tableTotal3, tableLoading3, exportLoading3, } = props;
   useEffect(() => {
-    onFinish();  
+    onFinish(null, 1);
   }, []);
 
+  const commonCol = [
+    {
+      title: '完成工单数',
+      dataIndex: 'taskCount',
+      key: 'taskCount',
+      align: 'center',
+      sorter: (a, b) => a.taskCount - b.taskCount,
+    },
+    {
+      title: '巡检',
+      dataIndex: 'xunjian',
+      key: 'xunjian',
+      align: 'center',
+      sorter: (a, b) => a.xunjian - b.xunjian,
+    },
+    {
+      title: '校准',
+      dataIndex: 'jiaozhun',
+      key: 'jiaozhun',
+      align: 'center',
+      sorter: (a, b) => a.jiaozhun - b.jiaozhun,
+    },
+    {
+      title: '维修',
+      dataIndex: 'weixiu',
+      key: 'weixiu',
+      align: 'center',
+      sorter: (a, b) => a.weixiu - b.weixiu,
+    },
+    {
+      title: '维护',
+      dataIndex: 'weihu',
+      key: 'weihu',
+      align: 'center',
+      sorter: (a, b) => a.weihu - b.weihu,
+    },
+    {
+      title: '备品备件更换',
+      dataIndex: 'beipin',
+      key: 'beipin',
+      align: 'center',
+      sorter: (a, b) => a.beipin - b.beipin,
+    },
+    {
+      title: '易耗品更换',
+      dataIndex: 'yihaopin',
+      key: 'yihaopin',
+      align: 'center',
+      sorter: (a, b) => a.yihaopin - b.yihaopin,
+    },
+    {
+      title: '标准物质更换',
+      dataIndex: 'biaozhunwuzhi',
+      key: 'biaozhunwuzhi',
+      align: 'center',
+      sorter: (a, b) => a.biaozhunwuzhi - b.biaozhunwuzhi,
+    },
+    {
+      title: '校验测试',
+      dataIndex: 'jiaoyanceshi',
+      key: 'jiaoyanceshi',
+      align: 'center',
+      sorter: (a, b) => a.jiaoyanceshi - b.jiaoyanceshi,
+    },
+    {
+      title: '配合检查',
+      dataIndex: 'peihejiancha',
+      key: 'peihejiancha',
+      align: 'center',
+      sorter: (a, b) => a.peihejiancha - b.peihejiancha,
+    },
+    {
+      title: '配合对比',
+      dataIndex: 'peiheduibi',
+      key: 'peiheduibi',
+      align: 'center',
+      sorter: (a, b) => a.peiheduibi - b.peiheduibi,
+    },
+  ]
+  const [regionCode,setRegionCode] = useState()
   const columns = [
     {
-      title: '公告标题',
-      dataIndex: 'NoticeTitle',
-      key: 'NoticeTitle',
+      title: '序号',
       align: 'center',
-    },
-    {
-      title: '生效时间',
-      dataIndex: 'BeginTime',
-      key: 'BeginTime',
-      align: 'center',
-      render: (text, record) => { 
-        return text ? moment(text).format('YYYY-MM-DD 00:00:00') : undefined;
-    }
-    },
-    {
-      title: '失效时间',
-      dataIndex: 'EndTime',
-      key: 'EndTime',
-      align: 'center',
-      render: (text, record) => { 
-          return text ? moment(text).format('YYYY-MM-DD 23:59:59') : undefined;
+      ellipsis: true,
+      render: (text, record, index) => {
+        return (index + 1) + (pageIndex - 1) * pageSize;
       }
     },
     {
-      title: '公告状态',
-      dataIndex: 'Status',
-      key: 'Status',
+      title: '行政区',
+      dataIndex: 'regionName',
+      key: 'regionName',
       align: 'center',
       render: (text, record) => {
-        if (text === '显示') {
-          return <span><Tag color="green">显示</Tag></span>;
-        }
-        if (text === '不显示') {
-          return <span><Tag color="red">不显示</Tag></span>;
-        }
-        if (text === '置顶') {
-          return <span><Tag color="blue">置顶</Tag></span>;
-        }
-      },
-    },
-    {
-      title: '查看公告单位',
-      dataIndex: 'Company',
-      key: 'Company',
-      align: 'center',
-    },
-    {
-      title: '查看公告角色',
-      dataIndex: 'Role',
-      key: 'Role',
-      align: 'center',
-    },
-    {
-      title: '发布人',
-      dataIndex: 'CreatUserName',
-      key: 'CreatUserName',
-      align: 'center',
-    },
-    {
-      title: '发布时间',
-      dataIndex: 'CreateTime',
-      key: 'CreateTime',
-      align: 'center',
-    },
-    {
-      title: <span>操作</span>,
-      dataIndex: 'x',
-      key: 'x',
-      align: 'center',
-      width: 180,
-      render: (text, record) => {
-        return <span>
-          <Fragment><Tooltip title="编辑"> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-          <Fragment><Tooltip title="详情"> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-
-          <Fragment> <Tooltip title="删除">
-            <Popconfirm title="确定要删除此条信息吗？" style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
-              <a><DelIcon /></a>
-            </Popconfirm>
-          </Tooltip>
-          </Fragment>
-        </span>
+        return <a onClick={() => { setPointType(2);setRegionCode(record.regionCode); onFinish({...queryPar,regionCode:record.regionCode}, 2) }}>{text}</a>
       }
     },
+    {
+      title: '运维监测点数',
+      dataIndex: 'pointCount',
+      key: 'pointCount',
+      align: 'center',
+      sorter: (a, b) => a.pointCount - b.pointCount,
+    },
+    ...commonCol,
   ];
-
-
-  const edit =  (record) => {
-    setFromVisible(true)
-    setType('edit')
-    console.log(record)
-    form2.resetFields();
-    form2.setFieldsValue({
-        ...record,
-        Role:record.RoleID? record.RoleID.split(',') : [],
-        Company:record.CompanyID? record.CompanyID.split(',') : [],     
-        Status:record.StatusID,
-        BeginTime: record.BeginTime&&moment(record.BeginTime),
-        EndTime:record.EndTime&&moment(record.EndTime),
-      })
-
-  };
-  const detail = (data) => {
-
-    router.push({ pathname: '/systemManger/noticeManger/detail', query: { data: JSON.stringify(data) } })
-  }
-
-  const add = () => {
-    setFromVisible(true)
-    setType('add')
-    form2.resetFields();
-  };
-
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
-  const onFinish = async (pageIndexs, pageSizes) => {  //查询
-
-
+  const columns2 = [
+    {
+      title: '序号',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return (index + 1) + (pageIndex2 - 1) * pageSize2;
+      }
+    },
+    {
+      title: '行政区',
+      dataIndex: 'regionName',
+      key: 'regionName',
+      align: 'center',
+      render: (text, record) => {
+        const regCode = record.regionCode?record.regionCode : regionCode
+        return <a onClick={() => { setPointType(3);setRegionCode(regCode); onFinish({...queryPar,regionCode:regCode}, 3) }}>{text}</a>
+      }
+    },
+    {
+      title: '运维监测点数',
+      dataIndex: 'pointCount',
+      key: 'pointCount',
+      align: 'center',
+      sorter: (a, b) => a.pointCount - b.pointCount,
+    },
+    ...commonCol,
+  ];
+  const columns3 = [
+    {
+      title: '序号',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return (index + 1) + (pageIndex3 - 1) * pageSize3;
+      }
+    },
+    {
+      title: '行政区',
+      dataIndex: 'regionName',
+      key: 'regionName',
+      align: 'center',
+    },
+    {
+      title: '企业名称',
+      dataIndex: 'entName',
+      key: 'entName',
+      align: 'center',
+    },
+    {
+      title: '监测点名称',
+      dataIndex: 'pointName',
+      key: 'pointName',
+      align: 'center',
+    },
+    ...commonCol,
+  ];
+  const [pointType, setPointType] = useState(1)
+  const onFinish = async (queryPar, pointType) => {  //查询
     try {
       const values = await form.validateFields();
-      pageIndexs && typeof pageIndexs === "number" ? setPageIndex(pageIndexs) : setPageIndex(1); //除分页和编辑  每次查询页码重置为第一页
-      props.getNoticeContentList({
-        ...values,
-        pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : 1,
-        pageSize: pageSizes ? pageSizes : pageSize,
-        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
-        company:values.company?values.company.toString() : '',
-        role:values.role?values.role.toString() : '',
+      const par = queryPar ? { ...queryPar, pointType: pointType } :
+        {
+          ...values,
+          beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+          endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+          time: undefined,
+          pointType: pointType,
+        }
+      props.getOperationPlanTaskList({
+        ...par,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
 
-  
-  const onModalOk = async () => { //添加 or 编辑弹框
 
-
-    try {
-      const values = await form2.validateFields();//触发校验
-
-      const contentVal = values.Content.replaceAll(/<p>|[</p>]/g, '').trim();
-      if ((!contentVal) || contentVal === 'br') {
-        message.warning('请输入公告内容')
-        return;
-      }
-
-      props.addOrUpdNoticeContent({
-        ...values,
-        BeginTime: values.BeginTime && moment(values.BeginTime).format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: values.EndTime && moment(values.EndTime).format('YYYY-MM-DD HH:mm:ss'),
-        Company:values.Company?values.Company.toString() : '',
-        Role:values.Role?values.Role.toString() : '',
-      }, () => {
-        setFromVisible(false)
-        onFinish()
-      })
-
-
-    } catch (errInfo) {
-      console.log('错误信息:', errInfo);
-    }
-  }
-
-  const del = async (record) => {
-    const values = await form.validateFields();
-    props.deleteNoticeContent({ ID: record.ID }, () => {
-      setPageIndex(1)
-      props.getNoticeContentList({
-        pageIndex: 1,
-        pageSize: pageSize,
-        ...values,
-      })
-    })
-  };
-  const onAddEditValuesChange = (hangedValues, allValues) => { //添加修改时
-    
- 
-  }
-  const startDisabledDate = (current) => {
-    const time = form2.getFieldValue('EndTime')
-    return time && current && current > moment(time).startOf('day');
-  }
-  const endDisabledDate = (current) => {
-    const time = form2.getFieldValue('BeginTime')
-    return time && current && current < moment(time).endOf('day');
-  }
-
-
-  const handleTableChange = async (PageIndex, PageSize) => { //分页
-    setPageSize(PageSize)
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
+  const handleTableChange = async (PageIndex, PageSize) => { //行政区 分页
     setPageIndex(PageIndex)
-    onFinish(PageIndex, PageSize)
+    setPageSize(PageSize)
+  }
+  const [pageIndex2, setPageIndex2] = useState(1)
+  const [pageSize2, setPageSize2] = useState(20)
+  const handleTableChange2 = async (PageIndex, PageSize) => { //市 分页
+    setPageIndex2(PageIndex)
+    setPageSize2(PageSize)
   }
 
+  const [pageIndex3, setPageIndex3] = useState(1)
+  const [pageSize3, setPageSize3] = useState(20)
+  const handleTableChange3 = async (PageIndex, PageSize) => { //企业 分页
+    setPageIndex3(PageIndex)
+    setPageSize3(PageSize)
+    onFinish({...queryPar,regionCode: regionCode, pageIndex: PageIndex, pageSize: PageSize })
+  }
 
+  const exports = (queryPar, pointType) => { //导出
+    props.exportOperationPlanTaskList({
+      ...queryPar,
+      pointType:pointType,
+    })
+  }
+  const [entCode,setEntCode] = useState()
   const searchComponents = () => {
-    return <Form
+    return pointType == 1 ? <Form
       form={form}
+      layout='inline'
       name="advanced_search"
       className={styles['ant-advanced-search-form']}
-      onFinish={onFinish}
+      onFinish={() => { setPointType(1); onFinish(null, 1) }}
+      initialValues={{
+        time: [moment().subtract(1, 'month').startOf('day'), moment().endOf('day'),],
+      }}
     >
-      <Row>
-        <Form.Item label="公告标题" name="title"  >
-          <Input placeholder='请输入' allowClear style={{ width: 200 }} />
-        </Form.Item>
-        <Form.Item label="发布时间" name="time" style={{ margin: '0 8px' }}>
-          <RangePicker allowClear style={{ width: 350 }} showTime={{
-            defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-          }} />
-        </Form.Item>
-        <Form.Item label="公告状态" name="status"  >
-          <Select placeholder='请输入' allowClear style={{ width: 200 }}>
-            <Option value={1}>显示</Option>
-            <Option value={2}>不显示</Option>
-            <Option value={3}>置顶</Option>
-          </Select>
-        </Form.Item>
-      </Row>
-      <Row>
-        <Form.Item label="查看公告单位" name="company"  >
-          <OperationCompanyList style={{ width: 200 }} mode='multiple'/>
-        </Form.Item>
-        <Form.Item label="查看公告角色" name="role" style={{ margin: '0 8px' }}>
-          <RoleList  style={{ width: 350 }} mode='multiple'/>
-        </Form.Item>
-        <Form.Item style={{ marginLeft: 30 }}>
-          <Button type="primary" htmlType='submit' style={{ marginRight: 8 }}>
-            查询
-     </Button>
-          <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }}>
-            重置
-     </Button>
-          <Button onClick={() => { add() }} >
-            添加
-     </Button>
-        </Form.Item>
-      </Row>
+      <Form.Item label="日期查询" name="time">
+        <RangePicker_ allowClear style={{ width: 350 }} showTime={{
+          defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+        }} />
+      </Form.Item>
+      <Form.Item label="行政区" name="regionCode">
+        <RegionList style={{ width: 150 }} />
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType='submit' loading={tableLoading} style={{ marginRight: 8 }}>
+          查询
+       </Button>
+        <Button icon={<ExportOutlined />} onClick={() => { exports(queryPar,1) }} loading={exportLoading} style={{ marginRight: 6 }}>
+          导出
+            </Button>
+      </Form.Item>
     </Form>
+      :
+      pointType == 2 ?
+        <Form layout='inline'>
+          <Form.Item>
+            <Button icon={<ExportOutlined />} onClick={() => { exports({...queryPar,regionCode:regionCode},2) }} loading={exportLoading2} style={{ marginRight: 6 }}>
+              导出
+      </Button>
+            <Button icon={<RollbackOutlined />} onClick={() => { setPointType(1) }} style={{ marginRight: 6 }}>
+              返回
+          </Button>
+          </Form.Item>
+        </Form>
+        :
+        <Form layout='inline'>
+          <Form.Item >
+            <EntAtmoList onChange={(value)=>{onFinish({...queryPar,regionCode: regionCode, entCode: value},3);setEntCode(value);}} style={{ width: 260 }} />
+          </Form.Item>
+          <Form.Item>
+            <Button icon={<ExportOutlined />} onClick={() => { exports({...queryPar,regionCode:regionCode,entCode:entCode},3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
+              导出
+          </Button>
+            <Button icon={<RollbackOutlined />} onClick={() => { setPointType(2) }} style={{ marginRight: 6 }}>
+              返回
+          </Button>
+          </Form.Item>
+        </Form>
   }
   return (
     <div className={styles.equipmentManufacturListSty}>
-      <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
-          <SdlTable
-            loading={tableLoading || delLoading}
+      <Card title={searchComponents()}>
+        {pointType == 1 ? <SdlTable
+          loading={tableLoading}
+          bordered
+          dataSource={tableDatas}
+          columns={columns}
+          pagination={{
+            total: tableTotal,
+            pageSize: pageSize,
+            current: pageIndex,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            onChange: handleTableChange,
+          }}
+        /> :
+          pointType == 2 ? <SdlTable
+            loading={tableLoading2}
             bordered
-            dataSource={tableDatas}
-            columns={columns}
+            dataSource={tableDatas2}
+            columns={columns2}
             pagination={{
-              total: tableTotal,
-              pageSize: pageSize,
-              current: pageIndex,
+              total: tableTotal2,
+              pageSize: pageSize2,
+              current: pageIndex2,
               showSizeChanger: true,
               showQuickJumper: true,
-              onChange: handleTableChange,
+              onChange: handleTableChange2,
             }}
-          />
-        </Card>
-      </BreadcrumbWrapper>
-
-      <Modal
-        title={type === 'add' ? '添加' : '编辑'}
-        visible={fromVisible}
-        onOk={onModalOk}
-        confirmLoading={loadingConfirm}
-        onCancel={() => { setFromVisible(false) }}
-        className={styles.fromModal}
-        destroyOnClose
-      >
-        <Form
-          name="basic"
-          form={form2}
-          initialValues={{
-            Status: 1
-          }}
-          onValuesChange={onAddEditValuesChange}
-        >
-          <Row>
-            <Col span={24}>
-              <Form.Item name="ID" hidden>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="发布标题" name="NoticeTitle" rules={[{ required: true, }]} >
-                <TextArea showCount maxLength={50} rows={1} placeholder='请输入' />
-              </Form.Item>
-            </Col>
-
-            <Col span={24}>
-            <ResizableBox 
-                  height={260} 
-                  axis = {'y'}
-                  minConstraints={['100%', 120]}
-                  className={'resizable_quill_sty'}
-                > 
-              <Form.Item label='公告内容' name="Content" rules={[{ required: true, message: '请输入公告内容' }]}>
-                <ReactQuill theme="snow" modules={modules}  />
-              </Form.Item> 
-              </ResizableBox>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="公告状态" name="Status" rules={[{ required: true, }]}>
-                <Radio.Group>
-                  <Radio value={1}>显示</Radio>
-                  <Radio value={2}>不显示</Radio>
-                  <Radio value={3}>置顶</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="查看公告单位" name="Company" rules={[{ required: true, message: '请选择公告单位' }]}>
-                <OperationCompanyList  mode='multiple'/>
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="查看公告角色" name="Role" rules={[{ required: true, message: '请选择公告角色' }]}>
-                <RoleList  mode='multiple' />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="生效时间" name="BeginTime" rules={[{ required: true, message: '请选择生效时间' }]} >
-                <DatePicker allowClear disabledDate={startDisabledDate} />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="失效时间" name="EndTime" rules={[{ required: true, message: '请选择失效时间' }]}>
-                <DatePicker allowClear disabledDate={endDisabledDate}/>
-              </Form.Item>
-            </Col>
-
-          </Row>
-
-
-
-        </Form>
-      </Modal>
+          /> :
+            <SdlTable
+              loading={tableLoading3}
+              bordered
+              dataSource={tableDatas3}
+              columns={columns3}
+              pagination={{
+                total: tableTotal3,
+                pageSize: pageSize3,
+                current: pageIndex3,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                onChange: handleTableChange3,
+              }}
+            />
+        }
+      </Card>
     </div>
   );
 };

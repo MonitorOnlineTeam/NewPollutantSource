@@ -28,3 +28,14 @@ export async function DeleteSystemLongInLogs(params) {
 }
 
 
+//操作日志 列表
+export async function GetUserOprationLogsList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetUserOprationLogsList',params, null);
+  return result;
+}
+//操作日志 删除
+export async function DeleteUserOprationLogs(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteUserOprationLogs',params, null);
+  return result;
+}
+

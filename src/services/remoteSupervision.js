@@ -104,3 +104,8 @@ export async function ForwardRemoteInspector(params) {
   const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/ForwardRemoteInspector`, params, null);
   return result;
 }
+//关键参数核查 导入
+export async function ExportRangeParam(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/ExportRangeParam`, params, null);
+  return result;
+}

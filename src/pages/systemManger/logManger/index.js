@@ -42,9 +42,9 @@ const dvaPropsData = ({ loading, logManger, usertree }) => ({
   queryPar2: logManger.queryPar2,
   deleteSystemLongInLogsLoading: loading.effects[`${namespace}/deleteSystemLongInLogs`],
   tableDatas3: logManger.tableDatas3,
-  tableLoading3: loading.effects[`${namespace}/getSystemLongInLogs`],
-  queryPar3: logManger.queryPar2,
-  // deleteSystemLongInLogsLoading: loading.effects[`${namespace}/deleteSystemLongInLogs`],
+  tableLoading3: loading.effects[`${namespace}/getUserOprationLogsList`],
+  queryPar3: logManger.queryPar3,
+  deleteUserOprationLogsLoading: loading.effects[`${namespace}/deleteUserOprationLogs`],
 
 })
 
@@ -88,6 +88,19 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
+    getUserOprationLogsList: (payload) => { //操作日志 列表
+      dispatch({
+        type: `${namespace}/getUserOprationLogsList`,
+        payload: payload,
+      })
+    },
+    deleteUserOprationLogs: (payload, callback) => { //操作日志 删除
+      dispatch({
+        type: `${namespace}/deleteUserOprationLogs`,
+        payload: payload,
+        callback: callback
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -97,13 +110,15 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
   const [form3] = Form.useForm();
+  const [form4] = Form.useForm();
 
 
 
-  const { tableDatas, tableTotal, tableLoading, queryPar, rolesList, rolesTreeLoading, tableDatas2, tableTotal2, tableLoading2, queryPar2, tableDatas3, tableTotal3, tableLoading3, queryPar3,} = props;
+  const { tableDatas, tableTotal, tableLoading, queryPar, rolesList, rolesTreeLoading, tableDatas2, tableTotal2, tableLoading2, queryPar2, tableDatas3, tableTotal3, tableLoading3, queryPar3, } = props;
   useEffect(() => {
     onFinish(pageIndex, pageSize);
     onFinish2(pageIndex2, pageSize2);
+    onFinish3(pageIndex3, pageSize3);
     if (rolesList?.length <= 0) {
       props.getRolesTree({})
     }
@@ -230,7 +245,7 @@ const Index = (props) => {
   const onFinish = async (pageIndexs, pageSizes, par) => {  //异常日志 查询
 
     try {
-      const values = await form.validateFields(); q
+      const values = await form.validateFields();
 
       props.getSystemExceptionList(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
         ...values,
@@ -251,7 +266,7 @@ const Index = (props) => {
     setPageSize(PageSize)
     onFinish(PageIndex, PageSize, queryPar)
   }
-  
+
 
   const del = (record) => {
     props.deleteSystemException({ ID: record.ID }, () => {
@@ -288,7 +303,7 @@ const Index = (props) => {
       key: 'UserName',
       align: 'center',
       ellipsis: true,
-      width: 'auto',
+      width: 140,
     },
     {
       title: '角色',
@@ -332,7 +347,7 @@ const Index = (props) => {
     },
   ];
 
-
+  const [clearTypeTitle, setClearTypeTitle] = useState()
   const searchComponents2 = () => {
     return <Form
       form={form2}
@@ -387,7 +402,7 @@ const Index = (props) => {
             <Button onClick={() => { form2.resetFields() }} style={{ marginRight: 8 }} >
               重置
       </Button>
-            <Button type="primary" onClick={() => { setFormVisible(true);form3.resetFields(); }}>
+            <Button type="primary" onClick={() => { setFormVisible(true); form3.resetFields(); setClearTypeTitle('登录') }}>
               日志清理
            </Button>
           </Form.Item>
@@ -418,22 +433,32 @@ const Index = (props) => {
     setPageIndex2(PageIndex)
     setPageSize2(PageSize)
     onFinish2(PageIndex, PageSize, queryPar2)
-  } 
-  const [formVisible, setFormVisible] = useState(false) 
-  const onModalOk = async () => { //日志清理
+  }
+  const [formVisible, setFormVisible] = useState(false)
+  const onModalOk = async () => { //日志清理 登录日志 和 操作日志
 
     try {
-      const values = await form3.validateFields();//触发校验
-      props.deleteSystemLongInLogs({
+      const values = await form4.validateFields();//触发校验
+      clearTypeTitle == '登录' ? props.deleteSystemLongInLogs({
         ...values,
       }, () => {
         setFormVisible(false)
         setPageIndex2(1); onFinish2(1, pageSize2)
+      }) : props.deleteUserOprationLogs({
+        ...values,
+      }, () => {
+        setFormVisible(false)
+        setPageIndex3(1); onFinish3(1, pageSize3)
       })
 
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
     }
+  }
+  const oprationTypeName = {
+    '1':'添加',
+    '2':'删除',
+    '3':'编辑',
   }
   const columns3 = [ //操作日志
     {
@@ -458,36 +483,39 @@ const Index = (props) => {
       key: 'UserName',
       align: 'center',
       ellipsis: true,
-      width: 'auto',
+      width: 140,
     },
     {
       title: '功能模块',
-      dataIndex: 'UserRolesName',
-      key: 'UserRolesName',
-      align: 'center',
-      ellipsis: true,
-      width: 'auto',
-    },
-    {
-      title: '操作类型',
-      dataIndex: 'LoginIP',
-      key: 'LoginIP',
+      dataIndex: 'OprationTableName',
+      key: 'OprationTableName',
       align: 'center',
       ellipsis: true,
       width: 120,
     },
     {
+      title: '操作类型',
+      dataIndex: 'OprationType',
+      key: 'OprationType',
+      align: 'center',
+      ellipsis: true,
+      width: 120,
+      render: (text, record, index) => {
+        return oprationTypeName[text]
+      }
+    },
+    {
       title: '操作内容',
-      dataIndex: 'Attribution',
-      key: 'Attribution',
+      dataIndex: 'OprationModeJson',
+      key: 'OprationModeJson',
       align: 'center',
       ellipsis: true,
       width: 'auto',
     },
     {
       title: '操作时间',
-      dataIndex: 'LoginTime',
-      key: 'LoginTime',
+      dataIndex: 'CreateTime',
+      key: 'CreateTime',
       align: 'center',
       ellipsis: true,
 
@@ -495,88 +523,77 @@ const Index = (props) => {
     {
       title: '操作',
       align: 'center',
-      width: 110,
+      width: 80,
       render: (text, record) => {
         return <span>
           <Fragment>
-            <Fragment> <Tooltip title="详情">  <a style={{ paddingRight: 5 }} onClick={() => { detail3(record) }} ><DetailIcon /></a></Tooltip><Divider type="vertical" /></Fragment>
-            <Popconfirm placement='left' title="确定要删除此条信息吗？" onConfirm={() => { del(record) }} okText="是" cancelText="否">
-              <Tooltip title="删除">   <a><DelIcon /></a></Tooltip>
-            </Popconfirm>
+            <Fragment> <Tooltip title="详情">  <a style={{ paddingRight: 5 }} onClick={() => { detail3(record) }} ><DetailIcon /></a></Tooltip></Fragment>
           </Fragment>
         </span>
       }
     },
   ];
-  const searchComponents3 = () =>{
+  const searchComponents3 = () => {
     return <Form
-    form={form3}
-    name="advanced_search"
-    className={styles['ant-advanced-search-form3']}
-    layout='inline'
-    initialValues={{
-      Time: [moment(new Date()).startOf("day"), moment().endOf("day")],
-      // LoginType: 2,
-    }}
-    onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2) }}
-  >
-    <Row style={{ flex: 1 }}>
-      <Col span={8}>
-        <Form.Item label="登录账号/姓名" name="UserAccount" style={{ marginBottom: 8 }}>
-          <Input placeholder='请输入' allowClear />
-        </Form.Item>
-      </Col>
-      <Col span={8}>
-        <Form.Item label="操作时间" name="Time" style={{ marginBottom: 8, marginRight: 0 }} >
-          <RangePicker_ style={{ width: '100%' }} showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }} />
-        </Form.Item>
-      </Col>
-      <Col span={8}>
-        <Form.Item label="功能模块" name="RoleId" style={{ marginBottom: 8 }}>
-          {rolesTreeLoading ? <Spin size='small' />
-            :
-            <TreeSelect
-              placeholder="请选择"
-              allowClear
-              treeData={rolesList}
-              showSearch
-              treeNodeFilterProp='title'
-            />
-          }
-        </Form.Item>
-      </Col>
-      <Col span={8}>
-        <Form.Item label="操作类型" name="LoginType" className='minWidthLabel3' >
-          <Select placeholder='请选择' allowClear>
-            <Option value={1}>网页</Option>
-            <Option value={2}>APP</Option>
-            <Option value={3}>小程序</Option>
-          </Select>
-        </Form.Item>
-      </Col>
-      <Col span={8}>
-        <Form.Item>
-          <Button type="primary" htmlType='submit' loading={tableLoading2} style={{ marginRight: 8 }}>
-            查询
-    </Button>
-          <Button onClick={() => { form2.resetFields() }} style={{ marginRight: 8 }} >
-            重置
-    </Button>
-          <Button type="primary" onClick={() => { setFormVisible(true);form3.resetFields(); }}>
-            日志清理
-         </Button>
-        </Form.Item>
-      </Col>
-    </Row>
-  </Form>
+      form={form3}
+      name="advanced_search"
+      className={styles['ant-advanced-search-form3']}
+      layout='inline'
+      initialValues={{
+        Time: [moment(new Date()).startOf("day"), moment().endOf("day")],
+      }}
+      onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize2) }}
+    >
+      <Row style={{ flex: 1 }}>
+        <Col span={8}>
+          <Form.Item label="登录账号/姓名" name="UserName" style={{ marginBottom: 8, }}>
+            <Input placeholder='请输入' allowClear />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="操作时间" name="Time" style={{ marginBottom: 8 }} >
+            <RangePicker_ style={{ width: '100%' }} showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }} />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="功能模块" name="OprationTableName" style={{ marginBottom: 8, marginRight: 0 }}>
+            <Select placeholder='请选择' allowClear>
+              <Option value={'监测点模块'}>监测点模块</Option>
+              <Option value={'企业模块'}>企业模块</Option>
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="操作类型" name="OprationType" className='minWidthLabel3' >
+            <Select placeholder='请选择' allowClear>
+              <Option value={1}>添加</Option>
+              <Option value={2}>删除</Option>
+              <Option value={3}>编辑</Option>
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item>
+            <Button type="primary" htmlType='submit' loading={tableLoading3} style={{ marginRight: 8 }}>
+              查询
+           </Button>
+            <Button onClick={() => { form3.resetFields() }} style={{ marginRight: 8 }} >
+              重置
+            </Button>
+            <Button type="primary" onClick={() => { setFormVisible(true); form4.resetFields(); setClearTypeTitle('操作') }}>
+              日志清理
+            </Button>
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form>
   }
 
   const onFinish3 = async (pageIndexs, pageSizes, par) => {  //操作日志 查询
-
     try {
-      const values = await form2.validateFields();
+      const values = await form3.validateFields();
 
-      props.getSystemLongInLogs(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
+      props.getUserOprationLogsList(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
         ...values,
         Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD HH:mm:ss'),
         Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD HH:mm:ss'),
@@ -595,7 +612,7 @@ const Index = (props) => {
     setPageSize3(PageSize)
     onFinish2(PageIndex, PageSize, queryPar3)
   }
-  const [detailVisible3, setDetailVisible3] = useState(false) 
+  const [detailVisible3, setDetailVisible3] = useState(false)
   const [detailData3, setDetailData3] = useState()
   const detail3 = (record) => {//操作日志 详情
     setDetailVisible3(true)
@@ -616,7 +633,7 @@ const Index = (props) => {
                 dataSource={tableDatas2}
                 columns={columns2}
                 size='small'
-                scroll={{ x: 810, y: 'calc(100vh - 320px)' }}
+                scroll={{ x: 1000, y: 'calc(100vh - 320px)' }}
                 pagination={{
                   total: tableTotal2,
                   pageSize: pageSize2,
@@ -650,14 +667,14 @@ const Index = (props) => {
             </Card>
           </Tabs.TabPane>
           <Tabs.TabPane tab="操作日志" key="3">
-             <Card title={searchComponents3()}>
+            <Card title={searchComponents3()}>
               <SdlTable
                 loading={tableLoading3}
                 bordered
                 dataSource={tableDatas3}
                 columns={columns3}
                 size='small'
-                scroll={{ x: 810, y: 'calc(100vh - 280px)' }}
+                scroll={{ x: 1000, y: 'calc(100vh - 320px)' }}
                 resizable
                 pagination={{
                   total: tableTotal3,
@@ -667,23 +684,23 @@ const Index = (props) => {
                   showQuickJumper: true,
                   onChange: handleTableChange3,
                 }}
-              /> 
+              />
             </Card>
           </Tabs.TabPane>
         </Tabs>
       </BreadcrumbWrapper>
 
       <Modal
-        title={'登录日志清理'}
+        title={`${clearTypeTitle}日志清理`}
         visible={formVisible}
         onCancel={() => { setFormVisible(false) }}
         destroyOnClose
-        confirmLoading={props.deleteSystemLongInLogsLoading}
+        confirmLoading={props.deleteSystemLongInLogsLoading || props.deleteUserOprationLogsLoading}
         onOk={onModalOk}
       >
         <Form
           name="basic"
-          form={form3}
+          form={form4}
           initialValues={{
             // DeleteType: 1,
           }}
@@ -730,42 +747,42 @@ const Index = (props) => {
         title={'操作日志详情'}
         visible={detailVisible3}
         onCancel={() => { setDetailVisible3(false) }}
-        className={styles.fromModal}
+        className={styles.fromModal3}
         destroyOnClose
         footer={null}
       >
         <Form name="basic_detail" >
-        <Row>
-          <Col span={8}>
-          <Form.Item label="登录账号">
-            {detailData3 && detailData3.ExUrl}
-          </Form.Item>
-          </Col>
-          <Col span={8}>
-          <Form.Item label="姓名">
-            {detailData3 && detailData3.ExMessage}
-          </Form.Item>
-          </Col>
-          <Col span={8}>
-          <Form.Item label="功能模块">
-           {detailData3 && detailData3.UserName}
-          </Form.Item>
-          </Col>
-          <Col span={8}>
-          <Form.Item label="操作类型">
-            {detailData3 && detailData3.UserName}
-          </Form.Item>
-          </Col>
-          <Col span={8}>
-          <Form.Item label="操作时间">
-            {detailData3 && detailData3.UserName}
-          </Form.Item>
-          </Col>
-          <Col>
-          <Form.Item label="操作内容">
-           {detailData3 && <TextArea rows={12} value={detailData3.StackTrace} />}
-          </Form.Item>
-          </Col>
+          <Row>
+            <Col span={8}>
+              <Form.Item label="登录账号">
+                {detailData3 && detailData3.UserAccount}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="姓名">
+                {detailData3 && detailData3.UserName}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="功能模块">
+                {detailData3 && detailData3.OprationTableName}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="操作类型">
+                {detailData3 && oprationTypeName[detailData3.OprationType]}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="操作时间">
+                {detailData3 && detailData3.CreateTime}
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item label="操作内容">
+                {detailData3 && detailData3.OprationModeJson}
+              </Form.Item>
+            </Col>
           </Row>
         </Form>
       </Modal>

@@ -1160,20 +1160,20 @@ class NavigationTree extends Component {
             <Search
               placeholder="请输入关键字查询"
               onChange={this.onChangeSearch}
-              style={{ width: 180 }}
-            //202
+              // style={{ width: 180 }}
+              style={{ width: 202 }}
             />
             <Radio.Group defaultValue={this.props.IsTree ? 'tree' : 'panel'} buttonStyle="solid" style={{ marginLeft: 6, cursor: 'pointer', }} onChange={this.onRadioChange}>
               <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>
               <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
             </Radio.Group>
-            <Popover trigger="click" placement="bottom" content={this.dataSourceFilterModel()}>
+            {/* <Popover trigger="click" placement="bottom" content={this.dataSourceFilterModel()}>
             <Tooltip title="数据来源过滤">
               <a  style={{marginLeft: 6 }}>
                 <FilterOutlined style={{ fontSize: 16,}} />
               </a>
             </Tooltip>
-            </Popover>
+            </Popover> */}
           </Row>
           <Divider />
           {this.state.treeVis ? <div >

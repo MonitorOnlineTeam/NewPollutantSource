@@ -50,26 +50,27 @@ class DataQuery extends Component {
   }
 
   componentDidMount() {
-    this.children.onDataTypeChange(this.state.dataType)
+    // this.children.onDataTypeChange(this.state.dataType)
     this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
+  
   }
 
   /** dgimn改變時候切換數據源 */
   componentWillReceiveProps = nextProps => {
-    if (nextProps.DGIMN !== this.props.DGIMN) {
-      this.props.dispatch({
-        type: 'dataquery/updateState',
-        payload: {
-          historyparams:
-          {
-          ...this.props.historyparams,
-          pageIndex:1,
-          pageSize:20
-        }
-        },
-      });
-      this.changeDgimn(nextProps.DGIMN,'switch');
-    }
+    // if (nextProps.DGIMN !== this.props.DGIMN) {
+    //   this.props.dispatch({
+    //     type: 'dataquery/updateState',
+    //     payload: {
+    //       historyparams:
+    //       {
+    //       ...this.props.historyparams,
+    //       pageIndex:1,
+    //       pageSize:20
+    //     }
+    //     },
+    //   });
+    //   this.changeDgimn(nextProps.DGIMN,'switch');
+    // }
   };
 
   /** 根据排口dgimn获取它下面的所有污染物 */
@@ -85,14 +86,14 @@ class DataQuery extends Component {
         if(this.props.tabType==='biao'&&type!=='realtime'&&type!=='minute'&&type!=='hour'&&type!=='day'){
           this.setState({dataType:'realtime'})
         }
-        // this.children.onDataTypeChange(this.state.dataType)
-        if(type){
-          this.reloaddatalist(historyparams)
-        }else{ //首次加载
-          this.setState({dataType:dateTypes,dateValue:dateValues},()=>{
-            this.children.onDataTypeChange(dateTypes) 
-          })
-        }
+        this.children.onDataTypeChange(this.state.dataType)
+        // if(type){
+        //   this.reloaddatalist(historyparams)
+        // }else{ //首次加载
+        //   this.setState({dataType:dateTypes,dateValue:dateValues},()=>{
+        //     this.children.onDataTypeChange(dateTypes) 
+        //   })
+        // }
       },
     });
   };
@@ -466,7 +467,7 @@ class DataQuery extends Component {
         historyparams,
       },
     });
-  this.reloaddatalist(historyparams);
+    this.reloaddatalist(historyparams);
   };
   dateCallbackDataQuery = (dates, dataType) => {
     let { historyparams, dispatch } = this.props;
@@ -567,10 +568,10 @@ class DataQuery extends Component {
             mode={mode}
             dataQuery={true}
             // onChange={this._handleDateChange}
-            callback={(dates, dataType) => this.dateCallback(dates, dataType)}
-            callbackDataQuery={(dates, dataType) =>
-              this.dateCallbackDataQuery(dates, dataType)
-            }
+            callback={(dates, dataType) => {dates?.[0]&&this.dateCallback(dates, dataType)}}
+            // callbackDataQuery={(dates, dataType) =>
+            //   this.dateCallbackDataQuery(dates, dataType)
+            // }
             allowClear={false}
             showTime={this.state.format}
           />

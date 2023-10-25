@@ -63,5 +63,26 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    *getUserOprationLogsList({ payload,callback }, { call, put, update }) { //操作日志 列表
+      const result = yield call(services.GetUserOprationLogsList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          tableTotal3:result.Total,
+          tableDatas3:result.Datas?result.Datas : [],
+          queryPar3:payload,
+        })
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *deleteUserOprationLogs({ payload,callback }, { call, put, update }) { //操作日志 删除
+      const result = yield call(services.DeleteUserOprationLogs, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    },
   },
 })

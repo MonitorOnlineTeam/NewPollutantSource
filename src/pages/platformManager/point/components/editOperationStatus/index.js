@@ -1,5 +1,5 @@
 /**
- * 功  能：修改运维状态
+ * 功  能：修改点位运维状态
  * 创建人：jab
  * 创建时间：2023.10.18
  */
@@ -44,7 +44,7 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    updatePointOprationStatus: (payload,callback) => { //修改运维状态
+    updatePointOprationStatus: (payload,callback) => { //修改点位运维状态
       dispatch({
         type: `${namespace}/updatePointOprationStatus`,
         payload: payload,
@@ -146,7 +146,7 @@ const Index = (props) => {
 
 
 
-  const onFinish =  (values) => {  //修改运维状态
+  const onFinish =  (values) => {  //修改点位运维状态
 
     try {
       props.updatePointOprationStatus({

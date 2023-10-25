@@ -80,6 +80,20 @@ export default Model.extend({
     alarmResTimelyResNumTableTotal: 0,
     alarmResTimelyResNumQueryPar: {},
     alarmResTimelyRegQueryPar: {},
+    operationPlanTaskTable:[],
+    operationPlanTaskTotal:0,
+    operationPlanTaskTableLoading:false,
+    operationPlanTaskQueryPar: {},
+    exportOperationPlanTaskTableLoading:false,
+    operationPlanTaskTable2:[],
+    operationPlanTaskTotal2:0,
+    operationPlanTaskTableLoading2:false,
+    exportOperationPlanTaskTableLoading2:false,
+    operationPlanTaskTable3:[],
+    operationPlanTaskTotal3:0,
+    operationPlanTaskTableLoading3:false,
+    exportOperationPlanTaskTableLoading3:false,
+    
   },
   effects: {
     // 获取日历信息
@@ -484,6 +498,37 @@ export default Model.extend({
       } else {
         message.error(result.Message)
       }
+    },
+    *getOperationPlanTaskList({ payload, callback }, { call, put, update }) { //近30日运维工单统计
+      payload.pointType==1?  yield update({operationPlanTaskTableLoading:true}) : payload.pointType==2? yield update({operationPlanTaskTableLoading2:true}) : yield update({operationPlanTaskTableLoading3:true})
+      const result = yield call(services.GetOperationPlanTaskList, payload);
+      if (result.IsSuccess) {
+        if(payload.pointType==1){
+          yield update({operationPlanTaskTable:result.Datas,operationPlanTaskTotal:result.Total,operationPlanTaskQueryPar: payload, });
+        }else if(payload.pointType==2){
+          yield update({operationPlanTaskTable2:result.Datas,operationPlanTaskTotal2:result.Total, });
+        }else{
+          yield update({operationPlanTaskTable3:result.Datas,operationPlanTaskTotal3:result.Total,});
+        }
+        callback && callback(result.Datas)
+    
+      } else {
+        message.error(result.Message)
+      }
+      payload.pointType==1?  yield update({operationPlanTaskTableLoading:false}) : payload.pointType==2? yield update({operationPlanTaskTableLoading2:false}) : yield update({operationPlanTaskTableLoading3:false})
+
+    },
+    *exportOperationPlanTaskList({ payload, callback }, { call, put, update }) { //近30日运维工单统计 导出
+      payload.pointType==1?  yield update({exportOperationPlanTaskTableLoading:true}) : payload.pointType==2? yield update({exportOperationPlanTaskTableLoading2:true}) : yield update({exportOperationPlanTaskTableLoading3:true})
+      const result = yield call(services.ExportOperationPlanTaskList, payload);
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      } else {
+        message.error(result.Message)
+      }
+      payload.pointType==1?  yield update({exportOperationPlanTaskTableLoading:false}) : payload.pointType==2? yield update({exportOperationPlanTaskTableLoading2:false}) : yield update({exportOperationPlanTaskTableLoading3:false})
+
     },
   },
   reducers: {

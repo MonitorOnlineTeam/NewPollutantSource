@@ -330,7 +330,7 @@ class BdTestRecordContent extends Component {
                         </tr> */}
                         <tr>
                             <td colSpan="6" style={{ textAlign: 'center', fontWeight: 'bold', borderBottom: '0' }}>
-                                CEMS主要仪器型号：
+                                CEMS主要仪器型号
                             </td>
                         </tr>
                         <tr>

@@ -714,10 +714,10 @@ export default class MonitorPoint extends Component {
         deviceManagerGasType: row["dbo.T_Bas_CommonPoint.Col4"]
       })
     }
-    editOperationStatus = (row) =>{ //修改运维状态
+    editOperationStatus = (row) =>{ //修改点位运维状态
       this.setState({
         editOperationStatusVisible:true,
-        editOperationStatusTitle:`${row["dbo.T_Bas_CommonPoint.PointName"]} - 修改运维状态`,
+        editOperationStatusTitle:`${row["dbo.T_Bas_CommonPoint.PointName"]} - 修改点位运维状态`,
         editOperationStatusData:row,
       })
     }
@@ -1071,17 +1071,17 @@ export default class MonitorPoint extends Component {
                             this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
                           }}><HighlightOutlined style={{ fontSize: 16 }} /></a>
                         </Tooltip></>
+                        <Divider type="vertical" />
+                      <Tooltip title="修改点位运维状态">
+                        <a onClick={() => {
+                          this.editOperationStatus(row);
+                        }}><FileProtectOutlined  style={{ fontSize: 16 }} /></a>
+                      </Tooltip>
                       <Divider type="vertical" />
                       <Tooltip title="设备管理">
                         <a onClick={() => {
                           this.deviceManager(row);
                         }}><HddOutlined style={{ fontSize: 16 }} /></a>
-                      </Tooltip>
-                      <Divider type="vertical" />
-                      <Tooltip title="修改运维状态">
-                        <a onClick={() => {
-                          this.editOperationStatus(row);
-                        }}><FileProtectOutlined  style={{ fontSize: 16 }} /></a>
                       </Tooltip>
                       {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="v  ertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
                          <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
@@ -1214,7 +1214,7 @@ export default class MonitorPoint extends Component {
             >
               <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} gasType={deviceManagerGasType} pollutantType={pollutantType} />
             </Modal>
-            <Modal  //修改运维状态
+            <Modal  //修改点位运维状态
               title={this.state.editOperationStatusTitle}
               visible={this.state.editOperationStatusVisible}
               onCancel={() => { this.setState({ editOperationStatusVisible: false }) }}

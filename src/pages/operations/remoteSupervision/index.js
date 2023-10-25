@@ -70,6 +70,7 @@ const dvaPropsData = ({ loading, remoteSupervision, global, common, autoForm }) 
   forwardTableLoading: remoteSupervision.forwardTableLoading,
   forwardOkLoading: loading.effects[`${namespace}/forwardRemoteInspector`],
   permisBtnTip: global.permisBtnTip,
+  importDataLoading: loading.effects[`${namespace}/exportRangeParam`] || false,
 
 })
 
@@ -215,6 +216,13 @@ const dvaDispatch = (dispatch) => {
     forwardRemoteInspector: (payload, callback) => {  // 转发工单 提交
       dispatch({
         type: `${namespace}/forwardRemoteInspector`,
+        payload: payload,
+        callback: callback,
+      })
+    },
+    exportRangeParam: (payload, callback) => {  // 导入
+      dispatch({
+        type: `${namespace}/exportRangeParam`,
         payload: payload,
         callback: callback,
       })
@@ -820,7 +828,6 @@ const Index = (props) => {
 
   const [echoLoading, setEchoLoading] = useState(false)
   const [isCheckUser, setIsCheckUser] = useState(false)
-
   const edit = (record) => { //编辑
     setTitle('编辑')
     setVisible(true)
@@ -851,7 +858,21 @@ const Index = (props) => {
 
     })
   }
+  const importData = () =>{ //导入数据
+    const mn = commonForm.getFieldValue('DGIMN')
+    props.exportRangeParam({ DGIMN: mn }, (data) => {
+      //共同的字段
+      // commonForm.setFieldsValue({
+      //   OperationUserID: data.operationUserID,
+      //   EntCode: data.entCode,
+      //   month: moment(moment(data.dateTime).format("YYYY-MM-DD")),
+      //   Commitment: data.Commitment,
+      // })
+      dgimnEchoDataFun(mn, data, '编辑')
 
+    })  
+    
+  }
   const dgimnEchoDataFun = (mn, data, title) => { //通过监测点获取回显数据  编辑时
 
     getPointConsistencyParamFun(mn, (pollutantList, paramList, addRealTimeList) => {
@@ -3085,6 +3106,10 @@ const Index = (props) => {
                   </Select>
                 </Form.Item>
               </Spin>
+              {/* <Form.Item>
+                <Button type='primary' icon={<UploadOutlined />} loading={props.importDataLoading} onClick={importData}>导入</Button>
+              </Form.Item> */}
+
             </Row>
 
             <Spin spinning={parLoading}>
