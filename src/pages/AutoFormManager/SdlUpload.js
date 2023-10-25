@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi
  * @Date: 2019-11-05 17:18:49
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-12-29 14:39:46
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-10-17 14:41:09
  * @desc: 上传组件
  */
 
@@ -72,7 +72,7 @@ class SdlUpload extends Component {
     indexOf(ext.toLowerCase()) !== -1;
   }
   render() {
-    const { configId, fileList, dispatch, accept, uploadNumber,flags } = this.props;
+    const { configId, fileList, dispatch, accept, uploadNumber,flags, action } = this.props;
     const { cuid } = this._SELF_;
     console.log('fileList=', fileList)
     let imageProps = {};
@@ -80,14 +80,15 @@ class SdlUpload extends Component {
       imageProps.accept = accept;
     }
     const props = {
-      action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
+
+      action: action || `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
       onChange: (info) => {
 
        if(flags==='img')
        {
         var index= info.file.name.lastIndexOf(".");
-        var ext = info.file.name.substr(index+1); 
+        var ext = info.file.name.substr(index+1);
         if(!this.isAssetTypeAnImage(ext))
         {
           message.error('上传文件类型失败！')
@@ -100,10 +101,11 @@ class SdlUpload extends Component {
         let fileList = info.fileList;
         console.log('info=', info)
         if (info.file.status === 'done') {
+          let before = action ? '/' : '/upload/';
           // setFieldsValue({ cuid: cuid })
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
-          fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
-          fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].url = before + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].thumbUrl = before + fileList[fileList.length - 1].response.Datas
         } else if (info.file.status === 'error') {
           let msg = fileList[fileList.length - 1].response.Message;
           console.log("msg=", msg)

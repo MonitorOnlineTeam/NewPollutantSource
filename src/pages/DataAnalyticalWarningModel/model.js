@@ -821,10 +821,29 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    // 我的已办
+    *GetMyModelException({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetMyModelException, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
     // 复核详情
     *GetWarningVerifyCheckInfo({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetWarningVerifyCheckInfo, payload);
       if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 报警核实
+    *InsertWarningVerify({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.InsertWarningVerify, payload);
+      if (result.IsSuccess) {
+        message.success('操作成功!');
         callback && callback(result.Datas);
       } else {
         message.error(result.Message);

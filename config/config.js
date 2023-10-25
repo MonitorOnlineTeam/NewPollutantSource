@@ -797,12 +797,12 @@ export default {
                     },
                     {
                       name: 'newOldProtocolConversManger',// 新老协议转换管理
-                      path: '/platformconfig/configurationInfo/newOldProtocol/newOldProtocolConversManger', 
+                      path: '/platformconfig/configurationInfo/newOldProtocol/newOldProtocolConversManger',
                       component: './platformManager/configurationInfo/newOldProtocolConversManger',
                     },
                     {
                       name: 'newOldProtocolConversManger',// 交接和报告
-                      path: '/platformconfig/configurationInfo/handoverReporting/handoverReport', 
+                      path: '/platformconfig/configurationInfo/handoverReporting/handoverReport',
                       component: './platformManager/configurationInfo/handoverReport',
                     },
                   ],
@@ -2911,6 +2911,43 @@ export default {
                       path: '/DataAnalyticalWarningModel/Statistics/FluctuateRange',
                       component: './DataAnalyticalWarningModel/Statistics/FluctuateRange',
                     },
+                  ],
+                },
+                // 线索复核
+                {
+                  name: 'reCheck',
+                  path: '/DataAnalyticalWarningModel/reCheck',
+                  routes: [
+                    {
+                      // 我的待办
+                      name: 'todo',
+                      path: '/DataAnalyticalWarningModel/ReCheck/Todo',
+                      component: './DataAnalyticalWarningModel/ReCheck/Todo',
+                    },
+                    {
+                      // 我的已办
+                      name: 'done',
+                      path: '/DataAnalyticalWarningModel/ReCheck/Done',
+                      component: './DataAnalyticalWarningModel/ReCheck/Done',
+                    },
+                    {
+                      // 复核详情
+                      name: 'todo',
+                      path: '/DataAnalyticalWarningModel/ReCheck/Details/:id',
+                      component: './DataAnalyticalWarningModel/ReCheck/Details',
+                    },
+                    // {
+                    //   // 场景模型分析报告
+                    //   name: 'AnalysisReport',
+                    //   path: '/DataAnalyticalWarningModel/Statistics/AnalysisReport',
+                    //   component: './DataAnalyticalWarningModel/Statistics/AnalysisReport',
+                    // },
+                    // {
+                    //   // 全企业波动范围
+                    //   name: 'FluctuateRange',
+                    //   path: '/DataAnalyticalWarningModel/Statistics/FluctuateRange',
+                    //   component: './DataAnalyticalWarningModel/Statistics/FluctuateRange',
+                    // },
 
                   ],
                 },

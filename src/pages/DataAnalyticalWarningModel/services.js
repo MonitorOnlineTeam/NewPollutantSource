@@ -246,6 +246,12 @@ export async function GetMyModelExceptionByPManager(params) {
   return result;
 }
 
+// 我的已办
+export async function GetMyModelException(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetMyModelException', params);
+  return result;
+}
+
 // 复核详情
 export async function GetWarningVerifyCheckInfo(params) {
   const result = await post(
@@ -255,4 +261,11 @@ export async function GetWarningVerifyCheckInfo(params) {
   return result;
 }
 
-
+// 报警核实
+export async function InsertWarningVerify(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/Warning/InsertWarningVerify',
+    params,
+  );
+  return result;
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Alert, Tooltip, Spin, Button, Empty } from 'antd';
+import { Row, Col, Alert, Tooltip, Spin, Button, Progress } from 'antd';
 import styles from './styles.less';
 import BoxItem from './BoxItem';
 import ReactEcharts from 'echarts-for-react';
@@ -39,7 +39,7 @@ const Index = props => {
   const [checkInfoAndEntRank, setCheckInfoAndEntRank] = useState({
     checkInfo: [{}, {}, {}], //线索核实情况
     entRank: [], // 企业排名
-    entMaxNum: 0,
+    checkInfoMaxNum: 0,
   }); // 线索核实情况和企业排名
   const [tableSelectedCount, setTableSelectedCount] = useState({
     DisCulesNum: 0,
@@ -95,13 +95,13 @@ const Index = props => {
       payload: body,
       callback: res => {
         let max = 0;
-        if (res.reasonResult.length) {
-          max = _.maxBy(res.reasonResult, 'Count').Count;
+        if (res.finalResult.length) {
+          max = _.maxBy(res.finalResult, 'Count').Count;
         }
         setCheckInfoAndEntRank({
           checkInfo: res.finalResult, //线索核实情况
-          entRank: res.reasonResult, // 企业排名
-          entMaxNum: max + max * 0.1,
+          // entRank: res.reasonResult, // 企业排名
+          checkInfoMaxNum: max + max * 0.1,
         });
       },
     });
@@ -354,6 +354,15 @@ const Index = props => {
     );
   };
 
+  const renderProgress = () => {
+    let el = '';
+    for (let index = 0; index < 50; index++) {
+      el += <li></li>;
+    }
+    console.log('el', el);
+    return el;
+  };
+
   const onSelectChange = newSelectedRowKeys => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -438,40 +447,112 @@ const Index = props => {
             </Spin>
           </BoxItem>
           {/* <BoxItem title="线索核实情况" style={{ flex: 1, marginRight: 14, minWidth: 400 }}> */}
-          <BoxItem
-            title="异常线索核实情况"
-            style={{ width: '40%', minWidth: 400 }}
-          >
+          <BoxItem title="异常线索核实情况" style={{ width: '40%', minWidth: 400 }}>
             <Spin spinning={StatisVeriAndErLoading}>
               <div className={styles.checkBox}>
-                <div style={{ width: '40%', height: 260 }}>
-                  <ReactEcharts
-                    option={getOption()}
-                    lazyUpdate
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                    }}
-                    // style={{ height: '700px', width: '100%' }}
-                    // onEvents={onEvents}
-                  />
-                </div>
-                <div style={{ width: '60%', paddingLeft: '8%', marginTop: 40 }}>
-                  <p className={styles.legendInfo}>
-                    <span style={{ background: '#0078FF' }}></span>
-                    <span style={{ width: 150 }}>待核实线索</span>
+                <div className={styles.legendInfo}>
+                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>待核实线索</p>
+                  <div className={styles.content}>
+                    <Progress
+                      style={{ width: '100%' }}
+                      strokeWidth={18}
+                      percent={
+                        checkInfoAndEntRank.checkInfo[2].Count
+                          ? (
+                              checkInfoAndEntRank.checkInfo[2].Count /
+                              checkInfoAndEntRank.checkInfoMaxNum
+                            ).toFixed(2) *
+                              100 >
+                            2
+                            ? (
+                                checkInfoAndEntRank.checkInfo[2].Count /
+                                checkInfoAndEntRank.checkInfoMaxNum
+                              ).toFixed(2) * 100
+                            : 2
+                          : 0
+                      }
+                      steps={50}
+                      showInfo={false}
+                      trailColor="rgba(52,84,119,.85)"
+                    />
                     <span className={styles.num}>{checkInfoAndEntRank.checkInfo[2].Count}个</span>
-                  </p>
-                  <p className={styles.legendInfo}>
-                    <span style={{ background: '#21F087' }}></span>
-                    <span style={{ width: 150 }}>核实为误报线索</span>
+                    <p className={styles.ent}>
+                      涉及企业
+                      <span className={styles.entCount}>
+                        {checkInfoAndEntRank.checkInfo[2].EntCount}个
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <div className={styles.legendInfo}>
+                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>核实为误报线索</p>
+                  <div className={styles.content}>
+                    <Progress
+                      style={{ width: '100%' }}
+                      strokeWidth={18}
+                      percent={
+                        checkInfoAndEntRank.checkInfo[0].Count
+                          ? (
+                              checkInfoAndEntRank.checkInfo[0].Count /
+                              checkInfoAndEntRank.checkInfoMaxNum
+                            ).toFixed(2) *
+                              100 >
+                            2
+                            ? (
+                                checkInfoAndEntRank.checkInfo[0].Count /
+                                checkInfoAndEntRank.checkInfoMaxNum
+                              ).toFixed(2) * 100
+                            : 2
+                          : 0
+                      }
+                      steps={50}
+                      showInfo={false}
+                      strokeColor={'#72ED91'}
+                      trailColor="rgba(52,84,119,.85)"
+                    />
                     <span className={styles.num}>{checkInfoAndEntRank.checkInfo[0].Count}个</span>
-                  </p>
-                  <p className={styles.legendInfo}>
-                    <span style={{ background: '#EDE022' }}></span>
-                    <span style={{ width: 150 }}>核实为异常线索</span>
+                    <p className={styles.ent}>
+                      涉及企业
+                      <span className={styles.entCount}>
+                        {checkInfoAndEntRank.checkInfo[0].EntCount}个
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <div className={styles.legendInfo}>
+                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>核实为异常线索</p>
+                  <div className={styles.content}>
+                    <Progress
+                      style={{ width: '100%' }}
+                      strokeWidth={18}
+                      percent={
+                        checkInfoAndEntRank.checkInfo[1].Count
+                          ? (
+                              checkInfoAndEntRank.checkInfo[1].Count /
+                              checkInfoAndEntRank.checkInfoMaxNum
+                            ).toFixed(2) *
+                              100 >
+                            2
+                            ? (
+                                checkInfoAndEntRank.checkInfo[1].Count /
+                                checkInfoAndEntRank.checkInfoMaxNum
+                              ).toFixed(2) * 100
+                            : 2
+                          : 0
+                      }
+                      steps={50}
+                      showInfo={false}
+                      strokeColor={'#EBE051'}
+                      trailColor="rgba(52,84,119,.85)"
+                    />
                     <span className={styles.num}>{checkInfoAndEntRank.checkInfo[1].Count}个</span>
-                  </p>
+                    <p className={styles.ent}>
+                      涉及企业
+                      <span className={styles.entCount}>
+                        {checkInfoAndEntRank.checkInfo[1].EntCount}个
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </Spin>

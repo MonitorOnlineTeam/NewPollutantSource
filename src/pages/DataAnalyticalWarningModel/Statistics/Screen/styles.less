@@ -192,30 +192,41 @@
     // 线索核实情况
     .checkBox {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: space-around;
       height: 100%;
+      padding: 0 20px;
 
       .legendInfo {
         color: #fff;
-        display: flex;
-        align-items: center;
+
         font-weight: 500;
-        margin-bottom: 50px;
         font-size: 18px;
 
-        span {
-          display: inline-block;
-        }
-        span:first-child {
-          width: 14px;
-          height: 14px;
-          margin-right: 10px;
-        }
+        .content {
+          position: relative;
+          :global {
+            .ant-progress-steps-item {
+              width: calc((100% - 300px) / 50) !important;
+              margin-right: 4px;
+            }
+          }
 
-        .num {
-          color: #26e3ff;
-          font-size: 19px;
+          .num {
+            position: absolute;
+            top: -3px;
+            right: 0;
+            color: #26e3ff;
+            font-size: 19px;
+          }
+          .ent {
+            font-size: 16px;
+          }
+          .entCount {
+            color: #26e3ff;
+            font-size: 19px;
+            margin-left: 40px;
+          }
         }
       }
     }
