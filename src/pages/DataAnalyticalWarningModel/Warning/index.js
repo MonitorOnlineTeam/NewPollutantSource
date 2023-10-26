@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-10 09:44:05
+ * @Last Modified time: 2023-10-25 20:10:41
  * @Description：报警记录
  */
 
@@ -18,8 +18,8 @@ import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { ModelNumberIdsDatas } from '../CONST';
-31;
+import { ModelNumberIdsDatas, ModalNameConversion } from '../CONST';
+
 const textStyle = {
   width: '100%',
   display: 'inline-block',
@@ -188,9 +188,10 @@ const WarningRecord = props => {
         width: 180,
         ellipsis: true,
         render: (text, record) => {
+          let _text = ModalNameConversion(text);
           return (
-            <Tooltip title={text}>
-              <span style={textStyle}>{text}</span>
+            <Tooltip title={_text}>
+              <span className={styles.textOverflow}>{_text}</span>
             </Tooltip>
           );
         },
@@ -301,8 +302,9 @@ const WarningRecord = props => {
         //   el && (el.scrollTop = currentForm.scrollTop);
         // }
         let el = document.querySelector(`[data-row-key="${currentForm.rowKey}"]`);
+        let body = document.querySelector('.ant-table-body');
         console.log('el', el);
-        el
+        el && body
           ? (document.querySelector('.ant-table-body').scrollTop = currentForm.scrollTop)
           : (document.querySelector('.ant-table-body').scrollTop = 0);
       },
@@ -449,7 +451,7 @@ const WarningRecord = props => {
                 {modelList.map(item => {
                   return (
                     <Option key={item.ModelGuid} value={item.ModelGuid}>
-                      {item.ModelName}
+                      {ModalNameConversion(item.ModelName)}
                     </Option>
                   );
                 })}

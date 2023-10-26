@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-10-17 09:05:33
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-19 15:00:00
+ * @Last Modified time: 2023-10-25 20:21:20
  * @Description:  我的已办
  */
 import React, { useState, useEffect } from 'react';
@@ -18,6 +18,7 @@ import { getCurrentUserId } from '@/utils/utils';
 import OperationInspectoUserList from '@/components/OperationInspectoUserList';
 import { router } from 'umi';
 import { DetailIcon } from '@/utils/icon';
+import { ModalNameConversion } from '../CONST';
 
 const textStyle = {
   width: '100%',
@@ -128,9 +129,10 @@ const Done = props => {
         width: 180,
         ellipsis: true,
         render: (text, record) => {
+          let _text = ModalNameConversion(text);
           return (
-            <Tooltip title={text}>
-              <span style={textStyle}>{text}</span>
+            <Tooltip title={_text}>
+              <span className={styles.textOverflow}>{_text}</span>
             </Tooltip>
           );
         },
@@ -248,7 +250,6 @@ const Done = props => {
               moment().endOf('day'),
             ],
           }}
-         
           autoComplete="off"
           // onValuesChange={onValuesChange}
           onValuesChange={(changedFields, allFields) => {

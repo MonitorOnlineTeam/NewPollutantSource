@@ -11,6 +11,7 @@ import { getCurrentUserId } from '@/utils/utils';
 import OperationInspectoUserList from '@/components/OperationInspectoUserList';
 import { router } from 'umi';
 import { FileProtectOutlined } from '@ant-design/icons';
+import {  ModalNameConversion } from '../CONST';
 
 const textStyle = {
   width: '100%',
@@ -122,9 +123,10 @@ const Tode = props => {
         width: 180,
         ellipsis: true,
         render: (text, record) => {
+          let _text = ModalNameConversion(text);
           return (
-            <Tooltip title={text}>
-              <span style={textStyle}>{text}</span>
+            <Tooltip title={_text}>
+              <span className={styles.textOverflow}>{_text}</span>
             </Tooltip>
           );
         },

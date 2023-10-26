@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-08 09:07:58
+ * @Last Modified time: 2023-10-25 20:11:49
  * @Description：报警核实详情
  */
 
@@ -20,7 +20,7 @@ import ModelChartLinear from './components/ModelChart-Linear';
 import ModelTable from './components/ModelTable';
 import WarningDataModal from './WarningDataModal';
 import moment from 'moment';
-import { ChartDefaultSelected, getPollutantNameByCode } from '../CONST';
+import { ChartDefaultSelected, getPollutantNameByCode, ModalNameConversion } from '../CONST';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   warningInfoLoading: loading.effects['dataModel/GetSingleWarning'],
@@ -468,7 +468,7 @@ const WarningVerify = props => {
             <Descriptions.Item label="排口">{warningInfo.PointName}</Descriptions.Item>
             <Descriptions.Item label="场景类别">
               <Tooltip title={warningInfo.WarningTypeName}>
-                <span className={styles.textOverflow}>{warningInfo.WarningTypeName}</span>
+                <span className={styles.textOverflow}>{ModalNameConversion(warningInfo.WarningTypeName)}</span>
               </Tooltip>
             </Descriptions.Item>
             <Descriptions.Item label="发现线索时间">{warningInfo.WarningTime}</Descriptions.Item>
