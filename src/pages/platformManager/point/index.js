@@ -44,6 +44,7 @@ import AnalyzerManage from './AnalyzerManage';
 import MonitoringStandard from '@/components/MonitoringStandard';
 import DeviceManager from './components/deviceManager';
 import EditOperationStatus from './components/editOperationStatus';
+import { permissionButton } from '@/utils/utils';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -115,6 +116,7 @@ export default class MonitorPoint extends Component {
       editOperationStatusTitle:'',
       editOperationStatusVisible:false,
       editOperationStatusData:{},
+      modifyPointOpratioinStatusPermis:false,
     };
   }
 
@@ -124,6 +126,12 @@ export default class MonitorPoint extends Component {
     // 3.获取监测点数据
     const { dispatch, match } = this.props;
     console.log('match=', match);
+    const buttonList = permissionButton('/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2')
+    buttonList.map(item=>{
+      switch (item){
+        case 'ModifyPointOpratioinStatus': this.setState({modifyPointOpratioinStatusPermis: true }); break;
+      }
+    })
     dispatch({
       type: 'point/getPointList',
       payload: {
@@ -1072,12 +1080,12 @@ export default class MonitorPoint extends Component {
                           }}><HighlightOutlined style={{ fontSize: 16 }} /></a>
                         </Tooltip></>
                         <Divider type="vertical" />
-                      <Tooltip title="修改点位运维状态">
+                      {this.state.modifyPointOpratioinStatusPermis&&<><Tooltip title="修改点位运维状态">
                         <a onClick={() => {
                           this.editOperationStatus(row);
                         }}><FileProtectOutlined  style={{ fontSize: 16 }} /></a>
                       </Tooltip>
-                      <Divider type="vertical" />
+                      <Divider type="vertical" /></>}
                       <Tooltip title="设备管理">
                         <a onClick={() => {
                           this.deviceManager(row);

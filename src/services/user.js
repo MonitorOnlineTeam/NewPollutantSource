@@ -5,6 +5,8 @@ import Cookie from 'js-cookie';
 
 import { async } from 'q';
 
+import config from '@/config';
+
 export async function query() {
   return request('/api/users');
 }
@@ -21,7 +23,9 @@ export async function queryNotices() {
 export async function getMenuData() {
   // ;
   const body = {
-    menu_id: sessionStorage.getItem("sysMenuId") ||  "140496b1-ab85-474a-9278-3ca7c6df3f9b,99dbc722-033f-481a-932a-3c6436e17245",
+    // menu_id: sessionStorage.getItem("sysMenuId") ||  "140496b1-ab85-474a-9278-3ca7c6df3f9b,99dbc722-033f-481a-932a-3c6436e17245",
+    menu_id: sessionStorage.getItem("sysMenuId") || config.menuId,
+ 
   };
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetSysMenuByUserID', body);
   // ;

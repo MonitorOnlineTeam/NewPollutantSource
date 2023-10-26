@@ -112,13 +112,25 @@ const Index = (props) => {
   const [form3] = Form.useForm();
   const [form4] = Form.useForm();
 
-
-
+  const defaultTime = [moment(new Date()).add(-7, 'day').startOf("day"), moment().endOf("day")]
+  const defaultTime3 = [moment(new Date()).startOf("day"), moment().endOf("day")]
   const { tableDatas, tableTotal, tableLoading, queryPar, rolesList, rolesTreeLoading, tableDatas2, tableTotal2, tableLoading2, queryPar2, tableDatas3, tableTotal3, tableLoading3, queryPar3, } = props;
   useEffect(() => {
-    onFinish(pageIndex, pageSize);
-    onFinish2(pageIndex2, pageSize2);
-    onFinish3(pageIndex3, pageSize3);
+ 
+    onFinish2(pageIndex2, pageSize2); //登录日志
+
+    props.getSystemExceptionList({ //异常日志
+      Btime: defaultTime && moment(defaultTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+      Etime: defaultTime && moment(defaultTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+    })
+    props.getUserOprationLogsList({ //操作日志
+      Btime: defaultTime3 && moment(defaultTime3[0]).format('YYYY-MM-DD HH:mm:ss'),
+      Etime: defaultTime3 && moment(defaultTime3[1]).format('YYYY-MM-DD HH:mm:ss'),
+      pageIndex: pageIndex3,
+      pageSize: pageSize3,
+    })
     if (rolesList?.length <= 0) {
       props.getRolesTree({})
     }
@@ -219,7 +231,7 @@ const Index = (props) => {
       className={styles['ant-advanced-search-form']}
       layout='inline'
       initialValues={{
-        Time: [moment(new Date()).add(-7, 'day').startOf("day"), moment().endOf("day"),]
+        Time: defaultTime
       }}
       onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
     >
@@ -466,7 +478,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        return (index + 1) + (pageIndex2 - 1) * pageSize2;
+        return (index + 1) + (pageIndex3 - 1) * pageSize3;
       }
     },
     {
@@ -540,9 +552,9 @@ const Index = (props) => {
       className={styles['ant-advanced-search-form3']}
       layout='inline'
       initialValues={{
-        Time: [moment(new Date()).startOf("day"), moment().endOf("day")],
+        Time: defaultTime3,
       }}
-      onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize2) }}
+      onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize3) }}
     >
       <Row style={{ flex: 1 }}>
         <Col span={8}>

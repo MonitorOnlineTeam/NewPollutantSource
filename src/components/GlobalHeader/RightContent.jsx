@@ -55,8 +55,9 @@ const GlobalHeaderRight = props => {
     }
     setIsFullscreen(!isFullscreen);
   };
+  const sysMenuId = sessionStorage.getItem('sysMenuId');
   const menu = (
-    <Menu selectedKeys={[sessionStorage.getItem('sysMenuId')]}>
+    <Menu selectedKeys={[sysMenuId && sysMenuId!='null' && sysMenuId!='undefined'? sysMenuId : sysPollutantTypeList?.[0]?.ID]}>
       {
         sysPollutantTypeList.map(item => {
           return <Menu.Item key={item.ID}>
@@ -141,17 +142,16 @@ const GlobalHeaderRight = props => {
 
       {/** 污水处理厂权限去掉铃铛<NoticeIconView /> */}
       <Popover zIndex={9999} overlayClassName={styles.expandPopSty} content={isFullscreen ? '退出全屏' : '全屏展示'}> <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }} >{isFullscreen ? <CompressOutlined style={{ color: '#fff' }} /> : <ExpandOutlined style={{ color: '#fff' }} />}</span></Popover>
-   
-          <Dropdown overlay={menu}>
-            {/* <Tooltip title="切换系统"> */}
+     
+        {/**切换系统**/}
+          {sysPollutantTypeList&&sysPollutantTypeList[0]&&<Dropdown overlay={menu}> 
               <a
                 rel="noopener noreferrer"
                 className={styles.action}
               >
                 <UnorderedListOutlined />
               </a>
-            {/* </Tooltip> */}
-          </Dropdown>  
+          </Dropdown>}
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}
     </div>

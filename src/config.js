@@ -61,6 +61,8 @@ module.exports = {
   //   domain: 'http://10.230.28.70:8184',
   //   srcPath: '/amap-master/amap/js/maps.js',
   // },
+  // menuId:'99dbc722-033f-481a-932a-3c6436e17245',
+  menuId:'140496b1-ab85-474a-9278-3ca7c6df3f9b,99dbc722-033f-481a-932a-3c6436e17245',
   isShowTabs: true,
   centerlongitude: '118.510962',
   centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/c/font_1298443_hh6t32kvnzq.js)

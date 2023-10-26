@@ -6,11 +6,13 @@ import { connect } from 'dva';
 import LoginComponents from './components/Login';
 import styles from './style.less';
 import FileViewer from 'react-file-viewer';
+import Cookie from 'js-cookie';
 const { Tab, UserName, Password, Mobile, Captcha, VerificaCode, Submit } = LoginComponents;
 import Agreement from '../login/components/Agreement'
 @connect(({ userLogin, loading, login }) => ({
   userLogin,
-  submitting: loading.effects['userLogin/login'],
+  //submitting: loading.effects['userLogin/login'], //宝武
+  submitting: loading.effects['userLogin/login'] || loading.effects['login/newLogin'],
   isAgree: userLogin.isAgree,
   configInfo: login.configInfo
 }))
@@ -30,13 +32,19 @@ class Login extends Component {
       autoLogin: e.target.checked,
     });
   };
+  clearData = () =>{ //清除系统列表数据和用户信息
+    const { dispatch } = this.props;
+    sessionStorage.clear();
+    dispatch({type: 'global/updateState', payload: { sysPollutantTypeList: [] } })
+  }
   componentDidMount() {
 
     this.timer = setInterval(() => {
       this.child && this.child.current && this.child.current.click(); // 3分钟刷新一次
     }, 1000 * 60 * 3);
+    this.clearData()
   }
-
+  
   componentWillUnmount() {
     this.props.dispatch({ type: 'userLogin/changeLoginStatus', payload: { status: '', type: '', message: '' } });
     clearInterval(this.timer)
@@ -61,27 +69,40 @@ class Login extends Component {
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
       }
-      // 后台新框架登录
+      // dispatch({ //宝武
+      //   type: 'userLogin/login',
+      //   payload: {
+      //     ...values,
+      //     IsAgree: isAgree,
+      //     type,
+      //   },
+      //   callback: isSuccess => {
+      //     if (!isSuccess) { this.child && this.child.current && this.child.current.click(); }  //请求错误刷新验证码
+      //     this.setState({ loginSuccess: isSuccess })
+      //     this.clearCommonData();
+      //   }
+      // });
+      
       dispatch({
-        type: 'login/newLogin',
+        type: 'login/newLogin',// 后台新框架登录
         payload: { ...values, IsAgree: isAgree, type },
         callback: isSuccess => {
-        },
-      });
-      dispatch({
-        type: 'userLogin/login',
-        payload: {
-          ...values,
-          IsAgree: isAgree,
-          type,
-        },
-        callback: isSuccess => {
-          if (!isSuccess) { this.child && this.child.current && this.child.current.click(); }  //请求错误刷新验证码
-          this.setState({ loginSuccess: isSuccess })
-          this.clearCommonData();
+          dispatch({
+            type: 'userLogin/login',
+            payload: {
+              ...values,
+              IsAgree: isAgree,
+              type,
+            },
+            callback: isSuccess => {
+              if (!isSuccess) { this.child && this.child.current && this.child.current.click(); }  //请求错误刷新验证码
+              this.setState({ loginSuccess: isSuccess })
+              this.clearCommonData();
+            }
+          });
         }
-
       });
+
 
     }
   };

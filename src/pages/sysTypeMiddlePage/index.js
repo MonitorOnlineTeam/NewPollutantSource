@@ -10,7 +10,6 @@ import { router } from 'umi'
 @connect(({ global,login, }) => ({
   sysPollutantTypeList: global.sysPollutantTypeList,
   configInfo: global.configInfo,
-  newTokenFlag:login.newTokenFlag,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -44,7 +43,6 @@ class index extends PureComponent {
       //   this.setState({ loading: false });
       // }
       sessionStorage.setItem("isShowSelectSystem", 1);
-      this.props.dispatch({ type: 'login/setNewTokenFlag', payload: false});
       this.setState({ loading: false });
       this.props.sysPollutantTypeList?.[0]&&this.onSysItemClick(this.props.sysPollutantTypeList[0])
 

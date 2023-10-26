@@ -11,6 +11,8 @@ import { array } from 'prop-types';
 import Cookie from 'js-cookie';
 import config from '@/config';
 import { message } from 'antd';
+import router from 'umi/router';
+import webConfig from '../../public/webConfig'
 
 /**
  * 功  能：报警消息和推送相关model
@@ -38,8 +40,8 @@ export default Model.extend({
     },
     clientHeight: null,
     sysPollutantTypeList: [],
-    userGoDetail:false,
-    permisBtnTip:'您暂无操作权限',
+    userGoDetail: false,
+    permisBtnTip: '您暂无操作权限',
   },
   effects: {
     // 首次加载获取当天报警消息
@@ -125,7 +127,7 @@ export default Model.extend({
       }
     },
     // 获取系统入口
-    *getSysPollutantTypeList({ payload }, { call, update, select }) {
+    *getSysPollutantTypeList({ payload, callback }, { call, update, select }) {
       const result = yield call(getSysPollutantTypeList);
       if (result.IsSuccess) {
         let sysPollutantTypeList = result.Datas;
@@ -135,6 +137,7 @@ export default Model.extend({
         yield update({
           sysPollutantTypeList: sysPollutantTypeList,
         })
+        callback && callback(sysPollutantTypeList);
       } else {
         message.error(result.Message)
       }
@@ -424,11 +427,17 @@ export default Model.extend({
   subscriptions: {
     socket({ dispatch, history }) {
       console.log('initsocket1');
-      if (history.location?.pathname === '/hrefLogin') {
+      const pathname = history.location?.pathname;
+      if (pathname=== '/hrefLogin') {
         return
       }
       // const token = Cookie.get(config.cookieName);
-      // token&&token!='null' && token!= 'undefined'&& token!= '' &&
+      // const tokenFlag = token&&token!='null' && token!= 'undefined'&& token!= '';
+      if (pathname === '/') {
+        let meunList = sessionStorage.getItem('menuDatas') ? JSON.parse(sessionStorage.getItem('menuDatas')) : []
+        router.push(meunList?.[0] ? meunList?.[0] : '/user/login')
+        return
+      }
       dispatch({ //登录之后获取
         type: 'getSystemConfigInfo', payload: {
           listen: function () {
@@ -556,6 +565,7 @@ export default Model.extend({
           }
         }
       })
+
     },
     setup({ history }) {
       history.listen(({ pathname, search }) => {

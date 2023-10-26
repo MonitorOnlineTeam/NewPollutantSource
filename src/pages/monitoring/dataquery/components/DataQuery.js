@@ -57,20 +57,20 @@ class DataQuery extends Component {
 
   /** dgimn改變時候切換數據源 */
   componentWillReceiveProps = nextProps => {
-    // if (nextProps.DGIMN !== this.props.DGIMN) {
-    //   this.props.dispatch({
-    //     type: 'dataquery/updateState',
-    //     payload: {
-    //       historyparams:
-    //       {
-    //       ...this.props.historyparams,
-    //       pageIndex:1,
-    //       pageSize:20
-    //     }
-    //     },
-    //   });
-    //   this.changeDgimn(nextProps.DGIMN,'switch');
-    // }
+    if (nextProps.DGIMN !== this.props.DGIMN) {
+      this.props.dispatch({
+        type: 'dataquery/updateState',
+        payload: {
+          historyparams:
+          {
+          ...this.props.historyparams,
+          pageIndex:1,
+          pageSize:20
+        }
+        },
+      });
+      this.changeDgimn(nextProps.DGIMN,'switch');
+    }
   };
 
   /** 根据排口dgimn获取它下面的所有污染物 */

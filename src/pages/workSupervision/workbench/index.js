@@ -31,7 +31,7 @@ import SuperviseRectificationDetail from '@/pages/operations/superviseRectificat
 import superviseRectificaSty from '@/pages/operations/superviseRectification/style.less';
 import router from 'umi/router';
 import { PageLoading } from '@ant-design/pro-layout';
-
+import config from '@/config';
 const { DirectoryTree } = Tree;
 const manualList = [
   {
@@ -239,7 +239,8 @@ const Workbench = props => {
   const GetUserMenuList = (callback) => {
     props.dispatch({
       type: 'wordSupervision/GetUserMenuList',
-      payload: { systemMenuID:  "140496b1-ab85-474a-9278-3ca7c6df3f9b,99dbc722-033f-481a-932a-3c6436e17245", },
+      // payload: { systemMenuID:  "140496b1-ab85-474a-9278-3ca7c6df3f9b,99dbc722-033f-481a-932a-3c6436e17245", },
+      payload: { systemMenuID:  config.menuId },
       callback:callback&&callback()
     });
   };

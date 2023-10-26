@@ -53,7 +53,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         payload.staticType==1? yield update({  exportLoading:false }) : yield update({  exportLoading2:false })
         message.success(result.Message)
-        downloadFile(`/upload${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       } else {
         yield update({  exportLoading:false, exportLoading2:false  })
         message.error(result.Message)

@@ -62,29 +62,29 @@ class BasicLayout extends Component {
   menuPermissions = () => {
     const { dispatch, location: { pathname }, } = this.props;
     const mateObj = {
-      '/noticeManger/detail':'/systemManger/noticeManger', //系统管理-公告管理
-      '/problemManger/detail':'/systemManger/problemManger',
-      '/equipmentAccount/point':'/commissionTest/equipmentAccount/pollutantManager/TestEnterprise',
-      '/TestPoint/AutoFormView':'/commissionTest/equipmentAccount/pollutantManager/TestEnterprise',
-      '/projectManager/detail':'/platformconfig/basicInfo/projectManager',
-      '/user/userinfoview':'/rolesmanager/user/newUserInfo',
-      '/user/userinfoedit':'/rolesmanager/user/newUserInfo',
-      '/equipmentFeedback/detail':'/operations/equipmentFeedback',
-      '/overVerifyRate/cityLevel':'/Intelligentanalysis/dataAlarm/overVerifyRate',
-      '/overVerifyRate/pointVerifyRate':'/Intelligentanalysis/dataAlarm/overVerifyRate',
-      '/overVerifyRate/pointVerifyRate':'/Intelligentanalysis/dataAlarm/overVerifyRate',
-      '/missingData/ent/cityLevel':'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent',
-      '/missingData/ent/missDataSecond':'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent',
-      '/missingDataRate/ent/citylevel':'/Intelligentanalysis/dataAlarm/missingDataRate/ent',
-      '/missingDataRate/missRateDataSecond':'/Intelligentanalysis/dataAlarm/missingDataRate/ent',
-      '/exceptionrecord/cityLevel':'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
-      '/exceptionrecord/details':'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
-      '/abnormal/cityLevel':'/Intelligentanalysis/dataAlarm/abnormal',
-      '/abnormal/details':'/Intelligentanalysis/dataAlarm/abnormal',
-      '/abnormalWorkStatistics/regionDetail':'/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics',
-      '/transmissionefficiency/cityLevel':'/Intelligentanalysis/transmissionefficiency',
-      '/transmissionefficiency/qutDetail':'/Intelligentanalysis/transmissionefficiency',
-      '/accessStatistics/missDataSecond':'/Intelligentanalysis/accessStatistics',
+      '/noticeManger/detail': '/systemManger/noticeManger', //系统管理-公告管理
+      '/problemManger/detail': '/systemManger/problemManger',
+      '/equipmentAccount/point': '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise',
+      '/TestPoint/AutoFormView': '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise',
+      '/projectManager/detail': '/platformconfig/basicInfo/projectManager',
+      '/user/userinfoview': '/rolesmanager/user/newUserInfo',
+      '/user/userinfoedit': '/rolesmanager/user/newUserInfo',
+      '/equipmentFeedback/detail': '/operations/equipmentFeedback',
+      '/overVerifyRate/cityLevel': '/Intelligentanalysis/dataAlarm/overVerifyRate',
+      '/overVerifyRate/pointVerifyRate': '/Intelligentanalysis/dataAlarm/overVerifyRate',
+      '/overVerifyRate/pointVerifyRate': '/Intelligentanalysis/dataAlarm/overVerifyRate',
+      '/missingData/ent/cityLevel': '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent',
+      '/missingData/ent/missDataSecond': '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent',
+      '/missingDataRate/ent/citylevel': '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
+      '/missingDataRate/missRateDataSecond': '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
+      '/exceptionrecord/cityLevel': '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
+      '/exceptionrecord/details': '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
+      '/abnormal/cityLevel': '/Intelligentanalysis/dataAlarm/abnormal',
+      '/abnormal/details': '/Intelligentanalysis/dataAlarm/abnormal',
+      '/abnormalWorkStatistics/regionDetail': '/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics',
+      '/transmissionefficiency/cityLevel': '/Intelligentanalysis/transmissionefficiency',
+      '/transmissionefficiency/qutDetail': '/Intelligentanalysis/transmissionefficiency',
+      '/accessStatistics/missDataSecond': '/Intelligentanalysis/accessStatistics',
     }
 
     const menuComparison = (meunData) => {
@@ -92,18 +92,18 @@ class BasicLayout extends Component {
       // if(sysName!='设备运维管理平台'){
       //   return
       // }
-      if(!pathname || pathname=='/' || pathname=='/hrefLogin' || pathname=='/account/settings'){
-          return
-      } 
+      if (!pathname || pathname == '/' || pathname == '/hrefLogin' || pathname == '/account/settings') {
+        return
+      }
       if (meunData.includes(pathname)) {
         // console.log('路由存在')
         return;
-      } else {                                               
-        const autoFormDetailRegeMatch = pathname.match(/TestEnterprise/) || pathname.match(/AEnterpriseTest/) || pathname.match(/OperationMaintenanceEnterprise/) || pathname.match(/MaintenanceDatabase/)  || pathname.match(/OperationMaintenancePersonnel/) || pathname.match(/OperationCycle/) || pathname.match(/Storehouse/) || pathname.match(/OutputStopNew/) || pathname.match(/CTEnterprise/)  //autoForm详情 存在上级页面 通过configId匹配
-        const subPagesRegeMatch =  pathname.match(/\/noticeManger\/detail/) || pathname.match(/\/problemManger\/detail/) || pathname.match(/\/equipmentAccount\/point/) || pathname.match(/\/TestPoint\/detail/)  || pathname.match(/\/projectManager\/AutoFormView/)  || pathname.match(/\/user\/userinfoview/) || pathname.match(/\/user\/userinfoedit/) || pathname.match(/\/equipmentFeedback\/detail/) ||
-                                   pathname.match(/\/overVerifyRate\/cityLevel/) || pathname.match(/\/overVerifyRate\/pointVerifyRate/) || pathname.match(/\/missingData\/ent\/cityLevel/) || pathname.match(/\/missingData\/ent\/missDataSecond/) || pathname.match(/\/missingDataRate\/ent\/citylevel/) || pathname.match(/\/missingDataRate\/missRateDataSecond/) ||
-                                   pathname.match(/\/exceptionrecord\/cityLevel/) || pathname.match(/\/exceptionrecord\/details/) ||pathname.match(/\/abnormal\/cityLevel/) || pathname.match(/\/abnormal\/details/) || pathname.match(/\/abnormalWorkStatistics\/regionDetail/) || pathname.match(/\/transmissionefficiency\/cityLevel/)  || pathname.match(/\/transmissionefficiency\/qutDetail/) ||
-                                   pathname.match(/\/accessStatistics\/missDataSecond/); //存在上级页面
+      } else {
+        const autoFormDetailRegeMatch = pathname.match(/TestEnterprise/) || pathname.match(/AEnterpriseTest/) || pathname.match(/OperationMaintenanceEnterprise/) || pathname.match(/MaintenanceDatabase/) || pathname.match(/OperationMaintenancePersonnel/) || pathname.match(/OperationCycle/) || pathname.match(/Storehouse/) || pathname.match(/OutputStopNew/) || pathname.match(/CTEnterprise/)  //autoForm详情 存在上级页面 通过configId匹配
+        const subPagesRegeMatch = pathname.match(/\/noticeManger\/detail/) || pathname.match(/\/problemManger\/detail/) || pathname.match(/\/equipmentAccount\/point/) || pathname.match(/\/TestPoint\/detail/) || pathname.match(/\/projectManager\/AutoFormView/) || pathname.match(/\/user\/userinfoview/) || pathname.match(/\/user\/userinfoedit/) || pathname.match(/\/equipmentFeedback\/detail/) ||
+          pathname.match(/\/overVerifyRate\/cityLevel/) || pathname.match(/\/overVerifyRate\/pointVerifyRate/) || pathname.match(/\/missingData\/ent\/cityLevel/) || pathname.match(/\/missingData\/ent\/missDataSecond/) || pathname.match(/\/missingDataRate\/ent\/citylevel/) || pathname.match(/\/missingDataRate\/missRateDataSecond/) ||
+          pathname.match(/\/exceptionrecord\/cityLevel/) || pathname.match(/\/exceptionrecord\/details/) || pathname.match(/\/abnormal\/cityLevel/) || pathname.match(/\/abnormal\/details/) || pathname.match(/\/abnormalWorkStatistics\/regionDetail/) || pathname.match(/\/transmissionefficiency\/cityLevel/) || pathname.match(/\/transmissionefficiency\/qutDetail/) ||
+          pathname.match(/\/accessStatistics\/missDataSecond/); //存在上级页面
 
         if (autoFormDetailRegeMatch?.length > 0) {
           const meunStr = JSON.stringify(meunData)
@@ -114,7 +114,7 @@ class BasicLayout extends Component {
             router.push('/404')
           }
 
-        }else if(subPagesRegeMatch?.length > 0 ){
+        } else if (subPagesRegeMatch?.length > 0) {
           if (meunData.includes(mateObj[subPagesRegeMatch[0]])) {
             // console.log('子页面  -  存在上级页面')
             return;
@@ -159,13 +159,8 @@ class BasicLayout extends Component {
     window.addEventListener('resize', this.onWindowResize)
     const token = Cookie.get(config.cookieName);
     const tokenFlag = token && token != 'null' && token != 'undefined' && token != '';
-    const { dispatch, configInfo,sysPollutantTypeList,currentMenu } = this.props;
+    const { dispatch, configInfo, sysPollutantTypeList, currentMenu } = this.props;
     if (!tokenFlag) { return }
-    if (!sysPollutantTypeList.length) {
-      dispatch({
-        type: 'global/getSysPollutantTypeList',
-      });
-    }
     dispatch({
       type: 'global/getSystemConfigInfo',
       payload: {},
@@ -175,6 +170,12 @@ class BasicLayout extends Component {
       type: 'user/fetchCurrent',
       payload: {},
     });
+    const currentUser = JSON.parse(Cookie.get('currentUser'));
+    if (currentUser && currentUser.UserName != '展厅演示') {
+        dispatch({
+          type: 'global/getSysPollutantTypeList',
+        });
+     }
     dispatch({
       type: 'global/updateState',
       payload: {
@@ -199,7 +200,7 @@ class BasicLayout extends Component {
     window._AMapSecurityConfig = {
       securityJsCode: 'a74ee5d040647b0512c842cff7d76517',
     }
-    
+
   }
 
   onWindowResize = () => {
@@ -439,7 +440,7 @@ class BasicLayout extends Component {
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
           {...settings}
-          menuHeaderRender={()=><a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>}
+          menuHeaderRender={() => <a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>}
         >
           {
             config.isShowTabs && defaultSettings.layout === 'sidemenu' ? <div id="sideMenuTabsLayout" style={{ margin: '-24px -24px 0px', padding: '10px', paddingTop: 4 }}><Tabs
