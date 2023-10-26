@@ -89,12 +89,12 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, queryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, tableDatas3, tableTotal3, tableLoading3, exportLoading3, } = props;
+  const {pollutantType, tableDatas, tableTotal, tableLoading, exportLoading, queryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, tableDatas3, tableTotal3, tableLoading3, exportLoading3, } = props;
   useEffect(() => {
     onFinish(null, 1);
   }, []);
 
-  const commonCol = [
+  let commonCol = [
     {
       title: '完成工单数',
       dataIndex: 'taskCount',
@@ -151,6 +151,14 @@ const Index = (props) => {
       align: 'center',
       sorter: (a, b) => a.biaozhunwuzhi - b.biaozhunwuzhi,
     },
+    
+    {
+      title: '试剂更换',
+      dataIndex: 'shiji',
+      key: 'shiji',
+      align: 'center',
+      sorter: (a, b) => a.shiji - b.shiji,
+    },
     {
       title: '校验测试',
       dataIndex: 'jiaoyanceshi',
@@ -173,6 +181,7 @@ const Index = (props) => {
       sorter: (a, b) => a.peiheduibi - b.peiheduibi,
     },
   ]
+  pollutantType==1? commonCol=commonCol.filter(item=>item.title!='标准物质更换') :  commonCol=commonCol.filter(item=>item.title!='试剂更换')
   const [regionCode,setRegionCode] = useState()
   const columns = [
     {
@@ -269,6 +278,7 @@ const Index = (props) => {
           endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
           time: undefined,
           pointType: pointType,
+          pollutantType:pollutantType,
         }
       props.getOperationPlanTaskList({
         ...par,

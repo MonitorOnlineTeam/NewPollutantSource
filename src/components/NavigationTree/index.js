@@ -1161,7 +1161,7 @@ class NavigationTree extends Component {
               placeholder="请输入关键字查询"
               onChange={this.onChangeSearch}
               // style={{ width: 180 }}
-              style={{ width: 202 }}
+              style={{ width: 201 }}
             />
             <Radio.Group defaultValue={this.props.IsTree ? 'tree' : 'panel'} buttonStyle="solid" style={{ marginLeft: 6, cursor: 'pointer', }} onChange={this.onRadioChange}>
               <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>

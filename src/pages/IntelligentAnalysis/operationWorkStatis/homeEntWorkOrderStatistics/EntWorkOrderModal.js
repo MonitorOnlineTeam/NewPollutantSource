@@ -42,7 +42,7 @@ class EntWorkOrderModal extends PureComponent {
             wrapClassName='spreadOverModal'
             destroyOnClose
         >
-          <LastThirtyDaysOperationworkOrder />
+          <LastThirtyDaysOperationworkOrder pollutantType = {pollutantTypeCode}/>
           {/* {
             this.state.page=='EntWorkOrderStatistics'?
               (<EntWorkOrderStatistics changePage ={this.changePage} location={{query:this.state.query}} pollutantTypeCode = {pollutantTypeCode}></EntWorkOrderStatistics>)

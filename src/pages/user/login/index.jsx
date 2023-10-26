@@ -32,7 +32,7 @@ class Login extends Component {
       autoLogin: e.target.checked,
     });
   };
-  clearData = () =>{ //清除系统列表数据和用户信息
+  clearData = () =>{ // 系统列表数据和用户信息 清除
     const { dispatch } = this.props;
     sessionStorage.clear();
     dispatch({type: 'global/updateState', payload: { sysPollutantTypeList: [] } })

@@ -592,12 +592,17 @@ class RoleIndex extends Component {
 
     addRight = () => {
         const keys = this.state.selectedRowKeys.key
-        console.log(this.state.selectButton);
-        this.props.dispatch({
+        // console.log(this.state.selectButton); //菜单权限列表
+        // console.log(this.state.buttonState) //菜单按钮权限列表
+        let buttonAuthority = this.state.buttonState.filter(item=>item.State == 1) //按钮权限
+            if(buttonAuthority?.[0]){
+                buttonAuthority = buttonAuthority.map(item=>item.ID)
+            }
+           this.props.dispatch({
             type: 'roleinfo/insertmenubyroleid',
             payload: {
                 Roles_ID: keys,
-                MenuID: this.state.selectButton,
+                MenuID: [...this.state.selectButton,...buttonAuthority],
                 callback: res => {
                     if (res.IsSuccess) {
                         message.success('修改成功');
@@ -729,6 +734,7 @@ class RoleIndex extends Component {
         const rowMenuSelection = {
             selectedRowKeys: this.state.selectButton,
             onChange: (se, selectedRows) => {
+                // console.log(se)
                 this.setState({
                     selectButton: se,
                 })
@@ -962,11 +968,11 @@ class RoleIndex extends Component {
                                             size="large"
                                         /> :
                                             <Table
-                                                onRow={record => ({
-                                                    onClick: event => {
-                                                        console.log('onClick=', this.props.CheckMenu)
-                                                    },
-                                                })}
+                                                // onRow={record => ({
+                                                //     onClick: event => {
+                                                //         console.log('onClick==', this.props.CheckMenu)//返回的选中菜单已经按钮权限
+                                                //     },
+                                                // })}
                                                 size="small"
                                                 rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
                                     }

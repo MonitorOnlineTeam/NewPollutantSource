@@ -350,7 +350,7 @@ const Index = (props) => {
     const values = await form.validateFields();
     props.exportProjectReportList({
       ...values,
-      status: values.status ? 1 : 0,
+      status: values.status ? 1 : '',
     })
   };
 
