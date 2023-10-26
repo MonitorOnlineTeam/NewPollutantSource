@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-01 09:07:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-08 09:50:22
+ * @Last Modified time: 2023-10-25 20:07:30
  * @Description：模型管理
  */
 
@@ -14,6 +14,7 @@ import { SettingOutlined, MinusCircleTwoTone } from '@ant-design/icons';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
 import { router } from 'umi';
+import { ModalNameConversion } from '@/pages/DataAnalyticalWarningModel/CONST';
 
 const dvaPropsData = ({ loading, dataModel }) => ({
   modelList: dataModel.modelList,
@@ -103,9 +104,10 @@ const ModelManagement = props => {
         ellipsis: true,
         width: 200,
         render: (text, record) => {
+          let _text = ModalNameConversion(text);
           return (
-            <Tooltip title={text}>
-              <span className={styles.textOverflow}>{text}</span>
+            <Tooltip title={_text}>
+              <span className={styles.textOverflow}>{_text}</span>
             </Tooltip>
           );
         },

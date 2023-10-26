@@ -10,6 +10,7 @@ import _ from 'lodash';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
 import { RollbackOutlined } from '@ant-design/icons';
+import { ModalNameConversion } from '@/pages/DataAnalyticalWarningModel/CONST';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   // todoList: wordSupervision.todoList,
@@ -243,9 +244,10 @@ const Index = props => {
       ellipsis: true,
       width: 200,
       render: (text, record) => {
+        let _text = ModalNameConversion(text);
         return (
-          <Tooltip title={text}>
-            <span>{text}</span>
+          <Tooltip title={_text}>
+            <span className={styles.textOverflow}>{_text}</span>
           </Tooltip>
         );
       },
@@ -450,7 +452,7 @@ const Index = props => {
           <BoxItem title="异常线索核实情况" style={{ width: '40%', minWidth: 400 }}>
             <Spin spinning={StatisVeriAndErLoading}>
               <div className={styles.checkBox}>
-              <div className={styles.legendInfo}>
+                <div className={styles.legendInfo}>
                   <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>
                     {/* 核实为误报线索 */}
                     核实存在异常

@@ -28,6 +28,7 @@ import ImageView from '@/components/ImageView';
 import cuid from 'cuid';
 import SdlUpload from '@/pages/AutoFormManager/SdlUpload';
 import moment from 'moment';
+import {  ModalNameConversion } from '../CONST';
 
 const { TextArea } = Input;
 
@@ -207,9 +208,11 @@ const ReCheckDetails = props => {
         width: 180,
         ellipsis: true,
         render: (text, record) => {
+          let _text = ModalNameConversion(text);
+          debugger
           return (
-            <Tooltip title={text}>
-              <span style={textStyle}>{text}</span>
+            <Tooltip title={_text}>
+              <span className={styles.textOverflow}>{_text}</span>
             </Tooltip>
           );
         },

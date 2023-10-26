@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-25 15:29:07
+ * @Last Modified time: 2023-10-25 20:08:04
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -32,7 +32,8 @@ import SdlTable from '@/components/SdlTable';
 import moment from 'moment';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { ModelNumberIdsDatas } from '../../CONST';
+import { ModelNumberIdsDatas, ModalNameConversion } from '../../CONST';
+
 
 const noData = {
   value: 0,
@@ -364,7 +365,7 @@ const Index = props => {
     return (
       <Card bodyStyle={{ paddingBottom: 20 }}>
         <Spin spinning={modelInfoLoading}>
-          <h1>{modelInfo.ModelName}</h1>
+          <h1>{ModalNameConversion(modelInfo.ModelName)}</h1>
           <p className={styles.description}>{modelInfo.ModelDes}</p>
 
           <Card title={<div className={styles.title}>执行结果</div>}>
@@ -636,7 +637,7 @@ const Index = props => {
                     {modelList.map(item => {
                       return (
                         <Option key={item.ModelGuid} value={item.ModelGuid}>
-                          {item.ModelName}
+                          {ModalNameConversion(item.ModelName)}
                         </Option>
                       );
                     })}

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:11:57
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-04 09:02:30
+ * @Last Modified time: 2023-10-25 20:07:46
  * @Description：模型设置页面
  */
 import React, { useState, useEffect } from 'react';
@@ -33,6 +33,7 @@ import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import _ from 'lodash';
 import { router } from 'umi';
 import { RollbackOutlined } from '@ant-design/icons';
+import { ModalNameConversion } from '@/pages/DataAnalyticalWarningModel/CONST';
 
 const { TextArea } = Input;
 
@@ -86,6 +87,8 @@ const Setting = props => {
       callback: res => {
         baseForm.setFieldsValue({
           ...res.modelInfo,
+          ModelName: ModalNameConversion(res.modelInfo.ModelName),
+          SuitScene: ModalNameConversion(res.modelInfo.SuitScene),
         });
       },
     });
