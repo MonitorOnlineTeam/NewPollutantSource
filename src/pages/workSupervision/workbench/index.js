@@ -239,8 +239,7 @@ const Workbench = props => {
   const GetUserMenuList = (callback) => {
     props.dispatch({
       type: 'wordSupervision/GetUserMenuList',
-      // payload: { systemMenuID:  "140496b1-ab85-474a-9278-3ca7c6df3f9b,99dbc722-033f-481a-932a-3c6436e17245", },
-      payload: { systemMenuID:  config.menuId },
+      payload: { systemMenuID:  "99dbc722-033f-481a-932a-3c6436e17245", }, //只展示运维平台相关菜单
       callback:callback&&callback()
     });
   };

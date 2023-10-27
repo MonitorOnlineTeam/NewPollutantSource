@@ -16,7 +16,7 @@ export async function systemLogin(params) {
     UserAccount: params.userName,
     UserPwd: params.password,
     // MenuId:  "140496b1-ab85-474a-9278-3ca7c6df3f9b,99dbc722-033f-481a-932a-3c6436e17245", //子系统ID 固定  污染源在线监控
-    MenuId:  configToken.menuId,
+    MenuId:  0,
     IsAgree: params.IsAgree,
     VerificationStatus:params.verificationCode&&1,
     VerificationCode:params.verificationCode,

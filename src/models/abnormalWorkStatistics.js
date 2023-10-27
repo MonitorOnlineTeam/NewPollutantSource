@@ -114,7 +114,7 @@ export default Model.extend({
       yield update({ getPointExceptionLoading: true })
       const result = yield call(services.getPointExceptionSignList, payload);
       if (result.IsSuccess) {
-        if (result.Datas.taskList[0]) {
+        if (result.Datas?.taskList?.[0]) {
           const taskLists = result.Datas.taskList.map((item) => ({
             position: {
               ...item
@@ -125,7 +125,7 @@ export default Model.extend({
           })
         }
         yield update({
-          entAbnormalList: result.Datas,
+          entAbnormalList: result.Datas? result.Datas : [],
           getPointExceptionLoading: false
         })
       } else {

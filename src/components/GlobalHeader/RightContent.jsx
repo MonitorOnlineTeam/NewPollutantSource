@@ -14,7 +14,9 @@ import router from 'umi/router';
 
 
 const GlobalHeaderRight = props => {
-  const { theme, layout, configInfo, appFlag, sysPollutantTypeList } = props;
+  const { theme, layout, configInfo, appFlag,  } = props;
+  console.log(JSON.parse(sessionStorage.getItem('sysList')))
+  const sysPollutantTypeList = JSON.parse(sessionStorage.getItem('sysList'))
   // console.log("changePwdVisible=",props);
   let className = styles.right;
 

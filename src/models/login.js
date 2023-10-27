@@ -29,7 +29,7 @@ const LoginModel = {
         const getTokenRes = yield call(getToken, {
           username: payload.userName,
           password: payload.password,
-          callback:()=>callback(response.IsSuccess),
+          callback:()=>callback&&callback(response.IsSuccess),
         });
         // if(getTokenRes.access_token){
         //   yield put({ type: 'setNewTokenFlag',payload: true, });

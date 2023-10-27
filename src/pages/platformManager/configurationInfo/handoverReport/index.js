@@ -113,7 +113,7 @@ const Index = (props) => {
     const buttonList = permissionButton(props.match.path)
     buttonList.map(item=>{
       switch (item){
-        case 'allotAuthority': setPermisEdit(true); break;
+        case 'editAuthority': setPermisEdit(true); break;
         // case 'handoverReport': setPermisEdit(false); break;
       }
     })
@@ -217,7 +217,7 @@ const Index = (props) => {
       title: '操作',
       align: 'center',
       fixed: 'right',
-      width: 180,
+      width: 100,
       ellipsis: true,
       render: (text, record) => {
         return <Fragment>
@@ -283,8 +283,7 @@ const Index = (props) => {
     setTitle(`${record.ProjectCode}-编辑`)
     form2.resetFields();
     setFilesList1([])
-    return
-    if(record.ReceiveFile&&record.ReceiveFile[0]){ //运维接收-运维交接单 照片
+    if(record.ReceiveFile&&record.ReceiveFile[0]&&record.ReceiveFile!='待上传'){ //运维接收-运维交接单 照片
       const fileList =[]
       record.ReceiveFile.map(item=>{
         if(!item.IsDelete){
@@ -299,7 +298,7 @@ const Index = (props) => {
       setFilesList1(fileList)
     }
     setFilesList2([])
-    if(record.TransferFile&&record.TransferFile[0]){ //运维移交-运维交接单 照片
+    if(record.TransferFile&&record.TransferFile[0]&&record.TransferFile!='待上传'){ //运维移交-运维交接单 照片
       const fileList =[]
       record.TransferFile.map(item=>{
         if(!item.IsDelete){
@@ -314,7 +313,7 @@ const Index = (props) => {
       setFilesList2(fileList)
     }
     setFilesList3([])
-    if(record.PerformanceFile&&record.PerformanceFile[0]){ //运维合同履约完成报告 照片
+    if(record.PerformanceFile&&record.PerformanceFile[0]&&record.PerformanceFile!='待上传'){ //运维合同履约完成报告 照片
       const fileList =[]
       record.PerformanceFile.map(item=>{
         if(!item.IsDelete){

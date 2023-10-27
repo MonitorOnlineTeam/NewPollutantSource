@@ -176,9 +176,11 @@ class NavigationTree extends Component {
         RunState: state,
         PollutantTypes: this.props.polShow && this.props.type == 'ent' ? '1,2' : this.props.polShow && this.props.type == 'air' ? '5' : this.state.PollutantTypes,
         isFilter: this.props.isMap,
-        PageIndex: 1,
-        PageSize: this.state.pageSize,
+        // PageIndex: 1,
+        // PageSize: this.state.pageSize,
         industryTypeCode: this.state.industryTypeCode,
+        StopPointFlag:this.state.stopPointFlag,
+        DataType:this.state.dataType,
         ...this.props.propsParams
       },
       callback: data => {
@@ -449,9 +451,11 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-        PageIndex: 1,
-        PageSize: this.state.pageSize,
+        // PageIndex: 1,
+        // PageSize: this.state.pageSize,
         industryTypeCode: this.state.industryTypeCode,
+        StopPointFlag:this.state.stopPointFlag,
+        DataType:this.state.dataType,
         ...this.props.propsParams
       },
       callback: data => {
@@ -474,9 +478,11 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-        PageIndex: 1,
-        PageSize: this.state.pageSize,
+        // PageIndex: 1,
+        // PageSize: this.state.pageSize,
         industryTypeCode: this.state.industryTypeCode,
+        StopPointFlag:this.state.stopPointFlag,
+        DataType:this.state.dataType,
         ...this.props.propsParams
       },
       callback: data => {
@@ -503,6 +509,8 @@ class NavigationTree extends Component {
         //  PageIndex:1,
         //  PageSize:this.state.pageSize,
         industryTypeCode: value,
+        StopPointFlag:this.state.stopPointFlag,
+        DataType:this.state.dataType,
         ...this.props.propsParams
       },
       callback: data => {
@@ -647,9 +655,11 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-        PageIndex: 1,
-        PageSize: this.state.pageSize,
+        // PageIndex: 1,
+        // PageSize: this.state.pageSize,
         industryTypeCode: this.state.industryTypeCode,
+        StopPointFlag:this.state.stopPointFlag,
+        DataType:this.state.dataType,
         ...this.props.propsParams
       },
       callback: data => {
@@ -740,9 +750,11 @@ class NavigationTree extends Component {
         Status: typeList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-        PageIndex: 1,
-        PageSize: this.state.pageSize,
+        // PageIndex: 1,
+        // PageSize: this.state.pageSize,
         industryTypeCode: this.state.industryTypeCode,
+        StopPointFlag:this.state.stopPointFlag,
+        DataType:this.state.dataType,
         ...this.props.propsParams
       },
       callback: data => {
@@ -1030,30 +1042,30 @@ class NavigationTree extends Component {
       rowClassName={this.setRowClassName} />
   }
 
-  pageChange = (pageIndex, pageSize) => { //分页
-    this.setState({
-      pageIndex: pageIndex,
-      pageIndex: pageSize,
-    })
-    this.props.dispatch({
-      type: 'navigationtree/getentandpoint',
-      payload: {
-        Name: this.state.Name,
-        PollutantTypes: this.state.PollutantTypes,
-        RegionCode: this.state.RegionCode,
-        Status: this.state.screenList,
-        RunState: this.state.RunState,
-        isFilter: this.props.isMap,
-        PageIndex: pageIndex,
-        PageSize: this.state.pageSize,
-        industryTypeCode: this.state.industryTypeCode,
-        ...this.props.propsParams
-      },
-      callback: data => {
-        this.loadCallback(data)
-      },
-    })
-  }
+  // pageChange = (pageIndex, pageSize) => { //分页
+  //   this.setState({
+  //     pageIndex: pageIndex,
+  //     pageIndex: pageSize,
+  //   })
+  //   this.props.dispatch({
+  //     type: 'navigationtree/getentandpoint',
+  //     payload: {
+  //       Name: this.state.Name,
+  //       PollutantTypes: this.state.PollutantTypes,
+  //       RegionCode: this.state.RegionCode,
+  //       Status: this.state.screenList,
+  //       RunState: this.state.RunState,
+  //       isFilter: this.props.isMap,
+  //       PageIndex: pageIndex,
+  //       PageSize: this.state.pageSize,
+  //       industryTypeCode: this.state.industryTypeCode,
+  //       ...this.props.propsParams
+  //     },
+  //     callback: data => {
+  //       this.loadCallback(data)
+  //     },
+  //   })
+  // }
   dataSourceFilterModel = () => { //数据来源过滤弹框
     return <Form className={styles.dataSourceFilterModelSty}>
       <Form.Item label='监测点范围' style={{marginBottom:0}}>
@@ -1075,6 +1087,26 @@ class NavigationTree extends Component {
       </Form.Item>
 
     </Form>
+  }
+  dataSourceFilterOK = () =>{  //数据来源过滤
+    this.props.dispatch({
+      type: 'navigationtree/getentandpoint',
+      payload: {
+        Name: this.state.Name,
+        PollutantTypes: this.state.PollutantTypes,
+        RegionCode: this.state.RegionCode,
+        Status: this.state.screenList,
+        RunState: this.state.RunState,
+        isFilter: this.props.isMap,
+        industryTypeCode: this.state.industryTypeCode,
+        StopPointFlag:this.state.stopPointFlag,
+        DataType:this.state.dataType,
+        ...this.props.propsParams
+      },
+      callback: data => {
+        this.loadCallback(data)
+      },
+    })
   }
   // ></Table>
   render() {
@@ -1160,20 +1192,20 @@ class NavigationTree extends Component {
             <Search
               placeholder="请输入关键字查询"
               onChange={this.onChangeSearch}
-              // style={{ width: 180 }}
-              style={{ width: 201 }}
+              style={{ width: 180 }}
+              // style={{ width: 201 }}
             />
             <Radio.Group defaultValue={this.props.IsTree ? 'tree' : 'panel'} buttonStyle="solid" style={{ marginLeft: 6, cursor: 'pointer', }} onChange={this.onRadioChange}>
               <Tooltip title="节点"><Radio.Button value="tree"> <TreeIcon></TreeIcon></Radio.Button></Tooltip>
               <Tooltip title="面板"><Radio.Button value="panel"><PanelIcon></PanelIcon></Radio.Button></Tooltip>
             </Radio.Group>
-            {/* <Popover trigger="click" placement="bottom" content={this.dataSourceFilterModel()}>
+             <Popover trigger="click" placement="bottom" content={this.dataSourceFilterModel()}>
             <Tooltip title="数据来源过滤">
               <a  style={{marginLeft: 6 }}>
                 <FilterOutlined style={{ fontSize: 16,}} />
               </a>
             </Tooltip>
-            </Popover> */}
+            </Popover>
           </Row>
           <Divider />
           {this.state.treeVis ? <div >
