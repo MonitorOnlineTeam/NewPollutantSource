@@ -49,7 +49,7 @@ import difference from 'lodash/difference';
 import { Right } from '@/utils/icon';
 // import AlarmPushRel from '@/components/AlarmPushRel';
 import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel'
-import { copyObjectArrayTreeAndRenameProperty,permissionButton } from '@/utils/utils';
+import { copyObjectArrayTreeAndRenameProperty, permissionButton } from '@/utils/utils';
 import TreeTransferSingle from '@/components/TreeTransferSingle'
 
 const { Search } = Input;
@@ -177,11 +177,11 @@ const rightTableColumns = [
     btnloading: loading.effects['roleinfo/insertroleinfo'],
     btnloading1: loading.effects['roleinfo/updroleinfo'],
     insertmenubyroleidLoading: loading.effects['roleinfo/insertmenubyroleid'],
-    setRegOrAppRoleId:roleinfo.setRegOrAppRoleId,
+    setRegOrAppRoleId: roleinfo.setRegOrAppRoleId,
     addSetRegOrAppRoleLoading: loading.effects['roleinfo/addSetRegOrAppRole'] || false,
-    getSetRegOrAppRoleIdLoading: loading.effects['roleinfo/getSetRegOrAppRoleId']  || false,
+    getSetRegOrAppRoleIdLoading: loading.effects['roleinfo/getSetRegOrAppRoleId'] || false,
 
-    
+
 }))
 @Form.create()
 
@@ -233,21 +233,20 @@ class RoleIndex extends Component {
                             return <span>
                                 { // item.State=="1"?"#2db7f5":"#DEDEDE"
                                     record.Menu_Button.map(item => {
-                                        if (this.state.buttonState.find(cc => cc.ID == item.ID) == undefined) {
-                                            this.state.buttonState.push({ ID: item.ID, State: item.State });
+                                        if (this.state.buttonState.find(cc => cc.ID == item.ID) == undefined) {  
+                                            this.state.buttonState.push({ ID: item.ID, State: item.State });//将没有选中的也添加进去
                                         }
                                         return <Tag color={this.state.buttonState.find(cc => cc.ID == item.ID).State == '1' ? '#2db7f5' : '#DEDEDE'} key={item.ID} onClick={e => {
-                                            //    console.log("but=",this.state.selectButton)
                                             if (this.state.selectButton.length == 0) {
                                                 this.state.selectButton.push(item.ID)
                                                 this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
-                                            } else if (this.state.selectButton.indexOf(item.ID) == -1) {
+                                            } else if (this.state.selectButton.indexOf(item.ID) == -1) { //不存在这个id
                                                 this.state.selectButton.push(item.ID)
-                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
+                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '1' //改变被选中按钮的状态 改为选中 蓝色
                                             } else {
-                                                const index = this.state.selectButton.indexOf(item.ID)
+                                                const index = this.state.selectButton.indexOf(item.ID) //存在这个id
                                                 this.state.selectButton.splice(index, 1)
-                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '0'
+                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '0' //改变被选中按钮的状态 改为未选中 置灰
                                             }
                                             this.setState({
                                                 buttonState: this.state.buttonState,
@@ -375,11 +374,11 @@ class RoleIndex extends Component {
                         </span>,
                 },
             ],
-            settingRoleTitle:'',
-            settingRoleVisible:false,
-            settingType:1,
-            settingRolePermis:false,
-            settingAppRolePermis:false,
+            settingRoleTitle: '',
+            settingRoleVisible: false,
+            settingType: 1,
+            settingRolePermis: false,
+            settingAppRolePermis: false,
         };
     }
 
@@ -426,12 +425,12 @@ class RoleIndex extends Component {
     // };
     componentDidMount() {
         const buttonList = permissionButton(this.props.match.path)
-        buttonList.map(item=>{
-          switch (item){
-            case 'SetRole': this.setState({settingRolePermis: true }); break;
-            case 'SetAppRole': this.setState({settingAppRolePermis: true }); break;
+        buttonList.map(item => {
+            switch (item) {
+                case 'SetRole': this.setState({ settingRolePermis: true }); break;
+                case 'SetAppRole': this.setState({ settingAppRolePermis: true }); break;
 
-          }
+            }
         })
         this.props.dispatch({
             type: 'roleinfo/getroleinfobytree',
@@ -594,15 +593,17 @@ class RoleIndex extends Component {
         const keys = this.state.selectedRowKeys.key
         // console.log(this.state.selectButton); //菜单权限列表
         // console.log(this.state.buttonState) //菜单按钮权限列表
-        let buttonAuthority = this.state.buttonState.filter(item=>item.State == 1) //按钮权限
-            if(buttonAuthority?.[0]){
-                buttonAuthority = buttonAuthority.map(item=>item.ID)
-            }
-           this.props.dispatch({
+        let buttonAuthority = this.state.buttonState.filter(item => item.State == 1) //按钮权限
+        if (buttonAuthority?.[0]) {
+            buttonAuthority = buttonAuthority.map(item => item.ID)
+        }
+        let menuIDArr = [...this.state.selectButton, ...buttonAuthority]
+            menuIDArr = menuIDArr.filter((item, index) => menuIDArr.indexOf(item) === index); //数组去重 
+        this.props.dispatch({
             type: 'roleinfo/insertmenubyroleid',
             payload: {
                 Roles_ID: keys,
-                MenuID: [...this.state.selectButton,...buttonAuthority],
+                MenuID: menuIDArr,
                 callback: res => {
                     if (res.IsSuccess) {
                         message.success('修改成功');
@@ -671,43 +672,58 @@ class RoleIndex extends Component {
     tableChange = (pageNumber, pageSize) => {
         this.setState({ pageNumber, pageSize })
     }
-    copyArrayTree(arr) {  
+    copyArrayTree(arr) {
         // 创建一个新的数组来存储复制后的元素  
-        const newArr = [];  
-        
+        const newArr = [];
+
         // 遍历原数组  
-        for (let i = 0; i < arr.length; i++) {  
-          // 如果当前元素是对象或数组，则递归复制  
-          if (typeof arr[i] === 'object' && arr[i] !== null) {  
-            newArr.push(copyArrayTree(arr[i]));  
-          } else {  
-            // 直接复制元素  
-            newArr.push(arr[i]);  
-          }  
-        }  
-        
-        return newArr;  
-      }
-      settingRole = (type,title) =>{
+        for (let i = 0; i < arr.length; i++) {
+            // 如果当前元素是对象或数组，则递归复制  
+            if (typeof arr[i] === 'object' && arr[i] !== null) {
+                newArr.push(copyArrayTree(arr[i]));
+            } else {
+                // 直接复制元素  
+                newArr.push(arr[i]);
+            }
+        }
+
+        return newArr;
+    }
+    settingRole = (type, title) => {
         this.setState({
-            settingRoleVisible:true,
-            settingRoleTitle:title,
-            settingType:type,
+            settingRoleVisible: true,
+            settingRoleTitle: title,
+            settingType: type,
         })
         this.props.dispatch({
             type: 'roleinfo/getSetRegOrAppRoleId',
-            payload: {type:type},
+            payload: { type: type },
         })
-      }
-     settingRoleOk = (roleIdChecked, state,callback) =>{
+    }
+    settingRoleOk = (roleIdChecked, state, callback) => {
         this.props.dispatch({
             type: 'roleinfo/addSetRegOrAppRole',
-            payload: {type:this.state.settingType,RoleIdList:roleIdChecked,State:state},
-            callback:()=>{
+            payload: { type: this.state.settingType, RoleIdList: roleIdChecked, State: state },
+            callback: () => {
                 callback()
             }
         })
-     }
+    }
+    findDifferentElements(array1, array2) {  //找两个数组不同的元素
+        var difference = [];  
+  
+        // 找出在array1中但不在array2中的元素  
+        difference = difference.concat(array1.filter(function(value) {  
+            return array2.indexOf(value) === -1;  
+        }));  
+      
+        // 找出在array2中但不在array1中的元素  
+        difference = difference.concat(array2.filter(function(value) {  
+            return array1.indexOf(value) === -1;  
+        }));  
+      
+        return difference;  
+    }  
     render() {
         const { getFieldDecorator } = this.props.form;
         const { targetKeys, disabled, showSearch } = this.state;
@@ -720,24 +736,39 @@ class RoleIndex extends Component {
                 span: 16,
             },
         };
-        const rowRadioSelection = {
-            type: null,
-            // columnTitle: "选择",
-            selectedRowKeys: this.state.rowKeys,
-            onChange: (selectedRowKeys, selectedRows) => {
-                this.setState({
-                    selectedRowKeys: selectedRows[0],
-                    rowKeys: selectedRowKeys,
-                })
-            },
-        }
+        // const rowRadioSelection = {
+        //     type: null,
+        //     selectedRowKeys: this.state.rowKeys,
+        //     onChange: (selectedRowKeys, selectedRows) => {
+        //         this.setState({
+        //             selectedRowKeys: selectedRows[0],
+        //             rowKeys: selectedRowKeys,
+        //         })
+        //     },
+        // }
         const rowMenuSelection = {
             selectedRowKeys: this.state.selectButton,
-            onChange: (se, selectedRows) => {
-                // console.log(se)
+            onSelect:(record, selected, selectedRows, nativeEvent)=>{
+                selectedRows = selectedRows.filter((value)=>(value !== undefined && value !== null && value !== '')); 
+                let selectedRowsKey = selectedRows.map(item=>item['Menu_ID'])
                 this.setState({
-                    selectButton: se,
+                    selectButton: selectedRowsKey,
                 })
+                let btnState = this.findDifferentElements(this.state.selectButton,selectedRowsKey) //筛选权限按钮
+                if(btnState?.[0] && btnState.length >1){
+                    btnState = btnState.filter(item=>item!=record['Menu_ID'])//删除当前选中或取消的菜单节点meunId          
+                    btnState = btnState.map(item=>({ID:item,State:'1'}))
+                    this.setState({
+                     buttonState:[...this.state.buttonState, ...btnState],
+                })
+               }
+            },
+            onChange: (se, selectedRows) => {  //当前版本无法获取 点击的当前行的菜单id
+                // console.log(se)
+                // this.setState({
+                //     selectButton: se,
+                // })
+  
             },
             getCheckboxProps: record => ({
                 disabled: record.name === 'Disabled User', // Column configuration not to be checked
@@ -760,12 +791,12 @@ class RoleIndex extends Component {
                             <Button type="primary"
                                 onClick={this.showModal}
                             >新增</Button>
-                            {this.state.settingRolePermis&&<Button type="primary"
-                                onClick={()=>this.settingRole(1,'设置行政区获取点位角色')}
+                            {this.state.settingRolePermis && <Button type="primary"
+                                onClick={() => this.settingRole(1, '设置行政区获取点位角色')}
                                 style={{ margin: '0 8px' }}
                             >设置行政区获取点位角色</Button>}
-                             {this.state.settingAppRolePermis&&<Button type="primary"
-                                onClick={()=>this.settingRole(2,'设置允许登录运维APP角色')}
+                            {this.state.settingAppRolePermis && <Button type="primary"
+                                onClick={() => this.settingRole(2, '设置允许登录运维APP角色')}
                             >设置允许登录运维APP角色</Button>}
                             {/* <Button
                                 onClick={this.showUserModal}
@@ -970,7 +1001,7 @@ class RoleIndex extends Component {
                                             <Table
                                                 // onRow={record => ({
                                                 //     onClick: event => {
-                                                //         console.log('onClick==', this.props.CheckMenu)//返回的选中菜单已经按钮权限
+                                                //         console.log('onClick==', record)//返回的选中菜单已经按钮权限
                                                 //     },
                                                 // })}
                                                 size="small"
@@ -999,7 +1030,7 @@ class RoleIndex extends Component {
                             title={this.state.settingRoleTitle}
                             visible={this.state.settingRoleVisible}
                             destroyOnClose={true}
-                            onCancel={() => { this.setState({settingRoleVisible:false}) }}
+                            onCancel={() => { this.setState({ settingRoleVisible: false }) }}
                             width={1100}
                             footer={null}
                             bodyStyle={{
@@ -1008,17 +1039,17 @@ class RoleIndex extends Component {
                             }}
 
                         >
-                            <Spin spinning={ this.props.RoleInfoTreeLoading || this.props.addSetRegOrAppRoleLoading || this.props.getSetRegOrAppRoleIdLoading}>
-                                {this.props.RoleInfoTree?.length > 0 && !this.props.RoleInfoTreeLoading && !this.props.getSetRegOrAppRoleIdLoading?
+                            <Spin spinning={this.props.RoleInfoTreeLoading || this.props.addSetRegOrAppRoleLoading || this.props.getSetRegOrAppRoleIdLoading}>
+                                {this.props.RoleInfoTree?.length > 0 && !this.props.RoleInfoTreeLoading && !this.props.getSetRegOrAppRoleIdLoading ?
                                     <TreeTransferSingle
                                         key="key"
                                         titles={['待设置角色', '已设置角色']}
-                                        treeData={copyObjectArrayTreeAndRenameProperty(this.props.RoleInfoTree,'Roles_Name','title')}
+                                        treeData={copyObjectArrayTreeAndRenameProperty(this.props.RoleInfoTree, 'Roles_Name', 'title')}
                                         checkedKeys={this.props.setRegOrAppRoleId}
-                                        targetKeysChange={(key, type,callback) => {
-                                            this.settingRoleOk(key, type == 1 ? 1 : 2,callback)
+                                        targetKeysChange={(key, type, callback) => {
+                                            this.settingRoleOk(key, type == 1 ? 1 : 2, callback)
                                         }
-                                    }
+                                        }
                                     />
                                     :
                                     <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />

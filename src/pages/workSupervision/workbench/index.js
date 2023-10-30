@@ -132,12 +132,19 @@ const Workbench = props => {
             case '运维服务':
             if(item?.CList[0]){
               SetOpera(true)
+              let btnArr = [];
               item.CList.map(clItem=>{
+                let btnObj = {};
                 if(clItem.CName=='监督核查'){
+                  btnObj.value = 1;
                   SetOperaSupervisionCheck(true)
-                  GetStagingInspectorRectificationList()
+                  GetStagingInspectorRectificationList(()=>{
+                    btnObj.name = `${clItem.CName}（${total}）`
+                  })
                 }
+                btnArr.push(btnObj)
               })
+              setOperaServiceBtnList(btnArr)
             }else{
               SetOpera(false)
             }
@@ -145,16 +152,26 @@ const Workbench = props => {
             case '我的提醒':
             if(item?.CList[0]){
               SetRemind(true)
+              let btnArr = [];
               item.CList.map(clItem=>{
+                 let btnObj = {};
                 if(clItem.CName=='数据报警'){
+                  btnObj.value = 1;
                   SetRemindDataAlarm(true)
-                  GetWorkAlarmPushList(dataAlarmVal) //我的提醒 数据报警
+                  GetWorkAlarmPushList(dataAlarmVal,alarmPageIndex,alarmPageSize,(total)=>{
+                    btnObj.name = `${clItem.CName}（${total}）`
+                  }) //我的提醒 数据报警
                 }
                 if(clItem.CName=='合同到期'){
+                  btnObj.value = 4;
                   SetRemindExpire(true)
-                  GetProjectRemindList() //我的提醒 合同到期
+                  GetProjectRemindList(contractPageIndex,contractPageSize,(total)=>{
+                    btnObj.name =  `${clItem.CName}（${total}）`
+                  }) //我的提醒 合同到期
                 }
+                btnArr.push(btnObj)
               })
+              setMyRemindBtnList(btnArr)   
             }else{
               SetRemind(false)
             }
@@ -223,15 +240,13 @@ const Workbench = props => {
   };
 
   //获取运维服务列表 监督核查
-  const GetStagingInspectorRectificationList = () => {
+  const GetStagingInspectorRectificationList = (callback) => {
     props.dispatch({
       type: 'wordSupervision/GetStagingInspectorRectificationList',
       payload: { pageIndex: 1, pageSize: 9999 },
       callback: (total) => {
         // operaServiceBtnList.splice(0, 1, { name: `监督核查（${total}）`, value: 1 })
-        let btnData = [...operaServiceBtnList, { name: `监督核查（${total}）`, value: 1 }]
-              btnData = uniqueArr(btnData)
-              setOperaServiceBtnList(btnData)
+           callback&&callback()
       }
     });
   };
@@ -433,7 +448,7 @@ const Workbench = props => {
   const btnComponents = (data, val, callBack) => {
     return <div className={styles.selectBtnSty}>
       {data.map(item => {
-        return <div className={item.value == val ? 'btnItemActive' : 'btnItem'} onClick={() => callBack(item.value)}>{item.name}</div>
+        return item.name && <div className={item.value == val ? 'btnItemActive' : 'btnItem'} onClick={() => callBack(item.value)}>{item.name}</div>
       })}
     </div>
   }
@@ -454,15 +469,13 @@ const Workbench = props => {
     }) === obj;  
   }); 
   //获取数据报警
-  const GetWorkAlarmPushList = (status, pageIndex, pageSize, ) => {
+  const GetWorkAlarmPushList = (status, pageIndex, pageSize,callback ) => {
     props.dispatch({
       type: 'wordSupervision/GetWorkAlarmPushList',
       payload: { status: status, pageIndex: pageIndex ? pageIndex : alarmPageIndex, pageSize: pageSize ? pageSize : alarmPageSize },
       callback: (total) => {
         // myRemindBtnList.splice(0, 1, { name: `数据报警（${total}）`, value: 1 })
-        let btnData = [...myRemindBtnList, { name: `数据报警（${total}）`, value: 1 }]
-            btnData = uniqueArr(btnData)
-            setMyRemindBtnList(btnData)
+        callback&&callback(total)
       }
     });
   }
@@ -497,15 +510,13 @@ const Workbench = props => {
 
 
   //获取合同到期
-  const GetProjectRemindList = (pageIndex, pageSize, ) => {
+  const GetProjectRemindList = (pageIndex, pageSize,callback ) => {
     props.dispatch({
       type: 'wordSupervision/GetProjectRemindList',
       payload: { pageIndex: pageIndex ? pageIndex : contractPageIndex, pageSize: pageSize ? pageSize : contractPageSize },
       callback: (total) => {
         // myRemindBtnList.splice(1, 1, { name: `合同到期（${total}）`, value: 4 })
-        let btnData = [...myRemindBtnList, { name: `合同到期（${total}）`, value: 4 }]
-            btnData = uniqueArr(btnData)
-        setMyRemindBtnList(btnData)
+          callback&&callback(total)
       }
     });
   }

@@ -861,7 +861,7 @@ const Index = (props) => {
   const importData = () =>{ //导入数据
     const mn = commonForm.getFieldValue('DGIMN')
     props.exportRangeParam({ DGIMN: mn }, (data) => {
-      console.log(data)
+      resetData('isImport')
      //量程一致性和数据一致性 回显数据
       data.consistencyCheckList?.[0]&&consistencyEchoData(data.consistencyCheckList,'isImport')
       //参数一致性核查 回显数据
@@ -934,7 +934,7 @@ const Index = (props) => {
       let val = isImport? item : item.DataList;
       let code = isImport? item.PollutantCode : item.DataList.PollutantCode
 
-      if (item.PollutantName == '颗粒物') {
+      if (item.PollutantName == '颗粒物' || code == '411') { // item.PollutantCode == '411' 导入数据
         if (val.Special) {
           if (val.Special == 1) { //有显示屏
             echoForamt(code, val, item)
@@ -950,7 +950,6 @@ const Index = (props) => {
           }
         }
         if (val.CouType) {
-
           if (val.CouType == 1) { //原始浓度
             echoForamt(`${code}c`, val, item)
             onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}c` }, `${code}cRangCheck2`, 2)
@@ -961,7 +960,7 @@ const Index = (props) => {
           }
 
         }
-      } else if (item.PollutantName === '流速') {
+      } else if (item.PollutantName === '流速'  || code == '415' ) {
         form2.setFieldsValue({  //实时数据
           [`${code}DsData`]: val.DASCou,
           [`${code}DsDataUnit`]: val.DASCouUnit,
@@ -1105,7 +1104,7 @@ const Index = (props) => {
       EndTime: values.month ? moment(values.month[1]).format("YYYY-MM-DD 23:59:59") : undefined,
     })
   }
-  const resetData = (flag) => {
+  const resetData = (isImport) => {
     form2.resetFields();
     form3.resetFields();
     // setDasChecked(false)
@@ -1116,11 +1115,14 @@ const Index = (props) => {
     setIsDisPlayCheck3(false)
     setIsDisPlayCheck4(false)
     // setFileList1([]); 
-    setPointList2([])
-    setFileList2([]); //清除附件
-    commonForm.resetFields();
-    setAddId();
-    props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
+    if(!isImport){ //导入数据时 这几项项数据不用清空
+      setPointList2([])
+      setFileList2([]); //清除附件
+      isImport&&commonForm.resetFields();
+      props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
+    }
+
+    // setAddId();
     // !flag&&commonForm.resetFields();
     // !flag&&setAddId();
     // !flag&&props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
@@ -3055,15 +3057,15 @@ const Index = (props) => {
           <Button onClick={() => { setVisible(false) }}>
             取消
           </Button>,
-          <Button type="primary" onClick={() => { save(1) }} loading={saveLoading1 || echoLoading || parLoading || false}>
+          <Button type="primary" onClick={() => { save(1) }} loading={saveLoading1 || echoLoading || parLoading || importDataLoading || false}>
             保存
           </Button>,
-          <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || echoLoading || parLoading || false} >
+          <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || echoLoading || parLoading || importDataLoading || false} >
             提交
           </Button>,
         ]}
       >
-        <Spin spinning={title === '编辑' && editLoading}>
+        <Spin spinning={(title === '编辑' && editLoading) || importDataLoading}>
           <Form
             form={commonForm}
             name={"advanced_search"}

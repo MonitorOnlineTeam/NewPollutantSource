@@ -173,8 +173,8 @@ const Index = (props) => {
     },
     {
       title: '项目续签状态',
-      dataIndex: 'operationCompanyName',
-      key: 'operationCompanyName',
+      dataIndex: 'StatusName',
+      key: 'StatusName',
       align: 'center',
       ellipsis: true,
     },
