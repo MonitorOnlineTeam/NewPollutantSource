@@ -25,7 +25,7 @@ import EntType from '@/components/EntType'
 import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import cuid from 'cuid';
-import { getBase64, } from '@/utils/utils';
+import { getBase64,permissionButton  } from '@/utils/utils';
 import Detail from './Detail';
 import Lightbox from "react-image-lightbox-rotate";
 
@@ -184,7 +184,20 @@ const Index = (props) => {
 
   const [tableValuesChange,setTableValuesChange] = useState(false)
 
+  const [editPermis, setEditPermis] = useState(false)
+  const [delPermis, setDelPermis] = useState(false)
+  const [pushPermis, setPushPermis] = useState(false)
+
+
   useEffect(() => {
+    const buttonList = permissionButton(props.match.path)
+    buttonList.map(item=>{
+      switch (item){
+        case 'editAuthority': setEditPermis(true); break;
+        case 'delete': setDelPermis(true); break;
+        case 'rectificationPush': setPushPermis(true); break;
+      }
+    })
     isDetailModal ? onFinish() : initData()
   }, []);
 
@@ -399,18 +412,17 @@ const Index = (props) => {
         const noSubmitStatusFlag = record.Status == 0; //暂存状态  不可以推送
 
         return <span>
-          <Fragment><Tooltip placement={flag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可编辑" :  "编辑"}> <a onClick={() => {
+          {editPermis&&<Fragment><Tooltip placement={flag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可编辑" :  "编辑"}> <a onClick={() => {
             if (flag) {
               return;
             }
             edit(record)
 
-          }} ><EditOutlined style={{ cursor: (flag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) '), fontSize: 16 }} /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          }} ><EditOutlined style={{ cursor: (flag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) '), fontSize: 16 }} /></a> </Tooltip><Divider type="vertical" /> </Fragment>}
           <Fragment>
-            <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip> <Divider type="vertical" />
+            <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip>
           </Fragment>
-          <Fragment>
-            <Tooltip placement={flag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可推送" : noSubmitStatusFlag ? "只有提交状态才可以整改推送" : "整改推送"}>
+            {pushPermis&&<Fragment> <Divider type="vertical" /><Tooltip placement={flag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可推送" : noSubmitStatusFlag ? "只有提交状态才可以整改推送" : "整改推送"}>
               <Popconfirm disabled={(flag) || noSubmitStatusFlag} placement="left" title="是否把整改问题推送给运维人员？"
                 onConfirm={() => {
                   if ((flag) || noSubmitStatusFlag) { return; } rectificationPush(record);
@@ -419,9 +431,9 @@ const Index = (props) => {
                 <a style={{ cursor: (flag && 'not-allowed') || (noSubmitStatusFlag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') || (noSubmitStatusFlag && 'rgba(0, 0, 0, 0.25) '), }} > <ToTopOutlined style={{ fontSize: 16 }} /> </a>
               </Popconfirm>
             </Tooltip>
+          </Fragment>}
+          {delPermis&&<Fragment>
             <Divider type="vertical" />
-          </Fragment>
-          <Fragment>
             <Tooltip placement={flag || pushStatusFlag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可删除" : pushStatusFlag ? '推送状态，不可删除' : "删除"}>
               <Popconfirm disabled={flag || pushStatusFlag} placement="left" title="确定要删除这条数据吗？"
                 onConfirm={() => {
@@ -431,7 +443,7 @@ const Index = (props) => {
                 <a style={{ cursor: (flag && 'not-allowed') || (pushStatusFlag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') || (pushStatusFlag && 'rgba(0, 0, 0, 0.25) '), }} > <DelIcon style={{ fontSize: 16 }} /> </a>
               </Popconfirm>
             </Tooltip>
-          </Fragment>
+          </Fragment>}
         </span>
       }
     },

@@ -237,7 +237,7 @@ const Index = (props) => {
   const [commonForm] = Form.useForm();
 
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, forwardTableLoading, forwardTableData, forwardOkLoading, regQueryPar, getRemoteInspectorPointLoading, remoteInspectorPointList, addRemoteInspectorPointLoading, forwardTableTotal,importDataLoading, } = props;
+  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, forwardTableLoading, forwardTableData, forwardOkLoading, regQueryPar, getRemoteInspectorPointLoading, remoteInspectorPointList, addRemoteInspectorPointLoading, forwardTableTotal, importDataLoading, } = props;
 
   const [tabType, setTabType] = useState('1')
 
@@ -538,16 +538,16 @@ const Index = (props) => {
             </Tooltip>
             <Divider type="vertical" />
             {detail}
-            {delPermis&&<><Divider type="vertical" />
-            <Tooltip title={'删除'} >
-              {/* title={ updateflag && flag? "删除": null  } */}
-              {/* <Popconfirm disabled={!(updateflag && flag && !isCheckUser)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+            {delPermis && <><Divider type="vertical" />
+              <Tooltip title={'删除'} >
+                {/* title={ updateflag && flag? "删除": null  } */}
+                {/* <Popconfirm disabled={!(updateflag && flag && !isCheckUser)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
                 <a style={{ cursor: updateflag && flag && !isCheckUser? 'pointer' : 'not-allowed', color: updateflag && flag && !isCheckUser? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
               </Popconfirm>  */}
-              <Popconfirm disabled={!isCheckUser? false : true} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                <a style={{ cursor: !isCheckUser ? 'pointer' : 'not-allowed', color: !isCheckUser ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
-              </Popconfirm>
-            </Tooltip></>}
+                <Popconfirm disabled={!isCheckUser ? false : true} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                  <a style={{ cursor: !isCheckUser ? 'pointer' : 'not-allowed', color: !isCheckUser ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
+                </Popconfirm>
+              </Tooltip></>}
             <Divider type="vertical" />
             <Tooltip title={"下发"} > {/* title={!issue||issue==='已下发'?  null : "下发"}*/}
               <Popconfirm disabled={(!issue) || issue === '已下发' || (!isCheckUser) ? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
@@ -758,17 +758,19 @@ const Index = (props) => {
   const [title, setTitle] = useState('添加')
   const [editId, setEditId] = useState()
 
-  const echoForamtUnit = (code, val, item) => { //格式化 除单位外的所有单位 数据一致性核查表
+  const echoForamtUnit = (code, val, item, isImport) => { //格式化 除单位外的所有单位 数据一致性核查表
     form2.setFieldsValue({
       [`${code}AnalyzerUnit`]: val.AnalyzerUnit,
       [`${code}DsUnit`]: val.DASUnit,
       [`${code}ScyUnit`]: val.DataUnit,
+    })
+    !isImport&&form2.setFieldsValue({//实时数据一致性核查表单位 导入数据不用
       [`${code}IndicaUnit`]: val.AnalyzerCouUnit,
       [`${code}DsDataUnit`]: val.DASCouUnit,
       [`${code}ScyDataUnit`]: val.DataCouUnit,
     })
   }
-  const echoForamtData = (code, val, item) => { //格式化 除单位外的所有数据 数据一致性核查表
+  const echoForamtData = (code, val, item,isImport) => { //格式化 除单位外的所有数据 数据一致性核查表
     form2.setFieldsValue({
       [`${code}AnalyzerRang1`]: val.AnalyzerMin,
       [`${code}AnalyzerRang2`]: val.AnalyzerMax,
@@ -780,20 +782,23 @@ const Index = (props) => {
       [`${code}RangCheck`]: val.RangeStatus ? [val.RangeStatus] : [],
       [`${code}Remark`]: val.RangeRemark,
       [`${code}OperationRangeRemark`]: val.OperationRangeRemark,
-      [`${code}IndicaVal`]: val.AnalyzerCou,//实时数据一致性核查表
-      [`${code}DsData`]: val.DASCou,
-      [`${code}ScyData`]: val.DataCou,
-      [`${code}DataUniformity`]: val.CouAutoStatus,
-      [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
-      [`${code}Remark2`]: val.CouRemrak,
-      [`${code}OperationDataRemark`]: val.OperationDataRemark,
-      [`${code}AnalyzerFilePar`]: item.AnalyzerFileList?.[0] && item.AnalyzerFileList?.[0].FileUuid,
-      [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
-      [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
-    })
+      }) 
+      !isImport&&form2.setFieldsValue({//实时数据一致性核查表 导入数据不用
+        [`${code}IndicaVal`]: val.AnalyzerCou,
+        [`${code}DsData`]: val.DASCou,
+        [`${code}ScyData`]: val.DataCou,
+        [`${code}DataUniformity`]: val.CouAutoStatus,
+        [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
+        [`${code}Remark2`]: val.CouRemrak,
+        [`${code}OperationDataRemark`]: val.OperationDataRemark,
+        [`${code}AnalyzerFilePar`]: item.AnalyzerFileList?.[0] && item.AnalyzerFileList?.[0].FileUuid,
+        [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
+        [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
+      })
+   
   }
 
-  const echoForamt = (code, val, item) => { //格式化 编辑回显
+  const echoForamt = (code, val, item,isImport) => { //格式化 编辑回显
     // form2.setFieldsValue({
     //   [`${code}AnalyzerRang1`]: val.AnalyzerMin,
     //   [`${code}AnalyzerRang2`]: val.AnalyzerMax,
@@ -822,8 +827,8 @@ const Index = (props) => {
     //   [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
     //   [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
     // })
-    echoForamtData(code, val, item)
-    echoForamtUnit(code, val, item)
+    echoForamtData(code, val, item, isImport)
+    echoForamtUnit(code, val, item, isImport)
   }
 
   const [echoLoading, setEchoLoading] = useState(false)
@@ -858,16 +863,57 @@ const Index = (props) => {
 
     })
   }
-  const importData = () =>{ //导入数据
+  const importData = () => { //导入数据
     const mn = commonForm.getFieldValue('DGIMN')
     props.exportRangeParam({ DGIMN: mn }, (data) => {
-      resetData('isImport')
-     //量程一致性和数据一致性 回显数据
-      data.consistencyCheckList?.[0]&&consistencyEchoData(data.consistencyCheckList,'isImport')
+      setIsDisPlayCheck1(false)
+      setIsDisPlayCheck2(false)
+      setIsDisPlayCheck3(false)
+      setIsDisPlayCheck4(false)
+      let codeArr = data.consistencyCheckList?.[0]&&data.consistencyCheckList.map(item=>item?.DataList?.PollutantCode)
+          codeArr = codeArr.filter((item, index) => codeArr.indexOf(item) === index);//去重
+      let i=0,j=0;
+      codeArr.map((item,index)=>{
+       if(item=='411'&&i==0){ //颗粒物
+          codeArr.push('411a')
+          i++
+       }
+       if(item=='415'&&j==0){ //流速
+          codeArr.push('415b')
+          j++;
+        }
+       
+     })
+     codeArr.map(code=>{
+      form2.setFieldsValue({
+        [`${code}AnalyzerRang1`]: undefined,
+        [`${code}AnalyzerRang2`]: undefined,
+        [`${code}DsRang1`]: undefined,
+        [`${code}DsRang2`]: undefined,
+        [`${code}ScyRang1`]: undefined,
+        [`${code}ScyRang2`]: undefined,
+        [`${code}RangUniformity`]: undefined,
+        [`${code}RangCheck`]: [],
+        [`${code}Remark`]: undefined,
+        [`${code}OperationRangeRemark`]: undefined,
+        [`${code}AnalyzerFilePar`]: undefined,
+        [`${code}DasFilePar`]: undefined,
+        [`${code}RangeFilePar`]: undefined,
+        [`${code}AnalyzerUnit`]: undefined,
+        [`${code}DsUnit`]: undefined,
+        [`${code}ScyUnit`]: undefined,
+
+      })
+     })
+      echoUnit(addDataConsistencyData,'isImport') //初始化量程一致性单位
+      form3.resetFields();//初始化参数一致性核查表
+      console.log(addDataConsistencyData)
+      //量程一致性和数据一致性 回显数据
+      data.consistencyCheckList?.[0] && consistencyEchoData(data.consistencyCheckList, 'isImport')
       //参数一致性核查 回显数据
-      data.consistentParametersCheckList?.[0]&&echoParFun(data.consistentParametersCheckList)
-    })  
-    
+      data.consistentParametersCheckList?.[0] && echoParFun(data.consistentParametersCheckList)
+    })
+
   }
 
   const dgimnEchoDataFun = (mn, data, title) => { //通过监测点获取回显数据  编辑时
@@ -924,17 +970,17 @@ const Index = (props) => {
     }, title)
   }
 
-  const consistencyEchoData = (consistencyCheckList,isImport)=>{ //量程一致性和数据一致性回显
+  const consistencyEchoData = (consistencyCheckList, isImport) => { //量程一致性和数据一致性回显
     let analyzerUploadList = {}, analyzerUploadFilesListObj = {};
     let dasUploadList = {}, dasUploadFilesListObj = {};
     let rangeUploadList = {}, rangeUploadFilesListObj = {};
 
     consistencyCheckList.map(item => { //一致性核查表 量程和数据
 
-      let val = isImport? item : item.DataList;
-      let code = isImport? item.PollutantCode : item.DataList.PollutantCode
+      let val =  item.DataList;
+      let code = item.DataList.PollutantCode;
 
-      if (item.PollutantName == '颗粒物' || code == '411') { // item.PollutantCode == '411' 导入数据
+      if (item.PollutantName == '颗粒物') { 
         if (val.Special) {
           if (val.Special == 1) { //有显示屏
             echoForamt(code, val, item)
@@ -949,7 +995,7 @@ const Index = (props) => {
 
           }
         }
-        if (val.CouType) {
+        if (val.CouType && !isImport) { //导入数据不用覆盖实时数据
           if (val.CouType == 1) { //原始浓度
             echoForamt(`${code}c`, val, item)
             onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}c` }, `${code}cRangCheck2`, 2)
@@ -960,8 +1006,9 @@ const Index = (props) => {
           }
 
         }
-      } else if (item.PollutantName === '流速'  || code == '415' ) {
-        form2.setFieldsValue({  //实时数据
+      } else if (item.PollutantName === '流速') {
+        if(!isImport){
+         form2.setFieldsValue({  //实时数据
           [`${code}DsData`]: val.DASCou,
           [`${code}DsDataUnit`]: val.DASCouUnit,
           [`${code}ScyData`]: val.DataCou,
@@ -970,24 +1017,24 @@ const Index = (props) => {
           [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
           [`${code}Remark2`]: val.CouRemrak,
           [`${code}OperationDataRemark`]: val.OperationDataRemark,
-        })
+         })
         onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)
-
+        }
         if (val.Special == 1) { //差压法
-          echoForamt(code, val, item)
+          echoForamt(code, val, item,isImport)
           isDisplayChange2({ target: { checked: true } }, 'isDisplay3', 'firstDefault')
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1)
         } else if (val.Special == 2) { //直测流速法
-          echoForamt(`${code}b`, val, item)
+          echoForamt(`${code}b`, val, item,isImport)
           isDisplayChange2({ target: { checked: true } }, 'isDisplay4', 'firstDefault')
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}b` }, `${code}bRangCheck`, 1)
 
         }
 
       } else {
-        echoForamt(code, val, item)
+        echoForamt(code, val, item,isImport)
         onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
-        onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
+        !isImport&&onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
 
       }
       // setNumChecked(val.DataRangeStatus == 1 ? true : false)
@@ -1104,7 +1151,7 @@ const Index = (props) => {
       EndTime: values.month ? moment(values.month[1]).format("YYYY-MM-DD 23:59:59") : undefined,
     })
   }
-  const resetData = (isImport) => {
+  const resetData = () => {
     form2.resetFields();
     form3.resetFields();
     // setDasChecked(false)
@@ -1115,13 +1162,10 @@ const Index = (props) => {
     setIsDisPlayCheck3(false)
     setIsDisPlayCheck4(false)
     // setFileList1([]); 
-    if(!isImport){ //导入数据时 这几项项数据不用清空
-      setPointList2([])
-      setFileList2([]); //清除附件
-      isImport&&commonForm.resetFields();
-      props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
-    }
-
+    setPointList2([])
+    setFileList2([]); //清除附件
+    commonForm.resetFields();
+    props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
     // setAddId();
     // !flag&&commonForm.resetFields();
     // !flag&&setAddId();
@@ -1353,28 +1397,29 @@ const Index = (props) => {
     }
   }
 
-  const unitDefault = (code, value) => {
+  const unitDefault = (code, value,isImport) => {
     form2.setFieldsValue({
       [`${code}AnalyzerUnit`]: value,
       [`${code}DsUnit`]: value,
       [`${code}ScyUnit`]: value,
+    })
+    !isImport&&form2.setFieldsValue({ //导入数据 实时数据不需要格式化单位
       [`${code}IndicaUnit`]: value,
       [`${code}DsDataUnit`]: value,
       [`${code}ScyDataUnit`]: value,
     })
   }
-  const echoUnit = (data) => { //格式化
+  const echoUnit = (data,isImport) => { //格式化
     data.map(item => {
-
-      const code = item.par
+      const code = item.par;
       if (item.Name == '流速' && item.isDisplay == 4) {
         const value = item.Col1.split(',')[2];
-        unitDefault(code, value)
+        unitDefault(code, value,isImport)
       }
 
       if (item.Col1.search(",") == -1) { //单位只有一个的情况
         const value = item.Col1;
-        unitDefault(code, value)
+        unitDefault(code, value,isImport)
       }
 
     })
@@ -2152,7 +2197,7 @@ const Index = (props) => {
               const fileFlag = !(analyzerFileList[`${record.par}AnalyzerFilePar`] && analyzerFileList[`${record.par}AnalyzerFilePar`][0])
               return <Row justify='center' align='middle'>
                 <Form.Item name={`${record.par}AnalyzerFilePar`}>
-                  <a style={{ cursor: disabledFlag && fileFlag && 'not-allowed', color:  disabledFlag && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag&&fileFlag) { return }; setFileType('analyzerFile'); setAnalyzerFilePar(`${record.par}AnalyzerFilePar`); setFileVisible(true); }}>{analyzerFileList[`${record.par}AnalyzerFilePar`] && analyzerFileList[`${record.par}AnalyzerFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                  <a style={{ cursor: disabledFlag && fileFlag && 'not-allowed', color: disabledFlag && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag && fileFlag) { return }; setFileType('analyzerFile'); setAnalyzerFilePar(`${record.par}AnalyzerFilePar`); setFileVisible(true); }}>{analyzerFileList[`${record.par}AnalyzerFilePar`] && analyzerFileList[`${record.par}AnalyzerFilePar`][0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </Row>
             }
@@ -2225,7 +2270,7 @@ const Index = (props) => {
               const fileFlag = !(dasFileList[`${record.par}DasFilePar`] && dasFileList[`${record.par}DasFilePar`][0])
               return <Row justify='center' align='middle'>
                 <Form.Item name={`${record.par}DasFilePar`}>
-                  <a style={{ cursor: disabledFlag && fileFlag && 'not-allowed', color: disabledFlag &&  fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag && fileFlag) { return }; setFileType('dasFile'); setDasFilePar(`${record.par}DasFilePar`); setFileVisible(true); }}>{dasFileList[`${record.par}DasFilePar`] && dasFileList[`${record.par}DasFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                  <a style={{ cursor: disabledFlag && fileFlag && 'not-allowed', color: disabledFlag && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag && fileFlag) { return }; setFileType('dasFile'); setDasFilePar(`${record.par}DasFilePar`); setFileVisible(true); }}>{dasFileList[`${record.par}DasFilePar`] && dasFileList[`${record.par}DasFilePar`][0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </Row>
             }
@@ -2301,7 +2346,7 @@ const Index = (props) => {
 
               return <Row justify='center' align='middle'>
                 <Form.Item name={`${record.par}RangeFilePar`}>
-                  <a style={{ cursor: disabledFlag && fileFlag && 'not-allowed', color: disabledFlag && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag&&fileFlag) { return }; setFileType('rangeFile'); setRangeFilePar(`${record.par}RangeFilePar`); setFileVisible(true); }}>{rangeFileList[`${record.par}RangeFilePar`] && rangeFileList[`${record.par}RangeFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                  <a style={{ cursor: disabledFlag && fileFlag && 'not-allowed', color: disabledFlag && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (disabledFlag && fileFlag) { return }; setFileType('rangeFile'); setRangeFilePar(`${record.par}RangeFilePar`); setFileVisible(true); }}>{rangeFileList[`${record.par}RangeFilePar`] && rangeFileList[`${record.par}RangeFilePar`][0] ? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </Row>
             }
@@ -2768,7 +2813,7 @@ const Index = (props) => {
             const fileFlag = !(instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0])
             return <div>
               <Form.Item name={`${record.par}InstrumentFilePar`} >
-                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser&&fileFlag) { return }; setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser && fileFlag) { return }; setFileType('instrumentFile'); setInstrumentFilePar(`${record.par}InstrumentFilePar`); setFileVisible(true); }}>{instrumentFileList[`${record.par}InstrumentFilePar`] && instrumentFileList[`${record.par}InstrumentFilePar`][0] ? '查看附件' : '上传附件'}</a>
               </Form.Item>
             </div>;
 
@@ -2837,7 +2882,7 @@ const Index = (props) => {
             const fileFlag = !(traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0])
             return <div>
               <Form.Item name={`${record.par}TraceabilityFilePar`} >
-                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser&&fileFlag) { return }; setFileType('traceabilityFile'); setTraceabilityFilePar(`${record.par}TraceabilityFilePar`); setFileVisible(true); }}>{traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0] ? '查看附件' : '上传附件'}</a>
+                <a style={{ paddingRight: 8 }} style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (isCheckUser && fileFlag) { return }; setFileType('traceabilityFile'); setTraceabilityFilePar(`${record.par}TraceabilityFilePar`); setFileVisible(true); }}>{traceabilityFileList[`${record.par}TraceabilityFilePar`] && traceabilityFileList[`${record.par}TraceabilityFilePar`][0] ? '查看附件' : '上传附件'}</a>
               </Form.Item>
             </div>;
 
@@ -3110,7 +3155,7 @@ const Index = (props) => {
                   </Select>
                 </Form.Item>
               </Spin>
-                <Form.Item>
+              <Form.Item>
                 <Button type='primary' icon={<UploadOutlined />} loading={importDataLoading || echoLoading} onClick={importData}>导入</Button>
               </Form.Item>
 
@@ -3245,7 +3290,7 @@ const Index = (props) => {
         footer={null}
       >
         <Upload {...uploadProps} style={{ width: '100%' }} >
-          {!isCheckUser&&<div>
+          {!isCheckUser && <div>
             <PlusOutlined />
             <div style={{ marginTop: 8 }}>上传</div>
           </div>}

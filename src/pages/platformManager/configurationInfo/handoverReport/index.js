@@ -114,7 +114,6 @@ const Index = (props) => {
     buttonList.map(item=>{
       switch (item){
         case 'editAuthority': setPermisEdit(true); break;
-        // case 'handoverReport': setPermisEdit(false); break;
       }
     })
     onFinish(pageIndex, pageSize);

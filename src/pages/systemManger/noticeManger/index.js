@@ -215,7 +215,6 @@ const Index = (props) => {
   const edit =  (record) => {
     setFromVisible(true)
     setType('edit')
-    console.log(record)
     form2.resetFields();
     form2.setFieldsValue({
         ...record,
@@ -275,8 +274,8 @@ const Index = (props) => {
 
       props.addOrUpdNoticeContent({
         ...values,
-        BeginTime: values.BeginTime && moment(values.BeginTime).format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: values.EndTime && moment(values.EndTime).format('YYYY-MM-DD HH:mm:ss'),
+        BeginTime: values.BeginTime && moment(values.BeginTime).format('YYYY-MM-DD 00:00:00'),
+        EndTime: values.EndTime && moment(values.EndTime).format('YYYY-MM-DD 23:59:59'),
         Company:values.Company?values.Company.toString() : '',
         Role:values.Role?values.Role.toString() : '',
       }, () => {
@@ -307,11 +306,11 @@ const Index = (props) => {
   }
   const startDisabledDate = (current) => {
     const time = form2.getFieldValue('EndTime')
-    return time && current && current > moment(time).startOf('day');
+    return time && current && current >= moment(time);
   }
   const endDisabledDate = (current) => {
     const time = form2.getFieldValue('BeginTime')
-    return time && current && current < moment(time).endOf('day');
+    return time && current && current <= moment(time);
   }
 
 

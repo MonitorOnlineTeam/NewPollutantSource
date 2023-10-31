@@ -66,7 +66,7 @@ const Model = {
         // } else {
         //   defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
         // }
-        if(response.Datas.MenuDatas?.[0]?.parentId=='0' ){
+        if(response.Datas.MenuDatas?.[0]?.parentId=='0'){
           const sysList =  response.Datas.MenuDatas[0]; //默认展示和选中第一个系统
           sessionStorage.setItem('sysMenuId',sysList.id)
           const meunList = sysList.children;

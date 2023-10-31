@@ -379,6 +379,7 @@ class RoleIndex extends Component {
             settingType: 1,
             settingRolePermis: false,
             settingAppRolePermis: false,
+            expandRowsLoading:false,
         };
     }
 
@@ -586,6 +587,7 @@ class RoleIndex extends Component {
             visibleMenu: false,
             selectButton: [],
             buttonState: [],
+            expandRows:false,
         });
     };
 
@@ -979,16 +981,22 @@ class RoleIndex extends Component {
                                                 {this.props.SelectMenu.map((item, key) => (<Option key={item.ID} >{item.Name}</Option>))
                                                 }
                                             </Select>
-                                            {/* <Switch checkedChildren="全部展开" unCheckedChildren="全部关闭"  checked={this.state.expandRows}  onChange={(e)=>{
+                                             <Switch  style={{marginLeft:8}} checkedChildren="全部收起" unCheckedChildren="全部展开"  checked={this.state.expandRows}  onChange={(value)=>{
                                                 this.setState({
-                                                    expandRows:e
+                                                    expandRows:value,
+                                                },()=>{
+                                                    setTimeout(()=>{
+                                                        this.setState({ expandRowsLoading:true },()=>{
+                                                            this.setState({ expandRowsLoading:false})
+                                                          })
+                                                    },200)
                                                 })
                                             }}
-                                            /> */}
+                                            /> 
                                         </div>
                                     }
                                     {
-                                        this.props.MenuTreeLoading ? <Spin
+                                        this.props.MenuTreeLoading || this.state.expandRowsLoading? <Spin
                                             style={{
                                                 width: '100%',
                                                 height: 'calc(100vh/2)',
@@ -1005,7 +1013,11 @@ class RoleIndex extends Component {
                                                 //     },
                                                 // })}
                                                 size="small"
-                                                rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
+                                                rowSelection={rowMenuSelection} 
+                                                columns={this.state.menucolumns}
+                                                dataSource={this.props.MenuTree} 
+                                                defaultExpandAllRows={this.state.expandRows}
+                                                 />
                                     }
 
                                 </div>
