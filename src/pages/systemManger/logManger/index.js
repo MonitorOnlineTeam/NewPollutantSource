@@ -113,7 +113,7 @@ const Index = (props) => {
   const [form4] = Form.useForm();
 
   const defaultTime = [moment(new Date()).add(-7, 'day').startOf("day"), moment().endOf("day")]
-  const defaultTime3 = [moment(new Date()).startOf("day"), moment().endOf("day")]
+  // const defaultTime3 = [moment(new Date()).startOf("day"), moment().endOf("day")]
   const { tableDatas, tableTotal, tableLoading, queryPar, rolesList, rolesTreeLoading, tableDatas2, tableTotal2, tableLoading2, queryPar2, tableDatas3, tableTotal3, tableLoading3, queryPar3, } = props;
   useEffect(() => {
  
@@ -126,8 +126,8 @@ const Index = (props) => {
       pageSize: pageSize,
     })
     props.getUserOprationLogsList({ //操作日志
-      Btime: defaultTime3 && moment(defaultTime3[0]).format('YYYY-MM-DD HH:mm:ss'),
-      Etime: defaultTime3 && moment(defaultTime3[1]).format('YYYY-MM-DD HH:mm:ss'),
+      Btime: defaultTime && moment(defaultTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+      Etime: defaultTime && moment(defaultTime[1]).format('YYYY-MM-DD HH:mm:ss'),
       pageIndex: pageIndex3,
       pageSize: pageSize3,
     })
@@ -552,7 +552,7 @@ const Index = (props) => {
       className={styles['ant-advanced-search-form3']}
       layout='inline'
       initialValues={{
-        Time: defaultTime3,
+        Time: defaultTime,
       }}
       onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize3) }}
     >

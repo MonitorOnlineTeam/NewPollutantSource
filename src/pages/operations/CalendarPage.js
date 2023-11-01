@@ -27,6 +27,7 @@ import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatist
   loading: loading.effects["operations/getAbnormalDetailList"],
   calendarInfoLoading: loading.effects["operations/getCalendarInfo"],
   queryPar: abnormalWorkStatistics.queryPar,
+  entAbnormalNumVisible:abnormalWorkStatistics.entAbnormalNumVisible,
 }))
 class CalendarPage extends PureComponent {
   constructor(props) {
@@ -66,7 +67,7 @@ class CalendarPage extends PureComponent {
           // href: `/operations/calendar/details/${item.TaskID}/${item.TaskID}`,
           title: <div>
             <span style={{ marginRight: 8, cursor: 'pointer', }} onClick={(e) => {
-              this.setState({ taskRecordDetailVisible: true, TaskID: item.TaskID, DGIMN: item.TaskID, })
+              this.setState({ taskRecordDetailVisible: true, TaskID: item.TaskID, DGIMN: item.DGIMN, })
             }}>{item.EnterpriseName}</span>
             {
               item.ExceptionTypeText && item.ExceptionTypeText.split(",").map(itm => {
@@ -673,7 +674,7 @@ class CalendarPage extends PureComponent {
             />
           </Modal>
           {/** 打卡异常  监测点 弹框 */}
-          <EntAbnormalMapModal abnormalTitle={abnormalTitle} onCancel={()=>{this.setState({abnormalTitle:undefined})}}/>
+          {this.state.abnormalTitle&&<EntAbnormalMapModal abnormalTitle={abnormalTitle} onCancel={()=>{this.setState({abnormalTitle:undefined})}}/>}
         </div>
       </BreadcrumbWrapper>
     );

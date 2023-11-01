@@ -166,16 +166,16 @@ class BasicLayout extends Component {
       payload: {},
     });
     // console.log(currentMenu)
-    dispatch({
+    dispatch({ //获取菜单
       type: 'user/fetchCurrent',
       payload: {},
     });
-    const currentUser = JSON.parse(Cookie.get('currentUser'));
-    if (currentUser && currentUser.UserName != '展厅演示') {
-        dispatch({
-          type: 'global/getSysPollutantTypeList',
-        });
-     }
+    // const currentUser = JSON.parse(Cookie.get('currentUser'));
+    // if (currentUser && currentUser.UserName != '展厅演示') {
+    //     dispatch({
+    //       type: 'global/getSysPollutantTypeList',
+    //     });
+    //  }
     dispatch({
       type: 'global/updateState',
       payload: {

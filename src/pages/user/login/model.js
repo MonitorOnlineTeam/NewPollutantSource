@@ -66,56 +66,51 @@ const Model = {
         // } else {
         //   defaultNavigateUrl = response.Datas.MenuDatas[0].NavigateUrl;
         // }
-        if(response.Datas.MenuDatas?.[0]?.parentId=='0'){
-          const sysList =  response.Datas.MenuDatas[0]; //默认展示和选中第一个系统
-          sessionStorage.setItem('sysMenuId',sysList.id)
+        if (response.Datas.MenuDatas?.[0]?.parentId == '0') {
+          const sysList = response.Datas.MenuDatas[0]; //默认展示和选中第一个系统
+          sessionStorage.setItem('sysMenuId', sysList.id)
           const meunList = sysList.children;
           defaultNavigateUrl = meunList?.[0]?.NavigateUrl
-          if(meunList?.[0]?.children?.[0]?.children?.[0]){ //三级菜单
+          if (meunList?.[0]?.children?.[0]?.children?.[0]) { //三级菜单
             defaultNavigateUrl = meunList[0].children[0].children[0].NavigateUrl
-          }else if(meunList?.[0]?.children?.[0]){//二级菜单
+          } else if (meunList?.[0]?.children?.[0]) {//二级菜单
             defaultNavigateUrl = meunList[0].children[0].NavigateUrl
-          }else if(meunList?.[0]){//一级菜单
+          } else if (meunList?.[0]) {//一级菜单
             defaultNavigateUrl = meunList[0].NavigateUrl
           }
-          const systemList = response.Datas.MenuDatas.map(item=>({...item,ID:item.id,Name:item.name,id:undefined,name:undefined,children:undefined})); //右上角系统列表
+          //右上角系统列表
+          const systemList = response.Datas.MenuDatas.map(item => ({ ...item, ID: item.id, Name: item.name, id: undefined, name: undefined, children: undefined })); 
           sessionStorage.setItem('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
-
+          //进入系统
+          if (!payload.butRedirct) router.push(defaultNavigateUrl); 
+          //生成菜单数组保存 清空路由和路由权限使用
+          function getMeun(meun) { 
+            const meunArr = [];
+            const meunData = data => {
+              if (data?.length > 0) { data.map(item => { meunArr.push(item.path); meunData(item.children); }); }
+              return meunArr;
+            };
+            const meunList = meunData(meun);
+            sessionStorage.setItem('menuDatas', meunList?.length > 0 ? JSON.stringify(meunList) : '');
+          }
           getMeun(meunList)
-
+          delete response.Datas.MenuDatas;
+          delete response.Datas.Ticket;
+          delete response.Datas.DepIds;
+          Cookie.set('currentUser', JSON.stringify(response.Datas));
+          Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
+          Cookie.set('systemNavigateUrl', systemNavigateUrl);
         }
-  
-        function getMeun (meun){ //清空路由和路由权限使用
-          const meunArr = [];
-          const meunData = data => {
-            if (data?.length > 0) {
-              data.map(item => {
-                meunArr.push(item.path);
-                meunData(item.children);
-              });
-            }
-            return meunArr;
-          };
-          const meunList = meunData(meun);
-          sessionStorage.setItem('menuDatas', meunList?.length > 0 ? JSON.stringify(meunList) : '');
-        }
-  
-        delete response.Datas.MenuDatas;
-        delete response.Datas.Ticket;
-        delete response.Datas.DepIds;
-        Cookie.set('currentUser', JSON.stringify(response.Datas));
-        Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
-        Cookie.set('systemNavigateUrl', systemNavigateUrl);
         try {
           const { ws } = window;
           ws.send(response.Datas.UserAccount);
-        } catch (error) {}
+        } catch (error) { }
         //大屏
         if (payload.redirctUrl) {
-          router.push('/newestHome');
+          router.push(payload.redirctUrl);
           return;
         }
-        if (!payload.butRedirct) router.push(defaultNavigateUrl);
+
       }
     },
 

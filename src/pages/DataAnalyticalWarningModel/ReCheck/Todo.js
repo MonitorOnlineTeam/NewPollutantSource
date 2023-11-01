@@ -10,7 +10,7 @@ import SdlTable from '@/components/SdlTable';
 import { getCurrentUserId } from '@/utils/utils';
 import OperationInspectoUserList from '@/components/OperationInspectoUserList';
 import { router } from 'umi';
-import { FileProtectOutlined } from '@ant-design/icons';
+import { FileProtectOutlined,RollbackOutlined } from '@ant-design/icons';
 import {  ModalNameConversion } from '../CONST';
 
 const textStyle = {
@@ -37,6 +37,7 @@ const Tode = props => {
   const [pageSize, setPageSize] = useState(20);
 
   const currentUserId = getCurrentUserId();
+  let par = props.history?.location?.query?.par && JSON.parse(props.history.location.query.par)
 
   useEffect(() => {
     loadData();
@@ -301,6 +302,10 @@ const Tode = props => {
                 查询
               </Button>
               <Button onClick={() => onReset()}>重置</Button>
+              {par&&<Button onClick={() => router.goBack()}>
+                <RollbackOutlined />
+                返回上级
+              </Button>}
             </Space>
           </Form.Item>
         </Form>

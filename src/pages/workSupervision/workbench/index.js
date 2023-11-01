@@ -138,7 +138,7 @@ const Workbench = props => {
                 if(clItem.CName=='监督核查'){
                   btnObj.value = 1;
                   SetOperaSupervisionCheck(true)
-                  GetStagingInspectorRectificationList(()=>{
+                  GetStagingInspectorRectificationList((total)=>{
                     btnObj.name = `${clItem.CName}（${total}）`
                   })
                 }
@@ -246,7 +246,7 @@ const Workbench = props => {
       payload: { pageIndex: 1, pageSize: 9999 },
       callback: (total) => {
         // operaServiceBtnList.splice(0, 1, { name: `监督核查（${total}）`, value: 1 })
-           callback&&callback()
+           callback&&callback(total)
       }
     });
   };

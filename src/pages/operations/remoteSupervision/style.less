@@ -113,7 +113,15 @@
     }
     }
  }
-
+ .detailModalSty :global{
+   .ant-pro-page-header-wrap-children-content{
+    overflow-y: hidden !important;
+    height: auto !important;
+   }
+   .ant-modal-body{
+    height: calc(100vh - 120px);
+   }
+}
  .remoteSupervisionDetailSty{
     :global{
         .ant-form-item{

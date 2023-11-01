@@ -1,5 +1,5 @@
 /**
- * 功  能：近30日运维工单
+ * 功  能：  异常精准识别核实整改率 核实率
  * 创建人：jab
  * 创建时间：2023.10
  */
@@ -29,26 +29,26 @@ import OperationCompanyList from '@/components/OperationCompanyList'
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'operations'
+const namespace = 'verificaRate'
 
 
 
 
 
-const dvaPropsData = ({ loading, operations }) => ({
-  tableDatas: operations.operationPlanTaskTable,
-  tableTotal: operations.operationPlanTaskTotal,
-  tableLoading: operations.operationPlanTaskTableLoading,
-  exportLoading: operations.exportOperationPlanTaskTableLoading,
-  tableDatas2: operations.operationPlanTaskTable2,
-  tableTotal2: operations.operationPlanTaskTotal2,
-  tableLoading2: operations.operationPlanTaskTableLoading2,
-  exportLoading2: operations.exportOperationPlanTaskTableLoading2,
-  tableDatas3: operations.operationPlanTaskTable3,
-  tableTotal3: operations.operationPlanTaskTotal3,
-  tableLoading3: operations.operationPlanTaskTableLoading3,
-  exportLoading3: operations.exportOperationPlanTaskTableLoading3,
-  queryPar: operations.operationPlanTaskQueryPar,
+const dvaPropsData = ({ loading, verificaRate }) => ({
+  tableDatas: verificaRate.tableDatas,
+  tableTotal: verificaRate.tableTotal,
+  tableLoading: verificaRate.tableLoading,
+  exportLoading: verificaRate.exportLoading,
+  tableDatas2: verificaRate.tableDatas2,
+  tableTotal2: verificaRate.tableTotal2,
+  tableLoading2: verificaRate.tableLoading2,
+  exportLoading2: verificaRate.exportLoading2,
+  tableDatas3: verificaRate.tableDatas3,
+  tableTotal3: verificaRate.tableTotal3,
+  tableLoading3: verificaRate.tableLoading3,
+  exportLoading3: verificaRate.exportLoading3,
+  queryPar: verificaRate.queryPar,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -96,92 +96,34 @@ const Index = (props) => {
 
   let commonCol = [
     {
-      title: '完成工单数',
+      title: '报警次数',
       dataIndex: 'taskCount',
       key: 'taskCount',
       align: 'center',
-      sorter: (a, b) => a.taskCount - b.taskCount,
+      render: (text, record) => {
+        return <a onClick={() => { router.push(`/DataAnalyticalWarningModel/ReCheck/Todo?par=${JSON.stringify(record)}`) }}>{111}</a>
+      }
     },
     {
-      title: '巡检',
+      title: '已报警次数',
       dataIndex: 'xunjian',
       key: 'xunjian',
       align: 'center',
-      sorter: (a, b) => a.xunjian - b.xunjian,
     },
     {
-      title: '校准',
+      title: '待核实报警次数',
       dataIndex: 'jiaozhun',
       key: 'jiaozhun',
       align: 'center',
-      sorter: (a, b) => a.jiaozhun - b.jiaozhun,
     },
     {
-      title: '维修',
+      title: '核实率',
       dataIndex: 'weixiu',
       key: 'weixiu',
       align: 'center',
-      sorter: (a, b) => a.weixiu - b.weixiu,
-    },
-    {
-      title: '维护',
-      dataIndex: 'weihu',
-      key: 'weihu',
-      align: 'center',
-      sorter: (a, b) => a.weihu - b.weihu,
-    },
-    {
-      title: '备品备件更换',
-      dataIndex: 'beipin',
-      key: 'beipin',
-      align: 'center',
-      sorter: (a, b) => a.beipin - b.beipin,
-    },
-    {
-      title: '易耗品更换',
-      dataIndex: 'yihaopin',
-      key: 'yihaopin',
-      align: 'center',
-      sorter: (a, b) => a.yihaopin - b.yihaopin,
-    },
-    {
-      title: '标准物质更换',
-      dataIndex: 'biaozhunwuzhi',
-      key: 'biaozhunwuzhi',
-      align: 'center',
-      sorter: (a, b) => a.biaozhunwuzhi - b.biaozhunwuzhi,
     },
     
-    {
-      title: '试剂更换',
-      dataIndex: 'shiji',
-      key: 'shiji',
-      align: 'center',
-      sorter: (a, b) => a.shiji - b.shiji,
-    },
-    {
-      title: '校验测试',
-      dataIndex: 'jiaoyanceshi',
-      key: 'jiaoyanceshi',
-      align: 'center',
-      sorter: (a, b) => a.jiaoyanceshi - b.jiaoyanceshi,
-    },
-    {
-      title: '配合检查',
-      dataIndex: 'peihejiancha',
-      key: 'peihejiancha',
-      align: 'center',
-      sorter: (a, b) => a.peihejiancha - b.peihejiancha,
-    },
-    {
-      title: '配合对比',
-      dataIndex: 'peiheduibi',
-      key: 'peiheduibi',
-      align: 'center',
-      sorter: (a, b) => a.peiheduibi - b.peiheduibi,
-    },
   ]
-  pollutantType==1? commonCol=commonCol.filter(item=>item.title!='标准物质更换') :  commonCol=commonCol.filter(item=>item.title!='试剂更换')
   const [regionCode,setRegionCode] = useState()
   const columns = [
     {
@@ -202,11 +144,16 @@ const Index = (props) => {
       }
     },
     {
-      title: '运维监测点数',
+      title: '精准识别报警企业数',
+      dataIndex: 'entCount',
+      key: 'entCount',
+      align: 'center',
+    },
+    {
+      title: '精准识别报警监测点数',
       dataIndex: 'pointCount',
       key: 'pointCount',
       align: 'center',
-      sorter: (a, b) => a.pointCount - b.pointCount,
     },
     ...commonCol,
   ];
@@ -230,11 +177,16 @@ const Index = (props) => {
       }
     },
     {
-      title: '运维监测点数',
+      title: '精准识别报警企业数',
+      dataIndex: 'entCount',
+      key: 'entCount',
+      align: 'center',
+    },
+    {
+      title: '精准识别报警监测点数',
       dataIndex: 'pointCount',
       key: 'pointCount',
       align: 'center',
-      sorter: (a, b) => a.pointCount - b.pointCount,
     },
     ...commonCol,
   ];
@@ -261,6 +213,12 @@ const Index = (props) => {
     },
     {
       title: '监测点名称',
+      dataIndex: 'pointName',
+      key: 'pointName',
+      align: 'center',
+    },
+    {
+      title: '运维负责人',
       dataIndex: 'pointName',
       key: 'pointName',
       align: 'center',
@@ -373,6 +331,7 @@ const Index = (props) => {
         </Form>
   }
   return (
+    <BreadcrumbWrapper>
     <div className={styles.equipmentManufacturListSty}>
       <Card title={searchComponents()}>
         {pointType == 1 ? <SdlTable
@@ -381,14 +340,6 @@ const Index = (props) => {
           dataSource={tableDatas}
           columns={columns}
           pagination={false}
-          // pagination={{
-          //   total: tableTotal,
-          //   pageSize: pageSize,
-          //   current: pageIndex,
-          //   showSizeChanger: true,
-          //   showQuickJumper: true,
-          //   onChange: handleTableChange,
-          // }}
         /> :
           pointType == 2 ? <SdlTable
             loading={tableLoading2}
@@ -396,14 +347,6 @@ const Index = (props) => {
             dataSource={tableDatas2}
             columns={columns2}
             pagination={false}
-            // pagination={{
-            //   total: tableTotal2,
-            //   pageSize: pageSize2,
-            //   current: pageIndex2,
-            //   showSizeChanger: true,
-            //   showQuickJumper: true,
-            //   onChange: handleTableChange2,
-            // }}
           /> :
             <SdlTable
               loading={tableLoading3}
@@ -422,6 +365,7 @@ const Index = (props) => {
         }
       </Card>
     </div>
+    </BreadcrumbWrapper>
   );
 };
 export default connect(dvaPropsData, dvaDispatch)(Index);

@@ -907,7 +907,7 @@ const Index = (props) => {
      })
       echoUnit(addDataConsistencyData,'isImport') //初始化量程一致性单位
       form3.resetFields();//初始化参数一致性核查表
-      console.log(addDataConsistencyData)
+      // console.log(addDataConsistencyData)
       //量程一致性和数据一致性 回显数据
       data.consistencyCheckList?.[0] && consistencyEchoData(data.consistencyCheckList, 'isImport')
       //参数一致性核查 回显数据
@@ -1595,6 +1595,7 @@ const Index = (props) => {
   const uploadProps = { //附件上传 
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
     accept: 'image/*',
+    showUploadList: { showPreviewIcon: true, showRemoveIcon: !isCheckUser },
     data: {
       // FileUuid: fileType == 1 ? filesCuid1 : fileType == 2 ? filesCuid2 : filesCuid3(),
       FileUuid: function () {
@@ -3155,9 +3156,9 @@ const Index = (props) => {
                   </Select>
                 </Form.Item>
               </Spin>
-              <Form.Item>
+              {!isCheckUser&&<Form.Item>
                 <Button type='primary' icon={<UploadOutlined />} loading={importDataLoading || echoLoading} onClick={importData}>导入</Button>
-              </Form.Item>
+              </Form.Item>}
 
             </Row>
 
@@ -3317,7 +3318,7 @@ const Index = (props) => {
         onOk={save}
         destroyOnClose
         onCancel={() => { setDetailVisible(false); }}
-        wrapClassName={styles.modalSty}
+        wrapClassName={`${styles.modalSty} ${styles.detailModalSty}`}
         getContainer={false}
         footer={null}
       >

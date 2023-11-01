@@ -90,7 +90,7 @@ const TableTransfer = ({ leftColumns, rightColumns, tableChange, pageNumber, pag
                     columns={columns}
                     dataSource={filteredItems}
                     size="small"
-                    scroll={{ y: 'calc(100vh - 550px)' }}
+                    scroll={{ y: 'calc(100vh - 450px)' }}
                     style={{ pointerEvents: listDisabled ? 'none' : null, paddingBottom: 10 }}
                     onRow={({ key, disabled: itemDisabled }) => ({
                         onClick: () => {
@@ -164,6 +164,7 @@ const rightTableColumns = [
     AllUserLoading: loading.effects['roleinfo/getalluser'],
     UserByRoleIDLoading: loading.effects['roleinfo/getuserbyroleid'],
     RoleInfoOneLoading: loading.effects['roleinfo/getroleinfobyid'],
+    insertrolebyuserLoading: loading.effects['roleinfo/insertrolebyuser'] || false,
     RoleInfoTree: roleinfo.RoleInfoTree,
     RoleInfoOne: roleinfo.RoleInfoOne,
     RolesTreeData: roleinfo.RolesTree,
@@ -181,7 +182,7 @@ const rightTableColumns = [
     addSetRegOrAppRoleLoading: loading.effects['roleinfo/addSetRegOrAppRole'] || false,
     getSetRegOrAppRoleIdLoading: loading.effects['roleinfo/getSetRegOrAppRoleId'] || false,
 
-
+    
 }))
 @Form.create()
 
@@ -251,7 +252,7 @@ class RoleIndex extends Component {
                                             this.setState({
                                                 buttonState: this.state.buttonState,
                                             })
-                                            console.log(this.state.buttonState)
+                                            // console.log(this.state.buttonState)
                                         }}><a>{item.Name}</a></Tag>
                                     },
 
@@ -297,7 +298,7 @@ class RoleIndex extends Component {
                         <span>
                             <Tooltip title="编辑">
                                 <a href="javascript:;" onClick={() => {
-                                    console.log(record.Roles_ID)
+                                    // console.log(record.Roles_ID)
                                     this.props.dispatch({
                                         type: 'roleinfo/getroleinfobyid',
                                         payload: {
@@ -341,7 +342,7 @@ class RoleIndex extends Component {
                             <Divider type="vertical" />
                             <Tooltip title="分配用户">
                                 <a href="javascript:;" style={{ cursor: 'pointer' }} onClick={() => {
-                                    console.log(record.Roles_ID)
+                                    // console.log(record.Roles_ID)
                                     this.setState({
                                         selectedRowKeys: record,
                                     }, () => {
@@ -392,7 +393,7 @@ class RoleIndex extends Component {
             type: 'roleinfo/insertrolebyuser',
             payload: {
                 User_ID: nextTargetKeys,
-                Roles_ID: this.state.selectedRowKeys.key,
+                Roles_ID: this.state.selectedRowKeys&&this.state.selectedRowKeys.key,
             },
         })
         this.setState({ targetKeys: nextTargetKeys });
@@ -409,11 +410,11 @@ class RoleIndex extends Component {
                 AuthorID: this.state.selectedRowKeys.key,
             },
         })
-        console.log(`selected ${value}`);
+        // console.log(`selected ${value}`);
     }
 
     onSelect = (record, selected, selectedRows) => {
-        console.log('record=', record.key);
+        // console.log('record=', record.key);
     }
     // rowSelection =()=> {
 
@@ -472,7 +473,7 @@ class RoleIndex extends Component {
         //     message.error("请选中一行")
         //     return
         // }
-        console.log(this.state.selectedRowKeys)
+        // console.log(this.state.selectedRowKeys)
         const keys = this.state.selectedRowKeys.key
         this.props.dispatch({
             type: 'roleinfo/getalluser',
@@ -487,9 +488,9 @@ class RoleIndex extends Component {
         // console.log("selectID=",this.props.UserByRoleID)
         // console.log("filterArr=",this.props.AllUser)
         const selectId = this.props.UserByRoleID.map(item => item.key)
-        console.log('selectId=', selectId)
+        // console.log('selectId=', selectId)
         const filterArr = this.props.AllUser.filter(item => selectId.indexOf(item.key))
-        console.log('filterArr=', filterArr)
+        // console.log('filterArr=', filterArr)
         this.setState({
             visibleUser: true,
             targetKeys: selectId,
@@ -532,9 +533,9 @@ class RoleIndex extends Component {
     componentWillReceiveProps(nextProps) {
         if (this.props.UserByRoleID !== nextProps.UserByRoleID) {
             const selectId = nextProps.UserByRoleID.map(item => item.key)
-            console.log('selectId=', selectId)
+            // console.log('selectId=', selectId)
             const filterArr = nextProps.AllUser.filter(item => selectId.indexOf(item.key))
-            console.log('filterArr=', filterArr)
+            // console.log('filterArr=', filterArr)
             this.setState({
                 visibleUser: true,
                 targetKeys: selectId,
@@ -651,7 +652,7 @@ class RoleIndex extends Component {
                     },
 
                 })
-                console.log('FormData=', FormData);
+                // console.log('FormData=', FormData);
             }
         });
     };
@@ -822,7 +823,7 @@ class RoleIndex extends Component {
                                     <Table
                                         onRow={record => ({
                                             onClick: event => {
-                                                console.log('onClick=', record)
+                                                // console.log('onClick=', record)
                                                 this.setState({
                                                     selectedRowKeys: record,
                                                     rowKeys: [record.key],
@@ -917,10 +918,10 @@ class RoleIndex extends Component {
                             <Modal
                                 title={`分配用户-${this.state.selectedRowKeys.Roles_Name}`}
                                 visible={this.state.visibleUser}
-                                onOk={this.handleCancel}
                                 destroyOnClose="true"
                                 onCancel={this.handleCancel}
                                 width={'70%'}
+                                footer={null}
                             >
                                 {
                                     this.props.UserByRoleIDLoading ? <Spin
@@ -933,6 +934,7 @@ class RoleIndex extends Component {
                                         }}
                                         size="large"
                                     /> :
+                                    <Spin spinning={this.props.insertrolebyuserLoading}>
                                         <TableTransfer
                                             rowKey={record => record.User_ID}
                                             titles={['待分配用户', '已分配用户']}
@@ -951,6 +953,7 @@ class RoleIndex extends Component {
                                             pageNumber={this.state.pageNumber}
                                             pageSize={this.state.pageSize}
                                         />
+                                    </Spin>
                                 }
                             </Modal>
                             <Modal

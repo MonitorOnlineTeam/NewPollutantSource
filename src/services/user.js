@@ -24,7 +24,6 @@ export async function getMenuData() {
   // ;
   const body = {
     menu_id: sessionStorage.getItem("sysMenuId"),
- 
   };
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetSysMenuByUserID', body);
   // ;

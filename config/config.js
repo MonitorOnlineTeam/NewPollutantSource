@@ -2913,6 +2913,29 @@ export default {
                     },
                   ],
                 },
+                // 异常精准识别核实整改率
+                {
+                  name: 'abnormalVerificaRectificaRate',
+                  path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate',
+                  routes: [
+                    {
+                      path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate',
+                      redirect:'/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                    },
+                    {
+                      // 核实率
+                      name: 'verificaRate',
+                      path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                      component: './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                    },
+                    {
+                      // 整改率
+                      name: 'rectificaRate',
+                      path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
+                      // component: './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
+                    },
+                  ],
+                },
                 // 线索复核
                 {
                   name: 'reCheck',

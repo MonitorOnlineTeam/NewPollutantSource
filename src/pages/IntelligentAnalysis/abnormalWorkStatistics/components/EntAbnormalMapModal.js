@@ -143,15 +143,16 @@ const Index = (props) => {
         size="large"
       />);
     }
+    console.log(abnormalTitle)
     return <div style={{ width: '100%', height: 'calc(100vh - 112px)' }}>
       <Map
         amapkey={config.amapKey}
         //  mapStyle="amap://styles/macaron"
         useAMapUI={!config.offlineMapUrl.domain}
-        center={entAbnormalList ? { longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude } : { longitude: centerlongitude, latitude: centerlatitude }}  //center 地图中心点坐标值
+        center={entAbnormalList && entAbnormalList.longitude  ? { longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude } : { longitude: '116.2529', latitude: '39.5420' }}  //center 地图中心点坐标值
         zoom={11}
       >
-        <Markers markers={taskList ? taskList : []} render={taskList ? renderMarker : ''} />
+        {taskList?.[0]&&<Markers markers={taskList} render={renderMarker} />}
         {/*企业监测点 */}
         {entAbnormalList && entAbnormalList.longitude && <Marker position={{ longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude }} >
           <div style={{ textAlign: 'center', }}>
