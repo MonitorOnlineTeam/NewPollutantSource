@@ -13,7 +13,7 @@ class SaveSessionPage extends PureComponent {
 
   componentDidMount() {
     let sysInfo = JSON.parse(this.props.history.location.query.sysInfo)
-    sessionStorage.setItem("sysMenuId", sysInfo.ID);
+    Cookie.set('sysMenuId', sysInfo.ID);
     sessionStorage.setItem("sysPollutantCodes", sysInfo.CodeList);
     sessionStorage.setItem("sysName", sysInfo.Name);
     this.getMenuList(sysInfo.ID);

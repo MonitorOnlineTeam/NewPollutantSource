@@ -68,7 +68,7 @@ const Model = {
         // }
         if (response.Datas.MenuDatas?.[0]?.parentId == '0') {
           const sysList = response.Datas.MenuDatas[0]; //默认展示和选中第一个系统
-          sessionStorage.setItem('sysMenuId', sysList.id)
+          Cookie.set('sysMenuId', sysList.id);
           const meunList = sysList.children;
           defaultNavigateUrl = meunList?.[0]?.NavigateUrl
           if (meunList?.[0]?.children?.[0]?.children?.[0]) { //三级菜单
@@ -81,6 +81,7 @@ const Model = {
           //右上角系统列表
           const systemList = response.Datas.MenuDatas.map(item => ({ ...item, ID: item.id, Name: item.name, id: undefined, name: undefined, children: undefined })); 
           sessionStorage.setItem('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
+          // Cookie.set('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
           //进入系统
           if (!payload.butRedirct) router.push(defaultNavigateUrl); 
           //生成菜单数组保存 清空路由和路由权限使用

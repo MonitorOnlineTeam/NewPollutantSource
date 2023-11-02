@@ -8,7 +8,7 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'verificaRate',
+  namespace: 'rectificaRate',
   state: {
     tableDatas:[],
     tableLoading:false,
@@ -19,36 +19,29 @@ export default Model.extend({
     tableDatas3:[],
     tableLoading3:false,
     tableTotal3:0,
-    tableDatas4:[],
-    tableLoading4:false,
-    tableTotal4:0,
     queryPar:{},
     exportLoading:false,
     exportLoading2:false,
     exportLoading3:false,
-
   },
   effects: {
-    *getModelWarningChecked({ payload, callback }, { call, put, update }) { //异常精准识别核实率 列表
-      payload.pointType==1?  yield update({tableLoading:true}) : payload.pointType==2? yield update({tableLoading2:true}) : payload.pointType==3? yield update({tableLoading3:true}) : yield update({tableLoading4:true})
-      const result = yield call(payload.pointType==1? services.getModelWarningCheckedForRegion :  payload.pointType==2? services.getModelWarningCheckedForCity: payload.pointType==3? services.getModelWarningCheckedForEnt : services.getModelWarningCheckedForPoint,{...payload,pointType:undefined});
+    *getOperationPlanTaskList({ payload, callback }, { call, put, update }) { //异常精准识别核实率 列表
+      payload.pointType==1?  yield update({operationPlanTaskTableLoading:true}) : payload.pointType==2? yield update({operationPlanTaskTableLoading2:true}) : yield update({operationPlanTaskTableLoading3:true})
+      const result = yield call(services.getOperationPlanTaskList, payload);
       if (result.IsSuccess) {
         if(payload.pointType==1){
           yield update({tableDatas:result.Datas,tableTotal:result.Total,queryPar: payload, });
         }else if(payload.pointType==2){
           yield update({tableDatas2:result.Datas,tableTotal2:result.Total, });
-        }else if(payload.pointType==3){
-          yield update({tableDatas3:result.Datas,tableTotal3:result.Total, });
         }else{
-          yield update({tableDatas4:result.Datas,tableTotal4:result.Total,});
+          yield update({tableDatas3:result.Datas,tableTotal3:result.Total,});
         }
         callback && callback(result.Datas)
     
       } else {
         message.error(result.Message)
       }
-      payload.pointType==1?  yield update({tableLoading:false}) : payload.pointType==2? yield update({tableLoading2:false}) : payload.pointType==3? yield update({tableLoading3:false}) : yield update({tableLoading4:false})
-
+      payload.pointType==1?  yield update({tableLoading:false}) : payload.pointType==2? yield update({tableLoading2:false}) : yield update({tableLoading3:false})
 
     },
     *exportOperationPlanTaskList({ payload, callback }, { call, put, update }) { //异常精准识别核实率 导出

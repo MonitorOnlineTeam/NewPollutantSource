@@ -23,7 +23,7 @@ export async function queryNotices() {
 export async function getMenuData() {
   // ;
   const body = {
-    menu_id: sessionStorage.getItem("sysMenuId"),
+    menu_id: Cookie.get('sysMenuId'),
   };
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetSysMenuByUserID', body);
   // ;

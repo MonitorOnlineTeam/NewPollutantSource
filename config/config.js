@@ -2932,7 +2932,7 @@ export default {
                       // 整改率
                       name: 'rectificaRate',
                       path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
-                      // component: './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
+                      component: './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
                     },
                   ],
                 },

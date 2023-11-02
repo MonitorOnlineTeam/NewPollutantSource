@@ -19,6 +19,7 @@ class AvatarDropdown extends React.Component {
         Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
         Cookie.set('newToken', null);
+        Cookie.remove('sysMenuId');
         sessionStorage.clear();
         dispatch({
           type: 'login/logout',

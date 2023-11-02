@@ -271,9 +271,12 @@ const Index = (props, ref) => {
 
   const [taskRecordDetailVisible, setTaskRecordDetailVisible] = useState(false)
   const [taskID, setTaskID] = useState()
+  const [dgimn, setDgimn] = useState()
+
   const taskDetail = (record) => { //详情
-      setTaskID(record.ID)
       setTaskRecordDetailVisible(true)
+      setTaskID(record.ID)
+      setDgimn(record.DGIMN)
   }
 
   const columns = [
@@ -2298,7 +2301,7 @@ const Index = (props, ref) => {
 
         >
           <TaskRecordDetails 
-            match={{ params: { TaskID: taskID, DGIMN: null } }}
+            match={{ params: { TaskID: taskID, DGIMN: dgimn } }}
             isHomeModal
             hideBreadcrumb
           />

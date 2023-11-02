@@ -11,13 +11,14 @@ import NoticeIconView from './NoticeIconView'
 import { ExpandOutlined, CompressOutlined, UnorderedListOutlined, RollbackOutlined } from '@ant-design/icons';
 import webConfig from '../../../public/webConfig'
 import router from 'umi/router';
+import { getCookie } from '@/utils/requestUtil';
+import Cookie from 'js-cookie';
 
 
 const GlobalHeaderRight = props => {
   const { theme, layout, configInfo, appFlag,  } = props;
-  // console.log(JSON.parse(sessionStorage.getItem('sysList')))
-  const sysPollutantTypeList = JSON.parse(sessionStorage.getItem('sysList'))
-  // console.log("changePwdVisible=",props);
+  const sysPollutantTypeList = sessionStorage.getItem('sysList')? JSON.parse(sessionStorage.getItem('sysList')) : []
+  // const sysPollutantTypeList = Cookie.get('sysList')? JSON.parse(Cookie.get('sysList')) : [];
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {
@@ -57,7 +58,7 @@ const GlobalHeaderRight = props => {
     }
     setIsFullscreen(!isFullscreen);
   };
-  const sysMenuId = sessionStorage.getItem('sysMenuId');
+  const sysMenuId = Cookie.get('sysMenuId');
   const menu = (
     <Menu selectedKeys={[sysMenuId && sysMenuId!='null' && sysMenuId!='undefined'? sysMenuId : sysPollutantTypeList?.[0]?.ID]}>
       {

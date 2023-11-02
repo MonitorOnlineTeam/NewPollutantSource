@@ -34,7 +34,7 @@ const WarningVerify = props => {
     '#91cc75',
     '#ea7ccc',
   ];
-  const { dispatch, warningInfoLoading, modelChartsLoading } = props;
+  const { dispatch, warningInfoLoading, modelChartsLoading,height } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [dataModalVisible, setDataModalVisible] = useState(false);
   const [warningDataDate, setWarningDataDate] = useState();
@@ -439,10 +439,10 @@ const WarningVerify = props => {
   };
   const isShowBack = location.pathname.indexOf('autoLogin') <= -1;
   return (
-    <BreadcrumbWrapper titles=" / 线索核实">
+    <BreadcrumbWrapper titles=" / 线索核实" hideBreadcrumb={props.hideBreadcrumb}>
       <div
         className={styles.WarningVerifyWrapper}
-        style={{ height: isShowBack ? '100%' : 'calc(100vh - 22px)' }}
+        style={{ height: height? height : isShowBack ? '100%'  : 'calc(100vh - 22px)' }}
       >
         <Card
           title="线索详情"
@@ -450,7 +450,7 @@ const WarningVerify = props => {
           loading={warningInfoLoading}
           extra={
             isShowBack ? (
-              <Button onClick={() => router.goBack()}>
+              <Button onClick={() =>props.hideBreadcrumb&&props.onCancel? props.onCancel() : router.goBack()}>
                 <RollbackOutlined />
                 返回上级
               </Button>

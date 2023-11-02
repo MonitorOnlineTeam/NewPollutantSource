@@ -4,9 +4,9 @@
  * 创建时间：2023.10
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Spin, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Spin, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Progress, } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, FileProtectOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -25,10 +25,10 @@ import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import RoleList from '@/components/RoleList'
 import OperationCompanyList from '@/components/OperationCompanyList'
-
+import { ModalNameConversion } from '../../CONST';
+import WarningDetail from '../../../DataAnalyticalWarningModel/Warning/WarningVerify'
 const { TextArea } = Input;
 const { Option } = Select;
-
 const namespace = 'verificaRate'
 
 
@@ -49,6 +49,9 @@ const dvaPropsData = ({ loading, verificaRate }) => ({
   tableLoading3: verificaRate.tableLoading3,
   exportLoading3: verificaRate.exportLoading3,
   queryPar: verificaRate.queryPar,
+  tableDatas4: verificaRate.tableDatas4,
+  tableTotal4: verificaRate.tableTotal4,
+  tableLoading4: verificaRate.tableLoading4,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -59,9 +62,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getOperationPlanTaskList: (payload) => { //列表
+    getModelWarningChecked: (payload) => { //列表
       dispatch({
-        type: `${namespace}/getOperationPlanTaskList`,
+        type: `${namespace}/getModelWarningChecked`,
         payload: payload,
       })
     },
@@ -80,51 +83,81 @@ const Index = (props) => {
 
 
   const [form] = Form.useForm();
-  const [form2] = Form.useForm();
+
+
+  const textStyle = {
+    width: '100%',
+    display: 'inline-block',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  };
 
 
 
 
 
-
-
-
-  const {pollutantType, tableDatas, tableTotal, tableLoading, exportLoading, queryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, tableDatas3, tableTotal3, tableLoading3, exportLoading3, } = props;
+  const { pollutantType, tableDatas, tableTotal, tableLoading, exportLoading, queryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, tableDatas3, tableTotal3, tableLoading3, exportLoading3, tableDatas4, tableTotal4, tableLoading4, } = props;
   useEffect(() => {
     onFinish(null, 1);
   }, []);
 
-  let commonCol = [
+  let commonCol = (type) => [
     {
       title: '报警次数',
-      dataIndex: 'taskCount',
-      key: 'taskCount',
+      dataIndex: 'WarningCount',
+      key: 'WarningCount',
       align: 'center',
       render: (text, record) => {
-        return <a onClick={() => { router.push(`/DataAnalyticalWarningModel/ReCheck/Todo?par=${JSON.stringify(record)}`) }}>{111}</a>
+        return <a onClick={() => { alarmsNum(record, 0, type) }}>{text}</a>
       }
     },
     {
       title: '已报警次数',
-      dataIndex: 'xunjian',
-      key: 'xunjian',
+      dataIndex: 'CheckWarningCount',
+      key: 'CheckWarningCount',
       align: 'center',
+      render: (text, record) => {
+        return <a onClick={() => { alarmsNum(record, 1, type) }}>{text}</a>
+      }
     },
     {
       title: '待核实报警次数',
-      dataIndex: 'jiaozhun',
-      key: 'jiaozhun',
+      dataIndex: 'NoCheckWarningCount',
+      key: 'NoCheckWarningCount',
       align: 'center',
+      render: (text, record) => {
+        return <a onClick={() => { alarmsNum(record, 2, type) }}>{text}</a>
+      }
     },
     {
       title: '核实率',
-      dataIndex: 'weixiu',
-      key: 'weixiu',
+      dataIndex: 'CheckWarningRate',
+      key: 'CheckWarningRate',
+      align: 'center',
+      render: (text, record) => {
+        return <Progress percent={text && text.replace("%", "")} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
+      }
+    },
+
+  ]
+  let regCityCommonCol = (type) => [
+    {
+      title: '精准识别报警企业数',
+      dataIndex: 'CountEnt',
+      key: 'CountEnt',
       align: 'center',
     },
-    
+    {
+      title: '精准识别报警监测点数',
+      dataIndex: 'CountPoint',
+      key: 'CountPoint',
+      align: 'center',
+    },
+    ...commonCol(type),
+
   ]
-  const [regionCode,setRegionCode] = useState()
+  const [regionCode, setRegionCode] = useState()
   const columns = [
     {
       title: '序号',
@@ -135,27 +168,16 @@ const Index = (props) => {
       }
     },
     {
-      title: '行政区',
-      dataIndex: 'regionName',
-      key: 'regionName',
+      title: '省',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
       align: 'center',
       render: (text, record) => {
-        return <a onClick={() => { setPointType(2);setRegionCode(record.regionCode); onFinish({...queryPar,regionCode:record.regionCode}, 2) }}>{text}</a>
+        return <a onClick={() => { setPointType(2); setRegionCode(record.RegionCode); onFinish({ ...queryPar, regionCode: record.RegionCode }, 2) }}>{text}</a>
       }
     },
-    {
-      title: '精准识别报警企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-    },
-    {
-      title: '精准识别报警监测点数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-    },
-    ...commonCol,
+
+    ...regCityCommonCol(1),
   ];
   const columns2 = [
     {
@@ -167,28 +189,22 @@ const Index = (props) => {
       }
     },
     {
-      title: '行政区',
-      dataIndex: 'regionName',
-      key: 'regionName',
+      title: '省',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
+      align: 'center',
+    },
+    {
+      title: '市',
+      dataIndex: 'CityName',
+      key: 'CityName',
       align: 'center',
       render: (text, record) => {
-        const regCode = record.regionCode?record.regionCode : regionCode
-        return <a onClick={() => { setPointType(3);setRegionCode(regCode); onFinish({...queryPar,regionCode:regCode}, 3) }}>{text}</a>
+        const regCode = record.CityCode ? record.CityCode : regionCode
+        return <a onClick={() => { setPointType(3); setRegionCode(regCode); onFinish({ ...queryPar, regionCode: regCode }, 3) }}>{text}</a>
       }
     },
-    {
-      title: '精准识别报警企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-    },
-    {
-      title: '精准识别报警监测点数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-    },
-    ...commonCol,
+    ...regCityCommonCol(2),
   ];
   const columns3 = [
     {
@@ -200,30 +216,173 @@ const Index = (props) => {
       }
     },
     {
-      title: '行政区',
-      dataIndex: 'regionName',
-      key: 'regionName',
+      title: '省',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
       align: 'center',
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { children: text, props: { colSpan: 2 }, };
+        } else {
+          return text
+        }
+      }
+    },
+    {
+      title: '市',
+      dataIndex: 'CityName',
+      key: 'CityName',
+      align: 'center',
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 0 : 1 }, children: text, };
+      }
     },
     {
       title: '企业名称',
-      dataIndex: 'entName',
-      key: 'entName',
+      dataIndex: 'EntName',
+      key: 'EntName',
       align: 'center',
     },
     {
       title: '监测点名称',
-      dataIndex: 'pointName',
-      key: 'pointName',
+      dataIndex: 'PointName',
+      key: 'PointName',
       align: 'center',
     },
     {
       title: '运维负责人',
-      dataIndex: 'pointName',
-      key: 'pointName',
+      dataIndex: 'OperationsUserName',
+      key: 'OperationsUserName',
       align: 'center',
     },
-    ...commonCol,
+    ...commonCol(3),
+  ];
+
+  const [warningDetailVisible,setWarningDetailVisible] = useState(false)
+  const [modelWarningGuid,setModelWarningGuid] = useState()
+  const columns4 = [
+    {
+      title: '编号',
+      dataIndex: 'index',
+      key: 'index',
+      width: 80,
+      ellipsis: true,
+      render: (text, record, index) => {
+        return (pageIndex - 1) * pageSize + index + 1;
+      },
+    },
+    {
+      title: '企业',
+      dataIndex: 'EntName',
+      key: 'EntName',
+      width: 200,
+      ellipsis: true,
+    },
+    {
+      title: '排口',
+      dataIndex: 'PointName',
+      key: 'PointName',
+      width: 200,
+      ellipsis: true,
+    },
+    {
+      title: '场景类型',
+      dataIndex: 'ModelName',
+      key: 'ModelName',
+      width: 180,
+      ellipsis: true,
+      render: (text, record) => {
+        let _text = ModalNameConversion(text);
+        return (
+          <Tooltip title={_text}>
+            <span className={styles.textOverflow}>{_text}</span>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      title: '核实状态',
+      dataIndex: 'StatusName',
+      key: 'StatusName',
+      width: 120,
+    },
+    {
+      title: '运维人核实结果',
+      dataIndex: 'CheckedResult',
+      key: 'CheckedResult',
+      width: 120,
+    },
+    {
+      title: '异常原因',
+      dataIndex: 'UntruthReason',
+      key: 'UntruthReason',
+      width: 200,
+      ellipsis: true,
+      render: (text, record) => {
+        return (
+          <Tooltip title={text}>
+            <span style={textStyle}>{text || '-'}</span>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      title: '描述',
+      dataIndex: 'CheckedDes',
+      key: 'CheckedDes',
+      width: 200,
+      ellipsis: true,
+      render: (text, record) => {
+        return (
+          <Tooltip title={text}>
+            <span style={textStyle}>{text}</span>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      title: '核实人',
+      dataIndex: 'User_Name',
+      key: 'User_Name',
+      width: 180,
+      ellipsis: true,
+    },
+    {
+      title: '核实时间',
+      dataIndex: 'CheckedTime',
+      key: 'CheckedTime',
+      width: 180,
+      ellipsis: true,
+      sorter: (a, b) => moment(a.CheckedTime).valueOf() - moment(b.CheckedTime).valueOf(),
+    },
+    {
+      title: '发现线索时间',
+      dataIndex: 'WarningTime',
+      key: 'WarningTime',
+      width: 180,
+      ellipsis: true,
+      sorter: (a, b) => moment(a.WarningTime).valueOf() - moment(b.WarningTime).valueOf(),
+    },
+    {
+      title: '操作',
+      key: 'handle',
+      width: 100,
+      render: (text, record) => {
+        return (
+          <Tooltip title="查看">
+            <a
+              onClick={e => {
+                setWarningDetailVisible(true)
+                setModelWarningGuid(record.ModelWarningGuid)
+              }}
+            >
+              <DetailIcon style={{ fontSize: 16 }} />
+              {/* 复核 */}
+            </a>
+          </Tooltip>
+        );
+      },
+    },
   ];
   const [pointType, setPointType] = useState(1)
   const onFinish = async (queryPar, pointType) => {  //查询
@@ -232,13 +391,12 @@ const Index = (props) => {
       const par = queryPar ? { ...queryPar, pointType: pointType } :
         {
           ...values,
-          beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-          endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+          bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+          eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
           time: undefined,
           pointType: pointType,
-          pollutantType:pollutantType,
         }
-      props.getOperationPlanTaskList({
+      props.getModelWarningChecked({
         ...par,
       })
     } catch (errorInfo) {
@@ -262,19 +420,38 @@ const Index = (props) => {
 
   const [pageIndex3, setPageIndex3] = useState(1)
   const [pageSize3, setPageSize3] = useState(20)
-  const handleTableChange3 = async (PageIndex, PageSize) => { //企业 分页
+  const handleTableChange3 = (PageIndex, PageSize) => { //企业 分页
     setPageIndex3(PageIndex)
     setPageSize3(PageSize)
-    onFinish({...queryPar,regionCode: regionCode, pageIndex: PageIndex, pageSize: PageSize },3)
+  }
+  const [alarmsNumVisible, setAlarmsNumVisible] = useState(false)
+  const [alarmsNumTitle, setAlarmsNumTitle] = useState(false)
+
+  const alarmsNum = (row, status, type) => { //报警次数
+    setAlarmsNumVisible(true)
+    const alarmName = status == 0 ? '报警次数' : status == 1 ? '已报警次数' : '待核实报警次数'
+    const regCityPointName = type == 1 ? row.RegionName : type == 2 ? row.CityName : row.EntName
+
+    setAlarmsNumTitle(`${regCityPointName} - ${alarmName}`)
+    setPageIndex4(1)
+    const regCode = type == 1 ? row.RegionCode : type == 2 ? row.CityCode || regionCode :  undefined;
+    onFinish({ ...queryPar, regionCode: regCode, dgimn: row.DGIMN, status: status, }, 4)
+
+  }
+  const [pageIndex4, setPageIndex4] = useState(1)
+  const [pageSize4, setPageSize4] = useState(20)
+  const handleTableChange4 = (PageIndex, PageSize) => { //核实次数 分页
+    setPageIndex4(PageIndex)
+    setPageSize4(PageSize)
   }
 
   const exports = (queryPar, pointType) => { //导出
     props.exportOperationPlanTaskList({
       ...queryPar,
-      pointType:pointType,
+      pointType: pointType,
     })
   }
-  const [entCode,setEntCode] = useState()
+  const [entCode, setEntCode] = useState()
   const searchComponents = () => {
     return pointType == 1 ? <Form
       form={form}
@@ -298,7 +475,7 @@ const Index = (props) => {
         <Button type="primary" htmlType='submit' loading={tableLoading} style={{ marginRight: 8 }}>
           查询
        </Button>
-        <Button icon={<ExportOutlined />} onClick={() => { exports(queryPar,1) }} loading={exportLoading} style={{ marginRight: 6 }}>
+        <Button icon={<ExportOutlined />} onClick={() => { exports(queryPar, 1) }} loading={exportLoading} style={{ marginRight: 6 }}>
           导出
             </Button>
       </Form.Item>
@@ -307,7 +484,7 @@ const Index = (props) => {
       pointType == 2 ?
         <Form layout='inline'>
           <Form.Item>
-            <Button icon={<ExportOutlined />} onClick={() => { exports({...queryPar,regionCode:regionCode},2) }} loading={exportLoading2} style={{ marginRight: 6 }}>
+            <Button icon={<ExportOutlined />} onClick={() => { exports({ ...queryPar, regionCode: regionCode }, 2) }} loading={exportLoading2} style={{ marginRight: 6 }}>
               导出
       </Button>
             <Button icon={<RollbackOutlined />} onClick={() => { setPointType(1) }} style={{ marginRight: 6 }}>
@@ -318,10 +495,10 @@ const Index = (props) => {
         :
         <Form layout='inline'>
           <Form.Item >
-            <EntAtmoList onChange={(value)=>{onFinish({...queryPar,regionCode: regionCode, entCode: value},3);setEntCode(value);}} style={{ width: 260 }} />
+            <EntAtmoList onChange={(value) => { onFinish({ ...queryPar, regionCode: regionCode, entCode: value }, 3); setEntCode(value); }} style={{ width: 260 }} />
           </Form.Item>
           <Form.Item>
-            <Button icon={<ExportOutlined />} onClick={() => { exports({...queryPar,regionCode:regionCode,entCode:entCode},3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
+            <Button icon={<ExportOutlined />} onClick={() => { exports({ ...queryPar, regionCode: regionCode, entCode: entCode }, 3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
               导出
           </Button>
             <Button icon={<RollbackOutlined />} onClick={() => { setPointType(2) }} style={{ marginRight: 6 }}>
@@ -332,39 +509,75 @@ const Index = (props) => {
   }
   return (
     <BreadcrumbWrapper>
-    <div className={styles.equipmentManufacturListSty}>
-      <Card title={searchComponents()}>
-        {pointType == 1 ? <SdlTable
-          loading={tableLoading}
-          bordered
-          dataSource={tableDatas}
-          columns={columns}
-          pagination={false}
-        /> :
-          pointType == 2 ? <SdlTable
-            loading={tableLoading2}
+      <div className={styles.equipmentManufacturListSty}>
+        <Card title={searchComponents()}>
+          {pointType == 1 ? <SdlTable
+            loading={tableLoading}
             bordered
-            dataSource={tableDatas2}
-            columns={columns2}
+            dataSource={tableDatas}
+            columns={columns}
             pagination={false}
           /> :
-            <SdlTable
-              loading={tableLoading3}
+            pointType == 2 ? <SdlTable
+              loading={tableLoading2}
               bordered
-              dataSource={tableDatas3}
-              columns={columns3}
-              pagination={{
-                total: tableTotal3,
-                pageSize: pageSize3,
-                current: pageIndex3,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                onChange: handleTableChange3,
-              }}
-            />
-        }
-      </Card>
-    </div>
+              dataSource={tableDatas2}
+              columns={columns2}
+              pagination={false}
+            /> :
+              <SdlTable
+                loading={tableLoading3}
+                bordered
+                dataSource={tableDatas3}
+                columns={columns3}
+                pagination={{
+                  total: tableTotal3,
+                  pageSize: pageSize3,
+                  current: pageIndex3,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange3,
+                }}
+              />
+          }
+        </Card>
+        <Modal //报警次数详情
+          visible={alarmsNumVisible}
+          title={alarmsNumTitle}
+          footer={null}
+          wrapClassName='spreadOverModal'
+          onCancel={() => { setAlarmsNumVisible(false) }}
+          destroyOnClose
+        >
+          <SdlTable
+            loading={tableLoading4}
+            bordered
+            align="center"
+            dataSource={tableDatas4}
+            columns={columns4}
+            pagination={{
+              total: tableTotal4,
+              pageSize: pageSize4,
+              current: pageIndex4,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              onChange: handleTableChange4,
+            }}
+          />
+        </Modal>
+        <Modal //线索详情
+          visible={warningDetailVisible}
+          footer={null}
+          wrapClassName={`spreadOverModal ${styles.warningDetailSty}`}
+          onCancel={() => { setWarningDetailVisible(false) }}
+          destroyOnClose
+          bodyStyle={{
+            padding:0,
+          }}
+        >
+          <WarningDetail  onCancel={() => { setWarningDetailVisible(false) }} match={{ params: { modelNumber: 'all', id: modelWarningGuid } }} hideBreadcrumb isShowBack={false} height='calc(100vh - 52px)'/>
+        </Modal>
+      </div>
     </BreadcrumbWrapper>
   );
 };
