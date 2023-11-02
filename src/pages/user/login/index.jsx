@@ -9,6 +9,8 @@ import FileViewer from 'react-file-viewer';
 import Cookie from 'js-cookie';
 const { Tab, UserName, Password, Mobile, Captcha, VerificaCode, Submit } = LoginComponents;
 import Agreement from '../login/components/Agreement'
+import configToken from '@/config'
+
 @connect(({ userLogin, loading, login }) => ({
   userLogin,
   //submitting: loading.effects['userLogin/login'], //宝武
@@ -34,6 +36,11 @@ class Login extends Component {
   };
   clearData = () =>{ // 系统列表数据和用户信息 清除
     const { dispatch } = this.props;
+    Cookie.remove(configToken.cookieName);
+    Cookie.remove('currentUser');
+    Cookie.remove('newToken');
+    Cookie.remove('sysMenuId');
+    sessionStorage.clear();
     sessionStorage.clear();
     dispatch({type: 'global/updateState', payload: { sysPollutantTypeList: [] } })
   }
