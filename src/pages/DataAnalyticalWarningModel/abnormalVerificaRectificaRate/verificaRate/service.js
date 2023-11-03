@@ -23,10 +23,19 @@ export async function getModelWarningCheckedForPoint(params) {
   const result = post(API.AbnormalModelAnalysisApi.GetModelWarningCheckedForPoint, params);
   return result;
 }
-//异常精准识别核实率 导出
-export async function exportOperationPlanTaskList(params) {
-  const result = post(API.AbnormalModelAnalysisApi.ExportOperationPlanTaskList, params);
+//异常精准识别核实率 行政区 导出
+export async function exportModelWarningCheckedForRegion(params) {
+  const result = post(API.AbnormalModelAnalysisApi.ExportModelWarningCheckedForRegion, params);
   return result;
 }
-
+//异常精准识别核实率 市 导出
+export async function exportModelWarningCheckedForCity(params) {
+  const result = post(API.AbnormalModelAnalysisApi.ExportModelWarningCheckedForCity, params);
+  return result;
+}
+//异常精准识别核实率 市 导出
+export async function exportModelWarningCheckedForEnt(params) {
+  const result = post(API.AbnormalModelAnalysisApi.ExportModelWarningCheckedForEnt, params);
+  return result;
+}
 

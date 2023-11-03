@@ -4,9 +4,9 @@
  * 创建时间：2023.10
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Spin, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio,Progress, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Spin, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Progress, } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, FileProtectOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -25,10 +25,12 @@ import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import RoleList from '@/components/RoleList'
 import OperationCompanyList from '@/components/OperationCompanyList'
+import { ModalNameConversion } from '../../CONST';
+import RectificaRateDetail from './RectificaRateDetail'
+import ImageView from '@/components/ImageView';
 
 const { TextArea } = Input;
 const { Option } = Select;
-
 const namespace = 'rectificaRate'
 
 
@@ -49,6 +51,9 @@ const dvaPropsData = ({ loading, rectificaRate }) => ({
   tableLoading3: rectificaRate.tableLoading3,
   exportLoading3: rectificaRate.exportLoading3,
   queryPar: rectificaRate.queryPar,
+  tableDatas4: rectificaRate.tableDatas4,
+  tableTotal4: rectificaRate.tableTotal4,
+  tableLoading4: rectificaRate.tableLoading4,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -59,15 +64,15 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getOperationPlanTaskList: (payload) => { //列表
+    getModelWarningCheckedRectification: (payload) => { //列表
       dispatch({
-        type: `${namespace}/getOperationPlanTaskList`,
+        type: `${namespace}/getModelWarningCheckedRectification`,
         payload: payload,
       })
     },
-    exportOperationPlanTaskList: (payload) => { //导出
+    exportModelWarningCheckedRectification: (payload) => { //导出
       dispatch({
-        type: `${namespace}/exportOperationPlanTaskList`,
+        type: `${namespace}/exportModelWarningCheckedRectification`,
         payload: payload,
       })
     },
@@ -80,69 +85,83 @@ const Index = (props) => {
 
 
   const [form] = Form.useForm();
-  const [form2] = Form.useForm();
+
+
+  const textStyle = {
+    width: '100%',
+    display: 'inline-block',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  };
 
 
 
 
 
-
-
-
-  const {pollutantType, tableDatas, tableTotal, tableLoading, exportLoading, queryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, tableDatas3, tableTotal3, tableLoading3, exportLoading3, } = props;
+  const { pollutantType, tableDatas, tableTotal, tableLoading, exportLoading, queryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, tableDatas3, tableTotal3, tableLoading3, exportLoading3, tableDatas4, tableTotal4, tableLoading4, } = props;
   useEffect(() => {
     onFinish(null, 1);
   }, []);
 
-  let commonCol = [
+  let commonCol = (type) => [
     {
       title: '已核实次数',
-      dataIndex: 'taskCount',
-      key: 'taskCount',
+      dataIndex: 'RectificationCount',
+      key: 'RectificationCount',
       align: 'center',
       render: (text, record) => {
-        return <a onClick={() => { router.push(`/DataAnalyticalWarningModel/ReCheck/Todo?par=${JSON.stringify(record)}`) }}>{111}</a>
+        return <a onClick={() => { rectificationNum(record, 0, type) }}>{text}</a>
       }
     },
     {
       title: '已整改次数',
-      dataIndex: 'xunjian',
-      key: 'xunjian',
+      dataIndex: 'RectificationCount',
+      key: 'RectificationCount',
       align: 'center',
+      render: (text, record) => {
+        return <a onClick={() => { rectificationNum(record, 1, type) }}>{text}</a>
+      }
     },
     {
       title: '待整改次数',
-      dataIndex: 'jiaozhun',
-      key: 'jiaozhun',
+      dataIndex: 'NoRectificationCount',
+      key: 'NoRectificationCount',
       align: 'center',
+      render: (text, record) => {
+        return <a onClick={() => { rectificationNum(record, 2, type) }}>{text}</a>
+      }
     },
     {
       title: '整改率',
-      dataIndex: 'weixiu',
-      key: 'weixiu',
+      dataIndex: 'RectificationRate',
+      key: 'RectificationRate',
       align: 'center',
       render: (text, record) => {
-        return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+        return record.RegionName=='全部合计'? '-' : <Progress percent={text && text.replace("%", "")} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
       }
     },
-    
+
   ]
-  let regCityCommonCol = [
+  let regCityCommonCol = (type) => [
     {
-      title: '精准识别已核实企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
+      title: '精准识别报警企业数',
+      dataIndex: 'CountEnt',
+      key: 'CountEnt',
       align: 'center',
     },
     {
-      title: '精准识别已核实监测点数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
+      title: '精准识别报警监测点数',
+      dataIndex: 'CountPoint',
+      key: 'CountPoint',
       align: 'center',
     },
-    ...commonCol,
+    ...commonCol(type),
+
   ]
-  const [regionCode,setRegionCode] = useState()
+  const [regionCode, setRegionCode] = useState()
+  const [regionName, setRegionName] = useState()
+
   const columns = [
     {
       title: '序号',
@@ -153,15 +172,17 @@ const Index = (props) => {
       }
     },
     {
-      title: '行政区',
-      dataIndex: 'regionName',
-      key: 'regionName',
+      title: '省',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
       align: 'center',
       render: (text, record) => {
-        return <a onClick={() => { setPointType(2);setRegionCode(record.regionCode); onFinish({...queryPar,regionCode:record.regionCode}, 2) }}>{text}</a>
+        const regCode = record.RegionCode || queryPar.regionCode;
+        return <a onClick={() => { setPointType(2); setRegionCode(regCode); setRegionName(record.RegionName); onFinish({ ...queryPar, regionCode: regCode }, 2) }}>{text}</a>
       }
     },
-    ...regCityCommonCol,
+
+    ...regCityCommonCol(1),
   ];
   const columns2 = [
     {
@@ -173,16 +194,30 @@ const Index = (props) => {
       }
     },
     {
-      title: '行政区',
-      dataIndex: 'regionName',
-      key: 'regionName',
+      title: '省',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
       align: 'center',
-      render: (text, record) => {
-        const regCode = record.regionCode?record.regionCode : regionCode
-        return <a onClick={() => { setPointType(3);setRegionCode(regCode); onFinish({...queryPar,regionCode:regCode}, 3) }}>{text}</a>
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { children: text, props: { colSpan: 0 }, };
+        } else {
+          return text
+        }
       }
     },
-    ...regCityCommonCol,
+    {
+      title: '市',
+      dataIndex: 'CityName',
+      key: 'CityName',
+      align: 'center',
+      render: (text, record, index) => {
+        const regCode = record.CityCode ? record.CityCode : regionCode
+        const element = <a onClick={() => { setPointType(3); setRegionCode(regCode); onFinish({ ...queryPar, regionCode: regCode }, 3) }}>{text}</a>
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: element, };
+      }
+    },
+    ...regCityCommonCol(2),
   ];
   const columns3 = [
     {
@@ -194,30 +229,152 @@ const Index = (props) => {
       }
     },
     {
-      title: '行政区',
-      dataIndex: 'regionName',
-      key: 'regionName',
+      title: '省',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
       align: 'center',
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { children: text, props: { colSpan: 2 }, };
+        } else {
+          return text
+        }
+      }
+    },
+    {
+      title: '市',
+      dataIndex: 'CityName',
+      key: 'CityName',
+      align: 'center',
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 0 : 1 }, children: text, };
+      }
     },
     {
       title: '企业名称',
-      dataIndex: 'entName',
-      key: 'entName',
+      dataIndex: 'EntName',
+      key: 'EntName',
       align: 'center',
     },
     {
       title: '监测点名称',
-      dataIndex: 'pointName',
-      key: 'pointName',
+      dataIndex: 'PointName',
+      key: 'PointName',
       align: 'center',
     },
     {
       title: '运维负责人',
-      dataIndex: 'pointName',
-      key: 'pointName',
+      dataIndex: 'OperationsUserName',
+      key: 'OperationsUserName',
       align: 'center',
     },
-    ...commonCol,
+    ...commonCol(3),
+  ];
+
+  const [rectificaDetailVisible, setRectificaDetailVisible] = useState(false)
+  const [modelRectificaGuid, setModelRectificaGuid] = useState()
+  const [isOpen, setIsOpen] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+  const [imageList, setImageList] = useState([]);
+  const columns4 = [
+    {
+      title: '编号',
+      dataIndex: 'index',
+      key: 'index',
+      width: 80,
+      ellipsis: true,
+      render: (text, record, index) => {
+        return (pageIndex4 - 1) * pageSize4 + index + 1;
+      },
+    },
+    {
+      title: '企业名称',
+      dataIndex: 'EntName',
+      key: 'EntName',
+      width: 200,
+      ellipsis: true,
+    },
+    {
+      title: '监测点名称',
+      dataIndex: 'PointName',
+      key: 'PointName',
+      width: 200,
+      ellipsis: true,
+    },
+    {
+      title: '整改状态',
+      dataIndex: 'RectificationStatusName',
+      key: 'RectificationStatusName',
+      width: 120,
+    },
+    {
+      title: '整改描述',
+      dataIndex: 'RectificationDes',
+      key: 'RectificationDes',
+      width: 200,
+      ellipsis: true,
+      render: (text, record) => {
+        return (
+          <Tooltip title={text}>
+            <span style={textStyle}>{text}</span>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      title: '整改附件',
+      dataIndex: 'RectificationMaterialList',
+      key: 'RectificationMaterialList',
+      width: 100,
+      ellipsis: true,
+      render: (text, record) => {
+        return (
+          text?.[0]&&<a title={text} onClick={()=>{
+            setIsOpen(true)
+            setImageIndex(0)
+            const imgList = text.map(item=>`/${item}`)
+            setImageList(imgList)
+          }}>
+            查看附件
+          </a>
+        );
+      },
+    },
+    {
+      title: '整改人',
+      dataIndex: 'OperationsUserName',
+      key: 'OperationsUserName',
+      width: 180,
+      ellipsis: true,
+    },
+    {
+      title: '整改时间',
+      dataIndex: 'CreateTime',
+      key: 'CreateTime',
+      width: 180,
+      ellipsis: true,
+      sorter: (a, b) => moment(a.CheckedTime).valueOf() - moment(b.CheckedTime).valueOf(),
+    },
+    {
+      title: '操作',
+      key: 'handle',
+      fixed: 'right',
+      width: 100,
+      render: (text, record) => {
+        return (
+          <Tooltip title="查看">
+            <a
+              onClick={e => {
+                setRectificaDetailVisible(true)
+                setModelRectificaGuid(record.ID)
+              }}
+            >
+              <DetailIcon style={{ fontSize: 16 }} />
+            </a>
+          </Tooltip>
+        );
+      },
+    },
   ];
   const [pointType, setPointType] = useState(1)
   const onFinish = async (queryPar, pointType) => {  //查询
@@ -226,13 +383,12 @@ const Index = (props) => {
       const par = queryPar ? { ...queryPar, pointType: pointType } :
         {
           ...values,
-          beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-          endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+          bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+          eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
           time: undefined,
           pointType: pointType,
-          pollutantType:pollutantType,
         }
-      props.getOperationPlanTaskList({
+      props.getModelWarningCheckedRectification({
         ...par,
       })
     } catch (errorInfo) {
@@ -241,23 +397,53 @@ const Index = (props) => {
   }
 
 
-
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
+  const handleTableChange = async (PageIndex, PageSize) => { //行政区 分页
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+  }
+  const [pageIndex2, setPageIndex2] = useState(1)
+  const [pageSize2, setPageSize2] = useState(20)
+  const handleTableChange2 = async (PageIndex, PageSize) => { //市 分页
+    setPageIndex2(PageIndex)
+    setPageSize2(PageSize)
+  }
 
   const [pageIndex3, setPageIndex3] = useState(1)
   const [pageSize3, setPageSize3] = useState(20)
-  const handleTableChange3 = async (PageIndex, PageSize) => { //企业 分页
+  const handleTableChange3 = (PageIndex, PageSize) => { //企业 分页
     setPageIndex3(PageIndex)
     setPageSize3(PageSize)
-    onFinish({...queryPar,regionCode: regionCode, pageIndex: PageIndex, pageSize: PageSize },3)
+  }
+  const [rectificationNumVisible, setRectificationNumVisible] = useState(false)
+  const [rectificationNumTitle, setRectificationNumTitle] = useState(false)
+
+  const rectificationNum = (row, status, type) => { //整改详情
+    setRectificationNumVisible(true)
+    const alarmName = status == 0 ? '已核实次数' : status == 1 ? '已整改次数' : '待整改次数'
+    const regCityPointName = type == 1 ? row.RegionName : type == 2 ? row.CityName == '全部合计' ? regionName : row.CityName : row.EntName
+
+    setRectificationNumTitle(`${regCityPointName} - ${alarmName}`)
+    setPageIndex4(1)
+    const regCode = type == 1 ? row.RegionCode : type == 2 ? row.CityCode || regionCode : undefined;
+    onFinish({ ...queryPar, regionCode: regCode, dgimn: row.DGIMN && row.DGIMN, status: status, }, 4)
+
+  }
+  const [pageIndex4, setPageIndex4] = useState(1)
+  const [pageSize4, setPageSize4] = useState(20)
+  const handleTableChange4 = (PageIndex, PageSize) => { //核实次数 分页
+    setPageIndex4(PageIndex)
+    setPageSize4(PageSize)
   }
 
   const exports = (queryPar, pointType) => { //导出
-    props.exportOperationPlanTaskList({
+    props.exportModelWarningCheckedRectification({
       ...queryPar,
-      pointType:pointType,
+      pointType: pointType,
     })
   }
-  const [entCode,setEntCode] = useState()
+  const [entCode, setEntCode] = useState()
   const searchComponents = () => {
     return pointType == 1 ? <Form
       form={form}
@@ -275,13 +461,13 @@ const Index = (props) => {
         }} />
       </Form.Item>
       <Form.Item label="行政区" name="regionCode">
-        <RegionList style={{ width: 170 }} />
+        <RegionList style={{ width: 170 }} placeholder='请输入' />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType='submit' loading={tableLoading} style={{ marginRight: 8 }}>
           查询
        </Button>
-        <Button icon={<ExportOutlined />} onClick={() => { exports(queryPar,1) }} loading={exportLoading} style={{ marginRight: 6 }}>
+        <Button icon={<ExportOutlined />} onClick={() => { exports(queryPar, 1) }} loading={exportLoading} style={{ marginRight: 6 }}>
           导出
             </Button>
       </Form.Item>
@@ -290,7 +476,7 @@ const Index = (props) => {
       pointType == 2 ?
         <Form layout='inline'>
           <Form.Item>
-            <Button icon={<ExportOutlined />} onClick={() => { exports({...queryPar,regionCode:regionCode},2) }} loading={exportLoading2} style={{ marginRight: 6 }}>
+            <Button icon={<ExportOutlined />} onClick={() => { exports({ ...queryPar, regionCode: regionCode }, 2) }} loading={exportLoading2} style={{ marginRight: 6 }}>
               导出
       </Button>
             <Button icon={<RollbackOutlined />} onClick={() => { setPointType(1) }} style={{ marginRight: 6 }}>
@@ -301,10 +487,10 @@ const Index = (props) => {
         :
         <Form layout='inline'>
           <Form.Item >
-            <EntAtmoList onChange={(value)=>{onFinish({...queryPar,regionCode: regionCode, entCode: value},3);setEntCode(value);}} style={{ width: 260 }} />
+            <EntAtmoList onChange={(value) => { onFinish({ ...queryPar, regionCode: regionCode, entCode: value }, 3); setEntCode(value); }} style={{ width: 260 }} />
           </Form.Item>
           <Form.Item>
-            <Button icon={<ExportOutlined />} onClick={() => { exports({...queryPar,regionCode:regionCode,entCode:entCode},3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
+            <Button icon={<ExportOutlined />} onClick={() => { exports({ ...queryPar, regionCode: regionCode, entCode: entCode }, 3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
               导出
           </Button>
             <Button icon={<RollbackOutlined />} onClick={() => { setPointType(2) }} style={{ marginRight: 6 }}>
@@ -315,63 +501,84 @@ const Index = (props) => {
   }
   return (
     <BreadcrumbWrapper>
-    <div className={styles.equipmentManufacturListSty}>
-      <Card title={searchComponents()}>
-        {pointType == 1 ? <SdlTable
-          loading={tableLoading}
-          bordered
-          dataSource={tableDatas}
-          columns={columns}
-          pagination={false}
-        /> :
-          pointType == 2 ? <SdlTable
-            loading={tableLoading2}
+      <div className={styles.equipmentManufacturListSty}>
+        <Card title={searchComponents()}>
+          {pointType == 1 ? <SdlTable
+            loading={tableLoading}
             bordered
-            dataSource={tableDatas2}
-            columns={columns2}
+            dataSource={tableDatas}
+            columns={columns}
             pagination={false}
           /> :
-            <SdlTable
-              loading={tableLoading3}
+            pointType == 2 ? <SdlTable
+              loading={tableLoading2}
               bordered
-              dataSource={tableDatas3}
-              columns={columns3}
-              pagination={{
-                total: tableTotal3,
-                pageSize: pageSize3,
-                current: pageIndex3,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                onChange: handleTableChange3,
-              }}
-            />
-        }
-      </Card>
-      <Modal //详情
-        visible={detailVisible}
-        title={'详情'}
-        footer={null}
-        wrapClassName='spreadOverModal'
-        className={styles.fromModal}
-        onCancel={() => { setDetailVisible(false) }}
-        destroyOnClose
-      >
-            <SdlTable
-              loading={tableLoading3}
-              bordered
-              dataSource={tableDatas3}
-              columns={columns3}
-              pagination={{
-                total: tableTotal3,
-                pageSize: pageSize3,
-                current: pageIndex3,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                onChange: handleTableChange3,
-              }}
-            />
-      </Modal>
-    </div>
+              dataSource={tableDatas2}
+              columns={columns2}
+              pagination={false}
+            /> :
+              <SdlTable
+                loading={tableLoading3}
+                bordered
+                dataSource={tableDatas3}
+                columns={columns3}
+                pagination={{
+                  total: tableTotal3,
+                  pageSize: pageSize3,
+                  current: pageIndex3,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  onChange: handleTableChange3,
+                }}
+              />
+          }
+        </Card>
+        <Modal //整改详情
+          visible={rectificationNumVisible}
+          title={rectificationNumTitle}
+          footer={null}
+          wrapClassName='spreadOverModal'
+          onCancel={() => { setRectificationNumVisible(false) }}
+          destroyOnClose
+        >
+          <SdlTable
+            loading={tableLoading4}
+            bordered
+            align="center"
+            dataSource={tableDatas4}
+            columns={columns4}
+            pagination={{
+              total: tableTotal4,
+              pageSize: pageSize4,
+              current: pageIndex4,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              onChange: handleTableChange4,
+            }}
+          />
+        </Modal>
+        <Modal //整改详情
+          visible={rectificaDetailVisible}
+          footer={null}
+          wrapClassName={`spreadOverModal ${styles.rectificaDetailSty}`}
+          onCancel={() => { setRectificaDetailVisible(false) }}
+          destroyOnClose
+          bodyStyle={{
+            padding: 0,
+          }}
+        >
+          <RectificaRateDetail  onCancel={() => { setRectificaDetailVisible(false) }} match={{ params: { id: modelRectificaGuid } }} hideBreadcrumb  height='calc(100vh - 52px)' />
+        </Modal>
+        {/* 查看附件弹窗 */}
+        <ImageView
+          isOpen={isOpen}
+          images={imageList?.length ? imageList : []}
+          imageIndex={imageIndex}
+          onCloseRequest={() => {
+            setIsOpen(false);
+          }}
+        />
+      </div>
     </BreadcrumbWrapper>
   );
 };

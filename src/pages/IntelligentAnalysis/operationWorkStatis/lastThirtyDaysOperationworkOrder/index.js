@@ -198,7 +198,8 @@ const Index = (props) => {
       key: 'regionName',
       align: 'center',
       render: (text, record) => {
-        return <a onClick={() => { setPointType(2);setRegionCode(record.regionCode); onFinish({...queryPar,regionCode:record.regionCode}, 2) }}>{text}</a>
+        const regCode = record.RegionCode || queryPar.regionCode;
+        return <a onClick={() => { setPointType(2);setRegionCode(regCode); onFinish({...queryPar,regionCode:regCode}, 2) }}>{text}</a>
       }
     },
     {
@@ -334,7 +335,7 @@ const Index = (props) => {
         }} />
       </Form.Item>
       <Form.Item label="行政区" name="regionCode">
-        <RegionList style={{ width: 170 }} />
+        <RegionList style={{ width: 170 }} placeholder='请输入'/>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType='submit' loading={tableLoading} style={{ marginRight: 8 }}>

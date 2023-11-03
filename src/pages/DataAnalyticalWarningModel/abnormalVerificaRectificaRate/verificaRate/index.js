@@ -68,9 +68,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    exportOperationPlanTaskList: (payload) => { //导出
+    exportModelWarningChecked: (payload) => { //导出
       dispatch({
-        type: `${namespace}/exportOperationPlanTaskList`,
+        type: `${namespace}/exportModelWarningChecked`,
         payload: payload,
       })
     },
@@ -136,7 +136,7 @@ const Index = (props) => {
       key: 'CheckWarningRate',
       align: 'center',
       render: (text, record) => {
-        return <Progress percent={text && text.replace("%", "")} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
+        return record.RegionName=='全部合计'? '-' : <Progress percent={text && text.replace("%", "")} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
       }
     },
 
@@ -158,6 +158,8 @@ const Index = (props) => {
 
   ]
   const [regionCode, setRegionCode] = useState()
+  const [regionName, setRegionName] = useState()
+
   const columns = [
     {
       title: '序号',
@@ -173,7 +175,8 @@ const Index = (props) => {
       key: 'RegionName',
       align: 'center',
       render: (text, record) => {
-        return <a onClick={() => { setPointType(2); setRegionCode(record.RegionCode); onFinish({ ...queryPar, regionCode: record.RegionCode }, 2) }}>{text}</a>
+        const regCode = record.RegionCode || queryPar.regionCode;
+        return <a onClick={() => { setPointType(2); setRegionCode(regCode);setRegionName(record.RegionName); onFinish({ ...queryPar, regionCode: regCode  }, 2) }}>{text}</a>
       }
     },
 
@@ -193,15 +196,23 @@ const Index = (props) => {
       dataIndex: 'RegionName',
       key: 'RegionName',
       align: 'center',
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { children: text, props: { colSpan: 0 }, };
+        } else {
+          return text
+        }
+      }
     },
     {
       title: '市',
       dataIndex: 'CityName',
       key: 'CityName',
       align: 'center',
-      render: (text, record) => {
+      render: (text, record, index) => {
         const regCode = record.CityCode ? record.CityCode : regionCode
-        return <a onClick={() => { setPointType(3); setRegionCode(regCode); onFinish({ ...queryPar, regionCode: regCode }, 3) }}>{text}</a>
+        const element = <a onClick={() => { setPointType(3); setRegionCode(regCode); onFinish({ ...queryPar, regionCode: regCode }, 3) }}>{text}</a>
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: element, };
       }
     },
     ...regCityCommonCol(2),
@@ -220,22 +231,12 @@ const Index = (props) => {
       dataIndex: 'RegionName',
       key: 'RegionName',
       align: 'center',
-      render: (text, record, index) => {
-        if (text == '全部合计') {
-          return { children: text, props: { colSpan: 2 }, };
-        } else {
-          return text
-        }
-      }
     },
     {
       title: '市',
       dataIndex: 'CityName',
       key: 'CityName',
       align: 'center',
-      render: (text, record, index) => {
-        return { props: { colSpan: text == '全部合计' ? 0 : 1 }, children: text, };
-      }
     },
     {
       title: '企业名称',
@@ -268,7 +269,7 @@ const Index = (props) => {
       width: 80,
       ellipsis: true,
       render: (text, record, index) => {
-        return (pageIndex - 1) * pageSize + index + 1;
+        return (pageIndex4 - 1) * pageSize4 + index + 1;
       },
     },
     {
@@ -366,6 +367,7 @@ const Index = (props) => {
     {
       title: '操作',
       key: 'handle',
+      fixed:'right',
       width: 100,
       render: (text, record) => {
         return (
@@ -377,7 +379,6 @@ const Index = (props) => {
               }}
             >
               <DetailIcon style={{ fontSize: 16 }} />
-              {/* 复核 */}
             </a>
           </Tooltip>
         );
@@ -427,15 +428,15 @@ const Index = (props) => {
   const [alarmsNumVisible, setAlarmsNumVisible] = useState(false)
   const [alarmsNumTitle, setAlarmsNumTitle] = useState(false)
 
-  const alarmsNum = (row, status, type) => { //报警次数
+  const alarmsNum = (row, status, type) => { //报警次数详情
     setAlarmsNumVisible(true)
     const alarmName = status == 0 ? '报警次数' : status == 1 ? '已报警次数' : '待核实报警次数'
-    const regCityPointName = type == 1 ? row.RegionName : type == 2 ? row.CityName : row.EntName
+    const regCityPointName = type == 1 ? row.RegionName : type == 2 ? row.CityName=='全部合计'? regionName : row.CityName : row.EntName
 
     setAlarmsNumTitle(`${regCityPointName} - ${alarmName}`)
     setPageIndex4(1)
     const regCode = type == 1 ? row.RegionCode : type == 2 ? row.CityCode || regionCode :  undefined;
-    onFinish({ ...queryPar, regionCode: regCode, dgimn: row.DGIMN, status: status, }, 4)
+    onFinish({ ...queryPar, regionCode: regCode, dgimn: row.DGIMN&&row.DGIMN, status: status, }, 4)
 
   }
   const [pageIndex4, setPageIndex4] = useState(1)
@@ -446,7 +447,7 @@ const Index = (props) => {
   }
 
   const exports = (queryPar, pointType) => { //导出
-    props.exportOperationPlanTaskList({
+    props.exportModelWarningChecked({
       ...queryPar,
       pointType: pointType,
     })
@@ -469,7 +470,7 @@ const Index = (props) => {
         }} />
       </Form.Item>
       <Form.Item label="行政区" name="regionCode">
-        <RegionList style={{ width: 170 }} />
+        <RegionList style={{ width: 170 }} placeholder='请输入'/>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType='submit' loading={tableLoading} style={{ marginRight: 8 }}>
@@ -575,7 +576,7 @@ const Index = (props) => {
             padding:0,
           }}
         >
-          <WarningDetail  onCancel={() => { setWarningDetailVisible(false) }} match={{ params: { modelNumber: 'all', id: modelWarningGuid } }} hideBreadcrumb isShowBack={false} height='calc(100vh - 52px)'/>
+          <WarningDetail  onCancel={() => { setWarningDetailVisible(false) }} match={{ params: { modelNumber: 'all', id: modelWarningGuid } }} hideBreadcrumb  height='calc(100vh - 52px)'/>
         </Modal>
       </div>
     </BreadcrumbWrapper>

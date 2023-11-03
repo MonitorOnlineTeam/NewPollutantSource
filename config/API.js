@@ -49,11 +49,29 @@ export const API = {
     //监测点 列表
     GetModelWarningCheckedForPoint: before + '/Warning/GetModelWarningCheckedForPoint',
     //行政区 导出
-    ExportWarningCheckedForRegion: before + '/Warning/ExportModelWarningCheckedForRegion',
+    ExportModelWarningCheckedForRegion: before + '/Warning/ExportModelWarningCheckedForRegion',
     //市 导出
     ExportModelWarningCheckedForCity: before + '/Warning/ExportModelWarningCheckedForCity',
     //企业 导出
     ExportModelWarningCheckedForEnt: before + '/Warning/ExportModelWarningCheckedForEnt',
+    //异常精准识别整改率
+    //行政区 列表
+    GetModelWarningCheckedRectificationForRegion: before + '/Warning/GetModelWarningCheckedRectificationForRegion',
+    //市 列表
+    GetModelWarningCheckedRectificationForCity: before + '/Warning/GetModelWarningCheckedRectificationForCity',
+    //企业 列表
+    GetModelWarningCheckedRectificationForEnt: before + '/Warning/GetModelWarningCheckedRectificationForEnt',
+    //监测点 列表
+    GetModelWarningCheckedRectificationForPoint: before + '/Warning/GetModelWarningCheckedRectificationForPoint',
+    //整改详情
+    GetCheckedRectificationApprovals: before + '/Warning/GetCheckedRectificationApprovals',
+    //行政区 导出
+    ExportModelWarningCheckedRectificationForRegion: before + '/Warning/ExportModelWarningCheckedRectificationForRegion',
+    //市 导出
+    ExportModelWarningCheckedRectificationForCity: before + '/Warning/ExportModelWarningCheckedRectificationForCity',
+    //企业 导出
+    ExportModelWarningCheckedRectificationForEnt: before + '/Warning/ExportModelWarningCheckedRectificationForEnt',
+  
   },
 
   /*监督核查 Api */

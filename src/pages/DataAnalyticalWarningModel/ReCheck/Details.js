@@ -350,46 +350,6 @@ const ReCheckDetails = props => {
             </Descriptions.Item>
           </Descriptions>
         </Card>
-        <Card title="核实整改" bodyStyle={{ padding: '16px 24px' }} loading={loading}>
-          <Descriptions column={4}>
-            <Descriptions.Item label="整改状态">
-              <Tag
-                color={
-                  warningInfo.Status === 3
-                    ? 'success'
-                    : warningInfo.Status === 2
-                    ? 'orange'
-                    : 'volcano'
-                }
-              >
-                {warningInfo.StatusName}
-              </Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="整改人">{warningInfo.CheckedUser || '-'}</Descriptions.Item>
-            <Descriptions.Item span={1} label="整改时间">
-              {warningInfo.CheckedTime || '-'}
-            </Descriptions.Item>
-            <Descriptions.Item span={4} label="整改描述">
-              {warningInfo.CheckedDes || '-'}
-            </Descriptions.Item>
-            <Descriptions.Item span={4} label="整改材料">
-              {fileList.length ? (
-                <Upload
-                  listType="picture-card"
-                  fileList={fileList}
-                  showUploadList={{ showPreviewIcon: true, showRemoveIcon: false }}
-                  onPreview={file => {
-                    setViewFileList(fileList);
-                    setIsOpen(true);
-                    setImageIndex(file.index);
-                  }}
-                />
-              ) : (
-                '-'
-              )}
-            </Descriptions.Item>
-          </Descriptions>
-        </Card>
         <Card bodyStyle={{ padding: '16px 24px' }} title="处理流程" loading={loading}>
           <Timeline style={{ marginTop: 20 }}>
             {processData.map(item => {

@@ -30,7 +30,6 @@ class SiteDetailsModal extends PureComponent {
     super(props);
     this.state = {
       currentKey: 1,
-      itemTitle: "监控数据",
     };
   }
 
@@ -81,7 +80,7 @@ class SiteDetailsModal extends PureComponent {
   }
 
   footerItemClick = (key) => {
-    this.setState({ currentKey: key + 1, itemTitle: tabList[key] })
+    this.setState({ currentKey: key + 1 })
   }
 
   renderModalFooter = () => {
@@ -236,8 +235,8 @@ class SiteDetailsModal extends PureComponent {
     }</>
   }
   render() {
-    const { data, infoWindowData } = this.props;
-    const { currentKey, itemTitle } = this.state;
+    const { data, infoWindowData, } = this.props;
+    const { currentKey } = this.state;
     if (data.PollutantType === "5") {
       tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
     }
@@ -247,7 +246,7 @@ class SiteDetailsModal extends PureComponent {
     }
     return (
       <Modal
-        title={`${data.ParentName} - ${itemTitle}`}
+        title={`${data.ParentName} - ${data.PointName}`}
         className={styles.detailsModal}
         destroyOnClose
         // width="90%"
