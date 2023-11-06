@@ -53,7 +53,7 @@ export default Model.extend({
     },
     *exportModelWarningChecked({ payload, callback }, { call, put, update }) { //异常精准识别核实率 导出
       payload.pointType==1?  yield update({exportLoading:true}) : payload.pointType==2? yield update({exportLoading2:true}) : yield update({exportLoading3:true})
-      const result = yield call(payload.pointType==1? services.exportModelWarningCheckedForRegion :  payload.pointType==2? services.exportModelWarningCheckedForCity: services.getModelWarningCheckedForEnt,{...payload,pointType:undefined});
+      const result = yield call(payload.pointType==1? services.exportModelWarningCheckedForRegion :  payload.pointType==2? services.exportModelWarningCheckedForCity: services.exportModelWarningCheckedForEnt,{...payload,pointType:undefined});
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`${result.Datas}`);

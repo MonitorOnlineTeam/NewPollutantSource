@@ -106,7 +106,7 @@ const Index = (props) => {
 
   let commonCol = (type) => [
     {
-      title: '已核实次数',
+      title: '整改问题数',
       dataIndex: 'RectificationCount',
       key: 'RectificationCount',
       align: 'center',
@@ -115,16 +115,16 @@ const Index = (props) => {
       }
     },
     {
-      title: '已整改次数',
-      dataIndex: 'RectificationCount',
-      key: 'RectificationCount',
+      title: '已整改问题数',
+      dataIndex: 'YesRectificationCount',
+      key: 'YesRectificationCount',
       align: 'center',
       render: (text, record) => {
         return <a onClick={() => { rectificationNum(record, 1, type) }}>{text}</a>
       }
     },
     {
-      title: '待整改次数',
+      title: '待整改问题数',
       dataIndex: 'NoRectificationCount',
       key: 'NoRectificationCount',
       align: 'center',
@@ -184,6 +184,7 @@ const Index = (props) => {
 
     ...regCityCommonCol(1),
   ];
+  const [cityCode, setCityCode] = useState()
   const columns2 = [
     {
       title: '序号',
@@ -212,8 +213,8 @@ const Index = (props) => {
       key: 'CityName',
       align: 'center',
       render: (text, record, index) => {
-        const regCode = record.CityCode ? record.CityCode : regionCode
-        const element = <a onClick={() => { setPointType(3); setRegionCode(regCode); onFinish({ ...queryPar, regionCode: regCode }, 3) }}>{text}</a>
+        const cityCode = record.CityCode ? record.CityCode : regionCode
+        const element = <a onClick={() => { setPointType(3); setCityCode(cityCode); onFinish({ ...queryPar, regionCode: cityCode }, 3) }}>{text}</a>
         return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: element, };
       }
     },
@@ -306,6 +307,7 @@ const Index = (props) => {
       dataIndex: 'RectificationStatusName',
       key: 'RectificationStatusName',
       width: 120,
+      ellipsis: true,
     },
     {
       title: '整改描述',
@@ -421,7 +423,7 @@ const Index = (props) => {
 
   const rectificationNum = (row, status, type) => { //整改详情
     setRectificationNumVisible(true)
-    const alarmName = status == 0 ? '已核实次数' : status == 1 ? '已整改次数' : '待整改次数'
+    const alarmName = status == 0 ? '整改问题数' : status == 1 ? '已整改问题数' : '待整改问题数'
     const regCityPointName = type == 1 ? row.RegionName : type == 2 ? row.CityName == '全部合计' ? regionName : row.CityName : row.EntName
 
     setRectificationNumTitle(`${regCityPointName} - ${alarmName}`)
@@ -487,10 +489,10 @@ const Index = (props) => {
         :
         <Form layout='inline'>
           <Form.Item >
-            <EntAtmoList onChange={(value) => { onFinish({ ...queryPar, regionCode: regionCode, entCode: value }, 3); setEntCode(value); }} style={{ width: 260 }} />
+            <EntAtmoList onChange={(value) => { onFinish({ ...queryPar, regionCode: cityCode, entCode: value }, 3); setEntCode(value); }} style={{ width: 260 }} />
           </Form.Item>
           <Form.Item>
-            <Button icon={<ExportOutlined />} onClick={() => { exports({ ...queryPar, regionCode: regionCode, entCode: entCode }, 3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
+            <Button icon={<ExportOutlined />} onClick={() => { exports({ ...queryPar, regionCode: cityCode, entCode: entCode }, 3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
               导出
           </Button>
             <Button icon={<RollbackOutlined />} onClick={() => { setPointType(2) }} style={{ marginRight: 6 }}>
@@ -506,6 +508,7 @@ const Index = (props) => {
           {pointType == 1 ? <SdlTable
             loading={tableLoading}
             bordered
+            resizable
             dataSource={tableDatas}
             columns={columns}
             pagination={false}
@@ -513,6 +516,7 @@ const Index = (props) => {
             pointType == 2 ? <SdlTable
               loading={tableLoading2}
               bordered
+              resizable
               dataSource={tableDatas2}
               columns={columns2}
               pagination={false}
@@ -520,6 +524,7 @@ const Index = (props) => {
               <SdlTable
                 loading={tableLoading3}
                 bordered
+                resizable
                 dataSource={tableDatas3}
                 columns={columns3}
                 pagination={{
@@ -544,6 +549,7 @@ const Index = (props) => {
           <SdlTable
             loading={tableLoading4}
             bordered
+            resizable
             align="center"
             dataSource={tableDatas4}
             columns={columns4}

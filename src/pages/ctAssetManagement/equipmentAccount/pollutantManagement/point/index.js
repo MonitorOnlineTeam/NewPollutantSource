@@ -412,12 +412,12 @@ export default class Index extends Component {
           </FormItem>
         </Col>
         <Col span={12}>
-          <FormItem label="脱销工艺类型">
+          <FormItem label="脱硝工艺类型">
             {isDetail ? pointData['dbo.T_Bas_CTCommonPoint.DenitrationProcess_Name'] : getFieldDecorator("denitrationProcess", {
-              rules: [{ required: true, message: "请选择脱销工艺类型", }],
+              rules: [{ required: true, message: "请选择脱硝工艺类型", }],
             })(
               <Select placeholder='请选择' allowClear>
-                <Option key={'1'} value={'1'}>脱销工艺类型1</Option>
+                <Option key={'1'} value={'1'}>脱硝工艺类型1</Option>
               </Select>
             )}
           </FormItem>

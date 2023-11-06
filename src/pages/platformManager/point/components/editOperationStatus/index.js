@@ -154,15 +154,19 @@ const Index = (props) => {
         PointCode:data['dbo.T_Bas_CommonPoint.PointCode']
       },()=>{
         setPageIndex(1)
-        form.resetFields();
-        setStatus(values.Status==='0'? '1' : '0')
-        setStatusFlag(values.Status)
         props.getOprationStatusList({PointCode:data['dbo.T_Bas_CommonPoint.PointCode'],pageIndex:1,PageSize:pageSize},()=>{
+          // form.resetFields();
+          // setStatus(values.Status==='0'? '1' : '0')
+          // setStatusFlag(values.Status)
           props.onCancel();
         })
         props.getAutoFormData({ //刷新监测点
           configId: pointConfigId,
           searchParams: pointDataWhere,
+          otherParams: {
+            SortFileds: 'Sort',
+            IsAsc: true,
+          }
         })
       })
     } catch (errorInfo) {

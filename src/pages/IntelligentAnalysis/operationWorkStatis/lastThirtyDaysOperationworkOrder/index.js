@@ -198,7 +198,7 @@ const Index = (props) => {
       key: 'regionName',
       align: 'center',
       render: (text, record) => {
-        const regCode = record.RegionCode || queryPar.regionCode;
+        const regCode = record.regionCode || queryPar.regionCode;
         return <a onClick={() => { setPointType(2);setRegionCode(regCode); onFinish({...queryPar,regionCode:regCode}, 2) }}>{text}</a>
       }
     },
@@ -211,6 +211,7 @@ const Index = (props) => {
     },
     ...commonCol,
   ];
+  const [cityCode, setCityCode] = useState()
   const columns2 = [
     {
       title: '序号',
@@ -226,8 +227,8 @@ const Index = (props) => {
       key: 'regionName',
       align: 'center',
       render: (text, record) => {
-        const regCode = record.regionCode?record.regionCode : regionCode
-        return <a onClick={() => { setPointType(3);setRegionCode(regCode); onFinish({...queryPar,regionCode:regCode}, 3) }}>{text}</a>
+        const cityCode = record.regionCode?record.regionCode : regionCode
+        return <a onClick={() => { setPointType(3);setCityCode(cityCode); onFinish({...queryPar,regionCode:cityCode}, 3) }}>{text}</a>
       }
     },
     {
@@ -308,7 +309,7 @@ const Index = (props) => {
   const handleTableChange3 = async (PageIndex, PageSize) => { //企业 分页
     setPageIndex3(PageIndex)
     setPageSize3(PageSize)
-    onFinish({...queryPar,regionCode: regionCode, pageIndex: PageIndex, pageSize: PageSize },3)
+    onFinish({...queryPar,regionCode: cityCode, pageIndex: PageIndex, pageSize: PageSize },3)
   }
 
   const exports = (queryPar, pointType) => { //导出
@@ -361,10 +362,10 @@ const Index = (props) => {
         :
         <Form layout='inline'>
           <Form.Item >
-            <EntAtmoList onChange={(value)=>{onFinish({...queryPar,regionCode: regionCode, entCode: value},3);setEntCode(value);}} style={{ width: 260 }} />
+            <EntAtmoList onChange={(value)=>{onFinish({...queryPar,regionCode: cityCode, entCode: value},3);setEntCode(value);}} style={{ width: 260 }} />
           </Form.Item>
           <Form.Item>
-            <Button icon={<ExportOutlined />} onClick={() => { exports({...queryPar,regionCode:regionCode,entCode:entCode},3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
+            <Button icon={<ExportOutlined />} onClick={() => { exports({...queryPar,regionCode:cityCode,entCode:entCode},3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
               导出
           </Button>
             <Button icon={<RollbackOutlined />} onClick={() => { setPointType(2) }} style={{ marginRight: 6 }}>

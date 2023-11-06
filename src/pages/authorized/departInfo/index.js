@@ -1331,8 +1331,9 @@ class DepartIndex extends Component {
     //拖拽事件
     const { departInfoTree } = this.state;
 
-    let data = [...departInfoTree];
-    let lastData = this.recursion(data, dragIndex, hoverIndex);
+    let data = departInfoTree;
+    let lastData = this.recursion(departInfoTree, dragIndex, hoverIndex);
+    console.log(lastData)
     this.setState(
       update(this.state, {
         departInfoTree: {
@@ -1340,7 +1341,8 @@ class DepartIndex extends Component {
         },
       }),
     );
-    // let lastDatas = update(this.state.departInfoTree, {$splice:[[departInfoTree , lastData]]});
+    // let lastDatas = update(data, {$splice:[[departInfoTree , lastData]]});
+    // console.log(lastDatas)
     //  this.setState({
     //   departInfoTree:lastDatas
     //  })
@@ -1367,7 +1369,7 @@ class DepartIndex extends Component {
         if (currentData && findData && currentData.flag === findData.flag) {
           //在同一个树下拖拽
           data[currentIndexs] = data.splice(findIndexs, 1, data[currentIndexs])[0]; //先删除替换  返回的删除元素再赋值到之前的位置
-          console.log(findIndexs, data[findIndexs]);
+          // console.log(findIndexs, data[findIndexs]);
           break; //拖拽完成后直接跳转循环 多次循环会导致错乱
         }
         totalData.push({
@@ -1537,9 +1539,9 @@ class DepartIndex extends Component {
                 onClick={() => this.settingOperationGroup()}
                 style={{ margin: '0 8px' }}
               >设置运维小组</Button>}
-              {/* <Button type="primary"  style={{marginRight:8}} onClick={this.updateSort}>
+              <Button type="primary"  style={{marginRight:8}} onClick={this.updateSort}>
                 {sortTitle}
-              </Button> */}
+              </Button> 
               {sortTitle === '关闭排序' ? (
                 <Button
                   onClick={() => {

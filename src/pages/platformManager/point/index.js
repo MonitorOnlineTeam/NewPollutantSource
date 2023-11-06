@@ -370,6 +370,10 @@ export default class MonitorPoint extends Component {
                     payload: {
                       configId: pointConfigId,
                       searchParams: pointDataWhere,
+                      otherParams: {
+                        SortFileds: 'Sort',
+                        IsAsc: true,
+                      }
                     },
                   });
                 }
@@ -403,6 +407,10 @@ export default class MonitorPoint extends Component {
               payload: {
                 configId: pointConfigId,
                 searchParams: pointDataWhere,
+                otherParams: {
+                  SortFileds: 'Sort',
+                  IsAsc: true,
+                }
               },
             });
           }
@@ -748,7 +756,12 @@ export default class MonitorPoint extends Component {
                 payload: {
                   configId: pointConfigId,
                   searchParams: pointDataWhere,
+                  otherParams: {
+                    SortFileds: 'Sort',
+                    IsAsc: true,
+                  }
                 },
+                
               });
             }
           })

@@ -113,7 +113,7 @@ const Index = (props) => {
       }
     },
     {
-      title: '已报警次数',
+      title: '已核实报警次数',
       dataIndex: 'CheckWarningCount',
       key: 'CheckWarningCount',
       align: 'center',
@@ -182,6 +182,7 @@ const Index = (props) => {
 
     ...regCityCommonCol(1),
   ];
+  const [cityCode, setCityCode] = useState()
   const columns2 = [
     {
       title: '序号',
@@ -210,8 +211,8 @@ const Index = (props) => {
       key: 'CityName',
       align: 'center',
       render: (text, record, index) => {
-        const regCode = record.CityCode ? record.CityCode : regionCode
-        const element = <a onClick={() => { setPointType(3); setRegionCode(regCode); onFinish({ ...queryPar, regionCode: regCode }, 3) }}>{text}</a>
+        const cityCode = record.CityCode ? record.CityCode : regionCode
+        const element = <a onClick={() => { setPointType(3); setCityCode(cityCode); onFinish({ ...queryPar, regionCode: cityCode }, 3) }}>{text}</a>
         return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: element, };
       }
     },
@@ -283,8 +284,22 @@ const Index = (props) => {
       title: '排口',
       dataIndex: 'PointName',
       key: 'PointName',
+      width: 140,
+      ellipsis: true,
+    },
+    {
+      title: '线索内容',
+      dataIndex: 'WarningContent',
+      key: 'WarningContent',
       width: 200,
       ellipsis: true,
+      render: (text, record) => {
+        return (
+          <Tooltip title={text}>
+            <span style={textStyle}>{text}</span>
+          </Tooltip>
+        );
+      },
     },
     {
       title: '场景类型',
@@ -300,6 +315,14 @@ const Index = (props) => {
           </Tooltip>
         );
       },
+    },
+    {
+      title: '发现线索时间',
+      dataIndex: 'WarningTime',
+      key: 'WarningTime',
+      width: 140,
+      ellipsis: true,
+      sorter: (a, b) => moment(a.WarningTime).valueOf() - moment(b.WarningTime).valueOf(),
     },
     {
       title: '核实状态',
@@ -343,26 +366,18 @@ const Index = (props) => {
     },
     {
       title: '核实人',
-      dataIndex: 'User_Name',
-      key: 'User_Name',
-      width: 180,
+      dataIndex: 'CheckedUserName',
+      key: 'CheckedUserName',
+      width: 120,
       ellipsis: true,
     },
     {
       title: '核实时间',
       dataIndex: 'CheckedTime',
       key: 'CheckedTime',
-      width: 180,
+      width: 140,
       ellipsis: true,
       sorter: (a, b) => moment(a.CheckedTime).valueOf() - moment(b.CheckedTime).valueOf(),
-    },
-    {
-      title: '发现线索时间',
-      dataIndex: 'WarningTime',
-      key: 'WarningTime',
-      width: 180,
-      ellipsis: true,
-      sorter: (a, b) => moment(a.WarningTime).valueOf() - moment(b.WarningTime).valueOf(),
     },
     {
       title: '操作',
@@ -430,7 +445,7 @@ const Index = (props) => {
 
   const alarmsNum = (row, status, type) => { //报警次数详情
     setAlarmsNumVisible(true)
-    const alarmName = status == 0 ? '报警次数' : status == 1 ? '已报警次数' : '待核实报警次数'
+    const alarmName = status == 0 ? '报警次数' : status == 1 ? '已核实报警次数' : '待核实报警次数'
     const regCityPointName = type == 1 ? row.RegionName : type == 2 ? row.CityName=='全部合计'? regionName : row.CityName : row.EntName
 
     setAlarmsNumTitle(`${regCityPointName} - ${alarmName}`)
@@ -496,10 +511,10 @@ const Index = (props) => {
         :
         <Form layout='inline'>
           <Form.Item >
-            <EntAtmoList onChange={(value) => { onFinish({ ...queryPar, regionCode: regionCode, entCode: value }, 3); setEntCode(value); }} style={{ width: 260 }} />
+            <EntAtmoList onChange={(value) => { onFinish({ ...queryPar, regionCode: cityCode, entCode: value }, 3); setEntCode(value); }} style={{ width: 260 }} />
           </Form.Item>
           <Form.Item>
-            <Button icon={<ExportOutlined />} onClick={() => { exports({ ...queryPar, regionCode: regionCode, entCode: entCode }, 3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
+            <Button icon={<ExportOutlined />} onClick={() => { exports({ ...queryPar, regionCode: cityCode, entCode: entCode }, 3) }} loading={exportLoading3} style={{ marginRight: 5 }}>
               导出
           </Button>
             <Button icon={<RollbackOutlined />} onClick={() => { setPointType(2) }} style={{ marginRight: 6 }}>
@@ -515,6 +530,7 @@ const Index = (props) => {
           {pointType == 1 ? <SdlTable
             loading={tableLoading}
             bordered
+            resizable
             dataSource={tableDatas}
             columns={columns}
             pagination={false}
@@ -522,6 +538,7 @@ const Index = (props) => {
             pointType == 2 ? <SdlTable
               loading={tableLoading2}
               bordered
+              resizable
               dataSource={tableDatas2}
               columns={columns2}
               pagination={false}
@@ -529,6 +546,7 @@ const Index = (props) => {
               <SdlTable
                 loading={tableLoading3}
                 bordered
+                resizable
                 dataSource={tableDatas3}
                 columns={columns3}
                 pagination={{
@@ -553,6 +571,7 @@ const Index = (props) => {
           <SdlTable
             loading={tableLoading4}
             bordered
+            resizable
             align="center"
             dataSource={tableDatas4}
             columns={columns4}
