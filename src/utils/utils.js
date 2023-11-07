@@ -538,3 +538,25 @@ export function copyObjectArrayTreeAndRenameProperty(arr, oldPropertyName, newPr
 
   return newArr;
 }
+export function deepCloneTree(tree) {  
+  if (typeof tree !== 'object' || tree === null) {  
+      return tree;  
+  }  
+
+  let clone;  
+  if (Array.isArray(tree)) {  
+      clone = [];  
+      for (let i = 0; i < tree.length; i++) {  
+          clone[i] = deepCloneTree(tree[i]);  
+      }  
+  } else {  
+      clone = {};  
+      for (let key in tree) {  
+          if (tree.hasOwnProperty(key)) {  
+              clone[key] = deepCloneTree(tree[key]);  
+          }  
+      }  
+  }  
+    
+  return clone;  
+}

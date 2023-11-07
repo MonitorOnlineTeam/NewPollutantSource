@@ -7,20 +7,20 @@ export default Model.extend({
   state: {
     pointDataWhere: null,
     commissionTestPointTime: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")],
-    systemData:[],
-    systemEditingKey:'',
+    systemData: [],
+    systemEditingKey: '',
     systemModelList: [],
     systemModelListTotal: null,
-    systemChangeData:[],
-    systemChangeEditingKey:'',
-    projectModelList:[],
-    deviceData:[],
-    deviceEditingKey:'',
-    manufacturerList:[],
+    systemChangeData: [],
+    systemChangeEditingKey: '',
+    projectModelList: [],
+    deviceData: [],
+    deviceEditingKey: '',
+    manufacturerList: [],
     equipmentInfoList: [],
     equipmentInfoListTotal: null,
-    deviceChangeData:[],
-    deviceChangeEditingKey:'',
+    deviceChangeData: [],
+    deviceChangeEditingKey: '',
   },
   effects: {
     // cems 系统信息 - CEMS生产厂家(弹框) 
@@ -108,7 +108,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-     //添加或修改仪表更换记录
+    //添加或修改仪表更换记录
     *addOrEditEquipmentChange({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.addOrEditEquipmentChange, { ...payload });
       if (result.IsSuccess) {
@@ -124,6 +124,25 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //企业电子围栏半径 添加
+    *addOrUpdateMonitorEntElectronicFence({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.addOrUpdateMonitorEntElectronicFence, { ...payload });
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback&&callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //企业电子围栏半径 获取
+    *getMonitorEntElectronicFence({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.getMonitorEntElectronicFence, { ...payload });
+      if (result.IsSuccess) {
+        callback(result?.Datas)
       } else {
         message.error(result.Message)
       }

@@ -65,7 +65,7 @@ import TreeTransfer from '@/components/TreeTransfer'
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
 import TreeTransferSingle from '@/components/TreeTransferSingle'
-import { copyObjectArrayTreeAndRenameProperty, permissionButton } from '@/utils/utils';
+import { copyObjectArrayTreeAndRenameProperty, permissionButton,deepCloneTree, } from '@/utils/utils';
 
 let dragingIndex = -1;
 
@@ -1326,27 +1326,6 @@ class DepartIndex extends Component {
       row: DragableBodyRow,
     },
   };
-
-  moveRow = (dragIndex, hoverIndex) => {
-    //拖拽事件
-    const { departInfoTree } = this.state;
-
-    let data = departInfoTree;
-    let lastData = this.recursion(departInfoTree, dragIndex, hoverIndex);
-    console.log(lastData)
-    this.setState(
-      update(this.state, {
-        departInfoTree: {
-          $splice: [[departInfoTree, lastData]],
-        },
-      }),
-    );
-    // let lastDatas = update(data, {$splice:[[departInfoTree , lastData]]});
-    // console.log(lastDatas)
-    //  this.setState({
-    //   departInfoTree:lastDatas
-    //  })
-  };
   recursion = (data, current, find) => {
     let totalData = [],
       currentData = null,
@@ -1386,13 +1365,58 @@ class DepartIndex extends Component {
 
     return totalData;
   };
+  moveRow = (dragIndex, hoverIndex) => {
+    //拖拽事件
+    const { departInfoTree } = this.state;
+
+    let data = departInfoTree;
+    let lastData = this.recursion(departInfoTree, dragIndex, hoverIndex);
+    console.log(lastData)
+    this.setState(
+      update(this.state, {
+        departInfoTree: {
+          $splice: [[departInfoTree, lastData]],
+        },
+      }),
+    );
+    // let lastDatas = update(data, {$splice:[[departInfoTree , lastData]]});
+    // console.log(lastDatas)
+    //  this.setState({
+    //   departInfoTree:lastDatas
+    //  })
+  };
+
   updateSort = () => {
     const { sortTitle } = this.state;
     sortTitle === '开启排序'
       ? this.setState({ sortTitle: '关闭排序' })
       : this.setState({ sortTitle: '开启排序' });
   };
-  saveSort = () => { };
+  saveSort = () => { //保存排序
+   const { departInfoTree } = this.state;
+   function extractKeysFromTree(treeArray) {  
+    let keys = [];  
+    // 递归函数，用于遍历树形结构并提取key属性  
+    function traverseTree(node) {  
+      if (node && typeof node === 'object') {  
+        if (node.key) {  
+          keys.push(node.key); // 提取节点的key属性并添加到数组中  
+        }  
+    
+        // 如果节点具有子节点，则递归遍历子节点  
+        if (Array.isArray(node.children)) {  
+          node.children.forEach(traverseTree);  
+        }  
+      }  
+    }  
+    
+    // 遍历数组中的每个树形结构，并提取key属性  
+    treeArray.forEach(traverseTree);  
+    
+    return keys; // 返回提取的key属性数组  
+  }
+   console.log(extractKeysFromTree(departInfoTree))
+  };
   addOrUpdateUserDepApprove = () => {
     //添加修改审核流程
     const {

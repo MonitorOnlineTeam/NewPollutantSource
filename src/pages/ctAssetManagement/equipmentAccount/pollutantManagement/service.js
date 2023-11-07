@@ -58,4 +58,13 @@ export async function pointSort(params) {
   const result = post(API.CtAssetManagementApi.PointSort, params);
   return result;
 }
-
+//添加或修改 企业电子围栏半径
+export async function addOrUpdateMonitorEntElectronicFence(params) {
+  const result = post(API.CtAssetManagementApi.AddOrUpdateMonitorEntElectronicFence, params);
+  return result;
+}
+//添加或修改 企业电子围栏半径
+export async function getMonitorEntElectronicFence(params) {
+  const result = post(API.CtAssetManagementApi.GetMonitorEntElectronicFence, params);
+  return result;
+}

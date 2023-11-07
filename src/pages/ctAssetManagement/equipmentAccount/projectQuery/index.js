@@ -286,7 +286,7 @@ const Index = (props) => {
       ellipsis: true,
       render: (text, record) => {
         return <span>
-          {editPermisPoint&&<Fragment><Tooltip title={'编辑'}> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>}
+          {/* {editPermisPoint&&<Fragment><Tooltip title={'编辑'}> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>} */}
           <Fragment> <Tooltip title="详情">
             <a onClick={() => detail(record)}  ><DetailIcon /></a>
           </Tooltip></Fragment>

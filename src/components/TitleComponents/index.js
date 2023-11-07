@@ -14,7 +14,7 @@ import { connect } from "dva";
 const Index = (props) => {
 
   return (
-    <div style={{ display: 'inline-block', fontWeight: 'bold', marginTop: 4, padding: '2px 0', marginBottom: 12, borderBottom: '1px solid rgba(0,0,0,.1)' }}>{props.text}</div>
+    <div  key={props.key} style={{ display: 'inline-block', fontWeight: 'bold', paddingBottom: '2px', marginBottom: 12, borderBottom: '1px solid rgba(0,0,0,.1)',...props.style }} >{props.text}</div>
   );
 };
 export default (Index);

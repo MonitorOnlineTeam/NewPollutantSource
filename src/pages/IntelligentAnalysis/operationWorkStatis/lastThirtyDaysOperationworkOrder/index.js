@@ -228,7 +228,7 @@ const Index = (props) => {
       align: 'center',
       render: (text, record) => {
         const cityCode = record.regionCode?record.regionCode : regionCode
-        return <a onClick={() => { setPointType(3);setCityCode(cityCode); onFinish({...queryPar,regionCode:cityCode}, 3) }}>{text}</a>
+        return <a onClick={() => { setPointType(3);setPageIndex3(1); setCityCode(cityCode); onFinish({...queryPar,regionCode:cityCode,pageIndex:1,pageSize:pageSize3}, 3) }}>{text}</a>
       }
     },
     {
@@ -282,9 +282,9 @@ const Index = (props) => {
           pointType: pointType,
           pollutantType:pollutantType,
         }
-      props.getOperationPlanTaskList({
+        props.getOperationPlanTaskList({
         ...par,
-      })
+        })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }

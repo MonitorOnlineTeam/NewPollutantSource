@@ -132,6 +132,10 @@ export const API = {
   CtAssetManagementApi: {
     //添加或修改监测点
     AddOrEditCommonPointList: before + '/CTBaseDataApi/AddOrEditCommonPointList',
+    //修改企业电子围栏半径
+    AddOrUpdateMonitorEntElectronicFence:before + '/CTBaseDataApi/AddOrUpdateMonitorEntElectronicFence',
+    //获取企业电子围栏半径
+    GetMonitorEntElectronicFence:before + '/CTBaseDataApi/GetMonitorEntElectronicFence',
     //获取行业和监测点类型信息
     GetPointIndustryList: before + '/CTBaseDataApi/GetPointIndustryList',
     // 获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
