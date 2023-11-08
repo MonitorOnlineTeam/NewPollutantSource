@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-12 10:30:26
+ * @Last Modified time: 2023-11-01 14:52:03
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -318,9 +318,14 @@ class SdlForm extends PureComponent {
           // initialValue = formData[fieldName] && (formData[fieldName] + "").split(",");
           initialValue =
             formData[configDataItemValue || fieldName] &&
-            `${formData[configDataItemValue || fieldName]}`.split(',');
+            `${formData[configDataItemValue || fieldName]}`;
           placeholder = placeholder || selectPlaceholder;
+
           const mode = item.type === '多选下拉列表' ? 'multiple' : '';
+          if (item.type === '多选下拉列表') {
+            initialValue = initialValue ? initialValue.split(',') : [];
+            // initialValue = formData[configDataItemValue || fieldName] ? (`${formData[configDataItemValue || fieldName]}`).split(',') : [];
+          }
           element = (
             <SearchSelect
               configId={item.configId}
@@ -364,14 +369,30 @@ class SdlForm extends PureComponent {
         case '单选':
           // initialValue = formData[fieldName] != undefined && formData[fieldName];
           if (item.value && !initialValue && !isEdit) {
-            if (configId === 'GasOutput' && (item.fullFieldName == 'dbo.T_Bas_CommonPoint.Col4' || item.fullFieldName == 'dbo.T_Bas_CommonPoint.OutputType')) {
+            if (
+              configId === 'GasOutput' &&
+              (item.fullFieldName == 'dbo.T_Bas_CommonPoint.Col4' ||
+                item.fullFieldName == 'dbo.T_Bas_CommonPoint.OutputType')
+            ) {
               initialValue = undefined;
             } else {
               console.log('item', item);
               initialValue = item.value[0] ? item.value[0].key : undefined;
             }
           }
-          element = <SdlRadio  disabled={((configId === 'GasOutput'|| configId === 'WaterOutput') && item.fullFieldName === "dbo.T_Bas_CommonPoint.Col5" && isEdit) ? true : false} data={item.value} configId={item.configId} />;
+          element = (
+            <SdlRadio
+              disabled={
+                (configId === 'GasOutput' || configId === 'WaterOutput') &&
+                item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col5' &&
+                isEdit
+                  ? true
+                  : false
+              }
+              data={item.value}
+              configId={item.configId}
+            />
+          );
           break;
         case '多选':
           element = <SdlCheckbox data={item.value} configId={item.configId} />;
