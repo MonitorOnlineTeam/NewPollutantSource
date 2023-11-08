@@ -212,6 +212,20 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
     },
+    // {
+    //   title: '操作人',
+    //   dataIndex: 'CreateUserName',
+    //   key:'CreateUserName',
+    //   align:'center',
+    //   ellipsis: true,
+    // },
+    // {
+    //   title: '操作时间',
+    //   dataIndex: 'CreateTime',
+    //   key:'CreateTime',
+    //   align:'center',
+    //   ellipsis: true,
+    // },
     {
       title: '操作',
       align: 'center',

@@ -103,7 +103,7 @@ const Index = (props) => {
                     form={form}
                 >
                     <Form.Item label="电子围栏半径（KM）" name="range" rules={[{ required: true, message: '请输入电子围栏半径!', },]} >
-                        <InputNumber placeholder='请输入' allowClear style={{ width: '100%' }} />
+                        <InputNumber  min={0.00001}  placeholder='请输入' allowClear style={{ width: '100%' }} />
                     </Form.Item>
                     <Form.Item name="entId" hidden>
                         <Input />

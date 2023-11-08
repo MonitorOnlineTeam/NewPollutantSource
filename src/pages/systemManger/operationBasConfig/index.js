@@ -72,6 +72,7 @@ const Index = (props) => {
     <div className={styles.operationBasConfigSty}>
       <BreadcrumbWrapper>
       <Card>
+        <Spin spinning={false}>
         <div>
           <TitleComponents text='自动派单推送对象' key='1' style={{marginBottom:4}}/>
           <Form.Item label='是否显示来源条件'>
@@ -96,7 +97,9 @@ const Index = (props) => {
               <Radio value={2}>否</Radio>
             </Radio.Group>
             </Form.Item>
+           <Divider orientation="right" style={{borderTopColor:'#0000000f'}}><Button type='primary'>保存</Button></Divider>
            </div>
+           </Spin>
         </Card>
       </BreadcrumbWrapper>
 

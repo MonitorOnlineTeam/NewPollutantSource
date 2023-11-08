@@ -8,7 +8,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined,RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Input, Button, Card, Spin, Row, Col } from 'antd';
@@ -56,7 +56,7 @@ class AutoFormView extends Component {
                 onClick={() => {
                   history.goBack(-1);
                 }}
-              ><LeftOutlined />返回
+              ><RollbackOutlined />返回
     </Button>
             }>
               {this.renderContent()}

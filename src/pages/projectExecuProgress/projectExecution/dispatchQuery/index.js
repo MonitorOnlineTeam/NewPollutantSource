@@ -315,7 +315,7 @@ const Index = (props) => {
             </Form.Item>
           </Col></>}
         <Col span={8} >
-          <Form.Item style={{ marginLeft: 4 }}>
+          <Form.Item style={{ marginLeft:expand ? 4 : 16 }}>
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>

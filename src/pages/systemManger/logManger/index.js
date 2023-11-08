@@ -571,7 +571,7 @@ const Index = (props) => {
           <Form.Item label="功能模块" name="OprationTableName" style={{ marginBottom: 8, marginRight: 0 }}>
             <Select placeholder='请选择' allowClear>
               <Option value={'监测点模块'}>监测点模块</Option>
-              <Option value={'企业模块'}>企业模块</Option>
+              <Option value={'污染源管理模块'}>污染源管理模块</Option>
             </Select>
           </Form.Item>
         </Col>
