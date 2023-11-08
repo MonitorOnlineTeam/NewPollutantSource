@@ -550,7 +550,7 @@ class NavigationTree extends Component {
     // console.log('2222')
     // console.log('pan2=',this.state.panelDataList);
     const entAndPoint = data || this.props.EntAndPoint;
-    const { value } = e.target;
+    const value = e.target.value.replace(/^\s+|\s+$/g, '')
     const msg = value.toUpperCase();
     // const expandedKeys = this.state.dataList
     //   .map(item => {
@@ -1179,7 +1179,7 @@ class NavigationTree extends Component {
             showIndustry &&
             <SearchSelect
               placeholder="请选择行业"
-              style={{ width: '100%' }}
+              style={{ width: '100%', marginBottom: 10 }}
               configId={'IndustryType'}
               itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
               itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}

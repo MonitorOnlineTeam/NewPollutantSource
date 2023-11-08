@@ -2,8 +2,8 @@
  * @desc: 下拉列表组件
  * @Author: Jiaqi
  * @Date: 2019-05-22 16:38:14
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-06-13 15:08:04
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2023-11-08 14:29:51
  */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -28,12 +28,14 @@ class SearchSelect extends Component {
 
   componentDidMount() {
     const { dispatch, configId, data } = this.props;
-    !data.length && dispatch({
-      type: 'autoForm/getConfigIdList',
-      payload: {
-        configId: configId
-      }
-    })
+    if (configId) {
+      !data.length && dispatch({
+        type: 'autoForm/getConfigIdList',
+        payload: {
+          configId: configId
+        }
+      })
+    }
   }
   render() {
     const { configId, configIdList, itemValue, itemName, data } = this.props;
