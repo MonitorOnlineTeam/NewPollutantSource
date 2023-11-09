@@ -779,8 +779,8 @@ const Index = (props) => {
       [`${code}ScyRang1`]: val.DataMin,
       [`${code}ScyRang2`]: val.DataMax,
       [`${code}RangUniformity`]: val.RangeAutoStatus,
-      [`${code}RangCheck`]: val.RangeStatus ? [val.RangeStatus] : [],
-      [`${code}Remark`]: val.RangeRemark,
+      [`${code}RangCheck`]:isImport? form2.getFieldValue(`${code}RangCheck`): val.RangeStatus ? [val.RangeStatus] : [],
+      [`${code}Remark`]:isImport? form2.getFieldValue(`${code}Remark`): val.RangeRemark,
       [`${code}OperationRangeRemark`]: val.OperationRangeRemark,
       }) 
       !isImport&&form2.setFieldsValue({//实时数据一致性核查表 导入数据不用
@@ -884,7 +884,7 @@ const Index = (props) => {
         }
        
      })
-     codeArr.map(code=>{
+     codeArr.map(code=>{ //初始化量程一致性 流速和颗粒物
       form2.setFieldsValue({
         [`${code}AnalyzerRang1`]: undefined,
         [`${code}AnalyzerRang2`]: undefined,
@@ -893,8 +893,8 @@ const Index = (props) => {
         [`${code}ScyRang1`]: undefined,
         [`${code}ScyRang2`]: undefined,
         [`${code}RangUniformity`]: undefined,
-        [`${code}RangCheck`]: [],
-        [`${code}Remark`]: undefined,
+        // [`${code}RangCheck`]: [],
+        // [`${code}Remark`]: undefined,
         [`${code}OperationRangeRemark`]: undefined,
         [`${code}AnalyzerFilePar`]: undefined,
         [`${code}DasFilePar`]: undefined,
@@ -906,12 +906,12 @@ const Index = (props) => {
       })
      })
       echoUnit(addDataConsistencyData,'isImport') //初始化量程一致性单位
-      form3.resetFields();//初始化参数一致性核查表
-      // console.log(addDataConsistencyData)
+      // form3.resetFields();//初始化参数一致性核查表
+      form3.setFieldsValue({allSelect:false})
       //量程一致性和数据一致性 回显数据
       data.consistencyCheckList?.[0] && consistencyEchoData(data.consistencyCheckList, 'isImport')
       //参数一致性核查 回显数据
-      data.consistentParametersCheckList?.[0] && echoParFun(data.consistentParametersCheckList)
+      data.consistentParametersCheckList?.[0] && echoParFun(data.consistentParametersCheckList,'isImport')
     })
 
   }
@@ -1481,7 +1481,7 @@ const Index = (props) => {
     setPageSize(PageSize)
     onFinish(PageIndex, PageSize)
   }
-  const echoFilePar = (code, item) => {
+  const echoFilePar = (code, item,isImport ) => {
     form3.setFieldsValue({
       [`${code}IsEnable`]: item.Status ? [item.Status] : [],
       [`${code}SetVal`]: item.SetValue,
@@ -1489,8 +1489,8 @@ const Index = (props) => {
       [`${code}TraceVal`]: item.TraceabilityValue,
       [`${code}DataVal`]: item.DataValue,
       [`${code}Uniform`]: item.AutoUniformity,
-      [`${code}RangCheck3`]: item.Uniformity ? [item.Uniformity] : [],//手工修正结果
-      [`${code}Remark3`]: item.Remark,
+      [`${code}RangCheck3`]: isImport? form3.getFieldValue(`${code}RangCheck3`): item.Uniformity ? [item.Uniformity] : [],//手工修正结果
+      [`${code}Remark3`]:  isImport? form3.getFieldValue(`${code}Remark3`): item.Remark,
       [`${code}OperationReamrk`]: item.OperationReramk,
       [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
       [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
@@ -1501,7 +1501,7 @@ const Index = (props) => {
       [`${code}DataStatus`]: item.DataStatus ? [item.DataStatus] : [],
     })
   }
-  const echoParFun = (data) => { //格式化 编辑回显     参数一致性核查表
+  const echoParFun = (data,isImport) => { //格式化 编辑回显     参数一致性核查表
     /***参数一致性核查表***/
     let settingUploadList = {}, settingUploadFilesListObj = {};
     let instrumentUploadList = {}, instrumentUploadFilesListObj = {};
@@ -1509,7 +1509,7 @@ const Index = (props) => {
     let dataUploadList = {}, dataUploadFilesListObj = {};
     data.map(item => {
       const code = item.CheckItem ? item.CheckItem : item.ChildID;
-      echoFilePar(code, item)
+      echoFilePar(code, item,isImport)
       const echoFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
         let parFileList = [];
         uploadList?.length && uploadList.map(uploadItem => {
@@ -3220,7 +3220,9 @@ const Index = (props) => {
                 className={styles.queryForm2}
               // onValuesChange={onValuesChange2}
               >
-                <Checkbox disabled={isCheckUser} onChange={onAllChange}>全选</Checkbox>
+               <Form.Item name="allSelect" valuePropName="checked">
+                <Checkbox  disabled={isCheckUser} onChange={onAllChange}>全选</Checkbox>
+                </Form.Item>
                 <SdlTable
                   loading={parLoading}
                   columns={columns4}

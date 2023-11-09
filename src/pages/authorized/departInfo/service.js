@@ -307,3 +307,9 @@ export async function getSetOperationGroup(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetSetOperationGroup', params, null);
   return result;
 }
+
+//部门管理 部门排序
+export async function groupSort(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GroupSort', params, null);
+  return result;
+}

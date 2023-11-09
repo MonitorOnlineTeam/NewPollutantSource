@@ -244,7 +244,7 @@ const Index = (props) => {
     </div>
   }
   //工作记录 组件
-  const WorkRecordTable = ({ data, loading,col }) => {
+  const WorkRecordTable = ({ data, loading,col,isWork }) => {
     return <div>
       <TitleComponents text='工作记录' />
       <SdlTable
@@ -256,9 +256,9 @@ const Index = (props) => {
         columns={col?col : workRecordsCol}
         pagination={false}
       />
-      <Form.Item label="离开现场时间">
+     {/* <Form.Item label="离开现场时间">
         {data?.[0]?.DepartureTime}
-      </Form.Item>
+      </Form.Item> */}
     </div>
   }
   //通用表格组件  只需要替换验监测点名称和照片上传时间中间的字段
@@ -352,11 +352,11 @@ const Index = (props) => {
             {data?.CompletionTime}
           </Form.Item>
         </Col>
-        <Col span={8}>
+        {/* <Col span={8}>
           <Form.Item label="离开现场时间" >
             {data?.DepartureTime}
           </Form.Item>
-        </Col>
+        </Col> */}
         <Col span={8}>
           <Form.Item label="备注" >
             {data?.Remark}

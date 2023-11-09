@@ -31,6 +31,7 @@ import {
   insertTestRegionByUser,
   addSetOperationGroup,
   getSetOperationGroup,
+  groupSort,
 } from './service';
 import { message } from 'antd';
 /*
@@ -468,6 +469,16 @@ export default Model.extend({
           setOperationGroupId: result.Datas,
         });
         callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+     //部门管理 部门排序
+    *groupSort({ payload, callback }, { call, update }) {
+      const result = yield call(groupSort, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback();
       } else {
         message.error(result.Message);
       }

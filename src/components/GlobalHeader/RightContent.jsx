@@ -147,7 +147,7 @@ const GlobalHeaderRight = props => {
       <Popover zIndex={9999} overlayClassName={styles.expandPopSty} content={isFullscreen ? '退出全屏' : '全屏展示'}> <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }} >{isFullscreen ? <CompressOutlined style={{ color: '#fff' }} /> : <ExpandOutlined style={{ color: '#fff' }} />}</span></Popover>
      
         {/**切换系统**/}
-          {Array.isArray(sysPollutantTypeList)&&sysPollutantTypeList&&sysPollutantTypeList[0]&&<Dropdown overlay={menu}> 
+          {Array.isArray(sysPollutantTypeList)&&sysPollutantTypeList&&sysPollutantTypeList[0]&&sysPollutantTypeList.length>1&&<Dropdown overlay={menu}> 
               <a
                 rel="noopener noreferrer"
                 className={styles.action}

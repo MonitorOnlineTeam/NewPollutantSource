@@ -65,7 +65,7 @@ import TreeTransfer from '@/components/TreeTransfer'
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
 import TreeTransferSingle from '@/components/TreeTransferSingle'
-import { copyObjectArrayTreeAndRenameProperty, permissionButton,deepCloneTree, } from '@/utils/utils';
+import { copyObjectArrayTreeAndRenameProperty, permissionButton, deepCloneTree, } from '@/utils/utils';
 
 let dragingIndex = -1;
 
@@ -273,6 +273,8 @@ const rightTableColumns = [
   setOperationGroupId: departinfo.setOperationGroupId,
   addSetOperationGroupLoading: loading.effects['departinfo/addSetOperationGroup'] || false,
   getSetOperationGroupLoading: loading.effects['departinfo/getSetOperationGroup'] || false,
+  groupSortLoading: loading.effects['departinfo/groupSort'] || false,
+
 
 }))
 @Form.create()
@@ -441,7 +443,7 @@ class DepartIndex extends Component {
                   </>
                 )}
 
-              {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && this.state.testRegionPermis &&<>
+              {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && this.state.testRegionPermis && <>
                 <Divider type="vertical" />
                 <Tooltip title="成套区域过滤">
                   <a
@@ -560,10 +562,10 @@ class DepartIndex extends Component {
       approvalUserID: undefined,
       approvalNode: undefined,
       depID: undefined,
-      settingOperationGroupVisible:false,
-      settingOperationGrouptitle:'设置运维小组',
-      settingOperationGroupPermis:false,
-      testRegionPermis:false,
+      settingOperationGroupVisible: false,
+      settingOperationGrouptitle: '设置运维小组',
+      settingOperationGroupPermis: false,
+      testRegionPermis: false,
     };
     this.depApproveColumns = [
       {
@@ -970,10 +972,10 @@ class DepartIndex extends Component {
 
   componentDidMount() {
     const buttonList = permissionButton(this.props.match.path)
-    buttonList.map(item=>{
-      switch (item){
-        case 'testRegion': this.setState({testRegionPermis: true }); break;
-        case 'SetOperationGroup': this.setState({settingOperationGroupPermis: true }); break;
+    buttonList.map(item => {
+      switch (item) {
+        case 'testRegion': this.setState({ testRegionPermis: true }); break;
+        case 'SetOperationGroup': this.setState({ settingOperationGroupPermis: true }); break;
       }
     })
     this.props.dispatch({
@@ -1371,7 +1373,6 @@ class DepartIndex extends Component {
 
     let data = departInfoTree;
     let lastData = this.recursion(departInfoTree, dragIndex, hoverIndex);
-    console.log(lastData)
     this.setState(
       update(this.state, {
         departInfoTree: {
@@ -1393,29 +1394,37 @@ class DepartIndex extends Component {
       : this.setState({ sortTitle: '开启排序' });
   };
   saveSort = () => { //保存排序
-   const { departInfoTree } = this.state;
-   function extractKeysFromTree(treeArray) {  
-    let keys = [];  
-    // 递归函数，用于遍历树形结构并提取key属性  
-    function traverseTree(node) {  
-      if (node && typeof node === 'object') {  
-        if (node.key) {  
-          keys.push(node.key); // 提取节点的key属性并添加到数组中  
-        }  
-    
-        // 如果节点具有子节点，则递归遍历子节点  
-        if (Array.isArray(node.children)) {  
-          node.children.forEach(traverseTree);  
-        }  
-      }  
-    }  
-    
-    // 遍历数组中的每个树形结构，并提取key属性  
-    treeArray.forEach(traverseTree);  
-    
-    return keys; // 返回提取的key属性数组  
-  }
-   console.log(extractKeysFromTree(departInfoTree))
+    const { departInfoTree } = this.state;
+    function extractKeysFromTree(treeArray) {
+      let keys = [];
+      // 递归函数，用于遍历树形结构并提取key属性  
+      function traverseTree(node) {
+        if (node && typeof node === 'object') {
+          if (node.key) {
+            keys.push(node.key); // 提取节点的key属性并添加到数组中  
+          }
+          // 如果节点具有子节点，则递归遍历子节点  
+          if (Array.isArray(node.children)) {
+            node.children.forEach(traverseTree);
+          }
+        }
+      }
+
+      // 遍历数组中的每个树形结构，并提取key属性  
+      treeArray.forEach(traverseTree);
+
+      return keys; // 返回提取的key属性数组  
+    }
+    const data = extractKeysFromTree(departInfoTree)?.[0]? extractKeysFromTree(departInfoTree) : []
+    this.props.dispatch({
+      type: 'departinfo/groupSort',
+      payload: {
+        IDList: data,
+      },
+      callback: () => {
+        this.setState({sortTitle:'开启排序'})
+      },
+    });
   };
   addOrUpdateUserDepApprove = () => {
     //添加修改审核流程
@@ -1454,23 +1463,23 @@ class DepartIndex extends Component {
     e.preventDefault();
     this.addOrUpdateUserDepApprove();
   };
-  settingOperationGroup = () =>{
+  settingOperationGroup = () => {
     this.setState({
-      settingOperationGroupVisible:true,
+      settingOperationGroupVisible: true,
     })
     this.props.dispatch({
       type: 'departinfo/getSetOperationGroup',
       payload: {},
-  })
+    })
   }
-  settingOperationGroupOk = (operationGroupChecked, state,callback)=>{   
+  settingOperationGroupOk = (operationGroupChecked, state, callback) => {
     this.props.dispatch({
       type: 'departinfo/addSetOperationGroup',
-      payload: {GroupIdList:operationGroupChecked,State:state},
-      callback:()=>{
+      payload: { GroupIdList: operationGroupChecked, State: state },
+      callback: () => {
         callback()
       }
-  })
+    })
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -1481,6 +1490,7 @@ class DepartIndex extends Component {
       userDepApproveInfoList,
       testRegionByDepIDLoading,
       insertTestRegionByUserLoading,
+      groupSortLoading,
     } = this.props;
     const {
       targetKeys,
@@ -1563,16 +1573,16 @@ class DepartIndex extends Component {
                 onClick={() => this.settingOperationGroup()}
                 style={{ margin: '0 8px' }}
               >设置运维小组</Button>}
-              <Button type="primary"  style={{marginRight:8}} onClick={this.updateSort}>
+              <Button type="primary" style={{ marginRight: 8 }} onClick={this.updateSort}>
                 {sortTitle}
-              </Button> 
+              </Button>
               {sortTitle === '关闭排序' ? (
                 <Button
                   onClick={() => {
                     this.saveSort();
                   }}
                   style={{ marginRight: 8 }}
-                  loading={this.props.dragLoading}
+                  loading={groupSortLoading}
                 >
                   保存排序
                 </Button>
@@ -1610,6 +1620,7 @@ class DepartIndex extends Component {
                   defaultExpandAllRows
                   // dataSource={this.props.DepartInfoTree}
                   dataSource={this.state.departInfoTree}
+                  loading={groupSortLoading}
                 />
               </DndProvider>
             </Card>
@@ -2041,8 +2052,8 @@ class DepartIndex extends Component {
                     titles={['待设置运维小组', '已设置运维小组']}
                     treeData={copyObjectArrayTreeAndRenameProperty(this.state.departInfoTree, 'UserGroup_Name', 'title')}
                     checkedKeys={this.props.setOperationGroupId}
-                    targetKeysChange={(key, type,callback) => {
-                      this.settingOperationGroupOk(key, type == 1 ? 1 : 2,callback)
+                    targetKeysChange={(key, type, callback) => {
+                      this.settingOperationGroupOk(key, type == 1 ? 1 : 2, callback)
                     }
                     }
                   />

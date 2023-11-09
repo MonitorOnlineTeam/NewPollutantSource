@@ -136,7 +136,8 @@ const Index = (props) => {
       key: 'CheckWarningRate',
       align: 'center',
       render: (text, record) => {
-        return record.RegionName=='全部合计'? '-' : <Progress percent={text && text.replace("%", "")} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
+        return  <Progress percent={text && text.replace("%", "")} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
+     
       }
     },
 

@@ -138,7 +138,7 @@ const Index = (props) => {
       key: 'RectificationRate',
       align: 'center',
       render: (text, record) => {
-        return record.RegionName=='全部合计'? '-' : <Progress percent={text && text.replace("%", "")} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
+        return  <Progress percent={text && text.replace("%", "")} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
       }
     },
 
@@ -331,7 +331,7 @@ const Index = (props) => {
       ellipsis: true,
       render: (text, record) => {
         return (
-          text?.[0]&&<a title={text} onClick={()=>{
+          text?.[0]&&<a onClick={()=>{
             setIsOpen(true)
             setImageIndex(0)
             const imgList = text.map(item=>`/${item}`)
