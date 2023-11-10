@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-10-17 09:05:33
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-25 20:21:20
+ * @Last Modified time: 2023-11-01 11:35:46
  * @Description:  我的已办
  */
 import React, { useState, useEffect } from 'react';
@@ -268,29 +268,34 @@ const Done = props => {
               style={{ width: 280 }}
             />
           </Form.Item>
-          <Form.Item label="企业" name="EntCode">
-            <EntAtmoList noFilter style={{ width: 200 }} />
-          </Form.Item>
-          <Spin spinning={pointLoading} size="small" style={{ top: -10 }}>
-            <Form.Item label="点位名称" name="DGIMN">
-              <Select
-                placeholder="请选择"
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                style={{ width: 200 }}
-              >
-                {pointList[0] &&
-                  pointList.map(item => {
-                    return (
-                      <Option key={item.DGIMN} value={item.DGIMN}>
-                        {item.PointName}
-                      </Option>
-                    );
-                  })}
-              </Select>
-            </Form.Item>
-          </Spin>
+          {// 脱敏角色不显示企业
+          !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
+            <>
+              <Form.Item label="企业" name="EntCode">
+                <EntAtmoList noFilter style={{ width: 200 }} />
+              </Form.Item>
+              <Spin spinning={pointLoading} size="small" style={{ top: -10 }}>
+                <Form.Item label="点位名称" name="DGIMN">
+                  <Select
+                    placeholder="请选择"
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    style={{ width: 200 }}
+                  >
+                    {pointList[0] &&
+                      pointList.map(item => {
+                        return (
+                          <Option key={item.DGIMN} value={item.DGIMN}>
+                            {item.PointName}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                </Form.Item>
+              </Spin>
+            </>
+          )}
           <Form.Item label="核实人" name="CheckUserID">
             <OperationInspectoUserList style={{ width: 150 }} />
           </Form.Item>

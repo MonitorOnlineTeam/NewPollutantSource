@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-25 20:11:49
+ * @Last Modified time: 2023-11-08 17:38:07
  * @Description：报警核实详情
  */
 
@@ -29,11 +29,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const WarningVerify = props => {
   const warningId = props.match.params.id;
-  const COLOR = [
-    '#5470c6',
-    '#91cc75',
-    '#ea7ccc',
-  ];
+  const COLOR = ['#5470c6', '#91cc75', '#ea7ccc'];
   const { dispatch, warningInfoLoading, modelChartsLoading, height } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [dataModalVisible, setDataModalVisible] = useState(false);
@@ -131,9 +127,9 @@ const WarningVerify = props => {
     let mergedData = [];
 
     // 遍历原始数据对象数组
-    data.forEach(function (obj) {
+    data.forEach(function(obj) {
       // 检查当前数据对象的Column是否存在于mergedData中
-      let existingData = mergedData.find(function (item) {
+      let existingData = mergedData.find(function(item) {
         return JSON.stringify(item.Column) === JSON.stringify(obj.Column);
       });
 
@@ -457,8 +453,8 @@ const WarningVerify = props => {
                 返回上级
               </Button>
             ) : (
-                ''
-              )
+              ''
+            )
           }
         >
           <Descriptions column={4}>
@@ -470,34 +466,38 @@ const WarningVerify = props => {
             <Descriptions.Item label="排口">{warningInfo.PointName}</Descriptions.Item>
             <Descriptions.Item label="场景类别">
               <Tooltip title={warningInfo.WarningTypeName}>
-                <span className={styles.textOverflow}>{ModalNameConversion(warningInfo.WarningTypeName)}</span>
+                <span className={styles.textOverflow}>
+                  {ModalNameConversion(warningInfo.WarningTypeName)}
+                </span>
               </Tooltip>
             </Descriptions.Item>
             <Descriptions.Item label="发现线索时间">{warningInfo.WarningTime}</Descriptions.Item>
             <Descriptions.Item label="线索内容">{warningInfo.WarningContent}</Descriptions.Item>
           </Descriptions>
         </Card>
-        <Card
-          title="异常特征"
-          loading={modelChartsLoading || warningInfoLoading}
-          extra={
-            <Button
-              loading={modelChartsLoading || warningInfoLoading}
-              type="primary"
-              onClick={() => onViewWarningData()}
-            >
-              线索数据
-            </Button>
-          }
-        >
-          {modelDescribe ? (
-            <>
-              <p>{modelDescribe}</p>
+        {// 脱敏角色不显示
+        !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
+          <Card
+            title="异常特征"
+            loading={modelChartsLoading || warningInfoLoading}
+            extra={
+              <Button
+                loading={modelChartsLoading || warningInfoLoading}
+                type="primary"
+                onClick={() => onViewWarningData()}
+              >
+                线索数据
+              </Button>
+            }
+          >
+            {modelDescribe ? (
+              <>
+                <p>{modelDescribe}</p>
 
-              {/* 图表模型 */}
-              {modelChartDatas.length ? (
-                <Row className={styles.chartWrapper}>
-                  {// 线性系数图表
+                {/* 图表模型 */}
+                {modelChartDatas.length ? (
+                  <Row className={styles.chartWrapper}>
+                    {// 线性系数图表
                     linearDatas.map((item, index) => {
                       return (
                         <>
@@ -515,57 +515,63 @@ const WarningVerify = props => {
                       );
                     })}
 
-                  {// 使用其它排放口烟气代替本排放口烟气进行监测
+                    {// 使用其它排放口烟气代替本排放口烟气进行监测
                     warningInfo.WarningTypeCode === 'c0af25fb-220b-45c6-a3de-f6c8142de8f1' ||
-                      // 同一现场借用其他合格监测设备数据
-                      warningInfo.WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
-                      // 引用错误、虚假的原始信号值
-                      warningInfo.WarningTypeCode === 'f021147d-e7c6-4c1d-9634-1d814ff9880a'
+                    // 同一现场借用其他合格监测设备数据
+                    warningInfo.WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
+                    // 引用错误、虚假的原始信号值
+                    warningInfo.WarningTypeCode === 'f021147d-e7c6-4c1d-9634-1d814ff9880a'
                       ? !linearDatas.length &&
-                      modelChartDatas.map((item, index) => {
-                        return (
-                          <Col span={12}>
-                            {/* 图例多选 */}
-                            <ModelChartMultiple
-                              chartData={item}
-                              WarningTypeCode={warningInfo.WarningTypeCode}
-                            />
-                          </Col>
-                        );
-                      })
+                        modelChartDatas.map((item, index) => {
+                          return (
+                            <Col span={12}>
+                              {/* 图例多选 */}
+                              <ModelChartMultiple
+                                chartData={item}
+                                WarningTypeCode={warningInfo.WarningTypeCode}
+                              />
+                            </Col>
+                          );
+                        })
                       : modelChartDatas.map((item, index) => {
-                        return (
-                          <Col span={modelChartDatas.length <= 3 ? 24 / modelChartDatas.length : 8}>
-                            {/* 图例单选，显示一条线 */}
-                            <ModelChart
-                              chartData={item}
-                              color={COLOR[index % 3]}
-                              WarningTypeCode={warningInfo.WarningTypeCode}
-                            />
-                          </Col>
-                        );
-                      })}
-                </Row>
-              ) : (
+                          return (
+                            <Col
+                              span={modelChartDatas.length <= 3 ? 24 / modelChartDatas.length : 8}
+                            >
+                              {/* 图例单选，显示一条线 */}
+                              <ModelChart
+                                chartData={item}
+                                color={COLOR[index % 3]}
+                                WarningTypeCode={warningInfo.WarningTypeCode}
+                              />
+                            </Col>
+                          );
+                        })}
+                  </Row>
+                ) : (
                   ''
                 )}
-              {/* 表格模型 */}
-              {modelTableDatas.length ? (
-                <Row className={styles.chartWrapper} style={{ height: 'auto' }}>
-                  {modelTableDatas.map(item => {
-                    return (
-                      <ModelTable WarningTypeCode={warningInfo.WarningTypeCode} tableData={item} />
-                    );
-                  })}
-                </Row>
-              ) : (
+                {/* 表格模型 */}
+                {modelTableDatas.length ? (
+                  <Row className={styles.chartWrapper} style={{ height: 'auto' }}>
+                    {modelTableDatas.map(item => {
+                      return (
+                        <ModelTable
+                          WarningTypeCode={warningInfo.WarningTypeCode}
+                          tableData={item}
+                        />
+                      );
+                    })}
+                  </Row>
+                ) : (
                   ''
                 )}
-            </>
-          ) : (
+              </>
+            ) : (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )}
-        </Card>
+          </Card>
+        )}
         <Card title="线索核实" loading={warningInfoLoading}>
           <Descriptions column={4}>
             <Descriptions.Item label="核实状态">
@@ -574,8 +580,8 @@ const WarningVerify = props => {
                   warningInfo.Status === 3
                     ? 'success'
                     : warningInfo.Status === 2
-                      ? 'orange'
-                      : 'volcano'
+                    ? 'orange'
+                    : 'volcano'
                 }
               >
                 {warningInfo.StatusName}
@@ -611,8 +617,8 @@ const WarningVerify = props => {
                   }}
                 />
               ) : (
-                  '-'
-                )}
+                '-'
+              )}
             </Descriptions.Item>
           </Descriptions>
         </Card>

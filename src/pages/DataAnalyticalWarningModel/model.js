@@ -4,6 +4,7 @@ import { message } from 'antd';
 import moment from 'moment';
 import { downloadFile } from '@/utils/utils';
 import { ModelNumberIdsDatas } from './CONST';
+import { getListPager } from '@/services/autoformapi';
 
 function initWarningForm() {
   let warningForm = {};
@@ -31,7 +32,7 @@ export default Model.extend({
     relationDGIMN: [],
     ModelInfoAndParams: {
       modelInfo: {},
-      dataAttribute: {},
+      dataAttribute: [],
     },
     allTypeDataList: [],
   },
@@ -457,6 +458,7 @@ export default Model.extend({
         //   StatusCode: 200,
         // });
       } else {
+        callback && callback([]);
         message.error(result.Message);
       }
     },
@@ -548,10 +550,20 @@ export default Model.extend({
     *GetModelInfoAndParams({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetModelInfoAndParams, payload);
       if (result.IsSuccess) {
+        let dataAttribute = result.Datas.dataAttribute;
+        let arr = [];
+        for (const key in dataAttribute) {
+          arr.push({
+            industryCode: key,
+            params: dataAttribute[key],
+          });
+        }
+
+        console.log('arr', arr)
         yield update({
           ModelInfoAndParams: {
             modelInfo: result.Datas.modelInfo || {},
-            dataAttribute: result.Datas.dataAttribute || {},
+            dataAttribute: arr || [],
           },
         });
         callback && callback(result.Datas);
@@ -804,7 +816,7 @@ export default Model.extend({
     },
     // 重新生成正常范围
     *RegenerateNomalRangeTime({ payload, callback }, { call, select, update }) {
-      debugger
+      debugger;
       const result = yield call(services.RegenerateNomalRangeTime, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
@@ -844,6 +856,15 @@ export default Model.extend({
       const result = yield call(services.InsertWarningVerify, payload);
       if (result.IsSuccess) {
         message.success('操作成功!');
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取行业
+    *getListPager({ payload, callback }, { call, select, update }) {
+      const result = yield call(getListPager, payload);
+      if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
         message.error(result.Message);

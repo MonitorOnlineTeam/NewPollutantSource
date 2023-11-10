@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-25 20:10:41
+ * @Last Modified time: 2023-11-09 17:04:03
  * @Description：报警记录
  */
 
@@ -19,6 +19,7 @@ import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
 import { ModelNumberIdsDatas, ModalNameConversion } from '../CONST';
+import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 
 const textStyle = {
   width: '100%',
@@ -171,6 +172,13 @@ const WarningRecord = props => {
         dataIndex: 'PointName',
         key: 'PointName',
         width: 200,
+        ellipsis: true,
+      },
+      {
+        title: '行业',
+        dataIndex: 'IndustryTypeName',
+        key: 'IndustryTypeName',
+        width: 120,
         ellipsis: true,
       },
       {
@@ -356,6 +364,9 @@ const WarningRecord = props => {
       },
       callback: res => {
         setPointList(res);
+        form.setFieldsValue({
+          ...warningForm[modelNumber],
+        });
       },
     });
   };
@@ -367,9 +378,7 @@ const WarningRecord = props => {
           form={form}
           layout="inline"
           style={{ padding: '10px 0' }}
-          initialValues={{
-            ...warningForm[modelNumber],
-          }}
+          initialValues={{}}
           autoComplete="off"
           // onValuesChange={onValuesChange}
           onValuesChange={(changedFields, allFields) => {
@@ -400,39 +409,53 @@ const WarningRecord = props => {
           <Form.Item label="行政区" name="regionCode">
             <RegionList noFilter style={{ width: 140 }} />
           </Form.Item>
-          <Form.Item label="企业" name="EntCode">
-            <EntAtmoList
-              noFilter
-              style={{ width: 200 }}
-              onChange={value => {
-                if (!value) {
-                  form.setFieldsValue({ DGIMN: undefined });
-                } else {
-                  form.setFieldsValue({ DGIMN: undefined });
-                  getPointList(value);
-                }
-              }}
+          {// 脱敏角色不显示企业
+          !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
+            <>
+              <Form.Item label="企业" name="EntCode">
+                <EntAtmoList
+                  noFilter
+                  style={{ width: 200 }}
+                  onChange={value => {
+                    if (!value) {
+                      form.setFieldsValue({ DGIMN: undefined });
+                    } else {
+                      form.setFieldsValue({ DGIMN: undefined });
+                      getPointList(value);
+                    }
+                  }}
+                />
+              </Form.Item>
+              <Spin spinning={!!pointListLoading} size="small">
+                <Form.Item label="监测点名称" name="DGIMN">
+                  <Select
+                    placeholder="请选择"
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    style={{ width: 150 }}
+                  >
+                    {pointList.map(item => {
+                      return (
+                        <Option key={item.DGIMN} value={item.DGIMN}>
+                          {item.PointName}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Spin>
+            </>
+          )}
+          <Form.Item label="行业" name="IndustryType">
+            <SearchSelect
+              placeholder="排口所属行业"
+              style={{ width: 130 }}
+              configId={'IndustryType'}
+              itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
+              itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
             />
           </Form.Item>
-          <Spin spinning={!!pointListLoading} size="small">
-            <Form.Item label="监测点名称" name="DGIMN">
-              <Select
-                placeholder="请选择"
-                showSearch
-                allowClear
-                optionFilterProp="children"
-                style={{ width: 150 }}
-              >
-                {pointList.map(item => {
-                  return (
-                    <Option key={item.DGIMN} value={item.DGIMN}>
-                      {item.PointName}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Spin>
           <Spin spinning={modelListLoading} size="small">
             <Form.Item label="场景类别" name="warningTypeCode">
               <Select
