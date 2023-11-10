@@ -11,7 +11,7 @@ import { getCurrentUserId } from '@/utils/utils';
 import OperationInspectoUserList from '@/components/OperationInspectoUserList';
 import { router } from 'umi';
 import { FileProtectOutlined,RollbackOutlined } from '@ant-design/icons';
-import {  ModalNameConversion } from '../CONST';
+import { ModalNameConversion } from '../CONST';
 
 const textStyle = {
   width: '100%',
@@ -264,29 +264,34 @@ const Tode = props => {
               style={{ width: '100%' }}
             />
           </Form.Item>
-          <Form.Item label="企业" name="EntCode">
-            <EntAtmoList noFilter style={{ width: 200 }} />
-          </Form.Item>
-          <Spin spinning={pointLoading} size="small" style={{ top: -10 }}>
-            <Form.Item label="点位名称" name="DGIMN">
-              <Select
-                placeholder="请选择"
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                style={{ width: 200 }}
-              >
-                {pointList[0] &&
-                  pointList.map(item => {
-                    return (
-                      <Option key={item.DGIMN} value={item.DGIMN}>
-                        {item.PointName}
-                      </Option>
-                    );
-                  })}
-              </Select>
-            </Form.Item>
-          </Spin>
+          {// 脱敏角色不显示企业
+          !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
+            <>
+              <Form.Item label="企业" name="EntCode">
+                <EntAtmoList noFilter style={{ width: 200 }} />
+              </Form.Item>
+              <Spin spinning={pointLoading} size="small" style={{ top: -10 }}>
+                <Form.Item label="点位名称" name="DGIMN">
+                  <Select
+                    placeholder="请选择"
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    style={{ width: 200 }}
+                  >
+                    {pointList[0] &&
+                      pointList.map(item => {
+                        return (
+                          <Option key={item.DGIMN} value={item.DGIMN}>
+                            {item.PointName}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                </Form.Item>
+              </Spin>
+            </>
+          )}
           <Form.Item label="核实人" name="CheckUserID">
             <OperationInspectoUserList style={{ width: 150 }} />
           </Form.Item>

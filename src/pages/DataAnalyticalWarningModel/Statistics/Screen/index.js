@@ -166,11 +166,35 @@ const Index = props => {
 
   // 获取请求参数
   const getRequestBody = () => {
+    let timeFlag = props.location.query.timeFlag;
+    console.log('timeFlag', timeFlag);
+
+    let beginTime, endTime;
+    switch (timeFlag) {
+      case 'before':
+        beginTime = moment()
+          .subtract(10, 'year')
+          .format('YYYY-MM-DD 00:00:00');
+        endTime = moment('2023-06')
+          .endOf('month')
+          .format('YYYY-MM-DD 23:59:59');
+        break;
+      case 'after':
+        beginTime = moment('2023-07')
+          .startOf('month')
+          .format('YYYY-MM-DD 00:00:00');
+        endTime = moment().format('YYYY-MM-DD 23:59:59');
+        break;
+      default:
+        beginTime = moment()
+          .subtract(1, 'year')
+          .format('YYYY-MM-DD 00:00:00');
+        endTime = moment().format('YYYY-MM-DD 23:59:59');
+        break;
+    }
     return {
-      beginTime: moment()
-        .subtract(1, 'year')
-        .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      beginTime: beginTime,
+      endTime: endTime,
       entCode: [],
       modelGuid: selectedModelGuid,
     };

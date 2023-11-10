@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:11:57
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-25 20:07:46
+ * @Last Modified time: 2023-11-07 14:35:17
  * @Description：模型设置页面
  */
 import React, { useState, useEffect } from 'react';
@@ -62,6 +62,7 @@ const Setting = props => {
   const [treeData, setTreeData] = useState([]);
   const [checkedKeys, setCheckedKeys] = useState([]);
   const [dataSource, setDataSource] = useState([]);
+  const [industryList, setIndustryList] = useState([]);
   const [pageSize, setPageSize] = useState(20);
   const [pageIndex, setPageIndex] = useState(1);
   const { ModelNumber, ID } = props.match.params;
@@ -73,8 +74,23 @@ const Setting = props => {
 
   //
   const loadData = () => {
+    getListPager();
     GetModelInfoAndParams();
     GetModelRelationDGIMN();
+  };
+
+  // 获取行业
+  const getListPager = () => {
+    dispatch({
+      type: 'dataModel/getListPager',
+      payload: {
+        configId: 'IndustryType',
+      },
+      callback: res => {
+        console.log('res', res)
+        setIndustryList(res.DataSource);
+      },
+    });
   };
 
   // 获取模型基础信息和参数配置
@@ -144,6 +160,7 @@ const Setting = props => {
         regionCode: values.regionCode,
         entCode: values.entCode,
         StopPointFlag: true,
+        ModelGuid: ID,
       },
       callback: res => {
         // setTreeData(res);
@@ -272,7 +289,7 @@ const Setting = props => {
             },
             dataAttribute: modelParamsData.dataAttribute,
           };
-          // console.log('body', body);
+          console.log('body', body);
           // return;
           dispatch({
             type: 'dataModel/SaveModelInfoAndParams',
@@ -419,7 +436,12 @@ const Setting = props => {
               </Row>
             </Form>
           </Card>
-          <ModelParamsConfig ModelID={ID} Data={ModelInfoAndParams} onRef={childRef} />
+          <ModelParamsConfig
+            ModelID={ID}
+            Data={ModelInfoAndParams}
+            industryList={industryList}
+            onRef={childRef}
+          />
           <Divider orientation="right" style={{ color: '#f6f0f0' }}>
             <Space>
               <Button type="primary" loading={saveLoading} onClick={() => onFinish()}>
@@ -517,7 +539,7 @@ const Setting = props => {
         <Card
           bordered={false}
           style={{ marginTop: 16 }}
-          bodyStyle={{ height: 'calc(100vh - 280px)', overflowY: 'auto' }}
+          bodyStyle={{ height: 'calc(100vh - 240px)', overflowY: 'auto' }}
         >
           {entAndPointLoading ? (
             <Spin></Spin>

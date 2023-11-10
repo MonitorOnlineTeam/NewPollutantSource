@@ -395,7 +395,8 @@ const WarningDataAndChart = props => {
         );
         let newFilteredWarningDate = filteredWarningDate.length ? filteredWarningDate : warningDate;
         let abnormalMarkLine = newFilteredWarningDate.map(item => {
-          let color = filteredWarningDate.length ? getColorByName[item.name] : '#c23531';
+          debugger
+          let color = filteredWarningDate.length ? getColorByName[item.pollutantName] : '#c23531';
           return {
             name: item.name,
             xAxis: item.date,

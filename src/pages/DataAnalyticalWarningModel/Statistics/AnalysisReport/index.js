@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-10-25 20:08:04
+ * @Last Modified time: 2023-11-01 10:14:29
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -33,7 +33,6 @@ import moment from 'moment';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
 import { ModelNumberIdsDatas, ModalNameConversion } from '../../CONST';
-
 
 const noData = {
   value: 0,
@@ -375,9 +374,7 @@ const Index = props => {
               个排放口{dateString[0]}至{dateString[1]}的小时数据进行分析，共发现
               {modelInfo.UniqueParentCodeCount}家企业{modelInfo.DGIMNCount}
               个排放口符合数据特征，发现线索{modelInfo.DisCulesNum}次，已核实
-              {modelInfo.VerifiedNum}次
-              {/* ，经核发现有异常{modelInfo.CheckedResult2Count}次 */}
-              。
+              {modelInfo.VerifiedNum}次{/* ，经核发现有异常{modelInfo.CheckedResult2Count}次 */}。
             </p>
             <Descriptions bordered column={1} size="small" className={styles.DescriptionsWrapper}>
               <Descriptions.Item label="数据特征">{modelInfo.DataAttr}</Descriptions.Item>
@@ -604,16 +601,19 @@ const Index = props => {
                   }}
                 />
               </Form.Item>
-              <Form.Item label="企业" name="EntCode">
-                <EntAtmoList
-                  mode="multiple"
-                  maxTagCount={2}
-                  maxTagTextLength={6}
-                  maxTagPlaceholder="..."
-                  regionCode={regionCode}
-                  style={{ width: 300 }}
-                />
-              </Form.Item>
+              {// 脱敏角色不显示企业
+              !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
+                <Form.Item label="企业" name="EntCode">
+                  <EntAtmoList
+                    mode="multiple"
+                    maxTagCount={2}
+                    maxTagTextLength={6}
+                    maxTagPlaceholder="..."
+                    regionCode={regionCode}
+                    style={{ width: 300 }}
+                  />
+                </Form.Item>
+              )}
               <Form.Item label="行业" name="IndustryTypeCode">
                 <SearchSelect
                   placeholder="排口所属行业"
