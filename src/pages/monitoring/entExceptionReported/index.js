@@ -207,7 +207,7 @@ class Test extends PureComponent {
                   {getFieldDecorator('DataType', {
                     // initialValue: ["HourData"]
                   })(
-                    <Select mode="multiple" allowClear style={{ width: 220 }} placeholder="请选择异常数据类型">
+                    <Select mode="multiple" allowClear style={{ width: 314 }} placeholder="请选择异常数据类型">
                       <Option key="HourData" value="HourData">小时数据</Option>
                       <Option key="DayData" value="DayData">日均数据</Option>
                     </Select>

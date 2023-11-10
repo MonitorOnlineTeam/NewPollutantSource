@@ -26,6 +26,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import Lightbox from "react-image-lightbox-rotate";
 import "react-image-lightbox/style.css";
 import OperationInspectoUserList from '@/components/OperationInspectoUserList'
+import CheckUserEditDetail from "./checkUserEdit";
+
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -755,8 +757,6 @@ const Index = (props) => {
     }
   }
 
-  const [title, setTitle] = useState('添加')
-  const [editId, setEditId] = useState()
 
   const echoForamtUnit = (code, val, item, isImport) => { //格式化 除单位外的所有单位 数据一致性核查表
     form2.setFieldsValue({
@@ -833,9 +833,20 @@ const Index = (props) => {
 
   const [echoLoading, setEchoLoading] = useState(false)
   const [isCheckUser, setIsCheckUser] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [title, setTitle] = useState('添加')
+  const [editId, setEditId] = useState()
+  const [checkEditvisible, setCheckEditvisible] = useState(false)
+
   const edit = (record) => { //编辑
-    setTitle('编辑')
+    // if(record.isCheckUser){ //核查人员编辑的时候
+    //   setCheckEditvisible(true)
+    //   setTitle('编辑')
+    //   setEditId(record.id)
+    //   return;
+    // }
     setVisible(true)
+    setTitle('编辑')
     setEditId(record.id)
     setEchoLoading(true)
     resetData();
@@ -1470,7 +1481,6 @@ const Index = (props) => {
       //  }
     }
   }
-  const [visible, setVisible] = useState(false)
 
 
   const [pageSize, setPageSize] = useState(20)
@@ -3093,12 +3103,13 @@ const Index = (props) => {
       <Modal
         title={title}
         visible={visible}
-        onOk={save}
+        // onOk={save}
+        // okText='保存'
         destroyOnClose
         onCancel={() => { setVisible(false); }}
         wrapClassName={styles.modalSty}
-        okText='保存'
         getContainer={false}
+        mask={false}
         footer={[
           <Button onClick={() => { setVisible(false) }}>
             取消
@@ -3273,7 +3284,7 @@ const Index = (props) => {
             </Spin>
             <div style={{ color: '#f5222d', marginTop: 4, fontSize: 18 }}>
               我承诺：当月上传的全部量程、参数设定值和溯源值均已核对无误，现场实时数据保持一致，上传的各项数据和照片如有任何问题，本人愿接受相应处罚。
-        </div>
+           </div>
             <Form.Item name='Commitment' valuePropName="checked" style={{ marginBottom: 0 }}>
               <Checkbox disabled={isCheckUser} className={styles.commitmentSty}>
                 已阅读已承诺！
@@ -3317,12 +3328,12 @@ const Index = (props) => {
       <Modal
         title={detailTitle}
         visible={detailVisible}
-        onOk={save}
         destroyOnClose
         onCancel={() => { setDetailVisible(false); }}
         wrapClassName={`${styles.modalSty} ${styles.detailModalSty}`}
         getContainer={false}
         footer={null}
+        mask={false}
       >
         <Detail match={{ params: { id: id } }} />
       </Modal>
@@ -3395,7 +3406,8 @@ const Index = (props) => {
           </Spin>
         </Form>
 
-      </Modal>
+      </Modal> 
+      <CheckUserEditDetail  visible={checkEditvisible} title={title} id={editId}    onCancel={() => { setCheckEditvisible(false); }}/>
     </div>
 
   );

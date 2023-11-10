@@ -89,6 +89,12 @@ export default Model.extend({
         currentUser = JSON.parse(currentUser);
 
         const response = yield call(getMenuData);
+        yield put({
+          type: 'saveCurrentUser',
+          payload: {
+            currentUser,
+          },
+        });
         // ;
         if (response.IsSuccess) {
           const cMenu = yield call(formatter, response.Datas);
@@ -101,7 +107,7 @@ export default Model.extend({
           yield put({
             type: 'saveCurrentUser',
             payload: {
-              currentUser,
+              // currentUser,
               currentMenu: cMenu,
               unfoldMenuList: [...menuList],
               menuDescList: filterDescList.map(item => item.desc.replace("ReactPD", ""))

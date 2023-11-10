@@ -37,19 +37,19 @@ const Model = {
         }
         response.Datas.User_ID = response.Datas.UserId;
         let defaultNavigateUrl = '/user/login';
-        let systemNavigateUrl = ''; //之前首页需要用到的默认路径
-        if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
-          if (response.Datas.MenuDatas[0].name === '首页') {
-            systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
-          } else {
-            if (response.Datas.MenuDatas[0].children.length) {
-              systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
-            } else {
-              systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
-            }
-          }
-        }
-        // defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;
+        let systemNavigateUrl = '/'; //之前首页需要用到的首页默认路径
+        // if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
+        //   if (response.Datas.MenuDatas[0].name === '首页') {
+        //     systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
+        //   } else {
+        //     if (response.Datas.MenuDatas[0].children.length) {
+        //       systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
+        //     } else {
+        //       systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
+        //     }
+        //   }
+        // }
+        // // defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;
         // if (
         //   response.Datas.MenuDatas[0].children &&
         //   response.Datas.MenuDatas[0].children.length &&
@@ -88,6 +88,7 @@ const Model = {
 
         if (response.Datas.MenuDatas?.[0]?.parentId == '0') {
           const sysList = response.Datas.MenuDatas[0]; //默认展示和选中第一个系统
+          // sessionStorage.setItem('sysMenuId', sysList.id);
           Cookie.set('sysMenuId', sysList.id);
           const meunList = sysList.children;
           defaultNavigateUrl = meunList?.[0]?.NavigateUrl

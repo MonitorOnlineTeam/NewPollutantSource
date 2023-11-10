@@ -89,25 +89,25 @@ class Login extends Component {
         }
       });
       
-      // dispatch({
-      //   type: 'login/newLogin',// 后台新框架登录
-      //   payload: { ...values, IsAgree: isAgree, type },
-      //   callback: isSuccess => {
-      //     dispatch({
-      //       type: 'userLogin/login',
-      //       payload: {
-      //         ...values,
-      //         IsAgree: isAgree,
-      //         type,
-      //       },
-      //       callback: isSuccess => {
-      //         if (!isSuccess) { this.child && this.child.current && this.child.current.click(); }  //请求错误刷新验证码
-      //         this.setState({ loginSuccess: isSuccess })
-      //         this.clearCommonData();
-      //       }
-      //     });
-      //   }
-      // });
+      dispatch({
+        type: 'login/newLogin',// 后台新框架登录
+        payload: { ...values, IsAgree: isAgree, type },
+        callback: isSuccess => {
+          dispatch({
+            type: 'userLogin/login',
+            payload: {
+              ...values,
+              IsAgree: isAgree,
+              type,
+            },
+            callback: isSuccess => {
+              if (!isSuccess) { this.child && this.child.current && this.child.current.click(); }  //请求错误刷新验证码
+              this.setState({ loginSuccess: isSuccess })
+              this.clearCommonData();
+            }
+          });
+        }
+      });
 
 
     }

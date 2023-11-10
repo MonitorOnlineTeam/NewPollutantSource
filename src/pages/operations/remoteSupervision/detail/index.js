@@ -553,17 +553,17 @@ const Index = (props) => {
         return  <div style={{ textAlign: 'left' }}>{text}</div>
       }
     },
-    {
-      title: '是否启用',
-      align: 'center',
-      dataIndex: 'Status',
-      key: 'Status',
-      width: 70,
-      render: (text, record) => {
-        return   <Checkbox checked={text==1?true:false} ></Checkbox>
+    // {
+    //   title: '是否启用',
+    //   align: 'center',
+    //   dataIndex: 'Status',
+    //   key: 'Status',
+    //   width: 70,
+    //   render: (text, record) => {
+    //     return   <Checkbox checked={text==1?true:false} ></Checkbox>
 
-      }
-    },
+    //   }
+    // },
     {
       title: '仪表设定值',
       align: 'center',
@@ -571,7 +571,7 @@ const Index = (props) => {
       key: 'SetValue',
       width: 100,
       render: (text, record, index) => {
-         return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : text;       
+      return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : <Row justify='center' align='middle'> {(record.SetStatus==1 || text )&&<Checkbox checked={record.SetStatus == 1 ? true : false} style={{paddingRight:4}}></Checkbox>}{text}</Row>;       
       }
     },
     {
@@ -596,7 +596,7 @@ const Index = (props) => {
       dataIndex: 'InstrumentSetValue',
       key: 'InstrumentSetValue',
       render: (text, record, index) => {
-        return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : text;       
+      return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : <Row justify='center' align='middle'> {(record.InstrumentStatus==1 || text )&&<Checkbox checked={record.InstrumentStatus == 1 ? true : false} style={{paddingRight:4}}></Checkbox>}{text}</Row>;       
      }
     },
     {
@@ -605,6 +605,32 @@ const Index = (props) => {
       dataIndex: 'InstrumentFileList',
       key: 'InstrumentFileList',
       width: 125,
+      render: (text, record, index) => {
+        // if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+        //   return '—' 
+        // }
+        const attachmentDataSource = getAttachmentDataSource(text);
+        return <div>
+         {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
+        </div>;
+      }
+    },
+    {
+      title: '数采仪设定值',
+      align: 'center',
+      dataIndex: 'DataValue',
+      key: 'DataValue',
+      width: 100,
+      render: (text, record, index) => {
+      return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—'  :  <Row justify='center' align='middle'> {(record.DataStatus==1 || text )&&<Checkbox checked={record.DataStatus == 1 ? true : false} style={{paddingRight:4}}></Checkbox>}{text}</Row>; 
+     }
+    },
+    {
+      title: '数采仪设定值照片',
+      align: 'center',
+      dataIndex: 'DataFileList',
+      key: 'DataFileList',
+      width: 140,
       render: (text, record, index) => {
         // if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
         //   return '—' 
@@ -631,32 +657,6 @@ const Index = (props) => {
       dataIndex: 'TraceabilityFileList',
       key: 'TraceabilityFileList',
       width: 120,
-      render: (text, record, index) => {
-        // if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
-        //   return '—' 
-        // }
-        const attachmentDataSource = getAttachmentDataSource(text);
-        return <div>
-         {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
-        </div>;
-      }
-    },
-    {
-      title: '数采仪设定值',
-      align: 'center',
-      dataIndex: 'DataValue',
-      key: 'DataValue',
-      width: 100,
-      render: (text, record, index) => {
-        return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : text;       
-     }
-    },
-    {
-      title: '数采仪设定值照片',
-      align: 'center',
-      dataIndex: 'DataFileList',
-      key: 'DataFileList',
-      width: 140,
       render: (text, record, index) => {
         // if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
         //   return '—' 
@@ -703,7 +703,6 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'Remark',
       key: 'Remark',
-      width: 100,
       width: 150,
     },
     {

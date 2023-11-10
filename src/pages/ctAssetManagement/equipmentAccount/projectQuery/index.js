@@ -107,7 +107,7 @@ const Index = (props) => {
 
   const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, entAndPoint, rojectPointRelationLoading, addProjectPointRelationLoading,checkPoint, } = props;
 
-  const [editPermisPoint,setPermisEditPoint] = useState(false)
+  // const [editPermisPoint,setPermisEditPoint] = useState(false)
   const [associaePermisPoint,setAssociaePermisPoint] = useState(false)
 
   useEffect(() => {
@@ -115,7 +115,7 @@ const Index = (props) => {
     buttonList.map(item=>{
       switch (item){
         case 'oprationPoint':  setAssociaePermisPoint(true); break;
-        case 'addPoint': setPermisEditPoint(true); break;
+        // case 'addPoint': setPermisEditPoint(true); break;
       }
     })
     onFinish(pageIndex, pageSize);
