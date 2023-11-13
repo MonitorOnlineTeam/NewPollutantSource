@@ -26,7 +26,7 @@ const namespace = 'remoteSupervision'
 
 
 const dvaPropsData = ({ loading, remoteSupervision, global }) => ({
-  tableLoading: loading.effects[`${namespace}/getConsistencyCheckInfo`],
+  // tableLoading: loading.effects[`${namespace}/getConsistencyCheckInfo`],
   clientHeight: global.clientHeight,
 })
 
@@ -45,10 +45,17 @@ const dvaDispatch = (dispatch) => {
         callback: callback,
       })
     },
+    getCheckPointConsistencyParam: (payload, callback) => {
+      dispatch({
+        type: `${namespace}/getCheckPointConsistencyParam`,
+        payload: payload,
+        callback: callback,
+      })
+    },
   }
 }
 const Index = (props) => {
-  const { visible, title, onCancel, id, tableLoading, type, clientHeight } = props;
+  const { visible, title, onCancel, id, mn, type, clientHeight } = props;
   const [form2] = Form.useForm(); //添加编辑表单  数据一致性核查表
   const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
   const [commonForm] = Form.useForm();
@@ -61,13 +68,15 @@ const Index = (props) => {
   const [dasRangStatus, setDasRangStatus] = useState(false)
   const [dataRangStatus, setDataRangStatus] = useState(false)
   const [dataRealTimeRangStatus, setDataRealTimeRangStatus] = useState(false) //数采仪实时数据
+  const [tableLoading, setTableLoading] = useState(false)
+
   useEffect(() => {
     if (visible) {
+      setTableLoading(true)
       props.getConsistencyCheckInfo({ ID: id }, (data) => { //DAS量程
         setRangeUpload(data.rangeUpload)
         setCouUpload(data.couUpload)
         setConsistencyCheckDetail(data)
-
         if (data.consistencyCheckList && data.consistencyCheckList[0]) {//获取das量程和数采仪量程是否被选中
           setDasRangStatus(data.consistencyCheckList[0].DataList.DASStatus == 1 ? true : false)
           setDataRangStatus(data.consistencyCheckList[0].DataList.DataRangeStatus == 1 ? true : false)
@@ -113,10 +122,29 @@ const Index = (props) => {
 
         // 实时数据一致性核查表 数据
         let data2 = data.consistencyCheckList && data.consistencyCheckList.filter(item => !(item.DataList.Special && item.PollutantName === '颗粒物'))
-
         setTableData2(data2)
 
-
+        const echoData = (data) =>{
+          for (let i = 0; i < data.consistencyCheckList.length; i++) {
+            const item = data.consistencyCheckList?.[i]?.DataList;
+            echoRangRealTimeForamtData(item?.PollutantCode, item)
+          }
+          for (let i = 0; i < data.consistentParametersCheckList.length; i++) {
+            const item = data.consistentParametersCheckList?.[i];
+            echoParForamtData(item?.CheckItem, item)
+          }
+          setTableLoading(false)
+        }
+        if (data.consistencyCheckList?.[0] && data.consistentParametersCheckList?.[0]) {
+          echoData(data)
+        } else {
+          props.getCheckPointConsistencyParam({ DGIMN: mn }, (data) => {
+            if (data) {
+              echoData(data)
+              setConsistencyCheckDetail(data)
+            }
+          })
+        }
       })
     }
 
@@ -124,7 +152,25 @@ const Index = (props) => {
 
 
   }, [visible]);
+  const echoRangRealTimeForamtData = (code, val, ) => { //格式化 量程和实时数据一致性核查表
+    form2.setFieldsValue({
+      [`${code}RangCheck`]: val?.RangeStatus ? [val.RangeStatus] : [],
+      [`${code}Remark`]: val?.RangeRemark,
+      [`${code}RangCheck2`]: val?.CouStatus ? [val.CouStatus] : [],
+      [`${code}Remark2`]: val?.CouRemrak,
+    })
+    onManualChange(val.RangeStatus && [val.RangeStatus], `${val.RangeStatus}RangCheck`)
+    onManualChange(val.CouStatus && [val.CouStatus], `${val.CouStatus}RangCheck2`)
 
+  }
+  const echoParForamtData = (code, val, ) => { //格式化 参数一致性核查表
+    form2.setFieldsValue({
+      [`${code}RangCheck3`]: val.Uniformity ? [val.Uniformity] : [],
+      [`${code}Remark3`]: val.Remark,
+    })
+    onManualChange(val.Uniformity && [val.Uniformity], `${val.Uniformity}RangCheck3`) //编辑 手工修正结果 参数一致性核查
+
+  }
   const getAttachmentDataSource = (fileInfo) => {
     const fileList = [];
     if (fileInfo && fileInfo[0]) {
@@ -142,6 +188,238 @@ const Index = (props) => {
     { label: '否', value: 2 },
     { label: '不适用', value: 3 },
   ])
+  const onManualChange = (val, name, ) => { //手工修正结果
+
+    if (!val) { return }
+    const ele = document.getElementById(`advanced_search_${name}`)
+    if (!ele) { return }
+    for (var i = 0; i < ele.childNodes.length; i++) {
+      if (val.toString() != i + 1) {
+        ele.childNodes && ele.childNodes[i] && ele.childNodes[i].getElementsByTagName('input')[0].setAttribute("disabled", true)
+      }
+      if (!val[0]) { //点击取消复选框
+        ele.childNodes && ele.childNodes[i] && ele.childNodes[i].getElementsByTagName('input')[0].removeAttribute("disabled")
+      }
+    }
+  }
+  const [saveLoading1, setSaveLoading1] = useState(false)
+  const [saveLoading2, setSaveLoading2] = useState(false)
+  const save = (type) => {
+    const commonData = {
+      ID: id,
+      DGIMN: consistencyCheckDetail?.DGIMN,
+      OperationUserID: consistencyCheckDetail?.operationUserID,
+      DateTime: consistencyCheckDetail?.dateTime,
+      Commitment: consistencyCheckDetail?.Commitment,
+    }
+    const values2 = form2.getFieldsValue();
+    const dataList = consistencyCheckDetail.consistencyCheckList.map(item => {
+      const data = item.DataList;
+      console.log(values2[`${data?.PollutantCode}RangCheck`])
+      return {
+        PollutantCode: data?.PollutantCode,
+        AnalyzerMin: data?.AnalyzerMin,
+        AnalyzerMax: data?.AnalyzerMax,
+        AnalyzerUnit: data?.AnalyzerUnit,
+        DASMin: data?.DASMin,
+        DASMax: data.DASMax,
+        DASUnit: data?.DASUnit,
+        DataMin: data?.DataMin,
+        DataMax: data?.DataMax,
+        DataUnit: data?.DataUnit,
+        RangeAutoStatus: data?.RangeAutoStatus, //量程一致性(自动判断)
+        OperationRangeRemark: data?.OperationRangeRemark,
+        Special: data?.Special,//颗粒物有无显示屏 流速差压法和直测流速法
+        DASStatus: data?.DASStatus,
+        DataRangeStatus: data?.DataRangeStatus, //数采仪量程
+        DataStatus: data?.DataStatus, //数采仪实时数据
+        AnalyzerFile: item?.AnalyzerFileList?.[0]?.FileUuid,
+        DASFile: item?.DASFileList?.[0]?.FileUuid,
+        RangeFile: item?.DataFileList?.[0]?.FileUuid,
+        RangCheck: values2[`${data?.PollutantCode}RangCheck`] && values2[`${item.PollutantCode}RangCheck`]?.[0] ? values2[`${item.PollutantCode}RangCheck`][0] : undefined,//手工修正结果
+        Remark: values2[`${data?.PollutantCode}Remark`],
+        CouStatus: values2[`${data?.PollutantCode}RangCheck2`] && values2[`${item.PollutantCode}RangCheck2`]?.[0] ? values2[`${item.PollutantCode}RangCheck2`][0] : undefined,//手工修正结果
+        CouRemrak: values2[`${data?.PollutantCode}Remark2`],
+      }
+    })
+    const values3 = form3.getFieldsValue();
+    const paramDataList = consistencyCheckDetail.consistentParametersCheckList.map(item => {
+      return {
+        ...item,
+        SetFile: item?.SetFileList?.[0]?.FileUuid,
+        InstrumentFile: item?.InstrumentFileList?.[0]?.FileUuid,
+        TraceabilityFile: item?.TraceabilityFileList?.[0]?.FileUuid,
+        DataFile: item?.DataFileList?.[0]?.FileUuid,
+        Uniformity: values3[`${item.CheckItem}RangCheck3`] && values3[`${item.CheckItem}RangCheck3`]?.[0] ? values3[`${item.CheckItem}RangCheck3`][0] : undefined,//手工修正结果
+        Remark: values3[`${item.CheckItem}Remark3`],
+      }
+    })
+    const data = {
+      AddType: type,
+      isCheckUser: true,
+      Data: {
+        ...commonData,
+        CouUpload: consistencyCheckDetail?.couUpload?.[0]?.FileUuid,
+      },
+      DataList: dataList,
+      ParamDataList: paramDataList,
+    }
+    console.log(data)
+    //  props.addRemoteInspector({
+    //   AddType: type,
+    //   isCheckUser: isCheckUser,
+    //   Data: {
+    //     ...commonData,
+    //     CouUpload:  consistencyCheckDetail?.couUpload?.[0]?.FileUuid,
+    //   },
+    //   DataList: dataList,
+    //   ParamDataList: paramDataList,
+    // }, (isSuccess) => {
+    //   type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
+    //   isSuccess && props.onFinish()
+    // })
+
+    // commonForm.validateFields().then(commonValues => {
+    //   if (type == 2 && !isCheckUser && !commonValues.Commitment) { //运维人员不在结尾的“已阅读已承诺”打勾，不能提交
+    //     message.error(`请确认“已阅读已承诺”!`)
+    //     return;
+    //   }
+    //   const commonData = {
+    //     ...commonValues,
+    //     // ID: title === '添加' ? addId : editId,
+    //     ID: editId,
+    //     month: undefined,
+    //     DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-DD 00:00:00") : undefined,
+    //     Commitment: commonValues.Commitment ? 1 : undefined,
+    //   }
+    //   // if (tabType == 1) { //数据一致性核查表
+
+    //   type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
+    //   form2.validateFields().then((values) => {
+    //     form3.validateFields().then(values2 => {
+    //       const dataList1 = addDataConsistencyData.map(item => {
+    //         return {
+    //           PollutantCode: item.ChildID,
+    //           AnalyzerMin: values[`${item.par}AnalyzerRang1`],
+    //           AnalyzerMax: values[`${item.par}AnalyzerRang2`],
+    //           AnalyzerUnit: values[`${item.par}AnalyzerUnit`],
+    //           DASMin: dasChecked ? values[`${item.par}DsRang1`] : undefined,
+    //           DASMax: dasChecked ? values[`${item.par}DsRang2`] : undefined,
+    //           DASUnit: dasChecked ? values[`${item.par}DsUnit`] : undefined,
+    //           DataMin: numChecked ? values[`${item.par}ScyRang1`] : undefined,
+    //           DataMax: numChecked ? values[`${item.par}ScyRang2`] : undefined,
+    //           DataUnit: numChecked ? values[`${item.par}ScyUnit`] : undefined,
+    //           RangeAutoStatus: values[`${item.par}RangUniformity`], //量程一致性(自动判断)
+    //           RangeStatus: values[`${item.par}RangCheck`] && values[`${item.par}RangCheck`][0] ? values[`${item.par}RangCheck`][0] : undefined,
+    //           RangeRemark: values[`${item.par}Remark`],
+    //           OperationRangeRemark: values[`${item.par}OperationRangeRemark`],
+    //           Special: item.isDisplay == 1 && isDisPlayCheck1 || item.isDisplay == 3 && isDisPlayCheck3 ? 1 : item.isDisplay == 2 && isDisPlayCheck2 || item.isDisplay == 4 && isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
+    //           DASStatus: dasChecked ? 1 : 2,
+    //           DataRangeStatus: numChecked ? 1 : 2, //数采仪量程
+    //           DataStatus: numRealTimeChecked ? 1 : 2, //数采仪实时数据
+    //           AnalyzerFile: values[`${item.par}AnalyzerFilePar`],
+    //           DASFile: values[`${item.par}DasFilePar`],
+    //           RangeFile: values[`${item.par}RangeFilePar`],
+    //         }
+    //       })
+    //       const dataList2 = addRealTimeData.map(item => {
+    //         return {
+    //           PollutantCode: item.ChildID,
+    //           AnalyzerCou: values[`${item.par}IndicaVal`],
+    //           AnalyzerCouUnit: values[`${item.par}IndicaUnit`],
+    //           DASCou: dasChecked ? values[`${item.par}DsData`] : undefined,
+    //           DASCouUnit: dasChecked ? values[`${item.par}DsDataUnit`] : undefined,
+    //           DataCou: numRealTimeChecked ? values[`${item.par}ScyData`] : undefined,
+    //           DataCouUnit: numRealTimeChecked ? values[`${item.par}ScyDataUnit`] : undefined,
+    //           CouAutoStatus: values[`${item.par}DataUniformity`],
+    //           CouStatus: values[`${item.par}RangCheck2`] && values[`${item.par}RangCheck2`][0] ? values[`${item.par}RangCheck2`][0] : undefined,
+    //           CouRemrak: values[`${item.par}Remark2`],
+    //           OperationDataRemark: values[`${item.par}OperationDataRemark`],
+    //           CouType: item.concentrationType == '原始浓度' ? 1 : item.concentrationType == '标杆浓度' ? 2 : undefined,
+    //         }
+    //       })
+    //       dataList1.map((item, index) => { // 合并颗粒物和流速的数据  量程一致性核查表 删除没勾选的 颗粒物和流速
+    //         if (item.PollutantCode == '411' && !item.Special || item.PollutantCode == '415' && !item.Special) {
+    //           dataList1.splice(index, 1)
+    //         }
+    //       })
+
+    //       let dataList = [], obj1 = null, obj2 = null, obj3 = null;
+    //       dataList1.map((item1, index1) => { //合并两个表格的数据     
+    //         dataList2.map((item2, index2) => {
+    //           if (item1.PollutantCode == '411' || item2.PollutantCode == '411') { //颗粒物特殊处理
+    //             if (item1.PollutantCode == '411' && item1.Special) {
+    //               obj1 = item1 //颗粒物 有无显示屏
+    //             }
+    //             if (item2.PollutantCode == '411' && item2.CouType == 1) {
+    //               obj2 = item2  //颗粒物 原始浓度
+    //             }
+    //             if (item2.PollutantCode == '411' && item2.CouType == 2) {
+    //               obj3 = item2  //颗粒物 标杆浓度
+    //             }
+    //           } else {
+    //             if (item1.PollutantCode == item2.PollutantCode) {
+    //               dataList.push({ ...item1, ...item2 })
+    //             }
+    //           }
+    //         })
+    //       })
+
+    //       dataList.push(obj1, obj2, obj3)
+    //       dataList = dataList.filter(item => item) //去除值为空的情况
+
+    //       const paramDataList = addParconsistencyData.map(item => {
+    //         const values = values2
+    //         return {
+    //           CheckItem: item.ChildID,
+    //           Status: values[`${item.par}IsEnable`] && values[`${item.par}IsEnable`][0] == 1 ? 1 : 2,
+    //           SetValue: values[`${item.par}SetVal`],
+    //           InstrumentSetValue: values[`${item.par}InstrumentSetVal`],
+    //           TraceabilityValue: values[`${item.par}TraceVal`],
+    //           DataValue: values[`${item.par}DataVal`],
+    //           AutoUniformity: values[`${item.par}Uniform`],
+    //           Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
+    //           Remark: values[`${item.par}Remark3`],
+    //           OperationReamrk: values[`${item.par}OperationReamrk`],
+    //           SetFile: values[`${item.par}SettingFilePar`],
+    //           InstrumentFile: values[`${item.par}InstrumentFilePar`],
+    //           TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
+    //           DataFile: values[`${item.par}DataFilePar`],
+    //           SetStatus: values[`${item.par}SetStatus`] && values[`${item.par}SetStatus`][0] == 1 ? 1 : 2,
+    //           InstrumentStatus: values[`${item.par}InstrumentStatus`] && values[`${item.par}InstrumentStatus`][0] == 1 ? 1 : 2,
+    //           DataStatus: values[`${item.par}DataStatus`] && values[`${item.par}DataStatus`][0] == 1 ? 1 : 2,
+    //         }
+    //       })
+    //       props.addRemoteInspector({
+    //         AddType: type,
+    //         isCheckUser: isCheckUser,
+    //         Data: {
+    //           ...commonData,
+    //           CouUpload: values.files2,
+    //         },
+    //         DataList: dataList,
+    //         ParamDataList: paramDataList,
+    //       }, (isSuccess) => {
+    //         // title === '添加' && id && setAddId(id)
+    //         type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
+    //         isSuccess && onFinish(pageIndex, pageSize)
+    //       })
+
+
+    //     }).catch((info) => {
+    //       console.log('Validate Failed3:', info);
+    //     });
+
+    //   }).catch((info) => {
+    //     console.log('Validate Failed2:', info);
+    //   });
+    // });
+
+
+
+
+
+  }
   const columns1 = [
     {
       title: '序号',
@@ -331,18 +609,10 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             }
-            let disabledFlag = false;
-            switch (record.isDisplay) {
-              case 1: case 2:
-                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
-                break;
-              case 3: case 4:
-                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
-                break;
-            }
+            const disabledFlag = (record.PollutantName === '颗粒物' || record.PollutantName === '流速') && !record.DataList?.Special;
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
-              <Form.Item name={[`${record.par}RangCheck`]}>
-                <Checkbox.Group disabled={disabledFlag} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck`, 1) }} />
+              <Form.Item name={`${record?.DataList?.PollutantCode}RangCheck`}>
+                <Checkbox.Group disabled={disabledFlag} options={manualOptions} onChange={(val) => { onManualChange(val, `${record?.DataList?.PollutantCode}RangCheck`,) }} />
               </Form.Item>
             </Row>
           }
@@ -372,16 +642,8 @@ const Index = (props) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             }
-            let disabledFlag = false;
-            switch (record.isDisplay) {
-              case 1: case 2:
-                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
-                break;
-              case 3: case 4:
-                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
-                break;
-            }
-            return <Form.Item name={`${record.par}Remark`}>
+            const disabledFlag = (record.PollutantName === '颗粒物' || record.PollutantName === '流速') && !record.DataList?.Special;
+            return <Form.Item name={`${record?.DataList?.PollutantCode}Remark`}>
               <TextArea rows={1} disabled={disabledFlag} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
@@ -512,8 +774,8 @@ const Index = (props) => {
           width: 220,
           render: (text, record, index) => {
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
-              <Form.Item name={[`${record.par}RangCheck2`]}>
-                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck2`, 2) }} />
+              <Form.Item name={`${record?.DataList?.PollutantCode}RangCheck2`}>
+                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, `${record?.DataList?.PollutantCode}RangCheck2`,) }} />
               </Form.Item>
             </Row>
           }
@@ -536,7 +798,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width: 180,
           render: (text, record) => {
-            return <Form.Item name={`${record.par}Remark2`}>
+            return <Form.Item name={`${record?.DataList?.PollutantCode}Remark2`}>
               <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
@@ -563,152 +825,158 @@ const Index = (props) => {
       }
     },
     {
-      title: '仪表设定值',
-      align: 'center',
-      dataIndex: 'SetValue',
-      key: 'SetValue',
-      width: 100,
-      render: (text, record, index) => {
-        return record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性' ? '—' : <Row justify='center' align='middle'> {(record.SetStatus == 1 || text) && <Checkbox checked={record.SetStatus == 1 ? true : false} style={{ paddingRight: 4 }}></Checkbox>}{text}</Row>;
-      }
-    },
-    {
-      title: '仪表设定值照片',
-      align: 'center',
-      dataIndex: 'SetFileList',
-      key: 'SetFileList',
-      width: 120,
-      render: (text, record, index) => {
-        const attachmentDataSource = getAttachmentDataSource(text);
-        return <div>
-          {text && text[0] && <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
-        </div>;
-      }
-    },
-    {
-      title: 'DAS设定值',
-      align: 'center',
-      dataIndex: 'InstrumentSetValue',
-      key: 'InstrumentSetValue',
-      render: (text, record, index) => {
-        return record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性' ? '—' : <Row justify='center' align='middle'> {(record.InstrumentStatus == 1 || text) && <Checkbox checked={record.InstrumentStatus == 1 ? true : false} style={{ paddingRight: 4 }}></Checkbox>}{text}</Row>;
-      }
-    },
-    {
-      title: 'DAS设定值照片',
-      align: 'center',
-      dataIndex: 'InstrumentFileList',
-      key: 'InstrumentFileList',
-      width: 125,
-      render: (text, record, index) => {
-        const attachmentDataSource = getAttachmentDataSource(text);
-        return <div>
-          {text && text[0] && <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
-        </div>;
-      }
-    },
-    {
-      title: '数采仪设定值',
-      align: 'center',
-      dataIndex: 'DataValue',
-      key: 'DataValue',
-      width: 100,
-      render: (text, record, index) => {
-        return record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性' ? '—' : <Row justify='center' align='middle'> {(record.DataStatus == 1 || text) && <Checkbox checked={record.DataStatus == 1 ? true : false} style={{ paddingRight: 4 }}></Checkbox>}{text}</Row>;
-      }
-    },
-    {
-      title: '数采仪设定值照片',
-      align: 'center',
-      dataIndex: 'DataFileList',
-      key: 'DataFileList',
-      width: 140,
-      render: (text, record, index) => {
-        const attachmentDataSource = getAttachmentDataSource(text);
-        return <div>
-          {text && text[0] && <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
-        </div>;
-      }
-    },
-    {
-      title: '溯源值',
-      align: 'center',
-      dataIndex: 'TraceabilityValue',
-      key: 'TraceabilityValue',
-      width: 70,
-      render: (text, record, index) => {
-        return record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性' ? '—' : text;
-      }
-    },
-    {
-      title: '溯源值照片',
-      align: 'center',
-      dataIndex: 'TraceabilityFileList',
-      key: 'TraceabilityFileList',
-      width: 120,
-      render: (text, record, index) => {
-        const attachmentDataSource = getAttachmentDataSource(text);
-        return <div>
-          {text && text[0] && <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
-        </div>;
-      }
-    },
-    {
-      title: '一致性(自动判断)',
-      align: 'center',
-      dataIndex: 'AutoUniformity',
-      key: 'AutoUniformity',
-      width: 120,
-      render: (text, record) => {
-        if (record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性') {
-          return '—'
-        } else {
-          return text == 1 ? '是' : text == 2 ? '否' : null
+      title: '参数一致性核查表',
+      children: [
+        {
+          title: '仪表设定值',
+          align: 'center',
+          dataIndex: 'SetValue',
+          key: 'SetValue',
+          width: 100,
+          render: (text, record, index) => {
+            return record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性' ? '—' : <Row justify='center' align='middle'> {(record.SetStatus == 1 || text) && <Checkbox checked={record.SetStatus == 1 ? true : false} style={{ paddingRight: 4 }}></Checkbox>}{text}</Row>;
+          }
+        },
+        {
+          title: '仪表设定值照片',
+          align: 'center',
+          dataIndex: 'SetFileList',
+          key: 'SetFileList',
+          width: 120,
+          render: (text, record, index) => {
+            const attachmentDataSource = getAttachmentDataSource(text);
+            return <div>
+              {text && text[0] && <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
+            </div>;
+          }
+        },
+        {
+          title: 'DAS设定值',
+          align: 'center',
+          dataIndex: 'InstrumentSetValue',
+          key: 'InstrumentSetValue',
+          width: 110,
+          render: (text, record, index) => {
+            return record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性' ? '—' : <Row justify='center' align='middle'> {(record.InstrumentStatus == 1 || text) && <Checkbox checked={record.InstrumentStatus == 1 ? true : false} style={{ paddingRight: 4 }}></Checkbox>}{text}</Row>;
+          }
+        },
+        {
+          title: 'DAS设定值照片',
+          align: 'center',
+          dataIndex: 'InstrumentFileList',
+          key: 'InstrumentFileList',
+          width: 125,
+          render: (text, record, index) => {
+            const attachmentDataSource = getAttachmentDataSource(text);
+            return <div>
+              {text && text[0] && <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
+            </div>;
+          }
+        },
+        {
+          title: '数采仪设定值',
+          align: 'center',
+          dataIndex: 'DataValue',
+          key: 'DataValue',
+          width: 100,
+          render: (text, record, index) => {
+            return record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性' ? '—' : <Row justify='center' align='middle'> {(record.DataStatus == 1 || text) && <Checkbox checked={record.DataStatus == 1 ? true : false} style={{ paddingRight: 4 }}></Checkbox>}{text}</Row>;
+          }
+        },
+        {
+          title: '数采仪设定值照片',
+          align: 'center',
+          dataIndex: 'DataFileList',
+          key: 'DataFileList',
+          width: 140,
+          render: (text, record, index) => {
+            const attachmentDataSource = getAttachmentDataSource(text);
+            return <div>
+              {text && text[0] && <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
+            </div>;
+          }
+        },
+        {
+          title: '溯源值',
+          align: 'center',
+          dataIndex: 'TraceabilityValue',
+          key: 'TraceabilityValue',
+          width: 70,
+          render: (text, record, index) => {
+            return record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性' ? '—' : text;
+          }
+        },
+        {
+          title: '溯源值照片',
+          align: 'center',
+          dataIndex: 'TraceabilityFileList',
+          key: 'TraceabilityFileList',
+          width: 120,
+          render: (text, record, index) => {
+            const attachmentDataSource = getAttachmentDataSource(text);
+            return <div>
+              {text && text[0] && <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
+            </div>;
+          }
+        },
+        {
+          title: '一致性(自动判断)',
+          align: 'center',
+          dataIndex: 'AutoUniformity',
+          key: 'AutoUniformity',
+          width: 120,
+          render: (text, record) => {
+            if (record.ItemName === '停炉信号接入有备案材料' || record.ItemName === '停炉信号激活时工况真实性') {
+              return '—'
+            } else {
+              return text == 1 ? '是' : text == 2 ? '否' : null
+            }
+          }
+        },
+        {
+          title: '手工修正结果',
+          align: 'center',
+          dataIndex: 'Uniformity',
+          key: 'Uniformity',
+          width: 220,
+          render: (text, record, index) => {
+            return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
+              <Form.Item name={`${record?.DataList?.PollutantCode}RangCheck3`}>
+                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, `${record?.DataList?.CheckItem}RangCheck3`,) }} />
+              </Form.Item>
+            </Row>
+          }
+        },
+        {
+          title: '运维人员核查备注',
+          align: 'center',
+          dataIndex: 'OperationReramk',
+          key: 'OperationReramk',
+          width: 180,
+        },
+        {
+          title: '备注',
+          align: 'center',
+          dataIndex: 'Remark',
+          key: 'Remark',
+          width: 150,
+          render: (text, record) => {
+            return <Form.Item name={`${record?.DataList?.PollutantCode}Remark3`}>
+              <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
+            </Form.Item>
+          }
+        },
+        {
+          title: '判断依据',
+          align: 'center',
+          dataIndex: 'Content',
+          key: 'Content',
+          width: 100,
+          render: (text, record, index) => {
+            return <div style={{ textAlign: 'left' }}>{text}</div>
+          }
         }
-      }
-    },
-    {
-      title: '手工修正结果',
-      align: 'center',
-      dataIndex: 'Uniformity',
-      key: 'Uniformity',
-      width: 220,
-      render: (text, record, index) => {
-        return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
-          <Form.Item name={`${record.par}RangCheck3`}>
-            <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck3`, 3) }} />
-          </Form.Item>
-        </Row>
-      }
-    },
-    {
-      title: '运维人员核查备注',
-      align: 'center',
-      dataIndex: 'OperationReramk',
-      key: 'OperationReramk',
-      width: 180,
-    },
-    {
-      title: '备注',
-      align: 'center',
-      dataIndex: 'Remark',
-      key: 'Remark',
-      width: 150,
-      render: (text, record) => {
-        return <Form.Item name={`${record.par}Remark3`}>
-          <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
-        </Form.Item>
-      }
-    },
-    {
-      title: '判断依据',
-      align: 'center',
-      dataIndex: 'Content',
-      key: 'Content',
-      width: 100,
-      render: (text, record, index) => {
-        return <div style={{ textAlign: 'left' }}>{text}</div>
-      }
+      ]
     }
   ]
 
@@ -729,10 +997,10 @@ const Index = (props) => {
         <Button onClick={() => { onCancel && onCancel() }}>
           取消
       </Button>,
-        <Button type="primary" onClick={() => { save(1) }} loading={tableLoading || false}>
+        <Button type="primary" onClick={() => { save(1) }} loading={saveLoading1 || tableLoading || false}>
           保存
       </Button>,
-        <Button type="primary" onClick={() => save(2)} loading={tableLoading || false} >
+        <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || tableLoading || false} >
           提交
       </Button>,
       ]}

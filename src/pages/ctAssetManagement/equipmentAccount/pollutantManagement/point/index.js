@@ -324,6 +324,7 @@ export default class Index extends Component {
   }
   industryChange = (value) => {
     const { pointIndustryList } = this.state;
+    this.props.form.setFieldsValue({pointType:undefined})
     const pointTypeData = pointIndustryList.filter(item => item.ChildID === value)
     this.setState({ pointTypeList: pointTypeData?.length ? pointTypeData[0].clist : [] })
   }

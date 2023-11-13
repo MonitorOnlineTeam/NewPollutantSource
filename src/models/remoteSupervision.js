@@ -109,6 +109,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    //获取数据 核查人员编辑时
+    *getCheckPointConsistencyParam({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.GetPointConsistencyParam, { ...payload });
+      if (result.IsSuccess) {
+        callback&&callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
     //添加或修改数据一致性核查
     *addOrUpdConsistencyCheck({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.AddOrUpdConsistencyCheck, { ...payload });
