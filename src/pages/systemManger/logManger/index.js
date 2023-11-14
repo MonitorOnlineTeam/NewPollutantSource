@@ -42,6 +42,7 @@ const dvaPropsData = ({ loading, logManger, usertree }) => ({
   queryPar2: logManger.queryPar2,
   deleteSystemLongInLogsLoading: loading.effects[`${namespace}/deleteSystemLongInLogs`],
   tableDatas3: logManger.tableDatas3,
+  tableTotal3: logManger.tableTotal3,
   tableLoading3: loading.effects[`${namespace}/getUserOprationLogsList`],
   queryPar3: logManger.queryPar3,
   deleteUserOprationLogsLoading: loading.effects[`${namespace}/deleteUserOprationLogs`],
@@ -622,7 +623,7 @@ const Index = (props) => {
   const handleTableChange3 = (PageIndex, PageSize) => { //分页 打卡异常  弹框
     setPageIndex3(PageIndex)
     setPageSize3(PageSize)
-    onFinish2(PageIndex, PageSize, queryPar3)
+    onFinish3(PageIndex, PageSize, queryPar3)
   }
   const [detailVisible3, setDetailVisible3] = useState(false)
   const [detailData3, setDetailData3] = useState()

@@ -194,7 +194,7 @@ const dvaDispatch = (dispatch) => {
         },
       })
     },
-    addRemoteInspector: (payload, callback) => {  //保存 新 
+    addRemoteInspector: (payload, callback) => {  //保存 提交
       dispatch({
         type: `${namespace}/addRemoteInspector`,
         payload: payload,

@@ -92,7 +92,7 @@ const Index = (props) => {
      }
 
 
-      //颗粒物和流速都未选择的状态
+      //颗粒物或流速都未选择的状态
       for(let k=0;k< data.consistencyCheckList.length;k++){
         if(flag1&&data.consistencyCheckList[k].PollutantName==='颗粒物'){
           data1.splice(k+1,0,{PollutantName:'颗粒物',DataList:{ flag:3 }},{PollutantName:'颗粒物',DataList:{ flag:4 }})

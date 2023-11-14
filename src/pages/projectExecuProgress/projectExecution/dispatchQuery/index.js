@@ -293,15 +293,11 @@ const Index = (props) => {
           <Col span={8}>
             <Form.Item name='status' label='流程状态' >
               <Select allowClear placeholder="请选择" >
-                <Option value="1">待发</Option>
-                <Option value="2">已发</Option>
-                <Option value="3">待办</Option>
-                <Option value="4">已办</Option>
-                <Option value="5">取消</Option>
-                <Option value="6">回退</Option>
-                <Option value="7">取回</Option>
-                <Option value="8">竞争执行</Option>
-                <Option value="15">终止</Option>
+                <Option value="0">进行中</Option>
+                <Option value="1">终止结束</Option>
+                <Option value="2">取消</Option>
+                <Option value="3">正常结束</Option>
+                <Option value="4">被删除</Option>
               </Select>
             </Form.Item>
           </Col>
