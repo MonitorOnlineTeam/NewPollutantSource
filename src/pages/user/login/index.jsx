@@ -75,19 +75,19 @@ class Login extends Component {
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
       }
-      dispatch({ //宝武
-        type: 'userLogin/login',
-        payload: {
-          ...values,
-          IsAgree: isAgree,
-          type,
-        },
-        callback: isSuccess => {
-          if (!isSuccess) { this.child && this.child.current && this.child.current.click(); }  //请求错误刷新验证码
-          this.setState({ loginSuccess: isSuccess })
-          this.clearCommonData();
-        }
-      });
+      // dispatch({ //宝武
+      //   type: 'userLogin/login',
+      //   payload: {
+      //     ...values,
+      //     IsAgree: isAgree,
+      //     type,
+      //   },
+      //   callback: isSuccess => {
+      //     if (!isSuccess) { this.child && this.child.current && this.child.current.click(); }  //请求错误刷新验证码
+      //     this.setState({ loginSuccess: isSuccess })
+      //     this.clearCommonData();
+      //   }
+      // });
       
       dispatch({
         type: 'login/newLogin',// 后台新框架登录

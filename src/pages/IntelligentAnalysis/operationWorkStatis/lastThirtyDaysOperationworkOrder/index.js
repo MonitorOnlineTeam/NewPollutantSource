@@ -228,7 +228,7 @@ const Index = (props) => {
       align: 'center',
       render: (text, record) => {
         const cityCode = record.regionCode?record.regionCode : regionCode
-        return <a onClick={() => { setPointType(3);setPageIndex3(1); setCityCode(cityCode); onFinish({...queryPar,regionCode:cityCode,pageIndex:1,pageSize:pageSize3}, 3) }}>{text}</a>
+        return <a onClick={() => { setPointType(3);setPageIndex3(1); setCityCode(cityCode);setEntCode();onFinish({...queryPar,regionCode:cityCode,pageIndex:1,pageSize:pageSize3}, 3) }}>{text}</a>
       }
     },
     {
@@ -383,14 +383,6 @@ const Index = (props) => {
           dataSource={tableDatas}
           columns={columns}
           pagination={false}
-          // pagination={{
-          //   total: tableTotal,
-          //   pageSize: pageSize,
-          //   current: pageIndex,
-          //   showSizeChanger: true,
-          //   showQuickJumper: true,
-          //   onChange: handleTableChange,
-          // }}
         /> :
           pointType == 2 ? <SdlTable
             loading={tableLoading2}
@@ -398,14 +390,6 @@ const Index = (props) => {
             dataSource={tableDatas2}
             columns={columns2}
             pagination={false}
-            // pagination={{
-            //   total: tableTotal2,
-            //   pageSize: pageSize2,
-            //   current: pageIndex2,
-            //   showSizeChanger: true,
-            //   showQuickJumper: true,
-            //   onChange: handleTableChange2,
-            // }}
           /> :
             <SdlTable
               loading={tableLoading3}

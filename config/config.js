@@ -1407,6 +1407,11 @@ export default {
                   component: './operations/cruxParSupervisionAnalysis',
                 },
                 {
+                  path: '/operations/operatioSupervisionKpi', //运维督查KPI
+                  name: 'operatioSupervisionKpi',
+                  component: './operations/operatioSupervisionKpi',
+                },
+                {
                   //运维任务管理 重定向
                   path: '/operations/operaTaskManager',
                   redirect: '/operations/operaTaskManager/operaTask',

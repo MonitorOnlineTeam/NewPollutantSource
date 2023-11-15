@@ -324,7 +324,7 @@ const Index = (props) => {
               return '—'
             }else{  
               let  rangeStatus = record.DataList.RangeStatus;
-              return rangeStatus==1? '是' : rangeStatus ==2 ? '否' : rangeStatus ==3 ?  '不适用': null
+              return rangeStatus==1? '是' : rangeStatus ==2 ? '否' : rangeStatus ==3 ?  '不适用':  rangeStatus ==4 ? '不规范' : null
             }
           }
         },
@@ -508,7 +508,7 @@ const Index = (props) => {
           width:150,
           render: (text, record) => {
             let  couStatus = record.DataList.CouStatus;
-            return couStatus==1? '是' : couStatus ==2 ? '否' : couStatus ==3 ?  '不适用': null
+            return couStatus==1? '是' : couStatus ==2 ? '否' : couStatus ==3 ?  '不适用':  couStatus ==4 ? '不规范' : null
         }
 
         },
@@ -688,7 +688,8 @@ const Index = (props) => {
       key: 'Uniformity', 
       width: 100,
       render: (text, record) => {
-         return text==1? '是' : text ==2 ? '否' : text ==3 ?  '不适用': null
+         return text==1? '是' : text ==2 ? '否' : text ==3 ?  '不适用':  text ==4 ? '不规范' : null
+
       }
     },
     {

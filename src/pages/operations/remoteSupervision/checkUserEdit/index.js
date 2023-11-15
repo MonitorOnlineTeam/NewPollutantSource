@@ -79,7 +79,6 @@ const Index = (props) => {
 
   useEffect(() => {
     if (visible) {
-      setTimeout(() => {
         setTableLoading(true)
         props.getConsistencyCheckInfo({ ID: id }, (data) => { //DAS量程
           setRangeUpload(data.rangeUpload)
@@ -163,7 +162,10 @@ const Index = (props) => {
           }
 
         })
-      })
+    }else{ //关闭弹框时 清空数据 防止下次打开弹框 上一个页面数据量过大 页面卡顿
+      setConsistencyCheckDetail({})
+      setTableData1([]);
+      setTableData2([]);
     }
 
 
@@ -205,6 +207,7 @@ const Index = (props) => {
     { label: '是', value: 1 },
     { label: '否', value: 2 },
     { label: '不适用', value: 3 },
+    { label: '不规范', value: 4 },
   ])
   const onManualChange = (val, name, ) => { //手工修正结果
     if (!val) { return }
@@ -492,13 +495,13 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
-          width: 220,
+          width: 260,
           render: (text, record, index) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             }
             const disabledFlag = (record.PollutantName === '颗粒物' || record.PollutantName === '流速') && !record.DataList?.Special;
-            return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
+            return <Row justify='center' align='middle'  className='manualSty'>
               <Form.Item name={`${record?.DataList?.PollutantCode}RangCheck`}>
                 <Checkbox.Group disabled={disabledFlag} options={manualOptions} onChange={(val) => { onManualChange(val, `${record?.DataList?.PollutantCode}RangCheck`) }} />
               </Form.Item>
@@ -661,10 +664,10 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
-          width: 220,
+          width: 260,
           render: (text, record, index) => {
             const code = `${record?.DataList?.PollutantCode}${record?.DataList?.CouType == 1 ? 'c' : record?.DataList?.CouType == 2 ? 'd' : ''}`
-            return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
+            return <Row justify='center' align='middle'  className='manualSty'>
               <Form.Item name={`${code}RangCheck2`}>
                 <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, `${code}RangCheck2`) }} />
               </Form.Item>
@@ -830,11 +833,11 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'Uniformity',
           key: 'Uniformity',
-          width: 220,
+          width: 260,
           render: (text, record, index) => {
-            return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
+            return <Row justify='center' align='middle'  className='manualSty'>
               <Form.Item name={`${record?.CheckItem}RangCheck3`}>
-                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, `${record?.DataList?.CheckItem}RangCheck3`) }} />
+                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, `${record?.CheckItem}RangCheck3`) }} />
               </Form.Item>
             </Row>
           }
@@ -899,7 +902,7 @@ const Index = (props) => {
     >
       <Form
         form={commonForm}
-        name={"advanced_search3"}
+        name={"advanced_search1"}
       >
         <Spin spinning={tableLoading}>
           <Row style={{ padding: '12px 0' }}>
@@ -971,7 +974,7 @@ const Index = (props) => {
               <li>若同时存在普通数采仪及动态管控仪数采仪，“数采仪”相关选项选择向“国发平台”发送数据的数采仪；</li>
               <li>颗粒物数值一致性： ≤10mg/m3的、绝对误差≤3mg/m3、 >10mg/m3的、绝对误差≤5mg/m3；</li>
               <li>流速直测法的(如热质式、超声波式)，有显示屏的填写设置量程，无显示屏的填写铭牌量程；</li>
-              <li>手工修正结果填写“是、否、不适用“三项，不适用必须备注填写原因</li>
+              <li>手工修正结果填写“是、否、不适用、不规范“四项，不适用必须备注填写原因</li>
             </ol>
           </Row>
           <Form

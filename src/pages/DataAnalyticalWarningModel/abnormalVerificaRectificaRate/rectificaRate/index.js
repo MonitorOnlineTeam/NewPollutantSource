@@ -214,7 +214,7 @@ const Index = (props) => {
       align: 'center',
       render: (text, record, index) => {
         const cityCode = record.CityCode ? record.CityCode : regionCode
-        const element = <a onClick={() => { setPointType(3); setCityCode(cityCode); onFinish({ ...queryPar, regionCode: cityCode }, 3) }}>{text}</a>
+        const element = <a onClick={() => { setPointType(3); setCityCode(cityCode);setEntCode();onFinish({ ...queryPar, regionCode: cityCode }, 3) }}>{text}</a>
         return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: element, };
       }
     },

@@ -1729,6 +1729,7 @@ const Index = (props) => {
     { label: '是', value: 1 },
     { label: '否', value: 2 },
     { label: '不适用', value: 3 },
+    { label: '不规范', value: 4 },
   ])
   const onManualChange = (val, row, name, type) => { //手工修正结果
 
@@ -2388,7 +2389,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 220,
+          width: 260,
           render: (text, record, index) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -2405,7 +2406,7 @@ const Index = (props) => {
                 disabledFlag = !isCheckUser;
                 break;
             }
-            return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
+            return <Row justify='center' align='middle'  className='manualSty'>
               <Form.Item name={[`${record.par}RangCheck`]}>
                 <Checkbox.Group disabled={disabledFlag} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck`, 1) }} />
               </Form.Item>
@@ -2687,9 +2688,9 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 220,
+          width: 260,
           render: (text, record, index) => {
-            return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
+            return <Row justify='center' align='middle' className='manualSty'>
               <Form.Item name={[`${record.par}RangCheck2`]}>
                 <Checkbox.Group disabled={!isCheckUser} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck2`, 2) }} />
               </Form.Item>
@@ -2924,9 +2925,9 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 220,
+          width: 260,
           render: (text, record, index) => {
-            return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
+            return <Row justify='center' align='middle' className='manualSty'>
               <Form.Item name={`${record.par}RangCheck3`}>
                 <Checkbox.Group disabled={!isCheckUser} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck3`, 3) }} />
               </Form.Item>
@@ -3220,7 +3221,7 @@ const Index = (props) => {
                     <li>若同时存在普通数采仪及动态管控仪数采仪，“数采仪”相关选项选择向“国发平台”发送数据的数采仪；</li>
                     <li>颗粒物数值一致性： ≤10mg/m3的、绝对误差≤3mg/m3、 >10mg/m3的、绝对误差≤5mg/m3；</li>
                     <li>流速直测法的(如热质式、超声波式)，有显示屏的填写设置量程，无显示屏的填写铭牌量程；</li>
-                    <li>手工修正结果填写“是、否、不适用“三项，不适用必须备注填写原因</li>
+                    <li>手工修正结果填写“是、否、不适用、不规范“四项，不适用必须备注填写原因</li>
                   </ol>
                 </Row>
               </Form>
