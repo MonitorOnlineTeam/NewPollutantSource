@@ -26,7 +26,7 @@ class ComparisonOfMonChart extends PureComponent {
     this.props.dispatch({
       type: 'home/getComparisonOfMonData',
       payload: {
-        "EntCode": "7526121f-1229-44dd-9de1-429bf6654664",
+        "EntCode": "c679c8f9-fa71-486b-9c20-0d6d2955b2d9",
         "BeginTime": "2023-01-01",
         "EndTime": moment().format("YYYY-MM-DD"),
         "type": "echarts"

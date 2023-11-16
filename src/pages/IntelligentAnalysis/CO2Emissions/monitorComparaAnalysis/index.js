@@ -57,10 +57,19 @@ const dvaDispatch = dispatch => {
 const Index = props => {
   const [form] = Form.useForm();
 
-  const { entList, entLoading, tableDatas, tableCol, tableLoading, showMode } = props;
+  const {
+    entList,
+    entLoading,
+    tableDatas,
+    tableCol,
+    tableLoading,
+    showMode,
+    date,
+    EntCode,
+  } = props;
   useEffect(() => {
     props.getAllEnterprise({}, data => {
-      data && data[0] && form.setFieldsValue({ EntCode: data[0].EntCode });
+      data && data[0] && form.setFieldsValue({ EntCode: EntCode || data[0].EntCode });
       onFinish();
     });
   }, []);
@@ -173,7 +182,8 @@ const Index = props => {
         name="advanced_search"
         layout="inline"
         initialValues={{
-          Time: moment(),
+          Time: date || moment(),
+          EntCode: EntCode,
         }}
         // onFinish={()=>{setPageIndex(1); onFinish(1,pageSize) } }
         onFinish={() => {

@@ -7,9 +7,9 @@ import ReactSeamlessScroll from 'react-seamless-scroll';
 import ReactEcharts from 'echarts-for-react';
 import { router } from 'umi';
 
-@connect(({ loading, home }) => ({
-  paramsInfo: home.paramsInfo,
-  CO2RateAll: home.CO2RateAll,
+@connect(({ loading, home_ys }) => ({
+  paramsInfo: home_ys.paramsInfo,
+  CO2RateAll: home_ys.CO2RateAll,
 }))
 class CO2Rate extends Component {
   constructor(props) {
@@ -18,13 +18,13 @@ class CO2Rate extends Component {
   }
 
   componentDidMount() {
-    this.getData('62030231rdep11');
+    this.getData('cems_202305190935');
     this.getData('62030231rdep12');
   }
 
   getData = dgimn => {
     this.props.dispatch({
-      type: 'home/GetProcessFlowChartStatus',
+      type: 'home_ys/GetProcessFlowChartStatus',
       payload: {
         dgimn: dgimn,
       },
@@ -48,7 +48,7 @@ class CO2Rate extends Component {
     // 实时CO2*10000*44*标杆流量/22.4/两个1000
     let value = (CO2Value * 10000 * 44 * flowValue) / 22.4 / 1000 / 1000;
     this.props.dispatch({
-      type: 'home/updateState',
+      type: 'home_ys/updateState',
       payload: {
         CO2RateAll: {
           ...CO2RateAll,
@@ -76,7 +76,7 @@ class CO2Rate extends Component {
 
   onShowModal = (modalType, title) => {
     this.props.dispatch({
-      type: 'home/updateState',
+      type: 'home_ys/updateState',
       payload: {
         yanshiVisible: true,
         modalType: modalType,
@@ -101,7 +101,7 @@ class CO2Rate extends Component {
             </p>
             <p className={styles.value}>
               CO₂排放速率：
-              <span className={styles.num}>{CO2RateAll['62030231rdep11']}</span>
+              <span className={styles.num}>{CO2RateAll['62030231rdep11'] || 0}</span>
               <span className={styles.unit}>kg/h</span>
             </p>
           </div>
@@ -119,7 +119,7 @@ class CO2Rate extends Component {
             </p>
             <p className={styles.value}>
               CO₂排放速率：
-              <span className={styles.num}>{CO2RateAll['62030231rdep12']}</span>
+              <span className={styles.num}>{CO2RateAll['62030231rdep12'] || 0}</span>
               <span className={styles.unit}>kg/h</span>
             </p>
           </div>

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Breadcrumb } from 'antd';
-import config from '@/config'
-import defaultSettings from '../../../config/defaultSettings'
-import webConfig from '../../../public/webConfig'
-import { connect } from "dva"
-
+import config from '@/config';
+import defaultSettings from '../../../config/defaultSettings';
+import webConfig from '../../../public/webConfig';
+import { connect } from 'dva';
 
 @connect(({ navigationtree }) => ({
   selectTreeItem: navigationtree.pointInfo,
@@ -14,105 +13,123 @@ class index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectTreeItem: {}
+      selectTreeItem: {},
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.selectTreeItem !== this.props.selectTreeItem) {
       this.setState({
-        selectTreeItem: this.props.selectTreeItem
-      })
+        selectTreeItem: this.props.selectTreeItem,
+      });
     }
   }
 
-  pageHeaderRender = (pageHeaderWrapperProps) => {
+  pageHeaderRender = pageHeaderWrapperProps => {
     const { selectTreeItem } = this.state;
     if (pageHeaderWrapperProps.unfoldMenuList.length) {
-      let currentMenu = pageHeaderWrapperProps.unfoldMenuList.find(item => item.path.split('?')[0] === location.pathname.split('?')[0])
+      let pathname = location.pathname;
+
+      // 匹配地址栏参数
+      let locationQuery = location.href.split('?')[1];
+      if (locationQuery) {
+        pathname += '?' + locationQuery;
+      }
+
+      let currentMenu = pageHeaderWrapperProps.unfoldMenuList.find(item => item.path === pathname);
+
       // url和菜单能匹配到
       if (currentMenu) {
         // 面包屑名称
         let breadcrumbNames = currentMenu.breadcrumbNames;
         // 面包屑地址
         let breadcrumbPaths = currentMenu.parentUrl.split(',');
-        return <div className="ant-page-header">
-          当前位置：
-          <Breadcrumb>
-            {
-              breadcrumbNames.split('/').map((item, index) => {
-                if (item.breadcrumbName !== "首页") {
-                  return <Breadcrumb.Item key={breadcrumbPaths[index]}>
-                    <a href={breadcrumbPaths[index]}>{item}</a>
-                  </Breadcrumb.Item>
+        return (
+          <div className="ant-page-header">
+            当前位置：
+            <Breadcrumb>
+              {breadcrumbNames.split('/').map((item, index) => {
+                if (item.breadcrumbName !== '首页') {
+                  return (
+                    <Breadcrumb.Item key={breadcrumbPaths[index]}>
+                      <a href={breadcrumbPaths[index]}>{item}</a>
+                    </Breadcrumb.Item>
+                  );
                 }
-              })
-            }
-            {
-              this.props.title ?
+              })}
+              {this.props.title ? (
                 <Breadcrumb.Item key={this.props.title}>
                   <a>{this.props.title}</a>
                 </Breadcrumb.Item>
-                : ""
-            }
-          </Breadcrumb>
-          {this.props.titles ?
-            this.props.titles
-            :
-            (selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""}
-        </div>
+              ) : (
+                ''
+              )}
+            </Breadcrumb>
+            {this.props.titles
+              ? this.props.titles
+              : selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName
+              ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】`
+              : ''}
+          </div>
+        );
       } else if (pageHeaderWrapperProps.breadcrumb.routes) {
-        return <div className="ant-page-header">
-          当前位置：
-          <Breadcrumb>
-            {
-              pageHeaderWrapperProps.breadcrumb.routes.map(item => {
-                if (item.breadcrumbName !== "首页") {
-                  return <Breadcrumb.Item key={item.path}>
-                    <a href={item.path}>{item.breadcrumbName}</a>
-                  </Breadcrumb.Item>
+        return (
+          <div className="ant-page-header">
+            当前位置：
+            <Breadcrumb>
+              {pageHeaderWrapperProps.breadcrumb.routes.map(item => {
+                if (item.breadcrumbName !== '首页') {
+                  return (
+                    <Breadcrumb.Item key={item.path}>
+                      <a href={item.path}>{item.breadcrumbName}</a>
+                    </Breadcrumb.Item>
+                  );
                 }
-              })
-            }
-            {
-              this.props.title ?
+              })}
+              {this.props.title ? (
                 <Breadcrumb.Item key={this.props.title}>
                   <a>{this.props.title}</a>
                 </Breadcrumb.Item>
-                : ""
-            }
-          </Breadcrumb>
-          {this.props.titles ?
-            this.props.titles
-            :
-            (selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""}
-        </div>
+              ) : (
+                ''
+              )}
+            </Breadcrumb>
+            {this.props.titles
+              ? this.props.titles
+              : selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName
+              ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】`
+              : ''}
+          </div>
+        );
       } else {
-        return <div className="ant-page-header">当前位置：
-          <Breadcrumb>
-            {
-              this.props.title ?
+        return (
+          <div className="ant-page-header">
+            当前位置：
+            <Breadcrumb>
+              {this.props.title ? (
                 <Breadcrumb.Item key={this.props.title}>
                   <a>{this.props.title}</a>
                 </Breadcrumb.Item>
-                : ""
-            }
-          </Breadcrumb>
-        </div>
+              ) : (
+                ''
+              )}
+            </Breadcrumb>
+          </div>
+        );
       }
     }
-  }
+  };
 
   render() {
     // 多标签 - 不显示面包屑
-    if (config.isShowTabs && defaultSettings.layout === "sidemenu") {
-      return <>{this.props.children}</>
+    if (config.isShowTabs && defaultSettings.layout === 'sidemenu') {
+      return <>{this.props.children}</>;
     }
     return (
       <PageHeaderWrapper
         title={null}
-        className={!webConfig.isShowBreadcrumb ? "hideBreadcrumb" : ""}
-        pageHeaderRender={(PageHeaderWrapperProps) => {
+        className={!webConfig.isShowBreadcrumb ? 'hideBreadcrumb' : ''}
+        pageHeaderRender={PageHeaderWrapperProps => {
           return this.pageHeaderRender(PageHeaderWrapperProps);
         }}
       >

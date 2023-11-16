@@ -959,6 +959,8 @@ export const API = {
     ExportPointSummary: before + '/MonitorPointApi/ExportPointSummary',
     // 数据不可信导出
     ExportUnTrustedList: before + '/MonBasicDataApi/ExportUnTrustedList',
+    // 导出历史工况参数
+    ExportProcessFlowTableHistoryDataList: before + '/DymaicData/ExportProcessFlowTableHistoryDataList',
 
     //
   },

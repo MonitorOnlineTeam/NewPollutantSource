@@ -1,22 +1,14 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import {
-  Card,
-  Row,
-  Select,
-  Tabs,
-  Button,
-  message,
-  DatePicker,
-} from 'antd';
+import { Card, Row, Select, Tabs, Button, message, DatePicker } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { connect } from 'dva'
-import SdlTable from '@/components/SdlTable'
-import moment from 'moment'
-import IndustryTree from '@/components/IndustryTree'
-import RegionList from '@/components/RegionList'
+import { connect } from 'dva';
+import SdlTable from '@/components/SdlTable';
+import moment from 'moment';
+import IndustryTree from '@/components/IndustryTree';
+import RegionList from '@/components/RegionList';
 import SelectPollutantType from '@/components/SelectPollutantType';
 
 const { RangePicker } = DatePicker;
@@ -24,13 +16,12 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-
 const ImportantTypeList = [
-  { text: "污染处理厂", value: "1" },
-  { text: "水重点", value: "2" },
-  { text: "气重点", value: "3" },
-  { text: "垃圾焚烧", value: "4" },
-]
+  { text: '污染处理厂', value: '1' },
+  { text: '水重点', value: '2' },
+  { text: '气重点', value: '3' },
+  { text: '垃圾焚烧', value: '4' },
+];
 
 @connect(({ loading, autoForm, emissionsStatistics, common }) => ({
   regionList: autoForm.regionList,
@@ -50,34 +41,50 @@ const ImportantTypeList = [
 @Form.create()
 class Contrast extends PureComponent {
   state = {
-    DataType: configInfo.IsSingleEnterprise ? "ent" : 'region',
+    DataType: configInfo.IsSingleEnterprise ? 'ent' : 'region',
     regionFlag: true,
     entFlag: false,
-    pointFlag: false
-  }
+    pointFlag: false,
+    PollutantType: this.props.location.query.PollutantType,
+  };
   _SELF_ = {
     formLayout: {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
     },
-  }
+  };
 
   componentDidMount() {
     // 获取行政区列表
     this.props.dispatch({
       type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2', }
+      payload: { RegionCode: '', PointMark: '2' },
     });
 
     // 获取关注列表
     this.props.dispatch({
       type: 'emissionsStatistics/getAttentionDegreeList',
-      payload: { RegionCode: '' }
+      payload: { RegionCode: '' },
     });
 
     // this.getTableData("region");
     // this.getTableData("ent");
     // this.getTableData("point");
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.location.query.PollutantType !== this.props.location.query.PollutantType) {
+      let _PollutantType = this.props.location.query.PollutantType;
+      this.setState({
+        PollutantType: _PollutantType,
+      });
+
+      if (_PollutantType) {
+        this.props.form.setFieldsValue({ PollutantType: _PollutantType });
+        this.getAllPollutantCode();
+        this.getTableData(this.state.DataType);
+      }
+    }
   }
 
   // 根据污染物类型获取污染物
@@ -87,13 +94,13 @@ class Contrast extends PureComponent {
       type: 'common/getAllPollutantCode',
       payload: {
         pollutantTypes: values.PollutantType,
-        dataType: 'dis'
-      }
-    })
-  }
+        dataType: 'dis',
+      },
+    });
+  };
 
   // 获取table数据
-  getTableData = (DataType) => {
+  getTableData = DataType => {
     let values = this.props.form.getFieldsValue();
     // if (values.time2 && values.time1) {
     //   if (values.time2[0] <= values.time1[1]) {
@@ -104,12 +111,15 @@ class Contrast extends PureComponent {
     //   message.error("请将时间填写完整");
     //   return;
     // }
-    console.log("values=", values)
+    console.log('values=', values);
     this.props.dispatch({
-      type: "emissionsStatistics/getContrastTableDataByType",
+      type: 'emissionsStatistics/getContrastTableDataByType',
       payload: {
         AttentionCode: values.AttentionCode,
-        TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
+        TradeCode:
+          values.TradeCode && values.TradeCode.length
+            ? values.TradeCode[values.TradeCode.length - 1]
+            : undefined,
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
         PollutantType: values.PollutantType,
@@ -118,9 +128,9 @@ class Contrast extends PureComponent {
         ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD 00:00:00'),
         ComparisonendTime: moment(values.time2[1]).format('YYYY-MM-DD 00:00:00'),
         DataType: DataType,
-      }
-    })
-  }
+      },
+    });
+  };
 
   // 导出
   onExport = () => {
@@ -135,10 +145,13 @@ class Contrast extends PureComponent {
     //   return;
     // }
     this.props.dispatch({
-      type: "emissionsStatistics/exportContrastTableDataByType",
+      type: 'emissionsStatistics/exportContrastTableDataByType',
       payload: {
         AttentionCode: values.AttentionCode,
-        TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
+        TradeCode:
+          values.TradeCode && values.TradeCode.length
+            ? values.TradeCode[values.TradeCode.length - 1]
+            : undefined,
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
         PollutantType: values.PollutantType,
@@ -147,31 +160,46 @@ class Contrast extends PureComponent {
         ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD 00:00:00'),
         ComparisonendTime: moment(values.time2[1]).format('YYYY-MM-DD 00:00:00'),
         DataType: this.state.DataType,
-      }
-    })
-  }
+      },
+    });
+  };
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, pollutantCodeList, regionContrastLoading, entContrastLoading, pointContrastLoading, regionContrastExportLoading, entContrastExportLoading, pointContrastExportLoading, regionList, attentionList, regionContrastTableDataSource, entContrastTableDataSource, pointContrastTableDataSource } = this.props;
-    const { DataType, regionFlag, entFlag, pointFlag } = this.state;
+    const {
+      form: { getFieldDecorator, getFieldValue },
+      pollutantCodeList,
+      regionContrastLoading,
+      entContrastLoading,
+      pointContrastLoading,
+      regionContrastExportLoading,
+      entContrastExportLoading,
+      pointContrastExportLoading,
+      regionList,
+      attentionList,
+      regionContrastTableDataSource,
+      entContrastTableDataSource,
+      pointContrastTableDataSource,
+    } = this.props;
+    const { DataType, regionFlag, entFlag, pointFlag, PollutantType } = this.state;
     let loading = regionContrastLoading || entContrastLoading || pointContrastLoading;
-    let exportLoading = regionContrastExportLoading || entContrastExportLoading || pointContrastExportLoading;
+    let exportLoading =
+      regionContrastExportLoading || entContrastExportLoading || pointContrastExportLoading;
     let _regionList = regionList.length ? regionList[0].children : [];
     const _style = {
       width: 60,
       textAlign: 'right',
       display: 'inline-block',
-    }
+    };
     let beginTime, endTime, beginTime2, endTime2;
-    let formTime1 = getFieldValue("time1");
-    let formTime2 = getFieldValue("time2");
+    let formTime1 = getFieldValue('time1');
+    let formTime2 = getFieldValue('time2');
     if (formTime1) {
-      beginTime = formTime1[0].format("YYYY年MM月DD日")
-      endTime = formTime1[1].format("YYYY年MM月DD日")
+      beginTime = formTime1[0].format('YYYY年MM月DD日');
+      endTime = formTime1[1].format('YYYY年MM月DD日');
     }
     if (formTime2) {
-      beginTime2 = formTime2[0].format("YYYY年MM月DD日")
-      endTime2 = formTime2[1].format("YYYY年MM月DD日")
+      beginTime2 = formTime2[0].format('YYYY年MM月DD日');
+      endTime2 = formTime2[1].format('YYYY年MM月DD日');
     }
 
     let PFLCColumns = [];
@@ -182,15 +210,15 @@ class Contrast extends PureComponent {
         key: item.field + '-EmissionsValueC',
         width: 180,
         align: 'center',
-      })
+      });
       return {
         title: item.name,
         dataIndex: item.field + '-EmissionsValue',
         key: item.field + '-EmissionsValue',
         width: 180,
         align: 'center',
-      }
-    })
+      };
+    });
 
     let RegionColumns = [
       {
@@ -230,11 +258,9 @@ class Contrast extends PureComponent {
           },
           {
             title: '排放量（kg）',
-            children: [
-              ...PFL
-            ]
+            children: [...PFL],
           },
-        ]
+        ],
       },
       {
         title: `时间（${beginTime2}至${endTime2}）`,
@@ -255,11 +281,9 @@ class Contrast extends PureComponent {
           },
           {
             title: '排放量（kg）',
-            children: [
-              ...PFLCColumns
-            ]
+            children: [...PFLCColumns],
           },
-        ]
+        ],
       },
       {
         title: '差额（kg）',
@@ -289,7 +313,7 @@ class Contrast extends PureComponent {
         width: 60,
         render: (text, record, index) => {
           return index + 1;
-        }
+        },
       },
       {
         title: '企业',
@@ -309,29 +333,27 @@ class Contrast extends PureComponent {
         key: 'ImportantType',
         width: 120,
         render: (text, record) => {
-          if (text && text !== "0") {
+          if (text && text !== '0') {
             // return ImportantTypeList.find(item => item.value == text)["text"]
-            const ImportantTypeLists =
-            {
-              "1": "污染处理厂",
-              '2': "水重点",
-              '3': "气重点",
-              '4': "垃圾焚烧"
-            }
-            let importVal = ''
-            let dataArr = text.split(',')
+            const ImportantTypeLists = {
+              '1': '污染处理厂',
+              '2': '水重点',
+              '3': '气重点',
+              '4': '垃圾焚烧',
+            };
+            let importVal = '';
+            let dataArr = text.split(',');
             dataArr.map(item => {
               ImportantTypeList.map(items => {
                 if (item == items.value) {
-                  importVal += `${ImportantTypeLists[item]}，`
+                  importVal += `${ImportantTypeLists[item]}，`;
                 }
-              })
-            })
+              });
+            });
             let _text = importVal.substring(0, importVal.length - 1);
-            return _text || '-'
-
+            return _text || '-';
           } else {
-            return "-"
+            return '-';
           }
         },
         // render: (text, record) => {
@@ -347,30 +369,26 @@ class Contrast extends PureComponent {
         key: 'TradeName',
         width: 180,
         render: (text, record) => {
-          return text ? text : "-"
-        }
+          return text ? text : '-';
+        },
       },
       {
         title: `时间（${beginTime}至${endTime}）`,
         children: [
           {
             title: '排放量（kg）',
-            children: [
-              ...PFL
-            ]
+            children: [...PFL],
           },
-        ]
+        ],
       },
       {
         title: `时间（${beginTime2}至${endTime2}）`,
         children: [
           {
             title: '排放量（kg）',
-            children: [
-              ...PFLCColumns
-            ]
+            children: [...PFLCColumns],
           },
-        ]
+        ],
       },
       {
         title: '差额（kg）',
@@ -386,7 +404,7 @@ class Contrast extends PureComponent {
         width: 120,
         align: 'center',
       },
-    ]
+    ];
     let PointColumns = [
       {
         title: '行政区',
@@ -401,7 +419,7 @@ class Contrast extends PureComponent {
         width: 60,
         render: (text, record, index) => {
           return index + 1;
-        }
+        },
       },
       {
         title: '企业',
@@ -421,29 +439,27 @@ class Contrast extends PureComponent {
         key: 'ImportantType',
         width: 120,
         render: (text, record) => {
-          if (text && text !== "0") {
+          if (text && text !== '0') {
             // return ImportantTypeList.find(item => item.value == text)["text"]
-            const ImportantTypeLists =
-            {
-              "1": "污染处理厂",
-              '2': "水重点",
-              '3': "气重点",
-              '4': "垃圾焚烧"
-            }
-            let importVal = ''
-            let dataArr = text.split(',')
+            const ImportantTypeLists = {
+              '1': '污染处理厂',
+              '2': '水重点',
+              '3': '气重点',
+              '4': '垃圾焚烧',
+            };
+            let importVal = '';
+            let dataArr = text.split(',');
             dataArr.map(item => {
               ImportantTypeList.map(items => {
                 if (item == items.value) {
-                  importVal += `${ImportantTypeLists[item]}，`
+                  importVal += `${ImportantTypeLists[item]}，`;
                 }
-              })
-            })
+              });
+            });
             let _text = importVal.substring(0, importVal.length - 1);
-            return _text || '-'
-
+            return _text || '-';
           } else {
-            return "-"
+            return '-';
           }
         },
         // render: (text, record) => {
@@ -459,8 +475,8 @@ class Contrast extends PureComponent {
         key: 'TradeName',
         width: 180,
         render: (text, record) => {
-          return text ? text : "-"
-        }
+          return text ? text : '-';
+        },
         // width: 200,
       },
       {
@@ -481,11 +497,9 @@ class Contrast extends PureComponent {
           },
           {
             title: '排放量（kg）',
-            children: [
-              ...PFL
-            ]
+            children: [...PFL],
           },
-        ]
+        ],
       },
       {
         title: `时间（${beginTime2}至${endTime2}）`,
@@ -499,11 +513,9 @@ class Contrast extends PureComponent {
           },
           {
             title: '排放量（kg）',
-            children: [
-              ...PFLCColumns
-            ]
+            children: [...PFLCColumns],
           },
-        ]
+        ],
       },
       {
         title: '差额（kg）',
@@ -519,7 +531,7 @@ class Contrast extends PureComponent {
         width: 180,
         align: 'center',
       },
-    ]
+    ];
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -527,35 +539,30 @@ class Contrast extends PureComponent {
             <Row>
               <FormItem label={<span style={{ ..._style }}>时间段1</span>}>
                 {getFieldDecorator('time1', {
-                  initialValue: [moment().subtract(14, 'days'), moment().subtract(7, 'days')]
-                })(
-                  <RangePicker />
-                )}
+                  initialValue: [moment().subtract(14, 'days'), moment().subtract(7, 'days')],
+                })(<RangePicker />)}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>时间段2</span>}>
                 {getFieldDecorator('time2', {
-                  initialValue: [moment().subtract(6, 'days'), moment().subtract(1, 'days')]
-                })(
-                  <RangePicker />
-                )}
+                  initialValue: [moment().subtract(6, 'days'), moment().subtract(1, 'days')],
+                })(<RangePicker />)}
               </FormItem>
               <FormItem label={<span style={{ ..._style, width: 74 }}>污染物类型</span>}>
-                {getFieldDecorator('PollutantType', {
-                })(
+                {getFieldDecorator('PollutantType', {})(
                   <SelectPollutantType
                     style={{ width: 160 }}
                     showDefaultValue
                     placeholder="请选择污染物类型"
-                    // filterPollutantType={'1,2'}
+                    filterPollutantType={PollutantType}
                     filterInvalidData={'5,12'}
-                    initCallback={(value) => {
-                      this.props.form.setFieldsValue({ 'PollutantType': value })
+                    initCallback={value => {
+                      this.props.form.setFieldsValue({ PollutantType: value });
                       this.getAllPollutantCode();
                       this.getTableData(DataType);
                       // this.getTableData("ent");
                       // this.getTableData("point");
                     }}
-                  />
+                  />,
                 )}
               </FormItem>
             </Row>
@@ -565,32 +572,32 @@ class Contrast extends PureComponent {
                   initialValue: undefined,
                 })(
                   <Select allowClear style={{ width: 140 }} placeholder="请选择关注程度">
-                    {
-                      attentionList.map(item => {
-                        return <Option key={item.AttentionCode} value={item.AttentionCode}>
+                    {attentionList.map(item => {
+                      return (
+                        <Option key={item.AttentionCode} value={item.AttentionCode}>
                           {item.AttentionName}
                         </Option>
-                      })
-                    }
+                      );
+                    })}
                   </Select>,
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>重点类型</span>}>
-                {getFieldDecorator('ImportantType', {
-                })(
+                {getFieldDecorator('ImportantType', {})(
                   <Select allowClear style={{ width: 140 }} placeholder="请选择重点类型">
-                    {
-                      ImportantTypeList.map(item => {
-                        return <Option value={item.value} key={item.value}>{item.text}</Option>
-                      })
-                    }
-                  </Select>
+                    {ImportantTypeList.map(item => {
+                      return (
+                        <Option value={item.value} key={item.value}>
+                          {item.text}
+                        </Option>
+                      );
+                    })}
+                  </Select>,
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>行政区</span>}>
-                {getFieldDecorator('RegionCode', {
-                })(
-                  <RegionList RegionCode={this.props.form.getFieldValue('RegionCode')} />
+                {getFieldDecorator('RegionCode', {})(
+                  <RegionList RegionCode={this.props.form.getFieldValue('RegionCode')} />,
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>行业</span>}>
@@ -599,30 +606,35 @@ class Contrast extends PureComponent {
                 })(
                   <IndustryTree
                     style={{ width: 200 }}
-                    textField={"dbo.T_Cod_IndustryType.IndustryTypeName"}
-                    valueField={"dbo.T_Cod_IndustryType.IndustryTypeCode"}
-                    configId={"IndustryType"}
-                  />
+                    textField={'dbo.T_Cod_IndustryType.IndustryTypeName'}
+                    valueField={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
+                    configId={'IndustryType'}
+                  />,
                 )}
               </FormItem>
-              <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={() => {
-                  let values = this.props.form.getFieldsValue();
-                  if (values.time2.length && values.time1.length) {
-                    if (values.time2[0] <= values.time1[1]) {
-                      message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
+              <div style={{ display: 'inline-block', lineHeight: '40px' }}>
+                <Button
+                  loading={loading}
+                  type="primary"
+                  style={{ marginLeft: 10 }}
+                  onClick={() => {
+                    let values = this.props.form.getFieldsValue();
+                    if (values.time2.length && values.time1.length) {
+                      if (values.time2[0] <= values.time1[1]) {
+                        message.error('时间段2开始时间需大于时间段1结束时间，请重新选择时间');
+                        return;
+                      }
+                    } else {
+                      message.error('请将时间填写完整');
                       return;
                     }
-                  } else {
-                    message.error("请将时间填写完整");
-                    return;
-                  }
-                  this.getAllPollutantCode();
-                  this.getTableData(DataType);
-                  // this.getTableData("region");
-                  // this.getTableData("ent");
-                  // this.getTableData("point");
-                }}>
+                    this.getAllPollutantCode();
+                    this.getTableData(DataType);
+                    // this.getTableData("region");
+                    // this.getTableData("ent");
+                    // this.getTableData("point");
+                  }}
+                >
                   查询
                 </Button>
                 <Button
@@ -633,14 +645,14 @@ class Contrast extends PureComponent {
                     let values = this.props.form.getFieldsValue();
                     if (values.time2.length && values.time1.length) {
                       if (values.time2[0] <= values.time1[1]) {
-                        message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
+                        message.error('时间段2开始时间需大于时间段1结束时间，请重新选择时间');
                         return;
                       }
                     } else {
-                      message.error("请将时间填写完整");
+                      message.error('请将时间填写完整');
                       return;
                     }
-                    this.onExport()
+                    this.onExport();
                   }}
                 >
                   导出
@@ -648,26 +660,53 @@ class Contrast extends PureComponent {
               </div>
             </Row>
             <Row style={{ marginTop: 10 }}>
-              <span style={{ color: "red" }}>采用日监测数据计算排放量，公式：日均浓度 × 流量。</span>
+              <span style={{ color: 'red' }}>
+                采用日监测数据计算排放量，公式：日均浓度 × 流量。
+              </span>
             </Row>
           </Form>
           {/* <Divider /> */}
-          <Tabs defaultActiveKey={DataType} onChange={(key) => {
-            if (!regionFlag || !entFlag || !pointFlag) {
-              this.getTableData(key);
-            }
-            this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
-          }}>
-            {
-              !configInfo.IsSingleEnterprise && <TabPane tab="辖区排放量" key="region">
-                <SdlTable loading={regionContrastLoading} pagination={false} align="center" dataSource={regionContrastTableDataSource} columns={RegionColumns} />
+          <Tabs
+            defaultActiveKey={DataType}
+            onChange={key => {
+              if (!regionFlag || !entFlag || !pointFlag) {
+                this.getTableData(key);
+              }
+              this.setState({
+                DataType: key,
+                [key + 'Flag']: true,
+                renderNum: Math.ceil(Math.random() * 10),
+              });
+            }}
+          >
+            {!configInfo.IsSingleEnterprise && (
+              <TabPane tab="辖区排放量" key="region">
+                <SdlTable
+                  loading={regionContrastLoading}
+                  pagination={false}
+                  align="center"
+                  dataSource={regionContrastTableDataSource}
+                  columns={RegionColumns}
+                />
               </TabPane>
-            }
+            )}
             <TabPane tab="企业排放量" key="ent">
-              <SdlTable loading={entContrastLoading} pagination={false} align="center" dataSource={entContrastTableDataSource} columns={EntColumns} />
+              <SdlTable
+                loading={entContrastLoading}
+                pagination={false}
+                align="center"
+                dataSource={entContrastTableDataSource}
+                columns={EntColumns}
+              />
             </TabPane>
             <TabPane tab="监测点排放量" key="point">
-              <SdlTable loading={pointContrastLoading} pagination={false} align="center" dataSource={pointContrastTableDataSource} columns={PointColumns} />
+              <SdlTable
+                loading={pointContrastLoading}
+                pagination={false}
+                align="center"
+                dataSource={pointContrastTableDataSource}
+                columns={PointColumns}
+              />
             </TabPane>
           </Tabs>
         </Card>

@@ -3,7 +3,7 @@ import moment from 'moment';
 import * as services from './service';
 import Model from '@/utils/model';
 import { message } from 'antd';
-import { GetVisualizationChartList } from "./service"
+import { GetVisualizationChartList } from './service';
 export default Model.extend({
   namespace: 'working',
   state: {
@@ -12,30 +12,60 @@ export default Model.extend({
       pollutant: [],
       flows: [],
     },
-    visLoading: true
+    visLoading: true,
   },
 
   effects: {
-    *getFlowTableData({ payload, }, { call, update, put, take, select }) {
+    *getFlowTableData({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getFlowTableData, payload);
       if (result.IsSuccess) {
-        yield update({ flowTableData: result.Datas })
+        yield update({ flowTableData: result.Datas });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
-    *getVisualizationChartList({ callback, payload, }, { call, update, put, take, select }) { //可视化数据列表
-      yield update({ visLoading: true })
+    *getVisualizationChartList({ callback, payload }, { call, update, put, take, select }) {
+      //可视化数据列表
+      yield update({ visLoading: true });
       const result = yield call(GetVisualizationChartList, payload);
       if (result.IsSuccess) {
         let pollutant = result.Datas.pollutant;
         let isShowKLW = false;
-        let newPollutant = [], otherParams = [];
+        let newPollutant = [],
+          otherParams = [];
+        // for (let key in pollutant) {
+        //   let valueObj = pollutant[key].find(item => item.Code === 'i13051') || {};
+        //   // 排除烟尘参数
+        //   if (
+        //     key !== 'a34013' &&
+        //     key !== 'a00000' &&
+        //     key !== 'a01011' &&
+        //     key !== 'a01012' &&
+        //     key !== 'a01013' &&
+        //     key !== 'a01014' &&
+        //     key !== 'b02'
+        //   ) {
+        //     newPollutant.push({
+        //       PollutantName: pollutant[key][0].PollutantName,
+        //       PollutantCode: pollutant[key][0].PollutantCode,
+        //       value: valueObj.Value || '-',
+        //       Unit: valueObj.Unit || '',
+        //       params: pollutant[key],
+        //     });
+        //   } else {
+        //     isShowKLW = true;
+        //     if (pollutant[key] && pollutant[key].length) {
+        //       otherParams.push(pollutant[key][0]);
+        //     }
+        //   }
+        // }
         for (let key in pollutant) {
-          let valueObj = pollutant[key].find(item => item.Code === 'i13051') || {};
+          let valueObj = pollutant[key].find(item => item.Code === 'concentration') || {};
+          console.log('valueObj', valueObj)
           // 排除烟尘参数
-          if (key !== 'a34013' &&
-            key !== "a00000" &&
+          if (
+            key !== 'a34013' &&
+            key !== 'a00000' &&
             key !== 'a01011' &&
             key !== 'a01012' &&
             key !== 'a01013' &&
@@ -43,37 +73,39 @@ export default Model.extend({
             key !== 'b02'
           ) {
             newPollutant.push({
-              PollutantName: pollutant[key][0].PollutantName,
-              PollutantCode: pollutant[key][0].PollutantCode,
+              PollutantName: valueObj.PollutantName,
+              PollutantCode: valueObj.PollutantCode,
               value: valueObj.Value || '-',
               Unit: valueObj.Unit || '',
-              params: pollutant[key]
-            })
+              params: pollutant[key],
+            });
           } else {
             isShowKLW = true;
             if (pollutant[key] && pollutant[key].length) {
-              otherParams.push(pollutant[key][0])
+              otherParams.push(pollutant[key][0]);
             }
           }
         }
-        console.log('otherParams', otherParams)
+        console.log('isShowKLW', isShowKLW)
+        console.log('otherParams', otherParams);
         let visualizaData = {
           ...result.Datas,
           pollutant: newPollutant,
           flows: pollutant['a01011'] || [],
           otherParams: otherParams,
           isShowKLW: isShowKLW,
-          isCO2: !!result.Datas.cems.find(item => item.PollutantCode === 'a05001')
+          isCO2: !!result.Datas.cems.find(item => item.PollutantCode === 'a05001'),
         };
-        console.log("visualizaData=", visualizaData)
+        console.log('visualizaData=', visualizaData);
         yield update({
-          visualizaData: visualizaData, visLoading: false
-        })
+          visualizaData: visualizaData,
+          visLoading: false,
+        });
         callback(visualizaData);
       } else {
-        message.error(result.Message)
-        yield update({ visLoading: false })
+        message.error(result.Message);
+        yield update({ visLoading: false });
       }
     },
-  }
+  },
 });

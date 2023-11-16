@@ -266,7 +266,7 @@ class RangeCheckPage extends PureComponent {
   render() {
     const { columns, columns24 } = this._SELF_;
     const { currentRowData } = this.state;
-    const { checkModalVisible, exportLoading, DGIMN, rangeCheckTableData, rangeCheck24TableData, pollutantList, tableLoading, pointName } = this.props;
+    const { checkModalVisible, exportLoading, DGIMN, rangeCheckTableData, rangeCheck24TableData, pollutantList, tableLoading, pointName, date } = this.props;
     let pollutantCodeList = "";
     if (this.formRef.current) {
       pollutantCodeList = this.formRef.current.getFieldValue("PollutantCode")
@@ -277,7 +277,7 @@ class RangeCheckPage extends PureComponent {
           name="global_state"
           ref={this.formRef}
           initialValues={{
-            time: [moment().subtract(29, 'days'), moment()],
+            time: date || [moment().subtract(29, 'days'), moment()],
           }}
         // onFieldsChange={(changedFields, allFields) => {
         //   console.log('changedFields=', changedFields)

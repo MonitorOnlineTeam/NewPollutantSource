@@ -4,12 +4,23 @@
  * 创建时间：2020.11.11
  */
 import React, { Component } from 'react';
-import { Table, Row, Col, Card, Button, Tabs, Modal, Input, Popconfirm, message, Space } from 'antd';
+import {
+  Table,
+  Row,
+  Col,
+  Card,
+  Button,
+  Tabs,
+  Modal,
+  Input,
+  Popconfirm,
+  message,
+  Space,
+} from 'antd';
 // import ModalDrag from '../../utils/ModalDrag';                          //弹框拖动
 import moment from 'moment';
 import { connect } from 'dva';
 import { Form } from '@ant-design/compatible';
-
 
 const EditableContext = React.createContext();
 const EditableRow = ({ form, index, ...props }) => (
@@ -19,9 +30,6 @@ const EditableRow = ({ form, index, ...props }) => (
 );
 
 const EditableFormRow = Form.create()(EditableRow);
-
-
-
 
 class EditableCell extends React.Component {
   state = {
@@ -108,9 +116,8 @@ const pageUrl = {
 
 @connect(({ loading, fieldConfigModel }) => ({
   loading: loading.effects[pageUrl.GetEnumDictionary],
-  EnumData: fieldConfigModel.EnumData //枚举值
+  EnumData: fieldConfigModel.EnumData, //枚举值
 }))
-
 class AutoFormAddTable extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -127,7 +134,6 @@ class AutoFormAddTable extends React.PureComponent {
         align: 'center',
         width: '40%',
         editable: true,
-
       },
       // {
       //   title: '备注',
@@ -138,7 +144,7 @@ class AutoFormAddTable extends React.PureComponent {
         title: '操作',
         align: 'center',
         dataIndex: 'operation',
-        render: (text, record) =>
+        render: (text, record) => (
           // this.state.dataSource.length >= 1 ? (
           <Space>
             <a onClick={this.getTableData}>保存</a>
@@ -146,6 +152,7 @@ class AutoFormAddTable extends React.PureComponent {
               <a>删除</a>
             </Popconfirm>
           </Space>
+        ),
 
         // ) : null,
       },
@@ -153,25 +160,23 @@ class AutoFormAddTable extends React.PureComponent {
 
     this.state = {
       TableRowData: [],
-      enumerationVisible: false,//枚举弹框
-      TableData: []
+      enumerationVisible: false, //枚举弹框
+      TableData: [],
     };
   }
 
-  componentDidMount() {
-
-  }
+  componentDidMount() {}
 
   handleDelete = value => {
     let { TableData } = this.state;
-    let res = TableData.filter(item => item.key != value.key)
+    let res = TableData.filter(item => item.key != value.key);
     this.setState({
-      TableData: res
-    })
+      TableData: res,
+    });
   };
 
   handleSave = row => {
-    this.setState({ TableRowData: row })
+    this.setState({ TableRowData: row });
   };
   //保存
   getTableData = () => {
@@ -179,15 +184,15 @@ class AutoFormAddTable extends React.PureComponent {
     let res = [];
     res = TableData.map(item => {
       if (item.key == TableRowData.key) {
-        return { key: item.key, value: TableRowData.value }
+        return { key: item.key, value: TableRowData.value };
       } else {
         return item;
       }
-    })
+    });
     this.setState({
-      TableData: res
-    })
-  }
+      TableData: res,
+    });
+  };
   //提交
   handleSubmit = e => {
     let TableData = [...this.state.TableData];
@@ -195,21 +200,24 @@ class AutoFormAddTable extends React.PureComponent {
     let flag = true;
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
+      debugger;
       if (!err) {
         res = TableData;
         res.forEach(item => {
-          if (item.Key == values.key) {
-            message.error('key值重复，修改失败！')
+          debugger;
+          if (item.key == values.key) {
+            message.error('key值重复，修改失败！');
             flag = false;
           }
-        })
-      }
-      if (flag) {
-        res.push({ key: values.key, value: values.value });
-        message.success('添加成功！');
-        this.setState({
-          TableData: res
-        })
+        });
+        if (flag) {
+          res.push({ key: values.key, value: values.value });
+          message.success('添加成功！');
+          this.setState({
+            TableData: res,
+          });
+          this.props.form.setFieldsValue({ key: undefined, value: undefined });
+        }
       }
     });
   };
@@ -217,17 +225,17 @@ class AutoFormAddTable extends React.PureComponent {
   //枚举弹框
   enumerationShowModal = () => {
     let { record, getEnumName } = this.props;
-    debugger
+    debugger;
     if (getEnumName('ENUM_NAME')) {
-      let res = JSON.parse(getEnumName('ENUM_NAME'))
+      let res = JSON.parse(getEnumName('ENUM_NAME'));
       this.setState({
         enumerationVisible: true,
-        TableData: [...res]
+        TableData: [...res],
       });
     } else {
       this.setState({
         enumerationVisible: true,
-        TableData: []
+        TableData: [],
       });
     }
   };
@@ -248,7 +256,7 @@ class AutoFormAddTable extends React.PureComponent {
     this.props.dispatch({
       type: pageUrl.GetEnumDictionary,
     });
-  }
+  };
   //保存
   handeUpdata = () => {
     let { setEnumName } = this.props;
@@ -256,11 +264,13 @@ class AutoFormAddTable extends React.PureComponent {
     // setEnumName({
     //   ENUM_NAME: JSON.stringify(TableData)
     // })
-    this.props.setEnumName(JSON.stringify(TableData))
+    // debugger
+    let _TableData = TableData && TableData.length ? JSON.stringify(TableData) : undefined;
+    this.props.setEnumName(_TableData);
     this.setState({
       enumerationVisible: false,
     });
-  }
+  };
   render() {
     const { dataSource, TableData } = this.state;
     const { EnumData } = this.props;
@@ -288,19 +298,17 @@ class AutoFormAddTable extends React.PureComponent {
       };
     });
 
-    console.log('columns', columns)
+    console.log('columns', columns);
     return (
       <>
-        <Button onClick={this.enumerationShowModal}>
-          编辑
-        </Button>
+        <Button onClick={this.enumerationShowModal}>编辑</Button>
         <Modal
           visible={this.state.enumerationVisible}
           centered={true}
           title={'枚举'}
           width={800}
-          className='autoModal'
-          classTitle='autoModal'
+          className="autoModal"
+          classTitle="autoModal"
           onOk={this.enumerationhandleOk}
           onCancel={this.enumerationhandleCancel}
           mask={false}
@@ -316,19 +324,15 @@ class AutoFormAddTable extends React.PureComponent {
             <Form.Item label="Key">
               {getFieldDecorator('key', {
                 rules: [{ required: true, message: '请输入Key' }],
-              })(
-                <Input placeholder='请输入Key' />
-              )}
+              })(<Input placeholder="请输入Key" />)}
             </Form.Item>
             <Form.Item label="Value">
               {getFieldDecorator('value', {
                 rules: [{ required: true, message: '请输入Value' }],
-              })(
-                <Input placeholder='请输入Value' />
-              )}
+              })(<Input placeholder="请输入Value" />)}
             </Form.Item>
             <Form.Item style={{ marginRight: 0 }}>
-              <Button type="primary" htmlType="submit" >
+              <Button type="primary" htmlType="submit">
                 添加
               </Button>
             </Form.Item>
@@ -348,4 +352,4 @@ class AutoFormAddTable extends React.PureComponent {
     );
   }
 }
-export default Form.create()(AutoFormAddTable)
+export default Form.create()(AutoFormAddTable);

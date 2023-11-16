@@ -380,7 +380,7 @@ class FlowChart extends PureComponent {
           visualizaData.pollutant.length ? visualizaData.pollutant.map((item, index) => {
             if (item.PollutantName) {
               return <div className={`${styles.so2} ${styles.commonSty}`} style={{ top: 311 + index * 90 }}>
-                <span>{item.PollutantName}：{item.value} {item.Unit}</span>
+                <span className={styles.value}>{item.PollutantName}：{item.value} {item.Unit}</span>
                 <Tooltip placement="top" title={this.renderParamList(item.params)} trigger='click'>
                   <span className={`${styles.more}`}>更多参数</span>
                 </Tooltip>
@@ -486,7 +486,7 @@ class FlowChart extends PureComponent {
       if (item.PollutantCode === "a01014") { //烟气湿度
         this.setState({ yans: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
       }
-      if (item.PollutantCode === "a00000") { //烟气流量
+      if (item.PollutantCode === "a00000" || item.PollutantCode === "b02") { //烟气流量
         this.setState({ yanll: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
       }
       if (item.PollutantCode === "a01011") { //烟气流速
@@ -523,10 +523,11 @@ class FlowChart extends PureComponent {
 
   // 渲染污染物参数列表
   renderParamList = (paramList) => {
-    if (paramList.length) {
+    let tempParamList = paramList.filter(item => item.Code !== "concentration");
+    if (tempParamList.length) {
       return <ul>
         {
-          paramList.map(item => {
+          tempParamList.map(item => {
             if (item.Code !== "concentration")
               return <li>{item.CodeName}：{item.Value} {item.Unit} </li>
           })

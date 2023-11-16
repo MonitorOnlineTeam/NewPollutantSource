@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-12-27 15:56:17
+ * @Last Modified time: 2023-10-26 15:06:23
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -637,7 +637,7 @@ class index extends Component {
                 // let themeLink = document.getElementById('theme-link');
                 if (value) {
                   document.documentElement.className = 'home-dark-theme';
-                  // document.documentElement.id = 'innerSystem';
+                  document.documentElement.id = 'innerSystem';
                   // themeLink.href = '/theme/light.css'; // 切换 antd 组件主题(亮色)
                 } else {
                   document.documentElement.className = 'home-light-theme';

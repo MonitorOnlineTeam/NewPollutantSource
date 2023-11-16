@@ -797,13 +797,13 @@ class FieldConfig extends Component {
         editable: true,
         inputType: 'foreignTypeArr',
         render: (text, record) => {
-          if (text == "0") {
+          if (text == 0) {
             return "无"
           }
-          if (text == "1") {
+          if (text == 1) {
             return "表链接"
           }
-          if (text == "2") {
+          if (text == 2) {
             return "枚举"
           }
         }

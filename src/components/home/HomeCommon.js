@@ -6,6 +6,8 @@ import MonitoringStatus from './MonitoringStatus';
 import EmissionsAnalysis from './EmissionsAnalysis';
 import EmissionTax from './EmissionTax';
 import EmissionYears from './EmissionYears';
+import QCAPassRate from '@/pages/home/yanshi/QCAPassRate.js';
+import ComparisonOfMonChart from '@/pages/home/yanshi/ComparisonOfMonChart.js';
 import moment from 'moment';
 class HomeCommon extends Component {
     constructor(props) {
@@ -49,6 +51,14 @@ class HomeCommon extends Component {
             case "EmissionTax":
                 // return<EmissionTax currentMonth={currentMonth} entCode={entCode} DGIMN={DGIMN}/>
                 return <EmissionYears currentMonth={currentMonth} entCode={entCode} DGIMN={DGIMN} />
+                break;
+            //质控合格率
+            case "QCAPassRate":
+                return <QCAPassRate currentMonth={currentMonth} entCode={entCode} DGIMN={DGIMN} />
+                break;
+            //排放量对比分析图
+            case "CO2LinearAnalysisChart":
+                return <ComparisonOfMonChart currentMonth={currentMonth} entCode={entCode} DGIMN={DGIMN} />
                 break;
             default:
                 break;

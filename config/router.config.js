@@ -102,21 +102,21 @@ const routes = [
         path: '/autoLogin',
         component: './user/login/AutoLogin',
       },
-      // {
-      //   name: 'homepage',
-      //   path: '/homepage',
-      //   component: './home_ys',
-      // },
-      // {
-      //   name: 'homepage',
-      //   path: '/homepage',
-      //   component: './home',
-      // },
+      {
+        name: 'homepage_ys',
+        path: '/homepage_ys',
+        component: './home_ys',
+      },
       {
         name: 'homepage',
         path: '/homepage',
         component: './home',
       },
+      // {
+      //   name: 'homepage',
+      //   path: '/homepage',
+      //   component: './home',
+      // },
       {
         name: 'hometangy',
         path: '/hometangy',

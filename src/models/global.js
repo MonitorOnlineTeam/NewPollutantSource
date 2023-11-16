@@ -477,7 +477,7 @@ export default Model.extend({
                   });
                   // 更新首页排放速率
                   dispatch({
-                    type: 'home/updateFlows',
+                    type: 'home_ys/updateFlows',
                     payload: {
                       data: obj.Message,
                     },

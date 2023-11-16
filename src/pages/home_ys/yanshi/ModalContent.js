@@ -6,18 +6,22 @@ import Marquee from '@/components/Marquee';
 import ReactSeamlessScroll from 'react-seamless-scroll';
 import ReactEcharts from 'echarts-for-react';
 import { router } from 'umi';
-import ZeroCheck from '@/pages/dataSearch/qca/zeroCheck';
-import RangeCheck from '@/pages/dataSearch/qca/rangeCheck';
 import Realtimedata from '@/pages/monitoring/realtimedata';
 import MonitorLineAnalysis from '@/pages/IntelligentAnalysis/CO2Emissions/monitorLineAnalysis';
 import MonitorCurveAnalysis from '@/pages/IntelligentAnalysis/CO2Emissions/monitorCurveAnalysis';
-import ResTimeCheck from '@/pages/dataSearch/qca/resTimeCheck';
-import ErrorValueCheck from '@/pages/dataSearch/qca/errorValueCheck';
 import MonitorComparaAnalysis from '@/pages/IntelligentAnalysis/CO2Emissions/monitorComparaAnalysis';
+import ZeroCheckPage from '@/pages/dataSearch/qca/zeroCheck/ZeroCheckPage';
+import RangeCheckPage from '@/pages/dataSearch/qca/rangeCheck/RangeCheckPage';
+import ResTimeCheckPage from '@/pages/dataSearch/qca/resTimeCheck/ResTimeCheckPage';
+import ErrorValuePage from '@/pages/dataSearch/qca/errorValueCheck/ErrorValuePage';
 
-@connect(({ loading, home }) => ({
-  modalType: home.modalType,
-  theme: home.theme,
+import moment from 'moment';
+
+const DGIMN = '62030231rdep11';
+const pointName = '北热1号分析小屋';
+@connect(({ loading, home_ys }) => ({
+  modalType: home_ys.modalType,
+  theme: home_ys.theme,
 }))
 class ModalContent extends Component {
   constructor(props) {
@@ -37,16 +41,44 @@ class ModalContent extends Component {
     switch (modalType) {
       // 零点核查
       case 'zeroCheck':
-        return <ZeroCheck showMode="modal" />;
+        return (
+          <ZeroCheckPage
+            DGIMN={DGIMN}
+            pointType={'2'}
+            pointName={pointName}
+            date={[moment('2023-01-01 00:00:00'), moment()]}
+          />
+        );
       // 量程核查
       case 'rangeCheck':
-        return <RangeCheck showMode="modal" location={{ query: {} }} />;
+        return (
+          <RangeCheckPage
+            DGIMN={DGIMN}
+            pointType={'2'}
+            pointName={pointName}
+            date={[moment('2023-01-01 00:00:00'), moment()]}
+          />
+        );
       // 响应时间核查
       case 'resTimeCheck':
-        return <ResTimeCheck showMode="modal" location={{ query: {} }} />;
+        return (
+          <ResTimeCheckPage
+            DGIMN={DGIMN}
+            pointType={'2'}
+            pointName={pointName}
+            date={[moment('2023-01-01 00:00:00'), moment()]}
+          />
+        );
       // 示值误差核查
       case 'errorValueCheck':
-        return <ErrorValueCheck showMode="modal" location={{ query: {} }} />;
+        return (
+          <ErrorValuePage
+            DGIMN={DGIMN}
+            pointType={'2'}
+            pointName={pointName}
+            date={[moment('2023-01-01 00:00:00'), moment()]}
+          />
+        );
       // 工艺流程图1
       case 'realtimedata1':
         return (
@@ -62,6 +94,18 @@ class ModalContent extends Component {
               },
             ]}
           />
+          // <Realtimedata
+          //   showMode="modal"
+          //   currentTreeItemData={[
+          //     {
+          //       key: 'cems_202308021036222',
+          //       pointName: '玖龙纸业(沈阳)有限公司',
+          //       entName: '废气排口',
+          //       Type: '2',
+          //       EntCode: '6c4234c6-9978-4d1c-b342-0d40e2ec2678',
+          //     },
+          //   ]}
+          // />
         );
       // 工艺流程图2
       case 'realtimedata2':
@@ -81,13 +125,31 @@ class ModalContent extends Component {
         );
       // 线性相关分析图
       case 'monitorLineAnalysis':
-        return <MonitorLineAnalysis showMode="modal" />;
+        return (
+          <MonitorLineAnalysis
+            showMode="modal"
+            EntCode="c679c8f9-fa71-486b-9c20-0d6d2955b2d9"
+            date={[moment('2023-01-01 00:00:00'), moment()]}
+          />
+        );
       // 直测与核算碳排放量比对分析图
       case 'monitorCurveAnalysis':
-        return <MonitorCurveAnalysis showMode="modal" />;
-      // 直测与核算碳排放量比对分析图
+        return (
+          <MonitorCurveAnalysis
+            showMode="modal"
+            EntCode="c679c8f9-fa71-486b-9c20-0d6d2955b2d9"
+            date={[moment('2023-01-01 00:00:00'), moment()]}
+          />
+        );
+      // 二氧化碳月度变化趋势
       case 'monitorComparaAnalysis':
-        return <MonitorComparaAnalysis showMode="modal" />;
+        return (
+          <MonitorComparaAnalysis
+            showMode="modal"
+            EntCode="c679c8f9-fa71-486b-9c20-0d6d2955b2d9"
+            date={moment('2023-07-01 00:00:00')}
+          />
+        );
     }
   };
 

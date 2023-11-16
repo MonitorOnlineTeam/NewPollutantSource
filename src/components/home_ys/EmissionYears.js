@@ -5,9 +5,9 @@ import QuestionTooltip from '@/components/QuestionTooltip';
 import { connect } from 'dva';
 import { router } from 'umi';
 import { Tooltip } from 'antd';
-@connect(({ loading, home }) => ({
-  theme: home.theme,
-  GHGandEmissionContrastData: home.GHGandEmissionContrastData,
+@connect(({ loading, home_ys }) => ({
+  theme: home_ys.theme,
+  GHGandEmissionContrastData: home_ys.GHGandEmissionContrastData,
 }))
 class EmissionYears extends PureComponent {
   constructor(props) {
@@ -24,9 +24,9 @@ class EmissionYears extends PureComponent {
   getData = EntCode => {
     this.props
       .dispatch({
-        type: 'home/getGHGandEmissionContrast',
+        type: 'home_ys/getGHGandEmissionContrast',
         payload: {
-          EntCode: EntCode,
+          EntCode: 'c679c8f9-fa71-486b-9c20-0d6d2955b2d9',
         },
       })
       .then(() => {
@@ -134,7 +134,7 @@ class EmissionYears extends PureComponent {
 
   onShowModal = (modalType, title) => {
     this.props.dispatch({
-      type: 'home/updateState',
+      type: 'home_ys/updateState',
       payload: {
         yanshiVisible: true,
         modalType: modalType,

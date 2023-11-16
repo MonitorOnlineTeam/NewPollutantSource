@@ -71,20 +71,19 @@ export default Model.extend({
         if (filterInvalidData !== 'undefined') {
           const _filterInvalidData = filterInvalidData && filterInvalidData.split(',');
           _filterInvalidData &&
-            (
-              _filterInvalidData.map(item => {
-                data = data.filter(m => m.pollutantTypeCode != item);
-              })
-            );
+            _filterInvalidData.map(item => {
+              data = data.filter(m => m.pollutantTypeCode != item);
+            });
         }
         // 是否显示全部
         if (showAll) {
-          data = [{
-            pollutantTypeName: '全部',
-            pollutantTypeCode: data.map(item => item.pollutantTypeCode).toString(),
-          },
-          ...data,
-          ]
+          data = [
+            {
+              pollutantTypeName: '全部',
+              pollutantTypeCode: data.map(item => item.pollutantTypeCode).toString(),
+            },
+            ...data,
+          ];
         }
         let defaultPollutantCode = data[0] && data[0]['pollutantTypeCode'];
         callback && callback(data);
@@ -95,7 +94,7 @@ export default Model.extend({
       }
     },
     // 获取省市区/企业/排口
-    * getEnterpriseAndPoint({ payload, callback }, { call, update, select }) {
+    *getEnterpriseAndPoint({ payload, callback }, { call, update, select }) {
       const level = yield select(state => state.common.level);
       const result = yield call(services.getEnterpriseAndPoint, payload);
       if (result.IsSuccess) {
@@ -120,7 +119,7 @@ export default Model.extend({
       }
     },
     // 获取企业及排口
-    * getEntAndPointList({ payload, callback }, { call, update }) {
+    *getEntAndPointList({ payload, callback }, { call, update }) {
       const result = yield call(services.getEntAndPoint, payload);
       if (result.IsSuccess) {
         const filterData = result.Datas.filter(item => {
@@ -128,15 +127,15 @@ export default Model.extend({
             let children = item.children.map(itm => {
               let obj = itm;
               delete obj.children;
-              return { ...obj }
-            })
+              return { ...obj };
+            });
             return {
               ...item,
-              children
-            }
+              children,
+            };
           }
-        })
-        callback && callback(filterData)
+        });
+        callback && callback(filterData);
         yield update({
           entAndPointList: result.Datas,
         });
@@ -146,7 +145,7 @@ export default Model.extend({
     },
 
     // 获取运维日志详情图片
-    * getOperationImageList({ payload, callback }, { call, put, update }) {
+    *getOperationImageList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.getOperationImageList, payload);
       if (result.IsSuccess) {
         let imageList = [];
@@ -157,7 +156,7 @@ export default Model.extend({
               name: item,
               status: 'done',
               url: `/uploadplantform/${item}`,
-            }
+            };
           });
           yield update({
             imageListVisible: true,
@@ -173,7 +172,7 @@ export default Model.extend({
     },
 
     // 根据污染物类型获取污染物
-    * getAllPollutantCode({ payload, callback }, { call, update }) {
+    *getAllPollutantCode({ payload, callback }, { call, update }) {
       const result = yield call(services.getPollutantTypeCode, payload);
       if (result.IsSuccess) {
         yield update({
@@ -186,7 +185,7 @@ export default Model.extend({
     },
 
     // 获取产业级联
-    * getIndustryTree({ payload, callback }, { call, update }) {
+    *getIndustryTree({ payload, callback }, { call, update }) {
       const result = yield call(services.getIndustryTree, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
@@ -196,7 +195,7 @@ export default Model.extend({
       }
     },
     // 根据企业获取排口
-    * getPointByEntCode({ payload }, { call, update }) {
+    *getPointByEntCode({ payload }, { call, update }) {
       const result = yield call(services.getPointByEntCode, payload);
       if (result.IsSuccess) {
         yield update({
@@ -205,17 +204,17 @@ export default Model.extend({
       }
     },
     // 根据mn号获取站点下的所有污染物因子
-    * getPollutantListByDgimn({ payload, callback }, { call, update }) {
+    *getPollutantListByDgimn({ payload, callback }, { call, update }) {
       const result = yield call(services.getPollutantListByDgimn, payload);
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        callback && callback(result.Datas);
         yield update({
           pollutantListByDgimn: result.Datas,
         });
       }
     },
     // 获取所有企业
-    * getEntList({ payload }, { call, update }) {
+    *getEntList({ payload }, { call, update }) {
       const result = yield call(services.getEntList, payload);
       if (result.IsSuccess) {
         yield update({
@@ -224,39 +223,41 @@ export default Model.extend({
       }
     },
     // 根据所有菜单名称
-    * getMenuNameList({ payload }, { call, update }) {
+    *getMenuNameList({ payload }, { call, update }) {
       const result = yield call(services.getMenuNameList, payload);
       if (result.IsSuccess) {
         yield update({
-          menuNameList: result.Datas.map(item => item.replace("ReactPD", "")),
+          menuNameList: result.Datas.map(item => item.replace('ReactPD', '')),
         });
       }
     },
     // 获取质控污染物，参数DGIMN 可选
-    * getQCAPollutantByDGIMN({ payload, callback, errorCallback }, { call, put, update, select }) {
+    *getQCAPollutantByDGIMN({ payload, callback, errorCallback }, { call, put, update, select }) {
       const result = yield call(services.getQCAPollutantByDGIMN, payload);
       if (result.IsSuccess) {
         yield update({
-          QCAPollutantList: result.Datas
-        })
-        callback && callback(result.Datas)
+          QCAPollutantList: result.Datas,
+        });
+        callback && callback(result.Datas);
       } else {
-        errorCallback && errorCallback(result.Message)
-        message.error(result.Message)
+        errorCallback && errorCallback(result.Message);
+        message.error(result.Message);
+      }
+    },
+    // 记录日志
+    *AddUserAccessLog({ payload }, { call, update }) {
+      const result = yield call(services.AddUserAccessLog, payload);
+      if (result.IsSuccess) {
       }
     },
     /**
-  * 基本信息-生成当前企业下所有监测点的二维码
-  * @param {传递参数} 传递参数
-  * @param {操作} 操作项
-  */
-    * CreatQRCode({
-      payload
-    }, {
-      call,
-    }) {
+     * 基本信息-生成当前企业下所有监测点的二维码
+     * @param {传递参数} 传递参数
+     * @param {操作} 操作项
+     */
+    *CreatQRCode({ payload }, { call }) {
       const result = yield call(services.CreatQRCode, {
-        ...payload
+        ...payload,
       });
       payload.callback(result);
     },

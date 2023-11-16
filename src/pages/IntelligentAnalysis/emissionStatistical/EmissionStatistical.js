@@ -58,6 +58,7 @@ class Gas extends PureComponent {
     regionFlag: true,
     entFlag: false,
     pointFlag: false,
+    PollutantType: this.props.location.query.PollutantType,
   };
   _SELF_ = {
     formLayout: {
@@ -82,6 +83,21 @@ class Gas extends PureComponent {
     // this.getTableData("region");
     // this.getTableData("ent");
     // this.getTableData("point");
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.location.query.PollutantType !== this.props.location.query.PollutantType) {
+      let _PollutantType = this.props.location.query.PollutantType;
+      this.setState({
+        PollutantType: _PollutantType,
+      });
+
+      if(_PollutantType) {
+        this.props.form.setFieldsValue({ PollutantType: _PollutantType });
+        this.getAllPollutantCode();
+        this.getTableData(this.state.DataType);
+      }
+    }
   }
 
   // 根据污染物类型获取污染物
@@ -168,7 +184,7 @@ class Gas extends PureComponent {
     let loading = regionLoading || entLoading || pointLoading;
     let exportLoading = regionExportLoading || entExportLoading || pointExportLoading;
     // const { columns, RegionColumns, EntColumns } = this._SELF_;
-    const { time, DataType, regionFlag, entFlag, pointFlag } = this.state;
+    const { time, DataType, regionFlag, entFlag, pointFlag, PollutantType } = this.state;
     let _regionList = regionList.length ? regionList[0].children : [];
     const _style = {
       width: 60,
@@ -572,7 +588,7 @@ class Gas extends PureComponent {
                   <SelectPollutantType
                     style={{ width: 200 }}
                     showDefaultValue
-                    // filterPollutantType={'1,2'}
+                    filterPollutantType={PollutantType}
                     filterInvalidData={'5,12'}
                     placeholder="请选择污染物类型"
                     onChange={value => {

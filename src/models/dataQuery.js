@@ -472,7 +472,8 @@ export default Model.extend({
           },
           yAxis: {
             type: 'log',
-            name: `浓度值${unit}`,
+            // name: `浓度值${unit}`,
+            name: `浓度值`,
             axisLabel: {
               formatter: '{value}',
             },
@@ -484,7 +485,7 @@ export default Model.extend({
             },
           },
           grid: {
-            x: 60,
+            x: 100,
             y: 45,
             x2: 45,
             y2: 20,

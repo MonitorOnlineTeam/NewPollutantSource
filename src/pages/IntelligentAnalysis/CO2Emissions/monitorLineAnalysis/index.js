@@ -3,95 +3,101 @@
  * 创建时间：2023.01.30
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Empty, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
-import SdlTable from '@/components/SdlTable'
+import {
+  Table,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Form,
+  Empty,
+  Tag,
+  Typography,
+  Card,
+  Button,
+  Select,
+  message,
+  Row,
+  Col,
+  Tooltip,
+  Divider,
+  Modal,
+  DatePicker,
+  Radio,
+  Spin,
+} from 'antd';
+import SdlTable from '@/components/SdlTable';
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
-import { connect } from "dva";
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import { connect } from 'dva';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 const { RangePicker } = DatePicker;
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon';
 const { Option } = Select;
-import moment from 'moment'
-const namespace = 'CO2Emissions'
+import moment from 'moment';
+const namespace = 'CO2Emissions';
 import ReactEcharts from 'echarts-for-react';
 
-
-
-
-const dvaPropsData = ({ loading, CO2Emissions, }) => ({
+const dvaPropsData = ({ loading, CO2Emissions }) => ({
   entList: CO2Emissions.entList,
   entLoading: loading.effects[`${namespace}/getAllEnterprise`],
   chartDataLoading: loading.effects[`${namespace}/getCO2LinearAnalysisOther`],
   chartDatas: CO2Emissions.monitorLineAnalysisChartData,
-})
+});
 
-const dvaDispatch = (dispatch) => {
+const dvaDispatch = dispatch => {
   return {
-    updateState: (payload) => {
+    updateState: payload => {
       dispatch({
         type: `${namespace}/updateState`,
         payload: payload,
-      })
+      });
     },
-    getAllEnterprise: (payload, callback) => { // 企业
+    getAllEnterprise: (payload, callback) => {
+      // 企业
       dispatch({
         type: `${namespace}/getAllEnterprise`,
         payload: payload,
-        callback: callback
-      })
-
+        callback: callback,
+      });
     },
-    getCO2LinearAnalysisOther: (payload) => { //列表
+    getCO2LinearAnalysisOther: payload => {
+      //列表
       dispatch({
         type: `${namespace}/getCO2LinearAnalysisOther`,
         payload: payload,
-      })
+      });
     },
-  }
-}
-const Index = (props) => {
-
+  };
+};
+const Index = props => {
   const [form] = Form.useForm();
 
-  const { entList, entLoading, chartDatas, chartDataLoading, showMode } = props;
+  const { entList, entLoading, chartDatas, chartDataLoading, showMode, EntCode, date } = props;
   useEffect(() => {
-    props.getAllEnterprise({}, (data) => {
-      data && data[0] && form.setFieldsValue({ EntCode: data[0].EntCode })
+    props.getAllEnterprise({}, data => {
+      data && data[0] && form.setFieldsValue({ EntCode: EntCode || data[0].EntCode });
       onFinish();
-    })
-
+    });
   }, []);
 
-
-
-
-
-
-
-
-
-
-
-
-  const onFinish = async () => {  //查询
+  const onFinish = async () => {
+    //查询
 
     try {
       const values = await form.validateFields();
-      props.getCO2LinearAnalysisOther({
-        ...values,
-        BeginTime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD'),
-        EndTime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD'),
-        Time: undefined,
-      }, () => {
-      })
+      props.getCO2LinearAnalysisOther(
+        {
+          ...values,
+          BeginTime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD'),
+          EndTime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD'),
+          Time: undefined,
+        },
+        () => {},
+      );
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
-  }
-
-
-
+  };
 
   const getOption = () => {
     const { chartDatas } = props;
@@ -105,7 +111,7 @@ const Index = (props) => {
         fontWeight: 'bold',
       },
       lineStyle: {
-        type: 'solid'
+        type: 'solid',
       },
       itemStyle: {
         color: '#1677ff',
@@ -113,21 +119,26 @@ const Index = (props) => {
       tooltip: {
         formatter: chartDatas.formula,
       },
-      data: [[{
-        coord: chartDatas.coordMin,
-        symbol: 'none'
-      }, {
-        coord: chartDatas.coordMax,
-        symbol: 'none'
-      }]]
+      data: [
+        [
+          {
+            coord: chartDatas.coordMin,
+            symbol: 'none',
+          },
+          {
+            coord: chartDatas.coordMax,
+            symbol: 'none',
+          },
+        ],
+      ],
     };
 
     let option = {
       title: {
-        text: "直测与核算碳排放量线性相关分析图",
+        text: '直测与核算碳排放量线性相关分析图',
         left: 'center',
         top: 0,
-        textStyle: { fontSize: 22, } //字体大小,
+        textStyle: { fontSize: 22 }, //字体大小,
       },
       itemStyle: {
         color: '#52c41a',
@@ -136,30 +147,42 @@ const Index = (props) => {
         left: '55px',
         right: '180px',
         bottom: 5,
-        containLabel: true
+        containLabel: true,
       },
       tooltip: {
-        formatter: function (params, ticket, callback) {
-          return `直测二氧化碳排放当量:    ${params && params.value[0]} KgCO₂e <br />核算二氧化碳排放当量:    ${params && params.value[1]} KgCO₂e`
-        }
+        formatter: function(params, ticket, callback) {
+          return `直测二氧化碳排放当量:    ${params &&
+            params.value[0]} KgCO₂e <br />核算二氧化碳排放当量:    ${params &&
+            params.value[1]} KgCO₂e`;
+        },
       },
       toolbox: {
         show: true,
         feature: {
           dataZoom: {
-            yAxisIndex: 'none'
+            yAxisIndex: 'none',
           },
           dataView: { readOnly: false },
           restore: {},
-          saveAsImage: {}
-        }
+          saveAsImage: {},
+        },
       },
       xAxis: [
-        { name: `直测二氧化碳排放当量(KgCO₂e)`, gridIndex: 0, min: chartDatas.coordMin && chartDatas.coordMin[0], max: chartDatas.coordMax && chartDatas.coordMax[0] },
+        {
+          name: `直测二氧化碳排放当量(KgCO₂e)`,
+          gridIndex: 0,
+          min: chartDatas.coordMin && chartDatas.coordMin[0],
+          max: chartDatas.coordMax && chartDatas.coordMax[0],
+        },
       ],
       yAxis: [
         // { name: `核算排放量(t)`, gridIndex: 0, min: chartDatas.coordMin[1] < 0 ? chartDatas.coordMin[1] - 5 : chartDatas.coordMin[1], max: chartDatas.coordMax[1] + 5 },
-        { name: `核算二氧化碳排放当量(KgCO₂e)`, gridIndex: 0, min: chartDatas.coordMin && chartDatas.coordMin[1], max: chartDatas.coordMax && chartDatas.coordMax[1] },
+        {
+          name: `核算二氧化碳排放当量(KgCO₂e)`,
+          gridIndex: 0,
+          min: chartDatas.coordMin && chartDatas.coordMin[1],
+          max: chartDatas.coordMax && chartDatas.coordMax[1],
+        },
       ],
       series: [
         {
@@ -170,73 +193,101 @@ const Index = (props) => {
           data: chartDatas.linearData,
           markLine: markLineOpt, //回归线段配置
         },
-      ]
+      ],
     };
 
     return option;
-  }
+  };
 
   const searchComponents = () => {
-    return <Form
-      form={form}
-      name="advanced_search"
-      layout='inline'
-      initialValues={{
-        Time: [moment(new Date()).add(-30, 'day'), moment(),]
-      }}
-      //className={styles["ant-advanced-search-form"]}
-      onFinish={() => { onFinish() }}
-    >
-      <Spin spinning={entLoading} size='small'>
-        <Form.Item label="企业" name="EntCode" >
-          <Select placeholder='请选择企业名称' showSearch
-            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-            style={{ width: 200 }}>
-            {
-              entList && entList[0] && entList.map(item => {
-                return <Option key={item.EntCode} value={item.EntCode}>{item.EntName}</Option>
-              })
-            }
-          </Select>
+    return (
+      <Form
+        form={form}
+        name="advanced_search"
+        layout="inline"
+        initialValues={{
+          Time: date || [moment(new Date()).add(-30, 'day'), moment()],
+          EntCode: EntCode,
+        }}
+        //className={styles["ant-advanced-search-form"]}
+        onFinish={() => {
+          onFinish();
+        }}
+      >
+        <Spin spinning={entLoading} size="small">
+          <Form.Item label="企业" name="EntCode">
+            <Select
+              placeholder="请选择企业名称"
+              showSearch
+              filterOption={(input, option) =>
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              style={{ width: 200 }}
+            >
+              {entList &&
+                entList[0] &&
+                entList.map(item => {
+                  return (
+                    <Option key={item.EntCode} value={item.EntCode}>
+                      {item.EntName}
+                    </Option>
+                  );
+                })}
+            </Select>
+          </Form.Item>
+        </Spin>
+        <Form.Item name="Time" label="日期">
+          <RangePicker_ allowClear={false} format="YYYY-MM-DD" style={{ width: '100%' }} />
         </Form.Item>
-      </Spin>
-      <Form.Item name='Time' label='日期' >
-        <RangePicker_ allowClear={false} format='YYYY-MM-DD' style={{ width: '100%' }} />
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType='submit' style={{ marginRight: 8 }} loading={chartDataLoading}>
-          查询
-        </Button>
-      </Form.Item>
-    </Form>
-  }
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginRight: 8 }}
+            loading={chartDataLoading}
+          >
+            查询
+          </Button>
+        </Form.Item>
+      </Form>
+    );
+  };
 
   const getPageContent = () => {
-    return <Card title={searchComponents()} border={false}>
-      <Spin spinning={chartDataLoading}>
-        {
-          chartDatas ? <ReactEcharts
-            option={getOption()}
-            lazyUpdate
-            notMerge
-            style={{ width: '100%', height: 'calc(100vh - 260px)', minHeight: '200px', marginTop: 20 }}
-          /> :
+    return (
+      <Card title={searchComponents()} border={false}>
+        <Spin spinning={chartDataLoading}>
+          {chartDatas ? (
+            <ReactEcharts
+              option={getOption()}
+              lazyUpdate
+              notMerge
+              style={{
+                width: '100%',
+                height: 'calc(100vh - 260px)',
+                minHeight: '200px',
+                marginTop: 20,
+              }}
+            />
+          ) : (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        }
-      </Spin>
-    </Card>
-  }
+          )}
+        </Spin>
+      </Card>
+    );
+  };
 
   return (
     <div>
-      {
-        showMode === 'modal' ?
-          getPageContent() :
-          <BreadcrumbWrapper>
-            {getPageContent()}
-          </BreadcrumbWrapper>
-      }
+      {showMode === 'modal' ? (
+        getPageContent()
+      ) : (
+        <BreadcrumbWrapper>{getPageContent()}</BreadcrumbWrapper>
+      )}
     </div>
   );
 };
-export default connect(dvaPropsData, dvaDispatch)(Index);
+export default connect(
+  dvaPropsData,
+  dvaDispatch,
+)(Index);

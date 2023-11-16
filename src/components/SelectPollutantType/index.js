@@ -20,6 +20,16 @@ class SelectPollutantType extends PureComponent {
     };
   }
   componentDidMount() {
+    this.getData();
+  }
+
+  componentDidUpdate(prevProps, prevState) { 
+    if(this.props.filterPollutantType !== prevProps.filterPollutantType) {
+      this.getData();
+    }
+  } 
+
+  getData = () => {
     this.props.dispatch({
       type: 'common/getPollutantTypeList',
       payload: {

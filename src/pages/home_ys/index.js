@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-07 10:50:14
+ * @Last Modified time: 2023-11-08 16:44:58
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -38,32 +38,25 @@ import config from '@/config';
 import HomeCommon from '@/components/home_ys/HomeCommon';
 import CO2Rate from './yanshi/CO2Rate';
 import ModalContent from './yanshi/ModalContent';
+import YSYLiveVideo from '@/components/Video/YSY/Live'
 
 const RadioButton = Radio.Button;
 const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
 let _thismap;
 let Map, Marker, Polygon, Markers, InfoWindow;
 
-@connect(({ loading, home, global }) => ({
-  allEntAndPointLoading: loading.effects['home/getAllEntAndPoint'],
-  alarmAnalysisLoading: loading.effects['home/getAlarmAnalysis'],
-  allMonthEmissionsByPollutantLoading: loading.effects['home/getAllMonthEmissionsByPollutant'],
-  rateStatisticsByEntLoading: loading.effects['home/getRateStatisticsByEnt'],
-  statisticsPointStatusLoading: loading.effects['home/getStatisticsPointStatus'],
-  warningInfoLoading: loading.effects['home/getWarningInfo'],
-  taskCountLoading: loading.effects['home/getTaskCount'],
-  exceptionProcessingLoading: loading.effects['home/getExceptionProcessing'],
-  loading: loading.effects['home/getHomePage'],
-  pollutantTypeList: home.pollutantTypeList,
-  currentEntInfo: home.currentEntInfo,
-  currentMarkersList: home.currentMarkersList,
-  allEntAndPointList: home.allEntAndPointList,
-  mounthOverData: home.mounthOverData,
-  homeVideoList: home.homeVideoList,
-  homePage: home.homePage,
-  theme: home.theme,
-  yanshiVisible: home.yanshiVisible,
-  yanshiModalTitle: home.yanshiModalTitle,
+@connect(({ loading, home_ys, global }) => ({
+  loading: loading.effects['home_ys/getHomePage'],
+  pollutantTypeList: home_ys.pollutantTypeList,
+  currentEntInfo: home_ys.currentEntInfo,
+  currentMarkersList: home_ys.currentMarkersList,
+  allEntAndPointList: home_ys.allEntAndPointList,
+  mounthOverData: home_ys.mounthOverData,
+  homeVideoList: home_ys.homeVideoList,
+  homePage: home_ys.homePage,
+  theme: home_ys.theme,
+  yanshiVisible: home_ys.yanshiVisible,
+  yanshiModalTitle: home_ys.yanshiModalTitle,
   configInfo: global.configInfo,
 }))
 class index extends Component {
@@ -102,34 +95,7 @@ class index extends Component {
           }
         }
       },
-      // zoomchange: (value) => {
-      //   if (_thismap.getZoom() <= this.state.zoom) {
-      //     props.dispatch({
-      //       type: "home/updateState",
-      //       payload: {
-      //         // currentEntInfo: {},
-      //         currentMarkersList: this.props.allEntAndPointList
-      //       }
-      //     })
-      //     if (this.state.showType === "point") {
-      //       props.dispatch({
-      //         type: "home/updateState",
-      //         payload: {
-      //           currentEntInfo: {},
-      //         }
-      //       })
-      //       this.setState({
-      //         currentPoint: undefined,
-      //         DGIMN: null
-      //       })
-      //     }
-      //     this.setState({ showType: "ent" })
-      //   } else {
-      //     this.setState({ showType: "point" })
-      //   }
-      // },
       complete: () => {
-        //_thismap.setZoomAndCenter(13, [centerlongitude, centerlatitude]);
       },
     };
   }
@@ -162,11 +128,11 @@ class index extends Component {
     const { dispatch } = this.props;
     // 获取企业及排口信息
     dispatch({
-      type: 'home/getAllEntAndPoint',
+      type: 'home_ys/getAllEntAndPoint',
     });
     // 获取污染物类型
     dispatch({
-      type: 'home/getPollutantTypeList',
+      type: 'home_ys/getPollutantTypeList',
       payload: {},
     });
     this.getHomePageVideo();
@@ -181,7 +147,7 @@ class index extends Component {
 
   // 获取首页视频列表
   getHomePageVideo = () => {
-    this.props.dispatch({ type: 'home/getHomePageVideo' });
+    this.props.dispatch({ type: 'home_ys/getHomePageVideo' });
   };
 
   componentWillReceiveProps(nextProps) {
@@ -253,7 +219,7 @@ class index extends Component {
         ? this.props.currentEntInfo.children.filter(item => item.PollutantType == e.target.value)
         : this.props.currentEntInfo.children;
       this.props.dispatch({
-        type: 'home/updateState',
+        type: 'home_ys/updateState',
         payload: {
           currentMarkersList: filterData,
         },
@@ -302,7 +268,7 @@ class index extends Component {
     if (itemData.position.IsEnt === 1) {
       // 企业
       this.props.dispatch({
-        type: 'home/updateState',
+        type: 'home_ys/updateState',
         payload: {
           currentEntInfo: itemData.position,
           currentMarkersList: itemData.position.children,
@@ -504,7 +470,7 @@ class index extends Component {
   // 显示企业点
   showEntMarkers = () => {
     this.props.dispatch({
-      type: 'home/updateState',
+      type: 'home_ys/updateState',
       payload: {
         // currentEntInfo: {},
         currentMarkersList: this.props.allEntAndPointList,
@@ -512,7 +478,7 @@ class index extends Component {
     });
     if (this.state.showType === 'point') {
       this.props.dispatch({
-        type: 'home/updateState',
+        type: 'home_ys/updateState',
         payload: {
           currentEntInfo: {},
         },
@@ -527,7 +493,7 @@ class index extends Component {
 
   onShowModal = (modalType, title) => {
     this.props.dispatch({
-      type: 'home/updateState',
+      type: 'home_ys/updateState',
       payload: {
         yanshiVisible: true,
         modalType: modalType,
@@ -552,14 +518,6 @@ class index extends Component {
     } = this.state;
     const {
       currentEntInfo,
-      allEntAndPointLoading,
-      alarmAnalysisLoading,
-      allMonthEmissionsByPollutantLoading,
-      rateStatisticsByEntLoading,
-      statisticsPointStatusLoading,
-      warningInfoLoading,
-      taskCountLoading,
-      exceptionProcessingLoading,
       mounthOverData,
       homePage,
       configInfo,
@@ -575,86 +533,9 @@ class index extends Component {
     if (ele) {
       height = ele.offsetHeight - 30;
     }
-    if (homePage == '1') {
-      return (
-        <Spin
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            top: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0)',
-            zIndex: 999,
-          }}
-          size="large"
-        />
-      );
-    }
 
-    const isLeftLoading =
-      allEntAndPointLoading ||
-      rateStatisticsByEntLoading ||
-      taskCountLoading ||
-      exceptionProcessingLoading ||
-      alarmAnalysisLoading ||
-      warningInfoLoading;
-    const isRightLoading =
-      allEntAndPointLoading || allMonthEmissionsByPollutantLoading || statisticsPointStatusLoading;
     return (
       <div className={styles.homeWrapper} style={{ width: '100%', height: 'calc(100vh)' }}>
-        {/* {
-          isLeftLoading && <Spin
-            style={{
-              position: "absolute",
-              width: "410px",
-              height: "100%",
-              top: 0,
-              left: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "rgba(0, 0, 0, 0.4)",
-              zIndex: 999,
-            }}
-            size="large"
-          />
-        }
-        {
-          isRightLoading && <Spin
-            style={{
-              position: "absolute",
-              width: "410px",
-              height: "100%",
-              top: 0,
-              right: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "rgba(0, 0, 0, 0.4)",
-              zIndex: 999,
-            }}
-            size="large"
-          />
-        } */}
-        {/* {
-          allEntAndPointLoading && <Spin
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              top: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "rgba(0, 0, 0, 0)",
-              zIndex: 999,
-            }}
-            size="large"
-          />
-        } */}
         <header className={styles.homeHeader}>
           <p>
             <span>SDL</span> {configInfo.SystemName}
@@ -710,7 +591,7 @@ class index extends Component {
                 onChange={(value, e) => {
                   console.log('value=', value);
                   this.props.dispatch({
-                    type: 'home/updateState',
+                    type: 'home_ys/updateState',
                     payload: {
                       theme: value ? 'dark' : 'light',
                     },
@@ -785,14 +666,25 @@ class index extends Component {
                     <p>视频监控</p>
                   </div>
                   <div className={styles.videoContainer}>
-                    {/* {
-                      homeVideoList[0] ? <LiveVideo videoInfo={homeVideoList[0]} id="video1" /> : <div className='notData'>
+                    {/* {homeVideoList[0] ? (
+                      <LiveVideo videoInfo={homeVideoList[0]} id="video1" />
+                    ) : (
+                      <div className="notData">
                         <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
-                        <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+                        <p style={{ color: '#d5d9e2', fontSize: 16, fontWeight: 500 }}>暂无数据</p>
                       </div>
-                    } */}
+                    )} */}
 
                     {/* <LiveVideo deviceSerial={'E36486991'} channelNo={1} template="simple" /> */}
+
+                    <YSYLiveVideo
+                      id={'video1'}
+                      appKey={'35ca29dba6714724be8fd7331548cc37'}
+                      appSecret={'699b15a37df6ba5f6115c4e5b23bde55'}
+                      deviceSerial={'AB2482688'}
+                      channelNo={'1'}
+                      // template="simple"
+                    />
                   </div>
                 </div>
               </Col>
@@ -884,7 +776,7 @@ class index extends Component {
           // wrapClassName={styles.myModal}
           onCancel={() => {
             this.props.dispatch({
-              type: 'home/updateState',
+              type: 'home_ys/updateState',
               payload: {
                 yanshiVisible: false,
               },

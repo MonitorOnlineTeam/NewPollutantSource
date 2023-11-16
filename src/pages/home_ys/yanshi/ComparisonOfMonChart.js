@@ -6,9 +6,9 @@ import { connect } from 'dva';
 import { router } from 'umi';
 import { Tooltip } from 'antd';
 import moment from 'moment';
-@connect(({ loading, home }) => ({
-  theme: home.theme,
-  comparisonOfMonData: home.comparisonOfMonData,
+@connect(({ loading, home_ys }) => ({
+  theme: home_ys.theme,
+  comparisonOfMonData: home_ys.comparisonOfMonData,
 }))
 class ComparisonOfMonChart extends PureComponent {
   constructor(props) {
@@ -24,9 +24,11 @@ class ComparisonOfMonChart extends PureComponent {
 
   getData = EntCode => {
     this.props.dispatch({
-      type: 'home/getComparisonOfMonData',
+      type: 'home_ys/getComparisonOfMonData',
       payload: {
-        EntCode: '7526121f-1229-44dd-9de1-429bf6654664',
+        // EntCode: '6c4234c6-9978-4d1c-b342-0d40e2ec2678',
+        // EntCode: '7526121f-1229-44dd-9de1-429bf6654664', // 华能
+        EntCode: 'c679c8f9-fa71-486b-9c20-0d6d2955b2d9', // 华能
         BeginTime: '2023-01-01',
         EndTime: moment().format('YYYY-MM-DD'),
         type: 'echarts',
@@ -122,7 +124,7 @@ class ComparisonOfMonChart extends PureComponent {
 
   onShowModal = (modalType, title) => {
     this.props.dispatch({
-      type: 'home/updateState',
+      type: 'home_ys/updateState',
       payload: {
         yanshiVisible: true,
         modalType: modalType,

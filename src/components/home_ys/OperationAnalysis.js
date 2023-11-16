@@ -5,10 +5,10 @@ import { connect } from 'dva';
 import config from '@/config';
 const { RunningRate, TransmissionEffectiveRate } = config;
 
-@connect(({ loading, home }) => ({
-  rateStatisticsByEntLoading: loading.effects['home/getRateStatisticsByEnt'],
-  rateStatisticsByEnt: home.rateStatisticsByEnt,
-  theme: home.theme,
+@connect(({ loading, home_ys }) => ({
+  rateStatisticsByEntLoading: loading.effects['home_ys/getRateStatisticsByEnt'],
+  rateStatisticsByEnt: home_ys.rateStatisticsByEnt,
+  theme: home_ys.theme,
 }))
 class OperationAnalysis extends Component {
   constructor(props) {
@@ -24,7 +24,6 @@ class OperationAnalysis extends Component {
     }
 
     if (this.props.theme !== nextProps.theme) {
-      debugger;
       if (this.myChart) {
         let echarts_instance = this.myChart.getEchartsInstance();
         echarts_instance.dispose();
@@ -37,7 +36,7 @@ class OperationAnalysis extends Component {
     const { dispatch } = this.props;
     // 获取智能质控数据
     dispatch({
-      type: 'home/getRateStatisticsByEnt',
+      type: 'home_ys/getRateStatisticsByEnt',
       payload: {
         entCode,
         DGIMN,

@@ -71,9 +71,9 @@ export const DATASPURCE_SELECT_OPTIONS_CONST = {
     { TypeName: '多选', TypeValue: 2 }
   ],
   foreignTypeArr: [
-    { TypeName: '无', TypeValue: '0' },
-    { TypeName: '表连接', TypeValue: '1' },
-    { TypeName: '枚举', TypeValue: '2' }
+    { TypeName: '无', TypeValue: 0 },
+    { TypeName: '表连接', TypeValue: 1 },
+    { TypeName: '枚举', TypeValue: 2 }
   ],
   foreignRelTypeArr: [
     { TypeName: '左连接', TypeValue: 'left join' },

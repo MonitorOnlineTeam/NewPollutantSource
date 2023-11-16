@@ -252,7 +252,7 @@ class MenuManagementModal extends Component {
                             <Col span={10} offset={1} className={styles.MenuAddressLeft} >
                                 <Form.Item label={`链接地址`}>
                                     {getFieldDecorator('NavigateUrl', {
-                                        rules: [{ required: true, message: '请输入链接地址!' }],
+                                        // rules: [{ required: true, message: '请输入链接地址!' }],
                                         initialValue: record && record.NavigateUrl
                                     })(
                                         <Input />

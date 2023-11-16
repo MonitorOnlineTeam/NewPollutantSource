@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-04 14:55:20
+ * @Last Modified time: 2023-11-16 10:05:13
  */
 
 import React, { PureComponent, Fragment } from 'react';
@@ -387,7 +387,7 @@ class SdlForm extends PureComponent {
             ? {
                 fileList: fileList,
               }
-            : {};
+            : {fileList: []};
           element = (
             <SdlUpload
               {...this.props}

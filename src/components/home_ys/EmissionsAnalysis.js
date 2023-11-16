@@ -6,9 +6,9 @@ import ReactEcharts from 'echarts-for-react';
 import { Empty, Tooltip } from 'antd';
 import { router } from 'umi';
 
-@connect(({ loading, home }) => ({
-  AllMonthEmissionsByPollutant: home.AllMonthEmissionsByPollutant,
-  isOnlyCO2: home.isOnlyCO2,
+@connect(({ loading, home_ys }) => ({
+  AllMonthEmissionsByPollutant: home_ys.AllMonthEmissionsByPollutant,
+  isOnlyCO2: home_ys.isOnlyCO2,
 }))
 class MonitoringStatus extends Component {
   constructor(props) {
@@ -28,9 +28,9 @@ class MonitoringStatus extends Component {
     const { dispatch } = this.props;
     // 获取排污许可情况
     dispatch({
-      type: 'home/getAllMonthEmissionsByPollutant',
+      type: 'home_ys/getAllMonthEmissionsByPollutant',
       payload: {
-        EntCode: entCode || undefined,
+        EntCode: 'c679c8f9-fa71-486b-9c20-0d6d2955b2d9' || undefined,
         DGIMN,
       },
     });
@@ -401,7 +401,7 @@ class MonitoringStatus extends Component {
 
   onShowModal = (modalType, title) => {
     this.props.dispatch({
-      type: 'home/updateState',
+      type: 'home_ys/updateState',
       payload: {
         yanshiVisible: true,
         modalType: modalType,

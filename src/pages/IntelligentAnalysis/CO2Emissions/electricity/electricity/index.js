@@ -1,23 +1,28 @@
 import React, { PureComponent } from 'react';
-import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
-import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
-import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker, message } from 'antd'
+import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
+import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker, message } from 'antd';
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
-import QuestionTooltip from "@/components/QuestionTooltip"
-import moment from 'moment'
-import { INDUSTRYS, maxWait, GET_SELECT_LIST, SUMTYPE } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import QuestionTooltip from '@/components/QuestionTooltip';
+import moment from 'moment';
+import {
+  INDUSTRYS,
+  maxWait,
+  GET_SELECT_LIST,
+  SUMTYPE,
+} from '@/pages/IntelligentAnalysis/CO2Emissions/CONST';
 import Debounce from 'lodash.debounce';
-import ImportFile from '../../components/ImportFile'
+import ImportFile from '../../components/ImportFile';
 
 const industry = INDUSTRYS.electricity;
-const SumType = SUMTYPE.electricity["电力"]
+const SumType = SUMTYPE.electricity['电力'];
 const { Option } = Select;
 const CONFIG_ID = 'CO2PowerDischarge';
-const SELECT_LIST = [{ "key": '1', "value": "外购电力" }]
+const SELECT_LIST = [{ key: '1', value: '外购电力' }];
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -51,10 +56,10 @@ class index extends PureComponent {
 
   // 判断是否可添加
   checkIsAdd = () => {
-    this.formRef.current.validateFields().then((values) => {
+    this.formRef.current.validateFields().then(values => {
       let { EntCode, MonitorTime, PowerDischargeType, CrewCode } = values;
       const { KEY, rowTime, rowType } = this.state;
-      let _MonitorTime = MonitorTime.format("YYYY-MM-01 00:00:00");
+      let _MonitorTime = MonitorTime.format('YYYY-MM-01 00:00:00');
       // 编辑时判断时间是否更改
       if (KEY && rowTime === _MonitorTime && rowType == PowerDischargeType) {
         this.onHandleSubmit();
@@ -69,32 +74,33 @@ class index extends PureComponent {
           TypeCode: PowerDischargeType,
           CrewCode: CrewCode,
         },
-        callback: (res) => {
+        callback: res => {
           if (res === true) {
             message.error('相同种类、相同时间添加不能重复，请重新选择种类或时间！');
             return;
           } else {
             this.onHandleSubmit();
           }
-        }
+        },
       });
-    })
-  }
+    });
+  };
 
   getCO2TableSum = () => {
     const { searchForm } = this.state;
-    let entCode = searchForm[CONFIG_ID] ? (
-      searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`] ? searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`].value : undefined
-    )
+    let entCode = searchForm[CONFIG_ID]
+      ? searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`]
+        ? searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`].value
+        : undefined
       : undefined;
     this.props.dispatch({
       type: 'CO2Emissions/getCO2TableSum',
       payload: {
         SumType: SumType,
-        EntCode: entCode
-      }
+        EntCode: entCode,
+      },
     });
-  }
+  };
   // 计算排放量
   countEmissions = () => {
     // 排放量 = 活动数据 × 排放因子
@@ -106,99 +112,103 @@ class index extends PureComponent {
         type: 'CO2Emissions/countEmissions',
         payload: {
           EntCode: EntCode,
-          Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
+          Time: MonitorTime.format('YYYY-MM-01 00:00:00'),
           IndustryCode: industry,
           Type: 1,
           CalType: 'w-2',
-          Data: { '活动数据': ActivityData || 0, '排放因子': Emission || 0 }
+          Data: { 活动数据: ActivityData || 0, 排放因子: Emission || 0 },
         },
-        callback: (res) => {
-          console.log('res=', res)
-          this.formRef.current.setFieldsValue({ 'tCO2': res.toFixed(2) });
-        }
-      })
+        callback: res => {
+          console.log('res=', res);
+          this.formRef.current.setFieldsValue({ tCO2: res.toFixed(2) });
+        },
+      });
     }
-  }
+  };
 
   handleCancel = () => {
     this.setState({
-      isModalVisible: false
-    })
+      isModalVisible: false,
+    });
   };
 
   // 保存
   onHandleSubmit = () => {
-    this.formRef.current.validateFields().then((values) => {
+    this.formRef.current.validateFields().then(values => {
       const { editData, KEY } = this.state;
-      console.log('KEY=', KEY)
+      console.log('KEY=', KEY);
       let actionType = KEY ? 'autoForm/saveEdit' : 'autoForm/add';
 
-      this.props.dispatch({
-        type: actionType,
-        payload: {
-          configId: CONFIG_ID,
-          FormData: {
-            ...values,
-            MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00"),
-            PowerDischargeCode: KEY
+      this.props
+        .dispatch({
+          type: actionType,
+          payload: {
+            configId: CONFIG_ID,
+            FormData: {
+              ...values,
+              MonitorTime: moment(values.MonitorTime).format('YYYY-MM-01 00:00'),
+              PowerDischargeCode: KEY,
+            },
+            reload: KEY ? true : undefined,
           },
-          reload: KEY ? true : undefined,
-        }
-      }).then(() => {
-        this.setState({
-          isModalVisible: false,
         })
-        this.getTableList();
-      })
-    })
-  }
-
+        .then(() => {
+          this.setState({
+            isModalVisible: false,
+          });
+          this.getTableList();
+        });
+    });
+  };
 
   getTableList = () => {
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',
       payload: {
         configId: CONFIG_ID,
-      }
-    })
+      },
+    });
     this.getCO2TableSum();
-  }
+  };
 
   // 点击编辑获取数据
-  getFormData = (FileUuid) => {
+  getFormData = FileUuid => {
     this.props.dispatch({
       type: 'autoForm/getFormData',
       payload: {
         configId: CONFIG_ID,
         'dbo.T_Bas_CO2PowerDischarge.PowerDischargeCode': this.state.KEY,
       },
-      callback: (res) => {
-        this.setState({
-          editData: res,
-          isModalVisible: true,
-        }, () => {
-          this.getCO2EnergyType()
-        })
-      }
-    })
-  }
+      callback: res => {
+        this.setState(
+          {
+            editData: res,
+            isModalVisible: true,
+          },
+          () => {
+            this.getCO2EnergyType();
+          },
+        );
+      },
+    });
+  };
 
   // 根据企业获取机组
   getCO2EnergyType = () => {
     let values = this.formRef.current.getFieldsValue();
     const { EntCode, MonitorTime } = values;
-    this.getUnitList(EntCode)
-  }
+    this.getUnitList(EntCode);
+  };
 
   // 获取机组信息
-  getUnitList = (entCode) => {
+  getUnitList = entCode => {
     this.props.dispatch({
       type: 'CO2Emissions/getUnitList',
       payload: {
-        EntCode: entCode
-      }
-    })
-  }
+        EntCode: entCode,
+      },
+    });
+  };
 
   // 重置机组
   resetUnitInfoList = () => {
@@ -206,19 +216,17 @@ class index extends PureComponent {
       type: 'CO2Emissions/updateState',
       payload: {
         unitInfoList: [],
-      }
-    })
-  }
+      },
+    });
+  };
 
   // 查询成功回调
-  searchSuccessCallback = (searchForm) => {
-    console.log("searchForm=", searchForm)
-    this.setState(
-      { searchForm },
-      () => {
-        this.getCO2TableSum();
-      })
-  }
+  searchSuccessCallback = searchForm => {
+    console.log('searchForm=', searchForm);
+    this.setState({ searchForm }, () => {
+      this.getCO2TableSum();
+    });
+  };
 
   render() {
     const { isModalVisible, editData, FileUuid, KEY } = this.state;
@@ -239,34 +247,47 @@ class index extends PureComponent {
                 editData: {},
                 KEY: undefined,
                 FileUuid: undefined,
-              })
+              });
               this.resetUnitInfoList();
             }}
             onEdit={(record, key) => {
-              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2PowerDischarge.AttachmentID')
-              this.setState({
-                KEY: key, FileUuid: FileUuid,
-                rowTime: record['dbo.T_Bas_CO2PowerDischarge.MonitorTime'],
-                rowType: record['dbo.T_Bas_CO2PowerDischarge.PowerDischargeType']
-              }, () => {
-                this.getFormData(FileUuid);
-              })
+              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2PowerDischarge.AttachmentID');
+              this.setState(
+                {
+                  KEY: key,
+                  FileUuid: FileUuid,
+                  rowTime: record['dbo.T_Bas_CO2PowerDischarge.MonitorTime'],
+                  rowType: record['dbo.T_Bas_CO2PowerDischarge.PowerDischargeType'],
+                },
+                () => {
+                  this.getFormData(FileUuid);
+                },
+              );
             }}
             onDeleteCallback={() => {
               this.getCO2TableSum();
             }}
             appendHandleButtons={() => {
-              return <ImportFile
-                onSuccess={() => {
-                  this.getTableList();
-                }}
-                industry={industry}
-              />
+              return (
+                <ImportFile
+                  onSuccess={() => {
+                    this.getTableList();
+                  }}
+                  industry={industry}
+                />
+              );
             }}
             footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />
         </Card>
-        <Modal destroyOnClose width={900} title={KEY ? "编辑" : "添加"} visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
+        <Modal
+          destroyOnClose
+          width={900}
+          title={KEY ? '编辑' : '添加'}
+          visible={isModalVisible}
+          onOk={this.checkIsAdd}
+          onCancel={this.handleCancel}
+        >
           <Form
             {...layout}
             ref={this.formRef}
@@ -284,12 +305,24 @@ class index extends PureComponent {
                   label="企业"
                   rules={[{ required: true, message: '请选择企业!' }]}
                 >
-                  <Select placeholder="请选择企业" onChange={this.getCO2EnergyType}>
-                    {
-                      EntView.map(item => {
-                        return <Option value={item["dbo.EntView.EntCode"]} key={item["dbo.EntView.EntCode"]}>{item["dbo.EntView.EntName"]}</Option>
-                      })
+                  <Select
+                    placeholder="请选择企业"
+                    onChange={this.getCO2EnergyType}
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
+                  >
+                    {EntView.map(item => {
+                      return (
+                        <Option
+                          value={item['dbo.EntView.EntCode']}
+                          key={item['dbo.EntView.EntCode']}
+                        >
+                          {item['dbo.EntView.EntName']}
+                        </Option>
+                      );
+                    })}
                   </Select>
                 </Form.Item>
               </Col>
@@ -308,14 +341,14 @@ class index extends PureComponent {
                   label="种类"
                   rules={[{ required: true, message: '请选择种类!' }]}
                 >
-                  <Select placeholder="请选择种类"
-                    onChange={() => this.countEmissions()}
-                  >
-                    {
-                      SELECT_LIST.map(item => {
-                        return <Option value={item.key} key={item.key}>{item.value}</Option>
-                      })
-                    }
+                  <Select placeholder="请选择种类" onChange={() => this.countEmissions()}>
+                    {SELECT_LIST.map(item => {
+                      return (
+                        <Option value={item.key} key={item.key}>
+                          {item.value}
+                        </Option>
+                      );
+                    })}
                   </Select>
                 </Form.Item>
               </Col>
@@ -325,7 +358,10 @@ class index extends PureComponent {
                   label="活动数据（MWh）"
                   rules={[{ required: true, message: '请填写活动数据!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据"
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={0}
+                    placeholder="请填写活动数据"
                     onChange={Debounce(() => this.countEmissions(), maxWait)}
                   />
                 </Form.Item>
@@ -336,13 +372,14 @@ class index extends PureComponent {
                   label="机组"
                   rules={[{ required: true, message: '请选择机组!' }]}
                 >
-                  <Select placeholder="请选择机组"
-                  >
-                    {
-                      unitInfoList.map(item => {
-                        return <Option value={item.CrewCode} key={item.CrewCode}>{item.CrewName}</Option>
-                      })
-                    }
+                  <Select placeholder="请选择机组">
+                    {unitInfoList.map(item => {
+                      return (
+                        <Option value={item.CrewCode} key={item.CrewCode}>
+                          {item.CrewName}
+                        </Option>
+                      );
+                    })}
                   </Select>
                 </Form.Item>
               </Col>
@@ -352,7 +389,10 @@ class index extends PureComponent {
                   label="排放因子（tCO₂/MWh）"
                   rules={[{ required: true, message: '请填写排放因子!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放因子"
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={0}
+                    placeholder="请填写排放因子"
                     onChange={Debounce(() => this.countEmissions(), maxWait)}
                   />
                 </Form.Item>
@@ -362,7 +402,8 @@ class index extends PureComponent {
                   name="tCO2"
                   label="排放量（tCO₂）"
                   label={
-                    <span>排放量（tCO₂）
+                    <span>
+                      排放量（tCO₂）
                       <QuestionTooltip content="排放量 = 活动数据 × 排放因子" />
                     </span>
                   }
@@ -377,11 +418,14 @@ class index extends PureComponent {
                   wrapperCol={{ span: 7 }}
                   name="AttachmentID"
                   label="验证材料"
-                // rules={[{ required: true, message: '请填写排放量!' }]}
+                  // rules={[{ required: true, message: '请填写排放量!' }]}
                 >
-                  <FileUpload fileUUID={FileUuid} uploadSuccess={(fileUUID) => {
-                    this.formRef.current.setFieldsValue({ AttachmentID: fileUUID })
-                  }} />
+                  <FileUpload
+                    fileUUID={FileUuid}
+                    uploadSuccess={fileUUID => {
+                      this.formRef.current.setFieldsValue({ AttachmentID: fileUUID });
+                    }}
+                  />
                 </Form.Item>
               </Col>
             </Row>

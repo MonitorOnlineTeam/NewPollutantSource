@@ -7,9 +7,9 @@ import ReactSeamlessScroll from 'react-seamless-scroll';
 import ReactEcharts from 'echarts-for-react';
 import { router } from 'umi';
 
-@connect(({ loading, home }) => ({
-  warningInfoList: home.warningInfoList,
-  theme: home.theme,
+@connect(({ loading, home_ys }) => ({
+  warningInfoList: home_ys.warningInfoList,
+  theme: home_ys.theme,
 }))
 class QCAPassRate extends Component {
   constructor(props) {
@@ -174,7 +174,7 @@ class QCAPassRate extends Component {
 
   onShowModal = (modalType, title) => {
     this.props.dispatch({
-      type: 'home/updateState',
+      type: 'home_ys/updateState',
       payload: {
         yanshiVisible: true,
         modalType: modalType,

@@ -4,10 +4,10 @@ import styles from '@/pages/home_ys/index.less';
 import Marquee from '@/components/Marquee';
 import { Row, Col } from 'antd';
 import ReactEcharts from 'echarts-for-react';
-@connect(({ loading, home }) => ({
-  pointData: home.pointData,
-  home: home,
-  theme: home.theme,
+@connect(({ loading, home_ys }) => ({
+  pointData: home_ys.pointData,
+  home_ys: home_ys,
+  theme: home_ys.theme,
 }))
 class MonitoringStatus extends Component {
   constructor(props) {
@@ -79,7 +79,7 @@ class MonitoringStatus extends Component {
     const { dispatch } = this.props;
     // 监控现状
     dispatch({
-      type: 'home/getStatisticsPointStatus',
+      type: 'home_ys/getStatisticsPointStatus',
       payload: {
         entCode: entCode,
       },
