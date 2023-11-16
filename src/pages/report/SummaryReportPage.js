@@ -46,7 +46,7 @@ class SummaryReportPage extends PureComponent {
     this.state = {
       columns: [],
       yearValue: moment(),
-      currQuarter: Math.floor((currMonth % 3 == 0 ? (currMonth / 3) : (currMonth / 3 + 1))),
+      currQuarter: Math.floor(currMonth % 3 == 0 ? currMonth / 3 : currMonth / 3 + 1),
       currentYear: moment().format('YYYY'),
       defaultRegionCode: [],
       currentDate: moment(),
@@ -186,11 +186,12 @@ class SummaryReportPage extends PureComponent {
         render: (text, row, index) => {
           // 数据不可信处理
           if (item.dataIndex === 'time') {
-            return <span>
-              {getDataTruseMsg(row)}
-              {text}
-            </span>
-
+            return (
+              <span>
+                {getDataTruseMsg(row)}
+                {text}
+              </span>
+            );
           }
           if (text) {
             const _text = text.split('|');
@@ -254,29 +255,38 @@ class SummaryReportPage extends PureComponent {
   }
 
   handleQuarterTime = (quarter, year) => {
-    let BeginTime; let EndTime;
+    let BeginTime;
+    let EndTime;
     const yearValue = year || this.state.yearValue;
     const currQuarter = quarter || this.state.currQuarter;
     switch (currQuarter) {
       case 1:
-        BeginTime = moment(yearValue).format('YYYY-01-01 00:00:00')
-        EndTime = moment(yearValue).endOf('months').format('YYYY-MM-DD HH:mm:ss')
+        BeginTime = moment(yearValue).format('YYYY-01-01 00:00:00');
+        EndTime = moment(yearValue)
+          .endOf('months')
+          .format('YYYY-MM-DD HH:mm:ss');
         break;
       case 2:
-        BeginTime = moment(yearValue).format('YYYY-04-01 00:00:00')
-        EndTime = moment(yearValue).endOf('months').format('YYYY-MM-DD HH:mm:ss')
+        BeginTime = moment(yearValue).format('YYYY-04-01 00:00:00');
+        EndTime = moment(yearValue)
+          .endOf('months')
+          .format('YYYY-MM-DD HH:mm:ss');
         break;
       case 3:
-        BeginTime = moment(yearValue).format('YYYY-07-01 00:00:00')
-        EndTime = moment(yearValue).endOf('months').format('YYYY-MM-DD HH:mm:ss')
+        BeginTime = moment(yearValue).format('YYYY-07-01 00:00:00');
+        EndTime = moment(yearValue)
+          .endOf('months')
+          .format('YYYY-MM-DD HH:mm:ss');
         break;
       case 4:
-        BeginTime = moment(yearValue).format('YYYY-10-01 00:00:00')
-        EndTime = moment(yearValue).endOf('months').format('YYYY-MM-DD HH:mm:ss')
+        BeginTime = moment(yearValue).format('YYYY-10-01 00:00:00');
+        EndTime = moment(yearValue)
+          .endOf('months')
+          .format('YYYY-MM-DD HH:mm:ss');
         break;
     }
     return [BeginTime, EndTime];
-  }
+  };
 
   changeReportType = (reportType, type) => {
     const pollutantType = type || this.props.form.getFieldValue('PollutantSourceType');
@@ -291,7 +301,10 @@ class SummaryReportPage extends PureComponent {
         endTime = moment(time).format('YYYY-MM-DD 23:59:59');
         break;
       case 'week':
-        beginTime = pollutantType != 5 ? moment(time).format('YYYY-MM-DD 00:00:00') : moment(time).subtract(7, 'day').format('YYYY-MM-DD 00:00:00');
+        // beginTime = pollutantType != 5 ? moment(time).format('YYYY-MM-DD 00:00:00') : moment(time).subtract(7, 'day').format('YYYY-MM-DD 00:00:00');
+        beginTime = moment(time)
+          .subtract(7, 'day')
+          .format('YYYY-MM-DD 00:00:00');
         endTime = moment(time).format('YYYY-MM-DD 23:59:59');
         break;
       case 'quarter':
@@ -337,7 +350,10 @@ class SummaryReportPage extends PureComponent {
     } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        if (timeDifference(this.state.beginTime, this.state.endTime) || values["reportType"] !== "daily") {
+        if (
+          timeDifference(this.state.beginTime, this.state.endTime) ||
+          values['reportType'] !== 'daily'
+        ) {
           this.props.dispatch({
             type: 'report/summaryReportExcel',
             payload: {
@@ -404,7 +420,11 @@ class SummaryReportPage extends PureComponent {
     const reportText =
       reportType === 'daily' ? '汇总日报' : reportType === 'monthly' ? '汇总月报' : '汇总年报';
     const format =
-      (reportType === 'daily' || reportType === 'week') ? 'YYYY-MM-DD' : reportType === 'monthly' ? 'YYYY-MM' : 'YYYY';
+      reportType === 'daily' || reportType === 'week'
+        ? 'YYYY-MM-DD'
+        : reportType === 'monthly'
+        ? 'YYYY-MM'
+        : 'YYYY';
     const pollutantSourceType = this.props.form.getFieldValue('PollutantSourceType');
     let picker = '';
     let dateType = '';
@@ -577,7 +597,12 @@ class SummaryReportPage extends PureComponent {
                 <Col
                   sm={24}
                   md={5}
-                  style={{ display: getFieldValue('PollutantSourceType') == 5 && reportType != 'quarter' ? 'block' : 'none' }}
+                  style={{
+                    display:
+                      getFieldValue('PollutantSourceType') == 5 && reportType != 'quarter'
+                        ? 'block'
+                        : 'none',
+                  }}
                 >
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator('airReportTime', {
@@ -594,7 +619,12 @@ class SummaryReportPage extends PureComponent {
                 <Col
                   sm={24}
                   md={5}
-                  style={{ display: getFieldValue('PollutantSourceType') == 5 || reportType == 'quarter' ? 'none' : 'block' }}
+                  style={{
+                    display:
+                      getFieldValue('PollutantSourceType') == 5 || reportType == 'quarter'
+                        ? 'none'
+                        : 'block',
+                  }}
                 >
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator('ReportTime', {
@@ -643,22 +673,28 @@ class SummaryReportPage extends PureComponent {
                         // style={{ width: '100%' }}
                         value={this.state.yearValue}
                         _onPanelChange={v => {
-                          let quarterBeginAndEnd = this.handleQuarterTime(this.state.currQuarter, v);
+                          let quarterBeginAndEnd = this.handleQuarterTime(
+                            this.state.currQuarter,
+                            v,
+                          );
                           this.setState({
                             beginTime: quarterBeginAndEnd[0],
                             endTime: quarterBeginAndEnd[1],
-                            yearValue: v
-                          })
+                            yearValue: v,
+                          });
                         }}
                       />
-                      <Select value={this.state.currQuarter} onChange={(value) => {
-                        let quarterBeginAndEnd = this.handleQuarterTime(value);
-                        this.setState({
-                          beginTime: quarterBeginAndEnd[0],
-                          endTime: quarterBeginAndEnd[1],
-                          currQuarter: value
-                        })
-                      }}>
+                      <Select
+                        value={this.state.currQuarter}
+                        onChange={value => {
+                          let quarterBeginAndEnd = this.handleQuarterTime(value);
+                          this.setState({
+                            beginTime: quarterBeginAndEnd[0],
+                            endTime: quarterBeginAndEnd[1],
+                            currQuarter: value,
+                          });
+                        }}
+                      >
                         <Option value={1}>第一季度</Option>
                         <Option value={2}>第二季度</Option>
                         <Option value={3}>第三季度</Option>
@@ -666,7 +702,6 @@ class SummaryReportPage extends PureComponent {
                       </Select>
                     </InputGroup>
                   </FormItem>
-
                 </Col>
                 <Col md={5} sm={24}>
                   <FormItem label="" style={{ width: '100%', marginLeft: 5 }}>
@@ -709,8 +744,8 @@ class SummaryReportPage extends PureComponent {
                 onChange: this.onTableChange,
                 total: Total,
               }}
-            // bordered
-            // pagination={true}
+              // bordered
+              // pagination={true}
             />
           </Card>
         </Spin>

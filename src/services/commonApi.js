@@ -1,14 +1,13 @@
 import { post, get } from '@/utils/request';
-import { API } from '@config/API'
-// import 
+import { API } from '@config/API';
+// import
 
 //根据行政区获取 大气站列表
 
 export async function GetStationByRegion(params) {
   const result = post(
     // '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetStationByRegion?RegionCode=' +
-    `${API.commonApi.GetStationByRegion}?RegionCode=` +
-    params.RegionCode,
+    `${API.commonApi.GetStationByRegion}?RegionCode=` + params.RegionCode,
     null,
     null,
   );
@@ -35,10 +34,14 @@ export async function getEnterpriseAndPoint(params) {
 
 // 获取污染物类型
 export async function getPollutantTypeList(params) {
-  const result = await post(API.commonApi.GetPollutantTypeList, {
-    ...params,
-    pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
-  }, null);
+  const result = await post(
+    API.commonApi.GetPollutantTypeList,
+    {
+      ...params,
+      pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes,
+    },
+    null,
+  );
   return result;
 }
 
@@ -53,7 +56,11 @@ export async function getSystemConfigInfo() {
 
 // 获取运维日志详情图片
 export async function getOperationImageList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetRecordPhotoName', params, null);
+  const result = await post(
+    '/api/rest/PollutantSourceApi/TaskProcessingApi/GetRecordPhotoName',
+    params,
+    null,
+  );
   return result;
 }
 
@@ -71,10 +78,14 @@ export async function getIndustryTree(params) {
 
 // 获取组件 - 企业及排口
 export async function getEntAndPoint(params) {
-  const result = await post(API.commonApi.GetEntAndPoint, {
-    ...params,
-    PollutantTypes: params.PollutantTypes || sessionStorage.getItem('sysPollutantCodes'),
-  }, null);
+  const result = await post(
+    API.commonApi.GetEntAndPoint,
+    {
+      ...params,
+      PollutantTypes: params.PollutantTypes || sessionStorage.getItem('sysPollutantCodes'),
+    },
+    null,
+  );
   return result;
 }
 
@@ -97,17 +108,21 @@ export async function getPollutantListByDgimn(params) {
  */
 export async function CreatQRCode(params) {
   const result = post(API.PointApi.CreateQRCode, params, null);
-  return result === null ? {
-    data: null
-  } : result;
+  return result === null
+    ? {
+        data: null,
+      }
+    : result;
 }
 
 // 获取系统菜单名称
 export async function getMenuNameList(params) {
   const result = post(API.AuthorityApi.GetMenuByLoginUser, params, null);
-  return result === null ? {
-    data: null
-  } : result;
+  return result === null
+    ? {
+        data: null,
+      }
+    : result;
 }
 
 // 获取所有企业
@@ -123,4 +138,8 @@ export async function getQCAPollutantByDGIMN(params) {
   return result;
 }
 
-
+// 记录日志
+export async function AddUserAccessLog(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/AddUserAccessLog', params, null);
+  return result;
+}

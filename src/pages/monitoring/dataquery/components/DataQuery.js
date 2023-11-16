@@ -403,7 +403,9 @@ class DataQuery extends Component {
         this.props.dispatch({
             type: "dataquery/exportHistoryReport",
             payload: {
-                DGIMNs: this.state.dgimn
+                DGIMNs: this.state.dgimn,
+                pageIndex: undefined,
+                pageSize: undefined
             }
         })
     }

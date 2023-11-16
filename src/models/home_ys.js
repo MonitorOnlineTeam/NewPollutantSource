@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-07 10:51:03
+ * @Last Modified time: 2023-11-10 10:25:06
  * @desc: 主页model
  */
 import moment from 'moment';
@@ -14,7 +14,7 @@ import { message } from 'antd';
 import { result } from 'lodash';
 
 export default Model.extend({
-  namespace: 'home',
+  namespace: 'home_ys',
   state: {
     theme: 'dark',
     allEntAndPointList: [],
@@ -364,15 +364,15 @@ export default Model.extend({
       };
       // const result = yield call(services.getTaskCount, postData);
       // if (result.IsSuccess) {
-      if (true) {
-        yield update({
-          taskCountData: {
-            TaskSum: 8,
-            CompletedTaskSum: 8,
-            NoCompletedTaskSum: 0,
-          },
-        });
-      }
+      yield update({
+        // taskCountData: result.Datas && result.Datas[0],
+        taskCountData: {
+          TaskSum: 46,
+          CompletedTaskSum: 34,
+          NoCompletedTaskSum: 12,
+        },
+      });
+      // }
     },
 
     // 获取智能预警数据
@@ -389,6 +389,8 @@ export default Model.extend({
           operationsWarningData: {
             ...data,
             ThisMonthEP: 5,
+            ThisMonthHB: -1,
+            ThisMonthTB: 2,
           },
         });
       }
@@ -407,9 +409,17 @@ export default Model.extend({
         yield update({
           alarmAnalysis: {
             ...data,
-            LessThan2Hour: 5,
-            GreaterThan8Hour: 0,
-            OtherTime: 0,
+            // LessThan2Hour: 5,
+            // GreaterThan8Hour: 0,
+            // OtherTime: 0,
+
+            LessThan2Hour: 24,
+            GreaterThan8Hour: 12,
+            OtherTime: 4,
+            LessThan2Hourlink: -12,
+            GreaterThan8Hourlink: -11,
+            LessThan2HourlinkFlag: 0,
+            GreaterThan8HourlinkFlag: 0,
           },
         });
       }

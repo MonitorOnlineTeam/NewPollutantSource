@@ -220,6 +220,7 @@ class Index extends Component {
               <Button icon={<PlusOutlined />} type="primary" onClick={() => {
                 this.setState({
                   visible: true,
+                  AttachmentID: ''
                 })
               }}>添加</Button>
             </Fragment>}
@@ -277,7 +278,7 @@ class Index extends Component {
             }}
             width="50%"
           >
-            <SdlForm configId={configId} form={this.props.form} hideBtns noLoad />
+            <SdlForm configId={configId} form={this.props.form} hideBtns noLoad isEdit={false} />
           </Modal>
           <Modal
             title="编辑"

@@ -11,7 +11,7 @@ const Model = {
   namespace: 'userLogin',
   state: {
     status: undefined,
-    configInfo: null
+    configInfo: null,
   },
   effects: {
     *login({ payload }, { call, put, select, take }) {
@@ -22,7 +22,11 @@ const Model = {
       });
       yield put({
         type: 'changeLoginStatus',
-        payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', message: response.Message },
+        payload: {
+          status: response.IsSuccess ? 'ok' : 'error',
+          type: 'account',
+          message: response.Message,
+        },
       });
 
       if (response.IsSuccess) {
@@ -31,15 +35,15 @@ const Model = {
           payload: {
             grant_type: 'password',
             username: payload.userName,
-            password: payload.password
-          }
-        })
+            password: payload.password,
+          },
+        });
         yield take('userLogin/getToken/@@end');
         response.Datas.User_ID = response.Datas.UserId;
         let defaultNavigateUrl = '/user/login';
         let systemNavigateUrl = '';
         if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
-          if (response.Datas.MenuDatas[0].name === "首页") {
+          if (response.Datas.MenuDatas[0].name === '首页') {
             systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
           } else {
             if (response.Datas.MenuDatas[0].children.length) {
@@ -48,19 +52,20 @@ const Model = {
               systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
             }
           }
-          defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ? response.Datas.MenuDatas[0].children[0].NavigateUrl : response.Datas.MenuDatas[0].NavigateUrl;
+          defaultNavigateUrl =
+            response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length
+              ? response.Datas.MenuDatas[0].children[0].NavigateUrl
+              : response.Datas.MenuDatas[0].NavigateUrl;
         }
         delete response.Datas.MenuDatas;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
-        sessionStorage.setItem("defaultNavigateUrl", defaultNavigateUrl)
+        sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl);
         // Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
         Cookie.set('systemNavigateUrl', systemNavigateUrl);
         try {
           const { ws } = window;
           ws.send(response.Datas.userAccount);
-        } catch (error) {
-
-        }
+        } catch (error) {}
         //大屏
         if (payload.redirctUrl) {
           router.push('/homepage');
@@ -87,7 +92,11 @@ const Model = {
       let response = yield call(getFakeCaptcha, payload);
       yield put({
         type: 'changeLoginStatus',
-        payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', mobileMessage: response.Message },
+        payload: {
+          status: response.IsSuccess ? 'ok' : 'error',
+          type: 'account',
+          mobileMessage: response.Message,
+        },
       });
     },
   },
