@@ -260,7 +260,7 @@ const Index = (props) => {
       }}
     >
       <Form.Item label="日期查询" name="time">
-        <DatePicker   picker="month"/>
+        <DatePicker allowClear={false}   picker="month"/>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType='submit' loading={tableLoading} style={{ marginRight: 8 }}>

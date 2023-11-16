@@ -437,6 +437,14 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '不规范数量',
+      dataIndex: 'StandardErrCount',
+      key: 'StandardErrCount',
+      align: 'center',
+      width: 100,
+      ellipsis: true,
+    },
+    {
       title: '核查人',
       dataIndex: 'CheckUser',
       key: 'CheckUser',
@@ -839,7 +847,7 @@ const Index = (props) => {
   const [checkEditvisible, setCheckEditvisible] = useState(false)
 
   const edit = (record) => { //编辑
-    if(record.isCheckUser){ //核查人员编辑的时候
+    if(!record.isCheckUser){ //核查人员编辑的时候
       setCheckEditvisible(true)
       setTitle('编辑')
       setEditId(record.id)
@@ -3408,7 +3416,7 @@ const Index = (props) => {
         </Form>
 
       </Modal> 
-      <CheckUserEditDetail  visible={checkEditvisible}  title={title} id={editId} mn={commonForm.getFieldValue('DGIMN')}   onCancel={() => { setCheckEditvisible(false); }} onFinish={()=>onFinish(pageIndex,pageSize)}/>
+      <CheckUserEditDetail  visible={checkEditvisible}  title={title} id={editId}   onCancel={() => { setCheckEditvisible(false); }} onFinish={()=>onFinish(pageIndex,pageSize)}/>
     </div>
 
   );

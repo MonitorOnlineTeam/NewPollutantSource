@@ -95,13 +95,13 @@ const Index = (props) => {
       //颗粒物或流速都未选择的状态
       for(let k=0;k< data.consistencyCheckList.length;k++){
         if(flag1&&data.consistencyCheckList[k].PollutantName==='颗粒物'){
-          data1.splice(k+1,0,{PollutantName:'颗粒物',DataList:{ flag:3 }},{PollutantName:'颗粒物',DataList:{ flag:4 }})
+          data1.splice(k,0,{PollutantName:'颗粒物',DataList:{ flag:3 }},{PollutantName:'颗粒物',DataList:{ flag:4 }})
           break;
         }
       }
       for(let l=0;l< data.consistencyCheckList.length;l++){
       if(flag2&&data.consistencyCheckList[l].PollutantName==='流速'){
-        data1.splice(l+1,0,{PollutantName:'流速',DataList:{ flag:3 }},{PollutantName:'流速',DataList:{ flag:4 }})
+        data1.splice(l,0,{PollutantName:'流速',DataList:{ flag:3 }},{PollutantName:'流速',DataList:{ flag:4 }})
         break;
       }
       }
@@ -239,7 +239,8 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'> <Checkbox checked={dasRangStatus}></Checkbox><span style={{paddingLeft:5}}>DAS量程</span></Row>,
+          // title: <Row align='middle' justify='center'> <Checkbox checked={dasRangStatus}></Checkbox><span style={{paddingLeft:5}}>DAS量程</span></Row>,
+          title: 'DAS量程',
           align: 'center',
           dataIndex: 'par',
           key: 'par',
@@ -269,7 +270,8 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'><Checkbox checked={dataRangStatus}  ></Checkbox><span style={{paddingLeft:5}}>数采仪量程</span></Row>,
+          // title: <Row align='middle' justify='center'><Checkbox checked={dataRangStatus}  ></Checkbox><span style={{paddingLeft:5}}>数采仪量程</span></Row>,
+          title: '数采仪量程',
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
@@ -442,7 +444,8 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'><Checkbox checked={dasRangStatus} ></Checkbox> <span style={{paddingLeft:5}}>DAS示值</span></Row>,
+          title: 'DAS示值',
+          // title: <Row align='middle' justify='center'><Checkbox checked={dasRangStatus} ></Checkbox> <span style={{paddingLeft:5}}>DAS示值</span></Row>,
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
@@ -452,7 +455,8 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'><Checkbox checked={dataRealTimeRangStatus} ></Checkbox><span style={{paddingLeft:5}}>数采仪实时数据</span></Row>,
+          // title: <Row align='middle' justify='center'><Checkbox checked={dataRealTimeRangStatus} ></Checkbox><span style={{paddingLeft:5}}>数采仪实时数据</span></Row>,
+          title: '数采仪实时数据',
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',

@@ -62,7 +62,7 @@ const dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
-  const { visible, title, onCancel, id, mn, type, clientHeight } = props;
+  const { visible, title, onCancel, id, type, clientHeight } = props;
   const [form2] = Form.useForm(); //添加编辑表单  数据一致性核查表
   const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
   const [commonForm] = Form.useForm();
@@ -83,53 +83,48 @@ const Index = (props) => {
         props.getConsistencyCheckInfo({ ID: id }, (data) => { //DAS量程
           setRangeUpload(data.rangeUpload)
           setCouUpload(data.couUpload)
-          setConsistencyCheckDetail(data)
-          if (data.consistencyCheckList && data.consistencyCheckList[0]) {//获取das量程和数采仪量程是否被选中
-            setDasRangStatus(data.consistencyCheckList[0].DataList.DASStatus == 1 ? true : false)
-            setDataRangStatus(data.consistencyCheckList[0].DataList.DataRangeStatus == 1 ? true : false)
-            setDataRealTimeRangStatus(data.consistencyCheckList[0].DataList.DataStatus == 1 ? true : false)
-          }
-
-
-          // 量程一致性核查表 数据
-          let data1 = data.consistencyCheckList && data.consistencyCheckList.filter(item => !(item.DataList.CouType && item.PollutantName === '颗粒物' || !item.DataList.CouType && !item.DataList.Special && item.PollutantName === '流速'))
-          let flag1 = true, flag2 = true;
-          for (let i = 0; i < data1.length; i++) {
-            if (data1[i].PollutantName === '颗粒物') {
-              data1.splice(i + 1, 0, { PollutantName: '颗粒物', DataList: { flag: data1[i].DataList.Special == 1 ? 1 : 2 } })
-              flag1 = false;
-              break;
+          const tableDataFun = (data) =>{ //表格数据
+            if (data.consistencyCheckList && data.consistencyCheckList[0]) {//获取das量程和数采仪量程是否被选中
+              setDasRangStatus(data.consistencyCheckList[0].DataList.DASStatus == 1 ? true : false)
+              setDataRangStatus(data.consistencyCheckList[0].DataList.DataRangeStatus == 1 ? true : false)
+              setDataRealTimeRangStatus(data.consistencyCheckList[0].DataList.DataStatus == 1 ? true : false)
             }
-          }
-          for (let j = 0; j < data1.length; j++) {
-            if (data1[j].PollutantName === '流速') {
-              data1.splice(j + 1, 0, { PollutantName: '流速', DataList: { flag: data1[j].DataList.Special == 1 ? 1 : 2 } })
-              flag2 = false;
-              break;
+            // 量程一致性核查表 数据
+            let data1 = data.consistencyCheckList && data.consistencyCheckList.filter(item => !(item.DataList.CouType && item.PollutantName === '颗粒物' || !item.DataList.CouType && !item.DataList.Special && item.PollutantName === '流速'))
+            let flag1 = true, flag2 = true;
+            for (let i = 0; i < data1.length; i++) {
+              if (data1[i].PollutantName === '颗粒物') {
+                data1.splice(i+1, 0, { PollutantName: '颗粒物', DataList: { flag: data1[i].DataList.Special == 1 ? 1 : 2 } })
+                flag1 = false;
+                break;
+              }
             }
-
-          }
-
-
-          //颗粒物或流速都未选择的状态
-          for (let k = 0; k < data.consistencyCheckList.length; k++) {
-            if (flag1 && data.consistencyCheckList[k].PollutantName === '颗粒物') {
-              data1.splice(k + 1, 0, { PollutantName: '颗粒物', DataList: { flag: 3 } }, { PollutantName: '颗粒物', DataList: { flag: 4 } })
-              break;
+            for (let j = 0; j < data1.length; j++) {
+              if (data1[j].PollutantName === '流速') {
+                data1.splice(j+1, 0, { PollutantName: '流速', DataList: { flag: data1[j].DataList.Special == 1 ? 1 : 2 } })
+                flag2 = false;
+                break;
+              }
+  
             }
-          }
-          for (let l = 0; l < data.consistencyCheckList.length; l++) {
-            if (flag2 && data.consistencyCheckList[l].PollutantName === '流速') {
-              data1.splice(l + 1, 0, { PollutantName: '流速', DataList: { flag: 3 } }, { PollutantName: '流速', DataList: { flag: 4 } })
-              break;
+            //颗粒物或流速都未选择的状态
+            for (let k = 0; k < data.consistencyCheckList.length; k++) {
+              if (flag1 && data.consistencyCheckList[k].PollutantName === '颗粒物') {
+                data1.splice(k, 0, { PollutantName: '颗粒物', DataList: { flag: 3 } }, { PollutantName: '颗粒物', DataList: { flag: 4 } })
+                break;
+              }
             }
+            for (let l = 0; l < data.consistencyCheckList.length; l++) {
+              if (flag2 && data.consistencyCheckList[l].PollutantName === '流速') {
+                data1.splice(l, 0, { PollutantName: '流速', DataList: { flag: 3 } }, { PollutantName: '流速', DataList: { flag: 4 } })
+                break;
+              }
+            }
+            setTableData1(data1)
+            // 实时数据一致性核查表 数据
+            let data2 = data.consistencyCheckList && data.consistencyCheckList.filter(item => !(item.DataList.Special && item.PollutantName === '颗粒物'))
+            setTableData2(data2)
           }
-          setTableData1(data1)
-
-          // 实时数据一致性核查表 数据
-          let data2 = data.consistencyCheckList && data.consistencyCheckList.filter(item => !(item.DataList.Special && item.PollutantName === '颗粒物'))
-          setTableData2(data2)
-          setTableLoading(false)
           const echoData = (data) => {
             for (let i = 0; i < data.consistencyCheckList.length; i++) {
               const item = data.consistencyCheckList?.[i]?.DataList;
@@ -146,21 +141,41 @@ const Index = (props) => {
             }
             for (let i = 0; i < data.consistentParametersCheckList.length; i++) {
               const item2 = data.consistentParametersCheckList?.[i];
-              echoParForamtData(item2?.CheckItem, item2)
+              const code = item2?.CheckItem
+              echoParForamtData(code, item2)
             }
             setTableLoading(false)
           }
           if (data.consistencyCheckList?.[0] && data.consistentParametersCheckList?.[0]) {
+            setConsistencyCheckDetail(data)
+            tableDataFun(data)
             echoData(data)
           } else {
-            props.getCheckPointConsistencyParam({ DGIMN: mn }, (data) => {
-              if (data) {
-                echoData(data)
-                setConsistencyCheckDetail(data)
+              props.getCheckPointConsistencyParam({ DGIMN: data.DGIMN }, (res) => {
+              if (res) {
+                 let pollutantList = []
+                 res.pollutantList.map(item=>{
+                  if(item.Name=='颗粒物'){//单独处理 只留实时数据一致性核查表
+                    pollutantList.push({PollutantName:item.Name, DataList:{...item,PollutantCode:item.ChildID,CouType:1}},{PollutantName:item.Name, DataList:{...item,PollutantCode:item.ChildID,CouType:2}})
+                  }else{
+                    pollutantList.push({PollutantName:item.Name, DataList:{...item,PollutantCode:item.ChildID}})
+                  }
+                })
+                const paramList = res.paramList.map(item=>{
+                  return {
+                    CheckItem: item.ChildID,
+                    ItemName:item.Name,
+                    Content: item.Col1,
+                  }
+                })
+                const listData = {consistencyCheckList:pollutantList ,consistentParametersCheckList:  paramList}
+                setConsistencyCheckDetail({...data, consistentParametersCheckList: paramList})
+                tableDataFun(listData)
+                echoData(listData)
               }
             })
           }
-
+          
         })
     }else{ //关闭弹框时 清空数据 防止下次打开弹框 上一个页面数据量过大 页面卡顿
       setConsistencyCheckDetail({})
@@ -174,21 +189,21 @@ const Index = (props) => {
   }, [visible]);
   const echoRangRealTimeForamtData = (code, val, ) => { //格式化 量程和实时数据一致性核查表
     form2.setFieldsValue({
-      [`${code}RangCheck`]: val?.RangeStatus ? [val.RangeStatus] : [],
+      [`${code}RangCheck`]: val?.RangeStatus? [val.RangeStatus] : [],
       [`${code}Remark`]: val?.RangeRemark,
       [`${code}RangCheck2`]: val?.CouStatus ? [val.CouStatus] : [],
       [`${code}Remark2`]: val?.CouRemrak,
     })
-    onManualChange(val.RangeStatus && [val.RangeStatus], `${code}RangCheck`)
-    onManualChange(val.CouStatus && [val.CouStatus], `${code}RangCheck2`)
+    onManualChange(val?.RangeStatus && [val.RangeStatus], `${code}RangCheck`)
+    onManualChange(val?.CouStatus && [val.CouStatus], `${code}RangCheck2`)
 
   }
   const echoParForamtData = (code, val, ) => { //格式化 参数一致性核查表
     form3.setFieldsValue({
-      [`${code}RangCheck3`]: val.Uniformity ? [val.Uniformity] : [],
-      [`${code}Remark3`]: val.Remark,
+      [`${code}RangCheck3`]: val?.Uniformity ? [val.Uniformity] : [],
+      [`${code}Remark3`]: val?.Remark,
     })
-    onManualChange(val.Uniformity && [val.Uniformity], `${code}RangCheck3`) //编辑 手工修正结果 参数一致性核查
+    onManualChange(val?.Uniformity && [val.Uniformity], `${code}RangCheck3`) //编辑 手工修正结果 参数一致性核查
 
   }
   const getAttachmentDataSource = (fileInfo) => {
@@ -414,7 +429,6 @@ const Index = (props) => {
           }
         },
         {
-          // title: <Row align='middle' justify='center'> <Checkbox checked={dasRangStatus}></Checkbox><span style={{ paddingLeft: 5 }}>DAS量程</span></Row>,
           title: 'DAS量程',
           align: 'center',
           dataIndex: 'par',
@@ -445,7 +459,6 @@ const Index = (props) => {
           }
         },
         {
-          // title: <Row align='middle' justify='center'><Checkbox checked={dataRangStatus}  ></Checkbox><span style={{ paddingLeft: 5 }}>数采仪量程</span></Row>,
           title: '数采仪量程',
           align: 'center',
           dataIndex: 'PollutantName',
@@ -599,7 +612,6 @@ const Index = (props) => {
           }
         },
         {
-          // title: <Row align='middle' justify='center'><Checkbox checked={dasRangStatus} ></Checkbox> <span style={{ paddingLeft: 5 }}>DAS示值</span></Row>,
           title: 'DAS示值',
           align: 'center',
           dataIndex: 'PollutantName',
@@ -610,7 +622,6 @@ const Index = (props) => {
           }
         },
         {
-          // title: <Row align='middle' justify='center'><Checkbox checked={dataRealTimeRangStatus} ></Checkbox><span style={{ paddingLeft: 5 }}>数采仪实时数据</span></Row>,
           title: '数采仪实时数据',
           align: 'center',
           dataIndex: 'PollutantName',
@@ -1003,8 +1014,8 @@ const Index = (props) => {
             <div style={{ color: '#f5222d', marginTop: 4, fontSize: 18 }}>
               我承诺：当月上传的全部量程、参数设定值和溯源值均已核对无误，现场实时数据保持一致，上传的各项数据和照片如有任何问题，本人愿接受相应处罚。
            </div>
-            <Form.Item name='Commitment' valuePropName="checked" style={{ marginBottom: 0 }}>
-              <Checkbox className={styles.commitmentSty}>
+            <Form.Item  valuePropName="checked" style={{ marginBottom: 0 }}>
+              <Checkbox className={styles.commitmentSty} checked={consistencyCheckDetail?.Commitment==1? true : false}>
                 已阅读已承诺！
             </Checkbox>
             </Form.Item>
