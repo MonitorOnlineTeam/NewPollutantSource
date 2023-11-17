@@ -477,7 +477,7 @@ const Index = props => {
             <Spin spinning={StatisVeriAndErLoading}>
               <div className={styles.checkBox}>
                 <div className={styles.legendInfo}>
-                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>
+                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 0 }}>
                     {/* 核实为误报线索 */}
                     核实存在异常
                   </p>
@@ -515,7 +515,7 @@ const Index = props => {
                   </div>
                 </div>
                 <div className={styles.legendInfo}>
-                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>待核实线索</p>
+                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 0 }}>待核实线索</p>
                   <div className={styles.content}>
                     <Progress
                       style={{ width: '100%' }}
@@ -549,7 +549,7 @@ const Index = props => {
                   </div>
                 </div>
                 <div className={styles.legendInfo}>
-                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 10 }}>
+                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 0 }}>
                     {/* 核实为异常线索 */}
                     核实无异常
                   </p>
@@ -633,7 +633,7 @@ const Index = props => {
           </BoxItem> */}
         </div>
         <div className={styles.boxWrapper} style={{}}>
-          <BoxItem title="核实信息" style={{ flex: 1, height: 'calc(100vh - 542px)' }}>
+          <BoxItem title="核实信息" style={{ flex: 1, height: 'calc(100vh - 440px)' }}>
             <div className={styles.checkInfoWrapper}>
               <Spin spinning={alertLoading}>
                 <Alert
@@ -653,7 +653,7 @@ const Index = props => {
                   }
                   type="info"
                   showIcon
-                  style={{ marginTop: 10, background: 'rgba(20,55,120,.6)' }}
+                  style={{ marginTop: 0, background: 'rgba(20,55,120,.6)' }}
                 />
               </Spin>
               <Spin spinning={tableLoading}>
@@ -662,13 +662,13 @@ const Index = props => {
                   rowSelection={rowSelection}
                   columns={columns}
                   dataSource={dataSource}
-                  style={{ padding: 10 }}
+                  style={{ padding: 10, paddingTop: 0 }}
                   bordered={false}
                   // loading={tableLoading}
                   align="center"
                   pagination={false}
                   scroll={{
-                    y: 'calc(100vh - 700px)',
+                    y: 'calc(100vh - 590px)',
                   }}
                 />
               </Spin>

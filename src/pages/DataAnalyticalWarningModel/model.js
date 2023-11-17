@@ -19,6 +19,8 @@ function initWarningForm() {
       warningTypeCode: [],
       pageSize: 20,
       pageIndex: 1,
+      EntCode: '',
+      DGIMN: '',
     };
   }
   return warningForm;

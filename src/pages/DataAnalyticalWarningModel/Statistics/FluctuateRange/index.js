@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:47:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-01 10:12:56
+ * @Last Modified time: 2023-11-10 15:37:17
  * @Description:
  */
 import React, { useState, useEffect } from 'react';
@@ -192,6 +192,7 @@ const Index = props => {
               color: 'transparent',
             },
           },
+          barMaxWidth: 40,
           data: data.LowerData,
         },
         {
@@ -202,6 +203,7 @@ const Index = props => {
           //   show: true,
           //   position: 'top',
           // },
+          barMaxWidth: 40,
           data: data.diffData,
         },
       ],

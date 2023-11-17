@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-08 17:38:07
+ * @Last Modified time: 2023-11-14 16:30:37
  * @Description：报警核实详情
  */
 
@@ -21,6 +21,7 @@ import ModelTable from './components/ModelTable';
 import WarningDataModal from './WarningDataModal';
 import moment from 'moment';
 import { ChartDefaultSelected, getPollutantNameByCode, ModalNameConversion } from '../CONST';
+import _ from 'lodash';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   warningInfoLoading: loading.effects['dataModel/GetSingleWarning'],
@@ -407,7 +408,13 @@ const WarningVerify = props => {
           return item.pollutantName;
         });
       }
-    } else if (warningInfo.WarningTypeCode === '0fa091a3-7a19-4c9e-91bd-c5a4bf2e9827') {
+      // } else if (warningInfo.WarningTypeCode === '0fa091a3-7a19-4c9e-91bd-c5a4bf2e9827') {
+    } else if (
+      modelTableDatas[0] &&
+      modelTableDatas[0].Column &&
+      modelTableDatas[0].Column.length
+    ) {
+      // 获取表格中的污染物
       let firstTableData = modelTableDatas[0];
       // 疑似零值微小波动
       if (firstTableData.Data && firstTableData.Data.length) {
@@ -423,14 +430,29 @@ const WarningVerify = props => {
         defaultSelected = _defaultSelected.slice(0, 6);
       }
     } else {
-      // 默认选中氧含量、烟气湿度、烟气温度、流速
-      // 固定污染物：根据WarningTypeCode获取,
-      defaultSelected = (ChartDefaultSelected[warningInfo.WarningTypeCode] || []).concat([
-        '氧含量',
-        '烟气湿度',
-        '烟气温度',
-        '流速',
-      ]);
+      // 获取数据中的污染物
+      let pollutantNames = [];
+      if (modelChartDatas.length && modelChartDatas[0].data.length) {
+        modelChartDatas.map(item => {
+          item.data.map(itm => {
+            pollutantNames.push(itm.pollutantName);
+          });
+        });
+        console.log('pollutantNames', _.uniq(pollutantNames));
+      }
+
+      if (pollutantNames.length) {
+        defaultSelected = pollutantNames;
+      } else {
+        // 默认选中氧含量、烟气湿度、烟气温度、流速
+        // 固定污染物：根据WarningTypeCode获取,
+        defaultSelected = (ChartDefaultSelected[warningInfo.WarningTypeCode] || []).concat([
+          '氧含量',
+          '烟气湿度',
+          '烟气温度',
+          '流速',
+        ]);
+      }
     }
     console.log('defaultSelected', defaultSelected);
     setDefaultChartSelected(defaultSelected);
@@ -448,7 +470,11 @@ const WarningVerify = props => {
           loading={warningInfoLoading}
           extra={
             isShowBack ? (
-              <Button onClick={() => props.hideBreadcrumb && props.onCancel ? props.onCancel() : router.goBack()}>
+              <Button
+                onClick={() =>
+                  props.hideBreadcrumb && props.onCancel ? props.onCancel() : router.goBack()
+                }
+              >
                 <RollbackOutlined />
                 返回上级
               </Button>

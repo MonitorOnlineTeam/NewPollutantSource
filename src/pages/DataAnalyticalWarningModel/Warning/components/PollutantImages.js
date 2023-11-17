@@ -44,6 +44,7 @@ const Index = props => {
   const [topImages, setTopImages] = useState([]);
   const [leftImages, setLeftImages] = useState([]);
   const [rightImages, setRightImages] = useState([]);
+  const [otherImages, setOtherImages] = useState([]);
   const [images, setImages] = useState([]);
   const [rangeTime, setRangeTime] = useState([]);
   const [updateDate, setUpdateDate] = useState({});
@@ -55,6 +56,8 @@ const Index = props => {
   useEffect(() => {
     let leftImages = [];
     let rightImages = [];
+    let topImages = [];
+    let otherImages = [];
     for (const key in images) {
       if (leftImagesOrder[key]) {
         leftImages.push({
@@ -63,11 +66,26 @@ const Index = props => {
           pollutantCode: key,
           updateTime: rangeTime[key] ? rangeTime[key].UpdateTime : '-',
         });
-      }
-      if (rightImagesOrder[key]) {
+      } else if (rightImagesOrder[key]) {
         rightImages.push({
           src: images[key],
           order: rightImagesOrder[key],
+          pollutantCode: key,
+          updateTime: rangeTime[key] ? rangeTime[key].UpdateTime : '-',
+        });
+      } else if (key === 'b02') {
+        topImages.push(
+          {
+            src: images['b02'],
+            pollutantCode: 'b02',
+            updateTime: rangeTime['b02'] ? rangeTime['b02'].UpdateTime : '-',
+          },
+          // { src: undefined },
+        );
+      } else {
+        otherImages.push({
+          src: images[key],
+          // order: rightImagesOrder[key],
           pollutantCode: key,
           updateTime: rangeTime[key] ? rangeTime[key].UpdateTime : '-',
         });
@@ -75,25 +93,18 @@ const Index = props => {
       // console.log('images', images);
     }
 
-    if (images['b02']) {
-      debugger
-      setTopImages([
-        {
-          src: images['b02'],
-          pollutantCode: 'b02',
-          updateTime: rangeTime['b02'] ? rangeTime['b02'].UpdateTime : '-',
-        },
-        // { src: undefined },
-      ]);
-    } else {
-      setTopImages([]);
-    }
-    // console.log('topImages', topImages);
+    // if (images['b02']) {
+    //   debugger;
+    // } else {
+    //   setTopImages([]);
+    // }
+    console.log('topImages', topImages);
     // console.log('leftImages', leftImages);
     // console.log('rightImages', rightImages);
-
+    setTopImages(topImages);
     setLeftImages(leftImages.sort((a, b) => a.order - b.order));
     setRightImages(rightImages.sort((a, b) => a.order - b.order));
+    setOtherImages(otherImages);
   }, [images, rangeTime]);
 
   // 获取波动范围图表
@@ -139,9 +150,9 @@ const Index = props => {
     });
   };
 
-  const renderImages = data => {
+  const renderImages = (data, flag) => {
     return data.map(item => {
-      return (
+      let element = (
         <div
           style={{
             width: '100%',
@@ -186,14 +197,19 @@ const Index = props => {
               </Collapse>
             </div> */}
           </div>
-            <div className={styles.dataRangeUpdateTimeBox}>
-              <span className={styles.updateTime}>
-                <ExclamationCircleOutlined style={{ marginRight: 4 }} />
-                更新时间：{item.updateTime}
-              </span>
-            </div>
+          <div className={styles.dataRangeUpdateTimeBox}>
+            <span className={styles.updateTime}>
+              <ExclamationCircleOutlined style={{ marginRight: 4 }} />
+              更新时间：{item.updateTime}
+            </span>
+          </div>
         </div>
       );
+      debugger;
+      if (flag) {
+        return <Col span={12}>{element}</Col>;
+      }
+      return element;
     });
   };
 
@@ -211,6 +227,7 @@ const Index = props => {
         </Col>
         <Col span={12}>{renderImages(leftImages)}</Col>
         <Col span={12}>{renderImages(rightImages)}</Col>
+        {renderImages(otherImages, true)}
       </Row>
     );
   };

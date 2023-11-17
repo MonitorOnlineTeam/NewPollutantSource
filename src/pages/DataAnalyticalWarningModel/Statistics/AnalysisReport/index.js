@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-01 10:14:29
+ * @Last Modified time: 2023-11-14 16:40:38
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -623,7 +623,7 @@ const Index = props => {
                   itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
                 />
               </Form.Item>
-              <Spin spinning={modelListLoading} size="small">
+              <Spin spinning={modelListLoading} size="small" style={{ background: '#fff' }}>
                 <Form.Item label="场景类别" name="modelGuid">
                   <Select
                     allowClear

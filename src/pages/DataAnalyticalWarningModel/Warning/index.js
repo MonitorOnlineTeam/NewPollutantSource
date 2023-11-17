@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-09 17:04:03
+ * @Last Modified time: 2023-11-16 16:27:23
  * @Description：报警记录
  */
 
@@ -36,6 +36,7 @@ const dvaPropsData = ({ loading, dataModel }) => ({
   modelListLoading: loading.effects['dataModel/GetModelList'],
   queryLoading: loading.effects['dataModel/GetWarningList'],
   pointListLoading: loading.effects['dataModel/GetNoFilterPointByEntCode'],
+  entListLoading: loading.effects['common/getEntNoFilterList'],
 });
 
 const WarningRecord = props => {
@@ -47,6 +48,7 @@ const WarningRecord = props => {
     queryLoading,
     modelMenuNumber,
     pointListLoading,
+    entListLoading,
   } = props;
   const modelNumber = props.match.params.modelNumber;
   const [modelList, setModelList] = useState([]);
@@ -276,7 +278,7 @@ const WarningRecord = props => {
   // 查询数据
   const onFinish = () => {
     const values = form.getFieldsValue();
-    let warningTypeCode = values.warningTypeCode.toString();
+    let warningTypeCode = values.warningTypeCode ? values.warningTypeCode.toString() : undefined;
 
     if (modelNumber && !warningTypeCode && modelNumber !== 'all') {
       warningTypeCode = ModelNumberIdsDatas[modelNumber].toString();
@@ -288,8 +290,8 @@ const WarningRecord = props => {
         Dgimn: values.DGIMN,
         warningTypeCode: warningTypeCode,
         date: undefined,
-        beginTime: values.date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.date[1].format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.date ? values.date[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endTime: values.date ? values.date[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
         modelNumber: modelNumber,
         // pageSize: warningForm[modelNumber].pageSize,
         // pageIndex: warningForm[modelNumber].pageIndex,
@@ -327,7 +329,12 @@ const WarningRecord = props => {
         modelNumber,
       },
     }).then(() => {
-      !notResetForm && form.resetFields();
+      if(!notResetForm) {
+        form.resetFields()
+        form.setFieldsValue({
+          ...warningForm[modelNumber],
+        });
+      }
       onTableChange(1, 20);
     });
   };
@@ -378,7 +385,9 @@ const WarningRecord = props => {
           form={form}
           layout="inline"
           style={{ padding: '10px 0' }}
-          initialValues={{}}
+          initialValues={{
+            ...warningForm[modelNumber],
+          }}
           autoComplete="off"
           // onValuesChange={onValuesChange}
           onValuesChange={(changedFields, allFields) => {
@@ -412,21 +421,23 @@ const WarningRecord = props => {
           {// 脱敏角色不显示企业
           !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
             <>
-              <Form.Item label="企业" name="EntCode">
-                <EntAtmoList
-                  noFilter
-                  style={{ width: 200 }}
-                  onChange={value => {
-                    if (!value) {
-                      form.setFieldsValue({ DGIMN: undefined });
-                    } else {
-                      form.setFieldsValue({ DGIMN: undefined });
-                      getPointList(value);
-                    }
-                  }}
-                />
-              </Form.Item>
-              <Spin spinning={!!pointListLoading} size="small">
+              <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
+                <Form.Item label="企业" name="EntCode">
+                  <EntAtmoList
+                    noFilter
+                    style={{ width: 200 }}
+                    onChange={value => {
+                      if (!value) {
+                        form.setFieldsValue({ DGIMN: undefined });
+                      } else {
+                        form.setFieldsValue({ DGIMN: undefined });
+                        getPointList(value);
+                      }
+                    }}
+                  />
+                </Form.Item>
+              </Spin>
+              <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}>
                 <Form.Item label="监测点名称" name="DGIMN">
                   <Select
                     placeholder="请选择"
