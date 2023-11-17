@@ -406,6 +406,12 @@ class BasicLayout extends Component {
     const userCookie = Cookie.get('currentUser');
     if (!userCookie) {
       router.push('/user/login');
+    } else {
+      let userData = JSON.parse(userCookie);
+      window.currentUser = {
+        ...userData,
+        RoleIds: userData.RoleIds.split(','),
+      };
     }
     return (
       <>
