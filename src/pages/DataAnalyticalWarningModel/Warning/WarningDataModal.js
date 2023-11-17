@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-15 16:03:37
+ * @Last Modified time: 2023-11-17 09:13:22
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -65,7 +65,7 @@ const WarningData = props => {
     if (CompareDGIMN) {
       return (
         <>
-          报警关联数据
+          线索数据
           <Select
             style={{ width: 420, marginLeft: 20 }}
             value={DGIMN}
@@ -84,7 +84,7 @@ const WarningData = props => {
         </>
       );
     } else {
-      return `报警关联数据（${PointName}）`;
+      return `线索数据（${PointName}）`;
     }
   };
 
