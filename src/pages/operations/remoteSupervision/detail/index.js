@@ -440,7 +440,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量' || record.PollutantName === '流速' || record.PollutantName === '颗粒物' && record.DataList.CouType  === 2) {
               return '—'
             }
-            return record.DataList.AnalyzerCou
+            return record.DataList.AnalyzerCou || record.DataList.AnalyzerCou == 0 ? `${record.DataList.AnalyzerCou}${record.DataList.AnalyzerCouUnit ? `（${record.DataList.AnalyzerCouUnit}）` : ''}` : null;
           }
         },
         {
@@ -451,7 +451,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width:120,
           render: (text, record) => {
-            return record.DataList.DASCou
+            return record.DataList.DASCou || record.DataList.DASCou == 0 ? `${record.DataList.DASCou}${record.DataList.DASCouUnit ? `（${record.DataList.DASCouUnit}）` : ''}` : null;
           }
         },
         {
@@ -465,7 +465,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NO' || record.PollutantName === 'NO2') {
               return '—'
             }else{
-              return record.DataList.DataCou
+              return record.DataList.DataCou || record.DataList.DataCou == 0 ? `${record.DataList.DataCou}${record.DataList.DataCouUnit ? `（${record.DataList.DataCouUnit}）` : ''}` : null;
             }
           }
         },

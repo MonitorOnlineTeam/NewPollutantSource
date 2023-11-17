@@ -847,12 +847,12 @@ const Index = (props) => {
   const [checkEditvisible, setCheckEditvisible] = useState(false)
 
   const edit = (record) => { //编辑
-    if(!record.isCheckUser){ //核查人员编辑的时候
-      setCheckEditvisible(true)
-      setTitle('编辑')
-      setEditId(record.id)
-      return;
-    }
+    // if(record.isCheckUser){ //核查人员编辑的时候
+    //   setCheckEditvisible(true)
+    //   setTitle('编辑')
+    //   setEditId(record.id)
+    //   return;
+    // }
     setVisible(true)
     setTitle('编辑')
     setEditId(record.id)
