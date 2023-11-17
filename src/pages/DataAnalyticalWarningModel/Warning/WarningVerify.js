@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-14 16:30:37
+ * @Last Modified time: 2023-11-17 09:05:15
  * @Description：报警核实详情
  */
 
@@ -421,7 +421,7 @@ const WarningVerify = props => {
         let _defaultSelected = [];
         firstTableData.Column.map(item => {
           // 去掉括号及内容，将“烟气排放量”替换为“流量”
-          let name = item.PollutantName.replace(/\((?:.*)\)/g, '').replace('烟气排放量', '流量');
+          let name = item.PollutantName.replace(/\((?:.*)\)/g, '').replace('烟气排放量', '流量').replace('排放量', '');
           if (name.indexOf('波动范围') === -1) {
             _defaultSelected.push(name);
           }
