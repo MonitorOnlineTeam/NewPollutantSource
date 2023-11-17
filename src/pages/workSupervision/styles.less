@@ -1,0 +1,258 @@
+.workbench {
+  width: 100%;
+  // min-height: 100%;
+  height: 100%;
+  background: #f0f2f5;
+  padding: 12px 12px 0;
+  display: flex;
+
+  .leftWrapper {
+    flex: 1;
+    margin-right: 12px;
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100% - 36% - 2px);
+  }
+
+  .rightWrapper {
+    width: 36%;
+    padding-bottom: 16px;
+
+    .infoWrapper {
+      height: 100%;
+
+      .messageTimeLine {
+        padding: 30px 20px;
+
+        :global {
+          .ant-timeline-item-label {
+            width: 120px;
+            text-align: center;
+          }
+          .ant-timeline-item-tail,
+          .ant-timeline-item-head,
+          .ant-timeline-item-content {
+            left: 130px;
+          }
+        }
+      }
+    }
+  }
+
+  .topWrapper {
+    display: flex;
+    // max-height: calc((100vh) / 2);
+    min-height: 400px;
+    height: calc(100vh - 541px);
+    padding-bottom: 12px;
+    .taskListWrapper {
+      flex: 1;
+      // margin-right: 20px;
+    }
+  }
+  .bottomWrapper {
+    padding-bottom: 12px !important;
+    // max-height: calc((50vh) - 130px);
+    // min-height: 400px;
+    // flex: 1;
+  }
+
+  .title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    position: relative;
+    padding-left: 16px;
+    // margin-bottom: 6px;
+    padding-bottom: 6px;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 20px;
+      background: #5e9df8;
+    }
+    // color: #333333;
+  }
+  .taskList {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      .taskName {
+        cursor: pointer;
+        &:hover {
+          color: #1890ff;
+        }
+      }
+      .listItem {
+        text-align: left;
+        padding: 16px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+    }
+  }
+
+  .manualList {
+    .title {
+      margin: 16px 0;
+    }
+    .content {
+      // height: 84px;
+      width: 100%;
+      margin: 0 !important;
+      padding: 10px 10px 20px;
+      .manualItem {
+        height: 80px;
+        cursor: pointer;
+        position: relative;
+        background: url(/qita.png) no-repeat;
+        background-size: cover;
+        border-radius: 10px;
+        // img {
+        //   width: 100%;
+        // }
+        p {
+          position: absolute;
+          color: #fff;
+          margin-left: 16px;
+          border-left: 2px solid #fff;
+          padding-left: 10px;
+          margin-top: 8%;
+          line-height: 14px;
+          /* font-size: 88%; */
+          font-weight: bold;
+          top: 0;
+        }
+      }
+    }
+  }
+  .operaServiceSty{
+    height: calc(100% - 92px);
+    overflow-y: auto;
+    :global {
+      .ant-col  {
+        color: #333;
+        cursor: pointer;
+       }
+      .ant-row{
+        &:hover {
+          .ant-col {color: #1890ff;}
+        }
+      }
+    }
+  }
+}
+
+.inspectionInfo {
+  margin-top: 20px;
+  list-style: initial;
+  li {
+    margin-bottom: 10px;
+
+    span {
+      color: #000;
+      font-weight: 500;
+    }
+  }
+}
+
+.ellipsis {
+  display: inline-block;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workSupervision {
+  :global {
+    .ant-card-head-title {
+      font-weight: bold;
+    }
+  }
+}
+.workbenchBreadSty{
+  :global {
+  .ant-pro-page-header-wrap-children-content{
+   background: none !important;
+   margin: 0;
+  }
+}
+}
+.quickNavWrapper :global{
+ margin-bottom: 12px;
+}
+.btnSty{
+  padding: 5px 16px;
+  border-radius: 15px;
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 16px;
+  margin-right: 6px;
+}
+.defaultBtnSty{
+  background: #F5F6FA;
+  color: #333;
+}
+.activeBtnSty{
+  background: #4090FF;
+  color: #fff;
+}
+.selectBtnSty  :global, .selectSquareBtnSty :global{
+   margin: 2px 0 12px;
+  .btnItem{
+  .btnSty;
+  .defaultBtnSty;
+  }
+  .btnItemActive{
+   .btnSty;
+   .activeBtnSty;
+  }
+}
+.selectSquareBtnSty :global {
+  margin-right: 12px;
+  .btnItem{
+    border-radius: 4px;
+   }
+   .btnItemActive{
+    border-radius: 4px;
+   }
+}
+
+.myRemindSty :global {
+  .myRemindContentSty {
+    padding:6px 16px 30px 12px;
+    height: calc(100% - 130px);
+    overflow-y: auto; 
+    .statusSty span{
+      padding-right: 6px;
+    }
+  }
+  .ant-pagination-item-active{
+    background-color: #1890FF;
+    a{
+      color: #fff;
+    }
+  }
+}
+.menuSty  :global{
+  .meunTitle:hover{
+    cursor: pointer;
+    color: #1890FF;
+  }
+  .meunAdd:hover{
+    cursor: pointer;
+    color: #1890FF;
+  }
+  .meunAddWrap{
+    &:hover {
+      .meunAdd {color: #1890ff;}
+    }
+  }
+}

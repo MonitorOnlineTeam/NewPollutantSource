@@ -1,0 +1,78 @@
+.deviceManagerSty{
+    :global{
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
+      .ant-pagination-options-size-changer.ant-select{
+       width: auto;
+      }
+      .ant-select{
+        text-align: left;
+      }
+
+  .noSpreadOverModal {
+        
+      .ant-modal-content{
+        height: auto;
+      }
+      .ant-modal{
+        max-width: auto;
+        width: 50% !important;
+        position: relative;
+        height: auto;
+      }
+    }
+   .ant-tabs-content{
+     overflow-y: auto;
+     height: calc(100vh - 250px);
+   }
+   .ant-table-body{
+    overflow-y: hidden !important;
+    max-height: none !important;
+   }
+  }
+  .systemListSty :global,.deviceSty :global, .formReferInstruSty :global{
+    .editable-row .ant-form-item-explain {
+      top: 6px;
+      right: 12px;
+   }
+  }
+  }
+  .deviceSty :global{
+    .rangeSty{
+      .ant-input-number{
+        width: 104px;
+      }
+    }
+  }
+  
+  .contentContainerSty,.pointSty,.deviceManagerSty{
+    :global{
+      ::-webkit-scrollbar {
+        height: 12px;
+        // width: 12px;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 40px;
+      }
+  }
+}
+.pointSty :global{
+  .ant-card-bordered{
+    border: 0;
+  }
+}
+.formModalSty  :global{
+  .ant-legacy-form-item-label{
+    width: 164px;
+  }
+  .ant-legacy-form-item{
+    margin-bottom: 12px;
+  }
+   .ant-input-affix-wrapper, .ant-picker, .ant-input-number{
+     width: 80%;
+   }
+   .ant-input{
+    width: 100%;
+  }
+}

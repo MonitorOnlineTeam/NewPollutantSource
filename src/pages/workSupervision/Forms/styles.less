@@ -1,0 +1,35 @@
+.formTitle {
+  padding: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.formContent {
+  padding: 0 10%;
+}
+
+.required {
+  &::before {
+    display: inline-block;
+    margin-right: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
+  }
+}
+
+.uploadWrapper {
+  & > span {
+    display: block;
+  }
+}
+
+th.hideColumn{
+  display: none;
+}
+
+.projectNumSty :global{
+  display: none;
+}

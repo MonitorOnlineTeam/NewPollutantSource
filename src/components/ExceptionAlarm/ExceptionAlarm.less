@@ -1,0 +1,65 @@
+// 工作台-异常报警样式
+@import '~antd/lib/style/themes/default.less';
+@import '~@/utils/utils.less';
+
+.exceptionAlarm{
+    :global {
+      .ant-card-meta-description {
+        color: red;
+        height: 44px;
+        line-height: 22px;
+        overflow: hidden;
+      }
+    }
+    .cardTitle {
+      font-size: 0;
+      a {
+        color: red;
+        margin-left: 12px;
+        line-height: 24px;
+        height: 24px;
+        display: inline-block;
+        vertical-align: top;
+        font-size: 14;
+        &:hover {
+          color: red;
+        }
+      }
+    }
+    .projectGrid {
+      width: 33.33%;
+    }
+    .projectItemContent {
+      display: flex;
+      margin-top: 8px;
+      overflow: hidden;
+      font-size: 12px;
+      height: 20px;
+      line-height: 20px;
+      .textOverflow();
+      a {
+        color: red;
+        display: inline-block;
+        flex: 1 1 0;
+        .textOverflow();
+        &:hover {
+          color: red;
+        }
+      }
+      .datetime {
+        color: red;
+        flex: 0 0 auto;
+        float: right;
+      }
+    }
+  }
+
+  .warningsData{
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .warningsData:hover{
+    cursor: pointer;
+    color: rgb(95, 183, 224);
+  }

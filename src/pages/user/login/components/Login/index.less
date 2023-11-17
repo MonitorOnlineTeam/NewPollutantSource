@@ -1,0 +1,80 @@
+@import '~antd/es/style/themes/default.less';
+
+.login {
+
+  
+  :global {
+    .ant-tabs-tab {
+      font-size: 16px;
+      line-height: 24px;
+    }
+    .ant-input-affix-wrapper .ant-input:not(:first-child) {
+      padding-left: 4px;
+    }
+    .ant-tabs > .ant-tabs-nav .ant-tabs-nav-wrap, .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-wrap{
+      justify-content: center;
+    }
+    .ant-tabs-nav-list{
+      .ant-tabs-tab{
+        margin: 0;
+      }
+    }
+    .ant-tabs .ant-tabs-bar {
+      font-size: 16px;
+      margin-bottom: 24px;
+      text-align: center;
+      border-bottom: 0;
+    }
+
+    .ant-form-item {
+      margin: 0 2px 24px;
+    }
+  }
+
+  .getCaptcha {
+    display: block;
+    width: 100%;
+  }
+
+  .icon {
+    margin-left: 16px;
+    color: rgba(0, 0, 0, 0.2);
+    font-size: 24px;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: color 0.3s;
+
+    &:hover {
+      color: @primary-color;
+    }
+  }
+
+  .other {
+    margin-top: 24px;
+    line-height: 22px;
+    text-align: left;
+
+    .register {
+      float: right;
+    }
+  }
+
+  .prefixIcon {
+    color: @disabled-color;
+    font-size: @font-size-base;
+  }
+
+  .submit {
+    width: 100%;
+    // margin-top: 24px;
+  }
+  .verificaCodeSty{
+    :global {
+      canvas{
+        width: 100%;
+        height: 40px;
+        border: 1px solid #d9d9d9;
+      }
+    }
+  }
+}

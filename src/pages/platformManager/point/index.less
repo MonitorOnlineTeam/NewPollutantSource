@@ -1,0 +1,77 @@
+.addContent {
+    line-height: 30px;
+    border: 1px dashed #1990ff;
+    color: #1990ff;
+    cursor: pointer;
+    text-align: center;
+  }
+.MNmodal{
+  :global {
+    .ant-legacy-form-item-label{
+      width: 126px;
+      padding-right: 8px;
+    }
+    .ant-legacy-form-item-label > label::after{
+      margin:0;
+      margin-left: 2px;
+    }
+  }
+}
+
+.deviceManagerSty{
+  :global{
+    .ant-form-item-label{
+      text-align: right;
+      min-width: 189px;
+    }
+    .specificationSty .ant-form-item-label{
+      min-width: 203px;
+    }
+    .ant-pagination-options-size-changer.ant-select{
+     width: auto;
+    }
+    .ant-select{
+      text-align: left;
+    }
+  }
+}
+.editOperationStatusSty :global{
+  .ant-form-item-label{
+    min-width: 80px;
+  }
+}
+.dataVerificationSty,.pointCoefficientSty,.deviceParSty{
+  :global{
+    .ant-legacy-form-item{
+      margin-bottom: 16px;
+    } 
+    .ant-legacy-form-item-control,.ant-legacy-form-item-label{
+      line-height: normal;
+    }
+    .inputSty{
+      .ant-legacy-form-item-label{
+        line-height: 40px;
+      }
+      .ant-legacy-form-item-control{
+        line-height:  40px;
+      }
+    }
+  }
+}
+.dataVerificationSty{
+  :global{
+    .ant-legacy-form-item-label{
+      min-width: 167px;
+    }
+    .ant-checkbox-group .ant-checkbox-group-item>span:nth-last-child(1){
+        width: 105px;
+        display: inline-block;
+    }
+    .ant-legacy-form-item:last-child{
+      padding-left: 112px;
+    }
+  }
+}
+.popSelectSty :global{
+  display: none;
+}

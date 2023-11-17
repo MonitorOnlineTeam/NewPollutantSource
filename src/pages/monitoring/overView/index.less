@@ -1,0 +1,130 @@
+.tableCss {
+  :global {
+    .ant-table-fixed-header .ant-table-scroll .ant-table-header {
+      overflow: hidden;
+      height: 55px;
+    }
+
+    .light {
+      background: #00000003;
+    }
+
+    .ant-table-thead>tr>th {
+      background: #fafafa;
+      -webkit-transition: background 0.3s ease;
+      -o-transition: background 0.3s ease;
+      transition: background 0.3s ease;
+      text-align: left;
+      color: rgba(0, 0, 0, 0.85);
+      border-bottom: 1px solid #e8e8e8;
+      font-weight: bold;
+    }
+  }
+}
+
+.red {
+  background: #ffca00;
+}
+
+.cardextra {
+  :global {
+    .ant-card-extra {
+      margin-left: 20px;
+    }
+  }
+}
+
+.demoinfinitecontainer {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+  padding: 8px 24px;
+  height: 'calc(100vh - 65px - 100px - 180px)';
+}
+
+.demoloadingcontainer {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  text-align: center;
+}
+
+.statusButtonImg {
+  width: 15px;
+  position: relative;
+  right: 5px;
+  bottom: 1px;
+}
+
+.selectStatus {
+  cursor: pointer;
+  padding: 4px 12px;
+  background: #fff;
+  border: 1px solid #55aaff;
+  border-radius: 4px;
+}
+
+.statusButton {
+  cursor: pointer;
+  padding: 4px 12px;
+  background: #fff;
+  border: 1px solid #d4d7da;
+  border-radius: 4px;
+}
+
+//运维中
+.operation {
+  padding: 3px 7px 3px 7px;
+  background: #ff995b;
+  color: #fff;
+  // float: right;
+  border-radius: 4px;
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+//停产中
+.stop {
+  padding: 3px 7px 3px 7px;
+  background: #b5b5b5;
+  color: #fff;
+  // float: right;
+  border-radius: 4px;
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+//故障中
+.fault {
+  padding: 3px 7px 3px 7px;
+  background: #119f9d;
+  color: #fff;
+  // float: right;
+  border-radius: 4px;
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+//预警中
+.warning {
+  padding: 3px 7px 3px 7px;
+  background: #ff6565;
+  color: #fff;
+  //   float: right;
+  border-radius: 4px;
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.airStatus {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    width: 14px;
+    height: 14px;
+    background: red;
+    border-radius: 50%;
+  }
+}

@@ -1,0 +1,302 @@
+.amap-info-contentContainer.bottom-left,
+.amap-info-contentContainer.bottom-center,
+.amap-info-contentContainer.bottom-right {
+  padding-bottom: 40px;
+  margin-left: 10px;
+}
+
+.airDescBox {
+  span {
+    font-weight: 'normal';
+    font-size: 13px;
+    margin-right: 10px;
+  }
+
+  &>div {
+    span {
+      font-size: 14px;
+    }
+  }
+}
+
+:global {
+  .antd-pro-pages-monitoring-mapview-index-mapWrapper .amap-info-content {}
+
+
+  .amap-logo {
+    display: none !important;
+  }
+
+  .amap-copyright {
+    display: none !important;
+  }
+
+  .amap-info .amap_markers_pop_window {
+    padding: 4px 6px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    top: 6px;
+
+    ::after {
+      display: none
+    }
+
+    ::before {
+      display: none
+    }
+  }
+
+  .amap-info .amap_markers_pop_window::before,
+  .amap-info .amap_markers_pop_window::after {
+    display: none
+  }
+}
+
+.pointInfoWindow {
+  :global {
+    .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-label {
+      padding: 6px;
+      text-align: center;
+      color: rgba(0, 0, 0, 0.65);
+      font-size: 12px;
+    }
+
+    .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-content {
+      padding: 0;
+      text-align: center;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 12px;
+    }
+  }
+
+  .content {
+    line-height: 30px;
+    padding: 0 10px;
+    cursor: pointer;
+  }
+
+}
+
+.echartdiv {
+  margin-top: 10px;
+}
+
+.mapWrapper {
+  margin: -24px -24px 0px;
+  // margin: -24px;
+  // height: calc(100vh - 64px);
+  // margin-bottom: -48px;
+
+  .pointDetails {
+    float: right;
+    font-size: 14px;
+    margin-top: -20px;
+    position: relative;
+    z-index: 1;
+    text-decoration: none;
+  }
+
+  :global {
+    .ant-layout {
+      .ant-pro-basicLayout-content {
+        margin: 0;
+        // padding-top: 64px;
+      }
+    }
+
+    .ant-descriptions-title {
+      font-weight: normal;
+      margin-bottom: 10px;
+    }
+
+    // .ant-descriptions-title{
+    //   margin-bottom: 10px;
+    // }
+    .amap-info-content {
+      min-height: 150px;
+      // max-height: 400px;
+      border-radius: 6px;
+      padding: 10px
+    }
+
+    .amap-info-close {
+      right: 10px !important;
+      font-size: 22px;
+    }
+
+    .ant-tooltip-inner {
+      background-color: "#fff";
+      color: #000000
+    }
+  }
+}
+
+@keyframes warn {
+  0% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.0;
+  }
+
+  25% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.1;
+  }
+
+  50% {
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    opacity: 0.3;
+  }
+
+  75% {
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    opacity: 0.0;
+  }
+}
+
+@keyframes warn1 {
+  0% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.0;
+  }
+
+  25% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.1;
+  }
+
+  50% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.3;
+  }
+
+  75% {
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    opacity: 0.0;
+  }
+}
+
+.container {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  /*border: 1px solid #000; hovertree.com */
+}
+
+/* 保持大小不变的小圆圈 何问起 */
+.dot {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 14px;
+  top: 14px;
+  /* left: 2px; */
+  /* top: 2px; */
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  /* border: 2px solid red; */
+  border-radius: 50%;
+  z-index: 2;
+}
+
+/* 产生动画（向外扩散变大）的圆圈  */
+.pulse {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  left: -13px;
+  top: -12px;
+  border: 6px solid red;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0;
+  -webkit-animation: warn 2s ease-out;
+  -moz-animation: warn 2s ease-out;
+  animation: warn 2s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  box-shadow: 1px 1px 30px red;
+}
+
+.pulse1 {
+  position: absolute;
+  width: 49px;
+  height: 49px;
+  left: -13px;
+  top: -13px;
+  border: 6px solid red;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0;
+  -webkit-animation: warn1 2s ease-out;
+  -moz-animation: warn1 2s ease-out;
+  animation: warn1 2s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  box-shadow: 1px 1px 30px red;
+}
+
+.legend {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+
+  ul {
+    li {
+      width: 67px;
+      line-height: 14px;
+      float: left;
+
+      span {
+        width: 100%;
+        display: inline-block;
+        font-weight: 500;
+      }
+
+      span:first-child {
+        text-align: center;
+        height: 14px;
+      }
+
+      span:nth-child(2) {
+        height: 6px;
+        background-color: #00e400;
+        border-right: solid 1px #fff;
+      }
+
+      span:last-child {
+        height: 14px;
+        text-align: left;
+        margin-left: -6px;
+      }
+
+    }
+  }
+}

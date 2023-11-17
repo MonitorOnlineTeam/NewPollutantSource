@@ -1,0 +1,65 @@
+.expertViewWrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  // max-height: calc(100vh + -60px);
+  background: #f0f2f5;
+  padding: 0 10px;
+  padding-bottom: 10px;
+
+  .title {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 12px;
+    line-height: 26px;
+    &::before {
+      position: absolute;
+      left: 0;
+      display: table;
+      content: ' ';
+      width: 4px;
+      height: 14px;
+      background-color: #1890ff;
+    }
+  }
+
+  .expertItemBox {
+    width: 25%;
+
+    .expertName {
+      margin-bottom: 26px;
+      img {
+        width: 30px;
+        margin-right: 16px;
+        vertical-align: bottom;
+      }
+
+      span {
+        font-size: 16px;
+      }
+    }
+    .expertInfo {
+      .statisticTitle {
+        line-height: 19px;
+
+        img {
+          margin-right: 10px;
+          vertical-align: bottom;
+        }
+      }
+    }
+  }
+
+  
+
+  .notData {
+    height: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}

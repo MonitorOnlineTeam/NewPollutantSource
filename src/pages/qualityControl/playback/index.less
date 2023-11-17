@@ -1,0 +1,70 @@
+.playbackWrapper {
+  .timelineContent {
+    // display: flex;
+    // align-items: center;
+    // flex-direction: column;
+    // margin-left: 300px;
+    // color: #444;
+    // margin-top: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    // padding-left: 300px;
+    color: #444;
+    // padding-top: 20px;
+    height: calc(100vh - 314px);
+    // overflow-y: auto;
+  }
+  .timeline {
+    // height: calc(100vh); */
+    overflow-y: auto;
+    /* position: relative; */
+    width: 100%;
+    // z-index: 1;
+    padding-left: 400px;
+    padding-top: 20px;
+    /* padding-bottom: 20px; */
+  }
+  .dateContent{
+    color: #444;
+    font-size: 14px;
+    background: #fff;
+    padding: 0px 4px;
+  }
+
+  .DateLoad {
+    // width: 150px;
+    // height: 30px;
+    // line-height: 30px;
+    // border: 2px solid #43B9FF;
+    // border-radius: 15px;
+  }
+
+  .taskDate {
+    font-size: 14px;
+    /* color: #66C7F9; */
+    /* margin-left: -100px; */
+    margin-bottom: 30px;
+    margin-left: -150px;
+  }
+  :global{
+    .ant-timeline-item{
+      padding: 0 0 30px;
+    }
+    .ant-timeline-item-content{
+      margin: 0 0 0 24px;
+    }
+  }
+}
+.spinWrapper{
+  position: relative;
+  height: 100%;
+  :global {
+    .ant-spin-container{
+      height: 100%;
+    }
+  }
+}
+.clickRowStyl {
+  background-color : #cbf2ff
+}
