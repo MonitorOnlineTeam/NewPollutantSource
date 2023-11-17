@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-17 09:05:15
+ * @Last Modified time: 2023-11-17 09:10:56
  * @Description：报警核实详情
  */
 
@@ -504,7 +504,7 @@ const WarningVerify = props => {
         {// 脱敏角色不显示
         !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
           <Card
-            title="异常特征"
+            title="线索数据"
             loading={modelChartsLoading || warningInfoLoading}
             extra={
               <Button
