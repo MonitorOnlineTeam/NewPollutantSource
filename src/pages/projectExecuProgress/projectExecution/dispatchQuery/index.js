@@ -152,6 +152,13 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
     },
+    // {
+    //   title: '流程执行状态',
+    //   dataIndex: 'ExecuteStatus',
+    //   key: 'ExecuteStatus',
+    //   align: 'center',
+    //   ellipsis: true,
+    // },
     {
       title: '流程状态',
       dataIndex: 'StatusName',

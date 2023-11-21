@@ -22,6 +22,7 @@ import {
   Tooltip,
   Radio,
   Steps,
+  Cascader,
 } from 'antd';
 import styles from "../style.less"
 import MonitorContent from '@/components/MonitorContent/index';
@@ -71,6 +72,7 @@ const { Step } = Steps;
   deviceChangeData: ctPollutantManger.deviceChangeData,
   saveSortLoading: loading.effects[`ctPollutantManger/pointSort`],
   projectModelList: common.ctProjectList,
+  getTechnologyLoading: loading.effects[`ctPollutantManger/getTechnologyList`],
 }))
 @Form.create()
 export default class Index extends Component {
@@ -99,6 +101,10 @@ export default class Index extends Component {
       modalTitle: '',
       isDetail: false,
       pointData: {},
+      denitrationOption: [],
+      desulfurizationList: [], //脱硫
+      denitrationList: [], //脱硝
+      dustEliminationList: [], //除尘
     };
 
   }
@@ -201,9 +207,22 @@ export default class Index extends Component {
       type: 'ctPollutantManger/getPointIndustryList',
       payload: {},
       callback: (res) => {
-        this.setState({ pointIndustryList: res, loadFlag: true, })
+        this.setState({ pointIndustryList: res})
       }
     })
+    dispatch({
+      type: 'ctPollutantManger/getTechnologyList',
+      payload: {},
+      callback: (res) => {
+        this.setState({
+          denitrationList: res.list1?.[0] ? res.list1 : [], //脱硫
+          desulfurizationList: res.list2?.[0] ? res.list2 : [], //脱硝
+          dustEliminationList: res.list3?.[0] ? res.list3 : [], //除尘
+          loadFlag: true, 
+        })
+      }
+    })
+
   }
 
   addPoint = () => { //添加监测点 弹框
@@ -237,9 +256,9 @@ export default class Index extends Component {
         latitude: row['dbo.T_Bas_CTCommonPoint.Latitude'],
         industry: industry,
         pointType: row['dbo.T_Bas_CTCommonPoint.PointType'],
+        desulfurizationProcess: row['dbo.T_Bas_CTCommonPoint.DesulfurizationProcess'] ? row['dbo.T_Bas_CTCommonPoint.DesulfurizationProcess'].split(',') : [] ,
         denitrationProcess: row['dbo.T_Bas_CTCommonPoint.DenitrationProcess'],
-        desulfurizationProcess: row['dbo.T_Bas_CTCommonPoint.DesulfurizationProcess'],
-        dustRemovalProcess: row['dbo.T_Bas_CTCommonPoint.DustRemovalProcess'],
+        dustRemovalProcess: row['dbo.T_Bas_CTCommonPoint.DustRemovalProcess']?  row['dbo.T_Bas_CTCommonPoint.DustRemovalProcess'].split(',') : [],
       })
     });
   }
@@ -324,14 +343,14 @@ export default class Index extends Component {
   }
   industryChange = (value) => {
     const { pointIndustryList } = this.state;
-    this.props.form.setFieldsValue({pointType:undefined})
+    this.props.form.setFieldsValue({ pointType: undefined })
     const pointTypeData = pointIndustryList.filter(item => item.ChildID === value)
     this.setState({ pointTypeList: pointTypeData?.length ? pointTypeData[0].clist : [] })
   }
 
   pointInfo = (current) => {
     const { getFormDataLoading, form, location: { query: { targetId } }, } = this.props;
-    const { isEdit, pointIndustryList, pointTypeList, modalTitle, isDetail, pointData, } = this.state;
+    const { isEdit, pointIndustryList, pointTypeList, modalTitle, isDetail, pointData,getTechnologyLoading,denitrationList, desulfurizationList, dustEliminationList, } = this.state;
     const { getFieldDecorator } = this.props.form;
     return <Form style={{ display: current == 0 ? 'block' : 'none' }}>
       <Row>
@@ -391,7 +410,7 @@ export default class Index extends Component {
         <Col span={12}>
           <Spin spinning={this.props.pointIndustryLoading} size='small' style={{ top: -4 }}>
             <FormItem label="行业">
-              {isDetail ? pointData['dbo.View_Industry.Name'] : getFieldDecorator("industry", {
+              {isDetail ? pointData['dbo.T_Cod_IndustryType.IndustryTypeName'] : getFieldDecorator("industry", {
                 rules: [{ required: true, message: "请选择行业", }],
               })(
                 <Select placeholder='请选择' allowClear onChange={(value) => this.industryChange(value)}>
@@ -413,34 +432,29 @@ export default class Index extends Component {
           </FormItem>
         </Col>
         <Col span={12}>
-          <FormItem label="脱硝工艺类型">
-            {isDetail ? pointData['dbo.T_Bas_CTCommonPoint.DenitrationProcess_Name'] : getFieldDecorator("denitrationProcess", {
-              rules: [{ required: true, message: "请选择脱硝工艺类型", }],
-            })(
-              <Select placeholder='请选择' allowClear>
-                <Option key={'1'} value={'1'}>脱硝工艺类型1</Option>
-              </Select>
-            )}
+          <FormItem label="脱硫工艺类型">
+            {isDetail ? pointData['dbo.Technology1.TechnologyName1'] : getFieldDecorator("desulfurizationProcess", {
+              rules: [{ required: true, message: "请选择脱硫工艺类型", }],
+            })(getTechnologyLoading?  <Spin size='small'/> :  <Cascader fieldNames={{ label: 'TechnologyName', value: 'ID', children: 'ChildList' }} options={denitrationList} />)}
           </FormItem>
         </Col>
         <Col span={12}>
-          <FormItem label="脱硫工艺类型">
-            {isDetail ? pointData['dbo.T_Bas_CTCommonPoint.DesulfurizationProcess_Name'] : getFieldDecorator("desulfurizationProcess", {
-              rules: [{ required: true, message: "请选择脱硫工艺类型", }],
-            })(
-              <Select placeholder='请选择'>
-                <Option key={'1'} value={'1'}>脱硫工艺类型1</Option>
+          <FormItem label="脱硝工艺类型">
+            {isDetail ? pointData['dbo.Technology2.TechnologyName2'] : getFieldDecorator("denitrationProcess", {
+              rules: [{ required: true, message: "请选择脱硝工艺类型", }],
+            })(getTechnologyLoading?  <Spin size='small'/> :  <Select placeholder='请选择'>
+                {desulfurizationList.map(item => <Option key={item.ID} value={item.ID}>{item.TechnologyName}</Option>) }
               </Select>
-            )}
+            )
+          }
           </FormItem>
         </Col>
         <Col span={12}>
           <FormItem label="除尘工艺类型">
-            {isDetail ? pointData['dbo.T_Bas_CTCommonPoint.DustRemovalProcess_Name'] : getFieldDecorator("dustRemovalProcess", {
+            {isDetail ? pointData['dbo.Technology3.TechnologyName3'] : getFieldDecorator("dustRemovalProcess", {
               rules: [{ required: true, message: "请选择除尘工艺类型", }],
-            })(
-              <Select placeholder='请选择' allowClear>
-                <Option key={'1'} value={'1'}>除尘工艺类型1</Option>
+            })(getTechnologyLoading?  <Spin size='small'/> :   <Select placeholder='请选择' allowClear mode='multiple'>
+                 {dustEliminationList.map(item => <Option key={item.ID} value={item.ID}>{item.TechnologyName}</Option>)}
               </Select>
             )}
           </FormItem>
@@ -497,9 +511,10 @@ export default class Index extends Component {
     form.validateFields((err, values) => { //监测点
       if (!err) {
         const formData = handleFormData(values);
+        console.log(formData)
         dispatch({
           type: 'ctPollutantManger/addOrEditCommonPointList',
-          payload: { ...formData, },
+          payload: { ...formData},
           callback: (res) => {
             this.setState({ pointSaveFlag: true }, () => {
               this.setState({ current: 1, dgimn: isEdit ? formData.id : res.Datas })
@@ -837,7 +852,6 @@ export default class Index extends Component {
             {current == 2 && <SystemReplaceRecord current={current} dgimn={dgimn} isDetail={isDetail} />}
             {current == 3 && <InstrumentInfo current={current} dgimn={dgimn} isDetail={isDetail} />}
             {current == 4 && <InstrumentReplaceRecord current={current} dgimn={dgimn} isDetail={isDetail} />}
-
           </div>
 
         </Modal>

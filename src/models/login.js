@@ -26,14 +26,11 @@ const LoginModel = {
       });
       if (response.IsSuccess) {
         // 后台新框架获取token
-        const getTokenRes = yield call(getToken, {
+         yield call(getToken, {
           username: payload.userName,
           password: payload.password,
           callback:()=>callback&&callback(response.IsSuccess),
         });
-        // if(getTokenRes.access_token){
-        //   yield put({ type: 'setNewTokenFlag',payload: true, });
-        // }
       }else{
         callback(response.IsSuccess)
       }

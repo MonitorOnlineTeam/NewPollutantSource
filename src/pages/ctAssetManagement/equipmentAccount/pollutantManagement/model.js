@@ -66,6 +66,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    //工艺类型
+    *getTechnologyList({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.getTechnologyList, { ...payload });
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
     //获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
     *getCEMSSystemList({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.getCEMSSystemList, { ...payload });

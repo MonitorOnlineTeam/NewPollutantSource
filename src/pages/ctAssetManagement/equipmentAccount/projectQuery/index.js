@@ -222,27 +222,27 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
     },
-    {
-      title: '经度',
-      dataIndex: 'Longitude',
-      key: 'Longitude',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '纬度',
-      dataIndex: 'Latitude',
-      key: 'Latitude',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '电子围栏（KM）',
-      dataIndex: 'Range',
-      key: 'Range',
-      align: 'center',
-      ellipsis: true,
-    },
+    // {
+    //   title: '经度',
+    //   dataIndex: 'Longitude',
+    //   key: 'Longitude',
+    //   align: 'center',
+    //   ellipsis: true,
+    // },
+    // {
+    //   title: '纬度',
+    //   dataIndex: 'Latitude',
+    //   key: 'Latitude',
+    //   align: 'center',
+    //   ellipsis: true,
+    // },
+    // {
+    //   title: '电子围栏（KM）',
+    //   dataIndex: 'Range',
+    //   key: 'Range',
+    //   align: 'center',
+    //   ellipsis: true,
+    // },
     {
       title: '项目点位数量',
       dataIndex: 'count',
@@ -494,7 +494,7 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 374px)' : 'calc(100vh - 294px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 394px)' : 'calc(100vh - 314px)' }}
             dataSource={tableDatas}
             columns={columns}
             pagination={{

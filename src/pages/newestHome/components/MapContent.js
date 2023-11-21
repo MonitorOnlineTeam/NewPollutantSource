@@ -83,39 +83,6 @@ class Index extends PureComponent {
           mapInstance.setFitView();//自动适应显示你想显示的范围区域
 
         }
-        // aMap.setFeatures(['bg', 'point', 'building'])
-        // AMap.plugin('AMap.DistrictSearch', () => {
-        //   const districtSearch = new AMap.DistrictSearch({
-        //     subdistrict: 0,   //获取边界不需要返回下级行政区
-        //     extensions: 'all',  //返回行政区边界坐标组等具体信息
-        //     level: 'province'  //查询行政级别为 省
-        //   })
-        //   // 搜索所有省/直辖市信息
-        //   districtSearch.search('中国', function (status, result) {
-        //     // 查询成功时，result即为对应的行政区信息
-        //     if (status === 'complete') {
-        //       const bounds = result.districtList[0].boundaries;
-        //       const polygons = [];
-        //       if (bounds) {
-        //           for (let i = 0, l = bounds.length; i < l; i++) {
-        //               //生成行政区划polygon
-        //               const polygon = new AMap.Polygon({
-        //                   path: bounds[i],
-        //                   fillOpacity: 0,
-        //                   strokeOpacity: 1,
-        //                   strokeWeight: 5,
-        //                   strokeColor: '#3b4fa5'
-        //               });
-        //               polygons.push(polygon);
-        //           }
-        //       }
-        //       aMap.add(polygons);
-        //       setTimeout(()=>{
-        //         aMap.setFeatures(['bg', 'road', 'building', 'point']); // 多个种类要素显示
-        //       },3000)
-            // } 
-          // })
-        // })
       },
       zoomchange: (value) => {
         const zoom = aMap.getZoom();
@@ -150,7 +117,6 @@ class Index extends PureComponent {
           const data = this.state.allPointMarkers.filter(item => item.position.ParentCode == position.entCode);
           this.setState({ selectPointMarkers: data, selectEnt: undefined, entGoPointFlag: true })
           this.loadPointMarkerData(data)
-
           dispatch({ //获取监测点数量  图例展示
             type: `${namespace}/GetMapPointList`,
             payload: { pollutantType: pollutantType, pointType: 3, entCode: position.entCode },
@@ -223,6 +189,7 @@ class Index extends PureComponent {
       InfoWindow = amap.InfoWindow;
     } else {
       const amap = require('react-amap');
+      console.log(amap)
       Map = amap.Map;
       Marker = amap.Marker;
       Polygon = amap.Polygon;
@@ -526,6 +493,34 @@ class Index extends PureComponent {
         this.setState({ selectEntAllPointMarkers: data })
       }
     })
+    AMap.plugin('AMap.DistrictSearch', () => {
+      const districtSearch = new AMap.DistrictSearch({
+        subdistrict: 0,   //获取边界不需要返回下级行政区
+        extensions: 'all',  //返回行政区边界坐标组等具体信息
+        level: 'province'  //查询行政级别为 省
+      })
+      const regName = extData?.position?.regionName == '新疆生产建设兵团' ? '新疆维吾尔自治区' : extData.position.regionName
+      // 搜索所有省/直辖市信息
+      districtSearch.search(regName, function (status, result) {
+        // 查询成功时，result即为对应的行政区信息
+        if (status === 'complete') {
+          const bounds = result?.districtList[0]?.boundaries;
+          // 创建省份轮廓覆盖物
+          const provinceOutline = new AMap.Polygon({
+            path: bounds?.[0] ? bounds : [],
+            strokeColor: '#faad14', // 初始轮廓颜色
+            strokeOpacity: 1,
+            strokeWeight: 2,
+            fillOpacity: 0,
+            // fillColor: '#fa541c',
+          });
+          // 将省份轮廓覆盖物添加到地图上
+          provinceOutline.setMap(aMap);
+          // 创建 CanvasLayer 图层  
+          // var canvasLayer = new AMap.CanvasLayer();
+        }
+      })
+    })
   }
   operationChange = (text, mapProps) => {
     const map = mapProps.__map__;
@@ -660,7 +655,7 @@ class Index extends PureComponent {
     const { showType, entTitleShow, pointTitleShow, isMassive } = this.state;
     const alarmStatus = extData.position.alarmStatus;
     if (showType == 1) {
-      return <div style={{ position: 'relative', width: 110, height: 110,marginLeft:-55,marginTop:-110, background: 'url("/homeMapBorder.png")', backgroundSize: '100% 100%', cursor: 'default' }}>
+      return <div style={{ position: 'relative', width: 110, height: 110, marginLeft: -55, marginTop: -110, background: 'url("/homeMapBorder.png")', backgroundSize: '100% 100%', cursor: 'default' }}>
         <div title={extData.position && extData.position.regionName} className='textOverflow' style={{ color: "#4BF3F9", position: 'absolute', left: 10, top: 18, fontSize: 12, lineHeight: '12px', width: 'calc(100% - 14px - 10px - 14px)' }}> {extData.position && extData.position.regionName} </div>
         <img src='/location.png' style={{ position: 'absolute', top: '100%', left: 'calc(50% - 10px)', width: 20, height: 20 }} />
         <RightOutlined onClick={() => { this.goEnt(extData) }} style={{ color: "#4BF3F9", position: 'absolute', top: 18, right: 8, fontSize: 14 }} />
@@ -669,7 +664,7 @@ class Index extends PureComponent {
     } else if (showType == 2) {
 
       const entName = extData.position.entName;
-      return <div style={{ position: 'relative',marginTop:24,  }}>
+      return <div style={{ position: 'relative', marginTop: 24, }}>
         <EntIcon />
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
         {entTitleShow && <div className={styles.titlePopSty}>
@@ -677,7 +672,7 @@ class Index extends PureComponent {
         </div>}
       </div>
     } else { //监测点
-      return <div style={{ position: 'relative',marginTop:24,}}>
+      return <div style={{ position: 'relative', marginTop: 24, }}>
         {this.getIcon(extData.position.Status)}
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
         {pointTitleShow && isMassive ?
@@ -941,6 +936,7 @@ class Index extends PureComponent {
           mapStatusRegData: { exceptionCount: 0, normalCount: 0, overCount: 0, stopCount: 0, unLineCount: 0 },
         },
       });
+      aMap.clearMap();
     }
     if (showType == 3) {
       const data = selectEntMarkers.filter(item => item.position.regionCode && item.position.regionCode.split(',')[0] == pointReg);
