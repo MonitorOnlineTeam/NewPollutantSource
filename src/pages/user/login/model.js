@@ -101,8 +101,8 @@ const Model = {
           }
           //右上角系统列表
           const systemList = response.Datas.MenuDatas.map(item => ({ ...item, ID: item.id, Name: item.name, id: undefined, name: undefined, children: undefined }));
-          sessionStorage.setItem('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
-          // Cookie.set('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
+          // sessionStorage.setItem('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
+          Cookie.set('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
           //进入系统
           if (!payload.butRedirct) router.push(defaultNavigateUrl);
           //生成菜单数组保存 清空路由和路由权限使用

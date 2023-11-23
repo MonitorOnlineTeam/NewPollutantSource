@@ -71,7 +71,7 @@ export const API = {
     ExportModelWarningCheckedRectificationForCity: before + '/Warning/ExportModelWarningCheckedRectificationForCity',
     //企业 导出
     ExportModelWarningCheckedRectificationForEnt: before + '/Warning/ExportModelWarningCheckedRectificationForEnt',
-  
+
   },
 
   /*监督核查 Api */
@@ -94,16 +94,14 @@ export const API = {
     ExportProjectReportList: before + '/CTBaseDataApi/ExportProjectReportList'
 
   },
-  /*********** 成套 ***********/
 
+  
+  /*********** 成套 ***********/
 
   //通用 Api
   CtCommonApi: {
-
     //站点信息
     GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList',
-    //项目列表
-    GetCTProjectList: before + '/CTBaseDataApi/GetCTProjectList',
   },
   //项目执行进度 Api
   ProjectExecuProgressApi: {
@@ -133,9 +131,9 @@ export const API = {
     //添加或修改监测点
     AddOrEditCommonPointList: before + '/CTBaseDataApi/AddOrEditCommonPointList',
     //修改企业电子围栏半径
-    AddOrUpdateMonitorEntElectronicFence:before + '/CTBaseDataApi/AddOrUpdateMonitorEntElectronicFence',
+    AddOrUpdateMonitorEntElectronicFence: before + '/CTBaseDataApi/AddOrUpdateMonitorEntElectronicFence',
     //获取企业电子围栏半径
-    GetMonitorEntElectronicFence:before + '/CTBaseDataApi/GetMonitorEntElectronicFence',
+    GetMonitorEntElectronicFence: before + '/CTBaseDataApi/GetMonitorEntElectronicFence',
     //获取行业和监测点类型信息
     GetPointIndustryList: before + '/CTBaseDataApi/GetPointIndustryList',
     // 获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
@@ -150,11 +148,13 @@ export const API = {
     AddOrEditEquipmentChange: before + '/CTBaseDataApi/AddOrEditEquipmentChange',
     // 监测点排序
     PointSort: before + '/CTBaseDataApi/PointSort',
-    //修改成套项目信息
+    //项目列表
+    GetCTProjectList: before + '/CTBaseDataApi/GetCTProjectList',
+    //修改项目信息
     UpdateCTProject: before + '/CTBaseDataApi/UpdateCTProject',
-    //获取成套项目与站点管理关系
+    //获取项目与站点管理关系
     GetrojectPointRelationList: before + '/CTBaseDataApi/GetrojectPointRelationList',
-    //添加成套项目与站点关联关系
+    //添加项目与站点关联关系
     AddProjectPointRelation: before + '/CTBaseDataApi/AddProjectPointRelation',
     //项目列表 导出
     ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',

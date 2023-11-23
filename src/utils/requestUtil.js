@@ -62,8 +62,8 @@ const errorHandler = error => {
     if (status >= 404 && status < 422) {
       // router.push('/exception/404');
       notification.error({
-        message: `请求错误 ${status}: ${url}`,
-        description: errorText,
+        message: `请求错误 ${status}:`,
+        description: <><div style={{wordWrap:'break-word'}}>{url}</div>{errorText}</>,
       });
     }
     return data;

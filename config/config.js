@@ -786,7 +786,7 @@ export default {
                       component: './platformManager/configurationInfo/pointMatchingSet',
                     },
                     {
-                      name: 'pointMatchingSet', //台账填报设置
+                      name: 'accountFillingSet', //台账填报设置
                       path: '/platformconfig/configurationInfo/accountFilling/accountFillingSet',
                       component: './platformManager/configurationInfo/accountFillingSet',
                     },

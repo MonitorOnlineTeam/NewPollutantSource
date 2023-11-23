@@ -17,8 +17,8 @@ import Cookie from 'js-cookie';
 
 const GlobalHeaderRight = props => {
   const { theme, layout, configInfo, appFlag,  } = props;
-  const sysPollutantTypeList = sessionStorage.getItem('sysList')? JSON.parse(sessionStorage.getItem('sysList')) : []
-  // const sysPollutantTypeList = Cookie.get('sysList')? JSON.parse(Cookie.get('sysList')) : [];
+  // const sysPollutantTypeList = sessionStorage.getItem('sysList')? JSON.parse(sessionStorage.getItem('sysList')) : []
+  const sysPollutantTypeList = Cookie.get('sysList')? JSON.parse(Cookie.get('sysList')) : [];
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {

@@ -1,8 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
 
-/**
- * 调试检测
- */
 
  
 // 列表  

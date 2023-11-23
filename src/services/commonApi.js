@@ -171,6 +171,6 @@ export async function GetCtEntAndPointList(params) {
 
 //项目列表
 export async function GetCTProjectList(params) {
-  const result = post(API.CtCommonApi.GetCTProjectList, params);
+  const result = post(API.CtAssetManagementApi.GetCTProjectList, params);
   return result;
 }
