@@ -27,6 +27,7 @@ import Lightbox from "react-image-lightbox-rotate";
 import "react-image-lightbox/style.css";
 import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import CheckUserEditDetail from "./checkUserEdit";
+import {  API } from '@config/API';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -1611,7 +1612,7 @@ const Index = (props) => {
     }
   }
   const uploadProps = { //附件上传 
-    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    action: API.UploadApi.UploadFiles,
     accept: 'image/*',
     showUploadList: { showPreviewIcon: true, showRemoveIcon: !isCheckUser },
     data: {

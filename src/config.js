@@ -24,8 +24,8 @@ const XinJiang = false;
 // const apiHost = 'http://220.171.32.30:8180/';
 // const apiHost = 'http://172.16.12.135:50209/';
 // const apiHost = 'http://localhost:52198/';
-const apiHost = 'http://172.16.12.234:61002/';
-
+// const apiHost = 'http://172.16.12.234:61002/';
+const apiHost = 'http://172.16.12.39:9002/';
 // const apiHost = 'http://172.16.12.135:50210/';
 
 // const apiHost = 'http://172.16.12.57:61000/';
@@ -73,7 +73,7 @@ module.exports = {
   iconFontJS: '/iconfont.js',
   onlyOneEnt: false,
   CORS: [],
-  cookieName: 'ssToken9001',
+  cookieName: 'newToken',
   
   openPages: ['/login'],
   enterpriceid: '51216eae-8f11-4578-ad63-5127f78f6cca',

@@ -23,6 +23,7 @@ import "react-image-lightbox/style.css";
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
+import {  API } from '@config/API';
 
 
 const namespace = 'cruxParSupervisionRectifica'
@@ -267,7 +268,7 @@ const Index = (props) => {
   const [filesList2, setFilesList2] = useState([])
 
   const uploadProps2 = { // 核查问题照片附件 上传
-    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    action: API.UploadApi.UploadFiles,
     listType: "picture-card",
     accept: 'image/*',
     data: {

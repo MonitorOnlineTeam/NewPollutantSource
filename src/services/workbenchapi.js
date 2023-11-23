@@ -5,11 +5,12 @@
  */
 
 import {post} from '@/utils/request';
+import { API } from '@config/API'
  const pageUrl = {
     Login: '/api/rest/PollutantSourceApi/PAuthor/IsLogins',
     PhoneLogin: '/api/rest/PollutantSourceApi/PUserLogin/PostUserPhoneLogin',
     SendCaptcha: '/api/rest/PollutantSourceApi/PUserLogin/SendCode',
-    Menu: '/api/rest/PollutantSourceApi/SysMenu/GetSysMenuByUserId',
+    Menu: API.MenuApi.GetSysMenuByUserId,
     workbench:{
         /**运维历史记录 */
         operationHistoryRecord:'/api/rest/PollutantSourceApi/PTaskProcessing/GetOperationHistoryRecordPageList',

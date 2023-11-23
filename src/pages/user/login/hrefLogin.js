@@ -27,16 +27,6 @@ export default class hrefLogin extends Component {
         redirctUrl:'/newestHome'
       }
     }) : router.push("/user/login")
-    this.props.dispatch({
-      type: 'login/newLogin',
-      payload: {
-        userName: 'datays',
-        password: 'Password@123@',
-      },
-      // callback: () => {
-      //   router.push(redirect);
-      // },
-    });
   }
   render() {
     return (

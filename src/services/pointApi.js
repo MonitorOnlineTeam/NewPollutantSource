@@ -8,7 +8,7 @@
 import Cookie from 'js-cookie';
 import { post, get } from '@/utils/request';
 import { async } from 'q';
-
+import { API } from '@config/API'
 /**
  * 添加监测点
  * @params {
@@ -74,7 +74,7 @@ import { async } from 'q';
  */
 export async function addPoint(params) {
     // console.log("params=",params);
-    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/AddPoint', params);
+    const result = await post(API.AssetManagementApi.AddPoint, params);
     return result;
 }
 
@@ -256,39 +256,39 @@ export async function GetPointEquipmentParameters(params) { //列表显示
 
 
 export async function GetManufacturerList(params) { //设备厂商 列表
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetManufacturerList', params, null);
+    const result = await post(API.AssetManagementApi.GetEquipmentManufacturerList, params, null);
     return result;
 }
 
 export async function GetMonitoringTypeList(params) { // 获取监测类别
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList', params, null);
+    const result = await post(API.AssetManagementApi.GetMonitoringCategoryList, params, null);
     return result;
 }
 
 
 export async function GetSystemModelList(params) { //系统型号
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelList', params, null);
+    const result = await post(API.AssetManagementApi.GetSystemModelList, params, null);
     return result;
 }
 
 
 export async function GetEquipmentInfoList(params) { //设备信息
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEquipmentInfoList', params, null);
+    const result = await post(API.CommonApi.GetPollutantTypeMonitoringCategoryInfo,params, null);
     return result;
 }
 
 export async function GetMonitoringTypeList2(params) { //设备信息  获取监测类别 
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
+    const result = await post(API.CommonApi.GetPollutantTypeMonitoringCategoryInfo,params, null);
     return result;
 }
 
 export async function GetPollutantById(params) {   //设备信息  获取监测类型
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
+    const result = await post(API.CommonApi.GetPollutantTypeMonitoringCategoryInfo,params, null);
     return result;
 }
 
 export async function GetPollutantById2(params) {   //设备信息  获取监测类型
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
+    const result = await post(API.CommonApi.GetPollutantTypeMonitoringCategoryInfo,params, null);
     return result;
 }
 

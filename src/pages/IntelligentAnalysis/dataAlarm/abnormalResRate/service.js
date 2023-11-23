@@ -1,8 +1,8 @@
 import { post } from '@/utils/request';
-
+import { API } from '@config/API'
 // 获取关注程度
 export async function getAttentionDegreeList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList', params);
+  const result = post(API.CommonApi.GetAttentionDegreeList, params);
   return result;
 }
 
@@ -32,9 +32,7 @@ export async function exportSecond(params) {
 
 // 根据行政区查询企业
 export async function getEntByRegion(params) {
-  console.log("params.RegionCode=", params.RegionCode)
-  let RegionCode = params.RegionCode || "";
-  const result = post(`/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=${RegionCode}`, {});
+  const result = post(API.CommonApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
   return result;
 }
 

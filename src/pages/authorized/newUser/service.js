@@ -1,9 +1,7 @@
 
 import { async } from 'q';
-import {
-    post, get
-}
-    from '@/utils/request';
+import {  post, get }from '@/utils/request';
+import { API } from '@config/API'
 
 
 // 部门列表
@@ -19,7 +17,7 @@ export async function GetRolesTree(params) {
 }
 // 用户列表
 export async function GetUserList(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserList', params, null);
+    const result = post(API.CommonApi.GetUserList, params, null);
     return result;
 }
 // 用户列表 导出

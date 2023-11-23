@@ -1787,6 +1787,19 @@ const Index = (props) => {
           </Form.Item>
         </Col>
       </Row>
+      <TitleComponents text='区域服务派发-区域派工人员填写' />
+      <Row>
+        <Col span={8}>
+          <Form.Item label="服务工程师" >
+            {data.WorkerName}
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="处理时间" >
+            {data.DealTime}
+          </Form.Item>
+        </Col>
+      </Row>
       <TitleComponents text='联系客户-工程师填写' />
       <Row>
         <Col span={8}>
@@ -1809,19 +1822,6 @@ const Index = (props) => {
         <Col span={8}>
           <Form.Item label="联系电话" >
             {data.Phone}
-          </Form.Item>
-        </Col>
-      </Row>
-      <TitleComponents text='区域服务派发-区域派工人员填写' />
-      <Row>
-        <Col span={8}>
-          <Form.Item label="服务工程师" >
-            {data.WorkerName}
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="处理时间" >
-            {data.DealTime}
           </Form.Item>
         </Col>
       </Row>

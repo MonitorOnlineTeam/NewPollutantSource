@@ -7,6 +7,8 @@ import { async } from 'q';
 
 import config from '@/config';
 
+import { API } from '@config/API'
+
 export async function query() {
   return request('/api/users');
 }
@@ -26,7 +28,7 @@ export async function getMenuData() {
     // menu_id: sessionStorage.getItem('sysMenuId'),
     menu_id: Cookie.get('sysMenuId'),
   };
-  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetSysMenuByUserID', body);
+  const result = await post(API.MenuApi.GetSysMenuByUserId, body);
   // ;
   return result;
 }
@@ -81,14 +83,14 @@ export async function getSystemConfigInfo() {
 
 // 验证旧密码是否一致
 export async function vertifyOldPwd(params) {
-  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/VertifyOldPwd', params);
+  const result = await post(API.LoginApi.VertifyOldPwd, params);
 
   return result;
 }
 
 // 修改密码
 export async function changePwd(params) {
-  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/ChangePwd', params);
+  const result = await post(API.LoginApi.ChangePwd, params);
 
   return result;
 }

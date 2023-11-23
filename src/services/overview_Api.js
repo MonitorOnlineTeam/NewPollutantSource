@@ -7,6 +7,7 @@
  */
 import moment from 'moment';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 【智能监控】获取污染物系统污染物
@@ -140,6 +141,6 @@ export async function getRealTimeDataView(params) {
 
 // 根据行政区获取企业列表
 export async function getEntByRegion(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' + params.RegionCode, {});
+  const result = post(API.CommonApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
   return result;
 }

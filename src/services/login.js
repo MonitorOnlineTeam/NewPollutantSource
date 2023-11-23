@@ -8,15 +8,14 @@
 import Cookie from 'js-cookie';
 import { post, get } from '@/utils/request';
 import { async } from 'q';
+import { API } from '@config/API'
 
 /**
  * 获取登录配置信息
  * @params {}
  */
 export async function getSystemLoginConfigInfo() {
-  const result = await get(
-    '/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemLoginConfigInfo',
-  );
+  const result = await get(API.SystemApi.GetSystemConfigInfo);
 
   return result;
 }
@@ -26,7 +25,7 @@ export async function getSystemLoginConfigInfo() {
  * @params {}
  */
 export async function IfSpecial() {
-  const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/IfSpecial');
+  const result = await get(API.SystemApi.IfSpecial);
   return result;
 }
 

@@ -39,6 +39,8 @@ import { DownloadOutlined,CloudDownloadOutlined,ImportOutlined,RollbackOutlined 
 import config from '@/config';
 import Cookie from 'js-cookie';
 import styles from '../style.less'
+import {  API } from '@config/API';
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -417,7 +419,7 @@ export default class EntImport extends Component {
     const { tableDatas, saveLoading} = this.props;
     const props = {
         name: 'file',
-        action: '/api/rest/PollutantSourceApi/BaseDataApi/ImportEnt',
+        action: API.AssetManagementApi.VerificationImportEntInfo,
         headers: {
           Authorization: "Bearer " + Cookie.get(config.cookieName),
         }
@@ -452,7 +454,7 @@ export default class EntImport extends Component {
              }} ><RollbackOutlined />返回</Button>
              </Form.Item>
               <Form.Item>
-              <a style={{color:'rgba(0, 0, 0, 0.65)'}} href='/upload/公司运维基础数据模板.xlsm' download="模板文件"> 
+              <a style={{color:'rgba(0, 0, 0, 0.65)'}} href={API.AssetManagementApi.CompanyOperationBasictemplate} download="模板文件"> 
                 <Button
                   icon={<DownloadOutlined />}
                 >

@@ -1,6 +1,6 @@
 import { async } from 'q';
 import { post, get } from '@/utils/request';
-
+import { API } from '@config/API'
 //报警关联列表
 export async function GetAlarmPushDepOrRole(params) {
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetAlarmPushDepOrRole', params, null);
@@ -146,8 +146,7 @@ export async function getregionbydepid(params) {
 }
 // 获取行政区详细信息及层级关系
 export async function getregioninfobytree(params) {
-  // const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRegionInfoByTree', params);
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetXuRegions', params);
+  const result = post(API.CommonApi.GetXuRegions, params);
   return result === null
     ? {
         data: null,
@@ -240,7 +239,7 @@ export async function AddOrUpdateUserDepApprove(params) {
 }
 // 用户列表
 export async function GetUserList(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserList', params, null);
+  const result = post(API.CommonApi.GetUserList, params, null);
   return result;
 }
 // 审核流程 添加or修改

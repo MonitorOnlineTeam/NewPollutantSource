@@ -16,6 +16,7 @@ import config from '@/config';
 import { connect } from 'dva';
 import styles from './index.less'
 import { MapInteractionCSS } from 'react-map-interaction';
+import {  API } from '@config/API';
 
 @connect(({ loading, autoForm }) => ({
   // fileList: autoForm.fileList,
@@ -81,8 +82,7 @@ class SdlUpload extends Component {
     }
     const props = {
 
-      action: action || `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
-      //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
+      action: action || API.UploadApi.UploadFiles,
       onChange: (info) => {
 
        if(flags==='img')

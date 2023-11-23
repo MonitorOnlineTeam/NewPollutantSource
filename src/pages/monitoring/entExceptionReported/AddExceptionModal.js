@@ -6,6 +6,7 @@ import { Modal, DatePicker, Row, Col, Select, Input, Upload, message } from "ant
 import { connect } from "dva"
 import cuid from 'cuid';
 import moment from 'moment'
+import {  API } from '@config/API';
 
 
 const FormItem = Form.Item;
@@ -108,7 +109,7 @@ class AddExceptionModal extends PureComponent {
     const { form: { getFieldDecorator, getFieldValue }, pollutantListByDgimn, addExceptionModalVisible, id, loading, exceptionReportedData } = this.props;
     const { cuid, fileList } = this.state;
     const props = {
-      action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
+      action: API.UploadApi.UploadFiles,
       onChange: (info) => {
         let fileList = info.fileList;
         if (info.file.status === 'done') {

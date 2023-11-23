@@ -29,6 +29,7 @@ import cuid from 'cuid';
 import SdlUpload from '@/pages/AutoFormManager/SdlUpload';
 import moment from 'moment';
 import {  ModalNameConversion } from '../CONST';
+import {  API } from '@config/API';
 
 const { TextArea } = Input;
 
@@ -422,7 +423,7 @@ const ReCheckDetails = props => {
           <Form.Item label="附件" name="file">
             <SdlUpload
               accept="image/*"
-              action="/newApi/rest/PollutantSourceApi/UploadApi/UploadFiles"
+              action={API.UploadApi.UploadFiles}
               cuid={uid}
               uploadSuccess={cuid => {}}
             />

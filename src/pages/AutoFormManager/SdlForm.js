@@ -12,6 +12,7 @@ import { LeftOutlined, RightOutlined, QuestionCircleOutlined } from '@ant-design
 
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
+import {  API } from '@config/API';
 
 import {
   Input,
@@ -465,7 +466,7 @@ class SdlForm extends PureComponent {
           break;
         // case "上传":
         //   const props = {
-        //     action: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
+        //     action: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/UploadFiles',
         //     // onChange: this.handleChange(fieldName),
         //     multiple: true,
         //     data: {
@@ -483,7 +484,7 @@ class SdlForm extends PureComponent {
           if (item.type === '上传') {
             // let uploadElement = null;
             const props = {
-              action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
+              action:API.UploadApi.UploadFiles,
               onChange: info => {
                 if (info.file.status === 'done') {
                   setFieldsValue({ cuid: uid });

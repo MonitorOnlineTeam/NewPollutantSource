@@ -6,7 +6,7 @@
 import { post, get } from '@/utils/request';
 
 /**
- * 上传附件
+ * 上传附件 手工上传
  * @params {"file":"","fileName":"","DGIMN":""}
  */
 export async function uploadfiles(params) {

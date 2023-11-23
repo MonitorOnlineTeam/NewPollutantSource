@@ -125,7 +125,7 @@ const Index = (props) => {
         {data.ProjectDays}
       </Form.Item>
        </Col>
-       <Col span={8}>
+       {/* <Col span={8}>
         <Form.Item label="经度"  >
         {data.Longitude}
       </Form.Item>
@@ -139,7 +139,7 @@ const Index = (props) => {
         <Form.Item label="电子围栏（KM）"  >
         {data.Range}
       </Form.Item>
-       </Col>
+       </Col> */}
        <Col span={8}>
         <Form.Item label="项目点位数量"  >
         {data.count}

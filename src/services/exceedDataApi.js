@@ -5,6 +5,8 @@
  */
 import { post } from '@/utils/request';
 import { async } from 'q';
+import { API } from '@config/API'
+
 //获取流量数据
 export async function GetPollutantByType(params){
     const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceedPollutantByType?type=${params.type}`,{})
@@ -25,8 +27,8 @@ export async function GetExceedNum(params)
 //企业
 export async function GetEntByRegion(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode='+params.RegionCode,null)
-    return result 
+    const result = post(API.CommonApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
+    return result;
 }
 //导出超标数据
 export async function ExportExceedDataList(params)

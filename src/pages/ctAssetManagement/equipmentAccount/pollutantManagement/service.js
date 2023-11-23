@@ -27,6 +27,12 @@ export async function getPointIndustryList(params) {
   const result = post(API.CtAssetManagementApi.GetPointIndustryList, params);
   return result;
 }
+//获取工艺类型
+export async function getTechnologyList(params) {
+  const result = post(API.CtAssetManagementApi.GetTechnologyList, params);
+  return result;
+}
+
 //获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
 export async function getCEMSSystemList(params) {
   const result = post(API.CtAssetManagementApi.GetCEMSSystemList, params);

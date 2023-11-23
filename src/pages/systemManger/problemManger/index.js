@@ -22,6 +22,7 @@ import cuid from 'cuid';
 import { Resizable, ResizableBox } from 'react-resizable';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import {  API } from '@config/API';
 
 
 const { TextArea } = Input;
@@ -347,7 +348,7 @@ const Index = (props) => {
   const uploadProps = {
     name: 'file',
     multiple: true,
-    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    action: API.UploadApi.UploadFiles,
     data: {
       FileUuid:filesCuid,
     },

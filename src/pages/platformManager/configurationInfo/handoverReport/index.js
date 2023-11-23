@@ -22,6 +22,8 @@ import cuid from 'cuid';
 import ImageView from '@/components/ImageView';
 import OperationCompanyList from '@/components/OperationCompanyList';
 import { permissionButton } from '@/utils/utils';
+import {  API } from '@config/API';
+
 const { Option } = Select;
 
 const namespace = 'handoverReport'
@@ -410,7 +412,7 @@ const Index = (props) => {
   const uploadProps2 = (fileName) => {
     const filesCuid = form2.getFieldValue([fileName])
     return { //照片附件 上传
-      action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+      action: API.UploadApi.UploadFiles,
       accept: 'image/*',
       data: {
         FileUuid: filesCuid,

@@ -28,6 +28,7 @@ import cuid from 'cuid';
 import { getBase64,permissionButton  } from '@/utils/utils';
 import Detail from './Detail';
 import Lightbox from "react-image-lightbox-rotate";
+import {  API } from '@config/API';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -1628,7 +1629,7 @@ const Index = (props) => {
   const [imgUrlList, setImgUrlList] = useState([]);//预览附件列表
 
   const uploadProps = { //附件上传 
-    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    action: API.UploadApi.UploadFiles,
     accept: 'image/*',
     data: {
       FileUuid: fileType == 0 ? filesCuid0 : fileType == 1 ? filesCuid1() : fileType == 2 ? filesCuid2() : filesCuid3(),

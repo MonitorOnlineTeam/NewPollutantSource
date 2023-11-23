@@ -1,5 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
-
+import {API } from '@config/API'
 
 /**
  * 
@@ -8,7 +8,7 @@ import { post, get, getNew } from '@/utils/request';
 
 //列表
 export async function GetPointStateRelationList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPointStateRelationList',params, null);
+  const result = await post(API.AssetManagementApi.GetStateControlledPointRelationList,params, null);
   return result;
 }
 //弹框
@@ -32,7 +32,7 @@ export async function DeleteStatePoint(params){
 
 // 匹配企业
 export async function GetEntStateList(params){
-  const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetEntStateList`,params, null);
+  const result = await post(API.AssetManagementApi.GetStateControlledEntList,params, null);
   return result;
 }
 
@@ -44,6 +44,6 @@ export async function GetPointStateList(params){
 }
 // 导出
 export async function ExportPointStateRelationList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPointStateRelationList',params, null);
+  const result = await post(API.AssetManagementApi.ExportStateControlledPointRelationList,params, null);
   return result;
 }

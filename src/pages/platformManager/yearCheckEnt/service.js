@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 传输有效率 行政区下
@@ -40,13 +41,7 @@ export async function GetTransmissionEfficiencyForEnt(params) {
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode,
-    null,
-    null,
-  );
-
+  const result = post(API.CommonApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
   return result;
 }
 

@@ -5,11 +5,12 @@
  */
 import { post } from '@/utils/request';
 import { async } from 'q';
+import { API } from '@config/API'
 //关注度列表
 export async function GetAttentionDegreeList() {
 
     const result = post(
-        '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
+        API.CommonApi.GetAttentionDegreeList,
         null,
         null
     )
@@ -72,14 +73,7 @@ export async function ExportEntOrPointDetail(params)
     return result
 }
 //根据行政区获取 企业列表
-
 export async function GetEntByRegion(params) {
-    const result = post(
-      '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-        params.RegionCode,
-      null,
-      null,
-    );
-  
+    const result = post(API.CommonApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
     return result;
   }

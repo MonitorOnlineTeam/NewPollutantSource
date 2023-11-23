@@ -1,13 +1,11 @@
 import { post, get, getNew } from '@/utils/request';
 
-/**
- * 调试检测
- */
+import { API } from '@config/API'
 
  
 // 列表  
 export async function GetNoticeContentList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetNoticeContentList',params, null);
+  const result = await post(API.SystemManageApi.GetNoticeContentList,params, null);
   return result;
 }
 // 添加or修改 

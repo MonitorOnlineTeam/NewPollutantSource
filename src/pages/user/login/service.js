@@ -4,7 +4,7 @@ import Cookie from 'js-cookie';
 
 import { async } from 'q';
 import configToken from '@/config';
-
+import { API } from '@config/API'
 /**
  * 系统登录
  * @params {"UserAccount": "system","UserPwd": "system","RememberMe": true}
@@ -22,12 +22,7 @@ export async function systemLogin(params) {
     VerificationCode:params.verificationCode,
   };
   const body = Object.assign(defaults);
-  const result = await post('/api/rest/PollutantSourceApi/LoginApi/Login', body,{credentials:'include'});
-  if (result.IsSuccess && result.Datas) {
-    Cookie.set(configToken.cookieName, result.Datas.Ticket);
-  } else {
-    Cookie.set(configToken.cookieName, '');
-  }
+  const result = await post(API.LoginApi.Login, body,{credentials:'include'});
   return result;
 }
 
@@ -46,3 +41,12 @@ export async function PostMessageCode(body) {
 // export async function getFakeCaptcha(mobile) {
 //   return request(`/api/login/captcha?mobile=${mobile}`);
 // }
+export async function getToken(params) {
+  const urlencoded = encodeURI(
+    `client_id=WryWebClient&client_secret=Web_P@ssw0rd_!@#$%&grant_type=password&username=${params.username}&password=${params.password}`,
+  );
+  const result = await post(API.LoginApi.Token, urlencoded, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' },
+  });
+  return result;
+}

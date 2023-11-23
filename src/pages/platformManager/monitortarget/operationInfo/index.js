@@ -20,6 +20,8 @@ import TextArea from 'antd/lib/input/TextArea';
 import AttachmentView from '@/components/AttachmentArrView'
 import { getBase64, getAttachmentArrDataSource } from '@/utils/utils'
 import cuid from 'cuid'
+import {  API } from '@config/API';
+
 const { Option } = Select;
 
 const namespace = 'operationInfo'
@@ -674,7 +676,7 @@ const Index = (props) => {
   const [fileList1, setFileList1] = useState([])
 
   const uploadProps = { //运维接收确认单附件上传 
-    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    action:API.UploadApi.UploadFiles,
     // accept:'image/*',
     data: {
       FileUuid: filesCuid1,

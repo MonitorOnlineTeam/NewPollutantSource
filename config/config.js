@@ -7,7 +7,8 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 import path from 'path';
-const apiHost = 'http://172.16.12.234:61002/';
+const apiHost = 'http://172.16.12.39:49003/';
+// const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.152:50089/';
 // const apiHost = 'http://61.50.135.114:63001/'; // 运维外网
 // const apiHost = 'http://172.16.12.234:61002/';
@@ -19,6 +20,8 @@ const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.135:50210/';
 // const apiHost = 'http://172.16.12.57:61000/';
 // const apiHost = 'http://172.16.12.57:61002/';
+
+
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
@@ -786,7 +789,7 @@ export default {
                       component: './platformManager/configurationInfo/pointMatchingSet',
                     },
                     {
-                      name: 'pointMatchingSet', //台账填报设置
+                      name: 'accountFillingSet', //台账填报设置
                       path: '/platformconfig/configurationInfo/accountFilling/accountFillingSet',
                       component: './platformManager/configurationInfo/accountFillingSet',
                     },
@@ -3117,16 +3120,18 @@ export default {
     '/newApi': {
       // target: 'http://61.50.135.114:63002/',
       // target: 'http://172.16.12.134:63002/',
-      target: 'http://172.16.12.234:60061/', // 模型
+      // target: 'http://172.16.12.234:60061/', // 模型
       // target: 'http://172.16.12.165:50012/', // 江西
+      target: apiHost,
       changeOrigin: true,
       pathRewrite: {
         '^/newApi': '',
       },
     },
     '/wwwroot': {
-      target: 'http://172.16.12.234:60061/',
+      // target: 'http://172.16.12.234:60061/',
       // target: 'http://172.16.12.134:63002/',
+      target: apiHost,
       changeOrigin: true,
       // pathRewrite: {
       //   '^/newApi': '',
@@ -3140,7 +3145,7 @@ export default {
       },
     },
     '/upload': {
-      target: config.uploadHost,
+      target: apiHost,
       // 接口的域名
       changeOrigin: true,
       // 如果接口跨域，需要进行这个参数配置
@@ -3149,7 +3154,7 @@ export default {
       }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
     '/uploadplantform': {
-      target: config.uploadHost,
+      target: apiHost,
       // 接口的域名
       changeOrigin: true,
       // 如果接口跨域，需要进行这个参数配置

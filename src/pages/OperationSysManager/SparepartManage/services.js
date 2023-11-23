@@ -4,6 +4,7 @@
  * 创建时间：2020.05.21
  */
 import { post, get } from '@/utils/request';
+import { API} from '@config/API';
 
 
 /**
@@ -57,11 +58,11 @@ export async function GetStorehouse(params) {
 }
 
 /**
- * 设备类型
+ * 设备监测类型
  * 
  */
 export async function GetMonitoringTypeList(params) {
-  const result =await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList', params, null);
+  const result =await post(API.AssetManagementApi.GetMonitoringCategoryList, params, null);
   return result;
 }
 

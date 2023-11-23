@@ -5,7 +5,7 @@ import { API } from '@config/API'
 
 //获取项目列表
 export async function GetCTProjectList(params) {
-  const result = post(API.CtCommonApi.GetCTProjectList, params);
+  const result = post(API.CtAssetManagementApi.GetCTProjectList, params);
   return result;
 }  
 // 项目修改

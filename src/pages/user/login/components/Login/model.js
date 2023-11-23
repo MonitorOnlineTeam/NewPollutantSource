@@ -2,7 +2,7 @@
 import router from 'umi/router';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
-import { systemLogin, getFakeCaptcha, getSystemLoginConfigInfo } from './service';
+import { systemLogin, getFakeCaptcha, getSystemLoginConfigInfo } from '../../service';
 import { getPageQuery, setAuthority } from './utils/utils';
 const Model = {
   namespace: 'userLogin',

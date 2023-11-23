@@ -12,27 +12,9 @@ export async function GetStationByRegion(params) {
 
   return result;
 }
-// //根据行政区获取 企业列表
-
-// export async function GetEntByRegion(params) {
-//   const result = post(
-//     '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-//     params.RegionCode,
-//     null,
-//     null,
-//   );
-
-//   return result;
-// }
 //根据行政区获取 企业列表
-
 export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion',
-    params,
-    null,
-  );
-
+  const result = post(API.CommonApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
   return result;
 }
 
@@ -44,7 +26,7 @@ export async function GetEntNoFilterList(params) {
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
+    API.CommonApi.GetAttentionDegreeList,
     params,
     null,
   );
@@ -53,7 +35,7 @@ export async function GetAttentionDegreeList(params) {
 }
 // 行政区划
 export async function getEnterpriseAndPoint(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetXuRegions', params, null);
+  const result = await post(API.CommonApi.GetXuRegions, params, null);
   return result === null ? { data: null } : result;
 }
 
@@ -68,7 +50,7 @@ let websocket = null;
  * @params {}
  */
 export async function getSystemConfigInfo() {
-  const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo');
+  const result = await get(API.SystemApi.GetSystemConfigInfo);
   return result;
 }
 
@@ -127,7 +109,7 @@ export async function getPollutantListByDgimn(params) {
 
 // 用户列表
 export async function GetUserList(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserList', params, null);
+  const result = post(API.CommonApi.GetUserList, params, null);
   return result;
 }
 
@@ -156,7 +138,7 @@ export async function GetTestXuRegions(params) {
 
 // 导出 运维监测点信息
 export async function ExportProjectPointList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportProjectPointList',params, null);
+  const result = await post(API.AssetManagementApi.ExportProjectPointList,params, null);
   return result;
 }
 
@@ -171,6 +153,6 @@ export async function GetCtEntAndPointList(params) {
 
 //项目列表
 export async function GetCTProjectList(params) {
-  const result = post(API.CtCommonApi.GetCTProjectList, params);
+  const result = post(API.CtAssetManagementApi.GetCTProjectList, params);
   return result;
 }

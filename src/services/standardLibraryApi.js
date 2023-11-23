@@ -1,6 +1,6 @@
 import { async } from 'q';
 import { post, get } from '@/utils/request';
-
+import { API } from '@config/API'
 // 标准库列表
 export async function getlist(params) {
   const body = {
@@ -293,7 +293,7 @@ export async function getpollutantbydgimn(params) {
     DGIMN: params.DGIMN,
   };
   const result = get(
-    '/api/rest/PollutantSourceApi/StandardLibraryApi/GetStandardPollutantsByDgimn',
+    API.CommonApi.GetStandardPollutantsByDgimn,
     body,
     null,
   );

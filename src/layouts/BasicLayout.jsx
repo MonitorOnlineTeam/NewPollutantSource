@@ -158,8 +158,8 @@ class BasicLayout extends Component {
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize)
     const token = Cookie.get(config.cookieName);
-    const tokenFlag = token && token != 'null' && token != 'undefined' && token != '';
     const { dispatch, configInfo, sysPollutantTypeList, currentMenu } = this.props;
+    const tokenFlag = token && token != 'null' && token != 'undefined' && token != '';
     if (!tokenFlag) { return }
     dispatch({
       type: 'global/getSystemConfigInfo',

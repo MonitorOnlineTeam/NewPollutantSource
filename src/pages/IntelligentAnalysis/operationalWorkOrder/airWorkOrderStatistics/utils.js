@@ -5,9 +5,9 @@
  * @LastEditTime: 2020-10-27 14:28:07
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/utils.js
  */
-
+import { API } from '@config/API'
 export function getAttentionDegreeList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList', params);
+  const result = post(API.CommonApi.GetAttentionDegreeList, params);
   return result;
 }
 

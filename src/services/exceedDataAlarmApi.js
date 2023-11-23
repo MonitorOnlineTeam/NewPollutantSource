@@ -5,11 +5,13 @@
  */
 import { post } from '@/utils/request';
 import { async } from 'q';
+import { API } from '@config/API'
+
 //企业
 export async function GetEntByRegion(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode='+params.RegionCode,null)
-    return result 
+    const result = post(API.CommonApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
+    return result;
 }
 //超标报警审核
 export async function GetAlarmVerifyRate(params)

@@ -51,6 +51,8 @@ import {
 } from '@ant-design/icons';
 import cuid from 'cuid';
 import flowanalysismodel from '@/models/flowanalysismodel';
+import {  API } from '@config/API';
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -746,7 +748,7 @@ export default class PersonData extends Component {
           // {   rules: [{required: true,  message: '请上传照片！'}],   }
           )(
          <Upload
-         action="/api/rest/PollutantSourceApi/UploadApi/PostFiles"
+         action={API.UploadApi.UploadFiles}
          listType="picture-card"
          fileList={fileList}
          onPreview={this.handlePreview}
@@ -814,7 +816,7 @@ export default class PersonData extends Component {
             getValueFromEvent: this.normFileGas,
           })( 
             <Upload 
-             action="/api/rest/PollutantSourceApi/UploadApi/PostFiles"
+             action={API.UploadApi.UploadFiles}
              accept='image/*'
              fileList={gasPhoto}
              data={{
@@ -883,7 +885,7 @@ export default class PersonData extends Component {
             // valuePropName: 'fileList',
             getValueFromEvent: this.normFileWater,
           })( 
-            <Upload name="logo" className='certificatePhoto' action="/api/rest/PollutantSourceApi/UploadApi/PostFiles"
+            <Upload name="logo" className='certificatePhoto' action={API.UploadApi.UploadFiles}
             accept='image/*'
             fileList={waterPhoto}
             data={{

@@ -9,26 +9,9 @@ import Cookie from 'js-cookie';
 import { post, get } from '@/utils/request';
 import { async } from 'q';
 import configToken from '@/config'
+import { API } from '@config/API'
 
-/**
- * 【AutoForm】系统登录
- * @params {"UserAccount": "system","UserPwd": "system","RememberMe": true}
- */
-export async function systemLogin(params) {
-    const defaults = {
-        RememberMe: true,
-        UserAccount: params.userName,
-        UserPwd: params.password,
-    };
-    const body = Object.assign(defaults);
-    const result = await post('/api/rest/PollutantSourceApi/LoginApi/Login', body);
-    if (result.IsSuccess && result.Datas) {
-        Cookie.set(configToken.cookieName, result.Datas.Ticket);
-    } else {
-        Cookie.set(configToken.cookieName, '');
-    }
-    return result;
-}
+
 
 /**
  * 【AutoForm】获取页面高级查询表单
@@ -59,7 +42,7 @@ export async function getPageConfigInfo(params) {
         PageSize: 200,
     };
     const body = Object.assign(defaults, param);
-    const result = await get('/api/rest/PollutantSourceApi/AutoFormDataApi/GetPageConfigInfo', body, null);
+    const result = await get(API.AutoFormApi.GetPageConfigInfo, body, null);
     return result;
 }
 
@@ -78,7 +61,7 @@ export async function getListPager(params) {
     //     PageSize:200
     // };
     // const body=Object.assign(param,params);
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/GetListPager', params, null);
+    const result = await post(API.AutoFormApi.GetListPager, params, null);
     return result;
 }
 
@@ -92,7 +75,7 @@ export async function getAutoFromAddView() {
     };
     const defaults = {};
     const body = Object.assign(defaults, params);
-    const result = await get('/api/rest/PollutantSourceApi/AutoFormDataApi/GetAutoFromAddView', body, null);
+    const result = await get(API.AutoFormApi.GetAutoFromAddView, body, null);
     return result;
 }
 
@@ -106,7 +89,7 @@ export async function getAutoFromUpdateView() {
     };
     const defaults = {};
     const body = Object.assign(defaults, params);
-    const result = await get('/api/rest/PollutantSourceApi/AutoFormDataApi/GetAutoFromUpdateView', body, null);
+    const result = await get(API.AutoFormApi.GetAutoFromUpdateView, body, null);
     return result;
 }
 
@@ -122,7 +105,7 @@ export async function getFormData(params) {
         ...params,
         ...defaults,
     };
-    const result = await get('/api/rest/PollutantSourceApi/AutoFormDataApi/GetFormData', params, null);
+    const result = await get(API.AutoFormApi.GetFormData, params, null);
     return result;
 }
 
@@ -138,7 +121,7 @@ export async function postAutoFromDataDelete(params) {
     // const defaults = {};
     // const body=Object.assign(defaults,params);
 
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/PostAutoFromDataDelete', params, null);
+    const result = await post(API.AutoFormApi.PostAutoFromDataDelete, params, null);
     return result;
 }
 /**
@@ -146,7 +129,7 @@ export async function postAutoFromDataDelete(params) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function postAutoFromDataAdd(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/PostAutoFromDataAdd', params, null);
+    const result = await post(API.AutoFormApi.PostAutoFromDataAdd, params, null);
     return result;
 }
 
@@ -155,7 +138,7 @@ export async function postAutoFromDataAdd(params) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function postAutoFromDataUpdate(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/PostAutoFromDataUpdate', params, null);
+    const result = await post(API.AutoFormApi.PostAutoFromDataUpdate, params, null);
     return result;
 }
 
@@ -164,7 +147,7 @@ export async function postAutoFromDataUpdate(params) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function getRegions(params) {
-    const result = await get('/api/rest/PollutantSourceApi/AuthorApi/GetRegions', params, null);
+    const result = await get(API.CommonApi.GetRegions, params, null);
     return result;
 }
 
@@ -174,7 +157,7 @@ export async function getRegions(params) {
  * @params {"FileUuid": "String"}
  */
 export async function getAttachmentList(params) {
-    const result = await post('/api/rest/PollutantSourceApi/UploadApi/GetAttachmentList', params, null);
+    const result = await post(API.UploadApi.GetAttachmentList, params, null);
     return result;
 }
 
@@ -183,7 +166,7 @@ export async function getAttachmentList(params) {
  * @params {"configId": "String"}
  */
 export async function exportDataExcel(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/ExportDataExcel', params, null);
+    const result = await post(API.AutoFormApi.ExportDataExcel, params, null);
     return result;
 }
 
@@ -192,7 +175,7 @@ export async function exportDataExcel(params) {
  * @params {"configId": "String"}
  */
 export async function exportTemplet(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/ExportTemplet', params, null);
+    const result = await post(API.AutoFormApi.ExportTemplet, params, null);
     return result;
 }
 
@@ -201,18 +184,18 @@ export async function exportTemplet(params) {
  * @params {"configId": "String"}
  */
 export async function fileUpload(params) {
-    const result = await post('/upload/rest/PollutantSourceApi/UploadApi/PostFiles', params, null);
+    const result = await post(API.UploadApi.UploadFiles, params, null);
     return result;
 }
 
 // 删除文件
 export async function deleteAttach(params) {
-    const result = await post('/api/rest/PollutantSourceApi/UploadApi/DeleteAttach', params, null);
+    const result = await post(API.UploadApi.DeleteAttach, params, null);
     return result;
 }
 // rest/PollutantSourceApi/AutoFormDataApi/VerificationData
 // 校验重复
 export async function checkRepeat(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/VerificationData', params, null);
+    const result = await post(API.AutoFormApi.VerificationData, params, null);
     return result;
 }

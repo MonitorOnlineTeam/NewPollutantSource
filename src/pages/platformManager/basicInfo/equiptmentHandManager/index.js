@@ -22,6 +22,8 @@ import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import PageLoading from '@/components/PageLoading'
 import { handleFormData } from '@/utils/utils';
 import cuid from 'cuid';
+import {  API } from '@config/API';
+
 const { Option } = Select;
 
 const namespace = 'equiptmentHandManager'
@@ -203,7 +205,7 @@ const Index = (props) => {
 
   const [fileList,setFileList] = useState([])
   const uploadProps = { // 设备运维接手资料  资料附件上传 
-    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    action:API.UploadApi.UploadFiles,
     data:{
       FileUuid: filesCuid,
       FileActualType: '0',

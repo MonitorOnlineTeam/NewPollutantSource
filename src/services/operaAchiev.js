@@ -1,4 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 
@@ -8,7 +9,7 @@ import { post, get, getNew } from '@/utils/request';
 
  //获取所有排口监测点系数列表 列表
 export async function GetPointCoefficientList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPointCoefficientList',params, null);
+  const result = await post(API.PerformanceApi.GetPointCoefficientList,params, null);
   return result;
 }
 //添加或修改监测点系数
@@ -20,7 +21,7 @@ export async function AddOrEditPointCoefficient(params) {
 
  //获取工单系数列表
  export async function GetRecordCoefficientList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetRecordCoefficientList',params, null);
+  const result = await post(API.PerformanceApi.GetWorkOrderTypeCoefficientList,params, null);
   return result;
 }
 
@@ -44,7 +45,7 @@ export async function DeleteRecordCoefficient(params) {
 
 // 导出所有排口监测点系数列表
 export async function ExportPointCoefficient(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPointCoefficient',params, null);
+  const result = await post(API.PerformanceApi.ExportPointCoefficient,params, null);
   return result;
 }
 

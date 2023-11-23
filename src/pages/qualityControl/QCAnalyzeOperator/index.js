@@ -7,8 +7,7 @@ import CustomIcon from '@/components/CustomIcon'
 import config from '@/config';
 import Cookie from 'js-cookie';
 import { connect } from "dva"
-
-
+import {  API } from '@config/API';
 
 @connect()
 class index extends PureComponent {
@@ -39,7 +38,7 @@ class index extends PureComponent {
       headers: {
         Authorization: "Bearer " + Cookie.get(config.cookieName)
       },
-      action: `/api/rest/PollutantSourceApi/UploadApi/UploadFiles`,
+      action:API.UploadApi.UploadFiles,
       onChange: (info) => {
         const { status, response } = info.file;
         if (status !== 'uploading') {
