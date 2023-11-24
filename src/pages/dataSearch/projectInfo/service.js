@@ -21,7 +21,7 @@ export async function GetProjectPointList(params) {
 
 // 导出 项目管理列表
 export async function ExportProjectInfoList(params) {
-  const result = await post(API.AssetManagementApi.ExportProjectInfoList,params, null);
+  const result = await post(API.AssetManagementApi.ExportProjectList,params, null);
   return result;
 }
 

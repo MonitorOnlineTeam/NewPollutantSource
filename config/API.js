@@ -42,6 +42,7 @@ export const API = {
     GetRegions: before + '/RegionApi/GetRegions', //获取行政区
     GetAttentionDegreeList: before + '/RegionApi/GetAttentionDegreeList',   //获取关注程度
     GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',//根据行政区查询企业
+    GetPointByEntCode: before + '/MonitorPointApi/GetPointByEntCode',//根据企业编号与污染物编号查询排口
     GetStandardPollutantsByDgimn: before + '/StandardLibraryApi/GetStandardPollutantsByDgimn', //根据排口获取标准污染物列表
     GetPollutantTypeMonitoringCategoryInfo: before + '/BaseDataApi/GetPollutantTypeMonitoringCategoryInfo',//获取设备信息监测参数类型
     GetUserList: before + '/UserApi/GetUserList',//获取用户信息
@@ -86,8 +87,8 @@ export const API = {
   },
   /*资产管理 Api */
   AssetManagementApi: {
-     /*** 设备台账 ***/
-     /*污染源管理*/
+    /*** 设备台账 ***/
+    /*污染源管理*/
     CompanyOperationBasictemplate: '/wwwroot/公司运维基础数据模板.xlsm',//企业模板下载 
     VerificationImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//导入企业
     AddPoint: before + '/MonitorPointApi/AddPoint', //添加监测点
@@ -108,10 +109,10 @@ export const API = {
     ExportPointEquipmentParametersList: before + '/MonitorPointApi/ExportPointEquipmentParametersList',//设备参数项信息 导出
     /*项目管理*/
     GetProjectList: before + '/AssetManagementApi/GetProjectList',//获取项目管理
-    ExportProjectList: before + '/AssetManagementApi/ExportProjectList',//项目管理 导出
     AddOrUpdateProjectInfo: before + '/AssetManagementApi/AddOrUpdateProjectInfo',//项目管理 添加修改
     DeleteProjectInfo: before + '/AssetManagementApi/DeleteProjectInfo',//项目管理 删除
     GetProjectPointList: before + '/AssetManagementApi/GetProjectPointList',//获取运维监测点信息
+    ExportProjectList: before + '/AssetManagementApi/ExportProjectList',//项目管理 导出
     ExportProjectPointList: before + '/AssetManagementApi/ExportProjectPointList',//运维监测点信息 导出
     /*项目权限管理*/
     GetAccessibleProjectList: before + '/AssetManagementApi/GetAccessibleProjectList',//获取项目权限信息
@@ -123,17 +124,38 @@ export const API = {
     AddEquipmentManufacturerInfo: before + '/AssetManagementApi/AddEquipmentManufacturerInfo',//添加设备厂家信息
     UpdateEquipmentManufacturerInfo: before + '/AssetManagementApi/UpdateEquipmentManufacturerInfo',//更新设备厂家信息
     DeleteEquipmentManufacturerInfo: before + '/AssetManagementApi/DeleteEquipmentManufacturerInfo',//删除设备厂家信息
+    ExportEquipmentManufacturerList: before + '/AssetManagementApi/ExportEquipmentManufacturerList',//设备厂家信息 导出
     /*系统型号清单*/
     GetSystemModelList: before + '/AssetManagementApi/GetSystemModelList',//获取系统型号信息
     AddSystemModelInfo: before + '/AssetManagementApi/AddSystemModelInfo',//添加系统型号信息
     UpdateSystemModelInfo: before + '/AssetManagementApi/UpdateSystemModelInfo',//更新系统型号信息
     DeleteSystemModelInfo: before + '/AssetManagementApi/DeleteSystemModelInfo',//删除系统型号信息
+    GetSystemNameList: before + '/AssetManagementApi/GetSystemNameList',//获取系统名称列表
+    ExportSystemModelList: before + '/AssetManagementApi/ExportSystemModelList',//系统型号信息 导出
     /*设备信息清单*/
+    GetEquipmentList: before + '/AssetManagementApi/GetEquipmentList',//获取设备信息清单
+    AddEquipmentInfo: before + '/AssetManagementApi/AddEquipmentInfo',//添加设备信息清单
+    UpdateEquipmentInfo: before + '/AssetManagementApi/UpdateEquipmentInfo',//更新信息清单
+    DeleteEquipmentInfo: before + '/AssetManagementApi/DeleteEquipmentInfo',//删除设备信息清单
     GetMonitoringCategoryList: before + '/AssetManagementApi/GetMonitoringCategoryList',//获取设备监测类型
+    ExportEquipmentList: before + '/AssetManagementApi/ExportEquipmentList',//设备信息清单 导出
+    /*故障单元清单*/
+    GetFaultUnitList: before + '/AssetManagementApi/GetFaultUnitList',//获取故障单元清单
+    AddFaultUnitInfo: before + '/AssetManagementApi/AddFaultUnitInfo',//添加故障单元清单
+    EditFaultUnit: before + '/AssetManagementApi/EditFaultUnit',//更新故障单元清单
+    DeleteFaultUnitInfo: before + '/AssetManagementApi/DeleteFaultUnitInfo',//删除故障单元清单
+    
     /*点位匹配设置*/
     GetStateControlledPointRelationList: before + '/AssetManagementApi/GetStateControlledPointRelationList',//获取点位匹配信息
     ExportStateControlledPointRelationList: before + '/AssetManagementApi/ExportStateControlledPointRelationList',//点位匹配信息 导出
     GetStateControlledEntList: before + '/AssetManagementApi/GetStateControlledEntList',//匹配企业
+    GetStateControlledPointList: before + '/BaseDataApi/GetStateControlledPointList',//获取企业匹配监测点信息
+    UpdateStateControlledPointRelationStatus: before + '/BaseDataApi/GetStateControlledPointList',//更新企业匹配监测点信息
+    DeleteStateControlledPointRelationStatus: before + '/BaseDataApi/DeleteStateControlledPointRelationStatus',//删除企业匹配监测点信息
+    /*台账填报设置*/
+    GetCalibrationAccountFillingTypeList: before + '/BaseDataApi/GetCalibrationAccountFillingTypeList',//获取台账填报设置信息
+    UpdateCalibrationAccountFillingTypeInfo: before + '/BaseDataApi/UpdateCalibrationAccountFillingTypeInfo',//更新废气点位校准信息填报方式
+    ExportCalibrationAccountFillingTypeList: before + '/BaseDataApi/ExportCalibrationAccountFillingTypeList',//台账填报设置信息 导出
     /*交接和报告*/
     GetProjectReportList: before + '/CTBaseDataApi/GetProjectReportList',   //列表
     AddOrUpdProjectReportInfo: before + '/CTBaseDataApi/AddOrUpdProjectReportInfo', //编辑
@@ -153,7 +175,7 @@ export const API = {
   /*********** 成套 ***********/
 
   //通用 Api
-  CtCommonApi: {  
+  CtCommonApi: {
     GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList', //站点信息
   },
   //项目执行进度 Api

@@ -1374,7 +1374,7 @@ class NewHome extends PureComponent {
                 )}
               </div> 
               <Map
-                amapkey="5e60171b820065e7e9a1d6ea45abaee9"
+                amapkey={config.amapKey}
                 // plugins={plugins}
                 // features={['bg', 'point', 'building']}
                 id="mapId"

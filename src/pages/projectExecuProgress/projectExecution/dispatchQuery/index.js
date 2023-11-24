@@ -117,6 +117,34 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '合同类型',
+      dataIndex: 'ProjectType',
+      key: 'ProjectType',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '最终用户',
+      dataIndex: 'CustomEnt',
+      key: 'CustomEnt',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '项目所在省',
+      dataIndex: 'Province',
+      key: 'Province',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '服务大区',
+      dataIndex: 'Region',
+      key: 'Region',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '工程助理',
       dataIndex: 'AssistantName',
       key: 'AssistantName',
@@ -275,7 +303,7 @@ const Index = (props) => {
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={8} className='minWidth2'>
           <Form.Item name='itemCode' label='立项号' >
             <Input placeholder="请输入" allowClear />
           </Form.Item>
@@ -285,7 +313,8 @@ const Index = (props) => {
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
-        {expand && <> <Col span={8}>
+        {expand && <> 
+        <Col span={8}>
           <Form.Item name='serviceUserName' label='服务工程师' >
             <Input placeholder="请输入" allowClear />
           </Form.Item>
@@ -316,7 +345,18 @@ const Index = (props) => {
                 <Option value="3">已完成</Option>
               </Select>
             </Form.Item>
-          </Col></>}
+          </Col>
+          <Col span={8}>
+          <Form.Item name='CustomEnt' label='最终用户' >
+            <Input placeholder="请输入" allowClear />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item name='ProjectType' label='合同类型' >
+            <Input placeholder="请输入" allowClear />
+          </Form.Item>
+        </Col>
+          </>}
         <Col span={8} >
           <Form.Item style={{ marginLeft:expand ? 4 : 16 }}>
             <Button type="primary" htmlType="submit" loading={tableLoading}>

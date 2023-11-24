@@ -2,24 +2,24 @@ import { post, get, getNew } from '@/utils/request';
 import { API } from '@config/API';
 //设备信息 列表
 export async function GetEquipmentInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEquipmentInfoList',params, null);
+  const result = await post(API.AssetManagementApi.GetEquipmentList,params, null);
   return result;
 }
 //设备信息 添加
 export async function AddEquipmentInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddEquipmentInfo',params, null);
+  const result = await post(API.AssetManagementApi.AddEquipmentInfo,params, null);
   return result;
 }
 
 // 设备信息 修改
 export async function EditEquipmentInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/EditEquipmentInfo',params, null);
+  const result = await post(API.AssetManagementApi.UpdateEquipmentInfo,params, null);
   return result;
 }
  
 // 设备信息  删除
 export async function DelEquipmentInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelEquipmentInfo',params, null);
+  const result = await post(API.AssetManagementApi.DeleteEquipmentInfo,params, null);
   return result;
 }
 //  获取监测类别
@@ -45,6 +45,6 @@ export async function GetManufacturerList(params) {
 
 //设备信息 导出
 export async function ExportEquipmentInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportEquipmentInfoList',params, null);
+  const result = await post(API.AssetManagementApi.ExportEquipmentList,params, null);
   return result;
 }

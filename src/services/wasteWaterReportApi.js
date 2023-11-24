@@ -5,6 +5,7 @@
  */
 import { post } from '@/utils/request';
 import { async } from 'q';
+import { API } from '@config/API'
 //根据 行政区和关注度 获取企业列表
 export async function GetEntByRegionAndAtt(params)
 {
@@ -14,7 +15,7 @@ export async function GetEntByRegionAndAtt(params)
 //根据 企业 获取 监测点
 export async function GetPointByEntCode(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetPointByEntCode',params,null)
+    const result = post(API.CommonApi.GetPointByEntCode,params,null)
     return result 
 }
 //数据列表

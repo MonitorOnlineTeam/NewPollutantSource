@@ -5,9 +5,9 @@ import { Spin,Button,Input } from 'antd';
 import axios from 'axios';
 import $script from 'scriptjs';
 import styles from './MapContent.less';
-
+import config from "@/config"
 const googleMapSdk = 'https://maps.googleapis.com/maps/api/js?key=your key';
-const gaodeMapSdk = 'https://webapi.amap.com/maps?v=1.4.12&key=5e60171b820065e7e9a1d6ea45abaee9';
+const gaodeMapSdk = `https://webapi.amap.com/maps?v=1.4.12&key=${config.amapKey}`;
 
 
 let map = null;
@@ -61,7 +61,6 @@ class MapContent extends React.Component {
                         resizeEnable: true,
                         center: mapCenter,
                         zoom: zoomLevel,
-                        // key:"5e60171b820065e7e9a1d6ea45abaee9"
                     });
 
                     // 高德设置语言    ['en', 'zh_en', 'zh_cn']

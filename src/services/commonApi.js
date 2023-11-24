@@ -80,12 +80,12 @@ export async function getEntAndPoint(params) {
 
 // 根据企业获取排口
 export async function getPointByEntCode(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetPointByEntCode', params, null);
+  const result = await post(API.CommonApi.GetPointByEntCode, params, null);
   return result;
 }
 // 根据企业获取排口
 export async function getPointByEntCode2(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetPointByEntCode', params, null);
+  const result = await post(API.CommonApi.GetPointByEntCode, params, null);
   return result;
 }
 /**
