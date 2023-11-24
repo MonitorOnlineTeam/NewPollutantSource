@@ -1033,14 +1033,10 @@ class Index extends PureComponent {
       <PageLoading />
       :
       <Map
-        amapkey={'a6202668a4412c04000baaf7625752bf'}
+        amapkey={'a6202668a4412c04000baaf7625752bf'} //自己申请的key  单独设置地图首页主题样式
         events={this.amapEvents}
         version='1.4.19'
         mapStyle='amap://styles/a0e33cc065bb7d9cb66b1fe3d9810781 '
-      // amapkey={config.amapKey}
-      // mapStyle="amap://styles/darkblue"
-      // useAMapUI={!config.offlineMapUrl.domain}
-
       >
 
         <Markers

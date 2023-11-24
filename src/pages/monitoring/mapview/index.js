@@ -882,7 +882,7 @@ class MapView extends Component {
         }} />
         <div id="contentWrapper" style={{ height: 'calc(100vh - 64px)', marginLeft: '320px', position: 'relative' }}>
           <Map
-            amapkey="5e60171b820065e7e9a1d6ea45abaee9"
+            amapkey={config.amapkey}
             plugins={plugins}
             id="mapId"
             // zoom={this.state.zoom}

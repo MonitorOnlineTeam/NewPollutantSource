@@ -89,7 +89,7 @@ class SdlCascader extends Component {
         this.setState({ industryTreeList: this.industryTreeListFormat(testRegionList, 1) })
        }else{
         this.props.dispatch({
-          type: "common/getTestXuRegions",
+          type: "common/getCtTestXuRegions",
           payload: { PointMark: '2' },
           callback: (res) => {
             this.setState({ industryTreeList: this.industryTreeListFormat(res, 1) })

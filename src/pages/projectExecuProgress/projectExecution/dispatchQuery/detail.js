@@ -1742,7 +1742,11 @@ const Index = (props) => {
             {data.ProjectName}
           </Form.Item>
         </Col>
-
+        <Col span={8}>
+          <Form.Item label="项目所在省" >
+            {data.Province}
+          </Form.Item>
+        </Col>
         <Col span={8}>
           <Form.Item label="项目所属行业" >
             {data.Industry}

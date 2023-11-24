@@ -153,7 +153,11 @@ export async function GetTestXuRegions(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestXuRegions', params, null);
   return result;
 }
-
+//行政区  列表  调试服务 成套
+export async function GetCtTestXuRegions(params) {
+  const result = post('/newApi/rest/PollutantSourceApi/CTBaseDataApi/GetTestXuRegions', params, null);
+  return result;
+}
 // 导出 运维监测点信息
 export async function ExportProjectPointList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportProjectPointList',params, null);
