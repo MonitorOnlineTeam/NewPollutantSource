@@ -335,7 +335,7 @@ const Index = props => {
       dataIndex: 'RectRate',
       sorter: (a, b) => a.RectRate - b.RectRate,
       render: (text, record) => {
-        return text ? text + '%' : '-';
+        return text + '%';
       },
     },
     {
