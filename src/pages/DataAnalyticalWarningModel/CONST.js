@@ -154,9 +154,9 @@ const ModalName = {
 };
 
 export const ModalNameConversion = name => {
-  if (ModalName[name]) {
-    return ModalName[name];
-  }
+  // if (ModalName[name]) {
+  //   return ModalName[name];
+  // }
   return name;
 };
 
