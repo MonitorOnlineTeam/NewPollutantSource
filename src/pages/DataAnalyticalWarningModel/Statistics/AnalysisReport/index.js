@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-14 16:40:38
+ * @Last Modified time: 2023-11-23 10:53:06
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -44,6 +44,7 @@ const noData = {
 
 const dvaPropsData = ({ loading, dataModel }) => ({
   warningForm: dataModel.warningForm,
+  AnalysisReportForm: dataModel.AnalysisReportForm,
   modelListLoading: loading.effects['dataModel/GetModelList'],
   modelInfoLoading: loading.effects['dataModel/StatisAlarmInfoSum'],
   exportLoading: loading.effects['dataModel/ExportStatisAlarmReport'],
@@ -69,6 +70,7 @@ const Index = props => {
     exportLoading,
     allExportLoading,
     warningForm,
+    AnalysisReportForm,
   } = props;
   const [modelList, setModelList] = useState([]);
   const [regionCode, setRegionCode] = useState();
@@ -92,15 +94,26 @@ const Index = props => {
       let values = JSON.parse(locationParams);
       values.date = [moment(values.date[0]), moment(values.date[1])];
       form.setFieldsValue(values);
+      dispatch({
+        type: 'dataModel/updateState',
+        payload: {
+          AnalysisReportForm: {
+            ...AnalysisReportForm,
+            ...values,
+          },
+        },
+      });
       getPageData();
+    } else {
+      getPageData(true);
     }
   };
 
-  // 获取页面数据
-  const getPageData = () => {
+  // 获取页面数据,  flag：是否出现错误提示
+  const getPageData = (flag) => {
     const values = form.getFieldsValue();
     if (!values.modelGuid) {
-      message.error('请选择场景后查询！');
+      !flag && message.error('请选择场景后查询！');
       return;
     }
     StatisAlarmInfoSum();
@@ -357,6 +370,20 @@ const Index = props => {
   // 重置表单
   const onReset = () => {
     form.resetFields();
+    dispatch({
+      type: 'dataModel/updateState',
+      payload: {
+        AnalysisReportForm: {
+          modelGuid: undefined,
+          date: [
+            moment()
+              .subtract(3, 'month')
+              .startOf('day'),
+            moment().endOf('day'),
+          ],
+        },
+      },
+    });
   };
 
   //
@@ -566,28 +593,22 @@ const Index = props => {
               style={{ padding: '10px 0' }}
               // style={{ padding: '10px 0', marginBottom: 10 }}
               initialValues={{
-                modelGuid: undefined,
-                date: [
-                  moment()
-                    .subtract(3, 'month')
-                    .startOf('day'),
-                  moment().endOf('day'),
-                ],
+                ...AnalysisReportForm,
               }}
               autoComplete="off"
               // onValuesChange={onValuesChange}
               onValuesChange={(changedFields, allFields) => {
-                // console.log('changedFields', changedFields);
-                // console.log('allFields', allFields);
-                // dispatch({
-                //   type: 'dataModel/updateState',
-                //   payload: {
-                //     warningForm: {
-                //       ...props.warningForm,
-                //       ...changedFields,
-                //     },
-                //   },
-                // });
+                console.log('changedFields', changedFields);
+                console.log('allFields', allFields);
+                dispatch({
+                  type: 'dataModel/updateState',
+                  payload: {
+                    AnalysisReportForm: {
+                      ...AnalysisReportForm,
+                      ...changedFields,
+                    },
+                  },
+                });
               }}
             >
               <Form.Item label="行政区" name="regionCode">
@@ -663,7 +684,7 @@ const Index = props => {
                   >
                     查询
                   </Button>
-                  <Button onClick={() => onReset()}>重置</Button>
+                  {/* <Button onClick={() => onReset()}>重置</Button> */}
                   <Button
                     type="primary"
                     onClick={() => onExportStatisAlarmReport()}

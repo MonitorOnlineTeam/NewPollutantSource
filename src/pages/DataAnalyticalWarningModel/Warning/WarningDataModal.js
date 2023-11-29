@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-17 09:13:22
+ * @Last Modified time: 2023-11-29 09:31:24
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -70,7 +70,6 @@ const WarningData = props => {
             style={{ width: 420, marginLeft: 20 }}
             value={DGIMN}
             onChange={value => {
-              console.log('value', value);
               setDGIMN(value);
             }}
           >
@@ -88,11 +87,6 @@ const WarningData = props => {
     }
   };
 
-  // DGIMN,
-  // date,
-  // describe,
-  // warningDate,
-  // defaultChartSelected,
 
   return (
     <Modal

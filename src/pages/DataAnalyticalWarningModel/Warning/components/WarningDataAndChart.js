@@ -119,6 +119,7 @@ const WarningDataAndChart = props => {
     const values = form.getFieldsValue();
     let beginTime = values.time[0].format('YYYY-MM-DD HH:mm:ss');
     let endTime = values.time[1].format('YYYY-MM-DD HH:mm:ss');
+
     dispatch({
       type: 'dataModel/GetAllTypeDataListForModel',
       payload: {
@@ -395,7 +396,6 @@ const WarningDataAndChart = props => {
         );
         let newFilteredWarningDate = filteredWarningDate.length ? filteredWarningDate : warningDate;
         let abnormalMarkLine = newFilteredWarningDate.map(item => {
-          debugger
           let color = filteredWarningDate.length ? getColorByName[item.pollutantName] : '#c23531';
           return {
             name: item.name,
@@ -616,6 +616,10 @@ const WarningDataAndChart = props => {
           <Button
             type="primary"
             onClick={() => {
+              if(!tempSelectedNames.length) {
+                message.error('请选择污染物！');
+                return;
+              }
               setSelectedNames(tempSelectedNames);
               GetAllTypeDataList();
             }}

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:11:57
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-07 14:35:17
+ * @Last Modified time: 2023-11-22 14:56:22
  * @Description：模型设置页面
  */
 import React, { useState, useEffect } from 'react';
@@ -87,7 +87,7 @@ const Setting = props => {
         configId: 'IndustryType',
       },
       callback: res => {
-        console.log('res', res)
+        console.log('res', res);
         setIndustryList(res.DataSource);
       },
     });
@@ -179,7 +179,7 @@ const Setting = props => {
     return [
       {
         title: '序号',
-        align: 'center',
+        // align: 'center',
         // dataIndex: 'index',
         // key: 'index',
         // width: 80,
@@ -436,12 +436,16 @@ const Setting = props => {
               </Row>
             </Form>
           </Card>
-          <ModelParamsConfig
-            ModelID={ID}
-            Data={ModelInfoAndParams}
-            industryList={industryList}
-            onRef={childRef}
-          />
+          {ModelInfoAndParams.dataAttribute.length ? (
+            <ModelParamsConfig
+              ModelID={ID}
+              Data={ModelInfoAndParams}
+              industryList={industryList}
+              onRef={childRef}
+            />
+          ) : (
+            ''
+          )}
           <Divider orientation="right" style={{ color: '#f6f0f0' }}>
             <Space>
               <Button type="primary" loading={saveLoading} onClick={() => onFinish()}>
@@ -490,18 +494,18 @@ const Setting = props => {
             style={{ marginTop: 16 }}
             dataSource={dataSource}
             columns={getColumns()}
-            pagination={{
-              // defaultCurrent: 1,
-              current: pageIndex,
-              pageSize: pageSize,
-              // showQuickJumper: true,
-              total: dataSource.length,
-              showSizeChanger: true,
-              onChange: (current, size) => {
-                setPageIndex(current);
-                setPageSize(size);
-              },
-            }}
+            // pagination={{
+            //   // defaultCurrent: 1,
+            //   current: pageIndex,
+            //   pageSize: pageSize,
+            //   // showQuickJumper: true,
+            //   total: dataSource.length,
+            //   showSizeChanger: true,
+            //   onChange: (current, size) => {
+            //     setPageIndex(current);
+            //     setPageSize(size);
+            //   },
+            // }}
           />
         </Card>
       </div>

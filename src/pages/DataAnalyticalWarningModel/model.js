@@ -28,6 +28,15 @@ export default Model.extend({
   namespace: 'dataModel',
   state: {
     warningForm: initWarningForm(),
+    AnalysisReportForm: {
+      modelGuid: undefined,
+      date: [
+        moment()
+          .subtract(3, 'month')
+          .startOf('day'),
+        moment().endOf('day'),
+      ],
+    },
     modelList: [],
     relationDGIMN: [],
     ModelInfoAndParams: {
@@ -559,7 +568,6 @@ export default Model.extend({
           });
         }
 
-        console.log('arr', arr)
         yield update({
           ModelInfoAndParams: {
             modelInfo: result.Datas.modelInfo || {},

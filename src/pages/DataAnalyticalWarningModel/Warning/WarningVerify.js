@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-17 09:12:52
+ * @Last Modified time: 2023-11-28 16:05:13
  * @Description：报警核实详情
  */
 
@@ -603,11 +603,11 @@ const WarningVerify = props => {
             <Descriptions.Item label="核实状态">
               <Tag
                 color={
-                  warningInfo.Status === 3
+                  warningInfo.Status === 3  // 核实完成
                     ? 'success'
-                    : warningInfo.Status === 2
+                    : warningInfo.Status === 2  // 待复核
                     ? 'orange'
-                    : 'volcano'
+                    : 'volcano'  //待核实
                 }
               >
                 {warningInfo.StatusName}

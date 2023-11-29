@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-16 16:27:23
+ * @Last Modified time: 2023-11-21 09:06:17
  * @Description：报警记录
  */
 
@@ -312,11 +312,11 @@ const WarningRecord = props => {
         //   el && (el.scrollTop = currentForm.scrollTop);
         // }
         let el = document.querySelector(`[data-row-key="${currentForm.rowKey}"]`);
-        let body = document.querySelector('.ant-table-body');
+        let tableBody = document.querySelector('.ant-table-body');
         console.log('el', el);
-        el && body
-          ? (document.querySelector('.ant-table-body').scrollTop = currentForm.scrollTop)
-          : (document.querySelector('.ant-table-body').scrollTop = 0);
+        if (tableBody) {
+          el ? (tableBody.scrollTop = currentForm.scrollTop) : (tableBody.scrollTop = 0);
+        }
       },
     });
   };
@@ -329,8 +329,8 @@ const WarningRecord = props => {
         modelNumber,
       },
     }).then(() => {
-      if(!notResetForm) {
-        form.resetFields()
+      if (!notResetForm) {
+        form.resetFields();
         form.setFieldsValue({
           ...warningForm[modelNumber],
         });
@@ -511,7 +511,21 @@ const WarningRecord = props => {
               >
                 查询
               </Button>
-              <Button onClick={() => onReset()}>重置</Button>
+              <Button
+                onClick={() => {
+                  dispatch({
+                    type: 'dataModel/onReset',
+                    payload: {
+                      modelNumber,
+                    },
+                  }).then(() => {
+                    form.resetFields();
+                    onTableChange(1, 20);
+                  });
+                }}
+              >
+                重置
+              </Button>
             </Space>
           </Form.Item>
         </Form>

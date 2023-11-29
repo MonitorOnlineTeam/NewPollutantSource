@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Alert, Tooltip, Spin, Button, Progress } from 'antd';
+import { Row, Col, Alert, Tooltip, Spin, Button, Progress, Modal, DatePicker } from 'antd';
 import styles from './styles.less';
 import BoxItem from './BoxItem';
 import ReactEcharts from 'echarts-for-react';
@@ -9,8 +9,32 @@ import moment from 'moment';
 import _ from 'lodash';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { RollbackOutlined } from '@ant-design/icons';
+import { RollbackOutlined, CalendarOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { ModalNameConversion } from '@/pages/DataAnalyticalWarningModel/CONST';
+import 'moment/locale/zh-cn';
+import locale from 'antd/es/date-picker/locale/zh_CN';
+
+const { RangePicker } = DatePicker;
+
+// 获取默认时间
+const getDefaultDate = timeFlag => {
+  let beginTime, endTime;
+  switch (timeFlag) {
+    case 'before':
+      beginTime = moment().subtract(10, 'year');
+      endTime = moment('2023-06').endOf('month');
+      break;
+    case 'after':
+      beginTime = moment('2023-07').startOf('month');
+      endTime = moment();
+      break;
+    default:
+      beginTime = moment().subtract(1, 'year');
+      endTime = moment();
+      break;
+  }
+  return [beginTime, endTime];
+};
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   // todoList: wordSupervision.todoList,
@@ -25,13 +49,17 @@ const Index = props => {
   const {
     dispatch,
     onCancel,
-    visible,
     tableLoading,
     alertLoading,
     StatisVeriAndErLoading,
     StatisForDataLoading,
   } = props;
-  // const [visible, setVisible] = useState([]);
+  const [queryDate, setQueryDate] = useState(getDefaultDate(props.location.query.timeFlag));
+  const _SELF = {
+    queryDate: queryDate,
+  };
+
+  const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [dataCountStatistics, setDataCountStatistics] = useState([]); // 数据统计分析数据
@@ -55,7 +83,7 @@ const Index = props => {
   useEffect(() => {
     StatisForData();
     loadData();
-  }, [selectedModelGuid]);
+  }, [selectedModelGuid, queryDate]);
 
   useEffect(() => {
     StatisAlarmInfoSum();
@@ -166,32 +194,9 @@ const Index = props => {
 
   // 获取请求参数
   const getRequestBody = () => {
-    let timeFlag = props.location.query.timeFlag;
-    console.log('timeFlag', timeFlag);
-
     let beginTime, endTime;
-    switch (timeFlag) {
-      case 'before':
-        beginTime = moment()
-          .subtract(10, 'year')
-          .format('YYYY-MM-DD 00:00:00');
-        endTime = moment('2023-06')
-          .endOf('month')
-          .format('YYYY-MM-DD 23:59:59');
-        break;
-      case 'after':
-        beginTime = moment('2023-07')
-          .startOf('month')
-          .format('YYYY-MM-DD 00:00:00');
-        endTime = moment().format('YYYY-MM-DD 23:59:59');
-        break;
-      default:
-        beginTime = moment()
-          .subtract(1, 'year')
-          .format('YYYY-MM-DD 00:00:00');
-        endTime = moment().format('YYYY-MM-DD 23:59:59');
-        break;
-    }
+    beginTime = moment(queryDate[0]).format('YYYY-MM-DD 00:00:00');
+    endTime = moment(queryDate[1]).format('YYYY-MM-DD 23:59:59');
     return {
       beginTime: beginTime,
       endTime: endTime,
@@ -277,13 +282,13 @@ const Index = props => {
       },
     },
     {
-      title: '发现线索个数',
+      title: '发现线索数量',
       dataIndex: 'DisCulesNum',
       ellipsis: true,
       sorter: (a, b) => a.DisCulesNum - b.DisCulesNum,
     },
     {
-      title: '已核实个数',
+      title: '已核实数量',
       ellipsis: true,
       dataIndex: 'VerifiedNum',
       sorter: (a, b) => a.VerifiedNum - b.VerifiedNum,
@@ -310,6 +315,27 @@ const Index = props => {
       sorter: (a, b) => a.VerifiedRate - b.VerifiedRate,
       render: (text, record) => {
         return text + '%';
+      },
+    },
+    {
+      title: '待整改数量',
+      ellipsis: true,
+      dataIndex: 'RectRecordNum',
+      sorter: (a, b) => a.RectRecordNum - b.RectRecordNum,
+    },
+    {
+      title: '已整改数量',
+      ellipsis: true,
+      dataIndex: 'RectedNum',
+      sorter: (a, b) => a.RectedNum - b.RectedNum,
+    },
+    {
+      title: '整改率',
+      ellipsis: true,
+      dataIndex: 'RectRate',
+      sorter: (a, b) => a.RectRate - b.RectRate,
+      render: (text, record) => {
+        return text ? text + '%' : '-';
       },
     },
     {
@@ -398,6 +424,32 @@ const Index = props => {
     onChange: onSelectChange,
   };
 
+  const confirm = () => {
+    Modal.confirm({
+      title: '看板时间选择',
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <RangePicker
+          locale={locale}
+          allowClear={false}
+          defaultValue={_SELF.queryDate}
+          onChange={date => {
+            _SELF.queryDate = date;
+          }}
+        />
+      ),
+      okText: '查询',
+      cancelText: '取消',
+      onOk() {
+        setQueryDate(_SELF.queryDate);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+  // console.log('_SELF.queryDate1',  moment(_SELF.queryDate[0]).format('YYYY-MM-DD 00:00:00'))
+  // console.log('_SELF.queryDate2',  moment(_SELF.queryDate[1]).format('YYYY-MM-DD 23:59:59'))
   return (
     <div className={styles.ScreenWrapper}>
       <header className={styles.header}>异常数据智能精准识别系统</header>
@@ -430,9 +482,27 @@ const Index = props => {
           }}
         />
       </Tooltip>
+      <Tooltip title="看板时间选择">
+        <CalendarOutlined
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+            border: '2px solid rgb(49 97 141)',
+            fontSize: 16,
+            padding: 4,
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            right: 62,
+            top: 34,
+            color: 'rgb(101, 217, 255)',
+          }}
+          onClick={confirm}
+          // onClick={() => setVisible(true)}
+        />
+      </Tooltip>
       <main>
         <div className={styles.boxWrapper}>
-          <BoxItem title="异常线索统计分析" style={{ flex: 1, marginRight: 14 }}>
+          <BoxItem title={<>异常线索统计分析</>} style={{ flex: 1, marginRight: 14 }}>
             <Spin spinning={StatisForDataLoading}>
               <div className={styles.dataCountStatistics}>
                 <div className={styles.countBox} onClick={() => getDataByModelGuid([])}>
@@ -675,6 +745,12 @@ const Index = props => {
             </div>
           </BoxItem>
         </div>
+        <Modal
+          title="选择时间"
+          visible={visible}
+          // onOk={handleOk}
+          onCancel={() => setVisible(false)}
+        ></Modal>
       </main>
     </div>
   );
