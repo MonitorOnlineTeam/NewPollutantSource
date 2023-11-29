@@ -78,7 +78,7 @@ const Training = props => {
     multiple: true,
     action: '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/UploadPersonTrainFiles',
     headers: {
-      Authorization: 'Bearer ' + Cookie.get('newToken'),
+      Authorization: 'Bearer ' + Cookie.get(config.cookieName),
     },
     onChange(info) {
       const { status } = info.file;

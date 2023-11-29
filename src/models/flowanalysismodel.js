@@ -89,7 +89,7 @@ export default Model.extend({
       }
       const result = yield call(ExportSewageFlowList, body, null)
       if (result.IsSuccess) {
-        downloadFile(`/upload${result.Datas}`)
+        downloadFile(`/wwwroot${result.Datas}`)
       }
     },
     *getEntByRegion({ payload }, { call, put, update, select }) {

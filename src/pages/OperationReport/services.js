@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API';
 
 // 设备异常统计
 export async function GetOpertionExceptionList(params) {
@@ -72,7 +73,7 @@ export async function GetOperationPlanTaskRate(params) {
 // 运维派单统计
 export async function GetOperationTaskList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/GetOperationTaskList',
+    API.VisualKanbanApi.GetOperationTaskStatisticsInfo,
     params,
   );
   return result;
@@ -81,7 +82,7 @@ export async function GetOperationTaskList(params) {
 // 耗材更换统计
 export async function GetConsumablesList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/GetConsumablesList',
+    API.VisualKanbanApi.GetVisualDashBoardConsumablesStatisticsInfo,
     params,
   );
   return result;

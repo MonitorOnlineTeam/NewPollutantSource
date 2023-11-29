@@ -15,7 +15,7 @@ export async function GetEntAccountTypeList(params) {
  
 // 添加修改 填报方式
 export async function AddOrUpaAccountType(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpaAccountType',params, null);
+  const result = await post(API.AssetManagementApi.UpdateCalibrationAccountFillingTypeInfo,params, null);
   return result;
 }
 
@@ -24,6 +24,6 @@ export async function AddOrUpaAccountType(params) {
 
 // 导出
 export async function ExportEntAccountTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportEntAccountTypeList',params, null);
+  const result = await post(API.AssetManagementApi.ExportCalibrationAccountFillingTypeList,params, null);
   return result;
 }

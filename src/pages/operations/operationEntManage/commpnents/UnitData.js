@@ -136,20 +136,20 @@ export default class EntTransmissionEfficiency extends Component {
 
 
 
-   del=(row)=>{
-    const {dispatch,match: { params: { configId } },} = this.props;
-    dispatch({
-      type: 'operationUnit/deleteOperationMaintenanceEnterpriseID',
-      payload: {
-        ID:row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']
-      },
-      callback: result => {
-        if (result.IsSuccess) {
-           this.getTableData();
-        }
-    },
-    });
-   }
+  //  del=(row)=>{
+  //   const {dispatch,match: { params: { configId } },} = this.props;
+  //   dispatch({
+  //     type: 'operationUnit/deleteOperationMaintenanceEnterpriseID',
+  //     payload: {
+  //       ID:row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']
+  //     },
+  //     callback: result => {
+  //       if (result.IsSuccess) {
+  //          this.getTableData();
+  //       }
+  //   },
+  //   });
+  //  }
    onSubmitForms=(form)=>{
   //   dispatch({
   //     type: 'operationUnit/updateState',

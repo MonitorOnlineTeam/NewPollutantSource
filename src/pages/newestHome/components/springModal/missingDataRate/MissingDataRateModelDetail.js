@@ -248,7 +248,7 @@ export default class Index extends Component {
       type: 'MissingRateDataModal/exportDefectPointDetail',
       payload: { ...par, Rate: 1,EntCode:this.state.entCode, },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

@@ -159,7 +159,7 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
         Rate: 1,
       },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

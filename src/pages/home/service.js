@@ -6,6 +6,7 @@
  * @desc: 主页接口api
  */
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取所有企业及排口信息
 export async function getHomePage(params) {
@@ -17,7 +18,7 @@ export async function getHomePage(params) {
 
 // 获取所有企业及排口信息
 export async function getAllEntAndPoint(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  const result = await post(API.CommonApi.GetEntAndPoint, params, null);
   return result === null ? {
     data: null
   } : result;

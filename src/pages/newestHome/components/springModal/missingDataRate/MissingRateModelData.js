@@ -297,7 +297,7 @@ export default class Index extends PureComponent {
       type: 'MissingRateDataModal/exportDefectDataSummary',
       payload: this.state.level ? { ...queryPar, RegionCode: this.state.regionDetailCode, regionLevel: this.state.level, Rate: 1, } : { ...queryPar, Rate: 1, },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

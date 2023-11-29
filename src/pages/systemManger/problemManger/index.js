@@ -23,6 +23,7 @@ import { Resizable, ResizableBox } from 'react-resizable';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {  API } from '@config/API';
+import config from '@/config';
 
 
 const { TextArea } = Input;
@@ -240,7 +241,7 @@ const Index = (props) => {
             uid: item.GUID,
             name: item.FileActualName,
             status: 'done',
-            url: `/upload/${item.FileName}`,
+            url: `/${item.FileName}`,
           })
           
         }
@@ -349,6 +350,7 @@ const Index = (props) => {
     name: 'file',
     multiple: true,
     action: API.UploadApi.UploadFiles,
+    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     data: {
       FileUuid:filesCuid,
     },
@@ -356,7 +358,7 @@ const Index = (props) => {
       setFilesLoading(true)
       // const fileList = info.fileList.map(item=>{
       //   if(item.response&&item.response.IsSuccess){ //刚上传的
-      //     return {...item,url: `/upload/${item.response.Datas}`,}
+      //     return {...item,url: `/${item.response.Datas}`,}
       //   }else{
       //     return {...item}
       //   }
@@ -364,7 +366,7 @@ const Index = (props) => {
       const fileList = [];
       info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
-          fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+          fileList.push({ ...item, url: `/${item.response.Datas}`, })
         } else if(!item.response ){
           fileList.push({ ...item})
         }

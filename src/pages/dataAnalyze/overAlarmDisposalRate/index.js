@@ -151,7 +151,7 @@ class index extends PureComponent {
         Rate: 1,
       },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

@@ -511,7 +511,7 @@ export default class OverVerifyLst extends Component {
       type: 'overVerifyRate/exportDefectDataSummary',
       payload: { ...overVerifyRateForm },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

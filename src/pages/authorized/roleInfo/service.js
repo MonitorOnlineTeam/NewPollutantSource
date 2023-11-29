@@ -1,6 +1,7 @@
 
 import { async } from 'q';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取角色详细信息及层级关系
 export async function getroleinfobytree(params) {
@@ -56,7 +57,7 @@ export async function updroleinfo(params) {
 }
 // 获取角色树(带根节点)
 export async function getrolestreeandobj(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRolesTreeAndObj', params, null);
+    const result = post(API.AssetManagementApi.GetRolesTreeAndObj, params, null);
     return result === null ? {
         data: null
     } : result;

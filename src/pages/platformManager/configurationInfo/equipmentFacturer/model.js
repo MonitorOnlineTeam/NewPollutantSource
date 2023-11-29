@@ -66,7 +66,7 @@ export default Model.extend({
       const result = yield call(services.ExportManufacturerList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.error(result.Message)
       }

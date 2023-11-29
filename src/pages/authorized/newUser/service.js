@@ -12,17 +12,17 @@ export async function GetDepInfoByTree(params) {
 
 // 角色列表
 export async function GetRolesTree(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRolesTree', params, null);
+    const result = post(API.AssetManagementApi.GetRolesTree, params, null);
     return result;
 }
 // 用户列表
 export async function GetUserList(params) {
-    const result = post(API.CommonApi.GetUserList, params, null);
+    const result = post(API.AssetManagementApi.GetUserList, params, null);
     return result;
 }
 // 用户列表 导出
 export async function ExportUserList(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/ExportUserList', params, null);
+    const result = post(API.AssetManagementApi.ExportUserList, params, null);
     return result;
 }
 
@@ -99,7 +99,7 @@ export async function getdeparttree(params) {
 }
 // 获取角色树
 export async function getrolestree(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRolesTree', params, null);
+    const result = post(API.AssetManagementApi.GetRolesTree, params, null);
     return result === null ? {
         data: null
     } : result;
@@ -146,7 +146,7 @@ export async function resetpwd(params) {
     const body = {
         User_ID: params.User_ID,
     };
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/ResetPwd', body, null);
+    const result = post(API.AssetManagementApi.ResetPwd, body, null);
     return result === null ? {
         data: null
     } : result;

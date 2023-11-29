@@ -180,7 +180,7 @@ export default class Index extends Component {
       type: 'entAbnormalRecord/exportTaskFormBookSta',
       payload: { ...entQueryPar },
       callback: data => {
-          downloadFile(`/upload${data}`);
+          downloadFile(`/wwwroot${data}`);
         },
     });
   };

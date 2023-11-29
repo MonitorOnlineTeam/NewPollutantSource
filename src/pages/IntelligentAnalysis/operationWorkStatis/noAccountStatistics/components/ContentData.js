@@ -297,7 +297,7 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'noAccountStatistics/exportTaskFormBookSta',
       payload: { ...queryPar },
       callback: data => {
-          downloadFile(`/upload${data}`);
+          downloadFile(`/wwwroot${data}`);
         },
     });
   };

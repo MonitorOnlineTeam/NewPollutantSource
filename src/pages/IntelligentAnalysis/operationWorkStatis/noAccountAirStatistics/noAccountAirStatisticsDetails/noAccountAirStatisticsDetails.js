@@ -165,7 +165,7 @@ let requestData = JSON.parse(this.props.requestData)
       type: 'noAccountAirStatistics/exportDefectDataSummary',
       payload: {  ...requestData, ...{ModelType:'Region'}  },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

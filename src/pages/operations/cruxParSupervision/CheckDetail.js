@@ -24,6 +24,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
 import {  API } from '@config/API';
+import config from '@/config';
 
 
 const namespace = 'cruxParSupervision'
@@ -233,6 +234,7 @@ const Index = (props) => {
 
   const uploadProps2 = { // 核查问题照片附件 上传
     action: API.UploadApi.UploadFiles,
+    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     listType: "picture-card",
     accept: 'image/*',
     data: {
@@ -251,7 +253,7 @@ const Index = (props) => {
       const fileList = [];
       info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
-          fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+          fileList.push({ ...item, url: `/${item.response.Datas}`, })
         } else if(!item.response ){
           fileList.push({ ...item})
         }
@@ -320,7 +322,7 @@ const Index = (props) => {
      const fileList2 = [];
      record.checkFileList.map((item,index) => { 
       if (!item.IsDelete) {
-        fileList2.push({ name: item.FileActualName, url: `/upload/${item.FileName}`, status: 'done',  uid: item.GUID, })
+        fileList2.push({ name: item.FileActualName, url: `/${item.FileName}`, status: 'done',  uid: item.GUID, })
       }
     })
     setFilesList2(fileList2)

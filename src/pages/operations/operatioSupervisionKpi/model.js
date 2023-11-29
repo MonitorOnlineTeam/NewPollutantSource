@@ -53,7 +53,7 @@ export default Model.extend({
       const result = yield call(services.exportParamKPIList,payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.error(result.Message)
       }

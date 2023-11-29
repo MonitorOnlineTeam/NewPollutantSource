@@ -52,6 +52,9 @@ import {
 import cuid from 'cuid';
 import flowanalysismodel from '@/models/flowanalysismodel';
 import {  API } from '@config/API';
+import OperationCompanyList from '@/components/OperationCompanyList'
+import Cookie from 'js-cookie';
+import config from '@/config';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -108,7 +111,8 @@ export default class PersonData extends Component {
       switchWater:true,
       pageSize:20,
       pageIndex:1,
-      editLoading:false
+      editLoading:false,
+      type:'add',
     };
     this.columns =  [
       {
@@ -204,10 +208,10 @@ export default class PersonData extends Component {
     //     configId,
     //   },
     // });
-    dispatch({
-      type: 'operationPerson/listOperationMaintenanceEnterprise',
-      payload: {},
-    });
+    // dispatch({
+    //   type: 'operationPerson/listOperationMaintenanceEnterprise',
+    //   payload: {},
+    // });
     setFieldsValue({switchGas:true})
     setFieldsValue({switchWater:true})
     setTimeout(() => {
@@ -651,15 +655,16 @@ export default class PersonData extends Component {
        <Col span={12}>
         <Form.Item  label="运维单位">
            {getFieldDecorator('EnterpriseID', {   rules: [{required: true,  message: '请输入运维单位！'}],   })(
-                               <Select
-                                     placeholder="请选择运维单位"
-                                     allowClear
-                                   >  
-                                   {
-                                    this.operationLists()
-                                   }
+                              //  <Select
+                              //        placeholder="请选择运维单位"
+                              //        allowClear
+                              //      >  
+                              //      {
+                              //       this.operationLists()
+                              //      }
                                 
-                                   </Select>
+                              //      </Select>
+                              <OperationCompanyList getDefaultOpration={(defaultId) => {  this.state.type === 'add' && this.props.form.setFieldsValue({ EnterpriseID: defaultId }) }} />
                    )}
          </Form.Item>
       </Col> 
@@ -749,6 +754,7 @@ export default class PersonData extends Component {
           )(
          <Upload
          action={API.UploadApi.UploadFiles}
+         headers={{Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)}}
          listType="picture-card"
          fileList={fileList}
          onPreview={this.handlePreview}
@@ -817,6 +823,7 @@ export default class PersonData extends Component {
           })( 
             <Upload 
              action={API.UploadApi.UploadFiles}
+             headers={{Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)}}
              accept='image/*'
              fileList={gasPhoto}
              data={{

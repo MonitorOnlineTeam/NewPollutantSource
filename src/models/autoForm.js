@@ -564,8 +564,9 @@ export default Model.extend({
       }
     },
 
-    // 下载导入模板
+    // 删除导入模板
     *deleteAttach({ payload }, { call, update }) {
+      payload =  {...payload, Guid :payload?.Guid?.split('/')?.[3]?  payload.Guid.split('/')[3] : payload.Guid }
       const result = yield call(services.deleteAttach, { ...payload });
       if (result.IsSuccess) {
         message.success('删除成功！');

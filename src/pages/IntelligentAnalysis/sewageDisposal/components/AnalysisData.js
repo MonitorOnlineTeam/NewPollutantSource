@@ -269,7 +269,7 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'removalFlowRate/exportSewageHistoryList',
       payload: { ...queryPar },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

@@ -8,6 +8,7 @@
 import Cookie from 'js-cookie';
 import { post, get } from '@/utils/request';
 import { async } from 'q';
+import { API } from '@config/API'
 
 /**
  * 获取污染物系统污染物
@@ -15,7 +16,7 @@ import { async } from 'q';
  */
 export async function getPollutantTypeList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList',
+    API.CommonApi.GetPollutantTypeList,
     params,
     null,
   );

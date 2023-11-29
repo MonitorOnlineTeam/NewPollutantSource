@@ -297,7 +297,7 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'noAccountStatistics/exportTaskFormBookStaForCity',
       payload: { ...queryPar,RegionCode:query&&query.RegionCode },
       callback: data => {
-          downloadFile(`/upload${data}`);
+          downloadFile(`/wwwroot${data}`);
         },
     });
   };

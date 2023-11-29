@@ -203,7 +203,7 @@ export default Model.extend({
             const result = yield call(ExportEntSummary,body,null)
             if(result.IsSuccess)
             {
-                downloadFile(`/upload${result.Datas}`)
+                downloadFile(`/wwwroot${result.Datas}`)
             }
         },
         //导出行政区详细信息
@@ -217,7 +217,7 @@ export default Model.extend({
             const result = yield call(ExportPointSummary,body,null)
             if(result.IsSuccess)
             {
-                downloadFile(`/upload${result.Datas}`)
+                downloadFile(`/wwwroot${result.Datas}`)
             }
         },
         //导出企业数 和 监测点数
@@ -233,7 +233,7 @@ export default Model.extend({
             const result = yield call(ExportEntOrPointDetail,body,null)
             if(result.IsSuccess)
             {
-                downloadFile(`/upload${result.Datas}`)
+                downloadFile(`/wwwroot${result.Datas}`)
             }
 
         },

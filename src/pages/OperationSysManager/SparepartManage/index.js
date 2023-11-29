@@ -69,7 +69,7 @@ export default class Index extends Component {
     componentDidMount() {
         this.GetSparepartManageList();
         this.GetStorehouse();
-        this.GetMonitoringTypeList();
+        // this.GetMonitoringTypeList();
     }
     //创建并获取模板
     Template = () => {

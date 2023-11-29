@@ -1,4 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 帮助中心
@@ -7,7 +8,7 @@ import { post, get, getNew } from '@/utils/request';
  
 // 问题列表  
 export async function GetQuestionDetialList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQuestionDetialList',params, null);
+  const result = await post(API.SystemManageApi.GetQuestionList,params, null);
   return result;
 }
 

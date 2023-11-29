@@ -465,12 +465,12 @@ export default Model.extend({
     },
     //查询公司运维单位列表信息
     *getOperationCompanyList({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(services.getOperationCompanyList, payload);
+      const result = yield call(services.getOperationCompanyList, {configId:'OperationMaintenanceEnterprise'});
       if (result.IsSuccess) {
         yield update({
-          operationCompanyList: result.Datas,
+          operationCompanyList: result.Datas?.DataSource,
         });
-        callback && callback(result.Datas)
+        callback && callback( result.Datas?.DataSource)
       } else {
         message.error(result.Message);
       }
@@ -493,7 +493,7 @@ export default Model.extend({
       const result = yield call(services.ExportResponseList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
         callback()
       } else {
         message.error(result.Message)
@@ -523,7 +523,7 @@ export default Model.extend({
       const result = yield call(services.ExportOperationPlanTaskList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.error(result.Message)
       }

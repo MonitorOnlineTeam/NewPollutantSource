@@ -1,5 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
-
+import { API } from '@config/API'
 // 获取日历信息
 export async function getCalendarInfo(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetCalendarInfo', params, null);
@@ -87,7 +87,7 @@ export async function rejectTask(params) {
 
 // 获取运维人员
 export async function getOperationsUserList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/UserApi/GetUserRolesGroupList', params, null);
+  const result = await post(API.AssetManagementApi.GetUserList, params, null);
   return result;
 }
 
@@ -134,7 +134,7 @@ export async function getcommanddispatchreport(params) {
     }
  */
 export async function getOperationCompanyList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationCompanyList', params, null);
+  const result = await post(API.AutoFormApi.GetListPager, params, null);
   return result;
 }
 // 报警响应及时率 
@@ -149,13 +149,13 @@ export async function ExportResponseList(params) {
   return result;
 }
 
-// 近30日运维工单统计
+// 近30日运维工单统计详情
 export async function GetOperationPlanTaskList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetOperationPlanTaskList', params, null);
+  const result = await post(API.VisualKanbanApi.GetOperationPlanTaskList, params, null);
   return result;
 }
-// 近30日运维工单统计 导出
+// 近30日运维工单统计详情 导出
 export async function ExportOperationPlanTaskList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/ExportOperationPlanTaskList', params, null);
+  const result = await post(API.VisualKanbanApi.ExportOperationPlanTaskList, params, null);
   return result;
 }

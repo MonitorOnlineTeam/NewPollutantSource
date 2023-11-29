@@ -23,6 +23,7 @@ import PageLoading from '@/components/PageLoading'
 import { handleFormData } from '@/utils/utils';
 import cuid from 'cuid';
 import {  API } from '@config/API';
+import config from '@/config';
 
 const { Option } = Select;
 
@@ -206,6 +207,7 @@ const Index = (props) => {
   const [fileList,setFileList] = useState([])
   const uploadProps = { // 设备运维接手资料  资料附件上传 
     action:API.UploadApi.UploadFiles,
+    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     data:{
       FileUuid: filesCuid,
       FileActualType: '0',

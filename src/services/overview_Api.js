@@ -15,7 +15,7 @@ import { API } from '@config/API'
  */
 export async function getPollutantTypeList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList',
+    API.CommonApi.GetPollutantTypeList,
     params,
     null,
   );

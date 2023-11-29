@@ -48,7 +48,7 @@ export default Model.extend({
       const result = yield call(services.ExportKeyParameterCheckList, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        downloadFile(`/upload${result.Datas}`)
+        downloadFile(`/wwwroot${result.Datas}`)
       } else {
         message.error(result.Message)
       }

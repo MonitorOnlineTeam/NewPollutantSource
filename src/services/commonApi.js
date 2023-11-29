@@ -41,7 +41,7 @@ export async function getEnterpriseAndPoint(params) {
 
 // 获取污染物类型
 export async function getPollutantTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', params, null);
+  const result = await post(API.CommonApi.GetPollutantTypeList, params, null);
   return result === null ? { data: null } : result;
 }
 let websocket = null;
@@ -74,7 +74,7 @@ export async function getIndustryTree(params) {
 
 // 获取组件 - 企业及排口
 export async function getEntAndPoint(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  const result = await post(API.CommonApi.GetEntAndPoint, params, null);
   return result;
 }
 
@@ -109,7 +109,7 @@ export async function getPollutantListByDgimn(params) {
 
 // 用户列表
 export async function GetUserList(params) {
-  const result = post(API.CommonApi.GetUserList, params, null);
+  const result = post(API.AssetManagementApi.GetUserList, params, null);
   return result;
 }
 
@@ -121,12 +121,12 @@ export async function GetInspectorUserList(params) {
 
 //行政区  列表
 export async function GetNoFilterRegionList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterRegionList', params, null);
+  const result = post(API.CommonApi.GetNoFilterRegionList, params, null);
   return result;
 }
 // 角色列表
 export async function GetRoleCodeList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetRoleCodeList', params, null);
+  const result = post(API.SystemManageApi.GetAllRoleList, params, null);
   return result;
 }
 

@@ -61,7 +61,7 @@ export default Model.extend({
             const result = yield call(ExportPointSummary,body,null)
             if(result.IsSuccess)
             {
-                downloadFile(`/upload${result.Datas}`)
+                downloadFile(`/wwwroot${result.Datas}`)
             }
         },
     },

@@ -111,7 +111,7 @@ export default Model.extend({
       const result = yield call(services.ExportPointInfoList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       }else{
         message.warning(result.Message)
        }
@@ -142,7 +142,7 @@ export default Model.extend({
       const result = yield call(services.ExportEntProjectRelationList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       }else{
         message.warning(result.Message)
        }
@@ -162,7 +162,7 @@ export default Model.extend({
       const result = yield call(services.ExportEntInfoList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       }else{
         message.warning(result.Message)
       }

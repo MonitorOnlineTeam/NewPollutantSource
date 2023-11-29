@@ -1,4 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取污染物
 export async function getPollutantList(params) {
@@ -22,7 +23,7 @@ export async function exportData(params) {
  * 获取系统污染物
  */
 export async function getPollutantTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', params, null);
+  const result = await post(API.CommonApi.GetPollutantTypeList, params, null);
   return result;
 }
 

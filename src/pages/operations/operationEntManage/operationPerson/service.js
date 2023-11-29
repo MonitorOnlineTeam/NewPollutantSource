@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API';
 
 /**
  * 运维人员列表
@@ -6,7 +7,7 @@ import { post } from '@/utils/request';
  */
 export async function SelectOperationMaintenancePersonnel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/SelectOperationMaintenancePersonnel',
+    API.AssetManagementApi.GetMaintainersWorkLicenseList,
     params,
     null,
   );
@@ -17,7 +18,7 @@ export async function SelectOperationMaintenancePersonnel(params) {
 //删除
 export async function DeleteOperationMaintenancePersonnel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/DeleteOperationMaintenancePersonnel',
+    API.AssetManagementApi.GetMaintainersWorkLicenseList,
     params,
     null,
   );
@@ -25,14 +26,14 @@ export async function DeleteOperationMaintenancePersonnel(params) {
   return result;
 }
 
-//运维单位列表
-export async function ListOperationMaintenanceEnterprise(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ListOperationMaintenanceEnterprise',
-    params,
-    null,
-  );
+// //运维单位列表
+// export async function ListOperationMaintenanceEnterprise(params) {
+//   const result = post(
+//     '/api/rest/PollutantSourceApi/BaseDataApi/ListOperationMaintenanceEnterprise',
+//     params,
+//     null,
+//   );
 
-  return result;
-}
+//   return result;
+// }
 

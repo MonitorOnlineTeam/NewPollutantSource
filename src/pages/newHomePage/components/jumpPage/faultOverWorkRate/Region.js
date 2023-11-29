@@ -344,7 +344,7 @@ export default class EntTransmissionEfficiency extends Component {
                        :'home/exportExceptionDataRate',
       payload: { ...queryPar,regionLevel:regionLevel? regionLevel : '' },
       callback: data => {
-          downloadFile(`/upload${data}`);
+          downloadFile(`/wwwroot${data}`);
         },
     });
   };

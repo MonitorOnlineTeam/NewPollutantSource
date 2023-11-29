@@ -30,6 +30,8 @@ import SdlUpload from '@/pages/AutoFormManager/SdlUpload';
 import moment from 'moment';
 import {  ModalNameConversion } from '../CONST';
 import {  API } from '@config/API';
+import Cookie from 'js-cookie';
+import config from '@/config';
 
 const { TextArea } = Input;
 
@@ -424,6 +426,7 @@ const ReCheckDetails = props => {
             <SdlUpload
               accept="image/*"
               action={API.UploadApi.UploadFiles}
+              headers={{Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)}}
               cuid={uid}
               uploadSuccess={cuid => {}}
             />

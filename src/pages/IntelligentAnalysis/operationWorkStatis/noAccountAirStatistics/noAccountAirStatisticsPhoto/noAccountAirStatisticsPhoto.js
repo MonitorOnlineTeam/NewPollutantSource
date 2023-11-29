@@ -145,7 +145,7 @@ export default class airMissing extends Component {
       type: 'noAccountAirStatistics/exportDefectDataSummary',
       payload: { ...requestData, ...{ ModelType: 'TaskNums' ,EntCode:this.state.EntCode}  },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

@@ -28,6 +28,7 @@ import "react-image-lightbox/style.css";
 import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import CheckUserEditDetail from "./checkUserEdit";
 import {  API } from '@config/API';
+import config from '@/config';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -971,7 +972,7 @@ const Index = (props) => {
               uid: uploadItem.GUID,
               name: uploadItem.FileName,
               status: 'done',
-              url: `/upload/${uploadItem.FileName}`,
+              url: `/${uploadItem.FileName}`,
             })
 
           }
@@ -1613,6 +1614,7 @@ const Index = (props) => {
   }
   const uploadProps = { //附件上传 
     action: API.UploadApi.UploadFiles,
+    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     accept: 'image/*',
     showUploadList: { showPreviewIcon: true, showRemoveIcon: !isCheckUser },
     data: {
@@ -1643,7 +1645,7 @@ const Index = (props) => {
       const fileList = [];
       info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
-          fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+          fileList.push({ ...item, url: `/${item.response.Datas}`, })
         } else if (!item.response) {
           fileList.push({ ...item })
         }

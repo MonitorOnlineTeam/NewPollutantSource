@@ -1979,7 +1979,7 @@ class DepartIndex extends Component {
                         return (
                           <Option
                             value={item.ID}
-                          >{`${item.userAccount} - ${item.userName}`}</Option>
+                          >{`${item.UserAccount} - ${item.UserName}`}</Option>
                         );
                       })}
                   </Select>

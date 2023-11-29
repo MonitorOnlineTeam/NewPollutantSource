@@ -12,7 +12,7 @@ import { API} from '@config/API';
  * @params {"DGIMN":"","pollutantCode":"","beginTime":"","endTime":"","pageIndex":"","pageSize":""}
  */
 export async function GetSparepartManageList(params) {
-  const result = await get('/api/rest/PollutantSourceApi/SparepartManageApi/GetSparepartManageList', params, null);
+  const result = await get(API.AssetManagementApi.GetSparepartList, params, null);
   return result;
 }
 /**
@@ -61,8 +61,8 @@ export async function GetStorehouse(params) {
  * 设备监测类型
  * 
  */
-export async function GetMonitoringTypeList(params) {
-  const result =await post(API.AssetManagementApi.GetMonitoringCategoryList, params, null);
-  return result;
-}
+// export async function GetMonitoringTypeList(params) {
+//   const result =await post(API.AssetManagementApi.GetMonitoringCategoryList, params, null);
+//   return result;
+// }
 

@@ -7,6 +7,8 @@ import { connect } from "dva"
 import cuid from 'cuid';
 import moment from 'moment'
 import {  API } from '@config/API';
+import Cookie from 'js-cookie';
+import config from '@/config';
 
 
 const FormItem = Form.Item;
@@ -110,12 +112,13 @@ class AddExceptionModal extends PureComponent {
     const { cuid, fileList } = this.state;
     const props = {
       action: API.UploadApi.UploadFiles,
+      headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
       onChange: (info) => {
         let fileList = info.fileList;
         if (info.file.status === 'done') {
           this.props.form.setFieldsValue({ Attachments: cuid })
-          fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
-          fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].url = "/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].thumbUrl = "/" + fileList[fileList.length - 1].response.Datas
           // delete fileList[fileList.length - 1].thumbUrl
         } else if (info.file.status === 'error') {
           message.error('上传文件失败！')

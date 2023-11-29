@@ -485,6 +485,7 @@ class SdlForm extends PureComponent {
             // let uploadElement = null;
             const props = {
               action:API.UploadApi.UploadFiles,
+              headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
               onChange: info => {
                 if (info.file.status === 'done') {
                   setFieldsValue({ cuid: uid });

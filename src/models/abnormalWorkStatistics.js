@@ -138,7 +138,7 @@ export default Model.extend({
       const result = yield call(services.exportExceptionTaskList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.warning(result.Message);
       }
@@ -151,7 +151,7 @@ export default Model.extend({
 
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
         payload.exceptionType == 1 ? yield update({ exportCardExceptionLoading: false }) : yield update({ exportCardResExceptionLoading: false })
       } else {
         message.warning(result.Message);
@@ -162,7 +162,7 @@ export default Model.extend({
       const result = yield call(services.regDetaiExportExceptionTaskList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.warning(result.Message);
       }
@@ -171,7 +171,7 @@ export default Model.extend({
       const result = yield call(services.abnormalExceptionTaskListExport, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.warning(result.Message);
       }
@@ -180,7 +180,7 @@ export default Model.extend({
       const result = yield call(services.cityDetailExceptionTaskListExport, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.warning(result.Message);
       }
@@ -189,7 +189,7 @@ export default Model.extend({
       const result = yield call(services.exportEntResExceptionTaskList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.warning(result.Message);
       }

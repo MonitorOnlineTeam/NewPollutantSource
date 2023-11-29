@@ -27,6 +27,6 @@ export async function DeleteProjectAuthor(params) {
 
 // 角色列表
 export async function GetUserList(params) {
-  const result = await post(API.CommonApi.GetUserList,params, null);
+  const result = await post(API.AssetManagementApi.GetUserList,params, null);
   return result;
 }

@@ -207,7 +207,7 @@ export default class Index extends Component {
       type: 'abnormalStandard/exportExceptionStandValue',
       payload: { ...queryPar, PageIndex: undefined, PageSize: undefined, },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

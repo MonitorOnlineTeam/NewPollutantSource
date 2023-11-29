@@ -284,7 +284,7 @@ export default class airMissing extends Component {
       type: 'noAccountAirStatistics/exportDefectDataSummaryCity',
       payload: { ...noAccountAirStatisticsForm,RegionCode:query&&query.RegionCode },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

@@ -221,7 +221,7 @@ export default class Index extends Component {
       type: 'standardData/exportDischargeStandValue',
       payload: { ...queryPar,PageIndex:undefined,PageSize:undefined, },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

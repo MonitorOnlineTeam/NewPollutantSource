@@ -189,10 +189,10 @@ export default Model.extend({
       if (result.IsSuccess) {
         if (payload.TabType == '1' || payload.TabType == '2') {
 
-          downloadFile(`/upload${result.Datas}`)
+          downloadFile(`/wwwroot${result.Datas}`)
         }
         else {
-          downloadFile(`/upload${result.Datas}`)
+          downloadFile(`/wwwroot${result.Datas}`)
         }
 
       }
@@ -213,7 +213,7 @@ export default Model.extend({
       }
       const result = yield call(ExportExceedNum, body, null)
       if (result.IsSuccess) {
-        downloadFile(`/upload${result.Datas}`)
+        downloadFile(`/wwwroot${result.Datas}`)
       }
     }
 

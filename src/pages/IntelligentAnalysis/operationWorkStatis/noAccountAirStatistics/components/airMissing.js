@@ -294,7 +294,7 @@ export default class airMissing extends Component {
       type: 'noAccountAirStatistics/exportDefectDataSummary',
       payload: { ...noAccountAirStatisticsForm },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

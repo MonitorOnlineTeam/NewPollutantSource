@@ -8,10 +8,11 @@
 
 import { async } from 'q';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取企业+排口
 export async function getentandpoint(params) {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params);
+    const result = post(API.CommonApi.GetEntAndPoint, params);
     return result === null ? {
         data: null
     } : result;
@@ -22,7 +23,7 @@ export async function getentandpoint(params) {
  */
 export async function getPollutantTypeList(params) {
     const result = await post(
-        '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList',
+        API.CommonApi.GetPollutantTypeList,
         params,
         null,
     );

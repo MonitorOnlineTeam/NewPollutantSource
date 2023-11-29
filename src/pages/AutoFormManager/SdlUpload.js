@@ -17,6 +17,7 @@ import { connect } from 'dva';
 import styles from './index.less'
 import { MapInteractionCSS } from 'react-map-interaction';
 import {  API } from '@config/API';
+import Cookie from 'js-cookie';
 
 @connect(({ loading, autoForm }) => ({
   // fileList: autoForm.fileList,
@@ -83,6 +84,7 @@ class SdlUpload extends Component {
     const props = {
 
       action: action || API.UploadApi.UploadFiles,
+      headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
       onChange: (info) => {
 
        if(flags==='img')
@@ -101,7 +103,8 @@ class SdlUpload extends Component {
         let fileList = info.fileList;
         console.log('info=', info)
         if (info.file.status === 'done') {
-          let before = action ? '/' : '/upload/';
+          // let before = action ? '/' : '/wwwroot/';
+          let before = '/'
           // setFieldsValue({ cuid: cuid })
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
           fileList[fileList.length - 1].url = before + fileList[fileList.length - 1].response.Datas

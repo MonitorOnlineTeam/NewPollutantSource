@@ -276,7 +276,7 @@ export default class Index extends Component {
       type: 'missingData/exportDefectPointDetail',
       payload: { ...par,Status:this.state.status,PageIndex:undefined, PageSize:undefined },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
        },
     });
   };

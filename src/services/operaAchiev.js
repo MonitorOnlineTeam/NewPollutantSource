@@ -27,7 +27,7 @@ export async function AddOrEditPointCoefficient(params) {
 
 // 根据污染物类型获取工单
 export async function GetRecordTypesByPollutantType(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetRecordTypesByPollutantType?PollutantType='+params.pollutantType,null, null);
+  const result = await post(API.CommonApi.GeteTaskOrderTypeByPollutantType,params, null);
   return result;
 }
  
@@ -53,28 +53,28 @@ export async function ExportPointCoefficient(params) {
 
 //绩效信息查询列表
 export async function GetPersonalPerformanceRateList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPersonalPerformanceRateList',params, null);
+  const result = await post(API.PerformanceApi.GetPersonalPerformanceList,params, null);
   return result;
 }
 //绩效信息查询 导出
-export async function ExportPersonalPerformanceRate(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPersonalPerformanceRate',params, null);
+export async function ExportPersonalPerformanceList(params) {
+  const result = await post(API.PerformanceApi.ExportPersonalPerformanceList,params, null);
   return result;
 }
 
 //个人分摊套数列表
 export async function GetIndividualApportionmentList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetIndividualApportionmentList',params, null);
+  const result = await post(API.PerformanceApi.GetPersonalPerformanceDetail,params, null);
   return result;
 }
 //获取个人工单详细 
 export async function GetIndividualTaskInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetIndividualTaskInfo',params, null);
+  const result = await post(API.PerformanceApi.GetPersonalPerformanceWorkOrderList,params, null);
   return result;
 }
 //个人分摊套数  导出
 export async function ExportIndividualApportionment(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportIndividualApportionment',params, null);
+  const result = await post(API.PerformanceApi.ExportPersonalPerformanceWorkOrderList,params, null);
   return result;
 }
 

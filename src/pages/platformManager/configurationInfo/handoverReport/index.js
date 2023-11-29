@@ -23,6 +23,7 @@ import ImageView from '@/components/ImageView';
 import OperationCompanyList from '@/components/OperationCompanyList';
 import { permissionButton } from '@/utils/utils';
 import {  API } from '@config/API';
+import config from '@/config';
 
 const { Option } = Select;
 
@@ -254,7 +255,7 @@ const Index = (props) => {
     const fileList = [];
     fileInfo.map((item, index) => {
       if (!item.IsDelete) {
-        fileList.push({ name: item.FileActualName, url: `/upload/${item.FileName}`, status: 'done', uid: item.GUID, })
+        fileList.push({ name: item.FileActualName, url: `/${item.FileName}`, status: 'done', uid: item.GUID, })
       }
     })
     setFilesList(fileList)
@@ -306,7 +307,7 @@ const Index = (props) => {
             uid: item.GUID,
             name: item.FileActualName,
             status: 'done',
-            url: `/upload/${item.FileName}`,
+            url: `/${item.FileName}`,
           })
         }
       })
@@ -321,7 +322,7 @@ const Index = (props) => {
             uid: item.GUID,
             name: item.FileActualName,
             status: 'done',
-            url: `/upload/${item.FileName}`,
+            url: `/${item.FileName}`,
           })
         }
       })
@@ -336,7 +337,7 @@ const Index = (props) => {
             uid: item.GUID,
             name: item.FileActualName,
             status: 'done',
-            url: `/upload/${item.FileName}`,
+            url: `/${item.FileName}`,
           })
         }
       })
@@ -413,6 +414,7 @@ const Index = (props) => {
     const filesCuid = form2.getFieldValue([fileName])
     return { //照片附件 上传
       action: API.UploadApi.UploadFiles,
+      headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
       accept: 'image/*',
       data: {
         FileUuid: filesCuid,
@@ -429,7 +431,7 @@ const Index = (props) => {
         const fileList = [];
         info.fileList.map(item => {
           if (item.response && item.response.IsSuccess) { //刚上传的
-            fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+            fileList.push({ ...item, url: `/${item.response.Datas}`, })
           } else if (!item.response) {
             fileList.push({ ...item })
           }

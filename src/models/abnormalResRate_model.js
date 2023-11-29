@@ -45,7 +45,7 @@ export default Model.extend({
       const result = yield call(services.exportReport, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.error(result.Message)
       }
@@ -66,7 +66,7 @@ export default Model.extend({
       const result = yield call(services.exportExceptionAlarmRateListForCity, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.error(result.Message)
       }
@@ -87,7 +87,7 @@ export default Model.extend({
       const result = yield call(services.exportSecond, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`/wwwroot${result.Datas}`);
       } else {
         message.error(result.Message)
       }

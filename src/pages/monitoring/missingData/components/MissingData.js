@@ -308,7 +308,7 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'missingData/exportDefectDataSummary',
       payload: { ...queryPar,regionDetailCode:undefined,RegionCode:this.state.regCode?this.state.regCode : '' ,regionLevel:this.state.regLevel },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`/wwwroot${data}`);
       },
     });
   };

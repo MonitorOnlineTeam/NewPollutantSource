@@ -1,5 +1,6 @@
 import { post } from '@/utils/request';
 
+import { API } from '@config/API';
 
 
 
@@ -9,7 +10,7 @@ import { post } from '@/utils/request';
  // 联网率---省一级
 export async function GetNetworkingRateForProvice(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonitorPointApi/GetNetworkingRateForProvice',
+    API.VisualKanbanApi.GetProviceNetworkingRate,
     params,
     null,
   );
@@ -19,7 +20,7 @@ export async function GetNetworkingRateForProvice(params) {
 //联网率---市一级
 export async function GetNetworkingRateForCity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonitorPointApi/GetNetworkingRateForCity',
+    API.VisualKanbanApi.GetCityNetworkingRate,
     params,
     null,
   );
@@ -30,7 +31,7 @@ export async function GetNetworkingRateForCity(params) {
 //联网率---监测点一级
 export async function GetNetworkingRateForPoint(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonitorPointApi/GetNetworkingRateForPoint',
+    API.VisualKanbanApi.GetPointNetworkingRate,
     params,
     null,
   );
@@ -40,7 +41,7 @@ export async function GetNetworkingRateForPoint(params) {
 // 联网率---导出省一级
 export async function ExportNetworkingRateForProvice(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonitorPointApi/ExportNetworkingRateForProvice',
+    API.VisualKanbanApi.ExportProviceNetworkingRate,
     params,
     null,
   );
@@ -53,7 +54,7 @@ export async function ExportNetworkingRateForProvice(params) {
 
 export async function ExportNetworkingRateForCity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonitorPointApi/ExportNetworkingRateForCity',
+    API.VisualKanbanApi.ExportCityNetworkingRate,
     params,
     null,
   );
@@ -64,7 +65,7 @@ export async function ExportNetworkingRateForCity(params) {
 // 联网率---导出监测点一级
 export async function ExportNetworkingRateForPoint(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonitorPointApi/ExportNetworkingRateForPoint',
+    API.VisualKanbanApi.ExportPointNetworkingRate,
     params,
     null,
   );

@@ -137,7 +137,7 @@ export async function resetpwd(params) {
     const body = {
         User_ID: params.User_ID,
     };
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/ResetPwd', body, null);
+    const result = post(API.AssetManagementApi.ResetPwd, body, null);
     return result === null ? {
         data: null
     } : result;

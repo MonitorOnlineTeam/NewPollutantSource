@@ -64,7 +64,7 @@ export default Model.extend({
         const result = yield call(services.exportFailureRateList, payload);
          if (result.IsSuccess) {
             message.success('下载成功');
-           downloadFile(`/upload${result.Datas}`);
+           downloadFile(`/wwwroot${result.Datas}`);
            yield update(exportStatus(false))
           } else {
          message.warning(result.Message);

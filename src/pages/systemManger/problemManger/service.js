@@ -7,7 +7,7 @@ import { post, get, getNew } from '@/utils/request';
  
 // 列表  
 export async function GetQuestionDetialList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQuestionDetialList',params, null);
+  const result = await post(API.SystemManageApi.GetQuestionList,params, null);
   return result;
 }
 // 添加or修改

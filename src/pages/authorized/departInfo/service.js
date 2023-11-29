@@ -76,7 +76,7 @@ export async function upddepartinfo(params) {
 }
 // 获取部门树(带根节点)
 export async function getdeparttreeandobj(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetDepartTreeAndObj', params, null);
+  const result = post(API.AssetManagementApi.GetDepartTreeAndObj, params, null);
   return result === null
     ? {
         data: null,
@@ -161,7 +161,7 @@ export async function getentandpoint(params) {
     Name:params.Name,
     Status: [],
   };
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', body);
+  const result = post(API.CommonApi.GetEntAndPoint, body);
   return result === null
     ? {
         data: null,
@@ -175,7 +175,8 @@ export async function getpointbydepid(params, isUser) {
     PollutantType: params.PollutantType,
   };
   const result = post(
-    `/api/rest/PollutantSourceApi/AuthorApi/${isUser ? 'GetPointByDepID' : 'GetPointByDepIDBW'}`,
+    isUser? API.AssetManagementApi.GetUserPointAuthorizeList :  API.AssetManagementApi.GetPointByDepIDBW,
+    // `/api/rest/PollutantSourceApi/AuthorApi/${isUser ? 'GetPointByDepID' : 'GetPointByDepIDBW'}`,
     body,
     null,
   );
@@ -239,7 +240,7 @@ export async function AddOrUpdateUserDepApprove(params) {
 }
 // 用户列表
 export async function GetUserList(params) {
-  const result = post(API.CommonApi.GetUserList, params, null);
+  const result = post(API.AssetManagementApi.GetUserList, params, null);
   return result;
 }
 // 审核流程 添加or修改

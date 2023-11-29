@@ -21,6 +21,8 @@ import AttachmentView from '@/components/AttachmentArrView'
 import { getBase64, getAttachmentArrDataSource } from '@/utils/utils'
 import cuid from 'cuid'
 import {  API } from '@config/API';
+import Cookie from 'js-cookie';
+import config from '@/config';
 
 const { Option } = Select;
 

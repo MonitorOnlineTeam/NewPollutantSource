@@ -215,7 +215,7 @@ export default class Index extends Component {
       type: 'MissingRateDataModal/exportDefectPointDetail',
       payload: { ...queryPar },
       callback: data => {
-         downloadFile(`/upload${data}`);
+         downloadFile(`/wwwroot${data}`);
         },
     });
   };

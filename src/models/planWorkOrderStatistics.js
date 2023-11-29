@@ -123,7 +123,7 @@ export default Model.extend({
       const result = yield call(services.exportTaskWorkOrderList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-          downloadFile(`/upload${result.Datas}`);
+          downloadFile(`/wwwroot${result.Datas}`);
          } else {
           message.warning(result.Message);
       }
@@ -132,7 +132,7 @@ export default Model.extend({
       const result = yield call(services.exportCityDetailTaskWorkList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-          downloadFile(`/upload${result.Datas}`);
+          downloadFile(`/wwwroot${result.Datas}`);
          } else {
         message.warning(result.Message);
       }
@@ -141,7 +141,7 @@ export default Model.extend({
       const result = yield call(services.workRegExportTaskWorkList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-          downloadFile(`/upload${result.Datas}`);
+          downloadFile(`/wwwroot${result.Datas}`);
          } else {
         message.warning(result.Message);
       }
@@ -150,7 +150,7 @@ export default Model.extend({
       const result = yield call(services.cityRegExportTaskWorkList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-          downloadFile(`/upload${result.Datas}`);
+          downloadFile(`/wwwroot${result.Datas}`);
          } else {
         message.warning(result.Message);
       }
@@ -159,7 +159,7 @@ export default Model.extend({
       const result = yield call(services.operaPointExportTaskWorkList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-          downloadFile(`/upload${result.Datas}`);
+          downloadFile(`/wwwroot${result.Datas}`);
          } else {
         message.warning(result.Message);
       }
@@ -168,7 +168,7 @@ export default Model.extend({
       const result = yield call(services.workEntExportTaskWorkList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-          downloadFile(`/upload${result.Datas}`);
+          downloadFile(`/wwwroot${result.Datas}`);
          } else {
         message.warning(result.Message);
       }
@@ -227,7 +227,7 @@ export default Model.extend({
       const result = yield call(services.exportActualTaskWorkOrderList, payload);     
       if (result.IsSuccess) {
           message.success('下载成功');
-          downloadFile(`/upload${result.Datas}`);
+          downloadFile(`/wwwroot${result.Datas}`);
           yield update(exportStatus(false))
          } else {
            message.warning(result.Message);

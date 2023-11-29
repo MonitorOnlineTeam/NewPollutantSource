@@ -42,12 +42,12 @@ export async function GetJzRecord(params) {
     return result === null ? { Datas: null } : result;
 }
 
-// 获取校准记录
+// 获取校准记录 运维表单类型
 export async function GetRecordType(params) {
     const body = {
         DGIMN: params.DGIMN,
     };
-    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetRecordType?', body, null);
+    const result = await post(API.CommonApi.GeteTaskOrderTypeByPollutantType, body, null);
     return result === null ? { Datas: null } : result;
 }
 

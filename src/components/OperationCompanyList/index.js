@@ -21,15 +21,14 @@ class Index extends Component {
   componentDidMount() {
     
     const { operationCompanyList, } = this.props;
-    // if(operationCompanyList&&operationCompanyList[0]){ //已经请求的数据 不再请求 缓存数据 默认值问题
-    //   this.props.getDefaultOpration && this.props.getDefaultOpration(operationCompanyList[0].id)
-    //   return
-    // }
+    if(operationCompanyList&&operationCompanyList[0]){ //已经请求的数据 不再请求 缓存数据 默认值问题
+      this.props.getDefaultOpration && this.props.getDefaultOpration(operationCompanyList[0].id)
+      return
+    }
     this.props.dispatch({
       type: 'operations/getOperationCompanyList',//获取运维单位列表
-      payload: { PointMark: '2', RegionCode: '' },
       callback: (data) => {
-        this.props.getDefaultOpration && this.props.getDefaultOpration(data && data[0] && data[0].id) //默认选中第一个
+        this.props.getDefaultOpration && this.props.getDefaultOpration(data && data[0] && data[0]['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']) //默认选中第一个
       }
     });
 
@@ -47,7 +46,7 @@ class Index extends Component {
          placeholder={placeholder ? placeholder : '请选择'} 
          {...this.props} >
         {operationCompanyList.map(item => {
-          return <Option key={item.id} value={item.id}>{item.name}</Option>
+          return <Option key={item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']} value={item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']}>{item['dbo.T_Bas_OperationMaintenanceEnterprise.Company']}</Option>
         })
         }
       </Select>

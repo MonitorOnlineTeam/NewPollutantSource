@@ -51,16 +51,15 @@ export default Model.extend({
         callback(response.IsSuccess)
       }
     },
-    *listOperationMaintenanceEnterprise({ payload,callback }, { call, put, update, select }) {
-      // 运维列表
-      const response = yield call(ListOperationMaintenanceEnterprise, { ...payload });
-      if (response.IsSuccess) {
-        yield update({
-          operationList: response.Datas,
-        });
-        // callback(response.IsSuccess)
-      }
-    },
+    // *listOperationMaintenanceEnterprise({ payload,callback }, { call, put, update, select }) {
+    //   // 运维列表
+    //   const response = yield call(ListOperationMaintenanceEnterprise, { ...payload });
+    //   if (response.IsSuccess) {
+    //     yield update({
+    //       operationList: response.Datas,
+    //     });
+    //   }
+    // },
     
 
   },

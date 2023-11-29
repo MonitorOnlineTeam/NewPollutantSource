@@ -21,6 +21,7 @@ import AttachmentView from '@/components/AttachmentView'
 import cuid from 'cuid';
 import Lightbox from "react-image-lightbox-rotate";
 import {  API } from '@config/API';
+import config from '@/config';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -139,7 +140,7 @@ const Index = (props) => {
     if (fileInfo) {
       fileInfo.split(',').map(item => {
         if (!item.IsDelete) {
-          fileList.push({ name: `${item}`, attach: `/upload/${item}` })
+          fileList.push({ name: `${item}`, attach: `/${item}` })
         }
       })
     }
@@ -506,6 +507,7 @@ const Index = (props) => {
 
   const uploadProps2 = { // 核查问题照片附件 上传
     action: API.UploadApi.UploadFiles,
+    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     listType: "picture-card",
     accept: 'image/*',
     data: {

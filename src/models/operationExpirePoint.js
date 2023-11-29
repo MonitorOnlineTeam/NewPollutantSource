@@ -33,7 +33,7 @@ export default Model.extend({
       const response = yield call(services.ExportOperationExpirePointList, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${response.Datas}`);
+        downloadFile(`/wwwroot${response.Datas}`);
       } else {
         message.warning(response.Message);
       }

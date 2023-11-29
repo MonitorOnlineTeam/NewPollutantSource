@@ -134,13 +134,13 @@ export default Model.extend({
                 message.error(result.Message);
             }
         },
-        *GetMonitoringTypeList({ payload, callback }, { call, put, update }) { //获取设备类型
-            const result = yield call(GetMonitoringTypeList, payload);
-            if (result.IsSuccess) {
-              yield update({ monitoringTypeList: result.Datas })
-            } else {
-              message.error(result.Message)
-            }
-          },   
+        // *GetMonitoringTypeList({ payload, callback }, { call, put, update }) { //获取设备类型
+        //     const result = yield call(GetMonitoringTypeList, payload);
+        //     if (result.IsSuccess) {
+        //       yield update({ monitoringTypeList: result.Datas })
+        //     } else {
+        //       message.error(result.Message)
+        //     }
+        //   },   
     },
 });
