@@ -68,7 +68,7 @@ export default Model.extend({
         const result = yield call(services.exportRepairRateList, payload);
          if (result.IsSuccess) {
             message.success('下载成功');
-           downloadFile(`/wwwroot${result.Datas}`);
+           downloadFile(`${result.Datas}`);
            yield update(exportStatus(false))
           } else {
          message.warning(result.Message);

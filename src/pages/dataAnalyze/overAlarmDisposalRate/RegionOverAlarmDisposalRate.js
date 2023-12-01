@@ -14,6 +14,7 @@ import { Card, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } 
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable';
 import moment from 'moment';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import { router } from 'umi';
 
@@ -159,7 +160,7 @@ export default class RegionOverAlarmDisposalRate extends PureComponent {
         Rate: 1,
       },
       callback: data => {
-        downloadFile(`/wwwroot${data}`);
+        downloadFile(`${data}`);
       },
     });
   };

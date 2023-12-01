@@ -62,7 +62,7 @@ export async function getOperationImageList(params) {
 
 // 根据污染物类型获取污染物
 export async function getPollutantTypeCode(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode', params, null);
+  const result = await post(API.CommonApi.GetPollutantTypeCode, params, null);
   return result;
 }
 
@@ -102,7 +102,7 @@ export async function CreatQRCode(params) {
 
 // 根据mn号获取站点下的所有污染物因子
 export async function getPollutantListByDgimn(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  const result = await post(API.CommonApi.GetPollutantListByDgimn, params, null);
   return result;
 }
 

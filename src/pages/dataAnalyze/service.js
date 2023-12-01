@@ -49,7 +49,7 @@ export async function getDataGainRateTableData(params) {
 
 // 获取数据获取率 - 详情污染物数据
 export async function getDataGainRateDetailPollutantList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  const result = await post(API.CommonApi.GetPollutantListByDgimn, params, null);
   return result;
 }
 

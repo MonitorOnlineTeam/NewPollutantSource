@@ -29,6 +29,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
@@ -308,7 +309,7 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'missingData/exportDefectDataSummary',
       payload: { ...queryPar,regionDetailCode:undefined,RegionCode:this.state.regCode?this.state.regCode : '' ,regionLevel:this.state.regLevel },
       callback: data => {
-        downloadFile(`/wwwroot${data}`);
+        downloadFile(`${data}`);
       },
     });
   };

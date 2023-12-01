@@ -7,6 +7,7 @@ import Model from '@/utils/model';
 import { GetAttentionDegreeList, GetEntSummary,GetPointSummary ,GetEntByRegion,GetEntOrPointDetail,ExportEntSummary,ExportPointSummary,ExportEntOrPointDetail} from '../services/enterpriseMonitoringInquiryApi'
 import moment from 'moment';
 import { message } from 'antd';
+import config from '@/config';
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
@@ -203,7 +204,7 @@ export default Model.extend({
             const result = yield call(ExportEntSummary,body,null)
             if(result.IsSuccess)
             {
-                downloadFile(`/wwwroot${result.Datas}`)
+                downloadFile(`${result.Datas}`)
             }
         },
         //导出行政区详细信息
@@ -217,7 +218,7 @@ export default Model.extend({
             const result = yield call(ExportPointSummary,body,null)
             if(result.IsSuccess)
             {
-                downloadFile(`/wwwroot${result.Datas}`)
+                downloadFile(`${result.Datas}`)
             }
         },
         //导出企业数 和 监测点数
@@ -233,7 +234,7 @@ export default Model.extend({
             const result = yield call(ExportEntOrPointDetail,body,null)
             if(result.IsSuccess)
             {
-                downloadFile(`/wwwroot${result.Datas}`)
+                downloadFile(`${result.Datas}`)
             }
 
         },

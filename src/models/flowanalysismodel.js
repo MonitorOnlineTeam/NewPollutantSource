@@ -11,6 +11,7 @@ import Model from '@/utils/model';
 import {GetSewageFlowList ,ExportSewageFlowList,GetEntByRegion} from '../services/FlowAnalysisApi'
 import moment from 'moment';
 import { message } from 'antd';
+import config from '@/config';
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
@@ -89,7 +90,7 @@ export default Model.extend({
       }
       const result = yield call(ExportSewageFlowList, body, null)
       if (result.IsSuccess) {
-        downloadFile(`/wwwroot${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       }
     },
     *getEntByRegion({ payload }, { call, put, update, select }) {

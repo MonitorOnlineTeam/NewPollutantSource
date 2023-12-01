@@ -3,6 +3,7 @@ import * as services from '../services/abnormalResRate_Api';
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
+import config from '@/config';
 
 export default Model.extend({
   namespace: 'abnormalResRate',
@@ -45,7 +46,7 @@ export default Model.extend({
       const result = yield call(services.exportReport, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message)
       }
@@ -66,7 +67,7 @@ export default Model.extend({
       const result = yield call(services.exportExceptionAlarmRateListForCity, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message)
       }
@@ -87,7 +88,7 @@ export default Model.extend({
       const result = yield call(services.exportSecond, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${config.apiPrefix}${result.Datas}`);
       } else {
         message.error(result.Message)
       }

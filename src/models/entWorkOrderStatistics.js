@@ -2,6 +2,7 @@ import Model from '@/utils/model';
 import * as services from '@/services/entWorkOrderStatistics';
 import moment from 'moment';
 import { message } from 'antd';
+import config from '@/config';
 import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'entWorkOrderStatistics',
@@ -81,7 +82,7 @@ export default Model.extend({
       const result = yield call(services.exportReport, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -115,7 +116,7 @@ export default Model.extend({
       const result = yield call(services.exportSecond, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -149,7 +150,7 @@ export default Model.extend({
       const result = yield call(services.exportThird, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -183,7 +184,7 @@ export default Model.extend({
       const result = yield call(services.exportFour, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }

@@ -52,7 +52,7 @@ export async function ExportAlarmVerifyDetail(params)
 //监测因子列表
 export async function GetPollutantCodeList(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantCodeList',params,null)
+    const result = post(API.CommonApi.GetPollutantCodeList,params,null)
     return result 
 }
 //核实结果

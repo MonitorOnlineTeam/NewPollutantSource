@@ -11,6 +11,7 @@ import {GetEntByRegion,GetAlarmManagementRate,GetAlarmManagementRateDetail,GetAl
 } from '../services/exceedDataDispositionRecordApi'
 import moment from 'moment';
 import { message } from 'antd';
+import config from '@/config';
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
@@ -182,7 +183,7 @@ export default Model.extend({
     const result = yield call(ExportAlarmManagementRate,body,null)
     if(result.IsSuccess)
     {
-      downloadFile(`/wwwroot${result.Datas}`)
+      downloadFile(`${result.Datas}`)
     }
   },//导出超标报警处置详情
     *ExportAlarmManagementRateDetail({ payload }, { call, put, update, select }) {
@@ -198,7 +199,7 @@ export default Model.extend({
         }
         const result = yield call(ExportAlarmManagementRateDetail, body, null)
         if (result.IsSuccess) {
-          downloadFile(`/wwwroot${result.Datas}`)
+          downloadFile(`${result.Datas}`)
         }
     },//导出超标报警处置详细
   *ExportAlarmManagementDetail({ payload }, { call, put, update, select }){
@@ -216,7 +217,7 @@ export default Model.extend({
       }
       const result = yield call(ExportAlarmManagementDetail, body, null)
       if (result.IsSuccess) {
-        downloadFile(`/wwwroot${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       }
     },
   },

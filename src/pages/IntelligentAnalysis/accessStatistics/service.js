@@ -1,11 +1,12 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API';
 
 
 
 // 获取用户访问率--大区
 export async function GetDaQuUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/GetDaQuUserActivity',
+    API.WholeProcessMonitorApi.GetSystemAccessRateList,
     params,
     null,
   );
@@ -15,7 +16,7 @@ export async function GetDaQuUserActivity(params) {
 //获取用户访问率--服务区
 export async function GetFuWuQuUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/GetFuWuQuUserActivity',
+    API.WholeProcessMonitorApi.GetSystemAccessRateList,
     params,
     null,
   );
@@ -26,7 +27,7 @@ export async function GetFuWuQuUserActivity(params) {
 //获取用户访问率--访问状态
 export async function GetUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/GetUserActivity',
+    API.WholeProcessMonitorApi.GetUserAccessInfo,
     params,
     null,
   );
@@ -36,7 +37,7 @@ export async function GetUserActivity(params) {
 // 获取用户访问率--导出大区
 export async function ExportDaQuUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/ExportDaQuUserActivity',
+    API.WholeProcessMonitorApi.ExportSystemAccessRateList,
     params,
     null,
   );
@@ -49,7 +50,7 @@ export async function ExportDaQuUserActivity(params) {
 
 export async function ExportFuWuQuUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/ExportFuWuQuUserActivity',
+    API.WholeProcessMonitorApi.ExportSystemAccessRateList,
     params,
     null,
   );
@@ -57,10 +58,10 @@ export async function ExportFuWuQuUserActivity(params) {
   return result;
 }
 
-// 获取用户访问率--导出大区
+// 获取用户访问率--导出用户信息
 export async function ExportUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/ExportUserActivity',
+    API.WholeProcessMonitorApi.ExportUserAccessInfo,
     params,
     null,
   );
@@ -70,7 +71,7 @@ export async function ExportUserActivity(params) {
 
 // 系统访问率  业务属性和行业属性
 export async function GetIndustryBusiness(params) {
-  const result = post('/api/rest/PollutantSourceApi/UserInfosApi/GetIndustryBusiness', params, null, );
+  const result = post(API.WholeProcessMonitorApi.GetIndustryAttributeInfo, params, null, );
   return result;
 }
 

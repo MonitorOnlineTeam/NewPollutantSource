@@ -1,8 +1,9 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API';
 
 // 获取数据获取率 - 详情污染物数据
 export async function getDataGainRateDetailPollutantList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  const result = await post(API.CommonApi.GetPollutantListByDgimn, params, null);
   return result;
 }
 
@@ -50,6 +51,6 @@ export async function exportDataFlagReport(params) {
 
 // 平台分析报告 - 导出
 export async function exportPlatformAnalysisReport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportPlatformAnalysisReport', params, null);
+  const result = await post(API.WholeProcessMonitorApi.ExportPlatformAnalysisReport, params, null);
   return result;
 }

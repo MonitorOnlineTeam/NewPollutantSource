@@ -7,6 +7,7 @@ import Model from '@/utils/model';
 import { GetPollutantByType, GetExceedDataList,GetEntByRegion,GetExceedNum,ExportExceedDataList,ExportExceedNum } from '../services/exceedDataApi'
 import moment from 'moment';
 import { message } from 'antd';
+import config from '@/config';
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
@@ -189,10 +190,10 @@ export default Model.extend({
       if (result.IsSuccess) {
         if (payload.TabType == '1' || payload.TabType == '2') {
 
-          downloadFile(`/wwwroot${result.Datas}`)
+          downloadFile(`${result.Datas}`)
         }
         else {
-          downloadFile(`/wwwroot${result.Datas}`)
+          downloadFile(`${result.Datas}`)
         }
 
       }
@@ -213,7 +214,7 @@ export default Model.extend({
       }
       const result = yield call(ExportExceedNum, body, null)
       if (result.IsSuccess) {
-        downloadFile(`/wwwroot${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       }
     }
 

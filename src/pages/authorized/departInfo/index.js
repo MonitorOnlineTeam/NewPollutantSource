@@ -1851,25 +1851,6 @@ class DepartIndex extends Component {
                         size="large"
                       />
                     ) : this.props.EntAndPoint && this.props.EntAndPoint.length > 0 ? (
-                      // <Tree
-                      //   key="key"
-                      //   style={{ height: '560px', overflow: 'auto' }}
-                      //   checkable
-                      //   // checkStrictly={false}
-                      //   onExpand={this.onExpands}
-                      //   treeData={this.state.newEntAndPoint}
-                      //   // expandedKeys={this.state.expandedKey}
-                      //   // autoExpandParent={this.state.autoExpandParent}
-                      //   onCheck={this.onChecks}
-                      //   checkedKeys={this.state.checkedKeys}
-                      //   // onSelect={this.onSelectData}
-                      //   // selectedKeys={this.state.dataSelectedKeys}
-                      //   defaultExpandAll
-                      //   // autoExpandParent={true}
-                      //   // defaultExpandAll
-                      // >
-                      //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
-                      // </Tree>
                       <Spin spinning={this.props.dataLoading}>
                         <TreeTransfer
                           key="key"

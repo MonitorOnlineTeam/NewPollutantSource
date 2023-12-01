@@ -1,3 +1,4 @@
+import config from '@/config';
 export const before = '/newApi/rest/PollutantSourceApi';
 export const API = {
   //登录相关Api
@@ -45,36 +46,98 @@ export const API = {
     GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',//根据行政区查询企业
     GetEntAndPoint: before + '/EnterpriseApi/GetEntAndPoint',//获取企业和企业对应的排口信息
     GetPointByEntCode: before + '/MonitorPointApi/GetPointByEntCode',//根据企业编号与污染物编号查询排口
+    GetPollutantCodeList: before + '/MonitorPollutantApi/GetPollutantCodeList',//获取污染物列表
+    GetPollutantTypeCode: before + '/MonitorPollutantApi/GetPollutantTypeCode',//根据污染物类型获取污染物
+    GetPollutantListByDgimn: before + '/MonitorPollutantApi/GetPollutantListByDgimn',//根据MN号获取污染物
     GetPollutantTypeList: before + '/MonitorPollutantApi/GetPollutantTypeList',//获取系统污染物类型信息
     GetStandardPollutantsByDgimn: before + '/StandardLibraryApi/GetStandardPollutantsByDgimn', //根据排口获取标准污染物列表
     GetPollutantTypeMonitoringCategoryInfo: before + '/BaseDataApi/GetPollutantTypeMonitoringCategoryInfo',//获取设备信息监测参数类型
-    GeteTaskOrderTypeByPollutantType:before + '/OperationWorkbenchApi/GeteTaskOrderTypeByPollutantType', //通过表单类型
+    GeteTaskOrderTypeByPollutantType: before + '/OperationWorkbenchApi/GeteTaskOrderTypeByPollutantType', // 根据污染物类型获取表单类型
   },
   // 可视化看板Api 首页
   VisualKanbanApi: {
     GetVisualDashBoardOperatePointInfo: before + '/VisualDashBoardApi/GetVisualDashBoardOperatePointInfo',//获取运维信息总览信息
     GetOperationTaskStatisticsInfo: before + '/VisualDashBoardApi/GetOperationTaskStatisticsInfo',//获取近30日运维工单统计
-    GetPlanOperationTaskCompleteRate:before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRate',//获取计划巡检完成率、校准完成率
-    GetOperationCompleteRateRank:before + '/VisualDashBoardApi/GetOperationCompleteRateRank',//获取近30日运维排名信息
-    GetSceneSignExceptionRate:before + '/VisualDashBoardApi/GetSceneSignExceptionRate',//获取现场打卡异常率
-    GetVisualDashBoardEffectiveTransmissionRate:before + '/VisualDashBoardApi/GetVisualDashBoardEffectiveTransmissionRate',//有效传输率
-    GetExceptionDataOverview:before + '/VisualDashBoardApi/GetExceptionDataOverview',//获取异常数据总览  获取超标报警核实率、异常报警响应率、缺失报警响应率、报警响应超时率.
-    GetVisualDashBoardConsumablesStatisticsInfo:before + '/VisualDashBoardApi/GetVisualDashBoardConsumablesStatisticsInfo',//获取耗材统计信息
-    GetConsumablesStatisticsInfo:before + '/VisualDashBoardApi/GetConsumablesStatisticsInfo',//获取耗材统计信息 详情
-    ExportConsumablesStatisticsInfo:before + '/VisualDashBoardApi/ExportConsumablesStatisticsInfo',//导出耗材统计信息 详情
-    GetEquipmentExceptionsOverview:before + '/VisualDashBoardApi/GetEquipmentExceptionsOverview',//获取设备异常总览 设备异常率、设备故障率、设备故障修复率
-    GetMapPointList:before + '/VisualDashBoardApi/GetMapPointList',//获取地图数据
-    GetOperatePointList:before + '/VisualDashBoardApi/GetOperatePointList',//获取运维信息总览 详情运维企业、监测点信息
-    ExportOperatePointList:before + '/VisualDashBoardApi/ExportOperatePointList',//导出运维信息总览 详情运维企业、监测点信息
+    GetPlanOperationTaskCompleteRate: before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRate',//获取计划巡检完成率、校准完成率
+    GetOperationCompleteRateRank: before + '/VisualDashBoardApi/GetOperationCompleteRateRank',//获取近30日运维排名信息
+    GetSceneSignExceptionRate: before + '/VisualDashBoardApi/GetSceneSignExceptionRate',//获取现场打卡异常率
+    GetVisualDashBoardEffectiveTransmissionRate: before + '/VisualDashBoardApi/GetVisualDashBoardEffectiveTransmissionRate',//有效传输率
+    GetExceptionDataOverview: before + '/VisualDashBoardApi/GetExceptionDataOverview',//获取异常数据总览  获取超标报警核实率、异常报警响应率、缺失报警响应率、报警响应超时率.
+    GetVisualDashBoardConsumablesStatisticsInfo: before + '/VisualDashBoardApi/GetVisualDashBoardConsumablesStatisticsInfo',//获取耗材统计信息
+    GetConsumablesStatisticsInfo: before + '/VisualDashBoardApi/GetConsumablesStatisticsInfo',//获取耗材统计信息 详情
+    ExportConsumablesStatisticsInfo: before + '/VisualDashBoardApi/ExportConsumablesStatisticsInfo',//导出耗材统计信息 详情
+    GetEquipmentExceptionsOverview: before + '/VisualDashBoardApi/GetEquipmentExceptionsOverview',//获取设备异常总览 设备异常率、设备故障率、设备故障修复率
+    GetMapPointList: before + '/VisualDashBoardApi/GetMapPointList',//获取地图数据
+    GetOperatePointList: before + '/VisualDashBoardApi/GetOperatePointList',//获取运维信息总览 详情运维企业、监测点信息
+    ExportOperatePointList: before + '/VisualDashBoardApi/ExportOperatePointList',//导出运维信息总览 详情运维企业、监测点信息
     GetOperationPlanTaskList: before + '/VisualDashBoardApi/GetOperationPlanTaskList',// 获取近30日运维工单统计 详情
     ExportOperationPlanTaskList: before + '/VisualDashBoardApi/ExportOperationPlanTaskList',// 导出近30日运维工单统计 详情
+    GetVisualDashBoardNetworkingRate: before + '/VisualDashBoardApi/GetVisualDashBoardNetworkingRate',//获取实时联网率统计
     GetProviceNetworkingRate: before + '/VisualDashBoardApi/GetProviceNetworkingRate',// 获取省实时联网率
     GetCityNetworkingRate: before + '/VisualDashBoardApi/GetProviceNetworkingRate',// 获取市实时联网率
     GetPointNetworkingRate: before + '/VisualDashBoardApi/GetPointNetworkingRate',// 获取点位实时联网率
-    ExportroviceNetworkingRate: before + '/VisualDashBoardApi/ExportProviceNetworkingRate',// 导出省实时联网率
-    ExportCityNetworkingRate: before + '/VisualDashBoardApi/ExportProviceNetworkingRate',// 导出市实时联网率
+    ExportProviceNetworkingRate: before + '/VisualDashBoardApi/ExportProviceNetworkingRate',// 导出省实时联网率
+    ExportCityNetworkingRate: before + '/VisualDashBoardApi/ExportCityNetworkingRate',// 导出市实时联网率
     ExportPointNetworkingRate: before + '/VisualDashBoardApi/ExportPointNetworkingRate',// 导出点位实时联网率
+    GetEquipmentExecptionRateList: before + '/VisualDashBoardApi/GetEquipmentExecptionRateList',//获取省、市、企业监测点设备完好率
+    ExportEquipmentExecptionRateList: before + '/VisualDashBoardApi/ExportEquipmentExecptionRateList',//导出省、市、企业监测点设备完好率
+    GetEquipmentFailureRateList: before + '/VisualDashBoardApi/GetEquipmentFailureRateList',//获取省、市、企业监测点设备故障率
+    ExportEquipmentFailureRateList: before + '/VisualDashBoardApi/ExportEquipmentFailureRateList',//导出省、市、企业监测点设备故障率
+    GetEquipmentRepairRateList: before + '/VisualDashBoardApi/GetEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
+    ExportEquipmentRepairRateList: before + '/VisualDashBoardApi/ExportEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
+ 
   },
+
+  // 全过程监控Api
+  WholeProcessMonitorApi: {
+    /**监测数据总览**/
+    /*数据总览*/
+    AllTypeSummaryList: before + '/MonBasicDataApi/AllTypeSummaryList', //获取获取站点基本信息、在线状态、报警状态、最新一条小时监测数据，包括污染源、空气质量
+   /*在线监测数据*/
+    GetAllTypeDataList: before + '/MonitorPointApi/GetAllTypeDataList',//获取各种类型的数据列表（实时、分钟、小时、日均）
+  
+    /**质控数据总览**/
+    /*有效传输率排名*/
+    GetTransmissionEfficiencyRateList: before + '/StatisticAnalysisApi/GetTransmissionEfficiencyRateList',//获取省、市、监测点有效传输率统计信息
+    ExportTransmissionEfficiencyRateList: before + '/StatisticAnalysisApi/ExportTransmissionEfficiencyRateList',//导出省、市级别有效传输率统计信息
+    /*系统访问率*/
+    GetSystemAccessRateList: before + '/StatisticAnalysisApi/GetSystemAccessRateList',//获取大区、服务区的系统访问率
+    ExportSystemAccessRateList: before + '/StatisticAnalysisApi/ExportSystemAccessRateList',//导出大区、服务区的系统访问率
+    GetUserAccessInfo: before + '/StatisticAnalysisApi/GetUserAccessInfo',//获取用户访问率
+    ExportUserAccessInfo: before + '/StatisticAnalysisApi/ExportUserAccessInfo',//导出用户访问率
+    GetIndustryAttributeInfo: before + '/StatisticAnalysisApi/GetIndustryAttributeInfo',//获取业务属性和行业属性
+    ExportPlatformAnalysisReport: before + '/StatisticAnalysisApi/ExportPlatformAnalysisReport',//导出平台分析报告
+    /*站点数据总览*/
+    GetDayReport: before + '/StatisticAnalysisApi/GetDayReport',//获取站点日报报表
+    GetMonthReport: before + '/StatisticAnalysisApi/GetMonthReport',//获取站点月报报表
+    GetYearReport: before + '/StatisticAnalysisApi/GetYearReport',//获取站点年报报表
+    GetReportExcel:before + '/StatisticAnalysisApi/GetReportExcel',//导出站点日报、月报、年报报表
+    GetSummaryDayReport: before + '/StatisticAnalysisApi/GetSummaryDayReport',//获取站点汇总日报报表
+    GetSummaryMonthReport: before + '/StatisticAnalysisApi/GetSummaryMonthReport',//获取站点汇总月报报表
+    GetSummaryYearReport: before + '/StatisticAnalysisApi/GetSummaryYearReport',//获取站点汇总年报报表
+    GetSummaryReportExcel: before + '/StatisticAnalysisApi/GetSummaryReportExcel',//导出站点汇总站点日报、月报、年报报表
+  },
+
+  //预测性维护Api
+  PredictiveMaintenanceApi:{
+     /**智慧运维**/
+    /*异常工单分析*/
+    GetExceptionTaskOrderList: before + '/OperationApi/GetExceptionTaskOrderList', //获取行政区运维工单统计信息
+    ExportExceptionTaskOrderList: before + '/OperationApi/ExportExceptionTaskOrderList', //导出行政区运维工单统计信息
+    GetWorkOrderAnalysisList: before + '/OperationApi/GetWorkOrderAnalysisList',//获取企业运维工单统计信息
+    ExportWorkOrderAnalysisList: before + '/OperationApi/ ExportWorkOrderAnalysisList',//导出企业运维工单统计信息
+   
+   
+    GetExceptionTaskOrderSignList: before + '/OperationApi/GetExceptionTaskOrderSignList', //获取企业异常打卡信息
+     /*运维到期提醒*/
+    GetOperationExpireAnalysis: before + '/OperationExpireAnalysis/GetOperationExpireAnalysis',//运维到期点位统计
+    ExportOperationExpireAnalysis: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//导出运维到期点位统计
+  },
+  //智能诊断Api
+  IntelligentDiagnosis:{
+     /**异常数据分析**/
+  },
+
 
   // 系统管理Api
   SystemManageApi: {
@@ -83,10 +146,10 @@ export const API = {
     AddOrUpdateNoticeInfo: before + '/NoticeApi/AddOrUpdateNoticeInfo', //添加修改公告
     DeleteNoticeInfo: before + '/NoticeApi/DeleteNoticeInfo', //删除公告
     GetAllRoleList: before + '/NoticeApi/GetAllRoleList', //获取角色
-   /*资源中心*/
-    GetQuestionList: before + '/NoticeApi/GetQuestionList', //获取问题清单列表
-    AddOrUpdateQuestionInfo: before + '/NoticeApi/AddOrUpdateQuestionInfo', //获取问题清单列表
-    GetQuestionTypeList: before + '/BaseDataApi/GetQuestionTypeList', //获取问题清单类别
+    /*资源中心*/
+    GetQuestionList: before + '/KnowledgeCenterApi/GetQuestionList', //获取问题清单列表
+    AddOrUpdateQuestionInfo: before + '/KnowledgeCenterApi/AddOrUpdateQuestionInfo', //获取问题清单列表
+    GetQuestionTypeList: before + '/KnowledgeCenterApi/GetQuestionTypeList', //获取问题清单类别
   },
   //异常数据模型分析 Api
   AbnormalModelAnalysisApi: {
@@ -121,7 +184,7 @@ export const API = {
     /*** 设备台账 ***/
 
     /*污染源管理*/
-    CompanyOperationBasictemplate: '/wwwroot/公司运维基础数据模板.xlsm',//企业模板下载 
+    CompanyOperationBasictemplate: `${config.uploadPrefix}/公司运维基础数据模板.xlsm`,//企业模板下载 
     VerificationImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//导入企业
     AddPoint: before + '/MonitorPointApi/AddPoint', //添加监测点
     /*污染源信息查询*/
@@ -216,17 +279,50 @@ export const API = {
     DeleteCustomerRenewDetail: before + '/CustomerServiceApi/GetCustomerRenewList',//删除客户续费详情信息
     /*续费日志 */
     GetCustomerRenewOperationLogs: before + '/CustomerServiceApi/GetCustomerRenewOperationLogs',//获取客户订单日志和客户订单详情日志信息
-   
+
     /*** 权限管理 ***/
     /*用户管理*/
     GetUserList: before + '/UserApi/GetUserList',//获取用户信息
-    ResetPwd: before + '/AuthorityApi/ResetPwd',//重置用户密码
-    GetRolesTree: before + '/AuthorityApi/GetRolesTree',//获取角色树信息
-    GetRolesTreeAndObj: before + '/AuthorityApi/GetRolesTreeAndObj',//获取角色树信息（带根节点）
-    GetDepartTreeAndObj: before + '/AuthorityApi/GetDepartTreeAndObj',//获取部门树信息（带根节点）
-    GetUserPointAuthorizeList: before + '/AuthorityApi/GetUserPointAuthorizeList',//获取当前部门选择的排口信息
-    ExportUserList: before + '/AuthorityApi/ExportUserList',//导出用户信息
-
+    ExportUserList: before + '/UserApi/ExportUserList',//导出用户信息
+    ResetPwd: before + '/LoginApi/ResetPwd',//重置用户密码
+    ResetUserWechatInfo: before + '/AuthorizeApi/ResetUserWechatInfo',//重置用户微信注册信息
+    GetRolesTree: before + '/RoleApi/GetRolesTree',//获取角色树信息
+    GetRolesTreeAndObj: before + '/RoleApi/GetRolesTreeAndObj',//获取角色树信息（带根节点）
+    GetRoleByUserID: before + '/UserApi/GetRoleByUserID',//获取用户角色
+    GetDepartmentTree: before + '/DepartmentApi/GetDepartmentTree',//获取部门树
+    GetDepByUserID: before + '/UserApi/GetDepByUserID',//获取部门树
+    InsertRoleDepForUser: before + '/UserApi/InsertRoleDepForUser',//给用户添加角色和部门
+    DelUserAndRoleDep: before + '/UserApi/DelUserAndRoleDep',//删除用户（假删除）
+    /*部门管理*/
+    GetDepInfoByTree: before + '/DepartmentApi/GetDepInfoByTree',//获取部门详细信息和层级关系
+    InsertDepartInfo: before + '/DepartmentApi/InsertDepartInfo',//新增部门信息
+    UpdDepartInfo: before + '/DepartmentApi/UpdDepartInfo',//更新部门信息
+    DelDepartInfo: before + '/DepartmentApi/DelDepartInfo',//删除部门信息
+    GetPointByDepID: before + '/DepartmentApi/GetPointByDepID',//查询当前部门下的所有排口
+    GetDepartInfoByID: before + '/DepartmentApi/GetDepartInfoByID',//获取单个部门信息
+    GetDepartTreeAndObj: before + '/DepartmentApi/GetDepartTreeAndObj',//获取部门树信息（带根节点）
+    GetGroupRegionFilter: before + '/ConfigureApi/GetGroupRegionFilter',//获取部门区域过滤
+    GetAllUser: before + '/UserApi/GetAllUser',//获取所有用户
+    GetUserByDepID: before + '/DepartmentApi/GetUserByDepID',//获取当前部门的用户
+    InsertDepartByUser: before + 'DepartmentApi/InsertDepartByUser',//给当前部门添加用户（可批量）
+    GetAlarmPushDepOrRole: before + 'AuthorizeApi/GetAlarmPushDepOrRole',//获取部门或角色报警关联列表
+    InsertAlarmDepOrRole: before + 'AuthorizeApi/InsertAlarmDepOrRole',//添加或修改部门或角色报警关联
+    /*角色管理*/
+    GetRoleInfoByTree: before + '/RoleApi/GetRoleInfoByTree',//获取角色详细信息和层级关系
+    GetRoleInfoByID : before + '/RoleApi/GetRoleInfoByID',//获取单个角色信息
+    GetUserByRoleId: before + '/RoleApi/GetUserByRoleId',//获取当前角色的用户
+    InsertRoleInfo: before + '/RoleApi/InsertRoleInfo',//新增角色信息
+    UpdRoleInfo: before + '/RoleApi/UpdRoleInfo',//更新角色信息
+    DelRoleInfo: before + '/RoleApi/DelRoleInfo',//删除角色信息
+    InsertRoleByUser: before + '/RoleApi/InsertRoleByUser',//给角色添加用户（可批量）
+    GetParentTree: before + '/RoleApi/GetParentTree',//获取根节点下拉选择权限（角色）
+    GetMenuByRoleID: before + '/RoleApi/GetMenuByRoleID',//获取当前角色的菜单
+    GetRoleMenuTree: before + '/MenuApi/GetRoleMenuTree',//获取菜单列表层级关系
+    InsertMenuByRoleID: before + '/AuthorizeApi/InsertMenuByRoleID',//给当前角色添加菜单权限（可批量）
+    /*用户权限*/
+    InsertPointFilterByUser: before + '/AuthorizeApi/InsertPointFilterByUser',//给当前人员添加排口权限（可批量）
+    /*用户恢复*/
+    RecoveryUserInfo: before + '/AuthorizeApi/RecoveryUserInfo',//恢复用户信息
     /*交接和报告*/
     GetProjectReportList: before + '/CTBaseDataApi/GetProjectReportList',   //列表
     AddOrUpdProjectReportInfo: before + '/CTBaseDataApi/AddOrUpdProjectReportInfo', //编辑

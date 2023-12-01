@@ -41,7 +41,7 @@ export default Model.extend({
       const result = yield call(services.ExportTestEntList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -61,7 +61,7 @@ export default Model.extend({
       const result = yield call(services.ExportTestPointList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -81,7 +81,7 @@ export default Model.extend({
       const result = yield call(services.ExportTestPointEquipmentList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -101,7 +101,7 @@ export default Model.extend({
       const result = yield call(services.ExportTestPointSystemList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
        }
@@ -121,7 +121,7 @@ export default Model.extend({
       const result = yield call(services.ExportTestPointParamList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }

@@ -30,6 +30,7 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from '../style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import RegionList from '@/components/RegionList'
@@ -252,7 +253,7 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'defectData/exportGetAlarmDataList',
       payload: { ...queryPar },
       callback: data => {
-         downloadFile(`/wwwroot${data}`);
+         downloadFile(`${data}`);
         },
     });
   };

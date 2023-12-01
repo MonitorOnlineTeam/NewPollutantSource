@@ -7,6 +7,7 @@ import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
 import moment from 'moment';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 import { remove } from 'lodash';
+import config from '@/config';
 import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'dataquery',
@@ -935,7 +936,7 @@ export default Model.extend({
       const result = yield call(services.exportPlatformAnalysisReport, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }

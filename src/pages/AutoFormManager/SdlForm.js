@@ -360,6 +360,7 @@ class SdlForm extends PureComponent {
               data={item.value}
               selectType={labelText === '行政区' ? item.selectType : '999,是'}
               placeholder={placeholder}
+              isCtPoll={configId==='CTEnterprise'}
             />
           );
           break;

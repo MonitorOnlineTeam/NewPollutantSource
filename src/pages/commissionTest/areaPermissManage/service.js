@@ -24,7 +24,7 @@ export async function  deleteTestGroup(params) {
 
 // 获取所有的用户
 export async function getAllUser(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetAllUser', params, null);
+  const result = post(API.AssetManagementApi.GetAllUser, params, null);
   return result;
 }
 

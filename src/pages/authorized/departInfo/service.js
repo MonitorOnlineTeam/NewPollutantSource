@@ -3,7 +3,7 @@ import { post, get } from '@/utils/request';
 import { API } from '@config/API'
 //报警关联列表
 export async function GetAlarmPushDepOrRole(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetAlarmPushDepOrRole', params, null);
+  const result = post(API.AssetManagementApi.GetAlarmPushDepOrRole, params, null);
 
   return result;
 }
@@ -14,7 +14,7 @@ export async function InsertAlarmDepOrRole(params) {
 }
 // 获取部门详细信息及层级关系
 export async function getdepartinfobytree(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetDepInfoByTree', params);
+  const result = post(API.AssetManagementApi.GetDepInfoByTree, params);
   return result === null
     ? {
         data: null,
@@ -26,7 +26,7 @@ export async function getdepartinfobyid(params) {
   const body = {
     UserGroup_ID: params.UserGroup_ID,
   };
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetDepartInfoByID', body);
+  const result = post(API.AssetManagementApi.GetDepartInfoByID, body);
   return result === null
     ? {
         data: null,
@@ -40,7 +40,7 @@ export async function insertdepartinfo(params) {
     UserGroup_Name: params.UserGroup_Name,
     UserGroup_Remark: params.UserGroup_Remark,
   };
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertDepartInfo', body);
+  const result = post(API.AssetManagementApi.InsertDepartInfo, body);
   return result === null
     ? {
         data: null,
@@ -52,7 +52,7 @@ export async function deldepartinfo(params) {
   const body = {
     UserGroup_ID: params.UserGroup_ID,
   };
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/DelDepartInfo', body);
+  const result = post(API.AssetManagementApi.DelDepartInfo, body);
   return result === null
     ? {
         data: null,
@@ -67,7 +67,7 @@ export async function upddepartinfo(params) {
     UserGroup_Name: params.UserGroup_Name,
     UserGroup_Remark: params.UserGroup_Remark,
   };
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/UpdDepartInfo', body);
+  const result = post(API.AssetManagementApi.UpdDepartInfo, body);
   return result === null
     ? {
         data: null,
@@ -85,7 +85,7 @@ export async function getdeparttreeandobj(params) {
 }
 // 获取所有用户
 export async function getalluser(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetAllUser', params, null);
+  const result = post(API.AssetManagementApi.GetAllUser, params, null);
   return result === null
     ? {
         data: null,
@@ -97,7 +97,7 @@ export async function getuserbydepid(params) {
   const body = {
     UserGroup_ID: params.UserGroup_ID,
   };
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserByDepID', body, null);
+  const result = post(API.AssetManagementApi.GetUserByDepID, body, null);
   return result === null
     ? {
         data: null,
@@ -110,7 +110,7 @@ export async function insertdepartbyuser(params) {
     UserGroup_ID: params.UserGroup_ID,
     User_ID: params.User_ID,
   };
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertDepartByUser', body, null);
+  const result = post(API.AssetManagementApi.InsertDepartByUser, body, null);
   // return result === null
   //   ? {
   //       data: null,
@@ -175,7 +175,7 @@ export async function getpointbydepid(params, isUser) {
     PollutantType: params.PollutantType,
   };
   const result = post(
-    isUser? API.AssetManagementApi.GetUserPointAuthorizeList :  API.AssetManagementApi.GetPointByDepIDBW,
+    isUser? API.AssetManagementApi.GetPointByDepID :  API.AssetManagementApi.GetPointByDepIDBW,
     // `/api/rest/PollutantSourceApi/AuthorApi/${isUser ? 'GetPointByDepID' : 'GetPointByDepIDBW'}`,
     body,
     null,
@@ -209,7 +209,7 @@ export async function insertpointfilterbydepid(params) {
 }
 // 是否显示区域过滤
 export async function getGroupRegionFilter(params) {
-  const result = get('/api/rest/PollutantSourceApi/BaseDataApi/GetGroupRegionFilter', params, null);
+  const result = get(API.AssetManagementApi.GetGroupRegionFilter, params, null);
   return result;
 }
 

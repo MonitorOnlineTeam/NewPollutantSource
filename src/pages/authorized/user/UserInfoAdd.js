@@ -104,6 +104,7 @@ export default class UserInfoAdd extends Component {
         //     }
         // });
         // this.setState({ checkedKeysSel: leafTree });
+        console.log(data)
         this.setState({checkedKeysSel: checkedKeys })
     };
 
@@ -113,7 +114,7 @@ export default class UserInfoAdd extends Component {
 
     renderTreeNodes = data =>
         data.map(item => {
-            if (item.children.length == 0) {
+            if (item?.children?.length == 0 || !item.children) {
                 if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
                     this.state.leafTreeDatas.push(item.key);
                 }

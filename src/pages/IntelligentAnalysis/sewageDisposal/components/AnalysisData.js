@@ -32,6 +32,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile, GetDataType, toDecimal3,interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import ReactEcharts from 'echarts-for-react';
@@ -269,7 +270,7 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'removalFlowRate/exportSewageHistoryList',
       payload: { ...queryPar },
       callback: data => {
-        downloadFile(`/wwwroot${data}`);
+        downloadFile(`${data}`);
       },
     });
   };

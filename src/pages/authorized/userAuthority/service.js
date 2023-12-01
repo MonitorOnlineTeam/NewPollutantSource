@@ -5,7 +5,7 @@ import { API } from '@config/API'
 
 // 部门列表
 export async function GetDepInfoByTree(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetDepInfoByTree', params, null);
+    const result = post(API.AssetManagementApi.GetDepInfoByTree, params, null);
     return result;
 }
 
@@ -91,7 +91,7 @@ export async function getuser(params) {
 }
 // 获取部门树
 export async function getdeparttree(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetDepartmentTree', params, null);
+    const result = post(API.AssetManagementApi.GetDepartmentTree, params, null);
     return result === null ? {
         data: null
     } : result;
@@ -110,7 +110,7 @@ export async function getrolebyuserid(params) {
         Role: null,
         Depart: null
     }
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRoleByUserID', body, null);
+    const result = post(API.AssetManagementApi.GetRoleByUserID, body, null);
     return result === null ? {
         data: null
     } : result;
@@ -122,7 +122,7 @@ export async function getdepbyuserid(params) {
         Role: null,
         Depart: null
     }
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetDepByUserID', body, null);
+    const result = post(API.AssetManagementApi.GetDepByUserID, body, null);
     return result === null ? {
         data: null
     } : result;
@@ -135,7 +135,7 @@ export async function insertroledep(params) {
         Role: params.Roles_ID,
         Depart: params.UserGroup_ID
     };
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertRoleDepForUser', body, null);
+    const result = post(API.AssetManagementApi.InsertRoleDepForUser, body, null);
     return result === null ? {
         data: null
     } : result;
@@ -173,12 +173,12 @@ export async function edituser(params) {
         data: null
     } : result;
 }
-// 编辑用户
+// 删除用户
 export async function deluserandroledep(params) {
     const body = {
         User_ID: params.User_ID,
     };
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/DelUserAndRoleDep', body, null);
+    const result = post(API.AssetManagementApi.DelUserAndRoleDep, body, null);
     return result === null ? {
         data: null
     } : result;
@@ -263,7 +263,7 @@ export async function insertPointFilterByUser(params) {
       state:params.state,
     };
     const result = post(
-      '/api/rest/PollutantSourceApi/AuthorApi/InsertPointFilterByUser',
+      API.AssetManagementApi.InsertPointFilterByUser,
       body,
       null,
     );

@@ -30,6 +30,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 
@@ -239,7 +240,7 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'MissingRateData/exportDefectPointDetail',
       payload: { ...queryPar },
       callback: data => {
-         downloadFile(`/wwwroot${data}`);
+         downloadFile(`${data}`);
         },
     });
   };

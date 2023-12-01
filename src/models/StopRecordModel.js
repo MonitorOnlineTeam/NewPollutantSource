@@ -8,6 +8,7 @@ import {GetPointByEntCode,GetStopList,ExportStopList} from '../services/StopReco
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
+import config from '@/config';
 import { fileUpload } from '@/services/autoformapi';
 
 export default Model.extend({
@@ -82,7 +83,7 @@ export default Model.extend({
       }
       const result = yield call(ExportStopList, body, null)
       if (result.IsSuccess) {
-        downloadFile(`/wwwroot${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       }
     },
   },

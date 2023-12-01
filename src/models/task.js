@@ -33,6 +33,7 @@ import {
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
 import { GetAlarmResponseList } from '../services/AlarmResponseApi';
+import config from '@/config';
 import { downloadFile } from '@/utils/utils';
 export default Model.extend({
     namespace: 'task',
@@ -415,7 +416,7 @@ export default Model.extend({
             const result = yield call(ExportOperationTaskList, payload);
             if (result.IsSuccess) {
                 message.success('下载成功');
-                downloadFile(`/wwwroot${result.Datas}`);
+                downloadFile(`${result.Datas}`);
             }
         },
 

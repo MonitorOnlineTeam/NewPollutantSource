@@ -39,7 +39,7 @@ export async function getBtnAuthority(params) {
     }
  */
 export async function querypollutantlist(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  const result = await post(API.CommonApi.GetPollutantListByDgimn, params, null);
   return result === null ? {
     data: null,
   } : result.Datas;

@@ -26,6 +26,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { blue, red } from '@ant-design/colors';
@@ -221,7 +222,7 @@ export default class Index extends Component {
       type: 'standardData/exportDischargeStandValue',
       payload: { ...queryPar,PageIndex:undefined,PageSize:undefined, },
       callback: data => {
-        downloadFile(`/wwwroot${data}`);
+        downloadFile(`${data}`);
       },
     });
   };

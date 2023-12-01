@@ -3,7 +3,7 @@ import { API } from '@config/API'
 
 // 获取污染物类型 - 表头
 export async function getPollutantList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode', params, null);
+  const result = await post(API.CommonApi.GetPollutantTypeCode, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -11,7 +11,7 @@ export async function getPollutantList(params) {
 
 // 获取站点日报数据
 export async function getSiteDailyDayReport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetDayReport', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetDayReport, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -37,7 +37,7 @@ export async function getEnterpriseList(params) {
  * 获取汇总日报数据
  */
 export async function getDailySummaryList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetSummaryDayReport', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryDayReport, params, null);
   return result === null ? { data: null } : result;
 }
 
@@ -45,7 +45,7 @@ export async function getDailySummaryList(params) {
  * 报表导出
  */
 export async function reportExcel(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetReportExcel', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetReportExcel, params, null);
   return result === null ? { data: null } : result;
 }
 
@@ -53,7 +53,7 @@ export async function reportExcel(params) {
  * 汇总报表导出
  */
 export async function summaryReportExcel(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetSummaryReportExcel', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryReportExcel, params, null);
   return result === null ? { data: null } : result;
 }
 
@@ -89,7 +89,7 @@ export async function getStatisticsReportDataExcel(params) {
  * 获取站点月报数据
  */
 export async function getMonthlyReport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetMonthReport', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetMonthReport, params, null);
   return result === null ? { data: null } : result;
 }
 
@@ -97,7 +97,7 @@ export async function getMonthlyReport(params) {
  * 获取站点年报表
  */
 export async function getAnnalsReport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetYearReport', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetYearReport, params, null);
   return result === null ? { data: null } : result;
 }
 
@@ -105,7 +105,7 @@ export async function getAnnalsReport(params) {
  * 获取汇总月报数据
  */
 export async function getSummaryMonthReport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetSummaryMonthReport', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryMonthReport, params, null);
   return result === null ? { data: null } : result;
 }
 
@@ -113,7 +113,7 @@ export async function getSummaryMonthReport(params) {
  * 获取汇总年报数据
  */
 export async function getSummaryYearReport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetSummaryYearReport', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryYearReport, params, null);
   return result === null ? { data: null } : result;
 }
 

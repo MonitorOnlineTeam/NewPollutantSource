@@ -1729,7 +1729,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item label="签约客户名称"  >
-            {data.CustomName}
+            {data.SignName}
           </Form.Item>
         </Col>
         <Col span={8}>

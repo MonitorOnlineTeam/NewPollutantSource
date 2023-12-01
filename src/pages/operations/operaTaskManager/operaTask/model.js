@@ -344,7 +344,7 @@ export default Model.extend({
       const result = yield call(services.ExportSystemModelList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       } else {
         message.error('下载失败')
       }

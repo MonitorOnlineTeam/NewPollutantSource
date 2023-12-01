@@ -276,7 +276,7 @@ export async function exportTaskRecord(params) {
 
 // 获取所有用户
 export async function GetAllUser(params) {
-  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetAllUser', params);
+  const result = await post(API.AssetManagementApi.GetAllUser, params);
   return result;
 }
 

@@ -110,7 +110,7 @@ export default Model.extend({
             const response = yield call(ExportUserList, { ...payload });
             if (response.IsSuccess) {
                 message.success('下载成功');
-                downloadFile(`/wwwroot${response.Datas}`);
+                downloadFile(`${response.Datas}`);
             } else {
                 message.warning(response.Message);
             }
@@ -428,19 +428,19 @@ export default Model.extend({
             payload.callback();
         },
         /*获取行政区详细信息及层级关系**/
-        * getregioninfobytree({
-            payload
-        }, {
-            call,
-            update,
-        }) {
-            const result = yield call(getregioninfobytree, { ...payload });
-            if (result.IsSuccess) {
-                yield update({
-                    RegionInfoTree: result.Datas.list
-                });
-            }
-        },
+        // * getregioninfobytree({
+        //     payload
+        // }, {
+        //     call,
+        //     update,
+        // }) {
+        //     const result = yield call(getregioninfobytree, { ...payload });
+        //     if (result.IsSuccess) {
+        //         yield update({
+        //             RegionInfoTree: result.Datas.list
+        //         });
+        //     }
+        // },
         /*获取企业+排口**/
         * getentandpoint({
             payload

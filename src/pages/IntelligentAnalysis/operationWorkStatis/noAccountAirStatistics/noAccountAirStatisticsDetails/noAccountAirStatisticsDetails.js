@@ -30,6 +30,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 const { Search } = Input;
@@ -165,7 +166,7 @@ let requestData = JSON.parse(this.props.requestData)
       type: 'noAccountAirStatistics/exportDefectDataSummary',
       payload: {  ...requestData, ...{ModelType:'Region'}  },
       callback: data => {
-        downloadFile(`/wwwroot${data}`);
+        downloadFile(`${data}`);
       },
     });
   };

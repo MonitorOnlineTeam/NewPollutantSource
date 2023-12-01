@@ -134,6 +134,6 @@ export async function GetAndroidOrIosSettings(params) {
  * 用户恢复
  */
 export async function RecoveryUser(params) {
-  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/RecoveryUser', params);
+  const result = await post(API.AssetManagementApi.RecoveryUserInfo, params);
   return result;
 }

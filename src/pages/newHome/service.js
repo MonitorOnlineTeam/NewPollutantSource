@@ -3,7 +3,7 @@ import { API } from '@config/API'
 
 // 获取所有污染物
 export async function getPollutantList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode', params, null);
+  const result = await post(API.CommonApi.GetPollutantTypeCode, params, null);
   return result;
 }
 
@@ -74,7 +74,7 @@ export async function getOfficeStockList(params) {
 
 // 获取监测点infoWindow数据
 export async function getInfoWindowData(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AllTypeSummaryList', params, null);
+  const result = await post(API.WholeProcessMonitorApi.AllTypeSummaryList, params, null);
   return result;
 }
 

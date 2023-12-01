@@ -34,7 +34,7 @@ export default Model.extend({
         const result = yield call(services.exportOperateRIHPointList, payload);
          if (result.IsSuccess) {
             message.success('下载成功');
-           downloadFile(`/wwwroot${result.Datas}`);
+           downloadFile(`${result.Datas}`);
           } else {
          message.warning(result.Message);
          yield update(exportStatus(false))

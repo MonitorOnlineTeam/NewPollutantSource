@@ -34,6 +34,8 @@ const apiHost = 'http://172.16.12.39:9002/';
 // const apiHost = 'http://172.16.9.53:8036/'
 // 文件上传地址
 const uploadHost = apiHost;
+const uploadPrefix = '/wwwroot';
+
 // 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
 const webSocketPush = '172.16.12.55:50083,111.53.101.207:1501';
 // GBS国标视频接口地址
@@ -47,6 +49,7 @@ module.exports = {
   amapKey: 'c364929088c3e481bb0b40b0d121a0c4',
   apiHost,
   uploadHost,
+  uploadPrefix,
   XinJiang,
   GBSVideoApiUrl,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）

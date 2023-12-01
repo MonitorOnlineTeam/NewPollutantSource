@@ -65,7 +65,7 @@ export default Model.extend({
       const response = yield call(services.ExportProjectInfoList, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${response.Datas}`);
+        downloadFile(`${response.Datas}`);
       } else {
         message.warning(response.Message);
       }
@@ -74,7 +74,7 @@ export default Model.extend({
       const response = yield call(services.ExportProjectPointList, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${response.Datas}`);
+        downloadFile(`${response.Datas}`);
       } else {
         message.warning(response.Message);
       }

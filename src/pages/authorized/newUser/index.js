@@ -71,7 +71,7 @@ const { SHOW_PARENT } = TreeSelect;
   rolesList: usertree.RolesTree,
   userPar: newuserinfo.userPar,
   RegionInfoTree: autoForm.regionList,
-  GetRegionInfoByTree: loading.effects['newuserinfo/getregioninfobytree'],
+  // GetRegionInfoByTree: loading.effects['newuserinfo/getregioninfobytree'],
   CheckPointLoading: loading.effects['newuserinfo/getpointbydepid'],
   getentandpointLoading: loading.effects['newuserinfo/getentandpoint'],
   EntAndPoint: newuserinfo.EntAndPoint,
@@ -98,6 +98,7 @@ export default class UserInfoIndex extends Component {
       okLoading: false,
       pollutantType: 2,
       entPointName:'',
+      checkedKeys:[],
     };
 
     this.columns = [
@@ -315,10 +316,10 @@ export default class UserInfoIndex extends Component {
       return;
     }
     const keys = this.state.selectedRow.ID;
-    this.props.dispatch({
-      type: 'newuserinfo/getregioninfobytree',
-      payload: {},
-    });
+    // this.props.dispatch({
+    //   type: 'newuserinfo/getregioninfobytree',
+    //   payload: {},
+    // });
     this.setState({
       visibleData: true,
       pollutantType: 2,
@@ -936,19 +937,6 @@ export default class UserInfoIndex extends Component {
                     size="large"
                   />
                 ) : this.props.EntAndPoint.length > 0 ? (
-                  // <Tree
-                  //   key="key"
-                  //   style={{ overflow: 'auto' }}
-                  //   checkable
-                  //   onExpand={this.onExpands}
-                  //   treeData={this.state.newEntAndPoint}
-                  //   onCheck={this.onChecks}
-                  //   checkedKeys={this.state.checkedKeys}
-                  //   height={555}
-                  //   defaultExpandAll
-                  // >
-                  //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
-                  // </Tree>
                   <Spin spinning={this.state.okLoading}>
                     <TreeTransfer
                       key="key"

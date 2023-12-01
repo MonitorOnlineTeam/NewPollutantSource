@@ -337,7 +337,7 @@ class index extends PureComponent {
                     }}>
                     {this.pointList()}
                 </Select>
-                <label>监测时间:</label><DatePicker size='default' onChange={this.DatePickerHandle} defaultValue={time} style={{ marginLeft: 10, marginRight: 10 }} />
+                <label>监测时间:</label><DatePicker size='default' style={{ width: 200 }} onChange={this.DatePickerHandle} defaultValue={time} style={{ marginLeft: 10, marginRight: 10 }} />
 
                 <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>

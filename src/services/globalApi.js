@@ -18,7 +18,7 @@ export async function getSystemConfigInfo() {
 //报警关联列表
 export async function GetAlarmPushDepOrRole(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/AuthorApi/GetAlarmPushDepOrRole',
+    API.AssetManagementApi.GetAlarmPushDepOrRole,
     params,
     null,
   );

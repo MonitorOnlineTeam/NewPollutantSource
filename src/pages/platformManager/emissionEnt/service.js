@@ -7,7 +7,7 @@ import { API } from '@config/API'
  */
 export async function GetTransmissionEfficiencyForRegion(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForRegion',
+    API.WholeProcessMonitorApi.GetTransmissionEfficiencyRateList,
     params,
     null,
   );
@@ -19,7 +19,7 @@ export async function GetTransmissionEfficiencyForRegion(params) {
 
 export async function GetTransmissionEfficiencyForPoint(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForPoint',
+    API.WholeProcessMonitorApi.GetTransmissionEfficiencyRateList,
     params,
     null,
   );
@@ -30,7 +30,7 @@ export async function GetTransmissionEfficiencyForPoint(params) {
 
 export async function GetTransmissionEfficiencyForEnt(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForEnt',
+    API.WholeProcessMonitorApi.GetTransmissionEfficiencyRateList,
     params,
     null,
   );
@@ -49,7 +49,7 @@ export async function GetEntByRegion(params) {
 
 export async function ExportTransmissionEfficiencyForRegion(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForRegion',
+    API.WholeProcessMonitorApi.ExportTransmissionEfficiencyRateList,
     params,
     null,
   );
@@ -61,7 +61,7 @@ export async function ExportTransmissionEfficiencyForRegion(params) {
 
 export async function ExportTransmissionEfficiencyForEnt(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForEnt',
+    API.WholeProcessMonitorApi.ExportTransmissionEfficiencyRateList,
     params,
     null,
   );

@@ -28,7 +28,7 @@ export async function getPollutantTypeList(params) {
  */
 export async function querypollutanttypecode(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode',
+    API.CommonApi.GetPollutantTypeCode,
     params,
     null
   );
@@ -49,7 +49,7 @@ export async function querypollutanttypecode(params) {
 export async function querydatalist(params) {
   if (params.dgimn) params.DGIMNs = params.dgimn;
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/AllTypeSummaryList',
+    API.WholeProcessMonitorApi.AllTypeSummaryList,
     params,
     null,
   );
@@ -66,7 +66,7 @@ export async function querydatalist(params) {
  */
 export async function querylastestdatalist(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/DataList/AllTypeSummaryList',
+    API.WholeProcessMonitorApi.AllTypeSummaryList,
     params,
     null,
   );
@@ -122,7 +122,7 @@ export async function querygetentdatalist(params) {
 // 获取实时数据一览表头
 export async function getRealTimeColumn(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode',
+    API.CommonApi.GetPollutantTypeCode,
     params,
     null
   );
@@ -132,7 +132,7 @@ export async function getRealTimeColumn(params) {
 // 获取实时数据一览
 export async function getRealTimeDataView(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/AllTypeSummaryList',
+    API.WholeProcessMonitorApi.AllTypeSummaryList,
     params,
     null,
   );

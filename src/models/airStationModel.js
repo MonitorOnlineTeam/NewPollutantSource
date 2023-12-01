@@ -7,7 +7,9 @@ import Model from '@/utils/model';
 import {GetPointSummary,ExportPointSummary } from '../services/airStationApi'
 import moment from 'moment';
 import { message } from 'antd';
+import config from '@/config';
 import { downloadFile } from '@/utils/utils';
+
 export default Model.extend({
     namespace: 'airStationModel',
     state: {
@@ -61,7 +63,7 @@ export default Model.extend({
             const result = yield call(ExportPointSummary,body,null)
             if(result.IsSuccess)
             {
-                downloadFile(`/wwwroot${result.Datas}`)
+                downloadFile(`${result.Datas}`)
             }
         },
     },

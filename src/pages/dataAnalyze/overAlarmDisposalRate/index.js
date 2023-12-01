@@ -14,6 +14,7 @@ import '@ant-design/compatible/assets/index.css';
 import { Card, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import moment from 'moment';
 import { router } from 'umi';
@@ -151,7 +152,7 @@ class index extends PureComponent {
         Rate: 1,
       },
       callback: data => {
-        downloadFile(`/wwwroot${data}`);
+        downloadFile(`${data}`);
       },
     });
   };

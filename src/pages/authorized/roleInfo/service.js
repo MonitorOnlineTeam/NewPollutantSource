@@ -5,7 +5,7 @@ import { API } from '@config/API'
 
 // 获取角色详细信息及层级关系
 export async function getroleinfobytree(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRoleInfoByTree', params);
+    const result = post(API.AssetManagementApi.GetRoleInfoByTree, params);
     return result === null ? {
         data: null
     } : result;
@@ -15,7 +15,7 @@ export async function getroleinfobyid(params) {
     const body = {
         Roles_ID: params.Roles_ID
     };
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRoleInfoByID', body);
+    const result = post(API.AssetManagementApi.GetRoleInfoByID, body);
     return result === null ? {
         data: null
     } : result;
@@ -27,7 +27,7 @@ export async function insertroleinfo(params) {
         Roles_Name: params.Roles_Name,
         Roles_Remark: params.Roles_Remark,
     };
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertRoleInfo', body);
+    const result = post(API.AssetManagementApi.InsertRoleInfo, body);
     return result === null ? {
         data: null
     } : result;
@@ -37,7 +37,7 @@ export async function delroleinfo(params) {
     const body = {
         Roles_ID: params.Roles_ID,
     };
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/DelRoleInfo', body);
+    const result = post(API.AssetManagementApi.DelRoleInfo, body);
     return result === null ? {
         data: null
     } : result;
@@ -50,7 +50,7 @@ export async function updroleinfo(params) {
         Roles_Name: params.Roles_Name,
         Roles_Remark: params.Roles_Remark,
     };
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/UpdRoleInfo', body);
+    const result = post(API.AssetManagementApi.UpdRoleInfo, body);
     return result === null ? {
         data: null
     } : result;
@@ -64,7 +64,7 @@ export async function getrolestreeandobj(params) {
 }
 // 获取所有用户
 export async function getalluser(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetAllUser', params, null);
+    const result = post(API.AssetManagementApi.GetAllUser, params, null);
     return result === null ? {
         data: null
     } : result;
@@ -74,7 +74,7 @@ export async function getuserbyroleid(params) {
     const body={
         Roles_ID:params.Roles_ID
     }
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserByRoleId', body, null);
+    const result = post(API.AssetManagementApi.GetUserByRoleId, body, null);
     return result === null ? {
         data: null
     } : result;
@@ -85,14 +85,14 @@ export async function insertrolebyuser(params) {
         Roles_ID:params.Roles_ID,
         User_ID:params.User_ID
     }
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertRoleByUser', body, null);
+    const result = post(API.AssetManagementApi.InsertRoleByUser, body, null);
     return result === null ? {
         data: null
     } : result;
 }
 // 获取根节点下拉选择权限（角色）
 export async function getparenttree(params) {
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetParentTree', params, null);
+    const result = post(API.AssetManagementApi.GetParentTree, params, null);
     return result === null ? {
         data: null
     } : result;
@@ -103,7 +103,7 @@ export async function getrolemenutree(params) {
         Type:params.Type,
         AuthorID:params.AuthorID
     }
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRoleMenuTree', body);
+    const result = post(API.AssetManagementApi.GetRoleMenuTree, body);
     return result === null ? {
         data: null
     } : result;
@@ -113,7 +113,7 @@ export async function getmenubyroleid(params) {
     const body={
         Roles_ID:params.Roles_ID
     }
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetMenuByRoleID', body, null);
+    const result = post(API.AssetManagementApi.GetMenuByRoleID, body, null);
     return result
 }
 // 给角色添加菜单（可批量）
@@ -122,7 +122,7 @@ export async function insertmenubyroleid(params) {
         Roles_ID:params.Roles_ID,
         MenuID:params.MenuID
     }
-    const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertMenuByRoleID', body, null);
+    const result = post(API.AssetManagementApi.InsertMenuByRoleID, body, null);
     return result === null ? {
         data: null
     } : result;

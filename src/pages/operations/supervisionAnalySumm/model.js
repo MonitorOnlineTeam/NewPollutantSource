@@ -42,7 +42,7 @@ export default Model.extend({
       const result = yield call(services.ExportInspectorSummaryList , payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        downloadFile(`/wwwroot${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       } else {
         message.error(result.Message)
       }
@@ -78,7 +78,7 @@ export default Model.extend({
       const result = yield call(services.ExportRemoteSummaryList, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        downloadFile(`/wwwroot${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       } else {
         message.error(result.Message)
       }

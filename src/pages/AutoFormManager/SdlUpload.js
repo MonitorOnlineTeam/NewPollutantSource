@@ -103,7 +103,6 @@ class SdlUpload extends Component {
         let fileList = info.fileList;
         console.log('info=', info)
         if (info.file.status === 'done') {
-          // let before = action ? '/' : '/wwwroot/';
           let before = '/'
           // setFieldsValue({ cuid: cuid })
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);

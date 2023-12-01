@@ -493,7 +493,7 @@ export default Model.extend({
       const result = yield call(services.ExportResponseList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
         callback()
       } else {
         message.error(result.Message)
@@ -523,7 +523,7 @@ export default Model.extend({
       const result = yield call(services.ExportOperationPlanTaskList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/wwwroot${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message)
       }

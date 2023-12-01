@@ -93,6 +93,7 @@ export default class UserAuthority extends Component {
       newEntAndPoint:[],
       okLoading:false,
       pollutantType:2,
+      checkedKeys:[],
     };
 
     this.columns = [
@@ -285,10 +286,10 @@ export default class UserAuthority extends Component {
       return;
     }
     const keys = this.state.selectedRow.ID;
-    this.props.dispatch({
-      type: 'userAuthority/getregioninfobytree',
-      payload: {},
-    });
+    // this.props.dispatch({
+    //   type: 'userAuthority/getregioninfobytree',
+    //   payload: {},
+    // });
     this.setState({
       visibleData: true,
       DataTreeValue: [],
@@ -869,20 +870,6 @@ export default class UserAuthority extends Component {
                         size="large"
                       />
                     ) : this.props.EntAndPoint&&this.props.EntAndPoint.length > 0 ? (
-                      // <Tree
-                      //   key="key"
-                      //   style={{ height: '560px', overflow: 'auto' }}
-                      //   checkable
-                      //   onExpand={this.onExpands}
-                      //   treeData={this.state.newEntAndPoint}
-                      //   onCheck={this.onChecks}
-                      //   checkedKeys={this.state.checkedKeys}
-                      //   onSelect={this.onSelectData}
-                      //   // selectedKeys={this.state.selectedKeys}
-                      //   defaultExpandAll
-                      // >
-                      //   {this.renderDataTreeNodes(this.state.newEntAndPoint)}
-                      // </Tree>
                       <Spin spinning={this.state.okLoading}>
                       <TreeTransfer
                         key="key"

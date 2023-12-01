@@ -13,6 +13,7 @@ import { getregioninfobytree,getentandpoint,getpointbydepid,} from '../departInf
 import { postAutoFromDataAdd, postAutoFromDataUpdate } from '@/services/autoformapi'
 import { message } from 'antd';
 import { sdlMessage } from '@/utils/utils';
+import config from '@/config'
 import { downloadFile,interceptTwo } from '@/utils/utils';
 
 /*
@@ -103,7 +104,7 @@ export default Model.extend({
             const response = yield call(ExportUserList, { ...payload });
             if (response.IsSuccess) {
               message.success('下载成功');
-              downloadFile(`/wwwroot${response.Datas}`);
+              downloadFile(`${response.Datas}`);
             } else {
               message.warning(response.Message);
             }

@@ -11,6 +11,7 @@ import {GetEntByRegion,GetAlarmVerifyRate,GetAlarmVerifyRateDetail,GetAlarmVerif
 } from '../services/exceedDataAlarmApi'
 import moment from 'moment';
 import { message } from 'antd';
+import config from '@/config';
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
@@ -191,7 +192,7 @@ export default Model.extend({
     const result = yield call(ExportAlarmVerifyRate,body,null)
     if(result.IsSuccess)
     {
-      downloadFile(`/wwwroot${result.Datas}`)
+      downloadFile(`${result.Datas}`)
     }
   },//超标报警核实详情
     *ExportAlarmVerifyRateDetail({ payload }, { call, put, update, select }) {
@@ -209,7 +210,7 @@ export default Model.extend({
         }
         const result = yield call(ExportAlarmVerifyRateDetail, body, null)
         if (result.IsSuccess) {
-          downloadFile(`/wwwroot${result.Datas}`)
+          downloadFile(`${result.Datas}`)
         }
     },//超标报警核实详细
   *ExportAlarmVerifyDetail({ payload }, { call, put, update, select }){
@@ -229,7 +230,7 @@ export default Model.extend({
       }
       const result = yield call(ExportAlarmVerifyDetail, body, null)
       if (result.IsSuccess) {
-        downloadFile(`/wwwroot${result.Datas}`)
+        downloadFile(`${result.Datas}`)
       }
     },
   },

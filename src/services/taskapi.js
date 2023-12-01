@@ -7,6 +7,8 @@
  */
 import { post, get, authorpost } from '@/utils/request';
 import { EnumRejectFlag } from '../utils/enum';
+import { API } from '@config/API'
+
 // 污染源运维的相关接口
 export async function GetTaskRecord(params) {
     const body = {

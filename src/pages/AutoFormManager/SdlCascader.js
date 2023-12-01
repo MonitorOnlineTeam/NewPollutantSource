@@ -37,7 +37,7 @@ class SdlCascader extends Component {
   // }
 
   componentDidMount() {
-    const { dispatch, data, configId, itemValue, itemName,noFilter,regionList,noFilterRegionList,testRegionList, } = this.props;
+    const { dispatch, data, configId, itemValue, itemName,noFilter,regionList,noFilterRegionList,testRegionList,isCtPoll, } = this.props;
     // !data.length && dispatch({
     //   type: 'autoForm/getRegions',
     // })
@@ -84,7 +84,16 @@ class SdlCascader extends Component {
         }
         setTimeout(() => { this.setState({ industryTreeList: this.industryTreeListFormat(regionList, 1) }), 300 })
        }
-    }else if(itemName === 'dbo.View_TestRegion.RegionName'){ //调试服务
+    }else if(itemName === 'dbo.View_TestRegion.RegionName'){ //调试服务和成套污染源管理
+      if(isCtPoll){ //成套污染源管理
+        this.props.dispatch({
+          type: "common/getCtTestXuRegions",
+          payload: { PointMark: '2' },
+          callback: (res) => {
+            this.setState({ industryTreeList: this.industryTreeListFormat(res, 1) })
+          }
+        })
+      }else{ //调试服务
        if(testRegionList&&testRegionList[0]){
         this.setState({ industryTreeList: this.industryTreeListFormat(testRegionList, 1) })
        }else{
@@ -96,6 +105,7 @@ class SdlCascader extends Component {
           }
         })
       }
+    }
     } else {
       !data.length && this.props.dispatch({
         type: "common/getIndustryTree",
