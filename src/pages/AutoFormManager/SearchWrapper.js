@@ -301,6 +301,7 @@ class SearchWrapper extends Component {
               placeholder={placeholder}
               data={ item.value}
               selectType={labelText==='行政区'&&!this.props.isCoustom?  item.DF_OtherOptions : this.props.isCoustom? this.props.selectType : '999,是'}
+              isCtPoll={configId==='CTEnterprise'}
             />
           );
           break;

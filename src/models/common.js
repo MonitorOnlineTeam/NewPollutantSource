@@ -344,7 +344,7 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 行政区 调试服务
+    // 行政区 成套污染源管理
     *getCtTestXuRegions({ payload, callback }, { call, update }) {
       const result = yield call(services.GetCtTestXuRegions, payload);
       if (result.IsSuccess) {
