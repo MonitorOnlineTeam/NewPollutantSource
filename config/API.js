@@ -42,14 +42,15 @@ export const API = {
     GetNoFilterRegionList: before + '/RegionApi/GetNoFilterRegionList',//获取无权限过滤的行政区信息
     GetXuRegions: before + '/RegionApi/GetXuRegions',//获取所有省份及省份下的市县
     GetRegions: before + '/RegionApi/GetRegions', //获取行政区
-    GetAttentionDegreeList: before + '/RegionApi/GetAttentionDegreeList',   //获取关注程度
+    GetAttentionDegreeList: before + '/RegionApi/GetAttentionDegreeList',//获取关注程度
     GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',//根据行政区查询企业
     GetEntAndPoint: before + '/EnterpriseApi/GetEntAndPoint',//获取企业和企业对应的排口信息
     GetPointByEntCode: before + '/MonitorPointApi/GetPointByEntCode',//根据企业编号与污染物编号查询排口
-    GetPollutantCodeList: before + '/MonitorPollutantApi/GetPollutantCodeList',//获取污染物列表
-    GetPollutantTypeCode: before + '/MonitorPollutantApi/GetPollutantTypeCode',//根据污染物类型获取污染物
+    GetPollutantCodeList: before + '/MonitorPollutantApi/GetPollutantCodeList',//根据污染物类型获取污染物
+    GetPollutantTypeCode: before + '/MonitorPollutantApi/GetPollutantTypeCode',//获取数据一览表头，包括因子编码、因子名称、因子单位
     GetPollutantListByDgimn: before + '/MonitorPollutantApi/GetPollutantListByDgimn',//根据MN号获取污染物
     GetPollutantTypeList: before + '/MonitorPollutantApi/GetPollutantTypeList',//获取系统污染物类型信息
+    GetPollutantByType: before + '/MonitorPollutantApi/GetPollutantByType', //根据企业类型查询监测因子
     GetStandardPollutantsByDgimn: before + '/StandardLibraryApi/GetStandardPollutantsByDgimn', //根据排口获取标准污染物列表
     GetPollutantTypeMonitoringCategoryInfo: before + '/BaseDataApi/GetPollutantTypeMonitoringCategoryInfo',//获取设备信息监测参数类型
     GeteTaskOrderTypeByPollutantType: before + '/OperationWorkbenchApi/GeteTaskOrderTypeByPollutantType', // 根据污染物类型获取表单类型
@@ -85,7 +86,7 @@ export const API = {
     ExportEquipmentFailureRateList: before + '/VisualDashBoardApi/ExportEquipmentFailureRateList',//导出省、市、企业监测点设备故障率
     GetEquipmentRepairRateList: before + '/VisualDashBoardApi/GetEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
     ExportEquipmentRepairRateList: before + '/VisualDashBoardApi/ExportEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
- 
+
   },
 
   // 全过程监控Api
@@ -93,9 +94,9 @@ export const API = {
     /**监测数据总览**/
     /*数据总览*/
     AllTypeSummaryList: before + '/MonBasicDataApi/AllTypeSummaryList', //获取获取站点基本信息、在线状态、报警状态、最新一条小时监测数据，包括污染源、空气质量
-   /*在线监测数据*/
+    /*在线监测数据*/
     GetAllTypeDataList: before + '/MonitorPointApi/GetAllTypeDataList',//获取各种类型的数据列表（实时、分钟、小时、日均）
-  
+
     /**质控数据总览**/
     /*有效传输率排名*/
     GetTransmissionEfficiencyRateList: before + '/StatisticAnalysisApi/GetTransmissionEfficiencyRateList',//获取省、市、监测点有效传输率统计信息
@@ -111,7 +112,7 @@ export const API = {
     GetDayReport: before + '/StatisticAnalysisApi/GetDayReport',//获取站点日报报表
     GetMonthReport: before + '/StatisticAnalysisApi/GetMonthReport',//获取站点月报报表
     GetYearReport: before + '/StatisticAnalysisApi/GetYearReport',//获取站点年报报表
-    GetReportExcel:before + '/StatisticAnalysisApi/GetReportExcel',//导出站点日报、月报、年报报表
+    GetReportExcel: before + '/StatisticAnalysisApi/GetReportExcel',//导出站点日报、月报、年报报表
     GetSummaryDayReport: before + '/StatisticAnalysisApi/GetSummaryDayReport',//获取站点汇总日报报表
     GetSummaryMonthReport: before + '/StatisticAnalysisApi/GetSummaryMonthReport',//获取站点汇总月报报表
     GetSummaryYearReport: before + '/StatisticAnalysisApi/GetSummaryYearReport',//获取站点汇总年报报表
@@ -119,23 +120,89 @@ export const API = {
   },
 
   //预测性维护Api
-  PredictiveMaintenanceApi:{
-     /**智慧运维**/
+  PredictiveMaintenanceApi: {
+    /**智慧运维**/
+    /*运维日历*/
+    GetCalendarInfo: before + '/WorkOrderApi/GetCalendarInfo', //获取日历上工单统计信息
+    /*运维日志*/
+    GetOperationLogsList: before + '/WorkOrderApi/GetOperationLogsList', //获取运维日志记录
+    /*运维工单*/
+    GetOperationTaskList: before + '/WorkOrderApi/GetOperationTaskList', //获取运维工单记录
+    ExportOperationTaskList: before + '/WorkOrderApi/ExportOperationTaskList', //导出运维工单记录
+    GetTaskDetails: before + '/WorkOrderApi/GetTaskDetails', //获取运维工单详情
+    RejectTask: before + '/WorkOrderApi/RejectTask', //驳回任务
+    /*工单进度*/
+    GetWorkProgressList: before + '/WorkOrderApi/GetWorkProgressList', //获取指挥调度
+    /*运维工单分析*/
+    GetWorkOrderAnalysisList: before + '/WorkOrderStatistics/GetWorkOrderAnalysisList',//获取运维工单统计信息
+    ExportWorkOrderAnalysisList: before + '/WorkOrderStatistics/ExportWorkOrderAnalysisList',//导出运维工单统计信息
     /*异常工单分析*/
-    GetExceptionTaskOrderList: before + '/OperationApi/GetExceptionTaskOrderList', //获取行政区运维工单统计信息
-    ExportExceptionTaskOrderList: before + '/OperationApi/ExportExceptionTaskOrderList', //导出行政区运维工单统计信息
-    GetWorkOrderAnalysisList: before + '/OperationApi/GetWorkOrderAnalysisList',//获取企业运维工单统计信息
-    ExportWorkOrderAnalysisList: before + '/OperationApi/ ExportWorkOrderAnalysisList',//导出企业运维工单统计信息
-   
-   
-    GetExceptionTaskOrderSignList: before + '/OperationApi/GetExceptionTaskOrderSignList', //获取企业异常打卡信息
-     /*运维到期提醒*/
+    GetExceptionTaskOrderList: before + '/WorkOrderStatistics/GetExceptionTaskOrderList', //获取异常工单信息
+    ExportExceptionTaskOrderList: before + '/WorkOrderStatistics/ExportExceptionTaskOrderList', //导出异常工单信息
+    GetExceptionTaskOrderSignList: before + '/WorkOrderStatistics/GetExceptionTaskOrderSignList', //获取企业异常打卡信息（地图）
+
+    /*运维到期提醒*/
     GetOperationExpireAnalysis: before + '/OperationExpireAnalysis/GetOperationExpireAnalysis',//运维到期点位统计
     ExportOperationExpireAnalysis: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//导出运维到期点位统计
+
   },
   //智能诊断Api
-  IntelligentDiagnosis:{
-     /**异常数据分析**/
+  IntelligentDiagnosis: {
+    /**异常数据处置**/
+    /*异常数据上报*/
+    GetExceptionReportList: before + '/ExceptionResponseRateApi/GetExceptionReportList',//获取异常数据上报信息、企业异常记录
+    AddOrUpdateExceptionReportInfo: before + '/ExceptionResponseRateApi/AddOrUpdateExceptionReportInfo',//添加更新异常数据上报信息
+    DeleteExceptionReportInfo: before + '/ExceptionResponseRateApi/DeleteExceptionReportInfo',//删除异常数据上报信息
+    /*设备故障反馈*/
+    GetEquipmentFaultFeedbackList: before + '/ExceptionResponseRateApi/GetEquipmentFaultFeedbackList',//获取设备故障反馈信息
+    ExportEquipmentFaultFeedbackList: before + '/ExceptionResponseRateApi/ExportEquipmentFaultFeedbackList',//导出设备故障反馈信息
+    UpdateEquipmentFaultFeedbackStatus: before + '/ExceptionResponseRateApi/UpdateEquipmentFaultFeedbackStatus',//更新设备故障反馈信息
+    /**异常数据分析**/
+    /*超标数据分析*/
+    GetOverDataList: before + '/WorkOrderStatistics/GetOverDataList', //获取超标数据信息
+    ExportOverDataList: before + '/WorkOrderStatistics/ExportOverDataList', //导出超标数据信息
+    GetOverStandardNum: before + '/WorkOrderStatistics/GetOverStandardNum', //获取超标次数
+    ExportOverStandardNum: before + '/WorkOrderStatistics/ExportOverStandardNum', //导出超标次数
+    /*超标数据报警*/
+    GetOverToExamineOperation: before + '/ExceptionResponseRateApi/GetOverToExamineOperation',//获取超标核实类型
+    GetAlarmVerifyRate: before + '/ExceptionResponseRateApi/GetAlarmVerifyRate',//获取超标数据信息
+    ExportAlarmVerifyRate: before + '/ExceptionResponseRateApi/ExportAlarmVerifyRate',//导出超标数据信息
+    GetAlarmVerifyRateDetail: before + '/ExceptionResponseRateApi/GetAlarmVerifyRateDetail',//获取超标数据信息详情
+    ExportAlarmVerifyRateDetail: before + '/ExceptionResponseRateApi/ExportAlarmVerifyRate',//导出超标数据信息
+    GetAlarmVerifyDetail: before + '/ExceptionResponseRateApi/GetAlarmVerifyDetail',//获取超标数据报警次数详情
+    ExportAlarmVerifyDetail: before + '/ExceptionResponseRateApi/ExportAlarmVerifyDetail',//导出超标数据报警次数详情
+    /*缺失数据分析*/
+    GetMissDataList: before + '/ExceptionDataApi/GetMissDataList',//获取缺失数据信息
+    ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList',//导出缺失数据信息
+    GetMissDataResponseRateList: before + '/ExceptionDataApi/GetMissDataResponseRateList',//获取缺失数据响应和响应率信息
+    ExportExceptionReportedList: before + '/ExceptionDataApi/ExportExceptionReportedList',//导出缺失数据响应和响应率信息
+    /*异常数据分析*/
+
+    /*异常数据报警*/
+    GetProvinceExceptionDataAlaramList: before + '/ExceptionDataApi/GetProvinceExceptionDataAlaramList',//获取省级异常数据报警信息
+    ExportProvinceExceptionDataAlaramList: before + '/ExceptionDataApi/ExportProvinceExceptionDataAlaramList',//导出异常数据报警信息
+    GetCityExceptionDataAlaramList: before + '/ExceptionDataApi/GetCityExceptionDataAlaramList',//获取市级异常数据报警信息
+    ExportCityExceptionDataAlaramList: before + '/ExceptionDataApi/ExportProvinceExceptionDataAlaramList',//导出市级异常数据报警信息
+    GetEntExceptionDataAlaramList: before + '/ExceptionDataApi/GetEntExceptionDataAlaramList',//获取企业异常数据报警信息
+    ExportEntExceptionDataAlaramList: before + '/ExceptionDataApi/ExportEntExceptionDataAlaramList',//导出企业异常数据报警信息
+    /*停运记录分析*/
+    GetStopList: before + '/OutputStopApi/GetStopList',//获取停运记录
+    ExportStopList: before + '/OutputStopApi/GetStopList',//导出停运记录
+    /*企业异常记录*/
+    ExportExceptionReportList: before + '/OutputStopApi/ExportExceptionReportList',//获取企业异常记录
+    /**异常规则信息**/
+    /*监测标准设置*/
+    GetMonitorPointPollutantDetails: before + '/StandardLibraryApi/GetMonitorPointPollutantDetails',//获取监测污染物详情
+    UsePollutant: before + '/StandardLibraryApi/UsePollutant',//修改污染物监测状态
+    UseStatisti: before + '/StandardLibraryApi/UseStatisti',//修改污染物是否考核
+    EditMonitorPointPollutant: before + '/StandardLibraryApi/EditMonitorPointPollutant',//更新污染物设置标准
+    /*排放标准记录*/
+    GetDischargeStandValue: before + '/MonitorPointApi/GetDischargeStandValue',//获取排放标准记录
+    ExportDischargeStandValue: before + '/MonitorPointApi/ExportDischargeStandValue',//导出排放标准记录
+    /*排放标准记录*/
+    GetExceptionStandValue: before + '/MonitorPointApi/GetExceptionStandValue',//获取异常标准记录
+    ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue',//导出异常标准记录
+
   },
 
 
@@ -279,7 +346,6 @@ export const API = {
     DeleteCustomerRenewDetail: before + '/CustomerServiceApi/GetCustomerRenewList',//删除客户续费详情信息
     /*续费日志 */
     GetCustomerRenewOperationLogs: before + '/CustomerServiceApi/GetCustomerRenewOperationLogs',//获取客户订单日志和客户订单详情日志信息
-
     /*** 权限管理 ***/
     /*用户管理*/
     GetUserList: before + '/UserApi/GetUserList',//获取用户信息
@@ -309,7 +375,7 @@ export const API = {
     InsertAlarmDepOrRole: before + 'AuthorizeApi/InsertAlarmDepOrRole',//添加或修改部门或角色报警关联
     /*角色管理*/
     GetRoleInfoByTree: before + '/RoleApi/GetRoleInfoByTree',//获取角色详细信息和层级关系
-    GetRoleInfoByID : before + '/RoleApi/GetRoleInfoByID',//获取单个角色信息
+    GetRoleInfoByID: before + '/RoleApi/GetRoleInfoByID',//获取单个角色信息
     GetUserByRoleId: before + '/RoleApi/GetUserByRoleId',//获取当前角色的用户
     InsertRoleInfo: before + '/RoleApi/InsertRoleInfo',//新增角色信息
     UpdRoleInfo: before + '/RoleApi/UpdRoleInfo',//更新角色信息

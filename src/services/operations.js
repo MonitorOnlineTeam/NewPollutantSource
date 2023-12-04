@@ -2,7 +2,7 @@ import { post, get, getNew } from '@/utils/request';
 import { API } from '@config/API'
 // 获取日历信息
 export async function getCalendarInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetCalendarInfo', params, null);
+  const result = await post(API.PredictiveMaintenanceApi.GetCalendarInfo, params, null);
   return result.Datas === null ? {
     Datas: [],
   } : result;
@@ -10,7 +10,7 @@ export async function getCalendarInfo(params) {
 
 // 获取异常详细信息
 export async function getAbnormalDetailList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationHistoryRecordPageList', params, null);
+  const result = await post(API.PredictiveMaintenanceApi.GetOperationTaskList, params, null);
   return result === null ? {
     data: null,
   } : result;
@@ -18,7 +18,7 @@ export async function getAbnormalDetailList(params) {
 
 // 获取运维日志信息
 export async function getOperationLogList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationPageList', params, null);
+  const result = await post(API.PredictiveMaintenanceApi.GetOperationLogsList, params, null);
   return result === null ? {
     data: null,
   } : result;
@@ -81,7 +81,7 @@ export async function addTask(params) {
 
 // 驳回
 export async function rejectTask(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/RejectTask?taskId=${params.taskId}`, {}, null);
+  const result = await post(`${API.PredictiveMaintenanceApi.RejectTask}`, {TaskID:params.taskId}, null);
   return result;
 }
 
@@ -124,7 +124,7 @@ export async function getPointInfoList(params) {
 
 /** 获取指挥调度数据 */
 export async function getcommanddispatchreport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetCommandDispatchReport', params, null);
+  const result = await post(API.PredictiveMaintenanceApi.GetWorkProgressList, params, null);
   return result;
 }
 /**

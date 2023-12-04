@@ -6,7 +6,7 @@ import { API } from '@config/API'
  */
 export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectModel',
+    API.IntelligentDiagnosis.GetMissDataList,
     params,
     null,
   );
@@ -29,7 +29,7 @@ export async function GetAttentionDegreeList(params) {
 
 export async function ExportGetAlarmDataList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetAlarmDataList',
+    API.IntelligentDiagnosis.ExportMissDataList,
     params,
     null,
   );

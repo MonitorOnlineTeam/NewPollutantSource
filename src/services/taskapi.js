@@ -16,7 +16,7 @@ export async function GetTaskRecord(params) {
         IsEnableAlarm:1, //表示为pc端调用
     };
 
-    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetTaskDetails', body, null);
+    const result = await post(API.PredictiveMaintenanceApi.GetTaskDetails, body, null);
     return result === null ? { Datas: null } : result;
 }
 
@@ -31,7 +31,7 @@ export async function GetYwdsj(params) {
         beginTime: params.beginTime,
         endTime: params.endTime,
     };
-    const result = await post('/api/rest/PollutantSourceApi/PTaskProcessing/GetOperationPageList', body, null);
+    const result = await post(API.PredictiveMaintenanceApi.GetOperationLogsList, body, null);
     return result === null ? { Datas: null } : result;
 }
 
@@ -328,7 +328,7 @@ export async function GetOperationTaskList(params) {
             CreateTime: params.CreateTime != undefined && params.CreateTime != '' ? `${params.CreateTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CreateTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
         },
     };
-    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationTaskList', body.params, null);
+    const result = await post(API.PredictiveMaintenanceApi.GetOperationTaskList, body.params, null);
     return result === null ? { Datas: null } : result;
 }
 /** 任务列表 导出 */
@@ -340,7 +340,7 @@ export async function ExportOperationTaskList(params) {
             CreateTime: params.CreateTime ? `${params.CreateTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CreateTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
         },
     };
-    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationTaskList', body.params, null);
+    const result = await post(API.PredictiveMaintenanceApi.ExportOperationTaskList, body.params, null);
     return result === null ? { Datas: null } : result;
 }
 /** 试剂更换列表 */

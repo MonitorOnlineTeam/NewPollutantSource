@@ -8,7 +8,7 @@ export async function getAttentionDegreeList(params) {
 
 // 根据企业类型查询监测因子
 export async function getPollutantByType(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantByType?type=${params.type}`, {});
+  const result = post(`${API.CommonApi.GetPollutantByType}?type=${params.type}`, {});
   return result;
 }
 

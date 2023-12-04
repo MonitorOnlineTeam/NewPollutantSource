@@ -6,7 +6,7 @@ import { API } from '@config/API'
  */
 export async function GetDischargeStandValue(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDischargeStandValue',
+    API.IntelligentDiagnosis.GetDischargeStandValue,
     params,
     null,
   );
@@ -30,7 +30,7 @@ export async function GetAttentionDegreeList(params) {
 
 export async function ExportDischargeStandValue(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDischargeStandValue',
+    API.IntelligentDiagnosis.ExportDischargeStandValue,
     params,
     null,
   );

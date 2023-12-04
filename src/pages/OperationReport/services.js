@@ -22,7 +22,7 @@ export async function getPointByEntCode(params) {
 // 超标报警审核率
 export async function GetAlarmVerifyRateDetail(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRateDetail',
+    API.IntelligentDiagnosis.GetAlarmVerifyRateDetail,
     params,
   );
   return result;

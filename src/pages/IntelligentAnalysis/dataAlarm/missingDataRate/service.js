@@ -6,7 +6,7 @@ import { API } from '@config/API'
  */
 export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectDataSummary',
+    API.IntelligentDiagnosis.GetMissDataResponseRateList,
     params,
     null,
   );
@@ -38,7 +38,7 @@ export async function GetAttentionDegreeList(params) {
 //导出 缺失数据报警
 export async function ExportDefectDataSummary(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectDataSummary',
+    API.IntelligentDiagnosis.ExportExceptionReportedList,
     params,
     null,
   );
@@ -49,7 +49,7 @@ export async function ExportDefectDataSummary(params) {
 
 export async function ExportDefectPointDetailRate(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectPointDetailRate',
+    API.IntelligentDiagnosis.ExportExceptionReportedList,
     params,
     null,
   );

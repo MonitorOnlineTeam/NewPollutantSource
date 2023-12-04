@@ -2,7 +2,7 @@ import { post } from '@/utils/request';
 import { API } from '@config/API'
 // 根据企业类型查询监测因子
 export async function GetPollutantByType(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantCodeList`, params,null);
+  const result = post(API.CommonApi.GetPollutantCodeList, params,null);
   return result;
 }
 
@@ -38,7 +38,7 @@ export async function GetDefectModelCity(params) {
  */
 export async function GetDefectPointDetail(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRateDetail',
+    API.IntelligentDiagnosis.GetAlarmVerifyRateDetail,
     params,
     null,
   );

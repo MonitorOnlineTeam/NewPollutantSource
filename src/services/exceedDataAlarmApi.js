@@ -16,37 +16,37 @@ export async function GetEntByRegion(params)
 //超标报警审核
 export async function GetAlarmVerifyRate(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRate',params,null)
+    const result = post(API.IntelligentDiagnosis.GetAlarmVerifyRate,params,null)
     return result 
 }
 //超标报警审核详情
 export async function GetAlarmVerifyRateDetail(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRateDetail',params,null)
+    const result = post(API.IntelligentDiagnosis.GetAlarmVerifyRateDetail,params,null)
     return result 
 }
 //超标报警审核详细
 export async function GetAlarmVerifyDetail(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyDetail',params,null)
+    const result = post(API.IntelligentDiagnosis.GetAlarmVerifyDetail,params,null)
     return result 
 }
 //导出超标报警审核
 export async function ExportAlarmVerifyRate(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRate',params,null)
+    const result = post(API.IntelligentDiagnosis.ExportAlarmVerifyRate,params,null)
     return result 
 }
 //导出超标报警审核详情
 export async function ExportAlarmVerifyRateDetail(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRateDetail',params,null)
+    const result = post(API.IntelligentDiagnosis.ExportAlarmVerifyRateDetail,params,null)
     return result 
 }
 //导出超标报警审核详细
 export async function ExportAlarmVerifyDetail(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyDetail',params,null)
+    const result = post(API.IntelligentDiagnosis.ExportAlarmVerifyDetail,params,null)
     return result 
 }
 //监测因子列表
@@ -58,6 +58,6 @@ export async function GetPollutantCodeList(params)
 //核实结果
 export async function GetOverToExamineOperation(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/MonitorAlarmApi/GetOverToExamineOperation',null,null)
+    const result = post(API.IntelligentDiagnosis.GetOverToExamineOperation,null,null)
     return result 
 }

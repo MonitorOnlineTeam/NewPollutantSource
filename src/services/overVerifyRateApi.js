@@ -2,7 +2,7 @@ import { post } from '@/utils/request';
 import { API } from '@config/API'
 // 根据企业类型查询监测因子
 export async function GetPollutantByType(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantCodeList`, params,null);
+  const result = post(API.CommonApi.GetPollutantCodeList, params,null);
   return result;
 }
 
@@ -12,7 +12,7 @@ export async function GetPollutantByType(params) {
  */
 export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRate',
+    API.IntelligentDiagnosis.GetAlarmVerifyRate,
     params,
     null,
   );
@@ -25,7 +25,7 @@ export async function GetDefectModel(params) {
  */
 export async function GetDefectPointDetail(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRateDetail',
+    API.IntelligentDiagnosis.GetAlarmVerifyRateDetail,
     params,
     null,
   );
@@ -47,7 +47,7 @@ export async function GetAttentionDegreeList(params) {
 
 export async function ExportDefectDataSummary(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRate',
+    API.IntelligentDiagnosis.ExportAlarmVerifyRate,
     params,
     null,
   );
@@ -58,7 +58,7 @@ export async function ExportDefectDataSummary(params) {
 //导出 报警核实率  详情
 export async function ExportDefectPointDetail(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRateDetail',
+    API.IntelligentDiagnosis.ExportAlarmVerifyRateDetail,
     params,
     null,
   );

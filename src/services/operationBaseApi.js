@@ -8,6 +8,7 @@
 
 import { async } from 'q';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API';
 
 // 获取表单类型根据mn号
 export async function getrecordtypebymn(params) {
@@ -25,7 +26,7 @@ export async function getjzhistoryinfo(params) {
 }
 // 获取运维日志信息
 export async function getOperationLogList(params) {
-    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationPageList', params, null);
+    const result = await post(API.PredictiveMaintenanceApi.GetOperationLogsList, params, null);
     return result === null ? {
         data: null
     } : result;

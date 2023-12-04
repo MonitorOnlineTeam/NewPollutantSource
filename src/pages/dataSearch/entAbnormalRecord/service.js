@@ -6,7 +6,7 @@ import { API } from '@config/API'
  */
 export async function GetExceptionReportedList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionReportedList',
+    API.IntelligentDiagnosis.GetExceptionReportList,
     params,
     null,
   );
@@ -48,7 +48,7 @@ export async function GetAttentionDegreeList(params) {
 
 export async function ExportExceptionReported(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/ExceptionApi/ExportExceptionReported',
+    API.IntelligentDiagnosis.ExportExceptionReportList,
     params,
     null,
   );
