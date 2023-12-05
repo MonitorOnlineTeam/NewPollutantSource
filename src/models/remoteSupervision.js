@@ -128,16 +128,16 @@ export default Model.extend({
       }
       callback(result.Datas)
     },
-    //添加或修改数据一致性核查
-    *addOrUpdParamCheck({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.AddOrUpdParamCheck, { ...payload });
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback(result.Datas)
-      } else {
-        message.error(result.Message)
-      }
-    },
+    // //添加或修改数据一致性核查
+    // *addOrUpdParamCheck({ payload, callback }, { call, update, select, put }) {
+    //   const result = yield call(services.AddOrUpdParamCheck, { ...payload });
+    //   if (result.IsSuccess) {
+    //     message.success(result.Message)
+    //     callback(result.Datas)
+    //   } else {
+    //     message.error(result.Message)
+    //   }
+    // },
 
     //获取NOx数采仪实时数据
     *getNoxValue({ payload, callback }, { call, update, select, put }) {

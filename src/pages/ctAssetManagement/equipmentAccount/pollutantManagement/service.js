@@ -5,13 +5,13 @@ import { API } from '@config/API'
 
 // 获取系统信息列表 
 export async function TestGetSystemModelList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/TestGetSystemModelList', params);
+  const result = post(API.CtAssetManagementApi.GetCemsSystemModelInventory, params);
   return result;
 }
 
 // 获取设备信息列表
 export async function GetTestEquipmentInfoList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestEquipmentInfoList', params);
+  const result = post(API.CtAssetManagementApi.GetCemsEquipmentInventory, params);
   return result;
 }
 

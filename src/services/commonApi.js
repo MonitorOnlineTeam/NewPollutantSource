@@ -20,7 +20,7 @@ export async function GetEntByRegion(params) {
 
 // 根据行政区获取 企业列表 未过滤
 export async function GetEntNoFilterList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntNoFilterList', params, null);
+  const result = await post(API.CommonApi.GetNoFilterEntList, params, null);
   return result;
 }
 //关注列表
@@ -56,7 +56,7 @@ export async function getSystemConfigInfo() {
 
 // 获取运维日志详情图片
 export async function getOperationImageList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetRecordPhotoName', params, null);
+  const result = await post(API.PredictiveMaintenanceApi.GetRecordAttachmentList, params, null);
   return result;
 }
 

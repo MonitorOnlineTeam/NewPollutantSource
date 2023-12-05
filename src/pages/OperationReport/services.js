@@ -13,7 +13,7 @@ export async function GetOpertionExceptionList(params) {
 // 根据企业获取排口
 export async function getPointByEntCode(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
+    API.CommonApi.GetNoFilterPointByEntCode,
     params,
   );
   return result;

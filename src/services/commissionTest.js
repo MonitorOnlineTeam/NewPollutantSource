@@ -3,10 +3,11 @@
  * 调试检测公共接口
  */
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 //  获取设备厂家列表
 export async function GetManufacturerList(params) {
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestManufacturerList', params, null);
+    const result = await post(API.CtAssetManagementApi.GetEquipmentManufacturerInventory, params, null);
     return result;
 }
 
@@ -17,6 +18,6 @@ export async function GetPollutantById(params) {
 }
 //  获取系统名称列表
 export async function GetSystemModelNameList(params) {
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelNameList`, null);
+    const result = await post(API.AssetManagementApi.GetSystemModelNameList, null);
     return result;
 }

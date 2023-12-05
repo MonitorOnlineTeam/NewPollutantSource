@@ -1,22 +1,40 @@
 import { post, get, getNew } from '@/utils/request';
-
+import { API } from '@config/API'
 
 
 
 //企业树
 export async function GetTestEntTree(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTestEntTree',params, null);
+  const result = await post(API.CtDebugServiceApi.GetDebuggingEntTree,params, null);
   return result;
 }
-//右侧tab栏
+//右侧tab栏 表单类型
 
 export async function Get72TestRecordType(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/Get72TestRecordType',params, null);
+  const result = await post(API.CtDebugServiceApi.Get72HoursDebuggingItem,params, null);
   return result;
 }
 
 export async function Get72TestRecordPollutant(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/Get72TestRecordPollutant',params, null);
+  const result = await post(API.CtDebugServiceApi.Get72HoursGasPollutantInfo,params, null);
+  return result;
+}
+/*** 颗粒物CEMS零点和量程漂移检测  ***/
+
+//获取
+export async function GetPMZeroRangeRecord(params) {
+  const result = await post(API.CtDebugServiceApi.GetPMDriftInfo,params, null);
+  return result;
+}
+
+//添加修改
+export async function AddPMZeroRangeRecord(params) {
+  const result = await post(API.CtDebugServiceApi.AddOrUpdatePMDriftInfo,params, null);
+  return result;
+}
+//删除
+export async function DeletePMZeroRangeRecord(params) {
+  const result = await post(API.CtDebugServiceApi.DeletePMDriftInfo,params, null);
   return result;
 }
 
@@ -24,24 +42,24 @@ export async function Get72TestRecordPollutant(params) {
 
 //导入
 export async function ImportData(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ImportData',params, null);
+  const result = await post(API.CtDebugServiceApi.Import72HoursCommissioningTestData,params, null);
   return result;
 }
 //获取参数
 export async function GetPMReferenceCalibrationRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetPMReferenceCalibrationRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.GetReferenceCalibrationPMInfo,params, null);
   return result;
 }
 
 //提交 暂存
 export async function AddPMReferenceCalibrationRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddPMReferenceCalibrationRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.AddOrUpdateReferenceCalibrationPMInfo,params, null);
   return result;
 }
 
 //删除
 export async function DeletePMReferenceCalibrationRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeletePMReferenceCalibrationRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.DeleteReferenceCalibrationPMInfo,params, null);
   return result;
 }
 
@@ -51,35 +69,35 @@ export async function DeletePMReferenceCalibrationRecord(params) {
 
 //根据污染物获取时间
 export async function GetTimesListByPollutant(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTimesListByPollutant',params, null);
+  const result = await post(API.CtDebugServiceApi.Get72HoursGasPollutantInfo,params, null);
   return result;
 }
 //获取
 export async function GetGasReferenceMethodAccuracyRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetGasReferenceMethodAccuracyRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.GetGasReferenceMethodAccuracyInfo,params, null);
   return result;
 }
 
 //初始添加
 export async function AddGasReferenceMethodAccuracyInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddGasReferenceMethodAccuracyInfo',params, null);
+  const result = await post(API.CtDebugServiceApi.AddReferenceMethodCemsAccuracyTime,params, null);
   return result;
 }
 
 //添加或修改
 export async function AddGasReferenceMethodAccuracyRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddGasReferenceMethodAccuracyRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.AddOrUpdateReferenceMethodCemsAccuracyInfo,params, null);
   return result;
 }
 
 //删除
 export async function DeleteGasReferenceMethodAccuracyRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteGasReferenceMethodAccuracyRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.DeleteGasReferenceMethodAccuracyInfo,params, null);
   return result;
 }
 //导入
 export async function ImportDataNew(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ImportDataNew',params, null);
+  const result = await post(API.CtDebugServiceApi.Import72HoursCommissioningTestData,params, null);
   return result;
 }
 
@@ -87,36 +105,37 @@ export async function ImportDataNew(params) {
 
 //获取
 export async function GetGasIndicationErrorSystemResponseRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetGasIndicationErrorSystemResponseRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.GetGasIndicationErrorResponseTimeInfo,params, null);
   return result;
 }
 
 //添加修改
 export async function AddGasIndicationErrorSystemResponseRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddGasIndicationErrorSystemResponseRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.AddOrUpdateGasIndicationErrorResponseTimeInfo,params, null);
   return result;
 }
 //删除
 export async function DeleteGasIndicationErrorSystemResponseRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteGasIndicationErrorSystemResponseRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.DeleteGasIndicationErrorResponseTimeInfo,params, null);
   return result;
 }
 
 /*** 速度场系数检测表单 ***/
 
+//获取
 export async function GetVelocityFieldCheckingRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetVelocityFieldCheckingRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.GetVelocityFieldCoefficientInfo,params, null);
   return result;
 }
 
 //添加修改
 export async function AddVelocityFieldCheckingRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddVelocityFieldCheckingRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.AddOrUpdateVelocityFieldCoefficientInfo,params, null);
   return result;
 }
 //删除
 export async function DeleteVelocityFieldCheckingRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteVelocityFieldCheckingRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.DeleteVelocityFieldCoefficientInfo,params, null);
   return result;
 }
 
@@ -124,18 +143,18 @@ export async function DeleteVelocityFieldCheckingRecord(params) {
 
 //获取
 export async function GetTemperatureCheckingRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTemperatureCheckingRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.GetTemperatureAccuracyInfo,params, null);
   return result;
 }
 
 //添加修改
 export async function AddTemperatureCheckingRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddTemperatureCheckingRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.AddOrUpdateTemperatureAccuracyInfo,params, null);
   return result;
 }
 //删除
 export async function DeleteTemperatureCheckingRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteTemperatureCheckingRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.DeleteTemperatureAccuracyInfo,params, null);
   return result;
 }
 
@@ -143,18 +162,18 @@ export async function DeleteTemperatureCheckingRecord(params) {
 
 //获取
 export async function GetHumidityCheckingRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetHumidityCheckingRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.GetHumidityAccuracyInfo,params, null);
   return result;
 }
 
 //添加修改
 export async function AddHumidityCheckingRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddHumidityCheckingRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.AddOrUpdateHumidityAccuracyInfo,params, null);
   return result;
 }
 //删除
 export async function DeleteHumidityCheckingRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteHumidityCheckingRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.DeleteHumidityAccuracyInfo,params, null);
   return result;
 }
 
@@ -162,43 +181,25 @@ export async function DeleteHumidityCheckingRecord(params) {
 
 //获取
 export async function GetGasZeroRangeRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetGasZeroRangeRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.GetGasDriftInfo,params, null);
   return result;
 }
 
 //添加修改
 export async function AddGasZeroRangeInfoRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddGasZeroRangeInfoRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.AddOrUpdateGasDriftInfo,params, null);
   return result;
 }
 //删除
 export async function DeleteGasZeroRangeRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteGasZeroRangeRecord',params, null);
+  const result = await post(API.CtDebugServiceApi.DeleteGasDriftInfo,params, null);
   return result;
 }
 
-/*** 颗粒物CEMS零点和量程漂移检测  ***/
-
-//获取
-export async function GetPMZeroRangeRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetPMZeroRangeRecord',params, null);
-  return result;
-}
-
-//添加修改
-export async function AddPMZeroRangeRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddPMZeroRangeRecord',params, null);
-  return result;
-}
-//删除
-export async function DeletePMZeroRangeRecord(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeletePMZeroRangeRecord',params, null);
-  return result;
-}
 
 /*** 生成检测报告  ***/
 export async function exportTestPeport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ImportRecord',params, null);
+  const result = await post(Export72HoursCommissioningTestReport,params, null);
   return result;
 }
 /*** 生成采样时间  ***/

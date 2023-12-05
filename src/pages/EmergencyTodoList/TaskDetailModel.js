@@ -220,38 +220,38 @@ class EmergencyDetailInfo extends Component {
         </p>);
     }
 
-    // 获取撤单按钮
-    getCancelOrderButton = (createtime, TaskStatus) => {
-        if (moment(createtime) > moment(new Date()).add(-7, 'day') && TaskStatus == 3) {
-            return <Button onClick={this.cdShow}><CloseCircleOutlined />打回</Button>;
-        }
+    // // 获取撤单按钮
+    // getCancelOrderButton = (createtime, TaskStatus) => {
+    //     if (moment(createtime) > moment(new Date()).add(-7, 'day') && TaskStatus == 3) {
+    //         return <Button onClick={this.cdShow}><CloseCircleOutlined />打回</Button>;
+    //     }
 
-        return <Button disabled><CloseCircleOutlined />打回</Button>;
-    }
+    //     return <Button disabled><CloseCircleOutlined />打回</Button>;
+    // }
 
-    cdShow = () => {
-        this.setState({
-            cdvisible: true,
-        });
-    }
+    // cdShow = () => {
+    //     this.setState({
+    //         cdvisible: true,
+    //     });
+    // }
 
-    cdClose = () => {
-        this.setState({
-            cdvisible: false,
-        });
-    }
+    // cdClose = () => {
+    //     this.setState({
+    //         cdvisible: false,
+    //     });
+    // }
 
-    cdOk = TaskID => {
-        this.props.dispatch({
-            type: 'task/RevokeTask',
-            payload: {
-                taskID: TaskID,
-                revokeReason: this.props.form.getFieldValue('reason'),
-                reload: () => this.reloaddata(),
-                close: () => this.cdClose(),
-            },
-        });
-    }
+    // cdOk = TaskID => {
+    //     this.props.dispatch({
+    //         type: 'task/RevokeTask',
+    //         payload: {
+    //             taskID: TaskID,
+    //             revokeReason: this.props.form.getFieldValue('reason'),
+    //             reload: () => this.reloaddata(),
+    //             close: () => this.cdClose(),
+    //         },
+    //     });
+    // }
 
     handleCancel = e => {
         this.setState({

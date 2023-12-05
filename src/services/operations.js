@@ -26,7 +26,7 @@ export async function getOperationLogList(params) {
 
 // 获取运维日志详情图片
 export async function getOperationImageList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetRecordPhotoName', params, null);
+  const result = await post(API.PredictiveMaintenanceApi.GetRecordAttachmentList, params, null);
   return result;
 }
 

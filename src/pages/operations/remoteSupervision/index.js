@@ -149,20 +149,20 @@ const dvaDispatch = (dispatch) => {
         callback: callback,
       })
     },
-    addOrUpdConsistencyCheck: (payload, callback) => {  //添加或修改数据一致性核查
-      dispatch({
-        type: `${namespace}/addOrUpdConsistencyCheck`,
-        payload: payload,
-        callback: callback,
-      })
-    },
-    addOrUpdParamCheck: (payload, callback) => {  //添加或修改参数一致性核查表
-      dispatch({
-        type: `${namespace}/addOrUpdParamCheck`,
-        payload: payload,
-        callback: callback,
-      })
-    },
+    // addOrUpdConsistencyCheck: (payload, callback) => {  //添加或修改数据一致性核查
+    //   dispatch({
+    //     type: `${namespace}/addOrUpdConsistencyCheck`,
+    //     payload: payload,
+    //     callback: callback,
+    //   })
+    // },
+    // addOrUpdParamCheck: (payload, callback) => {  //添加或修改参数一致性核查表
+    //   dispatch({
+    //     type: `${namespace}/addOrUpdParamCheck`,
+    //     payload: payload,
+    //     callback: callback,
+    //   })
+    // },
     deleteRemoteInspector: (payload, callback) => {  //删除
       dispatch({
         type: `${namespace}/deleteRemoteInspector`,

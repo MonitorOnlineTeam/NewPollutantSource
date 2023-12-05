@@ -125,7 +125,7 @@ export async function insertregionbyuser(params) {
     RegionCode: params.RegionCode,
     ...params,
   };
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertRegionByUser', body, null);
+  const result = post(API.AssetManagementApi.InsertRegionByUser, body, null);
   return result === null
     ? {
         data: null,
@@ -137,7 +137,7 @@ export async function getregionbydepid(params) {
   const body = {
     UserGroup_ID: params.UserGroup_ID,
   };
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRegionByDepID', body, null);
+  const result = post(API.AssetManagementApi.GetRegionByDepID, body, null);
   return result === null
     ? {
         data: null,

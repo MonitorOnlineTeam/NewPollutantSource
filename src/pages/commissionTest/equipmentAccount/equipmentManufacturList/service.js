@@ -1,4 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 
 /*** 调试检测 */
@@ -6,7 +7,7 @@ import { post, get, getNew } from '@/utils/request';
 
 //设备厂商 列表
 export async function GetManufacturerList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestManufacturerList',params, null);
+  const result = await post(API.CtAssetManagementApi.GetEquipmentManufacturerInventory,params, null);
   return result;
 }
 //设备厂商 添加

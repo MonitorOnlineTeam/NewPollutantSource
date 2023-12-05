@@ -357,27 +357,27 @@ export default Model.extend({
                 });
             }
         },
-        // 撤单（运维人员）、打回（环保专工）
-        * RevokeTask({
-            payload,
-        }, { call }) {
-            const DataInfo = yield call(RevokeTask, payload);
-            if (DataInfo !== null && DataInfo.IsSuccess) {
-                message.success('操作成功!');
-                payload.close();
-                payload.reload();
-            } else {
-                message.error('操作失败!');
-            }
-        },
+        // // 撤单（运维人员）、打回（环保专工）
+        // * RevokeTask({
+        //     payload,
+        // }, { call }) {
+        //     const DataInfo = yield call(RevokeTask, payload);
+        //     if (DataInfo !== null && DataInfo.IsSuccess) {
+        //         message.success('操作成功!');
+        //         payload.close();
+        //         payload.reload();
+        //     } else {
+        //         message.error('操作失败!');
+        //     }
+        // },
 
-        // 根据任务id判断出所使用的日常巡检类型
-        * GetPatrolType({
-            payload,
-        }, { call }) {
-            const DataInfo = yield call(GetPatrolType, payload);
-            payload.callback(DataInfo.Datas);
-        },
+        // // 根据任务id判断出所使用的日常巡检类型
+        // * GetPatrolType({
+        //     payload,
+        // }, { call }) {
+        //     const DataInfo = yield call(GetPatrolType, payload);
+        //     payload.callback(DataInfo.Datas);
+        // },
 
         // 获取报警响应列表
         * GetAlarmResponseList({

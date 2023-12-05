@@ -43,6 +43,8 @@ export const API = {
     GetXuRegions: before + '/RegionApi/GetXuRegions',//获取所有省份及省份下的市县
     GetRegions: before + '/RegionApi/GetRegions', //获取行政区
     GetAttentionDegreeList: before + '/RegionApi/GetAttentionDegreeList',//获取关注程度
+    GetNoFilterEntList: before + '/EnterpriseApi/GetNoFilterEntList',//获取无权限过滤的企业信息
+    GetNoFilterPointByEntCode: before + '/EnterpriseApi/GetNoFilterPointByEntCode',//通过企业获取无权限过滤的监测点信息
     GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',//根据行政区查询企业
     GetEntAndPoint: before + '/EnterpriseApi/GetEntAndPoint',//获取企业和企业对应的排口信息
     GetPointByEntCode: before + '/MonitorPointApi/GetPointByEntCode',//根据企业编号与污染物编号查询排口
@@ -131,6 +133,29 @@ export const API = {
     ExportOperationTaskList: before + '/WorkOrderApi/ExportOperationTaskList', //导出运维工单记录
     GetTaskDetails: before + '/WorkOrderApi/GetTaskDetails', //获取运维工单详情
     RejectTask: before + '/WorkOrderApi/RejectTask', //驳回任务
+    GetOperationLogList: before + '/WorkOrderApi/GetOperationLogList', //获取运维记录
+
+    //电子表单
+    GetCemsCalibrationRecord: before + '/GasOperationFormApi/GetCemsCalibrationRecord', //获取单个任务的校准记录
+    GetConsumablesReplaceRecordList: before + '/ConsumableMaterialApi/GetConsumablesReplaceRecordList', //获取易耗品更换记录
+    GetFaultRecordForPCList: before + '/ConsumableMaterialApi/GetFaultRecordForPCList', //获取故障小时记录
+    GetSparePartReplaceRecordList: before + '/ConsumableMaterialApi/GetSparePartReplaceRecordList', //获取备品备件更换记录
+    GetStandardGasRepalceRecordList: before + '/ConsumableMaterialApi/GetStandardGasRepalceRecordList', //获取标气更换记录
+    GetMaintainRecordList: before + '/GasOperationFormApi/GetMaintainRecordList', //获取保养记录
+    GetShutdownRecordList: before + '/GasOperationFormApi/GetShutdownRecordList', //获取停机记录
+    GetRepairRecordForPCList: before + '/GasOperationFormApi/GetRepairRecordForPCList', //获取维修记录
+    GetDeviceExceptionRecordForPCList: before + '/GasOperationFormApi/GetDeviceExceptionRecordForPCList', //获取异常记录
+    GetVerificationTestRecordList: before + '/GasOperationFormApi/GetVerificationTestRecordList', //获取单个CEMS校验测试记录
+    GetReagentRepalceRecordList: before + '/ConsumableMaterialApi/GetReagentRepalceRecordList', //获取标液更换记录
+    GetCooperationInspectionRecordForPCList: before + '/GasOperationFormApi/GetCooperationInspectionRecordForPCList', //获取配合检查记录
+    GetHourDayConsistencyRecordForPCList: before + '/GasOperationFormApi/GetHourDayConsistencyRecordForPCList', //获取数据一致性记录(小时日)
+    GetDetectionTimesRecordForPCList: before + '/GasOperationFormApi/GetDetectionTimesRecordForPCList', //获取上月委托第三方检测次数
+    GetWaterCalibrationRecordForPCList: before + '/GasOperationFormApi/GetWaterCalibrationRecordForPCList', //获取废水校准记录
+    GetStandardSolutionRecordForPCList: before + '/GasOperationFormApi/GetStandardSolutionRecordForPCList', //获取标准溶液核查记录
+    GetWaterParametersChangeRecordForPCList: before + '/GasOperationFormApi/GetWaterParametersChangeRecordForPCList', //获取废水参数变动记录
+    GetGasParametersChangeRecordForPCList: before + '/GasOperationFormApi/GetGasParametersChangeRecordForPCList', //获取废气参数变动记录
+    GetWaterComparisonTestRecordForPCList: before + '/GasOperationFormApi/GetWaterComparisonTestRecordForPCList', //获取实际水样比对试验结果记录
+    GetRecordAttachmentList: before + '/GasOperationFormApi/GetRecordAttachmentList', //获取运维表单图片信息
     /*工单进度*/
     GetWorkProgressList: before + '/WorkOrderApi/GetWorkProgressList', //获取指挥调度
     /*运维工单分析*/
@@ -204,20 +229,6 @@ export const API = {
     ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue',//导出异常标准记录
 
   },
-
-
-  // 系统管理Api
-  SystemManageApi: {
-    /*公告管理*/
-    GetNoticeList: before + '/NoticeApi/GetNoticeList', //获取公告管理信息
-    AddOrUpdateNoticeInfo: before + '/NoticeApi/AddOrUpdateNoticeInfo', //添加修改公告
-    DeleteNoticeInfo: before + '/NoticeApi/DeleteNoticeInfo', //删除公告
-    GetAllRoleList: before + '/NoticeApi/GetAllRoleList', //获取角色
-    /*资源中心*/
-    GetQuestionList: before + '/KnowledgeCenterApi/GetQuestionList', //获取问题清单列表
-    AddOrUpdateQuestionInfo: before + '/KnowledgeCenterApi/AddOrUpdateQuestionInfo', //获取问题清单列表
-    GetQuestionTypeList: before + '/KnowledgeCenterApi/GetQuestionTypeList', //获取问题清单类别
-  },
   //异常数据模型分析 Api
   AbnormalModelAnalysisApi: {
     /*异常精准识别核实率*/
@@ -242,6 +253,47 @@ export const API = {
 
   /*监督核查 Api */
   SupervisionVerificaApi: {
+    /*** 远程监督核查 ***/
+    /*关键参数核查*/
+    GetKeyParameterCheckList: before + '/SupervisionApi/GetKeyParameterCheckList', //获取关键参数核查信息
+    ExportKeyParameterCheckList: before + '/SupervisionApi/ExportKeyParameterCheckList', //导出关键参数核查信息
+    GetRangeConsistencyDetail: before + '/SupervisionApi/GetRangeConsistencyDetail', //获取关键参数核查信息明细
+    AddRemoteInspector: before + '/SupervisionApi/AddRemoteInspector', //更新关键参数核查信息
+    DeleteKeyParameterCheckInfo: before + '/SupervisionApi/DeleteKeyParameterCheckInfo', //删除关键参数核查信息
+    GetParameterConsistencyCodeInfo: before + '/SupervisionApi/GetParameterConsistencyCodeInfo',//获取量程和实时数据一致性核查监测参数信息
+    JudgeRangeConsistencyCheck: before + '/SupervisionApi/JudgeRangeConsistencyCheck',//获取量程一致性(自动判断)
+    JudgeDataConsistencyCheck: before + '/SupervisionApi/JudgeDataConsistencyCheck',//获取数据一致性(自动判断)	
+    GetNOxValue: before + '/SupervisionApi/GetNOxValue',//获取NOx数采仪实时数据
+    JudgeParameterConsistencyInfo: before + '/SupervisionApi/JudgeParameterConsistencyInfo',//获取参数一致性核查检查项目信息
+    IssueKeyParameterCheckInfo: before + '/SupervisionApi/IssueKeyParameterCheckInfo',//关键参数核查下发
+    /*关键参数核查（新）*/
+
+    /*** 现场监督核查 ***/
+    /*系统设施核查*/
+    GetSystemFacilityVerificationList: before + '/SupervisionApi/GetSystemFacilityVerificationList',//获取系统设施核查
+    ExportSystemFacilityVerificationList: before + '/SupervisionApi/ExportSystemFacilityVerificationList',//导出系统设施核查
+    GetSystemFacilityVerificationInfo: before + '/SupervisionApi/GetSystemFacilityVerificationInfo',//获取单条督查信息
+    GetPointSystemInfo: before + '/SupervisionApi/GetPointSystemInfo',//获取运维督查信息单个排口的默认信息
+    AddOrUpdateSystemFacilityVerificationInfo: before + '/SupervisionApi/AddOrUpdateSystemFacilityVerificationInfo',//添加修改督查模板
+    GetSystemFacilityVerificationDetail: before + '/SupervisionApi/GetPointSystemInfo',//获取运维督查详情
+    DeleteInspectorOperation: before + '/SupervisionApi/DeleteInspectorOperation',//删除运维督查信息
+    /*核查模板设置*/
+    GetSupervisionQuestionTypeList: before + '/SupervisionApi/DeleteInspectorOperation',//获取督查类别清单
+    GetSupervisionQuestionTypeCodeList: before + '/SupervisionApi/GetSupervisionQuestionTypeCodeList',//获取督查类别
+    AddOrUpdateSupervisionQuestionTypeInfo: before + '/SupervisionApi/DeleteInspectorOperation',//添加更新督查类别清单
+    DeleteSupervisionQuestionTypeInfo: before + '/SupervisionApi/DeleteInspectorOperation',//删除更新督查类别清单
+    ChangeSupervisionQuestionTypeStatus: before + '/SupervisionApi/ChangeSupervisionQuestionTypeStatus',//更改更新督查类别清单状态
+    GetSupervisionTemplateList: before + '/SupervisionApi/ChangeSupervisionQuestionTypeStatus',//获取督查模板信息
+    AddOrUpdateSupervisionTemplateInfo: before + '/SupervisionApi/AddOrUpdateSupervisionTemplateInfo',//添加更新督查模板信息
+    DeleteSupervisionTemplateInfo: before + '/SupervisionApi/DeleteSupervisionTemplateInfo',//删除更新督查模板信息
+    GetSupervisionQuestionTypeDescribeList: before + '/SupervisionApi/GetSupervisionQuestionTypeDescribeList',//获取督查模板类别信息
+    ChangeSupervisionTemplateStatus: before + '/SupervisionApi/ChangeSupervisionTemplateStatus',//更改督查模板状态
+    GetSupervisionTemplateDetail: before + '/SupervisionApi/GetSupervisionTemplateDetail',//获取督查模板详情
+    /*系统设施核查整改*/
+
+    /*** 监督核查分析 ***/
+    /*督查分析总结*/
+
     /*关键参数核查统计*/
     GetKeyParameterAnalyseList: before + '/CTBaseDataApi/GetKeyParameterAnalyseList', //列表
     ExportKeyParameterAnalyseList: before + '/CTBaseDataApi/ExportKeyParameterAnalyseList' //导出
@@ -249,7 +301,6 @@ export const API = {
   /*资产管理 Api */
   AssetManagementApi: {
     /*** 设备台账 ***/
-
     /*污染源管理*/
     CompanyOperationBasictemplate: `${config.uploadPrefix}/公司运维基础数据模板.xlsm`,//企业模板下载 
     VerificationImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//导入企业
@@ -370,9 +421,11 @@ export const API = {
     GetGroupRegionFilter: before + '/ConfigureApi/GetGroupRegionFilter',//获取部门区域过滤
     GetAllUser: before + '/UserApi/GetAllUser',//获取所有用户
     GetUserByDepID: before + '/DepartmentApi/GetUserByDepID',//获取当前部门的用户
-    InsertDepartByUser: before + 'DepartmentApi/InsertDepartByUser',//给当前部门添加用户（可批量）
-    GetAlarmPushDepOrRole: before + 'AuthorizeApi/GetAlarmPushDepOrRole',//获取部门或角色报警关联列表
-    InsertAlarmDepOrRole: before + 'AuthorizeApi/InsertAlarmDepOrRole',//添加或修改部门或角色报警关联
+    InsertDepartByUser: before + '/DepartmentApi/InsertDepartByUser',//给当前部门添加用户（可批量）
+    GetAlarmPushDepOrRole: before + '/AuthorizeApi/GetAlarmPushDepOrRole',//获取部门或角色报警关联列表
+    InsertAlarmDepOrRole: before + '/AuthorizeApi/InsertAlarmDepOrRole',//添加或修改部门或角色报警关联
+    InsertRegionByUser: before + '/DepartmentApi/InsertRegionByUser',//给部门添加行政区(可批量)
+    GetRegionByDepID: before + '/DepartmentApi/GetRegionByDepID',//获取当前部门的行政区
     /*角色管理*/
     GetRoleInfoByTree: before + '/RoleApi/GetRoleInfoByTree',//获取角色详细信息和层级关系
     GetRoleInfoByID: before + '/RoleApi/GetRoleInfoByID',//获取单个角色信息
@@ -410,6 +463,18 @@ export const API = {
 
   },
 
+  // 系统管理Api
+  SystemManageApi: {
+    /*公告管理*/
+    GetNoticeList: before + '/NoticeApi/GetNoticeList', //获取公告管理信息
+    AddOrUpdateNoticeInfo: before + '/NoticeApi/AddOrUpdateNoticeInfo', //添加修改公告
+    DeleteNoticeInfo: before + '/NoticeApi/DeleteNoticeInfo', //删除公告
+    GetAllRoleList: before + '/NoticeApi/GetAllRoleList', //获取角色
+    /*资源中心*/
+    GetQuestionList: before + '/KnowledgeCenterApi/GetQuestionList', //获取问题清单列表
+    AddOrUpdateQuestionInfo: before + '/KnowledgeCenterApi/AddOrUpdateQuestionInfo', //获取问题清单列表
+    GetQuestionTypeList: before + '/KnowledgeCenterApi/GetQuestionTypeList', //获取问题清单类别
+  },
 
 
   /*********** 成套 ***********/
@@ -419,7 +484,7 @@ export const API = {
     GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList', //站点信息
   },
   //项目执行进度 Api
-  ProjectExecuProgressApi: {
+  CtProjectExecuProgressApi: {
     GetServiceDispatch: before + '/CTBaseDataApi/GetServiceDispatch',//获取服务派单信息
     GetServiceDispatchTypeAndRecord: before + '/CTBaseDataApi/GetServiceDispatchTypeAndRecord',  //服务填报内容 要加载的项
     GetAcceptanceServiceRecord: before + '/CTBaseDataApi/GetAcceptanceServiceRecord',//服务填报内容  服务报告
@@ -431,8 +496,66 @@ export const API = {
     GetRepairRecord: before + '/CTBaseDataApi/GetRepairRecord',//服务填报内容  维修记录
     ExportServiceDispatch: before + '/CTBaseDataApi/ExportServiceDispatch',  //服务派单信息 导出
   },
+  //调试服务
+  CtDebugServiceApi: {
+    /*调试点位管理*/
+    GetPointCemsSystemList: before + '/DebuggingEquipmentApi/GetPointCemsSystemList',  //获取监测点CEMS参数信息
+    OperationPointCemsSystemInfo: before + '/DebuggingEquipmentApi/OperationPointCemsSystemInfo',  //添加更新CEMS参数信息
+    GetPointReferenceInstrumentList: before + '/DebuggingEquipmentApi/GetPointReferenceInstrumentList', //获取参比仪器信息
+    OperationPointReferenceInstrumentInfo: before + '/DebuggingEquipmentApi/GetPointReferenceInstrumentList', //添加更新参比仪器信息
+   
+    /*72小时调试检测*/
+    GetDebuggingEntTree: before + '/DebuggingEquipmentApi/GetDebuggingEntTree', //获取企业监测点信息 树结构
+    Get72HoursDebuggingItem: before + '/DebuggingEquipmentApi/Get72HoursDebuggingItem', //获取表单类型
+    Get72HoursGasPollutantInfo: before + '/DebuggingEquipmentApi/Get72HoursGasPollutantInfo', //获取表单污染物信息
+    Import72HoursCommissioningTestData: before + '/DebuggingEquipmentApi/Import72HoursCommissioningTestData',//颗粒物参比和参比方法评估气态污染物CEMS（含氧量）准确度导入数据
+                                          //获取参比方法校准颗粒物CEMS采样时间信息
+    //颗粒物CEMS零点和量程漂移检测
+    GetPMDriftInfo: before + '/DebuggingEquipmentApi/GetPMDriftInfo',//获取录入信息
+    AddOrUpdatePMDriftInfo: before + '/DebuggingEquipmentApi/AddOrUpdatePMDriftInfo',//添加更新信息
+    DeletePMDriftInfo: before + '/DebuggingEquipmentApi/DeleteGasDriftInfo',//删除信息
+    // 参比方法校准颗粒物CEMS
+    GetReferenceCalibrationPMInfo: before + '/DebuggingEquipmentApi/Get72HoursGasPollutantInfo', //获取颗粒物参比参数信息
+    AddOrUpdateReferenceCalibrationPMInfo: before + '/DebuggingEquipmentApi/AddOrUpdateReferenceCalibrationPMInfo', //添加更新颗粒物参比信息
+    DeleteReferenceCalibrationPMInfo: before + '/DebuggingEquipmentApi/DeleteReferenceCalibrationPMInfo', //删除颗粒物参比信息
+    //参比方法评估气态污染物CEMS（含氧量）准确度
+    GetGasReferenceMethodAccuracyInfo: before + '/DebuggingEquipmentApi/GetGasReferenceMethodAccuracyInfo',//获取录入信息
+    AddReferenceMethodCemsAccuracyTime: before + '/DebuggingEquipmentApi/AddReferenceMethodCemsAccuracyTime',//初始添加信息
+    AddOrUpdateReferenceMethodCemsAccuracyInfo: before + '/DebuggingEquipmentApi/AddOrUpdateReferenceMethodCemsAccuracyInfo',//添加更新信息
+    DeleteGasReferenceMethodAccuracyInfo: before + '/DebuggingEquipmentApi/DeleteGasReferenceMethodAccuracyInfo',//删除信息
+    //气态污染物CEMS示值误差和系统响应时间检测
+    GetGasIndicationErrorResponseTimeInfo: before + '/DebuggingEquipmentApi/GetGasIndicationErrorResponseTimeInfo',//获取录入信息
+    AddOrUpdateGasIndicationErrorResponseTimeInfo: before + '/DebuggingEquipmentApi/AddOrUpdateGasIndicationErrorResponseTimeInfo',//添加更新信息
+    DeleteGasIndicationErrorResponseTimeInfo: before + '/DebuggingEquipmentApi/DeleteGasIndicationErrorResponseTimeInfo',//删除信息
+    //速度场系数检测表单
+    GetVelocityFieldCoefficientInfo: before + '/DebuggingEquipmentApi/GetVelocityFieldCoefficientInfo',//获取录入信息
+    AddOrUpdateVelocityFieldCoefficientInfo: before + '/DebuggingEquipmentApi/AddOrUpdateVelocityFieldCoefficientInfo',//添加更新信息
+    DeleteVelocityFieldCoefficientInfo: before + '/DebuggingEquipmentApi/DeleteVelocityFieldCoefficientInfo',//删除信息
+    //温度CMS准确度检测表单
+    GetTemperatureAccuracyInfo: before + '/DebuggingEquipmentApi/GetTemperatureAccuracyInfo',//获取录入信息
+    AddOrUpdateTemperatureAccuracyInfo: before + '/DebuggingEquipmentApi/AddOrUpdateTemperatureAccuracyInfo',//添加更新信息
+    DeleteTemperatureAccuracyInfo: before + '/DebuggingEquipmentApi/DeleteTemperatureAccuracyInfo',//删除信息
+    //湿度CMS准确度检测表单
+    GetHumidityAccuracyInfo: before + '/DebuggingEquipmentApi/GetHumidityAccuracyInfo',//获取录入信息
+    AddOrUpdateHumidityAccuracyInfo: before + '/DebuggingEquipmentApi/AddOrUpdateHumidityAccuracyInfo',//添加更新信息
+    DeleteHumidityAccuracyInfo: before + '/DebuggingEquipmentApi/DeleteHumidityAccuracyInfo',//删除信息
+    //气态污染物CEMS（含氧量）零点和量程漂移检测
+    GetGasDriftInfo: before + '/DebuggingEquipmentApi/GetGasDriftInfo',//获取录入信息
+    AddOrUpdateGasDriftInfo: before + '/DebuggingEquipmentApi/AddOrUpdateGasDriftInfo',//添加更新信息
+    DeleteGasDriftInfo: before + '/DebuggingEquipmentApi/DeleteGasDriftInfo',//删除信息
+    //生成检测报告
+    Export72HoursCommissioningTestReport: before + '/DebuggingEquipmentApi/Export72HoursCommissioningTestReport',//导出72小时调试检测报告
+  
+    /*区域权限管理*/
+    GetDebuggingAreaGroupList: before + '/DebuggingEquipmentApi/GetDebuggingAreaGroupList',//获取部门详细信息及层级关系
+    AddOrUpdateDebuggingAreaGroupInfo: before + '/DebuggingEquipmentApi/AddOrUpdateDebuggingAreaGroupInfo',//添加部门信息
+    DeleteDebuggingAreaGroupInfo: before + '/DebuggingEquipmentApi/DeleteDebuggingAreaGroupInfo',//删除部门信息
+    GetDebuggingAreaUserList: before + '/DebuggingEquipmentApi/GetDebuggingAreaUserList',//获取当前部门的用户
+    OperationDebuggingAreaUserInfo: before + '/DebuggingEquipmentApi/OperationDebuggingAreaUserInfo',//给当前部门分配用户
+  },
   //资产管理 Api
   CtAssetManagementApi: {
+    /*** 设备台账 ***/
     /*污染源管理*/
     AddOrEditCommonPointList: before + '/CTBaseDataApi/AddOrEditCommonPointList', //添加或修改监测点
     AddOrUpdateMonitorEntElectronicFence: before + '/CTBaseDataApi/AddOrUpdateMonitorEntElectronicFence', //修改企业电子围栏半径
@@ -451,6 +574,23 @@ export const API = {
     GetrojectPointRelationList: before + '/CTBaseDataApi/GetrojectPointRelationList',//获取项目与站点管理关系
     AddProjectPointRelation: before + '/CTBaseDataApi/AddProjectPointRelation',//添加项目与站点关联关系
     ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',  //项目列表 导出
+    /*设备厂家名录 */
+    GetEquipmentManufacturerInventory: before + '/DebuggingEquipmentApi/GetEquipmentManufacturerInventory',  //获取设备厂商信息
+    /*系统型号清单*/
+    GetCemsSystemModelInventory: before + '/DebuggingEquipmentApi/GetCemsSystemModelInventory',  //获取系统型号清单信息
+    AddCemsSystemModelInfo: before + '/DebuggingEquipmentApi/AddCemsSystemModelInfo',  //添加系统型号清单信息
+    UpdCemsSystemModelInfo: before + '/DebuggingEquipmentApi/AddCemsSystemModelInfo',  //更新系统型号清单信息
+    DeleteCemsSystemModelInfo: before + '/DebuggingEquipmentApi/DeleteCemsSystemModelInfo',  //删除系统型号清单信息
+    /*设备信息清单*/
+    GetCemsEquipmentInventory: before + '/DebuggingEquipmentApi/GetCemsEquipmentInventory',  //获取设备信息清单
+    AddCemsEquipmentInfo: before + '/DebuggingEquipmentApi/AddCemsEquipmentInfo', //添加设备信息清单信息
+    UpdCemsEquipmentInfo: before + '/DebuggingEquipmentApi/UpdCemsEquipmentInfo', //更新设备信息清单信息
+    DeleteCemsEquipmentInfo: before + '/DebuggingEquipmentApi/UpdCemsEquipmentInfo', //删除设备信息清单信息
+    /*参比仪器清单*/
+    GetReferenceInstrumentInventory: before + '/DebuggingEquipmentApi/GetReferenceInstrumentInventory',  //获取参比仪器设备清单
+    AddReferenceInstrumentInfo: before + '/DebuggingEquipmentApi/AddReferenceInstrumentInfo',  //添加参比仪器设备清单
+    UpdReferenceInstrumentInfo: before + '/DebuggingEquipmentApi/AddReferenceInstrumentInfo',  //更新参比仪器设备清单
+    DeleteReferenceInstrumentInfo: before + '/DebuggingEquipmentApi/AddReferenceInstrumentInfo',  //删除参比仪器设备清单
   },
 };
 
