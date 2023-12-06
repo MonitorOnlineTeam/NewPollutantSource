@@ -9,7 +9,7 @@ import { API } from '@config/API'
 //根据 行政区和关注度 获取企业列表
 export async function GetEntByRegionAndAtt(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegionAndAtt',params,null)
+    const result = post(API.CommonApi.GetEntByRegionAndAtt,params,null)
     return result 
 }
 //根据 企业 获取 监测点

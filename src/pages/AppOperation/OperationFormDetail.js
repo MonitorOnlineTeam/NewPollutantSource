@@ -7,6 +7,7 @@ import Lightbox from "react-image-lightbox-rotate";
 import "react-image-lightbox/style.css";
 import { router } from 'umi'
 import { Spin } from 'antd';
+import config from '@/config';
 const Item = List.Item;
 @connect(({ task, loading }) => ({
     loading: loading.effects['task/GetOperationFormDetail'],
@@ -96,10 +97,10 @@ class OperationFormDetail extends PureComponent {
                     uid: index,
                     name: item.replace('_thumbnail', ''),
                     status: 'done',
-                    url: `/upload/${item}`,
+                    url: `${config.opoperationUploadPrefix}/${item}`,
                 });
                 UrlTaskDitailsAttachmentList.push(
-                    `/upload/${item}`,
+                    `${config.opoperationUploadPrefix}/${item}`,
                 );
             });
         }
@@ -121,10 +122,10 @@ class OperationFormDetail extends PureComponent {
                     uid: indexAttachment,
                     name: item.replace('_thumbnail', ''),
                     status: 'done',
-                    url: `/upload/${item}`,
+                    url: `${config.opoperationUploadPrefix}/${item}`,
                 });
                 URLattachment.push(
-                    `/upload/${item}`,
+                    `${config.opoperationUploadPrefix}/${item}`,
                 );
             });
         }

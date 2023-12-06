@@ -360,7 +360,7 @@ class SmokeReportPage extends PureComponent {
       },
     })
     this.props.form.setFieldsValue({ "time": moment() })
-    this.timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: '100%' }} callback={this.dateOnchange} />
+    this.timeEle = <DatePickerTool allowClear={false} picker={reportType} style={{ width: 200, marginRight: 10 }} callback={this.dateOnchange} />
   }
 
   dateOnchange = (dates, beginTime, endTime) => {
@@ -577,7 +577,7 @@ class SmokeReportPage extends PureComponent {
                 }}>
                 {this.children()}
               </Select> */}
-                <RegionList style={{ width: 200, marginLeft: 10, marginRight: 10 }} onChange={(value) => {
+                <RegionList style={{ width: 200, marginLeft: 10, marginRight: 12 }} onChange={(value) => {
                   //获取关注度列表
                   this.props.dispatch({
                     type: pageUrl.GetEntByRegionAndAtt,
@@ -593,9 +593,10 @@ class SmokeReportPage extends PureComponent {
                     pointValue: undefined
                   })
                 }}/>
-              <label>关注程度:</label><Select
+              <FormItem   label="关注程度" style={{ marginBottom:0}}>
+              <Select
                 allowClear
-                style={{ width: 200, marginLeft: 10, marginRight: 14 }}
+                style={{ width: 200, marginRight: 10 }}
                 placeholder="关注度"
                 maxTagCount={2}
                 maxTagTextLength={5}
@@ -618,6 +619,7 @@ class SmokeReportPage extends PureComponent {
                 }}>
                 {this.attention()}
               </Select>
+              </FormItem>
               <label>企业列表:</label><Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -647,7 +649,7 @@ class SmokeReportPage extends PureComponent {
               <Row align='middle' style={{ marginTop: 10 }}>
                 <label>监测点:</label><Select
                   allowClear
-                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  style={{ width: 200, marginLeft: 10}}
                   placeholder="监测点列表"
                   maxTagCount={2}
                   maxTagTextLength={5}
@@ -660,7 +662,7 @@ class SmokeReportPage extends PureComponent {
                   }}>
                   {this.pointList()}
                 </Select>
-                <FormItem  {...formLayout} label="监测日期" style={{ width: 250,marginBottom:0}}>
+                <FormItem  {...formLayout} label="监测日期" style={{ marginBottom:0}}>
                   {getFieldDecorator('time', {
                     initialValue: moment(),
                     rules: [

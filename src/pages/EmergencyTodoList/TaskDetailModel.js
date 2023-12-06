@@ -594,7 +594,7 @@ class EmergencyDetailInfo extends Component {
                     uid: index,
                     name: item.replace('_thumbnail', ''),
                     status: 'done',
-                    url: `/uploadplantform/${item}`,
+                    url: `${config.uploadPrefix}/${item}`,
                 });
             }
         });
@@ -602,7 +602,7 @@ class EmergencyDetailInfo extends Component {
         const ImageList = [];
         fileList.map(item => {
             ImageList.push(
-                `/uploadplantform/${item.name}`,
+                `${config.uploadPrefix}/${item.name}`,
             );
         });
         // 报警列表列名

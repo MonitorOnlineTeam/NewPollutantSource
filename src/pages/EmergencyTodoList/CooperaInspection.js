@@ -13,6 +13,7 @@ import styles from "./ConsumablesReplaceRecordContent.less";
 import MonitorContent from '../../components/MonitorContent/index';
 import ImageView from '@/components/ImageView';
 import index from '@/components/YearPicker';
+import config from '@/config';
 
 @connect(({ task, loading }) => ({
     isloading: loading.effects['task/GetCooperationInspectionRecordList'],
@@ -237,16 +238,16 @@ class RepalceRecordList extends Component {
                             <td colSpan="12" style={{ height: '50px', fontSize: '14px' }}>
                                 <>
                                     图片
-                                    {Content !== null ? Content.PictureFilesList && Content.PictureFilesList.LowimgList.map((item,index) => {
+                                    {Content !== null ? Content.PictureFilesList && Content.PictureFilesList.ImgList.map((item,index) => {
                                     return <img
                                         width={20}
                                         height={20}
                                         style={{ marginLeft: 10, cursor: 'pointer' }}
-                                        src={`/upload/${item}`}
+                                        src={`/${item}`}
                                         onClick={() => {
                                             this.setState({
                                                 isOpen: true,
-                                                imageList: Content.PictureFilesList?.LowimgList.map(item=>`/upload/${item}`),
+                                                imageList: Content.PictureFilesList?.ImgList.map(item=>`/${item}`),
                                                 imageIndex:index,
                                             })
                                         }}
@@ -261,9 +262,9 @@ class RepalceRecordList extends Component {
 
                                 <>
                                     附件
-                                    {Content !== null ? Content.EnclosureFilesList && Content.EnclosureFilesList.ImgList.map(item => {
+                                    {Content !== null ? Content.EnclosureFilesList && Content.EnclosureFilesList.NameList.map((item,index) => {
                                     return <a
-                                        href={`/upload/${item}`}
+                                        href={`/${Content.EnclosureFilesList?.ImgList?.[index]}`}
                                         style={{ marginLeft: 10 }}
                                         download
                                     >

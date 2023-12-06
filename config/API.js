@@ -36,6 +36,7 @@ export const API = {
     GetAttachmentList: before + '/UploadApi/GetAttachmentList',//获取附件ID获取所有附件
     DeleteAttach: before + '/UploadApi/DeleteAttach',//删除文件
     UploadFiles: before + '/UploadApi/UploadFiles',//上传文件
+    UploadPicture: before + '/UploadApi/UploadPicture',//上传图片
   },
   //通用Api
   CommonApi: {
@@ -46,6 +47,7 @@ export const API = {
     GetNoFilterEntList: before + '/EnterpriseApi/GetNoFilterEntList',//获取无权限过滤的企业信息
     GetNoFilterPointByEntCode: before + '/EnterpriseApi/GetNoFilterPointByEntCode',//通过企业获取无权限过滤的监测点信息
     GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',//根据行政区查询企业
+    GetEntByRegionAndAtt: before + '/EnterpriseApi/GetEntByRegionAndAtt', //获取行政区和关注程度查询企业
     GetEntAndPoint: before + '/EnterpriseApi/GetEntAndPoint',//获取企业和企业对应的排口信息
     GetPointByEntCode: before + '/MonitorPointApi/GetPointByEntCode',//根据企业编号与污染物编号查询排口
     GetPollutantCodeList: before + '/MonitorPollutantApi/GetPollutantCodeList',//根据污染物类型获取污染物
@@ -127,14 +129,14 @@ export const API = {
     /*运维日历*/
     GetCalendarInfo: before + '/WorkOrderApi/GetCalendarInfo', //获取日历上工单统计信息
     /*运维日志*/
-    GetOperationLogsList: before + '/WorkOrderApi/GetOperationLogsList', //获取运维日志记录
+    GetOperationLogsList: before + '/OperationLogsApi/GetOperationLogsList', //获取运维日志记录
     /*运维工单*/
     GetOperationTaskList: before + '/WorkOrderApi/GetOperationTaskList', //获取运维工单记录
     ExportOperationTaskList: before + '/WorkOrderApi/ExportOperationTaskList', //导出运维工单记录
     GetTaskDetails: before + '/WorkOrderApi/GetTaskDetails', //获取运维工单详情
     RejectTask: before + '/WorkOrderApi/RejectTask', //驳回任务
     GetOperationLogList: before + '/WorkOrderApi/GetOperationLogList', //获取运维记录
-
+    PostRetransmission : before + '/WorkOrderApi/PostRetransmission', //任务转发
     //电子表单
     GetCemsCalibrationRecord: before + '/GasOperationFormApi/GetCemsCalibrationRecord', //获取单个任务的校准记录
     GetConsumablesReplaceRecordList: before + '/ConsumableMaterialApi/GetConsumablesReplaceRecordList', //获取易耗品更换记录
@@ -148,6 +150,7 @@ export const API = {
     GetVerificationTestRecordList: before + '/GasOperationFormApi/GetVerificationTestRecordList', //获取单个CEMS校验测试记录
     GetReagentRepalceRecordList: before + '/ConsumableMaterialApi/GetReagentRepalceRecordList', //获取标液更换记录
     GetCooperationInspectionRecordForPCList: before + '/GasOperationFormApi/GetCooperationInspectionRecordForPCList', //获取配合检查记录
+    GetRealtimeConsistencyRecordForPCList: before + '/GasOperationFormApi/GetRealtimeConsistencyRecordForPCList',//获取数据一致性记录(实时)
     GetHourDayConsistencyRecordForPCList: before + '/GasOperationFormApi/GetHourDayConsistencyRecordForPCList', //获取数据一致性记录(小时日)
     GetDetectionTimesRecordForPCList: before + '/GasOperationFormApi/GetDetectionTimesRecordForPCList', //获取上月委托第三方检测次数
     GetWaterCalibrationRecordForPCList: before + '/GasOperationFormApi/GetWaterCalibrationRecordForPCList', //获取废水校准记录
@@ -156,8 +159,17 @@ export const API = {
     GetGasParametersChangeRecordForPCList: before + '/GasOperationFormApi/GetGasParametersChangeRecordForPCList', //获取废气参数变动记录
     GetWaterComparisonTestRecordForPCList: before + '/GasOperationFormApi/GetWaterComparisonTestRecordForPCList', //获取实际水样比对试验结果记录
     GetRecordAttachmentList: before + '/GasOperationFormApi/GetRecordAttachmentList', //获取运维表单图片信息
+    /*运维记录*/
+    GetOperationRecordListByDGIMN: before + '/WorkOrderApi/GetOperationRecordListByDGIMN', //获取运维记录
+    ExportOperationRecordListByDGIMN: before + '/WorkOrderApi/ExportOperationRecordListByDGIMN', //导出运维记录
+    GetTaskTypeList: before + '/WorkOrderApi/GetTaskTypeList', //获取运维工单类型
     /*工单进度*/
     GetWorkProgressList: before + '/WorkOrderApi/GetWorkProgressList', //获取指挥调度
+    /*运维记录分析*/
+    GetOperationRecordAnalyList: before + '/WorkOrderStatistics/GetOperationRecordAnalyList', //获取运维记录分析
+    ExportOperationRecordAnalyInfo: before + '/WorkOrderStatistics/ExportOperationRecordAnalyInfo', //导出运维记录分析明细
+    GetOperationRecordAnalyInfoList: before + '/WorkOrderStatistics/GetOperationRecordAnalyInfoList', //获取运维记录分析明细
+    ExportOperationRecordAnaly: before + '/WorkOrderStatistics/ExportOperationRecordAnaly', //导出运维记录分析
     /*运维工单分析*/
     GetWorkOrderAnalysisList: before + '/WorkOrderStatistics/GetWorkOrderAnalysisList',//获取运维工单统计信息
     ExportWorkOrderAnalysisList: before + '/WorkOrderStatistics/ExportWorkOrderAnalysisList',//导出运维工单统计信息
@@ -165,11 +177,14 @@ export const API = {
     GetExceptionTaskOrderList: before + '/WorkOrderStatistics/GetExceptionTaskOrderList', //获取异常工单信息
     ExportExceptionTaskOrderList: before + '/WorkOrderStatistics/ExportExceptionTaskOrderList', //导出异常工单信息
     GetExceptionTaskOrderSignList: before + '/WorkOrderStatistics/GetExceptionTaskOrderSignList', //获取企业异常打卡信息（地图）
-
     /*运维到期提醒*/
     GetOperationExpireAnalysis: before + '/OperationExpireAnalysis/GetOperationExpireAnalysis',//运维到期点位统计
     ExportOperationExpireAnalysis: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//导出运维到期点位统计
 
+    /**运维报告**/
+    /*运维报告（word）*/
+    GetOperationReportList: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//获取运维月度报告信息
+    ExportOperationRepor: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//导出运维月度报告
   },
   //智能诊断Api
   IntelligentDiagnosis: {
@@ -353,10 +368,10 @@ export const API = {
     GetMonitoringCategoryList: before + '/AssetManagementApi/GetMonitoringCategoryList',//获取设备监测类型
     ExportEquipmentList: before + '/AssetManagementApi/ExportEquipmentList',//设备信息清单 导出
     /*故障单元清单*/
-    GetFaultUnitList: before + '/AssetManagementApi/GetFaultUnitList',//获取故障单元清单
-    AddFaultUnitInfo: before + '/AssetManagementApi/AddFaultUnitInfo',//添加故障单元清单
-    EditFaultUnit: before + '/AssetManagementApi/EditFaultUnit',//更新故障单元清单
-    DeleteFaultUnitInfo: before + '/AssetManagementApi/DeleteFaultUnitInfo',//删除故障单元清单
+    GetFaultUnitList: before + '/AccountApi/GetFaultUnitList',//获取故障单元清单
+    AddFaultUnitInfo: before + '/AccountApi/AddFaultUnitInfo',//添加故障单元清单
+    EditFaultUnit: before + '/AccountApi/EditFaultUnit',//更新故障单元清单
+    DeleteFaultUnitInfo: before + '/AccountApi/DeleteFaultUnitInfo',//删除故障单元清单
     /*点位匹配设置*/
     GetStateControlledPointRelationList: before + '/AssetManagementApi/GetStateControlledPointRelationList',//获取点位匹配信息
     ExportStateControlledPointRelationList: before + '/AssetManagementApi/ExportStateControlledPointRelationList',//点位匹配信息 导出

@@ -8,9 +8,9 @@ export async function getCalendarInfo(params) {
   } : result;
 }
 
-// 获取异常详细信息
+// 获取异常详细信息 历史运维工单
 export async function getAbnormalDetailList(params) {
-  const result = await post(API.PredictiveMaintenanceApi.GetOperationTaskList, params, null);
+  const result = await post(API.PredictiveMaintenanceApi.GetOperationTaskList,  {...params,IsApp:1}, null);
   return result === null ? {
     data: null,
   } : result;

@@ -7,7 +7,7 @@
  */
 import { post, get, authorpost } from '@/utils/request';
 import { EnumRejectFlag } from '../utils/enum';
-import { API } from '@config/API'
+import { API } from '@config/API';
 
 // 污染源运维的相关接口
 export async function GetTaskRecord(params) {
@@ -354,13 +354,13 @@ export async function GetStandardLiquidRepalceRecordList(params) {
 
 /** 配合检查列表 */
 export async function GetCooperationInspectionRecordList(params) {
-    const result = await post(API.PredictiveMaintenanceApi.GetCooperationInspectionRecordList, params , null);
+    const result = await post(API.PredictiveMaintenanceApi.GetCooperationInspectionRecordForPCList, params , null);
     return result === null ? { Datas: null } : result;
 }
 
 /** 数据一致性检查表 实时 */
 export async function GetDataConsistencyRecordForPCList(params) {
-    const result = await post(API.PredictiveMaintenanceApi.GetCooperationInspectionRecordForPCList, params , null);
+    const result = await post(API.PredictiveMaintenanceApi.GetRealtimeConsistencyRecordForPCList, params , null);
     return result === null ? { Datas: null } : result;
 }
 
@@ -406,6 +406,6 @@ export async function GetWaterComparisonTestRecordForPCList(params) {
 }
 /** 任务转发 */
 export async function PostRetransmission(params) {
-    const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/PostRetransmission', params, null);
+    const result = await post(API.PredictiveMaintenanceApi.PostRetransmission, params, null);
     return result;
   }
