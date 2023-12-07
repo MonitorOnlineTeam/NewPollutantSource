@@ -34,6 +34,7 @@ import config from '@/config';
 // import { Map, MouseTool, Marker, Markers, Polygon, Circle,InfoWindow  } from '@/components/ReactAmap';
 import styles from "../style.less"
 import SiteDetailsModal from './springModal/mapModal/SiteDetailsModal'
+import { uploadPrefix } from '@/config'
 
 const { Option } = Select;
 
@@ -696,7 +697,7 @@ class Index extends PureComponent {
     let imgName =
       pollutantType == 2 ? '/gasInfoWindow.png' : pollutantType == 1 ? '/water.jpg' : '/infoWindowImg.png';
     if (infoWindowData.photo) {
-      imgName = `/upload/${infoWindowData.photo[0]}`;
+      imgName = `${uploadPrefix}/${infoWindowData.photo[0]}`;
     }
 
     // 获取筛选状态图标颜色

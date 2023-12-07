@@ -19,6 +19,7 @@ import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import ImageView from '@/components/ImageView';
+import { uploadPrefix } from '@/config'
 
 
 const { TextArea, Search, } = Input;
@@ -86,7 +87,7 @@ const Index = (props) => {
                 uid: item.GUID,
                 name: item.FileActualName,
                 status: 'done',
-                url: `/upload/${item.FileName}`,
+                url: `${uploadPrefix}/${item.FileName}`,
               })
 
             }

@@ -25,6 +25,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 import {  API } from '@config/API';
 import config from '@/config';
+import { uploadPrefix } from '@/config'
 
 
 const namespace = 'cruxParSupervision'
@@ -104,7 +105,7 @@ const Index = (props) => {
     const fileList = [];
       fileInfo.map((item,index) => { 
         if (!item.IsDelete) {
-          fileList.push({ name: item.FileActualName, url: `/upload/${item.FileName}`, status: 'done',  uid: item.GUID, })
+          fileList.push({ name: item.FileActualName, url:`${uploadPrefix}/${item.FileName}`, status: 'done',  uid: item.GUID, })
         }
       })
     setFilesList(fileList)
@@ -233,7 +234,7 @@ const Index = (props) => {
   const [filesList2, setFilesList2] = useState([])
 
   const uploadProps2 = { // 核查问题照片附件 上传
-    action: API.UploadApi.UploadFiles,
+    action: API.UploadApi.UploadPicture,
     headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     listType: "picture-card",
     accept: 'image/*',

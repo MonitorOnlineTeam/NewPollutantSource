@@ -33,6 +33,7 @@ import { downloadFile } from '@/utils/utils';
 import FileDown from '@/components/AttachmentView/index'
 import VerifyDetailsPop from './VerifyDetailsPop'
 import RegionList from '@/components/RegionList'
+import { uploadPrefix } from '@/config'
 
 import { compose } from 'redux';
 const { Option } = Select;
@@ -1321,7 +1322,7 @@ class exceedDataAlarmModal extends PureComponent {
                         record.verifyImage&&record.verifyImage.map(item=>{
                             obj = {
                                 name:item.FileName,
-                                attach:'/upload/'+item.FileName
+                                attach:`${uploadPrefix}/`+item.FileName
                             }
                         })
                         obj.remark = text;
@@ -1476,7 +1477,7 @@ class exceedDataAlarmModal extends PureComponent {
                         record.verifyImage&&record.verifyImage.map(item=>{
                             obj = {
                                 name:item.FileName,
-                                attach:'/upload/'+item.FileName
+                                attach:`${uploadPrefix}/`+item.FileName
                             }
                         })
                         obj.remark = text;
@@ -1621,7 +1622,7 @@ class exceedDataAlarmModal extends PureComponent {
                         record.verifyImage&&record.verifyImage.map(item=>{
                             obj = {
                                 name:item.FileName,
-                                attach:'/upload/'+item.FileName
+                                attach:`${uploadPrefix}/`+item.FileName
                             }
                         })
                         obj.remark = text;
@@ -1780,7 +1781,7 @@ class exceedDataAlarmModal extends PureComponent {
                         record.verifyImage&&record.verifyImage.map(item=>{
                             obj = {
                                 name:item.FileName,
-                                attach:'/upload/'+item.FileName
+                                attach:`${uploadPrefix}/`+item.FileName
                             }
                         })
                         obj.remark = text;

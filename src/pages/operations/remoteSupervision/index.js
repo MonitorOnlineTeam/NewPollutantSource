@@ -1613,7 +1613,7 @@ const Index = (props) => {
     }
   }
   const uploadProps = { //附件上传 
-    action: API.UploadApi.UploadFiles,
+    action: API.UploadApi.UploadPicture,
     headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     accept: 'image/*',
     showUploadList: { showPreviewIcon: true, showRemoveIcon: !isCheckUser },

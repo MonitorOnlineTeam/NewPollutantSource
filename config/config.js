@@ -1386,7 +1386,7 @@ export default {
                 },
                 {
                   path: '/operations/cruxParSupervision', //关键参数督查
-                  name: 'superviseRectification',
+                  name: 'cruxParSupervision',
                   component: './operations/cruxParSupervision',
                 },
                 {
@@ -1399,11 +1399,11 @@ export default {
                   name: 'cruxParSupervisionRectifica',
                   component: './operations/cruxParSupervisionRectifica',
                 },
-                {
-                  path: '/operations/cruxParSupervisionAnalysis', //关键参数核查分析
-                  name: 'cruxParSupervisionAnalysis',
-                  component: './operations/cruxParSupervisionAnalysis',
-                },
+                // {
+                //   path: '/operations/cruxParSupervisionAnalysis', //关键参数核查分析
+                //   name: 'cruxParSupervisionAnalysis',
+                //   component: './operations/cruxParSupervisionAnalysis',
+                // },
                 {
                   path: '/operations/cruxParSupervisionStatistics', //关键参数核查统计
                   name: 'cruxParSupervisionStatistics',

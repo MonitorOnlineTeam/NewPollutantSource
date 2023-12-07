@@ -90,22 +90,22 @@ export async function AddRemoteInspector(params) {
 
 //关键参数核查 可申请工单站点
 export async function GetRemoteInspectorPointList(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/GetRemoteInspectorPointList`, params, null);
+  const result = await post(API.SupervisionVerificaApi.GetRemoteInspectorPointList, params, null);
   return result;
 }
 
 //关键参数核查 手工申请工单
 export async function AddRemoteInspectorPoint(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/AddRemoteInspectorPoint`, params, null);
+  const result = await post(API.SupervisionVerificaApi.AddRemoteInspectorPoint, params, null);
   return result;
 }
 //关键参数核查 转发工单
 export async function ForwardRemoteInspector(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/ForwardRemoteInspector`, params, null);
+  const result = await post(API.SupervisionVerificaApi.ForwardRemoteInspector, params, null);
   return result;
 }
 //关键参数核查 导入
 export async function ExportRangeParam(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/ExportRangeParam`, params, null);
+  const result = await post(API.SupervisionVerificaApi.ExportRangeParam, params, null);
   return result;
 }

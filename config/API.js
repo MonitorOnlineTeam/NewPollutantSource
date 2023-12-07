@@ -42,6 +42,7 @@ export const API = {
   CommonApi: {
     GetNoFilterRegionList: before + '/RegionApi/GetNoFilterRegionList',//获取无权限过滤的行政区信息
     GetXuRegions: before + '/RegionApi/GetXuRegions',//获取所有省份及省份下的市县
+    GetTestXuRegions: before + '/RegionApi/GetXuRegions',//获取所有省份及省份下的市县（调试服务）
     GetRegions: before + '/RegionApi/GetRegions', //获取行政区
     GetAttentionDegreeList: before + '/RegionApi/GetAttentionDegreeList',//获取关注程度
     GetNoFilterEntList: before + '/EnterpriseApi/GetNoFilterEntList',//获取无权限过滤的企业信息
@@ -113,14 +114,14 @@ export const API = {
     GetIndustryAttributeInfo: before + '/StatisticAnalysisApi/GetIndustryAttributeInfo',//获取业务属性和行业属性
     ExportPlatformAnalysisReport: before + '/StatisticAnalysisApi/ExportPlatformAnalysisReport',//导出平台分析报告
     /*站点数据总览*/
-    GetDayReport: before + '/StatisticAnalysisApi/GetDayReport',//获取站点日报报表
-    GetMonthReport: before + '/StatisticAnalysisApi/GetMonthReport',//获取站点月报报表
-    GetYearReport: before + '/StatisticAnalysisApi/GetYearReport',//获取站点年报报表
-    GetReportExcel: before + '/StatisticAnalysisApi/GetReportExcel',//导出站点日报、月报、年报报表
-    GetSummaryDayReport: before + '/StatisticAnalysisApi/GetSummaryDayReport',//获取站点汇总日报报表
-    GetSummaryMonthReport: before + '/StatisticAnalysisApi/GetSummaryMonthReport',//获取站点汇总月报报表
-    GetSummaryYearReport: before + '/StatisticAnalysisApi/GetSummaryYearReport',//获取站点汇总年报报表
-    GetSummaryReportExcel: before + '/StatisticAnalysisApi/GetSummaryReportExcel',//导出站点汇总站点日报、月报、年报报表
+    GetDayReport: before + '/MonBasicDataApi/GetDayReport',//获取站点日报报表
+    GetMonthReport: before + '/MonBasicDataApi/GetMonthReport',//获取站点月报报表
+    GetYearReport: before + '/MonBasicDataApi/GetYearReport',//获取站点年报报表
+    GetReportExcel: before + '/MonBasicDataApi/GetReportExcel',//导出站点日报、月报、年报报表
+    GetSummaryDayReport: before + '/MonBasicDataApi/GetSummaryDayReport',//获取站点汇总日报报表
+    GetSummaryMonthReport: before + '/MonBasicDataApi/GetSummaryMonthReport',//获取站点汇总月报报表
+    GetSummaryYearReport: before + '/MonBasicDataApi/GetSummaryYearReport',//获取站点汇总年报报表
+    GetSummaryReportExcel: before + '/MonBasicDataApi/GetSummaryReportExcel',//导出站点汇总站点日报、月报、年报报表
   },
 
   //预测性维护Api
@@ -270,48 +271,81 @@ export const API = {
   SupervisionVerificaApi: {
     /*** 远程监督核查 ***/
     /*关键参数核查*/
-    GetKeyParameterCheckList: before + '/SupervisionApi/GetKeyParameterCheckList', //获取关键参数核查信息
-    ExportKeyParameterCheckList: before + '/SupervisionApi/ExportKeyParameterCheckList', //导出关键参数核查信息
-    GetRangeConsistencyDetail: before + '/SupervisionApi/GetRangeConsistencyDetail', //获取关键参数核查信息明细
-    AddRemoteInspector: before + '/SupervisionApi/AddRemoteInspector', //更新关键参数核查信息
-    DeleteKeyParameterCheckInfo: before + '/SupervisionApi/DeleteKeyParameterCheckInfo', //删除关键参数核查信息
-    GetParameterConsistencyCodeInfo: before + '/SupervisionApi/GetParameterConsistencyCodeInfo',//获取量程和实时数据一致性核查监测参数信息
-    JudgeRangeConsistencyCheck: before + '/SupervisionApi/JudgeRangeConsistencyCheck',//获取量程一致性(自动判断)
-    JudgeDataConsistencyCheck: before + '/SupervisionApi/JudgeDataConsistencyCheck',//获取数据一致性(自动判断)	
-    GetNOxValue: before + '/SupervisionApi/GetNOxValue',//获取NOx数采仪实时数据
-    JudgeParameterConsistencyInfo: before + '/SupervisionApi/JudgeParameterConsistencyInfo',//获取参数一致性核查检查项目信息
-    IssueKeyParameterCheckInfo: before + '/SupervisionApi/IssueKeyParameterCheckInfo',//关键参数核查下发
+    GetKeyParameterCheckList: before + '/KeyParameter/GetKeyParameterCheckList', //获取关键参数核查信息
+    ExportKeyParameterCheckList: before + '/KeyParameter/ExportKeyParameterCheckList', //导出关键参数核查信息
+    GetRangeConsistencyDetail: before + '/KeyParameter/GetRangeConsistencyDetail', //获取关键参数核查信息明细
+    AddRemoteInspector: before + '/KeyParameter/AddRemoteInspector', //更新关键参数核查信息
+    DeleteKeyParameterCheckInfo: before + '/KeyParameter/DeleteKeyParameterCheckInfo', //删除关键参数核查信息
+    GetParameterConsistencyCodeInfo: before + '/KeyParameter/GetParameterConsistencyCodeInfo',//获取量程和实时数据一致性核查监测参数信息
+    JudgeRangeConsistencyCheck: before + '/KeyParameter/JudgeRangeConsistencyCheck',//获取量程一致性(自动判断)
+    JudgeDataConsistencyCheck: before + '/KeyParameter/JudgeDataConsistencyCheck',//获取数据一致性(自动判断)	
+    GetNOxValue: before + '/KeyParameter/GetNOxValue',//获取NOx数采仪实时数据
+    JudgeParameterConsistencyInfo: before + '/KeyParameter/JudgeParameterConsistencyInfo',//获取参数一致性核查检查项目信息
+    IssueKeyParameterCheckInfo: before + '/KeyParameter/IssueKeyParameterCheckInfo',//关键参数核查下发
+    GetRemoteInspectorPointList: before + '/KeyParameter/GetRemoteInspectorPointList',//获取可申请的站点工单
+    AddRemoteInspectorPoint: before + '/KeyParameter/AddRemoteInspectorPoint',//申请关键参数核查
+    ForwardRemoteInspector: before + '/KeyParameter/ForwardRemoteInspector',//转发关键参数核查
+    ExportRangeParam: before + '/KeyParameter/ExportRangeParam',//导入合格的参数核查
     /*关键参数核查（新）*/
-
+    GetNewKeyParameterCheckList: before + '/KeyParameter/GetNewKeyParameterCheckList',//获取关键参数核查信息
+    ExportNewKeyParameterCheckList: before + '/KeyParameter/ExportNewKeyParameterCheckList',//导出关键参数核查信息
+    GetKeyParameterCheckDetailList: before + '/KeyParameter/GetKeyParameterCheckDetailList',//导出关键参数核查详情信息
+    CheckItemKeyParameter: before + '/KeyParameter/GetKeyParameterCheckDetailList',//核查关键参数项
+    DeleteKeyParameterItemCheck: before + '/KeyParameter/GetKeyParameterCheckDetailList',//删除核查关键参数项
+    SubCheckItem: before + '/KeyParameter/GetKeyParameterCheckDetailList',//保存或提交核查结果
+    DeleteKeyParameterCheck: before + '/KeyParameter/DeleteKeyParameterCheck',//删除核查信息
+    IssuedKeyParameter: before + '/KeyParameter/IssuedKeyParameter',//下发核查信息
+    RetransmissionKeyParameter: before + '/KeyParameter/IssuedKeyParameter',//转发关键参数核查任务单
     /*** 现场监督核查 ***/
     /*系统设施核查*/
-    GetSystemFacilityVerificationList: before + '/SupervisionApi/GetSystemFacilityVerificationList',//获取系统设施核查
-    ExportSystemFacilityVerificationList: before + '/SupervisionApi/ExportSystemFacilityVerificationList',//导出系统设施核查
-    GetSystemFacilityVerificationInfo: before + '/SupervisionApi/GetSystemFacilityVerificationInfo',//获取单条督查信息
-    GetPointSystemInfo: before + '/SupervisionApi/GetPointSystemInfo',//获取运维督查信息单个排口的默认信息
-    AddOrUpdateSystemFacilityVerificationInfo: before + '/SupervisionApi/AddOrUpdateSystemFacilityVerificationInfo',//添加修改督查模板
-    GetSystemFacilityVerificationDetail: before + '/SupervisionApi/GetPointSystemInfo',//获取运维督查详情
-    DeleteInspectorOperation: before + '/SupervisionApi/DeleteInspectorOperation',//删除运维督查信息
+    GetSystemFacilityVerificationList: before + '/SystemFacilityVerification/GetSystemFacilityVerificationList',//获取系统设施核查
+    ExportSystemFacilityVerificationList: before + '/SystemFacilityVerification/ExportSystemFacilityVerificationList',//导出系统设施核查
+    GetSystemFacilityVerificationInfo: before + '/SystemFacilityVerification/GetSystemFacilityVerificationInfo',//获取单条督查信息
+    GetPointSystemInfo: before + '/SystemFacilityVerification/GetPointSystemInfo',//获取运维督查信息单个排口的默认信息
+    AddOrUpdateSystemFacilityVerificationInfo: before + '/SystemFacilityVerification/AddOrUpdateSystemFacilityVerificationInfo',//添加修改督查模板
+    GetSystemFacilityVerificationDetail: before + '/SystemFacilityVerification/GetPointSystemInfo',//获取运维督查详情
+    DeleteInspectorOperation: before + '/SystemFacilityVerification/DeleteInspectorOperation',//删除运维督查信息
+    PushInspectorOperation: before + '/SystemFacilityVerification/PushInspectorOperation',//问题整改推送
     /*核查模板设置*/
-    GetSupervisionQuestionTypeList: before + '/SupervisionApi/DeleteInspectorOperation',//获取督查类别清单
-    GetSupervisionQuestionTypeCodeList: before + '/SupervisionApi/GetSupervisionQuestionTypeCodeList',//获取督查类别
-    AddOrUpdateSupervisionQuestionTypeInfo: before + '/SupervisionApi/DeleteInspectorOperation',//添加更新督查类别清单
-    DeleteSupervisionQuestionTypeInfo: before + '/SupervisionApi/DeleteInspectorOperation',//删除更新督查类别清单
-    ChangeSupervisionQuestionTypeStatus: before + '/SupervisionApi/ChangeSupervisionQuestionTypeStatus',//更改更新督查类别清单状态
-    GetSupervisionTemplateList: before + '/SupervisionApi/ChangeSupervisionQuestionTypeStatus',//获取督查模板信息
-    AddOrUpdateSupervisionTemplateInfo: before + '/SupervisionApi/AddOrUpdateSupervisionTemplateInfo',//添加更新督查模板信息
-    DeleteSupervisionTemplateInfo: before + '/SupervisionApi/DeleteSupervisionTemplateInfo',//删除更新督查模板信息
-    GetSupervisionQuestionTypeDescribeList: before + '/SupervisionApi/GetSupervisionQuestionTypeDescribeList',//获取督查模板类别信息
-    ChangeSupervisionTemplateStatus: before + '/SupervisionApi/ChangeSupervisionTemplateStatus',//更改督查模板状态
-    GetSupervisionTemplateDetail: before + '/SupervisionApi/GetSupervisionTemplateDetail',//获取督查模板详情
+    GetSupervisionQuestionTypeList: before + '/SystemFacilityVerification/GetSupervisionQuestionTypeList',//获取督查类别清单
+    GetSupervisionQuestionTypeCodeList: before + '/SystemFacilityVerification/GetSupervisionQuestionTypeCodeList',//获取督查类别
+    AddOrUpdateSupervisionQuestionTypeInfo: before + '/SystemFacilityVerification/AddOrUpdateSupervisionQuestionTypeInfo',//添加更新督查类别清单
+    DeleteSupervisionQuestionTypeInfo: before + '/SystemFacilityVerification/DeleteSupervisionQuestionTypeInfo',//删除更新督查类别清单
+    ChangeSupervisionQuestionTypeStatus: before + '/SystemFacilityVerification/ChangeSupervisionQuestionTypeStatus',//更改更新督查类别清单状态
+    GetSupervisionTemplateList: before + '/SystemFacilityVerification/GetSupervisionTemplateList',//获取督查模板信息
+    AddOrUpdateSupervisionTemplateInfo: before + '/SystemFacilityVerification/AddOrUpdateSupervisionTemplateInfo',//添加更新督查模板信息
+    DeleteSupervisionTemplateInfo: before + '/SystemFacilityVerification/DeleteSupervisionTemplateInfo',//删除更新督查模板信息
+    GetSupervisionQuestionTypeDescribeList: before + '/SystemFacilityVerification/GetSupervisionQuestionTypeDescribeList',//获取督查模板类别信息
+    ChangeSupervisionTemplateStatus: before + '/SystemFacilityVerification/ChangeSupervisionTemplateStatus',//更改督查模板状态
+    GetSupervisionTemplateDetail: before + '/SystemFacilityVerification/GetSupervisionTemplateDetail',//获取督查模板详情
     /*系统设施核查整改*/
-
+    GetInspectorRectificationManageList: before + '/SystemFacilityVerification/GetInspectorRectificationManageList',//获取核查整改信息
+    ExportInspectorRectificationManage: before + '/SystemFacilityVerification/GetInspectorRectificationManageList',//导出核查整改信息
+    GetInspectorRectificationView: before + '/SystemFacilityVerification/GetInspectorRectificationManageList',//获取核查整改详情
+    UpdateRectificationStatus: before + '/SystemFacilityVerification/GetInspectorRectificationManageList',//更新核查整改状态
+    RejectInspectorRectificationInfo: before + '/SystemFacilityVerification/GetInspectorRectificationManageList',//核查整改驳回或申述驳回
     /*** 监督核查分析 ***/
     /*督查分析总结*/
-
+    GetInspectorCodeList: before + '/Supervision/GetInspectorCodeList', //获取督查总结的督查类别
+    GetInspectorSummaryList: before + '/Supervision/GetInspectorSummaryList', //获取督查总结信息
+    ExportInspectorSummaryList: before + '/Supervision/ExportInspectorSummaryList', //导出督查总结信息
+    GetInspectorSummaryForRegionList: before + '/Supervision/GetInspectorSummaryForRegionList', //获取督查总结信息（按省统计）
+    ExportInspectorSummaryForRegion: before + '/Supervision/ExportInspectorSummaryForRegion', //导出督查总结信息（按省统计）
+    GetRemoteSummaryList: before + '/Supervision/GetRemoteSummaryList', //获取关键参数督查汇总
+    ExportRemoteSummaryList: before + '/Supervision/ExportRemoteSummaryList', //导出关键参数督查汇总
+    GetOperationManageSummaryList: before + '/Supervision/GetOperationManageSummaryList', //获取全系统督查汇总信息（点位统计2）
+    ExportOperationManageSummaryList: before + '/Supervision/ExportOperationManageSummaryList', //导出全系统督查汇总（点位统计2）
+    GetOperationManageSummaryTypeList: before + '/Supervision/GetOperationManageSummaryTypeList', //获取全系统督查汇总信息（问题统计）
+    ExportOperationManageSummaryType: before + '/Supervision/ExportOperationManageSummaryType', //导出全系统督查汇总（问题统计）
+    GetOperationManageSummaryListNew: before + '/Supervision/GetOperationManageSummaryListNew', //获取全系统督查汇总信息（点位统计1）
+    ExportOperationManageSummaryListNew: before + '/Supervision/ExportOperationManageSummaryListNew', //导出全系统督查汇总（点位统计1）
+    GetInspectorUserList: before + '/SystemFacilityVerification/GetInspectorUserList', //获取运维人员和督查人员信息
     /*关键参数核查统计*/
-    GetKeyParameterAnalyseList: before + '/CTBaseDataApi/GetKeyParameterAnalyseList', //列表
-    ExportKeyParameterAnalyseList: before + '/CTBaseDataApi/ExportKeyParameterAnalyseList' //导出
+    GetKeyParameterAnalyseList: before + '/KeyParameter/GetKeyParameterAnalyseList', //获取关键参数核查统计
+    ExportKeyParameterAnalyseList: before + '/KeyParameter/ExportKeyParameterAnalyseList', //导出关键参数核查统计获取
+    /*运维督查KPI*/
+    GetParamKPIList: before + '/SystemFacilityVerification/GetParamKPIList',//获取运维督查KPI
+    ExportParamKPIList: before + '/SystemFacilityVerification/GetParamKPIList',//导出运维督查KPI
   },
   /*资产管理 Api */
   AssetManagementApi: {
@@ -486,9 +520,9 @@ export const API = {
     DeleteNoticeInfo: before + '/NoticeApi/DeleteNoticeInfo', //删除公告
     GetAllRoleList: before + '/NoticeApi/GetAllRoleList', //获取角色
     /*资源中心*/
-    GetQuestionList: before + '/KnowledgeCenterApi/GetQuestionList', //获取问题清单列表
-    AddOrUpdateQuestionInfo: before + '/KnowledgeCenterApi/AddOrUpdateQuestionInfo', //获取问题清单列表
-    GetQuestionTypeList: before + '/KnowledgeCenterApi/GetQuestionTypeList', //获取问题清单类别
+    GetQuestionList: before + '/HelpCenterApi/GetQuestionList', //获取问题清单列表
+    AddOrUpdateQuestionInfo: before + '/HelpCenterApi/AddOrUpdateQuestionInfo', //获取问题清单列表
+    GetQuestionTypeList: before + '/HelpCenterApi/GetQuestionTypeList', //获取问题清单类别
   },
 
 

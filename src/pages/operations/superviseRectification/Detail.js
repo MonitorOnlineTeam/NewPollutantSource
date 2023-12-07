@@ -22,6 +22,7 @@ import cuid from 'cuid';
 import Lightbox from "react-image-lightbox-rotate";
 import {  API } from '@config/API';
 import config from '@/config';
+import { uploadPrefix } from '@/config'
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -506,7 +507,7 @@ const Index = (props) => {
   const [filesList2, setFilesList2] = useState([])
 
   const uploadProps2 = { // 核查问题照片附件 上传
-    action: API.UploadApi.UploadFiles,
+    action: API.UploadApi.UploadPicture,
     headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     listType: "picture-card",
     accept: 'image/*',
@@ -525,7 +526,7 @@ const Index = (props) => {
       const fileList = [];
       info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
-          fileList.push({ ...item, url: `/upload/${item.response.Datas}`, })
+          fileList.push({ ...item, url: `${uploadPrefix}/${item.response.Datas}`, })
         } else if(!item.response ){
           fileList.push({ ...item})
         }

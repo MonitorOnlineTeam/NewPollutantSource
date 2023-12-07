@@ -36,6 +36,7 @@ import VerifyDetailsPop from './VerifyDetailsPop'
 const { Option } = Select;
 const { TabPane } = Tabs;
 import RegionList from '@/components/RegionList'
+import { uploadPrefix } from '@/config'
 
 
 const pageUrl = {
@@ -1310,7 +1311,7 @@ class index extends PureComponent {
                         record.verifyImage && record.verifyImage.map(item => {
                             obj = {
                                 name: item.FileName,
-                                attach: '/upload/' + item.FileName
+                                attach: `${uploadPrefix}/` + item.FileName
                             }
                         })
                         obj.remark = text;
@@ -1465,7 +1466,7 @@ class index extends PureComponent {
                         record.verifyImage && record.verifyImage.map(item => {
                             obj = {
                                 name: item.FileName,
-                                attach: '/upload/' + item.FileName,
+                                attach: `${uploadPrefix}/` + item.FileName,
                             }
                         })
                         obj.remark = text;
@@ -1609,7 +1610,7 @@ class index extends PureComponent {
                         record.verifyImage && record.verifyImage.map(item => {
                             obj = {
                                 name: item.FileName,
-                                attach: '/upload/' + item.FileName
+                                attach: `${uploadPrefix}/` + item.FileName
                             }
                         })
                         obj.remark = text;
@@ -1766,7 +1767,7 @@ class index extends PureComponent {
                         record.verifyImage && record.verifyImage.map(item => {
                             obj = {
                                 name: item.FileName,
-                                attach: '/upload/' + item.FileName
+                                attach: `${uploadPrefix}/` + item.FileName
                             }
                         })
                         obj.remark = text;

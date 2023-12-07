@@ -413,7 +413,7 @@ const Index = (props) => {
   const uploadProps2 = (fileName) => {
     const filesCuid = form2.getFieldValue([fileName])
     return { //照片附件 上传
-      action: API.UploadApi.UploadFiles,
+      action: API.UploadApi.UploadPicture,
       headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
       accept: 'image/*',
       data: {

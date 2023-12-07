@@ -38,6 +38,7 @@ import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
+import { uploadPrefix } from '@/config'
 
 const { confirm } = Modal;
 
@@ -206,7 +207,7 @@ export default class MonitorTarget extends Component {
     /**下载模版 */
     downloadFile = (returnName) => {
         let a = document.createElement('a');
-        a.href = `/upload/${returnName}`;
+        a.href = `${uploadPrefix}/${returnName}`;
         a.download = '';
         document.body.appendChild(a);
         a.click();

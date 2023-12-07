@@ -115,7 +115,7 @@ export async function GetUserList(params) {
 
 // 运维人员  督查人员 列表
 export async function GetInspectorUserList(params) {
-  const result = post('/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorUserList', params, null);
+  const result = post(API.SupervisionVerificaApi.GetInspectorUserList, params, null);
   return result;
 }
 
@@ -132,7 +132,7 @@ export async function GetRoleCodeList(params) {
 
 //行政区  列表  调试服务
 export async function GetTestXuRegions(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestXuRegions', params, null);
+  const result = post(API.AssetManagementApi.GetTestXuRegions,params, params, null);
   return result;
 }
 

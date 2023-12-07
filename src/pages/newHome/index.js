@@ -764,7 +764,7 @@ class NewHome extends PureComponent {
           ? '/water.jpg'
           : '/infoWindowImg.png';
     if (infoWindowData.photo) {
-      imgName = `/upload/${infoWindowData.photo[0]}`;
+      imgName =`${uploadPrefix}/${infoWindowData.photo[0]}`;
     }
     return (
       <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>

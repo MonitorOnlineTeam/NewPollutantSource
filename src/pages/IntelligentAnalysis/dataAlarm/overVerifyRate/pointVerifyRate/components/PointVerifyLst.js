@@ -36,6 +36,7 @@ import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import EntAtmoList from '@/components/EntAtmoList';
 import VerifyDetailsPop from '@/pages/dataSearch/exceedDataAlarmRecord/VerifyDetailsPop';
+import { uploadPrefix } from '@/config'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -217,7 +218,7 @@ export default class PointVerifyLst extends Component {
                     record.verifyImage&&record.verifyImage.map(item=>{
                         obj = {
                             name:item.FileName,
-                            attach:'/upload/'+item.FileName
+                            attach:`${uploadPrefix}/`+item.FileName
                         }
                     })
                     obj.remark = text;

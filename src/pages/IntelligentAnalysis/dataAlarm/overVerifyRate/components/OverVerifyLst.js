@@ -38,6 +38,8 @@ import ButtonGroup_ from '@/components/ButtonGroup';
 import RegionList from '@/components/RegionList'
 import EntAtmoList from '@/components/EntAtmoList'
 import VerifyDetailsPop from '@/pages/dataSearch/exceedDataAlarmRecord/VerifyDetailsPop'
+import { uploadPrefix } from '@/config'
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -239,7 +241,7 @@ export default class OverVerifyLst extends Component {
                     record.verifyImage&&record.verifyImage.map(item=>{
                         obj = {
                             name:item.FileName,
-                            attach:'/upload/'+item.FileName
+                            attach:`${uploadPrefix}/`+item.FileName
                         }
                     })
                     obj.remark = text;

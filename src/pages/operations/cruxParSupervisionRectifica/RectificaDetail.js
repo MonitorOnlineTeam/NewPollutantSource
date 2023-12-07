@@ -269,7 +269,7 @@ const Index = (props) => {
   const [filesList2, setFilesList2] = useState([])
 
   const uploadProps2 = { // 核查问题照片附件 上传
-    action: API.UploadApi.UploadFiles,
+    action: API.UploadApi.UploadPicture,
     headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     listType: "picture-card",
     accept: 'image/*',

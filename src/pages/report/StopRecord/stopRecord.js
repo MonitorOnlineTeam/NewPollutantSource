@@ -38,6 +38,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 const { MonthPicker } = DatePicker;
 import RegionList from '@/components/RegionList'
+import { uploadPrefix } from '@/config'
 
 const pageUrl = {
     getRegions: 'autoForm/getRegions',
@@ -461,7 +462,7 @@ class index extends PureComponent {
                         record.field.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:'/upload/'+item.FileName
+                                attach:`${uploadPrefix}/`+item.FileName
                             }
                             sourc.push(obj)
                         })

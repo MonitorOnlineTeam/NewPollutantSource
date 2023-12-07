@@ -52,6 +52,7 @@ import DiffHorizontal from './component/DiffHorizontal';
 import OfficeModal from './component/OfficeModal';
 import SiteDetailsModal from './component/SiteDetailsModal';
 import PageLoading from '@/components/PageLoading';
+import { uploadPrefix } from '@/config'
 
 // const plugins = [
 //   'MapType', // 地图模式（卫星）
@@ -792,7 +793,7 @@ class NewHome extends PureComponent {
           ? '/water.jpg'
           : '/infoWindowImg.png';
     if (infoWindowData.photo) {
-      imgName = `/upload/${infoWindowData.photo[0]}`;
+      imgName =`${uploadPrefix}/${infoWindowData.photo[0]}`;
     }
     return (
       <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>

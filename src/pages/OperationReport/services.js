@@ -91,7 +91,7 @@ export async function GetConsumablesList(params) {
 // 运维台账填报数量统计
 export async function GetOperationRecordAnalyList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationRecordAnalyList',
+    API.PredictiveMaintenanceApi.GetOperationRecordAnalyList,
     params,
   );
   return result;

@@ -43,6 +43,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import html2canvas from 'html2canvas';
+import { uploadPrefix } from '@/config'
 
 var QRCode = require('qrcode.react');
 const { confirm } = Modal;

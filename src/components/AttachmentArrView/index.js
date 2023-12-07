@@ -7,7 +7,7 @@
  */
 import React, { PureComponent } from 'react';
 import { Popover, Table, Divider } from "antd"
-import { uploadHost } from '@/config'
+import { uploadPrefix } from '@/config'
 
 class index extends PureComponent {
   constructor(props) {
@@ -27,10 +27,10 @@ class index extends PureComponent {
               <>
                 <a target="_blank" onClick={(e) => {
                   e.stopPropagation()
-                  window.open(`/upload/${text}`)
+                  window.open(`${uploadPrefix}/${text}`)
                 }}>预览</a>
                 <Divider type="vertical" />
-                <a href={`/upload/${text}`} download onClick={(e) => {
+                <a href={`${uploadPrefix}/${text}`} download onClick={(e) => {
                   e.stopPropagation()
                 }}>下载</a>
               </>

@@ -1630,7 +1630,7 @@ const Index = (props) => {
   const [imgUrlList, setImgUrlList] = useState([]);//预览附件列表
 
   const uploadProps = { //附件上传 
-    action: API.UploadApi.UploadFiles,
+    action: API.UploadApi.UploadPicture,
     headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     accept: 'image/*',
     data: {
