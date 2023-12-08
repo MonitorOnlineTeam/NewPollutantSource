@@ -11,7 +11,7 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportExceptionReported,
-  GetEmissionsEntPointPollutant
+  // GetEmissionsEntPointPollutant
 } from './service';
 
 

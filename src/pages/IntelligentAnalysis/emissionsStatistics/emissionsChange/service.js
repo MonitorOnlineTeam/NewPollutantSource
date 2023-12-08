@@ -14,16 +14,16 @@ export async function GetEmissionsTrendList(params) {
   return result;
 }
 
-// 参数列表
-export async function GetEmissionsEntPointPollutant(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsEntPointPollutant',
-    params,
-    null,
-  );
+// // 参数列表
+// export async function GetEmissionsEntPointPollutant(params) {
+//   const result = post(
+//     '/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsEntPointPollutant',
+//     params,
+//     null,
+//   );
 
-  return result;
-}
+//   return result;
+// }
 
 //关注列表
 export async function GetAttentionDegreeList(params) {

@@ -11,39 +11,38 @@ export async function getPollutantByType(params) {
   const result = post(`${API.CommonApi.GetPollutantByType}?type=${params.type}`, {});
   return result;
 }
-
-// 异常数据查询-师一级
+// 异常数据查询-省一级
 export async function getExceptionList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionList`, params);
+  const result = post(API.IntelligentDiagnosis.GetExceptionList, params);
   return result;
 }
 
-// 异常数据导出-师一级
+// 异常数据导出-省一级
 export async function exportExceptionList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionList`, params);
+  const result = post(API.IntelligentDiagnosis.ExportExceptionList, params);
   return result;
 }
 
 // 异常数据查询-城市级别
 export async function getExceptionCityList  (params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionCityList`, params);
+  const result = post(API.IntelligentDiagnosis.GetExceptionCityList, params);
   return result;
 }
 
 // 异常数据导出-城市级别
 export async function exportExceptionCityList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionCityList`, params);
+  const result = post(API.IntelligentDiagnosis.ExportExceptionCityList, params);
   return result;
 }
 // 异常数据查询 - 二级页面
 export async function getExceptionPointList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionPointList`, params);
+  const result = post(API.IntelligentDiagnosis.GetExceptionPointList, params);
   return result;
 }
 
 // 异常数据导出 - 二级页面
 export async function exportExceptionPointList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionPointList`, params);
+  const result = post(API.IntelligentDiagnosis.ExportExceptionPointList, params);
   return result;
 }
 

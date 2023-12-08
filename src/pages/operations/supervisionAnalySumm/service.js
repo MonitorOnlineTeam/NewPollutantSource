@@ -4,18 +4,18 @@ import { API } from '@config/API';
 
 //督查总结的督查类别
 export async function GetInspectorCodeList(params) {
-  const result = await post(API.SupervisionVerificaApi.GetInspectorCodeList,params, null);
+  const result = await post(API.SupervisionVerificaApi.GetSupervisionTypeList,params, null);
   return result;
 }
 //列表 督查总结
 export async function GetInspectorSummaryList(params) {
-  const result = await post(API.SupervisionVerificaApi.GetInspectorSummaryList,params, null);
+  const result = await post(API.SupervisionVerificaApi.GetSupervisionSummaryList,params, null);
   return result;
 }
 
 //导出 督查总结
 export async function ExportInspectorSummaryList(params) {
-  const result = await post(API.SupervisionVerificaApi.ExportInspectorSummaryList,params, null);
+  const result = await post(API.SupervisionVerificaApi.ExportSupervisionSummaryList,params, null);
   return result;
 }
 //列表 督查总结---按省统计
@@ -33,26 +33,26 @@ export async function ExportInspectorSummaryForRegion(params) {
 
 //列表 关键参数督查汇总
 export async function GetRemoteSummaryList(params) {
-  const result = await post(API.SupervisionVerificaApi.GetRemoteSummaryList,params, null);
+  const result = await post(API.SupervisionVerificaApi.GetKeyParameterSummaryList,params, null);
   return result;
 }
  
 //导出 关键参数督查汇总
 export async function ExportRemoteSummaryList(params) {
-  const result = await post(API.SupervisionVerificaApi.ExportRemoteSummaryList,params, null);
+  const result = await post(API.SupervisionVerificaApi.ExportKeyParameterSummaryList,params, null);
   return result;
 }
 
 //列表 全系统督查汇总 点位统计2
 export async function GetOperationManageSummaryList(params) {
-  const result = await post(API.SupervisionVerificaApi.GetOperationManageSummaryList,params, null);
+  const result = await post(API.SupervisionVerificaApi.GetSystemFacilityVerificationSummaryList,params, null);
   return result;
 }
 
  
 //导出 全系统督查汇总 点位统计2
 export async function ExportOperationManageSummaryList(params) {
-  const result = await post(API.SupervisionVerificaApi.ExportOperationManageSummaryList,params, null);
+  const result = await post(API.SupervisionVerificaApi.ExportSystemFacilityVerificationSummaryList,params, null);
   return result;
 }
 

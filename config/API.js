@@ -191,46 +191,57 @@ export const API = {
   IntelligentDiagnosis: {
     /**异常数据处置**/
     /*异常数据上报*/
-    GetExceptionReportList: before + '/ExceptionResponseRateApi/GetExceptionReportList',//获取异常数据上报信息、企业异常记录
-    AddOrUpdateExceptionReportInfo: before + '/ExceptionResponseRateApi/AddOrUpdateExceptionReportInfo',//添加更新异常数据上报信息
-    DeleteExceptionReportInfo: before + '/ExceptionResponseRateApi/DeleteExceptionReportInfo',//删除异常数据上报信息
+    GetExceptionReportList: before + '/ExceptionApi/GetExceptionReportList',//获取异常数据上报信息、企业异常记录
+    AddOrUpdateExceptionReportInfo: before + '/ExceptionApi/AddOrUpdateExceptionReportInfo',//添加更新异常数据上报信息
+    DeleteExceptionReportInfo: before + '/ExceptionApi/DeleteExceptionReportInfo',//删除异常数据上报信息
     /*设备故障反馈*/
-    GetEquipmentFaultFeedbackList: before + '/ExceptionResponseRateApi/GetEquipmentFaultFeedbackList',//获取设备故障反馈信息
-    ExportEquipmentFaultFeedbackList: before + '/ExceptionResponseRateApi/ExportEquipmentFaultFeedbackList',//导出设备故障反馈信息
-    UpdateEquipmentFaultFeedbackStatus: before + '/ExceptionResponseRateApi/UpdateEquipmentFaultFeedbackStatus',//更新设备故障反馈信息
+    GetEquipmentFaultFeedbackList: before + '/EquipmentFailure/GetEquipmentFaultFeedbackList',//获取设备故障反馈信息
+    ExportEquipmentFaultFeedbackList: before + '/EquipmentFailure/ExportEquipmentFaultFeedbackList',//导出设备故障反馈信息
+    UpdateEquipmentFaultFeedbackStatus: before + '/EquipmentFailure/UpdateEquipmentFaultFeedbackStatus',//更新设备故障反馈信息
     /**异常数据分析**/
     /*超标数据分析*/
-    GetOverDataList: before + '/WorkOrderStatistics/GetOverDataList', //获取超标数据信息
-    ExportOverDataList: before + '/WorkOrderStatistics/ExportOverDataList', //导出超标数据信息
-    GetOverStandardNum: before + '/WorkOrderStatistics/GetOverStandardNum', //获取超标次数
-    ExportOverStandardNum: before + '/WorkOrderStatistics/ExportOverStandardNum', //导出超标次数
+    GetOverDataList: before + '/OverDataApi/GetOverDataList', //获取超标数据信息
+    ExportOverDataList: before + '/OverDataApi/ExportOverDataList', //导出超标数据信息
+    GetOverStandardNum: before + '/OverDataApi/GetOverStandardNum', //获取超标次数
+    ExportOverStandardNum: before + '/OverDataApi/ExportOverStandardNum', //导出超标次数
     /*超标数据报警*/
-    GetOverToExamineOperation: before + '/ExceptionResponseRateApi/GetOverToExamineOperation',//获取超标核实类型
-    GetAlarmVerifyRate: before + '/ExceptionResponseRateApi/GetAlarmVerifyRate',//获取超标数据信息
-    ExportAlarmVerifyRate: before + '/ExceptionResponseRateApi/ExportAlarmVerifyRate',//导出超标数据信息
-    GetAlarmVerifyRateDetail: before + '/ExceptionResponseRateApi/GetAlarmVerifyRateDetail',//获取超标数据信息详情
-    ExportAlarmVerifyRateDetail: before + '/ExceptionResponseRateApi/ExportAlarmVerifyRate',//导出超标数据信息
-    GetAlarmVerifyDetail: before + '/ExceptionResponseRateApi/GetAlarmVerifyDetail',//获取超标数据报警次数详情
-    ExportAlarmVerifyDetail: before + '/ExceptionResponseRateApi/ExportAlarmVerifyDetail',//导出超标数据报警次数详情
+    GetOverToExamineOperation: before + '/AlarmVerifyManageApi/GetOverToExamineOperation',//获取超标核实类型
+    GetAlarmVerifyRate: before + '/AlarmVerifyManageApi/GetAlarmVerifyRate',//获取超标数据信息
+    ExportAlarmVerifyRate: before + '/AlarmVerifyManageApi/ExportAlarmVerifyRate',//导出超标数据信息
+    GetAlarmVerifyRateDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyRateDetail',//获取超标数据信息详情
+    ExportAlarmVerifyRateDetail: before + '/AlarmVerifyManageApi/ExportAlarmVerifyRate',//导出超标数据信息
+    GetAlarmVerifyDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyDetail',//获取超标数据报警次数详情
+    ExportAlarmVerifyDetail: before + '/AlarmVerifyManageApi/ExportAlarmVerifyDetail',//导出超标数据报警次数详情
     /*缺失数据分析*/
     GetMissDataList: before + '/ExceptionDataApi/GetMissDataList',//获取缺失数据信息
     ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList',//导出缺失数据信息
-    GetMissDataResponseRateList: before + '/ExceptionDataApi/GetMissDataResponseRateList',//获取缺失数据响应和响应率信息
+    GetMissDataResponseRateList: before + '/ExceptionAlarmApi/GetMissDataResponseRateList',//获取缺失数据响应和响应率信息
     ExportExceptionReportedList: before + '/ExceptionDataApi/ExportExceptionReportedList',//导出缺失数据响应和响应率信息
     /*异常数据分析*/
-
-    /*异常数据报警*/
-    GetProvinceExceptionDataAlaramList: before + '/ExceptionDataApi/GetProvinceExceptionDataAlaramList',//获取省级异常数据报警信息
-    ExportProvinceExceptionDataAlaramList: before + '/ExceptionDataApi/ExportProvinceExceptionDataAlaramList',//导出异常数据报警信息
-    GetCityExceptionDataAlaramList: before + '/ExceptionDataApi/GetCityExceptionDataAlaramList',//获取市级异常数据报警信息
-    ExportCityExceptionDataAlaramList: before + '/ExceptionDataApi/ExportProvinceExceptionDataAlaramList',//导出市级异常数据报警信息
-    GetEntExceptionDataAlaramList: before + '/ExceptionDataApi/GetEntExceptionDataAlaramList',//获取企业异常数据报警信息
-    ExportEntExceptionDataAlaramList: before + '/ExceptionDataApi/ExportEntExceptionDataAlaramList',//导出企业异常数据报警信息
+    GetExceptionList: before + '/ExceptionDataApi/GetExceptionList',//获取省级异常数据信息
+    ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList',//导出省级异常数据信息
+    GetExceptionCityList: before + '/ExceptionDataApi/GetExceptionCityList',//获取市级异常数据信息
+    ExportExceptionCityList: before + '/ExceptionDataApi/ExportExceptionCityList',//导出市级异常数据信息
+    GetExceptionPointList: before + '/ExceptionDataApi/GetExceptionPointList',//获取监测点异常数据信息
+    ExportExceptionPointList: before + '/ExceptionDataApi/ExportExceptionPointList',//导出监测点异常数据信息
+    /*异常数据报警 异常报警响应率*/
+    GetProvinceExceptionDataAlaramList: before + '/ExceptionDataApi/GetProvinceExceptionDataAlaramList',//获取省级异常数据报警和报警响应率信息
+    ExportProvinceExceptionDataAlaramList: before + '/ExceptionDataApi/ExportProvinceExceptionDataAlaramList',//导出异常数据报警和报警响应率信息
+    GetCityExceptionDataAlaramList: before + '/ExceptionDataApi/GetCityExceptionDataAlaramList',//获取市级异常数据报警和报警响应率信息
+    ExportCityExceptionDataAlaramList: before + '/ExceptionDataApi/ExportProvinceExceptionDataAlaramList',//导出市级异常数据报警和报警响应率信息
+    GetEntExceptionDataAlaramList: before + '/ExceptionDataApi/GetEntExceptionDataAlaramList',//获取企业异常数据报警和报警响应率信息
+    ExportEntExceptionDataAlaramList: before + '/ExceptionDataApi/ExportEntExceptionDataAlaramList',//导出企业异常数据报警和报警响应率信息
+    // /*异常报警响应率*/
+    // GetExceptionAlarmRateListForRegion: before + '/ExceptionResponseRateApi/GetExceptionAlarmRateListForRegion',//获取省级异常报警响应率信息
+    // ExportExceptionAlarmRateListForRegion: before + '/ExceptionResponseRateApi/ExportExceptionAlarmRateListForRegion',//导出省级异常报警响应率信息
+    // GetExceptionAlarmRateListForPoint: before + '/ExceptionResponseRateApi/GetExceptionAlarmRateListForPoint',//获取监测点异常报警响应率信息
+    // ExportExceptionAlarmRateListForPoint: before + '/ExceptionResponseRateApi/ExportExceptionAlarmRateListForPoint',//导出监测点异常报警响应率信息
     /*停运记录分析*/
     GetStopList: before + '/OutputStopApi/GetStopList',//获取停运记录
     ExportStopList: before + '/OutputStopApi/GetStopList',//导出停运记录
     /*企业异常记录*/
-    ExportExceptionReportList: before + '/OutputStopApi/ExportExceptionReportList',//获取企业异常记录
+    ExportExceptionReportList: before + '/ExceptionApi/ExportExceptionReportList',//获取企业异常记录
+    GetExceptionReportedView: before + '/ExceptionApi/GetExceptionReportedView',//获取企业异常记录详情
     /**异常规则信息**/
     /*监测标准设置*/
     GetMonitorPointPollutantDetails: before + '/StandardLibraryApi/GetMonitorPointPollutantDetails',//获取监测污染物详情
@@ -296,6 +307,12 @@ export const API = {
     DeleteKeyParameterCheck: before + '/KeyParameter/DeleteKeyParameterCheck',//删除核查信息
     IssuedKeyParameter: before + '/KeyParameter/IssuedKeyParameter',//下发核查信息
     RetransmissionKeyParameter: before + '/KeyParameter/IssuedKeyParameter',//转发关键参数核查任务单
+    /*关键参数核查整改*/
+    GetKeyParameterQuestionList: before + '/KeyParameter/GetKeyParameterQuestionList',//获取关键参数核查整改信息
+    ExportKeyParameterQuestionList: before + '/KeyParameter/ExportKeyParameterQuestionList',//导出关键参数核查整改信息
+    GetKeyParameterQuestionDetailList: before + '/KeyParameter/GetKeyParameterQuestionDetailList',//获取关键参数核查整改详情
+    CheckItemKeyParameterQuestion: before + '/KeyParameter/CheckItemKeyParameterQuestion',//关键参数核查整改
+    UpdateKeyParameterQuestionStatus: before + '/KeyParameter/UpdateKeyParameterQuestionStatus',//通过或驳回关键参数核查整改
     /*** 现场监督核查 ***/
     /*系统设施核查*/
     GetSystemFacilityVerificationList: before + '/SystemFacilityVerification/GetSystemFacilityVerificationList',//获取系统设施核查
@@ -326,15 +343,15 @@ export const API = {
     RejectInspectorRectificationInfo: before + '/SystemFacilityVerification/GetInspectorRectificationManageList',//核查整改驳回或申述驳回
     /*** 监督核查分析 ***/
     /*督查分析总结*/
-    GetInspectorCodeList: before + '/Supervision/GetInspectorCodeList', //获取督查总结的督查类别
-    GetInspectorSummaryList: before + '/Supervision/GetInspectorSummaryList', //获取督查总结信息
-    ExportInspectorSummaryList: before + '/Supervision/ExportInspectorSummaryList', //导出督查总结信息
+    GetSupervisionTypeList: before + '/Supervision/GetSupervisionTypeList', //获取督查总结的督查类别
+    GetSupervisionSummaryList: before + '/Supervision/GetSupervisionSummaryList', //获取督查总结信息
+    ExportSupervisionSummaryList: before + '/Supervision/ExportSupervisionSummaryList', //导出督查总结信息
     GetInspectorSummaryForRegionList: before + '/Supervision/GetInspectorSummaryForRegionList', //获取督查总结信息（按省统计）
     ExportInspectorSummaryForRegion: before + '/Supervision/ExportInspectorSummaryForRegion', //导出督查总结信息（按省统计）
-    GetRemoteSummaryList: before + '/Supervision/GetRemoteSummaryList', //获取关键参数督查汇总
-    ExportRemoteSummaryList: before + '/Supervision/ExportRemoteSummaryList', //导出关键参数督查汇总
-    GetOperationManageSummaryList: before + '/Supervision/GetOperationManageSummaryList', //获取全系统督查汇总信息（点位统计2）
-    ExportOperationManageSummaryList: before + '/Supervision/ExportOperationManageSummaryList', //导出全系统督查汇总（点位统计2）
+    GetRemoteSummaryList: before + '/Supervision/GetKeyParameterSummaryList', //获取关键参数督查汇总
+    ExportKeyParameterSummaryList: before + '/Supervision/ExportKeyParameterSummaryList', //导出关键参数督查汇总
+    GetSystemFacilityVerificationSummaryList: before + '/Supervision/GetSystemFacilityVerificationSummaryList', //获取全系统督查汇总信息（点位统计2）
+    ExportSystemFacilityVerificationSummaryList: before + '/Supervision/ExportSystemFacilityVerificationSummaryList', //导出全系统督查汇总（点位统计2）
     GetOperationManageSummaryTypeList: before + '/Supervision/GetOperationManageSummaryTypeList', //获取全系统督查汇总信息（问题统计）
     ExportOperationManageSummaryType: before + '/Supervision/ExportOperationManageSummaryType', //导出全系统督查汇总（问题统计）
     GetOperationManageSummaryListNew: before + '/Supervision/GetOperationManageSummaryListNew', //获取全系统督查汇总信息（点位统计1）
@@ -382,25 +399,25 @@ export const API = {
     AddAccessibleProjectInfo: before + '/AssetManagementApi/AddAccessibleProjectInfo',//分配项目权限
     DeleteAccessibleProjectInfo: before + '/AssetManagementApi/DeleteAccessibleProjectInfo',//删除项目权限
     /*设备厂家名录*/
-    GetEquipmentManufacturerList: before + '/AssetManagementApi/GetEquipmentManufacturerList',//获取设备厂家信息
-    AddEquipmentManufacturerInfo: before + '/AssetManagementApi/AddEquipmentManufacturerInfo',//添加设备厂家信息
-    UpdateEquipmentManufacturerInfo: before + '/AssetManagementApi/UpdateEquipmentManufacturerInfo',//更新设备厂家信息
-    DeleteEquipmentManufacturerInfo: before + '/AssetManagementApi/DeleteEquipmentManufacturerInfo',//删除设备厂家信息
-    ExportEquipmentManufacturerList: before + '/AssetManagementApi/ExportEquipmentManufacturerList',//设备厂家信息 导出
+    GetEquipmentManufacturerList: before + '/EquipmentApi/GetEquipmentManufacturerList',//获取设备厂家信息
+    AddEquipmentManufacturerInfo: before + '/EquipmentApi/AddEquipmentManufacturerInfo',//添加设备厂家信息
+    UpdateEquipmentManufacturerInfo: before + '/EquipmentApi/UpdateEquipmentManufacturerInfo',//更新设备厂家信息
+    DeleteEquipmentManufacturerInfo: before + '/EquipmentApi/DeleteEquipmentManufacturerInfo',//删除设备厂家信息
+    ExportEquipmentManufacturerList: before + '/EquipmentApi/ExportEquipmentManufacturerList',//设备厂家信息 导出
     /*系统型号清单*/
-    GetSystemModelList: before + '/AssetManagementApi/GetSystemModelList',//获取系统型号信息
-    AddSystemModelInfo: before + '/AssetManagementApi/AddSystemModelInfo',//添加系统型号信息
-    UpdateSystemModelInfo: before + '/AssetManagementApi/UpdateSystemModelInfo',//更新系统型号信息
-    DeleteSystemModelInfo: before + '/AssetManagementApi/DeleteSystemModelInfo',//删除系统型号信息
-    GetSystemNameList: before + '/AssetManagementApi/GetSystemNameList',//获取系统名称列表
-    ExportSystemModelList: before + '/AssetManagementApi/ExportSystemModelList',//系统型号信息 导出
+    GetSystemModelList: before + '/EquipmentApi/GetSystemModelList',//获取系统型号信息
+    AddSystemModelInfo: before + '/EquipmentApi/AddSystemModelInfo',//添加系统型号信息
+    UpdateSystemModelInfo: before + '/EquipmentApi/UpdateSystemModelInfo',//更新系统型号信息
+    DeleteSystemModelInfo: before + '/EquipmentApi/DeleteSystemModelInfo',//删除系统型号信息
+    GetSystemNameList: before + '/EquipmentApi/GetSystemNameList',//获取系统名称列表
+    ExportSystemModelList: before + '/EquipmentApi/ExportSystemModelList',//系统型号信息 导出
     /*设备信息清单*/
-    GetEquipmentList: before + '/AssetManagementApi/GetEquipmentList',//获取设备信息清单
-    AddEquipmentInfo: before + '/AssetManagementApi/AddEquipmentInfo',//添加设备信息清单
-    UpdateEquipmentInfo: before + '/AssetManagementApi/UpdateEquipmentInfo',//更新信息清单
-    DeleteEquipmentInfo: before + '/AssetManagementApi/DeleteEquipmentInfo',//删除设备信息清单
-    GetMonitoringCategoryList: before + '/AssetManagementApi/GetMonitoringCategoryList',//获取设备监测类型
-    ExportEquipmentList: before + '/AssetManagementApi/ExportEquipmentList',//设备信息清单 导出
+    GetEquipmentList: before + '/EquipmentApi/GetEquipmentList',//获取设备信息清单
+    AddEquipmentInfo: before + '/EquipmentApi/AddEquipmentInfo',//添加设备信息清单
+    UpdateEquipmentInfo: before + '/EquipmentApi/UpdateEquipmentInfo',//更新信息清单
+    DeleteEquipmentInfo: before + '/EquipmentApi/DeleteEquipmentInfo',//删除设备信息清单
+    GetMonitoringCategoryList: before + '/EquipmentApi/GetMonitoringCategoryList',//获取设备监测类型
+    ExportEquipmentList: before + '/EquipmentApi/ExportEquipmentList',//设备信息清单 导出
     /*故障单元清单*/
     GetFaultUnitList: before + '/AccountApi/GetFaultUnitList',//获取故障单元清单
     AddFaultUnitInfo: before + '/AccountApi/AddFaultUnitInfo',//添加故障单元清单
@@ -464,7 +481,7 @@ export const API = {
     InsertDepartInfo: before + '/DepartmentApi/InsertDepartInfo',//新增部门信息
     UpdDepartInfo: before + '/DepartmentApi/UpdDepartInfo',//更新部门信息
     DelDepartInfo: before + '/DepartmentApi/DelDepartInfo',//删除部门信息
-    GetPointByDepID: before + '/DepartmentApi/GetPointByDepID',//查询当前部门下的所有排口
+    GetUserPointAuthorizeList: before + '/DepartmentApi/GetUserPointAuthorizeList',//查询当前部门下的所有排口
     GetDepartInfoByID: before + '/DepartmentApi/GetDepartInfoByID',//获取单个部门信息
     GetDepartTreeAndObj: before + '/DepartmentApi/GetDepartTreeAndObj',//获取部门树信息（带根节点）
     GetGroupRegionFilter: before + '/ConfigureApi/GetGroupRegionFilter',//获取部门区域过滤

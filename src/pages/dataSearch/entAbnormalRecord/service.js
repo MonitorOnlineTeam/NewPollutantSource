@@ -16,23 +16,23 @@ export async function GetExceptionReportedList(params) {
 //异常记录详情
 export async function GetExceptionReportedView(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionReportedView',
+    API.IntelligentDiagnosis.GetExceptionReportedView,
     params,
     null,
   );
 
   return result;
 }
-// 参数列表
-export async function GetEmissionsEntPointPollutant(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsEntPointPollutant',
-    params,
-    null,
-  );
+// // 参数列表
+// export async function GetEmissionsEntPointPollutant(params) {
+//   const result = post(
+//     '/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsEntPointPollutant',
+//     params,
+//     null,
+//   );
 
-  return result;
-}
+//   return result;
+// }
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(

@@ -174,7 +174,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Attachments',
         align: 'center',
         render: (text, record) => {
-          const attachmentDataSource = this.getAttachmentDataSource(text);
+          const attachmentDataSource = this.getAttachmentDataSource(text?.Attachments?.NameList || []);
           return  <AttachmentView dataSource={attachmentDataSource} />;
         },
       },  
@@ -206,7 +206,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   getAttachmentDataSource(value) {
-    const fileInfo = value ? value.split(',') : [];
+    const fileInfo = value;
     let fileList =  fileInfo.map(item => {
       return {
         name: item,

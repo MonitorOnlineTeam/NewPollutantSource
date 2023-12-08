@@ -175,7 +175,7 @@ export async function getpointbydepid(params, isUser) {
     PollutantType: params.PollutantType,
   };
   const result = post(
-    isUser? API.AssetManagementApi.GetPointByDepID :  API.AssetManagementApi.GetPointByDepIDBW,
+    isUser? API.AssetManagementApi.GetUserPointAuthorizeList :  API.AssetManagementApi.GetPointByDepIDBW,
     // `/api/rest/PollutantSourceApi/AuthorApi/${isUser ? 'GetPointByDepID' : 'GetPointByDepIDBW'}`,
     body,
     null,
