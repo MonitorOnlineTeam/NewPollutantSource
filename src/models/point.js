@@ -144,74 +144,74 @@ export default Model.extend({
 
             // payload.callback(result);
         },
-        /** 获取测试项目 */
-        *GetComponent({ payload }, { call, put, update, select }) {
-            const result = yield call(GetComponent, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    TestComponent: result.Datas,
-                });
-            } else {
-                sdlMessage(result.Message, 'error');
-            }
-        },
-        /** 获取主要仪器名称 */
-        *GetMainInstrumentName({ payload }, { call, put, update, select }) {
-            const result = yield call(GetMainInstrumentName, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    MainInstrumentName: result.Datas,
-                });
-            } else {
-                sdlMessage(result.Message, 'error');
-            }
-        },
-        /** 获取CEMS监测子系统信息 */
-        *GetChildCems({ payload }, { call, put, update, select }) {
-            const result = yield call(GetChildCems, payload);
-            if (result.IsSuccess) {
-                yield update({
-                    CemsList: result.Datas,
-                });
-            } else {
-                sdlMessage(result.Message, 'error');
-            }
-        },
+        // /** 获取测试项目 */
+        // *GetComponent({ payload }, { call, put, update, select }) {
+        //     const result = yield call(GetComponent, payload);
+        //     if (result.IsSuccess) {
+        //         yield update({
+        //             TestComponent: result.Datas,
+        //         });
+        //     } else {
+        //         sdlMessage(result.Message, 'error');
+        //     }
+        // },
+        // /** 获取主要仪器名称 */
+        // *GetMainInstrumentName({ payload }, { call, put, update, select }) {
+        //     const result = yield call(GetMainInstrumentName, payload);
+        //     if (result.IsSuccess) {
+        //         yield update({
+        //             MainInstrumentName: result.Datas,
+        //         });
+        //     } else {
+        //         sdlMessage(result.Message, 'error');
+        //     }
+        // },
+        // /** 获取CEMS监测子系统信息 */
+        // *GetChildCems({ payload }, { call, put, update, select }) {
+        //     const result = yield call(GetChildCems, payload);
+        //     if (result.IsSuccess) {
+        //         yield update({
+        //             CemsList: result.Datas,
+        //         });
+        //     } else {
+        //         sdlMessage(result.Message, 'error');
+        //     }
+        // },
         /** 添加Cem */
-        *AddAnalyzer({ payload }, { call, put, update, select }) {
-            const result = yield call(AddAnalyzer, payload);
-            if (result.IsSuccess) {
-                sdlMessage('添加成功', 'success');
-            } else {
-                sdlMessage(result.Message, 'error');
-            }
-        },
+        // *AddAnalyzer({ payload }, { call, put, update, select }) {
+        //     const result = yield call(AddAnalyzer, payload);
+        //     if (result.IsSuccess) {
+        //         sdlMessage('添加成功', 'success');
+        //     } else {
+        //         sdlMessage(result.Message, 'error');
+        //     }
+        // },
         /** 获取Cem列表 */
-        *GetAnalyzerListByDGIMN({ payload }, { call, put, update, select }) {
-            const result = yield call(GetAnalyzerListByDGIMN, payload);
-            let qualityControlTableData = [];
-            if (result.Datas) {
-                qualityControlTableData = result.Datas.map((item, index) => {
-                    let Component = [];
-                    Component = item.Component.map((itm, idx) => ({
-                        ...itm,
-                        key: `${index}${idx}`,
-                    }))
-                    return {
-                        ...item,
-                        key: index,
-                        Component: [
-                            ...Component,
-                        ],
-                    }
-                })
-                yield update({
-                    qualityControlTableData,
-                })
-            } else {
-                sdlMessage(result.Message, 'error');
-            }
-        },
+        // *GetAnalyzerListByDGIMN({ payload }, { call, put, update, select }) {
+        //     const result = yield call(GetAnalyzerListByDGIMN, payload);
+        //     let qualityControlTableData = [];
+        //     if (result.Datas) {
+        //         qualityControlTableData = result.Datas.map((item, index) => {
+        //             let Component = [];
+        //             Component = item.Component.map((itm, idx) => ({
+        //                 ...itm,
+        //                 key: `${index}${idx}`,
+        //             }))
+        //             return {
+        //                 ...item,
+        //                 key: index,
+        //                 Component: [
+        //                     ...Component,
+        //                 ],
+        //             }
+        //         })
+        //         yield update({
+        //             qualityControlTableData,
+        //         })
+        //     } else {
+        //         sdlMessage(result.Message, 'error');
+        //     }
+        // },
         //更新dgimn号
         *updatePointDGIMN({callback, payload }, { call, put, update, select }) {
             const result = yield call(UpdatePointDGIMN, payload);

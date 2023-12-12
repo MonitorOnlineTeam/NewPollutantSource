@@ -39,7 +39,7 @@ export async function  GetEquipmentName(params) {
 }
 //  获取设备厂商列表
 export async function GetManufacturerList(params) {
-  const result = await post(API.CommonApi.GetPollutantTypeMonitoringCategoryInfo,params, null);
+  const result = await post(API.AssetManagementApi.GetEquipmentManufacturerList,params, null);
   return result;
 }
 

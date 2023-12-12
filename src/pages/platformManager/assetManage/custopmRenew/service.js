@@ -28,7 +28,7 @@ export async function AddCustomerOrder(params) {
 
 // 删除客户订单
 export async function DeleteCustomerOrder(params){
-  const result = await post(`${API.AssetManagementApi.DeleteCustomerRenewInfo}/${params.ID}`,null, null);
+  const result = await post(`${API.AssetManagementApi.DeleteCustomerRenewInfo}?ID=${params.ID}`,null, null);
   return result;
 }
 
@@ -45,6 +45,6 @@ export async function GetCustomerOrderInfoList(params){
 }
 // 删除客户订单详情
 export async function DeleteCustomerOrderInfo(params){
-  const result = await post(`${API.AssetManagementApi.DeleteCustomerRenewDetail}/${params.ID}`,null, null);
+  const result = await post(`${API.AssetManagementApi.DeleteCustomerRenewDetail}?ID=${params.ID}`,null, null);
   return result;
 }

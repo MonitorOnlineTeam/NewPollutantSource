@@ -1012,7 +1012,7 @@ class DepartIndex extends Component {
         return {
           ...item,
           flag: i,
-          children: item.children.length > 0 ? this.handleData(item.children, i) : [],
+          children: item?.children?.length > 0 ? this.handleData(item.children, i) : [],
         };
       });
     }

@@ -21,13 +21,13 @@ export async function GetInspectorTypeCode(params) {
 
 //督查类别清单 删除
 export async function DeleteInspectorType(params) {
-  const result = await post(`${API.SupervisionVerificaApi.DeleteSupervisionQuestionTypeInfo}/${params.ID}`, null, null);
+  const result = await post(`${API.SupervisionVerificaApi.DeleteSupervisionQuestionTypeInfo}?ID=${params.ID}`, null, null);
   return result;
 }
 
 //督查类别清单 更改状态
 export async function ChangeInspectorTypeStatus(params) {
-  const result = await post(`${API.SupervisionVerificaApi.ChangeSupervisionQuestionTypeStatus}/${params.ID}?Status=${params.Status}`, null, null);
+  const result = await post(`${API.SupervisionVerificaApi.ChangeSupervisionQuestionTypeStatus}?ID=${params.ID}&&Status=${params.Status}`, null, null);
   return result;
 }
 
@@ -44,7 +44,7 @@ export async function AddOrEditInspectorTemplate(params) {
 }
 //督查模板 删除
 export async function DeleteInspectorTemplate(params) {
-  const result = await post(`${API.SupervisionVerificaApi.DeleteSupervisionTemplateInfo}/${params.ID}`, null, null);
+  const result = await post(`${API.SupervisionVerificaApi.DeleteSupervisionTemplateInfo}?ID=${params.ID}`, null, null);
   return result;
 }
 //督查模板 类别描述
@@ -55,7 +55,7 @@ export async function GetInspectorTypeList(params) {
 
 //督查模板 更改模板状态
 export async function ChangeInspectorTemplateStatus(params) {
-  const result = await post(`${API.SupervisionVerificaApi.ChangeSupervisionTemplateStatus}?InspectorNum=${params.InspectorNum}&Status=${params.Status}`, null, null);
+  const result = await post(`${API.SupervisionVerificaApi.ChangeSupervisionTemplateStatus}?InspectorNum=${params.InspectorNum}&&Status=${params.Status}`, null, null);
   return result;
 }
 //督查模板 督查模板详细

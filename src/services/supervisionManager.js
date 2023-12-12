@@ -25,7 +25,7 @@ export async function AddOrEditInspectorOperation(params) {
 }
 //督查管理详情
 export async function GetInspectorOperationView(params) {
-  const result = await post(`${API.SupervisionVerificaApi.GetSystemFacilityVerificationDetail}/${params.ID}`,params, null);
+  const result = await post(`${API.SupervisionVerificaApi.GetSystemFacilityVerificationDetail}?ID=${params.ID}`,params, null);
   return result;
 }
 
@@ -36,12 +36,12 @@ export async function ExportInspectorOperationManage(params) {
 }
 //删除运维督查信息
 export async function DeleteInspectorOperation(params) {
-  const result = await post(`${API.SupervisionVerificaApi.DeleteSystemFacilityVerificationInfo}/${params.ID}`,null, null);
+  const result = await post(`${API.SupervisionVerificaApi.DeleteSystemFacilityVerificationInfo}?ID=${params.ID}`,null, null);
   return result;
 }
 
 //整改问题推送
 export async function PushInspectorOperation(params) {
-  const result = await post(`${API.SupervisionVerificaApi.PushInspectorOperation}/${params.ID}`,null, null);
+  const result = await post(`${API.SupervisionVerificaApi.PushInspectorOperation}?ID=${params.ID}`,null, null);
   return result;
 }

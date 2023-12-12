@@ -10,7 +10,7 @@ export async function GetInspectorRectificationManageList(params) {
 
 //核查整改 详情
 export async function GetInspectorRectificationView(params) {
-  const result = await post(`${API.SupervisionVerificaApi.GetInspectorRectificationView}/${params.ID}` ,params, null);
+  const result = await post(`${API.SupervisionVerificaApi.GetInspectorRectificationView}?ID=${params.ID}` ,params, null);
   return result;
 }
 

@@ -81,7 +81,7 @@ export async function addPoint(params) {
 
 export async function getEnterpriseCorporationCode(params) {
     // console.log("params=",params);
-    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/GetEnterpriseCorporationCode', params);
+    const result = await post(API.AssetManagementApi.GetEnterpriseCorporationCode, params);
     return result;
 }
 
@@ -182,57 +182,57 @@ export async function queryPointForTarget(params) {
     const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/queryPointForTarget', params, null);
     return result;
 }
-export async function GetComponent(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/GetComponent', params, null);
-    return result;
-}
-export async function GetMainInstrumentName(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/GetMainInstrumentName', params, null);
-    return result;
-}
-export async function GetChildCems(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/GetChildCems', params, null);
-    return result;
-}
-export async function AddAnalyzer(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/AddAnalyzer', params, null);
-    return result;
-}
-export async function GetAnalyzerListByDGIMN(params) {
-    const result = await post(`/api/rest/PollutantSourceApi/AnalyzerApi/GetAnalyzerListByDGIMN?DGIMN=${params.DGIMN}`, null, null);
-    return result;
-}
+// export async function GetComponent(params) {
+//     const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/GetComponent', params, null);
+//     return result;
+// }
+// export async function GetMainInstrumentName(params) {
+//     const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/GetMainInstrumentName', params, null);
+//     return result;
+// }
+// export async function GetChildCems(params) {
+//     const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/GetChildCems', params, null);
+//     return result;
+// }
+// export async function AddAnalyzer(params) {
+//     const result = await post('/api/rest/PollutantSourceApi/AnalyzerApi/AddAnalyzer', params, null);
+//     return result;
+// }
+// export async function GetAnalyzerListByDGIMN(params) {
+//     const result = await post(`/api/rest/PollutantSourceApi/AnalyzerApi/GetAnalyzerListByDGIMN?DGIMN=${params.DGIMN}`, null, null);
+//     return result;
+// }
 export async function UpdatePointDGIMN(params) { //更新MN号
-    const result = await post(`/api/rest/PollutantSourceApi/MonitorPointApi/UpdatePointDGIMN`, params, null);
+    const result = await post(API.AssetManagementApi.UpdatePointDGIMN, params, null);
     return result;
 }
 export async function GetMonitorPointVerificationItem(params) { //获取点位关联数据核查信息
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetMonitorPointVerificationItem`, params, null);
+    const result = await post(API.AssetManagementApi.GetMonitorPointVerificationItem, params, null);
     return result;
 }
 
 export async function GetMonitorPointVerificationList(params) { //获取数据核查信息码表
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetMonitorPointVerificationList?PollutantType=${params.pollutantType}`, {}, null);
+    const result = await post(`${API.AssetManagementApi.GetMonitorPointVerificationList}?PollutantType=${params.pollutantType}`, {}, null);
     return result;
 }
 
 export async function AddMonitorPointVerificationItem(params) { //添加或者修改点位关联数据核查信息
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/AddMonitorPointVerificationItem`, params, null);
+    const result = await post(API.AssetManagementApi.AddPointVerificationItem, params, null);
     return result;
 }
 
 export async function GetParamInfoList(params) { //获取设备参数项列表
-    const result = await post(`/api/rest/PollutantSourceApi/OperationBasicApi/GetParamInfoList`, params, null);
+    const result = await post(API.AssetManagementApi.GetParamInfoList, params, null);
     return result;
 }
 
 export async function GetParamCodeList(params) { //设备参数项码表
-    const result = await post(`/api/rest/PollutantSourceApi/OperationBasicApi/GetParamCodeList`, params, null);
+    const result = await post(API.AssetManagementApi.GetEquipmentParameterItem, params, null);
     return result;
 }
 
 export async function AddPointParamInfo(params) { //添加设备参数项
-    const result = await post(`/api/rest/PollutantSourceApi/OperationBasicApi/AddPointParamInfo`, params, null);
+    const result = await post(API.AssetManagementApi.AddPointParamItem, params, null);
     return result;
 }
 
@@ -240,17 +240,17 @@ export async function AddPointParamInfo(params) { //添加设备参数项
 
 /*******监测点设备管理  ***** */
 export async function GetPointEquipmentInfo(params) { //获取站点设备信息
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPointEquipmentInfo`, params, null);
+    const result = await post(API.AssetManagementApi.GetPointEquipmentInfo, params, null);
     return result;
 }
 
 export async function AddOrUpdateEquipmentInfo(params) { //添加或者修改设备参数信息
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdateEquipmentInfo`, params, null);
+    const result = await post(API.AssetManagementApi.AddOrUpdateSystemEquipmentInfo, params, null);
     return result;
 }
 
 export async function GetPointEquipmentParameters(params) { //列表显示
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPointEquipmentParameters`, params, null);
+    const result = await post(API.AssetManagementApi.GetPointEquipmentInfo, params, null);
     return result;
 }
 
@@ -293,41 +293,41 @@ export async function GetPollutantById2(params) {   //设备信息  获取监测
 }
 
 export async function GetMonitoringCategoryType(params) {   //设备信息  获取监测类型
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringCategoryType', params, null);
+    const result = await post(API.CommonApi.GetPollutantTypeMonitoringCategoryInfo, params, null);
     return result;
 }
 
 export async function GetPBList(params) {   //设备信息  废气 配备
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPBList', params, null);
+    const result = await post(API.AssetManagementApi.GetStandardGasEquipmentInfo, params, null);
     return result;
 }
 
 /*******监测点新增功能******* */
 export async function PointSort(params) {   //监测点排序
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/PointSort', params, null);
+    const result = await post(API.AssetManagementApi.UpdatePointSortInfo, params, null);
     return result;
 }
 
 
 export async function GetPointCoefficientByDGIMN(params) {   //获取监测点系数
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPointCoefficientByDGIMN?DGIMN=' + params.DGIMN, null, null);
+    const result = await post(`${API.AssetManagementApi.GetPointCoefficientInfo}?DGIMN=${params.DGIMN}`, null, null);
     return result;
 }
 
 
 export async function GetPointElectronicFenceInfo(params) {   //获取电子围栏半径
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPointElectronicFenceInfo', params, null);
+    const result = await post(API.AssetManagementApi.GetPointElectronicFenceInfo, params, null);
     return result;
 }
 export async function AddOrUpdatePointElectronicFenceInfo(params) {   //电子围栏半径  添加or更新
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdatePointElectronicFenceInfo', params, null);
+    const result = await post(API.AssetManagementApi.AddOrUpdatePointElectronicFenceInfo, params, null);
     return result;
 }
 export async function UpdatePointOprationStatus(params) {   //修改运维状态
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/UpdatePointOprationStatus', params, null);
+    const result = await post(API.AssetManagementApi.UpdatePointOprationStatus, params, null);
     return result;
 }
 export async function GetOprationStatusList(params) {   //运维状态 修改记录
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOprationStatusList', params, null);
+    const result = await post(API.AssetManagementApi.GetOprationStatusList, params, null);
     return result;
 }

@@ -14,7 +14,7 @@ export async function AddFaultUnit(params) {
 
 //  修改
 export async function EditFaultUnit(params) {
-  const result = await post(API.AssetManagementApi.EditFaultUnit,params, null);
+  const result = await post(API.AssetManagementApi.UpdateFaultUnitInfo,params, null);
   return result;
 }
  

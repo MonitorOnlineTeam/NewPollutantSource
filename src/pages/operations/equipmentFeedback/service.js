@@ -9,7 +9,7 @@ export async function GetFaultFeedbackList(params) {
 
 //编辑
 export async function UpdateFaultFeedbackIsSolve(params) {
-  const result = await post(`${API.IntelligentDiagnosis.UpdateEquipmentFaultFeedbackStatus}/${params.ID}?IsSolve=${params.IsSolve}`, params, null);
+  const result = await post(`${API.IntelligentDiagnosis.UpdateEquipmentFaultFeedbackStatus}?ID=${params.ID}&&IsSolve=${params.IsSolve}`, params, null);
   return result;
 }
 

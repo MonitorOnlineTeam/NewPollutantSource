@@ -94,7 +94,7 @@ export async function getPointByEntCode2(params) {
  * @param {操作} 操作项
  */
 export async function CreatQRCode(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/CreateQRCode', params, null);
+  const result = post(API.AssetManagementApi.CreateQRCode, params, null);
   return result === null ? {
     data: null
   } : result;

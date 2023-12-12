@@ -1,5 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
-import { API } from '@/utils/request';
+import { API } from '@config/API';
 
 //关键参数核查整改信息
 export async function GetKeyParameterQuestionList(params) {

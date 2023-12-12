@@ -18,7 +18,7 @@ export async function SelectOperationMaintenancePersonnel(params) {
 //删除
 export async function DeleteOperationMaintenancePersonnel(params) {
   const result = post(
-    API.AssetManagementApi.GetMaintainersWorkLicenseList,
+    API.AssetManagementApi.DeleteMaintainersWorkLicenseInfo,
     params,
     null,
   );

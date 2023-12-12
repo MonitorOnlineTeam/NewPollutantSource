@@ -50,7 +50,7 @@ export async function addVehicleApplication(params) {
 
 // 撤销申请
 export async function cancelApplication(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/CancelApplication/${  params.ID}`, null);
+  const result = await post(`/api/rest/PollutantSourceApi/VehicleApplicationApi/CancelApplication/${params.ID}`, null);
   return result;
 }
 
