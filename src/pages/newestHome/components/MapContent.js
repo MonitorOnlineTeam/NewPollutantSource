@@ -198,9 +198,9 @@ class Index extends PureComponent {
     }
 
   }
-  componentDidMount() {
-    window._AMapSecurityConfig = {
-      securityJsCode: 'a74ee5d040647b0512c842cff7d76517',
+  componentDidMount() { 
+    window._AMapSecurityConfig = { //地图密钥
+      securityJsCode: config.securityJsCode,
     }
     this.initData()
   }
@@ -1033,10 +1033,11 @@ class Index extends PureComponent {
       <PageLoading />
       :
       <Map
-        amapkey={'a6202668a4412c04000baaf7625752bf'} //自己申请的key  单独设置地图首页主题样式
+        // amapkey={config.amapkey}
+        amapkey={'1440c67033e5ede0f3a068605de5fb5f'}
         events={this.amapEvents}
         version='1.4.19'
-        mapStyle='amap://styles/a0e33cc065bb7d9cb66b1fe3d9810781 '
+        mapStyle='amap://styles/6daa80e94c53325ff909a31f3d3d8809'
       >
 
         <Markers

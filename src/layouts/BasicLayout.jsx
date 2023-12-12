@@ -188,19 +188,13 @@ class BasicLayout extends Component {
     if (config.isShowTabs && defaultSettings.layout === 'sidemenu' && contentElement) {
       contentElement.style.margin = '8px'
     }
-
     this.props.dispatch({
       type: 'autoForm/getRegions',
       payload: { PointMark: '2', RegionCode: '' }
     }); //获取行政区列表
-
-    // window._AMapSecurityConfig = {
-    //   securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
-    // }
-    window._AMapSecurityConfig = {
-      securityJsCode: 'a74ee5d040647b0512c842cff7d76517',
+    window._AMapSecurityConfig = { //地图密钥
+      securityJsCode: config.securityJsCode,
     }
-
   }
 
   onWindowResize = () => {
@@ -410,7 +404,7 @@ class BasicLayout extends Component {
       let userData = JSON.parse(userCookie);
       window.currentUser = {
         ...userData,
-        RoleIds: userData.RoleIds.split(','),
+        RoleIds: userData?.RoleIds?.split(','),
       };
     }
     return (

@@ -862,7 +862,7 @@ class RoleIndex extends Component {
                                             <Form.Item label="父节点" {...formItemLayout} >
                                                 {getFieldDecorator('ParentId', {
                                                     rules: [{ required: true, message: '请选择父节点' }],
-                                                    initialValue: this.state.IsEdit == true ? this.props.RoleInfoOne.ParentId : '',
+                                                    initialValue: this.state.IsEdit == true ? this.props.RoleInfoOne.ParentId : [],
                                                 })(
                                                     <TreeSelect
                                                         type="ParentId"

@@ -45,6 +45,7 @@ module.exports = {
   // footerText: '污染源智能分析平台   2018 sdl',
   // amapKey: '5e60171b820065e7e9a1d6ea45abaee9',
   amapKey: '1440c67033e5ede0f3a068605de5fb5f',
+  securityJsCode:'75c46ff09b225e8981e7d78d094a5d66',
   apiHost,
   uploadHost,
   XinJiang,

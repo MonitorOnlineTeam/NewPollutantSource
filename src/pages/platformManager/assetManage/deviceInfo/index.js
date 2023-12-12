@@ -489,7 +489,7 @@ const Index = (props) => {
     for (let i = 0; i < manufacturerList.length; i += 1) {
       const key = manufacturerList[i].ID;
       const treeNode = {
-        title: <div style={{ display: 'inline-block' }}> {manufacturerList[i].ManufacturerName}</div>,
+        title: <div className='textOverflow' style={{ display: 'inline-block',width:220 }}> {manufacturerList[i].ManufacturerName}</div>,
         key,
         icon: <ProfileFilled style={{ color: '#1890ff' }} />,
         titles: manufacturerList[i].ManufacturerName

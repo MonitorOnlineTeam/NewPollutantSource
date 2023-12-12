@@ -52,7 +52,6 @@ class SdlMap extends PureComponent {
   }
 
   componentWillUpdate() {
-
   }
 
   // componentWillReceiveProps(nextProps) {
@@ -67,7 +66,6 @@ class SdlMap extends PureComponent {
   //     })
   //   }
   // }
-
   componentDidMount() {
     const self = this;
     this.toolEvents = {
