@@ -16,7 +16,7 @@ export async function Get72TestRecordType(params) {
 }
 
 export async function Get72TestRecordPollutant(params) {
-  const result = await post(API.CtDebugServiceApi.Get72HoursGasPollutantInfo,params, null);
+  const result = await post(API.CtDebugServiceApi.Get72TestRecordPollutant,params, null);
   return result;
 }
 /*** 颗粒物CEMS零点和量程漂移检测  ***/
@@ -42,7 +42,7 @@ export async function DeletePMZeroRangeRecord(params) {
 
 //导入
 export async function ImportData(params) {
-  const result = await post(API.CtDebugServiceApi.Import72HoursCommissioningTestData,params, null);
+  const result = await post(API.CtDebugServiceApi.ImportData,params, null);
   return result;
 }
 //获取参数
@@ -69,7 +69,7 @@ export async function DeletePMReferenceCalibrationRecord(params) {
 
 //根据污染物获取时间
 export async function GetTimesListByPollutant(params) {
-  const result = await post(API.CtDebugServiceApi.Get72HoursGasPollutantInfo,params, null);
+  const result = await post(API.CtDebugServiceApi.GetTimesListByPollutant,params, null);
   return result;
 }
 //获取
@@ -97,7 +97,7 @@ export async function DeleteGasReferenceMethodAccuracyRecord(params) {
 }
 //导入
 export async function ImportDataNew(params) {
-  const result = await post(API.CtDebugServiceApi.Import72HoursCommissioningTestData,params, null);
+  const result = await post(API.CtDebugServiceApi.ImportDataNew,params, null);
   return result;
 }
 
@@ -192,18 +192,18 @@ export async function AddGasZeroRangeInfoRecord(params) {
 }
 //删除
 export async function DeleteGasZeroRangeRecord(params) {
-  const result = await post(API.CtDebugServiceApi.DeleteGasDriftInfo,params, null);
+  const result = await post(API.CtDebugServiceApi.DeleteGasZeroRangeRecord,params, null);
   return result;
 }
 
 
 /*** 生成检测报告  ***/
 export async function exportTestPeport(params) {
-  const result = await post(Export72HoursCommissioningTestReport,params, null);
+  const result = await post(API.CtDebugServiceApi.Export72HoursCommissioningTestReport,params, null);
   return result;
 }
 /*** 生成采样时间  ***/
 export async function usePMReferenceTimes(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/UsePMReferenceTimes',params, null);
+  const result = await post(API.CtDebugServiceApi.UsePMReferenceTimes,params, null);
   return result;
 }

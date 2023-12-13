@@ -141,7 +141,7 @@ const Index = (props) => {
     if (fileInfo) {
       fileInfo.split(',').map(item => {
         if (!item.IsDelete) {
-          fileList.push({ name: `${item}`, attach: `/${item}` })
+          fileList.push({ name: `${item}`, attach: `${uploadPrefix}/${item}` })
         }
       })
     }

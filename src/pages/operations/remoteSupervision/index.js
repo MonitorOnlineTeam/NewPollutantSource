@@ -972,7 +972,7 @@ const Index = (props) => {
               uid: uploadItem.GUID,
               name: uploadItem.FileName,
               status: 'done',
-              url: `/${uploadItem.FileName}`,
+              url: `${config.uploadPrefix}/${uploadItem.FileName}`,
             })
 
           }
@@ -1072,7 +1072,7 @@ const Index = (props) => {
               uid: uploadItem.GUID,
               name: uploadItem.FileName,
               status: 'done',
-              url: `\\upload\\${uploadItem.FileName}`,
+              url: `${config.uploadPrefix}/${uploadItem.FileName}`,
             })
           }
         })
@@ -1538,7 +1538,7 @@ const Index = (props) => {
               uid: uploadItem.GUID,
               name: uploadItem.FileName,
               status: 'done',
-              url: `\\upload\\${uploadItem.FileName}`,
+              url: `${config.uploadPrefix}/${uploadItem.FileName}`,
             })
           }
         })
@@ -1645,7 +1645,7 @@ const Index = (props) => {
       const fileList = [];
       info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
-          fileList.push({ ...item, url: `/${item.response.Datas}`, })
+          fileList.push({ ...item, url: `${config.uploadPrefix}/${item.response.Datas}`, })
         } else if (!item.response) {
           fileList.push({ ...item })
         }

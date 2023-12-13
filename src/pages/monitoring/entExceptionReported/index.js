@@ -23,7 +23,8 @@ import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import AttachmentView from '@/components/AttachmentView'
 import AddExceptionModal from './AddExceptionModal'
 import TableText from '@/components/TableText'
-import config from '@/config';
+import { uploadPrefix } from '@/config'
+
 const { Option } = Select;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -80,7 +81,7 @@ class Test extends PureComponent {
             let dataSource = fileInfo.map(item => {
               return {
                 name: item,
-                attach: `/${item}`
+                attach: `${uploadPrefix}/${item}`
               }
             })
             return (

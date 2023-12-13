@@ -14,7 +14,7 @@ export async function GetPointCoefficientList(params) {
 }
 //添加或修改监测点系数
 export async function AddOrEditPointCoefficient(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrEditPointCoefficient',params, null);
+  const result = await post(API.PerformanceApi.AddOrUpdatePointCoefficientInfo,params, null);
   return result;
 }
 
@@ -33,19 +33,19 @@ export async function GetRecordTypesByPollutantType(params) {
  
 // 添加或修改工单系数
 export async function AddOrEditRecordCoefficient(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrEditRecordCoefficient',params, null);
+  const result = await post(API.PerformanceApi.AddOrUpdateWorkOrderTypeCoefficientList,params, null);
   return result;
 }
 
 // 删除工单系数
 export async function DeleteRecordCoefficient(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteRecordCoefficient/'+params.ID,params, null);
+  const result = await post(`${API.PerformanceApi.DeleteWorkOrderTypeCoefficientList}?ID=${params.ID}`,params, null);
   return result;
 }
 
 // 导出所有排口监测点系数列表
 export async function ExportPointCoefficient(params) {
-  const result = await post(API.PerformanceApi.ExportPointCoefficient,params, null);
+  const result = await post(API.PerformanceApi.ExportPointCoefficientList,params, null);
   return result;
 }
 
@@ -86,47 +86,48 @@ export async function ExportIndividualTaskInfo(params) {
 
 //绩效明细 查询列表
 export async function GetPersonalPerformanceRateInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPersonalPerformanceRateInfoList',params, null);
+  const result = await post(API.PerformanceApi.GetPersonalPerformanceRateInfoList,params, null);
   return result;
 }
 //绩效明细 导出
 export async function ExportPersonalPerformanceRateInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPersonalPerformanceRateInfo',params, null);
+  const result = await post(API.PerformanceApi.ExportPersonalPerformanceRateInfo,params, null);
   return result;
 }
 
-/**积分信息查询 */
+/**工作质量积分 */
 
 //积分汇总 一级页面
+export async function GetOperationIntegralGroupList(params) {
+  const result = await post(API.PerformanceApi.GetOperationIntegralGroupList,params, null);
+  return result;
+}
+//积分汇总 二级页面
+export async function GetOperationIntegralGroupInfoList(params) {
+  const result = await post(API.PerformanceApi.GetOperationIntegralGroupInfoList,params, null);
+  return result;
+}
+//积分明细 一级页面
 export async function GetOperationIntegralList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralList',params, null);
   return result;
 }
-//积分汇总 二级页面
+//积分明细 二级页面
 export async function GetOperationIntegralInfoList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralInfoList',params, null);
   return result;
 }
-//积分汇总 三级页面
+//积分明细 三级页面
 export async function GetOperationIntegralInfoViewList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralInfoViewList',params, null);
   return result;
 }
-//导入积分
+//积分明细 导入
 export async function ImportOperationIntegral(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ImportOperationIntegral',params, null);
   return result;
 }
-//积分明细 一级页面
-export async function GetOperationIntegralGroupList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralGroupList',params, null);
-  return result;
-}
-//积分明细 二级页面
-export async function GetOperationIntegralGroupInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralGroupInfoList',params, null);
-  return result;
-}
+
 
 //工作总量绩效 修改
 export async function UpdatePersonalPerformanceRateInfo(params) {

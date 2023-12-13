@@ -46,6 +46,6 @@ export async function OperationParam(params) {
 
 // 添加或修改调试检测排口
 export async function AddOrUpdateTestPoint(params) {
-  const result = post('/api/rest/PollutantSourceApi/TaskFormApi/AddOrUpdateTestPoint', params);
+  const result = post(API.CtDebugServiceApi.AddOrUpdateTestPoint, params);
   return result;
 }	

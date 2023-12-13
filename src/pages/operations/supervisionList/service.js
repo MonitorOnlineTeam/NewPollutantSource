@@ -44,7 +44,7 @@ export async function AddOrEditInspectorTemplate(params) {
 }
 //督查模板 删除
 export async function DeleteInspectorTemplate(params) {
-  const result = await post(`${API.SupervisionVerificaApi.DeleteSupervisionTemplateInfo}?ID=${params.ID}`, null, null);
+  const result = await post(`${API.SupervisionVerificaApi.DeleteSupervisionTemplateInfo}?InspectorNum=${params.ID}`, null, null);
   return result;
 }
 //督查模板 类别描述

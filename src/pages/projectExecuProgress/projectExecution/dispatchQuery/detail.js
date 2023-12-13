@@ -16,6 +16,7 @@ import ImageView from '@/components/ImageView';
 import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils';
 import AttachmentView from '@/components/AttachmentView';
 import CooperaInspection from './components/CooperaInspection'
+import { uploadPrefix } from '@/config'
 import styles from "./style.less"
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -975,7 +976,7 @@ const Index = (props) => {
           const fileList = text.ImgList.map((item, index) => {
             return {
               name: text.ImgNameList[index] || '附件.pdf',
-              attach: `/${item}`
+              attach: `${uploadPrefix}/${item}`
             }
           })
           return <AttachmentView dataSource={fileList} />;

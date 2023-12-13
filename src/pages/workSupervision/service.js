@@ -1,4 +1,5 @@
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 // 仪器借出、归还
 export async function StandbyAndInsLendOrReturn(params) {
@@ -370,10 +371,9 @@ export async function GetPollutantTypeList(params) {
 
 // 获取项目
 export async function GetProjectInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetProjectInfoList', params);
+  const result = await post(API.AssetManagementApi.GetProjectList, params);
   return result;
 }
-
 // 提交应收账款催收
 export async function InsOrUpdAccountsReceivable(params) {
   const result = await post(
@@ -445,8 +445,7 @@ export async function GetStagingInspectorRectificationList(params) {
   return result;
 }
 
-/**我的提醒 */
-
+/**我的提醒 */   //API.workStageApi.
 
 // 数据报警列表
 export async function GetWorkAlarmPushList(params) {

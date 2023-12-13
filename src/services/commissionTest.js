@@ -11,13 +11,13 @@ export async function GetManufacturerList(params) {
     return result;
 }
 
-//  获取监测类型
+//  获取监测类型 GetTestPollutantList
 export async function GetPollutantById(params) {
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetTestPollutantList?type=${params.type? params.type : ' '}`, null);
+    const result = await post(API.CommonApi.GetPollutantTypeMonitoringCategoryInfo,params, null);
     return result;
 }
 //  获取系统名称列表
 export async function GetSystemModelNameList(params) {
-    const result = await post(API.AssetManagementApi.GetSystemModelNameList, null);
+    const result = await post(API.AssetManagementApi.GetSystemNameList, null);
     return result;
 }
