@@ -275,7 +275,7 @@ export default class UpdateSparepartManage extends Component {
                                           }
                                     >
                                          {
-                                            storehouseList[0]&&storehouseList.map(item => <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>)
+                                            storehouseList[0]&&storehouseList.map(item => <Option key={item['dbo.T_Bas_Storehouse.ID']} value={item['dbo.T_Bas_Storehouse.ID']}>{item['dbo.T_Bas_Storehouse.StorehouseName']}</Option>)
                                         } 
                                     </Select>
                                 )}

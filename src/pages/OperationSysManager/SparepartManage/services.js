@@ -12,7 +12,7 @@ import { API} from '@config/API';
  * @params {"DGIMN":"","pollutantCode":"","beginTime":"","endTime":"","pageIndex":"","pageSize":""}
  */
 export async function GetSparepartManageList(params) {
-  const result = await get(API.AssetManagementApi.GetSparepartList, params, null);
+  const result = await post(API.AssetManagementApi.GetSparepartList, params, null);
   return result;
 }
 /**
@@ -28,7 +28,7 @@ export async function GetSparePartsStation(params) {
  * @params {"PollutantType":""}
  */
 export async function getUploadTemplate(params) {
-  const result =await post('/api/rest/PollutantSourceApi/SparepartManageApi/UploadTemplateSpareParts', params, null);
+  const result =await post(API.AssetManagementApi.DownLoadSparePartsTemplateInfo, params, null);
   return result;
 }
 /**
@@ -36,7 +36,7 @@ export async function getUploadTemplate(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":""}
  */
 export async function DeleteSpareParts(params) {
-  const result =await post('/api/rest/PollutantSourceApi/SparepartManageApi/DeleteSpareParts', params, null);
+  const result =await post(API.AssetManagementApi.DeleteSparePartsInfo, params, null);
   return result;
 }
 /**
@@ -44,7 +44,7 @@ export async function DeleteSpareParts(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
  */
 export async function UpdateSpareParts(params) {
-  const result =await post('/api/rest/PollutantSourceApi/SparepartManageApi/UpdateSpareParts', params, null);
+  const result =await post(API.AssetManagementApi.UpdateSparePartsInfo, params, null);
   return result;
 }
 
@@ -53,7 +53,7 @@ export async function UpdateSpareParts(params) {
  * 
  */
 export async function GetStorehouse(params) {
-  const result =await get('/api/rest/PollutantSourceApi/SparepartManageApi/GetStorehouse', params, null);
+  const result =await post(API.AutoFormApi.GetListPager, {configId:'Storehouse'}, null);
   return result;
 }
 

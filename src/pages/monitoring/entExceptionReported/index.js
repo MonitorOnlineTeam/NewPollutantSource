@@ -77,7 +77,7 @@ class Test extends PureComponent {
           dataIndex: 'Attachments',
           key: 'Attachments',
           render: (value, record) => {
-            const fileInfo = value ? value.split(',') : [];
+            const fileInfo = value.ImgNameList ? value.ImgNameList : [];
             let dataSource = fileInfo.map(item => {
               return {
                 name: item,

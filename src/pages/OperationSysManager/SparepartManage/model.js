@@ -128,7 +128,7 @@ export default Model.extend({
             const result = yield call(GetStorehouse, payload);
             if (result.IsSuccess) {
                 yield update({
-                    storehouseList: result.Datas,
+                    storehouseList: result.Datas?.DataSource,
                 });
             }else {
                 message.error(result.Message);

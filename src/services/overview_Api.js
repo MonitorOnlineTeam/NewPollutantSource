@@ -86,7 +86,7 @@ export async function querylastestdatalist(params) {
  */
 export async function queryhistorydatalist(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/DataList/GetAllTypeDataList',
+    API.WholeProcessMonitorApi.GetAllTypeDataList,
     params,
     null,
   );

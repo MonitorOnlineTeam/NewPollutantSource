@@ -11,9 +11,9 @@ export async function GetManufacturerList(params) {
     return result;
 }
 
-//  获取监测类型 GetTestPollutantList
+//  获取监测类型 
 export async function GetPollutantById(params) {
-    const result = await post(API.CommonApi.GetPollutantTypeMonitoringCategoryInfo,params, null);
+    const result = await post(API.CtCommonApi.GetTestPollutantList,params, null);
     return result;
 }
 //  获取系统名称列表

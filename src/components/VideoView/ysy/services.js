@@ -1,4 +1,5 @@
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 /** 萤石云视频列表 */
 export async function getysyList(params) {
@@ -52,7 +53,7 @@ export async function queryhistorydatalistbyrealtime(params) {
  */
 export async function queryhistorydatalist(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataList',
+    API.WholeProcessMonitorApi.GetAllTypeDataList,
     params,
     null,
   );
@@ -80,7 +81,7 @@ export async function IsTrueSerialNumber(params) {
   const body = {
     SerialNumber: params.SerialNumber,
   };
-  const result = await post('/api/rest/PollutantSourceApi/VideoApi/IsTrueSerialNumber', body, null);
+  const result = await post(API.videoManagementApi.IsTrueSerialNumber, body, null);
   return result === null
     ? {
         data: null,

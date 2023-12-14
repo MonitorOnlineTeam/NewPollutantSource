@@ -43,7 +43,7 @@ export async function getPointTableData(params) {
 
 // 获取气泡图表数据
 export async function getPointChartData(params) {
-  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataList', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetAllTypeDataList, params, null);
   return result === null ? {
     data: null
   } : result;

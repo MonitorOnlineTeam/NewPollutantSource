@@ -21,14 +21,14 @@ export async function GetPointByEntCode(params)
 //数据列表
 export async function GetAllTypeDataListWater(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataListWater',params,null)
+    const result = post(API.WholeProcessMonitorApi.GetAllTypeDataListWater,params,null)
     return result 
 }
 
 //导出 数据列表
 export async function ExportAllTypeDataListWater(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/MonDataApi/ExportAllTypeDataListWater',params,null)
+    const result = post(API.WholeProcessMonitorApi.ExportAllTypeDataListWater,params,null)
     return result 
 }
 

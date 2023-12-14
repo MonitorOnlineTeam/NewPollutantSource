@@ -55,7 +55,7 @@ export async function getDataGainRateDetailPollutantList(params) {
 
 // 获取数据获取率 - table数据
 export async function queryhistorydatalist(params) {
-  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataList', params);
+  const result = await post(API.WholeProcessMonitorApi.GetAllTypeDataList, params);
   return result === null ? { data: null } : result;
 }
 

@@ -32,6 +32,7 @@ import Cookie from 'js-cookie';
 import UpdateSparepartManage from './UpdateSparepartManage';
 import { EditIcon, DelIcon } from '@/utils/icon';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
+import { API} from '@config/API';
 const confirm = Modal.confirm;
 const Option = Select.Option;
 const { Search } = Input;
@@ -151,7 +152,7 @@ export default class Index extends Component {
         const { uid } = this.state;
         const { sparepartManageParameters } = this.props;
         const props = {
-            action: '/api/rest/PollutantSourceApi/SparepartManageApi/UploadFileSpareParts',
+            action: API.AssetManagementApi.ImportSparePartsList,
             onChange(info) {
                 that.setState({
                     uploadLoading: true,
@@ -654,7 +655,7 @@ export default class Index extends Component {
                                     allowClear style={{ width: 150 }} onChange={this.storehouseChange}>
                                     {
                                         storehouseList[0] && storehouseList.map(item => {
-                                            return <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>
+                                            return <Option key={item['dbo.T_Bas_Storehouse.ID']} value={item['dbo.T_Bas_Storehouse.ID']}>{item['dbo.T_Bas_Storehouse.StorehouseName']}</Option>
                                         })
                                     }
                                 </Select>

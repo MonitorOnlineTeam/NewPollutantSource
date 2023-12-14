@@ -114,12 +114,14 @@ class AddExceptionModal extends PureComponent {
       action: API.UploadApi.UploadFiles,
       headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
       onChange: (info) => {
+        console.log(info)
         let fileList = info.fileList;
         if (info.file.status === 'done') {
           this.props.form.setFieldsValue({ Attachments: cuid })
-          fileList[fileList.length - 1].url = "/" + fileList[fileList.length - 1].response.Datas
-          fileList[fileList.length - 1].thumbUrl = "/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].url = `/` + fileList[fileList.length - 1].response.Datas?.fNameList
+          fileList[fileList.length - 1].thumbUrl = `/` + fileList[fileList.length - 1].response.Datas?.fNameList
           // delete fileList[fileList.length - 1].thumbUrl
+          console.log(fileList)
         } else if (info.file.status === 'error') {
           message.error('上传文件失败！')
         }

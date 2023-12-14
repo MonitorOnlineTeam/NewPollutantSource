@@ -9,7 +9,7 @@ export async function GetAlarmPushDepOrRole(params) {
 }
 //报警关联  选择
 export async function InsertAlarmDepOrRole(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmDepOrRole', params, null);
+  const result = post(API.AssetManagementApi.InsertAlarmDepOrRole, params, null);
   return result;
 }
 // 获取部门详细信息及层级关系
@@ -216,7 +216,7 @@ export async function getGroupRegionFilter(params) {
 // 更新运维区域
 export async function UpdateOperationArea(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/UpdateOperationArea',
+    API.AssetManagementApi.UpdateOperationArea,
     params,
     null,
   );
@@ -287,29 +287,29 @@ export async function DeleteProvinceOrRegionalOne(params) {
 
 // 调试检测区域过滤 获取选中
 export async function getTestRegionByDepID(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetTestRegionByDepID', params, null);
+  const result = post(API.AssetManagementApi.GetTestRegionByDepID, params, null);
   return result;
 }
 // 调试检测区域过滤 提交
 export async function insertTestRegionByUser(params) {
-  const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertTestRegionByUser', params, null);
+  const result = post(API.AssetManagementApi.InsertTestRegionByUser, params, null);
   return result;
 }
 
 //部门管理 设置运维小组
 export async function addSetOperationGroup(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/AddSetOperationGroup', params, null);
+  const result = post(API.AssetManagementApi.AddSetOperationGroup, params, null);
   return result;
 }
 
 //部门管理 获取设置运维小组
 export async function getSetOperationGroup(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetSetOperationGroup', params, null);
+  const result = post(API.AssetManagementApi.GetSetOperationGroup, params, null);
   return result;
 }
 
 //部门管理 部门排序
 export async function groupSort(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GroupSort', params, null);
+  const result = post(API.AssetManagementApi.GroupSort, params, null);
   return result;
 }

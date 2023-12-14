@@ -129,7 +129,7 @@ export async function getEntAndPoint(params) {
  * 
  */
 export async function getSmokeReportData(params) {
-  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataListGas', params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetAllTypeDataListGas, params, null);
   return result;
 }
 
@@ -137,7 +137,7 @@ export async function getSmokeReportData(params) {
  * 烟气报表导出
  */
 export async function exportSmokeReport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/ExportAllTypeDataListGas', params, null);
+  const result = await post(API.WholeProcessMonitorApi.ExportAllTypeDataListGas, params, null);
   return result;
 }
 

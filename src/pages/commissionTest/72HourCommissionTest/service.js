@@ -192,7 +192,7 @@ export async function AddGasZeroRangeInfoRecord(params) {
 }
 //删除
 export async function DeleteGasZeroRangeRecord(params) {
-  const result = await post(API.CtDebugServiceApi.DeleteGasZeroRangeRecord,params, null);
+  const result = await post(API.CtDebugServiceApi.DeleteGasDriftInfo,params, null);
   return result;
 }
 

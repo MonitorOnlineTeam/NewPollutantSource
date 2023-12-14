@@ -12,18 +12,18 @@ export async function GetQuestionDetialList(params) {
 }
 // 添加or修改
 export async function AddOrUpdQuestionDetial(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdQuestionDetial',params, null);
+  const result = await post(API.SystemManageApi.AddOrUpdateQuestionInfo,params, null);
   return result;
 }
 
 // 删除
 export async function DeleteQuestionDetial(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteQuestionDetial',params, null);
+  const result = await post(API.SystemManageApi.DeleteQuestionInfo,params, null);
   return result;
 }
 // 问题类别
 export async function GetQuestionType(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQuestionType',params, null);
+  const result = await post(API.SystemManageApi.GetQuestionType,params, null);
   return result;
 }
 

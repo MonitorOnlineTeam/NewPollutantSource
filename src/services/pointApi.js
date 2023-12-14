@@ -150,7 +150,7 @@ export async function getEnterpriseCorporationCode(params) {
  */
 export async function updatePoint(params) {
     // console.log("params=",params);
-    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/UpdatePoint', params);
+    const result = await post(API.AssetManagementApi.UpdatePoint, params);
     return result;
 }
 
@@ -162,15 +162,15 @@ export async function updatePoint(params) {
  */
 export async function deletePoints(params) {
     // console.log("params=",params);
-    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/DeletePoints', params, null);
+    const result = await post(API.AssetManagementApi.DeletePoints, params, null);
     return result;
 }
-//出厂测试
-export async function factoryTest(params) {
-    // console.log("params=",params);
-    const result = await get('/api/rest/PollutantSourceApi/MonitorPointApi/FactoryTest', params, null);
-    return result;
-}
+// //出厂测试
+// export async function factoryTest(params) {
+//     // console.log("params=",params);
+//     const result = await get('/api/rest/PollutantSourceApi/MonitorPointApi/FactoryTest', params, null);
+//     return result;
+// }
 
 /**
  * 根据批量监控目标Id获取监测点

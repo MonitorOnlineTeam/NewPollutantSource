@@ -6,13 +6,14 @@
  * @Description: 异常超标记录api
  */
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 /**
  * 【智能监控】获取异常信息汇总
  * @params {
     }
  */
 export async function getexmodellist(params) {
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionModel', params, null);
+    const result = await post(API.VisualKanbanApi.GetExceptionModel, params, null);
     return result 
 }
 /**
@@ -21,7 +22,7 @@ export async function getexmodellist(params) {
     }
  */
 export async function getexceptiondata(params) {
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionData', params, null);
+    const result = await post(API.VisualKanbanApi.GetExceptionData, params, null);
     return result 
 }
 /**
@@ -30,7 +31,7 @@ export async function getexceptiondata(params) {
     }
  */
 export async function getovermodellist(params) {
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOverModel', params, null);
+    const result = await post(API.VisualKanbanApi.GetOverModel, params, null);
     return result 
 }
 /**
@@ -39,6 +40,6 @@ export async function getovermodellist(params) {
     }
  */
 export async function getoverdata(params) {
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOverData', params, null);
+    const result = await post(API.VisualKanbanApi.GetOverData, params, null);
     return result 
 }

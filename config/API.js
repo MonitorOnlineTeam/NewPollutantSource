@@ -91,7 +91,10 @@ export const API = {
     ExportEquipmentFailureRateList: before + '/VisualDashBoardApi/ExportEquipmentFailureRateList',//导出省、市、企业监测点设备故障率
     GetEquipmentRepairRateList: before + '/VisualDashBoardApi/GetEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
     ExportEquipmentRepairRateList: before + '/VisualDashBoardApi/ExportEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
-
+    GetOverModel: before + '/OverDataApi/GetOverModel',//获取超标记录汇总信息
+    GetOverData: before + '/OverDataApi/GetOverModel',//获取超标记录详情信息
+    GetExceptionModel: before + '/ExceptionDataApi/GetExceptionModel',//获取异常记录汇总信息
+    GetExceptionData: before + '/ExceptionDataApi/GetExceptionData',//获取异常记录详情信息
   },
   // 工作台Api
 
@@ -102,30 +105,17 @@ export const API = {
     AllTypeSummaryList: before + '/MonBasicDataApi/AllTypeSummaryList', //获取获取站点基本信息、在线状态、报警状态、最新一条小时监测数据，包括污染源、空气质量
     /*在线监测数据*/
     GetAllTypeDataList: before + '/MonBasicDataApi/GetAllTypeDataList',//获取各种类型的数据列表（实时、分钟、小时、日均）
-
-    //工作台
-    workStageApi:{
-      // GetWorkAlarmPushList
-      // UpdateWorkPushStatus
-      // UpdateAllWorkPushStatus
-      // GetProjectRemindList
-      // UpdateProjectPushStatus
-      // UpdateAllProjectPushStatus
-      // GetUserMenuList
-      // AddUserMenu
-      // GetWorkbenchesModuleList
-    },
     /**质控数据总览**/
     /*有效传输率排名*/
-    GetTransmissionEfficiencyRateList: before + '/StatisticAnalysisApi/GetTransmissionEfficiencyRateList',//获取省、市、监测点有效传输率统计信息
-    ExportTransmissionEfficiencyRateList: before + '/StatisticAnalysisApi/ExportTransmissionEfficiencyRateList',//导出省、市级别有效传输率统计信息
+    GetTransmissionEfficiencyRateList: before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyRateList',//获取省、市、监测点有效传输率统计信息
+    ExportTransmissionEfficiencyRateList: before + '/TransmissionEfficiencyApi/ExportTransmissionEfficiencyRateList',//导出省、市级别有效传输率统计信息
     /*系统访问率*/
-    GetSystemAccessRateList: before + '/StatisticAnalysisApi/GetSystemAccessRateList',//获取大区、服务区的系统访问率
-    ExportSystemAccessRateList: before + '/StatisticAnalysisApi/ExportSystemAccessRateList',//导出大区、服务区的系统访问率
-    GetUserAccessInfo: before + '/StatisticAnalysisApi/GetUserAccessInfo',//获取用户访问率
-    ExportUserAccessInfo: before + '/StatisticAnalysisApi/ExportUserAccessInfo',//导出用户访问率
-    GetIndustryAttributeInfo: before + '/StatisticAnalysisApi/GetIndustryAttributeInfo',//获取业务属性和行业属性
-    ExportPlatformAnalysisReport: before + '/StatisticAnalysisApi/ExportPlatformAnalysisReport',//导出平台分析报告
+    GetSystemAccessRateList: before + '/SystemAccessApi/GetSystemAccessRateList',//获取大区、服务区的系统访问率
+    ExportSystemAccessRateList: before + '/SystemAccessApi/ExportSystemAccessRateList',//导出大区、服务区的系统访问率
+    GetUserAccessInfo: before + '/SystemAccessApi/GetUserAccessInfo',//获取用户访问率
+    ExportUserAccessInfo: before + '/SystemAccessApi/ExportUserAccessInfo',//导出用户访问率
+    GetIndustryAttributeInfo: before + '/SystemAccessApi/GetIndustryAttributeInfo',//获取业务属性和行业属性
+    ExportPlatformAnalysisReport: before + '/SystemAccessApi/ExportPlatformAnalysisReport',//导出平台分析报告
     /*站点数据总览*/
     GetDayReport: before + '/MonBasicDataApi/GetDayReport',//获取站点日报报表
     GetMonthReport: before + '/MonBasicDataApi/GetMonthReport',//获取站点月报报表
@@ -135,8 +125,30 @@ export const API = {
     GetSummaryMonthReport: before + '/MonBasicDataApi/GetSummaryMonthReport',//获取站点汇总月报报表
     GetSummaryYearReport: before + '/MonBasicDataApi/GetSummaryYearReport',//获取站点汇总年报报表
     GetSummaryReportExcel: before + '/MonBasicDataApi/GetSummaryReportExcel',//导出站点汇总站点日报、月报、年报报表
+    /*废气排放量总览*/
+    GetAllTypeDataListGas: before + '/MonBasicDataApi/GetSummaryReportExcel',//获取废气日平均值小日平均日报、日平均月报、月平均季报、季平均年报信息
+    ExportAllTypeDataListGas: before + '/MonBasicDataApi/ExportAllTypeDataListGas',//导出废气日平均值小日平均日报、日平均月报、月平均季报、季平均年报信息
+    /*废水排放量总览*/
+    GetAllTypeDataListWater: before + '/MonBasicDataApi/GetAllTypeDataListWater',//获取废水日平均值小日平均日报、日平均月报、月平均季报、季平均年报信息
+    ExportAllTypeDataListWater: before + '/MonBasicDataApi/ExportAllTypeDataListWater',//导出废水日平均值小日平均日报、日平均月报、月平均季报、季平均年报信息
+    /**视频监控**/
+    /*视频监控（企业）*/
+    VideoMonitoringApi: {
+      GetCameraListEnt: before + '/MonBasicDataApi/GetSummaryReportExcel',//获取企业视频监控信息
+    },
   },
-
+  //工作台
+  workStageApi: {
+    // GetWorkAlarmPushList
+    // UpdateWorkPushStatus
+    // UpdateAllWorkPushStatus
+    // GetProjectRemindList
+    // UpdateProjectPushStatus
+    // UpdateAllProjectPushStatus
+    // GetUserMenuList
+    // AddUserMenu
+    // GetWorkbenchesModuleList
+  },
   //预测性维护Api
   PredictiveMaintenanceApi: {
     /**智慧运维**/
@@ -207,6 +219,7 @@ export const API = {
     GetExceptionReportList: before + '/ExceptionApi/GetExceptionReportList',//获取异常数据上报信息、企业异常记录
     AddOrUpdateExceptionReportInfo: before + '/ExceptionApi/AddOrUpdateExceptionReportInfo',//添加更新异常数据上报信息
     DeleteExceptionReportInfo: before + '/ExceptionApi/DeleteExceptionReportInfo',//删除异常数据上报信息
+    GetExceptionReportedById: before + '/ExceptionApi/GetExceptionReportedById',//获取异常数据上报详情
     /*设备故障反馈*/
     GetEquipmentFaultFeedbackList: before + '/EquipmentFailure/GetEquipmentFaultFeedbackList',//获取设备故障反馈信息
     ExportEquipmentFaultFeedbackList: before + '/EquipmentFailure/ExportEquipmentFaultFeedbackList',//导出设备故障反馈信息
@@ -271,14 +284,14 @@ export const API = {
   },
   //异常数据模型分析 Api
   AbnormalModelAnalysisApi: {
-     /**设备参数管理**/
-     GetEquipmentParametersInfo: before + '/aa/GetEquipmentParametersInfo',//获取量程设定信息
-     GetParametersInfo: before + '/aa/GetParametersInfo',//获取测量参数信息
-     AddOrUpdateEquipmentParametersInfo: before + '/aa/AddOrUpdateEquipmentParametersInfo',//添加更新量程设定信息
-     DeleteEquipmentParametersInfo: before + '/aa/DeleteEquipmentParametersInfo',//删除量程设定信息
-     GetEquipmentParameters: before + '/aa/GetEquipmentParameters',//获取烟气流量、颗粒物参数、其他参数设定信息
-     AddOrUpdateEquipmentParameters: before + '/aa/AddOrUpdateEquipmentParameters',//添加更新烟气流量、颗粒物参数、其他参数设定信息
-     /**异常精准识别核实整改率**/
+    /**设备参数管理**/
+    GetEquipmentParametersInfo: before + '/EquipmentApi/GetEquipmentParametersInfo',//获取量程设定信息
+    GetParametersInfo: before + '/EquipmentApi/GetParametersInfo',//获取测量参数信息
+    AddOrUpdateEquipmentParametersInfo: before + '/EquipmentApi/AddOrUpdateEquipmentParametersInfo',//添加更新量程设定信息
+    DeleteEquipmentParametersInfo: before + '/EquipmentApi/DeleteEquipmentParametersInfo',//删除量程设定信息
+    GetEquipmentParameters: before + '/EquipmentApi/GetEquipmentParameters',//获取烟气流量、颗粒物参数、其他参数设定信息
+    AddOrUpdateEquipmentParameters: before + '/EquipmentApi/AddOrUpdateEquipmentParameters',//添加更新烟气流量、颗粒物参数、其他参数设定信息
+    /**异常精准识别核实整改率**/
     /*核实率*/
     GetModelWarningCheckedForRegion: before + '/Warning/GetModelWarningCheckedForRegion', //行政区 列表
     GetModelWarningCheckedForCity: before + '/Warning/GetModelWarningCheckedForCity',   //市 列表
@@ -392,6 +405,8 @@ export const API = {
     CompanyOperationBasictemplate: `${config.uploadPrefix}/公司运维基础数据模板.xlsm`,//企业模板下载 
     VerificationImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//导入企业
     AddPoint: before + '/MonitorPointApi/AddPoint', //添加监测点
+    UpdatePoint: before + '/MonitorPointApi/UpdatePoint', //更新监测点
+    DeletePoints: before + '/MonitorPointApi/DeletePoints', //删除监测点
     CreateQRCode: before + '/MonitorPointApi/CreateQRCode', //获取企业下各个监测点的二维码信息
     GetEnterpriseCorporationCode: before + '/EnterpriseApi/GetEnterpriseCorporationCode', //获取企业厂界信息
     GetPointProjectRelationList: before + '/EnterpriseApi/GetPointProjectRelationList', //获取监测设备运维信息
@@ -408,7 +423,7 @@ export const API = {
     GetPointEquipmentInfo: before + '/MonitorPointApi/GetPointEquipmentInfo', //获取监测点设备信息
     AddOrUpdateSystemEquipmentInfo: before + '/MonitorPointApi/AddOrUpdateSystemEquipmentInfo', //添加更新监测点设备信息
     GetStandardGasEquipmentInfo: before + '/MonitorPointApi/GetStandardGasEquipmentInfo', //获取标气配备信息
-    UpdatePointSortInfo: before + '/MonitorPointApi/GetStandardGasEquipmentInfo', //监测点排序
+    UpdatePointSortInfo: before + '/MonitorPointApi/UpdatePointSortInfo', //监测点排序
     GetPointCoefficientInfo: before + '/MonitorPointApi/GetPointCoefficientInfo', //获取监测点系数
     GetPointElectronicFenceInfo: before + '/MonitorPointApi/GetPointCoefficientInfo', //获取电子围栏半径信息
     AddOrUpdatePointElectronicFenceInfo: before + '/MonitorPointApi/AddOrUpdatePointElectronicFenceInfo', //添加更新电子围栏半径信息
@@ -465,12 +480,12 @@ export const API = {
     UpdateFaultUnitInfo: before + '/AccountApi/UpdateFaultUnitInfo',//更新故障单元清单
     DeleteFaultUnitInfo: before + '/AccountApi/DeleteFaultUnitInfo',//删除故障单元清单
     /*点位匹配设置*/
-    GetStateControlledPointRelationList: before + '/AssetManagementApi/GetStateControlledPointRelationList',//获取点位匹配信息
-    ExportStateControlledPointRelationList: before + '/AssetManagementApi/ExportStateControlledPointRelationList',//点位匹配信息 导出
-    GetStateControlledEntList: before + '/AssetManagementApi/GetStateControlledEntList',//匹配企业
-    GetStateControlledPointList: before + '/BaseDataApi/GetStateControlledPointList',//获取企业匹配监测点信息
-    UpdateStateControlledPointRelationStatus: before + '/BaseDataApi/GetStateControlledPointList',//更新企业匹配监测点信息
-    DeleteStateControlledPointRelationStatus: before + '/BaseDataApi/DeleteStateControlledPointRelationStatus',//删除企业匹配监测点信息
+    GetStateControlledPointRelationList: before + '/StateControlled/GetStateControlledPointRelationList',//获取点位匹配信息
+    ExportStateControlledPointRelationList: before + '/StateControlled/ExportStateControlledPointRelationList',//点位匹配信息 导出
+    GetStateControlledEntList: before + '/StateControlled/GetStateControlledEntList',//匹配企业
+    GetStateControlledPointList: before + '/StateControlled/GetStateControlledPointList',//获取企业匹配监测点信息
+    UpdateStateControlledPointRelationStatus: before + '/StateControlled/GetStateControlledPointList',//更新企业匹配监测点信息
+    DeleteStateControlledPointRelationStatus: before + '/StateControlled/DeleteStateControlledPointRelationStatus',//删除企业匹配监测点信息
     /*台账填报设置*/
     GetCalibrationAccountFillingTypeList: before + '/BaseDataApi/GetCalibrationAccountFillingTypeList',//获取台账填报设置信息
     UpdateCalibrationAccountFillingTypeInfo: before + '/BaseDataApi/UpdateCalibrationAccountFillingTypeInfo',//更新废气点位校准信息填报方式
@@ -483,27 +498,31 @@ export const API = {
     /*原始数据包*/
     GetOriginalData: before + '/MonBasicDataApi/GetOriginalData',//获取原始数据包信息
     /*定时器管理*/
-    GetOnlineTimerManageList: before + '/MonBasicDataApi/GetOnlineTimerManageList',//获取定时器信息
-    AddOnlineTimerManage: before + '/MonBasicDataApi/GetOnlineTimerManageList',//添加定时器信息
-    EditOnlineTimerManage: before + '/MonBasicDataApi/EditOnlineTimerManage',//更新定时器信息
-    DelOnlineTimerManage: before + '/MonBasicDataApi/DelOnlineTimerManage',//删除定时器信息
+    GetOnlineTimerManageList: before + '/OnlineTimerManage/GetOnlineTimerManageList',//获取定时器信息
+    AddOnlineTimerManage: before + '/OnlineTimerManage/GetOnlineTimerManageList',//添加定时器信息
+    EditOnlineTimerManage: before + '/OnlineTimerManage/EditOnlineTimerManage',//更新定时器信息
+    DelOnlineTimerManage: before + '/OnlineTimerManage/DelOnlineTimerManage',//删除定时器信息
     /*新老协议转换管理*/
-    GetAgreementTransferList: before + '/MonBasicDataApi/GetAgreementTransferList',//获取新老协议转换信息
-    AddAgreementTransfer: before + '/MonBasicDataApi/GetAgreementTransferList',//添加新老协议转换信息
-    DeleteAgreementTransfer: before + '/MonBasicDataApi/DeleteAgreementTransfer',//删除新老协议转换信息
+    GetAgreementTransferList: before + '/OnlineTimerManage/GetAgreementTransferList',//获取新老协议转换信息
+    AddAgreementTransfer: before + '/OnlineTimerManage/GetAgreementTransferList',//添加新老协议转换信息
+    DeleteAgreementTransfer: before + '/OnlineTimerManage/DeleteAgreementTransfer',//删除新老协议转换信息
     /*交接和报告*/
-    GetProjectReportList: before + '/CTBaseDataApi/GetProjectReportList', //获取交接和报告信息
-    ExportProjectReportList: before + '/CTBaseDataApi/ExportProjectReportList', //导出交接和报告信息
-    AddOrUpdProjectReportInfo: before + '/CTBaseDataApi/AddOrUpdProjectReportInfo',//添加更新交接和报告信息
+    GetProjectReportList: before + '/ProjectApi/GetProjectReportList', //获取交接和报告信息
+    ExportProjectReportList: before + '/ProjectApi/ExportProjectReportList', //导出交接和报告信息
+    AddOrUpdProjectReportInfo: before + '/ProjectApi/AddOrUpdProjectReportInfo',//添加更新交接和报告信息
     /*省区经理管理*/
-    GetProvinceManagerList: before + '/CTBaseDataApi/GetProvinceManagerList',//获取省区经理信息
-    AddorUpdateProvinceManager: before + '/CTBaseDataApi/AddorUpdateProvinceManager',//添加更新省区经理信息
-    DeleteProvinceManager: before + '/CTBaseDataApi/DeleteProvinceManager',//删除省区经理信息
-    GetProvinceManagerByID: before + '/CTBaseDataApi/GetProvinceManagerByID',//获取省区经理详情信息
+    GetProvinceManagerList: before + '/SystemFacilityVerification/GetProvinceManagerList',//获取省区经理信息
+    AddorUpdateProvinceManager: before + '/SystemFacilityVerification/AddorUpdateProvinceManager',//添加更新省区经理信息
+    DeleteProvinceManager: before + '/SystemFacilityVerification/DeleteProvinceManager',//删除省区经理信息
+    GetProvinceManagerByID: before + '/SystemFacilityVerification/GetProvinceManagerByID',//获取省区经理详情信息
 
     /*** 备件耗材 ***/
     /*备品备件编码*/
     GetSparepartList: before + '/ConsumablesApi/GetSparepartList',//获取备品备件编码
+    UpdateSparePartsInfo: before + '/ConsumablesApi/UpdateSparePartsInfo',//更新备品备件编码
+    DeleteSparePartsInfo: before + '/ConsumablesApi/DeleteSparePartsInfo',//删除备品备件编码
+    ImportSparePartsList: before + '/ConsumablesApi/ImportSparePartsList',//导入备品备件编码
+    DownLoadSparePartsTemplateInfo: before + '/ConsumablesApi/DownLoadSparePartsTemplateInfo',//下载备品备件编码模板
     /*标准气体编码 试剂信息编码*/
     GetStandardGasList: before + '/ConsumablesApi/GetStandardGasList',//获取标准气体编码、试剂信息编码
     AddReferenceMaterialsInfo: before + '/ConsumablesApi/AddReferenceMaterialsInfo',//添加标准气体编码、试剂信息编码
@@ -540,7 +559,7 @@ export const API = {
     InsertDepartInfo: before + '/DepartmentApi/InsertDepartInfo',//新增部门信息
     UpdDepartInfo: before + '/DepartmentApi/UpdDepartInfo',//更新部门信息
     DelDepartInfo: before + '/DepartmentApi/DelDepartInfo',//删除部门信息
-    GetUserPointAuthorizeList: before + '/DepartmentApi/GetUserPointAuthorizeList',//查询当前部门下的所有排口
+    GetUserPointAuthorizeList: before + '/AuthorizeApi/GetUserPointAuthorizeList',//查询当前部门下的所有排口
     GetDepartInfoByID: before + '/DepartmentApi/GetDepartInfoByID',//获取单个部门信息
     GetDepartTreeAndObj: before + '/DepartmentApi/GetDepartTreeAndObj',//获取部门树信息（带根节点）
     GetGroupRegionFilter: before + '/ConfigureApi/GetGroupRegionFilter',//获取部门区域过滤
@@ -548,9 +567,16 @@ export const API = {
     GetUserByDepID: before + '/DepartmentApi/GetUserByDepID',//获取当前部门的用户
     InsertDepartByUser: before + '/DepartmentApi/InsertDepartByUser',//给当前部门添加用户（可批量）
     GetAlarmPushDepOrRole: before + '/AuthorizeApi/GetAlarmPushDepOrRole',//获取部门或角色报警关联列表
-    InsertAlarmDepOrRole: before + '/AuthorizeApi/InsertAlarmDepOrRole',//添加或修改部门或角色报警关联
-    InsertRegionByUser: before + '/DepartmentApi/InsertRegionByUser',//给部门添加行政区(可批量)
+    InsertAlarmDepOrRole: before + '/AuthorizeApi/InsertAlarmDepOrRole',//设置部门或角色报警关联
+    InsertRegionByUser: before + '/DepartmentApi/InsertRegionByUser',//当前部门添加行政区(可批量)
     GetRegionByDepID: before + '/DepartmentApi/GetRegionByDepID',//获取当前部门的行政区
+    GetTestRegionByDepID: before + '/DepartmentApi/GetTestRegionByDepID',//获取当前部门成套区域过滤权限
+    UpdateOperationArea: before + '/DepartmentApi/UpdateOperationArea',//更新当前部门运维区域
+    InsertTestRegionByUser: before + '/DepartmentApi/InsertTestRegionByUser',//设置当前部门成套区域过滤权限
+    GetSetOperationGroup: before + '/DepartmentApi/GetSetOperationGroup',//获取设置运维小组信息
+    AddSetOperationGroup: before + '/DepartmentApi/AddSetOperationGroup',//设置运维小组
+    GroupSort: before + '/DepartmentApi/GroupSort',//部门排序
+
     /*角色管理*/
     GetRoleInfoByTree: before + '/RoleApi/GetRoleInfoByTree',//获取角色详细信息和层级关系
     GetRoleInfoByID: before + '/RoleApi/GetRoleInfoByID',//获取单个角色信息
@@ -563,11 +589,19 @@ export const API = {
     GetMenuByRoleID: before + '/RoleApi/GetMenuByRoleID',//获取当前角色的菜单
     GetRoleMenuTree: before + '/MenuApi/GetRoleMenuTree',//获取菜单列表层级关系
     InsertMenuByRoleID: before + '/AuthorizeApi/InsertMenuByRoleID',//给当前角色添加菜单权限（可批量）
+    GetSetLongInAppRoleId: before + '/RoleApi/AddSetLongInAppRole',//获取允许登录的APP角色信息
+    AddSetLongInAppRole: before + '/RoleApi/AddSetLongInAppRole',//设置允许登录的APP角色
+    GetSetRoleId: before + '/RoleApi/GetSetRoleId',//获取行政区获取点位角色信息
+    AddSetRole: before + '/RoleApi/AddSetRole',//设置行政区获取点位角色
     /*用户权限*/
     InsertPointFilterByUser: before + '/AuthorizeApi/InsertPointFilterByUser',//给当前人员添加排口权限（可批量）
     /*用户恢复*/
-    RecoveryUserInfo: before + '/AuthorizeApi/RecoveryUserInfo',//恢复用户信息
-
+    RecoveryUserInfo: before + '/UserApi/RecoveryUserInfo',//恢复用户信息
+    /*** 基础设置 ***/
+    /*合同变更设置*/
+    GetOperationUserList: before + '/UserApi/GetOperationUserList',//获取合同变更运维人信息
+    UpdateOperationUser: before + '/UserApi/UpdateOperationUser',//更新合同变更运维人信息
+    DeleteOperationUser: before + '/UserApi/DeleteOperationUser',//删除合同变更运维人信息
   },
   //绩效排名
   PerformanceApi: {
@@ -608,6 +642,23 @@ export const API = {
     GetQuestionList: before + '/HelpCenterApi/GetQuestionList', //获取问题清单列表
     AddOrUpdateQuestionInfo: before + '/HelpCenterApi/AddOrUpdateQuestionInfo', //获取问题清单列表
     GetQuestionTypeList: before + '/HelpCenterApi/GetQuestionTypeList', //获取问题清单类别
+    GetQuestionType: before + '/HelpCenterApi/GetQuestionType', //获取问题类别
+    /*视频管理*/
+    videoManagementApi: {
+      IsTrueSerialNumber: before + '/VideoApi/IsTrueSerialNumber', //判断摄像头摄像头序列号是否正确
+      AddCameraMonitor: before + '/VideoApi/AddCameraMonitor', //添加摄像头与监测点关系
+      DeleteCamera: before + '/VideoApi/DeleteCamera',//删除摄像头
+      DeleteVideoInfo: before + '/VideoApi/DeleteVideoInfo',//删除视频信息
+      AddVideoInfo: before + '/VideoApi/AddVideoInfo',//根据监测点添加视频信息
+      UpdateVideoInfo: before + '/VideoApi/AddVideoInfo',//更新视频信息
+    },
+    /*日志管理*/
+    GetSystemExceptionList: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
+    DeleteSystemException: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
+    GetSystemLongInLogs: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
+    DeleteSystemLongInLogs: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
+    GetUserOprationLogsList: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
+    DeleteUserOprationLogs: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
   },
 
 
@@ -616,6 +667,7 @@ export const API = {
   //通用 Api
   CtCommonApi: {
     GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList', //站点信息
+    GetTestPollutantList: before + '/DebuggingBase/GetTestPollutantList', //站点信息
   },
   //项目执行进度 Api
   CtProjectExecuProgressApi: {
@@ -646,7 +698,7 @@ export const API = {
     //颗粒物CEMS零点和量程漂移检测
     GetPMDriftInfo: before + '/CommissioningTest/GetPMDriftInfo',//获取录入信息
     AddOrUpdatePMDriftInfo: before + '/CommissioningTest/AddOrUpdatePMDriftInfo',//添加更新信息
-    DeletePMDriftInfo: before + '/CommissioningTest/DeleteGasDriftInfo',//删除信息
+    DeletePMDriftInfo: before + '/CommissioningTest/DeletePMDriftInfo',//删除信息
     // 参比方法校准颗粒物CEMS
     GetReferenceCalibrationPMInfo: before + '/CommissioningTest/GetReferenceCalibrationPMInfo', //获取颗粒物参比参数信息
     AddOrUpdateReferenceCalibrationPMInfo: before + '/CommissioningTest/AddOrUpdateReferenceCalibrationPMInfo', //添加更新颗粒物参比信息
@@ -678,7 +730,7 @@ export const API = {
     //气态污染物CEMS（含氧量）零点和量程漂移检测
     GetGasDriftInfo: before + '/CommissioningTest/GetGasDriftInfo',//获取录入信息
     AddOrUpdateGasDriftInfo: before + '/CommissioningTest/AddOrUpdateGasDriftInfo',//添加更新信息
-    DeleteGasZeroRangeRecord: before + '/CommissioningTest/DeleteGasZeroRangeRecord',//删除信息
+    DeleteGasDriftInfo: before + '/CommissioningTest/DeleteGasDriftInfo',//删除信息
     //生成检测报告
     Export72HoursCommissioningTestReport: before + '/CommissioningTest/Export72HoursCommissioningTestReport',//导出72小时调试检测报告
 
@@ -711,7 +763,10 @@ export const API = {
     AddProjectPointRelation: before + '/CTBaseDataApi/AddProjectPointRelation',//添加项目与站点关联关系
     ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',  //项目列表 导出
     /*设备厂家名录 */
-    GetEquipmentManufacturerInventory: before + '/DebuggingEquipment/GetEquipmentManufacturerInventory',  //获取设备厂商信息
+    GetEquipmentManufacturerInventory: before + '/EquipmentApi/GetEquipmentManufacturerInventory',  //获取设备厂商信息
+    AddEquipmentManufacturerInfo: before + '/EquipmentApi/AddEquipmentManufacturerInfo',  //添加设备厂商信息
+    UpdateEquipmentManufacturerInfo: before + '/EquipmentApi/UpdateEquipmentManufacturerInfo',  //更新设备厂商信息
+    DeleteEquipmentManufacturerInfo: before + '/EquipmentApi/DeleteEquipmentManufacturerInfo',  //删除设备厂商信息
     /*系统型号清单*/
     GetCemsSystemModelInventory: before + '/DebuggingEquipment/GetCemsSystemModelInventory',  //获取系统型号清单信息
     AddCemsSystemModelInfo: before + '/DebuggingEquipment/AddCemsSystemModelInfo',  //添加系统型号清单信息

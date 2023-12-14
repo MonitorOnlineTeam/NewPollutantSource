@@ -15,6 +15,6 @@ export async function GetQuestionDetialList(params) {
 
 // 问题类别
 export async function GetQuestionType(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQuestionType',params, null);
+  const result = await post(API.SystemManageApi.GetQuestionType,params, null);
   return result;
 }

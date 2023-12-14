@@ -1,5 +1,6 @@
 import { post } from '@/utils/request';
 import { async } from 'q';
+import { API } from '@config/API'
 /**
  * 【智能监控】获取历史数据
  * @params {
@@ -13,6 +14,6 @@ import { async } from 'q';
     }
  */
 export async function queryhistorydatalist(params) {
-    const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataList', params);
+    const result = await post( API.WholeProcessMonitorApi.GetAllTypeDataList, params);
     return result === null ? { data: null } : result;
 }

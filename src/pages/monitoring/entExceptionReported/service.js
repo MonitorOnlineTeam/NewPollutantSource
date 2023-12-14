@@ -22,6 +22,6 @@ export async function saveAndUpdateException(params) {
 
 // 获取编辑数据
 export async function getExceptionReportedById(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionReportedById?ID=${params.ID}`, {});
+  const result = await post(`${API.IntelligentDiagnosis.GetExceptionReportedById}?ID=${params.ID}`, {});
   return result;
 }

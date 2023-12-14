@@ -22,6 +22,7 @@ import BtnComponents from './BtnComponents'
 const { TextArea } = Input;
 const { Option } = Select;
 import config from '@/config'
+import { API } from '@config/API'
 const namespace = 'hourCommissionTest'
 
 
@@ -783,7 +784,7 @@ const Index = (props) => {
                 formData.append('firstColumn', value.colVal);
                 formData.append('PollutantCode', pollutantCode);
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
-                fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportDataNew', {
+                fetch(API.CtDebugServiceApi.ImportDataNew, {
                     method: 'POST',
                     body: formData,
                     headers: { Authorization: "Bearer " + Cookie.get(config.cookieName), },

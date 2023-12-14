@@ -12,19 +12,19 @@ export async function GetManufacturerList(params) {
 }
 //设备厂商 添加
 export async function AddManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/TestAddManufacturer',params, null);
+  const result = await post(API.CtAssetManagementApi.AddEquipmentManufacturerInfo,params, null);
   return result;
 }
 
 // 设备厂商 修改
 export async function EditManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/TestEditManufacturer',params, null);
+  const result = await post(API.CtAssetManagementApi.UpdateEquipmentManufacturerInfo,params, null);
   return result;
 }
  
 // 设备厂商  删除
 export async function DelManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/TestDelManufacturer',params, null);
+  const result = await post(API.CtAssetManagementApi.DeleteEquipmentManufacturerInfo,params, null);
   return result;
 }
 
