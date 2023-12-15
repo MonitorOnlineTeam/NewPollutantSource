@@ -406,7 +406,7 @@ class BasicLayout extends Component {
       let userData = JSON.parse(userCookie);
       window.currentUser = {
         ...userData,
-        RoleIds: userData.RoleIds.split(','),
+        RoleIds: userData?.RoleIds?.split(','),
       };
     }
     return (

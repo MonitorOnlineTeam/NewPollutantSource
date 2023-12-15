@@ -1,5 +1,5 @@
 import { post, get } from '@/utils/request';
-
+import { API } from '@config/API'
 /** 萤石云视频列表 */
 export async function getysyList(params) {
   const body = {

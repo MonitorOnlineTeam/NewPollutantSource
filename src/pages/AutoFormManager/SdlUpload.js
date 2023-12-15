@@ -106,8 +106,8 @@ class SdlUpload extends Component {
           let before = '/'
           // setFieldsValue({ cuid: cuid })
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
-          fileList[fileList.length - 1].url = before + fileList[fileList.length - 1].response.Datas
-          fileList[fileList.length - 1].thumbUrl = before + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].url = before + fileList[fileList.length - 1].response.Datas?.fNameList
+          fileList[fileList.length - 1].thumbUrl = before + fileList[fileList.length - 1].response.Datas?.fNameList
         } else if (info.file.status === 'error') {
           let msg = fileList[fileList.length - 1].response.Message;
           console.log("msg=", msg)

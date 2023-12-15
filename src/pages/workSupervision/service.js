@@ -439,18 +439,18 @@ export async function RetransmissionTasks(params) {
 // 运维服务
 export async function GetStagingInspectorRectificationList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/TaskFormApi/GetStagingInspectorRectificationList',
+    API.WorkStageApi.GetStagingInspectorRectificationList,
     params,
   );
   return result;
 }
 
-/**我的提醒 */   //API.workStageApi.
+/**我的提醒 */
 
 // 数据报警列表
 export async function GetWorkAlarmPushList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/GetWorkAlarmPushList',
+    API.WorkStageApi.ApiGetWorkAlarmPushList,
     params,
   );
   return result;
@@ -458,7 +458,7 @@ export async function GetWorkAlarmPushList(params) {
 // 删除数据报警
 export async function UpdateWorkPushStatus(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/UpdateWorkPushStatus',
+    API.WorkStageApi.UpdateWorkPushStatus,
     params,
   );
   return result;
@@ -467,7 +467,7 @@ export async function UpdateWorkPushStatus(params) {
 // 删除所有数据报警
 export async function UpdateAllWorkPushStatus(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/UpdateAllWorkPushStatus',
+    API.WorkStageApi.UpdateAllWorkPushStatus,
     params,
   );
   return result;
@@ -476,7 +476,7 @@ export async function UpdateAllWorkPushStatus(params) {
 //合同到期列表
 export async function GetProjectRemindList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/GetProjectRemindList',
+    API.WorkStageApi.GetProjectRemindList,
     params,
   );
   return result;
@@ -484,7 +484,7 @@ export async function GetProjectRemindList(params) {
 // 删除合同到期
 export async function UpdateProjectPushStatus(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/UpdateProjectPushStatus',
+    API.WorkStageApi.UpdateProjectPushStatus,
     params,
   );
   return result;
@@ -493,7 +493,7 @@ export async function UpdateProjectPushStatus(params) {
 // 删除所有合同到期
 export async function UpdateAllProjectPushStatus(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/UpdateAllProjectPushStatus',
+    API.WorkStageApi.UpdateAllProjectPushStatus,
     params,
   );
   return result;
@@ -503,7 +503,7 @@ export async function UpdateAllProjectPushStatus(params) {
 // 获取工作台快捷导航列表 以及 可添加菜单列表
 export async function GetUserMenuList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/GetUserMenuList',
+    API.WorkStageApi.GetUserMenuList,
     params,
   );
   return result;
@@ -511,7 +511,7 @@ export async function GetUserMenuList(params) {
 // 添加快捷菜单
 export async function AddUserMenu (params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/OperationHomeApi/AddUserMenu',
+    API.WorkStageApi.AddUserMenu,
     params,
   );
   return result;
@@ -520,7 +520,7 @@ export async function AddUserMenu (params) {
 // 动态加载工作台模块
 export async function GetWorkbenchesModuleList (params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetWorkbenchesModuleList',
+    API.WorkStageApi.GetWorkbenchesModuleList,
     params,
   );
   return result;

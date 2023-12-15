@@ -547,6 +547,7 @@ class AutoFormTable extends PureComponent {
           align: isCenter ? 'center' : '',
           render: (text, record) => {
             const attachmentDataSource = getAttachmentDataSource(text);
+            console.log(attachmentDataSource)
             return <AttachmentView dataSource={attachmentDataSource} />;
           },
         };

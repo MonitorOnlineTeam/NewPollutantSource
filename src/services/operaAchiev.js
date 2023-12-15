@@ -74,13 +74,13 @@ export async function GetIndividualTaskInfo(params) {
 }
 //个人分摊套数  导出
 export async function ExportIndividualApportionment(params) {
-  const result = await post(API.PerformanceApi.ExportPersonalPerformanceWorkOrderList,params, null);
+  const result = await post(API.PerformanceApi.ExportPersonalPerformanceDetail,params, null);
   return result;
 }
 
 //个人任务详细 导出
 export async function ExportIndividualTaskInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportIndividualTaskInfo',params, null);
+  const result = await post(API.PerformanceApi.ExportPersonalPerformanceWorkOrderList,params, null);
   return result;
 }
 
@@ -109,28 +109,28 @@ export async function GetOperationIntegralGroupInfoList(params) {
 }
 //积分明细 一级页面
 export async function GetOperationIntegralList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralList',params, null);
+  const result = await post(API.PerformanceApi.GetOperationIntegralList,params, null);
   return result;
 }
 //积分明细 二级页面
 export async function GetOperationIntegralInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralInfoList',params, null);
+  const result = await post(API.PerformanceApi.GetOperationIntegralInfoList,params, null);
   return result;
 }
 //积分明细 三级页面
 export async function GetOperationIntegralInfoViewList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationIntegralInfoViewList',params, null);
+  const result = await post(API.PerformanceApi.GetOperationIntegralInfoViewList,params, null);
   return result;
 }
 //积分明细 导入
 export async function ImportOperationIntegral(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ImportOperationIntegral',params, null);
+  const result = await post(API.PerformanceApi.ImportOperationIntegral,params, null);
   return result;
 }
 
 
 //工作总量绩效 修改
 export async function UpdatePersonalPerformanceRateInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/UpdatePersonalPerformanceRateInfo',params, null);
+  const result = await post(API.PerformanceApi.UpdatePersonalPerformanceRateInfo,params, null);
   return result;
 }

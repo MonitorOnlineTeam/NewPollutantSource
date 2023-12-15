@@ -73,16 +73,17 @@ class CalendarPage extends PureComponent {
               item.ExceptionTypeText && item.ExceptionTypeText.split(",").map(itm => {
                 // 报警响应异常,打卡异常,工作超时
                 let color = itm === "报警响应异常" ? "#f50" : (itm === "打卡异常" ? "#108ee9" : "#2db7f5")
-                return <Popover
+                return <div  style={{position:'relative',display:'inline-block'}}>
+                  <Tag color={color}>{itm}</Tag>
+                  <Popover
                   content={<Button type="link" onClick={() => this.exceptionDetail(item)}>详情</Button>}
                   overlayClassName={styles.exceptionTypePopSty}
                   zIndex={99}
                   visible={itm === "打卡异常"}
                   getPopupContainer={trigger => trigger.parentNode}
                   placement='right'
-                >
-                  <Tag color={color}>{itm}</Tag>
-                </Popover>
+                />
+                </div>
               })
             }
           </div>,

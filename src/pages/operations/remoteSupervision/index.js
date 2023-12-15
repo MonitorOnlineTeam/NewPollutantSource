@@ -3076,7 +3076,7 @@ const Index = (props) => {
                 <Button type="primary" loading={tableLoading} htmlType="submit">
                   查询
                </Button>
-                <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
+                <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields();setPointList([]) }}  >
                   重置
                 </Button>
                 {/* {!isRecord && <Button style={{ marginRight: 8 }} onClick={add}>

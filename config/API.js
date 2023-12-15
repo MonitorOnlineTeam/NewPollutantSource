@@ -96,7 +96,19 @@ export const API = {
     GetExceptionModel: before + '/ExceptionDataApi/GetExceptionModel',//获取异常记录汇总信息
     GetExceptionData: before + '/ExceptionDataApi/GetExceptionData',//获取异常记录详情信息
   },
-  // 工作台Api
+  //工作台Api
+  WorkStageApi: {
+    GetStagingInspectorRectificationList: before + '/OperationWorkbenchApi/GetStagingInspectorRectificationList',//获取运维服务信息
+    GetWorkAlarmPushList: before + '/OperationWorkbenchApi/GetWorkAlarmPushList',//获取数据报警信息
+    UpdateWorkPushStatus: before + '/OperationWorkbenchApi/UpdateWorkPushStatus',//删除数据报警信息
+    UpdateAllWorkPushStatus: before + '/OperationWorkbenchApi/UpdateAllWorkPushStatus',//删除所有数据报警信息
+    GetProjectRemindList: before + '/OperationWorkbenchApi/GetProjectRemindList',//获取合同到期信息
+    UpdateProjectPushStatus: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除合同到期信息
+    UpdateAllProjectPushStatus: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期信息
+    GetUserMenuList: before + '/OperationWorkbenchApi/GetUserMenuList',//获取工作台快捷导航信息和可添加菜单信息
+    AddUserMenu: before + '/OperationWorkbenchApi/AddUserMenu',//添加快捷菜单
+    GetWorkbenchesModuleList: before + '/OperationWorkbenchApi/GetWorkbenchesModuleList',//获取动态加载工作台模块信息
+  },
 
   // 全过程监控Api
   WholeProcessMonitorApi: {
@@ -137,18 +149,7 @@ export const API = {
       GetCameraListEnt: before + '/MonBasicDataApi/GetSummaryReportExcel',//获取企业视频监控信息
     },
   },
-  //工作台
-  workStageApi: {
-    // GetWorkAlarmPushList
-    // UpdateWorkPushStatus
-    // UpdateAllWorkPushStatus
-    // GetProjectRemindList
-    // UpdateProjectPushStatus
-    // UpdateAllProjectPushStatus
-    // GetUserMenuList
-    // AddUserMenu
-    // GetWorkbenchesModuleList
-  },
+
   //预测性维护Api
   PredictiveMaintenanceApi: {
     /**智慧运维**/
@@ -215,6 +216,10 @@ export const API = {
   //智能诊断Api
   IntelligentDiagnosis: {
     /**异常数据处置**/
+    /*停运上报*/
+    AddOutputStop: before + '/ExceptionApi/AddOutputStop',//添加停运上报信息
+    UpdateOutputStop: before + '/ExceptionApi/UpdateOutputStop',//更新停运上报信息
+    DeleteOutputStopById: before + '/ExceptionApi/DeleteOutputStopById',//删除停运上报信息
     /*异常数据上报*/
     GetExceptionReportList: before + '/ExceptionApi/GetExceptionReportList',//获取异常数据上报信息、企业异常记录
     AddOrUpdateExceptionReportInfo: before + '/ExceptionApi/AddOrUpdateExceptionReportInfo',//添加更新异常数据上报信息
@@ -232,12 +237,12 @@ export const API = {
     ExportOverStandardNum: before + '/OverDataApi/ExportOverStandardNum', //导出超标次数
     /*超标数据报警*/
     GetOverToExamineOperation: before + '/AlarmVerifyManageApi/GetOverToExamineOperation',//获取超标核实类型
-    GetAlarmVerifyRate: before + '/AlarmVerifyManageApi/GetAlarmVerifyRate',//获取超标数据信息
-    ExportAlarmVerifyRate: before + '/AlarmVerifyManageApi/ExportAlarmVerifyRate',//导出超标数据信息
-    GetAlarmVerifyRateDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyRateDetail',//获取超标数据信息详情
-    ExportAlarmVerifyRateDetail: before + '/AlarmVerifyManageApi/ExportAlarmVerifyRate',//导出超标数据信息
-    GetAlarmVerifyDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyDetail',//获取超标数据报警次数详情
-    ExportAlarmVerifyDetail: before + '/AlarmVerifyManageApi/ExportAlarmVerifyDetail',//导出超标数据报警次数详情
+    GetAlarmVerifyRate: before + '/OverAlarmApi/GetAlarmVerifyRate',//获取超标数据信息
+    ExportAlarmVerifyRate: before + '/OverAlarmApi/ExportAlarmVerifyRate',//导出超标数据信息
+    GetAlarmVerifyRateDetail: before + '/OverAlarmApi/GetAlarmVerifyRateDetail',//获取超标数据信息详情
+    ExportAlarmVerifyRateDetail: before + '/OverAlarmApi/ExportAlarmVerifyRate',//导出超标数据信息
+    GetAlarmVerifyDetail: before + '/OverAlarmApi/GetAlarmVerifyDetail',//获取超标数据报警次数详情
+    ExportAlarmVerifyDetail: before + '/OverAlarmApi/ExportAlarmVerifyDetail',//导出超标数据报警次数详情
     /*缺失数据分析*/
     GetMissDataList: before + '/ExceptionDataApi/GetMissDataList',//获取缺失数据信息
     ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList',//导出缺失数据信息
@@ -620,6 +625,7 @@ export const API = {
     GetOperationIntegralList: before + '/AchievementsApi/GetOperationIntegralList',//获取积分明细信息
     GetOperationIntegralInfoList: before + '/AchievementsApi/GetOperationIntegralInfoList',//获取积分明细详情信息
     GetOperationIntegralInfoViewList: before + '/AchievementsApi/GetOperationIntegralInfoViewList',//获取积分明细员工考核加减分详情
+    UpdatePersonalPerformanceRateInfo: before + '/AchievementsApi/UpdatePersonalPerformanceRateInfo',//更新工作总量绩效
     ImportOperationIntegral: before + '/AchievementsApi/ImportOperationIntegral',//导入积分明细信息
     /*工单系数清单*/
     GetWorkOrderTypeCoefficientList: before + '/PerformanceCoefficientApi/GetWorkOrderTypeCoefficientList',//获取工单系数信息
@@ -654,11 +660,11 @@ export const API = {
     },
     /*日志管理*/
     GetSystemExceptionList: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
-    DeleteSystemException: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
-    GetSystemLongInLogs: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
-    DeleteSystemLongInLogs: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
-    GetUserOprationLogsList: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
-    DeleteUserOprationLogs: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
+    DeleteSystemException: before + '/HelpCenterApi/DeleteSystemException', //获取问题清单列表
+    GetSystemLongInLogs: before + '/HelpCenterApi/GetSystemLongInLogs', //获取问题清单列表
+    DeleteSystemLongInLogs: before + '/HelpCenterApi/DeleteSystemLongInLogs', //获取问题清单列表
+    GetUserOprationLogsList: before + '/HelpCenterApi/GetUserOprationLogsList', //获取问题清单列表
+    DeleteUserOprationLogs: before + '/HelpCenterApi/DeleteUserOprationLogs', //获取问题清单列表
   },
 
 
@@ -763,10 +769,10 @@ export const API = {
     AddProjectPointRelation: before + '/CTBaseDataApi/AddProjectPointRelation',//添加项目与站点关联关系
     ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',  //项目列表 导出
     /*设备厂家名录 */
-    GetEquipmentManufacturerInventory: before + '/EquipmentApi/GetEquipmentManufacturerInventory',  //获取设备厂商信息
-    AddEquipmentManufacturerInfo: before + '/EquipmentApi/AddEquipmentManufacturerInfo',  //添加设备厂商信息
-    UpdateEquipmentManufacturerInfo: before + '/EquipmentApi/UpdateEquipmentManufacturerInfo',  //更新设备厂商信息
-    DeleteEquipmentManufacturerInfo: before + '/EquipmentApi/DeleteEquipmentManufacturerInfo',  //删除设备厂商信息
+    GetEquipmentManufacturerInventory: before + '/DebuggingEquipment/GetEquipmentManufacturerInventory',  //获取设备厂商信息
+    AddEquipmentManufacturerInfo: before + '/DebuggingEquipment/AddEquipmentManufacturerInfo',  //添加设备厂商信息
+    UpdateEquipmentManufacturerInfo: before + '/DebuggingEquipment/UpdateEquipmentManufacturerInfo',  //更新设备厂商信息
+    DeleteEquipmentManufacturerInfo: before + '/DebuggingEquipment/DeleteEquipmentManufacturerInfo',  //删除设备厂商信息
     /*系统型号清单*/
     GetCemsSystemModelInventory: before + '/DebuggingEquipment/GetCemsSystemModelInventory',  //获取系统型号清单信息
     AddCemsSystemModelInfo: before + '/DebuggingEquipment/AddCemsSystemModelInfo',  //添加系统型号清单信息

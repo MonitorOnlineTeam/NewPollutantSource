@@ -1,5 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
-
+import { API } from '@config/API'
 /**
  * 问题清单
  */
