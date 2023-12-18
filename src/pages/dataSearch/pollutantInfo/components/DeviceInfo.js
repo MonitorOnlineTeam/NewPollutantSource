@@ -266,7 +266,7 @@ const Index = (props) => {
             <Form.Item label='行政区' name='RegionCode' style={{margin:'0 8px'}}>
                 <RegionList levelNum={2} style={{width:165}} />
             </Form.Item>
-            <Spin spinning={pollutantByIdLoading} size='small' style={{ top: 0, left: 20 }}>
+            <Spin spinning={pollutantByIdLoading} size='small' style={{ top: -6, left: 20 }}>
             <Form.Item label = '监测点类型' name='PollutantType' >
               <Select placeholder='请选择' style={{width:200}}>
               {
@@ -277,7 +277,7 @@ const Index = (props) => {
                </Select>
              </Form.Item>
              </Spin> 
-             <Spin spinning={loadingGetPollutantById2} size='small' style={{ top: 0, left: 20 }}>
+             <Spin spinning={loadingGetPollutantById2} size='small' style={{ top: -6, left: 20 }}>
               <Form.Item label='监测参数' name='PollutantCode' style={{marginLeft:8}}>
                 <Select placeholder='请选择' showSearch optionFilterProp="children"  style={{width:200}}>
 

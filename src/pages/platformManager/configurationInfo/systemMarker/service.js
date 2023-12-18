@@ -43,6 +43,6 @@ export async function GetSystemModelNameList(params) {
 
 //系统型号 导出
 export async function ExportSystemModelList(params) {
-  const result = await post(API.AssetManagementApi.ExportSystemModelList,params, null);
+  const result = await post(API.AssetManagementApi.ExportCemsSystemModelInventory,params, null);
   return result;
 }

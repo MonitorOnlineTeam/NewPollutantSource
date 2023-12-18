@@ -1,8 +1,9 @@
 import { post, get, getNew } from '@/utils/request';
+import { API} from '@config/API';
 
 
 //无数据点位统计 导出
-export async function ExportSystemModelList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportSystemModelList',params, null);
+export async function aa(params) {
+  const result = await post(API,params, null);
   return result;
 }

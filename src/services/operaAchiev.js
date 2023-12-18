@@ -57,7 +57,7 @@ export async function GetPersonalPerformanceRateList(params) {
   return result;
 }
 //绩效信息查询 导出
-export async function ExportPersonalPerformanceList(params) {
+export async function ExportPersonalPerformanceRate(params) {
   const result = await post(API.PerformanceApi.ExportPersonalPerformanceList,params, null);
   return result;
 }

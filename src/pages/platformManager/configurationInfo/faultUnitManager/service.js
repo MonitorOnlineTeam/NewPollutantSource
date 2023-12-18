@@ -26,6 +26,6 @@ export async function DelFaultUnit(params) {
 
 // 监测设备类别
 export async function GetTestingEquipmentList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestingEquipmentList',params, null);
+  const result = await post(API.AssetManagementApi.GetTestingEquipmentList,params, null);
   return result;
 }

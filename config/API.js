@@ -41,8 +41,7 @@ export const API = {
   //通用Api
   CommonApi: {
     GetNoFilterRegionList: before + '/RegionApi/GetNoFilterRegionList',//获取无权限过滤的行政区信息
-    GetXuRegions: before + '/RegionApi/GetXuRegions',//获取所有省份及省份下的市县
-    GetTestXuRegions: before + '/RegionApi/GetTestXuRegions',//获取所有省份及省份下的市县（调试服务）
+    GetXuRegions: before + '/RegionApi/GetXuRegions',//获取省份及省份下的市县
     GetRegions: before + '/RegionApi/GetRegions', //获取行政区
     GetAttentionDegreeList: before + '/RegionApi/GetAttentionDegreeList',//获取关注程度
     GetNoFilterEntList: before + '/EnterpriseApi/GetNoFilterEntList',//获取无权限过滤的企业信息
@@ -408,7 +407,8 @@ export const API = {
     /*** 设备台账 ***/
     /*污染源管理*/
     CompanyOperationBasictemplate: `${config.uploadPrefix}/公司运维基础数据模板.xlsm`,//企业模板下载 
-    VerificationImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//导入企业
+    VerificationImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//导入企业信息
+    ImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//保存导入企业信息
     AddPoint: before + '/MonitorPointApi/AddPoint', //添加监测点
     UpdatePoint: before + '/MonitorPointApi/UpdatePoint', //更新监测点
     DeletePoints: before + '/MonitorPointApi/DeletePoints', //删除监测点
@@ -429,11 +429,12 @@ export const API = {
     AddOrUpdateSystemEquipmentInfo: before + '/MonitorPointApi/AddOrUpdateSystemEquipmentInfo', //添加更新监测点设备信息
     GetStandardGasEquipmentInfo: before + '/MonitorPointApi/GetStandardGasEquipmentInfo', //获取标气配备信息
     UpdatePointSortInfo: before + '/MonitorPointApi/UpdatePointSortInfo', //监测点排序
+    GetTestingEquipmentList: before + '/MonitorPointApi/GetTestingEquipmentList', //获取监测点监测设备类别
     GetPointCoefficientInfo: before + '/MonitorPointApi/GetPointCoefficientInfo', //获取监测点系数
-    GetPointElectronicFenceInfo: before + '/MonitorPointApi/GetPointCoefficientInfo', //获取电子围栏半径信息
+    GetPointElectronicFenceInfo: before + '/MonitorPointApi/GetPointElectronicFenceInfo', //获取电子围栏半径信息
     AddOrUpdatePointElectronicFenceInfo: before + '/MonitorPointApi/AddOrUpdatePointElectronicFenceInfo', //添加更新电子围栏半径信息
     UpdatePointOprationStatus: before + '/MonitorPointApi/UpdatePointOprationStatus', //更新监测点运维状态
-    GetOprationStatusList: before + '/MonitorPointApi/GetOprationStatusList', //获取更新运维状态记录
+    GetOprationStatusList: before + '/UserApi/GetOprationStatusList', //获取更新运维状态记录
     /*污染源信息查询*/
     GetEntList: before + '/EnterpriseApi/GetEntList', //获取监测点信息
     ExportEntList: before + '/EnterpriseApi/ExportEntList', //导出企业信息 
@@ -471,7 +472,7 @@ export const API = {
     UpdateSystemModelInfo: before + '/EquipmentApi/UpdateSystemModelInfo',//更新系统型号信息
     DeleteSystemModelInfo: before + '/EquipmentApi/DeleteSystemModelInfo',//删除系统型号信息
     GetSystemNameList: before + '/EquipmentApi/GetSystemNameList',//获取系统名称列表
-    ExportSystemModelList: before + '/EquipmentApi/ExportSystemModelList',//系统型号信息 导出
+    ExportCemsSystemModelInventory: before + '/EquipmentApi/ExportCemsSystemModelInventory',//系统型号信息 导出
     /*设备信息清单*/
     GetEquipmentList: before + '/EquipmentApi/GetEquipmentList',//获取设备信息清单
     AddEquipmentInfo: before + '/EquipmentApi/AddEquipmentInfo',//添加设备信息清单
@@ -492,9 +493,9 @@ export const API = {
     UpdateStateControlledPointRelationStatus: before + '/StateControlled/GetStateControlledPointList',//更新企业匹配监测点信息
     DeleteStateControlledPointRelationStatus: before + '/StateControlled/DeleteStateControlledPointRelationStatus',//删除企业匹配监测点信息
     /*台账填报设置*/
-    GetCalibrationAccountFillingTypeList: before + '/BaseDataApi/GetCalibrationAccountFillingTypeList',//获取台账填报设置信息
-    UpdateCalibrationAccountFillingTypeInfo: before + '/BaseDataApi/UpdateCalibrationAccountFillingTypeInfo',//更新废气点位校准信息填报方式
-    ExportCalibrationAccountFillingTypeList: before + '/BaseDataApi/ExportCalibrationAccountFillingTypeList',//台账填报设置信息 导出
+    GetCalibrationAccountFillingTypeList: before + '/AccountApi/GetCalibrationAccountFillingTypeList',//获取台账填报设置信息
+    UpdateCalibrationAccountFillingTypeInfo: before + '/AccountApi/UpdateCalibrationAccountFillingTypeInfo',//更新废气点位校准信息填报方式
+    ExportCalibrationAccountFillingTypeList: before + '/AccountApi/ExportCalibrationAccountFillingTypeList',//台账填报设置信息 导出
 
     /*** 运维台账 ***/
     /*运维上岗证*/
@@ -536,16 +537,16 @@ export const API = {
 
     /*** 客户订单 ***/
     /*客户续费*/
-    GetCustomerRenewList: before + '/CustomerServiceApi/GetCustomerRenewList',//获取客户续费信息
-    AddCustomerRenewInfo: before + '/CustomerServiceApi/AddCustomerRenewInfo',//添加客户续费信息
-    UpdateCustomerRenewInfo: before + '/CustomerServiceApi/UpdateCustomerRenewInfo',//更新客户续费信息
-    DeleteCustomerRenewInfo: before + '/CustomerServiceApi/DeleteCustomerRenewInfo',//删除客户续费信息
-    GetCustomerPointAuthorityList: before + '/CustomerServiceApi/GetCustomerPointAuthorityList',//获取客户订单企业与排口列表
-    GetCustomerList: before + '/CustomerServiceApi/GetCustomerList',//获取客户续费用户信息
-    GetCustomerRenewDetail: before + '/CustomerServiceApi/GetCustomerRenewDetail',//获取客户续费详情信息
-    DeleteCustomerRenewDetail: before + '/CustomerServiceApi/DeleteCustomerRenewDetail',//删除客户续费详情信息
+    GetCustomerRenewList: before + '/CustomerRenew/GetCustomerRenewList',//获取客户续费信息
+    AddCustomerRenewInfo: before + '/CustomerRenew/AddCustomerRenewInfo',//添加客户续费信息
+    UpdateCustomerRenewInfo: before + '/CustomerRenew/UpdateCustomerRenewInfo',//更新客户续费信息
+    DeleteCustomerRenewInfo: before + '/CustomerRenew/DeleteCustomerRenewInfo',//删除客户续费信息
+    GetCustomerPointAuthorityList: before + '/CustomerRenew/GetCustomerPointAuthorityList',//获取客户订单企业与排口信息
+    GetCustomerList: before + '/CustomerRenew/GetCustomerList',//获取客户续费用户信息
+    GetCustomerRenewDetail: before + '/CustomerRenew/GetCustomerRenewDetail',//获取客户续费详情信息
+    DeleteCustomerRenewDetail: before + '/CustomerRenew/DeleteCustomerRenewDetail',//删除客户续费详情信息
     /*续费日志 */
-    GetCustomerRenewOperationLogs: before + '/CustomerServiceApi/GetCustomerRenewOperationLogs',//获取客户订单日志和客户订单详情日志信息
+    GetCustomerRenewOperationLogs: before + '/CustomerRenew/GetCustomerRenewOperationLogs',//获取客户订单日志和客户订单详情日志信息
     /*** 权限管理 ***/
     /*用户管理*/
     GetUserList: before + '/UserApi/GetUserList',//获取用户信息
@@ -659,12 +660,12 @@ export const API = {
       UpdateVideoInfo: before + '/VideoApi/AddVideoInfo',//更新视频信息
     },
     /*日志管理*/
-    GetSystemExceptionList: before + '/HelpCenterApi/GetSystemExceptionList', //获取问题清单列表
-    DeleteSystemException: before + '/HelpCenterApi/DeleteSystemException', //获取问题清单列表
-    GetSystemLongInLogs: before + '/HelpCenterApi/GetSystemLongInLogs', //获取问题清单列表
-    DeleteSystemLongInLogs: before + '/HelpCenterApi/DeleteSystemLongInLogs', //获取问题清单列表
-    GetUserOprationLogsList: before + '/HelpCenterApi/GetUserOprationLogsList', //获取问题清单列表
-    DeleteUserOprationLogs: before + '/HelpCenterApi/DeleteUserOprationLogs', //获取问题清单列表
+    GetSystemExceptionList: before + '/LogsApi/GetSystemExceptionList', //获取问题清单列表
+    DeleteSystemException: before + '/LogsApi/DeleteSystemException', //获取问题清单列表
+    GetSystemLongInLogs: before + '/LogsApi/GetSystemLongInLogs', //获取问题清单列表
+    DeleteSystemLongInLogs: before + '/LogsApi/DeleteSystemLongInLogs', //获取问题清单列表
+    GetUserOprationLogsList: before + '/LogsApi/GetUserOprationLogsList', //获取问题清单列表
+    DeleteUserOprationLogs: before + '/LogsApi/DeleteUserOprationLogs', //获取问题清单列表
   },
 
 
@@ -691,11 +692,12 @@ export const API = {
   //调试服务
   CtDebugServiceApi: {
     /*调试点位管理*/
+    GetTestXuRegions: before + '/DebuggingBase/GetTestXuRegions',//获取省份及省份下的市县（调试服务）
     GetPointCemsSystemList: before + '/DebuggingBase/GetPointCemsSystemList',  //获取监测点CEMS参数信息
     OperationPointCemsSystemInfo: before + '/DebuggingBase/OperationPointCemsSystemInfo',  //添加更新CEMS参数信息
     GetPointReferenceInstrumentList: before + '/DebuggingBase/GetPointReferenceInstrumentList', //获取参比仪器信息
     OperationPointReferenceInstrumentInfo: before + '/DebuggingBase/GetPointReferenceInstrumentList', //添加更新参比仪器信息
-    AddOrUpdateTestPoint: before + '/DebuggingBase/AddOrUpdateTestPoint', //添加更新调试检测监测点
+    AddOrUpdateTestPoint: before + '/DebuggingBase/AddOrUpdateTestPoint', //添加更新监测点（调试检测）
     /*72小时调试检测*/
     GetDebuggingEntTree: before + '/DebuggingBase/GetDebuggingEntTree', //获取企业监测点信息 树结构
     Get72HoursDebuggingItem: before + '/CommissioningTest/Get72HoursDebuggingItem', //获取表单类型
@@ -751,7 +753,8 @@ export const API = {
   CtAssetManagementApi: {
     /*** 设备台账 ***/
     /*污染源管理*/
-    AddOrEditCommonPointList: before + '/CTBaseDataApi/AddOrEditCommonPointList', //添加或修改监测点
+    GetTestXuRegions: before + '/CTBaseDataApi/GetTestXuRegions', //获取省份及省份下的市县（成套）
+    AddOrEditCommonPointList: before + '/CTBaseDataApi/AddOrEditCommonPointList', //添加或修改监测点（成套）
     AddOrUpdateMonitorEntElectronicFence: before + '/CTBaseDataApi/AddOrUpdateMonitorEntElectronicFence', //修改企业电子围栏半径
     GetMonitorEntElectronicFence: before + '/CTBaseDataApi/GetMonitorEntElectronicFence', //获取企业电子围栏半径
     GetPointIndustryList: before + '/CTBaseDataApi/GetPointIndustryList',  //获取行业和监测点类型信息
@@ -776,13 +779,13 @@ export const API = {
     /*系统型号清单*/
     GetCemsSystemModelInventory: before + '/DebuggingEquipment/GetCemsSystemModelInventory',  //获取系统型号清单信息
     AddCemsSystemModelInfo: before + '/DebuggingEquipment/AddCemsSystemModelInfo',  //添加系统型号清单信息
-    UpdCemsSystemModelInfo: before + '/DebuggingEquipment/AddCemsSystemModelInfo',  //更新系统型号清单信息
+    UpdCemsSystemModelInfo: before + '/DebuggingEquipment/UpdCemsSystemModelInfo',  //更新系统型号清单信息
     DeleteCemsSystemModelInfo: before + '/DebuggingEquipment/DeleteCemsSystemModelInfo',  //删除系统型号清单信息
     /*设备信息清单*/
     GetCemsEquipmentInventory: before + '/DebuggingEquipment/GetCemsEquipmentInventory',  //获取设备信息清单
     AddCemsEquipmentInfo: before + '/DebuggingEquipment/AddCemsEquipmentInfo', //添加设备信息清单信息
     UpdCemsEquipmentInfo: before + '/DebuggingEquipment/UpdCemsEquipmentInfo', //更新设备信息清单信息
-    DeleteCemsEquipmentInfo: before + '/DebuggingEquipment/UpdCemsEquipmentInfo', //删除设备信息清单信息
+    DeleteCemsEquipmentInfo: before + '/DebuggingEquipment/DeleteCemsEquipmentInfo', //删除设备信息清单信息
     /*参比仪器清单*/
     GetReferenceInstrumentInventory: before + '/DebuggingEquipment/GetReferenceInstrumentInventory',  //获取参比仪器设备清单
     AddReferenceInstrumentInfo: before + '/DebuggingEquipment/AddReferenceInstrumentInfo',  //添加参比仪器设备清单

@@ -31,10 +31,10 @@ export default Model.extend({
     noFilterRegionList: [],
     roleList: [],
     testRegionList: [],
-    ctEntAndPointList:[],
-    ctProjectList:[],
-    ctProjectTotal:0,
-    ctProjectQueryPar:null,
+    ctEntAndPointList: [],
+    ctProjectList: [],
+    ctProjectTotal: 0,
+    ctProjectQueryPar: null,
   },
 
   effects: {
@@ -344,6 +344,15 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    // 行政区 成套污染源管理
+    *getCtTestXuRegions({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetCtTestXuRegions, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas ? result.Datas.list : []);
+      } else {
+        message.error(result.Message);
+      }
+    },
     //成套获取 企业和监测点
     *getCtEntAndPointList({ payload, callback }, { call, update }) {
       const result = yield call(services.GetCtEntAndPointList, payload);
@@ -363,7 +372,7 @@ export default Model.extend({
         yield update({
           ctProjectList: result.Datas,
           ctProjectTotal: result.Total,
-          ctProjectQueryPar:payload,
+          ctProjectQueryPar: payload,
         })
         callback && callback(result.Datas);
       } else {

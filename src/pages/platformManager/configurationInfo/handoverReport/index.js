@@ -255,7 +255,7 @@ const Index = (props) => {
     const fileList = [];
     fileInfo.map((item, index) => {
       if (!item.IsDelete) {
-        fileList.push({ name: item.FileActualName, url: `/${item.FileName}`, status: 'done', uid: item.GUID, })
+        fileList.push({ name: item.FileName, url: `${config.uploadPrefix}/${item.FileName}`, status: 'done', uid: item.GUID, })
       }
     })
     setFilesList(fileList)
@@ -305,7 +305,7 @@ const Index = (props) => {
         if(!item.IsDelete){
           fileList.push({
             uid: item.GUID,
-            name: item.FileActualName,
+            name: item.FileName,
             status: 'done',
             url: `/${item.FileName}`,
           })
@@ -320,7 +320,7 @@ const Index = (props) => {
         if(!item.IsDelete){
           fileList.push({
             uid: item.GUID,
-            name: item.FileActualName,
+            name: item.FileName,
             status: 'done',
             url: `/${item.FileName}`,
           })
@@ -335,7 +335,7 @@ const Index = (props) => {
         if(!item.IsDelete){
           fileList.push({
             uid: item.GUID,
-            name: item.FileActualName,
+            name: item.FileName,
             status: 'done',
             url: `/${item.FileName}`,
           })

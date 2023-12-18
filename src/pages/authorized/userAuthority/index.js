@@ -722,7 +722,7 @@ export default class UserAuthority extends Component {
                 <Dropdown overlay={() => <Menu>
 
                     <Menu.Item>
-                    <div  onClick={this.exports}> <ExportOutlined />导出 </div>
+                    <div  onClick={this.exports}> <ExportOutlined style={{paddingRight:4}}/>导出 </div>
                   </Menu.Item>
             </Menu>}>
               <Button>

@@ -67,30 +67,6 @@ export default class EntImport extends Component {
       tableDatas2:[],
       saveDisabled:true
     };
-//     Abbreviation: "哈尔滨石化分公司热电厂"
-// AttentionCode: "国控"
-// City: "哈尔滨市"
-// Col3: "完全抽取法"
-// County: "兰西县"
-// DGIMN: "as548545"
-// EntAddress: "沙发沙发士大夫"
-// EntLatitude: "41.204923"
-// EntLongitude: "123.242485"
-// EntName: "哈尔滨石化分公司热电厂"
-// EnvironmentPrincipal: "张三"
-// Error: "哈尔滨市下不存在此（县/区）；监测因子（折算SO₂1111）无效；工号（SDL001）不存在系统中请先添加此员工；"
-// Latitude: "41.204923"
-// Longitude: "123.242485"
-// MobilePhone: "15210415451"
-// OutputType: "排放口"
-// PSScaleCode: "特大型"
-// PointName: "1号"
-// PolltantType: "2"
-// PollutantList: "实测烟尘,折算烟尘,实测SO2,折算SO21111"
-// Province: "黑龙江省"
-// UserName: "张三"
-// UserNum: "SDL001"
-// warning: ""
     this.columns = [
       {
         title: <span>序号</span>,

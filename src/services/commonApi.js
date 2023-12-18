@@ -132,10 +132,14 @@ export async function GetRoleCodeList(params) {
 
 //行政区  列表  调试服务
 export async function GetTestXuRegions(params) {
-  const result = post(API.CommonApi.GetTestXuRegions,params, params, null);
+  const result = post(API.CtDebugServiceApi.GetTestXuRegions,params, params, null);
   return result;
 }
-
+//行政区  列表  调试服务 成套
+export async function GetCtTestXuRegions(params) {
+  const result = post(API.CtAssetManagementApi.GetTestXuRegions, params, null);
+  return result;
+}
 // 导出 运维监测点信息
 export async function ExportProjectPointList(params) {
   const result = await post(API.AssetManagementApi.ExportProjectPointList,params, null);
