@@ -38,7 +38,7 @@ export async function GetAttentionDegreeList(params) {
 //导出 缺失数据报警
 export async function ExportDefectDataSummary(params) {
   const result = post(
-    API.IntelligentDiagnosis.ExportExceptionReportedList,
+    API.IntelligentDiagnosis.ExportMissDataResponseRateList,
     params,
     null,
   );
@@ -49,7 +49,7 @@ export async function ExportDefectDataSummary(params) {
 
 export async function ExportDefectPointDetailRate(params) {
   const result = post(
-    API.IntelligentDiagnosis.ExportExceptionReportedList,
+    API.IntelligentDiagnosis.ExportMissDataResponseRateList,
     params,
     null,
   );

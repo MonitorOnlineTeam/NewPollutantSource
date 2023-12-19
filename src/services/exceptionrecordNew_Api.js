@@ -14,37 +14,36 @@ export async function getPollutantByType(params) {
 
 // 获取table数据 - 省一级
 export async function getExceptionAlarmListForRegion(params) {
-  const result = post(API.IntelligentDiagnosis.GetProvinceExceptionDataAlaramList, params);
+  const result = post(API.IntelligentDiagnosis.GetExceptionAlarmResponseRateList, params);
   return result;
 }
 
 // 异常数据报警-省一级
 export async function exportExceptionAlarm(params) {
-  const result = post(API.IntelligentDiagnosis.ExportProvinceExceptionDataAlaramList, params);
+  const result = post(API.IntelligentDiagnosis.ExportExceptionAlarmResponseRateList, params);
   return result;
 }
-
-// 异常数据报警 - 二级页面
-export async function getExceptionAlarmListForEnt(params) {
-  const result = post(API.IntelligentDiagnosis.GetEntExceptionDataAlaramList, params);
-  return result;
-}
-
-// 异常数据报警导出 - 二级页面
-export async function exportExceptionAlarmListForEnt(params) {
-  const result = post(API.IntelligentDiagnosis.ExportEntExceptionDataAlaramList, params);
-  return result;
-}
-
-
 // 获取table数据 - 城市一级
 export async function getExceptionAlarmListForCity(params) {
-  const result = post(API.IntelligentDiagnosis.GetCityExceptionDataAlaramList, params);
+  const result = post(API.IntelligentDiagnosis.GetExceptionAlarmResponseRateList, params);
   return result;
 }
 
 // 导出table数据 - 城市一级 
 export async function exportExceptionAlarmListForCity(params) {
-  const result = post(API.IntelligentDiagnosis.ExportCityExceptionDataAlaramList, params);
+  const result = post(API.IntelligentDiagnosis.ExportExceptionAlarmResponseRateList, params);
   return result;
 }
+// 异常数据报警 - 企业一级
+export async function getExceptionAlarmListForEnt(params) {
+  const result = post(API.IntelligentDiagnosis.GetExceptionAlarmResponseRateList, params);
+  return result;
+}
+
+// 异常数据报警导出 - 企业一级
+export async function exportExceptionAlarmListForEnt(params) {
+  const result = post(API.IntelligentDiagnosis.ExportExceptionAlarmResponseRateList, params);
+  return result;
+}
+
+

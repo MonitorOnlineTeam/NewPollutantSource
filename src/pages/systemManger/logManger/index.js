@@ -415,7 +415,7 @@ const Index = (props) => {
             <Button onClick={() => { form2.resetFields() }} style={{ marginRight: 8 }} >
               重置
       </Button>
-            <Button type="primary" onClick={() => { setFormVisible(true); form3.resetFields(); setClearTypeTitle('登录') }}>
+            <Button type="primary" disabled={tableDatas2?.length<=0} onClick={() => { setFormVisible(true); form3.resetFields(); setClearTypeTitle('登录') }}>
               日志清理
            </Button>
           </Form.Item>
@@ -593,7 +593,7 @@ const Index = (props) => {
             <Button onClick={() => { form3.resetFields() }} style={{ marginRight: 8 }} >
               重置
             </Button>
-            <Button type="primary" onClick={() => { setFormVisible(true); form4.resetFields(); setClearTypeTitle('操作') }}>
+            <Button type="primary"  disabled={tableDatas3?.length<=0} onClick={() => { setFormVisible(true); form4.resetFields(); setClearTypeTitle('操作') }}>
               日志清理
             </Button>
           </Form.Item>

@@ -81,7 +81,7 @@ export async function IsTrueSerialNumber(params) {
   const body = {
     SerialNumber: params.SerialNumber,
   };
-  const result = await post(API.videoManagementApi.IsTrueSerialNumber, body, null);
+  const result = await post(API.SystemManageApi.IsTrueSerialNumber, body, null);
   return result === null
     ? {
         data: null,

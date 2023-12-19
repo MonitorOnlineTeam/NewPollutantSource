@@ -10,7 +10,8 @@ import { message } from 'antd';
 import moment, { months } from 'moment';
 import {
     GetTaskRecord, GetJzRecord,
-    GetRecordType, GetConsumablesReplaceRecord,
+    // GetRecordType,
+    GetConsumablesReplaceRecord,
     GetStandardGasReplaceRecord, GetPatrolRecord,
     GetDeviceExceptionRecord, GetStopCemsRecord,
     GetBdTestRecord, RevokeTask,
@@ -161,17 +162,17 @@ export default Model.extend({
                 });
             }
         },
-        // 运维表单类型
-        * GetRecordType({
-            payload,
-        }, { call, update }) {
-            const DataInfo = yield call(GetRecordType, payload);
-            if (DataInfo !== null && DataInfo.IsSuccess) {
-                yield update({ RecordTypes: DataInfo.Datas });
-            } else {
-                yield update({ RecordTypes: [] });
-            }
-        },
+        // // 运维表单类型
+        // * GetRecordType({
+        //     payload,
+        // }, { call, update }) {
+        //     const DataInfo = yield call(GetRecordType, payload);
+        //     if (DataInfo !== null && DataInfo.IsSuccess) {
+        //         yield update({ RecordTypes: DataInfo.Datas });
+        //     } else {
+        //         yield update({ RecordTypes: [] });
+        //     }
+        // },
         // 易耗品更换记录
         * GetConsumablesReplaceRecord({
             payload,

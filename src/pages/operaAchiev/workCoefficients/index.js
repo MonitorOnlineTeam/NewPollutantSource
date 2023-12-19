@@ -299,7 +299,7 @@ const Index = (props) => {
               <Select placeholder='请选择'   showSearch optionFilterProp="children" >
                {
                  recordTypesByPollutantTypeList.map(item => {
-                  return <Option key={item.ID} value={item.ID} >{item.TypeName}</Option>
+                  return <Option key={item.ID} value={item.ID} >{item.PollutantTypeName}</Option>
                 })
               } 
               </Select>

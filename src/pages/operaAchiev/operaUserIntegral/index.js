@@ -22,7 +22,7 @@ import styles from "../style.less";
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
-
+import { API } from '@config/API'
 import AssessScoreAddReeuce from './components/AssessScoreAddReeuce'
 
 const namespace = 'operaAchiev'
@@ -366,7 +366,7 @@ const Index = (props) => {
     name: 'file',
     accept: '.xls,.xlsx',
     showUploadList: false,
-    action: '/api/rest/PollutantSourceApi/BaseDataApi/ImportOperationIntegral',
+    action: API.PerformanceApi.ImportOperationIntegral,
     headers: {
       Authorization: "Bearer " + Cookie.get(config.cookieName),
     },

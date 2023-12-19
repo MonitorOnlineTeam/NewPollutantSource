@@ -6,7 +6,7 @@ import { API } from '@config/API'
  */
 export async function GetCameraListEnt(params) {
   const result = post(
-    API.VideoMonitoringApi.GetCameraListEnt,
+    API.WholeProcessMonitorApi.GetCameraListEnt,
     params,
     null,
   );

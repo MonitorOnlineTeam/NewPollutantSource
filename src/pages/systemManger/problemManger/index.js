@@ -241,7 +241,7 @@ const Index = (props) => {
             uid: item.GUID,
             name: item.FileActualName,
             status: 'done',
-            url: `/${item.FileName}`,
+            url: `${config.uploadPrefix}/${item.FileName}`,
           })
           
         }
@@ -366,7 +366,8 @@ const Index = (props) => {
       const fileList = [];
       info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
-          fileList.push({ ...item, url: `/${item.response.Datas}`, })
+          console.log(item.response.Datas?.fNameList)
+          fileList.push({ ...item, url: `/${item.response.Datas?.fNameList}`, })
         } else if(!item.response ){
           fileList.push({ ...item})
         }

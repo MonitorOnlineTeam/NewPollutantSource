@@ -1,7 +1,6 @@
 
-import {
-  post,
-} from '@/utils/request';
+import { post } from '@/utils/request';
+import { API } from '@config/API';
 /** 萤石云视频列表 */
 export async function getysyList(params) {
   const body = {
@@ -23,7 +22,7 @@ export async function getvideolist(params) {
   const body = {
     DGIMN: params.DGIMN,
   };
-  const result = post('/api/rest/PollutantSourceApi/VideoApi/GetVideoList', body, null);
+  const result = post(API.VisualKanbanApi.GetVideoList, body, null);
   return result;
 }
 /** 海康获取视频连接 */

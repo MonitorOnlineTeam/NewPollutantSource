@@ -44,14 +44,14 @@ export async function GetJzRecord(params) {
     return result === null ? { Datas: null } : result;
 }
 
-// 获取校准记录 运维表单类型
-export async function GetRecordType(params) {
-    const body = {
-        DGIMN: params.DGIMN,
-    };
-    const result = await post(API.CommonApi.GeteTaskOrderTypeByPollutantType, body, null);
-    return result === null ? { Datas: null } : result;
-}
+// // 获取校准记录 运维表单类型
+// export async function GetRecordType(params) {
+//     const body = {
+//         DGIMN: params.DGIMN,
+//     };
+//     const result = await post(API.PerformanceApi.GeteTaskOrderTypeByPollutantType, body, null);
+//     return result === null ? { Datas: null } : result;
+// }
 
 // // 获取校准历史记录
 // export async function GetJzHistoryList(params) {
