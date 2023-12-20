@@ -181,6 +181,7 @@ const Index = (props) => {
       const values = await form2.validateFields();//触发校验
       props.updateOperationUser({
         ...values,
+        type:1,
       }, () => {
         setFromVisible(false)
         onFinish()

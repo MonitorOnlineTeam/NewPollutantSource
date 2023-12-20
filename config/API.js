@@ -564,7 +564,8 @@ export const API = {
     InsertDepartInfo: before + '/DepartmentApi/InsertDepartInfo',//新增部门信息
     UpdDepartInfo: before + '/DepartmentApi/UpdDepartInfo',//更新部门信息
     DelDepartInfo: before + '/DepartmentApi/DelDepartInfo',//删除部门信息
-    GetUserPointAuthorizeList: before + '/AuthorizeApi/GetUserPointAuthorizeList',//查询当前部门下的所有排口
+    GetUserPointAuthorizeList: before + '/AuthorizeApi/GetUserPointAuthorizeList',//查询当前部门下的所有排口（公司运维）
+    GetUserPointAuthorizeListBW: before + '/AuthorizeApi/GetUserPointAuthorizeListBW',//查询当前部门下的所有排口（宝武）
     GetDepartInfoByID: before + '/DepartmentApi/GetDepartInfoByID',//获取单个部门信息
     GetDepartTreeAndObj: before + '/DepartmentApi/GetDepartTreeAndObj',//获取部门树信息（带根节点）
     GetGroupRegionFilter: before + '/ConfigureApi/GetGroupRegionFilter',//获取部门区域过滤
@@ -594,7 +595,7 @@ export const API = {
     GetMenuByRoleID: before + '/RoleApi/GetMenuByRoleID',//获取当前角色的菜单
     GetRoleMenuTree: before + '/MenuApi/GetRoleMenuTree',//获取菜单列表层级关系
     InsertMenuByRoleID: before + '/AuthorizeApi/InsertMenuByRoleID',//给当前角色添加菜单权限（可批量）
-    GetSetLongInAppRoleId: before + '/RoleApi/AddSetLongInAppRole',//获取允许登录的APP角色信息
+    GetSetLongInAppRoleId: before + '/RoleApi/GetSetLongInAppRoleId',//获取允许登录的APP角色信息
     AddSetLongInAppRole: before + '/RoleApi/AddSetLongInAppRole',//设置允许登录的APP角色
     GetSetRoleId: before + '/RoleApi/GetSetRoleId',//获取行政区获取点位角色信息
     AddSetRole: before + '/RoleApi/AddSetRole',//设置行政区获取点位角色

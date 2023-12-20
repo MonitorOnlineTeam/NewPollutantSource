@@ -20,7 +20,7 @@ export async function EditFaultUnit(params) {
  
 //  删除
 export async function DelFaultUnit(params) {
-  const result = await post(API.AssetManagementApi.DeleteFaultUnitInfo,params, null);
+  const result = await post(`${API.AssetManagementApi.DeleteFaultUnitInfo}?ID=${params.ID}`,null, null);
   return result;
 }
 

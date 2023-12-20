@@ -19,7 +19,7 @@ export async function EditEquipmentInfo(params) {
  
 // 设备信息  删除
 export async function DelEquipmentInfo(params) {
-  const result = await post(API.AssetManagementApi.DeleteEquipmentInfo,params, null);
+  const result = await post(`${API.AssetManagementApi.DeleteEquipmentInfo}?ID=${params.ID}`,null, null);
   return result;
 }
 //  获取监测类别

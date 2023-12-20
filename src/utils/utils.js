@@ -560,3 +560,15 @@ export function deepCloneTree(tree) {
     
   return clone;  
 }
+// 根据端口获取系统名称
+export function getSysName(systemName) {
+  const sysName = JSON.parse(systemName);
+  const { NODE_ENV } = process.env;
+
+  // 生产环境：根据端口匹配系统名称，开发环境：取key为-1的系统名称
+  if (NODE_ENV === 'production') {
+    const port = window.location.port;
+    return sysName[port] ? sysName[port] : sysName[-1];
+  }
+  return sysName[-1];
+}

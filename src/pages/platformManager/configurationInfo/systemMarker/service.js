@@ -20,7 +20,7 @@ export async function EditSystemModel(params) {
  
 // 系统型号  删除
 export async function DelSystemModel(params) {
-  const result = await post(API.AssetManagementApi.DeleteSystemModelInfo,params, null);
+  const result = await post(`${API.AssetManagementApi.DeleteSystemModelInfo}?ID=${params.ID}`,null, null);
   return result;
 }
 // 系统型号 获取监测类别

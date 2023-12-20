@@ -25,7 +25,7 @@ export async function EditManufacturer(params) {
  
 // 设备厂家  删除
 export async function DelManufacturer(params) {
-  const result = await post(API.AssetManagementApi.DeleteEquipmentManufacturerInfo,params, null);
+  const result = await post(`${API.AssetManagementApi.DeleteEquipmentManufacturerInfo}?ID=${params.ID}`,null, null);
   return result;
 }
 

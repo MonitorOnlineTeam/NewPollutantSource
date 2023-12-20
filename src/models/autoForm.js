@@ -500,7 +500,7 @@ export default Model.extend({
             uid: item.Guid,
             name: item.FileName,
             status: 'done',
-            url: `${item.Url}`,
+            url: `/${item.Url}`,
           }));
           yield update({
             fileList,

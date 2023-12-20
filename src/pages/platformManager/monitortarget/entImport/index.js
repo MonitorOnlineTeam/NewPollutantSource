@@ -370,7 +370,7 @@ export default class EntImport extends Component {
     if (info.file.status === 'uploading') {
       this.setState({ importLoading:true,saveDisabled:true, errorText:'' })
     }
-    if (info.file.status === 'done') {
+    if (info.file.status === 'done'&&info.file.response?.IsSuccess) {
       message.success(`${info.file.name}上传成功`);
 
       let data = info.file.response.Datas;

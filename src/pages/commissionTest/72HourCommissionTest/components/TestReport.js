@@ -75,9 +75,9 @@ const Index = (props) => {
 
   return (
     <div className={styles.testReportContentSty}>
-    <Spin spinning={testReportLoading} tip={`生成${reportType==1?'Word':'Pdf' }检测报告中...`}  style={{height:'calc(100vh - 240px)'}}>
-      <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading1} style={{ marginRight: 10 }} onClick={()=>{testReportClick(1)}}>生成Word检测报告</Button>
-      <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading2} style={{ marginRight: 10 }} onClick={()=>{testReportClick(2)}}>生成Pdf检测报告</Button>
+    <Spin spinning={testReportLoading} tip={`生成${reportType==1?'WORD':'PDF' }检测报告中...`}  style={{height:'calc(100vh - 240px)'}}>
+      <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading1} style={{ marginRight: 10 }} onClick={()=>{testReportClick(1)}}>生成WORD检测报告</Button>
+      <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading2} style={{ marginRight: 10 }} onClick={()=>{testReportClick(2)}}>生成PDF检测报告</Button>
     </Spin>
     </div>
   );

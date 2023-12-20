@@ -170,14 +170,10 @@ export async function getentandpoint(params) {
 }
 // 获取当前部门的排口
 export async function getpointbydepid(params, isUser) {
-  const body = {
-    UserGroup_ID: params.UserGroup_ID,
-    PollutantType: params.PollutantType,
-  };
+  const par = `?UserGroup_ID=${params.UserGroup_ID}&&PollutantType=${params.PollutantType}`
   const result = post(
-    isUser? API.AssetManagementApi.GetUserPointAuthorizeList :  API.AssetManagementApi.GetPointByDepIDBW,
-    // `/api/rest/PollutantSourceApi/AuthorApi/${isUser ? 'GetPointByDepID' : 'GetPointByDepIDBW'}`,
-    body,
+    isUser? `${API.AssetManagementApi.GetUserPointAuthorizeList}${par}` :  `${API.AssetManagementApi.GetUserPointAuthorizeListBW}${par}`,
+    null,
     null,
   );
   return result === null
