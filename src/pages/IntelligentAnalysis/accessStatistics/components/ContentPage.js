@@ -505,7 +505,7 @@ export default class EntTransmissionEfficiency extends Component {
             </Form.Item>
             <Form.Item>
             <Spin spinning={industryBusinessLoading} size='small'>
-            <Select placeholder='请选择售业务属性'  value={queryPar.Business}  allowClear onChange={this.afterSaleChange} style={{width:180}}>
+            <Select placeholder='请选择售后业务属性'  value={queryPar.Business}  allowClear onChange={this.afterSaleChange} style={{width:180}}>
               {
                 businessList.map(item=>{
                 return<Option value={item.code} key={item.code}>{item.name}</Option>

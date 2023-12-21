@@ -847,8 +847,8 @@ export default Model.extend({
       };
       const result = yield call(services.exportHistoryReport, postData);
       if (result.IsSuccess) {
-        window.open(result.Datas);
-        message.success('导出成功');
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message);
       }

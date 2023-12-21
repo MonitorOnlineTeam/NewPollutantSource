@@ -84,8 +84,8 @@ export default Model.extend({
     *exportReport({ payload, callback }, { call, put, update, select }) {
       const result = yield call(exportReport, payload);
       if (result.IsSuccess) {
-        window.open(result.Datas);
-        message.success('导出成功');
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message);
       }

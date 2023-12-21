@@ -14,18 +14,6 @@ export async function GetTransmissionEfficiencyForRegion(params) {
 
   return result;
 }
-
-//传输有效率  排口
-
-export async function GetTransmissionEfficiencyForPoint(params) {
-  const result = post(
-    API.WholeProcessMonitorApi.GetTransmissionEfficiencyRateList,
-    params,
-    null,
-  );
-
-  return result;
-}
 //传输有效率  企业
 
 export async function GetTransmissionEfficiencyForEnt(params) {
@@ -38,6 +26,17 @@ export async function GetTransmissionEfficiencyForEnt(params) {
   return result;
 }
 
+//传输有效率  排口
+
+export async function GetTransmissionEfficiencyForPoint(params) {
+  const result = post(
+    API.WholeProcessMonitorApi.GetTransmissionEfficiencyRateList,
+    params,
+    null,
+  );
+
+  return result;
+}
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
@@ -50,7 +49,7 @@ export async function GetEntByRegion(params) {
 export async function ExportTransmissionEfficiencyForRegion(params) {
   const result = post(
     API.WholeProcessMonitorApi.ExportTransmissionEfficiencyRateList,
-    params,
+    {...params,regionLevel:1},
     null,
   );
 
@@ -62,7 +61,7 @@ export async function ExportTransmissionEfficiencyForRegion(params) {
 export async function ExportTransmissionEfficiencyForEnt(params) {
   const result = post(
     API.WholeProcessMonitorApi.ExportTransmissionEfficiencyRateList,
-    params,
+    {...params,regionLevel:2},
     null,
   );
 

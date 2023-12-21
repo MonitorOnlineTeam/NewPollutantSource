@@ -98,7 +98,7 @@ export default Model.extend({
         });
       }
     },
-    *getQutletData({ payload }, { call, put, update, select }) {
+    *getTransmissionEfficiencyForEnt({ payload }, { call, put, update, select }) {
       //企业
       const response = yield call(GetTransmissionEfficiencyForEnt, { ...payload });
       if (response.IsSuccess) {
@@ -108,7 +108,7 @@ export default Model.extend({
         });
       }
     },
-    *getTransmissionEfficiencyForEnt({ payload }, { call, put, update, select }) {
+    *getTransmissionEfficiencyForPoint({ payload }, { call, put, update, select }) {
       //排口
       const response = yield call(GetTransmissionEfficiencyForPoint, { ...payload });
       if (response.IsSuccess) {

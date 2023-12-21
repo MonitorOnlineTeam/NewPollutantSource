@@ -2078,29 +2078,25 @@ export default {
                       component: './platformManager/dataReport/components/dataReportView',
                     },
                   ],
-                }, // {
-                //   name: 'Intelligentanalysis',
-                //   path: '/Intelligentanalysis/transmissionefficiency',
-                //   component: './Intelligentanalysis/transmissionefficiency/entIndex',
-                // },
+                },
                 {
                   name: 'ChaoStatistic',
                   path: '/Intelligentanalysis/chaoStatistics',
                   component: './IntelligentAnalysis/chaoStatistics',
                 },
-                //质控数据总览 重定向
+                //传输有效率 行政区级别
+                {
+                  name: 'Intelligentanalysis',
+                  path: '/Intelligentanalysis/transmissionefficiency',
+                  component: './Intelligentanalysis/newTransmissionefficiency',
+                },
+                //传输有效率 城市级别
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency/cityLevel',
                   component: './Intelligentanalysis/newTransmissionefficiency/CityLevel',
                 },
-                //传输有效率 城市级别
-
-                {
-                  name: 'Intelligentanalysis',
-                  path: '/Intelligentanalysis/transmissionefficiency',
-                  component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
-                },
+                //传输有效率 企业级别
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
@@ -2928,7 +2924,7 @@ export default {
                   routes: [
                     {
                       path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate',
-                      redirect:'/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                      redirect: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
                     },
                     {
                       // 核实率

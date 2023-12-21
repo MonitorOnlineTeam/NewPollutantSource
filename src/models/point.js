@@ -14,7 +14,7 @@ import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentNam
     AddPointParamInfo,GetParamInfoList,GetParamCodeList,
     GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetMonitoringTypeList,
     GetManufacturerList,GetSystemModelList,GetPollutantById,GetPollutantById2,GetEquipmentInfoList,GetMonitoringTypeList2,
-    GetMonitoringCategoryType,GetPBList,PointSort,GetPointCoefficientByDGIMN,GetPointElectronicFenceInfo,AddOrUpdatePointElectronicFenceInfo,
+    GetMonitoringCategoryType,GetPBList,PointSort,AddOrEditPointCoefficient,GetPointCoefficientByDGIMN,GetPointElectronicFenceInfo,AddOrUpdatePointElectronicFenceInfo,
     UpdatePointOprationStatus,GetOprationStatusList,
     
 } from '@/services/pointApi'; 
@@ -466,6 +466,15 @@ export default Model.extend({
               message.error(result.Message)
             }
           },
+          *addOrEditPointCoefficient({ payload,callback }, { call, put, update }) { //添加或修改监测点系数
+            const result = yield call(AddOrEditPointCoefficient, {...payload,ID:payload.ID? payload.ID : ''});
+            if (result.IsSuccess) {
+              message.success(result.Message)
+              callback&&callback()
+            }else{
+              message.error(result.Message)
+            }
+          }, 
           *getPointElectronicFenceInfo({ payload, callback }, { call, put, update }) { //获取电子围栏半径
             const result = yield call(GetPointElectronicFenceInfo, payload);
             if (result.IsSuccess) {

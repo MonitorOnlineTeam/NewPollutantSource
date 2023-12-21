@@ -89,8 +89,8 @@ export default Model.extend({
         });
       }
     },
-    *getQutletData({ payload }, { call, put, update, select }) {
-            //行政区
+    *getTransmissionEfficiencyForEnt({ payload }, { call, put, update, select }) {
+            //企业
             const {
               operationpersonnel,
             } = yield select(state => state.newtransmissionefficiency);
@@ -107,7 +107,7 @@ export default Model.extend({
         });
       }
     },
-    *getTransmissionEfficiencyForEnt({ payload }, { call, put, update, select }) {
+    *getTransmissionEfficiencyForPoint({ payload }, { call, put, update, select }) {
       const {
         operationpersonnel,
       } = yield select(state => state.newtransmissionefficiency);

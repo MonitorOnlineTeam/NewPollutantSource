@@ -39,7 +39,7 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
-  getData: 'newtransmissionefficiency/getQutletData',
+  getData: 'newtransmissionefficiency/getTransmissionEfficiencyForPoint',
 };
 const content = <div>当有效传输率未到达90%时判定为未达标</div>;
 @connect(({ loading, newtransmissionefficiency }) => ({
@@ -115,7 +115,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...queryPar,regionLevel:3 },
     });
   };
 
@@ -176,7 +176,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForEnt',
-      payload: {...queryPar},
+      payload: {...queryPar, regionLevel:3},
       callback: data => {
         downloadFile(data);
       },
@@ -223,7 +223,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       });
       dispatch({
-        type: 'newtransmissionefficiency/getTransmissionEfficiencyForEnt',
+        type: 'newtransmissionefficiency/getTransmissionEfficiencyForPoint',
         payload: { ...priseQueryPar },
       });
     });

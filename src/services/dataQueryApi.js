@@ -27,7 +27,7 @@ export async function exportDataAuditReport(params) {
 
 // 导出历史数据报表
 export async function exportHistoryReport(params) {
-  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/ExportAllTypeDataList', params, null);
+  const result = await post(API.WholeProcessMonitorApi.ExportAllTypeDataList, params, null);
   return result;
 }
 

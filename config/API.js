@@ -116,6 +116,7 @@ export const API = {
     AllTypeSummaryList: before + '/MonBasicDataApi/AllTypeSummaryList', //获取获取站点基本信息、在线状态、报警状态、最新一条小时监测数据，包括污染源、空气质量
     /*在线监测数据*/
     GetAllTypeDataList: before + '/MonBasicDataApi/GetAllTypeDataList',//获取各种类型的数据列表（实时、分钟、小时、日均）
+    ExportAllTypeDataList: before + '/MonBasicDataApi/ExportAllTypeDataList',//导出各种类型的数据列表（实时、分钟、小时、日均）
     /**质控数据总览**/
     /*有效传输率排名*/
     GetTransmissionEfficiencyRateList: before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyRateList',//获取省、市、监测点有效传输率统计信息
@@ -126,7 +127,8 @@ export const API = {
     GetUserAccessInfo: before + '/SystemAccessApi/GetUserAccessInfo',//获取用户访问率
     ExportUserAccessInfo: before + '/SystemAccessApi/ExportUserAccessInfo',//导出用户访问率
     GetIndustryAttributeInfo: before + '/SystemAccessApi/GetIndustryAttributeInfo',//获取业务属性和行业属性
-    ExportPlatformAnalysisReport: before + '/SystemAccessApi/ExportPlatformAnalysisReport',//导出平台分析报告
+    /*平台分析报告*/
+    ExportPlatformAnalysisReport: before + '/WorkOrderStatistics/ExportPlatformAnalysisReport',//导出平台分析报告
     /*站点数据总览*/
     GetDayReport: before + '/MonBasicDataApi/GetDayReport',//获取站点日报报表
     GetMonthReport: before + '/MonBasicDataApi/GetMonthReport',//获取站点月报报表
@@ -256,15 +258,6 @@ export const API = {
     /*异常数据报警 异常报警响应率*/
     GetExceptionAlarmResponseRateList: before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseRateList',//获取异常数据报警和报警响应率信息
     ExportExceptionAlarmResponseRateList: before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseRateList',//导出异常数据报警和报警响应率信息
-    // GetCityExceptionDataAlaramList: before + '/ExceptionDataApi/GetCityExceptionDataAlaramList',//获取市级异常数据报警和报警响应率信息
-    // ExportCityExceptionDataAlaramList: before + '/ExceptionDataApi/ExportProvinceExceptionDataAlaramList',//导出市级异常数据报警和报警响应率信息
-    // GetEntExceptionDataAlaramList: before + '/ExceptionDataApi/GetEntExceptionDataAlaramList',//获取企业异常数据报警和报警响应率信息
-    // ExportEntExceptionDataAlaramList: before + '/ExceptionDataApi/ExportEntExceptionDataAlaramList',//导出企业异常数据报警和报警响应率信息
-    // /*异常报警响应率*/
-    // GetExceptionAlarmRateListForRegion: before + '/ExceptionResponseRateApi/GetExceptionAlarmRateListForRegion',//获取省级异常报警响应率信息
-    // ExportExceptionAlarmRateListForRegion: before + '/ExceptionResponseRateApi/ExportExceptionAlarmRateListForRegion',//导出省级异常报警响应率信息
-    // GetExceptionAlarmRateListForPoint: before + '/ExceptionResponseRateApi/GetExceptionAlarmRateListForPoint',//获取监测点异常报警响应率信息
-    // ExportExceptionAlarmRateListForPoint: before + '/ExceptionResponseRateApi/ExportExceptionAlarmRateListForPoint',//导出监测点异常报警响应率信息
     /*停运记录分析*/
     GetStopList: before + '/OutputStopApi/GetStopList',//获取停运记录
     ExportStopList: before + '/OutputStopApi/ExportStopList',//导出停运记录
@@ -408,11 +401,12 @@ export const API = {
     CompanyOperationBasictemplate: `/wwwroot/BaseDataUpload/Report/公司运维基础数据模板.xlsm`,//企业模板下载 
     VerificationImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//导入企业信息
     ImportEntInfo: before + '/EnterpriseApi/ImportEntInfo',//保存导入企业信息
+    GetEnterpriseCorporationCode: before + '/EnterpriseApi/GetEnterpriseCorporationCode', //获取企业厂界信息
     AddPoint: before + '/MonitorPointApi/AddPoint', //添加监测点
     UpdatePoint: before + '/MonitorPointApi/UpdatePoint', //更新监测点
     DeletePoints: before + '/MonitorPointApi/DeletePoints', //删除监测点
+    AddOrUpdatePointCoefficientInfo: before + '/MonitorPointApi/AddOrUpdatePointCoefficientInfo',//添加更新监测点系数
     CreateQRCode: before + '/MonitorPointApi/CreateQRCode', //获取企业下各个监测点的二维码信息
-    GetEnterpriseCorporationCode: before + '/EnterpriseApi/GetEnterpriseCorporationCode', //获取企业厂界信息
     GetPointProjectRelationList: before + '/EnterpriseApi/GetPointProjectRelationList', //获取监测设备运维信息
     ExportPointProjectRelationList: before + '/EnterpriseApi/ExportPointProjectRelationList', //导出监测设备运维信息
     AddOrUpdatePointProjectRelationInfo: before + '/EnterpriseApi/AddOrUpdatePointProjectRelationInfo', //添加更新监测设备运维信息
@@ -421,6 +415,7 @@ export const API = {
     GetMonitorPointVerificationList: before + '/MonitorPointApi/GetMonitorPointVerificationList', //获取数据核查项码表
     GetMonitorPointVerificationItem: before + '/MonitorPointApi/GetMonitorPointVerificationItem', //获取监测点数据核查信息
     AddPointVerificationItem: before + '/MonitorPointApi/AddPointVerificationItem', //添加更新监测点数据核查项
+    GetPointSystemInfo: before + '/MonitorPointApi/GetPointSystemInfo', //获取监测点系统信息
     GetParamInfoList: before + '/MonitorPointApi/GetParamInfoList', //获取设备参数项信息
     GetEquipmentParameterItem: before + '/MonitorPointApi/GetEquipmentParameterItem', //获取设备参数类别信息
     AddPointParamItem: before + '/MonitorPointApi/AddPointParamItem', //添加设备参数信息

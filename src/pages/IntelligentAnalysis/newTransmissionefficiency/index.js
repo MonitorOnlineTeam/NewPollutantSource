@@ -100,6 +100,7 @@ export default class EntTransmissionEfficiency extends Component {
   getTableData = () => {
     this.props.dispatch({
       type: pageUrl.getData,
+      payload:{regionLevel:1}
     });
   };
 
@@ -190,6 +191,7 @@ export default class EntTransmissionEfficiency extends Component {
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForRegion',
       payload: {
+        regionLevel:1,
         callback: data => {
           downloadFile(data);
         },
@@ -207,6 +209,7 @@ export default class EntTransmissionEfficiency extends Component {
   queryClick = () => {
     this.props.dispatch({
       type: pageUrl.getData,
+      payload:{regionLevel:1}
     });
   };
 

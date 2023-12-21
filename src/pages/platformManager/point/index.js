@@ -74,7 +74,7 @@ let pointConfigIdEdit = '';
   addPointParamInfoLoading: loading.effects['point/addPointParamInfo'],
   getParamInfoListLoading: loading.effects['point/getParamInfoList'] || false,
   getPointCoefficientListLoading: loading.effects[`point/getPointCoefficientByDGIMN`] || false,
-  addOrEditPointCoefficientLoading: loading.effects['operaAchiev/addOrEditPointCoefficient'],
+  addOrEditPointCoefficientLoading: loading.effects['point/addOrEditPointCoefficient'],
   getPointElectronicFenceInfoLoading: loading.effects[`point/getPointElectronicFenceInfo`] || false,
   addOrUpdatePointElectronicFenceInfoLoading:
     loading.effects['point/addOrUpdatePointElectronicFenceInfo'],
@@ -348,7 +348,7 @@ export default class MonitorPoint extends Component {
         return;
       }
       dispatch({
-        type: 'operaAchiev/addOrEditPointCoefficient',
+        type: 'point/addOrEditPointCoefficient',
         payload: {
           DGIMN: FormData['dbo.T_Cod_MonitorPointBase.DGIMN'] || FormData['DGIMN'],
           Coefficient: this.state.pointCoefficientVal,
@@ -703,9 +703,10 @@ export default class MonitorPoint extends Component {
     //监测点系数
 
     const { pointCoefficientFlag } = this.state;
+    const { getPointCoefficientListLoading } = this.props;
 
     return (
-      <Spin spinning={this.props.getPointCoefficientListLoading}>
+      <Spin spinning={getPointCoefficientListLoading}>
         <div className={styles.pointCoefficientSty}>
           <Form.Item label="监测点系数" className="inputSty">
             <InputNumber
@@ -715,7 +716,7 @@ export default class MonitorPoint extends Component {
               placeholder="请输入"
               onChange={this.pointCoefficientChange}
             />
-            {pointCoefficientFlag && (
+            {(!getPointCoefficientListLoading) && pointCoefficientFlag && (
               <span style={{ paddingLeft: 10 }} className="red">
                 如需修改系数，请联系管理员
               </span>

@@ -239,8 +239,8 @@ export async function AddPointParamInfo(params) { //添加设备参数项
 
 
 /*******监测点设备管理  ***** */
-export async function GetPointEquipmentInfo(params) { //获取站点设备信息
-    const result = await post(API.AssetManagementApi.GetPointEquipmentInfo, params, null);
+export async function GetPointEquipmentInfo(params) { //获取站点系统信息
+    const result = await post(API.AssetManagementApi.GetPointSystemInfo, params, null);
     return result;
 }
 
@@ -249,7 +249,7 @@ export async function AddOrUpdateEquipmentInfo(params) { //添加或者修改设
     return result;
 }
 
-export async function GetPointEquipmentParameters(params) { //列表显示
+export async function GetPointEquipmentParameters(params) { //获取站点设备信息
     const result = await post(API.AssetManagementApi.GetPointEquipmentInfo, params, null);
     return result;
 }
@@ -273,7 +273,7 @@ export async function GetSystemModelList(params) { //系统型号
 
 
 export async function GetEquipmentInfoList(params) { //设备信息
-    const result = await post(API.CommonApi.GetPollutantTypeMonitoringCategoryInfo,params, null);
+    const result = await post(API.AssetManagementApi.GetEquipmentList,params, null);
     return result;
 }
 
@@ -314,6 +314,11 @@ export async function GetPointCoefficientByDGIMN(params) {   //获取监测点�
     return result;
 }
 
+//添加或修改监测点系数
+export async function AddOrEditPointCoefficient(params) {
+    const result = await post(API.AssetManagementApi.AddOrUpdatePointCoefficientInfo,params, null);
+    return result;
+  }
 
 export async function GetPointElectronicFenceInfo(params) {   //获取电子围栏半径
     const result = await post(API.AssetManagementApi.GetPointElectronicFenceInfo, params, null);
