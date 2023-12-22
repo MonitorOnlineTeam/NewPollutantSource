@@ -20,6 +20,6 @@ export async function EditOnlineTimerManage(params) {
  
 // 定时器  删除
 export async function DelOnlineTimerManage(params) {
-  const result = await post(API.AssetManagementApi.DelOnlineTimerManage,params, null);
+  const result = await post(`${API.AssetManagementApi.DelOnlineTimerManage}?ID=${params.ID}`,null, null);
   return result;
 }

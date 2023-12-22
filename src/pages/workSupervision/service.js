@@ -450,7 +450,7 @@ export async function GetStagingInspectorRectificationList(params) {
 // 数据报警列表
 export async function GetWorkAlarmPushList(params) {
   const result = await post(
-    API.WorkStageApi.ApiGetWorkAlarmPushList,
+    API.WorkStageApi.GetWorkAlarmPushList,
     params,
   );
   return result;

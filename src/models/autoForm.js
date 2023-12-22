@@ -10,6 +10,7 @@ import config from '@/config';
 import moment from 'moment';
 import * as services from '@/services/autoformapi';
 import * as commonServices from '@/services/commonApi';
+import { downloadFile } from '@/utils/utils';
 
 function getQueryParams(state, payload) {
   const group = [];
@@ -548,8 +549,8 @@ export default Model.extend({
       const postData = getQueryParams(state, payload);
       const result = yield call(services.exportDataExcel, { ...postData, ...payload });
       if (result.IsSuccess) {
-        console.log('suc=', result);
-        result.Datas && window.open(result.Datas);
+        message.success('下载成功');
+        result.Datas && downloadFile(`${result.Datas}`);
       } else {
         message.error(result.reason);
       }
@@ -558,7 +559,7 @@ export default Model.extend({
     *exportTemplet({ payload }, { call, update }) {
       const result = yield call(services.exportTemplet, { ...payload });
       if (result.IsSuccess) {
-        result.Datas && window.open(result.Datas);
+        result.Datas && downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message);
       }

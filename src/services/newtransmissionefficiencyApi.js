@@ -49,7 +49,7 @@ export async function GetEntByRegion(params) {
 export async function ExportTransmissionEfficiencyForRegion(params) {
   const result = post(
     API.WholeProcessMonitorApi.ExportTransmissionEfficiencyRateList,
-    {...params,regionLevel:1},
+    params,
     null,
   );
 
@@ -61,7 +61,7 @@ export async function ExportTransmissionEfficiencyForRegion(params) {
 export async function ExportTransmissionEfficiencyForEnt(params) {
   const result = post(
     API.WholeProcessMonitorApi.ExportTransmissionEfficiencyRateList,
-    {...params,regionLevel:2},
+    params,
     null,
   );
 

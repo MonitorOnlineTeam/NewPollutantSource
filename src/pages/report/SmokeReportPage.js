@@ -621,7 +621,9 @@ class SmokeReportPage extends PureComponent {
               </Select>
               </FormItem>
               <label>企业列表:</label><Select
+                showSearch
                 allowClear
+                optionFilterProp="children"
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="企业列表"
                 maxTagCount={2}
@@ -648,7 +650,9 @@ class SmokeReportPage extends PureComponent {
               
               <Row align='middle' style={{ marginTop: 10 }}>
                 <label>监测点:</label><Select
+                  showSearch
                   allowClear
+                  optionFilterProp="children"
                   style={{ width: 200, marginLeft: 10}}
                   placeholder="监测点列表"
                   maxTagCount={2}

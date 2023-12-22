@@ -499,7 +499,7 @@ export const API = {
     GetOriginalData: before + '/MonBasicDataApi/GetOriginalData',//获取原始数据包信息
     /*定时器管理*/
     GetOnlineTimerManageList: before + '/OnlineTimerManage/GetOnlineTimerManageList',//获取定时器信息
-    AddOnlineTimerManage: before + '/OnlineTimerManage/GetOnlineTimerManageList',//添加定时器信息
+    AddOnlineTimerManage: before + '/OnlineTimerManage/AddOnlineTimerManage',//添加定时器信息
     EditOnlineTimerManage: before + '/OnlineTimerManage/EditOnlineTimerManage',//更新定时器信息
     DelOnlineTimerManage: before + '/OnlineTimerManage/DelOnlineTimerManage',//删除定时器信息
     /*新老协议转换管理*/

@@ -72,6 +72,7 @@ class DateReportPage extends PureComponent {
     // 获取污染物 - 查询条件
     this.props.dispatch({
       type: 'report/getPollutantTypeList',
+      payload:{},
       callback: data => {
         const defalutVal = this.state.defalutPollCode;
         this.props.dispatch({

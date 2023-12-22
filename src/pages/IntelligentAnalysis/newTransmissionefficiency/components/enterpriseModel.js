@@ -33,7 +33,7 @@ const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
-  getData: 'newtransmissionefficiency/getTransmissionEfficiencyForEnt',
+  getData: 'newtransmissionefficiency/getTransmissionEfficiencyForPoint',
 };
 @Form.create()
 @connect(({ loading, newtransmissionefficiency }) => ({
@@ -97,7 +97,7 @@ export default class EnterpriseEfficiency extends Component {
     const { getFieldDecorator } = this.props.form;
     const columns = [
       {
-        title: <span style={{ fontWeight: 'bold' }}>排口类型</span>,
+        title: <span style={{ fontWeight: 'normal' }}>排口类型</span>,
         dataIndex: 'PollutantTypeName',
         key: 'PollutantTypeName',
         align: 'center',
@@ -106,7 +106,7 @@ export default class EnterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>排口名称</span>,
+        title: <span style={{ fontWeight: 'normal' }}>排口名称</span>,
         dataIndex: 'PointName',
         key: 'PointName',
         align: 'center',
@@ -115,7 +115,7 @@ export default class EnterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>应传个数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>应传个数</span>,
         dataIndex: 'ShouldNumber',
         key: 'ShouldNumber',
         align: 'center',
@@ -128,7 +128,7 @@ export default class EnterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>实传个数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>实传个数</span>,
         dataIndex: 'TransmissionNumber',
         key: 'TransmissionNumber',
         align: 'center',
@@ -158,7 +158,7 @@ export default class EnterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效个数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效个数</span>,
         dataIndex: 'TransmissionNumber',
         key: 'TransmissionNumber',
         align: 'center',
@@ -187,7 +187,7 @@ export default class EnterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>传输率</span>,
         dataIndex: 'TransmissionRate',
         key: 'TransmissionRate',
         align: 'center',
@@ -218,7 +218,7 @@ export default class EnterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效率</span>,
         dataIndex: 'EffectiveRate',
         key: 'EffectiveRate',
         align: 'center',
@@ -250,7 +250,7 @@ export default class EnterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效传输率</span>,
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
@@ -330,7 +330,6 @@ export default class EnterpriseEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={columns}
-              bordered={false}
               // onChange={this.handleTableChange}
               scroll={{ y: 'calc(100vh - 450px)' }}
               size="small" // small middle

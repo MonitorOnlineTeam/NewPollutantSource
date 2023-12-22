@@ -482,6 +482,8 @@ class AutoFormTable extends PureComponent {
       payload: {
         configId,
         IsPaging: false,
+        pageIndex:undefined,
+        pageSize:undefined,
         // ...conditionWhere
       },
     });

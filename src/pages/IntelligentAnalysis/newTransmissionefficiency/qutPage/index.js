@@ -230,8 +230,8 @@ export default class EntTransmissionEfficiency extends Component {
         },
       });
       dispatch({
-        type: 'newtransmissionefficiency/getTransmissionEfficiencyForEnt',
-        payload: { ...priseQueryPar },
+        type: 'newtransmissionefficiency/getTransmissionEfficiencyForPoint',
+        payload: { ...priseQueryPar,regionLevel:4 },
       });
     });
   };
@@ -253,7 +253,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     const columns = [
       {
-        title: <span style={{ fontWeight: 'bold' }}>行政区</span>,
+        title: <span style={{ fontWeight: 'normal' }}>行政区</span>,
         dataIndex: 'RegionName',
         key: 'RegionName',
         // width: '20%',
@@ -263,7 +263,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>考核企业名称</span>,
+        title: <span style={{ fontWeight: 'normal' }}>考核企业名称</span>,
         dataIndex: 'EntName',
         key: 'EntName',
         align: 'center',
@@ -277,7 +277,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>考核监测点数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>考核监测点数</span>,
         dataIndex: 'CountPoint',
         key: 'CountPoint',
         sorter: (a, b) => a.CountPoint - b.CountEnt,
@@ -289,7 +289,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效率</span>,
         dataIndex: 'EffectiveRate',
         key: 'EffectiveRate',
         // width: '10%',
@@ -318,7 +318,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>传输率</span>,
         dataIndex: 'TransmissionRate',
         key: 'TransmissionRate',
         sorter: (a, b) => a.TransmissionRate - b.TransmissionRate,
@@ -350,7 +350,7 @@ export default class EntTransmissionEfficiency extends Component {
       },
       ,
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效传输率</span>,
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
@@ -509,7 +509,6 @@ export default class EntTransmissionEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={columns}
-              bordered={false}
               onChange={this.handleTableChange}
               dataSource={this.props.tableDatas}
               // scroll={{ y: 550 }}

@@ -155,6 +155,7 @@ export default Model.extend({
         EntCode: entCode,
         Assessment:assessment,
         OperationPersonnel:operationpersonnel,
+        ...payload
       };
       const response = yield call(ExportTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {
