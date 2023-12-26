@@ -75,7 +75,7 @@ class Login extends Component {
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
       }
-      // dispatch({ //宝武 239
+      // dispatch({ //宝武平台和239平台
       //   type: 'userLogin/login',
       //   payload: {
       //     ...values,

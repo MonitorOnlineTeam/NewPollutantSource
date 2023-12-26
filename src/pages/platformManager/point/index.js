@@ -703,9 +703,9 @@ export default class MonitorPoint extends Component {
     //监测点系数
 
     const { pointCoefficientFlag } = this.state;
-
+    const { getPointCoefficientListLoading } = this.props;
     return (
-      <Spin spinning={this.props.getPointCoefficientListLoading}>
+      <Spin spinning={getPointCoefficientListLoading}>
         <div className={styles.pointCoefficientSty}>
           <Form.Item label="监测点系数" className="inputSty">
             <InputNumber
@@ -715,7 +715,7 @@ export default class MonitorPoint extends Component {
               placeholder="请输入"
               onChange={this.pointCoefficientChange}
             />
-            {pointCoefficientFlag && (
+            {(!getPointCoefficientListLoading) && pointCoefficientFlag && (
               <span style={{ paddingLeft: 10 }} className="red">
                 如需修改系数，请联系管理员
               </span>
