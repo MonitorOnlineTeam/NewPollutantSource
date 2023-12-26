@@ -21,13 +21,14 @@ export default Model.extend({
       /** 逻辑删除运维系统设置 */
       * DeleteOperationSys({
         payload,
+        callback
       }, {
         call, put,
       }) {
         const result = yield call(DeleteOperationSys, {
           ...payload,
         });
-        if (result.IsSuccess && result.Datas) {
+        if (result.IsSuccess) {
           yield put({
           type: 'autoForm/getAutoFormData',
           payload: {
@@ -35,6 +36,7 @@ export default Model.extend({
             searchParams: payload.searchParams ? payload.searchParams : '',
           },
         })
+        callback&&callback()
         }
       },
        /** 添加停产 */

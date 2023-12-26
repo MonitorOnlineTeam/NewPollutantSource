@@ -274,9 +274,6 @@ class Index extends Component {
             callback:()=>{
                 this.setState({
                     confirmLoading:false
-                },()=>{
-                    // this.props.cancelAlarmModal();
-
                 })
             }
         });

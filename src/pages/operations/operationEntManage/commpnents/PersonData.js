@@ -892,7 +892,11 @@ export default class PersonData extends Component {
             // valuePropName: 'fileList',
             getValueFromEvent: this.normFileWater,
           })( 
-            <Upload name="logo" className='certificatePhoto' action={API.UploadApi.UploadFiles}
+            <Upload 
+            name="file" 
+            className='certificatePhoto'
+            action={API.UploadApi.UploadFiles}
+            headers={{Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)}}
             accept='image/*'
             fileList={waterPhoto}
             data={{

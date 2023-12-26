@@ -2,7 +2,7 @@ import { post, get, getNew } from '@/utils/request';
 import { API } from '@config/API'
 //列表
 export async function GetStandardGasList(params) {
-  const result = await post(API.AssetManagementApi.GetStandardGasList,params, null);
+  const result = await post(API.AssetManagementApi.GetReferenceMaterialsList,params, null);
   return result;
 }
 // 添加

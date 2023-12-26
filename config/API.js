@@ -97,7 +97,7 @@ export const API = {
   },
   //工作台Api
   WorkStageApi: {
-    GetStagingInspectorRectificationList: before + '/OperationWorkbenchApi/GetStagingInspectorRectificationList',//获取运维服务信息
+    GetStagingInspectorRectificationList: before + '/SystemFacilityVerification/GetStagingInspectorRectificationList',//获取运维服务信息
     GetWorkAlarmPushList: before + '/OperationWorkbenchApi/GetWorkAlarmPushList',//获取数据报警信息
     UpdateWorkPushStatus: before + '/OperationWorkbenchApi/UpdateWorkPushStatus',//删除数据报警信息
     UpdateAllWorkPushStatus: before + '/OperationWorkbenchApi/UpdateAllWorkPushStatus',//删除所有数据报警信息
@@ -249,12 +249,8 @@ export const API = {
     GetMissDataResponseRateList: before + '/ExceptionAlarmApi/GetMissDataResponseRateList',//获取缺失数据报警和响应率信息
     ExportMissDataResponseRateList: before + '/ExceptionAlarmApi/ExportMissDataResponseRateList',//导出缺失数据报警和响应率信息
     /*异常数据分析*/
-    GetExceptionList: before + '/ExceptionDataApi/GetExceptionList',//获取省级异常数据信息
-    ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList',//导出省级异常数据信息
-    GetExceptionCityList: before + '/ExceptionDataApi/GetExceptionCityList',//获取市级异常数据信息
-    ExportExceptionCityList: before + '/ExceptionDataApi/ExportExceptionCityList',//导出市级异常数据信息
-    GetExceptionPointList: before + '/ExceptionDataApi/GetExceptionPointList',//获取监测点异常数据信息
-    ExportExceptionPointList: before + '/ExceptionDataApi/ExportExceptionPointList',//导出监测点异常数据信息
+    GetExceptionList: before + '/ExceptionDataApi/GetExceptionList',//获取省级、市级、监测点异常数据信息
+    ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList',//导出省级、市级、监测点异常数据信息
     /*异常数据报警 异常报警响应率*/
     GetExceptionAlarmResponseRateList: before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseRateList',//获取异常数据报警和报警响应率信息
     ExportExceptionAlarmResponseRateList: before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseRateList',//导出异常数据报警和报警响应率信息
@@ -402,6 +398,7 @@ export const API = {
     VerificationImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//导入企业信息
     ImportEntInfo: before + '/EnterpriseApi/ImportEntInfo',//保存导入企业信息
     GetEnterpriseCorporationCode: before + '/EnterpriseApi/GetEnterpriseCorporationCode', //获取企业厂界信息
+    queryPointForTarget: before + '/MonitorPointApi/queryPointForTarget', //根据批量监控目标id获取监测点(删除监控目标用)
     AddPoint: before + '/MonitorPointApi/AddPoint', //添加监测点
     UpdatePoint: before + '/MonitorPointApi/UpdatePoint', //更新监测点
     DeletePoints: before + '/MonitorPointApi/DeletePoints', //删除监测点
@@ -492,6 +489,8 @@ export const API = {
     ExportCalibrationAccountFillingTypeList: before + '/AccountApi/ExportCalibrationAccountFillingTypeList',//台账填报设置信息 导出
 
     /*** 运维台账 ***/
+    /*运维技术资料库*/
+    DeleteOperationSysTable: before + '/AccountApi/DeleteOperationSysTable',//删除运维技术资料库信息
     /*运维上岗证*/
     GetMaintainersWorkLicenseList: before + '/AccountApi/GetMaintainersWorkLicenseList',//获取运维上岗证信息
     DeleteMaintainersWorkLicenseInfo: before + '/AccountApi/DeleteMaintainersWorkLicenseInfo',//删除运维上岗证信息
@@ -524,7 +523,7 @@ export const API = {
     ImportSparePartsList: before + '/ConsumablesApi/ImportSparePartsList',//导入备品备件编码
     DownLoadSparePartsTemplateInfo: before + '/ConsumablesApi/DownLoadSparePartsTemplateInfo',//下载备品备件编码模板
     /*标准气体编码 试剂信息编码*/
-    GetStandardGasList: before + '/ConsumablesApi/GetStandardGasList',//获取标准气体编码、试剂信息编码
+    GetReferenceMaterialsList: before + '/ConsumablesApi/GetReferenceMaterialsList',//获取标准气体编码、试剂信息编码
     AddReferenceMaterialsInfo: before + '/ConsumablesApi/AddReferenceMaterialsInfo',//添加标准气体编码、试剂信息编码
     UpdateReferenceMaterialsInfo: before + '/ConsumablesApi/UpdateReferenceMaterialsInfo',//更新标准气体编码、试剂信息编码
     DeleteReferenceMaterialsInfo: before + '/ConsumablesApi/DeleteReferenceMaterialsInfo',//删除标准气体编码、试剂信息编码

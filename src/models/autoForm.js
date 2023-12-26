@@ -523,7 +523,7 @@ export default Model.extend({
             uid: item.Guid,
             name: item.FileName,
             status: 'done',
-            url: `${item.Url}`,
+            url: `/${item.Url}`,
           }));
           callback(fileList);
         }
@@ -567,7 +567,7 @@ export default Model.extend({
 
     // 删除导入模板
     *deleteAttach({ payload }, { call, update }) {
-      payload =  {...payload, Guid :payload?.Guid?.split('/')?.[3]?  payload.Guid.split('/')[3] : payload.Guid }
+      payload =  {...payload, Guid :payload.Guid&&payload.Guid.fNameList&&payload.Guid.fNameList[0]?  payload.Guid.fNameList[0].split('/')[2] : payload.Guid }
       const result = yield call(services.deleteAttach, { ...payload });
       if (result.IsSuccess) {
         message.success('删除成功！');

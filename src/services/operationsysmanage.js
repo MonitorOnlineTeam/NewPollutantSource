@@ -1,9 +1,9 @@
 import { post } from '@/utils/request';
 import { API } from '@config/API'
 
-/** 删除车辆信息 */
+/** 删除运维技术资料库信息 */
 export async function DeleteOperationSys(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationSysApi/DeleteOperationSysTable', params, null);
+  const result = await post(API.AssetManagementApi.DeleteOperationSysTable, params, null);
   return result;
 }
 /** 添加停产 */

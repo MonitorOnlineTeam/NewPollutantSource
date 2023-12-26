@@ -217,6 +217,10 @@ const Index = (props) => {
     if (info.file.status === 'error') {
       message.error('上传文件失败！')
     }
+    if(info.file.status === "done" && !(info.file?.response?.IsSuccess)){
+      message.error(info.file.response.Message)
+      setFileList([])
+    }
     },
     onRemove: (file)=>{
         if (!file.error) {

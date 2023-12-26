@@ -179,7 +179,7 @@ export async function deletePoints(params) {
     }
  */
 export async function queryPointForTarget(params) {
-    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/queryPointForTarget', params, null);
+    const result = await post(API.AssetManagementApi.queryPointForTarget, params, null);
     return result;
 }
 // export async function GetComponent(params) {

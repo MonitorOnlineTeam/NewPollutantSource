@@ -53,7 +53,7 @@ export async function querypollutantlist(params) {
  */
 export async function deletePoints(params) {
   // console.log("params=",params);
-  const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/DeletePoints', params, null);
+  const result = await post(API.AssetManagementApi.DeletePoints, params, null);
   return result;
 }
 
@@ -65,7 +65,7 @@ export async function deletePoints(params) {
  */
 export async function queryPointForTarget(params) {
   console.log("params=", params);
-  const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/queryPointForTarget', params, null);
+  const result = await post(API.AssetManagementApi.queryPointForTarget, params, null);
   return result;
 }
 

@@ -393,7 +393,7 @@ const Index = (props) => {
     return <Form
       form={form}
       name="advanced_search"
-      onFinish={() => { onFinish(pageIndex, pageSize) }}
+      onFinish={onFinish}
       initialValues={{
       }}
       className={styles.queryForm}

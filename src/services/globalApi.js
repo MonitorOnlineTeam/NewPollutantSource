@@ -28,7 +28,7 @@ export async function GetAlarmPushDepOrRole(params) {
 //报警关联  选择
 export async function InsertAlarmDepOrRole(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmDepOrRole',
+    API.AssetManagementApi.InsertAlarmDepOrRole,
     params,
     null,
   );

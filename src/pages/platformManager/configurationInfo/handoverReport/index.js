@@ -307,7 +307,7 @@ const Index = (props) => {
             uid: item.GUID,
             name: item.FileName,
             status: 'done',
-            url: `/${item.FileName}`,
+            url: `${config.uploadPrefix}/${item.FileName}`,
           })
         }
       })
@@ -322,7 +322,7 @@ const Index = (props) => {
             uid: item.GUID,
             name: item.FileName,
             status: 'done',
-            url: `/${item.FileName}`,
+            url: `${config.uploadPrefix}/${item.FileName}`,
           })
         }
       })
@@ -337,7 +337,7 @@ const Index = (props) => {
             uid: item.GUID,
             name: item.FileName,
             status: 'done',
-            url: `/${item.FileName}`,
+            url: `${config.uploadPrefix}/${item.FileName}`,
           })
         }
       })

@@ -114,6 +114,7 @@ export default Model.extend({
         callback();
       } else {
         message.error(response.Message);
+        callback();
       }
     },
     /*获取部门详细信息及层级关系**/

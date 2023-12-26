@@ -642,7 +642,7 @@ const Index = (props) => {
 
           <Row>
             <Col span={12}>
-              <Form.Item label="设备品牌" name="EquipmentBrand" rules={[{ required: true, message: '请选择监测类型' }]} >
+              <Form.Item label="设备品牌" name="EquipmentBrand" rules={[{ required: true, message: '请输入设备品牌' }]} >
                 <Input placeholder='请输入设备品牌' allowClear />
               </Form.Item>
 
