@@ -25,7 +25,7 @@ export async function ProjectNumList(params) {
   return result;
 }
 
-//项目编号列表
+//监测点信息
 export async function GetEntPointList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntPointList', params, null);
   return result;
