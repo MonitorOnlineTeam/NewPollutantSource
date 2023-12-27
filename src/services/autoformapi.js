@@ -180,7 +180,7 @@ export async function exportTemplet(params) {
 }
 
 /**
- * 【AutoForm】下载导入模板
+ * 【AutoForm】上传附件
  * @params {"configId": "String"}
  */
 export async function fileUpload(params) {

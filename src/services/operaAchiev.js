@@ -27,7 +27,7 @@ export async function AddOrEditPointCoefficient(params) {
 
 // 根据污染物类型获取工单
 export async function GetRecordTypesByPollutantType(params) {
-  const result = await post(API.PerformanceApi.GeteTaskOrderTypeByPollutantType,params, null);
+  const result = await post(`${API.PerformanceApi.GeteTaskOrderTypeByPollutantType}?PollutantType=${params.pollutantType}`,null, null);
   return result;
 }
  

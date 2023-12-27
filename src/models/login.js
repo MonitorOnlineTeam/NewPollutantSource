@@ -2,6 +2,8 @@ import { parse, stringify } from 'qs';
 import { routerRedux } from 'dva/router';
 import { getSystemLoginConfigInfo, IfSpecial, newLogin, getToken } from '@/services/login';
 import { message } from 'antd';
+import { getSysName } from '../utils/utils';
+
 export function getPageQuery() {
   return parse(window.location.href.split('?')[1]);
 }
@@ -56,7 +58,7 @@ const LoginModel = {
       if (response.IsSuccess) {
         yield put({
           type: 'setConfigInfo',
-          payload: response.Datas,
+          payload: {...response.Datas,SystemName:getSysName(response.Datas?.SystemName)},
         });
       }
       // const { configInfo } = yield select(m => m.login);

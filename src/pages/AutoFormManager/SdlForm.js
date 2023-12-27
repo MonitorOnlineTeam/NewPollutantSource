@@ -489,6 +489,12 @@ class SdlForm extends PureComponent {
               headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
               onChange: info => {
                 if (info.file.status === 'done') {
+                  if(info.file.response?.IsSuccess){
+                    if(info.file.response.Datas?.fNameList?.length<=0){
+                    message.error('上传文件不能为空');
+                    return;
+                    }
+                  }
                   setFieldsValue({ cuid: uid });
                   setFieldsValue({ [fieldName]: uid });
                 } else if (info.file.status === 'error') {

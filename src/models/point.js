@@ -458,7 +458,7 @@ export default Model.extend({
               callback(result.IsSuccess)
             }
           },
-          *getPointCoefficientByDGIMN({ payload, callback }, { call, put, update }) { //监测点排序
+          *getPointCoefficientByDGIMN({ payload, callback }, { call, put, update }) { //获取监测点系数
             const result = yield call(GetPointCoefficientByDGIMN, payload);
             if (result.IsSuccess) {
                 callback&&callback(result.Datas)

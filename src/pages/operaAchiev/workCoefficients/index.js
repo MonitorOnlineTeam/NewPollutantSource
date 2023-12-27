@@ -305,7 +305,7 @@ const Index = (props) => {
               </Select>
              </Form.Item>
             </Spin>
-              <Form.Item label="工单系数" name="Coefficient" rules={[{ required: true, message: '请输入监测点系数' }]}>
+              <Form.Item label="工单系数" name="Coefficient" rules={[{ required: true, message: '请输入工单系数' }]}>
                 <InputNumber placeholder='请输入'  />
               </Form.Item>
               <Form.Item  name="ID" hidden>

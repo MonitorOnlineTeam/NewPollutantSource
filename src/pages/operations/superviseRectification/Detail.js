@@ -17,7 +17,7 @@ import moment from 'moment';
 import { getAttachmentArrDataSource } from '@/utils/utils';
 import styles from "./style.less"
 import Cookie from 'js-cookie';
-import AttachmentView from '@/components/AttachmentView'
+import AttachmentView from '../remoteSupervision/components/AttachmentView'
 import cuid from 'cuid';
 import Lightbox from "react-image-lightbox-rotate";
 import {  API } from '@config/API';
@@ -137,11 +137,12 @@ const Index = (props) => {
 
   }
   const getAttachmentDataSource = (fileInfo) => {
+
     const fileList = [];
     if (fileInfo) {
       fileInfo.split(',').map(item => {
         if (!item.IsDelete) {
-          fileList.push({ name: `${item}`, attach: `${uploadPrefix}/${item}` })
+          fileList.push({ name: `${item}`, attach: `${item}` })
         }
       })
     }
@@ -160,7 +161,7 @@ const Index = (props) => {
   const [rejectTitle, setRejectTitle] = useState(null)
   const reject = (record,type) => { //驳回弹框
     setRejectVisible(true)
-    record.StatusName == '已整改'? setRejectTitle(`整改驳回`) : setRejectTitle(`申诉驳回`)
+    type == 1? setRejectTitle(`整改驳回`) : setRejectTitle(`申诉驳回`)
     form.resetFields();
     setFilesList2([])
     form.setFieldsValue({
@@ -237,7 +238,7 @@ const Index = (props) => {
         render: (text, record) => {
           const attachmentDataSource = getAttachmentDataSource(text);
           return <div>
-            {text && <AttachmentView noDataNoShow dataSource={attachmentDataSource} />}
+            {text && <AttachmentView getPopupContainer={false} popSty={false} dataSource={attachmentDataSource} />}
           </div>
         },
       },
@@ -260,7 +261,7 @@ const Index = (props) => {
         render: (text, record) => {
           const attachmentDataSource = getAttachmentDataSource(text);
           return <div>
-            {text && <AttachmentView noDataNoShow dataSource={attachmentDataSource} />}
+            {text && <AttachmentView getPopupContainer={false} popSty={false} dataSource={attachmentDataSource} />}
           </div>
         },
       },
@@ -365,7 +366,7 @@ const Index = (props) => {
   //     render: (text, record) => {
   //       const attachmentDataSource = getAttachmentDataSource(text);
   //       return   <div>
-  //          {text&&<AttachmentView noDataNoShow dataSource={attachmentDataSource} />}
+  //          {text&&<AttachmentView getPopupContainer={false} popSty={false} dataSource={attachmentDataSource} />}
   //     </div>
   //     },
   //   },
@@ -419,7 +420,7 @@ const Index = (props) => {
   //       render: (text, record) => {
   //         const attachmentDataSource = getAttachmentDataSource(text);
   //         return   <div>
-  //            {text&&<AttachmentView noDataNoShow  dataSource={attachmentDataSource} />}
+  //            {text&&<AttachmentView getPopupContainer={false} popSty={false}  dataSource={attachmentDataSource} />}
   //       </div>
   //       },
   //     },
@@ -467,7 +468,7 @@ const Index = (props) => {
   //       const attachmentDataSource = getAttachmentArrDataSource(infoList && infoList.FilesList);
   //       const obj = {
   //         children: <div>
-  //           <AttachmentView noDataNoShow style={{ marginTop: 10 }} dataSource={attachmentDataSource} />
+  //           <AttachmentView getPopupContainer={false} popSty={false} style={{ marginTop: 10 }} dataSource={attachmentDataSource} />
   //         </div>,
   //         props: {},
   //       };

@@ -49,7 +49,7 @@ export async function GetJzRecord(params) {
 //     const body = {
 //         DGIMN: params.DGIMN,
 //     };
-//     const result = await post(API.PerformanceApi.GeteTaskOrderTypeByPollutantType, body, null);
+//     const result = await post(`${API.PerformanceApi.GeteTaskOrderTypeByPollutantType}?PollutantType=${params.pollutantType}`, body, null);
 //     return result === null ? { Datas: null } : result;
 // }
 

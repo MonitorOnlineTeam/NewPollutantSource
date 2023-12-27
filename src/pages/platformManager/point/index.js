@@ -119,6 +119,7 @@ export default class MonitorPoint extends Component {
       hourPollutantCode: [],
       pointCoefficientVal: '', //监测点系数
       pointCoefficientFlag: false,
+      pointCoefficientID:'',
       deviceManagerGasType: 1,
       dragDatas: [],
       sortTitle: '开启排序',
@@ -352,6 +353,7 @@ export default class MonitorPoint extends Component {
         payload: {
           DGIMN: FormData['dbo.T_Cod_MonitorPointBase.DGIMN'] || FormData['DGIMN'],
           Coefficient: this.state.pointCoefficientVal,
+          ID:this.state.pointCoefficientID,
         },
         callback: () => {
           this.setState({ pointCoefficientFlag: true });
@@ -1006,8 +1008,8 @@ export default class MonitorPoint extends Component {
           createTime3: res && res.CreateTime,
           updUserName3: res && res.UpdUserName,
           updTime3: res && res.UpdTime,
-          pointCoefficientFlag:
-            res && res.PointCoefficient && !this.state.isSuperAdministrator ? true : false,
+          pointCoefficientFlag:res && res.PointCoefficient && !this.state.isSuperAdministrator ? true : false,
+          pointCoefficientID: res && res.ID,
         });
       },
     });

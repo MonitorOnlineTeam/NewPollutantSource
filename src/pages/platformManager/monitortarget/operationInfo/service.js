@@ -28,7 +28,7 @@ export async function ProjectNumList(params) {
 
 //监测点信息
 export async function GetEntPointList(params) {
-  const result = await post(API.CommonApi.GetPointByEntCode, params, null);
+  const result = await post(API.CommonApi.GetPointByEntCode, {EntCode:params.EntID}, null);
   return result;
 }
  

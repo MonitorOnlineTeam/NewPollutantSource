@@ -3,7 +3,7 @@ import { getBtnAuthority } from '../services/baseapi';
 import * as services from '@/services/commonApi';
 import Model from '@/utils/model';
 import * as mywebsocket from '../utils/mywebsocket';
-import { getTimeDistance } from '../utils/utils';
+import { getTimeDistance,getSysName } from '../utils/utils';
 import { getAlarmNotices, mymessagelist, getSysPollutantTypeList, } from '@/services/globalApi';
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
@@ -118,6 +118,7 @@ export default Model.extend({
           payload: {
             GroupRegionState: 0,
             ...response.Datas,
+            SystemName:getSysName(response.Datas?.SystemName)
           },
         });
         yield put({

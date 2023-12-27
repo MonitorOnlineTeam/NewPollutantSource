@@ -99,10 +99,15 @@ class SdlUpload extends Component {
 
         // var index= info.file.name.split(".")[];
        }
-        debugger
         let fileList = info.fileList;
         console.log('info=', info)
         if (info.file.status === 'done') {
+          if(info.file.response?.IsSuccess){
+            if(info.file.response.Datas?.fNameList?.length<=0){
+            message.error('上传文件不能为空');
+            return;
+            }
+          }
           let before = '/'
           // setFieldsValue({ cuid: cuid })
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);

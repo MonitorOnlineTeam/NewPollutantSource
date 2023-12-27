@@ -13,13 +13,13 @@ export async function getPollutantByType(params) {
 }
 // 异常数据查询-省一级
 export async function getExceptionList(params) {
-  const result = post(API.IntelligentDiagnosis.GetExceptionList, {...params, regionLevel:1});
+  const result = post(API.IntelligentDiagnosis.GetExceptionList, {...params,regionLevel:1});
   return result;
 }
 
 // 异常数据导出-省一级
 export async function exportExceptionList(params) {
-  const result = post(API.IntelligentDiagnosis.ExportExceptionList, {...params, regionLevel:1});
+  const result = post(API.IntelligentDiagnosis.ExportExceptionList, {...params,regionLevel:1});
   return result;
 }
 
@@ -36,13 +36,13 @@ export async function exportExceptionCityList(params) {
 }
 // 异常数据查询 - 二级页面
 export async function getExceptionPointList(params) {
-  const result = post(API.IntelligentDiagnosis.GetExceptionList, {...params, regionLevel:3});
+  const result = post(API.IntelligentDiagnosis.GetExceptionPointList, params);
   return result;
 }
 
 // 异常数据导出 - 二级页面
 export async function exportExceptionPointList(params) {
-  const result = post(API.IntelligentDiagnosis.ExportExceptionList, {...params, regionLevel:3});
+  const result = post(API.IntelligentDiagnosis.ExportExceptionPointList, params);
   return result;
 }
 

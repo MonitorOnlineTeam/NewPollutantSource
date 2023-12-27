@@ -538,8 +538,11 @@ export default Model.extend({
       const result = yield call(services.exportTemplet, payload);
       if (result.IsSuccess) {
         // result.Datas && window.open(result.Datas)
+        if(result?.Datas?.fNameList?.length<=0){
+          message.error('上传文件不能为空');
+        }
       } else {
-        message.error(result.Datas);
+          message.error(result.Datas);
       }
     },
 
@@ -567,8 +570,20 @@ export default Model.extend({
 
     // 删除导入模板
     *deleteAttach({ payload }, { call, update }) {
-      payload =  {...payload, Guid :payload.Guid&&payload.Guid.fNameList&&payload.Guid.fNameList[0]?  payload.Guid.fNameList[0].split('/')[2] : payload.Guid }
-      const result = yield call(services.deleteAttach, { ...payload });
+      let Guid = '';
+      if(payload.Guid&&payload.Guid.fNameList){
+        if(payload.Guid.fNameList[0]){
+          Guid =  payload.Guid.fNameList[0].split('/')[2] 
+         }else{
+          Guid = ''
+         }
+       }else{
+        Guid = payload.Guid;
+       }
+       if(!Guid){
+          return;
+       }
+      const result = yield call(services.deleteAttach, { ...payload, Guid :Guid });
       if (result.IsSuccess) {
         message.success('删除成功！');
       } else {

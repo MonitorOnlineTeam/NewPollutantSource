@@ -90,7 +90,7 @@ export const API = {
     GetEquipmentRepairRateList: before + '/VisualDashBoardApi/GetEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
     ExportEquipmentRepairRateList: before + '/VisualDashBoardApi/ExportEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
     GetOverModel: before + '/OverDataApi/GetOverModel',//获取超标记录汇总信息
-    GetOverData: before + '/OverDataApi/GetOverModel',//获取超标记录详情信息
+    GetOverData: before + '/OverDataApi/GetOverData',//获取超标记录详情信息
     GetExceptionModel: before + '/ExceptionDataApi/GetExceptionModel',//获取异常记录汇总信息
     GetExceptionData: before + '/ExceptionDataApi/GetExceptionData',//获取异常记录详情信息
     GetVideoList: before + '/VideoApi/GetVideoList',//视频管理获取视频信息
@@ -166,7 +166,7 @@ export const API = {
     //电子表单
     GetCemsCalibrationRecord: before + '/GasOperationFormApi/GetCemsCalibrationRecord', //获取单个任务的校准记录
     GetConsumablesReplaceRecordList: before + '/ConsumableMaterialApi/GetConsumablesReplaceRecordList', //获取易耗品更换记录
-    GetFaultRecordForPCList: before + '/ConsumableMaterialApi/GetFaultRecordForPCList', //获取故障小时记录
+    GetFaultRecordForPCList: before + '/GasOperationFormApi/GetFaultRecordForPCList', //获取故障小时记录
     GetSparePartReplaceRecordList: before + '/ConsumableMaterialApi/GetSparePartReplaceRecordList', //获取备品备件更换记录
     GetStandardGasRepalceRecordList: before + '/ConsumableMaterialApi/GetStandardGasRepalceRecordList', //获取标气更换记录
     GetMaintainRecordList: before + '/GasOperationFormApi/GetMaintainRecordList', //获取保养记录
@@ -209,16 +209,16 @@ export const API = {
 
     /**运维报告**/
     /*运维报告（word）*/
-    GetOperationReportList: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//获取运维月度报告信息
-    ExportOperationRepor: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//导出运维月度报告
+    GetOperationReportList: before + '/WorkOrderStatistics/GetOperationReportList',//获取运维月度报告信息
+    ExportOperationReport: before + '/WorkOrderStatistics/ExportOperationReport',//导出运维月度报告
   },
   //智能诊断Api
   IntelligentDiagnosis: {
     /**异常数据处置**/
     /*停运上报*/
-    AddOutputStop: before + '/ExceptionApi/AddOutputStop',//添加停运上报信息
-    UpdateOutputStop: before + '/ExceptionApi/UpdateOutputStop',//更新停运上报信息
-    DeleteOutputStopById: before + '/ExceptionApi/DeleteOutputStopById',//删除停运上报信息
+    AddOutputStop: before + '/OutputStopApi/AddOutputStop',//添加停运上报信息
+    UpdateOutputStop: before + '/OutputStopApi/UpdateOutputStop',//更新停运上报信息
+    DeleteOutputStopById: before + '/OutputStopApi/DeleteOutputStopById',//删除停运上报信息
     /*异常数据上报*/
     GetExceptionReportList: before + '/ExceptionApi/GetExceptionReportList',//获取异常数据上报信息、企业异常记录
     AddOrUpdateExceptionReportInfo: before + '/ExceptionApi/AddOrUpdateExceptionReportInfo',//添加更新异常数据上报信息
@@ -249,11 +249,18 @@ export const API = {
     GetMissDataResponseRateList: before + '/ExceptionAlarmApi/GetMissDataResponseRateList',//获取缺失数据报警和响应率信息
     ExportMissDataResponseRateList: before + '/ExceptionAlarmApi/ExportMissDataResponseRateList',//导出缺失数据报警和响应率信息
     /*异常数据分析*/
-    GetExceptionList: before + '/ExceptionDataApi/GetExceptionList',//获取省级、市级、监测点异常数据信息
-    ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList',//导出省级、市级、监测点异常数据信息
-    /*异常数据报警 异常报警响应率*/
-    GetExceptionAlarmResponseRateList: before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseRateList',//获取异常数据报警和报警响应率信息
-    ExportExceptionAlarmResponseRateList: before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseRateList',//导出异常数据报警和报警响应率信息
+    GetExceptionList: before + '/ExceptionDataApi/GetExceptionList',//获取省级、市级异常数据信息
+    ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList',//导出省级、市级异常数据信息
+    // GetExceptionCityList: before + '/ExceptionDataApi/GetExceptionCityList',//获取市级异常数据信息
+    // ExportExceptionCityList: before + '/ExceptionDataApi/ExportExceptionCityList',//导出市级异常数据信息
+    GetExceptionPointList: before + '/ExceptionDataApi/GetExceptionPointList',//获取监测点异常数据信息
+    ExportExceptionPointList : before + '/ExceptionDataApi/ExportExceptionPointList',//获取监测点异常数据信息
+    /*异常数据报警*/
+    GetExceptionAlarmResponseList: before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseList',//获取异常数据报警信息
+    ExportExceptionAlarmResponseList: before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseList',//导出异常数据报警信息
+    /*异常报警响应率*/
+    GetExceptionAlarmResponseRateList: before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseRateList',//获取异常数据报警响应率信息
+    ExportExceptionAlarmResponseRateList: before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseRateList',//导出异常数据报警响应率信息
     /*停运记录分析*/
     GetStopList: before + '/OutputStopApi/GetStopList',//获取停运记录
     ExportStopList: before + '/OutputStopApi/ExportStopList',//导出停运记录
@@ -327,12 +334,12 @@ export const API = {
     GetNewKeyParameterCheckList: before + '/KeyParameter/GetNewKeyParameterCheckList',//获取关键参数核查信息
     ExportNewKeyParameterCheckList: before + '/KeyParameter/ExportNewKeyParameterCheckList',//导出关键参数核查信息
     GetKeyParameterCheckDetailList: before + '/KeyParameter/GetKeyParameterCheckDetailList',//导出关键参数核查详情信息
-    CheckItemKeyParameter: before + '/KeyParameter/GetKeyParameterCheckDetailList',//核查关键参数项
-    DeleteKeyParameterItemCheck: before + '/KeyParameter/GetKeyParameterCheckDetailList',//删除核查关键参数项
-    SubCheckItem: before + '/KeyParameter/GetKeyParameterCheckDetailList',//保存或提交核查结果
+    CheckItemKeyParameter: before + '/KeyParameter/CheckItemKeyParameter',//核查关键参数项
+    DeleteKeyParameterItemCheck: before + '/KeyParameter/DeleteKeyParameterItemCheck',//删除核查关键参数项
+    SubCheckItem: before + '/KeyParameter/SubCheckItem',//保存或提交核查结果
     DeleteKeyParameterCheck: before + '/KeyParameter/DeleteKeyParameterCheck',//删除核查信息
     IssuedKeyParameter: before + '/KeyParameter/IssuedKeyParameter',//下发核查信息
-    RetransmissionKeyParameter: before + '/KeyParameter/IssuedKeyParameter',//转发关键参数核查任务单
+    RetransmissionKeyParameter: before + '/KeyParameter/RetransmissionKeyParameter',//转发关键参数核查任务单
     /*关键参数核查整改*/
     GetKeyParameterQuestionList: before + '/KeyParameter/GetKeyParameterQuestionList',//获取关键参数核查整改信息
     ExportKeyParameterQuestionList: before + '/KeyParameter/ExportKeyParameterQuestionList',//导出关键参数核查整改信息
@@ -481,7 +488,7 @@ export const API = {
     ExportStateControlledPointRelationList: before + '/StateControlled/ExportStateControlledPointRelationList',//点位匹配信息 导出
     GetStateControlledEntList: before + '/StateControlled/GetStateControlledEntList',//匹配企业
     GetStateControlledPointList: before + '/StateControlled/GetStateControlledPointList',//获取企业匹配监测点信息
-    UpdateStateControlledPointRelationStatus: before + '/StateControlled/GetStateControlledPointList',//更新企业匹配监测点信息
+    UpdateStateControlledPointRelationStatus: before + '/StateControlled/UpdateStateControlledPointRelationStatus',//更新企业匹配监测点信息
     DeleteStateControlledPointRelationStatus: before + '/StateControlled/DeleteStateControlledPointRelationStatus',//删除企业匹配监测点信息
     /*台账填报设置*/
     GetCalibrationAccountFillingTypeList: before + '/AccountApi/GetCalibrationAccountFillingTypeList',//获取台账填报设置信息
@@ -503,7 +510,7 @@ export const API = {
     DelOnlineTimerManage: before + '/OnlineTimerManage/DelOnlineTimerManage',//删除定时器信息
     /*新老协议转换管理*/
     GetAgreementTransferList: before + '/OnlineTimerManage/GetAgreementTransferList',//获取新老协议转换信息
-    AddAgreementTransfer: before + '/OnlineTimerManage/GetAgreementTransferList',//添加新老协议转换信息
+    AddAgreementTransfer: before + '/OnlineTimerManage/AddAgreementTransfer',//添加新老协议转换信息
     DeleteAgreementTransfer: before + '/OnlineTimerManage/DeleteAgreementTransfer',//删除新老协议转换信息
     /*交接和报告*/
     GetProjectReportList: before + '/ProjectApi/GetProjectReportList', //获取交接和报告信息
@@ -652,7 +659,7 @@ export const API = {
     DeleteCamera: before + '/VideoApi/DeleteCamera',//删除摄像头
     DeleteVideoInfo: before + '/VideoApi/DeleteVideoInfo',//删除视频信息
     AddVideoInfo: before + '/VideoApi/AddVideoInfo',//根据监测点添加视频信息
-    UpdateVideoInfo: before + '/VideoApi/AddVideoInfo',//更新视频信息
+    UpdateVideoInfo: before + '/VideoApi/UpdateVideoInfo',//更新视频信息
     /*日志管理*/
     GetSystemExceptionList: before + '/LogsApi/GetSystemExceptionList', //获取问题清单列表
     DeleteSystemException: before + '/LogsApi/DeleteSystemException', //获取问题清单列表
@@ -690,7 +697,7 @@ export const API = {
     GetPointCemsSystemList: before + '/DebuggingBase/GetPointCemsSystemList',  //获取监测点CEMS参数信息
     OperationPointCemsSystemInfo: before + '/DebuggingBase/OperationPointCemsSystemInfo',  //添加更新CEMS参数信息
     GetPointReferenceInstrumentList: before + '/DebuggingBase/GetPointReferenceInstrumentList', //获取参比仪器信息
-    OperationPointReferenceInstrumentInfo: before + '/DebuggingBase/GetPointReferenceInstrumentList', //添加更新参比仪器信息
+    OperationPointReferenceInstrumentInfo: before + '/DebuggingBase/OperationPointReferenceInstrumentInfo', //添加更新参比仪器信息
     AddOrUpdateTestPoint: before + '/DebuggingBase/AddOrUpdateTestPoint', //添加更新监测点（调试检测）
     /*72小时调试检测*/
     GetDebuggingEntTree: before + '/DebuggingBase/GetDebuggingEntTree', //获取企业监测点信息 树结构
@@ -788,4 +795,3 @@ export const API = {
   },
 };
 
-export const UPLOAD = {};

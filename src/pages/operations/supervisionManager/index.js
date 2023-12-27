@@ -1000,7 +1000,7 @@ const Index = (props) => {
             <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
               查询
      </Button>
-            <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }} >
+            <Button onClick={() => { form.resetFields();setPointList([]) }} style={{ marginRight: 8 }} >
               重置
      </Button>
             {!isRecord && <Button style={{ marginRight: 8 }} onClick={() => { add() }} >

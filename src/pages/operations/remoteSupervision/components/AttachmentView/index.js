@@ -43,12 +43,14 @@ class index extends PureComponent {
 
   render() {
     const { columns } = this._SELF_;
-    const {placement, dataSource, } = this.props;
+    const {placement, dataSource,getPopupContainer,popSty } = this.props;
     const content = (
       <Table style={{ fontSize: 20 }} dataSource={dataSource} columns={columns} size="small" bordered={false} pagination={false} />
     );
     return (
-      <Popover placement={placement? placement : 'top'} content={content} title="附件详情" trigger="click" getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.popSty}>
+      <Popover placement={placement? placement : 'top'} content={content} title="附件详情" trigger="click" 
+           getPopupContainer={getPopupContainer==false? getPopupContainer : trigger => trigger.parentNode} 
+           overlayClassName={popSty==false? popSty : styles.popSty }>
         <a onClick={(e) => {
           e.stopPropagation()
         }}>{dataSource&&dataSource[0]? "查看附件" : ''}</a>
