@@ -72,7 +72,7 @@ export default class Index extends Component {
     }
    }
   render() {
-      const {selectType,RegionCode,changeRegion,regionList,noFilter,noFilterRegionList,noFilteRegLoading,regLoading,spinSty,test,testRegLoading,testRegionList,ct,ctRegLoading,ctRegionList} = this.props
+      const {selectType,RegionCode,changeRegion,regionList,noFilter,noFilterRegionList,noFilteRegLoading,regLoading,spinSty,test,testRegLoading,testRegionList,ct,ctRegLoading,ctRegionList,} = this.props
     return (
 //       <SdlCascader
 //        style={{ width: 170 }}
