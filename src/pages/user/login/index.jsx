@@ -116,7 +116,7 @@ class Login extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'common/updateState',
-      payload: { noFilterRegionList: [], testRegionList: [], operationUserList: [], inspectorUserList: [], roleList: [], entList: [], noFilterEntList: [], atmoStationList: [], }
+      payload: { noFilterRegionList: [], testRegionList: [],ctRegionList:[], operationUserList: [], inspectorUserList: [], roleList: [], entList: [], noFilterEntList: [], atmoStationList: [], }
     })
     dispatch({
       type: 'autoForm/updateState',
