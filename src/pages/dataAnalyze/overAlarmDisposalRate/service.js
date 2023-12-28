@@ -66,24 +66,24 @@ export async function GetEntByRegion(params) {
 
 // 异常数据查询-省一级
 export async function getExceptionList(params) {
-  const result = post(API.IntelligentDiagnosis.GetExceptionList, {...params,regionLevel:1});
+  const result = post(API.IntelligentDiagnosisApi.GetExceptionList, {...params,regionLevel:1});
   return result;
 }
 
 // 异常数据导出-省一级
 export async function exportExceptionList(params) {
-  const result = post(API.IntelligentDiagnosis.ExportExceptionList, {...params,regionLevel:1});
+  const result = post(API.IntelligentDiagnosisApi.ExportExceptionList, {...params,regionLevel:1});
   return result;
 }
 
 // 异常数据查询 - 企业一级
 export async function getExceptionPointList(params) {
-  const result = post(API.IntelligentDiagnosis.GetExceptionPointList, params);
+  const result = post(API.IntelligentDiagnosisApi.GetExceptionPointList, params);
   return result;
 }
 
 // 异常数据导出 - 企业一级
 export async function exportExceptionPointList(params) {
-  const result = post(API.IntelligentDiagnosis.ExportExceptionPointList, params);
+  const result = post(API.IntelligentDiagnosisApi.ExportExceptionPointList, params);
   return result;
 }

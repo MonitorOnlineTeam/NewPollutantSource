@@ -344,7 +344,7 @@ export async function isusepollutant(params) {
     Enalbe: params.Enalbe,
   };
   const result = post(
-    API.IntelligentDiagnosis.UsePollutant,
+    API.IntelligentDiagnosisApi.UsePollutant,
     body,
     null,
   );
@@ -361,7 +361,7 @@ export async function getMonitorPointPollutantDetails(params) {
     pollutantCode: params.PollutantCode,
   };
   const result = get(
-    API.IntelligentDiagnosis.GetMonitorPointPollutantDetails,
+    API.IntelligentDiagnosisApi.GetMonitorPointPollutantDetails,
     body,
     null,
   );
@@ -393,7 +393,7 @@ export async function editmonitorpointPollutant(params) {
     OverNormalRangeCount: params.OverNormalRangeCount,
   };
   const result = post(
-    API.IntelligentDiagnosis.EditMonitorPointPollutant,
+    API.IntelligentDiagnosisApi.EditMonitorPointPollutant,
     body,
     null,
   );
@@ -406,7 +406,7 @@ export async function editmonitorpointPollutant(params) {
 
 // 改变考核状态
 export async function changeUseStatisti(params) {
-  const result = post(API.IntelligentDiagnosis.UseStatisti,
+  const result = post(API.IntelligentDiagnosisApi.UseStatisti,
     params,
   );
   return result;

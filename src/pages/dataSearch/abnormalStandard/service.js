@@ -9,7 +9,7 @@ import { API } from '@config/API'
 //异常标准
 export async function GetExceptionStandValue(params) {
   const result = post(
-    API.IntelligentDiagnosis.GetExceptionStandValue,
+    API.IntelligentDiagnosisApi.GetExceptionStandValue,
     params,
     null,
   );
@@ -32,7 +32,7 @@ export async function GetAttentionDegreeList(params) {
 //导出  异常 
 export async function ExportExceptionStandValue(params) {
   const result = post(
-    API.IntelligentDiagnosis.ExportExceptionStandValue,
+    API.IntelligentDiagnosisApi.ExportExceptionStandValue,
     params,
     null,
   );

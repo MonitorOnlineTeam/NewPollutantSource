@@ -38,7 +38,7 @@ export async function GetDefectModelCity(params) {
  */
 export async function GetDefectPointDetail(params) {
   const result = post(
-    API.IntelligentDiagnosis.GetAlarmVerifyRateDetail,
+    API.IntelligentDiagnosisApi.GetAlarmVerifyRateDetail,
     params,
     null,
   );

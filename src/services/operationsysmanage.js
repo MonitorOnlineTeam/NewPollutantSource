@@ -8,18 +8,18 @@ export async function DeleteOperationSys(params) {
 }
 /** 添加停产 */
 export async function addoutputstop(params) {
-  const result = post(API.IntelligentDiagnosis.AddOutputStop, params.FormData, null);
+  const result = post(API.IntelligentDiagnosisApi.AddOutputStop, params.FormData, null);
   return result;
 }
 /** 删除停产 */
 export async function deleteoutputstop(params) {
   debugger;
-  const result = post(`${API.IntelligentDiagnosis.DeleteOutputStopById}?ID=${params.ID}`, '', null);
+  const result = post(`${API.IntelligentDiagnosisApi.DeleteOutputStopById}?ID=${params.ID}`, '', null);
   return result;
 }
 /** 编辑停产 */
 export async function editoutputstop(params) {
   debugger;
-  const result = post(API.IntelligentDiagnosis.UpdateOutputStop, params.FormData, null);
+  const result = post(API.IntelligentDiagnosisApi.UpdateOutputStop, params.FormData, null);
   return result;
 }

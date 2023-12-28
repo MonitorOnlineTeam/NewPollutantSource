@@ -199,7 +199,7 @@ export async function DeleteGasZeroRangeRecord(params) {
 
 /*** 生成检测报告  ***/
 export async function exportTestPeport(params) {
-  const result = await post(API.CtDebugServiceApi.Export72HoursCommissioningTestReport,params, null);
+  const result = await post(params.ExportType==1?API.CtDebugServiceApi.Export72HoursCommissioningTestReport : API.CtDebugServiceApi.Export72HoursCommissioningTestPdfReport,params, null);
   return result;
 }
 /*** 生成采样时间  ***/

@@ -12,7 +12,7 @@ export async function GetPollutantByType(params) {
  */
 export async function GetDefectModel(params) {
   const result = post(
-    API.IntelligentDiagnosis.GetAlarmVerifyRate,
+    API.IntelligentDiagnosisApi.GetAlarmVerifyRate,
     params,
     null,
   );
@@ -25,7 +25,7 @@ export async function GetDefectModel(params) {
  */
 export async function GetDefectPointDetail(params) {
   const result = post(
-    API.IntelligentDiagnosis.GetAlarmVerifyRateDetail,
+    API.IntelligentDiagnosisApi.GetAlarmVerifyRateDetail,
     params,
     null,
   );
@@ -47,7 +47,7 @@ export async function GetAttentionDegreeList(params) {
 
 export async function ExportDefectDataSummary(params) {
   const result = post(
-    API.IntelligentDiagnosis.ExportAlarmVerifyRate,
+    API.IntelligentDiagnosisApi.ExportAlarmVerifyRate,
     params,
     null,
   );
@@ -58,7 +58,7 @@ export async function ExportDefectDataSummary(params) {
 //导出 报警核实率  详情
 export async function ExportDefectPointDetail(params) {
   const result = post(
-    API.IntelligentDiagnosis.ExportAlarmVerifyRateDetail,
+    API.IntelligentDiagnosisApi.ExportAlarmVerifyRateDetail,
     params,
     null,
   );

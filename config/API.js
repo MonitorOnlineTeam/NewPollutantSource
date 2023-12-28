@@ -213,7 +213,7 @@ export const API = {
     ExportOperationReport: before + '/WorkOrderStatistics/ExportOperationReport',//导出运维月度报告
   },
   //智能诊断Api
-  IntelligentDiagnosis: {
+  IntelligentDiagnosisApi: {
     /**异常数据处置**/
     /*停运上报*/
     AddOutputStop: before + '/OutputStopApi/AddOutputStop',//添加停运上报信息
@@ -741,8 +741,8 @@ export const API = {
     AddOrUpdateGasDriftInfo: before + '/CommissioningTest/AddOrUpdateGasDriftInfo',//添加更新信息
     DeleteGasDriftInfo: before + '/CommissioningTest/DeleteGasDriftInfo',//删除信息
     //生成检测报告
-    Export72HoursCommissioningTestReport: before + '/CommissioningTest/Export72HoursCommissioningTestReport',//导出72小时调试检测报告
-
+    Export72HoursCommissioningTestReport: before + '/CommissioningTest/Export72HoursCommissioningTestReport',//导出72小时调试检测报告 word
+    Export72HoursCommissioningTestPdfReport: '/api/rest/PollutantSourceApi/TaskFormApi/ImportRecord',//导出72小时调试检测报告 pdf
     /*区域权限管理*/
     GetDebuggingAreaGroupList: before + '/DebuggingAreaAuthority/GetDebuggingAreaGroupList',//获取部门详细信息及层级关系
     AddOrUpdateDebuggingAreaGroupInfo: before + '/DebuggingAreaAuthority/AddOrUpdateDebuggingAreaGroupInfo',//添加部门信息
@@ -754,7 +754,7 @@ export const API = {
   CtAssetManagementApi: {
     /*** 设备台账 ***/
     /*污染源管理*/
-    GetTestXuRegions: before + '/CTBaseDataApi/GetTestXuRegions', //获取省份及省份下的市县（成套）
+    GetTestXuRegions: before + '/CTBaseDataApi/GetTestXuRegions', //获取省份及省份下的市县（成套污染源管理）
     AddOrEditCommonPointList: before + '/CTBaseDataApi/AddOrEditCommonPointList', //添加或修改监测点（成套）
     AddOrUpdateMonitorEntElectronicFence: before + '/CTBaseDataApi/AddOrUpdateMonitorEntElectronicFence', //修改企业电子围栏半径
     GetMonitorEntElectronicFence: before + '/CTBaseDataApi/GetMonitorEntElectronicFence', //获取企业电子围栏半径

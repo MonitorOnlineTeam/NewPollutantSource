@@ -9,19 +9,19 @@ import { API } from '@config/API'
 
 //获取流量数据
 export async function GetPollutantByType(params){
-    const result = post(`${API.CommonApi.GetPollutantCodeList}?type=${params.type}`,{})
+    const result = post(API.CommonApi.GetPollutantCodeList,{PollutantType:params.type},null)
     return result 
 }
 //查询超标数据
 export async function GetExceedDataList(params)
 {
-    const result = post(API.IntelligentDiagnosis.GetOverDataList,params,null)
+    const result = post(API.IntelligentDiagnosisApi.GetOverDataList,params,null)
     return result 
 }
 //超标次数查询
 export async function GetExceedNum(params)
 {
-    const result = post(API.IntelligentDiagnosis.GetOverStandardNum,params,null)
+    const result = post(API.IntelligentDiagnosisApi.GetOverStandardNum,params,null)
     return result 
 }
 //企业
@@ -33,13 +33,13 @@ export async function GetEntByRegion(params)
 //导出超标数据
 export async function ExportExceedDataList(params)
 {
-    const result = post(API.IntelligentDiagnosis.ExportOverDataList,params,null)
+    const result = post(API.IntelligentDiagnosisApi.ExportOverDataList,params,null)
     return result 
 }
 //导出超标次数数据
 export async function ExportExceedNum(params)
 {
-    const result = post(API.IntelligentDiagnosis.ExportOverStandardNum,params,null)
+    const result = post(API.IntelligentDiagnosisApi.ExportOverStandardNum,params,null)
     return result 
 }
 

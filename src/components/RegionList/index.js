@@ -17,6 +17,8 @@ const { TreeNode } = TreeSelect;
     noFilteRegLoading: loading.effects[`common/getNoFilterRegionList`],
     testRegionList:common.testRegionList,
     testRegLoading: loading.effects[`common/getTestXuRegions`],
+    ctRegionList:common.ctRegionList,
+    ctRegLoading: loading.effects[`common/getCtTestXuRegions`],
 }))
 export default class Index extends Component {
   static defaultProps = {
@@ -50,7 +52,7 @@ export default class Index extends Component {
 
 
   componentDidMount() {
-     const {regionList,noFilter,noFilterRegionList,test,testRegionList,} = this.props;
+     const {regionList,noFilter,noFilterRegionList,test,testRegionList,ct,ctRegionList,} = this.props;
      if(noFilter){
        if(noFilterRegionList&&noFilterRegionList.length<=0){
          this.props.dispatch({  type: 'common/getNoFilterRegionList',  payload: {  PointMark: '2', RegionCode:''}, });
@@ -59,6 +61,10 @@ export default class Index extends Component {
       if(testRegionList&&testRegionList.length<=0){
       this.props.dispatch({  type: 'common/getTestXuRegions',  payload: {  PointMark: '2', RegionCode:''}, });
       }
+    }else if(ct){ //成套行政区列表
+      if(ctRegionList&&ctRegionList.length<=0){
+      this.props.dispatch({  type: 'common/getCtTestXuRegions',  payload: {  PointMark: '2', RegionCode:''}, });
+      }
     }else{
     //   if(regionList&&regionList.length<=0){ //普通行政区
     //     this.props.dispatch({   type: 'autoForm/getRegions',  payload: {  PointMark: '2', RegionCode: ''} });
@@ -66,7 +72,7 @@ export default class Index extends Component {
     }
    }
   render() {
-      const {selectType,RegionCode,changeRegion,regionList,noFilter,noFilterRegionList,noFilteRegLoading,regLoading,spinSty,test,testRegLoading,testRegionList,} = this.props
+      const {selectType,RegionCode,changeRegion,regionList,noFilter,noFilterRegionList,noFilteRegLoading,regLoading,spinSty,test,testRegLoading,testRegionList,ct,ctRegLoading,ctRegionList} = this.props
     return (
 //       <SdlCascader
 //        style={{ width: 170 }}
@@ -76,7 +82,7 @@ export default class Index extends Component {
 //        onChange={changeRegion}
 // />
 // spinning={noFilter? noFilteRegLoading : regLoading}
-     <Spin spinning={noFilter? noFilteRegLoading : test? testRegLoading : regLoading} size='small' style={{...spinSty}}>
+     <Spin spinning={noFilter? noFilteRegLoading : test? testRegLoading : ct? ctRegLoading : regLoading} size='small' style={{...spinSty}}>
       <TreeSelect
       virtual={false}
       showSearch
@@ -91,7 +97,7 @@ export default class Index extends Component {
       onChange={changeRegion}
       {...this.props}
     >
-       {this.regchildren(noFilter?noFilterRegionList: test? testRegionList : regionList,1)}
+       {this.regchildren(noFilter?noFilterRegionList: test? testRegionList : ct? ctRegionList : regionList,1)}
       </TreeSelect>
       </Spin>
     );

@@ -97,14 +97,14 @@ class EmergencyDetailInfo extends Component {
             },
             {
                 title: '审批状态',
-                dataIndex: 'examMsg',
-                key: 'examMsg',
+                dataIndex: 'examStaus',
+                key: 'examStaus',
                 align: 'center',
             },
             {
                 title: '备注',
-                dataIndex: 'examStaus',
-                key: 'examStaus',
+                dataIndex: 'examMsg',
+                key: 'examMsg',
                 align: 'center',
             },
             {

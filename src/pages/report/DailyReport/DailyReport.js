@@ -46,6 +46,7 @@ const pageUrl = {
 }
 @connect(({ loading, autoForm, wasteWaterReportModel, exceedDataAlarmModel, enterpriseMonitoringModel }) => ({
     loading: loading.effects['wasteWaterReportModel/GetAllTypeDataListWater'],
+    exportLoading: loading.effects['wasteWaterReportModel/ExportAllTypeDataListWater'],
     regionList: autoForm.regionList,
     attention: enterpriseMonitoringModel.attention,
     total: wasteWaterReportModel.total,
@@ -210,7 +211,7 @@ class index extends PureComponent {
     }
     cardTitle = () => {
         const { time } = this.state;
-
+        const { exportLoading } = this.props;
         return <>
             <label style={{ fontSize: 14 }}>行政区:</label>
             {/* <Select
@@ -340,7 +341,7 @@ class index extends PureComponent {
                 <label>监测时间:</label><DatePicker size='default' style={{ width: 200 }} onChange={this.DatePickerHandle} defaultValue={time} style={{ marginLeft: 10, marginRight: 10 }} />
 
                 <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+                <Button style={{ marginRight: 10 }} onClick={this.exportReport} loading={exportLoading}><ExportOutlined />导出</Button>
                 <span style={{ fontSize: 14, color: 'red' }}>排放量为小时均值*小时流量</span>
             </div>
         </>;

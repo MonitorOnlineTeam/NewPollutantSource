@@ -135,7 +135,7 @@ export async function GetTestXuRegions(params) {
   const result = post(API.CtDebugServiceApi.GetTestXuRegions,params, params, null);
   return result;
 }
-//行政区  列表  调试服务 成套
+//行政区  列表  成套
 export async function GetCtTestXuRegions(params) {
   const result = post(API.CtAssetManagementApi.GetTestXuRegions, params, null);
   return result;

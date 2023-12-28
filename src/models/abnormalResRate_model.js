@@ -88,7 +88,7 @@ export default Model.extend({
       const result = yield call(services.exportSecond, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`${config.apiPrefix}${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message)
       }

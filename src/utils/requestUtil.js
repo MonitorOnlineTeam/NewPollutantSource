@@ -108,7 +108,9 @@ request.interceptors.request.use(async (url, options) => {
     if (urls[1] === 'newApi') {
       token = Cookie.get('newToken');
     }
-
+    if (urls[1] === 'api') {
+      token = ''; //调试服务pdf导出
+    }
     const headers = {
       'Content-Type': options.headers['Content-Type'] || 'application/json',
       Accept: 'application/json',

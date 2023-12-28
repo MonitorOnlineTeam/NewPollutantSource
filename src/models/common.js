@@ -35,6 +35,7 @@ export default Model.extend({
     ctProjectList: [],
     ctProjectTotal: 0,
     ctProjectQueryPar: null,
+    ctRegionList:[],
   },
 
   effects: {
@@ -348,6 +349,9 @@ export default Model.extend({
     *getCtTestXuRegions({ payload, callback }, { call, update }) {
       const result = yield call(services.GetCtTestXuRegions, payload);
       if (result.IsSuccess) {
+        yield update({
+          ctRegionList: result.Datas ? result.Datas.list : [],
+        });
         callback && callback(result.Datas ? result.Datas.list : []);
       } else {
         message.error(result.Message);

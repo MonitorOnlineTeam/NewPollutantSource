@@ -571,16 +571,18 @@ export default Model.extend({
     // 删除导入模板
     *deleteAttach({ payload }, { call, update }) {
       let Guid = '';
-      if(payload.Guid&&payload.Guid.fNameList){
-        if(payload.Guid.fNameList[0]){
+      if(payload.Guid){
+        if(payload.Guid.fNameList&&payload.Guid.fNameList[0]){
           Guid =  payload.Guid.fNameList[0].split('/')[2] 
+         }else if(payload.Guid[0]){ //只上传图片的情况 UploadPicture接口
+          Guid =  payload.Guid[0].split('/')[2] 
          }else{
           Guid = ''
          }
        }else{
-        Guid = payload.Guid;
+         Guid = payload.Guid;
        }
-       if(!Guid){
+       if(!Guid){ //文件为空的情况
           return;
        }
       const result = yield call(services.deleteAttach, { ...payload, Guid :Guid });

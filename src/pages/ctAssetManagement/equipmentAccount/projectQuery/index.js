@@ -591,7 +591,7 @@ const Index = (props) => {
 
           <div>
             <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
-              <RegionList style={{ width: 200 }} placeholder='请选择行政区' changeRegion={(value) => { setRegionCode(value) }} />
+              <RegionList ct style={{ width: 200 }} placeholder='请选择行政区' changeRegion={(value) => { setRegionCode(value) }} />
               <Input.Group compact style={{ width: 290, marginLeft: 16, display: 'inline-block' }}>
                 <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onBlur={(e) => setEntPointName(e.target.value)} />
                 <Button type="primary" loading={entAndPointLoading} onClick={handlePointQuery}>查询</Button>

@@ -11,6 +11,7 @@ import Cookie from 'js-cookie';
 import logo from '../../public/gg.png';
 import config from '@/config';
 import styles from './UserLayout.less';
+import { getSysName } from '../utils/utils';
 
 const UserLayout = props => {
   const {

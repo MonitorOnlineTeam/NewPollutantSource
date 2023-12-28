@@ -12,7 +12,6 @@ const apiHost = 'http://172.16.12.39:49003/';
 // const apiHost = 'http://172.16.12.152:50089/';
 // const apiHost = 'http://61.50.135.114:63001/'; // 运维外网
 // const apiHost = 'http://172.16.12.234:61002/';
-// const apiHost = 'http://172.16.12.134:63001/';
 // const apiHost = 'http://172.16.9.33:8800/'//运维 py 本地
 // const apiHost = 'http://172.16.12.234:61010/' //宝武集团 测试
 // const apiHost = 'http://172.16.12.91:61007/' //宝武集团 正式
@@ -20,6 +19,7 @@ const apiHost = 'http://172.16.12.39:49003/';
 // const apiHost = 'http://172.16.12.135:50210/';
 // const apiHost = 'http://172.16.12.57:61000/';
 // const apiHost = 'http://172.16.12.57:61002/';
+const apiHost2 = 'http://172.16.12.134:63001/';//调试服务导出PDF api
 
 
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
@@ -3124,15 +3124,15 @@ export default {
       target: apiHost,
       changeOrigin: true,
     },
-    '/api': {
-      target: apiHost,
+    '/api': { 
+      target: apiHost2, //调试服务导出PDF 代理
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',
       },
     },
     '/upload': {
-      target: apiHost,
+      target: apiHost2, //调试服务导出PDF 代理
       // 接口的域名
       changeOrigin: true,
       // 如果接口跨域，需要进行这个参数配置

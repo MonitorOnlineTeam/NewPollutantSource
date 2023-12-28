@@ -3,19 +3,19 @@ import { API } from '@config/API'
 
 //设备故障反馈 列表
 export async function GetFaultFeedbackList(params) {
-  const result = await post(API.IntelligentDiagnosis.GetEquipmentFaultFeedbackList, params, null);
+  const result = await post(API.IntelligentDiagnosisApi.GetEquipmentFaultFeedbackList, params, null);
   return result;
 }
 
 //编辑
 export async function UpdateFaultFeedbackIsSolve(params) {
-  const result = await post(`${API.IntelligentDiagnosis.UpdateEquipmentFaultFeedbackStatus}?ID=${params.ID}&&IsSolve=${params.IsSolve}`, params, null);
+  const result = await post(`${API.IntelligentDiagnosisApi.UpdateEquipmentFaultFeedbackStatus}?ID=${params.ID}&&IsSolve=${params.IsSolve}`, params, null);
   return result;
 }
 
 //设备故障反馈 导出
 export async function ExportFaultFeedback(params) {
-  const result = await post(API.IntelligentDiagnosis.ExportEquipmentFaultFeedbackList, params, null);
+  const result = await post(API.IntelligentDiagnosisApi.ExportEquipmentFaultFeedbackList, params, null);
   return result;
 }
 

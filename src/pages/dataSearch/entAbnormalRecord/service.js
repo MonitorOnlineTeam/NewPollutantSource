@@ -6,7 +6,7 @@ import { API } from '@config/API'
  */
 export async function GetExceptionReportedList(params) {
   const result = post(
-    API.IntelligentDiagnosis.GetExceptionReportList,
+    API.IntelligentDiagnosisApi.GetExceptionReportList,
     params,
     null,
   );
@@ -16,7 +16,7 @@ export async function GetExceptionReportedList(params) {
 //异常记录详情
 export async function GetExceptionReportedView(params) {
   const result = post(
-    API.IntelligentDiagnosis.GetExceptionReportedView,
+    API.IntelligentDiagnosisApi.GetExceptionReportedView,
     params,
     null,
   );
@@ -48,7 +48,7 @@ export async function GetAttentionDegreeList(params) {
 
 export async function ExportExceptionReported(params) {
   const result = post(
-    API.IntelligentDiagnosis.ExportExceptionReportList,
+    API.IntelligentDiagnosisApi.ExportExceptionReportList,
     params,
     null,
   );

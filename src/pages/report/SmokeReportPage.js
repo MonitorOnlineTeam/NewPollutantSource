@@ -485,6 +485,9 @@ class SmokeReportPage extends PureComponent {
   // 导出报表
   exportReport = () => {
     const { time, pointValue } = this.state
+    if (pointValue == '' || pointValue == undefined) {
+      return message.error('请选择监测点')
+    }
     this.props.dispatch({
       type: 'report/exportSmokeReport',
       payload: {
@@ -680,7 +683,7 @@ class SmokeReportPage extends PureComponent {
                   )}
                 </FormItem>
                 <Button type="primary" style={{ marginRight: 10,marginLeft:10 }} onClick={() => { this.getSmokeReportData() }}>查询</Button>
-                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+                <Button style={{ marginRight: 10 }} onClick={this.exportReport} loading={exportLoading}><ExportOutlined />导出</Button>
                 <span style={{ fontSize: 14, color: 'red' }}>{this.props.msg}</span>
               </Row>
             
