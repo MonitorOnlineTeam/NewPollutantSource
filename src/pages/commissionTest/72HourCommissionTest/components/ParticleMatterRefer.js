@@ -101,11 +101,13 @@ const Index = (props) => {
                 setRecordType(res.RecordType)
 
                 if (res.MainTable) {
+                    const timeIntervals = form.getFieldValue('TimeIntervals')
                     form.resetFields();
                     setIsClears(false);
 
                     form.setFieldsValue({
-                        ...res.MainTable
+                        ...res.MainTable,
+                        TimeIntervals:timeIntervals
                     })
                     if (res.ChildTable) {
                         const data = [];
@@ -207,7 +209,7 @@ const Index = (props) => {
         }, (startTimeVal, endTimeVal) => {
             const duration = endTimeVal - startTimeVal;
 
-            if (duration && duration < 20) {
+            if (startTimeVal &&  endTimeVal && duration && duration < 20) {
                 props.timeComparWarnMessAlert('采样时长过短，请核实')
                 setWarnArr([...warnArr, index])
                 return
