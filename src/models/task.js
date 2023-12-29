@@ -417,7 +417,7 @@ export default Model.extend({
             const result = yield call(ExportOperationTaskList, payload);
             if (result.IsSuccess) {
                 message.success('下载成功');
-                // downloadFile(`${result.Datas}`);
+                downloadFile(`${result.Datas}`);
             }
         },
 

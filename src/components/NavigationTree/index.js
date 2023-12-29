@@ -602,7 +602,6 @@ class NavigationTree extends Component {
         expandedKeys
       })
     }
-    console.log(' this.state.panelDataListAys', this.state.panelDataListAys)
 
     this.setState({
       // expandedKeys,

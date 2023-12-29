@@ -78,7 +78,7 @@ export const API = {
     ExportOperationPlanTaskList: before + '/VisualDashBoardApi/ExportOperationPlanTaskList',// 导出近30日运维工单统计 详情
     GetVisualDashBoardNetworkingRate: before + '/VisualDashBoardApi/GetVisualDashBoardNetworkingRate',//获取实时联网率统计
     GetProviceNetworkingRate: before + '/VisualDashBoardApi/GetProviceNetworkingRate',// 获取省实时联网率
-    GetCityNetworkingRate: before + '/VisualDashBoardApi/GetProviceNetworkingRate',// 获取市实时联网率
+    GetCityNetworkingRate: before + '/VisualDashBoardApi/GetCityNetworkingRate',// 获取市实时联网率
     GetPointNetworkingRate: before + '/VisualDashBoardApi/GetPointNetworkingRate',// 获取点位实时联网率
     ExportProviceNetworkingRate: before + '/VisualDashBoardApi/ExportProviceNetworkingRate',// 导出省实时联网率
     ExportCityNetworkingRate: before + '/VisualDashBoardApi/ExportCityNetworkingRate',// 导出市实时联网率

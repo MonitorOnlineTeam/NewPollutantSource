@@ -25,6 +25,7 @@ const { RangePicker } = DatePicker;
   abnormalDataForm: abnormalData.abnormalDataForm,
   abnormalDataTime: abnormalData.abnormalDataTime,
   loading: loading.effects["abnormalData/getExceptionList"],
+  exportLoading:loading.effects["abnormalData/exportExceptionList"],
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -432,6 +433,7 @@ class index extends PureComponent {
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
                   onClick={this.exportExceptionList}
+                  loading={this.props.exportLoading}
                 >
                   导出
                       </Button>

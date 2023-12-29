@@ -29,7 +29,6 @@ export default Model.extend({
     },
     pointName:'',
     disTableDatas: [],
-    disColumn:[],
     total: '',
     attentionList:[],
     priseList: [],
@@ -39,17 +38,17 @@ export default Model.extend({
   },
   subscriptions: {},
   effects: {
-    *getDischargeStandValue({ payload }, { call, put, update, select }) {
+    *getDischargeStandValue({ payload,callback }, { call, put, update, select }) {
       //列表  排放标准
       yield update({ loading: true });
       const response = yield call(GetDischargeStandValue, { ...payload });
       if (response.IsSuccess) {
         yield update({
           disTableDatas: response.Datas.data,
-          disColumn:response.Datas.column,
           total: response.Total,
           loading: false
         });
+        callback&&callback(response.Datas?.column)
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {

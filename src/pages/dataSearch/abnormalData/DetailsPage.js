@@ -13,6 +13,7 @@ import Modal from 'antd/lib/modal/Modal';
 @connect(({ loading, autoForm, abnormalData }) => ({
   exceptionPointList: abnormalData.exceptionPointList,
   loading: loading.effects["abnormalData/getExceptionPointList"],
+  exportLoading: loading.effects["abnormalData/exportExceptionPointList"],
 }))
 class DetailsPage extends PureComponent {
   state = {}
@@ -197,7 +198,7 @@ class DetailsPage extends PureComponent {
   }
 
   render() {
-    const { exceptionPointList, loading, location, isModal, } = this.props;
+    const { exceptionPointList, loading, location, isModal, exportLoading, } = this.props;
     const { columns, columns_Chao, columns_Lian, queryCondition } = this._SELF_;
     let _columns = columns;
     let title = "零值异常"
@@ -218,7 +219,7 @@ class DetailsPage extends PureComponent {
             {`${queryCondition.RegionName}${beginTime}至${endTime}${title}情况`}
           </Row>
           <Row style={{ marginBottom: 10 }}>
-            <Button type="primary" ghost icon={<ExportOutlined />} onClick={this.onExport}>
+            <Button type="primary" ghost icon={<ExportOutlined />} onClick={this.onExport}  loading={exportLoading}>
               导出
             </Button>
             <Divider type="vertical" />
@@ -231,7 +232,7 @@ class DetailsPage extends PureComponent {
       </BreadcrumbWrapper>
         :
         <div>
-        <Button style={{marginBottom:12}} type="primary" ghost icon={<ExportOutlined />} onClick={this.onExport}>
+        <Button style={{marginBottom:12}} type="primary" ghost icon={<ExportOutlined />} onClick={this.onExport} loading={exportLoading}>
         导出
       </Button>
        <SdlTable align="center" dataSource={exceptionPointList} columns={_columns} loading={loading} scroll={{y:'calc(100vh - 380px)'}} />

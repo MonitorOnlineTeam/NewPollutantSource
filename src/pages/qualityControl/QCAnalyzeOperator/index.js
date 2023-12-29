@@ -35,10 +35,10 @@ class index extends PureComponent {
         ssoToken: Cookie.get(config.cookieName),
         UserID: userid
       },
+      action:API.UploadApi.UploadFiles,
       headers: {
         Authorization: "Bearer " + Cookie.get(config.cookieName)
       },
-      action:API.UploadApi.UploadFiles,
       onChange: (info) => {
         const { status, response } = info.file;
         if (status !== 'uploading') {

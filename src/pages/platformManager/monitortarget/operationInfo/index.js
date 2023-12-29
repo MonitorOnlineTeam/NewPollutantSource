@@ -679,6 +679,7 @@ const Index = (props) => {
 
   const uploadProps = { //运维接收确认单附件上传 
     action:API.UploadApi.UploadFiles,
+    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
     // accept:'image/*',
     data: {
       FileUuid: filesCuid1,
@@ -686,13 +687,17 @@ const Index = (props) => {
     },
     listType: "picture-card",
     onChange(info) {
-      setFileList1(info.fileList)
       if (info.file.status === 'done') {
+        let fileList = info.fileList;
+        let before = '/'
+        fileList[fileList.length - 1].url = before + fileList[fileList.length - 1].response.Datas?.fNameList
+        fileList[fileList.length - 1].thumbUrl = before + fileList[fileList.length - 1].response.Datas?.fNameList
         form2.setFieldsValue({ Enclosure: filesCuid1 })
       }
       if (info.file.status === 'error') {
         message.error('上传文件失败！')
       }
+      setFileList1(info.fileList)
     },
     onRemove: (file) => {
       if (!file.error) {
@@ -700,14 +705,15 @@ const Index = (props) => {
       }
 
     },
-    onPreview: async file => { //预览
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-      setPreviewImage(file.url || file.preview)
-      setPreviewVisible(true)
-      setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
-    },
+    // onPreview: async file => { //预览
+      // console.log(file)
+    //   if (!file.url && !file.preview) {
+    //     file.preview = await getBase64(file.originFileObj);
+    //   }
+    //   setPreviewImage(file.url || file.preview)
+    //   setPreviewVisible(true)
+    //   setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
+    // },
     fileList: fileList1,
   };
   return (
@@ -891,7 +897,7 @@ const Index = (props) => {
         </Form>
       </Modal>
 
-      <Modal //预览上传运维接收确认单附件
+      {/* <Modal //预览上传运维接收确认单附件
         visible={previewVisible}
         title={previewTitle}
         footer={null}
@@ -899,7 +905,7 @@ const Index = (props) => {
 
       >
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
