@@ -26,6 +26,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { blue, red } from '@ant-design/colors';
@@ -54,7 +55,6 @@ const pageUrl = {
   chartExport: standardData.chartExport,
   chartImport: standardData.chartImport,
   chartTime: standardData.chartTime,
-  disColumn: standardData.disColumn,
 }))
 @Form.create()
 export default class Index extends Component {
@@ -62,48 +62,54 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      columns : [
-        {
-          title: '行政区',
-          dataIndex: 'regionName',
-          key: 'regionName',
-          align: 'center',
-          width: 100,
-        },
-        {
-          title: '企业名称',
-          dataIndex: 'entName',
-          key: 'entName',
-          align: 'center',
-          width: 200,
-          render: (text, record) => {
-            return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
-          },
-        },
-        {
-          title: '监测点名称',
-          dataIndex: 'pointName',
-          key: 'pointName',
-          align: 'center',
-          width: 150,
-          render: (text, record) => {
-            return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
-          },
-        },
-        // {
-        //   title: '污染物排放标准',
-        //   width: 480,
-        //   children: [],
-        // },
-      ]
+      columns: []
     };
-
+    this.columns1 = [
+      {
+        title: '行政区',
+        dataIndex: 'regionName',
+        key: 'regionName',
+        align: 'center',
+        width: 100,
+      },
+      {
+        title: '企业名称',
+        dataIndex: 'entName',
+        key: 'entName',
+        align: 'center',
+        width: 200,
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+        },
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'pointName',
+        key: 'pointName',
+        align: 'center',
+        width: 150,
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+        },
+      },
+    ]
+    this.columns2 = [
+      ...this.columns1,
+      {
+        title: '排口类型',
+        dataIndex: 'outputType',
+        key: 'outputType',
+        align: 'center',
+        width: 120,
+      }
+    ]
   }
+
 
   componentDidMount() {
     this.initData();
   }
-  
+
 
   initData = () => {
     const { dispatch, location } = this.props;
@@ -117,7 +123,6 @@ export default class Index extends Component {
     dispatch({ type: 'standardData/getEntByRegion', payload: { RegionCode: '' }, });//获取企业列表
 
     this.updateQueryState({
-      disColumn:[],
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
@@ -139,34 +144,40 @@ export default class Index extends Component {
   };
 
   getTableData = () => {
-    const { dispatch, queryPar } = this.props;
-    const col = this.state.columns;
-    if(queryPar.PollutantType==2){
-      const gasCol = col.filter(item=>item.title=='排口类型')
-      if(gasCol&&gasCol.length<=0){
-       col.splice(3,0,{
-          title: '排口类型',
-          dataIndex: 'outputType',
-          key: 'outputType',
-          align: 'center',
-          width:120,
-        })
-      }
-      this.setState({columns:col})
-      }else{
-        const waterCol =  col.filter(item=>item.title!='排口类型')
-        this.setState({columns:waterCol})
-    }
-    setTimeout(()=>{
+    const { dispatch, queryPar, } = this.props;
+    setTimeout(() => {
       dispatch({
         type: pageUrl.getData,
         payload: { ...queryPar },
+        callback: (col) => {
+          this.getCol(queryPar.PollutantType, col)
+        }
       });
     })
 
   };
 
-
+  getCol = (pollutantType, col) => {
+    let column = pollutantType == 1 ? this.columns1 : this.columns2;
+    if (col && col.length > 0) { //数据请求完成
+      const num = pollutantType == 1 ? 3 : 4;
+      column[num] = {
+        title: '污染物排放标准',
+        children: [],
+      },
+        col.map(item => {
+          column[num].children.push(
+            {
+              title: `${item.PollutantName}${item.Unit ? `(${item.Unit})` : ''}`,
+              dataIndex: `${item.PollutantCode}`,
+              key: `${item.PollutantCode}`,
+              width: 100, align: 'center'
+            },
+          )
+        })
+    }
+    this.setState({ columns: column })
+  }
 
   children = () => { //企业列表
     const { priseList } = this.props;
@@ -219,18 +230,18 @@ export default class Index extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'standardData/exportDischargeStandValue',
-      payload: { ...queryPar,PageIndex:undefined,PageSize:undefined, },
+      payload: { ...queryPar, PageIndex: undefined, PageSize: undefined, },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        downloadFile(`${data}`);
       },
     });
   };
   //查询事件
   queryClick = () => {
     this.updateQueryState({
-      PageIndex:1,
+      PageIndex: 1,
     });
-    setTimeout(()=>{
+    setTimeout(() => {
       this.getTableData();
     })
 
@@ -295,40 +306,23 @@ export default class Index extends Component {
 
   }
 
-  onTableChange = (PageIndex,PageSize) =>{
+  onTableChange = (PageIndex, PageSize) => {
     this.updateQueryState({
-    PageIndex:PageIndex,
-    PageSize: PageSize,
-  });
-  setTimeout(()=>{
-    this.getTableData();
-  })
- }
+      PageIndex: PageIndex,
+      PageSize: PageSize,
+    });
+    setTimeout(() => {
+      this.getTableData();
+    })
+  }
+
   render() {
     const {
       exloading,
       loading,
       queryPar: { beginTime, endTime, EntCode, RegionCode, AttentionCode, PollutantType },
-      disColumn
     } = this.props;
-    let column = this.state.columns;
-    if (disColumn&&disColumn.length > 0) { //数据请求完成
-      const num = PollutantType == 1 ? 3 : 4;
-      column[num] =  {
-        title: '污染物排放标准',
-        children: [],
-      },
-      disColumn.map(item => {
-         column[num].children.push(
-           {
-            title: `${item.PollutantName}${item.Unit ? `(${item.Unit})` : ''}`,
-            dataIndex: `${item.PollutantCode}`, 
-            key: `${item.PollutantCode}`,
-            width: 100, align: 'center'
-          },
-        )
-      })
-    }
+
     return (
       <Card
         bordered={false}
@@ -408,7 +402,7 @@ export default class Index extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={loading}
-            columns={column}
+            columns={this.state.columns}
             bordered={true}
             dataSource={this.props.disTableDatas}
             scroll={{ y: 'calc(100vh - 360px)' }}
