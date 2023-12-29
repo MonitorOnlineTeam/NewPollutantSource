@@ -9,6 +9,7 @@ const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do
 import path from 'path';
 const apiHost = 'http://172.16.12.39:49003/';
 // const apiHost = 'http://172.16.12.234:61002/';
+// const apiHost = 'http://172.16.12.134:63001/';//正式
 // const apiHost = 'http://172.16.12.152:50089/';
 // const apiHost = 'http://61.50.135.114:63001/'; // 运维外网
 // const apiHost = 'http://172.16.12.234:61002/';
@@ -20,6 +21,7 @@ const apiHost = 'http://172.16.12.39:49003/';
 // const apiHost = 'http://172.16.12.57:61000/';
 // const apiHost = 'http://172.16.12.57:61002/';
 const apiHost2 = 'http://172.16.12.109:61001/';//调试服务导出PDF api
+
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
