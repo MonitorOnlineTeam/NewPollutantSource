@@ -1349,8 +1349,9 @@ class DepartIndex extends Component {
 
         if (currentData && findData && currentData.flag === findData.flag) {
           //在同一个树下拖拽
+          console.log(currentIndexs)
           data[currentIndexs] = data.splice(findIndexs, 1, data[currentIndexs])[0]; //先删除替换  返回的删除元素再赋值到之前的位置
-          // console.log(findIndexs, data[findIndexs]);
+          console.log(findIndexs, data[findIndexs]);
           break; //拖拽完成后直接跳转循环 多次循环会导致错乱
         }
         totalData.push({

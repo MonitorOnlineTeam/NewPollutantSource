@@ -234,14 +234,14 @@ export const API = {
     ExportOverDataList: before + '/OverDataApi/ExportOverDataList', //导出超标数据信息
     GetOverStandardNum: before + '/OverDataApi/GetOverStandardNum', //获取超标次数
     ExportOverStandardNum: before + '/OverDataApi/ExportOverStandardNum', //导出超标次数
-    /*超标数据报警*/
+    /*超标数据报警 超标报警核实率*/
     GetOverToExamineOperation: before + '/AlarmVerifyManageApi/GetOverToExamineOperation',//获取超标核实类型
     GetAlarmVerifyRate: before + '/OverAlarmApi/GetAlarmVerifyRate',//获取超标数据信息
     ExportAlarmVerifyRate: before + '/OverAlarmApi/ExportAlarmVerifyRate',//导出超标数据信息
     GetAlarmVerifyRateDetail: before + '/OverAlarmApi/GetAlarmVerifyRateDetail',//获取超标数据信息详情
     ExportAlarmVerifyRateDetail: before + '/OverAlarmApi/ExportAlarmVerifyRate',//导出超标数据信息
-    GetAlarmVerifyDetail: before + '/OverAlarmApi/GetAlarmVerifyDetail',//获取超标数据报警次数详情
-    ExportAlarmVerifyDetail: before + '/OverAlarmApi/ExportAlarmVerifyDetail',//导出超标数据报警次数详情
+    GetAlarmVerifyDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyDetail',//获取超标数据报警次数详情
+    ExportAlarmVerifyDetail: before + '/AlarmVerifyManageApi/ExportAlarmVerifyDetail',//导出超标数据报警次数详情
     /*缺失数据分析*/
     GetMissDataList: before + '/ExceptionDataApi/GetMissDataList',//获取缺失数据分析信息
     ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList',//导出缺失数据分析信息

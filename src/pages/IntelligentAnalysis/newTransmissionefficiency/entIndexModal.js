@@ -78,7 +78,7 @@ export default class EntIndexModal extends Component {
       PollutantType: props.pollutantType,
       beginTime:props.beginTime,
       endTime:props.endTime,
-      level:''
+      level:1
     };
   }
 
@@ -115,8 +115,8 @@ export default class EntIndexModal extends Component {
         PollutantType: this.state.PollutantType?this.state.PollutantType:'',
         beginTime:this.state.beginTime,
         endTime:this.state.endTime,
-        RegionCode:this.state.level? regionCode: this.props.RegionCode,
-        regionLevel:this.state.level? this.state.level: ''
+        RegionCode:this.state.level==2? regionCode: this.props.RegionCode,
+        regionLevel:this.state.level
       }
     });
   };
@@ -202,7 +202,7 @@ export default class EntIndexModal extends Component {
   };
 
   //创建并获取模板   导出
-  template = () => {
+  template = (level) => {
     this.updateState({
       exRegionloading: true,
     });
@@ -210,6 +210,8 @@ export default class EntIndexModal extends Component {
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForRegion',
       payload: {
+        RegionCode:level==2? this.state.regionCode: this.props.RegionCode,
+        regionLevel:level,
         callback: data => {
           downloadFile(data);
         },
@@ -275,7 +277,7 @@ export default class EntIndexModal extends Component {
         render: (text, record) => { 
           let RegionCode = record.RegionCode;
           return <a onClick={()=>{
-            if(this.state.level){
+            if(this.state.level==2){
               this.setState({
                 showDetails: true,
                 RegionCode: RegionCode,
@@ -283,7 +285,8 @@ export default class EntIndexModal extends Component {
               })
             }else{
               this.setState({
-                level: '2',
+                level: 2,
+                regionCode:RegionCode,
               },()=>{
                 this.getTableData(RegionCode);
               })
@@ -436,7 +439,7 @@ export default class EntIndexModal extends Component {
           bordered={false}
           title={
             <>
-              {!level&& <Form layout="inline">
+              {level == 1 && <Form layout="inline">
 
                <Form.Item>
                   查询时间：
@@ -483,14 +486,14 @@ export default class EntIndexModal extends Component {
                   <Button
                     style={{ margin: '0 5px' }}
                     icon={<ExportOutlined />}
-                    onClick={this.template}
+                    onClick={()=>this.template(level)}
                     loading={exRegionloading}
                   >
                     导出
                   </Button>
                 </Form.Item>
               </Form>}
-              {!level&&  <div style={{ paddingTop: 10 }}>
+              {level==1&&  <div style={{ paddingTop: 10 }}>
                 <div
                   style={{
                     width: 20,
@@ -523,17 +526,17 @@ export default class EntIndexModal extends Component {
                 </span>
                 <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span>
               </div>}
-              {level&&<><Button
+              {level==2&&<><Button
                     style={{ margin: '0 5px' }}
                     icon={<ExportOutlined />}
-                    onClick={this.template}
+                    onClick={()=>this.template(level)}
                     loading={exRegionloading}
                   >
                     导出
                   </Button><Button
                     onClick={() => {
                       this.setState({
-                        level:'',
+                        level:1,
                       },()=>{
                         this.getTableData();
                       })
