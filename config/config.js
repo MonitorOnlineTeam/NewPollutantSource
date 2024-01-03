@@ -9,6 +9,8 @@ import path from 'path';
 // const API_HOST = 'http://172.16.12.39:9090/'; // 唐银钢铁 - 开发
 const CONSOLE_HOST = 'http://172.16.12.39:9090/'; //
 // const API_HOST = 'http://172.16.12.39:9090/';  // 志鹏
+// const API_HOST = 'http://172.16.12.39:9090/'; // 39
+// const API_HOST = 'http://60.29.13.132:60061';  // 60
 const API_HOST = 'http://172.16.12.60:6001/';  // 60
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
@@ -139,6 +141,7 @@ export default {
   },
   chainWebpack: webpackPlugin,
   proxy: {
+    
     '/rest': {
       target: API_HOST,
       changeOrigin: true,
