@@ -225,7 +225,7 @@ export const API = {
     GetExceptionReportList: before + '/ExceptionApi/GetExceptionReportList',//获取异常数据上报信息、企业异常记录
     AddOrUpdateExceptionReportInfo: before + '/ExceptionApi/AddOrUpdateExceptionReportInfo',//添加更新异常数据上报信息
     DeleteExceptionReportInfo: before + '/ExceptionApi/DeleteExceptionReportInfo',//删除异常数据上报信息
-    GetExceptionReportedById: before + '/ExceptionApi/GetExceptionReportedById',//获取异常数据上报详情
+    GetExceptionReportedById: before + '/ExceptionDataApi/GetExceptionReportedById',//获取异常数据上报详情
     /*设备故障反馈*/
     GetEquipmentFaultFeedbackList: before + '/EquipmentFailure/GetEquipmentFaultFeedbackList',//获取设备故障反馈信息
     ExportEquipmentFaultFeedbackList: before + '/EquipmentFailure/ExportEquipmentFaultFeedbackList',//导出设备故障反馈信息
@@ -268,7 +268,7 @@ export const API = {
     ExportStopList: before + '/OutputStopApi/ExportStopList',//导出停运记录
     /*企业异常记录*/
     ExportExceptionReportList: before + '/ExceptionApi/ExportExceptionReportList',//获取企业异常记录
-    GetExceptionReportedView: before + '/ExceptionApi/GetExceptionReportedView',//获取企业异常记录详情
+    GetExceptionReportedView: before + '/ExceptionDataApi/GetExceptionReportedView',//获取企业异常记录详情
     /**异常规则信息**/
     /*监测标准设置*/
     GetMonitorPointPollutantDetails: before + '/StandardLibraryApi/GetMonitorPointPollutantDetails',//获取监测污染物详情

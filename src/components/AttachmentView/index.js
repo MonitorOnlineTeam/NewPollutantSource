@@ -27,10 +27,10 @@ class index extends PureComponent {
               <>
                 <a target="_blank" onClick={(e) => {
                   e.stopPropagation()
-                  window.open(`/${text}`)
+                  window.open(props.noSlashPrefix? text : `/${text}`)
                 }}>预览</a>
                 <Divider type="vertical" />
-                <a href={`/${text}`} download onClick={(e) => {
+                <a href={props.noSlashPrefix? text : `/${text}`} download onClick={(e) => {
                   e.stopPropagation()
                 }}>下载</a>
               </>

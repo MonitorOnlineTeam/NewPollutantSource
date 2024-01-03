@@ -77,7 +77,7 @@ class Test extends PureComponent {
           dataIndex: 'Attachments',
           key: 'Attachments',
           render: (value, record) => {
-            const fileInfo = value.ImgNameList ? value.ImgNameList : [];
+            const fileInfo = value ? value.split(',') : [];
             let dataSource = fileInfo.map(item => {
               return {
                 name: item,
@@ -85,7 +85,7 @@ class Test extends PureComponent {
               }
             })
             return (
-              <AttachmentView dataSource={dataSource} />
+              <AttachmentView dataSource={dataSource} noSlashPrefix/>
             )
           }
         },
