@@ -745,7 +745,7 @@ class EmergencyDetailInfo extends Component {
                 });
             }
         }
-        const pics = Attachments !== '' ? Attachments.ThumbimgList : [];
+        const pics = Attachments !== '' ? Attachments.ImgList : [];
         const fileList = [];
         let index = 0;
         pics.map((item, key) => {
@@ -760,9 +760,9 @@ class EmergencyDetailInfo extends Component {
             } else {
                 fileList.push({
                     uid: index,
-                    name: item.replace('_thumbnail', ''),
+                    name:  item.ImgNameList&&item.ImgNameList[index-1],
                     status: 'done',
-                    url: `${config.uploadPrefix}/${item}`,
+                    url: `/${item}`,
                 });
             }
         });
@@ -770,7 +770,7 @@ class EmergencyDetailInfo extends Component {
         const ImageList = [];
         fileList.map(item => {
             ImageList.push(
-                `${config.uploadPrefix}/${item.name}`,
+                `${item.url}`,
             );
         });
         // 报警列表列名

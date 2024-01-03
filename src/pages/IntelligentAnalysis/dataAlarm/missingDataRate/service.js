@@ -17,7 +17,7 @@ export async function GetDefectModel(params) {
 //缺失数据查询响应率 二级
 export async function GetDefectPointDetailRate(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectPointDetailRate',
+    API.IntelligentDiagnosisApi.GetMissDataResponseRateList,
     params,
     null,
   );

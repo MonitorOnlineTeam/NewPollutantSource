@@ -504,7 +504,7 @@ const Index = (props) => {
                 </Form.Item>
               </Spin>
             </Col>
-            <Col span={24}>
+            <Col span={24} >
               <ResizableBox
                 height={260}
                 axis={'y'}
@@ -512,7 +512,7 @@ const Index = (props) => {
                 onResize={handleResize}
                 className={'resizable_quill_sty'}
               >
-                <Form.Item label="答案描述" name='Content' rules={[{ required: true, message: '请输入答案描述' }]}>
+                <Form.Item label="答案描述" name='Content' className={'contentSty'} rules={[{ required: true, message: '请输入答案描述' }]}>
                   <ReactQuill theme="snow" modules={modules} />
                 </Form.Item>
               </ResizableBox >

@@ -83,12 +83,14 @@ export const API = {
     ExportProviceNetworkingRate: before + '/VisualDashBoardApi/ExportProviceNetworkingRate',// 导出省实时联网率
     ExportCityNetworkingRate: before + '/VisualDashBoardApi/ExportCityNetworkingRate',// 导出市实时联网率
     ExportPointNetworkingRate: before + '/VisualDashBoardApi/ExportPointNetworkingRate',// 导出点位实时联网率
+    GetResponseList: before + '/VisualDashBoardApi/GetResponseList',// 获取报警响应及时率
+    ExportResponseList: before + '/VisualDashBoardApi/ExportResponseList',// 导出报警响应及时率
     GetEquipmentExecptionRateList: before + '/VisualDashBoardApi/GetEquipmentExecptionRateList',//获取省、市、企业监测点设备完好率
     ExportEquipmentExecptionRateList: before + '/VisualDashBoardApi/ExportEquipmentExecptionRateList',//导出省、市、企业监测点设备完好率
     GetEquipmentFailureRateList: before + '/VisualDashBoardApi/GetEquipmentFailureRateList',//获取省、市、企业监测点设备故障率
     ExportEquipmentFailureRateList: before + '/VisualDashBoardApi/ExportEquipmentFailureRateList',//导出省、市、企业监测点设备故障率
     GetEquipmentRepairRateList: before + '/VisualDashBoardApi/GetEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
-    ExportEquipmentRepairRateList: before + '/VisualDashBoardApi/ExportEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
+    ExportRepairRateList: before + '/VisualDashBoardApi/ExportRepairRateList',//导出省、市、企业监测点设备故障修复率
     GetOverModel: before + '/OverDataApi/GetOverModel',//获取超标记录汇总信息
     GetOverData: before + '/OverDataApi/GetOverData',//获取超标记录详情信息
     GetExceptionModel: before + '/ExceptionDataApi/GetExceptionModel',//获取异常记录汇总信息

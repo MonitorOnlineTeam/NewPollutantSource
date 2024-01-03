@@ -187,7 +187,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.setState({pageIndex,pageSize},()=>{
       dispatch({
         type: pageUrl.getData,
-        payload: { ...queryPar,PageIndex:pageIndex,PageSize:pageSize,},
+        payload: { ...queryPar,PageIndex:pageIndex,PageSize:pageSize,regionLevel:3,staticType:2},
       });
     })
 
@@ -238,7 +238,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateData/exportDefectPointDetail',
-      payload: { ...queryPar },
+      payload: { ...queryPar,regionLevel:3,staticType:2 },
       callback: data => {
          downloadFile(`${data}`);
         },

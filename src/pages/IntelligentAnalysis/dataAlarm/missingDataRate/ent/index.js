@@ -28,7 +28,7 @@ export default class Index extends Component {
   render() {
     return (
         <BreadcrumbWrapper title="缺失数据报警响应率(企业)">
-           <MissingRateData types='ent' {...this.props}/>
+           <MissingRateData types='ent'  level='1'  {...this.props}/>
         </BreadcrumbWrapper>
     );
   }

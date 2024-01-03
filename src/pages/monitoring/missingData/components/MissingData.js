@@ -68,7 +68,7 @@ export default class EntTransmissionEfficiency extends Component {
       regionName: '',
       status: '',
       regCode:'',
-      regLevel:'',
+      regLevel:1,
     };
     this.commonCol = [
       {
@@ -129,7 +129,7 @@ export default class EntTransmissionEfficiency extends Component {
               const { queryPar, } = this.props
               //省级跳转
               this.props.dispatch(routerRedux.push({
-                pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar, regionDetailCode: record.regionCode }), regionCode: record.regionCode }
+                pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar, regionDetailCode: record.regionCode,regionLevel:2,staticType:1 }), regionCode: record.regionCode }
               }));
 
             }}>{text}</a>
@@ -182,7 +182,7 @@ export default class EntTransmissionEfficiency extends Component {
               () => {
                 const { queryPar, } = this.props
                 //市级跳转
-                this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.CityCode ? record.CityCode : queryPar.regionDetailCode }), regionName: record.regionName } }));
+                this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar,Rate:1, RegionCode: record.CityCode ? record.CityCode : queryPar.regionDetailCode, regionLevel:3,staticType:3}), regionName: record.regionName } }));
               }}>{record.ProvinceName == '全部合计' ? '全部合计' : text}</a>
           }
         },
@@ -240,7 +240,7 @@ export default class EntTransmissionEfficiency extends Component {
     const par = regionLevel == 1 ? queryPar : query && query.queryPar && JSON.parse(query.queryPar)
     dispatch({
       type: pageUrl.getData,
-      payload: { ...par, RegionCode: regCode, regionLevel: regionLevel,},
+      payload: { ...par, RegionCode: regCode, regionLevel: regionLevel,staticType:1},
     });
   };
 
@@ -307,7 +307,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar, } = this.props;
     dispatch({
       type: 'missingData/exportDefectDataSummary',
-      payload: { ...queryPar,regionDetailCode:undefined,RegionCode:this.state.regCode?this.state.regCode : '' ,regionLevel:this.state.regLevel },
+      payload: { ...queryPar,regionDetailCode:undefined,RegionCode:this.state.regCode?this.state.regCode : '' ,regionLevel:this.state.regLevel,staticType:1 },
       callback: data => {
         downloadFile(`${data}`);
       },
@@ -387,7 +387,7 @@ export default class EntTransmissionEfficiency extends Component {
           <>
             <Form layout="inline">
               <Row>
-                {!this.props.level &&
+                {level == 1 &&
                   <>
                     <Form.Item label='数据类型'>
                       <Select
@@ -434,7 +434,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Select>
               </Form.Item>  */}
                 {types === 'air' ? <Form.Item>
-                  {!this.props.level && <Button type="primary" onClick={this.queryClick}>
+                  {level == 1 && <Button type="primary" onClick={this.queryClick}>
                     查询
                 </Button>
                   }
@@ -446,7 +446,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                 </Button>
-                  {level && <Button onClick={() => {
+                  {level == 2 && <Button onClick={() => {
                     // this.props.dispatch(routerRedux.push({pathname:'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/air'}))
                     history.go(-1)
                   }}>
@@ -456,7 +456,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Row>
 
               {types === 'ent' ? <Row>
-                {!level && <>
+                { level == 1 &&<>
                   <Form.Item label='关注程度'>
                     <Select
                       allowClear
@@ -483,7 +483,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Form.Item>
                 </>}
                 <Form.Item>
-                  {!level && <Button type="primary" onClick={this.queryClick}>
+                  {level == 1 && <Button type="primary" onClick={this.queryClick}>
                     查询
                 </Button>}
 
@@ -495,7 +495,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                 </Button>
-                  {level && <Button onClick={() => {
+                  {level == 2 && <Button onClick={() => {
                     //  this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/ent'}))
                     history.go(-1)
                   }}>
@@ -512,7 +512,7 @@ export default class EntTransmissionEfficiency extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
-            columns={!level ? this.columns : this.columns2}
+            columns={level == 1? this.columns : this.columns2}
             dataSource={this.props.tableDatas}
             pagination={false}
           // pagination={{
@@ -536,7 +536,7 @@ export default class EntTransmissionEfficiency extends Component {
           onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
           className={styles.missDetailSty}
         >
-          <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, status: this.state.status }) } }} />
+          <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, status: this.state.status,staticType:3, }) } }} />
         </Modal>
       </Card>
     );

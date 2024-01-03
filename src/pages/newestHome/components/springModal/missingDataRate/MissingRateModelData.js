@@ -70,7 +70,7 @@ export default class Index extends PureComponent {
       location: {
         query: {}
       },
-      level: '',
+      level: 1,
       goback: false,
       regionDetailCode: '',
       missingAlarmVisible: false,
@@ -179,13 +179,13 @@ export default class Index extends PureComponent {
   }
   detail = (text, record) => {
     const { queryPar } = this.props;
-    if (this.state.level) { //监测点
+    if (this.state.level==2) { //进入监测点
       this.setState({
-        location: { query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : this.state.regionDetailCode, }) } }
+        location: { query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : this.state.regionDetailCode,regionLevel:3, staticType:2 }) } }
       }, () => {
         this.setState({ entVisible: true })
       })
-    } else { //省级详情
+    } else { //进入市级详情
       const { dispatch, types, time } = this.props;
       this.setState({ regionDetailCode: record.regionCode, level: 2 }, () => {
           this.getTableData(record.regionCode);
@@ -231,7 +231,7 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: this.state.level ? { ...queryPar, RegionCode: regionCode, regionLevel: this.state.level } : { ...queryPar },
+      payload: this.state.level==1 ? { ...queryPar, RegionCode: this.state.regionDetailCode, regionLevel: this.state.level, Rate: 1,staticType:1, } : { ...queryPar, regionLevel: this.state.level, Rate: 1, staticType:1, },
     });
   };
 
@@ -296,7 +296,7 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateDataModal/exportDefectDataSummary',
-      payload: this.state.level ? { ...queryPar, RegionCode: this.state.regionDetailCode, regionLevel: this.state.level, Rate: 1, } : { ...queryPar, Rate: 1, },
+      payload: this.state.level==1 ? { ...queryPar, RegionCode: this.state.regionDetailCode, regionLevel: this.state.level, Rate: 1,staticType:1, } : { ...queryPar, regionLevel: this.state.level, Rate: 1, staticType:1, },
       callback: data => {
         downloadFile(`${data}`);
       },
@@ -378,7 +378,7 @@ export default class Index extends PureComponent {
         <div>
           <Form layout="inline">
             <Row style={{ paddingBottom: 15 }}>
-              {!level && <><Form.Item>
+              {level==1 && <><Form.Item>
                 日期查询：
                 <RangePicker_ allowClear={false} onRef={this.onRef1} dataType={''} style={{ minWidth: '200px', marginRight: '10px' }} dateValue={[moment(time[0]), moment(time[1])]}
                   callback={(dates, dataType) => this.dateChange(dates, dataType)} />
@@ -437,7 +437,7 @@ export default class Index extends PureComponent {
                 </Form.Item> : null}
               </>}
               <Form.Item>
-                {!level && <Button type="primary" onClick={this.queryClick}>
+                {level==1 && <Button type="primary" onClick={this.queryClick}>
                   查询
                 </Button>}
                 <Button
@@ -459,7 +459,7 @@ export default class Index extends PureComponent {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
-            columns={ !level ? this.columns : this.columns2}
+            columns={ level==1 ? this.columns : this.columns2}
             dataSource={this.props.tableDatas}
             pagination={false}
           />
@@ -472,7 +472,7 @@ export default class Index extends PureComponent {
             onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
             className={styles.missDetailSty}
           >
-            <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status }) } }} />
+            <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status, staticType:3 }) } }} />
           </Modal>
         </div>
       }

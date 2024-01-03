@@ -135,14 +135,14 @@ export default class EntTransmissionEfficiency extends Component {
             return this.props.types === 'ent' ? //一级页面
               <Link to={{
                 pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
-                query: { regionCode: record.regionCode, queryPar: JSON.stringify(queryPar) }
+                query: { regionCode: record.regionCode, queryPar: JSON.stringify({...queryPar,regionLevel:2,staticType:1} ) }
               }} >
                 {text}
               </Link> 
               :
               <Link to={{
                 pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
-                query: { regionCode: record.regionCode, queryPar: JSON.stringify(this.props.queryPar) }
+                query: { regionCode: record.regionCode, queryPar: JSON.stringify({...queryPar,regionLevel:2,staticType:1}) }
               }} >
                 {text}
               </Link>
@@ -210,7 +210,7 @@ export default class EntTransmissionEfficiency extends Component {
         return  { props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
         children: <Link to={{
         pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-        query: { regionCode: record.regionCode ? record.regionCode : queryPar.RegionCode , queryPar: JSON.stringify(queryPar) }
+        query: { regionCode: record.regionCode ? record.regionCode : queryPar.RegionCode , queryPar: JSON.stringify({...queryPar}) }
       }} >
         {record.ProvinceName == '全部合计' ? '全部合计' : text}
       </Link>
@@ -266,7 +266,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar, level } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar, regionLevel: level },
+      payload: { ...queryPar, regionLevel: level,staticType:1 },
     });
   };
 
@@ -331,7 +331,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar, level } = this.props;
     dispatch({
       type: 'MissingRateData/exportDefectDataSummary',
-      payload: { ...queryPar, regionLevel: level },
+      payload: { ...queryPar, regionLevel: level,staticType:1  },
       callback: data => {
         downloadFile(`${data}`);
       },
@@ -421,7 +421,7 @@ export default class EntTransmissionEfficiency extends Component {
 
                 </Select>
             </Form.Item> */}
-                {!level &&
+                {level == 1 &&
                   <> <Form.Item>
                     日期查询：
                 <RangePicker_ allowClear={false} onRef={this.onRef1} dataType={''} style={{ minWidth: '200px', marginRight: '10px' }} dateValue={[moment(beginTime), moment(endTime)]}
@@ -471,7 +471,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </>
                 }
                 <Form.Item>
-                  {!level && <Button type="primary" onClick={this.queryClick}>
+                  {level == 1 && <Button type="primary" onClick={this.queryClick}>
                     查询
                 </Button>}
 
@@ -483,7 +483,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     导出
                 </Button>
-                  {level && <Button onClick={() => { history.go(-1); }} >
+                  {level == 2 && <Button onClick={() => { history.go(-1); }} >
                     <RollbackOutlined />
                    返回
                 </Button>}
@@ -497,7 +497,7 @@ export default class EntTransmissionEfficiency extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
-            columns={!level? this.columns : this.columns2}
+            columns={level == 1? this.columns : this.columns2}
             dataSource={this.props.tableDatas}
             pagination={false}
           />
@@ -511,7 +511,7 @@ export default class EntTransmissionEfficiency extends Component {
           onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
           className={styles.missDetailSty}
         >
-          <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status }) } }} />
+          <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status,staticType:3 }) } }} />
         </Modal>
       </Card>
     );

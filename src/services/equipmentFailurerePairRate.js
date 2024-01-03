@@ -27,7 +27,7 @@ export async function pointGetRepairRateList(params) {
 
 // 监测点
 export async function exportRepairRateList(params) {
-  const result = await post(API.VisualKanbanApi.ExportEquipmentRepairRateList,params, null);
+  const result = await post(API.VisualKanbanApi.ExportRepairRateList,params, null);
   return result;
 }
 

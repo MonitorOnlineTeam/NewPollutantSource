@@ -422,14 +422,14 @@ const Index = (props) => {
       className={styles['ant-advanced-search-form']}
       onFinish={() => { onFinish(pageIndex, pageSize) }}
       initialValues={{
-        time: [moment().clone().startOf('month'), moment().clone().endOf('month')],
+        time: [moment().subtract(6, 'months').startOf('d'), moment().endOf('d')],
       }}
     >
       <Row align='middle'>
         <Col span={8}>
           <Form.Item name='time' label='运维日期' >
             <RangePicker_ style={{ width: '100%' }}
-              showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
+              showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
             />
           </Form.Item>
         </Col>

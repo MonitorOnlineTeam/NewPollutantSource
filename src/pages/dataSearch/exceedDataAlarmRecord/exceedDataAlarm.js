@@ -1313,12 +1313,11 @@ class index extends PureComponent {
                                 name: item.FileName,
                                 attach: `${uploadPrefix}/` + item.FileName
                             }
+                            sourc.push(obj)
                         })
-                        obj.remark = text;
-                        sourc.push(obj)
+                        
                     }
-                    return sourc.length > 0 ? <VerifyDetailsPop dataSource={sourc} /> : '-'
-                    //return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
+                    return <VerifyDetailsPop dataSource={sourc} remark={text}/>
                 }
             },
         ]
@@ -1456,8 +1455,7 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render: (text, record) => {
-                    let sourc = [];
-
+                    let sourc = []
                     if (!record.verifyImage && !record.remark) {
                         sourc = []
                     }
@@ -1466,14 +1464,13 @@ class index extends PureComponent {
                         record.verifyImage && record.verifyImage.map(item => {
                             obj = {
                                 name: item.FileName,
-                                attach: `${uploadPrefix}/` + item.FileName,
+                                attach: `${uploadPrefix}/` + item.FileName
                             }
+                            sourc.push(obj)
                         })
-                        obj.remark = text;
-                        sourc.push(obj)
+                        
                     }
-                    return <VerifyDetailsPop dataSource={sourc} />
-                    //  return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                    return <VerifyDetailsPop dataSource={sourc} remark={text}/>
                 }
             },
         ]
@@ -1602,7 +1599,7 @@ class index extends PureComponent {
                 key: 'remark',
                 render: (text, record) => {
                     let sourc = []
-                    if (!record.remark && (record.verifyImage == null || record.verifyImage == '' || record.status == 0)) {
+                    if (!record.verifyImage && !record.remark) {
                         sourc = []
                     }
                     else {
@@ -1612,11 +1609,11 @@ class index extends PureComponent {
                                 name: item.FileName,
                                 attach: `${uploadPrefix}/` + item.FileName
                             }
+                            sourc.push(obj)
                         })
-                        obj.remark = text;
-                        sourc.push(obj)
+                        
                     }
-                    return sourc.length > 0 ? <VerifyDetailsPop dataSource={sourc} /> : '-'
+                    return <VerifyDetailsPop dataSource={sourc} remark={text}/>
                 }
             },
         ]
@@ -1769,11 +1766,11 @@ class index extends PureComponent {
                                 name: item.FileName,
                                 attach: `${uploadPrefix}/` + item.FileName
                             }
+                            sourc.push(obj)
                         })
-                        obj.remark = text;
-                        sourc.push(obj)
+                        
                     }
-                    return sourc.length > 0 ? <VerifyDetailsPop dataSource={sourc} /> : '-'
+                    return <VerifyDetailsPop dataSource={sourc} remark={text}/>
                 }
             },
         ]

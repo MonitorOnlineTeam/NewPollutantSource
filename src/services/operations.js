@@ -139,13 +139,13 @@ export async function getOperationCompanyList(params) {
 }
 // 报警响应及时率 
 export async function GetResponseList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetResponseList', params, null);
+  const result = await post(API.VisualKanbanApi.GetResponseList, params, null);
   return result;
 }
 
 // 报警响应及时率 导出
 export async function ExportResponseList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/ExportResponseList', params, null);
+  const result = await post(API.VisualKanbanApi.ExportResponseList, params, null);
   return result;
 }
 
