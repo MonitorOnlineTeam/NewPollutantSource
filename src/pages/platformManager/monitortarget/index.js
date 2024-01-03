@@ -207,7 +207,7 @@ export default class MonitorTarget extends Component {
     /**下载模版 */
     downloadFile = (returnName) => {
         let a = document.createElement('a');
-        a.href = `${uploadPrefix}/${returnName}`;
+        a.href = `、${returnName}`;
         a.download = '';
         document.body.appendChild(a);
         a.click();
