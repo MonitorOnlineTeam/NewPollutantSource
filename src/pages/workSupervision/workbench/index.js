@@ -165,7 +165,7 @@ const Workbench = props => {
                 if(clItem.CName=='合同到期'){
                   btnObj.value = 4;
                   SetRemindExpire(true)
-                  GetProjectRemindList(dataAlarmVal,contractPageIndex,contractPageSize,(total)=>{
+                  GetProjectRemindList(contractPageIndex,contractPageSize,(total)=>{
                     btnObj.name =  `${clItem.CName}（${total}）`
                   }) //我的提醒 合同到期
                 }
