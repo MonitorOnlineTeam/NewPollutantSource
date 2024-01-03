@@ -231,7 +231,7 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: this.state.level==1 ? { ...queryPar, RegionCode: this.state.regionDetailCode, regionLevel: this.state.level, Rate: 1,staticType:1, } : { ...queryPar, regionLevel: this.state.level, Rate: 1, staticType:1, },
+      payload: this.state.level==2 ? { ...queryPar, RegionCode: regionCode, regionLevel: this.state.level, Rate: 1,staticType:1, } : { ...queryPar, regionLevel: this.state.level, Rate: 1, staticType:1, },
     });
   };
 
@@ -296,7 +296,7 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateDataModal/exportDefectDataSummary',
-      payload: this.state.level==1 ? { ...queryPar, RegionCode: this.state.regionDetailCode, regionLevel: this.state.level, Rate: 1,staticType:1, } : { ...queryPar, regionLevel: this.state.level, Rate: 1, staticType:1, },
+      payload: this.state.level==2? { ...queryPar, RegionCode: this.state.regionDetailCode, regionLevel: this.state.level, Rate: 1,staticType:1, } : { ...queryPar, regionLevel: this.state.level, Rate: 1, staticType:1, },
       callback: data => {
         downloadFile(`${data}`);
       },
@@ -448,8 +448,8 @@ export default class Index extends PureComponent {
                 >
                   导出
                 </Button>
-                {level && <Button onClick={() => {
-                  this.setState({ level: '', regionDetailCode: '', goback: true }, () => {
+                {level == 2 && <Button onClick={() => {
+                  this.setState({ level: 1, regionDetailCode: '', goback: true }, () => {
                     this.getTableData();
                   })
                 }} ><RollbackOutlined />返回</Button>}
