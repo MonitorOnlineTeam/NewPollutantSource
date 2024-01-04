@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-21 09:06:17
+ * @Last Modified time: 2023-08-31 10:20:59
  * @Description：报警记录
  */
 
@@ -18,8 +18,6 @@ import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { ModelNumberIdsDatas, ModalNameConversion } from '../CONST';
-import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 
 const textStyle = {
   width: '100%',
@@ -36,7 +34,6 @@ const dvaPropsData = ({ loading, dataModel }) => ({
   modelListLoading: loading.effects['dataModel/GetModelList'],
   queryLoading: loading.effects['dataModel/GetWarningList'],
   pointListLoading: loading.effects['dataModel/GetNoFilterPointByEntCode'],
-  entListLoading: loading.effects['common/getEntNoFilterList'],
 });
 
 const WarningRecord = props => {
@@ -48,39 +45,28 @@ const WarningRecord = props => {
     queryLoading,
     modelMenuNumber,
     pointListLoading,
-    entListLoading,
   } = props;
   const modelNumber = props.match.params.modelNumber;
   const [modelList, setModelList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [pointList, setPointList] = useState([]);
+  const [modelIdDatas, setModelIdDatas] = useState();
   const [total, setTotal] = useState(0);
-
-  console.log('warningForm', warningForm);
   useEffect(() => {
-    // getModelIdsByModelNumber(false);
-    // handleLocationParams();
+    getModelIdsByModelNumber(true);
+    handleLocationParams();
     if (modelNumber) {
       if (modelMenuNumber === modelNumber) {
-        // 页面没跳转
-        debugger;
         onFinish();
       } else {
-        // 页面跳转，清空查询条件并重置分页
-        if (props.history.location.query.notResetForm) {
-          onReset(true);
-        } else {
-          onReset();
-        }
-        // form.setFieldsValue({ warningTypeCode: [] });
-        // onTableChange(1, 20);
+        onTableChange(1, 20);
       }
     } else {
       onFinish();
     }
     GetModelList();
-    if (warningForm[modelNumber].EntCode) {
-      getPointList(warningForm[modelNumber].EntCode);
+    if (warningForm.EntCode) {
+      getPointList(warningForm.EntCode);
     }
 
     props.dispatch({
@@ -93,22 +79,13 @@ const WarningRecord = props => {
     console.log('modelNumber', modelNumber);
   }, [modelNumber]);
 
-  // useEffect(() => {
-  //   onFinish();
-  //   console.log('pageIndex', warningForm[modelNumber].pageIndex);
-  // }, [warningForm[modelNumber].pageIndex, warningForm[modelNumber].pageSize]);
-
   // 处理地址栏参数
   const handleLocationParams = () => {
     let locationParams = props.history.location.query.params;
     if (locationParams) {
-      // onReset();
       let values = JSON.parse(locationParams);
       values.date = [moment(values.date[0]), moment(values.date[1])];
       form.setFieldsValue(values);
-      if (values.EntCode) {
-        getPointList(values.EntCode);
-      }
       // onFinish();
     }
   };
@@ -122,10 +99,8 @@ const WarningRecord = props => {
       callback: (res, unfoldModelList) => {
         let _modelList = unfoldModelList;
         console.log('unfoldModelList', unfoldModelList);
-        if (modelNumber && modelNumber !== 'all') {
-          _modelList = _modelList.filter(item =>
-            ModelNumberIdsDatas[modelNumber].includes(item.ModelGuid),
-          );
+        if (modelNumber) {
+          _modelList = _modelList.filter(item => modelIds.includes(item.ModelGuid));
           // _modelList = modelType.split(',')
         }
         setModelList(_modelList);
@@ -137,14 +112,99 @@ const WarningRecord = props => {
   const getModelIdsByModelNumber = isInitValue => {
     if (!modelNumber) return;
 
-    let modelIds = ModelNumberIdsDatas[modelNumber];
+    let modelIds = '';
+    switch (modelNumber) {
+      // 波动范围异常分析
+      case '2.2':
+        // 疑似篡改分析仪量程
+        // 疑似人为修改颗粒物斜率截距
+        modelIds = ['069ab699-428a-4f4b-8df7-915d6b4f3215', '5bfd23c7-03da-4f4b-a258-a9c618774ab9'];
+        break;
+
+      // 样气异常识别
+      case '4.1':
+        // 疑似监测样品为空气,
+        // 疑似监测样品混入氮气,
+        // 疑似监测样品混入空气,
+        // 疑似监测样品混入氧混合气
+        modelIds = [
+          '9104ab9f-d3f3-4bd9-a0d9-898d87def4dd',
+          '1fed575c-48d7-4eef-9266-735fe4bbdb2a',
+          '5520e6f2-ac4a-4f24-bafd-48746a13f4a4',
+          '1b9afa8d-1200-4fb1-aab0-a59936c3f22d',
+        ];
+        break;
+
+      // 参数变化识别
+      case '5.1':
+        // 疑似人为修改烟道截面积
+        // 疑似人为修改过量空气系数
+        // 疑似人为修改速度场系数
+        // 疑似计算公式错误
+        modelIds = [
+          'c934b575-a357-4a2c-b493-02849ce9cee3',
+          '3d209ce2-da92-44c4-916b-8874d05da558',
+          'ce61d9a9-5d0d-4b66-abbd-72a89e823ee2',
+          'a59cce2a-8558-4c42-8a45-4d8402e4b29d',
+        ];
+        break;
+
+      // 模拟监测数据
+      case '5.2':
+        // 疑似超过预设值数据恒定
+        // 疑似疑似使用随机数产生数据
+        // 疑似按预设公式处理数据
+        // 疑似远程控制监测数据
+        modelIds = [
+          '1a606047-6f21-4357-a459-03ef7788e09a',
+          '39680c93-e03f-42cf-a21f-115255251d4e',
+          '983cd7b9-55e1-47f3-b369-2df7bc0a6111',
+          'b52087fb-563c-4939-a11f-f86b10da63c1',
+        ];
+        break;
+
+      // 多排放源数据一致性分析
+      case '6.1':
+        // 疑似借用其他合格监测设备数据
+        // 疑似替换分析仪监测样气
+        modelIds = ['c0af25fb-220b-45c6-a3de-f6c8142de8f1', 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402'];
+        break;
+
+      // 同一排放源时间序列数据相似分析
+      case '6.2':
+        // 疑似借用本设备合格历史数据
+        modelIds = ['d5dea4cc-bd6c-44fa-a122-a1f44514b465'];
+        break;
+
+      // 多组分数据相关性分析
+      case '6.3':
+        // 疑似引用错误、虚假原始信号值
+        modelIds = ['f021147d-e7c6-4c1d-9634-1d814ff9880a'];
+        break;
+
+      // 虚假标记异常识别
+      case '7.1':
+        // 疑似机组停运未及时上报
+        // 疑似机组停运虚假标记
+        // 疑似超过标准标记数据无效
+        // 疑似恒定值微小波动
+        // 疑似零值微小波动
+        modelIds = [
+          '928ec327-d30d-4803-ae83-eab3a93538c1',
+          '3568b3c6-d8db-42f1-bbff-e76406a67f7f',
+          '6675e28e-271a-4fb7-955b-79bf0b858e8e',
+          'cda1f2e2-ec5f-425b-93d2-94ba62b17146',
+          '0fa091a3-7a19-4c9e-91bd-c5a4bf2e9827',
+        ];
+        break;
+    }
     // 初始化场景类别默认值
     isInitValue &&
       form.setFieldsValue({
         warningTypeCode: modelIds,
       });
 
-    // setModelIdDatas(modelIds);
+    setModelIdDatas(modelIds);
     // return modelIds;
   };
 
@@ -157,9 +217,7 @@ const WarningRecord = props => {
         width: 80,
         ellipsis: true,
         render: (text, record, index) => {
-          return (
-            (warningForm[modelNumber].pageIndex - 1) * warningForm[modelNumber].pageSize + index + 1
-          );
+          return (warningForm.pageIndex - 1) * warningForm.pageSize + index + 1;
         },
       },
       {
@@ -177,13 +235,6 @@ const WarningRecord = props => {
         ellipsis: true,
       },
       {
-        title: '行业',
-        dataIndex: 'IndustryTypeName',
-        key: 'IndustryTypeName',
-        width: 120,
-        ellipsis: true,
-      },
-      {
         title: '发现线索时间',
         dataIndex: 'WarningTime',
         key: 'WarningTime',
@@ -198,10 +249,9 @@ const WarningRecord = props => {
         width: 180,
         ellipsis: true,
         render: (text, record) => {
-          let _text = ModalNameConversion(text);
           return (
-            <Tooltip title={_text}>
-              <span className={styles.textOverflow}>{_text}</span>
+            <Tooltip title={text}>
+              <span style={textStyle}>{text}</span>
             </Tooltip>
           );
         },
@@ -230,7 +280,7 @@ const WarningRecord = props => {
             case '3':
               return <Badge status="default" text="未核实" />;
             case '2':
-              return <Badge status="warning" text="有异常" />;
+              return <Badge status="success" text="有异常" />;
             case '1':
               return <Badge status="error" text="系统误报" />;
           }
@@ -245,22 +295,6 @@ const WarningRecord = props => {
             <Tooltip title="查看">
               <a
                 onClick={e => {
-                  let scrollTop = 0;
-                  let el = document.querySelector('.ant-table-body');
-                  el ? (scrollTop = el.scrollTop) : '';
-                  props.dispatch({
-                    type: 'dataModel/updateState',
-                    payload: {
-                      warningForm: {
-                        ...warningForm,
-                        [modelNumber]: {
-                          ...warningForm[modelNumber],
-                          rowKey: record.ModelWarningGuid,
-                          scrollTop: scrollTop,
-                        },
-                      },
-                    },
-                  });
                   router.push(
                     `/DataAnalyticalWarningModel/Warning/ModelType/${modelNumber}/WarningVerify/${record.ModelWarningGuid}`,
                   );
@@ -278,11 +312,13 @@ const WarningRecord = props => {
   // 查询数据
   const onFinish = () => {
     const values = form.getFieldsValue();
-    let warningTypeCode = values.warningTypeCode ? values.warningTypeCode.toString() : undefined;
+    console.log('values', values);
+    let warningTypeCode = values.warningTypeCode.toString();
 
-    if (modelNumber && !warningTypeCode && modelNumber !== 'all') {
-      warningTypeCode = ModelNumberIdsDatas[modelNumber].toString();
+    if (modelNumber && !warningTypeCode) {
+      warningTypeCode = modelIdDatas.toString();
     }
+
     props.dispatch({
       type: 'dataModel/GetWarningList',
       payload: {
@@ -290,51 +326,25 @@ const WarningRecord = props => {
         Dgimn: values.DGIMN,
         warningTypeCode: warningTypeCode,
         date: undefined,
-        beginTime: values.date ? values.date[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
-        endTime: values.date ? values.date[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
-        modelNumber: modelNumber,
-        // pageSize: warningForm[modelNumber].pageSize,
-        // pageIndex: warningForm[modelNumber].pageIndex,
+        beginTime: values.date[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.date[1].format('YYYY-MM-DD HH:mm:ss'),
+        // pageIndex,
+        // pageSize,
       },
       callback: res => {
         setDataSource(res.Datas);
         setTotal(res.Total);
-
-        // 设置滚动条高度，定位到点击详情的行号
-        let currentForm = warningForm[modelNumber];
-        // if (currentForm.scrollTop !== undefined && currentForm.rowKey) {
-        //   let tableBody = document.querySelector('.ant-table-body');
-        //   let rowEl = document.querySelector(`[data-row-key="${currentForm.rowKey}"]`);
-        //   el
-        //     ? el.scrollIntoView({ block: 'nearest' })
-        //     : (document.querySelector('.ant-table-body').scrollTop = 0);
-        //   debugger;
-        //   el && (el.scrollTop = currentForm.scrollTop);
-        // }
-        let el = document.querySelector(`[data-row-key="${currentForm.rowKey}"]`);
-        let tableBody = document.querySelector('.ant-table-body');
-        console.log('el', el);
-        if (tableBody) {
-          el ? (tableBody.scrollTop = currentForm.scrollTop) : (tableBody.scrollTop = 0);
-        }
       },
     });
   };
 
   // 重置表单
-  const onReset = notResetForm => {
+  const onReset = () => {
     dispatch({
       type: 'dataModel/onReset',
-      payload: {
-        modelNumber,
-      },
+      payload: {},
     }).then(() => {
-      if (!notResetForm) {
-        form.resetFields();
-        form.setFieldsValue({
-          ...warningForm[modelNumber],
-        });
-      }
+      form.resetFields();
       onTableChange(1, 20);
     });
   };
@@ -346,20 +356,12 @@ const WarningRecord = props => {
       payload: {
         warningForm: {
           ...warningForm,
-          [modelNumber]: {
-            ...warningForm[modelNumber],
-            pageSize,
-            pageIndex: current,
-            rowKey: undefined,
-            scrollTop: 0,
-          },
+          pageSize,
+          pageIndex: current,
         },
       },
     });
-    setTimeout(() => {
-      onFinish();
-    }, 0);
-    // onFinish();
+    onFinish();
   };
 
   // 根据企业获取排口
@@ -371,12 +373,10 @@ const WarningRecord = props => {
       },
       callback: res => {
         setPointList(res);
-        form.setFieldsValue({
-          ...warningForm[modelNumber],
-        });
       },
     });
   };
+  console.log('pointListLoading', pointListLoading);
   return (
     <BreadcrumbWrapper>
       <Card className={styles.warningWrapper}>
@@ -386,7 +386,7 @@ const WarningRecord = props => {
           layout="inline"
           style={{ padding: '10px 0' }}
           initialValues={{
-            ...warningForm[modelNumber],
+            ...warningForm,
           }}
           autoComplete="off"
           // onValuesChange={onValuesChange}
@@ -397,11 +397,8 @@ const WarningRecord = props => {
               type: 'dataModel/updateState',
               payload: {
                 warningForm: {
-                  ...warningForm,
-                  [modelNumber]: {
-                    ...props.warningForm[modelNumber],
-                    ...changedFields,
-                  },
+                  ...props.warningForm,
+                  ...changedFields,
                 },
               },
             });
@@ -418,55 +415,39 @@ const WarningRecord = props => {
           <Form.Item label="行政区" name="regionCode">
             <RegionList noFilter style={{ width: 140 }} />
           </Form.Item>
-          {// 脱敏角色不显示企业
-          !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
-            <>
-              <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
-                <Form.Item label="企业" name="EntCode">
-                  <EntAtmoList
-                    noFilter
-                    style={{ width: 200 }}
-                    onChange={value => {
-                      if (!value) {
-                        form.setFieldsValue({ DGIMN: undefined });
-                      } else {
-                        form.setFieldsValue({ DGIMN: undefined });
-                        getPointList(value);
-                      }
-                    }}
-                  />
-                </Form.Item>
-              </Spin>
-              <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}>
-                <Form.Item label="监测点名称" name="DGIMN">
-                  <Select
-                    placeholder="请选择"
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    style={{ width: 150 }}
-                  >
-                    {pointList.map(item => {
-                      return (
-                        <Option key={item.DGIMN} value={item.DGIMN}>
-                          {item.PointName}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Spin>
-            </>
-          )}
-          <Form.Item label="行业" name="IndustryType">
-            <SearchSelect
-              placeholder="排口所属行业"
-              style={{ width: 130 }}
-              configId={'IndustryType'}
-              itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
-              itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
+          <Form.Item label="企业" name="EntCode">
+            <EntAtmoList
+              noFilter
+              style={{ width: 200 }}
+              onChange={value => {
+                if (!value) {
+                  form.setFieldsValue({ DGIMN: undefined });
+                } else {
+                  form.setFieldsValue({ DGIMN: undefined });
+                  getPointList(value);
+                }
+              }}
             />
           </Form.Item>
+          <Spin spinning={!!pointListLoading} size="small">
+            <Form.Item label="监测点名称" name="DGIMN">
+              <Select
+                placeholder="请选择"
+                showSearch
+                allowClear
+                optionFilterProp="children"
+                style={{ width: 150 }}
+              >
+                {pointList.map(item => {
+                  return (
+                    <Option key={item.DGIMN} value={item.DGIMN}>
+                      {item.PointName}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Spin>
           <Spin spinning={modelListLoading} size="small">
             <Form.Item label="场景类别" name="warningTypeCode">
               <Select
@@ -485,7 +466,7 @@ const WarningRecord = props => {
                 {modelList.map(item => {
                   return (
                     <Option key={item.ModelGuid} value={item.ModelGuid}>
-                      {ModalNameConversion(item.ModelName)}
+                      {item.ModelName}
                     </Option>
                   );
                 })}
@@ -511,21 +492,7 @@ const WarningRecord = props => {
               >
                 查询
               </Button>
-              <Button
-                onClick={() => {
-                  dispatch({
-                    type: 'dataModel/onReset',
-                    payload: {
-                      modelNumber,
-                    },
-                  }).then(() => {
-                    form.resetFields();
-                    onTableChange(1, 20);
-                  });
-                }}
-              >
-                重置
-              </Button>
+              <Button onClick={() => onReset()}>重置</Button>
             </Space>
           </Form.Item>
         </Form>
@@ -538,8 +505,8 @@ const WarningRecord = props => {
           pagination={{
             showSizeChanger: true,
             showQuickJumper: true,
-            pageSize: warningForm[modelNumber].pageSize,
-            current: warningForm[modelNumber].pageIndex,
+            pageSize: warningForm.pageSize,
+            current: warningForm.pageIndex,
             onChange: onTableChange,
             total: total,
           }}

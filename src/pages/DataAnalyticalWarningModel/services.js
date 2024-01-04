@@ -1,5 +1,4 @@
 import { post } from '@/utils/request';
-import { API } from '@config/API';
 
 // 获取模型列表
 export async function GetModelList(params) {
@@ -121,7 +120,7 @@ export async function StatisLinearCoefficient(params) {
 // 根据企业获取排口
 export async function getPointByEntCode(params) {
   const result = await post(
-    API.CommonApi.GetNoFilterPointByEntCode,
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
     params,
   );
   return result;
@@ -205,7 +204,7 @@ export async function ExportStatisAlarm(params) {
 // 根据企业获取排口
 export async function GetNoFilterPointByEntCode(params) {
   const result = await post(
-    API.CommonApi.GetNoFilterPointByEntCode,
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
     params,
   );
   return result;
@@ -264,9 +263,20 @@ export async function GetWarningVerifyCheckInfo(params) {
 
 // 报警核实
 export async function InsertWarningVerify(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/InsertWarningVerify', params);
+  return result;
+}
+
+// 模型重新运行
+export async function onRunModel(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Mold/RunModel', params);
+  return result;
+}
+// 获取模型运行状态
+export async function GetModelRunState(params) {
   const result = await post(
-    '/newApi/rest/PollutantSourceApi/Warning/InsertWarningVerify',
-    params,
+    '/newApi/rest/PollutantSourceApi/Mold/GetModelRunState?modelGuid=' + params.modelGuid,
+    {},
   );
   return result;
 }

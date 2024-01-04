@@ -15,7 +15,7 @@ import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentNam
     GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetMonitoringTypeList,
     GetManufacturerList,GetSystemModelList,GetPollutantById,GetPollutantById2,GetEquipmentInfoList,GetMonitoringTypeList2,
     GetMonitoringCategoryType,GetPBList,PointSort,AddOrEditPointCoefficient,GetPointCoefficientByDGIMN,GetPointElectronicFenceInfo,AddOrUpdatePointElectronicFenceInfo,
-    UpdatePointOprationStatus,GetOprationStatusList,
+    UpdatePointOprationStatus,GetOprationStatusList,GetCraftByIndustry,AddOrUptCraftByPoint,GetCraftByPoint,
     
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
@@ -50,6 +50,7 @@ export default Model.extend({
         monitoringCategoryTypeList:[],
         pbList:[], //废气 配备
         oprationStatusList:[],
+        craftByIndustry: {},
     },
     effects: {
 
@@ -505,6 +506,31 @@ export default Model.extend({
             const result = yield call(GetOprationStatusList, payload);
             if (result.IsSuccess) {
                 yield update({ oprationStatusList:result?.Datas?.dataList?  result.Datas.dataList :[],oprationStatusListTotal:result.Total, });
+                callback&&callback(result.Datas)
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *GetCraftByIndustry({ payload, callback }, { call, put, update }) { // 运维状态 修改记录
+            const result = yield call(GetCraftByIndustry, payload);
+            if (result.IsSuccess) {
+                yield update({ craftByIndustry:result.Datas });
+                callback&&callback(result.Datas)
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *AddOrUptCraftByPoint({ payload, callback }, { call, put, update }) { // 运维状态 修改记录
+            const result = yield call(AddOrUptCraftByPoint, payload);
+            if (result.IsSuccess) {
+                callback&&callback(result.Datas)
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *GetCraftByPoint({ payload, callback }, { call, put, update }) { // 运维状态 修改记录
+            const result = yield call(GetCraftByPoint, payload);
+            if (result.IsSuccess) {
                 callback&&callback(result.Datas)
             } else {
               message.error(result.Message)

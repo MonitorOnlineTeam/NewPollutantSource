@@ -89,7 +89,12 @@ const ModelChart = props => {
 
     // 处理x和y轴/grid
     let appendSeries = { type: 'line' };
-    let xAxisData = date.map(item => moment(item).format('MM-DD HH:mm'));
+    let xAxisData = date.map(item => {
+      if (item === '-') {
+        return item;
+      }
+      return moment(item).format('MM-DD HH:mm');
+    });
     let xAxis = {
       type: 'category',
       data: xAxisData,
@@ -244,10 +249,11 @@ const ModelChart = props => {
         trigger: 'axis',
         formatter: function(params) {
           let { axisValue, dataIndex, marker, seriesName, value } = params[0];
+          let _value = value != undefined ? value : '-';
           let date = axisValue;
           //内容
           let content = '';
-          content = `${marker} ${seriesName}: ${value || '-'}${unit || ''}
+          content = `${marker} ${seriesName}: ${_value}${unit || ''}
         <br />`;
           return date + '<br />' + content;
         },
