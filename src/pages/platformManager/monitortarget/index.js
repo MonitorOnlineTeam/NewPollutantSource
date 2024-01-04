@@ -188,7 +188,6 @@ export default class MonitorTarget extends Component {
 
     //生成监测点二维码
     CreatQRCode = (row) => {
-        debugger
         this.props.dispatch({
             type: 'common/CreatQRCode',
             payload: {

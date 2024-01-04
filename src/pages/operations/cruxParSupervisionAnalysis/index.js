@@ -227,7 +227,7 @@ const statisticColumns = [
         endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         staticType:1,
-        type:name=='cruxParSupervisionAnalysis'? 'analysis' : 'statistics'
+        // type:name=='cruxParSupervisionAnalysis'? 'analysis' : 'statistics'
       }, ( par) => {
       })
     } catch (errorInfo) {

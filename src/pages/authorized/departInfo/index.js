@@ -1349,9 +1349,9 @@ class DepartIndex extends Component {
 
         if (currentData && findData && currentData.flag === findData.flag) {
           //在同一个树下拖拽
-          console.log(currentIndexs)
-          data[currentIndexs] = data.splice(findIndexs, 1, data[currentIndexs])[0]; //先删除替换  返回的删除元素再赋值到之前的位置
-          console.log(findIndexs, data[findIndexs]);
+          // data[currentIndexs] = data.splice(findIndexs, 1, data[currentIndexs])[0]; //先删除替换  返回的删除元素再赋值到之前的位置
+          const movedObj = data.splice(currentIndexs, 1)[0]; //先删除
+          data.splice(findIndexs, 0, movedObj);//再把要删除的对象添加到拖拽位置
           break; //拖拽完成后直接跳转循环 多次循环会导致错乱
         }
         totalData.push({
@@ -1416,14 +1416,14 @@ class DepartIndex extends Component {
 
       return keys; // 返回提取的key属性数组  
     }
-    const data = extractKeysFromTree(departInfoTree)?.[0]? extractKeysFromTree(departInfoTree) : []
+    const data = extractKeysFromTree(departInfoTree)?.[0] ? extractKeysFromTree(departInfoTree) : []
     this.props.dispatch({
       type: 'departinfo/groupSort',
       payload: {
         IDList: data,
       },
       callback: () => {
-        this.setState({sortTitle:'开启排序'})
+        this.setState({ sortTitle: '开启排序' })
       },
     });
   };
