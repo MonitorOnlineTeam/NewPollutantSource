@@ -250,13 +250,195 @@ const WarningDataAndChart = props => {
 
     setColumns(columns);
   };
-
   const getOption = () => {
     debugger;
     const values = form.getFieldsValue();
     const { pollutantCodes = [] } = values;
     let series = [];
-    let seriesFlag = {};
+    let seriesFlag = {
+      实测烟尘: [
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '日常维护(M)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+      ],
+      氧含量: [
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+      ],
+      烟气温度: [
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+      ],
+      烟气静压: [
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+      ],
+      烟气湿度: [
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+      ],
+      流速: [
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+      ],
+      流量: [
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+        '正常(N)',
+      ],
+    };
     let xAxisData = [];
     let WorkConData = {};
     let yxisData = [];
@@ -315,7 +497,9 @@ const WarningDataAndChart = props => {
           color: getColorByName[selectedNames[index]],
         },
         symbol: (value, params) => {
+          // 污染物flag非正常，显示三角
           // console.log('params', params);
+
           let flag = seriesFlag[params.seriesName][params.dataIndex];
           if (flag === '正常(N)' || flag === '' || flag === '正常(n)') {
             return 'circle';
@@ -333,10 +517,74 @@ const WarningDataAndChart = props => {
             return 20;
           }
         },
+        // markPoint: {
+        //   data: [
+        //     {
+        //       // 所有
+        //       xAxis: '2023-08-19 04:00',
+        //       yAxis: 1.055,
+        //       symbolSize: 14,
+        //       symbol: '/临时/all.png',
+        //       itemStyle: {
+        //         color: index === 0 ? '#faad14' : 'transparent',
+        //       },
+        //     },
+        //     {
+        //       // 故障标记
+        //       xAxis: '2023-08-19 05:00',
+        //       yAxis: 1.054,
+        //       symbolSize: 14,
+        //       symbol: 'circle',
+        //       itemStyle: {
+        //         color: index === 0 ? '#faad14' : 'transparent',
+        //       },
+        //     },
+        //     {
+        //       // 运维信息
+        //       xAxis: '2023-08-19 06:00',
+        //       yAxis: 1.055,
+        //       symbolSize: 14,
+        //       symbol: 'circle',
+        //       itemStyle: {
+        //         color: index === 0 ? '#faad14' : 'transparent',
+        //       },
+        //     },
+        //     // {
+        //     //   // 所有
+        //     //   xAxis: '2023-09-25 14:00',
+        //     //   yAxis: 1.055,
+        //     //   symbolSize: 14,
+        //     //   symbol: 'circle',
+        //     //   itemStyle: {
+        //     //     color: index === 0 ? '#faad14' : 'transparent',
+        //     //   },
+        //     // },
+        //     // {
+        //     //   // 故障标记
+        //     //   xAxis: '2023-09-25 15:00',
+        //     //   yAxis: 1.054,
+        //     //   symbolSize: 14,
+        //     //   symbol: 'circle',
+        //     //   itemStyle: {
+        //     //     color: index === 0 ? '#ff4d4f' : 'transparent',
+        //     //   },
+        //     // },
+        //     // {
+        //     //   // 运维信息
+        //     //   xAxis: '2023-09-25 16:00',
+        //     //   yAxis: 1.055,
+        //     //   symbolSize: 14,
+        //     //   symbol: 'circle',
+        //     //   itemStyle: {
+        //     //     color: index === 0 ? '#2f54eb' : 'transparent',
+        //     //   },
+        //     // },
+        //   ],
+        // },
       });
-      seriesFlag[selectedNames[index]] = seriesFlagdata;
+      // seriesFlag[selectedNames[index]] = seriesFlagdata;
     });
-
+    console.log('seriesFlag', seriesFlag);
     let markAreaData = [];
     let continuousItem = [];
     allTypeDataList.map((item, idx) => {
@@ -488,7 +736,12 @@ const WarningDataAndChart = props => {
         formatter: function(params, ticket) {
           //x轴名称 params[0]
           let date = params[0].axisValue;
+          let WorkCon1 = `数据特征识别：`;
+          let WorkConfen = `-----------------------`;
           let WorkCon = `工况：${WorkConData[date]}`;
+          let WorkCon2 = `人为干预：监测样品为空气`;
+          let WorkCon3 = `故障原因：系统故障`;
+          let WorkCon4 = `大样本模型识别：监测样品为空气`;
 
           //值
           let value = '';
@@ -499,7 +752,9 @@ const WarningDataAndChart = props => {
           ${seriesFlag[item.seriesName][item.dataIndex]}<br />`;
           });
 
-          return date + '<br />' + WorkCon + '<br />' + value;
+          return (
+            date + '<br />' + WorkCon1 +  '<br />' +  WorkConfen  + '<br />' + WorkCon + '<br />' + WorkCon2 + '<br />' + WorkCon3 + '<br />' + value + '<br />' + WorkCon4
+          );
         },
       },
       legend: {
@@ -616,7 +871,7 @@ const WarningDataAndChart = props => {
           <Button
             type="primary"
             onClick={() => {
-              if(!tempSelectedNames.length) {
+              if (!tempSelectedNames.length) {
                 message.error('请选择污染物！');
                 return;
               }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Alert, Tooltip, Spin, Button, Progress, Modal, DatePicker } from 'antd';
+import { Row, Col, Alert, Tooltip, Spin, Button, Empty } from 'antd';
 import styles from './styles.less';
 import BoxItem from './BoxItem';
 import ReactEcharts from 'echarts-for-react';
@@ -9,32 +9,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { RollbackOutlined, CalendarOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { ModalNameConversion } from '@/pages/DataAnalyticalWarningModel/CONST';
-import 'moment/locale/zh-cn';
-import locale from 'antd/es/date-picker/locale/zh_CN';
-
-const { RangePicker } = DatePicker;
-
-// 获取默认时间
-const getDefaultDate = timeFlag => {
-  let beginTime, endTime;
-  switch (timeFlag) {
-    case 'before':
-      beginTime = moment().subtract(10, 'year');
-      endTime = moment('2023-06').endOf('month');
-      break;
-    case 'after':
-      beginTime = moment('2023-07').startOf('month');
-      endTime = moment();
-      break;
-    default:
-      beginTime = moment().subtract(1, 'year');
-      endTime = moment();
-      break;
-  }
-  return [beginTime, endTime];
-};
+import { RollbackOutlined } from '@ant-design/icons';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   // todoList: wordSupervision.todoList,
@@ -49,17 +24,13 @@ const Index = props => {
   const {
     dispatch,
     onCancel,
+    visible,
     tableLoading,
     alertLoading,
     StatisVeriAndErLoading,
     StatisForDataLoading,
   } = props;
-  const [queryDate, setQueryDate] = useState(getDefaultDate(props.location.query.timeFlag));
-  const _SELF = {
-    queryDate: queryDate,
-  };
-
-  const [visible, setVisible] = useState(false);
+  // const [visible, setVisible] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [dataCountStatistics, setDataCountStatistics] = useState([]); // 数据统计分析数据
@@ -68,7 +39,7 @@ const Index = props => {
   const [checkInfoAndEntRank, setCheckInfoAndEntRank] = useState({
     checkInfo: [{}, {}, {}], //线索核实情况
     entRank: [], // 企业排名
-    checkInfoMaxNum: 0,
+    entMaxNum: 0,
   }); // 线索核实情况和企业排名
   const [tableSelectedCount, setTableSelectedCount] = useState({
     DisCulesNum: 0,
@@ -83,7 +54,7 @@ const Index = props => {
   useEffect(() => {
     StatisForData();
     loadData();
-  }, [selectedModelGuid, queryDate]);
+  }, [selectedModelGuid]);
 
   useEffect(() => {
     StatisAlarmInfoSum();
@@ -124,13 +95,13 @@ const Index = props => {
       payload: body,
       callback: res => {
         let max = 0;
-        if (res.finalResult.length) {
-          max = _.maxBy(res.finalResult, 'Count').Count;
+        if (res.reasonResult.length) {
+          max = _.maxBy(res.reasonResult, 'Count').Count;
         }
         setCheckInfoAndEntRank({
           checkInfo: res.finalResult, //线索核实情况
-          // entRank: res.reasonResult, // 企业排名
-          checkInfoMaxNum: max + max * 0.1,
+          entRank: res.reasonResult, // 企业排名
+          entMaxNum: max + max * 0.1,
         });
       },
     });
@@ -194,12 +165,11 @@ const Index = props => {
 
   // 获取请求参数
   const getRequestBody = () => {
-    let beginTime, endTime;
-    beginTime = moment(queryDate[0]).format('YYYY-MM-DD 00:00:00');
-    endTime = moment(queryDate[1]).format('YYYY-MM-DD 23:59:59');
     return {
-      beginTime: beginTime,
-      endTime: endTime,
+      beginTime: moment()
+        .subtract(1, 'year')
+        .format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD 23:59:59'),
       entCode: [],
       modelGuid: selectedModelGuid,
     };
@@ -251,9 +221,9 @@ const Index = props => {
             },
           },
           data: [
-            { value: checkInfo[2].Count, name: '待核实数据' },
-            { value: checkInfo[0].Count, name: '核实为误报数据' },
-            { value: checkInfo[1].Count, name: '核实为异常数据' },
+            { value: checkInfo[2].Count, name: '待核实线索' },
+            { value: checkInfo[0].Count, name: '核实存在异常' },
+            { value: checkInfo[1].Count, name: '核实无异常' },
           ],
         },
       ],
@@ -273,28 +243,27 @@ const Index = props => {
       ellipsis: true,
       width: 200,
       render: (text, record) => {
-        let _text = ModalNameConversion(text);
         return (
-          <Tooltip title={_text}>
-            <span className={styles.textOverflow}>{_text}</span>
+          <Tooltip title={text}>
+            <span>{text}</span>
           </Tooltip>
         );
       },
     },
     {
-      title: '发现线索数量',
+      title: '发现线索个数',
       dataIndex: 'DisCulesNum',
       ellipsis: true,
       sorter: (a, b) => a.DisCulesNum - b.DisCulesNum,
     },
     {
-      title: '已核实数量',
+      title: '已核实个数',
       ellipsis: true,
       dataIndex: 'VerifiedNum',
       sorter: (a, b) => a.VerifiedNum - b.VerifiedNum,
     },
     // {
-    //   title: '核实为异常个数',
+    //   title: '核实无异常个数',
     //   ellipsis: true,
     //   dataIndex: 'CheckedResult2Count',
     //   sorter: (a, b) => a.CheckedResult2Count - b.CheckedResult2Count,
@@ -313,27 +282,6 @@ const Index = props => {
       ellipsis: true,
       dataIndex: 'VerifiedRate',
       sorter: (a, b) => a.VerifiedRate - b.VerifiedRate,
-      render: (text, record) => {
-        return text + '%';
-      },
-    },
-    {
-      title: '待整改数量',
-      ellipsis: true,
-      dataIndex: 'RectRecordNum',
-      sorter: (a, b) => a.RectRecordNum - b.RectRecordNum,
-    },
-    {
-      title: '已整改数量',
-      ellipsis: true,
-      dataIndex: 'RectedNum',
-      sorter: (a, b) => a.RectedNum - b.RectedNum,
-    },
-    {
-      title: '整改率',
-      ellipsis: true,
-      dataIndex: 'RectRate',
-      sorter: (a, b) => a.RectRate - b.RectRate,
       render: (text, record) => {
         return text + '%';
       },
@@ -406,15 +354,6 @@ const Index = props => {
     );
   };
 
-  const renderProgress = () => {
-    let el = '';
-    for (let index = 0; index < 50; index++) {
-      el += <li></li>;
-    }
-    console.log('el', el);
-    return el;
-  };
-
   const onSelectChange = newSelectedRowKeys => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -424,32 +363,6 @@ const Index = props => {
     onChange: onSelectChange,
   };
 
-  const confirm = () => {
-    Modal.confirm({
-      title: '看板时间选择',
-      icon: <ExclamationCircleOutlined />,
-      content: (
-        <RangePicker
-          locale={locale}
-          allowClear={false}
-          defaultValue={_SELF.queryDate}
-          onChange={date => {
-            _SELF.queryDate = date;
-          }}
-        />
-      ),
-      okText: '查询',
-      cancelText: '取消',
-      onOk() {
-        setQueryDate(_SELF.queryDate);
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
-  };
-  // console.log('_SELF.queryDate1',  moment(_SELF.queryDate[0]).format('YYYY-MM-DD 00:00:00'))
-  // console.log('_SELF.queryDate2',  moment(_SELF.queryDate[1]).format('YYYY-MM-DD 23:59:59'))
   return (
     <div className={styles.ScreenWrapper}>
       <header className={styles.header}>异常数据智能精准识别系统</header>
@@ -478,31 +391,13 @@ const Index = props => {
             color: 'rgb(101, 217, 255)',
           }}
           onClick={() => {
-            router.push('/DataAnalyticalWarningModel/Statistics/FluctuateRange');
+            router.push('/DataAnalyticalWarningModel/Statistics/WarningModelAnalysis');
           }}
-        />
-      </Tooltip>
-      <Tooltip title="看板时间选择">
-        <CalendarOutlined
-          style={{
-            position: 'absolute',
-            zIndex: 1,
-            border: '2px solid rgb(49 97 141)',
-            fontSize: 16,
-            padding: 4,
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            right: 62,
-            top: 34,
-            color: 'rgb(101, 217, 255)',
-          }}
-          onClick={confirm}
-          // onClick={() => setVisible(true)}
         />
       </Tooltip>
       <main>
         <div className={styles.boxWrapper}>
-          <BoxItem title={<>异常线索统计分析</>} style={{ flex: 1, marginRight: 14 }}>
+          <BoxItem title="异常线索统计分析" style={{ flex: 1, marginRight: 14 }}>
             <Spin spinning={StatisForDataLoading}>
               <div className={styles.dataCountStatistics}>
                 <div className={styles.countBox} onClick={() => getDataByModelGuid([])}>
@@ -543,118 +438,40 @@ const Index = props => {
             </Spin>
           </BoxItem>
           {/* <BoxItem title="线索核实情况" style={{ flex: 1, marginRight: 14, minWidth: 400 }}> */}
-          <BoxItem title="异常线索核实情况" style={{ width: '40%', minWidth: 400 }}>
+          <BoxItem
+            title="异常线索核实情况"
+            style={{ width: '40%', minWidth: 400 }}
+          >
             <Spin spinning={StatisVeriAndErLoading}>
               <div className={styles.checkBox}>
-                <div className={styles.legendInfo}>
-                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 0 }}>
-                    {/* 核实为误报线索 */}
-                    核实存在异常
-                  </p>
-                  <div className={styles.content}>
-                    <Progress
-                      style={{ width: '100%' }}
-                      strokeWidth={18}
-                      percent={
-                        checkInfoAndEntRank.checkInfo[0].Count
-                          ? (
-                              checkInfoAndEntRank.checkInfo[0].Count /
-                              checkInfoAndEntRank.checkInfoMaxNum
-                            ).toFixed(2) *
-                              100 >
-                            2
-                            ? (
-                                checkInfoAndEntRank.checkInfo[0].Count /
-                                checkInfoAndEntRank.checkInfoMaxNum
-                              ).toFixed(2) * 100
-                            : 2
-                          : 0
-                      }
-                      steps={50}
-                      showInfo={false}
-                      strokeColor={'#EBE051'}
-                      trailColor="rgba(52,84,119,.85)"
-                    />
-                    <span className={styles.num}>{checkInfoAndEntRank.checkInfo[0].Count}个</span>
-                    <p className={styles.ent}>
-                      涉及企业
-                      <span className={styles.entCount}>
-                        {checkInfoAndEntRank.checkInfo[0].EntCount}个
-                      </span>
-                    </p>
-                  </div>
+                <div style={{ width: '40%', height: 260 }}>
+                  <ReactEcharts
+                    option={getOption()}
+                    lazyUpdate
+                    style={{
+                      height: '100%',
+                      width: '100%',
+                    }}
+                    // style={{ height: '700px', width: '100%' }}
+                    // onEvents={onEvents}
+                  />
                 </div>
-                <div className={styles.legendInfo}>
-                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 0 }}>待核实线索</p>
-                  <div className={styles.content}>
-                    <Progress
-                      style={{ width: '100%' }}
-                      strokeWidth={18}
-                      percent={
-                        checkInfoAndEntRank.checkInfo[2].Count
-                          ? (
-                              checkInfoAndEntRank.checkInfo[2].Count /
-                              checkInfoAndEntRank.checkInfoMaxNum
-                            ).toFixed(2) *
-                              100 >
-                            2
-                            ? (
-                                checkInfoAndEntRank.checkInfo[2].Count /
-                                checkInfoAndEntRank.checkInfoMaxNum
-                              ).toFixed(2) * 100
-                            : 2
-                          : 0
-                      }
-                      steps={50}
-                      showInfo={false}
-                      trailColor="rgba(52,84,119,.85)"
-                    />
+                <div style={{ width: '60%', paddingLeft: '8%', marginTop: 40 }}>
+                  <p className={styles.legendInfo}>
+                    <span style={{ background: '#0078FF' }}></span>
+                    <span style={{ width: 150 }}>待核实线索</span>
                     <span className={styles.num}>{checkInfoAndEntRank.checkInfo[2].Count}个</span>
-                    <p className={styles.ent}>
-                      涉及企业
-                      <span className={styles.entCount}>
-                        {checkInfoAndEntRank.checkInfo[2].EntCount}个
-                      </span>
-                    </p>
-                  </div>
-                </div>
-                <div className={styles.legendInfo}>
-                  <p style={{ width: 150, fontWeight: 'bold', marginBottom: 0 }}>
-                    {/* 核实为异常线索 */}
-                    核实无异常
                   </p>
-                  <div className={styles.content}>
-                    <Progress
-                      style={{ width: '100%' }}
-                      strokeWidth={18}
-                      percent={
-                        checkInfoAndEntRank.checkInfo[1].Count
-                          ? (
-                              checkInfoAndEntRank.checkInfo[1].Count /
-                              checkInfoAndEntRank.checkInfoMaxNum
-                            ).toFixed(2) *
-                              100 >
-                            2
-                            ? (
-                                checkInfoAndEntRank.checkInfo[1].Count /
-                                checkInfoAndEntRank.checkInfoMaxNum
-                              ).toFixed(2) * 100
-                            : 2
-                          : 0
-                      }
-                      steps={50}
-                      showInfo={false}
-                      strokeColor={'#72ED91'}
-                      trailColor="rgba(52,84,119,.85)"
-                    />
+                  <p className={styles.legendInfo}>
+                    <span style={{ background: '#21F087' }}></span>
+                    <span style={{ width: 150 }}>核实存在异常</span>
+                    <span className={styles.num}>{checkInfoAndEntRank.checkInfo[0].Count}个</span>
+                  </p>
+                  <p className={styles.legendInfo}>
+                    <span style={{ background: '#EDE022' }}></span>
+                    <span style={{ width: 150 }}>核实无异常</span>
                     <span className={styles.num}>{checkInfoAndEntRank.checkInfo[1].Count}个</span>
-                    <p className={styles.ent}>
-                      涉及企业
-                      <span className={styles.entCount}>
-                        {checkInfoAndEntRank.checkInfo[1].EntCount}个
-                      </span>
-                    </p>
-                  </div>
+                  </p>
                 </div>
               </div>
             </Spin>
@@ -703,7 +520,7 @@ const Index = props => {
           </BoxItem> */}
         </div>
         <div className={styles.boxWrapper} style={{}}>
-          <BoxItem title="核实信息" style={{ flex: 1, height: 'calc(100vh - 440px)' }}>
+          <BoxItem title="核实信息" style={{ flex: 1, height: 'calc(100vh - 542px)' }}>
             <div className={styles.checkInfoWrapper}>
               <Spin spinning={alertLoading}>
                 <Alert
@@ -711,19 +528,13 @@ const Index = props => {
                   message={
                     <div style={{ color: '#65D9FF', fontWeight: 500, fontSize: 16 }}>
                       已选择{selectedRowKeys.length}项&nbsp;&nbsp;&nbsp;&nbsp;
-                      {/* {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，
-                      核实为异常${tableSelectedCount.CheckedResult2Count}个，
-                      核实率${tableSelectedCount.VerifiedRate}%；
-                    涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个`} */}
-                      {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，
-                      核实无异常${tableSelectedCount.CheckedResult2Count}个，
-                      核实率${tableSelectedCount.VerifiedRate}%；
+                      {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，核实无异常${tableSelectedCount.CheckedResult2Count}个，核实率${tableSelectedCount.VerifiedRate}%；
                     涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个`}
                     </div>
                   }
                   type="info"
                   showIcon
-                  style={{ marginTop: 0, background: 'rgba(20,55,120,.6)' }}
+                  style={{ marginTop: 10, background: 'rgba(20,55,120,.6)' }}
                 />
               </Spin>
               <Spin spinning={tableLoading}>
@@ -732,25 +543,19 @@ const Index = props => {
                   rowSelection={rowSelection}
                   columns={columns}
                   dataSource={dataSource}
-                  style={{ padding: 10, paddingTop: 0 }}
+                  style={{ padding: 10 }}
                   bordered={false}
                   // loading={tableLoading}
                   align="center"
                   pagination={false}
                   scroll={{
-                    y: 'calc(100vh - 590px)',
+                    y: 'calc(100vh - 700px)',
                   }}
                 />
               </Spin>
             </div>
           </BoxItem>
         </div>
-        <Modal
-          title="选择时间"
-          visible={visible}
-          // onOk={handleOk}
-          onCancel={() => setVisible(false)}
-        ></Modal>
       </main>
     </div>
   );

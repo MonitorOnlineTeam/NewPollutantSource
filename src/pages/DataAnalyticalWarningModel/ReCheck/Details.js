@@ -29,9 +29,6 @@ import cuid from 'cuid';
 import SdlUpload from '@/pages/AutoFormManager/SdlUpload';
 import moment from 'moment';
 import {  ModalNameConversion } from '../CONST';
-import {  API } from '@config/API';
-import Cookie from 'js-cookie';
-import config from '@/config';
 
 const { TextArea } = Input;
 
@@ -425,8 +422,7 @@ const ReCheckDetails = props => {
           <Form.Item label="附件" name="file">
             <SdlUpload
               accept="image/*"
-              action={API.UploadApi.UploadFiles}
-              headers={{Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)}}
+              action="/newApi/rest/PollutantSourceApi/UploadApi/UploadFiles"
               cuid={uid}
               uploadSuccess={cuid => {}}
             />

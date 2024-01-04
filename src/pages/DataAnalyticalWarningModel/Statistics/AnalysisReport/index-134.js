@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-04 18:26:27
+ * @Last Modified time: 2023-10-16 12:04:51
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -32,7 +32,7 @@ import SdlTable from '@/components/SdlTable';
 import moment from 'moment';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { ModelNumberIdsDatas, ModalNameConversion } from '../../CONST';
+import { ModelNumberIdsDatas } from '../../CONST';
 
 const noData = {
   value: 0,
@@ -44,7 +44,6 @@ const noData = {
 
 const dvaPropsData = ({ loading, dataModel }) => ({
   warningForm: dataModel.warningForm,
-  AnalysisReportForm: dataModel.AnalysisReportForm,
   modelListLoading: loading.effects['dataModel/GetModelList'],
   modelInfoLoading: loading.effects['dataModel/StatisAlarmInfoSum'],
   exportLoading: loading.effects['dataModel/ExportStatisAlarmReport'],
@@ -70,7 +69,6 @@ const Index = props => {
     exportLoading,
     allExportLoading,
     warningForm,
-    AnalysisReportForm,
   } = props;
   const [modelList, setModelList] = useState([]);
   const [regionCode, setRegionCode] = useState();
@@ -94,26 +92,15 @@ const Index = props => {
       let values = JSON.parse(locationParams);
       values.date = [moment(values.date[0]), moment(values.date[1])];
       form.setFieldsValue(values);
-      dispatch({
-        type: 'dataModel/updateState',
-        payload: {
-          AnalysisReportForm: {
-            ...AnalysisReportForm,
-            ...values,
-          },
-        },
-      });
       getPageData();
-    } else {
-      getPageData(true);
     }
   };
 
-  // 获取页面数据,  flag：是否出现错误提示
-  const getPageData = (flag) => {
+  // 获取页面数据
+  const getPageData = () => {
     const values = form.getFieldsValue();
     if (!values.modelGuid) {
-      !flag && message.error('请选择场景后查询！');
+      message.error('请选择场景后查询！');
       return;
     }
     StatisAlarmInfoSum();
@@ -370,20 +357,6 @@ const Index = props => {
   // 重置表单
   const onReset = () => {
     form.resetFields();
-    dispatch({
-      type: 'dataModel/updateState',
-      payload: {
-        AnalysisReportForm: {
-          modelGuid: undefined,
-          date: [
-            moment()
-              .subtract(3, 'month')
-              .startOf('day'),
-            moment().endOf('day'),
-          ],
-        },
-      },
-    });
   };
 
   //
@@ -391,7 +364,7 @@ const Index = props => {
     return (
       <Card bodyStyle={{ paddingBottom: 20 }}>
         <Spin spinning={modelInfoLoading}>
-          <h1>{ModalNameConversion(modelInfo.ModelName)}</h1>
+          <h1>{modelInfo.ModelName}</h1>
           <p className={styles.description}>{modelInfo.ModelDes}</p>
 
           <Card title={<div className={styles.title}>执行结果</div>}>
@@ -401,7 +374,9 @@ const Index = props => {
               个排放口{dateString[0]}至{dateString[1]}的小时数据进行分析，共发现
               {modelInfo.UniqueParentCodeCount}家企业{modelInfo.DGIMNCount}
               个排放口符合数据特征，发现线索{modelInfo.DisCulesNum}次，已核实
-              {modelInfo.VerifiedNum}次{/* ，经核发现有异常{modelInfo.CheckedResult2Count}次 */}。
+              {modelInfo.VerifiedNum}次
+              {/* ，经核发现核实无异常{modelInfo.CheckedResult2Count}次 */}
+              。
             </p>
             <Descriptions bordered column={1} size="small" className={styles.DescriptionsWrapper}>
               <Descriptions.Item label="数据特征">{modelInfo.DataAttr}</Descriptions.Item>
@@ -421,10 +396,10 @@ const Index = props => {
               <Descriptions.Item label="工况正常">
                 {modelInfo.CheckedResult1Count}次
               </Descriptions.Item>
-              <Descriptions.Item label="有异常">
+              <Descriptions.Item label="核实无异常">
                 {modelInfo.CheckedResult2Count}次
-              </Descriptions.Item>
-              <Descriptions.Item label="异常原因">{modelInfo.Reason || '-'}</Descriptions.Item> */}
+              </Descriptions.Item> */}
+              {/* <Descriptions.Item label="异常原因">{modelInfo.Reason || '-'}</Descriptions.Item> */}
             </Descriptions>
           </Card>
         </Spin>
@@ -500,7 +475,7 @@ const Index = props => {
       sorter: (a, b) => a.VerifiedNum - b.VerifiedNum,
     },
     // {
-    //   title: '核实有异常',
+    //   title: '核实无异常',
     //   ellipsis: true,
     //   dataIndex: 'CheckedResult2Count',
     //   sorter: (a, b) => a.CheckedResult2Count - b.CheckedResult2Count,
@@ -593,22 +568,28 @@ const Index = props => {
               style={{ padding: '10px 0' }}
               // style={{ padding: '10px 0', marginBottom: 10 }}
               initialValues={{
-                ...AnalysisReportForm,
+                modelGuid: undefined,
+                date: [
+                  moment()
+                    .subtract(3, 'month')
+                    .startOf('day'),
+                  moment().endOf('day'),
+                ],
               }}
               autoComplete="off"
               // onValuesChange={onValuesChange}
               onValuesChange={(changedFields, allFields) => {
-                console.log('changedFields', changedFields);
-                console.log('allFields', allFields);
-                dispatch({
-                  type: 'dataModel/updateState',
-                  payload: {
-                    AnalysisReportForm: {
-                      ...AnalysisReportForm,
-                      ...changedFields,
-                    },
-                  },
-                });
+                // console.log('changedFields', changedFields);
+                // console.log('allFields', allFields);
+                // dispatch({
+                //   type: 'dataModel/updateState',
+                //   payload: {
+                //     warningForm: {
+                //       ...props.warningForm,
+                //       ...changedFields,
+                //     },
+                //   },
+                // });
               }}
             >
               <Form.Item label="行政区" name="regionCode">
@@ -622,19 +603,16 @@ const Index = props => {
                   }}
                 />
               </Form.Item>
-              {// 脱敏角色不显示企业
-              !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
-                <Form.Item label="企业" name="EntCode">
-                  <EntAtmoList
-                    mode="multiple"
-                    maxTagCount={2}
-                    maxTagTextLength={6}
-                    maxTagPlaceholder="..."
-                    regionCode={regionCode}
-                    style={{ width: 300 }}
-                  />
-                </Form.Item>
-              )}
+              <Form.Item label="企业" name="EntCode">
+                <EntAtmoList
+                  mode="multiple"
+                  maxTagCount={2}
+                  maxTagTextLength={6}
+                  maxTagPlaceholder="..."
+                  regionCode={regionCode}
+                  style={{ width: 300 }}
+                />
+              </Form.Item>
               <Form.Item label="行业" name="IndustryTypeCode">
                 <SearchSelect
                   placeholder="排口所属行业"
@@ -644,7 +622,7 @@ const Index = props => {
                   itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
                 />
               </Form.Item>
-              <Spin spinning={modelListLoading} size="small" style={{ background: '#fff' }}>
+              <Spin spinning={modelListLoading} size="small">
                 <Form.Item label="场景类别" name="modelGuid">
                   <Select
                     allowClear
@@ -658,7 +636,7 @@ const Index = props => {
                     {modelList.map(item => {
                       return (
                         <Option key={item.ModelGuid} value={item.ModelGuid}>
-                          {ModalNameConversion(item.ModelName)}
+                          {item.ModelName}
                         </Option>
                       );
                     })}
@@ -684,7 +662,7 @@ const Index = props => {
                   >
                     查询
                   </Button>
-                  {/* <Button onClick={() => onReset()}>重置</Button> */}
+                  <Button onClick={() => onReset()}>重置</Button>
                   <Button
                     type="primary"
                     onClick={() => onExportStatisAlarmReport()}
