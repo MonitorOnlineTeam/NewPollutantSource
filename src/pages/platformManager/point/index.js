@@ -57,6 +57,7 @@ import MonitoringStandard from '@/components/MonitoringStandard';
 import DeviceManager from './components/deviceManager';
 import EditOperationStatus from './components/editOperationStatus';
 import { permissionButton } from '@/utils/utils';
+import ProcessInfo from './ProcessInfo';
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -132,7 +133,7 @@ export default class MonitorPoint extends Component {
       editOperationStatusVisible: false,
       editOperationStatusData: {},
       associationPointList: [], // 窑尾关联的排口
-      modifyPointOpratioinStatusPermis:false,
+      modifyPointOpratioinStatusPermis: false,
     };
   }
 
@@ -142,12 +143,16 @@ export default class MonitorPoint extends Component {
     // 3.获取监测点数据
     const { dispatch, match } = this.props;
     console.log('match=', match);
-    const buttonList = permissionButton('/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2')
-    buttonList.map(item=>{
-      switch (item){
-        case 'ModifyPointOpratioinStatus': this.setState({modifyPointOpratioinStatusPermis: true }); break;
+    const buttonList = permissionButton(
+      '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2',
+    );
+    buttonList.map(item => {
+      switch (item) {
+        case 'ModifyPointOpratioinStatus':
+          this.setState({ modifyPointOpratioinStatusPermis: true });
+          break;
       }
-    })
+    });
     dispatch({
       type: 'point/getPointList',
       payload: {
@@ -157,9 +162,11 @@ export default class MonitorPoint extends Component {
         },
       },
     });
-    const userAccountFlag = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserAccount === 'system';
-    this.setState({ isSuperAdministrator: userAccountFlag })
-
+    const userAccountFlag =
+      Cookie.get('currentUser') &&
+      JSON.parse(Cookie.get('currentUser')) &&
+      JSON.parse(Cookie.get('currentUser')).UserAccount === 'system';
+    this.setState({ isSuperAdministrator: userAccountFlag });
   }
 
   getPageConfig = type => {
@@ -276,10 +283,10 @@ export default class MonitorPoint extends Component {
         },
         callback: res => {
           // 获取关联对应窑头数据
-          if(res.PmCemsSupplier === '2' && res['dbo.T_Bas_CommonPoint.Col7'] === '6') {
+          if (res.PmCemsSupplier === '2' && res['dbo.T_Bas_CommonPoint.Col7'] === '6') {
             this.getEntAndPointList();
           }
-        }
+        },
       });
     } else {
       this.setState({
@@ -378,57 +385,80 @@ export default class MonitorPoint extends Component {
       form.validateFields((err, values) => {
         //监测点
         if (!err) {
-          const FormData = handleFormData(values);
-          console.log('values', values);
-          console.log('FormData', FormData);
-          // return;
-          if (!Object.keys(FormData).length) {
-            sdlMessage('数据为空', 'error');
-            return false;
-          }
-          if (this.state.isEdit) {
-            FormData.PointCode = this.state.selectedPointCode;
-          }
-          FormData['DGIMN'] = FormData['DGIMN'] && FormData['DGIMN'].toLowerCase();
-          const payload = {
-            BaseType: match.params.targetType,
-            TargetId: match.params.targetId,
-            Point: {
-              ...FormData,
-              PmCemsCode: values.PmCemsCode_temp,
-              PmCemsSupplier: values.PmCemsSupplier_temp,
-              PmCemsCode_temp: undefined,
-              PmCemsCode_temp: undefined
-            },
+          console.log('this.subProcessInfo', this.subProcessInfo);
+
+          const _submit = () => {
+            const FormData = handleFormData(values);
+            console.log('values', values);
+            console.log('FormData', FormData);
+            // return;
+            if (!Object.keys(FormData).length) {
+              sdlMessage('数据为空', 'error');
+              return false;
+            }
+            if (this.state.isEdit) {
+              // 编辑：有DGIMN，可提交工艺信息
+              values['Col7'] && this.subProcessInfo.onSubmit();
+
+              FormData.PointCode = this.state.selectedPointCode;
+            }
+            FormData['DGIMN'] = FormData['DGIMN'] && FormData['DGIMN'].toLowerCase();
+            const payload = {
+              BaseType: match.params.targetType,
+              TargetId: match.params.targetId,
+              Point: {
+                ...FormData,
+                PmCemsCode: values.PmCemsCode_temp,
+                PmCemsSupplier: values.PmCemsSupplier_temp,
+                PmCemsCode_temp: undefined,
+              },
+            };
+
+            dispatch({
+              type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
+              payload: {
+                FormData: { ...payload },
+                callback: result => {
+                  if (result.IsSuccess) {
+                    // this.setState({
+                    //   visible: false,
+                    // });
+                    dispatch({
+                      type: 'autoForm/getAutoFormData',
+                      payload: {
+                        configId: pointConfigId,
+                        searchParams: pointDataWhere,
+                        otherParams: {
+                          SortFileds: 'Sort',
+                          IsAsc: true,
+                        },
+                      },
+                    });
+
+                    // 新增：无DGIMN，需要保存完排口后再添加工艺信息
+                    !this.state.isEdit &&
+                      values['Col7'] &&
+                      this.subProcessInfo.onSubmit(result.Datas);
+                  }
+                  this.setState({
+                    FormData: { ...FormData, DGIMN: result.Datas },
+                  });
+                },
+              },
+            });
           };
 
-          dispatch({
-            type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
-            payload: {
-              FormData: { ...payload },
-              callback: result => {
-                if (result.IsSuccess) {
-                  // this.setState({
-                  //   visible: false,
-                  // });
-                  dispatch({
-                    type: 'autoForm/getAutoFormData',
-                    payload: {
-                      configId: pointConfigId,
-                      searchParams: pointDataWhere,
-                      otherParams: {
-                        SortFileds: 'Sort',
-                        IsAsc: true,
-                      }
-                    },
-                  });
-                }
-                this.setState({
-                  FormData: { ...FormData, DGIMN: result.Datas },
-                });
-              },
-            },
-          });
+          if (values.Col7) {
+            // 校验工艺信息验证是否通过，通过后才能保存
+            this.subProcessInfo.validateFields().then(validateFlag => {
+              console.log('validateFlag', validateFlag);
+              if (validateFlag) {
+                _submit();
+              }
+            });
+          } else {
+            _submit();
+          }
         }
       });
     }
@@ -456,7 +486,7 @@ export default class MonitorPoint extends Component {
                 otherParams: {
                   SortFileds: 'Sort',
                   IsAsc: true,
-                }
+                },
               },
             });
           }
@@ -576,7 +606,6 @@ export default class MonitorPoint extends Component {
 
   getTabInfo = () => {
     const { FormData } = this.state;
-    console.log('FormData=', FormData);
     if (FormData)
       return (
         <MonitoringStandard
@@ -870,41 +899,37 @@ export default class MonitorPoint extends Component {
   onSubmitMN = e => {
     const { dispatch, pointDataWhere } = this.props;
 
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-        if (values.newMN) {
-          dispatch({
-            type: 'point/updatePointDGIMN',
-            payload: {
-              oldDGIMN: this.state.MNEcho,
-              newDGIMN: values.newMN
-            },
-            callback: () => {
-              this.setState({ MNVisible: false })
-              dispatch({
-                type: 'autoForm/getAutoFormData',
-                payload: {
-                  configId: pointConfigId,
-                  searchParams: pointDataWhere,
-                  otherParams: {
-                    SortFileds: 'Sort',
-                    IsAsc: true,
-                  }
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (values.newMN) {
+        dispatch({
+          type: 'point/updatePointDGIMN',
+          payload: {
+            oldDGIMN: this.state.MNEcho,
+            newDGIMN: values.newMN,
+          },
+          callback: () => {
+            this.setState({ MNVisible: false });
+            dispatch({
+              type: 'autoForm/getAutoFormData',
+              payload: {
+                configId: pointConfigId,
+                searchParams: pointDataWhere,
+                otherParams: {
+                  SortFileds: 'Sort',
+                  IsAsc: true,
                 },
-
-              });
-            }
-          })
-
-        } else {
-
-          message.error('新设备编号(MN)不能为空！')
-        }
-      });
-
-    }
-    onMenuClick = ({ key }) => {
-      const { row } = this.state;
+              },
+            });
+          },
+        });
+      } else {
+        message.error('新设备编号(MN)不能为空！');
+      }
+    });
+  };
+  onMenuClick = ({ key }) => {
+    const { row } = this.state;
 
     if (key == 3) {
       //设置Cems参数
@@ -1054,6 +1079,10 @@ export default class MonitorPoint extends Component {
     });
   };
 
+  onRef = ref => {
+    this.subProcessInfo = ref;
+  };
+
   render() {
     const {
       searchConfigItems,
@@ -1090,18 +1119,14 @@ export default class MonitorPoint extends Component {
     const menu = (
       <Menu onClick={this.onMenuClick}>
         <Menu.Item key="3">
-          {' '}
           <Tooltip title="设置Cems参数">
-            {' '}
             <a>
               <ToolOutlined style={{ fontSize: 16 }} />
-            </a>{' '}
+            </a>
           </Tooltip>
         </Menu.Item>
         <Menu.Item key="4">
-          {' '}
           <Tooltip title="修改设备编号(MN)">
-            {' '}
             <a>
               <HighlightOutlined style={{ fontSize: 16 }} />
             </a>
@@ -1109,10 +1134,9 @@ export default class MonitorPoint extends Component {
         </Menu.Item>
         <Menu.Item key="5">
           <Tooltip title="设备管理">
-            {' '}
             <a>
               <FileTextOutlined style={{ fontSize: 16 }} />
-            </a>{' '}
+            </a>
           </Tooltip>
         </Menu.Item>
       </Menu>
@@ -1206,6 +1230,7 @@ export default class MonitorPoint extends Component {
                   this.setState({
                     pointCoefficientVal: undefined,
                     pointCoefficientFlag: false,
+                    DGIMN: undefined,
                   });
                   // this.setState({
                   //   cuid: getRowCuid(columns, row)
@@ -1253,6 +1278,7 @@ export default class MonitorPoint extends Component {
                           this.setState({
                             cuid: getRowCuid(row, 'dbo.T_Bas_CommonPoint.Photo'),
                             FormData: row,
+                            DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
                           });
                           dispatch({
                             type: 'point/getMonitorPointVerificationList', //获取数据核查信息
@@ -1312,17 +1338,30 @@ export default class MonitorPoint extends Component {
                         <a
                           onClick={() => {
                             this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
-                          }}><HighlightOutlined style={{ fontSize: 16 }} /></a>
-                        </Tooltip></>
-                        <Divider type="vertical" />
-                      {this.state.modifyPointOpratioinStatusPermis&&<><Tooltip title="修改点位运维状态">
-                        <a onClick={() => {
-                          this.editOperationStatus(row);
-                        }}><FileProtectOutlined  style={{ fontSize: 16 }} /></a>
+                          }}
+                        >
+                          <HighlightOutlined style={{ fontSize: 16 }} />
+                        </a>
                       </Tooltip>
-                      <Divider type="vertical" /></>}
-                      <Tooltip title="设备管理">
-                        <a onClick={() => {
+                    </>
+                    <Divider type="vertical" />
+                    {this.state.modifyPointOpratioinStatusPermis && (
+                      <>
+                        <Tooltip title="修改点位运维状态">
+                          <a
+                            onClick={() => {
+                              this.editOperationStatus(row);
+                            }}
+                          >
+                            <FileProtectOutlined style={{ fontSize: 16 }} />
+                          </a>
+                        </Tooltip>
+                        <Divider type="vertical" />
+                      </>
+                    )}
+                    <Tooltip title="设备管理">
+                      <a
+                        onClick={() => {
                           this.deviceManager(row);
                         }}
                       >
@@ -1390,75 +1429,36 @@ export default class MonitorPoint extends Component {
                   tab={this.state.isView ? '详情' : this.state.isEdit ? '编辑监测点' : '添加监测点'}
                   key="1"
                 >
-                  <SdlForm
-                    corporationCode={this.props.CorporationCode}
-                    configId={pointConfigIdEdit}
-                    onSubmitForm={this.onSubmitForm.bind(this)}
-                    form={this.props.form}
-                    noLoad
-                    hideBtns
-                    uid={this.state.cuid}
-                    isEdit={this.state.isEdit}
-                    keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
-                    types="point"
-                    isModal
-                  >
-                    <Row>
-                      {this.props.form.getFieldValue('Col7') === '6' && (
-                        <Col span={12}>
-                          <FormItem {...formLayout} label="烧成车间排口">
-                            {getFieldDecorator('PmCemsSupplier_temp', {
-                              initialValue: this.props.form.getFieldValue('PmCemsSupplier'),
-                              rules: [
-                                {
-                                  required: true,
-                                  message: '烧成车间排口不能为空',
-                                },
-                              ],
-                            })(
-                              <Radio.Group
-                                onChange={e => {
-                                  let value = e.target.value;
-                                  if (value === '2') {
-                                    this.getEntAndPointList();
-                                  }
-                                }}
-                              >
-                                <Radio value={'1'}>窑头</Radio>
-                                <Radio value={'2'}>窑尾</Radio>
-                              </Radio.Group>,
-                            )}
-                          </FormItem>
-                        </Col>
-                      )}
-                      {this.props.form.getFieldValue('PmCemsSupplier_temp') == '2' &&
-                        this.props.form.getFieldValue('Col7') === '6' && (
-                          <Col span={12}>
-                            <FormItem {...formLayout} label="关联对应窑头">
-                              {getFieldDecorator('PmCemsCode_temp', {
-                              initialValue: this.props.form.getFieldValue('PmCemsCode'),
-                                rules: [
-                                  {
-                                    required: true,
-                                    message: '关联对应窑头不能为空',
-                                  },
-                                ],
-                              })(
-                                <Select allowClear>
-                                  {this.state.associationPointList.map(item => {
-                                    return (
-                                      <Option key={item.DGIMN} value={item.DGIMN}>
-                                        {item.title}
-                                      </Option>
-                                    );
-                                  })}
-                                </Select>,
-                              )}
-                            </FormItem>
-                          </Col>
-                        )}
-                    </Row>
-                  </SdlForm>
+                  <Card title="基本信息" size="small" bordered={false} bodyStyle={{ padding: 1 }}>
+                    <SdlForm
+                      corporationCode={this.props.CorporationCode}
+                      configId={pointConfigIdEdit}
+                      onSubmitForm={this.onSubmitForm.bind(this)}
+                      form={this.props.form}
+                      noLoad
+                      hideBtns
+                      uid={this.state.cuid}
+                      isEdit={this.state.isEdit}
+                      keysParams={{
+                        'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode,
+                      }}
+                      types="point"
+                      isModal
+                    ></SdlForm>
+                  </Card>
+                  {this.props.form.getFieldValue('Col7') && (
+                    <Card title="工艺信息" size="small" bordered={false} bodyStyle={{ padding: 1 }}>
+                      {/* {this.props.form.getFieldValue('Col7') && ( */}
+                      <ProcessInfo
+                        // ref={ref => this.subProcessInfo = ref}
+                        onRef={this.onRef}
+                        DGIMN={this.state.DGIMN}
+                        IndustryCode={this.props.form.getFieldValue('Col7')}
+                        EntCode={this.props.match.params.targetId}
+                      />
+                      {/* )} */}
+                    </Card>
+                  )}
                 </TabPane>
                 <TabPane tab="污染物信息" key="2">
                   {this.getTabInfo()}
@@ -1477,6 +1477,9 @@ export default class MonitorPoint extends Component {
                   </TabPane>
                 )}
                 <TabPane tab="电子围栏半径" key="6">
+                  {this.radiusElectronicFence()}
+                </TabPane>
+                <TabPane tab="关联模型" key="7">
                   {this.radiusElectronicFence()}
                 </TabPane>
               </Tabs>

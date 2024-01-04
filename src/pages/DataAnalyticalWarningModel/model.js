@@ -44,6 +44,7 @@ export default Model.extend({
       dataAttribute: [],
     },
     allTypeDataList: [],
+    runState: false,
   },
   effects: {
     // 获取报警记录
@@ -873,6 +874,29 @@ export default Model.extend({
     *getListPager({ payload, callback }, { call, select, update }) {
       const result = yield call(getListPager, payload);
       if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 模型重新运行
+    *onRunModel({ payload, callback }, { call, select, update }) {
+      yield update({ runState: true });
+      const result = yield call(services.onRunModel, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        yield update({ runState: false });
+        message.error(result.Message);
+      }
+    },
+    // 获取模型运行状态
+    *GetModelRunState({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetModelRunState, payload);
+      if (result.IsSuccess) {
+        yield update({
+          runState: result.Datas,
+        });
         callback && callback(result.Datas);
       } else {
         message.error(result.Message);

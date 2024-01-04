@@ -2,13 +2,25 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-28 16:05:13
+ * @Last Modified time: 2023-12-12 10:25:30
  * @Description：报警核实详情
  */
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Card, Descriptions, Row, Col, Tag, Upload, Button, Tooltip, Empty, message } from 'antd';
+import {
+  Card,
+  Descriptions,
+  Row,
+  Col,
+  Tag,
+  Upload,
+  Button,
+  Tooltip,
+  Empty,
+  message,
+  Divider,
+} from 'antd';
 import { router } from 'umi';
 import styles from '../styles.less';
 import { RollbackOutlined } from '@ant-design/icons';
@@ -40,6 +52,7 @@ const WarningVerify = props => {
   const [imageIndex, setImageIndex] = useState();
   const [warningInfo, setWarningInfo] = useState({});
   const [fileList, setFileList] = useState([]);
+  const [rectFileList, setRectFileList] = useState([]);
   const [modelChartDatas, setModelChartDatas] = useState([]);
   const [linearDatas, setLinearDatas] = useState([]);
   const [modelTableDatas, setModelTableDatas] = useState([]);
@@ -47,6 +60,7 @@ const WarningVerify = props => {
   const [defaultChartSelected, setDefaultChartSelected] = useState([]);
   const [timeList, setTimeList] = useState([]);
   const [snapshotData, setSnapshotData] = useState({});
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -63,7 +77,8 @@ const WarningVerify = props => {
       callback: res => {
         if (res) {
           setWarningInfo(res);
-          let _fileList = [];
+          let _fileList = [],
+            rectFileList = [];
           if (res.CheckedMaterial && res.CheckedMaterial.length) {
             _fileList = res.CheckedMaterial.map((item, index) => {
               return {
@@ -74,7 +89,19 @@ const WarningVerify = props => {
               };
             });
           }
+          if (res.RectificationMaterial && res.RectificationMaterial.length) {
+            rectFileList = res.RectificationMaterial.map((item, index) => {
+              return {
+                uid: index,
+                index: index,
+                status: 'done',
+                url: '/' + item,
+              };
+            });
+          }
+
           setFileList(_fileList);
+          setRectFileList(rectFileList);
           GetSnapshotData(res.WarningTypeCode);
         }
       },
@@ -421,7 +448,9 @@ const WarningVerify = props => {
         let _defaultSelected = [];
         firstTableData.Column.map(item => {
           // 去掉括号及内容，将“烟气排放量”替换为“流量”
-          let name = item.PollutantName.replace(/\((?:.*)\)/g, '').replace('烟气排放量', '流量').replace('排放量', '');
+          let name = item.PollutantName.replace(/\((?:.*)\)/g, '')
+            .replace('烟气排放量', '流量')
+            .replace('排放量', '');
           if (name.indexOf('波动范围') === -1) {
             _defaultSelected.push(name);
           }
@@ -603,11 +632,11 @@ const WarningVerify = props => {
             <Descriptions.Item label="核实状态">
               <Tag
                 color={
-                  warningInfo.Status === 3  // 核实完成
+                  warningInfo.Status === 3 // 核实完成
                     ? 'success'
-                    : warningInfo.Status === 2  // 待复核
+                    : warningInfo.Status === 2 // 待复核
                     ? 'orange'
-                    : 'volcano'  //待核实
+                    : 'volcano' //待核实
                 }
               >
                 {warningInfo.StatusName}
@@ -640,6 +669,7 @@ const WarningVerify = props => {
                   onPreview={file => {
                     setIsOpen(true);
                     setImageIndex(file.index);
+                    setImages(fileList);
                   }}
                 />
               ) : (
@@ -647,11 +677,60 @@ const WarningVerify = props => {
               )}
             </Descriptions.Item>
           </Descriptions>
+          <Divider style={{ marginTop: 10 }} />
+          {/* 整改详情 */}
+          <Descriptions column={4}>
+            <Descriptions.Item label="是否需要整改">
+              <Tag
+                color={
+                  warningInfo.IsRect === 1 // 需整改
+                    ? 'orange'
+                    : 'success' //不用整改
+                }
+              >
+                {warningInfo.IsRect === 1 ? '需整改' : '不用整改'}
+              </Tag>
+            </Descriptions.Item>
+            {warningInfo.IsRect === 1 && (
+              <>
+                <Descriptions.Item label="整改状态">
+                  {warningInfo.RectificationStatus === '1' && <Tag color="orange">待整改</Tag>}
+                  {warningInfo.RectificationStatus === '2' && <Tag color="orange">待复核</Tag>}
+                  {warningInfo.RectificationStatus === '3' && <Tag color="success">整改完成</Tag>}
+                </Descriptions.Item>
+                <Descriptions.Item label="整改人">
+                  {warningInfo.RectificationUserName || '-'}
+                </Descriptions.Item>
+                <Descriptions.Item span={1} label="整改时间">
+                  {warningInfo.CompleteTime || '-'}
+                </Descriptions.Item>
+                <Descriptions.Item span={4} label="整改描述">
+                  {warningInfo.RectificationDes || '-'}
+                </Descriptions.Item>
+                <Descriptions.Item span={4} label="整改材料">
+                  {rectFileList.length ? (
+                    <Upload
+                      listType="picture-card"
+                      fileList={rectFileList}
+                      showUploadList={{ showPreviewIcon: true, showRemoveIcon: false }}
+                      onPreview={file => {
+                        setIsOpen(true);
+                        setImageIndex(file.index);
+                        setImages(rectFileList);
+                      }}
+                    />
+                  ) : (
+                    '-'
+                  )}
+                </Descriptions.Item>
+              </>
+            )}
+          </Descriptions>
         </Card>
         {/* 查看附件弹窗 */}
         <ImageView
           isOpen={isOpen}
-          images={fileList.map(item => item.url)}
+          images={images.map(item => item.url)}
           imageIndex={imageIndex}
           onCloseRequest={() => {
             setIsOpen(false);

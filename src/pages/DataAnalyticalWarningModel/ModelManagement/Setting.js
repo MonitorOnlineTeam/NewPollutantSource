@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:11:57
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-22 14:56:22
+ * @Last Modified time: 2024-01-02 17:25:13
  * @Description：模型设置页面
  */
 import React, { useState, useEffect } from 'react';
@@ -22,6 +22,8 @@ import {
   Modal,
   Tree,
   Spin,
+  Popconfirm,
+  DatePicker,
 } from 'antd';
 import styles from '../styles.less';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -32,14 +34,19 @@ import EntAtmoList from '@/components/EntAtmoList';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import _ from 'lodash';
 import { router } from 'umi';
-import { RollbackOutlined } from '@ant-design/icons';
+import { RollbackOutlined, SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { ModalNameConversion } from '@/pages/DataAnalyticalWarningModel/CONST';
+import moment from 'moment';
+import locale from 'antd/es/date-picker/locale/zh_CN';
 
 const { TextArea } = Input;
+const { RangePicker } = DatePicker;
+let timer;
 
 const dvaPropsData = ({ loading, dataModel }) => ({
   relationDGIMN: dataModel.relationDGIMN,
   ModelInfoAndParams: dataModel.ModelInfoAndParams,
+  runState: dataModel.runState,
   entAndPointLoading: loading.effects['common/getEntAndPointList'],
   saveLoading: loading.effects['dataModel/SaveModelInfoAndParams'],
   relationDGIMNLoading: loading.effects['dataModel/GetModelRelationDGIMN'],
@@ -49,6 +56,10 @@ const Setting = props => {
   const [baseForm] = Form.useForm();
   const [pointForm] = Form.useForm();
   const [entAndPointForm] = Form.useForm();
+
+  const _SELF = {
+    queryDate: [moment().subtract(1, 'month'), moment()],
+  };
   // const [] = Form.useForm();
   const {
     dispatch,
@@ -57,6 +68,7 @@ const Setting = props => {
     relationDGIMNLoading,
     relationDGIMN,
     ModelInfoAndParams,
+    runState,
   } = props;
   const [visible, setVisible] = useState(false);
   const [treeData, setTreeData] = useState([]);
@@ -70,10 +82,15 @@ const Setting = props => {
 
   useEffect(() => {
     loadData();
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   //
   const loadData = () => {
+    GetModelRunState();
     getListPager();
     GetModelInfoAndParams();
     GetModelRelationDGIMN();
@@ -87,7 +104,6 @@ const Setting = props => {
         configId: 'IndustryType',
       },
       callback: res => {
-        console.log('res', res);
         setIndustryList(res.DataSource);
       },
     });
@@ -306,6 +322,68 @@ const Setting = props => {
       });
   };
 
+  //
+  const confirm = () => {
+    Modal.confirm({
+      title: '运行时间选择',
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <RangePicker
+          locale={locale}
+          allowClear={false}
+          defaultValue={_SELF.queryDate}
+          onChange={date => {
+            _SELF.queryDate = date;
+          }}
+        />
+      ),
+      okText: '运行',
+      cancelText: '取消',
+      onOk() {
+        // setQueryDate(_SELF.queryDate);
+        onRunModel(_SELF.queryDate);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+
+  // 运行
+  const onRunModel = date => {
+    dispatch({
+      type: 'dataModel/onRunModel',
+      payload: {
+        modelGuid: ID,
+        beginTime: date[0].format('YYYY-MM-DD HH:00:00'),
+        endTime: date[1].format('YYYY-MM-DD 23:59:59'),
+      },
+      callback: res => {
+        GetModelRunState();
+      },
+    });
+  };
+
+  // 获取运行状态
+  const GetModelRunState = () => {
+    dispatch({
+      type: 'dataModel/GetModelRunState',
+      payload: {
+        modelGuid: ID,
+      },
+      callback: res => {
+        if (res) {
+          clearInterval(timer);
+          timer = setInterval(() => {
+            GetModelRunState();
+          }, 20000);
+        } else {
+          clearInterval(timer);
+        }
+      },
+    });
+  };
+
   // 获取已关联排口
   const onPointFormFinish = values => {
     GetModelRelationDGIMN();
@@ -436,24 +514,35 @@ const Setting = props => {
               </Row>
             </Form>
           </Card>
-          {ModelInfoAndParams.dataAttribute.length ? (
-            <ModelParamsConfig
-              ModelID={ID}
-              Data={ModelInfoAndParams}
-              industryList={industryList}
-              onRef={childRef}
-            />
-          ) : (
-            ''
-          )}
-          <Divider orientation="right" style={{ color: '#f6f0f0' }}>
-            <Space>
-              <Button type="primary" loading={saveLoading} onClick={() => onFinish()}>
-                提交
-              </Button>
-              {/* <Button onClick={() => router.push('/DataAnalyticalWarningModel/Model')}>取消</Button> */}
-            </Space>
-          </Divider>
+          {
+            <Spin spinning={runState} tip="模型正在运行中，请稍后...">
+              {ModelInfoAndParams.dataAttribute.length ? (
+                <ModelParamsConfig
+                  ModelID={ID}
+                  Data={ModelInfoAndParams}
+                  industryList={industryList}
+                  onRef={childRef}
+                />
+              ) : (
+                ''
+              )}
+              <Divider orientation="right" style={{ color: '#f6f0f0' }}>
+                <Space>
+                  <Button
+                    // type="primary"
+                    onClick={confirm}
+                    icon={<SyncOutlined />}
+                    loading={runState}
+                  >
+                    运行
+                  </Button>
+                  <Button type="primary" loading={saveLoading} onClick={() => onFinish()}>
+                    保存
+                  </Button>
+                </Space>
+              </Divider>
+            </Spin>
+          }
         </div>
         <Card
           title={<div className={styles.title}>关联排口</div>}

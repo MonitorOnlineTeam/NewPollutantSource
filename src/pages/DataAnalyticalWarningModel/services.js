@@ -263,9 +263,20 @@ export async function GetWarningVerifyCheckInfo(params) {
 
 // 报警核实
 export async function InsertWarningVerify(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/InsertWarningVerify', params);
+  return result;
+}
+
+// 模型重新运行
+export async function onRunModel(params) {
+  const result = await post('/newApi/rest/PollutantSourceApi/Mold/RunModel', params);
+  return result;
+}
+// 获取模型运行状态
+export async function GetModelRunState(params) {
   const result = await post(
-    '/newApi/rest/PollutantSourceApi/Warning/InsertWarningVerify',
-    params,
+    '/newApi/rest/PollutantSourceApi/Mold/GetModelRunState?modelGuid=' + params.modelGuid,
+    {},
   );
   return result;
 }
