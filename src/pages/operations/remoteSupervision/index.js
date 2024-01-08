@@ -35,7 +35,6 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 import cuid from 'cuid';
 import { permissionButton } from '@/utils/utils';
-import { DevOpsGuru } from 'aws-sdk';
 
 const namespace = 'remoteSupervision'
 

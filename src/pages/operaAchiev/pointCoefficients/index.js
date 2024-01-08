@@ -22,7 +22,7 @@ import NumTips from '@/components/NumTips'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
-import tableList from '@/pages/list/table-list';
+
 
 const { TextArea } = Input;
 const { Option } = Select;

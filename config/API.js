@@ -241,7 +241,7 @@ export const API = {
     GetAlarmVerifyRate: before + '/OverAlarmApi/GetAlarmVerifyRate',//获取超标数据信息
     ExportAlarmVerifyRate: before + '/OverAlarmApi/ExportAlarmVerifyRate',//导出超标数据信息
     GetAlarmVerifyRateDetail: before + '/OverAlarmApi/GetAlarmVerifyRateDetail',//获取超标数据信息详情
-    ExportAlarmVerifyRateDetail: before + '/OverAlarmApi/ExportAlarmVerifyRate',//导出超标数据信息
+    ExportAlarmVerifyRateDetail: before + '/OverAlarmApi/ExportAlarmVerifyRateDetail',//导出超标数据信息详情
     GetAlarmVerifyDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyDetail',//获取超标数据报警次数详情
     ExportAlarmVerifyDetail: before + '/AlarmVerifyManageApi/ExportAlarmVerifyDetail',//导出超标数据报警次数详情
     /*缺失数据分析*/

@@ -773,7 +773,7 @@ const Index = (props) => {
                 })
                 const formData = new FormData();
                 fileList.forEach((file) => {
-                    formData.append('files', file);
+                    formData.append('file', file);
                 });
                 formData.append('firstRow', value.rowVal);
                 formData.append('firstColumn', value.colVal);
