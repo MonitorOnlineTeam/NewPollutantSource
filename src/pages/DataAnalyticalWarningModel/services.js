@@ -1,5 +1,5 @@
 import { post } from '@/utils/request';
-
+import { API } from '@config/API';
 // 获取模型列表
 export async function GetModelList(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Mold/GetMoldList', params);
@@ -204,7 +204,7 @@ export async function ExportStatisAlarm(params) {
 // 根据企业获取排口
 export async function GetNoFilterPointByEntCode(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
+    API.CommonApi.GetNoFilterPointByEntCode,
     params,
   );
   return result;

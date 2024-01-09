@@ -37,7 +37,7 @@ const Model = {
         });
         if (tokenResponse.access_token) {
           yield put({ type: 'changeLoginLoading', payload: { loginLoading: false }, });
-          Cookie.set('newToken', tokenResponse.access_token);
+          Cookie.set(configToken.cookieName, tokenResponse.access_token);
           //大屏
           if (payload.redirctUrl) {
             router.push(payload.redirctUrl);
@@ -74,9 +74,9 @@ const Model = {
             const systemList = response.Datas.MenuDatas.map(item => ({ ...item, ID: item.id, Name: item.name, id: undefined, name: undefined, children: undefined }));
             // sessionStorage.setItem('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
             Cookie.set('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
+            callback && callback(response.IsSuccess);
             //进入系统
             router.push(defaultNavigateUrl);
-            callback && callback(response.IsSuccess);
             //生成菜单数组保存 清空路由和路由权限使用
             function getMeun(meun) {
               const meunArr = [];
@@ -96,7 +96,7 @@ const Model = {
 
           }
         } else {  //token获取失败
-          Cookie.set('newToken', '');
+          Cookie.set(configToken.cookieName, '');
           yield put({ type: 'changeLoginLoading', payload: { loginLoading: false }, });
         }
       } else {  //登录获取失败
