@@ -376,6 +376,8 @@ export const API = {
     GetInspectorRectificationView: before + '/SystemFacilityVerification/GetInspectorRectificationView',//获取核查整改详情
     UpdateRectificationStatus: before + '/SystemFacilityVerification/UpdateRectificationStatus',//更新核查整改状态
     RejectInspectorRectificationInfo: before + '/SystemFacilityVerification/RejectInspectorRectificationInfo',//核查整改驳回或申述驳回
+    AddSetUser: before + '/UserApi/AddSetUser',//设置可以看到督察整改全部信息的人员信息
+    GetSetUser: before + '/UserApi/GetSetUser',//获取可以看到督察整改全部信息的人员信息
     /*** 监督核查分析 ***/
     /*督查分析总结*/
     GetSupervisionTypeList: before + '/Supervision/GetSupervisionTypeList', //获取督查总结的督查类别

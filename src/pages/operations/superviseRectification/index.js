@@ -28,6 +28,7 @@ import cuid from 'cuid';
 import { getBase64 } from '@/utils/utils';
 import Detail from './Detail';
 import Lightbox from "react-image-lightbox-rotate";
+import InspectorUserTableTransfer from "@/components/InspectorUserTableTransfer";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -37,7 +38,7 @@ const namespace = 'superviseRectification'
 
 
 
-const dvaPropsData = ({ loading, superviseRectification, global, common, point, autoForm }) => ({
+const dvaPropsData = ({ loading, superviseRectification, global, common, roleinfo, autoForm }) => ({
   tableDatas: superviseRectification.tableDatas,
   tableLoading: loading.effects[`${namespace}/getInspectorRectificationManageList`],
   tableTotal: superviseRectification.tableTotal,
@@ -47,6 +48,10 @@ const dvaPropsData = ({ loading, superviseRectification, global, common, point, 
   entLoading: common.noFilterEntLoading,
   clientHeight: global.clientHeight,
   exportLoading: loading.effects[`${namespace}/exportInspectorRectificationManage`],
+  inspectorUserLoading: loading.effects['common/getInspectorUserList'],
+  addSetUserLoading:loading.effects[`${namespace}/addSetUser`],
+  setUserLoading:loading.effects[`${namespace}/getSetUser`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -87,13 +92,27 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
+    addSetUser: (payload, callback) => { //设置人员
+      dispatch({
+        type: `${namespace}/addSetUser`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    getSetUser: (payload, callback) => { //获取设置人员
+      dispatch({
+        type: `${namespace}/getSetUser`,
+        payload: payload,
+        callback: callback
+      })
+    },
   }
 }
 const Index = (props) => {
 
   const { match: { path } } = props;
 
-  const  inspectorType = path === '/operations/superviseRectification'? 1 : 2; // 是否为现场督查 1 现场 2 远程  
+  const inspectorType = path === '/operations/superviseRectification' ? 1 : 2; // 是否为现场督查 1 现场 2 远程  
 
   const [form] = Form.useForm();
 
@@ -129,7 +148,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        return (index + 1) + (pageIndex-1)*pageSize
+        return (index + 1) + (pageIndex - 1) * pageSize
       }
     },
     {
@@ -290,7 +309,7 @@ const Index = (props) => {
   }
 
 
-
+  const [personnelListVisble, setPersonnelListVisble] = useState(false)
   const searchComponents = () => {
     return <Form
       form={form}
@@ -299,7 +318,7 @@ const Index = (props) => {
         time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
       }}
       className={styles["ant-advanced-search-form"]}
-      onFinish={()=>{setPageIndex(1);onFinish(1,pageSize)}}
+      onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
       onValuesChange={onValuesChange}
     >
       <Row align='middle'>
@@ -345,16 +364,25 @@ const Index = (props) => {
           </Select>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 5 }}>
+          <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 4 }}>
             查询
      </Button>
-          <Button onClick={() => { form.resetFields() }} style={{ marginRight: 5 }} >
+          <Button onClick={() => { form.resetFields() }} style={{ marginRight: 4 }} >
             重置
      </Button>
-          <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading} style={{ marginRight: 5 }}>
+          <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading} style={{ marginRight: 4 }}>
             导出
             </Button>
-
+          <Button type="primary" style={{ marginRight: 4 }}
+           onClick={() => { 
+            setPersonnelListVisble(true);
+            setTargetUserKeys([])
+            props.getSetUser({},(data)=>{
+              setTargetUserKeys(data)
+            }) }} 
+           >
+            配置人员清单
+            </Button>
         </Form.Item>
 
       </Row>
@@ -382,17 +410,14 @@ const Index = (props) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+  const [targetUserKeys,setTargetUserKeys] = useState()
+  const userChange =(nextTargetKeys,direction,moveKeys)=>{
+    setTargetUserKeys(nextTargetKeys)
+    props.addSetUser({
+      userIdList:direction==='right'? nextTargetKeys : moveKeys,
+      state:direction==='right'? 1 : 2
+    }) 
+  }
 
   return (
     <div className={styles.superviseRectificationSty}>
@@ -427,6 +452,19 @@ const Index = (props) => {
         destroyOnClose
       >
         <Detail ID={detailId} />
+      </Modal>
+
+      <Modal //配置人员清单
+        visible={personnelListVisble}
+        title={'配置人员清单'}
+        footer={null}
+        onCancel={() => { setPersonnelListVisble(false) }}
+        destroyOnClose
+        width={1100}
+      >
+        <Spin spinning={props.inspectorUserLoading || props.setUserLoading || props.addSetUserLoading || false}>
+          <InspectorUserTableTransfer targetKeys={targetUserKeys} onChange={userChange}/>
+        </Spin>
       </Modal>
     </div>
   );
