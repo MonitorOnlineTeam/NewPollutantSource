@@ -44,6 +44,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    *addProjectEntRelation({ payload, callback }, { call, put, update }) { //添加成套项目与企业关联关系
+      const result = yield call(services.addProjectEntRelation, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
     *exportCTProjectList({ callback, payload }, { call, put, update, select }) { //导出
       const response = yield call(services.exportCTProjectList, { ...payload });
       if (response.IsSuccess) {

@@ -772,10 +772,11 @@ export const API = {
     PointSort: before + '/CTBaseDataApi/PointSort',// 监测点排序
     /*服务档案查询 */
     GetCTProjectList: before + '/CTBaseDataApi/GetCTProjectList', //项目列表
+    ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',  //项目列表 导出
     UpdateCTProject: before + '/CTBaseDataApi/UpdateCTProject', //修改项目信息
     GetrojectPointRelationList: before + '/CTBaseDataApi/GetrojectPointRelationList',//获取项目与站点管理关系
     AddProjectPointRelation: before + '/CTBaseDataApi/AddProjectPointRelation',//添加项目与站点关联关系
-    ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',  //项目列表 导出
+    AddProjectEntRelation: before + '/CTBaseDataApi/AddProjectEntRelation',//添加项目与企业关联关系
     /*设备厂家名录 */
     GetEquipmentManufacturerInventory: before + '/DebuggingEquipment/GetEquipmentManufacturerInventory',  //获取设备厂商信息
     AddEquipmentManufacturerInfo: before + '/DebuggingEquipment/AddEquipmentManufacturerInfo',  //添加设备厂商信息

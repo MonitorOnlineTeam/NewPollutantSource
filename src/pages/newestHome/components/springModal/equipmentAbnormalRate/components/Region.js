@@ -72,7 +72,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, paramCodeListLoading, coommonCol, configInfo, } = props;
+  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, paramCodeListLoading, coommonCol, configInfo,deviceType, } = props;
 
   const provinceShow = configInfo && configInfo.IsShowProjectRegion;
   useEffect(() => {

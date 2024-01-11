@@ -388,13 +388,16 @@ const Index = (props) => {
     };
     return option;
   }
-
+  const [deviceType,setdeviceType] = useState(1)
   const deviceAbnormals = () =>{ //设备完好率
     setEquipmentAbnormalRateVisible(true)
+    setdeviceType(1)
   }
 
   const deviceFailureRate = () =>{ //设备完好率
     setEquipmentFailureRateVisible(true)
+    // setEquipmentAbnormalRateVisible(true)
+    // setdeviceType(2)
   }
   const deviceFailurerePairRate = () =>{ //设备故障修复率
     setEquipmentFailurerePairRateVisible(true)
@@ -536,6 +539,7 @@ const Index = (props) => {
         type={Number(pollutantType)}
         onCancel={()=>{setEquipmentAbnormalRateVisible(false)}}
         time={[moment(deviceAbnormalCheck.beginTime),moment(deviceAbnormalCheck.endTime)]}
+        deviceType={deviceType} //1设备完好率 2设备故障率 新
       />  
       <EquipmentFailureRate  //设备故障率弹框
         visible={equipmentFailureRateVisible}

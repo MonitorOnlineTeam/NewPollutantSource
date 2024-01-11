@@ -2,14 +2,14 @@
 *两个节点穿梭框  适用于企业监测点树
 */
 import React, { useState, useEffect } from 'react'
-import { Transfer, Tree, Spin, Empty,message, } from 'antd'
+import { Transfer, Tree, Spin, Empty, message, } from 'antd'
 import { ConsoleSqlOutlined, CalculatorFilled } from '@ant-design/icons';
 import { connect } from 'dva';
 import styles from './styles.less'
 
 const dvaPropsData = ({ global }) => ({
   clientHeight: global.clientHeight,
-  permisBtnTip:global.permisBtnTip,
+  permisBtnTip: global.permisBtnTip,
 })
 const dvaDispatch = (dispatch) => {
   return {
@@ -23,7 +23,7 @@ const dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
-  const { treeData, checkedKeys, height, clientHeight,permission,permisBtnTip,titles, } = props;
+  const { treeData, checkedKeys, height, clientHeight, permission, permisBtnTip, titles, singleLayer } = props;
   const [targetKeys, setTargetKeys] = useState(checkedKeys)
   const [rightTreeData, setRightTreeData] = useState([])
   const generateTree = (treeNodes = [], checkedKeys = []) => {
@@ -43,25 +43,25 @@ const Index = (props) => {
     })
   }
   function findParentNodeByKey(nodes, childNodeKey) {  //通过子节点的key 查找父节点  并返回其key  以数组形式返回
-    for (let i = 0; i < nodes.length; i++) {  
-      let node = nodes[i];  
-      if (node.children && node.children.length > 0) {  
-        for (let j = 0; j < node.children.length; j++) {  
-          let childNode = node.children[j];  
-    
-          if (childNode.key === childNodeKey) {  
-            return node.key? [node.key] : [];  
-          } else {  
-            let result = findParentNodeByKey(node.children, childNodeKey);  
-            if (result !== null) {  
-              return result;  
-            }  
-          }  
-        }  
-      }  
-    }  
-    
-    return null;  
+    for (let i = 0; i < nodes.length; i++) {
+      let node = nodes[i];
+      if (node.children && node.children.length > 0) {
+        for (let j = 0; j < node.children.length; j++) {
+          let childNode = node.children[j];
+
+          if (childNode.key === childNodeKey) {
+            return node.key ? [node.key] : [];
+          } else {
+            let result = findParentNodeByKey(node.children, childNodeKey);
+            if (result !== null) {
+              return result;
+            }
+          }
+        }
+      }
+    }
+
+    return null;
   }
   const dealCheckboxSeleted = ({ node, onItemSelect, onItemSelectAll }) => {
     let {
@@ -80,8 +80,8 @@ const Index = (props) => {
       // 勾选的是子节点
       if (!checked) {
         // 查找该元素的父元素
-        let parentKeys = halfCheckedKeys?.[0]&&[halfCheckedKeys?.[0]] || findParentNodeByKey(treeData,key) || []
-        onItemSelectAll([...parentKeys,key], checked)
+        let parentKeys = halfCheckedKeys?.[0] && [halfCheckedKeys?.[0]] || findParentNodeByKey(treeData, key) || []
+        onItemSelectAll([...parentKeys, key], checked)
       } else {
         let parentKey = ''
         treeData && treeData[0] && treeData.forEach(tree => {
@@ -112,7 +112,7 @@ const Index = (props) => {
     // } 
     // flatten(dataSource)
     const leftData = generateTree(dataSource, targetKeys)
-    const leftTreeData = leftData?.length? leftData.filter(item=>item.children[0]) : []
+    const leftTreeData = singleLayer ? leftData : leftData?.length ? leftData.filter(item => item.children[0]) : []
     return (
       <Transfer
         {...restProps}
@@ -120,7 +120,7 @@ const Index = (props) => {
         // dataSource={transferDataSource}
         className={styles["tree-transfer"]}
         render={item => item.title}
-        titles={titles? titles : ['待分配点位','已分配点位']}
+        titles={titles ? titles : ['待分配点位', '已分配点位']}
       >
         {({ direction, onItemSelect, onItemSelectAll, selectedKeys }) => {
           if (direction === 'left') {
@@ -178,18 +178,18 @@ const Index = (props) => {
     )
   }
 
-    
+
   /**
    * 改变右边tree数据
    * @param {*右边tree需要处理的keys集合} keys
    * @param {*0-删除以上的keys 1-新增以上的keys} type
    */
   const getRightTreeData = (keys, type) => {
-    let arr =  [...rightTreeData]
+    let arr = [...rightTreeData]
     if (keys?.length > 0) {
       keys.forEach(key => {
         // treeData && treeData[0]?.children?.forEach(data => {
-          treeData.forEach(data => {
+        treeData.forEach(data => {
           if (key === data.key) {
             let index = arr.findIndex(i => {
               return i.key === key
@@ -276,34 +276,39 @@ const Index = (props) => {
     }, 1000)
   }
   const onChange = (keys, direction, moveKeys) => {
-    let changeArrType = 1 // 0-删除  1-新增
-    if (direction === 'left') { 
-      changeArrType = 0
-      if (keys?.length > 0) {//去掉父节点的key
-        treeData.forEach(tree => {
-          let index = keys.indexOf(tree?.key)
-          if (index > -1 && tree?.children?.length > 0) {
-            tree?.children?.forEach(child => {
-              if (keys.includes(child?.key)) {
-                keys?.splice(index, 1)
-              }
-            })
-          }
-        })
+    let changeArrType = direction === 'left'? 0 : 1 // 0-删除  1-新增
+    if (singleLayer) {
+      keys = keys.filter(item => item)
+      moveKeys = moveKeys.filter(item => item)
+    } else {
+      if (direction === 'left') {
+        if (keys?.length > 0) {//去掉父节点的key
+          treeData.forEach(tree => {
+            let index = keys.indexOf(tree?.key)
+            if (index > -1 && tree?.children?.length > 0) {
+              tree?.children?.forEach(child => {
+                if (keys.includes(child?.key)) {
+                  keys?.splice(index, 1)
+                }
+              })
+            }
+          })
+        }
       }
-    }  
-    treeData.map(item=>{
-      if(keys.includes(item.key)){
-        keys = keys.filter(filterItem => filterItem !== item.key); 
-      }
-    })
+      treeData.map(item => {
+        if (keys.includes(item.key)) {
+          keys = keys.filter(filterItem => filterItem !== item.key);
+        }
+      })
+
+    }
     setTargetKeys(keys)
     let keysList = changeArrType === 1 ? keys : moveKeys
-    props.targetKeysChange? props.targetKeysChange(moveKeys,changeArrType,()=>{
-       getRightTreeData(keysList, changeArrType)
-    }) :  getRightTreeData(keysList, changeArrType)
+    props.targetKeysChange ? props.targetKeysChange(moveKeys, changeArrType, () => {
+      getRightTreeData(keysList, changeArrType)
+    }) : getRightTreeData(keysList, changeArrType)
   }
-  
+
   return <Spin spinning={initDataLoading}><TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} /> </Spin>
 }
 

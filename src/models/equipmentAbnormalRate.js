@@ -117,6 +117,62 @@ export default Model.extend({
           }
         
        ],
+       coommonCol2 : [
+          {
+            title: '总小时个数',
+            dataIndex: 'exceptionRate',
+            key: 'exceptionRate',
+            align:'center',
+          },
+          {
+            title: '故障小时个数',
+            dataIndex: 'exceptionRate',
+            key: 'exceptionRate',
+            align:'center',
+          },
+          {
+            title: '日常维护小时个数',
+            dataIndex: 'exceptionRate',
+            key: 'exceptionRate',
+            align:'center',
+          },
+          {
+            title: '设备完好率',
+            dataIndex: 'intactRate',
+            key: 'intactRate',
+            width: 150,
+            align:'center',
+            sorter: (a, b) => a.intactRate - b.intactRate,
+            render: (text, record) => {
+              return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+            }
+          }
+       ],
+       failcoommonCol2 : [
+        {
+          title: '总小时个数',
+          dataIndex: 'exceptionRate',
+          key: 'exceptionRate',
+          align:'center',
+        },
+        {
+          title: '故障小时个数',
+          dataIndex: 'exceptionRate',
+          key: 'exceptionRate',
+          align:'center',
+        },
+        {
+          title: '设备故障率',
+          dataIndex: 'failureRate',
+          key: 'failureRate',
+          width: 150,
+          align:'center',
+          sorter: (a, b) => a.failureRate - b.failureRate,
+          render: (text, record) => {
+            return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+          }
+        }
+     ],
        exportRegLoading:false,
        exportRegDetailLoading: false,
        exportPointLoading: false,
