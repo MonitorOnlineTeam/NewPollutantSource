@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-08-15 15:20:15
+ * @Last Modified time: 2024-01-11 14:56:09
  * @desc: 主页model
  */
 import moment from 'moment';
@@ -362,6 +362,16 @@ export default Model.extend({
         ...taskCountParams,
         ...payload,
       };
+      // 华能北京热电厂
+      // if (true) {
+      //   yield update({
+      //     taskCountData: {
+      //       TaskSum: 8,
+      //       CompletedTaskSum: 8,
+      //       NoCompletedTaskSum: 0,
+      //     },
+      //   });
+      // }
       const result = yield call(services.getTaskCount, postData);
       if (result.IsSuccess) {
         yield update({
@@ -561,7 +571,8 @@ export default Model.extend({
     },
     // 年度排放量对比分析 - 碳排放
     *getGHGandEmissionContrast({ payload }, { call, update, select }) {
-      const result = yield call(services.GetGHGandEmissionContrastOther, payload);
+      // const result = yield call(services.GetGHGandEmissionContrastOther, payload);  // 华能北京热电厂
+      const result = yield call(services.getGHGandEmissionContrast, payload);
       if (result.IsSuccess) {
         yield update({
           GHGandEmissionContrastData: result.Datas,
