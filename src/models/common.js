@@ -2,7 +2,6 @@ import { message } from 'antd';
 import * as services from '../services/commonApi';
 import config from '@/config';
 import Model from '@/utils/model';
-
 export default Model.extend({
   namespace: 'common',
   state: {
@@ -297,6 +296,7 @@ export default Model.extend({
       } else {
         message.error(result.Message);
       }
+      callback&&callback()
     },
     // 行政区 非过滤
     *getNoFilterRegionList({ payload, callback }, { call, update }) {
@@ -397,7 +397,6 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-
 
 
 

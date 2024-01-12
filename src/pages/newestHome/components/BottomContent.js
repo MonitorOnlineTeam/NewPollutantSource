@@ -34,7 +34,7 @@ const namespace = 'newestHome'
 
 
 
-const dvaPropsData = ({ loading, newestHome }) => ({
+const dvaPropsData = ({ loading, newestHome,global}) => ({
   exceptionSignTaskRateLoading: loading.effects[`${namespace}/GetExceptionSignTaskRate`],
   exceptionSignTaskRateList:newestHome.exceptionSignTaskRateList,
   consumablesLoading: loading.effects[`${namespace}/GetConsumablesList`],
@@ -47,6 +47,7 @@ const dvaPropsData = ({ loading, newestHome }) => ({
   modalType:newestHome.pollType,
   opertionExceptionList:newestHome.opertionExceptionList,
   smallResolution:newestHome.smallResolution,
+  operationSettingInfo:global.operationSettingInfo,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -89,7 +90,7 @@ const Index = (props) => {
   const [tableDatas, setTableDatas] = useState([])
 
 
-  const {pollType,latelyDays7, latelyDays30,subjectFontSize,smallResolution,} = props;
+  const {pollType,latelyDays7, latelyDays30,subjectFontSize,smallResolution,operationSettingInfo} = props;
 
   const consumablesEchartsRef = useRef(null);
   const planInsideClockAbnormalEchartsRef = useRef(null);
@@ -146,7 +147,8 @@ const Index = (props) => {
   const getOpertionExceptionList = (date) =>{ //设备异常总览
     props.GetOpertionExceptionList({ 
       pollutantType: pollutantType,
-      ...date
+      type:operationSettingInfo?.Availability,
+      ...date,
     })
   }
   const [clockBtnCheck, setClockBtnCheck] = useState(latelyDays7)
@@ -388,16 +390,20 @@ const Index = (props) => {
     };
     return option;
   }
-  const [deviceType,setdeviceType] = useState(1)
+  const [deviceType,setDeviceType] = useState(1)
   const deviceAbnormals = () =>{ //设备完好率
     setEquipmentAbnormalRateVisible(true)
-    setdeviceType(1)
+    setDeviceType(1)
   }
 
   const deviceFailureRate = () =>{ //设备完好率
-    setEquipmentFailureRateVisible(true)
-    // setEquipmentAbnormalRateVisible(true)
-    // setdeviceType(2)
+    if(operationSettingInfo?.Availability==1){ //提取数据 评估中心
+      setEquipmentAbnormalRateVisible(true)
+      setDeviceType(2)
+    }else{
+      setEquipmentFailureRateVisible(true)
+    }
+ 
   }
   const deviceFailurerePairRate = () =>{ //设备故障修复率
     setEquipmentFailurerePairRateVisible(true)
@@ -539,7 +545,8 @@ const Index = (props) => {
         type={Number(pollutantType)}
         onCancel={()=>{setEquipmentAbnormalRateVisible(false)}}
         time={[moment(deviceAbnormalCheck.beginTime),moment(deviceAbnormalCheck.endTime)]}
-        deviceType={deviceType} //1设备完好率 2设备故障率 新
+        operationSetType={operationSettingInfo?.Availability} //1评估中心 2默认
+        deviceType={deviceType} //1设备完好率 2设备故障率 
       />  
       <EquipmentFailureRate  //设备故障率弹框
         visible={equipmentFailureRateVisible}

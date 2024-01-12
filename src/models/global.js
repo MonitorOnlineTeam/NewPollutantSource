@@ -13,6 +13,7 @@ import config from '@/config';
 import { message } from 'antd';
 import router from 'umi/router';
 import webConfig from '../../public/webConfig'
+import { GetOperationSetting } from '@/pages/systemManger/operationBasConfig/service'
 
 /**
  * 功  能：报警消息和推送相关model
@@ -42,6 +43,7 @@ export default Model.extend({
     sysPollutantTypeList: [],
     userGoDetail: false,
     permisBtnTip: '您暂无操作权限',
+    operationSettingInfo:{},
   },
   effects: {
     // 首次加载获取当天报警消息
@@ -140,6 +142,16 @@ export default Model.extend({
         })
         callback && callback(sysPollutantTypeList);
       } else {
+        message.error(result.Message)
+      }
+    },
+    *getOperationSetting({ payload,callback }, { call, put, update }) { //获取运维基础配置
+      const result = yield call(GetOperationSetting, payload);
+      if (result.IsSuccess) {
+        yield update({
+          operationSettingInfo: result.Datas,
+        })
+      }else{
         message.error(result.Message)
       }
     },

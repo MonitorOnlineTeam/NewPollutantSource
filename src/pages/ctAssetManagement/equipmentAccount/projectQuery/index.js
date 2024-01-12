@@ -391,7 +391,7 @@ const Index = (props) => {
   const associaePoint = (record) => { //关联企业和监测点 弹框
     setAssociaePointVisible(true)
     setAssociaType(1)
-    setEntPointName([])
+    setEntPointName('')
     setRegionCode('')
     setProjectCode(record.ProjectCode)
     setProjectID(record.ID)
@@ -418,7 +418,7 @@ const Index = (props) => {
   }
 
   const [regionCode, setRegionCode] = useState('')
-  const [entPointName, setEntPointName] = useState()
+  const [entPointName, setEntPointName] = useState('')
   const handlePointQuery = () => {
     getrojectPointRelationListQues(projectID,associaType)
     props.getEntAndPoint({ regionCode: regionCode, entName: entPointName,type:associaType==1? 1 : undefined},(data)=>{
@@ -450,11 +450,10 @@ const Index = (props) => {
 
   const associaTypeChange=({ target: { value } }) => { 
     setAssociaType(value);
-    setEntPointName([])
+    setEntPointName('')
     setRegionCode('')
     getrojectPointRelationListQues(projectID,value)
     if(value==2 && pointList?.length<=0){
-      getrojectPointRelationListQues(projectID)
       props.getEntAndPoint({ regionCode: regionCode, entName: entPointName},(data)=>{
         setPointList(data)
       })
@@ -622,7 +621,7 @@ const Index = (props) => {
         <Detail data={detailData ? detailData : {}} />
       </Modal>
       <Modal
-        title={`${projectCode} - 关联监测点`}
+        title={`${projectCode} - 关联企业和监测点`}
         visible={associaePointVisible}
         destroyOnClose={true}
         onCancel={() => { setAssociaePointVisible(false) }}

@@ -1,5 +1,5 @@
 /**
- * 功  能：表格穿梭框 人员
+ * 功  能：表格穿梭框 核查人员
  * 创建人：jab
  * 创建时间：2024.1.10
  */
@@ -31,7 +31,9 @@ const dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
     useEffect(() => {
-        props.getInspectorUserList()
+        if(props.inspectorUserList?.length<=0){
+          props.getInspectorUserList()
+         }
     }, []);
     const leftTableColumns = [
         {
@@ -107,12 +109,12 @@ const Index = (props) => {
         titles={['待分配用户', '已分配用户']}
         dataSource={props.inspectorUserList}
         filterOption={(inputValue, item) =>
-            (item.UserAccount && item.User_Name.indexOf(inputValue) !== -1) ||
-            (item.UserName && item.User_Account.indexOf(inputValue) !== -1) ||
-            (item.Phone && item.Phone.indexOf(inputValue) !== -1)
+            (item.UserAccount && item.UserAccount.indexOf(inputValue) !== -1) ||
+            (item.UserName && item.UserName.indexOf(inputValue) !== -1)
         }
         leftColumns={leftTableColumns}
         rightColumns={rightTableColumns}
+        showSearch
         {...props}
     />
 };

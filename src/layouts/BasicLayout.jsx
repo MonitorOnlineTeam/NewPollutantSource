@@ -165,6 +165,10 @@ class BasicLayout extends Component {
       type: 'global/getSystemConfigInfo',
       payload: {},
     });
+    dispatch({
+      type: 'global/getOperationSetting',
+      payload: {},
+    });
     // console.log(currentMenu)
     dispatch({ //获取菜单
       type: 'user/fetchCurrent',

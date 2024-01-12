@@ -29,6 +29,7 @@ import { getBase64 } from '@/utils/utils';
 import Detail from './Detail';
 import Lightbox from "react-image-lightbox-rotate";
 import InspectorUserTableTransfer from "@/components/InspectorUserTableTransfer";
+import {  permissionButton } from '@/utils/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -130,15 +131,21 @@ const Index = (props) => {
 
 
 
-
+ const [inspectorUserPermission,SetInspectorUserPermission] = useState(false)
 
 
   useEffect(() => {
     initData()
   }, []);
-
+  
   const initData = () => {
+    const buttonList = permissionButton(props.match.path)
+    buttonList.map(item => {
+      switch (item) {
+        case 'setInspectorUser': SetInspectorUserPermission(true); break;
+      }
     onFinish()
+    })
 
   }
 
@@ -373,7 +380,7 @@ const Index = (props) => {
           <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading} style={{ marginRight: 4 }}>
             导出
             </Button>
-          <Button type="primary" style={{ marginRight: 4 }}
+         {inspectorUserPermission&&<Button type="primary" style={{ marginRight: 4 }}
            onClick={() => { 
             setPersonnelListVisble(true);
             setTargetUserKeys([])
@@ -382,7 +389,7 @@ const Index = (props) => {
             }) }} 
            >
             配置人员清单
-            </Button>
+            </Button>}
         </Form.Item>
 
       </Row>

@@ -71,6 +71,7 @@ export const API = {
     GetConsumablesStatisticsInfo: before + '/VisualDashBoardApi/GetConsumablesStatisticsInfo',//获取耗材统计信息 详情
     ExportConsumablesStatisticsInfo: before + '/VisualDashBoardApi/ExportConsumablesStatisticsInfo',//导出耗材统计信息 详情
     GetEquipmentExceptionsOverview: before + '/VisualDashBoardApi/GetEquipmentExceptionsOverview',//获取设备异常总览 设备异常率、设备故障率、设备故障修复率
+    GetStatePointEquipmentExceptionsOverview: before + '/VisualDashBoardApi/GetStatePointEquipmentExceptionsOverview',//获取设备异常总览 设备异常率、设备故障率、设备故障修复率（评估中心）
     GetMapPointList: before + '/VisualDashBoardApi/GetMapPointList',//获取地图数据
     GetOperatePointList: before + '/VisualDashBoardApi/GetOperatePointList',//获取运维信息总览 详情运维企业、监测点信息
     ExportOperatePointList: before + '/VisualDashBoardApi/ExportOperatePointList',//导出运维信息总览 详情运维企业、监测点信息
@@ -89,6 +90,8 @@ export const API = {
     ExportEquipmentExecptionRateList: before + '/VisualDashBoardApi/ExportEquipmentExecptionRateList',//导出省、市、企业监测点设备完好率
     GetEquipmentFailureRateList: before + '/VisualDashBoardApi/GetEquipmentFailureRateList',//获取省、市、企业监测点设备故障率
     ExportEquipmentFailureRateList: before + '/VisualDashBoardApi/ExportEquipmentFailureRateList',//导出省、市、企业监测点设备故障率
+    GetStatePointExecptionRateList: before + '/VisualDashBoardApi/GetStatePointExecptionRateList',//获取省、市、企业监测点设备完好率和故障率（评估中心）
+    ExportStatePointExecptionRateList: before + '/VisualDashBoardApi/ExportStatePointExecptionRateList',//导出省、市、企业监测点设备完好率和故障率（评估中心）
     GetEquipmentRepairRateList: before + '/VisualDashBoardApi/GetEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
     ExportRepairRateList: before + '/VisualDashBoardApi/ExportRepairRateList',//导出省、市、企业监测点设备故障修复率
     GetOverModel: before + '/OverDataApi/GetOverModel',//获取超标记录汇总信息
@@ -671,6 +674,9 @@ export const API = {
     DeleteSystemLongInLogs: before + '/LogsApi/DeleteSystemLongInLogs', //获取问题清单列表
     GetUserOprationLogsList: before + '/LogsApi/GetUserOprationLogsList', //获取问题清单列表
     DeleteUserOprationLogs: before + '/LogsApi/DeleteUserOprationLogs', //获取问题清单列表
+    /*运维基础配置*/
+    GetOperationSetting: before + '/ConfigureApi/GetOperationSetting', //获取运维基础配置信息
+    UpdOperationSetting: before + '/ConfigureApi/UpdOperationSetting', //设置运维基础配置
   },
 
 

@@ -32,6 +32,8 @@ const dvaPropsData = ({ loading, equipmentAbnormalRate, global }) => ({
   clientHeight: global.clientHeight,
   queryPar: equipmentAbnormalRate.queryPar,
   coommonCol: equipmentAbnormalRate.coommonCol,
+  coommonCol2: equipmentAbnormalRate.coommonCol2,
+  failcoommonCol2: equipmentAbnormalRate.failcoommonCol2,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -60,7 +62,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, coommonCol } = props;
+  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, coommonCol,coommonCol2,failcoommonCol2,deviceType } = props;
 
 
   useEffect(() => {
@@ -118,13 +120,64 @@ const Index = (props) => {
     },
     ...coommonCol
   ]
+  const assessmentCentreCol =  deviceType == 1 ? coommonCol2 : failcoommonCol2
+  const columns2 = [
+    {
+      title: '序号',
+      align: 'center',
+      render: (text, record, index) => {
+        return index + 1
+      }
+    },
+    {
+      title: '省',
+      dataIndex: 'provinceName',
+      key: 'provinceName',
+      align: 'center',
+      render: (text, record, index) => {
+        if (text == '全部合计') {
+          return { props: { colSpan: 0 }, };
+        }
+        return text;
+      },
+    },
+    {
+      title: '市',
+      dataIndex: 'cityName',
+      key: 'cityName',
+      align: 'center',
+      render: (text, record) => {
+        const name = record.provinceName == '全部合计' ? '全部合计' : text
+        return {
+          props: { colSpan: record.provinceName == '全部合计' ? 2 : 1 },
+          children: name
+        }
 
+      }
+    },
+    {
+      title: '运维企业数',
+      dataIndex: 'entCount',
+      key: 'entCount',
+      align: 'center',
+      sorter: (a, b) => a.entCount - b.entCount,
+    },
+    {
+      title: '运维监测点数',
+      dataIndex: 'pointCount',
+      key: 'pointCount',
+      align: 'center',
+      sorter: (a, b) => a.pointCount - b.pointCount,
+
+    },
+    ...assessmentCentreCol
+  ]
   const [entName,setEntName ] = useState()
   return (
     <div>
        
        <Form layout='inline'>
-      <Form.Item style={{ paddingBottom: '16px' }}>
+      <Form.Item>
         <Input placeholder='请输入企业名称' allowClear onChange={(e) => { setEntName(e.target.value) }} />
         </Form.Item>
         <Form.Item style={{ paddingBottom: '16px' }}>
@@ -140,7 +193,7 @@ const Index = (props) => {
         loading={tableLoading}
         bordered
         dataSource={tableDatas}
-        columns={columns}
+        columns={operationSetType==1? columns2 : columns}
         scroll={{ y: clientHeight - 500 }}
         pagination={false}
       />

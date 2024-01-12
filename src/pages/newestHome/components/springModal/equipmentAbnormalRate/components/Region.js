@@ -35,6 +35,8 @@ const dvaPropsData = ({ loading, equipmentAbnormalRate, global, point }) => ({
   queryPar: equipmentAbnormalRate.queryPar,
   paramCodeListLoading: loading.effects[`point/getParamCodeList`],
   coommonCol: equipmentAbnormalRate.coommonCol,
+  coommonCol2: equipmentAbnormalRate.coommonCol2,
+  failcoommonCol2: equipmentAbnormalRate.failcoommonCol2,
   configInfo: global.configInfo,
 })
 
@@ -72,7 +74,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, paramCodeListLoading, coommonCol, configInfo,deviceType, } = props;
+  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, paramCodeListLoading,configInfo, coommonCol, coommonCol2,failcoommonCol2,deviceType,operationSetType, } = props;
 
   const provinceShow = configInfo && configInfo.IsShowProjectRegion;
   useEffect(() => {
@@ -83,7 +85,6 @@ const Index = (props) => {
 
   const [parType, setParType] = useState([])
   const initData = () => {
-
     props.getParamCodeList({ pollutantType: type }, (data) => {
       setParType(data)
       form.setFieldsValue({ parameterCategory: data.map(item => item.value) })
@@ -102,7 +103,8 @@ const Index = (props) => {
     })
 
   };
-
+  const assessmentCentreCol =  deviceType == 1 ? coommonCol2 : failcoommonCol2
+  const col = operationSetType==1?  assessmentCentreCol : coommonCol  //1评估中心
   const column = [
     {
       title: '序号',
@@ -136,7 +138,7 @@ const Index = (props) => {
       sorter: (a, b) => a.pointCount - b.pointCount,
 
     },
-    ...coommonCol
+    ...col
   ]
 
   const [columns, setColumns] = useState([])
@@ -267,7 +269,7 @@ const Index = (props) => {
       </>
         :
 
-        <RegionDetail onGoBack={() => { setRegionDetailVisible(false) }} />  // 行政区详情弹框 
+        <RegionDetail operationSetType={operationSetType} deviceType={deviceType}  onGoBack={() => { setRegionDetailVisible(false) }} />  // 行政区详情弹框 
       }
 
     </div>

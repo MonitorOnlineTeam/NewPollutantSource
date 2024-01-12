@@ -126,7 +126,7 @@ export default Model.extend({
            }    
           },
           *GetOpertionExceptionList({ payload,callback }, { call, put, update }) { //异常设备统计
-            const result = yield call(services.GetOpertionExceptionList, payload);
+            const result = yield call(payload.type==1? services.GetStatePointEquipmentExceptionsOverview: services.GetOpertionExceptionList, {...payload,type:undefined});
             if (result.IsSuccess) { 
               yield update({ opertionExceptionList: result.Datas });
             }else{
