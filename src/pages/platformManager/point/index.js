@@ -436,7 +436,7 @@ export default class MonitorPoint extends Component {
                       },
                     });
                     // 新增：无DGIMN，需要保存完排口后再添加工艺信息
-                    !this.state.isEdit &&
+                    !this.state.isEdit &&   
                       IsModelProject &&  values['Col7'] &&
                       this.subProcessInfo.onSubmit(result.Datas);
                   }
