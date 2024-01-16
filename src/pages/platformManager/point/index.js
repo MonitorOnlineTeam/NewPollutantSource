@@ -485,7 +485,7 @@ export default class MonitorPoint extends Component {
                 searchParams: pointDataWhere,
                 otherParams: {
                   SortFileds: 'Sort',
-                  IsAsc: true,
+                  IsAsc: true, 
                 },
               },
             });
