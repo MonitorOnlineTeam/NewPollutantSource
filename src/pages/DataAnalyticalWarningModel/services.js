@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API';
 
 // 获取模型列表
 export async function GetModelList(params) {
@@ -119,10 +120,7 @@ export async function StatisLinearCoefficient(params) {
 
 // 根据企业获取排口
 export async function getPointByEntCode(params) {
-  const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
-    params,
-  );
+  const result = await post(API.CommonApi.GetNoFilterPointByEntCode, params);
   return result;
 }
 
@@ -203,10 +201,7 @@ export async function ExportStatisAlarm(params) {
 
 // 根据企业获取排口
 export async function GetNoFilterPointByEntCode(params) {
-  const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
-    params,
-  );
+  const result = await post(API.CommonApi.GetNoFilterPointByEntCode, params);
   return result;
 }
 
