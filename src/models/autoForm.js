@@ -576,13 +576,13 @@ export default Model.extend({
       if (payload.Guid) {
         if (payload.Guid.fNameList && payload.Guid.fNameList[0]) {
           Guid = payload.Guid.fNameList[0].split('/')[2]
-        } else if (payload.Guid[0]) { //只上传图片的情况 UploadPicture接口
+        } else if (Array.isArray(payload.Guid)&&payload.Guid[0]) { //只上传图片的情况 UploadPicture接口
           Guid = payload.Guid[0].split('/')[2]
         } else {
-          Guid = ''
+          Guid = payload.Guid //编辑的情况
         }
       } else {
-        Guid = payload.Guid;
+        Guid = '';
       }
       if (!Guid) { //文件为空的情况
         return;

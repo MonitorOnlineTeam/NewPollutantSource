@@ -284,8 +284,9 @@ export default class MonitorPoint extends Component {
         },
         callback: res => {
           // 获取关联对应窑头数据
-          if (res.PmCemsSupplier === '2' && res['dbo.T_Bas_CommonPoint.Col7'] === '6') {
-            this.getEntAndPointList();
+          const IsModelProject = Cookie.get('sysMenuId')==='5cd1884a-3f42-426f-8893-5cae720bddf3';//是否为模型项目
+           if (IsModelProject && res.PmCemsSupplier === '2' && res['dbo.T_Bas_CommonPoint.Col7'] === '6') {
+              this.getEntAndPointList();
           }
         },
       });
@@ -387,6 +388,7 @@ export default class MonitorPoint extends Component {
       form.validateFields((err, values) => {
         //监测点
         if (!err) {
+          const IsModelProject = Cookie.get('sysMenuId')==='5cd1884a-3f42-426f-8893-5cae720bddf3';//是否为模型项目
           const _submit = () => {
             const FormData = handleFormData(values);
             console.log('values', values);
@@ -399,7 +401,7 @@ export default class MonitorPoint extends Component {
             if (this.state.isEdit) {
               FormData.PointCode = this.state.selectedPointCode;
               // 编辑：有DGIMN，可提交工艺信息
-              values['Col7'] && this.subProcessInfo.onSubmit();
+              IsModelProject &&  values['Col7'] &&  this.subProcessInfo.onSubmit();
             }
             FormData['DGIMN'] = FormData['DGIMN'] && FormData['DGIMN'].toLowerCase();
             const payload = {
@@ -435,7 +437,7 @@ export default class MonitorPoint extends Component {
                     });
                     // 新增：无DGIMN，需要保存完排口后再添加工艺信息
                     !this.state.isEdit &&
-                      values['Col7'] &&
+                      IsModelProject &&  values['Col7'] &&
                       this.subProcessInfo.onSubmit(result.Datas);
                   }
                   this.setState({
@@ -446,7 +448,7 @@ export default class MonitorPoint extends Component {
             });
           };
 
-          if (values.Col7) {
+          if (IsModelProject && values.Col7) {
             // 校验工艺信息验证是否通过，通过后才能保存
             this.subProcessInfo.validateFields().then(validateFlag => {
               console.log('validateFlag', validateFlag);
@@ -1100,6 +1102,7 @@ export default class MonitorPoint extends Component {
       saveSortLoading,
     } = this.props;
     const provinceShow = this.props.configInfo && this.props.configInfo.IsShowProjectRegion;
+    const IsModelProject = Cookie.get('sysMenuId')==='5cd1884a-3f42-426f-8893-5cae720bddf3';//是否为模型项目
     const { getFieldDecorator } = this.props.form;
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
@@ -1155,8 +1158,7 @@ export default class MonitorPoint extends Component {
       sortTitle,
       isSuperAdministrator,
     } = this.state;
-    const pointFlag = tabKey == 5 && pointCoefficientFlag;
-
+    const pointFlag = tabKey == 5 && pointCoefficientFlag; 
     const formLayout = {
       labelCol: {
         span: 8,
@@ -1451,7 +1453,7 @@ export default class MonitorPoint extends Component {
                       isModal
                     ></SdlForm>
                   </Card>
-                  {this.props.form.getFieldValue('Col7') && (
+                  { IsModelProject && this.props.form.getFieldValue('Col7') &&(
                     <Card title="工艺信息" size="small" bordered={false} bodyStyle={{ padding: 1 }}>
                       {/* {this.props.form.getFieldValue('Col7') && ( */}
                       <ProcessInfo

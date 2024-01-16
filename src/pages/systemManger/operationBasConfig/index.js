@@ -42,13 +42,6 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getOperationSetting: (payload,callback) => { //获取已设置信息
-      dispatch({
-        type: `${namespace}/getOperationSetting`,
-        payload: payload,
-        callback:callback
-      })
-    },
     updOperationSetting: (payload) => { //设置信息
       dispatch({
         type: `${namespace}/updOperationSetting`,

@@ -393,16 +393,17 @@ const Index = (props) => {
   const [deviceType,setDeviceType] = useState(1)
   const deviceAbnormals = () =>{ //设备完好率
     setEquipmentAbnormalRateVisible(true)
-    setDeviceType(1)
+    // setDeviceType(1)
   }
 
   const deviceFailureRate = () =>{ //设备完好率
-    if(operationSettingInfo?.Availability==1){ //提取数据 评估中心
-      setEquipmentAbnormalRateVisible(true)
-      setDeviceType(2)
-    }else{
-      setEquipmentFailureRateVisible(true)
-    }
+    // if(operationSettingInfo?.Availability==1){ //提取数据 评估中心
+    //   setEquipmentAbnormalRateVisible(true)
+    //   setDeviceType(2)
+    // }else{
+    //   setEquipmentFailureRateVisible(true)
+    // }
+    setEquipmentFailureRateVisible(true)
  
   }
   const deviceFailurerePairRate = () =>{ //设备故障修复率
