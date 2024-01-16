@@ -102,8 +102,9 @@ const ProcessInfo = props => {
           DGIMN: DGIMN,
         },
         callback: res => {
-          setCraftDatas(res);
-          form.setFieldsValue({ ...res });
+          let result = res || {};
+          setCraftDatas(result);
+          form.setFieldsValue({ ...result });
         },
       });
   };
@@ -294,7 +295,7 @@ const ProcessInfo = props => {
           </Row>
         );
       default:
-        return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="无工艺信息"/>
+        return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="无工艺信息" />;
         break;
     }
   };
@@ -326,7 +327,7 @@ const ProcessInfo = props => {
   };
   console.log('craftDatas', craftDatas);
   return (
-    <Spin spinning={getLoading}>
+    <Spin spinning={!!getLoading}>
       <Form
         form={form}
         labelCol={{ span: 6 }}
