@@ -862,7 +862,7 @@ const Index = (props) => {
       props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
-        res?.[0]&&form.setFieldsValue({ DGIMN: res[0].DGIMN })
+        form.setFieldsValue({ DGIMN: [] })
       })
     }
   }
@@ -972,7 +972,7 @@ const Index = (props) => {
           <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
             <Form.Item label='点位名称' name='DGIMN' >
 
-              <Select placeholder='请选择' showSearch optionFilterProp="children" style={{ width: 150 }}>
+              <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 150 }}>
                 {
                   pointList[0] && pointList.map(item => {
                     return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>

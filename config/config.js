@@ -7,9 +7,10 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 import path from 'path';
-const apiHost = 'http://172.16.12.39:49003/';
+const apiHost = 'http://172.16.12.39:49003/';//运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
-// const apiHost = 'http://172.16.12.134:63001/';//正式
+// const apiHost = 'http://172.16.12.134:61003/';//运维正式
+// const apiHost = 'http://172.16.12.234:60061/';//模型
 // const apiHost = 'http://172.16.12.152:50089/';
 // const apiHost = 'http://61.50.135.114:63001/'; // 运维外网
 // const apiHost = 'http://172.16.12.234:61002/';
@@ -1397,7 +1398,8 @@ export default {
                 {
                   path: '/operations/cruxParSupervisionRectifica', //关键参数核查整改
                   name: 'cruxParSupervisionRectifica',
-                  component: './operations/cruxParSupervisionRectifica',
+                  // component: './operations/cruxParSupervisionRectifica',
+                  component: './operations/cruxParSupervisionRectifica3.0',
                 },
                 // {
                 //   path: '/operations/cruxParSupervisionAnalysis', //关键参数核查分析

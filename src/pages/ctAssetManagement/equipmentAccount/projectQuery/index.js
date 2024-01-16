@@ -408,7 +408,11 @@ const Index = (props) => {
   const getrojectPointRelationListQues = (projectID,type) => {
     props.getrojectPointRelationList({ projectID: projectID, }, (res) => {
       if(type==1){
-        const keys =  res.map(item => item.EntId) 
+        const keys =  res.map(item =>{
+           if(!item.DGIMN){
+           return item.EntId
+           }
+        })
         setEntCheckedKeys(keys)
       }else{
         const keys = res.map(item => item.DGIMN)
