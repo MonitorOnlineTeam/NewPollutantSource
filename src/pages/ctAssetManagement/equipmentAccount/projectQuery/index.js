@@ -4,7 +4,7 @@
  * 创建时间：2023.09.11
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty,Radio, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -32,16 +32,16 @@ const dvaPropsData = ({ loading, ctProjectQuery, global, common }) => ({
   tableDatas: common.ctProjectList,
   tableTotal: common.ctProjectTotal,
   queryPar: common.ctProjectQueryPar,
-  entAndPoint: common.ctEntAndPointList,
   loadingConfirm: loading.effects[`${namespace}/updateCTProject`],
   exportLoading: loading.effects[`${namespace}/exportCTProjectList`],
   entAndPointLoading: loading.effects[`common/getCtEntAndPointList`] || false,
   rojectPointRelationLoading: loading.effects[`${namespace}/getrojectPointRelationList`] || false,
   addProjectPointRelationLoading: loading.effects[`${namespace}/addProjectPointRelation`] || false,
+  addProjectEntRelationLoading: loading.effects[`${namespace}/addProjectEntRelation`] || false,
   configInfo: global.configInfo,
   clientHeight: global.clientHeight,
-  checkPoint:ctProjectQuery.checkPoint,
-  permisBtnTip:global.permisBtnTip,
+  checkPoint: ctProjectQuery.checkPoint,
+  permisBtnTip: global.permisBtnTip,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -79,6 +79,13 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
+    addProjectEntRelation: (payload, callback) => { //添加成套项目与企业关联关系
+      dispatch({
+        type: `${namespace}/addProjectEntRelation`,
+        payload: payload,
+        callback: callback
+      })
+    },
     getEntAndPoint: (payload, callback) => { //企业监测点
       dispatch({
         type: `common/getCtEntAndPointList`,
@@ -105,16 +112,16 @@ const Index = (props) => {
   const [fromVisible, setFromVisible] = useState(false)
   const [tableVisible, setTableVisible] = useState(false)
 
-  const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, entAndPoint, rojectPointRelationLoading, addProjectPointRelationLoading,checkPoint, } = props;
+  const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, rojectPointRelationLoading, addProjectPointRelationLoading, checkPoint,addProjectEntRelationLoading, } = props;
 
   // const [editPermisPoint,setPermisEditPoint] = useState(false)
-  const [associaePermisPoint,setAssociaePermisPoint] = useState(false)
+  const [associaePermisPoint, setAssociaePermisPoint] = useState(false)
 
   useEffect(() => {
     const buttonList = permissionButton(props.match.path)
-    buttonList.map(item=>{
-      switch (item){
-        case 'oprationPoint':  setAssociaePermisPoint(true); break;
+    buttonList.map(item => {
+      switch (item) {
+        case 'oprationPoint': setAssociaePermisPoint(true); break;
         // case 'addPoint': setPermisEditPoint(true); break;
       }
     })
@@ -290,7 +297,7 @@ const Index = (props) => {
           <Fragment> <Tooltip title="详情">
             <a onClick={() => detail(record)}  ><DetailIcon /></a>
           </Tooltip></Fragment>
-          {associaePermisPoint&&<Fragment><Divider type="vertical" /><Tooltip title={"关联监测点"} >  <a onClick={() => { associaePoint(record) }} ><PointIcon /></a></Tooltip></Fragment>}
+          {associaePermisPoint && <Fragment><Divider type="vertical" /><Tooltip title={"关联企业和监测点"} >  <a onClick={() => { associaePoint(record) }} ><PointIcon /></a></Tooltip></Fragment>}
 
         </span>
       }
@@ -302,11 +309,11 @@ const Index = (props) => {
 
   const detail = (record) => {
     setDetailVisible(true)
-    setDetailTitle(`${record.ProjectCode? `${record.ProjectCode}-详情` : record.ItemCode ? `${record.ItemCode}-详情` : '详情'}`)
+    setDetailTitle(`${record.ProjectCode ? `${record.ProjectCode}-详情` : record.ItemCode ? `${record.ItemCode}-详情` : '详情'}`)
     setDetailData(record)
   }
-  
- 
+
+
 
   const [editTitle, setEditTitle] = useState('')
   const edit = async (record) => {
@@ -317,7 +324,7 @@ const Index = (props) => {
       form2.setFieldsValue({
         latitude: record.Latitude,
         longitude: record.Longitude,
-        range: record.Range? record.Range : 3,
+        range: record.Range ? record.Range : 3,
         id: record.ID,
       })
     } catch (errInfo) {
@@ -326,24 +333,14 @@ const Index = (props) => {
   };
 
 
-  const [projectCode, setProjectCode] = useState();
-  const [projectID, setProjectID] = useState();
-  const [associaePointVisible, setAssociaePointVisible] = useState(false);
-  const associaePoint = (record) => { //关联监测点
-    setAssociaePointVisible(true)
-    setProjectCode(record.ProjectCode)
-    setProjectID(record.ID)
-    getrojectPointRelationListQues(record.ID)
-    props.getEntAndPoint({ regionCode: '', entName: '', })
-  };
 
 
   const exports = async () => {
     const values = await form.validateFields();
     props.exportProjectInfoList({
       ...values,
-      beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'), 
-      endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'), 
+      beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+      endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
 
     })
@@ -351,12 +348,12 @@ const Index = (props) => {
 
 
   const onFinish = async (PageIndex, PageSize, queryPar) => {  //查询
-    
+
     try {
       const values = await form.validateFields();
       const par = queryPar ? queryPar :
         { ...values, beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'), endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'), time: undefined, }
-        props.getProjectInfoList({
+      props.getProjectInfoList({
         ...par,
         pageIndex: PageIndex,
         pageSize: PageSize,
@@ -386,34 +383,82 @@ const Index = (props) => {
     setPageIndex(PageIndex)
     onFinish(PageIndex, PageSize, queryPar)
   }
-  
-  const getrojectPointRelationListQues = (projectID) =>{
-    props.getrojectPointRelationList({ projectID: projectID, },(res)=>{
-      const keys = res.map(item=>item.DGIMN)
-      setCheckedKeys(keys)
+  const [projectCode, setProjectCode] = useState();
+  const [projectID, setProjectID] = useState();
+  const [associaePointVisible, setAssociaePointVisible] = useState(false);
+  const [entList, setEntList] = useState([]);
+
+  const associaePoint = (record) => { //关联企业和监测点 弹框
+    setAssociaePointVisible(true)
+    setAssociaType(1)
+    setEntPointName('')
+    setRegionCode('')
+    setProjectCode(record.ProjectCode)
+    setProjectID(record.ID)
+    getrojectPointRelationListQues(record.ID,associaType)
+    props.getEntAndPoint({ regionCode: '', entName: '',type:1 },(data)=>{
+      setEntList(data)
+    })
+  };
+
+
+
+  const [entCheckedKeys, setEntCheckedKeys] = useState([])
+  const [pointCheckedKeys, setPointCheckedKeys] = useState([])
+  const getrojectPointRelationListQues = (projectID,type) => {
+    props.getrojectPointRelationList({ projectID: projectID, }, (res) => {
+      if(type==1){
+        const keys =  res.map(item => item.EntId) 
+        setEntCheckedKeys(keys)
+      }else{
+        const keys = res.map(item => item.DGIMN)
+        setPointCheckedKeys(keys)
+      }
     })
   }
 
   const [regionCode, setRegionCode] = useState('')
-  const [entPointName, setEntPointName] = useState()
+  const [entPointName, setEntPointName] = useState('')
   const handlePointQuery = () => {
-    getrojectPointRelationListQues(projectID)
-    props.getEntAndPoint({ regionCode: regionCode, entName: entPointName, })
-
-  }
-  //关联监测点 提交
-
-  const [checkedKeys, setCheckedKeys] = useState([])
-  const handlePointOK = (checkedKeys, state, callback) => {
-    entAndPoint.map(item=>{
-      if(checkedKeys.includes(item.key)){
-        checkedKeys = checkedKeys.filter(filterItem => filterItem !== item.key); 
+    getrojectPointRelationListQues(projectID,associaType)
+    props.getEntAndPoint({ regionCode: regionCode, entName: entPointName,type:associaType==1? 1 : undefined},(data)=>{
+      if(associaType==1){
+        setEntList(data)
+      }else{
+        setPointList(data)
       }
     })
-    props.addProjectPointRelation({projectID:projectID, dgimn: checkedKeys, state: state }, () => { callback() })
+
+  }
+  //关联企业和监测点 提交
+  const handlePointOK = (checkedKeys, state, callback) => {
+    if(associaType==1){
+      props.addProjectEntRelation({ projectID: projectID, entList: checkedKeys, state: state }, () => { callback() })
+    }else{
+      pointList.map(item => {
+        if (checkedKeys.includes(item.key)) {
+          checkedKeys = checkedKeys.filter(filterItem => filterItem !== item.key);
+        }
+      })
+      props.addProjectPointRelation({ projectID: projectID, dgimn: checkedKeys, state: state }, () => { callback() })
+
+    }
   }
 
+  const [associaType, setAssociaType] = useState(1)
+  const [pointList, setPointList] = useState([])
 
+  const associaTypeChange=({ target: { value } }) => { 
+    setAssociaType(value);
+    setEntPointName('')
+    setRegionCode('')
+    getrojectPointRelationListQues(projectID,value)
+    if(value==2 && pointList?.length<=0){
+      props.getEntAndPoint({ regionCode: regionCode, entName: entPointName},(data)=>{
+        setPointList(data)
+      })
+   } 
+ }
 
   const searchComponents = () => {
     return <Form
@@ -454,7 +499,7 @@ const Index = (props) => {
               {/* <Select placeholder='请选择' allowClear>
                 <Option></Option>
               </Select> */}
-              <Input placeholder='请输入' allowClear/>
+              <Input placeholder='请输入' allowClear />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -462,7 +507,7 @@ const Index = (props) => {
               {/* <Select placeholder='请选择' allowClear>
                 <Option></Option>
               </Select> */}
-              <Input placeholder='请输入' allowClear/>
+              <Input placeholder='请输入' allowClear />
             </Form.Item>
           </Col>
 
@@ -486,6 +531,7 @@ const Index = (props) => {
       </Row>
     </Form>
   }
+
   return (
     <div className={styles.ctProjectQuerySty}>
       <BreadcrumbWrapper>
@@ -575,7 +621,7 @@ const Index = (props) => {
         <Detail data={detailData ? detailData : {}} />
       </Modal>
       <Modal
-        title={`${projectCode} - 关联监测点`}
+        title={`${projectCode} - 关联企业和监测点`}
         visible={associaePointVisible}
         destroyOnClose={true}
         onCancel={() => { setAssociaePointVisible(false) }}
@@ -591,30 +637,54 @@ const Index = (props) => {
 
           <div>
             <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
-              <RegionList ct style={{ width: 200 }} placeholder='请选择行政区' changeRegion={(value) => { setRegionCode(value) }} />
+            <Radio.Group
+              options={[{ label: '关联企业', value: 1 }, { label: '关联监测点', value: 2, }]}
+              onChange={associaTypeChange}
+              value={associaType}
+              optionType="button"
+            />
+              <RegionList ct style={{ width: 200, marginLeft: 16 }} placeholder='请选择行政区' changeRegion={(value) => { setRegionCode(value) }} />
               <Input.Group compact style={{ width: 290, marginLeft: 16, display: 'inline-block' }}>
                 <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onBlur={(e) => setEntPointName(e.target.value)} />
                 <Button type="primary" loading={entAndPointLoading} onClick={handlePointQuery}>查询</Button>
               </Input.Group>
             </Row>
-            
-            <Spin spinning={entAndPointLoading || rojectPointRelationLoading || addProjectPointRelationLoading  }>
-              {entAndPoint?.length > 0 && (!entAndPointLoading) && (!rojectPointRelationLoading) ?
-                <TreeTransfer
-                  key="key"
-                  // permission={!associaePermisPoint}
-                  treeData={entAndPoint}
-                  checkedKeys={checkedKeys}
-                  targetKeysChange={(key, type, callback) => {
-                    // setCheckedKeys(key)
-                    handlePointOK(key, type == 1 ? 1 : 2, callback)
-                  }
-                  } 
+
+            {associaType == 1 ?
+              <Spin spinning={entAndPointLoading || rojectPointRelationLoading || addProjectEntRelationLoading}>
+                {entList?.length > 0 && (!entAndPointLoading) && (!rojectPointRelationLoading) ?
+                  <TreeTransfer
+                    singleLayer
+                    key="key"
+                    titles={['待分配企业', '已分配企业']}
+                    treeData={entList}
+                    checkedKeys={entCheckedKeys}
+                    targetKeysChange={(key, type, callback) => {
+                      handlePointOK(key, type == 1 ? 1 : 2, callback)
+                    }
+                    }
                   />
-                :
-                <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-              }
-            </Spin>
+                  :
+                  <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                }
+              </Spin>
+              :
+              <Spin spinning={entAndPointLoading || rojectPointRelationLoading || addProjectPointRelationLoading}>
+                {pointList?.length > 0 && (!entAndPointLoading) && (!rojectPointRelationLoading) ?
+                  <TreeTransfer
+                    key="key"
+                    treeData={pointList}
+                    checkedKeys={pointCheckedKeys}
+                    targetKeysChange={(key, type, callback) => {
+                      handlePointOK(key, type == 1 ? 1 : 2, callback)
+                    }
+                    }
+                  />
+                  :
+                  <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                }
+              </Spin>
+            }
           </div>
         }
       </Modal>

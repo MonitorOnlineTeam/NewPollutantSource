@@ -2,7 +2,6 @@ import { message } from 'antd';
 import * as services from '../services/commonApi';
 import config from '@/config';
 import Model from '@/utils/model';
-
 export default Model.extend({
   namespace: 'common',
   state: {
@@ -35,7 +34,8 @@ export default Model.extend({
     ctProjectList: [],
     ctProjectTotal: 0,
     ctProjectQueryPar: null,
-    ctRegionList:[],
+    ctRegionList: [],
+    allUser: [],
   },
 
   effects: {
@@ -290,12 +290,13 @@ export default Model.extend({
       const result = yield call(services.GetInspectorUserList, payload);
       if (result.IsSuccess) {
         yield update({
-          inspectorUserList: result.Datas ? result.Datas.InspectorUserList : [],
+          inspectorUserList: result.Datas ? result.Datas.InspectorUserList.map(item=>({...item,key:item.UserId})) : [],
           operationUserList: result.Datas ? result.Datas.OperationUserList : [],
         });
       } else {
         message.error(result.Message);
       }
+      callback&&callback()
     },
     // 行政区 非过滤
     *getNoFilterRegionList({ payload, callback }, { call, update }) {
@@ -383,5 +384,21 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-  },
+    //获取所有用户信息
+    *getAlluser({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetAlluser, payload);
+      if (result.IsSuccess) {
+        const data = result.Datas ? result.Datas : [];
+        yield update({
+          allUser: data,
+        });
+        callback && callback(data);
+      } else {
+        message.error(result.Message);
+      }
+    },
+
+
+
+  }
 });

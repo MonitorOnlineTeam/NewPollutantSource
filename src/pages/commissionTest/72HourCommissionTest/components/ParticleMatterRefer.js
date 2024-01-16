@@ -763,7 +763,7 @@ const Index = (props) => {
                 })
                 const formData = new FormData();
                 fileList.forEach((file) => {
-                    formData.append('files', file);
+                    formData.append('file', file);
                 });
                 formData.append('firstRow', value.rowVal);
                 formData.append('firstColumn', value.colVal);
@@ -774,9 +774,8 @@ const Index = (props) => {
                     body: formData,
                     headers: {
                         Authorization: "Bearer " + Cookie.get(config.cookieName),
-
                     },
-
+                    credentials: 'omit', // 默认请求是否带上cookie omit不携带cookie
                 }).then((res) => res.json()).then((data) => {
                     setUploading(false);
                     if (data.IsSuccess) {

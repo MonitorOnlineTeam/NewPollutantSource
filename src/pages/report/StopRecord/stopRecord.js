@@ -467,7 +467,7 @@ class index extends PureComponent {
                             sourc.push(obj)
                         })
                      }
-                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                     return sourc.length>0? <FileDown dataSource={sourc} noSlashPrefix/>:'-'
                     //<a onClick={this.lookChange.bind(this,record.field)}>查看</a>
                     
                 }

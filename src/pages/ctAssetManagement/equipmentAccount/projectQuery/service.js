@@ -25,6 +25,12 @@ export async function addProjectPointRelation(params) {
   const result = await post(API.CtAssetManagementApi.AddProjectPointRelation,params, null);
   return result;
 }
+// 添加成套项目与企业关联关系
+export async function addProjectEntRelation(params) {
+  const result = await post(API.CtAssetManagementApi.AddProjectEntRelation,params, null);
+  return result;
+}
+
 
 //获取项目列表 导出
 export async function exportCTProjectList(params) {

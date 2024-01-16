@@ -95,12 +95,16 @@ const Index = (props) => {
     }
   },
   {
-    title: '省/市',
-    dataIndex: 'regionName',
-    key:'regionName',
-    align:'center',
-    ellipsis: true,
-    width:150,
+    title: '省',
+    dataIndex: 'provinceName',
+    key: 'provinceName',
+    align: 'center',
+  },
+  {
+    title: '市',
+    dataIndex: 'cityName',
+    key: 'cityName',
+    align: 'center',
   },
   {
     title: '企业名称',

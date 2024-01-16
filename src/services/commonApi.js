@@ -160,3 +160,9 @@ export async function GetCTProjectList(params) {
   const result = post(API.CtAssetManagementApi.GetCTProjectList, params);
   return result;
 }
+
+//获取所有用户
+export async function GetAlluser(params) {
+  const result = post(API.AssetManagementApi.GetAllUser, params);
+  return result;
+}

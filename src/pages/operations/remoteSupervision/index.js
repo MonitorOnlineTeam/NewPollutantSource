@@ -35,7 +35,6 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 import cuid from 'cuid';
 import { permissionButton } from '@/utils/utils';
-import { DevOpsGuru } from 'aws-sdk';
 
 const namespace = 'remoteSupervision'
 
@@ -1645,7 +1644,7 @@ const Index = (props) => {
       const fileList = [];
       info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
-          fileList.push({ ...item, url: `${config.uploadPrefix}/${item.response.Datas}`, })
+          fileList.push({ ...item, url: `/${item.response.Datas}`, })
         } else if (!item.response) {
           fileList.push({ ...item })
         }

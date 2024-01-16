@@ -10,6 +10,8 @@ import config from '@/config';
 import moment from 'moment';
 import * as services from '@/services/autoformapi';
 import * as commonServices from '@/services/commonApi';
+import  {addOrUpdateMonitorEntElectronicFence} from '@/pages/ctAssetManagement/equipmentAccount/pollutantManagement/service';
+
 import { downloadFile } from '@/utils/utils';
 
 function getQueryParams(state, payload) {
@@ -71,15 +73,15 @@ function getQueryParams(state, payload) {
 
   group.length || searchParams.length
     ? (postData.ConditionWhere = JSON.stringify({
-        // group.length? postData.ConditionWhere = JSON.stringify({
-        rel: '$and',
-        group: [
-          {
-            rel: '$and',
-            group: [...group, ...searchParams],
-          },
-        ],
-      }))
+      // group.length? postData.ConditionWhere = JSON.stringify({
+      rel: '$and',
+      group: [
+        {
+          rel: '$and',
+          group: [...group, ...searchParams],
+        },
+      ],
+    }))
     : '';
 
   return postData;
@@ -432,7 +434,7 @@ export default Model.extend({
             [payload.configId]: result.Datas[0],
           },
         });
-        callback&&callback(result.Datas[0]);
+        callback && callback(result.Datas[0]);
       } else {
         message.error(result.Message);
       }
@@ -460,8 +462,8 @@ export default Model.extend({
               item.DF_FOREIGN_TYPE === 2
                 ? `${item.FullFieldName}_Name`
                 : item.FOREIGH_DT_CONFIGID
-                ? item.FOREIGN_DF_NAME
-                : item.DF_NAME, // 判断是否是外键或表连接
+                  ? item.FOREIGN_DF_NAME
+                  : item.DF_NAME, // 判断是否是外键或表连接
             // configId: item.DT_CONFIG_ID,
             configId: item.FOREIGH_DT_CONFIGID,
             configDataItemName: item.FOREIGN_DF_NAME,
@@ -538,11 +540,11 @@ export default Model.extend({
       const result = yield call(services.exportTemplet, payload);
       if (result.IsSuccess) {
         // result.Datas && window.open(result.Datas)
-        if(result?.Datas?.fNameList?.length<=0){
+        if (result?.Datas?.fNameList?.length <= 0) {
           message.error('上传文件不能为空');
         }
       } else {
-          message.error(result.Datas);
+        message.error(result.Datas);
       }
     },
 
@@ -571,21 +573,21 @@ export default Model.extend({
     // 删除导入模板
     *deleteAttach({ payload }, { call, update }) {
       let Guid = '';
-      if(payload.Guid){
-        if(payload.Guid.fNameList&&payload.Guid.fNameList[0]){
-          Guid =  payload.Guid.fNameList[0].split('/')[2] 
-         }else if(payload.Guid[0]){ //只上传图片的情况 UploadPicture接口
-          Guid =  payload.Guid[0].split('/')[2] 
-         }else{
+      if (payload.Guid) {
+        if (payload.Guid.fNameList && payload.Guid.fNameList[0]) {
+          Guid = payload.Guid.fNameList[0].split('/')[2]
+        } else if (payload.Guid[0]) { //只上传图片的情况 UploadPicture接口
+          Guid = payload.Guid[0].split('/')[2]
+        } else {
           Guid = ''
-         }
-       }else{
-         Guid = payload.Guid;
-       }
-       if(!Guid){ //文件为空的情况
-          return;
-       }
-      const result = yield call(services.deleteAttach, { ...payload, Guid :Guid });
+        }
+      } else {
+        Guid = payload.Guid;
+      }
+      if (!Guid) { //文件为空的情况
+        return;
+      }
+      const result = yield call(services.deleteAttach, { ...payload, Guid: Guid });
       if (result.IsSuccess) {
         message.success('删除成功！');
       } else {
@@ -598,6 +600,13 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
+      }
+    },
+    //成套企业电子围栏半径 添加
+    *addOrUpdateMonitorEntElectronicFence({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(addOrUpdateMonitorEntElectronicFence, { ...payload });
+      if (result.IsSuccess) {
+        callback && callback()
       }
     },
   },

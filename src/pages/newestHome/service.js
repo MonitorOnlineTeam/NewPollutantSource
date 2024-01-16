@@ -54,7 +54,11 @@ export async function GetOpertionExceptionList(params) {
   const result = await post(API.VisualKanbanApi.GetEquipmentExceptionsOverview, params, null);
   return result;
 }
-
+//首页 设备异常总览（评估中心）
+export async function GetStatePointEquipmentExceptionsOverview(params) {
+  const result = await post(API.VisualKanbanApi.GetStatePointEquipmentExceptionsOverview, params, null);
+  return result;
+}
 
 
 

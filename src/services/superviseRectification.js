@@ -30,3 +30,15 @@ export async function RejectInspectorRectificationInfo (params) {
   const result = await post(API.SupervisionVerificaApi.RejectInspectorRectificationInfo,params, null);
   return result;
 }
+
+
+//设置可以看到督察整改全部信息的人员信息
+export async function AddSetUser (params) {
+  const result = await post(API.SupervisionVerificaApi.AddSetUser,params, null);
+  return result;
+}
+//获取可以看到督察整改全部信息的人员信息
+export async function GetSetUser (params) {
+  const result = await post(API.SupervisionVerificaApi.GetSetUser,params, null);
+  return result;
+}

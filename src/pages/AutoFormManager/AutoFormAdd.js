@@ -71,6 +71,15 @@ class AutoFormAdd extends Component {
         callback: (res) => {
           if (res.IsSuccess) {
             successCallback ? successCallback(res) : history.go(-1); //dispatch(routerRedux.push(`/sysmanage/autoformmanager/${configId}`));
+            if (configId === 'CTEnterprise') { //成套企业 默认添加电子围栏半径
+              dispatch({
+                type: 'autoForm/addOrUpdateMonitorEntElectronicFence',
+                payload: {
+                  range:3,
+                  entId:res.Datas
+                 }
+               })
+            }
           }
         }
       }

@@ -62,6 +62,27 @@ export default Model.extend({
         message.error('数据发生改变，操作失败')
       }
     },
-  },
-  
+    *addSetUser({ payload, callback }, { call, put, update }) { //设置可以看到督察整改全部信息的人员信息
+      const result = yield call(services.AddSetUser, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback&&callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    *getSetUser({ payload, callback }, { call, put, update }) { //获取可以看到督察整改全部信息的人员信息
+      const result = yield call(services.GetSetUser, payload);
+      if (result.IsSuccess) {
+        callback&&callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+
+
+
+  }
 })

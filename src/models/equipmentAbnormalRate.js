@@ -117,13 +117,69 @@ export default Model.extend({
           }
         
        ],
+       coommonCol2 : [
+          {
+            title: '总小时个数',
+            dataIndex: 'workHour',
+            key: 'workHour',
+            align:'center',
+          },
+          {
+            title: '故障小时个数',
+            dataIndex: 'faultDataHour',
+            key: 'faultDataHour',
+            align:'center',
+          },
+          {
+            title: '日常维护小时个数',
+            dataIndex: 'systemMaintenanceHour',
+            key: 'systemMaintenanceHour',
+            align:'center',
+          },
+          {
+            title: '设备完好率',
+            dataIndex: 'intactRate',
+            key: 'intactRate',
+            width: 150,
+            align:'center',
+            sorter: (a, b) => a.intactRate - b.intactRate,
+            render: (text, record) => {
+              return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+            }
+          }
+       ],
+       failcoommonCol2 : [
+        {
+          title: '总小时个数',
+          dataIndex: 'workHour',
+          key: 'workHour',
+          align:'center',
+        },
+        {
+          title: '故障小时个数',
+          dataIndex: 'faultDataHour',
+          key: 'faultDataHour',
+          align:'center',
+        },
+        {
+          title: '设备故障率',
+          dataIndex: 'faultDataRate',
+          key: 'faultDataRate',
+          width: 150,
+          align:'center',
+          sorter: (a, b) => a.faultDataRate - b.faultDataRate,
+          render: (text, record) => {
+            return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+          }
+        }
+     ],
        exportRegLoading:false,
        exportRegDetailLoading: false,
        exportPointLoading: false,
   },
   effects: {
     *regGetExecptionRateList({ payload,callback }, { call, put, update }) { //行政区
-      const result = yield call(services.regGetExecptionRateList, payload);
+      const result = yield call(payload.type==1? services.regGetExecptionRateList : services.getStatePointExecptionRateList, payload);
       if (result.IsSuccess) {
         yield update({
           regTableDatas:result.Datas,
@@ -135,7 +191,7 @@ export default Model.extend({
       }
     },
     *regDetailGetExecptionRateList({ payload,callback }, { call, put, update }) { // 行政区详情
-      const result = yield call(services.regDetailGetExecptionRateList, payload);
+      const result = yield call(payload.type==1? services.regDetailGetExecptionRateList: services.getStatePointExecptionRateList, payload);
       if (result.IsSuccess) {
         yield update({
           regDetailTableDatas:result.Datas,
@@ -145,7 +201,7 @@ export default Model.extend({
       }
     },
     *pointGetExecptionRateList({ payload,callback }, { call, put, update }) { // 监测点
-      const result = yield call(services.pointGetExecptionRateList, payload);
+      const result = yield call(payload.type==1? services.pointGetExecptionRateList: services.getStatePointExecptionRateList, payload);
       if (result.IsSuccess) {
         yield update({
           pointTableDatas:result.Datas,
@@ -160,7 +216,7 @@ export default Model.extend({
                payload.pointType==2 ? {exportRegDetailLoading: flag}:{exportPointLoading: flag}
         }
         yield update(exportStatus(true))
-        const result = yield call(services.exportExecptionRateList, payload);
+        const result = yield call(payload.type==1? services.exportExecptionRateList: services.exportStatePointExecptionRateList, payload);
          if (result.IsSuccess) {
             message.success('下载成功');
            downloadFile(`${result.Datas}`);
@@ -170,5 +226,5 @@ export default Model.extend({
          yield update(exportStatus(false))
        }
     },
-  },
+  }
 })

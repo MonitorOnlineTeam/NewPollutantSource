@@ -71,6 +71,7 @@ export const API = {
     GetConsumablesStatisticsInfo: before + '/VisualDashBoardApi/GetConsumablesStatisticsInfo',//获取耗材统计信息 详情
     ExportConsumablesStatisticsInfo: before + '/VisualDashBoardApi/ExportConsumablesStatisticsInfo',//导出耗材统计信息 详情
     GetEquipmentExceptionsOverview: before + '/VisualDashBoardApi/GetEquipmentExceptionsOverview',//获取设备异常总览 设备异常率、设备故障率、设备故障修复率
+    GetStatePointEquipmentExceptionsOverview: before + '/VisualDashBoardApi/GetStatePointEquipmentExceptionsOverview',//获取设备异常总览 设备异常率、设备故障率、设备故障修复率（评估中心）
     GetMapPointList: before + '/VisualDashBoardApi/GetMapPointList',//获取地图数据
     GetOperatePointList: before + '/VisualDashBoardApi/GetOperatePointList',//获取运维信息总览 详情运维企业、监测点信息
     ExportOperatePointList: before + '/VisualDashBoardApi/ExportOperatePointList',//导出运维信息总览 详情运维企业、监测点信息
@@ -89,6 +90,8 @@ export const API = {
     ExportEquipmentExecptionRateList: before + '/VisualDashBoardApi/ExportEquipmentExecptionRateList',//导出省、市、企业监测点设备完好率
     GetEquipmentFailureRateList: before + '/VisualDashBoardApi/GetEquipmentFailureRateList',//获取省、市、企业监测点设备故障率
     ExportEquipmentFailureRateList: before + '/VisualDashBoardApi/ExportEquipmentFailureRateList',//导出省、市、企业监测点设备故障率
+    GetStatePointExecptionRateList: before + '/VisualDashBoardApi/GetStatePointExecptionRateList',//获取省、市、企业监测点设备完好率和故障率（评估中心）
+    ExportStatePointExecptionRateList: before + '/VisualDashBoardApi/ExportStatePointExecptionRateList',//导出省、市、企业监测点设备完好率和故障率（评估中心）
     GetEquipmentRepairRateList: before + '/VisualDashBoardApi/GetEquipmentRepairRateList',//获取省、市、企业监测点设备故障修复率
     ExportRepairRateList: before + '/VisualDashBoardApi/ExportRepairRateList',//导出省、市、企业监测点设备故障修复率
     GetOverModel: before + '/OverDataApi/GetOverModel',//获取超标记录汇总信息
@@ -241,7 +244,7 @@ export const API = {
     GetAlarmVerifyRate: before + '/OverAlarmApi/GetAlarmVerifyRate',//获取超标数据信息
     ExportAlarmVerifyRate: before + '/OverAlarmApi/ExportAlarmVerifyRate',//导出超标数据信息
     GetAlarmVerifyRateDetail: before + '/OverAlarmApi/GetAlarmVerifyRateDetail',//获取超标数据信息详情
-    ExportAlarmVerifyRateDetail: before + '/OverAlarmApi/ExportAlarmVerifyRate',//导出超标数据信息
+    ExportAlarmVerifyRateDetail: before + '/OverAlarmApi/ExportAlarmVerifyRateDetail',//导出超标数据信息详情
     GetAlarmVerifyDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyDetail',//获取超标数据报警次数详情
     ExportAlarmVerifyDetail: before + '/AlarmVerifyManageApi/ExportAlarmVerifyDetail',//导出超标数据报警次数详情
     /*缺失数据分析*/
@@ -376,6 +379,8 @@ export const API = {
     GetInspectorRectificationView: before + '/SystemFacilityVerification/GetInspectorRectificationView',//获取核查整改详情
     UpdateRectificationStatus: before + '/SystemFacilityVerification/UpdateRectificationStatus',//更新核查整改状态
     RejectInspectorRectificationInfo: before + '/SystemFacilityVerification/RejectInspectorRectificationInfo',//核查整改驳回或申述驳回
+    AddSetUser: before + '/UserApi/AddSetUser',//设置可以看到督察整改全部信息的人员信息
+    GetSetUser: before + '/UserApi/GetSetUser',//获取可以看到督察整改全部信息的人员信息
     /*** 监督核查分析 ***/
     /*督查分析总结*/
     GetSupervisionTypeList: before + '/Supervision/GetSupervisionTypeList', //获取督查总结的督查类别
@@ -669,6 +674,9 @@ export const API = {
     DeleteSystemLongInLogs: before + '/LogsApi/DeleteSystemLongInLogs', //获取问题清单列表
     GetUserOprationLogsList: before + '/LogsApi/GetUserOprationLogsList', //获取问题清单列表
     DeleteUserOprationLogs: before + '/LogsApi/DeleteUserOprationLogs', //获取问题清单列表
+    /*运维基础配置*/
+    GetOperationSetting: before + '/ConfigureApi/GetOperationSetting', //获取运维基础配置信息
+    UpdOperationSetting: before + '/ConfigureApi/UpdOperationSetting', //设置运维基础配置
   },
 
 
@@ -770,10 +778,11 @@ export const API = {
     PointSort: before + '/CTBaseDataApi/PointSort',// 监测点排序
     /*服务档案查询 */
     GetCTProjectList: before + '/CTBaseDataApi/GetCTProjectList', //项目列表
+    ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',  //项目列表 导出
     UpdateCTProject: before + '/CTBaseDataApi/UpdateCTProject', //修改项目信息
     GetrojectPointRelationList: before + '/CTBaseDataApi/GetrojectPointRelationList',//获取项目与站点管理关系
     AddProjectPointRelation: before + '/CTBaseDataApi/AddProjectPointRelation',//添加项目与站点关联关系
-    ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList',  //项目列表 导出
+    AddProjectEntRelation: before + '/CTBaseDataApi/AddProjectEntRelation',//添加项目与企业关联关系
     /*设备厂家名录 */
     GetEquipmentManufacturerInventory: before + '/DebuggingEquipment/GetEquipmentManufacturerInventory',  //获取设备厂商信息
     AddEquipmentManufacturerInfo: before + '/DebuggingEquipment/AddEquipmentManufacturerInfo',  //添加设备厂商信息

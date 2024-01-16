@@ -24,7 +24,6 @@ import style from "./style.less"
 
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
-import tableList from '@/pages/list/table-list';
 import EntType from '@/components/EntType'
 
 const { TextArea } = Input;

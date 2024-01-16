@@ -52,7 +52,7 @@ const Index = (props) => {
 
   return (
     <Modal
-    title="设备完好率"
+    title={props.deviceType==1? "设备完好率" : "设备故障率"}
     wrapClassName='spreadOverModal'
     visible={props.visible}
     footer={false}

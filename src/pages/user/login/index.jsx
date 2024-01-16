@@ -81,17 +81,10 @@ class Login extends Component {
           IsAgree: isAgree,
           type,
         },
-        callback: (isSuccess,defaultNavigateUrl) => {
+        callback: (isSuccess) => {
           if (!isSuccess) { this.child && this.child.current && this.child.current.click(); }  //请求错误刷新验证码
           this.setState({ loginSuccess: isSuccess })
           this.clearCommonData();
-          dispatch({ 
-            type: 'userLogin/getToken',
-            payload: {
-              username: values.userName,
-              password: values.password,
-            },
-          })
         }
       });
       
