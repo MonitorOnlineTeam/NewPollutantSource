@@ -59,7 +59,7 @@ class Index extends Component {
             targetKeys: [],
             confirmLoading:false,
             options:[
-                { label: '异常', value: '1' },
+                { label: '异常', value: '0' },
                 { label: '超标', value: '2' },
                 { label: '预警', value: '5' },
                 { label: '超标核实推送', value: '6' },
@@ -107,7 +107,7 @@ class Index extends Component {
     componentDidMount() {
         const { dispatch, alarmPushParam, FlagType,type,alarmPushData,alarmPushFlag } = this.props;
        
-        const alarmType = (flag)=>flag? "" : '1'
+        const alarmType = (flag)=>flag? "" : '0'
         dispatch({
           type: 'alarmPush/getFirstAlarmpar',
           payload: {   Type: type, RegionCode: "", ID:alarmPushData.key,AlarmType: ''},
@@ -312,7 +312,7 @@ class Index extends Component {
                                       onChange={this.changeCheckboxGroup}
                                      />
 
-                                  : <Radio.Group  defaultValue={"1"} onChange={this.changeCheckboxGroup} >
+                                  : <Radio.Group  defaultValue={"0"} onChange={this.changeCheckboxGroup} >
                                       {this.getAlarmRadioOptions()}
                                         </Radio.Group>} </>
                                         :

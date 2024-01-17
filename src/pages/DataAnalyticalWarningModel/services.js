@@ -1,6 +1,5 @@
 import { post } from '@/utils/request';
-import { API } from '@config/API';import { API } from '@config/API';
-
+import { API } from '@config/API';
 // 获取模型列表
 export async function GetModelList(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Mold/GetMoldList', params);
