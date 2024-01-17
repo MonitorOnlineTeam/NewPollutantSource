@@ -791,6 +791,9 @@ const Index = (props) => {
       [`${code}RangCheck`]:isImport? form2.getFieldValue(`${code}RangCheck`): val.RangeStatus ? [val.RangeStatus] : [],
       [`${code}Remark`]:isImport? form2.getFieldValue(`${code}Remark`): val.RangeRemark,
       [`${code}OperationRangeRemark`]: val.OperationRangeRemark,
+      [`${code}AnalyzerFilePar`]: item.AnalyzerFileList?.[0] && item.AnalyzerFileList?.[0].FileUuid,
+      [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
+      [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
       }) 
       !isImport&&form2.setFieldsValue({//实时数据一致性核查表 导入数据不用
         [`${code}IndicaVal`]: val.AnalyzerCou,
@@ -800,9 +803,6 @@ const Index = (props) => {
         [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
         [`${code}Remark2`]: val.CouRemrak,
         [`${code}OperationDataRemark`]: val.OperationDataRemark,
-        [`${code}AnalyzerFilePar`]: item.AnalyzerFileList?.[0] && item.AnalyzerFileList?.[0].FileUuid,
-        [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
-        [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
       })
    
   }
@@ -1226,6 +1226,7 @@ const Index = (props) => {
       form2.validateFields().then((values) => {
         form3.validateFields().then(values2 => {
           const dataList1 = addDataConsistencyData.map(item => {
+            console.log(values,item.par)
             return {
               PollutantCode: item.ChildID,
               AnalyzerMin: values[`${item.par}AnalyzerRang1`],

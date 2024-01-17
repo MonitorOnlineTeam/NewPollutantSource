@@ -147,6 +147,7 @@ const Index = (props) => {
     props.deleteOperationUser({ ID: record.id }, () => {
       props.getOperationUserList({
         ...values,
+        Type:1,
       })
     })
   };

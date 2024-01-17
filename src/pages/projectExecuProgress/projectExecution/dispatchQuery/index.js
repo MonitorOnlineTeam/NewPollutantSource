@@ -290,7 +290,7 @@ const Index = (props) => {
       form={form}
       name="advanced_search"
       className={styles['ant-advanced-search-form']}
-      onFinish={() => { onFinish(pageIndex, pageSize) }}
+      onFinish={() => {setPageIndex(1); onFinish(1, pageSize) }}
     >
       <Row align='middle'>
         <Col span={8}>

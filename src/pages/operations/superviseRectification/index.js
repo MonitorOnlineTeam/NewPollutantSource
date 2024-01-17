@@ -144,8 +144,8 @@ const Index = (props) => {
       switch (item) {
         case 'setInspectorUser': SetInspectorUserPermission(true); break;
       }
-    onFinish()
     })
+    onFinish()
 
   }
 
