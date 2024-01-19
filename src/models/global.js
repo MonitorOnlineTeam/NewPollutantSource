@@ -61,7 +61,13 @@ export default Model.extend({
             alarmcount: item.AlarmCount,
             sontype: item.PushType, // 推送类型（1.超标 over;2.预警 warn；3.异常 exception ）
             type: 'alarm',
-            title: <span>{item.Title}<br /><span style={{ fontSize: 11 }}>{item.TargetName}</span></span>,
+            title: (
+              <span>
+                {item.Title}
+                <br />
+                <span style={{ fontSize: 11 }}>{item.TargetName}</span>
+              </span>
+            ),
             description: item.Description,
             exceptiontypes: item.AlarmTypeDescription, // 右侧标签用到，可多个
             orderby: item.PushType === 'over' ? 1 : item.PushType === 'exception' ? 2 : 3, // 排序
@@ -74,7 +80,7 @@ export default Model.extend({
           notifyCount: result.Datas ? result.Datas.length : 0,
           unreadCount: result.Datas ? result.Datas.length : 0,
         },
-      })
+      });
     },
     // 获取系统入口
     *getSysPollutantTypeList({ payload }, { call, update, select }) {
@@ -82,13 +88,15 @@ export default Model.extend({
       if (result.IsSuccess) {
         let sysPollutantTypeList = result.Datas;
         if (process.env.NODE_ENV === 'production') {
-          sysPollutantTypeList = sysPollutantTypeList.filter(item => item.Name.indexOf("Autoform") === -1)
+          sysPollutantTypeList = sysPollutantTypeList.filter(
+            item => item.Name.indexOf('Autoform') === -1,
+          );
         }
         yield update({
           sysPollutantTypeList: sysPollutantTypeList,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取按钮权限
@@ -140,9 +148,15 @@ export default Model.extend({
           CenterLatitude: response.Datas.CenterLatitude || 39.908195,
         }))
         // 防止系统错乱，如果没有menuId，跳转中间页。
-        if (location.pathname !== '/user/login' && location.pathname !== '/dataFlowChart' && location.pathname !== '/autoLogin' && response.Datas.IsShowSysPage === '1') {
+        if (
+          location.pathname !== '/user/login' &&
+          location.pathname !== '/dataFlowChart' &&
+          location.pathname !== '/console' &&
+          location.pathname !== '/autoLogin' &&
+          response.Datas.IsShowSysPage === '1'
+        ) {
           if (!sessionStorage.getItem('sysMenuId')) {
-            router.push('/sysTypeMiddlePage')
+            router.push('/sysTypeMiddlePage');
           }
         }
         yield put({
@@ -156,7 +170,7 @@ export default Model.extend({
         yield put({
           type: 'settings/getSetting',
           payload: {
-            ...configInfo
+            ...configInfo,
           },
         });
       }
@@ -211,9 +225,7 @@ export default Model.extend({
             break;
         }
         // 超标枚举
-        const over = [
-          EnumPropellingAlarmSourceType.DataOver,
-        ];
+        const over = [EnumPropellingAlarmSourceType.DataOver];
         // 异常枚举
         const exception = [
           EnumPropellingAlarmSourceType.DataException,
@@ -222,9 +234,7 @@ export default Model.extend({
           EnumPropellingAlarmSourceType.DYSTATEALARM,
         ];
         // 预警枚举
-        const warnover = [
-          EnumPropellingAlarmSourceType.DataOverWarning,
-        ];
+        const warnover = [EnumPropellingAlarmSourceType.DataOverWarning];
         // 报警描述
         const getAlarmExceptions = [
           {
@@ -261,9 +271,13 @@ export default Model.extend({
           },
         ];
         // 如果推送是超标并且之前没有数据
-        if ((!notices.find(t => t.id.includes(`over_${data.DGIMN}`)) && over.includes(data.AlarmType)) ||
-          (!notices.find(t => t.id.includes(`warn_${data.DGIMN}`)) && warnover.includes(data.AlarmType)) ||
-          (!notices.find(t => t.id.includes(`exception_${data.DGIMN}`)) && exception.includes(data.AlarmType))
+        if (
+          (!notices.find(t => t.id.includes(`over_${data.DGIMN}`)) &&
+            over.includes(data.AlarmType)) ||
+          (!notices.find(t => t.id.includes(`warn_${data.DGIMN}`)) &&
+            warnover.includes(data.AlarmType)) ||
+          (!notices.find(t => t.id.includes(`exception_${data.DGIMN}`)) &&
+            exception.includes(data.AlarmType))
         ) {
           newnotices = notices;
           count += 1;
@@ -278,15 +292,26 @@ export default Model.extend({
             sontype: flagAlarm,
             type: 'alarm',
             orderby,
-            title: flagAlarm === 'warn' ?
-              <span>{`${data.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span> :
-              <span>{`${data.PointName}报警${data.AlarmCount}次`}<br /><span style={{ fontSize: 11 }}>{data.ParentName}</span></span>,
+            title:
+              flagAlarm === 'warn' ? (
+                <span>
+                  {`${data.PointName}发生了预警`}
+                  <br />
+                  <span style={{ fontSize: 11 }}>{data.ParentName}</span>
+                </span>
+              ) : (
+                <span>
+                  {`${data.PointName}报警${data.AlarmCount}次`}
+                  <br />
+                  <span style={{ fontSize: 11 }}>{data.ParentName}</span>
+                </span>
+              ),
             description:
-              flagAlarm === 'over' ?
-                `${data.PollutantName}从${data.FirstOverTime}发生了${data.AlarmCount}次超标报警` :
-                flagAlarm === 'exception' ?
-                  `从${data.FirstOverTime}至${data.AlarmTime}发生了${data.AlarmCount}次异常报警` :
-                  `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue};`,
+              flagAlarm === 'over'
+                ? `${data.PollutantName}从${data.FirstOverTime}发生了${data.AlarmCount}次超标报警`
+                : flagAlarm === 'exception'
+                ? `从${data.FirstOverTime}至${data.AlarmTime}发生了${data.AlarmCount}次异常报警`
+                : `${data.PollutantName}${data.FirstOverTime}发生预警，建议浓度降到${data.SuggestValue};`,
             exceptiontypes: getAlarmExceptions.find(n => n.id === data.AlarmType).description,
           });
         }
@@ -294,7 +319,8 @@ export default Model.extend({
         else {
           newnotices = notices.map(notice => {
             // 判断类型是否包含
-            if (over.includes(data.AlarmType) ||
+            if (
+              over.includes(data.AlarmType) ||
               warnover.includes(data.AlarmType) ||
               exception.includes(data.AlarmType)
             ) {
@@ -302,16 +328,26 @@ export default Model.extend({
               if (notice.id === key) {
                 notice.lasttime = data.AlarmTime;
                 notice.alarmcount += 1;
-                notice.title =
-                  flagAlarm === 'warn' ?
-                    <span>{`${notice.PointName}发生了预警`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span> :
-                    <span>{`${notice.PointName}报警${notice.alarmcount}次`}<br /><span style={{ fontSize: 11 }}>{notice.ParentName}</span></span>,
-                  notice.description =
-                  flagAlarm === 'over' ?
-                    `${notice.pollutantnames}从${notice.firsttime}发生了${notice.alarmcount}次超标报警` :
-                    flagAlarm === 'exception' ?
-                      `从${notice.firsttime}至${notice.lasttime}发生了${notice.alarmcount}次异常报警` :
-                      `${notice.PollutantName}${notice.FirstOverTime}发生预警，建议浓度降到${notice.SuggestValue};`
+                (notice.title =
+                  flagAlarm === 'warn' ? (
+                    <span>
+                      {`${notice.PointName}发生了预警`}
+                      <br />
+                      <span style={{ fontSize: 11 }}>{notice.ParentName}</span>
+                    </span>
+                  ) : (
+                    <span>
+                      {`${notice.PointName}报警${notice.alarmcount}次`}
+                      <br />
+                      <span style={{ fontSize: 11 }}>{notice.ParentName}</span>
+                    </span>
+                  )),
+                  (notice.description =
+                    flagAlarm === 'over'
+                      ? `${notice.pollutantnames}从${notice.firsttime}发生了${notice.alarmcount}次超标报警`
+                      : flagAlarm === 'exception'
+                      ? `从${notice.firsttime}至${notice.lasttime}发生了${notice.alarmcount}次异常报警`
+                      : `${notice.PollutantName}${notice.FirstOverTime}发生预警，建议浓度降到${notice.SuggestValue};`);
               }
             }
             return notice;
@@ -342,11 +378,19 @@ export default Model.extend({
       payload.map(item => {
         // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警
         // 判断过滤条件
-        let filterDataIndex = notices.findIndex(notice => item.DataGatherCode === notice.DGIMN && notice.AlarmType == item.Type && item.Code == 0)
+        let filterDataIndex = notices.findIndex(
+          notice =>
+            item.DataGatherCode === notice.DGIMN && notice.AlarmType == item.Type && item.Code == 0,
+        );
         // console.log('index=',filterDataIndex)
         let PollutantName = item.TypeName;
         if (changeType === 67) {
-          filterDataIndex = notices.findIndex(notice => item.DataGatherCode === notice.DGIMN && notice.AlarmType == item.Type && notice.PollutantCodes == item.Code)
+          filterDataIndex = notices.findIndex(
+            notice =>
+              item.DataGatherCode === notice.DGIMN &&
+              notice.AlarmType == item.Type &&
+              notice.PollutantCodes == item.Code,
+          );
           PollutantName = item.PollutantName;
         }
 
@@ -357,9 +401,17 @@ export default Model.extend({
             ...notices[filterDataIndex],
             alarmcount: filterObj.alarmcount + 1,
             LastAlarmTime: item.Time,
-            title: <span>{`${filterObj.pointname}，${PollutantName}报警${filterObj.alarmcount + 1}次`}<br /><span style={{ fontSize: 11 }}>{filterObj.TargetName}</span></span>,
-            description: `从${filterObj.FirstAlarmTime}至${item.Time},${PollutantName}发生了${filterObj.alarmcount + 1}次${filterObj.exceptiontypes}`, // 右侧标签用到，可多个
-          }
+            title: (
+              <span>
+                {`${filterObj.pointname}，${PollutantName}报警${filterObj.alarmcount + 1}次`}
+                <br />
+                <span style={{ fontSize: 11 }}>{filterObj.TargetName}</span>
+              </span>
+            ),
+            description: `从${filterObj.FirstAlarmTime}至${
+              item.Time
+            },${PollutantName}发生了${filterObj.alarmcount + 1}次${filterObj.exceptiontypes}`, // 右侧标签用到，可多个
+          };
         } else {
           // 无相同数据，追加推送的新数据
           const name = changeType === 67 ? item.PollutantName : item.TypeName;
@@ -375,12 +427,18 @@ export default Model.extend({
             sontype: 'exception',
             type: 'alarm',
             exceptiontypes: `${item.TypeName}报警`,
-            title: <span>{`${item.PointName}，${name}报警1次`}<br /><span style={{ fontSize: 11 }}>{item.PointName}</span></span>,
+            title: (
+              <span>
+                {`${item.PointName}，${name}报警1次`}
+                <br />
+                <span style={{ fontSize: 11 }}>{item.PointName}</span>
+              </span>
+            ),
             // description: item.Description,
             description: `从${item.Time}至${item.Time}，${name}发生了1次报警`, // 右侧标签用到，可多个
-          })
+          });
         }
-      })
+      });
       return {
         ...state,
         notices,
@@ -447,8 +505,9 @@ export default Model.extend({
   subscriptions: {
     socket({ dispatch }) {
       dispatch({
-        type: 'getSystemConfigInfo', payload: {
-          listen: function () {
+        type: 'getSystemConfigInfo',
+        payload: {
+          listen: function() {
             console.log('initsocket2');
             return mywebsocket.listen(data => {
               // 实时数据："{"MessageType":"RealTimeData","Message":[{"DGIMN":"201809071401","PollutantCode":"s01","MonitorTime":"2018-11-21 01:22:41","MonitorValue":36.630,"MinStrength":null,"MaxStrength":null,"CouStrength":null,"IsOver":-1,"IsException":0,"Flag":"","ExceptionType":"","AlarmLevel":"身份验证失败","AlarmType":"无报警","Upperpollutant":"0","Lowerpollutant":"0","PollutantResult":"","AlarmTypeCode":0,"StandardColor":"red","StandardValue":"-","OverStandValue":"","DecimalReserved":3}]}"
@@ -492,7 +551,7 @@ export default Model.extend({
                       type: 'RealTimeData',
                       message: obj.Message,
                     },
-                  })
+                  });
                   break;
                 case 'MinuteData':
                   // console.log("MinuteData=", obj.Message)
@@ -503,7 +562,7 @@ export default Model.extend({
                       type: 'MinuteData',
                       message: obj.Message,
                     },
-                  })
+                  });
                   break;
                 case 'HourData':
                   // console.log("HourData=", obj.Message)
@@ -572,47 +631,47 @@ export default Model.extend({
                   break;
                 // 阀门状态
                 case 'ControlData':
-                  console.log("ControlData=", obj.Message[0])
+                  console.log('ControlData=', obj.Message[0]);
                   dispatch({
                     type: 'qcManual/changeQCState',
                     payload: obj.Message[0],
-                  })
+                  });
                   // 工艺流程图
                   dispatch({
                     type: 'realtimeserver/changeQCState',
                     payload: obj.Message[0],
-                  })
+                  });
                   break;
                 // 质控日志 - 开始质控命令
                 case 'QCACheckStart':
                   // console.log("QCACheckStart-global=", obj.Message)
-                  if (obj.Message.MsgType === "check") {
+                  if (obj.Message.MsgType === 'check') {
                     dispatch({
                       type: 'qcManual/updateQCLogStart',
                       payload: obj.Message,
-                    })
+                    });
                   }
-                  if (obj.Message.MsgType === "get") {
+                  if (obj.Message.MsgType === 'get') {
                     dispatch({
                       type: 'dataExtract/updateQCLogStart',
                       payload: obj.Message,
-                    })
+                    });
                   }
                   break;
                 // 质控日志 - 质控应答
                 case 'QCACheckAnswer':
                   // console.log("QCACheckAnswer-global=", obj.Message)
-                  if (obj.Message.MsgType === "check") {
+                  if (obj.Message.MsgType === 'check') {
                     dispatch({
                       type: 'qcManual/updateQCLogAnswer',
-                      payload: obj.Message
-                    })
+                      payload: obj.Message,
+                    });
                   }
-                  if (obj.Message.MsgType === "get") {
+                  if (obj.Message.MsgType === 'get') {
                     dispatch({
                       type: 'dataExtract/updateQCLogAnswer',
-                      payload: obj.Message
-                    })
+                      payload: obj.Message,
+                    });
                   }
                   break;
                 // 质控日志 - 质控结果
@@ -620,14 +679,14 @@ export default Model.extend({
                   // console.log("QCACheckResult=", obj.Message)
                   dispatch({
                     type: 'qcManual/updateQCLogResult',
-                    payload: obj.Message
-                  })
+                    payload: obj.Message,
+                  });
                   break;
                 case 'ControlState':
                   dispatch({
                     type: 'qualityControl/changeQCState',
                     payload: obj.Message[0],
-                  })
+                  });
                   break;
                 case 'State':
                   // console.log('QCAState=', obj.Message)
@@ -635,19 +694,19 @@ export default Model.extend({
                   dispatch({
                     type: 'qcManual/changeQCStatus',
                     payload: obj.Message[0],
-                  })
+                  });
                   // 工艺流程图
                   dispatch({
                     type: 'realtimeserver/changeQCStatus',
                     payload: obj.Message[0],
-                  })
+                  });
                   break;
                 case 'QCAAlarmMsg':
                   // console.log('msg=',obj)
                   dispatch({
                     type: 'qualityControl/volumeWarning',
                     payload: obj.Message,
-                  })
+                  });
                   dispatch({
                     type: 'changeQCANotices',
                     payload: obj.Message,
@@ -656,16 +715,16 @@ export default Model.extend({
                 case 'QCARtn': //下发
                   // console.log('下发=', obj)
                   dispatch({
-                    type: 'qualitySet/issueData',//同步更新数据
+                    type: 'qualitySet/issueData', //同步更新数据
                     payload: obj.Message,
-                  })
+                  });
                   break;
                 default:
                   break;
               }
             });
-          }
-        }
+          },
+        },
       });
     },
     setup({ history }) {

@@ -19,6 +19,7 @@ const Model = {
       const response = yield call(systemLogin, {
         ...payload,
         MenuId: configInfo.IsShowSysPage === '1' ? '' : '99dbc722-033f-481a-932a-3c6436e17245', //子系统ID 固定  污染源在线监控
+        // MenuId: configInfo.IsShowSysPage === '1' ? '' : '5cd1884a-3f42-426f-8893-5cae720bddf3', //子系统ID 固定  污染源在线监控
       });
       yield put({
         type: 'changeLoginStatus',
@@ -38,7 +39,7 @@ const Model = {
             password: payload.password,
           },
         });
-        yield take('userLogin/getToken/@@end');
+        yield take('getToken/@@end');
         response.Datas.User_ID = response.Datas.UserId;
         let defaultNavigateUrl = '/user/login';
         let systemNavigateUrl = '';

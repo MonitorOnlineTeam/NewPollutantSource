@@ -250,7 +250,7 @@ class Index extends Component {
                 visible: false,
               });
             }}
-            width="50%"
+            width={1200}
           >
             <SdlForm configId={configId} form={this.props.form} hideBtns noLoad />
           </Modal>
@@ -267,7 +267,7 @@ class Index extends Component {
                 Evisible: false,
               });
             }}
-            width="50%"
+            width={1200}
           >
             <SdlForm configId={configId} onSubmitForm={this.onSubmitForm} form={this.props.form} hideBtns isEdit keysParams={this.state.keysParams} noLoad uid={this.state.AttachmentID} />
           </Modal>

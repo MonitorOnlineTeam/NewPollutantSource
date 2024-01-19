@@ -19,6 +19,7 @@ export async function queryNotices() {
 export async function getMenuData(payload) {
     const body = {
         menu_id: sessionStorage.getItem("sysMenuId") || '99dbc722-033f-481a-932a-3c6436e17245',
+        // menu_id: sessionStorage.getItem("sysMenuId") || '5cd1884a-3f42-426f-8893-5cae720bddf3',
         // ...payload
     };
     const result = await post(API.systemApi.GetSysMenuByUserID, body);

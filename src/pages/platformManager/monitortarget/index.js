@@ -286,7 +286,8 @@ export default class MonitorTarget extends Component {
                                     <FundProjectionScreenOutlined style={{ fontSize: 16 }} />
                                 </a>
                             </Tooltip>
-                            {configId == "Station" && webConfig.entShowBtns.includes("licence") && <><Divider type="vertical" />
+                            {/* {configId == "Station" && webConfig.entShowBtns.includes("licence") && <><Divider type="vertical" /> */}
+                            {webConfig.entShowBtns.includes("licence") && <><Divider type="vertical" />
                                 <Tooltip title="排污许可证">
                                     <a onClick={() => {
                                         this.adddischargepermit('', row);
