@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-01-18 15:08:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-19 11:02:58
+ * @Last Modified time: 2024-01-19 11:37:16
  * @Description:  数据现象
  */
 import React, { useState, useEffect } from 'react';
@@ -27,7 +27,7 @@ const DataPhenomena = props => {
   const [selectedNames, setSelectedNames] = useState([]);
   const [selectedCodes, setSelectedCodes] = useState([]);
 
-  const { dispatch, DGIMN, pollutantListByDgimn } = props;
+  const { dispatch, DGIMN, pollutantListByDgimn, DataPhenomenaList } = props;
   // const [visible, setVisible] = useState([]);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const DataPhenomena = props => {
         form.setFieldsValue({ pollutantCodes: pollutantCodes });
         GetHourDataForPhenomenon();
       },
-    }).then(() => {});
+    }).then(() => {}); 
   };
 
   // 获取数据现象
@@ -70,7 +70,7 @@ const DataPhenomena = props => {
         DGIMNs: DGIMN,
         beginTime: moment(values.time[0]).format('YYYY-MM-DD HH:00:00'),
         endTime: moment(values.time[1]).format('YYYY-MM-DD HH:59:59'),
-        pollutantCodes: values.pollutantCodes.toString(),
+        pollutantCodes: values.pollutantCodes,
         isAsc: true,
         IsSupplyData: false,
         PhenomenonType: values.PhenomenonType,
