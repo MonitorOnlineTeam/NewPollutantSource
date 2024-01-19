@@ -3055,6 +3055,66 @@ const routes = [
               },
             ],
           },
+          // 异常数据识别模型
+          {
+            path: '/AbnormalIdentifyModel',
+            name: 'AbnormalIdentifyModel',
+            routes: [
+              // {
+              //   path: '/AbnormalIdentifyModel',
+              //   redirect: '/AbnormalIdentifyModel/Home',
+              // },
+              // {
+              //   // 首页
+              //   name: 'AbnormalIdentifyModelHome',
+              //   path: '/AbnormalIdentifyModel/Home',
+              //   component: './AbnormalIdentifyModel/Home',
+              // },
+              // {
+              //   // 异常线索清单
+              //   name: 'AbnormalCluesList',
+              //   path: '/AbnormalIdentifyModel/CluesList',
+              //   component: './AbnormalIdentifyModel/CluesList',
+              // },
+              {
+                // 通用库
+                name: 'general',
+                path: '/AbnormalIdentifyModel/modelBase/general',
+                component: './AbnormalIdentifyModel/ModelBase/General',
+              },
+              {
+                // 通用库 - 设置
+                name: 'setting',
+                path: '/AbnormalIdentifyModel/modelBase/general/setting/:ID',
+                component: './AbnormalIdentifyModel/ModelBase/Setting',
+              },
+              {
+                // 模型选配
+                name: 'modelMatch',
+                path: '/AbnormalIdentifyModel/modelMatch',
+                component: './AbnormalIdentifyModel/ModelMatch',
+              },
+              {
+                // 历史数据综合评价
+                name: 'HistoryDataAnalysis',
+                path: '/AbnormalIdentifyModel/HistoryDataAnalysis',
+                routes: [
+                  {
+                    // 排放源历史监测数据分析
+                    name: 'AssistDataAnalysis',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AssistDataAnalysis',
+                    component: './AbnormalIdentifyModel/AssistDataAnalysis',
+                  },
+                  {
+                    // 统计分析
+                    name: 'PointStatisticalAnalysis',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis',
+                    component: './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
       {

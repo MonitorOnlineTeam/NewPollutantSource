@@ -225,7 +225,7 @@ export const API = {
     //唐银项目获取地图图例
     Getlegends: `${before}/EnterpriseApi/GetTyMonitorpollutants`,
     //唐银项目所有点位监控信息 - 单个企业
-    GetDataForSingleEnt: `${before}/EnterpriseApi/GetTyEntAndPoint`
+    GetDataForSingleEnt: `${before}/EnterpriseApi/GetTyEntAndPoint`,
   },
   // 质控Api
   QualityControlApi: {
@@ -960,7 +960,8 @@ export const API = {
     // 数据不可信导出
     ExportUnTrustedList: before + '/MonBasicDataApi/ExportUnTrustedList',
     // 导出历史工况参数
-    ExportProcessFlowTableHistoryDataList: before + '/DymaicData/ExportProcessFlowTableHistoryDataList',
+    ExportProcessFlowTableHistoryDataList:
+      before + '/DymaicData/ExportProcessFlowTableHistoryDataList',
 
     //
   },
@@ -1003,6 +1004,38 @@ export const API = {
     // 海康云台操作
     PTZControl: before + '/VideoApi/PTZControl',
   },
+  // 异常数据识别模型Api
+  AbnormalIdentifyModel: {
+    // 获取模型列表
+    GetMoldList: before + '/MoldV2/GetMoldList',
+    // 模型开启、关闭
+    SetMoldStatus: before + '/MoldV2/SetMoldStatus',
+    // 获取模型配置
+    GetModelInfoAndParams: before + '/WarningV2/GetModelInfoAndParams',
+    // 获取模型配置关联排口
+    GetModelRelationDGIMN: before + '/WarningV2/GetModelRelationDGIMN',
+    // 保存模型基础配置
+    SaveModelInfoAndParams: before + '/WarningV2/SaveModelInfoAndParams',
+    // 根据MN获取模型选配数据
+    GetDataAttributeAndPointList: before + '/MoldV2/GetDataAttributeAndPointList',
+    // 添加关联模型选配
+    AddDataAttributeAndPoint: before + '/MoldV2/AddDataAttributeAndPoint',
+    // 获取辅助分析数据
+    GetAllTypeDataListForModel: before + '/WarningV2/GetAllTypeDataListForModel',
+    // 获取直方图
+    StatisPolValueNumsByDGIMN: before + '/WarningV2/StatisPolValueNumsByDGIMN',
+    // 获取波动范围及点位参数信息
+    GetPointParamsRange: before + '/WarningV2/GetPointParamsRange',
+    // 重新生成正常范围
+    RegenerateNomalRangeTime: before + '/WarningV2/RegenerateNomalRangeTime',
+    // 线性相关系数
+    StatisLinearCoefficient: before + '/WarningV2/StatisLinearCoefficient',
+    // 历史数据综合评价/统计分析
+    GetHistoricalDataEvaluation: before + '/MoldV2/GetHistoricalDataEvaluation',
+    // 获取数据现象
+    GetHourDataForPhenomenon: before + '/WarningV2/GetHourDataForPhenomenon',
+  },
+  // 唐银钢铁Api
   TYGTApi: {
     // 获取排放源下设施列表(治理设施,生产,环保点位) InstallationType: 1=治理设施,2=生产,3=环保点位
     GetInstallationByEmission: before + '/EmissionDataApi/GetInstallationByEmission',

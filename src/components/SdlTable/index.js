@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-28 16:57:14
+ * @Last Modified time: 2024-01-17 11:26:02
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -215,7 +215,6 @@ class SdlTable extends PureComponent {
       }),
     }));
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
-    console.log('scroll', scrollY);
     return (
       <div ref={el => (this.sdlTableFrame = el)}>
         <Table

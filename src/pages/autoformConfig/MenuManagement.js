@@ -46,7 +46,7 @@ class MenuManagement extends Component {
             {
                 title: '菜单提示',
                 dataIndex: 'Menu_Title',
-                width: '10%',
+                width: '20%',
                 align: 'center'
 
             },
@@ -59,14 +59,14 @@ class MenuManagement extends Component {
             {
                 title: '类型',
                 dataIndex: 'Target',
-                width: '15%',
+                width: 120,
                 key: 'type',
                 align: 'center'
             },
             {
                 title: '图标',
                 dataIndex: 'Menu_Img',
-                width: '15%',
+                width: 120,
                 align: 'center'
             },
             {
