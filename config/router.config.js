@@ -3075,7 +3075,76 @@ const routes = [
               //   name: 'AbnormalCluesList',
               //   path: '/AbnormalIdentifyModel/CluesList',
               //   component: './AbnormalIdentifyModel/CluesList',
+              // }, 
+              // {
+              //   // 线索详情
+              //   name: 'ClueDetails',
+              //   path: '/AbnormalIdentifyModel/ClueDetails',
+              //   component: './AbnormalIdentifyModel/CluesList',
               // },
+              {
+                // 异常线索清单
+                name: 'AbnormalCluesList',
+                path: '/AbnormalIdentifyModel/CluesList',
+                routes: [
+                  {
+                    path: '/AbnormalIdentifyModel/CluesList',
+                    redirect: '/AbnormalIdentifyModel/CluesList/all',
+                  },
+                  {
+                    // 线索分析
+                    name: 'ClueDetails',
+                    path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis',
+                    routes: [
+                      // {
+                      //   path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis',
+                      //   redirect: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/WorkTower',
+                      // },
+                      {
+                       // 工作台
+                        name: 'WorkTower',
+                        path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/WorkTower',
+                        component: './AbnormalIdentifyModel/ClueAnalysis/WorkTower',
+                     },
+                     {
+                      // 生成核查任务
+                       name: 'GenerateVerificationTake',
+                       path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake',
+                       component: './AbnormalIdentifyModel/ClueAnalysis/GenerateVerificationTake',
+                    },
+                    ]
+                  },
+                ]
+               },
+               {
+                // 核查任务管理
+                name: 'VerificationTaskManagement',
+                path: '/AbnormalIdentifyModel/VerificationTaskManagement',
+                routes: [
+                  {
+                    path: '/AbnormalIdentifyModel/VerificationTaskManagement',
+                    redirect: '/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask',
+                  },
+                  {
+                    // 待核查任务
+                    name: 'TobeVerifiedTask',
+                    path: '/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask',
+                    component: './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                  },
+                  {
+                    // 已核查任务
+                    name: 'AlreadyVerifiedTask',
+                    path: '/AbnormalIdentifyModel/VerificationTaskManagement/AlreadyVerifiedTask',
+                    component: './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                  },
+                  {
+                    // 核查详情
+                    name: 'AlreadyVerifiedTask',
+                    path: '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail',
+                    component: './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask/Detail',
+                  },
+                ]
+               },
               {
                 // 通用库
                 name: 'general',

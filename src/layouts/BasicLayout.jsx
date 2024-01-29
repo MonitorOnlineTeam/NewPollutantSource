@@ -42,7 +42,10 @@ class BasicLayout extends Component {
         clientHeight: document.body.clientHeight,
       },
     });
-
+    dispatch({
+      type: 'login/IfSpecial',
+      payload: {},
+    });
     if (!this.props.sysPollutantTypeList.length && configInfo.IsShowSysPage === '1') {
       dispatch({
         type: 'global/getSysPollutantTypeList',
@@ -85,7 +88,7 @@ class BasicLayout extends Component {
     };
 
     const logoRender = Item => {
-      if (configInfo && configInfo.IsShowLogo === 'true') {
+      if (configInfo && configInfo.IsShowLogo === 'true' && !configInfo.IsShhy) {
         return settings.layout === 'topmenu' ? (
           <img
             style={{ height: 60 }}

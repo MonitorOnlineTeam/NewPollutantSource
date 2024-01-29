@@ -120,8 +120,10 @@ export const API = {
     //
   },
   UploadApi: {
-    // 删除文件
-    DeleteAttach: before + '/UploadApi/DeleteAttach',
+    GetAttachmentList: before + '/UploadApi/GetAttachmentList',//获取附件ID获取所有附件
+    DeleteAttach: before + '/UploadApi/DeleteAttach',//删除文件
+    UploadFiles: before + '/UploadApi/UploadFiles',//上传文件
+    UploadPicture: before + '/UploadApi/UploadPicture',//上传图片
   },
   PollutantApi: {
     // 根据MN号获取污染物类型并获取污染物
@@ -1034,6 +1036,23 @@ export const API = {
     GetHistoricalDataEvaluation: before + '/MoldV2/GetHistoricalDataEvaluation',
     // 获取数据现象
     GetHourDataForPhenomenon: before + '/WarningV2/GetHourDataForPhenomenon',
+
+
+    /*实时数据异常识别及管理*/
+    //异常线索清单
+    //线索分析
+    GetClueDatas: before + '/Clue/GetClueDatas', //工作台信息
+    //生成核查任务
+    GetWaitCheckDatas: before + '/Clue/GetWaitCheckDatas', //获取生产核查任务信息
+    GetPreTakeFlagDatas: before + '/Clue/GetPreTakeFlagDatas', //获取庄家意见信息
+    GetPlanDatas: before + '/Clue/GetPlanDatas', //获取已有方案信息
+    GetCheckRoleDatas: before + '/Clue/GetCheckRoleDatas', //获取核查角色
+    AddPlanTask: before + '/Clue/AddPlanTask', //生成核查任务
+    //核查任务管理
+    //待核查任务 已核查任务
+    GetCheckedList: before + '/Clue/GetCheckedList', //获取待核查或已核查任务信息
+    GetCheckedView: before + '/Clue/GetCheckedView', //核查详情
+
   },
   // 唐银钢铁Api
   TYGTApi: {

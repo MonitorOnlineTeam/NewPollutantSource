@@ -99,13 +99,13 @@ class Login extends Component {
   );
 
   render() {
-    const { userLogin, submitting, configInfo } = this.props;
+    const { userLogin, submitting, configInfo, configInfo:{IsShhy}} = this.props;
     const { status, type: loginType, message, mobileMessage } = userLogin;
     const { type, autoLogin } = this.state;
     // 是否显示手机号登录
     let IsPhoneLogin = configInfo.IsPhoneLogin === 'true';
     return (
-      <div className={`${styles.main} ${IsPhoneLogin && styles.phone}`}>
+      <div className={`${styles.main} ${IsPhoneLogin && styles.phone}  ${IsShhy && styles.shhySty}`}>
         <LoginComponents
           defaultActiveKey={type}
           onTabChange={this.onTabChange}

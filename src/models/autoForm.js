@@ -95,15 +95,15 @@ function getQueryParams(state, payload) {
   const searchParams = payload.searchParams || [];
   group.length || searchParams.length
     ? (postData.ConditionWhere = JSON.stringify({
-        // group.length? postData.ConditionWhere = JSON.stringify({
-        rel: '$and',
-        group: [
-          {
-            rel: '$and',
-            group: [...group, ...searchParams],
-          },
-        ],
-      }))
+      // group.length? postData.ConditionWhere = JSON.stringify({
+      rel: '$and',
+      group: [
+        {
+          rel: '$and',
+          group: [...group, ...searchParams],
+        },
+      ],
+    }))
     : '';
 
   return postData;
@@ -491,8 +491,8 @@ export default Model.extend({
               item.DF_FOREIGN_TYPE === 2
                 ? `${item.FullFieldName}_Name`
                 : item.FOREIGH_DT_CONFIGID
-                ? item.FOREIGN_DF_NAME
-                : item.DF_NAME, // 判断是否是外键或表连接
+                  ? item.FOREIGN_DF_NAME
+                  : item.DF_NAME, // 判断是否是外键或表连接
             // configId: item.DT_CONFIG_ID,
             isHide: item.DF_HIDDEN,
             configId: item.FOREIGH_DT_CONFIGID,
@@ -601,6 +601,21 @@ export default Model.extend({
 
     // 下载导入模板
     *deleteAttach({ payload }, { call, update }) {
+      let Guid = '';
+      if (payload.Guid) {
+        if (payload.Guid.fNameList && payload.Guid.fNameList[0]) {
+          Guid = payload.Guid.fNameList[0].split('/')[2]
+        } else if (Array.isArray(payload.Guid) && payload.Guid[0]) { //只上传图片的情况 UploadPicture接口
+          Guid = payload.Guid[0].split('/')[2]
+        } else {
+          Guid = payload.Guid //编辑的情况
+        }
+      } else {
+        Guid = '';
+      }
+      if (!Guid) { //文件为空的情况
+        return;
+      }
       const result = yield call(services.deleteAttach, { ...payload });
       if (result.IsSuccess) {
         message.success('删除成功！');

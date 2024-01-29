@@ -5,7 +5,7 @@ import moment from 'moment';
 import { downloadFile } from '@/utils/utils';
 // import { ModelNumberIdsDatas } from './CONST';
 import { getListPager } from '@/services/autoformapi';
-
+import { useSelector } from 'umi';  
 function initWarningForm() {
   let warningForm = {};
   for (const key in ModelNumberIdsDatas) {
@@ -35,6 +35,24 @@ export default Model.extend({
       dataAttribute: [],
     },
     DataPhenomenaList: [],
+    workTowerData:{
+      pageIndex:1,
+      pageSize:12,
+      type:1,
+    },
+    generateVerificationTakeData:{
+     pageIndex:1,
+     pageSize:20,
+     scrollTop:'',
+     type:1,
+    },
+    workTowerQueryPar:{},
+    verificationTaskData:{
+      pageIndex:1,
+      pageSize:20,
+      scrollTop:'',
+      type:1,
+     },
   },
   effects: {
     // 获取通用库模型列表
@@ -47,7 +65,7 @@ export default Model.extend({
             unfoldModelList = unfoldModelList.concat(itm.ModelList);
           });
         });
-        console.log('unfoldModelList', unfoldModelList);
+        // console.log('unfoldModelList', unfoldModelList);
         let modelList = result.Datas.sort((a, b) => a.ModelTypeCode - b.ModelTypeCode);
         callback && callback(modelList, unfoldModelList);
         yield update({
@@ -532,5 +550,78 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-  },
+
+    /**
+     * 线索分析 
+     */
+    *GetClueDatas({ payload, callback }, { call, select, update }) { // 获取工作台信息
+      const result = yield call(services.GetClueDatas, payload); 
+      if (result.IsSuccess) {
+        callback && callback(result);
+        yield update({
+          workTowerQueryPar: payload,
+        });
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *GetWaitCheckDatas({ payload, callback }, { call, select, update }) { //获取生成核查任务
+      const result = yield call(services.GetWaitCheckDatas, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *GetPreTakeFlagDatas({ payload, callback }, { call, select, update }) { //获取庄家意见信息
+      const result = yield call(services.GetPreTakeFlagDatas, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *GetPlanDatas({ payload, callback }, { call, select, update }) { //获取已有方案信息
+      const result = yield call(services.GetPlanDatas, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *GetCheckRoleDatas({ payload, callback }, { call, select, update }) { //获取核查角色（目前暂时用的是管理员角色）
+      const result = yield call(services.GetCheckRoleDatas, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },  
+    *AddPlanTask({ payload, callback }, { call, select, update }) { //生成核查任务
+      const result = yield call(services.AddPlanTask, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *GetCheckedList({ payload, callback }, { call, select, update }) { // 获取待核查任务、已核查任务
+      const result = yield call(services.GetCheckedList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *GetCheckedView({ payload, callback }, { call, select, update }) { // 获取待核查任务、已核查任务详情
+      const result = yield call(services.GetCheckedView, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    
+  }
 });

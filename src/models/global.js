@@ -138,7 +138,7 @@ export default Model.extend({
         configInfo.SystemName = getSysName(configInfo.SystemName);
         const IsShhy = configInfo.SystemName==='污染源在线监测综合管理平台';//是否为上海华谊项目
         configInfo.IsShhy = IsShhy;
-        // configInfo.IsShhy = true
+        // configInfo.IsShhy = true;
         localStorage.setItem('sysConfigInfo', JSON.stringify({
           // ...response.Datas,
           ...configInfo,

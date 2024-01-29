@@ -195,12 +195,13 @@ export default Model.extend({
       }
     },
     // 根据企业获取排口
-    *getPointByEntCode({ payload }, { call, update }) {
+    *getPointByEntCode({ payload,callback }, { call, update }) {
       const result = yield call(services.getPointByEntCode, payload);
       if (result.IsSuccess) {
         yield update({
           pointListByEntCode: result.Datas,
         });
+        callback&&callback(result.Datas)
       }
     },
     // 根据mn号获取站点下的所有污染物因子

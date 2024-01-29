@@ -284,3 +284,49 @@ export async function GetModelRunState(params) {
   );
   return result;
 }
+
+/**
+ * 线索分析
+ */
+// 获取工作台信息
+export async function GetClueDatas(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetClueDatas, params);
+  return result;
+}
+// 获取生成核查任务信息
+export async function GetWaitCheckDatas(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetWaitCheckDatas, params);
+  return result;
+}
+// 获取庄家意见信息
+export async function GetPreTakeFlagDatas(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetPreTakeFlagDatas, params);
+  return result;
+}
+// 获取已有方案信息
+export async function GetPlanDatas(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetPlanDatas, params);
+  return result;
+}
+// 获取核查角色
+export async function GetCheckRoleDatas(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetCheckRoleDatas, params);
+  return result;
+}
+
+// 生成核查任务
+export async function AddPlanTask(params) {
+  const result = await post(API.AbnormalIdentifyModel.AddPlanTask, params);
+  return result;
+}
+// 获取待核查任务、已核查任务
+export async function GetCheckedList(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetCheckedList, params);
+  return result;
+}
+
+// 获取待核查任务、已核查任务 详情
+export async function GetCheckedView(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetCheckedView, params);
+  return result;
+}
