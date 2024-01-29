@@ -40,6 +40,7 @@
     "dva": "^2.4.1",
     "echarts": "^4.2.1",
     "echarts-for-react": "^2.0.16",
+    "echarts-liquidfill": "^2.0.0",
     "encryptlong": "^3.1.4",
     "ezuikit-js": "^7.6.7",
     "gg-editor": "^2.0.4",

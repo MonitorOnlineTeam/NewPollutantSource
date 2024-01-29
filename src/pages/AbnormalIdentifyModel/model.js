@@ -3,9 +3,9 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 import moment from 'moment';
 import { downloadFile } from '@/utils/utils';
-// import { ModelNumberIdsDatas } from './CONST';
+import { ModelNumberIdsDatas } from './CONST';
 import { getListPager } from '@/services/autoformapi';
-import { useSelector } from 'umi';  
+import { useSelector } from 'umi';
 function initWarningForm() {
   let warningForm = {};
   for (const key in ModelNumberIdsDatas) {
@@ -27,14 +27,18 @@ function initWarningForm() {
 export default Model.extend({
   namespace: 'AbnormalIdentifyModel',
   state: {
-    // warningForm: initWarningForm(),
+    warningForm: initWarningForm(),
     modelList: [],
     unfoldModelList: [],
     ModelInfoAndParams: {
       modelInfo: {},
       dataAttribute: [],
     },
-    DataPhenomenaList: [],
+    DataPhenomenaChartList: {
+      MonitorTimeList: [],
+      dataList: [],
+    },
+    DataPhenomenaTableList: [],
     workTowerData:{
       pageIndex:1,
       pageSize:12,
@@ -199,19 +203,50 @@ export default Model.extend({
     },
     // 获取数据现象
     *GetHourDataForPhenomenon({ payload, callback }, { call, select, update }) {
-      const result = yield call(services.GetHourDataForPhenomenon, payload);
+      const { pollutantCodes } = payload;
+      const result = yield call(services.GetHourDataForPhenomenon, {
+        ...payload,
+        pollutantCodes: pollutantCodes.toString(),
+      });
       if (result.IsSuccess) {
+        let data = {},
+          MonitorTimeList = [];
+        pollutantCodes.map(code => {
+          data[code] = [];
+          data[`${code}_ME`] = [];
+          result.Datas.map(item => {
+            data[code].push(item[code]);
+            data[`${code}_ME`].push(item[`${code}_ME`]);
+
+            if (MonitorTimeList.length !== result.Datas.length) {
+              MonitorTimeList.push(item.MonitorTime);
+            }
+          });
+        });
+        console.log('data', data);
         yield update({
-          DataPhenomenaList: result.Datas,
+          DataPhenomenaChartList: {
+            MonitorTimeList,
+            dataList: data,
+          },
+          DataPhenomenaTableList: result.Datas,
         });
       } else {
         message.error(result.Message);
       }
     },
-
-    // 获取报警记录
+    // 获取首页地图数据
+    *GetMapPointList({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetMapPointList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取线索列表
     *GetWarningList({ payload, callback }, { call, select, update }) {
-      const state = yield select(state => state.dataModel);
+      const state = yield select(state => state.AbnormalIdentifyModel);
       let currentForm = state.warningForm[payload.modelNumber];
       const result = yield call(services.GetWarningList, {
         ...payload,
@@ -227,7 +262,7 @@ export default Model.extend({
     },
     // 重置报警记录form
     *onReset({ payload, callback }, { call, select, update }) {
-      let state = yield select(state => state.dataModel);
+      let state = yield select(state => state.AbnormalIdentifyModel);
       let current = state.warningForm[payload.modelNumber];
       yield update({
         warningForm: {
@@ -243,6 +278,15 @@ export default Model.extend({
           },
         },
       });
+    },
+    // 根据企业获取排口
+    *GetNoFilterPointByEntCode({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetNoFilterPointByEntCode, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
     },
 
     // 获取报警及核实信息（上、下部分）
@@ -444,15 +488,7 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 根据企业获取排口
-    *GetNoFilterPointByEntCode({ payload, callback }, { call, select, update }) {
-      const result = yield call(services.GetNoFilterPointByEntCode, payload);
-      if (result.IsSuccess) {
-        callback && callback(result.Datas);
-      } else {
-        message.error(result.Message);
-      }
-    },
+
     // 首页 - 数据统计分析
     *StatisForData({ payload, callback }, { call, select, update }) {
       const result = yield call(services.StatisForData, payload);
@@ -552,10 +588,10 @@ export default Model.extend({
     },
 
     /**
-     * 线索分析 
+     * 线索分析
      */
     *GetClueDatas({ payload, callback }, { call, select, update }) { // 获取工作台信息
-      const result = yield call(services.GetClueDatas, payload); 
+      const result = yield call(services.GetClueDatas, payload);
       if (result.IsSuccess) {
         callback && callback(result);
         yield update({
@@ -596,7 +632,7 @@ export default Model.extend({
       } else {
         message.error(result.Message);
       }
-    },  
+    },
     *AddPlanTask({ payload, callback }, { call, select, update }) { //生成核查任务
       const result = yield call(services.AddPlanTask, payload);
       if (result.IsSuccess) {
@@ -622,6 +658,6 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    
+
   }
 });

@@ -142,6 +142,12 @@ const routes = [
         path: '/dataFlowChart',
         component: './home/yanshi/DataFolwChart',
       },
+      {
+        // 模型首页 - 区域和行业
+        name: 'AbnormalIdentifyModelHome',
+        path: '/AbnormalIdentifyModel/Home/RegionAndIndustry',
+        component: './AbnormalIdentifyModel/Home/RegionAndIndustryPage/index.js',
+      },
       // appoperation
       {
         path: '/appoperation',
@@ -3061,21 +3067,11 @@ const routes = [
             name: 'AbnormalIdentifyModel',
             routes: [
               // {
-              //   path: '/AbnormalIdentifyModel',
-              //   redirect: '/AbnormalIdentifyModel/Home',
-              // },
-              // {
-              //   // 首页
-              //   name: 'AbnormalIdentifyModelHome',
-              //   path: '/AbnormalIdentifyModel/Home',
-              //   component: './AbnormalIdentifyModel/Home',
-              // },
-              // {
               //   // 异常线索清单
               //   name: 'AbnormalCluesList',
               //   path: '/AbnormalIdentifyModel/CluesList',
               //   component: './AbnormalIdentifyModel/CluesList',
-              // }, 
+              // },
               // {
               //   // 线索详情
               //   name: 'ClueDetails',
@@ -3164,6 +3160,12 @@ const routes = [
                 component: './AbnormalIdentifyModel/ModelMatch',
               },
               {
+                // 异常线索清单
+                name: 'CluesList',
+                path: '/AbnormalIdentifyModel/CluesList/:modelNumber',
+                component: './AbnormalIdentifyModel/CluesList',
+              },
+              {
                 // 历史数据综合评价
                 name: 'HistoryDataAnalysis',
                 path: '/AbnormalIdentifyModel/HistoryDataAnalysis',
@@ -3178,7 +3180,8 @@ const routes = [
                     // 统计分析
                     name: 'PointStatisticalAnalysis',
                     path: '/AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis',
-                    component: './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
                   },
                 ],
               },

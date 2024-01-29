@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-12 10:51:59
+ * @Last Modified time: 2024-01-25 20:32:55
  * @Description：报警记录
  */
 
@@ -29,18 +29,18 @@ const textStyle = {
   textOverflow: 'ellipsis',
 };
 
-const dvaPropsData = ({ loading, dataModel }) => ({
-  warningForm: dataModel.warningForm,
-  modelMenuNumber: dataModel.modelMenuNumber,
-  // modelList: dataModel.modelList,
-  modelListLoading: loading.effects['dataModel/GetModelList'],
-  queryLoading: loading.effects['dataModel/GetWarningList'],
-  pointListLoading: loading.effects['dataModel/GetNoFilterPointByEntCode'],
+const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
+  warningForm: AbnormalIdentifyModel.warningForm,
+  modelMenuNumber: AbnormalIdentifyModel.modelMenuNumber,
+  // modelList: AbnormalIdentifyModel.modelList,
+  modelListLoading: loading.effects['AbnormalIdentifyModel/GetModelList'],
+  queryLoading: loading.effects['AbnormalIdentifyModel/GetWarningList'],
+  pointListLoading: loading.effects['AbnormalIdentifyModel/GetNoFilterPointByEntCode'],
   entListLoading: loading.effects['common/getEntNoFilterList'],
 });
 
 const CluesList = props => {
-  const [form] = Form.useForm(2);
+  const [form] = Form.useForm();
   const {
     dispatch,
     warningForm,
@@ -84,7 +84,7 @@ const CluesList = props => {
     }
 
     props.dispatch({
-      type: 'dataModel/updateState',
+      type: 'AbnormalIdentifyModel/updateState',
       payload: {
         modelMenuNumber: modelNumber,
       },
@@ -92,32 +92,12 @@ const CluesList = props => {
 
     console.log('modelNumber', modelNumber);
   }, [modelNumber]);
-
-  // useEffect(() => {
-  //   onFinish();
-  //   console.log('pageIndex', warningForm[modelNumber].pageIndex);
-  // }, [warningForm[modelNumber].pageIndex, warningForm[modelNumber].pageSize]);
-
-  // 处理地址栏参数
-  const handleLocationParams = () => {
-    let locationParams = props.history.location.query.params;
-    if (locationParams) {
-      // onReset();
-      let values = JSON.parse(locationParams);
-      values.date = [moment(values.date[0]), moment(values.date[1])];
-      form.setFieldsValue(values);
-      if (values.EntCode) {
-        getPointList(values.EntCode);
-      }
-      // onFinish();
-    }
-  };
-
+  console.log('warningForm', warningForm);
   // 获取数据模型列表
   const GetModelList = () => {
     const modelIds = form.getFieldValue('warningTypeCode');
     dispatch({
-      type: 'dataModel/GetModelList',
+      type: 'AbnormalIdentifyModel/GetModelList',
       payload: {},
       callback: (res, unfoldModelList) => {
         let _modelList = unfoldModelList;
@@ -221,20 +201,10 @@ const CluesList = props => {
         },
       },
       {
-        title: '核实结果',
+        title: '核实结论',
         dataIndex: 'CheckedResultCode',
         key: 'CheckedResultCode',
         width: 120,
-        render: (text, record) => {
-          switch (text) {
-            case '3':
-              return <Badge status="default" text="未核实" />;
-            case '2':
-              return <Badge status="warning" text="有异常" />;
-            case '1':
-              return <Badge status="error" text="系统误报" />;
-          }
-        },
       },
       {
         title: '操作',
@@ -249,7 +219,7 @@ const CluesList = props => {
                   let el = document.querySelector('.ant-table-body');
                   el ? (scrollTop = el.scrollTop) : '';
                   props.dispatch({
-                    type: 'dataModel/updateState',
+                    type: 'AbnormalIdentifyModel/updateState',
                     payload: {
                       warningForm: {
                         ...warningForm,
@@ -284,7 +254,7 @@ const CluesList = props => {
       warningTypeCode = ModelNumberIdsDatas[modelNumber].toString();
     }
     props.dispatch({
-      type: 'dataModel/GetWarningList',
+      type: 'AbnormalIdentifyModel/GetWarningList',
       payload: {
         ...values,
         Dgimn: values.DGIMN,
@@ -324,7 +294,7 @@ const CluesList = props => {
   // 重置表单
   const onReset = notResetForm => {
     dispatch({
-      type: 'dataModel/onReset',
+      type: 'AbnormalIdentifyModel/onReset',
       payload: {
         modelNumber,
       },
@@ -342,7 +312,7 @@ const CluesList = props => {
   // 分页
   const onTableChange = (current, pageSize) => {
     props.dispatch({
-      type: 'dataModel/updateState',
+      type: 'AbnormalIdentifyModel/updateState',
       payload: {
         warningForm: {
           ...warningForm,
@@ -365,7 +335,7 @@ const CluesList = props => {
   // 根据企业获取排口
   const getPointList = EntCode => {
     dispatch({
-      type: 'dataModel/GetNoFilterPointByEntCode',
+      type: 'AbnormalIdentifyModel/GetNoFilterPointByEntCode',
       payload: {
         EntCode,
       },
@@ -394,7 +364,7 @@ const CluesList = props => {
             console.log('changedFields', changedFields);
             console.log('allFields', allFields);
             dispatch({
-              type: 'dataModel/updateState',
+              type: 'AbnormalIdentifyModel/updateState',
               payload: {
                 warningForm: {
                   ...warningForm,
@@ -418,8 +388,7 @@ const CluesList = props => {
           <Form.Item label="行政区" name="regionCode">
             <RegionList noFilter style={{ width: 140 }} />
           </Form.Item>
-          {// 脱敏角色不显示企业
-          !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
+          {
             <>
               <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
                 <Form.Item label="企业" name="EntCode">
@@ -457,7 +426,7 @@ const CluesList = props => {
                 </Form.Item>
               </Spin>
             </>
-          )}
+          }
           <Form.Item label="行业" name="IndustryType">
             <SearchSelect
               placeholder="排口所属行业"
@@ -492,13 +461,6 @@ const CluesList = props => {
               </Select>
             </Form.Item>
           </Spin>
-          <Form.Item label="核实结果" name="checkedResultCode">
-            <Select allowClear style={{ width: 120 }} placeholder="请选择核实结果">
-              <Option value="2">有异常</Option>
-              <Option value="1">系统误报</Option>
-              <Option value="3">未核实</Option>
-            </Select>
-          </Form.Item>
           <Form.Item>
             <Space>
               <Button
@@ -514,7 +476,7 @@ const CluesList = props => {
               <Button
                 onClick={() => {
                   dispatch({
-                    type: 'dataModel/onReset',
+                    type: 'AbnormalIdentifyModel/onReset',
                     payload: {
                       modelNumber,
                     },
@@ -532,6 +494,7 @@ const CluesList = props => {
         <SdlTable
           rowKey="ModelWarningGuid"
           align="center"
+          style={{ marginTop: 20 }}
           columns={getColumns()}
           dataSource={dataSource}
           loading={queryLoading}

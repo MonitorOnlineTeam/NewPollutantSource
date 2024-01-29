@@ -163,6 +163,8 @@ export const API = {
   },
   // BaseDataApi
   BaseDataApi: {
+    // 根据企业id获取监测点
+    GetNoFilterPointByEntCode: before + '/EnterpriseApi/GetNoFilterPointByEntCode',
     // 年度考核列表
     GetAnnualAssessmentEntList: before + '/EnterpriseApi/GetAnnualAssessmentEntList',
     // 企业排放量列表
@@ -1008,6 +1010,8 @@ export const API = {
   },
   // 异常数据识别模型Api
   AbnormalIdentifyModel: {
+    // 获取线索列表
+    GetWarningList: before + '/WarningV2/GetWarningList',
     // 获取模型列表
     GetMoldList: before + '/MoldV2/GetMoldList',
     // 模型开启、关闭
@@ -1036,6 +1040,20 @@ export const API = {
     GetHistoricalDataEvaluation: before + '/MoldV2/GetHistoricalDataEvaluation',
     // 获取数据现象
     GetHourDataForPhenomenon: before + '/WarningV2/GetHourDataForPhenomenon',
+    // 获取模型首页地图
+    GetMapPointList: before + '/MoldHome/GetMapPointList',
+    // 获取首页运行分析
+    GetOperationsAnalysis: before + '/MoldHome/GetOperationsAnalysis',
+    // 获取首页排放量统计
+    GetEmissionStatistics: before + '/MoldHome/GetEmissionStatistics',
+    // 异常线索统计
+    GetAbnormalClueStatistics: before + '/MoldHome/GetAbnormalClueStatistics',
+    // 排名
+    GetSuspectedRanking: before + '/MoldHome/GetSuspectedRanking',
+    // 数据质量分析
+    GetDataQualityAnalysis: before + '/MoldHome/GetDataQualityAnalysis',
+    // 排污缺口
+    GetPollutantDischargeGapStatistics: before + '/MoldHome/GetPollutantDischargeGapStatistics',
 
 
     /*实时数据异常识别及管理*/

@@ -85,11 +85,65 @@ export async function GetHourDataForPhenomenon(params) {
   return result;
 }
 
-// 获取报警记录
-export async function GetWarningList(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetWarningList', params);
+// 获取首页地图
+export async function GetMapPointList(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetMapPointList, params);
   return result;
 }
+
+// 获取首页运行分析
+export async function GetOperationsAnalysis(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetOperationsAnalysis, params);
+  return result;
+}
+
+// 获取首页排放量统计
+export async function GetEmissionStatistics(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetEmissionStatistics, params);
+  return result;
+}
+
+// 获取首页异常线索统计
+export async function GetAbnormalClueStatistics(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetAbnormalClueStatistics, params);
+  return result;
+}
+
+// 获取排名
+export async function GetSuspectedRanking(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetSuspectedRanking, params);
+  return result;
+}
+
+// 首页 - 数据质量分析
+export async function GetDataQualityAnalysis(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetDataQualityAnalysis, params);
+  return result;
+}
+
+// 首页 - 排污缺口
+export async function GetPollutantDischargeGapStatistics(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetPollutantDischargeGapStatistics, params);
+  return result;
+}
+
+// 获取线索列表
+export async function GetWarningList(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetWarningList, params);
+  return result;
+}
+
+// 根据企业获取排口
+export async function GetNoFilterPointByEntCode(params) {
+  const result = await post(API.BaseDataApi.GetNoFilterPointByEntCode, params);
+  return result;
+}
+
+// // 根据企业获取排口
+// export async function getPointByEntCode(params) {
+//   const result = await post(API.BaseDataApi.GetNoFilterPointByEntCode, params);
+//   return result;
+// }
 
 // 获取报警及核实信息（上、下）
 export async function GetSingleWarning(params) {
@@ -125,15 +179,6 @@ export async function SaveModelRelationDGIMN(params) {
 export async function ExportHourDataForModel(params) {
   const result = await post(
     '/newApi/rest/PollutantSourceApi/Warning/ExportHourDataForModel',
-    params,
-  );
-  return result;
-}
-
-// 根据企业获取排口
-export async function getPointByEntCode(params) {
-  const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
     params,
   );
   return result;
@@ -211,15 +256,6 @@ export async function ExportStatisAlarmReport(params) {
 // 场景模型分析 - 导出
 export async function ExportStatisAlarm(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Warning/ExportStatisAlarm', params);
-  return result;
-}
-
-// 根据企业获取排口
-export async function GetNoFilterPointByEntCode(params) {
-  const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterPointByEntCode',
-    params,
-  );
   return result;
 }
 
