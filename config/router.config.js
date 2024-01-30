@@ -142,6 +142,12 @@ const routes = [
         path: '/dataFlowChart',
         component: './home/yanshi/DataFolwChart',
       },
+      {
+        // 模型首页 - 区域和行业
+        name: 'AbnormalIdentifyModelHome',
+        path: '/AbnormalIdentifyModel/Home/RegionAndIndustry',
+        component: './AbnormalIdentifyModel/Home/RegionAndIndustryPage/index.js',
+      },
       // appoperation
       {
         path: '/appoperation',
@@ -3060,28 +3066,6 @@ const routes = [
             path: '/AbnormalIdentifyModel',
             name: 'AbnormalIdentifyModel',
             routes: [
-              // {
-              //   path: '/AbnormalIdentifyModel',
-              //   redirect: '/AbnormalIdentifyModel/Home',
-              // },
-              // {
-              //   // 首页
-              //   name: 'AbnormalIdentifyModelHome',
-              //   path: '/AbnormalIdentifyModel/Home',
-              //   component: './AbnormalIdentifyModel/Home',
-              // },
-              // {
-              //   // 异常线索清单
-              //   name: 'AbnormalCluesList',
-              //   path: '/AbnormalIdentifyModel/CluesList',
-              //   component: './AbnormalIdentifyModel/CluesList',
-              // }, 
-              // {
-              //   // 线索详情
-              //   name: 'ClueDetails',
-              //   path: '/AbnormalIdentifyModel/ClueDetails',
-              //   component: './AbnormalIdentifyModel/CluesList',
-              // },
               {
                 // 异常线索清单
                 name: 'AbnormalCluesList',
@@ -3090,6 +3074,12 @@ const routes = [
                   {
                     path: '/AbnormalIdentifyModel/CluesList',
                     redirect: '/AbnormalIdentifyModel/CluesList/all',
+                  },
+                  {
+                    // 异常线索清单
+                    name: 'CluesList',
+                    path: '/AbnormalIdentifyModel/CluesList/:modelNumber',
+                    component: './AbnormalIdentifyModel/CluesList',
                   },
                   {
                     // 线索分析
@@ -3101,22 +3091,23 @@ const routes = [
                       //   redirect: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/WorkTower',
                       // },
                       {
-                       // 工作台
+                        // 工作台
                         name: 'WorkTower',
                         path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/WorkTower',
                         component: './AbnormalIdentifyModel/ClueAnalysis/WorkTower',
-                     },
-                     {
-                      // 生成核查任务
-                       name: 'GenerateVerificationTake',
-                       path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake',
-                       component: './AbnormalIdentifyModel/ClueAnalysis/GenerateVerificationTake',
-                    },
-                    ]
+                      },
+                      {
+                        // 生成核查任务
+                        name: 'GenerateVerificationTake',
+                        path:
+                          '/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake',
+                        component: './AbnormalIdentifyModel/ClueAnalysis/GenerateVerificationTake',
+                      },
+                    ],
                   },
-                ]
-               },
-               {
+                ],
+              },
+              {
                 // 核查任务管理
                 name: 'VerificationTaskManagement',
                 path: '/AbnormalIdentifyModel/VerificationTaskManagement',
@@ -3129,22 +3120,25 @@ const routes = [
                     // 待核查任务
                     name: 'TobeVerifiedTask',
                     path: '/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask',
-                    component: './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                    component:
+                      './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
                   },
                   {
                     // 已核查任务
                     name: 'AlreadyVerifiedTask',
                     path: '/AbnormalIdentifyModel/VerificationTaskManagement/AlreadyVerifiedTask',
-                    component: './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                    component:
+                      './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
                   },
                   {
                     // 核查详情
                     name: 'AlreadyVerifiedTask',
                     path: '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail',
-                    component: './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask/Detail',
+                    component:
+                      './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask/Detail',
                   },
-                ]
-               },
+                ],
+              },
               {
                 // 通用库
                 name: 'general',
@@ -3178,7 +3172,8 @@ const routes = [
                     // 统计分析
                     name: 'PointStatisticalAnalysis',
                     path: '/AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis',
-                    component: './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
                   },
                 ],
               },

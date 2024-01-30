@@ -75,6 +75,7 @@ export const GasNormal = props => <IconConfig type="icon-gas-normal" {...props} 
 export const GasExceed = props => <IconConfig type="icon-gas-exceed" {...props} style={{ ...mapStyle, ...props.style }} />
 export const GasAbnormal = props => <IconConfig type="icon-gas-abnormal" {...props} style={{ ...mapStyle, ...props.style }} />
 export const GasOffline = props => <IconConfig type="icon-gas-offline" {...props} style={{ ...mapStyle, ...props.style }} />
+export const GasStop = props => <IconConfig type="icon-feiqi-tingyun" {...props} style={{ ...mapStyle, ...props.style }} />
 
 //向上、向下箭头
 export const Xiangshang = props => <IconConfig type="icon-jiantou_xiangshang1"  {...props} style={{ ...mapStyle }} />

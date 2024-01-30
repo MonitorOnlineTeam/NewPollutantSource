@@ -40,7 +40,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 });
 
 const Index = props => {
-  const { dispatch, title, DGIMN, visible, onCancel, height, loading, reloadLoading } = props;
+  const { dispatch, title, DGIMN, visible, onCancel, height, loading, reloadLoading, type } = props;
   const [topImages, setTopImages] = useState([]);
   const [leftImages, setLeftImages] = useState([]);
   const [rightImages, setRightImages] = useState([]);
@@ -116,7 +116,7 @@ const Index = props => {
           DGIMN,
         },
         callback: res => {
-          setImages(res.image);
+          setImages(type === 'stop' ? res.stopImage : res.image);
           setRangeTime(res.rangeTime);
           let tempUpdateDate = {};
           for (const key in res.rangeTime) {

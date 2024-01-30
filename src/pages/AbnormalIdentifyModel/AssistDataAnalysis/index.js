@@ -40,7 +40,7 @@ const AssistDataAnalysis = props => {
   const getPageContent = () => {
     return (
       <Card>
-        <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '6'}>
+        <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '5'}>
           {/* <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '2'}> */}
           <Tabs.TabPane tab="数据工况" key="5" style={{ overflowY: 'auto' }}>
             <WarningDataAndChart
@@ -49,8 +49,11 @@ const AssistDataAnalysis = props => {
               defaultChartSelected={['氧含量', '烟气湿度', '烟气温度', '流速']}
             />
           </Tabs.TabPane>
-          <Tabs.TabPane tab="正常范围" key="2" style={{ overflowY: 'auto' }}>
+          <Tabs.TabPane tab="正常范围" key="1" style={{ overflowY: 'auto' }}>
             <PollutantImages DGIMN={DGIMN} height="calc(100vh - 216px)" />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="停运范围" key="2" style={{ overflowY: 'auto' }}>
+            <PollutantImages type="stop" DGIMN={DGIMN} height="calc(100vh - 216px)" />
           </Tabs.TabPane>
           <Tabs.TabPane tab="密度分布直方图" key="3" style={{ overflowY: 'auto' }}>
             <Histogram DGIMN={DGIMN} />
