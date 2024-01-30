@@ -22,7 +22,7 @@ const titleBottomStyle = {
 let myChart;
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   // todoList: wordSupervision.todoList,
-  requestParams: AbnormalIdentifyModelHome.entPointSumStatus,
+  requestParams: AbnormalIdentifyModelHome.entRequestParams,
   OverRate: AbnormalIdentifyModelHome.EntOverRate,
   RunRate: AbnormalIdentifyModelHome.EntRunRate,
   loading: loading.effects['AbnormalIdentifyModelHome/GetEntOperationsAnalysis'],
@@ -134,7 +134,6 @@ const RanAnalysis = props => {
 
     return {};
   };
-  console.log('runChart', runChart);
   return (
     <HomeCard title="运行分析" loading={loading}>
       <div className={styles.echartsContent}>

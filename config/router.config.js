@@ -3066,18 +3066,6 @@ const routes = [
             path: '/AbnormalIdentifyModel',
             name: 'AbnormalIdentifyModel',
             routes: [
-              // {
-              //   // 异常线索清单
-              //   name: 'AbnormalCluesList',
-              //   path: '/AbnormalIdentifyModel/CluesList',
-              //   component: './AbnormalIdentifyModel/CluesList',
-              // },
-              // {
-              //   // 线索详情
-              //   name: 'ClueDetails',
-              //   path: '/AbnormalIdentifyModel/ClueDetails',
-              //   component: './AbnormalIdentifyModel/CluesList',
-              // },
               {
                 // 异常线索清单
                 name: 'AbnormalCluesList',
@@ -3086,6 +3074,12 @@ const routes = [
                   {
                     path: '/AbnormalIdentifyModel/CluesList',
                     redirect: '/AbnormalIdentifyModel/CluesList/all',
+                  },
+                  {
+                    // 异常线索清单
+                    name: 'CluesList',
+                    path: '/AbnormalIdentifyModel/CluesList/:modelNumber',
+                    component: './AbnormalIdentifyModel/CluesList',
                   },
                   {
                     // 线索分析
@@ -3097,22 +3091,23 @@ const routes = [
                       //   redirect: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/WorkTower',
                       // },
                       {
-                       // 工作台
+                        // 工作台
                         name: 'WorkTower',
                         path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/WorkTower',
                         component: './AbnormalIdentifyModel/ClueAnalysis/WorkTower',
-                     },
-                     {
-                      // 生成核查任务
-                       name: 'GenerateVerificationTake',
-                       path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake',
-                       component: './AbnormalIdentifyModel/ClueAnalysis/GenerateVerificationTake',
-                    },
-                    ]
+                      },
+                      {
+                        // 生成核查任务
+                        name: 'GenerateVerificationTake',
+                        path:
+                          '/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake',
+                        component: './AbnormalIdentifyModel/ClueAnalysis/GenerateVerificationTake',
+                      },
+                    ],
                   },
-                ]
-               },
-               {
+                ],
+              },
+              {
                 // 核查任务管理
                 name: 'VerificationTaskManagement',
                 path: '/AbnormalIdentifyModel/VerificationTaskManagement',
@@ -3125,22 +3120,25 @@ const routes = [
                     // 待核查任务
                     name: 'TobeVerifiedTask',
                     path: '/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask',
-                    component: './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                    component:
+                      './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
                   },
                   {
                     // 已核查任务
                     name: 'AlreadyVerifiedTask',
                     path: '/AbnormalIdentifyModel/VerificationTaskManagement/AlreadyVerifiedTask',
-                    component: './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                    component:
+                      './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
                   },
                   {
                     // 核查详情
                     name: 'AlreadyVerifiedTask',
                     path: '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail',
-                    component: './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask/Detail',
+                    component:
+                      './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask/Detail',
                   },
-                ]
-               },
+                ],
+              },
               {
                 // 通用库
                 name: 'general',
@@ -3158,12 +3156,6 @@ const routes = [
                 name: 'modelMatch',
                 path: '/AbnormalIdentifyModel/modelMatch',
                 component: './AbnormalIdentifyModel/ModelMatch',
-              },
-              {
-                // 异常线索清单
-                name: 'CluesList',
-                path: '/AbnormalIdentifyModel/CluesList/:modelNumber',
-                component: './AbnormalIdentifyModel/CluesList',
               },
               {
                 // 历史数据综合评价

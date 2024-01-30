@@ -27,12 +27,15 @@ const Emissions = props => {
   };
 
   const getOption = () => {
-    if (!echarts) {
+    if (!echarts || !EmissionStatisticsData.xData.length) {
       return {};
     }
-
+    // let tempPollutantList = EmissionStatisticsData.pollutantList.length
+    //   ? EmissionStatisticsData.pollutantList
+    //   : ['01', '02', '03'];
+    let tempPollutantList = EmissionStatisticsData.pollutantList;
     let seriesData = [];
-    for (const key in EmissionStatisticsData.pollutantList) {
+    for (const key in tempPollutantList) {
       let name = key === '01' ? '颗粒物' : key === '02' ? '二氧化硫' : '氮氧化物';
       let color = key === '01' ? '#0A93F3' : key === '02' ? '#1BFFC7' : '#D388EF';
       seriesData.push({
@@ -49,7 +52,7 @@ const Emissions = props => {
         itemStyle: {
           color: color,
         },
-        data: EmissionStatisticsData.pollutantList[key],
+        data: tempPollutantList[key],
       });
     }
     return {
@@ -200,14 +203,21 @@ const Emissions = props => {
         height: 'calc(100% - 110px)',
       }}
     >
-      <ReactEcharts
-        ref={echart => {
-          setEcharts(echart);
-        }}
-        option={getOption(2)}
-        style={{ height: '100%', width: '100%' }}
-        theme="my_theme"
-      />
+      {!loading && EmissionStatisticsData.xData.length ? (
+        <ReactEcharts
+          ref={echart => {
+            setEcharts(echart);
+          }}
+          option={getOption(2)}
+          style={{ height: '100%', width: '100%' }}
+          theme="my_theme"
+        />
+      ) : (
+        <div className="notData">
+          <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
+          <p style={{ color: '#d5d9e2', fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+        </div>
+      )}
     </HomeCard>
   );
 };

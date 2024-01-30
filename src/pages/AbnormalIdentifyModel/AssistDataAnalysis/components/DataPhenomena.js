@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-01-18 15:08:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-29 11:04:45
+ * @Last Modified time: 2024-01-29 17:07:34
  * @Description:  数据现象
  */
 import React, { useState, useEffect } from 'react';
@@ -87,7 +87,7 @@ const DataPhenomena = props => {
 
   // 获取表头
   const getColumns = pollutantList => {
-    let columns = [
+    let columns = [ 
       {
         title: '时间',
         dataIndex: 'MonitorTime',

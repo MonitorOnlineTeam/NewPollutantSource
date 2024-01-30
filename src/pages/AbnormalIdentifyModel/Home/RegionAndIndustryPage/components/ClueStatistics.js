@@ -40,7 +40,6 @@ const ClueStatistics = props => {
 
   // 处理柱状图数据
   const handleBarData = data => {
-    console.log('data', data);
     let xData = [],
       seriesData = [];
     data.map(item => {

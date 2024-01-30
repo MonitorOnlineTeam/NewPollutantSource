@@ -112,7 +112,6 @@ class MapContent extends PureComponent {
 
   // 渲染地图点 - 排口
   renderMarkers = extData => {
-    console.log('extData111', extData);
     const {
       entRequestParams: { pLeve },
       currentEntName,
@@ -132,7 +131,6 @@ class MapContent extends PureComponent {
   };
 
   getIcon = status => {
-    console.log('status', status);
     switch (status) {
       case '0': // 离线
         return <GasOffline />;

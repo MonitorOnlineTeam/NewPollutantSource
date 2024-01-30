@@ -15,7 +15,6 @@ function getBodyParams(requestParams) {
       ? requestParams.pollutantCode.toString()
       : '01,02,03',
     // entCode: '7aad4f39-a853-4547-a5a6-40839f77ea41',
-    entCode: '',
   };
   return body;
 }
@@ -115,7 +114,6 @@ export default Model.extend({
             value: Rlist[0][key],
           });
         }
-        console.log('regionList', regionList);
 
         const markers = list.length
           ? list.map(item => ({
@@ -170,7 +168,6 @@ export default Model.extend({
             }
           });
         });
-        console.log('EmissionStatisticsData', data);
         yield update({
           EmissionStatisticsData: {
             pollutantList: data,
@@ -262,7 +259,6 @@ export default Model.extend({
           '02': pollutant02,
           '03': pollutant03,
         };
-        console.log('obj', obj);
         callback && callback(obj);
       } else {
         message.error(result.Message);
@@ -283,7 +279,6 @@ export default Model.extend({
             value: Rlist[0][key],
           });
         }
-        console.log('regionList', regionList);
 
         const markers = list.length
           ? list.map(item => ({
@@ -319,7 +314,6 @@ export default Model.extend({
 
     // 更新首页请求参数
     *updateRequestParams({ payload, callback }, { put, take, update }) {
-      console.log('payload', payload);
       yield update(payload);
       // yield take('updateRequestParams/@@end');
       // callback && callback();
@@ -330,7 +324,6 @@ export default Model.extend({
 
     // // 更新企业首页请求参数
     // *updateRequestParams({ payload }, { put, take, update }) {
-    //   console.log('payload', payload);
     //   yield update(payload);
     //   // yield take('updateRequestParams/@@end');
     //   yield put({

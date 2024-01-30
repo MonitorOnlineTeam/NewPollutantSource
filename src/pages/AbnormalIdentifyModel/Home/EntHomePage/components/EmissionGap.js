@@ -20,7 +20,6 @@ const EmissionGap = props => {
     entRequestParams: { pollutantCode },
   } = props;
   const [gapData, setGapData] = useState({});
-  console.log('gapData', gapData);
   useEffect(() => {
     GetPollutantDischargeGapStatistics();
   }, [entRequestParams]);
@@ -217,7 +216,6 @@ const EmissionGap = props => {
 
     return option;
   };
-  console.log('EmissionStatisticsData222', EmissionStatisticsData);
 
   const _pollutantCode = pollutantCode.length ? pollutantCode : ['01', '02', '03'];
 
@@ -283,11 +281,19 @@ const EmissionGap = props => {
                 >
                   {item === '01' ? '烟尘' : item === '02' ? 'SO2' : 'NOx'}
                 </p>
-                <ReactEcharts
-                  option={getOption(item)}
-                  style={{ height: '100%', width: '100%', marginTop: -10 }}
-                  theme="my_theme"
-                />
+                {gapData[item] ? (
+                  <ReactEcharts
+                    option={getOption(item)}
+                    style={{ height: '100%', width: '100%', marginTop: -10 }}
+                    theme="my_theme"
+                  />
+                ) : (
+                  <div className="notData">
+                    <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
+                    <p style={{ color: '#d5d9e2', fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+                  </div>
+                )}
+
                 {renderInfoContent(item)}
                 {/* <div className={styles.infoContent}>
                   <p>SO2排放量：324121kg (75%)</p>

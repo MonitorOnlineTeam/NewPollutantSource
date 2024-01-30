@@ -7,11 +7,11 @@ import HomeCard from '../../components/HomeCard';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   entRequestParams: AbnormalIdentifyModelHome.entRequestParams,
-  // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
+  loading: loading.effects['AbnormalIdentifyModelHome/GetDataQualityAnalysis'],
 });
 
 const DataQualityAnalysis = props => {
-  const { dispatch, entRequestParams } = props;
+  const { dispatch, entRequestParams, loading } = props;
   const [analysisData, setAnalysisData] = useState({});
   const [maxNum, setMaxNum] = useState();
 
@@ -23,9 +23,9 @@ const DataQualityAnalysis = props => {
     dispatch({
       type: 'AbnormalIdentifyModelHome/GetDataQualityAnalysis',
       payload: {},
-      callback: res => {
-        console.log('res', res);
-        setAnalysisData(res);
+      callback: result => {
+        let res = result || {};
+        setAnalysisData(res || {});
         let max = Math.max(
           ...[
             res.NomarlHour,
@@ -40,10 +40,10 @@ const DataQualityAnalysis = props => {
       },
     });
   };
-  console.log('maxNum', maxNum);
   return (
     <HomeCard
       title={'数据质量分析'}
+      loading={loading}
       bodyStyle={{
         display: 'flex',
         flexDirection: 'column',

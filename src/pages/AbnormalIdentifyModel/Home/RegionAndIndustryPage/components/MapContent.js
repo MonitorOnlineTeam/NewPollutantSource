@@ -123,7 +123,6 @@ class MapContent extends PureComponent {
   // 展示企业
   renderEntList = data => {
     const { position } = data;
-    console.log('position', position);
     this.queryParamsChange(
       {
         regionCode: position.regionCode,
@@ -170,7 +169,6 @@ class MapContent extends PureComponent {
 
   // 企业图标点击 - 进入企业页面
   onEntList = data => {
-    console.log('data', data);
     this.props.dispatch({
       type: 'AbnormalIdentifyModelHome/updateState',
       payload: {
@@ -459,6 +457,9 @@ class MapContent extends PureComponent {
                         }}
                       >
                         <Space>
+                          <Radio.Button key={0} value={''} data-label={'全部'}>
+                            全部
+                          </Radio.Button>
                           {industryList.map(item => {
                             return (
                               <Radio.Button
@@ -519,7 +520,6 @@ class MapContent extends PureComponent {
             </div>
           </Space>
         </div>
-        {console.log('pollutantCode', pollutantCode)}
 
         {pLeve === 2 && (
           <div

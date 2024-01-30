@@ -7,7 +7,7 @@ const COLOR = ['#FFC611', '#DBDEE1', '#FF942B'];
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   entRequestParams: AbnormalIdentifyModelHome.entRequestParams,
-  loading: loading.effects['AbnormalIdentifyModelHome/GetSuspectedRanking'],
+  loading: loading.effects['AbnormalIdentifyModelHome/GetEntSuspectedRanking'],
 });
 
 const RankingContent = props => {
@@ -35,7 +35,7 @@ const RankingContent = props => {
         {rankDataList.length ? (
           rankDataList.map((item, index) => {
             return (
-              <Row className={styles.RankListContent}>
+              <Row key={index} className={styles.RankListContent}>
                 <Col flex="100px">
                   <span
                     className={styles.number}

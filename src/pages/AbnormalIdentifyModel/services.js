@@ -124,7 +124,14 @@ export async function GetDataQualityAnalysis(params) {
 // 首页 - 排污缺口
 export async function GetPollutantDischargeGapStatistics(params) {
   const result = await post(API.AbnormalIdentifyModel.GetPollutantDischargeGapStatistics, params);
-  return result;
+  if (result.Datas) {
+    return result;
+  } else {
+    return {
+      ...result,
+      Datas: [],
+    };
+  }
 }
 
 // 获取线索列表

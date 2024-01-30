@@ -8,11 +8,11 @@ import HomeCard from '../../components/HomeCard';
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   PointSumStatus: AbnormalIdentifyModelHome.entPointSumStatus,
   // todoList: wordSupervision.todoList,
-  // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
+  loading: loading.effects['AbnormalIdentifyModelHome/GetEntMapPointList'],
 });
 
 const RunState = props => {
-  const { dispatch, PointSumStatus } = props;
+  const { dispatch, PointSumStatus, loading } = props;
 
   useEffect(() => {}, []);
 
@@ -120,7 +120,7 @@ const RunState = props => {
     };
   };
   return (
-    <HomeCard title="运行状态分布">
+    <HomeCard title="运行状态分布" loading={loading}>
       <div className={styles.echartsContent} style={{ padding: '0 20px' }}>
         <ReactEcharts
           option={getOption(1)}

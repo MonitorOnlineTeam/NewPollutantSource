@@ -11,14 +11,14 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   requestParams: AbnormalIdentifyModelHome.requestParams,
   OverRate: AbnormalIdentifyModelHome.OverRate,
   RunRate: AbnormalIdentifyModelHome.RunRate,
-  // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
+  loading: loading.effects['AbnormalIdentifyModelHome/GetOperationsAnalysis'],
 });
 
 const RanAnalysis = props => {
   // const runChart = useRef();
   // const overChart = useRef();
   // let runChart, overChart;
-  const { dispatch, requestParams, RunRate, OverRate } = props;
+  const { dispatch, requestParams, RunRate, OverRate, loading } = props;
   const [runChart, setRunChart] = useState();
   const [overChart, setOverChart] = useState();
 
@@ -113,9 +113,8 @@ const RanAnalysis = props => {
 
     return {};
   };
-  console.log('runChart', runChart);
   return (
-    <HomeCard title="运行分析">
+    <HomeCard title="运行分析" loading={loading}>
       <div className={styles.echartsContent}>
         <div className={styles.echartItem}>
           <ReactEcharts
