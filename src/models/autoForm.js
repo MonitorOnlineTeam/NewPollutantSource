@@ -599,7 +599,7 @@ export default Model.extend({
       }
     },
 
-    // 下载导入模板
+    // 删除导入模板
     *deleteAttach({ payload }, { call, update }) {
       let Guid = '';
       if (payload.Guid) {

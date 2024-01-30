@@ -227,7 +227,7 @@ const WorkTower = props => {
                           type: 'AbnormalIdentifyModel/updateState',
                           payload: { generateVerificationTakeData: { ...generateVerificationTakeData, type: 2 } },
                         });
-                        router.push(`/AbnormalIdentifyModel/ClueAnalysis/GenerateVerificationTake?data=${JSON.stringify(data)}`);
+                        router.push(`/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake?data=${JSON.stringify(data)}`);
                       }}
                       color="default" style={{ marginTop: 4 }}>监测样品为<span>{typeItem.WarningName}</span>  <span style={{ paddingLeft: 6 }}>{typeItem.WarningCount}</span>个</Tag>)}
                   </div>
