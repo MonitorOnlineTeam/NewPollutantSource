@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-25 20:32:55
+ * @Last Modified time: 2024-01-30 14:03:34
  * @Description：报警记录
  */
 
@@ -232,7 +232,7 @@ const CluesList = props => {
                     },
                   });
                   router.push(
-                    `/DataAnalyticalWarningModel/Warning/ModelType/${modelNumber}/WarningVerify/${record.ModelWarningGuid}`,
+                    `/AbnormalIdentifyModel/CluesList/CluesDetails/${record.ModelWarningGuid}`,
                   );
                 }}
               >

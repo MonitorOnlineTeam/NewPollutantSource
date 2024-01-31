@@ -90,7 +90,6 @@ const Index = props => {
           updateTime: rangeTime[key] ? rangeTime[key].UpdateTime : '-',
         });
       }
-      // console.log('images', images);
     }
 
     // if (images['b02']) {
@@ -98,7 +97,7 @@ const Index = props => {
     // } else {
     //   setTopImages([]);
     // }
-    console.log('topImages', topImages);
+    // console.log('topImages', topImages);
     // console.log('leftImages', leftImages);
     // console.log('rightImages', rightImages);
     setTopImages(topImages);
@@ -116,7 +115,7 @@ const Index = props => {
           DGIMN,
         },
         callback: res => {
-          setImages(type === 'stop' ? res.stopImage : res.image);
+          setImages(type === 'stop' ? res.stopImage || [] : res.image);
           setRangeTime(res.rangeTime);
           let tempUpdateDate = {};
           for (const key in res.rangeTime) {
@@ -125,7 +124,6 @@ const Index = props => {
               moment(res.rangeTime[key].EndTime),
             ];
           }
-          console.log('tempUpdateDate', tempUpdateDate);
           setUpdateDate(tempUpdateDate);
         },
       });

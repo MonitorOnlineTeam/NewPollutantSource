@@ -288,7 +288,6 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-
     // 获取报警及核实信息（上、下部分）
     *GetSingleWarning({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetSingleWarning, payload);
@@ -298,6 +297,13 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+
+
+
+
+
+
+    
     // 获取模型快照数据
     *GetSnapshotData({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetSnapshotData, payload);

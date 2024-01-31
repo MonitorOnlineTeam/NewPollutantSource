@@ -120,10 +120,10 @@ export const API = {
     //
   },
   UploadApi: {
-    GetAttachmentList: before + '/UploadApi/GetAttachmentList',//获取附件ID获取所有附件
-    DeleteAttach: before + '/UploadApi/DeleteAttach',//删除文件
-    UploadFiles: before + '/UploadApi/UploadFiles',//上传文件
-    UploadPicture: before + '/UploadApi/UploadPicture',//上传图片
+    GetAttachmentList: before + '/UploadApi/GetAttachmentList', //获取附件ID获取所有附件
+    DeleteAttach: before + '/UploadApi/DeleteAttach', //删除文件
+    UploadFiles: before + '/UploadApi/UploadFiles', //上传文件
+    UploadPicture: before + '/UploadApi/UploadPicture', //上传图片
   },
   PollutantApi: {
     // 根据MN号获取污染物类型并获取污染物
@@ -1054,7 +1054,8 @@ export const API = {
     GetDataQualityAnalysis: before + '/MoldHome/GetDataQualityAnalysis',
     // 排污缺口
     GetPollutantDischargeGapStatistics: before + '/MoldHome/GetPollutantDischargeGapStatistics',
-
+    // 获取报警详情
+    GetSingleWarning: before + '/WarningV2/GetSingleWarning',
 
     /*实时数据异常识别及管理*/
     //异常线索清单
@@ -1070,7 +1071,6 @@ export const API = {
     //待核查任务 已核查任务
     GetCheckedList: before + '/Clue/GetCheckedList', //获取待核查或已核查任务信息
     GetCheckedView: before + '/Clue/GetCheckedView', //核查详情
-
   },
   // 唐银钢铁Api
   TYGTApi: {

@@ -146,17 +146,17 @@ export async function GetNoFilterPointByEntCode(params) {
   return result;
 }
 
+// 获取报警及核实信息（上、下）
+export async function GetSingleWarning(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetSingleWarning, params);
+  return result;
+}
+
 // // 根据企业获取排口
 // export async function getPointByEntCode(params) {
 //   const result = await post(API.BaseDataApi.GetNoFilterPointByEntCode, params);
 //   return result;
 // }
-
-// 获取报警及核实信息（上、下）
-export async function GetSingleWarning(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetSingleWarning', params);
-  return result;
-}
 
 // 获取模型快照数据
 export async function GetSnapshotData(params) {

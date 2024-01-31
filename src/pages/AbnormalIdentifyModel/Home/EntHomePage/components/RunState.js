@@ -21,7 +21,7 @@ const RunState = props => {
       { value: PointSumStatus.Normal, name: '正常', rate: PointSumStatus.NormalRate },
       { value: PointSumStatus.Exception, name: '异常', rate: PointSumStatus.ExceptionRate },
       { value: PointSumStatus.Over, name: '超标', rate: PointSumStatus.OverRate },
-      { value: PointSumStatus.Stop, name: '离线', rate: PointSumStatus.StopRate },
+      { value: PointSumStatus.Stop, name: '停运', rate: PointSumStatus.StopRate },
     ];
     let color = ['#347AED', '#FF4374', '#EDC434', '#CFCFCF'];
     return {
@@ -66,7 +66,7 @@ const RunState = props => {
         {
           name: '访问来源',
           type: 'pie',
-          radius: ['60%', '80%'],
+          radius: ['60%', '76%'],
           center: ['50%', '50%'],
           // color: ['rgb(131,249,103)', '#FBFE27', '#FE5050', '#1DB7E5'], //'#FBFE27','rgb(11,228,96)','#FE5050'
           data: data,
@@ -82,7 +82,7 @@ const RunState = props => {
               alignTo: 'edge',
               margin: 10,
               // paddingBottom: 100,
-              edgeDistance: 10,
+              edgeDistance: 0,
               rich: {
                 c: {
                   color: '#3BBFFE',
@@ -121,7 +121,7 @@ const RunState = props => {
   };
   return (
     <HomeCard title="运行状态分布" loading={loading}>
-      <div className={styles.echartsContent} style={{ padding: '0 20px' }}>
+      <div className={styles.echartsContent} style={{ padding: '10px' }}>
         <ReactEcharts
           option={getOption(1)}
           lazyUpdate={true}

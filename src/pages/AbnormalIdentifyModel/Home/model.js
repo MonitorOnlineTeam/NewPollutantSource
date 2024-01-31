@@ -205,7 +205,7 @@ export default Model.extend({
         modelBaseType: payload.modelBaseType,
       });
       if (result.IsSuccess) {
-        let rankData = _.sortBy([...result.Datas], item => item.val);
+        let rankData = _.sortBy([...result.Datas], item => -item.val);
         callback && callback(rankData);
       } else {
         message.error(result.Message);
