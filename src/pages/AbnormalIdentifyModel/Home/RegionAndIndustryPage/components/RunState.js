@@ -63,7 +63,6 @@ const RunState = props => {
         itemWidth: 20,
         formatter: function(name, option) {
           console.log('name', name)
-          debugger
           let current = data.find(item => item.name === name);
           return `${name}: ${current.value}个   ${current.rate}%`;
         },
