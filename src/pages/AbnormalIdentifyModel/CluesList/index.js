@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-30 14:03:34
+ * @Last Modified time: 2024-02-01 09:50:15
  * @Description：报警记录
  */
 
@@ -351,18 +351,16 @@ const CluesList = props => {
     <BreadcrumbWrapper>
       <Card className={styles.warningWrapper}>
         <Form
-          name="basic"
+          name="searchForm"
           form={form}
           layout="inline"
-          style={{ padding: '10px 0' }}
+          // style={{ padding: '10px 0' }}
           initialValues={{
             ...warningForm[modelNumber],
           }}
           autoComplete="off"
           // onValuesChange={onValuesChange}
           onValuesChange={(changedFields, allFields) => {
-            console.log('changedFields', changedFields);
-            console.log('allFields', allFields);
             dispatch({
               type: 'AbnormalIdentifyModel/updateState',
               payload: {
@@ -494,7 +492,7 @@ const CluesList = props => {
         <SdlTable
           rowKey="ModelWarningGuid"
           align="center"
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 10 }}
           columns={getColumns()}
           dataSource={dataSource}
           loading={queryLoading}
