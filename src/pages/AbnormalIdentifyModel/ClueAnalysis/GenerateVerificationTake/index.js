@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Card, Spin, Button, Space, Select, Badge, Tooltip, Input, Radio, Modal, Row, message, Popover, Table, Collapse, Cascader, Upload } from 'antd';
+import { Form, Card, Spin, Button, Space, Select, Badge, Tooltip, Input, Radio, Modal, Row, message, Popover, Table, Collapse, Cascader, Upload, Col } from 'antd';
 import styles from '../../styles.less';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
@@ -26,6 +26,7 @@ import 'react-quill/dist/quill.snow.css';
 import { API } from '@config/API';
 import { cookieName, uploadPrefix } from '@/config'
 import ImageView from '@/components/ImageView';
+import { useHistory } from 'react-router-dom';
 const { Panel } = Collapse;
 const textStyle = {
   width: '100%',
@@ -66,7 +67,7 @@ const Index = props => {
     pointListLoading,
     entListLoading,
     generateVerificationTakeData,
-    generateVerificationTakeData: { pageIndex, pageSize, scrollTop, type },
+    generateVerificationTakeData: { pageIndex, pageSize, scrollTop,rowKey, type },
     workTowerData,
     history,
     queryPlanLoading,
@@ -74,6 +75,7 @@ const Index = props => {
     checkRoleDatasLoading,
     planDatasLoading,
     addLoading,
+    location: { pathname },
   } = props;
   let data = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
   const currentUser = JSON.parse(Cookie.get('currentUser'));
@@ -119,7 +121,23 @@ const Index = props => {
       }
     }
   }, []);
+  const detailPath = '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail'
+  const historys = useHistory();
+  useEffect(() => {
+    const handleRouteChange = (location) => {
+      // 在这里执行你需要在路由变化时执行的代码  
+      const path = location.pathname
+      const currentPath = pathname
+      if ((path !== detailPath && path !== currentPath) || (path === detailPath && !location.search)) {
+        dispatch({
+          type: 'AbnormalIdentifyModel/updateState',
+          payload: { generateVerificationTakeData: { pageIndex: 1, pageSize: 20,  scrollTop:0,rowKey:undefined, type: 1 } },
+        })
+      }
+    };
 
+    historys.listen(handleRouteChange);
+  }, [historys]);
   // 获取数据模型列表
   const GetModelList = (callback) => {
     dispatch({
@@ -222,12 +240,14 @@ const Index = props => {
                       generateVerificationTakeData: {
                         ...generateVerificationTakeData,
                         scrollTop: scrollTop,
+                        rowKey:record.WarningCode,
+                        type:2,
                       },
                     },
                   });
-                  const data = { type: 2 }
+                  const data = {ID:record.WarningCode }
                   router.push(
-                    `/AbnormalIdentifyModel/ClueAnalysis/GenerateVerificationTake/Detail?data=${data}`
+                    `${detailPath}?data=${data}`
                   );
                 }}
               >
@@ -408,13 +428,11 @@ const Index = props => {
         setSelectedRow([])
         }
         // 设置滚动条高度，定位到点击详情的行号
-        // let currentForm = warningForm[modelNumber];
-        // let el = document.querySelector(`[data-row-key="rowKey"]`);
-        // let tableBody = document.querySelector('.ant-table-body');
-        // console.log('el', el);
-        // if (tableBody) {
-        //   el ? (tableBody.scrollTop = currentForm.scrollTop) : (tableBody.scrollTop = 0);
-        // }
+        let el = document.querySelector(`[data-row-key="${rowKey}"]`);
+        let tableBody = document.querySelector('.ant-table-body');
+        if (tableBody) {
+          el && type==2? (tableBody.scrollTop = scrollTop) : (tableBody.scrollTop = 0);
+        }
       },
     });
   };
@@ -899,12 +917,18 @@ const Index = props => {
             checkResult: 1,
           }}
         >
+          <Row>
+            <Col span={8}>
           <Form.Item label="企业">
             {selectedRow?.EntName}
           </Form.Item>
+          </Col>
+          <Col span={8}>
           <Form.Item label="排口">
             {selectedRow?.PointName}
           </Form.Item>
+          </Col>
+          <Col span={8}>
           <Form.Item name='isSceneCheck' label="现场核查" rules={[{ required: true, message: '请选择现场核查!' }]}>
             <Radio.Group
               onChange={(e) => {
@@ -920,6 +944,8 @@ const Index = props => {
               <Radio value={2}>不需要</Radio>
             </Radio.Group>
           </Form.Item>
+          </Col>
+          </Row>
           <Spin spinning={!!preTakeFlagDatasLoading} size="small" style={{ width: 440, top: -6 }}>
             <Form.Item name='preTakeFlag' label="专家意见" rules={[{ required: true, message: '请选择标记!' }]}>
               <Cascader showSearch filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 300 }} fieldNames={{ label: 'FlagName', value: 'FlagCode', children: 'ChildrenFlags' }} options={preTakeFlagDatas} placeholder="请选择标记" />
@@ -1049,6 +1075,7 @@ const Index = props => {
                     className={'resizable_quill_sty'}
                   >
                     <Form.Item name='planContent'
+                      style={{height:'100%'}}
                       rules={[
                         {
                           validator: (_, value) => {
