@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-01 09:07:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-18 11:07:47
+ * @Last Modified time: 2024-02-01 11:48:09
  * @Description：模型管理
  */
 
@@ -66,7 +66,15 @@ const General = props => {
           let parent = unfoldModelList.find(item => item.ModelGuid === key);
           if (!parent.Status) {
             // 父级是关闭状态
-            message.error(`请开启${parent.ModelName}`);
+            let parentName = `"${parent.ModelName}场景"`;
+            if (
+              parent.ModelGuid === 'DD47D527-E34F-4EAE-A9D6-908B62E6008B' ||
+              parent.ModelGuid === '438229E2-D05A-4204-BE04-1361A51BD4E6'
+            ) {
+              // 零值、恒值
+              parentName = '"零值微小波动场景"或"恒定值微小波动场景"';
+            }
+            message.warning(`请先开启${parentName}！`);
             return;
           }
         }

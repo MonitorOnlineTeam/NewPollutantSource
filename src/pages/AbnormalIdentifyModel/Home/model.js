@@ -156,15 +156,16 @@ export default Model.extend({
         let data = {};
         let EntCount = [],
           xData = [];
-        requestParams.pollutantCode.map(code => {
+        let pollutantCode = requestParams.pollutantCode.length
+          ? requestParams.pollutantCode
+          : ['01', '02', '03'];
+        pollutantCode.map(code => {
           data[code] = [];
           result.Datas.map(item => {
             data[code].push(item[code]);
-            // data[code].push(203203.123);
             if (EntCount.length !== result.Datas.length) {
               EntCount.push(item.EntCont);
-              xData.push(item.RegionName);
-              // xData.push('北京市');
+              xData.push(item.RegionName || item.IndustryTypeName);
             }
           });
         });
@@ -205,7 +206,7 @@ export default Model.extend({
         modelBaseType: payload.modelBaseType,
       });
       if (result.IsSuccess) {
-        let rankData = _.sortBy([...result.Datas], item => item.val);
+        let rankData = _.sortBy([...result.Datas], item => -item.val);
         callback && callback(rankData);
       } else {
         message.error(result.Message);

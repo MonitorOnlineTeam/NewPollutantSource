@@ -3082,6 +3082,12 @@ const routes = [
                     component: './AbnormalIdentifyModel/CluesList',
                   },
                   {
+                    // 异常线索清单
+                    name: 'CluesList',
+                    path: '/AbnormalIdentifyModel/CluesList/CluesDetails/:id',
+                    component: './AbnormalIdentifyModel/CluesList/CluesDetails',
+                  },
+                  {
                     // 线索分析
                     name: 'ClueDetails',
                     path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis',

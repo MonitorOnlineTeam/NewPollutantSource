@@ -11,6 +11,7 @@ const HomeCard = props => {
   return (
     <div className={styles.boxWrapper} style={style}>
       <Spin spinning={!!loading} style={{ display: 'flex' }}>
+      {/* <Spin spinning={true} style={{ display: 'flex' }}> */}
         <div className={styles.headerWrapper} style={headerStyle}>
           <div className={styles.title}>{title}</div>
           <div className={styles.extra}>{extra}</div>
