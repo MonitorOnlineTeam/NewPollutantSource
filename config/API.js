@@ -1054,16 +1054,13 @@ export const API = {
     GetDataQualityAnalysis: before + '/MoldHome/GetDataQualityAnalysis',
     // 排污缺口
     GetPollutantDischargeGapStatistics: before + '/MoldHome/GetPollutantDischargeGapStatistics',
-<<<<<<< HEAD
    /*历史数据综合评价 */
     // 排污缺口   
     GetPollutionDischargeGap: before + '/MoldV2/GetPollutionDischargeGap', //获取排污缺口信息
     ExportPollutionDischargeGap: before + '/MoldV2/ExportPollutionDischargeGap', //排污缺口 导出
-=======
     // 获取报警详情
     GetSingleWarning: before + '/WarningV2/GetSingleWarning',
 
->>>>>>> 452afe468c65123eaba5b9cc8b1fbc719197daa3
     /*实时数据异常识别及管理*/
     //异常线索清单
     //线索分析
@@ -1078,11 +1075,8 @@ export const API = {
     //待核查任务 已核查任务
     GetCheckedList: before + '/Clue/GetCheckedList', //获取待核查或已核查任务信息
     GetCheckedView: before + '/Clue/GetCheckedView', //核查详情
-<<<<<<< HEAD
     UpdatePlanItem: before + '/Clue/UpdatePlanItem', //核查保存或提交
     CheckConfirm: before + '/Clue/CheckConfirm', //核查确认
-=======
->>>>>>> 452afe468c65123eaba5b9cc8b1fbc719197daa3
   },
   // 唐银钢铁Api
   TYGTApi: {
