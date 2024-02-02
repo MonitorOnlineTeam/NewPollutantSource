@@ -617,7 +617,7 @@ export default Model.extend({
       if (!Guid) { //文件为空的情况
         return;
       }
-      const result = yield call(services.deleteAttach, { ...payload });
+      const result = yield call(services.deleteAttach, { ...payload,Guid:Guid });
       if (result.IsSuccess) {
         message.success('删除成功！');
       } else {

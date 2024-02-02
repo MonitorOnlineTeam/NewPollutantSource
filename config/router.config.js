@@ -3169,6 +3169,13 @@ const routes = [
                     component: './AbnormalIdentifyModel/AssistDataAnalysis',
                   },
                   {
+                    // 排污缺口
+                    name: 'PollutantDischargeGap',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/PollutantDischargeGap',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/PollutantDischargeGap',
+                  },
+                  {
                     // 统计分析
                     name: 'PointStatisticalAnalysis',
                     path: '/AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis',

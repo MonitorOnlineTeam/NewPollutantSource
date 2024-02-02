@@ -57,6 +57,7 @@ export default Model.extend({
       scrollTop:'',
       type:1,
      },
+     pollutantDischargeGapQuery:{},
   },
   effects: {
     // 获取通用库模型列表
@@ -658,6 +659,46 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    *UpdatePlanItem({ payload, callback }, { call, select, update }) { // 核查保存或提交
+      const result = yield call(services.UpdatePlanItem, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *CheckConfirm({ payload, callback }, { call, select, update }) { // 核查确认
+      const result = yield call(services.CheckConfirm, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *GetPollutionDischargeGap({ payload, callback }, { call, select, update }) { // 排污缺口
+      const result = yield call(services.GetPollutionDischargeGap, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+        yield update({
+          pollutantDischargeGapQuery:payload
+        })
+      } else {
+        message.error(result.Message);
+      }
+    },
+
+    *ExportPollutionDischargeGap({ payload, callback }, { call, select, update }) { // 排污缺口 导出
+      const result = yield call(services.ExportPollutionDischargeGap, payload);
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      } else {
+        message.error(result.Message)
+      }
+    },
+
 
   }
 });

@@ -91,8 +91,8 @@ const WorkTower = props => {
       type: 'AbnormalIdentifyModel/GetClueDatas',
       payload: {
         ...values,
-        beginTime: values.date ? values.date[0].format('YYYY-MM-DD') : undefined,
-        endTime: values.date ? values.date[1].format('YYYY-MM-DD') : undefined,
+        beginTime: values.date ? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined,
+        endTime: values.date ? values.date[1].format('YYYY-MM-DD 23:59:59') : undefined,
         date: undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
@@ -239,7 +239,7 @@ const WorkTower = props => {
           </Spin>
         </Card>
       </BreadcrumbWrapper>
-      {total && total > 0 && <div style={{ textAlign: 'right', marginTop: 12 }}>
+      {total && total > 0 ? <div style={{ textAlign: 'right', marginTop: 12 }}>
         <Pagination
           showSizeChanger
           total={total}
@@ -248,7 +248,7 @@ const WorkTower = props => {
           onChange={onTableChange}
           pageSizeOptions={['12']}
         />
-      </div>}
+      </div> : null}
     </div>
   );
 };

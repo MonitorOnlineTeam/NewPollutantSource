@@ -49,42 +49,42 @@ const Index = props => {
     pointListLoading,
     entListLoading,
     verificationTaskData,
-    verificationTaskData: { pageIndex, pageSize, scrollTop, type },
-    location:{pathname},
+    verificationTaskData: { pageIndex, pageSize, scrollTop,rowKey, type },
+    location: { pathname },
   } = props;
- const routerType = pathname==='/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask'? 1 : 2
+  const routerType = pathname === '/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask' ? 1 : 2
   const [pointList, setPointList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     form.resetFields();
-      if (type == 2) {//从详情返回
-        onFinish(pageIndex, pageSize);
-      }else{
-        onTableChange(1, 20)
-      }
+    if (type == 2) {//从详情返回
+      onFinish(pageIndex, pageSize);
+    } else {
+      onTableChange(1, 20)
+    }
 
 
   }, []);
 
-  const history = useHistory();  
-  useEffect(() => {  
-    const handleRouteChange = (location) => {  
+  const history = useHistory();
+  useEffect(() => {
+    const handleRouteChange = (location) => {
       // 在这里执行你需要在路由变化时执行的代码  
       const path = location.pathname
-      const detailPath = '/AbnormalIdentifyModel/ClueAnalysis/GenerateVerificationTake'
+      const detailPath = '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail'
       const currentPath = pathname
-      if((path !== detailPath && path !== currentPath) || (path === detailPath && !location.search)){
+      if ((path !== detailPath && path !== currentPath) || (path === detailPath && !location.search)) {
         dispatch({
           type: 'AbnormalIdentifyModel/updateState',
-          payload: { workTowerData: {pageIndex:1,pageSize:12, type: 1} },
+          payload: { verificationTaskData: { pageIndex: 1, pageSize: 20,  scrollTop:0,rowKey:undefined, type: 1 } },
         })
       }
-    };  
-  
-    history.listen(handleRouteChange);  
-  }, [history]); 
+    };
+
+    history.listen(handleRouteChange);
+  }, [history]);
 
   const getColumns = () => {
     return [
@@ -146,7 +146,7 @@ const Index = props => {
         title: '是否需要核查',
         dataIndex: 'IsRectificationRecordName',
         key: 'IsRectificationRecordName',
-        width: 200,
+        width: 120,
         ellipsis: true,
       },
       {
@@ -181,13 +181,14 @@ const Index = props => {
                       verificationTaskData: {
                         ...verificationTaskData,
                         scrollTop: scrollTop,
+                        rowKey:record.ID 
                       },
                     },
                   });
-                  const data = {id: record.ID }
+                  const data = { id: record.ID }
 
                   router.push(
-                    `/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail?id=${record.ID}`
+                    `/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail?id=${record.ID}&&type=${record.Status}`
                   );
                 }}
               >
@@ -215,19 +216,15 @@ const Index = props => {
         pageSize: pageSize
       },
       callback: res => {
-        const data = routerType == 1? res.Datas?.filter(item=>item.Status==1) : res.Datas?.filter(item=>item.Status==2)
+        const data = routerType == 1 ? res.Datas?.filter(item => item.Status == 1 || item.Status == 2) : res.Datas?.filter(item => item.Status == 3)
         setDataSource(data);
         setTotal(res.Total);
-        setSelectedRowKeys([])
-        setSelectedRow([])
         // 设置滚动条高度，定位到点击详情的行号
-        // let currentForm = warningForm[modelNumber];
-        // let el = document.querySelector(`[data-row-key="rowKey"]`);
-        // let tableBody = document.querySelector('.ant-table-body');
-        // console.log('el', el);
-        // if (tableBody) {
-        //   el ? (tableBody.scrollTop = currentForm.scrollTop) : (tableBody.scrollTop = 0);
-        // }
+        let el = rowKey&&document.querySelector(`[data-row-key='${rowKey}']`);
+        let tableBody = document.querySelector('.ant-table-body');
+        if (tableBody) {
+          el && type==2 ? (tableBody.scrollTop = scrollTop) : (tableBody.scrollTop = 0);
+        }
       },
     });
   };
@@ -243,6 +240,7 @@ const Index = props => {
           pageSize: pageSize,
           pageIndex: current,
           scrollTop: 0,
+          rowKey:undefined,
         },
       },
     });
@@ -262,22 +260,7 @@ const Index = props => {
       },
     });
   };
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRow, setSelectedRow] = useState([]);
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (newSelectedRowKeys, row) => {
-      // 如果选中的复选框数量为1，则直接更新选中状态
-      if (newSelectedRowKeys?.length === 1) {
-        setSelectedRowKeys(newSelectedRowKeys)
-      } else {
-        let diff = newSelectedRowKeys.filter(x => !selectedRowKeys.includes(x));
-        setSelectedRowKeys(diff)
-      }
-      const data = row?.[0]
-      setSelectedRow(data)
-    }
-  };
+
 
   return (<div className={styles.verificationTakeWrapper}>
     <BreadcrumbWrapper>
@@ -287,7 +270,8 @@ const Index = props => {
           form={form}
           layout="inline"
           initialValues={{
-            date: [moment().add(-1, 'months'), moment()]
+            date: [moment().add(-1, 'months'), moment()],
+            CheckStatus:routerType==2? 3 : undefined,
           }}
         >
           <Form.Item label="日期" name="date">
@@ -299,12 +283,11 @@ const Index = props => {
             />
           </Form.Item>
           <Form.Item label="行政区" name="regionCode">
-            <RegionList noFilter style={{ width: 140 }} />
+            <RegionList  style={{ width: 140 }} />
           </Form.Item>
           <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
             <Form.Item label="企业" name="entCode">
               <EntAtmoList
-                noFilter
                 style={{ width: 200 }}
                 onChange={value => {
                   if (!value) {
@@ -336,6 +319,18 @@ const Index = props => {
               </Select>
             </Form.Item>
           </Spin>
+          <Form.Item label="核查状态" name="CheckStatus" hidden={routerType == 2}>
+            {routerType == 2 ?
+               <Select>
+               <Option key={3} value={3}>已完成</Option>
+             </Select>
+              :
+              <Select placeholder='请选择' style={{ width: 100 }} allowClear>
+              <Option key={1} value={1}>待核查</Option>
+              <Option key={2} value={2}>待确认</Option>
+            </Select>
+             }
+          </Form.Item>
           <Form.Item>
             <Space>
               <Button
@@ -361,13 +356,12 @@ const Index = props => {
       </Card>
 
       <Card
-        title={<span style={{ fontWeight: 'bold' }}>{`${routerType==1?'待核查':'已核查'}任务单`}</span>}
+        title={<span style={{ fontWeight: 'bold' }}>{`${routerType == 1 ? '待核查' : '已核查'}任务单`}</span>}
         style={{ marginTop: 12 }}
       >
         <SdlTable
-          rowKey={(record, index) => `${index}`}
+          rowKey={(record, index) => `${record.ID}`}
           align="center"
-          rowSelection={rowSelection}
           columns={getColumns()}
           dataSource={dataSource}
           loading={queryLoading}

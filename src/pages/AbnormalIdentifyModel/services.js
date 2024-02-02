@@ -373,3 +373,27 @@ export async function GetCheckedView(params) {
   const result = await post(API.AbnormalIdentifyModel.GetCheckedView, params);
   return result;
 }
+// 核查保存或者提交
+export async function UpdatePlanItem(params) {
+  const result = await post(API.AbnormalIdentifyModel.UpdatePlanItem, params);
+  return result;
+}
+// 核查确认
+export async function CheckConfirm(params) {
+  const result = await post(API.AbnormalIdentifyModel.CheckConfirm, params);
+  return result;
+}
+/**
+ * 历史数据综合评价 
+ */
+// 排污缺口
+export async function GetPollutionDischargeGap(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetPollutionDischargeGap, params);
+  return result;
+}
+
+// 排污缺口 导出
+export async function ExportPollutionDischargeGap(params) {
+  const result = await post(API.AbnormalIdentifyModel.ExportPollutionDischargeGap, params);
+  return result;
+}

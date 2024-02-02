@@ -182,6 +182,13 @@ const Index = props => {
         key: 'WarningName',
         width: 180,
         ellipsis: true,
+        render: (text, record) => {
+          return (
+            <Tooltip title={text}>
+              <span style={textStyle}>{text}</span>
+            </Tooltip>
+          );
+        },
       },
       {
         title: '线索内容',
@@ -363,24 +370,43 @@ const Index = props => {
     let newData = dataSource.filter((item) => item.PlanItemCode !== record.PlanItemCode)
     setVerificationActionData(newData)
   }
+
+  function hasConsistentProperties(array, property1, property2) {
+    return array.every((obj, index, arr) => {
+      // 对于第一个对象，直接返回true
+      if (index === 0) {
+        return true;
+      }
+    
+      // 比较当前对象和前一个对象的这两个属性值
+      const prevObj = arr[index - 1];
+      return obj[property1] === prevObj[property1] &&
+             obj[property2] === prevObj[property2];
+    });
+}
+  const [selectFlag,setSelectFlag] = useState(false)
   // 查询数据
-  const onFinish = (pageIndex, pageSize) => {
+  const onFinish = (pageIndex, pageSize,pageChange) => {
     const values = form.getFieldsValue();
     props.dispatch({
       type: 'AbnormalIdentifyModel/GetWaitCheckDatas',
       payload: {
         ...values,
         date: undefined,
-        beginTime: values.date ? values.date[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
-        endTime: values.date ? values.date[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        beginTime: values.date ? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined,
+        endTime: values.date ? values.date[1].format('YYYY-MM-DD 23:59:59') : undefined,
         pageIndex: pageIndex,
         pageSize: pageSize
       },
       callback: res => {
+        const falg = hasConsistentProperties(res.Datas, 'DGIMN', 'WarningName')
+        setSelectFlag(falg)
         setDataSource(res.Datas);
         setTotal(res.Total);
+        if(!pageChange){
         setSelectedRowKeys([])
         setSelectedRow([])
+        }
         // 设置滚动条高度，定位到点击详情的行号
         // let currentForm = warningForm[modelNumber];
         // let el = document.querySelector(`[data-row-key="rowKey"]`);
@@ -395,7 +421,7 @@ const Index = props => {
 
 
   // 分页
-  const onTableChange = (current, pageSize) => {
+  const onTableChange = (current, pageSize,query) => {
     props.dispatch({
       type: 'AbnormalIdentifyModel/updateState',
       payload: {
@@ -407,7 +433,7 @@ const Index = props => {
         },
       },
     });
-    onFinish(current, pageSize);
+    onFinish(current, pageSize,query=='query'? '':'pageChange');
   };
 
   // 根据企业获取排口
@@ -478,10 +504,10 @@ const Index = props => {
           setPlanDatas(res);
         }
       });
-      setSelectedRowKeys([]);
 
 
     } else {
+      setSelectedRowKeys([]);
       setSelectedRow([]);
       setPreTakeFlagDatas([])
       setCheckRoleDatas([])
@@ -493,17 +519,15 @@ const Index = props => {
     const validateFieldsFun = async () => {
       const modalValues = await modalForm.validateFields();
       if (siteVerificationPlanType == 1) { //现场核查
-        if (verificationActionData?.lenght == 0) {
-          message.warning('请输入核查动作')
+        if (verificationActionData?.length == 0) {
+          message.error('请新增核查动作')
           return;
         }
       }
       const parData = {
         planAction: type,
         createUserId: currentUser?.User_ID,
-        dgimn: selectedRow?.DGIMN,
-        warningTypeCode: selectedRow?.WarningCode,
-        warningTime: selectedRow.ClueTime,
+        warningCodes: selectedRowKeys?.[0]? selectedRowKeys.toString() : '',
         isSceneCheck: modalValues.isSceneCheck,
         isSavePlan: modalValues.isSavePlan,
         preTakeFlag: modalValues.preTakeFlag?.length ? modalValues.preTakeFlag[modalValues.preTakeFlag.length - 1] : undefined,
@@ -543,20 +567,24 @@ const Index = props => {
       validateFieldsFun()
     }
   }
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRow, setSelectedRow] = useState([]);
+  const [selectedRow, setSelectedRow] = useState({});
   const rowSelection = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys, row) => {
-      // 如果选中的复选框数量为1，则直接更新选中状态
-      if (newSelectedRowKeys?.length === 1) {
-        setSelectedRowKeys(newSelectedRowKeys)
-      } else {
-        let diff = newSelectedRowKeys.filter(x => !selectedRowKeys.includes(x));
-        setSelectedRowKeys(diff)
+      console.log(newSelectedRowKeys, row)
+      if(selectedRowKeys?.length==0 || newSelectedRowKeys?.length==0 ){ //还未选中 或 全部取消
+      setSelectedRowKeys(newSelectedRowKeys)
+      setSelectedRow(row?.[0])
+      }else{ 
+        const currentRow = row?.[row?.length-1]
+        if(currentRow?.['DGIMN']==selectedRow['DGIMN'] && currentRow?.['WarningName']==selectedRow['WarningName']){
+          setSelectedRowKeys(newSelectedRowKeys)
+        }else{
+          message.error('同一企业同一排口同一场景下才能同时选中并生成核查方案')
+        }
       }
-      const data = row?.[0]
-      setSelectedRow(data)
     }
   };
   const [selectedPlanRowKeys, setSelectedPlanRowKeys] = useState([]);
@@ -652,10 +680,16 @@ const Index = props => {
       if (info.file.status === 'uploading') {
         setFilesList({ ...filesList, [files]: fileList })
       }
-      if (info.file.status === 'done' || info.file.status === 'removed' || info.file.status === 'error') {
+      if (info.file.status === 'removed' || info.file.status === 'error') {
         setFilesList({ ...filesList, [files]: fileList })
-        modalForm.setFieldsValue({ [files]: filesCuid() })
-        info.file.status === 'done' && message.success('上传成功！')
+        if(info.file.status === 'done'){
+          if(info.file?.response?.IsSuccess){
+            modalForm.setFieldsValue({ [files]: filesCuid() })
+            message.success('上传成功！')
+          }else{
+            message.error(info.file?.response?.Message)
+          }
+        }
         info.file.status === 'error' && message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
       }
     },
@@ -715,12 +749,11 @@ const Index = props => {
             />
           </Form.Item>
           <Form.Item label="行政区" name="regionCode">
-            <RegionList noFilter style={{ width: 140 }} />
+            <RegionList  style={{ width: 140 }} />
           </Form.Item>
           <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
             <Form.Item label="企业" name="entCode">
               <EntAtmoList
-                noFilter
                 style={{ width: 200 }}
                 onChange={value => {
                   if (!value) {
@@ -779,7 +812,7 @@ const Index = props => {
                 type="primary"
                 loading={queryLoading}
                 onClick={() => {
-                  onTableChange(1, 20);
+                  onTableChange(1, 20,'query');
                 }}
               >
                 查询
@@ -787,7 +820,7 @@ const Index = props => {
               <Button
                 onClick={() => {
                   form.resetFields();
-                  onTableChange(1, 20);
+                  onTableChange(1, 20,'query');
                 }}
               >
                 重置
@@ -802,8 +835,9 @@ const Index = props => {
         style={{ marginTop: 12 }}
       >
         <Button style={{ marginBottom: 12 }} type='primary' onClick={() => { generateVerificationTakeFun() }} >生成核查方案</Button>
+        <span style={{color:'#f5222d',paddingLeft:8}}>注：同一企业同一排口同一场景下才能同时选中并生成核查方案</span>
         <SdlTable
-          rowKey={(record, index) => `${index}`}
+          rowKey={(record, index) => `${record.WarningCode}`}
           align="center"
           rowSelection={rowSelection}
           columns={getColumns()}
@@ -818,6 +852,7 @@ const Index = props => {
             onChange: onTableChange,
             total: total,
           }}
+          className={selectFlag? '': 'noSelectAllSty' }
         />
       </Card>
       <Modal
@@ -886,8 +921,8 @@ const Index = props => {
             </Radio.Group>
           </Form.Item>
           <Spin spinning={!!preTakeFlagDatasLoading} size="small" style={{ width: 440, top: -6 }}>
-            <Form.Item name='preTakeFlag' label="专家意见" rules={[{ required: true, message: '请选择专家意见!' }]}>
-              <Cascader showSearch filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 300 }} fieldNames={{ label: 'FlagName', value: 'FlagCode', children: 'ChildrenFlags' }} options={preTakeFlagDatas} placeholder="请选择" />
+            <Form.Item name='preTakeFlag' label="专家意见" rules={[{ required: true, message: '请选择标记!' }]}>
+              <Cascader showSearch filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 300 }} fieldNames={{ label: 'FlagName', value: 'FlagCode', children: 'ChildrenFlags' }} options={preTakeFlagDatas} placeholder="请选择标记" />
             </Form.Item>
           </Spin>
           {siteVerificationPlanType == 1 ?
@@ -945,8 +980,6 @@ const Index = props => {
                         onClick={() => {
                           if (selectedPlanRowKeys?.length > 0) {
                             setPlanPopVisible(false);
-                            setSelectedPlanRowKeys([]);
-                            setSelectedPlanRow([])
                             setCollapsekey('1');
                             setTimeout(() => {
                               if (selectedPlanRow?.PlanItemDatas?.[0]) {
@@ -982,7 +1015,10 @@ const Index = props => {
                                   setFilesCuidList({ ...uploadCuid })
                                 }
                               }
+                              setSelectedPlanRowKeys([]);
+                              setSelectedPlanRow([])
                             }, 0)
+                            
                           } else {
                             message.warning('请选择核查方案')
                           }
@@ -1053,7 +1089,7 @@ const Index = props => {
             </>
             :
             <>
-              <Form.Item name='checkResult' label="核查结果与线索是否符合" rules={[{ required: true, message: '请选择是否保存到方案库!' }]}>
+              <Form.Item name='checkResult' label="核查结果与线索是否符合" rules={[{ required: true, message: '请选择核查结果与线索是否符合!' }]}>
                 <Radio.Group>
                   <Radio value={1}>符合</Radio>
                   <Radio value={2}>部分符合</Radio>
