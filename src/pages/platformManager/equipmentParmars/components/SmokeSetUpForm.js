@@ -38,38 +38,29 @@ const  dvaDispatch = (dispatch) => {
 const SmokeSetUpForm = (props) => {
   const [setform] = Form.useForm();
   const { DGIMN, formLoading} = props;
-  const [formList,setFormList] = useState(); 
-
-  const formLists = {
-    ID:'',
-    PitotCoefficient:'',
-    VelocityCoefficient: '',
-    FlueCoefficient: '',
-    Slope: '',
-    Intercept: '',
-    Atmos: '',
-    AirCoefficient: '',
-    Remark: ''
-   }
+    
     useEffect(() => {
     if(DGIMN){
+      
+      
       props.getEquipmentParameters({DGIMN:DGIMN},(res)=>{
-         
         if(res){
-        setform.setFieldsValue({
-        ID:res.ID,
-        PitotCoefficient: res.PitotCoefficient,
-        VelocityCoefficient: res.VelocityCoefficient,
-        FlueCoefficient: res.FlueCoefficient,
-        Slope: res.Slope,
-        Intercept: res.Intercept,
-        Atmos: res.Atmos,
-        AirCoefficient: res.AirCoefficient,
-        Remark: res.Remark
-       })
-      }else{
-        setform.setFieldsValue({...formLists})
-      }
+          setform.setFieldsValue({
+            ID:res.ID,
+            PitotCoefficient: res.PitotCoefficient,
+            VelocityCoefficient: res.VelocityCoefficient,
+            FlueCoefficient: res.FlueCoefficient,
+            Slope: res.Slope,
+            Intercept: res.Intercept,
+            Atmos: res.Atmos,
+            AirCoefficient: res.AirCoefficient,
+            Remark: res.Remark
+            })
+          }else{
+           setform.resetFields()
+          }
+
+
       })
     }
 
@@ -144,8 +135,8 @@ const SmokeSetUpForm = (props) => {
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="标准过量空气系数" name="AirCoefficient" rules={[{ required: false,message: '请输入标准过量空气系数!', } ]}>
-        <InputNumber placeholder='请输入标准过量空气系数'/>
+      <Form.Item label="基准氧含量（单位：%，过量空气系数请转换成基准氧含量）"  name="AirCoefficient" rules={[{ required: false,message: '请输入基准氧含量!', } ]}>
+        <InputNumber placeholder='请输入基准氧含量'/>
       </Form.Item>
       </Col>
       <Col>

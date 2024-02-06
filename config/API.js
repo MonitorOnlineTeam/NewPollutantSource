@@ -1008,6 +1008,41 @@ export const API = {
     // 海康云台操作
     PTZControl: before + '/VideoApi/PTZControl',
   },
+  //异常数据模型分析 Api
+  AbnormalModelAnalysisApi: {
+    /**设备参数管理**/
+    GetEquipmentParametersInfo: before + '/EquipmentApi/GetEquipmentParametersInfo', //获取量程设定信息
+    GetParametersInfo: before + '/EquipmentApi/GetParametersInfo', //获取测量参数信息
+    AddOrUpdateEquipmentParametersInfo: before + '/EquipmentApi/AddOrUpdateEquipmentParametersInfo', //添加更新量程设定信息
+    DeleteEquipmentParametersInfo: before + '/EquipmentApi/DeleteEquipmentParametersInfo', //删除量程设定信息
+    GetEquipmentParameters: before + '/EquipmentApi/GetEquipmentParameters', //获取烟气流量、颗粒物参数、其他参数设定信息
+    AddOrUpdateEquipmentParameters: before + '/EquipmentApi/AddOrUpdateEquipmentParameters', //添加更新烟气流量、颗粒物参数、其他参数设定信息
+    /**异常精准识别核实整改率**/
+    /*核实率*/
+    GetModelWarningCheckedForRegion: before + '/Warning/GetModelWarningCheckedForRegion', //行政区 列表
+    GetModelWarningCheckedForCity: before + '/Warning/GetModelWarningCheckedForCity', //市 列表
+    GetModelWarningCheckedForEnt: before + '/Warning/GetModelWarningCheckedForEnt', //企业 列表
+    GetModelWarningCheckedForPoint: before + '/Warning/GetModelWarningCheckedForPoint', //监测点 列表
+    ExportModelWarningCheckedForRegion: before + '/Warning/ExportModelWarningCheckedForRegion', //行政区 导出
+    ExportModelWarningCheckedForCity: before + '/Warning/ExportModelWarningCheckedForCity', //市 导出
+    ExportModelWarningCheckedForEnt: before + '/Warning/ExportModelWarningCheckedForEnt', //企业 导出
+    /*整改率*/
+    GetModelWarningCheckedRectificationForRegion:
+      before + '/Warning/GetModelWarningCheckedRectificationForRegion', //行政区 列表
+    GetModelWarningCheckedRectificationForCity:
+      before + '/Warning/GetModelWarningCheckedRectificationForCity', //市 列表
+    GetModelWarningCheckedRectificationForEnt:
+      before + '/Warning/GetModelWarningCheckedRectificationForEnt', //企业 列表
+    GetModelWarningCheckedRectificationForPoint:
+      before + '/Warning/GetModelWarningCheckedRectificationForPoint', //监测点 列表
+    GetCheckedRectificationApprovals: before + '/Warning/GetCheckedRectificationApprovals', //整改详情
+    ExportModelWarningCheckedRectificationForRegion:
+      before + '/Warning/ExportModelWarningCheckedRectificationForRegion', //行政区 导出
+    ExportModelWarningCheckedRectificationForCity:
+      before + '/Warning/ExportModelWarningCheckedRectificationForCity', //市 导出
+    ExportModelWarningCheckedRectificationForEnt:
+      before + '/Warning/ExportModelWarningCheckedRectificationForEnt', //企业 导出
+  },
   // 异常数据识别模型Api
   AbnormalIdentifyModel: {
     // 获取线索列表
@@ -1054,7 +1089,7 @@ export const API = {
     GetDataQualityAnalysis: before + '/MoldHome/GetDataQualityAnalysis',
     // 排污缺口
     GetPollutantDischargeGapStatistics: before + '/MoldHome/GetPollutantDischargeGapStatistics',
-   /*历史数据综合评价 */
+    /*历史数据综合评价 */
     // 排污缺口
     GetPollutionDischargeGap: before + '/MoldV2/GetPollutionDischargeGap', //获取排污缺口信息
     ExportPollutionDischargeGap: before + '/MoldV2/ExportPollutionDischargeGap', //排污缺口 导出
