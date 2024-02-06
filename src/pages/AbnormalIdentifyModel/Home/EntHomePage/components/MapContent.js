@@ -123,7 +123,7 @@ class MapContent extends PureComponent {
       <div style={{ position: 'relative', marginTop: 24 }}>
         <div className={styles.entPopWrapper}>
           <div className="textOverflow">{currentEntName}</div>
-          <div className={styles.pointName}>{extData.position.PointName}</div>
+          <div className={`${styles.pointName} textOverflow`}>{extData.position.PointName}</div>
         </div>
         {this.getIcon(extData.position.Status)}
       </div>

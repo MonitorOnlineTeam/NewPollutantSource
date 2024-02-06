@@ -2,13 +2,13 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-01 09:50:15
+ * @Last Modified time: 2024-02-06 10:44:01
  * @Description：报警记录
  */
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Card, Spin, Button, Space, Select, Badge, Tooltip } from 'antd';
+import { Form, Input, InputNumber, Card, Spin, Button, Space, Select, Badge, Tooltip } from 'antd';
 import styles from '../styles.less';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
@@ -63,7 +63,6 @@ const CluesList = props => {
     if (modelNumber) {
       if (modelMenuNumber === modelNumber) {
         // 页面没跳转
-        debugger;
         onFinish();
       } else {
         // 页面跳转，清空查询条件并重置分页
@@ -82,7 +81,6 @@ const CluesList = props => {
     if (warningForm[modelNumber].EntCode) {
       getPointList(warningForm[modelNumber].EntCode);
     }
-
     props.dispatch({
       type: 'AbnormalIdentifyModel/updateState',
       payload: {
@@ -92,6 +90,11 @@ const CluesList = props => {
 
     console.log('modelNumber', modelNumber);
   }, [modelNumber]);
+
+  useEffect(() => {
+    form.setFieldsValue({ ...warningForm[modelNumber] });
+  }, [warningForm[modelNumber]]);
+
   console.log('warningForm', warningForm);
   // 获取数据模型列表
   const GetModelList = () => {
@@ -331,7 +334,8 @@ const CluesList = props => {
     }, 0);
     // onFinish();
   };
-
+  console.log('warningForm', warningForm);
+  console.log('111', form.getFieldsValue());
   // 根据企业获取排口
   const getPointList = EntCode => {
     dispatch({
@@ -341,9 +345,9 @@ const CluesList = props => {
       },
       callback: res => {
         setPointList(res);
-        form.setFieldsValue({
-          ...warningForm[modelNumber],
-        });
+        // form.setFieldsValue({
+        //   ...warningForm[modelNumber],
+        // });
       },
     });
   };
@@ -361,6 +365,15 @@ const CluesList = props => {
           autoComplete="off"
           // onValuesChange={onValuesChange}
           onValuesChange={(changedFields, allFields) => {
+            debugger;
+            // let changedFields_temp = { ...changedFields };
+            // if (!changedFields_temp.EntCode) {
+            //   changedFields_temp.DGIMN = undefined;
+            // }
+            let DGIMN = allFields.DGIMN;
+            if (!allFields.EntCode || changedFields.EntCode ) {
+              DGIMN = undefined;
+            }
             dispatch({
               type: 'AbnormalIdentifyModel/updateState',
               payload: {
@@ -369,6 +382,7 @@ const CluesList = props => {
                   [modelNumber]: {
                     ...props.warningForm[modelNumber],
                     ...changedFields,
+                    DGIMN,
                   },
                 },
               },
@@ -396,6 +410,7 @@ const CluesList = props => {
                     onChange={value => {
                       if (!value) {
                         form.setFieldsValue({ DGIMN: undefined });
+                        setPointList([]);
                       } else {
                         form.setFieldsValue({ DGIMN: undefined });
                         getPointList(value);
@@ -480,7 +495,8 @@ const CluesList = props => {
                     },
                   }).then(() => {
                     form.resetFields();
-                    onTableChange(1, 20);
+                    // onTableChange(1, 20);
+                    onFinish();
                   });
                 }}
               >

@@ -160,10 +160,7 @@ export async function GetSingleWarning(params) {
 
 // 获取模型快照数据
 export async function GetSnapshotData(params) {
-  const result = await post(
-    '/newApi/rest/PollutantSourceApi/Warning/GetSnapshotData?ID=' + params.ID,
-    {},
-  );
+  const result = await post(`${API.AbnormalIdentifyModel.GetSnapshotData}?ID=${params.ID}`, {});
   return result;
 }
 
@@ -384,7 +381,7 @@ export async function CheckConfirm(params) {
   return result;
 }
 /**
- * 历史数据综合评价 
+ * 历史数据综合评价
  */
 // 排污缺口
 export async function GetPollutionDischargeGap(params) {

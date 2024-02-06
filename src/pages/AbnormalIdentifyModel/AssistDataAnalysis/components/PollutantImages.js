@@ -141,6 +141,7 @@ const Index = props => {
         beginTime: moment(updateDate[pollutantCode][0]).format('YYYY-MM-DD 00:00:00'),
         endTime: moment(updateDate[pollutantCode][1]).format('YYYY-MM-DD 23:59:59'),
         updateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        isStop: type === 'stop' ? 1 : 0,
       },
       callback: () => {
         getImages();

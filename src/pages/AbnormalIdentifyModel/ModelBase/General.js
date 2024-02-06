@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-01 09:07:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-01 11:48:09
+ * @Last Modified time: 2024-02-05 15:21:54
  * @Description：模型管理
  */
 
@@ -305,6 +305,8 @@ const General = props => {
               {item.ModelBaseList && item.ModelBaseList.length > 1 ? (
                 // 三级
                 <SdlTable
+                  //           tableLayout="auto"
+                  // style={{ display: 'table' }}
                   loading={loading}
                   columns={getColumns()}
                   dataSource={item.ModelBaseList}

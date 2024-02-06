@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-09-14 10:37:10
+ * @Last Modified time: 2024-02-02 14:47:38
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
@@ -134,9 +134,9 @@ const ModelChartMultiple = props => {
   return (
     <>
       <div className={styles.chartBox}>
-        <Tooltip title="点击放大图表" onClick={() => onShowMoreDataModal()}>
+        {/* <Tooltip title="点击放大图表" onClick={() => onShowMoreDataModal()}>
           <div style={{ height: 34, width: '100%', position: 'absolute', zIndex: 1 }}></div>
-        </Tooltip>
+        </Tooltip> */}
         {/* {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>} */}
         <ReactEcharts
           option={getOption()}

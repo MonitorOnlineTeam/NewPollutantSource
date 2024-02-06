@@ -31,6 +31,7 @@ import { RollbackOutlined, SyncOutlined, ExclamationCircleOutlined } from '@ant-
 // import { ModalNameConversion } from '@/pages/DataAnalyticalWarningModel/CONST';
 import moment from 'moment';
 import locale from 'antd/es/date-picker/locale/zh_CN';
+import ModelParamsConfig from './components/ModelParamsConfig';
 
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
@@ -271,31 +272,29 @@ const Setting = props => {
     baseForm
       .validateFields()
       .then(async values => {
-        // let modelParamsData = await childRef.current.onFinish();
-        // if (modelParamsData.dataAttribute !== false) {
-
-        // }
-
-        let body = {
-          modelInfo: {
-            ...ModelInfoAndParams.modelInfo,
-            // AbnormalNum: modelParamsData.AbnormalNum,
-            // IsCAbnormal: modelParamsData.IsCAbnormal,
-            modelGuid: ID,
-            ...values,
-          },
-          dataAttribute: [],
-          // dataAttribute: modelParamsData.dataAttribute,
-        };
-        console.log('body', body);
-        // return;
-        dispatch({
-          type: 'AbnormalIdentifyModel/SaveModelInfoAndParams',
-          payload: body,
-          callback: () => {
-            GetModelInfoAndParams();
-          },
-        });
+        let modelParamsData = await childRef.current.onFinish();
+        debugger;
+        if (modelParamsData.dataAttribute !== false) {
+          console.log('modelParamsData', modelParamsData);
+          // return;
+          let body = {
+            modelInfo: {
+              ...ModelInfoAndParams.modelInfo,
+              modelGuid: ID,
+              ...values,
+            },
+            dataAttribute: modelParamsData.dataAttribute,
+          };
+          console.log('body', body);
+          // return;
+          dispatch({
+            type: 'AbnormalIdentifyModel/SaveModelInfoAndParams',
+            payload: body,
+            callback: () => {
+              GetModelInfoAndParams();
+            },
+          });
+        }
       })
       .catch(errorInfo => {
         // message.warning('请输入完整的数据');
@@ -433,6 +432,7 @@ const Setting = props => {
               </Row>
             </Form>
           </Card>
+          <ModelParamsConfig ModelID={ID} Data={ModelInfoAndParams} onRef={childRef} />
           {
             <Divider orientation="right" style={{ color: '#f6f0f0' }}>
               <Space>
@@ -443,6 +443,7 @@ const Setting = props => {
             </Divider>
           }
         </div>
+
         <Card
           title={<div className={styles.title}>关联排口</div>}
           style={{ marginTop: 10 }}

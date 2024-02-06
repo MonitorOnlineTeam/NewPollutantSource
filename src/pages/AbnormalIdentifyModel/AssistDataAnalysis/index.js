@@ -14,7 +14,7 @@ const dvaPropsData = ({ loading, dataModel }) => ({});
 
 const AssistDataAnalysis = props => {
   const [form] = Form.useForm();
-  const { dispatch, displayType, loadLoading, saveLoading } = props;
+  const { dispatch, displayType, loadLoading, saveLoading, dataChartParams } = props;
   const [DGIMN, setDGIMN] = useState(props.DGIMN);
   // const [images, setImages] = useState([]);
 
@@ -40,13 +40,15 @@ const AssistDataAnalysis = props => {
   const getPageContent = () => {
     return (
       <Card>
-        <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '5'}>
-          {/* <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '2'}> */}
+        {/* <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '5'}> */}
+        <Tabs defaultActiveKey={'5'}>
           <Tabs.TabPane tab="数据工况" key="5" style={{ overflowY: 'auto' }}>
             <WarningDataAndChart
               DGIMN={DGIMN}
               date={[moment().subtract(1, 'week'), moment()]}
-              defaultChartSelected={['氧含量', '烟气湿度', '烟气温度', '流速']}
+              // defaultChartSelected={['氧含量', '烟气湿度', '烟气温度', '流速']}
+              defaultChartSelected={['s01', 's05', 's03', 's02']}
+              {...dataChartParams}
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="正常范围" key="1" style={{ overflowY: 'auto' }}>
@@ -62,7 +64,12 @@ const AssistDataAnalysis = props => {
             <CorrelationCoefficient DGIMN={DGIMN} />
           </Tabs.TabPane>
           <Tabs.TabPane tab="数据现象" key="6" style={{ overflowY: 'auto' }}>
-            <DataPhenomena DGIMN={DGIMN} />
+            <DataPhenomena
+              date={dataChartParams.date || [moment().subtract(1, 'day'), moment()]}
+              DGIMN={DGIMN}
+              echartBoxHeight={displayType === 'modal' ? 'calc(100vh - 200px)' : ''}
+              tableHeight={displayType === 'modal' ? 'calc(100vh - 200px)' : ''}
+            />
           </Tabs.TabPane>
         </Tabs>
       </Card>
@@ -99,6 +106,10 @@ const AssistDataAnalysis = props => {
       </div>
     </>
   );
+};
+
+AssistDataAnalysis.defaultProps = {
+  dataChartParams: {},
 };
 
 export default connect(dvaPropsData)(AssistDataAnalysis);

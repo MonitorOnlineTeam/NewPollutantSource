@@ -19,6 +19,7 @@ export default Model.extend({
         yield update({
           tableDatas:result.Datas
         })
+        console.log(result.Datas,11111)
         callback(result.Datas)
       }
 
@@ -26,10 +27,9 @@ export default Model.extend({
     *getParametersInfo({ payload,callback }, { call, put, update }) { //下拉列表的 测量参数
       const result = yield call(services.GetParametersInfo, payload);
       if (result.IsSuccess) {
-        callback(result.Datas);
-        // yield update({
-        //   parametersList:result.Datas
-        // })
+        yield update({
+          parametersList:result.Datas
+        })
       }
 
     },

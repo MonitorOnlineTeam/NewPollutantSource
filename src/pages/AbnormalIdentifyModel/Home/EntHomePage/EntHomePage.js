@@ -31,7 +31,9 @@ const RegionAndIndustryPage = props => {
 
   return (
     <div className={styles.ScreenWrapper}>
-      <header className={styles.header}>{currentEntName}</header>
+      <header className={styles.header}>
+        <span className={styles.entName}>{currentEntName}</span>
+      </header>
       {/* <Tooltip title="返回">
         <RollbackOutlined
           style={{

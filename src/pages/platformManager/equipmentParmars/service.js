@@ -1,37 +1,36 @@
 import { post, get, getNew } from '@/utils/request';
 import { API } from '@config/API'
 
-// 获取测量参数列表
+// 获取量程设定列表 
 export async function GetEquipmentParametersInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/GetEquipmentParametersInfo?DGIMN='+params.DGIMN, {}, null);
+  const result = await post(`${API.AbnormalModelAnalysisApi.GetEquipmentParametersInfo}?DGIMN=${params.DGIMN}`, {}, null);
   return result;
 }
 
 // 获取下拉列表框中的测量参数
 export async function GetParametersInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/GetParametersInfo?PolltantType='+params.PolltantType+"&&DGIMN="+params.DGIMN, {}, null);
+  const result = await post(`${API.AbnormalModelAnalysisApi.GetParametersInfo}?PolltantType=${params.PolltantType}`, {}, null);
   return result;
 }
 
-// 添加 or 修改
+// 添加 or 修改 量程设定
 export async function AddOrUpdateEquipmentParametersInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/AddOrUpdateEquipmentParametersInfo', params, null);
+  const result = await post(API.AbnormalModelAnalysisApi.AddOrUpdateEquipmentParametersInfo, params, null);
   return result;
 }
 
-// 删除
+// 删除 量程设定
 export async function DeleteEquipmentParametersInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/DeleteEquipmentParametersInfo/'+params.ID, {}, null);
+  const result = await post(`${API.AbnormalModelAnalysisApi.DeleteEquipmentParametersInfo}?ID=${params.ID}`, {}, null);
   return result;
 }
-
-// 添加 or 修改 设定参数
-export async function AddOrUpdateEquipmentParameters(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/AddOrUpdateEquipmentParameters', params, null);
-  return result;
-}
-// 获取 设定 参数
+// 获取 烟气流量、颗粒物参数、其他参数设定
 export async function GetEquipmentParameters(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/GetEquipmentParameters?DGIMN='+params.DGIMN, {}, null);
+  const result = await post(`${API.AbnormalModelAnalysisApi.GetEquipmentParameters}?DGIMN=${params.DGIMN}`, {}, null);
+  return result;
+}
+// 添加 or 修改 烟气流量、颗粒物参数、其他参数设定
+export async function AddOrUpdateEquipmentParameters(params) {
+  const result = await post(API.AbnormalModelAnalysisApi.AddOrUpdateEquipmentParameters, params, null);
   return result;
 }
