@@ -225,7 +225,7 @@ const WorkTower = props => {
                         const data = {beginTime:queryPar?.beginTime,endTime:queryPar?.endTime, entCode: item.EntCode, dgimn: item.DGIMN, warningCode: typeItem.WarningCode }
                         props.dispatch({
                           type: 'AbnormalIdentifyModel/updateState',
-                          payload: { generateVerificationTakeData: { ...generateVerificationTakeData, type: 2 } },
+                          payload: { generateVerificationTakeData: { ...generateVerificationTakeData, type: 1 } },
                         });
                         router.push(`/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake?data=${JSON.stringify(data)}`);
                       }}
