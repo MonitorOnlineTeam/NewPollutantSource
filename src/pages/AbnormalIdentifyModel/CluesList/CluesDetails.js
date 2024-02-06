@@ -18,10 +18,14 @@ import styles from '../styles.less';
 import { RollbackOutlined } from '@ant-design/icons';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import ImageView from '@/components/ImageView';
-// import WarningDataModal from './WarningDataModal';
+import WarningDataModal from './WarningDataModal';
 import moment from 'moment';
 import { ChartDefaultSelected, getPollutantNameByCode, ModalNameConversion } from '../CONST';
 import _ from 'lodash';
+import ModelTable from './components/ModelTable';
+import WarningDataAndChart from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis/components/WarningDataAndChart.js';
+import ModelChartMultiple from './components/ModelChart-multiple';
+import ModelChartLinear from './components/ModelChart-Linear';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   warningInfoLoading: loading.effects['AbnormalIdentifyModel/GetSingleWarning'],
@@ -36,6 +40,7 @@ const CluesDetails = props => {
   const [dataModalVisible, setDataModalVisible] = useState(false);
   const [warningDataDate, setWarningDataDate] = useState();
   const [warningDate, setWarningDate] = useState([]);
+  const [searchDate, setSearchDate] = useState([]);
   const [rtnFinal, setRtnFinal] = useState([]);
   const [imageIndex, setImageIndex] = useState();
   const [warningInfo, setWarningInfo] = useState({});
@@ -49,6 +54,12 @@ const CluesDetails = props => {
   const [timeList, setTimeList] = useState([]);
   const [snapshotData, setSnapshotData] = useState({});
   const [images, setImages] = useState([]);
+  const [chartData, setChartData] = useState();
+  //   // 图表
+  //   BeginTime: '',
+  //   EndTime: '',
+  //   PollutantCodeList: [],
+  // });
 
   useEffect(() => {
     loadData();
@@ -90,7 +101,7 @@ const CluesDetails = props => {
 
           setFileList(_fileList);
           setRectFileList(rectFileList);
-          // GetSnapshotData(res.WarningTypeCode);
+          GetSnapshotData(res.WarningTypeCode);
         }
       },
     });
@@ -105,36 +116,77 @@ const CluesDetails = props => {
       },
       callback: res => {
         if (res.chartData) {
-          // setModelChartDatas(res.chartData);
-          // handleLinearDatas(res.chartData, WarningTypeCode);
-        } else {
+          // 线性图
+          setModelChartDatas(res.chartData);
+          handleLinearDatas(res.chartData, WarningTypeCode);
+        }
+        if (res.PollutantList && res.BeginTime && res.EndTime) {
+          // 图表
+          setChartData(res);
+        }
+        if (res.rtnFinal) {
+          // 表格
           setRtnFinal(res.rtnFinal);
           let tableDatas = processJSONData(res.rtnFinal);
           setModelTableDatas(tableDatas);
-          // setModelTableDatas({
-          //   Column: res.Column,
-          //   Data: res.Data,
-          // });
         }
         setModelDescribe(res.describe);
-        setSnapshotData(res);
+        // setSnapshotData(res);
         // 处理恒定值报警时间线
-        if (res.timeListByCode) {
-          let timeList = res.timeListByCode;
-          let newTimeList = [];
-          for (const key in timeList) {
-            timeList[key].map(item => {
-              newTimeList.push({
-                pollutantCode: key,
-                time: item.split('~'),
-              });
-            });
-          }
-          console.log('newTimeList', newTimeList);
-          setTimeList(newTimeList);
-        }
+        // if (res.timeListByCode) {
+        //   let timeList = res.timeListByCode;
+        //   let newTimeList = [];
+        //   for (const key in timeList) {
+        //     timeList[key].map(item => {
+        //       newTimeList.push({
+        //         pollutantCode: key,
+        //         time: item.split('~'),
+        //       });
+        //     });
+        //   }
+        //   console.log('newTimeList', newTimeList);
+        //   setTimeList(newTimeList);
+        // }
       },
     });
+  };
+
+  // 处理线性系数数据
+  const handleLinearDatas = (chartData, WarningTypeCode) => {
+    let linearDatas = [];
+    chartData.map(chart => {
+      if (chart.linear) {
+        let data = [];
+        let names = [];
+        if (chart.data.length > 1) {
+          // let allData = [];
+          let values = chart.data.map(item => {
+            // allData = allData.concat(item.data);
+            // allData = _.concat(allData, item.data);
+            names.push(item.PointName || item.pollutantName);
+            return item.data;
+          });
+          // console.log('allData', allData);
+          data = values[0].map((item, index) => {
+            let arr = [];
+            chart.data.map(itm => {
+              arr.push(itm.data[index]);
+            });
+            return arr;
+          });
+        }
+        linearDatas.push({
+          title: chart.title.replace('趋势', '线性'),
+          linear: chart.linear,
+          data: data,
+          names: names,
+          startPoint: chart.startPoint,
+          endPoint: chart.endPoint,
+        });
+      }
+    });
+
+    setLinearDatas(linearDatas);
   };
 
   // 表格数据：相同Column数据合并
@@ -159,6 +211,87 @@ const CluesDetails = props => {
     });
 
     return mergedData;
+  };
+
+  // 查看报警数据
+  const onViewWarningData = () => {
+    // 表格模型
+    if (modelTableDatas.length) {
+      let tableData = modelTableDatas[0];
+      if (tableData.Data.length && tableData.Data[0]) {
+        // 排序
+        let sortTableData = tableData.Data.sort((a, b) => new Date(a.Time) - new Date(b.Time));
+        let startDate = sortTableData[0].Time;
+        let endData = tableData.Data.slice(-1)[0].Time;
+
+        // 报警时间
+        if (tableData.Data[1]) {
+          setWarningDate([
+            {
+              // name: '异常开始时间',
+              name: `开始\n`,
+              date: moment(startDate).format('YYYY-MM-DD HH:mm'),
+            },
+            {
+              // name: '异常结束时间',
+              name: `结束\n`,
+              date: moment(endData).format('YYYY-MM-DD HH:00'),
+            },
+          ]);
+        }else{
+          setWarningDate([
+            {
+              // name: '异常开始时间',
+              name: `报警\n`,
+              date: moment(startDate).format('YYYY-MM-DD HH:mm'),
+            },
+          ]);
+        }
+
+        let PollutantList = [];
+        tableData.Column.map(item => {
+          if (item.PollutantCode !== 'Flue' || item.PollutantCode !== 'Error') {
+            PollutantList.push(item.PollutantCode);
+          }
+        });
+        console.log('PollutantList', PollutantList);
+        // 默认选中污染物
+        setDefaultChartSelected(PollutantList);
+        // 查询数据时间
+        setSearchDate([moment(startDate).subtract(2, 'day'), moment(endData).add(2, 'day')]);
+
+        setDataModalVisible(true);
+      } else {
+        message.error('异常特征无数据，无法查看线索数据！');
+      }
+    } else {
+      console.log('onViewWarningData-chartData', chartData);
+      if (chartData) {
+        // 报警时间
+        setWarningDate([
+          {
+            // name: '异常开始时间',
+            name: `开始\n`,
+            date: moment(chartData.BeginTime).format('YYYY-MM-DD HH:mm'),
+          },
+          {
+            // name: '异常结束时间',
+            name: `结束\n`,
+            date: moment(chartData.EndTime).format('YYYY-MM-DD HH:00'),
+          },
+        ]);
+        // 默认选中污染物
+        setDefaultChartSelected(chartData.PollutantList.map(item => item.PollutantCode));
+        // 查询数据时间
+        setSearchDate([
+          moment(chartData.BeginTime).subtract(2, 'day'),
+          moment(chartData.EndTime).add(2, 'day'),
+        ]);
+        setDataModalVisible(true);
+      } else {
+        message.error('异常特征无数据，无法查看线索数据！');
+      }
+    }
   };
 
   const isShowBack = location.pathname.indexOf('autoLogin') <= -1;
@@ -205,8 +338,85 @@ const CluesDetails = props => {
             <Descriptions.Item label="线索内容">{warningInfo.WarningContent}</Descriptions.Item>
           </Descriptions>
         </Card>
-        <Card title="异常特征" style={{margin: '10px 0'}}>
+        <Card
+          title="异常特征"
+          style={{ margin: '10px 0' }}
+          loading={modelChartsLoading}
+          extra={
+            <Button
+              loading={modelChartsLoading || warningInfoLoading}
+              type="primary"
+              onClick={() => onViewWarningData()}
+            >
+              线索数据
+            </Button>
+          }
+        >
+          <Row className={styles.chartWrapper} style={{ height: 'auto' }}>
+            <p style={{ marginBottom: 20 }}>{modelDescribe}</p>
+            {/* 表格模型 */}
+            {modelTableDatas.length
+              ? modelTableDatas.map(item => {
+                  return (
+                    <ModelTable WarningTypeCode={warningInfo.WarningTypeCode} tableData={item} />
+                  );
+                })
+              : ''}
+            {/* 图表模型 */}
+            {chartData && !modelChartDatas.length ? (
+              <WarningDataAndChart
+                chartStyle={{
+                  height: 600,
+                  marginTop: 10,
+                }}
+                DGIMN={warningInfo.Dgimn}
+                // let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
+                warningDate={[
+                  {
+                    // name: '异常开始时间',
+                    name: `开始\n`,
+                    date: moment(chartData.BeginTime).format('YYYY-MM-DD HH:mm'),
+                  },
+                  {
+                    // name: '异常结束时间',
+                    name: `结束\n`,
+                    date: moment(chartData.EndTime).format('YYYY-MM-DD HH:00'),
+                  },
+                ]}
+                date={[
+                  moment(chartData.BeginTime).subtract(2, 'day'),
+                  moment(chartData.EndTime).add(2, 'day'),
+                ]}
+                chartPollutantList={chartData.PollutantList}
+                defaultChartSelected={chartData.PollutantList.map(item => item.PollutantCode).slice(
+                  0,
+                  6,
+                )}
+              />
+            ) : (
+              ''
+            )}
 
+            {/* 线性图表模型 */}
+            {modelChartDatas.length
+              ? linearDatas.map((item, index) => {
+                  return (
+                    <>
+                      <Col span={12}>
+                        <ModelChartLinear chartData={item} />
+                      </Col>
+                      <Col span={12}>
+                        {/* 图例多选 */}
+                        <ModelChartMultiple
+                          chartData={modelChartDatas[index]}
+                          WarningTypeCode={warningInfo.WarningTypeCode}
+                        />
+                      </Col>
+                    </>
+                  );
+                })
+              : ''}
+          </Row>
         </Card>
         <Card title="线索核实" loading={warningInfoLoading}>
           <Descriptions column={4}>
@@ -318,23 +528,27 @@ const CluesDetails = props => {
           }}
         />
         {/* 报警数据弹窗 */}
-        {/* {dataModalVisible && warningDataDate && (
+        {dataModalVisible && searchDate && (
           <WarningDataModal
             PointName={`${warningInfo.EntNmae} - ${warningInfo.PointName}`}
             DGIMN={warningInfo.Dgimn}
-            CompareDGIMN={warningInfo.CompareDGIMN}
-            ComparePointName={`${warningInfo.CompareEntNmae} - ${warningInfo.ComparePointName}`}
+            // CompareDGIMN={warningInfo.CompareDGIMN}
+            // ComparePointName={`${warningInfo.CompareEntNmae} - ${warningInfo.ComparePointName}`}
             visible={dataModalVisible}
-            date={warningDataDate}
-            warningDate={warningDate}
-            wrapClassName={isShowBack ? 'spreadOverModal' : 'fullScreenModal'}
+            // date={warningDataDate}
+            // warningDate={warningDate}
+            // wrapClassName={isShowBack ? 'spreadOverModal' : 'fullScreenModal'}
+            wrapClassName={'fullScreenModal'}
             describe={modelDescribe}
-            defaultChartSelected={defaultChartSelected}
+            // defaultChartSelected={defaultChartSelected}
             onCancel={() => {
               setDataModalVisible(false);
             }}
+            warningDate={warningDate}
+            date={searchDate}
+            defaultChartSelected={defaultChartSelected}
           />
-        )} */}
+        )}
       </div>
     </BreadcrumbWrapper>
   );

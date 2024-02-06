@@ -3,6 +3,7 @@
   :global {
     .ant-table-row-expand-icon-cell {
       padding: 16px !important;
+      width: 48px !important;
     }
     // .ant-table.ant-table-middle .ant-table-tbody .ant-table-wrapper:only-child .ant-table {
     //   margin: -11px -8px -13px 40px;
@@ -14,7 +15,7 @@
       vertical-align: sub;
     }
     .ant-table.ant-table-middle .ant-table-tbody .ant-table-wrapper:only-child .ant-table {
-      margin: -12px -16px -16px 39px;
+      margin: -9px -16px -9px 39px;
     }
   }
 }
@@ -77,12 +78,12 @@
     .ant-pro-page-header-wrap-children-content {
       background-color: transparent !important;
     }
-    .noSelectAllSty{
-     .ant-table-thead{
-      .ant-table-selection{
-        display: none;
+    .noSelectAllSty {
+      .ant-table-thead {
+        .ant-table-selection {
+          display: none;
+        }
       }
-     }
     }
   }
 }
@@ -117,7 +118,7 @@
       padding-left: 0;
       padding-bottom: 0;
     }
-    .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow{
+    .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
       margin-right: 8px;
     }
     .ant-empty-normal {
@@ -145,7 +146,7 @@
     .ant-form-item {
       margin-bottom: 8px;
     }
-    .ant-tabs-nav{
+    .ant-tabs-nav {
       margin-bottom: 8px;
     }
     .ant-tabs-tab {
@@ -157,32 +158,87 @@
     .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
       padding: 0 8px 4px 8px;
     }
-    .ant-tabs-content{
+    .ant-tabs-content {
       overflow-y: auto;
       height: calc(100vh - 360px);
     }
-    .ant-upload-list-picture-card-container,.ant-upload.ant-upload-select-picture-card,.ant-upload-list-picture-card .ant-upload-list-item{
+    .ant-upload-list-picture-card-container,
+    .ant-upload.ant-upload-select-picture-card,
+    .ant-upload-list-picture-card .ant-upload-list-item {
       width: 84px;
       height: 84px;
     }
-    #checkAction{
-      .ant-form-item-label > label{
+    #checkAction {
+      .ant-form-item-label > label {
         font-weight: bold;
       }
     }
-    .ant-progress-inner{
+    .ant-progress-inner {
       margin-top: 16px;
     }
   }
-} 
+}
 
 .pollutantDischargeGapWrapper {
-  :global{
-    .ant-card-body{
+  :global {
+    .ant-card-body {
       padding-bottom: 0;
     }
-    .ant-form-item{
+    .ant-form-item {
       margin: 4px 12px 4px 0;
     }
+  }
 }
+
+// 波动范围
+.dataRangeUpdateTimeBox {
+  margin-top: -20px;
+  padding: 0 10%;
+  display: flex;
+  margin-top: 0;
+
+  .updateTime {
+    margin-left: 10px;
+    margin-top: 4px;
+    color: #444;
+    font-size: 12px;
+  }
+}
+
+// 通用库 - 参数配置
+.paramTitle {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  padding: 0 10px;
+  background: #fff;
+  font-weight: bold;
+}
+
+.paramItemWrapper {
+  display: inline-block;
+}
+
+.paramsCardWrapper {
+  width: 100%;
+  margin-bottom: 20px;
+  :global {
+    .ant-form-item {
+      display: inline-block;
+      margin-right: 100px;
+    }
+  }
+
+  .formItemText_l {
+    display: inline-block;
+    line-height: 32px;
+    font-size: 13px;
+    margin-right: 6px;
+  }
+  .formItemText_r {
+    display: inline-block;
+    line-height: 32px;
+    font-size: 13px;
+    margin-left: -92px;
+  }
 }

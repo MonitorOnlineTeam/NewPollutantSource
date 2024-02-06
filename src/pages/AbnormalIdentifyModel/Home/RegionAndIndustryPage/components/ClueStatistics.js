@@ -57,6 +57,13 @@ const ClueStatistics = props => {
     let data = ModelGroupList.map(item => {
       return { value: item.count, name: item.name };
     });
+
+    // let data = [
+    //   { value: 3214, name: 'a' },
+    //   { value: 214, name: 'a1' },
+    //   { value: 324, name: 'a2' },
+    //   { value: 24, name: 'a3' },
+    // ]
     var colors = [
       '#5e81ec',
       '#ffc855',
@@ -83,9 +90,9 @@ const ClueStatistics = props => {
       series: [
         {
           type: 'pie',
-          radius: ['30%', '65%'],
+          radius: ['30%', '50%'],
           center: ['50%', '50%'],
-          roseType: 'radius',
+          // roseType: 'radius',
           label: {
             show: true,
             color: '#FEFEFF',

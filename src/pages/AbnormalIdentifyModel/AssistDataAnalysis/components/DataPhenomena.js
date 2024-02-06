@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-01-18 15:08:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-29 17:07:34
+ * @Last Modified time: 2024-02-06 10:44:19
  * @Description:  数据现象
  */
 import React, { useState, useEffect } from 'react';
@@ -12,7 +12,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable';
-import { WarningOutlined } from '@ant-design/icons';
+import { WarningOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 let tempSelectedNames = [];
 let tempSelectPollutantList = [];
@@ -29,8 +29,6 @@ const DataPhenomena = props => {
 
   const [showType, setShowType] = useState('chart');
   const [columns, setColumns] = useState([]);
-  const [selectedNames, setSelectedNames] = useState([]);
-  const [selectedCodes, setSelectedCodes] = useState([]);
   const [selectPollutantList, SetSelectPollutantList] = useState([]);
 
   const {
@@ -39,6 +37,9 @@ const DataPhenomena = props => {
     pollutantListByDgimn,
     DataPhenomenaChartList,
     DataPhenomenaTableList,
+    date,
+    echartBoxHeight,
+    tableHeight,
     loading,
   } = props;
 
@@ -87,7 +88,7 @@ const DataPhenomena = props => {
 
   // 获取表头
   const getColumns = pollutantList => {
-    let columns = [ 
+    let columns = [
       {
         title: '时间',
         dataIndex: 'MonitorTime',
@@ -113,7 +114,10 @@ const DataPhenomena = props => {
         render: (text, record) => {
           let color = 'rgba(0, 0, 0, 0.85)';
           let _text = record[item.PollutantCode + '_ME'];
+          console.log('_text', _text);
           let content = '';
+
+          let icon = '';
 
           if (_text !== 0 && _text !== '-') {
             color = 'red';
@@ -123,6 +127,13 @@ const DataPhenomena = props => {
             } else if (PhenomenonType === '2') {
               _text = '恒值';
             } else if (PhenomenonType === '3') {
+              if (_text == 1) {
+                // name = '陡升';
+                icon = <ArrowUpOutlined />;
+              } else {
+                // name = '陡降';
+                icon = <ArrowDownOutlined />;
+              }
               _text = '陡变';
             }
 
@@ -141,7 +152,10 @@ const DataPhenomena = props => {
           if (content)
             return (
               <Popover content={content}>
-                <div style={{ color: color }}>{text}</div>
+                <div style={{ color: color }}>
+                  {text}
+                  <span style={{ position: 'absolute', right: 4 }}>{icon}</span>
+                </div>
               </Popover>
             );
 
@@ -196,7 +210,7 @@ const DataPhenomena = props => {
         result.push({
           gt: start > -1 ? start - 1 : start,
           lte: i - 1,
-          color: 'red',
+          color: data[i - 1] === 2 ? '#1890ff' : 'red',
           flag: data[i - 1],
         });
         start = i;
@@ -209,6 +223,7 @@ const DataPhenomena = props => {
           flag: data[i - 1],
         });
         start = i;
+        // currentColor = data[i] === 1 ? 'red' : '#1890ff';
         currentColor = 'red';
       }
     }
@@ -224,6 +239,134 @@ const DataPhenomena = props => {
     return result;
   };
 
+  const getOption1 = () => {
+    let title = [],
+      grid = [],
+      xAxis = [],
+      yAxis = [],
+      series = [];
+    selectPollutantList.map((pollutant, index) => {
+      title.push({
+        text: pollutant.PollutantName,
+        left: 'center',
+        top: index * 300,
+      });
+      grid.push({
+        left: 80,
+        right: 50,
+        top: index * 300 + 40,
+        height: 200,
+      });
+      xAxis.push({
+        gridIndex: index,
+        type: 'category',
+        boundaryGap: false,
+        axisLine: { onZero: true },
+        data: DataPhenomenaChartList.MonitorTimeList,
+        // position: 'top'
+      });
+      yAxis.push({
+        gridIndex: index,
+        name: pollutant.Unit,
+        type: 'value',
+      });
+      const currentData = DataPhenomenaChartList.dataList[pollutant.PollutantCode];
+      const currentDataME = DataPhenomenaChartList.dataList[pollutant.PollutantCode + '_ME'] || [];
+      console.log(title + '-currentDataME', currentDataME);
+      let visualMapPieces = findColorBlocks(currentDataME);
+      let markAreaData = [];
+      // 处理阴影
+      visualMapPieces.map(item => {
+        if (item.color === 'red' || item.color === '#1890ff') {
+          let PhenomenonType = form.getFieldValue('PhenomenonType');
+          let name = '',
+            otherParams = {};
+
+          if (PhenomenonType === '1') {
+            name = '零值';
+          } else if (PhenomenonType === '2') {
+            name = '恒值';
+          } else if (PhenomenonType === '3') {
+            if (item.flag === 1) {
+              name = '陡升';
+            } else {
+              name = '陡降';
+              otherParams = {
+                itemStyle: {
+                  color: 'rgba(24, 144, 255, 0.4)',
+                },
+                label: {
+                  color: '#1890ff',
+                },
+              };
+            }
+          }
+
+          let data = [
+            { name: name, xAxis: DataPhenomenaChartList.MonitorTimeList[item.gt], ...otherParams },
+            { xAxis: DataPhenomenaChartList.MonitorTimeList[item.lte], ...otherParams },
+          ];
+          markAreaData.push(data);
+        }
+      });
+      console.log('markAreaData', markAreaData);
+      series.push({
+        name: pollutant.PollutantName,
+        data: currentData,
+        type: 'line',
+        xAxisIndex: index,
+        yAxisIndex: index,
+        smooth: true,
+        markArea: {
+          itemStyle: {
+            color: 'rgba(255, 173, 177, 0.4)',
+          },
+          label: {
+            color: 'red',
+          },
+          data: markAreaData,
+        },
+      });
+    });
+
+    return {
+      title: title,
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          animation: false,
+        },
+      },
+      // legend: {},
+      toolbox: {
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none',
+          },
+          restore: {},
+          saveAsImage: {},
+        },
+      },
+      axisPointer: {
+        link: [
+          {
+            xAxisIndex: 'all',
+          },
+        ],
+      },
+      // dataZoom: [
+      //   {
+      //     type: 'inside',
+      //     xAxisIndex: [0, 1],
+      //   },
+      // ],
+      grid: grid,
+      xAxis: xAxis,
+      yAxis: yAxis,
+      series: series,
+    };
+  };
+
   const getOption = (pollutant, index) => {
     if (loading) {
       return {};
@@ -231,34 +374,9 @@ const DataPhenomena = props => {
 
     const title = pollutant.PollutantName;
     const currentData = DataPhenomenaChartList.dataList[pollutant.PollutantCode];
-    const currentDataME = DataPhenomenaChartList.dataList[pollutant.PollutantCode + '_ME'] || [];
-    console.log(title + '-currentDataME', currentDataME);
-    let visualMapPieces = findColorBlocks(currentDataME);
+
     console.log(title + '-visualMapPieces', visualMapPieces);
 
-    let markAreaData = [];
-    // 处理阴影
-    visualMapPieces.map(item => {
-      if (item.color === 'red') {
-        let PhenomenonType = form.getFieldValue('PhenomenonType');
-        let name = '';
-
-        if (PhenomenonType === '1') {
-          name = '零值';
-        } else if (PhenomenonType === '2') {
-          name = '恒值';
-        } else if (PhenomenonType === '3') {
-          name = item.flag === 1 ? '陡升' : '陡降';
-        }
-
-        let data = [
-          { name: name, xAxis: DataPhenomenaChartList.MonitorTimeList[item.gt] },
-          { xAxis: DataPhenomenaChartList.MonitorTimeList[item.lte] },
-        ];
-        markAreaData.push(data);
-      }
-    });
-    console.log('markAreaData', markAreaData);
     return {
       title: {
         text: title,
@@ -315,13 +433,15 @@ const DataPhenomena = props => {
     };
   };
 
+  console.log('DataPhenomenaChartList', DataPhenomenaChartList);
+
   return (
     <>
       <Form
         form={form}
         layout="inline"
         initialValues={{
-          time: [moment().subtract(1, 'day'), moment()],
+          time: date,
           pollutantCodes: [],
           PhenomenonType: '1',
         }}
@@ -407,21 +527,31 @@ const DataPhenomena = props => {
           dataSource={DataPhenomenaTableList}
           align="center"
           loading={loading}
-          scroll={{ y: 'calc(100vh - 390px)' }}
+          scroll={{ y: tableHeight || 'calc(100vh - 390px)' }}
         />
       ) : (
-        selectPollutantList.map((item, index) => {
-          return (
-            <ReactEcharts
-              theme="light"
-              option={getOption(item, index)}
-              lazyUpdate
-              notMerge
-              id="rightLine"
-              style={{ marginTop: 34, width: '100%', height: '300px' }}
-            />
-          );
-        })
+        <div style={{ height: echartBoxHeight || 'calc(100vh - 300px)', overflowY: 'auto' }}>
+          {/* {selectPollutantList.map((item, index) => {
+            return (
+              <ReactEcharts
+                theme="light"
+                option={getOption(item, index)}
+                lazyUpdate
+                notMerge
+                id="rightLine"
+                style={{ marginTop: 34, width: '100%', height: '300px' }}
+              />
+            );
+          })} */}
+          <ReactEcharts
+            theme="light"
+            option={getOption1()}
+            lazyUpdate
+            notMerge
+            id="rightLine"
+            style={{ marginTop: 34, width: '100%', height: selectPollutantList.length * 300 }}
+          />
+        </div>
       )}
     </>
   );

@@ -1055,11 +1055,13 @@ export const API = {
     // 排污缺口
     GetPollutantDischargeGapStatistics: before + '/MoldHome/GetPollutantDischargeGapStatistics',
    /*历史数据综合评价 */
-    // 排污缺口   
+    // 排污缺口
     GetPollutionDischargeGap: before + '/MoldV2/GetPollutionDischargeGap', //获取排污缺口信息
     ExportPollutionDischargeGap: before + '/MoldV2/ExportPollutionDischargeGap', //排污缺口 导出
     // 获取报警详情
     GetSingleWarning: before + '/WarningV2/GetSingleWarning',
+    // 获取模型快转
+    GetSnapshotData: before + '/WarningV2/GetSnapshotData',
 
     /*实时数据异常识别及管理*/
     //异常线索清单

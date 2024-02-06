@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Alert, Form, Space, Button, Select, Radio, message, Spin } from 'antd';
+import { Alert, Form, Space, Button, Select, Radio, message, Spin, Badge, Row } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { formatPollutantPopover } from '@/utils/utils';
 import styles from '../../styles.less';
@@ -11,12 +11,6 @@ import { getColorByName } from '../../CONST';
 import TableText from '@/components/TableText';
 
 const COLOR = '#e6b8b7';
-const RenAndGuImage =
-  'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+tpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ1IDc5LjE2MzQ5OSwgMjAxOC8wOC8xMy0xNjo0MDoyMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOSAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDIzLTEyLTIyVDEwOjI3OjI0KzA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMy0xMi0yMlQxMDozMToyNSswODowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAyMy0xMi0yMlQxMDozMToyNSswODowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzQzMjk0MTNBMDcyMTFFRUEzRDhGQ0MzODgzMEQ5OTUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzQzMjk0MTRBMDcyMTFFRUEzRDhGQ0MzODgzMEQ5OTUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNDMyOTQxMUEwNzIxMUVFQTNEOEZDQzM4ODMwRDk5NSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNDMyOTQxMkEwNzIxMUVFQTNEOEZDQzM4ODMwRDk5NSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PhCQbQkAAARaSURBVHjaxJdbbFRFGMf/c7YXSG+g26SYJhbLQ4EmSjDCAw8mRsT4UKz2xTQSmyoY5M2YEutDidiEhGikYhPTKCE+oVYbEhsMvkhoS+lNrqWFIlLXbKm9bLu97Tmf/9mzZ7tnt8uW8tBJfpmdOTPzP99833xnVokIVqMYWKWyesKiFJaghBwjPWSOCJkl3aSeFDtjV1ysCNrXrLNJI7GIPIQQaSBZet5KiAqTQnIlhWA8vST/cYSzyJ8JC3u9IkeOiPT2ikxPiwSDIt3dInV14WeRcd1kzUqFGxJEy8pExsYkaeEzq7zcHptvfDX/o3c72U1eICl3QXFiMbX7iSfq+LIyqOZmQAfQgQNQjY12//nzgM8HVFbabS5gtuyDZf4aHzo6OfSSb0lDevmILHWcqlyiXi/UqVPAzAxw7RowOmrXRDo7gZycaFu/mOe1k1BrCuLX1eG+jXxJri/8lJ8RPyCN7Hb1HDwI5OUBIyNAT0+0lvv3gcOHgdOnISdOAEVFUFu3coVseHY08dUzobI2UtKABAZh+Vph3aHB8/+VcFU/xZ+i5cHY4xSM9a10dblcae3fb9f19fbzoSGxampE/H5JWeYnJNT2ttDnmimS4fhYb/Val8WbNy86iv7Vfg37ubAQitairw9oa+Mhyk+dJNJz4dn5HYwNe3Qri7TH+njqYXPVwADUoUN2Y9cuyN69UNXVqUUXgjZ0t+f5k0Dmk7p3G7e83BHucE3o71/87QTW4KDdvnAB2LTJ9ncKUfPq12Fsy3PgKX7PeVrpCP/gmtTSsvjbCbBAAEwaEAqrixeBiQnbDUsUGb2O0O9vQoJ/wVP6/uLObYjG8M5wmwHD8wFtQm64m75T2sLcXPeKd++GIzmhbYVgDZ2FzIxAhptt8elOpL16A2qtd3F8KIiFlqedVqa2OEA+j7VSqqrCycFVYkVj2ta9Vsjkbaj0bBjP1sHY8hGMjTVu0bCJri9whpMy9VfJ50qZFRUik5PyqCXU8YmYvksJ/db4FedYzTnHCZHI/tj1hmfOQBhIOHqUwXQVMGfCyOQNyIP2pHElY5dpfVZiv++c87PHyVxO0Xn1LfJStMfvh9TWwpw7BnkuJutlrEf6K0yf6XmJAvRvQglNwbz9jdNqjb/6aKe+S6YTJhZ43O35MZiXP+AMM/Hcr9/DiPbHrGrB7GIemHsQnkm+WOrONaSzdXy6l3xP4s2Fudhs38czO+7q92z/FMpbGjnPAZgd78AaPus8foP5etw5TkuV7yPbDqwzEGp6Inmy4LYbz1TBKHgZKrfENjIwAOvfczxm/MrNRq3/kKLHo/YkEc6OZLQtUpQG8/i6x71UVlO0aTnXWx3lr5MJ5Kz4JqljRt8QSuNF46M6vtwiFcg2Wh/h/r1A/iA/k18oeC/ZwLQUC/0mOeoz1rVJRG4SHnL06U8I6aLY7HLeUC3nvxM/ZS+y2kGGyT/kDvmbIuZK/aBW60/b/wIMACWpUylRhOCjAAAAAElFTkSuQmCC';
-const GuImage =
-  'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+tpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ1IDc5LjE2MzQ5OSwgMjAxOC8wOC8xMy0xNjo0MDoyMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOSAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDIzLTEyLTIyVDEwOjI3OjI0KzA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMy0xMi0yMlQxMDoyOTo0MiswODowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAyMy0xMi0yMlQxMDoyOTo0MiswODowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RjZBQjQzQzdBMDcxMTFFRTg3QjlCREFCNEU1RUY0NTAiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RjZBQjQzQzhBMDcxMTFFRTg3QjlCREFCNEU1RUY0NTAiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGNkFCNDNDNUEwNzExMUVFODdCOUJEQUI0RTVFRjQ1MCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpGNkFCNDNDNkEwNzExMUVFODdCOUJEQUI0RTVFRjQ1MCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pj4G1iwAAAMISURBVHjapJdNSFRRFMfPtRgwMEgTIo3Mpo0z4DLShWALkbYtWmgUCgoStHDhInDpbnCh4kJoMW5aFEYLhZlZSBQYFQjjBy0ESbIMFVHDBued/vfdN713n/Nx3/PAnzfnvnfOb96dc+89I5iZTI2FuIRLHSSvF6A8dAztCeY/FMQkuJwsoiroMfQF4jL6BD2CRKWc9stWgN5xEnIAfYBuhQYjuB060JK2tDAnEsxra8wnJ0qrq/aYvOd59jd0NzAYQXENGokwT0ww5/Nc0uS96Wm2qqsL8D05Y8ZgPByBsho0lXIByaQOTKeZd3ZcP5OxY5z4r9BFU/Bz7/Ty5KTGsccKdnysfC9YGmbHk2OgGFh4lxOWi8DlO9RgD8RiJJaXsXCwcmZn1TO9vSSSSRVQU0M8PExidNRdJj09WGR54tZWopUVObIByG3/aqry+Tf+Q2Giv19Biy3Dw0MbSn19yp+ZId7aUjcRY8cqa8YLXS+7jp1KdqdZVq/PClNtjY2xFY0yz80pX372TjliPbnOVLj/jes0r7nZ/ZzJEA8Oqi8rrwcHJFIp4vl5NaUNmKj6+uKxRLWVpjpScovb3iZqaiKRzZLo7iba37d92t0lHhryTq2yXK5sXj/4r+ZtbGiuaGy0C46iUXews5NocZGoq0vPtLlZOm8R8E/NW1jQ6wEVjUIhjsfVgKz0RIJoZIS4rY1oacl9OJ0unbdIcdVqW2Q8znx6qoolm1UqFNnUFFsDA25BYSOxOjqUjxgZ6+SxoMsmG8jHchuIkSHGkyNtunM91N7av2VWMn3LlHpgChbQ5zPw4IeEfUQGPZ06ip61sRjz+Djz+jpzLsd8dKR+d4x5flOv2sOcx68DNgB+vQrbCFyDdkNC92X8eVqfJyHBT8/VcznwNwGh70waPhPwFWjTEPoDunruLtMDvwflKkDz0H2TfMZgB/6sAviFaa5AYAf+sgT0rWkjHxYsO9D3PugyVBMkT2CwA6+DvjnQX9DNoDnOdJkB/rxV49Io+xIkOKIQ9k+AAQBWk2FlMCnAfgAAAABJRU5ErkJggg==';
-const RenImage =
-  'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+tpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ1IDc5LjE2MzQ5OSwgMjAxOC8wOC8xMy0xNjo0MDoyMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOSAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDIzLTEyLTIyVDEwOjI3OjI0KzA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMy0xMi0yMlQxMDoyOTozMSswODowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAyMy0xMi0yMlQxMDoyOTozMSswODowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RjAxRDlCQjlBMDcxMTFFRUIyNzJFN0UzREE5RDJBMDQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RjAxRDlCQkFBMDcxMTFFRUIyNzJFN0UzREE5RDJBMDQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGMDFEOUJCN0EwNzExMUVFQjI3MkU3RTNEQTlEMkEwNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpGMDFEOUJCOEEwNzExMUVFQjI3MkU3RTNEQTlEMkEwNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PjmvGFwAAANUSURBVHjapJddSFRBFMfPnV0FDSQyFVJJjShKJIMK+xKqt3qSIBGlrIewwKCieiiEIqiH7KGHhCgM+6AghcjelKzWiChDyhJJVy3K1bIil9K9d/rP3bu73d3Z3bnbwJ9h75wzvznzcWZW45yTaplrz8lElQ2J2gXp0Az0La1q0k8OipYMDBhDVQsdglYnMH0BNUN3MAj+X2BAl6K6Ca1xEEyvGCjgIymBAd2A6iGUFTbOWkasqJa0vK2kzVtsfuMzXuIT3WR4bxD/ORgynYJ2AP7cERjQUlSeMJSlk6vsNLHiengweU/cALyN9P6TWPnf4ss0tA7wISUwoOmoXkErQ1D3+luk5VYqzTOffEIBTzWRMSt+9kFrAQ9E28mGfyAMFVu37IwUyr8OANAYG0nOJnN2rFIO7ZMNkEVFq6E6GlnT5Zje3fLI/D7S0uZL21jxHtPXKseSglEKofxwIzYSaS45+MdQgi3rCvoGSwkCWqQCjvjnbYm/lp86yPh4GdMkzxtRvoXJwNk2Z+vIyNaXz00QK2ggY7xbDrb7LkgGTlfZufr7FmL5NcSWVJM+0CSP2phL2G80+I8tspnR2P4GbxOf9pCrtIG07BXEcreT3ndOsvnG4/YrA3+xOU/Yp1F/c4X0t43krmgjSssMHrfyE2T4OgG/YIuc+x7H7VcG/mCLzos0zfUgFB0b3hZyV/aYkYYLBuDe3A5QFwW6d1pU3UyhoTFAwyqZSyT5inACWXWeWMneSDRWpLF51k884CctYyEZw9dIf3081NKFzLVNJXM126a3/xSi6QkC40GtAQmoSJnC559yUSWBiHIPehmZ71kK9NYgiqvmRRD/YOOSGLlu2lp52rwiEW2nk9tJJOdHMcYihRbVmcnBPKc4Mtw/Zm6k4LX4LtplI8Aep/exiLyKUi93Ad0Vr5ElcDwo3lIpQr9bTyVyDMZoxdk7kiL4sOVPqUQs4K2oOhxCH0CtyYyYQkfiIh9ThH6G6lVemUnB6ES8narFfktiKs5aHeynVEaoErGAP1NY7ybYdamuB1M1RKeXEqzdfeisk43AHG6c/dDTqG/91gOeO+lIc/LfyUos4pUipl78y/BZz9dRp+fNMdiCZ6AqELsY0F+pHPS/AgwAMutL9VJqW14AAAAASUVORK5CYII=';
 
 let tempSelectedNames = [];
 
@@ -34,6 +28,7 @@ const WarningDataAndChart = props => {
   const [columns, setColumns] = useState([]);
   const [selectedNames, setSelectedNames] = useState([]);
   const [legendSelected, setLegendSelected] = useState({});
+  const [allTypeDataList, setAllTypeDataList] = useState([]);
   const [units, setUnits] = useState({});
   const [showType, setShowType] = useState('chart');
 
@@ -42,13 +37,15 @@ const WarningDataAndChart = props => {
     DGIMN,
     pollutantListByDgimn,
     date,
-    allTypeDataList,
+    // allTypeDataList,
     pollutantLoading,
     tableLoading,
     exportLoading,
     describe,
     warningDate,
     defaultChartSelected,
+    chartStyle,
+    chartPollutantList,
   } = props;
   // const [visible, setVisible] = useState([]);
 
@@ -60,30 +57,40 @@ const WarningDataAndChart = props => {
 
   // 根据mn获取污染物
   const getPollutantListByDgimn = () => {
-    dispatch({
-      type: 'common/getPollutantListByDgimn',
-      payload: {
-        DGIMNs: DGIMN,
-      },
-      callback: res => {
-        let pollutantCodes = [],
-          pollutantNames = [];
-        let units = {};
+    if (chartPollutantList) {
+      // 数据快照：使用报警的污染物
+      initData(chartPollutantList);
+    } else {
+      // 辅助数据分析：获取所有污染物
+      dispatch({
+        type: 'common/getPollutantListByDgimn',
+        payload: {
+          DGIMNs: DGIMN,
+        },
+        callback: res => {
+          initData(res);
+        },
+      }).then(() => {});
+    }
+  };
 
-        res.map(item => {
-          pollutantCodes.push(item.PollutantCode);
-          pollutantNames.push(item.PollutantName);
-          units[item.PollutantName] = item.Unit;
-        });
-        setUnits(units);
-        form.setFieldsValue({ pollutantCodes: pollutantCodes });
-        setSelectedNames(pollutantNames);
-        tempSelectedNames = pollutantNames;
-        GetAllTypeDataList();
-        getColumns(res);
-        // handleLegendSelected();
-      },
-    }).then(() => {});
+  const initData = res => {
+    let pollutantCodes = [],
+      pollutantNames = [];
+    let units = {};
+
+    res.map(item => {
+      pollutantCodes.push(item.PollutantCode);
+      pollutantNames.push(item.PollutantName);
+      units[item.PollutantName] = item.Unit;
+    });
+    setUnits(units);
+    form.setFieldsValue({ pollutantCodes: pollutantCodes });
+    setSelectedNames(pollutantNames);
+    tempSelectedNames = pollutantNames;
+    GetAllTypeDataList();
+    getColumns(res);
+    // handleLegendSelected();
   };
 
   useEffect(() => {
@@ -93,10 +100,9 @@ const WarningDataAndChart = props => {
   // 处理选中的图例
   const handleLegendSelected = () => {
     let pollutantNames = selectedNames;
-    console.log('selectedNames', selectedNames);
+    let pollutantCodes = form.getFieldValue('pollutantCodes');
     // 处理图例
     let legendSelected = {};
-    console.log('pollutantNames', pollutantNames);
     // 默认选中氧含量、烟气湿度、烟气温度、流速
     pollutantNames.map((item, index) => {
       // if (item === '氧含量' || item === '烟气湿度' || item === '烟气温度' || item === '流速') {
@@ -104,10 +110,9 @@ const WarningDataAndChart = props => {
       // } else {
       //   legendSelected[item] = false;
       // }
-      console.log('defaultChartSelected', defaultChartSelected);
       // 根据不同模型选中污染物
       if (defaultChartSelected.length) {
-        if (defaultChartSelected.includes(item)) {
+        if (defaultChartSelected.includes(pollutantCodes[index])) {
           legendSelected[item] = true;
         } else {
           legendSelected[item] = false;
@@ -138,7 +143,9 @@ const WarningDataAndChart = props => {
         isAsc: true,
         IsSupplyData: false,
       },
-      callback: () => {},
+      callback: res => {
+        setAllTypeDataList(res);
+      },
     }).then(res => {});
   };
 
@@ -406,9 +413,8 @@ const WarningDataAndChart = props => {
       });
       let serieData = [];
       allTypeDataList.map(item => {
-        serieData = serieData.concat(item[pollutant]);
+        serieData = serieData.concat(item[pollutant] * 1);
       });
-      console.log('serieData', serieData);
       series.push({
         type: 'line',
         id: pollutant,
@@ -425,7 +431,6 @@ const WarningDataAndChart = props => {
         },
         symbol: (value, params) => {
           // 污染物flag非正常，显示三角
-          console.log('params', params);
           let { dataIndex, seriesId } = params;
           let currentData = allTypeDataList[dataIndex];
           let flag = currentData[seriesId + '_Flag'];
@@ -446,28 +451,30 @@ const WarningDataAndChart = props => {
             return 20;
           }
         },
-        // markPoint: {
-        //   data: [
-        //     {
-        //       name: '人为干预',
-        //       xAxis: '2024-01-03 17:00',
-        //       yAxis: 125.299,
-        //       symbol: RenAndGuImage,
-        //       symbolRotate: 22,
-        //       symbolSize: 36,
-        //       symbolOffset: [0, -28],
-        //     },
-        //   ],
-        // },
       });
     });
+
+    let showIndex = yxisData.findIndex(item => item.show === true);
 
     // 异常工况数据
     let markAreaData = [];
     let continuousItem = [];
     // 人为干预和故障数据
     let RenAndGuData = [];
+
     allTypeDataList.map((item, idx) => {
+      let index = 0;
+      // interval = 0.05;
+
+      let min = _.min(series[showIndex].data);
+      let max = _.max(series[showIndex].data);
+      if (min < 0) {
+        min = Math.abs(min);
+      } else {
+        min = 0;
+      }
+
+      let interval = showIndex > -1 ? (min + max) / 60 : 0;
       // 时间数据
       xAxisData.push(item.MonitorTime);
       // 绘制异常工况
@@ -484,7 +491,7 @@ const WarningDataAndChart = props => {
         }
 
         // 异常工况结束
-        if ((item.ModelQHFlag === '正常' || item.ModelWCFlag === '正常') && continuousItem.length) {
+        if (item.ModelQHFlag === '正常' && item.ModelWCFlag === '正常' && continuousItem.length) {
           continuousItem.push({
             name: '异常工况',
             xAxis: item.MonitorTime,
@@ -509,56 +516,96 @@ const WarningDataAndChart = props => {
       {
         let RenStatus = item.WCArtificialFlag || item.QHArtificialFlag;
         let GuStatus = item.WCFaultFlag || item.QHFaultFlag;
+        let CEMSRunStatus = item.WCOperationFlag || item.QHOperationFlag;
 
-        if (RenStatus && GuStatus) {
+        // 运行管理异常
+        if (CEMSRunStatus) {
+          index++;
           RenAndGuData.push({
-            name: '人为干预、设备故障',
+            yAxis: index * interval,
             xAxis: item.MonitorTime,
-            lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
-            label: {
-              position: 'end',
-              fontSize: 13,
-              color: '#ff5500',
-              formatter: function(params) {
-                return '人为干预\n设备故障';
-              },
-            },
-          });
-        } else if (RenStatus) {
-          RenAndGuData.push({
-            name: '人为干预',
-            xAxis: item.MonitorTime,
-            lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
-            label: {
-              position: 'end',
-              fontSize: 13,
-              color: '#ff5500',
-              formatter: function(params) {
-                return '人为干预\n设备故障';
-              },
-            },
-          });
-        } else if (GuStatus) {
-          RenAndGuData.push({
-            name: '设备故障',
-            xAxis: item.MonitorTime,
-            lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
-            label: {
-              position: 'end',
-              fontSize: 13,
-              color: '#ff5500',
-              formatter: function(params) {
-                return '人为干预\n设备故障';
-              },
+            symbol: 'circle',
+            symbolSize: 6,
+            itemStyle: {
+              color: '#faad14',
             },
           });
         }
+
+        // 故障
+        if (GuStatus) {
+          index++;
+          RenAndGuData.push({
+            yAxis: index * interval,
+            xAxis: item.MonitorTime,
+            symbol: 'circle',
+            symbolSize: 6,
+            itemStyle: {
+              color: '#ff4d4f',
+            },
+          });
+        }
+
+        // 人为干预
+        if (RenStatus) {
+          index++;
+          RenAndGuData.push({
+            yAxis: index * interval,
+            xAxis: item.MonitorTime,
+            symbol: 'circle',
+            symbolSize: 6,
+            itemStyle: {
+              color: '#722ed1',
+            },
+          });
+        }
+
+        // if (RenStatus && GuStatus) {
+        //   RenAndGuData.push({
+        //     name: '人为干预、设备故障',
+        //     xAxis: item.MonitorTime,
+        //     lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
+        //     label: {
+        //       position: 'end',
+        //       fontSize: 13,
+        //       color: '#ff5500',
+        //       formatter: function(params) {
+        //         return '人为干预\n设备故障';
+        //       },
+        //     },
+        //   });
+        // } else if (RenStatus) {
+        //   RenAndGuData.push({
+        //     name: '人为干预',
+        //     xAxis: item.MonitorTime,
+        //     lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
+        //     label: {
+        //       position: 'end',
+        //       fontSize: 13,
+        //       color: '#ff5500',
+        //       formatter: function(params) {
+        //         return '人为干预\n设备故障';
+        //       },
+        //     },
+        //   });
+        // } else if (GuStatus) {
+        //   RenAndGuData.push({
+        //     name: '设备故障',
+        //     xAxis: item.MonitorTime,
+        //     lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
+        //     label: {
+        //       position: 'end',
+        //       fontSize: 13,
+        //       color: '#ff5500',
+        //       formatter: function(params) {
+        //         return '人为干预\n设备故障';
+        //       },
+        //     },
+        //   });
+        // }
       }
     });
-    console.log('RenAndGuData', RenAndGuData);
-    console.log('markAreaData', markAreaData);
-    let showIndex = yxisData.findIndex(item => item.show === true);
-    console.log('showIndex', showIndex);
+
     if (showIndex > -1) {
       // 绘制异常工况阴影
       series[showIndex].markArea = {
@@ -574,7 +621,6 @@ const WarningDataAndChart = props => {
         let selectedPollutantCodes = Object.keys(legendSelected).filter(
           code => legendSelected[code],
         );
-        console.log('selectedPollutantCodes', selectedPollutantCodes);
         let filteredWarningDate = warningDate.filter(item =>
           selectedPollutantCodes.includes(item.pollutantName),
         );
@@ -595,20 +641,22 @@ const WarningDataAndChart = props => {
               // width: 20,
               // overflow: 'truncate',
               formatter: function(params) {
-                return (
-                  item.name
-                    .split('')
-                    // .reverse()
-                    .join('\n')
-                );
+                return item.name;
+                // .split('')
+                // // .reverse()
+                // .join('\n')
               },
             },
           };
         });
-        series[showIndex].markLine = { data: [...abnormalMarkLine, ...RenAndGuData] };
+        // series[showIndex].markLine = { data: [...abnormalMarkLine, ...RenAndGuData] };
+        series[showIndex].markLine = { data: [...abnormalMarkLine] };
+        series[showIndex].markPoint = {
+          data: RenAndGuData,
+        };
       } else {
         // 绘制人为干预、设备故障时间线
-        series[showIndex].markLine = {
+        series[showIndex].markPoint = {
           data: RenAndGuData,
         };
       }
@@ -649,6 +697,28 @@ const WarningDataAndChart = props => {
           let WorkConColor = currentData.ModelWCFlag === '正常' ? '#52c41a' : '#faad14';
           let WorkConColor2 = currentData.ModelQHFlag === '正常' ? '#52c41a' : '#faad14';
 
+          // 数据特征识别：人为干预
+          let WCArtificialFlag = currentData.WCArtificialFlag
+            ? currentData.WCArtificialFlag.split(',')
+            : [];
+          // 数据特征识别：故障原因
+          let WCFaultFlag = currentData.WCFaultFlag ? currentData.WCFaultFlag.split(',') : [];
+          // 数据特征识别：运行管理异常
+          let WCOperationFlag = currentData.WCOperationFlag
+            ? currentData.WCOperationFlag.split(',')
+            : [];
+
+          // 大样本识别：人为干预
+          let QHArtificialFlag = currentData.QHArtificialFlag
+            ? currentData.QHArtificialFlag.split(',')
+            : [];
+          // 大样本识别：故障原因
+          let QHFaultFlag = currentData.QHFaultFlag ? currentData.QHFaultFlag.split(',') : [];
+          // 大样本识别：运行管理异常
+          let QHOperationFlag = currentData.QHOperationFlag
+            ? currentData.QHOperationFlag.split(',')
+            : [];
+
           let content = `
             <div style="background: #eeeeee; padding: 4px 10px; font-size: 14px">${
               currentData.MonitorTime
@@ -656,25 +726,57 @@ const WarningDataAndChart = props => {
             <div style="line-height: 20px">
               <div>
                 <i style="display: inline-block;width: 2px; height: 16px; margin-right: 8px; background: #3988ff;  vertical-align: middle;"></i>
-                <span style="display: inline-block; vertical-align: middle; color: #000">数据特征识别：<span>
+                <span style="display: inline-block; vertical-align: middle; color: #000">数据特征识别：</span>
               </div>
               <div style="padding: 0 14px">
                 <p>工况：<span style="color: ${WorkConColor}; font-weight: bold">${currentData.ModelWCFlag ||
-            '-'}</span><p>
-                <p>人为干预：${currentData.WCArtificialFlag || '-'}<p>
-                <p>故障原因：${currentData.WCFaultFlag || '-'}<p>
+            '-'}<p>
+                <div>
+                  <div style="display: inline-block;vertical-align: top;">人为干预：</div>
+                  <div  style="display: inline-block;">
+                    ${WCArtificialFlag.length ? WCArtificialFlag.join('<br/>') : '-'}
+                  </div>
+                </div>
+                <div style="margin-top: 4px">
+                  <div style="display: inline-block;vertical-align: top;">故障原因：</div>
+                  <div  style="display: inline-block;">
+                    ${WCFaultFlag.length ? WCFaultFlag.join('<br/>') : '-'}
+                  </div>
+                </div>
+                <div style="margin-top: 4px; display: ${WCOperationFlag.length ? 'block' : 'none'}">
+                  <div style="display: inline-block;vertical-align: top;">运行管理异常：</div>
+                  <div  style="display: inline-block;">
+                    ${WCOperationFlag.length ? WCOperationFlag.join('<br/>') : '-'}
+                  </div>
+                </div>
               </div>
             </div>
             <div style="line-height: 20px; margin-top: 10px">
               <div>
                 <i style="display: inline-block;width: 2px; height: 16px; margin-right: 8px; background: #3988ff;  vertical-align: middle;"></i>
-                <span style="display: inline-block; vertical-align: middle; color: #000">大样本识别：<span>
+                <span style="display: inline-block; vertical-align: middle; color: #000">大样本识别：</span>
               </div>
               <div style="padding: 0 14px">
                 <p>工况：<span style="color: ${WorkConColor2}; font-weight: bold">${currentData.ModelQHFlag ||
-            '-'}</span><p>
-                <p>人为干预：${currentData.QHArtificialFlag || '-'}<p>
-                <p>故障原因：${currentData.QHFaultFlag || '-'}<p>
+            '-'}<p>
+                <div>
+                  <div style="display: inline-block;vertical-align: top;">人为干预：</div>
+                  <div  style="display: inline-block;">
+                    ${QHArtificialFlag.length ? QHArtificialFlag.join('<br/>') : '-'}
+                  </div>
+                </div>
+                <div style="margin-top: 4px">
+                  <div style="display: inline-block;vertical-align: top;">故障原因：</div>
+                  <div  style="display: inline-block;">
+                    ${QHFaultFlag.length ? QHFaultFlag.join('<br/>') : '-'}
+                  </div>
+                </div>
+                <div style="margin-top: 4px; display: ${QHOperationFlag.length ? 'block' : 'none'}">
+                  <div style="display: inline-block;vertical-align: top;">运行管理异常：</div>
+                  <div  style="display: inline-block;">
+                    ${QHOperationFlag.length ? QHOperationFlag.join('<br/>') : '-'}
+                  </div>
+                </div>
               </div>
             </div>
             <div style="margin: 8px;background: #f7f7f7; padding: 0 6px;">
@@ -710,7 +812,6 @@ const WarningDataAndChart = props => {
       yAxis: yxisData,
       series: series,
     };
-    console.log('option', option);
     return option;
   };
 
@@ -742,7 +843,6 @@ const WarningDataAndChart = props => {
   // const onCancel = () => {
   //   setVisible(false);
   // };
-  console.log('legendSelected', legendSelected);
   return (
     <>
       {describe && (
@@ -761,6 +861,7 @@ const WarningDataAndChart = props => {
           pollutantCodes: [],
         }}
         autoComplete="off"
+        style={{ display: chartPollutantList ? 'none' : '' }}
       >
         <Form.Item name="pollutantCodes">
           <Select
@@ -838,17 +939,38 @@ const WarningDataAndChart = props => {
           loading={tableLoading}
           scroll={{ y: 'calc(100vh - 390px)' }}
         />
-      ) : tableLoading == false && pollutantLoading === false ? (
+      ) : tableLoading == false && !pollutantLoading ? (
         // false ? (
-        <ReactEcharts
-          theme="light"
-          option={getOption()}
-          lazyUpdate
-          notMerge
-          id="rightLine"
-          onEvents={onEvents}
-          style={{ marginTop: 34, width: '100%', height: 'calc(100vh - 304px)' }}
-        />
+        <>
+          <ReactEcharts
+            theme="light"
+            option={getOption()}
+            lazyUpdate
+            notMerge
+            id="rightLine"
+            onEvents={onEvents}
+            style={{ marginTop: 34, width: '100%', height: 'calc(100vh - 304px)', ...chartStyle }}
+          />
+          <Row justify="center" style={{ width: '100%' }}>
+            <Space size={20}>
+              <Badge
+                // status="processing"
+                color="#722ed1"
+                text="人为干预"
+              />
+              <Badge
+                // status="processing"
+                color="#ff4d4f"
+                text="故障"
+              />
+              <Badge
+                // status="processing"
+                color="#faad14"
+                text="运行管理异常"
+              />
+            </Space>
+          </Row>
+        </>
       ) : (
         <div className="example">
           <Spin tip="Loading..." />
@@ -861,6 +983,7 @@ const WarningDataAndChart = props => {
 WarningDataAndChart.defaultProps = {
   defaultChartSelected: [],
   warningDate: [],
+  chartStyle: {},
 };
 
 export default connect(dvaPropsData)(WarningDataAndChart);

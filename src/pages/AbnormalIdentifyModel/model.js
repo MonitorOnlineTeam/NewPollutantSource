@@ -32,32 +32,32 @@ export default Model.extend({
     unfoldModelList: [],
     ModelInfoAndParams: {
       modelInfo: {},
-      dataAttribute: [],
+      dataAttribute: { 1: [], 2: [], 3: [] },
     },
     DataPhenomenaChartList: {
       MonitorTimeList: [],
       dataList: [],
     },
     DataPhenomenaTableList: [],
-    workTowerData:{
-      pageIndex:1,
-      pageSize:12,
-      type:1,
+    workTowerData: {
+      pageIndex: 1,
+      pageSize: 12,
+      type: 1,
     },
-    generateVerificationTakeData:{
-     pageIndex:1,
-     pageSize:20,
-     scrollTop:'',
-     type:1,
+    generateVerificationTakeData: {
+      pageIndex: 1,
+      pageSize: 20,
+      scrollTop: '',
+      type: 1,
     },
-    workTowerQueryPar:{},
-    verificationTaskData:{
-      pageIndex:1,
-      pageSize:20,
-      scrollTop:'',
-      type:1,
-     },
-     pollutantDischargeGapQuery:{},
+    workTowerQueryPar: {},
+    verificationTaskData: {
+      pageIndex: 1,
+      pageSize: 20,
+      scrollTop: '',
+      type: 1,
+    },
+    pollutantDischargeGapQuery: {},
   },
   effects: {
     // 获取通用库模型列表
@@ -107,7 +107,13 @@ export default Model.extend({
         yield update({
           ModelInfoAndParams: {
             modelInfo: result.Datas.modelInfo || {},
-            dataAttribute: arr || [],
+            // dataAttribute: arr || [],
+            dataAttribute: {
+              1: [],
+              2: [],
+              3: [],
+              ...result.Datas.dataAttribute,
+            },
           },
         });
         callback && callback(result.Datas);
@@ -276,6 +282,8 @@ export default Model.extend({
               moment().endOf('day'),
             ],
             warningTypeCode: [],
+            pageSize: 20,
+            pageIndex: 1,
           },
         },
       });
@@ -298,20 +306,13 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-
-
-
-
-
-
-    
     // 获取模型快照数据
     *GetSnapshotData({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetSnapshotData, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        // message.error(result.Message);
+        message.error(result.Message);
       }
     },
 
@@ -597,7 +598,8 @@ export default Model.extend({
     /**
      * 线索分析
      */
-    *GetClueDatas({ payload, callback }, { call, select, update }) { // 获取工作台信息
+    *GetClueDatas({ payload, callback }, { call, select, update }) {
+      // 获取工作台信息
       const result = yield call(services.GetClueDatas, payload);
       if (result.IsSuccess) {
         callback && callback(result);
@@ -608,7 +610,8 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *GetWaitCheckDatas({ payload, callback }, { call, select, update }) { //获取生成核查任务
+    *GetWaitCheckDatas({ payload, callback }, { call, select, update }) {
+      //获取生成核查任务
       const result = yield call(services.GetWaitCheckDatas, payload);
       if (result.IsSuccess) {
         callback && callback(result);
@@ -616,7 +619,8 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *GetPreTakeFlagDatas({ payload, callback }, { call, select, update }) { //获取庄家意见信息
+    *GetPreTakeFlagDatas({ payload, callback }, { call, select, update }) {
+      //获取庄家意见信息
       const result = yield call(services.GetPreTakeFlagDatas, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
@@ -624,7 +628,8 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *GetPlanDatas({ payload, callback }, { call, select, update }) { //获取已有方案信息
+    *GetPlanDatas({ payload, callback }, { call, select, update }) {
+      //获取已有方案信息
       const result = yield call(services.GetPlanDatas, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
@@ -632,7 +637,8 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *GetCheckRoleDatas({ payload, callback }, { call, select, update }) { //获取核查角色（目前暂时用的是管理员角色）
+    *GetCheckRoleDatas({ payload, callback }, { call, select, update }) {
+      //获取核查角色（目前暂时用的是管理员角色）
       const result = yield call(services.GetCheckRoleDatas, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
@@ -640,7 +646,8 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *AddPlanTask({ payload, callback }, { call, select, update }) { //生成核查任务
+    *AddPlanTask({ payload, callback }, { call, select, update }) {
+      //生成核查任务
       const result = yield call(services.AddPlanTask, payload);
       if (result.IsSuccess) {
         message.success(result.Message);
@@ -649,7 +656,8 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *GetCheckedList({ payload, callback }, { call, select, update }) { // 获取待核查任务、已核查任务
+    *GetCheckedList({ payload, callback }, { call, select, update }) {
+      // 获取待核查任务、已核查任务
       const result = yield call(services.GetCheckedList, payload);
       if (result.IsSuccess) {
         callback && callback(result);
@@ -657,7 +665,8 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *GetCheckedView({ payload, callback }, { call, select, update }) { // 获取待核查任务、已核查任务详情
+    *GetCheckedView({ payload, callback }, { call, select, update }) {
+      // 获取待核查任务、已核查任务详情
       const result = yield call(services.GetCheckedView, payload);
       if (result.IsSuccess) {
         callback && callback(result);
@@ -665,46 +674,48 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *UpdatePlanItem({ payload, callback }, { call, select, update }) { // 核查保存或提交
+    *UpdatePlanItem({ payload, callback }, { call, select, update }) {
+      // 核查保存或提交
       const result = yield call(services.UpdatePlanItem, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
+        message.success(result.Message);
         callback && callback(result);
       } else {
         message.error(result.Message);
       }
     },
-    *CheckConfirm({ payload, callback }, { call, select, update }) { // 核查确认
+    *CheckConfirm({ payload, callback }, { call, select, update }) {
+      // 核查确认
       const result = yield call(services.CheckConfirm, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
+        message.success(result.Message);
         callback && callback(result);
       } else {
         message.error(result.Message);
       }
     },
-    *GetPollutionDischargeGap({ payload, callback }, { call, select, update }) { // 排污缺口
+    *GetPollutionDischargeGap({ payload, callback }, { call, select, update }) {
+      // 排污缺口
       const result = yield call(services.GetPollutionDischargeGap, payload);
       if (result.IsSuccess) {
         callback && callback(result);
         yield update({
-          pollutantDischargeGapQuery:payload
-        })
+          pollutantDischargeGapQuery: payload,
+        });
       } else {
         message.error(result.Message);
       }
     },
 
-    *ExportPollutionDischargeGap({ payload, callback }, { call, select, update }) { // 排污缺口 导出
+    *ExportPollutionDischargeGap({ payload, callback }, { call, select, update }) {
+      // 排污缺口 导出
       const result = yield call(services.ExportPollutionDischargeGap, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
-
-
-  }
+  },
 });
