@@ -1,7 +1,7 @@
 import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import { Badge, Popover, message, Tag } from 'antd';
 import moment from 'moment';
-
+import BetterTable from 'quill-better-table'
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 export const encryptKey =
@@ -525,26 +525,82 @@ export const getDataTruseItemMsg = (record, key, value) => {
   return <span>{value}</span>;
 };
 
-let quillFontSize = ['12px', '14px', '16px', '18px','20px', '24px', '36px']
 export const quillModules = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-    ['blockquote', 'code-block'],
-    ['link', 'image'],
-
-    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-    [{ 'direction': 'rtl' }],                         // text direction
-
-    // [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-    [{ 'size': quillFontSize }], // 文字大小自定义
-    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    [{ 'font': [] }],
-    [{ 'align': [] }],
-    ['clean']                                         // remove formatting button
-  ]
+  theme: 'snow',
+  modules: {
+    toolbar: {
+      container: [
+        [{'header': [1, 2, false]}],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{'script': 'sub'}, {'script': 'super'}], // superscript/subscript
+        [{'align': []}],
+        [{'color': []}],
+        [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        [{'direction': 'rtl'}],
+        ["formula"],
+        // ['link', 'image', 'video'],
+        ['link', 'image'],
+        ['clean'],
+        [{ 'size':  ['12px', '14px', '16px', '18px','20px', '24px', '36px'] }], // 文字大小自定义
+        ['table'], // 引入table到工具栏
+      ],
+      handlers: {
+        quill: undefined,
+        table() { // 工具栏点击事件修改
+          const quill = this.quill
+          const tableModule = quill.getModule('better-table')
+          tableModule.insertTable(3, 3) // 简单插入一个3*3到表格
+        },
+      },
+    },
+    table: false,
+    'better-table': {
+      operationMenu: { // table右键事件重命名
+        items: {
+          insertColumnRight: {
+            text: '右侧插入一列'
+          },
+          insertColumnLeft: {
+            text: '左侧插入一列'
+          },
+          insertRowUp: {
+            text: '上侧插入一行'
+          },
+          insertRowDown: {
+            text: '下侧插入一行'
+          },
+          mergeCells: {
+            text: '合并单元格'
+          },
+          unmergeCells: {
+            text: '拆分单元格'
+          },
+          deleteColumn: {
+            text: '删除当前列'
+          },
+          deleteRow: {
+            text: '删除当前行'
+          },
+          deleteTable: {
+            text: '删除表格'
+          }
+        },
+        color: {
+          colors: [
+            '#E53333', '#E56600', '#FF9900', '#64451D',
+            '#DFC5A4', '#FFE500', '#009900', '#006600',
+            '#99BB00', '#B8D100', '#60D978', '#00D5FF',
+            '#337FE5', '#003399', '#4C33E5', '#9933E5',
+            '#CC33E5', '#EE33EE', '#FFFFFF', '#CCCCCC',
+            '#999999', '#666666', '#333333', '#000000'
+          ],
+          text: '背景颜色'
+        }
+      },
+    },
+    keyboard: {
+      bindings: BetterTable.keyboardBindings //绑定table右键事件
+    },
+}
 }

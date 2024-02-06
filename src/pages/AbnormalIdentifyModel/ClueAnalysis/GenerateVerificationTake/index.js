@@ -4,7 +4,7 @@
  * @Description：生成核查任务
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Form, Card, Spin, Button, Space, Select, Badge, Tooltip, Input, Radio, Modal, Row, message, Popover, Table, Collapse, Cascader, Upload, Col } from 'antd';
 import styles from '../../styles.less';
@@ -21,8 +21,8 @@ import cuid from 'cuid';
 import Cookie from 'js-cookie';
 import { ModelNumberIdsDatas, ModalNameConversion } from '../../CONST';
 import { Resizable, ResizableBox } from 'react-resizable';
-import ReactQuill, { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import Quill from 'quill'
+import 'quill/dist/quill.snow.css';
 import { API } from '@config/API';
 import { cookieName, uploadPrefix } from '@/config'
 import ImageView from '@/components/ImageView';
@@ -39,6 +39,10 @@ const textStyle = {
 let fontSize = ['12px', '14px', '16px', '18px', '20px', '24px', '36px']
 Quill.imports['attributors/style/size'].whitelist = fontSize;
 Quill.register(Quill.imports['attributors/style/size']);
+import BetterTable from 'quill-better-table'
+import 'quill-better-table/dist/quill-better-table.css'
+// 注册 better-table 模块到 Quill
+Quill.register({ "modules/better-table": BetterTable }, true);
 import { quillModules } from '@/utils/utils';
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   generateVerificationTakeData: AbnormalIdentifyModel.generateVerificationTakeData,
@@ -54,10 +58,12 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   addLoading: loading.effects['AbnormalIdentifyModel/AddPlanTask'],
 
 });
-
+let editor, editor2;
 const Index = props => {
   const [form] = Form.useForm();
   const [modalForm] = Form.useForm();
+  const quillRef = useRef(null);
+  const quillRef2 = useRef(null);
 
 
   const {
@@ -67,7 +73,7 @@ const Index = props => {
     pointListLoading,
     entListLoading,
     generateVerificationTakeData,
-    generateVerificationTakeData: { pageIndex, pageSize, scrollTop,rowKey, type },
+    generateVerificationTakeData: { pageIndex, pageSize, scrollTop, rowKey, type },
     workTowerData,
     history,
     queryPlanLoading,
@@ -78,28 +84,23 @@ const Index = props => {
     location: { pathname },
   } = props;
   let data = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
-  const currentUser = JSON.parse(Cookie.get('currentUser'));
+  const currentUser = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser'));
   const [modelList, setModelList] = useState([]);
   const [pointList, setPointList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [total, setTotal] = useState(0);
   const [visible, setVisible] = useState(false)
   const [planPopVisible, setPlanPopVisible] = useState(false);
+  const [collapsekey, setCollapsekey] = useState()
+  const [siteVerificationPlanType, setSiteVerificationPlanType] = useState(1)
 
   useEffect(() => {
     form.resetFields();
-    if (!data) { //点菜单进入
+    if ((!data) && type != 2) { //点菜单进入
       GetModelList();
       onTableChange(1, 20)
     } else {
-      if (type == 1) {//从详情返回
-        GetModelList();
-        onFinish(pageIndex, pageSize);
-      } else if (type == 2) {//从工作台进入
-        props.dispatch({
-          type: 'AbnormalIdentifyModel/updateState',
-          payload: { workTowerData: { ...workTowerData, type: 2 } },
-        });
+      if (type == 1) {//从工作台进入
         form.setFieldsValue({
           date: data.beginTime && data.endTime ? [moment(data.beginTime), moment(data.endTime)] : [],
         })
@@ -116,22 +117,56 @@ const Index = props => {
           });
 
         })
-
-
+        props.dispatch({
+          type: 'AbnormalIdentifyModel/updateState',
+          payload: { workTowerData: { ...workTowerData, type: 2 } },
+        });
+      } else if (type == 2) {//从详情返回
+        GetModelList();
+        onFinish(pageIndex, pageSize,'query');
       }
+
     }
   }, []);
-  const detailPath = '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail'
+  useEffect(() => {
+    if (collapsekey == 1) {
+      setTimeout(() => {
+        if (quillRef.current) {
+          editor = new Quill(quillRef.current, { ...quillModules })
+          // 监听Quill编辑器的内容变化
+          editor.on('text-change', () => {
+            modalForm.validateFields(['planContent']);
+          });
+        }
+      })
+
+    }
+  }, [collapsekey])
+  useEffect(() => {
+    if (siteVerificationPlanType == 2) {
+      setTimeout(() => {
+        if (quillRef2.current) {
+          editor2 = new Quill(quillRef2.current, { ...quillModules })
+          editor2.on('text-change', () => {
+            modalForm.validateFields(['checkReason']);
+          });
+        }
+      })
+
+    }
+  }, [siteVerificationPlanType])
+  const detailPath = '/AbnormalIdentifyModel/CluesList/CluesDetails'
   const historys = useHistory();
   useEffect(() => {
     const handleRouteChange = (location) => {
       // 在这里执行你需要在路由变化时执行的代码  
       const path = location.pathname
       const currentPath = pathname
-      if ((path !== detailPath && path !== currentPath) || (path === detailPath && !location.search)) {
+      const detailPathReg = new RegExp(detailPath);
+      if ( (!detailPathReg.test(path)) && path !== currentPath) {
         dispatch({
           type: 'AbnormalIdentifyModel/updateState',
-          payload: { generateVerificationTakeData: { pageIndex: 1, pageSize: 20,  scrollTop:0,rowKey:undefined, type: 1 } },
+          payload: { generateVerificationTakeData: { pageIndex: 1, pageSize: 20, scrollTop: 0, rowKey: undefined, type: 1 } },
         })
       }
     };
@@ -240,14 +275,13 @@ const Index = props => {
                       generateVerificationTakeData: {
                         ...generateVerificationTakeData,
                         scrollTop: scrollTop,
-                        rowKey:record.WarningCode,
-                        type:2,
+                        rowKey: record.WarningCode,
+                        type: 2,
                       },
                     },
                   });
-                  const data = {ID:record.WarningCode }
                   router.push(
-                    `${detailPath}?data=${data}`
+                    `${detailPath}/${record.WarningCode}`
                   );
                 }}
               >
@@ -397,16 +431,16 @@ const Index = props => {
       if (index === 0) {
         return true;
       }
-    
+
       // 比较当前对象和前一个对象的这两个属性值
       const prevObj = arr[index - 1];
       return obj[property1] === prevObj[property1] &&
-             obj[property2] === prevObj[property2];
+        obj[property2] === prevObj[property2];
     });
-}
-  const [selectFlag,setSelectFlag] = useState(false)
+  }
+  const [selectFlag, setSelectFlag] = useState(false)
   // 查询数据
-  const onFinish = (pageIndex, pageSize,pageChange) => {
+  const onFinish = (pageIndex, pageSize, pageChange) => {
     const values = form.getFieldsValue();
     props.dispatch({
       type: 'AbnormalIdentifyModel/GetWaitCheckDatas',
@@ -423,15 +457,15 @@ const Index = props => {
         setSelectFlag(falg)
         setDataSource(res.Datas);
         setTotal(res.Total);
-        if(!pageChange){
-        setSelectedRowKeys([])
-        setSelectedRow([])
+        if (!pageChange) {
+          setSelectedRowKeys([])
+          setSelectedRow([])
         }
         // 设置滚动条高度，定位到点击详情的行号
         let el = document.querySelector(`[data-row-key="${rowKey}"]`);
         let tableBody = document.querySelector('.ant-table-body');
         if (tableBody) {
-          el && type==2? (tableBody.scrollTop = scrollTop) : (tableBody.scrollTop = 0);
+          el && type == 2 ? (tableBody.scrollTop = scrollTop) : (tableBody.scrollTop = 0);
         }
       },
     });
@@ -439,7 +473,7 @@ const Index = props => {
 
 
   // 分页
-  const onTableChange = (current, pageSize,query) => {
+  const onTableChange = (current, pageSize, query) => {
     props.dispatch({
       type: 'AbnormalIdentifyModel/updateState',
       payload: {
@@ -451,7 +485,7 @@ const Index = props => {
         },
       },
     });
-    onFinish(current, pageSize,query=='query'? '':'pageChange');
+    onFinish(current, pageSize, query == 'query' ? '' : 'pageChange');
   };
 
   // 根据企业获取排口
@@ -533,6 +567,7 @@ const Index = props => {
       initVerificationActionData()
     }
   }, [visible])
+
   const save = (type) => {
     const validateFieldsFun = async () => {
       const modalValues = await modalForm.validateFields();
@@ -545,7 +580,7 @@ const Index = props => {
       const parData = {
         planAction: type,
         createUserId: currentUser?.User_ID,
-        warningCodes: selectedRowKeys?.[0]? selectedRowKeys.toString() : '',
+        warningCodes: selectedRowKeys?.[0] ? selectedRowKeys.toString() : '',
         isSceneCheck: modalValues.isSceneCheck,
         isSavePlan: modalValues.isSavePlan,
         preTakeFlag: modalValues.preTakeFlag?.length ? modalValues.preTakeFlag[modalValues.preTakeFlag.length - 1] : undefined,
@@ -569,6 +604,7 @@ const Index = props => {
         } : undefined
 
       }
+      // console.log(parData)
       dispatch({
         type: 'AbnormalIdentifyModel/AddPlanTask', payload: { ...parData },
         callback: res => {
@@ -591,15 +627,14 @@ const Index = props => {
   const rowSelection = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys, row) => {
-      console.log(newSelectedRowKeys, row)
-      if(selectedRowKeys?.length==0 || newSelectedRowKeys?.length==0 ){ //还未选中 或 全部取消
-      setSelectedRowKeys(newSelectedRowKeys)
-      setSelectedRow(row?.[0])
-      }else{ 
-        const currentRow = row?.[row?.length-1]
-        if(currentRow?.['DGIMN']==selectedRow['DGIMN'] && currentRow?.['WarningName']==selectedRow['WarningName']){
+      if (selectedRowKeys?.length == 0 || newSelectedRowKeys?.length == 0) { //还未选中 或 全部取消
+        setSelectedRowKeys(newSelectedRowKeys)
+        setSelectedRow(row?.[0])
+      } else {
+        const currentRow = row?.[row?.length - 1]
+        if (currentRow?.['DGIMN'] == selectedRow['DGIMN'] && currentRow?.['WarningName'] == selectedRow['WarningName']) {
           setSelectedRowKeys(newSelectedRowKeys)
-        }else{
+        } else {
           message.error('同一企业同一排口同一场景下才能同时选中并生成核查方案')
         }
       }
@@ -620,9 +655,7 @@ const Index = props => {
     }
   };
   const [verificationPlanType, setVerificationPlanType] = useState(1)
-  const [siteVerificationPlanType, setSiteVerificationPlanType] = useState(1)
   const [saveType, setSaveType] = useState()
-  const [collapsekey, setCollapsekey] = useState()
   const EditableCell = ({
     editing,
     dataIndex,
@@ -700,11 +733,11 @@ const Index = props => {
       }
       if (info.file.status === 'removed' || info.file.status === 'error') {
         setFilesList({ ...filesList, [files]: fileList })
-        if(info.file.status === 'done'){
-          if(info.file?.response?.IsSuccess){
+        if (info.file.status === 'done') {
+          if (info.file?.response?.IsSuccess) {
             modalForm.setFieldsValue({ [files]: filesCuid() })
             message.success('上传成功！')
-          }else{
+          } else {
             message.error(info.file?.response?.Message)
           }
         }
@@ -766,9 +799,9 @@ const Index = props => {
               style={{ width: 250 }}
             />
           </Form.Item>
-          <Form.Item label="行政区" name="regionCode">
-            <RegionList  style={{ width: 140 }} />
-          </Form.Item>
+          {/* <Form.Item label="行政区" name="regionCode">
+            <RegionList style={{ width: 140 }} />
+          </Form.Item> */}
           <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
             <Form.Item label="企业" name="entCode">
               <EntAtmoList
@@ -830,7 +863,7 @@ const Index = props => {
                 type="primary"
                 loading={queryLoading}
                 onClick={() => {
-                  onTableChange(1, 20,'query');
+                  onTableChange(1, 20, 'query');
                 }}
               >
                 查询
@@ -838,7 +871,7 @@ const Index = props => {
               <Button
                 onClick={() => {
                   form.resetFields();
-                  onTableChange(1, 20,'query');
+                  onTableChange(1, 20, 'query');
                 }}
               >
                 重置
@@ -847,13 +880,12 @@ const Index = props => {
           </Form.Item>
         </Form>
       </Card>
-
       <Card
         title={<span style={{ fontWeight: 'bold' }}>生成核查任务</span>}
         style={{ marginTop: 12 }}
       >
         <Button style={{ marginBottom: 12 }} type='primary' onClick={() => { generateVerificationTakeFun() }} >生成核查方案</Button>
-        <span style={{color:'#f5222d',paddingLeft:8}}>注：同一企业同一排口同一场景下才能同时选中并生成核查方案</span>
+        <span style={{ color: '#f5222d', paddingLeft: 8 }}>注：同一企业同一排口同一场景下才能同时选中并生成核查方案</span>
         <SdlTable
           rowKey={(record, index) => `${record.WarningCode}`}
           align="center"
@@ -870,7 +902,7 @@ const Index = props => {
             onChange: onTableChange,
             total: total,
           }}
-          className={selectFlag? '': 'noSelectAllSty' }
+          className={selectFlag ? '' : 'noSelectAllSty'}
         />
       </Card>
       <Modal
@@ -919,32 +951,33 @@ const Index = props => {
         >
           <Row>
             <Col span={8}>
-          <Form.Item label="企业">
-            {selectedRow?.EntName}
-          </Form.Item>
-          </Col>
-          <Col span={8}>
-          <Form.Item label="排口">
-            {selectedRow?.PointName}
-          </Form.Item>
-          </Col>
-          <Col span={8}>
-          <Form.Item name='isSceneCheck' label="现场核查" rules={[{ required: true, message: '请选择现场核查!' }]}>
-            <Radio.Group
-              onChange={(e) => {
-                setSiteVerificationPlanType(e.target?.value)
-                modalForm.resetFields();
-                modalForm.setFieldsValue({
-                  isSceneCheck: e.target?.value,
-                })
-                initVerificationActionData()//重新初始化核查动作数据
-              }}
-            >
-              <Radio value={1}>需要</Radio>
-              <Radio value={2}>不需要</Radio>
-            </Radio.Group>
-          </Form.Item>
-          </Col>
+              <Form.Item label="企业">
+                {selectedRow?.EntName}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="排口">
+                {selectedRow?.PointName}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name='isSceneCheck' label="现场核查" rules={[{ required: true, message: '请选择现场核查!' }]}>
+                <Radio.Group
+                  onChange={(e) => {
+                    setSiteVerificationPlanType(e.target?.value)
+                    setCollapsekey();
+                    modalForm.resetFields();
+                    modalForm.setFieldsValue({
+                      isSceneCheck: e.target?.value,
+                    })
+                    initVerificationActionData()//重新初始化核查动作数据
+                  }}
+                >
+                  <Radio value={1}>需要</Radio>
+                  <Radio value={2}>不需要</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
           </Row>
           <Spin spinning={!!preTakeFlagDatasLoading} size="small" style={{ width: 440, top: -6 }}>
             <Form.Item name='preTakeFlag' label="专家意见" rules={[{ required: true, message: '请选择标记!' }]}>
@@ -1043,8 +1076,9 @@ const Index = props => {
                               }
                               setSelectedPlanRowKeys([]);
                               setSelectedPlanRow([])
+
                             }, 0)
-                            
+
                           } else {
                             message.warning('请选择核查方案')
                           }
@@ -1073,16 +1107,19 @@ const Index = props => {
                     axis={'y'}
                     minConstraints={['100%', 120]}
                     className={'resizable_quill_sty'}
+                    style={{ marginTop: 8 }}
                   >
                     <Form.Item name='planContent'
-                      style={{height:'100%'}}
+                      style={{ height: '100%' }}
                       rules={[
                         {
                           validator: (_, value) => {
-                            const contentVal = value && value.replaceAll(/<p>|[</p>]/g, '').trim();
+                            const editorContent = editor?.root?.innerHTML
+                            const contentVal = editorContent && editorContent.replaceAll(/<p>|[</p>]/g, '').trim();
                             if ((!contentVal) || contentVal === 'br') {
                               return Promise.reject(new Error('请输入核查方案!'));
                             } else {
+                              modalForm.setFieldsValue({ planContent: editorContent })
                               return Promise.resolve();
                             }
 
@@ -1090,7 +1127,7 @@ const Index = props => {
                         }
                       ]}
                     >
-                      <ReactQuill theme="snow" modules={quillModules} />
+                      {collapsekey == 1 && <div ref={quillRef} />}
                     </Form.Item>
                   </ResizableBox >
                   <Row align='middle' style={{ marginBottom: 6 }}><span style={{ display: 'inline-block', height: 14, width: 4, marginRight: 4, backgroundColor: '#3888ff' }}></span> 核查动作</Row>
@@ -1137,17 +1174,19 @@ const Index = props => {
                     {
                       required: true,
                       validator: (_, value) => {
-                        const contentVal = value && value.replaceAll(/<p>|[</p>]/g, '').trim();
+                        const editorContent2 = editor2?.root?.innerHTML
+                        const contentVal = editorContent2 && editorContent2.replaceAll(/<p>|[</p>]/g, '').trim();
                         if ((!contentVal) || contentVal === 'br') {
                           return Promise.reject(new Error('请输入原因!'));
                         } else {
+                          modalForm.setFieldsValue({ checkReason: editorContent2 })
                           return Promise.resolve();
                         }
                       }
                     }
                   ]}
                 >
-                  <ReactQuill theme="snow" modules={quillModules} />
+                  {siteVerificationPlanType == 2 && <div ref={quillRef2} />}
                 </Form.Item>
               </ResizableBox >
             </>

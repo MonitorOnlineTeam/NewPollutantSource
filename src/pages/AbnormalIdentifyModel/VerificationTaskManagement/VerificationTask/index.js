@@ -18,8 +18,6 @@ import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 import Cookie from 'js-cookie';
-import ReactQuill, { Quill } from 'react-quill';
-
 import { API } from '@config/API';
 import { cookieName, uploadPrefix } from '@/config'
 import { useHistory } from 'react-router-dom';
@@ -75,7 +73,7 @@ const Index = props => {
       const path = location.pathname
       const detailPath = '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail'
       const currentPath = pathname
-      if ((path !== detailPath && path !== currentPath) || (path === detailPath && !location.search)) {
+      if (path !== detailPath && path !== currentPath) {
         dispatch({
           type: 'AbnormalIdentifyModel/updateState',
           payload: { verificationTaskData: { pageIndex: 1, pageSize: 20,  scrollTop:0,rowKey:undefined, type: 1 } },
@@ -186,7 +184,6 @@ const Index = props => {
                     },
                   });
                   const data = { id: record.ID }
-
                   router.push(
                     `/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail?id=${record.ID}&&type=${record.Status}`
                   );
@@ -281,9 +278,6 @@ const Index = props => {
               format="YYYY-MM-DD"
               style={{ width: 250 }}
             />
-          </Form.Item>
-          <Form.Item label="行政区" name="regionCode">
-            <RegionList  style={{ width: 140 }} />
           </Form.Item>
           <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
             <Form.Item label="企业" name="entCode">

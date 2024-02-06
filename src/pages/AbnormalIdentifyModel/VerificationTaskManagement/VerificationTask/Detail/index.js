@@ -58,11 +58,11 @@ const Index = props => {
     const [preTakeFlagDatas, setPreTakeFlagDatas] = useState([]) //专家意见
 
     useEffect(() => {
+        initData();
         props.dispatch({
             type: 'AbnormalIdentifyModel/updateState',
             payload: { verificationTaskData: { ...verificationTaskData, type: 2 } },
         });
-        initData();
     }, []);
 
 
@@ -156,7 +156,7 @@ const Index = props => {
                             <a
                                 onClick={e => {
                                     router.push(
-                                        `/DataAnalyticalWarningModel/Warning/ModelType/all/WarningVerify/${record.ModelWarningGuid}`,
+                                        `/AbnormalIdentifyModel/CluesList/CluesDetails/${record.ModelWarningGuid}`,
                                     );
                                 }}
                             >
@@ -236,7 +236,6 @@ const Index = props => {
         </div>
     }
     const [previewVisible, setPreviewVisible] = useState(false)
-    const [previewTitle, setPreviewTitle] = useState()
     const [photoIndex, setPhotoIndex] = useState(0); //预览图片Index
     const [imgUrlList, setImgUrlList] = useState([]);//预览图片列表
     //返回的核查动作图片
@@ -269,7 +268,6 @@ const Index = props => {
                 }
                 setPhotoIndex(imageListIndex)
                 setPreviewVisible(true)
-                setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
             },
             fileList: imgLists
         }
@@ -278,7 +276,11 @@ const Index = props => {
         // 更新表单域的值
         form.setFieldsValue({ [key]: fileResponse });
     };
-
+    const checkStatus = {
+        '核查完成': <Tag color="success">核查完成</Tag>,
+        '待确认': <Tag color="processing">待确认</Tag>,
+        '待确认': <Tag color="processing">待确认</Tag>,
+      }
 
     return (<div className={styles.verificationTaskDetailWrapper}>
         <BreadcrumbWrapper>
@@ -344,7 +346,7 @@ const Index = props => {
 
                         />
                     </Card>
-                    <Card
+                     <Card
                         title={<span style={{ fontWeight: 'bold' }}>方案及核查信息</span>}
                         style={{ marginTop: 8 }}
                     >
@@ -354,15 +356,7 @@ const Index = props => {
                                 <Row>
                                     <Col span={6}>
                                         <Form.Item label="核查状态">
-                                            {dataSource?.checkInfo?.StatusName === '核查完成' ?
-                                                <Tag color="success">核查完成</Tag>
-                                                :
-                                                dataSource?.checkInfo?.StatusName === '待确认' ?
-                                                <Tag color="processing">待确认</Tag>
-                                                :
-                                                <Tag color="error">{dataSource?.checkInfo?.StatusName}</Tag>
-
-                                            }
+                                              {checkStatus[dataSource?.checkInfo?.StatusName] }
                                         </Form.Item>
                                     </Col>
                                     <Col span={6}>
@@ -381,15 +375,12 @@ const Index = props => {
                                         </Form.Item>
                                     </Col>
                                 </Row>
-                                <div>
-                                    <Form.Item label="方案及核查信息" >
+                                    <Form.Item label="方案及核查信息" className='programmeLabel' >
                                         <div dangerouslySetInnerHTML={{ __html: dataSource?.Plan?.ContentBody }}></div>
                                     </Form.Item>
-
-                                </div>
                                 <Form name='checkAction' form={form} layout='vertical'>
                                     <div style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}>核查动作</div>
-                                    <div style={{ paddingLeft: 111 }}>
+                                    <div style={{ paddingLeft: 112 }}>
                                         {dataSource?.Plan?.PlanItem.map((item, index) => {
                                             const cuids = item.ReAttachment.AttachID ? item.ReAttachment.AttachID : cuid();
                                             return <div style={{paddingBottom:12}}>
@@ -436,7 +427,7 @@ const Index = props => {
                                 </Row>}
                             </>
                         }
-                    </Card>
+                    </Card> 
                 </Tabs.TabPane>
 
             </Tabs>
