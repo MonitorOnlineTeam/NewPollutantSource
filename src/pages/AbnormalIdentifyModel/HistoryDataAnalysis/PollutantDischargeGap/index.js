@@ -107,7 +107,7 @@ const Index = props => {
                         render: renderContent,
                     },
                     {
-                        title: 'SO2排放量',
+                        title: 'SO₂排放量',
                         dataIndex: 'SO2Discharge',
                         key: 'SO2Discharge',
                         align: 'center',
@@ -115,7 +115,7 @@ const Index = props => {
                         ellipsis: true,
                     },
                     {
-                        title: 'SO2排污许可证量',
+                        title: 'SO₂排污许可证量',
                         dataIndex: 'SO2PD',
                         key: 'SO2PD',
                         align: 'center',
@@ -124,7 +124,7 @@ const Index = props => {
                         render: renderContent,
                     },
                     {
-                        title: 'SO2排污缺口',
+                        title: 'SO₂排污缺口',
                         dataIndex: 'SO2PDQ',
                         key: 'SO2PDQ',
                         align: 'center',
@@ -177,7 +177,7 @@ const Index = props => {
                             ellipsis: true,
                         },
                         {
-                            title: 'SO2',
+                            title: 'SO₂',
                             dataIndex: `SO2Discharge${item}`,
                             key: `SO2Discharge${item}`,
                             align: 'center',
@@ -211,7 +211,7 @@ const Index = props => {
                     ellipsis: true,
                 },
                 {
-                    title: 'SO2',
+                    title: 'SO₂',
                     dataIndex:  `SO2Discharge${item}`,
                     key:  `SO2Discharge${item}`,
                     align: 'center',

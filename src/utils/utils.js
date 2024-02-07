@@ -527,6 +527,7 @@ export const getDataTruseItemMsg = (record, key, value) => {
 
 export const quillModules = {
   theme: 'snow',
+  placeholder: '请输入',
   modules: {
     toolbar: {
       container: [
