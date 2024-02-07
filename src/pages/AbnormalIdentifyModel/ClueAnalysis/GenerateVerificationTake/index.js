@@ -16,7 +16,7 @@ import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined,RollbackOutlined } from '@ant-design/icons';
 import cuid from 'cuid';
 import Cookie from 'js-cookie';
 import { ModelNumberIdsDatas, ModalNameConversion } from '../../CONST';
@@ -58,13 +58,15 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   addLoading: loading.effects['AbnormalIdentifyModel/AddPlanTask'],
 
 });
+
 let editor, editor2;
 const Index = props => {
   const [form] = Form.useForm();
   const [modalForm] = Form.useForm();
+
+
   const quillRef = useRef(null);
   const quillRef2 = useRef(null);
-
 
   const {
     dispatch,
@@ -123,7 +125,7 @@ const Index = props => {
         });
       } else if (type == 2) {//从详情返回
         GetModelList();
-        onFinish(pageIndex, pageSize,'query');
+        onFinish(pageIndex, pageSize, 'query');
       }
 
     }
@@ -133,13 +135,14 @@ const Index = props => {
       setTimeout(() => {
         if (quillRef.current) {
           editor = new Quill(quillRef.current, { ...quillModules })
-          // 监听Quill编辑器的内容变化
-          editor.on('text-change', () => {
+          editor.on('text-change', () => {  // 监听Quill编辑器的内容变化
             modalForm.validateFields(['planContent']);
           });
         }
       })
 
+    } else {
+      quillRef.current = null
     }
   }, [collapsekey])
   useEffect(() => {
@@ -152,7 +155,8 @@ const Index = props => {
           });
         }
       })
-
+    } else {
+      quillRef2.current = null
     }
   }, [siteVerificationPlanType])
   const detailPath = '/AbnormalIdentifyModel/CluesList/CluesDetails'
@@ -163,7 +167,7 @@ const Index = props => {
       const path = location.pathname
       const currentPath = pathname
       const detailPathReg = new RegExp(detailPath);
-      if ( (!detailPathReg.test(path)) && path !== currentPath) {
+      if ((!detailPathReg.test(path)) && path !== currentPath) {
         dispatch({
           type: 'AbnormalIdentifyModel/updateState',
           payload: { generateVerificationTakeData: { pageIndex: 1, pageSize: 20, scrollTop: 0, rowKey: undefined, type: 1 } },
@@ -604,7 +608,6 @@ const Index = props => {
         } : undefined
 
       }
-      // console.log(parData)
       dispatch({
         type: 'AbnormalIdentifyModel/AddPlanTask', payload: { ...parData },
         callback: res => {
@@ -731,7 +734,7 @@ const Index = props => {
       if (info.file.status === 'uploading') {
         setFilesList({ ...filesList, [files]: fileList })
       }
-      if (info.file.status === 'removed' || info.file.status === 'error') {
+      if (info.file.status === 'done' || info.file.status === 'removed' || info.file.status === 'error') {
         setFilesList({ ...filesList, [files]: fileList })
         if (info.file.status === 'done') {
           if (info.file?.response?.IsSuccess) {
@@ -876,6 +879,9 @@ const Index = props => {
               >
                 重置
               </Button>
+              <Button  onClick={() => {
+                history.go(-1);
+              }} ><RollbackOutlined />返回上级</Button>
             </Space>
           </Form.Item>
         </Form>
@@ -1043,6 +1049,11 @@ const Index = props => {
                             setTimeout(() => {
                               if (selectedPlanRow?.PlanItemDatas?.[0]) {
                                 modalForm.setFieldsValue({ planName: selectedPlanRow.PlanName, planContent: selectedPlanRow.PlanContent, planCode: selectedPlanRow?.PlanCode })
+                                setTimeout(() => { //给富文本赋值
+                                  if (quillRef.current) {
+                                    editor.root.innerHTML = selectedPlanRow.PlanContent
+                                  }
+                                })
                                 const data = selectedPlanRow.PlanItemDatas
                                 setVerificationActionData(data)
                                 if (data?.[0]) {
@@ -1127,7 +1138,7 @@ const Index = props => {
                         }
                       ]}
                     >
-                      {collapsekey == 1 && <div ref={quillRef} />}
+                      <div ref={quillRef} />
                     </Form.Item>
                   </ResizableBox >
                   <Row align='middle' style={{ marginBottom: 6 }}><span style={{ display: 'inline-block', height: 14, width: 4, marginRight: 4, backgroundColor: '#3888ff' }}></span> 核查动作</Row>
@@ -1186,7 +1197,7 @@ const Index = props => {
                     }
                   ]}
                 >
-                  {siteVerificationPlanType == 2 && <div ref={quillRef2} />}
+                  <div ref={quillRef2} />
                 </Form.Item>
               </ResizableBox >
             </>

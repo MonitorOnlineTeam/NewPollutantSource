@@ -269,7 +269,7 @@ const Index = props => {
         dispatch({
             type: 'AbnormalIdentifyModel/ExportPollutionDischargeGap',
             payload: {
-                EntCode,
+                ...queryPar,
             },
             callback: res => {
             },
@@ -307,9 +307,9 @@ const Index = props => {
                     <Form.Item label="日期" name="date">
                         <DatePicker picker="year" allowClear={false}/>
                     </Form.Item>
-                    <Form.Item label="行政区" name="regionCode">
+                    {/* <Form.Item label="行政区" name="regionCode">
                         <RegionList style={{ width: 140 }} />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
                         <Form.Item label="企业" name="entCode">
                             <EntAtmoList

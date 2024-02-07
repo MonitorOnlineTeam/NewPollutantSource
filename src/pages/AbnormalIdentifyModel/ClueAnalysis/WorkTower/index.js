@@ -65,7 +65,7 @@ const WorkTower = props => {
       // 在这里执行你需要在路由变化时执行的代码  
       const path = location.pathname
       const detailPath = '/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake'
-      const currentPath = '/AbnormalIdentifyModel/ClueAnalysis/WorkTower'
+      const currentPath = '/AbnormalIdentifyModel/CluesList/ClueAnalysis/WorkTower'
       if((path !== detailPath && path !== currentPath) || (path === detailPath && !location.search)){
         dispatch({
           type: 'AbnormalIdentifyModel/updateState',
