@@ -52,7 +52,20 @@ const WorkTower = props => {
 
   useEffect(() => {
     if (type == 2) {  //从生成核查任务返回
-      onFinish(pageIndex, pageSize);
+      let data = queryPar
+      form.setFieldsValue({
+        entCode: data?.entCode,
+        date: data.beginTime && data.endTime ? [moment(data.beginTime), moment(data.endTime)] : [],
+      });
+      if(data?.entCode){
+        getPointList(data?.entCode, () => {
+          form.setFieldsValue({dgimn: data?.dgimn })
+          onFinish(pageIndex, pageSize);
+        })
+      }else{
+        onFinish(pageIndex, pageSize);
+      }
+
     } else {//首次进入
       onTableChange(1, 12)
     }
@@ -121,7 +134,7 @@ const WorkTower = props => {
   };
 
   // 根据企业获取排口
-  const getPointList = EntCode => {
+  const getPointList = (EntCode,callback) => {
     dispatch({
       type: 'common/getPointByEntCode',
       payload: {
@@ -129,6 +142,7 @@ const WorkTower = props => {
       },
       callback: res => {
         setPointList(res);
+        callback&&callback()
       },
     });
   };

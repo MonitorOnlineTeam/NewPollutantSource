@@ -16,7 +16,7 @@ import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { PlusOutlined,RollbackOutlined } from '@ant-design/icons';
+import { PlusOutlined, RollbackOutlined } from '@ant-design/icons';
 import cuid from 'cuid';
 import Cookie from 'js-cookie';
 import { ModelNumberIdsDatas, ModalNameConversion } from '../../CONST';
@@ -46,6 +46,7 @@ Quill.register({ "modules/better-table": BetterTable }, true);
 import { quillModules } from '@/utils/utils';
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   generateVerificationTakeData: AbnormalIdentifyModel.generateVerificationTakeData,
+  waitCheckDatasQueryPar: AbnormalIdentifyModel.waitCheckDatasQueryPar,
   workTowerData: AbnormalIdentifyModel.workTowerData,
   modelListLoading: loading.effects['AbnormalIdentifyModel/GetModelList'],
   queryLoading: loading.effects['AbnormalIdentifyModel/GetWaitCheckDatas'],
@@ -76,6 +77,7 @@ const Index = props => {
     entListLoading,
     generateVerificationTakeData,
     generateVerificationTakeData: { pageIndex, pageSize, scrollTop, rowKey, type },
+    waitCheckDatasQueryPar,
     workTowerData,
     history,
     queryPlanLoading,
@@ -85,7 +87,6 @@ const Index = props => {
     addLoading,
     location: { pathname },
   } = props;
-  let data = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
   const currentUser = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser'));
   const [modelList, setModelList] = useState([]);
   const [pointList, setPointList] = useState([]);
@@ -98,38 +99,54 @@ const Index = props => {
 
   useEffect(() => {
     form.resetFields();
-    if ((!data) && type != 2) { //点菜单进入
-      GetModelList();
-      onTableChange(1, 20)
-    } else {
-      if (type == 1) {//从工作台进入
-        form.setFieldsValue({
-          date: data.beginTime && data.endTime ? [moment(data.beginTime), moment(data.endTime)] : [],
-        })
-        getPointList(data?.entCode, () => {
-          form.setFieldsValue({
-            entCode: data?.entCode,
-            dgimn: data?.dgimn,
-          })
-          GetModelList(() => {
-            form.setFieldsValue({
-              warningCode: data?.warningCode
-            })
-            onTableChange(1, 20)
-          });
+    // if ((!data) && type != 2) { //点菜单进入
+    //   GetModelList();
+    //   onTableChange(1, 20)
+    // } else {
 
-        })
-        props.dispatch({
-          type: 'AbnormalIdentifyModel/updateState',
-          payload: { workTowerData: { ...workTowerData, type: 2 } },
-        });
-      } else if (type == 2) {//从详情返回
-        GetModelList();
-        onFinish(pageIndex, pageSize, 'query');
+    let data = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
+
+    if (type == 1 || type == 2) {//1从工作台进入   2 从详情返回
+      let data = ''
+      if (type == 1) {
+        data = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
+      } else {
+        data = waitCheckDatasQueryPar
       }
-
+      form.setFieldsValue({
+        entCode: data?.entCode,
+        date: data.beginTime && data.endTime ? [moment(data.beginTime), moment(data.endTime)] : [],
+      })
+      if (data?.entCode) {
+        getPointList(data?.entCode, () => {
+          form.setFieldsValue({ dgimn: data?.dgimn, })
+          initData(data);
+        })
+      } else {
+        initData(data)
+      }
     }
+
+
+
+
+    // }
   }, []);
+
+  const initData = (data) => {
+      GetModelList(() => {
+        form.setFieldsValue({ warningCode: data?.warningCode })
+        if (type == 1) {
+          onTableChange(1, 20)
+          props.dispatch({
+            type: 'AbnormalIdentifyModel/updateState',
+            payload: { workTowerData: { ...workTowerData, type: 2 } },
+          });
+        } else {
+          onFinish(pageIndex, pageSize, 'query');
+        }
+      });
+  }
   useEffect(() => {
     if (collapsekey == 1) {
       setTimeout(() => {
@@ -879,7 +896,7 @@ const Index = props => {
               >
                 重置
               </Button>
-              <Button  onClick={() => {
+              <Button onClick={() => {
                 history.go(-1);
               }} ><RollbackOutlined />返回上级</Button>
             </Space>

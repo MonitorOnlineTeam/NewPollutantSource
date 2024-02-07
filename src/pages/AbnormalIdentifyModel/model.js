@@ -50,6 +50,7 @@ export default Model.extend({
       scrollTop: '',
       type: 1,
     },
+    waitCheckDatasQueryPar:{},
     workTowerQueryPar: {},
     verificationTaskData: {
       pageIndex: 1,
@@ -615,6 +616,9 @@ export default Model.extend({
       const result = yield call(services.GetWaitCheckDatas, payload);
       if (result.IsSuccess) {
         callback && callback(result);
+        yield update({
+          waitCheckDatasQueryPar: payload,
+        });
       } else {
         message.error(result.Message);
       }
