@@ -2,12 +2,12 @@
  * @Author: JiaQi
  * @Date: 2024-01-18 15:08:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-06 10:44:19
+ * @Last Modified time: 2024-02-20 14:46:00
  * @Description:  数据现象
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Card, Spin, Button, Radio, Select, Space, Popover, Badge } from 'antd';
+import { Form, Card, Spin, Button, Radio, Select, Space, Popover, Badge, message } from 'antd';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
@@ -119,7 +119,7 @@ const DataPhenomena = props => {
 
           let icon = '';
 
-          if (_text !== 0 && _text !== '-') {
+          if (_text && _text !== 0 && _text !== '-') {
             color = 'red';
             let PhenomenonType = form.getFieldValue('PhenomenonType');
             if (PhenomenonType === '1') {
@@ -159,7 +159,7 @@ const DataPhenomena = props => {
               </Popover>
             );
 
-          return text;
+          return text || '-';
         },
       });
       // // 非折算
@@ -272,12 +272,13 @@ const DataPhenomena = props => {
       });
       const currentData = DataPhenomenaChartList.dataList[pollutant.PollutantCode];
       const currentDataME = DataPhenomenaChartList.dataList[pollutant.PollutantCode + '_ME'] || [];
-      console.log(title + '-currentDataME', currentDataME);
+      console.log(pollutant.PollutantName + '-currentDataME', currentDataME);
       let visualMapPieces = findColorBlocks(currentDataME);
+      console.log('visualMapPieces', visualMapPieces);
       let markAreaData = [];
       // 处理阴影
       visualMapPieces.map(item => {
-        if (item.color === 'red' || item.color === '#1890ff') {
+        if ((item.color === 'red' || item.color === '#1890ff') && item.flag !== undefined) {
           let PhenomenonType = form.getFieldValue('PhenomenonType');
           let name = '',
             otherParams = {};
@@ -289,7 +290,7 @@ const DataPhenomena = props => {
           } else if (PhenomenonType === '3') {
             if (item.flag === 1) {
               name = '陡升';
-            } else {
+            } else if (item.flag === 2) {
               name = '陡降';
               otherParams = {
                 itemStyle: {
@@ -333,6 +334,7 @@ const DataPhenomena = props => {
       title: title,
       tooltip: {
         trigger: 'axis',
+        confine: true,
         axisPointer: {
           animation: false,
         },

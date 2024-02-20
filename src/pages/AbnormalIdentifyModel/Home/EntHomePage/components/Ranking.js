@@ -41,7 +41,7 @@ const Ranking = props => {
         </Radio.Group>
       }
     >
-      <RankingContent modelType={2} modelBaseType={modelBaseType} />
+      <RankingContent modelType={2} modelBaseType={modelBaseType} limitScrollNum={10}/>
     </HomeCard>
   );
 };

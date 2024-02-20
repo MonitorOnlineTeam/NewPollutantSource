@@ -7,7 +7,7 @@ import moment from 'moment';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   // todoList: wordSupervision.todoList,
-  loading: loading.effects['dataModel/GetAllTypeDataListForModel2'],
+  loading: loading.effects['AbnormalIdentifyModel/GetAllTypeDataListForModel2'],
 });
 
 const ModelChartMultipleBig = props => {
@@ -39,7 +39,7 @@ const ModelChartMultipleBig = props => {
     const values = form.getFieldsValue();
     console.log('values', values);
     dispatch({
-      type: 'dataModel/GetAllTypeDataListForModel2',
+      type: 'AbnormalIdentifyModel/GetAllTypeDataListForModel2',
       payload: {
         DGIMNs: DGIMNs.toString(),
         beginTime: moment(values.date[0]).format('YYYY-MM-DD HH:mm:ss'),

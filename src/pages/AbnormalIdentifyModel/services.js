@@ -164,6 +164,18 @@ export async function GetSnapshotData(params) {
   return result;
 }
 
+// 获取全企业波动范围
+export async function StatisNormalRange(params) {
+  const result = await post(API.AbnormalIdentifyModel.StatisNormalRange, params);
+  return result;
+}
+
+// 全企业波动范围 - 导出
+export async function ExportStatisNormalRange(params) {
+  const result = await post(API.AbnormalIdentifyModel.ExportStatisNormalRange, params);
+  return result;
+}
+
 // 保存点位参数配置
 export async function SavePointParamsRange(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Warning/SavePointParamsRange', params);
@@ -230,21 +242,6 @@ export async function StatisAlarmInfoSum(params) {
 // 线索信息统计
 export async function StatisAlarmInfoIndiz(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfoIndiz', params);
-  return result;
-}
-
-// 获取全企业波动范围
-export async function StatisNormalRange(params) {
-  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisNormalRange', params);
-  return result;
-}
-
-// 全企业波动范围 - 导出
-export async function ExportStatisNormalRange(params) {
-  const result = await post(
-    '/newApi/rest/PollutantSourceApi/Warning/ExportStatisNormalRange',
-    params,
-  );
   return result;
 }
 

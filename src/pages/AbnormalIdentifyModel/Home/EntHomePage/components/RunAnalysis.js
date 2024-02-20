@@ -115,7 +115,7 @@ const RanAnalysis = props => {
                 color: '#fff',
                 fontWeight: 'bold',
                 formatter: function(name) {
-                  let val = name.value == '-' ? '-' : name.value.toFixed(2);
+                  let val = name.value == '-' ? '-' : (name.value * 100).toFixed(2);
                   return val == '-' ? '-' : `{val|${val}%}`;
                 },
                 rich: {

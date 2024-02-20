@@ -150,6 +150,7 @@ const Index = props => {
   };
 
   const renderImages = (data, flag) => {
+    console.log('data', data);
     return data.map(item => {
       let element = (
         <div
@@ -188,13 +189,6 @@ const Index = props => {
                 重新生成
               </Button>
             </div>
-            {/* <div>
-              <Collapse bordered={false}>
-                <Panel header="重新生成波动范围" key="1">
-                  <p>1111</p>
-                </Panel>
-              </Collapse>
-            </div> */}
           </div>
           <div className={styles.dataRangeUpdateTimeBox}>
             <span className={styles.updateTime}>
@@ -204,16 +198,27 @@ const Index = props => {
           </div>
         </div>
       );
-      debugger;
       if (flag) {
         return <Col span={12}>{element}</Col>;
       }
-      return element;
+      if (item.src) {
+        return element;
+      }
+      return '';
     });
   };
 
+  const checkNullValues = obj => {
+    for (let key in obj) {
+      if (obj[key] !== null) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const getPageContent = () => {
-    if (!Object.keys(images).length) {
+    if (!Object.keys(images).length || checkNullValues(images)) {
       return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
     }
     return (

@@ -413,7 +413,8 @@ const WarningDataAndChart = props => {
       });
       let serieData = [];
       allTypeDataList.map(item => {
-        serieData = serieData.concat(item[pollutant] * 1);
+        // serieData = serieData.concat(item[pollutant] * 1);
+        serieData = serieData.concat(item[pollutant]);
       });
       series.push({
         type: 'line',
@@ -461,152 +462,151 @@ const WarningDataAndChart = props => {
     let continuousItem = [];
     // 人为干预和故障数据
     let RenAndGuData = [];
-
-    allTypeDataList.map((item, idx) => {
-      let index = 0;
-      // interval = 0.05;
-
-      let min = _.min(series[showIndex].data);
-      let max = _.max(series[showIndex].data);
-      if (min < 0) {
-        min = Math.abs(min);
-      } else {
-        min = 0;
-      }
-
-      let interval = showIndex > -1 ? (min + max) / 60 : 0;
-      // 时间数据
-      xAxisData.push(item.MonitorTime);
-      // 绘制异常工况
-      {
-        // 异常工况开始
-        if (
-          (item.ModelQHFlag !== '正常' || item.ModelWCFlag !== '正常') &&
-          !continuousItem.length
-        ) {
-          continuousItem.push({
-            name: '异常工况',
-            xAxis: item.MonitorTime,
-          });
-        }
-
-        // 异常工况结束
-        if (item.ModelQHFlag === '正常' && item.ModelWCFlag === '正常' && continuousItem.length) {
-          continuousItem.push({
-            name: '异常工况',
-            xAxis: item.MonitorTime,
-          });
-
-          markAreaData.push(continuousItem);
-          continuousItem = [];
-        } else if (
-          (item.ModelQHFlag !== '正常' || item.ModelWCFlag !== '正常') &&
-          idx === allTypeDataList.length - 1
-        ) {
-          continuousItem.push({
-            name: '异常工况',
-            xAxis: item.MonitorTime,
-          });
-
-          markAreaData.push(continuousItem);
-          continuousItem = [];
-        }
-      }
-      // 绘制人为干预、设备故障时间线
-      {
-        let RenStatus = item.WCArtificialFlag || item.QHArtificialFlag;
-        let GuStatus = item.WCFaultFlag || item.QHFaultFlag;
-        let CEMSRunStatus = item.WCOperationFlag || item.QHOperationFlag;
-
-        // 运行管理异常
-        if (CEMSRunStatus) {
-          index++;
-          RenAndGuData.push({
-            yAxis: index * interval,
-            xAxis: item.MonitorTime,
-            symbol: 'circle',
-            symbolSize: 6,
-            itemStyle: {
-              color: '#faad14',
-            },
-          });
-        }
-
-        // 故障
-        if (GuStatus) {
-          index++;
-          RenAndGuData.push({
-            yAxis: index * interval,
-            xAxis: item.MonitorTime,
-            symbol: 'circle',
-            symbolSize: 6,
-            itemStyle: {
-              color: '#ff4d4f',
-            },
-          });
-        }
-
-        // 人为干预
-        if (RenStatus) {
-          index++;
-          RenAndGuData.push({
-            yAxis: index * interval,
-            xAxis: item.MonitorTime,
-            symbol: 'circle',
-            symbolSize: 6,
-            itemStyle: {
-              color: '#722ed1',
-            },
-          });
-        }
-
-        // if (RenStatus && GuStatus) {
-        //   RenAndGuData.push({
-        //     name: '人为干预、设备故障',
-        //     xAxis: item.MonitorTime,
-        //     lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
-        //     label: {
-        //       position: 'end',
-        //       fontSize: 13,
-        //       color: '#ff5500',
-        //       formatter: function(params) {
-        //         return '人为干预\n设备故障';
-        //       },
-        //     },
-        //   });
-        // } else if (RenStatus) {
-        //   RenAndGuData.push({
-        //     name: '人为干预',
-        //     xAxis: item.MonitorTime,
-        //     lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
-        //     label: {
-        //       position: 'end',
-        //       fontSize: 13,
-        //       color: '#ff5500',
-        //       formatter: function(params) {
-        //         return '人为干预\n设备故障';
-        //       },
-        //     },
-        //   });
-        // } else if (GuStatus) {
-        //   RenAndGuData.push({
-        //     name: '设备故障',
-        //     xAxis: item.MonitorTime,
-        //     lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
-        //     label: {
-        //       position: 'end',
-        //       fontSize: 13,
-        //       color: '#ff5500',
-        //       formatter: function(params) {
-        //         return '人为干预\n设备故障';
-        //       },
-        //     },
-        //   });
-        // }
-      }
-    });
-
     if (showIndex > -1) {
+      allTypeDataList.map((item, idx) => {
+        let index = 0;
+        // interval = 0.05;
+
+        let min = _.min(series[showIndex].data);
+        let max = _.max(series[showIndex].data);
+        if (min < 0) {
+          min = Math.abs(min);
+        } else {
+          min = 0;
+        }
+
+        let interval = (min + max) / 50;
+        // 时间数据
+        xAxisData.push(item.MonitorTime);
+        // 绘制异常工况
+        {
+          // 异常工况开始
+          if (
+            (item.ModelQHFlag !== '正常' || item.ModelWCFlag !== '正常') &&
+            !continuousItem.length
+          ) {
+            continuousItem.push({
+              name: '异常工况',
+              xAxis: item.MonitorTime,
+            });
+          }
+
+          // 异常工况结束
+          if (item.ModelQHFlag === '正常' && item.ModelWCFlag === '正常' && continuousItem.length) {
+            continuousItem.push({
+              name: '异常工况',
+              xAxis: item.MonitorTime,
+            });
+
+            markAreaData.push(continuousItem);
+            continuousItem = [];
+          } else if (
+            (item.ModelQHFlag !== '正常' || item.ModelWCFlag !== '正常') &&
+            idx === allTypeDataList.length - 1
+          ) {
+            continuousItem.push({
+              name: '异常工况',
+              xAxis: item.MonitorTime,
+            });
+
+            markAreaData.push(continuousItem);
+            continuousItem = [];
+          }
+        }
+        // 绘制人为干预、设备故障时间线
+        {
+          let RenStatus = item.WCArtificialFlag || item.QHArtificialFlag;
+          let GuStatus = item.WCFaultFlag || item.QHFaultFlag;
+          let CEMSRunStatus = item.WCOperationFlag || item.QHOperationFlag;
+
+          // 运行管理异常
+          if (CEMSRunStatus) {
+            index++;
+            RenAndGuData.push({
+              yAxis: index * interval,
+              xAxis: item.MonitorTime,
+              symbol: 'circle',
+              symbolSize: 6,
+              itemStyle: {
+                color: '#faad14',
+              },
+            });
+          }
+
+          // 故障
+          if (GuStatus) {
+            index++;
+            RenAndGuData.push({
+              yAxis: index * interval,
+              xAxis: item.MonitorTime,
+              symbol: 'circle',
+              symbolSize: 6,
+              itemStyle: {
+                color: '#ff4d4f',
+              },
+            });
+          }
+
+          // 人为干预
+          if (RenStatus) {
+            index++;
+            RenAndGuData.push({
+              yAxis: index * interval,
+              xAxis: item.MonitorTime,
+              symbol: 'circle',
+              symbolSize: 6,
+              itemStyle: {
+                color: '#722ed1',
+              },
+            });
+          }
+
+          // if (RenStatus && GuStatus) {
+          //   RenAndGuData.push({
+          //     name: '人为干预、设备故障',
+          //     xAxis: item.MonitorTime,
+          //     lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
+          //     label: {
+          //       position: 'end',
+          //       fontSize: 13,
+          //       color: '#ff5500',
+          //       formatter: function(params) {
+          //         return '人为干预\n设备故障';
+          //       },
+          //     },
+          //   });
+          // } else if (RenStatus) {
+          //   RenAndGuData.push({
+          //     name: '人为干预',
+          //     xAxis: item.MonitorTime,
+          //     lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
+          //     label: {
+          //       position: 'end',
+          //       fontSize: 13,
+          //       color: '#ff5500',
+          //       formatter: function(params) {
+          //         return '人为干预\n设备故障';
+          //       },
+          //     },
+          //   });
+          // } else if (GuStatus) {
+          //   RenAndGuData.push({
+          //     name: '设备故障',
+          //     xAxis: item.MonitorTime,
+          //     lineStyle: { color: '#ff5500', type: 'solid', width: 2 },
+          //     label: {
+          //       position: 'end',
+          //       fontSize: 13,
+          //       color: '#ff5500',
+          //       formatter: function(params) {
+          //         return '人为干预\n设备故障';
+          //       },
+          //     },
+          //   });
+          // }
+        }
+      });
+
       // 绘制异常工况阴影
       series[showIndex].markArea = {
         itemStyle: {
@@ -664,6 +664,7 @@ const WarningDataAndChart = props => {
     let option = {
       tooltip: {
         trigger: 'axis',
+        confine: true,
         extraCssText:
           'background: rgba(255,255,255,.9); border: 1px solid #ddd; padding: 0; font-size: 13px; border-radius: 0;',
         textStyle: 'color: rgba(0,0,0,.5)',

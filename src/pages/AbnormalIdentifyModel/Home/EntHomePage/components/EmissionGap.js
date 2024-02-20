@@ -30,12 +30,14 @@ const EmissionGap = props => {
       type: 'AbnormalIdentifyModelHome/GetPollutantDischargeGapStatistics',
       payload: {},
       callback: res => {
+        debugger
         setGapData(res);
       },
     });
   };
 
   const getOption = type => {
+    console.log('gapData', gapData)
     let name = type === '01' ? '烟尘' : type === '02' ? '二氧化硫' : '氮氧化物';
     let currentData = gapData[type];
 
@@ -173,22 +175,14 @@ const EmissionGap = props => {
           fontSize: '26',
           fontWeight: 600,
         },
-        subtext: `已排放:${value}kg`,
+        // subtext: `已排放:${value}kg`,
+        subtext: `${value}kg`,
         subtextStyle: {
           color: '#EDEDED',
           fontSize: '13',
           fontWeight: 600,
         },
       },
-      // grid: {
-      //   // left: '-10%',
-      //   // right: '4%',
-      //   // top: '-20%',
-      //   // bottom: '100%',
-      //   bottom: '15%',
-      //   top: '40%',
-      //   // containLabel: true,
-      // },
       angleAxis: {
         max: 100,
         // 隐藏刻度线
@@ -217,9 +211,12 @@ const EmissionGap = props => {
     return option;
   };
 
-  const _pollutantCode = pollutantCode.length ? pollutantCode : ['01', '02', '03'];
+  const _pollutantCode = pollutantCode.split(',');
 
   const renderInfoContent = code => {
+    console.log('code', code)
+    console.log('gapData', gapData)
+    let name = code === '01' ? '烟尘' : code === '02' ? '二氧化硫' : '氮氧化物';
     let currentData = gapData[code];
     if (!currentData) {
       return '';
@@ -234,7 +231,7 @@ const EmissionGap = props => {
     return (
       <div className={styles.infoContent}>
         <p>
-          SO2排放量：{value}kg ({rate}%)
+          排放量：{value}kg ({rate}%)
         </p>
         {gapValue < 0 ? (
           // 超
@@ -271,7 +268,7 @@ const EmissionGap = props => {
                   style={{
                     textAlign: 'center',
                     position: 'absolute',
-                    top: 20,
+                    top: 12,
                     fontSize: 20,
                     width: '100%',
                     color: '#fff',
@@ -284,7 +281,7 @@ const EmissionGap = props => {
                 {gapData[item] ? (
                   <ReactEcharts
                     option={getOption(item)}
-                    style={{ height: '100%', width: '100%', marginTop: -10 }}
+                    style={{ height: '90%', width: '100%', marginTop: 6 }}
                     theme="my_theme"
                   />
                 ) : (
