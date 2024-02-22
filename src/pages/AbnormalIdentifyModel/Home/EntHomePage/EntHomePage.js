@@ -64,7 +64,7 @@ const RegionAndIndustryPage = props => {
               <DataQualityAnalysis />
             </div>
           </Col>
-          <Col flex="1" className={styles.centerWrapper}>
+          <Col style={{ maxWidth: '54%' }} flex={'auto'} className={styles.centerWrapper}>
             <div className={styles.mapWrapper}>
               <i className={styles.lt}></i>
               <i className={styles.rt}></i>

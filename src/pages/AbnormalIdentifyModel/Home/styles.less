@@ -3,6 +3,7 @@
   width: 100vw;
   min-width: 1500px;
   overflow: auto;
+  // overflow-y: none;
   background: url(/AbnormalIdentifyModel/BG.png) no-repeat;
   background-size: cover;
 
@@ -109,6 +110,9 @@
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
+          background: linear-gradient(90deg, #145bbd, rgba(20, 91, 189, 0.01));
+          opacity: 0.9;
+          background-position-x: 25px;
         }
 
         .extra {
@@ -185,13 +189,43 @@
       .clueStatistics {
         flex: 1;
         margin-top: 10px;
+        height: calc(100vh - 346px);
 
         .ClueStatisticsContent {
           display: flex;
           flex-direction: column;
           height: 100%;
+
+          .unit {
+            color: #fff;
+            text-align: right;
+            margin-bottom: 20px;
+            font-weight: 500;
+            margin-right: 10px;
+          }
           .BarBox {
             flex: 1;
+            color: #4ee1ff;
+            overflow-y: auto;
+
+            .ClueClassificationWrapper {
+              margin-bottom: 10px;
+              font-weight: 500;
+              cursor: pointer;
+            }
+            .label {
+              text-align: right;
+              padding: 0 10px;
+            }
+            .value {
+              text-align: left;
+              padding: 0 10px;
+            }
+
+            .ProgressContent {
+              background: #2894ef;
+              height: 20px;
+            }
           }
         }
       }
@@ -202,9 +236,10 @@
 
         .rateBoxWrapper {
           background: url(/AbnormalIdentifyModel/rate_bg.png) no-repeat;
-          margin: 10px;
-          margin-top: 14px;
-          height: 90px;
+          margin: 4% 12px;
+          margin-bottom: 0;
+          height: 11%;
+          min-height: 76px;
           background-size: 100% 100%;
           display: flex;
           align-items: center;
@@ -243,6 +278,7 @@
           font-weight: bold;
           padding: 0 10px;
           margin-top: 24px;
+          padding-bottom: 6%;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -257,7 +293,7 @@
             display: flex;
             align-items: center;
             width: 100%;
-            margin-bottom: 20px;
+            // margin-bottom: 20px;
 
             .itemProgress {
               width: calc(100% - 120px);
@@ -391,7 +427,7 @@
           margin-left: -94px;
           margin-bottom: 10px;
           font-weight: bold;
-
+          cursor: default;
           & > div {
             line-height: 32px;
             color: #fff;
@@ -532,12 +568,45 @@
               &.active {
                 background: #007bfd;
               }
-              i {
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                margin-right: 10px;
-              }
+              // i {
+              //   display: inline-block;
+              //   width: 8px;
+              //   height: 8px;
+              //   margin-right: 10px;
+              // }
+            }
+          }
+          i {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 10px;
+          }
+        }
+
+        // 搜索企业
+        .searchEntWrapper {
+          // position: absolute;
+          // left: 20px;
+          // top: 48px;
+          :global {
+            .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+              border-color: #007bfd;
+              background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+              // background: rgba(10, 125, 254, 0.4);
+              color: #fff;
+              height: 30px;
+              line-height: 30px;
+              border-radius: 0;
+            }
+
+            .ant-select-selection-item {
+              font-weight: 500;
+            }
+
+            .ant-select-clear {
+              background-color: transparent;
+              color: #999;
             }
           }
         }
@@ -560,7 +629,7 @@
           font-weight: bold;
           position: absolute;
           padding: 6px 10px;
-          bottom: 10px;
+          bottom: 6px;
           z-index: 1;
         }
       }
@@ -604,8 +673,12 @@
 
         .RankingContent {
           height: 100%;
-          overflow-y: auto;
+          // overflow-y: auto;
           padding: 10px;
+
+          .RankingSeamlessScrollContent {
+            min-height: 100%;
+          }
         }
 
         .RankListContent {
@@ -615,6 +688,7 @@
           text-align: center;
           font-size: 15px;
           padding: 4px 0;
+          cursor: pointer;
 
           &:nth-child(2n) {
             background-color: #0a244e;
@@ -629,6 +703,24 @@
           }
         }
       }
+    }
+  }
+}
+
+.popupStyle {
+  // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+  background: rgba(10, 125, 254, 0.4);
+  font-weight: 500;
+  :global {
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+      background-color: #136fd1;
+    }
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+      background-color: #007bfd;
+    }
+
+    .ant-select-item {
+      color: #fff;
     }
   }
 }

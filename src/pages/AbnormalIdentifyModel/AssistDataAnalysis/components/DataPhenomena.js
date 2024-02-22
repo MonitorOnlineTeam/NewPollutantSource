@@ -2,12 +2,12 @@
  * @Author: JiaQi
  * @Date: 2024-01-18 15:08:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-06 10:44:19
+ * @Last Modified time: 2024-02-22 09:20:30
  * @Description:  数据现象
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Card, Spin, Button, Radio, Select, Space, Popover, Badge } from 'antd';
+import { Form, Card, Spin, Button, Radio, Select, Space, Popover, Badge, message } from 'antd';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
@@ -114,12 +114,11 @@ const DataPhenomena = props => {
         render: (text, record) => {
           let color = 'rgba(0, 0, 0, 0.85)';
           let _text = record[item.PollutantCode + '_ME'];
-          console.log('_text', _text);
           let content = '';
 
           let icon = '';
 
-          if (_text !== 0 && _text !== '-') {
+          if (_text && _text !== 0 && _text !== '-') {
             color = 'red';
             let PhenomenonType = form.getFieldValue('PhenomenonType');
             if (PhenomenonType === '1') {
@@ -159,7 +158,7 @@ const DataPhenomena = props => {
               </Popover>
             );
 
-          return text;
+          return text || '-';
         },
       });
       // // 非折算
@@ -272,12 +271,13 @@ const DataPhenomena = props => {
       });
       const currentData = DataPhenomenaChartList.dataList[pollutant.PollutantCode];
       const currentDataME = DataPhenomenaChartList.dataList[pollutant.PollutantCode + '_ME'] || [];
-      console.log(title + '-currentDataME', currentDataME);
+      console.log(pollutant.PollutantName + '-currentDataME', currentDataME);
       let visualMapPieces = findColorBlocks(currentDataME);
+      console.log('visualMapPieces', visualMapPieces);
       let markAreaData = [];
       // 处理阴影
       visualMapPieces.map(item => {
-        if (item.color === 'red' || item.color === '#1890ff') {
+        if ((item.color === 'red' || item.color === '#1890ff') && item.flag !== undefined) {
           let PhenomenonType = form.getFieldValue('PhenomenonType');
           let name = '',
             otherParams = {};
@@ -289,7 +289,7 @@ const DataPhenomena = props => {
           } else if (PhenomenonType === '3') {
             if (item.flag === 1) {
               name = '陡升';
-            } else {
+            } else if (item.flag === 2) {
               name = '陡降';
               otherParams = {
                 itemStyle: {
@@ -309,7 +309,6 @@ const DataPhenomena = props => {
           markAreaData.push(data);
         }
       });
-      console.log('markAreaData', markAreaData);
       series.push({
         name: pollutant.PollutantName,
         data: currentData,
@@ -333,8 +332,23 @@ const DataPhenomena = props => {
       title: title,
       tooltip: {
         trigger: 'axis',
+        confine: true,
         axisPointer: {
           animation: false,
+        },
+        formatter: function(params) {
+          let str = '';
+          params.forEach((m, index) => {
+            str += `<div style="padding: 4px 0;">
+                  <span class="chart-tooltip-color" style="display: inline-block; margin-right: 10px; background-color: ${m.color}; width: 10px; height: 10px; border-radius:100%; margin-right: 5px"></span>
+                  ${m.seriesName}：${m.data} ${selectPollutantList[m.seriesIndex].Unit}<br/>
+                </div>
+                `;
+            // str += `${m.seriesName}:${m.data}<br/>`;
+            // str += `${index % 3 === 0 ? '<br/>' : ''}`;
+          });
+          return `<p style="margin-bottom: 6px; font-weight: 500;">${params[0].axisValue}</p>
+          ${str}`;
         },
       },
       // legend: {},
@@ -375,8 +389,6 @@ const DataPhenomena = props => {
     const title = pollutant.PollutantName;
     const currentData = DataPhenomenaChartList.dataList[pollutant.PollutantCode];
 
-    console.log(title + '-visualMapPieces', visualMapPieces);
-
     return {
       title: {
         text: title,
@@ -386,6 +398,16 @@ const DataPhenomena = props => {
         trigger: 'axis',
         axisPointer: {
           type: 'cross',
+          formatter: function(params) {
+            let str = '';
+            str += `${params[0].axisValue}<br/>`;
+            params.forEach((m, index) => {
+              str += `<span class="chart-tooltip-color" style="display: inline-block; margin-right: 10px; background-color: ${m.color}; width: 10px; height: 10px; border-radius:100%; margin-right: 5px"></span>`;
+              str += `${m.seriesName}:${m.data}`;
+              str += `${index % 3 === 0 ? '<br/>' : ''}`;
+            });
+            return str;
+          },
         },
       },
       toolbox: {
@@ -432,8 +454,6 @@ const DataPhenomena = props => {
       ],
     };
   };
-
-  console.log('DataPhenomenaChartList', DataPhenomenaChartList);
 
   return (
     <>

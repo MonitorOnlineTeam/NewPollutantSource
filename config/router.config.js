@@ -3146,6 +3146,12 @@ const routes = [
                 ],
               },
               {
+                // 热电行业数据波动范围
+                name: 'FluctuateRange',
+                path: '/AbnormalIdentifyModel/FluctuateRange',
+                component: './AbnormalIdentifyModel/FluctuateRange',
+              },
+              {
                 // 通用库
                 name: 'general',
                 path: '/AbnormalIdentifyModel/modelBase/general',

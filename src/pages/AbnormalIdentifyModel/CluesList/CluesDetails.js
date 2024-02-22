@@ -26,6 +26,7 @@ import ModelTable from './components/ModelTable';
 import WarningDataAndChart from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis/components/WarningDataAndChart.js';
 import ModelChartMultiple from './components/ModelChart-multiple';
 import ModelChartLinear from './components/ModelChart-Linear';
+import ProgrammeCheck from '@/pages/AbnormalIdentifyModel/components/ProgrammeCheck.js';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   warningInfoLoading: loading.effects['AbnormalIdentifyModel/GetSingleWarning'],
@@ -238,7 +239,7 @@ const CluesDetails = props => {
               date: moment(endData).format('YYYY-MM-DD HH:00'),
             },
           ]);
-        }else{
+        } else {
           setWarningDate([
             {
               // name: '异常开始时间',
@@ -256,7 +257,7 @@ const CluesDetails = props => {
         });
         console.log('PollutantList', PollutantList);
         // 默认选中污染物
-        setDefaultChartSelected(PollutantList);
+        setDefaultChartSelected(PollutantList.slice(0, 6));
         // 查询数据时间
         setSearchDate([moment(startDate).subtract(2, 'day'), moment(endData).add(2, 'day')]);
 
@@ -296,7 +297,7 @@ const CluesDetails = props => {
 
   const isShowBack = location.pathname.indexOf('autoLogin') <= -1;
   return (
-    <BreadcrumbWrapper titles=" / 线索核实" hideBreadcrumb={props.hideBreadcrumb}>
+    <BreadcrumbWrapper titles=" / 线索详情" hideBreadcrumb={props.hideBreadcrumb}>
       <div
         className={styles.PageWrapper}
         style={{ height: height ? height : isShowBack ? '100%' : 'calc(100vh - 22px)' }}
@@ -418,106 +419,8 @@ const CluesDetails = props => {
               : ''}
           </Row>
         </Card>
-        <Card title="线索核实" loading={warningInfoLoading}>
-          <Descriptions column={4}>
-            <Descriptions.Item label="核实状态">
-              <Tag
-                color={
-                  warningInfo.Status === 3 // 核实完成
-                    ? 'success'
-                    : warningInfo.Status === 2 // 待复核
-                    ? 'orange'
-                    : 'volcano' //待核实
-                }
-              >
-                {warningInfo.StatusName}
-              </Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="核实结果">
-              {warningInfo.CheckedResultCode === '1' && <Tag color="error">系统误报</Tag>}
-              {warningInfo.CheckedResultCode === '2' && <Tag color="warning">有异常</Tag>}
-              {warningInfo.CheckedResultCode === '3' && <Tag>未核实</Tag>}
-            </Descriptions.Item>
-            <Descriptions.Item label="异常原因">
-              {warningInfo.UntruthReason || '-'}
-            </Descriptions.Item>
-            <Descriptions.Item label="核实人">{warningInfo.CheckedUser || '-'}</Descriptions.Item>
-            <Descriptions.Item span={1} label="核实时间">
-              {warningInfo.CheckedTime || '-'}
-            </Descriptions.Item>
-            <Descriptions.Item span={3} label="暂停报警截止时间">
-              {warningInfo.StopAlarmEndTime || '-'}
-            </Descriptions.Item>
-            <Descriptions.Item span={4} label="核实描述">
-              {warningInfo.CheckedDes || '-'}
-            </Descriptions.Item>
-            <Descriptions.Item span={4} label="核实材料">
-              {fileList.length ? (
-                <Upload
-                  listType="picture-card"
-                  fileList={fileList}
-                  showUploadList={{ showPreviewIcon: true, showRemoveIcon: false }}
-                  onPreview={file => {
-                    setIsOpen(true);
-                    setImageIndex(file.index);
-                    setImages(fileList);
-                  }}
-                />
-              ) : (
-                '-'
-              )}
-            </Descriptions.Item>
-          </Descriptions>
-          <Divider style={{ marginTop: 10 }} />
-          {/* 整改详情 */}
-          <Descriptions column={4}>
-            <Descriptions.Item label="是否需要整改">
-              <Tag
-                color={
-                  warningInfo.IsRect === 1 // 需整改
-                    ? 'orange'
-                    : 'success' //不用整改
-                }
-              >
-                {warningInfo.IsRect === 1 ? '需整改' : '不用整改'}
-              </Tag>
-            </Descriptions.Item>
-            {warningInfo.IsRect === 1 && (
-              <>
-                <Descriptions.Item label="整改状态">
-                  {warningInfo.RectificationStatus === '1' && <Tag color="orange">待整改</Tag>}
-                  {warningInfo.RectificationStatus === '2' && <Tag color="orange">待复核</Tag>}
-                  {warningInfo.RectificationStatus === '3' && <Tag color="success">整改完成</Tag>}
-                </Descriptions.Item>
-                <Descriptions.Item label="整改人">
-                  {warningInfo.RectificationUserName || '-'}
-                </Descriptions.Item>
-                <Descriptions.Item span={1} label="整改时间">
-                  {warningInfo.CompleteTime || '-'}
-                </Descriptions.Item>
-                <Descriptions.Item span={4} label="整改描述">
-                  {warningInfo.RectificationDes || '-'}
-                </Descriptions.Item>
-                <Descriptions.Item span={4} label="整改材料">
-                  {rectFileList.length ? (
-                    <Upload
-                      listType="picture-card"
-                      fileList={rectFileList}
-                      showUploadList={{ showPreviewIcon: true, showRemoveIcon: false }}
-                      onPreview={file => {
-                        setIsOpen(true);
-                        setImageIndex(file.index);
-                        setImages(rectFileList);
-                      }}
-                    />
-                  ) : (
-                    '-'
-                  )}
-                </Descriptions.Item>
-              </>
-            )}
-          </Descriptions>
-        </Card>
+        <ProgrammeCheck id={warningId} />
+
         {/* 查看附件弹窗 */}
         <ImageView
           isOpen={isOpen}
@@ -532,8 +435,8 @@ const CluesDetails = props => {
           <WarningDataModal
             PointName={`${warningInfo.EntNmae} - ${warningInfo.PointName}`}
             DGIMN={warningInfo.Dgimn}
-            // CompareDGIMN={warningInfo.CompareDGIMN}
-            // ComparePointName={`${warningInfo.CompareEntNmae} - ${warningInfo.ComparePointName}`}
+            CompareDGIMN={warningInfo.CompareDGIMN}
+            ComparePointName={`${warningInfo.CompareEntNmae} - ${warningInfo.ComparePointName}`}
             visible={dataModalVisible}
             // date={warningDataDate}
             // warningDate={warningDate}
@@ -546,7 +449,7 @@ const CluesDetails = props => {
             }}
             warningDate={warningDate}
             date={searchDate}
-            defaultChartSelected={defaultChartSelected}
+            defaultChartSelected={defaultChartSelected.slice(0, 6)}
           />
         )}
       </div>

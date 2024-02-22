@@ -4,16 +4,25 @@ import { message } from 'antd';
 import moment from 'moment';
 import _ from 'lodash';
 
-function getBodyParams(requestParams) {
+function getBodyParams(params) {
+  const requestParams = _.cloneDeep(params);
+  let btime = requestParams.btime.format('YYYY-MM-DD  00:00:00');
+  let etime = requestParams.etime.add(-1, 'day').format('YYYY-MM-DD 23:59:59');
+
+  if (requestParams.isYanShi) {
+    btime = requestParams.btime.add(-20, 'month').format('YYYY-MM-DD 00:00:00');
+    etime = requestParams.etime.add(-20, 'month').format('YYYY-MM-DD 23:59:59');
+  }
+
   let body = {
     ...requestParams,
-    etime: requestParams.etime.format('YYYY-MM-DD HH:mm:ss'),
-    btime: requestParams.btime.format('YYYY-MM-DD HH:mm:ss'),
+    etime: etime,
+    btime: btime,
     // etime: '2023-12-08 00:00:00',
     // btime: '2023-12-01 00:00:00',
-    pollutantCode: requestParams.pollutantCode.length
-      ? requestParams.pollutantCode.toString()
-      : '01,02,03',
+    // pollutantCode: requestParams.pollutantCode.length
+    //   ? requestParams.pollutantCode.toString()
+    //   : '01,02,03',
     // entCode: '7aad4f39-a853-4547-a5a6-40839f77ea41',
   };
   return body;
@@ -25,16 +34,22 @@ export default Model.extend({
     entHomeIsOpen: false,
     // 首页
     requestParams: {
+      regionName: '全国',
       regionCode: '',
       industryCode: '',
-      btime: moment()
-        .add(-1, 'week')
-        .startOf('day'),
+      dateRange: 'week',
+      btime: moment().add(-6, 'day'),
+      // .startOf('day'),
       etime: moment(),
-      pollutantCode: [],
+      // .endOf('day'),
+      pollutantCode: '01,02,03',
       // pollutantCode: [],
       pLeve: 1,
       entCode: '',
+    },
+    queryData: {
+      RegionName: '全国',
+      IndustryName: undefined,
     },
     //
     EntCount: 0,
@@ -72,13 +87,12 @@ export default Model.extend({
       // regionCode: '150000000',
       regionCode: '',
       industryCode: '',
-      btime: moment()
-        .add(-1, 'week')
-        .startOf('day'),
-      // btime: moment().startOf('year'),
+      dateRange: 'week',
+      btime: moment().add(-6, 'day'),
+      // .startOf('day'),
       etime: moment(),
 
-      pollutantCode: [],
+      pollutantCode: '01,02,03',
       // pollutantCode: [],
       pLeve: 3,
       entCode: '',
@@ -105,7 +119,6 @@ export default Model.extend({
       let body = getBodyParams(requestParams);
       const result = yield call(services.GetMapPointList, body);
       if (result.IsSuccess) {
-        callback && callback(result.Datas);
         const { EntCount, PointCount, Rlist, PointSumStatus, list } = result.Datas;
         let regionList = [];
         for (const key in Rlist[0]) {
@@ -123,6 +136,7 @@ export default Model.extend({
             }))
           : [];
 
+        callback && callback(markers);
         yield update({
           EntCount,
           PointCount,
@@ -137,7 +151,7 @@ export default Model.extend({
     // 获取首页运行分析
     *GetOperationsAnalysis({ payload, callback }, { call, select, update }) {
       const requestParams = yield select(state => state.AbnormalIdentifyModelHome.requestParams);
-      let body = getBodyParams(requestParams);
+      let body = getBodyParams({ ...requestParams, isYanShi: true });
       const result = yield call(services.GetOperationsAnalysis, body);
       if (result.IsSuccess) {
         // callback && callback(result.Datas);
@@ -149,16 +163,14 @@ export default Model.extend({
     // 获取排放量统计
     *GetEmissionStatistics({ payload, callback }, { call, select, update }) {
       const requestParams = yield select(state => state.AbnormalIdentifyModelHome.requestParams);
-      let body = getBodyParams(requestParams);
+      let body = getBodyParams({ ...requestParams, isYanShi: true });
       const result = yield call(services.GetEmissionStatistics, body);
       if (result.IsSuccess) {
         // callback && callback(result.Datas);
         let data = {};
         let EntCount = [],
           xData = [];
-        let pollutantCode = requestParams.pollutantCode.length
-          ? requestParams.pollutantCode
-          : ['01', '02', '03'];
+        let pollutantCode = requestParams.pollutantCode.split(',');
         pollutantCode.map(code => {
           data[code] = [];
           result.Datas.map(item => {
@@ -183,7 +195,7 @@ export default Model.extend({
     // 获取异常线索统计
     *GetAbnormalClueStatistics({ payload, callback }, { call, select, update }) {
       const requestParams = yield select(state => state.AbnormalIdentifyModelHome.requestParams);
-      let body = getBodyParams(requestParams);
+      let body = getBodyParams({ ...requestParams, isYanShi: true });
       const result = yield call(services.GetAbnormalClueStatistics, body);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
@@ -199,7 +211,7 @@ export default Model.extend({
     // 获取排名
     *GetSuspectedRanking({ payload, callback }, { call, select, update }) {
       const requestParams = yield select(state => state.AbnormalIdentifyModelHome.requestParams);
-      let body = getBodyParams(requestParams);
+      let body = getBodyParams({ ...requestParams, isYanShi: true });
       const result = yield call(services.GetSuspectedRanking, {
         ...body,
         modelType: payload.modelType,
@@ -218,14 +230,14 @@ export default Model.extend({
       const entRequestParams = yield select(
         state => state.AbnormalIdentifyModelHome.entRequestParams,
       );
-      let body = getBodyParams(entRequestParams);
+      let body = getBodyParams({ ...entRequestParams, isYanShi: true });
       const result = yield call(services.GetSuspectedRanking, {
         ...body,
         modelType: payload.modelType,
         modelBaseType: payload.modelBaseType,
       });
       if (result.IsSuccess) {
-        let rankData = _.sortBy([...result.Datas], item => item.val);
+        let rankData = _.sortBy([...result.Datas], item => -item.val);
         callback && callback(rankData);
       } else {
         message.error(result.Message);
@@ -236,7 +248,7 @@ export default Model.extend({
       const entRequestParams = yield select(
         state => state.AbnormalIdentifyModelHome.entRequestParams,
       );
-      let body = getBodyParams(entRequestParams);
+      let body = getBodyParams({ ...entRequestParams, isYanShi: true });
       const result = yield call(services.GetDataQualityAnalysis, body);
       if (result.IsSuccess) {
         callback(result.Datas);
@@ -249,12 +261,12 @@ export default Model.extend({
       const entRequestParams = yield select(
         state => state.AbnormalIdentifyModelHome.entRequestParams,
       );
-      let body = getBodyParams(entRequestParams);
+      let body = getBodyParams({ ...entRequestParams, isYanShi: true });
       const result = yield call(services.GetPollutantDischargeGapStatistics, body);
       if (result.IsSuccess) {
-        let pollutant01 = result.Datas.find(item => item['01']);
-        let pollutant02 = result.Datas.find(item => item['02']);
-        let pollutant03 = result.Datas.find(item => item['03']);
+        let pollutant01 = result.Datas.find(item => item['01'] != undefined);
+        let pollutant02 = result.Datas.find(item => item['02'] != undefined);
+        let pollutant03 = result.Datas.find(item => item['03'] != undefined);
         let obj = {
           '01': pollutant01,
           '02': pollutant02,
@@ -285,6 +297,8 @@ export default Model.extend({
           ? list.map(item => ({
               position: {
                 ...item,
+                latitude: item.Latitude,
+                longitude: item.Longitude,
               },
             }))
           : [];
@@ -300,7 +314,7 @@ export default Model.extend({
     // 获取首页企业运行分析
     *GetEntOperationsAnalysis({ payload, callback }, { call, select, update }) {
       const requestParams = yield select(state => state.AbnormalIdentifyModelHome.entRequestParams);
-      let body = getBodyParams(requestParams);
+      let body = getBodyParams({ ...requestParams, isYanShi: true });
       const result = yield call(services.GetOperationsAnalysis, body);
       if (result.IsSuccess) {
         // callback && callback(result.Datas);

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Modal } from 'antd';
+import { Modal, Row, Col } from 'antd';
 import styles from '../../styles.less';
 import ReactEcharts from 'echarts-for-react';
 import HomeCard from '../../components/HomeCard';
+import _ from 'lodash';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   requestParams: AbnormalIdentifyModelHome.requestParams,
@@ -18,10 +19,9 @@ const ClueStatistics = props => {
     requestParams,
     ClueStatisticsData: { CountList, ModelGroupList },
   } = props;
-  const [barData, setBarData] = useState({
-    xData: [],
-    seriesData: [],
-  });
+  const [barDataMax, setBarDataMax] = useState();
+  const [barData, setBarData] = useState([]);
+  const [pieOption, setPieOption] = useState({});
 
   useEffect(() => {
     GetAbnormalClueStatistics();
@@ -33,7 +33,11 @@ const ClueStatistics = props => {
       type: 'AbnormalIdentifyModelHome/GetAbnormalClueStatistics',
       payload: {},
       callback: res => {
-        handleBarData(res.CountList);
+        console.log('res', res);
+        // handleBarData(res.CountList);
+        res.CountList.length && setBarDataMax(_.maxBy(res.CountList, 'val').val);
+        setBarData(res.CountList);
+        getOption(res.ModelGroupList);
       },
     });
   };
@@ -53,8 +57,8 @@ const ClueStatistics = props => {
   };
 
   // 线索统计饼图
-  const getOption = () => {
-    let data = ModelGroupList.map(item => {
+  const getOption = (pieData) => {
+    let data = pieData.map(item => {
       return { value: item.count, name: item.name };
     });
 
@@ -81,7 +85,7 @@ const ClueStatistics = props => {
       '#ea7ccc',
     ];
 
-    return {
+    let option = {
       tooltip: {
         trigger: 'item',
         formatter: '{b} : {c} ({d}%)',
@@ -128,6 +132,8 @@ const ClueStatistics = props => {
         },
       ],
     };
+
+    setPieOption(option);
   };
 
   // 柱状图
@@ -169,6 +175,7 @@ const ClueStatistics = props => {
             show: false,
           },
           axisLabel: {
+            show: false,
             textStyle: {
               color: '#c3bfbf',
             },
@@ -225,8 +232,11 @@ const ClueStatistics = props => {
   const onClickEchartsPie = e => {
     const { dataIndex } = e;
     let currentData = ModelGroupList[dataIndex].childList;
-    handleBarData(currentData);
+    // handleBarData(currentData);
+    setBarDataMax(_.maxBy(currentData, 'val').val);
+    setBarData(currentData);
   };
+
   return (
     <HomeCard
       title="异常线索统计"
@@ -238,20 +248,54 @@ const ClueStatistics = props => {
       <div className={styles.ClueStatisticsContent}>
         <div style={{ height: 300 }}>
           <ReactEcharts
-            option={getOption()}
-            lazyUpdate={true}
+            option={pieOption}
+            // option={getOption()}
+            // lazyUpdate={true}
             onEvents={{
               click: onClickEchartsPie,
             }}
             style={{ height: '100%', width: '100%' }}
           />
         </div>
+        <p className={styles.unit}>单位：条</p>
         <div className={styles.BarBox}>
-          <ReactEcharts
-            option={getBarOption()}
-            lazyUpdate={true}
-            style={{ height: '100%', width: '100%' }}
-          />
+          {barData.map(item => {
+            return (
+              <Row
+                className={styles.ClueClassificationWrapper}
+                onClick={() => {
+                  // 跳转到当前行政区
+                  if (!requestParams.regionCode)
+                    dispatch({
+                      type: 'AbnormalIdentifyModelHome/updateState',
+                      payload: {
+                        requestParams: {
+                          ...requestParams,
+                          // name: item.key,
+                          // code: item.code,
+                          regionCode: item.code,
+                          regionName: item.key,
+                          pLeve: 2,
+                        },
+                      },
+                    });
+                }}
+              >
+                <Col flex="100px" className={`${styles.label} textOverflow`}>
+                  {item.key}
+                </Col>
+                <Col flex="auto">
+                  <div
+                    className={styles.ProgressContent}
+                    style={{ width: (item.val / barDataMax) * 100 + '%' }}
+                  ></div>
+                </Col>
+                <Col flex="80px" className={`${styles.value} textOverflow`}>
+                  {item.val}
+                </Col>
+              </Row>
+            );
+          })}
         </div>
       </div>
     </HomeCard>

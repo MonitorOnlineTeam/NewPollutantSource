@@ -357,10 +357,10 @@ class NavigationTree extends Component {
   // 控制节点滚动条位置
   controlsScrollBarOffsetTop = () => {
     let selectedTreeNode = $('.ant-tree-treenode-selected');
-    let treeElement = $('.ant-tree');
+    let treeElement = $('.ant-tree .ant-tree-list');
     if (Setting.layout === 'sidemenu' && config.isShowTabs) {
       selectedTreeNode = $('.ant-tabs-tabpane-active .ant-tree-treenode-selected');
-      treeElement = $('.ant-tabs-tabpane-active .ant-tree');
+      treeElement = $('.ant-tabs-tabpane-active .ant-tree .ant-tree-list');
     }
     if (selectedTreeNode && selectedTreeNode.length) {
       // 选中元素的scrollTop

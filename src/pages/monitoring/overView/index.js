@@ -8,7 +8,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import InfiniteScroll from 'react-infinite-scroller';
 import {
     Table,
     Radio,

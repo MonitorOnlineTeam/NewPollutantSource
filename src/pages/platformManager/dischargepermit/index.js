@@ -7,12 +7,10 @@ import { connect } from 'dva';
 import cuid from 'cuid';
 import SdlTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
-import SdlForm from '@/pages/AutoFormManager/SdlForm'
+import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import { handleFormData } from '@/utils/utils';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import {
-  DelIcon, EditIcon,
-} from '@/utils/icon';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import { DelIcon, EditIcon } from '@/utils/icon';
 /**
  * 排污许可证页面
  * xpy
@@ -27,7 +25,6 @@ import {
   routerConfig: autoForm.routerConfig,
   btnisloading: loading.effects['autoForm/add'],
   btnisloading1: loading.effects['autoForm/saveEdit'],
-
 }))
 @Form.create()
 class Index extends Component {
@@ -45,19 +42,22 @@ class Index extends Component {
 
   /** 初始化加载 */
   componentDidMount() {
-    const {
-      configId, EntCode,
-    } = this.props.match.params;
-    const DataWhere = [{
-      Key: '[dbo]__[T_Bas_PDPermit]__EntCode',
-      Value: EntCode,
-      Where: '$=',
-    }];
-    this.setState({
-      DataWhere,
-    }, () => {
-      this.reloadPage(configId);
-    })
+    const { configId, EntCode } = this.props.match.params;
+    const DataWhere = [
+      {
+        Key: '[dbo]__[T_Bas_PDPermit]__EntCode',
+        Value: EntCode,
+        Where: '$=',
+      },
+    ];
+    this.setState(
+      {
+        DataWhere,
+      },
+      () => {
+        this.reloadPage(configId);
+      },
+    );
   }
 
   /** 加载autoform */
@@ -74,20 +74,14 @@ class Index extends Component {
       payload: {
         configId,
       },
-    })
-  }
-
+    });
+  };
 
   /** 添加 */
   handleOk = e => {
-    const {
-      dispatch,
-      form,
-    } = this.props;
+    const { dispatch, form } = this.props;
     const { configId, EntCode } = this.props.match.params;
-    const {
-      DataWhere,
-    } = this.state;
+    const { DataWhere } = this.state;
     form.validateFields((err, values) => {
       if (!err) {
         const formData = handleFormData(values);
@@ -102,7 +96,7 @@ class Index extends Component {
               if (result.IsSuccess) {
                 this.setState({
                   visible: false,
-                })
+                });
               }
             },
           },
@@ -113,14 +107,9 @@ class Index extends Component {
 
   /** 编辑 */
   SaveOk = e => {
-    const {
-      dispatch,
-      form,
-    } = this.props;
+    const { dispatch, form } = this.props;
     const { configId, EntCode } = this.props.match.params;
-    const {
-      DataWhere,
-    } = this.state;
+    const { DataWhere } = this.state;
     form.validateFields((err, values) => {
       if (!err) {
         const formData = handleFormData(values);
@@ -134,19 +123,23 @@ class Index extends Component {
               EPID: this.state.ID,
               ID: this.state.ID,
             },
+            reload: false,
             callback: result => {
               if (result.IsSuccess) {
-                this.setState({ 
-                  Evisible: false,
-                }, () => {
-                  dispatch({
-                    type: 'autoForm/getAutoFormData',
-                    payload: {
-                      configId,
-                      searchParams: this.state.DataWhere,
-                    },
-                  })
-                })
+                this.setState(
+                  {
+                    Evisible: false,
+                  },
+                  () => {
+                    dispatch({
+                      type: 'autoForm/getAutoFormData',
+                      payload: {
+                        configId,
+                        searchParams: this.state.DataWhere,
+                      },
+                    });
+                  },
+                );
               }
             },
           },
@@ -161,37 +154,41 @@ class Index extends Component {
     const { configId, EntName } = this.props.match.params;
     const { DataWhere } = this.state;
     if (this.props.loading) {
-      return (<Spin
-        style={{
-          width: '100%',
-          height: 'calc(100vh/2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        size="large"
-      />);
+      return (
+        <Spin
+          style={{
+            width: '100%',
+            height: 'calc(100vh/2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          size="large"
+        />
+      );
     }
     return (
       <BreadcrumbWrapper title="排污许可证维护">
-        <Card title={
-          <span>
-            {EntName}
-            <Button
-              style={{ marginLeft: 10 }}
-              onClick={() => {
-                history.go(-1);
-              }}
-              type="link"
-              size="small"
-            >
-              <RollbackOutlined />
-                  返回上级
-                </Button>
-          </span>
-        }>
-          {
-            DataWhere && DataWhere.length && <>
+        <Card
+          title={
+            <span>
+              {EntName}
+              <Button
+                style={{ marginLeft: 10 }}
+                onClick={() => {
+                  history.go(-1);
+                }}
+                type="link"
+                size="small"
+              >
+                <RollbackOutlined />
+                返回上级
+              </Button>
+            </span>
+          }
+        >
+          {DataWhere && DataWhere.length && (
+            <>
               <SearchWrapper
                 onSubmitForm={form => this.loadReportList(form)}
                 searchParams={DataWhere}
@@ -200,42 +197,59 @@ class Index extends Component {
               <SdlTable
                 style={{ marginTop: 10 }}
                 configId={configId}
-                parentcode="ddd"
                 searchParams={DataWhere}
-                appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
-                  <Button icon={<PlusOutlined />} type="primary" onClick={() => {
-                    this.setState({
-                      visible: true,
-                    })
-                  }}>添加</Button>
-                </Fragment>}
-                appendHandleRows={row => <Fragment>
-                  <Divider type="vertical" />
-                  <Tooltip title="编辑">
-                    <a onClick={() => {
-                      const keysParams = {
-                        'dbo.T_Bas_PDPermit.EPID': row['dbo.T_Bas_PDPermit.EPID'],
-                      };
-                      const arr = row['dbo.T_Bas_PDPermit.AttachmentID'] ? row['dbo.T_Bas_PDPermit.AttachmentID'].split('|') : [];
-
-                      this.setState({
-                        keysParams,
-                        AttachmentID: arr.length > 0 ? arr[arr.length - 2] : '',
-                        ID: row['dbo.T_Bas_PDPermit.EPID'],
-                      }, () => {
+                appendHandleButtons={(selectedRowKeys, selectedRows) => (
+                  <Fragment>
+                    <Button
+                      icon={<PlusOutlined />}
+                      type="primary"
+                      onClick={() => {
                         this.setState({
-                          Evisible: true,
-                        })
-                      })
-                    }}><EditIcon /></a>
-                  </Tooltip>
-                </Fragment>}
+                          visible: true,
+                        });
+                      }}
+                    >
+                      添加
+                    </Button>
+                  </Fragment>
+                )}
+                appendHandleRows={row => (
+                  <Fragment>
+                    <Divider type="vertical" />
+                    <Tooltip title="编辑">
+                      <a
+                        onClick={() => {
+                          const keysParams = {
+                            'dbo.T_Bas_PDPermit.EPID': row['dbo.T_Bas_PDPermit.EPID'],
+                          };
+                          const arr = row['dbo.T_Bas_PDPermit.AttachmentID']
+                            ? row['dbo.T_Bas_PDPermit.AttachmentID'].split('|')
+                            : [];
+
+                          this.setState(
+                            {
+                              keysParams,
+                              AttachmentID: arr.length > 0 ? arr[arr.length - 2] : '',
+                              ID: row['dbo.T_Bas_PDPermit.EPID'],
+                            },
+                            () => {
+                              this.setState({
+                                Evisible: true,
+                              });
+                            },
+                          );
+                        }}
+                      >
+                        <EditIcon />
+                      </a>
+                    </Tooltip>
+                  </Fragment>
+                )}
                 parentcode="platformconfig"
                 {...this.props}
-              >
-              </SdlTable>
+              ></SdlTable>
             </>
-          }
+          )}
 
           <Modal
             title="添加"
@@ -269,7 +283,16 @@ class Index extends Component {
             }}
             width={1200}
           >
-            <SdlForm configId={configId} onSubmitForm={this.onSubmitForm} form={this.props.form} hideBtns isEdit keysParams={this.state.keysParams} noLoad uid={this.state.AttachmentID} />
+            <SdlForm
+              configId={configId}
+              // onSubmitForm={this.onSubmitForm}
+              form={this.props.form}
+              hideBtns
+              isEdit
+              keysParams={this.state.keysParams}
+              noLoad
+              uid={this.state.AttachmentID}
+            />
           </Modal>
         </Card>
       </BreadcrumbWrapper>

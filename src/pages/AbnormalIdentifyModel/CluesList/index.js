@@ -2,13 +2,25 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-06 10:44:01
+ * @Last Modified time: 2024-02-20 16:46:24
  * @Description：报警记录
  */
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Input, InputNumber, Card, Spin, Button, Space, Select, Badge, Tooltip } from 'antd';
+import {
+  Form,
+  Input,
+  InputNumber,
+  Card,
+  Spin,
+  Button,
+  Space,
+  Select,
+  Badge,
+  Tooltip,
+  message,
+} from 'antd';
 import styles from '../styles.less';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
@@ -49,6 +61,8 @@ const CluesList = props => {
     modelMenuNumber,
     pointListLoading,
     entListLoading,
+    showMode,
+    tableProps = {},
   } = props;
   const modelNumber = props.match.params.modelNumber;
   const [modelList, setModelList] = useState([]);
@@ -66,7 +80,7 @@ const CluesList = props => {
         onFinish();
       } else {
         // 页面跳转，清空查询条件并重置分页
-        if (props.history.location.query.notResetForm) {
+        if (props.history && props.history.location.query.notResetForm) {
           onReset(true);
         } else {
           onReset();
@@ -101,7 +115,9 @@ const CluesList = props => {
     const modelIds = form.getFieldValue('warningTypeCode');
     dispatch({
       type: 'AbnormalIdentifyModel/GetModelList',
-      payload: {},
+      payload: {
+        type: 1, // 过滤掉打标记和数据现象
+      },
       callback: (res, unfoldModelList) => {
         let _modelList = unfoldModelList;
         console.log('unfoldModelList', unfoldModelList);
@@ -205,9 +221,19 @@ const CluesList = props => {
       },
       {
         title: '核实结论',
-        dataIndex: 'CheckedResultCode',
-        key: 'CheckedResultCode',
+        dataIndex: 'CheckedDes',
+        key: 'CheckedDes',
         width: 120,
+        render: (text, record) => {
+          if (text) {
+            return (
+              <Tooltip title={text}>
+                <span style={textStyle}>{text}</span>
+              </Tooltip>
+            );
+          }
+          return '-';
+        },
       },
       {
         title: '操作',
@@ -256,6 +282,11 @@ const CluesList = props => {
     if (modelNumber && !warningTypeCode && modelNumber !== 'all') {
       warningTypeCode = ModelNumberIdsDatas[modelNumber].toString();
     }
+    if (!values.date.length && !values.date1.length) {
+      message.error('请选择日期后查询！');
+      return;
+    }
+
     props.dispatch({
       type: 'AbnormalIdentifyModel/GetWarningList',
       payload: {
@@ -263,8 +294,11 @@ const CluesList = props => {
         Dgimn: values.DGIMN,
         warningTypeCode: warningTypeCode,
         date: undefined,
-        beginTime: values.date ? values.date[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
-        endTime: values.date ? values.date[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        beginTime: values.date[0]?.format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.date[1]?.format('YYYY-MM-DD HH:mm:ss'),
+        date1: undefined,
+        WarningBeginTime: values.date1[0]?.startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        WarningEndTime: values.date1[1]?.endOf('day').format('YYYY-MM-DD HH:mm:ss'),
         modelNumber: modelNumber,
         // pageSize: warningForm[modelNumber].pageSize,
         // pageIndex: warningForm[modelNumber].pageIndex,
@@ -351,8 +385,9 @@ const CluesList = props => {
       },
     });
   };
-  return (
-    <BreadcrumbWrapper>
+
+  const getPageContent = () => {
+    return (
       <Card className={styles.warningWrapper}>
         <Form
           name="searchForm"
@@ -361,6 +396,7 @@ const CluesList = props => {
           // style={{ padding: '10px 0' }}
           initialValues={{
             ...warningForm[modelNumber],
+            // regionCode: warningForm[modelNumber].regionCode || undefined,
           }}
           autoComplete="off"
           // onValuesChange={onValuesChange}
@@ -371,7 +407,7 @@ const CluesList = props => {
             //   changedFields_temp.DGIMN = undefined;
             // }
             let DGIMN = allFields.DGIMN;
-            if (!allFields.EntCode || changedFields.EntCode ) {
+            if (!allFields.EntCode || changedFields.EntCode) {
               DGIMN = undefined;
             }
             dispatch({
@@ -389,13 +425,42 @@ const CluesList = props => {
             });
           }}
         >
-          <Form.Item label="日期" name="date">
+          <Form.Item label="发现线索日期" name="date">
             <RangePicker_
-              allowClear={false}
+              // allowClear={false}
               dataType="day"
               format="YYYY-MM-DD"
               style={{ width: 250 }}
             />
+          </Form.Item>
+          <Form.Item label="数据异常日期" name="date1">
+            <RangePicker_
+              // allowClear={false}
+              dataType="day"
+              format="YYYY-MM-DD"
+              style={{ width: 250 }}
+            />
+          </Form.Item>
+          <Form.Item label="污染物" name="PollutantCode">
+            <Select
+              placeholder="请选择污染物"
+              showSearch
+              optionFilterProp="children"
+              style={{ width: 150 }}
+            >
+              <Option key={'1'} value={''}>
+                全部
+              </Option>
+              <Option key={'2'} value={'01'}>
+                颗粒物
+              </Option>
+              <Option key={'3'} value={'02'}>
+                二氧化硫
+              </Option>
+              <Option key={'4'} value={'03'}>
+                氮氧化物
+              </Option>
+            </Select>
           </Form.Item>
           <Form.Item label="行政区" name="regionCode">
             <RegionList noFilter style={{ width: 140 }} />
@@ -486,22 +551,25 @@ const CluesList = props => {
               >
                 查询
               </Button>
-              <Button
-                onClick={() => {
-                  dispatch({
-                    type: 'AbnormalIdentifyModel/onReset',
-                    payload: {
-                      modelNumber,
-                    },
-                  }).then(() => {
-                    form.resetFields();
-                    // onTableChange(1, 20);
-                    onFinish();
-                  });
-                }}
-              >
-                重置
-              </Button>
+              {// 弹窗不显示重置按钮
+              JSON.stringify(tableProps) === '{}' && (
+                <Button
+                  onClick={() => {
+                    dispatch({
+                      type: 'AbnormalIdentifyModel/onReset',
+                      payload: {
+                        modelNumber,
+                      },
+                    }).then(() => {
+                      form.resetFields();
+                      // onTableChange(1, 20);
+                      onFinish();
+                    });
+                  }}
+                >
+                  重置
+                </Button>
+              )}
             </Space>
           </Form.Item>
         </Form>
@@ -520,10 +588,17 @@ const CluesList = props => {
             onChange: onTableChange,
             total: total,
           }}
+          {...tableProps}
         />
       </Card>
-    </BreadcrumbWrapper>
-  );
+    );
+  };
+
+  if (showMode === 'modal') {
+    return getPageContent();
+  }
+
+  return <BreadcrumbWrapper>{getPageContent()}</BreadcrumbWrapper>;
 };
 
 export default connect(dvaPropsData)(CluesList);

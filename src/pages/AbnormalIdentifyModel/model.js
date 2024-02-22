@@ -16,6 +16,8 @@ function initWarningForm() {
           .startOf('day'),
         moment().endOf('day'),
       ],
+      date1:[],
+      PollutantCode: '',
       warningTypeCode: [],
       pageSize: 20,
       pageIndex: 1,
@@ -134,7 +136,6 @@ export default Model.extend({
     },
     // 根据MN获取模型选配数据
     *GetDataAttributeAndPointList({ payload, callback }, { call, select, update }) {
-      debugger;
       const result = yield call(services.GetDataAttributeAndPointList, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
@@ -156,9 +157,9 @@ export default Model.extend({
     *GetAllTypeDataListForModel({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetAllTypeDataListForModel, payload);
       if (result.IsSuccess) {
-        yield update({
-          allTypeDataList: result.Datas,
-        });
+        // yield update({
+        //   allTypeDataList: result.Datas,
+        // });
         callback && callback(result.Datas);
       } else {
         message.error(result.Message);
@@ -282,6 +283,8 @@ export default Model.extend({
                 .startOf('day'),
               moment().endOf('day'),
             ],
+            date1:[],
+            PollutantCode: '',
             warningTypeCode: [],
             pageSize: 20,
             pageIndex: 1,

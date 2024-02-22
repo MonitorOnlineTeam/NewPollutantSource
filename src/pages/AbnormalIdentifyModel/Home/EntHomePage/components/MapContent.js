@@ -4,28 +4,15 @@ import { connect } from 'dva';
 import styles from '../../styles.less';
 import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
-import { Radio, Space } from 'antd';
+import { Radio, Space, Spin } from 'antd';
 import moment from 'moment';
-import {
-  EntIcon,
-  GasIcon,
-  GasOffline,
-  GasNormal,
-  GasExceed,
-  GasAbnormal,
-  WaterIcon,
-  WaterNormal,
-  WaterExceed,
-  WaterAbnormal,
-  WaterOffline,
-  WaterStop,
-  GasStop,
-} from '@/utils/icon';
+import { GasIcon, GasOffline, GasExceed, GasAbnormal } from '@/utils/icon';
+import { router } from 'umi';
 
 let aMap;
 
 @connect(({ loading, AbnormalIdentifyModelHome }) => ({
-  loading: loading.effects['AbnormalIdentifyModelHome/GetMapPointList'],
+  loading: loading.effects['AbnormalIdentifyModelHome/GetEntMapPointList'],
   entRequestParams: AbnormalIdentifyModelHome.entRequestParams,
   mapMarkersList: AbnormalIdentifyModelHome.entMapMarkersList,
   currentEntName: AbnormalIdentifyModelHome.currentEntName,
@@ -89,6 +76,14 @@ class MapContent extends PureComponent {
             clearInterval(timer);
           }
         }, 0);
+
+        // setPointStatsList([
+        //   { text: '超标', color: '#FF0000', val: statusData.overCount, status: 2 },
+        //   { text: '异常', color: '#FFCC00', val: statusData.exceptionCount, status: 3 },
+        //   { text: '离线', color: '#67666A', val: statusData.unLineCount, status: 0 },
+        //   { text: '正常', color: '#5fc15d', val: statusData.normalCount, status: 1 },
+        //   { text: '停运', color: '#836BFB', val: statusData.stopCount, status: 4 },
+        // ]);
       });
   };
 
@@ -125,23 +120,26 @@ class MapContent extends PureComponent {
           <div className="textOverflow">{currentEntName}</div>
           <div className={`${styles.pointName} textOverflow`}>{extData.position.PointName}</div>
         </div>
-        {this.getIcon(extData.position.Status)}
+        <div onClick={() => this.onPointClickGoAnalysisPage(extData.position)}>
+          {this.getIcon(extData.position.Status)}
+        </div>
+        {/* {this.getIcon('3')} */}
       </div>
     );
   };
 
   getIcon = status => {
     switch (status) {
-      case '0': // 离线
+      case '3': // 离线
         return <GasOffline />;
-      case '1': // 在线
-        return <GasNormal />;
+      case '4': // 在线
+        return <GasIcon />;
       case '2': // 超标
         return <GasExceed />;
-      case '3': // 异常
+      case '1': // 异常
         return <GasAbnormal />;
-      case '4': // 停运
-        return <GasStop />;
+      // case '3': // 停运
+      //   return <GasStop />;
     }
   };
 
@@ -156,40 +154,60 @@ class MapContent extends PureComponent {
 
   // 污染物Change
   onPollutantChange = value => {
-    let pollutantCode = [...this.props.entRequestParams.pollutantCode];
+    // let pollutantCode = [...this.props.entRequestParams.pollutantCode];
 
-    if (pollutantCode.includes(value)) {
-      // 存在：去掉
-      pollutantCode = pollutantCode.filter(item => item !== value);
-    } else {
-      pollutantCode.push(value);
-    }
+    // if (pollutantCode.includes(value)) {
+    //   // 存在：去掉
+    //   pollutantCode = pollutantCode.filter(item => item !== value);
+    // } else {
+    //   pollutantCode.push(value);
+    // }
     this.queryParamsChange(
       {
-        pollutantCode: pollutantCode,
+        pollutantCode: value,
       },
       true,
     );
   };
 
+  // 点击排口，更新导航树model，进入统计分析
+  onPointClickGoAnalysisPage = data => {
+    localStorage.setItem('overallselkeys', data.DGIMN); // 排口key
+    localStorage.setItem('overallexpkeys', data.EntCode); // 企业key
+    localStorage.setItem(
+      'pointInfo',
+      JSON.stringify({
+        // 排口及企业名称
+        entName: data.EntName,
+        pointName: data.PointName,
+      }),
+    );
+    this.props.dispatch({
+      type: 'navigationtree/updateState',
+      payload: {
+        overallselkeys: [data.DGIMN],
+        overallexpkeys: [data.EntCode],
+        pointInfo: {
+          entName: data.EntName,
+          pointName: data.PointName,
+        },
+      },
+    });
+    setTimeout(() => {
+      router.push('/AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis');
+    }, 0);
+  };
+
   render() {
+    const {} = this.state;
     const {
-      regionToggle,
-      industryToggle,
-      industryList,
-      currentRegionName,
-      currentIndustryName,
-    } = this.state;
-    const {
-      EntCount,
-      PointCount,
-      regionList,
       mapMarkersList,
-      entRequestParams,
-      entRequestParams: { pLeve, pollutantCode },
+      loading,
+      entRequestParams: { pLeve, pollutantCode, dateRange },
     } = this.props;
+
     return (
-      <>
+      <Spin spinning={!!loading}>
         <Map
           resizeEnable={true}
           events={this.mapEvents}
@@ -215,15 +233,21 @@ class MapContent extends PureComponent {
         <div className={styles.mapSearchWrapper}>
           <Space align="start">
             <Radio.Group
-              defaultValue="week"
+              value={dateRange}
               className={styles.myRadio}
               style={{ lineHeight: '24px' }}
               onChange={e => {
                 let value = e.target.value;
                 this.queryParamsChange({
-                  btime: moment()
-                    .add(-1, value)
-                    .startOf('day'),
+                  dateRange: value,
+                  btime:
+                    value === 'week'
+                      ? moment()
+                          .add(-6, 'day')
+                          .startOf('day')
+                      : moment()
+                          .add(-1, value)
+                          .startOf('day'),
                   etime: moment(),
                 });
               }}
@@ -235,19 +259,26 @@ class MapContent extends PureComponent {
               {/* <p>污染物</p> */}
               <ul>
                 <li
-                  className={`${pollutantCode.includes('01') ? styles.active : ''}`}
+                  className={`${pollutantCode === '01,02,03' ? styles.active : ''}`}
+                  style={{ padding: '0 20px' }}
+                  onClick={e => this.onPollutantChange('01,02,03')}
+                >
+                  全部
+                </li>
+                <li
+                  className={`${pollutantCode === '01' ? styles.active : ''}`}
                   onClick={e => this.onPollutantChange('01')}
                 >
                   <i style={{ background: '#0A93F3' }}></i>颗粒物
                 </li>
                 <li
-                  className={`${pollutantCode.includes('02') ? styles.active : ''}`}
+                  className={`${pollutantCode === '02' ? styles.active : ''}`}
                   onClick={e => this.onPollutantChange('02')}
                 >
                   <i style={{ background: '#1BFFC7' }}></i>二氧化硫
                 </li>
                 <li
-                  className={`${pollutantCode.includes('03') ? styles.active : ''}`}
+                  className={`${pollutantCode === '03' ? styles.active : ''}`}
                   onClick={e => this.onPollutantChange('03')}
                 >
                   <i style={{ background: '#D388EF' }}></i>氮氧化物
@@ -265,7 +296,7 @@ class MapContent extends PureComponent {
         >
           返回
         </div>
-      </>
+      </Spin>
     );
   }
 }

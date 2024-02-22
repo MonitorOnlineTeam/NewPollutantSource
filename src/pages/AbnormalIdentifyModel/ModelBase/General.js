@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-01 09:07:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-05 15:21:54
+ * @Last Modified time: 2024-02-19 14:22:33
  * @Description：模型管理
  */
 
@@ -279,10 +279,11 @@ const General = props => {
   const expandedRowRender = (record, index, indent, expanded) => {
     return (
       <SdlTable
+        rowKey="ModelGuid"
         columns={getExpandedColumns(true, index)}
         dataSource={record.ModelList}
         pagination={false}
-        scroll={{ y: true }}
+        scroll={false}
         rowClassName={{}}
       />
     );
@@ -307,11 +308,12 @@ const General = props => {
                 <SdlTable
                   //           tableLayout="auto"
                   // style={{ display: 'table' }}
+                  rowKey="ModelTypeCode"
                   loading={loading}
                   columns={getColumns()}
                   dataSource={item.ModelBaseList}
                   pagination={false}
-                  scroll={{ y: true }}
+                  scroll={false}
                   rowClassName={{}}
                   expandable={{
                     indentSize: 1000,
@@ -324,10 +326,11 @@ const General = props => {
               ) : (
                 // 两级
                 <SdlTable
+                  rowKey="ModelGuid"
                   columns={getExpandedColumns(false)}
                   dataSource={item.ModelBaseList[0].ModelList}
                   pagination={false}
-                  scroll={{ y: true }}
+                  scroll={false}
                 />
               )}
             </Card>

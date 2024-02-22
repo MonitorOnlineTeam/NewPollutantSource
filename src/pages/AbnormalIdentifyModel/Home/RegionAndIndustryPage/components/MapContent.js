@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import styles from '../../styles.less';
 import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
-import { Radio, Space } from 'antd';
+import { Radio, Space, Spin, Select } from 'antd';
 import moment from 'moment';
 import { EntIcon } from '@/utils/icon';
 import PageLoading from '@/components/PageLoading';
@@ -29,6 +29,8 @@ class MapContent extends PureComponent {
       industryToggle: false,
       industryList: [],
       currentRegionName: '全国',
+      mapMarkersList: [],
+      filterMarkerList: [],
     };
     this.mapEvents = {
       created(m) {
@@ -57,11 +59,19 @@ class MapContent extends PureComponent {
     this.loadPageData();
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (JSON.stringify(prevProps.requestParams) !== JSON.stringify(this.props.requestParams)) {
-  //     loadPageData();
-  //   }
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (JSON.stringify(prevProps.requestParams) !== JSON.stringify(this.props.requestParams)) {
+      this.loadPageData();
+    }
+    if (
+      prevProps.requestParams.regionCode !== this.props.requestParams.regionCode &&
+      this.props.requestParams.pLeve === 2
+    ) {
+      this.renderRegionBoundary({
+        regionName: this.props.requestParams.regionName,
+      });
+    }
+  }
 
   loadPageData = () => {
     this.getMapPointList(true);
@@ -74,13 +84,17 @@ class MapContent extends PureComponent {
         type: 'AbnormalIdentifyModelHome/GetMapPointList',
         payload: {},
       })
-      .then(() => {
+      .then(res => {
         const timer = setInterval(() => {
           if (aMap && isFitView) {
             aMap.setFitView();
             clearInterval(timer);
           }
         }, 0);
+        this.setState({
+          mapMarkersList: this.props.mapMarkersList,
+          filterMarkerList: this.props.mapMarkersList,
+        });
       });
   };
 
@@ -112,21 +126,37 @@ class MapContent extends PureComponent {
           },
         },
         callback: () => {
-          // debugger
         },
       })
       .then(() => {
-        this.getMapPointList(isFitView);
+        // this.getMapPointList(isFitView);
       });
+  };
+
+  // 更新企业参数
+  updateEntQueryParams = params => {
+    this.props.dispatch({
+      type: 'AbnormalIdentifyModelHome/updateState',
+      payload: {
+        entRequestParams: {
+          ...this.props.entRequestParams,
+          ...params,
+        },
+      },
+    });
   };
 
   // 展示企业
   renderEntList = data => {
     const { position } = data;
+    // { regionCode: data.code, regionName: data.name, industryCode: '', pLeve: 2, },
+    console.log('position', position);
     this.queryParamsChange(
       {
         regionCode: position.regionCode,
-        pLeve: 2,
+        regionName: position.regionName,
+        industryCode: '',
+        pLeve: position.pLeve || 2,
       },
       true,
     );
@@ -136,6 +166,11 @@ class MapContent extends PureComponent {
       regionToggle: false,
     });
 
+    // this.renderRegionBoundary(position);
+  };
+
+  // 绘制行政区边界
+  renderRegionBoundary = position => {
     AMap.plugin('AMap.DistrictSearch', () => {
       const districtSearch = new AMap.DistrictSearch({
         subdistrict: 0, //获取边界不需要返回下级行政区
@@ -266,8 +301,11 @@ class MapContent extends PureComponent {
     } else if (pLeve == 2) {
       const entName = extData.position.entName;
       return (
-        <div style={{ position: 'relative', marginTop: 24 }}>
-          <EntIcon onClick={() => this.onEntList(extData.position)} />
+        <div
+          style={{ position: 'relative', marginTop: 24 }}
+          onClick={() => this.onEntList(extData.position)}
+        >
+          <EntIcon />
           <div
           // className={
           //   alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''
@@ -305,18 +343,36 @@ class MapContent extends PureComponent {
 
   // 污染物Change
   onPollutantChange = value => {
-    let pollutantCode = [...this.props.requestParams.pollutantCode];
+    // let pollutantCode = [...this.props.requestParams.pollutantCode];
 
-    if (pollutantCode.includes(value)) {
-      // 存在：去掉
-      pollutantCode = pollutantCode.filter(item => item !== value);
-    } else {
-      pollutantCode.push(value);
-    }
+    // if (pollutantCode.includes(value)) {
+    //   // 存在：去掉
+    //   pollutantCode = pollutantCode.filter(item => item !== value);
+    // } else {
+    //   pollutantCode.push(value);
+    // }
     this.queryParamsChange(
       {
-        pollutantCode: pollutantCode,
+        pollutantCode: value,
       },
+      true,
+    );
+
+    // 污染物更新到企业中
+    this.updateEntQueryParams({
+      pollutantCode: value,
+    });
+  };
+
+  // 行政区change
+  onRegionChange = data => {
+    console.log('data', data);
+    // this.setState({
+    //   currentRegionName: data.name,
+    //   currentIndustryName: undefined,
+    // });
+    this.queryParamsChange(
+      { regionCode: data.code, regionName: data.name, industryCode: '', pLeve: 2 },
       true,
     );
   };
@@ -328,12 +384,13 @@ class MapContent extends PureComponent {
       industryList,
       currentRegionName,
       currentIndustryName,
+      mapMarkersList,
+      filterMarkerList,
     } = this.state;
     const {
       EntCount,
       PointCount,
       regionList,
-      mapMarkersList,
       requestParams,
       loading,
       requestParams: { pLeve, pollutantCode },
@@ -341,206 +398,271 @@ class MapContent extends PureComponent {
     // if (!!loading) {
     //   return <PageLoading />;
     // }
+
+    console.log('mapMarkersList-region', mapMarkersList);
     return (
       <>
-        <Map
-          resizeEnable={true}
-          events={this.mapEvents}
-          zoom={5}
-          mapStyle={'amap://styles/32ae1bcea26191a8dd684f71c172af1f'}
-          amapkey={'5e60171b820065e7e9a1d6ea45abaee9'}
-          // center={mapCenter}
-        >
-          <Markers
-            markers={mapMarkersList}
-            render={this.renderMarkers}
-            events={this.markersEvents}
-            extData={mapMarkersList}
-            // useCluster
-          />
-          {/* <Markers
+        <Spin spinning={!!loading}>
+          <Map
+            resizeEnable={true}
+            events={this.mapEvents}
+            zoom={5}
+            mapStyle={'amap://styles/32ae1bcea26191a8dd684f71c172af1f'}
+            amapkey={'5e60171b820065e7e9a1d6ea45abaee9'}
+            // center={mapCenter}
+          >
+            <Markers
+              markers={filterMarkerList}
+              render={this.renderMarkers}
+              events={this.markersEvents}
+              extData={filterMarkerList}
+              // useCluster
+            />
+            {/* <Markers
             markers={currentMarkersList}
             events={this.markersEvents}
             // className={this.state.special}
             render={this.renderMarkers}
           /> */}
-        </Map>
-        <div className={styles.mapCountWrapper}>
-          <div style={{ marginRight: 20 }}>
-            <p className={styles.title}>排污单位（家）</p>
-            <p className={styles.count}>{EntCount}</p>
-          </div>
-          <div>
-            <p className={styles.title}>监控点数（个）</p>
-            <p className={styles.count}>{PointCount}</p>
-          </div>
-        </div>
-        <div className={styles.mapSearchWrapper}>
-          <Space align="start" style={{ flexWrap: 'wrap' }}>
-            {pLeve === 1 && (
-              <>
-                <div className={styles.searchSelectWrapper}>
-                  <div
-                    className={styles.select}
-                    onClick={() => {
-                      this.setState({
-                        regionToggle: !regionToggle,
-                        industryToggle: false,
-                      });
-                    }}
-                  >
-                    {currentRegionName !== undefined ? currentRegionName : '按区域'}
-                    <DownOutlined className={styles.icon} />
-                  </div>
-                  {regionToggle && (
-                    <div className={styles.listbox}>
-                      <Radio.Group
-                        defaultValue={requestParams.regionCode}
-                        size="small"
-                        onChange={e => {
-                          this.setState({
-                            currentRegionName: e.target['data-label'],
-                            currentIndustryName: undefined,
-                            regionToggle: !regionToggle,
-                          });
-                          this.queryParamsChange(
-                            { regionCode: e.target.value, industryCode: '' },
-                            true,
-                          );
-                        }}
-                      >
-                        <Space>
-                          {regionList.map(item => {
-                            return (
-                              <Radio.Button
-                                key={item.value}
-                                value={item.value}
-                                data-label={item.label}
-                              >
-                                {item.label}
-                              </Radio.Button>
-                            );
-                          })}
-                        </Space>
-                      </Radio.Group>
-                    </div>
-                  )}
-                </div>
-                <div className={styles.searchSelectWrapper}>
-                  <div
-                    className={styles.select}
-                    onClick={() => {
-                      this.setState({
-                        industryToggle: !industryToggle,
-                        regionToggle: false,
-                      });
-                    }}
-                  >
-                    {currentIndustryName !== undefined ? currentIndustryName : '按行业'}
-                    <DownOutlined className={styles.icon} />
-                  </div>
-                  {industryToggle && (
-                    <div className={styles.listbox}>
-                      <Radio.Group
-                        defaultValue={requestParams.industryCode || undefined}
-                        size="small"
-                        onChange={e => {
-                          this.setState({
-                            currentIndustryName: e.target['data-label'],
-                            currentRegionName: undefined,
-                            industryToggle: !industryToggle,
-                          });
-                          this.queryParamsChange(
-                            { industryCode: e.target.value, regionCode: '' },
-                            true,
-                          );
-                        }}
-                      >
-                        <Space>
-                          <Radio.Button key={0} value={''} data-label={'全部'}>
-                            全部
-                          </Radio.Button>
-                          {industryList.map(item => {
-                            return (
-                              <Radio.Button
-                                key={item['dbo.T_Cod_IndustryType.IndustryTypeCode']}
-                                value={item['dbo.T_Cod_IndustryType.IndustryTypeCode']}
-                                data-label={item['dbo.T_Cod_IndustryType.IndustryTypeName']}
-                              >
-                                {item['dbo.T_Cod_IndustryType.IndustryTypeName']}
-                              </Radio.Button>
-                            );
-                          })}
-                        </Space>
-                      </Radio.Group>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-            <Radio.Group
-              defaultValue="week"
-              className={styles.myRadio}
-              style={{ lineHeight: '24px' }}
-              onChange={e => {
-                let value = e.target.value;
-                this.queryParamsChange({
-                  btime: moment()
-                    .add(-1, value)
-                    .startOf('day'),
-                  etime: moment(),
-                });
-              }}
-            >
-              <Radio.Button value="week">近七天</Radio.Button>
-              <Radio.Button value="month">近一个月</Radio.Button>
-            </Radio.Group>
-            <div className={styles.pollutantWrapper}>
-              {/* <p>污染物</p> */}
-              <ul>
-                <li
-                  className={`${pollutantCode.includes('01') ? styles.active : ''}`}
-                  onClick={e => this.onPollutantChange('01')}
-                >
-                  <i style={{ background: '#0A93F3' }}></i>颗粒物
-                </li>
-                <li
-                  className={`${pollutantCode.includes('02') ? styles.active : ''}`}
-                  onClick={e => this.onPollutantChange('02')}
-                >
-                  <i style={{ background: '#1BFFC7' }}></i>二氧化硫
-                </li>
-                <li
-                  className={`${pollutantCode.includes('03') ? styles.active : ''}`}
-                  onClick={e => this.onPollutantChange('03')}
-                >
-                  <i style={{ background: '#D388EF' }}></i>氮氧化物
-                </li>
-              </ul>
+          </Map>
+          <div className={styles.mapCountWrapper}>
+            <div style={{ marginRight: 20 }}>
+              <p className={styles.title}>排污单位（家）</p>
+              <p className={styles.count}>{EntCount}</p>
             </div>
-          </Space>
-        </div>
-
-        {pLeve === 2 && (
-          <div
-            className={styles.gobackBox}
-            onClick={() => {
-              aMap.clearMap();
-              this.queryParamsChange(
-                {
-                  regionCode: '',
-                  pLeve: 1,
-                },
-                true,
-              );
-              this.setState({
-                currentRegionName: undefined,
-              });
-            }}
-          >
-            返回
+            <div>
+              <p className={styles.title}>监控点数（个）</p>
+              <p className={styles.count}>{PointCount}</p>
+            </div>
           </div>
-        )}
+          <div className={styles.mapSearchWrapper}>
+            <Space align="start" style={{ flexWrap: 'wrap' }}>
+              {pLeve === 1 && (
+                <>
+                  <div className={styles.searchSelectWrapper}>
+                    <div
+                      className={styles.select}
+                      onClick={() => {
+                        this.setState({
+                          regionToggle: !regionToggle,
+                          industryToggle: false,
+                        });
+                      }}
+                    >
+                      {/* {requestParams.regionName !== undefined ? requestParams.regionName : '按区域'} */}
+                      {!requestParams.industryCode ? '全国' : '按区域'}
+                      <DownOutlined className={styles.icon} />
+                    </div>
+                    {regionToggle && (
+                      <div className={styles.listbox}>
+                        <Radio.Group
+                          value={requestParams.regionCode}
+                          size="small"
+                          onChange={e => {
+                            let label = e.target['data-label'];
+                            let value = e.target.value;
+                            this.setState({
+                              regionToggle: !regionToggle,
+                              currentIndustryName: undefined,
+                            });
+                            // this.onRegionChange({ name: label, code: value });
+
+                            this.renderEntList({
+                              position: {
+                                regionCode: value,
+                                regionName: label,
+                                pLeve: value ? 2 : 1,
+                              },
+                            });
+                          }}
+                        >
+                          <Space>
+                            {regionList.map(item => {
+                              return (
+                                <Radio.Button
+                                  key={item.value}
+                                  value={item.value}
+                                  data-label={item.label}
+                                >
+                                  {item.label}
+                                </Radio.Button>
+                              );
+                            })}
+                          </Space>
+                        </Radio.Group>
+                      </div>
+                    )}
+                  </div>
+                  <div className={styles.searchSelectWrapper}>
+                    <div
+                      className={styles.select}
+                      onClick={() => {
+                        this.setState({
+                          industryToggle: !industryToggle,
+                          regionToggle: false,
+                        });
+                      }}
+                    >
+                      {currentIndustryName !== undefined ? currentIndustryName : '按行业'}
+                      <DownOutlined className={styles.icon} />
+                    </div>
+                    {industryToggle && (
+                      <div className={styles.listbox}>
+                        <Radio.Group
+                          defaultValue={requestParams.industryCode || undefined}
+                          size="small"
+                          onChange={e => {
+                            this.setState({
+                              currentIndustryName: e.target['data-label'],
+                              currentRegionName: undefined,
+                              industryToggle: !industryToggle,
+                            });
+                            this.queryParamsChange(
+                              {
+                                industryCode: e.target.value,
+                                regionCode: undefined,
+                                regionName: undefined,
+                              },
+                              true,
+                            );
+                          }}
+                        >
+                          <Space>
+                            <Radio.Button key={0} value={''} data-label={'全部'}>
+                              全部
+                            </Radio.Button>
+                            {industryList.map(item => {
+                              return (
+                                <Radio.Button
+                                  key={item['dbo.T_Cod_IndustryType.IndustryTypeCode']}
+                                  value={item['dbo.T_Cod_IndustryType.IndustryTypeCode']}
+                                  data-label={item['dbo.T_Cod_IndustryType.IndustryTypeName']}
+                                >
+                                  {item['dbo.T_Cod_IndustryType.IndustryTypeName']}
+                                </Radio.Button>
+                              );
+                            })}
+                          </Space>
+                        </Radio.Group>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+              <Radio.Group
+                value={requestParams.dateRange}
+                className={styles.myRadio}
+                style={{ lineHeight: '24px' }}
+                onChange={e => {
+                  let value = e.target.value;
+                  this.queryParamsChange({
+                    dateRange: value,
+                    btime: value === 'week' ? moment().add(-6, 'day') : moment().add(-1, value),
+                    etime: moment(),
+                  });
+
+                  // 时间同时更新到企业中
+                  this.updateEntQueryParams({
+                    dateRange: value,
+                    btime: value === 'week' ? moment().add(-6, 'day') : moment().add(-1, value),
+                    etime: moment(),
+                  });
+                }}
+              >
+                <Radio.Button value="week">近七天</Radio.Button>
+                <Radio.Button value="month">近一个月</Radio.Button>
+              </Radio.Group>
+              <div className={styles.pollutantWrapper}>
+                {/* <p>污染物</p> */}
+                <ul>
+                  <li
+                    className={`${pollutantCode === '01,02,03' ? styles.active : ''}`}
+                    style={{ padding: '0 20px' }}
+                    onClick={e => this.onPollutantChange('01,02,03')}
+                  >
+                    全部
+                  </li>
+                  <li
+                    className={`${pollutantCode === '01' ? styles.active : ''}`}
+                    onClick={e => this.onPollutantChange('01')}
+                  >
+                    <i style={{ background: '#0A93F3' }}></i>颗粒物
+                  </li>
+                  <li
+                    className={`${pollutantCode === '02' ? styles.active : ''}`}
+                    onClick={e => this.onPollutantChange('02')}
+                  >
+                    <i style={{ background: '#1BFFC7' }}></i>二氧化硫
+                  </li>
+                  <li
+                    className={`${pollutantCode === '03' ? styles.active : ''}`}
+                    onClick={e => this.onPollutantChange('03')}
+                  >
+                    <i style={{ background: '#D388EF' }}></i>氮氧化物
+                  </li>
+                </ul>
+              </div>
+              {pLeve === 2 && (
+                <div className={styles.searchEntWrapper}>
+                  <Select
+                    allowClear
+                    placeholder="搜索企业"
+                    onChange={value => {
+                      let filterList = mapMarkersList;
+                      if (value) {
+                        filterList = mapMarkersList.filter(item => item.position.entCode === value);
+                      }
+                      this.setState(
+                        {
+                          filterMarkerList: filterList,
+                        },
+                        () => {
+                          aMap.setFitView();
+                        },
+                      );
+                    }}
+                    style={{ width: 180 }}
+                    showSearch
+                    optionFilterProp="children"
+                    popupClassName={styles.popupStyle}
+                  >
+                    {mapMarkersList.map(item => {
+                      return (
+                        <Option key={item.position.entCode} value={item.position.entCode}>
+                          {item.position.entName}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </div>
+              )}
+            </Space>
+          </div>
+          {pLeve === 2 && (
+            <>
+              <div
+                className={styles.gobackBox}
+                onClick={() => {
+                  aMap.clearMap();
+                  this.queryParamsChange(
+                    {
+                      regionCode: '',
+                      pLeve: 1,
+                    },
+                    true,
+                  );
+                  this.setState({
+                    currentRegionName: undefined,
+                    regionToggle: false,
+                    industryToggle: false,
+                  });
+                }}
+              >
+                返回
+              </div>
+            </>
+          )}
+        </Spin>
       </>
     );
   }

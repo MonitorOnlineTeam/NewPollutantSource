@@ -35,7 +35,7 @@ const Index = props => {
           // ModelFlag: 'ModelFlag',
           // industryTypeCode: '1',
           outputType: 0,
-          StopPointFlag: true,
+          // StopPointFlag: true,
         }}
         // checkpPol="2"
         polShow

@@ -121,6 +121,7 @@ const Emissions = props => {
         {
           type: 'value',
           name: '排污单位',
+          minInterval: 1,
           nameTextStyle: {
             color: '#8BEEFF',
             fontSize: 14,

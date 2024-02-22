@@ -14,13 +14,20 @@ const dvaPropsData = ({ loading, dataModel }) => ({});
 
 const AssistDataAnalysis = props => {
   const [form] = Form.useForm();
-  const { dispatch, displayType, loadLoading, saveLoading, dataChartParams } = props;
+  const {
+    dispatch,
+    displayType,
+    loadLoading,
+    saveLoading,
+    dataChartParams,
+    defaultActiveKey,
+  } = props;
   const [DGIMN, setDGIMN] = useState(props.DGIMN);
   // const [images, setImages] = useState([]);
 
-  // useEffect(() => {
-  //   getImages();
-  // }, [DGIMN]);
+  useEffect(() => {
+    setDGIMN(props.DGIMN);
+  }, [props.DGIMN]);
 
   // // 获取波动范围图表
   // const getImages = () => {
@@ -41,7 +48,7 @@ const AssistDataAnalysis = props => {
     return (
       <Card>
         {/* <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '5'}> */}
-        <Tabs defaultActiveKey={'5'}>
+        <Tabs defaultActiveKey={defaultActiveKey || '5'}>
           <Tabs.TabPane tab="数据工况" key="5" style={{ overflowY: 'auto' }}>
             <WarningDataAndChart
               DGIMN={DGIMN}
@@ -89,7 +96,7 @@ const AssistDataAnalysis = props => {
           // ModelFlag: 'ModelFlag',
           // industryTypeCode: '1',
           outputType: 0,
-          StopPointFlag: true,
+          // StopPointFlag: true,
         }}
         // checkpPol="2"
         polShow

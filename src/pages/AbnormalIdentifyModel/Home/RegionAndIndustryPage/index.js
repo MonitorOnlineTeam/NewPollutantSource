@@ -32,7 +32,7 @@ const RegionAndIndustryPage = props => {
   return (
     <div className={styles.ScreenWrapper}>
       <header className={styles.header}>异常数据智能精准识别系统</header>
-      <Tooltip title="返回">
+      <Tooltip title="返回菜单">
         <RollbackOutlined
           style={{
             position: 'absolute',
@@ -52,7 +52,11 @@ const RegionAndIndustryPage = props => {
         />
       </Tooltip>
       <main>
-        <Row gutter={[8, 8]} style={{ padding: '0 8px' }} className={styles.contentWrapper}>
+        <Row
+          gutter={[8, 8]}
+          style={{ marginLeft: 0, width: '100%' }}
+          className={styles.contentWrapper}
+        >
           <Col style={{ width: '27%', minWidth: 400 }} className={styles.leftWrapper}>
             {/* 运行分析 */}
             <div>
@@ -62,7 +66,12 @@ const RegionAndIndustryPage = props => {
               <ClueStatistics />
             </div>
           </Col>
-          <Col flex="1" className={styles.centerWrapper}>
+          {/* <Col
+            style={{ width: '46%', minWidth: 'calc(100% - 832px)' }}
+            // flex={1}
+            className={styles.centerWrapper}
+          > */}
+          <Col style={{ maxWidth: '46%' }} flex={'auto'} className={styles.centerWrapper}>
             <div className={styles.mapWrapper}>
               <i className={styles.lt}></i>
               <i className={styles.rt}></i>
@@ -90,7 +99,7 @@ const RegionAndIndustryPage = props => {
       {entHomeIsOpen && (
         <Modal
           centered
-          visible={entHomeIsOpen}
+          open={entHomeIsOpen}
           footer={null}
           closeIcon={<CloseOutlined style={{ fontSize: 0 }} />}
           wrapClassName="fullScreenModal"

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-17 11:26:02
+ * @Last Modified time: 2024-02-19 14:19:22
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -236,10 +236,16 @@ class SdlTable extends PureComponent {
           pagination={{ defaultPageSize: 20 }}
           {...this.props}
           defaultWidth={80}
-          scroll={{
-            x: (this.props.scroll && this.props.scroll.x && this.props.scroll.x) || scrollXWidth,
-            y: scrollY,
-          }}
+          scroll={
+            this.props.scroll === false
+              ? {}
+              : {
+                  x:
+                    (this.props.scroll && this.props.scroll.x && this.props.scroll.x) ||
+                    scrollXWidth,
+                  y: scrollY,
+                }
+          }
           columns={_columns}
           {..._props}
         />
