@@ -124,6 +124,8 @@ const RankingContent = props => {
                             requestParams_temp.pollutantCode === '01,02,03'
                               ? ''
                               : requestParams_temp.pollutantCode,
+                          pageSize: 20,
+                          pageIndex: 1,
                         });
                       }}
                     >

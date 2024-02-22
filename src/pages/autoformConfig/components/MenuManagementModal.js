@@ -284,7 +284,7 @@ class MenuManagementModal extends Component {
                     <Form.Item>
                       {getFieldDecorator('DeleteMark', {
                         valuePropName: 'checked',
-                        initialValue: record && record.DeleteMark === 1 ? true : false,
+                        initialValue: record && record.DeleteMark === 2 ? false : true,
                       })(<Checkbox onChange={this.onChange}>启用</Checkbox>)}
                     </Form.Item>
                   </Col>

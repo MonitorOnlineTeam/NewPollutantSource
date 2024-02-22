@@ -126,7 +126,6 @@ class MapContent extends PureComponent {
           },
         },
         callback: () => {
-          // debugger
         },
       })
       .then(() => {

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-19 16:45:37
+ * @Last Modified time: 2024-02-20 16:46:24
  * @Description：报警记录
  */
 
@@ -396,6 +396,7 @@ const CluesList = props => {
           // style={{ padding: '10px 0' }}
           initialValues={{
             ...warningForm[modelNumber],
+            // regionCode: warningForm[modelNumber].regionCode || undefined,
           }}
           autoComplete="off"
           // onValuesChange={onValuesChange}

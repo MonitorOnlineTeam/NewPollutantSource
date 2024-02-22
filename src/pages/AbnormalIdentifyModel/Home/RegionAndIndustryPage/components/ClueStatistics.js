@@ -21,6 +21,7 @@ const ClueStatistics = props => {
   } = props;
   const [barDataMax, setBarDataMax] = useState();
   const [barData, setBarData] = useState([]);
+  const [pieOption, setPieOption] = useState({});
 
   useEffect(() => {
     GetAbnormalClueStatistics();
@@ -36,6 +37,7 @@ const ClueStatistics = props => {
         // handleBarData(res.CountList);
         res.CountList.length && setBarDataMax(_.maxBy(res.CountList, 'val').val);
         setBarData(res.CountList);
+        getOption(res.ModelGroupList);
       },
     });
   };
@@ -55,8 +57,8 @@ const ClueStatistics = props => {
   };
 
   // 线索统计饼图
-  const getOption = () => {
-    let data = ModelGroupList.map(item => {
+  const getOption = (pieData) => {
+    let data = pieData.map(item => {
       return { value: item.count, name: item.name };
     });
 
@@ -83,7 +85,7 @@ const ClueStatistics = props => {
       '#ea7ccc',
     ];
 
-    return {
+    let option = {
       tooltip: {
         trigger: 'item',
         formatter: '{b} : {c} ({d}%)',
@@ -130,6 +132,8 @@ const ClueStatistics = props => {
         },
       ],
     };
+
+    setPieOption(option);
   };
 
   // 柱状图
@@ -244,8 +248,9 @@ const ClueStatistics = props => {
       <div className={styles.ClueStatisticsContent}>
         <div style={{ height: 300 }}>
           <ReactEcharts
-            option={getOption()}
-            lazyUpdate={true}
+            option={pieOption}
+            // option={getOption()}
+            // lazyUpdate={true}
             onEvents={{
               click: onClickEchartsPie,
             }}

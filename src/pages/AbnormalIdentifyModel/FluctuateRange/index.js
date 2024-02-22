@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:47:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-20 10:30:17
+ * @Last Modified time: 2024-02-20 16:44:32
  * @Description:
  */
 import React, { useState, useEffect } from 'react';
@@ -301,7 +301,7 @@ const Index = props => {
         <Space direction="vertical" style={{ width: '100%' }}>
           <Card bodyStyle={{ paddingTop: 0 }}>
             <Form
-              name="basic"
+              name="searchForm"
               form={form}
               layout="inline"
               style={{ padding: '10px 0', marginBottom: 10 }}

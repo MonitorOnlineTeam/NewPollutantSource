@@ -158,11 +158,14 @@ const RankingContent = props => {
                                 requestParams_temp.btime.add(-20, 'month'),
                                 requestParams_temp.etime.add(-1, 'day').add(-20, 'month'),
                               ],
+                              regionCode: requestParams_temp.regionCode || undefined,
                               warningTypeCode: item.code,
                               PollutantCode:
                                 requestParams_temp.pollutantCode === '01,02,03'
                                   ? ''
                                   : requestParams_temp.pollutantCode,
+                              pageSize: 20,
+                              pageIndex: 1,
                             });
                           }
                         }}

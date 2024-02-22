@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-01-18 15:08:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-20 14:46:00
+ * @Last Modified time: 2024-02-22 09:20:30
  * @Description:  数据现象
  */
 import React, { useState, useEffect } from 'react';
@@ -114,7 +114,6 @@ const DataPhenomena = props => {
         render: (text, record) => {
           let color = 'rgba(0, 0, 0, 0.85)';
           let _text = record[item.PollutantCode + '_ME'];
-          console.log('_text', _text);
           let content = '';
 
           let icon = '';
@@ -310,7 +309,6 @@ const DataPhenomena = props => {
           markAreaData.push(data);
         }
       });
-      console.log('markAreaData', markAreaData);
       series.push({
         name: pollutant.PollutantName,
         data: currentData,
@@ -337,6 +335,20 @@ const DataPhenomena = props => {
         confine: true,
         axisPointer: {
           animation: false,
+        },
+        formatter: function(params) {
+          let str = '';
+          params.forEach((m, index) => {
+            str += `<div style="padding: 4px 0;">
+                  <span class="chart-tooltip-color" style="display: inline-block; margin-right: 10px; background-color: ${m.color}; width: 10px; height: 10px; border-radius:100%; margin-right: 5px"></span>
+                  ${m.seriesName}：${m.data} ${selectPollutantList[m.seriesIndex].Unit}<br/>
+                </div>
+                `;
+            // str += `${m.seriesName}:${m.data}<br/>`;
+            // str += `${index % 3 === 0 ? '<br/>' : ''}`;
+          });
+          return `<p style="margin-bottom: 6px; font-weight: 500;">${params[0].axisValue}</p>
+          ${str}`;
         },
       },
       // legend: {},
@@ -377,8 +389,6 @@ const DataPhenomena = props => {
     const title = pollutant.PollutantName;
     const currentData = DataPhenomenaChartList.dataList[pollutant.PollutantCode];
 
-    console.log(title + '-visualMapPieces', visualMapPieces);
-
     return {
       title: {
         text: title,
@@ -388,6 +398,16 @@ const DataPhenomena = props => {
         trigger: 'axis',
         axisPointer: {
           type: 'cross',
+          formatter: function(params) {
+            let str = '';
+            str += `${params[0].axisValue}<br/>`;
+            params.forEach((m, index) => {
+              str += `<span class="chart-tooltip-color" style="display: inline-block; margin-right: 10px; background-color: ${m.color}; width: 10px; height: 10px; border-radius:100%; margin-right: 5px"></span>`;
+              str += `${m.seriesName}:${m.data}`;
+              str += `${index % 3 === 0 ? '<br/>' : ''}`;
+            });
+            return str;
+          },
         },
       },
       toolbox: {
@@ -434,8 +454,6 @@ const DataPhenomena = props => {
       ],
     };
   };
-
-  console.log('DataPhenomenaChartList', DataPhenomenaChartList);
 
   return (
     <>

@@ -1101,6 +1101,8 @@ export const API = {
     StatisNormalRange: before + '/WarningV2/StatisNormalRange',
     // 获取全行业波动范围 - 导出
     ExportStatisNormalRange: before + '/WarningV2/ExportStatisNormalRange',
+    // 数据工况 - 导出
+    ExportHourDataForModel: before + '/WarningV2/ExportHourDataForModel',
 
     /*实时数据异常识别及管理*/
     //异常线索清单

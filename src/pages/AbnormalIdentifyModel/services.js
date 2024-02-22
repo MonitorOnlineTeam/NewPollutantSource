@@ -176,6 +176,12 @@ export async function ExportStatisNormalRange(params) {
   return result;
 }
 
+// 导出报警数据
+export async function ExportHourDataForModel(params) {
+  const result = await post(API.AbnormalIdentifyModel.ExportHourDataForModel, params);
+  return result;
+}
+
 // 保存点位参数配置
 export async function SavePointParamsRange(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Warning/SavePointParamsRange', params);
@@ -186,15 +192,6 @@ export async function SavePointParamsRange(params) {
 export async function SaveModelRelationDGIMN(params) {
   const result = await post(
     '/newApi/rest/PollutantSourceApi/Warning/SaveModelRelationDGIMN',
-    params,
-  );
-  return result;
-}
-
-// 导出报警数据
-export async function ExportHourDataForModel(params) {
-  const result = await post(
-    '/newApi/rest/PollutantSourceApi/Warning/ExportHourDataForModel',
     params,
   );
   return result;

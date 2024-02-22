@@ -449,7 +449,7 @@ const CluesDetails = props => {
             }}
             warningDate={warningDate}
             date={searchDate}
-            defaultChartSelected={defaultChartSelected}
+            defaultChartSelected={defaultChartSelected.slice(0, 6)}
           />
         )}
       </div>

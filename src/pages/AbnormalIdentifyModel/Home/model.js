@@ -267,7 +267,6 @@ export default Model.extend({
         let pollutant01 = result.Datas.find(item => item['01'] != undefined);
         let pollutant02 = result.Datas.find(item => item['02'] != undefined);
         let pollutant03 = result.Datas.find(item => item['03'] != undefined);
-        debugger;
         let obj = {
           '01': pollutant01,
           '02': pollutant02,

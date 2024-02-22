@@ -30,7 +30,6 @@ const EmissionGap = props => {
       type: 'AbnormalIdentifyModelHome/GetPollutantDischargeGapStatistics',
       payload: {},
       callback: res => {
-        debugger
         setGapData(res);
       },
     });
@@ -214,8 +213,6 @@ const EmissionGap = props => {
   const _pollutantCode = pollutantCode.split(',');
 
   const renderInfoContent = code => {
-    console.log('code', code)
-    console.log('gapData', gapData)
     let name = code === '01' ? '烟尘' : code === '02' ? '二氧化硫' : '氮氧化物';
     let currentData = gapData[code];
     if (!currentData) {
