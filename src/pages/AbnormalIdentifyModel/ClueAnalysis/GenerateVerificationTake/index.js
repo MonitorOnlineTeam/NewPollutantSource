@@ -555,7 +555,8 @@ const Index = props => {
 
   useEffect(() => {
     if (visible) {
-      modalForm.resetFields();
+      modalForm.resetFields()
+      setSaveType()
       setSiteVerificationPlanType(1)
       setVerificationPlanType(1)
       setCollapsekey()

@@ -313,13 +313,13 @@ const Index = props => {
                     <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
                         <Form.Item label="企业" name="entCode">
                             <EntAtmoList
-
-                                style={{ width: 200 }}
+                             style={{ width: 200 }}
                                 onChange={value => {
                                     if (!value) {
-                                        form.setFieldsValue({ DGIMN: undefined });
+                                        form.setFieldsValue({ dgimn: undefined });
+                                        setPointList([])
                                     } else {
-                                        form.setFieldsValue({ DGIMN: undefined });
+                                        form.setFieldsValue({ dgimn: undefined });
                                         getPointList(value);
                                     }
                                 }}
