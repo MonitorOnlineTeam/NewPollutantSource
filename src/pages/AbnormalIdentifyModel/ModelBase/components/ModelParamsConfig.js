@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:10:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-05 14:14:03
+ * @Last Modified time: 2024-02-22 13:51:49
  * @Description：模型参数配置
  */
 import React, { useState, useEffect, useImperativeHandle } from 'react';
