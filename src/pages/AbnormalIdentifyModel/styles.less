@@ -181,6 +181,9 @@
       margin-top: 16px;
     }
     .programmeLabel{
+      & > .div {  
+       width: calc(100vw - 166px);
+      }  
       .ant-form-item-label > label{
         height: 20px;
         line-height: 20px;
@@ -188,6 +191,17 @@
       .ant-form-item-control-input {
         min-height: 20px;
      }
+    }
+    .checkedDesLabel{
+      .ant-form-item-label > label{
+        height: 20px;
+        line-height: 20px;
+      }
+      .ant-form-item-control-input{
+        width: calc(25vw - 120px );
+        word-wrap: break-word;
+        min-height: 20px;
+      }
     }
   }
 }

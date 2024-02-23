@@ -12,14 +12,13 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
     saveLoading: loading.effects['autoform/UpdatePlanItem'],
 
 });
-const Index = ({ name, uid, onFileChange, dispatch }) => {
+const Index = ({ name, uid, onFileChange, dispatch, fileListData }) => {
 
     const [previewVisible, setPreviewVisible] = useState(false)
     const [previewTitle, setPreviewTitle] = useState()
     const [photoIndex, setPhotoIndex] = useState(0); //预览图片Index
     const [imgUrlList, setImgUrlList] = useState([]);//预览图片列表
-
-    const [fileList, setFileList] = useState([]);
+    const [fileList, setFileList] = useState(fileListData?.[0] ? fileListData : []);
     const uploadProps = {
         action: API.UploadApi.UploadPicture,
         headers: { Cookie: null, Authorization: "Bearer " + Cookie.get(cookieName) },
@@ -29,7 +28,7 @@ const Index = ({ name, uid, onFileChange, dispatch }) => {
             FileActualType: '0',
         },
         listType: "picture-card",
-        locale:{uploading: '上传中...'},
+        locale: { uploading: '上传中' },
         beforeUpload: (file) => {
             const fileType = file?.type; //获取文件类型 type  image/*
             if (!(/^image/g.test(fileType))) {
@@ -39,6 +38,7 @@ const Index = ({ name, uid, onFileChange, dispatch }) => {
         },
         onChange(info) {
             const fileData = [];
+            console.log(info)
             info.fileList.map(item => {
                 if (item.response && item.response.IsSuccess) { //刚上传的
                     fileData.push({ ...item, url: `/${item.response.Datas}`, })
@@ -46,18 +46,21 @@ const Index = ({ name, uid, onFileChange, dispatch }) => {
                     fileData.push({ ...item })
                 }
             })
+           
             if (info.file.status === 'uploading') {
                 setFileList(fileData)
             }
             if (info.file.status === 'done' || info.file.status === 'removed' || info.file.status === 'error') {
                 setFileList(fileData)
+                onFileChange(name, uid ? uid : undefined);//有上传成功的取前面的uid 没有则表示没有上传成功的图片
                 if (info.file.status === 'done') {
                     if (info.file?.response?.IsSuccess) {
-                        onFileChange(name, uid);
-                        message.success('上传成功！')
+                        message.success(`${info.file.name} 上传成功`);
                     } else {
                         message.error(info.file?.response?.Message)
                     }
+                } else if (info.file.status === 'error') {
+                    message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
                 }
                 info.file.status === 'error' && message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
             }
@@ -105,7 +108,7 @@ const Index = ({ name, uid, onFileChange, dispatch }) => {
                 {...uploadProps}
             >
                 <div>
-                  <PlusOutlined />
+                    <PlusOutlined />
                     <div className="ant-upload-text">上传</div>
                 </div>
             </Upload>

@@ -676,7 +676,7 @@ export default Model.extend({
       // 获取待核查任务、已核查任务详情
       const result = yield call(services.GetCheckedView, payload);
       if (result.IsSuccess) {
-        callback && callback(result);
+        callback && callback(result.Datas);
       } else {
         message.error(result.Message);
       }

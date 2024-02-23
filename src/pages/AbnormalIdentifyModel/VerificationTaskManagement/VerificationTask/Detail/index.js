@@ -179,13 +179,24 @@ const Index = props => {
                 id: id
             },
             callback: res => {
-                setDataSource(res.Datas);
+                setDataSource(res);
+                if(type==1){ //待核查
+                    res?.Plan?.PlanItem.map(item => {
+                        form.setFieldsValue({
+                            [`reContent_${item.ID}`] : item.ReContent,
+                            [`reAttachment_${item.ID}`] : item.ReAttachment?.AttachID,
+                        })
+                    })
+                }
+                if(type==2){//待确认
                 dispatch({
-                    type: 'AbnormalIdentifyModel/GetPreTakeFlagDatas', payload: {},
+                    type: 'AbnormalIdentifyModel/GetPreTakeFlagDatas',
+                    payload: {},
                     callback: res => {
                         setPreTakeFlagDatas(res);
                     }
                 });
+             }
             },
         });
     };
@@ -224,15 +235,15 @@ const Index = props => {
                 flag: values.flag?.length ? values.flag[values.flag.length - 1] : undefined,
             },
             callback: res => {
-              setCheckVisible(false)
-              history.go(-1);
-              //router.push('/AbnormalIdentifyModel/VerificationTaskManagement/AlreadyVerifiedTask')
+                setCheckVisible(false)
+                history.go(-1);
+                //router.push('/AbnormalIdentifyModel/VerificationTaskManagement/AlreadyVerifiedTask')
             },
         });
     }
     const SeeUploadComponents = ({ item }) => {
         return <div>
-            <Upload {...seeUploadProps(item? item : [])} style={{ width: '100%' }} />
+            <Upload {...seeUploadProps(item ? item : [])} style={{ width: '100%' }} />
         </div>
     }
     const [previewVisible, setPreviewVisible] = useState(false)
@@ -277,11 +288,11 @@ const Index = props => {
         form.setFieldsValue({ [key]: fileResponse });
     };
     const checkStatus = {
-        '核查完成': <Tag color="success">核查完成</Tag>,
-        '待确认': <Tag color="processing">待确认</Tag>,
-        '待确认': <Tag color="processing">待确认</Tag>,
-      }
-
+        核查完成: <Tag color="success">核查完成</Tag>,
+        待确认: <Tag color="processing">待确认</Tag>,
+        待核查: <Tag color="error">待核查</Tag>,
+    }
+    const isRectificationRecord = dataSource?.checkInfo?.IsRectificationRecord == 1; //需要现场核查
     return (<div className={styles.verificationTaskDetailWrapper}>
         <BreadcrumbWrapper>
             <Card style={{ paddingBottom: 24 }}>
@@ -289,7 +300,7 @@ const Index = props => {
                     :
                     <>
                         <Row align='middle'>
-                            <span style={{ fontSize: 18, fontWeight: 'bold' }}><img width='28' height='28' src='/programme.png' style={{ marginRight: 12 }} />方案：{dataSource?.Plan?.PlanName}</span>
+                            <span style={{ fontSize: 18, fontWeight: 'bold' }}><img width='28' height='28' src='/programme.png' style={{ marginRight: isRectificationRecord == 1 ? 12 : 0 }} />{isRectificationRecord == 1 && <>方案：{dataSource?.Plan?.PlanName}</>}</span>
                             <Button style={{ marginLeft: 16 }} onClick={() => {
                                 history.go(-1);
                             }} ><RollbackOutlined />返回上级</Button>
@@ -342,11 +353,11 @@ const Index = props => {
                             dataSource={dataSource?.finalResult}
                             loading={queryLoading}
                             scroll={{ y: 200 }}
-                          // pagination={false}
+                            pagination={false}
 
                         />
                     </Card>
-                     <Card
+                    <Card
                         title={<span style={{ fontWeight: 'bold' }}>方案及核查信息</span>}
                         style={{ marginTop: 8 }}
                     >
@@ -356,63 +367,82 @@ const Index = props => {
                                 <Row>
                                     <Col span={6}>
                                         <Form.Item label="核查状态">
-                                              {checkStatus[dataSource?.checkInfo?.StatusName] }
+                                            {checkStatus[dataSource?.checkInfo?.StatusName]}
                                         </Form.Item>
                                     </Col>
                                     <Col span={6}>
-                                        <Form.Item label="核查结论" >
-                                            {dataSource?.checkInfo?.CheckedTime}
+                                        <Form.Item className='checkedDesLabel' label="核查结论" >
+                                            {dataSource?.checkInfo?.CheckedDes  || '-'}
                                         </Form.Item>
                                     </Col>
                                     <Col span={6}>
                                         <Form.Item label="核查人" >
-                                            {dataSource?.checkInfo?.CheckUserName}
+                                            {dataSource?.checkInfo?.CheckUserName  || '-'}
                                         </Form.Item>
                                     </Col>
                                     <Col span={6}>
                                         <Form.Item label="核查时间" >
-                                            {dataSource?.checkInfo?.CheckedTime}
+                                            {dataSource?.checkInfo?.CheckedTime  || '-'}
                                         </Form.Item>
                                     </Col>
                                 </Row>
-                                    <Form.Item label="方案及核查信息" className='programmeLabel' >
-                                        <div dangerouslySetInnerHTML={{ __html: dataSource?.Plan?.ContentBody }}></div>
+                                {isRectificationRecord == 1 ? <> <Form.Item label="方案及核查信息" className='programmeLabel' >
+                                    <div dangerouslySetInnerHTML={{ __html: dataSource?.Plan?.ContentBody }}></div>
+                                </Form.Item>
+                                    <Form name='checkAction' form={form} layout='vertical'>
+                                        <div style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}>核查动作</div>
+                                        <div style={{ paddingLeft: 112 }}>
+                                            {dataSource?.Plan?.PlanItem.map((item, index) => {
+                                                const cuids = item.ReAttachment?.AttachID ? item.ReAttachment.AttachID : cuid();
+                                                const fileList = item.ReAttachment?.ImgList?.map(item => {
+                                                    return {
+                                                        uid: cuids,
+                                                        status: 'done',
+                                                        url: `/${item}`,
+                                                    }
+                                                })
+                                                return <div style={{ paddingBottom: 12 }}>
+                                                    <Form.Item label={`${index + 1}.${item.QTitle}`}>
+                                                        {item.QContent}
+                                                    </Form.Item>
+                                                    {item.QAttachment?.ImgList?.[0] && <div>
+                                                        <SeeUploadComponents item={item.QAttachment?.ImgList} />
+                                                    </div>}
+                                                    <Row>
+                                                        <Col span={type == 1 ? 16 : 12} style={{ paddingRight: 8 }}>
+                                                            <Form.Item label='填写核查结果' name={`reContent_${item.ID}`} rules={[{ required: type == 1 ? true : false, message: `请输入核查结果!` }]}>
+                                                                {type == 1 ? <Input.TextArea rows={4} placeholder='请输入' /> : item.ReContent}
+                                                            </Form.Item>
+                                                        </Col>
+                                                        <Col span={type == 1 ? 8 : 12}>
+                                                            <div style={{ marginTop: 30 }}>
+                                                                {type == 1 ?
+                                                                    <CustomUpload fileListData={fileList} key={index} name={`reAttachment_${item.ID}`} uid={cuids} onFileChange={(k, res) => handleFileChange(k, res)} />
+                                                                    :
+                                                                    <SeeUploadComponents item={item.ReAttachment?.ImgList} />
+                                                                }
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            })
+                                            }
+
+                                        </div>
+
+                                    </Form>
+                                </>
+                                    :
+                                    <>
+                                    <Form.Item label="核查结果与线索是否符合"  >
+                                     {dataSource?.checkInfo?.checkResult}
+                                   </Form.Item>
+                                    <Form.Item label="核查原因" className='programmeLabel' >
+                                        <div dangerouslySetInnerHTML={{ __html: dataSource?.checkInfo?.UntruthReason }}></div>
                                     </Form.Item>
-                                <Form name='checkAction' form={form} layout='vertical'>
-                                    <div style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}>核查动作</div>
-                                    <div style={{ paddingLeft: 112 }}>
-                                        {dataSource?.Plan?.PlanItem.map((item, index) => {
-                                            const cuids = item.ReAttachment.AttachID ? item.ReAttachment.AttachID : cuid();
-                                            return <div style={{paddingBottom:12}}>
-                                                <Form.Item label={`${index + 1}.${item.QTitle}`}>
-                                                    {item.QContent}
-                                                </Form.Item>
-                                                {item.QAttachment?.ImgList?.[0] && <div>
-                                                    <SeeUploadComponents item={item.QAttachment?.ImgList} />
-                                                </div>}
-                                                <Row>
-                                                    <Col span={type == 1 ? 16 : 12} style={{ paddingRight: 8 }}>
-                                                        <Form.Item label='填写核查结果' name={`reContent_${item.ID}`} rules={[{ required: true, message: `请输入核查结果!` }]}>
-                                                            {type == 1 ? <Input.TextArea rows={4} placeholder='请输入' /> : item.ReContent}
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={type == 1 ? 8 : 12}>
-                                                        <div style={{ marginTop: 30 }}>
-                                                            {type == 1 ?
-                                                                <CustomUpload key={index} name={`reAttachment_${item.ID}`} uid={cuids} onFileChange={(k, res) => handleFileChange(k, res)} />
-                                                                :
-                                                                <SeeUploadComponents item={item.ReAttachment?.ImgList} />
-                                                            }
-                                                        </div>
-                                                    </Col>
-                                                </Row>
-                                            </div>
-                                        })
-                                        }
+                                  </>
 
-                                    </div>
-
-                                </Form>
+                                }
                                 {(type == 1 || type == 2) && <Row style={{ margin: '12px 0 24px 0' }} justify='end'>
                                     {type == 1 ?
                                         <Space>
@@ -427,7 +457,7 @@ const Index = props => {
                                 </Row>}
                             </>
                         }
-                    </Card> 
+                    </Card>
                 </Tabs.TabPane>
 
             </Tabs>

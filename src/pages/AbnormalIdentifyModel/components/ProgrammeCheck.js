@@ -25,7 +25,7 @@ const ProgrammeCheck = props => {
       type: 'AbnormalIdentifyModel/GetCheckedView',
       payload: { id },
       callback: res => {
-        setDataSource(res.Datas);
+        setDataSource(res);
       },
     });
   };
@@ -80,9 +80,9 @@ const ProgrammeCheck = props => {
   const checkStatus = {
     核查完成: <Tag color="success">核查完成</Tag>,
     待确认: <Tag color="processing">待确认</Tag>,
-    待确认: <Tag color="processing">待确认</Tag>,
+    待核查: <Tag color="error">待核查</Tag>,
   };
-
+  const isRectificationRecord = dataSource?.checkInfo?.IsRectificationRecord == 1; //需要现场核查
   return (
     <Card
       title={<span style={{ fontWeight: 'bold' }}>方案及核查信息</span>}
@@ -92,67 +92,78 @@ const ProgrammeCheck = props => {
       {queryLoading ? (
         <Skeleton paragraph={{ rows: 4 }} />
       ) : (
-        <>
-          <Row>
-            <Col span={6}>
-              <Form.Item label="核查状态">
-                {checkStatus[(dataSource?.checkInfo?.StatusName)] || (
-                  <Tag color="volcano">待核查</Tag>
-                )}
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="核查结论">{dataSource?.checkInfo?.CheckedTime || '-'}</Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="核查人">{dataSource?.checkInfo?.CheckUserName || '-'}</Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="核查时间">{dataSource?.checkInfo?.CheckedTime || '-'}</Form.Item>
-            </Col>
-          </Row>
-          <Form.Item label="方案及核查信息" className="programmeLabel">
-            <div
-              dangerouslySetInnerHTML={{
-                __html: dataSource?.Plan?.ContentBody || '<span>-</span>',
-              }}
-            ></div>
-          </Form.Item>
-          <Form layout="vertical">
-            {dataSource?.Plan?.PlanItem.length ? (
-              <div style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}>
-                核查动作
-              </div>
-            ) : (
-              ''
-            )}
-            <div style={{ paddingLeft: 112 }}>
-              {dataSource?.Plan?.PlanItem.map((item, index) => {
-                return (
-                  <div style={{ paddingBottom: 12 }}>
-                    <Form.Item label={`${index + 1}.${item.QTitle}`}>{item.QContent}</Form.Item>
-                    {item.QAttachment?.ImgList?.[0] && (
-                      <div>
-                        <SeeUploadComponents item={item.QAttachment?.ImgList} />
-                      </div>
-                    )}
-                    <Row>
-                      <Col span={12} style={{ paddingRight: 8 }}>
-                        <Form.Item label="填写核查结果">{item.ReContent}</Form.Item>
-                      </Col>
-                      <Col span={12}>
-                        <div style={{ marginTop: 30 }}>
-                          <SeeUploadComponents item={item.ReAttachment?.ImgList} />
-                        </div>
-                      </Col>
-                    </Row>
+          <>
+            <Row>
+              <Col span={6}>
+                <Form.Item label="核查状态">
+                  {checkStatus[(dataSource?.checkInfo?.StatusName)] || (
+                    <Tag color="volcano">待核查</Tag>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item   className='checkedDesLabel' label="核查结论">{dataSource?.checkInfo?.CheckedDes || '-'}</Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item label="核查人">{dataSource?.checkInfo?.CheckUserName || '-'}</Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item label="核查时间">{dataSource?.checkInfo?.CheckedTime || '-'}</Form.Item>
+              </Col>
+            </Row>
+            {isRectificationRecord == 1 ? <><Form.Item label="方案及核查信息" className="programmeLabel">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: dataSource?.Plan?.ContentBody || '<span>-</span>',
+                }}
+              ></div>
+            </Form.Item>
+              <Form layout="vertical">
+                {dataSource?.Plan?.PlanItem.length ? (
+                  <div style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}>
+                    核查动作
                   </div>
-                );
-              })}
-            </div>
-          </Form>
-        </>
-      )}
+                ) : (
+                    ''
+                  )}
+                <div style={{ paddingLeft: 112 }}>
+                  {dataSource?.Plan?.PlanItem.map((item, index) => {
+                    return (
+                      <div style={{ paddingBottom: 12 }}>
+                        <Form.Item label={`${index + 1}.${item.QTitle}`}>{item.QContent}</Form.Item>
+                        {item.QAttachment?.ImgList?.[0] && (
+                          <div>
+                            <SeeUploadComponents item={item.QAttachment?.ImgList} />
+                          </div>
+                        )}
+                        <Row>
+                          <Col span={12} style={{ paddingRight: 8 }}>
+                            <Form.Item label="填写核查结果">{item.ReContent}</Form.Item>
+                          </Col>
+                          <Col span={12}>
+                            <div style={{ marginTop: 30 }}>
+                              <SeeUploadComponents item={item.ReAttachment?.ImgList} />
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Form>
+            </>
+              : 
+              <>
+                <Form.Item label="核查结果与线索是否符合"  >
+                  {dataSource?.checkInfo?.checkResult}
+                </Form.Item>
+                <Form.Item label="核查原因" className='programmeLabel' >
+                  <div dangerouslySetInnerHTML={{ __html: dataSource?.checkInfo?.UntruthReason }}></div>
+                </Form.Item>
+              </>
+            }
+          </>
+        )}
       <ImageView
         isOpen={previewVisible}
         images={imgUrlList?.length ? imgUrlList : []}

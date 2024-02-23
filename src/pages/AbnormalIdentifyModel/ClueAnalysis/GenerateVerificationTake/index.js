@@ -143,7 +143,7 @@ const Index = props => {
             payload: { workTowerData: { ...workTowerData, type: 2 } },
           });
         } else {
-          onFinish(pageIndex, pageSize, 'query');
+          onFinish(pageIndex, pageSize);
         }
       });
   }
@@ -228,6 +228,11 @@ const Index = props => {
         key: 'EntName',
         width: 200,
         ellipsis: true,
+        render: (text, record) => {
+          return (
+              <span style={textStyle}>{text}</span>
+          );
+        },
       },
       {
         title: '排口',
@@ -630,6 +635,7 @@ const Index = props => {
         type: 'AbnormalIdentifyModel/AddPlanTask', payload: { ...parData },
         callback: res => {
           setVisible(false)
+          onFinish(pageIndex, pageSize, 'query');
         }
       });
     }
