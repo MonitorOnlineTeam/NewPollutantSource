@@ -260,6 +260,26 @@ const WarningDataAndChart = props => {
               );
             },
           },
+          {
+            title: '运行管理异常',
+            dataIndex: 'WCOperationFlag',
+            key: 'WCOperationFlag',
+            width: 180,
+            align: 'center',
+            ellipsis: true,
+            render: (text, record) => {
+              let backgroundColor = 'transparent';
+              if (text || record['MonitorTime_Status'] === true) {
+                // if (true) {
+                backgroundColor = COLOR;
+              }
+              return (
+                <div className={styles.tdBox} style={{ background: backgroundColor }}>
+                  <TableText content={text || '-'} />
+                </div>
+              );
+            },
+          },
         ],
       },
       {
@@ -317,6 +337,26 @@ const WarningDataAndChart = props => {
             title: '故障原因',
             dataIndex: 'QHFaultFlag',
             key: 'QHFaultFlag',
+            width: 180,
+            align: 'center',
+            ellipsis: true,
+            render: (text, record) => {
+              let backgroundColor = 'transparent';
+              if (text || record['MonitorTime_Status'] === true) {
+                // if (true) {
+                backgroundColor = COLOR;
+              }
+              return (
+                <div className={styles.tdBox} style={{ background: backgroundColor }}>
+                  <TableText content={text || '-'} />
+                </div>
+              );
+            },
+          },
+          {
+            title: '运行管理异常',
+            dataIndex: 'QHOperationFlag',
+            key: 'QHOperationFlag',
             width: 180,
             align: 'center',
             ellipsis: true,
@@ -852,7 +892,7 @@ const WarningDataAndChart = props => {
                     ${WCFaultFlag.length ? WCFaultFlag.join('<br/>') : '-'}
                   </div>
                 </div>
-                <div style="margin-top: 4px; display: ${WCOperationFlag.length ? 'block' : 'none'}">
+                <div style="margin-top: 4px; display: 'block'}">
                   <div style="display: inline-block;vertical-align: top;">运行管理异常：</div>
                   <div  style="display: inline-block;">
                     ${WCOperationFlag.length ? WCOperationFlag.join('<br/>') : '-'}
@@ -880,7 +920,7 @@ const WarningDataAndChart = props => {
                     ${QHFaultFlag.length ? QHFaultFlag.join('<br/>') : '-'}
                   </div>
                 </div>
-                <div style="margin-top: 4px; display: ${QHOperationFlag.length ? 'block' : 'none'}">
+                <div style="margin-top: 4px; display: 'block'}">
                   <div style="display: inline-block;vertical-align: top;">运行管理异常：</div>
                   <div  style="display: inline-block;">
                     ${QHOperationFlag.length ? QHOperationFlag.join('<br/>') : '-'}
@@ -913,6 +953,14 @@ const WarningDataAndChart = props => {
           saveAsImage: { show: true },
         },
       },
+      // dataZoom: [
+      //   {
+      //     show: true,
+      //     realtime: true,
+      //     start: 0,
+      //     end: 100,
+      //   },
+      // ],
       xAxis: {
         type: 'category',
         boundaryGap: false,
