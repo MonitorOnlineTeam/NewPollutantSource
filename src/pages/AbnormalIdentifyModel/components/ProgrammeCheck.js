@@ -155,9 +155,9 @@ const ProgrammeCheck = props => {
               : 
               <>
                 <Form.Item label="核查结果与线索是否符合"  >
-                  {dataSource?.checkInfo?.checkResult}
+                  {dataSource?.checkInfo?.CheckResult}
                 </Form.Item>
-                <Form.Item label="核查原因" className='programmeLabel' >
+                <Form.Item label="核查原因" className='programmeLabel2' >
                   <div dangerouslySetInnerHTML={{ __html: dataSource?.checkInfo?.UntruthReason }}></div>
                 </Form.Item>
               </>

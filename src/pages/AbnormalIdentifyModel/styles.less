@@ -181,9 +181,20 @@
       margin-top: 16px;
     }
     .programmeLabel{
-      & > .div {  
-       width: calc(100vw - 166px);
+      .ant-form-item-control-input-content{
+      & > div {  
+       width: calc(100vw - 208px);
+       word-wrap: break-word;
       }  
+    }
+    .programmeLabel2{
+      .ant-form-item-control-input-content{
+      & > div {  
+       width: calc(100vw - 166px);
+       word-wrap: break-word;
+      }  
+     }
+    }
       .ant-form-item-label > label{
         height: 20px;
         line-height: 20px;
@@ -203,7 +214,14 @@
         min-height: 20px;
       }
     }
+    .ant-card-head{
+      min-height: 32px;
+    }
+    .ant-card-head-title{
+      padding: 8px 0;
+    }
   }
+
 }
 
 .pollutantDischargeGapWrapper {

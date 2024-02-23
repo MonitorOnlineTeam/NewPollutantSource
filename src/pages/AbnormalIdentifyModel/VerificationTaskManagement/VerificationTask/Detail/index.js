@@ -132,19 +132,9 @@ const Index = props => {
             },
             {
                 title: '核实结果',
-                dataIndex: 'CheckedResultCode',
-                key: 'CheckedResultCode',
+                dataIndex: 'CheckedResult',
+                key: 'CheckedResult',
                 width: 120,
-                render: (text, record) => {
-                    switch (text) {
-                        case '3':
-                            return <Badge status="default" text="未核实" />;
-                        case '2':
-                            return <Badge status="warning" text="有异常" />;
-                        case '1':
-                            return <Badge status="error" text="系统误报" />;
-                    }
-                },
             },
             {
                 title: '操作',
@@ -352,7 +342,7 @@ const Index = props => {
                             columns={getColumns()}
                             dataSource={dataSource?.finalResult}
                             loading={queryLoading}
-                            scroll={{ y: 200 }}
+                            scroll={{ y: 240 }}
                             pagination={false}
 
                         />
@@ -435,9 +425,9 @@ const Index = props => {
                                     :
                                     <>
                                     <Form.Item label="核查结果与线索是否符合"  >
-                                     {dataSource?.checkInfo?.checkResult}
+                                     {dataSource?.checkInfo?.CheckResult}
                                    </Form.Item>
-                                    <Form.Item label="核查原因" className='programmeLabel' >
+                                    <Form.Item label="核查原因" className='programmeLabel2' >
                                         <div dangerouslySetInnerHTML={{ __html: dataSource?.checkInfo?.UntruthReason }}></div>
                                     </Form.Item>
                                   </>

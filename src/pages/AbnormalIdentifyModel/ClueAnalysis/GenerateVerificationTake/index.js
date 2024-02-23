@@ -106,7 +106,7 @@ const Index = props => {
 
     let data = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
 
-    if (type == 1 || type == 2) {//1从工作台进入   2 从详情返回
+    if (type == 1 || type == 2) {//1从工作台进入   2从详情返回
       let data = ''
       if (type == 1) {
         data = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
@@ -143,7 +143,7 @@ const Index = props => {
             payload: { workTowerData: { ...workTowerData, type: 2 } },
           });
         } else {
-          onFinish(pageIndex, pageSize);
+          onFinish(pageIndex, pageSize,'query');
         }
       });
   }
@@ -466,7 +466,7 @@ const Index = props => {
   }
   const [selectFlag, setSelectFlag] = useState(false)
   // 查询数据
-  const onFinish = (pageIndex, pageSize, pageChange) => {
+  const onFinish = (pageIndex, pageSize, pageType) => {
     const values = form.getFieldsValue();
     props.dispatch({
       type: 'AbnormalIdentifyModel/GetWaitCheckDatas',
@@ -483,7 +483,7 @@ const Index = props => {
         setSelectFlag(falg)
         setDataSource(res.Datas);
         setTotal(res.Total);
-        if (!pageChange) {
+        if (pageType=='query') {
           setSelectedRowKeys([])
           setSelectedRow([])
         }
@@ -511,7 +511,7 @@ const Index = props => {
         },
       },
     });
-    onFinish(current, pageSize, query == 'query' ? '' : 'pageChange');
+    onFinish(current, pageSize, query);
   };
 
   // 根据企业获取排口
@@ -660,7 +660,7 @@ const Index = props => {
       } else {
         const currentRow = row?.[row?.length - 1]
         if (currentRow?.['DGIMN'] == selectedRow['DGIMN'] && currentRow?.['WarningName'] == selectedRow['WarningName']) {
-          setSelectedRowKeys(newSelectedRowKeys)
+          setSelectedRowKeys( [...selectedRowKeys,...newSelectedRowKeys])
         } else {
           message.error('同一企业同一排口同一场景下才能同时选中并生成核查方案')
         }
@@ -929,7 +929,7 @@ const Index = props => {
             showQuickJumper: true,
             pageSize: pageSize,
             current: pageIndex,
-            onChange: onTableChange,
+            onChange:(current, pageSize)=>onTableChange(current, pageSize, 'pageChange'),
             total: total,
           }}
           className={selectFlag ? '' : 'noSelectAllSty'}
