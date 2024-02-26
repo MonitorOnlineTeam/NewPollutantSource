@@ -23,7 +23,7 @@ const ProgrammeCheck = props => {
   const loadData = () => {
     dispatch({
       type: 'AbnormalIdentifyModel/GetCheckedView',
-      payload: { id },
+      payload: { id,type:1 },
       callback: res => {
         setDataSource(res);
       },
