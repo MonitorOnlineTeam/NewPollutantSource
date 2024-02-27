@@ -111,7 +111,7 @@ const ProgrammeCheck = props => {
                 <Form.Item label="核查时间">{dataSource?.checkInfo?.CheckedTime || '-'}</Form.Item>
               </Col>
             </Row>
-            {isRectificationRecord == 1 ? <><Form.Item label="方案及核查信息" className="programmeLabel">
+            {isRectificationRecord == 1 ? <div id='checkAction'><Form.Item label="方案及核查信息" className="programmeLabel">
               <div
                 dangerouslySetInnerHTML={{
                   __html: dataSource?.Plan?.ContentBody || '<span>-</span>',
@@ -137,21 +137,21 @@ const ProgrammeCheck = props => {
                           </div>
                         )}
                         <Row>
-                          <Col span={12} style={{ paddingRight: 8 }}>
+                         {item.ReContent&&<Col span={12} style={{ paddingRight: 8 }}>
                             <Form.Item label="填写核查结果">{item.ReContent}</Form.Item>
-                          </Col>
-                          <Col span={12}>
+                          </Col>}
+                         {item.ReAttachment?.ImgList?.[0]&&<Col span={12}>
                             <div style={{ marginTop: 30 }}>
-                              <SeeUploadComponents item={item.ReAttachment?.ImgList} />
+                              <SeeUploadComponents item={item.ReAttachment.ImgList} />
                             </div>
-                          </Col>
+                          </Col>}
                         </Row>
                       </div>
                     );
                   })}
                 </div>
               </Form>
-            </>
+            </div>
               : 
               <>
                 <Form.Item label="核查结果与线索是否符合"  >
