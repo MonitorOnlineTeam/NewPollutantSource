@@ -111,14 +111,14 @@ const ProgrammeCheck = props => {
                 <Form.Item label="核查时间">{dataSource?.checkInfo?.CheckedTime || '-'}</Form.Item>
               </Col>
             </Row>
-            {isRectificationRecord == 1 ? <div id='checkAction'><Form.Item label="方案及核查信息" className="programmeLabel">
+            {isRectificationRecord == 1 ? <div><Form.Item label="方案及核查信息" className="programmeLabel">
               <div
                 dangerouslySetInnerHTML={{
                   __html: dataSource?.Plan?.ContentBody || '<span>-</span>',
                 }}
               ></div>
             </Form.Item>
-              <Form layout="vertical">
+              <Form  id='checkAction' layout="vertical">
                 {dataSource?.Plan?.PlanItem.length ? (
                   <div style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}>
                     核查动作
@@ -155,7 +155,7 @@ const ProgrammeCheck = props => {
               : 
               <>
                 <Form.Item label="核查结果与线索是否符合"  >
-                  {dataSource?.checkInfo?.CheckResult}
+                  {dataSource?.checkInfo?.CheckedResult}
                 </Form.Item>
                 <Form.Item label="核查原因" className='programmeLabel2' >
                   <div dangerouslySetInnerHTML={{ __html: dataSource?.checkInfo?.UntruthReason }}></div>
