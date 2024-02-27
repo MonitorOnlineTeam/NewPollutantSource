@@ -68,7 +68,7 @@ export default Model.extend({
     mapMarkersList: [],
     // 运行分析
     OverRate: 0,
-    RunRate: 0,
+    DataEfficiencyRate: 0,
     // 异常线索统计
     ClueStatisticsData: {
       CountList: [],
@@ -110,7 +110,7 @@ export default Model.extend({
     entMapMarkersList: [],
     // 运行分析
     EntOverRate: 0,
-    EntRunRate: 0,
+    EntDataEfficiencyRate: 0,
   },
   effects: {
     // 获取首页地图数据
@@ -320,7 +320,7 @@ export default Model.extend({
         // callback && callback(result.Datas);
         yield update({
           EntOverRate: result.Datas.OverRate,
-          EntRunRate: result.Datas.RunRate,
+          EntDataEfficiencyRate: result.Datas.DataEfficiencyRate,
         });
       } else {
         message.error(result.Message);

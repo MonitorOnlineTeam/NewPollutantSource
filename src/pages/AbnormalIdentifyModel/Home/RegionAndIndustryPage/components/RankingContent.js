@@ -58,6 +58,7 @@ const RankingContent = props => {
           ...warningForm,
           all: {
             ...warningForm['all'],
+            EntCode: undefined,
             rowKey: undefined,
             scrollTop: 0,
             ...params,

@@ -24,7 +24,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   // todoList: wordSupervision.todoList,
   requestParams: AbnormalIdentifyModelHome.entRequestParams,
   OverRate: AbnormalIdentifyModelHome.EntOverRate,
-  RunRate: AbnormalIdentifyModelHome.EntRunRate,
+  DataEfficiencyRate: AbnormalIdentifyModelHome.EntDataEfficiencyRate,
   loading: loading.effects['AbnormalIdentifyModelHome/GetEntOperationsAnalysis'],
 });
 
@@ -32,7 +32,7 @@ const RanAnalysis = props => {
   // const runChart = useRef();
   // const overChart = useRef();
   // let runChart, overChart;
-  const { dispatch, requestParams, RunRate, OverRate, loading } = props;
+  const { dispatch, requestParams, DataEfficiencyRate, OverRate, loading } = props;
   const [runChart, setRunChart] = useState();
   const [overChart, setOverChart] = useState();
 
@@ -142,7 +142,7 @@ const RanAnalysis = props => {
             ref={echart => {
               setRunChart(echart);
             }}
-            option={getOption(1, RunRate)}
+            option={getOption(1, DataEfficiencyRate)}
             lazyUpdate={true}
             style={{ height: '180px', width: '100%' }}
           />
@@ -150,7 +150,7 @@ const RanAnalysis = props => {
             className={styles.echartsTitle}
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           >
-            运行率
+            数据有效率
             <div style={titleBottomStyle}></div>
           </div>
         </div>

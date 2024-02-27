@@ -23,11 +23,19 @@ const RegionAndIndustryPage = props => {
   // const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    loadData();
+    resetCluesListParams();
   }, []);
 
-  //
-  const loadData = () => {};
+  // 重置数据列表表单
+  const resetCluesListParams = () => {
+    // 重置表单
+    dispatch({
+      type: 'AbnormalIdentifyModel/onReset',
+      payload: {
+        modelNumber: 'all',
+      },
+    });
+  };
 
   return (
     <div className={styles.ScreenWrapper}>

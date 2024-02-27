@@ -129,6 +129,7 @@ class MapContent extends PureComponent {
   };
 
   getIcon = status => {
+    return <GasIcon />;
     switch (status) {
       case '3': // 离线
         return <GasOffline />;
