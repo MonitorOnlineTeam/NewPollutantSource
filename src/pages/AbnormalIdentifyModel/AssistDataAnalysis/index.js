@@ -75,7 +75,7 @@ const AssistDataAnalysis = props => {
               date={dataChartParams.date || [moment().subtract(1, 'day'), moment()]}
               DGIMN={DGIMN}
               echartBoxHeight={displayType === 'modal' ? 'calc(100vh - 200px)' : ''}
-              tableHeight={displayType === 'modal' ? 'calc(100vh - 200px)' : ''}
+              tableHeight={displayType === 'modal' ? 'calc(100vh - 320px)' : ''}
             />
           </Tabs.TabPane>
         </Tabs>

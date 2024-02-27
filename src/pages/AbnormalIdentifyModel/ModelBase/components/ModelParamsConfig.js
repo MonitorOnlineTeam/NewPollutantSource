@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:10:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-22 13:51:49
+ * @Last Modified time: 2024-02-26 15:45:52
  * @Description：模型参数配置
  */
 import React, { useState, useEffect, useImperativeHandle } from 'react';
@@ -42,20 +42,24 @@ const WeekData = [
 ];
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
+  loading: loading.effects['AbnormalIdentifyModel/GetModelInfoAndParams'],
   // todoList: wordSupervision.todoList,
   // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
 });
 
 const ModelParamsConfig = props => {
   const [form] = Form.useForm();
-  const [paramsData, setParamsData] = useState(props.Data.dataAttribute);
+  const [paramsData, setParamsData] = useState(props.Data);
+  const [dataAttribute, setDataAttribute] = useState(props.Data);
   const {
     ModelID,
-    Data: { dataAttribute, modelInfo },
+    // Data: { dataAttribute, modelInfo },
     industryList,
+    loading,
   } = props;
   console.log('dataAttribute', dataAttribute);
   useEffect(() => {
+    console.log('props.Data', props.Data);
     let range = {};
     // _PollutantList.map(item => {
     //   let pollutantValue = dataAttribute[item.pollutantCode];
@@ -67,11 +71,19 @@ const ModelParamsConfig = props => {
     //   }
     // });
 
-    form.setFieldsValue({
-      ...range,
-    });
-    setParamsData(props.Data.dataAttribute);
+    // form.setFieldsValue({
+    //   ...range,
+    // });
+    form.resetFields();
+    setDataAttribute(props.Data);
+    setParamsData(props.Data);
   }, [props.Data]);
+
+  useEffect(() => {
+    return () => {
+      form.resetFields();
+    };
+  }, []);
 
   useImperativeHandle(props.onRef, () => {
     return {
@@ -405,6 +417,7 @@ const ModelParamsConfig = props => {
           title={<div className={styles.title}>参数配置</div>}
           bordered={false}
           bodyStyle={{ padding: '20px 40px' }}
+          loading={!!loading}
         >
           <Form
             name="basic"

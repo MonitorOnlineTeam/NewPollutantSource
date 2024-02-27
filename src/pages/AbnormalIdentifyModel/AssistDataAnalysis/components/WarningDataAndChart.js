@@ -878,8 +878,12 @@ const WarningDataAndChart = props => {
                 <span style="display: inline-block; vertical-align: middle; color: #000">数据特征识别：</span>
               </div>
               <div style="padding: 0 14px">
-                <p>工况：<span style="color: ${WorkConColor}; font-weight: bold">${ModelWCFlag ||
-            '-'}<p>
+                <p>
+                  <span>工况：<span style="color: ${WorkConColor}; font-weight: bold">${ModelWCFlag ||
+            '-'}</span>
+            <span style="margin-left: 10px;">上报工况：<span style="">${currentData.WorkCon ||
+              '-'}</span>
+                </p>
                 <div>
                   <div style="display: inline-block;vertical-align: top;">人为干预：</div>
                   <div  style="display: inline-block;">

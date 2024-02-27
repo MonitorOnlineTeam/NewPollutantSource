@@ -171,7 +171,7 @@ const EmissionGap = props => {
         itemGap: 10,
         textStyle: {
           color: '#fff',
-          fontSize: '26',
+          fontSize: '22',
           fontWeight: 600,
         },
         // subtext: `已排放:${value}kg`,

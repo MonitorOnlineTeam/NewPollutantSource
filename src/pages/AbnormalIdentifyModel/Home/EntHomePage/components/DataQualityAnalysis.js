@@ -28,12 +28,15 @@ const DataQualityAnalysis = props => {
         setAnalysisData(res || {});
         let max = Math.max(
           ...[
-            res.NomarlHour,
+            res.ExceptionHour,
             res.FaultHour,
-            res.DefendHour,
+            // res.DefendHour,
             res.ExceptionHour,
             res.MissHour,
             res.RenweiHour,
+            res.StopHour,
+            res.RunHour,
+            res.AllHours,
           ],
         );
         setMaxNum(max + max * 0.1);
@@ -54,22 +57,22 @@ const DataQualityAnalysis = props => {
     >
       <div className={styles.rateBoxWrapper}>
         <div className={styles.Progress}>
-          <p className={styles.title}>CEMS运行数据有效率</p>
+          <p className={styles.title}>数据异常率</p>
           <Progress
-            percent={analysisData.DataEfficiency}
+            percent={analysisData.ExceptionRate}
             strokeColor={'#11C0F9'}
             trailColor="#0D6B8A"
             showInfo={false}
           />
         </div>
         <div className={styles.numberContent}>
-          <p className={styles.num}>{analysisData.NomarlHour}</p>
-          <p className={styles.text}>正常运行小时数</p>
+          <p className={styles.num}>{analysisData.ExceptionHour}</p>
+          <p className={styles.text}>运行异常小时数</p>
         </div>
         <div className={styles.line}></div>
         <div className={styles.numberContent}>
-          <p className={styles.num}>{analysisData.DataEfficiency}%</p>
-          <p className={styles.text}>有效率</p>
+          <p className={styles.num}>{analysisData.ExceptionRate}%</p>
+          <p className={styles.text}>异常率</p>
         </div>
       </div>
       <div className={styles.rateBoxWrapper}>
@@ -112,37 +115,73 @@ const DataQualityAnalysis = props => {
           <p className={styles.text}>维护率</p>
         </div>
       </div>
+      <div className={styles.rateBoxWrapper}>
+        <div className={styles.Progress}>
+          <p className={styles.title}>数据缺失率</p>
+          <Progress
+            percent={analysisData.MissRate}
+            strokeColor={'#11C0F9'}
+            trailColor="#0D6B8A"
+            showInfo={false}
+          />
+        </div>
+        <div className={styles.numberContent}>
+          <p className={styles.num}>{analysisData.MissHour}</p>
+          <p className={styles.text}>数据缺失小时数</p>
+        </div>
+        <div className={styles.line}></div>
+        <div className={styles.numberContent}>
+          <p className={styles.num}>{analysisData.MissRate}%</p>
+          <p className={styles.text}>缺失率</p>
+        </div>
+      </div>
       <div className={styles.groupItemWrapper}>
         <p className={styles.unit}>单位：小时</p>
         <div className={styles.itemInfoBox}>
-          <span className={styles.itemName}>正常运行</span>
+          <span className={styles.itemName}>总时长</span>
           <div className={styles.itemProgress}>
             <Progress
               style={{ width: '100%' }}
               strokeWidth={12}
-              percent={maxNum ? (analysisData.NomarlHour / maxNum).toFixed(2) * 100 : 0}
+              percent={maxNum ? (analysisData.AllHours / maxNum).toFixed(2) * 100 : 0}
               steps={40}
               showInfo={false}
               strokeColor={'#00FFFC'}
               trailColor="#0F255D"
             />
           </div>
-          <span className={styles.num}>{analysisData.NomarlHour}</span>
+          <span className={styles.num}>{analysisData.AllHours}</span>
         </div>
         <div className={styles.itemInfoBox}>
-          <span className={styles.itemName}>异常</span>
+          {/* 排放源运行小时数 */}
+          <span className={styles.itemName}>运行</span>
           <div className={styles.itemProgress}>
             <Progress
               style={{ width: '100%' }}
               strokeWidth={12}
-              percent={maxNum ? (analysisData.ExceptionHour / maxNum).toFixed(2) * 100 : 0}
+              percent={maxNum ? (analysisData.RunHour / maxNum).toFixed(2) * 100 : 0}
               steps={40}
               showInfo={false}
               strokeColor={'#00FFFC'}
               trailColor="#0F255D"
             />
           </div>
-          <span className={styles.num}>{analysisData.ExceptionHour}</span>
+          <span className={styles.num}>{analysisData.RunHour}</span>
+        </div>
+        <div className={styles.itemInfoBox}>
+          <span className={styles.itemName}>停炉</span>
+          <div className={styles.itemProgress} style={{transform: 'scaleX(-1)'}}>
+            <Progress
+              style={{ width: '100%' }}
+              strokeWidth={12}
+              percent={maxNum ? (analysisData.StopHour / maxNum).toFixed(2) * 100 : 0}
+              steps={40}
+              showInfo={false}
+              strokeColor={'#00FFFC'}
+              trailColor="#0F255D"
+            />
+          </div>
+          <span className={styles.num}>{analysisData.StopHour}</span>
         </div>
         <div className={styles.itemInfoBox}>
           <span className={styles.itemName}>人为干预</span>
@@ -158,52 +197,6 @@ const DataQualityAnalysis = props => {
             />
           </div>
           <span className={styles.num}>{analysisData.RenweiHour}</span>
-        </div>
-        <div className={styles.itemInfoBox}>
-          <span className={styles.itemName}>设备故障</span>
-          <div className={styles.itemProgress}>
-            <Progress
-              style={{ width: '100%' }}
-              strokeWidth={12}
-              percent={maxNum ? (analysisData.FaultHour / maxNum).toFixed(2) * 100 : 0}
-              steps={40}
-              showInfo={false}
-              strokeColor={'#00FFFC'}
-              trailColor="#0F255D"
-            />
-          </div>
-          <span className={styles.num}>{analysisData.FaultHour}</span>
-        </div>
-        <div className={styles.itemInfoBox}>
-          <span className={styles.itemName}>缺失</span>
-          <div className={styles.itemProgress}>
-            <Progress
-              style={{ width: '100%' }}
-              strokeWidth={12}
-              percent={maxNum ? (analysisData.MissHour / maxNum).toFixed(2) * 100 : 0}
-              steps={40}
-              showInfo={false}
-              strokeColor={'#00FFFC'}
-              trailColor="#0F255D"
-            />
-          </div>
-          <span className={styles.num}>{analysisData.MissHour}</span>
-        </div>
-
-        <div className={styles.itemInfoBox}>
-          <span className={styles.itemName}>维护</span>
-          <div className={styles.itemProgress}>
-            <Progress
-              style={{ width: '100%' }}
-              strokeWidth={12}
-              percent={maxNum ? (analysisData.DefendHour / maxNum).toFixed(2) * 100 : 0}
-              steps={40}
-              showInfo={false}
-              strokeColor={'#00FFFC'}
-              trailColor="#0F255D"
-            />
-          </div>
-          <span className={styles.num}>{analysisData.DefendHour}</span>
         </div>
       </div>
     </HomeCard>

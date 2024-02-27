@@ -41,6 +41,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   relationDGIMN: AbnormalIdentifyModel.relationDGIMN,
   ModelInfoAndParams: AbnormalIdentifyModel.ModelInfoAndParams,
   runState: AbnormalIdentifyModel.runState,
+  loading: loading.effects['AbnormalIdentifyModel/GetModelInfoAndParams'],
   entAndPointLoading: loading.effects['common/getEntAndPointList'],
   saveLoading: loading.effects['dataModel/SaveModelInfoAndParams'],
   relationDGIMNLoading: loading.effects['dataModel/GetModelRelationDGIMN'],
@@ -63,6 +64,7 @@ const Setting = props => {
     relationDGIMN,
     ModelInfoAndParams,
     runState,
+    loading,
   } = props;
   const [visible, setVisible] = useState(false);
   const [treeData, setTreeData] = useState([]);
@@ -432,7 +434,14 @@ const Setting = props => {
               </Row>
             </Form>
           </Card>
-          <ModelParamsConfig ModelID={ID} Data={ModelInfoAndParams} onRef={childRef} />
+          {/* {!loading && ( */}
+          <ModelParamsConfig
+            ModelID={ID}
+            Data={ModelInfoAndParams.dataAttribute}
+            onRef={childRef}
+          />
+          {/* )} */}
+
           {
             <Divider orientation="right" style={{ color: '#f6f0f0' }}>
               <Space>

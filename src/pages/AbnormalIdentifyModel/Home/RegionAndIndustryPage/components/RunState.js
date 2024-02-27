@@ -23,10 +23,30 @@ const RunState = props => {
     }
 
     let data = [
-      { value: PointSumStatus.Normal, name: '正常', rate: PointSumStatus.NormalRate },
-      { value: PointSumStatus.Exception, name: '异常', rate: PointSumStatus.ExceptionRate },
-      { value: PointSumStatus.Over, name: '超标', rate: PointSumStatus.OverRate },
-      { value: PointSumStatus.Stop, name: '停运', rate: PointSumStatus.StopRate },
+      {
+        value: PointSumStatus.Normal,
+        name: '正常',
+        rate: PointSumStatus.NormalRate,
+        entCount: PointSumStatus.NormalEnt,
+      },
+      {
+        value: PointSumStatus.Exception,
+        name: '异常',
+        rate: PointSumStatus.ExceptionRate,
+        entCount: PointSumStatus.ExceptionEnt,
+      },
+      {
+        value: PointSumStatus.Over,
+        name: '超标',
+        rate: PointSumStatus.OverRate,
+        entCount: PointSumStatus.OverEnt,
+      },
+      {
+        value: PointSumStatus.Stop,
+        name: '停运',
+        rate: PointSumStatus.StopRate,
+        entCount: PointSumStatus.StopEnt,
+      },
     ];
     let color = ['#2899F6', '#E3AB15', '#FF4374', '#CACACA'];
     return {
@@ -50,7 +70,7 @@ const RunState = props => {
       legend: {
         orient: 'vertical',
         top: 'center',
-        right: '6%',
+        right: '0%',
         textStyle: {
           color: '#fff',
           fontSize: 14,
@@ -62,9 +82,9 @@ const RunState = props => {
         //图例标记的图形宽度
         itemWidth: 20,
         formatter: function(name, option) {
-          console.log('name', name)
+          console.log('name', name);
           let current = data.find(item => item.name === name);
-          return `${name}: ${current.value}个   ${current.rate}%`;
+          return `${name}: 企业${current.entCount}家 排口${current.value}个   ${current.rate}%`;
         },
       },
       series: [
@@ -110,7 +130,7 @@ const RunState = props => {
           color: ['#ffffff', 'red'],
           startAngle: 105,
           tooltip: {
-            show: false
+            show: false,
           },
           data: [
             {
@@ -164,7 +184,7 @@ const RunState = props => {
           top: 'center',
           startAngle: 90,
           tooltip: {
-            show: false
+            show: false,
           },
           data: [
             {
