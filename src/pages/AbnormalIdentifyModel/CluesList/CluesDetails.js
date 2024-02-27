@@ -35,6 +35,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const CluesDetails = props => {
   const warningId = props.match.params.id;
+  const checkId = props.location.query.checkId;
   const COLOR = ['#5470c6', '#91cc75', '#ea7ccc'];
   const { dispatch, warningInfoLoading, modelChartsLoading, height } = props;
   const [isOpen, setIsOpen] = useState(false);
@@ -419,7 +420,7 @@ const CluesDetails = props => {
               : ''}
           </Row>
         </Card>
-        <ProgrammeCheck id={warningId} />
+        <ProgrammeCheck id={checkId} />
 
         {/* 查看附件弹窗 */}
         <ImageView

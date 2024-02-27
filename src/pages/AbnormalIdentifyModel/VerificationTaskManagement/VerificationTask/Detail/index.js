@@ -146,7 +146,7 @@ const Index = props => {
                             <a
                                 onClick={e => {
                                     router.push(
-                                        `/AbnormalIdentifyModel/CluesList/CluesDetails/${record.ModelCheckedGuid}`,
+                                        `/AbnormalIdentifyModel/CluesList/CluesDetails/${record.ModelWarningGuid}?checkId=${record.ModelCheckedGuid}`,
                                     );
                                 }}
                             >
