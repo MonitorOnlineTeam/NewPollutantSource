@@ -996,6 +996,7 @@ const Index = props => {
                   onChange={(e) => {
                     setSiteVerificationPlanType(e.target?.value)
                     setCollapsekey();
+                    setSaveType();
                     modalForm.resetFields();
                     modalForm.setFieldsValue({
                       isSceneCheck: e.target?.value,

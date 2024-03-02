@@ -285,9 +285,9 @@ const Index = props => {
                 style={{ width: 200 }}
                 onChange={value => {
                   if (!value) {
-                    form.setFieldsValue({ DGIMN: undefined });
+                    form.setFieldsValue({ dgimn: undefined });
                   } else {
-                    form.setFieldsValue({ DGIMN: undefined });
+                    form.setFieldsValue({ dgimn: undefined });
                     getPointList(value);
                   }
                 }}
