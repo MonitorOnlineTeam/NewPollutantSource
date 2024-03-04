@@ -16,7 +16,7 @@ import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentNam
     GetManufacturerList,GetSystemModelList,GetPollutantById,GetPollutantById2,GetEquipmentInfoList,GetMonitoringTypeList2,
     GetMonitoringCategoryType,GetPBList,PointSort,AddOrEditPointCoefficient,GetPointCoefficientByDGIMN,GetPointElectronicFenceInfo,AddOrUpdatePointElectronicFenceInfo,
     UpdatePointOprationStatus,GetOprationStatusList,GetCraftByIndustry,AddOrUptCraftByPoint,GetCraftByPoint,
-    
+    GetEquipmentParametersList,
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
 import cuid from 'cuid';
@@ -530,6 +530,14 @@ export default Model.extend({
           },
           *GetCraftByPoint({ payload, callback }, { call, put, update }) { // 运维状态 修改记录
             const result = yield call(GetCraftByPoint, payload);
+            if (result.IsSuccess) {
+                callback&&callback(result.Datas)
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *GetEquipmentParametersList({ payload, callback }, { call, put, update }) { // 监测参数设备信息清单
+            const result = yield call(GetEquipmentParametersList, payload);
             if (result.IsSuccess) {
                 callback&&callback(result.Datas)
             } else {

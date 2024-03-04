@@ -518,7 +518,7 @@ const Index = (props) => {
       width: 150,
       ellipsis: true,
       render: (text, record) => {
-        // const updateflag = record.updateflag;
+        const updateflag = record.submitStatus !== '系统关闭';
         // const flag = record.flag;
         const issue = record.issue;
         const isCheckUser = record.isCheckUser;
@@ -534,16 +534,15 @@ const Index = (props) => {
         }
         return (
           <>
-            <Tooltip title={'编辑'}> {/* title={updateflag && flag? "编辑" : null  } */}
+            <Tooltip title={'编辑'}>
               <a onClick={() => {
-                // if (updateflag && flag) {
-                //   edit(record)
-                // }
-                // return;
-                edit(record)
+                if (updateflag) {
+                  edit(record)
+                }
+                return;
               }}  >
-                {/* <EditOutlined style={{ cursor: updateflag && flag ? 'pointer' : 'not-allowed', color: updateflag && flag ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', fontSize: 16 }} /> */}
-                <EditOutlined style={{ fontSize: 16 }} />
+                <EditOutlined style={{ cursor: updateflag ? 'pointer' : 'not-allowed', color: updateflag ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', fontSize: 16 }} />
+                {/* <EditOutlined style={{ fontSize: 16 }} /> */}
 
               </a>
             </Tooltip>
@@ -1226,7 +1225,6 @@ const Index = (props) => {
       form2.validateFields().then((values) => {
         form3.validateFields().then(values2 => {
           const dataList1 = addDataConsistencyData.map(item => {
-            console.log(values,item.par)
             return {
               PollutantCode: item.ChildID,
               AnalyzerMin: values[`${item.par}AnalyzerRang1`],
@@ -1330,6 +1328,7 @@ const Index = (props) => {
             ParamDataList: paramDataList,
           }, (isSuccess) => {
             // title === '添加' && id && setAddId(id)
+            setVisible(false)
             type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
             isSuccess && onFinish(pageIndex, pageSize)
           })
@@ -1676,7 +1675,13 @@ const Index = (props) => {
           case 'dataFile': setDataFileList({ ...dataFileList, [dataFilePar]: fileList }); form3.setFieldsValue({ [dataFilePar]: filesCuidFun(dataFileCuidList, dataFilePar) }); break;
 
         }
-        info.file.status === 'done' && message.success('上传成功！')
+        if(info.file.status === 'done'){
+          if(info.file?.response?.IsSuccess){
+            message.success('上传成功！')
+          }else{
+            message.error(info.file?.response?.Message)
+          }
+        }
         info.file.status === 'error' && message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
 
       }
@@ -1842,26 +1847,26 @@ const Index = (props) => {
 
         break;
       case 2: // 实时数据一致性核查表 自动判断
-        if (row.Name == '颗粒物') {
-          // isDisPlayCheck2 无显示屏  isDisPlayCheck4   直测流速法
-          analyzerRang1 = isDisPlayCheck2 ? form2.getFieldValue(`${row.ChildID}aAnalyzerRang1`) : isDisPlayCheck1 ? form2.getFieldValue(`${row.ChildID}AnalyzerRang1`) : undefined;
-          analyzerRang2 = isDisPlayCheck2 ? form2.getFieldValue(`${row.ChildID}aAnalyzerRang2`) : isDisPlayCheck1 ? form2.getFieldValue(`${row.ChildID}AnalyzerRang2`) : undefined;
-          analyzerUnit = isDisPlayCheck2 ? form2.getFieldValue(`${row.ChildID}aAnalyzerUnit`) : isDisPlayCheck1 ? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
+        // if (row.Name == '颗粒物') {
+        //   // isDisPlayCheck2 无显示屏  isDisPlayCheck4   直测流速法
+        //   analyzerRang1 = isDisPlayCheck2 ? form2.getFieldValue(`${row.ChildID}aAnalyzerRang1`) : isDisPlayCheck1 ? form2.getFieldValue(`${row.ChildID}AnalyzerRang1`) : undefined;
+        //   analyzerRang2 = isDisPlayCheck2 ? form2.getFieldValue(`${row.ChildID}aAnalyzerRang2`) : isDisPlayCheck1 ? form2.getFieldValue(`${row.ChildID}AnalyzerRang2`) : undefined;
+        //   analyzerUnit = isDisPlayCheck2 ? form2.getFieldValue(`${row.ChildID}aAnalyzerUnit`) : isDisPlayCheck1 ? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
 
-        } else if (row.Name == '流速') {
-          analyzerRang1 = isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang1`) : isDisPlayCheck3 ? form2.getFieldValue(`${row.ChildID}AnalyzerRang1`) : undefined;
-          analyzerRang2 = isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang2`) : isDisPlayCheck3 ? form2.getFieldValue(`${row.ChildID}AnalyzerRang2`) : undefined;
-          analyzerUnit = isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) : isDisPlayCheck3 ? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
+        // } else if (row.Name == '流速') {
+        //   analyzerRang1 = isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang1`) : isDisPlayCheck3 ? form2.getFieldValue(`${row.ChildID}AnalyzerRang1`) : undefined;
+        //   analyzerRang2 = isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang2`) : isDisPlayCheck3 ? form2.getFieldValue(`${row.ChildID}AnalyzerRang2`) : undefined;
+        //   analyzerUnit = isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) : isDisPlayCheck3 ? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
 
-        } else if (row.Name == 'NOx') {
-          analyzerRang1 = form2.getFieldValue(`400AnalyzerRang1`);
-          analyzerRang2 = form2.getFieldValue(`400AnalyzerRang2`);
-          analyzerUnit = form2.getFieldValue(`400AnalyzerUnit`);
-        } else {
-          analyzerRang1 = form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
-            analyzerRang2 = form2.getFieldValue(`${row.ChildID}AnalyzerRang2`),
-            analyzerUnit = form2.getFieldValue(`${row.ChildID}AnalyzerUnit`);
-        }
+        // } else if (row.Name == 'NOx') {
+        //   analyzerRang1 = form2.getFieldValue(`400AnalyzerRang1`);
+        //   analyzerRang2 = form2.getFieldValue(`400AnalyzerRang2`);
+        //   analyzerUnit = form2.getFieldValue(`400AnalyzerUnit`);
+        // } else {
+        //   analyzerRang1 = form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
+        //     analyzerRang2 = form2.getFieldValue(`${row.ChildID}AnalyzerRang2`),
+        //     analyzerUnit = form2.getFieldValue(`${row.ChildID}AnalyzerUnit`);
+        // }
 
 
         // analyzerFlag = (analyzerRang1 || analyzerRang1 == 0) && (analyzerRang2 || analyzerRang2 == 0) && analyzerUnit || row.Name == '流速' || row.Name == '标干流量' || row.Name == 'NO' || row.Name == 'NO2' ? true : false;

@@ -12,9 +12,21 @@ import { connect } from "dva";
 
 
 const Index = (props) => {
-
+  
+  const { text } = props;
   return (
-    <div  key={props.key} style={{ display: 'inline-block', fontWeight: 'bold', paddingBottom: '2px', marginBottom: 12, borderBottom: '1px solid rgba(0,0,0,.1)',...props.style }} >{props.text}</div>
+     <>
+     { props.simpleSty?
+       <div  key={props.key} style={{ display: 'inline-block', fontWeight: 'bold',  marginBottom: 12,...props.style }} >
+       <div style={{width:3,height:14, display:'inline-block',verticalAlign:'middle',background:'#1890FF',margin:'0 4px 4px 0'}}/> 
+       {text}
+     </div>
+      :
+      <div  key={props.key} style={{ display: 'inline-block', fontWeight: 'bold', paddingBottom: '2px', marginBottom: 12, borderBottom: '1px solid rgba(0,0,0,.1)',...props.style }} >
+      {text}
+     </div> 
+     }
+    </>
   );
 };
 export default (Index);

@@ -441,7 +441,7 @@ export default class MonitorPoint extends Component {
                       this.subProcessInfo.onSubmit(result.Datas);
                   }
                   this.setState({
-                    FormData: { ...FormData, DGIMN: result.Datas },
+                    FormData: { ...FormData, DGIMN: this.state.isEdit? FormData['DGIMN'] : result.Datas },
                   });
                 },
               },
@@ -1168,6 +1168,8 @@ export default class MonitorPoint extends Component {
       },
     };
     // const radiusFlag = tabKey == 6 && !isSuperAdministrator;
+    const titles =  pollutantType == 1? '废水': deviceManagerGasType == 1? '废气-常规CEMS' : '废气-VOCS'
+    
     return (
       <BreadcrumbWrapper title="监测点维护">
         <div className={styles.cardTitle}>
@@ -1531,21 +1533,14 @@ export default class MonitorPoint extends Component {
           </Modal>
 
           <Modal //设备管理
-            title={
-              pollutantType == 1
-                ? '废水'
-                : deviceManagerGasType == 1
-                ? '废气-常规CEMS'
-                : '废气-VOCS'
-            }
+            title={titles}
             visible={this.state.deviceManagerVisible}
             onCancel={() => {
               this.setState({ deviceManagerVisible: false });
             }}
-            width="95%"
             destroyOnClose
             footer={null}
-            wrapClassName={styles.deviceManagerSty}
+            wrapClassName={`${styles.deviceManagerSty} spreadOverModal table-light`}
           >
             <DeviceManager
               onCancel={() => {
@@ -1554,6 +1549,7 @@ export default class MonitorPoint extends Component {
               DGIMN={this.state.deviceManagerMN}
               gasType={deviceManagerGasType}
               pollutantType={pollutantType}
+              titles={titles }
             />
           </Modal>
           <Modal //修改点位运维状态

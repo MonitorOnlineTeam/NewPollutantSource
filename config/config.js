@@ -504,6 +504,12 @@ export default {
                   path: '/operaAchiev/operaUserIntegral',
                   component: './operaAchiev/operaUserIntegral',
                 },
+                {
+                  // 现场签到统计
+                  name: 'operationSiteAttendanceStatistics',
+                  path: '/operaAchiev/operationSiteAttendanceStatistics',
+                  component: './operaAchiev/operationSiteAttendanceStatistics',
+                },
               ],
             },
             {
@@ -3009,9 +3015,22 @@ export default {
                       path: '/projectExecuProgress/projectExecution/dispatchQuery',
                       component: './projectExecuProgress/projectExecution/dispatchQuery',
                     },
+                    {
+                      // 派单完成率
+                      name: 'DispatchCompletionRate',
+                      path: '/projectExecuProgress/projectExecution/dispatchCompletionRate',
+                      component: './projectExecuProgress/projectExecution/dispatchCompletionRate',
+                    },
+
                   ],
                 },
 
+                {
+                  // 现场签到统计
+                  name: 'SiteAttendanceStatistics',
+                  path: '/projectExecuProgress/siteAttendanceStatistics',
+                  component: './projectExecuProgress/siteAttendanceStatistics',
+                },
               ],
             },
             // 资产管理

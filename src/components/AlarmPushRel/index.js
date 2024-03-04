@@ -442,10 +442,9 @@ class Index extends Component {
                         }
                     </Row>
                 </div >
-                <div style={{ textAlign: 'center', marginTop: 15 }}>
+                <div style={{ textAlign: 'right', marginTop: 16 }}>
                     <Pagination
                         size="small"
-                        total={50}
                         showSizeChanger
                         showQuickJumper
                         total={total}

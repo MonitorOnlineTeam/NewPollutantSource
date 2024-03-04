@@ -87,7 +87,7 @@ const Index = (props) => {
                         columns={columns}
                         dataSource={filteredItems}
                         size="small"
-                        scroll={{ y: 'calc(100vh - 380px)' }}
+                        scroll={{ y: 'calc(100vh - 420px)' }}
                         style={{ pointerEvents: listDisabled ? 'none' : null, paddingBottom: 10 }}
                         onRow={({ key, disabled: itemDisabled }) => ({
                             onClick: () => {

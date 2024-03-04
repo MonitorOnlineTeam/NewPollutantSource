@@ -29,8 +29,7 @@ import { getBase64,permissionButton  } from '@/utils/utils';
 import Detail from './Detail';
 import Lightbox from "react-image-lightbox-rotate";
 import {  API } from '@config/API';
-import config from '@/config';
-
+import {cookieName, uploadPrefix } from '@/config'
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -525,7 +524,7 @@ const Index = (props) => {
                   uid: item.GUID,
                   name: item.FileName,
                   status: 'done',
-                  url: `\\upload\\${item.FileName}`,
+                  url: `${uploadPrefix}/${item.FileName}`,
                 })
 
               }
@@ -553,7 +552,7 @@ const Index = (props) => {
                 uid: items.GUID,
                 name: items.FileName,
                 status: 'done',
-                url: `\\upload\\${items.FileName}`,
+                url: `${uploadPrefix}/${items.FileName}`,
               })
             }
           })
@@ -579,7 +578,7 @@ const Index = (props) => {
                 uid: items.GUID,
                 name: items.FileName,
                 status: 'done',
-                url: `\\upload\\${items.FileName}`,
+                url: `${uploadPrefix}/${items.FileName}`,
               })
             }
           })
@@ -605,7 +604,7 @@ const Index = (props) => {
                 uid: items.GUID,
                 name: items.FileName,
                 status: 'done',
-                url: `\\upload\\${items.FileName}`,
+                url: `${uploadPrefix}/${items.FileName}`,
               })
             }
           })
@@ -862,7 +861,7 @@ const Index = (props) => {
       props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
-        form.setFieldsValue({ DGIMN: [] })
+        form.setFieldsValue({ DGIMN: undefined })
       })
     }
   }
@@ -1631,7 +1630,7 @@ const Index = (props) => {
 
   const uploadProps = { //附件上传 
     action: API.UploadApi.UploadPicture,
-    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
+    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(cookieName)},
     accept: 'image/*',
     data: {
       FileUuid: fileType == 0 ? filesCuid0 : fileType == 1 ? filesCuid1() : fileType == 2 ? filesCuid2() : filesCuid3(),
@@ -1676,8 +1675,14 @@ const Index = (props) => {
       }
       if (info.file.status === 'done' || info.file.status === 'removed' || info.file.status === 'error') {
         fileType == 0 ? setFilesList0(fileList) : fileType == 1 ? setFilesList1({ ...filesList1, [files1]: fileList }) : fileType == 2 ? setFilesList2({ ...filesList2, [files2]: fileList }) : setFilesList3({ ...filesList3, [files3]: fileList })
-        fileType == 0 ? tableForm.setFieldsValue({ Files: fileList && fileList[0] ? filesCuid0 : undefined }) : fileType == 1 ? tableForm.setFieldsValue({ [files1]: filesCuid1() }) : fileType == 2 ? tableForm.setFieldsValue({ [files2]: filesCuid2() }) : tableForm.setFieldsValue({ [files3]: filesCuid3() })
-        info.file.status === 'done' && message.success('上传成功！')
+        if(info.file.status === 'done'){
+          if(info.file?.response?.IsSuccess){
+            message.success('上传成功！')
+            fileType == 0 ? tableForm.setFieldsValue({ Files: fileList && fileList[0] ? filesCuid0 : undefined }) : fileType == 1 ? tableForm.setFieldsValue({ [files1]: filesCuid1() }) : fileType == 2 ? tableForm.setFieldsValue({ [files2]: filesCuid2() }) : tableForm.setFieldsValue({ [files3]: filesCuid3() })
+          }else{
+            message.error(info.file?.response?.Message)
+          }
+        }
         info.file.status === 'error' && message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
       }
     },

@@ -393,3 +393,9 @@ export async function AddOrUptCraftByPoint(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Mold/AddOrUptCraftByPoint', params);
   return result;
 }
+
+// 获取监测参数设备清单信息
+export async function GetEquipmentParametersList(params) {
+  const result = await post(API.AssetManagementApi.GetEquipmentParametersList, params);
+  return result;
+}

@@ -62,7 +62,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, coommonCol,coommonCol2,failcoommonCol2,deviceType } = props;
+  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, coommonCol,coommonCol2,failcoommonCol2,operationSetType,deviceType } = props;
 
 
   useEffect(() => {
@@ -73,9 +73,10 @@ const Index = (props) => {
 
   const initData = () => {
     props.pointGetExecptionRateList({
-      ...props.queryPar,
+      ...queryPar,
       pointType: 3,
-      entName:entName
+      entName:entName,
+      type:operationSetType,
     })
   };
 
@@ -84,6 +85,8 @@ const Index = (props) => {
     props.exportExecptionRateList({
       ...queryPar,
       pointType: 3,
+      type:operationSetType,
+      taskType: deviceType
     })
 
   };
@@ -156,18 +159,16 @@ const Index = (props) => {
       }
     },
     {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
+      title: '企业名称',
+      dataIndex: 'entName',
+      key: 'entName',
       align: 'center',
-      sorter: (a, b) => a.entCount - b.entCount,
     },
     {
-      title: '运维监测点数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
+      title: '站点名称',
+      dataIndex: 'pointName',
+      key: 'pointName',
       align: 'center',
-      sorter: (a, b) => a.pointCount - b.pointCount,
 
     },
     ...assessmentCentreCol

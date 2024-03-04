@@ -169,7 +169,7 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
-            title: '设备厂家',
+            title: '设备生产商',
             dataIndex: 'ManufacturerName',
             key: 'ManufacturerName',
             align: 'center',

@@ -42,10 +42,18 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    updOperationSetting: (payload) => { //设置信息
+    getOperationSetting: (payload) => { //获取运维基础配置
+      dispatch({ 
+        type: 'global/getOperationSetting',
+        payload: {},
+      });
+    },
+
+    updOperationSetting: (payload,callback) => { //设置信息
       dispatch({
         type: `${namespace}/updOperationSetting`,
         payload: payload,
+        callback:callback,
       })
     },
 
@@ -62,14 +70,15 @@ const Index = (props) => {
 
   const { operationSettingInfo } = props;
   useEffect(() => {
-   if(operationSettingInfo.ID){
+   if(operationSettingInfo?.ID){
     form.setFieldsValue({availability:operationSettingInfo.Availability})
    }
   }, [operationSettingInfo]);
 
  const submitOk = (values) =>{
-  const id =  Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId;
-  props.updOperationSetting({id:id, ...values})
+  props.updOperationSetting({id:operationSettingInfo?.ID? operationSettingInfo.ID : '', ...values},()=>{
+   props.getOperationSetting({})
+  })
  }
   return (
     <div className={styles.operationBasConfigSty}>
@@ -115,6 +124,12 @@ const Index = (props) => {
             <Radio.Group  defaultValue={2}>
               <Radio value={1}>抓取数据</Radio>
               <Radio value={2}>直传数据</Radio>
+            </Radio.Group>
+            </Form.Item>
+            <Form.Item label='维护点位设置方式' name='aa'>
+            <Radio.Group  defaultValue={1}>
+              <Radio value={1}>从设备清单中选择</Radio>
+              <Radio value={2}>输入框直接录入</Radio>
             </Radio.Group>
             </Form.Item>
             <Divider orientation="right" style={{borderTopColor:'#0000000f'}}>

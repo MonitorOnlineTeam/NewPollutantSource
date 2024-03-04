@@ -231,6 +231,7 @@ export default Model.extend({
     *forwardRemoteInspector({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.ForwardRemoteInspector, { ...payload });
       if (result.IsSuccess) {
+        callback && message.success(result.Message)
         callback()
       } else {
         message.error(result.Message)

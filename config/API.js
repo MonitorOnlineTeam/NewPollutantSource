@@ -351,6 +351,13 @@ export const API = {
     GetKeyParameterQuestionDetailList: before + '/KeyParameter/GetKeyParameterQuestionDetailList',//获取关键参数核查整改详情
     CheckItemKeyParameterQuestion: before + '/KeyParameter/CheckItemKeyParameterQuestion',//关键参数核查整改
     UpdateKeyParameterQuestionStatus: before + '/KeyParameter/UpdateKeyParameterQuestionStatus',//通过或驳回关键参数核查整改
+    GetZGCheckList: before + '/KeyParameter/GetZGCheckList',//获取关键参数核查整改信息
+    ExportZGCheckList: before + '/KeyParameter/ExportZGCheckList',//导出关键参数核查整改信息
+    GetZGCheckInfoList: before + '/KeyParameter/GetZGCheckInfoList',//获取关键参数核查整改详情信息
+    UpdZGCouCheck: before + '/KeyParameter/UpdZGCouCheck',//数据一致性核查整改
+    UpdZGRangeCheck: before + '/KeyParameter/UpdZGRangeCheck',//量程一致性核查整改
+    UpdZGParamCheck: before + '/KeyParameter/UpdZGParamCheck',//参数一致性核查整改
+    GetKeyPollutantList: before + '/KeyParameter/GetKeyPollutantList',//获取数据量程一致性核查整改单位信息
     /*** 现场监督核查 ***/
     /*系统设施核查*/
     GetSystemFacilityVerificationList: before + '/SystemFacilityVerification/GetSystemFacilityVerificationList',//获取系统设施核查
@@ -440,6 +447,7 @@ export const API = {
     AddOrUpdatePointElectronicFenceInfo: before + '/MonitorPointApi/AddOrUpdatePointElectronicFenceInfo', //添加更新电子围栏半径信息
     UpdatePointOprationStatus: before + '/MonitorPointApi/UpdatePointOprationStatus', //更新监测点运维状态
     GetOprationStatusList: before + '/UserApi/GetOprationStatusList', //获取更新运维状态记录
+    GetEquipmentParametersList: before + '/EquipmentApi/GetEquipmentParametersList', //获取监测参数设备清单信息
     /*污染源信息查询*/
     GetEntList: before + '/EnterpriseApi/GetEntList', //获取监测点信息
     ExportEntList: before + '/EnterpriseApi/ExportEntList', //导出企业信息 
@@ -645,6 +653,10 @@ export const API = {
     GetPointCoefficientList: before + '/PerformanceCoefficientApi/GetPointCoefficientList',//获取监测点系数信息
     ExportPointCoefficientList: before + '/PerformanceCoefficientApi/ExportPointCoefficientList',//导出监测点系数信息
     AddOrUpdatePointCoefficientInfo: before + '/PerformanceCoefficientApi/AddOrUpdatePointCoefficientInfo',//添加更新监测点系数
+    /*现场签到统计*/
+    GetSignInList: before + '/OperationSignInApi/GetSignInList',//获取现场签到统计信息
+    ExportSignInList: before + '/OperationSignInApi/ExportSignInList',//现场签到统计信息 导出
+    GetSignInType: before + '/OperationSignInApi/GetSignInType',//获取打卡类型
   },
 
   // 系统管理Api
@@ -688,6 +700,9 @@ export const API = {
     GetTestPollutantList: before + '/DebuggingBase/GetTestPollutantList', //站点信息
   },
   //项目执行进度 Api
+
+  /*** 项目执行 ***/
+  /*派单查询*/
   CtProjectExecuProgressApi: {
     GetServiceDispatch: before + '/CTBaseDataApi/GetServiceDispatch',//获取服务派单信息
     GetServiceDispatchTypeAndRecord: before + '/CTBaseDataApi/GetServiceDispatchTypeAndRecord',  //服务填报内容 要加载的项
@@ -699,6 +714,14 @@ export const API = {
     GetCooperateRecord: before + '/CTBaseDataApi/GetCooperateRecord',//服务填报内容  配合检查
     GetRepairRecord: before + '/CTBaseDataApi/GetRepairRecord',//服务填报内容  维修记录
     ExportServiceDispatch: before + '/CTBaseDataApi/ExportServiceDispatch',  //服务派单信息 导出
+    GetCTServiceDispatchRateList : before + '/CTBaseDataApi/GetCTServiceDispatchRateList ',  //获取成套派单完成率信息
+    ExportCTServiceDispatchRateList: before + '/CTBaseDataApi/ExportCTServiceDispatchRateList',  //成套派单完成率 导出
+ 
+  /*现场签到统计*/
+    GetSignInAnalysis: before + '/CTStatisticsApi/GetSignInAnalysis',//获取现场签到统计信息
+    ExportSignInAnalysis: before + '/CTStatisticsApi/ExportSignInAnalysis',//现场签到统计信息 导出
+    GetSignInAnalysisInfo: before + '/CTStatisticsApi/GetSignInAnalysisInfo',//获取现场签到统计详情信息
+    ExportSignInAnalysisInfo: before + '/CTStatisticsApi/ExportSignInAnalysisInfo',//现场签到统计详情信息 导出
   },
   //调试服务
   CtDebugServiceApi: {

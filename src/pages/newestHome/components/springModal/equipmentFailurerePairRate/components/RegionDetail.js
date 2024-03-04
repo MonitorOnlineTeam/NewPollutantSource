@@ -155,7 +155,7 @@ const Index = (props) => {
     props.updateState({
          queryPar:{
         ...queryPar,
-        regionCode:row.regionCode
+        regionCode: row.regionCode? row.regionCode : queryPar.regionCode,
       }
     })
     setRegionName(row.regionName)

@@ -1,7 +1,7 @@
 /**
  * 功  能：关键参数核查整改
  * 创建人：jab
- * 创建时间：2022.02.20
+ * 创建时间：2024.02
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
@@ -41,10 +41,10 @@ const dvaPropsData = ({ loading, cruxParSupervisionRectifica, global, common, po
   clientHeight: global.clientHeight,
   entLoading: common.noFilterEntLoading,
   tableDatas: cruxParSupervisionRectifica.tableDatas,
-  tableLoading: loading.effects[`${namespace}/getKeyParameterQuestionList`],
+  tableLoading: loading.effects[`${namespace}/getZGCheckList`],
   tableTotal: cruxParSupervisionRectifica.tableTotal,
-  exportLoading: loading.effects[`${namespace}/exportKeyParameterQuestionList`],
-  regQueryPar:cruxParSupervisionRectifica.regQueryPar,
+  exportLoading: loading.effects[`${namespace}/exportZGCheckList`],
+  queryPar:cruxParSupervisionRectifica.queryPar,
 
 })
 
@@ -71,23 +71,16 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    getKeyParameterQuestionList: (payload) => { //列表
+    getZGCheckList: (payload) => { //列表
       dispatch({
-        type: `${namespace}/getKeyParameterQuestionList`,
+        type: `${namespace}/getZGCheckList`,
         payload: payload,
       })
     },
-    exportKeyParameterQuestionList: (payload) => { //导出
+    exportZGCheckList: (payload) => { //导出
       dispatch({
-        type: `${namespace}/exportKeyParameterQuestionList`,
+        type: `${namespace}/exportZGCheckList`,
         payload: payload,
-      })
-    },
-    checkItemKeyParameterQuestion: (payload, callback) => { //核查整改
-      dispatch({
-        type: `${namespace}/checkItemKeyParameterQuestion`,
-        payload: payload,
-        callback: callback
       })
     },
   }
@@ -99,7 +92,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,regQueryPar, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,queryPar, } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -114,14 +107,14 @@ const Index = (props) => {
   const columns = [
     {
       title: '省',
-      dataIndex: 'provinceName',
-      key: 'provinceName',
+      dataIndex: 'province',
+      key: 'province',
       align: 'center',
     },
     {
       title: '市',
-      dataIndex: 'cityName',
-      key: 'cityName',
+      dataIndex: 'city',
+      key: 'city',
       align: 'center',
     },
     {
@@ -140,39 +133,39 @@ const Index = (props) => {
     },
     {
       title: '运维人员',
-      dataIndex: 'operationUserName',
-      key: 'operationUserName',
+      dataIndex: 'OperationUser',
+      key: 'OperationUser',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '核查人',
-      dataIndex: 'checkUserName',
-      key: 'checkUserName',
+      dataIndex: 'CheckUser',
+      key: 'CheckUser',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '核查日期',
-      dataIndex: 'checkTime',
-      key: 'checkTime',
+      dataIndex: 'CheckDate',
+      key: 'CheckDate',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '状态',
-      dataIndex: 'rectificationStatus',
-      key: 'rectificationStatus',
+      dataIndex: 'Status',
+      key: 'Status',
       align: 'center',
       ellipsis: true,
       render: (text, record) => {
-        return  <span style={{ color: text=='整改待核实'? '#f5222d': text=='整改已完成'? '#52c41a' : ''}}>{text}</span> 
+        return  <span style={{ color: text=='整改未完成' ? '#f5222d': text=='整改已完成'? '#52c41a' : ''}}>{text}</span> 
       }
     },
     {
       title: '整改完成时间',
-      dataIndex: 'rectificationTime',
-      key: 'rectificationTime',
+      dataIndex: 'CompleteDate',
+      key: 'CompleteDate',
       align: 'center',
       ellipsis: true,
     },
@@ -186,18 +179,18 @@ const Index = (props) => {
       render: (text, record) => {
         return (
           <div>
-            {record.rectificationStatus!=='整改已完成'&&<>
+            {record.isCheckUser?
             <a onClick={() => { rectificaDetail(record, 1) }}>
-              核查整改（核查人员）
+              核查整改
               </a>
-           <Divider type="vertical" />
+           :
            <a onClick={() => { rectificaDetail(record, 2) }}>
-              整改（运维人员）
+              整改
               </a>
-           <Divider type="vertical" />
-            </>}
+            }
+            <Divider type="vertical" />
             <a onClick={() => {
-              rectificaDetail(record, 2)
+              rectificaDetail(record,3)
             }}>
               整改详情
           </a>
@@ -220,7 +213,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getKeyParameterQuestionList(par?par : {
+      props.getZGCheckList(par?par : {
         ...values,
         beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
@@ -234,16 +227,8 @@ const Index = (props) => {
     }
   }
   const exports = async () => { //导出
-    const values = await form.validateFields();
-    props.exportKeyParameterQuestionList({
-      ...values,
-      beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      checkBeginTime: values.time2 && moment(values.time2[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      checkEndTime: values.time2 && moment(values.time2[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
-      time: undefined,
-      time2:undefined,
-
+    props.exportZGCheckList({
+      ...queryPar
     })
   }
 
@@ -341,7 +326,7 @@ const Index = (props) => {
   const handleTableChange = (PageIndex, PageSize) => {
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    onFinish(PageIndex, PageSize,{...regQueryPar,pageIndex:PageIndex,pageSize:PageSize})
+    onFinish(PageIndex, PageSize,{...queryPar,pageIndex:PageIndex,pageSize:PageSize})
   }
 
 
@@ -359,9 +344,6 @@ const Index = (props) => {
     setRectificaDetailType(type)
     setInfoData(record)
   }
-
-
-
 
 
   return (
@@ -391,13 +373,15 @@ const Index = (props) => {
 
       <Modal //核查和详情
         visible={rectificaDetailVisible}
-        title={rectificaDetailType==1? '核查整改': '整改详情'}
+        title={rectificaDetailType==1? '核查整改': rectificaDetailType==2? '整改' : '整改详情'}
         footer={null}
         wrapClassName='spreadOverModal'
-        onCancel={() => { setRectificaDetailVisible(false);rectificaDetailType==1&&infoData&&infoData.rectificationStatus!=='整改未完成'&&onFinish(pageIndex,pageSize); }}
+        onCancel={() => { setRectificaDetailVisible(false);rectificaDetailType!=3 && infoData?.Status !=='整改已完成' && onFinish(pageIndex,pageSize); }}
         destroyOnClose
+        zIndex={666}
+        className={styles.rectificaDetailSty}
       >
-        <RectificaDetail id={rectificaDetailId} type={rectificaDetailType} infoData={infoData}/>
+        <RectificaDetail id={rectificaDetailId} rectificaDetailType={rectificaDetailType} infoData={infoData}/>
       </Modal>
     </div>
   );

@@ -165,10 +165,10 @@ class BasicLayout extends Component {
       type: 'global/getSystemConfigInfo',
       payload: {},
     });
-    // dispatch({ //获取运维基础配置
-    //   type: 'global/getOperationSetting',
-    //   payload: {},
-    // });
+    dispatch({ //获取运维基础配置 
+      type: 'global/getOperationSetting',
+      payload: {},
+    });
     dispatch({ //获取菜单
       type: 'user/fetchCurrent',
       payload: {},

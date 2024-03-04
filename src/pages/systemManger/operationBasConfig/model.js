@@ -16,6 +16,7 @@ export default Model.extend({
       const result = yield call(services.UpdOperationSetting, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
+        callback&&callback()
       } else {
         message.error(result.Message)
       }

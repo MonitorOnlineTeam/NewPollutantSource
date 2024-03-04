@@ -178,8 +178,8 @@ export default Model.extend({
        exportPointLoading: false,
   },
   effects: {
-    *regGetExecptionRateList({ payload,callback }, { call, put, update }) { //行政区
-      const result = yield call(payload.type==1? services.regGetExecptionRateList : services.getStatePointExecptionRateList, payload);
+    *regGetExecptionRateList({ payload,callback }, { call, put, update }) { //行政区  1评估中心
+      const result = yield call(payload.type==1? services.getStatePointExecptionRateList : services.regGetExecptionRateList, payload);
       if (result.IsSuccess) {
         yield update({
           regTableDatas:result.Datas,
@@ -191,7 +191,7 @@ export default Model.extend({
       }
     },
     *regDetailGetExecptionRateList({ payload,callback }, { call, put, update }) { // 行政区详情
-      const result = yield call(payload.type==1? services.regDetailGetExecptionRateList: services.getStatePointExecptionRateList, payload);
+      const result = yield call(payload.type==1? services.getStatePointExecptionRateList: services.regDetailGetExecptionRateList, payload);
       if (result.IsSuccess) {
         yield update({
           regDetailTableDatas:result.Datas,
@@ -201,7 +201,7 @@ export default Model.extend({
       }
     },
     *pointGetExecptionRateList({ payload,callback }, { call, put, update }) { // 监测点
-      const result = yield call(payload.type==1? services.pointGetExecptionRateList: services.getStatePointExecptionRateList, payload);
+      const result = yield call(payload.type==1? services.getStatePointExecptionRateList: services.pointGetExecptionRateList, payload);
       if (result.IsSuccess) {
         yield update({
           pointTableDatas:result.Datas,
@@ -216,8 +216,8 @@ export default Model.extend({
                payload.pointType==2 ? {exportRegDetailLoading: flag}:{exportPointLoading: flag}
         }
         yield update(exportStatus(true))
-        const result = yield call(payload.type==1? services.exportExecptionRateList: services.exportStatePointExecptionRateList, payload);
-         if (result.IsSuccess) {
+        const result = yield call(payload.type==1? services.exportStatePointExecptionRateList: services.exportExecptionRateList, payload);
+        if (result.IsSuccess) {
             message.success('下载成功');
            downloadFile(`${result.Datas}`);
            yield update(exportStatus(false))

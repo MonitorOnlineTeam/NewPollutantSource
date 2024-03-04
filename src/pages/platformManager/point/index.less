@@ -20,7 +20,7 @@
 
 .deviceManagerSty{
   :global{
-    .ant-form-item-label{
+    .ant-table .ant-form-item-label{
       text-align: right;
       min-width: 189px;
     }
@@ -34,6 +34,7 @@
       text-align: left;
     }
   }
+  
 }
 .editOperationStatusSty :global{
   .ant-form-item-label{
@@ -74,4 +75,13 @@
 }
 .popSelectSty :global{
   display: none;
+}
+.deviceParSty  :global{
+  .ant-modal-body{
+    max-height: calc(100% - 90px);
+    overflow-y: auto;
+  }
+  .ant-table-body{
+   min-height: 180px;
+  }
 }

@@ -22,8 +22,7 @@ import { getBase64, getAttachmentArrDataSource } from '@/utils/utils'
 import cuid from 'cuid'
 import {  API } from '@config/API';
 import Cookie from 'js-cookie';
-import config from '@/config';
-
+import {cookieName, uploadPrefix } from '@/config';
 const { Option } = Select;
 
 const namespace = 'operationInfo'
@@ -486,7 +485,7 @@ const Index = (props) => {
             uid: item.GUID,
             name: item.FileName,
             status: 'done',
-            url: `\\upload\\${item.FileName}`,
+            url: `${uploadPrefix}/${item.FileName}`,
           })
 
         }
@@ -679,7 +678,7 @@ const Index = (props) => {
 
   const uploadProps = { //运维接收确认单附件上传 
     action:API.UploadApi.UploadFiles,
-    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
+    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(cookieName)},
     // accept:'image/*',
     data: {
       FileUuid: filesCuid1,

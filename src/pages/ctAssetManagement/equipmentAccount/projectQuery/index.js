@@ -454,14 +454,17 @@ const Index = (props) => {
 
   const associaTypeChange=({ target: { value } }) => { 
     setAssociaType(value);
-    setEntPointName('')
-    setRegionCode('')
     getrojectPointRelationListQues(projectID,value)
-    if(value==2 && pointList?.length<=0){
+    if(value==1){
+      props.getEntAndPoint({ regionCode: regionCode, entName: entPointName,type:1},(data)=>{
+        setEntList(data)
+      })
+    }
+    if(value==2){
       props.getEntAndPoint({ regionCode: regionCode, entName: entPointName},(data)=>{
         setPointList(data)
       })
-   } 
+     } 
  }
 
   const searchComponents = () => {
@@ -476,7 +479,7 @@ const Index = (props) => {
     >
       <Row align='middle'>
         <Col span={8}>
-          <Form.Item name='time' label='运维日期' >
+          <Form.Item name='time' label='创建时间' >
             <RangePicker_ style={{ width: '100%' }}
               showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
             />
@@ -649,7 +652,7 @@ const Index = (props) => {
             />
               <RegionList ct style={{ width: 200, marginLeft: 16 }} placeholder='请选择行政区' changeRegion={(value) => { setRegionCode(value) }} />
               <Input.Group compact style={{ width: 290, marginLeft: 16, display: 'inline-block' }}>
-                <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onBlur={(e) => setEntPointName(e.target.value)} />
+                <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onChange={(e) => setEntPointName(e.target.value)} />
                 <Button type="primary" loading={entAndPointLoading} onClick={handlePointQuery}>查询</Button>
               </Input.Group>
             </Row>

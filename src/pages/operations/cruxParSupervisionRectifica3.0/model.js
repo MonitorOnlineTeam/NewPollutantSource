@@ -14,58 +14,92 @@ export default Model.extend({
     parametersList: [],
     tableLoading: false,
     tableTotal: 0,
-    parameterQuestionDetailList: [],
-    regQueryPar: '',
+    detailList: [],
+    queryPar: '',
   },
   effects: {
-    *getKeyParameterQuestionList({ payload, callback }, { call, put, update }) { //关键参数核查整改信息列表
-      const result = yield call(services.GetKeyParameterQuestionList, payload);
+
+    //获取关键参数核查整改信息
+    *getZGCheckList({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.GetZGCheckList, { ...payload });
       if (result.IsSuccess) {
         yield update({
+          tableDatas: result.Datas ? result.Datas : [],
           tableTotal: result.Total,
-          tableDatas: result.Datas,
-          regQueryPar: payload,
+          queryPar: payload
         })
       } else {
         message.error(result.Message)
       }
     },
-    *exportKeyParameterQuestionList({ payload, callback }, { call, put, update }) { //关键参数核查整改信息列表 导出
-      const result = yield call(services.ExportKeyParameterQuestionList, payload);
+    //导出关键参数核查整改信息
+    *exportZGCheckList({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.ExportZGCheckList, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    //获取关键参数核查整改详情信息
+    *getZGCheckInfoList({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.GetZGCheckInfoList, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          detailList: result.Datas,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //数据一致性核查整改
+    *updZGCouCheck({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.UpdZGCouCheck, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
-        downloadFile(`${result.Datas}`)
+        callback && callback(result.IsSuccess)
       } else {
         message.error(result.Message)
       }
     },
-    *checkItemKeyParameterQuestion({ payload, callback }, { call, put, update }) { //关键参数核查整改
-      const result = yield call(services.CheckItemKeyParameterQuestion, payload);
+    //量程一致性核查整改
+    *updZGRangeCheck({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.UpdZGRangeCheck, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback(result.IsSuccess);
-      } else {
-        message.error(result.Message)
-        callback(result.IsSuccess);
-      }
-    },
-    *getKeyParameterQuestionDetailList({ payload, callback }, { call, put, update }) { //关键参数核查整改详情
-      const result = yield call(services.GetKeyParameterQuestionDetailList, payload);
-      if (result.IsSuccess) {
-        yield update({  parameterQuestionDetailList:  result.Datas&&result.Datas.Itemlist? result.Datas.Itemlist : [],  })
+        callback && callback(result.IsSuccess)
       } else {
         message.error(result.Message)
       }
     },
-    *updateKeyParameterQuestionStatus({ payload, callback }, { call, put, update }) { //通过或驳回关键参数核查整改
-      const result = yield call(services.UpdateKeyParameterQuestionStatus, payload);
+    //参数一致性核查整改
+    *updZGParamCheck({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.UpdZGParamCheck, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback(result.IsSuccess);
+        callback && callback(result.IsSuccess)
       } else {
         message.error(result.Message)
-        callback(result.IsSuccess);
       }
     },
-  },
+    //数据量程一致性核查整改 单位
+    *getKeyPollutantList({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.GetKeyPollutantList, { ...payload });
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+
+
+
+
+
+
+
+  }
 })

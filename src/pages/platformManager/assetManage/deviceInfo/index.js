@@ -229,7 +229,7 @@ const Index = (props) => {
     //   align: 'center',
     // },
     {
-      title: '设备厂家',
+      title: '设备生产商',
       dataIndex: 'ManufacturerName',
       key: 'ManufacturerName',
       align: 'center',
@@ -480,7 +480,7 @@ const Index = (props) => {
   }
   const treeDatas = () => {
     const list = [{
-      title: '设备厂家',
+      title: '设备生产商',
       key: '1',
       icon: <CreditCardFilled style={{ color: '#1890ff' }} />,
       children: [],
@@ -590,8 +590,6 @@ const Index = (props) => {
                 <Input />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
             <Col span={12}>
               <Form.Item label="编号" name="EquipmentCode" rules={[{ required: true, message: '请输入编号' }]} >
                 <InputNumber placeholder="请输入编号" allowClear />
@@ -609,27 +607,20 @@ const Index = (props) => {
                 </Select>
               </Form.Item>
             </Col>
-          </Row>
-
-          <Row>
-            <Col span={12}>
-              <Form.Item label="设备名称" name="EquipmentName" rules={[{ required: true, message: '请选择设备名称' }]} >
-                {loadingAddEditEquipmentName ? <Spin size='small' />
-                  :
-                  <Select placeholder='请选择设备名称' allowClear>
-                    {
-                      addEditEquipmentNameList[0] && addEditEquipmentNameList.map(item => {
-                        return <Option key={item.ID} value={item.Name}>{item.Name}</Option>
-                      })
-                    }
-                  </Select>}
-              </Form.Item>
-            </Col>
             <Col span={12}>
               <Form.Item label="监测类型" name="PollutantCode" rules={[{ required: true, message: '请选择监测类型' }]}>
                 {loadingAddEditPollutantById ? <Spin size='small' />
                   :
-                  <Select placeholder='请选择监测类型' allowClear>
+                  <Select placeholder='请选择监测类型' allowClear onChange={(val)=>{
+                    if(!val){
+                      form2.setFieldsValue({EquipmentName:undefined})
+                    }else{
+                      const data = addEditPollutantTypeList.filter(item=>item.ID == val)
+                      const name = data?.[0]?.Name
+                      const filterData = addEditEquipmentNameList.filter(item=>item.Name.includes(name))
+                      form2.setFieldsValue({EquipmentName:filterData?.[0]?.Name})
+                    }
+                  }}>
                     {
                       addEditPollutantTypeList[0] && addEditPollutantTypeList.map(item => {
                         return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
@@ -638,24 +629,32 @@ const Index = (props) => {
                   </Select>}
               </Form.Item>
             </Col>
-          </Row>
-
-          <Row>
             <Col span={12}>
+              <Form.Item label="设备名称" name="EquipmentName" rules={[{ required: true, message: '请选择设备名称' }]} >
+                {loadingAddEditEquipmentName ? <Spin size='small' />
+                  :
+                  <Select placeholder='请选择设备名称'>
+                    {
+                      addEditEquipmentNameList[0] && addEditEquipmentNameList.map(item => {
+                        return <Option key={item.ID} value={item.Name}>{item.Name}</Option>
+                      })
+                    }
+                  </Select>}
+              </Form.Item>
+            </Col>
+
+
+            {/* <Col span={12}>
               <Form.Item label="设备品牌" name="EquipmentBrand" rules={[{ required: true, message: '请输入设备品牌' }]} >
                 <Input placeholder='请输入设备品牌' allowClear />
               </Form.Item>
 
-            </Col>
+            </Col> */}
             <Col span={12}>
               <Form.Item label="设备型号" name="EquipmentType" rules={[{ required: true, message: '请输入设备型号' }]} >
                 <Input placeholder='请输入设备型号' allowClear />
               </Form.Item>
-
             </Col>
-          </Row>
-
-          <Row>
             <Col span={12}>
               <Form.Item label="分析方法" name="AnalyticalMethod" rules={[{ required: true, message: '请输入分析方法' }]} >
                 <Input placeholder='请输入分析方法' allowClear />
@@ -667,9 +666,7 @@ const Index = (props) => {
                 <Input placeholder='请输入CIS同步编码' allowClear />
               </Form.Item>
             </Col>
-          </Row>
 
-          <Row>
             <Col span={12}>
               <Form.Item label="状态" name="Status" >
                 <Radio.Group>

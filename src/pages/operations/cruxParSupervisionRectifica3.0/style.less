@@ -24,30 +24,43 @@
 
 }
 
-
-    .fromModal  :global {
-      .ant-modal-body{
-        padding: 10px  30px 15px  50px;
-        height: calc(100vh - 250px);
-        overflow-y: auto;
-      }
-      .ant-form-item-label{
-        min-width: 83px;
-      }  
-      .ant-table-row:nth-child(2n+1) .ant-table-cell-fix-left, .ant-table-row:nth-child(2n+1) .ant-table-cell-fix-right{
-        background-color: #fff;
-      }
-    } 
-
     .rejectSty  :global {
-      .ant-form-item-label{
-        min-width: 125px;
-     }  
+  }
+  .rectificaDetailSty   :global {
+    .ant-table-body .ant-table-cell-fix-right{
+      background-color: #fff !important;
+    }
   }
   .rectificationModelSty  :global {
-    .rangformSty{
+    .ant-form-item{
+      margin-bottom: 0;
+    }
+    .ant-upload-list-picture-card-container,
+    .ant-upload.ant-upload-select-picture-card,
+    .ant-upload-list-picture-card .ant-upload-list-item {
+      width: 60px;
+      height: 60px;
+    }
+     .ant-upload-list-picture-card-container{
+       margin: 0 4px 4px 0;
+     }
+     /* Uploading... text*/
+    .ant-upload-list-item-info
+    > span
+    > div[class="ant-upload-list-item-uploading-text"] {
+       visibility: hidden;
+      }
+    .rangformSty,.dataformSty{
       .ant-form-item-label{
          min-width: 112px;
+      }
+    }
+    .parformSty{
+      .ant-form-item-label{
+         min-width: 125px;
+      }
+      .ant-input-number{
+        width: 80%;
       }
     }
     .ant-row>span{

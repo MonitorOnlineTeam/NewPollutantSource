@@ -1,28 +1,40 @@
 import { post, get, getNew } from '@/utils/request';
 import { API } from '@config/API';
 
-//关键参数核查整改信息
-export async function GetKeyParameterQuestionList(params) {
-  const result = await post(API.SupervisionVerificaApi.GetKeyParameterQuestionList,params, null);
+
+//获取关键参数核查整改信息
+export async function GetZGCheckList(params) {
+  const result = await post(API.SupervisionVerificaApi.GetZGCheckList, params, null);
   return result;
 }
-//关键参数核查整改信息 导出
-export async function ExportKeyParameterQuestionList(params) {
-  const result = await post(API.SupervisionVerificaApi.ExportKeyParameterQuestionList,params, null);
+//导出关键参数核查整改信息
+export async function ExportZGCheckList(params) {
+  const result = await post(API.SupervisionVerificaApi.ExportZGCheckList, params, null);
   return result;
 }
-//关键参数核查整改详情
-export async function GetKeyParameterQuestionDetailList(params) {
-  const result = await post(API.SupervisionVerificaApi.GetKeyParameterQuestionDetailList,params, null);
+//获取关键参数核查整改详情信息
+export async function GetZGCheckInfoList(params) {
+  const result = await post(API.SupervisionVerificaApi.GetZGCheckInfoList, params, null);
   return result;
 }
-//关键参数核查整改
-export async function CheckItemKeyParameterQuestion(params) {
-  const result = await post(API.SupervisionVerificaApi.CheckItemKeyParameterQuestion,params, null);
+//数据一致性核查整改
+export async function UpdZGCouCheck(params) {
+  const result = await post(API.SupervisionVerificaApi.UpdZGCouCheck, params, null);
   return result;
 }
-//通过或驳回关键参数核查整改
-export async function UpdateKeyParameterQuestionStatus(params) {
-  const result = await post(API.SupervisionVerificaApi.UpdateKeyParameterQuestionStatus,params, null);
+//量程一致性核查整改
+export async function UpdZGRangeCheck(params) {
+  const result = await post(API.SupervisionVerificaApi.UpdZGRangeCheck, params, null);
+  return result;
+}
+//参数一致性核查整改
+export async function UpdZGParamCheck(params) {
+  const result = await post(API.SupervisionVerificaApi.UpdZGParamCheck, params, null);
+  return result;
+}
+
+//数据量程一致性核查 单位
+export async function GetKeyPollutantList(params) {
+  const result = await post(API.SupervisionVerificaApi.GetKeyPollutantList, params, null);
   return result;
 }

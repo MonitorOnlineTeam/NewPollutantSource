@@ -85,10 +85,12 @@ const Index = (props) => {
 
   const [parType, setParType] = useState([])
   const initData = () => {
+    if(operationSetType!=1){
     props.getParamCodeList({ pollutantType: type }, (data) => {
       setParType(data)
       form.setFieldsValue({ parameterCategory: data.map(item => item.value) })
     })
+  }
   }
 
   const exports = async () => {
@@ -100,6 +102,8 @@ const Index = (props) => {
       endTime: moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
       parameterCategory: values.parameterCategory ? values.parameterCategory.toString() : '',
       pointType: statisType,
+      type:operationSetType,
+      taskType: deviceType
     })
 
   };
@@ -120,7 +124,14 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        return statisType == 1 ? <a onClick={() => { regionDetail(record) }} >{text}</a> : text
+        if(statisType == 1 ){
+           return <a onClick={() => { regionDetail(record) }} >{text}</a>
+        }else{
+            if (record.largeRegionName == '全部合计') {
+              return { props: { colSpan: 0 } };
+            }
+            return text;
+        }
       }
     },
     {
@@ -153,6 +164,7 @@ const Index = (props) => {
         endTime: moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         parameterCategory: values.parameterCategory ? values.parameterCategory.toString() : '',
         pointType: statisType,
+        type:operationSetType,
       }
       props.regGetExecptionRateList({ ...par })
 
@@ -169,6 +181,9 @@ const Index = (props) => {
         dataIndex: 'largeRegionName',
         key: 'largeRegionName',
         align: 'center',
+        render: (text, record, index) => {
+         return { props: { colSpan: text == '全部合计'? 2 : 1 }, children: text };
+        }
       })
       setColumns(column)
     }
@@ -182,6 +197,7 @@ const Index = (props) => {
       queryPar: {
         ...queryPar,
         regionCode: row.regionCode,
+        type:operationSetType,
       }
     })
   }
@@ -252,7 +268,7 @@ const Index = (props) => {
             </Radio.Group>
           </Form.Item>}
         </Row>
-        {form.getFieldValue('pollutantType') && <Form.Item label='设备参数类别' name='parameterCategory'>
+        {form.getFieldValue('pollutantType') && operationSetType!=1 && <Form.Item label='设备参数类别' name='parameterCategory'>
           {paramCodeListLoading ? <Spin size='small' /> :
             <Checkbox.Group options={parType} />
           }

@@ -100,6 +100,7 @@ const Model = {
           yield put({ type: 'changeLoginLoading', payload: { loginLoading: false }, });
         }
       } else {  //登录获取失败
+        callback && callback(response.IsSuccess);
         yield put({ type: 'changeLoginLoading', payload: { loginLoading: false }, });
       }
     },

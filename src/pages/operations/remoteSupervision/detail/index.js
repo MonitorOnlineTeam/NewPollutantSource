@@ -217,7 +217,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
-              return record.DataList.AnalyzerMin||record.DataList.AnalyzerMin==0 || record.DataList.AnalyzerMax||record.DataList.AnalyzerMax==0? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMax}${record.DataList.AnalyzerUnit ? `（${record.DataList.AnalyzerUnit}）` :''}` : null;
+              return record.DataList.AnalyzerMin||record.DataList.AnalyzerMin==0 || record.DataList.AnalyzerMax||record.DataList.AnalyzerMax==0? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMax}${record.DataList.AnalyzerUnit ? ` ${record.DataList.AnalyzerUnit}` :''}` : null;
             }
           }
         },
@@ -249,7 +249,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
-               return record.DataList.DASMin||record.DataList.DASMin==0 || record.DataList.DASMax||record.DataList.DASMax==0? `${record.DataList.DASMin}-${record.DataList.DASMax}${record.DataList.DASUnit ? `（${record.DataList.DASUnit}）` :''}` : null;
+               return record.DataList.DASMin||record.DataList.DASMin==0 || record.DataList.DASMax||record.DataList.DASMax==0? `${record.DataList.DASMin}-${record.DataList.DASMax}${record.DataList.DASUnit ? ` ${record.DataList.DASUnit}` :''}` : null;
             }
           }
         },
@@ -280,7 +280,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
-              return record.DataList.DataMin||record.DataList.DataMin==0? `${record.DataList.DataMin}-${record.DataList.DataMax}${record.DataList.DataUnit ? `（${record.DataList.DataUnit}）` :''}` : null;
+              return record.DataList.DataMin||record.DataList.DataMin==0? `${record.DataList.DataMin}-${record.DataList.DataMax}${record.DataList.DataUnit ? ` ${record.DataList.DataUnit}` :''}` : null;
 
             }
           }
@@ -440,7 +440,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量' || record.PollutantName === '流速' || record.PollutantName === '颗粒物' && record.DataList.CouType  === 2) {
               return '—'
             }
-            return record.DataList.AnalyzerCou || record.DataList.AnalyzerCou == 0 ? `${record.DataList.AnalyzerCou}${record.DataList.AnalyzerCouUnit ? `（${record.DataList.AnalyzerCouUnit}）` : ''}` : null;
+            return record.DataList.AnalyzerCou || record.DataList.AnalyzerCou == 0 ? `${record.DataList.AnalyzerCou}${record.DataList.AnalyzerCouUnit ? `${record.DataList.AnalyzerCouUnit}` : ''}` : null;
           }
         },
         {
@@ -451,7 +451,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width:120,
           render: (text, record) => {
-            return record.DataList.DASCou || record.DataList.DASCou == 0 ? `${record.DataList.DASCou}${record.DataList.DASCouUnit ? `（${record.DataList.DASCouUnit}）` : ''}` : null;
+            return record.DataList.DASCou || record.DataList.DASCou == 0 ? `${record.DataList.DASCou}${record.DataList.DASCouUnit ? `${record.DataList.DASCouUnit}` : ''}` : null;
           }
         },
         {

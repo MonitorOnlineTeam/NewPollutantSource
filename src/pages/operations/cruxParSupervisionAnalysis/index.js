@@ -4,7 +4,7 @@
  * 创建时间：2022.04.20 2023.10.13
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form,Progress, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Progress, Upload, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin, Statistic } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, IssuesCloseOutlined, AuditOutlined, DownOutlined, ProfileOutlined, UploadOutlined, EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled, ToTopOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -97,7 +97,7 @@ const Index = (props) => {
       width:'auto',
       ellipsis: true,
       render:(text,record)=>{
-       return <a onClick={()=>{regDetail(record)}}>{text}</a>
+       return <a onClick={()=>{regDetail(record,2)}}>{text}</a>
       }
       },
     {
@@ -109,12 +109,24 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '问题数量',
+      dataIndex: 'questionCount',
+      key: 'questionCount',
+      align: 'center',
+      width:'auto',
+      ellipsis: true,
+    },
+
+    {
       title: '待完成数',
       dataIndex: 'noCompleteCount',
       key: 'noCompleteCount',
       align: 'center',
       width:'auto',
       ellipsis: true,
+      render:(text,record)=>{
+        return <a onClick={()=>{regDetail(record,3)}}>{text}</a>
+       }
     },
     {
       title: '完成数',
@@ -144,79 +156,110 @@ const Index = (props) => {
           </div>
         );
       }
+    },
+    {
+      title: '合格数',
+      dataIndex: 'qualifiedCount',
+      key: 'qualifiedCount',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '核查合格率',
+      dataIndex: 'qualifiedRate',
+      key: 'qualifiedRate',
+      width: 160,
+      align:'center',
+      sorter: (a, b) => a.qualifiedRate - b.qualifiedRate,
+      render: (text, record) => {
+        return (
+          <div>
+            <Progress
+              percent={text=='-'? 0 : text}
+              size="small"
+              style={{width:'80%'}}
+              status='normal'
+              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+            />
+          </div>
+        );
+      }
+    },
+    {
+      title: '督查人员待核查数',
+      dataIndex: 'supervisionCount',
+      key: 'supervisionCount',
+      align: 'center',
+      width:'auto',
+      ellipsis: true,
+    },
+    {
+      title: '督查人员核查率',
+      dataIndex: 'supervisionRate',
+      key: 'supervisionRate',
+      align: 'center',
+      width: 150,
+      ellipsis: true,
+      sorter: (a, b) => a.supervisionRate - b.supervisionRate,
+      render: (text, record) => {
+        return (
+          <div>
+            <Progress
+              percent={text=='-'? 0 : text}
+              size="small"
+              style={{width:'80%'}}
+              status='normal'
+              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+            />
+          </div>
+        );
+      }
+    },
+    {
+      title: '未完成整改数',
+      dataIndex: 'wwcquestionCount',
+      key: 'wwcquestionCount',
+      align: 'center',
+      width:'auto',
+      ellipsis: true,
+      render:(text,record)=>{
+        return <a onClick={()=>{regDetail(record,4)}}>{text}</a>
+       }
+    },
+    {
+      title: '整改率',
+      dataIndex: 'rate',
+      key: 'rate',
+      width: 150,
+      align:'center',
+      sorter: (a, b) => a.rate - b.rate,
+      render: (text, record) => {
+        return (
+          <div>
+            <Progress
+              percent={text=='-'? 0 : text}
+              size="small"
+              style={{width:'80%'}}
+              status='normal'
+              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+            />
+          </div>
+        );
+      }
     }
   ];
-const statisticColumns = [
-  ...columns,
-  {
-    title: '合格数',
-    dataIndex: 'qualifiedCount',
-    key: 'qualifiedCount',
-    align: 'center',
-    ellipsis: true,
-  },
-  {
-    title: '核查合格率',
-    dataIndex: 'qualifiedRate',
-    key: 'qualifiedRate',
-    width: 160,
-    align:'center',
-    sorter: (a, b) => a.qualifiedRate - b.qualifiedRate,
-    render: (text, record) => {
-      return (
-        <div>
-          <Progress
-            percent={text=='-'? 0 : text}
-            size="small"
-            style={{width:'80%'}}
-            status='normal'
-            format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
-          />
-        </div>
-      );
-    }
-  },
-  {
-    title: '督查人员待核查数',
-    dataIndex: 'supervisionCount',
-    key: 'supervisionCount',
-    align: 'center',
-    width:'auto',
-    ellipsis: true,
-  },
-  {
-    title: '督查人员核查率',
-    dataIndex: 'supervisionRate',
-    key: 'supervisionRate',
-    align: 'center',
-    width: 150,
-    ellipsis: true,
-    sorter: (a, b) => a.supervisionRate - b.supervisionRate,
-    render: (text, record) => {
-      return (
-        <div>
-          <Progress
-            percent={text=='-'? 0 : text}
-            size="small"
-            style={{width:'80%'}}
-            status='normal'
-            format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
-          />
-        </div>
-      );
-    }
-  },
-]
   const [regDetailVisible, setRegDetailVisible] = useState(false)
   const [regDetailTitle, setRegDetailTitle] = useState()
   const [regionCode, setRegionCode] = useState()
+  const [staticType,setStaticType] = useState(2)
 
-  const regDetail = (row) => {
+  const regDetail = (row,staticType) => {
     setRegDetailVisible(true)
-    setRegDetailTitle(`${row.regionName}-统计${regQueryPar.beginTime&&moment(regQueryPar.beginTime).format('YYYY-MM-DD')}~${regQueryPar.endTime&&moment(regQueryPar.endTime).format('YYYY-MM-DD')}内关键参数核查分析`)
+    setRegDetailTitle(`${row.regionName} - 统计${regQueryPar.beginTime&&moment(regQueryPar.beginTime).format('YYYY-MM-DD')}~${regQueryPar.endTime&&moment(regQueryPar.endTime).format('YYYY-MM-DD')}内关键参数核查分析`)
     setRegionCode(row.regionCode)
     form2.resetFields()
-    onFinish2(row.regionCode)
+    setStaticType(staticType)
+    onFinish2(row.regionCode,staticType)
   }
   const onFinish = async () => {  //查询  par参数 分页需要的参数
     try {
@@ -331,6 +374,26 @@ const statisticColumns = [
       width:100,
       ellipsis: true,
     },
+    
+  ];
+  const statisticColumns2 = [
+    ...columns2,
+    {
+      title: '核查总数',
+      dataIndex: 'allCount',
+      key: 'allCount',
+      align: 'center',
+      width:100,
+      ellipsis: true,
+    },
+    {
+      title: '问题数量',
+      dataIndex: 'questionCount',
+      key: 'questionCount',
+      align: 'center',
+      width:100,
+      ellipsis: true,
+    },
     {
       title: '待完成数',
       dataIndex: 'noCompleteCount',
@@ -365,10 +428,7 @@ const statisticColumns = [
           </div>
         );
       }
-    }
-  ];
-  const statisticColumns2 = [
-    ...columns2,
+    },
     {
       title: '合格数',
       dataIndex: 'qualifiedCount',
@@ -428,6 +488,34 @@ const statisticColumns = [
         );
       }
     },
+    {
+      title: '未完成整改数',
+      dataIndex: 'wwcquestionCount',
+      key: 'wwcquestionCount',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '整改率',
+      dataIndex: 'rate',
+      key: 'rate',
+      width: 150,
+      align:'center',
+      sorter: (a, b) => a.rate - b.rate,
+      render: (text, record) => {
+        return (
+          <div>
+            <Progress
+              percent={text=='-'? 0 : text}
+              size="small"
+              style={{width:'80%'}}
+              status='normal'
+              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+            />
+          </div>
+        );
+      }
+    },
   ]
 
   const searchComponents2 = () => {
@@ -436,7 +524,7 @@ const statisticColumns = [
       name="advanced_search"
       layout='inline'
       className={styles["ant-advanced-search-form"]}
-      onFinish={() => {  onFinish2(regionCode) }}
+      onFinish={() => {  onFinish2(regionCode,staticType) }}
     >
         <Form.Item label='企业名称' name='entName'>
           <Input allowClear placeholder='请输入'/>
@@ -459,8 +547,7 @@ const statisticColumns = [
 
 
 
-
-  const onFinish2 = async (regionCodes) => {  //查询  par参数 分页需要的参数
+  const onFinish2 = async (regionCodes,staticType) => {  //查询  par参数 分页需要的参数
     try {
       const values = await form2.validateFields();
       props.getKeyParameterAnalyseList({
@@ -468,7 +555,7 @@ const statisticColumns = [
         ...regQueryPar,
         time: undefined,
         regionCode:regionCodes,
-        staticType:2,
+        staticType:staticType,
       }, ( par) => {
 
         
@@ -484,7 +571,7 @@ const statisticColumns = [
       ...regQueryPar,
       regionCode:regionCode,
       time: undefined,
-      staticType:2,
+      staticType:staticType,
     })
   }
  
@@ -506,10 +593,10 @@ const statisticColumns = [
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={name=='cruxParSupervisionAnalysis'? columns : statisticColumns}
+            columns={columns}
             pagination={false}
             className={styles.cruxParAnalysisRegTableSty}
-            scroll={{ x:name=='cruxParSupervisionAnalysis'? 700 : 1050}}
+            scroll={{ x: 1450}}
           />
         </Card>
         <Modal //省级详情
@@ -526,7 +613,7 @@ const statisticColumns = [
               loading={tableLoading2}
               bordered
               dataSource={tableDatas2}
-              columns={name=='cruxParSupervisionAnalysis'? columns2 : statisticColumns2}
+              columns={staticType==2? statisticColumns2 : columns2}
               // pagination={{
               //   total: tableTotal2,
               //   pageSize: pageSize,

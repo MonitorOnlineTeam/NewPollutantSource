@@ -183,6 +183,7 @@ a:hover {
 
 /*滚动条大小*/
 @scrollbar-width: 6px;
+@scrollbar-height: 12px;
 
 .fixedHeader {
   position: fixed;
@@ -200,7 +201,7 @@ a:hover {
 
 ::-webkit-scrollbar {
   width: @scrollbar-width;
-  height: @scrollbar-width;
+  height: @scrollbar-height;
 }
 ::-webkit-scrollbar-track {
   border-radius: 10px;
@@ -223,11 +224,14 @@ a:hover {
 .light {
   background-color: #f0f2f5;
 }
-.ant-table-row:nth-child(2n + 1) {
+.table-light :global{
+  .ant-table-body{ 
+  .ant-table-cell,
   .ant-table-cell-fix-left,
   .ant-table-cell-fix-right {
-    background-color: #f0f2f5;
+    background-color: #fff;
   }
+}
 }
 
 #contentWrapper {
@@ -991,4 +995,7 @@ a:hover {
 }
 .ant-notification :global{
   top: 68px !important;
+}
+.formItemSpinSty{
+  height: 32px !important;
 }

@@ -105,35 +105,6 @@ const Index = (props) => {
       }
     },
     {
-      title: '省',
-      dataIndex: 'provinceName',
-      key: 'provinceName',
-      align: 'center',
-      fixed: fixed,
-      render: (text, record, index) => {
-        if (text == '全部合计') {
-          return { props: { colSpan: 0 }, };
-        }
-        return text;
-      },
-    },
-    {
-      title: '市',
-      dataIndex: 'cityName',
-      key: 'cityName',
-      align: 'center',
-      fixed: fixed,
-      render: (text, record) => {
-        const name = record.ProvinceName == '全部合计' ? '全部合计' : text
-        return {
-          props: { colSpan: record.provinceName == '全部合计' ? 2 : 1 },
-          children: <a onClick={() => pointDetail(record)}> {name} </a>
-        }
-
-      }
-    },
-
-    {
       title: '运维企业数',
       dataIndex: 'entCount',
       key: 'entCount',
@@ -165,8 +136,8 @@ const Index = (props) => {
     setPointVisible(true)
     props.updateState({
       queryPar: {
-        ...props.queryPar,
-        regionCode: row.regionCode
+        ...queryPar,
+        regionCode: row.regionCode? row.regionCode : queryPar.regionCode,
       }
     })
     setRegionName(row.regionName)

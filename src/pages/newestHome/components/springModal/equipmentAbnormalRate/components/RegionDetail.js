@@ -74,6 +74,7 @@ const Index = (props) => {
     props.regDetailGetExecptionRateList({
       ...queryPar,
       pointType: 2,
+      type:operationSetType,
     })
   };
 
@@ -173,6 +174,8 @@ const Index = (props) => {
     props.exportExecptionRateList({
       ...queryPar,
       pointType: 2,
+      type:operationSetType,
+      taskType: deviceType
     })
 
   };
@@ -183,7 +186,7 @@ const Index = (props) => {
     props.updateState({
       queryPar: {
         ...queryPar,
-        regionCode: row.regionCode
+        regionCode: row.regionCode? row.regionCode : queryPar.regionCode,
       }
     })
     setRegionName(row.regionName)
