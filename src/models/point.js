@@ -393,7 +393,7 @@ export default Model.extend({
               message.error(result.Message)
             }
           },
-          *getPollutantById({ payload, callback }, { call, put, update }) { //获取监测类型
+          *getPollutantById({ payload, callback }, { call, put, update }) { //获取监测参数
 
             if (payload.id) {
               const result = yield call(GetPollutantById, payload);
@@ -406,7 +406,7 @@ export default Model.extend({
               yield update({ pollutantTypeList: [] })
             }
           },
-          *getPollutantById2({ payload, callback }, { call, put, update }) { //获取监测类型
+          *getPollutantById2({ payload, callback }, { call, put, update }) { //获取监测参数
 
             if (payload.id) {
               const result = yield call(GetPollutantById2, payload);
@@ -417,7 +417,7 @@ export default Model.extend({
                 message.error(result.Message)
               }
             } else {
-              yield update({ pollutantTypeList: [] })
+              yield update({ pollutantTypeList2: [] })
             }
           },
           *getEquipmentInfoList({ payload, callback }, { call, put, update }) { //列表 设备信息

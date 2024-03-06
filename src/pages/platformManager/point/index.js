@@ -71,14 +71,14 @@ let pointConfigIdEdit = '';
   saveLoadingEdit: loading.effects['point/editPoint'],
   addMonitorPointVerificationLoading: loading.effects['point/addMonitorPointVerificationItem'],
   getMonitorPointVerificationItemLoading:
-    loading.effects['point/getMonitorPointVerificationItem'] || false,
+  loading.effects['point/getMonitorPointVerificationItem'] || false,
   addPointParamInfoLoading: loading.effects['point/addPointParamInfo'],
   getParamInfoListLoading: loading.effects['point/getParamInfoList'] || false,
   getPointCoefficientListLoading: loading.effects[`point/getPointCoefficientByDGIMN`] || false,
   addOrEditPointCoefficientLoading: loading.effects['point/addOrEditPointCoefficient'],
   getPointElectronicFenceInfoLoading: loading.effects[`point/getPointElectronicFenceInfo`] || false,
   addOrUpdatePointElectronicFenceInfoLoading:
-    loading.effects['point/addOrUpdatePointElectronicFenceInfo'],
+  loading.effects['point/addOrUpdatePointElectronicFenceInfo'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
@@ -1541,6 +1541,7 @@ export default class MonitorPoint extends Component {
             destroyOnClose
             footer={null}
             wrapClassName={`${styles.deviceManagerSty} spreadOverModal table-light`}
+            mask={false}
           >
             <DeviceManager
               onCancel={() => {

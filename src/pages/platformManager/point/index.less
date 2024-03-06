@@ -33,6 +33,14 @@
     .ant-select{
       text-align: left;
     }
+    .ant-modal-body{
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      .ant-table-body{
+        min-height: 46px;
+      }
+    }
+
   }
   
 }
@@ -80,8 +88,23 @@
   .ant-modal-body{
     max-height: calc(100% - 90px);
     overflow-y: auto;
+    .ant-table-body{
+      min-height: 46px;
+    }
   }
-  .ant-table-body{
-   min-height: 180px;
+  .ant-tabs-tab .anticon{
+    margin-right: 0;
+    margin-left: 4px;
   }
+}
+.popSty   :global{
+  .ant-modal{
+    position: relative !important;
+    width: 800px !important;
+    height: auto !important;
+  }
+  .ant-modal-content{
+    height: auto !important;
+  }
+
 }
