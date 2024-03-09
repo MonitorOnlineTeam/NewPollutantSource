@@ -779,6 +779,7 @@ export default class OverVerifyLstModal extends Component {
                     <Option value="2">废气</Option>
                     <Option value="1">废水</Option>
                   </Select>
+                  </Form.Item>
                   <Form.Item>
                     <Button type="primary"  loading={this.props.loading} onClick={this.queryClick}>
                       查询
@@ -790,8 +791,7 @@ export default class OverVerifyLstModal extends Component {
                       loading={exloading}
                     >
                       导出
-                  </Button>
-                  </Form.Item>
+                  </Button> 
                 </Form.Item> 
                 </Row> 
                   <div style={{  marginTop: 10 }}>
@@ -799,7 +799,7 @@ export default class OverVerifyLstModal extends Component {
                     initialValue: checkedValues,
                   })(
                     <Checkbox.Group
-                      style={{ maxWidth: 'calc(100% - 5.3% - 168px)' }}
+                      className={styles.pollutantCheckboxSty}
                       onChange={this.onCheckboxChange}
                     >
                       {divisorList.map(item => {
