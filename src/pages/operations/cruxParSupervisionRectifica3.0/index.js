@@ -44,7 +44,7 @@ const dvaPropsData = ({ loading, cruxParSupervisionRectifica, global, common, po
   tableLoading: loading.effects[`${namespace}/getZGCheckList`],
   tableTotal: cruxParSupervisionRectifica.tableTotal,
   exportLoading: loading.effects[`${namespace}/exportZGCheckList`],
-  queryPar:cruxParSupervisionRectifica.queryPar,
+  queryPar: cruxParSupervisionRectifica.queryPar,
 
 })
 
@@ -92,7 +92,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,queryPar, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, queryPar, } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -100,7 +100,7 @@ const Index = (props) => {
 
 
   useEffect(() => {
-    onFinish(pageIndex,pageSize)
+    onFinish(pageIndex, pageSize)
   }, []);
 
 
@@ -159,8 +159,15 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record) => {
-        return  <span style={{ color: text=='整改未完成' ? '#f5222d': text=='整改已完成'? '#52c41a' : ''}}>{text}</span> 
+        return <span style={{ color: text == '整改未完成' ? '#f5222d' : text == '整改已完成' ? '#52c41a' : '' }}>{text}</span>
       }
+    },
+    {
+      title: '审核类型',
+      dataIndex: 'CheckType',
+      key: 'CheckType',
+      align: 'center',
+      ellipsis: true,
     },
     {
       title: '整改完成时间',
@@ -179,18 +186,19 @@ const Index = (props) => {
       render: (text, record) => {
         return (
           <div>
-            {record.isCheckUser?
-            <a onClick={() => { rectificaDetail(record, 1) }}>
-              核查整改
-              </a>
-           :
-           <a onClick={() => { rectificaDetail(record, 2) }}>
-              整改
-              </a>
+            {record.isCheckUser == 0 ?
+
+              <a onClick={() => { rectificaDetail(record, 2) }}>
+                整改
+               </a>
+              :
+             (record.isCheckUser == 1 && record.CheckType =='一级审核') || (record.isCheckUser == 2&&record.CheckType =='二级审核') && <a onClick={() => { rectificaDetail(record, 1) }}>
+                核查整改
+               </a>
             }
             <Divider type="vertical" />
             <a onClick={() => {
-              rectificaDetail(record,3)
+              rectificaDetail(record, 3)
             }}>
               整改详情
           </a>
@@ -209,16 +217,16 @@ const Index = (props) => {
 
 
 
-  const onFinish = async (pageIndexs, pageSizes,par) => {  //查询  par参数 分页需要的参数
+  const onFinish = async (pageIndexs, pageSizes, par) => {  //查询  par参数 分页需要的参数
     try {
       const values = await form.validateFields();
 
-      props.getZGCheckList(par?par : {
+      props.getZGCheckList(par ? par : {
         ...values,
         beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
-        time2:undefined,
+        time2: undefined,
         pageIndex: pageIndexs,
         pageSize: pageSizes,
       })
@@ -250,7 +258,7 @@ const Index = (props) => {
       props.getPointByEntCode({ EntCode: hangedValues.entCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
-        form.setFieldsValue({ DGIMN: undefined})
+        form.setFieldsValue({ DGIMN: undefined })
       })
     }
   }
@@ -264,7 +272,7 @@ const Index = (props) => {
         time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
       }}
       className={styles["ant-advanced-search-form"]}
-      onFinish={()=>{setPageIndex(1); onFinish(1,pageSize)}}
+      onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
       onValuesChange={onValuesChange}
     >
       <Row align='middle'>
@@ -290,28 +298,28 @@ const Index = (props) => {
         </Spin>
       </Row>
 
-      <Row style={{paddingTop:5}}>
-        <Form.Item label="核查人" name="checkUser"  className='minWidth'>
+      <Row style={{ paddingTop: 5 }}>
+        <Form.Item label="核查人" name="checkUser" className='minWidth'>
           <OperationInspectoUserList workNum type='2' style={{ width: 150 }} />
         </Form.Item>
         <Form.Item label="核查日期" name="time"  >
-            <RangePicker_
-              style={{ width: 300 }}
-              allowClear={false}
-              format="YYYY-MM-DD" />
-          </Form.Item>
+          <RangePicker_
+            style={{ width: 300 }}
+            allowClear={false}
+            format="YYYY-MM-DD" />
+        </Form.Item>
         <Form.Item label="整改状态" name="checkResult"  >
           <Select placeholder='请选择' allowClear style={{ width: 150 }}>
             <Option key={1} value={1} >整改待核实</Option>
             <Option key={2} value={2} >整改未完成</Option>
-            <Option key={3} value={3} >整改已完成</Option>    
+            <Option key={3} value={3} >整改已完成</Option>
           </Select>
         </Form.Item>
-        <Form.Item style={{paddingLeft:16}}>
+        <Form.Item style={{ paddingLeft: 16 }}>
           <Button type="primary" loading={tableLoading} htmlType='submit'>
             查询
           </Button>
-          <Button onClick={() => { form.resetFields() }}   style={{ margin: '0 8px' }}>
+          <Button onClick={() => { form.resetFields() }} style={{ margin: '0 8px' }}>
             重置
           </Button>
           <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
@@ -326,7 +334,7 @@ const Index = (props) => {
   const handleTableChange = (PageIndex, PageSize) => {
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    onFinish(PageIndex, PageSize,{...queryPar,pageIndex:PageIndex,pageSize:PageSize})
+    onFinish(PageIndex, PageSize, { ...queryPar, pageIndex: PageIndex, pageSize: PageSize })
   }
 
 
@@ -337,7 +345,7 @@ const Index = (props) => {
   const [rectificaDetailVisible, setRectificaDetailVisible] = useState(false)
   const [rectificaDetailId, setRectificaDetailId] = useState(null)
   const [rectificaDetailType, setRectificaDetailType] = useState(1)
-  const [infoData,setInfoData] = useState(null)
+  const [infoData, setInfoData] = useState(null)
   const rectificaDetail = (record, type) => { //核查 详情
     setRectificaDetailId(record.id);
     setRectificaDetailVisible(true)
@@ -373,15 +381,15 @@ const Index = (props) => {
 
       <Modal //核查和详情
         visible={rectificaDetailVisible}
-        title={rectificaDetailType==1? '核查整改': rectificaDetailType==2? '整改' : '整改详情'}
+        title={rectificaDetailType == 1 ? '核查整改' : rectificaDetailType == 2 ? '整改' : '整改详情'}
         footer={null}
         wrapClassName='spreadOverModal'
-        onCancel={() => { setRectificaDetailVisible(false);rectificaDetailType!=3 && infoData?.Status !=='整改已完成' && onFinish(pageIndex,pageSize); }}
+        onCancel={() => { setRectificaDetailVisible(false); rectificaDetailType != 3 && infoData?.Status !== '整改已完成' && onFinish(pageIndex, pageSize); }}
         destroyOnClose
         zIndex={666}
         className={styles.rectificaDetailSty}
       >
-        <RectificaDetail id={rectificaDetailId} rectificaDetailType={rectificaDetailType} infoData={infoData}/>
+        <RectificaDetail id={rectificaDetailId} rectificaDetailType={rectificaDetailType} infoData={infoData} />
       </Modal>
     </div>
   );

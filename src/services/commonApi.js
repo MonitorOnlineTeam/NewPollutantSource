@@ -68,7 +68,7 @@ export async function getPollutantTypeCode(params) {
 
 // 获取行业列表
 export async function getIndustryTree(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetIndustryTree', params, null);
+  const result = await post(API.CommonApi.GetIndustryTree, params, null);
   return result;
 }
 

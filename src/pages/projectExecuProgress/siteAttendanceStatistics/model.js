@@ -31,11 +31,11 @@ export default Model.extend({
     },
     *ExportSignInAnalysis({ payload,callback }, { call, put, update }) { //现场签到统计信息 导出
       const result = yield call(services.ExportSignInAnalysis, payload);
-      if (response.IsSuccess) {
+      if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`${response.Datas}`);
+        downloadFile(`${result.Datas}`);
       } else {
-        message.warning(response.Message);
+        message.warning(result.Message);
       }
     },
     *GetSignInAnalysisInfo({ payload,callback }, { call, put, update }) { //获取现场签到统计详情信息

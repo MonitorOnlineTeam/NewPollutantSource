@@ -39,6 +39,7 @@ import RegionList from '@/components/RegionList'
 import EntAtmoList from '@/components/EntAtmoList'
 import VerifyDetailsPop from '@/pages/dataSearch/exceedDataAlarmRecord/VerifyDetailsPop'
 import { uploadPrefix } from '@/config'
+import styles from '../index.less'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -352,6 +353,7 @@ export default class OverVerifyLst extends Component {
          
           },
         })
+        res = [{PollutantName:'全部合计',PollutantCode:'全部合计'},...res]
         res.map(item => {
           newCloum.push({
             title: <span>{item.PollutantName}</span>,
@@ -603,9 +605,11 @@ export default class OverVerifyLst extends Component {
       message.warning('最少勾选一个监测因子！');
       return;
     }
-    this.props.divisorList.map((item, key) => {
-      let index = checkedValues.findIndex((checkedItem, checkedKey) => {
-        if (item.PollutantCode == checkedItem) {
+    let colList = this.props.divisorList
+        colList =  [{PollutantName:'全部合计',PollutantCode:'全部合计'},...colList]
+        colList.map((item, key) => {
+         let index = checkedValues.findIndex((checkedItem, checkedKey) => {
+          if (item.PollutantCode == checkedItem) {
           return true;
         }
       });
@@ -614,7 +618,6 @@ export default class OverVerifyLst extends Component {
           title: <span>{item.PollutantName}</span>,
           dataIndex: item.PollutantCode,
           key: item.PollutantCode,
-
           children: [
             {
               title: <span>报警次数</span>,
@@ -751,9 +754,8 @@ export default class OverVerifyLst extends Component {
         bordered={false}
         title={
           <Form layout="inline">
-            <Row>
-              {!level ? <>
-                <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
+            <>
+              {!level ? <> <Row style={{  marginTop: 10 }}>
                   <Form.Item>
                     日期查询：
                   <RangePicker_
@@ -778,16 +780,6 @@ export default class OverVerifyLst extends Component {
                     </Select>
                   </Form.Item>
                   <Form.Item label="行政区">
-                    {/* <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode}
-                    style={{ width: 100 }}
-                  >
-                    <Option value="">全部</Option>
-                    {this.regchildren()}
-                  </Select> */}
                     <RegionList style={{ width: 165 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
                   </Form.Item>
                   <Form.Item label="企业类型">
@@ -801,39 +793,6 @@ export default class OverVerifyLst extends Component {
                       <Option value="1">废水</Option>
                     </Select>
                   </Form.Item>
-                </Col>
-                <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-                  {/* <Form.Item label='运维状态'>
-                <Select
-                  allowClear
-                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                  placeholder="运维状态"
-                  maxTagCount={2}
-                  value={OperationPersonnel?OperationPersonnel:undefined}
-                  onChange={this.changePperation}
-                  maxTagTextLength={5}
-                  maxTagPlaceholder="..."
-                  >
-                  <Option value="1">已设置运维人员</Option>
-                  <Option value="2">未设置运维人员</Option>
-                </Select>
-                </Form.Item>  */}
-                  {getFieldDecorator('PollutantList', {
-                    initialValue: checkedValues,
-                  })(
-                    <Checkbox.Group
-                      style={{ maxWidth: 'calc(100% - 5.3% - 168px)' }}
-                      onChange={this.onCheckboxChange}
-                    >
-                      {divisorList.map(item => {
-                        return (
-                          <Checkbox key={item.PollutantCode} value={item.PollutantCode}>
-                            {item.PollutantName}
-                          </Checkbox>
-                        );
-                      })}
-                    </Checkbox.Group>,
-                  )}
                   <Form.Item>
                     <Button type="primary" loading={this.props.loading} onClick={this.queryClick}>
                       查询
@@ -847,8 +806,26 @@ export default class OverVerifyLst extends Component {
                       导出
                   </Button>
                   </Form.Item>
-                </Col>
-              </> :
+                  </Row> 
+                  <div style={{  marginTop: 10 }}>
+                  {getFieldDecorator('PollutantList', {
+                    initialValue: checkedValues,
+                  })(
+                    <Checkbox.Group
+                      onChange={this.onCheckboxChange}
+                      className={styles.pollutantCheckboxSty}
+                    >
+                      {divisorList.map(item => {
+                        return (
+                          <Checkbox key={item.PollutantCode} value={item.PollutantCode}>
+                            {item.PollutantName}
+                          </Checkbox>
+                        );
+                      })}
+                    </Checkbox.Group> ,
+                  )}
+                  </div>
+                </>:
                 <Form.Item>
                   <Button
                     style={{ margin: '0 5px' }}
@@ -863,7 +840,7 @@ export default class OverVerifyLst extends Component {
                   }} ><RollbackOutlined />返回</Button>
                 </Form.Item>
               }
-            </Row>
+            </>
           </Form>
         }
       >

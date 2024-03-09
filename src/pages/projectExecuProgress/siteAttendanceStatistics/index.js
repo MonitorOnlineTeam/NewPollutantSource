@@ -105,6 +105,11 @@ const Index = (props) => {
       key: 'Workhours',
       align: 'center',
       width:'auto',
+      sorter: (a, b) =>{
+        if(a.RegionName!=='总计'){
+          return  a.Workhours- b.Workhours
+        }
+      },
       ellipsis: true,
     },
     {
@@ -123,7 +128,7 @@ const Index = (props) => {
   const detail = (record) => {
     setDetailVisible(true)
     setDetailTitle(`${record.RegionName}（${queryPar.bTime&&moment(queryPar.bTime).format('YYYY-MM-DD')} ~ ${queryPar.eTime&&moment(queryPar.eTime).format('YYYY-MM-DD')}）`)
-    setDetailCode(record.RegionCode)
+    setDetailCode(record.RegionCode? record.RegionCode : queryPar.regionCode)
   }
   const exports = async () => {
     props.ExportSignInAnalysis({

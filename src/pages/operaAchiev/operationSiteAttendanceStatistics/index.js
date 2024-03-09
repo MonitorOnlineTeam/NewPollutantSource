@@ -159,7 +159,7 @@ const Index = (props) => {
   const detail = (record) => {
     setDetailVisible(true)
     setDetailTitle(`${record.provinceName}（${queryPar.beginTime && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar.endTime && moment(queryPar.endTime).format('YYYY-MM-DD')}）`)
-    setRegionDetailCode(record.RegionCode? record.RegionCode : queryPar.regionCode )
+    setRegionDetailCode(record.provinceCode? record.provinceCode : queryPar.regionCode )
   }
   const exports = async () => {
     props.ExportSignInList({

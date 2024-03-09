@@ -16,6 +16,8 @@ export default Model.extend({
     tableTotal:0,
     pointDatasTotal:0,
     pointDatas:[],
+    sellerCompanyDatas:[],
+    sellerCompanyTotal:0,
   },
   effects: {
     *getProjectInfoList({ payload,callback }, { call, put, update }) { //项目信息列表
@@ -79,6 +81,34 @@ export default Model.extend({
         message.warning(response.Message);
       }
     },
-    
+    *getSellerCompanyList({ payload,callback }, { call, put, update }) { //获取卖房公司信息
+      const result = yield call(services.GetSellerCompanyList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          sellerCompanyDatas:result.Datas,
+          sellerCompanyTotal:result.Total,
+        })
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *addOrUpdSellerCompany({ payload,callback }, { call, put, update }) { //添加卖房公司信息
+      const result = yield call(services.AddOrUpdSellerCompany, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *delSellerCompany({ payload,callback }, { call, put, update }) { //删除卖房公司信息
+      const result = yield call(services.DelSellerCompany, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    },
   },
 })

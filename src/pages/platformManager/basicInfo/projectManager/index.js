@@ -4,7 +4,7 @@
  * 创建时间：2021.08.18
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Popover,Spin, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -18,6 +18,7 @@ import RegionList from '@/components/RegionList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
+import { permissionButton } from '@/utils/utils';
 import OperationCompanyList from '@/components/OperationCompanyList'
 const { Option } = Select;
 
@@ -26,7 +27,7 @@ const namespace = 'projectManager'
 
 
 
-const dvaPropsData = ({ loading, projectManager,global, }) => ({
+const dvaPropsData = ({ loading, projectManager, global, }) => ({
   tableDatas: projectManager.tableDatas,
   pointDatas: projectManager.pointDatas,
   pointDatasTotal: projectManager.pointDatasTotal,
@@ -37,6 +38,11 @@ const dvaPropsData = ({ loading, projectManager,global, }) => ({
   exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
   exportPointLoading: loading.effects[`${namespace}/exportProjectPointList`],
   configInfo: global.configInfo,
+  sellerCompanyDatas: projectManager.sellerCompanyDatas,
+  sellerCompanyTotal: projectManager.sellerCompanyTotal,
+  sellerCompanyLoading: loading.effects[`${namespace}/getSellerCompanyList`],
+  addOrUpdSellerCompanyLoading: loading.effects[`${namespace}/addOrUpdSellerCompany`],
+  delSellerCompanyLoading: loading.effects[`${namespace}/delSellerCompany`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -92,6 +98,28 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
+    getSellerCompanyList: (payload, callback) => { //卖方公司信息
+      dispatch({
+        type: `${namespace}/getSellerCompanyList`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    addOrUpdSellerCompany: (payload, callback) => { //添加卖方公司
+      dispatch({
+        type: `${namespace}/addOrUpdSellerCompany`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    delSellerCompany: (payload, callback) => { //删除卖方公司
+      dispatch({
+        type: `${namespace}/delSellerCompany`,
+        payload: payload,
+        callback: callback
+      })
+    },
+
   }
 }
 const Index = (props) => {
@@ -100,6 +128,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
 
   const [data, setData] = useState([]);
 
@@ -107,7 +136,7 @@ const Index = (props) => {
   const [count, setCount] = useState(513);
   const [DGIMN, setDGIMN] = useState('')
   const [expand, setExpand] = useState(false)
-  const [fromVisible, setFromVisible] = useState(false)
+  const [formVisible, setFormVisible] = useState(false)
   const [tableVisible, setTableVisible] = useState(false)
 
   const [type, setType] = useState('add')
@@ -115,16 +144,26 @@ const Index = (props) => {
   const [pageSize, setPageSize] = useState(20)
 
 
+
+
+
   const isEditing = (record) => record.key === editingKey;
 
-  const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading, } = props;
-  
+  const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading,sellerCompanyDatas,sellerCompanyTotal,sellerCompanyLoading,addOrUpdSellerCompanyLoading, delSellerCompanyLoading,} = props;
+
   // const provinceShow = props.configInfo&&props.configInfo.IsShowProjectRegion; 
-  const provinceShow = true; 
-  
+  const provinceShow = true;
+
+  const [sellCompanyPermis,setSellCompanyPermis] = useState(false)
   useEffect(() => {
     onFinish(pageIndex, pageSize);
-
+    sellerhandleTableChange(1,20)
+    const buttonList = permissionButton(props.match.path)
+    buttonList.map(item => {
+      switch (item) {
+        case 'sellCompany': setSellCompanyPermis(true); break;
+      }
+    })
   }, []);
 
   let columns = [
@@ -238,14 +277,14 @@ const Index = (props) => {
       width: 180,
       ellipsis: true,
       render: (text, record) => {
-        const flag =   !record.deleteFlag
+        const flag = !record.deleteFlag
         const tipText = '没有操作权限，请联系管理员'
-        const placement= flag?  'left' :'top'
-        const disSty = { cursor: (flag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ')}
+        const placement = flag ? 'left' : 'top'
+        const disSty = { cursor: (flag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') }
         return <span>
-          <Fragment><Tooltip placement={placement} title={flag? `${tipText}` : "编辑" }> <a style={{...disSty}} onClick={() => { if(flag){return}; edit(record)  }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          <Fragment><Tooltip placement={placement} title={flag ? `${tipText}` : "编辑"}> <a style={{ ...disSty }} onClick={() => { if (flag) { return }; edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
 
-          <Fragment> <Tooltip  title="详情">
+          <Fragment> <Tooltip title="详情">
             <Link style={{ padding: '0 5px' }} to={{
               pathname: '/platformconfig/basicInfo/projectManager/detail',
               query: {
@@ -257,14 +296,14 @@ const Index = (props) => {
             </Link>
           </Tooltip><Divider type="vertical" /></Fragment>
 
-          <Fragment> <Tooltip placement={placement} title={flag? `${tipText}` : "删除" }>
-            <Popconfirm title="确定要删除此条信息吗？"  disabled={flag} style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
-              <a style={{...disSty}}><DelIcon /></a>
+          <Fragment> <Tooltip placement={placement} title={flag ? `${tipText}` : "删除"}>
+            <Popconfirm title="确定要删除此条信息吗？" disabled={flag} style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
+              <a style={{ ...disSty }}><DelIcon /></a>
             </Popconfirm>
           </Tooltip>
           </Fragment>
-            <Divider type="vertical" />
-            <Fragment> <Tooltip placement={'top'} title={"运维监测点信息" } >  <a  href="javasctipt:;" onClick={() => { operaInfo(record)  }} ><PointIcon /></a></Tooltip></Fragment>
+          <Divider type="vertical" />
+          <Fragment> <Tooltip placement={'top'} title={"运维监测点信息"} >  <a href="javasctipt:;" onClick={() => { operaInfo(record) }} ><PointIcon /></a></Tooltip></Fragment>
         </span>
       }
     },
@@ -300,19 +339,20 @@ const Index = (props) => {
       ellipsis: true,
     },
   ]
-  
+
   const edit = async (record) => {
-    setFromVisible(true)
+    setFormVisible(true)
     setType('edit')
     form2.resetFields();
     try {
       form2.setFieldsValue({
         ...record,
-        Province:record.isShow? record.Province&&record.Province.split(',') : undefined,
+        Province: record.isShow ? record.Province && record.Province.split(',') : undefined,
         BeginTime: moment(record.BeginTime),
         EndTime: moment(record.EndTime),
         SignName: record.SingName,
         OperationCompany: record.operationCompanyID,
+        SellCompanyName:record.SellCompanyID || undefined,
       })
 
 
@@ -348,7 +388,7 @@ const Index = (props) => {
 
 
   const add = () => {
-    setFromVisible(true)
+    setFormVisible(true)
     setType('add')
     form2.resetFields();
 
@@ -403,12 +443,12 @@ const Index = (props) => {
       }
       props.addOrUpdateProjectInfo({
         ...values,
-        Province:values.Province && values.Province.toString(),
+        Province: values.Province && values.Province.toString(),
         BeginTime: values.BeginTime && moment(values.BeginTime).format('YYYY-MM-DD 00:00:00'),
         EndTime: values.EndTime && moment(values.EndTime).format('YYYY-MM-DD 23:59:59'),
         CreateUserID: type === 'add' ? JSON.parse(Cookie.get('currentUser')).UserId : values.CreateUserID,
       }, () => {
-        setFromVisible(false)
+        setFormVisible(false)
         onFinish(pageIndex, pageSize)
       })
 
@@ -510,12 +550,84 @@ const Index = (props) => {
     return time && current && current < moment(time).endOf('day');
   }
 
+  const sellerColumns = [
+    {
+      title: '序号',
+      align: 'center',
+      ellipsis:true,
+      render: (text, record, index) => {
+        return  (index + 1) + (sellerPageIndex-1) * sellerPageSize;
+      }
+    },
+    {
+      title: '卖方公司名称',
+      dataIndex: 'Name',
+      key: 'Name',
+      align: 'center',
+      width: 'auto',
+      ellipsis: true,
+    },
+    {
+      title: '创建人',
+      dataIndex: 'CreateUserName',
+      key: 'CreateUserName',
+      align: 'center',
+      width: 'auto',
+      ellipsis: true,
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'CreateTime',
+      key: 'CreateTime',
+      align: 'center',
+      width: 'auto',
+      ellipsis: true,
+    },
+    {
+      title: <span>操作</span>,
+      dataIndex: 'ID',
+      key: 'ID',
+      align: 'center',
+      fixed: 'right',
+      width: 90,
+      ellipsis: true,
+      render: (text, record) => {
+          return   <Popconfirm title="确定要删除此条信息吗？"   onConfirm={() => { delSeller(text) }} okText="是" cancelText="否">
+              <a>删除</a>
+             </Popconfirm>
+      }
+    },
+  ]
+  const [sellerCompanyVisible, setSellerCompanyVisible] = useState(false)
+  const [sellerCompanyForm, setSellerCompanyForm] = Form.useForm();
+  const [popVisible, setPopVisible] = useState(false)
+
+  
+  const [sellerPageIndex, setSellerPageIndex] = useState(1)
+  const [sellerPageSize, setSellerPageSize] = useState(20)
+  const sellerhandleTableChange = (PageIndex, PageSize) => {
+    setSellerPageIndex(PageIndex)
+    setSellerPageSize(PageSize)
+    props.getSellerCompanyList({pageIndex: PageIndex, pageSize: PageSize, })
+  }
+
+  const addOrUpdSellerSubmit=(values)=>{ //添加卖方公司
+    props.addOrUpdSellerCompany({...values},()=>{
+      setPopVisible(false)
+      sellerhandleTableChange(1,20)
+    })
+  }
+  const delSeller = (id)=>{//卖方公司
+    props.delSellerCompany({id},()=>{
+      sellerhandleTableChange(1,20)
+    })
+  }
   const searchComponents = () => {
     return <Form
       form={form}
       name="advanced_search"
       className={styles['ant-advanced-search-form']}
-      onFinish={() => {setPageIndex(1); onFinish(1, pageSize) }}
+      onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
     >
       <Row align='middle'>
         <Col span={8}>
@@ -572,6 +684,9 @@ const Index = (props) => {
         <Button icon={<ExportOutlined />} loading={exportLoading} style={{ margin: '0 8px', }} onClick={() => { exports() }}>
           导出
          </Button>
+        {sellCompanyPermis&&<Button type="primary" onClick={() => { setSellerCompanyVisible(true);setSellerPageIndex(1);setSellerPageSize(20) }}>
+          维护卖方公司清单
+         </Button>}
       </Row>
     </Form>
   }
@@ -585,7 +700,7 @@ const Index = (props) => {
             bordered
             scroll={{ y: expand ? 'calc(100vh - 470px)' : 'calc(100vh - 370px)' }}
             dataSource={tableDatas}
-            columns={provinceShow ? columns : columns.filter(item=>item.title!='行政区')}
+            columns={provinceShow ? columns : columns.filter(item => item.title != '行政区')}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
@@ -600,10 +715,10 @@ const Index = (props) => {
 
       <Modal
         title={type === 'edit' ? '编辑项目' : '添加项目'}
-        visible={fromVisible}
+        visible={formVisible}
         onOk={onModalOk}
         confirmLoading={loadingConfirm}
-        onCancel={() => { setFromVisible(false) }}
+        onCancel={() => { setFormVisible(false) }}
         className={styles.fromModal}
         destroyOnClose
         centered
@@ -627,9 +742,9 @@ const Index = (props) => {
                 <Input placeholder='请输入项目编号' allowClear />
               </Form.Item>
             </Col>
-            {provinceShow&&<Col span={12}>
+            {provinceShow && <Col span={12}>
               <Form.Item label="行政区" name="Province" rules={[{ required: true, message: '请输入行政区!', },]} >
-               <SdlCascader  selectType='2,否' />
+                <SdlCascader selectType='2,否' />
               </Form.Item>
             </Col>}
             <Col span={12}>
@@ -639,9 +754,18 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="卖方公司" name="SellCompanyName" rules={[{ required: true, message: '请输入卖方公司!', },]} >
-                <Input placeholder='请输入卖方公司' />
+   
+              <Form.Item label="卖方公司"    name="SellCompanyName" rules={[{ required: true, message: '请输入卖方公司!', },]} >
+              {sellerCompanyLoading?
+               <Spin size='small' />
+               :  <Select placeholder='请选择'  allowClear showSearch  optionFilterProp="children">
+                {sellerCompanyDatas.map(item=>{
+                   return <Option key={item.ID}  value={item.ID}>{item.Name}</Option>
+                })}
+                </Select>
+                }
               </Form.Item>
+            
             </Col>
 
             <Col span={12}>
@@ -682,7 +806,7 @@ const Index = (props) => {
       </Col> */}
             <Col span={12}>
               <Form.Item label="所属运维单位" name="OperationCompany" rules={[{ required: true, message: '请选择所属运维单位!', },]}>
-                <OperationCompanyList getDefaultOpration={(defaultId) => {  type === 'add' &&   !provinceShow && form2.setFieldsValue({ OperationCompany: defaultId })}} />
+                <OperationCompanyList getDefaultOpration={(defaultId) => { type === 'add' && !provinceShow && form2.setFieldsValue({ OperationCompany: defaultId }) }} />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -727,6 +851,57 @@ const Index = (props) => {
             showSizeChanger: true,
             showQuickJumper: true,
             onChange: handleTableChange2,
+          }}
+        />
+      </Modal>
+      <Modal
+        title={`维护卖方公司清单`}
+        visible={sellerCompanyVisible}
+        onCancel={() => { setSellerCompanyVisible(false);popVisible&&setPopVisible(false); }}
+        footer={null}
+        destroyOnClose
+        width={1000}
+      >
+        <Popover visible={popVisible} placement="bottom" title={'添加卖方公司'}  trigger="click"
+                 overlayStyle ={{width:400}}
+          content={
+            <Form
+              name="basic3"
+              form={form3}
+              onFinish={addOrUpdSellerSubmit}
+            >
+              <Form.Item label="卖方公司名称" name="name" rules={[{ required: true, message: '请输入卖方公司名称', },]} >
+                <Input placeholder='请输入' allowClear />
+              </Form.Item>
+
+              <Row align='end'>
+                <Button  onClick={() => { setPopVisible(false) }} style={{ marginRight: 8 }} >
+                  取消
+                </Button>
+                <Button type="primary" htmlType='submit' loading={addOrUpdSellerCompanyLoading}>
+                  确定
+                  </Button>
+              </Row>
+            </Form>
+          }>
+          <Button type="primary" style={{ marginBottom: 10 }} onClick={() => { setPopVisible(true);form3.resetFields(); }}>
+            添加
+          </Button>
+        </Popover>
+        <SdlTable
+          resizable
+          loading={sellerCompanyLoading || delSellerCompanyLoading}
+          bordered
+          dataSource={sellerCompanyDatas}
+          columns={sellerColumns}
+          scroll={{ x:600,y:'calc(100vh - 400px)' }}
+          pagination={{
+            total: sellerCompanyTotal,
+            pageSize: sellerPageSize,
+            current: sellerPageIndex,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            onChange: sellerhandleTableChange,
           }}
         />
       </Modal>

@@ -285,22 +285,21 @@ export default class PointVerifyLst extends Component {
         align: 'left',
       },
     ];
-    this.props.divisorList.map((item, key) => {
-      let pollutantList = this.props.overVerifyRateForm.PollutantList.value?  
-      this.props.overVerifyRateForm.PollutantList.value : this.props.overVerifyRateForm.PollutantList;
-      let index = pollutantList.findIndex(
-        (checkedItem, checkedKey) => {
+    let colList = this.props.divisorList
+        colList =  [{PollutantName:'全部合计',PollutantCode:'全部合计'},...colList]
+        colList.map((item, key) => {
+        let pollutantList = this.props.overVerifyRateForm.PollutantList.value?  
+                        this.props.overVerifyRateForm.PollutantList.value : this.props.overVerifyRateForm.PollutantList;
+        let index = pollutantList.findIndex((checkedItem, checkedKey) => {
           if (item.PollutantCode == checkedItem) {
             return true;
           }
-        },
-      );
+        });
       if (index !== -1) {
         newColumns.push({
           title: <span>{item.PollutantName}</span>,
           dataIndex: item.PollutantCode,
           key: item.PollutantCode,
-
           children: [
             {
               title: <span>报警次数</span>,

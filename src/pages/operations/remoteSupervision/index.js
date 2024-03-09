@@ -383,6 +383,16 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '一级审核',
+      dataIndex: 'SecondStatus',
+      key: 'SecondStatus',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record) => {
+        return text === '不合格' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
+      }
+    },
+    {
       title: '核查结果',
       dataIndex: 'resultCheck',
       key: 'resultCheck',
@@ -484,6 +494,21 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '省区经理下发次数',
+      dataIndex: 'ManagerIssue',
+      key: 'ManagerIssue',
+      align: 'center',
+      width:140,
+      ellipsis: true,
+    },
+    {
+      title: '省区经理下发时间',
+      dataIndex: 'ManagerIssueTime',
+      key: 'ManagerIssueTime',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '创建人',
       dataIndex: 'userName',
       key: 'userName',
@@ -520,8 +545,8 @@ const Index = (props) => {
       render: (text, record) => {
         const updateflag = record.submitStatus !== '系统关闭';
         // const flag = record.flag;
-        const issue = record.issue;
-        const isCheckUser = record.isCheckUser;
+        const issue =  (record.isCheckUser == 2&&record.issue) || (record.isCheckUser == 1&&record.ManagerIssueTime);
+        const isCheckUser = record.isCheckUser == 1 || record.isCheckUser == 2 ; //0运维人员  1省区经理 2核查人员
         let detail = <Tooltip title="详情">
           <a onClick={() => {
             details(record)
@@ -790,6 +815,7 @@ const Index = (props) => {
       [`${code}RangCheck`]:isImport? form2.getFieldValue(`${code}RangCheck`): val.RangeStatus ? [val.RangeStatus] : [],
       [`${code}Remark`]:isImport? form2.getFieldValue(`${code}Remark`): val.RangeRemark,
       [`${code}OperationRangeRemark`]: val.OperationRangeRemark,
+      [`${code}ManagerRangeRemark`]: val.ManagerRangeRemark,
       [`${code}AnalyzerFilePar`]: item.AnalyzerFileList?.[0] && item.AnalyzerFileList?.[0].FileUuid,
       [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
       [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
@@ -802,6 +828,7 @@ const Index = (props) => {
         [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
         [`${code}Remark2`]: val.CouRemrak,
         [`${code}OperationDataRemark`]: val.OperationDataRemark,
+        [`${code}ManagerDataRemark`]: val.ManagerDataRemark,
       })
    
   }
@@ -821,6 +848,7 @@ const Index = (props) => {
     //   [`${code}RangCheck`]: val.RangeStatus ? [val.RangeStatus] : [],
     //   [`${code}Remark`]: val.RangeRemark,
     //   [`${code}OperationRangeRemark`]: val.OperationRangeRemark,
+    //   [`${code}ManagerRangeRemark`]: val.ManagerRangeRemark,
     //   [`${code}IndicaVal`]: val.AnalyzerCou,//实时数据一致性核查表
     //   [`${code}IndicaUnit`]: val.AnalyzerCouUnit,
     //   [`${code}DsData`]: val.DASCou,
@@ -831,6 +859,7 @@ const Index = (props) => {
     //   [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
     //   [`${code}Remark2`]: val.CouRemrak,
     //   [`${code}OperationDataRemark`]: val.OperationDataRemark,
+    //   [`${code}ManagerDataRemark`]: val.ManagerDataRemark
     //   [`${code}AnalyzerFilePar`]: item.AnalyzerFileList?.[0] && item.AnalyzerFileList?.[0].FileUuid,
     //   [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
     //   [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
@@ -841,6 +870,7 @@ const Index = (props) => {
 
   const [echoLoading, setEchoLoading] = useState(false)
   const [isCheckUser, setIsCheckUser] = useState(false)
+  const [roleType, setRoleType ] = useState()
   const [visible, setVisible] = useState(false)
   const [title, setTitle] = useState('添加')
   const [editId, setEditId] = useState()
@@ -859,7 +889,8 @@ const Index = (props) => {
     setEchoLoading(true)
     resetData();
     setTabType("1")
-    setIsCheckUser(record.isCheckUser)
+    setIsCheckUser(record.isCheckUser==1||record.isCheckUser==2? true : false)
+    setRoleType(record.isCheckUser)
     // setIsCheckUser(true)
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
       //共同的字段
@@ -915,6 +946,7 @@ const Index = (props) => {
         // [`${code}RangCheck`]: [],
         // [`${code}Remark`]: undefined,
         [`${code}OperationRangeRemark`]: undefined,
+        [`${code}ManagerRangeRemark`]: undefined,
         [`${code}AnalyzerFilePar`]: undefined,
         [`${code}DasFilePar`]: undefined,
         [`${code}RangeFilePar`]: undefined,
@@ -1036,6 +1068,7 @@ const Index = (props) => {
           [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
           [`${code}Remark2`]: val.CouRemrak,
           [`${code}OperationDataRemark`]: val.OperationDataRemark,
+          [`${code}ManagerDataRemark`]: val.ManagerDataRemark,
          })
         onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)
         }
@@ -1139,7 +1172,7 @@ const Index = (props) => {
     })
   }
   const issues = (record) => { //下发
-    props.issueRemoteInspector({ ID: record.id }, () => {
+    props.issueRemoteInspector({ ID: record.id,isCheckUser:record.isCheckUser }, () => {
       onFinish(pageIndex, pageSize)
     })
   }
@@ -1240,6 +1273,7 @@ const Index = (props) => {
               RangeStatus: values[`${item.par}RangCheck`] && values[`${item.par}RangCheck`][0] ? values[`${item.par}RangCheck`][0] : undefined,
               RangeRemark: values[`${item.par}Remark`],
               OperationRangeRemark: values[`${item.par}OperationRangeRemark`],
+              ManagerRangeRemark: values[`${item.par}ManagerRangeRemark`],
               Special: item.isDisplay == 1 && isDisPlayCheck1 || item.isDisplay == 3 && isDisPlayCheck3 ? 1 : item.isDisplay == 2 && isDisPlayCheck2 || item.isDisplay == 4 && isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
               DASStatus: dasChecked ? 1 : 2,
               DataRangeStatus: numChecked ? 1 : 2, //数采仪量程
@@ -1262,6 +1296,7 @@ const Index = (props) => {
               CouStatus: values[`${item.par}RangCheck2`] && values[`${item.par}RangCheck2`][0] ? values[`${item.par}RangCheck2`][0] : undefined,
               CouRemrak: values[`${item.par}Remark2`],
               OperationDataRemark: values[`${item.par}OperationDataRemark`],
+              ManagerDataRemark: values[`${item.par}ManagerDataRemark`],
               CouType: item.concentrationType == '原始浓度' ? 1 : item.concentrationType == '标杆浓度' ? 2 : undefined,
             }
           })
@@ -1308,6 +1343,7 @@ const Index = (props) => {
               Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
               Remark: values[`${item.par}Remark3`],
               OperationReamrk: values[`${item.par}OperationReamrk`],
+              ManagerRemark: values[`${item.par}ManagerRemark`],
               SetFile: values[`${item.par}SettingFilePar`],
               InstrumentFile: values[`${item.par}InstrumentFilePar`],
               TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
@@ -1319,7 +1355,7 @@ const Index = (props) => {
           })
           props.addRemoteInspector({
             AddType: type,
-            isCheckUser: isCheckUser,
+            isCheckUser: roleType,
             Data: {
               ...commonData,
               CouUpload: values.files2,
@@ -1364,6 +1400,7 @@ const Index = (props) => {
       //       Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
       //       Remark: values[`${item.par}Remark3`],
       //       OperationReamrk: values[`${item.par}OperationReamrk`],
+      //       ManagerRemark: values[`${item.par}ManagerRemark`],
       //       SetFile: values[`${item.par}SettingFilePar`],
       //       InstrumentFile: values[`${item.par}InstrumentFilePar`],
       //       TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
@@ -1511,6 +1548,7 @@ const Index = (props) => {
       [`${code}RangCheck3`]: isImport? form3.getFieldValue(`${code}RangCheck3`): item.Uniformity ? [item.Uniformity] : [],//手工修正结果
       [`${code}Remark3`]:  isImport? form3.getFieldValue(`${code}Remark3`): item.Remark,
       [`${code}OperationReamrk`]: item.OperationReramk,
+      [`${code}ManagerRemark`]: item.ManagerRemark,
       [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
       [`${code}InstrumentFilePar`]: item.InstrumentFileList?.[0] && item.InstrumentFileList?.[0].FileUuid,
       [`${code}TraceabilityFilePar`]: item.TraceabilityFileList?.[0] && item.TraceabilityFileList?.[0].FileUuid,
@@ -1998,6 +2036,7 @@ const Index = (props) => {
       [`${code}RangCheck`]: [],
       [`${code}Remark`]: undefined,
       [`${code}OperationRangeRemark`]: undefined,
+      [`${code}ManagerRangeRemark`]: undefined,
       [`${code}AnalyzerFilePar`]: undefined,
       [`${code}DasFilePar`]: undefined,
       [`${code}RangeFilePar`]: undefined,
@@ -2047,6 +2086,7 @@ const Index = (props) => {
       [`${code}RangCheck`]: [],
       [`${code}Remark`]: undefined,
       [`${code}OperationRangeRemark`]: undefined,
+      [`${code}ManagerRangeRemark`]: undefined,
       [`${code}AnalyzerFilePar`]: undefined,
       [`${code}DasFilePar`]: undefined,
       [`${code}RangeFilePar`]: undefined,
@@ -2464,18 +2504,47 @@ const Index = (props) => {
               return '—'
             }
             let disabledFlag = false;
+            const isCheck = roleType != 2;
             switch (record.isDisplay) {
               case 1: case 2:
-                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 || (!isCheckUser) ? true : false
+                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 || (isCheck) ? true : false
                 break;
               case 3: case 4:
-                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 || (!isCheckUser) ? true : false
+                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 || (isCheck) ? true : false
                 break;
               default:
-                disabledFlag = !isCheckUser;
+                disabledFlag = isCheck;
                 break
             }
             return <Form.Item name={`${record.par}Remark`}>
+              <TextArea rows={1} disabled={disabledFlag} placeholder='请输入' style={{ width: '100%' }} />
+            </Form.Item>
+          }
+        },
+        {
+          title: '省区经理备注',
+          align: 'center',
+          dataIndex: 'par',
+          key: 'par',
+          width: 180,
+          render: (text, record) => {
+            if (record.Name === 'NOx' || record.Name === '标干流量') {
+              return '—'
+            }
+            let disabledFlag = false;
+            const isCheck = roleType != 1;
+            switch (record.isDisplay) {
+              case 1: case 2:
+                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 || (isCheck) ? true : false
+                break;
+              case 3: case 4:
+                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 || (isCheck) ? true : false
+                break;
+              default:
+                disabledFlag = isCheck;
+                break
+            }
+            return <Form.Item name={`${record.par}ManagerRangeRemark`}>
               <TextArea rows={1} disabled={disabledFlag} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
@@ -2732,9 +2801,23 @@ const Index = (props) => {
           key: 'par',
           width: 180,
           render: (text, record) => {
+            const isCheck = roleType != 2;
             return <Form.Item name={`${record.par}Remark2`}>
-              <TextArea disabled={!isCheckUser} rows={1} placeholder='请输入' style={{ width: '100%' }} />
+              <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
+          }
+        },
+        {
+          title: '省区经理备注',
+          align: 'center',
+          dataIndex: 'par',
+          key: 'par',
+          width: 180,
+          render: (text, record) => {
+            const isCheck = roleType != 1;
+            return <Form.Item name={`${record.par}ManagerDataRemark`}>
+            <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
+          </Form.Item>
           }
         },
       ]
@@ -2969,9 +3052,23 @@ const Index = (props) => {
           key: 'par',
           width: 150,
           render: (text, record) => {
+            const isCheck = roleType != 2;
             return <Form.Item name={`${record.par}Remark3`}>
-              <TextArea disabled={!isCheckUser} rows={1} placeholder='请输入' style={{ width: '100%' }} />
+              <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
+          }
+        },
+        {
+          title: '省区经理备注',
+          align: 'center',
+          dataIndex: 'par',
+          key: 'par',
+          width: 180,
+          render: (text, record) => {
+            const isCheck = roleType != 1;
+            return <Form.Item name={`${record.par}ManagerRemark`}>
+            <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
+          </Form.Item>
           }
         },
         // {

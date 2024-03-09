@@ -57,6 +57,7 @@ export const API = {
     GetPollutantByType: before + '/MonitorPollutantApi/GetPollutantByType', //根据企业类型查询监测因子
     GetStandardPollutantsByDgimn: before + '/StandardLibraryApi/GetStandardPollutantsByDgimn', //根据排口获取标准污染物列表
     GetPollutantTypeMonitoringCategoryInfo: before + '/EquipmentApi/GetPollutantTypeMonitoringCategoryInfo',//获取设备信息监测参数类型
+    GetIndustryTree: before + '/AutoFormDataApi/GetIndustryTree', //获取行业树信息
   },
   // 可视化看板Api
   VisualKanbanApi: {
@@ -468,6 +469,9 @@ export const API = {
     GetProjectPointList: before + '/ProjectApi/GetProjectPointList',//获取运维监测点信息
     ExportProjectList: before + '/ProjectApi/ExportProjectList',//导出项目管理 
     ExportProjectPointList: before + '/ProjectApi/ExportProjectPointList',//导出运维监测点信息 
+    GetSellerCompanyList: before + '/ProjectApi/GetSellerCompanyList',// 获取卖房公司信息
+    AddOrUpdSellerCompany: before + '/ProjectApi/AddOrUpdSellerCompany',// 添加卖房公司信息
+    DelSellerCompany: before + '/ProjectApi/DelSellerCompany',// 删除卖房公司信息
     /*项目权限管理*/
     GetAccessibleProjectList: before + '/ProjectApi/GetAccessibleProjectList',//获取项目权限信息
     GetInaccessibleProjectList: before + '/ProjectApi/GetInaccessibleProjectList',//获取当前人员未分配的项目权限

@@ -38,3 +38,19 @@ export async function ExportProjectPointList(params) {
   const result = await post(API.AssetManagementApi.ExportProjectPointList,params, null);
   return result;
 }
+
+//获取卖房公司信息
+export async function GetSellerCompanyList(params) {
+  const result = await post(API.AssetManagementApi.GetSellerCompanyList,params, null);
+  return result;
+}
+//添加卖房公司信息
+export async function AddOrUpdSellerCompany(params) {
+  const result = await post(API.AssetManagementApi.AddOrUpdSellerCompany,params, null);
+  return result;
+}
+//删除卖房公司信息
+export async function DelSellerCompany(params) {
+  const result = await post(API.AssetManagementApi.DelSellerCompany,params, null);
+  return result;
+}
