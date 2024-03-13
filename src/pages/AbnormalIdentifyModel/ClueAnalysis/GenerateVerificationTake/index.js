@@ -660,7 +660,9 @@ const Index = props => {
       } else {
         const currentRow = row?.[row?.length - 1]
         if (currentRow?.['DGIMN'] == selectedRow['DGIMN'] && currentRow?.['WarningName'] == selectedRow['WarningName']) {
-          setSelectedRowKeys( [...selectedRowKeys,...newSelectedRowKeys])
+          let data = [...selectedRowKeys,...newSelectedRowKeys]
+              data = data.filter((value, index, self) => self.indexOf(value) === index)
+             setSelectedRowKeys(data)
         } else {
           message.error('同一企业同一排口同一场景下才能同时选中并生成核查方案')
         }
