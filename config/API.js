@@ -449,6 +449,8 @@ export const API = {
     UpdatePointOprationStatus: before + '/MonitorPointApi/UpdatePointOprationStatus', //更新监测点运维状态
     GetOprationStatusList: before + '/UserApi/GetOprationStatusList', //获取更新运维状态记录
     GetEquipmentParametersList: before + '/EquipmentApi/GetEquipmentParametersList', //获取监测参数设备清单信息
+    AddOrUpdOperationSignRadiusInfo: before + '/EnterpriseApi/AddOrUpdOperationSignRadiusInfo',//企业设置电子围栏半径
+    GetOperationSignRadiusInfo: before + '/EnterpriseApi/GetOperationSignRadiusInfo',//获取企业电子围栏半径
     /*污染源信息查询*/
     GetEntList: before + '/EnterpriseApi/GetEntList', //获取监测点信息
     ExportEntList: before + '/EnterpriseApi/ExportEntList', //导出企业信息 

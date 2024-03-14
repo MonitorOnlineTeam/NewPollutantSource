@@ -114,7 +114,7 @@ const UserLayout = props => {
 
                   </div>
                 </Col>}
-                <Col span={configInfo.IsShowProjectRegion? 24 : 12} style={{ textAlign: 'center' }}>
+                <Col span={configInfo.IsShowProjectRegion? 24 : 12}style={{ textAlign: 'center' }}>
                 <div style={{ marginBottom: '10px' }}>
                     <Button type="danger" icon={<DownloadOutlined />} size="small">运维APP下载</Button>
                   </div>
@@ -122,9 +122,13 @@ const UserLayout = props => {
                      <img
                     width={200}
                     alt=""
-                    src= {configInfo.IsShowProjectRegion?  "/yunweicode.png" : "/yunweicode_new.png"}
+                    src={'/mobile_code.png'}
+                    // src= {configInfo.IsShowProjectRegion?  "/yunweicode.png" : "/yunweicode_new.png"}
                   />
-                 <div style={{position:'absolute',width:200,left:24,bottom:configInfo.IsShowProjectRegion? 20 : 4,fontSize:16,background:'#fff'}}>运维工程师使用</div>
+                 <div style={{position:'absolute',width:200,left:24,
+                              // bottom:configInfo.IsShowProjectRegion? 20 : 4,
+                              bottom:4,
+                              fontSize:16,background:'#fff'}}>运维工程师使用</div>
                   </div>
                 </Col>
               </Row>

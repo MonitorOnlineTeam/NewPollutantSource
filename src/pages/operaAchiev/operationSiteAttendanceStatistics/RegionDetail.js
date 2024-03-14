@@ -169,6 +169,7 @@ const Index = (props) => {
     const [detailVisible, setDetailVisible] = useState(false)
     const [detailTitle, setDetailTitle] = useState('详情')
     const [cityDetailCode, setCityDetailCode] = useState()
+    const [workType, setWorkType] = useState()
   
     const detail = (record,type) => {
       setDetailVisible(true)
@@ -181,6 +182,7 @@ const Index = (props) => {
       }
       setDetailTitle(`${name}（${queryPar.beginTime && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar.endTime && moment(queryPar.endTime).format('YYYY-MM-DD')}）`)
       setCityDetailCode(code? code : queryPar.regionCode )
+      setWorkType(record.workType)
     }
 
     const [pageIndex, setPageIndex] = useState(1)
@@ -194,7 +196,9 @@ const Index = (props) => {
 
     const exports = async () => {
       props.ExportSignInList({
-        ...regDetailQueryPar
+        ...regDetailQueryPar,
+         pageIndex: undefined,
+         pageSize: undefined
       })
     };
   
@@ -231,7 +235,7 @@ const Index = (props) => {
         destroyOnClose
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
       >
-        <CityDetail cityDetailCode={cityDetailCode} />
+        <CityDetail cityDetailCode={cityDetailCode} workType={workType}/>
       </Modal>
     </div>
   );

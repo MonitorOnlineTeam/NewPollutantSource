@@ -62,6 +62,42 @@ class RegionDetails extends PureComponent {
           align: 'left',
         },
         {
+          title: '全部合计',
+          children: [
+            {
+              title: '报警次数',
+              dataIndex: 'AllCount',
+              key: 'AllCount',
+              width: 120,
+              align: 'center',
+            },
+            {
+              title: '已响应报警次数',
+              dataIndex: 'AllResponsedCount',
+              key: 'AllResponsedCount',
+              width: 120,
+              align: 'center',
+            },
+            {
+              title: '待响应报警次数',
+              dataIndex: 'AllNoResponseCount',
+              key: 'AllNoResponseCount',
+              width: 120,
+              align: 'center',
+            },
+            {
+              title: '响应率',
+              dataIndex: 'AllRate',
+              key: 'AllRate',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return record.AllCount === 0 ? '-' : text
+              }
+            },
+          ]
+        },
+        {
           title: '零值报警',
           children: [
             {

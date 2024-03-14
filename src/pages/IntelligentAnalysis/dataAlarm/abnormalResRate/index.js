@@ -154,6 +154,63 @@ class Index extends PureComponent {
         width: 200,
       },
       {
+        title: '全部合计',
+        children: [
+          {
+            title: '报警次数',
+            dataIndex: 'AllCount',
+            key: 'AllCount',
+            width: 120,
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, '1', undefined)
+              }}>{text}</a>
+            }
+          },
+          {
+            title: '已响应报警次数',
+            dataIndex: 'AllResponsedCount',
+            key: 'AllResponsedCount',
+            width: 120,
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "1", '1')
+              }}>{text}</a>
+            }
+          },
+          {
+            title: '待响应报警次数',
+            dataIndex: 'AllNoResponseCount',
+            key: 'AllNoResponseCount',
+            width: 120,
+            align: 'center',
+            render: (text, record) => {
+              return <a onClick={() => {
+                this.setState({ RegionName: record.RegionName })
+                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+                this.onTableClick(RegionCode, "1", '0')
+              }}>{text}</a>
+            }
+          },
+          {
+            title: '响应率',
+            dataIndex: 'AllRate',
+            key: 'AllRate',
+            width: 120,
+            align: 'center',
+            render: (text, record) => {
+              return record.AllCount === 0 ? '-' : text
+            }
+          },
+        ]
+      },
+      {
         title: '零值报警',
         children: [
           {
@@ -409,6 +466,15 @@ class Index extends PureComponent {
           if (record.CompleteTime === "0001-01-01 00:00:00") {
             return "-"
           }
+          return text ? text : "-"
+        }
+      },
+      {
+        title: '处理说明',
+        dataIndex: 'Description',
+        key: 'Description',
+        align: 'center',
+        render: (text, record) => {
           return text ? text : "-"
         }
       },

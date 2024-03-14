@@ -136,11 +136,20 @@ const Index = (props) => {
       key: 'CheckWarningRate',
       align: 'center',
       render: (text, record) => {
-        return  <Progress percent={text && text.replace("%", "")} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
+        return  <Progress percent={text && text.replace("%", "").trim()} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
      
       }
     },
-
+    {
+      title: '复核率',
+      dataIndex: 'ReviewRate',
+      key: 'ReviewRate',
+      align: 'center',
+      render: (text, record) => {
+        return  <Progress percent={text && text.replace("%", "").trim()} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
+     
+      }
+    },
   ]
   let regCityCommonCol = (type) => [
     {
@@ -369,6 +378,13 @@ const Index = (props) => {
       title: '核实人',
       dataIndex: 'CheckedUserName',
       key: 'CheckedUserName',
+      width: 120,
+      ellipsis: true,
+    },
+    {
+      title: '复核人',
+      dataIndex: 'Reviewer',
+      key: 'Reviewer',
       width: 120,
       ellipsis: true,
     },

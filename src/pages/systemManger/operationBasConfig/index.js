@@ -71,7 +71,11 @@ const Index = (props) => {
   const { operationSettingInfo } = props;
   useEffect(() => {
    if(operationSettingInfo?.ID){
-    form.setFieldsValue({availability:operationSettingInfo.Availability})
+    form.setFieldsValue({
+      availability:operationSettingInfo.Availability,
+      setEquipmentMode:operationSettingInfo.SetEquipmentMode,
+      InspectionType:operationSettingInfo.InspectionType,
+    })
    }
   }, [operationSettingInfo]);
 
@@ -89,7 +93,9 @@ const Index = (props) => {
           form={form}
           onFinish={submitOk}
           initialValues={{
-            availability:2
+            availability:2,
+            setEquipmentMode:0,
+            InspectionType:1,
           }}
         >
         <Spin spinning={props.getOperationSettingLoading}>
@@ -121,15 +127,21 @@ const Index = (props) => {
             </Radio.Group>
             </Form.Item> */}
            <Form.Item label='设备完好率数据来源' name='availability'>
-            <Radio.Group  defaultValue={2}>
+            <Radio.Group>
               <Radio value={1}>抓取数据</Radio>
               <Radio value={2}>直传数据</Radio>
             </Radio.Group>
             </Form.Item>
-            <Form.Item label='维护点位设置方式' name='aa'>
-            <Radio.Group  defaultValue={1}>
-              <Radio value={1}>从设备清单中选择</Radio>
-              <Radio value={2}>输入框直接录入</Radio>
+            <Form.Item label='维护点位设置方式' name='setEquipmentMode'>
+            <Radio.Group>
+              <Radio value={0}>从设备清单中选择</Radio>
+              <Radio value={1}>输入框直接录入</Radio>
+            </Radio.Group>
+            </Form.Item>
+            <Form.Item label='巡检工单允许手工申请' name='InspectionType'>
+            <Radio.Group>
+              <Radio value={1}>否</Radio>
+              <Radio value={2}>是</Radio>
             </Radio.Group>
             </Form.Item>
             <Divider orientation="right" style={{borderTopColor:'#0000000f'}}>

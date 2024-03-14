@@ -160,10 +160,18 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '项目接收状态',
+      dataIndex: 'StatusName',
+      key: 'StatusName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '运维接收-运维交接单',
       dataIndex: 'ReceiveFile',
       key: 'ReceiveFile',
       align: 'center',
+      width:150,
       ellipsis: true,
       render: (text, record, index) => {
         return text == '待上传' ?
@@ -174,9 +182,9 @@ const Index = (props) => {
       }
     },
     {
-      title: '项目续签状态',
-      dataIndex: 'StatusName',
-      key: 'StatusName',
+      title: '项目结束状态名称',
+      dataIndex: 'EndStatusName',
+      key: 'EndStatusName',
       align: 'center',
       ellipsis: true,
     },
@@ -185,6 +193,7 @@ const Index = (props) => {
       dataIndex: 'TransferFile',
       key: 'TransferFile',
       align: 'center',
+      width:150,
       ellipsis: true,
       render: (text, record, index) => {
         return text == '待上传' ?
@@ -199,6 +208,7 @@ const Index = (props) => {
       dataIndex: 'PerformanceFile',
       key: 'PerformanceFile',
       align: 'center',
+      width:150,
       ellipsis: true,
       render: (text, record, index) => {
         return text == '待上传' ?
@@ -352,6 +362,7 @@ const Index = (props) => {
         performanceFile: record.PerformanceFile == '待上传' || !record.PerformanceFile ? cuid() : record.PerformanceFile?.[0]?.FileUuid,
         receiveFile: record.ReceiveFile == '待上传' || !record.ReceiveFile ? cuid() : record.ReceiveFile?.[0]?.FileUuid,
         transferFile: record.TransferFile == '待上传' || !record.TransferFile ? cuid() : record.TransferFile?.[0]?.FileUuid,
+        EndStatus:record.EndStatus,
       })
 
 
@@ -467,9 +478,6 @@ const Index = (props) => {
 
     }
   }
-
-
-
   const searchComponents = () => {
     return <Form
       form={form}
@@ -538,12 +546,18 @@ const Index = (props) => {
           name="basic"
           form={form2}
         >
+         <Form.Item label="项目接收状态" name="status" >
+            <Radio.Group>
+              <Radio value="1">续签</Radio>
+              <Radio value="2">新签</Radio>
+            </Radio.Group>
+          </Form.Item>
           <Form.Item label="运维接收-运维交接单" name="receiveFile" >
             <Upload {...uploadProps2('receiveFile')} accept='image/*'>
               <Button icon={<UploadOutlined />}>上传照片</Button>
             </Upload>
           </Form.Item>
-          <Form.Item label="项目续签状态" name="status" >
+          <Form.Item label="项目结束状态" name="EndStatus" >
             <Radio.Group>
               <Radio value="1">续签</Radio>
               <Radio value="2">不续签</Radio>

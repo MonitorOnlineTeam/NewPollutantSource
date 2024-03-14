@@ -5,7 +5,7 @@
  * @Date: 2019年7月29日15:11:59
  */
 import React, { Component, Fragment } from 'react';
-import { CalendarTwoTone, QrcodeOutlined,FundOutlined } from '@ant-design/icons';
+import { CalendarTwoTone, QrcodeOutlined,FundOutlined,RotateRightOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -39,6 +39,7 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
 import { uploadPrefix } from '@/config'
+import MonitorEntElectronicFence from './components/MonitorEntElectronicFence'
 
 const { confirm } = Modal;
 
@@ -311,11 +312,27 @@ export default class MonitorTarget extends Component {
                                })
                              }}><FundOutlined style={{fontSize:16}}/>  </a>
                     </Tooltip> 
+                    <Divider type="vertical" />
+                                <Tooltip title="修改电子围栏半径">
+                                    <a
+                                        onClick={() => {
+                                            this.setState({
+                                                electronicFenceVisible: true,
+                                                electronicFenceTitle: `${row['dbo.T_Bas_Enterprise.EntName']}`,
+                                                entId: row['dbo.T_Bas_Enterprise.EntCode'],
+                                            })
+                                        }}
+                                    >
+                                        <RotateRightOutlined style={{fontSize:16}}/>
+                                    </a>
+                                </Tooltip>
                         </Fragment>}
                         parentcode="platformconfig/monitortarget"
                         {...this.props}
                     >
                     </AutoFormTable>}
+                    <MonitorEntElectronicFence visible={this.state.electronicFenceVisible} title={this.state.electronicFenceTitle} entId={this.state.entId} onCancel={() => { this.setState({ electronicFenceVisible: false }) }} />
+
                 </Card>
             </BreadcrumbWrapper>
         );

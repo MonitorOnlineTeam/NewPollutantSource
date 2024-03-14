@@ -187,16 +187,20 @@ const Index = (props) => {
         return (
           <div>
             {record.isCheckUser == 0 ?
-
+              <>
               <a onClick={() => { rectificaDetail(record, 2) }}>
                 整改
                </a>
+               <Divider type="vertical" />
+                </>
               :
-             (record.isCheckUser == 1 && record.CheckType =='一级审核') || (record.isCheckUser == 2&&record.CheckType =='二级审核') && <a onClick={() => { rectificaDetail(record, 1) }}>
+              ((record.isCheckUser == 1 && record.CheckType =='一级审核') || (record.isCheckUser == 2 && record.CheckType =='二级审核')) && <><a onClick={() => { rectificaDetail(record, 1) }}>
                 核查整改
                </a>
+                <Divider type="vertical" />
+                </>
             }
-            <Divider type="vertical" />
+           
             <a onClick={() => {
               rectificaDetail(record, 3)
             }}>
@@ -299,8 +303,9 @@ const Index = (props) => {
       </Row>
 
       <Row style={{ paddingTop: 5 }}>
-        <Form.Item label="核查人" name="checkUser" className='minWidth'>
-          <OperationInspectoUserList workNum type='2' style={{ width: 150 }} />
+        <Form.Item label="核查人" name="CheckUser" className='minWidth'>
+          {/* <OperationInspectoUserList workNum type='2' style={{ width: 150 }} /> */}
+          <Input placeholder='请输入'  allowClear style={{ width: 150 }}/>
         </Form.Item>
         <Form.Item label="核查日期" name="time"  >
           <RangePicker_
@@ -308,7 +313,7 @@ const Index = (props) => {
             allowClear={false}
             format="YYYY-MM-DD" />
         </Form.Item>
-        <Form.Item label="整改状态" name="checkResult"  >
+        <Form.Item label="整改状态" name="CheckStatus"  >
           <Select placeholder='请选择' allowClear style={{ width: 150 }}>
             <Option key={1} value={1} >整改待核实</Option>
             <Option key={2} value={2} >整改未完成</Option>

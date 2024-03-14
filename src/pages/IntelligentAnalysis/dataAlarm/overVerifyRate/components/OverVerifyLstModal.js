@@ -860,7 +860,7 @@ export default class OverVerifyLstModal extends Component {
     const { overVerifyRateForm: { beginTime, endTime, EntCode, PollutantList, RegionCode, AttentionCode, PollutantType, OperationPersonnel } } = this.props;
     this.setState({
       alarmNumVisible: true,
-      PollutantCode: pollutantCode,
+      PollutantCode: pollutantCode=='全部合计'? '' : pollutantCode,
       dealType: status,
       alarmNumModalTitle: record.regionName + moment(beginTime).format('YYYY年MM月DD号HH时') + '至' + moment(endTime).format('YYYY年MM月DD号HH时') + '超标报警情况',
     })
@@ -874,7 +874,7 @@ export default class OverVerifyLstModal extends Component {
         DataType: '',
         BeginTime: moment(beginTime).format("YYYY-MM-DD HH:mm:ss"),
         EndTime: moment(endTime).format("YYYY-MM-DD HH:mm:ss"),
-        PollutantCode: pollutantCode,
+        PollutantCode: pollutantCode=='全部合计'? '' : pollutantCode,
         Status: status == 2 ? '' : status,
         EntCode: '',
         VerifyStatus: this.state.alarmDealTypeListCode,

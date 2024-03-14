@@ -199,3 +199,15 @@ export async function checkRepeat(params) {
     const result = await post(API.AutoFormApi.VerificationData, params, null);
     return result;
 }
+
+//企业设置电子围栏半径 运维
+export async function addOrUpdOperationSignRadiusInfo(params) {
+    const result = await post(API.AssetManagementApi.AddOrUpdOperationSignRadiusInfo, params, null);
+    return result;
+}
+
+//企业获取电子围栏半径 运维
+export async function getOperationSignRadiusInfo(params) {
+    const result = await post(API.AssetManagementApi.GetOperationSignRadiusInfo, params, null);
+    return result;
+}

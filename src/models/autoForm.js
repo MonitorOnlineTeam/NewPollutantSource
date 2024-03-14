@@ -10,7 +10,7 @@ import config from '@/config';
 import moment from 'moment';
 import * as services from '@/services/autoformapi';
 import * as commonServices from '@/services/commonApi';
-import  {addOrUpdateMonitorEntElectronicFence} from '@/pages/ctAssetManagement/equipmentAccount/pollutantManagement/service';
+import { addOrUpdateMonitorEntElectronicFence } from '@/pages/ctAssetManagement/equipmentAccount/pollutantManagement/service';
 
 import { downloadFile } from '@/utils/utils';
 
@@ -576,7 +576,7 @@ export default Model.extend({
       if (payload.Guid) {
         if (payload.Guid.fNameList && payload.Guid.fNameList[0]) {
           Guid = payload.Guid.fNameList[0].split('/')[2]
-        } else if (Array.isArray(payload.Guid)&&payload.Guid[0]) { //只上传图片的情况 UploadPicture接口
+        } else if (Array.isArray(payload.Guid) && payload.Guid[0]) { //只上传图片的情况 UploadPicture接口
           Guid = payload.Guid[0].split('/')[2]
         } else {
           Guid = payload.Guid //编辑的情况
@@ -607,6 +607,22 @@ export default Model.extend({
       const result = yield call(addOrUpdateMonitorEntElectronicFence, { ...payload });
       if (result.IsSuccess) {
         callback && callback()
+      }
+    },
+    // 运维 企业设置电子围栏半径
+    *addOrUpdOperationSignRadiusInfo({ payload, callback }, { call, update }) {
+      const result = yield call(services.addOrUpdOperationSignRadiusInfo, { ...payload });
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+      }
+    },
+    //  运维 企业获取电子围栏半径
+    *getOperationSignRadiusInfo({ payload, callback }, { call, update }) {
+      const result = yield call(services.getOperationSignRadiusInfo, { ...payload });
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
       }
     },
   },

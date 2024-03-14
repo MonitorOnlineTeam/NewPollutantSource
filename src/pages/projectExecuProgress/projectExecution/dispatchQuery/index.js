@@ -65,7 +65,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const [expand, setExpand] = useState(false);
+  const [expand, setExpand] = useState(true);
 
 
 
@@ -291,6 +291,9 @@ const Index = (props) => {
       name="advanced_search"
       className={styles['ant-advanced-search-form']}
       onFinish={() => {setPageIndex(1); onFinish(1, pageSize) }}
+      initialValues={{
+        time:[moment().add(-6, 'months').startOf('day'), moment().endOf('day')]
+      }}
     >
       <Row align='middle'>
         <Col span={8}>
@@ -384,7 +387,7 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 390px)' : 'calc(100vh - 350px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 430px)' : 'calc(100vh - 350px)' }}
             dataSource={tableDatas}
             columns={columns}
             pagination={{

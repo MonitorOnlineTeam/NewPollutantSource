@@ -190,6 +190,7 @@ const Index = (props) => {
         pageSize: pageSize,
         ...regDetailQueryPar,
         regionCode:props.cityDetailCode,
+        workType:props.workType,
         pointType:3
       })
     } catch (errorInfo) {
@@ -237,7 +238,9 @@ const Index = (props) => {
 
   const exports = async () => {
     props.ExportSignInList({
-      ...cityDetailQueryPar
+      ...cityDetailQueryPar,
+      pageIndex: undefined,
+      pageSize: undefined
     })
   };
 

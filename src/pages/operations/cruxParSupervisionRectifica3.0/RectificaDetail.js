@@ -771,11 +771,11 @@ const Index = (props) => {
       setDasFileList(dasFileList)
       setDasRangeFile(record.DASFileList?.[0]?.FileUuid ? record.DASFileList[0].FileUuid : cuid())
 
-      const dataFileList = record.DataFileList?.[0] ? record.DASFileList.map(item => {
+      const dataFileList = record.RangeFileList?.[0] ? record.RangeFileList.map(item => {//数采仪量程照片
         return { uid: item.GUID, name: item.FileName, status: 'done', url: `${uploadPrefix}/${item.FileName}`, }
       }) : []
       setDataRangeFileList(dataFileList)
-      setDataRangeFile(record.DataFileList?.[0]?.FileUuid ? record.DataFileList[0].FileUuid : cuid())
+      setDataRangeFile(record.RangeFileList?.[0]?.FileUuid ? record.RangeFileList[0].FileUuid : cuid())
     } else if (type == 2) {
       dataform.resetFields();
       dataform.setFieldsValue({
@@ -812,7 +812,7 @@ const Index = (props) => {
         traceabilityFile: record.TraceabilityFileList?.[0]?.FileUuid,
         autoUniformity: record.AutoUniformity,
         operationReamrk: record.OperationReamrk,
-        pollutantCode: record.CheckItem,
+        CheckItem: record.CheckItem,
         id: record.ID,
         zgid: record.ZGID,
         status: status,
@@ -878,9 +878,9 @@ const Index = (props) => {
     } else {
       try {
         const values = await parform.validateFields();
+        console.log(values)
         props.updZGParamCheck({
           ...values,
-          // uniformity: manualVal?.toString(),
         }, (isSuccess) => {
           if (isSuccess) {
             setRectificationVisible(false)
@@ -1219,7 +1219,7 @@ const Index = (props) => {
     <Form.Item name="status" hidden>
       <Input />
     </Form.Item>
-    <Form.Item name="pollutantCode" hidden>
+    <Form.Item name={rectificationType==3? "CheckItem": "pollutantCode"} hidden>
       <Input />
     </Form.Item>
 

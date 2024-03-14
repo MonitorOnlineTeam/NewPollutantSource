@@ -1,7 +1,7 @@
 /**
- * 功  能：成套电子围栏半径
+ * 功  能：运维设置电子围栏半径
  * 创建人：jab
- * 创建时间：
+ * 创建时间：2024.03.14
  */
 import React, { useState, useEffect, useRef, Fragment, useMemo } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Tabs, Typography, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Popover, Tag, Spin } from 'antd';
@@ -20,14 +20,14 @@ import Cookie from 'js-cookie';
 import cuid from 'cuid';
 const { TabPane } = Tabs;
 const { Option } = Select;
-const namespace = 'ctPollutantManger'
+const namespace = 'autoForm'
 
 
 
 
 const dvaPropsData = ({ loading, ctPollutantManger, common, }) => ({
-    addUpdataLoading: loading.effects[`${namespace}/addOrUpdateMonitorEntElectronicFence`],
-    getDataLoading: loading.effects[`${namespace}/getMonitorEntElectronicFence`] || false,
+    addUpdataLoading: loading.effects[`${namespace}/addOrUpdOperationSignRadiusInfo`],
+    getDataLoading: loading.effects[`${namespace}/getOperationSignRadiusInfo`] || false,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -38,16 +38,16 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        addOrUpdateMonitorEntElectronicFence: (payload, callback) => { //添加修改
+        addOrUpdOperationSignRadiusInfo: (payload, callback) => { //添加修改
             dispatch({
-                type: `${namespace}/addOrUpdateMonitorEntElectronicFence`,
+                type: `${namespace}/addOrUpdOperationSignRadiusInfo`,
                 payload: payload,
                 callback: callback
             })
         },
-        getMonitorEntElectronicFence: (payload, callback) => { //获取
+        getOperationSignRadiusInfo: (payload, callback) => { //获取
             dispatch({
-                type: `${namespace}/getMonitorEntElectronicFence`,
+                type: `${namespace}/getOperationSignRadiusInfo`,
                 payload: payload,
                 callback: callback
             })
@@ -64,18 +64,15 @@ const Index = (props) => {
 
     const [form] = Form.useForm();
 
-    const getData = () =>{
-        
-    }
     useEffect(() => {
         if (visible) {
             form.resetFields()
-            form.setFieldsValue({ entId: entId })
-            props.getMonitorEntElectronicFence({ entId: entId, }, (data) => {
+            form.setFieldsValue({ entID: entId })
+            props.getOperationSignRadiusInfo({ entID: entId, }, (data) => {
                 data&&form.setFieldsValue({
                     ...data,
                     id: data?.ID,
-                    range: data?.Range,
+                    radius: data?.Radius,
                 })
             })
         }
@@ -84,7 +81,7 @@ const Index = (props) => {
     const monitorEntElectronicFenceOk = async () => {
         try {
             const value = await form.validateFields()
-            props.addOrUpdateMonitorEntElectronicFence({
+            props.addOrUpdOperationSignRadiusInfo({
                 ...value,
             }, () => {
                 props.onCancel();
@@ -102,23 +99,23 @@ const Index = (props) => {
                     name="basic"
                     form={form}
                 >
-                    <Form.Item label="电子围栏半径（KM）" name="range" rules={[{ required: true, message: '请输入电子围栏半径!', },]} >
+                    <Form.Item label="电子围栏半径（KM）" name="radius" rules={[{ required: true, message: '请输入电子围栏半径!', },]} >
                         <InputNumber  min={0.00001}  placeholder='请输入' allowClear style={{ width: '100%' }} />
                     </Form.Item>
-                    <Form.Item name="entId" hidden>
+                    <Form.Item name="entID" hidden>
                         <Input />
                     </Form.Item>
                     <Form.Item name="id" hidden>
                         <Input />
                     </Form.Item>
-                    {form.getFieldValue('id')&&<Form.Item>
+                    {/* {form.getFieldValue('id')&&<Form.Item>
                         <Row  justify='space-between'>
                             <Col style={{paddingLeft:12}}>创建人：{form.getFieldValue('CreateUserName')}</Col>
                             <Col style={{paddingLeft:12}}>创建时间：{form.getFieldValue('CreateTime')}</Col>
                             <Col style={{paddingLeft:12}}>更新人：{form.getFieldValue('UpdateUserName')}</Col>
                             <Col style={{paddingLeft:12}}>更新时间：{form.getFieldValue('UpdateTime')}</Col>
                         </Row>
-                    </Form.Item>}
+                    </Form.Item>} */}
                 </Form>
             </Spin>
         </Modal>

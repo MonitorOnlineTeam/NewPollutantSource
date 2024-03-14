@@ -138,8 +138,9 @@ const  Index = (props) => {
     });
   };
   const columns_ = setColumnsResizeable(selfColumns);
+
+
   return <Table
-    {...props}
     size="middle"
     rowClassName={(record, index, indent) => {
       if (index === 0) {
@@ -148,7 +149,7 @@ const  Index = (props) => {
       if (index % 2 !== 0) {
         return 'light';
       }
-    }} columns={columns_} components={components} />;
+    }}   {...props}  columns={columns_} components={components}/>;
 }
 Index.defaultProps = {
   defaultWidth: 120

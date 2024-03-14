@@ -74,7 +74,7 @@ const Index = (props) => {
 
     const rowSpanFun = (value,record) =>{
         let obj = {
-          children: <div>{value}</div>,
+          children: <div className='textOverflow'>{value}</div>,
           props: { rowSpan: record.Count},
         };
         return obj;
@@ -114,6 +114,7 @@ const Index = (props) => {
                     key: 'entName',
                     align: 'center',
                     width: 150,
+                    ellipsis: true,
                     render:(text, record, index)=>rowSpanFun(text, record)
                 },
                 {
@@ -276,6 +277,7 @@ const Index = (props) => {
                     key: 'entName',
                     align: 'center',
                     width: 150,
+                    ellipsis: true,
                 },
                 {
                     title: '排口名称',
@@ -574,10 +576,9 @@ const Index = (props) => {
                             <Select placeholder='请选择' style={{ width: 160 }} showSearch optionFilterProp="children" onChange={statisTypeChange}>
                                 <Option key={1} value={1} >按点位统计1</Option>
                                 <Option key={2} value={2} >按点位统计2</Option>
-                                {/* <Option key={2} value={2} >按点位统计</Option> */}
-                                <Option key={491} value={491} >按原则性问题统计</Option>
+                                {/* <Option key={491} value={491} >按原则性问题统计</Option>
                                 <Option key={492} value={492} >按一般问题统计</Option>
-                                <Option key={493} value={493} >按重点问题统计</Option>
+                                <Option key={493} value={493} >按重点问题统计</Option> */}
                             </Select>
                         </Form.Item>
                         <Form.Item>
@@ -605,6 +606,7 @@ const Index = (props) => {
                         showQuickJumper: true,
                         onChange: handleTableChange,
                     }}
+                    rowClassName={null}
                     scroll={{ x: '100%', y: 'calc(100vh - 405px)' }}
                 />
                <Row style={{marginTop:16}} justify='end'>

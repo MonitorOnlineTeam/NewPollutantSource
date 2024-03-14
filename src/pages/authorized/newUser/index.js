@@ -559,6 +559,7 @@ export default class UserInfoIndex extends Component {
       payload: {
         RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
         PollutantType: e.target.value,
+        Name:this.state.entPointName,
       },
     });
   };

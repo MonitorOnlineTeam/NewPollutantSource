@@ -79,62 +79,31 @@ const Index = (props) => {
   useEffect(() => {
     onFinish()
   }, []);
-
-  const columns = [
-    {
-      title: '序号',
-      align: 'center',
-      ellipsis: true,
-      render:(text,record,index)=>{
-        return index + 1 
-       }
-    },
-    {
-      title: '省',
-      dataIndex: 'regionName',
-      key: 'regionName',
-      align: 'center',
-      width:'auto',
-      ellipsis: true,
-      render:(text,record)=>{
-       return <a onClick={()=>{regDetail(record,2)}}>{text}</a>
-      }
-      },
+  
+  const commonCol = (type)=>[
     {
       title: '核查总数',
       dataIndex: 'allCount',
       key: 'allCount',
       align: 'center',
-      width:'auto',
       ellipsis: true,
-    },
-    {
-      title: '问题数量',
-      dataIndex: 'questionCount',
-      key: 'questionCount',
-      align: 'center',
-      width:'auto',
-      ellipsis: true,
-    },
-
-    {
-      title: '待完成数',
-      dataIndex: 'noCompleteCount',
-      key: 'noCompleteCount',
-      align: 'center',
-      width:'auto',
-      ellipsis: true,
-      render:(text,record)=>{
-        return <a onClick={()=>{regDetail(record,3)}}>{text}</a>
-       }
     },
     {
       title: '完成数',
       dataIndex: 'completeCount',
       key: 'completeCount',
       align: 'center',
-      width:'auto',
       ellipsis: true,
+    },
+    {
+      title: '待完成数',
+      dataIndex: 'noCompleteCount',
+      key: 'noCompleteCount',
+      align: 'center',
+      ellipsis: true,
+      render:(text,record)=>{
+        return  type==1? <a onClick={()=>{regDetail(record,3)}}>{text}</a> : text
+       }
     },
     {
       title: '核查完成率',
@@ -158,17 +127,17 @@ const Index = (props) => {
       }
     },
     {
-      title: '合格数',
+      title: '一次合格数',
       dataIndex: 'qualifiedCount',
       key: 'qualifiedCount',
       align: 'center',
       ellipsis: true,
     },
     {
-      title: '核查合格率',
+      title: '一次合格率',
       dataIndex: 'qualifiedRate',
       key: 'qualifiedRate',
-      width: 160,
+      width: 150,
       align:'center',
       sorter: (a, b) => a.qualifiedRate - b.qualifiedRate,
       render: (text, record) => {
@@ -186,21 +155,76 @@ const Index = (props) => {
       }
     },
     {
-      title: '督查人员待核查数',
+      title: '二次合格数',
+      dataIndex: 'resultSupervisionCount',
+      key: 'resultSupervisionCount',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '二次合格率',
+      dataIndex: 'resultSupervisionRate',
+      key: 'resultSupervisionRate',
+      width: 150,
+      align:'center',
+      sorter: (a, b) => a.resultSupervisionRate - b.resultSupervisionRate,
+      render: (text, record) => {
+        return (
+          <div>
+            <Progress
+              percent={text=='-'? 0 : text}
+              size="small"
+              style={{width:'80%'}}
+              status='normal'
+              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+            />
+          </div>
+        );
+      }
+    },
+    {
+      title: '省区经理待核查数',
       dataIndex: 'supervisionCount',
       key: 'supervisionCount',
       align: 'center',
-      width:'auto',
+      ellipsis: true,
+    },
+    {
+      title: '省区经理核查率',
+      dataIndex: 'supervisionRate',
+      key: 'supervisionRate',
+      width: 150,
+      align:'center',
+      sorter: (a, b) => a.supervisionRate - b.supervisionRate,
+      render: (text, record) => {
+        return (
+          <div>
+            <Progress
+              percent={text=='-'? 0 : text}
+              size="small"
+              style={{width:'80%'}}
+              status='normal'
+              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+            />
+          </div>
+        );
+      }
+    },
+    {
+      title: '督查人员待核查数',
+      dataIndex: 'resultSupervisionCount',
+      key: 'resultSupervisionCount',
+      align: 'center',
       ellipsis: true,
     },
     {
       title: '督查人员核查率',
-      dataIndex: 'supervisionRate',
-      key: 'supervisionRate',
+      dataIndex: 'resultSupervisionRate',
+      key: 'resultSupervisionRate',
       align: 'center',
       width: 150,
       ellipsis: true,
-      sorter: (a, b) => a.supervisionRate - b.supervisionRate,
+      sorter: (a, b) => a.resultSupervisionRate - b.resultSupervisionRate,
       render: (text, record) => {
         return (
           <div>
@@ -220,19 +244,18 @@ const Index = (props) => {
       dataIndex: 'wwcquestionCount',
       key: 'wwcquestionCount',
       align: 'center',
-      width:'auto',
       ellipsis: true,
       render:(text,record)=>{
-        return <a onClick={()=>{regDetail(record,4)}}>{text}</a>
+        return type==1? <a onClick={()=>{regDetail(record,4)}}>{text}</a> : text
        }
     },
     {
       title: '整改率',
-      dataIndex: 'rate',
-      key: 'rate',
+      dataIndex: 'questionRate',
+      key: 'questionRate',
       width: 150,
       align:'center',
-      sorter: (a, b) => a.rate - b.rate,
+      sorter: (a, b) => a.questionRate - b.questionRate,
       render: (text, record) => {
         return (
           <div>
@@ -246,7 +269,28 @@ const Index = (props) => {
           </div>
         );
       }
-    }
+    },
+  ]
+  const columns = [
+    {
+      title: '序号',
+      align: 'center',
+      ellipsis: true,
+      render:(text,record,index)=>{
+        return index + 1 
+       }
+    },
+    {
+      title: '省',
+      dataIndex: 'regionName',
+      key: 'regionName',
+      align: 'center',
+      ellipsis: true,
+      render:(text,record)=>{
+       return <a onClick={()=>{regDetail(record,2)}}>{text}</a>
+       }
+      },
+      ...commonCol(1)
   ];
   const [regDetailVisible, setRegDetailVisible] = useState(false)
   const [regDetailTitle, setRegDetailTitle] = useState()
@@ -378,144 +422,7 @@ const Index = (props) => {
   ];
   const statisticColumns2 = [
     ...columns2,
-    {
-      title: '核查总数',
-      dataIndex: 'allCount',
-      key: 'allCount',
-      align: 'center',
-      width:100,
-      ellipsis: true,
-    },
-    {
-      title: '问题数量',
-      dataIndex: 'questionCount',
-      key: 'questionCount',
-      align: 'center',
-      width:100,
-      ellipsis: true,
-    },
-    {
-      title: '待完成数',
-      dataIndex: 'noCompleteCount',
-      key: 'noCompleteCount',
-      align: 'center',
-      width:100,
-    },
-    {
-      title: '完成数',
-      dataIndex: 'completeCount',
-      key: 'completeCount',
-      align: 'center',
-      width:100,
-    },
-    {
-      title: '核查完成率',
-      dataIndex: 'rate',
-      key: 'rate',
-      width: 150,
-      align:'center',
-      sorter: (a, b) => a.rate - b.rate,
-      render: (text, record) => {
-        return (
-          <div>
-            <Progress
-              percent={text=='-'? 0 : text}
-              size="small"
-              style={{width:'75%'}}
-              status='normal'
-              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
-            />
-          </div>
-        );
-      }
-    },
-    {
-      title: '合格数',
-      dataIndex: 'qualifiedCount',
-      key: 'qualifiedCount',
-      align: 'center',
-      width:120,
-      ellipsis: true,
-    },
-    {
-      title: '核查合格率',
-      dataIndex: 'qualifiedRate',
-      key: 'qualifiedRate',
-      width: 150,
-      align:'center',
-      sorter: (a, b) => a.qualifiedRate - b.qualifiedRate,
-      render: (text, record) => {
-        return (
-          <div>
-            <Progress
-              percent={text=='-'? 0 : text}
-              size="small"
-              style={{width:'80%'}}
-              status='normal'
-              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
-            />
-          </div>
-        );
-      }
-    },
-    {
-      title: '督查人员待核查数',
-      dataIndex: 'supervisionCount',
-      key: 'supervisionCount',
-      align: 'center',
-      width:140,
-      ellipsis: true,
-    },
-    {
-      title: '督查人员核查率',
-      dataIndex: 'supervisionRate',
-      key: 'supervisionRate',
-      align: 'center',
-      width: 150,
-      ellipsis: true,
-      sorter: (a, b) => a.supervisionRate - b.supervisionRate,
-      render: (text, record) => {
-        return (
-          <div>
-            <Progress
-              percent={text=='-'? 0 : text}
-              size="small"
-              style={{width:'80%'}}
-              status='normal'
-              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
-            />
-          </div>
-        );
-      }
-    },
-    {
-      title: '未完成整改数',
-      dataIndex: 'wwcquestionCount',
-      key: 'wwcquestionCount',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '整改率',
-      dataIndex: 'rate',
-      key: 'rate',
-      width: 150,
-      align:'center',
-      sorter: (a, b) => a.rate - b.rate,
-      render: (text, record) => {
-        return (
-          <div>
-            <Progress
-              percent={text=='-'? 0 : text}
-              size="small"
-              style={{width:'80%'}}
-              status='normal'
-              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
-            />
-          </div>
-        );
-      }
-    },
+    ...commonCol(2)
   ]
 
   const searchComponents2 = () => {
@@ -596,7 +503,6 @@ const Index = (props) => {
             columns={columns}
             pagination={false}
             className={styles.cruxParAnalysisRegTableSty}
-            scroll={{ x: 1450}}
           />
         </Card>
         <Modal //省级详情

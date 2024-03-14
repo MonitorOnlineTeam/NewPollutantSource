@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useRef, Fragment, useMemo } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Popover, Tag, Spin, Empty } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined,CheckCircleOutlined, QuestionCircleOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, CheckCircleOutlined, QuestionCircleOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -51,6 +51,7 @@ const dvaPropsData = ({ loading, point, global }) => ({
   pbListLoading: loading.effects[`${namespace}/getPBList`],
   operationSettingInfo: global.operationSettingInfo,
   equipmentParametersListLoading: loading.effects[`${namespace}/GetEquipmentParametersList`],
+  deviceTypeList: point.deviceTypeList,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -108,20 +109,20 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    getPollutantById: (payload) => { //监测类型
+    getPollutantById: (payload, callback) => { //监测类型
       dispatch({
         type: `${namespace}/getPollutantById`,
-        payload: payload,
-
-      })
-    },
-    getPollutantById2: (payload, callback) => { //监测类型
-      dispatch({
-        type: `${namespace}/getPollutantById2`,
         payload: payload,
         callback: callback
       })
     },
+    // getPollutantById2: (payload, callback) => { //监测类型
+    //   dispatch({
+    //     type: `${namespace}/getPollutantById2`,
+    //     payload: payload,
+    //     callback: callback
+    //   })
+    // },
     getEquipmentInfoList: (payload) => { //列表 设备信息
       dispatch({
         type: `${namespace}/getEquipmentInfoList`,
@@ -156,7 +157,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
   const [dates, setDates] = useState([]);
-  const { DGIMN, pollutantType, manufacturerList, systemModelList, systemModelListTotal, pollutantTypeList, equipmentInfoList, pointSystemInfo, equipmentInfoListTotal, pbList, pbListLoading, gasType, operationSettingInfo, titles, equipmentParametersListLoading, } = props;
+  const { DGIMN, pollutantType, manufacturerList, systemModelList, systemModelListTotal, pollutantTypeList, equipmentInfoList, pointSystemInfo, equipmentInfoListTotal, pbList, pbListLoading, gasType, titles, equipmentParametersListLoading, deviceTypeList, operationSettingInfo: { SetEquipmentMode } } = props;
 
   const [defaultPollData, setDefaultPollData] = useState([]);
 
@@ -175,7 +176,7 @@ const Index = (props) => {
 
   const initData = () => {
     // props.getMonitoringTypeList({})
-    props.getManufacturerList({}, (data) => {
+    props.getManufacturerList({ pageIndex: 1, pageSize: 9999 }, (data) => {
       // console.log(data)
     })
     //设备信息
@@ -196,19 +197,26 @@ const Index = (props) => {
       // setPmchoiceData(res&&res.pMManufacturerName? res.pMManufacturerName : undefined)
       const data = res ? res.map(item => {
         return { ...item, key: cuid() }
-      }) : null;
+      }) : undefined;
       setGasSystemData(data ? data : [])
     })
 
     //废水 废气   默认加载监测参数
     props.getPollutantById({ id: defaultParId, type: 1 }, (data) => {
+      setDefaultPollData(data) //手动添加默认值
     })
-
+    if (SetEquipmentMode == 1) { //手动录入
+      //设备类型
+      props.getPollutantById({ id: defaultParId, type: 2 }, (data) => {
+      })
+    }
     //废气 配备
     props.getPBList({})
 
-    //CEMS设备生产商
-    props.getSystemModelList({})
+    //CEMS设备生产商 选择下拉列表
+    if (SetEquipmentMode == 0) {
+      props.getSystemModelList({})
+    }
   }
 
 
@@ -219,11 +227,11 @@ const Index = (props) => {
   const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   // const isEditing = (record) => record.key === editingKey;
-  const isEditing = (record) =>  record.type === 'edit';
+  const isEditing = (record) => record.type === 'edit';
   const edit = (record) => {
     formDevice.setFieldsValue({
       ...record,
-      [`EquipmentInfoID_${record.key}`]: record.EquipmentInfoID || undefined,
+      [`EquipmentInfoID_${record.key}`]: record.EquipmentInfoID,
       [`Range1Min_${record.key}`]: record.Range1 ? record.Range1.split("~")[0] : undefined,
       [`Range1Max_${record.key}`]: record.Range1 ? record.Range1.split("~")[1] : undefined,
       // [`Range2Min_${record.key}`]: record.Range2 ? record.Range2.split("~")[0] : undefined,
@@ -233,108 +241,54 @@ const Index = (props) => {
       [`PollutantCode_${record.key}`]: record.PollutantCode || undefined,//设备参数
       [`Equipment_${record.key}`]: record.Equipment || undefined,
       [`EquipmentCode_${record.key}`]: record.EquipmentCode || undefined,//配备
-      [`EquipmentManufacturer_${record.key}`]: record.EquipmentManufacturer,
-      [`EquipmentManufacturerID_${record.key}`]: record.EquipmentManufacturerID || undefined,//设备生产商
-      
+      [`EquipmentManufacturer_${record.key}`]: SetEquipmentMode == 0 ? record.EquipmentManufacturer : record.type == 'add' ? record.EquipmentManufacturer : record.EquipmentManufacturerID,
+      [`EquipmentManufacturerID_${record.key}`]: SetEquipmentMode == 0 ? record.EquipmentManufacturerID : record.type == 'add' ? record.EquipmentManufacturerID : record.EquipmentManufacturer,//设备生产商
+
     });
-    const tableData = data.map(item=>{
-      if(record.key == item.key){
-        return {...item,type:'edit'}
-      }else{
+    const tableData = data.map(item => {
+      if (record.key == item.key) {
+        return { ...item, type: 'edit' }
+      } else {
         return item;
       }
     })
     setData(tableData)
     // setDevicePollutantName(record.PollutantName) //设备参数
-    // record.type == "edit" ? setParchoiceDeViceID(record.EquipmentManufacturerID) : null //设备生产商
+    // record.type == "edit" ? setParchoiceDeViceID(record.EquipmentManufacturerID) : undefined //设备生产商
     // setEditingKey(record.key);
     // props.getMonitoringCategoryType({ PollutantCode: record.PollutantCode }) //根据监测参数获取监测类型 设备生产商查询条件用
 
   };
+
   const gasSyatemEdit = (record) => {
     form.setFieldsValue({
-      systemName: record.systemName,
-      gasManufacturerName: record.gasManufacturerName,
+      systemName: Number(record.systemID),
+      gasManufacturerName: SetEquipmentMode == 0 ? record.gasManufacturerName || undefined : record.gasManufacturer || undefined,
+      gasManufacturer: SetEquipmentMode == 0 ? record.gasManufacturer : record.gasManufacturerName,
       gasEquipment: record.gasEquipment,
     });
-
     if (record.type != "add") {
-      setGasSystemEquipmentId(record.gasEquipment) //CEMS设备生产商
+      // setGasSystemEquipmentId(record.gasManufacturer) //CEMS设备生产商
       setCemsVal(Number(record.systemID))//系统名称
     }
     setGasSystemEditingKey(record.key);
   }
-  const del = (record) => {
-      const dataSource = [...data];
-      let newData = dataSource.filter((item) => item.key !== record.key)
-      setData(newData)
-      // setEditingKey('');
-  };
-  const gasSyatemCancel = (record, type) => {
-    if (record.type === 'add' || type) { //新添加一行 删除 || 原有数据编辑的删除  不用走接口
-      const dataSource = [...gasSystemData];
-      let newData = dataSource.filter((item) => item.key !== record.key)
-      setGasSystemData(newData)
-      setGasSystemEditingKey('');
-    } else { //编辑状态
-      setGasSystemEditingKey('');
-    }
-  };
 
-
-  const save = async (record) => {
-    try {
-      const value = await formDevice.validateFields();
-      const newData = [...data];
-      const key = record.key;
-      const index = newData.findIndex((item) => key === item.key);
-      if (index > -1) {
-        if(!(value[`EquipmentManufacturer_${key}`])){
-          message.error('请选择设备生产商')
-          return;
-        }
-        const editRow = {
-          Range1: value[`Range1Min_${key}`] ||  value[`Range1Max_${key}`] ? `${value[`Range1Min_${key}`]}~${value[`Range1Max_${key}`]}` : null,
-          // Range2:  value[`Range2Min_${key}`] || value[`Range2Max_${key}`] ? `${row.Range2Min}~${row.Range2Max}` : null,
-          EquipmentInfoID: value[`EquipmentInfoID_${key}`], //设备名称
-          EquipmentModel: value[`EquipmentModel_${key}`], //设备型号
-          EquipmentManufacturer:value[`EquipmentManufacturer_${key}`],
-          EquipmentManufacturerID: value[`EquipmentManufacturerID_${key}`], //设备生产商 需要传的参数
-          PollutantName:undefined,
-          PollutantCode:  value[`PollutantCode_${key}`],//设备参数 需要传的参数
-          Equipment: undefined,
-          EquipmentCode:  value[`EquipmentCode_${key}`], //配备 需要传的参数
-          EquipmentNumber:   value[`EquipmentNumber_${key}`],  //设备序列号	
-        };
-        const item = { ...newData[index] }
-        newData.splice(index, 1, { ...item, ...editRow, type:'add' });
-        setData(newData);
-        // setEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-      // if (errInfo.errorFields && errInfo.errorFields[0] && errInfo.errorFields[0].name) {
-      //   if (errInfo.errorFields[0].name[0].includes('EquipmentManufacturer')) {
-      //     message.error('请选择设备生产商')
-      //   }
-      // }
-    }
-  };
   const gasSystemSave = async (record) => {
     try {
-      const row = await form.validateFields();
+      const values = await form.validateFields();
       const newData = [...gasSystemData];
       const key = record.key;
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
         const editRow = {
           systemName: cemsVal == 465 ? '气态污染物CEMS' : '颗粒物污染物CEMS',
-          gasManufacturer: gasSystemEquipmentId,
+          gasManufacturer: SetEquipmentMode == 0 ? values.gasManufacturer : values.gasManufacturerName,
+          gasManufacturerName: SetEquipmentMode == 0 ? values.gasManufacturerName : values.gasManufacturer,
           systemID: cemsVal,
         };
-
         const item = record.type === 'add' ? { ...newData[index], key: cuid() } : { ...newData[index] }
-        newData.splice(index, 1, { ...item, ...row, ...editRow });
+        newData.splice(index, 1, { ...item, ...values, ...editRow });
         setGasSystemData(newData);
         setGasSystemEditingKey('');
       } else {
@@ -350,6 +304,102 @@ const Index = (props) => {
       console.log('Validate Failed:', errInfo);
     }
   }
+  const gasSyatemCancel = (record, type) => {
+    if (record.type === 'add' || type) { //新添加一行 删除 || 原有数据编辑的删除  不用走接口
+      const dataSource = [...gasSystemData];
+      let newData = dataSource.filter((item) => item.key !== record.key)
+      setGasSystemData(newData)
+      setGasSystemEditingKey('');
+    } else { //编辑状态
+      setGasSystemEditingKey('');
+    }
+  };
+  const del = (record) => {
+    const dataSource = [...data];
+    let newData = dataSource.filter((item) => item.key !== record.key)
+    setData(newData)
+    // setEditingKey('');
+  };
+  // const [gasSystemEquipmentId, setGasSystemEquipmentId] = useState()
+  const generatorColChoice = (data, option) => {
+    // if (popVisible) {
+    //   form.setFieldsValue({ GasManufacturer: data.ID, GasEquipment: data.SystemModel });
+    //   setGaschoiceData(data.ManufacturerName)
+    //   setPopVisible(false)
+    // } else if(pmPopVisible) {//颗粒物
+    //   form.setFieldsValue({ PMManufacturer: data.ID, PMEquipment: data.SystemModel });
+    //   setPmchoiceData(data.ManufacturerName)
+    //   setPmPopVisible(false)
+    // }else if(pollutantType==2&&gasType){ //废气-常规CEMS 废气-Vocs
+
+    // }
+    if (SetEquipmentMode == 0) {
+      form.setFieldsValue({ gasManufacturerName: data.ManufacturerName, gasManufacturer: data.ID, gasEquipment: data.SystemModel });
+      // setGasSystemEquipmentId(data.ID)
+      setManufacturerPopVisible(false)
+      setChoiceGasManufacturer(true)
+
+    } else {
+      // setGasSystemEquipmentId(data)
+      form.setFieldsValue({ gasManufacturerName: data, gasManufacturer: option?.children });
+    }
+
+  }
+  const save = async (record) => {
+    try {
+      const value = await formDevice.validateFields();
+      const newData = [...data];
+      const key = record.key;
+      const index = newData.findIndex((item) => key === item.key);
+      if (index > -1) {
+        if (!(value[`EquipmentManufacturer_${key}`])) {
+          message.error('请选择设备生产商')
+          return;
+        }
+        if (!(value[`EquipmentModel_${key}`])) {
+          message.error('请输入设备型号')
+          return;
+        }
+      
+
+        const editRow = {
+          Range1: value[`Range1Min_${key}`] || value[`Range1Max_${key}`] ? `${value[`Range1Min_${key}`]}~${value[`Range1Max_${key}`]}` : undefined,
+          // Range2:  value[`Range2Min_${key}`] || value[`Range2Max_${key}`] ? `${row.Range2Min}~${row.Range2Max}` : undefined,
+          EquipmentInfoID: value[`EquipmentInfoID_${key}`], //设备名称
+          EquipmentModel: value[`EquipmentModel_${key}`], //设备型号
+          EquipmentManufacturer: value[`EquipmentManufacturer_${key}`],
+          EquipmentManufacturerID: value[`EquipmentManufacturerID_${key}`], //设备生产商 需要传的参数
+          PollutantName: undefined,
+          PollutantCode: value[`PollutantCode_${key}`] || undefined,//设备参数 需要传的参数
+          Equipment: undefined,
+          EquipmentCode: value[`EquipmentCode_${key}`], //配备 需要传的参数
+          EquipmentNumber: value[`EquipmentNumber_${key}`],  //设备序列号	
+        };
+        const item = { ...newData[index] }
+        newData.splice(index, 1, { ...item, ...editRow, type: 'add' });
+        const seenValues = {};   // 用于存储已经出现过的属性值
+        for (const obj of newData) {
+          const value = obj['PollutantCode'];
+          if (seenValues[value] && value==editRow['PollutantCode']) { // 如果属性值已经存在于 seenValues 中，则说明存在重复
+            message.error('当前监测参数已选择，请重新选择')
+            return
+          } else {
+            seenValues[value] = true;  // 如果属性值已经存在于 seenValues 中，则说明存在重复
+          }
+        }
+        setData(newData);
+        // setEditingKey('');
+      }
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+      // if (errInfo.errorFields && errInfo.errorFields[0] && errInfo.errorFields[0].name) {
+      //   if (errInfo.errorFields[0].name[0].includes('EquipmentManufacturer')) {
+      //     message.error('请选择设备生产商')
+      //   }
+      // }
+    }
+  };
+
   let columns = [
     {
       title: '监测参数',
@@ -357,20 +407,14 @@ const Index = (props) => {
       align: 'center',
       width: 130,
       editable: true,
-      render:(text,record)=>{
-        if(record.PollutantName){
+      render: (text, record) => {
+        if (record.PollutantName) {
           return record.PollutantName
-        }else{
-          const filterData = pollutantTypeList.filter(item=>item.ID == text)
+        } else {
+          const filterData = pollutantTypeList.filter(item => item.ID == text)
           return filterData?.[0]?.Name;
         }
       }
-    },
-    {
-      title: '设备生产商',
-      dataIndex: 'EquipmentManufacturer',
-      align: 'center',
-      editable: true,
     },
     {
       title: '设备名称',
@@ -396,11 +440,11 @@ const Index = (props) => {
       dataIndex: 'EquipmentCode',
       align: 'center',
       editable: true,
-      render:(text,record)=>{
-        if(record.Equipment){
+      render: (text, record) => {
+        if (record.Equipment) {
           return record.Equipment
-        }else{
-          const filterData =  pbList.filter(item=>item.code == text)
+        } else {
+          const filterData = pbList.filter(item => item.code == text)
           return filterData?.[0]?.name;
         }
       }
@@ -462,18 +506,45 @@ const Index = (props) => {
             {/* <span onClick={() => { cancel(record) }} style={{ marginRight: 8 }}>
               <a>{record.type == 'add' ? "删除" : "取消"}</a>
             </span> */}
-            <span onClick={() => { del(record) }}> 
+            <span onClick={() => { del(record) }}>
               <a>删除</a>
             </span>
           </span>
         ) : (
-            <Typography.Link  onClick={() => edit(record)}>
+            <Typography.Link onClick={() => edit(record)}>
               编辑
             </Typography.Link>
           );
       },
     },
   ];
+
+  if (SetEquipmentMode == 0) {
+    columns.splice(1, 0, {
+      title: '设备生产商',
+      dataIndex: 'EquipmentManufacturer',
+      align: 'center',
+      editable: true,
+    })
+  } else { //手工录入
+    columns = columns.filter(item => { //配备
+      return item.dataIndex != 'EquipmentCode'
+    })
+    columns.splice(4, 0, {
+      title: '设备生产商',
+      dataIndex: 'EquipmentManufacturer',
+      align: 'center',
+      editable: true,
+      render: (text, record) => {
+        if (record.type == 'add') {
+          return record.EquipmentManufacturerID
+        } else {
+          return text
+        }
+      }
+    })
+  }
+
   if (pollutantType == 1) {
     //   columns.splice(4,0,{
     //     title: '手填设备生产商',
@@ -494,9 +565,9 @@ const Index = (props) => {
     //       editable: true,
     // })
 
-    columns = columns.filter(item => {
-      return item.dataIndex != 'Equipment'
-    })
+    // columns = columns.filter(item => {
+    //   return item.dataIndex != 'Equipment'
+    // })
   }
   const [gasSystemData, setGasSystemData] = useState([]);
   const [gasSystemEditingKey, setGasSystemEditingKey] = useState('');
@@ -654,23 +725,11 @@ const Index = (props) => {
 
   const [pmchoiceData, setPmchoiceData] = useState()
 
-  const [gasSystemEquipmentId, setGasSystemEquipmentId] = useState()
-  const generatorColChoice = (record) => {
-    // if (popVisible) {
-    //   form.setFieldsValue({ GasManufacturer: record.ID, GasEquipment: record.SystemModel });
-    //   setGaschoiceData(record.ManufacturerName)
-    //   setPopVisible(false)
-    // } else if(pmPopVisible) {//颗粒物
-    //   form.setFieldsValue({ PMManufacturer: record.ID, PMEquipment: record.SystemModel });
-    //   setPmchoiceData(record.ManufacturerName)
-    //   setPmPopVisible(false)
-    // }else if(pollutantType==2&&gasType){ //废气-常规CEMS 废气-Vocs
 
-    // }
-    form.setFieldsValue({ gasManufacturerName: record.ManufacturerName, gasEquipment: record.SystemModel, });
-    setGasSystemEquipmentId(record.ID)
-    setManufacturerPopVisible(false)
-    setChoiceGasManufacturer(true)
+  const onManufacturerClearChoice = (value) => { //CEMS 设备生产商清除功能
+    form.setFieldsValue({ gasManufacturerName: value, gasEquipment: value });
+    // setGasSystemEquipmentId('')
+    setChoiceGasManufacturer(false)
   }
   const [parchoiceDeViceID, setParchoiceDeViceID] = useState(undefined) //设备生产商ID
 
@@ -680,10 +739,10 @@ const Index = (props) => {
     setGaschoiceData(value)
   }
 
-  const onPmClearChoice = (value) => {
-    form.setFieldsValue({ PMManufacturer: value, PMEquipment: '' });
-    setPmchoiceData(value)
-  }
+  // const onPmClearChoice = (value) => {
+  //   form.setFieldsValue({ PMManufacturer: value, PMEquipment: '' });
+  //   setPmchoiceData(value)
+  // }
 
   const [devicePollutantName, setDevicePollutantName] = useState()
   const [pbName, setPbName] = useState()
@@ -692,37 +751,29 @@ const Index = (props) => {
 
   const [isManual, setIsManual] = useState(false) //是否手填
 
-  // const []
-  const deviceColChoice = (record) => { //设备参数选择
-    const key = pollCodeKey
-    formDevice.setFieldsValue({
-      [`EquipmentManufacturer${key}`]: record.ManufacturerName,
-      [`EquipmentManufacturerID${key}`]: record.ID,
-      [`EquipmentInfoID${key}`]: record.EquipmentName,
-      [`EquipmentModel${key}`]: record.EquipmentType,
-    });
-      // setParchoiceDeViceID(record.ID)
+  const deviceColChoice = (data, key) => { //设备参数选择
+    if (SetEquipmentMode == 0) {
+      formDevice.setFieldsValue({
+        [`EquipmentManufacturer${key}`]: data.ManufacturerName,
+        [`EquipmentManufacturerID${key}`]: data.ID,
+        [`EquipmentInfoID${key}`]: data.EquipmentName,
+        [`EquipmentModel${key}`]: SetEquipmentMode == 0 ? data.EquipmentType : '',
+      });
       setParPopVisible(false)
-      formDevice.setFieldsValue({ [`PollutantCode${key}`]: record.PollutantCode })
-    // setDevicePollutantName(record.PollutantName)
-    // setIsManual(true)
-    // props.getPollutantById2({ id: record.PollutantType, type: 1 }, () => {
-    //    formDevice.setFieldsValue({ PollutantCode: record.PollutantCode })
-    //    setDevicePollutantName(record.PollutantName)
-    //    setIsManual(true)
-    // })
+      formDevice.setFieldsValue({ [`PollutantCode${key}`]: data.PollutantCode })
+    } else {
+      formDevice.setFieldsValue({
+        [`EquipmentManufacturer${key}`]: data?.value || undefined,
+        [`EquipmentManufacturerID${key}`]: data?.children || undefined,
+      });
+    }
   }
-  const onParClearChoice = (value,key) => {//设备参数清除
-    formDevice.setFieldsValue({[`EquipmentManufacturer${key}`]: undefined,  [`EquipmentManufacturerID${key}`]: undefined, [`PollutantCode${key}`]: undefined,  [`EquipmentInfoID${key}`]: '',  [`EquipmentModel${key}`]: '', });
+  const onParClearChoice = (value, key) => {//设备参数清除
+    formDevice.setFieldsValue({ [`EquipmentManufacturer${key}`]: undefined, [`EquipmentManufacturerID${key}`]: undefined, [`PollutantCode${key}`]: undefined, [`EquipmentInfoID${key}`]: '', [`EquipmentModel${key}`]: '', });
     // setParchoiceDeViceID(value)
     // props.updateState({pollutantTypeList2:[]}) //清除监测参数 
     // props.updateState({ pollutantTypeList2: defaultPollData })//恢复默认
     setIsManual(false)
-  }
-  const onManufacturerClearChoice = (value) => { //CEMS 设备生产商清除功能
-    form.setFieldsValue({ gasManufacturerName: value, gasEquipment: value });
-    setGasSystemEquipmentId('')
-    setChoiceGasManufacturer(false)
   }
   const [pageIndex2, setPageIndex2] = useState(1)
   const [pageSize2, setPageSize2] = useState(10)
@@ -890,13 +941,13 @@ const Index = (props) => {
       title: '操作',
       align: 'center',
       render: (text, record) => {
-        return <Button type='primary' size='small' onClick={() => { deviceColChoice(record) }}> 选择 </Button>
+        return <Button type='primary' size='small' onClick={() => { deviceColChoice(record, pollCodeKey) }}> 选择 </Button>
       }
     },
   ];
   const [pageSize3, setPageSize3] = useState(10)
   const [pageIndex3, setPageIndex3] = useState(1)
-  const onFinish3 = async (pageIndexs, pageSizes,key) => {  //查询 设备信息 除分页 每次查询页码重置为1
+  const onFinish3 = async (pageIndexs, pageSizes, key) => {  //查询 设备信息 除分页 每次查询页码重置为1
     try {
       const values = await form3.validateFields();
       const pollutantCode = formDevice.getFieldValue([`PollutantCode${key}`]);
@@ -914,7 +965,7 @@ const Index = (props) => {
   const handleTableChange3 = (PageIndex, PageSize) => {
     setPageIndex3(PageIndex)
     setPageSize3(PageSize)
-    onFinish3(PageIndex, PageSize,pollCodeKey)
+    onFinish3(PageIndex, PageSize, pollCodeKey)
   }
   // const onValuesChange3 = (hangedValues, allValues) => {
   //   if (Object.keys(hangedValues).join() == 'PollutantType') {
@@ -961,51 +1012,75 @@ const Index = (props) => {
   const [selectDeviceParTitle, setSelectDeviceParTitle] = useState(`${titles}添加设备`)
   const [deviceParData, setDeviceParData] = useState([])
   const handleAdd = () => { //添加设备
-    setSelectDeviceParVisible(true)
-    setTabPollData([])
-    setTotalTabPollData([])
-    form4.resetFields()
-    form5.resetFields()
-    setSelectedEquipmentParametersList([])
-    props.GetEquipmentParametersList({
-      dgimn: DGIMN,
-      pollutantType: defaultParId
-    }, (res) => {
-      setDeviceParData(res)
-    })
-    //   if (editingKey) {
-    //     message.warning('请先保存数据')
-    //     return
-    //   }else{
-    //   formDevice.resetFields();
-    //   formDevice.setFieldsValue({PollutantCode:defaultPollData&&defaultPollData[0]? defaultPollData[0].ID : null})
-    //   setDevicePollutantName(defaultPollData&&defaultPollData[0]? defaultPollData[0].Name : null)
-    //   setEditingKey(editingKey + 1)
-    //   const newData = {
-    //     PollutantCode: "",
-    //     Range1: "",
-    //     Range2: "",
-    //     EquipmentManufacturer: undefined,
-    //     EquipmentInfoID: "",
-    //     EquipmentModel: "",
-    //     EquipmentNumber: '',
-    //     Equipment: '',
-    //     key: editingKey+1,
-    //     type: 'add',
-    //     editable: true,
-    //   }
-    //   setData([...data, newData])
-    //   setIsManual(false)
-    //   props.updateState({pollutantTypeList2:defaultPollData})
-    //  }
+    if (SetEquipmentMode == 0) {
+      setSelectDeviceParVisible(true)
+      setTabPollData([])
+      setTotalTabPollData([])
+      form4.resetFields()
+      form5.resetFields()
+      setSelectedEquipmentParametersList([])
+      props.GetEquipmentParametersList({
+        dgimn: DGIMN,
+        pollutantType: defaultParId
+      }, (res) => {
+        setDeviceParData(res)
+      })
+    } else {
+      const key = cuid();
+      const newData = {
+        PollutantCode: "",
+        Range1: "",
+        EquipmentManufacturer: undefined,
+        EquipmentManufacturerID: undefined,
+        EquipmentInfoID: "",
+        EquipmentModel: "",
+        EquipmentNumber: '',
+        Equipment: '',
+        key: key,
+        type: 'edit',
+        editable: true,
+      }
+      setData([...data, newData])
+      if (defaultPollData && defaultPollData[0]) {
+        const filterData = deviceTypeList.filter(item => item.Name?.indexOf(defaultPollData[0].Name) != -1)
+        formDevice.setFieldsValue({
+          [`PollutantCode_${key}`]: defaultPollData && defaultPollData[0] ? defaultPollData[0].ID : undefined,
+          [`EquipmentInfoID_${key}`]: filterData?.[0]?.Name, //设备名称
+        })
+      }
+      //   if (editingKey) {
+      //     message.error('请先保存数据')
+      //     return
+      //   }else{
+      //   formDevice.resetFields();
+      //   formDevice.setFieldsValue({PollutantCode:defaultPollData&&defaultPollData[0]? defaultPollData[0].ID : undefined})
+      //   setDevicePollutantName(defaultPollData&&defaultPollData[0]? defaultPollData[0].Name : undefined)
+      //   setEditingKey(editingKey + 1)
+      //   const newData = {
+      //     PollutantCode: "",
+      //     Range1: "",
+      //     Range2: "",
+      //     EquipmentManufacturer: undefined,
+      //     EquipmentInfoID: "",
+      //     EquipmentModel: "",
+      //     EquipmentNumber: '',
+      //     Equipment: '',
+      //     key: editingKey+1,
+      //     type: 'add',
+      //     editable: true,
+      //   }
+      //   setData([...data, newData])
+      //   setIsManual(false)
+      //   props.updateState({pollutantTypeList2:defaultPollData})
+    }
   };
 
   const [tabPollData, setTabPollData] = useState([])
   const [tabTotalPollData, setTotalTabPollData] = useState([])
-  const [tabKey,setTabKey] = useState()
+  const [tabKey, setTabKey] = useState()
 
   const deviceParQuery = () => {
-    setSelectedEquipmentParametersList([])
+    
     const monitorParVal = form4.getFieldValue('monitorPar')
     if (monitorParVal) {
       const commonPollutantData = deviceParData.filter(item => {
@@ -1018,8 +1093,9 @@ const Index = (props) => {
       setTabPollData(commonPollutantData)
       setTotalTabPollData(commonPollutantData)
     }
+    setSelectedEquipmentParametersList([])
   }
-  const tabPollDataFun = (pollutantCode,manufacturerId, equipmentType ) => {
+  const tabPollDataFun = (pollutantCode, manufacturerId, equipmentType) => {
     let childData, childArr = [], indexToReplace = -1;
     let tabPollList = tabTotalPollData.map(item => ({ ...item }));
     tabPollList.map((item, index) => {
@@ -1029,24 +1105,24 @@ const Index = (props) => {
           childData = item;
           item.ChildList.map(childrenItem => {
             if (childrenItem) {
-              if(manufacturerId && equipmentType){
-                if ( childrenItem.ManufacturerId == manufacturerId  && childrenItem.EquipmentType?.indexOf(equipmentType) != -1 ) { //设备生产商 设备型号
+              if (manufacturerId && equipmentType) {
+                if (childrenItem.ManufacturerId == manufacturerId && childrenItem.EquipmentType?.indexOf(equipmentType) != -1) { //设备生产商 设备型号
                   childArr.push(childrenItem)
                 }
-              }else{
-                if ( (manufacturerId&&childrenItem.ManufacturerId == manufacturerId)  || (equipmentType&&childrenItem.EquipmentType?.indexOf(equipmentType) != -1)) { //设备生产商 设备型号
-                 childArr.push(childrenItem)
-              }
+              } else {
+                if ((manufacturerId && childrenItem.ManufacturerId == manufacturerId) || (equipmentType && childrenItem.EquipmentType?.indexOf(equipmentType) != -1)) { //设备生产商 设备型号
+                  childArr.push(childrenItem)
+                }
               }
 
             }
-    
+
           })
         }
       }
     })
     childData.ChildList = childArr
-     // 使用 slice 创建一个新数组，包含要替换位置之前的元素
+    // 使用 slice 创建一个新数组，包含要替换位置之前的元素
     let newArray = tabPollList.slice(0, indexToReplace);
     // 在新数组的指定位置插入新的对象  
     newArray.push(childData);
@@ -1057,26 +1133,26 @@ const Index = (props) => {
   const selectDeviceParChange = (pollutantCode) => {
     const values = form5.getFieldsValue();
     const equipmentManufacturer = values[`equipmentManufacturer_${pollutantCode}`]
-    const equipmentType = values[`equipmentType${pollutantCode}`]
-      if((!equipmentManufacturer) && (!equipmentType)){
-        setTabPollData(tabTotalPollData)
-      }else{
-        tabPollDataFun(pollutantCode,equipmentManufacturer,equipmentType)
-      }
+    const equipmentType = values[`equipmentType_${pollutantCode}`]
+    if ((!equipmentManufacturer) && (!equipmentType)) {
+      setTabPollData(tabTotalPollData)
+    } else {
+      tabPollDataFun(pollutantCode, equipmentManufacturer, equipmentType)
+    }
   }
   const selectDeviceParOk = () => {
-     selectedEquipmentParametersList.map(item=>{
+    selectedEquipmentParametersList.map(item => {
       const record = item;
       formDevice.setFieldsValue({
         [`EquipmentInfoID_${record.key}`]: record.EquipmentName || undefined, //设备名称
-        [`EquipmentModel_${record.key}`]: record.EquipmentType,//设备型号
+        [`EquipmentModel_${record.key}`]: SetEquipmentMode == 0 ? record.EquipmentType : undefined,//设备型号
         [`PollutantCode_${record.key}`]: record.PollutantCode || undefined,//设备参数
-        [`EquipmentManufacturer_${record.key}`]: record.ManufacturerName,
-        [`EquipmentManufacturerID_${record.key}`]: record.ID || undefined,//设备生产商
+        [`EquipmentManufacturer_${record.key}`]: SetEquipmentMode == 0 ? record.ManufacturerName : record.ManufacturerId,
+        [`EquipmentManufacturerID_${record.key}`]: (SetEquipmentMode == 0 ? record.ID : record.ManufacturerName) || undefined,//设备生产商
       })
-     })
-     setData([...data,...selectedEquipmentParametersList])
-     setSelectDeviceParVisible(false)
+    })
+    setData([...data, ...selectedEquipmentParametersList])
+    setSelectDeviceParVisible(false)
   }
   const deviceParCol = (type) => [{
     title: '设备参数',
@@ -1116,50 +1192,61 @@ const Index = (props) => {
   }
 
   ]
- 
-  const [selectedEquipmentParametersList,setSelectedEquipmentParametersList] = useState([])
-  const operateDevicePar = (record, type)=>{
+
+  const [selectedEquipmentParametersList, setSelectedEquipmentParametersList] = useState([])
+  const operateDevicePar = (record, type) => {
     let tabPollList = tabPollData.map(item => ({ ...item }));
 
-   if(type==1){ //添加
-    setSelectedEquipmentParametersList([...selectedEquipmentParametersList,{...record,type:'edit',key:cuid()}])
-    
-    let childData =  tabPollList.map((item, index) => {
-      if (item.PollutantCode == tabKey) {
-        if (item.ChildList) {
-          item.ChildList = item.ChildList.filter(obj => obj.ID !== record.ID ); 
+    if (type == 1) { //添加
+      const selectData = [...selectedEquipmentParametersList, { ...record, type: 'edit', key: cuid() }]
+      // 用于存储已经出现过的属性值
+      const seenValues = {};
+      for (const obj of selectData) {
+        const value = obj['PollutantCode'];
+        if (seenValues[value]) { 
+          message.error('当前设备参数已选择，请重新选择')
+          return
+        } else {
+          seenValues[value] = true;  
+        }
+      }
+      setSelectedEquipmentParametersList(selectData)
+      let childData = tabPollList.map((item, index) => {
+        if (item.PollutantCode == tabKey) {
+          if (item.ChildList) {
+            item.ChildList = item.ChildList.filter(obj => obj.ID !== record.ID);
+            return item;
+          }
+        } else {
           return item;
         }
-      }else{
-        return item;
-      }
-    })
-    console.log(childData)
-    setTabPollData(childData)
-   }else{ //删除
-     let selectedEquipmentParData = selectedEquipmentParametersList.map(item => ({ ...item }));
-         selectedEquipmentParData = selectedEquipmentParData.filter(item=>item.ID !== record.ID)
-     setSelectedEquipmentParametersList(selectedEquipmentParData)
+      })
+      setTabPollData(childData)
+    } else { //删除
+      let selectedEquipmentParData = selectedEquipmentParametersList.map(item => ({ ...item }));
+      selectedEquipmentParData = selectedEquipmentParData.filter(item => item.ID !== record.ID)
+      setSelectedEquipmentParametersList(selectedEquipmentParData)
 
-     const pollCode = record.PollutantCode
-     let childDelData =  tabPollList.map((item, index) => {
-       if (item.PollutantCode == pollCode) {
-         if (item.ChildList) {
-           item.ChildList= [record,...item.ChildList]
-           return item;
-         }
-       }else{
-         return item;
-       }
-     })
-     setTabPollData(childDelData)
-   }
+      const pollCode = record.PollutantCode
+      let childDelData = tabPollList.map((item, index) => {
+        if (item.PollutantCode == pollCode) {
+          if (item.ChildList) {
+            item.ChildList = [record, ...item.ChildList]
+            return item;
+          }
+        } else {
+          return item;
+        }
+      })
+      setTabPollData(childDelData)
+      selectDeviceParChange(pollCode)
+    }
   }
 
 
   const handleGasSystemAdd = () => { //添加系统信息
     if (gasSystemEditingKey) {
-      message.warning('请先保存数据')
+      message.error('请先保存数据')
       return
     } else {
       form.resetFields();
@@ -1187,17 +1274,17 @@ const Index = (props) => {
   //     setPbName(data[0] ? data[0].name : '')
   //   }
   // }
-   const [pollCodeKey,setPollCodeKey] = useState()
+  const [pollCodeKey, setPollCodeKey] = useState()
   const popVisibleClick = (key) => {
     setParPopVisible(!parPopVisible);
     form3.resetFields();
     // form3.setFieldsValue({
-      // ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
-      // PollutantType: defaultParId,
+    // ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
+    // PollutantType: defaultParId,
     // })
     setPollCodeKey(key)
-    setPageIndex3(1); onFinish3(1, pageSize3,key)
-    
+    setPageIndex3(1); onFinish3(1, pageSize3, key)
+
   }
   const [manufacturerPopVisible, setManufacturerPopVisible] = useState(false)
   const manufacturerPopVisibleClick = () => { //cems设备生产商
@@ -1216,6 +1303,15 @@ const Index = (props) => {
   const cemsChange = (val) => {
     setCemsVal(val)
   }
+
+  const pllChange = (option, key) => { //手填
+    if (option.children) {
+      const filterData = deviceTypeList.filter(item => item.Name?.indexOf(option.children) != -1)
+      formDevice.setFieldsValue({
+        [`EquipmentInfoID${key}`]: filterData?.[0]?.Name, //设备名称
+      })
+    }
+  }
   const EditableCell = ({
     editing,
     dataIndex,
@@ -1228,23 +1324,34 @@ const Index = (props) => {
     ...restProps
   }) => {
     let inputNode = '';
-    const key = dataIndex === 'systemName' ||  dataIndex === 'gasEquipment'? '':   record && (`_${record.key}` || `_${record.ID}`)
+    const key = dataIndex === 'systemName' || dataIndex === 'gasEquipment' ? '' : record && (`_${record.key}` || `_${record.ID}`)
     if (dataIndex === 'EquipmentManufacturer') { // 设备生产商
-      inputNode = <Select onClick={() => { popVisibleClick(key) }} onChange={(val)=>onParClearChoice(val,key)} allowClear showSearch={false} dropdownClassName={styles.popSelectSty} placeholder="请选择"> 
-                  </Select>;
+      if (SetEquipmentMode == 0) {
+        inputNode = <Select placeholder="请选择" onClick={() => { popVisibleClick(key) }} onChange={(val) => onParClearChoice(val, key)} allowClear showSearch={false} dropdownClassName={styles.popSelectSty}>
+        </Select>;
+      } else { //手填
+        inputNode = <Select placeholder="请选择" showSearch onChange={(val, option) => deviceColChoice(option, key)} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}>
+          {
+            manufacturerList[0] && manufacturerList.map(item => {
+              return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
+            })
+          }
+        </Select>;
+      }
     } else if (dataIndex === 'systemName') {
       inputNode = <Select placeholder='请选择' onChange={cemsChange} disabled={choiceGasManufacturer}>
         <Option value={465}>气态污染物CEMS</Option>
         <Option value={466}>颗粒物污染物CEMS</Option>
+        <Option value={587}>NMHC-CEMS</Option>
       </Select>
     } else if (inputType === 'number') {
       inputNode = <InputNumber placeholder={`请输入`} />
     } else {
-      inputNode = <Input title={formDevice.getFieldValue([dataIndex])} disabled={title === '设备名称' || title === '设备型号' || title === 'CEMS设备规格型号' ? true : title === '手填设备生产商' || title === '手填设备名称' || title === '手填设备型号' ? isManual : false} placeholder={title === '手填设备生产商' || title === '手填设备名称' || title === '手填设备型号' ? `CIS同步使用` : `请输入`} />
+      inputNode = <Input title={formDevice.getFieldValue([dataIndex])} disabled={title === '设备名称' || (title === '设备型号' && SetEquipmentMode == 0) || (title === 'CEMS设备规格型号' && SetEquipmentMode == 0) ? true : false} placeholder={title === '手填设备生产商' || title === '手填设备名称' || title === '手填设备型号' ? `CIS同步使用` : `请输入`} />
     }
 
     // const parLoading = record && record.type && record.type === 'add' ? props.loadingGetPollutantById2 : props.monitoringCategoryTypeLoading; //监测参数提示loading
-    const parLoading =  props.loadingGetPollutantById;
+    const parLoading = props.loadingGetPollutantById;
     return (
       <td {...restProps}>
         {editing ? (
@@ -1269,7 +1376,7 @@ const Index = (props) => {
               <>{parLoading ? <Spin size='small' style={{ textAlign: 'left' }} />
                 :
                 <Form.Item name={`PollutantCode${key}`} style={{ margin: 0 }}>
-                  <Select placeholder='请选择' disabled={isManual ? true : false} allowClear={false} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
+                  <Select placeholder='请选择' onChange={(val, option) => SetEquipmentMode == 1 && pllChange(option, key)} allowClear={false} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
                     {
                       pollutantTypeList[0] && pollutantTypeList.map(item => {
                         return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
@@ -1288,9 +1395,19 @@ const Index = (props) => {
                         })
                       }
                     </Select></Form.Item>}</>
-                : dataIndex === 'gasManufacturerName' ?  //废气-常规CEMS  废气-Vocs
-                  <Form.Item name={`gasManufacturerName`} style={{ margin: 0 }} rules={[{ required: true, message: '' }]}>
-                    <Select onClick={() => { manufacturerPopVisibleClick() }} onChange={onManufacturerClearChoice} allowClear showSearch={false} dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>
+                : dataIndex === 'gasManufacturerName' ?  //废气-常规CEMS  废气-Vocs CEMS设备生产商
+                  <Form.Item name={dataIndex} style={{ margin: 0 }} rules={[{ required: true, message: '' }]}>
+                    {SetEquipmentMode == 0 ?
+                      <Select onClick={() => { manufacturerPopVisibleClick() }} onChange={onManufacturerClearChoice} allowClear showSearch={false} dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>
+                      :
+                      <Select placeholder="请选择" onChange={(val, option) => generatorColChoice(val, option)} allowClear showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
+                        {
+                          manufacturerList[0] && manufacturerList.map(item => {
+                            return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
+                          })
+                        }
+                      </Select>
+                    }
                   </Form.Item>
 
                   :
@@ -1298,14 +1415,16 @@ const Index = (props) => {
                   <Form.Item
                     name={`${dataIndex}${key}`}
                     style={{ margin: 0 }}
-                    // rules={[{ required: dataIndex === "EquipmentManufacturer", message: `` }]}
                   >
                     {inputNode}
                   </Form.Item>
         ) : (
             children
           )}
-            {dataIndex === 'EquipmentManufacturer'&&<Form.Item hidden name={`EquipmentManufacturerID${key}`}></Form.Item>}
+        {dataIndex === 'EquipmentManufacturer' && <Form.Item hidden name={`EquipmentManufacturerID${key}`}></Form.Item>}
+        {dataIndex === 'gasManufacturerName' && <Form.Item hidden name={`gasManufacturer`}></Form.Item>} {/*系统信息 手工输入设备型号 */}
+
+
       </td>
     );
   };
@@ -1313,48 +1432,60 @@ const Index = (props) => {
 
   const submits = async () => {
     if (gasSystemEditingKey) {
-      message.warning('请保存系统信息数据')
+      message.error('请保存系统信息数据')
       return;
     }
     try {
       // const values = await form.validateFields();
       const gasSystemInfo = gasSystemData.map(item => { //废气 系统信息
-        return {
+        return SetEquipmentMode == 0 ? {
           SystemManufactor: item.systemID,
           GasManufacturer: item.gasManufacturer,
           GasEquipment: item.gasEquipment,
-        }
+        } : {
+            SystemManufactor: item.systemID,
+            PMManufacturer: item.gasManufacturer,
+            PMEquipment: item.gasEquipment,
+          }
       })
-      let  parList = [], flag = true;
-      for(let i=0;i<data.length;i++){
+      let parList = [], flag = true;
+      for (let i = 0; i < data.length; i++) {
         let item = data[i]
-        if(item?.type&&item.type=='edit'){
-          message.warning('请保存设备信息数据')
+        if (item?.type && item.type == 'edit') {
+          message.error('请保存设备信息数据')
           flag = false;
           break;
-        }else{
-          parList.push({
+        } else {
+          const commonData = {
             ID: '', DGIMN: DGIMN, PollutantCode: item.PollutantCode, Range1: item.Range1, // Range2: item.Range2,
             EquipmentManufacturer: item.EquipmentManufacturerID,
             EquipmentInfoID: item.EquipmentInfoID, EquipmentModel: item.EquipmentModel, EquipmentNumber: item.EquipmentNumber, Equipment: item.EquipmentCode,
-            // ManualEquipmentManufacturer: item.ManualEquipmentManufacturer,
-            // ManualEquipmentModel: item.ManualEquipmentModel,
-            // ManualEquipmentName: item.ManualEquipmentName,
+          }
+          SetEquipmentMode == 0 ? parList.push({
+            ...commonData,
+            EquipmentManufacturer: item.EquipmentManufacturerID,
+            ManualEquipmentManufacturer: undefined,
           })
+            :
+            parList.push({
+              ...commonData,
+              ManualEquipmentManufacturer: item.type == 'add' ? item.EquipmentManufacturer : item.EquipmentManufacturerID,
+              EquipmentManufacturer: undefined,
+            })
         }
       }
-      if(flag){
-      const par = {
-        equipmentModel: pollutantType == 1 ? null : gasSystemInfo,
-        equipmentParametersList: parList[0] ? parList : [],
-        DGIMN: DGIMN,
+      if (flag) {
+        const par = {
+          equipmentModel: pollutantType == 1 ? '' : gasSystemInfo,
+          equipmentParametersList: parList[0] ? parList : [],
+          DGIMN: DGIMN,
+        }
+        props.addOrUpdateEquipmentInfo({
+          ...par
+        }, () => {
+          props.onCancel()
+        })
       }
-      props.addOrUpdateEquipmentInfo({
-        ...par
-      }, () => {
-        props.onCancel()
-      })
-    }
 
 
     } catch (errorInfo) {
@@ -1372,7 +1503,7 @@ const Index = (props) => {
           <SdlTable
             components={{
               body: {
-                cell: (data)=>EditableCell({...data,type:'isStyInfo'}),
+                cell: (data) => EditableCell({ ...data, type: 'isStyInfo' }),
               }
             }}
             bordered
@@ -1391,7 +1522,7 @@ const Index = (props) => {
       <div style={{ fontWeight: 'bold', paddingBottom: 10 }}>设备信息</div>
       <Form form={formDevice} name="advanced_search_device"
       //  onValuesChange={onValuesChange}
-       >
+      >
         <SdlTable
           components={{
             body: {
@@ -1410,19 +1541,19 @@ const Index = (props) => {
       <Button style={{ margin: '10px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleAdd()} >
         添加设备
        </Button>
-      <Row justify='end' align='middle' style={{width:'100%',height:48,backgroundColor:'#fff',boxShadow: '0 -4px 4px rgb(240, 240, 240)', position:'absolute',left:0,left:0, bottom:0}}> 
-        <Button type="primary" style={{marginRight:20}} disabled={gasSystemData?.length==0 &&  data?.length==0 } loading={props.addOrUpdateEquipmentInfoLoading} onClick={submits} > 保存</Button>
+      <Row justify='end' align='middle' style={{ width: '100%', height: 48, backgroundColor: '#fff', boxShadow: '0 -4px 4px rgb(240, 240, 240)', position: 'absolute', left: 0, left: 0, bottom: 0 }}>
+        <Button type="primary" style={{ marginRight: 20 }} disabled={gasSystemData?.length == 0 && data?.length == 0} loading={props.addOrUpdateEquipmentInfoLoading} onClick={submits} > 保存</Button>
       </Row>
 
-      <Modal  wrapClassName={`${styles.popSty}`}  visible={parPopVisible} getContainer={false} onCancel={() => { setParPopVisible(false) }} width={"70%"} destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }}>
+      <Modal wrapClassName={`${styles.popSty}`} visible={parPopVisible} getContainer={false} onCancel={() => { setParPopVisible(false) }} width={"70%"} destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }}>
         <Form
           form={form3}
           name="advanced_search3"
-          onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize3,pollCodeKey) }}
-          // onValuesChange={onValuesChange3}
-          // initialValues={{
-            // ManufacturerId: manufacturerList[0] && manufacturerList[0].ID,
-          // }}
+          onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize3, pollCodeKey) }}
+        // onValuesChange={onValuesChange3}
+        // initialValues={{
+        // ManufacturerId: manufacturerList[0] && manufacturerList[0].ID,
+        // }}
         >
           <Row>
             <span>
@@ -1437,9 +1568,9 @@ const Index = (props) => {
               </Form.Item>
             </span>
             <Form.Item style={{ marginRight: 8 }} name="EquipmentType">
-            <Input allowClear placeholder="请输入设备型号" style={{ width: 180 }} />
-          </Form.Item>
-          {/* <Form.Item style={{ marginRight: 8 }} name="PollutantType">
+              <Input allowClear placeholder="请输入设备型号" style={{ width: 180 }} />
+            </Form.Item>
+            {/* <Form.Item style={{ marginRight: 8 }} name="PollutantType">
             <Select allowClear placeholder="请选择监测类别" disabled style={{ width: 150 }}>
               {
                 monitoringTypeList2[0] && monitoringTypeList2.map(item => {
@@ -1448,7 +1579,7 @@ const Index = (props) => {
               }
             </Select>
           </Form.Item> */}
-           {/* <Form.Item style={{ marginRight: 8 }} name="PollutantCode"  >
+            {/* <Form.Item style={{ marginRight: 8 }} name="PollutantCode"  >
             {props.loadingGetPollutantById ? <Spin size='small' style={{ width: 150, textAlign: 'left' }} />
               :
               <Select placeholder='请选择监测类型' allowClear showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 150 }}>
@@ -1482,7 +1613,7 @@ const Index = (props) => {
         </Form>
       </Modal>
       <Modal visible={selectDeviceParVisible} title={selectDeviceParTitle} wrapClassName={`${styles.deviceParSty} spreadOverModal table-light`} onOk={selectDeviceParOk} onCancel={() => { setSelectDeviceParVisible(false) }} width={800} destroyOnClose getContainer={false} maskStyle={{ display: 'none' }}>
-        <TitleComponents simpleSty text='选点位设备监测参数' key='1' style={{ marginTop:4 }}/>
+        <TitleComponents simpleSty text='选点位设备监测参数' key='1' style={{ marginTop: 4 }} />
         <Row>
           <Form
             form={form4}
@@ -1492,8 +1623,8 @@ const Index = (props) => {
               <Select placeholder='请选择'
                 mode='multiple' maxTagCount={4} maxTagTextLength={5} maxTagPlaceholder="..." style={{ width: 300 }} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
                 {
-                  pollutantTypeList[0] && pollutantTypeList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
+                  deviceParData[0] && deviceParData.map(item => {
+                    return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
                   })
                 }
               </Select>
@@ -1504,35 +1635,36 @@ const Index = (props) => {
            </Button>
         </Row>
 
-        <TitleComponents simpleSty text='待选设备清单' key='2' style={{ marginBottom: 0 ,marginTop:8 }} />
+        <TitleComponents simpleSty text='待选设备清单' key='2' style={{ marginBottom: 0, marginTop: 8 }} />
         {tabPollData?.[0] ? <Tabs
-          onChange={(key)=>{setTabKey(key)}}
+          onChange={(key) => { setTabKey(key) }}
+          activeKey={tabKey}
         >
           {tabPollData.map(item => {
             return <Tabs.TabPane tab={<>{item?.PollutantName}
-              {selectedEquipmentParametersList?.[0] && selectedEquipmentParametersList?.filter(filterItem=>filterItem.PollutantCode==item.PollutantCode)?.[0]?  <CheckCircleOutlined /> : ''}
-               </>} 
-               
-               
-               key={item?.PollutantCode} >
+              {selectedEquipmentParametersList?.[0] && selectedEquipmentParametersList?.filter(filterItem => filterItem.PollutantCode == item.PollutantCode)?.[0] ? <CheckCircleOutlined /> : ''}
+            </>}
+
+
+              key={item?.PollutantCode} >
               <Row style={{ marginBottom: 12 }}>
-              <Form  form={form5}   name="advanced_search5" layout='inline'>
-                <Form.Item style={{ margin: '0 8px 0 0' }} name={`EquipmentManufacturerID_${item?.PollutantCode}`}>
-                  <Select onChange={() => { selectDeviceParChange(item?.PollutantCode) }} placeholder='请选择设备生产商' style={{ width: 240 }} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} allowClear>
-                    {
-                      manufacturerList[0] && manufacturerList.map(item => {
-                        return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
-                      })
-                    }
-                  </Select>
-                </Form.Item>
-                <Form.Item style={{ margin: '0 8px 0 0' }}  name={`equipmentType_${item?.PollutantCode}`}>
-                  <Input onChange={(e) => { selectDeviceParChange( item?.PollutantCode) }} allowClear placeholder="请输入设备型号" style={{ width: 240 }} />
-                </Form.Item>
+                <Form form={form5} name="advanced_search5" layout='inline'>
+                  <Form.Item style={{ margin: '0 8px 0 0' }} name={`equipmentManufacturer_${item?.PollutantCode}`}>
+                    <Select onChange={() => { selectDeviceParChange(item?.PollutantCode) }} placeholder='请选择设备生产商' style={{ width: 240 }} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} allowClear>
+                      {
+                        manufacturerList[0] && manufacturerList.map(item => {
+                          return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
+                        })
+                      }
+                    </Select>
+                  </Form.Item>
+                  <Form.Item style={{ margin: '0 8px 0 0' }} name={`equipmentType_${item?.PollutantCode}`}>
+                    <Input onChange={(e) => { selectDeviceParChange(item?.PollutantCode) }} allowClear placeholder="请输入设备型号" style={{ width: 240 }} />
+                  </Form.Item>
                 </Form>
               </Row>
-              <SdlTable 
-                scroll={{ y: 'calc(100vh - 812px)' }}
+              <SdlTable
+                scroll={{ y: 'calc(50vh - 290px)' }}
                 loading={equipmentParametersListLoading}
                 dataSource={item?.ChildList} columns={deviceParCol(1)}
               />
@@ -1545,15 +1677,15 @@ const Index = (props) => {
         }
 
         <TitleComponents simpleSty text='已选设备清单' key='3' />
-         {selectedEquipmentParametersList?.[0]? <SdlTable scroll={{ y: 'calc(100vh - 812px)' }}
-                dataSource={selectedEquipmentParametersList} columns={deviceParCol(2)}
-                pagination={false}
-              />
-              :
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        {selectedEquipmentParametersList?.[0] ? <SdlTable scroll={{ y: 'calc(50vh - 290px)' }}
+          dataSource={selectedEquipmentParametersList} columns={deviceParCol(2)}
+          pagination={false}
+        />
+          :
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         }
       </Modal>
-      <Modal wrapClassName={`${styles.popSty}`}  visible={manufacturerPopVisible} getContainer={false} onCancel={() => { setManufacturerPopVisible(false) }}  destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }}>
+      <Modal wrapClassName={`${styles.popSty}`} visible={manufacturerPopVisible} getContainer={false} onCancel={() => { setManufacturerPopVisible(false) }} destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }}>
         {popContent}
       </Modal>
     </div>

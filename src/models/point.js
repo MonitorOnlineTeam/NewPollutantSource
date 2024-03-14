@@ -51,6 +51,7 @@ export default Model.extend({
         pbList:[], //废气 配备
         oprationStatusList:[],
         craftByIndustry: {},
+        deviceTypeList:[],
     },
     effects: {
 
@@ -398,7 +399,12 @@ export default Model.extend({
             if (payload.id) {
               const result = yield call(GetPollutantById, payload);
               if (result.IsSuccess) {
-                yield update({ pollutantTypeList: result.Datas? result.Datas.plist : []})
+                if(payload.type==1){
+                  yield update({ pollutantTypeList: result.Datas? result.Datas.plist : []})
+                }else{
+                  yield update({ deviceTypeList: result.Datas? result.Datas.plist : []})
+                }
+                callback&&callback(result.Datas? result.Datas.plist : [])
               } else {
                 message.error(result.Message)
               }
