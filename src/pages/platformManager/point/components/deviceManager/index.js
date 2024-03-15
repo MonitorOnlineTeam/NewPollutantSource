@@ -848,7 +848,7 @@ const Index = (props) => {
      </Button>
       </Form.Item>
     </Row>
-    <SdlTable scroll={{ y: 'calc(100vh - 300px)' }} style={{ width: 800 }}
+    <SdlTable size='small' scroll={{ y: 'calc(100vh - 300px)' }} style={{ width: 800 }}
       loading={props.loadingSystemModel} bordered dataSource={systemModelList} columns={generatorCol}
       pagination={{
         total: systemModelListTotal,
@@ -1501,6 +1501,7 @@ const Index = (props) => {
           <div style={{ fontWeight: 'bold', paddingBottom: 5 }}> 系统信息</div>
           {/* { systemInfo()} */}
           <SdlTable
+            size='small'
             components={{
               body: {
                 cell: (data) => EditableCell({ ...data, type: 'isStyInfo' }),
@@ -1524,6 +1525,7 @@ const Index = (props) => {
       //  onValuesChange={onValuesChange}
       >
         <SdlTable
+          size='small'
           components={{
             body: {
               cell: EditableCell
@@ -1597,7 +1599,7 @@ const Index = (props) => {
            </Button>
             </Form.Item>
           </Row>
-          <SdlTable scroll={{ y: 'calc(100vh - 500px)' }}
+          <SdlTable  size='small' scroll={{ y: 'calc(100vh - 500px)' }}
             loading={props.loadingGetEquipmentInfoList}
             bordered dataSource={equipmentInfoList} columns={deviceCol}
             pagination={{
@@ -1613,14 +1615,14 @@ const Index = (props) => {
         </Form>
       </Modal>
       <Modal visible={selectDeviceParVisible} title={selectDeviceParTitle} wrapClassName={`${styles.deviceParSty} spreadOverModal table-light`} onOk={selectDeviceParOk} onCancel={() => { setSelectDeviceParVisible(false) }} width={800} destroyOnClose getContainer={false} maskStyle={{ display: 'none' }}>
-        <TitleComponents simpleSty text='选点位设备监测参数' key='1' style={{ marginTop: 4 }} />
-        <Row>
+        {/* <TitleComponents simpleSty text='选点位设备监测参数' key='1' style={{ marginTop: 4 }} /> */}
           <Form
             form={form4}
             name="advanced_search4"
+            layout='inline'
           >
-            <Form.Item style={{ marginRight: 8 }} label='监测参数' name='monitorPar'>
-              <Select placeholder='请选择'
+            <Form.Item style={{ marginRight: 8 }} label='点位设备监测参数' name='monitorPar'>
+              <Select placeholder='请选择' 
                 mode='multiple' maxTagCount={4} maxTagTextLength={5} maxTagPlaceholder="..." style={{ width: 300 }} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
                 {
                   deviceParData[0] && deviceParData.map(item => {
@@ -1629,13 +1631,15 @@ const Index = (props) => {
                 }
               </Select>
             </Form.Item>
-          </Form>
-          <Button type="primary" loading={equipmentParametersListLoading} onClick={() => { deviceParQuery() }}>
+            <Form.Item>
+            <Button type="primary" loading={equipmentParametersListLoading} onClick={() => { deviceParQuery() }}>
             确定
            </Button>
-        </Row>
+           </Form.Item>
+          </Form>
 
-        <TitleComponents simpleSty text='待选设备清单' key='2' style={{ marginBottom: 0, marginTop: 8 }} />
+
+        <TitleComponents simpleSty text='待选设备清单' key='2' style={{ marginBottom: 0, marginTop: 2 }} />
         {tabPollData?.[0] ? <Tabs
           onChange={(key) => { setTabKey(key) }}
           activeKey={tabKey}
@@ -1647,7 +1651,7 @@ const Index = (props) => {
 
 
               key={item?.PollutantCode} >
-              <Row style={{ marginBottom: 12 }}>
+              <Row style={{ marginBottom: 6 }}>
                 <Form form={form5} name="advanced_search5" layout='inline'>
                   <Form.Item style={{ margin: '0 8px 0 0' }} name={`equipmentManufacturer_${item?.PollutantCode}`}>
                     <Select onChange={() => { selectDeviceParChange(item?.PollutantCode) }} placeholder='请选择设备生产商' style={{ width: 240 }} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} allowClear>
@@ -1664,9 +1668,10 @@ const Index = (props) => {
                 </Form>
               </Row>
               <SdlTable
-                scroll={{ y: 'calc(50vh - 290px)' }}
+                scroll={{ y: 'auto' }}
                 loading={equipmentParametersListLoading}
                 dataSource={item?.ChildList} columns={deviceParCol(1)}
+                size='small'
               />
             </Tabs.TabPane>
           })
@@ -1676,8 +1681,8 @@ const Index = (props) => {
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         }
 
-        <TitleComponents simpleSty text='已选设备清单' key='3' />
-        {selectedEquipmentParametersList?.[0] ? <SdlTable scroll={{ y: 'calc(50vh - 290px)' }}
+      <TitleComponents simpleSty text='已选设备清单' key='3' style={{ marginBottom: 4}}/> {/*'calc(50vh - 290px)'*/}
+        {selectedEquipmentParametersList?.[0] ? <SdlTable size='small' scroll={{ y: 'auto' }}
           dataSource={selectedEquipmentParametersList} columns={deviceParCol(2)}
           pagination={false}
         />

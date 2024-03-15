@@ -205,16 +205,16 @@ class RegionDetails extends PureComponent {
             },
           ]
         },
-        {
-          title: '响应率',
-          dataIndex: 'AllRate',
-          key: 'AllRate',
-          width: 120,
-          sorter: (a, b) => a.AllRate.replace("%", "") - b.AllRate.replace("%", ""),
-          render: (text, record) => {
-            return (record.ChaoAlarmCount + record.LingAlarmCount === 0) ? '-' : text
-          }
-        },
+        // {
+        //   title: '响应率',
+        //   dataIndex: 'AllRate',
+        //   key: 'AllRate',
+        //   width: 120,
+        //   sorter: (a, b) => a.AllRate.replace("%", "") - b.AllRate.replace("%", ""),
+        //   render: (text, record) => {
+        //     return (record.ChaoAlarmCount + record.LingAlarmCount === 0) ? '-' : text
+        //   }
+        // },
       ],
     };
   }

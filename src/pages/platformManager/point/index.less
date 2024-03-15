@@ -86,15 +86,31 @@
 }
 .deviceParSty  :global{
   .ant-modal-body{
-    max-height: calc(100% - 90px);
+    padding: 6px 12px;
+    height: calc(100vh - 148px);
     overflow-y: auto;
     .ant-table-body{
-      min-height: 46px;
+      max-height: calc(50vh - 211px);
     }
+  }
+  .ant-modal-footer{
+    padding: 6px 12px; 
   }
   .ant-tabs-tab .anticon{
     margin-right: 0;
     margin-left: 4px;
+  }
+    .ant-table-pagination.ant-pagination{
+      margin: 6px 0;
+    }
+  .ant-tabs-tab{
+    padding: 4px 0;
+  }
+   .ant-tabs-nav{
+    margin-bottom: 6px;
+  }
+  .ant-table.ant-table-small .ant-table-title, .ant-table.ant-table-small .ant-table-footer, .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small tfoot > tr > th, .ant-table.ant-table-small tfoot > tr > td{
+    padding: 6px 8px;
   }
 }
 .popSty   :global{

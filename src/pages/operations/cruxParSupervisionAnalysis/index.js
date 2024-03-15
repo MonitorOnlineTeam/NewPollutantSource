@@ -156,18 +156,18 @@ const Index = (props) => {
     },
     {
       title: '二次合格数',
-      dataIndex: 'resultSupervisionCount',
-      key: 'resultSupervisionCount',
+      dataIndex: 'resultQualifiedCount',
+      key: 'resultQualifiedCount',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '二次合格率',
-      dataIndex: 'resultSupervisionRate',
-      key: 'resultSupervisionRate',
+      dataIndex: 'resultQualifiedRate',
+      key: 'resultQualifiedRate',
       width: 150,
       align:'center',
-      sorter: (a, b) => a.resultSupervisionRate - b.resultSupervisionRate,
+      sorter: (a, b) => a.resultQualifiedRate - b.resultQualifiedRate,
       render: (text, record) => {
         return (
           <div>

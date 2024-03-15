@@ -750,7 +750,7 @@ const Index = (props) => {
         dataMin: record.DataMin,
         dataMax: record.DataMax,
         dataUnit: record.DataUnit,
-        dataFile: record.DataFileList?.[0]?.FileUuid,
+        rangeFile: record.RangeFileList?.[0]?.FileUuid,
         rangeAutoStatus: record.RangeAutoStatus,
         operationRangeRemark: record.OperationRangeRemark,
         pollutantCode: record.PollutantCode,
@@ -771,10 +771,10 @@ const Index = (props) => {
       setDasFileList(dasFileList)
       setDasRangeFile(record.DASFileList?.[0]?.FileUuid ? record.DASFileList[0].FileUuid : cuid())
 
-      const dataFileList = record.RangeFileList?.[0] ? record.RangeFileList.map(item => {//数采仪量程照片
+      const rangeFileList = record.RangeFileList?.[0] ? record.RangeFileList.map(item => {//数采仪量程照片
         return { uid: item.GUID, name: item.FileName, status: 'done', url: `${uploadPrefix}/${item.FileName}`, }
       }) : []
-      setDataRangeFileList(dataFileList)
+      setDataRangeFileList(rangeFileList)
       setDataRangeFile(record.RangeFileList?.[0]?.FileUuid ? record.RangeFileList[0].FileUuid : cuid())
     } else if (type == 2) {
       dataform.resetFields();
@@ -1051,7 +1051,7 @@ const Index = (props) => {
         dataMin: record.DataMin,
         dataMax: record.DataMax,
         dataUnit: record.DataUnit,
-        dataFile: record.DataFileList?.[0]?.FileUuid,
+        rangeFile: record.RangeFileList?.[0]?.FileUuid,
         rangeAutoStatus: record.RangeAutoStatus,
         rangeStatus: record.RangeStatus,   
         id: record.ID,
@@ -1118,6 +1118,9 @@ const Index = (props) => {
   const reject = (record, type, title, status) => { //驳回弹框
     setRejectVisible(true)
     setRejectTitle(`${type == 1 ? '量程' : type == 2 ? '数据' : '参数'}一致性${title}（${record.PollutantName}）`)
+    setRectificationType(type)
+    setRejectStatus(status)
+    setRectificationData(record)
     rejectform.resetFields();
     if(status==5){ //运维
       type==1 ? rejectform.setFieldsValue({operationRangeRemark: record.OperationRangeRemark}) :  type==2 ? rejectform.setFieldsValue({operationDataRemark : record.OperationDataRemark }) : rejectform.setFieldsValue({operationReamrk: record.OperationReamrk }) 
@@ -1125,9 +1128,6 @@ const Index = (props) => {
       type==1 ? rejectform.setFieldsValue({rangeRemark: record.RangeRemark}) :  type==2 ? rejectform.setFieldsValue({couRemrak : record.CouRemrak }) : rejectform.setFieldsValue({remark: record.Remark }) 
 
     }
-    setRectificationType(type)
-    setRejectStatus(status)
-    setRectificationData(record)
 
   }
   const jectOk = async () => {//整改或驳回通过 
@@ -1389,8 +1389,8 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name='dataFile' label='数采仪量程照片'>
-                {uploadButton('dataFile', 3)}
+              <Form.Item name='rangeFile' label='数采仪量程照片'>
+                {uploadButton('rangeFile', 3)}
               </Form.Item>
             </Col>
             {commonForm()}

@@ -136,8 +136,26 @@ const Index = (props) => {
       key: 'CheckWarningRate',
       align: 'center',
       render: (text, record) => {
-        return  <Progress percent={text && text.replace("%", "").trim()} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
+        return  <Progress percent={text && text.replace("%", "").trim()} size="small" style={{ width: '75%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
      
+      }
+    },
+    {
+      title: '已复核核实次数',
+      dataIndex: 'Review',
+      key: 'Review',
+      align: 'center',
+      render: (text, record) => {
+        return <a onClick={() => { alarmsNum(record, 3, type) }}>{text}</a>
+      }
+    },
+    {
+      title: '待复核核实次数',
+      dataIndex: 'NoReview',
+      key: 'NoReview',
+      align: 'center',
+      render: (text, record) => {
+        return <a onClick={() => { alarmsNum(record, 1, type) }}>{text}</a>
       }
     },
     {
@@ -145,8 +163,9 @@ const Index = (props) => {
       dataIndex: 'ReviewRate',
       key: 'ReviewRate',
       align: 'center',
+      width:140,
       render: (text, record) => {
-        return  <Progress percent={text && text.replace("%", "").trim()} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
+        return  <Progress percent={text && text.replace("%", "").trim()} size="small" style={{ width: '75%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
      
       }
     },

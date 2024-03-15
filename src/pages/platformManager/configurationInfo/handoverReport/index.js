@@ -182,7 +182,7 @@ const Index = (props) => {
       }
     },
     {
-      title: '项目结束状态名称',
+      title: '项目结束状态',
       dataIndex: 'EndStatusName',
       key: 'EndStatusName',
       align: 'center',

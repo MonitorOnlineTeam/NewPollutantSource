@@ -4,7 +4,7 @@
  * 创建时间：2021.11.03
  */
 import React, { useState, useEffect, Fragment, useRef, useMemo } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio,Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -34,20 +34,20 @@ const namespace = 'newestHome'
 
 
 
-const dvaPropsData = ({ loading, newestHome,global}) => ({
+const dvaPropsData = ({ loading, newestHome, global }) => ({
   exceptionSignTaskRateLoading: loading.effects[`${namespace}/GetExceptionSignTaskRate`],
-  exceptionSignTaskRateList:newestHome.exceptionSignTaskRateList,
+  exceptionSignTaskRateList: newestHome.exceptionSignTaskRateList,
   consumablesLoading: loading.effects[`${namespace}/GetConsumablesList`],
   exceptionListLoading: loading.effects[`${namespace}/GetOpertionExceptionList`],
-  consumablesList:newestHome.consumablesList,
-  latelyDays30:newestHome.latelyDays30,
-  latelyDays7:newestHome.latelyDays7,
-  pollType:newestHome.pollType,
-  subjectFontSize:newestHome.subjectFontSize,
-  modalType:newestHome.pollType,
-  opertionExceptionList:newestHome.opertionExceptionList,
-  smallResolution:newestHome.smallResolution,
-  operationSettingInfo:global.operationSettingInfo,
+  consumablesList: newestHome.consumablesList,
+  latelyDays30: newestHome.latelyDays30,
+  latelyDays7: newestHome.latelyDays7,
+  pollType: newestHome.pollType,
+  subjectFontSize: newestHome.subjectFontSize,
+  modalType: newestHome.pollType,
+  opertionExceptionList: newestHome.opertionExceptionList,
+  smallResolution: newestHome.smallResolution,
+  operationSettingInfo: global.operationSettingInfo,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -58,23 +58,23 @@ const dvaDispatch = (dispatch) => {
         payload: { ...payload },
       })
     },
-    GetExceptionSignTaskRate:(payload)=>{ //现场打卡异常
+    GetExceptionSignTaskRate: (payload) => { //现场打卡异常
       dispatch({
-        type: `${namespace}/GetExceptionSignTaskRate`, 
-        payload:{...payload},
-      }) 
+        type: `${namespace}/GetExceptionSignTaskRate`,
+        payload: { ...payload },
+      })
     },
-    GetConsumablesList:(payload)=>{ //耗材统计
+    GetConsumablesList: (payload) => { //耗材统计
       dispatch({
-        type: `${namespace}/GetConsumablesList`, 
-        payload:{...payload},
-      }) 
+        type: `${namespace}/GetConsumablesList`,
+        payload: { ...payload },
+      })
     },
-    GetOpertionExceptionList:(payload)=>{ //异常设备统计
+    GetOpertionExceptionList: (payload) => { //异常设备统计
       dispatch({
-        type: `${namespace}/GetOpertionExceptionList`, 
-        payload:{...payload},
-      }) 
+        type: `${namespace}/GetOpertionExceptionList`,
+        payload: { ...payload },
+      })
     },
   }
 }
@@ -90,7 +90,7 @@ const Index = (props) => {
   const [tableDatas, setTableDatas] = useState([])
 
 
-  const {pollType,latelyDays7, latelyDays30,subjectFontSize,smallResolution,operationSettingInfo} = props;
+  const { pollType, latelyDays7, latelyDays30, subjectFontSize, smallResolution,operationSettingInfo} = props;
 
   const consumablesEchartsRef = useRef(null);
   const planInsideClockAbnormalEchartsRef = useRef(null);
@@ -105,51 +105,57 @@ const Index = (props) => {
 
 
   }, []);
+  
+  useEffect(() => {
+    if(operationSettingInfo.Availability){
+      getOpertionExceptionList(latelyDays7)
+    }
+  }, [operationSettingInfo]);
 
   const initData = () => {
     let consumablesEchartsInstance = consumablesEchartsRef.current.getEchartsInstance()
     consumablesEchartsInstance.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: 0 }); //耗材统计默认第一条高亮
-  
-    getExceptionSignTaskRate(latelyDays7); 
+
+    getExceptionSignTaskRate(latelyDays7);
     getConsumablesList(latelyDays7)
-    getOpertionExceptionList(latelyDays7)
+
 
     const planInsideClockAbnormalEchartsInstance = planInsideClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常 计划内  点击事件
-     planInsideClockAbnormalEchartsInstance.getZr().on('click', (params) => {
+    planInsideClockAbnormalEchartsInstance.getZr().on('click', (params) => {
       setClockAbnormalVisible(true)
     });
     const planOutClockAbnormalEchartsInstance = planOutClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常 计划外  点击事件
     planOutClockAbnormalEchartsInstance.getZr().on('click', (params) => {
       setClockAbnormalVisible(true)
     });
- 
-  //   planInsideClockAbnormalEchartsInstance.getZr().on('mousemove',(params)=> {
-  //       planInsideClockAbnormalEchartsInstance.getZr().setCursorStyle('pointer');
-  // });
-  
-  //   planOutClockAbnormalEchartsInstance.getZr().on('mousemove', (params)=> {
-  //       planInsideClockAbnormalEchartsInstance.getZr().setCursorStyle('pointer');
-  // })
+
+    //   planInsideClockAbnormalEchartsInstance.getZr().on('mousemove',(params)=> {
+    //       planInsideClockAbnormalEchartsInstance.getZr().setCursorStyle('pointer');
+    // });
+
+    //   planOutClockAbnormalEchartsInstance.getZr().on('mousemove', (params)=> {
+    //       planInsideClockAbnormalEchartsInstance.getZr().setCursorStyle('pointer');
+    // })
   }
 
-  const getExceptionSignTaskRate = (date) =>{ //现场打卡异常
-    props.GetExceptionSignTaskRate({ 
+  const getExceptionSignTaskRate = (date) => { //现场打卡异常
+    props.GetExceptionSignTaskRate({
       pollutantType: pollutantType,
       ...date
     })
   }
-  const getConsumablesList = (date) =>{ //耗材统计
-    props.GetConsumablesList({ 
+  const getConsumablesList = (date) => { //耗材统计
+    props.GetConsumablesList({
       pollutantType: pollutantType,
       ...date
     })
   }
-  const getOpertionExceptionList = (date) =>{ //设备异常总览
-    props.GetOpertionExceptionList({ 
-      pollutantType: pollutantType,
-      type:operationSettingInfo?.Availability,
-      ...date,
-    })
+  const getOpertionExceptionList = (date) => { //设备异常总览
+      props.GetOpertionExceptionList({
+        pollutantType: pollutantType,
+        type: operationSettingInfo.Availability,
+        ...date,
+      })
   }
   const [clockBtnCheck, setClockBtnCheck] = useState(latelyDays7)
   const clockAbnormalClick = (key) => { //现场打卡异常 日期切换
@@ -169,17 +175,17 @@ const Index = (props) => {
     setDeviceAbnormalCheck(key)
     getOpertionExceptionList(key)
   }
-   
-  const [consumablesStatisticsVisible,setConsumablesStatisticsVisible] = useState(false)
+
+  const [consumablesStatisticsVisible, setConsumablesStatisticsVisible] = useState(false)
   const moreBtnClick = (type) => {
-    if(type === 'consumables'){ //耗材统计
+    if (type === 'consumables') { //耗材统计
       setConsumablesStatisticsVisible(true)
     }
- 
-  }
-  const sceneClockOption = (data) => { 
 
-    let rate = data=='-' ? "-" : data? data.replace('%', '') / 100 : data;
+  }
+  const sceneClockOption = (data) => {
+
+    let rate = data == '-' ? "-" : data ? data.replace('%', '') / 100 : data;
     var option = {
       series: [{
         type: 'liquidFill',
@@ -188,7 +194,7 @@ const Index = (props) => {
         radius: "85%", //水球的半径
         center: ['50%', '50%'],
         // silent: true,
-        minAngle:100,
+        minAngle: 100,
         itemStyle: {
           shadowBlur: 0,
         },
@@ -222,13 +228,13 @@ const Index = (props) => {
         backgroundStyle: { //内环
           borderWidth: 5,
           borderColor: '#263249',
-          color: 'none',     
+          color: 'none',
         },
         label: {
           normal: {
             formatter: function (name) {
-              let val = name.value=='-'? '-' : (name.value * 100).toFixed(2);
-              return val=='-'?'-' : `{val|${val}%}`
+              let val = name.value == '-' ? '-' : (name.value * 100).toFixed(2);
+              return val == '-' ? '-' : `{val|${val}%}`
             },
             rich: {
               //富文本 对字体进一步设置样式。val对应的 value
@@ -249,110 +255,110 @@ const Index = (props) => {
 
   const { consumablesList } = props;
 
-  const consumablesOption = ()=>{
-    
-    const commonData =[
-        { value: consumablesList.consumablesReplaceCount, name: '易耗品更换数量', },
-        { value: consumablesList.sparePartReplaceRecordCount, name: '备品备件更换数量' },
-      ]
-    return {  //耗材统计
-    color: ['#00DCFF', '#FFC200'],
-    tooltip: {
-      show: false
-    },
-    legend: {
-      show: false
-    },
-    series: [
-      {
-        name: '耗材统计',
-        type: 'pie',
-        radius: ['50%', '70%'],
-        avoidLabelOverlap: true,
-        minAngle: 90,//最小角度
-        emphasis: {
-          label: {
-            show: true, //高亮是标签的样式
-          }
-        },
-        label: {
-          // position: 'outer',
-          // alignTo: 'edge',
-          formatter: '{name|{b}}\n{num|{c}}',
-          rich: {
-            name: {
-              fontSize: subjectFontSize,
-              color: '#fff',
-              align: "left",
-              padding: smallResolution? [5, 2, 18, 2] : [5, 5, 18, 5]  //上左下右 逆时针 
-            },
-            num: {
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: '#3BBFFE',
-              align: "left",
-              padding: [0, 10, 0, 10]
-            }
-          },
-        },
-        labelLine: {
-          normal: {
-            length: 8,  // 视觉引导线第一段的长度。
-            length2: '11%', //视觉引导线第二段的长度。
-            lineStyle: {
-              color: "#fff"  // 改变标示线的颜色
-            }
-          },
+  const consumablesOption = () => {
 
-        },
-
-        data: pollutantType==1?[
-          ...commonData,
-          {
-            value: consumablesList.standardLiquidRepalceCount, name: '试剂更换数量',
-            itemStyle: {
-              normal: {
-                color: {
-                  type: 'linear', // 线性渐变
-                  x: 0, y: 0, x2: 1, y2: 0,
-                  colorStops: [{
-                    offset: 0,
-                    color: '#E94F7B' // 0%处的颜色为红色
-                  }, {
-                    offset: 1,
-                    color: '#F66188' // 100%处的颜色为蓝
-                  }],
-                }
-              },
-            }
-          },
-
-        ]:[
-          ...commonData,
-            {
-            value: consumablesList.standardGasRepalceCoun, name: '标准气体更换数量', itemStyle: {
-              normal: {
-                color: {
-                  type: 'linear', // 线性渐变
-                  x: 0, y: 0, x2: 1, y2: 0,
-                  colorStops: [{
-                    offset: 0,
-                    color: '#116CFD' // 0%处的颜色为红色
-                  }, {
-                    offset: 1,
-                    color: '#0BAEFD' // 100%处的颜色为蓝
-                  }],
-                }
-              },
-            }
-          },
-        ]
-      }
+    const commonData = [
+      { value: consumablesList.consumablesReplaceCount, name: '易耗品更换数量', },
+      { value: consumablesList.sparePartReplaceRecordCount, name: '备品备件更换数量' },
     ]
-  }
+    return {  //耗材统计
+      color: ['#00DCFF', '#FFC200'],
+      tooltip: {
+        show: false
+      },
+      legend: {
+        show: false
+      },
+      series: [
+        {
+          name: '耗材统计',
+          type: 'pie',
+          radius: ['50%', '70%'],
+          avoidLabelOverlap: true,
+          minAngle: 90,//最小角度
+          emphasis: {
+            label: {
+              show: true, //高亮是标签的样式
+            }
+          },
+          label: {
+            // position: 'outer',
+            // alignTo: 'edge',
+            formatter: '{name|{b}}\n{num|{c}}',
+            rich: {
+              name: {
+                fontSize: subjectFontSize,
+                color: '#fff',
+                align: "left",
+                padding: smallResolution ? [5, 2, 18, 2] : [5, 5, 18, 5]  //上左下右 逆时针 
+              },
+              num: {
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#3BBFFE',
+                align: "left",
+                padding: [0, 10, 0, 10]
+              }
+            },
+          },
+          labelLine: {
+            normal: {
+              length: 8,  // 视觉引导线第一段的长度。
+              length2: '11%', //视觉引导线第二段的长度。
+              lineStyle: {
+                color: "#fff"  // 改变标示线的颜色
+              }
+            },
+
+          },
+
+          data: pollutantType == 1 ? [
+            ...commonData,
+            {
+              value: consumablesList.standardLiquidRepalceCount, name: '试剂更换数量',
+              itemStyle: {
+                normal: {
+                  color: {
+                    type: 'linear', // 线性渐变
+                    x: 0, y: 0, x2: 1, y2: 0,
+                    colorStops: [{
+                      offset: 0,
+                      color: '#E94F7B' // 0%处的颜色为红色
+                    }, {
+                      offset: 1,
+                      color: '#F66188' // 100%处的颜色为蓝
+                    }],
+                  }
+                },
+              }
+            },
+
+          ] : [
+              ...commonData,
+              {
+                value: consumablesList.standardGasRepalceCoun, name: '标准气体更换数量', itemStyle: {
+                  normal: {
+                    color: {
+                      type: 'linear', // 线性渐变
+                      x: 0, y: 0, x2: 1, y2: 0,
+                      colorStops: [{
+                        offset: 0,
+                        color: '#116CFD' // 0%处的颜色为红色
+                      }, {
+                        offset: 1,
+                        color: '#0BAEFD' // 100%处的颜色为蓝
+                      }],
+                    }
+                  },
+                }
+              },
+            ]
+        }
+      ]
+    }
   };
   const deviceAbnormalOption = (type) => {  //设备异常统计图表
-   const { opertionExceptionList } = props; 
+    const { opertionExceptionList } = props;
     let color1 = ["#FFCC00", "#323A70"], color2 = ["#FF0000", '#323A70'], color3 = ['#3571EA', '#323A70']
     let option = {
       tooltip: {
@@ -362,7 +368,7 @@ const Index = (props) => {
       },
       color: type == 1 ? color1 : type == 2 ? color2 : color3,
       title: {
-        text: type == 1 ? opertionExceptionList.intactRate=='-'?'-': ` ${ opertionExceptionList.intactRate }%` : type == 2 ? opertionExceptionList.failureRate=='-'?'-':  `${opertionExceptionList.failureRate}%` : opertionExceptionList.repairRate=='-'?'-':  `${opertionExceptionList.repairRate}%`,
+        text: type == 1 ? opertionExceptionList.intactRate == '-' ? '-' : ` ${opertionExceptionList.intactRate}%` : type == 2 ? opertionExceptionList.failureRate == '-' ? '-' : `${opertionExceptionList.failureRate}%` : opertionExceptionList.repairRate == '-' ? '-' : `${opertionExceptionList.repairRate}%`,
         left: "center",
         top: "42%",
         textStyle: {
@@ -380,187 +386,186 @@ const Index = (props) => {
           avoidLabelOverlap: false,
           label: { normal: { show: false, position: 'center' }, },
           data: [
-            { value: type == 1 ? opertionExceptionList.intactRate  : type == 2 ? opertionExceptionList.failureRate: opertionExceptionList.repairRate, name: '已完成' },
-            { value: type == 1 ? opertionExceptionList.intactRate=='-'? 0 : (100 - opertionExceptionList.intactRate) : type == 2 ? opertionExceptionList.failureRate=='-'? 0 : (100 - opertionExceptionList.failureRate) : opertionExceptionList.repairRate=='-'? 0  : (100 - opertionExceptionList.repairRate), name: '未完成' },
+            { value: type == 1 ? opertionExceptionList.intactRate : type == 2 ? opertionExceptionList.failureRate : opertionExceptionList.repairRate, name: '已完成' },
+            { value: type == 1 ? opertionExceptionList.intactRate == '-' ? 0 : (100 - opertionExceptionList.intactRate) : type == 2 ? opertionExceptionList.failureRate == '-' ? 0 : (100 - opertionExceptionList.failureRate) : opertionExceptionList.repairRate == '-' ? 0 : (100 - opertionExceptionList.repairRate), name: '未完成' },
           ],
           minAngle: 0,//最小角度
-          startAngle:350, //起始角度
+          startAngle: 350, //起始角度
         }
       ]
     };
     return option;
   }
-  const [deviceType,setDeviceType] = useState(1)
-  const deviceAbnormals = () =>{ //设备完好率
+  const [deviceType, setDeviceType] = useState(1)
+  const deviceAbnormals = () => { //设备完好率
     setEquipmentAbnormalRateVisible(true)
     setDeviceType(1)
   }
 
-  const deviceFailureRate = () =>{ //设备故障率
-    if(operationSettingInfo?.Availability==1){ //提取数据 评估中心
-      setEquipmentAbnormalRateVisible(true)
-      setDeviceType(0)
-    }else{
-      setEquipmentFailureRateVisible(true)
+  const deviceFailureRate = () => { //设备故障率
+      if (Availability == 1) { //提取数据 评估中心
+       setEquipmentAbnormalRateVisible(true)
+       setDeviceType(0)
+      } else {
+       setEquipmentFailureRateVisible(true)
     }
- 
   }
-  const deviceFailurerePairRate = () =>{ //设备故障修复率
+  const deviceFailurerePairRate = () => { //设备故障修复率
     setEquipmentFailurerePairRateVisible(true)
   }
-  const deviceAbnormalEcharts = useMemo(()=>{  
-   return <Row type='flex' align='middle' justify='space-between'>
-    <Col span={8} align='middle'>
+  const deviceAbnormalEcharts = useMemo(() => {
+    return <Row type='flex' align='middle' justify='space-between'>
+      <Col span={8} align='middle'>
 
-      <ReactEcharts
-        option={deviceAbnormalOption(1)}
-        style={{ width: '100%', height: 151 }}
-        onEvents={{ click: deviceAbnormals }}
-      />
-     <div>设备完好率</div>
-    </Col>
-    <Col span={8} align='middle'>
-      <ReactEcharts
-        option={deviceAbnormalOption(2)}
-        style={{ width: '100%', height: 151 }}
-        onEvents={{ click: deviceFailureRate }}
-      />
-      <div>设备故障率</div>
-    </Col>
-    <Col span={8} align='middle'>
-      <ReactEcharts
-        option={deviceAbnormalOption(3)}
-        style={{ width: '100%', height: 151 }}
-        onEvents={{ click: deviceFailurerePairRate }}
-      />
-      <div>故障修复率</div>
-    </Col>
-  </Row>
-  },[props.opertionExceptionList])
+        <ReactEcharts
+          option={deviceAbnormalOption(1)}
+          style={{ width: '100%', height: 151 }}
+          onEvents={{ click: deviceAbnormals }}
+        />
+        <div>设备完好率</div>
+      </Col>
+      <Col span={8} align='middle'>
+        <ReactEcharts
+          option={deviceAbnormalOption(2)}
+          style={{ width: '100%', height: 151 }}
+          onEvents={{ click: deviceFailureRate }}
+        />
+        <div>设备故障率</div>
+      </Col>
+      <Col span={8} align='middle'>
+        <ReactEcharts
+          option={deviceAbnormalOption(3)}
+          style={{ width: '100%', height: 151 }}
+          onEvents={{ click: deviceFailurerePairRate }}
+        />
+        <div>故障修复率</div>
+      </Col>
+    </Row>
+  }, [props.opertionExceptionList])
 
-  const { exceptionSignTaskRateLoading,exceptionSignTaskRateList } = props; //现场打卡
+  const { exceptionSignTaskRateLoading, exceptionSignTaskRateList } = props; //现场打卡
   const { consumablesLoading } = props; //耗材统计
-  const [clockAbnormalVisible,setClockAbnormalVisible] = useState(false)  //现场打卡 弹框
+  const [clockAbnormalVisible, setClockAbnormalVisible] = useState(false)  //现场打卡 弹框
   const { exceptionListLoading } = props; //设备异常总览
-  const [equipmentAbnormalRateVisible,setEquipmentAbnormalRateVisible ] = useState(false) //设备完好率 弹框
-  const [equipmentFailureRateVisible,setEquipmentFailureRateVisible ] = useState(false) //设备故障率 弹框
-  const [equipmentFailurerePairRateVisible,setEquipmentFailurerePairRateVisible ] = useState(false) //设备故障修复率 弹框
- 
-  
+  const [equipmentAbnormalRateVisible, setEquipmentAbnormalRateVisible] = useState(false) //设备完好率 弹框
+  const [equipmentFailureRateVisible, setEquipmentFailureRateVisible] = useState(false) //设备故障率 弹框
+  const [equipmentFailurerePairRateVisible, setEquipmentFailurerePairRateVisible] = useState(false) //设备故障修复率 弹框
+
+
   return (
     <Row style={{ flexFlow: 'row nowrap' }} justify='space-between'>
 
       <Spin spinning={exceptionSignTaskRateLoading}>
-      <Col className={styles.clockAbnormal}>
-        <CardHeader btnClick={clockAbnormalClick} showBtn type='week' btnCheck={clockBtnCheck} title='现场打卡异常' />
-        <div style={{ paddingTop: 11 }}>
-          <Row>
-            <div style={{ width: '50%' }}>
-              <ReactEcharts
-                option={sceneClockOption(exceptionSignTaskRateList.insidePlanRate=='-'? '-': ` ${ exceptionSignTaskRateList.insidePlanRate}%`)}
-                style={{ height: '112px', width: '100%' }}
-                ref={planInsideClockAbnormalEchartsRef}
-              />
-              <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划内打卡异常率</Row>
-              <Row justify='center'>
-                <div className={styles.clockNumTextBag}>
-                  <Row justify='center'>
-                    <Col>
-                      <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskCount}次</div>
-                      <div className={styles.clockText}>打卡次数</div>
-                    </Col>
-                    <Col style={{ paddingLeft: 43 }}>
-                      <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskExceptionCount}次</div>
-                      <div className={styles.clockText}>打卡异常次数</div>
-                    </Col>
-                  </Row>
-                </div>
-              </Row>
-            </div>
-            <div style={{ width: '50%' }}>
-              <ReactEcharts
-                option={sceneClockOption(exceptionSignTaskRateList.outPlanTaskRate=='-'? '-': `${exceptionSignTaskRateList.outPlanTaskRate}%`)}
-                style={{ height: '112px', width: '100%' }}
-                ref={planOutClockAbnormalEchartsRef}
-              />
-              <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划外打卡异常率</Row>
-              <Row justify='center'>
-                <div className={styles.clockNumTextBag}>
-                  <Row justify='center'>
-                    <Col>
-                      <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskCount}次</div>
-                      <div className={styles.clockText}>打卡次数</div>
-                    </Col>
-                    <Col style={{ paddingLeft: 43 }}>
-                      <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskExceptionCount}次</div>
-                      <div className={styles.clockText}>打卡异常次数</div>
-                    </Col>
-                  </Row>
-                </div>
-              </Row>
-            </div>
-          </Row>
-        </div>
-      </Col>
+        <Col className={styles.clockAbnormal}>
+          <CardHeader btnClick={clockAbnormalClick} showBtn type='week' btnCheck={clockBtnCheck} title='现场打卡异常' />
+          <div style={{ paddingTop: 11 }}>
+            <Row>
+              <div style={{ width: '50%' }}>
+                <ReactEcharts
+                  option={sceneClockOption(exceptionSignTaskRateList.insidePlanRate == '-' ? '-' : ` ${exceptionSignTaskRateList.insidePlanRate}%`)}
+                  style={{ height: '112px', width: '100%' }}
+                  ref={planInsideClockAbnormalEchartsRef}
+                />
+                <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划内打卡异常率</Row>
+                <Row justify='center'>
+                  <div className={styles.clockNumTextBag}>
+                    <Row justify='center'>
+                      <Col>
+                        <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskCount}次</div>
+                        <div className={styles.clockText}>打卡次数</div>
+                      </Col>
+                      <Col style={{ paddingLeft: 43 }}>
+                        <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskExceptionCount}次</div>
+                        <div className={styles.clockText}>打卡异常次数</div>
+                      </Col>
+                    </Row>
+                  </div>
+                </Row>
+              </div>
+              <div style={{ width: '50%' }}>
+                <ReactEcharts
+                  option={sceneClockOption(exceptionSignTaskRateList.outPlanTaskRate == '-' ? '-' : `${exceptionSignTaskRateList.outPlanTaskRate}%`)}
+                  style={{ height: '112px', width: '100%' }}
+                  ref={planOutClockAbnormalEchartsRef}
+                />
+                <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划外打卡异常率</Row>
+                <Row justify='center'>
+                  <div className={styles.clockNumTextBag}>
+                    <Row justify='center'>
+                      <Col>
+                        <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskCount}次</div>
+                        <div className={styles.clockText}>打卡次数</div>
+                      </Col>
+                      <Col style={{ paddingLeft: 43 }}>
+                        <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskExceptionCount}次</div>
+                        <div className={styles.clockText}>打卡异常次数</div>
+                      </Col>
+                    </Row>
+                  </div>
+                </Row>
+              </div>
+            </Row>
+          </div>
+        </Col>
       </Spin>
 
       <Spin spinning={consumablesLoading}>
-      <Col className={styles.consumablesStatistics}>
-        <CardHeader btnClick={consumablesClick} showBtn type='week' btnCheck={consumablesCheck} title='耗材统计' />
-        <Row justify='center' align='middle' className={styles.consumablesChart} >
-          <div style={{ position: 'absolute', height: '167px', width: '167px', borderRadius: '50%', border: '1px solid #2d3d59' }}></div>
-          <ReactEcharts
-            option={consumablesOption()}
-            style={{ height: '182px', width: '100%' }}
-            ref={consumablesEchartsRef}
-          />
-          <MoreBtn className={styles.moreBtnAbsoluteSty} type='consumables' moreBtnClick={moreBtnClick} />
-        </Row>
-      </Col>
-     </Spin>
+        <Col className={styles.consumablesStatistics}>
+          <CardHeader btnClick={consumablesClick} showBtn type='week' btnCheck={consumablesCheck} title='耗材统计' />
+          <Row justify='center' align='middle' className={styles.consumablesChart} >
+            <div style={{ position: 'absolute', height: '167px', width: '167px', borderRadius: '50%', border: '1px solid #2d3d59' }}></div>
+            <ReactEcharts
+              option={consumablesOption()}
+              style={{ height: '182px', width: '100%' }}
+              ref={consumablesEchartsRef}
+            />
+            <MoreBtn className={styles.moreBtnAbsoluteSty} type='consumables' moreBtnClick={moreBtnClick} />
+          </Row>
+        </Col>
+      </Spin>
 
-     <Spin spinning={exceptionListLoading}>
-      <Col className={styles.deviceAbnormal}> {/**设备异常总览 */}
-        <CardHeader btnClick={deviceAbnormalClick} showBtn type='week' btnCheck={deviceAbnormalCheck} title='设备异常总览' />
-        <div style={{ height: '100%', padding: '41px 0 0' }}> 
-           { deviceAbnormalEcharts }{/**当图表有点击事件时 更新更新页面时  图表抖动 */}
-        </div>
-      </Col>
-    </Spin>
-       <ClockAbnormalModal  //现场打卡异常弹框
+      <Spin spinning={exceptionListLoading}>
+        <Col className={styles.deviceAbnormal}> {/**设备异常总览 */}
+          <CardHeader btnClick={deviceAbnormalClick} showBtn type='week' btnCheck={deviceAbnormalCheck} title='设备异常总览' />
+          <div style={{ height: '100%', padding: '41px 0 0' }}>
+            {deviceAbnormalEcharts}{/**当图表有点击事件时 更新更新页面时  图表抖动 */}
+          </div>
+        </Col>
+      </Spin>
+      <ClockAbnormalModal  //现场打卡异常弹框
         modalType='clockAbnormal'
         visible={clockAbnormalVisible}
         type={pollutantType}
-        onCancel={()=>{setClockAbnormalVisible(false)}}
-        time={[moment(clockBtnCheck.beginTime),moment(clockBtnCheck.endTime)]}
+        onCancel={() => { setClockAbnormalVisible(false) }}
+        time={[moment(clockBtnCheck.beginTime), moment(clockBtnCheck.endTime)]}
       />
       <ConsumablesStatisticsModal  //耗材统计弹框
         visible={consumablesStatisticsVisible}
         type={Number(pollutantType)}
-        onCancel={()=>{setConsumablesStatisticsVisible(false)}}
-        time={[moment(consumablesCheck.beginTime),moment(consumablesCheck.endTime)]}
-      />    
+        onCancel={() => { setConsumablesStatisticsVisible(false) }}
+        time={[moment(consumablesCheck.beginTime), moment(consumablesCheck.endTime)]}
+      />
       <EquipmentAbnormalRateModal  //设备完好率弹框
         visible={equipmentAbnormalRateVisible}
         type={Number(pollutantType)}
-        onCancel={()=>{setEquipmentAbnormalRateVisible(false)}}
-        time={[moment(deviceAbnormalCheck.beginTime),moment(deviceAbnormalCheck.endTime)]}
+        onCancel={() => { setEquipmentAbnormalRateVisible(false) }}
+        time={[moment(deviceAbnormalCheck.beginTime), moment(deviceAbnormalCheck.endTime)]}
         operationSetType={operationSettingInfo?.Availability} //1评估中心 2默认
         deviceType={deviceType} //1设备完好率 2设备故障率 
-      />  
+      />
       <EquipmentFailureRate  //设备故障率弹框
         visible={equipmentFailureRateVisible}
         type={Number(pollutantType)}
-        onCancel={()=>{setEquipmentFailureRateVisible(false)}}
-        time={[moment(deviceAbnormalCheck.beginTime),moment(deviceAbnormalCheck.endTime)]}
-      />  
+        onCancel={() => { setEquipmentFailureRateVisible(false) }}
+        time={[moment(deviceAbnormalCheck.beginTime), moment(deviceAbnormalCheck.endTime)]}
+      />
       <EquipmentFailurerePairRate //设备故障修复率弹框
         visible={equipmentFailurerePairRateVisible}
         type={Number(pollutantType)}
-        onCancel={()=>{setEquipmentFailurerePairRateVisible(false)}}
-        time={[moment(deviceAbnormalCheck.beginTime),moment(deviceAbnormalCheck.endTime)]}
-      /> 
-         
+        onCancel={() => { setEquipmentFailurerePairRateVisible(false) }}
+        time={[moment(deviceAbnormalCheck.beginTime), moment(deviceAbnormalCheck.endTime)]}
+      />
+
     </Row>
   );
 };

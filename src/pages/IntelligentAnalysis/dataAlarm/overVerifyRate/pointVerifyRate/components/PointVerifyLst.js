@@ -347,15 +347,15 @@ export default class PointVerifyLst extends Component {
       } else {
       }
     });
-    newColumns.push({
-      title: <span>核实率</span>,
-      dataIndex: 'AllRespondedRate',
-      key: 'AllRespondedRate',
-      align: 'center',
-      render: (text, record) => {
-        return <div>{text == '-' ? text : `${text}%`}</div>;
-      },
-    });
+    // newColumns.push({
+    //   title: <span>核实率</span>,
+    //   dataIndex: 'AllRespondedRate',
+    //   key: 'AllRespondedRate',
+    //   align: 'center',
+    //   render: (text, record) => {
+    //     return <div>{text == '-' ? text : `${text}%`}</div>;
+    //   },
+    // });
     this.setState({ columns: newColumns });
     setTimeout(() => {
       this.getTableData();

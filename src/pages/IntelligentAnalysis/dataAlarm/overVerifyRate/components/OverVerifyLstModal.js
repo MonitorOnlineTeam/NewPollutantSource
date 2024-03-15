@@ -377,15 +377,15 @@ export default class OverVerifyLstModal extends Component {
             ],
           });
         });
-        newCloum.push({
-          title: <span>核实率</span>,
-          dataIndex: 'AllRespondedRate',
-          key: 'AllRespondedRate',
-          align: 'center',
-          render: (text, record) => {
-            return <div>{text == '-' ? text : `${text}%`}</div>;
-          },
-        });
+        // newCloum.push({
+        //   title: <span>核实率</span>,
+        //   dataIndex: 'AllRespondedRate',
+        //   key: 'AllRespondedRate',
+        //   align: 'center',
+        //   render: (text, record) => {
+        //     return <div>{text == '-' ? text : `${text}%`}</div>;
+        //   },
+        // });
         let newCloum2 = []; newCloum2.push(...newCloum);
          newCloum2.splice(0,1,{
           title: '省',
@@ -695,15 +695,15 @@ export default class OverVerifyLstModal extends Component {
       } else {
       }
     });
-    newCloum.push({
-      title: <span>核实率</span>,
-      dataIndex: 'AllRespondedRate',
-      key: 'AllRespondedRate',
-      align: 'center',
-      render: (text, record) => {
-        return <div>{text == '-' ? text : `${text}%`}</div>;
-      },
-    });
+    // newCloum.push({
+    //   title: <span>核实率</span>,
+    //   dataIndex: 'AllRespondedRate',
+    //   key: 'AllRespondedRate',
+    //   align: 'center',
+    //   render: (text, record) => {
+    //     return <div>{text == '-' ? text : `${text}%`}</div>;
+    //   },
+    // });
     this.setState({
       columns: newCloum,
     });

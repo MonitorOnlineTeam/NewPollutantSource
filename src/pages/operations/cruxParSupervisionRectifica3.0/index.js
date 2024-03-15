@@ -315,8 +315,8 @@ const Index = (props) => {
         </Form.Item>
         <Form.Item label="整改状态" name="CheckStatus"  >
           <Select placeholder='请选择' allowClear style={{ width: 150 }}>
-            <Option key={1} value={1} >整改待核实</Option>
-            <Option key={2} value={2} >整改未完成</Option>
+            <Option key={1} value={1} >整改未完成</Option>
+            <Option key={2} value={2} >整改待核实</Option>
             <Option key={3} value={3} >整改已完成</Option>
           </Select>
         </Form.Item>
