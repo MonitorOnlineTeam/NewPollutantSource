@@ -1021,7 +1021,7 @@ const Index = props => {
             <>
               <Spin spinning={!!checkRoleDatasLoading} size="small" style={{ width: 440, top: -6 }}>
                 <Form.Item name='checkUserId' label="核查人" rules={[{ required: true, message: '请选择核查人!' }]}>
-                  <Select showSearch style={{ width: 300 }} placeholder="请选择"  >
+                  <Select style={{ width: 300 }} placeholder="请选择"   showSearch filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}>
                     {checkRoleDatas?.[0] && checkRoleDatas.map(item => <Option value={item.UserID}>{item.UserName}</Option>)}
                   </Select>
                 </Form.Item>

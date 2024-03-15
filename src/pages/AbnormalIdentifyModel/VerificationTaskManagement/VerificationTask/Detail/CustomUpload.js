@@ -9,8 +9,6 @@ import { connect } from 'dva';
 import ImageView from '@/components/ImageView';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
-    saveLoading: loading.effects['autoform/UpdatePlanItem'],
-
 });
 const Index = ({ name, uid, onFileChange, dispatch, fileListData }) => {
 
@@ -38,7 +36,6 @@ const Index = ({ name, uid, onFileChange, dispatch, fileListData }) => {
         },
         onChange(info) {
             const fileData = [];
-            console.log(info)
             info.fileList.map(item => {
                 if (item.response && item.response.IsSuccess) { //刚上传的
                     fileData.push({ ...item, url: `/${item.response.Datas}`, })
