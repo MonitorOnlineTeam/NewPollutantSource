@@ -1858,6 +1858,18 @@ const Index = (props) => {
           </Form.Item>
         </Col>
       </Row>
+      <Row>
+        <Col span={8}>
+          <Form.Item label="离开现场时间" >
+            {data.LeaveSceneTime}
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="实际工时（小时）" >
+            {data.RealityHour}
+          </Form.Item>
+        </Col>
+      </Row>
       <TitleComponents text='服务结果处理-工程助理填写' />
       <Row>
         <Col span={8}>

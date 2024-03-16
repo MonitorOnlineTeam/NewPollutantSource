@@ -870,7 +870,7 @@ const Index = (props) => {
               form={form3}
               onFinish={addOrUpdSellerSubmit}
             >
-              <Form.Item label="卖方公司名称" name="name" rules={[{ required: true, message: '请输入卖方公司名称', },]} >
+              <Form.Item label="卖方公司名称" name="name" rules={[{ required: true, message: '请输入卖方公司名称'}]} >
                 <Input placeholder='请输入' allowClear />
               </Form.Item>
 
