@@ -1981,7 +1981,7 @@ const Index = (props) => {
         if (traceVal || traceVal == 0) {
           if ((setStatusVal?.[0] == 1 || instrumentStatusVal?.[0] == 1 || dataStatusVal?.[0] == 1) && ((setVal || setVal == 0) || (instrumentSetVal || instrumentSetVal == 0) || (dataVal || dataVal == 0))) {
             props.judgeParamCheck({
-              PollutantCode: row.ChildID,
+              CheckItem: row.ChildID,
               SetValue: setVal, InstrumentSetValue: instrumentSetVal, DataValue: dataVal,
               TraceabilityValue: traceVal,
               SetStatus: setStatusVal?.length && setStatusVal[0],

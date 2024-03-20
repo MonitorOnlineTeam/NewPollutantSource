@@ -761,7 +761,7 @@ export default class OverVerifyLstModal extends Component {
                     value={AttentionCode}
                     style={{ width: 110 }}
                   >
-                    <Option value="">全部</Option>
+                    {/* <Option value="">全部</Option> */}
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
@@ -868,8 +868,8 @@ export default class OverVerifyLstModal extends Component {
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
         RegionCode:  record.ProvinceName == '全部合计' ? RegionCode : record.regionCode,
-        attentionCode: record.attentionValue,
-        PollutantType: record.outletValue,
+        attentionCode: AttentionCode,
+        PollutantType: PollutantType,
         // DataType: record.dataType == '日'? 'DayData' : 'HourData',
         DataType: '',
         BeginTime: moment(beginTime).format("YYYY-MM-DD HH:mm:ss"),

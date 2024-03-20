@@ -4,7 +4,7 @@
  * 创建时间：2022.07.18
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, Card,Popover, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, Card, Popover, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -18,6 +18,7 @@ import RegionList from '@/components/RegionList'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import NumTips from '@/components/NumTips'
+import { permissionButton } from '@/utils/utils';
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -37,8 +38,13 @@ const dvaPropsData = ({ loading, cemsModelList, commissionTest, }) => ({
   maxNum: cemsModelList.maxNum,
   systemModelNameList: commissionTest.systemModelNameList,
   systemModelNameListLoading: loading.effects[`${namespace}/getSystemModelNameList`],
-  tableLoading2: loading.effects[`${namespace}/addSystemModel`],
-  tableDatas2: cemsModelList.tableDatas,
+  monitorCategorySystemLoading: loading.effects[`${namespace}/getMonitorCategorySystemList`],
+  monitorCategorySystemList: cemsModelList.monitorCategorySystemList,
+  associatedSystemList: cemsModelList.associatedSystemList,
+  associatedCategoryList: cemsModelList.associatedCategoryList,
+  updateMonitorCategorySystemStatusLoading: loading.effects[`${namespace}/updateMonitorCategorySystemStatus`],
+  addMonitorCategorySystemLoading: loading.effects[`${namespace}/addMonitorCategorySystem`],
+  deleteMonitorCategorySystemLoading: loading.effects[`${namespace}/deleteMonitorCategorySystem`],
 
 })
 
@@ -94,6 +100,34 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
+    getMonitorCategorySystemList: (payload, callback) => { //获取关联关系
+      dispatch({
+        type: `${namespace}/getMonitorCategorySystemList`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    updateMonitorCategorySystemStatus: (payload, callback) => { //更新关联关系设备类别状态
+      dispatch({
+        type: `${namespace}/updateMonitorCategorySystemStatus`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    addMonitorCategorySystem: (payload, callback) => { //添加关联关系
+      dispatch({
+        type: `${namespace}/addMonitorCategorySystem`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    deleteMonitorCategorySystem: (payload, callback) => { //删除系统型号与系统类别关联
+      dispatch({
+        type: `${namespace}/deleteMonitorCategorySystem`,
+        payload: payload,
+        callback: callback
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -114,15 +148,24 @@ const Index = (props) => {
   const [equipmentModelVisible, setEquipmentModelVisible] = useState(false)
   const [popVisible, setPopVisible] = useState(false)
 
-   
-  const isEditing = (record) => record.key === editingKey;
 
-  const { tableDatas, tableTotal, tableLoading, monitoringTypeList, manufacturerList, loadingAddConfirm, loadingEditConfirm, exportLoading, maxNum, systemModelNameList, systemModelNameListLoading, tableLoading2, tableDatas2, } = props;
+  const [equipmentModelStatisticsPermis, setEquipmentModelStatisticsPermis] = useState(false)
+
+
+  const { tableDatas, tableTotal, tableLoading, monitoringTypeList, manufacturerList, loadingAddConfirm, loadingEditConfirm, exportLoading, maxNum, systemModelNameList, systemModelNameListLoading,
+    monitorCategorySystemLoading, monitorCategorySystemList, associatedSystemList, associatedCategoryList, updateMonitorCategorySystemStatusLoading, addMonitorCategorySystemLoading, deleteMonitorCategorySystemLoading, } = props;
+
   useEffect(() => {
     onFinish();
     props.getManufacturerList({})
     props.getSystemModelNameList({})
-
+    
+    const buttonList = permissionButton(props.match.path)
+    buttonList.map(item=>{
+      switch (item){
+        case 'equipmentModelStatisticsList': setEquipmentModelStatisticsPermis(true); break;
+      }
+    })
   }, []);
 
   const columns = [
@@ -194,61 +237,53 @@ const Index = (props) => {
     },
     {
       title: '编号',
-      dataIndex: 'Num',
-      key: 'Num',
+      dataIndex: 'CategoryNum',
+      key: 'CategoryNum',
       align: 'center',
-      width:80,
+      width: 80,
     },
     {
       title: '设备类型',
-      dataIndex: 'ManufactorName',
-      key: 'ManufactorName',
+      dataIndex: 'CategoryName',
+      key: 'CategoryName',
       align: 'center',
-      width:'auto',
+      width: 'auto',
     },
     {
       title: '设备类别状态',
-      dataIndex: 'SystemName',
-      key: 'SystemName',
-      align: 'center',
-      width:'auto',
-      render: (text, record) => {
-        if (text === 1) {
-          return <span><Tag color="blue">启用</Tag></span>;
-        }
-        if (text === 2) {
-          return <span><Tag color="red">停用</Tag></span>;
-        }
-      },
-    },
-    {
-      title: '系统型号',
-      dataIndex: 'SystemModel',
-      key: 'SystemModel',
-      align: 'center',
-      width:'auto',
-    },
-    {
-      title: '系统型号编号',
-      dataIndex: 'SystemModel',
-      key: 'SystemModel',
-      align: 'center',
-      width:'auto',
-    },
-    {
-      title: '状态',
       dataIndex: 'Status',
       key: 'Status',
       align: 'center',
-      width:'auto',
+      width: 'auto',
       render: (text, record) => {
-        if (text === 1) {
-          return <span><Tag color="blue" onClick={()=>setDeviceCategory(record)}>启用</Tag></span>;
+        if(record.CategoryName!='其他'){
+          if (text === 1) {
+            return <Popconfirm title="确定要停用此设备类型吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
+              <Tag style={{cursor:'pointer'}} color="blue">启用</Tag>
+            </Popconfirm>;
+          }
+          if (text === 2) {
+            return <Popconfirm title="确定要启用此设备类型吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
+              <Tag style={{cursor:'pointer'}} color="red">停用</Tag>
+            </Popconfirm>;
+          }
         }
-        if (text === 2) {
-          return <span><Tag color="red">停用</Tag></span>;
-        }
+
       },
+    },
+    {
+      title: '系统型号编号',
+      dataIndex: 'SystemNum',
+      key: 'SystemNum',
+      align: 'center',
+      width: 'auto',
+    },
+    {
+      title: '系统型号',
+      dataIndex: 'SystemName',
+      key: 'SystemName',
+      align: 'center',
+      width: 'auto',
     },
     {
       title: <span>操作</span>,
@@ -257,7 +292,7 @@ const Index = (props) => {
       render: (text, record) => {
         return <Fragment>
           <Tooltip title="删除">
-            <Popconfirm title="确定要删除此条信息吗？" style={{ paddingRight: 5 }} onConfirm={() => { delAssociation(record) }} okText="是" cancelText="否">
+            <Popconfirm placement='topLeft' title="确定要删除此条信息吗？" style={{ paddingRight: 5 }} onConfirm={() => { delAssociation(record) }} okText="是" cancelText="否">
               <a>删除</a>
             </Popconfirm>
           </Tooltip>
@@ -415,44 +450,42 @@ const Index = (props) => {
           <Button onClick={() => { add() }} style={{ marginRight: 8 }}>
             添加
      </Button>
-          <Button type="primary" style={{ marginRight: 8 }} onClick={() => { setEquipmentModelVisible(true) }}>
+         {equipmentModelStatisticsPermis && <Button type="primary" style={{ marginRight: 8 }} onClick={() => { setEquipmentModelVisible(true); props.getMonitorCategorySystemList({}) }}>
             设备型号统计清单
-     </Button>
+     </Button>}
         </Form.Item>
       </Row>
     </Form>
   }
-    //关联系统型号列表
-    const [associatedSystemModelLoading,setAssociatedSystemModelLoading] = useState(false)
-    const [associatedSystemModelList,setAssociatedSystemModelList] = useState([])
-    useEffect(()=>{
-      if(popVisible){
-        setAssociatedSystemModelLoading(true)
-        props.getSystemModelList({
-          ManufactorID: "9dc59e69-d2ec-4b43-ae9e-2fe78de986be",//雪迪龙
-          pageIndex:1,
-          pageSize:9999,
-        },(result )=>{
-          console.log(result)
-          setAssociatedSystemModelLoading(false)
-          if (result.IsSuccess) {
-            setAssociatedSystemModelList( result.Datas ? result.Datas.rtnlist : [])
-          } else {
-            message.error(result.Message)
-          }
-        })
-      }
-    },[popVisible])
 
-  const addAssociation = (record)=>{ //添加关联
 
+
+  //关联系统型号列表
+  const [associatedSystemModelLoading, setAssociatedSystemModelLoading] = useState(false)
+  const [associatedSystemModelList, setAssociatedSystemModelList] = useState([])
+  useEffect(() => {
+    if (popVisible && associatedSystemModelList?.length <= 0) {
+      setAssociatedSystemModelLoading(true)
+      setAssociatedSystemModelLoading(false)
+    }
+  }, [popVisible])
+
+  const addAssociation = (values) => { //添加关联
+    props.addMonitorCategorySystem({ ...values }, () => {
+      form3.resetFields();
+      props.getMonitorCategorySystemList({});
+    })
   }
-  const setDeviceCategory = (record)=> { //停用或启用设备类别
-
+  const setDeviceCategory = (record) => { //停用或启用设备类别 更细状态
+    props.updateMonitorCategorySystemStatus({ id: record.ID, status: record.Status==1? 2 : 1 }, () => {
+      props.getMonitorCategorySystemList({})
+    })
   }
-  
-  const delAssociation = (record)=>{//删除关联
 
+  const delAssociation = (record) => {//删除关联
+    props.deleteMonitorCategorySystem({ id: record.ID}, () => {
+      props.getMonitorCategorySystemList({})
+    })
   }
 
 
@@ -565,7 +598,7 @@ const Index = (props) => {
       <Modal
         title={'设备型号统计清单关联关系'}
         visible={equipmentModelVisible}
-        onCancel={() => { setEquipmentModelVisible(false);setPopVisible(false) }}
+        onCancel={() => { setEquipmentModelVisible(false); setPopVisible(false) }}
         footer={null}
         destroyOnClose
         wrapClassName="spreadOverModal"
@@ -579,16 +612,22 @@ const Index = (props) => {
               form={form3}
               onFinish={addAssociation}
             >
-              <Form.Item label="编号" name="name" rules={[{ required: true, message: '请输入编号' }]} >
+              <Form.Item label="编号" name="categoryNum" rules={[{ required: true, message: '请输入编号' }]} >
                 <InputNumber placeholder='请输入' allowClear />
               </Form.Item>
-              <Form.Item label="设备类别" name="name" rules={[{ required: true, message: '请输入设备类别' }]} >
-                <Input placeholder='请输入' allowClear />
+              <Form.Item label="设备类别" name="categoryId" rules={[{ required: true, message: '请输入设备类别' }]} >
+                {monitorCategorySystemLoading ? <Spin size='small' /> : <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
+                  {
+                    associatedCategoryList[0] && associatedCategoryList.map(item => {
+                      return <Option key={item.ChildID} value={item.ChildID}>{item.Name}</Option>
+                    })
+                  }
+                </Select>}
               </Form.Item>
-              <Form.Item label="关联系统型号" name="name" rules={[{ required: true, message: '请选择关联系统型号' }]} >
-                {associatedSystemModelLoading? <Spin size='small'/> : <Select placeholder='请选择设备厂家' allowClear showSearch optionFilterProp="children">
-                    {
-                    associatedSystemModelList[0] && associatedSystemModelList.map(item => {
+              <Form.Item label="关联系统型号" name="systemId" rules={[{ required: true, message: '请选择关联系统型号' }]} >
+                {monitorCategorySystemLoading ? <Spin size='small' /> : <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
+                  {
+                    associatedSystemList[0] && associatedSystemList.map(item => {
                       return <Option key={item.ID} value={item.ID}>{item.SystemModel}</Option>
                     })
                   }
@@ -598,7 +637,7 @@ const Index = (props) => {
                 <Button onClick={() => { setPopVisible(false) }} style={{ marginRight: 8 }} >
                   取消
                 </Button>
-                <Button type="primary" htmlType='submit' loading={false}>
+                <Button type="primary" htmlType='submit' loading={addMonitorCategorySystemLoading}>
                   保存
                   </Button>
               </Row>
@@ -609,11 +648,11 @@ const Index = (props) => {
           </Button>
         </Popover>
         <SdlTable
-          loading={tableLoading2}
+          loading={monitorCategorySystemLoading || updateMonitorCategorySystemStatusLoading || deleteMonitorCategorySystemLoading}
           bordered
-          dataSource={tableDatas2}
+          dataSource={monitorCategorySystemList }
           columns={columns2}
-          scroll={{x:900}}
+          scroll={{ x: 900 }}
           pagination={false}
         />
       </Modal>

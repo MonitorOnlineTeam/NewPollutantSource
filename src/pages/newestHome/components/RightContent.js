@@ -250,14 +250,6 @@ const Index = (props) => {
       tooltip: {
         trigger: 'axis',   //触发类型；轴触发，axis则鼠标hover到一条柱状图显示全部数据，item则鼠标hover到折线点显示相应数据，
         formatter: function (params, ticket, callback) {
-          // //x轴名称
-          // let name = params.name
-          // //值
-          //   let value = ''
-          //   value = params.marker + params.seriesName+": "+params.value +'%' + '<br />'
-          // return  name + '<br />' + value
-
-          //x轴名称 params[0].name
           let name = params[0].name;
           //值
           let value = ''
@@ -277,6 +269,10 @@ const Index = (props) => {
             width: 1
           },
         },
+        textStyle: {
+          color: '#fff' // 修改文字颜色为白色
+        },
+        borderColor: 'rgba(46, 57, 80, 1)', // 修改边框颜色
       },
       grid: {
         left: 40,
@@ -440,7 +436,7 @@ const Index = (props) => {
             num: {
               fontSize: 16,
               color: '#fff',
-              padding: [0, 0, 5, 0]
+              padding: [8, 0, 0, 0]
             }
           }
         },
@@ -456,10 +452,10 @@ const Index = (props) => {
           },
         },
         data: [
-          { value: operationExpiraData.notExpired7, name: '0-7日内到期' },
-          { value: operationExpiraData.notExpired30, name: '15-30日内到期' },
-          { value: operationExpiraData.notExpired14, name: '8-14日内到期' },
-          { value: operationExpiraData.overdue7, name: '过期7日内' },
+          { value: operationExpiraData.notExpired7, name: '0-7日内到期',label: { color: '#FFB900' } },
+          { value: operationExpiraData.notExpired30, name: '15-30日内到期',label: { color: '#F76890' }  },
+          { value: operationExpiraData.notExpired14, name: '8-14日内到期',label: { color: '#2D8BCD' }  },
+          { value: operationExpiraData.overdue7, name: '过期7日内',label: { color: '#2AFAA4' }  },
         ]
       }
     ]

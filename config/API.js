@@ -822,6 +822,10 @@ export const API = {
     AddCemsSystemModelInfo: before + '/DebuggingEquipment/AddCemsSystemModelInfo',  //添加系统型号清单信息
     UpdCemsSystemModelInfo: before + '/DebuggingEquipment/UpdCemsSystemModelInfo',  //更新系统型号清单信息
     DeleteCemsSystemModelInfo: before + '/DebuggingEquipment/DeleteCemsSystemModelInfo',  //删除系统型号清单信息
+    GetMonitorCategorySystemList: before + '/CTBaseDataApi/GetMonitorCategorySystemList',//获取系统型号与系统类别关联信息
+    UpdateMonitorCategorySystemStatus: before + '/CTBaseDataApi/UpdateMonitorCategorySystemStatus',///更新系统型号与系统类别关联信息设备类别状态
+    AddMonitorCategorySystem: before + '/CTBaseDataApi/AddMonitorCategorySystem',///添加系统型号与系统类别关联
+    DeleteMonitorCategorySystem: before + '/CTBaseDataApi/DeleteMonitorCategorySystem',//删除系统型号与系统类别关联
     /*设备信息清单*/
     GetCemsEquipmentInventory: before + '/DebuggingEquipment/GetCemsEquipmentInventory',  //获取设备信息清单
     AddCemsEquipmentInfo: before + '/DebuggingEquipment/AddCemsEquipmentInfo', //添加设备信息清单信息
@@ -833,5 +837,6 @@ export const API = {
     UpdReferenceInstrumentInfo: before + '/DebuggingEquipment/UpdReferenceInstrumentInfo',  //更新参比仪器设备清单
     DeleteReferenceInstrumentInfo: before + '/DebuggingEquipment/DeleteReferenceInstrumentInfo',  //删除参比仪器设备清单
   },
+  
 };
 

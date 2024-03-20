@@ -21,6 +21,7 @@ import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 import RegionDetail from './RegionDetail'
+import CityDetail from './CityDetail'
 
 const { Option } = Select;
 
@@ -142,6 +143,9 @@ const Index = (props) => {
       align: 'center',
       width: 'auto',
       ellipsis: true,
+      render: (text, record) => {
+       return record.provinceName=='全部合计'? <a onClick={() => { cityDetail(record) }}> {text} </a> : text
+      }
     },
     {
       title: '签到异常次数（缺卡次数）',
@@ -155,12 +159,23 @@ const Index = (props) => {
   const [detailVisible, setDetailVisible] = useState(false)
   const [detailTitle, setDetailTitle] = useState('详情')
   const [regionDetailCode, setRegionDetailCode] = useState()
-
   const detail = (record) => {
     setDetailVisible(true)
     setDetailTitle(`${record.provinceName}（${queryPar.beginTime && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar.endTime && moment(queryPar.endTime).format('YYYY-MM-DD')}）`)
     setRegionDetailCode(record.provinceCode? record.provinceCode : queryPar.regionCode )
   }
+
+  const [cityDetailVisible, setCityDetailVisible] = useState(false)
+  const [cityDetailTitle, setCityDetailTitle] = useState('详情')
+  const [cityDetailCode, setCityDetailCode] = useState()
+  const cityDetail = (record) => {
+    setCityDetailVisible(true)
+    setCityDetailTitle(`${record.provinceName}（${queryPar.beginTime && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar.endTime && moment(queryPar.endTime).format('YYYY-MM-DD')}）`)
+    setCityDetailCode(queryPar.regionCode )
+  }
+
+
+
   const exports = async () => {
     props.ExportSignInList({
       ...queryPar
@@ -253,6 +268,17 @@ return (
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
       >
         <RegionDetail regionDetailCode={regionDetailCode} />
+      </Modal>
+
+      <Modal
+        visible={cityDetailVisible}
+        title={cityDetailTitle}
+        onCancel={() => { setCityDetailVisible(false) }}
+        footer={null}
+        destroyOnClose
+        wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
+      >
+        <CityDetail cityDetailCode={cityDetailCode} type='hour'/>
       </Modal>
     </BreadcrumbWrapper>
   </div>

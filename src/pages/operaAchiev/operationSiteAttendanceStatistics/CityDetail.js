@@ -32,7 +32,7 @@ const dvaPropsData = ({ loading, operationSiteAttendanceStatistics }) => ({
   exportLoading: operationSiteAttendanceStatistics.cityDetailExportLoading,
   configInfo: global.configInfo,
   regDetailQueryPar: operationSiteAttendanceStatistics.regDetailQueryPar,
-
+  regQueryPar: operationSiteAttendanceStatistics.queryPar,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -59,7 +59,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
 
-  const { regDetailQueryPar, detailCode, tableDatas, tableTotal, tableLoading, exportLoading, cityDetailQueryPar, } = props;
+  const { regDetailQueryPar, detailCode, tableDatas, tableTotal, tableLoading, exportLoading, cityDetailQueryPar,type, regQueryPar,} = props;
 
 
   useEffect(() => {
@@ -184,11 +184,12 @@ const Index = (props) => {
 
     try {
       const values = await form.validateFields();
+      const par = type==='hour'? regQueryPar : regDetailQueryPar
       props.GetSignInList(cityDetailQueryPar ? { ...cityDetailQueryPar, pageIndex: pageIndex, pageSize: pageSize } : {
         ...values,
         pageIndex: pageIndex,
         pageSize: pageSize,
-        ...regDetailQueryPar,
+        ...par,
         regionCode:props.cityDetailCode,
         workType:props.workType,
         pointType:3

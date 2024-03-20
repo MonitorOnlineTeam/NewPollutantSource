@@ -166,7 +166,7 @@ class Index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
-                this.onTableClick(RegionCode, '1', undefined)
+                this.onTableClick(RegionCode, '', undefined)
               }}>{text}</a>
             }
           },
@@ -180,7 +180,7 @@ class Index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
-                this.onTableClick(RegionCode, "1", '1')
+                this.onTableClick(RegionCode, '', '1')
               }}>{text}</a>
             }
           },
@@ -194,7 +194,7 @@ class Index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
-                this.onTableClick(RegionCode, "1", '0')
+                this.onTableClick(RegionCode, '', '0')
               }}>{text}</a>
             }
           },
@@ -655,17 +655,12 @@ class Index extends PureComponent {
     let _regionList = regionList.length ? regionList[0].children : [];
     let showTypeText = "";
     if (secondQueryCondition.ResponseStatus == "0") {
-      showTypeText = `${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值'}待响应报警情况`
+      showTypeText = `${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : secondQueryCondition.ExceptionType == "3"?  '恒定值' : '全部合计'}待响应报警情况`
     } else if (secondQueryCondition.ResponseStatus == "1") {
-      showTypeText =`${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' : '恒定值'}已响应报警情况`
+      showTypeText =`${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' :  secondQueryCondition.ExceptionType == "3"?  '恒定值' : '全部合计'}已响应报警情况`
     } else {
-      if (secondQueryCondition.ExceptionType == "1") {
-        showTypeText = "零值报警情况"
-      } else if(secondQueryCondition.ExceptionType == "2") {
-        showTypeText = "超量程报警情况"
-      }else if(secondQueryCondition.ExceptionType == "3"){
-        showTypeText = "恒定值报警情况"
-      }
+      showTypeText =`${secondQueryCondition.ExceptionType == "1"? "零值" : secondQueryCondition.ExceptionType == "2" ? '超量程' :  secondQueryCondition.ExceptionType == "3"?  '恒定值' : '全部合计'}报警情况`
+
     }
     let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY年MM月DD号HH时") : moment(queryCondition.beginTime).format("YYYY年MM月DD号")
     let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY年MM月DD号HH时") : moment(queryCondition.endTime).format("YYYY年MM月DD号")
@@ -791,6 +786,7 @@ class Index extends PureComponent {
           footer={false}
           wrapClassName='spreadOverModal'
           onCancel={() => { this.setState({ visible: false }) }}
+          destroyOnClose
         >
           <Row style={{ marginBottom: 10 }}>
             <Button  icon={<ExportOutlined />} loading={exportExceptionAlarmListForEntLoading} onClick={this.onDetailExport}>

@@ -593,7 +593,7 @@ const Index = (props) => {
                   align: 'center',
                   ellipsis: true,
                   width: 'auto',
-                },)
+                })
               
               return <WorkRecordTable data={installWorkData} loading={installWorkLoading} col={columns}/>;//工作记录
             }
@@ -1023,13 +1023,20 @@ const Index = (props) => {
             if (item.RecordStatus == 1) {
               let columns = []
               columns = workRecordsCol.map(item => item)
-              columns.splice(4, 0,{
-                  title: '是否调试完成',
-                  dataIndex: 'Col1Name',
-                  key: 'Col1Name',
-                  align: 'center',
-                  ellipsis: true,
-                },)
+                columns.splice(3, 0,{
+                    title: '设备型号',
+                    dataIndex: 'SystemModelName',
+                    key: 'SystemModelName',
+                    align: 'center',
+                    ellipsis: true,
+                    width: 'auto',
+                  },{
+                    title: '是否调试完成',
+                    dataIndex: 'Col1Name',
+                    key: 'Col1Name',
+                    align: 'center',
+                    ellipsis: true,
+                  })
               setDebugWorkId(item.RecordId);
               return <WorkRecordTable data={debugWorkData} loading={debugWorkLoading} col={columns}/>;//工作记录
             }
@@ -1223,8 +1230,18 @@ const Index = (props) => {
             }
           case '11':
             if (item.RecordStatus == 1) {
+              let columns = []
+              columns = workRecordsCol.map(item => item)
+                columns.splice(3, 0,{
+                    title: '设备型号',
+                    dataIndex: 'SystemModelName',
+                    key: 'SystemModelName',
+                    align: 'center',
+                    ellipsis: true,
+                    width: 'auto',
+                  })
               setProjectAccepWorkId(item.RecordId);
-              return <WorkRecordTable data={projectAccepWorkData} loading={projectAccepWorkLoading} />;//工作记录
+              return <WorkRecordTable data={projectAccepWorkData} loading={projectAccepWorkLoading} col={columns}/>;//工作记录
             }
           case '23':
             if (item.RecordStatus == 1) {

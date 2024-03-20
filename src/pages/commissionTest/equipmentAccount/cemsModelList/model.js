@@ -18,13 +18,12 @@ export default Model.extend({
     manufacturerList: [],
     maxNum: null,
     systemModelNameList: [],
+    monitorCategorySystemList: [],
+    associatedSystemList:[],
+    associatedCategoryList:[],
   },
   effects: {
     *getSystemModelList({ payload, callback }, { call, put, update }) { //列表
-      if (payload.pageSize==9999) { //设备型号统计清单关联关系 关联系统型号清单
-        const result = yield call(services.GetSystemModelList, payload);
-        callback&&callback(result)
-      } else {
         yield update({ tableLoading: true })
         const result = yield call(services.GetSystemModelList,  payload);
         if (result.IsSuccess) {
@@ -38,7 +37,6 @@ export default Model.extend({
           message.error(result.Message)
           yield update({ tableLoading: false })
         }
-      }
     },
     *addSystemModel({ payload, callback }, { call, put, update }) { //添加
       const result = yield call(services.AddSystemModel, payload);
@@ -75,6 +73,40 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    *getMonitorCategorySystemList({ payload, callback }, { call, put, update }) { //获取系统型号与系统类别关联信息
+      const result = yield call(services.GetMonitorCategorySystemList, payload);
+      if (result.IsSuccess) {
+        yield update({ monitorCategorySystemList: result.Datas?.list,associatedSystemList:result.Datas?.SystemList,associatedCategoryList:result.Datas?.CategoryList,  })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *updateMonitorCategorySystemStatus({ payload, callback }, { call, put, update }) { //更新系统型号与系统类别关联信息设备类别状态
+      const result = yield call(services.UpdateMonitorCategorySystemStatus, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback&&callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *addMonitorCategorySystem({ payload, callback }, { call, put, update }) { //添加系统型号与系统类别关联
+      const result = yield call(services.AddMonitorCategorySystem, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback&&callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *deleteMonitorCategorySystem({ payload, callback }, { call, put, update }) { //删除系统型号与系统类别关联
+      const result = yield call(services.DeleteMonitorCategorySystem, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback&&callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 })

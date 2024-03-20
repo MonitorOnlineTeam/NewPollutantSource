@@ -679,7 +679,6 @@ export default class OverVerifyLst extends Component {
   };
   entAlarmNum = (record,pollutantCode,status) => { //报警次数 弹框
     const {overVerifyRateForm: {beginTime,  endTime, EntCode,PollutantList, RegionCode,  AttentionCode,  PollutantType, OperationPersonnel } } = this.props;
-    console.log(pollutantCode)
     this.setState({
       alarmNumVisible:true,
       PollutantCode:pollutantCode=='全部合计'? '' : pollutantCode,
@@ -690,8 +689,8 @@ export default class OverVerifyLst extends Component {
       type:pageUrl.GetAlarmVerifyDetail,
       payload: {
           RegionCode: record.ProvinceName == '全部合计' ? RegionCode :record.regionCode,
-          attentionCode: record.attentionValue,
-          PollutantType: record.outletValue,
+          attentionCode: AttentionCode,
+          PollutantType: PollutantType,
           // DataType: record.dataType == '日'? 'DayData' : 'HourData',
           DataType:'',
           BeginTime: moment(beginTime).format("YYYY-MM-DD HH:mm:ss"),
@@ -776,7 +775,7 @@ export default class OverVerifyLst extends Component {
                       style={{ width: 110 }}
                       allowClear
                     >
-                      <Option value=""></Option>
+                      {/* <Option value=""></Option> */}
                       {this.attentchildren()}
                     </Select>
                   </Form.Item>

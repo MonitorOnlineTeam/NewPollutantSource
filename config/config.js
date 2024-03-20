@@ -3074,6 +3074,23 @@ export default {
 
               ],
             },
+            // 售后服务管理
+            {
+              path: '/ctAfterSalesServiceManagement',
+              name: 'CtAfterSalesServiceManagement',
+              routes: [
+                {
+                  path: '/ctAfterSalesServiceManagement',
+                  redirect: '/ctAfterSalesServiceManagement/nodeServices',
+                },
+                {
+                  name: 'NodeServices', // 节点服务
+                  path: '/ctAfterSalesServiceManagement/nodeServices',
+                  component: './ctAfterSalesServiceManagement/nodeServices',
+                },
+              ]
+            },
+
             /* 任务详情 */
             {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
@@ -3145,7 +3162,7 @@ export default {
       target: apiHost,
       changeOrigin: true,
     },
-    '/api': { 
+    '/api': {
       target: apiHost2, //调试服务导出PDF 代理
       changeOrigin: true,
       pathRewrite: {
