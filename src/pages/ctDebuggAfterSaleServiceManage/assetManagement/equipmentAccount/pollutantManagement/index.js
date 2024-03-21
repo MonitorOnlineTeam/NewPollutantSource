@@ -92,7 +92,7 @@ export default class Index extends Component {
 
     goPointInfo = (row) => {
         router.push({
-            pathname: `/ctAssetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point`,
+            pathname: `/ctManage/assetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point`,
             query: {
                 targetId: row['dbo.T_Bas_CTEnterprise.ID'],
                 targetName: row['dbo.T_Bas_CTEnterprise.EntName'],

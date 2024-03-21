@@ -10,7 +10,7 @@ import config from '@/config';
 import moment from 'moment';
 import * as services from '@/services/autoformapi';
 import * as commonServices from '@/services/commonApi';
-import { addOrUpdateMonitorEntElectronicFence } from '@/pages/ctAssetManagement/equipmentAccount/pollutantManagement/service';
+import { addOrUpdateMonitorEntElectronicFence } from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/service';
 
 import { downloadFile } from '@/utils/utils';
 

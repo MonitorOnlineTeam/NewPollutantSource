@@ -112,7 +112,7 @@ const Workbench = props => {
   }, [props.location.query.type]);
  
   const [userAllMenuListLoading,setAllUserMenuLoading] = useState(true)
-  // 加载工作台和我的消息数据 运维服务列表 根据权限
+  // 加载工作台和我的消息数据 待办中心列表 根据权限
   const loadData = () => {
     props.dispatch({
       type: 'wordSupervision/GetWorkbenchesModuleList',
@@ -129,7 +129,7 @@ const Workbench = props => {
             //    SetDaily(false)
             //  }
             break;
-            case '运维服务':
+            case '待办中心':
             if(item?.CList[0]){
               SetOpera(true)
               let btnArr = [];
@@ -239,7 +239,7 @@ const Workbench = props => {
     });
   };
 
-  //获取运维服务列表 监督核查
+  //获取待办中心列表 监督核查
   const GetStagingInspectorRectificationList = (callback) => {
     props.dispatch({
       type: 'wordSupervision/GetStagingInspectorRectificationList',
@@ -633,9 +633,9 @@ const Workbench = props => {
                     height: '100%',
                   }}
                 >
-                  {/* 运维服务 */}
+                  {/* 待办中心 */}
                   {operaSupervisionCheck&&<><Row justify='space-between'>
-                    <div className={styles.title}>运维服务</div>
+                    <div className={styles.title}>待办中心</div>
                     <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />
                   </Row>
                   {btnComponents(operaServiceBtnList, selectOperaVal, (val) => { setSelectOperaVal(val) })}
@@ -831,7 +831,7 @@ const Workbench = props => {
         <Modal
           centered
           visible={superviseRectificaVisible}
-          title={'运维服务'}
+          title={'待办中心'}
           footer={null}
           wrapClassName="spreadOverModal"
           destroyOnClose

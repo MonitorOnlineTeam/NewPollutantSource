@@ -2988,38 +2988,44 @@ export default {
                 },
               ],
             },
-            /*  设备调试及售后服务管理平台 成套   */
 
-            // 项目执行进度
+
+
+            /********  设备调试及售后服务管理平台 成套   ********/
             {
-              path: '/projectExecuProgress',
+              path: '/ctManage',
+              name: 'CtManage',
+              routes: [
+            /**项目执行进度 */ 
+             {
+              path: '/ctManage/projectExecuProgress',
               name: 'ProjectExecuProgress',
 
               routes: [
                 {
-                  path: '/projectExecuProgress',
-                  redirect: '/projectExecuProgress/projectExecution/dispatchQuery',
+                  path: '/ctManage/projectExecuProgress',
+                  redirect: '/ctManage/projectExecuProgress/projectExecution/dispatchQuery',
                 },
                 // 项目执行
                 {
                   name: 'ProjectExecution',
-                  path: '/projectExecuProgress/projectExecution',
+                  path: '/ctManage/projectExecuProgress/projectExecution',
                   routes: [
                     {
-                      path: '/projectExecuProgress/projectExecution',
-                      redirect: '/projectExecuProgress/projectExecution/dispatchQuery',
+                      path: '/ctManage/projectExecuProgress/projectExecution',
+                      redirect: '/ctManage/projectExecuProgress/projectExecution/dispatchQuery',
                     },
                     {
                       // 派单查询
                       name: 'DispatchQuery',
-                      path: '/projectExecuProgress/projectExecution/dispatchQuery',
-                      component: './projectExecuProgress/projectExecution/dispatchQuery',
+                      path: '/ctManage/projectExecuProgress/projectExecution/dispatchQuery',
+                      component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery',
                     },
                     {
                       // 派单完成率
                       name: 'DispatchCompletionRate',
-                      path: '/projectExecuProgress/projectExecution/dispatchCompletionRate',
-                      component: './projectExecuProgress/projectExecution/dispatchCompletionRate',
+                      path: '/ctManage/projectExecuProgress/projectExecution/dispatchCompletionRate',
+                      component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchCompletionRate',
                     },
 
                   ],
@@ -3028,68 +3034,73 @@ export default {
                 {
                   // 现场签到统计
                   name: 'SiteAttendanceStatistics',
-                  path: '/projectExecuProgress/siteAttendanceStatistics',
-                  component: './projectExecuProgress/siteAttendanceStatistics',
+                  path: '/ctManage/projectExecuProgress/siteAttendanceStatistics',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/siteAttendanceStatistics',
                 },
               ],
             },
-            // 资产管理
+            /**售后服务管理  */ 
             {
-              path: '/ctAssetManagement',
-              name: 'CtAssetManagement',
-
+              path: '/ctManage/afterSalesServiceManage',
+              name: 'AfterSalesServiceManagement',
               routes: [
                 {
-                  path: '/ctAssetManagement',
-                  redirect: '/ctAssetManagement/equipmentAccount/projectQuery',
+                  path: '/ctManage/afterSalesServiceManage',
+                  redirect: '/ctManage/afterSalesServiceManage/nodeServices',
+                },
+                {
+                  name: 'NodeServices', // 节点服务
+                  path: '/ctManage/afterSalesServiceManage/nodeServices',
+                  component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/nodeServices',
+                },
+              ]
+            },
+            /**资产管理 */ 
+            {
+              path: '/ctManage/assetManagement',
+              name: 'AssetManagement',
+              routes: [
+                {
+                  path: '/assetManagement',
+                  redirect: '/ctManage/assetManagement/equipmentAccount/projectQuery',
                 },
                 // 设备台账
                 {
                   name: 'EquipmentAccount',
-                  path: '/ctAssetManagement/equipmentAccount',
+                  path: '/ctManage/assetManagement/equipmentAccount',
                   routes: [
                     {
-                      path: '/ctAssetManagement/equipmentAccount',
-                      redirect: '/ctAssetManagement/equipmentAccount/projectQuery',
+                      path: '/ctManage/assetManagement/equipmentAccount',
+                      redirect: '/ctManage/assetManagement/equipmentAccount/projectQuery',
                     },
                     {
                       // 项目查询
                       name: 'ctProjectQuery',
-                      path: '/ctAssetManagement/equipmentAccount/projectQuery',
-                      component: './ctAssetManagement/equipmentAccount/projectQuery',
+                      path: '/ctManage/assetManagement/equipmentAccount/projectQuery',
+                      component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery',
                     },
                     {
                       // 污染源管理
                       name: 'ctPollutantManagement',
-                      path: '/ctAssetManagement/equipmentAccount/pollutantManagement/:configId',
-                      component: './ctAssetManagement/equipmentAccount/pollutantManagement',
+                      path: '/ctManage/assetManagement/equipmentAccount/pollutantManagement/:configId',
+                      component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement',
                     },
                     {
                       name: 'ctPoint', // 污染源管理 监测点
-                      path: '/ctAssetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
-                      component: './ctAssetManagement/equipmentAccount/pollutantManagement/point',
+                      path: '/ctManage/assetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
+                      component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/point',
                     },
                   ],
                 },
 
               ],
             },
-            // 售后服务管理
-            {
-              path: '/ctAfterSalesServiceManagement',
-              name: 'CtAfterSalesServiceManagement',
-              routes: [
-                {
-                  path: '/ctAfterSalesServiceManagement',
-                  redirect: '/ctAfterSalesServiceManagement/nodeServices',
-                },
-                {
-                  name: 'NodeServices', // 节点服务
-                  path: '/ctAfterSalesServiceManagement/nodeServices',
-                  component: './ctAfterSalesServiceManagement/nodeServices',
-                },
+
+
+
               ]
             },
+
 
             /* 任务详情 */
             {
