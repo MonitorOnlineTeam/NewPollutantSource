@@ -17,7 +17,9 @@ import moment from 'moment';
 import styles from "./style.less"
 import ReactEcharts from 'echarts-for-react';
 import * as echarts from 'echarts';
+import 'echarts-gl';
 const { Option } = Select;
+import { getPie3D,chartClick,chartMouseover,chartMouseout } from '../getPie3D';
 
 const namespace = 'ctAfterSalesServiceManagement'
 
@@ -106,12 +108,29 @@ const Index = (props) => {
   const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, rojectPointRelationLoading, addProjectPointRelationLoading, checkPoint, addProjectEntRelationLoading, } = props;
 
   const echartsRef = useRef(null);
+  const echartsRef2 = useRef(null);
 
   useEffect(() => {
     sessionStorage.clear()
   }, []);
 
+  useEffect(() => {
+     let myChart = echartsRef2.current.getEchartsInstance();
+     let echartsOption = echartsRef2.current.props;
 
+       myChart.on('mouseover', function(params) {
+        chartMouseover(myChart,echartsOption,params)
+       });
+
+       myChart.on('globalout', function(params) {
+        chartMouseout(myChart,echartsOption,params)  // 修正取消高亮失败的 bug
+       });
+
+       myChart.on('click', function(params) {
+       chartClick(myChart,echartsOption,params) 
+       });
+
+  }, []);
   let columns = [
     {
       title: '序号',
@@ -410,7 +429,7 @@ const Index = (props) => {
       ],
     };
   }
-  const serviceFrequencyDuration = () => {
+  const serviceFrequencyDuration = () => { //各大区赠送服务次数、工作时长
     return {
       grid: {
         left: 40,
@@ -423,15 +442,16 @@ const Index = (props) => {
         data: [
           {
             name: 'Precipitation',
-            type: 'square', 
-            itemStyle:{
-              color:{
-                x: 0, y: 0, x2: 0,y2: 1,
-                colorStops: [{ offset: 0, color: '#28CBFA'  // 开始颜色
-                  }, {
-                    offset: 1, color: '#64B0FD'  // 结束颜色
+            type: 'square',
+            itemStyle: {
+              color: {
+                x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [{
+                  offset: 0, color: '#28CBFA'  // 开始颜色
+                }, {
+                  offset: 1, color: '#64B0FD'  // 结束颜色
                 }]
-             }
+              }
             }
           },
           {
@@ -566,6 +586,169 @@ const Index = (props) => {
   }, [])
 
 
+  const serviceFrequencyRatio = () => {  //服务次数占比
+    return {
+      color: ['#5CDC9F', '#488CF7', '#F46848', '#E0D52B', '#4EEFEF', '#2358DC', '#AFD7DE', '#EAA017'],
+      tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} ： {c} ({d}%)"
+      },
+      title: {
+        text: `${1000}次`,
+        textStyle: {
+          fontFamily: 'Microsoft YaHei',
+          fontWeight: 'bold',
+          color: '#3888FF',
+          fontSize:14,
+        },
+        x: "center",
+        y: "center",
+      },
+      series: [
+        {
+          name: '增值电信业务统计表',
+          type: 'pie',
+          radius: [40, 150],
+          roseType: 'area',
+          itemStyle: {
+            normal: {
+              shadowBlur: 10,
+              shadowColor: 'rgba(44,44,44,0.2)'
+            },
+          },
+          label: {
+            show: true,
+            position: 'outside',
+            color: 'inherit', //继承饼图颜色
+            formatter: function (params) {
+              var total = 0; //总数量
+              var percent = 0; //占比
+              [10, 5, 15, 25, 20, 35, 30, 40].forEach(function (value) {
+                total += value;
+              });
+              percent = ((params.value / total) * 100).toFixed(1);
+              return (
+                "{a| ● } {b|" + params.name + "}\n{c|" + percent + "%}"
+              );
+            },
+            rich: {
+              a: {
+                fontSize: 18,
+                padding: [18, 0, 0, 0]
+              },
+              b: {
+                fontFamily: 'Source Han Sans CN',
+                fontWeight: 400,
+                fontSize: 14,
+                color: '#999999',
+                padding: [18, 8, 0, 0]
+              },
+              c: {
+                fontFamily: 'Microsoft YaHei',
+                fontWeight: 400,
+                fontSize: 16,
+                padding: [4, 0, 0, 26]
+              }
+            }
+          },
+          labelLine: {
+            lineStyle: {
+              width: 2  // 引导线宽度
+            }
+          },
+          data: [
+            { value: 10, name: 'rose1' },
+            { value: 5, name: 'rose2' },
+            { value: 15, name: 'rose3' },
+            { value: 25, name: 'rose4' },
+            { value: 20, name: 'rose5' },
+            { value: 35, name: 'rose6' },
+            { value: 30, name: 'rose7' },
+            { value: 40, name: 'rose8' }
+          ]
+        }
+      ]
+    };
+
+  }
+
+  const proportionWorkHours = () => {
+    const color = ['#2451FF','#5AADD4','#B35AFF','#EDCC31','#FF6B11','#25BD97','#4C8FFE','#2AC3DF']
+    let optionData = [{
+      name: '林地面积统计1',
+      value: 19900,
+    }, {
+      name: '草地面积统计2',
+      value: 12116,
+    }, {
+      name: '耕地地面积统计3',
+      value: 16616,
+    },
+    {
+      name: '耕地地面积统计4',
+      value: 14616,
+    },
+    {
+      name: '耕地地面积统计5',
+      value: 17616,
+    },
+    {
+      name: '耕地地面积统计6',
+      value: 19616,
+    },
+    {
+      name: '耕地地面积统计7',
+      value: 11616,
+    },
+    {
+      name: '耕地地面积统计8',
+      value: 13616,
+    },
+  ]
+  optionData =  optionData.map((item,index)=>{
+    return {
+        name: item.name,
+        value: item.value,
+        itemStyle: {
+          color: color[index]
+        }
+    }
+  })
+    const option = getPie3D(optionData, 0.6)
+    option.title = {
+      text: `${100}小时`,
+      textStyle: {
+        fontFamily: 'Microsoft YaHei',
+        fontWeight: 'bold',
+        color: '#3888FF',
+        fontSize:14,
+      },
+      x:"18.5%",
+      y: "43%",
+    },
+    option.series.push({
+      name: 'pie2d',
+      type: 'pie',
+      color:['#2451FF','#5AADD4','#B35AFF','#EDCC31','#FF6B11','#25BD97','#4C8FFE','#2AC3DF'],
+      avoidLabelOverlap: true,
+      labelLine: {
+        show:false,
+      },
+      startAngle: -20, //起始角度，支持范围[0, 360]。
+      clockwise: false,//饼图的扇区是否是顺时针排布。上述这两项配置主要是为了对齐3d的样式
+      radius: ['25%', '70%'],
+      center: ['20%', '50%'],
+      data: optionData,
+      itemStyle: {
+        opacity: 0
+      },
+    })
+    console.log(option)
+    return option;
+
+
+  }
+
   const searchComponents = () => {
     return <Form
       form={form}
@@ -601,14 +784,32 @@ const Index = (props) => {
           {searchComponents()}
         </Card>
         <Row style={{ margin: '8px 0' }} className='echartsContentSty'>
-          <Col span={10}>
+          <Col span={9}>
             <Card title={`各大区赠送服务次数、工作时长`}>
-
               {echartsComponents}
             </Card>
           </Col>
-          <Col span={7}></Col>
-          <Col span={7}></Col>
+          <Col span={8} style={{ padding: '0 12px' }}>
+            <Card title={`服务次数占比`}>
+              <ReactEcharts
+                option={serviceFrequencyRatio()}
+                style={{ height: 'calc(50vh - 140px)' }}
+                className="echarts-for-echarts"
+                theme="my_theme"
+              />
+            </Card>
+          </Col>
+          <Col span={7}>
+            <Card title={`工作时长占比`}>
+              <ReactEcharts
+                option={proportionWorkHours()}
+                style={{width:"100%", height: 'calc(50vh - 140px)' }}
+                ref={echartsRef2}
+                className="echarts-for-echarts"
+                theme="my_theme"
+              />
+            </Card>
+          </Col>
         </Row>
       </BreadcrumbWrapper>
     </div>

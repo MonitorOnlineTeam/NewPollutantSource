@@ -403,7 +403,7 @@ const Index = (props) => {
   }
 
   const deviceFailureRate = () => { //设备故障率
-      if (Availability == 1) { //提取数据 评估中心
+      if (operationSettingInfo?.Availability == 1) { //提取数据 评估中心
        setEquipmentAbnormalRateVisible(true)
        setDeviceType(0)
       } else {

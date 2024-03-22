@@ -123,6 +123,7 @@ const Workbench = props => {
           switch(item.PName){
             case '日常监督':
               SetDaily(true)
+              GetToDoDailyWorks()
             // if(item?.CList[0]){ 
             //   SetDaily(true)
             //  }else{
@@ -589,7 +590,7 @@ const Workbench = props => {
                 >
                   {/* 手工申请 */}
                   <div className={styles.title}>日常监督</div>
-                  {/* <div className={styles.manualList}>
+                  <div className={styles.manualList}>
                     <Row
                       gutter={32}
                       className={styles.content}
@@ -613,7 +614,7 @@ const Workbench = props => {
                         );
                       })}
                     </Row>
-                  </div> */}
+                  </div> 
                   {/* 待办任务列表 */}
                   <div className={styles.taskList}>
                     <div className={styles.content} style={{ textAlign: 'center' }}>
