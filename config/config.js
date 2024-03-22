@@ -3030,12 +3030,17 @@ export default {
 
                   ],
                 },
-
                 {
                   // 现场签到统计
                   name: 'SiteAttendanceStatistics',
                   path: '/ctManage/projectExecuProgress/siteAttendanceStatistics',
                   component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/siteAttendanceStatistics',
+                },
+                {
+                  // 服务不及时
+                  name: 'serviceIsNotTimely',
+                  path: '/ctManage/projectExecuProgress/serviceIsNotTimely',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/serviceIsNotTimely',
                 },
               ],
             },

@@ -83,6 +83,13 @@ ol {
     cursor: col-resize;
     z-index: 1;
   }
+  // 搜索form
+  #searchForm {
+    .ant-form-item,
+    .ant-legacy-form-item {
+      margin-bottom: 12px;
+    }
+  }
   .searchForm .ant-legacy-form-item {
     margin-bottom: 8px;
   }
@@ -224,18 +231,18 @@ a:hover {
 .light {
   background-color: #f0f2f5;
   .ant-table-cell-fix-left,
-  .ant-table-cell-fix-right{
+  .ant-table-cell-fix-right {
     background-color: #f0f2f5;
   }
 }
-.table-light :global{
-  .ant-table-body{ 
-  .ant-table-cell,
-  .ant-table-cell-fix-left,
-  .ant-table-cell-fix-right {
-    background-color: #fff;
+.table-light :global {
+  .ant-table-body {
+    .ant-table-cell,
+    .ant-table-cell-fix-left,
+    .ant-table-cell-fix-right {
+      background-color: #fff;
+    }
   }
-}
 }
 
 #contentWrapper {
@@ -686,13 +693,13 @@ a:hover {
       // overflow-y: auto;
     }
   }
-  .ant-modal-header{
+  .ant-modal-header {
     padding: 8px 16px;
   }
-  .ant-modal-close-x{
-   line-height: 40px;
+  .ant-modal-close-x {
+    line-height: 40px;
   }
-  .ant-modal-body{
+  .ant-modal-body {
     padding: 12px 16px;
   }
 }
@@ -976,33 +983,33 @@ a:hover {
   justify-content: center;
   flex-direction: column;
 }
-.ant-card :global{
-//  .ant-card-head-title{
-//   padding: 8px 0;
-//  }
+.ant-card :global {
+  //  .ant-card-head-title{
+  //   padding: 8px 0;
+  //  }
 }
- .ant-tabs-left> .ant-tabs-nav :global{
-  .ant-tabs-tab{
+.ant-tabs-left > .ant-tabs-nav :global {
+  .ant-tabs-tab {
     margin: 0 0 12px 0 !important;
   }
 }
 
-.ant-tabs-left>.ant-tabs-content-holder>.ant-tabs-content>.ant-tabs-tabpane:global{
-    padding-left: 16px  !important;
+.ant-tabs-left > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane:global {
+  padding-left: 16px !important;
 }
-.disabled_a{
- cursor: not-allowed;
- color: rgba(0, 0, 0, 0.25) !important;
+.disabled_a {
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.25) !important;
 }
-.ant-divider-horizontal.ant-divider-with-text :global{
+.ant-divider-horizontal.ant-divider-with-text :global {
   border-top-color: rgba(0, 0, 0, 0.06);
 }
-.ant-notification :global{
+.ant-notification :global {
   top: 68px !important;
 }
-.formItemSpinSty{
+.formItemSpinSty {
   height: 32px !important;
 }
-.ant-menu-submenu-popup :global{
+.ant-menu-submenu-popup :global {
   z-index: 10000;
 }
