@@ -837,6 +837,20 @@ export const API = {
     UpdReferenceInstrumentInfo: before + '/DebuggingEquipment/UpdReferenceInstrumentInfo',  //更新参比仪器设备清单
     DeleteReferenceInstrumentInfo: before + '/DebuggingEquipment/DeleteReferenceInstrumentInfo',  //删除参比仪器设备清单
   },
-  
+  CtAPI_WJQ: {
+    // 服务不及时API
+    CTProjectExecutionApi: {
+      // 获取已设置不及时的服务列表
+      GetServiceSetList: before + '/CTProjectExecutionApi/GetServiceSetList',
+      // 获取未设置不及时的服务列表
+      GetServiceNotSetList: before + '/CTProjectExecutionApi/GetServiceNotSetList',
+      // 设置服务不及时
+      SetServiceStatus: before + '/CTProjectExecutionApi/SetServiceStatus',
+      // 删除
+      DeleteServiceSetStatus: before + '/CTProjectExecutionApi/DeleteServiceSetStatus',
+      // 导出
+      ExportServiceSetList: before + '/CTProjectExecutionApi/ExportServiceSetList',
+    },
+  },
 };
 
