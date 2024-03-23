@@ -1,6 +1,12 @@
 .ctAfterSalesServiceManagementSty :global{
     .ant-pro-page-header-wrap-children-content{
         background-color: transparent !important;
+        // height: calc(100vh - 46px)  !important;
+    }
+    .serchContent{
+       .ant-card-bordered{
+        padding-bottom: 0 !important;
+      }
     }
     .ant-advanced-search-form{
         padding-bottom: 10px;
@@ -15,12 +21,18 @@
     .ant-card-head-title{
      padding:8px 0;
     }
-    .echartsContentSty{
+      .echarts-for-react{
+       min-height: 308px;
+      }
       .ant-card-body{
         padding-bottom: 16px;
       }
-      .ant-card-bordered{
+    .ant-card-bordered{
+        width: 100%;
         padding-bottom: 16px !important;
-      }
-    }
+     }
+     .ant-table-header ~ .ant-table-body { //兄弟节点
+       max-height: calc(50vh - 208px);
+     }
+    
 }
