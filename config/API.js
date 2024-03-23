@@ -857,6 +857,21 @@ export const API = {
       // 导出
       ExportServiceSetList: before + '/CTProjectExecutionApi/ExportServiceSetList',
     },
+    // 服务报告抽查
+    ReportSpotCheckApi: {
+      // 获取已抽查服务列表
+      GetCheckServiceList: before + '/CTBaseDataApi/GetCheckServiceList',
+      // 获取未被抽查服务列表
+      GetServiceReportList: before + '/CTBaseDataApi/GetServiceReportList',
+      // 获取单个服务详情
+      GetSingleServiceReport: before + '/CTBaseDataApi/GetSingleServiceReport',
+      // 导出
+      ExportCheckServiceList: before + '/CTBaseDataApi/ExportCheckServiceList',
+      // 添加服务抽查报告
+      AddCheckServiceReport: before + '/CTBaseDataApi/AddCheckServiceReport',
+      // 删除
+      DelteCheckServiceReport: before + '/CTBaseDataApi/DelteCheckServiceReport',
+    },
   },
 };
 

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-21 16:51:07
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-22 09:53:40
+ * @Last Modified time: 2024-03-22 11:31:31
  * @Description:  登记弹窗
  */
 
@@ -43,7 +43,6 @@ const RegistrationModal = props => {
   const [serviceChangeDate, setServiceChangeDate] = useState();
 
   const { dispatch, title, isModalOpen, onCancel, serviceType, queryLoading } = props;
-  console.log('props', props);
 
   useEffect(() => {
     onFinish();

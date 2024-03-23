@@ -1,5 +1,6 @@
 import { post, get } from '@/utils/request';
 import { API } from '@config/API'
+import Cookie from 'js-cookie';
 
 // 仪器借出、归还
 export async function StandbyAndInsLendOrReturn(params) {
@@ -520,8 +521,8 @@ export async function AddUserMenu (params) {
 // 动态加载工作台模块
 export async function GetWorkbenchesModuleList (params) {
   const result = await post(
-    API.WorkStageApi.GetWorkbenchesModuleList,
-    params,
+    `${API.WorkStageApi.GetWorkbenchesModuleList}?menuId=${Cookie.get('sysMenuId')}`,
+    {},
   );
   return result;
 }
