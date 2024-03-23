@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2024-03-22 11:45:31 
- * @Last Modified by:   JiaQi 
- * @Last Modified time: 2024-03-22 11:45:31 
+ * @Author: JiaQi
+ * @Date: 2024-03-22 11:45:31
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-03-22 15:40:25
  * @Description:  查看全部
  */
 import React, { useState, useEffect } from 'react';
@@ -12,7 +12,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import { DeleteOutlined, ExportOutlined } from '@ant-design/icons';
-import ServiceIsNotTimelyContent from './ServiceIsNotTimelyContent';
+import ReportSpotCheck from '../index.js';
 
 const { TabPane } = Tabs;
 
@@ -23,13 +23,13 @@ const AllViewModal = props => {
 
   const [showType, setShowType] = useState('chart');
 
-  const { dispatch, serviceType, title, isModalOpen, onCancel } = props;
+  const { dispatch, isModalOpen, onCancel } = props;
 
   useEffect(() => {}, []);
 
   return (
     <Modal
-      title={`${title} - 查看全部`}
+      title={`查看全部`}
       wrapClassName="spreadOverModal"
       visible={isModalOpen}
       destroyOnClose
@@ -38,7 +38,7 @@ const AllViewModal = props => {
         onCancel();
       }}
     >
-      <ServiceIsNotTimelyContent serviceType={serviceType} isAll />
+      {isModalOpen && <ReportSpotCheck isAll />}
     </Modal>
   );
 };

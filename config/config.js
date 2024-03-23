@@ -3042,6 +3042,12 @@ export default {
                   path: '/ctManage/projectExecuProgress/serviceIsNotTimely',
                   component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/serviceIsNotTimely',
                 },
+                {
+                  // 服务报告抽查
+                  name: 'reportSpotCheck',
+                  path: '/ctManage/projectExecuProgress/reportSpotCheck',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportSpotCheck',
+                },
               ],
             },
             /**售后服务管理  */ 

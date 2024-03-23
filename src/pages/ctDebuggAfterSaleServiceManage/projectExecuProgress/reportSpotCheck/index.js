@@ -1,35 +1,38 @@
 /*
  * @Author: JiaQi
- * @Date: 2024-03-21 13:47:44
+ * @Date: 2024-03-22 15:39:53
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-22 13:59:24
- * @Description:  服务不及时页面
+ * @Last Modified time: 2024-03-23 14:49:26
+ * @Description:  服务报告抽查
  */
-
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
   Form,
-  Popconfirm,
+  Card,
   Input,
   Button,
-  Tooltip,
+  Popconfirm,
   Select,
   Space,
   Row,
   Col,
   message,
   Divider,
+  Tooltip,
 } from 'antd';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import { DeleteOutlined, ExportOutlined } from '@ant-design/icons';
-import RegistrationModal from './RegistrationModal';
-import AllViewModal from './AllViewModal';
+import AllViewModal from './components/AllViewModal';
+import SpotCheckPage from './components/SpotCheckPage';
+import ImageLightboxView from '@/components/ImageLightboxView';
 
 const dvaPropsData = ({ loading }) => ({
-  queryLoading: loading.effects[`serviceIsNotTimely/GetServiceSetList`],
+  queryLoading: loading.effects[`reportSpotCheck/GetCheckServiceList`],
+  exportLoading: loading.effects[`reportSpotCheck/ExportCheckServiceList`],
 });
 
 const ServiceIsNotTimely = props => {
@@ -39,10 +42,10 @@ const ServiceIsNotTimely = props => {
   const [pageSize, setPageSize] = useState(20);
   const [tableTotal, setTableTotal] = useState(0);
   const [dataSource, setDataSource] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAllViewModalOpen, setIsAllViewModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { dispatch, serviceType, queryLoading, isAll } = props;
+  const { isAll, queryLoading, dispatch, exportLoading } = props;
 
   useEffect(() => {
     getTableDataSource();
@@ -54,9 +57,8 @@ const ServiceIsNotTimely = props => {
     return {
       ...values,
       time: undefined,
-      registerBeginTime: values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      registerEndTime: values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      serviceType: serviceType,
+      checkBeginTime: values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      checkEndTime: values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
       isAll: isAll ? 0 : 1,
     };
   };
@@ -65,7 +67,7 @@ const ServiceIsNotTimely = props => {
   const getTableDataSource = (_pageIndex, _pageSize) => {
     const body = getParams();
     dispatch({
-      type: 'serviceIsNotTimely/GetServiceSetList',
+      type: 'reportSpotCheck/GetCheckServiceList',
       payload: {
         ...body,
         pageIndex: _pageIndex || pageIndex,
@@ -81,9 +83,8 @@ const ServiceIsNotTimely = props => {
   // 删除
   const onDelete = id => {
     dispatch({
-      type: 'serviceIsNotTimely/DeleteServiceSetStatus',
+      type: 'reportSpotCheck/DelteCheckServiceReport',
       payload: {
-        serviceType: serviceType,
         id: id,
       },
       callback: res => {
@@ -96,7 +97,7 @@ const ServiceIsNotTimely = props => {
   const onExport = () => {
     const body = getParams();
     dispatch({
-      type: 'serviceIsNotTimely/ExportServiceSetList',
+      type: 'reportSpotCheck/ExportCheckServiceList',
       payload: {
         ...body,
         isExport: 1,
@@ -125,9 +126,10 @@ const ServiceIsNotTimely = props => {
       },
       {
         title: '合同编号',
-        dataIndex: 'ProjectCode',
-        key: 'ProjectCode',
+        dataIndex: 'ProjectID',
+        key: 'ProjectID',
         ellipsis: true,
+        width: 200,
       },
       {
         title: '立项号',
@@ -140,30 +142,7 @@ const ServiceIsNotTimely = props => {
         dataIndex: 'ProjectName',
         key: 'ProjectName',
         ellipsis: true,
-      },
-      {
-        title: '合同类型',
-        dataIndex: 'ProjectType',
-        key: 'ProjectType',
-        ellipsis: true,
-      },
-      {
-        title: '最终用户',
-        dataIndex: 'CustomEnt',
-        key: 'CustomEnt',
-        ellipsis: true,
-      },
-      {
-        title: '项目所在省',
-        dataIndex: 'Province',
-        key: 'Province',
-        ellipsis: true,
-      },
-      {
-        title: '服务大区',
-        dataIndex: 'Region',
-        key: 'Region',
-        ellipsis: true,
+        width: 200,
       },
       {
         title: '服务工程师',
@@ -179,23 +158,36 @@ const ServiceIsNotTimely = props => {
         width: 180,
       },
       {
-        title: '客户服务需求时间',
-        dataIndex: 'NeedDate',
-        key: 'NeedDate',
+        title: '提交时间',
+        dataIndex: 'CommitDate',
+        key: 'CommitDate',
         ellipsis: true,
         width: 180,
       },
       {
-        title: '变更后服务需求时间',
-        dataIndex: 'ServiceChangeDate',
-        key: 'ServiceChangeDate',
+        title: '离开现场时间',
+        dataIndex: 'LeaveDate',
+        key: 'LeaveDate',
         ellipsis: true,
         width: 180,
       },
       {
-        title: '状态',
-        dataIndex: 'ServiceType',
-        key: 'ServiceType',
+        title: '抽查人',
+        dataIndex: 'CheckUserNmae',
+        key: 'CheckUserNmae',
+        ellipsis: true,
+      },
+      {
+        title: '抽查时间',
+        dataIndex: 'CheckTime',
+        key: 'CheckTime',
+        ellipsis: true,
+        width: 180,
+      },
+      {
+        title: '抽查结果',
+        dataIndex: 'CheckResult',
+        key: 'CheckResult',
         ellipsis: true,
       },
       {
@@ -209,16 +201,17 @@ const ServiceIsNotTimely = props => {
         },
       },
       {
-        title: '登记人',
-        dataIndex: 'RegisterUserName',
-        key: 'RegisterUserName',
+        title: '附件照片',
+        dataIndex: 'FileList',
+        key: 'FileList',
         ellipsis: true,
-      },
-      {
-        title: '登记时间',
-        dataIndex: 'RegisterDate',
-        key: 'RegisterDate',
-        ellipsis: true,
+        render: (text, record) => {
+          let fileList = record.FileList.ImgList;
+          if (!fileList.length) {
+            return '-';
+          }
+          return <ImageLightboxView images={fileList} />;
+        },
       },
       {
         title: '操作',
@@ -247,21 +240,10 @@ const ServiceIsNotTimely = props => {
       },
     ];
 
-    // 查看全部过滤掉操作列
+    // 查看全部过滤掉操作列和“离开现场时间”
     if (isAll) {
-      columns = columns.filter(item => item.dataIndex !== 'handle');
-      // 服务时间变更：查看全部不显示“客户服务需求时间”
-      if (serviceType === 2) {
-        columns = columns.filter(item => item.dataIndex !== 'NeedDate');
-      }
-    }
-    // 服务时间变更 - 不显示状态
-    if (serviceType === 2) {
-      columns = columns.filter(item => item.dataIndex !== 'ServiceType');
-    } else {
-      // 服务不及时、不参与统计不显示“客户服务需求时间”和“变更后服务需求时间”列
       columns = columns.filter(
-        item => item.dataIndex !== 'NeedDate' && item.dataIndex !== 'ServiceChangeDate',
+        item => item.dataIndex !== 'handle' && item.dataIndex !== 'LeaveDate',
       );
     }
 
@@ -292,8 +274,6 @@ const ServiceIsNotTimely = props => {
             ],
           }}
           autoComplete="off"
-          // labelCol={{ span: 5 }}
-          // wrapperCol={{ span: 18 }}
           labelCol={{
             flex: '90px',
           }}
@@ -322,27 +302,26 @@ const ServiceIsNotTimely = props => {
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
             </Col>
-
-            {// 只有查看全部时显示
-            isAll && (
-              <Col span={8}>
-                <Form.Item name="registerUserID" label="登记人">
-                  <Input placeholder="请输入" allowClear />
-                </Form.Item>
-              </Col>
-            )}
             <Col span={8}>
-              <Form.Item name="time" label="登记时间">
-                <RangePicker_
-                  style={{ width: '100%' }}
-                  format="YYYY-MM-DD"
-                  // showTime={{
-                  //   format: 'YYYY-MM-DD',
-                  //   defaultValue: [
-                  //     moment(' 00:00:00', ' HH:mm:ss'),
-                  //     moment(' 23:59:59', ' HH:mm:ss'),
-                  //   ],
-                  // }}
+              <Form.Item name="time" label="抽查时间">
+                <RangePicker_ style={{ width: '100%' }} format="YYYY-MM-DD" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="CheckResult" label="抽查结果">
+                <Select
+                  allowClear
+                  placeholder="请选择"
+                  options={[
+                    {
+                      value: 0,
+                      label: '合格',
+                    },
+                    {
+                      value: 1,
+                      label: '不合格',
+                    },
+                  ]}
                 />
               </Form.Item>
             </Col>
@@ -375,13 +354,14 @@ const ServiceIsNotTimely = props => {
                 setIsModalOpen(true);
               }}
             >
-              登记
+              抽查
             </Button>
           )}
 
           <Button
+            type="primary"
             icon={<ExportOutlined />}
-            loading={false}
+            loading={exportLoading}
             onClick={() => {
               onExport();
             }}
@@ -404,49 +384,54 @@ const ServiceIsNotTimely = props => {
       </div>
     );
   };
-  return (
-    <div style={{ marginRight: 20 }}>
-      <SearchComponents />
-      <SdlTable
-        loading={queryLoading}
-        align="center"
-        dataSource={dataSource}
-        columns={getColumns()}
-        pagination={{
-          total: tableTotal,
-          pageSize: pageSize,
-          current: pageIndex,
-          showSizeChanger: true, 
-          showQuickJumper: true,
-          onChange: handleTableChange,
-        }}
-      />
-      {isModalOpen && (
-        <RegistrationModal
-          title={
-            serviceType === 0 ? '服务不及时' : serviceType === 1 ? '不参与统计' : '服务时间变更'
-          }
-          serviceType={serviceType}
-          isModalOpen={isModalOpen}
-          onCancel={flag => {
-            flag && getTableDataSource(1, 20);
-            setIsModalOpen(false);
+
+  const getPageContent = () => {
+    return (
+      <Card bordered={isAll ? false : true}>
+        <SearchComponents />
+        <SdlTable
+          loading={queryLoading}
+          align="center"
+          dataSource={dataSource}
+          columns={getColumns()}
+          pagination={{
+            total: tableTotal,
+            pageSize: pageSize,
+            current: pageIndex,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            onChange: handleTableChange,
           }}
         />
-      )}
-      {isAllViewModalOpen && (
         <AllViewModal
-          title={
-            serviceType === 0 ? '服务不及时' : serviceType === 1 ? '不参与统计' : '服务时间变更'
-          }
-          serviceType={serviceType}
           isModalOpen={isAllViewModalOpen}
           onCancel={() => {
             setIsAllViewModalOpen(false);
           }}
         />
+      </Card>
+    );
+  };
+
+  if (isAll) {
+    return getPageContent();
+  }
+
+  return (
+    <BreadcrumbWrapper>
+      {getPageContent()}
+      {isModalOpen && (
+        <SpotCheckPage
+          isModalOpen={isModalOpen}
+          onCancel={() => {
+            setIsModalOpen(false);
+          }}
+          reloadPageData={() => {
+            getTableDataSource();
+          }}
+        />
       )}
-    </div>
+    </BreadcrumbWrapper>
   );
 };
 

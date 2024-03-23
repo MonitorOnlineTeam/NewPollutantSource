@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-21 13:47:44
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-21 16:14:45
+ * @Last Modified time: 2024-03-22 11:44:42
  * @Description:  服务不及时页面
  */
 
@@ -31,7 +31,7 @@ const ServiceIsNotTimely = props => {
 
   return (
     <BreadcrumbWrapper>
-      <Tabs defaultActiveKey="1" tabPosition="left" style={{ marginTop: 16 }}>
+      <Tabs defaultActiveKey="1" tabPosition="left" style={{ marginTop: 20 }}>
         <TabPane tab="服务不及时" key="1">
           <ServiceIsNotTimelyContent serviceType={0} />
         </TabPane>
