@@ -3060,9 +3060,29 @@ export default {
                   redirect: '/ctManage/afterSalesServiceManage/nodeServices',
                 },
                 {
-                  name: 'NodeServices', // 节点服务
+                  name: 'ChargeService', // 收费服务
+                  path: '/ctManage/afterSalesServiceManage/chargeService',
+                  component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                },
+                {
+                  name: 'NodeServices', // 成套节点服务
                   path: '/ctManage/afterSalesServiceManage/nodeServices',
-                  component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/nodeServices',
+                  component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                },
+                {
+                  name: 'GiveServer', // 赠送服务
+                  path: '/ctManage/afterSalesServiceManage/giveServer',
+                  component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                },
+                {
+                  name: 'CooperateInspection', // 配合检查
+                  path: '/ctManage/afterSalesServiceManage/cooperateInspection',
+                  component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                },
+                {
+                  name: 'CooperateOtherWork', // 配合其它工作
+                  path: '/ctManage/afterSalesServiceManage/cooperateOtherWork',
+                  component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
                 },
               ]
             },

@@ -732,8 +732,19 @@ export const API = {
     /*** 售后服务管理 ***/
   /*节点服务*/
   AfterSalesServiceManageApi :{
-    GetCompleteNodeServerAnalysis: before + '/CTStatisticsApi/GetCompleteNodeServerAnalysis',//获取节点服务信息
-    ExportCompleteNodeServerAnalysis: before + '/CTStatisticsApi/ExportCompleteNodeServerAnalysis',//节点服务信息 导出
+    GetChargeServiceAnalysis: before + '/CTStatisticsApi/GetChargeServiceAnalysis',//获取收费服务
+    ExportGiveServerAnalysis: before + '/CTStatisticsApi/ExportGiveServerAnalysis',//收费服务 导出
+    GetCompleteNodeServerAnalysis: before + '/CTStatisticsApi/GetCompleteNodeServerAnalysis',//成套节点服务
+    ExportCompleteNodeServerAnalysis: before + '/CTStatisticsApi/ExportCompleteNodeServerAnalysis',//成套节点服务 导出
+    GetGiveServerAnalysis: before + '/CTStatisticsApi/GetGiveServerAnalysis',//赠送服务
+    ExportGiveServerAnalysis: before + '/CTStatisticsApi/ExportGiveServerAnalysis',//赠送服务 导出
+    GetCooperateInspectionAnalysis: before + '/CTStatisticsApi/GetCooperateInspectionAnalysis',//获取配合检查
+    ExportCooperateInspectionAnalysis: before + '/CTStatisticsApi/ExportCooperateInspectionAnalysis',//配合检查 导出
+    GetCooperateOtherWorkAnalysis: before + '/CTStatisticsApi/GetCooperateOtherWorkAnalysis',//获取获取配合其它工作
+    ExportCooperateOtherWorkAnalysis: before + '/CTStatisticsApi/ExportCooperateOtherWorkAnalysis',//配合其它工作 导出
+    GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList',//获取服务大区
+    GetServiceDispatchForAnalysis: before + '/CTStatisticsApi/GetServiceDispatchForAnalysis',//获取服务明细
+    ExportServiceDispatchForAnalysis: before + '/CTStatisticsApi/ExportServiceDispatchForAnalysis',//服务明细 导出
   },
   //调试服务
   CtDebugServiceApi: {

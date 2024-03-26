@@ -1,11 +1,12 @@
 import { fomatFloat } from '@/utils/utils';
+import { ContactsOutlined } from '@ant-design/icons';
 
 //获取3d丙图的最高扇区的高度
-function getHeight3D(series, height) {
+function getHeight3D(series, height,customHourVal) { //customHourVal 默认高度
     series.sort((a, b) => {
         return (b.pieData.value - a.pieData.value);
     })
-    return height * 25 / series[0].pieData.value;
+    return series[0].pieData.rate==0 || series[0].pieData.value==customHourVal ? 50 : height * 25 / series[0].pieData.value;
 }
 
 
@@ -72,7 +73,7 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
 
 
 
-export function getPie3D(pieData, internalDiameterRatio,legend) {
+export function getPie3D(pieData, internalDiameterRatio,legendList,customHourVal) {
      
     //internalDiameterRatio:透明的空心占比
     let series = [];
@@ -101,7 +102,7 @@ export function getPie3D(pieData, internalDiameterRatio,legend) {
                 hovered: false,
                 k: k
             },
-            center: ['50%', '50%']
+            //center: ['50%', '50%'] //没发现有用
         };
 
         if (typeof pieData[i].itemStyle != 'undefined') {
@@ -135,11 +136,11 @@ export function getPie3D(pieData, internalDiameterRatio,legend) {
             value: bfb
         });
     }
-    let boxHeight = getHeight3D(series, 20);//通过传参设定3d饼/环的高度，20代表20px
+    let boxHeight = getHeight3D(series, 20,customHourVal);//通过传参设定3d饼/环的高度，20代表20px
     // 准备待返回的配置项，把准备好的 legendData、series 传入。
     let option = {
-        legend: legend && {
-            data: legendData,
+        legend:  {
+            data: legendList? legendList : legendData,
             orient: 'vertical',
             right: 0,
             y: 'center',
@@ -195,14 +196,22 @@ export function getPie3D(pieData, internalDiameterRatio,legend) {
         },
         tooltip: {
             formatter: params => {
+                let bfb = ''
                 if (params.seriesName !== 'mouseoutSeries' && params.seriesName !== 'pie2d') {
-                    let bfb = ((option.series[params.seriesIndex].pieData.endRatio - option.series[params.seriesIndex].pieData.startRatio) *
+                    const item = option.series[params.seriesIndex].pieData
+                     if( item.value == customHourVal || item.value.rate==0){//为0时
+                        bfb = '0.00'
+                     }else{
+                        bfb = ((option.series[params.seriesIndex].pieData.endRatio - option.series[params.seriesIndex].pieData.startRatio) *
                         100).toFixed(2);
+                     }
+                    }
                     return `${params.seriesName}<br/>` +
                         `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span>` +
                         `${bfb}%`;
+                    
                 }
-            }
+            
         },
         xAxis3D: {
             min: -1,
@@ -220,14 +229,16 @@ export function getPie3D(pieData, internalDiameterRatio,legend) {
             show: false,
             boxHeight: boxHeight, //圆环的高度
             width: '100%',
+            top:0,
             left: 0,
             viewControl: { //3d效果可以放大、旋转等，请自己去查看官方配置
                 alpha: 40, //角度
-                distance: 265,//调整视角到主体的距离，类似调整zoom
+                distance: 235,//调整视角到主体的距离，类似调整zoom
                 rotateSensitivity: 0, //设置为0无法旋转
                 zoomSensitivity: 0, //设置为0无法缩放
                 panSensitivity: 0, //设置为0无法平移
-                autoRotate: true //自动旋转
+                autoRotate: true, //自动旋转   
+                // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'   
             }
         },
         series: series

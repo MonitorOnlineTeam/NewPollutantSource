@@ -1,5 +1,5 @@
 /**
- * 功  能：成套售后服务管理
+ * 功  能：成套售后服务管理 成套节点服务 ，赠送服务 ，配合检查  ，配合其他工作 ，收费服务
  * 创建人：jab
  * 创建时间：2024.09.11
  */
@@ -22,12 +22,22 @@ const { Option } = Select;
 import { getPie3D, chartClick, chartMouseover, chartMouseout } from '../getPie3D';
 import { CubeLeft, CubeRight, CubeTop } from '../getBar3D';
 import { fomatFloat } from '@/utils/utils';
+import ServiceDetails from '../components/ServiceDetails';
 
 const namespace = 'ctAfterSalesServiceManagement'
 const dvaPropsData = ({ loading, ctAfterSalesServiceManagement, global, common }) => ({
+  chargeServiceAnalysisLoading: loading.effects[`${namespace}/GetChargeServiceAnalysis`],
+  exportChargeServiceAnalysisLoading: loading.effects[`${namespace}/ExportChargeServiceAnalysis`],
   completeNodeServerAnalysisLoading: loading.effects[`${namespace}/GetCompleteNodeServerAnalysis`],
   exportCompleteNodeServerAnalysisLoaging: loading.effects[`${namespace}/ExportCompleteNodeServerAnalysis`],
+  giveServerAnalysisLoading: loading.effects[`${namespace}/GetGiveServerAnalysis`],
+  exportGiveServerAnalysisLoading: loading.effects[`${namespace}/ExportGiveServerAnalysis`],
+  cooperateInspectionAnalysisLoading: loading.effects[`${namespace}/GetCooperateInspectionAnalysis`],
+  exportCooperateInspectionAnalysisLoading: loading.effects[`${namespace}/ExportCooperateInspectionAnalysis`],
+  cooperateOtherWorkAnalysisLoading: loading.effects[`${namespace}/GetCooperateOtherWorkAnalysis`],
+  exportCooperateOtherWorkAnalysisLoading: loading.effects[`${namespace}/ExportCooperateOtherWorkAnalysis`],
 })
+
 
 const dvaDispatch = (dispatch) => {
   return {
@@ -37,43 +47,132 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    GetCompleteNodeServerAnalysis: (payload, callback) => { //节点服务
+    GetChargeServiceAnalysis: (payload, callback) => { //收费服务
+      dispatch({
+        type: `${namespace}/GetChargeServiceAnalysis`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    ExportChargeServiceAnalysis: (payload, callback) => { //收费服务 导出
+      dispatch({
+        type: `${namespace}/ExportChargeServiceAnalysis`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    GetCompleteNodeServerAnalysis: (payload, callback) => { //成套节点服务
       dispatch({
         type: `${namespace}/GetCompleteNodeServerAnalysis`,
         payload: payload,
         callback: callback
       })
     },
-    ExportCompleteNodeServerAnalysis: (payload, callback) => { //节点服务 导出
+    ExportCompleteNodeServerAnalysis: (payload, callback) => { //成套节点服务 导出
       dispatch({
         type: `${namespace}/ExportCompleteNodeServerAnalysis`,
         payload: payload,
         callback: callback
       })
     },
+
+    GetGiveServerAnalysis: (payload, callback) => { //赠送服务
+      dispatch({
+        type: `${namespace}/GetGiveServerAnalysis`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    ExportGiveServerAnalysis: (payload, callback) => { //赠送服务 导出
+      dispatch({
+        type: `${namespace}/ExportGiveServerAnalysis`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    GetCooperateInspectionAnalysis: (payload, callback) => { //配合检查
+      dispatch({
+        type: `${namespace}/GetCooperateInspectionAnalysis`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    ExportCooperateInspectionAnalysis: (payload, callback) => { //配合检查 导出
+      dispatch({
+        type: `${namespace}/ExportCooperateInspectionAnalysis`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    GetCooperateOtherWorkAnalysis: (payload, callback) => { //配合其他工作
+      dispatch({
+        type: `${namespace}/GetCooperateOtherWorkAnalysis`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    ExportCooperateOtherWorkAnalysis: (payload, callback) => { //配合其他工作 导出
+      dispatch({
+        type: `${namespace}/ExportCooperateOtherWorkAnalysis`,
+        payload: payload,
+        callback: callback
+      })
+    },
+
+
+
   }
 }
 const Index = (props) => {
 
+  const { match: { path },
+           chargeServiceAnalysisLoading, exportChargeServiceAnalysisLoading,
+           completeNodeServerAnalysisLoading, exportCompleteNodeServerAnalysisLoaging,
+           giveServerAnalysisLoading, exportGiveServerAnalysisLoading,
+           cooperateInspectionAnalysisLoading, exportCooperateInspectionAnalysisLoading,
+           cooperateOtherWorkAnalysisLoading, exportCooperateOtherWorkAnalysisLoading,
+        } = props;
+   
+  const commonPath = '/ctManage/afterSalesServiceManage'
+  const chargeServicePath = `${commonPath}/chargeService` //收费服务
+  const nodeServicesPath = `${commonPath}/nodeServices` //成套节点服务
+  const giveServerPath = `${commonPath}/giveServer`//赠送服务
+  const cooperateInspectionPath = `${commonPath}/cooperateInspection`//配合检查
+  const cooperateOtherWorkPath = `${commonPath}/cooperateOtherWork` //配合其他工作
 
-
-
-  const { match: { path }, completeNodeServerAnalysisLoading, exportCompleteNodeServerAnalysisLoaging } = props;
-
-  const nodeServicesPath = '/ctManage/afterSalesServiceManage/nodeServices'
   const tableLoading = {
-    [nodeServicesPath]: completeNodeServerAnalysisLoading
+    [chargeServicePath]: chargeServiceAnalysisLoading,
+    [nodeServicesPath]: completeNodeServerAnalysisLoading,
+    [giveServerPath]: giveServerAnalysisLoading,
+    [cooperateInspectionPath]: cooperateInspectionAnalysisLoading,
+    [cooperateOtherWorkPath]: cooperateOtherWorkAnalysisLoading,
   }
 
+
   const exportLoading = {
-    [nodeServicesPath]: exportCompleteNodeServerAnalysisLoaging
+    [chargeServicePath]: exportChargeServiceAnalysisLoading,
+    [nodeServicesPath]: exportCompleteNodeServerAnalysisLoaging,
+    [giveServerPath]: exportGiveServerAnalysisLoading,
+    [cooperateInspectionPath]: exportCooperateInspectionAnalysisLoading,
+    [cooperateOtherWorkPath]: exportCooperateOtherWorkAnalysisLoading,
   }
 
   const title = {
-    [nodeServicesPath]: '节点服务'
+    [chargeServicePath]: '收费',
+    [nodeServicesPath]: '成套节点',
+    [giveServerPath]:  '赠送服务',
+    [cooperateInspectionPath]: '配合检查',
+    [cooperateOtherWorkPath]: '配合其它工作',
+
   }
 
-
+  const type = {
+    [chargeServicePath]: '5',
+    [nodeServicesPath]: '1',
+    [giveServerPath]:  '2',
+    [cooperateInspectionPath]: '3',
+    [cooperateOtherWorkPath]: '4',
+  }
 
 
 
@@ -82,11 +181,15 @@ const Index = (props) => {
   const echartsRef2 = useRef(null);
 
   const [tableDatas, setTableDatas] = useState([])
+  const [tableAllDatas, setAllTableDatas] = useState([])
   const [serviceAreaName, setServiceAreaName] = useState([])
   const [serviceNum, setServiceNum] = useState([])
+  const [serviceNumAll, setServiceNumAll] = useState([])
   const [workHour, setWorkHour] = useState([])
+  
   const [serviceNumRatio, setServiceNumRatio] = useState([])
   const [workHourDataRatio, setWorkHourDataRatio] = useState([])
+  const [customHourVal, setCustomHourVal] = useState(0.03456)
   const [queryPar, setQueryPar] = useState([])
 
 
@@ -111,7 +214,7 @@ const Index = (props) => {
         //  chartClick(myChart,echartsOption,params) 
         //  });
 
-      }, 300)
+      }, 400)
     }
   }, [workHourDataRatio]);
 
@@ -123,17 +226,19 @@ const Index = (props) => {
     switch (path) {
       case nodeServicesPath:
         props.GetCompleteNodeServerAnalysis({ ...par }, (res) => {
-          setTableDatas(res?.ServerAnalysisList ? res.ServerAnalysisList : [])
+          const tableList = res?.ServerAnalysisList ? res.ServerAnalysisList : []
+          setTableDatas(tableList)
+          setAllTableDatas(tableList)
           if (res?.SumServerAnalysisList) {
             const data = res.SumServerAnalysisList
             let areaName = [], serNum = [], hourData = [], serNumRt = [], hourDataRt = [];
             data.map((item, index) => {
               areaName.push(item.ServiceArea)
-              serNum.push(item.ServiceNum)
+              serNum.push({value :item.ServiceNum, label: { textStyle: { color:  '#08BDFF'} }})
               hourData.push(item.WorkHour)
               serNumRt.push({ name: item.ServiceArea, value: item.ServiceNum, rate: item.ServiceRate })
-              const color = ['#2451FF', '#5AADD4', '#B35AFF', '#EDCC31', '#FF6B11', '#25BD97', '#4C8FFE', '#2AC3DF']
-              hourDataRt.push({ name: item.ServiceArea, value: item.WorkHour, rate: item.WorkRate, itemStyle: { color: color[index] } })
+              const color = ['#2451FF', '#5AADD4', '#B35AFF', '#EDCC31', '#FF6B11', '#25BD97', '#4C8FFE', '#2AC3DF','#fe6bba']
+              hourDataRt.push({ name: item.ServiceArea, value: item.WorkHour == 0? customHourVal : item.WorkHour, rate: item.WorkRate, itemStyle: { color: color[index] } })
 
             })
             setServiceAreaName(areaName)
@@ -149,6 +254,31 @@ const Index = (props) => {
     }
   }
 
+
+  const onChartClick = (e) => {
+    const selectedRegionVal = sessionStorage.getItem('selectedRegion')
+    echartsRef.current.props.option.series[0].renderItem = (params, api) => {
+      return renderItemFun(params, api, 2, e)
+    }
+
+    serviceNum.map((item,index)=>{
+      if(e.name == selectedRegionVal ||  e.dataIndex != index){ //取消或上一次选中
+        serviceNum[index].label = { textStyle: { color: '#08BDFF'} }
+      }else{//当前选中
+        serviceNum[e.dataIndex].label = { textStyle: { color: '#ffcb72'} }
+      }
+    })
+    echartsRef.current.getEchartsInstance().setOption(echartsRef.current.props.option)
+    if(e.name == selectedRegionVal){ //选中取消
+      setTableDatas(tableAllDatas)
+      sessionStorage.setItem('selectedRegion', '')
+    }else{
+      const selectedData = tableDatas.filter(item=>item.ServiceArea == e.name)
+      setTableDatas(selectedData)
+      sessionStorage.setItem('selectedRegion', e.name)
+    }
+  }
+
   const exportData = () => {
     switch (path) {
       case nodeServicesPath:
@@ -157,6 +287,7 @@ const Index = (props) => {
 
     }
   }
+  
   const columns = [
     {
       title: '序号',
@@ -210,6 +341,9 @@ const Index = (props) => {
       align: 'center',
       width: 'auto',
       ellipsis: true,
+      render:(text,record)=>{
+       return <a onClick={()=>serviceHourDetail(record)}>{text}</a>
+      }
     },
     {
       title: '时长占比',
@@ -220,16 +354,6 @@ const Index = (props) => {
       ellipsis: true,
     },
   ];
-  const [selectedRegion, setSelectedRegion] = useState()
-
-  const onChartClick = (e) => {
-    echartsRef.current.props.option.series[0].renderItem = (params, api) => {
-      return renderItemFun(params, api, 2, e)
-    }
-    echartsRef.current.getEchartsInstance().setOption(echartsRef.current.props.option)
-    sessionStorage.setItem('selectedRegion', e.name == sessionStorage.getItem('selectedRegion') ? '' : e.name)
-
-  }
 
 
   const renderItemFun = (params, api, type, e) => {
@@ -300,11 +424,10 @@ const Index = (props) => {
     };
   }
   const serviceFrequencyDuration = () => { //各大区赠送服务次数、工作时长
-
     return {
       grid: {
-        left: 40,
-        right: 40,
+        left: 50,
+        right: 70,
         bottom: 20,
         top: 50,
       },
@@ -355,6 +478,9 @@ const Index = (props) => {
       },
       yAxis: [{
         type: "value",
+        axisLabel: {
+          formatter: '{value}次'
+        },
         axisTick: {
           show: false,
         },
@@ -368,10 +494,12 @@ const Index = (props) => {
       },
       {
         type: 'value',
-        min: 0,
         splitLine: {
           show: false,
         },
+        axisLabel: {
+          formatter: '{value}小时'
+        }
         //boundaryGap: ["20%", "20%"],//坐标轴与边界间距的属性
       },
       ],
@@ -391,8 +519,8 @@ const Index = (props) => {
             normal: {
               show: true,
               position: "top",
-              color: "#08BDFF",
-              offset: [30, -15],//左右 上下
+              color:  "#08BDFF",
+              offset: [22, -10],//左右 上下
             },
           },
           itemStyle: {
@@ -403,10 +531,10 @@ const Index = (props) => {
         },
         {
           type: 'bar', //显示背景图 
-          data: serviceNum,
+          data: workHour,
           itemStyle: { color: 'rgba(86,182,252,0.05)' },
           // itemStyle: { normal: { color: 'red' } },
-          barWidth: '80%',  // 柱形的宽度
+          barWidth: '60%',  // 柱形的宽度
           barGap: '800%', // Make series be ove
           silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
           barMinHeight: 1000,
@@ -435,7 +563,8 @@ const Index = (props) => {
         formatter: (params) => {
           return (
             `${params[0].name}<br />
-            ${params[0].seriesName}：${params[0].value}`
+            <span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background:linear-gradient(to bottom,#28CBFA, #64B0FD);\"></span> ${params[0].seriesName}：${params[0].value}<br />` + 
+            `${params[3].marker} ${params[3].seriesName}：${params[3].value}` 
           )
         }
       },
@@ -448,9 +577,9 @@ const Index = (props) => {
 
   const serviceFrequencyRatio = () => {  //服务次数占比
     var total = 0; //总数量
-    serviceNum.forEach(function (value) { total += value });
+    serviceNumRatio.forEach(function (item) { total += item.value });
     return {
-      color: ['#5CDC9F', '#488CF7', '#F46848', '#E0D52B', '#4EEFEF', '#2358DC', '#AFD7DE', '#EAA017'],
+      color: ['#5CDC9F', '#488CF7', '#F46848', '#E0D52B', '#4EEFEF', '#2358DC', '#AFD7DE', '#EAA017','#6c76f1'],
       tooltip: {
         trigger: 'item',
         formatter: "{a} <br/>{b} ： {c} ({d}%)"
@@ -523,7 +652,7 @@ const Index = (props) => {
   const proportionWorkHours = () => {
     var total = 0; //总数量
     workHour.forEach(function (value) { total += value });
-    const option = getPie3D(workHourDataRatio, 0.6)
+    const option = getPie3D(workHourDataRatio, 0.6,[],customHourVal)
     option.title = {
       text: `${total}小时`,
       textStyle: {
@@ -533,32 +662,41 @@ const Index = (props) => {
         fontSize: 13,
       },
       x: "center",
-      y: "43.8%",
-    },
-      option.series.push({
-        name: 'pie2d',
-        type: 'pie',
-        avoidLabelOverlap: true,
-        label: {
-          show: false, 
-         },
-        labelLine: {
-          show: false,
-        },
-        startAngle: -20, //起始角度，支持范围[0, 360]。
-        clockwise: false,//饼图的扇区是否是顺时针排布。上述这两项配置主要是为了对齐3d的样式
-        radius: ['40%', '100%'],
-        center: ['50%', '50%'],
-        data: workHourDataRatio,
-        itemStyle: {
-          opacity: 0
-        },
-      })
+      y: total==0? "50%" : "center",
+    }
+      // option.series.push({ //需要label指引线的话
+      //   name: 'pie2d',
+      //   type: 'pie',
+      //   avoidLabelOverlap: true,
+      //   label: {
+      //     show: false, 
+      //    },
+      //   labelLine: {
+      //     show: false,
+      //   },
+      //   startAngle: -20, //起始角度，支持范围[0, 360]。
+      //   clockwise: false,//饼图的扇区是否是顺时针排布。上述这两项配置主要是为了对齐3d的样式
+      //   radius: ['40%', '100%'],
+      //   center: ['50%', '50%'],
+      //   data: workHourDataRatio,
+      //   itemStyle: {
+      //     opacity: 0
+      //   },
+      // })
     return option;
 
 
   }
 
+  const [serviceHourVisible,setServiceHourVisible] = useState(false)
+  const [serviceAreaCode ,setServiceAreaCode] = useState()
+  const [province ,setProvince] = useState()
+
+  const serviceHourDetail = (row)=>{
+    setServiceHourVisible(true)
+    setServiceAreaCode(row.ServiceAreaCode?Number(row.ServiceAreaCode) : undefined )
+    setProvince(row.RegionCode || undefined )
+  }
   const searchComponents = () => {
     return <Form
       form={form}
@@ -571,7 +709,7 @@ const Index = (props) => {
       }}
     >
       <Form.Item name='date' label='日期' >
-        <RangePicker style={{ width: 260 }} picker='month' />
+        <RangePicker style={{ width: 260 }} picker='month'  allowClear={false}/>
       </Form.Item>
       <Form.Item>
         <Space>
@@ -607,7 +745,7 @@ const Index = (props) => {
         </div>
         <Row style={{ margin: '8px 0' }} className='echartsContentSty'>
           <Col span={9}>
-            <Card title={`各大区${title[path]}次数、工作时长`}>
+            <Card title={`各大区${title[path]}服务次数、工作时长`}>
               {tableLoading[path] ?
                 <Skeleton active paragraph={{ rows: 8 }} />
                 :
@@ -633,7 +771,7 @@ const Index = (props) => {
                 <Skeleton active paragraph={{ rows: 8 }} />
                 : workHourDataRatio?.[0] && 
                  <Row>
-                  <Col span={12}>
+                  <Col span={14}>
                   <ReactEcharts
                   option={proportionWorkHours()}
                   style={{ width: "100%", height: 'calc(50vh - 170px)' }}
@@ -642,8 +780,13 @@ const Index = (props) => {
                   theme="my_theme"
                 />
                 </Col>
-                <Col style={{display:'flex',flexDirection:'column',alignItems:'end',justifyContent:'center',justifyItems:'center'}}  span={12}>{workHourDataRatio.map((item,index)=>{
-                    return  <Row  align='middle' style={{paddingBottom:index==workHourDataRatio.length? 0 : 8}}> <Row align='middle'> <div style={{display:'inline-block',width:14,height:14, borderRadius:2, backgroundColor:item.itemStyle.color,marginRight:8}}></div> <div style={{width:120}}>{item.name}</div></Row> <div style={{width:50,textAlign:'right',color:'#2189FC',fontWeight:'bold',marginLeft:4}}>{item.rate}%</div></Row>
+                <Col span={10} style={{paddingLeft:4,display:'flex',flexDirection:'column',alignItems:'end',justifyContent:'center',justifyItems:'center'}} >{workHourDataRatio.map((item,index)=>{
+                    return  <Row align='middle' style={{width:'100%',paddingBottom:index==workHourDataRatio.length? 0 : 8}}>
+                          <Row align='middle' wrap={false} style={{width:'calc(100% - 54px)'}}> 
+                          <div  style={{display:'inline-block',width:14,height:14, borderRadius:2, backgroundColor:item.itemStyle.color,marginRight:8}}></div> 
+                           <div className='textOverflow' style={{width:'calc(100% - 24px)'}}>{item.name}</div>
+                          </Row> 
+                          <div style={{minWidth:50,textAlign:'right',color:'#2189FC',fontWeight:'bold',marginLeft:4}}>{item.rate}%</div></Row>
                   })
                  }
                  </Col>
@@ -654,7 +797,7 @@ const Index = (props) => {
         </Row>
         <Row>
           <Card
-            title={<><span>各省区{title[path]}次数及工作时长</span>
+            title={<><span>各省区{title[path]}服务次数及工作时长</span>
               <Button icon={<ExportOutlined />} loading={exportLoading[path]} style={{ marginLeft: 12 }} onClick={() => { exportData() }}>
                 导出
                     </Button>
@@ -673,6 +816,16 @@ const Index = (props) => {
             />
           </Card>
         </Row>
+        <Modal
+        visible={serviceHourVisible}
+        title={`${title[path]}服务明细`}
+        onCancel={() => { setServiceHourVisible(false) }}
+        footer={null}
+        destroyOnClose
+        wrapClassName={`spreadOverModal`}
+      >
+        <ServiceDetails serviceQueryPar={{ time:[moment(queryPar.bTime),moment(queryPar.eTime)],serviceAreaCode:serviceAreaCode,province:province}} type={type[path]}/>
+      </Modal>
       </BreadcrumbWrapper>
     </div>
   );

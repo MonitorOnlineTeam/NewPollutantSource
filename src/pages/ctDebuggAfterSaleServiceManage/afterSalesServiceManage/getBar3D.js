@@ -7,8 +7,8 @@ export  const CubeLeft = echarts.graphic.extendShape({
     buildPath: function (ctx, shape) {
       const xAxisPoint = shape.xAxisPoint;
       const c0 = [shape.x, shape.y];
-      const c1 = [shape.x - 9, shape.y - 9];
-      const c2 = [xAxisPoint[0] - 9, xAxisPoint[1] - 0];
+      const c1 = [shape.x - 8, shape.y - 8];
+      const c2 = [xAxisPoint[0] - 8, xAxisPoint[1] - 0];
       const c3 = [xAxisPoint[0], xAxisPoint[1]];
       ctx
         .moveTo(c0[0], c0[1])
@@ -27,8 +27,8 @@ export  const CubeLeft = echarts.graphic.extendShape({
       const xAxisPoint = shape.xAxisPoint;
       const c1 = [shape.x, shape.y];
       const c2 = [xAxisPoint[0], xAxisPoint[1]];
-      const c3 = [xAxisPoint[0] + 18, xAxisPoint[1] - 0];
-      const c4 = [shape.x + 18, shape.y - 9];
+      const c3 = [xAxisPoint[0] + 16, xAxisPoint[1] - 0];
+      const c4 = [shape.x + 16, shape.y - 8];
       ctx
         .moveTo(c1[0], c1[1])
         .lineTo(c2[0], c2[1])
@@ -44,9 +44,9 @@ export  const CubeLeft = echarts.graphic.extendShape({
     },
     buildPath: function (ctx, shape) {
       const c1 = [shape.x, shape.y];
-      const c2 = [shape.x + 18, shape.y - 9];
-      const c3 = [shape.x + 9, shape.y - 18];
-      const c4 = [shape.x - 9, shape.y - 9];
+      const c2 = [shape.x + 16, shape.y - 8];
+      const c3 = [shape.x + 8, shape.y - 16];
+      const c4 = [shape.x - 8, shape.y - 8];
       ctx
         .moveTo(c1[0], c1[1])
         .lineTo(c2[0], c2[1])
