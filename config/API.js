@@ -704,6 +704,8 @@ export const API = {
   CtCommonApi: {
     GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList', //站点信息
     GetTestPollutantList: before + '/DebuggingBase/GetTestPollutantList', //站点信息
+    // 获取大区
+    GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList',
   },
   //项目执行进度 Api
 
@@ -838,6 +840,11 @@ export const API = {
     DeleteReferenceInstrumentInfo: before + '/DebuggingEquipment/DeleteReferenceInstrumentInfo',  //删除参比仪器设备清单
   },
   CtAPI_WJQ: {
+    // 基础服务
+    CTBaseDataApi: {
+      // 获取超时服务原因与重复服务原因
+      GetReasonList: before + '/CTBaseDataApi/GetReasonList',
+    },
     // 服务不及时API
     CTProjectExecutionApi: {
       // 获取已设置不及时的服务列表
@@ -865,6 +872,28 @@ export const API = {
       AddCheckServiceReport: before + '/CTBaseDataApi/AddCheckServiceReport',
       // 删除
       DelteCheckServiceReport: before + '/CTBaseDataApi/DelteCheckServiceReport',
+    },
+    // 超时服务
+    TimeoutServices: {
+      // 超时服务统计
+      GetTimeoutServiceAnalysis: before + '/CTStatisticsApi/GetTimeoutServiceAnalysis',
+      // 导出超时服务统计
+      ExportTimeoutServiceAnalysis: before + '/CTStatisticsApi/ExportTimeoutServiceAnalysis',
+      // 获取超时服务基础数据
+      GetTimeoutServiceInfo: before + '/CTStatisticsApi/GetTimeoutServiceInfo',
+      // 导出 - 超时服务基础数据
+      ExportTimeoutServiceInfo: before + '/CTStatisticsApi/ExportTimeoutServiceInfo',
+    },
+    // 重复服务
+    RepeatServices: {
+      // 重复服务统计
+      GetRepeatServiceAnalysis: before + '/CTStatisticsApi/GetRepeatServiceAnalysis',
+      // 导出超时服务统计
+      ExportRepeatServiceAnalysis: before + '/CTStatisticsApi/ExportRepeatServiceAnalysis',
+      // 获取超时服务基础数据
+      GetRepeatServiceInfo: before + '/CTStatisticsApi/GetRepeatServiceInfo',
+      // 导出 - 超时服务基础数据
+      ExportRepeatServiceInfo: before + '/CTStatisticsApi/ExportRepeatServiceInfo',
     },
   },
 };

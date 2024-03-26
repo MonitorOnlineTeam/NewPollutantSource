@@ -1,0 +1,76 @@
+.pageWrapper {
+  overflow-x: hidden;
+  height: 100%;
+  background-color: #f0f2f5;
+
+  :global {
+    .ant-card-bordered {
+      padding-top: 0 !important;
+    }
+  }
+
+  .legendWrapper {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    padding: 40px 0;
+
+    .lengendItem {
+      display: flex;
+      justify-content: space-around;
+      line-height: 30px;
+      height: 30px;
+      width: 100%;
+      padding: 0 14px;
+      .label {
+        width: 120px;
+        display: inline-block;
+        display: flex;
+        align-items: center;
+        i {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background-color: red;
+          margin-right: 6px;
+        }
+        span {
+          color: #555;
+          display: inline-block;
+          // width: 100px;
+        }
+      }
+      .value {
+        width: 50px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #333333;
+        display: inline-block;
+      }
+    }
+
+    // li {
+
+    //   .label {
+    //     i {
+    //       display: inline-block;
+    //       width: 10px;
+    //       height: 10px;
+    //       border-radius: 50%;
+    //       background-color: red;
+    //       margin-right: 6px;
+    //     }
+    //     span {
+    //       color: #555;
+    //     }
+    //   }
+
+    //   .value {
+    //     font-weight: bold;
+    //     font-size: 14px;
+    //     color: #333333;
+    //   }
+    // }
+  }
+}
