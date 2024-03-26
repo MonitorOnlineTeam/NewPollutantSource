@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-25 15:29:55
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-26 09:27:48
+ * @Last Modified time: 2024-03-26 16:04:16
  * @Description:  大区超时时长
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -45,7 +45,7 @@ const TimeoutDuration = props => {
       xData = [];
     let seriesData = LargeRegionAnalysis.map(item => {
       xData.push(item.LargeRegionName);
-      seriesData2.push(max + 1);
+      seriesData2.push(max);
       return item.Times;
     });
 
@@ -58,7 +58,6 @@ const TimeoutDuration = props => {
         type: 'pictorialBar',
         symbol: 'path://M35,0L35,70L0,70z M35,0L35,70L70,70z',
         data: seriesData,
-        symbolOffset: [0, -10],
         z: 99,
         barMaxWidth: 40,
         label: {
@@ -103,6 +102,12 @@ const TimeoutDuration = props => {
       //   top: 10,
       //   right: 10,
       // },
+      tooltip: {
+        trigger: 'axis',
+        formatter: params => {
+          return `${params[0].marker}${params[0].name}：${params[0].value} 小时`;
+        },
+      },
       grid: {
         borderWidth: 0,
         bottom: 40,

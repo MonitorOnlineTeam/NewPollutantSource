@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-25 15:29:55
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-26 14:31:56
+ * @Last Modified time: 2024-03-26 15:49:53
  * @Description:  大区重复服务次数
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -94,16 +94,12 @@ const RepeatCount = props => {
       },
     ];
     let option = {
-      // tooltip: {
-      //   show: true,
-      //   // formatter: '{c}' + '个人',
-      // },
-      // toolbox: {
-      //   show: true,
-      //   top: 10,
-      //   right: 10,
-      // },
-      
+      tooltip: {
+        trigger: 'axis',
+        formatter: params => {
+          return `${params[0].marker}${params[0].name}：${params[0].value} 次`;
+        },
+      },
       grid: {
         borderWidth: 0,
         bottom: 40,

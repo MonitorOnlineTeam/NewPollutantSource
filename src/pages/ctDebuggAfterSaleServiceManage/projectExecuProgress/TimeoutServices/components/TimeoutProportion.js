@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-25 15:30:11
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-26 14:36:44
+ * @Last Modified time: 2024-03-26 15:49:02
  * @Description:  服务时长占比
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -62,7 +62,7 @@ const TimeoutProportion = props => {
     let option = {
       color: COLOR,
       title: {
-        text: '{name|服务次数}\n{val|' + count + '}',
+        text: '{name|超时时长}\n{val|' + count + '}',
         top: 'center',
         left: 'center',
         textStyle: {
@@ -140,7 +140,7 @@ const TimeoutProportion = props => {
   }, [LargeRegionAnalysis, echarts]);
 
   return (
-    <Card title="服务时长占比" size="small" bodyStyle={{ height: 300 }} loading={loading}>
+    <Card title="大区超时时长占比" size="small" bodyStyle={{ height: 300 }} loading={loading}>
       {renderEcharts}
     </Card>
   );
