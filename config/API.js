@@ -731,6 +731,12 @@ export const API = {
     GetSignInAnalysisInfo: before + '/CTStatisticsApi/GetSignInAnalysisInfo',//获取现场签到统计详情信息
     ExportSignInAnalysisInfo: before + '/CTStatisticsApi/ExportSignInAnalysisInfo',//现场签到统计详情信息 导出
   },
+    /*** 售后服务管理 ***/
+  /*节点服务*/
+  AfterSalesServiceManageApi :{
+    GetCompleteNodeServerAnalysis: before + '/CTStatisticsApi/GetCompleteNodeServerAnalysis',//获取节点服务信息
+    ExportCompleteNodeServerAnalysis: before + '/CTStatisticsApi/ExportCompleteNodeServerAnalysis',//节点服务信息 导出
+  },
   //调试服务
   CtDebugServiceApi: {
     /*调试点位管理*/

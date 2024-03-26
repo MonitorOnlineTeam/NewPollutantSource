@@ -1,3 +1,5 @@
+import { fomatFloat } from '@/utils/utils';
+
 //获取3d丙图的最高扇区的高度
 function getHeight3D(series, height) {
     series.sort((a, b) => {
@@ -69,29 +71,9 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
 }
 
 
-function fomatFloat(num, n) {
-    var f = parseFloat(num);
-    if (isNaN(f)) {
-        return false;
-    }
-    f = Math.round(num * Math.pow(10, n)) / Math.pow(10, n); // n 幂   
-    var s = f.toString();
-    var rs = s.indexOf('.');
-    //判定如果是整数，增加小数点再补0
-    if (rs < 0) {
-        rs = s.length;
-        s += '.';
-    }
-    while (s.length <= rs + n) {
-        s += '0';
-    }
-    return s;
-}
 
-
-
-export function getPie3D(pieData, internalDiameterRatio) {
-
+export function getPie3D(pieData, internalDiameterRatio,legend) {
+     
     //internalDiameterRatio:透明的空心占比
     let series = [];
     let sumValue = 0;
@@ -119,7 +101,7 @@ export function getPie3D(pieData, internalDiameterRatio) {
                 hovered: false,
                 k: k
             },
-            center: ['10%', '50%']
+            center: ['50%', '50%']
         };
 
         if (typeof pieData[i].itemStyle != 'undefined') {
@@ -156,22 +138,23 @@ export function getPie3D(pieData, internalDiameterRatio) {
     let boxHeight = getHeight3D(series, 20);//通过传参设定3d饼/环的高度，20代表20px
     // 准备待返回的配置项，把准备好的 legendData、series 传入。
     let option = {
-        legend: {
+        legend: legend && {
             data: legendData,
             orient: 'vertical',
             right: 0,
             y: 'center',
-            itemGap: 18,
+            itemGap: 16,
             show: true,
             itemWidth: 14,  // 设置图例标记的宽度
             itemHeight: 14, // 设置图例标记的高度
             formatter: function (param) {
+                
                 let item = legendBfb.filter(item => item.name == param)[0];
                 let bfs = fomatFloat(item.value * 100, 2);
                 return `{a|${item.name}}{b|${bfs + '%'}}`
             },
             textStyle: {
-                padding:[2,0,0,0],
+                padding:[2,0,0,4],
                 fontFamily: 'Microsoft YaHei',
                 rich: {
                     a: {
@@ -180,7 +163,7 @@ export function getPie3D(pieData, internalDiameterRatio) {
                     color: "#666",
                   },
                   b: {
-                    padding: [0, 0, 0, 4],
+                    padding: [0, 0, 0, 2],
                     fontWeight:'bold',
                     color: "#2189FC",
                     fontSize:14,
@@ -236,15 +219,15 @@ export function getPie3D(pieData, internalDiameterRatio) {
         grid3D: {
             show: false,
             boxHeight: boxHeight, //圆环的高度
-            width: '50%',
+            width: '100%',
             left: 0,
             viewControl: { //3d效果可以放大、旋转等，请自己去查看官方配置
                 alpha: 40, //角度
-                distance: 270,//调整视角到主体的距离，类似调整zoom
+                distance: 265,//调整视角到主体的距离，类似调整zoom
                 rotateSensitivity: 0, //设置为0无法旋转
                 zoomSensitivity: 0, //设置为0无法缩放
                 panSensitivity: 0, //设置为0无法平移
-                // autoRotate: false //自动旋转
+                autoRotate: true //自动旋转
             }
         },
         series: series
