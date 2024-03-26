@@ -3048,6 +3048,18 @@ export default {
                   path: '/ctManage/projectExecuProgress/reportSpotCheck',
                   component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportSpotCheck',
                 },
+                {
+                  // 超时服务
+                  name: 'TimeoutServices',
+                  path: '/ctManage/projectExecuProgress/TimeoutServices',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/TimeoutServices',
+                },
+                {
+                  // 重复服务
+                  name: 'RepeatServices',
+                  path: '/ctManage/projectExecuProgress/RepeatServices',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/RepeatServices',
+                },
               ],
             },
             /**售后服务管理  */ 
