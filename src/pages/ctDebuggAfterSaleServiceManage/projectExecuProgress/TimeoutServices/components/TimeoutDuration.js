@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-25 15:29:55
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-26 16:04:16
+ * @Last Modified time: 2024-03-26 17:20:44
  * @Description:  大区超时时长
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -183,8 +183,6 @@ const TimeoutDuration = props => {
     return (
       <ReactEcharts
         ref={echart => {
-          debugger;
-
           echart && setEcharts(echart.echarts);
         }}
         option={getOption()}

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-25 15:30:21
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-26 14:32:09
+ * @Last Modified time: 2024-03-26 17:21:03
  * @Description:  重复服务原因次数
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -171,7 +171,6 @@ const ReasonsCount = props => {
     return (
       <ReactEcharts
         ref={echart => {
-          debugger;
           echart && setEcharts(echart.echarts);
         }}
         option={getOption()}

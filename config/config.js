@@ -3000,7 +3000,6 @@ export default {
              {
               path: '/ctManage/projectExecuProgress',
               name: 'ProjectExecuProgress',
-
               routes: [
                 {
                   path: '/ctManage/projectExecuProgress',
@@ -3061,6 +3060,23 @@ export default {
                   component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/RepeatServices',
                 },
               ],
+            },
+            // 监督核查
+            {
+              path: '/ctManage/supervisionCheck',
+              name: 'supervisionCheck',
+              routes: [
+                {
+                  path: '/ctManage/supervisionCheck',
+                  redirect: '/ctManage/afterSalesServiceManage/nodeServices',
+                },
+                {
+                  // 纪律检查
+                  name: 'NodeServices', 
+                  path: '/ctManage/supervisionCheck/disciplineCheck',
+                  component: './ctDebuggAfterSaleServiceManage/supervisionCheck/disciplineCheck',
+                },
+              ]
             },
             /**售后服务管理  */ 
             {

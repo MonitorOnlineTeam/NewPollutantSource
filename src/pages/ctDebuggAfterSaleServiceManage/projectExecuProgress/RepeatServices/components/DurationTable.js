@@ -145,6 +145,8 @@ const DurationTable = props => {
         title: '年度',
         dataIndex: 'year',
         key: 'year',
+        width: 80,
+        fixed: 'left',
         render: (text, record, index) => {
           return {
             children: text,
@@ -156,6 +158,7 @@ const DurationTable = props => {
         title: '序号',
         dataIndex: 'sort',
         key: 'sort',
+        fixed: 'left',
         render: (text, record, index) => {
           return {
             children: text,
@@ -168,6 +171,7 @@ const DurationTable = props => {
         dataIndex: 'ReasonName',
         key: 'ReasonName',
         width: 200,
+        fixed: 'left',
         render: (text, record, index) => {
           return {
             children: text,

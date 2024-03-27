@@ -912,6 +912,19 @@ export const API = {
       // 导出 - 超时服务基础数据
       ExportRepeatServiceInfo: before + '/CTStatisticsApi/ExportRepeatServiceInfo',
     },
+    // 纪律检查
+    DisciplineCheck: {
+      // 纪律检查统计列表
+      GetDisciplineCheckList: before + '/CTProjectExecutionApi/GetDisciplineCheckList',
+      // 导出
+      ExportDisciplineCheckList: before + '/CTProjectExecutionApi/ExportDisciplineCheckList',
+      // 删除
+      DeleteDisciplineCheckManage: before + '/CTProjectExecutionApi/DeleteDisciplineCheckManage',
+      // 获取纪律检查详情
+      GetRecordLogInfor: before + '/CTProjectExecutionApi/GetRecordLogInfor',
+      // 修改纪律检查
+      UpdateDisciplineCheckManage: before + '/CTProjectExecutionApi/UpdateDisciplineCheckManage',
+    }
   },
 };
 

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-25 15:30:21
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-26 14:34:30
+ * @Last Modified time: 2024-03-26 17:20:52
  * @Description:  超时原因
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -171,7 +171,6 @@ const TimeoutReasons = props => {
     return (
       <ReactEcharts
         ref={echart => {
-          debugger;
           echart && setEcharts(echart.echarts);
         }}
         option={getOption()}
