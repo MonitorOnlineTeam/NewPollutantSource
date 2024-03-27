@@ -1066,9 +1066,7 @@ const Index = props => {
                       setPlanPopVisible(false)
                       if(editor?.root?.innerHTML){
                         editor.root.innerHTML = '' //清空富文本内容
-                      }
-                      
-                    
+                      }                    
                     }}
                   >
                     <Option value={1}>新建方案</Option>
