@@ -1064,7 +1064,6 @@ const Index = props => {
                       modalForm.setFieldsValue({ planName: '', planContent: '', planCode: '' })
                       initVerificationActionData()
                       setPlanPopVisible(false)
-                      console.log(editor)
                       if(editor?.root?.innerHTML){
                         editor.root.innerHTML = '' //清空富文本内容
                       }
