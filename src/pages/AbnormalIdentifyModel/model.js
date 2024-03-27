@@ -50,7 +50,7 @@ export default Model.extend({
       pageIndex: 1,
       pageSize: 20,
       scrollTop: '',
-      type: 1,
+      type: '',
     },
     waitCheckDatasQueryPar:{},
     workTowerQueryPar: {},

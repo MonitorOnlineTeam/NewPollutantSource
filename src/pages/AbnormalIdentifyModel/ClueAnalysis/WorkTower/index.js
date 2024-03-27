@@ -51,6 +51,7 @@ const WorkTower = props => {
   const [total, setTotal] = useState();
 
   useEffect(() => {
+    console.log(type,queryPar)
     if (type == 2) {  //从生成核查任务返回
       let data = queryPar
       form.setFieldsValue({
@@ -104,8 +105,8 @@ const WorkTower = props => {
       type: 'AbnormalIdentifyModel/GetClueDatas',
       payload: {
         ...values,
-        beginTime: values.date ? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined,
-        endTime: values.date ? values.date[1].format('YYYY-MM-DD 23:59:59') : undefined,
+        beginTime: values.date && values.date[0] ? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined,
+        endTime: values.date  && values.date[1]  ? values.date[1].format('YYYY-MM-DD 23:59:59') : undefined,
         date: undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,

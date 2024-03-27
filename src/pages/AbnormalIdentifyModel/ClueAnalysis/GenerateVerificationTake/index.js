@@ -105,7 +105,6 @@ const Index = props => {
     // } else {
 
     let data = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
-
     if (type == 1 || type == 2) {//1从工作台进入   2从详情返回
       let data = ''
       if (type == 1) {
@@ -113,6 +112,7 @@ const Index = props => {
       } else {
         data = waitCheckDatasQueryPar
       }
+   
       form.setFieldsValue({
         entCode: data?.entCode,
         date: data.beginTime && data.endTime ? [moment(data.beginTime), moment(data.endTime)] : [],
@@ -125,6 +125,8 @@ const Index = props => {
       } else {
         initData(data)
       }
+    }else{ //刷新
+      initData()
     }
 
 
@@ -473,8 +475,8 @@ const Index = props => {
       payload: {
         ...values,
         date: undefined,
-        beginTime: values.date ? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined,
-        endTime: values.date ? values.date[1].format('YYYY-MM-DD 23:59:59') : undefined,
+        beginTime: values.date &&  values.date[0]? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined,
+        endTime: values.date &&  values.date[1] ? values.date[1].format('YYYY-MM-DD 23:59:59') : undefined,
         pageIndex: pageIndex,
         pageSize: pageSize
       },
@@ -648,20 +650,45 @@ const Index = props => {
       validateFieldsFun()
     }
   }
-
+  function findDifferentValues(array1, array2) {
+    // 合并两个数组，并去除重复值
+    let mergedArray = [...new Set(array1.concat(array2))];
+    
+    // 创建一个数组来存储不同的值
+    let differentValues = [];
+    
+    // 遍历合并后的数组，检查每个元素在两个数组中的出现次数
+    for (let i = 0; i < mergedArray.length; i++) {
+        let value = mergedArray[i];
+        
+        // 如果某个值在其中一个数组中出现的次数不等于2（即只在一个数组中出现），则将其添加到不同的值数组中
+        if (array1.indexOf(value) !== array2.indexOf(value)) {
+            differentValues.push(value);
+        }
+    }
+    
+    return differentValues;
+}
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRow, setSelectedRow] = useState({});
+  let currentRow = {};
   const rowSelection = {
-    selectedRowKeys,
+    selectedRowKeys:selectedRowKeys,
+    onSelect : (record, selected, selectedRows, nativeEvent) =>{
+     currentRow = record
+    },
     onChange: (newSelectedRowKeys, row) => {
       if (selectedRowKeys?.length == 0 || newSelectedRowKeys?.length == 0) { //还未选中 或 全部取消
         setSelectedRowKeys(newSelectedRowKeys)
         setSelectedRow(row?.[0])
       } else {
-        const currentRow = row?.[row?.length - 1]
         if (currentRow?.['DGIMN'] == selectedRow['DGIMN'] && currentRow?.['WarningName'] == selectedRow['WarningName']) {
-          let data = [...selectedRowKeys,...newSelectedRowKeys]
-              data = data.filter((value, index, self) => self.indexOf(value) === index)
+            let  data = [...selectedRowKeys,...newSelectedRowKeys] //selectedRowKeys跳转第二页时 记住
+                 data = data.filter((value, index, self) => self.indexOf(value) === index) //去重
+          if(selectedRowKeys?.length == data?.length){  //取消
+               const key = currentRow.WarningCode //需要取消的列
+               data = data.filter(item=>item !=key)
+            }
              setSelectedRowKeys(data)
         } else {
           message.error('同一企业同一排口同一场景下才能同时选中并生成核查方案')
@@ -669,6 +696,7 @@ const Index = props => {
       }
     }
   };
+
   const [selectedPlanRowKeys, setSelectedPlanRowKeys] = useState([]);
   const [selectedPlanRow, setSelectedPlanRow] = useState([]);
   const rowPlanSelection = {
@@ -676,11 +704,13 @@ const Index = props => {
     onChange: (newSelectedRowKeys, row) => {
       if (newSelectedRowKeys?.length === 1) {
         setSelectedPlanRowKeys(newSelectedRowKeys)
+        setSelectedPlanRow(row?.[0])
       } else {
-        let diff = newSelectedRowKeys.filter(x => !selectedPlanRowKeys.includes(x));
-        setSelectedPlanRowKeys(diff)
+        let diffIndex = newSelectedRowKeys.filter(x => !selectedPlanRowKeys.includes(x));
+        setSelectedPlanRowKeys(diffIndex)
+        setSelectedPlanRow(row?.[diffIndex])
       }
-      setSelectedPlanRow(row?.[0])
+     
     }
   };
   const [verificationPlanType, setVerificationPlanType] = useState(1)
@@ -837,9 +867,9 @@ const Index = props => {
                 style={{ width: 200 }}
                 onChange={value => {
                   if (!value) {
-                    form.setFieldsValue({ DGIMN: undefined });
+                    form.setFieldsValue({ dgimn: undefined });
                   } else {
-                    form.setFieldsValue({ DGIMN: undefined });
+                    form.setFieldsValue({ dgimn: undefined });
                     getPointList(value);
                   }
                 }}
@@ -1033,7 +1063,13 @@ const Index = props => {
                       setVerificationPlanType(value)
                       modalForm.setFieldsValue({ planName: '', planContent: '', planCode: '' })
                       initVerificationActionData()
-
+                      setPlanPopVisible(false)
+                      console.log(editor)
+                      if(editor?.root?.innerHTML){
+                        editor.root.innerHTML = '' //清空富文本内容
+                      }
+                      
+                    
                     }}
                   >
                     <Option value={1}>新建方案</Option>
@@ -1056,7 +1092,7 @@ const Index = props => {
                   placement={planDatas?.length >= 18 ? 'rightBottom' : 'right'}
                   content={<>
                     <Table
-                      rowKey={(record, index) => `${index}`}
+                      rowKey={(record, index) => index}
                       bordered
                       size='small'
                       rowSelection={rowPlanSelection}
