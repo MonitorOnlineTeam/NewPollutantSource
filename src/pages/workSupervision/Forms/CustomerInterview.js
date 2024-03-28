@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-17 08:57:46
+ * @Last Modified time: 2024-03-28 16:14:24
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -189,6 +189,14 @@ const CustomerInterview = props => {
           autoComplete="off"
         >
           <Row style={{ width: '100%' }}>
+            <Form.Item name="RegionalArea" style={{ display: 'none' }}>
+              {/* 大区id */}
+              <Input disabled />
+            </Form.Item>
+            <Form.Item name="Province" style={{ display: 'none' }}>
+              {/* 省份id */}
+              <Input disabled />
+            </Form.Item>
             <Col span={12}>
               <Form.Item
                 label="大区"
@@ -240,8 +248,10 @@ const CustomerInterview = props => {
                         onChange={(value, option) => {
                           setCustomID(value);
                           form.setFieldsValue({
+                            RegionalArea: option['data-item'].UserGroup_ID,
                             UserGroup_Name: option['data-item'].UserGroup_Name,
                             ProvinceName: option['data-item'].ProvinceName,
+                            Province: option['data-item'].Province,
                           });
                         }}
                       >
@@ -264,6 +274,8 @@ const CustomerInterview = props => {
                           CustomID: data.ID,
                           UserGroup_Name: data.UserGroup_Name,
                           ProvinceName: data.ProvinceName,
+                          RegionalArea: option['data-item'].UserGroup_ID,
+                          Province: option['data-item'].Province,
                         });
                       }}
                     />
@@ -360,7 +372,6 @@ const CustomerInterview = props => {
                 <Input disabled />
               </Form.Item>
             </Col>
-           
           </Row>
           <Table
             size="small"

@@ -7,7 +7,7 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 import path from 'path';
-const apiHost = 'http://172.16.12.39:49003/';//运维测试
+const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:61003/';//运维正式
 // const apiHost = 'http://172.16.12.234:60061/';//模型
@@ -21,7 +21,7 @@ const apiHost = 'http://172.16.12.39:49003/';//运维测试
 // const apiHost = 'http://172.16.12.135:50210/';
 // const apiHost = 'http://172.16.12.57:61000/';
 // const apiHost = 'http://172.16.12.57:61002/';
-const apiHost2 = 'http://172.16.12.109:61001/';//调试服务导出PDF api
+const apiHost2 = 'http://172.16.12.109:61001/'; //调试服务导出PDF api
 
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 
@@ -52,11 +52,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false,
       // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
@@ -806,12 +806,13 @@ export default {
                       component: './platformManager/configurationInfo/noDataPointExport',
                     },
                     {
-                      name: 'newOldProtocolConversManger',// 新老协议转换管理
-                      path: '/platformconfig/configurationInfo/newOldProtocol/newOldProtocolConversManger',
+                      name: 'newOldProtocolConversManger', // 新老协议转换管理
+                      path:
+                        '/platformconfig/configurationInfo/newOldProtocol/newOldProtocolConversManger',
                       component: './platformManager/configurationInfo/newOldProtocolConversManger',
                     },
                     {
-                      name: 'newOldProtocolConversManger',// 交接和报告
+                      name: 'newOldProtocolConversManger', // 交接和报告
                       path: '/platformconfig/configurationInfo/handoverReporting/handoverReport',
                       component: './platformManager/configurationInfo/handoverReport',
                     },
@@ -1779,7 +1780,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  }`,
                 },
                 {
                   //视频监控（新）
@@ -1804,7 +1805,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -2932,19 +2933,24 @@ export default {
                   routes: [
                     {
                       path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate',
-                      redirect: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                      redirect:
+                        '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
                     },
                     {
                       // 核实率
                       name: 'verificaRate',
-                      path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
-                      component: './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                      path:
+                        '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                      component:
+                        './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
                     },
                     {
                       // 整改率
                       name: 'rectificaRate',
-                      path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
-                      component: './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
+                      path:
+                        '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
+                      component:
+                        './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
                     },
                   ],
                 },
@@ -2983,13 +2989,10 @@ export default {
                     //   path: '/DataAnalyticalWarningModel/Statistics/FluctuateRange',
                     //   component: './DataAnalyticalWarningModel/Statistics/FluctuateRange',
                     // },
-
                   ],
                 },
               ],
             },
-
-
 
             /********  设备调试及售后服务管理平台 成套   ********/
             {
@@ -3019,46 +3022,53 @@ export default {
                           // 派单查询
                           name: 'DispatchQuery',
                           path: '/ctManage/projectExecuProgress/projectExecution/dispatchQuery',
-                          component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery',
                         },
                         {
                           // 派单完成率
                           name: 'DispatchCompletionRate',
-                          path: '/ctManage/projectExecuProgress/projectExecution/dispatchCompletionRate',
-                          component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchCompletionRate',
+                          path:
+                            '/ctManage/projectExecuProgress/projectExecution/dispatchCompletionRate',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchCompletionRate',
                         },
-
                       ],
                     },
                     {
                       // 现场签到统计
                       name: 'SiteAttendanceStatistics',
                       path: '/ctManage/projectExecuProgress/siteAttendanceStatistics',
-                      component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/siteAttendanceStatistics',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/siteAttendanceStatistics',
                     },
                     {
                       // 服务不及时
                       name: 'serviceIsNotTimely',
                       path: '/ctManage/projectExecuProgress/serviceIsNotTimely',
-                      component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/serviceIsNotTimely',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/serviceIsNotTimely',
                     },
                     {
                       // 服务报告抽查
                       name: 'reportSpotCheck',
                       path: '/ctManage/projectExecuProgress/reportSpotCheck',
-                      component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportSpotCheck',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportSpotCheck',
                     },
                     {
                       // 超时服务
                       name: 'TimeoutServices',
                       path: '/ctManage/projectExecuProgress/TimeoutServices',
-                      component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/TimeoutServices',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/TimeoutServices',
                     },
                     {
                       // 重复服务
                       name: 'RepeatServices',
                       path: '/ctManage/projectExecuProgress/RepeatServices',
-                      component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/RepeatServices',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/RepeatServices',
                     },
                   ],
                 },
@@ -3066,25 +3076,29 @@ export default {
                   // 现场签到统计
                   name: 'SiteAttendanceStatistics',
                   path: '/ctManage/projectExecuProgress/siteAttendanceStatistics',
-                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/siteAttendanceStatistics',
+                  component:
+                    './ctDebuggAfterSaleServiceManage/projectExecuProgress/siteAttendanceStatistics',
                 },
                 {
                   // 服务不及时
                   name: 'serviceIsNotTimely',
                   path: '/ctManage/projectExecuProgress/serviceIsNotTimely',
-                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/serviceIsNotTimely',
+                  component:
+                    './ctDebuggAfterSaleServiceManage/projectExecuProgress/serviceIsNotTimely',
                 },
                 {
                   // 服务报告抽查
                   name: 'reportSpotCheck',
                   path: '/ctManage/projectExecuProgress/reportSpotCheck',
-                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportSpotCheck',
+                  component:
+                    './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportSpotCheck',
                 },
                 {
                   // 超时服务
                   name: 'TimeoutServices',
                   path: '/ctManage/projectExecuProgress/TimeoutServices',
-                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/TimeoutServices',
+                  component:
+                    './ctDebuggAfterSaleServiceManage/projectExecuProgress/TimeoutServices',
                 },
                 {
                   // 重复服务
@@ -3092,7 +3106,6 @@ export default {
                   path: '/ctManage/projectExecuProgress/RepeatServices',
                   component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/RepeatServices',
                 },
-
                 // 监督核查
                 {
                   path: '/ctManage/supervisionCheck',
@@ -3106,9 +3119,10 @@ export default {
                       // 纪律检查
                       name: 'NodeServices',
                       path: '/ctManage/supervisionCheck/disciplineCheck',
-                      component: './ctDebuggAfterSaleServiceManage/supervisionCheck/disciplineCheck',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/supervisionCheck/disciplineCheck',
                     },
-                  ]
+                  ],
                 },
                 /**售后服务管理  */
                 {
@@ -3126,29 +3140,34 @@ export default {
                         {
                           name: 'ChargeService', // 收费服务
                           path: '/ctManage/afterSalesServiceManage/chargeService',
-                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
                         },
                         {
                           name: 'NodeServices', // 成套节点服务
                           path: '/ctManage/afterSalesServiceManage/nodeServices',
-                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
                         },
                         {
                           name: 'GiveServer', // 赠送服务
                           path: '/ctManage/afterSalesServiceManage/giveServer',
-                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
                         },
                         {
                           name: 'CooperateInspection', // 配合检查
                           path: '/ctManage/afterSalesServiceManage/cooperateInspection',
-                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
                         },
                         {
                           name: 'CooperateOtherWork', // 配合其它工作
                           path: '/ctManage/afterSalesServiceManage/cooperateOtherWork',
-                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
                         },
-                      ]
+                      ],
                     },
                     /**资产管理 */
                     {
@@ -3172,22 +3191,26 @@ export default {
                               // 项目查询
                               name: 'CtProjectQuery',
                               path: '/ctManage/assetManagement/equipmentAccount/projectQuery',
-                              component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery',
+                              component:
+                                './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery',
                             },
                             {
                               // 污染源管理
                               name: 'CtPollutantManagement',
-                              path: '/ctManage/assetManagement/equipmentAccount/pollutantManagement/:configId',
-                              component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement',
+                              path:
+                                '/ctManage/assetManagement/equipmentAccount/pollutantManagement/:configId',
+                              component:
+                                './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement',
                             },
                             {
                               name: 'CtPoint', // 污染源管理 监测点
-                              path: '/ctManage/assetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
-                              component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/point',
+                              path:
+                                '/ctManage/assetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
+                              component:
+                                './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/point',
                             },
                           ],
                         },
-
                       ],
                     },
                     /**监督检查 */
@@ -3203,42 +3226,15 @@ export default {
                           // 设备安装审核
                           name: 'InstallaEquipmentReview',
                           path: '/ctManage/supervisionInspection/installaEquipmentReview',
-                          component: './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
                         },
-
                       ],
                     },
-
-
-
-
-
-
-
                   ],
                 },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-              ]
+              ],
             },
-
-
             /* 任务详情 */
             {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
