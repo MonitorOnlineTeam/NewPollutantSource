@@ -58,6 +58,8 @@ export const API = {
     GetStandardPollutantsByDgimn: before + '/StandardLibraryApi/GetStandardPollutantsByDgimn', //根据排口获取标准污染物列表
     GetPollutantTypeMonitoringCategoryInfo: before + '/EquipmentApi/GetPollutantTypeMonitoringCategoryInfo',//获取设备信息监测参数类型
     GetIndustryTree: before + '/AutoFormDataApi/GetIndustryTree', //获取行业树信息
+    AddSetUser: before + '/UserApi/AddSetUser',//设置人员信息 3 整改人员清单 4 照片审核人员清单
+    GetSetUser: before + '/UserApi/GetSetUser',//获取设置人员信息 3 整改人员清单 4 照片审核人员清单
   },
   // 可视化看板Api
   VisualKanbanApi: {
@@ -260,7 +262,7 @@ export const API = {
     // GetExceptionCityList: before + '/ExceptionDataApi/GetExceptionCityList',//获取市级异常数据信息
     // ExportExceptionCityList: before + '/ExceptionDataApi/ExportExceptionCityList',//导出市级异常数据信息
     GetExceptionPointList: before + '/ExceptionDataApi/GetExceptionPointList',//获取监测点异常数据信息
-    ExportExceptionPointList : before + '/ExceptionDataApi/ExportExceptionPointList',//获取监测点异常数据信息
+    ExportExceptionPointList: before + '/ExceptionDataApi/ExportExceptionPointList',//获取监测点异常数据信息
     /*异常数据报警*/
     GetExceptionAlarmResponseList: before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseList',//获取异常数据报警信息
     ExportExceptionAlarmResponseList: before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseList',//导出异常数据报警信息
@@ -387,8 +389,6 @@ export const API = {
     GetInspectorRectificationView: before + '/SystemFacilityVerification/GetInspectorRectificationView',//获取核查整改详情
     UpdateRectificationStatus: before + '/SystemFacilityVerification/UpdateRectificationStatus',//更新核查整改状态
     RejectInspectorRectificationInfo: before + '/SystemFacilityVerification/RejectInspectorRectificationInfo',//核查整改驳回或申述驳回
-    AddSetUser: before + '/UserApi/AddSetUser',//设置可以看到督察整改全部信息的人员信息
-    GetSetUser: before + '/UserApi/GetSetUser',//获取可以看到督察整改全部信息的人员信息
     /*** 监督核查分析 ***/
     /*督查分析总结*/
     GetSupervisionTypeList: before + '/Supervision/GetSupervisionTypeList', //获取督查总结的督查类别
@@ -722,20 +722,27 @@ export const API = {
     GetCooperateRecord: before + '/CTBaseDataApi/GetCooperateRecord',//服务填报内容  配合检查
     GetRepairRecord: before + '/CTBaseDataApi/GetRepairRecord',//服务填报内容  维修记录
     ExportServiceDispatch: before + '/CTBaseDataApi/ExportServiceDispatch',  //服务派单信息 导出
-    GetCTServiceDispatchRateList : before + '/CTBaseDataApi/GetCTServiceDispatchRateList ',  //获取成套派单完成率信息
+    GetCTServiceDispatchRateList: before + '/CTBaseDataApi/GetCTServiceDispatchRateList ',  //获取成套派单完成率信息
     ExportCTServiceDispatchRateList: before + '/CTBaseDataApi/ExportCTServiceDispatchRateList',  //成套派单完成率 导出
- 
-  /*现场签到统计*/
+
+    /*现场签到统计*/
     GetSignInAnalysis: before + '/CTStatisticsApi/GetSignInAnalysis',//获取现场签到统计信息
     ExportSignInAnalysis: before + '/CTStatisticsApi/ExportSignInAnalysis',//现场签到统计信息 导出
     GetSignInAnalysisInfo: before + '/CTStatisticsApi/GetSignInAnalysisInfo',//获取现场签到统计详情信息
     ExportSignInAnalysisInfo: before + '/CTStatisticsApi/ExportSignInAnalysisInfo',//现场签到统计详情信息 导出
   },
-    /*** 售后服务管理 ***/
+
+  /*** 工作台 ***/
+  CtWorkStageApi: {
+    ProjectImplementationList: before + '/CTBaseDataApi/ProjectImplementationList',//获取项目执行 遗留问题信息
+    UpdateImplementationStatus: before + '/CTBaseDataApi/UpdateImplementationStatus',//解决项目执行遗留问题
+  },
+
+  /*** 售后服务管理 ***/
   /*节点服务*/
-  AfterSalesServiceManageApi :{
+  AfterSalesServiceManageApi: {
     GetChargeServiceAnalysis: before + '/CTStatisticsApi/GetChargeServiceAnalysis',//获取收费服务
-    ExportGiveServerAnalysis: before + '/CTStatisticsApi/ExportGiveServerAnalysis',//收费服务 导出
+    ExportChargeServiceAnalysis: before + '/CTStatisticsApi/ExportChargeServiceAnalysis',//收费服务 导出
     GetCompleteNodeServerAnalysis: before + '/CTStatisticsApi/GetCompleteNodeServerAnalysis',//成套节点服务
     ExportCompleteNodeServerAnalysis: before + '/CTStatisticsApi/ExportCompleteNodeServerAnalysis',//成套节点服务 导出
     GetGiveServerAnalysis: before + '/CTStatisticsApi/GetGiveServerAnalysis',//赠送服务
@@ -855,6 +862,13 @@ export const API = {
     AddReferenceInstrumentInfo: before + '/DebuggingEquipment/AddReferenceInstrumentInfo',  //添加参比仪器设备清单
     UpdReferenceInstrumentInfo: before + '/DebuggingEquipment/UpdReferenceInstrumentInfo',  //更新参比仪器设备清单
     DeleteReferenceInstrumentInfo: before + '/DebuggingEquipment/DeleteReferenceInstrumentInfo',  //删除参比仪器设备清单
+  },
+  //监督检查 Api
+  SupervisionInspecApi: {
+    /*设备安装审核*/
+    GetEquipmentAuditList: before + '/CustomerSatisfaction/GetEquipmentAuditList',  //获取设备安装审核信息
+    GetAuditPhoto: before + '/CustomerSatisfaction/GetAuditPhoto',  //获取设备安装审核照片详细
+    AddAuditInfo: before + '/CustomerSatisfaction/AddAuditInfo',  //安装照片审核
   },
   CtAPI_WJQ: {
     // 基础服务

@@ -397,6 +397,32 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    *addSetUser({ payload, callback }, { call, put, update }) { //设置人员信息
+      const result = yield call(services.AddSetUser, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback&&callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    *getSetUser({ payload, callback }, { call, put, update }) { //获取设置的人员信息
+      const result = yield call(services.GetSetUser, payload);
+      if (result.IsSuccess) {
+        callback&&callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+
+
+
+
+
+
+
 
 
 

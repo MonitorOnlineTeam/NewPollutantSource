@@ -166,3 +166,14 @@ export async function GetAlluser(params) {
   const result = post(API.AssetManagementApi.GetAllUser, params);
   return result;
 }
+
+//设置人员信息
+export async function AddSetUser (params) {
+  const result = await post(API.CommonApi.AddSetUser,params, null);
+  return result;
+}
+//获取设置人员信息
+export async function GetSetUser (params) {
+  const result = await post(API.CommonApi.GetSetUser,params, null);
+  return result;
+}

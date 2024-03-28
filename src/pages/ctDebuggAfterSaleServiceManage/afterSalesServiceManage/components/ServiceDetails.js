@@ -186,16 +186,16 @@ const Index = (props) => {
 
     {
       title: '离开现场时间',
-      dataIndex: 'CommitDate',
-      key: 'CommitDate',
+      dataIndex: 'LeaveDate',
+      key: 'LeaveDate',
       align: 'center',
       ellipsis: true,
     },
     
     {
         title: '工作时长（小时）',
-        dataIndex: 'CommitDate',
-        key: 'CommitDate',
+        dataIndex: 'WorkTime',
+        key: 'WorkTime',
         align: 'center',
         ellipsis: true,
       },
@@ -328,7 +328,9 @@ const Index = (props) => {
         </Col>
           <Col span={8}>
             <Form.Item name='time' label='离开现场时间' >
-              <RangePicker style={{ width: '100%' }}
+              <RangePicker 
+              picker='month'
+              style={{ width: '100%' }}
                 // showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
               />
             </Form.Item>
@@ -361,7 +363,7 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 430px)' : 'calc(100vh - 350px)' }}
+            scroll={{ y:'calc(100vh - 430px)'}}
             dataSource={tableDatas}
             columns={columns}
             pagination={{

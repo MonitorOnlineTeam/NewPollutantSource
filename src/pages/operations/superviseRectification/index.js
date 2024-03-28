@@ -28,7 +28,7 @@ import cuid from 'cuid';
 import { getBase64 } from '@/utils/utils';
 import Detail from './Detail';
 import Lightbox from "react-image-lightbox-rotate";
-import InspectorUserTableTransfer from "@/components/InspectorUserTableTransfer";
+import SetUserListBtn from "@/components/SetUserListBtn";
 import {  permissionButton } from '@/utils/utils';
 
 const { TextArea } = Input;
@@ -49,9 +49,6 @@ const dvaPropsData = ({ loading, superviseRectification, global, common, roleinf
   entLoading: common.noFilterEntLoading,
   clientHeight: global.clientHeight,
   exportLoading: loading.effects[`${namespace}/exportInspectorRectificationManage`],
-  inspectorUserLoading: loading.effects['common/getInspectorUserList'],
-  addSetUserLoading:loading.effects[`${namespace}/addSetUser`],
-  setUserLoading:loading.effects[`${namespace}/getSetUser`],
 
 })
 
@@ -95,14 +92,14 @@ const dvaDispatch = (dispatch) => {
     },
     addSetUser: (payload, callback) => { //设置人员
       dispatch({
-        type: `${namespace}/addSetUser`,
+        type: `common/addSetUser`,
         payload: payload,
         callback: callback
       })
     },
     getSetUser: (payload, callback) => { //获取设置人员
       dispatch({
-        type: `${namespace}/getSetUser`,
+        type: `common/getSetUser`,
         payload: payload,
         callback: callback
       })
@@ -316,7 +313,7 @@ const Index = (props) => {
   }
 
 
-  const [personnelListVisble, setPersonnelListVisble] = useState(false)
+
   const searchComponents = () => {
     return <Form
       form={form}
@@ -380,16 +377,7 @@ const Index = (props) => {
           <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading} style={{ marginRight: 4 }}>
             导出
             </Button>
-         {inspectorUserPermission&&<Button type="primary" style={{ marginRight: 4 }}
-           onClick={() => { 
-            setPersonnelListVisble(true);
-            setTargetUserKeys([])
-            props.getSetUser({},(data)=>{
-              setTargetUserKeys(data)
-            }) }} 
-           >
-            配置人员清单
-            </Button>}
+         {inspectorUserPermission&&<SetUserListBtn text='配置人员清单' style={{ marginRight: 4 }} />}
         </Form.Item>
 
       </Row>
@@ -417,14 +405,7 @@ const Index = (props) => {
 
 
 
-  const [targetUserKeys,setTargetUserKeys] = useState()
-  const userChange =(nextTargetKeys,direction,moveKeys)=>{
-    setTargetUserKeys(nextTargetKeys)
-    props.addSetUser({
-      userIdList:direction==='right'? nextTargetKeys : moveKeys,
-      state:direction==='right'? 1 : 2
-    }) 
-  }
+
 
   return (
     <div className={styles.superviseRectificationSty}>
@@ -459,19 +440,6 @@ const Index = (props) => {
         destroyOnClose
       >
         <Detail ID={detailId} />
-      </Modal>
-
-      <Modal //配置人员清单
-        visible={personnelListVisble}
-        title={'配置人员清单'}
-        footer={null}
-        onCancel={() => { setPersonnelListVisble(false) }}
-        destroyOnClose
-        width={1100}
-      >
-        <Spin spinning={props.inspectorUserLoading || props.setUserLoading || props.addSetUserLoading || false}>
-          <InspectorUserTableTransfer targetKeys={targetUserKeys} onChange={userChange}/>
-        </Spin>
       </Modal>
     </div>
   );

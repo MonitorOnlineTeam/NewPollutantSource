@@ -21,6 +21,8 @@ import {
   Spin,
   Pagination,
   Tree,
+  Form,
+  Popover,
 } from 'antd';
 import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import styles from '../styles.less';
@@ -63,7 +65,7 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   TYPE: wordSupervision.TYPE,
   todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'] || false,
   messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
-  operaServiceList: wordSupervision.operaServiceList,
+  supervisionVerificaList: wordSupervision.supervisionVerificaList,
   operaServiceLoading: loading.effects['wordSupervision/GetStagingInspectorRectificationList'],
   workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
@@ -77,23 +79,30 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   userMenuListLoading: loading.effects['wordSupervision/GetUserMenuList'],
   addUserMenuLoading: loading.effects['wordSupervision/AddUserMenu'],
   clientHeight: global.clientHeight,
-  workbenchesModuleLoading:loading.effects['wordSupervision/GetWorkbenchesModuleList'] || false,
+  workbenchesModuleLoading: loading.effects['wordSupervision/GetWorkbenchesModuleList'] || false,
+  projectExecutionLoading: loading.effects['wordSupervision/ProjectImplementationList'] || false,
+  projectExecutionList: wordSupervision.projectExecutionList,
+  updateprojectExecutionLoading: loading.effects['wordSupervision/UpdateImplementationStatus'] || false,
+
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, operaServiceList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractTotal, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading,clientHeight,workbenchesModuleLoading, } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, supervisionVerificaList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractTotal, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading, clientHeight, workbenchesModuleLoading, projectExecutionLoading, projectExecutionList, updateprojectExecutionLoading, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
   const [forwardingUserId, setForwardingUserId] = useState('');
 
   // const type = props.location.query.type;
-  const [daily,SetDaily] = useState(false)
-  const [opera,SetOpera] = useState(false)
-  const [operaSupervisionCheck,SetOperaSupervisionCheck] = useState(false)
-  const [remind,SetRemind] = useState(false)
-  const [remindDataAlarm,SetRemindDataAlarm] = useState(false)
-  const [remindExpire,SetRemindExpire] = useState(false)
+  const [daily, SetDaily] = useState(false)
+  const [opera, SetOpera] = useState(false)
+  const [operaSupervisionCheck, SetOperaSupervisionCheck] = useState(false)//监督核查
+  const [projectExecution, setProjectExecution] = useState(false)//项目执行
+  const [remind, SetRemind] = useState(false)
+  const [remindDataAlarm, SetRemindDataAlarm] = useState(false)
+  const [remindExpire, SetRemindExpire] = useState(false)
+  const [popForm] = Form.useForm(); //项目执行-解决问题
+
 
   useEffect(() => {
     loadData();
@@ -110,83 +119,91 @@ const Workbench = props => {
       loadData();
     }
   }, [props.location.query.type]);
- 
-  const [userAllMenuListLoading,setAllUserMenuLoading] = useState(true)
+
+  const [userAllMenuListLoading, setAllUserMenuLoading] = useState(true)
   // 加载工作台和我的消息数据 待办中心列表 根据权限
   const loadData = () => {
     props.dispatch({
       type: 'wordSupervision/GetWorkbenchesModuleList',
       payload: {},
-      callback:(res)=>{
-        res.map(item=>{
-          
-          switch(item.PName){
+      callback: (res) => {
+        res.map(item => {
+
+          switch (item.PName) {
             case '日常监督':
               SetDaily(true)
               GetToDoDailyWorks()
-            // if(item?.CList[0]){ 
-            //   SetDaily(true)
-            //  }else{
-            //    SetDaily(false)
-            //  }
-            break;
+              // if(item?.CList[0]){ 
+              //   SetDaily(true)
+              //  }else{
+              //    SetDaily(false)
+              //  }
+              break;
             case '待办中心':
-            if(item?.CList[0]){
-              SetOpera(true)
-              let btnArr = [];
-              item.CList.map(clItem=>{
-                let btnObj = {};
-                if(clItem.CName=='监督核查'){
-                  btnObj.value = 1;
-                  SetOperaSupervisionCheck(true)
-                  GetStagingInspectorRectificationList((total)=>{
-                    btnObj.name = `${clItem.CName}（${total}）`
-                  })
-                }
-                btnArr.push(btnObj)
-              })
-              setOperaServiceBtnList(btnArr)
-            }else{
-              SetOpera(false)
-            }
-            break;
+              if (item?.CList[0]) {
+                SetOpera(true)
+                let btnArr = [];
+                item.CList.map(clItem => {
+                  let btnObj = {};
+                  if (clItem.CName == '监督核查') {
+                    btnObj.value = 1;
+                    SetOperaSupervisionCheck(true)
+                    GetStagingInspectorRectificationList((total) => {
+                      btnObj.name = `${clItem.CName}（${total}）`
+                    })
+                  }
+                  if (clItem.CName == '项目执行') {
+                    btnObj.value = 2;
+                    setProjectExecution(true)
+                    ProjectImplementationList((total) => {
+                      btnObj.name = `${clItem.CName}（${total}）`
+                    })
+                  }
+                  btnArr.push(btnObj)
+                })
+
+                setOperaServiceBtnList(btnArr)
+              } else {
+                SetOpera(false)
+              }
+              break;
             case '我的提醒':
-            if(item?.CList[0]){
-              SetRemind(true)
-              let btnArr = [];
-              item.CList.map(clItem=>{
-                 let btnObj = {};
-                if(clItem.CName=='数据报警'){
-                  btnObj.value = 1;
-                  SetRemindDataAlarm(true)
-                  GetWorkAlarmPushList(dataAlarmVal,alarmPageIndex,alarmPageSize,(total)=>{
-                    btnObj.name = `${clItem.CName}（${total}）`
-                  }) //我的提醒 数据报警
-                }
-                if(clItem.CName=='合同到期'){
-                  btnObj.value = 4;
-                  SetRemindExpire(true)
-                  GetProjectRemindList(contractPageIndex,contractPageSize,(total)=>{
-                    btnObj.name =  `${clItem.CName}（${total}）`
-                  }) //我的提醒 合同到期
-                }
-                btnArr.push(btnObj)
-              })
-              setMyRemindBtnList(btnArr)   
-            }else{
-              SetRemind(false)
-            }
-            break;
+              if (item?.CList[0]) {
+                SetRemind(true)
+                let btnArr = [];
+                item.CList.map(clItem => {
+                  let btnObj = {};
+                  if (clItem.CName == '数据报警') {
+                    btnObj.value = 1;
+                    SetRemindDataAlarm(true)
+                    GetWorkAlarmPushList(dataAlarmVal, alarmPageIndex, alarmPageSize, (total) => {
+                      btnObj.name = `${clItem.CName}（${total}）`
+                    }) //我的提醒 数据报警
+                  }
+                  if (clItem.CName == '合同到期') {
+                    btnObj.value = 4;
+                    SetRemindExpire(true)
+                    GetProjectRemindList(contractPageIndex, contractPageSize, (total) => {
+                      btnObj.name = `${clItem.CName}（${total}）`
+                    }) //我的提醒 合同到期
+                  }
+                  btnArr.push(btnObj)
+                })
+                setMyRemindBtnList(btnArr)
+              } else {
+                SetRemind(false)
+              }
+              break;
           }
 
-          
+
         })
       }
     });
-    GetUserMenuList(()=>{ setAllUserMenuLoading(false) });//快捷菜单
+    GetUserMenuList(() => { setAllUserMenuLoading(false) });//快捷菜单
     GetWorkBenchMsg(); //我的消息
   };
-  
+
 
   // 获取工作台待办
   const GetToDoDailyWorks = () => {
@@ -247,16 +264,53 @@ const Workbench = props => {
       payload: { pageIndex: 1, pageSize: 9999 },
       callback: (total) => {
         // operaServiceBtnList.splice(0, 1, { name: `监督核查（${total}）`, value: 1 })
-           callback&&callback(total)
+        callback && callback(total)
       }
     });
   };
+  //获取待办中心列表 项目执行
+  const ProjectImplementationList = (callback) => {
+    props.dispatch({
+      type: 'wordSupervision/ProjectImplementationList',
+      payload: { pageIndex: 1, pageSize: 9999 },
+      callback: (total) => {
+        callback && callback(total)
+      }
+    });
+  };
+  const [popVisible, setPopVisible] = useState(false)
+  const [popSelectIndex, setSelectPopIndex] = useState(-1)
+
+  const solveProblem = async (row) => { //待办中心 项目执行-解决问题
+    try {
+      const values = await popForm.validateFields();
+      props.dispatch({
+        type: 'wordSupervision/UpdateImplementationStatus',
+        payload: {
+          problemTime: values.problemTime && values.problemTime.format('YYYY-MM-DD HH:mm:ss'),
+          ...row
+        },
+        callback: () => {
+          setPopVisible(false)
+          ProjectImplementationList((total) => {
+            const filterIndex = operaServiceBtnList.findIndex(item=>item.value==2)
+            if(filterIndex!=-1){
+              operaServiceBtnList[filterIndex]['name']= `项目执行（${total}）`
+            }
+          })
+        }
+      });
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+
   //获取菜单列表
   const GetUserMenuList = (callback) => {
     props.dispatch({
       type: 'wordSupervision/GetUserMenuList',
-      payload: { systemMenuID:  "99dbc722-033f-481a-932a-3c6436e17245", }, //只展示运维平台相关菜单
-      callback:callback&&callback()
+      payload: { systemMenuID: "99dbc722-033f-481a-932a-3c6436e17245", }, //只展示运维平台相关菜单
+      callback: callback && callback()
     });
   };
 
@@ -464,19 +518,19 @@ const Workbench = props => {
       })}
     </div>
   }
-  const uniqueArr = (arr)=> arr.filter((obj, index) => {  
-    return arr.find((compareObj) => {  
-      return compareObj.name === obj.name;  
-    }) === obj;  
-  }); 
+  const uniqueArr = (arr) => arr.filter((obj, index) => {
+    return arr.find((compareObj) => {
+      return compareObj.name === obj.name;
+    }) === obj;
+  });
   //获取数据报警
-  const GetWorkAlarmPushList = (status, pageIndex, pageSize,callback ) => {
+  const GetWorkAlarmPushList = (status, pageIndex, pageSize, callback) => {
     props.dispatch({
       type: 'wordSupervision/GetWorkAlarmPushList',
       payload: { status: status, pageIndex: pageIndex ? pageIndex : alarmPageIndex, pageSize: pageSize ? pageSize : alarmPageSize },
       callback: (total) => {
         // myRemindBtnList.splice(0, 1, { name: `数据报警（${total}）`, value: 1 })
-        callback&&callback(total)
+        callback && callback(total)
       }
     });
   }
@@ -511,13 +565,13 @@ const Workbench = props => {
 
 
   //获取合同到期
-  const GetProjectRemindList = (pageIndex, pageSize,callback ) => {
+  const GetProjectRemindList = (pageIndex, pageSize, callback) => {
     props.dispatch({
       type: 'wordSupervision/GetProjectRemindList',
       payload: { pageIndex: pageIndex ? pageIndex : contractPageIndex, pageSize: pageSize ? pageSize : contractPageSize },
       callback: (total) => {
         // myRemindBtnList.splice(1, 1, { name: `合同到期（${total}）`, value: 4 })
-          callback&&callback(total)
+        callback && callback(total)
       }
     });
   }
@@ -554,8 +608,8 @@ const Workbench = props => {
   const addMeun = () => { //添加快捷菜单
     setMenuVisible(true)
   }
-   
-  const [menuID,setMenuID] = useState()
+
+  const [menuID, setMenuID] = useState()
   const onMeunSelect = (keys, info) => {
     setMenuID(keys?.[0])
   };
@@ -563,199 +617,235 @@ const Workbench = props => {
   const menuOK = () => {
     props.dispatch({
       type: 'wordSupervision/AddUserMenu',
-      payload: {menuID:menuID,},
+      payload: { menuID: menuID, },
       callback: () => {
         setMenuVisible(false)
         GetUserMenuList()
       },
     });
   }
-  const meunClick = (url) =>{
+  const meunClick = (url) => {
     router.push(url);
   }
   return (
     <div className={styles.workbenchBreadSty}>
       <BreadcrumbWrapper>
         <div className={styles.workbench}>
-        {workbenchesModuleLoading?
-             <div className={styles.leftWrapper} style={{background:'#fff'}}> <PageLoading size='default'/> </div>
-              :
-             <>
-          <div className={styles.leftWrapper}>
-           {daily&&<div className={styles.topWrapper}>
-             <div className={styles.taskListWrapper}>
-                <Card
-                  style={{ height: '100%' }}
-                  bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}
-                >
-                  {/* 手工申请 */}
-                  <div className={styles.title}>日常监督</div>
-                  <div className={styles.manualList}>
-                    <Row
-                      gutter={32}
-                      className={styles.content}
+          {workbenchesModuleLoading ?
+            <div className={styles.leftWrapper} style={{ background: '#fff' }}> <PageLoading size='default' /> </div>
+            :
+            <>
+              <div className={styles.leftWrapper}>
+                {daily && <div className={styles.topWrapper}>
+                  <div className={styles.taskListWrapper}>
+                    <Card
+                      style={{ height: '100%' }}
+                      bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}
                     >
-                      {manualList.map(item => {
-                        return (
-                          <Col span={6}>
-                            <Popconfirm
-                              title={`确认申请${item.label}任务单？`}
-                              onConfirm={e => {
-                                manualTask(item.value);
-                              }}
-                              okText="是"
-                              cancelText="否"
-                            >
-                              <div className={styles.manualItem} style={{ backgroundImage: `url(${item.img})` }}>
-                                <p>{item.label}</p>
-                              </div>
-                            </Popconfirm>
-                          </Col>
-                        );
-                      })}
-                    </Row>
-                  </div> 
-                  {/* 待办任务列表 */}
-                  <div className={styles.taskList}>
-                    <div className={styles.content} style={{ textAlign: 'center' }}>
-                      <Spin spinning={todoListLoading}>{renderTodoList()}</Spin>
-                      {/* <Spin spinning={true}>{renderTodoList()}</Spin> */}
-                    </div>
+                      {/* 手工申请 */}
+                      <div className={styles.title}>日常监督</div>
+                      <div className={styles.manualList}>
+                        <Row
+                          gutter={32}
+                          className={styles.content}
+                        >
+                          {manualList.map(item => {
+                            return (
+                              <Col span={6}>
+                                <Popconfirm
+                                  title={`确认申请${item.label}任务单？`}
+                                  onConfirm={e => {
+                                    manualTask(item.value);
+                                  }}
+                                  okText="是"
+                                  cancelText="否"
+                                >
+                                  <div className={styles.manualItem} style={{ backgroundImage: `url(${item.img})` }}>
+                                    <p>{item.label}</p>
+                                  </div>
+                                </Popconfirm>
+                              </Col>
+                            );
+                          })}
+                        </Row>
+                      </div>
+                      {/* 待办任务列表 */}
+                      <div className={styles.taskList}>
+                        <div className={styles.content} style={{ textAlign: 'center' }}>
+                          <Spin spinning={todoListLoading}>{renderTodoList()}</Spin>
+                          {/* <Spin spinning={true}>{renderTodoList()}</Spin> */}
+                        </div>
+                      </div>
+                    </Card>
                   </div>
-                </Card>
+                </div>}
+                <Row className={`${styles.bottomWrapper}`}>
+                  {opera && <Col flex="1" span={24} style={{ height: 360 }}>
+                    <Card
+                      style={{ height: '100%' }}
+                      bodyStyle={{
+                        padding: 0,
+                        height: '100%',
+                      }}
+                    >
+                      {/* 待办中心 */}
+                      {(operaSupervisionCheck || projectExecution) && <><Row justify='space-between'>
+                        <div className={styles.title}>待办中心</div>
+                        {operaSupervisionCheck && <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />} {/**监督核查 */}
+                      </Row>
+                        {btnComponents(operaServiceBtnList, selectOperaVal, (val) => { setSelectOperaVal(val) })}
+                        <div className={styles.operaServiceSty} style={{ padding: '0 24px 0 16px' }}>
+                          {selectOperaVal == 1 && <Spin spinning={operaServiceLoading}>
+                            {supervisionVerificaList?.length ? supervisionVerificaList.map(item =>
+                              (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }} onClick={() => { operaServiceClick(item.ID) }}>
+                                <Col style={{ width: 'calc(100% - 146px)' }} className='textOverflow' title={item.EntNamePointName}>{item.EntNamePointName}</Col>
+                                <Col>{item.Time}</Col>
+                              </Row>)
+                            ) :
+                              <Empty style={{ marginTop: '30px' }} />}
+                          </Spin>}
+                          {selectOperaVal == 2 && <Spin spinning={projectExecutionLoading}>
+                            {projectExecutionList?.length ? projectExecutionList.map((item, index) =>
+                              (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }}>
+                                <Col style={{ width: 'calc(100% - 196px)' }} className='textOverflow' title={item.EntNamePointName}>{item.msg}</Col>
+                                <Col>
+                                  <Popover visible={index == popSelectIndex && popVisible} placement='leftTop' title={'解决问题'} trigger="click"
+                                    overlayStyle={{ width: 400 }}
+                                    content={
+                                      <Form
+                                        name="basicPop"
+                                        form={popForm}
+                                        onFinish={() => solveProblem(item)}
+                                      >
+                                        <Form.Item label="解决时间" name="problemTime" rules={[{ required: true, message: '请选择解决时间！' }]} >
+                                          <DatePicker showTime style={{ width: '100%' }} />
+                                        </Form.Item>
+                                        <Row align='end'>
+                                          <Button onClick={() => { setPopVisible(false) }} style={{ marginRight: 8 }} >
+                                            取消
+                                           </Button>
+                                          <Button type="primary" htmlType='submit' loading={updateprojectExecutionLoading}>
+                                            提交
+                                            </Button>
+                                        </Row>
+                                      </Form>
+                                    }>
+                                    <Tag color="#4090FF" onClick={() => { setSelectPopIndex(index); setPopVisible(true); }} style={{ cursor: 'pointer', marginLeft: 8 }} >解决问题</Tag>
+                                  </Popover>
+                                </Col>
+                                <Col>{item.createTime}</Col>
+                              </Row>)
+                            ) :
+                              <Empty style={{ marginTop: '30px' }} />}
+                          </Spin>}
+                        </div>
+                      </>}
+
+                    </Card>
+                  </Col>}
+                </Row>
+                {/* 我的提醒 */}
+                {remind && <Row className={`${styles.myRemindSty}`}>
+                  <Col flex="1" span={24} style={{ height: 380 }}>
+                    <Card
+                      style={{ height: '100%' }}
+                      bodyStyle={{
+                        padding: 0,
+                        height: '100%',
+                      }}
+                    >
+
+                      <div className={styles.title}>我的提醒</div>
+                      {remindDataAlarm && <Row justify='space-between'>
+                        {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val); })}
+                        {selectMyVal == 1 ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
+                      </Row>}
+                      <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
+                        {remindDataAlarm && <>{selectMyVal == 1 && <Spin spinning={workAlarmPushLoading}> {/*数据报警 */}
+                          {workAlarmPushList?.length ? workAlarmPushList.map(item =>
+                            (<Row justify='space-between' style={{ paddingBottom: 12, }}>
+                              <Col style={{ paddingTop: 4 }}><img src='/work_alarm.png' /></Col>
+                              <Col style={{ width: 'calc(100% - 100px)' }}>
+                                <div>{item.message}</div>
+                                <div className='statusSty' style={{ color: '#666', fontSize: 13, paddingTop: 4 }}><span>报警生成时间：{item.alarmCreateTime}</span>
+                                  {item.alarmType == 0 || item.alarmType == 12 ?
+                                    <><Tag color={item.status == 3 ? "success" : "warning"}>{item.status == 3 ? '已响应' : '待响应'}</Tag>{item.status == 3 && <><span>响应人：{item.userName}</span> <span>响应时间：{item.responseTime}</span></>}</>
+                                    :
+                                    <><Tag color={item.status == 3 ? "success" : "warning"}>{item.status == 3 ? '已响应' : '待响应'}</Tag>{item.status == 3 && <><span>核实人：{item.userName}</span> <span>核实时间：{item.responseTime}</span></>}</>}
+
+                                </div>
+                              </Col>
+                              <Col>
+                                <Popconfirm placement="left" title={'确定要删除这条报警吗？'} onConfirm={() => delAlarm(item)} okText="是" cancelText="否">
+                                  <a>删除</a>
+                                </Popconfirm>
+                              </Col>
+                            </Row>)
+                          )
+                            :
+                            <Empty style={{ marginTop: '30px' }} />}
+                        </Spin>}</>}
+                        {remindExpire && <> {selectMyVal == 4 && <Spin spinning={contractLoading}> {/*合同到期 */}
+                          {contractList?.length ? contractList.map(item =>
+                            (<Row justify='space-between' style={{ paddingBottom: 12, transition: '0.5s all ease-in' }}>
+                              <Col style={{ paddingTop: 4 }}><img src='/work_contract.png' /></Col>
+                              <Col style={{ width: 'calc(100% - 100px)' }}>
+                                <div>{item.Msg}</div>
+                                <div>如合同不再续签请参考以下注意事项：</div>
+                                <div>1、如涉及物联网卡销号请及时提交CIS申请《物联网卡新增或销号申请》</div>
+                                <div>2、办事处、备件库、车辆等如有变动请同服务管理部对应同事沟通</div>
+                                <div>3、如有人员跨行业调整请记得考取对应行业运营上岗证</div>
+                              </Col>
+                              <Col>
+                                <Popconfirm placement="left" title={'确定要删除这条合同到期吗？'} onConfirm={() => delContract(item)} okText="是" cancelText="否">
+                                  <a>删除</a>
+                                </Popconfirm>
+                              </Col>
+                            </Row>)
+                          )
+                            :
+                            <Empty style={{ marginTop: '30px' }} />}
+                        </Spin>}</>}
+                      </div>
+                      {selectMyVal == 1 && <>{workAlarmTotal ? <Row justify='space-between' style={{ paddingTop: 12 }}>
+                        <Popconfirm placement="topLeft" title={'确定要关闭全部报警吗？'} onConfirm={() => closeAllAlarmChange()} okText="是" cancelText="否">
+                          <div>{btnSquareComponents([{ name: '关闭全部', value: 1 }], allClose, () => { })}</div>
+                        </Popconfirm>
+                        <Pagination
+                          size="small"
+                          style={{ paddingRight: 12 }}
+                          showSizeChanger
+                          showQuickJumper
+                          total={workAlarmTotal}
+                          current={alarmPageIndex}
+                          pageSize={alarmPageSize}
+                          onChange={alarmPageChange}
+                        />
+                      </Row> : null}</>}
+                      {selectMyVal == 4 && <>{contractTotal ? <Row justify='space-between' style={{ paddingTop: 12 }}>
+                        <Popconfirm placement="topLeft" title={'确定要删除全部合同到期吗？'} onConfirm={() => delAllContract()} okText="是" cancelText="否">
+                          <div>{btnSquareComponents([{ name: '删除全部', value: 1 }], allClose, () => { })}</div>
+                        </Popconfirm>
+                        <Pagination
+                          size="small"
+                          style={{ paddingRight: 12 }}
+                          showSizeChanger
+                          showQuickJumper
+                          total={contractTotal}
+                          current={contractPageIndex}
+                          pageSize={contractPageSize}
+                          onChange={contractPageChange}
+                        />
+                      </Row> : null}</>}
+                    </Card>
+                  </Col>
+                </Row>}
               </div>
-            </div>}
-           <Row className={`${styles.bottomWrapper}`}>
-              {opera&&<Col flex="1" span={24} style={{ height: 360 }}>
-                <Card
-                  style={{ height: '100%' }}
-                  bodyStyle={{
-                    padding: 0,
-                    height: '100%',
-                  }}
-                >
-                  {/* 待办中心 */}
-                  {operaSupervisionCheck&&<><Row justify='space-between'>
-                    <div className={styles.title}>待办中心</div>
-                    <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />
-                  </Row>
-                  {btnComponents(operaServiceBtnList, selectOperaVal, (val) => { setSelectOperaVal(val) })}
-                  <div className={styles.operaServiceSty} style={{ padding: '0 24px 0 16px' }}>
-                    <Spin spinning={operaServiceLoading}>
-                      {operaServiceList?.length ? operaServiceList.map(item =>
-                        (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }} onClick={() => { operaServiceClick(item.ID) }}>
-                          <Col style={{ width: 'calc(100% - 146px)' }} className='textOverflow' title={item.EntNamePointName}>{item.EntNamePointName}</Col>
-                          <Col>{item.Time}</Col>
-                        </Row>)
-                      ) :
-                        <Empty style={{ marginTop: '30px' }} />}
-                    </Spin>
-                  </div></>}
-                </Card>
-              </Col>}
-            </Row>
-            {/* 我的提醒 */}
-            {remind&&<Row className={`${styles.myRemindSty}`}>
-              <Col flex="1" span={24} style={{ height: 380 }}>
-                <Card
-                  style={{ height: '100%' }}
-                  bodyStyle={{
-                    padding: 0,
-                    height: '100%',
-                  }}
-                >
-
-                  <div className={styles.title}>我的提醒</div>
-                  {remindDataAlarm&&<Row justify='space-between'>
-                    {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val); })}
-                    {selectMyVal == 1 ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
-                  </Row>}
-                  <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
-                   {remindDataAlarm&&<>{selectMyVal == 1 && <Spin spinning={workAlarmPushLoading}> {/*数据报警 */}
-                      {workAlarmPushList?.length ? workAlarmPushList.map(item =>
-                        (<Row justify='space-between' style={{ paddingBottom: 12, }}>
-                          <Col style={{ paddingTop: 4 }}><img src='/work_alarm.png' /></Col>
-                          <Col style={{ width: 'calc(100% - 100px)' }}>
-                            <div>{item.message}</div>
-                            <div className='statusSty' style={{ color: '#666', fontSize: 13, paddingTop: 4 }}><span>报警生成时间：{item.alarmCreateTime}</span>
-                              {item.alarmType == 0 || item.alarmType == 12 ?
-                                <><Tag color={item.status == 3 ? "success" : "warning"}>{item.status == 3 ? '已响应' : '待响应'}</Tag>{item.status == 3 && <><span>响应人：{item.userName}</span> <span>响应时间：{item.responseTime}</span></>}</>
-                                :
-                                <><Tag color={item.status == 3 ? "success" : "warning"}>{item.status == 3 ? '已响应' : '待响应'}</Tag>{item.status == 3 && <><span>核实人：{item.userName}</span> <span>核实时间：{item.responseTime}</span></>}</>}
-
-                            </div>
-                          </Col>
-                          <Col>
-                            <Popconfirm placement="left" title={'确定要删除这条报警吗？'} onConfirm={() => delAlarm(item)} okText="是" cancelText="否">
-                              <a>删除</a>
-                            </Popconfirm>
-                          </Col>
-                        </Row>)
-                      )
-                        :
-                        <Empty style={{ marginTop: '30px' }} />}
-                    </Spin>}</>}
-                    {remindExpire&&<> {selectMyVal == 4 && <Spin spinning={contractLoading}> {/*合同到期 */}
-                      {contractList?.length ? contractList.map(item =>
-                        (<Row justify='space-between' style={{ paddingBottom: 12, transition: '0.5s all ease-in' }}>
-                          <Col style={{ paddingTop: 4 }}><img src='/work_contract.png' /></Col>
-                          <Col style={{ width: 'calc(100% - 100px)' }}>
-                            <div>{item.Msg}</div>
-                            <div>如合同不再续签请参考以下注意事项：</div>
-                            <div>1、如涉及物联网卡销号请及时提交CIS申请《物联网卡新增或销号申请》</div>
-                            <div>2、办事处、备件库、车辆等如有变动请同服务管理部对应同事沟通</div>
-                            <div>3、如有人员跨行业调整请记得考取对应行业运营上岗证</div>
-                          </Col>
-                          <Col>
-                            <Popconfirm placement="left" title={'确定要删除这条合同到期吗？'} onConfirm={() => delContract(item)} okText="是" cancelText="否">
-                              <a>删除</a>
-                            </Popconfirm>
-                          </Col>
-                        </Row>)
-                      )
-                        :
-                        <Empty style={{ marginTop: '30px' }} />}
-                    </Spin>}</>}
-                  </div>
-                  {selectMyVal == 1 && <>{workAlarmTotal ? <Row justify='space-between' style={{ paddingTop: 12 }}>
-                    <Popconfirm placement="topLeft" title={'确定要关闭全部报警吗？'} onConfirm={() => closeAllAlarmChange()} okText="是" cancelText="否">
-                      <div>{btnSquareComponents([{ name: '关闭全部', value: 1 }], allClose, () => { })}</div>
-                    </Popconfirm>
-                    <Pagination
-                      size="small"
-                      style={{ paddingRight: 12 }}
-                      showSizeChanger
-                      showQuickJumper
-                      total={workAlarmTotal}
-                      current={alarmPageIndex}
-                      pageSize={alarmPageSize}
-                      onChange={alarmPageChange}
-                    />
-                  </Row> : null}</>}
-                  {selectMyVal == 4 && <>{contractTotal ? <Row justify='space-between' style={{ paddingTop: 12 }}>
-                    <Popconfirm placement="topLeft" title={'确定要删除全部合同到期吗？'} onConfirm={() => delAllContract()} okText="是" cancelText="否">
-                      <div>{btnSquareComponents([{ name: '删除全部', value: 1 }], allClose, () => { })}</div>
-                    </Popconfirm>
-                    <Pagination
-                      size="small"
-                      style={{ paddingRight: 12 }}
-                      showSizeChanger
-                      showQuickJumper
-                      total={contractTotal}
-                      current={contractPageIndex}
-                      pageSize={contractPageSize}
-                      onChange={contractPageChange}
-                    />
-                  </Row> : null}</>}
-                </Card>
-              </Col>
-            </Row>}
-          </div>
-          </>
-        }
+            </>
+          }
           <div className={styles.rightWrapper}>
             <div className={styles.quickNavWrapper}>
-           
+
               <Card style={{ height: '100%' }} bodyStyle={{ padding: 0, height: '100%', }} >
                 <Row justify='space-between'>
                   <div className={styles.title}>快捷导航</div>
@@ -764,14 +854,14 @@ const Workbench = props => {
                 <div className={styles.menuSty} style={{ padding: '0 24px 16px 16px' }}>
                   {/* <Empty style={{ marginTop: '30px' }} /> */}
                   <Spin spinning={userMenuListLoading}>
-                  <Row>
-                      {menuList.map((item, index) => <Col span={6} style={{ paddingTop: index <= 3 ? 6 : 12, display: 'flex', alignItems: 'center' }}><img src='/work_meun.png' style={{ paddingRight: 8 }} /><span className='meunTitle' onClick={()=>meunClick(item.path)}>{item.name}</span></Col>)}
-                    <Col span={6} style={{ paddingTop: menuList?.length <= 3 ? 6 : 12, display: 'flex', alignItems: 'center' }} onClick={addMeun} className='meunAddWrap'><img src='/work_meun_add.png' style={{ paddingRight: 8, cursor: 'pointer' }} /><span className='meunAdd'>添加</span></Col>
-                  </Row>
+                    <Row>
+                      {menuList.map((item, index) => <Col span={6} style={{ paddingTop: index <= 3 ? 6 : 12, display: 'flex', alignItems: 'center' }}><img src='/work_meun.png' style={{ paddingRight: 8 }} /><span className='meunTitle' onClick={() => meunClick(item.path)}>{item.name}</span></Col>)}
+                      <Col span={6} style={{ paddingTop: menuList?.length <= 3 ? 6 : 12, display: 'flex', alignItems: 'center' }} onClick={addMeun} className='meunAddWrap'><img src='/work_meun_add.png' style={{ paddingRight: 8, cursor: 'pointer' }} /><span className='meunAdd'>添加</span></Col>
+                    </Row>
                   </Spin>
                 </div>
               </Card>
-             
+
             </div>
             <div className={styles.infoWrapper}>
               <Card bodyStyle={{ padding: 0, height: '100%' }} style={{ height: '100%' }}>
@@ -868,7 +958,7 @@ const Workbench = props => {
               defaultExpandAll
               onSelect={onMeunSelect}
               treeData={allMenuList}
-              height = {clientHeight - 300}
+              height={clientHeight - 300}
             />
           </Spin>
         </Modal>

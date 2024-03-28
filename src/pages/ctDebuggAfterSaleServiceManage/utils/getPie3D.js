@@ -73,7 +73,7 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
 
 
 
-export function getPie3D(pieData, internalDiameterRatio,legendList,customHourVal) {
+export function getPie3D(pieData, internalDiameterRatio,customHourVal,legendOption) {
      
     //internalDiameterRatio:透明的空心占比
     let series = [];
@@ -139,8 +139,8 @@ export function getPie3D(pieData, internalDiameterRatio,legendList,customHourVal
     let boxHeight = getHeight3D(series, 20,customHourVal);//通过传参设定3d饼/环的高度，20代表20px
     // 准备待返回的配置项，把准备好的 legendData、series 传入。
     let option = {
-        legend:  {
-            data: legendList? legendList : legendData,
+        legend:  legendOption? legendOption : {
+            data:  legendData,
             orient: 'vertical',
             right: 0,
             y: 'center',
@@ -249,7 +249,7 @@ export function getPie3D(pieData, internalDiameterRatio,legendList,customHourVal
 
 let selectedIndex = '';
 let hoveredIndex = '';
-export function chartClick(myChart,that, params) {
+export function chartClick(myChart,that, params) { //基本用不上 有点问题 用得上的时候修复
     // 监听鼠标事件，实现饼图选中效果（单选），近似实现高亮（放大）效果。
     // 监听点击事件，实现选中效果（单选）
     // 从 option.series 中读取重新渲染扇形所需的参数，将是否选中取反。

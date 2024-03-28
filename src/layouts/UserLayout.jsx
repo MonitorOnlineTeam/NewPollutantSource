@@ -123,11 +123,11 @@ const UserLayout = props => {
                     width={200}
                     alt=""
                     src={'/mobile_code.png'}
+                    style={{paddingBottom:configInfo.IsShowProjectRegion? 24 : 0}} //configInfo.IsShowProjectRegion 宝武集团
                     // src= {configInfo.IsShowProjectRegion?  "/yunweicode.png" : "/yunweicode_new.png"}
                   />
                  <div style={{position:'absolute',width:200,left:24,
-                              // bottom:configInfo.IsShowProjectRegion? 20 : 4,
-                              bottom:4,
+                              bottom:configInfo.IsShowProjectRegion? 0 : 4,
                               fontSize:16,background:'#fff'}}>运维工程师使用</div>
                   </div>
                 </Col>

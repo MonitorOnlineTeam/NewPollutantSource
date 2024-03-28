@@ -543,7 +543,7 @@ const Index = (props) => {
       width: 150,
       ellipsis: true,
       render: (_, record) => {
-        const updateflag = record.submitStatus == '系统关闭' || (record.isCheckUser == 0 &&  record.issueTime);
+        const updateflag = record.submitStatus == '系统关闭' || (record.isCheckUser == 0 &&  (record.issueTime || record.ManagerIssueTime) ) || (record.isCheckUser == 1 &&  record.issueTime);
         // const flag = record.flag;
         const issue =  (record.isCheckUser == 2 && record.issue) || (record.isCheckUser == 1 && !record.ManagerIssueTime);
         const isCheckUser = record.isCheckUser == 1 || record.isCheckUser == 2 ; //0运维人员  1省区经理 2核查人员

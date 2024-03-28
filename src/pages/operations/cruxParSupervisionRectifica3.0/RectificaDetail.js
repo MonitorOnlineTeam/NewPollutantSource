@@ -160,17 +160,17 @@ const Index = (props) => {
 
   const unitFormat = (record) => {
     return record.Col1 && record.Col1.split(',').map((item, index) => {
-      if (record.Name == '流速' && record.isDisplay == 3) { //差压法
-        if (index <= 1) { //只取前两个
-          return <Option value={item}>{item}</Option>
-        }
-      } else if (record.Name == '流速' && (record.isDisplay == 4 || !record.isDisplay)) { //直测流速法 或 实时数据一致性核查表 
-        if (index > 1) { //只取最后一个
-          return <Option value={item}>{item}</Option>
-        }
-      } else {
+      // if (record.Name == '流速' && record.isDisplay == 3) { //差压法
+      //   if (index <= 1) { //只取前两个
+      //     return <Option value={item}>{item}</Option>
+      //   }
+      // } else if (record.Name == '流速' && (record.isDisplay == 4 || !record.isDisplay)) { //直测流速法 或 实时数据一致性核查表 
+      //   if (index > 1) { //只取最后一个
+      //     return <Option value={item}>{item}</Option>
+      //   }
+      // } else {
         return <Option value={item}>{item}</Option>
-      }
+      // }
     })
   }
   const commonCol1 = [

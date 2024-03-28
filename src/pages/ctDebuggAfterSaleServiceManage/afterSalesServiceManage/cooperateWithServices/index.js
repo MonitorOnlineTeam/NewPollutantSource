@@ -19,8 +19,8 @@ import ReactEcharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import 'echarts-gl';
 const { Option } = Select;
-import { getPie3D, chartClick, chartMouseover, chartMouseout } from '../getPie3D';
-import { CubeLeft, CubeRight, CubeTop } from '../getBar3D';
+import { getPie3D,chartMouseover,chartMouseout } from '../../utils/getPie3D';
+import { bar3DrenderItem } from '../../utils/getBar3D';
 import { fomatFloat } from '@/utils/utils';
 import ServiceDetails from '../components/ServiceDetails';
 
@@ -126,13 +126,13 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
   const { match: { path },
-           chargeServiceAnalysisLoading, exportChargeServiceAnalysisLoading,
-           completeNodeServerAnalysisLoading, exportCompleteNodeServerAnalysisLoaging,
-           giveServerAnalysisLoading, exportGiveServerAnalysisLoading,
-           cooperateInspectionAnalysisLoading, exportCooperateInspectionAnalysisLoading,
-           cooperateOtherWorkAnalysisLoading, exportCooperateOtherWorkAnalysisLoading,
-        } = props;
-   
+    chargeServiceAnalysisLoading, exportChargeServiceAnalysisLoading,
+    completeNodeServerAnalysisLoading, exportCompleteNodeServerAnalysisLoaging,
+    giveServerAnalysisLoading, exportGiveServerAnalysisLoading,
+    cooperateInspectionAnalysisLoading, exportCooperateInspectionAnalysisLoading,
+    cooperateOtherWorkAnalysisLoading, exportCooperateOtherWorkAnalysisLoading,
+  } = props;
+
   const commonPath = '/ctManage/afterSalesServiceManage'
   const chargeServicePath = `${commonPath}/chargeService` //收费服务
   const nodeServicesPath = `${commonPath}/nodeServices` //成套节点服务
@@ -160,7 +160,7 @@ const Index = (props) => {
   const title = {
     [chargeServicePath]: '收费',
     [nodeServicesPath]: '成套节点',
-    [giveServerPath]:  '赠送服务',
+    [giveServerPath]: '赠送服务',
     [cooperateInspectionPath]: '配合检查',
     [cooperateOtherWorkPath]: '配合其它工作',
 
@@ -169,7 +169,7 @@ const Index = (props) => {
   const type = {
     [chargeServicePath]: '5',
     [nodeServicesPath]: '1',
-    [giveServerPath]:  '2',
+    [giveServerPath]: '2',
     [cooperateInspectionPath]: '3',
     [cooperateOtherWorkPath]: '4',
   }
@@ -184,9 +184,8 @@ const Index = (props) => {
   const [tableAllDatas, setAllTableDatas] = useState([])
   const [serviceAreaName, setServiceAreaName] = useState([])
   const [serviceNum, setServiceNum] = useState([])
-  const [serviceNumAll, setServiceNumAll] = useState([])
   const [workHour, setWorkHour] = useState([])
-  
+
   const [serviceNumRatio, setServiceNumRatio] = useState([])
   const [workHourDataRatio, setWorkHourDataRatio] = useState([])
   const [customHourVal, setCustomHourVal] = useState(0.03456)
@@ -221,73 +220,104 @@ const Index = (props) => {
 
 
   const getData = () => {
+    const processingData = (res) => {
+      const tableList = res?.ServerAnalysisList ? res.ServerAnalysisList : []
+      setTableDatas(tableList)
+      setAllTableDatas(tableList)
+      if (res?.SumServerAnalysisList) {
+        const data = res.SumServerAnalysisList
+        let areaName = [], serNum = [], hourData = [], serNumRt = [], hourDataRt = [];
+        data.map((item, index) => {
+          areaName.push(item.ServiceArea)
+          serNum.push({ value: item.ServiceNum, label: { textStyle: { color: '#08BDFF' } } })
+          hourData.push(item.WorkHour)
+          serNumRt.push({ name: item.ServiceArea, value: item.ServiceNum, rate: item.ServiceRate })
+          const color = ['#2451FF', '#5AADD4', '#B35AFF', '#EDCC31', '#FF6B11', '#25BD97', '#4C8FFE', '#2AC3DF', '#fe6bba']
+          hourDataRt.push({ name: item.ServiceArea, value: item.WorkHour == 0 ? customHourVal : item.WorkHour, rate: item.WorkRate, itemStyle: { color: color[index] } })
+
+        })
+        setServiceAreaName(areaName)
+        setWorkHour(hourData)
+        setServiceNum(serNum)
+        setServiceNumRatio(serNumRt)
+        setWorkHourDataRatio(hourDataRt)
+      }
+      setQueryPar(par)
+    }
+
     const values = form.getFieldsValue()
     const par = { ...values, bTime: values.date ? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined, eTime: values.date ? values.date[1].format('YYYY-MM-DD HH:mm:ss') : undefined, date: undefined }
     switch (path) {
+      case chargeServicePath:
+        props.GetChargeServiceAnalysis({ ...par }, (res) => {
+          processingData(res)
+        })
+        break;
       case nodeServicesPath:
         props.GetCompleteNodeServerAnalysis({ ...par }, (res) => {
-          const tableList = res?.ServerAnalysisList ? res.ServerAnalysisList : []
-          setTableDatas(tableList)
-          setAllTableDatas(tableList)
-          if (res?.SumServerAnalysisList) {
-            const data = res.SumServerAnalysisList
-            let areaName = [], serNum = [], hourData = [], serNumRt = [], hourDataRt = [];
-            data.map((item, index) => {
-              areaName.push(item.ServiceArea)
-              serNum.push({value :item.ServiceNum, label: { textStyle: { color:  '#08BDFF'} }})
-              hourData.push(item.WorkHour)
-              serNumRt.push({ name: item.ServiceArea, value: item.ServiceNum, rate: item.ServiceRate })
-              const color = ['#2451FF', '#5AADD4', '#B35AFF', '#EDCC31', '#FF6B11', '#25BD97', '#4C8FFE', '#2AC3DF','#fe6bba']
-              hourDataRt.push({ name: item.ServiceArea, value: item.WorkHour == 0? customHourVal : item.WorkHour, rate: item.WorkRate, itemStyle: { color: color[index] } })
-
-            })
-            setServiceAreaName(areaName)
-            setWorkHour(hourData)
-            setServiceNum(serNum)
-            setServiceNumRatio(serNumRt)
-            setWorkHourDataRatio(hourDataRt)
-          }
-          setQueryPar(par)
+          processingData(res)
+        })
+        break;
+      case giveServerPath:
+        props.GetGiveServerAnalysis({ ...par }, (res) => {
+          processingData(res)
+        })
+        break;
+      case cooperateInspectionPath:
+        props.GetCooperateInspectionAnalysis({ ...par }, (res) => {
+          processingData(res)
+        })
+        break;
+      case cooperateOtherWorkPath:
+        props.GetCooperateOtherWorkAnalysis({ ...par }, (res) => {
+          processingData(res)
         })
         break;
 
     }
   }
-
-
+  const exportData = () => {
+    switch (path) {
+      case chargeServicePath:
+        props.ExportChargeServiceAnalysis({ ...queryPar })
+        break;
+      case nodeServicesPath:
+        props.ExportCompleteNodeServerAnalysis({ ...queryPar })
+        break;
+      case giveServerPath:
+        props.ExportGiveServerAnalysis({ ...queryPar })
+        break;
+      case cooperateInspectionPath:
+        props.ExportCooperateInspectionAnalysis({ ...queryPar })
+        break;
+      case cooperateOtherWorkPath:
+        props.ExportCooperateOtherWorkAnalysis({ ...queryPar })
+        break;
+    }
+  }
   const onChartClick = (e) => {
     const selectedRegionVal = sessionStorage.getItem('selectedRegion')
     echartsRef.current.props.option.series[0].renderItem = (params, api) => {
       return renderItemFun(params, api, 2, e)
     }
 
-    serviceNum.map((item,index)=>{
-      if(e.name == selectedRegionVal ||  e.dataIndex != index){ //取消或上一次选中
-        serviceNum[index].label = { textStyle: { color: '#08BDFF'} }
-      }else{//当前选中
-        serviceNum[e.dataIndex].label = { textStyle: { color: '#ffcb72'} }
+    serviceNum.map((item, index) => {
+      if (e.name == selectedRegionVal || e.dataIndex != index) { //取消或上一次选中
+        serviceNum[index].label = { textStyle: { color: '#08BDFF' } }
+      } else {//当前选中
+        serviceNum[e.dataIndex].label = { textStyle: { color: '#ffcb72' } }
       }
     })
     echartsRef.current.getEchartsInstance().setOption(echartsRef.current.props.option)
-    if(e.name == selectedRegionVal){ //选中取消
+    if (e.name == selectedRegionVal) { //选中取消
       setTableDatas(tableAllDatas)
       sessionStorage.setItem('selectedRegion', '')
-    }else{
-      const selectedData = tableDatas.filter(item=>item.ServiceArea == e.name)
+    } else {
+      const selectedData = tableDatas.filter(item => item.ServiceArea == e.name)
       setTableDatas(selectedData)
       sessionStorage.setItem('selectedRegion', e.name)
     }
   }
-
-  const exportData = () => {
-    switch (path) {
-      case nodeServicesPath:
-        props.ExportCompleteNodeServerAnalysis({ ...queryPar })
-        break;
-
-    }
-  }
-  
   const columns = [
     {
       title: '序号',
@@ -333,6 +363,9 @@ const Index = (props) => {
       align: 'center',
       width: 'auto',
       ellipsis: true,
+      render: (text, record, index) => {
+        return `${text}%`
+      },
     },
     {
       title: '工作时长(小时)',
@@ -341,8 +374,8 @@ const Index = (props) => {
       align: 'center',
       width: 'auto',
       ellipsis: true,
-      render:(text,record)=>{
-       return <a onClick={()=>serviceHourDetail(record)}>{text}</a>
+      render: (text, record) => {
+        return <a onClick={() => serviceHourDetail(record)}>{text}</a>
       }
     },
     {
@@ -352,6 +385,9 @@ const Index = (props) => {
       align: 'center',
       width: 'auto',
       ellipsis: true,
+      render: (text, record, index) => {
+        return `${text}%`
+      },
     },
   ];
 
@@ -368,60 +404,7 @@ const Index = (props) => {
       color2 = params.dataIndex == e.dataIndex && e.name != selectedData ? '#fd9b3b' : '#64B0FD'
       color3 = params.dataIndex == e.dataIndex && e.name != selectedData ? '#ffcb72' : '#08BDFF'//顶部
     }
-    const location = api.coord([api.value(0), api.value(1)]);
-    return {
-      type: "group",
-      children: [
-        {
-          type: "CubeLeft",
-          shape: {
-            api,
-            xValue: api.value(0),
-            yValue: api.value(1),
-            x: location[0],
-            y: location[1],
-            xAxisPoint: api.coord([api.value(0), 0]),
-          },
-          style: {
-            fill: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: color1 }, { offset: 1, color: color2 }
-            ]),
-          },
-        },
-        {
-          type: "CubeRight",
-          shape: {
-            api,
-            xValue: api.value(0),
-            yValue: api.value(1),
-            x: location[0],
-            y: location[1],
-            xAxisPoint: api.coord([api.value(0), 0]),
-          },
-          style: {
-            fill: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: color1 }, { offset: 1, color: color2 }
-            ]),
-          },
-        },
-        {
-          type: "CubeTop",
-          shape: {
-            api,
-            xValue: api.value(0),
-            yValue: api.value(1),
-            x: location[0],
-            y: location[1],
-            xAxisPoint: api.coord([api.value(0), 0]),
-          },
-          style: {
-            fill: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: color3 }, { offset: 1, color: color3 }
-            ]),
-          },
-        },
-      ],
-    };
+    return bar3DrenderItem(params, api, type, e,color1,color2,color3)
   }
   const serviceFrequencyDuration = () => { //各大区赠送服务次数、工作时长
     return {
@@ -519,7 +502,7 @@ const Index = (props) => {
             normal: {
               show: true,
               position: "top",
-              color:  "#08BDFF",
+              color: "#08BDFF",
               offset: [22, -10],//左右 上下
             },
           },
@@ -563,8 +546,8 @@ const Index = (props) => {
         formatter: (params) => {
           return (
             `${params[0].name}<br />
-            <span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background:linear-gradient(to bottom,#28CBFA, #64B0FD);\"></span> ${params[0].seriesName}：${params[0].value}<br />` + 
-            `${params[3].marker} ${params[3].seriesName}：${params[3].value}` 
+            <span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background:linear-gradient(to bottom,#28CBFA, #64B0FD);\"></span> ${params[0].seriesName}：${params[0].value}<br />` +
+            `${params[3].marker} ${params[3].seriesName}：${params[3].value}`
           )
         }
       },
@@ -579,7 +562,7 @@ const Index = (props) => {
     var total = 0; //总数量
     serviceNumRatio.forEach(function (item) { total += item.value });
     return {
-      color: ['#5CDC9F', '#488CF7', '#F46848', '#E0D52B', '#4EEFEF', '#2358DC', '#AFD7DE', '#EAA017','#6c76f1'],
+      color: ['#5CDC9F', '#488CF7', '#F46848', '#E0D52B', '#4EEFEF', '#2358DC', '#AFD7DE', '#EAA017', '#6c76f1'],
       tooltip: {
         trigger: 'item',
         formatter: "{a} <br/>{b} ： {c} ({d}%)"
@@ -652,7 +635,7 @@ const Index = (props) => {
   const proportionWorkHours = () => {
     var total = 0; //总数量
     workHour.forEach(function (value) { total += value });
-    const option = getPie3D(workHourDataRatio, 0.6,[],customHourVal)
+    const option = getPie3D(workHourDataRatio, 0.6,customHourVal, { show: false}, )
     option.title = {
       text: `${total}小时`,
       textStyle: {
@@ -662,40 +645,40 @@ const Index = (props) => {
         fontSize: 13,
       },
       x: "center",
-      y: total==0? "50%" : "center",
+      y: total == 0 ? "50%" : "45%",
     }
-      // option.series.push({ //需要label指引线的话
-      //   name: 'pie2d',
-      //   type: 'pie',
-      //   avoidLabelOverlap: true,
-      //   label: {
-      //     show: false, 
-      //    },
-      //   labelLine: {
-      //     show: false,
-      //   },
-      //   startAngle: -20, //起始角度，支持范围[0, 360]。
-      //   clockwise: false,//饼图的扇区是否是顺时针排布。上述这两项配置主要是为了对齐3d的样式
-      //   radius: ['40%', '100%'],
-      //   center: ['50%', '50%'],
-      //   data: workHourDataRatio,
-      //   itemStyle: {
-      //     opacity: 0
-      //   },
-      // })
+    // option.series.push({ //需要label指引线的话
+    //   name: 'pie2d',
+    //   type: 'pie',
+    //   avoidLabelOverlap: true,
+    //   label: {
+    //     show: false, 
+    //    },
+    //   labelLine: {
+    //     show: false,
+    //   },
+    //   startAngle: -20, //起始角度，支持范围[0, 360]。
+    //   clockwise: false,//饼图的扇区是否是顺时针排布。上述这两项配置主要是为了对齐3d的样式
+    //   radius: ['40%', '100%'],
+    //   center: ['50%', '50%'],
+    //   data: workHourDataRatio,
+    //   itemStyle: {
+    //     opacity: 0
+    //   },
+    // })
     return option;
 
 
   }
 
-  const [serviceHourVisible,setServiceHourVisible] = useState(false)
-  const [serviceAreaCode ,setServiceAreaCode] = useState()
-  const [province ,setProvince] = useState()
+  const [serviceHourVisible, setServiceHourVisible] = useState(false)
+  const [serviceAreaCode, setServiceAreaCode] = useState()
+  const [province, setProvince] = useState()
 
-  const serviceHourDetail = (row)=>{
+  const serviceHourDetail = (row) => {
     setServiceHourVisible(true)
-    setServiceAreaCode(row.ServiceAreaCode?Number(row.ServiceAreaCode) : undefined )
-    setProvince(row.RegionCode || undefined )
+    setServiceAreaCode(row.ServiceAreaCode ? Number(row.ServiceAreaCode) : undefined)
+    setProvince(row.RegionCode || undefined)
   }
   const searchComponents = () => {
     return <Form
@@ -709,7 +692,7 @@ const Index = (props) => {
       }}
     >
       <Form.Item name='date' label='日期' >
-        <RangePicker style={{ width: 260 }} picker='month'  allowClear={false}/>
+        <RangePicker style={{ width: 260 }} picker='month' allowClear={false} />
       </Form.Item>
       <Form.Item>
         <Space>
@@ -769,29 +752,32 @@ const Index = (props) => {
             <Card title={`工作时长占比`}>
               {tableLoading[path] ?
                 <Skeleton active paragraph={{ rows: 8 }} />
-                : workHourDataRatio?.[0] && 
-                 <Row>
+                : workHourDataRatio?.[0]?
+                <Row>
                   <Col span={14}>
-                  <ReactEcharts
-                  option={proportionWorkHours()}
-                  style={{ width: "100%", height: 'calc(50vh - 170px)' }}
-                  ref={echartsRef2}
-                  className="echarts-for-echarts"
-                  theme="my_theme"
-                />
-                </Col>
-                <Col span={10} style={{paddingLeft:4,display:'flex',flexDirection:'column',alignItems:'end',justifyContent:'center',justifyItems:'center'}} >{workHourDataRatio.map((item,index)=>{
-                    return  <Row align='middle' style={{width:'100%',paddingBottom:index==workHourDataRatio.length? 0 : 8}}>
-                          <Row align='middle' wrap={false} style={{width:'calc(100% - 54px)'}}> 
-                          <div  style={{display:'inline-block',width:14,height:14, borderRadius:2, backgroundColor:item.itemStyle.color,marginRight:8}}></div> 
-                           <div className='textOverflow' style={{width:'calc(100% - 24px)'}}>{item.name}</div>
-                          </Row> 
-                          <div style={{minWidth:50,textAlign:'right',color:'#2189FC',fontWeight:'bold',marginLeft:4}}>{item.rate}%</div></Row>
+                    <ReactEcharts
+                      option={proportionWorkHours()}
+                      style={{ width: "100%", height: 'calc(50vh - 170px)' }}
+                      ref={echartsRef2}
+                      className="echarts-for-echarts"
+                      theme="my_theme"
+                    />
+                  </Col>
+                  <Col span={10} style={{ paddingLeft: 4, display: 'flex', flexDirection: 'column', alignItems: 'end', justifyContent: 'center', justifyItems: 'center' }} >{workHourDataRatio.map((item, index) => {
+                    return <Row align='middle' style={{ width: '100%', paddingBottom: index == workHourDataRatio.length ? 0 : 8 }}>
+                      <Row align='middle' wrap={false} style={{ width: 'calc(100% - 54px)' }}>
+                        <div style={{ display: 'inline-block', width: 14, height: 14, borderRadius: 2, backgroundColor: item.itemStyle.color, marginRight: 8 }}></div>
+                        <div className='textOverflow' style={{ width: 'calc(100% - 24px)' }}>{item.name}</div>
+                      </Row>
+                      <div style={{ minWidth: 50, textAlign: 'right', color: '#2189FC', fontWeight: 'bold', marginLeft: 4 }}>{item.rate}%</div></Row>
                   })
-                 }
-                 </Col>
+                  }
+                  </Col>
                 </Row>
-              }
+                : 
+                <Empty  style={{   minHeight: 308, height: 'calc(50vh - 170px)' }}/>
+              }            
+                
             </Card>
           </Col>
         </Row>
@@ -817,15 +803,15 @@ const Index = (props) => {
           </Card>
         </Row>
         <Modal
-        visible={serviceHourVisible}
-        title={`${title[path]}服务明细`}
-        onCancel={() => { setServiceHourVisible(false) }}
-        footer={null}
-        destroyOnClose
-        wrapClassName={`spreadOverModal`}
-      >
-        <ServiceDetails serviceQueryPar={{ time:[moment(queryPar.bTime),moment(queryPar.eTime)],serviceAreaCode:serviceAreaCode,province:province}} type={type[path]}/>
-      </Modal>
+          visible={serviceHourVisible}
+          title={`${title[path]}服务明细`}
+          onCancel={() => { setServiceHourVisible(false) }}
+          footer={null}
+          destroyOnClose
+          wrapClassName={`spreadOverModal`}
+        >
+          <ServiceDetails serviceQueryPar={{ time: [moment(queryPar.bTime), moment(queryPar.eTime)], serviceAreaCode: serviceAreaCode, province: province }} type={type[path]} />
+        </Modal>
       </BreadcrumbWrapper>
     </div>
   );

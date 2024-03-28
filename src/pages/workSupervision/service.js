@@ -526,3 +526,19 @@ export async function GetWorkbenchesModuleList (params) {
   );
   return result;
 }
+//成套 获取遗留问题
+export async function ProjectImplementationList (params) {
+  const result = await post(
+    API.CtWorkStageApi.ProjectImplementationList,
+    params,
+  );
+  return result;
+}
+//成套 解决遗留问题
+export async function UpdateImplementationStatus (params) {
+  const result = await post(
+    API.CtWorkStageApi.UpdateImplementationStatus,
+    params,
+  );
+  return result;
+}

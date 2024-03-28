@@ -20,7 +20,7 @@ export default Model.extend({
     allUser: [],
     IndustryList: [],
     managerList: [],
-    operaServiceList: [],
+    supervisionVerificaList: [],
     workAlarmPushList: [],
     workAlarmTotal: 0,
     contractList: [],
@@ -552,12 +552,12 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 运维服务列表
+    // 待办中心 监督核查
     *GetStagingInspectorRectificationList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.GetStagingInspectorRectificationList, payload);
       if (result.IsSuccess) {
         yield update({
-          operaServiceList: result.Datas,
+          supervisionVerificaList: result.Datas,
         });
         callback && callback(result.Total);
       } else {
@@ -634,22 +634,22 @@ export default Model.extend({
     *GetUserMenuList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.GetUserMenuList, payload);
       if (result.IsSuccess) {
-        const menuList = result.Datas?.menuList? result.Datas.menuList :[]
+        const menuList = result.Datas?.menuList ? result.Datas.menuList : []
         const allMenuListFun = (data) => {
           if (data?.length) {
-             return data.map(item => {
+            return data.map(item => {
               return {
-                selectable:item.children?.length? false : true,
+                selectable: item.children?.length ? false : true,
                 title: item.name,
                 key: item.id,
-                children: allMenuListFun(item.children) ?  allMenuListFun(item.children) : [],
-                icon:item.children?.length? null : <img src='/work_meun.png' style={{ paddingRight: 8 }} />
+                children: allMenuListFun(item.children) ? allMenuListFun(item.children) : [],
+                icon: item.children?.length ? null : <img src='/work_meun.png' style={{ paddingRight: 8 }} />
               }
             })
           }
         }
-        
-        const allMenuList = result.Datas?.allMenuList?.length ?  allMenuListFun(result.Datas.allMenuList) :[]
+
+        const allMenuList = result.Datas?.allMenuList?.length ? allMenuListFun(result.Datas.allMenuList) : []
         const menuFilterTree = (treeNodes = [], checkedKeys = []) => {
           return treeNodes?.length && treeNodes.filter(item => checkedKeys.indexOf(item.key) == -1).map(item => {
             item = { ...item }
@@ -659,7 +659,7 @@ export default Model.extend({
             return item
           })
         }
-        const allMenuData = menuFilterTree(allMenuList,menuList.map(item=>item.id))
+        const allMenuData = menuFilterTree(allMenuList, menuList.map(item => item.id))
         // const filterEmptyChildren = (treeNodes) =>{
         //   return treeNodes?.length&&treeNodes.children&&treeNodes.children.length&&(!treeNodes.selectable)&&treeNodes.map(item => {
         //     item = { ...item }
@@ -700,6 +700,36 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-  },
-  
+    //待办中心 项目执行-获取遗留问题
+    *ProjectImplementationList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.ProjectImplementationList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          projectExecutionList: result.Datas,
+        });
+        callback && callback(result.Total);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    //待办中心 项目执行-解决遗留问题
+    *UpdateImplementationStatus({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.UpdateImplementationStatus, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+
+
+
+
+
+
+
+
+
+  }
+
 });
