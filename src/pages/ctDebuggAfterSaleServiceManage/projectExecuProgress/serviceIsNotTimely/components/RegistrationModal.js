@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-21 16:51:07
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-22 11:31:31
+ * @Last Modified time: 2024-03-28 15:42:51
  * @Description:  登记弹窗
  */
 
@@ -217,7 +217,7 @@ const RegistrationModal = props => {
       wrapClassName="spreadOverModal"
       visible={isModalOpen}
       destroyOnClose
-      footer={[]}
+      footer={null}
       onCancel={() => {
         onCancel();
       }}

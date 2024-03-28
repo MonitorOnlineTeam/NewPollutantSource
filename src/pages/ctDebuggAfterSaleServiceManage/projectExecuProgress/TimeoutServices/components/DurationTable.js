@@ -147,6 +147,7 @@ const DurationTable = props => {
         key: 'year',
         width: 80,
         fixed: 'left',
+        className: styles.bg_white,
         render: (text, record, index) => {
           return {
             children: text,
@@ -321,7 +322,7 @@ const DurationTable = props => {
         wrapClassName="spreadOverModal"
         visible={isModalOpen}
         destroyOnClose
-        footer={[]}
+        footer={null}
         onCancel={() => {
           onCancel();
         }}

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 16:18:02
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-28 13:47:17
+ * @Last Modified time: 2024-03-28 15:43:28
  * @Description:  纪律检查记录弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -475,7 +475,7 @@ const RecordModal = props => {
       wrapClassName="spreadOverModal"
       visible={open}
       destroyOnClose
-      footer={[]}
+      footer={null}
       onCancel={() => {
         onCancel();
       }}
