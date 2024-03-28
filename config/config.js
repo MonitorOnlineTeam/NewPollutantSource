@@ -3092,128 +3092,131 @@ export default {
                   path: '/ctManage/projectExecuProgress/RepeatServices',
                   component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/RepeatServices',
                 },
-              ],
-            },
-            // 监督核查
-            {
-              path: '/ctManage/supervisionCheck',
-              name: 'supervisionCheck',
-              routes: [
+
+                // 监督核查
                 {
                   path: '/ctManage/supervisionCheck',
-                  redirect: '/ctManage/afterSalesServiceManage/nodeServices',
+                  name: 'supervisionCheck',
+                  routes: [
+                    {
+                      path: '/ctManage/supervisionCheck',
+                      redirect: '/ctManage/afterSalesServiceManage/nodeServices',
+                    },
+                    {
+                      // 纪律检查
+                      name: 'NodeServices',
+                      path: '/ctManage/supervisionCheck/disciplineCheck',
+                      component: './ctDebuggAfterSaleServiceManage/supervisionCheck/disciplineCheck',
+                    },
+                  ]
                 },
-                {
-                  // 纪律检查
-                  name: 'NodeServices', 
-                  path: '/ctManage/supervisionCheck/disciplineCheck',
-                  component: './ctDebuggAfterSaleServiceManage/supervisionCheck/disciplineCheck',
-                },
-              ]
-            },
-            /**售后服务管理  */ 
-            {
-              path: '/ctManage/afterSalesServiceManage',
-              name: 'AfterSalesServiceManagement',
-              routes: [
+                /**售后服务管理  */
                 {
                   path: '/ctManage/afterSalesServiceManage',
                   name: 'AfterSalesServiceManagement',
                   routes: [
                     {
                       path: '/ctManage/afterSalesServiceManage',
-                      redirect: '/ctManage/afterSalesServiceManage/nodeServices',
-                    },
-                    {
-                      name: 'ChargeService', // 收费服务
-                      path: '/ctManage/afterSalesServiceManage/chargeService',
-                      component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
-                    },
-                    {
-                      name: 'NodeServices', // 成套节点服务
-                      path: '/ctManage/afterSalesServiceManage/nodeServices',
-                      component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
-                    },
-                    {
-                      name: 'GiveServer', // 赠送服务
-                      path: '/ctManage/afterSalesServiceManage/giveServer',
-                      component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
-                    },
-                    {
-                      name: 'CooperateInspection', // 配合检查
-                      path: '/ctManage/afterSalesServiceManage/cooperateInspection',
-                      component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
-                    },
-                    {
-                      name: 'CooperateOtherWork', // 配合其它工作
-                      path: '/ctManage/afterSalesServiceManage/cooperateOtherWork',
-                      component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
-                    },
-                  ]
-                },
-                /**资产管理 */
-                {
-                  path: '/ctManage/assetManagement',
-                  name: 'AssetManagement',
-                  routes: [
-                    {
-                      path: '/ctManage/assetManagement',
-                      redirect: '/ctManage/assetManagement/equipmentAccount/projectQuery',
-                    },
-                    // 设备台账
-                    {
-                      name: 'EquipmentAccount',
-                      path: '/ctManage/assetManagement/equipmentAccount',
+                      name: 'AfterSalesServiceManagement',
                       routes: [
                         {
-                          path: '/ctManage/assetManagement/equipmentAccount',
+                          path: '/ctManage/afterSalesServiceManage',
+                          redirect: '/ctManage/afterSalesServiceManage/nodeServices',
+                        },
+                        {
+                          name: 'ChargeService', // 收费服务
+                          path: '/ctManage/afterSalesServiceManage/chargeService',
+                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                        },
+                        {
+                          name: 'NodeServices', // 成套节点服务
+                          path: '/ctManage/afterSalesServiceManage/nodeServices',
+                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                        },
+                        {
+                          name: 'GiveServer', // 赠送服务
+                          path: '/ctManage/afterSalesServiceManage/giveServer',
+                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                        },
+                        {
+                          name: 'CooperateInspection', // 配合检查
+                          path: '/ctManage/afterSalesServiceManage/cooperateInspection',
+                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                        },
+                        {
+                          name: 'CooperateOtherWork', // 配合其它工作
+                          path: '/ctManage/afterSalesServiceManage/cooperateOtherWork',
+                          component: './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                        },
+                      ]
+                    },
+                    /**资产管理 */
+                    {
+                      path: '/ctManage/assetManagement',
+                      name: 'AssetManagement',
+                      routes: [
+                        {
+                          path: '/ctManage/assetManagement',
                           redirect: '/ctManage/assetManagement/equipmentAccount/projectQuery',
                         },
+                        // 设备台账
                         {
-                          // 项目查询
-                          name: 'CtProjectQuery',
-                          path: '/ctManage/assetManagement/equipmentAccount/projectQuery',
-                          component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery',
+                          name: 'EquipmentAccount',
+                          path: '/ctManage/assetManagement/equipmentAccount',
+                          routes: [
+                            {
+                              path: '/ctManage/assetManagement/equipmentAccount',
+                              redirect: '/ctManage/assetManagement/equipmentAccount/projectQuery',
+                            },
+                            {
+                              // 项目查询
+                              name: 'CtProjectQuery',
+                              path: '/ctManage/assetManagement/equipmentAccount/projectQuery',
+                              component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery',
+                            },
+                            {
+                              // 污染源管理
+                              name: 'CtPollutantManagement',
+                              path: '/ctManage/assetManagement/equipmentAccount/pollutantManagement/:configId',
+                              component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement',
+                            },
+                            {
+                              name: 'CtPoint', // 污染源管理 监测点
+                              path: '/ctManage/assetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
+                              component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/point',
+                            },
+                          ],
+                        },
+
+                      ],
+                    },
+                    /**监督检查 */
+                    {
+                      path: '/ctManage/supervisionInspection',
+                      name: 'SupervisionInspection',
+                      routes: [
+                        {
+                          path: '/ctManage/supervisionInspection',
+                          redirect: '/ctManage/supervisionInspection/installaEquipment',
                         },
                         {
-                          // 污染源管理
-                          name: 'CtPollutantManagement',
-                          path: '/ctManage/assetManagement/equipmentAccount/pollutantManagement/:configId',
-                          component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement',
+                          // 设备安装审核
+                          name: 'InstallaEquipmentReview',
+                          path: '/ctManage/supervisionInspection/installaEquipmentReview',
+                          component: './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
                         },
-                        {
-                          name: 'CtPoint', // 污染源管理 监测点
-                          path: '/ctManage/assetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
-                          component: './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/point',
-                        },
+
                       ],
                     },
 
-                  ],
-                },
-                /**监督检查 */
-                {
-                  path: '/ctManage/supervisionInspection',
-                  name: 'SupervisionInspection',
-                  routes: [
-                    {
-                      path: '/ctManage/supervisionInspection',
-                      redirect: '/ctManage/supervisionInspection/installaEquipment',
-                    },
-                    {
-                       // 设备安装审核
-                      name: 'InstallaEquipmentReview',
-                      path: '/ctManage/supervisionInspection/installaEquipmentReview',
-                      component: './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
-                    },
 
-                  ],
-                },
 
 
 
 
 
+                  ],
+                },
 
 
 

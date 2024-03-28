@@ -28,7 +28,7 @@ import cuid from 'cuid';
 import { getBase64 } from '@/utils/utils';
 import Detail from './Detail';
 import Lightbox from "react-image-lightbox-rotate";
-import SetUserListBtn from "@/components/SetUserListBtn";
+// import SetUserListBtn from "@/components/SetUserListBtn";
 import {  permissionButton } from '@/utils/utils';
 
 const { TextArea } = Input;
@@ -377,7 +377,7 @@ const Index = (props) => {
           <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading} style={{ marginRight: 4 }}>
             导出
             </Button>
-         {inspectorUserPermission&&<SetUserListBtn text='配置人员清单' style={{ marginRight: 4 }} />}
+         {/* {inspectorUserPermission&&<SetUserListBtn text='配置人员清单' style={{ marginRight: 4 }} />} */}
         </Form.Item>
 
       </Row>
