@@ -269,12 +269,12 @@ const DurationTable = props => {
 
   // 排序、分页
   const onTableChange = (pagination, filters, sorter) => {
-    const { pageSize, pageIndex } = pagination;
+    const { pageSize, current } = pagination;
     setPageSize(pageSize);
-    setPageIndex(pageIndex);
+    setPageIndex(current);
     let order = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? 2 : 0;
     setSort(order);
-    GetTimeoutServiceInfo(pageIndex, pageSize, order + '');
+    GetTimeoutServiceInfo(current, pageSize, order + '');
   };
 
   return (
