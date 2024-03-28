@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 11:11:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-27 16:44:15
+ * @Last Modified time: 2024-03-28 13:39:04
  * @Description:  纪律检查
  */
 
@@ -28,6 +28,7 @@ import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import { DeleteOutlined, ExportOutlined } from '@ant-design/icons';
 import RecordModal from './components/RecordModal';
+import { permissionButton } from '@/utils/utils';
 
 const { RangePicker } = DatePicker;
 
@@ -41,9 +42,11 @@ const DisciplineCheck = props => {
 
   const [date, setDate] = useState([
     moment()
+      .add(-1, 'week')
       .startOf('week')
       .add(1, 'day'),
-    moment().add(1, 'week'),
+    moment().startOf('week'),
+    // .add(-1, 'day'),
   ]);
   const [dataSource, setDataSource] = useState([]);
   const [modalTitle, setModalTitle] = useState();
@@ -51,6 +54,7 @@ const DisciplineCheck = props => {
   const [modalDataType, setModalDataType] = useState(1); // 0: 一级列表  1: 纪律检查任务完成记录  2:纪律检查记录/纪律检查管理
   const [modalQueryParams, setModalQueryParams] = useState({});
 
+  const buttonList = permissionButton(props.match.path);
   const { queryLoading, dispatch, exportLoading } = props;
 
   useEffect(() => {
@@ -80,7 +84,7 @@ const DisciplineCheck = props => {
   // 获取大区列表
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getLargeRegion',
+      type: 'disciplineCheck/getLargeRegion',
       payload: {},
     });
   };
@@ -119,7 +123,7 @@ const DisciplineCheck = props => {
       {
         title: '序号',
         align: 'center',
-        width: 80,
+        width: 40,
         // ellipsis: true,
         // render: (text, record, index) => {
         //   return index + 1 + (pageIndex - 1) * pageSize;
@@ -147,8 +151,8 @@ const DisciplineCheck = props => {
       },
       {
         title: '应检查次数',
-        dataIndex: 'AlreadyCheckCount',
-        key: 'AlreadyCheckCount',
+        dataIndex: 'ShouldCheckCount',
+        key: 'ShouldCheckCount',
         ellipsis: true,
         render: (text, record) => {
           return (
@@ -167,8 +171,8 @@ const DisciplineCheck = props => {
       },
       {
         title: '实际检查次数',
-        dataIndex: 'ShouldCheckCount',
-        key: 'ShouldCheckCount',
+        dataIndex: 'AlreadyCheckCount',
+        key: 'AlreadyCheckCount',
         ellipsis: true,
       },
       {
@@ -177,15 +181,25 @@ const DisciplineCheck = props => {
         key: 'CheckRate',
         ellipsis: true,
         width: 200,
+        sorter: (a, b) => a.CheckRate - b.CheckRate,
         render: (text, record) => {
           let percent = Number(text).toFixed(2);
           return (
+            // <Progress
+            //   percent={percent}
+            //   size="small"
+            //   style={{ width: '80%' }}
+            //   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
+            // />
+
             <Progress
-              successPercent={percent}
-              percent={percent}
+              percent={text == '-' ? 0 : text}
               size="small"
               style={{ width: '80%' }}
-              format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
+              status="normal"
+              format={percent => (
+                <span style={{ color: 'rgba(0,0,0,.8)' }}>{text == '-' ? text : text + '%'}</span>
+              )}
             />
           );
         },
@@ -193,6 +207,18 @@ const DisciplineCheck = props => {
     ];
 
     return columns;
+  };
+
+  const disabledDate = current => {
+    // Can not select days before today and today
+    return (
+      current &&
+      current >
+        moment()
+          .add(-1, 'week')
+          .endOf('week')
+          .add(1, 'day')
+    );
   };
 
   return (
@@ -206,6 +232,7 @@ const DisciplineCheck = props => {
                 <RangePicker
                   picker="week"
                   allowClear={false}
+                  disabledDate={disabledDate}
                   defaultValue={date}
                   onChange={onDateChange}
                 />
@@ -216,16 +243,18 @@ const DisciplineCheck = props => {
               <Button icon={<ExportOutlined />} type="primary" onClick={onExport}>
                 导出
               </Button>
-              <Button
-                type="primary"
-                onClick={() => {
-                  openRecordModal('纪律检查管理', 2, {
-                    time: date,
-                  });
-                }}
-              >
-                纪律检查管理
-              </Button>
+              {buttonList.includes('disciplineCheck') && (
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    openRecordModal('纪律检查管理', 2, {
+                      time: date,
+                    });
+                  }}
+                >
+                  纪律检查管理
+                </Button>
+              )}
             </Space>
           </Row>
         }
@@ -248,6 +277,9 @@ const DisciplineCheck = props => {
           open={isModalOpen}
           onCancel={() => {
             setIsModalOpen(false);
+          }}
+          reloadPage={() => {
+            getTableDataSource();
           }}
         />
       )}

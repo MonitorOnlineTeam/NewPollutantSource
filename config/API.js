@@ -924,6 +924,8 @@ export const API = {
       GetRecordLogInfor: before + '/CTProjectExecutionApi/GetRecordLogInfor',
       // 修改纪律检查
       UpdateDisciplineCheckManage: before + '/CTProjectExecutionApi/UpdateDisciplineCheckManage',
+      // 获取大区列表
+      GetRegionList: before + '/CTProjectExecutionApi/GetRegionList',
     }
   },
 };

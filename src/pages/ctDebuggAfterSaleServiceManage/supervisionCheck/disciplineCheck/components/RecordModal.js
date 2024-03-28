@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 16:18:02
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-27 17:16:58
+ * @Last Modified time: 2024-03-28 13:47:17
  * @Description:  纪律检查记录弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -22,6 +22,7 @@ import {
   Modal,
   DatePicker,
   message,
+  Tag,
 } from 'antd';
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
@@ -29,9 +30,10 @@ import { EditOutlined, DeleteOutlined, ExportOutlined } from '@ant-design/icons'
 
 const { RangePicker } = DatePicker;
 
-const dvaPropsData = ({ loading, common }) => ({
-  largeRegionList: common.largeRegionList,
-  queryLoading: loading.effects[`serviceIsNotTimely/GetServiceSetList`],
+const dvaPropsData = ({ loading, disciplineCheck }) => ({
+  largeRegionList: disciplineCheck.largeRegionList,
+  queryLoading: loading.effects[`disciplineCheck/GetDisciplineCheckList`],
+  exportLoading: loading.effects[`disciplineCheck/ExportDisciplineCheckList`],
 });
 
 const RecordModal = props => {
@@ -49,14 +51,17 @@ const RecordModal = props => {
     dispatch,
     open,
     queryLoading,
+    exportLoading,
     largeRegionList,
     dataType,
     title,
     queryParams,
     onCancel,
+    reloadPage,
   } = props;
 
   useEffect(() => {
+    
     form.setFieldsValue({
       ...queryParams,
     });
@@ -76,6 +81,19 @@ const RecordModal = props => {
       taskType: '7',
       dataType: dataType,
       systemType: '2',
+    };
+
+    return {
+      beginTime: '2024-03-04 00:00:00',
+      endTime: '2024-03-24 23:59:00',
+      taskType: '',
+      systemType: '',
+      dataType: dataType,
+      regionCode: '',
+      isComplete: 0,
+      searcahUserName: '',
+      pageIndex: 1,
+      pageSize: 10,
     };
   };
 
@@ -105,6 +123,7 @@ const RecordModal = props => {
       },
       callback: res => {
         handleTableChange(1, 20);
+        title === '纪律检查管理' && reloadPage();
       },
     });
   };
@@ -129,20 +148,28 @@ const RecordModal = props => {
       payload: {
         ID,
       },
+      callback: res => {
+        form1.setFieldsValue({
+          checkInState: res.CheckInState,
+          unqualifiedDate: res.UnqualifiedDate,
+          unqualifiedReason: res.UnqualifiedReason,
+          recordUnqualifiedDate: res.RecordUnqualifiedDate,
+          logID: res.ID,
+        });
+      },
     });
   };
 
   // 编辑
   const onUpdate = () => {
-    form
-      .validateFields((err, values) => {
+    form1
+      .validateFields()
+      .then(values => {
         dispatch({
           type: 'disciplineCheck/UpdateDisciplineCheckManage',
-          payload: {
-            logID: editId,
-            ...values,
-          },
+          payload: values,
           callback: res => {
+            setIsEditModalOpen(false);
             getTableDataSource();
           },
         });
@@ -158,38 +185,46 @@ const RecordModal = props => {
         title: '序号',
         align: 'center',
         ellipsis: true,
+        width: 60,
         render: (text, record, index) => {
           return index + 1 + (pageIndex - 1) * pageSize;
         },
       },
       {
         title: '大区',
-        dataIndex: 'Num',
-        key: 'Num',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
         ellipsis: true,
       },
       {
         title: '任务单派发时间',
-        dataIndex: 'Num',
-        key: 'Num',
+        dataIndex: 'CreateTime',
+        key: 'CreateTime',
         ellipsis: true,
       },
       {
         title: '是否完成',
-        dataIndex: 'Num',
-        key: 'Num',
+        dataIndex: 'IsCompleteTip',
+        key: 'IsCompleteTip',
         ellipsis: true,
+        width: 100,
+        render: (text, record) => {
+          if (text === '是') {
+            return <Tag color="success">{text}</Tag>;
+          }
+          return <Tag color="error">{text}</Tag>;
+        },
       },
       {
         title: '检查人',
-        dataIndex: 'Num',
-        key: 'Num',
+        dataIndex: 'CheckUserName',
+        key: 'CheckUserName',
         ellipsis: true,
       },
       {
         title: '检查时间/派单关闭时间',
-        dataIndex: 'Num',
-        key: 'Num',
+        dataIndex: 'ShowTime',
+        key: 'ShowTime',
         ellipsis: true,
       },
     ];
@@ -199,56 +234,70 @@ const RecordModal = props => {
         title: '序号',
         align: 'center',
         ellipsis: true,
+        width: 60,
         render: (text, record, index) => {
           return index + 1 + (pageIndex - 1) * pageSize;
         },
       },
       {
         title: '大区',
-        dataIndex: 'Num',
-        key: 'Num',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
         ellipsis: true,
+        width: 120,
       },
       {
         title: '姓名',
-        dataIndex: 'ProjectCode',
-        key: 'ProjectCode',
+        dataIndex: 'NormalUserName',
+        key: 'NormalUserName',
         ellipsis: true,
+        width: 120,
       },
       {
         title: '签到是否合格',
-        dataIndex: 'ItemCode',
-        key: 'ItemCode',
+        dataIndex: 'CheckIn',
+        key: 'CheckIn',
         ellipsis: true,
+        width: 100,
+        render: (text, record) => {
+          if (record.CheckInState === 1) {
+            return <Tag color="success">{text}</Tag>;
+          }
+          return <Tag color="error">{text}</Tag>;
+        },
       },
       {
         title: '签到不合格日期',
-        dataIndex: 'ProjectName',
-        key: 'ProjectName',
+        dataIndex: 'UnqualifiedDate',
+        key: 'UnqualifiedDate',
         ellipsis: true,
+        width: 200,
       },
       {
         title: '签到不合格原因',
-        dataIndex: 'ProjectType',
-        key: 'ProjectType',
+        dataIndex: 'UnqualifiedReason',
+        key: 'UnqualifiedReason',
         ellipsis: true,
+        width: 200,
       },
       {
-        title: '日期不合格日期',
-        dataIndex: 'ProjectType',
-        key: 'ProjectType',
+        title: '日志不合格日期',
+        dataIndex: 'RecordUnqualifiedDate',
+        key: 'RecordUnqualifiedDate',
         ellipsis: true,
+        width: 200,
       },
       {
         title: '检查人',
-        dataIndex: 'ProjectType',
-        key: 'ProjectType',
+        dataIndex: 'CheckUserName',
+        key: 'CheckUserName',
         ellipsis: true,
+        width: 120,
       },
       {
-        title: '检查日期',
-        dataIndex: 'ProjectType',
-        key: 'ProjectType',
+        title: '检查时间',
+        dataIndex: 'RecordTime',
+        key: 'RecordTime',
         ellipsis: true,
       },
       {
@@ -262,8 +311,8 @@ const RecordModal = props => {
                 <a
                   onClick={() => {
                     setIsEditModalOpen(true);
-                    setEditId(record.id);
-                    GetRecordLogInfor(record.id);
+                    setEditId(record.LogID);
+                    GetRecordLogInfor(record.LogID);
                   }}
                 >
                   <EditOutlined style={{ fontSize: 16 }} />
@@ -274,7 +323,7 @@ const RecordModal = props => {
                 <Popconfirm
                   title="确认要删除吗?"
                   onConfirm={() => {
-                    onDelete();
+                    onDelete(record.LogID);
                   }}
                   // onCancel={this.cancel}
                   okText="是"
@@ -298,7 +347,7 @@ const RecordModal = props => {
     let columns = columns2;
     if (dataType === 2) {
       if (title === '纪律检查记录') {
-        columns = columns2.filter(item => item.dataIndex !== 'handle');
+        columns = columns2.filter(item => item.dataIndex !== 'handle' && item.dataIndex !== 'CheckUserName');
       }
     }
 
@@ -312,6 +361,17 @@ const RecordModal = props => {
     getTableDataSource(PageIndex, PageSize);
   };
 
+  const disabledDate = current => {
+    return (
+      current &&
+      current >
+        moment()
+          .add(-1, 'week')
+          .endOf('week')
+          .add(1, 'day')
+    );
+  };
+
   // 搜索组件
   const SearchComponents = () => {
     return (
@@ -320,7 +380,9 @@ const RecordModal = props => {
         form={form}
         layout="inline"
         initialValues={{
-          isComplete: 1,
+          isComplete: 0,
+          checkInState: 2,
+          time: queryParams.time,
         }}
         autoComplete="off"
         style={{ marginTop: 10, marginBottom: 10 }}
@@ -338,26 +400,37 @@ const RecordModal = props => {
             >
               {largeRegionList.map(item => {
                 return (
-                  <Option value={item.ID} key={item.ID}>
-                    {item.LargeRegion}
+                  <Option value={item.UserGroup_ID} key={item.UserGroup_ID}>
+                    {item.UserGroup_Name}
                   </Option>
                 );
               })}
             </Select>
           </Form.Item>
           <Form.Item name="time" label="检查时间">
-            <RangePicker picker="week" allowClear={false} />
+            <RangePicker disabledDate={disabledDate} picker="week" allowClear={false} />
           </Form.Item>
           <Form.Item name="searcahUserName" label="姓名">
             <Input allowClear={true} style={{ width: '100%' }} placeholder="请输入" />
           </Form.Item>
-          <Form.Item name="isComplete" label="是否完成">
-            <Radio.Group>
-              <Radio value={1}>全部</Radio>
-              <Radio value={2}>是</Radio>
-              <Radio value={3}>否</Radio>
-            </Radio.Group>
-          </Form.Item>
+          {dataType === 1 && (
+            <Form.Item name="isComplete" label="是否完成">
+              <Radio.Group>
+                <Radio value={0}>全部</Radio>
+                <Radio value={1}>是</Radio>
+                <Radio value={2}>否</Radio>
+              </Radio.Group>
+            </Form.Item>
+          )}
+          {dataType === 2 && (
+            <Form.Item name="checkInState" label="是否合格">
+              <Radio.Group>
+                <Radio value={2}>全部</Radio>
+                <Radio value={1}>是</Radio>
+                <Radio value={0}>否</Radio>
+              </Radio.Group>
+            </Form.Item>
+          )}
           <Form.Item>
             <Space style={{ marginLeft: 10 }}>
               <Button
@@ -381,7 +454,7 @@ const RecordModal = props => {
               {title !== '纪律检查管理' && (
                 <Button
                   icon={<ExportOutlined />}
-                  loading={false}
+                  loading={exportLoading}
                   type="primary"
                   onClick={() => {
                     onExport();
@@ -425,34 +498,53 @@ const RecordModal = props => {
 
       <Modal
         title="编辑"
+        destroyOnClose
         visible={isEditModalOpen}
         onOk={onUpdate}
         onCancel={() => {
           setIsEditModalOpen(false);
         }}
+        okText="保存"
       >
         <Form
-          id="searchForm"
+          // id="searchForm"
           form={form1}
           // layout="inline"
-          initialValues={{}}
+          initialValues={{
+            checkInState: 2,
+          }}
           autoComplete="off"
           style={{ marginTop: 10, marginBottom: 10 }}
+          labelCol={{
+            flex: '130px',
+          }}
         >
-          <Form.Item name="checkInState" label="签到是否合格">
+          <Form.Item
+            name="checkInState"
+            label="签到是否合格"
+            rules={[
+              {
+                required: true,
+                message: '不能为空',
+              },
+            ]}
+          >
             <Radio.Group>
-              <Radio value={2}>是</Radio>
-              <Radio value={3}>否</Radio>
+              <Radio value={1}>是</Radio>
+              <Radio value={0}>否</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item name="checkInState" label="签到不合格日期">
-            <Input />
+          <Form.Item name="unqualifiedDate" label="签到不合格日期">
+            <Input placeholder="请输入" />
           </Form.Item>
-          <Form.Item name="checkInState" label="签到不合格原因">
-            <Input />
+          <Form.Item name="unqualifiedReason" label="签到不合格原因">
+            <Input placeholder="请输入" />
           </Form.Item>
-          <Form.Item name="checkInState" label="日志不合格日期">
-            <Input />
+          <Form.Item name="recordUnqualifiedDate" label="日志不合格日期">
+            <Input placeholder="请输入" />
+          </Form.Item>
+          <Form.Item name="logID" style={{ display: 'none' }}>
+            <Input placeholder="请输入" />
           </Form.Item>
         </Form>
       </Modal>

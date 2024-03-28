@@ -9,7 +9,9 @@ import { API } from '@config/API';
 
 export default Model.extend({
   namespace: 'disciplineCheck',
-  state: {},
+  state: {
+    largeRegionList: [],
+  },
   effects: {
     // 获取纪律检查详情
     *GetDisciplineCheckList({ payload, callback }, { call, put, update }) {
@@ -30,7 +32,7 @@ export default Model.extend({
         {},
       );
       if (result.IsSuccess) {
-        callback && callback(result);
+        callback && callback(result.Datas);
       }
     },
     // 修改纪律检查
@@ -59,7 +61,7 @@ export default Model.extend({
     },
     // 获取所属大区
     *getLargeRegion({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.CtCommonApi.GetLargeRegionList, payload);
+      const result = yield call(requestPost, API.CtAPI_WJQ.DisciplineCheck.GetRegionList, payload);
       if (result.IsSuccess) {
         yield update({
           largeRegionList: result.Datas,
