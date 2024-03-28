@@ -1,8 +1,8 @@
 /*
  * @Author: JiaQi 
  * @Date: 2024-03-22 11:45:31 
- * @Last Modified by:   JiaQi 
- * @Last Modified time: 2024-03-22 11:45:31 
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-03-28 15:41:59
  * @Description:  查看全部
  */
 import React, { useState, useEffect } from 'react';
@@ -33,7 +33,7 @@ const AllViewModal = props => {
       wrapClassName="spreadOverModal"
       visible={isModalOpen}
       destroyOnClose
-      footer={[]}
+      footer={null}
       onCancel={() => {
         onCancel();
       }}

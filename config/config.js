@@ -3062,7 +3062,60 @@ export default {
                     },
                   ],
                 },
-                /**售后服务管理  */
+                {
+                  // 现场签到统计
+                  name: 'SiteAttendanceStatistics',
+                  path: '/ctManage/projectExecuProgress/siteAttendanceStatistics',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/siteAttendanceStatistics',
+                },
+                {
+                  // 服务不及时
+                  name: 'serviceIsNotTimely',
+                  path: '/ctManage/projectExecuProgress/serviceIsNotTimely',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/serviceIsNotTimely',
+                },
+                {
+                  // 服务报告抽查
+                  name: 'reportSpotCheck',
+                  path: '/ctManage/projectExecuProgress/reportSpotCheck',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportSpotCheck',
+                },
+                {
+                  // 超时服务
+                  name: 'TimeoutServices',
+                  path: '/ctManage/projectExecuProgress/TimeoutServices',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/TimeoutServices',
+                },
+                {
+                  // 重复服务
+                  name: 'RepeatServices',
+                  path: '/ctManage/projectExecuProgress/RepeatServices',
+                  component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/RepeatServices',
+                },
+              ],
+            },
+            // 监督核查
+            {
+              path: '/ctManage/supervisionCheck',
+              name: 'supervisionCheck',
+              routes: [
+                {
+                  path: '/ctManage/supervisionCheck',
+                  redirect: '/ctManage/afterSalesServiceManage/nodeServices',
+                },
+                {
+                  // 纪律检查
+                  name: 'NodeServices', 
+                  path: '/ctManage/supervisionCheck/disciplineCheck',
+                  component: './ctDebuggAfterSaleServiceManage/supervisionCheck/disciplineCheck',
+                },
+              ]
+            },
+            /**售后服务管理  */ 
+            {
+              path: '/ctManage/afterSalesServiceManage',
+              name: 'AfterSalesServiceManagement',
+              routes: [
                 {
                   path: '/ctManage/afterSalesServiceManage',
                   name: 'AfterSalesServiceManagement',

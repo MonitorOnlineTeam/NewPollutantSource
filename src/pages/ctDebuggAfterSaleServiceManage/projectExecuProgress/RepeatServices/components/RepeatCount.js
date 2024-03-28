@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-25 15:29:55
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-26 15:49:53
+ * @Last Modified time: 2024-03-26 17:21:11
  * @Description:  大区重复服务次数
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -175,8 +175,6 @@ const RepeatCount = props => {
     return (
       <ReactEcharts
         ref={echart => {
-          debugger;
-
           echart && setEcharts(echart.echarts);
         }}
         option={getOption()}
