@@ -52,11 +52,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false,
       // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
@@ -1780,7 +1780,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   //视频监控（新）
@@ -1805,7 +1805,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                  }`,
+                    }`,
                 },
                 {
                   //视频监控 企业
@@ -3169,67 +3169,67 @@ export default {
                         },
                       ],
                     },
-                    /**资产管理 */
+                  ],
+                },
+                /**资产管理 */
+                {
+                  path: '/ctManage/assetManagement',
+                  name: 'AssetManagement',
+                  routes: [
                     {
                       path: '/ctManage/assetManagement',
-                      name: 'AssetManagement',
+                      redirect: '/ctManage/assetManagement/equipmentAccount/projectQuery',
+                    },
+                    // 设备台账
+                    {
+                      name: 'EquipmentAccount',
+                      path: '/ctManage/assetManagement/equipmentAccount',
                       routes: [
                         {
-                          path: '/ctManage/assetManagement',
+                          path: '/ctManage/assetManagement/equipmentAccount',
                           redirect: '/ctManage/assetManagement/equipmentAccount/projectQuery',
                         },
-                        // 设备台账
                         {
-                          name: 'EquipmentAccount',
-                          path: '/ctManage/assetManagement/equipmentAccount',
-                          routes: [
-                            {
-                              path: '/ctManage/assetManagement/equipmentAccount',
-                              redirect: '/ctManage/assetManagement/equipmentAccount/projectQuery',
-                            },
-                            {
-                              // 项目查询
-                              name: 'CtProjectQuery',
-                              path: '/ctManage/assetManagement/equipmentAccount/projectQuery',
-                              component:
-                                './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery',
-                            },
-                            {
-                              // 污染源管理
-                              name: 'CtPollutantManagement',
-                              path:
-                                '/ctManage/assetManagement/equipmentAccount/pollutantManagement/:configId',
-                              component:
-                                './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement',
-                            },
-                            {
-                              name: 'CtPoint', // 污染源管理 监测点
-                              path:
-                                '/ctManage/assetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
-                              component:
-                                './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/point',
-                            },
-                          ],
+                          // 项目查询
+                          name: 'CtProjectQuery',
+                          path: '/ctManage/assetManagement/equipmentAccount/projectQuery',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery',
+                        },
+                        {
+                          // 污染源管理
+                          name: 'CtPollutantManagement',
+                          path:
+                            '/ctManage/assetManagement/equipmentAccount/pollutantManagement/:configId',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement',
+                        },
+                        {
+                          name: 'CtPoint', // 污染源管理 监测点
+                          path:
+                            '/ctManage/assetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/point',
                         },
                       ],
                     },
-                    /**监督检查 */
+                  ],
+                },
+                /**监督检查 */
+                {
+                  path: '/ctManage/supervisionInspection',
+                  name: 'SupervisionInspection',
+                  routes: [
                     {
                       path: '/ctManage/supervisionInspection',
-                      name: 'SupervisionInspection',
-                      routes: [
-                        {
-                          path: '/ctManage/supervisionInspection',
-                          redirect: '/ctManage/supervisionInspection/installaEquipment',
-                        },
-                        {
-                          // 设备安装审核
-                          name: 'InstallaEquipmentReview',
-                          path: '/ctManage/supervisionInspection/installaEquipmentReview',
-                          component:
-                            './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
-                        },
-                      ],
+                      redirect: '/ctManage/supervisionInspection/installaEquipment',
+                    },
+                    {
+                      // 设备安装审核
+                      name: 'InstallaEquipmentReview',
+                      path: '/ctManage/supervisionInspection/installaEquipmentReview',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
                     },
                   ],
                 },

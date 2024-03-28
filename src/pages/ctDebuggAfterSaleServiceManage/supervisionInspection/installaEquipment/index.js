@@ -12,6 +12,7 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import moment from 'moment';
+import SetUserListBtn from "@/components/SetUserListBtn";
 
 import styles from "./style.less"
 // import Detail from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery/detail'
@@ -266,12 +267,10 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
-            <Button style={{margin: '0 8px',}} onClick={() => { form.resetFields(); }}  >
+            <Button style={{margin: '0 8px'}} onClick={() => { form.resetFields(); }}  >
               重置
          </Button>
-         <Button type="primary">
-              审核人员清单
-         </Button>
+         <SetUserListBtn type={4} text='审核人员清单' />
           </Form.Item>
         </Col>
       </Row>

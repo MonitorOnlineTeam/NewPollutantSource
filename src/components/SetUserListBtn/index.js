@@ -4,7 +4,7 @@
  * 创建时间：2024.1.10
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Button, Table, Transfer, Spin,Modal} from 'antd';
+import { Button, Table, Transfer, Spin, Modal } from 'antd';
 import { connect } from "dva";
 import difference from 'lodash/difference';
 import SdlTable from '@/components/SdlTable';
@@ -47,14 +47,7 @@ const dvaDispatch = (dispatch) => {
     }
 }
 
-const [targetUserKeys, setTargetUserKeys] = useState()
-const userChange = (nextTargetKeys, direction, moveKeys) => {
-    setTargetUserKeys(nextTargetKeys)
-    props.addSetUser({
-        userIdList: direction === 'right' ? nextTargetKeys : moveKeys,
-        state: direction === 'right' ? 1 : 2
-    })
-}
+
 const Index = (props) => {
 
     const [listVisble, setListVisble] = useState(false)
@@ -64,10 +57,18 @@ const Index = (props) => {
         if (props.inspectorUserList?.length <= 0) {
             props.getInspectorUserList()
         }
-        props.getSetUser({}, (data) => {
+        props.getSetUser({type:props.type}, (data) => {
             setTargetUserKeys(data)
         })
     }, []);
+    const [targetUserKeys, setTargetUserKeys] = useState()
+    const userChange = (nextTargetKeys, direction, moveKeys) => {
+        setTargetUserKeys(nextTargetKeys)
+        props.addSetUser({
+            userIdList: direction === 'right' ? nextTargetKeys : moveKeys,
+            state: direction === 'right' ? 1 : 2
+        })
+    }
     const leftTableColumns = [
         {
             dataIndex: 'UserAccount',
@@ -139,22 +140,22 @@ const Index = (props) => {
 
 
     return <>
-          <Button type="primary" style={{ marginRight: 4 }}
+         <Button type="primary" style={{ marginRight: 4,...props.btnSty }}
             onClick={() => {
                 setListVisble(true);
             }}
         >
             {props.text}
-        </Button>
-        {/* <Modal
+        </Button> 
+         <Modal
             visible={listVisble}
             title={'配置人员清单'}
             footer={null}
             onCancel={() => { setListVisble(false) }}
             destroyOnClose
             width={1100}
-        > */}
-            {/* <Spin spinning={props.inspectorUserLoading || props.setUserLoading || props.addSetUserLoading || false}>
+        > 
+        <Spin spinning={props.inspectorUserLoading || props.setUserLoading || props.addSetUserLoading || false}>
 
                 <TableTransfer
                     titles={['待分配用户', '已分配用户']}
@@ -171,9 +172,9 @@ const Index = (props) => {
                     {...props}
 
                 />
-            </Spin> */}
-        {/* </Modal> */}
-        </>
+            </Spin> 
+        </Modal> 
+    </>
 };
 
 export default connect(dvaPropsData, dvaDispatch)(Index);

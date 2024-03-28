@@ -322,6 +322,7 @@ const Index = (props) => {
     {
       title: '序号',
       align: 'center',
+      className: 'bg_white',
       render: (text, record, index) => {
         return (index + 1);
       }
@@ -333,6 +334,7 @@ const Index = (props) => {
       align: 'center',
       width: 'auto',
       ellipsis: true,
+      className: 'bg_white',
       render: (text, record, index) => {
         return {
           children: text,
@@ -794,7 +796,6 @@ const Index = (props) => {
               loading={tableLoading[path]}
               bordered
               size='small'
-              rowClassName={null}
               scroll={{ x: 800, y: 'auto' }}
               dataSource={tableDatas}
               columns={columns}

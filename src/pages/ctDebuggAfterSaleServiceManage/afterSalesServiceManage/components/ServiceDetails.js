@@ -163,8 +163,8 @@ const Index = (props) => {
     },
     {
       title: '服务大区',
-      dataIndex: 'Region',
-      key: 'Region',
+      dataIndex: 'ServiceArea',
+      key: 'ServiceArea',
       align: 'center',
       ellipsis: true,
     },
