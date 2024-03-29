@@ -179,14 +179,6 @@ const DurationTable = props => {
             props: { colSpan: text === '总计' ? 0 : 1 },
           };
         },
-        // onCell: (_, index) => {
-        //   if (index === 4) {
-        //     return {
-        //       colSpan: 0,
-        //     };
-        //   }
-        //   return {};
-        // },
       },
       {
         title: '总计',

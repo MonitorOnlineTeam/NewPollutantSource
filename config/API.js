@@ -940,7 +940,18 @@ export const API = {
       UpdateDisciplineCheckManage: before + '/CTProjectExecutionApi/UpdateDisciplineCheckManage',
       // 获取大区列表
       GetRegionList: before + '/CTProjectExecutionApi/GetRegionList',
-    }
+    },
+    // 客户回访
+    CustomerReturnVisit: {
+      // 客户回访统计列表
+      GetCustomerVisitList: before + '/CTProjectExecutionApi/GetCustomerVisitList',
+      // 导出
+      ExportCustomerVisitList: before + '/CTProjectExecutionApi/ExportCustomerVisitList',
+      // 删除
+      DeleteReturnVisitCustomers: before + '/DailyWorkManagerApi/DeleteReturnVisitCustomers',
+      // 获取纪律检查详情
+      GetCustomerVisitInfor: before + '/CTProjectExecutionApi/GetCustomerVisitInfor',
+    },
   },
 };
 
