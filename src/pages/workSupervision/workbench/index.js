@@ -448,7 +448,7 @@ const Workbench = props => {
             }
           }}
         >
-          {item.TaskFrom === 2 && <Menu.Item key="1">转发任务</Menu.Item>}
+          {/* {item.TaskFrom === 2 && <Menu.Item key="1">转发任务</Menu.Item>} */}
           <Menu.Item key="2">结束任务</Menu.Item>
         </Menu>
       );
