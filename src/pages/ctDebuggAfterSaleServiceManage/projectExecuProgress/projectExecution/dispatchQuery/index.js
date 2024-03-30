@@ -324,8 +324,10 @@ const Index = (props) => {
         </Col>
           <Col span={8}>
             <Form.Item name='time' label='下单日期' >
-              <RangePicker style={{ width: '100%' }}
-                showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
+              <RangePicker 
+              style={{ width: '100%' }}
+              showTime={false}
+              format="YYYY-MM-DD"
               />
             </Form.Item>
           </Col>

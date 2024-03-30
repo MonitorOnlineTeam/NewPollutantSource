@@ -7,7 +7,8 @@ import { DatePicker, message } from 'antd';
 import PropTypes from 'prop-types';
 
 const { RangePicker } = DatePicker;
-
+// 获取当前年份
+const currentYear = moment().year();
 
 class NewRangePicker extends Component {
     constructor(props) {
@@ -23,10 +24,18 @@ class NewRangePicker extends Component {
                 连续七天: [moment().add(-6, 'd'), moment()],
                 本月: [moment().startOf('month'), moment().endOf('month')],
                 上月: [moment().add(-1, 'M').startOf('month'), moment().add(-1, 'M').endOf('month')],
-                最近三月: [moment().add(-3, 'M').startOf('month'), moment().endOf('month')],
-                最近半年: [moment().startOf('years'), moment().endOf('years').add(-6, 'M').endOf('month')],
-                最近一年: [moment().startOf('years'), moment().endOf('years')],
-                最近三年: [moment().add(-3, 'y').startOf('years'), moment().endOf('years')],
+                近三月: [moment().subtract(2, 'months').startOf('month'), moment().endOf('month')],
+                一季度: [moment(`${currentYear}-01-01`).startOf('quarter'), moment(`${currentYear}-03-31`).endOf('quarter')],
+                二季度: [moment(`${currentYear}-04-01`).startOf('quarter'), moment(`${currentYear}-06-30`).endOf('quarter')],
+                三季度: [moment(`${currentYear}-07-01`).startOf('quarter'), moment(`${currentYear}-09-30`).endOf('quarter')],
+                四季度: [moment(`${currentYear}-10-01`).startOf('quarter'), moment(`${currentYear}-12-31`).endOf('quarter')],
+                近半年: [moment().subtract(6, 'months').startOf('month'), moment().endOf('month')],
+                本年: [moment().startOf('year'),  moment().endOf('year')],
+                去年: [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')],
+                前年: [moment().subtract(2, 'years').startOf('year'),  moment().subtract(2, 'years').endOf('year')],
+                近一年: [moment().subtract(1, 'year').startOf('year'),moment().endOf('year')],
+                近二年: [moment().subtract(2, 'years').startOf('year'),moment().subtract(1, 'year').endOf('year')],
+                近三年: [ moment().subtract(3, 'years').startOf('year'), moment().subtract(2, 'years').endOf('year')],
             },
             // style: {
             //     width: (this.props.style && (this.props.style.width || 300)) || 250,

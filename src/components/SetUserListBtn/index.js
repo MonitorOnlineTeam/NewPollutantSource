@@ -50,23 +50,29 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
+    const { type } = props;
+
     const [listVisble, setListVisble] = useState(false)
 
 
     useEffect(() => {
+        if(listVisble){
         if (props.inspectorUserList?.length <= 0) {
             props.getInspectorUserList()
         }
-        props.getSetUser({type:props.type}, (data) => {
+        props.getSetUser({type:type}, (data) => {
             setTargetUserKeys(data)
         })
-    }, []);
+     }
+    }, [listVisble]);
+
     const [targetUserKeys, setTargetUserKeys] = useState()
     const userChange = (nextTargetKeys, direction, moveKeys) => {
         setTargetUserKeys(nextTargetKeys)
         props.addSetUser({
             userIdList: direction === 'right' ? nextTargetKeys : moveKeys,
-            state: direction === 'right' ? 1 : 2
+            state: direction === 'right' ? 1 : 2,
+            type:type,
         })
     }
     const leftTableColumns = [

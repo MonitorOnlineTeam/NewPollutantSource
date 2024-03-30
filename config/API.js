@@ -725,11 +725,16 @@ export const API = {
     GetCTServiceDispatchRateList: before + '/CTBaseDataApi/GetCTServiceDispatchRateList ',  //获取成套派单完成率信息
     ExportCTServiceDispatchRateList: before + '/CTBaseDataApi/ExportCTServiceDispatchRateList',  //成套派单完成率 导出
 
-    /*现场签到统计*/
-    GetSignInAnalysis: before + '/CTStatisticsApi/GetSignInAnalysis',//获取现场签到统计信息
-    ExportSignInAnalysis: before + '/CTStatisticsApi/ExportSignInAnalysis',//现场签到统计信息 导出
-    GetSignInAnalysisInfo: before + '/CTStatisticsApi/GetSignInAnalysisInfo',//获取现场签到统计详情信息
-    ExportSignInAnalysisInfo: before + '/CTStatisticsApi/ExportSignInAnalysisInfo',//现场签到统计详情信息 导出
+    /*现场工作时长*/
+    GetSignInAnalysis: before + '/CTStatisticsApi/GetSignInAnalysis',//获取现场工作时长信息
+    ExportSignInAnalysis: before + '/CTStatisticsApi/ExportSignInAnalysis',//现场工作时长信息 导出
+    GetSignInAnalysisInfo: before + '/CTStatisticsApi/GetSignInAnalysisInfo',//获取现场工作时长详情信息
+    ExportSignInAnalysisInfo: before + '/CTStatisticsApi/ExportSignInAnalysisInfo',//现场工作时长详情信息 导出
+    /*签到考勤查询*/
+    GetSignInAndOffsiteSignList: before + '/CTStatisticsApi/GetSignInAndOffsiteSignList',//获取现场签到与非现场签到详细
+    ExportSignInAndOffsiteSign: before + '/CTStatisticsApi/ExportSignInAndOffsiteSign',//现场签到与非现场签到详细 导出
+    GetOffWorkType: before + '/CTStatisticsApi/GetOffWorkType',//非现场签到工作类型
+
   },
 
   /*** 工作台 ***/

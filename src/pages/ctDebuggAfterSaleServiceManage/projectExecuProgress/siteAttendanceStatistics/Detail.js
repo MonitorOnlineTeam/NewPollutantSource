@@ -1,5 +1,5 @@
 /**
- * 功  能：项目执行进度 / 现场签到统计 详情内容
+ * 功  能：项目执行进度 / 现场工作时长 详情内容
  * 创建人：jab
  * 创建时间：2024.02.26
  */
@@ -15,6 +15,7 @@ import PageLoading from '@/components/PageLoading'
 import ImageView from '@/components/ImageView';
 import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils';
 import AttachmentView from '@/components/AttachmentView';
+import UserList from '@/components/UserList'
 import { uploadPrefix } from '@/config'
 import styles from "./style.less"
 const { Option } = Select;
@@ -121,7 +122,7 @@ const Index = (props) => {
 
       },
       {
-        title: '成套人员',
+        title: '姓名',
         dataIndex: 'UserName',
         key: 'UserName',
         align: 'center',
@@ -227,13 +228,13 @@ const Index = (props) => {
       >
         <Row align='middle'>
           <Col span={8}>
-            <Form.Item name='userName' label='成套人员'>
-              <Input placeholder="请输入" allowClear />
+            <Form.Item name='CheckUserID' label='姓名'>
+              <UserList />
             </Form.Item>
           </Col>
           <Col span={8} >
-            <Form.Item name='userAccount' label='工号' className='minWidth' >
-              <Input placeholder="请输入" allowClear />
+            <Form.Item name='projectCode' label='项目编号' className='minWidth' >
+              <Input placeholder="合同编号、立项号" allowClear />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -241,7 +242,7 @@ const Index = (props) => {
               <Input placeholder="请输入" allowClear />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          {/* <Col span={8}>
             <Form.Item name='projectCode' label='合同编号' >
               <Input placeholder="请输入" allowClear />
             </Form.Item>
@@ -250,7 +251,7 @@ const Index = (props) => {
             <Form.Item name='itemCode' label='立项号'>
               <Input placeholder="请输入" allowClear />
             </Form.Item>
-          </Col>
+          </Col> */}
           <Col span={8} >
             <Form.Item>
               <Button type="primary" htmlType="submit" loading={tableLoading}>
@@ -305,6 +306,16 @@ const Index = (props) => {
               current={pageIndex}
               onChange={handleTableChange}
               pageSizeOptions={[1,2,5,10]}
+              locale={{
+                items_per_page: '天/页', // 替换“条/页”为“天/页”
+              }}
+              // itemRender={(page, type, originalElement) => {
+              //   console.log(page, type, originalElement)
+              //   if (type === 'page') {
+              //     return <a href={`/items/page-${page}`}>第{page}天</a>;
+              //   }
+              //   return originalElement;
+              // }}
           />
       </div> : null}
         </Card>

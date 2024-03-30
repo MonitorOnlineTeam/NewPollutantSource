@@ -357,6 +357,9 @@ const Index = (props) => {
       align: 'center',
       width: 'auto',
       ellipsis: true,
+      render: (text, record) => {
+        return <a onClick={() => ServiceNumDetail(record)}>{text}</a>
+      }
     },
     {
       title: '次数占比',
@@ -376,9 +379,6 @@ const Index = (props) => {
       align: 'center',
       width: 'auto',
       ellipsis: true,
-      render: (text, record) => {
-        return <a onClick={() => serviceHourDetail(record)}>{text}</a>
-      }
     },
     {
       title: '时长占比',
@@ -677,7 +677,7 @@ const Index = (props) => {
   const [serviceAreaCode, setServiceAreaCode] = useState()
   const [province, setProvince] = useState()
 
-  const serviceHourDetail = (row) => {
+  const ServiceNumDetail = (row) => {
     setServiceHourVisible(true)
     setServiceAreaCode(row.ServiceAreaCode ? Number(row.ServiceAreaCode) : undefined)
     setProvince(row.RegionCode || undefined)

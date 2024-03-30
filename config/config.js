@@ -3036,11 +3036,18 @@ export default {
                       ],
                     },
                     {
-                      // 现场签到统计
+                      // 现场工作时长
                       name: 'SiteAttendanceStatistics',
                       path: '/ctManage/projectExecuProgress/siteAttendanceStatistics',
                       component:
                         './ctDebuggAfterSaleServiceManage/projectExecuProgress/siteAttendanceStatistics',
+                    },
+                    {
+                      // 签到考勤查询 成套
+                      name: 'CheckAttendanceQuery',
+                      path: '/ctManage/projectExecuProgress/checkAttendanceQuery',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/cTcheckAttendanceQuery',
                     },
                     {
                       // 服务不及时
@@ -3071,13 +3078,6 @@ export default {
                         './ctDebuggAfterSaleServiceManage/projectExecuProgress/RepeatServices',
                     },
                   ],
-                },
-                {
-                  // 现场签到统计
-                  name: 'SiteAttendanceStatistics',
-                  path: '/ctManage/projectExecuProgress/siteAttendanceStatistics',
-                  component:
-                    './ctDebuggAfterSaleServiceManage/projectExecuProgress/siteAttendanceStatistics',
                 },
                 {
                   // 服务不及时

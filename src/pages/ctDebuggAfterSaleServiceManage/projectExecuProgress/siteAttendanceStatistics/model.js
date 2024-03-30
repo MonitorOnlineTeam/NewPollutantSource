@@ -17,7 +17,7 @@ export default Model.extend({
     detailQueryPar:{},
   },
   effects: {
-    *GetSignInAnalysis({ payload,callback }, { call, put, update }) { //获取现场签到统计信息
+    *GetSignInAnalysis({ payload,callback }, { call, put, update }) { //获取现场工作时长信息
       const result = yield call(services.GetSignInAnalysis, payload);
       if (result.IsSuccess) {
         yield update({
@@ -29,7 +29,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *ExportSignInAnalysis({ payload,callback }, { call, put, update }) { //现场签到统计信息 导出
+    *ExportSignInAnalysis({ payload,callback }, { call, put, update }) { //现场工作时长信息 导出
       const result = yield call(services.ExportSignInAnalysis, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
@@ -38,7 +38,7 @@ export default Model.extend({
         message.warning(result.Message);
       }
     },
-    *GetSignInAnalysisInfo({ payload,callback }, { call, put, update }) { //获取现场签到统计详情信息
+    *GetSignInAnalysisInfo({ payload,callback }, { call, put, update }) { //获取现场工作时长详情信息
       const result = yield call(services.GetSignInAnalysisInfo, payload);
       if (result.IsSuccess) {
         yield update({
@@ -50,13 +50,13 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *ExportSignInAnalysisInfo({ callback,payload }, { call, put, update, select }) { //现场签到统计详情信息 导出
+    *ExportSignInAnalysisInfo({ callback,payload }, { call, put, update, select }) { //现场工作时长详情信息 导出
       const response = yield call(services.ExportSignInAnalysisInfo, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         downloadFile(`${response.Datas}`);
       } else {
-        message.warning(response.Message);
+        message.error(response.Message);
       }
     },
 

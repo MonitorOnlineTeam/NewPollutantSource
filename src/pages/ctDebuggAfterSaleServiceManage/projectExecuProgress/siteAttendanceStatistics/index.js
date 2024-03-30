@@ -1,7 +1,7 @@
 /**
- * 功  能：项目执行进度 / 现场签到统计
+ * 功  能：项目执行进度 /签到考勤查询
  * 创建人：jab
- * 创建时间：2024.02.26
+ * 创建时间：2024.03.30
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker } from 'antd';
@@ -19,7 +19,6 @@ import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-
 import Detail from './Detail'
 const { Option } = Select; 
 
@@ -168,13 +167,15 @@ const Index = (props) => {
           <Form.Item label="日期" name="time">
             <RangePicker_
               allowClear={false}
-              style={{ width: 380 }}
-              format="YYYY-MM-DD HH:mm:ss"
-              showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
+              style={{ minWidth: 240 }}
+              showTime={false}
+              format="YYYY-MM-DD"
+              // format="YYYY-MM-DD HH:mm:ss"
+              // showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
             />
           </Form.Item>
           <Form.Item name='regionCode' label='省份' >
-          <RegionList levelNum={1} style={{ width: 170 }} />
+          <RegionList ct levelNum={1} style={{ width: 170 }} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={tableLoading} style={{marginRight:8}}>
