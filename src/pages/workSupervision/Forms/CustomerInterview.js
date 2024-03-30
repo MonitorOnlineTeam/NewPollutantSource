@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-28 16:14:24
+ * @Last Modified time: 2024-03-29 16:29:07
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -20,6 +20,7 @@ import {
   Col,
   Space,
   Table,
+  Rate,
 } from 'antd';
 import styles from './styles.less';
 import HandleCustomer from './HandleCustomer';
@@ -109,25 +110,28 @@ const CustomerInterview = props => {
             align: 'center',
             render: (text, record) => {
               return (
-                <Form.Item
-                  name={record.dataIndex}
-                  style={{ marginBottom: 0 }}
-                  labelCol={{ span: 0 }}
-                  wrapperCol={{ span: 24 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: '不能为空！',
-                    },
-                  ]}
-                >
-                  <InputNumber
+                <Row justify="center">
+                  <Form.Item
+                    name={record.dataIndex}
+                    style={{ marginBottom: 0 }}
+                    // labelCol={{ span: 0 }}
+                    wrapperCol={{ span: 24 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: '不能为空！',
+                      },
+                    ]}
+                  >
+                    {/* <InputNumber
                     placeholder="1 ~ 5"
                     max={5}
                     min={1}
                     style={{ width: 100, textAlign: 'center' }}
-                  />
-                </Form.Item>
+                  /> */}
+                    <Rate />
+                  </Form.Item>
+                </Row>
               );
             },
           },
@@ -274,8 +278,8 @@ const CustomerInterview = props => {
                           CustomID: data.ID,
                           UserGroup_Name: data.UserGroup_Name,
                           ProvinceName: data.ProvinceName,
-                          RegionalArea: option['data-item'].UserGroup_ID,
-                          Province: option['data-item'].Province,
+                          RegionalArea: data.UserGroup_ID,
+                          Province: data.Province,
                         });
                       }}
                     />

@@ -289,18 +289,21 @@ const Index = (props) => {
                 <Image preview={true} src={`/ctInstallaEquipmentImg/installPhotos/${index}.png`} />
                 <div style={{ paddingLeft: 8, width: 'calc(100% - 58px)' }}>
                   <div style={{ fontSize: 16, fontWeight: 400 }} className='textOverflow'>{item.Name}</div>
-                  <div className='textOverflow'>备注：{item.Remark ? item.Remark : '无'}</div>
+                <div className='textOverflow'>备注：{!item.Remark ? 
+                   <Tooltip placement="bottom" title="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111122222222222222222222222222222222211111111111111111111111111">{item.Remark}11</Tooltip> 
+                   :
+                   '无'}</div>
                 </div>
                 <Row style={{ marginTop: 4, width:'100%' }}>
                        <Upload
                       listType="picture-card"
                       showUploadList={{ showRemoveIcon: false }}
                       fileList={         
-                        item?.FilesList?.ImgList[0]?  [0,1,2,3,4].map((imgItem, index) => {
+                        item?.FilesList?.ImgList[0]? item.FilesList.ImgList.map((imgItem, index) => {
                             return {
                               uid: index,
                               status: 'done',
-                              url: `/wwwroot/Upload/SDL202403291452575257778.jpg`
+                              url: `/${imgItem}`
                             }
                           }) : []
                         }

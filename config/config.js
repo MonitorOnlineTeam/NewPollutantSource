@@ -3124,6 +3124,24 @@ export default {
                     },
                   ],
                 },
+                // 客户满意度
+                {
+                  path: '/ctManage/customerSatisfaction',
+                  name: 'customerSatisfaction',
+                  routes: [
+                    {
+                      path: '/ctManage/customerSatisfaction',
+                      redirect: '/ctManage/customerSatisfaction/customerReturnVisit',
+                    },
+                    {
+                      // 客户现场回访
+                      name: 'returnVisit',
+                      path: '/ctManage/customerSatisfaction/customerReturnVisit',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/customerSatisfaction/customerReturnVisit',
+                    },
+                  ],
+                },
                 /**售后服务管理  */
                 {
                   path: '/ctManage/afterSalesServiceManage',
@@ -3235,6 +3253,7 @@ export default {
                 },
               ],
             },
+
             /* 任务详情 */
             {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',

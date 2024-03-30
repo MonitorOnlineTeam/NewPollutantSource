@@ -1,9 +1,9 @@
 /*
  * @Author: JiaQi
- * @Date: 2024-03-27 11:11:18
+ * @Date: 2024-03-29 10:00:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-29 15:58:36
- * @Description:  纪律检查
+ * @Last Modified time: 2024-03-29 18:19:26
+ * @Description:  客户现场回访
  */
 
 import React, { useState, useEffect } from 'react';
@@ -33,21 +33,14 @@ import { permissionButton } from '@/utils/utils';
 const { RangePicker } = DatePicker;
 
 const dvaPropsData = ({ loading }) => ({
-  queryLoading: loading.effects[`disciplineCheck/GetDisciplineCheckList`],
+  queryLoading: loading.effects[`customer/GetCustomerVisitList`],
   exportLoading: loading.effects[`disciplineCheck/ExportDisciplineCheckList`],
 });
 
-const DisciplineCheck = props => {
+const ReturnVisit = props => {
   const [form] = Form.useForm();
 
-  const [date, setDate] = useState([
-    moment()
-      .add(-1, 'week')
-      .startOf('week')
-      .add(1, 'day'),
-    moment().startOf('week'),
-    // .add(-1, 'day'),
-  ]);
+  const [date, setDate] = useState([moment().startOf('month'), moment().endOf('month')]);
   const [dataSource, setDataSource] = useState([]);
   const [modalTitle, setModalTitle] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,11 +58,11 @@ const DisciplineCheck = props => {
   // 获取表格数据
   const getTableDataSource = () => {
     dispatch({
-      type: 'disciplineCheck/GetDisciplineCheckList',
+      type: 'customer/GetCustomerVisitList',
       payload: {
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD 23:59:59'),
-        taskType: '7',
+        beginTime: date[0].startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: date[1].endOf('month').format('YYYY-MM-DD 23:59:59'),
+        taskType: '4',
         dataType: 0,
         systemType: '2',
         pageIndex: 1,
@@ -84,7 +77,7 @@ const DisciplineCheck = props => {
   // 获取大区列表
   const getLargeRegion = () => {
     dispatch({
-      type: 'disciplineCheck/getLargeRegion',
+      type: 'customer/getLargeRegion',
       payload: {},
     });
   };
@@ -92,11 +85,11 @@ const DisciplineCheck = props => {
   // 导出
   const onExport = () => {
     dispatch({
-      type: 'disciplineCheck/ExportDisciplineCheckList',
+      type: 'customer/ExportCustomerVisitList',
       payload: {
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD 23:59:59'),
-        taskType: '7',
+        beginTime: date[0].startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: date[1].endOf('month').format('YYYY-MM-DD 23:59:59'),
+        taskType: '4',
         dataType: 0,
         systemType: '2',
         pageIndex: 0,
@@ -138,7 +131,7 @@ const DisciplineCheck = props => {
           return (
             <a
               onClick={() => {
-                openRecordModal('纪律检查记录', 2, {
+                openRecordModal('客户现场回访记录', 2, {
                   time: date,
                   regionCode: record.RegionCode === 'All' ? undefined : record.RegionCode,
                 });
@@ -150,7 +143,7 @@ const DisciplineCheck = props => {
         },
       },
       {
-        title: '应执行检查任务数量',
+        title: '应执行回访任务数量',
         dataIndex: 'ShouldCheckCount',
         key: 'ShouldCheckCount',
         ellipsis: true,
@@ -158,7 +151,7 @@ const DisciplineCheck = props => {
           return (
             <a
               onClick={() => {
-                openRecordModal('纪律检查任务完成记录', 1, {
+                openRecordModal('客户现场回访任务完成记录', 1, {
                   time: date,
                   regionCode: record.RegionCode === 'All' ? undefined : record.RegionCode,
                 });
@@ -170,13 +163,13 @@ const DisciplineCheck = props => {
         },
       },
       {
-        title: '实际执行检查任务数量',
+        title: '实际执行回访任务数量',
         dataIndex: 'AlreadyCheckCount',
         key: 'AlreadyCheckCount',
         ellipsis: true,
       },
       {
-        title: '检查完成率',
+        title: '回访完成率',
         dataIndex: 'CheckRate',
         key: 'CheckRate',
         ellipsis: true,
@@ -204,14 +197,7 @@ const DisciplineCheck = props => {
 
   const disabledDate = current => {
     // Can not select days before today and today
-    return (
-      current &&
-      current >
-        moment()
-          .add(-1, 'week')
-          .endOf('week')
-          .add(1, 'day')
-    );
+    return current && current > moment();
   };
 
   return (
@@ -221,9 +207,9 @@ const DisciplineCheck = props => {
           <Row align="middle">
             <Space>
               <span style={{ fontSize: 14 }}>
-                检查时间：
+                回访时间：
                 <RangePicker
-                  picker="week"
+                  picker="month"
                   allowClear={false}
                   disabledDate={disabledDate}
                   defaultValue={date}
@@ -236,16 +222,17 @@ const DisciplineCheck = props => {
               <Button icon={<ExportOutlined />} type="primary" onClick={onExport}>
                 导出
               </Button>
-              {buttonList.includes('disciplineCheck') && (
+              {/* {buttonList.includes('disciplineCheck') && ( */}
+              {true && (
                 <Button
                   type="primary"
                   onClick={() => {
-                    openRecordModal('纪律检查管理', 2, {
+                    openRecordModal('客户现场回访管理', 2, {
                       time: date,
                     });
                   }}
                 >
-                  纪律检查管理
+                  客户现场回访管理
                 </Button>
               )}
             </Space>
@@ -261,7 +248,7 @@ const DisciplineCheck = props => {
         />
       </Card>
 
-      {/* 纪律检查管理弹窗 */}
+      {/* 客户现场回访弹窗 */}
       {isModalOpen && (
         <RecordModal
           title={modalTitle}
@@ -280,4 +267,4 @@ const DisciplineCheck = props => {
   );
 };
 
-export default connect(dvaPropsData)(DisciplineCheck);
+export default connect(dvaPropsData)(ReturnVisit);

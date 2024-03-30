@@ -2,8 +2,8 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 16:18:02
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-29 18:56:25
- * @Description:  纪律检查记录弹窗
+ * @Last Modified time: 2024-03-29 18:54:22
+ * @Description:  客户现场回访记录弹窗
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
@@ -23,17 +23,19 @@ import {
   DatePicker,
   message,
   Tag,
+  InputNumber,
 } from 'antd';
+import FromsModal from '@/pages/workSupervision/Forms/FromsModal';
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import { EditOutlined, DeleteOutlined, ExportOutlined } from '@ant-design/icons';
 
 const { RangePicker } = DatePicker;
 
-const dvaPropsData = ({ loading, disciplineCheck }) => ({
-  largeRegionList: disciplineCheck.largeRegionList,
-  queryLoading: loading.effects[`disciplineCheck/GetDisciplineCheckList`],
-  exportLoading: loading.effects[`disciplineCheck/ExportDisciplineCheckList`],
+const dvaPropsData = ({ loading, customer }) => ({
+  largeRegionList: customer.largeRegionList,
+  queryLoading: loading.effects[`customer/GetCustomerVisitList`],
+  exportLoading: loading.effects[`customer/ExportCustomerVisitList`],
 });
 
 const RecordModal = props => {
@@ -46,6 +48,9 @@ const RecordModal = props => {
   const [dataSource, setDataSource] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editId, setEditId] = useState();
+  const [currentEditData, setCurrentEditData] = useState({});
+  const [taskInfo, setTaskInfo] = useState({});
+  const [formsModalVisible, setFormsModalVisible] = useState(false);
 
   const {
     dispatch,
@@ -75,24 +80,11 @@ const RecordModal = props => {
     return {
       ...values,
       time: undefined,
-      beginTime: values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      endTime: values.time[1].endOf('day').format('YYYY-MM-DD 23:59:59'),
-      taskType: '7',
+      beginTime: values.time[0].startOf('momth').format('YYYY-MM-DD HH:mm:ss'),
+      endTime: values.time[1].endOf('momth').format('YYYY-MM-DD 23:59:59'),
+      taskType: '4',
       dataType: dataType,
       systemType: '2',
-    };
-
-    return {
-      beginTime: '2024-03-04 00:00:00',
-      endTime: '2024-03-24 23:59:00',
-      taskType: '',
-      systemType: '',
-      dataType: dataType,
-      regionCode: '',
-      isComplete: 0,
-      searcahUserName: '',
-      pageIndex: 1,
-      pageSize: 10,
     };
   };
 
@@ -100,7 +92,7 @@ const RecordModal = props => {
   const getTableDataSource = (_pageIndex, _pageSize) => {
     const body = getParams();
     dispatch({
-      type: 'disciplineCheck/GetDisciplineCheckList',
+      type: 'customer/GetCustomerVisitList',
       payload: {
         ...body,
         pageIndex: _pageIndex || pageIndex,
@@ -116,13 +108,13 @@ const RecordModal = props => {
   // 删除
   const onDelete = ID => {
     dispatch({
-      type: 'disciplineCheck/DeleteDisciplineCheckManage',
+      type: 'customer/DeleteReturnVisitCustomers',
       payload: {
         ID,
       },
       callback: res => {
         handleTableChange(1, 20);
-        title === '纪律检查管理' && reloadPage();
+        title === '客户现场回访管理' && reloadPage();
       },
     });
   };
@@ -131,7 +123,7 @@ const RecordModal = props => {
   const onExport = () => {
     const body = getParams();
     dispatch({
-      type: 'disciplineCheck/ExportDisciplineCheckList',
+      type: 'customer/ExportCustomerVisitList',
       payload: {
         ...body,
         pageIndex: 0,
@@ -140,42 +132,25 @@ const RecordModal = props => {
     });
   };
 
-  // 获取纪律检查详情
-  const GetRecordLogInfor = ID => {
+  // 获取客户现场回访详情
+  const GetCustomerVisitInfor = (ID, editData) => {
     dispatch({
-      type: 'disciplineCheck/GetRecordLogInfor',
+      type: 'customer/GetCustomerVisitInfor',
       payload: {
         ID,
       },
       callback: res => {
-        form1.setFieldsValue({
-          checkInState: res.CheckInState,
-          unqualifiedDate: res.UnqualifiedDate,
-          unqualifiedReason: res.UnqualifiedReason,
-          recordUnqualifiedDate: res.RecordUnqualifiedDate,
-          logID: res.ID,
+        setCurrentEditData({
+          ...res,
+          ...editData,
         });
+        setTaskInfo({
+          TaskType: 4,
+          ID: res.DailyTaskID,
+        });
+        setFormsModalVisible(true);
       },
     });
-  };
-
-  // 编辑
-  const onUpdate = () => {
-    form1
-      .validateFields()
-      .then(values => {
-        dispatch({
-          type: 'disciplineCheck/UpdateDisciplineCheckManage',
-          payload: values,
-          callback: res => {
-            setIsEditModalOpen(false);
-            getTableDataSource();
-          },
-        });
-      })
-      .catch(error => {
-        message.error('请将数据填写完整！');
-      });
   };
 
   const getColumns = () => {
@@ -215,9 +190,9 @@ const RecordModal = props => {
         },
       },
       {
-        title: '检查人',
-        dataIndex: 'CheckUserName',
-        key: 'CheckUserName',
+        title: '回访人',
+        dataIndex: 'ReturnUserName',
+        key: 'ReturnUserName',
         ellipsis: true,
       },
       {
@@ -225,6 +200,9 @@ const RecordModal = props => {
         dataIndex: 'ShowTime',
         key: 'ShowTime',
         ellipsis: true,
+        render: (text, record) => {
+          return text || '-';
+        },
       },
     ];
 
@@ -246,57 +224,81 @@ const RecordModal = props => {
         width: 120,
       },
       {
-        title: '姓名',
-        dataIndex: 'NormalUserName',
-        key: 'NormalUserName',
+        title: '省份',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
         ellipsis: true,
         width: 120,
       },
       {
-        title: '签到是否合格',
-        dataIndex: 'CheckIn',
-        key: 'CheckIn',
+        title: '客户名称（全称）',
+        dataIndex: 'CustomName',
+        key: 'CustomName',
+        ellipsis: true,
+        width: 200,
+      },
+      {
+        title: '客户姓名',
+        dataIndex: 'CustomRealName',
+        key: 'CustomRealName',
+        ellipsis: true,
+        width: 120,
+      },
+      {
+        title: '部门',
+        dataIndex: 'Depart',
+        key: 'Depart',
         ellipsis: true,
         width: 100,
+      },
+      {
+        title: '服务态度',
+        dataIndex: 'ServeManner',
+        key: 'ServeManner',
+        ellipsis: true,
+        width: 100,
+      },
+      {
+        title: '技术水平',
+        dataIndex: 'TechnicalLevel',
+        key: 'TechnicalLevel',
+        ellipsis: true,
+        width: 100,
+      },
+      {
+        title: '服务响应',
+        dataIndex: 'ServiceResponse',
+        key: 'ServiceResponse',
+        ellipsis: true,
+        width: 100,
+      },
+      {
+        title: '问题解决率',
+        dataIndex: 'ProblemSolvingEfficiency',
+        key: 'ProblemSolvingEfficiency',
+        ellipsis: true,
+        width: 100,
+      },
+      {
+        title: '问题建议',
+        dataIndex: 'ProblemsAndAdvice',
+        key: 'ProblemsAndAdvice',
+        ellipsis: true,
+        width: 220,
         render: (text, record) => {
-          if (record.CheckInState === 1) {
-            return <Tag color="success">{text}</Tag>;
-          }
-          return <Tag color="error">{text}</Tag>;
+          return text || '-';
         },
       },
       {
-        title: '签到不合格日期',
-        dataIndex: 'UnqualifiedDate',
-        key: 'UnqualifiedDate',
+        title: '回访人',
+        dataIndex: 'ReturnUserName',
+        key: 'ReturnUserName',
         ellipsis: true,
-        width: 200,
       },
       {
-        title: '签到不合格原因',
-        dataIndex: 'UnqualifiedReason',
-        key: 'UnqualifiedReason',
-        ellipsis: true,
-        width: 200,
-      },
-      {
-        title: '日志不合格日期',
-        dataIndex: 'RecordUnqualifiedDate',
-        key: 'RecordUnqualifiedDate',
-        ellipsis: true,
-        width: 200,
-      },
-      {
-        title: '检查人',
-        dataIndex: 'CheckUserName',
-        key: 'CheckUserName',
-        ellipsis: true,
-        width: 120,
-      },
-      {
-        title: '检查时间',
-        dataIndex: 'RecordTime',
-        key: 'RecordTime',
+        title: '回访时间',
+        dataIndex: 'ReturnTime',
+        key: 'ReturnTime',
         ellipsis: true,
       },
       {
@@ -310,8 +312,11 @@ const RecordModal = props => {
                 <a
                   onClick={() => {
                     setIsEditModalOpen(true);
-                    setEditId(record.LogID);
-                    GetRecordLogInfor(record.LogID);
+                    setEditId(record.ID);
+                    GetCustomerVisitInfor(record.ID, {
+                      UserGroup_Name: record.RegionName,
+                      ProvinceName: record.ProvinceName,
+                    });
                   }}
                 >
                   <EditOutlined style={{ fontSize: 16 }} />
@@ -322,7 +327,7 @@ const RecordModal = props => {
                 <Popconfirm
                   title="确认要删除吗?"
                   onConfirm={() => {
-                    onDelete(record.LogID);
+                    onDelete(record.ID);
                   }}
                   // onCancel={this.cancel}
                   okText="是"
@@ -345,10 +350,8 @@ const RecordModal = props => {
 
     let columns = columns2;
     if (dataType === 2) {
-      if (title === '纪律检查记录') {
-        columns = columns2.filter(
-          item => item.dataIndex !== 'handle' && item.dataIndex !== 'CheckUserName',
-        );
+      if (title === '客户现场回访记录') {
+        columns = columns2.filter(item => item.dataIndex !== 'handle');
       }
     }
 
@@ -385,10 +388,10 @@ const RecordModal = props => {
           checkInState: 2,
           time: queryParams.time,
         }}
-        autoComplete="off"
+        // autoComplete="off"
         style={{ marginTop: 10, marginBottom: 10 }}
       >
-        <Space style={{ flexWrap: 'wrap' }}>
+        <Space wrap style={{flexWrap: 'wrap'}}>
           <Form.Item name="regionCode" label="大区">
             <Select
               showSearch
@@ -408,27 +411,42 @@ const RecordModal = props => {
               })}
             </Select>
           </Form.Item>
-          <Form.Item name="time" label="任务完成时间/派单关闭时间">
-            <RangePicker disabledDate={disabledDate} picker="week" allowClear={false} />
-          </Form.Item>
-          <Form.Item name="searcahUserName" label="姓名">
-            <Input allowClear={true} style={{ width: '100%' }} placeholder="请输入" />
-          </Form.Item>
           {dataType === 1 && (
-            <Form.Item name="isComplete" label="是否完成">
-              <Radio.Group>
-                <Radio value={0}>全部</Radio>
-                <Radio value={1}>是</Radio>
-                <Radio value={2}>否</Radio>
-              </Radio.Group>
+            <Form.Item name="time" label="任务完成时间/派单关闭时间">
+              <RangePicker
+                style={{ width: 220 }}
+                disabledDate={disabledDate}
+                picker="month"
+                allowClear={false}
+              />
             </Form.Item>
           )}
           {dataType === 2 && (
-            <Form.Item name="checkInState" label="是否合格">
-              <Radio.Group>
-                <Radio value={2}>全部</Radio>
+            <>
+              <Form.Item name="time" label="回访时间">
+                <RangePicker
+                  style={{ width: 200 }}
+                  disabledDate={disabledDate}
+                  picker="month"
+                  allowClear={false}
+                />
+              </Form.Item>
+              <Form.Item name="searcahUserName" label="客户名称">
+                <Input allowClear={true} style={{ width: 200 }} placeholder="请输入" />
+              </Form.Item>
+            </> 
+          )}
+          {dataType === 2 && title === '客户现场回访记录' && (
+            <Form.Item name="customerScore" label="客户满意度小于">
+              <InputNumber allowClear={true} style={{ width: '100%' }} placeholder="请输入" />
+            </Form.Item>
+          )}
+          {dataType === 1 && (
+            <Form.Item name="isComplete" label="是否完成">
+              <Radio.Group style={{ width: 180 }}>
+                <Radio value={0}>全部</Radio>
                 <Radio value={1}>是</Radio>
-                <Radio value={0}>否</Radio>
+                <Radio value={2}>否</Radio>
               </Radio.Group>
             </Form.Item>
           )}
@@ -452,7 +470,7 @@ const RecordModal = props => {
               >
                 重置
               </Button>
-              {title !== '纪律检查管理' && (
+              {title !== '客户现场回访管理' && (
                 <Button
                   icon={<ExportOutlined />}
                   loading={exportLoading}
@@ -496,59 +514,18 @@ const RecordModal = props => {
           onChange: handleTableChange,
         }}
       />
-
-      <Modal
-        title="编辑"
-        destroyOnClose
-        visible={isEditModalOpen}
-        onOk={onUpdate}
+      <FromsModal
+        visible={formsModalVisible}
+        taskInfo={taskInfo}
+        editData={currentEditData}
         onCancel={() => {
-          setIsEditModalOpen(false);
+          setFormsModalVisible(false);
         }}
-        okText="保存"
-      >
-        <Form
-          // id="searchForm"
-          form={form1}
-          // layout="inline"
-          initialValues={{
-            checkInState: 2,
-          }}
-          autoComplete="off"
-          style={{ marginTop: 10, marginBottom: 10 }}
-          labelCol={{
-            flex: '130px',
-          }}
-        >
-          <Form.Item
-            name="checkInState"
-            label="签到是否合格"
-            rules={[
-              {
-                required: true,
-                message: '不能为空',
-              },
-            ]}
-          >
-            <Radio.Group>
-              <Radio value={1}>是</Radio>
-              <Radio value={0}>否</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item name="unqualifiedDate" label="签到不合格日期">
-            <Input placeholder="请输入" />
-          </Form.Item>
-          <Form.Item name="unqualifiedReason" label="签到不合格原因">
-            <Input placeholder="请输入" />
-          </Form.Item>
-          <Form.Item name="recordUnqualifiedDate" label="日志不合格日期">
-            <Input placeholder="请输入" />
-          </Form.Item>
-          <Form.Item name="logID" style={{ display: 'none' }}>
-            <Input placeholder="请输入" />
-          </Form.Item>
-        </Form>
-      </Modal>
+        onSubmitCallback={() => {
+          setFormsModalVisible(false);
+          getTableDataSource();
+        }}
+      />
     </Modal>
   );
 };
