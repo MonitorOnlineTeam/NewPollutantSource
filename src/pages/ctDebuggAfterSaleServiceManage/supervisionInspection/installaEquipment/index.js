@@ -289,8 +289,8 @@ const Index = (props) => {
                 <Image preview={true} src={`/ctInstallaEquipmentImg/installPhotos/${index}.png`} />
                 <div style={{ paddingLeft: 8, width: 'calc(100% - 58px)' }}>
                   <div style={{ fontSize: 16, fontWeight: 400 }} className='textOverflow'>{item.Name}</div>
-                <div className='textOverflow'>备注：{!item.Remark ? 
-                   <Tooltip placement="bottom" title="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111122222222222222222222222222222222211111111111111111111111111">{item.Remark}11</Tooltip> 
+                <div className='textOverflow'>备注：{item.Remark ? 
+                   <Tooltip placement="bottomLeft" title={item.Remark}>{item.Remark}</Tooltip> 
                    :
                    '无'}</div>
                 </div>
