@@ -678,7 +678,7 @@ const Index = props => {
      currentRow = record
     },
     onChange: (newSelectedRowKeys, row) => {
-      if (selectedRowKeys?.length == 0 || newSelectedRowKeys?.length == 0) { //还未选中 或 全部取消
+      if (selectedRowKeys?.length == 0 || newSelectedRowKeys?.length == 0 || Object.keys(currentRow).length === 0) { //还未选中 或 全部取消
         setSelectedRowKeys(newSelectedRowKeys)
         setSelectedRow(row?.[0])
       } else {
