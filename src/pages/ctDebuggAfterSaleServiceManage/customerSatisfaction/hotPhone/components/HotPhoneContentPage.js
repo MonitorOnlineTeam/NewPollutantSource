@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-01 10:18:03
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-01 16:22:50
+ * @Last Modified time: 2024-04-01 16:50:19
  * @Description:  服务热线电话页面内容
  */
 
@@ -313,7 +313,7 @@ const HotPhoneContentPage = props => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="contactPhone" label="联系电话">
+              <Form.Item name="contactPhone" label="联系方式">
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
             </Col>
