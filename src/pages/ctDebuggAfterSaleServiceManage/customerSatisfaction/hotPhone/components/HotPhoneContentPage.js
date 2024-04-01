@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-01 10:18:03
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-01 16:50:19
+ * @Last Modified time: 2024-04-01 16:53:08
  * @Description:  服务热线电话页面内容
  */
 
@@ -202,24 +202,28 @@ const HotPhoneContentPage = props => {
         render: (text, record) => {
           return (
             <>
-              <Tooltip title="编辑">
-                <a
-                  onClick={() => {
-                    setIsView(false);
-                    setCurrentID(record.ID);
-                    // onAddOrEdit(record.ID);
-                    form1.setFieldsValue({
-                      ...record,
-                      ProcessingCompletion: moment(record.ProcessingCompletion),
-                      RecipientDate: moment(record.RecipientDate),
-                    });
-                    setAddOrEditModalOpen(true);
-                  }}
-                >
-                  <EditIcon />
-                </a>
-              </Tooltip>
-              <Divider type="vertical" />
+              {record.IsFlag && (
+                <>
+                  <Tooltip title="编辑">
+                    <a
+                      onClick={() => {
+                        setIsView(false);
+                        setCurrentID(record.ID);
+                        // onAddOrEdit(record.ID);
+                        form1.setFieldsValue({
+                          ...record,
+                          ProcessingCompletion: moment(record.ProcessingCompletion),
+                          RecipientDate: moment(record.RecipientDate),
+                        });
+                        setAddOrEditModalOpen(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </a>
+                  </Tooltip>
+                  <Divider type="vertical" />
+                </>
+              )}
               <Tooltip title="详情">
                 <a
                   onClick={() => {
@@ -236,20 +240,24 @@ const HotPhoneContentPage = props => {
                   <DetailIcon />
                 </a>
               </Tooltip>
-              <Divider type="vertical" />
-              <Tooltip title="删除">
-                <Popconfirm
-                  placement="left"
-                  title="确定要删除吗？"
-                  onConfirm={() => onDelete(record.ID)}
-                  okText="是"
-                  cancelText="否"
-                >
-                  <a>
-                    <DelIcon />
-                  </a>
-                </Popconfirm>
-              </Tooltip>
+              {record.IsFlag && (
+                <>
+                  <Divider type="vertical" />
+                  <Tooltip title="删除">
+                    <Popconfirm
+                      placement="left"
+                      title="确定要删除吗？"
+                      onConfirm={() => onDelete(record.ID)}
+                      okText="是"
+                      cancelText="否"
+                    >
+                      <a>
+                        <DelIcon />
+                      </a>
+                    </Popconfirm>
+                  </Tooltip>
+                </>
+              )}
             </>
           );
         },
