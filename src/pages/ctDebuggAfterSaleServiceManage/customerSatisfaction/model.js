@@ -68,5 +68,39 @@ export default Model.extend({
         message.success('删除成功！');
       }
     },
+    // 获取服务热线列表
+    *GetServiceHotlineList({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.CtAPI_WJQ.HotPhone.GetServiceHotlineList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 添加或编辑服务热线
+    *AddOrUpdateServiceHotline({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.HotPhone.AddOrUpdateServiceHotline,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 删除服务热线
+    *DeleteServiceHotline({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.CtAPI_WJQ.HotPhone.DeleteServiceHotline, payload);
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+        callback && callback(result);
+      }
+    },
+    // 导出服务热线
+    *ExportServiceHotline({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.CtAPI_WJQ.HotPhone.ExportServiceHotline, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
   },
 });

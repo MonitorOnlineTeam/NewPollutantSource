@@ -3140,6 +3140,13 @@ export default {
                       component:
                         './ctDebuggAfterSaleServiceManage/customerSatisfaction/customerReturnVisit',
                     },
+                    {
+                      // 服务热线电话
+                      name: 'hotPhone',
+                      path: '/ctManage/customerSatisfaction/hotPhone',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/customerSatisfaction/hotPhone',
+                    },
                   ],
                 },
                 /**售后服务管理  */
