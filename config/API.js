@@ -956,6 +956,17 @@ export const API = {
       DeleteReturnVisitCustomers: before + '/DailyWorkManagerApi/DeleteReturnVisitCustomers',
       // 获取纪律检查详情
       GetCustomerVisitInfor: before + '/CTProjectExecutionApi/GetCustomerVisitInfor',
+    }, 
+    // 服务热线电话
+    HotPhone: {
+      // 获取服务热线列表
+      GetServiceHotlineList: before + '/CustomerSatisfaction/GetServiceHotlineList',
+      // 添加或修改服务热线
+      AddOrUpdateServiceHotline: before + '/CustomerSatisfaction/AddOrUpdateServiceHotline',
+      // 删除
+      DeleteServiceHotline: before + '/CustomerSatisfaction/DeleteServiceHotline',
+      // 导出
+      ExportServiceHotline: before + '/CustomerSatisfaction/ExportServiceHotline',
     },
   },
 };
