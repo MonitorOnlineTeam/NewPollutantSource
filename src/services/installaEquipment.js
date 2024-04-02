@@ -6,6 +6,11 @@ export async function GetEquipmentAuditList(params) {
   const result = post(API.SupervisionInspecApi.GetEquipmentAuditList, params);
   return result;
 }
+//设备安装审核信息 导出
+export async function ExportEquipmentAudit(params) {
+  const result = post(API.SupervisionInspecApi.ExportEquipmentAudit, params);
+  return result;
+}
 
 //获取设备安装审核照片详细
 export async function GetAuditPhoto(params) {

@@ -756,7 +756,6 @@ export const API = {
     ExportCooperateInspectionAnalysis: before + '/CTStatisticsApi/ExportCooperateInspectionAnalysis',//配合检查 导出
     GetCooperateOtherWorkAnalysis: before + '/CTStatisticsApi/GetCooperateOtherWorkAnalysis',//获取获取配合其它工作
     ExportCooperateOtherWorkAnalysis: before + '/CTStatisticsApi/ExportCooperateOtherWorkAnalysis',//配合其它工作 导出
-    GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList',//获取服务大区
     GetServiceDispatchForAnalysis: before + '/CTStatisticsApi/GetServiceDispatchForAnalysis',//获取服务明细
     ExportServiceDispatchForAnalysis: before + '/CTStatisticsApi/ExportServiceDispatchForAnalysis',//服务明细 导出
   },
@@ -872,6 +871,7 @@ export const API = {
   SupervisionInspecApi: {
     /*设备安装审核*/
     GetEquipmentAuditList: before + '/CustomerSatisfaction/GetEquipmentAuditList',  //获取设备安装审核信息
+    ExportEquipmentAudit: before + '/CustomerSatisfaction/ExportEquipmentAudit',  //设备安装审核信息 导出
     GetAuditPhoto: before + '/CustomerSatisfaction/GetAuditPhoto',  //获取设备安装审核照片详细
     AddAuditInfo: before + '/CustomerSatisfaction/AddAuditInfo',  //安装照片审核
   },

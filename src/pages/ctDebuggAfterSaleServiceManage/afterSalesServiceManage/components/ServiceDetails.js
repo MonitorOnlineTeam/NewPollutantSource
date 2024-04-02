@@ -31,7 +31,7 @@ const dvaPropsData = ({ loading, ctAfterSalesServiceManagement, global, }) => ({
   queryPar:ctAfterSalesServiceManagement.serviceDispatchForAnalysisQueryPar,
   configInfo: global.configInfo,
   exportLoading: loading.effects[`${namespace}/ExportServiceDispatchForAnalysis`],
-  largeRegionListLoading: loading.effects[`${namespace}/GetLargeRegionList`],
+  largeRegionListLoading: loading.effects[`ctCommon/GetLargeRegionList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -44,7 +44,7 @@ const dvaDispatch = (dispatch) => {
     },
     GetLargeRegionList: (payload,callback) => { //服务大区
         dispatch({
-          type: `${namespace}/GetLargeRegionList`,
+          type: `ctCommon/GetLargeRegionList`,
           payload: payload,
           callback:callback,
         })

@@ -21,6 +21,7 @@ class NewRangePicker extends Component {
             ranges: {
                 今天: [moment().startOf('day'), moment()],
                 本周: [moment().startOf('week'), moment()],
+                上周: [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
                 连续七天: [moment().add(-6, 'd'), moment()],
                 本月: [moment().startOf('month'), moment().endOf('month')],
                 上月: [moment().add(-1, 'M').startOf('month'), moment().add(-1, 'M').endOf('month')],

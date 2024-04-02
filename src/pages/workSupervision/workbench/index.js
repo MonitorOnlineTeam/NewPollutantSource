@@ -691,7 +691,7 @@ const Workbench = props => {
                       {/* 待办中心 */}
                       {(operaSupervisionCheck || projectExecution) && <><Row justify='space-between'>
                         <div className={styles.title}>待办中心</div>
-                        {operaSupervisionCheck && <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />} {/**监督核查 */}
+                        {operaSupervisionCheck && selectOperaVal == 1 && <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />} {/**监督核查 */}
                       </Row>
                         {btnComponents(operaServiceBtnList, selectOperaVal, (val) => { setSelectOperaVal(val) })}
                         <div className={styles.operaServiceSty} style={{ padding: '0 24px 0 16px' }}>
@@ -855,7 +855,7 @@ const Workbench = props => {
                   {/* <Empty style={{ marginTop: '30px' }} /> */}
                   <Spin spinning={userMenuListLoading}>
                     <Row>
-                      {menuList.map((item, index) => <Col span={6} style={{ paddingTop: index <= 3 ? 6 : 12, display: 'flex', alignItems: 'center' }}><img src='/work_meun.png' style={{ paddingRight: 8 }} /><span className='meunTitle' onClick={() => meunClick(item.path)}>{item.name}</span></Col>)}
+                      {menuList.map((item, index) => <Col span={6} style={{ paddingTop: index <= 3 ? 6 : 12, display: 'flex', alignItems: 'center' }}><img src='/work_meun.png' style={{ paddingRight: 8 }} /><span title={item.name} className='meunTitle textOverflow' onClick={() => meunClick(item.path)}>{item.name}</span></Col>)}
                       <Col span={6} style={{ paddingTop: menuList?.length <= 3 ? 6 : 12, display: 'flex', alignItems: 'center' }} onClick={addMeun} className='meunAddWrap'><img src='/work_meun_add.png' style={{ paddingRight: 8, cursor: 'pointer' }} /><span className='meunAdd'>添加</span></Col>
                     </Row>
                   </Spin>

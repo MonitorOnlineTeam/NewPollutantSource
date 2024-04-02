@@ -66,8 +66,3 @@ export async function ExportServiceDispatchForAnalysis(params) {
   const result = post(API.AfterSalesServiceManageApi.ExportServiceDispatchForAnalysis, params);
   return result;
 }
-// 获取服务大区
-export async function GetLargeRegionList(params) {
-  const result = post(API.AfterSalesServiceManageApi.GetLargeRegionList, params);
-  return result;
-}

@@ -15,6 +15,7 @@ import PageLoading from '@/components/PageLoading'
 import ImageView from '@/components/ImageView';
 import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils';
 import AttachmentView from '@/components/AttachmentView';
+import UserList from '@/components/UserList'
 import { uploadPrefix } from '@/config'
 import styles from "./style.less"
 const { Option } = Select;
@@ -111,7 +112,7 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '运维人员',
+      title: '姓名',
       dataIndex: 'operationUserName',
       key: 'operationUserName',
       align: 'center',
@@ -209,12 +210,12 @@ const Index = (props) => {
       layout='inline'
     >
 
-      <Form.Item name='operationUser' label='运维人员'>
-        <Input placeholder="请输入" allowClear />
+      <Form.Item name='operationUser' label='姓名'>
+       <UserList style={{width:200}}/>
       </Form.Item>
-      <Form.Item name='userAccount' label='工号'>
+      {/* <Form.Item name='userAccount' label='工号'>
         <Input placeholder="请输入" allowClear />
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={tableLoading}>
           查询

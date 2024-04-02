@@ -505,10 +505,17 @@ export default {
                   component: './operaAchiev/operaUserIntegral',
                 },
                 {
-                  // 现场签到统计
+                  // 现场工作时长
                   name: 'operationSiteAttendanceStatistics',
                   path: '/operaAchiev/operationSiteAttendanceStatistics',
                   component: './operaAchiev/operationSiteAttendanceStatistics',
+                },
+                {
+                  // 签到考勤查询 运维
+                  name: 'OperaCheckAttendanceQuery',
+                  path: '/operaAchiev/operaCheckAttendanceQuery',
+                  component:
+                    './operaAchiev/operaCheckAttendanceQuery',
                 },
               ],
             },
@@ -3044,8 +3051,8 @@ export default {
                     },
                     {
                       // 签到考勤查询 成套
-                      name: 'CheckAttendanceQuery',
-                      path: '/ctManage/projectExecuProgress/checkAttendanceQuery',
+                      name: 'CtCheckAttendanceQuery',
+                      path: '/ctManage/projectExecuProgress/ctCheckAttendanceQuery',
                       component:
                         './ctDebuggAfterSaleServiceManage/projectExecuProgress/cTcheckAttendanceQuery',
                     },
@@ -3246,6 +3253,13 @@ export default {
                       // 设备安装审核
                       name: 'InstallaEquipmentReview',
                       path: '/ctManage/supervisionInspection/installaEquipmentReview',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
+                    },
+                    {
+                      // 设备安装规范性
+                      name: 'InstallaEquipmentSpecific',
+                      path: '/ctManage/supervisionInspection/installaEquipmentSpecific',
                       component:
                         './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
                     },

@@ -130,15 +130,6 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    //服务大区
-    *GetLargeRegionList({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(services.GetLargeRegionList, { ...payload });
-      if (!result.IsSuccess) {
-        message.error(result.Message)
-      }
-      callback && callback(result.Datas)
-
-    },
 
 
 

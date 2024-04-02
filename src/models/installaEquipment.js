@@ -1,5 +1,5 @@
 import Model from '@/utils/model';
-import * as services from './service';
+import * as services from '../services/installaEquipment';
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
@@ -24,6 +24,16 @@ export default Model.extend({
         })
       } else {
         message.error(result.Message)
+      }
+    },
+    //设备安装审核信息 导出
+    *ExportEquipmentAudit({ payload,callback }, { call, put, update }) { 
+      const result = yield call(services.ExportEquipmentAudit, payload);
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      } else {
+        message.error(result.Message);
       }
     },
     //获取设备安装审核照片详细

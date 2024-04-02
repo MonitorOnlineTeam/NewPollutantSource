@@ -1,5 +1,5 @@
 /**
- * 功  能：绩效排名 / 现场签到统计
+ * 功  能：绩效排名 / 签到考勤查询
  * 创建人：jab
  * 创建时间：2024.02.27
  */
@@ -211,9 +211,9 @@ const Index = (props) => {
       <Form.Item label="日期" name="time">
         <RangePicker_
           allowClear={false}
-          style={{ width: 380 }}
-          format="YYYY-MM-DD HH:mm:ss"
-          showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
+          style={{ width: 260 }}
+          format="YYYY-MM-DD"
+          // showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
         />
       </Form.Item>
       <Form.Item name='regionCode' label='省份' >
