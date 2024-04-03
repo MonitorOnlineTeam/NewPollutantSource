@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:41:16
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-23 14:33:50
+ * @Last Modified time: 2024-04-02 11:28:43
  * @Description:  服务报告抽查 - 抽查页面
  */
 import React, { useState, useEffect } from 'react';
@@ -64,7 +64,6 @@ const SpotCheckPage = props => {
   // 获取表格数据
   const getTableDataSource = (_pageIndex, _pageSize) => {
     const values = form.getFieldsValue();
-    console.log('values', values);
     let body = {
       ...values,
       time: undefined,
@@ -440,7 +439,7 @@ const SpotCheckPage = props => {
             rules={[
               {
                 required: true,
-                message: '备注不能为空！',
+                message: '附件照片不能为空！',
               },
             ]}
           >
@@ -518,6 +517,7 @@ const SpotCheckPage = props => {
       destroyOnClose
       footer={[]}
       onCancel={() => {
+        setStepCurrent(0)
         onCancel();
       }}
     >

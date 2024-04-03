@@ -102,5 +102,85 @@ export default Model.extend({
         downloadFile(result.Datas);
       }
     },
+
+    // 获取客户投诉列表
+    *GetCustomerComplaintsList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.HandleComplaints.GetCustomerComplaintsList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 添加或编辑客户投诉
+    *AddOrEditCustomerComplaints({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.HandleComplaints.AddOrEditCustomerComplaints,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 获取客户投诉项目列表
+    *GetCustomerComplaintsProject({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.HandleComplaints.GetCustomerComplaintsProject,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 获取客户投诉详情
+    *GetCustomerComplaintsView({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.HandleComplaints.GetCustomerComplaintsView,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas[0]);
+      }
+    },
+    // 导出 - 客户投诉项目列表
+    *ExportCustomerComplaints({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.HandleComplaints.ExportCustomerComplaints,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 处理投诉
+    *HandleCustomerComplaints({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.HandleComplaints.HandleCustomerComplaints,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas[0]);
+      }
+    },
+    // 删除客户投诉
+    *DeleteCustomerComplaints({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.HandleComplaints.DeleteCustomerComplaints,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+        callback && callback();
+      }
+    },
   },
 });

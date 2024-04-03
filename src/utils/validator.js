@@ -50,6 +50,7 @@ export function afterDecimalNum(rule, value, callback) {
 export const checkRules = {
   number: {
     type: "number",
+    // pattern: REGEXP.number,
     message: '请输入正确的数字。',
   },
   double: {
