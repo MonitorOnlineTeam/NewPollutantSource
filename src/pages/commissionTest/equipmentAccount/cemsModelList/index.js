@@ -216,7 +216,8 @@ const Index = (props) => {
       render: (text, record) => {
         return <span>
           <Fragment><Tooltip title="编辑"> <a onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-          <Fragment> <Tooltip title="删除">
+          <Fragment> 
+            <Tooltip title="删除">
             <Popconfirm title="确定要删除此条信息吗？" style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
               <a><DelIcon /></a>
             </Popconfirm>
@@ -289,11 +290,9 @@ const Index = (props) => {
       width: 80,
       render: (text, record) => {
         return <Fragment>
-          <Tooltip title="删除">
             <Popconfirm placement='topLeft' title="确定要删除此条信息吗？" style={{ paddingRight: 5 }} onConfirm={() => { delAssociation(record) }} okText="是" cancelText="否">
               <a>删除</a>
             </Popconfirm>
-          </Tooltip>
         </Fragment>
 
       }

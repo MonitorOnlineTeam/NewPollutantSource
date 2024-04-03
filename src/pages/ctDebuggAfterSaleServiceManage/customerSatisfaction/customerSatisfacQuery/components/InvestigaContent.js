@@ -42,57 +42,30 @@ const Index = (props) => {
 
 
   const ContentComponents = () => {
-    return <Form className='detailForm'>
-     <TitleComponents simpleSty text='派单详情' key='1' height={16} style={{ fontSize:16 }} />
+    return <Form className='detailForm' style={{marginTop:12}}>
+     <TitleComponents simpleSty text='调查内容' key='1' height={16} style={{ fontSize:16 }} />
       <div>
               <Row>
                 <Col span={8}>
-                    <Form.Item label='派单工号'>
+                    <Form.Item label='调查人员'>
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
-                    <Form.Item label='项目编号'>
+                    <Form.Item label='调查日期'>
+                   </Form.Item> 
+                </Col>
+                <Col span={8}></Col>
+                <Col span={8}>
+                    <Form.Item label='工程师的服务态度'>
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
-                    <Form.Item label='项目名称'>
+                    <Form.Item label='工程师的技术水平'>
                    </Form.Item> 
                 </Col>
-                <Col span={8}>
-                    <Form.Item label='大区名称'>
-                   </Form.Item> 
-                </Col>
-                <Col span={8}>
-                    <Form.Item label='省份'>
-                   </Form.Item> 
-                </Col>
-                <Col span={8}>
-                    <Form.Item label='行业'>
-                   </Form.Item> 
-                </Col>
-                <Col span={8}>
-                    <Form.Item label='服务工程师'>
-                   </Form.Item> 
-                </Col>
-                <Col span={8}>
-                    <Form.Item label='工程师行政区域'>
-                 
-                   </Form.Item> 
-                </Col>
-                <Col span={8}>
-                    <Form.Item label='服务主要内容'> 
-                   </Form.Item> 
-                </Col>
-                <Col span={8}>
-                    <Form.Item label='服务完成日期'>
-                   </Form.Item> 
-                </Col>
-                <Col span={8}>
-                    <Form.Item label='客户姓名'>
-                   </Form.Item> 
-                </Col>
-                <Col span={8}>
-                    <Form.Item label='客户电话'>
+                <Col span={8}></Col>
+                <Col span={24}>
+                    <Form.Item label='客户问题及建议'>
                    </Form.Item> 
                 </Col>
               </Row>

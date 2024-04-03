@@ -19,7 +19,7 @@ import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 
-import Detail from './Detail'
+import Detail from './detail'
 const { Option } = Select; 
 
 const namespace = 'dispatchQuery'

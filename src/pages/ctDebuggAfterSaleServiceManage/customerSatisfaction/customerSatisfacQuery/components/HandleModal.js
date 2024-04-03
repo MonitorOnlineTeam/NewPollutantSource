@@ -11,16 +11,17 @@ const { RangePicker } = DatePicker;
 import Cookie from 'js-cookie';
 import config from '@/config';
 import DispatchDetails from './DispatchDetails';
+import InvestigaContent from './InvestigaContent';
 
 
 import { API } from '@config/API';
 import cuid from 'cuid';
 import styles from "../style.less"
 const { Step } = Steps;
-const namespace = 'customerSatisfacQuery'
+const namespace = 'installaEquipment'
 
-const dvaPropsData = ({ loading, customerSatisfacQuery, global, }) => ({
-  submitSurveyLoading: loading.effects[`${namespace}/SubmitSurvey`],
+const dvaPropsData = ({ loading, installaEquipment, global, }) => ({
+  submitProcessedLoading: loading.effects[`${namespace}/SubmitProcessed`],
   configInfo: global.configInfo,
 })
 
@@ -32,7 +33,7 @@ const Index = (props) => {
 
 
 
-  const { visible, data,submitSurveyLoading} = props;
+  const { visible, data,submitProcessedLoading} = props;
  
 
 
@@ -47,24 +48,15 @@ const Index = (props) => {
 
 
 
-  const InvestigateComponents = () => {
+  const HandleComponents = () => {
     return <div style={{padding:'14px 18px 0 18px'}}>
       <Form
       form={form2}
       name="advanced_search2"
       className={'investigate-search-form'}
     >
-      <Form.Item name='investigationTime' label='调查日期'  rules={[{ required: true, message: '请选择调查日期！' }]}>
-        <DatePicker />
-      </Form.Item>
-      <Form.Item name='serviceAttitude' label='工程师的服务态度'  rules={[{ required: true, message: '请选择工程师的服务态度！' }]}>
-         <Rate />
-      </Form.Item>
-      <Form.Item name='technicalLevel' label='工程师的技术水平'  rules={[{ required: true, message: '请选择工程师的技术水平！' }]}>
-         <Rate />
-      </Form.Item>
-      <Form.Item name='problem' label='客户问题及建议' rules={[{ required: true, message: '请输入客户问题及建议！' }]}>
-        <Input.TextArea rows={2} placeholder="请输入" allowClear />
+      <Form.Item name='problem' label='处理办法' rules={[{ required: true, message: '请输入处理办法！' }]}>
+        <Input.TextArea rows={4} placeholder="请输入" allowClear />
       </Form.Item>
     </Form>
       </div>
@@ -72,15 +64,15 @@ const Index = (props) => {
 
 
 
-  const steps = ['派单内容', '调查', '完成']
+  const steps = ['调查内容', '处理', '完成']
   const [current, SetCurrent] = useState(0)
 
   const saveNext = async () => { //下一步
     switch (current) {
-      case 0: //派单内容
+      case 0: //调查内容
         SetCurrent(current + 1)
         break;
-      case 1: //调查
+      case 1: //处理
       const values = await form2.validateFields();
       const par = {
           ...values,
@@ -90,7 +82,7 @@ const Index = (props) => {
           investigatorName:data.investigatorName,
       }
       props.dispatch({
-        type: `${namespace}/SubmitSurvey`,
+        type: `${namespace}/SubmitProcessed`,
         payload: {
          ...par
         },
@@ -113,13 +105,13 @@ const Index = (props) => {
   const CompleteComponents = ()=>{
     return  <Result
     status="success"
-    title="调查完成"
+    title="处理完成"
   />
   }
   return (
           <Modal
             visible={visible}
-            title={'调查'}
+            title={'处理'}
             onCancel={() => { props.onCancel()}}
             destroyOnClose
             wrapClassName={`spreadOverModal ${styles.modalSty}`}
@@ -133,7 +125,7 @@ const Index = (props) => {
                 </Button>
               )}
               {current <= steps.length - 1 && (
-                <Button type="primary" loading={current==1? submitSurveyLoading : false} onClick={() => saveNext()}>
+                <Button type="primary" loading={current==1? submitProcessedLoading : false} onClick={() => saveNext()}>
                   {current < steps.length - 1 ? '下一步' : '完成'}
                 </Button>
               )}
@@ -142,7 +134,7 @@ const Index = (props) => {
             <Steps current={current}>
               {steps.map(item => <Step title={item} />)}
             </Steps>
-              <div style={{marginTop:18}}>{current==0? <DispatchDetails data={data}/> : current==1 ? <InvestigateComponents />  : <CompleteComponents /> } </div>
+              <div style={{marginTop:18}}>{current==0? <><DispatchDetails data={data}/> <InvestigaContent data={data}/> </>: current==1 ? <HandleComponents />  : <CompleteComponents /> } </div>
           </Modal>
   );
 };

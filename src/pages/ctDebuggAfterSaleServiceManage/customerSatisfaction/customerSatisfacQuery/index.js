@@ -4,7 +4,7 @@
  * 创建时间：2024.04
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Upload, Popconfirm, Radio,Result, Steps, Image, Form, Tag, Skeleton, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty } from 'antd';
+import { Table, Input, InputNumber, Upload, Popconfirm,Popover, Radio,Result, Steps, Image, Form, Tag, Skeleton, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, AuditOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -16,10 +16,14 @@ import Cookie from 'js-cookie';
 import config from '@/config';
 import ImageView from '@/components/ImageView';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import TitleComponents from '@/components/TitleComponents'
 import SetUserListBtn from "@/components/SetUserListBtn";
 import LargeRegionList from "@/pages/ctDebuggAfterSaleServiceManage/components/largeRegionList";
 import DispatchDetails from "./components/DispatchDetails";
+import InvestigaContent from "./components/InvestigaContent";
 import InvestigateModal from "./components/InvestigateModal";
+import HandleModal from "./components/HandleModal";
+import UserList from '@/components/UserList'
 
 import { API } from '@config/API';
 import cuid from 'cuid';
@@ -29,14 +33,16 @@ const { Step } = Steps;
 const namespace = 'customerSatisfacQuery'
 
 const dvaPropsData = ({ loading, customerSatisfacQuery, global, }) => ({
-  tableLoading: loading.effects[`${namespace}/GetSatisfactionSurveyList`],
+  tableLoading:  customerSatisfacQuery.tableLoading,
   tableDatas: customerSatisfacQuery.tableDatas,
   tableTotal: customerSatisfacQuery.tableTotal,
   queryPar: customerSatisfacQuery.queryPar,
-  installPhotoData: customerSatisfacQuery.installPhotoData,
-  auditPhotoLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-  addAuditInfoLoading: loading.effects[`${namespace}/AddAuditInfo`],
-  exportLoading: loading.effects[`${namespace}/ExportSatisfactionSurvey`],
+  tableLoading2:  customerSatisfacQuery.tableLoading2,
+  tableDatas2: customerSatisfacQuery.tableDatas2,
+  tableTotal2: customerSatisfacQuery.tableTotal2,
+  queryPar2: customerSatisfacQuery.queryPar2,
+  exportLoading: customerSatisfacQuery.exportLoading,
+  exportLoading2: customerSatisfacQuery.exportLoading2,
   largeRegionListLoading: loading.effects[`ctCommon/GetLargeRegionList`],
   configInfo: global.configInfo,
 })
@@ -46,20 +52,25 @@ const Index = (props) => {
 
 
   const [form] = Form.useForm();
+  const [formAll] = Form.useForm();
+  const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
 
 
 
-
-  const {largeRegionListLoading, location:{pathname}, queryPar, tableDatas, tableTotal, tableLoading, auditPhotoLoading, installPhotoData, addAuditInfoLoading,exportLoading} = props;
+  const {largeRegionListLoading, location:{pathname}, queryPar, tableDatas, tableTotal, tableLoading,queryPar2, tableDatas2, tableTotal2, tableLoading2, auditPhotoLoading, installPhotoData, addAuditInfoLoading,exportLoading,exportLoading2} = props;
  
 
   const [exportIndex, setExportIndex] = useState(-1);
   
   const [largeRegionList, setLargeRegionList] = useState([]);
   const [provinceList, setProvincelist] = useState([]);
+  const [provinceList2, setProvincelist2] = useState([]);
   const [provinceAllList, setProvinceAlllist] = useState([]);
+  const [popVisible, setPopVisible] = useState(false);
+  const [popVisible2, setPopVisible2] = useState(false);
 
-
+  
 
   useEffect(() => {
     props.dispatch({
@@ -77,10 +88,21 @@ const Index = (props) => {
          
         })
         setProvinceAlllist(data)
-        onFinish(pageIndex, pageSize);
+        onFinish(1,pageIndex, pageSize);
       },
     })
   }, []);
+
+  const [viewAllFlag,setViewAllFlag] = useState(false)
+  const [viewAllVisible,setViewAllVisible] = useState(false)
+
+  const viewAllData = ()=>{
+    setViewAllVisible(true)
+    setViewAllFlag(true)
+    formAll.resetFields()
+    onFinish(2,pageIndex2, pageSize2)
+  }
+
   const columns = [
     {
       title: '序号',
@@ -134,8 +156,8 @@ const Index = (props) => {
     },
     {
       title: '行业',
-      dataIndex: 'ProvinceName',
-      key: 'ProvinceName',
+      dataIndex: 'Industry',
+      key: 'Industry',
       align: 'center',
       ellipsis: true,
     },
@@ -148,102 +170,104 @@ const Index = (props) => {
     },
     {
       title: '工程师行政区域',
-      dataIndex: 'WorkerName',
-      key: 'WorkerName',
+      dataIndex: 'ServiceAreaName',
+      key: 'ServiceAreaName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '服务主要内容',
-      dataIndex: 'WorkerName',
-      key: 'WorkerName',
+      dataIndex: 'Remark',
+      key: 'Remark',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '服务完成日期',
-      dataIndex: 'WorkerName',
-      key: 'WorkerName',
+      dataIndex: 'LeaveDate',
+      key: 'LeaveDate',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '客户姓名',
-      dataIndex: 'WorkerName',
-      key: 'WorkerName',
+      dataIndex: 'ContactsName',
+      key: 'ContactsName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '客户电话',
-      dataIndex: 'EntName',
-      key: 'EntName',
+      dataIndex: 'Phone',
+      key: 'Phone',
       align: 'center',
       ellipsis: true,
 
     },
     {
       title: '工程师服务态度（1-5分）',
-      dataIndex: 'PointName',
-      key: 'PointName',
+      dataIndex: 'ServiceAttitude',
+      key: 'ServiceAttitude',
       align: 'center',
       ellipsis: true,
+      width:170,
 
     },
     {
       title: '工程师技术水平（1-5分）',
-      dataIndex: 'SystemModelName',
-      key: 'SystemModelName',
+      dataIndex: 'TechnicalLevel',
+      key: 'TechnicalLevel',
       align: 'center',
       ellipsis: true,
+      width:170,
     },
 
     {
       title: '客户问题及建议',
-      dataIndex: 'LeaveDate',
-      key: 'LeaveDate',
+      dataIndex: 'Problem',
+      key: 'Problem',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '总得分',
-      dataIndex: 'LeaveDate',
-      key: 'LeaveDate',
+      dataIndex: 'TotalScore',
+      key: 'TotalScore',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '调查人员',
-      dataIndex: 'CreateTime',
-      key: 'CreateTime',
+      dataIndex: 'InvestigatorName',
+      key: 'InvestigatorName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '调查日期',
-      dataIndex: 'CreateTime',
-      key: 'CreateTime',
+      dataIndex: 'InvestigationTime',
+      key: 'InvestigationTime',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '调查提交时间',
-      dataIndex: 'CreateTime',
-      key: 'CreateTime',
+      dataIndex: 'InvestigationSubTime',
+      key: 'InvestigationSubTime',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '终止调查原因',
-      dataIndex: 'CreateTime',
-      key: 'CreateTime',
+      dataIndex: 'RerminationRemark',
+      key: 'RerminationRemark',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '调查状态',
-      dataIndex:'StatusName',
-      key: 'StatusName',
+      dataIndex:'InvestigationStatusName',
+      key: 'InvestigationStatusName',
       align: 'center',
       ellipsis: true,
       render: (text) => {
@@ -252,8 +276,8 @@ const Index = (props) => {
     },
     {
       title: '处理状态',
-      dataIndex:'StatusName',
-      key: 'StatusName',
+      dataIndex:'ProcessingStatusName',
+      key: 'ProcessingStatusName',
       align: 'center',
       ellipsis: true,
       render: (text) => {
@@ -262,22 +286,22 @@ const Index = (props) => {
     },
     {
       title: '处理办法',
-      dataIndex:'StatusName',
-      key: 'StatusName',
+      dataIndex:'ProcessedMethod',
+      key: 'ProcessedMethod',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '处理人',
-      dataIndex:'StatusName',
-      key: 'StatusName',
+      dataIndex:'ProcessedByName',
+      key: 'ProcessedByName',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '处理填写时间',
-      dataIndex:'StatusName',
-      key: 'StatusName',
+      dataIndex:'ProcessedTime',
+      key: 'ProcessedTime',
       align: 'center',
       ellipsis: true,
     },
@@ -285,15 +309,62 @@ const Index = (props) => {
       title: <span>操作</span>,
       align: 'center',
       fixed: 'right',
-      width: 220,
+      width: 280,
       ellipsis: true,
       fixed:'right',
       render: (text, record,index) => {
         return <> 
-             <a>详细</a>   <Divider type="vertical" />
-             <a onClick={()=>investigate(record)}>调查</a> <Divider type="vertical" />
-             <a>终止调查</a> <Divider type="vertical" />
-             <a>转发</a> 
+             <a onClick={()=>detail(record)}>详细</a>  
+             {record.IsInvestigator&&<> <Divider type="vertical" /><a onClick={()=>handle(record)}>处理</a></>}
+             {record.IsProcessedBy&&<> <Divider type="vertical" /><a onClick={()=>investigate(record)}>调查</a>
+        <Popover visible={popVisible} placement='left' title={'终止调查'} trigger="click"
+          overlayStyle={{ width: 400 }}
+          content={
+            <Form
+              name="basic2"
+              form={form2}
+              onFinish={(values)=>terminaInvestiga(values,record)}
+            >
+              <Form.Item label="终止调查原因" name="categoryNum" rules={[{ required: true, message: '请输入终止调查原因！' }]} >
+                <Input.TextArea  rows={2}  placeholder='请输入' allowClear />
+              </Form.Item>
+              <Row align='end'>
+                <Button onClick={() => { setPopVisible(false) }} style={{ marginRight: 8 }} >
+                  取消
+                </Button>
+                <Button type="primary" htmlType='submit' loading={false}>
+                  保存
+                  </Button>
+              </Row>
+            </Form>
+          }
+          > 
+          <Divider type="vertical" /><a onClick={()=>{setPopVisible(true);setPopVisible2(false)}}>终止调查</a>
+        </Popover>
+        <Popover visible={popVisible2} placement='left' title={'任务转发'} trigger="click"
+          overlayStyle={{ width: 400 }}
+          content={
+            <Form
+              name="basic3"
+              form={form3}
+              onFinish={(values)=>forward(values,record)}
+            >
+              <Form.Item label="转发人" name="categoryNum" rules={[{ required: true, message: '请选择转发人！' }]} >
+                <UserList />
+              </Form.Item>
+              <Row align='end'>
+                <Button onClick={() => { setPopVisible2(false)}} style={{ marginRight: 8 }} >
+                  取消
+                </Button>
+                <Button type="primary" htmlType='submit' loading={false}>
+                  保存
+                  </Button>
+              </Row>
+            </Form>
+          }>
+            <Divider type="vertical" /> <a  onClick={()=>{setPopVisible2(true);setPopVisible(false) }}>转发</a>
+        </Popover>
+        </>}
              </>
                
     }
@@ -305,33 +376,43 @@ const Index = (props) => {
     const data = value? provinceAllList.filter(item=>item.ID == value ) : provinceAllList
     setProvincelist(data)
   }
-
-  const [viewPhotosVisible, setViewPhotosVisible] = useState(false)
-  const viewPhotos = (row) => {
-    setViewPhotosVisible(true)
-    props.dispatch({
-      type: `${namespace}/GetAuditPhoto`,
-      payload: {
-        systemModelId: row.Col1,
-        dispatchId: row.DispatchId,
-        pointId: row.PointId,
-        equipmentAuditId: row.EquipmentAuditId,
-      }
-    });
+  const largeRegionChange2 = (value)=>{
+    formAll.setFieldsValue({province:undefined})
+    const data = value? provinceAllList.filter(item=>item.ID == value ) : provinceAllList
+    setProvincelist2(data)
   }
-  const [investigateVisible, setInvestigateVisible] = useState(true)
-  const [investigateData, setInvestigateData] = useState([1])
+  
+  const terminaInvestiga = (value,row) => {
+    console.log(value,row)
 
+  }
+  const forward = (value,row)=>{
+   console.log(value,row)
+  }
+  const [data, setData] = useState([1])
+
+  const [investigateVisible, setInvestigateVisible] = useState(false)
   const investigate = (row) => {
     setInvestigateVisible(true)
-    setInvestigateData(row)
+    setData(row)
 
   }
+  const [handleVisible, setHandleVisible] = useState(false)
+  const [handleData, setHandleData] = useState([1])
+  const handle = (row) =>{
+    setHandleVisible(true)
+    setData(row)
+  }
+  const [detailVisible, setDetailVisible] = useState(false)
 
-  const onFinish = async (PageIndex, PageSize, queryPar) => {  //查询
+  const detail = (row)=>{
+    setDetailVisible(true)
+    setData(row)
+  }
+  const onFinish = async (type,PageIndex, PageSize, queryPar) => {  //查询
 
     try {
-      const values = await form.validateFields();
+      const values = type==1? await form.validateFields() : await formAll.validateFields();
       const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
         ...values,
         bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
@@ -339,6 +420,8 @@ const Index = (props) => {
         time: undefined,
         pageIndex: PageIndex,
         pageSize: PageSize,
+        type:type,
+        allData:type==2? 1 : undefined
       }
       props.dispatch({
         type: `${namespace}/GetSatisfactionSurveyList`,
@@ -352,16 +435,25 @@ const Index = (props) => {
   }
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState(20)
-  const handleTableChange = async (PageIndex, PageSize) => { //分页
+  const handleTableChange =  (PageIndex, PageSize) => { //分页
     setPageSize(PageSize)
     setPageIndex(PageIndex)
-    onFinish(PageIndex, PageSize, queryPar)
+    onFinish(1, PageIndex, PageSize, queryPar)
   }
-   const exports = ()=>{
+
+  const [pageIndex2, setPageIndex2] = useState(1)
+  const [pageSize2, setPageSize2] = useState(20)
+  const handleTableChange2 =  (PageIndex, PageSize) => { //分页
+    setPageSize2(PageSize)
+    setPageIndex2(PageIndex)
+    onFinish(1, PageIndex, PageSize, queryPar2)
+  }
+   const exports = (type)=>{
     props.dispatch({
       type: `${namespace}/ExportSatisfactionSurvey`,
       payload: {
         ...queryPar,
+        type:type
       }
     });
    }
@@ -370,7 +462,7 @@ const Index = (props) => {
       form={form}
       name="advanced_search"
       className={'ant-advanced-search-form'}
-      onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
+      onFinish={() => { setPageIndex(1);setPageSize(20); onFinish(1,1, 20) }}
     >
       <Row align='middle'>
       <Col span={8}>
@@ -397,22 +489,19 @@ const Index = (props) => {
             <Input placeholder="合同编号、立项号" allowClear />
           </Form.Item>
         </Col>
-
-
-
         <Col span={8} >
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
-            <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1, 20) }}  >
+            <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1,1, 20) }}  >
               重置
          </Button>
-         <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading} onClick={() => {exports() }}>
+         <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading} onClick={() => {exports(1) }}>
               导出
          </Button>
-            <SetUserListBtn type={4} text='配置助理清单' />
-            <Button type="primary">
+           <SetUserListBtn type={4} text='配置助理清单' />
+            <Button type="primary" onClick={viewAllData}>
               查看所有数据
             </Button>
           </Form.Item>
@@ -420,9 +509,106 @@ const Index = (props) => {
       </Row>
     </Form>
   }
+  const searchComponents2 = () => {
+    return <Form
+      form={formAll}
+      name="advanced_search"
+      className={'ant-advanced-search-form'}
+      onFinish={() => { setPageIndex2(1);setPageSize2(20); onFinish(2,1, 20) }}
+    >
+      <Row align='middle'>
+      <Col span={8}>
+        <Spin size='small' spinning={largeRegionListLoading}   className='formItemSpinSty'>
+          <Form.Item name='serviceAreaCode' label='服务大区'>
+             <Select placeholder='请选择' onChange={largeRegionChange2} allowClear>
+             {largeRegionList.map(item=><Option value={item.ID}>{item.LargeRegion}</Option>)}
+             </Select>
+            </Form.Item>
+          </Spin>
+        </Col>
+        <Col span={8}>
+          <Spin size='small' spinning={largeRegionListLoading}   className='formItemSpinSty'>
+          <Form.Item name='province' className='minWidth' label='省份' >
+             <Select placeholder='请选择' allowClear>
+              {provinceList2.map(item=><Option value={item.RegionCode}>{item.RegionName}</Option>)}
+             </Select>
+          </Form.Item>
+          </Spin>
+        </Col>
+        <Col span={8} >
+          <Form.Item name='projectCode' label='项目编号' >
+            <Input placeholder="合同编号、立项号" allowClear />
+          </Form.Item>
+        </Col>
+        <Col span={8} >
+          <Form.Item name='investigator' className='minWidth'  label='调查人' >
+            <Input placeholder="请输入" allowClear />
+          </Form.Item>
+        </Col>
+        <Col span={8} >
+          <Form.Item name='investigation' label='调查状态' >
+            <Select placeholder='请选择' allowClear>
+               <Option value={1}>待调查</Option>
+               <Option value={2}>调查结束</Option>
+               <Option value={3}>调查终止</Option>
+             </Select>
+          </Form.Item>
+        </Col>
+        <Col span={8} >
+          <Form.Item name='processingStatus' label='处理状态' >
+            <Select placeholder='请选择' allowClear>
+               <Option value={1}>待处理</Option>
+               <Option value={2}>已处理</Option>
+             </Select>
+          </Form.Item>
+        </Col>
+        <Col span={8} >
+          <Form.Item name='time' label='调查日期' >
+          <RangePicker 
+              style={{ width: '100%' }}
+              format="YYYY-MM-DD"
+              />
+          </Form.Item>
+        </Col>
+        <Col span={8} >
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={tableLoading}>
+              查询
+         </Button>
+            <Button style={{ margin: '0 8px' }} onClick={() => { formAll.resetFields(); setPageIndex2(1); setPageSize2(20); onFinish(2,1, 20) }}  >
+              重置
+         </Button>
+         <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading2} onClick={() => {exports(2) }}>
+              导出
+         </Button>
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form>
+  }
 
 
-
+  const ProcessResultsComponents = ({data}) => {
+    return <Form className='detailForm'>
+     <TitleComponents simpleSty text='处理结果' key='1' height={16} style={{ fontSize:16 }} />
+      <div>
+              <Row>
+                <Col span={24}>
+                    <Form.Item label='处理办法'>
+                   </Form.Item> 
+                </Col>
+                <Col span={8}>
+                    <Form.Item label='处理人'>
+                   </Form.Item> 
+                </Col>
+                <Col span={8}>
+                    <Form.Item label='处理填写时间'>
+                   </Form.Item> 
+                </Col>
+              </Row>
+      </div>
+    </Form>
+  }
 
 
   return (
@@ -444,22 +630,60 @@ const Index = (props) => {
               showQuickJumper: true,
               onChange: handleTableChange,
             }}
+            onRow={(record, index) => ({
+              onClick: event => {
+                console.log(11111)
+              },
+            })}
           />
-          {/* <Modal
-            visible={viewPhotosVisible}
-            title={'安装照片'}
-            onCancel={() => { setViewPhotosVisible(false) }}
-            footer={null}
-            mask={false}
+        </Card>
+        <HandleModal visible={handleVisible}  data={data}  onCancel={() => { setHandleVisible(false) }}/>
+           <InvestigateModal   visible={investigateVisible}  data={data}  onCancel={() => { setInvestigateVisible(false) }}/>
+        <Modal
+            visible={detailVisible}
+            title={'调查'}
+            onCancel={() => { setDetailVisible(false)}}
             destroyOnClose
             wrapClassName={`spreadOverModal ${styles.modalSty}`}
+            mask={false}
           >
-
-            <DispatchDetails type={1}/>
-          </Modal> */}
-           <InvestigateModal   visible={investigateVisible}  data={investigateData}  onCancel={() => { setInvestigateVisible(false) }}/>
-        </Card>
-
+          <DispatchDetails data={data}/>
+          <InvestigaContent data={data}/> 
+          <ProcessResultsComponents data={data}/>
+          </Modal>
+          <Modal
+            visible={viewAllVisible}
+            title={'查看满意度调查数据'}
+            onCancel={() => { setViewAllVisible(false)}}
+            destroyOnClose
+            wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
+            mask={false}
+            footer={null}
+          >
+          {searchComponents2()}
+          <SdlTable
+            style={{ marginTop: 6 }}
+            resizable
+            loading={tableLoading2}
+            bordered
+            dataSource={tableDatas2}
+            columns={columns}
+            pagination={{
+              total: tableTotal2,
+              pageSize: pageSize2,
+              current: pageIndex2,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              onChange: handleTableChange2,
+            }}
+            onRow={(record, index) => ({
+              onClick: event => {
+                console.log(record)
+              },
+            })}
+          />
+          </Modal>
+          
       </BreadcrumbWrapper>
     </div>
   );

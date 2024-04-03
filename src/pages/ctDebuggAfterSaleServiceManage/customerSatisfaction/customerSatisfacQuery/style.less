@@ -16,10 +16,32 @@
      }
     }
  }
- .modalSty, .modalSty2 {
+
+ .detailModalSty  :global{
+  .ant-advanced-search-form{
+    .ant-form-item{
+        margin-bottom: 8px;
+     }
+     .ant-col-8:nth-child(3n-1){
+       padding: 0 2%;
+   }
+   .minWidth  :global{
+     .ant-form-item-label {
+       min-width:69px;
+     }
+    }
+   }
+ }
+
+ .modalSty {
   :global{
     .ant-modal-content{
       height: auto;
+    }
+    .ant-modal-body{
+      height: calc(100vh - 155px);
+      overflow-y: auto;
+      padding: 16px;
     }
     .ant-form-item{
       margin-bottom: 12px;
@@ -32,26 +54,11 @@
        padding-right: 12px;
       }
      }
+     .investigate-search-form{
+      .ant-form-item-label{
+        min-width: 136px;
+      }
+     }
   }
   
  }
-
- 
-   .modalSty  :global{
-    .ant-modal-content{
-      background-color: #F4F5F8;
-      padding: 0 12px;
-    }
-    .ant-modal-body{
-      height: calc(100vh - 89px);
-      overflow-y: auto;
-      padding: 0;
-    }
-   }
-   .modalSty2  :global{
-    .ant-modal-body{
-     padding:24px 18px; 
-     height: calc(100vh - 155px);
-     overflow-y: auto;
-    }
-   }
