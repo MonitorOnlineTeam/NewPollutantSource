@@ -995,6 +995,8 @@ export const API = {
       GetCustomerComplaintsView: before + '/CustomerSatisfaction/GetCustomerComplaintsView',
       // 处理投诉
       HandleCustomerComplaints: before + '/CustomerSatisfaction/HandleCustomerComplaints',
+      // 删除
+      DeleteCustomerComplaints: before + '/CustomerSatisfaction/DeleteCustomerComplaints',
     },
   },
 };

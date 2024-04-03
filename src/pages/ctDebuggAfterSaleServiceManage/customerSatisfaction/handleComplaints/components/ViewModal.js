@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-02 11:09:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-03 09:50:35
+ * @Last Modified time: 2024-04-03 15:58:51
  * @Description:  客户投诉解决页面内容
  */
 import React, { useState, useEffect } from 'react';
@@ -99,7 +99,7 @@ const ViewModal = props => {
         <Descriptions.Item label="处理人">{detailsData.ProcessedByName}</Descriptions.Item>
         <Descriptions.Item label="处理时间">{detailsData.ProcessingTime}</Descriptions.Item>
         <Descriptions.Item label="处理结果填写时间" span={3}>
-          {detailsData.ReceiveComplaintDate}
+          {detailsData.UpdateTime}
         </Descriptions.Item>
       </Descriptions>
     </Modal>

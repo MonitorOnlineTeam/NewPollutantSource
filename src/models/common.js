@@ -37,6 +37,7 @@ export default Model.extend({
     ctRegionList: [],
     allUser: [],
     largeRegionList: [],
+    provinceList: [],
   },
 
   effects: {
@@ -401,38 +402,38 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *addSetUser({ payload, callback }, { call, put, update }) { //设置人员信息
+    *addSetUser({ payload, callback }, { call, put, update }) {
+      //设置人员信息
       const result = yield call(services.AddSetUser, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
-        callback&&callback(result.Datas)
+        message.success(result.Message);
+        callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
-    *getSetUser({ payload, callback }, { call, put, update }) { //获取设置的人员信息
+    *getSetUser({ payload, callback }, { call, put, update }) {
+      //获取设置的人员信息
       const result = yield call(services.GetSetUser, payload);
       if (result.IsSuccess) {
-        callback&&callback(result.Datas)
+        callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
-
-
-
-
-
-
-
 
     // 获取大区及省份列表
     *getLargeRegion({ payload, callback }, { call, put, update }) {
       const result = yield call(services.GetLargeRegionList, payload);
       if (result.IsSuccess) {
+        let provinceList = [];
+        result.Datas.map(item => {
+          provinceList = provinceList.concat([...item.ChildList]);
+        });
         yield update({
           largeRegionList: result.Datas,
+          provinceList: provinceList,
         });
       }
     },

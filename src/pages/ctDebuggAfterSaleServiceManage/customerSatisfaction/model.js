@@ -170,5 +170,17 @@ export default Model.extend({
         callback && callback(result.Datas[0]);
       }
     },
+    // 删除客户投诉
+    *DeleteCustomerComplaints({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.HandleComplaints.DeleteCustomerComplaints,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+        callback && callback();
+      }
+    },
   },
 });

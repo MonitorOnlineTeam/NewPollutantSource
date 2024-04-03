@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-02 11:09:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-03 14:13:37
+ * @Last Modified time: 2024-04-03 16:05:17
  * @Description:  客户投诉解决页面内容
  */
 import React, { useState, useEffect } from 'react';
@@ -40,6 +40,7 @@ const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, common }) => ({
   largeRegionList: common.largeRegionList,
+  provinceAllList: common.provinceList,
   queryLoading: loading.effects[`customer/GetCustomerComplaintsList`],
   exportLoading: loading.effects[`customer/ExportCustomerComplaints`],
 });
@@ -59,12 +60,16 @@ const HandleComplaintsContentPage = props => {
   const [provinceList, setProvinceList] = useState([]); // 大区、省份列表
   const [disposeModalOpen, setDisposeModalOpen] = useState(false);
 
-  const { isAll, queryLoading, dispatch, exportLoading, largeRegionList } = props;
+  const { isAll, queryLoading, dispatch, exportLoading, largeRegionList, provinceAllList } = props;
 
   useEffect(() => {
     getLargeRegion();
     getTableDataSource();
   }, []);
+
+  useEffect(() => {
+    setProvinceList(provinceAllList);
+  }, [provinceAllList]);
 
   // 获取大区及省份
   const getLargeRegion = () => {
@@ -106,7 +111,7 @@ const HandleComplaintsContentPage = props => {
   // 删除
   const onDelete = id => {
     dispatch({
-      type: 'customer/DeleteServiceHotline',
+      type: 'customer/DeleteCustomerComplaints',
       payload: {
         id: id,
       },
@@ -282,9 +287,10 @@ const HandleComplaintsContentPage = props => {
         width: 150,
         ellipsis: true,
         render: (text, record) => {
+          console.log('isAll', isAll);
           return (
             <>
-              {record.IsEidtOrDel && (
+              {record.IsEidtOrDel && !isAll && (
                 <>
                   <Tooltip title="编辑">
                     <a
@@ -315,7 +321,7 @@ const HandleComplaintsContentPage = props => {
                   <DetailIcon />
                 </a>
               </Tooltip>
-              {record.IsEidtOrDel && (
+              {record.IsEidtOrDel && !isAll && (
                 <>
                   <Divider type="vertical" />
                   <Tooltip title="删除">
@@ -333,7 +339,7 @@ const HandleComplaintsContentPage = props => {
                   </Tooltip>
                 </>
               )}
-              {record.IsProcessing && (
+              {record.IsProcessing && !isAll && (
                 <>
                   <Divider type="vertical" />
                   <Tooltip title="处理">
@@ -354,11 +360,9 @@ const HandleComplaintsContentPage = props => {
       },
     ];
 
-    // 查看全部过滤掉操作列和“状态”
+    // 查看全部过滤掉“状态”
     if (isAll) {
-      columns = columns.filter(
-        item => item.dataIndex !== 'handle' && item.dataIndex !== 'StatusName',
-      );
+      columns = columns.filter(item => item.dataIndex !== 'StatusName');
     }
 
     return columns;
@@ -401,9 +405,9 @@ const HandleComplaintsContentPage = props => {
                     if (value) {
                       setProvinceList(option['data-childList']);
                     } else {
-                      setProvinceList([]);
-                      form.setFieldsValue({ province: undefined });
+                      setProvinceList(provinceAllList);
                     }
+                    form.setFieldsValue({ province: undefined });
                   }}
                 >
                   {largeRegionList.map(item => {
