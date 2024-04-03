@@ -391,24 +391,26 @@ const Index = (props) => {
   }
   const [data, setData] = useState([1])
 
-  const [investigateVisible, setInvestigateVisible] = useState(false)
-  const investigate = (row) => {
-    setInvestigateVisible(true)
+  const [detailVisible, setDetailVisible] = useState(false)
+  const detail = (row)=>{
+    setDetailVisible(true)
     setData(row)
-
   }
+
   const [handleVisible, setHandleVisible] = useState(false)
   const [handleData, setHandleData] = useState([1])
   const handle = (row) =>{
     setHandleVisible(true)
     setData(row)
   }
-  const [detailVisible, setDetailVisible] = useState(false)
-
-  const detail = (row)=>{
-    setDetailVisible(true)
+  
+  const [investigateVisible, setInvestigateVisible] = useState(false)
+  const investigate = (row) => {
+    setInvestigateVisible(true)
     setData(row)
+
   }
+
   const onFinish = async (type,PageIndex, PageSize, queryPar) => {  //查询
 
     try {
@@ -630,11 +632,6 @@ const Index = (props) => {
               showQuickJumper: true,
               onChange: handleTableChange,
             }}
-            onRow={(record, index) => ({
-              onClick: event => {
-                console.log(11111)
-              },
-            })}
           />
         </Card>
         <HandleModal visible={handleVisible}  data={data}  onCancel={() => { setHandleVisible(false) }}/>
@@ -676,11 +673,6 @@ const Index = (props) => {
               showQuickJumper: true,
               onChange: handleTableChange2,
             }}
-            onRow={(record, index) => ({
-              onClick: event => {
-                console.log(record)
-              },
-            })}
           />
           </Modal>
           
