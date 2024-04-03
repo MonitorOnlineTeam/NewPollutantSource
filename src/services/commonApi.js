@@ -167,6 +167,12 @@ export async function GetAlluser(params) {
   return result;
 }
 
+//获取大区
+export async function GetLargeRegionList(params) {
+  const result = post(API.CtCommonApi.GetLargeRegionList, params);
+  return result;
+}
+
 //设置人员信息
 export async function AddSetUser (params) {
   const result = await post(API.CommonApi.AddSetUser,params, null);

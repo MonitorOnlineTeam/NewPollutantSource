@@ -52,11 +52,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false,
       // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
@@ -1787,7 +1787,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  }`,
                 },
                 {
                   //视频监控（新）
@@ -1812,7 +1812,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -3151,8 +3151,14 @@ export default {
                       // 服务热线电话
                       name: 'hotPhone',
                       path: '/ctManage/customerSatisfaction/hotPhone',
+                      component: './ctDebuggAfterSaleServiceManage/customerSatisfaction/hotPhone',
+                    },
+                    {
+                      // 客户投诉解决
+                      name: 'hotPhone',
+                      path: '/ctManage/customerSatisfaction/handleComplaints',
                       component:
-                        './ctDebuggAfterSaleServiceManage/customerSatisfaction/hotPhone',
+                        './ctDebuggAfterSaleServiceManage/customerSatisfaction/handleComplaints',
                     },
                     {
                       // 客户满意度调查

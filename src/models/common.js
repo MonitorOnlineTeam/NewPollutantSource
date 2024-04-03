@@ -36,6 +36,7 @@ export default Model.extend({
     ctProjectQueryPar: null,
     ctRegionList: [],
     allUser: [],
+    largeRegionList: [],
   },
 
   effects: {
@@ -290,13 +291,15 @@ export default Model.extend({
       const result = yield call(services.GetInspectorUserList, payload);
       if (result.IsSuccess) {
         yield update({
-          inspectorUserList: result.Datas ? result.Datas.InspectorUserList.map(item=>({...item,key:item.UserId})) : [],
+          inspectorUserList: result.Datas
+            ? result.Datas.InspectorUserList.map(item => ({ ...item, key: item.UserId }))
+            : [],
           operationUserList: result.Datas ? result.Datas.OperationUserList : [],
         });
       } else {
         message.error(result.Message);
       }
-      callback&&callback()
+      callback && callback();
     },
     // 行政区 非过滤
     *getNoFilterRegionList({ payload, callback }, { call, update }) {
@@ -371,17 +374,18 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *getCTProjectList({ payload, callback }, { call, put, update }) { //项目列表
+    *getCTProjectList({ payload, callback }, { call, put, update }) {
+      //项目列表
       const result = yield call(services.GetCTProjectList, payload);
       if (result.IsSuccess) {
         yield update({
           ctProjectList: result.Datas,
           ctProjectTotal: result.Total,
           ctProjectQueryPar: payload,
-        })
+        });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     //获取所有用户信息
@@ -423,8 +427,14 @@ export default Model.extend({
 
 
 
-
-
-
-  }
+    // 获取大区及省份列表
+    *getLargeRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetLargeRegionList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          largeRegionList: result.Datas,
+        });
+      }
+    },
+  },
 });

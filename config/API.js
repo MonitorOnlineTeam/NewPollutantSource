@@ -981,6 +981,21 @@ export const API = {
       // 导出
       ExportServiceHotline: before + '/CustomerSatisfaction/ExportServiceHotline',
     },
+    // 客户投诉解决
+    HandleComplaints: {
+      // 客户投诉列表
+      GetCustomerComplaintsList: before + '/CustomerSatisfaction/GetCustomerComplaintsList',
+      // 添加或修改客户投诉
+      AddOrEditCustomerComplaints: before + '/CustomerSatisfaction/AddOrEditCustomerComplaints',
+      // 获取客户投诉项目列表
+      GetCustomerComplaintsProject: before + '/CustomerSatisfaction/GetCustomerComplaintsProject',
+      // 导出
+      ExportCustomerComplaints: before + '/CustomerSatisfaction/ExportCustomerComplaints',
+      // 获取客户投诉详情
+      GetCustomerComplaintsView: before + '/CustomerSatisfaction/GetCustomerComplaintsView',
+      // 处理投诉
+      HandleCustomerComplaints: before + '/CustomerSatisfaction/HandleCustomerComplaints',
+    },
   },
 };
 
