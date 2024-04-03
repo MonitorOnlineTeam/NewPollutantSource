@@ -50,7 +50,7 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-    const { type } = props;
+    const { type,text } = props;
 
     const [listVisble, setListVisble] = useState(false)
 
@@ -151,11 +151,11 @@ const Index = (props) => {
                 setListVisble(true);
             }}
         >
-            {props.text}
+            {text}
         </Button> 
          <Modal
             visible={listVisble}
-            title={'配置人员清单'}
+            title={text}
             footer={null}
             onCancel={() => { setListVisble(false) }}
             destroyOnClose

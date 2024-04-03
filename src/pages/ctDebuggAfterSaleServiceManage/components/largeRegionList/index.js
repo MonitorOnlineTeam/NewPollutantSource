@@ -55,8 +55,8 @@ const Index = (props) => {
 
   
   return (
-        <Spin size='small' spinning={props.largeRegionListLoading}>
-        <Form.Item name={name? name : 'serviceAreaCode'} label='服务大区' className='formItemSpinSty' >
+        <Spin size='small' spinning={props.largeRegionListLoading} className='formItemSpinSty'>
+        <Form.Item name={name? name : 'serviceAreaCode'} label='服务大区'  >
          <Select placeholder='请选择'  allowClear>
          {largeRegionList.map(item=><Option value={item.ID}>{item.LargeRegion}</Option>)}
          </Select>

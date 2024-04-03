@@ -35,7 +35,7 @@ const dvaPropsData = ({ loading, operaCheckAttendanceQuery, global, }) => ({
   tableTotal: operaCheckAttendanceQuery.tableTotal,
   queryPar: operaCheckAttendanceQuery.queryPar,
   exportLoading: loading.effects[`${namespace}/ExportSignInAndOffsiteSign`],
-  workTypeLoading: loading.effects[`${namespace}/GetOffWorkType`],
+  workTypeLoading: loading.effects[`${namespace}/GetSignInType`],
   clientHeight: global.clientHeight,
 })
 
@@ -59,9 +59,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    GetOffWorkType: (payload,callback) => { //工作类型
+    GetSignInType: (payload,callback) => { //工作类型
       dispatch({
-        type: `${namespace}/GetOffWorkType`,
+        type: `${namespace}/GetSignInType`,
         payload: payload,
         callback:callback,
       })
@@ -82,8 +82,8 @@ const Index = (props) => {
   const [workTypeList,setWorkTypeList] = useState([])
   useEffect(() => {
     onFinish(pageIndex,pageSize);
-    props.GetOffWorkType({},(res)=>{
-      res?.[0]&&setWorkTypeList(res)
+    props.GetSignInType({},(res)=>{
+      res?.childList&&setWorkTypeList(res?.childList)
     })
   }, []);
 
@@ -93,7 +93,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       fixed:'left',
-      render: (text, record, index) => index + 1
+      render: (text, record, index) => (index + 1) + (pageIndex-1)*pageSize
     },
     {
       title: '姓名',
@@ -105,44 +105,31 @@ const Index = (props) => {
     },
     {
       title: '工号',
-      dataIndex: 'UserAccount',
-      key: 'UserAccount',
+      dataIndex: 'userAccount',
+      key: 'userAccount',
       align: 'center',
       ellipsis: true,
       fixed:'left',
     },
     {
       title: '工作类型',
-      dataIndex: 'WorkTypeName',
-      key: 'WorkTypeName',
+      dataIndex: 'workTypeName',
+      key: 'workTypeName',
       align: 'center',
+      width:130,
       ellipsis: true,
     },
     {
       title: '省',
-      dataIndex: 'ProvinceName',
-      key: 'ProvinceName',
+      dataIndex: 'province',
+      key: 'province',
       align: 'center',
       ellipsis: true,
     },
     {
-      title: '项目编号',
-      dataIndex: 'ProjectCode',
-      key: 'ProjectCode',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '项目名称',
-      dataIndex: 'ProjectName',
-      key: 'ProjectName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'EntName',
-      key: 'EntName',
+      title: '运维企业',
+      dataIndex: 'entName',
+      key: 'entName',
       align: 'center',
       ellipsis: true,
     },
@@ -152,15 +139,15 @@ const Index = (props) => {
       children: [
         {
           title: '时间',
-          dataIndex: 'STime',
-          key: 'STime',
+          dataIndex: 'signInTime',
+          key: 'signInTime',
           align: 'center',
           ellipsis: true,
         },
         {
           title: '结果',
-          dataIndex: 'OResult',
-          key: 'OResult',
+          dataIndex: 'signInexceptType',
+          key: 'signInexceptType',
           align: 'center',
           ellipsis: true,
           render:(text, record, index)=>{
@@ -169,32 +156,32 @@ const Index = (props) => {
         },
         {
           title: '经度',
-          dataIndex: 'OLongitude',
-          key: 'OLongitude',
+          dataIndex: 'signInLongitude',
+          key: 'signInLongitude',
           align: 'center',
           ellipsis: true,
 
         },
         {
           title: '纬度',
-          dataIndex: 'SLatitude',
-          key: 'SLatitude',
+          dataIndex: 'signInLatitude',
+          key: 'signInLatitude',
           align: 'center',
           ellipsis: true,
 
         },
         {
           title: '地点',
-          dataIndex: 'SLocation',
-          key: 'SLocation',
+          dataIndex: 'signInPosition',
+          key: 'signInPosition',
           align: 'center',
           ellipsis: true,
 
         },
         {
           title: '详细地址',
-          dataIndex: 'OAddress',
-          key: 'OAddress',
+          dataIndex: 'signInAddress',
+          key: 'signInAddress',
           align: 'center',
           ellipsis: true,
         },
@@ -206,15 +193,15 @@ const Index = (props) => {
       children: [
         {
           title: '时间',
-          dataIndex: 'OTime',
-          key: 'OTime',
+          dataIndex: 'signOutTime',
+          key: 'signOutTime',
           align: 'center',
           ellipsis: true,
         },
         {
           title: '结果',
-          dataIndex: 'OResult',
-          key: 'OResult',
+          dataIndex: 'signOutexceptType',
+          key: 'signOutexceptType',
           align: 'center',
           ellipsis: true,
           render:(text, record, index)=>{
@@ -223,32 +210,32 @@ const Index = (props) => {
         },
         {
           title: '经度',
-          dataIndex: 'OLongitude',
-          key: 'OLongitude',
+          dataIndex: 'signOutLongitude',
+          key: 'signOutLongitude',
           align: 'center',
           ellipsis: true,
 
         },
         {
           title: '纬度',
-          dataIndex: 'OLatitude',
-          key: 'OLatitude',
+          dataIndex: 'signOutLatitude',
+          key: 'signOutLatitude',
           align: 'center',
           ellipsis: true,
 
         },
         {
           title: '地点',
-          dataIndex: 'OLocation',
-          key: 'OLocation',
+          dataIndex: 'signOutPosition',
+          key: 'signOutPosition',
           align: 'center',
           ellipsis: true,
 
         },
         {
           title: '详细地址',
-          dataIndex: 'OAddress',
-          key: 'OAddress',
+          dataIndex: 'signOutAddress',
+          key: 'signOutAddress',
           align: 'center',
           ellipsis: true,
         },
@@ -278,8 +265,8 @@ const Index = (props) => {
       const values = await form.validateFields();
       props.GetSignInAndOffsiteSignList({
         ...values,
-        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
@@ -309,7 +296,7 @@ const Index = (props) => {
     >
       <Row>
         <Col span={8}>
-          <Form.Item name="userName" label="姓名" className='minWidth'>
+          <Form.Item name="userId" label="姓名" className='minWidth'>
             <UserList />
           </Form.Item>
         </Col>

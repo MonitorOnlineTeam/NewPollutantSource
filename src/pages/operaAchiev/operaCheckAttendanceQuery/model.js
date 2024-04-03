@@ -38,8 +38,8 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *GetOffWorkType({ payload,callback }, { call, put, update }) { //工作类型
-      const result = yield call(services.GetOffWorkType, payload);
+    *GetSignInType({ payload,callback }, { call, put, update }) { //工作类型
+      const result = yield call(services.GetSignInType, payload);
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{

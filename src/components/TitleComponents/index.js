@@ -13,12 +13,12 @@ import { connect } from "dva";
 
 const Index = (props) => {
   
-  const { text } = props;
+  const { text,height } = props;
   return (
      <>
      { props.simpleSty?
        <div  key={props.key} style={{ display: 'inline-block', fontWeight: 'bold',  marginBottom: 12,...props.style }} >
-       <div style={{width:3,height:14, display:'inline-block',verticalAlign:'middle',background:'#1890FF',margin:'0 4px 4px 0'}}/> 
+       <div style={{width:3,height:height? height : 14 , display:'inline-block',verticalAlign:'middle',background:'#1890FF',margin:'0 4px 4px 0'}}/> 
        {text}
      </div>
       :

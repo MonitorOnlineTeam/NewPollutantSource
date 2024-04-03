@@ -243,7 +243,7 @@ const Index = (props) => {
       width: 80,
     },
     {
-      title: '设备类型',
+      title: '设备类别',
       dataIndex: 'CategoryName',
       key: 'CategoryName',
       align: 'center',
@@ -256,18 +256,16 @@ const Index = (props) => {
       align: 'center',
       width: 'auto',
       render: (text, record) => {
-        if(record.CategoryName!='其他'){
           if (text === 1) {
-            return <Popconfirm title="确定要停用此设备类型吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
+            return <Popconfirm title="确定要停用此设备类别吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
               <Tag style={{cursor:'pointer'}} color="blue">启用</Tag>
             </Popconfirm>;
           }
           if (text === 2) {
-            return <Popconfirm title="确定要启用此设备类型吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
+            return <Popconfirm title="确定要启用此设备类别吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
               <Tag style={{cursor:'pointer'}} color="red">停用</Tag>
             </Popconfirm>;
           }
-        }
 
       },
     },
@@ -600,6 +598,7 @@ const Index = (props) => {
         visible={equipmentModelVisible}
         onCancel={() => { setEquipmentModelVisible(false); setPopVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName="spreadOverModal"
       >

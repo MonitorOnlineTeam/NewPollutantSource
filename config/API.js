@@ -663,6 +663,9 @@ export const API = {
     GetSignInList: before + '/OperationSignInApi/GetSignInList',//获取现场签到统计信息
     ExportSignInList: before + '/OperationSignInApi/ExportSignInList',//现场签到统计信息 导出
     GetSignInType: before + '/OperationSignInApi/GetSignInType',//获取打卡类型
+    /*签到考勤查询*/
+    GetSignInAndOffsiteSignList: before + '/OperationSignInApi/GetSignInAndOffsiteSignList',//获取签到考勤信息
+    ExportSignInAndOffsiteSign: before + '/OperationSignInApi/ExportSignInAndOffsiteSign',//签到考勤信息 导出
   },
 
   // 系统管理Api
@@ -758,6 +761,16 @@ export const API = {
     ExportCooperateOtherWorkAnalysis: before + '/CTStatisticsApi/ExportCooperateOtherWorkAnalysis',//配合其它工作 导出
     GetServiceDispatchForAnalysis: before + '/CTStatisticsApi/GetServiceDispatchForAnalysis',//获取服务明细
     ExportServiceDispatchForAnalysis: before + '/CTStatisticsApi/ExportServiceDispatchForAnalysis',//服务明细 导出
+  },
+    /*** 客户满意度 ***/
+  /*客户满意度调查*/
+  CustomerSatisfactionApi:{
+    GetSatisfactionSurveyList: before + '/CustomerSatisfaction/GetSatisfactionSurveyList',//获取客户满意度调查信息
+    ExportSatisfactionSurvey: before + '/CustomerSatisfaction/ExportSatisfactionSurvey',//客户满意度调查信息 导出
+    SubmitSurvey: before + '/CustomerSatisfaction/SubmitSurvey',//客户满意度调查提交
+    SubmitProcessed: before + '/CustomerSatisfaction/SubmitProcessed',//客户满意度调查处理
+    SubmitRermination: before + '/CustomerSatisfaction/SubmitRermination',//客户满意度终止调查
+    TransmitSurvey: before + '/CustomerSatisfaction/TransmitSurvey',//客户满意度转发
   },
   //调试服务
   CtDebugServiceApi: {

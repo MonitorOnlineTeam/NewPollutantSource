@@ -5,17 +5,17 @@ import { API } from '@config/API'
 
 //获取签到考勤查询信息
 export async function GetSignInAndOffsiteSignList(params) {
-  const result = post(API.CtProjectExecuProgressApi.GetSignInAndOffsiteSignList, params);
+  const result = post(API.PerformanceApi.GetSignInAndOffsiteSignList, params);
   return result;
 }
 
 //签到考勤查询信息 导出
 export async function ExportSignInAndOffsiteSign(params) {
-  const result = post(API.CtProjectExecuProgressApi.ExportSignInAndOffsiteSign, params);
+  const result = post(API.PerformanceApi.ExportSignInAndOffsiteSign, params);
   return result;
 }
 //工作类型
-export async function GetOffWorkType(params) {
-  const result = post(API.CtProjectExecuProgressApi.GetOffWorkType, params);
+export async function GetSignInType(params) {
+  const result = post(API.PerformanceApi.GetSignInType, params);
   return result;
 }

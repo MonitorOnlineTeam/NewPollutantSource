@@ -75,7 +75,7 @@ const Index = (props) => {
 
 
 
-  const {serviceQueryPar,queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,type,  } = props;
+  const {serviceQueryPar,queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,type,largeRegionListLoading  } = props;
 
   const [largeRegionList, setLargeRegionList] = useState([]);
   const [provinceList, setProvincelist] = useState([]);
@@ -306,7 +306,7 @@ const Index = (props) => {
         {expand && <> 
             <Col span={8}>
           <Form.Item name='serviceAreaCode' label='服务大区' >
-            {props.largeRegionListLoading?
+            {largeRegionListLoading?
             <Spin size='small'/>
              :
              <Select placeholder='请选择' onChange={largeRegionChange} allowClear>
@@ -317,7 +317,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item name='province' className='minWidth4' label='省份' >
-          {props.largeRegionListLoading?
+          {largeRegionListLoading?
             <Spin size='small'/>
              :
              <Select placeholder='请选择' allowClear>

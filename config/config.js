@@ -3154,6 +3154,14 @@ export default {
                       component:
                         './ctDebuggAfterSaleServiceManage/customerSatisfaction/hotPhone',
                     },
+                    {
+                      // 客户满意度调查
+                      name: 'hotPhone',
+                      path: '/ctManage/customerSatisfaction/customerSatisfacQuery',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery',
+                    },
+                    
                   ],
                 },
                 /**售后服务管理  */
