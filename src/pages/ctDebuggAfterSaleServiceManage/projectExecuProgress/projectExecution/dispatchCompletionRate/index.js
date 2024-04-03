@@ -326,6 +326,7 @@ const Index = (props) => {
           footer={null}
           destroyOnClose
           wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
+          mask={false}
         >
         <Button icon={<ExportOutlined />} style={{marginBottom:8}} loading={exportIncompleteLoading} onClick={() => { exports(2) }}>
           导出

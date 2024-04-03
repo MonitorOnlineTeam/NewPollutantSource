@@ -138,6 +138,7 @@ const FromsModal = props => {
       visible={visible}
       footer={null}
       wrapClassName="spreadOverModal"
+      mask={false}
       destroyOnClose
       onCancel={() => onCancel()}
     >

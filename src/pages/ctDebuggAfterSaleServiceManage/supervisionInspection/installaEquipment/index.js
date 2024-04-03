@@ -668,9 +668,9 @@ const Index = (props) => {
             title={'安装照片'}
             onCancel={() => { setViewPhotosVisible(false) }}
             footer={null}
-            mask={false}
             destroyOnClose
             wrapClassName={`spreadOverModal ${styles.modalSty}`}
+            mask={false}
           >
             <ViewPhotos />
 

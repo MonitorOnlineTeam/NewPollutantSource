@@ -428,6 +428,7 @@ export default class Index extends Component {
           destroyOnClose
           footer={null}
           wrapClassName={`spreadOverModal spreadOverHiddenModal`}
+          mask={false}
         >
           <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} />
         </Modal>

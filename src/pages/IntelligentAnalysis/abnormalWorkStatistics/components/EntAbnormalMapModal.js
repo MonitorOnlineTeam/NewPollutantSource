@@ -143,7 +143,6 @@ const Index = (props) => {
         size="large"
       />);
     }
-    console.log(abnormalTitle)
     return <div style={{ width: '100%', height: 'calc(100vh - 112px)' }}>
       <Map
         amapkey={config.amapKey}
@@ -193,6 +192,7 @@ const Index = (props) => {
         footer={null}
         destroyOnClose
         wrapClassName="spreadOverModal"
+        mask={false}
       >
         {entAbnormalNumVisible && entMap()}
       </Modal>

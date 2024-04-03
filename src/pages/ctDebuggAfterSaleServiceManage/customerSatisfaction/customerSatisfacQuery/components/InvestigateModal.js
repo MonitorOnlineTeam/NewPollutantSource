@@ -129,8 +129,8 @@ const Index = (props) => {
             title={'调查'}
             onCancel={() => { props.onCancel()}}
             destroyOnClose
-            mask={false}
             wrapClassName={`spreadOverModal ${styles.modalSty2}`}
+            // mask={false}
             footer={<div className="steps-action">
               {current > 0 && current != steps.length - 1 && (
                 <Button

@@ -598,9 +598,9 @@ const Index = (props) => {
         visible={equipmentModelVisible}
         onCancel={() => { setEquipmentModelVisible(false); setPopVisible(false) }}
         footer={null}
-        mask={false}
         destroyOnClose
         wrapClassName="spreadOverModal"
+        mask={false}
       >
         <Popover visible={popVisible} placement='rightTop' title={'添加'} trigger="click"
           overlayStyle={{ width: 400 }}

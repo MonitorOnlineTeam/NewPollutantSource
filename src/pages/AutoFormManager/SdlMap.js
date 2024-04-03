@@ -523,6 +523,7 @@ class SdlMap extends PureComponent {
           title="编辑位置信息"
           // width="70%"
           wrapClassName='spreadOverModal'
+          mask={false}
           destroyOnClose// 清除上次数据
           onOk={() => {
             this.onOk();

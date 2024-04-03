@@ -818,6 +818,7 @@ export default class Index extends Component {
           visible={this.state.visible}
           onCancel={() => { this.setState({ visible: false }) }}
           wrapClassName={`spreadOverModal`}
+          mask={false}
           destroyOnClose
           className={styles.formModalSty}
           footer={

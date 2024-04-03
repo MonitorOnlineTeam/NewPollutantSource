@@ -810,6 +810,7 @@ const Index = (props) => {
           footer={null}
           destroyOnClose
           wrapClassName={`spreadOverModal`}
+          mask={false}
         >
           <ServiceDetails serviceQueryPar={{ time: [moment(queryPar.bTime), moment(queryPar.eTime)], serviceAreaCode: serviceAreaCode, province: province }} type={type[path]} />
         </Modal>

@@ -208,6 +208,7 @@ const Index = (props) => {
         footer={null}
         destroyOnClose
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
+        mask={false}
       >
         <Detail  detailCode={detailCode}/>
       </Modal>

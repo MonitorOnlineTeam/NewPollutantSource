@@ -1942,6 +1942,7 @@ const Index = (props) => {
         footer={null}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
+        mask={false}
       >
        <CooperaInspection cooperatInspectionRecordList={cooperaInspectionData}/>
       </Modal>

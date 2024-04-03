@@ -925,6 +925,7 @@ const Workbench = props => {
           title={'待办中心'}
           footer={null}
           wrapClassName="spreadOverModal"
+          mask={false}
           destroyOnClose
           onCancel={() => setSuperviseRectificaVisible(false)}
         >
