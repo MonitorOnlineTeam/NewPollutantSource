@@ -1248,7 +1248,7 @@ const Index = props => {
                         const editorContent2 = editor2?.root?.innerHTML
                         const contentVal = editorContent2 && editorContent2.replaceAll(/<p>|[</p>]/g, '').trim();
                         if ((!contentVal) || contentVal === 'br') {
-                          return Promise.reject(new Error('请输入原因!'));
+                          return Promise.reject(new Error('请输入原因！'));
                         } else {
                           modalForm.setFieldsValue({ checkReason: editorContent2 })
                           return Promise.resolve();
