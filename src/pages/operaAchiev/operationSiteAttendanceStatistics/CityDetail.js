@@ -91,7 +91,7 @@ const Index = (props) => {
       width:130,
     },
     {
-      title: '省份',
+      title: '省',
       dataIndex: 'province',
       key: 'province',
       align: 'center',
@@ -165,20 +165,20 @@ const Index = (props) => {
       }
     },
     {
-      title: '现场工作时长(小时)',
+      title: '现场工作时长（小时）',
       dataIndex: 'workTime',
       key: 'workTime',
       align: 'center',
       ellipsis: true,
-      width: 140,
+      width: 155,
     },
     {
-      title: '签到异常次数(缺卡次数)',
+      title: '签到异常次数（缺卡次数）',
       dataIndex: 'exceptCount',
       key: 'exceptCount',
       align: 'center',
       ellipsis: true,
-      width: 160,
+      width: 180,
     },
   ]
   const onFinish = async (pageIndex, pageSize, cityDetailQueryPar) => {  //查询

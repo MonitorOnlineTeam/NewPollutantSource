@@ -56,7 +56,7 @@ export default Model.extend({
             yield update(type==1? { exportLoading: false } : {  exportLoading2: false})
         },
         *SubmitSurvey({ payload, callback }, { call, put, update }) { //客户满意度调查 提交
-            const result = yield call(services.getServiceDispatchTypeAndRecord, payload);
+            const result = yield call(services.SubmitSurvey, payload);
             if (result.IsSuccess) {
                 callback && callback(result.Datas)
             } else {

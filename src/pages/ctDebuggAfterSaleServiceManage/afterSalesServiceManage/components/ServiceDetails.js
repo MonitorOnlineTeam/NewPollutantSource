@@ -14,11 +14,11 @@ import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
+import Cookie from 'js-cookie';
 import RegionList from '@/components/RegionList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
-import styles from "@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery/style.less"
-import Cookie from 'js-cookie';
 import Detail from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery/detail'
+import styles from "@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery/style.less"
 const { Option } = Select; 
 
 const namespace = 'ctAfterSalesServiceManagement'
@@ -222,7 +222,7 @@ const Index = (props) => {
     },
   ];
   const [detailVisible, setDetailVisible] = useState(false)
-  const [detailTitle, setDetailTitle] = useState('详情')
+  const [detailTitle, setDetailTitle] = useState()
   const [detailData, setDetailData] = useState()
   const [detailId, setDetailId] = useState()
 

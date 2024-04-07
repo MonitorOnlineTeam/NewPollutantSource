@@ -30,7 +30,7 @@ const Index = (props) => {
 
 
 
-  const {data,} = props;
+  const {data} = props;
  
 
 
@@ -40,7 +40,6 @@ const Index = (props) => {
 
   }, []);
 
-
   const ContentComponents = () => {
     return <Form className='detailForm'>
      <TitleComponents simpleSty text='派单详情' key='1' height={16} style={{ fontSize:16 }} />
@@ -48,51 +47,62 @@ const Index = (props) => {
               <Row>
                 <Col span={8}>
                     <Form.Item label='派单工号'>
+                      {data?.Num}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='项目编号'>
+                    {data?.ProjectCode}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='项目名称'>
+                    {data?.ProjectName}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='大区名称'>
+                    {data?.ServiceAreaName}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='省份'>
+                    {data?.ProvinceName}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='行业'>
+                    {data?.Industry}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='服务工程师'>
+                    {data?.WorkerName}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='工程师行政区域'>
-                 
+                    {data?.ServiceAreaName}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='服务主要内容'> 
+                    {data?.Remark}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='服务完成日期'>
+                    {data?.LeaveDate}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='客户姓名'>
+                    {data?.ContactsName}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='客户电话'>
+                    {data?.Phone}
                    </Form.Item> 
                 </Col>
               </Row>
@@ -103,7 +113,7 @@ const Index = (props) => {
   
 
   return (
-    <div className={styles.installaEquipmentSty}>
+    <div>
           <ContentComponents />
     </div>
   );

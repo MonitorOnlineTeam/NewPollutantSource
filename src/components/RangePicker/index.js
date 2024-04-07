@@ -7,7 +7,7 @@ import { DatePicker } from 'antd';
 import PropTypes from 'prop-types';
 
 const { RangePicker } = DatePicker;
-
+const startOfWeek = moment().startOf('week')
 class Index extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +17,7 @@ class Index extends Component {
             dateFormat: this.props.format || 'YYYY-MM-DD HH:mm:ss',
             ranges: {
                 今天: [moment().startOf('day'), moment()],
-                本周: [moment().startOf('week'), moment()],
+                本周: [startOfWeek.subtract(startOfWeek.isoWeekday() - 1, 'days'), startOfWeek.clone().add(6, 'days').endOf('day')],
                 连续七天: [moment().add(-6, 'd'), moment()],
                 本月: [moment().startOf('month'), moment().endOf('month')],
                 上月: [moment().add(-1, 'M').startOf('month'), moment().add(-1, 'M').endOf('month')],
@@ -49,7 +49,6 @@ class Index extends Component {
     render() {
         return (
             <RangePicker
-
                 showTime={this.state.showTime}
                 value={this.props.dateValue}
                 onChange={this.props.onChange}

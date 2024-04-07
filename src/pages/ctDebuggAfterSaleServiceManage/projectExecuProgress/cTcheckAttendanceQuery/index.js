@@ -159,8 +159,8 @@ const Index = (props) => {
         },
         {
           title: '结果',
-          dataIndex: 'OResult',
-          key: 'OResult',
+          dataIndex: 'SResult',
+          key: 'SResult',
           align: 'center',
           ellipsis: true,
           render:(text, record, index)=>{
@@ -169,8 +169,8 @@ const Index = (props) => {
         },
         {
           title: '经度',
-          dataIndex: 'OLongitude',
-          key: 'OLongitude',
+          dataIndex: 'SLongitude',
+          key: 'SLongitude',
           align: 'center',
           ellipsis: true,
 
@@ -193,8 +193,8 @@ const Index = (props) => {
         },
         {
           title: '详细地址',
-          dataIndex: 'OAddress',
-          key: 'OAddress',
+          dataIndex: 'SAddress',
+          key: 'SAddress',
           align: 'center',
           ellipsis: true,
         },
@@ -324,7 +324,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item name='regionCode' label='省份' >
-            <RegionList levelNum={1} />
+            <RegionList ct levelNum={1} />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -342,7 +342,7 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading} style={{ marginRight: 8 }}>
               查询
          </Button>
-            <Button style={{ marginRight: 8 }} onClick={() => { setPageIndex(1); setPageSize(20); onFinish(1, 20) }}>
+            <Button style={{ marginRight: 8 }} onClick={() => {form.resetFields();setPageIndex(1); setPageSize(20); onFinish(1, 20) }}>
               重置
          </Button>
             <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>

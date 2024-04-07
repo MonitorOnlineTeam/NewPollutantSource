@@ -24,7 +24,7 @@ import InvestigaContent from "./components/InvestigaContent";
 import InvestigateModal from "./components/InvestigateModal";
 import HandleModal from "./components/HandleModal";
 import UserList from '@/components/UserList'
-
+import {  permissionButton } from '@/utils/utils';
 import { API } from '@config/API';
 import cuid from 'cuid';
 import styles from "./style.less"
@@ -44,6 +44,8 @@ const dvaPropsData = ({ loading, customerSatisfacQuery, global, }) => ({
   exportLoading: customerSatisfacQuery.exportLoading,
   exportLoading2: customerSatisfacQuery.exportLoading2,
   largeRegionListLoading: loading.effects[`ctCommon/GetLargeRegionList`],
+  submitRerminaLoading: loading.effects[`${namespace}/SubmitRermination`],
+  transmitSurveyLoading: loading.effects[`${namespace}/TransmitSurvey`],
   configInfo: global.configInfo,
 })
 
@@ -58,7 +60,7 @@ const Index = (props) => {
 
 
 
-  const {largeRegionListLoading, location:{pathname}, queryPar, tableDatas, tableTotal, tableLoading,queryPar2, tableDatas2, tableTotal2, tableLoading2, auditPhotoLoading, installPhotoData, addAuditInfoLoading,exportLoading,exportLoading2} = props;
+  const {largeRegionListLoading, location:{pathname}, queryPar, tableDatas, tableTotal, tableLoading,queryPar2, tableDatas2, tableTotal2, tableLoading2, auditPhotoLoading, installPhotoData, addAuditInfoLoading,exportLoading,exportLoading2,submitRerminaLoading,transmitSurveyLoading,} = props;
  
 
   const [exportIndex, setExportIndex] = useState(-1);
@@ -71,8 +73,15 @@ const Index = (props) => {
   const [popVisible2, setPopVisible2] = useState(false);
 
   
+  const [confiAssistantCheckBtn, setConfiAssistantCheckBtn] = useState(false);
 
   useEffect(() => {
+    const buttonList = permissionButton(props.match.path)
+    buttonList.map(item => {
+      switch (item) {
+        case 'confiAssistantChecklist': setConfiAssistantCheckBtn(true); break;
+      }
+    })
     props.dispatch({
       type: `ctCommon/GetLargeRegionList`,
       payload: {},
@@ -100,10 +109,12 @@ const Index = (props) => {
     setViewAllVisible(true)
     setViewAllFlag(true)
     formAll.resetFields()
-    onFinish(2,pageIndex2, pageSize2)
+    setPopVisible(false)
+    setPopVisible2(false)
+    onFinish(2,pageIndex2, pageSize2);
   }
 
-  const columns = [
+  const columns = (type)=>[
     {
       title: '序号',
       align: 'center',
@@ -121,15 +132,15 @@ const Index = (props) => {
     },
     {
       title: '派单时间',
-      dataIndex: 'ProjectCode',
-      key: 'ProjectCode',
+      dataIndex: 'OrderDate',
+      key: 'OrderDate',
       align: 'center',
       ellipsis: true,
     },
     {
       title: '项目编号',
-      dataIndex: 'ItemCode',
-      key: 'ItemCode',
+      dataIndex: 'ProjectCode',
+      key: 'ProjectCode',
       align: 'center',
       ellipsis: true,
     },
@@ -281,7 +292,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text) => {
-        return  <span style={{color: text == '待调查'? '#f5222d' : 'rgba(0, 0, 0, 0.85)'}}>{text}</span> 
+        return  <span style={{color: text == '待处理'? '#f5222d' : 'rgba(0, 0, 0, 0.85)'}}>{text}</span> 
       }
     },
     {
@@ -309,14 +320,18 @@ const Index = (props) => {
       title: <span>操作</span>,
       align: 'center',
       fixed: 'right',
-      width: 280,
+      width:  type==2? 80 : 280,
       ellipsis: true,
       fixed:'right',
       render: (text, record,index) => {
-        return <> 
-             <a onClick={()=>detail(record)}>详细</a>  
-             {record.IsInvestigator&&<> <Divider type="vertical" /><a onClick={()=>handle(record)}>处理</a></>}
-             {record.IsProcessedBy&&<> <Divider type="vertical" /><a onClick={()=>investigate(record)}>调查</a>
+        return type==2?
+              <a onClick={()=>detail(record)}>详细</a>  //查看所有数据
+              :
+              <> 
+              <a onClick={()=>detail(record)}>详细</a>
+             {(record.IsInvestigator&&record.ProcessingStatusName=='待处理') || (record.IsProcessedBy&&record.InvestigationStatusName=='待调查') &&    <Divider type="vertical" />}
+             {record.IsInvestigator&&record.ProcessingStatusName=='待处理'&&<><a onClick={()=>handle(record)}>处理</a><Divider type="vertical" /></>}
+             {record.IsProcessedBy&&record.InvestigationStatusName=='待处理'&&<><a onClick={()=>investigate(record)}>调查</a><Divider type="vertical" />
         <Popover visible={popVisible} placement='left' title={'终止调查'} trigger="click"
           overlayStyle={{ width: 400 }}
           content={
@@ -325,22 +340,23 @@ const Index = (props) => {
               form={form2}
               onFinish={(values)=>terminaInvestiga(values,record)}
             >
-              <Form.Item label="终止调查原因" name="categoryNum" rules={[{ required: true, message: '请输入终止调查原因！' }]} >
+              <Form.Item label="终止调查原因" name="rerminationRemark" rules={[{ required: true, message: '请输入终止调查原因！' }]} >
                 <Input.TextArea  rows={2}  placeholder='请输入' allowClear />
               </Form.Item>
               <Row align='end'>
                 <Button onClick={() => { setPopVisible(false) }} style={{ marginRight: 8 }} >
                   取消
                 </Button>
-                <Button type="primary" htmlType='submit' loading={false}>
+                <Button type="primary" htmlType='submit' loading={submitRerminaLoading}>
                   保存
                   </Button>
               </Row>
             </Form>
           }
           > 
-          <Divider type="vertical" /><a onClick={()=>{setPopVisible(true);setPopVisible2(false)}}>终止调查</a>
+          <a onClick={()=>{setPopVisible(true);form2.resetFields();setPopVisible2(false)}}>终止调查</a>
         </Popover>
+        <Divider type="vertical" />
         <Popover visible={popVisible2} placement='left' title={'任务转发'} trigger="click"
           overlayStyle={{ width: 400 }}
           content={
@@ -349,20 +365,20 @@ const Index = (props) => {
               form={form3}
               onFinish={(values)=>forward(values,record)}
             >
-              <Form.Item label="转发人" name="categoryNum" rules={[{ required: true, message: '请选择转发人！' }]} >
+              <Form.Item label="转发人" name="userId" rules={[{ required: true, message: '请选择转发人！' }]} >
                 <UserList />
               </Form.Item>
               <Row align='end'>
                 <Button onClick={() => { setPopVisible2(false)}} style={{ marginRight: 8 }} >
                   取消
                 </Button>
-                <Button type="primary" htmlType='submit' loading={false}>
+                <Button type="primary" htmlType='submit' loading={transmitSurveyLoading}>
                   保存
                   </Button>
               </Row>
             </Form>
           }>
-            <Divider type="vertical" /> <a  onClick={()=>{setPopVisible2(true);setPopVisible(false) }}>转发</a>
+            <a  onClick={()=>{setPopVisible2(true);form3.resetFields();setPopVisible(false) }}>转发</a>
         </Popover>
         </>}
              </>
@@ -370,7 +386,6 @@ const Index = (props) => {
     }
     }
   ];
-
   const largeRegionChange = (value)=>{
     form.setFieldsValue({province:undefined})
     const data = value? provinceAllList.filter(item=>item.ID == value ) : provinceAllList
@@ -382,12 +397,32 @@ const Index = (props) => {
     setProvincelist2(data)
   }
   
-  const terminaInvestiga = (value,row) => {
-    console.log(value,row)
-
+  const terminaInvestiga = (values,row) => {
+    props.dispatch({
+      type: `${namespace}/SubmitRermination`,
+      payload: {
+        ...values,
+        id: row?.ID,
+      },
+      callback:()=>{
+        setPopVisible(false)
+        onFinish(1, pageIndex, pageSize)
+      }
+    }); 
   }
-  const forward = (value,row)=>{
-   console.log(value,row)
+  const forward = (values,row)=>{
+    props.dispatch({
+      type: `${namespace}/TransmitSurvey`,
+      payload: {
+        ...values,
+        id: row?.ID,
+        num:row?.Num,
+      },
+      callback:()=>{
+        setPopVisible2(false)
+        onFinish(1, pageIndex, pageSize)
+      }
+    }); 
   }
   const [data, setData] = useState([1])
 
@@ -423,7 +458,7 @@ const Index = (props) => {
         pageIndex: PageIndex,
         pageSize: PageSize,
         type:type,
-        allData:type==2? 1 : undefined
+        allData:type==1?2 : 1,
       }
       props.dispatch({
         type: `${namespace}/GetSatisfactionSurveyList`,
@@ -469,7 +504,7 @@ const Index = (props) => {
       <Row align='middle'>
       <Col span={8}>
         <Spin size='small' spinning={largeRegionListLoading}   className='formItemSpinSty'>
-          <Form.Item name='serviceAreaCode' label='服务大区'>
+          <Form.Item name='serviceAreaCode' label='大区名称'>
              <Select placeholder='请选择' onChange={largeRegionChange} allowClear>
              {largeRegionList.map(item=><Option value={item.ID}>{item.LargeRegion}</Option>)}
              </Select>
@@ -502,7 +537,7 @@ const Index = (props) => {
          <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading} onClick={() => {exports(1) }}>
               导出
          </Button>
-           <SetUserListBtn type={4} text='配置助理清单' />
+           {confiAssistantCheckBtn&&<SetUserListBtn type={5} text='配置助理清单' onClick={()=>{setPopVisible(false);setPopVisible2(false)}}/>}
             <Button type="primary" onClick={viewAllData}>
               查看所有数据
             </Button>
@@ -521,7 +556,7 @@ const Index = (props) => {
       <Row align='middle'>
       <Col span={8}>
         <Spin size='small' spinning={largeRegionListLoading}   className='formItemSpinSty'>
-          <Form.Item name='serviceAreaCode' label='服务大区'>
+          <Form.Item name='serviceAreaCode' label='大区名称'>
              <Select placeholder='请选择' onChange={largeRegionChange2} allowClear>
              {largeRegionList.map(item=><Option value={item.ID}>{item.LargeRegion}</Option>)}
              </Select>
@@ -548,7 +583,7 @@ const Index = (props) => {
           </Form.Item>
         </Col>
         <Col span={8} >
-          <Form.Item name='investigation' label='调查状态' >
+          <Form.Item name='investigationStatus' label='调查状态' >
             <Select placeholder='请选择' allowClear>
                <Option value={1}>待调查</Option>
                <Option value={2}>调查结束</Option>
@@ -566,7 +601,7 @@ const Index = (props) => {
         </Col>
         <Col span={8} >
           <Form.Item name='time' label='调查日期' >
-          <RangePicker 
+          <RangePicker_
               style={{ width: '100%' }}
               format="YYYY-MM-DD"
               />
@@ -597,14 +632,17 @@ const Index = (props) => {
               <Row>
                 <Col span={24}>
                     <Form.Item label='处理办法'>
+                    {data?.ProcessedMethod}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='处理人'>
+                    {data?.ProcessedByName}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='处理填写时间'>
+                    {data?.ProcessedTime}
                    </Form.Item> 
                 </Col>
               </Row>
@@ -623,7 +661,7 @@ const Index = (props) => {
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={columns}
+            columns={columns(1)}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
@@ -634,15 +672,16 @@ const Index = (props) => {
             }}
           />
         </Card>
-        <HandleModal visible={handleVisible}  data={data}  onCancel={() => { setHandleVisible(false) }}/>
-           <InvestigateModal   visible={investigateVisible}  data={data}  onCancel={() => { setInvestigateVisible(false) }}/>
+           <HandleModal visible={handleVisible}  data={data}  completeFinish={()=>{setPageIndex(1);setPageSize(20);onFinish(1,1,20)}}  onCancel={() => { setHandleVisible(false) }}/>
+           <InvestigateModal   visible={investigateVisible}  data={data}  completeFinish={()=>{setPageIndex(1);setPageSize(20);onFinish(1,1,20)}} onCancel={() => { setInvestigateVisible(false) }}/>
         <Modal
             visible={detailVisible}
             title={'调查'}
             onCancel={() => { setDetailVisible(false)}}
             destroyOnClose
-            wrapClassName={`spreadOverModal ${styles.modalSty}`}
+            wrapClassName={`spreadOverModal ${styles.modalSty} ${styles.detailModalSty}`}
             mask={false}
+            footer={null}
           >
           <DispatchDetails data={data}/>
           <InvestigaContent data={data}/> 
@@ -664,7 +703,7 @@ const Index = (props) => {
             loading={tableLoading2}
             bordered
             dataSource={tableDatas2}
-            columns={columns}
+            columns={columns(2)}
             pagination={{
               total: tableTotal2,
               pageSize: pageSize2,

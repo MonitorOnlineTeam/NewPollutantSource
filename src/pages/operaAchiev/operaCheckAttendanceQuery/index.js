@@ -83,7 +83,7 @@ const Index = (props) => {
   useEffect(() => {
     onFinish(pageIndex,pageSize);
     props.GetSignInType({},(res)=>{
-      res?.childList&&setWorkTypeList(res?.childList)
+      res?.allList&&setWorkTypeList(res?.allList)
     })
   }, []);
 
@@ -329,7 +329,7 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading} style={{ marginRight: 8 }}>
               查询
          </Button>
-            <Button style={{ marginRight: 8 }} onClick={() => { setPageIndex(1); setPageSize(20); onFinish(1, 20) }}>
+            <Button style={{ marginRight: 8 }} onClick={() => {form.resetFields();setPageIndex(1); setPageSize(20); onFinish(1, 20) }}>
               重置
          </Button>
             <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>

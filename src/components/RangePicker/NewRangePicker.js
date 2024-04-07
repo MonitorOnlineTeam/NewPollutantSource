@@ -7,9 +7,9 @@ import { DatePicker, message } from 'antd';
 import PropTypes from 'prop-types';
 
 const { RangePicker } = DatePicker;
-// 获取当前年份
-const currentYear = moment().year();
 
+const currentYear = moment().year();// 获取当前年份
+const startOfWeek = moment().startOf('week'); //获取本周 默认为星期日
 class NewRangePicker extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +20,7 @@ class NewRangePicker extends Component {
             dateValue: this.getDefault(),
             ranges: {
                 今天: [moment().startOf('day'), moment()],
-                本周: [moment().startOf('week'), moment()],
+                本周: [startOfWeek.subtract(startOfWeek.isoWeekday() - 1, 'days'), startOfWeek.clone().add(6, 'days').endOf('day')],
                 上周: [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
                 连续七天: [moment().add(-6, 'd'), moment()],
                 本月: [moment().startOf('month'), moment()],

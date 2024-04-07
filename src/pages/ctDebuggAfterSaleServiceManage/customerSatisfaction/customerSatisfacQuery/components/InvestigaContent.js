@@ -30,7 +30,7 @@ const Index = (props) => {
 
 
 
-  const {data,} = props;
+  const {data} = props;
  
 
 
@@ -48,24 +48,29 @@ const Index = (props) => {
               <Row>
                 <Col span={8}>
                     <Form.Item label='调查人员'>
+                    {data?.InvestigatorName}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='调查日期'>
+                    {data?.InvestigationTime}
                    </Form.Item> 
                 </Col>
                 <Col span={8}></Col>
                 <Col span={8}>
                     <Form.Item label='工程师的服务态度'>
+                    {data?.ServiceAttitude}
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='工程师的技术水平'>
+                    {data?.TechnicalLevel}
                    </Form.Item> 
                 </Col>
                 <Col span={8}></Col>
                 <Col span={24}>
                     <Form.Item label='客户问题及建议'>
+                    {data?.Problem}
                    </Form.Item> 
                 </Col>
               </Row>
@@ -76,7 +81,7 @@ const Index = (props) => {
   
 
   return (
-    <div className={styles.installaEquipmentSty}>
+    <div>
           <ContentComponents />
     </div>
   );

@@ -208,7 +208,7 @@ const Index = (props) => {
         time: [moment(new Date()).add(-7, 'day').startOf('day'), moment(new Date()).endOf('day')]
       }}
     >
-      <Form.Item label="日期" name="time">
+      <Form.Item label="签到时间" name="time">
         <RangePicker_
           allowClear={false}
           style={{ width: 260 }}
@@ -216,16 +216,12 @@ const Index = (props) => {
           // showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
         />
       </Form.Item>
-      <Form.Item name='regionCode' label='省份' >
-        <RegionList levelNum={1} style={{ width: 170 }} />
-      </Form.Item>
       <Form.Item name='pollutantType' label='监测类型' >
         <Select placeholder='请选择' style={{ width: 160 }} allowClear>
           <Option value={2}>污染源（废气）</Option>
           <Option value={1}>污染源（废水）</Option>
           <Option value={3}>污染源（废气废水）</Option>
         </Select>
-
       </Form.Item>
       <Spin spinning={signInTypeLoading} size='small' className='formItemSpinSty'>
       <Form.Item name='workType' label='工作类型' >
@@ -234,6 +230,9 @@ const Index = (props) => {
         </Select>
       </Form.Item>
       </Spin>
+      <Form.Item name='regionCode' label='省份' >
+        <RegionList levelNum={1} style={{ width: 170 }} />
+      </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={tableLoading} style={{ marginRight: 8 }}>
           查询
@@ -249,7 +248,7 @@ return (
     <BreadcrumbWrapper>
       <Card title={searchComponents()}>
         <SdlTable
-          resizable
+          // resizable
           loading={tableLoading}
           bordered
           rowClassName={null}

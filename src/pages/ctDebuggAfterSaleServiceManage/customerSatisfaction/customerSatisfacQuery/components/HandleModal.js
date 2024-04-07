@@ -12,13 +12,12 @@ import Cookie from 'js-cookie';
 import config from '@/config';
 import DispatchDetails from './DispatchDetails';
 import InvestigaContent from './InvestigaContent';
-
-
 import { API } from '@config/API';
 import cuid from 'cuid';
 import styles from "../style.less"
+import DispatchDetailsBtn from '../../../components/dispatchDetailsBtn';
 const { Step } = Steps;
-const namespace = 'installaEquipment'
+const namespace = 'customerSatisfacQuery'
 
 const dvaPropsData = ({ loading, installaEquipment, global, }) => ({
   submitProcessedLoading: loading.effects[`${namespace}/SubmitProcessed`],
@@ -29,11 +28,11 @@ const Index = (props) => {
 
 
 
-  const [form2] = Form.useForm();
+  const [handleModalForm] = Form.useForm();
 
 
 
-  const { visible, data,submitProcessedLoading} = props;
+  const { visible, data,submitProcessedLoading,completeFinish} = props;
  
 
 
@@ -41,6 +40,7 @@ const Index = (props) => {
   useEffect(() => {
     if(visible){
     SetCurrent(0)
+    handleModalForm.resetFields()
   }
   }, [visible]);
 
@@ -51,11 +51,11 @@ const Index = (props) => {
   const HandleComponents = () => {
     return <div style={{padding:'14px 18px 0 18px'}}>
       <Form
-      form={form2}
+      form={handleModalForm}
       name="advanced_search2"
       className={'investigate-search-form'}
     >
-      <Form.Item name='problem' label='处理办法' rules={[{ required: true, message: '请输入处理办法！' }]}>
+      <Form.Item name='processedMethod' label='处理办法' rules={[{ required: true, message: '请输入处理办法！' }]}>
         <Input.TextArea rows={4} placeholder="请输入" allowClear />
       </Form.Item>
     </Form>
@@ -73,26 +73,22 @@ const Index = (props) => {
         SetCurrent(current + 1)
         break;
       case 1: //处理
-      const values = await form2.validateFields();
-      const par = {
-          ...values,
-          id: data.ID,
-          num: data.Num,
-          serviceAreaCode: data.ServiceAreaCode,
-          investigatorName:data.investigatorName,
-      }
+      const values = await handleModalForm.validateFields();
       props.dispatch({
         type: `${namespace}/SubmitProcessed`,
         payload: {
-         ...par
+          ...values,
+          id: data?.ID,
+          num: data?.Num,
         },
         callback:()=>{
           SetCurrent(current + 1)
+          completeFinish&&completeFinish()
         }
       });  
         break;
       case 2: //完成
-        setExamineVisible(false)
+        props.onCancel()
         break;
       default:
         SetCurrent(0)
@@ -111,7 +107,7 @@ const Index = (props) => {
   return (
           <Modal
             visible={visible}
-            title={'处理'}
+            title={<Row justify='space-between'><span>处理</span><DispatchDetailsBtn data={data}/></Row>}
             onCancel={() => { props.onCancel()}}
             destroyOnClose
             wrapClassName={`spreadOverModal ${styles.modalSty}`}

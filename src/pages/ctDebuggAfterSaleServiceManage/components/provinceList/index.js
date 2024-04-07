@@ -1,7 +1,7 @@
 /**
- * 功  能：服务大区 成套
+ * 功  能：省份 成套
  * 创建人：jab
- * 创建时间：2024.03
+ * 创建时间：2024.04
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin } from 'antd';
@@ -28,7 +28,7 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    GetLargeRegionList: (payload,callback) => { //服务大区
+    GetLargeRegionList: (payload,callback) => { //服务大区 省份
         dispatch({
           type: `ctCommon/GetLargeRegionList`,
           payload: payload,
@@ -42,13 +42,21 @@ const Index = (props) => {
 
 
   const { name } = props;
-  const [largeRegionList, setLargeRegionList] = useState([]);
+  const [provinceList, setProvinceList] = useState([]);
 
 
 
   useEffect(() => {
     props.GetLargeRegionList({},(res)=>{
-        setLargeRegionList(res)
+      const data = [];
+         res.map(item=>{
+          if(item.ChildList?.[0]){
+            item.ChildList.map(childListItem=>{
+              data.push(childListItem)
+            })
+          }
+        })
+        setProvinceList(data)
     })
 
   }, []);
@@ -56,9 +64,9 @@ const Index = (props) => {
   
   return (
         <Spin size='small' spinning={props.largeRegionListLoading} className='formItemSpinSty'>
-        <Form.Item name={name? name : 'serviceAreaCode'} label='服务大区'  >
+        <Form.Item name={name? name : 'province'} label='省份'  >
          <Select placeholder='请选择'  allowClear>
-         {largeRegionList.map(item=><Option value={item.ID}>{item.LargeRegion}</Option>)}
+         {provinceList.map(item=><Option value={item.RegionCode}>{item.RegionName}</Option>)}
          </Select>
          </Form.Item>
         </Spin>

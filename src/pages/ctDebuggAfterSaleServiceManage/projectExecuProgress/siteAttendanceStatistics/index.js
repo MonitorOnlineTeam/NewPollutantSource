@@ -1,5 +1,5 @@
 /**
- * 功  能：项目执行进度 /签到考勤查询
+ * 功  能：项目执行进度 /现场工作时长
  * 创建人：jab
  * 创建时间：2024.03.30
  */
@@ -164,7 +164,7 @@ const Index = (props) => {
         time:[moment(new Date()).add(-1, 'day').startOf('day'),moment(new Date()).add(-1, 'day').endOf('day')]
       }}
     >
-          <Form.Item label="日期" name="time">
+          <Form.Item label="签到时间" name="time">
             <RangePicker_
               allowClear={false}
               style={{ minWidth: 240 }}

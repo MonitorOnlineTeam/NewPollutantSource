@@ -50,20 +50,20 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-    const { type,text } = props;
+    const { type, text,onClick } = props;
 
     const [listVisble, setListVisble] = useState(false)
 
 
     useEffect(() => {
-        if(listVisble){
-        if (props.inspectorUserList?.length <= 0) {
-            props.getInspectorUserList()
+        if (listVisble) {
+            if (props.inspectorUserList?.length <= 0) {
+                props.getInspectorUserList()
+            }
+            props.getSetUser({ type: type }, (data) => {
+                setTargetUserKeys(data)
+            })
         }
-        props.getSetUser({type:type}, (data) => {
-            setTargetUserKeys(data)
-        })
-     }
     }, [listVisble]);
 
     const [targetUserKeys, setTargetUserKeys] = useState()
@@ -72,7 +72,7 @@ const Index = (props) => {
         props.addSetUser({
             userIdList: direction === 'right' ? nextTargetKeys : moveKeys,
             state: direction === 'right' ? 1 : 2,
-            type:type,
+            type: type,
         })
     }
     const leftTableColumns = [
@@ -146,22 +146,23 @@ const Index = (props) => {
 
 
     return <>
-         <Button type="primary" style={{ marginRight: 4,...props.btnSty }}
+        <Button type="primary" style={{ marginRight: 4, ...props.btnSty }}
             onClick={() => {
                 setListVisble(true);
+                onClick&&onClick();
             }}
         >
             {text}
-        </Button> 
-         <Modal
+        </Button>
+        <Modal
             visible={listVisble}
             title={text}
             footer={null}
             onCancel={() => { setListVisble(false) }}
             destroyOnClose
             width={1100}
-        > 
-        <Spin spinning={props.inspectorUserLoading || props.setUserLoading || props.addSetUserLoading || false}>
+        >
+            <Spin spinning={props.inspectorUserLoading || props.setUserLoading || props.addSetUserLoading || false}>
 
                 <TableTransfer
                     titles={['待分配用户', '已分配用户']}
@@ -178,8 +179,8 @@ const Index = (props) => {
                     {...props}
 
                 />
-            </Spin> 
-        </Modal> 
+            </Spin>
+        </Modal>
     </>
 };
 

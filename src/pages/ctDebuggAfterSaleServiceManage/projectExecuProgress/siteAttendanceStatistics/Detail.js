@@ -106,21 +106,21 @@ const Index = (props) => {
 
       },
       {
-        title: '省份',
+        title: '省',
         dataIndex: 'ProvinceName',
         key: 'ProvinceName',
         align: 'center',
         ellipsis: true,
 
       },
-      {
-        title: '市',
-        dataIndex: 'CityName',
-        key: 'CityName',
-        align: 'center',
-        ellipsis: true,
+      // {
+      //   title: '市',
+      //   dataIndex: 'CityName',
+      //   key: 'CityName',
+      //   align: 'center',
+      //   ellipsis: true,
 
-      },
+      // },
       {
         title: '姓名',
         dataIndex: 'UserName',
@@ -176,22 +176,22 @@ const Index = (props) => {
         }
       },
       {
-        title: '现场工作时长(小时)',
+        title: '现场工作时长（小时）',
         dataIndex: 'Workhours',
         key: 'Workhours',
         align: 'center',
         ellipsis: true,
-        width:140,
+        width:155,
         render:(text, record, index)=>rowSpanFun(text, record)
 
       },
       {
-        title: '签到异常次数(缺卡次数)',
+        title: '签到异常次数（缺卡次数）',
         dataIndex: 'Num',
         key: 'Num',
         align: 'center',
         ellipsis: true,
-        width:160,
+        width:175,
 
       },
     ]

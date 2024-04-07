@@ -21,6 +21,7 @@ import LargeRegionList from "@/pages/ctDebuggAfterSaleServiceManage/components/l
 import ViewPhotos from "./components/ViewPhotos";
 import HandlingSugges from "./components/HandlingSugges";
 import ExamineModal from "./components/ExamineModal";
+import { permissionButton } from '@/utils/utils';
 
 import { API } from '@config/API';
 import cuid from 'cuid';
@@ -55,13 +56,17 @@ const Index = (props) => {
   const type= pathname=='/ctManage/supervisionInspection/installaEquipmentReview'? 1 : 2
   const [exportIndex, setExportIndex] = useState(-1);
   
-  // const [isImageViewOpen, setIsImageViewOpen] = useState(false);
-  // const [imageIndex, setImageIndex] = useState(0);
-  // const [imageList, setImageList] = useState([]);
 
 
+  const [reviewersListBtn, setReviewersBtn] = useState(false);
 
   useEffect(() => {
+    const buttonList = permissionButton(props.match.path)
+    buttonList.map(item => {
+      switch (item) {
+        case 'reviewersList': setReviewersBtn(true); break;
+      }
+    })
     onFinish(pageIndex, pageSize)
   }, []);
   const columns = [
@@ -343,7 +348,7 @@ const Index = (props) => {
          <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportIndex==-1 && exportLoading} onClick={() => {setExportIndex(-1); exports() }}>
               导出
          </Button>
-            <SetUserListBtn type={4} text='审核人员清单' />
+            {reviewersListBtn&&<SetUserListBtn type={4} text='审核人员清单' />}
           </Form.Item>
         </Col>
       </Row>

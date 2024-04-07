@@ -51,7 +51,6 @@ export default Model.extend({
     *AddAuditInfo({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.AddAuditInfo, { ...payload });
       if (result.IsSuccess) {
-        message.success(result.Message)
         callback && callback(result.Datas)
       } else {
         message.error(result.Message)

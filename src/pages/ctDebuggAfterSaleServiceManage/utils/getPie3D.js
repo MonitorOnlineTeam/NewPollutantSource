@@ -239,7 +239,20 @@ export function getPie3D(pieData, internalDiameterRatio,customHourVal,legendOpti
                 panSensitivity: 0, //设置为0无法平移
                 autoRotate: true, //自动旋转   
                 // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'   
-            }
+            },
+            //后处理特效可以为画面添加高光、景深、环境光遮蔽（SSAO）、调色等效果。可以让整个画面更富有质感。
+            // postEffect: {//配置这项会出现锯齿，请自己去查看官方配置有办法解决 
+            //     enable: true,
+            //     bloom: {
+            //         enable: true,
+            //         bloomIntensity: 0.1
+            //     },
+            //     SSAO: {
+            //         enable: true,
+            //         quality: 'medium',
+            //         radius: 2
+            //     }
+            // }
         },
         series: series
     };

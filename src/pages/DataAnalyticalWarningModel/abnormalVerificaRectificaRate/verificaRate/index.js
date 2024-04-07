@@ -155,7 +155,7 @@ const Index = (props) => {
       key: 'NoReview',
       align: 'center',
       render: (text, record) => {
-        return <a onClick={() => { alarmsNum(record, 1, type) }}>{text}</a>
+        return <a onClick={() => { alarmsNum(record, 4, type) }}>{text}</a>
       }
     },
     {
