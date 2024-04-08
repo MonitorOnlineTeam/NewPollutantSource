@@ -329,9 +329,8 @@ const Index = (props) => {
               :
               <> 
               <a onClick={()=>detail(record)}>详细</a>
-             {(record.IsInvestigator&&record.ProcessingStatusName=='待处理') || (record.IsProcessedBy&&record.InvestigationStatusName=='待调查') &&    <Divider type="vertical" />}
-             {record.IsInvestigator&&record.ProcessingStatusName=='待处理'&&<><a onClick={()=>handle(record)}>处理</a><Divider type="vertical" /></>}
-             {record.IsProcessedBy&&record.InvestigationStatusName=='待处理'&&<><a onClick={()=>investigate(record)}>调查</a><Divider type="vertical" />
+             {(record.IsInvestigator&&record.InvestigationStatusName=='待调查') || (record.IsProcessedBy&&record.ProcessingStatusName=='待处理') ?    <Divider type="vertical" /> : ''}
+             {record.IsInvestigator&&record.InvestigationStatusName=='待调查'&&<><a onClick={()=>investigate(record)}>调查</a><Divider type="vertical" />
         <Popover visible={popVisible} placement='left' title={'终止调查'} trigger="click"
           overlayStyle={{ width: 400 }}
           content={
@@ -381,6 +380,7 @@ const Index = (props) => {
             <a  onClick={()=>{setPopVisible2(true);form3.resetFields();setPopVisible(false) }}>转发</a>
         </Popover>
         </>}
+        {record.IsProcessedBy&&record.ProcessingStatusName=='待处理'&&<><a onClick={()=>handle(record)}>处理</a><Divider type="vertical" /></>}
              </>
                
     }
@@ -452,8 +452,8 @@ const Index = (props) => {
       const values = type==1? await form.validateFields() : await formAll.validateFields();
       const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
         ...values,
-        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
         pageIndex: PageIndex,
         pageSize: PageSize,

@@ -18,7 +18,7 @@ import RegionList from '@/components/RegionList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
-
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import Detail from './detail'
 const { Option } = Select; 
 
@@ -266,8 +266,8 @@ const Index = (props) => {
       const values =   await form.validateFields();
       props.getServiceDispatch(queryPar?{...queryPar, PageIndex: PageIndex, PageSize: PageSize,} : {
         ...values,
-        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
         PageIndex: PageIndex,
         PageSize: PageSize,
@@ -324,7 +324,7 @@ const Index = (props) => {
         </Col>
           <Col span={8}>
             <Form.Item name='time' label='下单日期' >
-              <RangePicker 
+              <RangePicker_ 
               style={{ width: '100%' }}
               showTime={false}
               format="YYYY-MM-DD"

@@ -188,8 +188,8 @@ const Index = (props) => {
       const values =  form.getFieldsValue();
       props.GetSignInList({
         ...values,
-        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
         pointType: 1
       })

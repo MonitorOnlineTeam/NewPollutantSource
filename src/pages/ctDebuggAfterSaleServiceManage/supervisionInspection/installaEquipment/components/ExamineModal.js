@@ -184,15 +184,15 @@ const Index = (props) => {
       const values = await form2.validateFields();
       const par = {
           ...values,
-          systemModelId: examineData.Col1,
-          dispatchId: examineData.DispatchId,
-          pointId: examineData.PointId,
-          equipmentAuditId: examineData.EquipmentAuditId,
-          workerID:examineData.PointId,
-          projectCode: examineData.ProjectCode,
-          itemCode:  examineData.ItemCode,
-          entName:  examineData.EntName,
-          pointName:  examineData.PointName,
+          systemModelId: data.Col1,
+          dispatchId: data.DispatchId,
+          pointId: data.PointId,
+          equipmentAuditId: data.EquipmentAuditId,
+          workerID:data.PointId,
+          projectCode: data.ProjectCode,
+          itemCode:  data.ItemCode,
+          entName:  data.EntName,
+          pointName:  data.PointName,
       }
       props.dispatch({
         type: `${namespace}/AddAuditInfo`,

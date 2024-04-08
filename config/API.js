@@ -762,9 +762,9 @@ export const API = {
     GetServiceDispatchForAnalysis: before + '/CTStatisticsApi/GetServiceDispatchForAnalysis',//获取服务明细
     ExportServiceDispatchForAnalysis: before + '/CTStatisticsApi/ExportServiceDispatchForAnalysis',//服务明细 导出
   },
-    /*** 客户满意度 ***/
+  /*** 客户满意度 ***/
   /*客户满意度调查*/
-  CustomerSatisfactionApi:{
+  CustomerSatisfactionApi: {
     GetSatisfactionSurveyList: before + '/CustomerSatisfaction/GetSatisfactionSurveyList',//获取客户满意度调查信息
     ExportSatisfactionSurvey: before + '/CustomerSatisfaction/ExportSatisfactionSurvey',//客户满意度调查信息 导出
     SubmitSurvey: before + '/CustomerSatisfaction/SubmitSurvey',//客户满意度调查提交
@@ -888,6 +888,22 @@ export const API = {
     GetAuditPhoto: before + '/CustomerSatisfaction/GetAuditPhoto',  //获取设备安装审核照片详细
     AddAuditInfo: before + '/CustomerSatisfaction/AddAuditInfo',  //安装照片审核
   },
+  //监督检查 Api
+  GeneralManagerApi: {
+    /*车辆管理*/
+    GetCarList: before + '/CTProjectExecutionApi/GetCarList',  //获取车辆信息
+    ExportCarList: before + '/CTProjectExecutionApi/ExportCarList',  //车辆信息 导出
+    /*人员档案*/
+    GetUserList: before + '/CTProjectExecutionApi/GetUserList',  //获取人员档案
+    ExportUserList: before + '/CTProjectExecutionApi/ExportUserList',  //人员档案 导出
+    GetCodList: before + '/CTProjectExecutionApi/GetCodList',  //获取岗位类别和行业属性
+    /*大区档案*/
+    GetProvinceList: before + '/CTProjectExecutionApi/GetProvinceList',  //获取大区档案
+    ExportProvinceList: before + '/CTProjectExecutionApi/ExportProvinceList',  //大区档案 导出
+    GetManagerUserList: before + '/CTProjectExecutionApi/GetManagerUserList',  //获取大区或省区经理
+    
+  },
+  
   CtAPI_WJQ: {
     // 基础服务
     CTBaseDataApi: {
@@ -969,7 +985,7 @@ export const API = {
       DeleteReturnVisitCustomers: before + '/DailyWorkManagerApi/DeleteReturnVisitCustomers',
       // 获取纪律检查详情
       GetCustomerVisitInfor: before + '/CTProjectExecutionApi/GetCustomerVisitInfor',
-    }, 
+    },
     // 服务热线电话
     HotPhone: {
       // 获取服务热线列表

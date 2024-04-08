@@ -278,8 +278,8 @@ const Index = (props) => {
       const values = await form.validateFields();
       props.GetSignInAndOffsiteSignList({
         ...values,
-        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
@@ -309,7 +309,7 @@ const Index = (props) => {
     >
       <Row>
         <Col span={8}>
-          <Form.Item name="userName" label="姓名" className='minWidth'>
+          <Form.Item name="checkUserID" label="姓名" className='minWidth'>
             <UserList />
           </Form.Item>
         </Col>

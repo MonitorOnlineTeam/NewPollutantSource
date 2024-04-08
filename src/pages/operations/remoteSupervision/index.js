@@ -545,7 +545,7 @@ const Index = (props) => {
       render: (_, record) => {
         const updateflag = record.submitStatus == '系统关闭' || (record.isCheckUser == 0 &&  (record.issueTime || record.ManagerIssueTime) ) || (record.isCheckUser == 1 &&  record.issueTime);
         // const flag = record.flag;
-        const issue =  (record.isCheckUser == 2 && record.issue) || (record.isCheckUser == 1 && !record.ManagerIssueTime);
+        const issue =  (record.isCheckUser == 1 && (record.SecondStatus=='合格' || record.SecondStatus=='不合格')) || (record.isCheckUser == 2 && (record.resultCheck=='合格' || record.resultCheck=='不合格'));
         const isCheckUser = record.isCheckUser == 1 || record.isCheckUser == 2 ; //0运维人员  1省区经理 2核查人员
         let detail = <Tooltip title="详情">
           <a onClick={() => {

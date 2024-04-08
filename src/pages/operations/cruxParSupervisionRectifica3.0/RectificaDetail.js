@@ -1054,6 +1054,7 @@ const Index = (props) => {
         rangeFile: record.RangeFileList?.[0]?.FileUuid,
         rangeAutoStatus: record.RangeAutoStatus,
         rangeStatus: record.RangeStatus,   
+        special: record.Special, 
         id: record.ID,
         zgid: record.ZGID,
         ...data,
@@ -1078,6 +1079,7 @@ const Index = (props) => {
         couStatus : record.CouStatus,
         id: record.ID,
         zgid: record.ZGID,
+        couType: record.CouType,
         ...data,
       }, (isSuccess) => {
         if (isSuccess) {

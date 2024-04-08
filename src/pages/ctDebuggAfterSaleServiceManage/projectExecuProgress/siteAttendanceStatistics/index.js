@@ -142,8 +142,8 @@ const Index = (props) => {
       const values =   await form.validateFields();
       props.GetSignInAnalysis({
         ...values,
-        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
       })
     } catch (errorInfo) {

@@ -189,7 +189,7 @@ a:hover {
 @scrollbar-thumb-color: rgba(214, 212, 212, 0.8);
 
 /*滚动条大小*/
-@scrollbar-width: 6px;
+@scrollbar-width: 12px;
 @scrollbar-height: 12px;
 
 .fixedHeader {
@@ -1012,4 +1012,34 @@ a:hover {
 }
 .ant-menu-submenu-popup :global {
   z-index: 10000;
+}
+.detailModalFormTextSty  :global{
+  .ant-modal-body{
+    padding: 16px;
+    max-height: calc(100vh - 102px);
+    overflow-y: auto;
+  }
+  .ant-form-item{
+    margin-bottom: 14px;
+  }
+  .ant-form-item-control-input-content{
+    padding-right: 16px;
+  }
+  .ant-form-item-label > label{
+   height:18px;
+  }
+  .ant-form-item-label > label,.ant-form-item-control-input{
+    min-height: 18px;
+  }
+}
+.queryCriterTitleSty  :global{
+  .ant-card-head-title{
+     padding: 8px 0;
+   }
+   .ant-form-item{
+     margin-bottom: 8px;
+   }
+   .ant-col-8:nth-child(3n-1){
+    padding: 0 16px;
+ }
 }

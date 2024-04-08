@@ -247,9 +247,9 @@ const Index = (props) => {
       const values = await form.validateFields();
       const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
         ...values,
-        status:values.status? values.status : '1，2',
-        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        status:values.status? values.status : '1,2',
+        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
         pageIndex: PageIndex,
         pageSize: PageSize,
