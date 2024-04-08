@@ -514,8 +514,7 @@ export default {
                   // 签到考勤查询 运维
                   name: 'OperaCheckAttendanceQuery',
                   path: '/operaAchiev/operaCheckAttendanceQuery',
-                  component:
-                    './operaAchiev/operaCheckAttendanceQuery',
+                  component: './operaAchiev/operaCheckAttendanceQuery',
                 },
               ],
             },
@@ -3167,7 +3166,6 @@ export default {
                       component:
                         './ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery',
                     },
-                    
                   ],
                 },
                 /**售后服务管理  */
@@ -3256,6 +3254,13 @@ export default {
                             '/ctManage/assetManagement/equipmentAccount/pollutantManagement/CTEnterprise/point',
                           component:
                             './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/point',
+                        },
+                        {
+                          // 标气有效期
+                          name: 'standardGasValidity',
+                          path: '/ctManage/assetManagement/equipmentAccount/standardGasValidity',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/standardGasValidity',
                         },
                       ],
                     },

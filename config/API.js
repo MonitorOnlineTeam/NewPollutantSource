@@ -998,6 +998,21 @@ export const API = {
       // 删除
       DeleteCustomerComplaints: before + '/CustomerSatisfaction/DeleteCustomerComplaints',
     },
+    // 标气有效期
+    StandardGasValidity: {
+      // 标气有效期列表
+      GetStandardAirList: before + '/CTProjectExecutionApi/GetStandardAirList',
+      // 添加、修改
+      UpdateOrAddStandardAir: before + '/CTProjectExecutionApi/UpdateOrAddStandardAir',
+      // 导出
+      ExportStandardAir: before + '/CTProjectExecutionApi/ExportStandardAir',
+      // 删除
+      DeleteStandardAir: before + '/CTProjectExecutionApi/DeleteStandardAir',
+      // 导入
+      ImportStandardAir: before + '/CTProjectExecutionApi/ImportStandardAir',
+      // 导入模板下载
+      GetStandardAirTemplate: before + '/CTProjectExecutionApi/GetStandardAirTemplate',
+    },
   },
 };
 
