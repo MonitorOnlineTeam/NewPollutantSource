@@ -3325,6 +3325,43 @@ export default {
                     },
                   ],
                 },
+                
+                /**技术专家系统 */
+                {
+                  path: '/ctManage/techExpertSystem',
+                  name: 'TechExpertSystem',
+                  routes: [
+                    {
+                      path: '/ctManage/techExpertSystem',
+                      redirect: '/ctManage/techExpertSystem/problemBase',
+                    },
+                    {
+                      // 问题库
+                      name: 'VehicleManager',
+                      path: '/ctManage/techExpertSystem/problemBase',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/techExpertSystem/problemBase',
+                    },
+                  ],
+                },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

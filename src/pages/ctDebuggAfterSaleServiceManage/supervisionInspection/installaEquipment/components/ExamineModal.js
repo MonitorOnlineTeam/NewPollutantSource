@@ -188,7 +188,7 @@ const Index = (props) => {
           dispatchId: data.DispatchId,
           pointId: data.PointId,
           equipmentAuditId: data.EquipmentAuditId,
-          workerID:data.PointId,
+          workerID:data.WorkerID,
           projectCode: data.ProjectCode,
           itemCode:  data.ItemCode,
           entName:  data.EntName,

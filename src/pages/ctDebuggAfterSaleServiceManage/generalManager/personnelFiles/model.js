@@ -37,17 +37,5 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *GetCodList({ payload,callback }, { call, put, update }) { //岗位类别和行业属性
-      const result = yield call(services.GetCodList, payload);
-      if (result.IsSuccess) {
-        callback&&callback(result.Datas)
-      }else{
-        message.error(result.Message)
-      }
-    },
-    
-
-
-
   }
 })

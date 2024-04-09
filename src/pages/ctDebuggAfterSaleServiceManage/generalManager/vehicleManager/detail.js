@@ -195,7 +195,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item label='综合油耗'>
-            {data?.OilConsumption}
+            {data?.OilConsumption && `${data.OilConsumption}L/100km`}
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -248,7 +248,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item label='核定载人数'>
-            {data?.ApprovedCount}
+            {data?.ApprovedCount  && `${data.ApprovedCount}人`}
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -258,22 +258,22 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item label='总质量'>
-            {data?.Weight}
+            {data?.Weight && `${data.Weight}kg`}
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item label='整备质量'>
-            {data?.PreparationWeight}
+            {data?.PreparationWeight && `${data.PreparationWeight}kg`}
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item label='核定载质量'>
-            {data?.ApprovedWeight}
+            {data?.ApprovedWeight && `${data.ApprovedWeight}kg`}
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item label='准牵引总质量'>
-            {data?.TractionWeight}
+            {data?.TractionWeight && `${data.TractionWeight}kg`}
           </Form.Item>
         </Col>
       </Row>

@@ -707,8 +707,8 @@ export const API = {
   CtCommonApi: {
     GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList', //站点信息
     GetTestPollutantList: before + '/DebuggingBase/GetTestPollutantList', //站点信息
-    // 获取大区
-    GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList',
+    GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList',  // 获取大区
+    GetCodList: before + '/CTProjectExecutionApi/GetCodList',  //获取岗位类别、行业属性、问题类别
   },
   //项目执行进度 Api
 
@@ -888,7 +888,7 @@ export const API = {
     GetAuditPhoto: before + '/CustomerSatisfaction/GetAuditPhoto',  //获取设备安装审核照片详细
     AddAuditInfo: before + '/CustomerSatisfaction/AddAuditInfo',  //安装照片审核
   },
-  //监督检查 Api
+  //通用管理 Api
   GeneralManagerApi: {
     /*车辆管理*/
     GetCarList: before + '/CTProjectExecutionApi/GetCarList',  //获取车辆信息
@@ -896,14 +896,22 @@ export const API = {
     /*人员档案*/
     GetUserList: before + '/CTProjectExecutionApi/GetUserList',  //获取人员档案
     ExportUserList: before + '/CTProjectExecutionApi/ExportUserList',  //人员档案 导出
-    GetCodList: before + '/CTProjectExecutionApi/GetCodList',  //获取岗位类别和行业属性
     /*大区档案*/
     GetProvinceList: before + '/CTProjectExecutionApi/GetProvinceList',  //获取大区档案
     ExportProvinceList: before + '/CTProjectExecutionApi/ExportProvinceList',  //大区档案 导出
-    GetManagerUserList: before + '/CTProjectExecutionApi/GetManagerUserList',  //获取大区或省区经理
+    GetManagerSelect: before + '/CTProjectExecutionApi/GetManagerSelect',  //获取大区系统类型、档案执行大区、项目所在地、大区经理、省区经理信息
     
   },
-  
+    //技术专家系统 Api
+    TechExpertSystemApi: {
+      /*问题库*/
+      GetQuestionList: before + '/CTProjectExecutionApi/GetQuestionList',  //获取问题库信息
+      ExportQuestion: before + '/CTProjectExecutionApi/ExportQuestion',  //问题库信 导出
+      GetQuestionTemplate: before + '/CTProjectExecutionApi/GetQuestionTemplate',  //获取问题库导入模板
+      ImportQuestion: before + '/CTProjectExecutionApi/ImportQuestion',  //导入问题库
+      AddOrUpdateQuestion: before + '/CTProjectExecutionApi/AddOrUpdateQuestion',  //修改添加问题库
+      DeleteQuestion: before + '/CTProjectExecutionApi/DeleteQuestion',  //删除问题库
+    },
   CtAPI_WJQ: {
     // 基础服务
     CTBaseDataApi: {

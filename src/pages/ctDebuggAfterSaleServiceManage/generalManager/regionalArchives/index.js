@@ -34,6 +34,7 @@ const dvaPropsData = ({ loading, regionalArchives, global, }) => ({
   tableTotal: regionalArchives.tableTotal,
   queryPar:regionalArchives.queryPar,
   exportLoading: loading.effects[`${namespace}/ExportProvinceList`],
+  managerSelectLoading: loading.effects[`${namespace}/GetManagerSelect`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -56,9 +57,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    GetManagerUserList: (payload,callback) => { //大区或省区经理
+    GetManagerSelect: (payload,callback) => { //大区或省区经理
       dispatch({
-        type: `${namespace}/GetManagerUserList`,
+        type: `${namespace}/GetManagerSelect`,
         payload: payload,
         callback:callback,
       })
@@ -75,26 +76,41 @@ const Index = (props) => {
 
 
 
-  const {queryPar, tableDatas, tableTotal,  tableLoading, exportLoading, } = props;
+  const {queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,managerSelectLoading, } = props;
 
-  const [managerUserList,setManagerUserList] = useState([]) 
-  const [managerUserLoading,setManagerUserLoading] = useState(true) 
+  const [managerList,setManagerList] = useState({}) 
 
-  const [managerUserList2,setManagerUserList2] = useState([]) 
-  const [managerUserLoading2,setManagerUserLoading2] = useState(true) 
+  const [provinceList, setProvincelist] = useState([]);
+  const [provinceAllList, setProvinceAlllist] = useState([]);
   useEffect(() => {
     onFinish(pageIndex, pageSize);
-    props.GetManagerUserList({ManagerType:55},(res)=>{ 
-      setManagerUserList(res)
-      setManagerUserLoading(false)
-    })
-    props.GetManagerUserList({ManagerType:56},(res)=>{ 
-      setManagerUserList2(res)
-      setManagerUserLoading2(false)
-    })
+    props.GetManagerSelect({},(res)=>{ 
+      setManagerList(res)
+      let data = [];
+      res?.LargeRegions?.map(item=>{
+       if(item.LargeRegion){
+         item.ProjectRegions.map(childListItem=>{
+           data.push(childListItem)
+         })
+       }
+       data = data.filter((item, index) => data.indexOf(item) === index)
+       setProvincelist(data)
+       setProvinceAlllist(data)
+    })   
+  })
 
   }, []);
-
+  const largeRegionChange = (value)=>{
+    form.setFieldsValue({projectRegion:undefined})
+    
+    let data = []
+    if(value){
+      data = managerList?.LargeRegions?.filter(item=>item.LargeRegion == value)?.[0]?.ProjectRegions
+    }else{
+      data = provinceAllList
+    }
+    setProvincelist(data)
+  }
   let columns = [
     {
       title: '序号',
@@ -206,40 +222,42 @@ const Index = (props) => {
       className={'ant-advanced-search-form'}
       onFinish={() => {setPageIndex(1);setPageSize(20); onFinish(1, 20) }}
     >
+      <Spin spinning={managerSelectLoading} size='small'>
       <Row align='middle'>
         <Col span={8}>
             <Form.Item name='ctOperation' label='成套/运维' >
-             <Select placeholder='请选择' allowClear>
-                <Option key={1} value={1}>成套</Option>
-                <Option key={2} value={2}>运维</Option>
-              </Select>
+            <Select placeholder='请选择' allowClear >
+             {managerList?.CTOperations?.map(item => <Option key={item} value={item}>{item}</Option>)} 
+            </Select>
             </Form.Item>
         </Col>
         <Col span={8}>
-           <LargeRegionList name='largeRegion' label='执行大区'/>
+          <Form.Item name='largeRegion' label='执行大区' >
+           <Select placeholder='请选择' allowClear  showSearch  optionFilterProp="children"  onChange={largeRegionChange}>
+           {managerList?.LargeRegions?.map(item => <Option key={item.LargeRegion} value={item.LargeRegion}>{item.LargeRegion}</Option>)} 
+           </Select>
+           </Form.Item>
         </Col>
           <Col span={8} >
           <Form.Item name='projectRegion' label='项目所在地' >
-          <RegionList  levelNum={1}/>
+          <Select placeholder='请选择' allowClear  showSearch  optionFilterProp="children">
+          {provinceList?.map(item => <Option key={item} value={item}>{item}</Option>)} 
+          </Select>
           </Form.Item>
           </Col>
         <Col span={8}>
-        <Spin spinning={managerUserLoading} size='small' className='formItemSpinSty'>
-            <Form.Item name='largeRegionManagerCode' label='大区经理' className='minWidth'>
-            <Select placeholder='请选择' allowClear>
-                {managerUserList.map(item => <Option key={item.UserAccount} value={item.UserAccount}>{item.UserName}</Option>)}
+            <Form.Item name='largeRegionManager' label='大区经理' className='minWidth'>
+            <Select placeholder='请选择' allowClear  showSearch  optionFilterProp="children">
+             {managerList?.LargeRegionManagers?.map(item => <Option key={item} value={item}>{item}</Option>)}
               </Select>
             </Form.Item>
-          </Spin>
         </Col>
         <Col span={8}>
-        <Spin spinning={managerUserLoading2} size='small' className='formItemSpinSty'>
-            <Form.Item name='provinceManagerName' label='省区经理'>
-            <Select placeholder='请选择' allowClear>
-                {managerUserList2.map(item => <Option key={item.UserAccount} value={item.UserAccount}>{item.UserName}</Option>)}
+            <Form.Item name='provinceManager' label='省区经理'>
+            <Select placeholder='请选择' allowClear  showSearch  optionFilterProp="children">
+             {managerList?.ProvinceManagers?.map(item => <Option key={item} value={item}>{item}</Option>)}
               </Select>
             </Form.Item>
-          </Spin>
         </Col>
         <Col span={8} >
           <Form.Item>
@@ -255,6 +273,7 @@ const Index = (props) => {
           </Form.Item>
         </Col>
       </Row>
+      </Spin>
     </Form>
   }
   return (

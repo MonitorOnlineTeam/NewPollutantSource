@@ -303,7 +303,7 @@ const Index = (props) => {
         <Col span={8}>
           <Spin spinning={workTypeLoading} size='small' className='formItemSpinSty'>
             <Form.Item name='workType' label='工作类型' style={{ padding: '0 16px' }}>
-              <Select placeholder='请选择' allowClear>
+              <Select placeholder='请选择' allowClear showSearch  optionFilterProp="children">
                 {workTypeList.map(item => <Option value={item.ChildID}>{item.Name}</Option>)}
               </Select>
             </Form.Item>

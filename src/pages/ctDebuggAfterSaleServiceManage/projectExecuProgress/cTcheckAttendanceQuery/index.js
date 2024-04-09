@@ -316,7 +316,7 @@ const Index = (props) => {
         <Col span={8}>
           <Spin spinning={workTypeLoading} size='small' className='formItemSpinSty'>
             <Form.Item name='workType' label='工作类型' style={{ padding: '0 16px' }}>
-              <Select placeholder='请选择' allowClear>
+              <Select placeholder='请选择'  showSearch  optionFilterProp="children">
                 {workTypeList.map(item => <Option value={item.ChildID}>{item.Name}</Option>)}
               </Select>
             </Form.Item>
@@ -324,7 +324,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item name='regionCode' label='省份' >
-            <RegionList ct levelNum={1} />
+            <RegionList placeholder='请选择' ct levelNum={1} />
           </Form.Item>
         </Col>
         <Col span={8}>

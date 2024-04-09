@@ -14,8 +14,8 @@ export async function ExportProvinceList(params) {
   return result;
 }
 
-//岗位类别和行业属性
-export async function GetManagerUserList(params) {
-  const result = post(`${API.GeneralManagerApi.GetManagerUserList}?ManagerType=${params.ManagerType}`, null);
+//获取大区系统类型、档案执行大区、项目所在地、大区经理、省区经理信息
+export async function GetManagerSelect(params) {
+  const result = post(API.GeneralManagerApi.GetManagerSelect, params);
   return result;
 }

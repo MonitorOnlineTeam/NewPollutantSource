@@ -1,5 +1,5 @@
 /**
- * 功  能：通用管理 大区档案
+ * 功  能：技术专家系统 问题库
  * 创建人：jab
  * 创建时间：2024.04
  */
@@ -57,7 +57,7 @@ const dvaDispatch = (dispatch) => {
     },
     GetCodList: (payload,callback) => { //岗位类别和行业属性
       dispatch({
-        type: `${namespace}/GetCodList`,
+        type: `ctCommon/GetCodList`,
         payload: payload,
         callback:callback,
       })
@@ -222,9 +222,9 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
          <Spin spinning={codLoading} size='small' className='formItemSpinSty'>
-            <Form.Item name='department' label='岗位类别'>
-             <Select placeholder='请选择' allowClear>
-                {codList.map(item => <Option key={item.BaseCode} value={item.BaseCode}>{item.BaseCnName}</Option>)}
+            <Form.Item name='jobCategory' label='岗位类别'>
+             <Select placeholder='请选择' allowClear showSearch  optionFilterProp="children">
+                {codList.map(item => <Option key={item.BaseCnName} value={item.BaseCnName}>{item.BaseCnName}</Option>)}
               </Select>
             </Form.Item>
           </Spin>
@@ -232,8 +232,8 @@ const Index = (props) => {
         <Col span={8}>
         <Spin spinning={codLoading2} size='small' className='formItemSpinSty'>
             <Form.Item name='attribute' label='行业属性'>
-            <Select placeholder='请选择' allowClear>
-                {codList2.map(item => <Option key={item.BaseCode} value={item.BaseCode}>{item.BaseCnName}</Option>)}
+            <Select placeholder='请选择' allowClear showSearch  optionFilterProp="children">
+                {codList2.map(item => <Option key={item.BaseCnName} value={item.BaseCnName}>{item.BaseCnName}</Option>)}
               </Select>
             </Form.Item>
           </Spin>

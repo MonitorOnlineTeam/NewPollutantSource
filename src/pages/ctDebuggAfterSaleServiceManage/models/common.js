@@ -18,8 +18,16 @@ export default Model.extend({
       callback && callback(result.Datas)
 
     },
-
-
+    //岗位类别、行业属性、问题类别
+    *GetCodList({ payload,callback }, { call, put, update }) {
+      const result = yield call(services.GetCodList, payload);
+      if (result.IsSuccess) {
+        callback&&callback(result.Datas)
+      }else{
+        message.error(result.Message)
+      }
+    },
+    
 
 
 

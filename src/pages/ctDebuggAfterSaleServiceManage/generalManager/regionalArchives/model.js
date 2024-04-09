@@ -37,8 +37,8 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    *GetManagerUserList({ payload,callback }, { call, put, update }) { //大区或省区经理
-      const result = yield call(services.GetManagerUserList, payload);
+    *GetManagerSelect({ payload,callback }, { call, put, update }) { //获取大区系统类型、档案执行大区、项目所在地、大区经理、省区经理信息
+      const result = yield call(services.GetManagerSelect, payload);
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{

@@ -14,9 +14,3 @@ export async function ExportUserList(params) {
   const result = post(API.GeneralManagerApi.ExportUserList, params);
   return result;
 }
-
-//岗位类别和行业属性
-export async function GetCodList(params) {
-  const result = post(`${API.GeneralManagerApi.GetCodList}?CodID=${params.CodID}`, null);
-  return result;
-}

@@ -87,13 +87,12 @@ export default class Index extends Component {
       virtual={false}
       showSearch
       allowClear
-      searchPlaceholder='输入你查找的字段'
       placeholder="行政区"
+      treeNodeFilterProp='title'
       autoExpandParent={false}
       value={RegionCode ? RegionCode : undefined}
       style={{ width: '100%' }}
       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-      treeNodeFilterProp='title'
       onChange={changeRegion}
       {...this.props}
     >
