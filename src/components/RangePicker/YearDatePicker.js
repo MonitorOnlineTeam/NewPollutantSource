@@ -3,13 +3,13 @@ import React, { useRef } from 'react';
 import moment from 'moment';
 
 const Index = (props) => {
-
+    const { onChange} = props;
     const datePickerRef = useRef(null);
     const handleQuickSelect = (years) => {
         closeDatePicker()
         setTimeout(() => {
             const date = moment().subtract(years, 'years');
-            props.onChange(date)
+            onChange&&onChange(date)
         },200)
     };
     const closeDatePicker = () => { //关闭选择框
