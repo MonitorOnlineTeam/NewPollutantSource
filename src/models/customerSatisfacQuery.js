@@ -38,6 +38,7 @@ export default Model.extend({
                     tableTotal2: result.Total,
                 }
                 )
+                callback && callback()
             } else {
                 message.error(result.Message)
             }

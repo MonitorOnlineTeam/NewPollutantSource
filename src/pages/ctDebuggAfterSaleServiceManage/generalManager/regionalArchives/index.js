@@ -264,7 +264,7 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
-            <Button style={{margin: '0 8px',}} onClick={() => { form.resetFields();setPageIndex(1);setPageSize(20); onFinish(1, 20)}}  >
+            <Button style={{margin: '0 8px'}} loading={tableLoading} onClick={() => { form.resetFields();setPageIndex(1);setPageSize(20); onFinish(1, 20)}}  >
               重置
          </Button>
          <Button icon={<ExportOutlined />} loading={exportLoading} style={{ marginRight: 8 }} onClick={() => { exports() }}>

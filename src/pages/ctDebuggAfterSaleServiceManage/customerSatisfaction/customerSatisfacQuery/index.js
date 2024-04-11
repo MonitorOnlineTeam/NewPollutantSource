@@ -464,7 +464,14 @@ const Index = (props) => {
         type: `${namespace}/GetSatisfactionSurveyList`,
         payload: {
           ...par,
+        },
+        callback:()=>{
+            if(type==1){
+             setPopVisible(false)
+             setPopVisible2(false)
+            }
         }
+      
       });
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -531,7 +538,7 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
-            <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1,1, 20) }}  >
+            <Button style={{ margin: '0 8px' }} loading={tableLoading} onClick={() => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1,1, 20) }}  >
               重置
          </Button>
          <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading} onClick={() => {exports(1) }}>
@@ -609,10 +616,10 @@ const Index = (props) => {
         </Col>
         <Col span={8} >
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={tableLoading}>
+            <Button type="primary" htmlType="submit" loading={tableLoading2}>
               查询
          </Button>
-            <Button style={{ margin: '0 8px' }} onClick={() => { formAll.resetFields(); setPageIndex2(1); setPageSize2(20); onFinish(2,1, 20) }}  >
+            <Button style={{ margin: '0 8px' }} loading={tableLoading2} onClick={() => { formAll.resetFields(); setPageIndex2(1); setPageSize2(20); onFinish(2,1, 20) }}  >
               重置
          </Button>
          <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading2} onClick={() => {exports(2) }}>

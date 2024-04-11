@@ -710,11 +710,19 @@ export const API = {
     GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList',  // 获取大区
     GetCodList: before + '/CTProjectExecutionApi/GetCodList',  //获取岗位类别、行业属性、问题类别
   },
-  //项目执行进度 Api
 
-  /*** 项目执行 ***/
-  /*派单查询*/
+  //报告及视图
+  ReportsViewsApi: {
+    /*一次性解决率*/
+    GetDisposableRateList: before + '/CTStatisticsApi/GetDisposableRateList', //获取一次解决率
+    ExportDisposableRateList: before + '/CTStatisticsApi/ExportDisposableRateList', //一次解决率 导出
+    GetDisposableServiceInfo: before + '/CTStatisticsApi/GetDisposableServiceInfo', //获取一次解决率基础数据
+    ExportDisposableServiceInfo: before + '/CTStatisticsApi/ExportDisposableServiceInfo', //一次解决率基础数据 导出
+  },
+  //项目执行进度 Api
   CtProjectExecuProgressApi: {
+    /*** 项目执行 ***/
+    /*派单查询*/
     GetServiceDispatch: before + '/CTBaseDataApi/GetServiceDispatch',//获取服务派单信息
     GetServiceDispatchTypeAndRecord: before + '/CTBaseDataApi/GetServiceDispatchTypeAndRecord',  //服务填报内容 要加载的项
     GetAcceptanceServiceRecord: before + '/CTBaseDataApi/GetAcceptanceServiceRecord',//服务填报内容  服务报告
@@ -727,7 +735,6 @@ export const API = {
     ExportServiceDispatch: before + '/CTBaseDataApi/ExportServiceDispatch',  //服务派单信息 导出
     GetCTServiceDispatchRateList: before + '/CTBaseDataApi/GetCTServiceDispatchRateList ',  //获取成套派单完成率信息
     ExportCTServiceDispatchRateList: before + '/CTBaseDataApi/ExportCTServiceDispatchRateList',  //成套派单完成率 导出
-
     /*现场工作时长*/
     GetSignInAnalysis: before + '/CTStatisticsApi/GetSignInAnalysis',//获取现场工作时长信息
     ExportSignInAnalysis: before + '/CTStatisticsApi/ExportSignInAnalysis',//现场工作时长信息 导出

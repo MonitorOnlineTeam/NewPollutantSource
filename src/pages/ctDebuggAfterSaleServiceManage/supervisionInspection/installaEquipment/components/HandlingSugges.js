@@ -61,9 +61,8 @@ const Index = (props) => {
                   <span style={{ color: '#4D97F3', paddingRight: 24 }}>{item.UserName}</span>   <span style={{ color: item.StatusName == '驳回' ? '#FF5959' : item.StatusName == '申诉' ? '#F89F2D' : '#242425', paddingRight: 24 }}>{item.StatusName}</span>  <span style={{ color: '#999', paddingRight: 24 }}>{item.Time}</span>
                 </Row>
                 <Row style={{ padding: '12px 24px' }}>
-                  <div style={{ height: '100%' }}>备注：</div>
                   <div style={{ width: 'calc(100% - 42px)' }}>
-                    {item.Opinion ? item.Opinion : '无'}
+                    {item.Opinion}
                   </div>
                 </Row>
               </div>

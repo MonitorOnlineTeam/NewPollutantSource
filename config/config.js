@@ -3003,8 +3003,27 @@ export default {
             /********  设备调试及售后服务管理平台 成套   ********/
             {
               path: '/ctManage',
-              name: 'CtManage',
+              name: 'CtManage', 
               routes: [
+                // 报告及视图
+                {
+                  path: '/ctManage/reportsViews',
+                  name: 'ReportsViews',
+                  routes: [
+                    {
+                      path: '/ctManage/reportsViews',
+                      redirect: '/ctManage/reportsViews/oneResolutRate',
+                    },
+                    {
+                      // 一次性解决率
+                      name: 'returnVisit',
+                      path: '/ctManage/reportsViews/oneResolutRate',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/reportsViews/oneResolutRate',
+                    },
+
+                  ],
+                },
                 /**项目执行进度 */
                 {
                   path: '/ctManage/projectExecuProgress',
@@ -3325,7 +3344,7 @@ export default {
                     },
                   ],
                 },
-                
+
                 /**技术专家系统 */
                 {
                   path: '/ctManage/techExpertSystem',

@@ -46,10 +46,11 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    GetQuestionList: (payload) => { //列表
+    GetQuestionList: (payload, callback) => { //列表
       dispatch({
         type: `${namespace}/GetQuestionList`,
         payload: payload,
+        callback: callback,
       })
     },
     ExportQuestion: (payload) => { //导出
@@ -195,12 +196,12 @@ const Index = (props) => {
     form2.resetFields();
     type == 'edit' && form2.setFieldsValue({
       id:record.ID, 
-      questionType:record.QuestionType, 
+      questionType:record.QuestionType=='0'? undefined : record.QuestionType, 
       questionName:record.QuestionName, 
       questionDesc:record.QuestionDesc, 
       questionReply:record.QuestionReply, 
     })
-
+    setPopVisible(false)
   };
   const onModalOk = async () => { //添加 or 编辑弹框
 
@@ -235,6 +236,7 @@ const Index = (props) => {
   const detail = (record) => {
     setDetailVisible(true)
     setDetailData(record)
+    setPopVisible(false)
   }
 
   const exports = () => {
@@ -254,6 +256,8 @@ const Index = (props) => {
         ...values,
         pageIndex: PageIndex,
         pageSize: PageSize,
+      },()=>{
+        setPopVisible(false)
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -279,7 +283,7 @@ const Index = (props) => {
       setFileList(newFileList);
     },
     beforeUpload: (file) => {
-      setFileList([...fileList, file]);
+      setFileList([file]);
       return false;
     },
     fileList,
@@ -290,7 +294,7 @@ const Index = (props) => {
       formData.append('files', file);
     });
     setUploading(true);
-    fetch( API.TechExpertSystemApi.ImportQuestion, {
+    fetch(API.TechExpertSystemApi.ImportQuestion, {
       method: 'POST',
       body: formData,
       headers: {
@@ -299,23 +303,18 @@ const Index = (props) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
-        if (info.file.status === 'done') {
-          if (info.file.response.IsSuccess) {
+          if (res.IsSuccess) {
             message.success('导入成功')
             setPopVisible(false)
             setPageIndex(1);
-            pageSize(20)
+            setPageSize(20)
             onFinish(1,20)
           } else {
-            message.error(info.file.response.Message, 6);
+            message.error(`导入失败：${res.Message}`, 6);
           }
-        } else if (info.file.status === 'error') {
-          message.error(`导入失败，出现错误：${info.file.response.Message}`, 6);
-        }
       })
       .catch(() => {
-        message.error('upload failed.');
+        setUploading(false);
       })
       .finally(() => {
         setUploading(false);
@@ -362,13 +361,13 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
-            <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1, 20) }}  >
+            <Button style={{ margin: '0 8px' }} loading={tableLoading} onClick={() => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1, 20) }}  >
               重置
           </Button>
             <Button type="primary" onClick={() => addEdit({}, 'add')} style={{ marginRight: 8 }} >
               添加
          </Button>
-            <Popover visible={popVisible} placement='right' title={'导入'} trigger="click"
+            <Popover visible={popVisible} placement='rightTop' title={'导入'} trigger="click"
               overlayStyle={{ width: 400 }}
               overlayClassName={styles.popSty}
               getPopupContainer={trigger => trigger.parentNode}
@@ -377,12 +376,11 @@ const Index = (props) => {
                   <Form.Item label="浏览">
                     <Upload
                       {...uploadProps}
-                      maxCount={1}
                     >
                       <Button style={{ width: '100%'}}  icon={<UploadOutlined />}>上传</Button>
                     </Upload>
                   </Form.Item>
-                  <Form.Item style={{  paddingLeft: 41 }}>
+                  <Form.Item style={{  paddingLeft: 42 }}>
                     <Button style={{ width: '100%'}} icon={<DownloadOutlined />} onClick={questionTemplate} loading={questionTemplateLoading}>下载导入模板</Button>
                   </Form.Item>
                   <Row align='end'>
@@ -390,13 +388,13 @@ const Index = (props) => {
                       取消
                 </Button>
                     <Button type="primary"   disabled={fileList.length === 0}  onClick={()=>handleUpload()} loading={uploading}>
-                    {uploading ? '上传中...' : '确定'}
+                    {uploading ? '上传中' : '确定'}
                   </Button>
                   </Row>
                 </Form>
               }
             >
-              <Button onClick={() => { setPopVisible(true);}} icon={<ImportOutlined />} style={{ marginRight: 8 }}>
+              <Button onClick={() => { setPopVisible(true);setFileList([]) }} icon={<ImportOutlined />} style={{ marginRight: 8 }}>
                 导入
          </Button>
             </Popover>
@@ -410,7 +408,7 @@ const Index = (props) => {
     </Form>
   }
   return (
-    <div className={`queryCriterTitleSty`}>
+    <div className={`queryCriterTitleSty ${styles.problemBaseSty}`}>
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
           <SdlTable
@@ -477,16 +475,6 @@ const Index = (props) => {
         >
           <Form className='detailForm'>
             <Row>
-            <Col span={12}>
-                <Form.Item label='创建人'>
-                  {detailData?.CreateUserName}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label='创建时间'>
-                  {detailData?.CreateDate}
-                </Form.Item>
-              </Col>
               <Col span={12}>
                 <Form.Item label='问题类别'>
                   {detailData?.QuestionTypeName}
@@ -497,14 +485,24 @@ const Index = (props) => {
                   {detailData?.QuestionName}
                 </Form.Item>
               </Col>
-              <Col span={24}>
+              <Col span={12}>
                 <Form.Item label='问题描述'>
                   {detailData?.QuestionDesc}
                 </Form.Item>
               </Col>
-              <Col span={24}>
+              <Col span={12}>
                 <Form.Item label='问题解答'>
                   {detailData?.QuestionReply}
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label='创建人'>
+                  {detailData?.CreateUserName}
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label='创建时间'>
+                  {detailData?.CreateDate}
                 </Form.Item>
               </Col>
             </Row>

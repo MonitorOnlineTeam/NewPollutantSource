@@ -533,12 +533,12 @@ const Index = (props) => {
           itemStyle: {
             color: '#42DAB8',
           },
-          label: {
-            show: true,
-            position: 'top',
-            distance: 2,
-            color: '#42DAB8',
-          },
+          // label: {
+          //   show: true,
+          //   position: 'top',
+          //   distance: 2,
+          //   color: '#42DAB8',
+          // },
           smooth: true,
           symbol: 'circle',
         }

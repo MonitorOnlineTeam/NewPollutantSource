@@ -45,15 +45,17 @@ const Index = (props) => {
 
   useEffect(() => {
     if(visible){
-    const row = data
+    form2.resetFields();
+    setFiles(cuid())
+    setFileList([])
     SetCurrent(0)
     props.dispatch({
       type: `${namespace}/GetAuditPhoto`,
       payload: {
-        systemModelId: row.Col1,
-        dispatchId: row.DispatchId,
-        pointId: row.PointId,
-        equipmentAuditId: row.EquipmentAuditId,
+        systemModelId: data.Col1,
+        dispatchId: data.DispatchId,
+        pointId: data.PointId,
+        equipmentAuditId: data.EquipmentAuditId,
       }
     });
   }
@@ -63,7 +65,7 @@ const Index = (props) => {
 
 
 
-  const [files, setFiles] = useState(cuid()) 
+  const [files, setFiles] = useState() 
   const [fileList, setFileList] = useState([])
   const uploadProps = (name) => {
     return { // 核查问题照片附件 上传
@@ -205,7 +207,8 @@ const Index = (props) => {
       });  
         break;
       case 2: //完成
-        setExamineVisible(false)
+        props.onCancel()
+        props.onFinish()
         break;
       default:
         SetCurrent(0)
