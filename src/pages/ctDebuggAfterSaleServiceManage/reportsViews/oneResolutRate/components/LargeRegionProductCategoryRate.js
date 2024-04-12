@@ -37,24 +37,24 @@ const Index = props => {
     disposableDate,
   } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   const getOption = () => {
-    const lineColor= '#F6A821'
-    const barColor1 = {color1:'#83FFD2',color2:'#2BE5A1'}
-    const barColor2 = {color1:'#89C9FF',color2:'#399FF5'}
+    const lineColor = '#F6A821'
+    const barColor1 = { color1: '#83FFD2', color2: '#2BE5A1' }
+    const barColor2 = { color1: '#89C9FF', color2: '#399FF5' }
 
     let xAxisData = [];
     let data1 = [];
     let data2 = [];
     let rate = [];
-       const data = type==1? disposableRateList?.LargeRegionAnalysis :  disposableRateList?.TimeoutReasonAnalysis
-       data?.map(item=>{
-        xAxisData.push(type==1? item.largeRegionName : item.reasonName)
-        data1.push(item.solveCount)
-        data2.push(item.notSolveCount)
-        rate.push(item.rate)
-       })
+    const data = type == 1 ? disposableRateList?.LargeRegionAnalysis : disposableRateList?.TimeoutReasonAnalysis
+    data?.map(item => {
+      xAxisData.push(type == 1 ? item.largeRegionName : item.reasonName)
+      data1.push(item.solveCount)
+      data2.push(item.notSolveCount)
+      rate.push(item.rate)
+    })
     return {
       legend: {
         data: [
@@ -81,7 +81,7 @@ const Index = props => {
                 colorStops: [{
                   offset: 0, color: barColor2.color1  // 开始颜色
                 }, {
-                  offset: 1, color:  barColor2.color2  // 结束颜色
+                  offset: 1, color: barColor2.color2  // 结束颜色
                 }]
               }
             }
@@ -89,7 +89,7 @@ const Index = props => {
           {
             name: '一次解决率',
             type: 'line',
-            
+
           },
         ]
       },
@@ -118,7 +118,8 @@ const Index = props => {
       yAxis: [
         {
           type: 'value',
-          min: 1,
+          min: 0,
+          minInterval:1,
           axisLabel: {
             formatter: '{value}次'
           },
@@ -132,11 +133,12 @@ const Index = props => {
               type: "dashed" //dotted：虚线 solid:实线
             }
           },
-          
+
         },
         {
           type: 'value',
           min: 0,
+          minInterval:1,
           splitLine: {
             show: false,
           },
@@ -157,6 +159,7 @@ const Index = props => {
           type: 'bar',
           stack: 'one',
           data: data1,
+          barWidth: '58%',
           label: {
             show: true,
             textStyle: {
@@ -172,13 +175,15 @@ const Index = props => {
                 offset: 1, color: barColor1.color2  // 结束颜色
               }]
             }
-          }
+          },
+          z: 1
         },
         {
           name: '未解决次数',
           type: 'bar',
           stack: 'one',
           data: data2,
+          barWidth: '60%',
           label: {
             show: true,
             textStyle: {
@@ -189,12 +194,13 @@ const Index = props => {
             color: {
               x: 0, y: 0, x2: 0, y2: 1,
               colorStops: [{
-                offset: 0, color:  barColor2.color1  // 开始颜色
+                offset: 0, color: barColor2.color1  // 开始颜色
               }, {
-                offset: 1, color:  barColor2.color2  // 结束颜色
+                offset: 1, color: barColor2.color2  // 结束颜色
               }]
             }
-          }
+          },
+          z: 2
         },
         {
           name: '一次解决率',
@@ -213,16 +219,28 @@ const Index = props => {
           },
           smooth: true,
           symbol: 'circle',
-        }
+          z: 3
+        },
+        {
+          type: 'bar', //显示背景图 
+          data: data1,
+          itemStyle: { color: 'rgba(86,182,252,0.05)' },
+          // itemStyle: { color: 'red' },
+          barWidth: '84%',  // 柱形的宽度
+          barGap: '-120.8%', // Make series be ove
+          silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
+          barMinHeight: 1000,
+          z: -3
+        },
       ],
       tooltip: {
         trigger: 'axis',
         formatter: (params) => {
           return (
-            `${params[0].name}<br />
-            ${params[0].marker} ${params[0].seriesName}：${params[0].value}次 <br />` +
-            `${params[1].marker} ${params[1].seriesName}：${params[1].value}次 <br />` + 
-            `${params[2].marker} ${params[2].seriesName}：${params[2].value}%`
+            `${params?.[0].name}<br />
+            ${params?.[0]?.marker} ${params?.[0]?.seriesName}：${params?.[0]?.value}次 <br />` +
+            `${params?.[1]?.marker} ${params?.[1]?.seriesName}：${params?.[1]?.value}次 <br />` +
+            `${params?.[2]?.marker} ${params?.[2]?.seriesName}：${params?.[2]?.value}%`
           )
         }
       },
@@ -241,10 +259,10 @@ const Index = props => {
         theme="my_theme"
       />
     );
-  }, [disposableRateList,echarts]);
+  }, [disposableRateList, echarts]);
 
   return (
-    <Card title={`${disposableDate&&moment(disposableDate).format('YYYY年')}大区质保内服务一次解决率`} size="small" bodyStyle={{ height: 300 }} loading={loading}>
+    <Card title={`${disposableDate && moment(disposableDate).format('YYYY年')}${type == 1 ? `大区` : '产品类别'}质保内服务一次解决率`} size="small" bodyStyle={{ height: 300 }} loading={loading}>
       {renderEcharts}
     </Card>
   );

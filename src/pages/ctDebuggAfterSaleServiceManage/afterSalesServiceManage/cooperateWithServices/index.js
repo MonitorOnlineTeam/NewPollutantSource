@@ -463,6 +463,8 @@ const Index = (props) => {
       },
       yAxis: [{
         type: "value",
+        min: 0,
+        minInterval:1,
         axisLabel: {
           formatter: '{value}次'
         },
@@ -518,7 +520,6 @@ const Index = (props) => {
           type: 'bar', //显示背景图 
           data: workHour,
           itemStyle: { color: 'rgba(86,182,252,0.05)' },
-          // itemStyle: { normal: { color: 'red' } },
           barWidth: '60%',  // 柱形的宽度
           barGap: '800%', // Make series be ove
           silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
@@ -637,7 +638,7 @@ const Index = (props) => {
   const proportionWorkHours = () => {
     var total = 0; //总数量
     workHour.forEach(function (value) { total += value });
-    const option = getPie3D(workHourDataRatio, 0.6,customHourVal, { show: false}, )
+    const option = getPie3D(workHourDataRatio, {internalDiameterRatio:0.6, customVal: customHourVal, legendOption:{ show: false}} )
     option.title = {
       text: `${total}小时`,
       textStyle: {

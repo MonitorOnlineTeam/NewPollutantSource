@@ -24,9 +24,10 @@ export default Model.extend({
     workAlarmPushList: [],
     workAlarmTotal: 0,
     contractList: [],
-    contractTotal: 0,
     menuList: [],
-    allMenuList: []
+    allMenuList: [],
+    projectExecutionLoading:false,
+    contractLoading:false,
   },
   effects: {
     // 获取工作台待办
@@ -597,19 +598,18 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 合同到期列表
-    *GetProjectRemindList({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.GetProjectRemindList, payload);
-      if (result.IsSuccess) {
-        yield update({
-          contractList: result.Datas,
-          contractTotal: result.Total,
-        });
-        callback && callback(result.Total);
-      } else {
-        message.error(result.Message);
-      }
-    },
+    // // 合同到期列表
+    // *GetProjectRemindList({ payload, callback }, { call, put, update }) {
+    //   const result = yield call(services.GetProjectRemindList, payload);
+    //   if (result.IsSuccess) {
+    //     yield update({
+    //       contractList: result.Datas,
+    //     });
+    //     callback && callback(result.Total);
+    //   } else {
+    //     message.error(result.Message);
+    //   }
+    // },
     // 删除合同到期
     *UpdateProjectPushStatus({ payload, callback }, { call, put, update }) {
       const result = yield call(services.UpdateProjectPushStatus, payload);
@@ -700,17 +700,22 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    //待办中心 项目执行-获取遗留问题
-    *ProjectImplementationList({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.ProjectImplementationList, payload);
+    //项目执行、合同到期等
+    *CtGetWorkbenchMsg({ payload, callback }, { call, put, update }) {
+
+      yield update( payload.type==1?{projectExecutionLoading:true}:{ contractLoading: true});
+      const result = yield call(services.CtGetWorkbenchMsg, {...payload,type:undefined});
       if (result.IsSuccess) {
+        const data = result.Datas
         yield update({
-          projectExecutionList: result.Datas,
+          projectExecutionList: data?.ctList   || [],
+          contractList: data?.projectList  || [],
         });
-        callback && callback(result.Total);
+        callback && callback(data?.ctList?.length || 0, data?.projectList?.length || 0);
       } else {
         message.error(result.Message);
       }
+      yield update( payload.type==1?{projectExecutionLoading:false}:{ contractLoading: false});
     },
     //待办中心 项目执行-解决遗留问题
     *UpdateImplementationStatus({ payload, callback }, { call, put, update }) {

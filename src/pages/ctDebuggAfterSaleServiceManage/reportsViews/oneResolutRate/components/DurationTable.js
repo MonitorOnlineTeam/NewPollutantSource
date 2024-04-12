@@ -96,6 +96,9 @@ const Index = props => {
         analysisDate: disposableDate,
         sort: 2,
         ...values,
+        beginTime: values.time&&values.time[0].format('YYYY-MM-DD 00:00:00'),
+        endTime:  values.time&&values.time[1].format('YYYY-MM-DD 23:59:59'),
+        time:undefined
       },
     });
   };
@@ -276,6 +279,9 @@ const Index = props => {
         dataIndex: 'solveStatusName',
         key: 'solveStatusName',
         ellipsis: true,
+        render: (text, record, index) => {
+        return text=='未解决'? <span className='red'>{text}</span> : text;
+        },
       },
       {
         title: '未解决原因',
@@ -380,27 +386,22 @@ const Index = props => {
                 />
               </Form.Item>
               </Col>
-              <Col span={8}>
-                <Form.Item name='num' label='派工单号' style={{paddingRight:8}}>
+              <Col span={8} >
+                <Form.Item name='projectCode' label='项目编号' style={{paddingRight:8}}>
                   <Input placeholder="请输入" allowClear />
                 </Form.Item>
               </Col>
               <Col span={8} >
-                <Form.Item name='projectCode' label='项目编号'>
-                  <Input placeholder="请输入" allowClear />
-                </Form.Item>
-              </Col>
-              <Col span={8} >
-                <Form.Item name='projectName' label='项目名称' className='minWidth'  style={{paddingRight:8}}>
+                <Form.Item name='projectName' label='项目名称' style={{paddingRight:8}}>
                   <Input placeholder="请输入" allowClear />
                 </Form.Item>
               </Col>
               <Col>
-                <Form.Item name='solveStatus' label='解决状态'>
+                <Form.Item name='solveStatus' label='解决状态' className='minWidth' >
                   <Radio.Group>
                     <Radio value={''}>全部</Radio>
                     <Radio value={1}>已解决</Radio>
-                    <Radio value={2}>未解决</Radio>
+                    <Radio value={0}>未解决</Radio>
                   </Radio.Group>
                 </Form.Item>
               </Col>

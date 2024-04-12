@@ -2,11 +2,11 @@ import { fomatFloat } from '@/utils/utils';
 import { ContactsOutlined } from '@ant-design/icons';
 
 //获取3d丙图的最高扇区的高度
-function getHeight3D(series, height,customHourVal) { //customHourVal 默认高度
+function getHeight3D(series, height,customVal) { //customVal 默认高度
     series.sort((a, b) => {
         return (b.pieData.value - a.pieData.value);
     })
-    return series[0].pieData.rate==0 || series[0].pieData.value==customHourVal ? 50 : height * 25 / series[0].pieData.value;
+    return series[0].pieData.rate==0 || series[0].pieData.value==customVal ? 50 : height * 25 / series[0].pieData.value;
 }
 
 
@@ -73,7 +73,7 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
 
 
 
-export function getPie3D(pieData, internalDiameterRatio,customHourVal,legendOption) {
+export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption}) {
      
     //internalDiameterRatio:透明的空心占比
     let series = [];
@@ -136,7 +136,7 @@ export function getPie3D(pieData, internalDiameterRatio,customHourVal,legendOpti
             value: bfb
         });
     }
-    let boxHeight = getHeight3D(series, 20,customHourVal);//通过传参设定3d饼/环的高度，20代表20px
+    let boxHeight = getHeight3D(series, 20,customVal);//通过传参设定3d饼/环的高度，20代表20px
     // 准备待返回的配置项，把准备好的 legendData、series 传入。
     let option = {
         legend:  legendOption? legendOption : {
@@ -199,7 +199,7 @@ export function getPie3D(pieData, internalDiameterRatio,customHourVal,legendOpti
                 let bfb = ''
                 if (params.seriesName !== 'mouseoutSeries' && params.seriesName !== 'pie2d') {
                     const item = option.series[params.seriesIndex].pieData
-                     if( item.value == customHourVal || item.value.rate==0){//为0时
+                     if( item.value == customVal || item.value.rate==0){//为0时
                         bfb = '0.00'
                      }else{
                         bfb = ((option.series[params.seriesIndex].pieData.endRatio - option.series[params.seriesIndex].pieData.startRatio) *

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import {
@@ -34,6 +34,7 @@ import superviseRectificaSty from '@/pages/operations/superviseRectification/sty
 import router from 'umi/router';
 import { PageLoading } from '@ant-design/pro-layout';
 import config from '@/config';
+import { use } from 'echarts';
 const { DirectoryTree } = Tree;
 const manualList = [
   {
@@ -70,9 +71,8 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
   workAlarmTotal: wordSupervision.workAlarmTotal,
-  contractLoading: loading.effects['wordSupervision/GetProjectRemindList'] || loading.effects['wordSupervision/UpdateProjectPushStatus'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
+  contractLoading: wordSupervision.contractLoading || loading.effects['wordSupervision/UpdateProjectPushStatus'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
   contractList: wordSupervision.contractList,
-  contractTotal: wordSupervision.contractTotal,
   configInfo: global.configInfo,
   menuList: wordSupervision.menuList,
   allMenuList: wordSupervision.allMenuList,
@@ -80,20 +80,19 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   addUserMenuLoading: loading.effects['wordSupervision/AddUserMenu'],
   clientHeight: global.clientHeight,
   workbenchesModuleLoading: loading.effects['wordSupervision/GetWorkbenchesModuleList'] || false,
-  projectExecutionLoading: loading.effects['wordSupervision/ProjectImplementationList'] || false,
+  projectExecutionLoading: wordSupervision.projectExecutionLoading || false,
   projectExecutionList: wordSupervision.projectExecutionList,
   updateprojectExecutionLoading: loading.effects['wordSupervision/UpdateImplementationStatus'] || false,
 
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, supervisionVerificaList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractTotal, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading, clientHeight, workbenchesModuleLoading, projectExecutionLoading, projectExecutionList, updateprojectExecutionLoading, } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, supervisionVerificaList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading, clientHeight, workbenchesModuleLoading, projectExecutionLoading, projectExecutionList, updateprojectExecutionLoading, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
   const [forwardingUserId, setForwardingUserId] = useState('');
 
-  // const type = props.location.query.type;
   const [daily, SetDaily] = useState(false)
   const [opera, SetOpera] = useState(false)
   const [operaSupervisionCheck, SetOperaSupervisionCheck] = useState(false)//监督核查
@@ -103,32 +102,34 @@ const Workbench = props => {
   const [remindExpire, SetRemindExpire] = useState(false)
   const [popForm] = Form.useForm(); //项目执行-解决问题
 
-
+  const type = props.location.pathname === '/ctManage/workbench' ? 1 : false
   useEffect(() => {
     loadData();
   }, []);
 
   useEffect(() => {
-    if (props.location.query?.type) {
+    if (type) {
       props.dispatch({
         type: 'wordSupervision/updateState',
         payload: {
-          TYPE: props.location.query.type,
+          TYPE: type,
         },
       });
       loadData();
     }
-  }, [props.location.query.type]);
+  }, [type]);
 
   const [userAllMenuListLoading, setAllUserMenuLoading] = useState(true)
+
+
   // 加载工作台和我的消息数据 待办中心列表 根据权限
   const loadData = () => {
+    // let flag = false; //判断项目执行和合同到期合并接口请求
     props.dispatch({
       type: 'wordSupervision/GetWorkbenchesModuleList',
       payload: {},
       callback: (res) => {
         res.map(item => {
-
           switch (item.PName) {
             case '日常监督':
               SetDaily(true)
@@ -145,24 +146,24 @@ const Workbench = props => {
                 let btnArr = [];
                 item.CList.map(clItem => {
                   let btnObj = {};
+                  btnObj.title = clItem.CName;
+                  btnObj.name = clItem.CName;
                   if (clItem.CName == '监督核查') {
                     btnObj.value = 1;
                     SetOperaSupervisionCheck(true)
-                    GetStagingInspectorRectificationList((total) => {
-                      btnObj.name = `${clItem.CName}（${total}）`
-                    })
+                    GetStagingInspectorRectificationList()
                   }
                   if (clItem.CName == '项目执行') {
                     btnObj.value = 2;
                     setProjectExecution(true)
-                    ProjectImplementationList((total) => {
-                      btnObj.name = `${clItem.CName}（${total}）`
-                    })
+                    getCtWorkbenchMsg(1)
                   }
                   btnArr.push(btnObj)
                 })
-
+                setSelectOperaVal(btnArr?.[0]?.value)
                 setOperaServiceBtnList(btnArr)
+
+
               } else {
                 SetOpera(false)
               }
@@ -173,23 +174,23 @@ const Workbench = props => {
                 let btnArr = [];
                 item.CList.map(clItem => {
                   let btnObj = {};
+                  btnObj.title = clItem.CName;
+                  btnObj.name = clItem.CName
                   if (clItem.CName == '数据报警') {
-                    btnObj.value = 1;
+                    btnObj.value = 10;
                     SetRemindDataAlarm(true)
-                    GetWorkAlarmPushList(dataAlarmVal, alarmPageIndex, alarmPageSize, (total) => {
-                      btnObj.name = `${clItem.CName}（${total}）`
-                    }) //我的提醒 数据报警
+                    GetWorkAlarmPushList(dataAlarmVal, alarmPageIndex, alarmPageSize) //我的提醒 数据报警
                   }
                   if (clItem.CName == '合同到期') {
-                    btnObj.value = 4;
-                    SetRemindExpire(true)
-                    GetProjectRemindList(contractPageIndex, contractPageSize, (total) => {
-                      btnObj.name = `${clItem.CName}（${total}）`
-                    }) //我的提醒 合同到期
+                      btnObj.value = 11;
+                      SetRemindExpire(true)
+                      getCtWorkbenchMsg(2)
                   }
                   btnArr.push(btnObj)
                 })
+                setSelectMyVal(btnArr?.[0]?.value)
                 setMyRemindBtnList(btnArr)
+
               } else {
                 SetRemind(false)
               }
@@ -210,7 +211,7 @@ const Workbench = props => {
     props.dispatch({
       type: 'wordSupervision/GetToDoDailyWorks',
       payload: {
-        type: props.location.query.type,
+        type: type,
       },
     });
   };
@@ -224,7 +225,6 @@ const Workbench = props => {
       },
     });
   };
-
   // 结束任务
   const endTask = todoItem => {
     if (todoItem.qualify !== 1) {
@@ -258,24 +258,10 @@ const Workbench = props => {
   };
 
   //获取待办中心列表 监督核查
-  const GetStagingInspectorRectificationList = (callback) => {
+  const GetStagingInspectorRectificationList = () => {
     props.dispatch({
       type: 'wordSupervision/GetStagingInspectorRectificationList',
       payload: { pageIndex: 1, pageSize: 9999 },
-      callback: (total) => {
-        // operaServiceBtnList.splice(0, 1, { name: `监督核查（${total}）`, value: 1 })
-        callback && callback(total)
-      }
-    });
-  };
-  //获取待办中心列表 项目执行
-  const ProjectImplementationList = (callback) => {
-    props.dispatch({
-      type: 'wordSupervision/ProjectImplementationList',
-      payload: { pageIndex: 1, pageSize: 9999 },
-      callback: (total) => {
-        callback && callback(total)
-      }
     });
   };
   const [popVisible, setPopVisible] = useState(false)
@@ -292,12 +278,7 @@ const Workbench = props => {
         },
         callback: () => {
           setPopVisible(false)
-          ProjectImplementationList((total) => {
-            const filterIndex = operaServiceBtnList.findIndex(item=>item.value==2)
-            if(filterIndex!=-1){
-              operaServiceBtnList[filterIndex]['name']= `项目执行（${total}）`
-            }
-          })
+          getCtWorkbenchMsg(1)
         }
       });
     } catch (errorInfo) {
@@ -493,20 +474,22 @@ const Workbench = props => {
   const dataAlarmTypeChange = (val) => {
     setDataAlarmVal(val)
     setAlarmPageIndex(1)
-    GetWorkAlarmPushList(val, 1)
+    setAlarmPageSize(10)
+    GetWorkAlarmPushList(val, 1,10)
   }
-  const [selectMyVal, setSelectMyVal] = useState(1)
-  const [selectOperaVal, setSelectOperaVal] = useState(1)
+  const [selectOperaVal, setSelectOperaVal] = useState()
+  const [selectMyVal, setSelectMyVal] = useState()
 
   const [operaServiceBtnList, setOperaServiceBtnList] = useState([])
   const [myRemindBtnList, setMyRemindBtnList] = useState([])
-  const btnComponents = (data, val, callBack) => {
+  const BtnComponents = ({ data, val, callback }) => {
     return <div className={styles.selectBtnSty}>
       {data.map(item => {
-        return item.name && <div className={item.value == val ? 'btnItemActive' : 'btnItem'} onClick={() => callBack(item.value)}>{item.name}</div>
+        return  <div className={item.value&&item.value === val ? 'btnItemActive' : 'btnItem'} onClick={() => callback(item.value)}>{item.name}</div>
       })}
     </div>
   }
+
   const [dataAlarmTypeList, setDataAlarmTypeList] = useState([{ name: '全部', value: '' }, { name: '待处理', value: 1 }, { name: '已处理', value: 3 }])
   const [dataAlarmVal, setDataAlarmVal] = useState('')
   const [allClose, setAllClose] = useState(1)
@@ -518,19 +501,14 @@ const Workbench = props => {
       })}
     </div>
   }
-  const uniqueArr = (arr) => arr.filter((obj, index) => {
-    return arr.find((compareObj) => {
-      return compareObj.name === obj.name;
-    }) === obj;
-  });
   //获取数据报警
+  const [workAlarmPushTotal,setWorkAlarmPushTotal] = useState(0)
   const GetWorkAlarmPushList = (status, pageIndex, pageSize, callback) => {
     props.dispatch({
       type: 'wordSupervision/GetWorkAlarmPushList',
       payload: { status: status, pageIndex: pageIndex ? pageIndex : alarmPageIndex, pageSize: pageSize ? pageSize : alarmPageSize },
       callback: (total) => {
-        // myRemindBtnList.splice(0, 1, { name: `数据报警（${total}）`, value: 1 })
-        callback && callback(total)
+        setWorkAlarmPushTotal(total)
       }
     });
   }
@@ -551,7 +529,8 @@ const Workbench = props => {
       payload: {},
       callback: () => {
         setAlarmPageIndex(1)
-        GetWorkAlarmPushList(dataAlarmVal, 1)
+        setAlarmPageSize(10)
+        GetWorkAlarmPushList(dataAlarmVal, 1,10)
       },
     });
   }
@@ -564,17 +543,44 @@ const Workbench = props => {
   }
 
 
-  //获取合同到期
-  const GetProjectRemindList = (pageIndex, pageSize, callback) => {
+  //获取项目执行、合同到期等
+  const getCtWorkbenchMsg = (type) => {
     props.dispatch({
-      type: 'wordSupervision/GetProjectRemindList',
-      payload: { pageIndex: pageIndex ? pageIndex : contractPageIndex, pageSize: pageSize ? pageSize : contractPageSize },
-      callback: (total) => {
-        // myRemindBtnList.splice(1, 1, { name: `合同到期（${total}）`, value: 4 })
-        callback && callback(total)
+      type: 'wordSupervision/CtGetWorkbenchMsg',
+      payload: { type: type },
+      callback: (total, total2) => {
+          if (type == 1) {//项目执行
+            filterData(operaServiceBtnList,2,total)
+          } else {//合同到期
+            filterData(myRemindBtnList,11,total2)
+          }
       }
+
     });
   }
+  const filterData = (data,value,total) =>{
+    const filterIndex = data.findIndex(item => item.value == value)
+    if (filterIndex != -1) {
+      data[filterIndex]['name'] = `${data[filterIndex]?.title}（${total}）`
+    }
+  }
+
+  useEffect(()=>{ //初始加载 按钮显示总数
+     if(supervisionVerificaList?.length>=0){ //监督核查
+      filterData(operaServiceBtnList,1,supervisionVerificaList?.length)
+     }
+    if(projectExecutionList?.length>=0){ //项目执行
+      filterData(operaServiceBtnList,2,projectExecutionList?.length)
+    }
+    
+    if(workAlarmPushList?.length>=0){ //数据报警
+      filterData(myRemindBtnList,10,workAlarmPushTotal)
+    }
+    if(contractList?.length>=0){ //合同到期
+      filterData(myRemindBtnList,11,contractList?.length)
+    }
+  },[supervisionVerificaList,projectExecutionList,workAlarmPushList, contractList ])
+
   const delContract = (item) => { //删除合同到期
     props.dispatch({
       type: 'wordSupervision/UpdateProjectPushStatus',
@@ -582,7 +588,7 @@ const Workbench = props => {
         ID: item.ID,
       },
       callback: () => {
-        GetProjectRemindList()
+        getCtWorkbenchMsg(2)
       },
     });
   }
@@ -592,7 +598,8 @@ const Workbench = props => {
       payload: {},
       callback: () => {
         setContractPageIndex(1)
-        GetProjectRemindList(1)
+        setContractPageSize(10)
+        getCtWorkbenchMsg(2)
       },
     });
   }
@@ -601,7 +608,6 @@ const Workbench = props => {
   const contractPageChange = (pageIndex, pageSize) => {
     setContractPageIndex(pageIndex)
     setContractPageSize(pageSize)
-    GetProjectRemindList(pageIndex, pageSize)
   }
 
   const [menuVisible, setMenuVisible] = useState(false)
@@ -693,7 +699,7 @@ const Workbench = props => {
                         <div className={styles.title}>待办中心</div>
                         {operaSupervisionCheck && selectOperaVal == 1 && <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />} {/**监督核查 */}
                       </Row>
-                        {btnComponents(operaServiceBtnList, selectOperaVal, (val) => { setSelectOperaVal(val) })}
+                       <BtnComponents data={operaServiceBtnList} val={selectOperaVal} callback={(val) => { setSelectOperaVal(val) }} />
                         <div className={styles.operaServiceSty} style={{ padding: '0 24px 0 16px' }}>
                           {selectOperaVal == 1 && <Spin spinning={operaServiceLoading}>
                             {supervisionVerificaList?.length ? supervisionVerificaList.map(item =>
@@ -707,7 +713,7 @@ const Workbench = props => {
                           {selectOperaVal == 2 && <Spin spinning={projectExecutionLoading}>
                             {projectExecutionList?.length ? projectExecutionList.map((item, index) =>
                               (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }}>
-                                <Col style={{ width: 'calc(100% - 196px)' }} className='textOverflow' title={item.EntNamePointName}>{item.msg}</Col>
+                                <Col style={{ width: 'calc(100% - 216px)' }} className='textOverflow' title={item.Msg}>{item.Msg}</Col>
                                 <Col>
                                   <Popover visible={index == popSelectIndex && popVisible} placement='leftTop' title={'解决问题'} trigger="click"
                                     overlayStyle={{ width: 400 }}
@@ -733,7 +739,7 @@ const Workbench = props => {
                                     <Tag color="#4090FF" onClick={() => { setSelectPopIndex(index); setPopVisible(true); }} style={{ cursor: 'pointer', marginLeft: 8 }} >解决问题</Tag>
                                   </Popover>
                                 </Col>
-                                <Col>{item.createTime}</Col>
+                                <Col>{item.CreateTime}</Col>
                               </Row>)
                             ) :
                               <Empty style={{ marginTop: '30px' }} />}
@@ -757,11 +763,11 @@ const Workbench = props => {
 
                       <div className={styles.title}>我的提醒</div>
                       {remindDataAlarm && <Row justify='space-between'>
-                        {btnComponents(myRemindBtnList, selectMyVal, (val) => { setSelectMyVal(val); })}
-                        {selectMyVal == 1 ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
+                        <BtnComponents data={myRemindBtnList} val={selectMyVal} callback={(val) => { setSelectMyVal(val) }} />
+                        {selectMyVal == 1 && workAlarmPushList?.length > 0 ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
                       </Row>}
                       <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
-                        {remindDataAlarm && <>{selectMyVal == 1 && <Spin spinning={workAlarmPushLoading}> {/*数据报警 */}
+                        {remindDataAlarm && <>{selectMyVal == 10 && <Spin spinning={workAlarmPushLoading}> {/*数据报警 */}
                           {workAlarmPushList?.length ? workAlarmPushList.map(item =>
                             (<Row justify='space-between' style={{ paddingBottom: 12, }}>
                               <Col style={{ paddingTop: 4 }}><img src='/work_alarm.png' /></Col>
@@ -785,7 +791,7 @@ const Workbench = props => {
                             :
                             <Empty style={{ marginTop: '30px' }} />}
                         </Spin>}</>}
-                        {remindExpire && <> {selectMyVal == 4 && <Spin spinning={contractLoading}> {/*合同到期 */}
+                        {remindExpire && <> {selectMyVal == 11 && <Spin spinning={contractLoading}> {/*合同到期 */}
                           {contractList?.length ? contractList.map(item =>
                             (<Row justify='space-between' style={{ paddingBottom: 12, transition: '0.5s all ease-in' }}>
                               <Col style={{ paddingTop: 4 }}><img src='/work_contract.png' /></Col>
@@ -807,7 +813,7 @@ const Workbench = props => {
                             <Empty style={{ marginTop: '30px' }} />}
                         </Spin>}</>}
                       </div>
-                      {selectMyVal == 1 && <>{workAlarmTotal ? <Row justify='space-between' style={{ paddingTop: 12 }}>
+                      {selectMyVal == 1 && <>{workAlarmPushList?.length > 0 ? <Row justify='space-between' style={{ paddingTop: 12 }}>
                         <Popconfirm placement="topLeft" title={'确定要关闭全部报警吗？'} onConfirm={() => closeAllAlarmChange()} okText="是" cancelText="否">
                           <div>{btnSquareComponents([{ name: '关闭全部', value: 1 }], allClose, () => { })}</div>
                         </Popconfirm>
@@ -822,7 +828,7 @@ const Workbench = props => {
                           onChange={alarmPageChange}
                         />
                       </Row> : null}</>}
-                      {selectMyVal == 4 && <>{contractTotal ? <Row justify='space-between' style={{ paddingTop: 12 }}>
+                      {selectMyVal == 4 && <>{contractList?.length > 0 ? <Row justify='space-between' style={{ paddingTop: 12 }}>
                         <Popconfirm placement="topLeft" title={'确定要删除全部合同到期吗？'} onConfirm={() => delAllContract()} okText="是" cancelText="否">
                           <div>{btnSquareComponents([{ name: '删除全部', value: 1 }], allClose, () => { })}</div>
                         </Popconfirm>
@@ -831,7 +837,7 @@ const Workbench = props => {
                           style={{ paddingRight: 12 }}
                           showSizeChanger
                           showQuickJumper
-                          total={contractTotal}
+                          total={contractList.length}
                           current={contractPageIndex}
                           pageSize={contractPageSize}
                           onChange={contractPageChange}

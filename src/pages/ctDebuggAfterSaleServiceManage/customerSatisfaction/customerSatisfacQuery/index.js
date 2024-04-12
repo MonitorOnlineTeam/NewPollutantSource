@@ -102,12 +102,10 @@ const Index = (props) => {
     })
   }, []);
 
-  const [viewAllFlag,setViewAllFlag] = useState(false)
   const [viewAllVisible,setViewAllVisible] = useState(false)
 
   const viewAllData = ()=>{
     setViewAllVisible(true)
-    setViewAllFlag(true)
     formAll.resetFields()
     setPopVisible(false)
     setPopVisible2(false)

@@ -474,14 +474,14 @@ export async function UpdateAllWorkPushStatus(params) {
   return result;
 }
 
-//合同到期列表
-export async function GetProjectRemindList(params) {
-  const result = await post(
-    API.WorkStageApi.GetProjectRemindList,
-    params,
-  );
-  return result;
-}
+// //合同到期列表
+// export async function GetProjectRemindList(params) {
+//   const result = await post(
+//     API.WorkStageApi.GetProjectRemindList,
+//     params,
+//   );
+//   return result;
+// }
 // 删除合同到期
 export async function UpdateProjectPushStatus(params) {
   const result = await post(
@@ -526,10 +526,10 @@ export async function GetWorkbenchesModuleList (params) {
   );
   return result;
 }
-//成套 获取遗留问题
-export async function ProjectImplementationList (params) {
+//项目执行和合同到期等
+export async function CtGetWorkbenchMsg (params) {
   const result = await post(
-    API.CtWorkStageApi.ProjectImplementationList,
+    API.CtWorkStageApi.GetWorkbenchMsg,
     params,
   );
   return result;
