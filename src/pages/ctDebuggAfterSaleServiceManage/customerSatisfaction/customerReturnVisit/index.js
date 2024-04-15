@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-29 10:00:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-29 18:19:26
+ * @Last Modified time: 2024-04-11 17:02:59
  * @Description:  客户现场回访
  */
 
@@ -127,6 +127,7 @@ const ReturnVisit = props => {
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
+        width: 200,
         render: (text, record) => {
           return (
             <a
@@ -147,6 +148,7 @@ const ReturnVisit = props => {
         dataIndex: 'ShouldCheckCount',
         key: 'ShouldCheckCount',
         ellipsis: true,
+        width: 150,
         render: (text, record) => {
           return (
             <a
@@ -167,13 +169,14 @@ const ReturnVisit = props => {
         dataIndex: 'AlreadyCheckCount',
         key: 'AlreadyCheckCount',
         ellipsis: true,
+        width: 200,
       },
       {
         title: '回访完成率',
         dataIndex: 'CheckRate',
         key: 'CheckRate',
         ellipsis: true,
-        width: 200,
+        width: 300,
         sorter: (a, b) => a.CheckRate - b.CheckRate,
         render: (text, record) => {
           // let percent = Number(text).toFixed(2);

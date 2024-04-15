@@ -190,12 +190,14 @@ const DurationTable = props => {
       },
       {
         title: '总计',
+        fixed: 'left',
         children: [
           {
             title: '重复服务次数',
             dataIndex: 'SumTimes',
             key: 'SumTimes',
             width: 120,
+            fixed: 'left',
             align: 'center',
           },
           {
@@ -203,6 +205,7 @@ const DurationTable = props => {
             dataIndex: 'SumRate',
             key: 'SumRate',
             width: 120,
+            fixed: 'left',
             align: 'center',
           },
         ],
@@ -219,7 +222,6 @@ const DurationTable = props => {
         align: 'center',
         ellipsis: true,
         render: (text, record, index) => {
-          debugger
           return index + 1 + (pageIndex - 1) * pageSize;
         },
       },
@@ -354,6 +356,7 @@ const DurationTable = props => {
         destroyOnClose
         footer={null}
         onCancel={() => {
+          form.resetFields();
           onCancel();
         }}
       >

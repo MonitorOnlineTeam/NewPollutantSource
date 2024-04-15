@@ -3003,7 +3003,7 @@ export default {
             /********  设备调试及售后服务管理平台 成套   ********/
             {
               path: '/ctManage',
-              name: 'CtManage', 
+              name: 'CtManage',
               routes: [
                 // 报告及视图
                 {
@@ -3230,6 +3230,13 @@ export default {
                           path: '/ctManage/afterSalesServiceManage/cooperateOtherWork',
                           component:
                             './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
+                        },
+                        {
+                          // 质保内服务
+                          name: 'UnderWarrantyServices',
+                          path: '/ctManage/afterSalesServiceManage/underWarrantyServices',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/underWarrantyServices',
                         },
                       ],
                     },

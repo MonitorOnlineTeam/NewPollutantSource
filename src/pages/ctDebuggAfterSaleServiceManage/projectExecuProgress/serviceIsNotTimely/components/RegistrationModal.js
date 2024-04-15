@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-21 16:51:07
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-28 15:42:51
+ * @Last Modified time: 2024-04-15 09:55:24
  * @Description:  登记弹窗
  */
 
@@ -284,8 +284,8 @@ const RegistrationModal = props => {
             <p>变更后服务需求时间</p>
             <DatePicker
               style={{ width: '100%', marginBottom: 16 }}
-              format="YYYY-MM-DD HH:00"
-              showTime
+              format="YYYY-MM-DD"
+              // showTime
               onChange={(date, dateString) => {
                 setServiceChangeDate(date);
               }}
