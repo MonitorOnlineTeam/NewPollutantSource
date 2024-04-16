@@ -71,7 +71,7 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
   workAlarmTotal: wordSupervision.workAlarmTotal,
-  contractLoading: wordSupervision.contractLoading || loading.effects['wordSupervision/UpdateProjectPushStatus'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
+  contractLoading: wordSupervision.contractLoading || loading.effects['wordSupervision/DelWorkbenchMsg'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
   contractList: wordSupervision.contractList,
   configInfo: global.configInfo,
   menuList: wordSupervision.menuList,
@@ -583,7 +583,7 @@ const Workbench = props => {
 
   const delContract = (item) => { //删除合同到期
     props.dispatch({
-      type: 'wordSupervision/UpdateProjectPushStatus',
+      type: 'wordSupervision/DelWorkbenchMsg',
       payload: {
         ID: item.ID,
       },

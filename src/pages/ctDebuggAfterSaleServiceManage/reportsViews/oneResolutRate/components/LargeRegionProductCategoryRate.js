@@ -103,6 +103,7 @@ const Index = props => {
           }
         },
         axisLabel: {
+          rotate: 45, // 或者其他角度
           textStyle: {
             color: '#333'  // 修改 x 轴刻度文字的颜色
           }
@@ -150,8 +151,8 @@ const Index = props => {
       grid: {
         left: 50,
         right: 70,
-        bottom: 40,
-        top: 50,
+        bottom: type==1? 80 : 120,
+        top: 40,
       },
       series: [
         {

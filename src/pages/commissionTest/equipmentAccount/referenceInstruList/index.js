@@ -119,7 +119,7 @@ const Index = (props) => {
 
   const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,maxNum,} = props; 
   useEffect(() => {
-    props.getManufacturerList({},(data)=>{
+    props.getManufacturerList({pageIndex:1,pageSize:9999},(data)=>{
       if(data[0]){
         setManufactorID(data[0].ID)
         setDeveiceName(data[0].ManufactorName)

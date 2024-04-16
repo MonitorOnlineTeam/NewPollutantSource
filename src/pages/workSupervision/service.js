@@ -483,9 +483,9 @@ export async function UpdateAllWorkPushStatus(params) {
 //   return result;
 // }
 // 删除合同到期
-export async function UpdateProjectPushStatus(params) {
+export async function DelWorkbenchMsg(params) {
   const result = await post(
-    API.WorkStageApi.UpdateProjectPushStatus,
+    API.CtWorkStageApi.DelWorkbenchMsg,
     params,
   );
   return result;

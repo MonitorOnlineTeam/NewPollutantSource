@@ -611,8 +611,8 @@ export default Model.extend({
     //   }
     // },
     // 删除合同到期
-    *UpdateProjectPushStatus({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.UpdateProjectPushStatus, payload);
+    *DelWorkbenchMsg({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.DelWorkbenchMsg, payload);
       if (result.IsSuccess) {
         message.success('删除成功！');
         callback && callback();

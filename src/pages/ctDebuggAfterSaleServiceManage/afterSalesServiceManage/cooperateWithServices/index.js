@@ -413,7 +413,7 @@ const Index = (props) => {
       grid: {
         left: 50,
         right: 70,
-        bottom: 20,
+        bottom: 70,
         top: 50,
       },
       legend: {
@@ -449,6 +449,7 @@ const Index = (props) => {
           }
         },
         axisLabel: {
+          rotate: 45, // 或者其他角度
           textStyle: {
             color: '#333'  // 修改 x 轴刻度文字的颜色
           }

@@ -93,7 +93,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       fixed:'left',
-      render: (text, record, index) => index + 1
+      render: (text, record, index) =>  (index + 1) + (pageIndex-1)*pageSize
     },
     {
       title: '姓名',
@@ -278,6 +278,7 @@ const Index = (props) => {
       const values = await form.validateFields();
       props.GetSignInAndOffsiteSignList({
         ...values,
+        workType:values.workType && values.workType.toString(),
         bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
         eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
@@ -316,7 +317,7 @@ const Index = (props) => {
         <Col span={8}>
           <Spin spinning={workTypeLoading} size='small' className='formItemSpinSty'>
             <Form.Item name='workType' label='工作类型' style={{ padding: '0 16px' }}>
-              <Select placeholder='请选择'  showSearch  optionFilterProp="children">
+              <Select placeholder='请选择'  mode='multiple' showSearch allowClear optionFilterProp="children" >
                 {workTypeList.map(item => <Option value={item.ChildID}>{item.Name}</Option>)}
               </Select>
             </Form.Item>

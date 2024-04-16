@@ -199,12 +199,12 @@ const Index = (props) => {
 
       try {
         const values =  await form.validateFields();
-        if(values.userName || values.userAccount || values.entName || values.projectCode || values.itemCode){
-         setPageSize(10)
-         pageSize = 10;
-        }else{
-          pageSize = pageSize; 
-        }
+        // if(values.userName || values.userAccount || values.entName || values.projectCode || values.itemCode){
+        //  setPageSize(10)
+        //  pageSize = 10;
+        // }else{
+        //   pageSize = pageSize; 
+        // }
         props.GetSignInAnalysisInfo(detailQueryPar?{...detailQueryPar,pageIndex:pageIndex,pageSize:pageSize}: {
           ...values,
           pageIndex: pageIndex,

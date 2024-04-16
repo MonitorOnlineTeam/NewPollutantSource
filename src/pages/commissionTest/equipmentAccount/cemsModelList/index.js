@@ -157,7 +157,7 @@ const Index = (props) => {
 
   useEffect(() => {
     onFinish();
-    props.getManufacturerList({})
+    props.getManufacturerList({pageIndex:1,pageSize:9999})
     props.getSystemModelNameList({})
     
     const buttonList = permissionButton(props.match.path)

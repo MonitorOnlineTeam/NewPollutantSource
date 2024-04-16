@@ -1,0 +1,46 @@
+
+ .resourceOverviewPage  :global{
+    height: calc(100vh - 64px);
+    padding:10px;
+    overflow-y: auto;
+    margin: -24px;
+    // background-image: url(/bg2.jpg);
+    // background-repeat: no-repeat;
+    // background-size: 100% 100%;
+    background-color: #030A22;
+    color: #fff;
+    .cardBodySty{
+      padding: 0 16px;
+      background-color: #051031;
+    }
+    .mapModalHide{
+      opacity: 0;
+      transition: all .3s ease-in;
+    }
+    .mapModalShow{
+      opacity: 1;
+      transition: all .3s ease-in;
+    }
+    .ant-radio-button-wrapper:first-child {
+      border-radius: 12px 0 0 12px;
+    }
+    .ant-radio-button-wrapper:last-child {
+      border-radius: 0 12px 12px 0;
+    }
+    .ant-radio-button-wrapper{
+      color: #70A7FF;
+      background: transparent;
+      border: 1px solid #008DFD;
+    }
+    .ant-radio-button-wrapper:not(:first-child)::before,.ant-radio-button-wrapper:not(:first-child)::before{
+      width: 0;
+    }
+    .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled){
+      background: #1E74FD;
+      border-color: #1E74FD;
+    }
+    .ant-progress-inner{
+     border-radius: 0;
+     background-color: #1D3557;
+    }
+}
