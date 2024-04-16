@@ -1,26 +1,18 @@
 /*
- * @Author: jab
- * @Date: 2024-04
- * @Description:  大区质保内服务一次解决率
+ * @Author: JiaQi 
+ * @Date: 2024-04-16 16:37:23 
+ * @Last Modified by:   JiaQi 
+ * @Last Modified time: 2024-04-16 16:37:23 
+ * @Description:  安装调试达标率图表
  */
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'dva';
 import {
-  Form,
   Card,
-  Input,
-  Button,
-  DatePicker,
-  Select,
-  Space,
-  Row,
-  Col,
-  message,
-  Divider,
 } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
-import moment from 'moment';
 const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
   loading: loading.effects[`instStdAndCompReso/GetInstallationDebugRate`],
 });

@@ -1,26 +1,15 @@
 /*
- * @Author: jab
- * @Date: 2024-04
- * @Description:  大区质保内服务一次解决率
+ * @Author: JiaQi
+ * @Date: 2024-04-16 16:36:46
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-04-16 16:37:19
+ * @Description:  投诉解决率 - 图表
  */
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'dva';
-import {
-  Form,
-  Card,
-  Input,
-  Button,
-  DatePicker,
-  Select,
-  Space,
-  Row,
-  Col,
-  message,
-  Divider,
-} from 'antd';
+import { Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
-import moment from 'moment';
 const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
   loading: loading.effects[`instStdAndCompReso/GetInstallationDebugRate`],
 });
@@ -34,8 +23,6 @@ const NumAndRateChart = props => {
 
   const getOption = () => {
     const lineColor = '#F6A821';
-    // const barColor1 = { color1: '#83FFD2', color2: '#2BE5A1' };
-    // const barColor2 = { color1: '#89C9FF', color2: '#399FF5' };
 
     const color = [
       ['#89C9FF', '#399FF5'],
@@ -135,7 +122,6 @@ const NumAndRateChart = props => {
             textStyle: {
               color: '#fff',
             },
-            
           },
           itemStyle: {
             color: {

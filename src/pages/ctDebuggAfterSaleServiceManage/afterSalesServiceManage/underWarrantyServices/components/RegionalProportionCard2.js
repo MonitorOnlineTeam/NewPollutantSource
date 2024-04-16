@@ -216,12 +216,13 @@ const RegionalProportionCard2 = props => {
         pie2dData.push({
           ...item,
           itemStyle: {
-            color: color[index],
+            color: item.itemStyle.color,
             opacity: 0,
           },
         });
       }
     });
+    console.log('pie2dData', pie2dData)
     option.title = {
       text: '{name|总计}\n{val|' + count + '}',
       // top: 'center',

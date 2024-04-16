@@ -1,8 +1,13 @@
+/*
+ * @Author: JiaQi 
+ * @Date: 2024-04-16 16:37:38 
+ * @Last Modified by:   JiaQi 
+ * @Last Modified time: 2024-04-16 16:37:38 
+ * @Description:  投诉解决率表格
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Form, Card, Input, Button, Descriptions, Space, Tooltip, Modal } from 'antd';
-import styles from '../../index.less';
-import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import AllViewModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/handleComplaints/components/AllViewModal.js';
@@ -100,21 +105,6 @@ const TableCard = props => {
       },
       ...columnList,
     ];
-  };
-
-  const computeStartAndEnd = () => {
-    var now = moment();
-    var currentYear = now.format('YYYY');
-    let inputYear = date.format('YYYY');
-
-    var start = moment(date.format('YYYY-01-01 00:00:00')),
-      end;
-    if (inputYear === currentYear) {
-      end = now;
-    } else {
-      end = date.endOf('year');
-    }
-    return [start, end];
   };
 
   return (

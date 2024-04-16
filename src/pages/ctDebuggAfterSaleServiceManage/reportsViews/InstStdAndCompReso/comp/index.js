@@ -2,23 +2,16 @@
  * @Author: JiaQi
  * @Date: 2024-04-15 14:51:48
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-16 09:50:12
+ * @Last Modified time: 2024-04-16 16:40:28
  * @Description:  投诉解决率
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
-  Form,
   Card,
-  Input,
-  Button,
-  DatePicker,
-  Select,
   Space,
   Row,
   Col,
-  message,
-  Divider,
 } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import styles from '../index.less';

@@ -2,23 +2,16 @@
  * @Author: JiaQi
  * @Date: 2024-04-15 14:51:48
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-16 09:20:40
+ * @Last Modified time: 2024-04-16 16:40:29
  * @Description:  安装调试达标率
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
-  Form,
   Card,
-  Input,
-  Button,
-  DatePicker,
-  Select,
   Space,
   Row,
   Col,
-  message,
-  Divider,
 } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import styles from '../index.less';
@@ -37,7 +30,7 @@ const Install = props => {
 
   const {
     dispatch,
-    installPageData: { ColumnList, TableList, LargeRegionAnalysis, CategoryAnalysis },
+    installPageData: { LargeRegionAnalysis, CategoryAnalysis },
   } = props;
 
   useEffect(() => {

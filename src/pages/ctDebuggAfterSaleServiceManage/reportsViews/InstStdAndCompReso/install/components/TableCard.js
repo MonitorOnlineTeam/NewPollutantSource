@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi 
+ * @Date: 2024-04-16 16:37:56 
+ * @Last Modified by:   JiaQi 
+ * @Last Modified time: 2024-04-16 16:37:56 
+ * @Description:  安装调试达标率表格
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Form, Card, Input, Button, Descriptions, Space, Tooltip, Modal } from 'antd';
