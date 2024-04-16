@@ -3003,7 +3003,7 @@ export default {
             /********  设备调试及售后服务管理平台 成套   ********/
             {
               path: '/ctManage',
-              name: 'CtManage', 
+              name: 'CtManage',
               routes: [
                 // 报告及视图
                 {
@@ -3023,6 +3023,24 @@ export default {
                     },
 
                   ],
+                },
+                // 工作台
+                {
+                  // path: '/ctManage/workbench',
+                  // name: 'Workbench',
+                  // routes: [
+                  // {
+                  //   path: '/ctManage/workbench',
+                  //   redirect: '/ctManage/workbench',
+                  // },
+                  // {
+                  name: 'CtWorkbench',
+                  path: '/ctManage/workbench',
+                  component:
+                    './workSupervision/workbench',
+                  // },
+
+                  // ],
                 },
                 /**项目执行进度 */
                 {
@@ -3071,6 +3089,13 @@ export default {
                       // 签到考勤查询 成套
                       name: 'CtCheckAttendanceQuery',
                       path: '/ctManage/projectExecuProgress/ctCheckAttendanceQuery',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/cTcheckAttendanceQuery',
+                    },
+                    {
+                      // 遗留问题
+                      name: 'emainProblems',
+                      path: '/ctManage/projectExecuProgress/remainProblems',
                       component:
                         './ctDebuggAfterSaleServiceManage/projectExecuProgress/cTcheckAttendanceQuery',
                     },
@@ -3381,6 +3406,22 @@ export default {
 
 
 
+
+
+
+              ]
+            },
+            /********  通用   ********/
+            {
+              path: '/currency',
+              name: 'CtManage',
+              routes: [
+                {
+                  path: '/currency/resourceOverview',
+                  name: 'ResourceOverview',
+                  component:
+                    './currencyManage/resourceOverview',
+                },
 
 
 
