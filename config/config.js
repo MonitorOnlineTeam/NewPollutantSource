@@ -3256,6 +3256,13 @@ export default {
                           component:
                             './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/cooperateWithServices',
                         },
+                        {
+                          // 质保内服务
+                          name: 'UnderWarrantyServices',
+                          path: '/ctManage/afterSalesServiceManage/underWarrantyServices',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/afterSalesServiceManage/underWarrantyServices',
+                        },
                       ],
                     },
                   ],

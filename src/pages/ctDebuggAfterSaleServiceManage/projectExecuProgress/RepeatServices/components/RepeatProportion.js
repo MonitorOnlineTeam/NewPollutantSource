@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-25 15:30:11
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-26 14:30:34
+ * @Last Modified time: 2024-04-11 09:55:41
  * @Description:  大区重复服务次数占比
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -96,8 +96,14 @@ const RepeatProportion = props => {
           // radius: [50, 250],
           radius: ['50%', '70%'],
           center: ['50%', '50%'],
-          roseType: 'area',
+          // roseType: 'area',
           label: { show: false },
+          itemStyle: {
+            borderRadius: 6,
+            borderColor: '#fff',
+            borderWidth: 2,
+          },
+          padAngle: 1,
           data: seriesData,
         },
       ],

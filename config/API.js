@@ -330,7 +330,7 @@ export const API = {
     DeleteKeyParameterCheckInfo: before + '/KeyParameter/DeleteKeyParameterCheckInfo', //删除关键参数核查信息
     GetParameterConsistencyCodeInfo: before + '/KeyParameter/GetParameterConsistencyCodeInfo',//获取量程和实时数据一致性核查监测参数信息
     JudgeRangeConsistencyCheck: before + '/KeyParameter/JudgeRangeConsistencyCheck',//获取量程一致性(自动判断)
-    JudgeDataConsistencyCheck: before + '/KeyParameter/JudgeDataConsistencyCheck',//获取数据一致性(自动判断)	
+    JudgeDataConsistencyCheck: before + '/KeyParameter/JudgeDataConsistencyCheck',//获取数据一致性(自动判断)
     GetNOxValue: before + '/KeyParameter/GetNOxValue',//获取NOx数采仪实时数据
     JudgeParameterConsistencyInfo: before + '/KeyParameter/JudgeParameterConsistencyInfo',//获取参数一致性核查检查项目信息
     IssueKeyParameterCheckInfo: before + '/KeyParameter/IssueKeyParameterCheckInfo',//关键参数核查下发
@@ -416,7 +416,7 @@ export const API = {
   AssetManagementApi: {
     /*** 设备台账 ***/
     /*污染源管理*/
-    CompanyOperationBasictemplate: `/wwwroot/BaseDataUpload/Report/公司运维基础数据模板.xlsm`,//企业模板下载 
+    CompanyOperationBasictemplate: `/wwwroot/BaseDataUpload/Report/公司运维基础数据模板.xlsm`,//企业模板下载
     VerificationImportEntInfo: before + '/EnterpriseApi/VerificationImportEntInfo',//导入企业信息
     ImportEntInfo: before + '/EnterpriseApi/ImportEntInfo',//保存导入企业信息
     GetEnterpriseCorporationCode: before + '/EnterpriseApi/GetEnterpriseCorporationCode', //获取企业厂界信息
@@ -453,24 +453,24 @@ export const API = {
     GetOperationSignRadiusInfo: before + '/EnterpriseApi/GetOperationSignRadiusInfo',//获取企业电子围栏半径
     /*污染源信息查询*/
     GetEntList: before + '/EnterpriseApi/GetEntList', //获取监测点信息
-    ExportEntList: before + '/EnterpriseApi/ExportEntList', //导出企业信息 
+    ExportEntList: before + '/EnterpriseApi/ExportEntList', //导出企业信息
     GetPointList: before + '/MonitorPointApi/GetPointList', //获取监测点信息
-    ExportPointList: before + '/MonitorPointApi/ExportPointList', //导出监测点信息 
+    ExportPointList: before + '/MonitorPointApi/ExportPointList', //导出监测点信息
     GetPointSystemList: before + '/MonitorPointApi/GetPointSystemList', //获取所有排口下系统型号
     ExportPointSystemList: before + '/MonitorPointApi/ExportPointSystemList', //导出所有排口下系统型号
     GetPointEquipmentList: before + '/MonitorPointApi/GetPointEquipmentList',//获取设备信息
-    ExportPointEquipmentList: before + '/MonitorPointApi/ExportPointEquipmentList',//导出设备信息 
+    ExportPointEquipmentList: before + '/MonitorPointApi/ExportPointEquipmentList',//导出设备信息
     GetPointVerificationItemList: before + '/MonitorPointApi/GetPointVerificationItemList',//获取数据核查项信息
     ExportPointVerificationItemList: before + '/MonitorPointApi/ExportPointVerificationItemList',//数据核查项信息 导出
     GetPointEquipmentParametersList: before + '/MonitorPointApi/GetPointEquipmentParametersList',//获取设备参数项信息
     ExportPointEquipmentParametersList: before + '/MonitorPointApi/ExportPointEquipmentParametersList',//设备参数项信息 导出
     /*项目管理*/
     GetProjectList: before + '/ProjectApi/GetProjectList',//获取项目管理
-    AddOrUpdateProjectInfo: before + '/ProjectApi/AddOrUpdateProjectInfo',//添加修改项目管理信息 
+    AddOrUpdateProjectInfo: before + '/ProjectApi/AddOrUpdateProjectInfo',//添加修改项目管理信息
     DeleteProjectInfo: before + '/ProjectApi/DeleteProjectInfo',//删除项目管理信息
     GetProjectPointList: before + '/ProjectApi/GetProjectPointList',//获取运维监测点信息
-    ExportProjectList: before + '/ProjectApi/ExportProjectList',//导出项目管理 
-    ExportProjectPointList: before + '/ProjectApi/ExportProjectPointList',//导出运维监测点信息 
+    ExportProjectList: before + '/ProjectApi/ExportProjectList',//导出项目管理
+    ExportProjectPointList: before + '/ProjectApi/ExportProjectPointList',//导出运维监测点信息
     GetSellerCompanyList: before + '/ProjectApi/GetSellerCompanyList',// 获取卖房公司信息
     AddOrUpdSellerCompany: before + '/ProjectApi/AddOrUpdSellerCompany',// 添加卖房公司信息
     DelSellerCompany: before + '/ProjectApi/DelSellerCompany',// 删除卖房公司信息
@@ -498,7 +498,7 @@ export const API = {
     UpdateEquipmentInfo: before + '/EquipmentApi/UpdateEquipmentInfo',//更新信息清单
     DeleteEquipmentInfo: before + '/EquipmentApi/DeleteEquipmentInfo',//删除设备信息清单
     GetMonitoringCategoryList: before + '/EquipmentApi/GetMonitoringCategoryList',//获取设备监测类型
-    ExportEquipmentList: before + '/EquipmentApi/ExportEquipmentList',//导出设备信息清单 
+    ExportEquipmentList: before + '/EquipmentApi/ExportEquipmentList',//导出设备信息清单
     /*故障单元清单*/
     GetFaultUnitList: before + '/AccountApi/GetFaultUnitList',//获取故障单元清单
     AddFaultUnitInfo: before + '/AccountApi/AddFaultUnitInfo',//添加故障单元清单
@@ -908,7 +908,7 @@ export const API = {
     GetProvinceList: before + '/CTProjectExecutionApi/GetProvinceList',  //获取大区档案
     ExportProvinceList: before + '/CTProjectExecutionApi/ExportProvinceList',  //大区档案 导出
     GetManagerSelect: before + '/CTProjectExecutionApi/GetManagerSelect',  //获取大区系统类型、档案执行大区、项目所在地、大区经理、省区经理信息
-    
+
   },
     //技术专家系统 Api
     TechExpertSystemApi: {
@@ -1045,6 +1045,16 @@ export const API = {
       // 导入模板下载
       GetStandardAirTemplate: before + '/CTProjectExecutionApi/GetStandardAirTemplate',
     },
+    // 质保内服务
+    UnderWarrantyServices: {
+      // 获取页面数据
+      GetWarrantyServiceAnalysis: before + '/CTStatisticsApi/GetWarrantyServiceAnalysis',
+      // 导出
+      ExportWarrantyServiceAnalysis: before + '/CTStatisticsApi/ExportWarrantyServiceAnalysis',
+      // 质保内基础服务
+      GetWarrantyServiceInfo: before + '/CTStatisticsApi/GetWarrantyServiceInfo',
+      // 导出基础数据
+      ExportWarrantyServiceInfo: before + '/CTStatisticsApi/ExportWarrantyServiceInfo',
+    },
   },
 };
-

@@ -189,6 +189,7 @@ const DurationTable = props => {
             key: 'SumTimes',
             width: 120,
             align: 'center',
+            fixed: 'left',
           },
           {
             title: '占比',
@@ -196,6 +197,7 @@ const DurationTable = props => {
             key: 'SumRate',
             width: 120,
             align: 'center',
+            fixed: 'left',
           },
         ],
       },
@@ -316,6 +318,7 @@ const DurationTable = props => {
         destroyOnClose
         footer={null}
         onCancel={() => {
+          form.resetFields();
           onCancel();
         }}
       >

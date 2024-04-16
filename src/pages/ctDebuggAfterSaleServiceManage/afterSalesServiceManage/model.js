@@ -2,23 +2,31 @@ import Model from '@/utils/model';
 import * as services from './service';
 import moment from 'moment';
 import { message } from 'antd';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile, requestPost } from '@/utils/utils';
+import { API } from '@config/API';
 
 export default Model.extend({
   namespace: 'ctAfterSalesServiceManagement',
   state: {
-    serviceDispatchForAnalysisList: [],//服务详情
+    serviceDispatchForAnalysisList: [], //服务详情
     serviceDispatchForAnalysisTotal: 0,
     serviceDispatchForAnalysisQueryPar: {},
+    // 质保内服务
+    underWarrantyServicesData: {
+      ColumnList: [],
+      LargeRegionAnalysis: [],
+      TableList: [],
+      WarrantyAnalysis: [],
+    },
   },
   effects: {
     // 收费服务
     *GetChargeServiceAnalysis({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.GetChargeServiceAnalysis, { ...payload });
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     //收费服务 导出
@@ -28,16 +36,16 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 成套节点服务
     *GetCompleteNodeServerAnalysis({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.GetCompleteNodeServerAnalysis, { ...payload });
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     //成套节点服务 导出
@@ -47,16 +55,16 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 赠送服务
     *GetGiveServerAnalysis({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.GetGiveServerAnalysis, { ...payload });
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     //赠送服务 导出
@@ -66,16 +74,16 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 配合检查
     *GetCooperateInspectionAnalysis({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.GetCooperateInspectionAnalysis, { ...payload });
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     //配合检查 导出
@@ -85,16 +93,16 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 配合其它工作
     *GetCooperateOtherWorkAnalysis({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.GetCooperateOtherWorkAnalysis, { ...payload });
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     //配合其它工作 导出
@@ -104,7 +112,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     //服务明细
@@ -114,10 +122,10 @@ export default Model.extend({
         yield update({
           serviceDispatchForAnalysisList: result.Datas ? result.Datas : [],
           serviceDispatchForAnalysisTotal: result.Total,
-          serviceDispatchForAnalysisQueryPar: payload
+          serviceDispatchForAnalysisQueryPar: payload,
         });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     //服务明细 导出
@@ -127,13 +135,56 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
-
-
-
-
-
-  }
+    // 获取质保内服务页面数据
+    *GetWarrantyServiceAnalysis({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.UnderWarrantyServices.GetWarrantyServiceAnalysis,
+        payload,
+      );
+      if (result.IsSuccess) {
+        yield update({
+          underWarrantyServicesData: result.Datas,
+        });
+      }
+    },
+    // 导出 - 质保内服务页面数据
+    *ExportWarrantyServiceAnalysis({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.UnderWarrantyServices.ExportWarrantyServiceAnalysis,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      }
+    },
+    // 获取质保内服务基础数据
+    *GetWarrantyServiceInfo({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.UnderWarrantyServices.GetWarrantyServiceInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+     // 导出 - 获取质保内服务基础数据
+     *ExportWarrantyServiceInfo({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.UnderWarrantyServices.ExportWarrantyServiceInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      }
+    },
+  },
 });
