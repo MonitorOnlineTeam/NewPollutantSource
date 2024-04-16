@@ -67,8 +67,8 @@ const NumAndRateChart = props => {
           },
         },
         axisLabel: {
-          interval: 0,
-          rotate: 30,
+          // interval: 0,
+          // rotate: 30,
           textStyle: {
             // fontSize: 14,
             color: '#383838',
@@ -118,7 +118,7 @@ const NumAndRateChart = props => {
       grid: {
         left: 50,
         right: 70,
-        bottom: 60,
+        bottom: 40,
         top: 50,
       },
       series: [
@@ -135,6 +135,7 @@ const NumAndRateChart = props => {
             textStyle: {
               color: '#fff',
             },
+            
           },
           itemStyle: {
             color: {
@@ -168,6 +169,13 @@ const NumAndRateChart = props => {
             textStyle: {
               color: '#fff',
             },
+            formatter: function(param) {
+              if (param.value == 0) {
+                return '';
+              } else {
+                return param.value;
+              }
+            },
           },
           itemStyle: {
             color: {
@@ -200,6 +208,13 @@ const NumAndRateChart = props => {
             show: true,
             textStyle: {
               color: '#fff',
+            },
+            formatter: function(param) {
+              if (param.value == 0) {
+                return '';
+              } else {
+                return param.value;
+              }
             },
           },
           itemStyle: {

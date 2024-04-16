@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { connect } from 'dva';
-import {
-  Card,
-  Empty,
-  Row,
-  Col,
-  Divider,
-} from 'antd';
+import { Card, Empty, Row, Col, Divider } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import styles from '../index.less';
@@ -29,7 +23,7 @@ const RegionalProportionCard2 = props => {
   const [echarts, setEcharts] = useState();
 
   const {
-    date,
+    title,
     loading,
     underWarrantyServicesData: { LargeRegionAnalysis },
   } = props;
@@ -392,7 +386,7 @@ const RegionalProportionCard2 = props => {
 
   return (
     <Card
-      title="大区服务占比"
+      title={title}
       size="small"
       bodyStyle={{ height: 340, paddingBottom: 0, paddingTop: 0 }}
       loading={loading}

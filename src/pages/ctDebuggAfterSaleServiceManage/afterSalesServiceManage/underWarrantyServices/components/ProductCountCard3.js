@@ -16,6 +16,7 @@ const ProductCountCard3 = props => {
 
   const {
     loading,
+    title,
     underWarrantyServicesData: { WarrantyAnalysis },
   } = props;
 
@@ -313,7 +314,7 @@ const ProductCountCard3 = props => {
   }, [WarrantyAnalysis, echarts]);
 
   return (
-    <Card title="产品类别服务次数、时长" size="small" bodyStyle={{ height: 640 }} loading={loading}>
+    <Card title={title} size="small" bodyStyle={{ height: 640 }} loading={loading}>
       {renderEcharts}
     </Card>
   );

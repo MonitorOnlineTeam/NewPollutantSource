@@ -157,6 +157,7 @@ const TableCard = props => {
       {// 基础数据
       isModalOpen && (
         <AllViewModal
+          title="投诉解决率基础数据"
           isModalOpen={isModalOpen}
           onCancel={() => {
             onCancel();

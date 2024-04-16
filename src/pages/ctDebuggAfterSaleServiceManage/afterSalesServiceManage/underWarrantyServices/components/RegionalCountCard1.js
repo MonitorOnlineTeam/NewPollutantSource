@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'dva';
-import {
-  Card,
-} from 'antd';
+import { Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 
@@ -15,7 +13,7 @@ const RegionalCountCard1 = props => {
   const [echarts, setEcharts] = useState();
 
   const {
-    date,
+    title,
     loading,
     underWarrantyServicesData: { LargeRegionAnalysis },
   } = props;
@@ -43,14 +41,14 @@ const RegionalCountCard1 = props => {
         //   return value + '小时';
         // },
         trigger: 'axis',
-        formatter: (params) => {
-          console.log('params', params)
+        formatter: params => {
+          console.log('params', params);
           return (
             `${params?.[0].name}<br />
             ${params?.[0]?.marker} ${params?.[0]?.seriesName}：${params?.[0]?.value}次 <br />` +
             `${params?.[3]?.marker} ${params?.[3]?.seriesName}：${params?.[3]?.value}小时 <br />`
-          )
-        }
+          );
+        },
       },
       legend: {},
       grid: {
@@ -130,27 +128,23 @@ const RegionalCountCard1 = props => {
           name: '服务次数',
           type: 'bar',
           itemStyle: {
-            normal: {
-              opacity: 0.7,
-            },
+            opacity: 0.7,
           },
           barWidth: '20',
           symbolOffset: [0, 5],
           data: numSeriesData,
           itemStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: '#33FAFF',
-                },
-                {
-                  offset: 1,
-                  color: '#21C3C6',
-                },
-              ]),
-              opacity: 1,
-            },
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: '#33FAFF',
+              },
+              {
+                offset: 1,
+                color: '#21C3C6',
+              },
+            ]),
+            opacity: 1,
           },
         },
         {
@@ -166,6 +160,7 @@ const RegionalCountCard1 = props => {
               show: true,
               position: 'top',
               color: '#21C3C6',
+              fontWeight: 'bold',
               // formatter: '{c}%',
             },
           },
@@ -193,10 +188,15 @@ const RegionalCountCard1 = props => {
           smooth: true,
           symbolSize: 8,
           symbol: 'circle',
+          label: {
+            show: true,
+            position: 'top',
+            color: '#F6A821',
+            fontWeight: 'bold',
+            // formatter: '{c}%',
+          },
           itemStyle: {
-            normal: {
-              color: '#F6A821',
-            },
+            color: '#F6A821',
           },
         },
       ],
@@ -220,7 +220,7 @@ const RegionalCountCard1 = props => {
   }, [LargeRegionAnalysis, echarts]);
 
   return (
-    <Card title="大区服务次数，时长" size="small" bodyStyle={{ height: 340 }} loading={loading}>
+    <Card title={title} size="small" bodyStyle={{ height: 340 }} loading={loading}>
       {renderEcharts}
     </Card>
   );

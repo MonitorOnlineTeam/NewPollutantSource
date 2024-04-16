@@ -171,6 +171,13 @@ const NumAndRateChart = props => {
             textStyle: {
               color: '#fff',
             },
+            formatter: function(param) {
+              if (param.value == 0) {
+                return '';
+              } else {
+                return param.value;
+              }
+            },
           },
           itemStyle: {
             color: {
@@ -204,6 +211,13 @@ const NumAndRateChart = props => {
             textStyle: {
               color: '#fff',
             },
+            formatter: function(param) {
+              if (param.value == 0) {
+                return '';
+              } else {
+                return param.value;
+              }
+            },
           },
           itemStyle: {
             color: {
@@ -236,6 +250,13 @@ const NumAndRateChart = props => {
             show: true,
             textStyle: {
               color: '#fff',
+            },
+            formatter: function(param) {
+              if (param.value == 0) {
+                return '';
+              } else {
+                return param.value;
+              }
             },
           },
           itemStyle: {
@@ -275,7 +296,7 @@ const NumAndRateChart = props => {
           },
           smooth: true,
           symbol: 'circle',
-          z: 5,
+          z: 999,
         },
         // {
         //   type: 'bar', //显示背景图

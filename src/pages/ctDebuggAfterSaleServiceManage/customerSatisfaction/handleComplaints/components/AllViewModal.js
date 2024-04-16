@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-01 15:21:31
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-03 09:42:32
+ * @Last Modified time: 2024-04-16 15:29:28
  * @Description:  查看全部
  */
 
@@ -22,13 +22,13 @@ const AllViewModal = props => {
 
   const [showType, setShowType] = useState('chart');
 
-  const { dispatch, isModalOpen, onCancel } = props;
+  const { title, isModalOpen, onCancel } = props;
 
   useEffect(() => {}, []);
 
   return (
     <Modal
-      title={`查看全部`}
+      title={title || `查看全部`}
       wrapClassName="spreadOverModal"
       visible={isModalOpen}
       destroyOnClose
