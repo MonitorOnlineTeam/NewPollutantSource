@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-21 13:47:44
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-22 13:59:24
+ * @Last Modified time: 2024-04-16 14:19:56
  * @Description:  服务不及时页面
  */
 
@@ -399,6 +399,21 @@ const ServiceIsNotTimely = props => {
               查看全部
             </Button>
           )}
+          {/* 文字说明 */}
+          {serviceType === 0 && (
+            <span style={{ color: '#f5222d' }}>
+              1. 如同一客户联系人反馈未及时到达的视为不及时。2.
+              因公司原因、不可抗力导致不及时的视为不及时。请在此页面登记。
+            </span>
+          )}
+          {serviceType === 1 && (
+            <span style={{ color: '#f5222d' }}>
+              因客户原因导致不及时的，不参与统计，请在此处登记。
+            </span>
+          )}
+          {serviceType === 2 && (
+            <span style={{ color: '#f5222d' }}>如客户变更服务需求时间，请在此处登记。</span>
+          )}
         </Space>
         <Divider />
       </div>
@@ -416,7 +431,7 @@ const ServiceIsNotTimely = props => {
           total: tableTotal,
           pageSize: pageSize,
           current: pageIndex,
-          showSizeChanger: true, 
+          showSizeChanger: true,
           showQuickJumper: true,
           onChange: handleTableChange,
         }}
