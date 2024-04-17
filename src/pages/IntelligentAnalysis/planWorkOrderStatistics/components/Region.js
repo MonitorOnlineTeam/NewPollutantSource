@@ -945,6 +945,16 @@ const Index = (props, ref) => {
         return <Button type="link" onClick={() => { workOrderNum(3, record, 'coordinationComparisonCount') }}>{text}</Button>
       }
     },
+    {
+      title: '异常处理个数',
+      dataIndex: 'dealExceptionCompleteCount',
+      key: 'dealExceptionCompleteCount',
+      width: 120,
+      align: 'center',
+      render: (text, record, index) => {
+        return <Button type="link" onClick={() => { workOrderNum(3, record, 'dealExceptionCount') }}>{text}</Button>
+      }
+    },
   ]
   const outsideColumns = [ //计划外 首页面
     {
@@ -1420,6 +1430,7 @@ const Index = (props, ref) => {
     "cooperationInspectionCount": '6',
     "calibrationTestCount": '7',
     "coordinationComparisonCount": '8',
+    "dealExceptionCount" : '13'
   }
   const insideOrOutsideWorkGetTaskWorkOrderList = (par) => { //计划内or计划外弹框
     const pars = {
@@ -1458,6 +1469,7 @@ const Index = (props, ref) => {
     "cooperationInspectionCount": '配合检查工单',
     "calibrationTestCount": '校验测试工单',
     "coordinationComparisonCount": '配合比对工单数',
+    "dealExceptionCount": '异常处理个数',
   }
 
   const workOrderNum = (type, record, outType) => { //计划内  计划外  总数工单

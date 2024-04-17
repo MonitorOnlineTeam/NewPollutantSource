@@ -114,7 +114,7 @@ const Index = (props) => {
           <Col style={{width:445}} className={`leftPageSty ${fullScreen? ` mapModalHide`: `mapModalShow` }` }>
              <LeftContent {...props}/>
            </Col>
-           <Col  style={{width:'calc(100% - 990px)'}} className={'mapPageSty'}>
+           <Col  style={{width:'calc(100% - 890px)'}} className={'mapPageSty'}>
              <MapContent {...props} fullScreenClick={fullScreenClick}/>
            </Col>
            

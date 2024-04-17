@@ -187,7 +187,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
     yAxis: {
         type: 'category',
         // data: [ '配合比对', '配合检查','参数核对','校验测试','维护','维修','校准','巡检', ],
-        data: [ '配合比对', '配合检查','校验测试','维护','维修','校准','巡检', ],
+        data: ['异常处理','配合比对', '配合检查','校验测试','维护','维修','校准','巡检', ],
         axisLine: { show: false},
         axisTick: {show: false  },
         axisLabel: {  margin:80, textStyle: { color: '#fff',fontSize:subjectFontSize,align:'left'},   

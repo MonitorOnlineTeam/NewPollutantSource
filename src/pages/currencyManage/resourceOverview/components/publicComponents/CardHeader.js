@@ -58,7 +58,7 @@ const Index = (props) => {
         <img src={`/currencyResOver/cardIcon_${index}.png`} />
         <span style={{paddingLeft:24}}>{subtitle}</span>
         </div>
-        <span style={{fontSize:18}}>{num? num : 0}</span>
+        <span style={{fontSize:18}}>{num? num : ''}</span>
       </Row>
       </div>}
       </div>

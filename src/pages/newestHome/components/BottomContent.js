@@ -278,7 +278,7 @@ const Index = (props) => {
           minAngle: 90,//最小角度
           emphasis: {
             label: {
-              show: true, //高亮是标签的样式
+              show: true, 
             }
           },
           label: {
@@ -343,10 +343,10 @@ const Index = (props) => {
                       x: 0, y: 0, x2: 1, y2: 0,
                       colorStops: [{
                         offset: 0,
-                        color: '#116CFD' // 0%处的颜色为红色
+                        color: '#116CFD' // 0%处的颜色
                       }, {
                         offset: 1,
-                        color: '#0BAEFD' // 100%处的颜色为蓝
+                        color: '#0BAEFD' // 100%处的颜色
                       }],
                     }
                   },

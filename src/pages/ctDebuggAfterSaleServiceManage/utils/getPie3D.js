@@ -1,6 +1,6 @@
 import { fomatFloat } from '@/utils/utils';
 import { ContactsOutlined } from '@ant-design/icons';
-
+import 'echarts-gl';
 //获取3d丙图的最高扇区的高度
 function getHeight3D(series, height,customVal) { //customVal 默认高度
     series.sort((a, b) => {
@@ -12,7 +12,7 @@ function getHeight3D(series, height,customVal) { //customVal 默认高度
 
 
 // 生成扇形的曲面参数方程，用于 series-surface.parametricEquation
-function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h) {
+function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h,i,defaultSelection) {
     // 计算
     let midRatio = (startRatio + endRatio) / 2;
     let startRadian = startRatio * Math.PI * 2;
@@ -27,6 +27,7 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
     // 计算选中效果分别在 x 轴、y 轴方向上的位移（未选中，则位移均为 0）
     let offsetX = isSelected ? Math.cos(midRadian) * 0.1 : 0;
     let offsetY = isSelected ? Math.sin(midRadian) * 0.1 : 0;
+    let offsetZ = defaultSelection && i == 1 ? 2: 0; //默认选中
     // 计算高亮效果的放大比例（未高亮，则比例为 1）
     let hoverRate = isHovered ? 1.05 : 1;
     // 返回曲面参数方程
@@ -61,19 +62,17 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
         },
         z: function (u, v) {
             if (u < -Math.PI * 0.5) {
-                return Math.sin(u);
+                return  offsetZ + Math.sin(u);
             }
-            if (u > Math.PI * 2.5) {
-                return Math.sin(u) * h * .1;
-            }
-            return Math.sin(v) > 0 ? 1 * h * .1 : -1;
+           // 调整扇形高度
+			return offsetZ + (Math.sin(v) > 0 ? 0.1 * h : -1);
         }
     };
 }
 
 
 
-export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption}) {
+export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,height,defaultSelection},viewControl) {
      
     //internalDiameterRatio:透明的空心占比
     let series = [];
@@ -124,7 +123,7 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption}
         series[i].pieData.startRatio = startValue / sumValue;
         series[i].pieData.endRatio = endValue / sumValue;
         series[i].parametricEquation = getParametricEquation(series[i].pieData.startRatio, series[i].pieData.endRatio,
-            false, false, k, series[i].pieData.value);
+            false, false, k, height? height: series[i].pieData.value,i,defaultSelection);
         startValue = endValue;
         let bfb = fomatFloat(series[i].pieData.value / sumValue, 4);
         legendData.push({
@@ -227,7 +226,7 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption}
         },
         grid3D: {
             show: false,
-            boxHeight: boxHeight, //圆环的高度
+            boxHeight: height? height : boxHeight, //圆环的高度
             width: '100%',
             top:0,
             left: 0,
@@ -238,7 +237,7 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption}
                 zoomSensitivity: 0, //设置为0无法缩放
                 panSensitivity: 0, //设置为0无法平移
                 autoRotate: true, //自动旋转   
-                // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'   
+               ...viewControl
             },
             //后处理特效可以为画面添加高光、景深、环境光遮蔽（SSAO）、调色等效果。可以让整个画面更富有质感。
             // postEffect: {//配置这项会出现锯齿，请自己去查看官方配置有办法解决 

@@ -627,6 +627,13 @@ const Index = (props,ref) => {
           width: 120,
           align: 'center',
         },
+        {
+          title: '异常处理个数',
+          dataIndex: 'dealExceptionCompleteCount',
+          key: 'dealExceptionCompleteCount',
+          width: 120,
+          align: 'center',
+        },
         // {
         //   title:  <span>巡检</span>,
         //   dataIndex: 'inspectionCompleteCount',
@@ -1013,6 +1020,7 @@ const outTypeObj = {
   "repairInfoCount" :'维修工单',
   "matchingComparisonCount" :'参数核对',
   "coordinationComparisonCount": '配合比对完成工单数',
+  "dealExceptionCount": '异常处理个数',
  }
  const outTypeColor = {
   "inspectionCount"  : '#1890ff',
@@ -1027,6 +1035,8 @@ const outTypeObj = {
   "repairInfoCount" :'#f5222d',
   "matchingComparisonCount" :'#13c2c2',
   "coordinationComparisonCount": '#fa541c',
+  "dealExceptionCount": '#faad14',
+  
  }
 const dateCellRender = (value)=>{//日期
   let ele=[];

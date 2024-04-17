@@ -180,6 +180,13 @@ const Index = (props) => {
       align: 'center',
       sorter: (a, b) => a.peiheduibi - b.peiheduibi,
     },
+    {
+      title: '异常处理个数',
+      dataIndex: 'dealExceptionCount',
+      key: 'dealExceptionCount',
+      align: 'center',
+      sorter: (a, b) => a.dealExceptionCount - b.dealExceptionCount,
+    },
   ]
   pollutantType==1? commonCol=commonCol.filter(item=>item.title!='标准物质更换') :  commonCol=commonCol.filter(item=>item.title!='试剂更换')
   const [regionCode,setRegionCode] = useState()
