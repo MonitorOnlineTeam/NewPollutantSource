@@ -3035,6 +3035,13 @@ export default {
                       component:
                         './ctDebuggAfterSaleServiceManage/reportsViews/InstStdAndCompReso/comp/index',
                     },
+                    {
+                      // 投诉解决率
+                      name: 'returnVisit',
+                      path: '/ctManage/reportsViews/InstStdAndCompReso/timelyRate',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/reportsViews/timelyRate',
+                    },
                   ],
                 },
                 // 工作台

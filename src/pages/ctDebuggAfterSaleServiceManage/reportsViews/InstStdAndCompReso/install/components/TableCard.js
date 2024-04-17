@@ -1,8 +1,8 @@
 /*
  * @Author: JiaQi 
  * @Date: 2024-04-16 16:37:56 
- * @Last Modified by:   JiaQi 
- * @Last Modified time: 2024-04-16 16:37:56 
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-04-17 16:08:35
  * @Description:  安装调试达标率表格
  */
 import React, { useState, useEffect } from 'react';
@@ -199,16 +199,17 @@ const TableCard = props => {
   };
 
   const computeStartAndEnd = () => {
+    let _date = moment(date);
     var now = moment();
     var currentYear = now.format('YYYY');
-    let inputYear = date.format('YYYY');
+    let inputYear = _date.format('YYYY');
 
-    var start = moment(date.format('YYYY-01-01 00:00:00')),
+    var start = moment(_date.format('YYYY-01-01 00:00:00')),
       end;
     if (inputYear === currentYear) {
       end = now;
     } else {
-      end = date.endOf('year');
+      end = _date.endOf('year');
     }
     return [start, end];
   };
