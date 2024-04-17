@@ -3021,7 +3021,20 @@ export default {
                       component:
                         './ctDebuggAfterSaleServiceManage/reportsViews/oneResolutRate',
                     },
-
+                    {
+                      // 安装调试达标率
+                      name: 'install',
+                      path: '/ctManage/reportsViews/InstStdAndCompReso/install',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/reportsViews/InstStdAndCompReso/install/index',
+                    },
+                    {
+                      // 投诉解决率
+                      name: 'returnVisit',
+                      path: '/ctManage/reportsViews/InstStdAndCompReso/comp',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/reportsViews/InstStdAndCompReso/comp/index',
+                    },
                   ],
                 },
                 // 工作台

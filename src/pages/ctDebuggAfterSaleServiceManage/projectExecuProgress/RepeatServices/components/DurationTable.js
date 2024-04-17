@@ -107,7 +107,7 @@ const DurationTable = props => {
         // pageIndex: _pageIndex || pageIndex,
         // pageSize: _pageSize || pageSize,
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
-        sort: 2,
+        sort: sort,
         ...values,
       },
     });

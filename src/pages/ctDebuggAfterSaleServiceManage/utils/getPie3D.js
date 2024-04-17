@@ -174,7 +174,7 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
         labelLine: {
             show: false,
             lineStyle: {
-                color: '#7BC0CB'
+                // color: '#7BC0CB'
             }
         },
         label: {

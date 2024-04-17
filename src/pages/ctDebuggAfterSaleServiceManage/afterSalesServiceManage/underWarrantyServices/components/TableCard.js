@@ -11,7 +11,7 @@ import { DetailIcon } from '@/utils/icon';
 const dvaPropsData = ({ loading, ctAfterSalesServiceManagement, common }) => ({
   underWarrantyServicesData: ctAfterSalesServiceManagement.underWarrantyServicesData,
   // TimeoutServiceReason: timeoutServices.TimeoutServiceReason, // 超时服务原因
-  loading: loading.effects[`timeoutServices/GetTimeoutServiceAnalysis`],
+  loading: loading.effects['ctAfterSalesServiceManagement/GetWarrantyServiceAnalysis'],
   basicsLoading: loading.effects[`ctAfterSalesServiceManagement/GetWarrantyServiceInfo`],
   exportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceAnalysis'],
   basicsExportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceInfo'],

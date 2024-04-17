@@ -23,7 +23,7 @@ const ProductProportionCard4 = props => {
   const [echarts, setEcharts] = useState();
 
   const {
-    date,
+    title,
     loading,
     underWarrantyServicesData: { WarrantyAnalysis },
     // timeoutServicesData: { TimeoutReasonAnalysis },
@@ -289,7 +289,7 @@ const ProductProportionCard4 = props => {
 
   return (
     <Card
-      title="产品类别占比"
+      title={title}
       size="small"
       bodyStyle={{ height: 640, paddingTop: 0 }}
       loading={loading}

@@ -1056,5 +1056,20 @@ export const API = {
       // 导出基础数据
       ExportWarrantyServiceInfo: before + '/CTStatisticsApi/ExportWarrantyServiceInfo',
     },
+    // 安装调试达标率
+    InstStdAndCompReso: {
+      // 获取安装调试达标率数据
+      GetInstallationDebugRate: before + '/CTStatisticsApi/GetInstallationDebugRate',
+      // 导出 - 安装调试达标率
+      ExportInstallationDebugRate: before + '/CTStatisticsApi/ExportInstallationDebugRate',
+      // 获取投诉解决率
+      GetComplaintResolutionRate: before + '/CTStatisticsApi/GetComplaintResolutionRate',
+      // 导出 - 投诉解决率
+      ExportComplaintResolutionRate: before + '/CTStatisticsApi/ExportComplaintResolutionRate',
+      //
+
+    },
+    // 投诉解决率
+
   },
 };
