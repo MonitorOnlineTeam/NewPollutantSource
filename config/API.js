@@ -1072,7 +1072,21 @@ export const API = {
       //
 
     },
-    // 投诉解决率
+    // 服务响应及时率
+    TimelyRate: {
+      // 服务响应及时率 - 按大区统计
+      GetTimelyRateList: before + '/CTStatisticsApi/GetTimelyRateList',
+      // 按大区统计 - 导出
+      ExportTimelyRateList: before + '/CTStatisticsApi/ExportTimelyRateList',
+      // 服务响应及时率 - 按人员统计
+      GetTimelyRateByUserList: before + '/CTStatisticsApi/GetTimelyRateByUserList',
+      // 导出 - 按人员统计
+      ExportTimelyRateByUserList: before + '/CTStatisticsApi/ExportTimelyRateByUserList',
+      // 获取基础数据
+      GetTimelyRateInfoList: before + '/CTStatisticsApi/GetTimelyRateInfoList',
+      // 导出 - 基础数据
+      ExportTimelyRateInfoList: before + '/CTStatisticsApi/ExportTimelyRateInfoList',
+    },
 
   },
 };

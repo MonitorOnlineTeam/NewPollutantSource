@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-09 10:10:36
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-12 10:57:40
+ * @Last Modified time: 2024-04-17 10:16:18
  * @Description:  质保内服务
  */
 import React, { useState, useEffect } from 'react';
@@ -32,7 +32,6 @@ import TableCard from './components/TableCard';
 const dvaPropsData = ({ loading }) => ({});
 
 const UnderWarrantyServices = props => {
-  const [form] = Form.useForm();
 
   const [date, setDate] = useState(moment());
   const [type, setType] = useState(1);

@@ -1,23 +1,16 @@
-/*
- * @Author: JiaQi
- * @Date: 2024-04-16 16:36:46
- * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-17 16:19:10
- * @Description:  投诉解决率 - 图表
- */
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'dva';
 import { Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
-const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
-  loading: loading.effects[`instStdAndCompReso/GetInstallationDebugRate`],
+const dvaPropsData = ({ loading }) => ({
+  loading: loading.effects[`timelyRate/GetTimelyRateList`],
 });
 
 const NumAndRateChart = props => {
   const [echarts, setEcharts] = useState();
 
-  const { title, data, fieldNames, loading } = props;
+  const { title, data, loading } = props;
 
   useEffect(() => {}, []);
 
@@ -31,16 +24,14 @@ const NumAndRateChart = props => {
     ];
 
     let xAxisData = [];
-    let ComplaintsNum = [], // 投诉次数
-      NoComplaintsNum = [], // 未解决
-      YesComplaintsNum = []; // 已解决
+    let timelyCount = [], // 响应及时
+      nottimelyCount = []; // 响应不及时
     let rate = [];
     data?.map(item => {
-      xAxisData.push(item[fieldNames.title]);
-      ComplaintsNum.push(item.ComplaintsNum);
-      NoComplaintsNum.push(item.NoComplaintsNum);
-      YesComplaintsNum.push(item.YesComplaintsNum);
-      rate.push(item.ComplaintsRate.replace('%', ''));
+      xAxisData.push(item.largeRegionName);
+      timelyCount.push(item.timelyCount);
+      nottimelyCount.push(item.nottimelyCount);
+      rate.push(item.rate.replace('%', ''));
     });
     return {
       legend: {},
@@ -110,10 +101,10 @@ const NumAndRateChart = props => {
       },
       series: [
         {
-          name: '已解决',
+          name: '响应及时',
           type: 'bar',
           stack: 'one',
-          data: YesComplaintsNum,
+          data: timelyCount,
           showBackground: true,
           backgroundStyle: {
             color: 'rgba(86, 182, 252, 0.05)',
@@ -155,10 +146,10 @@ const NumAndRateChart = props => {
           z: 2,
         },
         {
-          name: '未解决',
+          name: '响应不及时',
           type: 'bar',
           stack: 'one',
-          data: NoComplaintsNum,
+          data: nottimelyCount,
           barMaxWidth: 40,
           barWidth: '60%',
           label: {
@@ -195,39 +186,6 @@ const NumAndRateChart = props => {
           },
           z: 3,
         },
-        // {
-        //   name: '无照片',
-        //   type: 'bar',
-        //   stack: 'one',
-        //   data: NoPhotos,
-        //   barWidth: '60%',
-        //   barMaxWidth: 40,
-        //   label: {
-        //     show: true,
-        //     textStyle: {
-        //       color: '#fff',
-        //     },
-        //   },
-        //   itemStyle: {
-        //     color: {
-        //       x: 0,
-        //       y: 0,
-        //       x2: 0,
-        //       y2: 1,
-        //       colorStops: [
-        //         {
-        //           offset: 0,
-        //           color: color[3][0], // 开始颜色
-        //         },
-        //         {
-        //           offset: 1,
-        //           color: color[3][1], // 结束颜色
-        //         },
-        //       ],
-        //     },
-        //   },
-        //   z: 4,
-        // },
         {
           name: '达标率',
           type: 'line',
@@ -250,17 +208,6 @@ const NumAndRateChart = props => {
           symbol: 'circle',
           z: 5,
         },
-        // {
-        //   type: 'bar', //显示背景图
-        //   data: ,
-        //   itemStyle: { color: 'rgba(86,182,252,0.05)' },
-        //   // itemStyle: { color: 'red' },
-        //   barWidth: '84%', // 柱形的宽度
-        //   barGap: '-120.8%', // Make series be ove
-        //   silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面
-        //   barMinHeight: 1000,
-        //   z: -3,
-        // },
       ],
       tooltip: {
         trigger: 'axis',

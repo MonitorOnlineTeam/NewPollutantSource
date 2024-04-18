@@ -1,16 +1,14 @@
 /*
- * @Author: JiaQi 
- * @Date: 2024-04-16 16:37:23 
- * @Last Modified by:   JiaQi 
- * @Last Modified time: 2024-04-16 16:37:23 
+ * @Author: JiaQi
+ * @Date: 2024-04-16 16:37:23
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-04-17 16:10:17
  * @Description:  安装调试达标率图表
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'dva';
-import {
-  Card,
-} from 'antd';
+import { Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
@@ -129,6 +127,7 @@ const NumAndRateChart = props => {
             show: true,
             textStyle: {
               color: '#fff',
+              fontWeight: 'bold',
             },
           },
           itemStyle: {
@@ -162,6 +161,7 @@ const NumAndRateChart = props => {
             show: true,
             textStyle: {
               color: '#fff',
+              fontWeight: 'bold',
             },
             formatter: function(param) {
               if (param.value == 0) {
@@ -202,6 +202,7 @@ const NumAndRateChart = props => {
             show: true,
             textStyle: {
               color: '#fff',
+              fontWeight: 'bold',
             },
             formatter: function(param) {
               if (param.value == 0) {
@@ -242,6 +243,7 @@ const NumAndRateChart = props => {
             show: true,
             textStyle: {
               color: '#fff',
+              fontWeight: 'bold',
             },
             formatter: function(param) {
               if (param.value == 0) {
@@ -281,7 +283,10 @@ const NumAndRateChart = props => {
           },
           label: {
             show: true,
-            color: lineColor,
+            textStyle: {
+              color: lineColor,
+              fontWeight: 'bold',
+            },
             formatter: function(params) {
               return params.data + '%';
             },
