@@ -17,7 +17,6 @@ import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import LeftContent from './components/LeftContent'
-import BottomContent from './components/BottomContent'
 import RightContent from './components/RightContent'
 import MapContent from './components/MapContent'
 import styles from "./style.less"
@@ -122,9 +121,6 @@ const Index = (props) => {
             <RightContent {...props}/>
             </Col>
         </Row>  
-        <div className={'mapPageSty'} style={{display: fullScreen? 'none' :''}}>    {/**底部组件*/}
-         <BottomContent {...props} />
-        </div>
       </div>  
 
   );

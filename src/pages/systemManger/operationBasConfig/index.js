@@ -72,9 +72,9 @@ const Index = (props) => {
   useEffect(() => {
    if(operationSettingInfo?.ID){
     form.setFieldsValue({
+       ...operationSettingInfo,
       availability:operationSettingInfo.Availability,
       setEquipmentMode:operationSettingInfo.SetEquipmentMode,
-      InspectionType:operationSettingInfo.InspectionType,
     })
    }
   }, [operationSettingInfo]);
@@ -144,6 +144,19 @@ const Index = (props) => {
               <Radio value={2}>是</Radio>
             </Radio.Group>
             </Form.Item>
+            <Form.Item label='是否显示数据中的flag标识' name='IsFlag'>
+            <Radio.Group>
+              <Radio value={true}>显示</Radio>
+              <Radio value={false}>不显示</Radio>
+            </Radio.Group>
+            </Form.Item>
+            <Form.Item label='是否显示地图点位数据' name='ShowMapData'>
+            <Radio.Group>
+              <Radio value={true}>显示</Radio>
+              <Radio value={false}>不显示</Radio>
+            </Radio.Group>
+            </Form.Item>
+
             <Divider orientation="right" style={{borderTopColor:'#0000000f'}}>
               <Button type='primary' htmlType='submit' loading={props.updOperationSettingLoading}>保存</Button>
             </Divider>

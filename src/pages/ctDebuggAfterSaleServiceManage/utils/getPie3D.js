@@ -25,9 +25,10 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
     // 通过扇形内径/外径的值，换算出辅助参数 k（默认值 1/3）
     k = typeof k !== 'undefined' ? k : 1 / 3;
     // 计算选中效果分别在 x 轴、y 轴方向上的位移（未选中，则位移均为 0）
-    let offsetX = isSelected ? Math.cos(midRadian) * 0.1 : 0;
-    let offsetY = isSelected ? Math.sin(midRadian) * 0.1 : 0;
-    let offsetZ = defaultSelection && i == 1 ? 2: 0; //默认选中
+
+    let selectSpac = defaultSelection && i == 1 ? 2: 0; //默认选中间距
+    let offsetX = isSelected ? Math.cos(midRadian) * 0.1 : 0 +  (selectSpac? 0.2 : 0);
+    let offsetY = isSelected ? Math.sin(midRadian) * 0.1 : 0 +  (selectSpac? -0.2 : 0);
     // 计算高亮效果的放大比例（未高亮，则比例为 1）
     let hoverRate = isHovered ? 1.05 : 1;
     // 返回曲面参数方程
@@ -62,17 +63,20 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
         },
         z: function (u, v) {
             if (u < -Math.PI * 0.5) {
-                return  offsetZ + Math.sin(u);
+                return  selectSpac + Math.sin(u);
             }
+            if (defaultSelection && u < -Math.PI * 0.5) {
+                return  selectSpac + Math.sin(u);
+            } 
            // 调整扇形高度
-			return offsetZ + (Math.sin(v) > 0 ? 0.1 * h : -1);
+			return selectSpac + (Math.sin(v) > 0 ? 0.1 * h : -1);
         }
     };
 }
 
 
 
-export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,height,defaultSelection},viewControl) {
+export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,height,defaultSelection}, viewControl) {
      
     //internalDiameterRatio:透明的空心占比
     let series = [];

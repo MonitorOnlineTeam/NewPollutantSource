@@ -628,7 +628,7 @@ const Index = (props,ref) => {
           align: 'center',
         },
         {
-          title: '异常处理个数',
+          title: '异常处理',
           dataIndex: 'dealExceptionCompleteCount',
           key: 'dealExceptionCompleteCount',
           width: 120,
@@ -1020,7 +1020,7 @@ const outTypeObj = {
   "repairInfoCount" :'维修工单',
   "matchingComparisonCount" :'参数核对',
   "coordinationComparisonCount": '配合比对完成工单数',
-  "dealExceptionCount": '异常处理个数',
+  "dealExceptionCount": '异常处理',
  }
  const outTypeColor = {
   "inspectionCount"  : '#1890ff',

@@ -111,7 +111,7 @@ export const API = {
     UpdateAllWorkPushStatus: before + '/OperationWorkbenchApi/UpdateAllWorkPushStatus',//删除所有数据报警信息
     // GetProjectRemindList: before + '/OperationWorkbenchApi/GetProjectRemindList',//获取合同到期信息
     // UpdateProjectPushStatus: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除合同到期信息
-    UpdateAllProjectPushStatus: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期信息
+    // UpdateAllProjectPushStatus: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期信息
     GetUserMenuList: before + '/OperationWorkbenchApi/GetUserMenuList',//获取工作台快捷导航信息和可添加菜单信息
     AddUserMenu: before + '/OperationWorkbenchApi/AddUserMenu',//添加快捷菜单
     GetWorkbenchesModuleList: before + '/OperationWorkbenchApi/GetWorkbenchesModuleList',//获取动态加载工作台模块信息
@@ -750,8 +750,11 @@ export const API = {
   /*** 工作台 ***/
   CtWorkStageApi: {
     UpdateImplementationStatus: before + '/CTBaseDataApi/UpdateImplementationStatus',//解决项目执行遗留问题
-    GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg',//获取工作台项目执行、合同到期等
-    DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg',//删除工作台合同到期等
+    // GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg',//获取工作台项目执行、合同到期等
+    // DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg',//删除工作台合同到期等
+    GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//合同到期
+    DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除工作台合同到期等
+    UpdateAllProjectPushStatus: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期
   },
 
   /*** 售后服务管理 ***/

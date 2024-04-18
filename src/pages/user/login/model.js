@@ -38,11 +38,6 @@ const Model = {
         if (tokenResponse.access_token) {
           yield put({ type: 'changeLoginLoading', payload: { loginLoading: false }, });
           Cookie.set(configToken.cookieName, tokenResponse.access_token);
-          //大屏
-          if (payload.redirctUrl) {
-            router.push(payload.redirctUrl);
-            return;
-          }
           if (!(response.Datas && response.Datas.Complexity)) {
             //判断密码复杂程度
             yield put({
@@ -76,7 +71,11 @@ const Model = {
             Cookie.set('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
             callback && callback(response.IsSuccess);
             //进入系统
-            router.push(defaultNavigateUrl);
+            if (payload.redirctUrl) { //大屏
+              router.push(payload.redirctUrl);
+            } else {
+              router.push(defaultNavigateUrl);
+            }
             //生成菜单数组保存 清空路由和路由权限使用
             function getMeun(meun) {
               const meunArr = [];

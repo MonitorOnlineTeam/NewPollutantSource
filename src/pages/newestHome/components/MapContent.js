@@ -63,6 +63,7 @@ let massPointTitleColor = 'rgb(23, 30, 70)'
   smallResolution: newestHome.smallResolution,
   mapStatusRegData: newestHome.mapStatusRegData,
   mapStatusEntData: newestHome.mapStatusEntData,
+  operationSettingInfo: global.operationSettingInfo,
 }))
 class Index extends PureComponent {
   constructor(props) {
@@ -693,7 +694,7 @@ class Index extends PureComponent {
   // 监测点弹窗内容
   infoWindowContent = () => {
     const { currentClickObj } = this.state;
-    const { infoWindowData } = this.props;
+    const { infoWindowData,operationSettingInfo:{ShowMapData} } = this.props;
     let imgName =
       pollutantType == 2 ? '/gasInfoWindow.png' : pollutantType == 1 ? '/water.jpg' : '/infoWindowImg.png';
     if (infoWindowData.photo) {
@@ -742,7 +743,7 @@ class Index extends PureComponent {
       return statusText;
     };
     return (
-      <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
+      <div className={styles.infoWindowContent} style={{ width: 340,minHeight:248}}>
         {this.props.infoWindowDataLoading ? <PageLoading /> :
 
           <>
@@ -772,8 +773,11 @@ class Index extends PureComponent {
                     </span>
                   )}
               </p>
+              <p>
+                {currentClickObj.alarmMsg}
+              </p>
             </div>
-            <div className={styles.desc}>
+            <div className={styles.desc} style={{borderBottom:ShowMapData? '1px dashed #ccc':'none'}}>
               <div className={styles['desc-l']}>
                 <h3>站点信息</h3>
                 <p className='textOverflow' style={{ width: 160 }} title={infoWindowData.regionCityName}>区域：{infoWindowData.regionCityName}</p>
@@ -784,7 +788,7 @@ class Index extends PureComponent {
                 <img src={imgName} alt="" width="100%" height="100%" />
               </div>
             </div>
-            <div className={styles.data}>
+            {ShowMapData&&<div className={styles.data}>
               <h3>
                 {infoWindowData.pollutantTypeCode === 2
                   ? '废气数据'
@@ -832,7 +836,7 @@ class Index extends PureComponent {
                 })}
               </ul>
               <p>监控时间：{infoWindowData.MonitorTime}</p>
-            </div>
+            </div>}
           </>}
       </div>
     );
@@ -1082,7 +1086,7 @@ class Index extends PureComponent {
 
         <RightIconMapComponent />
 
-        <div className={styles.mapEnt}  > { /**右上角 图标 */}
+        <div className={styles.mapEnt}  > { /**左上角 图标 */}
           <Row className={styles.legendBtnSty} align='middle' justify='center'>
             <EntIcon />
             <span className={styles.iconText}>企业</span>

@@ -181,7 +181,7 @@ const Index = (props) => {
       sorter: (a, b) => a.peiheduibi - b.peiheduibi,
     },
     {
-      title: '异常处理个数',
+      title: '异常处理',
       dataIndex: 'dealExceptionCount',
       key: 'dealExceptionCount',
       align: 'center',

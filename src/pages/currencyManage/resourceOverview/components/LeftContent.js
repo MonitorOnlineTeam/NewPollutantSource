@@ -352,7 +352,7 @@ const Index = (props) => {
       </div>
 
        <CardHeader isStatistics index={2} title='车辆统计' subtitle='车辆总数（ 人 ）' num={1000} />
-      <div className='cardBodySty'   style={{height:'calc(336px - 36px - 66px)'}}>
+      <div className='cardBodySty'   style={{height:'calc(336px - 36px - 66px - 8px)'}}>
         <Row justify='space-between' align='middle'>
         <Radio.Group defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
           <Radio.Button value="1">车辆分类</Radio.Button>
@@ -375,7 +375,7 @@ const Index = (props) => {
              <span style={{fontSize:16,position:'absolute',right:32}}>{30}个</span>
           </div>
         </div>
-      <Row align='middle' justify='space-between' style={{height:180}}>
+      <Row align='middle' justify='space-between' style={{height:190}}>
       <div  style={{position:'relative',width: '50%',height:'100%'}}>
       <div className='bjkSty'> </div>
       <ReactEcharts

@@ -42,12 +42,15 @@ class Login extends Component {
     sessionStorage.clear();
     dispatch({type: 'global/updateState', payload: { sysPollutantTypeList: [] } })
   }
+  componentWillMount(){
+    this.clearData()
+  }
   componentDidMount() {
 
     this.timer = setInterval(() => {
       this.child && this.child.current && this.child.current.click(); // 3分钟刷新一次
     }, 1000 * 60 * 3);
-    this.clearData()
+    
   }
   
   componentWillUnmount() {

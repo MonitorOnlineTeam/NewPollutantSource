@@ -946,7 +946,7 @@ const Index = (props, ref) => {
       }
     },
     {
-      title: '异常处理个数',
+      title: '异常处理',
       dataIndex: 'dealExceptionCompleteCount',
       key: 'dealExceptionCompleteCount',
       width: 120,
@@ -1469,7 +1469,7 @@ const Index = (props, ref) => {
     "cooperationInspectionCount": '配合检查工单',
     "calibrationTestCount": '校验测试工单',
     "coordinationComparisonCount": '配合比对工单数',
-    "dealExceptionCount": '异常处理个数',
+    "dealExceptionCount": '异常处理',
   }
 
   const workOrderNum = (type, record, outType) => { //计划内  计划外  总数工单

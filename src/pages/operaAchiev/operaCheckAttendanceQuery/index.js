@@ -242,6 +242,13 @@ const Index = (props) => {
       ]
     },
     {
+      title: '照片',
+      dataIndex: ' file',
+      key: ' file',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '备注',
       dataIndex: 'Remark',
       key: 'Remark',
@@ -310,8 +317,8 @@ const Index = (props) => {
           </Spin>
         </Col>
         <Col span={8}>
-          <Form.Item name='regionCode' label='省份' >
-            <RegionList levelNum={1} />
+          <Form.Item name='regionName' label='省份' >
+            <Input placeholder='请输入' />
           </Form.Item>
         </Col>
         <Col span={8}>

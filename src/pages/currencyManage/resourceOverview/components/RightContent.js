@@ -10,7 +10,7 @@ import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutline
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
+// import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
@@ -41,7 +41,7 @@ const Index = (props) => {
 
   const { } = props;
 
-  const [customHourVal, setCustomHourVal] = useState(0.03456)
+  const customVal = 0.03456
   useEffect(() => {
 
   }, []);
@@ -73,34 +73,39 @@ const Index = (props) => {
 
       }]
     const option = getPie3D(datalist,
-      { internalDiameterRatio: 0, height: 12, customVal: customHourVal, legendOption: { show: false },defaultSelection:true },
+      { internalDiameterRatio: 0, height: 12, customVal: customVal, legendOption: { show: false }, defaultSelection: true },
       { //3d效果可以放大、旋转等，请自己去查看官方配置
-        alpha: 20,
-				// 饼块开始得角度
-				beta: -10,
-        distance: 235,//调整视角到主体的距离，类似调整zoom
+        alpha: 20,// 视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
+        beta: -10,// 视角绕 y 轴，即左右旋转的角度
+        distance: 188,//调整视角到主体的距离，类似调整zoom
         autoRotate: false, //自动旋转   
       })
-    // option.series.push({ //需要label指引线的话
-    //   name: 'pie2d',
-    //   type: 'pie',
-    //   avoidLabelOverlap: true,
-    //   label: {
-    //     show: false, 
-    //    },
-    //   labelLine: {
-    //     show: false,
-    //   },
-    //   startAngle: -20, //起始角度，支持范围[0, 360]。
-    //   clockwise: false,//饼图的扇区是否是顺时针排布。上述这两项配置主要是为了对齐3d的样式
-    //   radius: ['40%', '100%'],
-    //   center: ['50%', '50%'],
-    //   data: workHourDataRatio,
-    //   itemStyle: {
-    //     opacity: 0
-    //   },
-    // })
-    console.log(option)
+    option.tooltip = {
+      backgroundColor: 'transparent', // 设置背景颜色为透明
+      padding: 0,
+      borderWidth: 0,
+      textStyle: {
+        color: "#fff", //设置文字颜色
+      },
+      formatter: params => {
+        let bfb = ''
+        const bagcolor = params.seriesName == '启用' ? 'rgba(0, 100, 194, .5)' : 'rgba(31, 83, 112, 1)'; // 设置背景颜色为半透明
+
+        if (params.seriesName !== 'mouseoutSeries' && params.seriesName !== 'pie2d') {
+          const item = option.series[params.seriesIndex].pieData
+          if (item.value == customVal || item.value.rate == 0) {//为0时
+            bfb = '0.00'
+          } else {
+            bfb = ((option.series[params.seriesIndex].pieData.endRatio - option.series[params.seriesIndex].pieData.startRatio) *
+              100).toFixed(2);
+          }
+        }
+        return `<div style="background-color:${bagcolor};padding:12px 18px;border-radius:12px;"><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span> ${params.seriesName}：` +
+          `${bfb}个</div>`;
+
+      }
+
+    }
 
     return option;
   }
@@ -110,6 +115,7 @@ const Index = (props) => {
 
   const bx1 = [{ name: '合格', value: 23, bagColor: bxColor1.bagColor, textColor: bxColor1.textColor }, { name: '准用', value: 23, bagColor: bxColor2.bagColor, textColor: bxColor2.textColor }, { name: '停用', value: 23, bagColor: bxColor3.bagColor, textColor: bxColor3.textColor }]
   const bx2 = [{ name: '可使用', value: 23, bagColor: bxColor1.bagColor, textColor: bxColor1.textColor }, { name: '使用中', value: 23, bagColor: bxColor2.bagColor, textColor: bxColor2.textColor }]
+  const total = '40'
   return (
     <div>
       <CardHeader title='便携式仪器统计' />
@@ -119,8 +125,8 @@ const Index = (props) => {
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '45%', textAlign: 'center' }}>
             <div style={{ paddingTop: 24 }}>
               <div style={{ color: '#C4C5C5', fontSize: 15 }}>便携式仪器总数</div>
-              <div style={{ fontFamily: 'YouSheBiaoTiHei', background: 'linear-gradient(to bottom, #FFFFFF, #0059D2)', '-webkit-background-clip': 'text', '-webkit-text-fill-color': 'transparent' }}>
-                <span style={{ fontSize: 28 }}>40</span>
+              <div style={{}}>
+                <span style={{ fontSize: 28 }} className='youSheBiaoTiHeiSty'>40</span>
                 <span>个</span>
               </div>
             </div>
@@ -150,15 +156,47 @@ const Index = (props) => {
       </div>
       <CardHeader title='办事统计处' />
       <div className='cardBodySty' style={{ height: 294 }}>
+        <Row justify='space-between' style={{ padding: '18px 56px 12px 56px', fontSize: 16 }}>
+          办事处总统计数
+        <div>
+            {Array.from(total).map((item, index) => {
+              return <> <span style={{ fontFamily: 'Source Han Sans CN', fontSize: 22, display: 'inline-block', width: 30, height: 30, marginRight: 6, textAlign: 'center', background: '#002B61', boxShadow: "0px 0px 6px 0px #003DBA", borderRadius: 2 }}>{item}</span></>
+            })}
+            <span style={{ paddingLeft: 4 }}>个</span>
+          </div>
+        </Row>
         <ReactEcharts
           option={workStatistics()}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: '100%', height: 'calc(100% - 112px)' }}
           ref={echartsRef}
           className="echarts-for-echarts"
           theme="my_theme"
         />
+        <div style={{ textAlign: 'center', paddingTop: 12 }}><span style={{ display: 'inline-block', textAlign: 'center', background: 'url(/currencyResOver/xbtk.png) no-repeat', color: '#B8D3F1' }}>使用状态</span>  </div>
       </div>
 
+      <CardHeader title='备件库统计' />
+      <div className='cardBodySty' style={{ height: 246 }}>
+        <Row justify='center' align='middle' style={{ height: '100%',padding:'24px 0' }}>
+          <Col span={12} style={{ height: '100%' }}>
+            <Row align='middle' justify='center' style={{height: '100%', background: 'url(/currencyResOver/bjkzs.png)', backgroundSize: '100% 100%' }}>
+              <div style={{display:'inline-block', margin: '-80px 0 0 80px'}}>
+              <div  style={{
+                fontSize: 30, fontWeight: 'bold',
+                'background': 'linear-gradient(0deg, #048BEB 0%, #F0F7FF 98.6328125%)',
+                '-webkit-background-clip': 'text',
+                '-webkit-text-fill-color': 'transparent'
+              }}><span style={{fontSize: 30}}>90</span><span style={{fontSize: 12}}>个</span></div>
+              <div style={{color:'#CBE9FE'}}>备件库总数</div>
+              </div>
+            </Row>
+          </Col>
+          <Col span={12} style={{paddingLeft:6}}>
+            <div style={{height:32, marginBottom:38, background: 'url(/currencyResOver/syztxbk.png)', backgroundSize: '100% 100%' }}><Row justify='space-between'  style={{paddingLeft:36}}><span>使用状态:启用</span> <span  style={{fontFamily: 'YouSheBiaoTiHei',fontSize:18,lineHeight:'100%'}}>30</span></Row></div>
+            <div style={{height:32, marginTop:38,  background: 'url(/currencyResOver/syztxbk.png)', backgroundSize: '100% 100%' }}><Row justify='space-between' style={{paddingLeft:36}}><span>使用状态:停用</span> <span style={{fontFamily: 'YouSheBiaoTiHei',fontSize:18,lineHeight:'100%'}}>30</span></Row></div>
+          </Col>
+        </Row>
+      </div>
     </div>
 
   );
