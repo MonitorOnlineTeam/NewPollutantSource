@@ -1,7 +1,7 @@
 
  .resourceOverviewPage  :global{
     height: calc(100vh - 64px);
-    padding:10px;
+    padding:0 10px;
     overflow-y: auto;
     margin: -24px;
     background-image: url(/currencyResOver/bg.png);
@@ -12,7 +12,10 @@
       padding: 0 16px;
       background-color: rgba(4, 39, 103, .2);
       // background-color: red;
-
+    }
+    .ant-spin-nested-loading > div > .ant-spin , .ant-spin-container, .ant-spin-nested-loading{
+      max-height: 100%;
+      height: 100%;
     }
     .mapModalHide{
       opacity: 0;
@@ -22,50 +25,55 @@
       opacity: 1;
       transition: all .3s ease-in;
     }
-    .ant-radio-button-wrapper:first-child {
-      border-radius: 12px 0 0 12px;
+
+    .leftPageSty{
+      .bjkSty{
+        width: 110px;
+        height: 110px;
+        position: absolute;
+        border: 1px solid #142247;
+        border-radius: 100%;
+        left: 48px;
+        top: 48px;
+      }
+      .ant-radio-button-wrapper:first-child {
+        border-radius: 12px 0 0 12px;
+      }
+      .ant-radio-button-wrapper:last-child {
+        border-radius: 0 12px 12px 0;
+      }
+      .ant-radio-button-wrapper{
+        color: #70A7FF;
+        background: transparent;
+        border: 1px solid #008DFD;
+      }
+      .ant-radio-button-wrapper:not(:first-child)::before,.ant-radio-button-wrapper:not(:first-child)::before{
+        width: 0;
+      }
+      .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled){
+        color: #fff;
+        background: #1E74FD;
+        border-color: #1E74FD;
+      }
     }
-    .ant-radio-button-wrapper:last-child {
-      border-radius: 0 12px 12px 0;
+    .rightPageSty{
+      .youSheBiaoTiHeiSty{
+        font-family: YouSheBiaoTiHei;
+        background: linear-gradient(to bottom, #FFFFFF, #0059D2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent
+      }
     }
-    .ant-radio-button-wrapper{
-      color: #70A7FF;
-      background: transparent;
-      border: 1px solid #008DFD;
+
+  .mapPageSty{
+    .mapModal{
+      position: fixed;
+      z-index:1000;
+      width:100%;
+      height:100%;
+      left: 0;
+      top: calc(64px)
     }
-    .ant-radio-button-wrapper:not(:first-child)::before,.ant-radio-button-wrapper:not(:first-child)::before{
-      width: 0;
-    }
-    .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled){
-      background: #1E74FD;
-      border-color: #1E74FD;
-    }
-    .ant-progress-line {
-      width: calc(100% - 56px);
-      padding-left: 8px;
   }
-  .bjkSty{
-    width: 110px;
-    height: 110px;
-    position: absolute;
-    border: 1px solid #142247;
-    // border: 1px solid red;
-    border-radius: 100%;
-    left: 48px;
-    top: 45px;
-  }
-  .youSheBiaoTiHeiSty{
-    font-family: YouSheBiaoTiHei;
-    background: linear-gradient(to bottom, #FFFFFF, #0059D2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent
-  }
-  .mapModal{
-    position: fixed;
-    z-index:1000;
-    width:100%;
-    height:100%;
-    left: 0;
-    top: calc(64px)
-  }
+
 }

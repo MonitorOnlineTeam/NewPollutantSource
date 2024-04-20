@@ -109,8 +109,8 @@ const Index = (props) => {
 
   return (
       <div className={styles.resourceOverviewPage}>
-        <Row style={{paddingTop:10,height:'100%'}}>   {/**地图部分 和 地图两侧*/}
-          <Col style={{width:445}} className={`leftPageSty ${fullScreen? ` mapModalHide`: `mapModalShow` }` }>
+        <Row style={{height:'100%'}}>   {/**地图部分 和 地图两侧*/}
+          <Col style={{width:445}} className={`leftPageSty ${fullScreen? `mapModalHide`: `mapModalShow` }` }>
              <LeftContent {...props}/>
            </Col>
            <Col  style={{width:'calc(100% - 890px)'}} className={'mapPageSty'}>

@@ -246,7 +246,7 @@ const Index = (props) => {
     }
 
     const values = form.getFieldsValue()
-    const par = { ...values, bTime: values.date ? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined, eTime: values.date ? values.date[1].format('YYYY-MM-DD HH:mm:ss') : undefined, date: undefined }
+    const par = { ...values, bTime: values.date?.[0] ? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined, eTime: values.date?.[1] ? values.date[1].endOf('month').format('YYYY-MM-DD HH:mm:ss') : undefined, date: undefined }
     switch (path) {
       case chargeServicePath:
         props.GetChargeServiceAnalysis({ ...par }, (res) => {
@@ -417,7 +417,7 @@ const Index = (props) => {
         top: 50,
       },
       legend: {
-        // selectedMode: false,
+        selectedMode: false,
         data: [
           {
             name: '服务次数',
@@ -548,7 +548,7 @@ const Index = (props) => {
       tooltip: {
         trigger: 'axis',
         formatter: (params) => {
-          return (
+          return params&&(
             `${params[0].name}<br />
             <span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background:linear-gradient(to bottom,#28CBFA, #64B0FD);\"></span> ${params[0].seriesName}：${params[0].value}<br />` +
             `${params[3].marker} ${params[3].seriesName}：${params[3].value}`

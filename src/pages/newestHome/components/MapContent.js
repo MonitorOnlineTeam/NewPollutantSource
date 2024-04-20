@@ -773,9 +773,11 @@ class Index extends PureComponent {
                     </span>
                   )}
               </p>
+             {currentClickObj.alarmStatus==1 || currentClickObj.alarmStatus==2 &&
               <p>
-                {currentClickObj.alarmMsg}
+                <div><div style={{display:'inline-block',verticalAlign:'top'}}> 报警信息：</div> <div style={{display:'inline-block',width:'calc(100% - 75px)',overflowWrap: 'break-word'}}>{currentClickObj.alarmMsg}</div></div>
               </p>
+             }
             </div>
             <div className={styles.desc} style={{borderBottom:ShowMapData? '1px dashed #ccc':'none'}}>
               <div className={styles['desc-l']}>

@@ -341,7 +341,7 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
-            <Button style={{margin: '0 8px',}} onClick={() => { form.resetFields(); }}  >
+            <Button style={{margin: '0 8px',}} onClick={() => { form.resetFields();setProvincelist([]);setPageIndex(1);setPageSize(20);onFinish(1,20) }}  >
               重置
          </Button>
          <Button icon={<ExportOutlined />} loading={exportLoading} style={{ marginRight: 8, }} onClick={() => { exports() }}>
@@ -363,7 +363,6 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y:'calc(100vh - 430px)'}}
             dataSource={tableDatas}
             columns={columns}
             pagination={{

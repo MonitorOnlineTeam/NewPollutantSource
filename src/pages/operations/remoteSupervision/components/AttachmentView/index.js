@@ -49,7 +49,7 @@ class index extends PureComponent {
     );
     return (
       <Popover placement={placement? placement : 'top'} content={content} title="附件详情" trigger="click" 
-           getPopupContainer={getPopupContainer==false? getPopupContainer : trigger => trigger.parentNode} 
+          //  getPopupContainer={getPopupContainer==false? getPopupContainer : trigger => trigger.parentNode} 
            overlayClassName={popSty==false? popSty : styles.popSty }>
         <a onClick={(e) => {
           e.stopPropagation()

@@ -3,9 +3,16 @@
         margin-bottom: 12px;
       }
      }
-     .treeSty{
+     .treeSty  :global{
         overflow-y: auto;
+        width: 100%;
         height: calc(100vh - 220px);
+         .ant-tree-node-content-wrapper{
+           width:  calc(100% - 48px);
+           .ant-tree-iconEle{
+             vertical-align: bottom;
+          }
+        }
      }
      .hourCommissionTestSty :global{
         ::-webkit-scrollbar {

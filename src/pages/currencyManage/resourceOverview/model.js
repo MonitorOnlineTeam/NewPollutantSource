@@ -12,40 +12,46 @@ export default Model.extend({
     disposableDate: [],
   },
   effects: {
-    // 获取一次解决率
-    *GetDisposableRateList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost,API.ReportsViewsApi.GetDisposableRateList,payload);
+    // 左侧数据
+    *GetResourceOverviewLeft({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewLeft, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 右侧数据
+    *GetResourceOverviewRight({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewRight, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 地图数据
+    *GetResourceOverviewMap({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewMap, payload);
+      if (result.IsSuccess) {
+        const data = result.Datas;
 
-      if (result.IsSuccess) {
-        yield update({
-          disposableRateList: result.Datas,
-          disposableDate: payload.analysisDate
-        });
-        callback && callback(result);
+        data.RegionStandbyMachineList = data.RegionStandbyMachineList.map(item=>({
+          position:{
+            ...item,
+            // latitude:item.Latitude,
+            // longitude:item.Longitude,
+            latitude:item.Longitude,
+            longitude:item.Latitude,
+         }
+       }))
+        // RegionPortableInstrumentList
+        // RegionOfficeLocationList
+        // RegionStorehouseList
+
+        callback && callback(data);
       }
     },
-    // 导出
-    *ExportDisposableRateList({ payload, callback }, { call, put, update }) {
-      const result = yield call( requestPost,API.ReportsViewsApi.ExportDisposableRateList, payload);
-      if (result.IsSuccess) {
-        message.success('导出成功！');
-        downloadFile(result.Datas);
-      }
-    },
-    // 获取一次解决率基础数据
-    *GetDisposableServiceInfo({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost,API.ReportsViewsApi.GetDisposableServiceInfo,payload);
-      if (result.IsSuccess) {
-        callback && callback(result);
-      }
-    },
+
     // 基础数据 - 导出
     *ExportDisposableServiceInfo({ payload, callback }, { call, put, update }) {
-      const result = yield call(
-        requestPost,
-        API.ReportsViewsApi.ExportDisposableServiceInfo,
-        payload,
-      );
+      const result = yield call(requestPost,API.ReportsViewsApi.ExportDisposableServiceInfo, payload);
       if (result.IsSuccess) {
         message.success('导出成功！');
         downloadFile(result.Datas);

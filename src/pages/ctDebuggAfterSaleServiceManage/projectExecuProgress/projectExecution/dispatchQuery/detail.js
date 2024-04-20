@@ -29,6 +29,7 @@ const namespace = 'dispatchQuery'
 const dvaPropsData = ({ loading, dispatchQuery }) => ({
   serviceDispatchTypeAndRecordLoading: loading.effects[`${namespace}/getServiceDispatchTypeAndRecord`],
   serviceDispatchTypeAndRecordData: dispatchQuery.serviceDispatchTypeAndRecordData,
+  serviceDispatchLoading: loading.effects[`${namespace}/getServiceDispatch`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -95,10 +96,17 @@ const dvaDispatch = (dispatch) => {
         callback: callback,
       })
     },
+    getServiceDispatch: (payload, callback) => { //服务派工申请单 数据
+      dispatch({
+        type: `${namespace}/getServiceDispatch`,
+        payload: payload,
+        callback: callback,
+      })
+    },
   }
 }
 const Index = (props) => {
-  const { id, data, serviceDispatchTypeAndRecordLoading, serviceDispatchTypeAndRecordData, } = props;
+  const { id, serviceApplicaData, serviceDispatchTypeAndRecordLoading, serviceDispatchTypeAndRecordData, serviceDispatchLoading, } = props;
 
   const [isOpen, setIsOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState();
@@ -106,16 +114,24 @@ const Index = (props) => {
 
   const [tabKey, setTabKey] = useState('')
   const [fillContentTab, setFillContentTab] = useState([])
+  const [data, setData] = useState({})
 
   useEffect(() => {
-    props.getServiceDispatchTypeAndRecord({ dispatchId: id }, (res) => {
-      const itemStatusData = res.map(item=>item.ItemStatus)
-      const itemStatusFlag = itemStatusData?.toString()?.includes('1')? true : false; //判断是否全部为空
-      const showData = res.filter(item=>item.ItemStatus==1)
-      setTabKey(itemStatusFlag?  showData?.[0]?.ItemId : '')
-      setFillContentTab(itemStatusFlag? showData : [])
+    props.getServiceDispatchTypeAndRecord({ dispatchId: id }, (data) => {
+      const itemStatusData = data.map(item => item.ItemStatus)
+      const itemStatusFlag = itemStatusData?.toString()?.includes('1') ? true : false; //判断是否全部为空
+      const showData = data.filter(item => item.ItemStatus == 1)
+      setTabKey(itemStatusFlag ? showData?.[0]?.ItemId : '')
+      setFillContentTab(itemStatusFlag ? showData : [])
 
     })
+    if (serviceApplicaData) {
+      setData(serviceApplicaData)
+    } else {
+      props.getServiceDispatch({ ID: id }, (data) => {
+        setData(data?.[0] ? data[0] : {})
+      })
+    }
   }, []);
   const TitleComponents = (props) => {
     // position:'sticky',top: 0,zIndex:998,background: '#fff',
@@ -245,7 +261,7 @@ const Index = (props) => {
     </div>
   }
   //工作记录 组件
-  const WorkRecordTable = ({ data, loading,col,isWork }) => {
+  const WorkRecordTable = ({ data, loading, col, isWork }) => {
     return <div>
       <TitleComponents text='工作记录' />
       <SdlTable
@@ -254,10 +270,10 @@ const Index = (props) => {
         scroll={{ x: 900, y: 'auto' }}
         rowClassName={null}
         dataSource={data}
-        columns={col?col : workRecordsCol}
+        columns={col ? col : workRecordsCol}
         pagination={false}
       />
-     {/* <Form.Item label="离开现场时间">
+      {/* <Form.Item label="离开现场时间">
         {data?.[0]?.DepartureTime}
       </Form.Item> */}
     </div>
@@ -496,7 +512,7 @@ const Index = (props) => {
   }, [inspectReportId, inspectInfoId, inspectWorkId,])
   const EquipmentInspection = ({ data }) => {
 
-    const Inspect = ({ inspectData,loading }) => {
+    const Inspect = ({ inspectData, loading }) => {
       return <>
         <Spin spinning={loading}>
           <TitleComponents text='验货单' />
@@ -586,16 +602,16 @@ const Index = (props) => {
               setInstallWorkId(item.RecordId);
               let columns = []
               columns = workRecordsCol.map(item => item)
-              columns.splice(3, 0,{
-                  title: '设备型号',
-                  dataIndex: 'SystemModelName',
-                  key: 'SystemModelName',
-                  align: 'center',
-                  ellipsis: true,
-                  width: 'auto',
-                })
-              
-              return <WorkRecordTable data={installWorkData} loading={installWorkLoading} col={columns}/>;//工作记录
+              columns.splice(3, 0, {
+                title: '设备型号',
+                dataIndex: 'SystemModelName',
+                key: 'SystemModelName',
+                align: 'center',
+                ellipsis: true,
+                width: 'auto',
+              })
+
+              return <WorkRecordTable data={installWorkData} loading={installWorkLoading} col={columns} />;//工作记录
             }
 
         }
@@ -786,16 +802,16 @@ const Index = (props) => {
             if (item.RecordStatus == 1) {
               let columns = []
               columns = workRecordsCol.map(item => item)
-              columns.splice(3, 0,{
+              columns.splice(3, 0, {
                 title: '设备型号',
                 dataIndex: 'SystemModelName',
                 key: 'SystemModelName',
                 align: 'center',
                 ellipsis: true,
                 width: 'auto',
-              },)
+              })
               setStaticWorkId(item.RecordId);
-              return <WorkRecordTable data={staticWorkData} loading={staticWorkLoading} col={columns}/>;//工作记录
+              return <WorkRecordTable data={staticWorkData} loading={staticWorkLoading} col={columns} />;//工作记录
             }
           case '13':
             if (item.RecordStatus == 1) {
@@ -1023,22 +1039,22 @@ const Index = (props) => {
             if (item.RecordStatus == 1) {
               let columns = []
               columns = workRecordsCol.map(item => item)
-                columns.splice(3, 0,{
-                    title: '设备型号',
-                    dataIndex: 'SystemModelName',
-                    key: 'SystemModelName',
-                    align: 'center',
-                    ellipsis: true,
-                    width: 'auto',
-                  },{
-                    title: '是否调试完成',
-                    dataIndex: 'Col1Name',
-                    key: 'Col1Name',
-                    align: 'center',
-                    ellipsis: true,
-                  })
+              columns.splice(3, 0, {
+                title: '设备型号',
+                dataIndex: 'SystemModelName',
+                key: 'SystemModelName',
+                align: 'center',
+                ellipsis: true,
+                width: 'auto',
+              }, {
+                title: '是否调试完成',
+                dataIndex: 'Col1Name',
+                key: 'Col1Name',
+                align: 'center',
+                ellipsis: true,
+              })
               setDebugWorkId(item.RecordId);
-              return <WorkRecordTable data={debugWorkData} loading={debugWorkLoading} col={columns}/>;//工作记录
+              return <WorkRecordTable data={debugWorkData} loading={debugWorkLoading} col={columns} />;//工作记录
             }
           case '19':
             if (item.RecordStatus == 1) {
@@ -1211,7 +1227,7 @@ const Index = (props) => {
     }
 
   }, [projectAccepReportId, projectAccepWorkId, projectAccepInfoId])
-  const ProjectAcceptance = ({data}) => {
+  const ProjectAcceptance = ({ data }) => {
     const acceptanceCol = [{
       title: '验收资料照片',
       dataIndex: 'FileList',
@@ -1232,16 +1248,16 @@ const Index = (props) => {
             if (item.RecordStatus == 1) {
               let columns = []
               columns = workRecordsCol.map(item => item)
-                columns.splice(3, 0,{
-                    title: '设备型号',
-                    dataIndex: 'SystemModelName',
-                    key: 'SystemModelName',
-                    align: 'center',
-                    ellipsis: true,
-                    width: 'auto',
-                  })
+              columns.splice(3, 0, {
+                title: '设备型号',
+                dataIndex: 'SystemModelName',
+                key: 'SystemModelName',
+                align: 'center',
+                ellipsis: true,
+                width: 'auto',
+              })
               setProjectAccepWorkId(item.RecordId);
-              return <WorkRecordTable data={projectAccepWorkData} loading={projectAccepWorkLoading} col={columns}/>;//工作记录
+              return <WorkRecordTable data={projectAccepWorkData} loading={projectAccepWorkLoading} col={columns} />;//工作记录
             }
           case '23':
             if (item.RecordStatus == 1) {
@@ -1292,11 +1308,11 @@ const Index = (props) => {
 
   }, [cooperateReportId, cooperateWorkId, cooperateInfoId])
 
-  const [cooperaInspectionVisible,setCooperaInspectionVisible] = useState(false)
-  const [cooperaInspectionTitle,setCooperaInspectionTitle] = useState('')
-  const [cooperaInspectionData,setCooperaInspectionData] = useState('')
+  const [cooperaInspectionVisible, setCooperaInspectionVisible] = useState(false)
+  const [cooperaInspectionTitle, setCooperaInspectionTitle] = useState('')
+  const [cooperaInspectionData, setCooperaInspectionData] = useState('')
 
-  const CooperateInspection = ({data}) => {
+  const CooperateInspection = ({ data }) => {
     const inspectionCol = [ //第三方检查汇报 列
       {
         title: '序号',
@@ -1455,7 +1471,7 @@ const Index = (props) => {
         key: 'FaultTime',
         align: 'center',
         ellipsis: true,
-        width:140,
+        width: 140,
       },
       {
         title: '系统型号',
@@ -1477,7 +1493,7 @@ const Index = (props) => {
         key: 'EquipmentNumber',
         align: 'center',
         ellipsis: true,
-        width:130,
+        width: 130,
       },
       {
         title: '主机生产厂商',
@@ -1526,7 +1542,7 @@ const Index = (props) => {
         key: 'RepairDate',
         align: 'center',
         ellipsis: true,
-        width:140,
+        width: 140,
       },
       {
         title: '离开时间',
@@ -1534,7 +1550,7 @@ const Index = (props) => {
         key: 'DepartureTime',
         align: 'center',
         ellipsis: true,
-        width:140,
+        width: 140,
       },
       // {
       //   title: '审核状态',
@@ -1551,7 +1567,7 @@ const Index = (props) => {
         <SdlTable
           // resizable
           loading={loading}
-          scroll={{ y:'auto'  }}
+          scroll={{ y: 'auto' }}
           rowClassName={null}
           dataSource={data}
           columns={maintenanceCol}
@@ -1570,7 +1586,7 @@ const Index = (props) => {
           case '11':
             if (item.RecordStatus == 1) {
               setMaintenWorkId(item.RecordId);
-              return <WorkRecordTable data={maintenWorkData} loading={maintenWorkLoading}/>;//工作记录
+              return <WorkRecordTable data={maintenWorkData} loading={maintenWorkLoading} />;//工作记录
             }
           case '25':
             if (item.RecordStatus == 1) {
@@ -1701,18 +1717,18 @@ const Index = (props) => {
 
   const ServiceFillContent = () => {
     return serviceDispatchTypeAndRecordLoading ? <PageLoading size='default' /> :
-      fillContentTab?.[0] ? 
-      <Tabs type='card' activeKey={tabKey} onChange={(key) => { setTabKey(key) }}>
-        {fillContentTab.map(item => {
+      fillContentTab?.[0] ?
+        <Tabs type='card' activeKey={tabKey} onChange={(key) => { setTabKey(key) }}>
+          {fillContentTab.map(item => {
             return <TabPane tab={item.ItemName} key={item.ItemId}>
               {fillContentTabContent(item)}
             </TabPane>
-        })
-       }
-      </Tabs>
-      :
-      <Empty description='暂无添加表单项'/>
-          
+          })
+          }
+        </Tabs>
+        :
+        <Empty description='暂无添加表单项' />
+
   }
 
 
@@ -1923,7 +1939,7 @@ const Index = (props) => {
           {ServiceFillContent()}
         </TabPane>
         <TabPane tab="服务派工申请单" key="2">
-          <ServiceWorkContent />
+          <Spin spinning={!!serviceDispatchLoading}> <ServiceWorkContent /> </Spin>
         </TabPane>
       </Tabs>
       {/* 查看附件弹窗 */}
@@ -1944,7 +1960,7 @@ const Index = (props) => {
         wrapClassName={`spreadOverModal`}
         mask={false}
       >
-       <CooperaInspection cooperatInspectionRecordList={cooperaInspectionData}/>
+        <CooperaInspection cooperatInspectionRecordList={cooperaInspectionData} />
       </Modal>
     </div>
   );

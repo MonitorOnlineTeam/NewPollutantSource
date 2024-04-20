@@ -411,7 +411,7 @@ const Index = (props) => {
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
         mask={false}
       >
-        <Detail data={detailData ? detailData : {}} id={detailId}/>
+        <Detail serviceApplicaData={detailData ? detailData : {}} id={detailId}/>
       </Modal>
       </BreadcrumbWrapper>
     </div>

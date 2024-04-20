@@ -4,13 +4,13 @@
  * 创建时间：2024.04.12
  */
 import React, { useState, useEffect, Fragment, useRef, useMemo } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio } from 'antd';
+import { Table, Input, InputNumber, Popconfirm,Spin, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-// import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
@@ -30,6 +30,7 @@ const namespace = 'resourceOverview'
 
 
 const dvaPropsData = ({ loading, resourceOverview }) => ({
+  loading : loading.effects[`${namespace}/GetResourceOverviewRight`],
 
 })
 
@@ -100,7 +101,7 @@ const Index = (props) => {
               100).toFixed(2);
           }
         }
-        return `<div style="background-color:${bagcolor};padding:12px 18px;border-radius:12px;"><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span> ${params.seriesName}：` +
+        return `<div style="background-color:${bagcolor};padding:10px 18px;border-radius:12px;"><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span> ${params.seriesName}：` +
           `${bfb}个</div>`;
 
       }
@@ -116,8 +117,9 @@ const Index = (props) => {
   const bx1 = [{ name: '合格', value: 23, bagColor: bxColor1.bagColor, textColor: bxColor1.textColor }, { name: '准用', value: 23, bagColor: bxColor2.bagColor, textColor: bxColor2.textColor }, { name: '停用', value: 23, bagColor: bxColor3.bagColor, textColor: bxColor3.textColor }]
   const bx2 = [{ name: '可使用', value: 23, bagColor: bxColor1.bagColor, textColor: bxColor1.textColor }, { name: '使用中', value: 23, bagColor: bxColor2.bagColor, textColor: bxColor2.textColor }]
   const total = '40'
+  const { loading } = props;
   return (
-    <div>
+    <Spin loading={!!loading}>
       <CardHeader title='便携式仪器统计' />
       <div className='cardBodySty' style={{ height: 280, padding: '16px 0 16px 16px' }}>
         <Row justify='space-between' style={{ height: '100%' }}>
@@ -125,9 +127,9 @@ const Index = (props) => {
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '45%', textAlign: 'center' }}>
             <div style={{ paddingTop: 24 }}>
               <div style={{ color: '#C4C5C5', fontSize: 15 }}>便携式仪器总数</div>
-              <div style={{}}>
+              <div>
                 <span style={{ fontSize: 28 }} className='youSheBiaoTiHeiSty'>40</span>
-                <span>个</span>
+                <span className='youSheBiaoTiHeiSty'>个</span>
               </div>
             </div>
             <img style={{ paddingBottom: 26 }} src={`/currencyResOver/bxsyy.png`} />
@@ -176,10 +178,10 @@ const Index = (props) => {
       </div>
 
       <CardHeader title='备件库统计' />
-      <div className='cardBodySty' style={{ height: 246 }}>
+      <div className='cardBodySty' style={{ height: 266 }}>
         <Row justify='center' align='middle' style={{ height: '100%',padding:'24px 0' }}>
           <Col span={12} style={{ height: '100%' }}>
-            <Row align='middle' justify='center' style={{height: '100%', background: 'url(/currencyResOver/bjkzs.png)', backgroundSize: '100% 100%' }}>
+            <Row align='middle' justify='center' style={{marginTop:12, height: '100%', background: 'url(/currencyResOver/bjkzs.png)', backgroundSize: '100% 100%' }}>
               <div style={{display:'inline-block', margin: '-80px 0 0 80px'}}>
               <div  style={{
                 fontSize: 30, fontWeight: 'bold',
@@ -197,7 +199,7 @@ const Index = (props) => {
           </Col>
         </Row>
       </div>
-    </div>
+    </Spin>
 
   );
 };

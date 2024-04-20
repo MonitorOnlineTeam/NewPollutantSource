@@ -4,7 +4,7 @@
  * 创建时间：2024.04.12
  */
 import React, { useState, useEffect, Fragment, useRef, useMemo } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Progress, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Progress,Spin, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -25,6 +25,7 @@ const namespace = 'resourceOverview'
 
 
 const dvaPropsData = ({ loading, resourceOverview }) => ({
+  loading : loading.effects[`${namespace}/GetResourceOverviewLeft`],
 
 })
 
@@ -311,7 +312,7 @@ const Index = (props) => {
               lineHeight:16,
               color: '#fff',
               align:'left',
-              padding: [0, -208],
+              padding: [0, -212],
             }
           },
           emphasis: {
@@ -335,8 +336,9 @@ const Index = (props) => {
       ]
     }
   }
+  const { loading } = props;
   return (
-    <div>
+    <Spin loading={!!loading}>
       <CardHeader isStatistics index={1} title='人员统计' subtitle='人员总数（ 人 ）' num={1000} />
       <div className='cardBodySty' style={{height:'calc(280px - 66px)'}}>
         <Radio.Group defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
@@ -375,7 +377,7 @@ const Index = (props) => {
              <span style={{fontSize:16,position:'absolute',right:32}}>{30}个</span>
           </div>
         </div>
-      <Row align='middle' justify='space-between' style={{height:190}}>
+      <Row align='middle' justify='space-between' style={{height:210}}>
       <div  style={{position:'relative',width: '50%',height:'100%'}}>
       <div className='bjkSty'> </div>
       <ReactEcharts
@@ -398,7 +400,7 @@ const Index = (props) => {
           </div>
         </Row>
         </div>
-    </div>
+    </Spin >
 
   );
 };
