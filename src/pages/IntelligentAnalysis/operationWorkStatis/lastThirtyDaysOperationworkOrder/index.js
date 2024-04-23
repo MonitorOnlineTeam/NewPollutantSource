@@ -131,6 +131,13 @@ const Index = (props) => {
       sorter: (a, b) => a.weihu - b.weihu,
     },
     {
+      title: '异常处理',
+      dataIndex: 'dealExceptionCount',
+      key: 'dealExceptionCount',
+      align: 'center',
+      sorter: (a, b) => a.dealExceptionCount - b.dealExceptionCount,
+    },
+    {
       title: '备品备件更换',
       dataIndex: 'beipin',
       key: 'beipin',
@@ -179,13 +186,6 @@ const Index = (props) => {
       key: 'peiheduibi',
       align: 'center',
       sorter: (a, b) => a.peiheduibi - b.peiheduibi,
-    },
-    {
-      title: '异常处理',
-      dataIndex: 'dealExceptionCount',
-      key: 'dealExceptionCount',
-      align: 'center',
-      sorter: (a, b) => a.dealExceptionCount - b.dealExceptionCount,
     },
   ]
   pollutantType==1? commonCol=commonCol.filter(item=>item.title!='标准物质更换') :  commonCol=commonCol.filter(item=>item.title!='试剂更换')

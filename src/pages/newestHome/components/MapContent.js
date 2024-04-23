@@ -775,7 +775,7 @@ class Index extends PureComponent {
               </p>
              {currentClickObj.alarmStatus==1 || currentClickObj.alarmStatus==2 &&
               <p>
-                <div><div style={{display:'inline-block',verticalAlign:'top'}}> 报警信息：</div> <div style={{display:'inline-block',width:'calc(100% - 75px)',overflowWrap: 'break-word'}}>{currentClickObj.alarmMsg}</div></div>
+                <div><div style={{display:'inline-block',verticalAlign:'top'}}> 详细描述：</div> <div style={{display:'inline-block',width:'calc(100% - 75px)',overflowWrap: 'break-word'}}>{currentClickObj.alarmMsg}</div></div>
               </p>
              }
             </div>

@@ -21,6 +21,7 @@ import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import UserList from '@/components/UserList'
 import MultipleHeadResizeTable from '@/components/MultipleHeadResizeTable';
+import CheckPhoto from '@/components/CheckPhoto';
 
 const { Option } = Select;
 
@@ -198,6 +199,16 @@ const Index = (props) => {
           align: 'center',
           ellipsis: true,
         },
+        {
+          title: '签到图片',
+          dataIndex: 'SFiles',
+          key: 'SFiles',
+          align: 'center',
+          ellipsis: true,
+          render:(text)=>{
+            return <CheckPhoto fileList={text}/>
+          }
+        },
       ]
     },
     {
@@ -251,6 +262,16 @@ const Index = (props) => {
           key: 'OAddress',
           align: 'center',
           ellipsis: true,
+        },
+        {
+          title: '签退图片',
+          dataIndex: 'OFiles',
+          key: 'OFiles',
+          align: 'center',
+          ellipsis: true,
+          render:(text)=>{
+            return <CheckPhoto fileList={text}/>
+          }
         },
       ]
     },
@@ -324,8 +345,9 @@ const Index = (props) => {
           </Spin>
         </Col>
         <Col span={8}>
-          <Form.Item name='regionCode' label='省份' >
-            <RegionList placeholder='请选择' ct levelNum={1} />
+          <Form.Item name='ProvinceName' label='省份' >
+            {/* <RegionList placeholder='请选择' ct levelNum={1} /> */}
+            <Input placeholder='请输入' allowClear/>
           </Form.Item>
         </Col>
         <Col span={8}>

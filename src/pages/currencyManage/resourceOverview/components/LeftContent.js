@@ -37,16 +37,41 @@ const Index = (props) => {
   const echartsRef = useRef(null);
   const echartsRef2 = useRef(null);
 
-  const { } = props;
+  const [data,setData ] =useState({})
 
   useEffect(() => {
-  
-    echartsRef?.current?.getEchartsInstance()?.dispatchAction({ type: 'highlight', dataIndex: 1 }); //备机统计 默认高亮
-    echartsRef2?.current?.getEchartsInstance()?.dispatchAction({ type: 'highlight',  dataIndex: 1 }); //备机统计 默认高亮
- 
-  }, []);
+    props.dispatch({
+      type: `${namespace}/GetResourceOverviewLeft`,
+      payload: {},
+      callback: (data) => {
+        setData(data)
+        
+      }
+    })
 
+  }, []);
+ 
+  useEffect(() => {
+    if(data?.StandbyMachineInfo){
+    echartsRef?.current?.getEchartsInstance()?.dispatchAction({ type: 'highlight', dataIndex: 2 }); //备机统计 默认高亮
+    echartsRef2?.current?.getEchartsInstance()?.dispatchAction({ type: 'highlight',  dataIndex: 1 }); //备机统计 默认高亮
+    }
+  }, [data]);
+  const [personType,setPersonType] = useState('1')
   const personlStatistics = () => {
+    let name = [],value=[];
+    if(personType==1){
+       data.UserInfo?.JobCategoryList.map(item=>{
+        name.push(item.JobCategory)
+        value.push(item.Num)
+      })
+    }else{
+        data.UserInfo?.YearList.map(item=>{
+          name.push(item.Year)
+          value.push(item.Num)
+        })
+
+    }
     return {
       grid: {
         left: 68,
@@ -73,12 +98,7 @@ const Index = (props) => {
       },
       yAxis: {
         type: "category",
-        data: [
-          "响水大",
-          "滨海北",
-          "徐州贾汪",
-          "响水陈家港",
-        ],
+        data: name,
         splitLine: {
           show: false,
         },
@@ -121,16 +141,28 @@ const Index = (props) => {
               },
             },
           },
-          data: [19, 29, 39, 81, 29, 39],
+          data: value,
         },
       ],
     };
 
   }
+  const [vehicleType,setVehicleType] = useState('1')
 
   const vehicleStatistics = () => {
-    var xLabel = ['黄浦区', '徐汇区', '长宁区', '静安区', '虹口区', '闵行区', '宝山区'];
-    var getwkrs = [140, 161, 168, 153, 154, 155, 164];
+    let name = [],value=[];
+    if(vehicleType==1){
+       data.CarInfo?.CarClassList.map(item=>{
+        name.push(item.CarClass)
+        value.push(item.Num)
+      })
+    }else{
+        data.CarInfo?.AssetStatusList.map(item=>{
+          name.push(item.AssetStatus)
+          value.push(item.Num)
+        })
+
+    }
     return {
       grid: {
         top: 12,
@@ -168,7 +200,7 @@ const Index = (props) => {
           axisTick: {
             show: false,
           },
-          data: xLabel,
+          data: name,
         },
       ],
       yAxis: [
@@ -201,7 +233,7 @@ const Index = (props) => {
         {
           name: "车辆",
           type: 'bar',
-          data: getwkrs,
+          data: value,
           barWidth: 12,
           itemStyle: {
             normal: {
@@ -220,7 +252,7 @@ const Index = (props) => {
           },
         },
         {
-          data: getwkrs.map(item => {
+          data: value.map(item => {
             return { value: item }
           }),
           type: 'pictorialBar',
@@ -247,10 +279,10 @@ const Index = (props) => {
   }
 
   const bjStatistics = (type) => {
-    const data = type == 1 ? [
-      {
-        value: 34, name: '合格', itemStyle: {
-          color: {
+    const list = type == 1 ? data?.StandbyMachineInfo?.InsStateList?.map(item=>{
+      return {
+        value: item.Num, name: item.InsState, itemStyle: {
+          color: item.InsState=='合格'? {
             x: 0, y: 0, x2: 1, y2: 0,
             colorStops: [{
               offset: 0,
@@ -259,16 +291,15 @@ const Index = (props) => {
               offset: 1,
               color: '#0BAEFD'
             }],
-          }
+          } :
+          item.InsState=='准用'? '#00D1F5' : '#F4BA02'
         }
-      },
-      { value: 23, name: '准用', itemStyle: { color: '#00D1F5' } },
-
-    ] :
-      [
-        {
-          value: 34, name: '可使用', itemStyle: {
-            color: {
+      }
+    }) :
+      data?.StandbyMachineInfo?.UseState?.map(item=>{
+        return {
+          value: item.Num, name: item.UseState, itemStyle: {
+            color: item.UseState=='可使用'? {
               x: 0, y: 0, x2: 1, y2: 0,
               colorStops: [{
                 offset: 0,
@@ -277,11 +308,11 @@ const Index = (props) => {
                 offset: 1,
                 color: '#0CA5FD'
               }],
-            }
+            } :
+             '#00FFCC'
           }
-        },
-        { value: 12, name: '使用中', itemStyle: { color: '#00FFCC' } },
-      ]
+        }
+      })
     return {
       title: {
         text: type == 1 ? '仪器\n状态' : '使用\n状态',  //图形标题，配置在中间对应位置
@@ -304,7 +335,9 @@ const Index = (props) => {
         {
           type: 'pie',
           radius: ['30%', '45%'],
+          avoidLabeloverlap: false,
           label: {
+            show:true,
             align: "right",
             formatter: '{b}:{c}个\n',
             textStyle: {
@@ -312,7 +345,7 @@ const Index = (props) => {
               lineHeight:16,
               color: '#fff',
               align:'left',
-              padding: [0, -212],
+              padding: [0, -80],
             }
           },
           emphasis: {
@@ -324,24 +357,24 @@ const Index = (props) => {
             normal: {
               show: true,
               length: 6,
-              length2: '100%',
+              length2: 80,
               align: "right",
             },
             emphasis: {
               show: true,
             },
           },
-          data: data
+          data: list
         }
       ]
     }
   }
   const { loading } = props;
   return (
-    <Spin loading={!!loading}>
-      <CardHeader isStatistics index={1} title='人员统计' subtitle='人员总数（ 人 ）' num={1000} />
+    <Spin spinning={!!loading}>
+      <CardHeader isStatistics index={1} title='人员统计' subtitle='人员总数（ 人 ）' num={data?.UserInfo?.SumUserNum} />
       <div className='cardBodySty' style={{height:'calc(280px - 66px)'}}>
-        <Radio.Group defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
+        <Radio.Group onChange={(e)=>{setPersonType(e.target.value)}} defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
           <Radio.Button value="1">业务属性维度</Radio.Button>
           <Radio.Button value="2">司龄</Radio.Button>
         </Radio.Group>
@@ -353,10 +386,10 @@ const Index = (props) => {
         />
       </div>
 
-       <CardHeader isStatistics index={2} title='车辆统计' subtitle='车辆总数（ 人 ）' num={1000} />
+       <CardHeader isStatistics index={2} title='车辆统计' subtitle='车辆总数（ 辆 ）' num={data?.CarInfo?.CarNum} />
       <div className='cardBodySty'   style={{height:'calc(336px - 36px - 66px - 8px)'}}>
         <Row justify='space-between' align='middle'>
-        <Radio.Group defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
+        <Radio.Group onChange={(e)=>{setVehicleType(e.target.value)}} defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
           <Radio.Button value="1">车辆分类</Radio.Button>
           <Radio.Button value="2">车辆资产状态</Radio.Button>
         </Radio.Group>
@@ -374,7 +407,7 @@ const Index = (props) => {
         <div style={{lineHeight:'34px',padding:'12px 0'}}>
         <div style={{ background: 'url(/currencyResOver/bjk.png)',backgroundSize:'100% 100%'}}>
              <span style={{paddingLeft:76,color:'#BAE3FF'}}>备机总数</span>
-             <span style={{fontSize:16,position:'absolute',right:32}}>{30}个</span>
+             <span style={{fontSize:16,position:'absolute',right:32}}>{data?.StandbyMachineInfo?.StandbyMachineNum}个</span>
           </div>
         </div>
       <Row align='middle' justify='space-between' style={{height:210}}>

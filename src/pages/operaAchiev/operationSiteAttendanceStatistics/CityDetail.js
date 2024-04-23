@@ -210,7 +210,7 @@ const Index = (props) => {
       layout='inline'
     >
 
-      <Form.Item name='operationUser' label='姓名'>
+      <Form.Item name='UserId' label='姓名'>
        <UserList style={{width:200}}/>
       </Form.Item>
       {/* <Form.Item name='userAccount' label='工号'>

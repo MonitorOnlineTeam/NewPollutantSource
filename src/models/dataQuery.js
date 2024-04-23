@@ -625,8 +625,8 @@ export default Model.extend({
                 {unit}
               </>
             ),
-            dataIndex: item.PollutantCode,
-            key: item.PollutantCode,
+            dataIndex: `${item.PollutantCode}_flag`,
+            key:  `${item.PollutantCode}_flag`,
             align: 'center',
             // width,
             render: (value, record, index) => {
@@ -821,7 +821,7 @@ export default Model.extend({
           title: '是否停运',
           dataIndex: 'stop',
           key: 'stop',
-          width: 50,
+          width: 70,
           // fixed: 'left',
           align: 'center',
         });

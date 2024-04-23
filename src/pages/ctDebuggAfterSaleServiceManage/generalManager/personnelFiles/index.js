@@ -211,14 +211,14 @@ const Index = (props) => {
     >
       <Row align='middle'>
         <Col span={8}>
+          <Form.Item name='userName' label='姓名' className='minWidth'>
+            <Input placeholder="请输入" allowClear />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
             <Form.Item name='userAccount' label='员工编号'>
             <Input placeholder="请输入" allowClear />
             </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item name='userName' label='姓名' >
-            <Input placeholder="请输入" allowClear />
-          </Form.Item>
         </Col>
         <Col span={8}>
          <Spin spinning={codLoading} size='small' className='formItemSpinSty'>

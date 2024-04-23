@@ -205,8 +205,7 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
                      if( item.value == customVal || item.value.rate==0){//为0时
                         bfb = '0.00'
                      }else{
-                        bfb = ((option.series[params.seriesIndex].pieData.endRatio - option.series[params.seriesIndex].pieData.startRatio) *
-                        100).toFixed(2);
+                        bfb =  item.value?.toFixed(2);
                      }
                     }
                     return `${params.seriesName}<br/>` +

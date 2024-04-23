@@ -147,7 +147,7 @@ const Index = (props) => {
 
   const initData = () => {
 
-    props.getManufacturerList({})  // 弹框 厂家列表
+    props.getManufacturerList({pageIndex:1,pageSize:9999})  // 弹框 厂家列表
 
     props.getPollutantById({})  //cems 监测设备  默认加载监测参数
     props.getPollutantById({type:1})  //cems 监测设备  默认加载监测参数

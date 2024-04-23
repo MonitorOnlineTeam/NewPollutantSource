@@ -8,14 +8,17 @@ import { API } from '@config/API';
 export default Model.extend({
   namespace: 'resourceOverview',
   state: {
-    disposableRateList: {},
-    disposableDate: [],
+    leftData: {},
+    rightData: {},
   },
   effects: {
     // 左侧数据
     *GetResourceOverviewLeft({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewLeft, payload);
       if (result.IsSuccess) {
+        yield update({
+          leftData: result.Datas,
+        });
         callback && callback(result.Datas);
       }
     },
@@ -23,6 +26,9 @@ export default Model.extend({
     *GetResourceOverviewRight({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewRight, payload);
       if (result.IsSuccess) {
+        yield update({
+          rightData: result.Datas,
+        });
         callback && callback(result.Datas);
       }
     },
@@ -31,19 +37,19 @@ export default Model.extend({
       const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewMap, payload);
       if (result.IsSuccess) {
         const data = result.Datas;
+        // data.RegionStandbyMachineList = data.RegionStandbyMachineList.map(item => ({
+        //   position: { ...item.position, ...item,position:undefined}
+        // }))
+        // data.RegionPortableInstrumentList = data.RegionPortableInstrumentList.map(item => ({
+        //   position: { ...item.position,...item,position:undefined}
+        // }))
+        data.RegionOfficeLocationList = data?.RegionOfficeLocationList?.map(item => ({
+          position: {...item.position, ...item,position:undefined}
+        }))
+        data.RegionStorehouseList = data?.RegionStorehouseList?.map(item => ({
+          position: {...item.position, ...item,position:undefined}
+        }))
 
-        data.RegionStandbyMachineList = data.RegionStandbyMachineList.map(item=>({
-          position:{
-            ...item,
-            // latitude:item.Latitude,
-            // longitude:item.Longitude,
-            latitude:item.Longitude,
-            longitude:item.Latitude,
-         }
-       }))
-        // RegionPortableInstrumentList
-        // RegionOfficeLocationList
-        // RegionStorehouseList
 
         callback && callback(data);
       }
@@ -51,7 +57,7 @@ export default Model.extend({
 
     // 基础数据 - 导出
     *ExportDisposableServiceInfo({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost,API.ReportsViewsApi.ExportDisposableServiceInfo, payload);
+      const result = yield call(requestPost, API.ReportsViewsApi.ExportDisposableServiceInfo, payload);
       if (result.IsSuccess) {
         message.success('导出成功！');
         downloadFile(result.Datas);

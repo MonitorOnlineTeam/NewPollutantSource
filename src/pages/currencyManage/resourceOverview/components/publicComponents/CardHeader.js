@@ -48,8 +48,8 @@ const Index = (props) => {
 
 
   const {index, title, subtitle,num,isStatistics} = props;
-  return (<div>
-      <div style={{marginTop:4, paddingLeft:32,height:37, background:'url(/currencyResOver/btbk.png)',backgroundSize:'100%',fontSize:16}}>
+  return (<div style={{paddingTop:4}}>
+      <div style={{paddingLeft:32,height:37, background:'url(/currencyResOver/btbk.png)',backgroundSize:'100%',fontSize:16}}>
         {title}
       </div>
     {isStatistics&&<div className='cardBodySty' style={{ padding:'8px 16px'}}>

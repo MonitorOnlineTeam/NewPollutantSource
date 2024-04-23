@@ -160,7 +160,7 @@ export default class Index extends Component {
       })
     }
     if (!isDetail) {
-      getManufacturerList({})  // 弹框 厂家列表
+      getManufacturerList({pageSize:1,pageSize:9999})  // 弹框 厂家列表
       getPollutantById({})  //仪表信息-监测参数
       updateState({ systemEditingKey: '' })
       updateState({ systemChangeEditingKey: '' })

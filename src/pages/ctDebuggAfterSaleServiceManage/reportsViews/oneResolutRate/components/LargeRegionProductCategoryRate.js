@@ -189,7 +189,10 @@ const Index = props => {
             show: true,
             textStyle: {
               color: '#fff'
-            }
+            },
+            formatter: function (params) {
+              return params.data == 0? '' : params.data;
+            },
           },
           itemStyle: {
             color: {

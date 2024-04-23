@@ -564,6 +564,13 @@ const Index = (props,ref) => {
           align: 'center',
         },
         {
+          title: '异常处理',
+          dataIndex: 'dealExceptionCompleteCount',
+          key: 'dealExceptionCompleteCount',
+          width: 120,
+          align: 'center',
+        },
+        {
           title: '备品备件更换',
           dataIndex: 'sparePartsCompleteCount',
           key: 'sparePartsCompleteCount',
@@ -624,13 +631,6 @@ const Index = (props,ref) => {
           title: '配合比对',
           dataIndex: 'coordinationComparisonCompleteCount',
           key: 'coordinationComparisonCompleteCount',
-          width: 120,
-          align: 'center',
-        },
-        {
-          title: '异常处理',
-          dataIndex: 'dealExceptionCompleteCount',
-          key: 'dealExceptionCompleteCount',
           width: 120,
           align: 'center',
         },
@@ -1010,6 +1010,7 @@ const [dete, setDete] = useState({})
 const outTypeObj = {
   "inspectionCount"  : "巡检工单",
   "maintainCount"  : "维护工单",
+  "dealExceptionCount": '异常处理',
   "sparePartsCount": "备品备件更换工单",
   "consumablesCount":'易耗品更换工单',
   "referenceMaterialsCount":"标准物质更换工单",
@@ -1020,11 +1021,11 @@ const outTypeObj = {
   "repairInfoCount" :'维修工单',
   "matchingComparisonCount" :'参数核对',
   "coordinationComparisonCount": '配合比对完成工单数',
-  "dealExceptionCount": '异常处理',
  }
  const outTypeColor = {
   "inspectionCount"  : '#1890ff',
   "maintainCount"  : "#a0d911",
+  "dealExceptionCount": '#faad14',
   "sparePartsCount": "#eb2f96",
   "consumablesCount":'#722ed1',
   "referenceMaterialsCount":"#bfbfbf",
@@ -1035,7 +1036,6 @@ const outTypeObj = {
   "repairInfoCount" :'#f5222d',
   "matchingComparisonCount" :'#13c2c2',
   "coordinationComparisonCount": '#fa541c',
-  "dealExceptionCount": '#faad14',
   
  }
 const dateCellRender = (value)=>{//日期

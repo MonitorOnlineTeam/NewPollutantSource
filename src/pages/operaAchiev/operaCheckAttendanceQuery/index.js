@@ -21,7 +21,7 @@ import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import UserList from '@/components/UserList'
 import MultipleHeadResizeTable from '@/components/MultipleHeadResizeTable';
-import ViewPhoto from '@/components/ViewPhoto';
+import CheckPhoto from '@/components/CheckPhoto';
 const { Option } = Select;
 
 const namespace = 'operaCheckAttendanceQuery'
@@ -185,6 +185,16 @@ const Index = (props) => {
           align: 'center',
           ellipsis: true,
         },
+        {
+          title: '签到图片',
+          dataIndex: 'signInFile',
+          key: 'signInFile',
+          align: 'center',
+          ellipsis: true,
+          render:(text)=>{
+            return <CheckPhoto fileList={text}/>
+          }
+        },
       ]
     },
     {
@@ -239,17 +249,17 @@ const Index = (props) => {
           align: 'center',
           ellipsis: true,
         },
+        {
+          title: '签退照片',
+          dataIndex: 'signOutFile',
+          key: 'signOutFile',
+          align: 'center',
+          ellipsis: true,
+          render:(text)=>{
+            return <CheckPhoto fileList={text}/>
+          }
+        },
       ]
-    },
-    {
-      title: '照片',
-      dataIndex: 'file',
-      key: 'file',
-      align: 'center',
-      ellipsis: true,
-      render:(text)=>{
-        return <ViewPhoto fileList={text}/>
-      }
     },
     {
       title: '备注',
@@ -275,7 +285,7 @@ const Index = (props) => {
       const values = await form.validateFields();
       props.GetSignInAndOffsiteSignList({
         ...values,
-        workType: values.workType && values.workType.toString(),
+        WorkTypeList: values.WorkTypeList || [],
         beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
         endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
@@ -313,7 +323,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Spin spinning={workTypeLoading} size='small' className='formItemSpinSty'>
-            <Form.Item name='workType' label='工作类型' style={{ padding: '0 16px' }}>
+            <Form.Item name='WorkTypeList' label='工作类型' style={{ padding: '0 16px' }}>
               <Select mode='tags' placeholder='请选择' allowClear showSearch  optionFilterProp="children">
                 {workTypeList.map(item => <Option value={item.ChildID}>{item.Name}</Option>)}
               </Select>

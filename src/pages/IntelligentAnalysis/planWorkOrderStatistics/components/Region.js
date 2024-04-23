@@ -855,6 +855,16 @@ const Index = (props, ref) => {
       }
     },
     {
+      title: '异常处理',
+      dataIndex: 'dealExceptionCompleteCount',
+      key: 'dealExceptionCompleteCount',
+      width: 120,
+      align: 'center',
+      render: (text, record, index) => {
+        return <Button type="link" onClick={() => { workOrderNum(3, record, 'dealExceptionCount') }}>{text}</Button>
+      }
+    },
+    {
       title: '备品备件更换',
       dataIndex: 'sparePartsCompleteCount',
       key: 'sparePartsCompleteCount',
@@ -943,16 +953,6 @@ const Index = (props, ref) => {
       align: 'center',
       render: (text, record, index) => {
         return <Button type="link" onClick={() => { workOrderNum(3, record, 'coordinationComparisonCount') }}>{text}</Button>
-      }
-    },
-    {
-      title: '异常处理',
-      dataIndex: 'dealExceptionCompleteCount',
-      key: 'dealExceptionCompleteCount',
-      width: 120,
-      align: 'center',
-      render: (text, record, index) => {
-        return <Button type="link" onClick={() => { workOrderNum(3, record, 'dealExceptionCount') }}>{text}</Button>
       }
     },
   ]

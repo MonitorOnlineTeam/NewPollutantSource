@@ -571,7 +571,6 @@ const Index = (props) => {
                         // RelativeError: form.getFieldValue('RelativeError'),
                         // RelativeAccuracy: form.getFieldValue('RelativeAccuracy'),
                         // Evaluation: form.getFieldValue('Evaluation'),
-                        //
 
                     },
                     ChildTable: [],
@@ -621,6 +620,7 @@ const Index = (props) => {
             ID: form.getFieldValue('ID'),
             RecordDate: form.getFieldValue('RecordDate'),
         }, () => {
+            setImportReturnData([])
             initData()
         })
     }
@@ -865,6 +865,7 @@ const Index = (props) => {
     const onPollChange = ({ target: { value } }) => {
         setPollutantCode(value)
         getTimeFormData(value)
+        setImportReturnData([])
     };
     const PollutantComponents = () => {
         return <Radio.Group options={pollOptions} value={pollutantCode} optionType="button" buttonStyle="solid" onChange={onPollChange} />
@@ -875,6 +876,7 @@ const Index = (props) => {
         setSelectDate(value)
         setFormLoading(true)
         getFormData(pollutantCode, value)
+        setImportReturnData([])
     };
     const DateComponents = () => {
         return <Radio.Group style={{ marginLeft: 10 }} options={dateOptions} value={selectDate} optionType="button" buttonStyle="solid" onChange={onSelectDateChange} />

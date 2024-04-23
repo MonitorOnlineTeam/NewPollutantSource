@@ -25,18 +25,15 @@ const Index = (props) => {
         setIsImageViewOpen(true)
         setImageIndex(0)
         let imgData = []
-        if(fileList?.[0]){ 
-            if(fileList[0].FileName){
-                imgData =  fileList.map(item => `${uploadPrefix}/${item.FileName}`)
-            }else{
-                imgData = fileList.ImgList.map(item => `/${item}`)
-            }
+        if(fileList?.[0]?.FileName){ 
+            imgData =  fileList.map(item => `${uploadPrefix}/${item.FileName}`)
+        }else{
+            imgData = fileList.ImgList.map(item => `/${item}`)
         }
-        console.log(imgData)
         setImageList(imgData);
     }
     return (<>
-        {fileList?.[0]&&<a onClick={photoClick}>查看照片</a>}
+        {(fileList?.[0] || fileList?.ImgList?.[0]) &&<a onClick={photoClick}>查看照片</a>}
         <ImageView  //查看附件弹窗 
         isOpen={isImageViewOpen}
         images={imageList}
