@@ -21,17 +21,14 @@ import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const { Option } = Select; 
 
-const namespace = 'personnelFiles'
+const namespace = 'generalManager'
 
-
-
-
-const dvaPropsData = ({ loading, personnelFiles, global, }) => ({
+const dvaPropsData = ({ loading, generalManager, global, }) => ({
   configInfo: global.configInfo,
+  tableDatas: generalManager.userTableDatas,
+  tableTotal: generalManager.userTableTotal,
+  queryPar: generalManager.userQueryPar,
   tableLoading:  loading.effects[`${namespace}/GetUserList`],
-  tableDatas: personnelFiles.tableDatas,
-  tableTotal: personnelFiles.tableTotal,
-  queryPar:personnelFiles.queryPar,
   exportLoading: loading.effects[`${namespace}/ExportUserList`],
 })
 
@@ -57,7 +54,7 @@ const dvaDispatch = (dispatch) => {
     },
     GetCodList: (payload,callback) => { //岗位类别和行业属性
       dispatch({
-        type: `ctCommon/GetCodList`,
+        type: `${namespace}/GetCodList`,
         payload: payload,
         callback:callback,
       })
@@ -74,7 +71,7 @@ const Index = (props) => {
 
 
 
-  const {queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,  } = props;
+  const {queryPar, tableDatas, tableTotal,  tableLoading, exportLoading, isModal, } = props;
 
   const [codList,setCodList] = useState([]) //岗位类别
   const [codLoading,setCodLoading] = useState(true) 
@@ -256,8 +253,8 @@ const Index = (props) => {
   }
   return (
     <div className={`${styles.personnelFilesSty} queryCriterTitleSty`}>
-      <BreadcrumbWrapper>
-        <Card  title={searchComponents()}>
+      <BreadcrumbWrapper hideBreadcrumb={isModal}>
+        <Card  title={searchComponents()} style={isModal&&{paddingTop:8}}>
           <SdlTable
             resizable
             loading={tableLoading}

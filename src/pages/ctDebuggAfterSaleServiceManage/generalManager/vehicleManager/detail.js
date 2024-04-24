@@ -18,9 +18,9 @@ import SdlTable from '@/components/SdlTable'
 import { API } from '@config/API';
 import cuid from 'cuid';
 const { Step } = Steps;
-const namespace = 'vehicleManager'
+const namespace = 'generalManager'
 
-const dvaPropsData = ({ loading, vehicleManager, global, }) => ({
+const dvaPropsData = ({ loading, generalManager, global, }) => ({
   configInfo: global.configInfo,
 })
 const dvaDispatch = (dispatch) => {

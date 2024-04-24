@@ -22,11 +22,11 @@ export default Model.extend({
     },
     effects: {
         *GetSatisfactionSurveyList({ payload, callback }, { call, put, update }) { //获取客户满意度调查信息
-            const type = payload.type
-            yield update(type==1? { tableLoading: true } : {  tableLoading2: true})
-            const result = yield call(services.GetSatisfactionSurveyList, {...payload,type:undefined});
+            const type = payload.allData
+            yield update(type==2? { tableLoading: true } : {  tableLoading2: true})
+            const result = yield call(services.GetSatisfactionSurveyList, payload);
             if (result.IsSuccess) {
-                yield update(type==1? {
+                yield update(type==2? {
                     queryPar: payload,
                     tableDatas: result.Datas,
                     tableTotal: result.Total,
@@ -42,19 +42,19 @@ export default Model.extend({
             } else {
                 message.error(result.Message)
             }
-            yield update(type==1? { tableLoading: false } : {  tableLoading2: false})
+            yield update(type==2? { tableLoading: false } : {  tableLoading2: false})
         },
         *ExportSatisfactionSurvey({ callback, payload }, { call, put, update, select }) { //客户满意度调查信息 导出
-            const type = payload.type
-            yield update(type==1? { exportLoading: true } : {  exportLoading2: true})
-            const result = yield call(services.ExportSatisfactionSurvey, {...payload,type:undefined});
+            const type = payload.allData
+            yield update(type==2? { exportLoading: true } : {  exportLoading2: true})
+            const result = yield call(services.ExportSatisfactionSurvey, payload);
             if (result.IsSuccess) {
                 message.success('下载成功');
                 downloadFile(`${result.Datas}`);
             } else {
                 message.warning(result.Message);
             }
-            yield update(type==1? { exportLoading: false } : {  exportLoading2: false})
+            yield update(type==2? { exportLoading: false } : {  exportLoading2: false})
         },
         *SubmitSurvey({ payload, callback }, { call, put, update }) { //客户满意度调查 提交
             const result = yield call(services.SubmitSurvey, payload);

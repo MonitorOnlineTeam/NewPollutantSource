@@ -17,6 +17,11 @@ import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import CardHeader from '../components/publicComponents/CardHeader'
+import PersonnelFiles from '@/pages/ctDebuggAfterSaleServiceManage/generalManager/personnelFiles'
+import VehicleManager from '@/pages/ctDebuggAfterSaleServiceManage/generalManager/vehicleManager'
+import Standby from '@/pages/workSupervision/management/standby/Standby'
+
+
 const { Option } = Select;
 
 const namespace = 'resourceOverview'
@@ -369,10 +374,17 @@ const Index = (props) => {
       ]
     }
   }
+  const [visible,setVisible] = useState(false)
+  const [modalTitle,setModalTitle] = useState()
+
+  const  viewAll = (title)=>{
+    setVisible(true)
+    setModalTitle(title)
+  }
   const { loading } = props;
   return (
     <Spin spinning={!!loading}>
-      <CardHeader isStatistics index={1} title='人员统计' subtitle='人员总数（ 人 ）' num={data?.UserInfo?.SumUserNum} />
+      <CardHeader isStatistics index={1} title='人员统计' subtitle='人员总数（ 人 ）' num={data?.UserInfo?.SumUserNum} onClick={()=>{viewAll('人员统计')}}/>
       <div className='cardBodySty' style={{height:'calc(280px - 66px)'}}>
         <Radio.Group onChange={(e)=>{setPersonType(e.target.value)}} defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
           <Radio.Button value="1">业务属性维度</Radio.Button>
@@ -386,7 +398,7 @@ const Index = (props) => {
         />
       </div>
 
-       <CardHeader isStatistics index={2} title='车辆统计' subtitle='车辆总数（ 辆 ）' num={data?.CarInfo?.CarNum} />
+       <CardHeader isStatistics index={2} title='车辆统计' subtitle='车辆总数（ 辆 ）' num={data?.CarInfo?.CarNum} onClick={()=>{viewAll('车辆统计')}}/>
       <div className='cardBodySty'   style={{height:'calc(336px - 36px - 66px - 8px)'}}>
         <Row justify='space-between' align='middle'>
         <Radio.Group onChange={(e)=>{setVehicleType(e.target.value)}} defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
@@ -402,7 +414,7 @@ const Index = (props) => {
           theme="my_theme"
         /> 
       </div>
-      <CardHeader title='备机统计' num={1000} />
+      <CardHeader title='备机统计' onClick={()=>{viewAll('备机统计')}}/>
       <div className='cardBodySty'>
         <div style={{lineHeight:'34px',padding:'12px 0'}}>
         <div style={{ background: 'url(/currencyResOver/bjk.png)',backgroundSize:'100% 100%'}}>
@@ -433,7 +445,19 @@ const Index = (props) => {
           </div>
         </Row>
         </div>
-    </Spin >
+        <Modal
+        visible={visible}
+        title={modalTitle}
+        onCancel={() => { setVisible(false) }}
+        footer={null}
+        destroyOnClose
+        wrapClassName={`spreadOverModal`}
+        mask={false}
+        bodyStyle={{padding:0,marginTop:-1}}
+      >
+        {modalTitle=='人员统计'? <PersonnelFiles isModal/> : modalTitle=='车辆统计'? <VehicleManager isModal/> : <Standby isModal/>}
+      </Modal>
+    </Spin>
 
   );
 };

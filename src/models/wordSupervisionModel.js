@@ -1,5 +1,5 @@
 import moment from 'moment';
-import * as services from '@/pages/workSupervision/service.js';
+import * as services from '../services/wordSupervisionManage';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';

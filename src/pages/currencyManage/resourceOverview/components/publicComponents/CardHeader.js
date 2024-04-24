@@ -47,9 +47,9 @@ const Index = (props) => {
 
 
 
-  const {index, title, subtitle,num,isStatistics} = props;
+  const {index, title, subtitle,num,isStatistics,onClick} = props;
   return (<div style={{paddingTop:4}}>
-      <div style={{paddingLeft:32,height:37, background:'url(/currencyResOver/btbk.png)',backgroundSize:'100%',fontSize:16}}>
+      <div style={{paddingLeft:32,height:37, background:'url(/currencyResOver/btbk.png)',backgroundSize:'100%',fontSize:16,cursor:'pointer'}} onClick={()=>onClick&&onClick()}>
         {title}
       </div>
     {isStatistics&&<div className='cardBodySty' style={{ padding:'8px 16px'}}>
@@ -58,7 +58,7 @@ const Index = (props) => {
         <img src={`/currencyResOver/cardIcon_${index}.png`} />
         <span style={{paddingLeft:24}}>{subtitle}</span>
         </div>
-        <span style={{fontSize:18}}>{num? num : ''}</span>
+        <span  style={{fontSize:18}} >{ num || 0}</span>
       </Row>
       </div>}
       </div>

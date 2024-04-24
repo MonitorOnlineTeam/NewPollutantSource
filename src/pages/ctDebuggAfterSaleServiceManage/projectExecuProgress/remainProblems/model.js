@@ -21,12 +21,13 @@ export default Model.extend({
     exportLoading2: false,
   },
   effects: {
-    *GetCarList({ payload, callback }, { call, put, update }) { //获取遗留问题信息
-      const type = payload.type
-      yield update(type == 1 ? { tableLoading: true } : { tableLoading2: true })
-      const result = yield call(requestPost, API.ReportsViewsApi.GetDisposableServiceInfo, { ...payload, type: undefined });
+
+    *GetQuestionList({ payload, callback }, { call, put, update }) { //获取遗留问题信息
+      const type = payload.isAll
+      yield update(type == 2 ? { tableLoading: true } : { tableLoading2: true })
+      const result = yield call(requestPost, API.CtProjectExecuProgressApi.GetQuestionList,payload);
       if (result.IsSuccess) {
-        yield update(type == 1 ? {
+        yield update(type == 2 ? {
           queryPar: payload,
           tableDatas: result.Datas,
           tableTotal: result.Total,
@@ -42,29 +43,20 @@ export default Model.extend({
       } else {
         message.error(result.Message)
       }
-      yield update(type == 1 ? { tableLoading: false } : { tableLoading2: false })
-    },
-    *ExportCarList({ payload, callback }, { call, put, update }) { //遗留 导出
-      const type = payload.type
-      yield update(type == 1 ? { exportLoading: true } : { exportLoading2: true })
-      const result = yield call(requestPost, API.ReportsViewsApi.ExportCarList, { ...payload, type: undefined });
+      yield update(type == 2 ? { tableLoading: false } : { tableLoading2: false })
+    }, 
+    *ExportQuestionList({ payload, callback }, { call, put, update }) { //遗留 导出
+      const type = payload.isAll
+      yield update(type == 2 ? { exportLoading: true } : { exportLoading2: true })
+      const result = yield call(requestPost, API.CtProjectExecuProgressApi.ExportQuestionList, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
         message.warning(result.Message);
       }
-      yield update(type == 1 ? { exportLoading: false } : { exportLoading2: false })
+      yield update(type == 2 ? { exportLoading: false } : { exportLoading2: false })
     },
-
-    *SubmitSurvey({ payload, callback }, { call, put, update }) { //客户满意度调查 提交
-      const result = yield call(requestPost, API.ReportsViewsApi.ExportCarList, { ...payload, type: undefined });
-      if (result.IsSuccess) {
-          callback && callback(result.Datas)
-      } else {
-          message.error(result.Message)
-      }
-  },
 
 
   }

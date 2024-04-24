@@ -31,10 +31,10 @@ export const BtnList = ({ data, onClick, style }) => {
 const  Dot = ()=><div  style={{textAlign:'center'}} ><span className={styles.circle} style={{ display:'inline-block',marginTop:16, width: 10,height: 10,background: 'rgba(0, 141, 253, 1)', boxShadow:' 0 0 4px 4px rgba(0, 141, 253, .1)',borderRadius: '50%'}}></span></div>
 
 // 弹框组件
-export const RegPopver = ({ regionName,sum,unit,data, isEnter,style,onClick }) => { //tksf.png
+export const RegPopver = ({ regionName,sum,unit,data, isEnter,style,onClick }) => { 
   const enterFlag = isEnter && data?.[0]?.value!=0;
   const sumFlag = sum||sum==0;
-  return <div style={{position:'relative',marginTop:'calc(-50% - 7px - 2px)',marginLeft:'-50%',padding: '0 14px', width: 197, height: 128, background: `url(/currencyResOver/tksf.png)`, backgroundSize: '100% 100%',width:180,height:112,...style }}>
+  return <div style={{position:'relative',transform: 'translate(-50%,calc(-50% - 28px))',padding: '0 14px',cursor:'text',width:180,height:112, background: `url(/currencyResOver/tksf.png)`, backgroundSize: '100% 100%',...style }}>
     <Row align='middle' style={{ height: 29, opacity: .9, color: '#52F2FF' }} justify='space-between'><div className='textOverflow' style={{ width:  sumFlag? 'calc(100% - 24px)' :  enterFlag? 'calc(100% - 18px)' : '100%'}} title={regionName}>{regionName}</div>
          {sumFlag&&<span>{sum}{unit}</span>}
      {enterFlag && <RightOutlined style={{paddingLeft: 4}} onClick={()=>{onClick&&onClick()}} style={{ cursor: 'pointer' }} />}</Row>
@@ -47,14 +47,14 @@ export const RegPopver = ({ regionName,sum,unit,data, isEnter,style,onClick }) =
     <Dot />
   </div>;
 };
-// 弹框组件 办事处 备件库等
+// 弹框组件 办事处 备件库等 marginTop:'calc(-50% - 7px - 2px)',marginLeft:'-50%',
 export const SecondPopver = ({ data,style,isIcon,isEnter,onClick  }) => { 
   const enterFlag = isEnter && data?.value!=0;
-  return <div style={{position:'relative',marginLeft:'-50%', padding: '0 12px', width: 199, height: 44, background: `url(/currencyResOver/bsc.png)`, backgroundSize: '100% 100%',...style  }}>
+  return <div style={{position:'relative',transform:  `translate(-50%, ${isIcon? 'calc(-50% - 27px)' :  'calc(-50% - 14px)'})`,padding: '0 12px',cursor:'text', width: 180, height: 44, background: `url(/currencyResOver/bsc.png)`, backgroundSize: '100% 100%',...style  }}>
     <Row justify='space-between' align='middle' style={{opacity:enterFlag? .9 : 1, color: enterFlag? '#52F2FF' : '#fff', height: 'calc(100% - 12px)' }}>
-      <span className='textOverflow' style={{ width:enterFlag? 'calc(100% - 46px)' :  'calc(100% - 28px)'}} title={data?.name}>{data?.name}</span>
+      <span className='textOverflow' style={{ width:enterFlag? 'calc(100% - 46px)' :  data?.value? 'calc(100% - 28px)' : '100%'}} title={data?.name}>{data?.name}</span>
       <>
-       <span style={{paddingLeft:6}}>{data?.value || 0}</span>
+       {(data?.value || data.value==0)&&<span style={{paddingLeft:6}}>{data.value || 0}</span>}
        {enterFlag && <RightOutlined   onClick={()=>{onClick&&onClick()}} style={{paddingLeft:4, cursor: 'pointer' }} />}
       </>
     </Row>

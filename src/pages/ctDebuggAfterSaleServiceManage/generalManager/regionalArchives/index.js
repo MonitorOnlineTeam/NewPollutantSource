@@ -22,17 +22,14 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const { Option } = Select; 
 import LargeRegionList from "@/pages/ctDebuggAfterSaleServiceManage/components/largeRegionList";
 
-const namespace = 'regionalArchives'
+const namespace = 'generalManager'
 
-
-
-
-const dvaPropsData = ({ loading, regionalArchives, global, }) => ({
+const dvaPropsData = ({ loading, generalManager, global, }) => ({
   configInfo: global.configInfo,
+  tableDatas: generalManager.provinceTableDatas,
+  tableTotal: generalManager.provinceTableTotal,
+  queryPar:generalManager.provinceQueryPar,
   tableLoading:  loading.effects[`${namespace}/GetProvinceList`],
-  tableDatas: regionalArchives.tableDatas,
-  tableTotal: regionalArchives.tableTotal,
-  queryPar:regionalArchives.queryPar,
   exportLoading: loading.effects[`${namespace}/ExportProvinceList`],
   managerSelectLoading: loading.effects[`${namespace}/GetManagerSelect`],
 })

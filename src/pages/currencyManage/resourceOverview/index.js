@@ -83,7 +83,6 @@ const Index = (props) => {
   const [scrollTop,setScrollTop] = useState(0)
   const handleScroll=(e)=>{
     //滚动条高度
-    // console.log(e.srcElement.scrollTop)
     setScrollTop(e.srcElement.scrollTop)
   }
 

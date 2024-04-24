@@ -97,7 +97,7 @@ const Index = (props) => {
          
         })
         setProvinceAlllist(data)
-        onFinish(1,pageIndex, pageSize);
+        onFinish(2,pageIndex, pageSize);
       },
     })
   }, []);
@@ -109,7 +109,7 @@ const Index = (props) => {
     formAll.resetFields()
     setPopVisible(false)
     setPopVisible2(false)
-    onFinish(2,pageIndex2, pageSize2);
+    onFinish(1,pageIndex2, pageSize2);
   }
 
   const columns = (type)=>[
@@ -318,11 +318,11 @@ const Index = (props) => {
       title: <span>操作</span>,
       align: 'center',
       fixed: 'right',
-      width:  type==2? 80 : 280,
+      width:  type==1? 80 : 280,
       ellipsis: true,
       fixed:'right',
       render: (text, record,index) => {
-        return type==2?
+        return type==1?
               <a onClick={()=>detail(record)}>详细</a>  //查看所有数据
               :
               <> 
@@ -404,7 +404,7 @@ const Index = (props) => {
       },
       callback:()=>{
         setPopVisible(false)
-        onFinish(1, pageIndex, pageSize)
+        onFinish(2, pageIndex, pageSize)
       }
     }); 
   }
@@ -418,7 +418,7 @@ const Index = (props) => {
       },
       callback:()=>{
         setPopVisible2(false)
-        onFinish(1, pageIndex, pageSize)
+        onFinish(2, pageIndex, pageSize)
       }
     }); 
   }
@@ -447,7 +447,7 @@ const Index = (props) => {
   const onFinish = async (type,PageIndex, PageSize, queryPar) => {  //查询
 
     try {
-      const values = type==1? await form.validateFields() : await formAll.validateFields();
+      const values = type==1? await formAll.validateFields() : await form.validateFields();
       const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
         ...values,
         bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
@@ -455,8 +455,7 @@ const Index = (props) => {
         time: undefined,
         pageIndex: PageIndex,
         pageSize: PageSize,
-        type:type,
-        allData:type==1?2 : 1,
+        allData:type,
       }
       props.dispatch({
         type: `${namespace}/GetSatisfactionSurveyList`,
@@ -464,7 +463,7 @@ const Index = (props) => {
           ...par,
         },
         callback:()=>{
-            if(type==1){
+            if(type==2){
              setPopVisible(false)
              setPopVisible2(false)
             }
@@ -480,7 +479,7 @@ const Index = (props) => {
   const handleTableChange =  (PageIndex, PageSize) => { //分页
     setPageSize(PageSize)
     setPageIndex(PageIndex)
-    onFinish(1, PageIndex, PageSize, queryPar)
+    onFinish(2, PageIndex, PageSize, queryPar)
   }
 
   const [pageIndex2, setPageIndex2] = useState(1)
@@ -493,18 +492,15 @@ const Index = (props) => {
    const exports = (type)=>{
     props.dispatch({
       type: `${namespace}/ExportSatisfactionSurvey`,
-      payload: {
-        ...queryPar,
-        type:type
-      }
+      payload: type==2? queryPar : queryPar2,
     });
    }
-  const searchComponents = () => {
+  const searchComponents = (type) => {
     return <Form
       form={form}
       name="advanced_search"
       className={'ant-advanced-search-form'}
-      onFinish={() => { setPageIndex(1);setPageSize(20); onFinish(1,1, 20) }}
+      onFinish={() => { setPageIndex(1);setPageSize(20); onFinish(2,1, 20) }}
     >
       <Row align='middle'>
       <Col span={8}>
@@ -536,10 +532,10 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
-            <Button style={{ margin: '0 8px' }} loading={tableLoading} onClick={() => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1,1, 20) }}  >
+            <Button style={{ margin: '0 8px' }} loading={tableLoading} onClick={() => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(type,1, 20) }}  >
               重置
          </Button>
-         <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading} onClick={() => {exports(1) }}>
+         <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading} onClick={() => {exports(type) }}>
               导出
          </Button>
            {confiAssistantCheckBtn&&<SetUserListBtn type={5} text='配置助理清单' onClick={()=>{setPopVisible(false);setPopVisible2(false)}}/>}
@@ -551,12 +547,12 @@ const Index = (props) => {
       </Row>
     </Form>
   }
-  const searchComponents2 = () => {
+  const searchComponents2 = (type) => {
     return <Form
       form={formAll}
       name="advanced_search"
       className={'ant-advanced-search-form'}
-      onFinish={() => { setPageIndex2(1);setPageSize2(20); onFinish(2,1, 20) }}
+      onFinish={() => { setPageIndex2(1);setPageSize2(20); onFinish(1,1, 20) }}
     >
       <Row align='middle'>
       <Col span={8}>
@@ -617,10 +613,10 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading2}>
               查询
          </Button>
-            <Button style={{ margin: '0 8px' }} loading={tableLoading2} onClick={() => { formAll.resetFields(); setPageIndex2(1); setPageSize2(20); onFinish(2,1, 20) }}  >
+            <Button style={{ margin: '0 8px' }} loading={tableLoading2} onClick={() => { formAll.resetFields(); setPageIndex2(1); setPageSize2(20); onFinish(type,1, 20) }}  >
               重置
          </Button>
-         <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading2} onClick={() => {exports(2) }}>
+         <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading2} onClick={() => {exports(1) }}>
               导出
          </Button>
           </Form.Item>
@@ -659,7 +655,7 @@ const Index = (props) => {
   return (
     <div className={styles.customerSatisfacQuerySty}>
       <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+        <Card title={searchComponents(2)}>
           <SdlTable
             style={{ marginTop: 6 }}
             resizable
@@ -677,8 +673,8 @@ const Index = (props) => {
             }}
           />
         </Card>
-           <HandleModal visible={handleVisible}  data={data}  completeFinish={()=>{setPageIndex(1);setPageSize(20);onFinish(1,1,20)}}  onCancel={() => { setHandleVisible(false) }}/>
-           <InvestigateModal   visible={investigateVisible}  data={data}  completeFinish={()=>{setPageIndex(1);setPageSize(20);onFinish(1,1,20)}} onCancel={() => { setInvestigateVisible(false) }}/>
+           <HandleModal visible={handleVisible}  data={data}  completeFinish={()=>{setPageIndex(1);setPageSize(20);onFinish(2,1,20)}}  onCancel={() => { setHandleVisible(false) }}/>
+           <InvestigateModal   visible={investigateVisible}  data={data}  completeFinish={()=>{setPageIndex(1);setPageSize(20);onFinish(2,1,20)}} onCancel={() => { setInvestigateVisible(false) }}/>
         <Modal
             visible={detailVisible}
             title={'调查'}
@@ -701,7 +697,7 @@ const Index = (props) => {
             mask={false}
             footer={null}
           >
-          {searchComponents2()}
+          {searchComponents2(1)}
           <SdlTable
             style={{ marginTop: 6 }}
             resizable

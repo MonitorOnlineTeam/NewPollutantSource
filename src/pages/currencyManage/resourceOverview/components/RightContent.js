@@ -22,6 +22,10 @@ import {
   chartMouseover,
   chartMouseout,
 } from '@/pages/ctDebuggAfterSaleServiceManage/utils/getPie3D';
+import Portable from '@/pages/workSupervision/management/Portable'
+import Office from '@/pages/workSupervision/management/Office'
+import StorehouseManager from '@/pages/platformManager/basicInfo/storehouseManager/AutoFormManager'
+
 const { Option } = Select;
 
 const namespace = 'resourceOverview'
@@ -56,6 +60,14 @@ const Index = (props) => {
     })
 
   }, []);
+
+  const [visible,setVisible] = useState(false)
+  const [modalTitle,setModalTitle] = useState()
+
+  const  viewAll = (title)=>{
+    setVisible(true)
+    setModalTitle(title)
+  }
   const workStatistics = () => {
     const colors = ['#56bcfd','#00D7E9']
     const datalist = data?.OfficeLocationInfo?.UsedList?.map((item,index)=>{
@@ -109,7 +121,7 @@ const Index = (props) => {
   const { loading } = props;
   return (
     <Spin spinning={!!loading}>
-      <CardHeader title='便携式仪器统计' />
+      <CardHeader title='便携式仪器统计' onClick={()=>{viewAll('便携式仪器统计')}}/>
       <div className='cardBodySty' style={{ height: 280, padding: '16px 0 16px 16px' }}>
         <Row justify='space-between' style={{ height: '100%' }}>
 
@@ -145,7 +157,7 @@ const Index = (props) => {
           </div>
         </Row>
       </div>
-      <CardHeader title='办事统计处' />
+      <CardHeader title='办事处统计' onClick={()=>{viewAll('办事处统计')}}/>
       <div className='cardBodySty' style={{ height: 294 }}>
         <Row justify='space-between' style={{ padding: '18px 56px 12px 56px', fontSize: 16 }}>
           办事处总统计数
@@ -166,7 +178,7 @@ const Index = (props) => {
         <div style={{ textAlign: 'center', paddingTop: 12 }}><span style={{ display: 'inline-block', textAlign: 'center', background: 'url(/currencyResOver/xbtk.png) no-repeat', color: '#B8D3F1' }}>使用状态</span>  </div>
       </div>
 
-      <CardHeader title='备件库统计' />
+      <CardHeader title='备件库统计' onClick={()=>{viewAll('备件库统计')}}/>
       <div className='cardBodySty' style={{ height: 266 }}>
         <Row justify='center' align='middle' style={{ height: '100%',padding:'24px 0' }}>
           <Col span={12} style={{ height: '100%' }}>
@@ -190,6 +202,18 @@ const Index = (props) => {
           </Col>
         </Row>
       </div>
+      <Modal
+        visible={visible}
+        title={modalTitle}
+        onCancel={() => { setVisible(false) }}
+        footer={null}
+        destroyOnClose
+        wrapClassName={`spreadOverModal`}
+        mask={false}
+        bodyStyle={{padding:0,marginTop:-1}}
+      >
+        {modalTitle=='便携式仪器统计'? <Portable isModal/> : modalTitle=='办事处统计'? <Office isModal/> : <StorehouseManager isModal match={{params : { configId:'Storehouse'} }}/>}
+      </Modal>
     </Spin>
 
   );

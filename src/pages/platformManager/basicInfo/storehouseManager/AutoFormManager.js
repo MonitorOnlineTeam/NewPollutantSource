@@ -52,10 +52,12 @@ export default class AutoFormIndex extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if(!this.props.isModal){
     if (nextProps.location.pathname != this.props.location.pathname) {
       if (nextProps.match.params.configId !== this.props.routerConfig)
         this.reloadPage(nextProps.match.params.configId);
     }
+  }
   }
 
   reloadPage = (configId) => {
@@ -77,7 +79,7 @@ export default class AutoFormIndex extends Component {
     })
   }
   render() {
-    const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
+    const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch,isModal} = this.props;
     const searchConditions = searchConfigItems[configId] || []
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const isFixedOpera =  configId === 'Storehouse'? true : false;
@@ -101,7 +103,7 @@ export default class AutoFormIndex extends Component {
       //     { Name: 'AutoForm', Url: '' }
       //   ]
       // }>
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper hideBreadcrumb={isModal}>
         <div>
           <Card>
             <SearchWrapper

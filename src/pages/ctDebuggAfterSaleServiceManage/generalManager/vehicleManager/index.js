@@ -22,16 +22,14 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import Detail from './detail'
 const { Option } = Select; 
 
-const namespace = 'vehicleManager'
+const namespace = 'generalManager'
 
 
-
-
-const dvaPropsData = ({ loading, vehicleManager, global, }) => ({
-  tableLoading: vehicleManager.tableLoading,
-  tableDatas: vehicleManager.tableDatas,
-  tableTotal: vehicleManager.tableTotal,
-  queryPar:vehicleManager.queryPar,
+const dvaPropsData = ({ loading, generalManager, global, }) => ({
+  tableDatas: generalManager.carTableDatas,
+  tableTotal: generalManager.carTableTotal,
+  tableLoading: generalManager.carTableLoading,
+  queryPar:generalManager.carQueryPar,
   configInfo: global.configInfo,
   exportLoading: loading.effects[`${namespace}/ExportCarList`],
 })
@@ -69,7 +67,7 @@ const Index = (props) => {
 
 
 
-  const { queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,  } = props;
+  const { queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,isModal,  } = props;
 
 
 
@@ -265,8 +263,8 @@ const Index = (props) => {
   }
   return (
     <div className={`${styles.vehicleManagerSty} queryCriterTitleSty`}>
-      <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+      <BreadcrumbWrapper  hideBreadcrumb={isModal}>
+        <Card title={searchComponents()}  style={isModal&&{paddingTop:8}}>
           <SdlTable
             resizable
             loading={tableLoading}

@@ -87,20 +87,20 @@ const Index = (props) => {
         break;
       case 1: //调查
         const values = await investigateForm.validateFields();
-        // props.dispatch({
-        //   type: `${namespace}/SubmitSurvey`,
-        //   payload: {
-        //     ...values,
-        //     id: data?.ID,
-        //     num: data?.Num,
-        //     serviceAreaCode: data?.ServiceAreaCode,
-        //     investigatorName:data?.investigatorName,
-        //   },
-        //   callback:()=>{
-        //     SetCurrent(current + 1)
-        //     completeFinish&&completeFinish()
-        //   }
-        // });  
+        props.dispatch({
+          type: `${namespace}/SubmitSurvey`,
+          payload: {
+            ...values,
+            id: data?.ID,
+            num: data?.Num,
+            serviceAreaCode: data?.ServiceAreaCode,
+            investigatorName:data?.investigatorName,
+          },
+          callback:()=>{
+            SetCurrent(current + 1)
+            completeFinish&&completeFinish()
+          }
+        });  
         break;
       case 2: //完成
         props.onCancel()

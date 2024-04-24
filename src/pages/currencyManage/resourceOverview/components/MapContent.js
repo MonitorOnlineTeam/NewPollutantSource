@@ -33,7 +33,7 @@ import moment from 'moment'
 import config from '@/config';
 import styles from "../style.less"
 import { uploadPrefix } from '@/config'
-import { BtnList, RegPopver, SecondPopver, MapSelect } from "@/components/mapPartPendant";
+import { BtnList, RegPopver, SecondPopver, MapSelect } from "../components/publicComponents/MapPartPendant";
 import Base from 'antd/lib/typography/Base';
 
 const { Option } = Select;
@@ -59,6 +59,7 @@ class Index extends PureComponent {
   constructor(props) {
     super(props);
     this.amapEvents = {
+      enableHighAccuracy:true,
       created: mapInstance => {
         console.log(
           '高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
@@ -185,24 +186,31 @@ class Index extends PureComponent {
   onBack = () => {
     const { selectType } = this.state
     aMap.clearMap();
-    this.setState({ selectType: { ...selectType, isEnter: false, showAll: false } })
+    this.setState({ selectType: { ...selectType, isEnter: false, showAll: false } },()=>{
+      this.mapFitView();
+    })
   }
 
 
   btnChange = (name, index) => {
+    aMap.clearMap();
     this.setState({ selectType: { name: name, secondFlag: name == '办事处' || name == '备件库' ? true : false } })
     const { selectType } = this.state;
     if(name != selectType.name){
-      this.setState({selectStatus:''})
+      this.setState({selectStatus:''},()=>{
+        this.mapFitView();
+      })
     }
   }
  
   selectChange = (value) => {
     const { selectType } = this.state;
-    this.setState({selectStatus:value})
+    this.setState({selectStatus:value},()=>{
+    })
   };
 
   regionEnter = (regionName) => {
+    aMap.clearMap();
     this.setState({ selectType: { ...this.state.selectType, isEnter: true }, selectRegionName: regionName }, () => {})
     AMap.plugin('AMap.DistrictSearch', () => {
       const districtSearch = new AMap.DistrictSearch({
@@ -219,17 +227,17 @@ class Index extends PureComponent {
           // 创建省份轮廓覆盖物
           const provinceOutline = new AMap.Polygon({
             path: bounds?.[0] ? bounds : [],
-            strokeColor: '#faad14', // 初始轮廓颜色
+            strokeColor: '#00A8FF', // 初始轮廓颜色
             strokeOpacity: 1,
             strokeWeight: 2,
             fillOpacity: 0,
-            // fillColor: '#fa541c',
           });
           // 将省份轮廓覆盖物添加到地图上
           provinceOutline.setMap(aMap);
         }
       })
     })
+    this.mapFitView();
   }
 
 
@@ -237,8 +245,8 @@ class Index extends PureComponent {
     const { selectType,selectStatus } = this.state;
     if (selectType.isEnter) { //进入二级页面
       const item = extData.position
-      const data = selectType.name == '办事处' ? { name: item?.OfficeName, value: `${item?.UserNum}人` } :
-        { name: item?.StorehouseName, value: item?.StorehouseNum } //备件库
+      const data = selectType.name == '办事处' ? { name: item?.OfficeName, value: `${item?.UserNum || 0}人` } :
+        { name: item?.StorehouseName } //备件库
       return <SecondPopver isIcon={selectType.name == '备件库'} data={data} />
     } else {
       const item = extData.position;

@@ -92,7 +92,7 @@ const TableTransfer = ({ leftColumns, rightColumns, loading, ...restProps }) => 
 );
 
 const Office = props => {
-  const { allUserByOffice, allManager, getUserLoading, bindUserLoading } = props;
+  const { allUserByOffice, allManager, getUserLoading, bindUserLoading,isModal } = props;
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [targetKeys, setTargetKeys] = useState([]);
@@ -212,7 +212,7 @@ const Office = props => {
   ];
 
   return (
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={isModal}>
       <Card>
         <SearchWrapper configId={CONFIGID} />
         <AutoFormTable
