@@ -17,10 +17,10 @@ import { API } from '@config/API';
 import cuid from 'cuid';
 import styles from "../style.less"
 const { Step } = Steps;
-const namespace = 'installaEquipment'
+const namespace = 'installEquipment'
 
-const dvaPropsData = ({ loading, installaEquipment, global, }) => ({
-  installPhotoData: installaEquipment.installPhotoData,
+const dvaPropsData = ({ loading, installEquipment, global, }) => ({
+  installPhotoData: installEquipment.installPhotoData,
   auditPhotoLoading: loading.effects[`${namespace}/GetAuditPhoto`],
   configInfo: global.configInfo,
 })
@@ -31,7 +31,7 @@ const Index = (props) => {
 
 
 
-  const {type, auditPhotoLoading, installPhotoData,} = props;
+  const { auditPhotoLoading, installPhotoData,} = props;
  
 
   const [isImageViewOpen, setIsImageViewOpen] = useState(false);
@@ -44,34 +44,31 @@ const Index = (props) => {
   }, []);
 
 
-  const HandlingSuggesComponents = () => {
-    return <Row className='handlingSuggesSty' style={{  width: type==1?'90%':'100%',margin:  type==1? '18px auto' : '18px 0', backgroundColor: '#fff' }}>
-      <div style={{ lineHeight: '40px', width: '100%', backgroundColor: '#E8F2FD', paddingLeft: 18, borderTop: '1px solid #BBDAF9' }}>
-        处理人意见区
-     </div>
-      <div style={{ width: '100%', boxShadow: '0px 0px 8px 0px rgba(153,153,153,0.14)', backgroundColor: '#fff',   }}>
-        {auditPhotoLoading ?
-          <div style={{ padding: 24 }}><Skeleton active avatar paragraph={{ rows: 8 }} /></div>
-          :
-          <>
-            <Row style={{ flex: 1, height: 24 }} />
-            {installPhotoData?.OpinionList?.[0] ? installPhotoData?.OpinionList.map((item, index) => {
-              return <><div>
-                <Row style={{ lineHeight: '40px', padding: '0 24px', backgroundColor: '#F4F5F8' }}>
-                  <span style={{ color: '#4D97F3', paddingRight: 24 }}>{item.UserName}</span>   <span style={{ color: item.StatusName == '驳回' ? '#FF5959' : item.StatusName == '申诉' ? '#F89F2D' : '#242425', paddingRight: 24 }}>{item.StatusName}</span>  <span style={{ color: '#999', paddingRight: 24 }}>{item.Time}</span>
-                </Row>
-                <Row style={{ padding: '12px 24px' }}>
-                  <div style={{ width: 'calc(100% - 42px)' }}>
-                    {item.Opinion}
-                  </div>
-                </Row>
-              </div>
-                <div style={{padding:'0 24px 8px 24px'}}>
+
+
+  const ViewPhotosComponents = () => {
+    return <Row className='seePhotoSty'>
+      {auditPhotoLoading ?
+        <Skeleton active avatar paragraph={{ rows: 8 }} />
+        :
+        <>{installPhotoData?.PhotosList?.[0] ? installPhotoData.PhotosList.map((item, index) => {
+          return <Col span={6} style={{ padding: '0 18px 14px 0' }}>
+            <div style={{ padding: '12px 0 12px 12px', borderRadius: 8, boxShadow: '0px 0px 16px 0px rgba(153,153,153,0.16)' }}>
+              <Row align='middle'>
+                <Image preview={false} src={`/ctinstallEquipmentImg/installPhotos/${index}.png`} />
+                <div style={{ paddingLeft: 8, width: 'calc(100% - 58px)' }}>
+                  <div style={{ fontSize: 16, fontWeight: 400 }} className='textOverflow'>{item.Name}</div>
+                <div className='textOverflow'>备注：{item.Remark ? 
+                   <Tooltip placement="bottomLeft" title={item.Remark}>{item.Remark}</Tooltip> 
+                   :
+                   '无'}</div>
+                </div>
+                <Row style={{ marginTop: 4, width:'100%' }}>
                        <Upload
                       listType="picture-card"
                       showUploadList={{ showRemoveIcon: false }}
                       fileList={         
-                        item?.FilesList?.ImgList[0]? item.FilesList.ImgList.map((imgItem, index) => {
+                        item?.FilesList?.ImgList?.[0]? item.FilesList.ImgList.map((imgItem, index) => {
                             return {
                               uid: index,
                               status: 'done',
@@ -92,23 +89,25 @@ const Index = (props) => {
                         setImageList(imageData);
                       }}
                     />
-                </div>
-              </>
-            })
-              :
-              <Empty />
+                </Row>
 
-            }</>
-        }
-      </div>
+              </Row>
+            </div>
+          </Col>
+
+        })
+          :
+          <Empty />
+
+        }</>
+      }
     </Row>
   }
-
   
 
   return (
-    <div className={styles.installaEquipmentSty}>
-          <HandlingSuggesComponents />
+    <div className={styles.installEquipmentSty}>
+          <ViewPhotosComponents />
         {/* 查看照片弹窗 */}
         <ImageView
           isOpen={isImageViewOpen}

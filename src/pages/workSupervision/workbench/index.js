@@ -31,6 +31,9 @@ import FromsModal from '../Forms/FromsModal';
 import SuperviseRectification from '@/pages/operations/superviseRectification'
 import SuperviseRectificationDetail from '@/pages/operations/superviseRectification/Detail';
 import superviseRectificaSty from '@/pages/operations/superviseRectification/style.less';
+import RemainProblems from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/remainProblems';
+import InstallEquipmentExamine from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment/components/ExamineModal';
+
 import router from 'umi/router';
 import { PageLoading } from '@ant-design/pro-layout';
 import config from '@/config';
@@ -68,10 +71,10 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
   supervisionVerificaList: wordSupervision.supervisionVerificaList,
   operaServiceLoading: loading.effects['wordSupervision/GetStagingInspectorRectificationList'],
-  workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
+  workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
   workAlarmTotal: wordSupervision.workAlarmTotal,
-  contractLoading: wordSupervision.contractLoading || loading.effects['wordSupervision/DelWorkbenchMsg'] || loading.effects['wordSupervision/UpdateAllProjectPushStatus'] || false,
+  contractLoading: wordSupervision.contractLoading || loading.effects['wordSupervision/DelWorkbenchMsg'] || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false,
   contractList: wordSupervision.contractList,
   configInfo: global.configInfo,
   menuList: wordSupervision.menuList,
@@ -83,24 +86,31 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   projectExecutionLoading: wordSupervision.projectExecutionLoading || false,
   projectExecutionList: wordSupervision.projectExecutionList,
   updateprojectExecutionLoading: loading.effects['wordSupervision/UpdateImplementationStatus'] || false,
-
+  customeSatisfactLoading: wordSupervision.customeSatisfactLoading,
+  customeSatisfactList: wordSupervision.customeSatisfactList,
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, supervisionVerificaList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading, clientHeight, workbenchesModuleLoading, projectExecutionLoading, projectExecutionList, updateprojectExecutionLoading, } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, supervisionVerificaList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading, clientHeight, workbenchesModuleLoading, projectExecutionLoading, projectExecutionList, updateprojectExecutionLoading,customeSatisfactList,customeSatisfactLoading, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
   const [forwardingUserId, setForwardingUserId] = useState('');
 
-  const [daily, SetDaily] = useState(false)
-  const [opera, SetOpera] = useState(false)
-  const [operaSupervisionCheck, SetOperaSupervisionCheck] = useState(false)//监督核查
+  const [daily, setDaily] = useState(false)
+  const [opera, setOpera] = useState(false)
+  const [operaSupervisionCheck, setOperaSupervisionCheck] = useState(false)//监督核查
   const [projectExecution, setProjectExecution] = useState(false)//项目执行
-  const [remind, SetRemind] = useState(false)
-  const [remindDataAlarm, SetRemindDataAlarm] = useState(false)
-  const [remindExpire, SetRemindExpire] = useState(false)
+  const [customSatisfact, setCustomSatisfact] = useState(false)//客户满意度
+  const [customSatisfactVisible, setCustomSatisfactVisible] = useState(false)
+  
+  const [remainProblemsVisible, setRemainProblemsVisible] = useState(false)
+  const [remind, setRemind] = useState(false)
+  const [remindDataAlarm, setRemindDataAlarm] = useState(false)
+  const [remindExpire, setRemindExpire] = useState(false)
   const [popForm] = Form.useForm(); //项目执行-解决问题
+  
+  const [installEquipmentVisible, SetInstallEquipmentVisible] = useState(false)
 
   const type = props.location.pathname === '/ctManage/workbench' ? 1 : false
   useEffect(() => {
@@ -132,17 +142,17 @@ const Workbench = props => {
         res.map(item => {
           switch (item.PName) {
             case '日常监督':
-              SetDaily(true)
+              setDaily(true)
               GetToDoDailyWorks()
               // if(item?.CList[0]){ 
-              //   SetDaily(true)
+              //   setDaily(true)
               //  }else{
-              //    SetDaily(false)
+              //    setDaily(false)
               //  }
               break;
             case '待办中心':
               if (item?.CList[0]) {
-                SetOpera(true)
+                setOpera(true)
                 let btnArr = [];
                 item.CList.map(clItem => {
                   let btnObj = {};
@@ -150,13 +160,18 @@ const Workbench = props => {
                   btnObj.name = clItem.CName;
                   if (clItem.CName == '监督核查') {
                     btnObj.value = 1;
-                    SetOperaSupervisionCheck(true)
+                    setOperaSupervisionCheck(true)
                     GetStagingInspectorRectificationList()
                   }
                   if (clItem.CName == '项目执行') {
                     btnObj.value = 2;
                     setProjectExecution(true)
-                    getCtWorkbenchMsg(1)
+                    getCtWorkbenchMsg(2)
+                  }
+                  if (clItem.CName == '客户满意度') {
+                    btnObj.value = 3;
+                    setCustomSatisfact(true)
+                    getCtWorkbenchMsg(3)
                   }
                   btnArr.push(btnObj)
                 })
@@ -165,12 +180,12 @@ const Workbench = props => {
 
 
               } else {
-                SetOpera(false)
+                setOpera(false)
               }
               break;
             case '我的提醒':
               if (item?.CList[0]) {
-                SetRemind(true)
+                setRemind(true)
                 let btnArr = [];
                 item.CList.map(clItem => {
                   let btnObj = {};
@@ -178,13 +193,13 @@ const Workbench = props => {
                   btnObj.name = clItem.CName
                   if (clItem.CName == '数据报警') {
                     btnObj.value = 10;
-                    SetRemindDataAlarm(true)
+                    setRemindDataAlarm(true)
                     GetWorkAlarmPushList(dataAlarmVal, alarmPageIndex, alarmPageSize) //我的提醒 数据报警
                   }
                   if (clItem.CName == '合同到期') {
                       btnObj.value = 11;
-                      SetRemindExpire(true)
-                      getCtWorkbenchMsg(2)
+                      setRemindExpire(true)
+                      getCtWorkbenchMsg(1)
                   }
                   btnArr.push(btnObj)
                 })
@@ -192,7 +207,7 @@ const Workbench = props => {
                 setMyRemindBtnList(btnArr)
 
               } else {
-                SetRemind(false)
+                setRemind(false)
               }
               break;
           }
@@ -267,7 +282,7 @@ const Workbench = props => {
   const [popVisible, setPopVisible] = useState(false)
   const [popSelectIndex, setSelectPopIndex] = useState(-1)
 
-  const solveProblem = async (row) => { //待办中心 项目执行-解决问题
+  const solveProblem = async (row) => { //待办中心 项目执行-解决遗留问题
     try {
       const values = await popForm.validateFields();
       props.dispatch({
@@ -278,7 +293,7 @@ const Workbench = props => {
         },
         callback: () => {
           setPopVisible(false)
-          getCtWorkbenchMsg(1)
+          getCtWorkbenchMsg(2)
         }
       });
     } catch (errorInfo) {
@@ -548,11 +563,16 @@ const Workbench = props => {
     props.dispatch({
       type: 'wordSupervision/CtGetWorkbenchMsg',
       payload: { type: type },
-      callback: (total, total2) => {
-          if (type == 1) {//项目执行
-            filterData(operaServiceBtnList,2,total)
-          } else {//合同到期
-            filterData(myRemindBtnList,11,total2)
+      callback: (total, total2,total3) => {
+          if (type == 1) {//合同到期
+            filterData(myRemindBtnList,11,total)
+
+          }else if(type == 2){//项目执行
+            filterData(operaServiceBtnList,2,total2)
+
+          } else if(type == 3) { //客户满意度
+            filterData(operaServiceBtnList,3,total3)
+
           }
       }
 
@@ -572,6 +592,9 @@ const Workbench = props => {
     if(projectExecutionList?.length>=0){ //项目执行
       filterData(operaServiceBtnList,2,projectExecutionList?.length)
     }
+    if(customeSatisfactList?.length>=0){ //客户满意度
+      filterData(operaServiceBtnList,3,customeSatisfactList?.length)
+    }
     
     if(workAlarmPushList?.length>=0){ //数据报警
       filterData(myRemindBtnList,10,workAlarmPushTotal)
@@ -579,7 +602,7 @@ const Workbench = props => {
     if(contractList?.length>=0){ //合同到期
       filterData(myRemindBtnList,11,contractList?.length)
     }
-  },[supervisionVerificaList,projectExecutionList,workAlarmPushList, contractList ])
+  },[supervisionVerificaList,projectExecutionList,customeSatisfactList,workAlarmPushList, contractList ])
 
   const delContract = (item) => { //删除合同到期
     props.dispatch({
@@ -588,18 +611,18 @@ const Workbench = props => {
         ID: item.ID,
       },
       callback: () => {
-        getCtWorkbenchMsg(2)
+        getCtWorkbenchMsg(1)
       },
     });
   }
   const delAllContract = () => { //删除全部合同到期
     props.dispatch({
-      type: 'wordSupervision/UpdateAllProjectPushStatus',
+      type: 'wordSupervision/DelAllWorkbenchMsg',
       payload: {},
       callback: () => {
         setContractPageIndex(1)
         setContractPageSize(10)
-        getCtWorkbenchMsg(2)
+        getCtWorkbenchMsg(1)
       },
     });
   }
@@ -695,7 +718,7 @@ const Workbench = props => {
                       }}
                     >
                       {/* 待办中心 */}
-                      {(operaSupervisionCheck || projectExecution) && <><Row justify='space-between'>
+                      {(operaSupervisionCheck || projectExecution || customSatisfact) && <><Row justify='space-between'>
                         <div className={styles.title}>待办中心</div>
                         {operaSupervisionCheck && selectOperaVal == 1 && <img title='更多' style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }} src="/more.png" onClick={() => setSuperviseRectificaVisible(true)} />} {/**监督核查 */}
                       </Row>
@@ -713,7 +736,13 @@ const Workbench = props => {
                           {selectOperaVal == 2 && <Spin spinning={projectExecutionLoading}>
                             {projectExecutionList?.length ? projectExecutionList.map((item, index) =>
                               (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }}>
-                                <Col style={{ width: 'calc(100% - 216px)' }} className='textOverflow' title={item.Msg}>{item.Msg}</Col>
+                                <Col onClick={()=>{
+                                   if(item.Type==2){ //遗留问题
+                                    setRemainProblemsVisible(true)
+                                   }else if(item.Type==4){ //安装照片审核
+                                    SetInstallEquipmentVisible(true)
+                                   }
+                                  }} style={{ width: item.Type==2? 'calc(100% - 216px)' :  'calc(100% - 146px)'}} className='textOverflow' title={item.Msg}>{item.Type==2? '（遗留问题）':item.Type==4? '（照片审核）' : ''} {item.Msg}</Col>
                                 <Col>
                                   <Popover visible={index == popSelectIndex && popVisible} placement='leftTop' title={'解决问题'} trigger="click"
                                     overlayStyle={{ width: 400 }}
@@ -736,8 +765,23 @@ const Workbench = props => {
                                         </Row>
                                       </Form>
                                     }>
-                                    <Tag color="#4090FF" onClick={() => { setSelectPopIndex(index); setPopVisible(true); }} style={{ cursor: 'pointer', marginLeft: 8 }} >解决问题</Tag>
+                                    {item.Type==2&&<Tag color="#4090FF" onClick={() => { setSelectPopIndex(index); setPopVisible(true); }} style={{ cursor: 'pointer', marginLeft: 8 }} >解决问题</Tag>}
                                   </Popover>
+                                </Col>
+                                <Col>{item.CreateTime}</Col>
+                              </Row>)
+                            ) :
+                              <Empty style={{ marginTop: '30px' }} />}
+                          </Spin>}
+                          {selectOperaVal == 3 && <Spin spinning={customeSatisfactLoading}>
+                            {customeSatisfactList?.length ? customeSatisfactList.map((item, index) =>
+                              (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }}>
+                                <Col onClick={()=>{
+                                   if(item.Type==6){ //客户满意度调查
+                                    setCustomSatisfactVisible(true)
+                                   }
+                                  }} style={{ width: 'calc(100% - 146px)'}} className='textOverflow' title={item.Msg}>{item.Type==6? '（满意度调差）'  : ''} {item.Msg}</Col>
+                                <Col>
                                 </Col>
                                 <Col>{item.CreateTime}</Col>
                               </Row>)
@@ -928,7 +972,7 @@ const Workbench = props => {
         <Modal
           centered
           visible={superviseRectificaVisible}
-          title={'待办中心'}
+          title={'监督核查'}
           footer={null}
           wrapClassName="spreadOverModal"
           mask={false}
@@ -937,9 +981,9 @@ const Workbench = props => {
         >
           <SuperviseRectification hideBreadcrumb match={{ path: '/operations/superviseRectification' }} />
         </Modal>
-        <Modal //详情
+        <Modal //监督核查详情
           visible={superviseRectificaDetailVisible}
-          title={'详情'}
+          title={'监督核查-详情'}
           footer={null}
           wrapClassName='spreadOverModal'
           className={superviseRectificaSty.fromModal}
@@ -969,6 +1013,20 @@ const Workbench = props => {
             />
           </Spin>
         </Modal>
+        <Modal
+          visible={remainProblemsVisible}
+          title={'遗留问题'}
+          footer={null}
+          wrapClassName='spreadOverModal'
+          onCancel={() => { setRemainProblemsVisible(false) }}
+          destroyOnClose
+          bodyStyle={{padding:0,marginTop:-1}}
+        >
+        <RemainProblems hideBreadcrumb  match={{ path: '/operations/superviseRectification' }}/>
+        </Modal>
+
+        <InstallEquipmentExamine  visible={installEquipmentVisible}  onCancel={() => { SetInstallEquipmentVisible(false); }}/>
+        
       </BreadcrumbWrapper>
     </div>
   );

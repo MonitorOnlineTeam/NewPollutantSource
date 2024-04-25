@@ -12,7 +12,7 @@ import styles from '../../index.less';
 import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
-import InstallaEquipment from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment';
+import InstallEquipment from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment';
 
 const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
   installPageData: instStdAndCompReso.installPageData,
@@ -262,7 +262,7 @@ const TableCard = props => {
             onCancel();
           }}
         >
-          <InstallaEquipment
+          <InstallEquipment
             hideBreadcrumb
             defaultTime={computeStartAndEnd(date)}
             location={props.location}

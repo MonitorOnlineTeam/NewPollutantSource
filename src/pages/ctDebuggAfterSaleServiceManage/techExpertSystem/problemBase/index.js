@@ -89,7 +89,7 @@ const dvaDispatch = (dispatch) => {
     },
     GetCodList: (payload, callback) => { //问题类别
       dispatch({
-        type: `ctCommon/GetCodList`,
+        type: `generalManager/GetCodList`,
         payload: payload,
         callback: callback,
       })
@@ -104,7 +104,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const { queryPar, tableDatas, tableTotal, tableLoading, exportLoading, loadingConfirm, questionTemplateLoading, } = props;
+  const { queryPar, tableDatas, tableTotal, tableLoading, exportLoading, loadingConfirm, questionTemplateLoading,isModal, } = props;
 
   const [popVisible, setPopVisible] = useState(false);
   const [codList, setCodList] = useState([]) //问题类别
@@ -409,8 +409,8 @@ const Index = (props) => {
   }
   return (
     <div className={`queryCriterTitleSty ${styles.problemBaseSty}`}>
-      <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+      <BreadcrumbWrapper  hideBreadcrumb={isModal}>
+        <Card title={searchComponents()}   style={isModal&&{paddingTop:8}}>
           <SdlTable
             resizable
             loading={tableLoading}

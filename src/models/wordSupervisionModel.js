@@ -26,8 +26,11 @@ export default Model.extend({
     contractList: [],
     menuList: [],
     allMenuList: [],
-    projectExecutionLoading:false,
     contractLoading:false,
+    projectExecutionLoading:false,
+    customeSatisfactList:[],
+    customeSatisfactLoading:false,
+    
   },
   effects: {
     // 获取工作台待办
@@ -598,18 +601,6 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // // 合同到期列表
-    // *GetProjectRemindList({ payload, callback }, { call, put, update }) {
-    //   const result = yield call(services.GetProjectRemindList, payload);
-    //   if (result.IsSuccess) {
-    //     yield update({
-    //       contractList: result.Datas,
-    //     });
-    //     callback && callback(result.Total);
-    //   } else {
-    //     message.error(result.Message);
-    //   }
-    // },
     // 删除合同到期
     *DelWorkbenchMsg({ payload, callback }, { call, put, update }) {
       const result = yield call(services.DelWorkbenchMsg, payload);
@@ -621,8 +612,8 @@ export default Model.extend({
       }
     },
     // 删除所有合同到期
-    *UpdateAllProjectPushStatus({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.UpdateAllProjectPushStatus, payload);
+    *DelAllWorkbenchMsg({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.DelAllWorkbenchMsg, payload);
       if (result.IsSuccess) {
         message.success('删除成功！');
         callback && callback();
@@ -660,18 +651,6 @@ export default Model.extend({
           })
         }
         const allMenuData = menuFilterTree(allMenuList, menuList.map(item => item.id))
-        // const filterEmptyChildren = (treeNodes) =>{
-        //   return treeNodes?.length&&treeNodes.children&&treeNodes.children.length&&(!treeNodes.selectable)&&treeNodes.map(item => {
-        //     item = { ...item }
-        //     if (item.children?.length) {
-        //       item.children = menuFilterTree(item.children)
-        //     }
-        //     return item
-        //   })
-        // }
-        // console.log(filterEmptyChildren(allMenuData))
-        // const filteredTree = filterEmptyChildren(allMenuData);
-        // console.log(filteredTree);
         yield update({
           menuList: menuList,
           allMenuList: allMenuData,
@@ -703,30 +682,37 @@ export default Model.extend({
     //项目执行、合同到期等
     *CtGetWorkbenchMsg({ payload, callback }, { call, put, update }) {
 
-      yield update( payload.type==1?{projectExecutionLoading:true}:{ contractLoading: true});
+      yield update( payload.type==1? { contractLoading: true} : payload.type==2? { projectExecutionLoading: true} : {customeSatisfactLoading:true});
       const result = yield call(services.CtGetWorkbenchMsg, {...payload,type:undefined});
       if (result.IsSuccess) {
         const data = result.Datas
+        // yield update({  老
+        //   projectExecutionList: data?.ctList   || [],
+        //   contractList: data  || [],
+        // });
+        // callback && callback( data?.length || 0, data?.ctList?.length || 0,);
         yield update({
           projectExecutionList: data?.ctList   || [],
-          // contractList: data?.projectList  || [],
-          contractList: data  || [],
-
+          contractList: data?.projectList  || [],
+          customeSatisfactList : data?.customerList  || [],
         });
-        callback && callback(data?.ctList?.length || 0, data?.length || 0);
+        callback && callback(data?.projectList?.length || 0, data?.ctList?.length || 0, data?.customerList?.length || 0,);
       } else {
         message.error(result.Message);
       }
-      yield update( payload.type==1?{projectExecutionLoading:false}:{ contractLoading: false});
+      yield update( payload.type==1? { contractLoading: false} : payload.type==2? { projectExecutionLoading: false} : {customeSatisfactLoading:false});
+
     },
     //待办中心 项目执行-解决遗留问题
     *UpdateImplementationStatus({ payload, callback }, { call, put, update }) {
       const result = yield call(services.UpdateImplementationStatus, payload);
       if (result.IsSuccess) {
-        callback && callback(result.Datas);
+        message.success(result.Message);
       } else {
         message.error(result.Message);
       }
+      callback && callback(result.Datas);
+
     },
 
 

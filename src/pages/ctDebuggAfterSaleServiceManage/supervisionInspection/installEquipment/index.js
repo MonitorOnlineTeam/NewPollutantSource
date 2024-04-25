@@ -62,14 +62,14 @@ import cuid from 'cuid';
 import styles from './style.less';
 const { Option } = Select;
 const { Step } = Steps;
-const namespace = 'installaEquipment';
+const namespace = 'installEquipment';
 
-const dvaPropsData = ({ loading, installaEquipment, global }) => ({
+const dvaPropsData = ({ loading, installEquipment, global }) => ({
   tableLoading: loading.effects[`${namespace}/GetEquipmentAuditList`],
-  tableDatas: installaEquipment.installEquipmentTableDatas,
-  tableTotal: installaEquipment.installEquipmentTableTotal,
-  queryPar: installaEquipment.installaEquipmentQueryPar,
-  installPhotoData: installaEquipment.installPhotoData,
+  tableDatas: installEquipment.installEquipmentTableDatas,
+  tableTotal: installEquipment.installEquipmentTableTotal,
+  queryPar: installEquipment.installEquipmentQueryPar,
+  installPhotoData: installEquipment.installPhotoData,
   auditPhotoLoading: loading.effects[`${namespace}/GetAuditPhoto`],
   addAuditInfoLoading: loading.effects[`${namespace}/AddAuditInfo`],
   exportLoading: loading.effects[`${namespace}/ExportEquipmentAudit`],
@@ -92,7 +92,7 @@ const Index = props => {
     exportLoading,
   } = props;
 
-  const type = pathname == '/ctManage/supervisionInspection/installaEquipmentReview' ? 1 : 2;
+  const type = pathname == '/ctManage/supervisionInspection/installEquipmentReview' ? 1 : 2;
   const [exportIndex, setExportIndex] = useState(-1);
 
   const [reviewersListBtn, setReviewersBtn] = useState(false);
@@ -452,8 +452,8 @@ const Index = props => {
   };
 
   return (
-    <div className={styles.installaEquipmentSty}>
-      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
+    <div className={styles.installEquipmentSty}>
+      <BreadcrumbWrapper hideBreadcrumb={isModal}>
         <Card title={searchComponents()} bordered={!props.hideBreadcrumb}>
           <SdlTable
             style={{ marginTop: 6 }}

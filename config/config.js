@@ -3345,21 +3345,21 @@ export default {
                   routes: [
                     {
                       path: '/ctManage/supervisionInspection',
-                      redirect: '/ctManage/supervisionInspection/installaEquipment',
+                      redirect: '/ctManage/supervisionInspection/installEquipment',
                     },
                     {
                       // 设备安装审核
-                      name: 'InstallaEquipmentReview',
-                      path: '/ctManage/supervisionInspection/installaEquipmentReview',
+                      name: 'InstallEquipmentReview',
+                      path: '/ctManage/supervisionInspection/installEquipmentReview',
                       component:
-                        './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
+                        './ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment',
                     },
                     {
                       // 设备安装规范性
-                      name: 'InstallaEquipmentSpecific',
-                      path: '/ctManage/supervisionInspection/installaEquipmentSpecific',
+                      name: 'InstallEquipmentSpecific',
+                      path: '/ctManage/supervisionInspection/installEquipmentSpecific',
                       component:
-                        './ctDebuggAfterSaleServiceManage/supervisionInspection/installaEquipment',
+                        './ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment',
                     },
                   ],
                 },

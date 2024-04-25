@@ -700,7 +700,6 @@ class Index extends PureComponent {
     if (infoWindowData.photo) {
       imgName = `${uploadPrefix}/${infoWindowData.photo[0]}`;
     }
-    console.log(currentClickObj)
 
     // 获取筛选状态图标颜色
     const getColor = status => {
@@ -774,7 +773,7 @@ class Index extends PureComponent {
                     </span>
                   )}
               </p>
-             {currentClickObj.alarmStatus==1 || currentClickObj.alarmStatus==2 &&
+             {(currentClickObj.alarmStatus==1 || currentClickObj.alarmStatus==2) &&
               <p>
                 <div><div style={{display:'inline-block',verticalAlign:'top'}}> 详细描述：</div> <div style={{display:'inline-block',width:'calc(100% - 75px)',overflowWrap: 'break-word'}}>{currentClickObj.alarmMsg}</div></div>
               </p>

@@ -19,9 +19,9 @@ import { API } from '@config/API';
 import cuid from 'cuid';
 import styles from "../style.less"
 const { Step } = Steps;
-const namespace = 'installaEquipment'
+const namespace = 'installEquipment'
 
-const dvaPropsData = ({ loading, installaEquipment, global, }) => ({
+const dvaPropsData = ({ loading, installEquipment, global, }) => ({
   auditPhotoLoading: loading.effects[`${namespace}/GetAuditPhoto`],
   addAuditInfoLoading: loading.effects[`${namespace}/AddAuditInfo`],
   configInfo: global.configInfo,
@@ -225,7 +225,7 @@ const Index = (props) => {
   />
   }
   return (
-    <div className={styles.installaEquipmentSty}>
+    <div className={styles.installEquipmentSty}>
           <Modal
             visible={visible}
             title={title}

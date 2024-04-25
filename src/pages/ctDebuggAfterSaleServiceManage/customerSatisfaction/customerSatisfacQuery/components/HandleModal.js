@@ -19,7 +19,7 @@ import DispatchDetailsBtn from '../../../components/dispatchDetailsBtn';
 const { Step } = Steps;
 const namespace = 'customerSatisfacQuery'
 
-const dvaPropsData = ({ loading, installaEquipment, global, }) => ({
+const dvaPropsData = ({ loading, installEquipment, global, }) => ({
   submitProcessedLoading: loading.effects[`${namespace}/SubmitProcessed`],
   configInfo: global.configInfo,
 })

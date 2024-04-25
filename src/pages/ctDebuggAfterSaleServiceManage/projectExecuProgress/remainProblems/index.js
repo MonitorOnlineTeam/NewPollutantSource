@@ -41,7 +41,6 @@ const dvaPropsData = ({ loading, remainProblems, global, }) => ({
   exportLoading: remainProblems.exportLoading,
   exportLoading2: remainProblems.exportLoading2,
   configInfo: global.configInfo,
-  updateImplementationLoading: loading.effects[`wordSupervision/UpdateImplementationStatus`],
 })
 
 const Index = (props) => {
@@ -57,7 +56,7 @@ const Index = (props) => {
 
 
 
-  const { queryPar, tableDatas, tableTotal, tableLoading, queryPar2, tableDatas2, tableTotal2, tableLoading2, exportLoading, exportLoading2, updateImplementationLoading } = props;
+  const { queryPar, tableDatas, tableTotal, tableLoading, queryPar2, tableDatas2, tableTotal2, tableLoading2, exportLoading, exportLoading2,hideBreadcrumb } = props;
 
   const [selectIndex, setSelectIndex] = useState(-1);
 
@@ -211,10 +210,17 @@ const Index = (props) => {
       }
     },
   ];
+  const [updateImplementationLoading,setUpdateImplementationLoading] = useState(false)
   const solveProblem = (values,record) => {
+    setUpdateImplementationLoading(true)
     props.dispatch({
       type: `wordSupervision/UpdateImplementationStatus`,
       payload: {id:record.id,...values,  problemTime:values.problemTime&&moment(values.problemTime).format('YYYY-MM-DD HH:mm:ss')},
+      callback:()=>{
+        setUpdateImplementationLoading(false)
+        setPopVisible(false)
+        onFinish(2, pageIndex, pageSize);
+      }
     });
   }
 
@@ -366,9 +372,6 @@ const Index = (props) => {
             <Button style={{ margin: '0 8px' }} loading={tableLoading2} onClick={() => { formAll.resetFields(); resetData() }}  >
               重置
          </Button>
-            {remainProblemsBtn && <Button style={{ marginRight: 8 }} type="primary" onClick={viewAllData}>
-              全部遗留问题
-            </Button>}
             <Button icon={<ExportOutlined />} loading={exportLoading2} style={{ marginRight: 8 }} onClick={() => { exports(type) }}>
               导出
          </Button>
@@ -376,11 +379,11 @@ const Index = (props) => {
         </Col>
       </Row>
     </Form>
-  }
+  } 
   return (
     <div className={`${styles.remainProblemsSty} queryCriterTitleSty`}>
-      <BreadcrumbWrapper>
-        <Card title={searchComponents(2)}>
+      <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
+        <Card title={searchComponents(2)} style={hideBreadcrumb&&{paddingTop:8}}>
           <SdlTable
             resizable
             loading={tableLoading}

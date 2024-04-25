@@ -1,15 +1,15 @@
 import Model from '@/utils/model';
-import * as services from '../services/installaEquipment';
+import * as services from '../services/installEquipment';
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'installaEquipment',
+  namespace: 'installEquipment',
   state: {
     installEquipmentTableDatas:[],
     installEquipmentTableTotal:0,
-    installaEquipmentQueryPar: {},
+    installEquipmentQueryPar: {},
     installPhotoData:[],
   },
   effects: {
@@ -20,7 +20,7 @@ export default Model.extend({
         yield update({
           installEquipmentTableDatas:result.Datas,
           installEquipmentTableTotal:result.Total,
-          installaEquipmentQueryPar: payload,
+          installEquipmentQueryPar: payload,
         })
       } else {
         message.error(result.Message)
