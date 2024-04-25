@@ -699,16 +699,27 @@ export const API = {
     GetOperationSetting: before + '/ConfigureApi/GetOperationSetting', //获取运维基础配置信息
     UpdOperationSetting: before + '/ConfigureApi/UpdOperationSetting', //设置运维基础配置
   },
-
-
+/*********** 通用 ***********/
+  //资源一览
+  ResourceOverviewApi: {
+    GetResourceOverviewLeft: before + '/CTStatisticsApi/GetResourceOverviewLeft', //左侧数据
+    GetResourceOverviewRight: before + '/CTStatisticsApi/GetResourceOverviewRight', //右侧数据
+    GetResourceOverviewMap: before + '/CTStatisticsApi/GetResourceOverviewMap', //地图数据
+  },
   /*********** 成套 ***********/
-
-  //通用 Api
+  //报告及视图
+  ReportsViewsApi: {
+    /*一次性解决率*/
+    GetDisposableRateList: before + '/CTStatisticsApi/GetDisposableRateList', //获取一次解决率
+    ExportDisposableRateList: before + '/CTStatisticsApi/ExportDisposableRateList', //一次解决率 导出
+    GetDisposableServiceInfo: before + '/CTStatisticsApi/GetDisposableServiceInfo', //获取一次解决率基础数据
+    ExportDisposableServiceInfo: before + '/CTStatisticsApi/ExportDisposableServiceInfo', //一次解决率基础数据 导出
+  },
+  //公共 Api
   CtCommonApi: {
     GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList', //站点信息
     GetTestPollutantList: before + '/DebuggingBase/GetTestPollutantList', //站点信息
     GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList',  // 获取大区
-    GetCodList: before + '/CTProjectExecutionApi/GetCodList',  //获取岗位类别、行业属性、问题类别
   },
 
   //报告及视图
@@ -744,7 +755,10 @@ export const API = {
     GetSignInAndOffsiteSignList: before + '/CTStatisticsApi/GetSignInAndOffsiteSignList',//获取现场签到与非现场签到详细
     ExportSignInAndOffsiteSign: before + '/CTStatisticsApi/ExportSignInAndOffsiteSign',//现场签到与非现场签到详细 导出
     GetOffWorkType: before + '/CTStatisticsApi/GetOffWorkType',//非现场签到工作类型
-
+    /*遗留问题*/
+    GetQuestionList: before + '/CTStatisticsApi/GetQuestionList',//获取遗留问题
+    ExportQuestionList: before + '/CTStatisticsApi/ExportQuestionList',//遗留问题 导出
+    
   },
 
   /*** 工作台 ***/
@@ -753,7 +767,7 @@ export const API = {
     // GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg',//获取工作台项目执行、合同到期等
     // DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg',//删除工作台合同到期等
     GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//合同到期
-    DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除工作台合同到期等
+    DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除工作台合同到期
     UpdateAllProjectPushStatus: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期
   },
 
@@ -907,11 +921,11 @@ export const API = {
     /*人员档案*/
     GetUserList: before + '/CTProjectExecutionApi/GetUserList',  //获取人员档案
     ExportUserList: before + '/CTProjectExecutionApi/ExportUserList',  //人员档案 导出
+    GetCodList: before + '/CTProjectExecutionApi/GetCodList',  //获取岗位类别、行业属性、问题类别
     /*大区档案*/
     GetProvinceList: before + '/CTProjectExecutionApi/GetProvinceList',  //获取大区档案
     ExportProvinceList: before + '/CTProjectExecutionApi/ExportProvinceList',  //大区档案 导出
     GetManagerSelect: before + '/CTProjectExecutionApi/GetManagerSelect',  //获取大区系统类型、档案执行大区、项目所在地、大区经理、省区经理信息
-
   },
     //技术专家系统 Api
     TechExpertSystemApi: {

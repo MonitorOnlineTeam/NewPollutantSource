@@ -525,8 +525,8 @@ export default Model.extend({
                 {unit}
               </>
             ),
-            dataIndex: item.PollutantCode,
-            key: item.PollutantCode,
+            dataIndex: `${item.PollutantCode}_flag`,
+            key:  `${item.PollutantCode}_flag`,
             align: 'center',
             // width,
             render: (value, record, index) => {

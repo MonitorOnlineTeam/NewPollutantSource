@@ -186,7 +186,7 @@ const Index = (props) => {
           ellipsis: true,
         },
         {
-          title: '签到图片',
+          title: '签到照片',
           dataIndex: 'signInFile',
           key: 'signInFile',
           align: 'center',

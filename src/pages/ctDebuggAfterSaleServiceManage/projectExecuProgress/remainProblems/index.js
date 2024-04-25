@@ -178,13 +178,14 @@ const Index = (props) => {
           <Tooltip title="编辑">
             <Popover visible={popVisible && selectIndex == index} placement='left' title={'编辑'} trigger="click"
               overlayStyle={{ width: 400 }}
+              overlayClassName={styles.popSty}
               content={
                 <Form
                   name="basic2"
                   form={form2}
                   onFinish={(values) => solveProblem(values, record)}
                 >
-                  <Form.Item label="解决人" name="solveUserName" rules={[{ required: true, message: '请输入解决人！' }]} >
+                  <Form.Item label="解决人" name="solveUserName" className='minWidth' rules={[{ required: true, message: '请输入解决人！' }]} >
                     <Input placeholder='请输入' allowClear />
                   </Form.Item>
                   <Form.Item label="解决时间" name="problemTime" rules={[{ required: true, message: '请选择解决时间！' }]} >
@@ -213,7 +214,7 @@ const Index = (props) => {
   const solveProblem = (values,record) => {
     props.dispatch({
       type: `wordSupervision/UpdateImplementationStatus`,
-      payload: {...record, ...values, problemTime:values.problemTime&&moment(values.problemTime).format('YYYY-MM-DD HH:mm:ss')},
+      payload: {id:record.id,...values,  problemTime:values.problemTime&&moment(values.problemTime).format('YYYY-MM-DD HH:mm:ss')},
     });
   }
 

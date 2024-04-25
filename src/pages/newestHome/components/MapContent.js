@@ -700,6 +700,7 @@ class Index extends PureComponent {
     if (infoWindowData.photo) {
       imgName = `${uploadPrefix}/${infoWindowData.photo[0]}`;
     }
+    console.log(currentClickObj)
 
     // 获取筛选状态图标颜色
     const getColor = status => {

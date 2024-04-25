@@ -70,7 +70,10 @@ const Index = (props) => {
   const [provinceList2, setProvincelist2] = useState([]);
   const [provinceAllList, setProvinceAlllist] = useState([]);
   const [popVisible, setPopVisible] = useState(false);
+  const [selectIndex, setSelectIndex] = useState(-1);
   const [popVisible2, setPopVisible2] = useState(false);
+  const [selectIndex2, setSelectIndex2] = useState(-1);
+
 
   
   const [confiAssistantCheckBtn, setConfiAssistantCheckBtn] = useState(false);
@@ -329,7 +332,7 @@ const Index = (props) => {
               <a onClick={()=>detail(record)}>详细</a>
              {(record.IsInvestigator&&record.InvestigationStatusName=='待调查') || (record.IsProcessedBy&&record.ProcessingStatusName=='待处理') ?    <Divider type="vertical" /> : ''}
              {record.IsInvestigator&&record.InvestigationStatusName=='待调查'&&<><a onClick={()=>investigate(record)}>调查</a><Divider type="vertical" />
-        <Popover visible={popVisible} placement='left' title={'终止调查'} trigger="click"
+        <Popover visible={popVisible && selectIndex==index} placement='left' title={'终止调查'} trigger="click"
           overlayStyle={{ width: 400 }}
           content={
             <Form
@@ -351,10 +354,10 @@ const Index = (props) => {
             </Form>
           }
           > 
-          <a onClick={()=>{setPopVisible(true);form2.resetFields();setPopVisible2(false)}}>终止调查</a>
+          <a onClick={()=>{setPopVisible(true);setSelectIndex(index); form2.resetFields();setPopVisible2(false)}}>终止调查</a>
         </Popover>
         <Divider type="vertical" />
-        <Popover visible={popVisible2} placement='left' title={'任务转发'} trigger="click"
+        <Popover visible={popVisible2 && selectIndex2==index} placement='left' title={'任务转发'} trigger="click"
           overlayStyle={{ width: 400 }}
           content={
             <Form
@@ -375,7 +378,7 @@ const Index = (props) => {
               </Row>
             </Form>
           }>
-            <a  onClick={()=>{setPopVisible2(true);form3.resetFields();setPopVisible(false) }}>转发</a>
+            <a  onClick={()=>{setPopVisible2(true);setSelectIndex2(index);form3.resetFields();setPopVisible(false) }}>转发</a>
         </Popover>
         </>}
         {record.IsProcessedBy&&record.ProcessingStatusName=='待处理'&&<><a onClick={()=>handle(record)}>处理</a><Divider type="vertical" /></>}
@@ -386,12 +389,12 @@ const Index = (props) => {
   ];
   const largeRegionChange = (value)=>{
     form.setFieldsValue({province:undefined})
-    const data = value? provinceAllList.filter(item=>item.ID == value ) : provinceAllList
+    const data = value? provinceAllList.filter(item=>item.ID == value ) : []
     setProvincelist(data)
   }
   const largeRegionChange2 = (value)=>{
     formAll.setFieldsValue({province:undefined})
-    const data = value? provinceAllList.filter(item=>item.ID == value ) : provinceAllList
+    const data = value? provinceAllList.filter(item=>item.ID == value ) : []
     setProvincelist2(data)
   }
   
@@ -662,7 +665,7 @@ const Index = (props) => {
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={columns(1)}
+            columns={columns(2)}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
@@ -704,7 +707,7 @@ const Index = (props) => {
             loading={tableLoading2}
             bordered
             dataSource={tableDatas2}
-            columns={columns(2)}
+            columns={columns(1)}
             pagination={{
               total: tableTotal2,
               pageSize: pageSize2,

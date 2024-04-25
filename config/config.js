@@ -3117,7 +3117,7 @@ export default {
                       name: 'emainProblems',
                       path: '/ctManage/projectExecuProgress/remainProblems',
                       component:
-                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/cTcheckAttendanceQuery',
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/remainProblems',
                     },
                     {
                       // 服务不及时
@@ -3367,7 +3367,7 @@ export default {
                 /**通用管理 */
                 {
                   path: '/ctManage/generalManager',
-                  name: 'GeneralManager',
+                  name: 'generalManager',
                   routes: [
                     {
                       path: '/ctManage/generalManager',

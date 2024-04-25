@@ -709,9 +709,11 @@ export default Model.extend({
         const data = result.Datas
         yield update({
           projectExecutionList: data?.ctList   || [],
-          contractList: data?.projectList  || [],
+          // contractList: data?.projectList  || [],
+          contractList: data  || [],
+
         });
-        callback && callback(data?.ctList?.length || 0, data?.projectList?.length || 0);
+        callback && callback(data?.ctList?.length || 0, data?.length || 0);
       } else {
         message.error(result.Message);
       }

@@ -200,7 +200,7 @@ const Index = (props) => {
           ellipsis: true,
         },
         {
-          title: '签到图片',
+          title: '签到照片',
           dataIndex: 'SFiles',
           key: 'SFiles',
           align: 'center',
@@ -264,7 +264,7 @@ const Index = (props) => {
           ellipsis: true,
         },
         {
-          title: '签退图片',
+          title: '签退照片',
           dataIndex: 'OFiles',
           key: 'OFiles',
           align: 'center',
