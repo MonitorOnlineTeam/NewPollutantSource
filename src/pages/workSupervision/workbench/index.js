@@ -774,17 +774,20 @@ const Workbench = props => {
                             ) :
                               <Empty style={{ marginTop: '30px' }} />}
                           </Spin>}
-                          {selectOperaVal == 2 && <Spin spinning={projectExecutionLoading  || delInstallPhotosLoading}>
+                          {selectOperaVal == 2 && <Spin spinning={!!projectExecutionLoading  || !!delInstallPhotosLoading}>
                             {projectExecutionList?.length ? projectExecutionList.map((item, index) =>
                               (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }}>
                                 <Col onClick={()=>{
                                    if(item.Type==2){ //遗留问题
                                     setRemainProblemsVisible(true)
-                                   }else if(item.Type==4 && item.Col1==1){ //安装照片审核
+                                   }else if(item.Type==4){ //安装照片审核
+                                      if(item.Col1 == 2){
                                       setInstallEquipmentVisible(true)
                                       const idArr = item.MsgID?.split(',')
-                                      setInstallEquipmentData({dispatchId:idArr?.[0], pointId:idArr?.[1],systemModelId:idArr?.[2],EquipmentAuditId:idArr?.[3]})          
-                                   }
+                                      //Col1代表systemModelId
+                                      setInstallEquipmentData({DispatchId:idArr?.[0], PointId:idArr?.[1],Col1:idArr?.[2],EquipmentAuditId:idArr?.[3]})          
+                                      }
+                                    }
                                   }} style={{ width:item.Type==2? 'calc(100% - 210px)': item.Col1==1? 'calc(100% - 180px)' : 'calc(100% - 140px)'}} className='textOverflow' title={item.Msg}>{item.Type==2? '（遗留问题）':item.Type==4? '（照片审核）' : ''} {item.Msg} </Col>
                                 <Col>{item.CreateTime}</Col>
                                 <Col>
@@ -829,10 +832,10 @@ const Workbench = props => {
                                    if(item.Type==6 ){
                                    if( item.Col1 == 2){ //客户满意度 调查
                                     setCustomSatisfactVisible(true)
-                                    setCustomSatisfactData({id:item.MsgID})
+                                    setCustomSatisfactData({id:item.MsgID,msgid:item.ID})
                                    }else if( item.Col1 == 3){//客户满意度 处理
                                     setCustomSatisfactVisible2(true)
-                                    setCustomSatisfactData2({id:item.MsgID})
+                                    setCustomSatisfactData2({id:item.MsgID,msgid:item.ID})
                                    }
                                   }
                                   }} style={{ width:item.Col1==1? 'calc(100% - 180px)' : 'calc(100% - 140px)' }} className='textOverflow' title={item.Msg}>{item.Type==6? '（满意度调查）'  : ''} {item.Msg} </Col>
@@ -1083,10 +1086,10 @@ const Workbench = props => {
         <RemainProblems hideBreadcrumb  match={{ path: '/operations/superviseRectification' }}/>
         </Modal>
 
-        <InstallEquipmentExamineModal  visible={installEquipmentVisible}  onCancel={() => { setInstallEquipmentVisible(false); }} data={installEquipmentData}/>
+        <InstallEquipmentExamineModal title='安装照片审核'  visible={installEquipmentVisible}  onCancel={() => { setInstallEquipmentVisible(false); }} data={installEquipmentData} onFinish={()=>{getCtWorkbenchMsg(2)}}/>
         
-        <CustomerSatisfaInvestigateModal  visible={customSatisfactVisible}  onCancel={() => { setCustomSatisfactVisible(false); }} completeQuery={()=>getCtWorkbenchMsg(3)} parData={customSatisfactData}/>
-        <CustomerSatisfacHandleModal  visible={customSatisfactVisible2}  onCancel={() => { setCustomSatisfactVisible2(false); }} completeQuery={()=>getCtWorkbenchMsg(3)} parData={customSatisfactData2}/>
+        <CustomerSatisfaInvestigateModal  visible={customSatisfactVisible}  onCancel={() => { setCustomSatisfactVisible(false); }}  parData={customSatisfactData} completeFinish={()=>{getCtWorkbenchMsg(3)}}/>
+        <CustomerSatisfacHandleModal  visible={customSatisfactVisible2}  onCancel={() => { setCustomSatisfactVisible2(false); }}  parData={customSatisfactData2} completeFinish={()=>{getCtWorkbenchMsg(3)}}/>
       
 
         

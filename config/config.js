@@ -3012,7 +3012,13 @@ export default {
                   routes: [
                     {
                       path: '/ctManage/reportsViews',
-                      redirect: '/ctManage/reportsViews/oneResolutRate',
+                      redirect: '/ctManage/reportsViews/ctServiceReport',
+                    },
+                    {
+                      path: '/ctManage/reportsViews/ctServiceReport', //成套服务报告
+                      name: 'ctServiceReport',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/reportsViews/ctServiceReport',
                     },
                     {
                       // 一次性解决率
@@ -3444,13 +3450,11 @@ export default {
               name: 'CtManage',
               routes: [
                 {
-                  path: '/currency/resourceOverview',
+                  path: '/currency/resourceOverview', //资源一览
                   name: 'ResourceOverview',
                   component:
                     './currencyManage/resourceOverview',
                 },
-
-
 
               ]
             },

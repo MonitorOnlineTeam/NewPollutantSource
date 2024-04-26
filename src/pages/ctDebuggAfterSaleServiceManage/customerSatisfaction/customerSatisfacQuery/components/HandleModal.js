@@ -97,6 +97,7 @@ const Index = (props) => {
           ...values,
           id: list?.ID,
           num: list?.Num,
+          msgid:parData?.msgid
         },
         callback:()=>{
           SetCurrent(current + 1)
@@ -106,7 +107,6 @@ const Index = (props) => {
         break;
       case 2: //完成
         props.onCancel()
-        props.completeQuery&&props.completeQuery()
         break;
       default:
         SetCurrent(0)

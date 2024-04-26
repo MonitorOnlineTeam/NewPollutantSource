@@ -32,7 +32,7 @@ const Index = (props) => {
 
 
 
-  const { visible, data, submitSurveyLoading, completeFinish,satisfactionSurveyLoading,completeQuery } = props;
+  const { visible, data, submitSurveyLoading, completeFinish,satisfactionSurveyLoading } = props;
 
   const [customerSuggesVerify, setCustomerSuggesVerify] = useState(false)
 
@@ -101,6 +101,7 @@ const Index = (props) => {
         break;
       case 1: //调查
         const values = await investigateForm.validateFields();
+        console.log(list)
         props.dispatch({
           type: `${namespace}/SubmitSurvey`,
           payload: {
@@ -110,11 +111,11 @@ const Index = (props) => {
             num: list?.Num,
             serviceAreaCode: list?.ServiceAreaCode,
             investigatorName:list?.investigatorName,
+            msgid:parData?.msgid
           },
           callback:()=>{
             SetCurrent(current + 1)
             completeFinish&&completeFinish()
-            completeQuery&&props.completeQuery()
           }
         });  
         break;

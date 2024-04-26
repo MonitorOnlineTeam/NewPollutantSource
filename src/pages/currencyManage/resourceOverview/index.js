@@ -20,7 +20,6 @@ import LeftContent from './components/LeftContent'
 import RightContent from './components/RightContent'
 import MapContent from './components/MapContent'
 import styles from "./style.less"
-import { Item } from 'gg-editor';
 
 const { Option } = Select;
 

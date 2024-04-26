@@ -40,6 +40,8 @@ import config from '@/config';
 import styles from './index.less';
 import AutoFormAddModal from './AutoFormAddModal';
 import AutoFormEditModal from './AutoFormEditModal';
+import AutoFormViewModal from './AutoFormViewModal';
+
 import SdlTable from '@/components/SdlTable';
 import defaultSettings from '../../../config/defaultSettings';
 import moment from 'moment';
@@ -66,6 +68,8 @@ class AutoFormTable extends PureComponent {
       delPostData: {},
       otherParams: '',
       editKeysParams: {},
+      handleViewVisible:false,
+      viewKeysParams: {},
     };
     this._SELF_ = { btnEl: [], configId: props.configId, moreBtns: [] };
 
@@ -126,7 +130,7 @@ class AutoFormTable extends PureComponent {
     //调试检测/污染源管理监测点  没有条件不让请求,防止请求多次   资产管理/设备台账/设备资料管理 不用请求
     if ((isSearchParams && !this.props.searchParams) || noLoadDataSource) {
       return;
-    }
+    } 
 
     // console.log(this.props.configId,this.props.tableInfo,'-----',this.props.noLoad)
     // switch (this.props.configId) {
@@ -140,7 +144,6 @@ class AutoFormTable extends PureComponent {
     //     if (!this.props.tableInfo['AEnterpriseTest']) { return }
     //     break;
     // }
-    console.log( (params&&Object.keys(params).length !== 0? params : null) || (this.state.otherParams&&Object.keys(this.state.otherParams).length !== 0 ? this.state.otherParams : '') || (this.props.otherParams&&Object.keys(this.props.otherParams).length !== 0 ? this.props.otherParams : ''))
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',
       payload: {
@@ -315,11 +318,32 @@ class AutoFormTable extends PureComponent {
     // dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormEdit/${JSON.stringify(postData)}/${uid}`))
   };
 
+  onHandleView = (record, returnKey, postData,parentCode,configId) =>{ //操作 详情 
+    if(this.props.onView){
+      this.props.onView(record, returnKey)
+    }else{
+      if (this.props.handleMode === 'modal') {
+        this.setState({
+          handleViewVisible: true,
+          viewKeysParams: postData,
+        });
+      } else {
+        dispatch(
+          routerRedux.push(
+            `/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(
+              postData,
+            )}`,
+          ),
+        );
+      }
+    }
+  }
   // 关闭操作弹窗
   onHandleCancel = () => {
     this.setState({
       handleAddVisible: false,
       handleEditVisible: false,
+      handleViewVisible:false,
     });
   };
 
@@ -518,7 +542,7 @@ class AutoFormTable extends PureComponent {
   }
 
   render() {
-    const { loading, selectedRowKeys, handleAddVisible, handleEditVisible } = this.state;
+    const { loading, selectedRowKeys, handleAddVisible, handleEditVisible,handleViewVisible } = this.state;
     const {
       tableInfo,
       searchForm,
@@ -691,15 +715,7 @@ class AutoFormTable extends PureComponent {
                                   postData[item] = record[item];
                                 }
                               });
-                              this.props.onView
-                                ? this.props.onView(record, returnKey)
-                                : dispatch(
-                                    routerRedux.push(
-                                      `/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(
-                                        postData,
-                                      )}`,
-                                    ),
-                                  );
+                              this.onHandleView(record, returnKey, postData,parentCode,configId);
                             }}
                           >
                             <DetailIcon />
@@ -951,6 +967,13 @@ class AutoFormTable extends PureComponent {
           keysParams={this.state.editKeysParams}
           onCancel={this.onHandleCancel}
           successCallback={this.onHandleCancel}
+        />
+        <AutoFormViewModal
+          configId={configId}
+          visible={handleViewVisible}
+          width={modalWidth || '100%'}
+          keysParams={this.state.viewKeysParams}
+          onCancel={this.onHandleCancel}
         />
       </Fragment>
     );

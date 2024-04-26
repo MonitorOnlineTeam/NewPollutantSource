@@ -706,6 +706,8 @@ export const API = {
   /*********** 成套 ***********/
   //报告及视图
   ReportsViewsApi: {
+     /*成套服务报告*/
+    ExportDebugReports: before + '/CTStatisticsApi/ExportDebugReports', //成套服务报告 导出
     /*一次性解决率*/
     GetDisposableRateList: before + '/CTStatisticsApi/GetDisposableRateList', //获取一次解决率
     ExportDisposableRateList: before + '/CTStatisticsApi/ExportDisposableRateList', //一次解决率 导出
@@ -718,15 +720,7 @@ export const API = {
     GetTestPollutantList: before + '/DebuggingBase/GetTestPollutantList', //站点信息
     GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList',  // 获取大区
   },
-
-  //报告及视图
-  ReportsViewsApi: {
-    /*一次性解决率*/
-    GetDisposableRateList: before + '/CTStatisticsApi/GetDisposableRateList', //获取一次解决率
-    ExportDisposableRateList: before + '/CTStatisticsApi/ExportDisposableRateList', //一次解决率 导出
-    GetDisposableServiceInfo: before + '/CTStatisticsApi/GetDisposableServiceInfo', //获取一次解决率基础数据
-    ExportDisposableServiceInfo: before + '/CTStatisticsApi/ExportDisposableServiceInfo', //一次解决率基础数据 导出
-  },
+  
   //项目执行进度 Api
   CtProjectExecuProgressApi: {
     /*** 项目执行 ***/

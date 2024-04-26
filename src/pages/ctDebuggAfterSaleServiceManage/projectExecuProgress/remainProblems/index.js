@@ -131,8 +131,8 @@ const Index = (props) => {
       key: 'problemStatusName',
       align: 'center',
       ellipsis: true,
-      render: (text) => {
-       return text == '未解决'? <span className='red'>{text}</span> : text
+      render: (text,record) => {
+       return record.problemStatus == 1 ? <span className='red'>{text}</span> : text
       }
     },
     {
@@ -173,7 +173,7 @@ const Index = (props) => {
       width: 60,
       ellipsis: true,
       render: (text, record,index) => {
-        return (
+        return record.problemStatus == 1 && (
           <Tooltip title="编辑">
             <Popover visible={popVisible && selectIndex == index} placement='left' title={'编辑'} trigger="click"
               overlayStyle={{ width: 400 }}
@@ -202,7 +202,7 @@ const Index = (props) => {
                 </Form>
               }
             >
-              <a onClick={() => { setPopVisible(true);setSelectIndex(index);form2.setFieldsValue({solveUserName:record.solveUserName,problemTime:record.problemTime}); }}><EditIcon /></a>
+              <a onClick={() => { setPopVisible(true);setSelectIndex(index);form2.setFieldsValue({solveUserName:record.solveUserName,problemTime:record.problemTime?moment(record.problemTime) : undefined }); }}><EditIcon /></a>
             </Popover>
           </Tooltip>
         );

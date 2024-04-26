@@ -203,12 +203,12 @@ const Index = (props) => {
         },
         callback:()=>{
           SetCurrent(current + 1)
+          props.onFinish&&props.onFinish()
         }
       });  
         break;
       case 2: //完成
         props.onCancel()
-        props.onFinish()
         break;
       default:
         SetCurrent(0)

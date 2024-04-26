@@ -448,7 +448,7 @@ const Index = props => {
 
   const examinePhotos = row => {
     setExamineVisible(true);
-    setExamineTitle(`安装审核照片（${row.EntName} - ${row.PointName} -${row.SystemModelName} ）`);
+    setExamineTitle(`安装审核照片（${row.EntName} - ${row.PointName} - ${row.SystemModelName} ）`);
     setExamineData(row);
   };
 
