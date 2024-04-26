@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:41:16
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-02 11:28:43
+ * @Last Modified time: 2024-04-26 11:23:16
  * @Description:  服务报告抽查 - 抽查页面
  */
 import React, { useState, useEffect } from 'react';
@@ -64,11 +64,12 @@ const SpotCheckPage = props => {
   // 获取表格数据
   const getTableDataSource = (_pageIndex, _pageSize) => {
     const values = form.getFieldsValue();
+    let time = values.time;
     let body = {
       ...values,
       time: undefined,
-      // outBeginTime: values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      // outEndTime: values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      outBeginTime: time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      outEndTime: time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
     };
     dispatch({
       type: 'reportSpotCheck/GetServiceReportList',
@@ -120,8 +121,10 @@ const SpotCheckPage = props => {
 
   // 再次抽查
   const onSpotCheckAgain = () => {
-    getTableDataSource(1, 20);
+    // form.resetFields();
+    form1.resetFields();
     setStepCurrent(0);
+    getTableDataSource(1, 20);
     // 重新加载数据列表
     reloadPageData();
   };
@@ -250,7 +253,6 @@ const SpotCheckPage = props => {
 
   // 查看图片
   const ViewUploadComponents = ({ fileList }) => {
-    console.log('fileList', fileList);
     return (
       <>
         <Upload
@@ -273,7 +275,7 @@ const SpotCheckPage = props => {
   // 第一步内容
   const getStep1Content = () => {
     return (
-      <div>
+      <div style={{ display: stepCurrent === 0 ? 'block' : 'none' }}>
         <Form
           id="searchForm"
           form={form}
@@ -342,7 +344,7 @@ const SpotCheckPage = props => {
   // 第二步内容
   const getStep2Content = () => {
     return (
-      <div style={{ marginTop: 20 }}>
+      <div style={{ marginTop: 20, display: stepCurrent === 1 ? 'block' : 'none' }}>
         {/* <TitleComponents text="基础信息-发起人填写" /> */}
         {serviceReportData.map(item => {
           let serviceData = item.ServiceList[0];
@@ -388,7 +390,7 @@ const SpotCheckPage = props => {
   // 第三步内容
   const getStep3Content = () => {
     return (
-      <>
+      <div style={{ display: stepCurrent === 2 ? 'block' : 'none' }}>
         <Form
           id="searchForm"
           form={form1}
@@ -460,22 +462,24 @@ const SpotCheckPage = props => {
             </Button>
           </Space>
         </Row>
-      </>
+      </div>
     );
   };
 
   // 第四步内容
   const getStep4Content = () => {
     return (
-      <Result
-        status="success"
-        title="操作完成!"
-        extra={[
-          <Button type="primary" onClick={() => onSpotCheckAgain()}>
-            再次抽查
-          </Button>,
-        ]}
-      />
+      <div style={{ display: stepCurrent === 3 ? 'block' : 'none' }}>
+        <Result
+          status="success"
+          title="操作完成!"
+          extra={[
+            <Button type="primary" onClick={() => onSpotCheckAgain()}>
+              再次抽查
+            </Button>,
+          ]}
+        />
+      </div>
     );
   };
 
@@ -497,16 +501,25 @@ const SpotCheckPage = props => {
   };
 
   const renderStepContent = () => {
-    switch (stepCurrent) {
-      case 0:
-        return getStep1Content();
-      case 1:
-        return getStep2Content();
-      case 2:
-        return getStep3Content();
-      case 3:
-        return getStep4Content();
-    }
+    // switch (stepCurrent) {
+    //   case 0:
+    //     return getStep1Content();
+    //   case 1:
+    //     return getStep2Content();
+    //   case 2:
+    //     return getStep3Content();
+    //   case 3:
+    //     return getStep4Content();
+    // }
+
+    return (
+      <>
+        {getStep1Content()}
+        {getStep2Content()}
+        {getStep3Content()}
+        {getStep4Content()}
+      </>
+    );
   };
 
   return (
@@ -515,9 +528,9 @@ const SpotCheckPage = props => {
       wrapClassName="spreadOverModal"
       visible={isModalOpen}
       destroyOnClose
-      footer={[]}
+      footer={false}
       onCancel={() => {
-        setStepCurrent(0)
+        setStepCurrent(0);
         onCancel();
       }}
     >

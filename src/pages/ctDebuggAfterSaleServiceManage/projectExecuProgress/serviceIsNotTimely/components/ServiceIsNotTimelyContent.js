@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-21 13:47:44
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-16 14:19:56
+ * @Last Modified time: 2024-04-26 11:29:32
  * @Description:  服务不及时页面
  */
 
@@ -326,7 +326,7 @@ const ServiceIsNotTimely = props => {
             {// 只有查看全部时显示
             isAll && (
               <Col span={8}>
-                <Form.Item name="registerUserID" label="登记人">
+                <Form.Item name="RegisterUserName" label="登记人">
                   <Input placeholder="请输入" allowClear />
                 </Form.Item>
               </Col>

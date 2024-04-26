@@ -1,0 +1,626 @@
+@font-face {
+  font-family: 'YouSheBiaoTiHei';
+  src: url('/iconFont/youshebiaotihei.ttf') format('truetype'); /* 根据你的字体文件格式调整format */
+}
+
+.CTScreenWrapper {
+  height: 100vh;
+  width: 100vw;
+  min-width: 1500px;
+  overflow: auto;
+  color: #fff;
+  // overflow-y: none;
+  background: url(/ctHomeDataScreen/bg.png) no-repeat;
+  // background-color: #030a22;
+  background-size: cover;
+
+  p {
+    margin-bottom: 0;
+  }
+
+  /*滚动条轨道颜色*/
+  @scrollbar-track-color: #021e39;
+  /*滚动条颜色*/
+  @scrollbar-thumb-color: #305090;
+  /*滚动条大小*/
+  @scrollbar-width: 9px;
+
+  ::-webkit-scrollbar-track-piece {
+    -webkit-border-radius: 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: @scrollbar-width;
+    height: 9px;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: @scrollbar-track-color;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: @scrollbar-thumb-color;
+    -webkit-border-radius: 4px;
+    outline-offset: -2px;
+    border: 2px solid @scrollbar-thumb-color;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    height: 50px;
+    background-color: @scrollbar-thumb-color;
+    -webkit-border-radius: 4px;
+  }
+
+  .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  :global {
+    .ant-spin-nested-loading,
+    .ant-spin-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  header {
+    height: 60px;
+    text-align: center;
+    background: url(/ctHomeDataScreen/top.png) no-repeat;
+    background-size: 100% 100%;
+
+    font-size: 26px;
+    font-weight: bold;
+    color: #ffffff;
+    line-height: 50px;
+    display: flex;
+    justify-content: center;
+
+    .entName {
+      width: 28%;
+      font-size: 24px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  main {
+    padding: 10px;
+    height: calc(100vh - 80px);
+
+    .contentWrapper {
+      height: calc(100vh - 100px);
+    }
+
+    // & > div {
+    //   height: 100%;
+    // }
+
+    .boxWrapper {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .headerWrapper {
+        margin-top: 4px;
+        padding-left: 32px;
+        height: 37px;
+        background: url(/currencyResOver/btbk.png);
+        background-size: 100% 100%;
+        font-size: 16px;
+
+        .title {
+          color: #fff;
+          font-weight: 500;
+        }
+
+        .extra {
+          position: absolute;
+          right: 26px;
+          top: 8px;
+          :global {
+            .ant-radio-button-wrapper {
+              background: #021235;
+              color: #70a7ff;
+              border-color: #1a65e1;
+              font-weight: bold;
+              border-radius: 0;
+              height: 26px;
+              line-height: 24px;
+              padding: 0 10px;
+            }
+            .ant-radio-button-wrapper-checked {
+              background-color: #1d70f5;
+              font-weight: bold;
+              color: #fff;
+            }
+            .ant-radio-button-wrapper:not(:first-child)::before {
+              background: #1a65e1;
+            }
+          }
+        }
+      }
+
+      .boxContent {
+        padding: 0 16px;
+        flex: 1;
+        background-color: #051031;
+      }
+    }
+
+    .echartsTitle {
+      text-align: center;
+      margin-top: -18px;
+      font-weight: bold;
+      // font-size: 15px;
+    }
+
+    // 设备信息总览
+    .DeviceInfoCountWrapper {
+      height: 100%;
+      p {
+        width: 100px;
+        text-align: center;
+      }
+      .text {
+        color: #d1e4ff;
+        background: url(/ctHomeDataScreen/text_bg.png) no-repeat;
+        background-size: 100%;
+        background-position-y: 6px;
+        line-height: 26px;
+        font-weight: 500;
+      }
+
+      .number {
+        font-family: 'YouSheBiaoTiHei';
+        font-size: 20px;
+      }
+    }
+
+    // 项目执行情况
+    .ProjectExecutionWrapper {
+      & > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .number {
+        background: url(/ctHomeDataScreen/circle.png);
+        text-align: center;
+        width: 120px;
+        height: 120px;
+        line-height: 120px;
+        font-size: 26px;
+      }
+      p {
+        text-align: center;
+        margin-top: 10px;
+        font-weight: 500;
+      }
+    }
+
+    // 服务报告及时合格率
+    .TimelyPassRateWrapper {
+    }
+
+    // 服务响应及时率
+    .ServiceResponseRateWrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: end;
+      position: relative;
+      .center {
+        flex-direction: column;
+      }
+      & > div {
+        background: url(/ctHomeDataScreen/ServiceResponseRate_2.png) no-repeat;
+        background-size: 100%;
+        text-align: center;
+        .count {
+          font-family: 'YouSheBiaoTiHei';
+          font-size: 24px;
+          margin-top: -6px;
+
+          span {
+            font-size: 16px;
+          }
+        }
+
+        .text {
+          font-size: 13px;
+          margin-top: -6px;
+        }
+      }
+    }
+
+    // 客户满意度
+    .CustomerSatisfactionWrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      .statisticsNum {
+        background: url(/ctHomeDataScreen/customer.png);
+        background-size: 100% 100%;
+        line-height: 46px;
+        padding: 0 20px;
+        margin-top: 10px;
+        .text {
+          margin-left: 40px;
+          font-weight: 500;
+        }
+
+        .number {
+          font-family: 'YouSheBiaoTiHei';
+          float: right;
+          background: linear-gradient(to top, #1ca1ff, #fff);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-size: 18px;
+        }
+      }
+      .echartsContent {
+        flex: 1;
+        align-items: center;
+      }
+    }
+
+    // 售后服务情况
+    .AfterSaleServiceWrapper {
+      height: 100%;
+      // display: flex;
+      .title {
+        background: url(/ctHomeDataScreen/title2_bg.png) no-repeat;
+        background-size: contain;
+        background-position: center;
+        width: 168px;
+        height: 24px;
+        margin: 10px 0;
+        padding-left: 25px;
+        font-size: 15px;
+      }
+
+      .listWrapper {
+        padding: 0 20px;
+        height: calc(100% - 24px - 20px);
+        overflow: hidden;
+        .header {
+          background: rgba(16, 41, 81, 0.6);;
+          color: #03aae2;
+          line-height: 38px;
+          text-align: center;
+          font-weight: 500;
+        }
+
+        .listContent {
+          height: calc(100% - 48px);
+          overflow: hidden;
+        }
+        .listItem {
+          line-height: 38px;
+          text-align: center;
+          font-weight: 500;
+          background-color: rgba(16, 41, 81, 0.3);
+          &:nth-child(2n) {
+            background-color: #010e33;
+          }
+        }
+      }
+    }
+
+    .leftWrapper {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 78px);
+      gap: 8;
+
+      & > div {
+        flex: 1;
+      }
+    }
+
+    .centerWrapper {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 78px);
+      min-height: 936px;
+      .mapWrapper {
+        flex: 2;
+        position: relative;
+        background: '#0b172f';
+
+        .gobackBox {
+          width: 60px;
+          line-height: 29px;
+          background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+          border: 1px solid #007bfd;
+          position: absolute;
+          right: 10px;
+          top: 10px;
+          color: #fff;
+          text-align: center;
+          font-weight: bold;
+          cursor: pointer;
+        }
+
+        .currentPosition {
+          color: rgb(75, 243, 249);
+          font-weight: bold;
+          position: absolute;
+          right: 10px;
+          top: 54px;
+          font-size: 15px;
+        }
+
+        .titlePopSty {
+          // white-space: break-word;
+          white-space: nowrap;
+          // color: rgb(56,168,212);
+          color: #fff;
+          background: rgb(23, 30, 70);
+          margin-top: 5px;
+          margin-left: calc(-50% - 0px);
+          margin-right: calc(50% - 32px);
+          text-align: center;
+          padding: 2px 4px;
+          border-radius: 2px;
+          border: 1px solid rgba(56, 168, 212, 0.4);
+        }
+
+        .pointTitlePopSty {
+          background: #000001;
+          margin-left: calc(-50% - 0px);
+          margin-right: calc(50% - 32px);
+          border-radius: 1px;
+          div {
+            margin-left: 0;
+            margin-right: 0;
+          }
+        }
+
+        .entPopWrapper {
+          background: url(/AbnormalIdentifyModel/point_bg.png) no-repeat;
+          background-size: 100% 100%;
+          width: 210px;
+          height: 70px;
+          margin-left: -94px;
+          margin-bottom: 10px;
+          font-weight: bold;
+          cursor: default;
+          & > div {
+            line-height: 32px;
+            color: #fff;
+            padding: 0 10px;
+          }
+
+          .pointName {
+            // text-align: left;
+            line-height: 14px;
+            color: #29d4f9;
+          }
+        }
+
+        .mapCountWrapper {
+          position: absolute;
+          bottom: 20px;
+          left: 20px;
+          z-index: 1;
+          display: flex;
+          flex-direction: row;
+          & > div {
+            background: url(/AbnormalIdentifyModel/mapCountBg.png) no-repeat;
+            background-size: contain;
+            width: 160px;
+            // height: 80px;
+            text-align: center;
+            font-weight: bold;
+
+            .title {
+              color: #9bdef0;
+              font-size: 16px;
+              line-height: 30px;
+              margin-top: 6px;
+              margin-bottom: 5px;
+            }
+            .count {
+              color: #00f1ff;
+              font-size: 20px;
+              line-height: 30px;
+              margin-bottom: 4px;
+            }
+          }
+        }
+
+        .mapSearchWrapper {
+          position: absolute;
+          top: 10px;
+          left: 20px;
+          .searchSelectWrapper {
+            .select {
+              width: 120px;
+              height: 28px;
+              line-height: 24px;
+              font-size: 15px;
+              font-weight: 500;
+              color: #e9e3e3;
+              background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+              border: 1px solid #007bfd;
+              padding: 1px 10px;
+              cursor: pointer;
+
+              .icon {
+                float: right;
+                line-height: 28px;
+                margin-right: -6px;
+                font-size: 10px;
+                color: #59deff;
+                font-weight: bold;
+              }
+            }
+
+            .listbox {
+              border: 1px solid #007bfd;
+              margin-top: 6px;
+              padding: 10px;
+              // background: rgba(25, 101, 185, 0.4);
+              background: rgb(2, 36, 80);
+              position: absolute;
+              max-width: 800px;
+              min-width: 400px;
+              :global {
+                .ant-space-align-center {
+                  flex-wrap: wrap;
+                }
+              }
+            }
+          }
+          :global {
+            .ant-radio-button-wrapper {
+              // background-color: transparent;
+              background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+              color: #fff;
+              border-color: #007bfd;
+              font-weight: bold;
+            }
+            .ant-radio-button-wrapper-checked {
+              background-color: #007bfd;
+              font-weight: bold;
+            }
+
+            .ant-picker {
+              background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+              border-color: #007bfd;
+              height: 30px;
+              line-height: 30px;
+            }
+
+            .ant-picker-input > input {
+              color: #fff;
+              font-weight: bold;
+            }
+
+            .ant-picker-suffix {
+              color: #cdc9c9;
+            }
+          }
+
+          .myRadio {
+            :global {
+              .ant-radio-button-wrapper {
+                height: 29px;
+                line-height: 28px;
+              }
+            }
+          }
+        }
+        // 搜索企业
+        .SelectWrapper {
+          // position: absolute;
+          // left: 20px;
+          // top: 48px;
+          :global {
+            .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+              border-color: #007bfd;
+              background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+              // background: rgba(10, 125, 254, 0.4);
+              color: #fff;
+              height: 30px;
+              line-height: 30px;
+              border-radius: 0;
+            }
+
+            .ant-select-selection-item {
+              font-weight: 500;
+            }
+
+            .ant-select-clear {
+              background-color: transparent;
+              color: #999;
+            }
+
+            .ant-select-arrow {
+              color: #59deff;
+              font-size: 10px;
+              right: 6px;
+            }
+          }
+        }
+      }
+    }
+
+    .rightWrapper {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 78px);
+      gap: 8;
+
+      & > div {
+        flex: 1;
+      }
+    }
+  }
+}
+
+.popupStyle {
+  // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+  background: rgba(10, 125, 254, 0.4);
+  font-weight: 500;
+  :global {
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+      background-color: #136fd1;
+    }
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+      background-color: #007bfd;
+    }
+
+    .ant-select-item {
+      color: #fff;
+    }
+  }
+}
+
+.datePickerPopup {
+  // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+  border: 1px solid rgb(0, 123, 253);
+  border-bottom: 0;
+
+  :global {
+    .ant-picker-panel-container {
+      background: rgb(9, 47, 97, 0.8);
+    }
+
+    .ant-picker-panel {
+      border-color: rgb(0, 123, 253);
+    }
+
+    .ant-picker-header {
+      color: #fff;
+      font-weight: bold;
+      border-color: rgb(0, 123, 253);
+    }
+
+    .ant-picker-header button {
+      color: #fff;
+    }
+
+    .ant-picker-header-view {
+      font-weight: bold;
+    }
+
+    .ant-picker-content td {
+      color: #fff;
+      font-weight: bold;
+    }
+    .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner,
+    .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end)
+      .ant-picker-cell-inner {
+      background: #136fd1;
+    }
+  }
+}

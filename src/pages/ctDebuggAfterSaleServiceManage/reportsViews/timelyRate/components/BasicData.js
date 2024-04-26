@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2024-04-17 17:13:10
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-04-18 10:18:52
+ * @Description:  服务响应及时率 - 基础数据
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
@@ -12,6 +19,7 @@ import {
   Row,
   Col,
   Select,
+  Empty,
 } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
@@ -22,11 +30,10 @@ import styles from '../index.less';
 
 const { Text, Link } = Typography;
 
-const dvaPropsData = ({ loading, instStdAndCompReso, common }) => ({
-  // compPageData: instStdAndCompReso.compPageData,
+const dvaPropsData = ({ loading, timelyRate, common }) => ({
   largeRegionList: common.largeRegionList,
   basicsLoading: loading.effects[`timelyRate/GetTimelyRateInfoList`],
-  exportLoading: loading.effects['instStdAndCompReso/ExportComplaintResolutionRate'],
+  exportLoading: loading.effects['timelyRate/ExportTimelyRateInfoList'],
 });
 
 const BasicData = props => {
@@ -43,7 +50,6 @@ const BasicData = props => {
     dispatch,
     basicsLoading,
     exportLoading,
-    // compPageData: { ColumnList, TableList },
     title,
     defaultTime,
     isModalOpen,
@@ -65,6 +71,7 @@ const BasicData = props => {
       payload: {
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
+        userID: props.userID,
         ...values,
         beginTime: values.time && values.time[0].format('YYYY-MM-DD 00:00:00'),
         endTime: values.time && values.time[1].format('YYYY-MM-DD 23:59:59'),
@@ -223,7 +230,6 @@ const BasicData = props => {
   };
 
   const TitleComponents = props => {
-    // position:'sticky',top: 0,zIndex:998,background: '#fff',
     return (
       <div
         style={{
@@ -241,7 +247,6 @@ const BasicData = props => {
       </div>
     );
   };
-  console.log('defaultTime', defaultTime)
   return (
     <Modal
       title={title}
@@ -427,17 +432,17 @@ const BasicData = props => {
           <Descriptions.Item label="登记时间">{detailsData.noStatisticsDate}</Descriptions.Item>
         </Descriptions>
         <TitleComponents text="系统判断结果" style={{ marginTop: 20 }} />
-        <Row>1. 区域接到服务时间距离客户要求时间大于24小时，未在客户要求时间之前到达。</Row>
-        <Row>
-          2.
-          区域接到服务时间距离客户要求时间小于等于24小时，区域接到服务派工时间距离到达现场时间大于等于36小时。
-        </Row>
-        <Row>3. 无服务需求时间，区域接到服务派工时间与到达现场时间大于等于72小时。</Row>
-        <Row>4. 区域接到服务派工时间后联系客户时间超过4小时。</Row>
-        <Row>5. 存在同一客户催促服务。</Row>
-        <Row>6. 因公司原因、不可抗力导致不及时。</Row>
-        <Row>7. 因客户原因导致不及时的，不参与统计。</Row>
-        <TitleComponents text="响应及时判断标准" style={{ marginTop: 20 }} />
+        {detailsData.result ? (
+          detailsData.result.map(item => {
+            return <Row>{item}</Row>;
+          })
+        ) : (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        )}
+        <TitleComponents
+          text={<Text type="danger">响应及时判断标准</Text>}
+          style={{ marginTop: 20 }}
+        />
         <div style={{ fontWeight: 'bold' }}>
           <Row>
             <Text type="danger">
