@@ -419,7 +419,7 @@ const Index = (props) => {
         <div style={{lineHeight:'34px',padding:'12px 0'}}>
         <div style={{ background: 'url(/currencyResOver/bjk.png)',backgroundSize:'100% 100%'}}>
              <span style={{paddingLeft:76,color:'#BAE3FF'}}>备机总数</span>
-             <span style={{fontSize:16,position:'absolute',right:32}}>{data?.StandbyMachineInfo?.StandbyMachineNum}个</span>
+             <span style={{fontSize:16,position:'absolute',right:32}}>{data?.StandbyMachineInfo?.StandbyMachineNum || 0}个</span>
           </div>
         </div>
       <Row align='middle' justify='space-between' style={{height:210}}>

@@ -31,3 +31,9 @@ export async function TransmitSurvey(params) {
     const result = await post(API.CustomerSatisfactionApi.SubmitRermination, params, null);
     return result;
 }
+
+//通过id获取客户满意度调查详情
+export async function GetSatisfactionSurveyInfo(params) {
+    const result = await post(API.CustomerSatisfactionApi.GetSatisfactionSurveyInfo, params, null);
+    return result;
+}

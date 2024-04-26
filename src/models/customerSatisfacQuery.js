@@ -44,6 +44,16 @@ export default Model.extend({
             }
             yield update(type==2? { tableLoading: false } : {  tableLoading2: false})
         },
+
+        *GetSatisfactionSurveyInfo({ payload, callback }, { call, put, update }) { //客户满意度调查详情信息
+            const result = yield call(services.GetSatisfactionSurveyInfo, payload);
+            if (result.IsSuccess) {
+                callback && callback(result.Datas)
+            } else {
+                message.error(result.Message)
+            }
+            
+        },
         *ExportSatisfactionSurvey({ callback, payload }, { call, put, update, select }) { //客户满意度调查信息 导出
             const type = payload.allData
             yield update(type==2? { exportLoading: true } : {  exportLoading2: true})

@@ -1,5 +1,5 @@
 /**
- * 功  能：设备安装审核 设备安装规范性
+ * 功  能：设备安装审核 设备安装规范性 查看照片
  * 创建人：jab
  * 创建时间：2024.03
  */
@@ -55,7 +55,7 @@ const Index = (props) => {
           return <Col span={6} style={{ padding: '0 18px 14px 0' }}>
             <div style={{ padding: '12px 0 12px 12px', borderRadius: 8, boxShadow: '0px 0px 16px 0px rgba(153,153,153,0.16)' }}>
               <Row align='middle'>
-                <Image preview={false} src={`/ctinstallEquipmentImg/installPhotos/${index}.png`} />
+                <Image preview={false} src={`/ctInstallEquipmentImg/installPhotos/${index}.png`} />
                 <div style={{ paddingLeft: 8, width: 'calc(100% - 58px)' }}>
                   <div style={{ fontSize: 16, fontWeight: 400 }} className='textOverflow'>{item.Name}</div>
                 <div className='textOverflow'>备注：{item.Remark ? 

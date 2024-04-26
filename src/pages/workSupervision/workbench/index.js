@@ -32,7 +32,9 @@ import SuperviseRectification from '@/pages/operations/superviseRectification'
 import SuperviseRectificationDetail from '@/pages/operations/superviseRectification/Detail';
 import superviseRectificaSty from '@/pages/operations/superviseRectification/style.less';
 import RemainProblems from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/remainProblems';
-import InstallEquipmentExamine from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment/components/ExamineModal';
+import InstallEquipmentExamineModal from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment/components/ExamineModal';
+import CustomerSatisfacHandleModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery/components/HandleModal';
+import CustomerSatisfaInvestigateModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery/components/InvestigateModal';
 
 import router from 'umi/router';
 import { PageLoading } from '@ant-design/pro-layout';
@@ -74,7 +76,7 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
   workAlarmTotal: wordSupervision.workAlarmTotal,
-  contractLoading: wordSupervision.contractLoading || loading.effects['wordSupervision/DelWorkbenchMsg'] || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false,
+  contractLoading: wordSupervision.contractLoading  || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false,
   contractList: wordSupervision.contractList,
   configInfo: global.configInfo,
   menuList: wordSupervision.menuList,
@@ -103,14 +105,18 @@ const Workbench = props => {
   const [projectExecution, setProjectExecution] = useState(false)//项目执行
   const [customSatisfact, setCustomSatisfact] = useState(false)//客户满意度
   const [customSatisfactVisible, setCustomSatisfactVisible] = useState(false)
-  
+  const [customSatisfactData, setCustomSatisfactData] = useState({})
+  const [customSatisfactVisible2, setCustomSatisfactVisible2] = useState(false)
+  const [customSatisfactData2, setCustomSatisfactData2] = useState({})
+
   const [remainProblemsVisible, setRemainProblemsVisible] = useState(false)
   const [remind, setRemind] = useState(false)
   const [remindDataAlarm, setRemindDataAlarm] = useState(false)
   const [remindExpire, setRemindExpire] = useState(false)
   const [popForm] = Form.useForm(); //项目执行-解决问题
   
-  const [installEquipmentVisible, SetInstallEquipmentVisible] = useState(false)
+  const [installEquipmentVisible, setInstallEquipmentVisible] = useState(false)
+  const [installEquipmentData, setInstallEquipmentData] = useState({})
 
   const type = props.location.pathname === '/ctManage/workbench' ? 1 : false
   useEffect(() => {
@@ -300,6 +306,8 @@ const Workbench = props => {
       console.log('Failed:', errorInfo);
     }
   }
+ 
+
 
   //获取菜单列表
   const GetUserMenuList = (callback) => {
@@ -604,13 +612,16 @@ const Workbench = props => {
     }
   },[supervisionVerificaList,projectExecutionList,customeSatisfactList,workAlarmPushList, contractList ])
 
+  const [delContractLoading,setDelContractLoading] = useState(false)
   const delContract = (item) => { //删除合同到期
+    setDelContractLoading(true)
     props.dispatch({
       type: 'wordSupervision/DelWorkbenchMsg',
       payload: {
         ID: item.ID,
       },
       callback: () => {
+        setDelContractLoading(false)
         getCtWorkbenchMsg(1)
       },
     });
@@ -626,6 +637,7 @@ const Workbench = props => {
       },
     });
   }
+  
   const [contractPageIndex, setContractPageIndex] = useState(1)
   const [contractPageSize, setContractPageSize] = useState(10)
   const contractPageChange = (pageIndex, pageSize) => {
@@ -633,6 +645,35 @@ const Workbench = props => {
     setContractPageSize(pageSize)
   }
 
+  const [delInstallPhotosLoading,setDelInstallPhotosLoading] = useState(false)
+  const delInstallPhotos = (item)=>{
+    setDelInstallPhotosLoading(true)
+    props.dispatch({
+      type: 'wordSupervision/DelWorkbenchMsg',
+      payload: {
+        ID: item.ID,
+      },
+      callback: () => {
+        setDelInstallPhotosLoading(false)
+        getCtWorkbenchMsg(2)
+      },
+    });
+  }
+  const [delCustomSatisfactLoading,setDelCustomSatisfactLoading] = useState(false)
+  const delCustomSatisfact = (item)=>{
+    setDelInstallPhotosLoading(true)
+    props.dispatch({
+      type: 'wordSupervision/DelWorkbenchMsg',
+      payload: {
+        ID: item.ID,
+      },
+      callback: () => {
+        setDelCustomSatisfactLoading(false)
+        getCtWorkbenchMsg(3)
+      },
+    });
+  }
+  
   const [menuVisible, setMenuVisible] = useState(false)
   const addMeun = () => { //添加快捷菜单
     setMenuVisible(true)
@@ -733,18 +774,22 @@ const Workbench = props => {
                             ) :
                               <Empty style={{ marginTop: '30px' }} />}
                           </Spin>}
-                          {selectOperaVal == 2 && <Spin spinning={projectExecutionLoading}>
+                          {selectOperaVal == 2 && <Spin spinning={projectExecutionLoading  || delInstallPhotosLoading}>
                             {projectExecutionList?.length ? projectExecutionList.map((item, index) =>
                               (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }}>
                                 <Col onClick={()=>{
                                    if(item.Type==2){ //遗留问题
                                     setRemainProblemsVisible(true)
-                                   }else if(item.Type==4){ //安装照片审核
-                                    SetInstallEquipmentVisible(true)
+                                   }else if(item.Type==4 && item.Col1==1){ //安装照片审核
+                                      setInstallEquipmentVisible(true)
+                                      const idArr = item.MsgID?.split(',')
+                                      setInstallEquipmentData({dispatchId:idArr?.[0], pointId:idArr?.[1],systemModelId:idArr?.[2],EquipmentAuditId:idArr?.[3]})          
                                    }
-                                  }} style={{ width: item.Type==2? 'calc(100% - 216px)' :  'calc(100% - 146px)'}} className='textOverflow' title={item.Msg}>{item.Type==2? '（遗留问题）':item.Type==4? '（照片审核）' : ''} {item.Msg}</Col>
+                                  }} style={{ width:item.Type==2? 'calc(100% - 210px)': item.Col1==1? 'calc(100% - 180px)' : 'calc(100% - 140px)'}} className='textOverflow' title={item.Msg}>{item.Type==2? '（遗留问题）':item.Type==4? '（照片审核）' : ''} {item.Msg} </Col>
+                                <Col>{item.CreateTime}</Col>
                                 <Col>
-                                  <Popover visible={index == popSelectIndex && popVisible} placement='leftTop' title={'解决问题'} trigger="click"
+                                {item.Type==2? 
+                                 <Popover visible={index == popSelectIndex && popVisible} placement='leftTop' title={'解决问题'} trigger="click"
                                     overlayStyle={{ width: 400 }}
                                     content={
                                       <Form
@@ -765,25 +810,38 @@ const Workbench = props => {
                                         </Row>
                                       </Form>
                                     }>
-                                    {item.Type==2&&<Tag color="#4090FF" onClick={() => { setSelectPopIndex(index); setPopVisible(true); }} style={{ cursor: 'pointer', marginLeft: 8 }} >解决问题</Tag>}
+                                    <Tag color="#4090FF" onClick={() => { setSelectPopIndex(index); setPopVisible(true); }} style={{ cursor: 'pointer', marginLeft: 8 }} >解决问题</Tag>
                                   </Popover>
+                                  :
+                                  <>{item.Col1==1&&<Popconfirm placement="left" title={'确定要删除这条安装照片信息吗？'} onConfirm={() => delInstallPhotos(item)} okText="是" cancelText="否">
+                                  <a>删除</a>
+                                </Popconfirm>}</>
+                                  }
                                 </Col>
-                                <Col>{item.CreateTime}</Col>
                               </Row>)
                             ) :
                               <Empty style={{ marginTop: '30px' }} />}
                           </Spin>}
-                          {selectOperaVal == 3 && <Spin spinning={customeSatisfactLoading}>
+                          {selectOperaVal == 3 && <Spin spinning={customeSatisfactLoading || delCustomSatisfactLoading}>
                             {customeSatisfactList?.length ? customeSatisfactList.map((item, index) =>
                               (<Row justify='space-between' style={{ paddingBottom: 18, cursor: 'pointer' }}>
                                 <Col onClick={()=>{
-                                   if(item.Type==6){ //客户满意度调查
+                                   if(item.Type==6 ){
+                                   if( item.Col1 == 2){ //客户满意度 调查
                                     setCustomSatisfactVisible(true)
+                                    setCustomSatisfactData({id:item.MsgID})
+                                   }else if( item.Col1 == 3){//客户满意度 处理
+                                    setCustomSatisfactVisible2(true)
+                                    setCustomSatisfactData2({id:item.MsgID})
                                    }
-                                  }} style={{ width: 'calc(100% - 146px)'}} className='textOverflow' title={item.Msg}>{item.Type==6? '（满意度调差）'  : ''} {item.Msg}</Col>
+                                  }
+                                  }} style={{ width:item.Col1==1? 'calc(100% - 180px)' : 'calc(100% - 140px)' }} className='textOverflow' title={item.Msg}>{item.Type==6? '（满意度调查）'  : ''} {item.Msg} </Col>
                                 <Col>
                                 </Col>
                                 <Col>{item.CreateTime}</Col>
+                                {item.Col1==1&&<Popconfirm placement="left" title={'确定要删除这条满意度调查信息吗？'} onConfirm={() => delCustomSatisfact(item)} okText="是" cancelText="否">
+                                  <a>删除</a>
+                                </Popconfirm>}
                               </Row>)
                             ) :
                               <Empty style={{ marginTop: '30px' }} />}
@@ -835,7 +893,7 @@ const Workbench = props => {
                             :
                             <Empty style={{ marginTop: '30px' }} />}
                         </Spin>}</>}
-                        {remindExpire && <> {selectMyVal == 11 && <Spin spinning={contractLoading}> {/*合同到期 */}
+                        {remindExpire && <> {selectMyVal == 11 && <Spin spinning={contractLoading || !!delContractLoading}> {/*合同到期 */}
                           {contractList?.length ? contractList.map(item =>
                             (<Row justify='space-between' style={{ paddingBottom: 12, transition: '0.5s all ease-in' }}>
                               <Col style={{ paddingTop: 4 }}><img src='/work_contract.png' /></Col>
@@ -1020,12 +1078,17 @@ const Workbench = props => {
           wrapClassName='spreadOverModal'
           onCancel={() => { setRemainProblemsVisible(false) }}
           destroyOnClose
-          bodyStyle={{padding:0,marginTop:-1}}
+          bodyStyle={{padding:'8px 0 0 0',}}
         >
         <RemainProblems hideBreadcrumb  match={{ path: '/operations/superviseRectification' }}/>
         </Modal>
 
-        <InstallEquipmentExamine  visible={installEquipmentVisible}  onCancel={() => { SetInstallEquipmentVisible(false); }}/>
+        <InstallEquipmentExamineModal  visible={installEquipmentVisible}  onCancel={() => { setInstallEquipmentVisible(false); }} data={installEquipmentData}/>
+        
+        <CustomerSatisfaInvestigateModal  visible={customSatisfactVisible}  onCancel={() => { setCustomSatisfactVisible(false); }} completeQuery={()=>getCtWorkbenchMsg(3)} parData={customSatisfactData}/>
+        <CustomerSatisfacHandleModal  visible={customSatisfactVisible2}  onCancel={() => { setCustomSatisfactVisible2(false); }} completeQuery={()=>getCtWorkbenchMsg(3)} parData={customSatisfactData2}/>
+      
+
         
       </BreadcrumbWrapper>
     </div>

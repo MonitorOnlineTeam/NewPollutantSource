@@ -90,6 +90,7 @@ const Index = props => {
     installPhotoData,
     addAuditInfoLoading,
     exportLoading,
+    hideBreadcrumb,
   } = props;
 
   const type = pathname == '/ctManage/supervisionInspection/installEquipmentReview' ? 1 : 2;
@@ -453,8 +454,8 @@ const Index = props => {
 
   return (
     <div className={styles.installEquipmentSty}>
-      <BreadcrumbWrapper hideBreadcrumb={isModal}>
-        <Card title={searchComponents()} bordered={!props.hideBreadcrumb}>
+      <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
+        <Card title={searchComponents()} bordered={!hideBreadcrumb}>
           <SdlTable
             style={{ marginTop: 6 }}
             resizable

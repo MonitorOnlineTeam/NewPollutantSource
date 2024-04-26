@@ -1,5 +1,5 @@
 /**
- * 功  能：客户满意度调查  审核组件
+ * 功  能：客户满意度调查  处理组件
  * 创建人：jab
  * 创建时间：2024.04
  */
@@ -22,6 +22,7 @@ const namespace = 'customerSatisfacQuery'
 const dvaPropsData = ({ loading, installEquipment, global, }) => ({
   submitProcessedLoading: loading.effects[`${namespace}/SubmitProcessed`],
   configInfo: global.configInfo,
+  satisfactionSurveyLoading: loading.effects[`${namespace}/GetSatisfactionSurveyInfo`],
 })
 
 const Index = (props) => {
@@ -36,11 +37,26 @@ const Index = (props) => {
  
 
 
+  const {parData} = props;
+ 
+  const [detailData,setDetailData] = useState({});
+
+
 
   useEffect(() => {
     if(visible){
     SetCurrent(0)
     handleModalForm.resetFields()
+    if(parData){
+      props.dispatch({
+        type: `${namespace}/GetSatisfactionSurveyInfo`,
+        payload: {...parData},
+        callback:(res)=>{
+          setDetailData(res?.[0])
+        }
+      
+      });
+    }
   }
   }, [visible]);
 
@@ -62,6 +78,7 @@ const Index = (props) => {
       </div>
   }
 
+  const list = parData? detailData : data;
 
 
   const steps = ['调查内容', '处理', '完成']
@@ -78,8 +95,8 @@ const Index = (props) => {
         type: `${namespace}/SubmitProcessed`,
         payload: {
           ...values,
-          id: data?.ID,
-          num: data?.Num,
+          id: list?.ID,
+          num: list?.Num,
         },
         callback:()=>{
           SetCurrent(current + 1)
@@ -89,6 +106,7 @@ const Index = (props) => {
         break;
       case 2: //完成
         props.onCancel()
+        props.completeQuery&&props.completeQuery()
         break;
       default:
         SetCurrent(0)
@@ -107,7 +125,7 @@ const Index = (props) => {
   return (
           <Modal
             visible={visible}
-            title={<Row justify='space-between'><span>处理</span><DispatchDetailsBtn data={data}/></Row>}
+            title={<Row justify='space-between'><span>处理</span><DispatchDetailsBtn data={list}/></Row>}
             onCancel={() => { props.onCancel()}}
             destroyOnClose
             wrapClassName={`spreadOverModal ${styles.modalSty}`}
@@ -130,7 +148,7 @@ const Index = (props) => {
             <Steps current={current}>
               {steps.map(item => <Step title={item} />)}
             </Steps>
-              <div style={{marginTop:18}}>{current==0? <><DispatchDetails data={data}/> <InvestigaContent data={data}/> </>: current==1 ? <HandleComponents />  : <CompleteComponents /> } </div>
+              <Spin spinning={!!props.satisfactionSurveyLoading}><div style={{marginTop:18}}>{current==0? <><DispatchDetails data={list}/> <InvestigaContent data={list}/> </>: current==1 ? <HandleComponents />  : <CompleteComponents /> } </div></Spin>
           </Modal>
   );
 };

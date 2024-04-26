@@ -117,7 +117,7 @@ const Index = (props) => {
   const bx1 = data?.PortableInstrumentInfo?.InsStateList?.map((item,index)=>({name:item.InsState,value:item.Num,bagColor: item.InsState=='合格'? bxColor0.bagColor : item.InsState=='准用' ? bxColor1.bagColor : bxColor2.bagColor, textColor: item.InsState=='合格'? bxColor0.textColor : item.InsState=='准用' ? bxColor1.textColor : bxColor2.textColor}))
   const bx2 = data?.PortableInstrumentInfo?.UseState?.map((item,index)=>({name:item.UseState,value:item.Num,bagColor: item.UseState=='可使用'? bxColor0.bagColor : bxColor1.bagColor, textColor: item.UseState=='可使用'? bxColor0.textColor :  bxColor1.textColor}))
   
-  const total = data?.OfficeLocationInfo?.OfficeLocationNum?.toString()
+  const total = data?.OfficeLocationInfo?.OfficeLocationNum?.toString() || '0'
   const { loading } = props;
   return (
     <Spin spinning={!!loading}>
@@ -129,7 +129,7 @@ const Index = (props) => {
             <div style={{ paddingTop: 24 }}>
               <div style={{ color: '#C4C5C5', fontSize: 15 }}>便携式仪器总数</div>
               <div>
-                <span style={{ fontSize: 28 }} className='youSheBiaoTiHeiSty'>40</span>
+                <span style={{ fontSize: 28 }} className='youSheBiaoTiHeiSty'>{data?.PortableInstrumentInfo?.PortableInstrumentNum || 0}</span>
                 <span className='youSheBiaoTiHeiSty'>个</span>
               </div>
             </div>
@@ -160,9 +160,9 @@ const Index = (props) => {
       <CardHeader title='办事处统计' onClick={()=>{viewAll('办事处统计')}}/>
       <div className='cardBodySty' style={{ height: 294 }}>
         <Row justify='space-between' style={{ padding: '18px 56px 12px 56px', fontSize: 16 }}>
-          办事处总统计数
+          办事处总数统计
         <div>
-            {total&&Array.from(total).map((item, index) => {
+            {total && Array.from(total).map((item, index) => {
               return <> <span style={{ fontFamily: 'Source Han Sans CN', fontSize: 22, display: 'inline-block', width: 30, height: 30, marginRight: 6, textAlign: 'center', background: '#002B61', boxShadow: "0px 0px 6px 0px #003DBA", borderRadius: 2 }}>{item}</span></>
             })}
             <span style={{ paddingLeft: 4 }}>个</span>
@@ -189,7 +189,7 @@ const Index = (props) => {
                 'background': 'linear-gradient(0deg, #048BEB 0%, #F0F7FF 98.6328125%)',
                 '-webkit-background-clip': 'text',
                 '-webkit-text-fill-color': 'transparent'
-              }}><span style={{fontSize: 30}}>{data?.StorehouseInfo?.StorehouseNum}</span><span style={{fontSize: 12}}>个</span></div>
+              }}><span style={{fontSize: 30}}>{data?.StorehouseInfo?.StorehouseNum || 0}</span><span style={{fontSize: 12}}>个</span></div>
               <div style={{color:'#CBE9FE'}}>备件库总数</div>
               </div>
             </Row>

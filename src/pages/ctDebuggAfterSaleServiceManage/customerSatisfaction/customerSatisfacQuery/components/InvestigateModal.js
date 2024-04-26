@@ -1,5 +1,5 @@
 /**
- * 功  能：客户满意度调查  审核组件
+ * 功  能：客户满意度调查  调查组件
  * 创建人：jab
  * 创建时间：2024.04
  */
@@ -21,6 +21,7 @@ import DispatchDetailsBtn from '../../../components/dispatchDetailsBtn';
 const dvaPropsData = ({ loading, customerSatisfacQuery, global, }) => ({
   submitSurveyLoading: loading.effects[`${namespace}/SubmitSurvey`],
   configInfo: global.configInfo,
+  satisfactionSurveyLoading: loading.effects[`${namespace}/GetSatisfactionSurveyInfo`],
 })
 
 const Index = (props) => {
@@ -31,15 +32,27 @@ const Index = (props) => {
 
 
 
-  const { visible, data, submitSurveyLoading, completeFinish } = props;
+  const { visible, data, submitSurveyLoading, completeFinish,satisfactionSurveyLoading,completeQuery } = props;
 
   const [customerSuggesVerify, setCustomerSuggesVerify] = useState(false)
 
+  const {parData} = props;
+  const [detailData,setDetailData] = useState({});
 
   useEffect(() => {
     if (visible) {
       SetCurrent(0)
       investigateForm.resetFields()
+      if(parData){
+        props.dispatch({
+          type: `${namespace}/GetSatisfactionSurveyInfo`,
+          payload: {...parData},
+          callback:(res)=>{
+            setDetailData(res?.[0])
+          }
+        
+        });
+      }
     }
   }, [visible]);
 
@@ -75,6 +88,7 @@ const Index = (props) => {
     </div>
   }
 
+  const list = parData? detailData : data;
 
 
   const steps = ['派单内容', '调查', '完成']
@@ -91,14 +105,16 @@ const Index = (props) => {
           type: `${namespace}/SubmitSurvey`,
           payload: {
             ...values,
-            id: data?.ID,
-            num: data?.Num,
-            serviceAreaCode: data?.ServiceAreaCode,
-            investigatorName:data?.investigatorName,
+            investigationTime:values.investigationTime&&moment(values.investigationTime).format('YYYY-MM-DD HH:mm:ss'),
+            id: list?.ID,
+            num: list?.Num,
+            serviceAreaCode: list?.ServiceAreaCode,
+            investigatorName:list?.investigatorName,
           },
           callback:()=>{
             SetCurrent(current + 1)
             completeFinish&&completeFinish()
+            completeQuery&&props.completeQuery()
           }
         });  
         break;
@@ -120,12 +136,11 @@ const Index = (props) => {
     />
   }
 
-
   return (<>
     <Modal
       visible={visible}
-      title={<Row justify='space-between'><span>调查</span><DispatchDetailsBtn data={data} /></Row>}
-      onCancel={() => { props.onCancel() }}
+      title={<Row justify='space-between'><span>调查</span><DispatchDetailsBtn data={list} /></Row>}
+      onCancel={() => { props.onCancel()}}
       destroyOnClose
       wrapClassName={`spreadOverModal ${styles.modalSty}`}
       mask={false}
@@ -147,7 +162,7 @@ const Index = (props) => {
       <Steps current={current}>
         {steps.map(item => <Step title={item} />)}
       </Steps>
-      <div style={{ marginTop: 18 }}>{current == 0 ? <DispatchDetails data={data} /> : current == 1 ? <InvestigateComponents /> : <CompleteComponents />} </div>
+      <Spin spinning={!!props.satisfactionSurveyLoading}><div style={{ marginTop: 18 }}>{current == 0 ? <DispatchDetails data={list} /> : current == 1 ? <InvestigateComponents /> : <CompleteComponents />} </div></Spin>
     </Modal>
   </>);
 };

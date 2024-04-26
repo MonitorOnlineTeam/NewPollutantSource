@@ -601,7 +601,7 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 删除合同到期
+    // 删除合同到期、项目执行等
     *DelWorkbenchMsg({ payload, callback }, { call, put, update }) {
       const result = yield call(services.DelWorkbenchMsg, payload);
       if (result.IsSuccess) {

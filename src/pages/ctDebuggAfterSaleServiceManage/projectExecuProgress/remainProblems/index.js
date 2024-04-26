@@ -202,7 +202,7 @@ const Index = (props) => {
                 </Form>
               }
             >
-              <a onClick={() => { setPopVisible(true);setSelectIndex(index);form2.resetFields(); }}><EditIcon /></a>
+              <a onClick={() => { setPopVisible(true);setSelectIndex(index);form2.setFieldsValue({solveUserName:record.solveUserName,problemTime:record.problemTime}); }}><EditIcon /></a>
             </Popover>
           </Tooltip>
         );
@@ -383,7 +383,7 @@ const Index = (props) => {
   return (
     <div className={`${styles.remainProblemsSty} queryCriterTitleSty`}>
       <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
-        <Card title={searchComponents(2)} style={hideBreadcrumb&&{paddingTop:8}}>
+        <Card title={searchComponents(2)} bordered={!hideBreadcrumb}>
           <SdlTable
             resizable
             loading={tableLoading}

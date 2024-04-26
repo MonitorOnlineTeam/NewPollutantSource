@@ -381,7 +381,7 @@ const Index = (props) => {
             <a  onClick={()=>{setPopVisible2(true);setSelectIndex2(index);form3.resetFields();setPopVisible(false) }}>转发</a>
         </Popover>
         </>}
-        {record.IsProcessedBy&&record.ProcessingStatusName=='待处理'&&<><a onClick={()=>handle(record)}>处理</a><Divider type="vertical" /></>}
+        {record.IsProcessedBy&&record.ProcessingStatusName=='待处理'&&<><a onClick={()=>handle(record)}>处理</a></>}
              </>
                
     }

@@ -1,5 +1,5 @@
 /**
- * 功  能：设备安装审核 设备安装规范性  审核组件
+ * 功  能：设备安装审核   审核组件
  * 创建人：jab
  * 创建时间：2024.04
  */
@@ -52,10 +52,10 @@ const Index = (props) => {
     props.dispatch({
       type: `${namespace}/GetAuditPhoto`,
       payload: {
-        systemModelId: data.Col1,
-        dispatchId: data.DispatchId,
-        pointId: data.PointId,
-        equipmentAuditId: data.EquipmentAuditId,
+        systemModelId: data?.Col1,
+        dispatchId: data?.DispatchId,
+        pointId: data?.PointId,
+        equipmentAuditId: data?.EquipmentAuditId,
       }
     });
   }

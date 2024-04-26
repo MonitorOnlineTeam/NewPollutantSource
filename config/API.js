@@ -795,6 +795,8 @@ export const API = {
     SubmitProcessed: before + '/CustomerSatisfaction/SubmitProcessed',//客户满意度调查处理
     SubmitRermination: before + '/CustomerSatisfaction/SubmitRermination',//客户满意度终止调查
     TransmitSurvey: before + '/CustomerSatisfaction/TransmitSurvey',//客户满意度转发
+    GetSatisfactionSurveyInfo: before + '/CustomerSatisfaction/GetSatisfactionSurveyInfo',//通过id获取客户满意度调查详情信息
+    
   },
   //调试服务
   CtDebugServiceApi: {

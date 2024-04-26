@@ -32,7 +32,7 @@ const Index = (props) => {
   
     const detail = (record) => {
       setDetailVisible(true)
-      setDetailTitle(`${record.Num}${record.ProjectCode? ` - ${record.ProjectCode}` : record.ItemCode ? ` - ${record.ItemCode}` : ''}`)
+      setDetailTitle(`${record?.Num} ${record?.ProjectCode? ` - ${record?.ProjectCode}` : record?.ItemCode ? ` - ${record?.ItemCode}` : ''}`)
     }
 
   useEffect(() => {
