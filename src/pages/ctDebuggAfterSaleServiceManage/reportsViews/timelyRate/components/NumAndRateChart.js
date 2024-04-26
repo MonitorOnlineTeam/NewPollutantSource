@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2024-04-17 17:12:56
+ * @Last Modified by:   JiaQi
+ * @Last Modified time: 2024-04-17 17:12:56
+ * @Description:  服务响应及时率 - 图表
+ */
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'dva';
 import { Card } from 'antd';

@@ -1,0 +1,226 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'dva';
+import { Row, Col } from 'antd';
+import styles from '../../styles.less';
+import HomeCard from '../HomeCard';
+import ReactEcharts from 'echarts-for-react';
+
+let myChart;
+const dvaPropsData = ({ loading }) => ({});
+
+const EquipUptimeRate = props => {
+  // const runChart = useRef();
+  // const overChart = useRef();
+  // let runChart, overChart;
+  const [echarts1, setEcharts1] = useState();
+  const [echarts2, setEcharts2] = useState();
+  const [echarts3, setEcharts3] = useState();
+
+  const { dispatch, requestParams, DataEfficiencyRate, OverRate, loading } = props;
+
+  useEffect(() => {}, []);
+
+  const getOption = (type, data) => {
+    let echarts,
+      colors = [],
+      labelColor = [];
+    if (type === 1) {
+      echarts = echarts1;
+      colors = ['#1DE4B7', '#1FCAD7', 'rgba(36,220,247,.4)'];
+      labelColor = '#30E0DE';
+    } else {
+      echarts = echarts2;
+      colors = ['#1C8AC3', '#4FB7FF', 'rgba(44,142,227, .4)'];
+      labelColor = '#2C8EE3';
+    }
+    let angle = 0; // 角度
+    let dataValue = 65;
+    if (echarts)
+      return {
+        title: {
+          text: `{v|${dataValue}}{unit|%}`,
+          x: 'center',
+          y: 'center',
+          textStyle: {
+            rich: {
+              v: { fontSize: 22, fontWeight: 'bold', color: labelColor },
+              unit: { fontSize: 22, fontWeight: 'bold', color: labelColor },
+            },
+          },
+        },
+        series: [
+          /** 内心圆 */
+          {
+            //内圆
+            type: 'pie',
+            radius: ['64%', '0%'],
+            center: ['50%', '50%'],
+            z: 1,
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.RadialGradient(
+                  0.5,
+                  0.5,
+                  0.5,
+                  [
+                    {
+                      offset: 0,
+                      color: 'transparent',
+                    },
+                    {
+                      offset: 0.5,
+                      color: 'transparent',
+                    },
+                    {
+                      offset: 1,
+                      color: colors[2],
+                    },
+                  ],
+                  false,
+                ),
+                label: {
+                  show: false,
+                },
+                labelLine: {
+                  show: false,
+                },
+              },
+            },
+            hoverAnimation: false,
+            label: {
+              show: false,
+            },
+            tooltip: {
+              show: false,
+            },
+            data: [100],
+            animationType: 'scale',
+          },
+          /** 饼图 */
+          {
+            name: '已完成',
+            type: 'pie',
+            startAngle: 90,
+            z: 0,
+            label: {
+              position: 'center',
+            },
+            radius: ['64%', '52%'],
+            silent: true,
+            animation: false, // 关闭饼图动画
+            data: [
+              {
+                value: dataValue,
+                itemStyle: {
+                  color: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0.2,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [
+                      { offset: 0, color: colors[0] },
+                      { offset: 1, color: colors[1] },
+                    ],
+                  },
+                },
+              },
+              {
+                name: '未完成',
+                value: 100 - dataValue,
+                label: { show: false },
+                itemStyle: { color: 'transparent' },
+              },
+            ],
+          },
+          /** 饼图上刻度 */
+          {
+            type: 'gauge',
+            center: ['50%', '50%'],
+            // radius: ['56%', '44%'],
+            radius: '86%', // 错位调整此处
+
+            startAngle: 0,
+            endAngle: 360,
+            splitNumber: 16,
+            axisLine: { show: false },
+            splitLine: {
+              length: 12,
+              // length: '24%',
+              lineStyle: {
+                width: 3,
+                color: '#002837',
+              },
+            },
+            axisTick: { show: false },
+            axisLabel: { show: false },
+          },
+          {
+            type: 'pie',
+            name: '内层细圆环',
+            radius: ['70%', '72%'],
+            hoverAnimation: false,
+            clockWise: false,
+            itemStyle: {
+              normal: {
+                color: colors[2],
+              },
+            },
+            label: {
+              show: false,
+            },
+            data: [100],
+          },
+        ],
+      };
+
+    return {};
+  };
+
+  return (
+    <HomeCard
+      style={{ minHeight: 320 }}
+      title="设备运行完好率"
+      bodyStyle={
+        {
+          // height: 'calc(100% - 110px)',
+          // padding: '10px',
+          // overflowY: 'auto',
+        }
+      }
+    >
+      <div className={styles.CustomerSatisfactionWrapper}>
+        <Row className={`${styles.echartsContent}`}>
+          <Col span={12}>
+            <ReactEcharts
+              ref={echart => {
+                echart && setEcharts1(echart.echarts);
+              }}
+              option={getOption(1, 82.71)}
+              lazyUpdate={true}
+              style={{ height: '180px', width: '100%' }}
+            />
+            <p className={styles.echartsTitle} style={{ marginTop: -6 }}>
+              设备完好率
+            </p>
+          </Col>
+          <Col span={12}>
+            <ReactEcharts
+              ref={echart => {
+                echart && setEcharts2(echart.echarts);
+              }}
+              option={getOption(2, 82.71)}
+              lazyUpdate={true}
+              style={{ height: '180px', width: '100%' }}
+            />
+            <p className={styles.echartsTitle} style={{ marginTop: -6 }}>
+              设备故障率
+            </p>
+          </Col>
+        </Row>
+      </div>
+    </HomeCard>
+  );
+};
+
+export default connect(dvaPropsData)(EquipUptimeRate);

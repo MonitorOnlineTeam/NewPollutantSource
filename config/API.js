@@ -957,6 +957,16 @@ export const API = {
       // 导出
       ExportServiceSetList: before + '/CTProjectExecutionApi/ExportServiceSetList',
     },
+    // 服务报告审核
+    ReportAuditApi: {
+      // 获取服务报告审核列表
+      GetStayCheckServices: before + '/CTProjectExecutionApi/GetStayCheckServices',
+      // 获取服务报告
+      GetDealOpinions: before + '/CTProjectExecutionApi/GetDealOpinions',
+      // 提交审核
+      AuditService: before + '/CTProjectExecutionApi/AuditService',
+
+    },
     // 服务报告抽查
     ReportSpotCheckApi: {
       // 获取已抽查服务列表

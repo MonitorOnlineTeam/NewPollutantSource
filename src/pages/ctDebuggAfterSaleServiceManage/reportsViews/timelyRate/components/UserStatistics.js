@@ -1,16 +1,19 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2024-04-17 17:12:24
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-04-17 17:22:37
+ * @Description: 服务响应及时率 - 按人员统计
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
   Form,
   Typography,
-  Input,
   Button,
   Card,
   Space,
   Tooltip,
-  Modal,
-  Row,
-  Col,
   Select,
 } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
@@ -19,9 +22,6 @@ import moment from 'moment';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { FileSearchOutlined } from '@ant-design/icons';
 import BasicData from './BasicData';
-import styles from '../index.less';
-
-const { Text, Link } = Typography;
 
 const dvaPropsData = ({ loading, timelyRate, autoForm }) => ({
   autoForm: autoForm,
@@ -183,7 +183,6 @@ const UserStatistics = props => {
     setPageIndex(PageIndex);
     GetTimelyRateByUserList(PageIndex, PageSize);
   };
-  console.log('autoform', autoForm);
 
   return (
     <Card bodyStyle={{ paddingBottom: 20 }}>

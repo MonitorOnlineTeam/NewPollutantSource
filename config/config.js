@@ -157,10 +157,16 @@ export default {
           component: './sysTypeMiddlePage/SaveSessionPage',
         },
         {
-          // 大屏
+          // 异常数据识别大屏 - 第一版
           name: 'ModelStatisticsScreen',
           path: '/ModelStatisticsScreen',
           component: './DataAnalyticalWarningModel/Statistics/Screen',
+        },
+        {
+          // 成套驾驶舱
+          name: 'ctDataScreen',
+          path: '/ctDataScreen',
+          component: './ctDebuggAfterSaleServiceManage/HomeDataScreen',
         },
         {
           path: '/appoperation',
@@ -3125,6 +3131,13 @@ export default {
                       path: '/ctManage/projectExecuProgress/serviceIsNotTimely',
                       component:
                         './ctDebuggAfterSaleServiceManage/projectExecuProgress/serviceIsNotTimely',
+                    },
+                    {
+                      // 服务报告审核
+                      name: 'reportAudit',
+                      path: '/ctManage/projectExecuProgress/reportAudit',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportAudit',
                     },
                     {
                       // 服务报告抽查

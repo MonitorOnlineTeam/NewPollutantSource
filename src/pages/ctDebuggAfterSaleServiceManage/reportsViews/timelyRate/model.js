@@ -1,20 +1,11 @@
-import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
-import { router } from 'umi';
-import config from '@/config';
 import { downloadFile, requestPost } from '@/utils/utils';
 import { API } from '@config/API';
 export default Model.extend({
   namespace: 'timelyRate',
   state: {
     timelyRateList: {
-      columnList: [],
-      tableList: [],
-      largeRegionAnalysis: [],
-      CategoryAnalysis: [],
-    },
-    timelyRateByUserList: {
       columnList: [],
       tableList: [],
       largeRegionAnalysis: [],
@@ -40,9 +31,6 @@ export default Model.extend({
         payload,
       );
       if (result.IsSuccess) {
-        yield update({
-          timelyRateByUserList: result.Datas,
-        });
         callback && callback(result);
       }
     },

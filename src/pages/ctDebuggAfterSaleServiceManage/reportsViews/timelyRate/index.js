@@ -1,3 +1,10 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2024-04-17 17:12:14
+ * @Last Modified by:   JiaQi
+ * @Last Modified time: 2024-04-17 17:12:14
+ * @Description:  服务响应及时率
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Card, Space, Row, Col, Radio } from 'antd';
