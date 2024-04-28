@@ -248,7 +248,7 @@ const RegionalProportionCard2 = props => {
 
     option.grid3D = {
       show: false,
-      boxHeight: 40, //圆环的高度
+      boxHeight: 20, //圆环的高度
       width: '100%',
       top: 0,
       left: 0,
@@ -337,7 +337,7 @@ const RegionalProportionCard2 = props => {
       startAngle: -40, //起始角度，支持范围[0, 360]。
       clockwise: false, //饼图的扇区是否是顺时针排布。上述这两项配置主要是为了对齐3d的样式
       radius: ['40%', '60%'],
-      center: ['50%', '58%'],
+      center: ['50%', '55%'],
       data: pie2dData.sort((a, b) => {
         return b.value - a.value;
       }),

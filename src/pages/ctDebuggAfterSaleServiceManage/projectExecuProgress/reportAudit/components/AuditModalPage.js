@@ -24,6 +24,8 @@ import styles from '../index.less';
 import ImageView from '@/components/ImageView';
 import SdlUpload from '@/pages/AutoFormManager/SdlUpload';
 import cuid from 'cuid';
+import ServiceReport from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery/detail.js';
+import HandlingSugges from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment/components/HandlingSugges.js';
 
 const { Step } = Steps;
 const { TextArea } = Input;
@@ -36,28 +38,22 @@ const AuditModalPage = props => {
   const [form1] = Form.useForm();
 
   const [stepCurrent, setStepCurrent] = useState(0);
-  const [serviceReportData, setServiceReportData] = useState([]);
   const [isImageViewOpen, setIsImageViewOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [imageList, setImageList] = useState([]);
   // const [uid, setUid] = useState(cuid());
   const [currentNum, setCurrentNum] = useState();
 
-  const { dispatch, id, CheckStatus,isModalOpen, onCancel, reloadPageData } = props;
+  const { dispatch, id, CheckStatus, isModalOpen, onCancel, reloadPageData } = props;
 
-  useEffect(() => {
-    GetDealOpinions();
-  }, []);
+  useEffect(() => {}, []);
 
-  // 获取服务详情
-  const GetDealOpinions = () => {
+  // 获取处理意见
+  const getProcessingOpinions = () => {
     dispatch({
-      type: 'reportAudit/GetDealOpinions',
+      type: `installEquipment/GetAuditPhoto`,
       payload: {
-        id,
-      },
-      callback: res => {
-        setServiceReportData(res.Datas);
+        equipmentAuditId: id,
       },
     });
   };
@@ -65,8 +61,6 @@ const AuditModalPage = props => {
   // 提交审核
   const AddCheckServiceReport = () => {
     form1.validateFields().then(values => {
-      console.log('values', values);
-      // return;
       dispatch({
         type: 'reportAudit/AuditService',
         payload: {
@@ -94,56 +88,20 @@ const AuditModalPage = props => {
     reloadPageData();
   };
 
-  // 查看图片
-  const ViewUploadComponents = ({ fileList }) => {
-    return (
-      <>
-        <Upload
-          // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          listType="picture-card"
-          showUploadList={{ showPreviewIcon: true, showRemoveIcon: false }}
-          fileList={fileList}
-          onPreview={file => {
-            setIsImageViewOpen(true);
-            setImageIndex(file.uid);
-            setImageList(fileList.map(item => item.url));
-          }}
-        >
-          {/* {fileList.length >= 8 ? null : uploadButton} */}
-        </Upload>
-      </>
-    );
-  };
-
   // 第一步内容
   const getStep1Content = () => {
     return (
       <div style={{ marginTop: 20, display: stepCurrent === 0 ? 'block' : 'none' }}>
-        {/* <TitleComponents text="基础信息-发起人填写" /> */}
-        {serviceReportData.map(item => {
-          let serviceData = item.ServiceList[0];
-          let fileList = serviceData.FileList;
-          let imgList = fileList.ImgList.map((img, index) => {
-            return {
-              uid: index,
-              status: 'done',
-              url: `/${img}`,
-            };
-          });
-          return (
-            <Descriptions title={item.ServiceName}>
-              <Descriptions.Item label="验收服务报告照片">
-                <ViewUploadComponents fileList={imgList} />
-              </Descriptions.Item>
-              <Descriptions.Item label="照片上传日期">{serviceData.CreateTime}</Descriptions.Item>
-              <Descriptions.Item label="备注">{serviceData.Remark || '-'}</Descriptions.Item>
-            </Descriptions>
-          );
-        })}
-        <Row justify="center">
+        <ServiceReport id={id} shouldOnlyRecordId="9" />
+        <Row justify="center" style={{ marginTop: 20 }}>
           <Space>
-            <Button onClick={() => setStepCurrent(0)}>上一步</Button>
-            <Button type="primary" onClick={() => setStepCurrent(1)}>
+            <Button
+              type="primary"
+              onClick={() => {
+                setStepCurrent(1);
+                getProcessingOpinions();
+              }}
+            >
               下一步
             </Button>
           </Space>
@@ -229,6 +187,7 @@ const AuditModalPage = props => {
             />
           </Form.Item>
         </Form>
+        <HandlingSugges type={1} />
         <Row justify="center">
           <Space>
             <Button onClick={() => setStepCurrent(0)}>上一步</Button>
@@ -247,7 +206,7 @@ const AuditModalPage = props => {
       <div style={{ display: stepCurrent === 2 ? 'block' : 'none' }}>
         <Result
           status="success"
-          title="操作完成，已推送消息给服务工程师进行整改!"
+          title={<span style={{ fontSize: 18 }}>操作完成，已推送消息给服务工程师进行整改!</span>}
           extra={[
             <Button type="primary" onClick={() => onResult()}>
               完成
@@ -276,17 +235,6 @@ const AuditModalPage = props => {
   };
 
   const renderStepContent = () => {
-    // switch (stepCurrent) {
-    //   case 0:
-    //     return getStep1Content();
-    //   case 1:
-    //     return getStep2Content();
-    //   case 2:
-    //     return getStep3Content();
-    //   case 3:
-    //     return getStep4Content();
-    // }
-
     return (
       <>
         {getStep1Content()}

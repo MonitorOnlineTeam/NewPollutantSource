@@ -720,7 +720,7 @@ export const API = {
     GetTestPollutantList: before + '/DebuggingBase/GetTestPollutantList', //站点信息
     GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList',  // 获取大区
   },
-  
+
   //项目执行进度 Api
   CtProjectExecuProgressApi: {
     /*** 项目执行 ***/
@@ -749,7 +749,7 @@ export const API = {
     /*遗留问题*/
     GetQuestionList: before + '/CTStatisticsApi/GetQuestionList',//获取遗留问题
     ExportQuestionList: before + '/CTStatisticsApi/ExportQuestionList',//遗留问题 导出
-    
+
   },
 
   /*** 工作台 ***/
@@ -759,8 +759,8 @@ export const API = {
     // DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除工作台合同到期 老
     // DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期 老
      GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg',//获取工作台项目执行、合同到期等  新
-     DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg',//删除工作台合同到期等 新  
-     DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg',//删除所有工作台合同到期等 新  
+     DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg',//删除工作台合同到期等 新
+     DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg',//删除所有工作台合同到期等 新
 
   },
 
@@ -790,7 +790,7 @@ export const API = {
     SubmitRermination: before + '/CustomerSatisfaction/SubmitRermination',//客户满意度终止调查
     TransmitSurvey: before + '/CustomerSatisfaction/TransmitSurvey',//客户满意度转发
     GetSatisfactionSurveyInfo: before + '/CustomerSatisfaction/GetSatisfactionSurveyInfo',//通过id获取客户满意度调查详情信息
-    
+
   },
   //调试服务
   CtDebugServiceApi: {
@@ -956,7 +956,7 @@ export const API = {
       // 获取服务报告审核列表
       GetStayCheckServices: before + '/CTProjectExecutionApi/GetStayCheckServices',
       // 获取服务报告
-      GetDealOpinions: before + '/CTProjectExecutionApi/GetDealOpinions',
+      GetDealOpinions: before + '/CTProjectExecutionApi/GetServiceDesc',
       // 提交审核
       AuditService: before + '/CTProjectExecutionApi/AuditService',
 
