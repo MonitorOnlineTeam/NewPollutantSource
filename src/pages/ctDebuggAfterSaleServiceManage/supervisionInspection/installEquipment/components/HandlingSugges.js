@@ -31,7 +31,7 @@ const Index = (props) => {
 
 
 
-  const {type, auditPhotoLoading, installPhotoData,} = props;
+  const {type, auditPhotoLoading, installPhotoData,parData} = props;
  
 
   const [isImageViewOpen, setIsImageViewOpen] = useState(false);
@@ -40,7 +40,17 @@ const Index = (props) => {
 
 
   useEffect(() => {
-
+    if(parData){
+    props.dispatch({
+      type: `${namespace}/GetAuditPhoto`,
+      payload: {
+        systemModelId: parData.Col1,
+        dispatchId: parData.DispatchId,
+        pointId: parData.PointId,
+        equipmentAuditId: parData.EquipmentAuditId,
+      },
+    });
+  }
   }, []);
 
 
