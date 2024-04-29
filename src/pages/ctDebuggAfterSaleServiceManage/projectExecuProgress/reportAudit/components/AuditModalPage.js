@@ -217,23 +217,6 @@ const AuditModalPage = props => {
     );
   };
 
-  const TitleComponents = props => {
-    return (
-      <div
-        style={{
-          display: 'inline-block',
-          fontWeight: 'bold',
-          marginTop: 4,
-          padding: '2px 0',
-          marginBottom: 12,
-          borderBottom: '1px solid rgba(0,0,0,.1)',
-        }}
-      >
-        {props.text}
-      </div>
-    );
-  };
-
   const renderStepContent = () => {
     return (
       <>

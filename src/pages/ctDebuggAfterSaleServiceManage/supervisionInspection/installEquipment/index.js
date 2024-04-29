@@ -91,6 +91,8 @@ const Index = props => {
     addAuditInfoLoading,
     exportLoading,
     hideBreadcrumb,
+    defaultStatus, // 默认的审核状态
+    auditResultList, // 审核状态列表
   } = props;
 
   const type = pathname == '/ctManage/supervisionInspection/installEquipmentReview' ? 1 : 2;
@@ -304,14 +306,20 @@ const Index = props => {
 
   const onFinish = async (PageIndex, PageSize, queryPar) => {
     //查询
-
+    console.log('defaultStatus', defaultStatus);
     try {
       const values = await form.validateFields();
       const par = queryPar
         ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize }
         : {
             ...values,
-            status: values.status ? values.status : type == 1 ? '1,2' : '3',
+            status: values.status
+              ? values.status
+              : type == 1
+              ? '1,2'
+              : defaultStatus !== undefined
+              ? defaultStatus
+              : '3',
             bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
             eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
             time: undefined,
@@ -392,9 +400,11 @@ const Index = props => {
             ) : (
               <Form.Item name="auditResults" label="审核状态">
                 <Select placeholder="请选择" allowClear>
-                  <Option value={1}>优秀</Option>
-                  <Option value={2}>合格</Option>
-                  <Option value={5}>/</Option>
+                  {auditResultList.includes(1) && <Option value={1}>优秀</Option>}
+                  {auditResultList.includes(2) && <Option value={2}>合格</Option>}
+                  {auditResultList.includes(3) && <Option value={3}>不合格</Option>}
+                  {auditResultList.includes(4) && <Option value={4}>无照片</Option>}
+                  {auditResultList.includes(5) && <Option value={5}>/</Option>}
                 </Select>
               </Form.Item>
             )}
@@ -503,4 +513,9 @@ const Index = props => {
     </div>
   );
 };
+
+Index.defaultProps = {
+  auditResultList: [1, 2, 5],
+};
+
 export default connect(dvaPropsData)(Index);

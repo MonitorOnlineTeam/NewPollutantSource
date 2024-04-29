@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2024-04-16 16:37:56 
+ * @Author: JiaQi
+ * @Date: 2024-04-16 16:37:56
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-17 16:08:35
+ * @Last Modified time: 2024-04-29 15:39:18
  * @Description:  安装调试达标率表格
  */
 import React, { useState, useEffect } from 'react';
@@ -265,6 +265,8 @@ const TableCard = props => {
           <InstallEquipment
             hideBreadcrumb
             defaultTime={computeStartAndEnd(date)}
+            defaultStatus=""
+            auditResultList={[1, 2, 3, 4, 5]}
             location={props.location}
             match={props.match}
           />

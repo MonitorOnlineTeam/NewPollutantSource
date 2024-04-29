@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-29 10:00:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-11 17:02:59
+ * @Last Modified time: 2024-04-29 14:01:02
  * @Description:  客户现场回访
  */
 
@@ -177,7 +177,11 @@ const ReturnVisit = props => {
         key: 'CheckRate',
         ellipsis: true,
         width: 300,
-        sorter: (a, b) => a.CheckRate - b.CheckRate,
+        sorter: (a, b) => {
+          if (a.RegionCode !== 'All' && b.RegionCode !== 'All') {
+            return a.CheckRate - b.CheckRate;
+          }
+        },
         render: (text, record) => {
           // let percent = Number(text).toFixed(2);
           return (

@@ -951,6 +951,19 @@ export const API = {
       // 导出
       ExportServiceSetList: before + '/CTProjectExecutionApi/ExportServiceSetList',
     },
+    // 服务报告查询
+    ReportQueryApi: {
+      // 获取列表
+      GetAlreadyCheckServices: before + '/CTProjectExecutionApi/GetAlreadyCheckServices',
+      // 导出列表
+      ExportGetAlreadyCheckServices: before + '/CTProjectExecutionApi/ExportGetAlreadyCheckServices',
+      // 获取审核情况统计数据
+      GetStatServiceReport: before + '/CTProjectExecutionApi/GetStatServiceReport',
+      // 获取审核情况统计数据 - 导出
+      ExportGetStatServiceReport: before + '/CTProjectExecutionApi/ExportGetStatServiceReport',
+  
+
+    },
     // 服务报告审核
     ReportAuditApi: {
       // 获取服务报告审核列表
