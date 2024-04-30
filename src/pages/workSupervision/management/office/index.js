@@ -217,6 +217,7 @@ const Office = props => {
         <SearchWrapper configId={CONFIGID} />
         <AutoFormTable
           noload
+          onlyAppendHandleRows = {props.onlyAppendHandleRows}
           getPageConfig
           handleMode="modal"
           style={{ marginTop: 10 }}
@@ -229,7 +230,7 @@ const Office = props => {
           appendHandleRows={row => {
             return (
               <>
-                <Divider type="vertical" />
+                {!props.onlyAppendHandleRows&&<Divider type="vertical" />}
                 <Tooltip title="关联办事处人员">
                   <a
                     onClick={() => {

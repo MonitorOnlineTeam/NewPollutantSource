@@ -192,6 +192,7 @@ const Index = props => {
             key: 'allCount',
             width: 120,
             align: 'center',
+            fixed: 'left',
           },
           {
             title: '已解决次数',
@@ -199,6 +200,7 @@ const Index = props => {
             key: 'allSolveCount',
             width: 120,
             align: 'center',
+            fixed: 'left',
           },
           {
             title: '未解决次数',
@@ -206,6 +208,7 @@ const Index = props => {
             key: 'allNotSolveCount',
             width: 120,
             align: 'center',
+            fixed: 'left',
           },
           {
             title: '一次解决率',
@@ -213,6 +216,7 @@ const Index = props => {
             key: 'allRate',
             width: 120,
             align: 'center',
+            fixed: 'left',
           },
         ],
       },
@@ -334,8 +338,9 @@ const Index = props => {
           <Button
             type="primary"
             onClick={() => {
-              handleTableChange(1, 20);
               setIsModalOpen(true);
+              form.resetFields();
+              handleTableChange(1, 20);
             }}
           >
             查看基础数据

@@ -199,8 +199,7 @@ const Index = (props) => {
   }, []);
 
   useEffect(() => {
-    if (workHourDataRatio?.[0]) {
-      setTimeout(() => {
+    if (workHourDataRatio?.[0] && echartsRef2?.current){
         let myChart = echartsRef2?.current?.getEchartsInstance();
         let echartsOption = echartsRef2?.current?.props;
         myChart.on('mouseover', function (params) {
@@ -212,8 +211,6 @@ const Index = (props) => {
         //  myChart.on('click', function(params) {
         //  chartClick(myChart,echartsOption,params) 
         //  });
-
-      }, 400)
     }
   }, [workHourDataRatio]);
 

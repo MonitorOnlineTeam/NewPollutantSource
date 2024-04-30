@@ -59,7 +59,7 @@ class Index extends PureComponent {
   constructor(props) {
     super(props);
     this.amapEvents = {
-      enableHighAccuracy:true,
+      enableHighAccuracy: true,
       created: mapInstance => {
         console.log(
           '高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
@@ -91,12 +91,11 @@ class Index extends PureComponent {
     };
     this.state = {
       fullScreen: false,
-      minWidth: 1690,
       selectType: { name: '备机' },
       markersList: [],
-      selectRegionName:'',
-      selectStatus:'',
-     
+      selectRegionName: '',
+      selectStatus: '',
+
     }
   }
   componentWillMount() {
@@ -126,10 +125,14 @@ class Index extends PureComponent {
 
 
 
-  mapFitView = () => {
+  mapFitView = (isSecond) => {
+    const { selectType } = this.state;
     const timer = setInterval(() => {
       if (aMap) {
         aMap.setFitView();
+        if(selectType.name=='便携式仪器' || (selectType.name=='办事处' && !isSecond)){
+          aMap.setZoom(5); 
+        }
         clearInterval(timer);
       }
     }, 0);
@@ -168,10 +171,17 @@ class Index extends PureComponent {
         this.props.fullScreenClick(false)
         break;
       case '省':
-        this.setState({ selectType: { ...selectType, isEnter: false, showAll: false } })
+        if (selectType.isEnter) {
+          aMap.clearMap();
+        }
+        this.setState({ selectType: { ...selectType, isEnter: false, showAll: false } }, () => {
+          this.mapFitView();
+        })
         break;
-      case `展示${'办事处' || '备件库'}`:
-        this.setState({ selectType: { ...selectType, isEnter: true, showAll: true } })
+      case '展示办事处': case '展示备件库':
+        this.setState({ selectType: { ...selectType, isEnter: true, showAll: true } }, () => {
+          this.mapFitView('isSecond');
+        })
         break;
     }
 
@@ -186,7 +196,7 @@ class Index extends PureComponent {
   onBack = () => {
     const { selectType } = this.state
     aMap.clearMap();
-    this.setState({ selectType: { ...selectType, isEnter: false, showAll: false } },()=>{
+    this.setState({ selectType: { ...selectType, isEnter: false, showAll: false } }, () => {
       this.mapFitView();
     })
   }
@@ -196,22 +206,22 @@ class Index extends PureComponent {
     aMap.clearMap();
     this.setState({ selectType: { name: name, secondFlag: name == '办事处' || name == '备件库' ? true : false } })
     const { selectType } = this.state;
-    if(name != selectType.name){
-      this.setState({selectStatus:''},()=>{
+    if (name != selectType.name) {
+      this.setState({ selectStatus: '' }, () => {
         this.mapFitView();
       })
     }
   }
- 
+
   selectChange = (value) => {
     const { selectType } = this.state;
-    this.setState({selectStatus:value},()=>{
+    this.setState({ selectStatus: value }, () => {
     })
   };
 
   regionEnter = (regionName) => {
     aMap.clearMap();
-    this.setState({ selectType: { ...this.state.selectType, isEnter: true }, selectRegionName: regionName }, () => {})
+    this.setState({ selectType: { ...this.state.selectType, isEnter: true }, selectRegionName: regionName }, () => { })
     AMap.plugin('AMap.DistrictSearch', () => {
       const districtSearch = new AMap.DistrictSearch({
         subdistrict: 0,   //获取边界不需要返回下级行政区
@@ -237,40 +247,40 @@ class Index extends PureComponent {
         }
       })
     })
-    this.mapFitView();
+    this.mapFitView('isSecond');
   }
 
 
   renderMarkers = (extData) => {
-    const { selectType,selectStatus } = this.state;
+    const { selectType, selectStatus } = this.state;
     if (selectType.isEnter) { //进入二级页面
       const item = extData.position
       const data = selectType.name == '办事处' ? { name: item?.OfficeName, value: `${item?.UserNum || 0}人` } :
         { name: item?.StorehouseName } //备件库
-      return <SecondPopver isIcon={selectType.name == '备件库'} data={data} />
+      return <SecondPopver isIcon={selectType.name == '备件库'} style={selectType.name == '备件库' && { textAlign: 'center', width: 120, }} data={data} />
     } else {
       const item = extData.position;
       let data = [];
-      if(selectType.name == '备机' || selectType.name == '便携式仪器'){
+      if (selectType.name == '备机' || selectType.name == '便携式仪器') {
         data = [{ name: '可使用', value: item?.UsedNum, unit: '台' }, { name: '使用中', value: item.UsintNum, unit: '台' }]
-        if(selectStatus){
-          data = data.filter(item=>item.name == selectStatus)
+        if (selectStatus) {
+          data = data.filter(item => item.name == selectStatus)
         }
-      }else if(selectType.name == '办事处'){ //办事处
-        data = [{ name: '办事处数量', value: item?.OfficeLocationNum, unit: '个'  }, { name: '人数', value: item?.OfficeAndUserNum, unit: '人' }] 
-      }else{//备件库
-        data =  { name: item?.RegionName, value: `${item?.StorehouseNum}个` }
+      } else if (selectType.name == '办事处') { //办事处
+        data = [{ name: '办事处数量', value: item?.OfficeLocationNum, unit: '个' }, { name: '人数', value: item?.OfficeAndUserNum, unit: '人' }]
+      } else {//备件库
+        data = { name: item?.RegionName, value: `${item?.StorehouseNum}个` }
       }
 
-      return selectType.name == '备件库' ? <SecondPopver onClick={() => this.regionEnter(item?.RegionName)} isEnter data={data} /> : <RegPopver unit={selectType.secondFlag?'': '台'} sum={selectType.secondFlag? '' : Number(data?.[0]?.value || 0) + Number(data?.[1]?.value || 0)} onClick={() => this.regionEnter(item?.RegionName)} isEnter={selectType.secondFlag} regionName={item.RegionName} data={data} />
+      return selectType.name == '备件库' ? <SecondPopver onClick={() => this.regionEnter(item?.RegionName)} isEnter data={data} /> : <RegPopver style={selectType.name != '办事处' && { width: '150px' }} unit={selectType.secondFlag ? '' : '台'} sum={selectType.secondFlag ? '' : Number(data?.[0]?.value || 0) + Number(data?.[1]?.value || 0)} onClick={() => this.regionEnter(item?.RegionName)} isEnter={selectType.secondFlag} regionName={item.RegionName} data={data} />
     }
 
 
   }
   mapContent = (props) => {
-    const { selectType, markersList, fullScreen, selectRegionName,selectStatus } = this.state;
-    const  { leftData,rightData } = this.props;
-    const btnList = [{ name: '备机', value: leftData?.StandbyMachineInfo?.StandbyMachineNum }, { name: '便携式仪器', value: rightData?.PortableInstrumentInfo?.PortableInstrumentNum }, { name: '办事处', value:  rightData?.OfficeLocationInfo?.OfficeLocationNum }, { name: '备件库', value: rightData?.StorehouseInfo?.StorehouseNum },]
+    const { selectType, markersList, fullScreen, selectRegionName, selectStatus } = this.state;
+    const { leftData, rightData } = this.props;
+    const btnList = [{ name: '备机', value: leftData?.StandbyMachineInfo?.StandbyMachineNum }, { name: '便携式仪器', value: rightData?.PortableInstrumentInfo?.PortableInstrumentNum }, { name: '办事处', value: rightData?.OfficeLocationInfo?.OfficeLocationNum }, { name: '备件库', value: rightData?.StorehouseInfo?.StorehouseNum },]
 
     const operationBtnArr = () => {
 
@@ -316,18 +326,18 @@ class Index extends PureComponent {
 
       }
     } else {
-      if( selectType.name == '备机'){
-          markersData = markersList?.RegionStandbyMachineList?.map(item => ({
-            position: { ...item.position, ...item,position:undefined}
-          }))
-      }else if(selectType.name == '便携式仪器'){
+      if (selectType.name == '备机') {
+        markersData = markersList?.RegionStandbyMachineList?.map(item => ({
+          position: { ...item.position, ...item, position: undefined }
+        }))?.filter(item => item?.position?.SumNum != 0)
+      } else if (selectType.name == '便携式仪器') {
         markersData = markersList?.RegionPortableInstrumentList?.map(item => ({
-          position: { ...item.position,...item,position:undefined}
+          position: { ...item.position, ...item, position: undefined }
         }))
-      }else if(selectType.name == '办事处'){
-        markersData =  markersList.RegionOfficeLocationList 
-      }else{ //备件库
-        markersData =  markersList.RegionStorehouseList 
+      } else if (selectType.name == '办事处') {
+        markersData = markersList.RegionOfficeLocationList
+      } else { //备件库
+        markersData = markersList.RegionStorehouseList
       }
 
     }

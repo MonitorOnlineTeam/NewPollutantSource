@@ -96,6 +96,7 @@ const Index = (props) => {
             availability:2,
             setEquipmentMode:0,
             InspectionType:1,
+            IsFlag:false,
           }}
         >
         <Spin spinning={props.getOperationSettingLoading}>
@@ -144,7 +145,7 @@ const Index = (props) => {
               <Radio value={2}>是</Radio>
             </Radio.Group>
             </Form.Item>
-            <Form.Item label='是否显示数据中的flag标识' name='IsFlag'>
+            <Form.Item label='监测数据显示标识位' name='IsFlag'>
             <Radio.Group>
               <Radio value={true}>显示</Radio>
               <Radio value={false}>不显示</Radio>

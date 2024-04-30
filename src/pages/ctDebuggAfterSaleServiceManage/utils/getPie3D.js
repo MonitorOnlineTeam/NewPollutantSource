@@ -2,17 +2,17 @@ import { fomatFloat } from '@/utils/utils';
 import { ContactsOutlined } from '@ant-design/icons';
 import 'echarts-gl';
 //获取3d丙图的最高扇区的高度
-function getHeight3D(series, height,customVal) { //customVal 默认高度
+function getHeight3D(series, height, customVal) { //customVal 默认高度
     series.sort((a, b) => {
         return (b.pieData.value - a.pieData.value);
     })
-    return series[0].pieData.rate==0 || series[0].pieData.value==customVal ? 50 : height * 25 / series[0].pieData.value;
+    return series[0].pieData.rate == 0 || series[0].pieData.value == customVal ? 50 : height * 25 / series[0].pieData.value;
 }
 
 
 
 // 生成扇形的曲面参数方程，用于 series-surface.parametricEquation
-function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h,i,defaultSelection) {
+function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h, selection, i, defaultselection, defaultIndex) {
     // 计算
     let midRatio = (startRatio + endRatio) / 2;
     let startRadian = startRatio * Math.PI * 2;
@@ -25,10 +25,24 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
     // 通过扇形内径/外径的值，换算出辅助参数 k（默认值 1/3）
     k = typeof k !== 'undefined' ? k : 1 / 3;
     // 计算选中效果分别在 x 轴、y 轴方向上的位移（未选中，则位移均为 0）
+    let selectSpac = selection || defaultselection && i == defaultIndex ? 3 : ''; //默认选中间距
+    let offsetX =  0;
+    let offsetY =  0;
+    if (selectSpac) {
+        if (midRatio >= 0.5) {
+            offsetX = 0.2
+            offsetY = -0.2
+        } else {
+            offsetX = -0.2
+            offsetY = 0.2
+        }
+    }
+    if (isSelected) {
+        offsetX = Math.cos(midRadian) * 0.1
+        offsetX = Math.sin(midRadian) * 0.1
+    }
 
-    let selectSpac = defaultSelection && i == 1 ? 2: 0; //默认选中间距
-    let offsetX = isSelected ? Math.cos(midRadian) * 0.1 : 0 +  (selectSpac? 0.2 : 0);
-    let offsetY = isSelected ? Math.sin(midRadian) * 0.1 : 0 +  (selectSpac? -0.2 : 0);
+
     // 计算高亮效果的放大比例（未高亮，则比例为 1）
     let hoverRate = isHovered ? 1.05 : 1;
     // 返回曲面参数方程
@@ -63,21 +77,21 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
         },
         z: function (u, v) {
             if (u < -Math.PI * 0.5) {
-                return  selectSpac + Math.sin(u);
+                return selectSpac + Math.sin(u);
             }
-            if (defaultSelection && u < -Math.PI * 0.5) {
-                return  selectSpac + Math.sin(u);
-            } 
-           // 调整扇形高度
-			return selectSpac + (Math.sin(v) > 0 ? 0.1 * h : -1);
+            if (selection && u < -Math.PI * 0.5) {
+                return selectSpac + Math.sin(u);
+            }
+            // 调整扇形高度
+            return selectSpac + (Math.sin(v) > 0 ? 0.1 * h : -1);
         }
     };
 }
 
+let selectedIndex = -1;
 
+export function getPie3D(pieData, { internalDiameterRatio, customVal, legendOption, height, selection, defaultselection, defaultIndex }, viewControl) {
 
-export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,height,defaultSelection}, viewControl) {
-     
     //internalDiameterRatio:透明的空心占比
     let series = [];
     let sumValue = 0;
@@ -86,6 +100,7 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
     let legendData = [];
     let legendBfb = [];
     let k = 1 - internalDiameterRatio;
+    selectedIndex = defaultIndex || defaultIndex == 0 ? defaultIndex : -1
     pieData.sort((a, b) => {
         return (b.value - a.value);
     });
@@ -127,7 +142,7 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
         series[i].pieData.startRatio = startValue / sumValue;
         series[i].pieData.endRatio = endValue / sumValue;
         series[i].parametricEquation = getParametricEquation(series[i].pieData.startRatio, series[i].pieData.endRatio,
-            false, false, k, height? height: series[i].pieData.value,i,defaultSelection);
+            false, false, k, height ? height : series[i].pieData.value, selection, i, defaultselection, defaultIndex);
         startValue = endValue;
         let bfb = fomatFloat(series[i].pieData.value / sumValue, 4);
         legendData.push({
@@ -139,11 +154,11 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
             value: bfb
         });
     }
-    let boxHeight = getHeight3D(series, 20,customVal);//通过传参设定3d饼/环的高度，20代表20px
+    let boxHeight = getHeight3D(series, 20, customVal);//通过传参设定3d饼/环的高度，20代表20px
     // 准备待返回的配置项，把准备好的 legendData、series 传入。
     let option = {
-        legend:  legendOption? legendOption : {
-            data:  legendData,
+        legend: legendOption ? legendOption : {
+            data: legendData,
             orient: 'vertical',
             right: 0,
             y: 'center',
@@ -152,28 +167,28 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
             itemWidth: 14,  // 设置图例标记的宽度
             itemHeight: 14, // 设置图例标记的高度
             formatter: function (param) {
-                
+
                 let item = legendBfb.filter(item => item.name == param)[0];
                 let bfs = fomatFloat(item.value * 100, 2);
                 return `{a|${item.name}}{b|${bfs + '%'}}`
             },
             textStyle: {
-                padding:[2,0,0,4],
+                padding: [2, 0, 0, 4],
                 fontFamily: 'Microsoft YaHei',
                 rich: {
                     a: {
-                    width:120,
-                    fontSize:14,
-                    color: "#666",
-                  },
-                  b: {
-                    padding: [0, 0, 0, 2],
-                    fontWeight:'bold',
-                    color: "#2189FC",
-                    fontSize:14,
-                  },
+                        width: 120,
+                        fontSize: 14,
+                        color: "#666",
+                    },
+                    b: {
+                        padding: [0, 0, 0, 2],
+                        fontWeight: 'bold',
+                        color: "#2189FC",
+                        fontSize: 14,
+                    },
                 },
-              },
+            },
         },
         labelLine: {
             show: false,
@@ -202,18 +217,18 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
                 let bfb = ''
                 if (params.seriesName !== 'mouseoutSeries' && params.seriesName !== 'pie2d') {
                     const item = option.series[params.seriesIndex].pieData
-                     if( item.value == customVal || item.value.rate==0){//为0时
+                    if (item.value == customVal || item.value.rate == 0) {//为0时
                         bfb = '0.00'
-                     }else{
-                        bfb =  item.value?.toFixed(2);
-                     }
+                    } else {
+                        bfb = item.rate?.toFixed(2);
                     }
-                    return `${params.seriesName}<br/>` +
-                        `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span>` +
-                        `${bfb}%`;
-                    
                 }
-            
+                return `${params.seriesName}<br/>` +
+                    `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span>` +
+                    `${bfb}%`;
+
+            }
+
         },
         xAxis3D: {
             min: -1,
@@ -229,9 +244,9 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
         },
         grid3D: {
             show: false,
-            boxHeight: height? height : boxHeight, //圆环的高度
+            boxHeight: height ? height : boxHeight, //圆环的高度
             width: '100%',
-            top:0,
+            top: 0,
             left: 0,
             viewControl: { //3d效果可以放大、旋转等，请自己去查看官方配置
                 alpha: 40, //角度
@@ -240,7 +255,7 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
                 zoomSensitivity: 0, //设置为0无法缩放
                 panSensitivity: 0, //设置为0无法平移
                 autoRotate: true, //自动旋转   
-               ...viewControl
+                ...viewControl
             },
             //后处理特效可以为画面添加高光、景深、环境光遮蔽（SSAO）、调色等效果。可以让整个画面更富有质感。
             // postEffect: {//配置这项会出现锯齿，请自己去查看官方配置有办法解决 
@@ -262,38 +277,39 @@ export function getPie3D(pieData, {internalDiameterRatio,customVal,legendOption,
 
 }
 
-let selectedIndex = '';
-let hoveredIndex = '';
-export function chartClick(myChart,that, params) { //基本用不上 有点问题 用得上的时候修复
+
+
+
+export function chartClick(myChart, that, params, fixedHeight) { //基本用不上 有点问题 用得上的时候修复
     // 监听鼠标事件，实现饼图选中效果（单选），近似实现高亮（放大）效果。
     // 监听点击事件，实现选中效果（单选）
     // 从 option.series 中读取重新渲染扇形所需的参数，将是否选中取反。
-    let isSelected = !that.option.series[params.seriesIndex].pieStatus.selected;
-    let isHovered = that.option.series[params.seriesIndex].pieStatus.hovered;
     let k = that.option.series[params.seriesIndex].pieStatus.k;
     let startRatio = that.option.series[params.seriesIndex].pieData.startRatio;
     let endRatio = that.option.series[params.seriesIndex].pieData.endRatio;
-    // 如果之前选中过其他扇形，将其取消选中（对 option 更新）
-    if (selectedIndex !== '' && selectedIndex !== params.seriesIndex) {
-        that.option.series[selectedIndex].parametricEquation = getParametricEquation(that.option.series[
-            selectedIndex].pieData
-            .startRatio, that.option.series[selectedIndex].pieData.endRatio, false, false, k, that.option.series[
-                selectedIndex].pieData
-            .value);
-        that.option.series[selectedIndex].pieStatus.selected = false;
+    let h = fixedHeight ? fixedHeight : that.option.series[params.seriesIndex].pieData.endRatio;
+
+    if (selectedIndex == params.seriesIndex) {
+        return
     }
-    // 对当前点击的扇形，执行选中/取消选中操作（对 option 更新）
+    // 如果之前选中过其他扇形，将其取消选中（对 option 更新）
+    if (selectedIndex != -1) { //点击 当前非选中
+        that.option.series[selectedIndex].parametricEquation =
+            getParametricEquation(that.option.series[selectedIndex].pieData.startRatio,
+                that.option.series[selectedIndex].pieData.endRatio, false, false, k,
+                fixedHeight ? fixedHeight : that.option.series[selectedIndex].pieData.value,
+                false);
+    }
     that.option.series[params.seriesIndex].parametricEquation = getParametricEquation(startRatio, endRatio,
-        isSelected,
-        isHovered, k, that.option.series[params.seriesIndex].pieData.value);
-    that.option.series[params.seriesIndex].pieStatus.selected = isSelected;
+        false,
+        false, k, h, true);
     // 如果本次是选中操作，记录上次选中的扇形对应的系列号 seriesIndex
-    isSelected ? selectedIndex = params.seriesIndex : null;
+    selectedIndex = params.seriesIndex
     // 使用更新后的 option，渲染图表
     myChart.setOption(that.option);
 
 }
-export function chartMouseover(myChart,that, params) {
+export function chartMouseover(myChart, that, params) {
     // 准备重新渲染扇形所需的参数
     let isSelected;
     let isHovered;
@@ -341,7 +357,7 @@ export function chartMouseover(myChart,that, params) {
     }
 }
 
-export function chartMouseout(myChart,that, params) {  // 修正取消高亮失败的 bug
+export function chartMouseout(myChart, that, params) {  // 修正取消高亮失败的 bug
     // 准备重新渲染扇形所需的参数
     let isSelected;
     let isHovered;

@@ -45,22 +45,13 @@ export default Model.extend({
         // }))
         data.RegionOfficeLocationList = data?.RegionOfficeLocationList?.map(item => ({
           position: {...item.position, ...item,position:undefined}
-        }))
+        }))?.filter(item=>item?.position?.OfficeLocationNum!=0 || item?.position?.OfficeAndUserNum!=0)
         data.RegionStorehouseList = data?.RegionStorehouseList?.map(item => ({
           position: {...item.position, ...item,position:undefined}
         }))
 
 
         callback && callback(data);
-      }
-    },
-
-    // 基础数据 - 导出
-    *ExportDisposableServiceInfo({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.ReportsViewsApi.ExportDisposableServiceInfo, payload);
-      if (result.IsSuccess) {
-        message.success('导出成功！');
-        downloadFile(result.Datas);
       }
     },
   },

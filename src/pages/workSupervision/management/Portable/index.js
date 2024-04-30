@@ -45,6 +45,7 @@ const Portable = props => {
         <SearchWrapper configId={CONFIGID} />
         <AutoFormTable
           noload
+          notOperate={props.notOperate}
           getPageConfig
           handleMode="modal"
           style={{ marginTop: 10 }}

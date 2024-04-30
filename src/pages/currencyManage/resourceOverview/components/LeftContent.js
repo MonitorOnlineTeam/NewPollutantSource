@@ -187,6 +187,7 @@ const Index = (props) => {
         {
           type: 'category',
           axisLabel: {
+            interval: 0,
             //坐标轴刻度标签的相关设置
             textStyle: {
               color: '#DAEBFF',
@@ -339,7 +340,7 @@ const Index = (props) => {
       series: [
         {
           type: 'pie',
-          radius: ['30%', '45%'],
+          radius: ['36%', '57%'],
           avoidLabeloverlap: false,
           label: {
             show:true,
@@ -350,7 +351,7 @@ const Index = (props) => {
               lineHeight:16,
               color: '#fff',
               align:'left',
-              padding: [0, -80],
+              padding: type == 1 ? [0, -66] : [0, -64],
             }
           },
           emphasis: {
@@ -361,8 +362,8 @@ const Index = (props) => {
           labelLine: {
             normal: {
               show: true,
-              length: 6,
-              length2: 80,
+              length: 5,
+              length2:type == 1 ? 62 : 68,
               align: "right",
             },
             emphasis: {
@@ -384,10 +385,11 @@ const Index = (props) => {
   const { loading } = props;
   return (
     <Spin spinning={!!loading}>
+      <div style={{height:'35%',minHeight:270}}>
       <CardHeader isStatistics index={1} title='人员统计' subtitle='人员总数（ 人 ）' num={data?.UserInfo?.SumUserNum} onClick={()=>{viewAll('人员统计')}}/>
-      <div className='cardBodySty' style={{height:'calc(280px - 66px)'}}>
+      <div className='cardBodySty' style={{height:'calc(100% - 111px)'}}>
         <Radio.Group onChange={(e)=>{setPersonType(e.target.value)}} defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
-          <Radio.Button value="1">业务属性维度</Radio.Button>
+          <Radio.Button value="1">业务属性</Radio.Button>
           <Radio.Button value="2">司龄</Radio.Button>
         </Radio.Group>
         <ReactEcharts
@@ -397,9 +399,10 @@ const Index = (props) => {
           theme="my_theme"
         />
       </div>
-
+      </div>
+      <div style={{height:'35%'}}>
        <CardHeader isStatistics index={2} title='车辆统计' subtitle='车辆总数（ 辆 ）' num={data?.CarInfo?.CarNum} onClick={()=>{viewAll('车辆统计')}}/>
-      <div className='cardBodySty'   style={{height:'calc(336px - 36px - 66px - 8px)'}}>
+      <div className='cardBodySty'   style={{height:'calc(100% - 36px - 66px - 8px)'}}>
         <Row justify='space-between' align='middle'>
         <Radio.Group onChange={(e)=>{setVehicleType(e.target.value)}} defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
           <Radio.Button value="1">车辆分类</Radio.Button>
@@ -414,15 +417,17 @@ const Index = (props) => {
           theme="my_theme"
         /> 
       </div>
+      </div>
+      <div style={{height:'30%'}}>
       <CardHeader title='备机统计' onClick={()=>{viewAll('备机统计')}}/>
-      <div className='cardBodySty'>
+      <div className='cardBodySty'    style={{ height: "calc(100% - 47px)" }}>
         <div style={{lineHeight:'34px',padding:'12px 0'}}>
         <div style={{ background: 'url(/currencyResOver/bjk.png)',backgroundSize:'100% 100%'}}>
              <span style={{paddingLeft:76,color:'#BAE3FF'}}>备机总数</span>
              <span style={{fontSize:16,position:'absolute',right:32}}>{data?.StandbyMachineInfo?.StandbyMachineNum || 0}个</span>
           </div>
         </div>
-      <Row align='middle' justify='space-between' style={{height:210}}>
+      <Row align='middle' justify='space-between' style={{ height: "calc(100% - 58px)" }}>
       <div  style={{position:'relative',width: '50%',height:'100%'}}>
       <div className='bjkSty'> </div>
       <ReactEcharts
@@ -445,6 +450,7 @@ const Index = (props) => {
           </div>
         </Row>
         </div>
+        </div>
         <Modal
         visible={visible}
         title={modalTitle}
@@ -455,7 +461,7 @@ const Index = (props) => {
         mask={false}
         bodyStyle={{padding:0,marginTop:-1}}
       >
-        {modalTitle=='人员统计'? <PersonnelFiles isModal/> : modalTitle=='车辆统计'? <VehicleManager isModal/> : <Standby isModal/>}
+        {modalTitle=='人员统计'? <PersonnelFiles isModal/> : modalTitle=='车辆统计'? <VehicleManager isModal/> : <Standby isModal notOperate/>}
       </Modal>
     </Spin>
 

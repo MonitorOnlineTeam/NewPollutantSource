@@ -18,6 +18,7 @@ class Index extends Component {
             dateFormat: this.props.format || 'YYYY-MM-DD HH:mm:ss',
             ranges: {
                 今天: [moment().startOf('day'), moment()],
+                昨天: [moment().subtract(1, 'days'), moment()],
                 本周: [startOfWeek.subtract(startOfWeek.isoWeekday() - 1, 'days'), moment().clone().endOf('isoWeek')],
                 上周: [startOfWeek.clone().subtract(1, 'week'), startOfWeek.clone().subtract(1, 'day')],
                 连续七天: [moment().add(-6, 'd'), moment()],
@@ -29,7 +30,7 @@ class Index extends Component {
                 三季度: [moment(`${currentYear}-07-01`).startOf('quarter'), moment(`${currentYear}-09-30`).endOf('quarter')],
                 四季度: [moment(`${currentYear}-10-01`).startOf('quarter'), moment(`${currentYear}-12-31`).endOf('quarter')],
                 近半年: [moment().subtract(6, 'months').startOf('month'), moment()],
-                本年: [moment().startOf('year'),  moment()],
+                今年: [moment().startOf('year'),  moment()],
                 去年: [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')],
                 前年: [moment().subtract(2, 'years').startOf('year'),  moment().subtract(2, 'years').endOf('year')],
                 近一年: [moment().subtract(1, 'year').startOf('year'),moment()],

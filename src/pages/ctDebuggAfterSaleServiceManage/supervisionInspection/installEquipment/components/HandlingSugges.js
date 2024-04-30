@@ -48,7 +48,7 @@ const Index = (props) => {
         dispatchId: parData.DispatchId,
         pointId: parData.PointId,
         equipmentAuditId: parData.EquipmentAuditId,
-      },
+      }
     });
   }
   }, []);

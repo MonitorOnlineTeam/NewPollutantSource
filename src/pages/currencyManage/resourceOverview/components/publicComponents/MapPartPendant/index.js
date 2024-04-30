@@ -34,7 +34,7 @@ const  Dot = ()=><div  style={{textAlign:'center'}} ><span className={styles.cir
 export const RegPopver = ({ regionName,sum,unit,data, isEnter,style,onClick }) => { 
   const enterFlag = isEnter && data?.[0]?.value!=0;
   const sumFlag = sum||sum==0;
-  return <div style={{position:'relative',transform: 'translate(-50%,calc(-50% - 28px))',padding: '0 14px',cursor:'text',width:180,height:112, background: `url(/currencyResOver/tksf.png)`, backgroundSize: '100% 100%',...style }}>
+  return <div style={{position:'relative',transform: 'translate(-50%,calc(-50% - 28px))',padding: '0 10px',cursor:'text',width:174,height:112, background: `url(/currencyResOver/tksf.png)`, backgroundSize: '100% 100%',...style }}>
     <Row align='middle' style={{ height: 29, opacity: .9, color: '#52F2FF' }} justify='space-between'><div className='textOverflow' style={{ width:  sumFlag? 'calc(100% - 24px)' :  enterFlag? 'calc(100% - 18px)' : '100%'}} title={regionName}>{regionName}</div>
          {sumFlag&&<span>{sum}{unit}</span>}
      {enterFlag && <RightOutlined style={{paddingLeft: 4}} onClick={()=>{onClick&&onClick()}} style={{ cursor: 'pointer' }} />}</Row>
@@ -50,7 +50,7 @@ export const RegPopver = ({ regionName,sum,unit,data, isEnter,style,onClick }) =
 // 弹框组件 办事处 备件库等 marginTop:'calc(-50% - 7px - 2px)',marginLeft:'-50%',
 export const SecondPopver = ({ data,style,isIcon,isEnter,onClick  }) => { 
   const enterFlag = isEnter && data?.value!=0;
-  return <div style={{position:'relative',transform:  `translate(-50%, ${isIcon? 'calc(-50% - 27px)' :  'calc(-50% - 14px)'})`,padding: '0 12px',cursor:'text', width: 180, height: 44, background: `url(/currencyResOver/bsc.png)`, backgroundSize: '100% 100%',...style  }}>
+  return <div style={{position:'relative',transform:  `translate(-50%, ${isIcon? 'calc(-50% - 27px)' :  'calc(-50% - 14px)'})`,padding: '0 10px',cursor:'text', width: 180, height: 44, background: `url(/currencyResOver/bsc.png)`, backgroundSize: '100% 100%',...style  }}>
     <Row justify='space-between' align='middle' style={{opacity:enterFlag? .9 : 1, color: enterFlag? '#52F2FF' : '#fff', height: 'calc(100% - 12px)' }}>
       <span className='textOverflow' style={{ width:enterFlag? 'calc(100% - 46px)' :  data?.value? 'calc(100% - 28px)' : '100%'}} title={data?.name}>{data?.name}</span>
       <>
