@@ -1467,6 +1467,36 @@ export default {
                     },
                   ],
                 },
+                { //运维计划
+                  path: '/operations/operaPlan',
+                  name: 'operaPlan',
+                  routes: [
+                    {
+                      path: '/operations/operaPlan',
+                      redirect: '/operations/operaPlan/formulateOperaTask',
+                    },
+                    {
+                      path: '/operations/operaPlan/formulateOperaTask', //制定运维计划
+                      name: 'formulateOperaTask',
+                      component: './operations/operaPlan/formulateOperaTask',
+                    },
+                    // {
+                    //   path: '/operations/operaPlan/afootPlan', //进行中计划
+                    //   name: 'afootPlan',
+                    //   component: './operations/operaPlan/afootPlan',
+                    // },
+                    // {
+                    //   path: '/operations/operaPlan/completedPlan', //已完结计划
+                    //   name: 'completedPlan',
+                    //   component: './operations/operaPlan/completedPlan',
+                    // },
+                    // {
+                    //   path: '/operations/operaPlan/operaPlanQuery', //运维计划查询
+                    //   name: 'operaPlanQuery',
+                    //   component: './operations/operaPlan/operaPlanQuery',
+                    // },
+                  ],
+                },
               ],
             },
             {
@@ -3130,6 +3160,13 @@ export default {
                       path: '/ctManage/projectExecuProgress/remainProblems',
                       component:
                         './ctDebuggAfterSaleServiceManage/projectExecuProgress/remainProblems',
+                    },
+                    {
+                      // 部件更换查询
+                      name: 'componentReplaceQuery',
+                      path: '/ctManage/projectExecuProgress/componentReplaceQuery',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/componentReplaceQuery',
                     },
                     {
                       // 服务不及时
