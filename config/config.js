@@ -3176,6 +3176,13 @@ export default {
                         './ctDebuggAfterSaleServiceManage/projectExecuProgress/serviceIsNotTimely',
                     },
                     {
+                      // 服务报告查询
+                      name: 'reportQuery',
+                      path: '/ctManage/projectExecuProgress/reportQuery',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportQuery',
+                    },
+                    {
                       // 服务报告审核
                       name: 'reportAudit',
                       path: '/ctManage/projectExecuProgress/reportAudit',

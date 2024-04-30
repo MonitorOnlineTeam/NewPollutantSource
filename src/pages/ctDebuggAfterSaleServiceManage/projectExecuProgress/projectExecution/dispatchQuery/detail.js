@@ -18,6 +18,7 @@ import AttachmentView from '@/components/AttachmentView';
 import CooperaInspection from './components/CooperaInspection'
 import { uploadPrefix } from '@/config'
 import styles from "./style.less"
+import { isArray } from 'lodash';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -423,7 +424,6 @@ const Index = (props) => {
 
   }, [earlyStaCheckReportId, earlyStaCheckInfoId, earlyStaCheckWorkId,])
   const EarlyStageCheck = ({ data }) => {
-
     const SiteInvestigation = ({ siteData, loading }) => {
       return <>
         <TitleComponents text='现场勘查信息' />
@@ -633,11 +633,11 @@ const Index = (props) => {
   const [staticInfoId, setStaticInfoId] = useState('')
   const [staticInfoLoading, setStaticInfoLoading] = useState(false)
   const [staticInfoData, setStaticInfoData] = useState([])
-  //安装报告  
+  //安装报告
   const [staticInstallRepId, setStaticInstallRepId] = useState('')
   const [staticInstallRepLoading, setStaticInstallRepLoading] = useState(false)
   const [staticInstallRepData, setStaticInstallRepData] = useState([])
-  //安装照片  
+  //安装照片
   const [staticPhotoId, setStaticPhotoId] = useState('')
   const [staticPhotoLoading, setStaticPhotoLoading] = useState(false)
   const [staticPhotoData, setStaticPhotoData] = useState([])
@@ -944,7 +944,7 @@ const Index = (props) => {
   const [debugInfoId, setDebugInfoId] = useState('')
   const [debugInfoLoading, setDebugInfoLoading] = useState(false)
   const [debugInfoData, setDebugInfoData] = useState([])
-  //参数照片  
+  //参数照片
   const [debugPhotoId, setDebugPhotoId] = useState('')
   const [debugPhotoLoading, setDebugPhotoLoading] = useState(false)
   const [debugPhotoData, setDebugPhotoData] = useState([])
@@ -1696,21 +1696,28 @@ const Index = (props) => {
   }
 
   const fillContentTabContent = (item) => {
+    let RecordList = isArray(item.RecordList) ? item.RecordList : [];
+
+    // 查询指定的RecordId
+    if(props.shouldOnlyRecordId) {
+      RecordList = RecordList.filter(item => item.RecordId === props.shouldOnlyRecordId);
+    }
+
     const tabContent = {
-      '1': <EarlyStageCheck data={item.RecordList?.length ? item.RecordList : []} />, //前期勘查
-      '2': <EquipmentInspection data={item.RecordList ? item.RecordList : []} />,//设备验货
-      '3': <GuideInstallation data={item.RecordList ? item.RecordList : []} />,//指导安装
-      '4': <StaticDebug data={item.RecordList ? item.RecordList : []} />,//静态调试
-      '5': <DynamicOperation data={item.RecordList ? item.RecordList : []} />,//前期勘查
-      '6': <TestRun data={item.RecordList ? item.RecordList : []} />,//168试运行
-      '7': <DebugTest data={item.RecordList ? item.RecordList : []} />,//72小时调试检测
-      '8': <Networking data={item.RecordList ? item.RecordList : []} />,//联网
-      '9': <ComparativeMonitoring data={item.RecordList ? item.RecordList : []} />,//比对监测
-      '10': <ProjectAcceptance data={item.RecordList ? item.RecordList : []} />,//项目验收
-      '11': <CooperateInspection data={item.RecordList ? item.RecordList : []} />,//配合检查
-      '12': <Maintenance data={item.RecordList ? item.RecordList : []} />,//维修
-      '13': <Train data={item.RecordList ? item.RecordList : []} />,//培训
-      '14': <Other data={item.RecordList ? item.RecordList : []} />,//其他
+      '1': <EarlyStageCheck data={RecordList} />, //前期勘查
+      '2': <EquipmentInspection data={RecordList} />,//设备验货
+      '3': <GuideInstallation data={RecordList} />,//指导安装
+      '4': <StaticDebug data={RecordList} />,//静态调试
+      '5': <DynamicOperation data={RecordList} />,//前期勘查
+      '6': <TestRun data={RecordList} />,//168试运行
+      '7': <DebugTest data={RecordList} />,//72小时调试检测
+      '8': <Networking data={RecordList} />,//联网
+      '9': <ComparativeMonitoring data={RecordList} />,//比对监测
+      '10': <ProjectAcceptance data={RecordList} />,//项目验收
+      '11': <CooperateInspection data={RecordList} />,//配合检查
+      '12': <Maintenance data={RecordList} />,//维修
+      '13': <Train data={RecordList} />,//培训
+      '14': <Other data={RecordList} />,//其他
     }
     return item.ItemId && tabContent[item.ItemId]
   }
@@ -1933,15 +1940,18 @@ const Index = (props) => {
 
   return (
     <div>
-      <Tabs defaultActiveKey="1" tabPosition="left">
-        <TabPane tab="服务填报内容" key="1">
-          {/* <ServiceFillContent /> */}
-          {ServiceFillContent()}
-        </TabPane>
-        <TabPane tab="服务派工申请单" key="2">
-          <Spin spinning={!!serviceDispatchLoading}> <ServiceWorkContent /> </Spin>
-        </TabPane>
-      </Tabs>
+      {
+        props.shouldOnlyRecordId ?
+          <ServiceFillContent /> :
+          <Tabs defaultActiveKey="1" tabPosition="left">
+            <TabPane tab="服务填报内容" key="1">
+            <ServiceFillContent />
+            </TabPane>
+            <TabPane tab="服务派工申请单" key="2">
+              <Spin spinning={!!serviceDispatchLoading}> <ServiceWorkContent /> </Spin>
+            </TabPane>
+          </Tabs>
+      }
       {/* 查看附件弹窗 */}
       <ImageView
         isOpen={isOpen}

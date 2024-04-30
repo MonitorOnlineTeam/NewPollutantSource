@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-02 11:09:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-03 14:01:30
+ * @Last Modified time: 2024-04-29 10:42:17
  * @Description:  客户投诉解决页面内容
  */
 import React, { useState, useEffect } from 'react';
@@ -116,8 +116,6 @@ const AddOrEditModal = props => {
   // 保存添加或编辑
   const onAddOrEdit = status => {
     form.validateFields().then(values => {
-      console.log('values', values);
-      // return;
       dispatch({
         type: 'customer/AddOrEditCustomerComplaints',
         payload: {
@@ -172,7 +170,6 @@ const AddOrEditModal = props => {
       setProvinceList(provinceList_temp);
     }
   };
-  console.log('uploadId', uploadId);
   return (
     <Modal
       title={ID ? '编辑' : '登记'}
@@ -185,6 +182,7 @@ const AddOrEditModal = props => {
           取消
         </Button>,
         <Button
+          style={{display: ID ? 'none' : 'inline'}}
           key="save"
           type="primary"
           loading={saveLoading}

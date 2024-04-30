@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 16:22:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-12 16:15:24
+ * @Last Modified time: 2024-04-28 16:48:56
  * @Description: 人员培训记录表
  */
 import React, { useState, useEffect } from 'react';
@@ -13,6 +13,7 @@ import { taskType } from '../workSupervisionUtils';
 import { InboxOutlined } from '@ant-design/icons';
 import Cookie from 'js-cookie';
 import moment from 'moment';
+import config from '@/config';
 
 const { Dragger } = Upload;
 

@@ -20,7 +20,7 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import Detail from './detail'
-const { Option } = Select; 
+const { Option } = Select;
 
 const namespace = 'dispatchQuery'
 
@@ -316,7 +316,7 @@ const Index = (props) => {
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
-        {expand && <> 
+        {expand && <>
         <Col span={8}>
           <Form.Item name='serviceUserName' label='服务工程师' >
             <Input placeholder="请输入" allowClear />
@@ -324,7 +324,7 @@ const Index = (props) => {
         </Col>
           <Col span={8}>
             <Form.Item name='time' label='下单日期' >
-              <RangePicker_ 
+              <RangePicker_
               style={{ width: '100%' }}
               showTime={false}
               format="YYYY-MM-DD"
@@ -411,7 +411,7 @@ const Index = (props) => {
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
         mask={false}
       >
-        <Detail serviceApplicaData={detailData ? detailData : {}} id={detailId}/>
+        <Detail serviceApplicaData={detailData ? detailData : {}} id={detailId} />
       </Modal>
       </BreadcrumbWrapper>
     </div>

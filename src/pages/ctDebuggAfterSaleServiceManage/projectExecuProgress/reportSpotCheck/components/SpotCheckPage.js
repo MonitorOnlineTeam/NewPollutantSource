@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:41:16
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-26 11:23:16
+ * @Last Modified time: 2024-04-28 15:48:20
  * @Description:  服务报告抽查 - 抽查页面
  */
 import React, { useState, useEffect } from 'react';
@@ -31,6 +31,7 @@ import styles from '../index.less';
 import ImageView from '@/components/ImageView';
 import SdlUpload from '@/pages/AutoFormManager/SdlUpload';
 import cuid from 'cuid';
+import ServiceReport from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery/detail.js';
 
 const { Step } = Steps;
 const { TextArea } = Input;
@@ -48,7 +49,7 @@ const SpotCheckPage = props => {
   const [tableTotal, setTableTotal] = useState(0);
   const [dataSource, setDataSource] = useState([]);
   const [stepCurrent, setStepCurrent] = useState(0);
-  const [serviceReportData, setServiceReportData] = useState([]);
+  const [currentID, setCurrentID] = useState([]);
   const [isImageViewOpen, setIsImageViewOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [imageList, setImageList] = useState([]);
@@ -85,18 +86,18 @@ const SpotCheckPage = props => {
     });
   };
 
-  // 获取服务详情
-  const GetSingleServiceReport = id => {
-    dispatch({
-      type: 'reportSpotCheck/GetSingleServiceReport',
-      payload: {
-        id,
-      },
-      callback: res => {
-        setServiceReportData(res.Datas);
-      },
-    });
-  };
+  // // 获取服务详情
+  // const GetSingleServiceReport = id => {
+  //   dispatch({
+  //     type: 'reportSpotCheck/GetSingleServiceReport',
+  //     payload: {
+  //       id,
+  //     },
+  //     callback: res => {
+  //       setServiceReportData(res.Datas);
+  //     },
+  //   });
+  // };
 
   // 添加服务抽查报告
   const AddCheckServiceReport = () => {
@@ -241,7 +242,8 @@ const SpotCheckPage = props => {
             onClick={() => {
               setStepCurrent(1);
               setCurrentNum(record.Num);
-              GetSingleServiceReport(record.ID);
+              setCurrentID(record.ID);
+              // GetSingleServiceReport(record.ID);
             }}
           >
             下一步
@@ -345,8 +347,7 @@ const SpotCheckPage = props => {
   const getStep2Content = () => {
     return (
       <div style={{ marginTop: 20, display: stepCurrent === 1 ? 'block' : 'none' }}>
-        {/* <TitleComponents text="基础信息-发起人填写" /> */}
-        {serviceReportData.map(item => {
+        {/* {serviceReportData.map(item => {
           let serviceData = item.ServiceList[0];
           let fileList = serviceData.FileList;
           let imgList = fileList.ImgList.map((img, index) => {
@@ -365,8 +366,9 @@ const SpotCheckPage = props => {
               <Descriptions.Item label="备注">{serviceData.Remark || '-'}</Descriptions.Item>
             </Descriptions>
           );
-        })}
-        <Row justify="center">
+        })} */}
+        {stepCurrent === 1 && <ServiceReport id={currentID} shouldOnlyRecordId="9" />}
+        <Row justify="center" style={{marginTop: 20}}>
           <Space>
             <Button onClick={() => setStepCurrent(0)}>上一步</Button>
             <Button type="primary" onClick={() => setStepCurrent(2)}>

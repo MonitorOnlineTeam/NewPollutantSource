@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-01 10:18:03
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-01 16:53:08
+ * @Last Modified time: 2024-04-29 10:13:05
  * @Description:  服务热线电话页面内容
  */
 
@@ -32,6 +32,7 @@ import { DeleteOutlined, ExportOutlined } from '@ant-design/icons';
 import AllViewModal from './AllViewModal';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon';
 import styles from '../../index.less';
+import Cookie from 'js-cookie';
 
 const { TextArea } = Input;
 
@@ -408,8 +409,8 @@ const HotPhoneContentPage = props => {
           payload: {
             id,
             ...values,
-            recipientDate: values.recipientDate.format('YYYY-MM-DD HH:mm:ss'),
-            processingCompletion: values.processingCompletion.format('YYYY-MM-DD HH:mm:ss'),
+            recipientDate: values.RecipientDate.format('YYYY-MM-DD HH:mm:ss'),
+            processingCompletion: values.ProcessingCompletion.format('YYYY-MM-DD HH:mm:ss'),
           },
           callback: res => {
             message.success('操作成功！');
@@ -419,6 +420,7 @@ const HotPhoneContentPage = props => {
         });
       })
       .catch(errorInfo => {
+        console.log('errorInfo', errorInfo)
         message.warning('请输入完整的数据');
         return;
       });
@@ -426,6 +428,8 @@ const HotPhoneContentPage = props => {
 
   const getPageContent = () => {
     const modalProps = isView ? { footer: false } : {};
+    const currentUser = JSON.parse(Cookie.get('currentUser'));
+    
     return (
       <Card bordered={isAll ? false : true} title={<SearchComponents />}>
         <SdlTable
@@ -467,7 +471,10 @@ const HotPhoneContentPage = props => {
             className={styles.hotPhoneForm}
             form={form1}
             layout="horizontal"
-            initialValues={{}}
+            initialValues={{
+              RecipientName: currentUser.UserName,
+              RecipientDate: moment(),
+            }}
             labelCol={{
               flex: '110px',
             }}
@@ -613,12 +620,12 @@ const HotPhoneContentPage = props => {
                 <Form.Item
                   name="Source"
                   label="来源"
-                  rules={[
-                    {
-                      required: true,
-                      message: '请填写来源！',
-                    },
-                  ]}
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //     message: '请填写来源！',
+                  //   },
+                  // ]}
                 >
                   {isView ? <Input bordered={false} disabled={true} /> : <TextArea rows={1} />}
                 </Form.Item>
@@ -641,12 +648,12 @@ const HotPhoneContentPage = props => {
                 <Form.Item
                   name="Treatment"
                   label="处理方案"
-                  rules={[
-                    {
-                      required: true,
-                      message: '请填写处理方案！',
-                    },
-                  ]}
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //     message: '请填写处理方案！',
+                  //   },
+                  // ]}
                 >
                   {isView ? <Input bordered={false} disabled={true} /> : <TextArea rows={3} />}
                 </Form.Item>
