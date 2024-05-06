@@ -961,8 +961,11 @@ export const API = {
       GetStatServiceReport: before + '/CTProjectExecutionApi/GetStatServiceReport',
       // 获取审核情况统计数据 - 导出
       ExportGetStatServiceReport: before + '/CTProjectExecutionApi/ExportGetStatServiceReport',
+      // 大区明细
+      GetServiceReportDesc: before + '/CTProjectExecutionApi/GetServiceReportDesc',
+      // 大区明细 - 导出
+      ExportGetServiceReportDesc: before + '/CTProjectExecutionApi/ExportGetServiceReportDesc',
   
-
     },
     // 服务报告审核
     ReportAuditApi: {

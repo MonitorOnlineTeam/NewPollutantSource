@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Form, Modal, Input, Button, Tabs, Select, Space, Row, Col, Card, Divider } from 'antd';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SdlTable from '@/components/SdlTable';
+import StatisticsDetailsModal from './StatisticsDetailsModal';
 
 const dvaPropsData = ({ common, loading }) => ({
   largeRegionList: common.largeRegionList,
@@ -14,6 +15,7 @@ const StatisticsModal = props => {
   const [form] = Form.useForm();
 
   const [dataSource, setDataSource] = useState([]);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const { dispatch, queryLoading, exportLoading, isModalOpen, onCancel, largeRegionList } = props;
 
@@ -58,39 +60,55 @@ const StatisticsModal = props => {
     let columns = [
       {
         title: '序号',
+        fixed: 'left',
       },
       {
         title: '服务大区',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'LargeRegion',
+        key: 'LargeRegion',
         ellipsis: true,
+        fixed: 'left',
+        render: (text, record) => {
+          return (
+            <a
+              onClick={() => {
+                setIsDetailsModalOpen(true);
+              }}
+            >
+              {text}
+            </a>
+          );
+        },
       },
       {
         title: '成套经理',
         children: [
           {
             title: '已审核报告数量',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'JLAlreadyCount',
+            key: 'JLAlreadyCount',
             ellipsis: true,
-            width: 180,
+            width: 120,
             align: 'center',
           },
           {
             title: '待审核报告数量',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'JLStayCount',
+            key: 'JLStayCount',
             ellipsis: true,
             align: 'center',
-            width: 180,
+            width: 120,
           },
           {
             title: '审核完成率',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'JLRate',
+            key: 'JLRate',
             ellipsis: true,
             align: 'center',
-            width: 180,
+            width: 120,
+            render: (text, record) => {
+              return text + '%';
+            },
           },
         ],
       },
@@ -99,27 +117,30 @@ const StatisticsModal = props => {
         children: [
           {
             title: '已审核报告数量',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'ZLAlreadyCount',
+            key: 'ZLAlreadyCount',
             ellipsis: true,
             align: 'center',
-            width: 180,
+            width: 120,
           },
           {
             title: '待审核报告数量',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'ZLStayCount',
+            key: 'ZLStayCount',
             ellipsis: true,
             align: 'center',
-            width: 180,
+            width: 120,
           },
           {
             title: '审核完成率',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'ZLRate',
+            key: 'ZLRate',
             ellipsis: true,
             align: 'center',
-            width: 180,
+            width: 120,
+            render: (text, record) => {
+              return text + '%';
+            },
           },
         ],
       },
@@ -128,11 +149,11 @@ const StatisticsModal = props => {
         children: [
           {
             title: '待审核报告数量',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'StayReformCount',
+            key: 'StayReformCount',
             ellipsis: true,
             align: 'center',
-            width: 180,
+            width: 120,
           },
         ],
       },
@@ -141,27 +162,30 @@ const StatisticsModal = props => {
         children: [
           {
             title: '已审核报告数量',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'AuditAlreadyCount',
+            key: 'AuditAlreadyCount',
             ellipsis: true,
             align: 'center',
-            width: 180,
+            width: 120,
           },
           {
             title: '待审核报告数量',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'AuditStayCount',
+            key: 'AuditStayCount',
             ellipsis: true,
             align: 'center',
-            width: 180,
+            width: 120,
           },
           {
             title: '审核完成率',
-            dataIndex: 'OrderDate',
-            key: 'OrderDate',
+            dataIndex: 'AuditRate',
+            key: 'AuditRate',
             ellipsis: true,
             align: 'center',
-            width: 180,
+            width: 120,
+            render: (text, record) => {
+              return text + '%';
+            },
           },
         ],
       },
@@ -279,6 +303,16 @@ const StatisticsModal = props => {
       }}
     >
       {getPageContent()}
+      {isDetailsModalOpen && (
+        <StatisticsDetailsModal
+          time={form.getFieldValue('time')}
+          region={form.getFieldValue('region')}
+          isModalOpen={isDetailsModalOpen}
+          onCancel={() => {
+            setIsDetailsModalOpen(false);
+          }}
+        />
+      )}
     </Modal>
   );
 };

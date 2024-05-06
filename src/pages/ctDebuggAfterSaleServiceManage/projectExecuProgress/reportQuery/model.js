@@ -55,5 +55,27 @@ export default Model.extend({
         downloadFile(result.Datas);
       }
     },
+    // 大区明细
+    *GetServiceReportDesc({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.ReportQueryApi.GetServiceReportDesc,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 大区明细 - 导出
+    *ExportGetServiceReportDesc({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.ReportQueryApi.ExportGetServiceReportDesc,
+        payload,
+      );
+      if (result.IsSuccess) {
+        downloadFile(result.Datas);
+      }
+    },
   },
 });

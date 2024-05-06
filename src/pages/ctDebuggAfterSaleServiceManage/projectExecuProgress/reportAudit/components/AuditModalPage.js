@@ -229,7 +229,7 @@ const AuditModalPage = props => {
 
   return (
     <Modal
-      title={`服务报告抽查`}
+      title={`服务报告审核`}
       wrapClassName="spreadOverModal"
       open={isModalOpen}
       destroyOnClose
