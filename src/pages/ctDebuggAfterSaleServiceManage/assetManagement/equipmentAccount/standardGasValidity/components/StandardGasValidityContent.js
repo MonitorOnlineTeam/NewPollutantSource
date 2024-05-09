@@ -55,7 +55,7 @@ const StandardGasValidityContent = props => {
   const [currentID, setCurrentID] = useState();
   const [isView, setIsView] = useState(false);
 
-  const { isAll, queryLoading, saveLoading, dispatch, exportLoading } = props;
+  const { isAll, queryLoading, saveLoading, dispatch, exportLoading,isWorkBench } = props;
 
   useEffect(() => {
     getTableDataSource();
@@ -71,7 +71,7 @@ const StandardGasValidityContent = props => {
         ? values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
       endTime: values.time ? values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss') : undefined,
-      dataType: isAll ? 1 : '0',
+      dataType: isAll && !isWorkBench ? 1 : '0',
     };
   };
 
@@ -84,6 +84,7 @@ const StandardGasValidityContent = props => {
         ...body,
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
+        id:props.id
       },
       callback: res => {
         setDataSource(res.Datas);
@@ -263,6 +264,11 @@ const StandardGasValidityContent = props => {
         item => item.dataIndex !== 'handle' && item.dataIndex !== 'LeaveDate',
       );
     }
+    if(isWorkBench){ //工作台弹框
+      columns = columns.filter(
+        item => item.dataIndex !== 'CreatUserName' && item.dataIndex !== 'CreateDate',
+      );
+    }
 
     return columns;
   };
@@ -421,7 +427,7 @@ const StandardGasValidityContent = props => {
 
   const getPageContent = () => {
     return (
-      <Card bordered={isAll ? false : true} title={<SearchComponents />}>
+      <Card bordered={isAll ? false : true} title={!isWorkBench&&<SearchComponents />}>
         <SdlTable
           loading={queryLoading}
           align="center"

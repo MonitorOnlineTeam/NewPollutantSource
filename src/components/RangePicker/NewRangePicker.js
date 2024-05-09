@@ -20,7 +20,7 @@ class NewRangePicker extends Component {
             dateValue: this.getDefault(),
             ranges: {
                 今天: [moment().startOf('day'), moment()],
-                昨天: [moment().subtract(1, 'days'), moment()],
+                昨天: [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
                 本周: [startOfWeek.subtract(startOfWeek.isoWeekday() - 1, 'days'), moment().clone().endOf('isoWeek')],
                 上周: [startOfWeek.clone().subtract(1, 'week'), startOfWeek.clone().subtract(1, 'day')],
                 连续七天: [moment().add(-6, 'd'), moment()],

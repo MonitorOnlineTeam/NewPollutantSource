@@ -1574,22 +1574,22 @@ const Index = (props, ref) => {
 
         <Col>
           <Row align='middle'>
-            <div style={{ marginRight: 8 }}>
+            <Row  align='middle' style={{ marginRight: 8 }}>
               <div style={{ display: 'inline-block', background: '#bae7ff', width: 24, height: 12, marginRight: 5 }}></div>
               <span>运维周期内</span>
-            </div>
-            <div style={{ marginRight: 8 }}>
+            </Row>
+            <Row  align='middle' style={{ marginRight: 8 }}>
               <div style={{ display: 'inline-block', background: '#faad14', width: 24, height: 12, marginRight: 5 }}></div>
               <span>待完成工单</span>
-            </div>
-            <div style={{ marginRight: 8 }}>
+            </Row>
+            <Row  align='middle' style={{ marginRight: 8 }}>
               <div style={{ display: 'inline-block', background: '#1890ff', width: 24, height: 12, marginRight: 5 }}></div>
               <span>完成工单</span>
-            </div>
-            <div style={{ marginRight: 8 }}>
+            </Row>
+            <Row  align='middle' style={{ marginRight: 8 }}>
               <div style={{ display: 'inline-block', background: '#f5222d', width: 24, height: 12, marginRight: 5 }}></div>
               <span>系统关闭工单</span>
-            </div>
+            </Row>
             <div >
               {/* <div style={{display:'inline-block',background:'#faad14',width:24,height:12,marginRight:5}}></div>
        <span>当日存在关闭和完成工单</span>

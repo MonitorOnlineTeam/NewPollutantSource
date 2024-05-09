@@ -13,8 +13,6 @@ import config from '@/config';
 import ImageView from '@/components/ImageView';
 import ViewPhotos from './ViewPhotos';
 import HandlingSugges from './HandlingSugges';
-
-
 import { API } from '@config/API';
 import cuid from 'cuid';
 import styles from "../style.less"

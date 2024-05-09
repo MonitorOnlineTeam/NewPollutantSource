@@ -419,11 +419,11 @@ class DepartIndex extends Component {
                 >
                   <UsergroupAddOutlined style={{ fontSize: 16 }} />
                 </a>
-              </Tooltip>
-              <Divider type="vertical" />
+              </Tooltip>  
               {// 控制显示隐藏区域过滤
                 this.props.showGroupRegionFilter && (
                   <>
+                  <Divider type="vertical" />
                     <Tooltip title="运维区域过滤">
                       <a
                         onClick={() => {
@@ -934,7 +934,7 @@ class DepartIndex extends Component {
         Type: this.state.pollutantType,
         DGIMN: this.state.checkedKeys,
         UserGroup_ID: this.state.selectedRowKeys.key,
-        RegionCode: this.state.DataTreeValue.toString(),
+        RegionCode: this.state.DataTreeValue&&this.state.DataTreeValue.toString(),
         state: state,
         callback: res => {
           if (res.IsSuccess) {
@@ -1823,7 +1823,6 @@ class DepartIndex extends Component {
                         // style={{ marginLeft: 50, float: 'left' }}
                         showType="radio"
                         value={this.state.pollutantType}
-                        mode="multiple"
                         onlyShowEnt
                         onChange={this.handleSizeChange}
                       />

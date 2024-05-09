@@ -447,20 +447,17 @@ const Index = (props) => {
             fileList.push({ ...item })
           }
         })
-        if (info.file.status == 'uploading') {
+        if (info.file.status == 'uploading' || info.file.status === 'done') {
+          form2.setFieldsValue({ [fileName]: filesCuid })
           fileName == 'receiveFile' ? setFilesList1(fileList) : fileName == 'transferFile' ? setFilesList2(fileList) : setFilesList3(fileList)
         }
         if (info.file.status === 'done') {
-          form2.setFieldsValue({ [fileName]: filesCuid })
-          fileName == 'receiveFile' ? setFilesList1(fileList) : fileName == 'transferFile' ? setFilesList2(fileList) : setFilesList3(fileList)
           message.success(`${info.file.name} 上传成功`);
-        } else if (info.file.status === 'error') {
+        } else if (info.file.status === 'removed' || info.file.status === 'error' ) {
           form2.setFieldsValue({ [fileName]: fileList && fileList[0] ? filesCuid : undefined }) //有上传成功的取前面的uid 没有则表示没有上传成功的图片
           fileName == 'receiveFile' ? setFilesList1(fileList) : fileName == 'transferFile' ? setFilesList2(fileList) : setFilesList3(fileList)
+        } else if (info.file.status === 'error') { 
           message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
-        } else if (info.file.status === 'removed') { //删除状态
-          form2.setFieldsValue({ [fileName]: fileList && fileList[0] ? filesCuid : undefined })
-          fileName == 'receiveFile' ? setFilesList1(fileList) : fileName == 'transferFile' ? setFilesList2(fileList) : setFilesList3(fileList)
 
         }
       },

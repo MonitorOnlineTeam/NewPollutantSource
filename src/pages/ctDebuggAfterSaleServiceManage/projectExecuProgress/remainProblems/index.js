@@ -289,7 +289,7 @@ const Index = (props) => {
   const SearchCommon = () => {
     return <>
       <Col span={8}>
-        <Form.Item name='num' label='派单工号'>
+        <Form.Item name='num' label='派工单号'>
           <Input placeholder="请输入" allowClear />
         </Form.Item>
       </Col>

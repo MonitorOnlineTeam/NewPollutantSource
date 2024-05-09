@@ -842,7 +842,6 @@ export default class UserAuthority extends Component {
 
                       <SelectPollutantType
                         showType="radio"
-                        mode="multiple"
                         value={this.state.pollutantType}
                         onChange={this.handleSizeChange}
                         onlyShowEnt

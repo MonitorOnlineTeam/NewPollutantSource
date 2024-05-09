@@ -4,7 +4,7 @@
  * 创建时间：2023.09.11
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty,Radio, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty, Radio, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -112,7 +112,7 @@ const Index = (props) => {
   const [fromVisible, setFromVisible] = useState(false)
   const [tableVisible, setTableVisible] = useState(false)
 
-  const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, rojectPointRelationLoading, addProjectPointRelationLoading, checkPoint,addProjectEntRelationLoading, } = props;
+  const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, rojectPointRelationLoading, addProjectPointRelationLoading, checkPoint, addProjectEntRelationLoading, } = props;
 
   // const [editPermisPoint,setPermisEditPoint] = useState(false)
   const [associaePermisPoint, setAssociaePermisPoint] = useState(false)
@@ -395,8 +395,8 @@ const Index = (props) => {
     setRegionCode('')
     setProjectCode(record.ProjectCode)
     setProjectID(record.ID)
-    getrojectPointRelationListQues(record.ID,associaType)
-    props.getEntAndPoint({ regionCode: '', entName: '',type:1 },(data)=>{
+    getrojectPointRelationListQues(record.ID, associaType)
+    props.getEntAndPoint({ regionCode: '', entName: '', type: 1 }, (data) => {
       setEntList(data)
     })
   };
@@ -405,16 +405,16 @@ const Index = (props) => {
 
   const [entCheckedKeys, setEntCheckedKeys] = useState([])
   const [pointCheckedKeys, setPointCheckedKeys] = useState([])
-  const getrojectPointRelationListQues = (projectID,type) => {
+  const getrojectPointRelationListQues = (projectID, type) => {
     props.getrojectPointRelationList({ projectID: projectID, }, (res) => {
-      if(type==1){
-        const keys =  res.map(item =>{
-           if(!item.DGIMN){
-           return item.EntId
-           }
+      if (type == 1) {
+        const keys = res.map(item => {
+          if (!item.DGIMN) {
+            return item.EntId
+          }
         })
         setEntCheckedKeys(keys)
-      }else{
+      } else {
         const keys = res.map(item => item.DGIMN)
         setPointCheckedKeys(keys)
       }
@@ -424,11 +424,11 @@ const Index = (props) => {
   const [regionCode, setRegionCode] = useState('')
   const [entPointName, setEntPointName] = useState('')
   const handlePointQuery = () => {
-    getrojectPointRelationListQues(projectID,associaType)
-    props.getEntAndPoint({ regionCode: regionCode, entName: entPointName,type:associaType==1? 1 : undefined},(data)=>{
-      if(associaType==1){
+    getrojectPointRelationListQues(projectID, associaType)
+    props.getEntAndPoint({ regionCode: regionCode, entName: entPointName, type: associaType == 1 ? 1 : undefined }, (data) => {
+      if (associaType == 1) {
         setEntList(data)
-      }else{
+      } else {
         setPointList(data)
       }
     })
@@ -436,9 +436,9 @@ const Index = (props) => {
   }
   //关联企业和监测点 提交
   const handlePointOK = (checkedKeys, state, callback) => {
-    if(associaType==1){
+    if (associaType == 1) {
       props.addProjectEntRelation({ projectID: projectID, entList: checkedKeys, state: state }, () => { callback() })
-    }else{
+    } else {
       pointList.map(item => {
         if (checkedKeys.includes(item.key)) {
           checkedKeys = checkedKeys.filter(filterItem => filterItem !== item.key);
@@ -452,20 +452,20 @@ const Index = (props) => {
   const [associaType, setAssociaType] = useState(1)
   const [pointList, setPointList] = useState([])
 
-  const associaTypeChange=({ target: { value } }) => { 
+  const associaTypeChange = ({ target: { value } }) => {
     setAssociaType(value);
-    getrojectPointRelationListQues(projectID,value)
-    if(value==1){
-      props.getEntAndPoint({ regionCode: regionCode, entName: entPointName,type:1},(data)=>{
+    getrojectPointRelationListQues(projectID, value)
+    if (value == 1) {
+      props.getEntAndPoint({ regionCode: regionCode, entName: entPointName, type: 1 }, (data) => {
         setEntList(data)
       })
     }
-    if(value==2){
-      props.getEntAndPoint({ regionCode: regionCode, entName: entPointName},(data)=>{
+    if (value == 2) {
+      props.getEntAndPoint({ regionCode: regionCode, entName: entPointName }, (data) => {
         setPointList(data)
       })
-     } 
- }
+    }
+  }
 
   const searchComponents = () => {
     return <Form
@@ -645,12 +645,12 @@ const Index = (props) => {
 
           <div>
             <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
-            <Radio.Group
-              options={[{ label: '关联企业', value: 1 }, { label: '关联监测点', value: 2, }]}
-              onChange={associaTypeChange}
-              value={associaType}
-              optionType="button"
-            />
+              <Radio.Group
+                options={[{ label: '关联企业', value: 1 }, { label: '关联监测点', value: 2, }]}
+                onChange={associaTypeChange}
+                value={associaType}
+                optionType="button"
+              />
               <RegionList ct style={{ width: 200, marginLeft: 16 }} placeholder='请选择行政区' changeRegion={(value) => { setRegionCode(value) }} />
               <Input.Group compact style={{ width: 290, marginLeft: 16, display: 'inline-block' }}>
                 <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onChange={(e) => setEntPointName(e.target.value)} />

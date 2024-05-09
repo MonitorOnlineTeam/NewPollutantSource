@@ -1011,7 +1011,6 @@ class TaskRecord extends Component {
             columns={columns}
             // scroll={{ y: isHomeModal? this.props.clientHeight - 480 :null }}
             scroll={{ y: this.state.expand ? "calc(100vh - 434px)" : this.props.tableHeight || undefined }}
-            tableLayout='auto'
           />
         </Card>
         <Modal

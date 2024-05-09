@@ -30,7 +30,8 @@ export default Model.extend({
     projectExecutionLoading:false,
     customeSatisfactList:[],
     customeSatisfactLoading:false,
-    
+    standgaswaringList:[],
+    standgaswaringLoading:false,
   },
   effects: {
     // 获取工作台待办
@@ -611,7 +612,7 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 删除所有合同到期
+    // 删除所有  合同到期、标气有效期报警等
     *DelAllWorkbenchMsg({ payload, callback }, { call, put, update }) {
       const result = yield call(services.DelAllWorkbenchMsg, payload);
       if (result.IsSuccess) {
@@ -682,7 +683,7 @@ export default Model.extend({
     //项目执行、合同到期等
     *CtGetWorkbenchMsg({ payload, callback }, { call, put, update }) {
 
-      yield update( payload.type==1? { contractLoading: true} : payload.type==2? { projectExecutionLoading: true} : {customeSatisfactLoading:true});
+      yield update(payload.type==1? { contractLoading: true} : payload.type==2? { projectExecutionLoading: true} : payload.type==11 ? {customeSatisfactLoading:true}: payload.type==12 ? {standgaswaringLoading:true} : null);
       const result = yield call(services.CtGetWorkbenchMsg, {...payload,type:undefined});
       if (result.IsSuccess) {
         const data = result.Datas
@@ -695,12 +696,11 @@ export default Model.extend({
           projectExecutionList: data?.ctList   || [],
           contractList: data?.projectList  || [],
           customeSatisfactList : data?.customerList  || [],
+          standgaswaringList: data?.standgaswaringList  || [],
         });
-        callback && callback(data?.projectList?.length || 0, data?.ctList?.length || 0, data?.customerList?.length || 0,);
-      } else {
-        message.error(result.Message);
+        callback && callback({ctListTotal: data?.ctList?.length || 0, customerListTotal:data?.customerList?.length || 0,projectListTotal:data?.projectList?.length || 0, standgaswaringListTotal:data?.standgaswaringList?.length || 0})
       }
-      yield update( payload.type==1? { contractLoading: false} : payload.type==2? { projectExecutionLoading: false} : {customeSatisfactLoading:false});
+      yield update( payload.type==1? { contractLoading: false} : payload.type==2? { projectExecutionLoading: false} : payload.type==11 ? {customeSatisfactLoading:false}: payload.type==12 ? {standgaswaringLoading:false} : null);
 
     },
     //待办中心 项目执行-解决遗留问题

@@ -46,7 +46,7 @@ const Index = (props) => {
       <div>
               <Row>
                 <Col span={8}>
-                    <Form.Item label='派单工号'>
+                    <Form.Item label='派工单号'>
                       {data?.Num}
                    </Form.Item> 
                 </Col>

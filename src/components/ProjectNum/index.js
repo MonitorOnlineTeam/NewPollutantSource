@@ -132,7 +132,7 @@ const Index = (props) => {
                     </Row>
                     <SdlTable
                         resizable
-                        scroll={{ y: 'calc(100vh - 400px)' }}
+                        scroll={{ y: 'calc(100vh - 460px)' }}
                         style={{ width: 800 }}
                         loading={getProjectInfoListLoading}
                         bordered
@@ -142,6 +142,7 @@ const Index = (props) => {
                 </>
             }
             trigger="click"
+            placement='right'
             visible={popVisible}
             onVisibleChange={visible => {
                 setPopVisible(visible);

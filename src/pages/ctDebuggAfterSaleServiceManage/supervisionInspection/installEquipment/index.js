@@ -56,7 +56,6 @@ import ViewPhotos from './components/ViewPhotos';
 import HandlingSugges from './components/HandlingSugges';
 import ExamineModal from './components/ExamineModal';
 import { permissionButton } from '@/utils/utils';
-
 import { API } from '@config/API';
 import cuid from 'cuid';
 import styles from './style.less';

@@ -35,11 +35,14 @@ import RemainProblems from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuP
 import InstallEquipmentExamineModal from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment/components/ExamineModal';
 import CustomerSatisfacHandleModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery/components/HandleModal';
 import CustomerSatisfaInvestigateModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery/components/InvestigateModal';
-
+import ReportAuditModal from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/reportAudit/components/AuditModalPage';
+import ProjectQueryDetail from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery/Detail';
+import StandardGasValidityContent from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/standardGasValidity/components/StandardGasValidityContent';
 import router from 'umi/router';
 import { PageLoading } from '@ant-design/pro-layout';
 import config from '@/config';
 import { use } from 'echarts';
+import { element } from 'prop-types';
 const { DirectoryTree } = Tree;
 const manualList = [
   {
@@ -73,11 +76,14 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
   supervisionVerificaList: wordSupervision.supervisionVerificaList,
   operaServiceLoading: loading.effects['wordSupervision/GetStagingInspectorRectificationList'],
-  workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false,
+  workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/UpdateAllWorkPushStatus'] || false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
   workAlarmTotal: wordSupervision.workAlarmTotal,
-  contractLoading: wordSupervision.contractLoading  || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false,
+  // contractLoading: wordSupervision.contractLoading  || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false, //旧
+  contractLoading: wordSupervision.contractLoading,
   contractList: wordSupervision.contractList,
+  standgaswaringList: wordSupervision.standgaswaringList,
+  standgaswaringLoading:wordSupervision.standgaswaringLoading,
   configInfo: global.configInfo,
   menuList: wordSupervision.menuList,
   allMenuList: wordSupervision.allMenuList,
@@ -93,7 +99,7 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
 });
 
 const Workbench = props => {
-  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, supervisionVerificaList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading, clientHeight, workbenchesModuleLoading, projectExecutionLoading, projectExecutionList, updateprojectExecutionLoading,customeSatisfactList,customeSatisfactLoading, } = props;
+  const { TYPE, todoList, messageList, managerList, todoListLoading, messageListLoading, operaServiceLoading, supervisionVerificaList, configInfo, workAlarmPushLoading, workAlarmPushList, workAlarmTotal, contractList, contractLoading, menuList, allMenuList, userMenuListLoading, addUserMenuLoading, clientHeight, workbenchesModuleLoading, projectExecutionLoading, projectExecutionList, updateprojectExecutionLoading,customeSatisfactList,customeSatisfactLoading,standgaswaringList,standgaswaringLoading, } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
   const [forwardingTaskVisible, setForwardingTaskVisible] = useState(false);
@@ -113,11 +119,25 @@ const Workbench = props => {
   const [remind, setRemind] = useState(false)
   const [remindDataAlarm, setRemindDataAlarm] = useState(false)
   const [remindExpire, setRemindExpire] = useState(false)
+  const [standardgasAlarm, setStandardgasAlarm] = useState(false)
+
+
   const [popForm] = Form.useForm(); //项目执行-解决问题
   
   const [installEquipmentVisible, setInstallEquipmentVisible] = useState(false)
   const [installEquipmentData, setInstallEquipmentData] = useState({})
 
+  const [reportAuditVisible, setReportAuditVisible] = useState(false)
+  const [reportAuditData, setReportAuditData] = useState({})
+
+  const [projectQueryDetailVisible, setProjectQueryDetailVisible] = useState(false)
+  const [projectQueryDetailTitle, setProjectQueryDetailTitle] = useState('详情')
+  const [projectQueryDetailCode, setProjectQueryDetailCode] = useState()
+
+  const [standardGasValidityVisible, setStandardGasValidityVisible] = useState()
+  const [standardGasValidityId, setStandardGasValidityId] = useState()
+
+  
   const type = props.location.pathname === '/ctManage/workbench' ? 1 : false
   useEffect(() => {
     loadData();
@@ -205,8 +225,13 @@ const Workbench = props => {
                   if (clItem.CName == '合同到期') {
                       btnObj.value = 11;
                       setRemindExpire(true)
-                      getCtWorkbenchMsg(1)
+                      getCtWorkbenchMsg(11)
                   }
+                  if (clItem.CName == '标气有效期报警') {
+                    btnObj.value = 12;
+                    setStandardgasAlarm(true)
+                    getCtWorkbenchMsg(12)
+                }
                   btnArr.push(btnObj)
                 })
                 setSelectMyVal(btnArr?.[0]?.value)
@@ -504,7 +529,10 @@ const Workbench = props => {
   const [selectMyVal, setSelectMyVal] = useState()
 
   const [operaServiceBtnList, setOperaServiceBtnList] = useState([])
-  const [myRemindBtnList, setMyRemindBtnList] = useState([])
+
+  const [myRemindBtnList, setMyRemindBtnList] = useState([]) //我的提醒
+
+
   const BtnComponents = ({ data, val, callback }) => {
     return <div className={styles.selectBtnSty}>
       {data.map(item => {
@@ -571,16 +599,12 @@ const Workbench = props => {
     props.dispatch({
       type: 'wordSupervision/CtGetWorkbenchMsg',
       payload: { type: type },
-      callback: (total, total2,total3) => {
-          if (type == 1) {//合同到期
-            filterData(myRemindBtnList,11,total)
-
-          }else if(type == 2){//项目执行
-            filterData(operaServiceBtnList,2,total2)
-
-          } else if(type == 3) { //客户满意度
-            filterData(operaServiceBtnList,3,total3)
-
+      callback: ({ctListTotal, customerListTotal,projectListTotal,standgaswaringListTotal}) => {
+        switch(type){
+           case 2: filterData(operaServiceBtnList,type,ctListTotal); break;//项目执行
+           case 3: filterData(operaServiceBtnList,type,customerListTotal); break;//客户满意度
+           case 11: filterData(myRemindBtnList,type,projectListTotal); break;//合同到期
+           case 12: filterData(myRemindBtnList,type,standgaswaringListTotal); break;//标气报警
           }
       }
 
@@ -610,9 +634,13 @@ const Workbench = props => {
     if(contractList?.length>=0){ //合同到期
       filterData(myRemindBtnList,11,contractList?.length)
     }
-  },[supervisionVerificaList,projectExecutionList,customeSatisfactList,workAlarmPushList, contractList ])
+    if(standgaswaringList?.length>=0){ //标气报警
+      filterData(myRemindBtnList,12,standgaswaringList?.length)
+    }
+  },[supervisionVerificaList,projectExecutionList,customeSatisfactList,workAlarmPushList, contractList,standgaswaringList ])
 
   const [delContractLoading,setDelContractLoading] = useState(false)
+  
   const delContract = (item) => { //删除合同到期
     setDelContractLoading(true)
     props.dispatch({
@@ -622,27 +650,32 @@ const Workbench = props => {
       },
       callback: () => {
         setDelContractLoading(false)
-        getCtWorkbenchMsg(1)
+        getCtWorkbenchMsg(11)
       },
     });
   }
-  const delAllContract = () => { //删除全部合同到期
-    props.dispatch({
-      type: 'wordSupervision/DelAllWorkbenchMsg',
-      payload: {},
-      callback: () => {
-        setContractPageIndex(1)
-        setContractPageSize(10)
-        getCtWorkbenchMsg(1)
-      },
-    });
-  }
+
   
   const [contractPageIndex, setContractPageIndex] = useState(1)
   const [contractPageSize, setContractPageSize] = useState(10)
   const contractPageChange = (pageIndex, pageSize) => {
     setContractPageIndex(pageIndex)
     setContractPageSize(pageSize)
+  }
+  const [delStandgaswaringLoading,setDelStandgaswaringLoading] = useState(false)
+
+  const delStandgaswaring = (item) => { //删除标气有效期报警
+    setDelStandgaswaringLoading(true)
+    props.dispatch({
+      type: 'wordSupervision/DelWorkbenchMsg',
+      payload: {
+        ID: item.ID,
+      },
+      callback: () => {
+        setDelStandgaswaringLoading(false)
+        getCtWorkbenchMsg(12)
+      },
+    });
   }
 
   const [delInstallPhotosLoading,setDelInstallPhotosLoading] = useState(false)
@@ -696,6 +729,44 @@ const Workbench = props => {
   }
   const meunClick = (url) => {
     router.push(url);
+  }
+
+
+  const [delAllContractLoading,setAllDelContractLoading] = useState(false)
+  const [delAllStandgaswaringLoading,setDelAllStandgaswaringLoading] = useState(false)
+
+  const delAll =  (type) =>{ //删除全部
+
+    const delAllloading = (flag)=>{
+      switch(type){
+        case 11: setDelContractLoading(flag); break;
+        case 12: setDelAllStandgaswaringLoading(flag); break;
+       }
+    }
+    const delAllPar = {
+      '11' : 1, //合同到期
+      '12' : 5, //标气有效期报警
+    }
+    delAllloading(true)
+    props.dispatch({
+      type: 'wordSupervision/DelAllWorkbenchMsg',
+      payload: {type : delAllPar[type]},
+      callback: () => {
+        delAllloading(false)
+        if(type==11){ //合同到期
+        setContractPageIndex(1)
+        setContractPageSize(10)
+        }
+        getCtWorkbenchMsg(type)
+      },
+    });
+  }
+  const DelAllBtnComponents = ({title,type})=>{
+    return <Row style={{ paddingTop: 8 }}>
+    <Popconfirm placement="topLeft" title={`确定要删除全部${title}吗？`} onConfirm={() => delAll(type)} okText="是" cancelText="否">
+      <div>{btnSquareComponents([{ name: '删除全部', value: 1 }], allClose, () => { })}</div>
+    </Popconfirm>
+    </Row>
   }
   return (
     <div className={styles.workbenchBreadSty}>
@@ -783,14 +854,17 @@ const Workbench = props => {
                                    }else if(item.Type==4){ //安装照片审核
                                       if(item.Col1 == 2){
                                       setInstallEquipmentVisible(true)
-                                      const idArr = item.MsgID?.split(',')
+                                      const dataArr = item.MsgID?.split(',')
                                       //Col1代表systemModelId
-                                      setInstallEquipmentData({DispatchId:idArr?.[0], PointId:idArr?.[1],Col1:idArr?.[2],EquipmentAuditId:idArr?.[3]})          
+                                      setInstallEquipmentData({DispatchId:dataArr?.[0], PointId:dataArr?.[1],Col1:dataArr?.[2],EquipmentAuditId:dataArr?.[3]})          
                                       }
+                                    }else if(item.Type==7){ //验收服务报告
+                                      setReportAuditVisible(true)
+                                      const dataArr = item.Col2?.split(',')
+                                      setReportAuditData({ID:dataArr?.[0],CheckStatus:dataArr?.[1]})
                                     }
-                                  }} style={{ width:item.Type==2? 'calc(100% - 210px)': item.Col1==1? 'calc(100% - 180px)' : 'calc(100% - 140px)'}} className='textOverflow' title={item.Msg}>{item.Type==2? '（遗留问题）':item.Type==4? '（照片审核）' : ''} {item.Msg} </Col>
-                                <Col>{item.CreateTime}</Col>
-                                <Col>
+                                  }} style={{ width:item.Type==2? 'calc(100% - 210px)': item.Col1==1? 'calc(100% - 180px)' : 'calc(100% - 140px)'}} className='textOverflow' title={item.Msg}>{item.Type==2? '（遗留问题）':item.Type==4? '（照片审核）' : item.Type==7? '（验收服务报告）' :''} {item.Msg} </Col>
+                               <Col>
                                 {item.Type==2? 
                                  <Popover visible={index == popSelectIndex && popVisible} placement='leftTop' title={'解决问题'} trigger="click"
                                     overlayStyle={{ width: 400 }}
@@ -821,6 +895,7 @@ const Workbench = props => {
                                 </Popconfirm>}</>
                                   }
                                 </Col>
+                                <Col>{item.CreateTime}</Col>
                               </Row>)
                             ) :
                               <Empty style={{ marginTop: '30px' }} />}
@@ -869,7 +944,7 @@ const Workbench = props => {
                       <div className={styles.title}>我的提醒</div>
                       {remindDataAlarm && <Row justify='space-between'>
                         <BtnComponents data={myRemindBtnList} val={selectMyVal} callback={(val) => { setSelectMyVal(val) }} />
-                        {selectMyVal == 1 && workAlarmPushList?.length > 0 ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
+                        {selectMyVal == 10 && workAlarmPushList?.length > 0 ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, (val) => { dataAlarmTypeChange(val) }) : null}
                       </Row>}
                       <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
                         {remindDataAlarm && <>{selectMyVal == 10 && <Spin spinning={workAlarmPushLoading}> {/*数据报警 */}
@@ -896,9 +971,9 @@ const Workbench = props => {
                             :
                             <Empty style={{ marginTop: '30px' }} />}
                         </Spin>}</>}
-                        {remindExpire && <> {selectMyVal == 11 && <Spin spinning={contractLoading || !!delContractLoading}> {/*合同到期 */}
+                        {remindExpire && <> {selectMyVal == 11 && <Spin spinning={contractLoading || !!delContractLoading || !!delAllContractLoading}> {/*合同到期 */}
                           {contractList?.length ? contractList.map(item =>
-                            (<Row justify='space-between' style={{ paddingBottom: 12, transition: '0.5s all ease-in' }}>
+                            (<Row justify='space-between' style={{ paddingBottom: 8, transition: '0.5s all ease-in' }}>
                               <Col style={{ paddingTop: 4 }}><img src='/work_contract.png' /></Col>
                               <Col style={{ width: 'calc(100% - 100px)' }}>
                                 <div>{item.Msg}</div>
@@ -917,8 +992,42 @@ const Workbench = props => {
                             :
                             <Empty style={{ marginTop: '30px' }} />}
                         </Spin>}</>}
+
+                        {standardgasAlarm && <> {selectMyVal == 12 && <Spin spinning={standgaswaringLoading || !!delStandgaswaringLoading || !!delAllStandgaswaringLoading}> {/*标气报警 */}
+                          {standgaswaringList?.length ? standgaswaringList.map(item =>{
+                          const dataArr = item.Col2?.split(',')
+                           return <Row justify='space-between' style={{ paddingBottom: 8, transition: '0.5s all ease-in' }}>
+                              <Col style={{ width: 'calc(100% - 186px)' }} className='textOverflow'>{item.Msg}{item.Msg}{item.Msg}</Col>
+                              <Col style={{cursor:'pointer'}}>
+                                <Space>
+                               <a  onClick={()=>{
+                                 setProjectQueryDetailVisible(true);
+                                 setProjectQueryDetailCode(dataArr?.[0])
+                                 setProjectQueryDetailTitle(`${dataArr&&dataArr[0] ? `${dataArr[0]}-详情` : '详情'}`)
+                                 }} >项目详情</a>
+                               <a
+                                onClick={()=>{
+                                  setStandardGasValidityVisible(true)
+                                  setStandardGasValidityId(dataArr?.[1])
+                                }} >标气详情</a>
+                                <Popconfirm placement="left" title={'确定要删除这条标气有效期报警吗？'} onConfirm={() => delStandgaswaring(item)} okText="是" cancelText="否">
+                                  <Tag style={{marginRight:0}} color="#4090FF">删除</Tag>
+                                </Popconfirm>
+                                </Space>
+                              </Col>
+                              </Row>
+                            }
+                          )
+                            :
+                            <Empty style={{ marginTop: '30px' }} />}
+                        </Spin>}</>}
+
+
+
+              
                       </div>
-                      {selectMyVal == 1 && <>{workAlarmPushList?.length > 0 ? <Row justify='space-between' style={{ paddingTop: 12 }}>
+                      
+                      {selectMyVal == 10 && <>{workAlarmPushList?.length > 0 ? <Row justify='space-between' style={{ paddingTop: 12 }}>
                         <Popconfirm placement="topLeft" title={'确定要关闭全部报警吗？'} onConfirm={() => closeAllAlarmChange()} okText="是" cancelText="否">
                           <div>{btnSquareComponents([{ name: '关闭全部', value: 1 }], allClose, () => { })}</div>
                         </Popconfirm>
@@ -933,8 +1042,8 @@ const Workbench = props => {
                           onChange={alarmPageChange}
                         />
                       </Row> : null}</>}
-                      {selectMyVal == 4 && <>{contractList?.length > 0 ? <Row justify='space-between' style={{ paddingTop: 12 }}>
-                        <Popconfirm placement="topLeft" title={'确定要删除全部合同到期吗？'} onConfirm={() => delAllContract()} okText="是" cancelText="否">
+                      {selectMyVal == 11 && <>{contractList?.length > 0 ? <Row justify='space-between' style={{ paddingTop: 8 }}>
+                        <Popconfirm placement="topLeft" title={'确定要删除全部合同到期吗？'} onConfirm={() => delAll(11)} okText="是" cancelText="否">
                           <div>{btnSquareComponents([{ name: '删除全部', value: 1 }], allClose, () => { })}</div>
                         </Popconfirm>
                         <Pagination
@@ -948,6 +1057,7 @@ const Workbench = props => {
                           onChange={contractPageChange}
                         />
                       </Row> : null}</>}
+                      {selectMyVal == 12 && standgaswaringList?.length > 0 && <DelAllBtnComponents title='标气有效期报警' type={12}/>}
                     </Card>
                   </Col>
                 </Row>}
@@ -1091,8 +1201,42 @@ const Workbench = props => {
         <CustomerSatisfaInvestigateModal  visible={customSatisfactVisible}  onCancel={() => { setCustomSatisfactVisible(false); }}  parData={customSatisfactData} completeFinish={()=>{getCtWorkbenchMsg(3)}}/>
         <CustomerSatisfacHandleModal  visible={customSatisfactVisible2}  onCancel={() => { setCustomSatisfactVisible2(false); }}  parData={customSatisfactData2} completeFinish={()=>{getCtWorkbenchMsg(3)}}/>
       
+        <ReportAuditModal
+          CheckStatus={reportAuditData.CheckStatus}
+          id={reportAuditData.ID}
+          isModalOpen={reportAuditVisible}
+          onCancel={() => {
+            setReportAuditVisible(false);
+          }}
+          reloadPageData={() => {
+           getCtWorkbenchMsg(2)
+          }}
+        />
 
-        
+      <Modal  //标气有效期预警  项目详情
+        visible={projectQueryDetailVisible}
+        title={projectQueryDetailTitle}
+        onCancel={() => { setProjectQueryDetailVisible(false) }}
+        footer={null}
+        destroyOnClose
+        wrapClassName='spreadOverModal'
+        mask={false}
+      >
+        <ProjectQueryDetail code={projectQueryDetailCode} />
+      </Modal>
+      <Modal  //标气有效期预警  标气详情
+        visible={standardGasValidityVisible}
+        title={'标气到期清单'}
+        onCancel={() => { setStandardGasValidityVisible(false) }}
+        footer={null}
+        destroyOnClose
+        wrapClassName='spreadOverModal'
+        mask={false}
+        bodyStyle={{padding:0}}
+      >
+        <StandardGasValidityContent id={standardGasValidityId} isAll isWorkBench />
+      </Modal>
+      
       </BreadcrumbWrapper>
     </div>
   );

@@ -303,7 +303,7 @@ const Index = (props) => {
            <Divider type="vertical" />
             <Tooltip placement={issuesFlag ? "top" : "left"}  title={issuesFlag ? "下发" : "只有核查并提交之后才可以下发" } >
               <Popconfirm disabled={!issuesFlag} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
-                <a className={issuesFlag? '':'disabledSty'}><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
+                <a className={issuesFlag? '':'disabled_a'}><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
             {/* </>} */}

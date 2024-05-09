@@ -211,7 +211,13 @@ export const API = {
     /*运维到期提醒*/
     GetOperationExpireAnalysis: before + '/OperationExpireAnalysis/GetOperationExpireAnalysis',//运维到期点位统计
     ExportOperationExpireAnalysis: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//导出运维到期点位统计
-
+    
+    /**运维计划**/
+    /*制定运维计划*/
+    GetOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList',//运维计划列表
+    ExportOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList',//运维计划 导出
+    GetOperationPlanPointList: before + '/WorkOrderApi/GetOperationPlanPointList',//获取未排计划点位
+    AddOperationPlan: before + '/WorkOrderApi/AddOperationPlan',//生成运维计划
     /**运维报告**/
     /*运维报告（word）*/
     GetOperationReportList: before + '/WorkOrderStatistics/GetOperationReportList',//获取运维月度报告信息

@@ -211,7 +211,7 @@ class RoleIndex extends Component {
             alarmPushData: '',
             pageNumber: 1,
             pageSize: 10,
-            menucolumns: [
+            menucolumns:()=> [
                 {
                     title: '菜单名称',
                     dataIndex: 'Menu_Name',
@@ -1017,7 +1017,7 @@ class RoleIndex extends Component {
                                                 // })}
                                                 size="small"
                                                 rowSelection={rowMenuSelection} 
-                                                columns={this.state.menucolumns}
+                                                columns={this.state.menucolumns()}
                                                 dataSource={this.props.MenuTree} 
                                                 defaultExpandAllRows={this.state.expandRows}
                                                  />

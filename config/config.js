@@ -1480,21 +1480,21 @@ export default {
                       name: 'formulateOperaTask',
                       component: './operations/operaPlan/formulateOperaTask',
                     },
-                    // {
-                    //   path: '/operations/operaPlan/afootPlan', //进行中计划
-                    //   name: 'afootPlan',
-                    //   component: './operations/operaPlan/afootPlan',
-                    // },
-                    // {
-                    //   path: '/operations/operaPlan/completedPlan', //已完结计划
-                    //   name: 'completedPlan',
-                    //   component: './operations/operaPlan/completedPlan',
-                    // },
-                    // {
-                    //   path: '/operations/operaPlan/operaPlanQuery', //运维计划查询
-                    //   name: 'operaPlanQuery',
-                    //   component: './operations/operaPlan/operaPlanQuery',
-                    // },
+                    {
+                      path: '/operations/operaPlan/afootPlan', //进行中计划
+                      name: 'afootPlan',
+                      component: './operations/operaPlan/afootPlan',
+                    },
+                    {
+                      path: '/operations/operaPlan/completedPlan', //已完结计划
+                      name: 'completedPlan',
+                      component: './operations/operaPlan/planQuery',
+                    },
+                    {
+                      path: '/operations/operaPlan/operaPlanQuery', //运维计划查询
+                      name: 'operaPlanQuery',
+                      component: './operations/operaPlan/planQuery',
+                    },
                   ],
                 },
               ],
@@ -1585,6 +1585,11 @@ export default {
                   name: 'userRecovery', //用户恢复
                   path: '/rolesmanager/userRecovery',
                   component: './authorized/userRecovery',
+                },
+                {
+                  name: 'smsSend', //短信发送
+                  path: '/rolesmanager/smsSend',
+                  component: './authorized/smsSend',
                 },
               ],
             }, // {
