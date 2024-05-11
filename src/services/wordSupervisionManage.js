@@ -113,7 +113,7 @@ export async function InsOrUpdReturnVisitCustomers(params) {
 // 获取所有客户
 export async function getCustomerList(params) {
   const result = await post(
-    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/GetAllOtherCustomList',
+    `/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/GetAllOtherCustomList?type=${params.type}`,
     null,
   );
   return result;

@@ -71,7 +71,7 @@ const StandardGasValidityContent = props => {
         ? values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
       endTime: values.time ? values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss') : undefined,
-      dataType: isAll && !isWorkBench ? 1 : '0',
+      dataType: isAll  ? 1 : '0',
     };
   };
 
@@ -84,7 +84,7 @@ const StandardGasValidityContent = props => {
         ...body,
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
-        id:props.id
+        gasID:props.id
       },
       callback: res => {
         setDataSource(res.Datas);

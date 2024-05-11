@@ -14,7 +14,7 @@ export default Model.extend({
   effects: {
     // 左侧数据
     *GetResourceOverviewLeft({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewLeft, payload);
+      const result = yield call(requestPost, API.GeneralManagerApi.GetResourceOverviewLeft, payload);
       if (result.IsSuccess) {
         yield update({
           leftData: result.Datas,
@@ -24,7 +24,7 @@ export default Model.extend({
     },
     // 右侧数据
     *GetResourceOverviewRight({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewRight, payload);
+      const result = yield call(requestPost, API.GeneralManagerApi.GetResourceOverviewRight, payload);
       if (result.IsSuccess) {
         yield update({
           rightData: result.Datas,
@@ -34,7 +34,7 @@ export default Model.extend({
     },
     // 地图数据
     *GetResourceOverviewMap({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewMap, payload);
+      const result = yield call(requestPost, API.GeneralManagerApi.GetResourceOverviewMap, payload);
       if (result.IsSuccess) {
         const data = result.Datas;
         // data.RegionStandbyMachineList = data.RegionStandbyMachineList.map(item => ({

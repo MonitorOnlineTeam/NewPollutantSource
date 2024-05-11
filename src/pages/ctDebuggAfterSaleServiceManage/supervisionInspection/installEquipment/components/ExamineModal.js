@@ -138,7 +138,7 @@ const Index = (props) => {
     }
 
   }
-  const ExamineComponents = () => {
+  const examineComponents = () => {
     return <div style={{padding:'14px 18px 0 18px'}}>
       <Form
       form={form2}
@@ -249,7 +249,7 @@ const Index = (props) => {
             <Steps current={current}>
               {steps.map(item => <Step title={item} />)}
             </Steps>
-              <div style={{marginTop:12}}>{current==0? <ViewPhotos /> : current==1 ? <ExamineComponents />  : <CompleteComponents /> } </div>
+              <div style={{marginTop:12}}>{current==0? <ViewPhotos /> : current==1 ? examineComponents()  : <CompleteComponents /> } </div>
           </Modal>
                   {/* 查看照片弹窗 */}
         <ImageView

@@ -247,7 +247,6 @@ const Index = (props) => {
         setLegendSelectIndex(data)
     }
     const typeLegendData = [{ title: '按计划完成', color: '#1890ff' }, { title: '超时完成', color: '#faad14' }, { title: '超时未完成', color: '#f5222d' }]
-    // legendSelectIndex.includes(index)? item.color : '#d9d9d9' raba(0,0,0,.85)
     return (
         <div>
             {searchComponents()}

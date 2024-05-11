@@ -23,6 +23,11 @@ export async function GetEntNoFilterList(params) {
   const result = await post(API.CommonApi.GetNoFilterEntList, params, null);
   return result;
 }
+//根据行政区获取 企业列表  启用未停用的企业
+export async function GetEntList(params) {
+  const result = post(API.AssetManagementApi.GetEntList,{regionCode:params.RegionCode},  null)
+  return result;
+}
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(

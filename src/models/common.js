@@ -20,6 +20,8 @@ export default Model.extend({
     entLoading: true,
     noFilterEntList: [],
     noFilterEntLoading: [],
+    enableEntList:[], //启用的企业
+    enableEntLoading:[],
     attentionList: [],
     pointListByEntCode: [],
     pollutantListByDgimn: [],
@@ -78,6 +80,17 @@ export default Model.extend({
         message.error(response.Message);
         yield update({ noFilterEntList: [], noFilterEntLoading: false });
       }
+    },
+    *getEnableEntList({ payload, callback }, { call, put, update, select }) {
+      //企业列表 开启未停用的企业
+      yield update({ enableEntList: true });
+      const response = yield call(services.GetEntList, { ...payload });
+      if (response.IsSuccess) {
+        yield update({enableEntList: response.Datas,});
+      } 
+      callback && callback(response?.Datas);
+      yield update({  noFilterEntLoading: false });
+      
     },
     *getEntByRegionCallBack({ payload, callback }, { call, put, update, select }) {
       //企业列表 回调

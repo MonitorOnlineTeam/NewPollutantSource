@@ -81,7 +81,7 @@ const Index = (props) => {
     
     const columns = [
 
-        ...commonCol(1),
+        ...commonCol(1,pageIndex,pageSize),
         ...operateCol,
     ];
 

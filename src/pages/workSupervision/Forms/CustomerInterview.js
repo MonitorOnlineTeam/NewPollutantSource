@@ -73,9 +73,10 @@ const CustomerInterview = props => {
 
   // 获取客户
   const getCustomerList = () => {
+    console.log(props.type)
     props.dispatch({
       type: 'wordSupervision/getCustomerList',
-      payload: {},
+      payload: {type:props.type==1? '1' : ''},
     });
   };
 

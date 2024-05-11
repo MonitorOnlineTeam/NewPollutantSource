@@ -170,32 +170,8 @@ const Index = (props) => {
         }
     }
 
-    const planContentOpera = [
-        {
-            title: '操作',
-            fixed: 'right',
-            width: 100,
-            ellipsis: true,
-            render: (text, record, index) => {
-                const isOpen = 1;
-                return (
-                    <Space>
-                        <Popconfirm title="确认要开启这条计划吗?" onConfirm={() => { openPlan(record) }} disabled={!isOpen}><a className={isOpen? '':'disabled_a'}> 开启 </a></Popconfirm> 
-                        <Popconfirm title="确认要停止这条计划吗?" onConfirm={() => { ceasePlan(record)}} disabled={isOpen} > <a className={isOpen? 'disabled_a' : ''}> 停止 </a></Popconfirm> 
-                    </Space>
-                );
+ 
 
-            }
-        },
-    ]
-
-    const openPlan = (record) =>{
-
-    }
-
-    const ceasePlan = (record) =>{
-
-    }
 
     const extensionPlan = () =>{ //延长计划
       alert('延长计划')
@@ -323,7 +299,7 @@ const Index = (props) => {
                         </Row>
                     </Form>
                     <TitleComponents simpleSty text='运维计划内容' />
-                    <PlanList type={2} planContentOpera={planContentOpera} extensionPlan={extensionPlan}/>
+                    <PlanList type={2}  extensionPlan={extensionPlan}/>
                 </Modal>
                 <ViewPlanModal
                     visible={viewPlanVisible}

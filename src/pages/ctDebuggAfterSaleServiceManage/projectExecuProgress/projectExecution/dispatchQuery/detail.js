@@ -1725,7 +1725,7 @@ const Index = (props) => {
   const ServiceFillContent = () => {
     return serviceDispatchTypeAndRecordLoading ? <PageLoading size='default' /> :
       fillContentTab?.[0] ?
-        <Tabs type='card' activeKey={tabKey} onChange={(key) => { setTabKey(key) }}>
+        <Tabs type='card' activeKey={tabKey} onChange={(key) => { setTabKey(key) }} size='small'>
           {fillContentTab.map(item => {
             return <TabPane tab={item.ItemName} key={item.ItemId}>
               {fillContentTabContent(item)}

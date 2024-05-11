@@ -13,15 +13,14 @@ const dvaPropsData = ({ loading, wordSupervision, }) => ({
 const Index = (props) => {
 
 
-    const {label,onChange, getProjectInfoListLoading } = props;
+    const {label,onChange,callback, getProjectInfoListLoading } = props;
 
     const [projectInfoList, setProjectInfoList] = useState([]);
-    const [projectNum, setProjectNum] = useState('');
+    const [projectNum, setProjectNum] = useState();
     const [popVisible, setPopVisible] = useState(false);
 
 
-
-
+    const [projectName, setProjectName] = useState(props.projectName);
 
     const projectNumCol = [
         {
@@ -78,11 +77,10 @@ const Index = (props) => {
           },
         },
       ];
-      const [projectName, setProjectName] = useState();
       const setPorjectInfo = record => {
         setProjectName(record.ProjectName || undefined)
         setPopVisible(false);
-        onChange&&onChange(record.ProjectCode)
+        onChange&&onChange(record)
     };
 
 

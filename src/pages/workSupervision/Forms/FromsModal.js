@@ -53,6 +53,7 @@ const FromsModal = props => {
       case 4:
         return (
           <CustomerInterview
+            type={props.type}
             editData={editData}
             taskInfo={taskInfo}
             onCancel={() => onCancel()}

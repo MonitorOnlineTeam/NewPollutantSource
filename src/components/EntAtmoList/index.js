@@ -7,6 +7,7 @@ import { Select} from 'antd'
   entList:common.entList,
   noFilterEntList:common.noFilterEntList,
   atmoStationList:common.atmoStationList,
+  enableEntList:common.enableEntList,
 }))
 export default class Index extends Component {
   static defaultProps = {
@@ -21,7 +22,7 @@ export default class Index extends Component {
 
   }
   children = () => { //企业列表 or 大气站列表
-    const { entList,atmoStationList,type,noFilter,noFilterEntList, } = this.props;
+    const { entList,atmoStationList,type,noFilter,noFilterEntList,enable,enableEntList } = this.props;
 
     const selectList = [];
 
@@ -32,6 +33,16 @@ export default class Index extends Component {
           selectList.push(
            <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
              {item.EntName}
+           </Option>,
+        );
+      });
+      }
+     }else if(enable){
+      if (enableEntList.length > 0) {
+        enableEntList.map(item => {
+          selectList.push(
+           <Option key={item.entID} value={item.entID} title={item.entName}>
+             {item.entName}
            </Option>,
         );
       });
@@ -56,12 +67,15 @@ export default class Index extends Component {
   return selectList;
   };
   componentDidMount() {
-    const {type,dispatch,regionCode,pollutantType,entList,atmoStationList,noFilter,noFilterEntList,} = this.props;
+    const {type,dispatch,regionCode,pollutantType,entList,atmoStationList,noFilter,noFilterEntList,enable,enableEntList} = this.props;
     switch(type) {
         case 1: //企业
            if(noFilter){ //不用过滤的企业列表
              if(noFilterEntList&&noFilterEntList.length){return}
                dispatch({ type:'common/getEntNoFilterList', payload: { RegionCode: regionCode, PollutantType: pollutantType },  })
+           }else if(enable){ //启用的企业 不包含停用的企业
+            if(enableEntList&&enableEntList.length){return}
+            dispatch({ type:'common/getEnableEntList', payload: { RegionCode: regionCode, PollutantType: pollutantType },  })
            }else{
             if(entList&&entList.length){return}
               dispatch({ type:'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType },  })
@@ -81,9 +95,12 @@ export default class Index extends Component {
        type==1? dispatch({ type: noFilter? 'common/getEntNoFilterList' : 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });
     }
   }
+  loadingStatus = () =>{
+
+  }
   render() {
       const {EntCode,changeEnt,type} = this.props
-    return (
+    return (<Spin spinning={loading} size='small'>
         <Select
         allowClear
         showSearch
@@ -96,6 +113,7 @@ export default class Index extends Component {
       >
         {this.children()}
       </Select>
+      </Spin>
     );
   }
 }

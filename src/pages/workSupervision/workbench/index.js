@@ -768,6 +768,12 @@ const Workbench = props => {
     </Popconfirm>
     </Row>
   }
+
+  const msgTypeTitle ={
+    '2': '（遗留问题）',
+    '4': '（照片审核）',
+    '7': '（验收服务报告）',
+  }
   return (
     <div className={styles.workbenchBreadSty}>
       <BreadcrumbWrapper>
@@ -863,7 +869,10 @@ const Workbench = props => {
                                       const dataArr = item.Col2?.split(',')
                                       setReportAuditData({ID:dataArr?.[0],CheckStatus:dataArr?.[1]})
                                     }
-                                  }} style={{ width:item.Type==2? 'calc(100% - 210px)': item.Col1==1? 'calc(100% - 180px)' : 'calc(100% - 140px)'}} className='textOverflow' title={item.Msg}>{item.Type==2? '（遗留问题）':item.Type==4? '（照片审核）' : item.Type==7? '（验收服务报告）' :''} {item.Msg} </Col>
+                                  }} style={{ width:item.Type==2? 'calc(100% - 210px)': item.Col1==1? 'calc(100% - 180px)' : 'calc(100% - 140px)'}} className='textOverflow' title={item.Msg}>
+                                    {msgTypeTitle[item.Type] }
+                                     {item.Msg}
+                                   </Col>
                                <Col>
                                 {item.Type==2? 
                                  <Popover visible={index == popSelectIndex && popVisible} placement='leftTop' title={'解决问题'} trigger="click"
@@ -873,9 +882,10 @@ const Workbench = props => {
                                         name="basicPop"
                                         form={popForm}
                                         onFinish={() => solveProblem(item)}
-                                      >
+                                      > 
+                                    };
                                         <Form.Item label="解决时间" name="problemTime" rules={[{ required: true, message: '请选择解决时间！' }]} >
-                                          <DatePicker showTime style={{ width: '100%' }} />
+                                          <DatePicker disabledDate={(current)=> current && current > moment()} showTime style={{ width: '100%' }} />
                                         </Form.Item>
                                         <Row align='end'>
                                           <Button onClick={() => { setPopVisible(false) }} style={{ marginRight: 8 }} >
@@ -1139,6 +1149,7 @@ const Workbench = props => {
             setFormsModalVisible(false);
           }}
           taskInfo={currentTodoItem}
+          type={type}
         />
         <Modal
           centered

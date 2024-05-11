@@ -8,17 +8,17 @@ import { API } from '@config/API';
 export default Model.extend({
   namespace: 'operaPlan',
   state: {
-    commonCol: (type) => [{
+    commonCol: (type,pageIndex,pageSize) => [{
       title: '序号',
       ellipsis: true,
       render: (text, record, index) => {
-        return index + 1;
+        return (index + 1) + (pageIndex - 1) * pageSize;
       }
     },
     {
       title: '计划编号',
-      dataIndex: 'projectCode',
-      key: 'projectCode',
+      dataIndex: 'code',
+      key: 'code',
       ellipsis: true,
     },
     {
@@ -35,53 +35,61 @@ export default Model.extend({
     },
     {
       title: '污染源企业',
-      dataIndex: 'remark',
-      key: 'remark',
+      dataIndex: 'entName',
+      key: 'entName',
       width: 150,
       ellipsis: true,
     },
     {
       title: '运维单位',
-      dataIndex: 'dd',
-      key: 'dd',
-      width: 90,
+      dataIndex: 'operationEnt',
+      key: 'operationEnt',
       ellipsis: true,
     },
     {
       title: '点位类别',
-      dataIndex: 'problemStatusName',
-      key: 'problemStatusName',
+      dataIndex: 'pollutantType',
+      key: 'pollutantType',
       ellipsis: true,
+      width:90,
     },
     {
       title: '计划起始日期',
-      dataIndex: 'solveUserName',
-      key: 'solveUserName',
+      dataIndex: 'beginTime',
+      key: 'beginTime',
       ellipsis: true,
+      width:160,
     },
     {
       title: '计划结束日期',
-      dataIndex: 'problemTime',
-      key: 'problemTime',
+      dataIndex: 'endTime',
+      key: 'endTime',
       ellipsis: true,
+      width:160,
     },
     {
       title: '状态',
-      dataIndex: 'dd',
-      key: 'dd',
+      dataIndex: 'status',
+      key: 'status',
       ellipsis: true,
+      width:90,
+      render: (text, record, index) => {
+        return text=='暂停'? <span className='red'>{text}</span> : text
+      }
     },
     {
       title: '备注',
-      dataIndex: 'problemTime',
-      key: 'problemTime',
+      dataIndex: 'remark',
+      key: 'remark',
       ellipsis: true,
+      width:160,
     },
     {
       title: '创建人',
       dataIndex: 'createUserName',
       key: 'createUserName',
       ellipsis: true,
+      width:100,
     },
     {
       title: '创建时间',
@@ -89,6 +97,7 @@ export default Model.extend({
       key: 'createTime',
       ellipsis: true,
     }],
+    operationPlanQueryRefreshType: '',
     tableDatas: [],
     tableTotal: 0,
     queryPar: {},
@@ -98,8 +107,13 @@ export default Model.extend({
     tableDatas3: [],
     tableTotal3: 0,
     queryPar3: {},
-    operationPlanQueryRefreshType: false,
-
+    operationPlanInfoRefreshType:'',
+    operationPlanInfoRefreshId:'',
+    operationPlanInfo:[],
+    operationPlanInfoTotal:0,
+    operationPlanInfoQueryPar:{},
+    xjPointList:[], //未排计划点位
+    jzPointList:[],
   },
   effects: {
     // 运维计划列表
@@ -132,7 +146,9 @@ export default Model.extend({
     *GetOperationPlanPointList({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanPointList, payload);
       if (result.IsSuccess) {
-        callback&&callback(result.Datas)
+        const xjData = result?.Datas?.xjList.map(item => ({ ...item, label: item.PointName, value: item.PointCode }))
+        const jzData = result?.Datas?.jzList.map(item => ({ ...item, label: item.PointName, value: item.PointCode }))
+        yield update({ xjPointList: xjData, jzPointList: jzData });
       }
     },
     // 生成运维计划
@@ -140,8 +156,25 @@ export default Model.extend({
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.AddOperationPlan, payload);
       if (result.IsSuccess) {
         message.success(result.Message);
+        yield update({ operationPlanInfoRefreshId: result.Datas });
       }
-      callback&&callback()
+      callback&&callback(result.Datas)
+    },
+   // 获取单个运维计划详情
+    *GetOperationPlanInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanInfo, payload);
+      if (result.IsSuccess) {
+        yield update({ operationPlanInfo: result?.Datas?.planInfoList, operationPlanInfoTotal: result?.Datas?.planInfoList?.length, operationPlanInfoQueryPar: payload, });
+      }
+      callback&&callback(result?.Datas)
+    },
+    // 删除运维计划点位
+    *DelOperationPlanPoint({ payload, callback }, { call, put, update }) { 
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.DelOperationPlanPoint, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+         callback&&callback()
+      }
     },
   },
 });

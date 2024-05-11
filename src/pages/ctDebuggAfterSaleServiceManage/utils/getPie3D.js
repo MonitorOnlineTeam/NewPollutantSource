@@ -1,6 +1,5 @@
-import { fomatFloat } from '@/utils/utils';
-import { ContactsOutlined } from '@ant-design/icons';
 import 'echarts-gl';
+import { fomatFloat } from '@/utils/utils';
 //获取3d丙图的最高扇区的高度
 function getHeight3D(series, height, customVal) { //customVal 默认高度
     series.sort((a, b) => {
@@ -220,7 +219,7 @@ export function getPie3D(pieData, { internalDiameterRatio, customVal, legendOpti
                     if (item.value == customVal || item.value.rate == 0) {//为0时
                         bfb = '0.00'
                     } else {
-                        bfb = item.rate?.toFixed(2);
+                        bfb = item.rate;
                     }
                 }
                 return `${params.seriesName}<br/>` +

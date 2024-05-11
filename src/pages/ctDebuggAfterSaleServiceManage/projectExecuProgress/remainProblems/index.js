@@ -60,7 +60,7 @@ const Index = (props) => {
 
   const [selectIndex, setSelectIndex] = useState(-1);
 
-  const [remainProblemsBtn, setRemainProblemsBtn] = useState(true);
+  const [remainProblemsBtn, setRemainProblemsBtn] = useState(false);
 
   
   useEffect(() => {
@@ -188,7 +188,7 @@ const Index = (props) => {
                     <Input placeholder='请输入' allowClear />
                   </Form.Item>
                   <Form.Item label="解决时间" name="problemTime" rules={[{ required: true, message: '请选择解决时间！' }]} >
-                    <DatePicker style={{width:'100%'}}/>
+                    <DatePicker disabledDate={(current)=> current && current > moment()} style={{width:'100%'}}/>
                   </Form.Item>
 
                   <Row align='end'>
@@ -402,7 +402,7 @@ const Index = (props) => {
         </Card>
         <Modal
           visible={viewAllVisible}
-          title={'查看满意度调查数据'}
+          title={'全部遗留问题'}
           onCancel={() => { setViewAllVisible(false) }}
           destroyOnClose
           wrapClassName={`spreadOverModal queryCriterTitleSty ${styles.detailModalSty}`}

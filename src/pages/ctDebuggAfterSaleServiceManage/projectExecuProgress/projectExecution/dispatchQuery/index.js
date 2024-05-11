@@ -410,6 +410,7 @@ const Index = (props) => {
         destroyOnClose
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
         mask={false}
+        bodyStyle={{overflow:'hidden'}}
       >
         <Detail serviceApplicaData={detailData ? detailData : {}} id={detailId} />
       </Modal>

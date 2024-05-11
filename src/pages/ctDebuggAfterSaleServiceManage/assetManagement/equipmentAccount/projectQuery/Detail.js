@@ -53,7 +53,7 @@ const Index = (props) => {
       props.getCTProjectList({
         projectCode:code
       },(res)=>{
-        setData(res)
+        res?.[0]&&setData(res?.[0])
       })
     }else{
       setData(props.data)
