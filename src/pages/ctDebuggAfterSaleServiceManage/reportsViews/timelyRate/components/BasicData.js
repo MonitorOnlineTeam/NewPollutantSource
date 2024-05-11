@@ -31,7 +31,7 @@ import styles from '../index.less';
 const { Text, Link } = Typography;
 
 const dvaPropsData = ({ loading, timelyRate, common }) => ({
-  largeRegionList: common.largeRegionList,
+  largeRegionList: common.CtLargeRegionList,
   basicsLoading: loading.effects[`timelyRate/GetTimelyRateInfoList`],
   exportLoading: loading.effects['timelyRate/ExportTimelyRateInfoList'],
 });
@@ -87,7 +87,7 @@ const BasicData = props => {
   // 获取大区及省份
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getLargeRegion',
+      type: 'common/getCTLargeRegion',
       payload: {},
     });
   };

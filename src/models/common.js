@@ -38,6 +38,10 @@ export default Model.extend({
     ctProjectQueryPar: null,
     ctRegionList: [],
     allUser: [],
+    // 成套大区、省份
+    CtLargeRegionList: [],
+    CtProvinceList: [],
+    // 运维大区、省份
     largeRegionList: [],
     provinceList: [],
   },
@@ -87,10 +91,10 @@ export default Model.extend({
       const response = yield call(services.GetEntList, { ...payload });
       if (response.IsSuccess) {
         yield update({enableEntList: response.Datas,});
-      } 
+      }
       callback && callback(response?.Datas);
       yield update({  noFilterEntLoading: false });
-      
+
     },
     *getEntByRegionCallBack({ payload, callback }, { call, put, update, select }) {
       //企业列表 回调
@@ -436,18 +440,36 @@ export default Model.extend({
       }
     },
 
-    // 获取大区及省份列表
-    *getLargeRegion({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.GetLargeRegionList, payload);
+    // 获取成套大区及省份列表
+    *getCTLargeRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetCtLargeRegionList, payload);
       if (result.IsSuccess) {
         let provinceList = [];
         result.Datas.map(item => {
           provinceList = provinceList.concat([...item.ChildList]);
         });
-        yield update({
+        let _datas = {
+          CtLargeRegionList: result.Datas,
+          CtProvinceList: provinceList,
+        };
+        yield update(_datas);
+        callback && callback(_datas);
+      }
+    },
+    // 获取运维大区及省份列表
+    *getLargeRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetLargeRegion, payload);
+      if (result.IsSuccess) {
+        let provinceList = [];
+        result.Datas.map(item => {
+          provinceList = provinceList.concat([...item.ChildList]);
+        });
+        let _datas = {
           largeRegionList: result.Datas,
           provinceList: provinceList,
-        });
+        };
+        yield update(_datas);
+        callback && callback(_datas);
       }
     },
   },

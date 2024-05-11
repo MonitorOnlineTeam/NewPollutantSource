@@ -23,8 +23,8 @@ import AuditModalPage from './components/AuditModalPage';
 import ImageLightboxView from '@/components/ImageLightboxView';
 
 const dvaPropsData = ({ loading, common }) => ({
-  provinceAllList: common.provinceList,
-  largeRegionList: common.largeRegionList,
+  provinceAllList: common.CtProvinceList,
+  largeRegionList: common.CtLargeRegionList,
   queryLoading: loading.effects[`reportAudit/GetStayCheckServices`],
 });
 
@@ -53,7 +53,7 @@ const reportAudit = props => {
   // 获取大区及省份
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getLargeRegion',
+      type: 'common/getCTLargeRegion',
       payload: {},
     });
   };

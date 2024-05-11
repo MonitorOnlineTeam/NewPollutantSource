@@ -21,8 +21,6 @@ import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import { Resizable, ResizableBox } from 'react-resizable';
-import ReactQuill, { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import RoleList from '@/components/RoleList'
 import OperationCompanyList from '@/components/OperationCompanyList'
 const { TextArea } = Input;
@@ -208,7 +206,7 @@ const Index = (props) => {
   ];
 
 
-  
+
   const [staticType, setStaticType] = useState(1)
   const onFinish = async (queryPar, staticType) => {  //查询
     try {

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-06 10:40:31
+ * @Last Modified time: 2024-05-11 15:32:58
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -216,9 +216,10 @@ export default Model.extend({
       }
     },
     // 根据configId 获取数据
-    *getConfigIdList({ payload }, { call, update, select }) {
+    *getConfigIdList({ payload, callback }, { call, update, select }) {
       const result = yield call(services.getListPager, { ...payload });
       if (result.IsSuccess) {
+        // callback && callback(result.Datas);
         const configIdList = yield select(state => state.autoForm.configIdList);
         yield update({
           configIdList: {

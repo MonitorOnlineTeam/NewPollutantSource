@@ -211,7 +211,7 @@ export const API = {
     /*运维到期提醒*/
     GetOperationExpireAnalysis: before + '/OperationExpireAnalysis/GetOperationExpireAnalysis',//运维到期点位统计
     ExportOperationExpireAnalysis: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//导出运维到期点位统计
-    
+
     /**运维计划**/
     /*制定运维计划*/
     GetOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList',//运维计划列表
@@ -938,6 +938,147 @@ export const API = {
       AddOrUpdateQuestion: before + '/CTProjectExecutionApi/AddOrUpdateQuestion',  //修改添加问题库
       DeleteQuestion: before + '/CTProjectExecutionApi/DeleteQuestion',  //删除问题库
     },
+   // 异常数据识别模型Api
+   AbnormalIdentifyModel: {
+    // 获取线索列表
+    GetWarningList: before + '/WarningV2/GetWarningList',
+    // 获取模型列表
+    GetMoldList: before + '/MoldV2/GetMoldList',
+    // 模型开启、关闭
+    SetMoldStatus: before + '/MoldV2/SetMoldStatus',
+    // 获取模型配置
+    GetModelInfoAndParams: before + '/WarningV2/GetModelInfoAndParams',
+    // 获取模型配置关联排口
+    GetModelRelationDGIMN: before + '/WarningV2/GetModelRelationDGIMN',
+    // 保存模型基础配置
+    SaveModelInfoAndParams: before + '/WarningV2/SaveModelInfoAndParams',
+    // 根据MN获取模型选配数据
+    GetDataAttributeAndPointList: before + '/MoldV2/GetDataAttributeAndPointList',
+    // 添加关联模型选配
+    AddDataAttributeAndPoint: before + '/MoldV2/AddDataAttributeAndPoint',
+    // 获取辅助分析数据
+    GetAllTypeDataListForModel: before + '/WarningV2/GetAllTypeDataListForModel',
+    // 获取直方图
+    StatisPolValueNumsByDGIMN: before + '/WarningV2/StatisPolValueNumsByDGIMN',
+    // 获取波动范围及点位参数信息
+    GetPointParamsRange: before + '/WarningV2/GetPointParamsRange',
+    // 重新生成正常范围
+    RegenerateNomalRangeTime: before + '/WarningV2/RegenerateNomalRangeTime',
+    // 线性相关系数
+    StatisLinearCoefficient: before + '/WarningV2/StatisLinearCoefficient',
+    // 历史数据综合评价/统计分析
+    GetHistoricalDataEvaluation: before + '/MoldV2/GetHistoricalDataEvaluation',
+    // 获取数据现象
+    GetHourDataForPhenomenon: before + '/WarningV2/GetHourDataForPhenomenon',
+    // 获取模型首页地图
+    GetMapPointList: before + '/MoldHome/GetMapPointList',
+    // 获取首页运行分析
+    GetOperationsAnalysis: before + '/MoldHome/GetOperationsAnalysis',
+    // 获取首页排放量统计
+    GetEmissionStatistics: before + '/MoldHome/GetEmissionStatistics',
+    // 异常线索统计
+    GetAbnormalClueStatistics: before + '/MoldHome/GetAbnormalClueStatistics',
+    // 排名
+    GetSuspectedRanking: before + '/MoldHome/GetSuspectedRanking',
+    // 数据质量分析
+    GetDataQualityAnalysis: before + '/MoldHome/GetDataQualityAnalysis',
+    // 排污缺口
+    GetPollutantDischargeGapStatistics: before + '/MoldHome/GetPollutantDischargeGapStatistics',
+    /*历史数据综合评价 */
+    // 排污缺口
+    GetPollutionDischargeGap: before + '/MoldV2/GetPollutionDischargeGap', //获取排污缺口信息
+    ExportPollutionDischargeGap: before + '/MoldV2/ExportPollutionDischargeGap', //排污缺口 导出
+    // 获取报警详情
+    GetSingleWarning: before + '/WarningV2/GetSingleWarning',
+    // 获取模型快转
+    GetSnapshotData: before + '/WarningV2/GetSnapshotData',
+    // 获取全行业波动范围
+    StatisNormalRange: before + '/WarningV2/StatisNormalRange',
+    // 获取全行业波动范围 - 导出
+    ExportStatisNormalRange: before + '/WarningV2/ExportStatisNormalRange',
+    // 数据工况 - 导出
+    ExportHourDataForModel: before + '/WarningV2/ExportHourDataForModel',
+    // 获取数据有效率下钻数据
+    GetEffectiveDrillDownData: before + '/MoldHome/GetEffectiveDrillDownData',
+    // 获取异常线索统计下钻数据
+    GetClueDrillDownData: before + '/MoldHome/GetClueDrillDownData',
+    // 获取超标率下钻数据
+    GetOverStandardDrillDownData: before + '/MoldHome/GetOverStandardDrillDownData',
+    // 获取数据质量分析下钻数据
+    GetQualityDrillDownData: before + '/MoldHome/GetQualityDrillDownData',
+    // 获取运行状态分布下钻数据
+    GetRunningStateDrillDownData: before + '/MoldHome/GetRunningStateDrillDownData',
+    // 修改小数数据WCFlag
+    UpdateHourDataWCFlag: before + '/WarningV2/UpdateHourDataWCFlag',
+    // 获取陡变过程数据
+    GetAbruptChangeData: before + '/MoldV2/GetAbruptChangeData',
+    // 修改陡变系数
+    UpdAbruptLinear: before + '/MoldV2/UpdAbruptLinear',
+
+    /*实时数据异常识别及管理*/
+    //异常线索清单
+    //线索分析
+    GetClueDatas: before + '/Clue/GetClueDatas', //工作台信息
+    //生成核查任务
+    GetWaitCheckDatas: before + '/Clue/GetWaitCheckDatas', //获取生产核查任务信息
+    GetPreTakeFlagDatas: before + '/Clue/GetPreTakeFlagDatas', //获取庄家意见信息
+    GetPlanDatas: before + '/Clue/GetPlanDatas', //获取已有方案信息
+    GetCheckRoleDatas: before + '/Clue/GetCheckRoleDatas', //获取核查角色
+    AddPlanTask: before + '/Clue/AddPlanTask', //生成核查任务
+    //核查任务管理
+    //待核查任务 已核查任务
+    GetCheckedList: before + '/Clue/GetCheckedList', //获取待核查或已核查任务信息
+    GetCheckedView: before + '/Clue/GetCheckedView', //核查详情
+    UpdatePlanItem: before + '/Clue/UpdatePlanItem', //核查保存或提交
+    CheckConfirm: before + '/Clue/CheckConfirm', //核查确认
+  },
+  // 经理日常管理Api
+  DailyManagement: {
+    // 办事处检查统计
+    GetOfficeCheckStatisticsForRegion:
+      before + '/DailyWorkManagerApi/GetOfficeCheckStatisticsForRegion',
+    // 办事处检查统计 - 导出
+    ExportOfficeCheckStatisticsForRegion:
+      before + '/DailyWorkManagerApi/ExportOfficeCheckStatisticsForRegion',
+    // 省区详情 - 检查任务完成记录
+    GetOfficeCheckStatisticsForRegionInfo:
+      before + '/DailyWorkManagerApi/GetOfficeCheckStatisticsForRegionInfo',
+    // 省区详情 - 检查任务完成记录 - 导出
+    ExportOfficeCheckStatisticsForRegionInfo:
+      before + '/DailyWorkManagerApi/ExportOfficeCheckStatisticsForRegionInfo',
+    // 检查记录和检查管理
+    GetOfficeCheckStatisticsList: before + '/DailyWorkManagerApi/GetOfficeCheckStatisticsList',
+    // 检查记录和检查管理 - 导出
+    ExportOfficeCheckStatisticsList:
+      before + '/DailyWorkManagerApi/ExportOfficeCheckStatisticsList',
+    // 删除办事处检查记录
+    DeleteOfficeCheckStatistics: before + '/DailyWorkManagerApi/DeleteOfficeCheckStatistics',
+    // 获取运维大区和省区
+    GetLargeRegion: before + '/DailyWorkBaseApi/GetLargeRegion',
+    // 根据省份获取办事处
+    GetOfficeList: before + '/DailyWorkBaseApi/GetOfficeList',
+    // 查询现场工作、其他工作、其他部门工作提交记录
+    GetOtherWorkList: before + '/DailyWorkManagerApi/GetOtherWorkList',
+    // 添加现场工作、其他工作、其他部门工作提交记录
+    InsOrUpdOtherWork: before + '/DailyWorkManagerApi/InsOrUpdOtherWork',
+
+    // 人员培训
+    TrainingApi: {
+      // 获取人员培训统计
+      GetPersonTrainForRegion: before + '/DailyWorkManagerApi/GetPersonTrainForRegion',
+      // 人员培训统计 - 导出
+      ExportPersonTrainForRegion: before + '/DailyWorkManagerApi/ExportPersonTrainForRegion',
+      // 任务完成记录
+      GetPersonTrainForRegionInfo: before + '/DailyWorkManagerApi/GetPersonTrainForRegionInfo',
+      // 任务完成记录 - 导出
+      ExportPersonTrainForRegionInfo:
+        before + '/DailyWorkManagerApi/ExportPersonTrainForRegionInfo',
+      // 获取记录和管理数据
+      GetPersonTrainList: before + '/DailyWorkManagerApi/GetPersonTrainList',
+      // 记录和管理数据 - 导出
+      ExportPersonTrainList: before + '/DailyWorkManagerApi/ExportPersonTrainList',
+    },
+  },
   CtAPI_WJQ: {
     // 基础服务
     CTBaseDataApi: {
@@ -971,7 +1112,7 @@ export const API = {
       GetServiceReportDesc: before + '/CTProjectExecutionApi/GetServiceReportDesc',
       // 大区明细 - 导出
       ExportGetServiceReportDesc: before + '/CTProjectExecutionApi/ExportGetServiceReportDesc',
-  
+
     },
     // 服务报告审核
     ReportAuditApi: {
@@ -1128,6 +1269,18 @@ export const API = {
       // 导出 - 基础数据
       ExportTimelyRateInfoList: before + '/CTStatisticsApi/ExportTimelyRateInfoList',
     },
-
+    // 报告及时合格率
+    TimelinessQualityReport: {
+      // 按大区统计
+      GetTimelyPassRateListByArea: before + '/CTProjectExecutionApi/GetTimelyPassRateListByArea',
+      // 按大区统计 - 导出
+      ExportTimelyPassRateListByArea:
+        before + '/CTProjectExecutionApi/ExportTimelyPassRateListByArea',
+      // 按人员统计
+      GetTimelyPassRateListByUser: before + '/CTProjectExecutionApi/GetTimelyPassRateListByUser',
+      // 按人员统计 - 导出
+      ExportTimelyPassRateListByUser:
+        before + '/CTProjectExecutionApi/ExportTimelyPassRateListByUser',
+    },
   },
 };

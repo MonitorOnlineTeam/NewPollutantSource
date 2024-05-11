@@ -31,10 +31,16 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 ul,
-ol {
+ol,
+p {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -494,7 +500,7 @@ a:hover {
 
   // 菜单
   .ant-pro-fixed-header.ant-layout-header {
-    z-index: 9999 !important;
+    z-index: 1001 !important;
   }
 }
 
@@ -563,27 +569,45 @@ a:hover {
 #basicLayout,
 #notBreadcrumbLayout {
   .ant-pro-page-header-wrap-children-content {
-    height: calc(100vh - 126px);
+    height: calc(100vh - 122px);
     background: #fff;
     overflow-y: auto;
-    .ant-card-body,
-    & > .ant-card-bordered {
-      // .ant-card-bordered {
+    // & > .ant-card-body:first-child,
+    // & > .ant-card-bordered:first-child {
+    //   // .ant-card-bordered {
+    //   box-shadow: none;
+    //   border: none;
+    //   padding-bottom: 0;
+    //   padding-top: 10px;
+    // }
+
+    //    .ant-card-bordered {
+    //   padding-top: 8px;
+
+    //    }
+    // .ant-card-bordered {
+    //   box-shadow: none;
+    //   padding-bottom: 0;
+    //   padding-top: 8px;
+    //   border: 0;
+    // }
+
+    & > .ant-card-body:first-child,
+    & > .ant-card-bordered:first-child {
       box-shadow: none;
       border: none;
       padding-bottom: 0;
-      padding-top: 10px;
-    }
-    .ant-card-bordered {
-      box-shadow: none;
-      padding-bottom: 0;
-      padding-top: 8px;
-      border: 0;
+      & > .ant-card-body:first-child {
+        box-shadow: none;
+        border: none;
+        padding-bottom: 0;
+        // padding-top: 10px;
+      }
     }
   }
 
   .contentContainer {
-    height: calc(100vh - 126px);
+    height: calc(100vh - 122px);
   }
 }
 
@@ -688,7 +712,7 @@ a:hover {
       height: calc(100vh - 64px);
     }
     .ant-modal-body {
-      max-height: calc(100% - 39px);
+      max-height: calc(100% - 34px);
       overflow-y: auto;
     }
   }
@@ -723,6 +747,7 @@ a:hover {
   }
 }
 .fullScreenModal {
+  z-index: 1002;
   //全面屏弹框
   :global {
     .ant-modal {
@@ -916,6 +941,7 @@ a:hover {
     bottom: -5px;
   }
   .ant-form-item,
+  .ant-form-item-row,
   .ant-form-item-control,
   .ant-form-item-control-input,
   .ant-form-item-control-input-content {
@@ -984,7 +1010,28 @@ a:hover {
   justify-content: center;
   flex-direction: column;
 }
-// .ant-card :global {
+
+// 标题样式
+.innerCardTitle {
+  font-size: 16px;
+  font-weight: 500;
+  /* line-height: 20px; */
+  position: relative;
+  padding-left: 14px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 12%;
+    left: 0;
+    width: 4px;
+    height: 70%;
+    background: #0466ff;
+  }
+  // color: #333333;
+}
+
+//.ant-card :global {
   //  .ant-card-head-title{
   //   padding: 8px 0;
   //  }
@@ -1043,7 +1090,7 @@ a:hover {
   }
   .ant-card-head-title{
      padding: 0;
-   } 
+   }
   .ant-form-item{
     margin-bottom: 8px;
   }

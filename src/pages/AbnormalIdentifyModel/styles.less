@@ -1,0 +1,304 @@
+.ModelTableWrapper {
+  margin-bottom: 10px;
+  :global {
+    .ant-table-row-expand-icon-cell {
+      padding: 16px !important;
+      width: 48px !important;
+    }
+    // .ant-table.ant-table-middle .ant-table-tbody .ant-table-wrapper:only-child .ant-table {
+    //   margin: -11px -8px -13px 40px;
+    // }
+
+    .ant-table-row-expand-icon {
+      display: inline-flex;
+      float: none;
+      vertical-align: sub;
+    }
+    .ant-table.ant-table-middle .ant-table-tbody .ant-table-wrapper:only-child .ant-table {
+      margin: -9px -16px -9px 39px;
+    }
+  }
+}
+
+.warningWrapper{
+  padding-top: 0 !important;
+}
+
+.PageWrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  // max-height: calc(100vh + -60px);
+  background: #f0f2f5;
+  padding-bottom: 10px;
+
+  :global {
+    .ant-card-head {
+      min-height: auto;
+    }
+    .ant-card-head-title {
+      padding: 8px 0;
+    }
+
+    .ant-card-extra {
+      padding: 0;
+    }
+  }
+}
+
+.WarningDataTable {
+  :global {
+    .ant-table-tbody td {
+      padding: 0 !important;
+    }
+  }
+
+  .tdBox {
+    padding: 8px;
+  }
+}
+.workTowerWrapper {
+  :global {
+    .ant-pro-page-header-wrap-children-content {
+      height: auto !important;
+      overflow-y: hidden;
+    }
+    .ant-card-body {
+      padding: 0;
+      .ant-tag {
+        cursor: pointer;
+        font-size: 14px;
+      }
+    }
+    .ant-col-8 {
+      .title {
+        font-size: large;
+        font-weight: bold;
+        padding-bottom: 10px;
+      }
+      border-right: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
+      padding: 16px;
+      height: calc(25vh - 62px);
+      overflow-y: auto;
+    }
+    .ant-select-item-option-content {
+      text-align: left;
+    }
+    .ant-pagination-options-size-changer.ant-select {
+      margin-right: 0;
+    }
+  }
+}
+.verificationTakeWrapper {
+  :global {
+    .ant-pro-page-header-wrap-children-content {
+      background-color: transparent !important;
+    }
+    .noSelectAllSty {
+      .ant-table-thead {
+        .ant-table-selection {
+          display: none;
+        }
+      }
+    }
+  }
+}
+.generateVerificationTakeModal {
+  :global {
+    .ant-modal-body {
+      max-height: calc(100% - 90px);
+      overflow-y: auto;
+    }
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+    .ant-form-item-label {
+      min-width: 80px;
+    }
+    .ant-table-thead {
+      .ant-table-selection {
+        display: none;
+      }
+    }
+    .ant-popover-content {
+      width: 680px;
+    }
+    .ant-popover-arrow {
+      display: none;
+    }
+    .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+      left: 0;
+    }
+    .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+      width: 120px;
+      padding-left: 0;
+      padding-bottom: 0;
+    }
+    .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+      margin-right: 8px;
+    }
+    .ant-empty-normal {
+      margin: 0;
+    }
+    .verificationActionTableSty {
+      .ant-form-item {
+        text-align: left;
+      }
+      .ant-form-item-has-error .ant-form-item-explain,
+      .ant-form-item-has-error .ant-form-item-split {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+      }
+      .ant-form-item-explain-connected {
+        width: auto;
+      }
+    }
+  }
+}
+.verificationTaskDetailWrapper {
+  :global {
+    .ant-pro-page-header-wrap-children-content {
+      background-color: transparent !important;
+      overflow-y: hidden !important;
+    }
+    .ant-form-item {
+      margin-bottom: 8px;
+    }
+    .ant-tabs-nav {
+      margin-bottom: 8px;
+    }
+    .ant-tabs-tab {
+      padding: 0;
+    }
+    .ant-tabs {
+      margin-top: 12px;
+    }
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+      padding: 0 8px 4px 8px;
+    }
+    .ant-tabs-content {
+      overflow-y: auto;
+      height: calc(100vh - 360px);
+    }
+    .ant-upload-list-picture-card-container,
+    .ant-upload.ant-upload-select-picture-card,
+    .ant-upload-list-picture-card .ant-upload-list-item {
+      width: 84px;
+      height: 84px;
+    }
+    #checkAction {
+      .ant-form-item-label > label {
+        font-weight: bold;
+      }
+    }
+    .ant-progress-inner {
+      margin-top: 16px;
+    }
+    .programmeLabel {
+      .ant-form-item-control-input-content {
+        & > div {
+          width: calc(100vw - 208px);
+          word-wrap: break-word;
+        }
+      }
+      .programmeLabel2 {
+        .ant-form-item-control-input-content {
+          & > div {
+            width: calc(100vw - 166px);
+            word-wrap: break-word;
+          }
+        }
+      }
+      .ant-form-item-label > label {
+        height: 20px;
+        line-height: 20px;
+      }
+      .ant-form-item-control-input {
+        min-height: 20px;
+      }
+    }
+    .checkedDesLabel {
+      .ant-form-item-label > label {
+        height: 20px;
+        line-height: 20px;
+      }
+      .ant-form-item-control-input {
+        width: calc(25vw - 120px);
+        word-wrap: break-word;
+        min-height: 20px;
+      }
+    }
+    .ant-card-head {
+      min-height: 32px;
+    }
+    .ant-card-head-title {
+      padding: 8px 0;
+    }
+  }
+}
+
+.pollutantDischargeGapWrapper {
+  :global {
+    .ant-card-body {
+      padding-bottom: 0;
+    }
+    .ant-form-item {
+      margin: 4px 12px 4px 0;
+    }
+  }
+}
+
+// 波动范围
+.dataRangeUpdateTimeBox {
+  margin-top: -20px;
+  padding: 0 10%;
+  display: flex;
+  margin-top: 0;
+
+  .updateTime {
+    margin-left: 10px;
+    margin-top: 4px;
+    color: #444;
+    font-size: 12px;
+  }
+}
+
+// 通用库 - 参数配置
+.paramTitle {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  padding: 0 10px;
+  background: #fff;
+  font-weight: bold;
+}
+
+.paramItemWrapper {
+  display: inline-block;
+}
+
+.paramsCardWrapper {
+  width: 100%;
+  margin-bottom: 20px;
+  :global {
+    .ant-form-item {
+      display: inline-block;
+      margin-right: 100px;
+    }
+  }
+
+  .formItemText_l {
+    display: inline-block;
+    line-height: 32px;
+    font-size: 13px;
+    margin-right: 6px;
+  }
+  .formItemText_r {
+    display: inline-block;
+    line-height: 32px;
+    font-size: 13px;
+    margin-left: -92px;
+  }
+}

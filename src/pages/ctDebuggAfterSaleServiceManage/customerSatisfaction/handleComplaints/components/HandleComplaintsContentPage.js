@@ -39,8 +39,8 @@ import Dispose from './Dispose';
 const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, common }) => ({
-  largeRegionList: common.largeRegionList,
-  provinceAllList: common.provinceList,
+  largeRegionList: common.CtLargeRegionList,
+  provinceAllList: common.CtProvinceList,
   queryLoading: loading.effects[`customer/GetCustomerComplaintsList`],
   exportLoading: loading.effects[`customer/ExportCustomerComplaints`],
 });
@@ -74,7 +74,7 @@ const HandleComplaintsContentPage = props => {
   // 获取大区及省份
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getLargeRegion',
+      type: 'common/getCTLargeRegion',
       payload: {},
     });
   };

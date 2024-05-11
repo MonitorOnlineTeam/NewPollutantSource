@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 11:11:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-29 15:58:36
+ * @Last Modified time: 2024-05-08 10:50:51
  * @Description:  纪律检查
  */
 
@@ -181,7 +181,11 @@ const DisciplineCheck = props => {
         key: 'CheckRate',
         ellipsis: true,
         width: 200,
-        sorter: (a, b) => a.CheckRate - b.CheckRate,
+        sorter: (a, b) => {
+          if (a.RegionCode !== 'All' && b.RegionCode !== 'All') {
+            return a.CheckRate - b.CheckRate;
+          }
+        },
         render: (text, record) => {
           // let percent = Number(text).toFixed(2);
           return (

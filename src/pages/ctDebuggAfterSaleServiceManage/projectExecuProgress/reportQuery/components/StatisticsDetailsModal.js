@@ -2,17 +2,19 @@
  * @Author: JiaQi
  * @Date: 2024-05-06 09:13:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-06 09:58:12
+ * @Last Modified time: 2024-05-07 15:07:39
  * @Description:  验收服务报告待完成审核明细
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Modal, Input, Button, Tabs, Select, Space, Row, Col, Card, Divider } from 'antd';
+import { Form, Modal, Input, Button, Tabs, Select, Space, Row, Col, Card, Typography } from 'antd';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SdlTable from '@/components/SdlTable';
 
+const { Text } = Typography;
+
 const dvaPropsData = ({ common, loading }) => ({
-  largeRegionList: common.largeRegionList,
+  largeRegionList: common.CtLargeRegionList,
   queryLoading: loading.effects[`reportQuery/GetServiceReportDesc`],
   exportLoading: loading.effects[`reportQuery/ExportGetServiceReportDesc`],
 });
@@ -67,9 +69,6 @@ const StatisticsDetailsModal = props => {
         title: '序号',
         align: 'center',
         ellipsis: true,
-        render: (text, record, index) => {
-          return index + 1 + (pageIndex - 1) * pageSize;
-        },
       },
       {
         title: '派工单号',
@@ -159,6 +158,9 @@ const StatisticsDetailsModal = props => {
         dataIndex: 'CheckStatuTip',
         key: 'CheckStatuTip',
         ellipsis: true,
+        render: (text, record) => {
+          return <Text type={record.CheckStatus === 2 ? "danger" : 'default'}>{text}</Text>
+        }
       },
     ];
 
@@ -175,7 +177,7 @@ const StatisticsDetailsModal = props => {
           // layout="inline"
           initialValues={{
             // time: [moment().startOf('month'), moment()],
-            region: props.region,
+            region: props.region || undefined,
             time: props.time,
           }}
           autoComplete="off"
@@ -210,13 +212,13 @@ const StatisticsDetailsModal = props => {
               </Select>
             </Form.Item>
             <Form.Item>
-              <Space style={{ marginLeft: 10 }}>
+              <Space>
                 <Button
                   type="primary"
                   htmlType="submit"
                   loading={queryLoading}
                   onClick={() => {
-                    GetStatServiceReport(1, 20);
+                    GetServiceReportDesc(1, 20);
                   }}
                 >
                   查询
@@ -224,7 +226,7 @@ const StatisticsDetailsModal = props => {
                 <Button
                   onClick={() => {
                     form.resetFields();
-                    GetStatServiceReport(1, 20);
+                    GetServiceReportDesc(1, 20);
                   }}
                 >
                   重置
@@ -254,6 +256,7 @@ const StatisticsDetailsModal = props => {
           align="center"
           dataSource={dataSource}
           columns={getColumns()}
+          pagination={false}
         />
       </Card>
     );
