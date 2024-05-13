@@ -211,13 +211,19 @@ export const API = {
     /*运维到期提醒*/
     GetOperationExpireAnalysis: before + '/OperationExpireAnalysis/GetOperationExpireAnalysis',//运维到期点位统计
     ExportOperationExpireAnalysis: before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis',//导出运维到期点位统计
-    
+
     /**运维计划**/
     /*制定运维计划*/
     GetOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList',//运维计划列表
-    ExportOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList',//运维计划 导出
+    ExportOperationPlanList: before + '/WorkOrderApi/ExportOperationPlanList',//运维计划 导出
     GetOperationPlanPointList: before + '/WorkOrderApi/GetOperationPlanPointList',//获取未排计划点位
     AddOperationPlan: before + '/WorkOrderApi/AddOperationPlan',//生成运维计划
+    GetOperationPlanInfo: before + '/WorkOrderApi/GetOperationPlanInfo',//获取单个运维计划详情
+    ExportOperationPlanInfo: before + '/WorkOrderApi/ExportOperationPlanInfo',//单个运维计划详情 导出
+    DelOperationPlanPoint: before + '/WorkOrderApi/DelOperationPlanPoint',//删除运维计划点位
+    DeleteOperationPlan: before + '/WorkOrderApi/DeleteOperationPlan',//删除运维计划
+    GetOperationPlanCalendar: before + '/WorkOrderApi/GetOperationPlanCalendar',//运维计划日历
+    ExportOperationPlanCalendar: before + '/WorkOrderApi/ExportOperationPlanCalendar',//运维计划日历 导出
     /**运维报告**/
     /*运维报告（word）*/
     GetOperationReportList: before + '/WorkOrderStatistics/GetOperationReportList',//获取运维月度报告信息
@@ -455,7 +461,7 @@ export const API = {
     AddOrUpdOperationSignRadiusInfo: before + '/EnterpriseApi/AddOrUpdOperationSignRadiusInfo',//企业设置电子围栏半径
     GetOperationSignRadiusInfo: before + '/EnterpriseApi/GetOperationSignRadiusInfo',//获取企业电子围栏半径
     /*污染源信息查询*/
-    GetEntList: before + '/EnterpriseApi/GetEntList', //获取监测点信息
+    GetEntList: before + '/EnterpriseApi/GetEntList', //获取企业信息
     ExportEntList: before + '/EnterpriseApi/ExportEntList', //导出企业信息
     GetPointList: before + '/MonitorPointApi/GetPointList', //获取监测点信息
     ExportPointList: before + '/MonitorPointApi/ExportPointList', //导出监测点信息
@@ -702,17 +708,12 @@ export const API = {
     GetOperationSetting: before + '/ConfigureApi/GetOperationSetting', //获取运维基础配置信息
     UpdOperationSetting: before + '/ConfigureApi/UpdOperationSetting', //设置运维基础配置
   },
-/*********** 通用 ***********/
-  //资源一览
-  ResourceOverviewApi: {
-    GetResourceOverviewLeft: before + '/CTStatisticsApi/GetResourceOverviewLeft', //左侧数据
-    GetResourceOverviewRight: before + '/CTStatisticsApi/GetResourceOverviewRight', //右侧数据
-    GetResourceOverviewMap: before + '/CTStatisticsApi/GetResourceOverviewMap', //地图数据
-  },
+  /*********** 通用 ***********/
+
   /*********** 成套 ***********/
   //报告及视图
   ReportsViewsApi: {
-     /*成套服务报告*/
+    /*成套服务报告*/
     ExportDebugReports: before + '/CTStatisticsApi/ExportDebugReports', //成套服务报告 导出
     /*一次性解决率*/
     GetDisposableRateList: before + '/CTStatisticsApi/GetDisposableRateList', //获取一次解决率
@@ -764,9 +765,9 @@ export const API = {
     // GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//合同到期 老
     // DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除工作台合同到期 老
     // DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期 老
-     GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg',//获取工作台项目执行、合同到期等  新
-     DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg',//删除工作台合同到期等 新
-     DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg',//删除所有工作台合同到期等 新
+    GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg',//获取工作台项目执行、合同到期等  新
+    DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg',//删除工作台合同到期等 新
+    DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg',//删除所有工作台合同到期等 新
 
   },
 
@@ -916,6 +917,10 @@ export const API = {
   },
   //通用管理 Api
   GeneralManagerApi: {
+    //资源一览
+    GetResourceOverviewLeft: before + '/CTStatisticsApi/GetResourceOverviewLeft', //左侧数据
+    GetResourceOverviewRight: before + '/CTStatisticsApi/GetResourceOverviewRight', //右侧数据
+    GetResourceOverviewMap: before + '/CTStatisticsApi/GetResourceOverviewMap', //地图数据
     /*车辆管理*/
     GetCarList: before + '/CTProjectExecutionApi/GetCarList',  //获取车辆信息
     ExportCarList: before + '/CTProjectExecutionApi/ExportCarList',  //车辆信息 导出
@@ -928,16 +933,16 @@ export const API = {
     ExportProvinceList: before + '/CTProjectExecutionApi/ExportProvinceList',  //大区档案 导出
     GetManagerSelect: before + '/CTProjectExecutionApi/GetManagerSelect',  //获取大区系统类型、档案执行大区、项目所在地、大区经理、省区经理信息
   },
-    //技术专家系统 Api
-    TechExpertSystemApi: {
-      /*问题库*/
-      GetQuestionList: before + '/CTProjectExecutionApi/GetQuestionList',  //获取问题库信息
-      ExportQuestion: before + '/CTProjectExecutionApi/ExportQuestion',  //问题库信 导出
-      GetQuestionTemplate: before + '/CTProjectExecutionApi/GetQuestionTemplate',  //获取问题库导入模板
-      ImportQuestion: before + '/CTProjectExecutionApi/ImportQuestion',  //导入问题库
-      AddOrUpdateQuestion: before + '/CTProjectExecutionApi/AddOrUpdateQuestion',  //修改添加问题库
-      DeleteQuestion: before + '/CTProjectExecutionApi/DeleteQuestion',  //删除问题库
-    },
+  //技术专家系统 Api
+  TechExpertSystemApi: {
+    /*问题库*/
+    GetQuestionList: before + '/CTProjectExecutionApi/GetQuestionList',  //获取问题库信息
+    ExportQuestion: before + '/CTProjectExecutionApi/ExportQuestion',  //问题库信 导出
+    GetQuestionTemplate: before + '/CTProjectExecutionApi/GetQuestionTemplate',  //获取问题库导入模板
+    ImportQuestion: before + '/CTProjectExecutionApi/ImportQuestion',  //导入问题库
+    AddOrUpdateQuestion: before + '/CTProjectExecutionApi/AddOrUpdateQuestion',  //修改添加问题库
+    DeleteQuestion: before + '/CTProjectExecutionApi/DeleteQuestion',  //删除问题库
+  },
   CtAPI_WJQ: {
     // 基础服务
     CTBaseDataApi: {
@@ -971,7 +976,7 @@ export const API = {
       GetServiceReportDesc: before + '/CTProjectExecutionApi/GetServiceReportDesc',
       // 大区明细 - 导出
       ExportGetServiceReportDesc: before + '/CTProjectExecutionApi/ExportGetServiceReportDesc',
-  
+
     },
     // 服务报告审核
     ReportAuditApi: {

@@ -3083,7 +3083,7 @@ export default {
                         './ctDebuggAfterSaleServiceManage/reportsViews/InstStdAndCompReso/comp/index',
                     },
                     {
-                      // 投诉解决率
+                      // 服务响应及时率
                       name: 'returnVisit',
                       path: '/ctManage/reportsViews/InstStdAndCompReso/timelyRate',
                       component:
@@ -3439,7 +3439,13 @@ export default {
                   routes: [
                     {
                       path: '/ctManage/generalManager',
-                      redirect: '/ctManage/generalManager/vehicleManager',
+                      redirect: '/ctManage/generalManager/resourceOverview',
+                    },
+                    {
+                      path: '/ctManage/generalManager/resourceOverview', //资源一览
+                      name: 'ResourceOverview',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/generalManager/resourceOverview',
                     },
                     {
                       // 车辆管理
@@ -3506,20 +3512,7 @@ export default {
 
               ]
             },
-            /********  通用   ********/
-            {
-              path: '/currency',
-              name: 'CtManage',
-              routes: [
-                {
-                  path: '/currency/resourceOverview', //资源一览
-                  name: 'ResourceOverview',
-                  component:
-                    './currencyManage/resourceOverview',
-                },
-
-              ]
-            },
+ 
 
             /* 任务详情 */
             {
