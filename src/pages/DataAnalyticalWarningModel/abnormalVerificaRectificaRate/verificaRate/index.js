@@ -21,8 +21,6 @@ import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import { Resizable, ResizableBox } from 'react-resizable';
-import ReactQuill, { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import RoleList from '@/components/RoleList'
 import OperationCompanyList from '@/components/OperationCompanyList'
 import { ModalNameConversion } from '../../CONST';
@@ -137,7 +135,7 @@ const Index = (props) => {
       align: 'center',
       render: (text, record) => {
         return  <Progress percent={text && text.replace("%", "").trim()} size="small" style={{ width: '75%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
-     
+
       }
     },
     {
@@ -166,7 +164,7 @@ const Index = (props) => {
       width:140,
       render: (text, record) => {
         return  <Progress percent={text && text.replace("%", "").trim()} size="small" style={{ width: '75%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>} />
-     
+
       }
     },
   ]

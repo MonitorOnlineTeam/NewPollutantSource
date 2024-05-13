@@ -1133,6 +1133,18 @@ export const API = {
       // 导出 - 基础数据
       ExportTimelyRateInfoList: before + '/CTStatisticsApi/ExportTimelyRateInfoList',
     },
-
+    // 报告及时合格率
+    TimelinessQualityReport: {
+      // 按大区统计
+      GetTimelyPassRateListByArea: before + '/CTProjectExecutionApi/GetTimelyPassRateListByArea',
+      // 按大区统计 - 导出
+      ExportTimelyPassRateListByArea:
+        before + '/CTProjectExecutionApi/ExportTimelyPassRateListByArea',
+      // 按人员统计
+      GetTimelyPassRateListByUser: before + '/CTProjectExecutionApi/GetTimelyPassRateListByUser',
+      // 按人员统计 - 导出
+      ExportTimelyPassRateListByUser:
+        before + '/CTProjectExecutionApi/ExportTimelyPassRateListByUser',
+    },
   },
 };

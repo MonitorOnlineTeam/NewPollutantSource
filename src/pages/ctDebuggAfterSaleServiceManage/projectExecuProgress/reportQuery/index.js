@@ -23,8 +23,8 @@ import StatisticsModal from './components/StatisticsModal';
 import ServiceReportModal from './components/ServiceReportModal';
 
 const dvaPropsData = ({ loading, common }) => ({
-  provinceAllList: common.provinceList,
-  largeRegionList: common.largeRegionList,
+  provinceAllList: common.CtProvinceList,
+  largeRegionList: common.CtLargeRegionList,
   queryLoading: loading.effects[`reportQuery/GetAlreadyCheckServices`],
   exportLoading: loading.effects[`reportQuery/ExportGetAlreadyCheckServices`],
 });
@@ -55,7 +55,7 @@ const reportAudit = props => {
   // 获取大区及省份
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getLargeRegion',
+      type: 'common/getCTLargeRegion',
       payload: {},
     });
   };
@@ -314,7 +314,7 @@ const reportAudit = props => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="checkStatus" label="合格状态">
+              <Form.Item name="auditStatus" label="合格状态">
                 <Select placeholder="请选择合格状态" style={{ width: '100%' }} allowClear>
                   <Option value={1} key={1}>
                     合格

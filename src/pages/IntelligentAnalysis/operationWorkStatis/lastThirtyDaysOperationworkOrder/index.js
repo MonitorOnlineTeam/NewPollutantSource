@@ -21,8 +21,6 @@ import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import { Resizable, ResizableBox } from 'react-resizable';
-import ReactQuill, { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import RoleList from '@/components/RoleList'
 import OperationCompanyList from '@/components/OperationCompanyList'
 
@@ -158,7 +156,7 @@ const Index = (props) => {
       align: 'center',
       sorter: (a, b) => a.biaozhunwuzhi - b.biaozhunwuzhi,
     },
-    
+
     {
       title: '试剂更换',
       dataIndex: 'shiji',

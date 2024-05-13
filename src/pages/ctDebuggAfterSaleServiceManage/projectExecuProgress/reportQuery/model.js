@@ -30,6 +30,7 @@ export default Model.extend({
         payload,
       );
       if (result.IsSuccess) {
+        message.success('导出成功！');
         downloadFile(result.Datas);
       }
     },
@@ -52,6 +53,7 @@ export default Model.extend({
         payload,
       );
       if (result.IsSuccess) {
+        message.success('导出成功！');
         downloadFile(result.Datas);
       }
     },
@@ -74,6 +76,7 @@ export default Model.extend({
         payload,
       );
       if (result.IsSuccess) {
+        message.success('导出成功！');
         downloadFile(result.Datas);
       }
     },

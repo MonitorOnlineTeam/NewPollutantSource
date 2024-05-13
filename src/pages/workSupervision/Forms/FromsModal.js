@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:56:52
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-06 14:07:26
+ * @Last Modified time: 2024-05-09 10:47:02
  * @Description: 任务单电子表单 - 操作弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -16,6 +16,7 @@ import Branch_Inside from './Branch_Inside';
 import Branch_Other from './Branch_Other';
 import AttendanceLog from './AttendanceLog';
 import AccountsReceivable from './AccountsReceivable';
+import Office from '@/pages/workSupervision/dailyManagement/officeCheck/ChecklistRecordAndManagement';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   formsModalVisible: wordSupervision.formsModalVisible,
@@ -61,9 +62,9 @@ const FromsModal = props => {
           />
         );
       case 5:
+        // 办事处检查任务
         return (
-          <OfficeInspection
-            editData={editData}
+          <Office
             taskInfo={taskInfo}
             onCancel={() => onCancel()}
             onSubmitCallback={() => onSubmitCallback && onSubmitCallback()}

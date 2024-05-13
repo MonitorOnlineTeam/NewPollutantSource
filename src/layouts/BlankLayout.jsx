@@ -1,11 +1,19 @@
 import React from 'react';
-import CopyBlock from '@/components/CopyBlock';
+import { PageLoading } from '@ant-design/pro-layout';
+import { connect } from 'dva';
 
-const Layout = ({ children }) => (
-  <>
-    <div>{children}</div>
-    {/* <CopyBlock id={Date.now()} /> */}
-  </>
-);
+const Layout = ({ children, loading }) => {
+  if (loading) {
+    return <PageLoading />;
+  }
 
-export default Layout;
+  return (
+    <>
+      <div>{children}</div>
+    </>
+  );
+};
+
+export default connect(({ loading }) => ({
+  loading: loading.effects['global/getSystemConfigInfo'],
+}))(Layout);

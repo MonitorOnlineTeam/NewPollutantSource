@@ -5,7 +5,8 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile, requestPost } from '@/utils/utils';
+import { API } from '@config/API';
 
 export default Model.extend({
   namespace: 'wordSupervision',
@@ -26,10 +27,11 @@ export default Model.extend({
     contractList: [],
     menuList: [],
     allMenuList: [],
-    contractLoading:false,
-    projectExecutionLoading:false,
-    customeSatisfactList:[],
-    customeSatisfactLoading:false,
+    contractLoading: false,
+    projectExecutionLoading: false,
+    customeSatisfactList: [],
+    customeSatisfactLoading: false,
+    largeRegionList: [],
     standgaswaringList:[],
     standgaswaringLoading:false,
   },
@@ -224,9 +226,9 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 获取办事处列表
+    // 根据省份获取办事处列表
     *GetOfficeList({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.GetOfficeList, payload);
+      const result = yield call(requestPost, API.DailyManagement.GetOfficeList, payload);
       if (result.IsSuccess) {
         yield update({
           officeList: result.Datas,
@@ -280,22 +282,9 @@ export default Model.extend({
     },
     // 添加或编辑现场工作/其它工作/其他部门工作记录
     *InsOrUpdOtherWork({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.InsOrUpdOtherWork, payload);
+      const result = yield call(requestPost, API.DailyManagement.InsOrUpdOtherWork, payload);
       if (result.IsSuccess) {
         message.success('操作成功！');
-
-        // 编辑时不加载工作台
-        if (!payload.ID) {
-          // 重新加载数据
-          yield put({
-            type: 'GetToDoDailyWorks',
-            payload: {},
-          });
-          yield put({
-            type: 'GetWorkBenchMsg',
-            payload: {},
-          });
-        }
         callback && callback();
       } else {
         message.error(result.Message);
@@ -303,9 +292,9 @@ export default Model.extend({
     },
     // 查询现场工作/其它工作/其他部门工作记录
     *GetOtherWorkList({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.GetOtherWorkList, payload);
+      const result = yield call(requestPost, API.DailyManagement.GetOtherWorkList, payload);
       if (result.IsSuccess) {
-        callback && callback(result.Datas);
+        callback && callback(result);
       } else {
         message.error(result.Message);
       }
@@ -346,7 +335,6 @@ export default Model.extend({
       const result = yield call(services.InsOrUpdCheckAttendance, payload);
       if (result.IsSuccess) {
         message.success('操作成功！');
-
         // 编辑时不加载工作台
         if (!payload.ID) {
           // 重新加载数据
@@ -626,8 +614,8 @@ export default Model.extend({
     *GetUserMenuList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.GetUserMenuList, payload);
       if (result.IsSuccess) {
-        const menuList = result.Datas?.menuList ? result.Datas.menuList : []
-        const allMenuListFun = (data) => {
+        const menuList = result.Datas?.menuList ? result.Datas.menuList : [];
+        const allMenuListFun = data => {
           if (data?.length) {
             return data.map(item => {
               return {
@@ -635,23 +623,35 @@ export default Model.extend({
                 title: item.name,
                 key: item.id,
                 children: allMenuListFun(item.children) ? allMenuListFun(item.children) : [],
-                icon: item.children?.length ? null : <img src='/work_meun.png' style={{ paddingRight: 8 }} />
-              }
-            })
+                icon: item.children?.length ? null : (
+                  <img src="/work_meun.png" style={{ paddingRight: 8 }} />
+                ),
+              };
+            });
           }
-        }
+        };
 
-        const allMenuList = result.Datas?.allMenuList?.length ? allMenuListFun(result.Datas.allMenuList) : []
+        const allMenuList = result.Datas?.allMenuList?.length
+          ? allMenuListFun(result.Datas.allMenuList)
+          : [];
         const menuFilterTree = (treeNodes = [], checkedKeys = []) => {
-          return treeNodes?.length && treeNodes.filter(item => checkedKeys.indexOf(item.key) == -1).map(item => {
-            item = { ...item }
-            if (item.children?.length && (!treeNodes.selectable)) {
-              item.children = menuFilterTree(item.children, checkedKeys)
-            }
-            return item
-          })
-        }
-        const allMenuData = menuFilterTree(allMenuList, menuList.map(item => item.id))
+          return (
+            treeNodes?.length &&
+            treeNodes
+              .filter(item => checkedKeys.indexOf(item.key) == -1)
+              .map(item => {
+                item = { ...item };
+                if (item.children?.length && !treeNodes.selectable) {
+                  item.children = menuFilterTree(item.children, checkedKeys);
+                }
+                return item;
+              })
+          );
+        };
+        const allMenuData = menuFilterTree(
+          allMenuList,
+          menuList.map(item => item.id),
+        );
         yield update({
           menuList: menuList,
           allMenuList: allMenuData,
@@ -712,17 +712,148 @@ export default Model.extend({
         message.error(result.Message);
       }
       callback && callback(result.Datas);
-
     },
 
+    // 办事处检查统计
+    *GetOfficeCheckStatisticsForRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.GetOfficeCheckStatisticsForRegion,
+        payload,
+      );
+      if (result.IsSuccess) {
+        // yield update({
+        //   timeoutServicesData: result.Datas,
+        // });
+        callback && callback(result.Datas);
+      }
+    },
+    // 办事处检查统计 - 导出
+    *ExportOfficeCheckStatisticsForRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ExportOfficeCheckStatisticsForRegion,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 省区详情 - 检查任务完成记录
+    *GetOfficeCheckStatisticsForRegionInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.GetOfficeCheckStatisticsForRegionInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 省区详情 - 检查任务完成记录 - 导出
+    *ExportOfficeCheckStatisticsForRegionInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ExportOfficeCheckStatisticsForRegionInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 检查记录和检查管理
+    *GetOfficeCheckStatisticsList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.GetOfficeCheckStatisticsList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 检查记录和检查管理 - 导出
+    *ExportOfficeCheckStatisticsList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ExportOfficeCheckStatisticsList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 获取运维大区和省区
+    *GetLargeRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.DailyManagement.GetLargeRegion, payload);
+      if (result.IsSuccess) {
+        yield update({
+          largeRegionList: result.Datas,
+        });
+        callback && callback(result.Datas);
+      }
+    },
+    // 删除办事处
+    *DeleteOfficeCheckStatistics({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.DeleteOfficeCheckStatistics,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+        callback && callback(result);
+      }
+    },
 
-
-
-
-
-
-
-
-  }
-
+    // 获取人员培训统计
+    *GetPersonTrainForRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.TrainingApi.GetPersonTrainForRegion,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 人员培训统计 - 导出
+    *ExportPersonTrainForRegion({ payload }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.TrainingApi.ExportPersonTrainForRegion,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 获取人员培训统计
+    *GetPersonTrainForRegionInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.TrainingApi.GetPersonTrainForRegionInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 人员培训统计 - 导出
+    *ExportPersonTrainForRegionInfo({ payload }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.TrainingApi.ExportPersonTrainForRegionInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+  },
 });

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:39:53
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-23 14:49:26
+ * @Last Modified time: 2024-05-07 17:25:54
  * @Description:  服务报告抽查
  */
 import React, { useState, useEffect } from 'react';
@@ -380,15 +380,13 @@ const ServiceIsNotTimely = props => {
             </Button>
           )}
         </Space>
-        <Divider />
       </div>
     );
   };
 
   const getPageContent = () => {
     return (
-      <Card bordered={isAll ? false : true}>
-        <SearchComponents />
+      <Card title={<SearchComponents />} bordered={isAll ? false : true}>
         <SdlTable
           loading={queryLoading}
           align="center"

@@ -163,6 +163,12 @@ export default {
           component: './DataAnalyticalWarningModel/Statistics/Screen',
         },
         {
+          // 模型首页 - 区域和行业
+          name: 'AbnormalIdentifyModelHome',
+          path: '/AbnormalIdentifyModel/Home/RegionAndIndustry',
+          component: './AbnormalIdentifyModel/Home/RegionAndIndustryPage/index.js',
+        },
+        {
           // 成套驾驶舱
           name: 'ctDataScreen',
           path: '/ctDataScreen',
@@ -1467,7 +1473,8 @@ export default {
                     },
                   ],
                 },
-                { //运维计划
+                {
+                  //运维计划
                   path: '/operations/operaPlan',
                   name: 'operaPlan',
                   routes: [
@@ -1827,7 +1834,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  }`,
                 },
                 {
                   //视频监控（新）
@@ -1852,7 +1859,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -2839,6 +2846,45 @@ export default {
                   path: '/workSupervision/statistics',
                   component: './workSupervision/statistics',
                 },
+                {
+                  // 经理日常管理
+                  path: '/workSupervision/dailyManagement',
+                  name: 'dailyManagement',
+                  routes: [
+                    {
+                      // 办事处管理
+                      name: 'officeCheck',
+                      path: '/workSupervision/dailyManagement/officeCheck',
+                      component: './workSupervision/dailyManagement/officeCheck',
+                    },
+                    {
+                      // 部门内其他工作
+                      name: 'innerOtherWork',
+                      path:
+                        '/workSupervision/dailyManagement/innerOtherWork/:WorkType/:CTOperation',
+                      component: './workSupervision/dailyManagement/work',
+                    },
+                    {
+                      // 现场工作
+                      name: 'fieldWork',
+                      path: '/workSupervision/dailyManagement/fieldWork/:WorkType/:CTOperation',
+                      component: './workSupervision/dailyManagement/work',
+                    },
+                    {
+                      // 支持其他部门工作
+                      name: 'otherDepartmentWork',
+                      path:
+                        '/workSupervision/dailyManagement/otherDepartmentWork/:WorkType/:CTOperation',
+                      component: './workSupervision/dailyManagement/work',
+                    },
+                    {
+                      // 人员培训
+                      name: 'training',
+                      path: '/workSupervision/dailyManagement/training/:type',
+                      component: './workSupervision/dailyManagement/training',
+                    },
+                  ],
+                },
               ],
             },
             // 运维评价报告
@@ -3040,7 +3086,145 @@ export default {
                 },
               ],
             },
-
+            // 异常数据识别模型
+            {
+              path: '/AbnormalIdentifyModel',
+              name: 'AbnormalIdentifyModel',
+              routes: [
+                {
+                  // 异常线索清单
+                  name: 'AbnormalCluesList',
+                  path: '/AbnormalIdentifyModel/CluesList',
+                  routes: [
+                    {
+                      path: '/AbnormalIdentifyModel/CluesList',
+                      redirect: '/AbnormalIdentifyModel/CluesList/all',
+                    },
+                    {
+                      // 异常线索清单
+                      name: 'CluesList',
+                      path: '/AbnormalIdentifyModel/CluesList/:modelNumber',
+                      component: './AbnormalIdentifyModel/CluesList',
+                    },
+                    {
+                      // 异常线索清单
+                      name: 'CluesList',
+                      path: '/AbnormalIdentifyModel/CluesList/CluesDetails/:id',
+                      component: './AbnormalIdentifyModel/CluesList/CluesDetails',
+                    },
+                    {
+                      // 线索分析
+                      name: 'ClueDetails',
+                      path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis',
+                      routes: [
+                        // {
+                        //   path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis',
+                        //   redirect: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/WorkTower',
+                        // },
+                        {
+                          // 工作台
+                          name: 'WorkTower',
+                          path: '/AbnormalIdentifyModel/CluesList/ClueAnalysis/WorkTower',
+                          component: './AbnormalIdentifyModel/ClueAnalysis/WorkTower',
+                        },
+                        {
+                          // 生成核查任务
+                          name: 'GenerateVerificationTake',
+                          path:
+                            '/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake',
+                          component:
+                            './AbnormalIdentifyModel/ClueAnalysis/GenerateVerificationTake',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  // 核查任务管理
+                  name: 'VerificationTaskManagement',
+                  path: '/AbnormalIdentifyModel/VerificationTaskManagement',
+                  routes: [
+                    {
+                      path: '/AbnormalIdentifyModel/VerificationTaskManagement',
+                      redirect:
+                        '/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask',
+                    },
+                    {
+                      // 待核查任务
+                      name: 'TobeVerifiedTask',
+                      path: '/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask',
+                      component:
+                        './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                    },
+                    {
+                      // 已核查任务
+                      name: 'AlreadyVerifiedTask',
+                      path: '/AbnormalIdentifyModel/VerificationTaskManagement/AlreadyVerifiedTask',
+                      component:
+                        './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                    },
+                    {
+                      // 核查详情
+                      name: 'AlreadyVerifiedTask',
+                      path: '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail',
+                      component:
+                        './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask/Detail',
+                    },
+                  ],
+                },
+                {
+                  // 热电行业数据波动范围
+                  name: 'FluctuateRange',
+                  path: '/AbnormalIdentifyModel/FluctuateRange',
+                  component: './AbnormalIdentifyModel/FluctuateRange',
+                },
+                {
+                  // 通用库
+                  name: 'general',
+                  path: '/AbnormalIdentifyModel/modelBase/general',
+                  component: './AbnormalIdentifyModel/ModelBase/General',
+                },
+                {
+                  // 通用库 - 设置
+                  name: 'setting',
+                  path: '/AbnormalIdentifyModel/modelBase/general/setting/:ID',
+                  component: './AbnormalIdentifyModel/ModelBase/Setting',
+                },
+                {
+                  // 模型选配
+                  name: 'modelMatch',
+                  path: '/AbnormalIdentifyModel/modelMatch',
+                  component: './AbnormalIdentifyModel/ModelMatch',
+                },
+                {
+                  // 历史数据综合评价
+                  name: 'HistoryDataAnalysis',
+                  path: '/AbnormalIdentifyModel/HistoryDataAnalysis',
+                  routes: [
+                    {
+                      // 排放源历史监测数据分析
+                      name: 'AssistDataAnalysis',
+                      path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AssistDataAnalysis',
+                      component: './AbnormalIdentifyModel/AssistDataAnalysis',
+                    },
+                    {
+                      // 排污缺口
+                      name: 'PollutantDischargeGap',
+                      path: '/AbnormalIdentifyModel/HistoryDataAnalysis/PollutantDischargeGap',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/PollutantDischargeGap',
+                    },
+                    {
+                      // 统计分析
+                      name: 'PointStatisticalAnalysis',
+                      path: '/AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
+                    },
+                  ],
+                },
+              ],
+            },
             /********  设备调试及售后服务管理平台 成套   ********/
             {
               path: '/ctManage',
@@ -3058,15 +3242,13 @@ export default {
                     {
                       path: '/ctManage/reportsViews/ctServiceReport', //成套服务报告
                       name: 'ctServiceReport',
-                      component:
-                        './ctDebuggAfterSaleServiceManage/reportsViews/ctServiceReport',
+                      component: './ctDebuggAfterSaleServiceManage/reportsViews/ctServiceReport',
                     },
                     {
                       // 一次性解决率
                       name: 'returnVisit',
                       path: '/ctManage/reportsViews/oneResolutRate',
-                      component:
-                        './ctDebuggAfterSaleServiceManage/reportsViews/oneResolutRate',
+                      component: './ctDebuggAfterSaleServiceManage/reportsViews/oneResolutRate',
                     },
                     {
                       // 安装调试达标率
@@ -3086,8 +3268,14 @@ export default {
                       // 服务响应及时率
                       name: 'returnVisit',
                       path: '/ctManage/reportsViews/InstStdAndCompReso/timelyRate',
+                      component: './ctDebuggAfterSaleServiceManage/reportsViews/timelyRate',
+                    },
+                    {
+                      // 报告及时合格率
+                      name: 'returnVisit',
+                      path: '/ctManage/reportsViews/timelinessQualityReport',
                       component:
-                        './ctDebuggAfterSaleServiceManage/reportsViews/timelyRate',
+                        './ctDebuggAfterSaleServiceManage/reportsViews/timelinessQualityReport',
                     },
                   ],
                 },
@@ -3103,8 +3291,7 @@ export default {
                   // {
                   name: 'CtWorkbench',
                   path: '/ctManage/workbench',
-                  component:
-                    './workSupervision/workbench',
+                  component: './workSupervision/workbench',
                   // },
 
                   // ],
@@ -3298,7 +3485,6 @@ export default {
                       component:
                         './ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery',
                     },
-
                   ],
                 },
                 /**售后服务管理  */
@@ -3451,22 +3637,19 @@ export default {
                       // 车辆管理
                       name: 'VehicleManager',
                       path: '/ctManage/generalManager/vehicleManager',
-                      component:
-                        './ctDebuggAfterSaleServiceManage/generalManager/vehicleManager',
+                      component: './ctDebuggAfterSaleServiceManage/generalManager/vehicleManager',
                     },
                     {
                       // 人员档案
                       name: 'PersonnelFiles',
                       path: '/ctManage/generalManager/personnelFiles',
-                      component:
-                        './ctDebuggAfterSaleServiceManage/generalManager/personnelFiles',
+                      component: './ctDebuggAfterSaleServiceManage/generalManager/personnelFiles',
                     },
                     {
                       // 大区档案
                       name: 'RegionalArchives',
                       path: '/ctManage/generalManager/regionalArchives',
-                      component:
-                        './ctDebuggAfterSaleServiceManage/generalManager/regionalArchives',
+                      component: './ctDebuggAfterSaleServiceManage/generalManager/regionalArchives',
                     },
                   ],
                 },
@@ -3484,33 +3667,11 @@ export default {
                       // 问题库
                       name: 'VehicleManager',
                       path: '/ctManage/techExpertSystem/problemBase',
-                      component:
-                        './ctDebuggAfterSaleServiceManage/techExpertSystem/problemBase',
+                      component: './ctDebuggAfterSaleServiceManage/techExpertSystem/problemBase',
                     },
                   ],
                 },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-              ]
+              ],
             },
  
 

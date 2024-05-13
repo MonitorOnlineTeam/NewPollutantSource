@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 16:22:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-28 16:48:56
+ * @Last Modified time: 2024-05-11 09:07:16
  * @Description: 人员培训记录表
  */
 import React, { useState, useEffect } from 'react';
@@ -14,10 +14,14 @@ import { InboxOutlined } from '@ant-design/icons';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import config from '@/config';
+import LargeRegionSelect from '@/pages/workSupervision/dailyManagement/components/LargeRegionSelect';
+import cuid from 'cuid';
+import { API } from '@config/API';
 
 const { Dragger } = Upload;
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
+  TYPE: wordSupervision.TYPE, // 1：成套 “”：运维
   todoList: wordSupervision.todoList,
   messageList: wordSupervision.messageList,
   todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
@@ -26,8 +30,9 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const Training = props => {
   const [form] = Form.useForm();
-  const { taskInfo, submitLoading, onCancel, editData, onSubmitCallback } = props;
+  const { dispatch, taskInfo, submitLoading, onCancel, editData, onSubmitCallback, TYPE } = props;
   const [fileList, setFileList] = useState([]);
+  const [uploadId, setUploadId] = useState(cuid());
 
   useEffect(() => {
     // 处理附件列表
@@ -55,16 +60,14 @@ const Training = props => {
       return;
     }
 
-    let FileNames = fileList.map(item => {
-      return item.url;
-    });
     props.dispatch({
       type: 'wordSupervision/InsOrUpdPersonTrain',
       payload: {
-        AttachId: editData.AttachId,
-        FileName: FileNames.toString(),
+        AttachId: editData.ID,
+        FileName: uploadId,
         DailyTaskID: taskInfo.ID,
         TrainTime: moment(values.TrainTime).format('YYYY-MM-DD 00:00:00'),
+        largeRegionCode: values.regionCode,
       },
       callback: () => {
         onCancel();
@@ -77,29 +80,69 @@ const Training = props => {
     name: 'file',
     accept: '.png,.jpg,.gif,.jpeg',
     multiple: true,
-    action: '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/UploadPersonTrainFiles',
+    action: API.UploadApi.UploadFiles,
     headers: {
       Authorization: 'Bearer ' + Cookie.get(config.cookieName),
     },
+    // onChange(info) {
+    //   console.log('info', info);
+    //   const { status } = info.file;
+    //   if (status !== 'uploading') {
+    //     let fileList_temp = [...info.fileList];
+    //     fileList_temp.map(item => {
+    //       if (item.response) {
+    //         item.url = '/' + item.response.Datas;
+    //       }
+    //     });
+    //     setFileList(fileList_temp);
+    //   }
+    //   if (status === 'done') {
+    //     message.success(`${info.file.name} 上传成功！.`);
+    //   } else if (status === 'error') {
+    //     message.error(`${info.file.name} 上传失败！`);
+    //   }
+    // },
+    data: {
+      FileUuid: uploadId,
+      FileActualType: '0',
+    },
     onChange(info) {
-      const { status } = info.file;
-      if (status !== 'uploading') {
-        let fileList_temp = [...info.fileList];
-        fileList_temp.map(item => {
-          if (item.response) {
-            item.url = '/' + item.response.Datas;
-          }
-        });
-        setFileList(fileList_temp);
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} 上传成功！.`);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} 上传失败！`);
-      }
+      const fileArr = [];
+      info.fileList.forEach(file => {
+        const { status, uid, name, response, url, percent } = file;
+
+        if (status === 'done') {
+          fileArr.push({
+            uid,
+            name,
+            status,
+            url: response?.Datas || url,
+          });
+        } else if (status === 'uploading') {
+          fileArr.push({
+            uid,
+            name,
+            status,
+            percent,
+          });
+        }
+      });
+      setFileList(fileArr);
     },
     onDrop(e) {
       console.log('Dropped files', e.dataTransfer.files);
+    },
+    onRemove(file) {
+      console.log('file', file);
+      if (!file.error) {
+        dispatch({
+          type: 'autoForm/deleteAttach',
+          payload: {
+            // FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
+            Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
+          },
+        });
+      }
     },
   };
   return (
@@ -128,27 +171,32 @@ const Training = props => {
           autoComplete="off"
         >
           <Row style={{ width: '100%' }}>
-            <Col span={12}>
-              <Form.Item
-                label="培训日期"
-                name="TrainTime"
-                rules={[
-                  {
-                    required: true,
-                    message: '请选择培训日期！',
-                  },
-                ]}
-              >
-                <DatePicker
-                  disabledDate={current => {
-                    return current && current > moment().endOf('day');
-                  }}
-                  style={{ width: '200px' }}
-                />
-              </Form.Item>
-            </Col>
+            <Space size={30}>
+              <Col>
+                <LargeRegionSelect type={TYPE == 1 ? 'ct' : undefined} required />
+              </Col>
+              <Col>
+                <Form.Item
+                  label="培训日期"
+                  name="TrainTime"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请选择培训日期！',
+                    },
+                  ]}
+                >
+                  <DatePicker
+                    disabledDate={current => {
+                      return current && current > moment().endOf('day');
+                    }}
+                    style={{ width: '200px' }}
+                  />
+                </Form.Item>
+              </Col>
+            </Space>
             <Col span={24} className={styles.uploadWrapper}>
-              <Dragger {...uploadProps} fileList={fileList}>
+              <Dragger {...uploadProps}>
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>

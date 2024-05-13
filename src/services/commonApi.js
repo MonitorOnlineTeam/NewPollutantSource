@@ -172,9 +172,14 @@ export async function GetAlluser(params) {
   return result;
 }
 
-//获取大区
-export async function GetLargeRegionList(params) {
+//获取成套大区
+export async function GetCtLargeRegionList(params) {
   const result = post(API.CtCommonApi.GetLargeRegionList, params);
+  return result;
+}
+//获取运维大区和省份
+export async function GetLargeRegion(params) {
+  const result = post(API.CommonApi.GetLargeRegion, params);
   return result;
 }
 

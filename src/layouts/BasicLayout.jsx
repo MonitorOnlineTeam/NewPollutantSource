@@ -161,11 +161,11 @@ class BasicLayout extends Component {
     const { dispatch, configInfo, sysPollutantTypeList, currentMenu } = this.props;
     const tokenFlag = token && token != 'null' && token != 'undefined' && token != '';
     if (!tokenFlag) { return }
-    dispatch({
-      type: 'global/getSystemConfigInfo',
-      payload: {},
-    });
-    dispatch({ //获取运维基础配置 
+    // dispatch({
+    //   type: 'global/getSystemConfigInfo',
+    //   payload: {},
+    // });
+    dispatch({ //获取运维基础配置
       type: 'global/getOperationSetting',
       payload: {},
     });

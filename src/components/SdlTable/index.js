@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-16 14:54:49
+ * @Last Modified time: 2024-05-11 15:32:31
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -305,11 +305,11 @@ class SdlTable extends PureComponent {
     const scrollY =
       pagination === false && typeof scrollYHeight === 'number' ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
-    
+
     const _columns = (columns || []).map((col, index) => ({
       render: (text, record,index) =>
         (
-          col.title=='序号' && !col.dataIndex && !col.key && !col.render? 
+          col.title=='序号' && !col.dataIndex && !col.key && !col.render?
           (index + 1) + (this.state.pageIndex-1) * this.state.pageSize
           :
           text &&  <div

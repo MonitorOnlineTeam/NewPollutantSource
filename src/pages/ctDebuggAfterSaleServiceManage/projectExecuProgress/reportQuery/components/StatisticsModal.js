@@ -6,7 +6,7 @@ import SdlTable from '@/components/SdlTable';
 import StatisticsDetailsModal from './StatisticsDetailsModal';
 
 const dvaPropsData = ({ common, loading }) => ({
-  largeRegionList: common.largeRegionList,
+  largeRegionList: common.CtLargeRegionList,
   queryLoading: loading.effects[`reportQuery/GetStatServiceReport`],
   exportLoading: loading.effects[`reportQuery/ExportGetStatServiceReport`],
 });
@@ -16,6 +16,7 @@ const StatisticsModal = props => {
 
   const [dataSource, setDataSource] = useState([]);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [currentRow, setCurrentRow] = useState({});
 
   const { dispatch, queryLoading, exportLoading, isModalOpen, onCancel, largeRegionList } = props;
 
@@ -72,6 +73,7 @@ const StatisticsModal = props => {
           return (
             <a
               onClick={() => {
+                setCurrentRow(record);
                 setIsDetailsModalOpen(true);
               }}
             >
@@ -207,14 +209,8 @@ const StatisticsModal = props => {
             time: props.time,
           }}
           autoComplete="off"
-          // labelCol={{
-          //   flex: '110px',
-          // }}
-          // wrapperCol={{
-          //   flex: 1,
-          // }}
         >
-          <Space align="middle">
+          <Space align="middle" size={20}>
             <Form.Item name="region" label="服务大区">
               <Select
                 placeholder="请选择服务大区"
@@ -242,7 +238,7 @@ const StatisticsModal = props => {
               <RangePicker_ style={{ width: '300px' }} format="YYYY-MM-DD" />
             </Form.Item>
             <Form.Item>
-              <Space style={{ marginLeft: 10 }}>
+              <Space>
                 <Button
                   type="primary"
                   htmlType="submit"
@@ -286,6 +282,7 @@ const StatisticsModal = props => {
           align="center"
           dataSource={dataSource}
           columns={getColumns()}
+          pagination={false}
         />
       </Card>
     );
@@ -306,7 +303,7 @@ const StatisticsModal = props => {
       {isDetailsModalOpen && (
         <StatisticsDetailsModal
           time={form.getFieldValue('time')}
-          region={form.getFieldValue('region')}
+          region={currentRow.LargeRegionCode}
           isModalOpen={isDetailsModalOpen}
           onCancel={() => {
             setIsDetailsModalOpen(false);

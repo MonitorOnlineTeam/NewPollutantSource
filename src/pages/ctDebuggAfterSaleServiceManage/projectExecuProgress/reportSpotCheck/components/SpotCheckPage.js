@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:41:16
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-28 15:48:20
+ * @Last Modified time: 2024-05-07 14:50:31
  * @Description:  服务报告抽查 - 抽查页面
  */
 import React, { useState, useEffect } from 'react';
@@ -428,24 +428,12 @@ const SpotCheckPage = props => {
           <Form.Item
             name="remark"
             label="备注"
-            rules={[
-              {
-                required: true,
-                message: '备注不能为空！',
-              },
-            ]}
           >
             <TextArea rows={4} />
           </Form.Item>
           <Form.Item
             name="attachment"
             label="附件照片"
-            rules={[
-              {
-                required: true,
-                message: '附件照片不能为空！',
-              },
-            ]}
           >
             <SdlUpload
               accept="image/*"

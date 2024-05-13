@@ -39,7 +39,7 @@ const { TextArea } = Input;
 let timeout;
 
 const dvaPropsData = ({ loading, common }) => ({
-  largeRegionList: common.largeRegionList,
+  largeRegionList: common.CtLargeRegionList,
   queryLoading: loading.effects[`customer/GetCustomerComplaintsList`],
   exportLoading: loading.effects[`customer/ExportServiceHotline`],
   saveLoading: loading.effects['customer/AddOrUpdateServiceHotline'],
