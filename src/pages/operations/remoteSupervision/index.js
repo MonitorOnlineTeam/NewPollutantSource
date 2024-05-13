@@ -744,11 +744,11 @@ const Index = (props) => {
       onValuesChange={onTaskValuesChange}
       layout='inline'
     >
-      <Spin spinning={entLoading} size='small'>
+      {/* <Spin spinning={entLoading} size='small'> */}
         <Form.Item label='企业' name='entCode' style={{ marginRight: 8 }}>
           <EntAtmoList noFilter style={{ width: 300 }} />
         </Form.Item>
-      </Spin>
+      {/* </Spin> */}
       <Spin spinning={taskPointLoading} size='small'>
         <Form.Item label='监测点名称' name='DGIMN' >
 
@@ -3146,11 +3146,11 @@ const Index = (props) => {
               <Form.Item label='行政区' name='RegionCode' className='regSty'>
                 <RegionList noFilter levelNum={2} style={{ width: 150 }} />
               </Form.Item>
-              <Spin spinning={entLoading} size='small' style={{ top: -4, left: 20 }}>
+              {/* <Spin spinning={entLoading} size='small' style={{ top: -4, left: 20 }}> */}
                 <Form.Item label='企业' name='EntCode'>
                   <EntAtmoList noFilter style={{ width: 200 }} />
                 </Form.Item>
-              </Spin>
+              {/* </Spin> */}
               <Spin spinning={pointLoading} size='small' style={{ top: -4, left: 20 }}>
                 <Form.Item label='监测点名称' name='DGIMN' >
 
@@ -3251,11 +3251,11 @@ const Index = (props) => {
           >
 
             <Row className={styles.queryPar} style={{ paddingTop: 12 }}>
-              <Spin spinning={entLoading} size='small' style={{ top: -2, left: '6%' }}>
+              {/* <Spin spinning={entLoading} size='small' style={{ top: -2, left: '6%' }}> */}
                 <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称' }]}>
                   <EntAtmoList noFilter disabled={title === '编辑'} allowClear={false} style={{ width: 200 }} />
                 </Form.Item>
-              </Spin>
+              {/* </Spin> */}
               <Spin spinning={pointLoading2} size='small' style={{ top: -2, left: '12.5%' }}>
                 <Form.Item label='监测点名称' name='DGIMN' style={{ margin: '0 8px' }} rules={[{ required: true, message: '请选择监测点名称!' }]} >
                   <Select placeholder='请选择' disabled={title === '编辑'} showSearch optionFilterProp="children" style={{ width: 200 }}>

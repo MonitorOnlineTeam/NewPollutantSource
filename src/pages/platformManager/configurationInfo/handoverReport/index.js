@@ -543,7 +543,7 @@ const Index = (props) => {
           name="basic"
           form={form2}
         >
-         <Form.Item label="项目接收状态" name="status" >
+         <Form.Item label="项目接收状态" name="status" rules={[{ required: true, message: '请选择项目接收状态！' }]}>
             <Radio.Group>
               <Radio value="1">续签</Radio>
               <Radio value="2">新签</Radio>
@@ -582,8 +582,8 @@ const Index = (props) => {
           <Form.Item>
           <Row style={{ color: '#f5222d' }}>
             <span style={{ paddingRight: 12 }}>注：</span>
-            <ol type="1" style={{ listStyle: 'auto',}}>
-              <li>在合同执行开始日期的前后7天内上传运维接收-运维交接单；</li>
+            <ol type="1" style={{ listStyle: 'auto'}}>
+              <li>在合同执行开始日期的前后7天内上传运维接收-运维交接单；如果项目接收状态是续签则无需上传；</li>
               <li>在合同执行结束日期的前后7天内上传运维移交-运维交接单，如果项目被续签则无需上传；</li>
               <li>在合同执行结束日期的前后15天内上传运维合同履约完成报告；</li>
             </ol>

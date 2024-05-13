@@ -134,7 +134,7 @@ const Index = (props) => {
     };
 
     const searchComponents = () => {
-        const resDataHandle = () => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1, 20) }
+        const resDataHandle = () => { setPageIndex(1); setPageSize(20); onFinish(1, 20) }
         return <Form
             name="advanced_search"
             className={'ant-advanced-search-form'}
@@ -179,7 +179,7 @@ const Index = (props) => {
                         <Button type="primary" htmlType="submit" loading={tableLoading}>
                             查询
                                  </Button>
-                        <Button loading={tableLoading} onClick={resDataHandle}  >
+                        <Button loading={tableLoading} onClick={()=>{ form.resetFields();resDataHandle}}  >
                             重置
                                   </Button>
                         <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exportData() }}>

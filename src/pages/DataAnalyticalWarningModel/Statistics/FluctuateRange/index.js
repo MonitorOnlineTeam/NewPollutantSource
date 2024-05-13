@@ -325,11 +325,11 @@ const Index = props => {
               </Form.Item>
               {// 脱敏角色不显示企业
               !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
-                <Spin spinning={entLoading}>
+                // <Spin spinning={entLoading}>
                   <Form.Item label="企业" name="EntCode">
                     <EntAtmoList mode="multiple" regionCode={regionCode} style={{ width: 200 }} />
                   </Form.Item>
-                </Spin>
+                // </Spin>
               )}
               <Form.Item label="行业" name="IndustryTypeCode">
                 <SearchSelect

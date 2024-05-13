@@ -130,7 +130,7 @@ class Index extends PureComponent {
     const timer = setInterval(() => {
       if (aMap) {
         aMap.setFitView();
-        if(selectType.name=='便携式仪器' || (selectType.name=='办事处' && !isSecond)){
+        if(selectType.name=='便携仪器' || (selectType.name=='办事处' && !isSecond)){
           aMap.setZoom(5); 
         }
         clearInterval(timer);
@@ -261,7 +261,7 @@ class Index extends PureComponent {
     } else {
       const item = extData.position;
       let data = [];
-      if (selectType.name == '备机' || selectType.name == '便携式仪器') {
+      if (selectType.name == '备机' || selectType.name == '便携仪器') {
         data = [{ name: '可使用', value: item?.UsedNum, unit: '台' }, { name: '使用中', value: item.UsintNum, unit: '台' }]
         if (selectStatus) {
           data = data.filter(item => item.name == selectStatus)
@@ -280,7 +280,7 @@ class Index extends PureComponent {
   mapContent = (props) => {
     const { selectType, markersList, fullScreen, selectRegionName, selectStatus } = this.state;
     const { leftData, rightData } = this.props;
-    const btnList = [{ name: '备机', value: leftData?.StandbyMachineInfo?.StandbyMachineNum }, { name: '便携式仪器', value: rightData?.PortableInstrumentInfo?.PortableInstrumentNum }, { name: '办事处', value: rightData?.OfficeLocationInfo?.OfficeLocationNum }, { name: '备件库', value: rightData?.StorehouseInfo?.StorehouseNum },]
+    const btnList = [{ name: '备机', value: leftData?.StandbyMachineInfo?.StandbyMachineNum }, { name: '便携仪器', value: rightData?.PortableInstrumentInfo?.PortableInstrumentNum }, { name: '办事处', value: rightData?.OfficeLocationInfo?.OfficeLocationNum }, { name: '备件库', value: rightData?.StorehouseInfo?.StorehouseNum },]
 
     const operationBtnArr = () => {
 
@@ -330,7 +330,7 @@ class Index extends PureComponent {
         markersData = markersList?.RegionStandbyMachineList?.map(item => ({
           position: { ...item.position, ...item, position: undefined }
         }))?.filter(item => item?.position?.SumNum != 0)
-      } else if (selectType.name == '便携式仪器') {
+      } else if (selectType.name == '便携仪器') {
         markersData = markersList?.RegionPortableInstrumentList?.map(item => ({
           position: { ...item.position, ...item, position: undefined }
         }))

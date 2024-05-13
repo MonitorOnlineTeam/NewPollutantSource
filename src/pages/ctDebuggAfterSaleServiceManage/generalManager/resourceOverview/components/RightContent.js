@@ -144,13 +144,13 @@ const Index = (props) => {
   return (
     <Spin spinning={!!loading}>
       <div style={{ height: '35%', minHeight: 270 }}>
-        <CardHeader title='便携式仪器统计' onClick={() => { viewAll('便携式仪器统计') }} />
+        <CardHeader title='便携仪器统计' onClick={() => { viewAll('便携仪器统计') }} />
         <div className='cardBodySty' style={{ height: 'calc(100% - 45px)', padding: '16px 0 16px 16px' }}>
           <Row justify='space-between' style={{ height: '100%' }}>
 
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '45%' }}>
               <div style={{ paddingTop: '12%', textAlign: 'center' }}>
-                <div style={{ color: '#C4C5C5', fontSize: 15 }}>便携式仪器总数</div>
+                <div style={{ color: '#C4C5C5', fontSize: 15 }}>便携仪器总数</div>
                 <div>
                   <span style={{ fontSize: 36 }} className='youSheBiaoTiHeiSty'>{data?.PortableInstrumentInfo?.PortableInstrumentNum || 0}</span>
                   <span className='youSheBiaoTiHeiSty'>个</span>
@@ -186,7 +186,7 @@ const Index = (props) => {
         <CardHeader title='办事处统计' onClick={() => { viewAll('办事处统计') }} />
         <div className='cardBodySty' style={{ height: 'calc(100% - 45px)' }}>
           <Row justify='space-between' style={{ padding: '18px 56px 12px 56px', fontSize: 16 }}>
-            办事处总数统计
+            办事处总数
         <div>
               {total && Array.from(total).map((item, index) => {
                 return <> <span style={{ fontFamily: 'Source Han Sans CN', fontSize: 22, display: 'inline-block', width: 30, height: 30, marginRight: 6, textAlign: 'center', background: '#002B61', boxShadow: "0px 0px 6px 0px #003DBA", borderRadius: 2 }}>{item}</span></>
@@ -240,7 +240,7 @@ const Index = (props) => {
         mask={false}
         bodyStyle={{ padding: 0, marginTop: -1 }}
       >
-        {modalTitle == '便携式仪器统计' ? <Portable isModal notOperate /> : modalTitle == '办事处统计' ? <Office isModal onlyAppendHandleRows /> : <StorehouseManager isModal notOperate match={{ params: { configId: 'Storehouse' } }} />}
+        {modalTitle == '便携仪器统计' ? <Portable isModal notOperate /> : modalTitle == '办事处统计' ? <Office isModal onlyAppendHandleRows /> : <StorehouseManager isModal notOperate match={{ params: { configId: 'Storehouse' } }} />}
       </Modal>
     </Spin>
 

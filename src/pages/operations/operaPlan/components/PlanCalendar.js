@@ -26,15 +26,15 @@ const { Option } = Select;
 const namespace = 'operaPlan'
 
 
-
-
 const dvaPropsData = ({ loading, operaPlan, global, }) => ({
-    tableLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-    tableDatas: operaPlan.formulateTableDatas2,
-    tableTotal: operaPlan.formulateTableTotal2,
-    exportLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-    queryPar: operaPlan.formulateQueryPar2,
-    configInfo: global.configInfo,
+    dateCol: operaPlan.operationPlanCalendarCol,
+    tableDatas: operaPlan.operationPlanCalendarList,
+    tableTotal: operaPlan.operationPlanCalendarTotal,
+    tableLoading: loading.effects[`${namespace}/GetOperationPlanCalendar`],
+    queryPar: operaPlan.operationPlanCalendarQueryPar,
+    operationPlanInfoRefreshId: operaPlan.operationPlanInfoRefreshId,
+    exportLoading: loading.effects[`${namespace}/ExportOperationPlanCalendar`],
+
 })
 
 const Index = (props) => {
@@ -46,7 +46,7 @@ const Index = (props) => {
 
 
 
-    const { type, pointType, queryPar, tableDatas, tableTotal, tableLoading, exportLoading } = props;
+    const {type,pointType,commonSearchComponents,operationPlanInfoRefreshId,  tableDatas, tableTotal, tableLoading,queryPar, exportLoading } = props;
 
     const [justVisible, setJustVisible] = useState(false)
 
@@ -57,6 +57,7 @@ const Index = (props) => {
         onFinish(pageIndex, pageSize);
 
     }, []);
+
 
 
 
@@ -74,26 +75,24 @@ const Index = (props) => {
         },
         {
             title: '监测点名称',
-            dataIndex: 'projectName',
-            key: 'projectName',
+            dataIndex: 'pointName',
+            key: 'pointName',
             fixed: 'left',
             ellipsis: true,
         }]
         if (dateCol && dateCol[0]) {
               const colList = dateCol.map((item, index) => {
                     return {
-                        title: `${item.date.split('_')[0]}`,
+                        title: `${item.month}`,
                         align: 'center',
+                        colSpan: item.count,
                         children: [{
-                            title: `${item.date.split('_')[0]}`,
-                            dataIndex: `${item.date.split('_')[0]}`,
-                            key: `${item.date.split('_')[0]}`,
-                            width: 70,
+                            title: `${item.day}`,
                             align: 'center',
                             children: [{
-                                    title: `${item.date.split('_')[1]}`,
-                                    dataIndex: `${item.date.split('_')[1]}`,
-                                    key: `${item.date.split('_')[1]}`,
+                                    title: `${item.week}`,
+                                    dataIndex: `${item.date}`,
+                                    key: `${item.date}`,
                                     width: 70,
                                     align:'center',
                                 }]
@@ -101,7 +100,8 @@ const Index = (props) => {
                      
                     }
                 })
-          col.push(colList)
+                console.log(colList)
+          col.push(...colList)
         }
         return col;
     }
@@ -117,9 +117,10 @@ const Index = (props) => {
                 time: undefined,
                 pageIndex: PageIndex,
                 pageSize: PageSize,
+                id: operationPlanInfoRefreshId,
             }
             props.dispatch({
-                type: `${namespace}/GetQuestionList`,
+                type: `${namespace}/GetOperationPlanCalendar`,
                 payload: {
                     ...par,
                 },
@@ -156,7 +157,7 @@ const Index = (props) => {
     }
     const searchComponents = () => {
 
-        const resDataHandle = () => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1, 20) }
+        const resDataHandle = () => {  setPageIndex(1); setPageSize(20); onFinish(1, 20) }
         return <Form
             name="advanced_search"
             className={'ant-advanced-search-form'}
@@ -164,24 +165,13 @@ const Index = (props) => {
             layout='inline'
             onFinish={resDataHandle}
         >
-            <Form.Item name='itemCode' label='监测点' style={{ marginBottom: 8 }}>
-                <Input placeholder='请输入' allowClear />
-            </Form.Item>
-            <Form.Item name='itemCode' label='计划内容' style={{ marginBottom: 8 }}>
-                <Select placeholder='请选择' allowClear style={{ width: 100 }}>
-                    <Option key={1} value={1}>巡检</Option>
-                    <Option key={2} value={2}>校准</Option>
-                </Select>
-            </Form.Item>
-            <Form.Item name='time' label='计划日期' style={{ marginBottom: 8 }}>
-                <RangePicker_ format="YYYY-MM-DD" />
-            </Form.Item>
+        {commonSearchComponents&&commonSearchComponents(1)}
             <Form.Item style={{ marginBottom: 4 }}>
                 <Space>
                     <Button type="primary" htmlType="submit" loading={tableLoading}>
                         查询
                                  </Button>
-                    <Button loading={tableLoading} onClick={resDataHandle}  >
+                    <Button loading={tableLoading} onClick={()=>{ form.resetFields();resDataHandle}}   >
                         重置
                                   </Button>
                     <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exportData() }}>
@@ -250,13 +240,13 @@ const Index = (props) => {
     return (
         <div>
             {searchComponents()}
-            {type != 1 && <Row style={{ paddingBottom: 8 }} align='middle'>
+             <Row style={{ paddingBottom: 8 }} align='middle'>
                 <span className='red' style={{ paddingRight: 18 }}> 巡检:X&nbsp;&nbsp;校准:J </span>
-                {typeLegendData.map((item, index) => <Row align='middle' style={{ cursor: 'pointer', marginRight: 12 }} onClick={() => typeLegendChange(index)} >
+                {type != 1 && typeLegendData.map((item, index) => <Row align='middle' style={{ cursor: 'pointer', marginRight: 12 }} onClick={() => typeLegendChange(index)} >
                     <div style={{ marginRight: 4, width: 32, height: 16, backgroundColor: item.color }}> </div>
                     <span style={{ fontWeight: legendSelectIndex.includes(index) ? 'bold' : 'normal' }}>{item.title}</span>
                 </Row>)}
-            </Row>}
+            </Row>
             <SdlTable
                 resizable
                 loading={tableLoading}
@@ -264,6 +254,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns()}
                 align='center'
+                scroll={{y:'calc(100vh - 200px)'}}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,

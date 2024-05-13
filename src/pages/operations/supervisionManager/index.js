@@ -963,11 +963,11 @@ const Index = (props) => {
           <Form.Item label='行政区' name='RegionCode' >
             <RegionList noFilter levelNum={3} style={{ width: 150 }} />
           </Form.Item>
-          <Spin spinning={entLoading && !entLoading2} size='small' style={{ top: -3, left: 39 }}>
+          {/* <Spin spinning={entLoading && !entLoading2} size='small' style={{ top: -3, left: 39 }}> */}
             <Form.Item label='企业' name='EntCode' style={{ marginLeft: 8, marginRight: 8 }}>
               <EntAtmoList noFilter style={{ width: 300 }} />
             </Form.Item>
-          </Spin>
+          {/* </Spin> */}
           <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
             <Form.Item label='点位名称' name='DGIMN' >
 

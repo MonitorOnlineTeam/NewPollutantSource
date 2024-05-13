@@ -93,7 +93,7 @@ const Index = (props) => {
           }
          
         })
-        const currentProvinceData = data.filter(item=>item.ID == serviceQueryPar.serviceAreaCode)
+        const currentProvinceData = serviceQueryPar.serviceAreaCode? data.filter(item=>item.ID == serviceQueryPar.serviceAreaCode) : data
         setProvincelist(currentProvinceData)
         setProvinceAlllist(data)
         form.setFieldsValue({...serviceQueryPar})

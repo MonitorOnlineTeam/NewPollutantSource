@@ -144,10 +144,12 @@ const Index = (props) => {
             visible={popVisible}
             onVisibleChange={visible => {
                 setPopVisible(visible);
-                getProjectInfoList()
+                if(visible){
+                 getProjectInfoList()
+                }
             }}
             placement="bottom"
-            getPopupContainer={trigger => trigger.parentNode}
+            // getPopupContainer={trigger => trigger.parentNode}
         >
             <Select
                 allowClear

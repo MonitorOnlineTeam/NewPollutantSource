@@ -283,11 +283,11 @@ const Index = (props) => {
         <Form.Item label='行政区' name='regionCode' className='minWidth'>
           <RegionList noFilter levelNum={2} style={{ width: 150 }} />
         </Form.Item>
-        <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}>
+        {/* <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}> */}
           <Form.Item label='企业' name='entCode'>
             <EntAtmoList noFilter style={{ width: 300 }} />
           </Form.Item>
-        </Spin>
+        {/* </Spin> */}
         <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
           <Form.Item label='监测点名称' name='DGIMN' >
 

@@ -273,11 +273,11 @@ const Index = (props) => {
       onValuesChange={onValuesChange}
       layout='inline'
     >
-      <Spin spinning={props.entLoading} size='small' style={{ top: -3, left: 39 }}>
+      {/* <Spin spinning={props.entLoading} size='small' style={{ top: -3, left: 39 }}> */}
         <Form.Item label='企业' name='EntCode'>
           <EntAtmoList style={{ width: 300 }} />
         </Form.Item>
-      </Spin>
+      {/* </Spin> */}
       <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
         <Form.Item label='监测点名称' name='DGIMN' >
 

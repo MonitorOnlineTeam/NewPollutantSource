@@ -659,11 +659,11 @@ const Index = props => {
                   }}
                 />
               </Form.Item>
-              <Spin spinning={entLoading}>
+              {/* <Spin spinning={entLoading}> */}
                 <Form.Item label="企业" name="EntCode">
                   <EntAtmoList mode="multiple" regionCode={regionCode} style={{ width: 200 }} />
                 </Form.Item>
-              </Spin>
+              {/* </Spin> */}
               <Form.Item label="行业" name="IndustryTypeCode">
                 <SearchSelect
                   placeholder="排口所属行业"

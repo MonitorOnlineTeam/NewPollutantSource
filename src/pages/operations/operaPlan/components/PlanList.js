@@ -20,7 +20,7 @@ import styles from "../styles.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import CheckPhoto from '@/components/CheckPhoto';
-import { permissionButton } from '@/utils/utils';
+import { permissionButton, } from '@/utils/utils';
 import PlanCalendar from '../components/PlanCalendar'
 
 const { Option } = Select;
@@ -39,6 +39,7 @@ const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     operationPlanInfoRefreshType: operaPlan.operationPlanInfoRefreshType,
     operationPlanInfoRefreshId: operaPlan.operationPlanInfoRefreshId,
     delOperationPlanPointLoading: loading.effects[`${namespace}/DelOperationPlanPoint`],
+    pointLoading: loading.effects[`common/getPointByEntCode`],
 })
 
 const Index = (props) => {
@@ -49,20 +50,25 @@ const Index = (props) => {
 
 
 
-    const { operationPlanInfoRefreshId,operationPlanInfoRefreshType, operationPlanPointPar, type,xjPointList,jzPointList, queryPar, tableDatas, tableTotal, exportLoading,delOperationPlanPointLoading } = props;
+    const {entCode,pointLoading, operationPlanInfoRefreshId, operationPlanInfoRefreshType, operationPlanPointPar, type,pointType, xjPointList, jzPointList, queryPar, tableDatas, tableTotal, exportLoading, delOperationPlanPointLoading } = props;
 
 
     const [planCalendarVisible, setPlanCalendarVisible] = useState(false)
+
+    const [pointList, setPointList] = useState([])
     useEffect(() => {
-           props.dispatch({type: `${namespace}/updateState`, payload: { operationPlanInfo: []} });
-            onFinish(pageIndex, pageSize);
-            //  if (operationPlanPointPar?.entCode && operationPlanPointPar?.pollutantType) {
-            //     props.dispatch({
-            //         type: `${namespace}/GetOperationPlanPointList`,
-            //         payload: { entCode: entCode, pollutantType: pollutantType },
-            //     });
-            // }
+        props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanInfo: [] } });
+
     }, []);
+    useEffect(() => {
+        entCode&&props.dispatch({    //获取排口
+             type: 'common/getPointByEntCode', 
+             payload: {  EntCode: entCode},
+             callback:(res)=>{
+                setPointList(res)
+             }
+            });
+    }, [entCode]);
     useEffect(() => {
         if (operationPlanInfoRefreshType) {
             if (operationPlanInfoRefreshType == 1) {
@@ -74,12 +80,12 @@ const Index = (props) => {
             }
             props.dispatch({
                 type: `${namespace}/updateState`,
-                payload: {operationPlanInfoRefreshType:''},
+                payload: { operationPlanInfoRefreshType: '' },
             });
         }
     }, [operationPlanInfoRefreshType]);
 
-    const planContentOpera = type==1? [
+    const planContentOpera = type == 1 ? [
         {
             title: '操作',
             fixed: 'right',
@@ -87,30 +93,34 @@ const Index = (props) => {
             ellipsis: true,
             render: (text, record, index) => {
                 return (
-                    <Popconfirm placement='left' title="确认要删除这条运维计划点位信息吗?" onConfirm={() => { delPlan([record.ID]) }} > <a> 删除</a></Popconfirm>
+                    <Popconfirm placement='left' title="确认要删除这条运维计划点位信息吗?" onConfirm={() => { delPlan([record.ID]) }} >
+                         <a 
+                         //  onClick={() => { setSelectedRows([record]); }}
+                         > 删除
+                        </a>
+                        </Popconfirm>
                 );
-
             }
         },
-    ] : type=2?
-    [
-        {
-            title: '操作',
-            fixed: 'right',
-            width: 100,
-            ellipsis: true,
-            render: (text, record, index) => {
-                const isOpen = 1;
-                return (
-                    <Space>
-                        <Popconfirm title="确认要开启这条计划吗?" onConfirm={() => { openPlan(record) }} disabled={!isOpen}><a className={isOpen? '':'disabled_a'}> 开启 </a></Popconfirm> 
-                        <Popconfirm title="确认要停止这条计划吗?" onConfirm={() => { ceasePlan(record)}} disabled={isOpen} > <a className={isOpen? 'disabled_a' : ''}> 停止 </a></Popconfirm> 
-                    </Space>
-                );
+    ] : type = 2 ?
+        [
+            {
+                title: '操作',
+                fixed: 'right',
+                width: 100,
+                ellipsis: true,
+                render: (text, record, index) => {
+                    const isOpen = 1;
+                    return (
+                        <Space>
+                            <Popconfirm title="确认要开启这条计划吗?" onConfirm={() => { openPlan(record) }} disabled={!isOpen}><a className={isOpen ? '' : 'disabled_a'}> 开启 </a></Popconfirm>
+                            <Popconfirm title="确认要停止这条计划吗?" onConfirm={() => { ceasePlan(record) }} disabled={isOpen} > <a className={isOpen ? 'disabled_a' : ''}> 停止 </a></Popconfirm>
+                        </Space>
+                    );
 
-            }
-        },
-    ]:[]
+                }
+            },
+        ] : []
 
 
     const columns = [
@@ -154,61 +164,56 @@ const Index = (props) => {
         },
         ...planContentOpera,
     ];
-
-    
-    const delPlan =  (idList) =>{
-      if(idList?.[0]){
-        props.dispatch({
-            type: `${namespace}/DelOperationPlanPoint`,
-            payload: {delIDList:idList },
-            callback:()=>{
-                onFinish(pageIndex, pageSize);
-            }
-        });
-      }
-    }
-    const openPlan = (record) =>{
-
-    }
-
-    const ceasePlan = (record) =>{
-
-    }
-    const [tableLoading,setTableLoading] = useState(false)
-    const onFinish = async (PageIndex, PageSize, queryPar) => {  //计划列表
-      if(operationPlanInfoRefreshId){
-        try {
-            const values = await form.validateFields();
-            const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
-                ...values,
-                beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
-                endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
-                time: undefined,
-                pageIndex: PageIndex,
-                pageSize: PageSize,
-                id:operationPlanInfoRefreshId,
-            }
-            setTableLoading(true)
+    const delPlan = (idList) => {
+        if (idList?.[0]) {
             props.dispatch({
-                type: `${namespace}/GetOperationPlanInfo`,
-                payload: {
-                    ...par,
-                },
-                callback:()=>{
-                    setTableLoading(false)
+                type: `${namespace}/DelOperationPlanPoint`,
+                payload: { delIDList: idList },
+                callback: () => {
+                    props.delPlanCallback &&  props.delPlanCallback()
+                    setPageSize(1);setPageSize(20);onFinish(1,20)
                 }
             });
-        } catch (errorInfo) {
-            console.log('Failed:', errorInfo);
         }
     }
+    const openPlan = (record) => {
+
     }
+
+    const ceasePlan = (record) => {
+
+    }
+    const [tableLoading, setTableLoading] = useState(false)
+    const onFinish =  (PageIndex, PageSize, queryPar) => {  //计划列表
+        if (operationPlanInfoRefreshId) {
+                const values =  form.getFieldsValue();
+                const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
+                    ...values,
+                    beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+                    endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
+                    time: undefined,
+                    pageIndex: PageIndex,
+                    pageSize: PageSize,
+                    id: operationPlanInfoRefreshId,
+                }
+                setTableLoading(true)
+                props.dispatch({
+                    type: `${namespace}/GetOperationPlanInfo`,
+                    payload: {
+                        ...par,
+                    },
+                    callback: () => {
+                        setTableLoading(false)
+                    }
+                });
+            }
+        }
     const [pageIndex, setPageIndex] = useState(1)
     const [pageSize, setPageSize] = useState(20)
     const handleTableChange = (PageIndex, PageSize) => { //分页
         setPageSize(PageSize)
         setPageIndex(PageIndex)
-        onFinish(PageIndex, PageSize, queryPar2)
+        // onFinish(PageIndex, PageSize, queryPar2)
     }
 
     const exportData = () => {
@@ -217,11 +222,48 @@ const Index = (props) => {
             payload: queryPar,
         });
     };
+   
+    const commonSearchComponents = (type) =>{
+       return<> <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
+        <Form.Item name='pointID' label='监测点' style={{ marginBottom: 8 }}>
+            <Select
+                mode="multiple"
+                maxTagCount={2}
+                maxTagTextLength={10}
+                maxTagPlaceholder="..."
+                placeholder="请选择"
+                style={{ width: 200 }}
+            >
+                {pointList.map(item => (<Option key={item.PointCode} value={item.PointCode}>{item.PointName}</Option>))}
+            </Select>
+        </Form.Item>
+        </Spin>
+        <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
+            {type == 1 ?
+                <Select placeholder='请选择' allowClear style={{ width: 100 }}>
+                    <Option key={pointType==2? 1 : 7} value={pointType==2? 1 : 7}>巡检</Option>
+                    <Option key={pointType==2? 3 : 9} value={pointType==2? 3 : 9}>校准</Option>
+                </Select>
+                :
+                <Select placeholder='请选择' allowClear style={{ width: 140 }}>
+                    <Option key={1} value={1}>巡检</Option>
+                    <Option key={2} value={2}>校准</Option>
+                    <Option key={3} value={3}>校验测试</Option>
+                    <Option key={4} value={4}>全系统校准</Option>
 
+                </Select>
+            }
+        </Form.Item>
+        {/* type == 1 ? '计划日期' : '日期' */}
+        <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
+            <RangePicker_ format="YYYY-MM-DD" />
+        </Form.Item>
+        </>
+    }
 
     const searchComponents = () => {
 
-        const resDataHandle = () => { form.resetFields(); setPageIndex(1); setPageSize(20); onFinish(1, 20) }
+        const resDataHandle = () => {  setPageIndex(1); setPageSize(20); onFinish(1, 20) }
         return <Form
             name="advanced_search3"
             className={'ant-advanced-search-form'}
@@ -229,51 +271,22 @@ const Index = (props) => {
             layout='inline'
             onFinish={resDataHandle}
         >
-            <Form.Item name='pointID' label='监测点' style={{ marginBottom: 8 }}>
-                <Select
-                    mode="multiple"
-                    maxTagCount={2}
-                    maxTagTextLength={6}
-                    maxTagPlaceholder="..."
-                    placeholder="请选择"
-                    style={{ width: 200 }}
-                    options={xjPointList|| jzPointList}
-                />
-            </Form.Item>
-            <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
-                {type == 1 ?
-                    <Select placeholder='请选择' allowClear style={{ width: 100 }}>
-                        <Option key={1} value={1}>巡检</Option>
-                        <Option key={2} value={2}>校准</Option>
-                    </Select>
-                    :
-                    <Select placeholder='请选择' allowClear style={{ width: 100 }}>
-                        <Option key={1} value={1}>巡检</Option>
-                        <Option key={2} value={2}>校准</Option>
-                        <Option key={3} value={3}>校验测试</Option>
-                        <Option key={4} value={4}>全系统校准</Option>
-
-                    </Select>
-                }
-            </Form.Item>
-            <Form.Item name='time' label={type == 1 ? '计划日期' : '日期'} style={{ marginBottom: 8 }}>
-                <RangePicker_ format="YYYY-MM-DD" />
-            </Form.Item>
+            {commonSearchComponents(type)}
             <Form.Item style={{ marginBottom: 4 }}>
                 <Space>
                     <Button type="primary" htmlType="submit" loading={tableLoading}>
                         查询
                                  </Button>
-                    <Button loading={tableLoading} onClick={resDataHandle}  >
+                    <Button loading={tableLoading} onClick={()=>{form.resetFields();resDataHandle()}}  >
                         重置
                                   </Button>
                     <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exportData() }}>
                         导出
                              </Button>
-                    {type == 1 && 
-                    <Popconfirm title="确认要批量删除运维计划点位吗?" onConfirm={() => { delPlan(delList) }} disabled={delList?.length<=0}>
-                    <Button type="primary" disabled={delList?.length<=0} loading={delOperationPlanPointLoading} >
-                        批量删除
+                    {type == 1 &&
+                        <Popconfirm title="确认要批量删除运维计划点位吗?" onConfirm={() => { delPlan(delList) }} disabled={delList?.length <= 0}>
+                            <Button type="primary" disabled={delList?.length <= 0} loading={delOperationPlanPointLoading} >
+                                批量删除
                              </Button></Popconfirm>}
                     {(type == 1 || type == 2) && <Button type="primary" onClick={() => {
                         setPlanCalendarVisible(true)
@@ -287,11 +300,14 @@ const Index = (props) => {
             </Form.Item>
         </Form>
     }
-    const [delList,setDelList] = useState([])
+    const [delList, setDelList] = useState([])
+    const [selectedRows, setSelectedRows] = useState([])
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
             setDelList(selectedRowKeys)
+            // setSelectedRows(selectedRows)
         },
+        selectedRowKeys: delList,
     };
     return (
         <div>
@@ -324,7 +340,7 @@ const Index = (props) => {
                 mask={false}
                 footer={null}
             >
-                <PlanCalendar type={type} />
+                <PlanCalendar type={type} pointType={pointType} pointList={pointList} pointLoading={pointLoading} commonSearchComponents={commonSearchComponents}/>
             </Modal>
         </div>
     );

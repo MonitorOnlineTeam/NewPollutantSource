@@ -17,11 +17,11 @@ export default Model.extend({
     entAndPointList: [],
     atmoStationList: [],
     entList: [],
-    entLoading: true,
+    entLoading: false,
     noFilterEntList: [],
-    noFilterEntLoading: [],
+    noFilterEntLoading: false,
     enableEntList:[], //启用的企业
-    enableEntLoading:[],
+    enableEntLoading:false,
     attentionList: [],
     pointListByEntCode: [],
     pollutantListByDgimn: [],
@@ -83,13 +83,13 @@ export default Model.extend({
     },
     *getEnableEntList({ payload, callback }, { call, put, update, select }) {
       //企业列表 开启未停用的企业
-      yield update({ enableEntList: true });
+      yield update({ enableEntLoading: true });
       const response = yield call(services.GetEntList, { ...payload });
       if (response.IsSuccess) {
         yield update({enableEntList: response.Datas,});
       } 
       callback && callback(response?.Datas);
-      yield update({  noFilterEntLoading: false });
+      yield update({  enableEntLoading: false });
       
     },
     *getEntByRegionCallBack({ payload, callback }, { call, put, update, select }) {

@@ -308,6 +308,7 @@ export function chartClick(myChart, that, params, fixedHeight) { //基本用不�
     myChart.setOption(that.option);
 
 }
+let hoveredIndex = '';
 export function chartMouseover(myChart, that, params) {
     // 准备重新渲染扇形所需的参数
     let isSelected;
