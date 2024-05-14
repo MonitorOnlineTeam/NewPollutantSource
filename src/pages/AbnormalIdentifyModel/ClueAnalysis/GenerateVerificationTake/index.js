@@ -96,6 +96,7 @@ const Index = props => {
   const [planPopVisible, setPlanPopVisible] = useState(false);
   const [collapsekey, setCollapsekey] = useState()
   const [siteVerificationPlanType, setSiteVerificationPlanType] = useState(1)
+  let locationPar = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
 
   useEffect(() => {
     form.resetFields();
@@ -104,7 +105,6 @@ const Index = props => {
     //   onTableChange(1, 20)
     // } else {
 
-    let data = history?.location?.query?.data ? JSON.parse(props?.history?.location?.query?.data) : ''
     if (type == 1 || type == 2) {//1从工作台进入   2从详情返回
       let data = ''
       if (type == 1) {
@@ -578,6 +578,11 @@ const Index = props => {
       dispatch({
         type: 'AbnormalIdentifyModel/GetCheckRoleDatas', payload: {},
         callback: res => {
+          console.log(res)
+          const userList = res?.map(item=>{
+            return { label: item.QuestionName, options:item?.Users?.map(chilItem=>({label:chilItem.UserName,value:chilItem.UserID}))}
+          })
+          console.log(userList)
           setCheckRoleDatas(res);
         }
       });
@@ -844,7 +849,7 @@ const Index = props => {
 
   return (<div className={styles.verificationTakeWrapper}>
     <BreadcrumbWrapper>
-      <Card style={{ paddingBottom: 24 }}>
+      <Card  bodyStyle={{padding:'16px 24px'}}>
         <Form
           name="basic"
           form={form}
@@ -948,6 +953,7 @@ const Index = props => {
       <Card
         title={<span style={{ fontWeight: 'bold' }}>生成核查任务</span>}
         style={{ marginTop: 12 }}
+        bodyStyle={{padding:'16px 24px'}}
       >
         <Button style={{ marginBottom: 12 }} type='primary' onClick={() => { generateVerificationTakeFun() }} >生成核查方案</Button>
         <span style={{ color: '#f5222d', paddingLeft: 8 }}>注：同一企业同一排口同一场景下才能同时选中并生成核查方案</span>
@@ -958,7 +964,7 @@ const Index = props => {
           columns={getColumns()}
           dataSource={dataSource}
           loading={queryLoading}
-          scroll={{ y: 'calc(100vh - 455px)' }}
+          scroll={{ y: 'calc(100vh - 424px)' }}
           pagination={{
             showSizeChanger: true,
             showQuickJumper: true,
@@ -1012,7 +1018,7 @@ const Index = props => {
             verificationPlanType: 1,
             isSceneCheck: 1,
             checkResult: 1,
-            checkUserId:data?.operationUser
+            checkUserId:locationPar?.operationUser
           }}
         >
           <Row>
@@ -1055,9 +1061,7 @@ const Index = props => {
             <>
               <Spin spinning={!!checkRoleDatasLoading} size="small" style={{ width: 440, top: -6 }}>
                 <Form.Item name='checkUserId' label="核查人" rules={[{ required: true, message: '请选择核查人!' }]}>
-                  <Select style={{ width: 300 }} placeholder="请选择"   showSearch filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}>
-                    {checkRoleDatas?.[0] && checkRoleDatas.map(item => <Option value={item.UserID}>{item.UserName}</Option>)}
-                  </Select>
+                  <Select  options={checkRoleDatas} style={{ width: 300 }} placeholder="请选择"   showSearch filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} />
                 </Form.Item>
               </Spin>
               <Row>

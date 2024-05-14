@@ -172,7 +172,6 @@ const WorkTower = props => {
               name="basic"
               form={form}
               layout="inline"
-              style={{ padding: '10px 0' }}
               initialValues={{
                 date: [moment().add(-1, 'months'), moment()],
               }}
