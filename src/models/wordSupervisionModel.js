@@ -32,8 +32,8 @@ export default Model.extend({
     customeSatisfactList: [],
     customeSatisfactLoading: false,
     largeRegionList: [],
-    standgaswaringList:[],
-    standgaswaringLoading:false,
+    standgaswaringList: [],
+    standgaswaringLoading: false,
   },
   effects: {
     // 获取工作台待办
@@ -211,7 +211,17 @@ export default Model.extend({
     *GetPersonTrainList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.GetPersonTrainList, payload);
       if (result.IsSuccess) {
-        callback && callback(result.Datas);
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 人员培训记录 - 导出
+    *ExportPersonTrainList({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.ExportPersonTrainList, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        window.open(result.Datas);
       } else {
         message.error(result.Message);
       }
@@ -450,18 +460,18 @@ export default Model.extend({
       const result = yield call(services.InsOrUpdAccountsReceivable, payload);
       if (result.IsSuccess) {
         message.success('操作成功！');
-        // 编辑时不加载工作台
-        if (!payload.ID) {
-          // 重新加载数据
-          yield put({
-            type: 'GetToDoDailyWorks',
-            payload: {},
-          });
-          yield put({
-            type: 'GetWorkBenchMsg',
-            payload: {},
-          });
-        }
+        // // 编辑时不加载工作台
+        // if (!payload.ID) {
+        //   // 重新加载数据
+        //   yield put({
+        //     type: 'GetToDoDailyWorks',
+        //     payload: {},
+        //   });
+        //   yield put({
+        //     type: 'GetWorkBenchMsg',
+        //     payload: {},
+        //   });
+        // }
         callback && callback();
       } else {
         message.error(result.Message);
@@ -682,26 +692,50 @@ export default Model.extend({
     },
     //项目执行、合同到期等
     *CtGetWorkbenchMsg({ payload, callback }, { call, put, update }) {
-
-      yield update(payload.type==1? { contractLoading: true} : payload.type==2? { projectExecutionLoading: true} : payload.type==11 ? {customeSatisfactLoading:true}: payload.type==12 ? {standgaswaringLoading:true} : null);
-      const result = yield call(services.CtGetWorkbenchMsg, {...payload,type:undefined});
+      yield update(
+        payload.type == 1
+          ? { contractLoading: true }
+          : payload.type == 2
+          ? { projectExecutionLoading: true }
+          : payload.type == 11
+          ? { customeSatisfactLoading: true }
+          : payload.type == 12
+          ? { standgaswaringLoading: true }
+          : null,
+      );
+      const result = yield call(services.CtGetWorkbenchMsg, { ...payload, type: undefined });
       if (result.IsSuccess) {
-        const data = result.Datas
+        const data = result.Datas;
         // yield update({  老
         //   projectExecutionList: data?.ctList   || [],
         //   contractList: data  || [],
         // });
         // callback && callback( data?.length || 0, data?.ctList?.length || 0,);
         yield update({
-          projectExecutionList: data?.ctList   || [],
-          contractList: data?.projectList  || [],
-          customeSatisfactList : data?.customerList  || [],
-          standgaswaringList: data?.standgaswaringList  || [],
+          projectExecutionList: data?.ctList || [],
+          contractList: data?.projectList || [],
+          customeSatisfactList: data?.customerList || [],
+          standgaswaringList: data?.standgaswaringList || [],
         });
-        callback && callback({ctListTotal: data?.ctList?.length || 0, customerListTotal:data?.customerList?.length || 0,projectListTotal:data?.projectList?.length || 0, standgaswaringListTotal:data?.standgaswaringList?.length || 0})
+        callback &&
+          callback({
+            ctListTotal: data?.ctList?.length || 0,
+            customerListTotal: data?.customerList?.length || 0,
+            projectListTotal: data?.projectList?.length || 0,
+            standgaswaringListTotal: data?.standgaswaringList?.length || 0,
+          });
       }
-      yield update( payload.type==1? { contractLoading: false} : payload.type==2? { projectExecutionLoading: false} : payload.type==11 ? {customeSatisfactLoading:false}: payload.type==12 ? {standgaswaringLoading:false} : null);
-
+      yield update(
+        payload.type == 1
+          ? { contractLoading: false }
+          : payload.type == 2
+          ? { projectExecutionLoading: false }
+          : payload.type == 11
+          ? { customeSatisfactLoading: false }
+          : payload.type == 12
+          ? { standgaswaringLoading: false }
+          : null,
+      );
     },
     //待办中心 项目执行-解决遗留问题
     *UpdateImplementationStatus({ payload, callback }, { call, put, update }) {
@@ -853,6 +887,42 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('导出成功！');
         downloadFile(result.Datas);
+      }
+    },
+
+    // 获取应收账款催收记录数据
+    *GetAccountsReceivableList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.CollectionsApi.GetAccountsReceivableList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 应收账款催收记录数据 - 导出
+    *ExportAccountsReceivableList({ payload }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.CollectionsApi.ExportAccountsReceivableList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 应收账款催收记录数据 - 删除
+    *DeleteAccountsReceivable({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.DailyManagement.CollectionsApi.DeleteAccountsReceivable}?ID=${payload.ID}`,
+        {},
+      );
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+        callback && callback()
       }
     },
   },

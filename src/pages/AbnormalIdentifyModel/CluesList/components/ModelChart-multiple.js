@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-18 15:19:12
+ * @Last Modified time: 2024-05-14 09:10:49
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
@@ -145,6 +145,9 @@ const ModelChartMultiple = props => {
           // onEvents={onEvents}
         />
       </div>
+      {
+        console.log('moreModalVisible', moreModalVisible)
+      }
       {moreModalVisible && (
         <ModelChartMultipleMore
           title={chartData.title}

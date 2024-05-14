@@ -47,7 +47,7 @@ const AssistDataAnalysis = props => {
 
   const getPageContent = () => {
     return (
-      <Card bodyStyle={{ paddingTop: 0 }}>
+      <Card bodyStyle={{ paddingTop: 0 }} bordered={displayType !== 'modal'}>
         {/* <Tabs defaultActiveKey={displayType === 'modal' ? '2' : '5'}> */}
         <Tabs defaultActiveKey={defaultActiveKey || '5'}>
           <Tabs.TabPane tab="数据工况" key="5" style={{ overflowY: 'auto' }}>
@@ -125,6 +125,7 @@ const AssistDataAnalysis = props => {
 };
 
 AssistDataAnalysis.defaultProps = {
+  bordered: true,
   dataChartParams: {},
 };
 

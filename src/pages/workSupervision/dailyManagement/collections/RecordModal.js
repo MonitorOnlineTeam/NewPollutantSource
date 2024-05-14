@@ -2,14 +2,14 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:38:17
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 11:15:30
+ * @Last Modified time: 2024-05-13 11:41:46
  * @Description：部门内其他工作事项
  */
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Modal, Form, Input, Button, Space, Tooltip, Popconfirm, Radio, Tag, Divider } from 'antd';
-import Work from './Work';
+import Content from './Content';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   queryLoading: loading.effects['wordSupervision/GetOtherWorkList'],
@@ -25,13 +25,13 @@ const Record = props => {
   const [pageSize, setPageSize] = useState(20);
   const [tableTotal, setTableTotal] = useState(0);
 
-  const { open, onCancel, CTOperation, title, WorkType } = props;
+  const { open, onCancel } = props;
 
   useEffect(() => {}, []);
 
   return (
     <Modal
-      title={title}
+      title='应收账款催收记录'
       wrapClassName={`spreadOverModal`}
       open={open}
       destroyOnClose
@@ -40,7 +40,7 @@ const Record = props => {
         onCancel();
       }}
     >
-      <Work WorkType={WorkType} CTOperation={CTOperation} mode="record" />
+      <Content mode="record" />
     </Modal>
   );
 };

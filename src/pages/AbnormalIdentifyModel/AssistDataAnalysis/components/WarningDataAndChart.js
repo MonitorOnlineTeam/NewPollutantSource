@@ -546,6 +546,7 @@ const WarningDataAndChart = props => {
           color: getColorByName[selectedNames[index]],
         },
         symbol: (value, params) => {
+          console.log('params', params)
           // 污染物flag非正常，显示三角
           let { dataIndex, seriesId } = params;
           let currentData = allTypeDataList[dataIndex];
@@ -953,7 +954,7 @@ const WarningDataAndChart = props => {
           //x轴名称 params[0]
           let { dataIndex } = params[0];
           let currentData = allTypeDataList[dataIndex];
-          //值 
+          //值
           let value = '';
           params.map(item => {
             let dataParams = currentData[item.seriesId + '_params'];

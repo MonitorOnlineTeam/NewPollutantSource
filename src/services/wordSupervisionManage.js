@@ -1,5 +1,5 @@
 import { post, get } from '@/utils/request';
-import { API } from '@config/API'
+import { API } from '@config/API';
 import Cookie from 'js-cookie';
 
 // 仪器借出、归还
@@ -191,6 +191,14 @@ export async function GetPersonTrainList(params) {
   );
   return result;
 }
+// 导出 - 人员培训提交记录
+export async function ExportPersonTrainList(params) {
+  const result = await post(
+    '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/ExportPersonTrainList',
+    params,
+  );
+  return result;
+}
 
 // 删除人员培训记录
 export async function DeletePersonTrain(params) {
@@ -304,7 +312,7 @@ export async function GetCheckAttendanceRecordList(params) {
 export async function DeleteCheckAttendanceRecord(params) {
   const result = await post(
     '/newApi/rest/PollutantSourceApi/DailyWorkManagerApi/DeleteCheckAttendanceRecord?ID=' +
-    params.ID,
+      params.ID,
     {},
   );
   return result;
@@ -439,10 +447,7 @@ export async function RetransmissionTasks(params) {
 }
 // 运维服务
 export async function GetStagingInspectorRectificationList(params) {
-  const result = await post(
-    API.WorkStageApi.GetStagingInspectorRectificationList,
-    params,
-  );
+  const result = await post(API.WorkStageApi.GetStagingInspectorRectificationList, params);
   return result;
 }
 
@@ -450,27 +455,18 @@ export async function GetStagingInspectorRectificationList(params) {
 
 // 数据报警列表
 export async function GetWorkAlarmPushList(params) {
-  const result = await post(
-    API.WorkStageApi.GetWorkAlarmPushList,
-    params,
-  );
+  const result = await post(API.WorkStageApi.GetWorkAlarmPushList, params);
   return result;
 }
 // 删除数据报警
 export async function UpdateWorkPushStatus(params) {
-  const result = await post(
-    API.WorkStageApi.UpdateWorkPushStatus,
-    params,
-  );
+  const result = await post(API.WorkStageApi.UpdateWorkPushStatus, params);
   return result;
 }
 
 // 删除所有数据报警
 export async function UpdateAllWorkPushStatus(params) {
-  const result = await post(
-    API.WorkStageApi.UpdateAllWorkPushStatus,
-    params,
-  );
+  const result = await post(API.WorkStageApi.UpdateAllWorkPushStatus, params);
   return result;
 }
 
@@ -484,42 +480,29 @@ export async function UpdateAllWorkPushStatus(params) {
 // }
 // 删除合同到期
 export async function DelWorkbenchMsg(params) {
-  const result = await post(
-    API.CtWorkStageApi.DelWorkbenchMsg,
-    params,
-  );
+  const result = await post(API.CtWorkStageApi.DelWorkbenchMsg, params);
   return result;
 }
 
 // 删除所有合同到期
 export async function DelAllWorkbenchMsg(params) {
-  const result = await post(
-    API.CtWorkStageApi.DelAllWorkbenchMsg,
-    params,
-  );
+  const result = await post(API.CtWorkStageApi.DelAllWorkbenchMsg, params);
   return result;
 }
-
 
 // 获取工作台快捷导航列表 以及 可添加菜单列表
 export async function GetUserMenuList(params) {
-  const result = await post(
-    API.WorkStageApi.GetUserMenuList,
-    params,
-  );
+  const result = await post(API.WorkStageApi.GetUserMenuList, params);
   return result;
 }
 // 添加快捷菜单
-export async function AddUserMenu (params) {
-  const result = await post(
-    API.WorkStageApi.AddUserMenu,
-    params,
-  );
+export async function AddUserMenu(params) {
+  const result = await post(API.WorkStageApi.AddUserMenu, params);
   return result;
 }
 
 // 动态加载工作台模块
-export async function GetWorkbenchesModuleList (params) {
+export async function GetWorkbenchesModuleList(params) {
   const result = await post(
     `${API.WorkStageApi.GetWorkbenchesModuleList}?menuId=${Cookie.get('sysMenuId')}`,
     {},
@@ -527,18 +510,12 @@ export async function GetWorkbenchesModuleList (params) {
   return result;
 }
 //项目执行和合同到期等
-export async function CtGetWorkbenchMsg (params) {
-  const result = await post(
-    API.CtWorkStageApi.GetWorkbenchMsg,
-    params,
-  );
+export async function CtGetWorkbenchMsg(params) {
+  const result = await post(API.CtWorkStageApi.GetWorkbenchMsg, params);
   return result;
 }
 //成套 解决遗留问题
-export async function UpdateImplementationStatus (params) {
-  const result = await post(
-    API.CtWorkStageApi.UpdateImplementationStatus,
-    params,
-  );
+export async function UpdateImplementationStatus(params) {
+  const result = await post(API.CtWorkStageApi.UpdateImplementationStatus, params);
   return result;
 }

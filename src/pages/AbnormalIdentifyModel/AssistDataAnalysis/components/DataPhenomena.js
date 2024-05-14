@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-01-18 15:08:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-28 14:10:39
+ * @Last Modified time: 2024-05-13 10:24:42
  * @Description:  数据现象
  */
 import React, { useState, useEffect } from 'react';
@@ -273,7 +273,7 @@ const DataPhenomena = props => {
       const currentDataME = DataPhenomenaChartList.dataList[pollutant.PollutantCode + '_ME'] || [];
       console.log(pollutant.PollutantName + '-currentDataME', currentDataME);
       let visualMapPieces = findColorBlocks(currentDataME);
-      console.log('visualMapPieces', visualMapPieces);
+      console.log(pollutant.PollutantName + '-visualMapPieces', visualMapPieces);
       let markAreaData = [];
       // 处理阴影
       visualMapPieces.map(item => {

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-08 16:09:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-11 15:11:59
+ * @Last Modified time: 2024-05-14 09:49:14
  * @Description:  数据有效率统计
  */
 import React, { useState, useEffect, useRef } from 'react';
@@ -82,8 +82,21 @@ const DataEfficiencyRateModal = props => {
         industryCode: values.industryCode,
       },
       callback: res => {
+        function handleNaN(value) {
+          return isNaN(value) ? 0 : value * 100;
+        }
+
         let dataSource_temp = [...dataSource];
-        dataSource_temp[dataType] = res;
+        let newData = res.map(item => {
+          return {
+            ...item,
+            DataExceptionRate: handleNaN(item.DataExceptionHour / item.RunHour),
+            RenweiRate: handleNaN(item.RenweiHour / item.RunHour),
+            FaultRate: handleNaN(item.FaultHour / item.RunHour),
+            NormalMissRate: handleNaN(item.NormalMissHour / item.RunHour),
+          };
+        });
+        dataSource_temp[dataType] = newData;
         setDataSource(dataSource_temp);
       },
     });
@@ -171,7 +184,7 @@ const DataEfficiencyRateModal = props => {
         title: '数据有效率',
         dataIndex: 'EffectiveRate',
         key: 'EffectiveRate',
-        fixed: 'left',
+        // fixed: 'left',
         width: 200,
         sorter: (a, b) => sorter(a, b, 'EffectiveRate'),
         render: (text, record) => {
@@ -191,9 +204,89 @@ const DataEfficiencyRateModal = props => {
         title: '运行率',
         dataIndex: 'RunRate',
         key: 'RunRate',
-        fixed: 'left',
+        // fixed: 'left',
         width: 200,
         sorter: (a, b) => sorter(a, b, 'RunRate'),
+        render: (text, record) => {
+          let percent = Number(text).toFixed(2);
+          return (
+            <Progress
+              successPercent={percent}
+              percent={percent}
+              size="small"
+              style={{ width: '76%' }}
+              format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
+            />
+          );
+        },
+      },
+      {
+        title: '数据现象异常',
+        dataIndex: 'DataExceptionRate',
+        key: 'DataExceptionRate',
+        // fixed: 'left',
+        width: 200,
+        sorter: (a, b) => sorter(a, b, 'DataExceptionRate'),
+        render: (text, record) => {
+          let percent = Number(text).toFixed(2);
+          return (
+            <Progress
+              successPercent={percent}
+              percent={percent}
+              size="small"
+              style={{ width: '76%' }}
+              format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
+            />
+          );
+        },
+      },
+      {
+        title: '人为干预',
+        dataIndex: 'RenweiRate',
+        key: 'RenweiRate',
+        // fixed: 'left',
+        width: 200,
+        sorter: (a, b) => sorter(a, b, 'RenweiRate'),
+        render: (text, record) => {
+          let percent = Number(text).toFixed(2);
+          return (
+            <Progress
+              successPercent={percent}
+              percent={percent}
+              size="small"
+              style={{ width: '76%' }}
+              format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
+            />
+          );
+        },
+      },
+      {
+        title: '设备故障',
+        dataIndex: 'FaultRate',
+        key: 'FaultRate',
+        // fixed: 'left',
+        width: 200,
+        sorter: (a, b) => sorter(a, b, 'FaultRate'),
+        render: (text, record) => {
+          let percent = Number(text).toFixed(2);
+          return (
+            <Progress
+              successPercent={percent}
+              percent={percent}
+              size="small"
+              style={{ width: '76%' }}
+              format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
+            />
+          );
+        },
+      },
+      {
+        title: '数据缺失',
+        dataIndex: 'NormalMissRate',
+        key: 'NormalMissRate',
+        // fixed: 'left',
+        width: 200,
+        sorter: (a, b) => sorter(a, b, 'NormalMissRate'),
         render: (text, record) => {
           let percent = Number(text).toFixed(2);
           return (

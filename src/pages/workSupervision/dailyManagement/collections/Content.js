@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:38:17
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 11:14:51
+ * @Last Modified time: 2024-05-13 19:17:30
  * @Description：部门内其他工作事项
  */
 
@@ -25,32 +25,21 @@ import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import { DelIcon, EditIcon } from '@/utils/icon';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import HandleWorkModal from './HandleWorkModal';
+import HandleModal from './HandleModal';
 import RecordModal from './RecordModal';
-
-const contentList = [
-  { name: '技术问题', value: '1' },
-  { name: '配合检查', value: '2' },
-  { name: '其他工作', value: '3' },
-];
-
-const WorkTypeText = {
-  1: '现场工作记录',
-  2: '部门内其他工作记录',
-  3: '支持其他部门工作记录',
-};
+import LargeRegionSelect from '@/pages/workSupervision/dailyManagement/components/LargeRegionSelect';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
-  queryLoading: loading.effects['wordSupervision/GetOtherWorkList'],
-  exportLoading: loading.effects['wordSupervision/exportTaskRecord'],
+  queryLoading: loading.effects['wordSupervision/GetAccountsReceivableList'],
+  exportLoading: loading.effects['wordSupervision/ExportAccountsReceivableList'],
 });
 
-const Work = props => {
+const Content = props => {
   const [form] = Form.useForm();
   const { WorkType, CTOperation, queryLoading, exportLoading, mode } = props;
   const [dataSource, setDataSource] = useState([]);
   const [editData, setEditData] = useState({});
-  const [handleWorkModalOpen, setHandleWorkModalOpen] = useState(false);
+  const [handleModalOpen, setHandleModalOpen] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [tableTotal, setTableTotal] = useState(0);
@@ -70,8 +59,6 @@ const Work = props => {
     return {
       BeginTime: beginTime,
       EndTime: endTime,
-      CTOperation: CTOperation,
-      WorkType: WorkType,
       flag: mode !== 'record',
     };
   };
@@ -82,7 +69,7 @@ const Work = props => {
     const body = getParams(values);
 
     props.dispatch({
-      type: 'wordSupervision/GetOtherWorkList',
+      type: 'wordSupervision/GetAccountsReceivableList',
       payload: {
         ...body,
         pageIndex: _pageIndex || pageIndex,
@@ -100,10 +87,9 @@ const Work = props => {
     const values = await form.validateFields();
     const body = getParams(values);
     props.dispatch({
-      type: 'wordSupervision/exportTaskRecord',
+      type: 'wordSupervision/ExportAccountsReceivableList',
       payload: {
         ...body,
-        apiName: 'ExportOtherWorkList',
       },
     });
   };
@@ -111,7 +97,7 @@ const Work = props => {
   // 删除
   const onDelete = ID => {
     props.dispatch({
-      type: 'wordSupervision/DeleteOtherWork',
+      type: 'wordSupervision/DeleteAccountsReceivable',
       payload: { ID },
       callback: res => {
         handleTableChange(1, 20);
@@ -122,7 +108,7 @@ const Work = props => {
   //
   const onEdit = record => {
     setEditData(record);
-    setHandleWorkModalOpen(true);
+    setHandleModalOpen(true);
   };
 
   // 获取列头
@@ -130,49 +116,98 @@ const Work = props => {
     let columns = [
       {
         title: '序号',
-        // dataIndex: 'index',
-        // key: 'index',
-        // render: (text, record, index) => {
-        //   return index + 1;
-        // },
       },
       {
-        title: '姓名',
-        dataIndex: 'User_Name',
-        key: 'User_Name',
-      },
-      {
-        title: '工作时间',
-        dataIndex: 'WorkTime',
-        key: 'WorkTime',
-        sorter: (a, b) => moment(a.WorkTime).valueOf() - moment(b.WorkTime).valueOf(),
-        render: (text, record) => {
-          return moment(text).format('YYYY-MM-DD');
-        },
-      },
-      {
-        title: '内容项',
-        dataIndex: 'Content',
-        key: 'Content',
-      },
-      {
-        title: '工作结果',
-        dataIndex: 'WorkResults',
-        key: 'WorkResults',
-        render: (text, record) => {
-          if (text === 1) {
-            return <Tag color="success">完成</Tag>;
-          } else {
-            return <Tag color="error">未完成</Tag>;
-          }
-        },
-      },
-      {
-        title: '内容描述',
-        dataIndex: 'ContentDes',
-        key: 'ContentDes',
-        width: 200,
+        title: '项目编号',
+        dataIndex: 'ProjectNo',
+        key: 'ProjectNo',
         ellipsis: true,
+        width: 200,
+      },
+      {
+        title: '项目名称',
+        dataIndex: 'ProjectName',
+        key: 'ProjectName',
+        ellipsis: true,
+        width: 200,
+      },
+      {
+        title: '最终用户名称',
+        dataIndex: 'FinalUserName',
+        key: 'FinalUserName',
+        render: text => {
+          return text || '-';
+        },
+      },
+      {
+        title: '项目所在省',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        render: text => {
+          return text || '-';
+        },
+      },
+      {
+        title: '项目接洽人',
+        children: [
+          {
+            title: '姓名',
+            dataIndex: 'UserName',
+            key: 'UserName',
+            align: 'center',
+            width: 120,
+          },
+          {
+            title: '职务',
+            dataIndex: 'UserPost',
+            width: 120,
+            align: 'center',
+            key: 'UserPost',
+          },
+          {
+            title: '联系电话',
+            dataIndex: 'UserPhone',
+            width: 120,
+            align: 'center',
+            key: 'UserPhone',
+          },
+        ],
+      },
+      {
+        title: '欠款金额',
+        dataIndex: 'AmountInArear',
+        key: 'AmountInArear',
+        sorter: (a, b) => a.AmountInArear - b.AmountInArear,
+      },
+      {
+        title: '催收完成金额',
+        dataIndex: 'CompletionAmount',
+        key: 'CompletionAmount',
+        sorter: (a, b) => a.CompletionAmount - b.CompletionAmount,
+      },
+      {
+        title: '行业',
+        dataIndex: 'IndustryName',
+        key: 'IndustryName',
+        render: text => {
+          return text || '-';
+        },
+      },
+      {
+        title: '催收人',
+        dataIndex: 'CreateUserName',
+        key: 'CreateUserName',
+        render: text => {
+          return text || '-';
+        },
+      },
+      {
+        title: '催收时间',
+        dataIndex: 'CreateTime',
+        key: 'CreateTime',
+        render: text => {
+          return text || '-';
+        },
       },
     ];
 
@@ -182,6 +217,7 @@ const Work = props => {
         title: '操作',
         dataIndex: 'handle',
         key: 'handle',
+        fixed: 'right',
         render: (text, record) => {
           return (
             <>
@@ -194,6 +230,7 @@ const Work = props => {
                   <EditIcon />
                 </a>
               </Tooltip>
+
               <Divider type="vertical" />
               <Tooltip title="删除">
                 <Popconfirm
@@ -242,30 +279,17 @@ const Work = props => {
           autoComplete="off"
         >
           <Space wrap>
-            <Form.Item label="工作时间" name="date">
-              <RangePicker_ allowClear={false} />
-            </Form.Item>
-            <Form.Item label="内容项" name="workContent">
-              {WorkType == '1' ? (
-                <Select placeholder="请选择内容项" style={{ width: '200px' }}>
-                  {contentList.map(item => {
-                    return (
-                      <Option value={item.value} key={item.value}>
-                        {item.name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              ) : (
-                <Input placeholder="内容项" allowClear />
-              )}
-            </Form.Item>
-            <Form.Item label="工作结果" name="workResults">
-              <Radio.Group>
-                <Radio value={null}>全部</Radio>
-                <Radio value={1}>完成</Radio>
-                <Radio value={0}>未完成</Radio>
-              </Radio.Group>
+            {mode === 'record' && [
+              <Form.Item label="项目编号" name="projectNo">
+                <Input placeholder="请输入项目编号" />
+              </Form.Item>,
+              <LargeRegionSelect label="项目所在省" name="RegionCode" />,
+              <Form.Item label="催收人" name="userName">
+                <Input placeholder="请输入催收人" />
+              </Form.Item>,
+            ]}
+            <Form.Item label="催收时间" name="date">
+              <RangePicker_ />
             </Form.Item>
             <Space>
               <Button
@@ -289,7 +313,7 @@ const Work = props => {
                 <Button
                   type="primary"
                   onClick={() => {
-                    setHandleWorkModalOpen(true);
+                    setHandleModalOpen(true);
                     setEditData({});
                   }}
                 >
@@ -301,7 +325,7 @@ const Work = props => {
                     setRecordModalOpen(true);
                   }}
                 >
-                  {WorkTypeText[WorkType]}
+                  应收账款催收记录
                 </Button>,
               ]}
               <Button loading={exportLoading} onClick={() => onExport()}>
@@ -311,7 +335,6 @@ const Work = props => {
           </Space>
         </Form>
       }
-      style={{ marginTop: -8 }}
     >
       <SdlTable
         loading={queryLoading}
@@ -328,21 +351,21 @@ const Work = props => {
         }}
       />
 
-      <HandleWorkModal
-        open={handleWorkModalOpen}
-        editData={editData}
-        WorkType={WorkType}
-        CTOperation={CTOperation}
-        onCancel={() => {
-          setHandleWorkModalOpen(false);
-        }}
-        onSubmitCallback={() => {
-          onFinish();
-        }}
-      />
+      {handleModalOpen && (
+        <HandleModal
+          open={handleModalOpen}
+          editData={editData}
+          onCancel={() => {
+            setHandleModalOpen(false);
+          }}
+          onSubmitCallback={() => {
+            onFinish();
+          }}
+        />
+      )}
+
       {recordModalOpen && (
         <RecordModal
-          title={WorkTypeText[WorkType]}
           open={recordModalOpen}
           WorkType={WorkType}
           CTOperation={CTOperation}
@@ -355,4 +378,4 @@ const Work = props => {
   );
 };
 
-export default connect(dvaPropsData)(Work);
+export default connect(dvaPropsData)(Content);

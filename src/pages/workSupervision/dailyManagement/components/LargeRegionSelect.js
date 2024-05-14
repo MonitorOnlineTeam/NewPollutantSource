@@ -8,11 +8,11 @@ const LargeRegionSelect = props => {
   const [largeRegionList, setLargeRegionList] = useState([]);
   const [provinceAllList, setProvinceAllList] = useState([]);
 
-  const { dispatch, type, required } = props;
+  const { dispatch, type, required, label, style, name } = props;
 
   useEffect(() => {
     type === 'ct' ? getCtLargeRegion() : getLargeRegion();
-  }, [type]);
+  }, []);
 
   // 获取成套大区及省份
   const getCtLargeRegion = () => {
@@ -28,7 +28,7 @@ const LargeRegionSelect = props => {
   // 获取运维大区及省份
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getCTLargeRegion',
+      type: 'common/getLargeRegion',
       payload: {},
       callback: res => {
         setProvinceAllList(res.provinceList);
@@ -39,16 +39,16 @@ const LargeRegionSelect = props => {
   if (type === 'ct') {
     return (
       <Form.Item
-        name="regionCode"
-        label="大区"
+        name={name}
+        label={label ? label : '大区'}
         rules={[
           {
             required: required,
-            message: '请选择大区！',
+            message: '请选择，不能为空！',
           },
         ]}
       >
-        <Select placeholder="请选择大区" style={{ width: 140 }} allowClear>
+        <Select placeholder="请选择" style={{ width: 140, ...style }} allowClear>
           {largeRegionList.map(item => {
             return (
               <Option value={item.ID} key={item.ID}>
@@ -60,30 +60,34 @@ const LargeRegionSelect = props => {
       </Form.Item>
     );
   } else {
-    <Form.Item
-      name="regionCode"
-      label="省份"
-      rules={[
-        {
-          required: required,
-          message: '请选择省份',
-        },
-      ]}
-    >
-      <Select placeholder="请选择省份" style={{ width: 140 }} allowClear>
-        {provinceAllList.map(item => {
-          return (
-            <Option value={item.RegionCode} key={item.RegionCode}>
-              {item.RegionName}
-            </Option>
-          );
-        })}
-      </Select>
-    </Form.Item>;
+    return (
+      <Form.Item
+        name={name}
+        label={label ? label : '省份'}
+        rules={[
+          {
+            required: required,
+            message: `请选择，不能为空！`,
+          },
+        ]}
+      >
+        <Select placeholder="请选择" style={{ width: 140, ...style }} allowClear>
+          {provinceAllList.map(item => {
+            return (
+              <Option value={item.RegionCode} key={item.RegionCode}>
+                {item.RegionName}
+              </Option>
+            );
+          })}
+        </Select>
+      </Form.Item>
+    );
   }
 };
 
 LargeRegionSelect.defaultProps = {
+  name: 'regionCode',
+  style: {},
   required: false,
 };
 

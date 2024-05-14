@@ -17,7 +17,7 @@ import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import LargeRegionSelect from '@/pages/workSupervision/dailyManagement/components/LargeRegionSelect';
+// import LargeRegionSelect from '@/pages/workSupervision/dailyManagement/components/LargeRegionSelect';
 
 const { Text, Link } = Typography;
 
@@ -40,8 +40,63 @@ const TaskCompletionRecord = props => {
   const { dispatch, loading, exportLoading, open, onCancel, time, regionCode, type } = props;
 
   useEffect(() => {
+    type === 'ct' ? getCtLargeRegion() : getLargeRegion();
     getPageData();
   }, []);
+
+  // 获取成套大区及省份
+  const getCtLargeRegion = () => {
+    dispatch({
+      type: 'common/getCTLargeRegion',
+      payload: {},
+      callback: res => {
+        setLargeRegionList(res.CtLargeRegionList);
+      },
+    });
+  };
+
+  // 获取运维大区及省份
+  const getLargeRegion = () => {
+    dispatch({
+      type: 'common/getLargeRegion',
+      payload: {},
+      callback: res => {
+        setProvinceAllList(res.provinceList);
+      },
+    });
+  };
+
+  const renderRegion = () => {
+    if (type === 'ct') {
+      return (
+        <Form.Item name="regionCode" label={'大区'}>
+          <Select placeholder="请选择" style={{ width: 140 }} allowClear>
+            {largeRegionList.map(item => {
+              return (
+                <Option value={item.ID} key={item.ID}>
+                  {item.LargeRegion}
+                </Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+      );
+    } else {
+      return (
+        <Form.Item name="regionCode" label={'省份'}>
+          <Select placeholder="请选择" style={{ width: 140 }} allowClear>
+            {provinceAllList.map(item => {
+              return (
+                <Option value={item.RegionCode} key={item.RegionCode}>
+                  {item.RegionName}
+                </Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+      );
+    }
+  };
 
   // 获取请求参数
   const getParams = () => {
@@ -170,7 +225,7 @@ const TaskCompletionRecord = props => {
           autoComplete="off"
         >
           <Space wrap>
-            <LargeRegionSelect type={type} />
+            {renderRegion()}
             <Form.Item name="userName" label="培训人">
               <Input style={{ width: 200 }} placeholder="培训人" allowClear />
             </Form.Item>

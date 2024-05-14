@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 16:18:02
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-29 18:56:25
+ * @Last Modified time: 2024-05-13 16:39:05
  * @Description:  纪律检查记录弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -401,7 +401,7 @@ const RecordModal = props => {
             >
               {largeRegionList.map(item => {
                 return (
-                  <Option value={item.UserGroup_ID} key={item.UserGroup_ID}>
+                  <Option value={item.UserGroup_ID * 1} key={item.UserGroup_ID}>
                     {item.UserGroup_Name}
                   </Option>
                 );

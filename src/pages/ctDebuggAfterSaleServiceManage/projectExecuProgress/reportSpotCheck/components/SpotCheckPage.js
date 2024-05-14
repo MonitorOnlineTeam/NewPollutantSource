@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:41:16
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-07 14:50:31
+ * @Last Modified time: 2024-05-13 14:45:25
  * @Description:  服务报告抽查 - 抽查页面
  */
 import React, { useState, useEffect } from 'react';
@@ -107,11 +107,13 @@ const SpotCheckPage = props => {
       dispatch({
         type: 'reportSpotCheck/AddCheckServiceReport',
         payload: {
-          num: currentNum,
+          dispatchID: currentID,
           ...values,
         },
         callback: res => {
           setStepCurrent(3);
+          // 重新加载数据列表
+          reloadPageData();
         },
       }).catch(errorInfo => {
         message.warning('请输入完整的数据');
@@ -126,8 +128,6 @@ const SpotCheckPage = props => {
     form1.resetFields();
     setStepCurrent(0);
     getTableDataSource(1, 20);
-    // 重新加载数据列表
-    reloadPageData();
   };
 
   //分页
@@ -243,7 +243,6 @@ const SpotCheckPage = props => {
               setStepCurrent(1);
               setCurrentNum(record.Num);
               setCurrentID(record.ID);
-              // GetSingleServiceReport(record.ID);
             }}
           >
             下一步
@@ -368,7 +367,7 @@ const SpotCheckPage = props => {
           );
         })} */}
         {stepCurrent === 1 && <ServiceReport id={currentID} shouldOnlyRecordId="9" />}
-        <Row justify="center" style={{marginTop: 20}}>
+        <Row justify="center" style={{ marginTop: 20 }}>
           <Space>
             <Button onClick={() => setStepCurrent(0)}>上一步</Button>
             <Button type="primary" onClick={() => setStepCurrent(2)}>
@@ -425,16 +424,10 @@ const SpotCheckPage = props => {
               <Radio value={1}>不合格</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item
-            name="remark"
-            label="备注"
-          >
+          <Form.Item name="remark" label="备注">
             <TextArea rows={4} />
           </Form.Item>
-          <Form.Item
-            name="attachment"
-            label="附件照片"
-          >
+          <Form.Item name="attachment" label="附件照片">
             <SdlUpload
               accept="image/*"
               cuid={cuid()}
@@ -512,13 +505,41 @@ const SpotCheckPage = props => {
     );
   };
 
+  // const renderFooter = () => {
+  //   if (stepCurrent === 1) {
+  //     return [
+  //       <Button onClick={() => setStepCurrent(0)}>上一步</Button>,
+  //       <Button type="primary" onClick={() => setStepCurrent(2)}>
+  //         下一步
+  //       </Button>
+  //     ]
+  //     return [
+  //       <Button onClick={() => setStepCurrent(1)}>上一步</Button>,
+  //       <Button type="primary" onClick={() => AddCheckServiceReport(3)}>
+  //         下一步
+  //       </Button>,
+  //     ];
+  //   }
+  // };
+
   return (
     <Modal
       title={`服务报告抽查`}
-      wrapClassName="spreadOverModal"
+      // wrapClassName={`spreadOverModal ${stepCurrent !== 0 && 'isFooterSty'}`}
+      wrapClassName={`spreadOverModal`}
       visible={isModalOpen}
       destroyOnClose
       footer={false}
+      // footer={
+      //   stepCurrent !== 0 ? (
+      //     <div className="steps-action">
+      //       <Button>上一步</Button>
+      //       <Button type="primary">下一步</Button>
+      //     </div>
+      //   ) : (
+      //     false
+      //   )
+      // }
       onCancel={() => {
         setStepCurrent(0);
         onCancel();

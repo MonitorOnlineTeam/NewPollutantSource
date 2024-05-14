@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:39:53
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-07 17:25:54
+ * @Last Modified time: 2024-05-13 18:43:30
  * @Description:  服务报告抽查
  */
 import React, { useState, useEffect } from 'react';
@@ -20,15 +20,21 @@ import {
   message,
   Divider,
   Tooltip,
+  Modal,
+  Radio,
 } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
-import { DeleteOutlined, ExportOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExportOutlined, EditOutlined, ProfileOutlined } from '@ant-design/icons';
 import AllViewModal from './components/AllViewModal';
 import SpotCheckPage from './components/SpotCheckPage';
 import ImageLightboxView from '@/components/ImageLightboxView';
+import SdlUpload from '@/pages/AutoFormManager/SdlUpload';
+import ServiceReportModal from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/timelinessQualityReport/components/ServiceReportModal';
+
+const { TextArea } = Input;
 
 const dvaPropsData = ({ loading }) => ({
   queryLoading: loading.effects[`reportSpotCheck/GetCheckServiceList`],
@@ -37,6 +43,7 @@ const dvaPropsData = ({ loading }) => ({
 
 const ServiceIsNotTimely = props => {
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
 
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -44,6 +51,12 @@ const ServiceIsNotTimely = props => {
   const [dataSource, setDataSource] = useState([]);
   const [isAllViewModalOpen, setIsAllViewModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editData, setEditData] = useState({});
+  const [fileList, setFileList] = useState([]);
+  const [serviceReportOpen, setServiceReportOpen] = useState(false);
+  const [currentRow, setCurrentRow] = useState({});
+  const [descriptionList, setDescriptionList] = useState([]);
 
   const { isAll, queryLoading, dispatch, exportLoading } = props;
 
@@ -218,23 +231,74 @@ const ServiceIsNotTimely = props => {
         dataIndex: 'handle',
         align: 'center',
         fixed: 'right',
-        width: 60,
+        width: 140,
         ellipsis: true,
         render: (text, record) => {
           return (
-            <Tooltip title="删除">
-              <Popconfirm
-                placement="left"
-                title="确定要删除吗？"
-                onConfirm={() => onDelete(record.ID)}
-                okText="是"
-                cancelText="否"
-              >
-                <a>
-                  <DeleteOutlined style={{ fontSize: 16 }} />
+            <>
+              {!isAll && (
+                <>
+                  <Tooltip title="编辑">
+                    <a
+                      onClick={() => {
+                        setIsEditOpen(true);
+                        setEditData(record);
+                        let _fileList = record.FileList?.ImgList.map((img, index) => {
+                          return {
+                            uid: record.FileList?.ImgNameList[index],
+                            status: 'done',
+                            url: `/${img}`,
+                          };
+                        });
+                        setFileList(_fileList);
+                        form1.setFieldsValue({
+                          checkResult: record.CheckResultStatus,
+                          remark: record.Remark,
+                          attachment: record.FileList?.AttachID,
+                        });
+                      }}
+                    >
+                      <EditOutlined style={{ fontSize: 16 }} />
+                    </a>
+                  </Tooltip>
+                  <Divider type="vertical" />
+                </>
+              )}
+
+              <Tooltip title="详情">
+                <a
+                  onClick={() => {
+                    setServiceReportOpen(true);
+                    setCurrentRow(record);
+                    let descriptionList = [
+                      { name: '审核状态', value: record.CheckStatuTip },
+                      { name: '合格状态', value: record.CheckResult },
+                    ];
+                    setDescriptionList(descriptionList);
+                  }}
+                >
+                  <ProfileOutlined style={{ fontSize: 16 }} />
                 </a>
-              </Popconfirm>
-            </Tooltip>
+              </Tooltip>
+              {!isAll && (
+                <>
+                  <Divider type="vertical" />
+                  <Tooltip title="删除">
+                    <Popconfirm
+                      placement="left"
+                      title="确定要删除吗？"
+                      onConfirm={() => onDelete(record.ID)}
+                      okText="是"
+                      cancelText="否"
+                    >
+                      <a>
+                        <DeleteOutlined style={{ fontSize: 16 }} />
+                      </a>
+                    </Popconfirm>
+                  </Tooltip>
+                </>
+              )}
+            </>
           );
         },
       },
@@ -242,9 +306,7 @@ const ServiceIsNotTimely = props => {
 
     // 查看全部过滤掉操作列和“离开现场时间”
     if (isAll) {
-      columns = columns.filter(
-        item => item.dataIndex !== 'handle' && item.dataIndex !== 'LeaveDate',
-      );
+      columns = columns.filter(item => item.dataIndex !== 'LeaveDate');
     }
 
     return columns;
@@ -255,6 +317,29 @@ const ServiceIsNotTimely = props => {
     setPageSize(PageSize);
     setPageIndex(PageIndex);
     getTableDataSource(PageIndex, PageSize);
+  };
+
+  // 编辑服务抽查报告
+  const EditCheckServiceReport = () => {
+    form1.validateFields().then(values => {
+      console.log('values', values);
+      // return;
+      dispatch({
+        type: 'reportSpotCheck/AddCheckServiceReport',
+        payload: {
+          ID: editData.ID,
+          ...values,
+        },
+        callback: res => {
+          setIsEditOpen(false);
+          setEditData({});
+          getTableDataSource();
+        },
+      }).catch(errorInfo => {
+        message.warning('请输入完整的数据');
+        return;
+      });
+    });
   };
 
   // 搜索组件
@@ -405,6 +490,75 @@ const ServiceIsNotTimely = props => {
           isModalOpen={isAllViewModalOpen}
           onCancel={() => {
             setIsAllViewModalOpen(false);
+          }}
+        />
+        {isEditOpen && (
+          <Modal
+            title={`编辑`}
+            open={isEditOpen}
+            destroyOnClose
+            onOk={() => EditCheckServiceReport()}
+            onCancel={() => {
+              setIsEditOpen(false);
+            }}
+          >
+            <Form
+              id="searchForm"
+              form={form1}
+              // initialValues={{
+              //   checkResult: editData.CheckResultStatus,
+              //   remark: editData.Remark,
+              // }}
+              autoComplete="off"
+              style={{ marginBottom: 10 }}
+              // labelCol={{ span: 5 }}
+              // wrapperCol={{ span: 18 }}
+              labelCol={{
+                flex: '90px',
+              }}
+              wrapperCol={{
+                flex: 1,
+              }}
+            >
+              <Form.Item
+                name="checkResult"
+                label="抽查结果"
+                rules={[
+                  {
+                    required: true,
+                    message: '不能为空！',
+                  },
+                ]}
+              >
+                <Radio.Group>
+                  <Radio value={'0'}>合格</Radio>
+                  <Radio value={'1'}>不合格</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item name="remark" label="备注">
+                <TextArea rows={4} />
+              </Form.Item>
+              <Form.Item name="attachment" label="附件照片">
+                {console.log('fileList', fileList)}
+                <SdlUpload
+                  accept="image/*"
+                  fileList={fileList}
+                  cuid={editData.FileList?.AttachID}
+                  uploadSuccess={id => {
+                    form1.setFieldsValue({ attachment: id });
+                  }}
+                />
+              </Form.Item>
+            </Form>
+          </Modal>
+        )}
+        <ServiceReportModal
+          descriptionColumn={4}
+          descriptionList={descriptionList}
+          isModalOpen={serviceReportOpen}
+          data={currentRow}
+          onCancel={() => {
+            setServiceReportOpen(false);
           }}
         />
       </Card>

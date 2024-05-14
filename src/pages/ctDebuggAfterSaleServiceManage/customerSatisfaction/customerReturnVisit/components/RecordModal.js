@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 16:18:02
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-29 18:54:22
+ * @Last Modified time: 2024-05-13 18:42:24
  * @Description:  客户现场回访记录弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -68,6 +68,7 @@ const RecordModal = props => {
   useEffect(() => {
     form.setFieldsValue({
       ...queryParams,
+      regionCode: queryParams.regionCode + '',
     });
     setTimeout(() => {
       getTableDataSource();
@@ -191,8 +192,8 @@ const RecordModal = props => {
       },
       {
         title: '回访人',
-        dataIndex: 'ReturnUserName',
-        key: 'ReturnUserName',
+        dataIndex: 'CheckUserName',
+        key: 'CheckUserName',
         ellipsis: true,
       },
       {
@@ -391,7 +392,7 @@ const RecordModal = props => {
         // autoComplete="off"
         style={{ marginTop: 10, marginBottom: 10 }}
       >
-        <Space wrap style={{flexWrap: 'wrap'}}>
+        <Space wrap style={{ flexWrap: 'wrap' }}>
           <Form.Item name="regionCode" label="大区">
             <Select
               showSearch
@@ -434,7 +435,7 @@ const RecordModal = props => {
               <Form.Item name="searcahUserName" label="客户名称">
                 <Input allowClear={true} style={{ width: 200 }} placeholder="请输入" />
               </Form.Item>
-            </> 
+            </>
           )}
           {dataType === 2 && title === '客户现场回访记录' && (
             <Form.Item name="customerScore" label="客户满意度小于">

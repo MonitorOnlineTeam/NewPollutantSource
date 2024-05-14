@@ -33,7 +33,7 @@ const dvaPropsData = ({ loading, timelinessQualityReport, common }) => ({
     loading.effects['timelinessQualityReport/ExportTimelyPassRateListByArea'] ||
     loading.effects['timelinessQualityReport/ExportTimelyPassRateListByUser'],
 });
- 
+
 const BasicData = props => {
   const [form] = Form.useForm();
 
@@ -181,8 +181,8 @@ const BasicData = props => {
       },
       {
         title: '项目所在省',
-        dataIndex: 'provinceName',
-        key: 'provinceName',
+        dataIndex: 'Province',
+        key: 'Province',
         align: 'center',
         ellipsis: true,
       },

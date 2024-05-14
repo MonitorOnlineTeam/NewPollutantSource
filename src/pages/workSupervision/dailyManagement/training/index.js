@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-05-10 14:18:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-10 15:38:08
+ * @Last Modified time: 2024-05-13 19:20:35
  * @Description:  人员培训
  */
 import React, { useState, useEffect } from 'react';
@@ -79,6 +79,7 @@ const Training = props => {
     dispatch({
       type: 'wordSupervision/ExportPersonTrainForRegion',
       payload: {
+        type: type === 'ct' ? '1' : undefined,
         beginTime: values.time[0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time[1].format('YYYY-MM-DD HH:mm:ss'),
       },
@@ -117,16 +118,15 @@ const Training = props => {
           //   return text;
           // }
           return {
-            children: (
-              <a
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setRegionCode(record.RegionCode);
-                }}
-              >
-                {text}
-              </a>
-            ),
+            children: text,
+              // <a
+              //   onClick={() => {
+              //     setIsModalOpen(true);
+              //     setRegionCode(record.RegionCode);
+              //   }}
+              // >
+              //   {text}
+              // </a>
             props: { colSpan: record.LargeRegion === '合计' ? 0 : 1 },
           };
         },
@@ -137,19 +137,19 @@ const Training = props => {
         key: 'CompletedCount',
         ellipsis: true,
         render: (text, record) => {
-          if (type === 'ct') {
-            return (
-              <a
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setRegionCode(record.LargeRegionCode);
-                }}
-              >
-                {text}
-              </a>
-            );
-          }
-          return text;
+          // if (type === 'ct') {
+          return (
+            <a
+              onClick={() => {
+                setIsModalOpen(true);
+                setRegionCode(type === 'ct' ? record.LargeRegionCode || undefined : record.RegionCode || undefined);
+              }}
+            >
+              {text}
+            </a>
+          );
+          // }
+          // return text;
         },
       },
       {
@@ -298,7 +298,7 @@ const Training = props => {
           }}
         />
       )}
-      {// 办事处检查记录和管理
+      {// 记录和管理
       isModalOpen2 && (
         <ChecklistRecordAndManagement
           type={type}

@@ -6,10 +6,10 @@ import HandlingSugges from '@/pages/ctDebuggAfterSaleServiceManage/supervisionIn
 
 const dvaPropsData = ({ loading }) => ({});
 
-const AuditModalPage = props => {
+const ServiceReportModal = props => {
   const {
     dispatch,
-    data: { ID, ItemCode },
+    data: { ID, ItemCode, Num },
     descriptionList,
     descriptionColumn,
     isModalOpen,
@@ -32,7 +32,7 @@ const AuditModalPage = props => {
 
   return (
     <Modal
-      title={`${ItemCode}-验收服务报告`}
+      title={`${Num || ItemCode}-验收服务报告`}
       wrapClassName="spreadOverModal"
       open={isModalOpen}
       destroyOnClose
@@ -57,8 +57,8 @@ const AuditModalPage = props => {
   );
 };
 
-AuditModalPage.defaultProps = {
+ServiceReportModal.defaultProps = {
   descriptionColumn: 3,
 };
 
-export default connect(dvaPropsData)(AuditModalPage);
+export default connect(dvaPropsData)(ServiceReportModal);

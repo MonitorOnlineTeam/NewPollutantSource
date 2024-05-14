@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-05 17:18:49
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-03 10:51:33
+ * @Last Modified time: 2024-05-13 15:20:22
  * @desc: 上传组件
  */
 
@@ -30,7 +30,7 @@ class SdlUpload extends Component {
     };
     this.state = {
       previewVisible: false,
-      fileList: [],
+      fileList: props.fileList || [],
     };
   }
 

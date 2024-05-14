@@ -2,23 +2,35 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 16:22:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-11 09:07:16
+ * @Last Modified time: 2024-05-13 20:00:26
  * @Description: 人员培训记录表
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Alert, Form, Button, DatePicker, Divider, Space, Row, Col, Upload, message } from 'antd';
+import {
+  Alert,
+  Form,
+  Button,
+  DatePicker,
+  Divider,
+  Space,
+  Row,
+  Col,
+  Upload,
+  message,
+  Typography,
+} from 'antd';
 import styles from './styles.less';
 import { taskType } from '../workSupervisionUtils';
 import { InboxOutlined } from '@ant-design/icons';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import config from '@/config';
-import LargeRegionSelect from '@/pages/workSupervision/dailyManagement/components/LargeRegionSelect';
 import cuid from 'cuid';
 import { API } from '@config/API';
 
 const { Dragger } = Upload;
+const { Text, Link } = Typography;
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   TYPE: wordSupervision.TYPE, // 1：成套 “”：运维
@@ -36,17 +48,16 @@ const Training = props => {
 
   useEffect(() => {
     // 处理附件列表
-    if (editData.FileName) {
-      let _fileList = editData.FileName.split(',').map((item, index) => {
-        let fileName = item.split('/').slice(-1);
+    if (editData.FilesList) {
+      let _fileList = editData.FilesList?.ImgList.map((item, index) => {
         return {
-          uid: index,
-          name: fileName.toString(),
+          uid: editData.FilesList?.ImgNameList[index],
+          name: editData.FilesList?.NameList[index],
           status: 'done',
-          url: item,
+          url: `/${item}`,
         };
       });
-
+      setUploadId(editData.FilesList.AttachID);
       setFileList(_fileList);
     }
   }, []);
@@ -54,7 +65,6 @@ const Training = props => {
   //
   const onFinish = async () => {
     const values = await form.validateFields();
-    console.log('values', values);
     if (!fileList.length) {
       message.error('请上传培训记录截图后提交！');
       return;
@@ -63,11 +73,10 @@ const Training = props => {
     props.dispatch({
       type: 'wordSupervision/InsOrUpdPersonTrain',
       payload: {
-        AttachId: editData.ID,
+        AttachId: editData.AttachId,
         FileName: uploadId,
-        DailyTaskID: taskInfo.ID,
+        DailyTaskID: taskInfo.ID || editData.DailyTaskID,
         TrainTime: moment(values.TrainTime).format('YYYY-MM-DD 00:00:00'),
-        largeRegionCode: values.regionCode,
       },
       callback: () => {
         onCancel();
@@ -76,6 +85,10 @@ const Training = props => {
     });
   };
 
+  const uploadFileListProps = {};
+  if (editData && editData.FilesList) {
+    uploadFileListProps.fileList = fileList;
+  }
   const uploadProps = {
     name: 'file',
     accept: '.png,.jpg,.gif,.jpeg',
@@ -84,6 +97,7 @@ const Training = props => {
     headers: {
       Authorization: 'Bearer ' + Cookie.get(config.cookieName),
     },
+    ...uploadFileListProps,
     // onChange(info) {
     //   console.log('info', info);
     //   const { status } = info.file;
@@ -113,10 +127,12 @@ const Training = props => {
 
         if (status === 'done') {
           fileArr.push({
-            uid,
+            uid: response?.Datas?.fNameList[0]
+              ? response?.Datas?.fNameList[0].split('/').pop()
+              : uid,
             name,
             status,
-            url: response?.Datas || url,
+            url: '/' + response?.Datas?.fNameList[0] || url,
           });
         } else if (status === 'uploading') {
           fileArr.push({
@@ -133,7 +149,6 @@ const Training = props => {
       console.log('Dropped files', e.dataTransfer.files);
     },
     onRemove(file) {
-      console.log('file', file);
       if (!file.error) {
         dispatch({
           type: 'autoForm/deleteAttach',
@@ -145,13 +160,12 @@ const Training = props => {
       }
     },
   };
+  console.log('editData', editData);
   return (
     <>
       {taskInfo.CreateTime && (
         <Alert
-          message={`任务类型：${taskType[taskInfo.TaskType]}，${taskInfo.CreateTime} 开始，于${
-            taskInfo.EndTime
-          } 结束，每个工单最少有（${taskInfo.standNum}次/月）记录。`}
+          message={`任务类型：人员培训记录，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次${taskInfo.standNum}次/月。`}
           type="info"
           showIcon
           style={{ marginRight: 30 }}
@@ -165,6 +179,7 @@ const Training = props => {
           // wrapperCol={{ span: 14 }}
           initialValues={{
             ...editData,
+            regionCode: editData.RegionCode,
             TrainTime: moment(editData.TrainTime),
           }}
           onFinish={onFinish}
@@ -173,7 +188,15 @@ const Training = props => {
           <Row style={{ width: '100%' }}>
             <Space size={30}>
               <Col>
-                <LargeRegionSelect type={TYPE == 1 ? 'ct' : undefined} required />
+                {TYPE == 1 ? (
+                  <Form.Item label="大区" name="LargeRegion">
+                    <Text>{taskInfo.LargeName || editData.LargeRegion}</Text>
+                  </Form.Item>
+                ) : (
+                  <Form.Item label="省份" name="RegionName">
+                    <Text>{taskInfo.RegionName || editData.RegionName}</Text>
+                  </Form.Item>
+                )}
               </Col>
               <Col>
                 <Form.Item

@@ -2883,6 +2883,12 @@ export default {
                       path: '/workSupervision/dailyManagement/training/:type',
                       component: './workSupervision/dailyManagement/training',
                     },
+                    {
+                      // 应收账款催收
+                      name: 'training',
+                      path: '/workSupervision/dailyManagement/collections',
+                      component: './workSupervision/dailyManagement/collections',
+                    },
                   ],
                 },
               ],
@@ -3673,7 +3679,7 @@ export default {
                 },
               ],
             },
- 
+
 
             /* 任务详情 */
             {

@@ -14,7 +14,7 @@ const TaskAlart = props => {
     <>
       {CreateTime && (
         <Alert
-          message={`任务类型：${taskType[TaskType]}，${CreateTime} 开始，于${EndTime} 结束，每个工单最少有（${standNum}次/${rangeText}）记录。`}
+          message={`任务类型：${taskType[TaskType]}，派发时间：${CreateTime}，有效期：${EndTime} ，任务单派发频次（${standNum}次/${rangeText}）。`}
           type="info"
           showIcon
           style={{ marginRight: 30 }}

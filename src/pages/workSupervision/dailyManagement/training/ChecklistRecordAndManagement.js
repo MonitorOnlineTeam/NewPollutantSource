@@ -20,7 +20,7 @@ import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { getCurrentUserId } from '@/utils/utils';
 import { DelIcon, EditIcon } from '@/utils/icon';
-import OfficeInspection from '@/pages/workSupervision/Forms/OfficeInspection';
+import Training from '@/pages/workSupervision/Forms/Training';
 import ImageLightboxView from '@/components/ImageLightboxView';
 
 const { Text, Link } = Typography;
@@ -40,7 +40,7 @@ const ChecklistRecordAndManagement = props => {
   const [tableTotal, setTableTotal] = useState(0);
   const [dataSource, setDataSource] = useState([]);
   const [editData, setEditData] = useState({});
-  const [officeInspectionOpen, setOfficeInspectionOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [largeRegionList, setLargeRegionList] = useState([]);
   const [provinceAllList, setProvinceAllList] = useState([]);
 
@@ -65,7 +65,7 @@ const ChecklistRecordAndManagement = props => {
   // 获取运维大区及省份
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getCTLargeRegion',
+      type: 'common/getLargeRegion',
       payload: {},
       callback: res => {
         setProvinceAllList(res.provinceList);
@@ -125,13 +125,23 @@ const ChecklistRecordAndManagement = props => {
 
   //
   const onEdit = record => {
+    updateType();
     setEditData(record);
     // setTaskInfo({
     //   // TaskType: type ? 4 : 3,
     //   TaskType: 5,
     //   ID: record.DailyTaskID,
     // });
-    setOfficeInspectionOpen(true);
+    setEditOpen(true);
+  };
+
+  const updateType = () => {
+    dispatch({
+      type: 'wordSupervision/updateState',
+      payload: {
+        TYPE: type === 'ct' ? 1 : '',
+      },
+    });
   };
 
   const getColumns = () => {
@@ -151,8 +161,8 @@ const ChecklistRecordAndManagement = props => {
       },
       {
         title: '培训人',
-        dataIndex: 'User_Name',
-        key: 'User_Name',
+        dataIndex: 'UserName',
+        key: 'UserName',
       },
       {
         title: '培训时间',
@@ -171,8 +181,8 @@ const ChecklistRecordAndManagement = props => {
           // let fileList = getAttachmentDataSource(text);
           // console.log('fileList', fileList);
           // return <AttachmentView dataSource={fileList} />;
-
-          return <ImageLightboxView images={text.split(',')} />;
+          let images = record.FilesList.ImgList;
+          return <ImageLightboxView images={images} />;
         },
       },
     ];
@@ -183,8 +193,8 @@ const ChecklistRecordAndManagement = props => {
         key: 'handle',
         fixed: 'right',
         render: (text, record) => {
-          if (record.IsEdit) {
-            // if (true) {
+          // if (record.IsEdit) {
+          if (true) {
             return (
               <>
                 <Tooltip title="编辑">
@@ -344,18 +354,19 @@ const ChecklistRecordAndManagement = props => {
         </Card>
         <Modal
           centered
-          open={officeInspectionOpen}
+          open={editOpen}
           footer={null}
           wrapClassName="spreadOverModal"
           mask={false}
           destroyOnClose
-          onCancel={() => setOfficeInspectionOpen(false)}
+          onCancel={() => setEditOpen(false)}
         >
-          <OfficeInspection
-            editData={editData}
+          <Training
+            type={type === 'ct' ? 1 : ''}
             taskInfo={taskInfo}
+            editData={editData}
             onCancel={() => {
-              setOfficeInspectionOpen(false);
+              setEditOpen(false);
             }}
             onSubmitCallback={() => {
               getPageData();

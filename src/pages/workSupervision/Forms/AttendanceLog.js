@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-06 13:57:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-16 15:03:02
+ * @Last Modified time: 2024-05-13 18:40:18
  * @Description: 检查考勤和日志
  */
 import React, { useState, useEffect } from 'react';
@@ -15,13 +15,14 @@ import SdlTable from '@/components/SdlTable';
 const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
+  TYPE: wordSupervision.TYPE, // 1：成套 “”：运维
   allUser: wordSupervision.allUser,
   todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
 });
 
 const AttendanceLog = props => {
   const [form] = Form.useForm();
-  const { taskInfo, editData, onCancel, onSubmitCallback, allUser, isDetail } = props;
+  const { taskInfo, editData, onCancel, onSubmitCallback, allUser, isDetail, TYPE } = props;
   const [dataSource, setDataSource] = useState(editData.dataSource || []);
 
   useEffect(() => {
@@ -63,7 +64,8 @@ const AttendanceLog = props => {
     let Key = tempDataSource.at(-1) ? tempDataSource.at(-1).Key + 1 : 0;
     tempDataSource.push({
       Key: Key,
-      RegionalArea: taskInfo.RegionCode,
+      RegionalArea: taskInfo.LargeName,
+      RegionName: taskInfo.RegionCode,
       UserName: undefined,
       CheckInState: 1,
       UnqualifiedDate: '',
@@ -97,7 +99,7 @@ const AttendanceLog = props => {
   console.log('taskInfo', taskInfo);
   //
   const getColumns = () => {
-    const columns = [
+    let columns = [
       {
         title: '序号',
         // dataIndex: 'index',
@@ -116,10 +118,36 @@ const AttendanceLog = props => {
         align: 'center',
         render: (text, record, index) => {
           return isDetail ? (
-            taskInfo.RegionName
+            taskInfo.LargeName
           ) : (
             <Form.Item
               name={'RegionalArea' + record.Key}
+              style={{ marginBottom: 0 }}
+              initialValue={text}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: '请选择大区！',
+              //   },
+              // ]}
+            >
+              <span>{taskInfo.LargeName}</span>
+            </Form.Item>
+          );
+        },
+      },
+      {
+        title: <div className={styles.required}>省份</div>,
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        width: 140,
+        align: 'center',
+        render: (text, record, index) => {
+          return isDetail ? (
+            taskInfo.RegionName
+          ) : (
+            <Form.Item
+              name={'RegionName' + record.Key}
               style={{ marginBottom: 0 }}
               initialValue={text}
               // rules={[
@@ -305,6 +333,10 @@ const AttendanceLog = props => {
           );
         },
       });
+    }
+
+    if (TYPE == 1) {
+      columns = columns.filter(item => item.dataIndex !== 'RegionName');
     }
 
     return columns;
