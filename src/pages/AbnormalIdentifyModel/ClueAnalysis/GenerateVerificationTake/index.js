@@ -1012,6 +1012,7 @@ const Index = props => {
             verificationPlanType: 1,
             isSceneCheck: 1,
             checkResult: 1,
+            checkUserId:data?.operationUser
           }}
         >
           <Row>

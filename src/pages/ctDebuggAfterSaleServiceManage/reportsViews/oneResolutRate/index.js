@@ -52,7 +52,7 @@ const Index = props => {
     <BreadcrumbWrapper>
       <div className={styles.pageWrapper}>
         <Space direction="vertical" style={{ width: '100%' }}>
-          <Card bodyStyle={{ paddingTop: 2, paddingBottom: 8 }} style={{ marginBottom: 0 }}>
+          <Card bodyStyle={{ paddingTop: 8, paddingBottom: 8 }} style={{ marginBottom: 0 }}>
             年份：
             <YearDatePicker value={date} onChange={onDateChange}/>
           </Card>

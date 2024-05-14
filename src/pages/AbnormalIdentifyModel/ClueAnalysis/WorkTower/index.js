@@ -264,6 +264,7 @@ const WorkTower = props => {
                               endTime: queryPar?.endTime,
                               entCode: item.EntCode,
                               dgimn: item.DGIMN,
+                              operationUser: item.OperationUser,
                               warningCode: typeItem.WarningCode,
                             };
                             props.dispatch({

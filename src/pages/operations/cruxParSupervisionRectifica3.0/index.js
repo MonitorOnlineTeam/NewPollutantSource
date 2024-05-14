@@ -240,7 +240,9 @@ const Index = (props) => {
   }
   const exports = async () => { //导出
     props.exportZGCheckList({
-      ...queryPar
+      ...queryPar,
+      pageIndex:undefined,
+      pageSize:undefined,
     })
   }
 

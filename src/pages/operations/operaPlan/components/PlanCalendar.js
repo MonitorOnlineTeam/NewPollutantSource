@@ -4,7 +4,7 @@
  * 创建时间：2024.04
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Checkbox, Spin, Tag, Tabs, Form, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space, Radio } from 'antd';
+import { Table, Input, InputNumber, Popconfirm,Empty, Checkbox,Skeleton, Spin, Tag, Tabs, Form, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -34,7 +34,8 @@ const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     queryPar: operaPlan.operationPlanCalendarQueryPar,
     operationPlanInfoRefreshId: operaPlan.operationPlanInfoRefreshId,
     exportLoading: loading.effects[`${namespace}/ExportOperationPlanCalendar`],
-
+    formulatePointListLoading: loading.effects[`${namespace}/GetFormulatePointList`],
+    adjustmentOperationPlanLoading: loading.effects[`${namespace}/AdjustmentOperationPlan`],
 })
 
 const Index = (props) => {
@@ -47,19 +48,38 @@ const Index = (props) => {
 
 
     const {type,pointType,commonSearchComponents,operationPlanInfoRefreshId,  tableDatas, tableTotal, tableLoading,queryPar, exportLoading } = props;
-
+    const [recordType, setRecordType] = useState(pointType == 2 ? '1' : '7')
     const [justVisible, setJustVisible] = useState(false)
-
-
+    const [adjustPointList, setAdjustPointList] = useState({xjPointList:[],jzPointList:[]})
 
 
     useEffect(() => {
+        if(operationPlanInfoRefreshId){
         onFinish(pageIndex, pageSize);
-
+       }else{
+        props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanCalendarList: [] } });
+       }
     }, []);
 
+    useEffect(() => {
+        if(operationPlanInfoRefreshId && justVisible){
+        props.dispatch({
+            type: `${namespace}/GetFormulatePointList`,
+            payload: {
+                id:operationPlanInfoRefreshId,
+            },
+            callback:res=>{
+                setAdjustPointList({xjPointList:res?.xjList,jzPointList:res?.jzList})
+            }
+        });
+       }
+    }, [justVisible]);
 
-
+   const justResData = () =>{
+    form2.resetFields();
+    setIndeterminate(false);
+    setCheckAll(false) 
+   }
 
 
     const { dateCol } = props;
@@ -100,7 +120,6 @@ const Index = (props) => {
                      
                     }
                 })
-                console.log(colList)
           col.push(...colList)
         }
         return col;
@@ -135,7 +154,7 @@ const Index = (props) => {
     const handleTableChange = (PageIndex, PageSize) => { //分页
         setPageSize(PageSize)
         setPageIndex(PageIndex)
-        onFinish(PageIndex, PageSize, queryPar2)
+        onFinish(PageIndex, PageSize, queryPar)
     }
 
     const exportData = () => {
@@ -150,7 +169,16 @@ const Index = (props) => {
     }
     const adjustPlanOk = () => {
         form2.validateFields().then((values)=>{
-            console.log(values)
+           const par = {recordType: recordType,...values,tzDate:values.tzDate&&moment(values.tzDate).format('YYYY-MM-DD 00:00:00')}
+           props.dispatch({
+                type: `${namespace}/AdjustmentOperationPlan`,
+                payload: {id:operationPlanInfoRefreshId,...par},
+                callback:()=>{
+                    setJustVisible(false);
+                    setPageIndex(1);setPageSize(20);onFinish(1,20);
+                    justResData();
+                }
+            });
             }).catch((errorInfo) => {
                 console.log('Failed:', errorInfo);
             });
@@ -185,45 +213,54 @@ const Index = (props) => {
         </Form>
     }
 
-    const checkOptions = [
-        { label: '1#机组废气入口', value: 'Apple', }, { label: '1#机组废气入口', value: 'Apple232313', }, { label: '1#机组废气入口', value: 'Apple75', },
-        { label: '1#机组废气入口', value: 'Apple13242', }, { label: '1#机组废气入口', value: 'Apple3', }, { label: '1#机组废气入口嗯嗯', value: 'Apple63236', }, { label: '1#机组废气入口', value: 'Apple5633', }, { label: '1#机组废气入口', value: 'Apple75533', },
-        { label: '1#机组废气入口', value: 'Apple23424', }, { label: '1#机组废气入口', value: 'Apple4', }, { label: '1#机组废气入口额问问', value: 'Apple3277', }, { label: '1#机组废气入口', value: 'Apple34567', }, { label: '1#机组废气入口', value: 'Apple7635', },
-        { label: '1#机组废气入口', value: 'Apple656', }, { label: '1#机组废气入口', value: 'Apple5565', }, { label: '1#机组废气入口', value: 'Apple883232', }, { label: '1#机组废气入柔柔弱弱口', value: 'Apple23777', }, { label: '1#机组废气入口', value: 'Apple53376', }, { label: '1#机组废气入口', value: 'Apple733366', },
-        { label: '1#机组废气入口', value: 'Apple6666', }, { label: '1#机组废气入口', value: 'Apple6', }, { label: '1#机组废气入口', value: 'Apple32356', }, { label: '1#机组废气入口', value: 'Apple77238', },
-    ];
     const [indeterminate, setIndeterminate] = useState(false);
     const [checkAll, setCheckAll] = useState(false);
-    const checkboxChange = (list) => {
-        setIndeterminate(!!list.length && list.length < checkOptions.length);
-        setCheckAll(list.length === checkOptions.length);
+    const checkboxChange = (valList, checkOptions) => {
+        setIndeterminate(!!valList.length && valList.length < checkOptions.length);
+        setCheckAll(valList.length === checkOptions.length);
     }
-    const onCheckAllChange = (e) => {
-        const allVal = checkOptions.map(item => item.value)
-        form2.setFieldsValue({ point: e.target.checked ? allVal : [] })
+    const onCheckAllChange = (e, checkOptions) => {
+        const allVal = checkOptions.map(item => item.PointCode)
+        form2.setFieldsValue({ pointID: e.target.checked ? allVal : [] })
         setIndeterminate(false);
         setCheckAll(e.target.checked);
     };
     const AdJustPlanComponents = () => {
-        return <Form
+        return props.formulatePointListLoading ? <Skeleton active style={{ height: 158 }} /> :
+           <>{dataList?.length ?  <Form
             form={form2}
             name="advanced_search_plancontent_form"
             className={'ant-advanced-search-form'}
             labelCol={{ flex: '108px' }}
         >
-            <Checkbox style={{ paddingLeft: 108 }} indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-                全选
+                <Checkbox style={{ paddingLeft: 108 }} indeterminate={indeterminate} onChange={(e) => onCheckAllChange(e, dataList)} checked={checkAll}>
+                    全选
                 </Checkbox>
-            <Form.Item className='pointItemSty' name='point' label='监测点' rules={[{ required: true, message: '请选择监测点！' }]} >
-                <Checkbox.Group
-                    options={checkOptions}
-                    onChange={checkboxChange}
-                />
+                <Form.Item className='form_label_width_94 pointItemSty' name='pointID' label='监测点' rules={[{ required: true, message: '请选择监测点！' }]} >
+                    <Checkbox.Group
+                        onChange={(val) => checkboxChange(val, dataList)}
+                    >
+                        {
+                            dataList.map(itm => {
+                                return <Checkbox key={itm.PointCode} value={itm.PointCode}>{itm.PointName}</Checkbox>
+                            })
+                        }
+                    </Checkbox.Group>
+                </Form.Item>
+            <Form.Item
+                name='tzDate'
+                label='调整起始日期'
+                rules={[{ required: true, message: '请选择调整起始日期！' }]}
+                >
+                <DatePicker      
+                  disabledDate={(current) => {
+                    return current && current < moment()
+                  }}/>
             </Form.Item>
-            <Form.Item name='time2' label='调整起始日期' rules={[{ required: true, message: '请选择调整起始日期！' }]}>
-                <DatePicker />
-            </Form.Item>
-        </Form>
+        </Form>   
+           :
+         <Empty description='暂无监测点' image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ paddingBottom: 24 }} />
+      }</>
     }
     const [legendSelectIndex, setLegendSelectIndex] = useState([])
     const typeLegendChange = (index) => {
@@ -237,6 +274,7 @@ const Index = (props) => {
         setLegendSelectIndex(data)
     }
     const typeLegendData = [{ title: '按计划完成', color: '#1890ff' }, { title: '超时完成', color: '#faad14' }, { title: '超时未完成', color: '#f5222d' }]
+    const dataList = recordType == '1' || recordType == '7' ? adjustPointList?.xjPointList : adjustPointList?.jzPointList
     return (
         <div>
             {searchComponents()}
@@ -267,29 +305,35 @@ const Index = (props) => {
             <Modal
                 visible={justVisible}
                 title={'调整计划'}
-                onCancel={() => { setJustVisible(false) }}
+                onCancel={() => { setJustVisible(false);justResData(); }}
                 destroyOnClose
                 wrapClassName={`spreadOverModal  ${styles.formulateModalSty}`}
                 mask={false}
-                footer={[<Button loading={tableLoading} onClick={() => { form2.resetFields() }}>
+                footer={dataList?.length>0? [<Button  onClick={() => {justResData()}}>
                     重置
                    </Button>,
-                <Button type="primary" loading={tableLoading} onClick={adjustPlanOk}>
+                  <Button type="primary" loading={props.adjustmentOperationPlanLoading} onClick={adjustPlanOk}>
                     提交
-                   </Button>]}
+                   </Button>] : null}
             >
                 <Tabs
                     defaultActiveKey="1"
                     type='card'
+                    onChange={(key) => {
+                        form2.resetFields()
+                        setCheckAll(false)
+                        setIndeterminate(false)
+                        setRecordType(key)
+                    }}
                     items={[
                         {
                             label: `巡检`,
-                            key: '1',
+                            key: pointType == 2 ? '1' : '7',
                             children: <AdJustPlanComponents />,
                         },
                         {
                             label: pointType == 2 ? '校准' : '标样核查及校准',
-                            key: '2',
+                            key: pointType == 2 ? '3' : '9',
                             children: <AdJustPlanComponents />,
                         },
                     ]}

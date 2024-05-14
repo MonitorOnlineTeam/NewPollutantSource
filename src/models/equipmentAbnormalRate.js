@@ -176,6 +176,7 @@ export default Model.extend({
        exportRegLoading:false,
        exportRegDetailLoading: false,
        exportPointLoading: false,
+       pointTableQuery:{},
   },
   effects: {
     *regGetExecptionRateList({ payload,callback }, { call, put, update }) { //行政区  1评估中心
@@ -205,6 +206,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           pointTableDatas:result.Datas,
+          pointTableQuery:payload,
         })
       }else{
         message.error(result.Message)

@@ -40,6 +40,7 @@ const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     tableTotal: operaPlan.tableTotal,
     queryPar: operaPlan.queryPar,
     exportLoading: loading.effects[`${namespace}/ExportOperationPlanList`],
+    updOperationPlanLoading: loading.effects[`${namespace}/UpdOperationPlan`],
     getOperationPlanPointListLoading: loading.effects[`${namespace}/GetOperationPlanPointList`],
     xjPointList: operaPlan.xjPointList,
     jzPointList: operaPlan.jzPointList,
@@ -60,7 +61,7 @@ const Index = (props) => {
 
 
 
-    const { commonCol, tableDatas, tableTotal, tableLoading, queryPar, getOperationPlanPointListLoading, xjPointList, jzPointList, operationPlanInfoRefreshType, operationPlanInfoRefreshId, operationPlanInfo, } = props;
+    const { commonCol, tableDatas, tableTotal, tableLoading, queryPar,updOperationPlanLoading, getOperationPlanPointListLoading, xjPointList, jzPointList, operationPlanInfoRefreshType, operationPlanInfoRefreshId, operationPlanInfo, } = props;
 
     const [pointType, setPointType] = useState()
     const [recordType, setRecordType] = useState()
@@ -112,6 +113,7 @@ const Index = (props) => {
     const [editLoading, setEditLoading] = useState(false)
     const [projectName, setProjectName] = useState()
 
+
     const editPlan = (record) => {
         setFormulateVisible(true)
         setFormulateTitle('编辑计划')
@@ -133,7 +135,7 @@ const Index = (props) => {
                     setPointType(data.PollutantType);
                     setRecordType(data.PollutantType == 2 ? '1' : '7')
                     props.dispatch({ type: `${namespace}/updateState`, payload: { xjPointList: data.xjList, jzPointList: data.jzList } });
-
+                   
                 }
             }
         });
@@ -180,7 +182,7 @@ const Index = (props) => {
             props.dispatch({
                 type: `${namespace}/AddOperationPlan`,
                 payload: par,
-                callback: (isSuccess) => {
+                callback: (isSuccess,id) => {
                     setGenerateSubmitPlanLoading(false)
                     if (isSuccess) {
                         form2.resetFields()
@@ -190,14 +192,14 @@ const Index = (props) => {
                             type: `${namespace}/updateState`,
                             payload: { operationPlanInfoRefreshType: 1 }
                         });
-                        // const pointList = recordType == '1' || recordType == '7' ? xjPointList : jzPointList
+                        par?.data&&getOperationPlanPointListRequest(par.data.entID, par.data.pollutantType,id)
+                         // const pointList = recordType == '1' || recordType == '7' ? xjPointList : jzPointList
                         // const pointFilter = pointList.filter(obj => !pointIdList.includes(obj.PointCode));
                         // if (recordType == '1' || recordType == '7') {
                         //     props.dispatch({ type: `${namespace}/updateState`, payload: { xjPointList: pointFilter } });
                         // } else {
                         //     props.dispatch({ type: `${namespace}/updateState`, payload: { jzPointList: pointFilter } });
                         // }
-                        par?.data&&getOperationPlanPointListRequest(par.data.entID, par.data.pollutantType)
                         if (type == 2) {
                             setFormulateVisible(false)
                             props.dispatch({
@@ -263,12 +265,12 @@ const Index = (props) => {
 
 
 
-    const getOperationPlanPointListRequest = (entCode, pollutantType) => {
+    const getOperationPlanPointListRequest = (entCode, pollutantType,id) => {
         form2.resetFields(); setCheckAll(false); setIndeterminate(false)
         if (entCode && pollutantType) {
             props.dispatch({
                 type: `${namespace}/GetOperationPlanPointList`,
-                payload: { entCode: entCode, pollutantType: pollutantType,id:operationPlanInfoRefreshId },
+                payload: { entCode: entCode, pollutantType: pollutantType,id: id || operationPlanInfoRefreshId },
             });
         } else {
             props.dispatch({
@@ -318,7 +320,6 @@ const Index = (props) => {
                                     return current < moment() ||  form2.getFieldValue('endTime') && current > form2.getFieldValue('endTime').startOf('day')
 
                                 }}
-
                                 style={{ width: '100%' }} />
                         </Form.Item>
                     </Col>
@@ -365,7 +366,7 @@ const Index = (props) => {
     return (
         <div className={`queryCriterTitleSty ${styles.formulateOperaTaskSty}`}>
             <BreadcrumbWrapper>
-                <Card title={<Button type="primary" onClick={() => { setFormulateVisible(true); setFormulateTitle('制定计划'); }}> 制定运维计划 </Button>}>
+                <Card title={<Button  type="primary" onClick={() => { setFormulateVisible(true); setFormulateTitle('制定计划'); }}> 制定运维计划 </Button>}>
                     <SdlTable
                         resizable
                         loading={tableLoading}
@@ -458,13 +459,13 @@ const Index = (props) => {
                                 </Col>
                                 <Col span={24} >
                                     <Form.Item name='remark' label='备注'>
-                                        <Input.TextArea placeholder='请输入' />
+                                        <Input.TextArea placeholder='请输入' allowClear/>
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row justify='end' >
                                 <Form.Item>
-                                    <Button type="primary" htmlType="submit" loading={tableLoading}>
+                                    <Button type="primary" htmlType="submit" loading={updOperationPlanLoading}>
                                         保存
                                 </Button>
                                 </Form.Item>
@@ -499,6 +500,7 @@ const Index = (props) => {
                         <PlanList
                             type={1}
                             pointType={pointType}
+                            recordType={recordType}
                             entCode={form.getFieldValue('entID')}
                             delPlanCallback={() => {
                                 setCheckAll(false)

@@ -25,7 +25,6 @@ import TitleComponents from '@/components/TitleComponents'
 import ProjectNum from '@/components/ProjectNum'
 import EntAtmoList from '@/components/EntAtmoList';
 import OperationCompanyList from '@/components/OperationCompanyList'
-import OperationPlanQuery from '../components/OperationPlanQuery'
 import PlanList from '../components/PlanList'
 import PlanCalendar from '../components/PlanCalendar'
 import RecordList from '../components/RecordList'

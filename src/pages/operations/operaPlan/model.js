@@ -107,6 +107,9 @@ export default Model.extend({
     tableDatas3: [],
     tableTotal3: 0,
     queryPar3: {},
+    tableDatas4: [],
+    tableTotal4: 0,
+    queryPar4: {},
     operationPlanInfoRefreshType:'',
     operationPlanInfoRefreshId:'',
     operationPlanInfo:[],
@@ -135,16 +138,34 @@ export default Model.extend({
            break;
            case 3 :
             yield update({ tableDatas3: result.Datas, tableTotal3: result.Total, queryPar3: payload, });
-           break;
+           default: //所有计划
+            yield update({ tableDatas4: result.Datas, tableTotal4: result.Total, queryPar4: payload, });
+            break;
         }
       }
     },
     // 运维计划 - 导出
     *ExportOperationPlanList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.ReportsViewsApi.ExportOperationPlanList, payload);
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.ExportOperationPlanList, payload);
       if (result.IsSuccess) {
         message.success('导出成功！');
         downloadFile(result.Datas);
+      }
+    },
+    // 运维计划 - 删除
+    *DeleteOperationPlan({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.DeleteOperationPlan, payload);
+      if (result.IsSuccess) {
+          message.success(result.Message);
+          callback&&callback()
+      }
+    },
+    //修改运维计划基本信息
+    *UpdOperationPlan({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.UpdOperationPlan, payload);
+      if (result.IsSuccess) {
+          message.success(result.Message);
+          callback&&callback()
       }
     },
       // 获取未排计划的点位
@@ -185,6 +206,21 @@ export default Model.extend({
       if (result.IsSuccess && result.Datas) {
         yield update({operationPlanCalendarCol:result.Datas.colList,  operationPlanCalendarList: result.Datas.dataList, operationPlanCalendarTotal: result.Total, operationPlanCalendarQueryPar: payload, });
          callback&&callback(result.Datas)
+      }
+    },
+    //可调整计划点位
+    *GetFormulatePointList({ payload, callback }, { call, put, update }) { 
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetFormulatePointList, payload);
+      if (result.IsSuccess && result.Datas) {
+         callback&&callback(result.Datas)
+      }
+    },
+     //调整计划点位 提交
+    *AdjustmentOperationPlan({ payload, callback }, { call, put, update }) { 
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.AdjustmentOperationPlan, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback&&callback()
       }
     },
   },

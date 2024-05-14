@@ -216,14 +216,18 @@ export const API = {
     /*制定运维计划*/
     GetOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList',//运维计划列表
     ExportOperationPlanList: before + '/WorkOrderApi/ExportOperationPlanList',//运维计划 导出
+    DeleteOperationPlan: before + '/WorkOrderApi/DeleteOperationPlan',//删除运维计划
+    UpdOperationPlan: before + '/WorkOrderApi/UpdOperationPlan',//修改运维计划基本信息
     GetOperationPlanPointList: before + '/WorkOrderApi/GetOperationPlanPointList',//获取未排计划点位
     AddOperationPlan: before + '/WorkOrderApi/AddOperationPlan',//生成运维计划
     GetOperationPlanInfo: before + '/WorkOrderApi/GetOperationPlanInfo',//获取单个运维计划详情
     ExportOperationPlanInfo: before + '/WorkOrderApi/ExportOperationPlanInfo',//单个运维计划详情 导出
     DelOperationPlanPoint: before + '/WorkOrderApi/DelOperationPlanPoint',//删除运维计划点位
-    DeleteOperationPlan: before + '/WorkOrderApi/DeleteOperationPlan',//删除运维计划
     GetOperationPlanCalendar: before + '/WorkOrderApi/GetOperationPlanCalendar',//运维计划日历
     ExportOperationPlanCalendar: before + '/WorkOrderApi/ExportOperationPlanCalendar',//运维计划日历 导出
+    GetFormulatePointList: before + '/WorkOrderApi/GetFormulatePointList',//获取运维计划可调整点位
+    AdjustmentOperationPlan: before + '/WorkOrderApi/AdjustmentOperationPlan',//提交运维计划调整点位
+    
     /**运维报告**/
     /*运维报告（word）*/
     GetOperationReportList: before + '/WorkOrderStatistics/GetOperationReportList',//获取运维月度报告信息

@@ -43,12 +43,7 @@ const namespace = 'operaPlan'
 
 
 const dvaPropsData = ({ loading, operaPlan, global, }) => ({
-    tableLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-    tableDatas: operaPlan.formulateTableDatas,
-    tableTotal: operaPlan.formulateTableTotal,
-    queryPar: operaPlan.formulateQueryPar,
-    exportLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-    configInfo: global.configInfo,
+    updOperationPlanLoading: loading.effects[`${namespace}/UpdOperationPlan`],
 })
 
 const Index = (props) => {
@@ -63,22 +58,15 @@ const Index = (props) => {
 
 
 
-    const { tableDatas, tableTotal, tableLoading, queryPar, exportLoading, } = props;
+    const { updOperationPlanLoading, } = props;
 
-    const [pointType, setPointType] = useState('2')
+
 
 
     useEffect(() => {
 
     }, []);
 
-    const initData = () => {
-        props.dispatch({
-            type: `${namespace}/GetQuestionList`,
-            payload: {
-            }
-        });
-    }
 
 
 
@@ -110,9 +98,16 @@ const Index = (props) => {
         }
     }]
     const [editPlanVisible, setEditPlanVisible] = useState(false)
+    const [entCode, setEntCode] = useState()
 
     const editPlan = (record) => {
         setEditPlanVisible(true)
+        form.setFieldsValue({beginTime:record.beginTime&&moment(record.beginTime),endTime:record.endTime&&moment(record.endTime),remark:record.remark,id:record.ID})
+        props.dispatch({
+            type: `${namespace}/updateState`,
+            payload: { operationPlanInfoRefreshType: 1 },
+        });
+        setEntCode()
     }
 
     const [viewPlanVisible, setViewPlanVisible] = useState(false)
@@ -148,8 +143,17 @@ const Index = (props) => {
 
 
     const saveBasicInfo = (values) => {
-        console.log(values)
-
+        console.log( {...values,beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59')})
+        props.dispatch({
+            type: `${namespace}/UpdOperationPlan`,
+            payload: {...values,beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59')},
+            callback:()=>{
+                props.dispatch({
+                    type: `${namespace}/updateState`,
+                    payload: {operationPlanQueryRefreshType:1},
+                });
+            }
+        });
     }
 
 
@@ -254,7 +258,7 @@ const Index = (props) => {
     return (
         <div>
             <BreadcrumbWrapper>
-                <OperationPlanQuery operateCol={operateCol} />
+                <OperationPlanQuery planType={2} operateCol={operateCol} />
                 <Modal
                     visible={editPlanVisible}
                     title={'编辑计划'}
@@ -275,24 +279,25 @@ const Index = (props) => {
                         <Row align='middle' justify='space-between'>
                             <Col span={12}>
                                 <Form.Item name='beginTime' label='计划起始日期' rules={[{ required: true, message: '请选择计划起始日期！' }]}>
-                                    <DatePicker style={{ width: '100%' }} />
+                                    <DatePicker style={{ width: '100%' }} disabledDate={(current) => current && form.getFieldValue('endTime') && current > form.getFieldValue('endTime').startOf('day')} />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item name='endTime' label='计划结束日期' rules={[{ required: true, message: '请选择计划结束日期！' }]}>
-                                    <DatePicker style={{ width: '100%' }} />
+                                    <DatePicker style={{ width: '100%' }} disabledDate={(current) => current && form.getFieldValue('beginTime') && current < form.getFieldValue('beginTime').endOf('day')}/>
                                 </Form.Item>
                             </Col>
                             <Col span={24} >
                                 <Form.Item name='remark' label='备注'>
-                                    <Input.TextArea placeholder='请输入' />
+                                    <Input.TextArea placeholder='请输入' allowClear/>
                                 </Form.Item>
 
                             </Col>
+                            <Form.Item name='id' hidden> </Form.Item>
                         </Row>
                         <Row justify='end' >
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" loading={tableLoading}>
+                                <Button type="primary" htmlType="submit" loading={updOperationPlanLoading}>
                                     保存
                                 </Button>
                             </Form.Item>
@@ -321,7 +326,7 @@ const Index = (props) => {
                     >
 
                         <Form.Item label='备注' name='remark' rules={[{ required: true, message: '请输入备注！' }]}>
-                            <Input.TextArea placeholder='请输入' />
+                            <Input.TextArea placeholder='请输入' allowClear/>
                         </Form.Item>
                         <Form.Item label='附件' name='files'>
                             <Upload {...uploadProps('files')} style={{ width: '100%' }}>

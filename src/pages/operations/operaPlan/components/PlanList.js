@@ -73,7 +73,7 @@ const Index = (props) => {
         if (operationPlanInfoRefreshType) {
             if (operationPlanInfoRefreshType == 1) {
                 onFinish(pageIndex, pageSize);
-            } else {
+            }  else {
                 setPageIndex(1)
                 setPageSize(20)
                 onFinish(1, 20);
@@ -102,7 +102,7 @@ const Index = (props) => {
                 );
             }
         },
-    ] : type = 2 ?
+    ] : type == 2 ?
         [
             {
                 title: '操作',
@@ -200,6 +200,7 @@ const Index = (props) => {
                 props.dispatch({
                     type: `${namespace}/GetOperationPlanInfo`,
                     payload: {
+                        pollutantType: pointType,
                         ...par,
                     },
                     callback: () => {
@@ -311,7 +312,7 @@ const Index = (props) => {
     };
     return (
         <div>
-            {searchComponents()}
+            {operationPlanInfoRefreshId&&searchComponents()}
             <SdlTable
                 rowSelection={type == 1 ? {
                     ...rowSelection,
@@ -340,7 +341,7 @@ const Index = (props) => {
                 mask={false}
                 footer={null}
             >
-                <PlanCalendar type={type} pointType={pointType} pointList={pointList} pointLoading={pointLoading} commonSearchComponents={commonSearchComponents}/>
+                <PlanCalendar  type={type} pointType={tableDatas?.[0]?.RecordType == 1 || tableDatas?.[0]?.RecordType == 3 ? 2 : 1 } pointList={pointList} pointLoading={pointLoading} commonSearchComponents={commonSearchComponents} />
             </Modal>
         </div>
     );

@@ -34,6 +34,7 @@ const dvaPropsData = ({ loading, equipmentAbnormalRate, global }) => ({
   coommonCol: equipmentAbnormalRate.coommonCol,
   coommonCol2: equipmentAbnormalRate.coommonCol2,
   failcoommonCol2: equipmentAbnormalRate.failcoommonCol2,
+  pointTableQuery: equipmentAbnormalRate.pointTableQuery,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -62,7 +63,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, coommonCol,coommonCol2,failcoommonCol2,operationSetType,deviceType } = props;
+  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, coommonCol,coommonCol2,failcoommonCol2,operationSetType,deviceType,pointTableQuery, } = props;
 
 
   useEffect(() => {
@@ -74,9 +75,10 @@ const Index = (props) => {
   const initData = () => {
     props.pointGetExecptionRateList({
       ...queryPar,
-      pointType: 3,
       entName:entName,
+      pointType: 3,
       type:operationSetType,
+      taskType: deviceType
     })
   };
 
@@ -84,6 +86,7 @@ const Index = (props) => {
   const exports = async () => {
     props.exportExecptionRateList({
       ...queryPar,
+      ...pointTableQuery,
       pointType: 3,
       type:operationSetType,
       taskType: deviceType

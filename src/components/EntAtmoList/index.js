@@ -100,13 +100,13 @@ export default class Index extends Component {
     }
   }
   loadingStatus = () => {
-    const { entListLoading, noFilter, noFilterEntLoading, enable, enableEntLoading } = this.props;
+    const { entLoading, noFilter, noFilterEntLoading, enable, enableEntLoading } = this.props;
     if (noFilter) {
       return noFilterEntLoading
     } else if (enable) {
       return enableEntLoading
     } else {
-      return entListLoading
+      return entLoading
     }
   }
   render() {

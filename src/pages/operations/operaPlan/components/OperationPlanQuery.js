@@ -25,9 +25,7 @@ import TitleComponents from '@/components/TitleComponents'
 import ProjectNum from '@/components/ProjectNum'
 import EntAtmoList from '@/components/EntAtmoList';
 import OperationCompanyList from '@/components/OperationCompanyList'
-import PlanList from '../components/PlanList'
 
-import { init } from 'echarts';
 
 const { Option } = Select;
 
@@ -37,12 +35,18 @@ const namespace = 'operaPlan'
 
 const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     commonCol: operaPlan.commonCol,
-    operationPlanQueryRefresh:operaPlan.operationPlanQueryRefresh,
-    tableLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-    tableDatas: operaPlan.formulateTableDatas,
-    tableTotal: operaPlan.formulateTableTotal,
-    queryPar: operaPlan.formulateQueryPar,
-    exportLoading: loading.effects[`${namespace}/GetAuditPhoto`],
+    operationPlanQueryRefreshType: operaPlan.operationPlanQueryRefreshType,
+    tableLoading: loading.effects[`${namespace}/GetOperationPlanList`],
+    tableDatas2: operaPlan.tableDatas2,
+    tableTotal2: operaPlan.tableTotal2,
+    queryPar2: operaPlan.queryPar2,
+    tableDatas3: operaPlan.tableDatas3,
+    tableTotal3: operaPlan.tableTotal3,
+    queryPar3: operaPlan.queryPar3,
+    tableDatas4: operaPlan.tableDatas4,
+    tableTotal4: operaPlan.tableTotal4,
+    queryPar4: operaPlan.queryPar4,
+    exportLoading: loading.effects[`${namespace}/ExportOperationPlanList`],
     configInfo: global.configInfo,
 })
 
@@ -57,7 +61,7 @@ const Index = (props) => {
 
 
 
-    const { commonCol,operateCol, operationPlanQueryRefreshType,tableDatas, tableTotal, tableLoading, queryPar, exportLoading, } = props;
+    const { planType,commonCol,operateCol, operationPlanQueryRefreshType,tableLoading, tableDatas2, tableTotal2, queryPar2,tableDatas3, tableTotal3, queryPar3,tableDatas4, tableTotal4, queryPar4, exportLoading, } = props;
 
 
 
@@ -66,6 +70,8 @@ const Index = (props) => {
 
     }, []);
 
+    const [pageIndex, setPageIndex] = useState(1)
+    const [pageSize, setPageSize] = useState(20)
     useEffect(() => {
         if(operationPlanQueryRefreshType){
             if(operationPlanQueryRefreshType==1){
@@ -75,7 +81,10 @@ const Index = (props) => {
                 setPageSize(20)
                 onFinish(1, 20);
             }
-
+            props.dispatch({
+                type: `${namespace}/updateState`,
+                payload: { operationPlanQueryRefreshType: '' },
+            });
         }
     }, [operationPlanQueryRefreshType]);
     
@@ -101,6 +110,7 @@ const Index = (props) => {
             const values = await form.validateFields();
             const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
                 ...values,
+                planType:planType,
                 beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
                 endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
                 time: undefined,
@@ -108,7 +118,7 @@ const Index = (props) => {
                 pageSize: PageSize,
             }
             props.dispatch({
-                type: `${namespace}/GetQuestionList`,
+                type: `${namespace}/GetOperationPlanList`,
                 payload: {
                     ...par,
                 },
@@ -118,18 +128,17 @@ const Index = (props) => {
             console.log('Failed:', errorInfo);
         }
     }
-    const [pageIndex, setPageIndex] = useState(1)
-    const [pageSize, setPageSize] = useState(20)
     const handleTableChange = async (PageIndex, PageSize) => { //分页
         setPageSize(PageSize)
         setPageIndex(PageIndex)
-        onFinish(PageIndex, PageSize, queryPar)
+        onFinish(PageIndex, PageSize, planType==2? queryPar2 : planType==3? queryPar3 : queryPar4)
     }
 
     const exportData = () => {
+        const queryParData = planType==2? queryPar2 : planType==3? queryPar3 : queryPar4
         props.dispatch({
-            type: `${namespace}/ExportQuestionList`,
-            payload: queryPar,
+            type: `${namespace}/ExportOperationPlanList`,
+            payload: {...queryParData,pageIndex:undefined,pageSize:undefined},
         });
     };
 
@@ -193,8 +202,6 @@ const Index = (props) => {
 
 
 
-
-
     return (
         <div className={`queryCriterTitleSty`}>
                 <Card title={searchComponents()}>
@@ -202,11 +209,11 @@ const Index = (props) => {
                         resizable
                         loading={tableLoading}
                         bordered
-                        dataSource={tableDatas}
+                        dataSource={planType==2? tableDatas2 : planType==3? tableDatas3 : tableDatas4 }
                         columns={columns}
                         align='center'
                         pagination={{
-                            total: tableTotal,
+                            total: planType==2? tableTotal2 : planType==3? tableTotal3 : tableTotal4,
                             pageSize: pageSize,
                             current: pageIndex,
                             showSizeChanger: true,
