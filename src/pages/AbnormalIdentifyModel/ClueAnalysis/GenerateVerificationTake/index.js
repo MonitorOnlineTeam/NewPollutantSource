@@ -578,12 +578,11 @@ const Index = props => {
       dispatch({
         type: 'AbnormalIdentifyModel/GetCheckRoleDatas', payload: {},
         callback: res => {
-          console.log(res)
           const userList = res?.map(item=>{
             return { label: item.QuestionName, options:item?.Users?.map(chilItem=>({label:chilItem.UserName,value:chilItem.UserID}))}
           })
           console.log(userList)
-          setCheckRoleDatas(res);
+          setCheckRoleDatas(userList);
         }
       });
       dispatch({
@@ -1061,7 +1060,12 @@ const Index = props => {
             <>
               <Spin spinning={!!checkRoleDatasLoading} size="small" style={{ width: 440, top: -6 }}>
                 <Form.Item name='checkUserId' label="核查人" rules={[{ required: true, message: '请选择核查人!' }]}>
-                  <Select  options={checkRoleDatas} style={{ width: 300 }} placeholder="请选择"   showSearch filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} />
+                   <Select 
+                    options={checkRoleDatas?.[0]? checkRoleDatas : []} style={{ width: 300 }} placeholder="请选择"   showSearch 
+                    filterOption={(input, option) =>
+                      (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                   />
                 </Form.Item>
               </Spin>
               <Row>

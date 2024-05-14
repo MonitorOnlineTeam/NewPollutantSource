@@ -346,13 +346,13 @@ const Index = (props) => {
         </Form.Item>
       </Row>
       <Row>
-        <Form.Item label="查看公告单位" name="company"  >
+        <Form.Item label="查看公告单位" name="company" style={{marginBottom:0}} >
           <OperationCompanyList style={{ width: 200 }} mode='multiple'/>
         </Form.Item>
-        <Form.Item label="查看公告角色" name="role" style={{ margin: '0 8px' }}>
+        <Form.Item label="查看公告角色" name="role" style={{ margin: '0 8px 0 0' }} >
           <RoleList  style={{ width: 350 }} mode='multiple'/>
         </Form.Item>
-        <Form.Item style={{ marginLeft: 30 }}>
+        <Form.Item style={{ marginLeft: 30, marginBottom:0 }}>
           <Button type="primary" htmlType='submit' style={{ marginRight: 8 }}>
             查询
      </Button>
@@ -404,19 +404,13 @@ const Index = (props) => {
           }}
           onValuesChange={onAddEditValuesChange}
         >
-          <Row>
-            <Col span={24}>
               <Form.Item name="ID" hidden>
                 <Input />
               </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="发布标题" name="NoticeTitle" rules={[{ required: true, }]} >
+              <Form.Item label="发布标题" name="NoticeTitle" rules={[{ required: true, }]} style={{paddingBottom:12}} >
                 <TextArea showCount maxLength={50} rows={1} placeholder='请输入' />
               </Form.Item>
-            </Col>
 
-            <Col span={24}>
             <ResizableBox 
                   height={260} 
                   axis = {'y'}
@@ -427,8 +421,6 @@ const Index = (props) => {
                 <ReactQuill theme="snow" modules={modules}  />
               </Form.Item> 
               </ResizableBox>
-            </Col>
-            <Col span={24}>
               <Form.Item label="公告状态" name="Status" rules={[{ required: true, }]}>
                 <Radio.Group>
                   <Radio value={1}>显示</Radio>
@@ -436,29 +428,18 @@ const Index = (props) => {
                   <Radio value={3}>置顶</Radio>
                 </Radio.Group>
               </Form.Item>
-            </Col>
-            <Col span={24}>
               <Form.Item label="查看公告单位" name="Company" rules={[{ required: true, message: '请选择公告单位' }]}>
                 <OperationCompanyList  mode='multiple'/>
               </Form.Item>
-            </Col>
-            <Col span={24}>
               <Form.Item label="查看公告角色" name="Role" rules={[{ required: true, message: '请选择公告角色' }]}>
                 <RoleList  mode='multiple' />
               </Form.Item>
-            </Col>
-            <Col span={24}>
               <Form.Item label="生效时间" name="BeginTime" rules={[{ required: true, message: '请选择生效时间' }]} >
                 <DatePicker allowClear disabledDate={startDisabledDate} />
               </Form.Item>
-            </Col>
-            <Col span={24}>
               <Form.Item label="失效时间" name="EndTime" rules={[{ required: true, message: '请选择失效时间' }]}>
                 <DatePicker allowClear disabledDate={endDisabledDate}/>
               </Form.Item>
-            </Col>
-
-          </Row>
 
 
 

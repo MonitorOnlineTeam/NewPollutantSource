@@ -31,6 +31,7 @@ export default Model.extend({
     AlarmDealTypeList:[],
     cityRegionCode:'',
     alarmVerifyQueryPar:{},
+    alarmVerifyRatePollutantCodeList:[],
   },
   subscriptions: {},
   effects: {
@@ -70,6 +71,7 @@ export default Model.extend({
         yield update({
           AlarmList:result.Datas.data,
           column:result.Datas.column,
+          alarmVerifyRatePollutantCodeList:payload.PollutantCodeList
         })
     }
     else{
@@ -80,7 +82,8 @@ export default Model.extend({
     }
   },//超标报警核实详情
     *GetAlarmVerifyRateDetail({ payload }, { call, put, update, select }) {
-        const body = {
+      const PollutantCodeList = yield select(state => state['exceedDataAlarmModel'].alarmVerifyRatePollutantCodeList);
+      const body = {
             RegionCode: payload.RegionCode,
             attentionCode: payload.attentionCode,
             PollutantType: payload.PollutantType,
@@ -89,7 +92,7 @@ export default Model.extend({
             EndTime: payload.EndTime,
             PageSize: payload.PageSize,
             PageIndex: payload.PageIndex,
-            PollutantCodeList: payload.PollutantCodeList,
+            PollutantCodeList: payload.PollutantCodeList?.[0]? payload.PollutantCodeList :PollutantCodeList,
             OperationPersonnel: payload.operationpersonnel,
         }
         const result = yield call(GetAlarmVerifyRateDetail, body, null)
@@ -111,6 +114,8 @@ export default Model.extend({
         }
     },//超标报警核实详细
   *GetAlarmVerifyDetail({ payload }, { call, put, update, select }){
+
+    const PollutantCodeList = yield select(state => state['exceedDataAlarmModel'].alarmVerifyRatePollutantCodeList);
       const body = {
           RegionCode: payload.RegionCode,
           attentionCode: payload.attentionCode,
@@ -122,6 +127,7 @@ export default Model.extend({
           Status:payload.Status,
           EntCode:payload.EntCode,
           VerifyStatus:payload.VerifyStatus,
+          PollutantCodeList: payload.PollutantCodeList?.[0]? payload.PollutantCodeList :PollutantCodeList,
           OperationPersonnel: payload.operationpersonnel,
           DGIMN:payload.DGIMN
       }
