@@ -36,7 +36,7 @@ const namespace = 'operaPlan'
 const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     commonCol: operaPlan.commonCol,
     operationPlanQueryRefreshType: operaPlan.operationPlanQueryRefreshType,
-    tableLoading: loading.effects[`${namespace}/GetOperationPlanList`],
+    tableLoading: loading.effects[`${namespace}/GetOperationPlanList`] ,
     tableDatas2: operaPlan.tableDatas2,
     tableTotal2: operaPlan.tableTotal2,
     queryPar2: operaPlan.queryPar2,

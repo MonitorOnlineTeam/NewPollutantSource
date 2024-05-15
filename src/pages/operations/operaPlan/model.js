@@ -8,7 +8,7 @@ import { API } from '@config/API';
 export default Model.extend({
   namespace: 'operaPlan',
   state: {
-    commonCol: (type,pageIndex,pageSize) => [{
+    commonCol: (type, pageIndex, pageSize) => [{
       title: '序号',
       ellipsis: true,
       render: (text, record, index) => {
@@ -51,30 +51,30 @@ export default Model.extend({
       dataIndex: 'pollutantType',
       key: 'pollutantType',
       ellipsis: true,
-      width:90,
+      width: 90,
     },
     {
       title: '计划起始日期',
       dataIndex: 'beginTime',
       key: 'beginTime',
       ellipsis: true,
-      width:160,
+      width: 160,
     },
     {
       title: '计划结束日期',
       dataIndex: 'endTime',
       key: 'endTime',
       ellipsis: true,
-      width:160,
+      width: 160,
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
       ellipsis: true,
-      width:90,
+      width: 90,
       render: (text, record, index) => {
-        return text=='暂停'? <span className='red'>{text}</span> : text
+        return text == '暂停' ? <span className='red'>{text}</span> : text
       }
     },
     {
@@ -82,14 +82,14 @@ export default Model.extend({
       dataIndex: 'remark',
       key: 'remark',
       ellipsis: true,
-      width:160,
+      width: 160,
     },
     {
       title: '创建人',
       dataIndex: 'createUserName',
       key: 'createUserName',
       ellipsis: true,
-      width:100,
+      width: 100,
     },
     {
       title: '创建时间',
@@ -110,15 +110,15 @@ export default Model.extend({
     tableDatas4: [],
     tableTotal4: 0,
     queryPar4: {},
-    operationPlanInfoRefreshType:'',
-    operationPlanInfoRefreshId:'',
-    operationPlanInfo:[],
-    operationPlanInfoTotal:0,
-    operationPlanInfoQueryPar:{},
-    xjPointList:[], //未排计划点位
-    jzPointList:[],
-    allPointList:[],
-    operationPlanCalendarCol:[],
+    operationPlanInfoRefreshType: '',
+    operationPlanInfoRefreshId: '',
+    operationPlanInfo: [],
+    operationPlanInfoTotal: 0,
+    operationPlanInfoQueryPar: {},
+    xjPointList: [], //未排计划点位
+    jzPointList: [],
+    allPointList: [],
+    operationPlanCalendarCol: [],
     operationPlanCalendarList: [],
     operationPlanCalendarTotal: 0,
     operationPlanCalendarQueryPar: {},
@@ -129,16 +129,16 @@ export default Model.extend({
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanList, payload);
       if (result.IsSuccess) {
         const planType = payload.planType
-        switch(planType){
-          case 1 :
+        switch (planType) {
+          case 1:
             yield update({ tableDatas: result.Datas, tableTotal: result.Total, queryPar: payload, });
-           break;
-           case 2 :
+            break;
+          case 2:
             yield update({ tableDatas2: result.Datas, tableTotal2: result.Total, queryPar2: payload, });
-           break;
-           case 3 :
+            break;
+          case 3:
             yield update({ tableDatas3: result.Datas, tableTotal3: result.Total, queryPar3: payload, });
-           default: //所有计划
+          default: //所有计划
             yield update({ tableDatas4: result.Datas, tableTotal4: result.Total, queryPar4: payload, });
             break;
         }
@@ -156,23 +156,23 @@ export default Model.extend({
     *DeleteOperationPlan({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.DeleteOperationPlan, payload);
       if (result.IsSuccess) {
-          message.success(result.Message);
-          callback&&callback()
+        message.success(result.Message);
+        callback && callback()
       }
     },
     //修改运维计划基本信息
     *UpdOperationPlan({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.UpdOperationPlan, payload);
       if (result.IsSuccess) {
-          message.success(result.Message);
-          callback&&callback()
+        message.success(result.Message);
+        callback && callback()
       }
     },
-      // 获取未排计划的点位
+    // 获取未排计划的点位
     *GetOperationPlanPointList({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanPointList, payload);
       if (result.IsSuccess) {
-        yield update({ xjPointList: result?.Datas?.xjList, jzPointList: result?.Datas?.jzList,});
+        yield update({ xjPointList: result?.Datas?.xjList, jzPointList: result?.Datas?.jzList, });
       }
     },
     // 生成运维计划
@@ -182,46 +182,71 @@ export default Model.extend({
         message.success(result.Message);
         yield update({ operationPlanInfoRefreshId: result.Datas });
       }
-      callback&&callback(result.IsSuccess,result.Datas)
+      callback && callback(result.IsSuccess, result.Datas)
     },
-   // 获取单个运维计划详情
+    // 获取单个运维计划详情
     *GetOperationPlanInfo({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanInfo, payload);
       if (result.IsSuccess) {
         yield update({ operationPlanInfo: result?.Datas?.planInfoList, operationPlanInfoTotal: result?.Datas?.planInfoList?.length || 0, operationPlanInfoQueryPar: payload, });
       }
-      callback&&callback(result?.Datas)
+      callback && callback(result?.Datas)
     },
     // 删除运维计划点位
-    *DelOperationPlanPoint({ payload, callback }, { call, put, update }) { 
+    *DelOperationPlanPoint({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.DelOperationPlanPoint, payload);
       if (result.IsSuccess) {
-         message.success(result.Message);
-         callback&&callback()
+        message.success(result.Message);
+        callback && callback()
       }
     },
-      // 运维计划日历
-    *GetOperationPlanCalendar({ payload, callback }, { call, put, update }) { 
+    // 运维计划日历
+    *GetOperationPlanCalendar({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanCalendar, payload);
       if (result.IsSuccess && result.Datas) {
-        yield update({operationPlanCalendarCol:result.Datas.colList,  operationPlanCalendarList: result.Datas.dataList, operationPlanCalendarTotal: result.Total, operationPlanCalendarQueryPar: payload, });
-         callback&&callback(result.Datas)
+        yield update({ operationPlanCalendarCol: result.Datas.colList, operationPlanCalendarList: result.Datas.dataList, operationPlanCalendarTotal: result.Total, operationPlanCalendarQueryPar: payload, });
+        callback && callback(result.Datas)
       }
     },
     //可调整计划点位
-    *GetFormulatePointList({ payload, callback }, { call, put, update }) { 
+    *GetFormulatePointList({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetFormulatePointList, payload);
       if (result.IsSuccess && result.Datas) {
-         callback&&callback(result.Datas)
+        callback && callback(result.Datas)
       }
     },
-     //调整计划点位 提交
-    *AdjustmentOperationPlan({ payload, callback }, { call, put, update }) { 
+    //计划点位 调整
+    *AdjustmentOperationPlan({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.AdjustmentOperationPlan, payload);
       if (result.IsSuccess) {
         message.success(result.Message);
-        callback&&callback()
+        callback && callback()
       }
     },
+    //计划点位 延长
+    *ExtendPlanDate({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.ExtendPlanDate, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback()
+      }
+    },
+    //运维计划状态修改记录
+    *GetOperationPlanStatusList({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanStatusList, payload);
+      if (result.IsSuccess && result.Datas) {
+        callback && callback(result.Datas)
+      }
+    },
+    //运维计划状态修改
+    *UpdOperationPlanStatus({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.UpdOperationPlanStatus, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback()
+      }
+    },
+
+
   },
 });

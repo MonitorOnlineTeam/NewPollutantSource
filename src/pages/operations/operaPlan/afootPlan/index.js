@@ -4,7 +4,7 @@
  * 创建时间：2024.04
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Tabs, Input, InputNumber, Popconfirm,Upload, Checkbox, Spin, Form, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space, Radio } from 'antd';
+import { Table, Tabs, Input, InputNumber, Popconfirm, Upload, Checkbox, Spin, Form, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, NodeCollapseOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -32,6 +32,7 @@ import ViewPlanModal from '../components/ViewPlanModal'
 import { API } from '@config/API';
 import config from '@/config';
 import cuid from 'cuid';
+import AdjustExtendPlanModal from '../components/AdjustExtendPlanModal';
 
 
 import { init, use } from 'echarts';
@@ -43,6 +44,7 @@ const namespace = 'operaPlan'
 
 
 const dvaPropsData = ({ loading, operaPlan, global, }) => ({
+    operationPlanInfo: operaPlan.operationPlanInfo,
     updOperationPlanLoading: loading.effects[`${namespace}/UpdOperationPlan`],
 })
 
@@ -58,7 +60,7 @@ const Index = (props) => {
 
 
 
-    const { updOperationPlanLoading, } = props;
+    const {operationPlanInfo, updOperationPlanLoading, } = props;
 
 
 
@@ -81,16 +83,16 @@ const Index = (props) => {
             return (<Fragment>
                 <Space>
                     <a onClick={() => { editPlan(record) }}> 编辑计划</a>
-                    <Popconfirm title="确认要删除这条计划吗？" onConfirm={() => { delPlan(record) }} > <a onClick={() => { delPlan(record) }}> 删除计划</a></Popconfirm>
+                    <Popconfirm title="确认要删除这条计划吗？" onConfirm={() => { delPlan(record) }} > <a> 删除计划</a></Popconfirm>
                     <a onClick={() => { viewPlan(record) }}>查看计划</a>
-                    <a onClick={() => { pauseOpenTerminPlan(record,'暂停计划') }}> 暂停计划</a>
-                
+                    <a onClick={() => { pauseOpenTerminPlan(record, '暂停计划') }}> 暂停计划</a>
+
                 </Space>
                 <br />
                 <Space>
-                    <a onClick={() => { pauseOpenTerminPlan(record,'开启计划') }}> 开启计划</a>
+                    <a onClick={() => { pauseOpenTerminPlan(record, '开启计划') }}> 开启计划</a>
                     <Popconfirm title="您确定运维已完结？" onConfirm={() => { completionPlan(record) }} > <a> 完结计划</a></Popconfirm>
-                    <a onClick={() => { pauseOpenTerminPlan(record,'异常终止',true) }}> 异常终止</a>
+                    <a onClick={() => { pauseOpenTerminPlan(record, '异常终止', true) }}> 异常终止</a>
                 </Space>
             </Fragment>
             );
@@ -99,63 +101,51 @@ const Index = (props) => {
     }]
     const [editPlanVisible, setEditPlanVisible] = useState(false)
     const [entCode, setEntCode] = useState()
+    const [pointType, setPointType] = useState()
 
     const editPlan = (record) => {
         setEditPlanVisible(true)
-        form.setFieldsValue({beginTime:record.beginTime&&moment(record.beginTime),endTime:record.endTime&&moment(record.endTime),remark:record.remark,id:record.ID})
+        form.setFieldsValue({ beginTime: record.beginTime && moment(record.beginTime), endTime: record.endTime && moment(record.endTime), remark: record.remark, id: record.ID })
         props.dispatch({
             type: `${namespace}/updateState`,
-            payload: { operationPlanInfoRefreshType: 1 },
+            payload: { operationPlanInfoRefreshType: 1, operationPlanInfoRefreshId: record.ID },
         });
-        setEntCode()
+        setEntCode(record.entCode)
+        setPointType(record.pollutantType=='废气'? 2 :1)
     }
 
     const [viewPlanVisible, setViewPlanVisible] = useState(false)
-    const viewPlan = (record)=>{
+    const viewPlan = (record) => {
         setViewPlanVisible(true)
+        props.dispatch({
+            type: `${namespace}/updateState`,
+            payload: { operationPlanInfoRefreshId: record.ID },
+        });
     }
 
     const delPlan = (record) => {
         props.dispatch({
-            type: `${namespace}/ExportQuestionList`,
-            payload: queryPar,
+            type: `${namespace}/DeleteOperationPlan`,
+            payload: { id: record.ID },
+            callback: () => {
+                props.dispatch({
+                    type: `${namespace}/updateState`,
+                    payload: { operationPlanQueryRefreshType: 1 },
+                });
+            }
         });
     }
 
     const [switchPlanVisible, setSwitchPlanVisible] = useState(false)
     const [switchPlanTitle, setSwitchPlanTitle] = useState()
     const [isTermin, setIsTermin] = useState(false)
-    const pauseOpenTerminPlan = (record,title,termin) => { //暂停计划、开启计划、异常终止
+    const pauseOpenTerminPlan = (record, title, termin) => { //暂停计划、开启计划、异常终止
         setSwitchPlanVisible(true)
         setSwitchPlanTitle()
         setIsTermin(termin)
         form2.resetFields();
         setFiles(cuid())
     }
-    const completionPlan = (record) => { //完结计划
-        setSwitchPlanVisible(true)
-        setFiles(cuid())
-    }
-
-
-
-
-
-
-    const saveBasicInfo = (values) => {
-        console.log( {...values,beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59')})
-        props.dispatch({
-            type: `${namespace}/UpdOperationPlan`,
-            payload: {...values,beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59')},
-            callback:()=>{
-                props.dispatch({
-                    type: `${namespace}/updateState`,
-                    payload: {operationPlanQueryRefreshType:1},
-                });
-            }
-        });
-    }
-
 
 
     const switchPlanSubmit = async () => {  //开启、暂停、终止计划提交
@@ -163,7 +153,7 @@ const Index = (props) => {
         try {
             const values = await form2.validateFields();
             props.dispatch({
-                type: `${namespace}/GetQuestionList`,
+                type: `${namespace}/UpdOperationPlan`,
                 payload: {
                     ...values,
                 },
@@ -174,86 +164,109 @@ const Index = (props) => {
         }
     }
 
+    const completionPlan = (record) => { //完结计划
+        setSwitchPlanVisible(true)
+        setFiles(cuid())
+    }
+
+
+
+    const saveBasicInfo = (values) => {
+        props.dispatch({
+            type: `${namespace}/UpdOperationPlan`,
+            payload: { ...values, beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59') },
+            callback: () => {
+                props.dispatch({
+                    type: `${namespace}/updateState`,
+                    payload: { operationPlanQueryRefreshType: 1 },
+                });
+            }
+        });
+    }
+
+
+
  
 
 
-    const extensionPlan = () =>{ //延长计划
-      alert('延长计划')
+    const [extensVisible,setExtensVisible] = useState(false)
+    const extensionPlan = () => { //延长计划
+        setExtensVisible(true)
     }
-    const [files, setFiles] = useState() 
+    const [files, setFiles] = useState()
     const [fileList, setFileList] = useState([])
     const uploadProps = (name) => {
-      return { // 核查问题照片附件 上传
-        action: API.UploadApi.UploadPicture,
-        headers: { Cookie: null, Authorization: "Bearer " + Cookie.get(config.cookieName) },
-        accept: 'image/*',
-        listType: 'picture-card',
-        data: {
-          FileUuid: files,
-          FileActualType: '0',
-        },
-        beforeUpload: (file) => {
-          const fileType = file?.type; //获取文件类型 type  image/*
-          if (!(/^image/g.test(fileType))) {
-            message.error(`请上传图片格式文件!`);
-            return false;
-          }
-        },
-        onChange(info) {
-          const fileList = [];
-          info.fileList.map(item => {
-            if (item.response && item.response.IsSuccess) { //刚上传的
-              fileList.push({ ...item, url: `/${item.response.Datas}`, })
-            } else if (!item.response) {
-              fileList.push({ ...item })
-            }
-          })
-          if (info.file.status == 'uploading') {
-            setFileList(fileList)
-          }
-          if (info.file.status === 'done') {
-              if(info.file?.response?.IsSuccess){
-                form2.setFieldsValue({ [name]: files })
-                message.success(`${info.file.name} 上传成功`);
-              }else{
-                message.error(info.file?.response?.Message)
-              }
-              setFileList(fileList)
-          } else if (info.file.status === 'error' || info.file.status === 'removed') {
-            form2.setFieldsValue({[name]:fileList && fileList[0] ? files : undefined})//有上传成功的取前面的uid 没有则表示没有上传成功的图片
-            if(info.file.status === 'error'){
-              message.error(`${info.file.name} ${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
-            }else{
-              setFileList(fileList)
-            }
-          } 
-        },
-        onRemove: (file) => {
-          if (!file.error) {
-            props.dispatch({
-              type: "autoForm/deleteAttach",
-              payload: {
-                Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
-              }
-            })
-          }
-  
-        },
-        onPreview: file => { //预览
-          setIsImageViewOpen(true);
-          let imageListIndex = 0,imgList=[];
-          fileList.map((item, index) => {
-            if (item.uid === file.uid) {
-              imageListIndex = index;
-            }
-            imgList.push(`${item.url}`)
-          });
-          setImageIndex(imageListIndex);
-          setImageList(imgList);
-        },
-        fileList: fileList
-      }
-  
+        return { // 核查问题照片附件 上传
+            action: API.UploadApi.UploadPicture,
+            headers: { Cookie: null, Authorization: "Bearer " + Cookie.get(config.cookieName) },
+            accept: 'image/*',
+            listType: 'picture-card',
+            data: {
+                FileUuid: files,
+                FileActualType: '0',
+            },
+            beforeUpload: (file) => {
+                const fileType = file?.type; //获取文件类型 type  image/*
+                if (!(/^image/g.test(fileType))) {
+                    message.error(`请上传图片格式文件!`);
+                    return false;
+                }
+            },
+            onChange(info) {
+                const fileList = [];
+                info.fileList.map(item => {
+                    if (item.response && item.response.IsSuccess) { //刚上传的
+                        fileList.push({ ...item, url: `/${item.response.Datas}`, })
+                    } else if (!item.response) {
+                        fileList.push({ ...item })
+                    }
+                })
+                if (info.file.status == 'uploading') {
+                    setFileList(fileList)
+                }
+                if (info.file.status === 'done') {
+                    if (info.file?.response?.IsSuccess) {
+                        form2.setFieldsValue({ [name]: files })
+                        message.success(`${info.file.name} 上传成功`);
+                    } else {
+                        message.error(info.file?.response?.Message)
+                    }
+                    setFileList(fileList)
+                } else if (info.file.status === 'error' || info.file.status === 'removed') {
+                    form2.setFieldsValue({ [name]: fileList && fileList[0] ? files : undefined })//有上传成功的取前面的uid 没有则表示没有上传成功的图片
+                    if (info.file.status === 'error') {
+                        message.error(`${info.file.name} ${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
+                    } else {
+                        setFileList(fileList)
+                    }
+                }
+            },
+            onRemove: (file) => {
+                if (!file.error) {
+                    props.dispatch({
+                        type: "autoForm/deleteAttach",
+                        payload: {
+                            Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
+                        }
+                    })
+                }
+
+            },
+            onPreview: file => { //预览
+                setIsImageViewOpen(true);
+                let imageListIndex = 0, imgList = [];
+                fileList.map((item, index) => {
+                    if (item.uid === file.uid) {
+                        imageListIndex = index;
+                    }
+                    imgList.push(`${item.url}`)
+                });
+                setImageIndex(imageListIndex);
+                setImageList(imgList);
+            },
+            fileList: fileList
+        }
+
     }
     return (
         <div>
@@ -284,12 +297,12 @@ const Index = (props) => {
                             </Col>
                             <Col span={12}>
                                 <Form.Item name='endTime' label='计划结束日期' rules={[{ required: true, message: '请选择计划结束日期！' }]}>
-                                    <DatePicker style={{ width: '100%' }} disabledDate={(current) => current && form.getFieldValue('beginTime') && current < form.getFieldValue('beginTime').endOf('day')}/>
+                                    <DatePicker style={{ width: '100%' }} disabledDate={(current) => current && form.getFieldValue('beginTime') && current < form.getFieldValue('beginTime').endOf('day')} />
                                 </Form.Item>
                             </Col>
                             <Col span={24} >
                                 <Form.Item name='remark' label='备注'>
-                                    <Input.TextArea placeholder='请输入' allowClear/>
+                                    <Input.TextArea placeholder='请输入' allowClear />
                                 </Form.Item>
 
                             </Col>
@@ -304,16 +317,28 @@ const Index = (props) => {
                         </Row>
                     </Form>
                     <TitleComponents simpleSty text='运维计划内容' />
-                    <PlanList type={2}  extensionPlan={extensionPlan}/>
+                    <PlanList type={2} entCode={entCode} extensionPlan={extensionPlan} />
                 </Modal>
+                <AdjustExtendPlanModal
+                    visible={extensVisible}
+                    title='延长计划'
+                    type={2}
+                    onCancel={() => { setExtensVisible(false); }}
+                    pointType={pointType}
+                    dataList={operationPlanInfo}
+                   
+                />
                 <ViewPlanModal
                     visible={viewPlanVisible}
                     onCancel={() => { setViewPlanVisible(false) }}
+                    type={1}
+                    pointType={pointType}
+                    entCode={entCode}
                 />
                 <Modal
                     visible={switchPlanVisible}
                     title={switchPlanTitle}
-                    onCancel={() => { setSwitchPlanVisible(false);form2.resetFields() }}
+                    onCancel={() => { setSwitchPlanVisible(false); form2.resetFields() }}
                     destroyOnClose
                     width={'60%'}
                     mask={false}
@@ -322,11 +347,11 @@ const Index = (props) => {
                     <Form
                         form={form2}
                         className={'ant-advanced-search-form'}
-                        labelCol={{flex:'52px'}}
+                        labelCol={{ flex: '52px' }}
                     >
 
                         <Form.Item label='备注' name='remark' rules={[{ required: true, message: '请输入备注！' }]}>
-                            <Input.TextArea placeholder='请输入' allowClear/>
+                            <Input.TextArea placeholder='请输入' allowClear />
                         </Form.Item>
                         <Form.Item label='附件' name='files'>
                             <Upload {...uploadProps('files')} style={{ width: '100%' }}>
@@ -337,15 +362,15 @@ const Index = (props) => {
                             </Upload>
                         </Form.Item>
                         <Row justify='end'>
-                        <Form.Item>
-                            <Space>
-                            <Button onClick={()=>{setSwitchPlanVisible(false);form2.resetFields()}}>取消</Button>
-                            <Button type='primary' htmlType='submit' onClick={switchPlanSubmit}>提交</Button>
-                            </Space>
-                        </Form.Item>
+                            <Form.Item>
+                                <Space>
+                                    <Button onClick={() => { setSwitchPlanVisible(false); form2.resetFields() }}>取消</Button>
+                                    <Button type='primary' htmlType='submit' onClick={switchPlanSubmit}>提交</Button>
+                                </Space>
+                            </Form.Item>
                         </Row>
                     </Form>
-                   {!isTermin&&<RecordList/>}
+                    {!isTermin && <RecordList />}
                 </Modal>
             </BreadcrumbWrapper>
         </div>

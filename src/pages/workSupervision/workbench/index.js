@@ -79,8 +79,8 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   workAlarmPushLoading: loading.effects['wordSupervision/GetWorkAlarmPushList'] || loading.effects['wordSupervision/UpdateWorkPushStatus'] || loading.effects['wordSupervision/UpdateAllWorkPushStatus'] || false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
   workAlarmTotal: wordSupervision.workAlarmTotal,
-  contractLoading: wordSupervision.contractLoading  || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false, //旧
-  // contractLoading: wordSupervision.contractLoading,
+  // contractLoading: wordSupervision.contractLoading  || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false, //旧
+  contractLoading: wordSupervision.contractLoading,
   contractList: wordSupervision.contractList,
   standgaswaringList: wordSupervision.standgaswaringList,
   standgaswaringLoading:wordSupervision.standgaswaringLoading,
@@ -787,7 +787,7 @@ const Workbench = props => {
                   <div className={styles.taskListWrapper}>
                     <Card
                       style={{ height: '100%' }}
-                      bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}
+                      bodyStyle={{ padding: '8px 0 0 0', display: 'flex', flexDirection: 'column', height: '100%' }}
                     >
                       {/* 手工申请 */}
                       <div className={styles.title}>日常监督</div>
@@ -831,7 +831,7 @@ const Workbench = props => {
                     <Card
                       style={{ height: '100%' }}
                       bodyStyle={{
-                        padding: 0,
+                        padding: '8px 0 0 0',
                         height: '100%',
                       }}
                     >
@@ -1095,7 +1095,7 @@ const Workbench = props => {
 
             </div>
             <div className={styles.infoWrapper}>
-              <Card bodyStyle={{ padding: 0, height: '100%' }} style={{ height: '100%' }}>
+              <Card bodyStyle={{ padding: '8px 0 0 0', height: '100%' }} style={{ height: '100%' }}>
                 <div className={styles.title}>我的消息</div>
                 <div
                   className={styles.content}
@@ -1202,7 +1202,7 @@ const Workbench = props => {
           wrapClassName='spreadOverModal'
           onCancel={() => { setRemainProblemsVisible(false) }}
           destroyOnClose
-          bodyStyle={{padding:'8px 0 0 0',}}
+          bodyStyle={{padding:'8px 0 0 0'}}
         >
         <RemainProblems hideBreadcrumb  match={{ path: '/operations/superviseRectification' }}/>
         </Modal>

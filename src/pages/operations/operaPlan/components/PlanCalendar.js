@@ -21,6 +21,8 @@ import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import CheckPhoto from '@/components/CheckPhoto';
 import { permissionButton } from '@/utils/utils';
+import AdjustExtendPlanModal from './AdjustExtendPlanModal';
+
 const { Option } = Select;
 
 const namespace = 'operaPlan'
@@ -167,22 +169,22 @@ const Index = (props) => {
     const adjustPlan = () => { //调整计划
         setJustVisible(true)
     }
-    const adjustPlanOk = () => {
-        form2.validateFields().then((values)=>{
-           const par = {recordType: recordType,...values,tzDate:values.tzDate&&moment(values.tzDate).format('YYYY-MM-DD 00:00:00')}
-           props.dispatch({
-                type: `${namespace}/AdjustmentOperationPlan`,
-                payload: {id:operationPlanInfoRefreshId,...par},
-                callback:()=>{
-                    setJustVisible(false);
-                    setPageIndex(1);setPageSize(20);onFinish(1,20);
-                    justResData();
-                }
-            });
-            }).catch((errorInfo) => {
-                console.log('Failed:', errorInfo);
-            });
-    }
+    // const adjustPlanOk = () => {
+    //     form2.validateFields().then((values)=>{
+    //        const par = {recordType: recordType,...values,tzDate:values.tzDate&&moment(values.tzDate).format('YYYY-MM-DD 00:00:00')}
+    //        props.dispatch({
+    //             type: `${namespace}/AdjustmentOperationPlan`,
+    //             payload: {id:operationPlanInfoRefreshId,...par},
+    //             callback:()=>{
+    //                 setJustVisible(false);
+    //                 setPageIndex(1);setPageSize(20);onFinish(1,20);
+    //                 justResData();
+    //             }
+    //         });
+    //         }).catch((errorInfo) => {
+    //             console.log('Failed:', errorInfo);
+    //         });
+    // }
     const searchComponents = () => {
 
         const resDataHandle = () => {  setPageIndex(1); setPageSize(20); onFinish(1, 20) }
@@ -193,7 +195,7 @@ const Index = (props) => {
             layout='inline'
             onFinish={resDataHandle}
         >
-        {commonSearchComponents&&commonSearchComponents(1)}
+        {commonSearchComponents&&commonSearchComponents(type)}
             <Form.Item style={{ marginBottom: 4 }}>
                 <Space>
                     <Button type="primary" htmlType="submit" loading={tableLoading}>
@@ -213,55 +215,55 @@ const Index = (props) => {
         </Form>
     }
 
-    const [indeterminate, setIndeterminate] = useState(false);
-    const [checkAll, setCheckAll] = useState(false);
-    const checkboxChange = (valList, checkOptions) => {
-        setIndeterminate(!!valList.length && valList.length < checkOptions.length);
-        setCheckAll(valList.length === checkOptions.length);
-    }
-    const onCheckAllChange = (e, checkOptions) => {
-        const allVal = checkOptions.map(item => item.PointCode)
-        form2.setFieldsValue({ pointID: e.target.checked ? allVal : [] })
-        setIndeterminate(false);
-        setCheckAll(e.target.checked);
-    };
-    const AdJustPlanComponents = () => {
-        return props.formulatePointListLoading ? <Skeleton active style={{ height: 158 }} /> :
-           <>{dataList?.length ?  <Form
-            form={form2}
-            name="advanced_search_plancontent_form"
-            className={'ant-advanced-search-form'}
-            labelCol={{ flex: '108px' }}
-        >
-                <Checkbox style={{ paddingLeft: 108 }} indeterminate={indeterminate} onChange={(e) => onCheckAllChange(e, dataList)} checked={checkAll}>
-                    全选
-                </Checkbox>
-                <Form.Item className='form_label_width_94 pointItemSty' name='pointID' label='监测点' rules={[{ required: true, message: '请选择监测点！' }]} >
-                    <Checkbox.Group
-                        onChange={(val) => checkboxChange(val, dataList)}
-                    >
-                        {
-                            dataList.map(itm => {
-                                return <Checkbox key={itm.PointCode} value={itm.PointCode}>{itm.PointName}</Checkbox>
-                            })
-                        }
-                    </Checkbox.Group>
-                </Form.Item>
-            <Form.Item
-                name='tzDate'
-                label='调整起始日期'
-                rules={[{ required: true, message: '请选择调整起始日期！' }]}
-                >
-                <DatePicker      
-                  disabledDate={(current) => {
-                    return current && current < moment()
-                  }}/>
-            </Form.Item>
-        </Form>   
-           :
-         <Empty description='暂无监测点' image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ paddingBottom: 24 }} />
-      }</>
-    }
+    // const [indeterminate, setIndeterminate] = useState(false);
+    // const [checkAll, setCheckAll] = useState(false);
+    // const checkboxChange = (valList, checkOptions) => {
+    //     setIndeterminate(!!valList.length && valList.length < checkOptions.length);
+    //     setCheckAll(valList.length === checkOptions.length);
+    // }
+    // const onCheckAllChange = (e, checkOptions) => {
+    //     const allVal = checkOptions.map(item => item.PointCode)
+    //     form2.setFieldsValue({ pointID: e.target.checked ? allVal : [] })
+    //     setIndeterminate(false);
+    //     setCheckAll(e.target.checked);
+    // };
+    // const AdJustPlanComponents = () => {
+    //     return props.formulatePointListLoading ? <Skeleton active style={{ height: 158 }} /> :
+    //        <>{dataList?.length ?  <Form
+    //         form={form2}
+    //         name="advanced_search_plancontent_form"
+    //         className={'ant-advanced-search-form'}
+    //         labelCol={{ flex: '108px' }}
+    //     >
+    //             <Checkbox style={{ paddingLeft: 108 }} indeterminate={indeterminate} onChange={(e) => onCheckAllChange(e, dataList)} checked={checkAll}>
+    //                 全选
+    //             </Checkbox>
+    //             <Form.Item className='form_label_width_94 pointItemSty' name='pointID' label='监测点' rules={[{ required: true, message: '请选择监测点！' }]} >
+    //                 <Checkbox.Group
+    //                     onChange={(val) => checkboxChange(val, dataList)}
+    //                 >
+    //                     {
+    //                         dataList.map(itm => {
+    //                             return <Checkbox key={itm.PointCode} value={itm.PointCode}>{itm.PointName}</Checkbox>
+    //                         })
+    //                     }
+    //                 </Checkbox.Group>
+    //             </Form.Item>
+    //         <Form.Item
+    //             name='tzDate'
+    //             label='调整起始日期'
+    //             rules={[{ required: true, message: '请选择调整起始日期！' }]}
+    //             >
+    //             <DatePicker      
+    //               disabledDate={(current) => {
+    //                 return current && current < moment()
+    //               }}/>
+    //         </Form.Item>
+    //     </Form>   
+    //        :
+    //      <Empty description='暂无监测点' image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ paddingBottom: 24 }} />
+    //   }</>
+    // }
     const [legendSelectIndex, setLegendSelectIndex] = useState([])
     const typeLegendChange = (index) => {
 
@@ -279,7 +281,7 @@ const Index = (props) => {
         <div>
             {searchComponents()}
              <Row style={{ paddingBottom: 8 }} align='middle'>
-                <span className='red' style={{ paddingRight: 18 }}> 巡检:X&nbsp;&nbsp;校准:J </span>
+                <span className='red' style={{ paddingRight: 18 }}> 巡检：X&nbsp;&nbsp;&nbsp;&nbsp;校准：J </span>
                 {type != 1 && typeLegendData.map((item, index) => <Row align='middle' style={{ cursor: 'pointer', marginRight: 12 }} onClick={() => typeLegendChange(index)} >
                     <div style={{ marginRight: 4, width: 32, height: 16, backgroundColor: item.color }}> </div>
                     <span style={{ fontWeight: legendSelectIndex.includes(index) ? 'bold' : 'normal' }}>{item.title}</span>
@@ -302,7 +304,16 @@ const Index = (props) => {
                     onChange: handleTableChange,
                 }}
             />
-            <Modal
+            <AdjustExtendPlanModal
+              type={1}
+              title='调整计划'
+              visible={justVisible}  
+              onCancel={() => { setJustVisible(false)}}
+              dataList={dataList}
+              pointType={pointType}
+              onFinish={()=>{setPageIndex(1);setPageSize(20);onFinish(1,20)}}
+              />
+            {/* <Modal
                 visible={justVisible}
                 title={'调整计划'}
                 onCancel={() => { setJustVisible(false);justResData(); }}
@@ -337,8 +348,8 @@ const Index = (props) => {
                             children: <AdJustPlanComponents />,
                         },
                     ]}
-                />
-            </Modal>
+                /> 
+            </Modal>*/}
         </div>
     );
 };

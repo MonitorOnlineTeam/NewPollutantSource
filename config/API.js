@@ -254,8 +254,10 @@ export const API = {
     GetOperationPlanCalendar: before + '/WorkOrderApi/GetOperationPlanCalendar',//运维计划日历
     ExportOperationPlanCalendar: before + '/WorkOrderApi/ExportOperationPlanCalendar',//运维计划日历 导出
     GetFormulatePointList: before + '/WorkOrderApi/GetFormulatePointList',//获取运维计划可调整点位
-    AdjustmentOperationPlan: before + '/WorkOrderApi/AdjustmentOperationPlan',//提交运维计划调整点位
-
+    AdjustmentOperationPlan: before + '/WorkOrderApi/AdjustmentOperationPlan',//运维计划点位调整
+    ExtendPlanDate: before + '/WorkOrderApi/ExtendPlanDate',//运维计划点位延长
+    UpdOperationPlanStatus: before + '/WorkOrderApi/UpdOperationPlanStatus',//运维计划状态修改
+    GetOperationPlanStatusList: before + '/WorkOrderApi/GetOperationPlanStatusList',//获取运维计划状态修改记录
     /**运维报告**/
     /*运维报告（word）*/
     GetOperationReportList: before + '/WorkOrderStatistics/GetOperationReportList', //获取运维月度报告信息
@@ -939,13 +941,13 @@ export const API = {
 
   /*** 工作台 ***/
   CtWorkStageApi: {
+    // GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//合同到期 旧
+    // DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除工作台合同到期 旧
+    // DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期 旧
+    GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg', //获取工作台项目执行、合同到期等  新
+    DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg', //删除工作台合同到期等 新
+    DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg', //删除所有工作台合同到期等 新
     UpdateImplementationStatus: before + '/CTBaseDataApi/UpdateImplementationStatus', //解决项目执行遗留问题
-    GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//合同到期 旧
-    DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除工作台合同到期 旧
-    DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期 旧
-    // GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg', //获取工作台项目执行、合同到期等  新
-    // DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg', //删除工作台合同到期等 新
-    // DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg', //删除所有工作台合同到期等 新
   },
 
   /*** 售后服务管理 ***/
