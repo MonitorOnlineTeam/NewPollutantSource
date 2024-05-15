@@ -184,7 +184,7 @@ const WorkTower = props => {
                   style={{ width: 250 }}
                 />
               </Form.Item>
-              <Spin spinning={!!entListLoading} size="small">
+              {/* <Spin spinning={!!entListLoading} size="small"> */}
                 <Form.Item label="企业" name="entCode">
                   <EntAtmoList
                     style={{ width: 200 }}
@@ -200,7 +200,7 @@ const WorkTower = props => {
                     placeholder="请选择"
                   />
                 </Form.Item>
-              </Spin>
+              {/* </Spin> */}
               <Spin spinning={!!pointListLoading} size="small">
                 <Form.Item label="排口" name="dgimn">
                   <Select

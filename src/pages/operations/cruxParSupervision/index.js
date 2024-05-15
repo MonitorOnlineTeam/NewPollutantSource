@@ -590,11 +590,11 @@ const Index = (props) => {
         onValuesChange={onTaskValuesChange}
         layout='inline'
       >
-          <Spin spinning={entLoading} size='small'>
+          {/* <Spin spinning={entLoading} size='small'> */}
             <Form.Item label='企业' name='entCode' style={{  marginRight: 8 }}>
               <EntAtmoList noFilter style={{ width: 300 }} />
             </Form.Item>
-          </Spin>
+          {/* </Spin> */}
           <Spin spinning={taskPointLoading} size='small'>
             <Form.Item label='监测点名称' name='DGIMN' >
 

@@ -21,6 +21,7 @@ import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import CheckPhoto from '@/components/CheckPhoto';
 import { permissionButton } from '@/utils/utils';
+import TitleComponents from '@/components/TitleComponents'
 import PlanCalendar from '../components/PlanCalendar'
 
 const { Option } = Select;
@@ -29,34 +30,37 @@ const namespace = 'operaPlan'
 
 
 
-
 const dvaPropsData = ({ loading, operaPlan, global, }) => ({
-    tableLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-    tableDatas: operaPlan.formulateTableDatas2,
-    tableTotal: operaPlan.formulateTableTotal2,
-    exportLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-    queryPar: operaPlan.formulateQueryPar2,
-    configInfo: global.configInfo,
+    tableLoading: loading.effects[`${namespace}/GetOperationPlanStatusList`],
+    tableDatas: operaPlan.operationPlanStatusList,
+    tableTotal: operaPlan.operationPlanStatusTotal,
+    operationPlanInfoRefreshId:operaPlan.operationPlanInfoRefreshId
 })
 
 const Index = (props) => {
 
 
-    const { type,tableDatas, tableTotal, tableLoading } = props;
+    const {id,status,tableDatas, tableTotal, tableLoading,refresh, } = props;
 
     useEffect(() => {
-        initData(pageIndex, pageSize);
+        console.log(id)
+        refresh&&initData(pageIndex, pageSize);
 
-    }, []);
-
+    }, [refresh]);
+   
     const initData = (pageIndex,pageSize) =>{
         props.dispatch({
-            type: `${namespace}/GetQuestionList`,
+            type: `${namespace}/GetOperationPlanStatusList`,
             payload: {
+               id:id,
+               status:status,
+               type:status,
                pageIndex:pageIndex,
                pageSize:pageSize
             },
-
+            callback:()=>{
+            //   props.restData &&  props.restData()
+            }
         });
     }
     
@@ -72,20 +76,23 @@ const Index = (props) => {
         },
         {
             title: '状态',
-            dataIndex: 'projectName',
-            key: 'projectName',
+            dataIndex: 'Status',
+            key: 'Status',
             ellipsis: true,
+            render: (text, record, index) => {
+                return <span className={text == '暂停' ? 'red' : text == '进行中'? 'green' : ''}>{text}</span>
+              }
         },
         {
             title: '备注',
-            dataIndex: 'projectName',
-            key: 'projectName',
+            dataIndex: 'Remark',
+            key: 'Remark',
             ellipsis: true,
         },
         {
             title: '附件',
-            dataIndex: 'projectName',
-            key: 'projectName',
+            dataIndex: 'File',
+            key: 'File',
             ellipsis: true,
             render: (text) => {
                 return <CheckPhoto fileList={text} />
@@ -93,14 +100,14 @@ const Index = (props) => {
         },
         {
             title: '操作人',
-            dataIndex: 'projectName',
-            key: 'projectName',
+            dataIndex: 'CreateUser',
+            key: 'CreateUser',
             ellipsis: true,
         },
         {
             title: '操作时间',
-            dataIndex: 'projectName',
-            key: 'projectName',
+            dataIndex: 'CreateTime',
+            key: 'CreateTime',
             ellipsis: true,
         },
     ];
@@ -117,6 +124,7 @@ const Index = (props) => {
 
     return (
         <div>
+             <TitleComponents simpleSty text='操作记录' />
             <SdlTable
                 resizable
                 loading={tableLoading}

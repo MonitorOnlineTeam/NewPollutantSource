@@ -279,7 +279,7 @@ const Index = props => {
               style={{ width: 250 }}
             />
           </Form.Item>
-          <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
+          {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
             <Form.Item label="企业" name="entCode">
               <EntAtmoList
                 style={{ width: 200 }}
@@ -293,7 +293,7 @@ const Index = props => {
                 }}
               />
             </Form.Item>
-          </Spin>
+          {/* </Spin> */}
           <Spin spinning={!!pointListLoading} size="small">
             <Form.Item label="监测点名称" name="dgimn">
               <Select

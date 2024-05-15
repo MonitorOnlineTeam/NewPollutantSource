@@ -859,7 +859,7 @@ export default class OverVerifyLst extends Component {
           wrapClassName='spreadOverModal'
           onCancel={() => { this.setState({ alarmNumVisible: false }) }}
         >
-          <div style={{ marginBottom: 10 }}>
+          <div style={{ marginBottom: 10 , display:'flex'}}>
             <EntAtmoList placeholder="企业列表" regionCode={this.state.regionCode} onChange={(value) => {
               this.setState({
                 enterpriseValue: value

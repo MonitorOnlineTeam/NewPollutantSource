@@ -276,7 +276,7 @@ const OperationReport = props => {
           </Form.Item>
           {rangeType === 'ent' ? (
             <>
-              <Spin spinning={entLoading} size="small" style={{ top: -3, left: 39 }}>
+              {/* <Spin spinning={entLoading} size="small" style={{ top: -3, left: 39 }}> */}
                 <Form.Item
                   label="企业"
                   name="entCode"
@@ -296,7 +296,7 @@ const OperationReport = props => {
                     }}
                   />
                 </Form.Item>
-              </Spin>
+              {/* </Spin> */}
               <Spin spinning={pointLoading} size="small" style={{ top: -3, left: 44 }}>
                 <Form.Item label="点位名称" name="DGIMN">
                   <Select

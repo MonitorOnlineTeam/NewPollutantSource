@@ -74,7 +74,7 @@ export default Model.extend({
       ellipsis: true,
       width: 90,
       render: (text, record, index) => {
-        return text == '暂停' ? <span className='red'>{text}</span> : text
+        return <span className={text == '暂停' ? 'red' : text == '进行中'? 'green' : ''}>{text}</span>
       }
     },
     {
@@ -122,6 +122,8 @@ export default Model.extend({
     operationPlanCalendarList: [],
     operationPlanCalendarTotal: 0,
     operationPlanCalendarQueryPar: {},
+    operationPlanStatusList:[],
+    operationPlanStatusTotal:0,
   },
   effects: {
     // 运维计划列表
@@ -234,8 +236,9 @@ export default Model.extend({
     //运维计划状态修改记录
     *GetOperationPlanStatusList({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanStatusList, payload);
-      if (result.IsSuccess && result.Datas) {
-        callback && callback(result.Datas)
+      if (result.IsSuccess) {
+        yield update({ operationPlanStatusList: result.Datas, operationPlanStatusTotal: result.Total });
+        callback && callback()
       }
     },
     //运维计划状态修改

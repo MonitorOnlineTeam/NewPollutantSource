@@ -941,12 +941,12 @@ export default class OverVerifyLstModal extends Component {
         onCancel={() => { this.setState({ alarmNumVisible: false }) }}
         zIndex={1001}
       >
-        <div style={{ marginBottom: 10 }}>
+        <div style={{ marginBottom: 10, display:'flex' }}>
           <EntAtmoList placeholder="企业列表" regionCode={this.state.regionCode} onChange={(value) => {
             this.setState({
               enterpriseValue: value
             })
-          }} EntCode={this.state.enterpriseValue} style={{ width: 200, marginRight: 10 }} />
+          }} EntCode={this.state.enterpriseValue} style={{ width: 200, marginRight: 10 }} inLineBlock/>
           <Radio.Group value={this.state.dealType} style={{ marginRight: 10, marginLeft: 10 }} onChange={(e) => {
             this.setState({
               dealType: e.target.value,

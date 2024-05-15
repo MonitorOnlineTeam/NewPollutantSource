@@ -59,14 +59,13 @@ const Index = (props) => {
 
   
     useEffect(()=>{
-        console.log(operationPlanInfoRefreshId,11111111111)
-        props.dispatch({
+        visible&&props.dispatch({
             type: `${namespace}/updateState`,
             payload: { operationPlanInfoRefreshType: 1, operationPlanInfoRefreshId: operationPlanInfoRefreshId },
         });
-    },[])
+    },[visible])
     useEffect(() => {
-        entCode && props.dispatch({    //获取排口
+        entCode && visible &&props.dispatch({    //获取排口
             type: 'common/getPointByEntCode',
             payload: { EntCode: entCode },
             callback: (res) => {

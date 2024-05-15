@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
 import { Select,Spin } from 'antd'
-import styles from './styles.less';
 
 
 //企业 大气站 列表组件
@@ -114,7 +113,7 @@ export default class Index extends Component {
   }
   render() {
     const { EntCode, changeEnt, type } = this.props
-    return (<Spin spinning={this.loadingStatus()} size='small' wrapperClassName={styles.spinSty}>
+    return (<Spin spinning={this.loadingStatus()} size='small'>
       <Select
         allowClear
         showSearch

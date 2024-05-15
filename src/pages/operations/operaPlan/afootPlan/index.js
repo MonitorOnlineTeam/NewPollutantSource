@@ -35,7 +35,7 @@ import cuid from 'cuid';
 import AdjustExtendPlanModal from '../components/AdjustExtendPlanModal';
 
 
-import { init, use } from 'echarts';
+import { init, use, setCanvasCreator } from 'echarts';
 
 const { Option } = Select;
 
@@ -46,6 +46,7 @@ const namespace = 'operaPlan'
 const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     operationPlanInfo: operaPlan.operationPlanInfo,
     updOperationPlanLoading: loading.effects[`${namespace}/UpdOperationPlan`],
+    updOperationPlanStatusLoaidng: loading.effects[`${namespace}/UpdOperationPlanStatus`],
 })
 
 const Index = (props) => {
@@ -60,7 +61,7 @@ const Index = (props) => {
 
 
 
-    const {operationPlanInfo, updOperationPlanLoading, } = props;
+    const { operationPlanInfo, updOperationPlanLoading, updOperationPlanStatusLoaidng, } = props;
 
 
 
@@ -78,21 +79,20 @@ const Index = (props) => {
         title: '操作',
         fixed: 'right',
         ellipsis: true,
-        width: 260,
+        width: 200,
         render: (text, record, index) => {
+            const startPauseTitle = record.status == '暂停' ? '开启计划' : '暂停计划'
             return (<Fragment>
                 <Space>
                     <a onClick={() => { editPlan(record) }}> 编辑计划</a>
                     <Popconfirm title="确认要删除这条计划吗？" onConfirm={() => { delPlan(record) }} > <a> 删除计划</a></Popconfirm>
                     <a onClick={() => { viewPlan(record) }}>查看计划</a>
-                    <a onClick={() => { pauseOpenTerminPlan(record, '暂停计划') }}> 暂停计划</a>
-
                 </Space>
                 <br />
                 <Space>
-                    <a onClick={() => { pauseOpenTerminPlan(record, '开启计划') }}> 开启计划</a>
-                    <Popconfirm title="您确定运维已完结？" onConfirm={() => { completionPlan(record) }} > <a> 完结计划</a></Popconfirm>
-                    <a onClick={() => { pauseOpenTerminPlan(record, '异常终止', true) }}> 异常终止</a>
+                    <a onClick={() => { pauseOpenTerminPlan(record, startPauseTitle, record.status == '暂停' ? 1 : 2) }}> {startPauseTitle}</a>
+                    <Popconfirm title="您确定运维已完结？" onConfirm={() => { completionPlan(record, 4) }} > <a> 完结计划</a></Popconfirm>
+                    <a onClick={() => { pauseOpenTerminPlan(record, '异常终止', 3) }}> 异常终止</a>
                 </Space>
             </Fragment>
             );
@@ -111,7 +111,7 @@ const Index = (props) => {
             payload: { operationPlanInfoRefreshType: 1, operationPlanInfoRefreshId: record.ID },
         });
         setEntCode(record.entCode)
-        setPointType(record.pollutantType=='废气'? 2 :1)
+        setPointType(record.pollutantType == '废气' ? 2 : 1)
     }
 
     const [viewPlanVisible, setViewPlanVisible] = useState(false)
@@ -138,35 +138,57 @@ const Index = (props) => {
 
     const [switchPlanVisible, setSwitchPlanVisible] = useState(false)
     const [switchPlanTitle, setSwitchPlanTitle] = useState()
-    const [isTermin, setIsTermin] = useState(false)
-    const pauseOpenTerminPlan = (record, title, termin) => { //暂停计划、开启计划、异常终止
+    const [status, setStatus] = useState()
+    const pauseOpenTerminPlan = (record, title, status) => { //暂停计划、开启计划、异常终止
         setSwitchPlanVisible(true)
-        setSwitchPlanTitle()
-        setIsTermin(termin)
-        form2.resetFields();
+        setSwitchPlanTitle(title)
+        form2.setFieldsValue({ id: record.ID, status: status })
         setFiles(cuid())
+        setRefresh(true)
     }
 
 
-    const switchPlanSubmit = async () => {  //开启、暂停、终止计划提交
 
-        try {
-            const values = await form2.validateFields();
-            props.dispatch({
-                type: `${namespace}/UpdOperationPlan`,
-                payload: {
-                    ...values,
-                },
+    const [refresh, setRefresh] = useState(false)
 
-            });
-        } catch (errorInfo) {
-            console.log('Failed:', errorInfo);
-        }
+    const updOperationPlanReauest = (values, callback) => {
+        props.dispatch({
+            type: `${namespace}/UpdOperationPlanStatus`,
+            payload: {
+                ...values,
+                type: values.status
+            },
+            callback: () => {
+                callback && callback()
+                props.dispatch({
+                    type: `${namespace}/updateState`,
+                    payload: { operationPlanQueryRefreshType: 1 },
+                });
+            }
+        });
+    }
+    const restData = () => {
+        form2.resetFields()
+        setFileList([])
+        setFiles(cuid())
+    }
+    const switchPlanSubmit = (values) => {  //开启、暂停、终止计划提交
+        updOperationPlanReauest(values, () => {
+            if (status == 3) { //终止
+                setSwitchPlanVisible(false)
+            } else {
+                setRefresh(!refresh)
+            }
+            restData()
+        })
+
     }
 
-    const completionPlan = (record) => { //完结计划
-        setSwitchPlanVisible(true)
-        setFiles(cuid())
+
+    const completionPlan = (record, status) => { //完结计划
+        updOperationPlanReauest({ id: record.ID, status: status }, () => {
+            restData()
+        })
     }
 
 
@@ -186,10 +208,10 @@ const Index = (props) => {
 
 
 
- 
 
 
-    const [extensVisible,setExtensVisible] = useState(false)
+
+    const [extensVisible, setExtensVisible] = useState(false)
     const extensionPlan = () => { //延长计划
         setExtensVisible(true)
     }
@@ -326,7 +348,7 @@ const Index = (props) => {
                     onCancel={() => { setExtensVisible(false); }}
                     pointType={pointType}
                     dataList={operationPlanInfo}
-                   
+
                 />
                 <ViewPlanModal
                     visible={viewPlanVisible}
@@ -338,39 +360,41 @@ const Index = (props) => {
                 <Modal
                     visible={switchPlanVisible}
                     title={switchPlanTitle}
-                    onCancel={() => { setSwitchPlanVisible(false); form2.resetFields() }}
+                    onCancel={() => { setSwitchPlanVisible(false); restData(); setRefresh(false) }}
                     destroyOnClose
                     width={'60%'}
-                    mask={false}
                     footer={null}
                 >
                     <Form
                         form={form2}
                         className={'ant-advanced-search-form'}
                         labelCol={{ flex: '52px' }}
+                        onFinish={switchPlanSubmit}
                     >
 
                         <Form.Item label='备注' name='remark' rules={[{ required: true, message: '请输入备注！' }]}>
                             <Input.TextArea placeholder='请输入' allowClear />
                         </Form.Item>
-                        <Form.Item label='附件' name='files'>
-                            <Upload {...uploadProps('files')} style={{ width: '100%' }}>
+                        <Form.Item label='附件' name='file'>
+                            <Upload {...uploadProps('file')} style={{ width: '100%' }}>
                                 <div>
                                     <PlusOutlined />
                                     <div className="ant-upload-text">上传</div>
                                 </div>
                             </Upload>
                         </Form.Item>
+                        <Form.Item name='id' hidden></Form.Item>
+                        <Form.Item name='status' hidden></Form.Item>
                         <Row justify='end'>
                             <Form.Item>
                                 <Space>
                                     <Button onClick={() => { setSwitchPlanVisible(false); form2.resetFields() }}>取消</Button>
-                                    <Button type='primary' htmlType='submit' onClick={switchPlanSubmit}>提交</Button>
+                                    <Button type='primary' htmlType='submit' loading={updOperationPlanStatusLoaidng}>提交</Button>
                                 </Space>
                             </Form.Item>
                         </Row>
                     </Form>
-                    {!isTermin && <RecordList />}
+                    {switchPlanTitle != '异常终止' && <RecordList id={form2.getFieldValue('id')} status={form2.getFieldValue('status')} refresh={refresh} />}
                 </Modal>
             </BreadcrumbWrapper>
         </div>

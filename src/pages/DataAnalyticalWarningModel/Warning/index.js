@@ -421,7 +421,7 @@ const WarningRecord = props => {
           {// 脱敏角色不显示企业
           !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
             <>
-              <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
+              {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
                 <Form.Item label="企业" name="EntCode">
                   <EntAtmoList
                     noFilter
@@ -436,7 +436,7 @@ const WarningRecord = props => {
                     }}
                   />
                 </Form.Item>
-              </Spin>
+              {/* </Spin> */}
               <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}>
                 <Form.Item label="监测点名称" name="DGIMN">
                   <Select

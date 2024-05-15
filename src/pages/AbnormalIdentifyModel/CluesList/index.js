@@ -543,7 +543,7 @@ const CluesList = props => {
           </Form.Item>
           {
             <>
-              <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
+              {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
                 <Form.Item label="企业" name="EntCode">
                   <EntAtmoList
                     regionCode={form.getFieldValue('regionCode')}
@@ -559,7 +559,7 @@ const CluesList = props => {
                     }}
                   />
                 </Form.Item>
-              </Spin>
+              {/* </Spin> */}
 
               {/* // 在首页点击查询是会出现loading  */}
               {/* <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}> */}

@@ -176,10 +176,7 @@ const Index = (props) => {
             type: `${namespace}/UpdOperationPlan`,
             payload: {id:operationPlanInfoRefreshId,...values, beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59') },
             callback: () => {
-                props.dispatch({
-                    type: `${namespace}/updateState`,
-                    payload: { operationPlanQueryRefreshType: 1 },
-                });
+               initData(pageIndex,pageSize)
             }
         });
 

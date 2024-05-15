@@ -68,7 +68,7 @@ const Index = (props) => {
     const {location, tableDatas, tableTotal, tableLoading, queryPar, exportLoading, } = props;
 
    
-    const type = location?.pathname === '/operations/operaPlan/completedPlan'? 1 : 2;
+    const type = location?.pathname === '/operations/operaPlan/completedPlan'? 3 : 4;
 
     console.log(type)
 
@@ -107,10 +107,17 @@ const Index = (props) => {
 
         }
     }]
+    const [entCode, setEntCode] = useState()
+    const [pointType, setPointType] = useState()
     const [viewPlanVisible, setViewPlanVisible] = useState(false)
-
-    const viewPlan = (record)=>{
+    const viewPlan = (record) => {
         setViewPlanVisible(true)
+        setEntCode(record.entCode)
+        setPointType(record.pollutantType=='废气'? 2 :1)
+        props.dispatch({
+            type: `${namespace}/updateState`,
+            payload: { operationPlanInfoRefreshId: record.ID },
+        });
     }
     const [statusChangeVisible, setStatusChangeVisible] = useState(false)
     const [statusChangeTitle, setStatusChangeTitle] = useState()
@@ -123,12 +130,14 @@ const Index = (props) => {
     return (
         <div>
             <BreadcrumbWrapper>
-                <OperationPlanQuery operateCol={operateCol} />
+                <OperationPlanQuery planType={type==3? 3 : ''} operateCol={operateCol} />
                 <ViewPlanModal
                     visible={viewPlanVisible}
                     onCancel={() => { setViewPlanVisible(false) }}
+                    type={type}
+                    pointType={pointType}
+                    entCode={entCode}
                 />
-
                 <Modal
                     visible={statusChangeVisible}
                     title={statusChangeTitle}
