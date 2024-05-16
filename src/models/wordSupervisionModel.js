@@ -47,7 +47,7 @@ export default Model.extend({
         yield update({
           todoList: result.Datas,
         });
-        callback && callback();
+        callback && callback(result.Datas);
       } else {
         message.error(result.Message);
       }
@@ -150,7 +150,7 @@ export default Model.extend({
         yield update({
           RegionalAndProvince: result.Datas,
         });
-        callback && callback();
+        callback && callback(result);
       } else {
         message.error(result.Message);
       }
@@ -717,7 +717,8 @@ export default Model.extend({
           customeSatisfactList: data?.customerList || [],
           standgaswaringList: data?.standgaswaringList || [],
         });
-        callback && callback({
+        callback &&
+          callback({
             ctListTotal: data?.ctList?.length || 0,
             customerListTotal: data?.customerList?.length || 0,
             projectListTotal: data?.projectList?.length || 0,
@@ -921,7 +922,112 @@ export default Model.extend({
       );
       if (result.IsSuccess) {
         message.success('删除成功！');
-        callback && callback()
+        callback && callback();
+      }
+    },
+
+    // 获取现场检查统计列表
+    *GetSiteInspectionForRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.FieldCheckApi.GetSiteInspectionForRegion,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 现场检查统计列表 - 导出
+    *ExportSiteInspectionForRegion({ payload }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.FieldCheckApi.ExportSiteInspectionForRegion,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 获取现场检查统计 - 省区详情
+    *GetSiteInspectionForRegionInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.FieldCheckApi.GetSiteInspectionForRegionInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 现场检查统计 - 省区详情 - 导出
+    *ExportSiteInspectionForRegionInfo({ payload }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.FieldCheckApi.ExportSiteInspectionForRegionInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+
+    // 客户回访统计列表
+    *GetCustomerVisitList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.CustomerReturnVisit.GetCustomerVisitList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 获取单个客户回访记录
+    *GetCustomerVisitInfor({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.DailyManagement.CustomerReturnVisit.GetCustomerVisitInfor}?ID=${payload.ID}`,
+        {},
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 导出客户回访记录
+    *ExportCustomerVisitList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.CustomerReturnVisit.ExportCustomerVisitList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 客户现场回访记录，客户现场回访管理
+    *GetCustomerVisitInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.DailyManagement.CustomerReturnVisit.GetCustomerVisitInfo}`,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 客户现场回访记录，客户现场回访管理 - 导出
+    *ExportCustomerVisitInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.CustomerReturnVisit.ExportCustomerVisitInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
       }
     },
   },

@@ -8,7 +8,7 @@ const LargeRegionSelect = props => {
   const [largeRegionList, setLargeRegionList] = useState([]);
   const [provinceAllList, setProvinceAllList] = useState([]);
 
-  const { dispatch, type, required, label, style, name } = props;
+  const { dispatch, type, required, label, formItemStyle, style, name } = props;
 
   useEffect(() => {
     type === 'ct' ? getCtLargeRegion() : getLargeRegion();
@@ -47,6 +47,7 @@ const LargeRegionSelect = props => {
             message: '请选择，不能为空！',
           },
         ]}
+        style={{ ...formItemStyle }}
       >
         <Select placeholder="请选择" style={{ width: 140, ...style }} allowClear>
           {largeRegionList.map(item => {
@@ -70,6 +71,7 @@ const LargeRegionSelect = props => {
             message: `请选择，不能为空！`,
           },
         ]}
+        style={{ ...formItemStyle }}
       >
         <Select placeholder="请选择" style={{ width: 140, ...style }} allowClear>
           {provinceAllList.map(item => {
@@ -87,6 +89,7 @@ const LargeRegionSelect = props => {
 
 LargeRegionSelect.defaultProps = {
   name: 'regionCode',
+  formItemStyle: {},
   style: {},
   required: false,
 };

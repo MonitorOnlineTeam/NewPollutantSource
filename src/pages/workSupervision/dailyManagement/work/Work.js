@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:38:17
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 11:14:51
+ * @Last Modified time: 2024-05-15 19:46:59
  * @Description：部门内其他工作事项
  */
 
@@ -72,6 +72,8 @@ const Work = props => {
       EndTime: endTime,
       CTOperation: CTOperation,
       WorkType: WorkType,
+      WorkContent: values.WorkContent,
+      WorkResults: values.workResults,
       flag: mode !== 'record',
     };
   };
@@ -154,6 +156,13 @@ const Work = props => {
         title: '内容项',
         dataIndex: 'Content',
         key: 'Content',
+        render: (text, record) => {
+          if (WorkType == '1') {
+            let current = contentList.find(item => item.value == text);
+            return current.name;
+          }
+          return text;
+        },
       },
       {
         title: '工作结果',
@@ -243,11 +252,11 @@ const Work = props => {
         >
           <Space wrap>
             <Form.Item label="工作时间" name="date">
-              <RangePicker_ allowClear={false} />
+              <RangePicker_ />
             </Form.Item>
-            <Form.Item label="内容项" name="workContent">
+            <Form.Item label="内容项" name="WorkContent">
               {WorkType == '1' ? (
-                <Select placeholder="请选择内容项" style={{ width: '200px' }}>
+                <Select placeholder="请选择内容项" style={{ width: '200px' }} allowClear>
                   {contentList.map(item => {
                     return (
                       <Option value={item.value} key={item.value}>
@@ -311,7 +320,6 @@ const Work = props => {
           </Space>
         </Form>
       }
-      style={{ marginTop: -8 }}
     >
       <SdlTable
         loading={queryLoading}

@@ -2,13 +2,14 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:56:52
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-09 10:47:02
+ * @Last Modified time: 2024-05-15 17:09:57
  * @Description: 任务单电子表单 - 操作弹窗
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Modal } from 'antd';
-import CustomerInterview from './CustomerInterview';
+// import CustomerInterview from './CustomerInterview';
+import CustomerInterview from '@/pages/workSupervision/dailyManagement/customerReturnVisit/components/RecordAndManagement';
 import Training from './Training';
 import OfficeInspection from './OfficeInspection';
 import Fieldwork from './Fieldwork';
@@ -53,9 +54,16 @@ const FromsModal = props => {
       case 3:
       case 4:
         return (
+          // <CustomerInterview
+          //   // type={props.type}
+          //   editData={editData}
+          //   taskInfo={taskInfo}
+          //   onCancel={() => onCancel()}
+          //   onSubmitCallback={() => onSubmitCallback && onSubmitCallback()}
+          // />
           <CustomerInterview
-            type={props.type}
-            editData={editData}
+            type={props.type == 1 ? '2' : '1'}
+            mode="management"
             taskInfo={taskInfo}
             onCancel={() => onCancel()}
             onSubmitCallback={() => onSubmitCallback && onSubmitCallback()}

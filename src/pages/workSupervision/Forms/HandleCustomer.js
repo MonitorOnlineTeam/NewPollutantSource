@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:58:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-12 16:46:29
+ * @Last Modified time: 2024-05-15 18:38:46
  * @Description: 客户操作页面
  */
 import React, { useState, useEffect } from 'react';
@@ -15,7 +15,7 @@ import Cookie from 'js-cookie';
 import moment from 'moment';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
-  // customerList: wordSupervision.customerList,
+  TYPE: wordSupervision.TYPE,
   otherCustomerList: wordSupervision.otherCustomerList,
   RegionalAndProvince: wordSupervision.RegionalAndProvince,
   // messageList: wordSupervision.messageList,
@@ -24,15 +24,14 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 });
 
 const HandleCustomer = props => {
-  const { otherCustomerList, RegionalAndProvince, CustomID, onOk } = props;
+  const [form] = Form.useForm();
+  const { otherCustomerList, RegionalAndProvince, CustomID, onOk, RegionCode, TYPE } = props;
   const [visible, setVisible] = useState(false);
   const [addOrEditVisible, setAddOrEditVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [editRowData, setEditRowData] = useState({});
   const [selectRow, setSelectRow] = useState([]);
-
-  const formRef = React.createRef();
-
+console.log('RegionCode', RegionCode)
   useEffect(() => {
     // setSelectedRowKeys([CustomID]);
     getOtherCustomerList();
@@ -107,15 +106,22 @@ const HandleCustomer = props => {
   const getOtherCustomerList = () => {
     props.dispatch({
       type: 'wordSupervision/getOtherCustomerList',
-      payload: {},
+      payload: {
+        type: TYPE == 1 ? '2' : '1', // 1：运维 2：成套
+        ReionCode: RegionCode,
+      },
     });
   };
 
   // 获取客户
   const getCustomerList = () => {
+    debugger
     props.dispatch({
       type: 'wordSupervision/getCustomerList',
-      payload: {},
+      payload: {
+        type: TYPE == 1 ? '2' : '1', // 1：运维 2：成套
+        ReionCode: RegionCode,
+      },
     });
   };
 
@@ -139,6 +145,13 @@ const HandleCustomer = props => {
     props.dispatch({
       type: 'wordSupervision/GetRegionalAndProvince',
       payload: {},
+      callback: res => {
+        let current = res.Datas.find(item => item.Province === RegionCode);
+        form.setFieldsValue({
+          Province: current.Province,
+          UserGroup_ID: current.UserGroup_ID,
+        });
+      },
     });
   };
 
@@ -156,7 +169,7 @@ const HandleCustomer = props => {
       currentUser = JSON.parse(currentUserStr);
     }
 
-    formRef.current.validateFields().then(values => {
+    form.validateFields().then(values => {
       props.dispatch({
         type: 'wordSupervision/InsOrUpdOtherCustomer',
         payload: {
@@ -240,7 +253,7 @@ const HandleCustomer = props => {
         }}
       >
         <Form
-          ref={formRef}
+          form={form}
           name="basic"
           labelCol={{
             span: 8,
@@ -264,9 +277,10 @@ const HandleCustomer = props => {
             ]}
           >
             <Select
+              disabled
               placeholder="请选择省份"
               onChange={(value, option) => {
-                formRef.current.setFieldsValue({ UserGroup_ID: option['data-item'].UserGroup_ID });
+                form.setFieldsValue({ UserGroup_ID: option['data-item'].UserGroup_ID });
               }}
             >
               {RegionalAndProvince.map((item, index) => {

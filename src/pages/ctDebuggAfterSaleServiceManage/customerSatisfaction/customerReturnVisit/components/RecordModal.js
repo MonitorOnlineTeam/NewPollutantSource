@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 16:18:02
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 18:42:24
+ * @Last Modified time: 2024-05-15 14:12:53
  * @Description:  客户现场回访记录弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -471,7 +471,6 @@ const RecordModal = props => {
               >
                 重置
               </Button>
-              {title !== '客户现场回访管理' && (
                 <Button
                   icon={<ExportOutlined />}
                   loading={exportLoading}
@@ -482,7 +481,6 @@ const RecordModal = props => {
                 >
                   导出
                 </Button>
-              )}
             </Space>
           </Form.Item>
         </Space>

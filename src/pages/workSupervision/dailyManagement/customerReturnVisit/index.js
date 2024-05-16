@@ -1,3 +1,11 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2024-03-29 10:00:32
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-05-15 18:54:47
+ * @Description:  客户现场回访
+ */
+
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
@@ -11,49 +19,63 @@ import {
   Row,
   Col,
   message,
+  Divider,
+  Tooltip,
   Progress,
 } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import styles from '../styles.less';
 import moment from 'moment';
-import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
-import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import TaskCompletionRecord from './TaskCompletionRecord';
-import ChecklistRecordAndManagement from './ChecklistRecordAndManagement';
+import { DeleteOutlined, ExportOutlined } from '@ant-design/icons';
+import RecordModal from './components/RecordModal';
 import { permissionButton } from '@/utils/utils';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RecordAndManagement from './components/RecordAndManagement';
+
+const { RangePicker } = DatePicker;
 
 const dvaPropsData = ({ loading }) => ({
-  queryLoading: loading.effects[`wordSupervision/GetOfficeCheckStatisticsForRegion`],
-  exportLoading: loading.effects[`wordSupervision/ExportOfficeCheckStatisticsForRegion`],
+  queryLoading: loading.effects[`wordSupervision/GetCustomerVisitList`],
+  exportLoading: loading.effects[`wordSupervision/ExportCustomerVisitList`],
 });
 
-const OfficeCheck = props => {
+const ReturnVisit = props => {
   const [form] = Form.useForm();
+
+  const [date, setDate] = useState([moment().startOf('month'), moment().endOf('month')]);
   const [dataSource, setDataSource] = useState([]);
-  const [regionCode, setRegionCode] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
-  const [mode, setMode] = useState(); // 1: 办事处检查管理 空：办事处检查纪律
-  
+  const [modalQueryParams, setModalQueryParams] = useState({});
+  const [mode, setMode] = useState(); // 1: 管理 空：记录
+
   const buttonList = permissionButton(props.match.path);
-  const { dispatch, queryLoading, exportLoading } = props;
+  const {
+    queryLoading,
+    dispatch,
+    exportLoading,
+    match: {
+      params: { systemType },
+    },
+  } = props;
 
   useEffect(() => {
-    getPageData();
+    getTableDataSource();
   }, []);
 
-  // 获取页面数据
-  const getPageData = () => {
+  // 获取表格数据
+  const getTableDataSource = () => {
     const values = form.getFieldsValue();
     dispatch({
-      type: 'wordSupervision/GetOfficeCheckStatisticsForRegion',
+      type: 'wordSupervision/GetCustomerVisitList',
       payload: {
         beginTime: values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time[1].endOf('months').format('YYYY-MM-DD 23:59:59'),
+        dataType: 0,
+        systemType: systemType,
       },
       callback: res => {
-        setDataSource(res);
+        setDataSource(res.Datas);
       },
     });
   };
@@ -62,96 +84,119 @@ const OfficeCheck = props => {
   const onExport = () => {
     const values = form.getFieldsValue();
     dispatch({
-      type: 'wordSupervision/ExportOfficeCheckStatisticsForRegion',
+      type: 'wordSupervision/ExportCustomerVisitList',
       payload: {
         beginTime: values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time[1].endOf('months').format('YYYY-MM-DD 23:59:59'),
+        dataType: 0,
+        systemType: systemType,
       },
     });
   };
+
 
   const getColumns = () => {
     let columns = [
       {
         title: '序号',
+        align: 'center',
         width: 40,
+        // ellipsis: true,
+        // render: (text, record, index) => {
+        //   return index + 1 + (pageIndex - 1) * pageSize;
+        // },
       },
       {
         title: '大区',
-        dataIndex: 'LargeRegion',
-        key: 'LargeRegion',
-        ellipsis: true,
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { colSpan: text === '合计' ? 2 : 1 },
-          };
-        },
-      },
-      {
-        title: '省份',
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
         width: 200,
         render: (text, record, index) => {
+          if (systemType !== '1') {
+            return text;
+          }
           return {
-            children: (
-              <a
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setRegionCode(record.RegionCode);
-                }}
-              >
-                {text}
-              </a>
-            ),
-            props: { colSpan: record.LargeRegion === '合计' ? 0 : 1 },
+            children: text,
+            props: { colSpan: record.RegionCode === 'All' ? 2 : 1 },
+          };
+        },
+      },
+      {
+        title: '省份',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        ellipsis: true,
+        width: 200,
+        render: (text, record, index) => {
+          return {
+            children: text,
+            props: { colSpan: record.RegionCode === 'All' ? 0 : 1 },
           };
         },
       },
       {
         title: '应完成任务数量',
-        dataIndex: 'CompletedCount',
-        key: 'CompletedCount',
+        dataIndex: 'ShouldCheckCount',
+        key: 'ShouldCheckCount',
         ellipsis: true,
+        width: 150,
+        render: (text, record) => {
+          return (
+            <a
+              onClick={() => {
+                setIsModalOpen(true);
+                setModalQueryParams({
+                  time: form.getFieldValue('time'),
+                  RegionCode: record.CityCode || undefined,
+                  LargeRegionCode: record.RegionCode === 'All' ? undefined : record.RegionCode,
+                });
+              }}
+            >
+              {text}
+            </a>
+          );
+        },
       },
       {
         title: '实际完成任务数量',
-        dataIndex: 'CompletedCountYes',
-        key: 'CompletedCountYes',
+        dataIndex: 'AlreadyCheckCount',
+        key: 'AlreadyCheckCount',
         ellipsis: true,
         width: 200,
       },
       {
-        title: '任务完成率',
-        dataIndex: 'CompletedRate',
-        key: 'CompletedRate',
+        title: '回访完成率',
+        dataIndex: 'CheckRate',
+        key: 'CheckRate',
         ellipsis: true,
-        width: 200,
+        width: 300,
         sorter: (a, b) => {
           if (a.RegionCode !== 'All' && b.RegionCode !== 'All') {
             return a.CheckRate - b.CheckRate;
           }
         },
         render: (text, record) => {
-          let percent = text.replace('%', '');
+          // let percent = Number(text).toFixed(2);
           return (
             <Progress
-              percent={percent == '-' ? 0 : percent}
+              percent={text == '-' ? 0 : text}
               size="small"
               style={{ width: '80%' }}
-              status={percent * 1 < 100 ? 'exception' : 'normal'}
+              status={text * 1 < 100 ? 'exception' : 'normal'}
               format={percent => (
-                <span style={{ color: 'rgba(0,0,0,.8)' }}>
-                  {percent == '-' ? percent : percent + '%'}
-                </span>
+                <span style={{ color: 'rgba(0,0,0,.8)' }}>{text == '-' ? text : text + '%'}</span>
               )}
             />
           );
         },
       },
     ];
+
+    if (systemType === '2') {
+      // 成套不显示省份
+      columns = columns.filter(item => item.dataIndex !== 'CityName');
+    }
 
     return columns;
   };
@@ -161,9 +206,8 @@ const OfficeCheck = props => {
     return (
       <div>
         <Form
-          id="searchForm"
           form={form}
-          // layout="inline"
+          layout="inline"
           initialValues={{
             time: [
               moment()
@@ -176,7 +220,7 @@ const OfficeCheck = props => {
           }}
           autoComplete="off"
         >
-          <Space align="middle">
+          <Space>
             <Form.Item name="time" label="任务派发时间">
               <RangePicker_
                 style={{ width: '100%' }}
@@ -192,7 +236,7 @@ const OfficeCheck = props => {
                   htmlType="submit"
                   loading={queryLoading}
                   onClick={() => {
-                    getPageData();
+                    getTableDataSource();
                   }}
                 >
                   查询
@@ -207,17 +251,17 @@ const OfficeCheck = props => {
                 >
                   导出
                 </Button>
-                {buttonList.includes('officeManagement') && (
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      setIsModalOpen2(true);
-                      setMode('management');
-                    }}
-                  >
-                    办事处检查管理
-                  </Button>
-                )}
+                {/* {buttonList.includes('officeManagement') && ( */}
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setIsModalOpen2(true);
+                    setMode('management');
+                  }}
+                >
+                  客户现场回访管理
+                </Button>
+                {/* )} */}
                 <Button
                   type="primary"
                   onClick={() => {
@@ -225,7 +269,7 @@ const OfficeCheck = props => {
                     setMode('record');
                   }}
                 >
-                  办事处检查记录
+                  客户现场回访记录
                 </Button>
               </Space>
             </Form.Item>
@@ -246,19 +290,22 @@ const OfficeCheck = props => {
           pagination={false}
         />
       </Card>
+
+      {/* 客户现场回访弹窗 */}
       {isModalOpen && (
-        <TaskCompletionRecord
-          time={form.getFieldValue('time')}
-          regionCode={regionCode}
+        <RecordModal
+          systemType={systemType}
+          queryParams={modalQueryParams}
           open={isModalOpen}
           onCancel={() => {
             setIsModalOpen(false);
           }}
         />
       )}
-      {// 办事处检查记录和管理
+      {// 记录和管理
       isModalOpen2 && (
-        <ChecklistRecordAndManagement
+        <RecordAndManagement
+          type={systemType}
           mode={mode}
           open={isModalOpen2}
           onCancel={() => {
@@ -270,4 +317,4 @@ const OfficeCheck = props => {
   );
 };
 
-export default connect(dvaPropsData)(OfficeCheck);
+export default connect(dvaPropsData)(ReturnVisit);

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-23 18:13:25
+ * @Last Modified time: 2024-05-14 16:46:47
  * @Description：报警记录
  */
 
@@ -67,7 +67,8 @@ const CluesList = props => {
     showMode,
     tableProps = {},
   } = props;
-  const modelNumber = props.match.params.modelNumber;
+  // const modelNumber = props.match.params.modelNumber;
+  const modelNumber = 'all';
   const [modelList, setModelList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [warningTypeCounts, setWarningTypeCounts] = useState([]);
@@ -601,7 +602,7 @@ const CluesList = props => {
           <Form.Item label="线索内容" name="WarningContent">
             <Input placeholder="线索内容" style={{ width: 240 }} />
           </Form.Item>
-          
+
           <Form.Item>
             <Space>
               <Button

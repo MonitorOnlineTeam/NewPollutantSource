@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 16:22:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 20:00:26
+ * @Last Modified time: 2024-05-15 19:38:51
  * @Description: 人员培训记录表
  */
 import React, { useState, useEffect } from 'react';
@@ -165,7 +165,7 @@ const Training = props => {
     <>
       {taskInfo.CreateTime && (
         <Alert
-          message={`任务类型：人员培训记录，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次${taskInfo.standNum}次/月。`}
+          message={`任务类型：人员培训记录，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次1次/月。`}
           type="info"
           showIcon
           style={{ marginRight: 30 }}

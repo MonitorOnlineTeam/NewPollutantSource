@@ -37,6 +37,7 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import styles from './style.less';
 import Setting from './components/Setting';
 import SettingRuleModal from './components/SettingRuleModal';
+import { permissionButton } from '@/utils/utils';
 const { Option } = Select;
 
 const namespace = 'generalManager';
@@ -102,6 +103,8 @@ const Index = props => {
   const [settingRuleOpen, setSettingRuleOpen] = useState(false);
   const [handleOpen, setHandleOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState({});
+
+  const buttonList = permissionButton(props.match.path);
 
   useEffect(() => {
     onFinish(pageIndex, pageSize);
@@ -365,14 +368,16 @@ const Index = props => {
                 >
                   导出
                 </Button>
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    setSettingRuleOpen(true);
-                  }}
-                >
-                  设置省区经理日常管理规则
-                </Button>
+                {buttonList.includes('disciplineCheck') && (
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      setSettingRuleOpen(true);
+                    }}
+                  >
+                    设置省区经理日常管理规则
+                  </Button>
+                )}
               </Form.Item>
             </Col>
           </Row>

@@ -242,22 +242,22 @@ export const API = {
 
     /**运维计划**/
     /*制定运维计划*/
-    GetOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList',//运维计划列表
-    ExportOperationPlanList: before + '/WorkOrderApi/ExportOperationPlanList',//运维计划 导出
-    DeleteOperationPlan: before + '/WorkOrderApi/DeleteOperationPlan',//删除运维计划
-    UpdOperationPlan: before + '/WorkOrderApi/UpdOperationPlan',//修改运维计划基本信息
-    GetOperationPlanPointList: before + '/WorkOrderApi/GetOperationPlanPointList',//获取未排计划点位
-    AddOperationPlan: before + '/WorkOrderApi/AddOperationPlan',//生成运维计划
-    GetOperationPlanInfo: before + '/WorkOrderApi/GetOperationPlanInfo',//获取单个运维计划详情
-    ExportOperationPlanInfo: before + '/WorkOrderApi/ExportOperationPlanInfo',//单个运维计划详情 导出
-    DelOperationPlanPoint: before + '/WorkOrderApi/DelOperationPlanPoint',//删除运维计划点位
-    GetOperationPlanCalendar: before + '/WorkOrderApi/GetOperationPlanCalendar',//运维计划日历
-    ExportOperationPlanCalendar: before + '/WorkOrderApi/ExportOperationPlanCalendar',//运维计划日历 导出
-    GetFormulatePointList: before + '/WorkOrderApi/GetFormulatePointList',//获取运维计划可调整点位
-    AdjustmentOperationPlan: before + '/WorkOrderApi/AdjustmentOperationPlan',//运维计划点位调整
-    ExtendPlanDate: before + '/WorkOrderApi/ExtendPlanDate',//运维计划点位延长
-    UpdOperationPlanStatus: before + '/WorkOrderApi/UpdOperationPlanStatus',//运维计划状态修改
-    GetOperationPlanStatusList: before + '/WorkOrderApi/GetOperationPlanStatusList',//获取运维计划状态修改记录
+    GetOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList', //运维计划列表
+    ExportOperationPlanList: before + '/WorkOrderApi/ExportOperationPlanList', //运维计划 导出
+    DeleteOperationPlan: before + '/WorkOrderApi/DeleteOperationPlan', //删除运维计划
+    UpdOperationPlan: before + '/WorkOrderApi/UpdOperationPlan', //修改运维计划基本信息
+    GetOperationPlanPointList: before + '/WorkOrderApi/GetOperationPlanPointList', //获取未排计划点位
+    AddOperationPlan: before + '/WorkOrderApi/AddOperationPlan', //生成运维计划
+    GetOperationPlanInfo: before + '/WorkOrderApi/GetOperationPlanInfo', //获取单个运维计划详情
+    ExportOperationPlanInfo: before + '/WorkOrderApi/ExportOperationPlanInfo', //单个运维计划详情 导出
+    DelOperationPlanPoint: before + '/WorkOrderApi/DelOperationPlanPoint', //删除运维计划点位
+    GetOperationPlanCalendar: before + '/WorkOrderApi/GetOperationPlanCalendar', //运维计划日历
+    ExportOperationPlanCalendar: before + '/WorkOrderApi/ExportOperationPlanCalendar', //运维计划日历 导出
+    GetFormulatePointList: before + '/WorkOrderApi/GetFormulatePointList', //获取运维计划可调整点位
+    AdjustmentOperationPlan: before + '/WorkOrderApi/AdjustmentOperationPlan', //运维计划点位调整
+    ExtendPlanDate: before + '/WorkOrderApi/ExtendPlanDate', //运维计划点位延长
+    UpdOperationPlanStatus: before + '/WorkOrderApi/UpdOperationPlanStatus', //运维计划状态修改
+    GetOperationPlanStatusList: before + '/WorkOrderApi/GetOperationPlanStatusList', //获取运维计划状态修改记录
     /**运维报告**/
     /*运维报告（word）*/
     GetOperationReportList: before + '/WorkOrderStatistics/GetOperationReportList', //获取运维月度报告信息
@@ -1133,7 +1133,6 @@ export const API = {
     AddProvinceManagementRules: before + '/DailyWorkBaseApi/AddProvinceManagementRules', // 设置省区经理日常规则
     GetProvinceManagementRulesList: before + '/DailyWorkBaseApi/GetProvinceManagementRulesList', // 获取省区经理日常规则列表
     DeleteProvinceManagementRules: before + '/DailyWorkBaseApi/DeleteProvinceManagementRules', // 删除省区经理日常规则列表
-
   },
   //技术专家系统 Api
   TechExpertSystemApi: {
@@ -1183,7 +1182,6 @@ export const API = {
       // 删除
       DeleteAccountsReceivable: before + '/DailyWorkManagerApi/DeleteAccountsReceivable',
     },
-
     // 人员培训
     TrainingApi: {
       // 获取人员培训统计
@@ -1199,6 +1197,39 @@ export const API = {
       GetPersonTrainList: before + '/DailyWorkManagerApi/GetPersonTrainList',
       // 记录和管理数据 - 导出
       ExportPersonTrainList: before + '/DailyWorkManagerApi/ExportPersonTrainList',
+    },
+    // 现场检查
+    FieldCheckApi: {
+      // 获取现场检查统计列表
+      GetSiteInspectionForRegion: before + '/DailyWorkManagerApi/GetSiteInspectionForRegion',
+      // 现场检查统计列表 - 导出
+      ExportSiteInspectionForRegion: before + '/DailyWorkManagerApi/ExportSiteInspectionForRegion',
+      // 省区详情
+      GetSiteInspectionForRegionInfo:
+        before + '/DailyWorkManagerApi/GetSiteInspectionForRegionInfo',
+      // 省区详情 - 导出
+      ExportSiteInspectionForRegionInfo:
+        before + '/DailyWorkManagerApi/ExportSiteInspectionForRegionInfo',
+      // 现场检查记录
+      GetSiteInspectionList: before + '/DailyWorkManagerApi/GetSiteInspectionList',
+      // 现场检查记录 - 导出
+      ExportSystemFacilityVerificationList:
+        before + '/DailyWorkManagerApi/ExportSystemFacilityVerificationList',
+    },
+    // 客户回访
+    CustomerReturnVisit: {
+      // 客户回访统计列表
+      GetCustomerVisitList: before + '/CTProjectExecutionApi/GetCustomerVisitList',
+      // 导出
+      ExportCustomerVisitList: before + '/CTProjectExecutionApi/ExportCustomerVisitList',
+      // 删除
+      DeleteReturnVisitCustomers: before + '/DailyWorkManagerApi/DeleteReturnVisitCustomers',
+      // 获取纪律检查详情
+      GetCustomerVisitInfor: before + '/CTProjectExecutionApi/GetCustomerVisitInfor',
+      // 客户现场回访记录，客户现场回访管理
+      GetCustomerVisitInfo: before + '/CTProjectExecutionApi/GetCustomerVisitInfo',
+      // 客户现场回访记录，客户现场回访管理 - 导出
+      ExportCustomerVisitInfo: before + '/CTProjectExecutionApi/ExportCustomerVisitInfo',
     },
   },
   CtAPI_WJQ: {
@@ -1296,17 +1327,6 @@ export const API = {
       UpdateDisciplineCheckManage: before + '/CTProjectExecutionApi/UpdateDisciplineCheckManage',
       // 获取大区列表
       GetRegionList: before + '/CTProjectExecutionApi/GetRegionList',
-    },
-    // 客户回访
-    CustomerReturnVisit: {
-      // 客户回访统计列表
-      GetCustomerVisitList: before + '/CTProjectExecutionApi/GetCustomerVisitList',
-      // 导出
-      ExportCustomerVisitList: before + '/CTProjectExecutionApi/ExportCustomerVisitList',
-      // 删除
-      DeleteReturnVisitCustomers: before + '/DailyWorkManagerApi/DeleteReturnVisitCustomers',
-      // 获取纪律检查详情
-      GetCustomerVisitInfor: before + '/CTProjectExecutionApi/GetCustomerVisitInfor',
     },
     // 服务热线电话
     HotPhone: {

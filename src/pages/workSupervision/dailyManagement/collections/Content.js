@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:38:17
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 19:17:30
+ * @Last Modified time: 2024-05-15 20:15:24
  * @Description：部门内其他工作事项
  */
 
@@ -328,7 +328,7 @@ const Content = props => {
                   应收账款催收记录
                 </Button>,
               ]}
-              <Button loading={exportLoading} onClick={() => onExport()}>
+              <Button type='primary' loading={exportLoading} onClick={() => onExport()}>
                 导出
               </Button>
             </Space>

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:54:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 19:16:04
+ * @Last Modified time: 2024-05-15 20:33:12
  * @Description：部门内其他工作事项
  */
 import React, { useState, useEffect } from 'react';
@@ -108,7 +108,7 @@ const HandleModal = props => {
     form.setFieldsValue({
       ProjectNo: record.ProjectCode,
       ProjectName: record.ProjectName,
-      regionCode: record.Province ? record.Province.split(',')[0] : undefined,
+      RegionCode: record.Province ? record.Province.split(',')[0] : undefined,
     });
     // setChoiceData(record.ProjectCode);
     setPopVisible(false);

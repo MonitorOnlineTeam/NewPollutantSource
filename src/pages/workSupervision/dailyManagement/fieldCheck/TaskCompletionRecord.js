@@ -21,9 +21,9 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const { Text, Link } = Typography;
 
 const dvaPropsData = ({ loading, provinceAllList, common }) => ({
-  provinceAllList: common.CtProvinceList,
-  loading: loading.effects[`wordSupervision/GetOfficeCheckStatisticsForRegionInfo`],
-  exportLoading: loading.effects[`wordSupervision/ExportOfficeCheckStatisticsForRegionInfo`],
+  provinceAllList: common.provinceList,
+  loading: loading.effects[`wordSupervision/GetSiteInspectionForRegionInfo`],
+  exportLoading: loading.effects[`wordSupervision/ExportSiteInspectionForRegionInfo`],
 });
 
 const TaskCompletionRecord = props => {
@@ -53,7 +53,7 @@ const TaskCompletionRecord = props => {
   // 获取大区及省份
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getCTLargeRegion',
+      type: 'common/getLargeRegion',
       payload: {},
     });
   };
@@ -65,10 +65,10 @@ const TaskCompletionRecord = props => {
       ...values,
       time: undefined,
       beginTime: values.time
-        ? values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss')
+        ? values.time[0].startOf('month').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
       endTime: values.time
-        ? values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss')
+        ? values.time[1].endOf('month').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
     };
   };
@@ -84,7 +84,7 @@ const TaskCompletionRecord = props => {
   const getPageData = (_pageIndex, _pageSize) => {
     const body = getParams();
     dispatch({
-      type: 'wordSupervision/GetOfficeCheckStatisticsForRegionInfo',
+      type: 'wordSupervision/GetSiteInspectionForRegionInfo',
       payload: {
         ...body,
         pageIndex: _pageIndex || pageIndex,
@@ -92,7 +92,7 @@ const TaskCompletionRecord = props => {
       },
       callback: res => {
         setDataSource(res.Datas);
-        setTableTotal(res.Total)
+        setTableTotal(res.Total);
       },
     });
   };
@@ -101,7 +101,7 @@ const TaskCompletionRecord = props => {
   const onExport = () => {
     const body = getParams();
     dispatch({
-      type: 'wordSupervision/ExportOfficeCheckStatisticsForRegionInfo',
+      type: 'wordSupervision/ExportSiteInspectionForRegionInfo',
       payload: body,
     });
   };
@@ -110,7 +110,6 @@ const TaskCompletionRecord = props => {
     let columns = [
       {
         title: '序号',
-        width: 40,
       },
       {
         title: '大区',
@@ -141,6 +140,30 @@ const TaskCompletionRecord = props => {
         },
       },
       {
+        title: '应覆盖监测点数',
+        dataIndex: 'InspectEquNum',
+        key: 'InspectEquNum',
+        width: 160,
+      },
+      {
+        title: '实际覆盖监测点数',
+        dataIndex: 'overInspectEquNum',
+        key: 'overInspectEquNum',
+        width: 160,
+      },
+      {
+        title: '应覆盖运维人员数量',
+        dataIndex: 'InspectPersonNum',
+        key: 'InspectPersonNum',
+        width: 160,
+      },
+      {
+        title: '实际覆盖运维人员数量',
+        dataIndex: 'overInspectPersonNum',
+        key: 'overInspectPersonNum',
+        width: 160,
+      },
+      {
         title: '检查人',
         dataIndex: 'UserName',
         key: 'UserName',
@@ -167,7 +190,7 @@ const TaskCompletionRecord = props => {
           form={form}
           layout="inline"
           initialValues={{
-            regionCode: regionCode,
+            regionCode: regionCode || undefined,
             time: time,
             status: null,
           }}
@@ -243,7 +266,7 @@ const TaskCompletionRecord = props => {
 
   return (
     <Modal
-      title={'办事处检查任务完成记录'}
+      title={'现场检查任务完成记录'}
       wrapClassName={`spreadOverModal`}
       open={open}
       destroyOnClose

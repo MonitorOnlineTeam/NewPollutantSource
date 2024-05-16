@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-29 16:29:07
+ * @Last Modified time: 2024-05-15 19:27:27
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -26,7 +26,6 @@ import styles from './styles.less';
 import HandleCustomer from './HandleCustomer';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { taskType } from '../workSupervisionUtils';
 
 const dataSource = [
   {
@@ -54,6 +53,7 @@ const dataSource = [
 const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
+  TYPE: wordSupervision.TYPE, // 1: 成套 “”：运维
   customerList: wordSupervision.customerList,
   // otherCustomerList: wordSupervision.otherCustomerList,
   // messageList: wordSupervision.messageList,
@@ -62,7 +62,15 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 });
 
 const CustomerInterview = props => {
-  const { customerList, submitLoading, taskInfo, onCancel, editData, onSubmitCallback } = props;
+  const {
+    customerList,
+    submitLoading,
+    onCancel,
+    editData,
+    onSubmitCallback,
+    TYPE,
+    taskInfo,
+  } = props;
   const [form] = Form.useForm();
 
   const [customID, setCustomID] = useState();
@@ -73,10 +81,12 @@ const CustomerInterview = props => {
 
   // 获取客户
   const getCustomerList = () => {
-    console.log(props.type)
     props.dispatch({
       type: 'wordSupervision/getCustomerList',
-      payload: {type:props.type==1? '1' : ''},
+      payload: {
+        type: TYPE == 1 ? '2' : '1', // 1：运维 2：成套
+        ReionCode: taskInfo.RegionCode || editData.RegionCode,
+      },
     });
   };
 
@@ -149,7 +159,7 @@ const CustomerInterview = props => {
       ReturnTime: moment(values.ReturnTime).format('YYYY-MM-DD 00:00:00'),
       UserGroup_Name: undefined,
       ProvinceName: undefined,
-      DailyTaskID: taskInfo.ID,
+      DailyTaskID: taskInfo.ID || editData.DailyTaskID,
       ReturnUser: JSON.parse(userCookie).UserId,
       ID: editData.ID,
     };
@@ -170,7 +180,7 @@ const CustomerInterview = props => {
 
   return (
     <>
-      {taskInfo.CreateTime && (
+      {/* {taskInfo.CreateTime && (
         <Alert
           message={`任务类型：${taskType[taskInfo.TaskType]}，${taskInfo.CreateTime} 开始，于${
             taskInfo.EndTime
@@ -179,7 +189,7 @@ const CustomerInterview = props => {
           showIcon
           style={{ marginRight: 30 }}
         />
-      )}
+      )} */}
       <h2 className={styles.formTitle}>回访客户记录表</h2>
       <div className={styles.formContent}>
         <Form
@@ -188,6 +198,8 @@ const CustomerInterview = props => {
           wrapperCol={{ span: 14 }}
           initialValues={{
             ...editData,
+            UserGroup_Name: editData.LargeRegion,
+            ProvinceName: editData.RegionName,
             ReturnTime: moment(editData.ReturnTime),
           }}
           onFinish={onFinish}
@@ -272,6 +284,7 @@ const CustomerInterview = props => {
                   </Col>
                   <Col span={10}>
                     <HandleCustomer
+                      RegionCode={taskInfo.RegionCode || editData.RegionCode}
                       CustomID={customID}
                       onOk={data => {
                         setCustomID(data.ID);
@@ -370,7 +383,7 @@ const CustomerInterview = props => {
                 rules={[
                   {
                     required: true,
-                    message: '请选择回访人！',
+                    message: '请填写回访人！',
                   },
                 ]}
               >
