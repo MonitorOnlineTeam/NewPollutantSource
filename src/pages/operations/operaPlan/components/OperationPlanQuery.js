@@ -155,18 +155,18 @@ const Index = (props) => {
         >
             <Row>
                 <Col span={8}>
-                    <Form.Item name='itemCode' label='合同编号'>
+                    <Form.Item name='projectCode' label='合同编号'>
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item name='itemCode' label='运维单位'>
-                        <Input placeholder='请输入' allowClear />
+                    <Form.Item name='operationEnt' label='运维单位'>
+                      <OperationCompanyList />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item name='itemCode' label='污染源企业'>
-                        <Input placeholder='请输入' allowClear />
+                    <Form.Item name='entCode' label='污染源企业'>
+                    <EntAtmoList enable placeholder="请选择"  style={{width:'100%'}}/>
                     </Form.Item>
                 </Col>
                 <Col span={8}>

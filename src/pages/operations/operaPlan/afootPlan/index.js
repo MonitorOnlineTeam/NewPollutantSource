@@ -117,6 +117,7 @@ const Index = (props) => {
     const [viewPlanVisible, setViewPlanVisible] = useState(false)
     const viewPlan = (record) => {
         setViewPlanVisible(true)
+        setEntCode(record.entCode)
         props.dispatch({
             type: `${namespace}/updateState`,
             payload: { operationPlanInfoRefreshId: record.ID },
@@ -138,13 +139,12 @@ const Index = (props) => {
 
     const [switchPlanVisible, setSwitchPlanVisible] = useState(false)
     const [switchPlanTitle, setSwitchPlanTitle] = useState()
-    const [status, setStatus] = useState()
     const pauseOpenTerminPlan = (record, title, status) => { //暂停计划、开启计划、异常终止
         setSwitchPlanVisible(true)
         setSwitchPlanTitle(title)
         form2.setFieldsValue({ id: record.ID, status: status })
         setFiles(cuid())
-        setRefresh(true)
+        setRefresh(!refresh)
     }
 
 
@@ -174,7 +174,7 @@ const Index = (props) => {
     }
     const switchPlanSubmit = (values) => {  //开启、暂停、终止计划提交
         updOperationPlanReauest(values, () => {
-            if (status == 3) { //终止
+            if (values.status == 3) { //终止
                 setSwitchPlanVisible(false)
             } else {
                 setRefresh(!refresh)
@@ -197,10 +197,10 @@ const Index = (props) => {
         props.dispatch({
             type: `${namespace}/UpdOperationPlan`,
             payload: { ...values, beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59') },
-            callback: () => {
+            callback: (res) => {
                 props.dispatch({
                     type: `${namespace}/updateState`,
-                    payload: { operationPlanQueryRefreshType: 1 },
+                    payload: {operationPlanInfoRefreshId:res.Datas, operationPlanQueryRefreshType: 1 },
                 });
             }
         });
@@ -347,9 +347,8 @@ const Index = (props) => {
                     type={2}
                     onCancel={() => { setExtensVisible(false); }}
                     pointType={pointType}
-                    dataList={operationPlanInfo}
-
-                />
+                    adjustPointList={{xjPointList:operationPlanInfo?.filter(item=>item.RecordType==1 || item.RecordType==7), jzPointList:operationPlanInfo?.filter(item=>item.RecordType==3 || item.RecordType==9)}}
+             />
                 <ViewPlanModal
                     visible={viewPlanVisible}
                     onCancel={() => { setViewPlanVisible(false) }}

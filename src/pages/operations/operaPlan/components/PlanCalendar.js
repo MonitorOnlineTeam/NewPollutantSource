@@ -4,7 +4,7 @@
  * 创建时间：2024.04
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm,Empty, Checkbox,Skeleton, Spin, Tag, Tabs, Form, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space, Radio } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Empty, Checkbox, Skeleton, Spin, Tag, Tabs, Form, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -14,14 +14,12 @@ import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
-import RegionList from '@/components/RegionList'
-import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
-import styles from "../styles.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import CheckPhoto from '@/components/CheckPhoto';
 import { permissionButton } from '@/utils/utils';
 import AdjustExtendPlanModal from './AdjustExtendPlanModal';
+import TaskRecordDetails from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout'
 
 const { Option } = Select;
 
@@ -36,8 +34,8 @@ const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     queryPar: operaPlan.operationPlanCalendarQueryPar,
     operationPlanInfoRefreshId: operaPlan.operationPlanInfoRefreshId,
     exportLoading: loading.effects[`${namespace}/ExportOperationPlanCalendar`],
-    formulatePointListLoading: loading.effects[`${namespace}/GetFormulatePointList`],
-    adjustmentOperationPlanLoading: loading.effects[`${namespace}/AdjustmentOperationPlan`],
+    // formulatePointListLoading: loading.effects[`${namespace}/GetFormulatePointList`],
+    // adjustmentOperationPlanLoading: loading.effects[`${namespace}/AdjustmentOperationPlan`],
 })
 
 const Index = (props) => {
@@ -49,39 +47,40 @@ const Index = (props) => {
 
 
 
-    const {type,pointType,commonSearchComponents,operationPlanInfoRefreshId,  tableDatas, tableTotal, tableLoading,queryPar, exportLoading } = props;
+    const { type, pointType, commonSearchComponents, operationPlanInfoRefreshId, tableDatas, tableTotal, tableLoading, queryPar, exportLoading } = props;
     const [recordType, setRecordType] = useState(pointType == 2 ? '1' : '7')
     const [justVisible, setJustVisible] = useState(false)
-    const [adjustPointList, setAdjustPointList] = useState({xjPointList:[],jzPointList:[]})
+    const [adjustPointList, setAdjustPointList] = useState({ xjPointList: [], jzPointList: [] })
+    const typeLegendData = [{ title: '按计划完成', value: 1, color: '#1890ff' }, { title: '超时完成', value: 2, color: '#faad14' }, { title: '超时未完成', value: 4, color: '#f5222d' }]
 
 
     useEffect(() => {
-        if(operationPlanInfoRefreshId){
-        onFinish(pageIndex, pageSize);
-       }else{
-        props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanCalendarList: [] } });
-       }
+        if (operationPlanInfoRefreshId) {
+            onFinish(pageIndex, pageSize);
+        } else {
+            props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanCalendarList: [] } });
+        }
     }, []);
 
     useEffect(() => {
-        if(operationPlanInfoRefreshId && justVisible){
-        props.dispatch({
-            type: `${namespace}/GetFormulatePointList`,
-            payload: {
-                id:operationPlanInfoRefreshId,
-            },
-            callback:res=>{
-                setAdjustPointList({xjPointList:res?.xjList,jzPointList:res?.jzList})
-            }
-        });
-       }
+        if (operationPlanInfoRefreshId && justVisible) {
+            props.dispatch({
+                type: `${namespace}/GetFormulatePointList`,
+                payload: {
+                    id: operationPlanInfoRefreshId,
+                },
+                callback: res => {
+                    setAdjustPointList({ xjPointList: res?.xjList, jzPointList: res?.jzList })
+                }
+            });
+        }
     }, [justVisible]);
 
-   const justResData = () =>{
-    form2.resetFields();
-    setIndeterminate(false);
-    setCheckAll(false) 
-   }
+    // const justResData = () => {
+    //     form2.resetFields();
+    //     setIndeterminate(false);
+    //     setCheckAll(false)
+    // }
 
 
     const { dateCol } = props;
@@ -103,32 +102,41 @@ const Index = (props) => {
             ellipsis: true,
         }]
         if (dateCol && dateCol[0]) {
-              const colList = dateCol.map((item, index) => {
-                    return {
-                        title: `${item.month}`,
+            const colList = dateCol.map((item, index) => {
+                return {
+                    title: `${item.month}`,
+                    align: 'center',
+                    colSpan: item.count,
+                    children: [{
+                        title: `${item.day}`,
                         align: 'center',
-                        colSpan: item.count,
                         children: [{
-                            title: `${item.day}`,
+                            title: `${item.week}`,
+                            dataIndex: `${item.date}`,
+                            key: `${item.date}`,
+                            width: 70,
                             align: 'center',
-                            children: [{
-                                    title: `${item.week}`,
-                                    dataIndex: `${item.date}`,
-                                    key: `${item.date}`,
-                                    width: 70,
-                                    align:'center',
-                                }]
+                            render: (text, record, index) => {
+                                const filterData = (status) => typeLegendData.filter(item => item.value == status)?.[0]?.color;
+                                return text&&<div style={{ fontWeight: 'bold', }}><span onClick={() => { text.xjID && taskDetail(text.xjID) }} style={{ color: filterData(text.xjStatus), cursor: text.xjID && 'pointer' }}>{text.xjStr}</span> <span onClick={() => { text.jzID && taskDetail(text.jzID) }} style={{ color: filterData(text.jzStatus), cursor: text.jzID && 'pointer' }}>{text.jzStr}</span></div>
+                            }
                         }]
-                     
-                    }
-                })
-          col.push(...colList)
+                    }]
+
+                }
+            })
+            col.push(...colList)
         }
         return col;
     }
 
+  const [taskRecordDetailVisible, setTaskRecordDetailVisible] = useState(false)
+  const [taskID, setTaskID] = useState()
+  const taskDetail = (id) => { //任务详情
+      setTaskID(id)
+      setTaskRecordDetailVisible(true)
+  }
     const onFinish = async (PageIndex, PageSize, queryPar) => {  //计划列表
-
         try {
             const values = await form.validateFields();
             const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
@@ -138,6 +146,7 @@ const Index = (props) => {
                 time: undefined,
                 pageIndex: PageIndex,
                 pageSize: PageSize,
+                statusList:legendSelectVal,
                 id: operationPlanInfoRefreshId,
             }
             props.dispatch({
@@ -161,8 +170,8 @@ const Index = (props) => {
 
     const exportData = () => {
         props.dispatch({
-            type: `${namespace}/ExportQuestionList`,
-            payload: queryPar,
+            type: `${namespace}/ExportOperationPlanCalendar`,
+            payload: {...queryPar,pageIndex:undefined,pageSize:undefined},
         });
     };
 
@@ -187,21 +196,20 @@ const Index = (props) => {
     // }
     const searchComponents = () => {
 
-        const resDataHandle = () => {  setPageIndex(1); setPageSize(20); onFinish(1, 20) }
         return <Form
             name="advanced_search"
             className={'ant-advanced-search-form'}
             form={form}
             layout='inline'
-            onFinish={resDataHandle}
+            onFinish={ () => { setPageIndex(1); setPageSize(20); onFinish(1, 20) }}
         >
-        {commonSearchComponents&&commonSearchComponents(type)}
+            {commonSearchComponents && commonSearchComponents(type)}
             <Form.Item style={{ marginBottom: 4 }}>
                 <Space>
                     <Button type="primary" htmlType="submit" loading={tableLoading}>
                         查询
                                  </Button>
-                    <Button loading={tableLoading} onClick={()=>{ form.resetFields();resDataHandle}}   >
+                    <Button loading={tableLoading} onClick={() => { form.resetFields(); setLegendSelectVal([]); setPageIndex(1); setPageSize(20); onFinish(1, 20,{  id: operationPlanInfoRefreshId})  }}   >
                         重置
                                   </Button>
                     <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exportData() }}>
@@ -264,27 +272,26 @@ const Index = (props) => {
     //      <Empty description='暂无监测点' image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ paddingBottom: 24 }} />
     //   }</>
     // }
-    const [legendSelectIndex, setLegendSelectIndex] = useState([])
-    const typeLegendChange = (index) => {
-
+    const [legendSelectVal, setLegendSelectVal] = useState([])
+    const typeLegendChange = (value) => {
         let data = []
-        if (legendSelectIndex.includes(index)) { //再次点击
-            data = legendSelectIndex.filter(item => item != index)
+        if (legendSelectVal.includes(value)) { //再次点击
+            data = legendSelectVal.filter(item => item != value)
         } else {
-            data = [...legendSelectIndex, index]
+            data = [...legendSelectVal, value]
         }
-        setLegendSelectIndex(data)
+        setLegendSelectVal(data)
+        setPageIndex(1);setPageSize(20);
+        onFinish(1,20,{...queryPar,statusList:data})
     }
-    const typeLegendData = [{ title: '按计划完成', color: '#1890ff' }, { title: '超时完成', color: '#faad14' }, { title: '超时未完成', color: '#f5222d' }]
-    const dataList = recordType == '1' || recordType == '7' ? adjustPointList?.xjPointList : adjustPointList?.jzPointList
     return (
         <div>
             {searchComponents()}
-             <Row style={{ paddingBottom: 8 }} align='middle'>
+            <Row style={{ paddingBottom: 8 }} align='middle'>
                 <span className='red' style={{ paddingRight: 18 }}> 巡检：X&nbsp;&nbsp;&nbsp;&nbsp;校准：J </span>
-                {type != 1 && typeLegendData.map((item, index) => <Row align='middle' style={{ cursor: 'pointer', marginRight: 12 }} onClick={() => typeLegendChange(index)} >
+                {type != 1 && typeLegendData.map((item, index) => <Row align='middle' style={{ cursor: 'pointer', marginRight: 12 }} onClick={() => typeLegendChange(item.value)} >
                     <div style={{ marginRight: 4, width: 32, height: 16, backgroundColor: item.color }}> </div>
-                    <span style={{ fontWeight: legendSelectIndex.includes(index) ? 'bold' : 'normal' }}>{item.title}</span>
+                    <span style={{ fontWeight: legendSelectVal.includes(item.value) ? 'bold' : 'normal' }}>{item.title}</span>
                 </Row>)}
             </Row>
             <SdlTable
@@ -294,7 +301,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns()}
                 align='center'
-                scroll={{y:'calc(100vh - 200px)'}}
+                scroll={{ y: 'calc(100vh - 200px)' }}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,
@@ -305,14 +312,14 @@ const Index = (props) => {
                 }}
             />
             <AdjustExtendPlanModal
-              type={1}
-              title='调整计划'
-              visible={justVisible}  
-              onCancel={() => { setJustVisible(false)}}
-              dataList={dataList}
-              pointType={pointType}
-              onFinish={()=>{setPageIndex(1);setPageSize(20);onFinish(1,20)}}
-              />
+                type={1}
+                title='调整计划'
+                visible={justVisible}
+                onCancel={() => { setJustVisible(false) }}
+                adjustPointList={adjustPointList}
+                pointType={pointType}
+                onFinish={() => { setPageIndex(1); setPageSize(20); onFinish(1, 20) }}
+            />
             {/* <Modal
                 visible={justVisible}
                 title={'调整计划'}
@@ -350,6 +357,23 @@ const Index = (props) => {
                     ]}
                 /> 
             </Modal>*/}
+            <Modal
+                title="任务详情"
+                visible={taskRecordDetailVisible}
+                destroyOnClose
+                wrapClassName='spreadOverModal'
+                footer={null}
+                onCancel={() => {
+                    setTaskRecordDetailVisible(false)
+                }}
+
+            >
+                <TaskRecordDetails
+                    match={{ params: { TaskID: taskID, DGIMN: null } }}
+                    isHomeModal
+                    hideBreadcrumb
+                />
+            </Modal>
         </div>
     );
 };

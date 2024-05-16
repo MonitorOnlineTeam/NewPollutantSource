@@ -399,9 +399,12 @@ const Index = (props) => {
                     destroyOnClose
                     wrapClassName={`spreadOverModal isFooterSty ${styles.formulateModalSty}`}
                     mask={false}
-                    okText='提交'
-                    confirmLoading={generateSubmitPlanLoading || editLoading}
-                    onOk={() => generateSubmitPlan(2)}
+                    footer={operationPlanInfo?.length>0? [<Button  onClick={() => { setFormulateVisible(false);}}>
+                        取消
+                       </Button>,
+                      <Button type="primary" loading={generateSubmitPlanLoading || editLoading} onClick={() => generateSubmitPlan(2)}>
+                        提交
+                       </Button>] : null}
                 >
                     <Spin spinning={editLoading}>
                         <Form

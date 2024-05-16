@@ -382,14 +382,14 @@ const Index = (props) => {
     </Form>
   }
   return (
-    <div className={styles.dispatchQuerySty}>
+    <div className={`${styles.dispatchQuerySty} queryCriterTitleSty` }>
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
           <SdlTable
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 430px)' : 'calc(100vh - 350px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 424px)' : 'calc(100vh - 344px)' }}
             dataSource={tableDatas}
             columns={columns}
             pagination={{

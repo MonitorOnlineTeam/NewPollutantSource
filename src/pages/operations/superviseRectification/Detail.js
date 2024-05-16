@@ -291,7 +291,7 @@ const Index = (props) => {
            const provincialManager = totalData?.Info?.length ?  totalData.Info[0].ProvincialManager :''
            const inspector = totalData?.Info?.length ?  totalData.Info[0].Inspector :''
 
-           if((text == 1 && userId == provincialManager) || (text == 8 && userId==inspector || (text == 5 && userId==inspector))){
+           if((text == 1 && userId == provincialManager) || (text == 8 && (userId==inspector || record.IsFlag) || (text == 5 && (userId==inspector || record.IsFlag) ))){
             return <div>
                <Popconfirm title={text == 1 || text == 8 ? "确定要整改通过？" : "确定要申诉通过？"} placement="left" onConfirm={() => pass(record,text==8 ? 3 :  text == 1 ?  8 : 6)} okText="是" cancelText="否">
               <a style={{paddingRight:6}}> {text == 1 || text == 8 ? '整改通过' : '申诉通过'} </a>

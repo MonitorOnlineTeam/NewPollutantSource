@@ -179,7 +179,7 @@ class TaskRecord extends Component {
   onSubmitForm = () => {
     const { dispatch, form, gettasklistqueryparams, DGIMN, isHomeModal } = this.props;
     const baseReportSearchForm = form.getFieldsValue();
-    console.log('baseReportSearchForm', baseReportSearchForm);
+    // console.log('baseReportSearchForm', baseReportSearchForm);
     dispatch({
       type: 'task/updateState',
       payload: {
@@ -205,7 +205,7 @@ class TaskRecord extends Component {
       type: 'task/GetOperationTaskList',
       payload: {},
     });
-    console.log('gettasklistqueryparams', gettasklistqueryparams);
+    // console.log('gettasklistqueryparams', gettasklistqueryparams);
   }
 
   /** 加载列表 */

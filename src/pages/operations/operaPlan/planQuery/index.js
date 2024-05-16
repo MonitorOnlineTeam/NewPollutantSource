@@ -68,9 +68,8 @@ const Index = (props) => {
     const {location, tableDatas, tableTotal, tableLoading, queryPar, exportLoading, } = props;
 
    
-    const type = location?.pathname === '/operations/operaPlan/completedPlan'? 3 : 4;
+    const type = location?.pathname === '/operations/operaPlan/completedPlan'? 3 : '';
 
-    console.log(type)
 
     useEffect(() => {
       
@@ -121,16 +120,18 @@ const Index = (props) => {
     }
     const [statusChangeVisible, setStatusChangeVisible] = useState(false)
     const [statusChangeTitle, setStatusChangeTitle] = useState()
+    const [statusChangeId, setStatusChangeId] = useState()
 
     const statusChangeRecord = (record)=>{
         setStatusChangeVisible(true)
-        setStatusChangeTitle('状态变更记录')
+        setStatusChangeTitle( `${record.code? `${record.code} - ` : ''}状态变更记录`)
+        setStatusChangeId(record.ID)
     }
 
     return (
         <div>
             <BreadcrumbWrapper>
-                <OperationPlanQuery planType={type==3? 3 : ''} operateCol={operateCol} />
+                <OperationPlanQuery planType={type} operateCol={operateCol} />
                 <ViewPlanModal
                     visible={viewPlanVisible}
                     onCancel={() => { setViewPlanVisible(false) }}
@@ -144,10 +145,10 @@ const Index = (props) => {
                     onCancel={() => { setStatusChangeVisible(false) }}
                     destroyOnClose
                     width={'60%'}
-                    mask={false}
                     footer={null}
+                    bodyStyle={{padding:'12px 24px'}}
                 >
-                <RecordList/>
+                <RecordList  id={statusChangeId} status={type} refresh={statusChangeVisible} noTitle/>
             </Modal>
             </BreadcrumbWrapper>
         </div>

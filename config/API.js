@@ -256,6 +256,7 @@ export const API = {
     GetFormulatePointList: before + '/WorkOrderApi/GetFormulatePointList',//获取运维计划可调整点位
     AdjustmentOperationPlan: before + '/WorkOrderApi/AdjustmentOperationPlan',//运维计划点位调整
     ExtendPlanDate: before + '/WorkOrderApi/ExtendPlanDate',//运维计划点位延长
+    UpdOperationPlanPoint: before + '/WorkOrderApi/UpdOperationPlanPoint',//运维计划点位状态修改
     UpdOperationPlanStatus: before + '/WorkOrderApi/UpdOperationPlanStatus',//运维计划状态修改
     GetOperationPlanStatusList: before + '/WorkOrderApi/GetOperationPlanStatusList',//获取运维计划状态修改记录
     /**运维报告**/

@@ -43,8 +43,7 @@ const Index = (props) => {
     const {id,status,tableDatas, tableTotal, tableLoading,refresh, } = props;
 
     useEffect(() => {
-        console.log(id)
-        refresh&&initData(pageIndex, pageSize);
+        initData(pageIndex, pageSize);
 
     }, [refresh]);
    
@@ -124,7 +123,7 @@ const Index = (props) => {
 
     return (
         <div>
-             <TitleComponents simpleSty text='操作记录' />
+            {!props.noTitle && <TitleComponents simpleSty text='操作记录' />}
             <SdlTable
                 resizable
                 loading={tableLoading}
@@ -132,6 +131,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns}
                 align='center'
+                scroll={{y:props.noTitle? 'calc(100vh - 308px)' : 'calc(100vh - 602px)'}}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,

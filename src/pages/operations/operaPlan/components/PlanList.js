@@ -32,7 +32,7 @@ const namespace = 'operaPlan'
 const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     tableDatas: operaPlan.operationPlanInfo,
     tableTotal: operaPlan.operationPlanInfoTotal,
-    ExportOperationPlanInfo: loading.effects[`${namespace}/ExportOperationPlanInfo`],
+    exportLoading: loading.effects[`${namespace}/ExportOperationPlanInfo`],
     queryPar: operaPlan.operationPlanInfoQueryPar,
     xjPointList: operaPlan.xjPointList,
     jzPointList: operaPlan.jzPointList,
@@ -40,6 +40,7 @@ const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     operationPlanInfoRefreshId: operaPlan.operationPlanInfoRefreshId,
     delOperationPlanPointLoading: loading.effects[`${namespace}/DelOperationPlanPoint`],
     pointLoading: loading.effects[`common/getPointByEntCode`],
+    updOperationPlanPointLoading: loading.effects[`${namespace}/UpdOperationPlanPoint`],
 })
 
 const Index = (props) => {
@@ -50,16 +51,18 @@ const Index = (props) => {
 
 
 
-    const { entCode, pointLoading, operationPlanInfoRefreshId, operationPlanInfoRefreshType, operationPlanPointPar, type, pointType, xjPointList, jzPointList, queryPar, tableDatas, tableTotal, exportLoading, delOperationPlanPointLoading } = props;
+    const { entCode, pointLoading, operationPlanInfoRefreshId, operationPlanInfoRefreshType, operationPlanPointPar, type, pointType, xjPointList, jzPointList, queryPar, tableDatas, tableTotal, exportLoading, delOperationPlanPointLoading,updOperationPlanPointLoading } = props;
 
 
     const [planCalendarVisible, setPlanCalendarVisible] = useState(false)
-
+    
     const [pointList, setPointList] = useState([])
     useEffect(() => {
         props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanInfo: [] } });
-
     }, []);
+    useEffect(() => {
+        props.pointList&&setPointList(props.pointList)
+    }, [props.pointList]);
     useEffect(() => {
         entCode && props.dispatch({    //获取排口
             type: 'common/getPointByEntCode',
@@ -110,11 +113,11 @@ const Index = (props) => {
                     width: 100,
                     ellipsis: true,
                     render: (text, record, index) => {
-                        const isOpen = 1;
+                        const isOpen = record.Status==2;
                         return (
                             <Space>
-                                <Popconfirm title="确认要开启这条计划吗?" onConfirm={() => { openPlan(record) }} disabled={!isOpen}><a className={isOpen ? '' : 'disabled_a'}> 开启 </a></Popconfirm>
-                                <Popconfirm title="确认要停止这条计划吗?" onConfirm={() => { ceasePlan(record) }} disabled={isOpen} > <a className={isOpen ? 'disabled_a' : ''}> 停止 </a></Popconfirm>
+                                <Popconfirm title="确认要开启这条计划吗?" onConfirm={() => { startCeasePlan(record,1) }} disabled={!isOpen}><a className={isOpen ? '' : 'disabled_a'}> 开启 </a></Popconfirm>
+                                <Popconfirm title="确认要停止这条计划吗?" onConfirm={() => { startCeasePlan(record,2) }} disabled={isOpen} > <a className={isOpen ? 'disabled_a' : ''}> 停止 </a></Popconfirm>
                             </Space>
                         );
 
@@ -176,13 +179,17 @@ const Index = (props) => {
             });
         }
     }
-    const openPlan = (record) => {
-
+    const startCeasePlan = (record,status) => {
+        props.dispatch({
+            type: `${namespace}/UpdOperationPlanPoint`,
+            payload: { id: record.ID,status:status },
+            callback: () => {
+                 onFinish(pageIndex, pageSize)
+            }
+        });
     }
 
-    const ceasePlan = (record) => {
 
-    }
     const [tableLoading, setTableLoading] = useState(false)
     const onFinish = (PageIndex, PageSize, queryPar) => {  //计划列表
         if (operationPlanInfoRefreshId) {
@@ -220,7 +227,7 @@ const Index = (props) => {
     const exportData = () => {
         props.dispatch({
             type: `${namespace}/ExportOperationPlanInfo`,
-            payload: queryPar,
+            payload: {...queryPar,pageIndex:undefined,pageSize:undefined},
         });
     };
 
@@ -318,19 +325,19 @@ const Index = (props) => {
                     ...rowSelection,
                 } : null}
                 resizable
-                loading={tableLoading || delOperationPlanPointLoading}
+                loading={tableLoading || !!delOperationPlanPointLoading || !!updOperationPlanPointLoading}
                 bordered
                 dataSource={tableDatas}
                 columns={columns}
                 align='center'
-                pagination={{
+                pagination={tableTotal?{
                     total: tableTotal,
                     pageSize: pageSize,
                     current: pageIndex,
                     showSizeChanger: true,
                     showQuickJumper: true,
                     onChange: handleTableChange,
-                }}
+                }:false}
             />
             <Modal
                 visible={planCalendarVisible}

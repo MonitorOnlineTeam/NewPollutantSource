@@ -74,7 +74,7 @@ export default Model.extend({
       ellipsis: true,
       width: 90,
       render: (text, record, index) => {
-        return <span className={text == '暂停' ? 'red' : text == '进行中'? 'green' : ''}>{text}</span>
+        return <span className={text == '暂停' || text=='异常终止' ? 'red' : text == '进行中'? 'green' : ''}>{text}</span>
       }
     },
     {
@@ -167,7 +167,7 @@ export default Model.extend({
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.UpdOperationPlan, payload);
       if (result.IsSuccess) {
         message.success(result.Message);
-        callback && callback()
+        callback && callback(result.Datas)
       }
     },
     // 获取未排计划的点位
@@ -194,6 +194,14 @@ export default Model.extend({
       }
       callback && callback(result?.Datas)
     },
+     // 获取单个运维计划详情
+    *ExportOperationPlanInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.ExportOperationPlanInfo, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功');
+        downloadFile(`${result.Datas}`);
+      }
+    },
     // 删除运维计划点位
     *DelOperationPlanPoint({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.DelOperationPlanPoint, payload);
@@ -208,6 +216,14 @@ export default Model.extend({
       if (result.IsSuccess && result.Datas) {
         yield update({ operationPlanCalendarCol: result.Datas.colList, operationPlanCalendarList: result.Datas.dataList, operationPlanCalendarTotal: result.Total, operationPlanCalendarQueryPar: payload, });
         callback && callback(result.Datas)
+      }
+    },
+     // 运维计划日历 导出
+    *ExportOperationPlanCalendar({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.ExportOperationPlanCalendar, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功');
+        downloadFile(`${result.Datas}`);
       }
     },
     //可调整计划点位
@@ -228,6 +244,14 @@ export default Model.extend({
     //计划点位 延长
     *ExtendPlanDate({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.ExtendPlanDate, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback()
+      }
+    },
+     //计划点位 状态修改
+    *UpdOperationPlanPoint({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.UpdOperationPlanPoint, payload);
       if (result.IsSuccess) {
         message.success(result.Message);
         callback && callback()

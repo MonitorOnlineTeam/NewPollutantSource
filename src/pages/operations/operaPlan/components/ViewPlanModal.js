@@ -4,7 +4,7 @@
  * 创建时间：2024.05
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Tabs, Input, InputNumber, Popconfirm,Upload, Checkbox, Spin, Form, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space, Radio } from 'antd';
+import { Table, Tabs, Input, InputNumber, Popconfirm, Upload, Checkbox, Spin, Form, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, NodeCollapseOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -54,44 +54,45 @@ const Index = (props) => {
 
 
 
-    const {type,pointType,entCode,operationPlanInfoRefreshId, visible,pointLoading } = props;
+    const { type, pointType, entCode, operationPlanInfoRefreshId, visible, pointLoading } = props;
     const [pointList, setPointList] = useState([])
 
-  
-    useEffect(()=>{
-        visible&&props.dispatch({
-            type: `${namespace}/updateState`,
-            payload: { operationPlanInfoRefreshType: 1, operationPlanInfoRefreshId: operationPlanInfoRefreshId },
-        });
-    },[visible])
+
     useEffect(() => {
-        entCode && visible &&props.dispatch({    //获取排口
-            type: 'common/getPointByEntCode',
-            payload: { EntCode: entCode },
-            callback: (res) => {
-                setPointList(res)
-            }
-        });
-    }, [entCode]);
+        if (visible) {
+            props.dispatch({
+                type: `${namespace}/updateState`,
+                payload: { operationPlanInfoRefreshType: 1, operationPlanInfoRefreshId: operationPlanInfoRefreshId },
+            });
+            entCode  && props.dispatch({    //获取排口
+                type: 'common/getPointByEntCode',
+                payload: { EntCode: entCode },
+                callback: (res) => {
+                    setPointList(res)
+                }
+            });
+        }
+  
+    }, [visible])
 
 
-    const commonSearchComponents = (type) =>{
-        return<> <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
-         <Form.Item name='pointID' label='监测点' style={{ marginBottom: 8 }}>
-             <Select
-                 mode="multiple"
-                 maxTagCount={2}
-                 maxTagTextLength={10}
-                 maxTagPlaceholder="..."
-                 placeholder="请选择"
-                 style={{ width: 200 }}
-             >
-                 {pointList.map(item => (<Option key={item.PointCode} value={item.PointCode}>{item.PointName}</Option>))}
-             </Select>
-         </Form.Item>
-         </Spin>
-         <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
-           {type == 2 ?
+    const commonSearchComponents = (type) => {
+        return <> <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
+            <Form.Item name='pointID' label='监测点' style={{ marginBottom: 8 }}>
+                <Select
+                    mode="multiple"
+                    maxTagCount={2}
+                    maxTagTextLength={10}
+                    maxTagPlaceholder="..."
+                    placeholder="请选择"
+                    style={{ width: 200 }}
+                >
+                    {pointList.map(item => (<Option key={item.PointCode} value={item.PointCode}>{item.PointName}</Option>))}
+                </Select>
+            </Form.Item>
+        </Spin>
+            <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
+                {type == 2 ?
                     <Select placeholder='请选择' allowClear style={{ width: 140 }}>
                         <Option key={1} value={1}>巡检</Option>
                         <Option key={2} value={2}>校准</Option>
@@ -106,42 +107,42 @@ const Index = (props) => {
                         <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
                     </Select>
                 }
-         </Form.Item>
-         <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
-             <RangePicker_ format="YYYY-MM-DD" />
-         </Form.Item>
-         </>
-     }
+            </Form.Item>
+            <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
+                <RangePicker_ format="YYYY-MM-DD" />
+            </Form.Item>
+        </>
+    }
 
     return (
         <div>
-                <Modal
-                    visible={visible}
-                    title={'查看计划'}
-                    onCancel={() => { props.onCancel && props.onCancel()}}
-                    destroyOnClose
-                    wrapClassName={`spreadOverModal`}
-                    mask={false}
-                    footer={null}
-                >
-                   <Tabs
-                        defaultActiveKey="1"
-                        type='card'
-                        tabPosition='left'
-                        items={[
-                            {
-                                label: '计划列表',
-                                key: '1',
-                                children: <PlanList type={3} planContentOpera={[]}/>,
-                            },
-                            {
-                                label: '计划日历',
-                                key: '2',
-                                children: <PlanCalendar commonSearchComponents={()=>commonSearchComponents(type)}/>,
-                            },
-                        ]}
-                    />
-                </Modal>
+            <Modal
+                visible={visible}
+                title={'查看计划'}
+                onCancel={() => { props.onCancel && props.onCancel() }}
+                destroyOnClose
+                wrapClassName={`spreadOverModal`}
+                mask={false}
+                footer={null}
+            >
+                <Tabs
+                    defaultActiveKey="1"
+                    type='card'
+                    tabPosition='left'
+                    items={[
+                        {
+                            label: '计划列表',
+                            key: '1',
+                            children: <PlanList type={3} planContentOpera={[]} pointList={pointList}/>,
+                        },
+                        {
+                            label: '计划日历',
+                            key: '2',
+                            children: <PlanCalendar commonSearchComponents={() => commonSearchComponents(type)} />,
+                        },
+                    ]}
+                />
+            </Modal>
 
 
         </div>
