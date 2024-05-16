@@ -106,10 +106,10 @@ const TaskCompletionRecord = props => {
       type: type === 'ct' ? '1' : undefined,
       time: undefined,
       beginTime: values.time
-        ? values.time[0].startOf('month').format('YYYY-MM-DD HH:mm:ss')
+        ? values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
       endTime: values.time
-        ? values.time[1].endOf('month').format('YYYY-MM-DD HH:mm:ss')
+        ? values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
     };
   };

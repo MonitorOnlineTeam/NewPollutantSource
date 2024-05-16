@@ -290,12 +290,12 @@ export default class MonitorTarget extends Component {
                                 }}><PointIcon />    </a>
                             </Tooltip>
 
-                            {/* {configId == "Station" ? "" : <><Divider type="vertical" />
+                            {configId == "Station" ? "" : <><Divider type="vertical" />
                                 <Tooltip title="排污许可证">
                                     <a onClick={() => {
                                         this.adddischargepermit('', row);
                                     }}><CalendarTwoTone style={{ fontSize: 16 }} /> </a>
-                                </Tooltip></>} */}
+                                </Tooltip></>}
 
                             <Divider type="vertical" />
                             <Tooltip title="生成监测点二维码">
@@ -311,7 +311,7 @@ export default class MonitorTarget extends Component {
                                    query:{p:row['dbo.T_Bas_Enterprise.EntCode'],entName:row['dbo.T_Bas_Enterprise.EntName']}
                                })
                              }}><FundOutlined style={{fontSize:16}}/>  </a>
-                    </Tooltip> 
+                    </Tooltip>
                     <Divider type="vertical" />
                                 <Tooltip title="修改电子围栏半径">
                                     <a

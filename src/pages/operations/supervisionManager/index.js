@@ -1,5 +1,5 @@
 /**
- * 功  能：系统设施核查 
+ * 功  能：系统设施核查
  * 创建人：jab
  * 创建时间：2022.04.20
  */
@@ -157,7 +157,7 @@ const Index = (props) => {
 
   const { match: { path } } = props;
   //是否为运维督查记录
-  const isRecord = path === '/operations/supervisionRecod' || path === '/operations/siteSupervisionRecod' ? true : false;
+  const isRecord = path === '/operations/supervisionRecod' || path === '/operations/siteSupervisionRecod' || props.isRecord ? true : false;
   // 是否为现场督查 1 现场 2 远程  其他为全部
   const inspectorType = path === '/operations/siteInspector' || path === '/operations/siteSupervisionRecod' ? 1 : path === '/operations/supervisionManager' || path === '/operations/supervisionRecod' ? 2 : '';
 
@@ -409,7 +409,7 @@ const Index = (props) => {
         // const flag = !record.IsFlag;
         const flag = false;
         // const pushStatusFlag = record.Status == 2; //推送状态  只能查看详情
-        const pushStatusFlag = record.Status == 2; //推送状态 不能删除 
+        const pushStatusFlag = record.Status == 2; //推送状态 不能删除
         const noSubmitStatusFlag = record.Status == 0; //暂存状态  不可以推送
 
         return <span>
@@ -693,7 +693,7 @@ const Index = (props) => {
       form2.resetFields();
       tableForm.resetFields();
       form2.setFieldsValue({ Inspector: userCookie && JSON.parse(userCookie).UserId })
-      setGaschoiceData(null);//清空生产商的值 
+      setGaschoiceData(null);//清空生产商的值
       setPmchoiceData(null);
       setEvaluate(null); //评价
       setFilesList0([])
@@ -719,6 +719,7 @@ const Index = (props) => {
         InspectorType: inspectorType,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
+        apiName: props.queryApiName,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -733,7 +734,7 @@ const Index = (props) => {
       ETime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
       InspectorType: inspectorType,
-
+      apiName: props.exportApiName,
     })
   }
   const formatData = (data, type) => {
@@ -759,7 +760,7 @@ const Index = (props) => {
 
   const save = (type) => {
     form2.validateFields().then(values => {
-   
+
       const saveFun = () =>{
         type == 0 ? setSaveLoading0(true) : type == 1 ? setSaveLoading1(true) :  type == 2 ? setSaveLoading2(true) : setSaveLoading3(true);
         let principleProblemList = operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList || [];
@@ -826,15 +827,15 @@ const Index = (props) => {
           })
         }
       }
-      type==0? 
+      type==0?
       saveFun()//保存时不需要验证
        :
-      tableForm.validateFields().then(()=>{ 
+      tableForm.validateFields().then(()=>{
         saveFun()
       }).catch (errorInfo =>{
         console.log('Failed:', errorInfo); //表格表单
         type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) :  type == 2 ? setSaveLoading2(false) : setSaveLoading3(false);
-      }) 
+      })
 
     }).catch(errorInfo => {
       console.log('Failed:', errorInfo);
@@ -893,7 +894,7 @@ const Index = (props) => {
       form2.setFieldsValue({ PollutantType: hangedValues.PollutantType, Inspector: userCookie && JSON.parse(userCookie).UserId });
       tableForm.resetFields();
       setPollutantType(hangedValues.PollutantType)
-      setGaschoiceData(null);//清空生产商的值 
+      setGaschoiceData(null);//清空生产商的值
       setPmchoiceData(null);
       setEvaluate(null); //评价
 
@@ -909,7 +910,7 @@ const Index = (props) => {
           RegionCode: data.RegionCode ? data.RegionCode.split(',') : undefined,
           PollutantCode: data.PollutantCode ? data.PollutantCode.split(',') : undefined,
         })
-     
+
         setDeviceInfoList(data.MonitorPointEquipmentList)
         // setGaschoiceData(data.GasManufacturerName? data.GasManufacturerName : undefined)
         // setPmchoiceData(data.PMManufacturerName? data.PMManufacturerName : undefined)
@@ -1439,7 +1440,7 @@ const Index = (props) => {
             })]}>
             <Checkbox disabled={ record.Status == '已推送'} onChange={(e)=>{
                 // setTableValuesChange(!tableValuesChange)
-                // tableForm.setFieldsValue({[`Score${record.Sort}`] :e.target.checked? record.Score : null })  
+                // tableForm.setFieldsValue({[`Score${record.Sort}`] :e.target.checked? record.Score : null })
             }}>
               {record.Score? `${-record.Score}分` : null }
           </Checkbox>
@@ -1628,7 +1629,7 @@ const Index = (props) => {
   const [photoIndex, setPhotoIndex] = useState(0); //预览附件Index
   const [imgUrlList, setImgUrlList] = useState([]);//预览附件列表
 
-  const uploadProps = { //附件上传 
+  const uploadProps = { //附件上传
     action: API.UploadApi.UploadPicture,
     headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(cookieName)},
     accept: 'image/*',
@@ -1725,11 +1726,11 @@ const Index = (props) => {
   if (isDetailModal) {
     columns = columns.filter(item => item.title != '操作')
   }
- 
+
   return (
     <div className={styles.supervisionManagerSty}>
-      <BreadcrumbWrapper hideBreadcrumb={isDetailModal} >
-        <Card title={searchComponents()} className={isDetailModal && styles.supervisionManagerModalSty}>
+      <BreadcrumbWrapper hideBreadcrumb={isDetailModal || props.hideBreadcrumb} >
+        <Card title={searchComponents()} bordered={!props.hideBreadcrumb} className={isDetailModal && styles.supervisionManagerModalSty}>
           <SdlTable
             resizable
             loading={tableLoading}

@@ -10,7 +10,7 @@ import {
   Space,
   Row,
   Col,
-  message,
+  Modal,
   Progress,
 } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -20,12 +20,13 @@ import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import TaskCompletionRecord from './TaskCompletionRecord';
-import ChecklistRecordAndManagement from './ChecklistRecordAndManagement';
 import { permissionButton } from '@/utils/utils';
+import SupervisionManager from '@/pages/operations/supervisionManager';
+import { API } from '@config/API';
 
 const dvaPropsData = ({ loading }) => ({
-  queryLoading: loading.effects[`wordSupervision/GetOfficeCheckStatisticsForRegion`],
-  exportLoading: loading.effects[`wordSupervision/ExportOfficeCheckStatisticsForRegion`],
+  queryLoading: loading.effects[`wordSupervision/GetSiteInspectionForRegion`],
+  exportLoading: loading.effects[`wordSupervision/ExportSiteInspectionForRegion`],
 });
 
 const OfficeCheck = props => {
@@ -35,7 +36,7 @@ const OfficeCheck = props => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [mode, setMode] = useState(); // 1: 办事处检查管理 空：办事处检查纪律
-  
+
   const buttonList = permissionButton(props.match.path);
   const { dispatch, queryLoading, exportLoading } = props;
 
@@ -47,10 +48,10 @@ const OfficeCheck = props => {
   const getPageData = () => {
     const values = form.getFieldsValue();
     dispatch({
-      type: 'wordSupervision/GetOfficeCheckStatisticsForRegion',
+      type: 'wordSupervision/GetSiteInspectionForRegion',
       payload: {
-        beginTime: values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time[1].format('YYYY-MM-DD HH:mm:ss'),
       },
       callback: res => {
         setDataSource(res);
@@ -62,10 +63,10 @@ const OfficeCheck = props => {
   const onExport = () => {
     const values = form.getFieldsValue();
     dispatch({
-      type: 'wordSupervision/ExportOfficeCheckStatisticsForRegion',
+      type: 'wordSupervision/ExportSiteInspectionForRegion',
       payload: {
-        beginTime: values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time[1].format('YYYY-MM-DD HH:mm:ss'),
       },
     });
   };
@@ -96,16 +97,7 @@ const OfficeCheck = props => {
         width: 200,
         render: (text, record, index) => {
           return {
-            children: (
-              <a
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setRegionCode(record.RegionCode);
-                }}
-              >
-                {text}
-              </a>
-            ),
+            children: text,
             props: { colSpan: record.LargeRegion === '合计' ? 0 : 1 },
           };
         },
@@ -115,6 +107,18 @@ const OfficeCheck = props => {
         dataIndex: 'CompletedCount',
         key: 'CompletedCount',
         ellipsis: true,
+        render: (text, record, index) => {
+          return (
+            <a
+              onClick={() => {
+                setIsModalOpen(true);
+                setRegionCode(record.RegionCode);
+              }}
+            >
+              {text}
+            </a>
+          );
+        },
       },
       {
         title: '实际完成任务数量',
@@ -161,9 +165,8 @@ const OfficeCheck = props => {
     return (
       <div>
         <Form
-          id="searchForm"
           form={form}
-          // layout="inline"
+          layout="inline"
           initialValues={{
             time: [
               moment()
@@ -176,7 +179,7 @@ const OfficeCheck = props => {
           }}
           autoComplete="off"
         >
-          <Space align="middle">
+          <Space>
             <Form.Item name="time" label="任务派发时间">
               <RangePicker_
                 style={{ width: '100%' }}
@@ -207,17 +210,6 @@ const OfficeCheck = props => {
                 >
                   导出
                 </Button>
-                {buttonList.includes('officeManagement') && (
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      setIsModalOpen2(true);
-                      setMode('management');
-                    }}
-                  >
-                    办事处检查管理
-                  </Button>
-                )}
                 <Button
                   type="primary"
                   onClick={() => {
@@ -225,7 +217,7 @@ const OfficeCheck = props => {
                     setMode('record');
                   }}
                 >
-                  办事处检查记录
+                  现场检查记录
                 </Button>
               </Space>
             </Form.Item>
@@ -256,15 +248,26 @@ const OfficeCheck = props => {
           }}
         />
       )}
-      {// 办事处检查记录和管理
+      {// 现场检查记录
       isModalOpen2 && (
-        <ChecklistRecordAndManagement
-          mode={mode}
+        <Modal
+          title="现场检查记录"
+          wrapClassName={`spreadOverModal`}
           open={isModalOpen2}
+          destroyOnClose
+          footer={null}
           onCancel={() => {
             setIsModalOpen2(false);
           }}
-        />
+        >
+          <SupervisionManager
+            isRecord
+            hideBreadcrumb
+            match={props.match}
+            queryApiName={API.DailyManagement.FieldCheckApi.GetSiteInspectionList}
+            exportApiName={API.DailyManagement.FieldCheckApi.ExportSystemFacilityVerificationList}
+          />
+        </Modal>
       )}
     </BreadcrumbWrapper>
   );

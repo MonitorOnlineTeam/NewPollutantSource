@@ -1134,7 +1134,6 @@ export const API = {
     AddProvinceManagementRules: before + '/DailyWorkBaseApi/AddProvinceManagementRules', // 设置省区经理日常规则
     GetProvinceManagementRulesList: before + '/DailyWorkBaseApi/GetProvinceManagementRulesList', // 获取省区经理日常规则列表
     DeleteProvinceManagementRules: before + '/DailyWorkBaseApi/DeleteProvinceManagementRules', // 删除省区经理日常规则列表
-
   },
   //技术专家系统 Api
   TechExpertSystemApi: {
@@ -1184,7 +1183,6 @@ export const API = {
       // 删除
       DeleteAccountsReceivable: before + '/DailyWorkManagerApi/DeleteAccountsReceivable',
     },
-
     // 人员培训
     TrainingApi: {
       // 获取人员培训统计
@@ -1200,6 +1198,39 @@ export const API = {
       GetPersonTrainList: before + '/DailyWorkManagerApi/GetPersonTrainList',
       // 记录和管理数据 - 导出
       ExportPersonTrainList: before + '/DailyWorkManagerApi/ExportPersonTrainList',
+    },
+    // 现场检查
+    FieldCheckApi: {
+      // 获取现场检查统计列表
+      GetSiteInspectionForRegion: before + '/DailyWorkManagerApi/GetSiteInspectionForRegion',
+      // 现场检查统计列表 - 导出
+      ExportSiteInspectionForRegion: before + '/DailyWorkManagerApi/ExportSiteInspectionForRegion',
+      // 省区详情
+      GetSiteInspectionForRegionInfo:
+        before + '/DailyWorkManagerApi/GetSiteInspectionForRegionInfo',
+      // 省区详情 - 导出
+      ExportSiteInspectionForRegionInfo:
+        before + '/DailyWorkManagerApi/ExportSiteInspectionForRegionInfo',
+      // 现场检查记录
+      GetSiteInspectionList: before + '/DailyWorkManagerApi/GetSiteInspectionList',
+      // 现场检查记录 - 导出
+      ExportSystemFacilityVerificationList:
+        before + '/DailyWorkManagerApi/ExportSystemFacilityVerificationList',
+    },
+    // 客户回访
+    CustomerReturnVisit: {
+      // 客户回访统计列表
+      GetCustomerVisitList: before + '/CTProjectExecutionApi/GetCustomerVisitList',
+      // 导出
+      ExportCustomerVisitList: before + '/CTProjectExecutionApi/ExportCustomerVisitList',
+      // 删除
+      DeleteReturnVisitCustomers: before + '/DailyWorkManagerApi/DeleteReturnVisitCustomers',
+      // 获取纪律检查详情
+      GetCustomerVisitInfor: before + '/CTProjectExecutionApi/GetCustomerVisitInfor',
+      // 客户现场回访记录，客户现场回访管理
+      GetCustomerVisitInfo: before + '/CTProjectExecutionApi/GetCustomerVisitInfo',
+      // 客户现场回访记录，客户现场回访管理 - 导出
+      ExportCustomerVisitInfo: before + '/CTProjectExecutionApi/ExportCustomerVisitInfo',
     },
   },
   CtAPI_WJQ: {
@@ -1297,17 +1328,6 @@ export const API = {
       UpdateDisciplineCheckManage: before + '/CTProjectExecutionApi/UpdateDisciplineCheckManage',
       // 获取大区列表
       GetRegionList: before + '/CTProjectExecutionApi/GetRegionList',
-    },
-    // 客户回访
-    CustomerReturnVisit: {
-      // 客户回访统计列表
-      GetCustomerVisitList: before + '/CTProjectExecutionApi/GetCustomerVisitList',
-      // 导出
-      ExportCustomerVisitList: before + '/CTProjectExecutionApi/ExportCustomerVisitList',
-      // 删除
-      DeleteReturnVisitCustomers: before + '/DailyWorkManagerApi/DeleteReturnVisitCustomers',
-      // 获取纪律检查详情
-      GetCustomerVisitInfor: before + '/CTProjectExecutionApi/GetCustomerVisitInfor',
     },
     // 服务热线电话
     HotPhone: {

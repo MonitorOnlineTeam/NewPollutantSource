@@ -46,7 +46,7 @@ const initialState = {
     industryCode: '',
     // dateRange: 'week',
     btime: moment()
-      .add(-2, 'year')
+      // .add(-2, 'year')
       .startOf('month'),
     // .startOf('day'),
     // etime: moment().add(-2, 'year'),
@@ -104,7 +104,7 @@ const initialState = {
     industryCode: '',
     // dateRange: 'week',
     btime: moment()
-      .add(-2, 'year')
+      // .add(-2, 'year')
       .startOf('month'),
     // .startOf('day'),
     // etime: moment(),

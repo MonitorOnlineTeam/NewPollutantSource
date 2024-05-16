@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-05-10 14:18:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 19:20:35
+ * @Last Modified time: 2024-05-15 20:01:11
  * @Description:  人员培训
  */
 import React, { useState, useEffect } from 'react';
@@ -64,8 +64,8 @@ const Training = props => {
       type: 'wordSupervision/GetPersonTrainForRegion',
       payload: {
         type: type === 'ct' ? '1' : undefined,
-        beginTime: values.time[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time[1].format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss'),
       },
       callback: res => {
         setDataSource(res);
@@ -80,8 +80,8 @@ const Training = props => {
       type: 'wordSupervision/ExportPersonTrainForRegion',
       payload: {
         type: type === 'ct' ? '1' : undefined,
-        beginTime: values.time[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time[1].format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss'),
       },
     });
   };
@@ -119,14 +119,14 @@ const Training = props => {
           // }
           return {
             children: text,
-              // <a
-              //   onClick={() => {
-              //     setIsModalOpen(true);
-              //     setRegionCode(record.RegionCode);
-              //   }}
-              // >
-              //   {text}
-              // </a>
+            // <a
+            //   onClick={() => {
+            //     setIsModalOpen(true);
+            //     setRegionCode(record.RegionCode);
+            //   }}
+            // >
+            //   {text}
+            // </a>
             props: { colSpan: record.LargeRegion === '合计' ? 0 : 1 },
           };
         },
@@ -142,7 +142,11 @@ const Training = props => {
             <a
               onClick={() => {
                 setIsModalOpen(true);
-                setRegionCode(type === 'ct' ? record.LargeRegionCode || undefined : record.RegionCode || undefined);
+                setRegionCode(
+                  type === 'ct'
+                    ? record.LargeRegionCode || undefined
+                    : record.RegionCode || undefined,
+                );
               }}
             >
               {text}
@@ -202,22 +206,22 @@ const Training = props => {
     return (
       <div>
         <Form
-          id="searchForm"
+          // id="searchForm"
           form={form}
-          // layout="inline"
+          layout="inline"
           initialValues={{
             time: [
               moment()
                 .subtract(1, 'month')
-                .startOf('month'),
+                .startOf('months'),
               moment()
                 .subtract(1, 'month')
-                .endOf('month'),
+                .endOf('months'),
             ],
           }}
           autoComplete="off"
         >
-          <Space align="middle">
+          <Space>
             <Form.Item name="time" label="任务派发时间">
               <RangePicker_
                 style={{ width: '100%' }}

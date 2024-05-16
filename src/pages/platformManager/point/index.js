@@ -284,7 +284,7 @@ export default class MonitorPoint extends Component {
         },
         callback: res => {
           // 获取关联对应窑头数据
-          const IsModelProject = Cookie.get('sysMenuId')==='5cd1884a-3f42-426f-8893-5cae720bddf3';//是否为模型项目
+          const IsModelProject = Cookie.get('sysMenuId')==='393883e8-750d-4929-9b51-3f999c2cea88';//是否为模型项目
            if (IsModelProject && res.PmCemsSupplier === '2' && res['dbo.T_Bas_CommonPoint.Col7'] === '6') {
               this.getEntAndPointList();
           }
@@ -388,7 +388,7 @@ export default class MonitorPoint extends Component {
       form.validateFields((err, values) => {
         //监测点
         if (!err) {
-          const IsModelProject = Cookie.get('sysMenuId')==='5cd1884a-3f42-426f-8893-5cae720bddf3';//是否为模型项目
+          const IsModelProject = Cookie.get('sysMenuId')==='393883e8-750d-4929-9b51-3f999c2cea88';//是否为模型项目
           const _submit = () => {
             const FormData = handleFormData(values);
             console.log('values', values);
@@ -436,7 +436,7 @@ export default class MonitorPoint extends Component {
                       },
                     });
                     // 新增：无DGIMN，需要保存完排口后再添加工艺信息
-                    !this.state.isEdit &&   
+                    !this.state.isEdit &&
                       IsModelProject &&  values['Col7'] &&
                       this.subProcessInfo.onSubmit(result.Datas);
                   }
@@ -1102,7 +1102,7 @@ export default class MonitorPoint extends Component {
       saveSortLoading,
     } = this.props;
     const provinceShow = this.props.configInfo && this.props.configInfo.IsShowProjectRegion;
-    const IsModelProject = Cookie.get('sysMenuId')==='5cd1884a-3f42-426f-8893-5cae720bddf3';//是否为模型项目
+    const IsModelProject = Cookie.get('sysMenuId')==='393883e8-750d-4929-9b51-3f999c2cea88';//是否为模型项目
     const { getFieldDecorator } = this.props.form;
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
@@ -1158,7 +1158,7 @@ export default class MonitorPoint extends Component {
       sortTitle,
       isSuperAdministrator,
     } = this.state;
-    const pointFlag = tabKey == 5 && pointCoefficientFlag; 
+    const pointFlag = tabKey == 5 && pointCoefficientFlag;
     const formLayout = {
       labelCol: {
         span: 8,
@@ -1169,7 +1169,7 @@ export default class MonitorPoint extends Component {
     };
     // const radiusFlag = tabKey == 6 && !isSuperAdministrator;
     const titles =  pollutantType == 1? '废水': deviceManagerGasType == 1? '废气-常规CEMS' : '废气-VOCS'
-    
+
     return (
       <BreadcrumbWrapper title="监测点维护">
         <div className={styles.cardTitle}>

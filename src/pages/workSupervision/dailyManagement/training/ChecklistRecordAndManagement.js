@@ -82,10 +82,10 @@ const ChecklistRecordAndManagement = props => {
       type: type === 'ct' ? '1' : undefined,
       isFlag: mode === 'management' ? 1 : undefined, // 区分管理
       beginTime: values.time
-        ? values.time[0].startOf('month').format('YYYY-MM-DD HH:mm:ss')
+        ? values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
       endTime: values.time
-        ? values.time[1].endOf('month').format('YYYY-MM-DD HH:mm:ss')
+        ? values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
     };
   };
@@ -193,8 +193,8 @@ const ChecklistRecordAndManagement = props => {
         key: 'handle',
         fixed: 'right',
         render: (text, record) => {
-          // if (record.IsEdit) {
-          if (true) {
+          if (record.IsEdit) {
+          // if (true) {
             return (
               <>
                 <Tooltip title="编辑">

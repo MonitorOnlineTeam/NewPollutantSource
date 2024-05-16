@@ -74,10 +74,10 @@ const ChecklistRecordAndManagement = props => {
       time: undefined,
       isFlag: mode === 'management' ? 1 : undefined,
       beginTime: values.time
-        ? values.time[0].startOf('month').format('YYYY-MM-DD HH:mm:ss')
+        ? values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
       endTime: values.time
-        ? values.time[1].endOf('month').format('YYYY-MM-DD HH:mm:ss')
+        ? values.time[1].endOf('months').format('YYYY-MM-DD HH:mm:ss')
         : undefined,
     };
   };
@@ -96,8 +96,8 @@ const ChecklistRecordAndManagement = props => {
       type: 'wordSupervision/GetOfficeCheckStatisticsList',
       payload: {
         ...body,
-        pageIndex: _pageIndex || pageIndex,
-        pageSize: _pageSize || pageSize,
+        pageIndex: taskInfo.ID ? _pageIndex || pageIndex : undefined,
+        pageSize: taskInfo.ID ? _pageSize || pageSize : undefined,
       },
       callback: res => {
         setDataSource(res.Datas);
@@ -295,22 +295,24 @@ const ChecklistRecordAndManagement = props => {
                     <EditIcon />
                   </a>
                 </Tooltip>
-                <Divider type="vertical" />
-                <Tooltip title="删除">
-                  <Popconfirm
-                    placement="left"
-                    title="确认是否删除?"
-                    onConfirm={() => {
-                      onDelete(record.ID);
-                    }}
-                    okText="是"
-                    cancelText="否"
-                  >
-                    <a>
-                      <DelIcon />
-                    </a>
-                  </Popconfirm>
-                </Tooltip>
+                {taskInfo.ID && [
+                  <Divider type="vertical" />,
+                  <Tooltip title="删除">
+                    <Popconfirm
+                      placement="left"
+                      title="确认是否删除?"
+                      onConfirm={() => {
+                        onDelete(record.ID);
+                      }}
+                      okText="是"
+                      cancelText="否"
+                    >
+                      <a>
+                        <DelIcon />
+                      </a>
+                    </Popconfirm>
+                  </Tooltip>,
+                ]}
               </>
             );
           }
@@ -384,7 +386,7 @@ const ChecklistRecordAndManagement = props => {
                   htmlType="submit"
                   loading={loading}
                   onClick={() => {
-                    getPageData(1, 20);
+                    handleTableChange(1, 20);
                   }}
                 >
                   查询
@@ -392,7 +394,7 @@ const ChecklistRecordAndManagement = props => {
                 <Button
                   onClick={() => {
                     form.resetFields();
-                    getPageData(1, 20);
+                    handleTableChange(1, 20);
                   }}
                 >
                   重置
@@ -420,7 +422,7 @@ const ChecklistRecordAndManagement = props => {
       <>
         {taskInfo.ID && (
           <Alert
-            message={`任务类型：办事处检查任务单，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次${taskInfo.standNum}次/月。`}
+            message={`任务类型：办事处检查任务单，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次1次/月。`}
             type="info"
             showIcon
             style={{ marginRight: 30 }}
@@ -434,7 +436,7 @@ const ChecklistRecordAndManagement = props => {
           {taskInfo.ID && (
             <Button
               type="primary"
-              style={{ marginBottom: 20 }}
+              style={{ margin: '10px 0' }}
               onClick={() => {
                 setEditData({});
                 setOfficeInspectionOpen(true);

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-29 10:00:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-29 14:01:02
+ * @Last Modified time: 2024-05-15 14:06:26
  * @Description:  客户现场回访
  */
 
@@ -29,6 +29,7 @@ import SdlTable from '@/components/SdlTable';
 import { DeleteOutlined, ExportOutlined } from '@ant-design/icons';
 import RecordModal from './components/RecordModal';
 import { permissionButton } from '@/utils/utils';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const { RangePicker } = DatePicker;
 
@@ -44,11 +45,19 @@ const ReturnVisit = props => {
   const [dataSource, setDataSource] = useState([]);
   const [modalTitle, setModalTitle] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [modalDataType, setModalDataType] = useState(1); // 0: 一级列表  1: 纪律检查任务完成记录  2:纪律检查记录/纪律检查管理
   const [modalQueryParams, setModalQueryParams] = useState({});
 
   const buttonList = permissionButton(props.match.path);
-  const { queryLoading, dispatch, exportLoading } = props;
+  const {
+    queryLoading,
+    dispatch,
+    exportLoading,
+    match: {
+      params: { systemType },
+    },
+  } = props;
 
   useEffect(() => {
     getLargeRegion();
@@ -64,7 +73,7 @@ const ReturnVisit = props => {
         endTime: date[1].endOf('month').format('YYYY-MM-DD 23:59:59'),
         taskType: '4',
         dataType: 0,
-        systemType: '2',
+        systemType: systemType,
         pageIndex: 1,
         pageSize: 999,
       },
@@ -91,7 +100,7 @@ const ReturnVisit = props => {
         endTime: date[1].endOf('month').format('YYYY-MM-DD 23:59:59'),
         taskType: '4',
         dataType: 0,
-        systemType: '2',
+        systemType: systemType,
         pageIndex: 0,
         pageSize: 0,
       },
@@ -128,19 +137,24 @@ const ReturnVisit = props => {
         key: 'RegionName',
         ellipsis: true,
         width: 200,
-        render: (text, record) => {
-          return (
-            <a
-              onClick={() => {
-                openRecordModal('客户现场回访记录', 2, {
-                  time: date,
-                  regionCode: record.RegionCode === 'All' ? undefined : record.RegionCode,
-                });
-              }}
-            >
-              {text}
-            </a>
-          );
+        render: (text, record, index) => {
+          return {
+            children: text,
+            props: { colSpan: record.RegionCode === 'All' ? 2 : 1 },
+          };
+        },
+      },
+      {
+        title: '省份',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        ellipsis: true,
+        width: 200,
+        render: (text, record, index) => {
+          return {
+            children: text,
+            props: { colSpan: record.RegionCode === 'All' ? 0 : 1 },
+          };
         },
       },
       {
@@ -202,50 +216,88 @@ const ReturnVisit = props => {
     return columns;
   };
 
-  const disabledDate = current => {
-    // Can not select days before today and today
-    return current && current > moment();
+  // 搜索组件
+  const SearchComponents = () => {
+    return (
+      <div>
+        <Form
+          id="searchForm"
+          form={form}
+          // layout="inline"
+          initialValues={{
+            time: [
+              moment()
+                .subtract(1, 'month')
+                .startOf('month'),
+              moment()
+                .subtract(1, 'month')
+                .endOf('month'),
+            ],
+          }}
+          autoComplete="off"
+        >
+          <Space align="middle">
+            <Form.Item name="time" label="任务派发时间">
+              <RangePicker_
+                style={{ width: '100%' }}
+                picker="month"
+                format="YYYY-MM"
+                allowClear={false}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Space style={{ marginLeft: 10 }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={queryLoading}
+                  onClick={() => {
+                    getTableDataSource();
+                  }}
+                >
+                  查询
+                </Button>
+                <Button
+                  type="primary"
+                  icon={<ExportOutlined />}
+                  loading={exportLoading}
+                  onClick={() => {
+                    onExport();
+                  }}
+                >
+                  导出
+                </Button>
+                {/* {buttonList.includes('officeManagement') && ( */}
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      setIsModalOpen2(true);
+                      setMode('management');
+                    }}
+                  >
+                    客户现场回访管理
+                  </Button>
+                {/* )} */}
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setIsModalOpen2(true);
+                    setMode('record');
+                  }}
+                >
+                  客户现场回访记录
+                </Button>
+              </Space>
+            </Form.Item>
+          </Space>
+        </Form>
+      </div>
+    );
   };
 
   return (
     <BreadcrumbWrapper>
-      <Card
-        title={
-          <Row align="middle">
-            <Space>
-              <span style={{ fontSize: 14 }}>
-                回访时间：
-                <RangePicker
-                  picker="month"
-                  allowClear={false}
-                  disabledDate={disabledDate}
-                  defaultValue={date}
-                  onChange={onDateChange}
-                />
-              </span>
-              <Button type="primary" onClick={getTableDataSource}>
-                查询
-              </Button>
-              <Button icon={<ExportOutlined />} type="primary" onClick={onExport}>
-                导出
-              </Button>
-              {/* {buttonList.includes('disciplineCheck') && ( */}
-              {true && (
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    openRecordModal('客户现场回访管理', 2, {
-                      time: date,
-                    });
-                  }}
-                >
-                  客户现场回访管理
-                </Button>
-              )}
-            </Space>
-          </Row>
-        }
-      >
+      <Card title={<SearchComponents />}>
         <SdlTable
           loading={queryLoading}
           align="center"
@@ -258,7 +310,6 @@ const ReturnVisit = props => {
       {/* 客户现场回访弹窗 */}
       {isModalOpen && (
         <RecordModal
-          title={modalTitle}
           dataType={modalDataType}
           queryParams={modalQueryParams}
           open={isModalOpen}

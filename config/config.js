@@ -2858,6 +2858,12 @@ export default {
                       component: './workSupervision/dailyManagement/officeCheck',
                     },
                     {
+                      // 客户现场回访
+                      name: 'customerReturnVisit',
+                      path: '/workSupervision/dailyManagement/customerReturnVisit/:systemType',
+                      component: './workSupervision/dailyManagement/customerReturnVisit',
+                    },
+                    {
                       // 部门内其他工作
                       name: 'innerOtherWork',
                       path:
@@ -2882,6 +2888,18 @@ export default {
                       name: 'training',
                       path: '/workSupervision/dailyManagement/training/:type',
                       component: './workSupervision/dailyManagement/training',
+                    },
+                    {
+                      // 现场检查
+                      name: 'fieldCheck',
+                      path: '/workSupervision/dailyManagement/fieldCheck',
+                      component: './workSupervision/dailyManagement/fieldCheck',
+                    },
+                    {
+                      // 账款催收
+                      name: 'fieldCheck',
+                      path: '/workSupervision/dailyManagement/collections',
+                      component: './workSupervision/dailyManagement/collections',
                     },
                   ],
                 },
@@ -2915,6 +2933,7 @@ export default {
                       path: '/completeSetManage/expert/view',
                       component: './completeSetManage/expert/View',
                     },
+
                   ],
                 },
               ],
@@ -3096,10 +3115,10 @@ export default {
                   name: 'AbnormalCluesList',
                   path: '/AbnormalIdentifyModel/CluesList',
                   routes: [
-                    {
-                      path: '/AbnormalIdentifyModel/CluesList',
-                      redirect: '/AbnormalIdentifyModel/CluesList/all',
-                    },
+                    // {
+                    //   path: '/AbnormalIdentifyModel/CluesList',
+                    //   redirect: '/AbnormalIdentifyModel/CluesList/all',
+                    // },
                     {
                       // 异常线索清单
                       name: 'CluesList',
@@ -3458,13 +3477,7 @@ export default {
                       path: '/ctManage/customerSatisfaction',
                       redirect: '/ctManage/customerSatisfaction/customerReturnVisit',
                     },
-                    {
-                      // 客户现场回访
-                      name: 'returnVisit',
-                      path: '/ctManage/customerSatisfaction/customerReturnVisit',
-                      component:
-                        './ctDebuggAfterSaleServiceManage/customerSatisfaction/customerReturnVisit',
-                    },
+
                     {
                       // 服务热线电话
                       name: 'hotPhone',
@@ -3673,7 +3686,7 @@ export default {
                 },
               ],
             },
- 
+
 
             /* 任务详情 */
             {

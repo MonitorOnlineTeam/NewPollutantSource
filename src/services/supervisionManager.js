@@ -3,7 +3,10 @@ import { API } from '@config/API';
 
 //列表
 export async function GetInspectorOperationManageList(params) {
-  const result = await post(API.SupervisionVerificaApi.GetSystemFacilityVerificationList,params, null);
+  const result = await post(params.apiName || API.SupervisionVerificaApi.GetSystemFacilityVerificationList,{
+    ...params,
+    apiName: undefined
+  }, null);
   return result;
 }
 //获取单个督查表实体
@@ -31,7 +34,10 @@ export async function GetInspectorOperationView(params) {
 
 //导出运维督查信息
 export async function ExportInspectorOperationManage(params) {
-  const result = await post(API.SupervisionVerificaApi.ExportSystemFacilityVerificationList,params, null);
+  const result = await post(params.apiName || API.SupervisionVerificaApi.ExportSystemFacilityVerificationList,{
+    ...params,
+    apiName: undefined
+  }, null);
   return result;
 }
 //删除运维督查信息
