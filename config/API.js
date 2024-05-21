@@ -739,6 +739,18 @@ export const API = {
     GetTransmissionEfficiencyForPoint:
       before + '/TransmissionEfficiencyApi/GetTransmissionEfficiencyForPoint',
     // --------------------------------------------------------------------------------
+     // 唐银区域浓度对比
+     GetAreaDensityContrast: before + '/EmissionsApi/GetAreaDensityContrast',
+     // 唐银区域浓度对比导出
+     ExportAreaDensityContrast: before + '/EmissionsApi/ExportAreaDensityContrast',
+     // 唐银区域浓度排名
+     GetAreaDensityRanking: before + '/EmissionsApi/GetAreaDensityRanking',
+     // 唐银区域浓度排名导出
+     ExportAreaDensityRanking: before + '/EmissionsApi/ExportAreaDensityRanking',
+     // 唐银厂区质量变化趋势
+     GetAirQualityTrend: before + '/EmissionsApi/GetAirQualityTrend',
+     // 唐银厂区质量变化趋势导出
+     ExportAirQualityTrend: before + '/EmissionsApi/ExportAirQualityTrend',
     // 根据数据类型查询排放量-师一级
     GetEmissionsListForRegion: before + '/EmissionsApi/GetEmissionsListForRegion',
     // 根据数据类型查询排放量--企业一级

@@ -291,6 +291,24 @@ const routes = [
               // },
             ],
           },
+          // 唐银钢铁项目 - 区域浓度均值对比
+          {
+            name: 'densityContrast',
+            path: '/TYGT/densityContrast',
+            component: './TYGT/densityContrast',
+          },
+          // 唐银钢铁项目 - 区域浓度均值排名
+          {
+            name: 'densityRanking',
+            path: '/TYGT/densityRanking',
+            component: './TYGT/densityRanking',
+          },
+          // 唐银钢铁项目 - 区域浓度均值排名
+          {
+            name: 'airQualityTrend',
+            path: '/TYGT/airQualityTrend',
+            component: './TYGT/airQualityTrend',
+          },
           // 唐银钢铁项目 - 台账
           {
             name: 'standingBook',
