@@ -27,12 +27,14 @@ const namespace = 'planWorkOrderStatistics'
 
 
 
-const dvaPropsData =  ({ loading,planWorkOrderStatistics }) => ({
+const dvaPropsData =  ({ loading,planWorkOrderStatistics,global, }) => ({
   tableDatas:planWorkOrderStatistics.tableDatas,
   tableLoading:planWorkOrderStatistics.tableLoading,
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   queryPar:planWorkOrderStatistics.queryPar,
   exportActualRegLoading:planWorkOrderStatistics.exportActualRegLoading,
+  operationSettingInfo: global.operationSettingInfo,
+
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -77,11 +79,14 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,exportLoading,exportActualRegLoading,queryPar,isPlanCalibrationModal,isPlanInspectionModal,isActualCalibrationModal } = props; 
-  
-  
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,exportLoading,exportActualRegLoading,queryPar,isPlanCalibrationModal,isPlanInspectionModal,isActualCalibrationModal,operationSettingInfo: { TaskPlanType } } = props; 
+
   useEffect(() => {
-    onFinish();
+    if(TaskPlanType==1){
+      onFinish();
+    }else{
+      router.push('/Intelligentanalysis/operationWorkStatis/entWorkOrderStatisticsDay')
+    }
   
   },[]);
 
@@ -134,12 +139,12 @@ const Index = (props) => {
           endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
           outOrInside:outOrInside,
           regionLevel:showType ==1? 1 : undefined,
+          homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,
           // pageIndex:showType ==2? 1 : undefined,
           // pageSize:showType ==2? 10 : undefined,
-          homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,
+       
         }
-        !isActualCalibrationModal?  props.regEntGetTaskWorkOrderList(par):
-        props.regEntActualGetTaskWorkOrderList(par)
+        !isActualCalibrationModal?  props.regEntGetTaskWorkOrderList(par): props.regEntActualGetTaskWorkOrderList(par)
       }else{
         message.warning('日期单位不能超过90天，请重新选择')
       }

@@ -706,24 +706,24 @@ export default Model.extend({
       const result = yield call(services.CtGetWorkbenchMsg, { ...payload, type: undefined });
       if (result.IsSuccess) {
         const data = result.Datas;
-        // yield update({  //旧
-        //   projectExecutionList: data?.ctList   || [],
-        //   contractList: data  || [],
-        // });
-        // callback && callback({ ctListTotal:data?.ctList?.length || 0, projectListTotal:data?.length || 0});
-        yield update({
-          projectExecutionList: data?.ctList || [],
-          contractList: data?.projectList || [],
-          customeSatisfactList: data?.customerList || [],
-          standgaswaringList: data?.standgaswaringList || [],
+        yield update({  //旧
+          projectExecutionList: data?.ctList   || [],
+          contractList: data  || [],
         });
-        callback &&
-          callback({
-            ctListTotal: data?.ctList?.length || 0,
-            customerListTotal: data?.customerList?.length || 0,
-            projectListTotal: data?.projectList?.length || 0,
-            standgaswaringListTotal: data?.standgaswaringList?.length || 0,
-          });
+        callback && callback({ ctListTotal:data?.ctList?.length || 0, projectListTotal:data?.length || 0});
+        // yield update({
+        //   projectExecutionList: data?.ctList || [],
+        //   contractList: data?.projectList || [],
+        //   customeSatisfactList: data?.customerList || [],
+        //   standgaswaringList: data?.standgaswaringList || [],
+        // });
+        // callback &&
+        //   callback({
+        //     ctListTotal: data?.ctList?.length || 0,
+        //     customerListTotal: data?.customerList?.length || 0,
+        //     projectListTotal: data?.projectList?.length || 0,
+        //     standgaswaringListTotal: data?.standgaswaringList?.length || 0,
+        //   });
       }
       yield update(
         payload.type == 1

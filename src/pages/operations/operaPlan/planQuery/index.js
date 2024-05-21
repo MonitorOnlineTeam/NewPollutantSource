@@ -76,16 +76,6 @@ const Index = (props) => {
 
     }, []);
 
-    const initData = () => {
-        props.dispatch({
-            type: `${namespace}/GetQuestionList`,
-            payload: {
-                pageIndex: pageIndex,
-                pageSize: pageSize
-            }
-        });
-    }
-
 
 
 
@@ -135,7 +125,6 @@ const Index = (props) => {
                 <ViewPlanModal
                     visible={viewPlanVisible}
                     onCancel={() => { setViewPlanVisible(false) }}
-                    type={type}
                     pointType={pointType}
                     entCode={entCode}
                 />
@@ -148,7 +137,7 @@ const Index = (props) => {
                     footer={null}
                     bodyStyle={{padding:'12px 24px'}}
                 >
-                <RecordList  id={statusChangeId} status={type} refresh={statusChangeVisible} noTitle/>
+                <RecordList  id={statusChangeId}  refresh={statusChangeVisible} noTitle/>
             </Modal>
             </BreadcrumbWrapper>
         </div>

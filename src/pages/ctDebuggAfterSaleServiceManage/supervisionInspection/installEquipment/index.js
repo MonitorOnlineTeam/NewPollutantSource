@@ -72,6 +72,7 @@ const dvaPropsData = ({ loading, installEquipment, global }) => ({
   auditPhotoLoading: loading.effects[`${namespace}/GetAuditPhoto`],
   addAuditInfoLoading: loading.effects[`${namespace}/AddAuditInfo`],
   exportLoading: loading.effects[`${namespace}/ExportEquipmentAudit`],
+  exportLoading2: loading.effects[`${namespace}/ExportAuditPhoto`],
   configInfo: global.configInfo,
 });
 
@@ -92,6 +93,7 @@ const Index = props => {
     hideBreadcrumb,
     defaultStatus, // 默认的审核状态
     auditResultList, // 审核状态列表
+    exportLoading2,
   } = props;
 
   const type = pathname == '/ctManage/supervisionInspection/installEquipmentReview' ? 1 : 2;
@@ -270,7 +272,7 @@ const Index = props => {
             <a
               onClick={() => {
                 setExportIndex(index);
-                exports({
+                exports2({
                   serviceAreaCode: record.ServiceAreaCode,
                   num: record.Num,
                   projectCode: record.ProjectCode,
@@ -278,7 +280,7 @@ const Index = props => {
                 });
               }}
             >
-              {index == exportIndex && exportLoading ? (
+              {index == exportIndex && exportLoading2 ? (
                 <Spin size="small" />
               ) : (
                 <ExportOutlined style={{ fontSize: 16 }} />
@@ -348,6 +350,14 @@ const Index = props => {
       type: `${namespace}/ExportEquipmentAudit`,
       payload: {
         ...queryPar,
+        ...record,
+      },
+    });
+  };
+  const exports2 = record => {
+    props.dispatch({
+      type: `${namespace}/ExportAuditPhoto`,
+      payload: {
         ...record,
       },
     });

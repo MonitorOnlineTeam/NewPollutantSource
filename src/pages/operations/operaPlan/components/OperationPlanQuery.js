@@ -108,7 +108,7 @@ const Index = (props) => {
     const onFinish = async (PageIndex, PageSize, queryPar) => {  
         try {
             const values = await form.validateFields();
-            const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
+            const par = queryPar ? { ...queryPar, pageIndex: PageIndex, pageSize: PageSize, } : {
                 ...values,
                 planType:planType,
                 beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
@@ -150,7 +150,7 @@ const Index = (props) => {
             form={form}
             onFinish={resDataHandle}
             initialValues={{
-                pointType:''
+                pollutantType:''
             }}
         >
             <Row>
@@ -170,8 +170,8 @@ const Index = (props) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item name='pointType' label='点位类型'>
-                        <Radio.Group onChange={(e) => { setPointType(e.target.value) }}>
+                    <Form.Item name='pollutantType' label='点位类型'>
+                        <Radio.Group>
                             <Radio value={''}>全部</Radio>
                             <Radio value={'2'}>废气</Radio>
                             <Radio value={'1'}>废水</Radio>

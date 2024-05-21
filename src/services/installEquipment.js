@@ -23,3 +23,10 @@ export async function AddAuditInfo(params) {
   const result = post(API.SupervisionInspecApi.AddAuditInfo, params);
   return result;
 }
+
+//单条设备安装导出
+export async function ExportAuditPhoto(params) {
+  const result = post(API.SupervisionInspecApi.ExportAuditPhoto, params);
+  return result;
+}
+

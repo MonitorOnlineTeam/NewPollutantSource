@@ -110,7 +110,7 @@ const Index = (props) => {
             id: list?.ID,
             num: list?.Num,
             serviceAreaCode: list?.ServiceAreaCode,
-            investigatorName:list?.investigatorName,
+            investigatorName:list?.InvestigatorName,
             msgid:parData?.msgid
           },
           callback:()=>{

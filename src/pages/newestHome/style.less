@@ -174,10 +174,31 @@
     }
 
   }
-
-  .operaOrder{
+  @selectColor:#A19FA2;
+  .operaOrder  :global{
     padding-bottom: 26px;
     height: 330px;
+    .operationTaskSelectSty{
+     position: absolute;
+     top: 28px;
+     right: 48px;
+     color: @selectColor;
+     .ant-select-selection-item, .ant-select-item-option-content,.ant-select-item,.ant-select-selection-placeholder, .anticon-down{
+      color: @selectColor;
+     }
+     .ant-select-selector,.ant-select-dropdown {
+       background-color: @cardBagCol !important;
+       border: 1px solid @selectColor !important;
+       width: 90px;
+     }
+      .ant-select-item-option-active:not(.ant-select-item-option-disabled){ //悬浮
+        background-color: rgba(161, 159, 162, .1);
+      }
+      .ant-select-item-option-selected:not(.ant-select-item-option-disabled){ //选中
+       color: @selectColor;
+       background-color: rgba(161, 159, 162, .2);
+      }
+    }
   }
   .planOpera{
     padding-bottom: 14px;
@@ -192,6 +213,7 @@
     padding-bottom: 20px;
     height: 313px;
   }
+
 }
 
 .bottomContent{   /* 底部部分 */
@@ -726,14 +748,17 @@
   }
 }
 .cardPopoverSty :global{
-   .ant-popover-inner ,.ant-popover-arrow{
+   .ant-popover-inner,.ant-popover-arrow-content:before{
     background: @cardBagCol !important;  
     border: 1px solid rgba(255,255,255,0.1) !important;
    }
-   .ant-popover-arrow{
-    border-top-color: transparent !important;
-    border-right-color: transparent !important;
+   .ant-popover-arrow-content:before{
+    background: rgba(255,255,255,0.1) !important;  ;
    }
+  //  .ant-popover-arrow{
+  //   border-top-color: transparent !important;
+  //   border-right-color: transparent !important;
+  //  }
   .ant-popover-inner-content{
     color: #fff;
   }

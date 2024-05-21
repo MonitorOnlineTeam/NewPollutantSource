@@ -122,6 +122,7 @@ const Index = (props) => {
             type: `${namespace}/updateState`,
             payload: { operationPlanInfoRefreshId: record.ID },
         });
+        setPointType(record.pollutantType == '废气' ? 2 : 1)
     }
 
     const delPlan = (record) => {
@@ -352,7 +353,6 @@ const Index = (props) => {
                 <ViewPlanModal
                     visible={viewPlanVisible}
                     onCancel={() => { setViewPlanVisible(false) }}
-                    type={1}
                     pointType={pointType}
                     entCode={entCode}
                 />

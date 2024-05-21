@@ -118,7 +118,7 @@ const Index = (props) => {
                             align: 'center',
                             render: (text, record, index) => {
                                 const filterData = (status) => typeLegendData.filter(item => item.value == status)?.[0]?.color;
-                                return text&&<div style={{ fontWeight: 'bold', }}><span onClick={() => { text.xjID && taskDetail(text.xjID) }} style={{ color: filterData(text.xjStatus), cursor: text.xjID && 'pointer' }}>{text.xjStr}</span> <span onClick={() => { text.jzID && taskDetail(text.jzID) }} style={{ color: filterData(text.jzStatus), cursor: text.jzID && 'pointer' }}>{text.jzStr}</span></div>
+                                return text&&<div style={{ fontWeight: 'bold', }}><span onClick={() => { text.xjID && taskDetail(text.xjID) }} style={{ color: filterData(text.xjStatus), cursor: text.xjID && 'pointer' }}>{text.xjStr}</span>&nbsp;&nbsp;<span onClick={() => { text.jzID && taskDetail(text.jzID) }} style={{ color: filterData(text.jzStatus), cursor: text.jzID && 'pointer' }}>{text.jzStr}</span></div>
                             }
                         }]
                     }]
@@ -139,7 +139,7 @@ const Index = (props) => {
     const onFinish = async (PageIndex, PageSize, queryPar) => {  //计划列表
         try {
             const values = await form.validateFields();
-            const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
+            const par = queryPar ? { ...queryPar, pageIndex: PageIndex, pageSize: PageSize, } : {
                 ...values,
                 beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
                 endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),

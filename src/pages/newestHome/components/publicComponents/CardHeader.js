@@ -24,9 +24,11 @@ const namespace = 'newestHome'
 
 
 
-const dvaPropsData =  ({ loading,newestHome }) => ({
+const dvaPropsData =  ({ loading,newestHome,global }) => ({
   latelyDays30:newestHome.latelyDays30,
   latelyDays7:newestHome.latelyDays7,
+  operationSettingInfo: global.operationSettingInfo,
+
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -45,17 +47,25 @@ const Index = (props) => {
 
 
 
-
+  const { operationSettingInfo: { TaskPlanType } } = props;
   
   useEffect(() => {
   
   },[]); 
-  const content =  <ul>
+  const content =  TaskPlanType ==1 ? <ul>
   <li>次数：系统按计划派发的工单数量</li>
   <li>计划内结束次数：系统关闭次数、完成次数</li>
   <li>完成率：(计划内完成次数/计划内结束次数) * 100%</li>
   </ul>
-  
+  :
+  <ul>
+  <li>完成率：(计划内完成次数/计划内应完成次数) * 100%</li>
+  <li>计划内完成次数：在计划周期内完成工单数量，包括超时完成工单</li>
+  <li>计划内未完成次数：在计划周期内味完成的工单数量</li>
+  <li>超时完成次数：没有在计划当天完成的工单数量</li>
+  <li>超时未完成次数：计划工单已超时，仍未完成的工单数量</li>
+  </ul>
+
   const { showBtn, type,btnCheck,btnClick,dataType,latelyDays30,latelyDays7,isPopover, } = props;
   const btnArr = type =='plan'? [{name:"巡检",key:1}, {name:"校准",key:2}] : [{name:"近7日",key:latelyDays7}, {name:"近30日",key:latelyDays30}]
   return (

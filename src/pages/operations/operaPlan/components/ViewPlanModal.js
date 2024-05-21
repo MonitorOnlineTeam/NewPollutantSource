@@ -54,7 +54,7 @@ const Index = (props) => {
 
 
 
-    const { type, pointType, entCode, operationPlanInfoRefreshId, visible, pointLoading } = props;
+    const { pointType, entCode, operationPlanInfoRefreshId, visible, pointLoading } = props;
     const [pointList, setPointList] = useState([])
 
 
@@ -76,7 +76,7 @@ const Index = (props) => {
     }, [visible])
 
 
-    const commonSearchComponents = (type) => {
+    const commonSearchComponents = () => {
         return <> <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
             <Form.Item name='pointID' label='监测点' style={{ marginBottom: 8 }}>
                 <Select
@@ -92,21 +92,10 @@ const Index = (props) => {
             </Form.Item>
         </Spin>
             <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
-                {type == 2 ?
-                    <Select placeholder='请选择' allowClear style={{ width: 140 }}>
-                        <Option key={1} value={1}>巡检</Option>
-                        <Option key={2} value={2}>校准</Option>
-                        <Option key={3} value={3}>校验测试</Option>
-                        <Option key={4} value={4}>全系统校准</Option>
-
-                    </Select>
-
-                    :
-                    <Select placeholder='请选择' allowClear style={{ width: 100 }}>
+                  <Select placeholder='请选择' allowClear style={{ width: 100 }}>
                         <Option key={pointType == 2 ? 1 : 7} value={pointType == 2 ? 1 : 7}>巡检</Option>
                         <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
                     </Select>
-                }
             </Form.Item>
             <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
                 <RangePicker_ format="YYYY-MM-DD" />
@@ -133,12 +122,12 @@ const Index = (props) => {
                         {
                             label: '计划列表',
                             key: '1',
-                            children: <PlanList type={3} planContentOpera={[]} pointList={pointList}/>,
+                            children: <PlanList type={3} pointType={pointType}  planContentOpera={[]} pointList={pointList}/>,
                         },
                         {
                             label: '计划日历',
                             key: '2',
-                            children: <PlanCalendar commonSearchComponents={() => commonSearchComponents(type)} />,
+                            children: <PlanCalendar pointType={pointType} commonSearchComponents={() => commonSearchComponents()} />,
                         },
                     ]}
                 />

@@ -113,6 +113,11 @@ export const API = {
     GetExceptionModel: before + '/ExceptionDataApi/GetExceptionModel', //获取异常记录汇总信息
     GetExceptionData: before + '/ExceptionDataApi/GetExceptionData', //获取异常记录详情信息
     GetVideoList: before + '/VideoApi/GetVideoList', //视频管理获取视频信息
+    GetOperationTaskStatisticsInfoByDay: before + '/VisualDashBoardApi/GetOperationTaskStatisticsInfoByDay', //近期运维工单 固定到天
+    GetOperationPlanTaskListByDay: before + '/VisualDashBoardApi/GetOperationPlanTaskListByDay', //近期运维工单详情 固定到天
+    GetPlanOperationTaskCompleteRateByDay: before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRateByDay', //获取看板计划内完成巡检校准任务 固定到天
+    GetWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/GetWorkOrderAnalysisList', //运维工单分析详情 固定到天
+    ExportWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/ExportWorkOrderAnalysisListDay', //运维工单分析详情 固定到天  导出
   },
   //工作台Api
   WorkStageApi: {
@@ -942,12 +947,12 @@ export const API = {
 
   /*** 工作台 ***/
   CtWorkStageApi: {
-    // GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//合同到期 旧
-    // DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除工作台合同到期 旧
-    // DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期 旧
-    GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg', //获取工作台项目执行、合同到期等  新
-    DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg', //删除工作台合同到期等 新
-    DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg', //删除所有工作台合同到期等 新
+    GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//合同到期 旧
+    DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//删除工作台合同到期 旧
+    DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//删除所有合同到期 旧
+    // GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg', //获取工作台项目执行、合同到期等  新
+    // DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg', //删除工作台合同到期等 新
+    // DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg', //删除所有工作台合同到期等 新
     UpdateImplementationStatus: before + '/CTBaseDataApi/UpdateImplementationStatus', //解决项目执行遗留问题
   },
 
@@ -1113,6 +1118,7 @@ export const API = {
     ExportEquipmentAudit: before + '/CustomerSatisfaction/ExportEquipmentAudit', //设备安装审核信息 导出
     GetAuditPhoto: before + '/CustomerSatisfaction/GetAuditPhoto', //获取设备安装审核照片详细
     AddAuditInfo: before + '/CustomerSatisfaction/AddAuditInfo', //安装照片审核
+    ExportAuditPhoto: before + '/CustomerSatisfaction/ExportAuditPhoto', //单条设备安装 导出
   },
   //通用管理 Api
   GeneralManagerApi: {

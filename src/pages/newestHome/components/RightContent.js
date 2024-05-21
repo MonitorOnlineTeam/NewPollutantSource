@@ -36,7 +36,7 @@ const namespace = 'newestHome'
 // const subjectFontSize = 14;
 
 
-const dvaPropsData = ({ loading, newestHome, operationExpirePoint }) => ({
+const dvaPropsData = ({ loading, newestHome, operationExpirePoint,global }) => ({
   effectiveTransmissionLoading: loading.effects[`${namespace}/GetEffectiveTransmissionRateList`],
   effectiveTransmissionList: newestHome.effectiveTransmissionList,
   dataAlarmResLoading: loading.effects[`${namespace}/GetAlarmResponse`],
@@ -48,6 +48,7 @@ const dvaPropsData = ({ loading, newestHome, operationExpirePoint }) => ({
   latelyDays30: newestHome.latelyDays30,
   latelyDays7: newestHome.latelyDays7,
   subjectFontSize: newestHome.subjectFontSize,
+  operationSettingInfo: global.operationSettingInfo,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -115,7 +116,7 @@ const Index = (props) => {
 
 
 
-  const { pollType, latelyDays7, latelyDays30, dataAlarmResData, subjectFontSize } = props;
+  const { pollType, latelyDays7, latelyDays30, dataAlarmResData, subjectFontSize,operationSettingInfo: { TaskPlanType } } = props;
 
   useEffect(() => {
     initData()
@@ -550,7 +551,7 @@ const Index = (props) => {
       </Spin>
 
       <Spin spinning={dataAlarmResLoading}>
-        <div className={styles.dataAlarmRes}>{/**异常数据总览 */}
+        <div className={styles.dataAlarmRes}  style={{height:TaskPlanType==1? 269 : 292}}>{/**异常数据总览 */}
           <CardHeader btnClick={dataAlarmResClick} showBtn type='week' btnCheck={dataAlarmResBtnCheck} title='异常数据总览' />
           {dataAlarmEcharts}
         </div>

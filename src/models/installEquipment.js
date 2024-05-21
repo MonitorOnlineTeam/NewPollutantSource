@@ -57,7 +57,16 @@ export default Model.extend({
       }
     },
     
-
+    //单条设备安装 导出
+    *ExportAuditPhoto({ payload,callback }, { call, put, update }) { 
+      const result = yield call(services.ExportAuditPhoto, payload);
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      } else {
+        message.error(result.Message);
+      }
+    },
 
 
 

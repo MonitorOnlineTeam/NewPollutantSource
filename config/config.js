@@ -2368,6 +2368,12 @@ export default {
                       // component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
                       component: './Intelligentanalysis/planWorkOrderStatistics',
                     },
+                    {
+                      // 运维工单统计（企业）固定到天
+                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatisticsDay',
+                      // component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      component: './Intelligentanalysis/planWorkOrderStatisticsDay',
+                    },
                     // {
                     //   // 运维工单统计（企业） 城市级别
                     //   path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/cityLevel',

@@ -97,6 +97,7 @@ const Index = (props) => {
             setEquipmentMode:0,
             InspectionType:1,
             IsFlag:false,
+            TaskPlanType:1,
           }}
         >
         <Spin spinning={props.getOperationSettingLoading}>
@@ -157,7 +158,12 @@ const Index = (props) => {
               <Radio value={false}>不显示</Radio>
             </Radio.Group>
             </Form.Item>
-
+            <Form.Item label='运维计划制定方式' name='TaskPlanType'>
+            <Radio.Group>
+              <Radio value={1}>固定到周</Radio>
+              <Radio value={2}>固定到天</Radio>
+            </Radio.Group>
+            </Form.Item>
             <Divider orientation="right" style={{borderTopColor:'#0000000f'}}>
               <Button type='primary' htmlType='submit' loading={props.updOperationSettingLoading}>保存</Button>
             </Divider>

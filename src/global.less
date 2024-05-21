@@ -1088,18 +1088,25 @@ a:hover {
   }
 }
 .queryCriterTitleSty  :global{
-  // .ant-card-head{
-  //   min-height: 40px;
-  // }
   .ant-card-head-title{
      padding: 8px 0 0 0;
    }
   .ant-form-item{
     margin-bottom: 8px;
   }
-   .ant-col-8:nth-child(3n-1){
-    padding: 0 16px;
+//  .ant-col-8:nth-child(3n-1){
+//     padding: 0 16px;
+//  }
+ .ant-form>.ant-row{
+  margin-left: -8px;
+  margin-right: -8px;
+  row-gap: 0px;
+  &>.ant-col{
+    padding-left: 8px;
+    padding-right: 8px
+   }
  }
+
  .ant-picker{
    width: 100% !important;
    margin-left: 0 !important;
@@ -1109,6 +1116,11 @@ a:hover {
 .form_label_width_55   :global{
   .ant-form-item-label {
     min-width:55px;
+  }
+ }
+ .form_label_width_83   :global{
+  .ant-form-item-label {
+    min-width:83px;
   }
  }
 .form_label_width_94  :global{

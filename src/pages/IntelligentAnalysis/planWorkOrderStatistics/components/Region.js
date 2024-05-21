@@ -1468,7 +1468,7 @@ const Index = (props, ref) => {
     "matchingComparisonCount": '参数核对工单',
     "cooperationInspectionCount": '配合检查工单',
     "calibrationTestCount": '校验测试工单',
-    "coordinationComparisonCount": '配合比对工单数',
+    "coordinationComparisonCount": '配合比对工单',
     "dealExceptionCount": '异常处理',
   }
 
@@ -1635,16 +1635,15 @@ const Index = (props, ref) => {
 
 
         <Col>
-          <Row align='middle'>
-            <div style={{ marginRight: 8 }}>
+         <Row align='middle'>
+            <Row  align='middle' style={{ marginRight: 8 }}>
               <div style={{ display: 'inline-block', background: '#bae7ff', width: 24, height: 12, marginRight: 5 }}></div>
               <span>运维周期内</span>
-            </div>
-            <div style={{ marginRight: 8 }}>
+            </Row>
+            <Row  align='middle' style={{ marginRight: 8 }}>
               <div style={{ display: 'inline-block', background: '#1890ff', width: 24, height: 12, marginRight: 5 }}></div>
               <span>完成工单</span>
-            </div>
-
+            </Row>
           </Row> 
         </Col>
       </Row>

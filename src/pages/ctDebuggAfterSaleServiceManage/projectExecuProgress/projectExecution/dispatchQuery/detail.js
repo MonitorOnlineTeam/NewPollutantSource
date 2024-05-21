@@ -737,6 +737,14 @@ const Index = (props) => {
         render: (text, record, index) => rowSpanFun(text, record, index)
       },
       {
+        title: '设备型号',
+        dataIndex: 'SystemModelName',
+        key: 'SystemModelName',
+        align: 'center',
+        ellipsis: true,
+        width: 'auto',
+      },
+      {
         title: '安装项',
         dataIndex: 'InstallationItemsName',
         key: 'InstallationItemsName',

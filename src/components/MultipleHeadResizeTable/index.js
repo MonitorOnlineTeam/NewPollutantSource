@@ -141,7 +141,7 @@ const  Index = (props) => {
 
 
   return <Table
-    size="middle"
+    size="small"
     rowClassName={(record, index, indent) => {
       if (index === 0) {
         return;

@@ -73,7 +73,7 @@ class TaskRecord extends Component {
     super(props);
     this.state = {
       ParentType: '企业',
-      expand: false,
+      expand: props.isWorkExecue,
       //  EntCode:null,
       taskRecordDetailVisible: false,
       TaskID: null,
@@ -189,7 +189,7 @@ class TaskRecord extends Component {
           TaskCode: baseReportSearchForm.TaskCode,
           ExceptionType: baseReportSearchForm.ExceptionType != undefined ? baseReportSearchForm.ExceptionType : '',
           TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
-          TaskStatus: baseReportSearchForm.TaskStatus != undefined ? baseReportSearchForm.TaskStatus : '',
+          TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
           TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
           ApproveStatus: baseReportSearchForm.ApproveStatus != undefined ? baseReportSearchForm.ApproveStatus : '',//审批状态
@@ -212,21 +212,25 @@ class TaskRecord extends Component {
   LoadData = (par) => {
     const {
       dispatch,
-      isHomeModal, DGIMN
+      isHomeModal, DGIMN,
+      isWorkExecue,
+      taskStatus,
+      operaStatus,
+      completeTime
     } = this.props;
-    
+    console.log(completeTime)
     dispatch({
       type: 'task/updateState',
       payload: {
         gettasklistqueryparams: {
           TaskCode: '',
-          ExceptionType: '',
+          ExceptionType: operaStatus,
           TaskFrom: '',
-          TaskStatus: '',
+          TaskStatusList: taskStatus,
           OperationsUserId: '',
           TaskType: '',
-          CompleteTime: '',
-          CreateTime: [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+          CompleteTime: completeTime,
+          CreateTime:[moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
           pageIndex: 1,
           pageSize: 20,
           total: 0,
@@ -235,6 +239,7 @@ class TaskRecord extends Component {
         },
       },
     })
+    this.props.form.setFieldsValue({CompleteTime: completeTime,})
     dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: false, }, })
 
     dispatch({
@@ -262,7 +267,7 @@ class TaskRecord extends Component {
           TaskCode: baseReportSearchForm.TaskCode,
           ExceptionType: baseReportSearchForm.ExceptionType != undefined ? baseReportSearchForm.ExceptionType : '',
           TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
-          TaskStatus: baseReportSearchForm.TaskStatus != undefined ? baseReportSearchForm.TaskStatus : '',
+          TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
           TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
           CompleteTime: baseReportSearchForm.CompleteTime,
@@ -292,7 +297,7 @@ class TaskRecord extends Component {
           TaskCode: baseReportSearchForm.TaskCode,
           ExceptionType: baseReportSearchForm.ExceptionType != undefined ? baseReportSearchForm.ExceptionType : '',
           TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
-          TaskStatus: baseReportSearchForm.TaskStatus != undefined ? baseReportSearchForm.TaskStatus : '',
+          TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
           TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
           CompleteTime: baseReportSearchForm.CompleteTime,
@@ -760,7 +765,7 @@ class TaskRecord extends Component {
     const { pointList, pointLoading, } = this.state;
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
-        <Card className={`contentContainer ${styles.taskRecordSty}`}>
+        <Card className={`contentContainer ${styles.taskRecordSty}`} bordered={ !this.props.isWorkExecue}>
           <Form layout="" className='searchForm' style={{ marginBottom: '10' }}>
             <Row>
               {!isHomeModal && <>
@@ -801,13 +806,13 @@ class TaskRecord extends Component {
                       isNoPanelChange
                       dateValue={gettasklistqueryparams.CreateTime}
                       style={{ width: '100%' }}
-                      allowClear={false}
+                      allowClear={true}
                       format="YYYY-MM-DD HH:mm:ss"
                       callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')}
                       showTime={{
                         defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
                       }}
-                    />,
+                    />
                   )}
                 </FormItem>
 
@@ -840,7 +845,7 @@ class TaskRecord extends Component {
                     >
                       <Option key="1" value="1">打卡异常</Option>
                       <Option key="2" value="2">报警响应超时</Option>
-                      {/* <Option key="3" value="3">工作超时</Option> */}
+                      <Option key="3" value="3">工作超时</Option>
                     </Select>,
                   )}
                 </FormItem>
@@ -866,10 +871,12 @@ class TaskRecord extends Component {
               </Col>
               <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                 <FormItem {...formLayout} label="任务状态" style={{ width: '100%' }}>
-                  {getFieldDecorator('TaskStatus', {
-                    initialValue: gettasklistqueryparams.TaskStatus ? gettasklistqueryparams.TaskStatus : undefined,
+                  {/* {getFieldDecorator('TaskStatus', { */}
+                  {getFieldDecorator('TaskStatusList', {
+                    initialValue: gettasklistqueryparams.TaskStatusList ? gettasklistqueryparams.TaskStatusList : undefined,
                   })(
                     <Select
+                      mode='multiple'
                       placeholder="请选择"
                       style={{ width: '100%' }}
                       allowClear
@@ -900,9 +907,7 @@ class TaskRecord extends Component {
               </Col>
               <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                 <FormItem {...formLayout} label="完成时间" style={{ width: '100%' }}>
-                  {getFieldDecorator('CompleteTime', {
-                    initialValue: gettasklistqueryparams.CompleteTime,
-                  })(
+                  {getFieldDecorator('CompleteTime')(
                     <RangePicker_
                       isNoPanelChange
                       style={{ width: '100%' }}

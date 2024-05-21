@@ -58,7 +58,11 @@ const Index = (props) => {
     
     const [pointList, setPointList] = useState([])
     useEffect(() => {
-        props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanInfo: [] } });
+        return () => {
+            // 执行清理工作，比如取消订阅或清除定时器
+            // 这个清理函数会在组件卸载时自动执行
+            props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanInfo: [],operationPlanInfoTotal:0 } });
+          };
     }, []);
     useEffect(() => {
         props.pointList&&setPointList(props.pointList)
@@ -247,21 +251,10 @@ const Index = (props) => {
             </Form.Item>
         </Spin>
             <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
-                {type == 2 ?
-                    <Select placeholder='请选择' allowClear style={{ width: 140 }}>
-                        <Option key={1} value={1}>巡检</Option>
-                        <Option key={2} value={2}>校准</Option>
-                        <Option key={3} value={3}>校验测试</Option>
-                        <Option key={4} value={4}>全系统校准</Option>
-
-                    </Select>
-
-                    :
-                    <Select placeholder='请选择' allowClear style={{ width: 100 }}>
+                 <Select placeholder='请选择' allowClear style={{ width: 100 }}>
                         <Option key={pointType == 2 ? 1 : 7} value={pointType == 2 ? 1 : 7}>巡检</Option>
                         <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
                     </Select>
-                }
             </Form.Item>
             <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
                 <RangePicker_ format="YYYY-MM-DD" />
@@ -330,14 +323,14 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns}
                 align='center'
-                pagination={tableTotal?{
+                pagination={{
                     total: tableTotal,
                     pageSize: pageSize,
                     current: pageIndex,
                     showSizeChanger: true,
                     showQuickJumper: true,
                     onChange: handleTableChange,
-                }:false}
+                }}
             />
             <Modal
                 visible={planCalendarVisible}
