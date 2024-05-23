@@ -273,10 +273,14 @@ const Index = props => {
               onClick={() => {
                 setExportIndex(index);
                 exports2({
-                  serviceAreaCode: record.ServiceAreaCode,
-                  num: record.Num,
+                  systemModelId: record.Col1,
+                  dispatchId: record.DispatchId,
+                  pointId: record.PointId,
+                  equipmentAuditId: record.EquipmentAuditId,
+                  entName: record.EntName,
+                  pointName: record.PointName,
+                  systemModelName: record.SystemModelName,
                   projectCode: record.ProjectCode,
-                  projectName: record.ProjectName,
                 });
               }}
             >

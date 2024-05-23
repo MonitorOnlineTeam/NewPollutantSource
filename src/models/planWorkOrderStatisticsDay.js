@@ -44,20 +44,20 @@ export default Model.extend({
           tableTotal: result.Total,
           tableDatas: result.Datas,
           tableLoading: false,
-          queryPar: { ...payload, entCode: undefined, entName: undefined, pointName: undefined },
+          queryPar: { ...payload,regionCode:undefined, entCode: undefined, entName: undefined, pointName: undefined },
         })
       } else {
         yield update({ tableLoading: false })
       }
     },
 
-    *cityGetTaskWorkOrderList({ payload, callback }, { call, put, update }) { //行政区市 级别 第一级
+    *cityGetTaskWorkOrderList({ payload, callback }, { call, put, update }) { //行政区市级别 第一级
       const result = yield call(requestPost, API.VisualKanbanApi.GetWorkOrderAnalysisListDay, payload);
       if (result.IsSuccess) {
         yield update({
           cityTableTotal: result.Total,
           cityTableDatas: result.Datas,
-          queryPar: { ...payload, entCode: undefined, entName: undefined, pointName: undefined },
+          queryPar: { ...payload,entCode: undefined, entName: undefined, pointName: undefined },
         })
       }
     },
@@ -78,7 +78,7 @@ export default Model.extend({
           insideOrOutsiderWorkTableDatas: result.Datas.resList,
           insideOrOutsiderWorkTableTotal: result.Total,
           dateCol: result.Datas.colList || [],
-          queryPar: { ...payload, entCode: undefined, entName: undefined, pointName: undefined },
+          queryPar: { ...payload,entCode: undefined, entName: undefined, pointName: undefined },
         })
       }
     },

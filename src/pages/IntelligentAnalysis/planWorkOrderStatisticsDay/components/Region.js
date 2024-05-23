@@ -18,6 +18,7 @@ import moment from 'moment';
 import RegionList from '@/components/RegionList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import TaskRecordDetails from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout'
 
 const { TextArea } = Input;
@@ -32,9 +33,6 @@ const dvaPropsData = ({ loading, planWorkOrderStatisticsDay, global }) => ({
   pointDatas: planWorkOrderStatisticsDay.pointDatas,
   tableLoading: planWorkOrderStatisticsDay.tableLoading,
   tableTotal: planWorkOrderStatisticsDay.tableTotal,
-  abnormalTypes: planWorkOrderStatisticsDay.abnormalTypes,
-  abnormalLoading: loading.effects[`${namespace}/abnormalExceptionTaskList`],
-  abnormalList: planWorkOrderStatisticsDay.abnormalList,
   queryPar: planWorkOrderStatisticsDay.queryPar,
   cityTableDatas: planWorkOrderStatisticsDay.cityTableDatas,
   cityTableLoading: loading.effects[`${namespace}/cityGetTaskWorkOrderList`],
@@ -158,11 +156,11 @@ const Index = (props, ref) => {
   const [showTaskID, setShowTaskID] = useState()
   const [showId, setShowId] = useState(-1)
 
-  const popContent = (type, id, taskTypeName, data, taskWorkNum1, taskWorkNum2,taskWorkNums3 ) => {
-    const oneNum = (record, taskNumData) => record && record[0] ? <div style={{ width: '100%', lineHeight: '44.5px', cursor: 'pointer', color: '#fff' }} onClick={() => { setShowId(-1); taskDetail(record && record[0]) }}>{taskNumData}</div> : <span style={{ color: '#fff' }}>{taskNumData}</span>
-    const multipleNum = (dataSource, taskNumData, typeName) => dataSource && dataSource[0] ? <Popover
+  const popContent = (type, id, taskTypeName, data, taskWorkNum1, taskWorkNum2,taskWorkNum3 ) => {
+    const oneNum = (record, taskNum) => record && record[0] ? <div style={{ width: '100%',height:20,cursor: 'pointer', color: '#fff' }} onClick={() => { setShowId(-1); taskDetail(record && record[0]) }}>{taskNum}</div> :  <div  style={{width:'100%',color: '#fff' }}>{taskNum}</div>
+    const multipleNum = (dataSource, taskNum, typeName) => dataSource && dataSource[0] ? <Popover
       zIndex={1000}
-      placement="top"
+      placement="topRight"
       onVisibleChange={(newVisible) => { setPopVisible(newVisible) }}
       trigger="click"
       visible={showId == `${id}${typeName}` && popVisible}
@@ -186,8 +184,8 @@ const Index = (props, ref) => {
           ]}
           dataSource={dataSource} pagination={false} />
       }>
-      <div onClick={() => { setShowId(`${id}${typeName}`) }} style={{ width: '100%', lineHeight: '44.5px', cursor: 'pointer', color: '#fff' }}>{taskNumData}</div>
-    </Popover> : <span style={{ color: '#fff' }}>{taskNumData}</span>
+      <div onClick={() => { setShowId(`${id}${typeName}`) }} style={{ width: '100%',height:20,cursor: 'pointer', color: '#fff' }}>{taskNum}</div>
+    </Popover> : <div  style={{width:'100%',color: '#fff' }}>{taskNum}</div>
   
 
   const colorObj = {
@@ -195,25 +193,30 @@ const Index = (props, ref) => {
     'overCompleteList': '#faad14',
     'overIncompleteList': '#f5222d'
   }
-  const popData = data.taskList
 
+  let popData = data.taskList
+  const popFilterData = {
+    'taskCompleteCount': popData.filter(item=>!item.TaskOverTime && item.TaskStatus==3),
+    'overCompleteList': popData.filter(item=> item.TaskOverTime==1 && item.TaskStatus==3),
+    'overIncompleteList': popData.filter(item=> item.TaskOverTime==1 && item.TaskStatus!=3),
+  }
   if (type == 3) {//同时存在三种工单
       let taskWorkNums1, taskWorkNums2, taskWorkNums3;
       taskTypeName = taskTypeName.split(',')
       if (data[taskTypeName[0]] > 1) {
-        taskWorkNums1 = multipleNum(popData, taskWorkNum1, taskTypeName[0])
+        taskWorkNums1 = multipleNum(popFilterData[taskTypeName[0]], taskWorkNum1, taskTypeName[0])
       } else {
         taskWorkNums1 = oneNum(popData, taskWorkNum1)
       }
       if (data[taskTypeName[1]] > 1) {
-        taskWorkNums2 = multipleNum(popData, taskWorkNum2, taskTypeName[1])
+        taskWorkNums2 = multipleNum(popFilterData[taskTypeName[1]], taskWorkNum2, taskTypeName[1])
       } else {
         taskWorkNums2 = oneNum(popData, taskWorkNum2)
       }
       if (data[taskTypeName[2]] > 1) {
-        taskWorkNums3 = multipleNum(popData, taskWorkNum2, taskTypeName[2])
+        taskWorkNums3 = multipleNum(popFilterData[taskTypeName[2]], taskWorkNum3, taskTypeName[2])
       } else {
-        taskWorkNums3 = oneNum(popData, taskWorkNum2)
+        taskWorkNums3 = oneNum(popData, taskWorkNum3)
       }
       return <Row align='middle' justify='center' style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
         <div style={{ width: '33.33%', height: '100%', display: 'flex', alignItems: 'center', background:  colorObj[taskTypeName[0]] }}> {taskWorkNums1} </div>
@@ -224,12 +227,12 @@ const Index = (props, ref) => {
       let taskWorkNums1, taskWorkNums2;
       taskTypeName = taskTypeName.split(',')
       if (data[taskTypeName[0]] > 1) {
-        taskWorkNums1 = multipleNum(popData, taskWorkNum1, taskTypeName[0])
+        taskWorkNums1 = multipleNum(popFilterData[taskTypeName[0]], taskWorkNum1, taskTypeName[0])
       } else {
         taskWorkNums1 = oneNum(popData, taskWorkNum1)
       }
       if (data[taskTypeName[1]] > 1) {
-        taskWorkNums2 = multipleNum(popData, taskWorkNum2, taskTypeName[1])
+        taskWorkNums2 = multipleNum(popFilterData[taskTypeName[1]], taskWorkNum2, taskTypeName[1])
       } else {
         taskWorkNums2 = oneNum(popData, taskWorkNum2)
       }
@@ -238,10 +241,10 @@ const Index = (props, ref) => {
         <div style={{ width: '50%', height: '100%', display: 'flex', alignItems: 'center', background:  colorObj[taskTypeName[1]]  }}> {taskWorkNums2} </div>
       </Row>;
     }else{
-      if (data.taskID && data.taskID.length > 1) {
-        return multipleNum(data.taskList, taskWorkNum1, taskTypeName)
+      if (taskWorkNum1 && taskWorkNum1 > 1) {
+        return multipleNum(popFilterData[taskTypeName], taskWorkNum1, taskTypeName)
       } else {
-        return oneNum(data.taskList, taskWorkNum1)
+        return oneNum(popData, taskWorkNum1)
       }
     }
 
@@ -271,7 +274,7 @@ const Index = (props, ref) => {
           align: 'center',
           sorter: (a, b) => props.sortRate(a, b,  type == 1? 'inspectionCount' : 'calibrationCount'),
           render: (text, record, index) => {
-            return text != '-' && text != 0 ? <Button type="link" onClick={() => { workOrderNum(type, record, 'inspectionCount') }}>{text}</Button> : text
+            return   text != '-' && text != 0 ? <Button type="link" onClick={() => { workOrderNum(type, record) }}>{text}</Button> : text
           }
         },
         {
@@ -287,7 +290,7 @@ const Index = (props, ref) => {
           title: '超时完成次数',
           dataIndex: type == 1 ? 'inspectionOverCompleteCount' : 'calibrationOverCompleteCount',
           key: type == 1 ? 'inspectionOverCompleteCount' : 'calibrationOverCompleteCount',
-          width: 100,
+          width: 120,
           align: 'center',
           sorter: (a, b) => props.sortRate(a, b,  type == 1? 'inspectionOverCompleteCount' : 'calibrationOverCompleteCount'),
 
@@ -296,7 +299,7 @@ const Index = (props, ref) => {
           title: '超时未完成次数',
           dataIndex: type == 1 ? 'inspectionOverIncompleteCount' : 'calibrationOverIncompleteCount',
           key: type == 1 ? 'inspectionOverIncompleteCount' : 'calibrationOverIncompleteCount',
-          width: 100,
+          width: 130,
           align: 'center',
           sorter: (a, b) => props.sortRate(a, b,  type == 1? 'inspectionOverIncompleteCount' : 'calibrationOverIncompleteCount'),
 
@@ -370,19 +373,21 @@ const Index = (props, ref) => {
       key: 'entCount',
       align: 'center',
       width: 100,
+      sorter: (a, b) => a.entCount - b.entCount,
     },
     {
       title: '运维监测点数',
       dataIndex: 'pointCount',
       key: 'pointCount',
       align: 'center',
-      width: 100,
+      width: 130,
+      sorter: (a, b) => a.pointCount - b.pointCount,
     },
     ...commonCol(type)
 
   ];
 
-  const cityInsideRegColumns = [ //计划内  市级别 二级弹框
+  const cityInsideRegColumns = ()=>[ //计划内  市级别 二级弹框
     {
       title: '序号',
       align: 'center',
@@ -419,6 +424,7 @@ const Index = (props, ref) => {
       key: 'entCount',
       align: 'center',
       width: 100,
+      sorter: (a, b) => a.entCount - b.entCount,
     },
     {
       title: '运维监测点数',
@@ -426,10 +432,19 @@ const Index = (props, ref) => {
       key: 'pointCount',
       align: 'center',
       width: 100,
+      sorter: (a, b) => a.pointCount - b.pointCount,
     },
     ...commonCol(tabType)
   ]
-  const insideWorkOrderColumns = [
+  const insideWorkOrderColumns = ()=>[
+    {
+      title: '序号',
+      align: 'center',
+      fixed: 'left',
+      render: (text, record, index) => {
+        return index + 1;
+      }
+    },
     {
       title: '省',
       dataIndex: 'province',
@@ -472,14 +487,14 @@ const Index = (props, ref) => {
       title:  `截止昨日（计划内${tabType == 1 ?'巡检': '校准'}）`,
       width: 255,
       children: [
-        {
-          title: '应完成次数',
-          dataIndex: 'taskCount',
-          key:  'taskCount',
-          width: 100,
-          align: 'center',
-          sorter: (a, b) => props.sortRate(a, b, 'taskCount'),
-        },
+        // {
+        //   title: '应完成次数',
+        //   dataIndex: 'taskCount',
+        //   key:  'taskCount',
+        //   width: 100,
+        //   align: 'center',
+        //   sorter: (a, b) => props.sortRate(a, b, 'taskCount'),
+        // },
         {
           title: '完成次数',
           dataIndex:'taskCompleteCount',
@@ -491,18 +506,18 @@ const Index = (props, ref) => {
         },
         {
           title: '超时完成次数',
-          dataIndex: 'overCompleteLis',
-          key:  'overCompleteLis',
-          width: 100,
+          dataIndex: 'overCompleteList',
+          key:  'overCompleteList',
+          width: 120,
           align: 'center',
-          sorter: (a, b) => props.sortRate(a, b,  'overCompleteLis'),
+          sorter: (a, b) => props.sortRate(a, b,  'overCompleteList'),
 
         },
         {
           title: '超时未完成次数',
           dataIndex:  'overIncompleteList',
           key:  'overIncompleteList',
-          width: 100,
+          width: 130,
           align: 'center',
           sorter: (a, b) => props.sortRate(a, b, 'overIncompleteList'),
 
@@ -549,26 +564,16 @@ const Index = (props, ref) => {
 
   ];
 
-  const outTypeNames = {
-    "inspectionCompleteCount": "巡检",
-    "calibrationCompleteCount": '校准',
-    "repairCompleteCount": '维修',
-    "sparePartsCompleteCount": '备品备件更换',
-    "consumablesCompleteCount": '易耗品更换',
-    "reagentCompleteCount": '试剂更换',
-    "referenceMaterialsCompleteCount": '标准物质更换',
-    "maintainCompleteCount": '维护',
-    "matchingComparisonCompleteCount": '参数核对',
-    "cooperationInspectionCompleteCount": '配合检查',
-    "calibrationTestCompleteCount": '校验测试工单',
-    "coordinationComparisonCompleteCount": '配合比对',
-    "dealExceptionCompleteCount": '异常处理',
-  }
-
-  const planOutRegCompleteCommonCol = ()=>{//计划外 行政区 市级别 完成工单数
-    const col = [];
-    for (let key in outTypeNames) {
-      const item = outTypeNames[key]
+  const planOutRegCompleteCommonCol = (type)=>{//计划外 行政区 市级别 完成工单数
+    const col = [{
+      title: '工单合计',
+      dataIndex: 'allCompleteTaskCount',
+      key: 'allCompleteTaskCount',
+      align: 'center',
+      sorter: (a, b) => a.allCompleteTaskCount - b.allCompleteTaskCount,
+    }];
+    for (let key in outTypeData) {
+      const item = outTypeData[key]['name']
       if(pollutantType == 1 && item !=='标准物质更换' || pollutantType == 2 && item !=='试剂更换' ){
       col.push({
         title: item,
@@ -578,7 +583,7 @@ const Index = (props, ref) => {
         align: 'center',
         sorter: (a, b) => a[key] - b[key],
         render: (text, record, index) => {
-          return text == 0 || key=='allCompleteTaskCount'? text : <Button type="link" onClick={() => { workOrderNum(3, record, key) }}>{text}</Button>
+          return text == 0 || key=='allCompleteTaskCount' || type==2? text : <Button type="link" onClick={() => { workOrderNum(3, record, key) }}>{text}</Button>
         }
        });
      }
@@ -586,10 +591,11 @@ const Index = (props, ref) => {
     return col
   }
    
-  const outsideColumns = [ //计划外 首页面
+  const outsideColumns = ()=>[ //计划外 首页面
     {
       title: '序号',
       align: 'center',
+      fixed:'left',
       render: (text, record, index) => {
         return index + 1;
       }
@@ -599,6 +605,7 @@ const Index = (props, ref) => {
       dataIndex: 'regionName',
       key: 'regionName',
       align: 'center',
+      fixed:'left',
       render: (text, record, index) => {
         return <Button type="link"
           onClick={() => {
@@ -612,6 +619,7 @@ const Index = (props, ref) => {
       dataIndex: 'entCount',
       key: 'entCount',
       align: 'center',
+      fixed:'left',
       width: 100,
     },
     {
@@ -619,15 +627,17 @@ const Index = (props, ref) => {
       dataIndex: 'pointCount',
       key: 'pointCount',
       align: 'center',
+      fixed:'left',
       width: 100,
     },
-    ...planOutRegCompleteCommonCol(),
+    ...planOutRegCompleteCommonCol(1),
 
   ];
-  const cityOutRegColumns = [ //计划外  市级别 二级弹框
+  const cityOutRegColumns = ()=>[ //计划外  市级别 二级弹框
     {
       title: '序号',
       align: 'center',
+      fixed: 'left',
       render: (text, record, index) => {
         return index + 1;
       }
@@ -637,6 +647,18 @@ const Index = (props, ref) => {
       dataIndex: 'province',
       key: 'province',
       align: 'center',
+      fixed: 'left',
+      width: 100,
+      render: (text, record, index) => {
+        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
+      }
+    },
+    {
+      title: '市',
+      dataIndex: 'city',
+      key: 'city',
+      align: 'center',
+      fixed: 'left',
       width: 100,
       render: (text, record, index) => {
         if (text == '全部合计') {
@@ -646,34 +668,26 @@ const Index = (props, ref) => {
       },
     },
     {
-      title: '市',
-      dataIndex: 'city',
-      key: 'city',
-      align: 'center',
-      width: 100,
-      render: (text, record, index) => {
-        return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
-      }
-    },
-    {
       title: '运维企业数',
       dataIndex: 'entCount',
       key: 'entCount',
       align: 'center',
+      fixed: 'left',
       width: 100,
     },
     {
-      title: <span>运维监测点数</span>,
+      title: '运维监测点数',
       dataIndex: 'pointCount',
       key: 'pointCount',
       align: 'center',
+      fixed: 'left',
       width: 100,
     },
-    ...planOutRegCompleteCommonCol(),
+    ...planOutRegCompleteCommonCol(2),
 
   ];
 
-  const outWorkOrderColumn = [ //计划外 工单
+  const outWorkOrderColumn = ()=>[ //计划外 工单
     {
       title: '省',
       dataIndex: 'province',
@@ -762,30 +776,27 @@ const Index = (props, ref) => {
 
 
 
-
-
-  const outTypePar = {
-    "inspectionCount": "1",
-    "calibrationCount": '2',
-    "sparePartsCount": '9', //后加
-    "consumablesCount": '10',
-    "reagentCount": '11',//废水 试剂更换
-    "referenceMaterialsCount": '12',//废水 标准物质更换
-    "repairCount": '3',
-    "maintainCount": '4',
-    "matchingComparisonCount": '5',
-    "cooperationInspectionCount": '6',
-    "calibrationTestCount": '7',
-    "coordinationComparisonCount": '8',
-    "dealExceptionCount": '13'
+  const outTypeData = {
+    "inspectionCompleteCount": {name:'巡检',value:'1'},
+    "calibrationCompleteCount":  {name:'校准',value:'2'},
+    "calibrationTestCompleteCount":  {name:'校验测试',value:'7'},
+    "repairCompleteCount":  {name:'维修',value:'3'},
+    "maintainCompleteCount":  {name:'维护',value:'4'},
+    "sparePartsCompleteCount":  {name:'备品备件更换',value:'9'},
+    "consumablesCompleteCount":  {name:'易耗品更换',value:'10'},
+    "reagentCompleteCount":  {name:'试剂更换',value:'11'},//废水 试剂更换
+    "referenceMaterialsCompleteCount":  {name:'标准物质更换',value:'12'},//废水 标准物质更换
+    "coordinationComparisonCompleteCount":  {name:'配合比对',value:'8'},
+    "cooperationInspectionCompleteCount":  {name:'配合检查',value:'6'},
+    // "matchingComparisonCompleteCount":   {name:'参数核对',value:'5'},
+    // "dealExceptionCompleteCount":   {name:'异常处理',value:'13'},
   }
   const insideOrOutsideWorkGetTaskWorkOrderList = (par) => { //计划内or计划外弹框
     const pars = {
       ...queryPar,
-      taskType: outTypePar[outType],
       ...par,
-      regionLevel: undefined,
       staticType: 3,
+      regionLevel: undefined,
       pageIndex: undefined,
       pageSize: undefined,
     }
@@ -809,7 +820,7 @@ const Index = (props, ref) => {
     }
     if (type == 3) {
       setOutWorkOrderVisible(true)
-      setOutTypeName(outTypeNames[outType])
+      setOutTypeName(outTypeData[outType]['name'])
     }
     setOutType(outType)
     workRegForm.resetFields();
@@ -823,7 +834,7 @@ const Index = (props, ref) => {
     setWorkPageSize(20)
     insideOrOutsideWorkGetTaskWorkOrderList({
       regionCode: record.regionCode,
-      taskType: type == 1 || type == 2 ? type : outTypePar[outType]
+      taskType: type == 1 || type == 2 ? type : outTypeData[outType]['value']
     })
 
 
@@ -835,7 +846,8 @@ const Index = (props, ref) => {
       insideOrOutsideWorkGetTaskWorkOrderList({
         ...values,
         time:undefined,
-        regionCode: regionCode,
+        regionCode: values.regionCode? values.regionCode : regionCode,
+        taskType: tabType == 1 || tabType == 2 ? tabType : outTypeData[outType]['value'],
       })
     
   }
@@ -852,7 +864,7 @@ const Index = (props, ref) => {
     const par = {
       ...queryPar,
       entName: workRegForm.getFieldValue('entName'),
-      taskType: outTypePar[outType],
+      taskType: outTypeData[outType]['value'],
       staticType: 3,
       regionCode: regionCode,
       pageIndex: undefined,
@@ -864,17 +876,17 @@ const Index = (props, ref) => {
   const workCommonForm = () => {
     return <>
           <Col span={8}>
-      <Form.Item name='entName' label='行政区'  className='form_label_width_83'>
-        <Input placeholder='搜索省、市关键字' allowClear />
+      <Form.Item name='regionCode' label='行政区'  className='form_label_width_83'>
+        <RegionList  levelNum={2} />
       </Form.Item>
       </Col>
       <Col  span={8}>
       <Form.Item name='time' label='日期'>
-          <RangePicker  style={{width:'100%'}} allowClear={false} showTime={false} />
+          <RangePicker_  style={{width:'100%'}}  format='YYYY-MM-DD' allowClear={false}   />
      </Form.Item>
      </Col>
      <Col  span={8}>
-      <Form.Item name='pointName'  label='企业名称'>
+      <Form.Item name='entName'  label='企业名称'>
         <Input placeholder='请输入' allowClear />
       </Form.Item>
       </Col>
@@ -890,6 +902,9 @@ const Index = (props, ref) => {
     return <Form
       onFinish={onFinishWorkOrder}
       form={workRegForm}
+      initialValues={{
+        time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')],
+      }}
     >
       <Row gutter={[16,0]}>
        {workCommonForm()}
@@ -917,19 +932,21 @@ const Index = (props, ref) => {
     return <Form
       onFinish={onFinishWorkOrder}
       form={workRegForm}
-      layout={'inline'}
+      initialValues={{
+        time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')],
+      }}
     >
      <Row gutter={[16,0]}>
       {workCommonForm()}
         <Col span={8}>
-            <Button style={{ margin: '0 8px' }} onClick={()=>{workRegForm.resetFields();onFinishWorkOrder();}}>
-                重置
-              </Button>
             <Form.Item>
               <Button type="primary" htmlType='submit'>
                 查询
              </Button>
-              <Button icon={<ExportOutlined />} style={{ margin: '0 8px' }} loading={workRegExportLoading} onClick={() => { workRegExports() }}>
+             <Button style={{ margin: '0 8px' }} onClick={()=>{workRegForm.resetFields();onFinishWorkOrder();}}>
+                重置
+              </Button>
+              <Button icon={<ExportOutlined />} loading={workRegExportLoading} onClick={() => { workRegExports() }}>
                 导出
               </Button>
             </Form.Item>
@@ -950,13 +967,14 @@ const Index = (props, ref) => {
     props.cityRegExportTaskWorkList(par)
   }
 
-  const cityQuery = (values) => {
+  const cityQuery = () => {
+    const values = cityForm.getFieldsValue();
     props.cityGetTaskWorkOrderList({
       ...values,
-      beginTime: values.time[0] && moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
-      endTime: values.time[1] && moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
       time: undefined,
-      regionCode: cityDetailRegionCode,
+      beginTime: values.time?.[0] && moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
+      endTime: values.time?.[1] && moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
+      regionCode: values.regionCode? values.regionCode : cityDetailRegionCode,
       staticType: 1,
       regionLevel: 2,
     })
@@ -971,19 +989,23 @@ const Index = (props, ref) => {
         time: [moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')],
       }}
     >
-      <Form.Item name='regionName' label='行政区'>
-        <Input placeholder='搜索省、市关键字' allowClear />
+      <Form.Item name='regionCode' label='行政区'>
+        <RegionList levelNum={2}  style={{width:180}}/>
       </Form.Item>
       <Form.Item name='time' label='日期'>
-        <RangePicker style={{ width: '100%' }}
+        <RangePicker_
+          style={{ width: '100%' }}
+          format='YYYY-MM-DD'
           allowClear={false}
-          showTime={false}
         />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType='submit' loading={cityTableLoading}>
           查询
- </Button>
+        </Button>
+        <Button style={{ margin: '0 8px' }} onClick={()=>{cityForm.resetFields();cityQuery();}}>
+                重置
+              </Button>
         <Button icon={<ExportOutlined />} style={{ margin: '0 8px' }} loading={cityRegExportLoading} onClick={() => { cityRegExports() }}>
           导出
  </Button>
@@ -1019,12 +1041,13 @@ const Index = (props, ref) => {
 
 
 
-
+  let noWorkNumDataEle = <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}> </Row>
   const { dateCol } = props;
   const insideWorkOrderCol = () => { //计划内 巡检 校准
+    let col = []
     if (dateCol && dateCol[0]) {
 
-      let col =  dateCol.map((item, index) => {
+      col = dateCol.map((item, index) => {
           return {
             title: `${item.date&&moment(item.date).format('MM-DD')}`,
             align: 'center',
@@ -1035,9 +1058,12 @@ const Index = (props, ref) => {
               key: `${item.week}`,
               width: 70,
               align: 'center',
-              ellipsis: false, //taskCompleteCount overCompleteList overIncompleteList
+              ellipsis: false, 
               render: (text, row, index) => {
                 let workNumEle, taskWorkNum1, taskWorkNum2, taskWorkNum3, taskTypeName;
+                
+                if(row.datePick?.length==0){ return noWorkNumDataEle} //没有工单
+                
                 return row.datePick.map(dateItem => {
                   if(dateItem.date == item.date){
                    if (dateItem.taskCompleteCount && dateItem.overCompleteList && dateItem.overIncompleteList) { //同时存在 按照计划完成、 超时完成、超时未完成
@@ -1063,27 +1089,28 @@ const Index = (props, ref) => {
                     return popContent(2, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, taskWorkNum1, taskWorkNum2) //同时存在 超时完成、 超时未完成
                   } else if (dateItem.taskCompleteCount) {//按照计划完成
                     workNumEle = <Row align='middle' justify='center' style={{ background: '#1890ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      <span style={{ color: '#fff' }}>{dateItem.taskInCompleteCount}</span>
+                      <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount}</span>
                     </Row>
                     taskTypeName = 'taskCompleteCount'
                     return popContent(1, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, workNumEle)
                   } else if (dateItem.overCompleteList) {//超时完成
                     workNumEle = <Row align='middle' justify='center' style={{ background: '#faad14', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount}</span>
+                      <span style={{ color: '#fff' }}>{dateItem.overCompleteList}</span>
                     </Row>
                     taskTypeName = 'overCompleteList'
                     return popContent(1, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, workNumEle)
                   } else if (dateItem.overIncompleteList) { //超时未完成
                     workNumEle = <Row align='middle' justify='center' style={{ background: '#f5222d', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      <span style={{ color: '#fff' }}>{dateItem.taskCloseCount}</span>
+                      <span style={{ color: '#fff' }}>{dateItem.overIncompleteList}</span>
                     </Row>
                     taskTypeName = 'overIncompleteList'
                     return popContent(1, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, workNumEle)
-                  }  else{  //没有工单
-                    workNumEle = <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}> </Row>
-                    return workNumEle
+                   }else{
+                    return noWorkNumDataEle
                   }
-                }
+                 }else{
+                  return noWorkNumDataEle
+                 }
                 })
 
 
@@ -1091,17 +1118,18 @@ const Index = (props, ref) => {
             }]
           }
         })
-        insideWorkOrderColumns.push(...col)
     
     }
-    return insideWorkOrderColumns;
+    return [...insideWorkOrderColumns(),...col];
   }
 
 
 
   const outWorkOrderCol = () => {  //计划外 巡检工单
+
+    let col = []
     if (dateCol && dateCol[0]) {
-      const col = dateCol.map((item, index) => {
+       col = dateCol.map((item, index) => {
           return {
             title: `${item.date&&moment(item.date).format('MM-DD')}`,
             align: 'center',
@@ -1115,6 +1143,9 @@ const Index = (props, ref) => {
               ellipsis: false,
               render: (text, row, index) => {
                 let outWorkNumEle;
+
+                if(row.datePick?.length==0){ return noWorkNumDataEle} //没有工单
+
                 return row.datePick.map(dateItem => {
                   if(dateItem.date == item.date){
                    if (dateItem.taskCompleteCount) {
@@ -1123,9 +1154,10 @@ const Index = (props, ref) => {
                     </Row>
                     return popContent(1, `${row.DGIMN}${dateItem.date}`, 'taskCompleteCount', dateItem, outWorkNumEle)
                   }else{
-                    return <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                    </Row>
+                    return noWorkNumDataEle
                   }
+                }else{
+                  return noWorkNumDataEle
                 }
                 })
 
@@ -1134,10 +1166,9 @@ const Index = (props, ref) => {
             }]
           }
       })
-      outWorkOrderColumn.push(...col)
 
     }
-    return outWorkOrderColumn;
+    return [...outWorkOrderColumn(),...col];
   }
   // 暴露的子组件方法，给父组件调用   子传父
   const childRef = useRef();
@@ -1222,7 +1253,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={outsideColumns}
+            columns={outsideColumns()}
             pagination={false}
           />
         </Tabs.TabPane>
@@ -1246,7 +1277,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
             bordered
             dataSource={cityTableDatas}
             total={cityTableTotal}
-            columns={tabType == 1 || tabType == 2 ? cityInsideRegColumns : cityOutRegColumns}
+            columns={tabType == 1 || tabType == 2 ? cityInsideRegColumns() : cityOutRegColumns()}
             pagination={false}
             scroll={{ y: 'calc(100vh - 280px)'}}
           />
@@ -1254,7 +1285,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
       </Modal>
 
 
-      {/**计划内 省级&&市级工单数弹框  计划巡检 计划校准*/}
+      {/**计划内 省级&&市级  计划巡检、计划校准  工单数弹框  */}
       <Modal
         title={<Row justify='space-between' align='middle'>
         <div>{`${regName} - ${queryPar?.pollutantType == 1 ? '废水' : '废气'}点位计划${tabType == 1 ? '巡检' : '校准'}明细`}</div>
@@ -1268,26 +1299,29 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
         wrapClassName={`spreadOverModal`}
         bodyStyle={{ padding: 0 }}
       >
-        <Card title={searchWorkComponents()} bordered={false} bodyStyle={{ padding: '16px  24px 0 24px' }}>
+        <div className='queryCriterTitleSty'>
+        <Card title={searchWorkComponents()} bordered={false} bodyStyle={{ padding: '16px  24px 0 24px' }}  headStyle={{ padding: '8px 24px' }}>
           <MultipleHeadResizeTable
             loading={insideOrOutsideWorkLoading}
             bordered
             dataSource={insideOrOutsiderWorkTableDatas}
             columns={insideWorkOrderCol()}
             scroll={{ y: 'calc(100vh - 370px)'}}
-            pagination={{
-              showSizeChanger: true,
-              showQuickJumper: true,
-              total: insideOrOutsiderWorkTableTotal,
-              pageSize: workPageSize,
-              current: workPageIndex,
-              onChange: handleWorkTableChange,
-            }}
+            pagination={false}
+            // pagination={{
+            //   showSizeChanger: true,
+            //   showQuickJumper: true,
+            //   total: insideOrOutsiderWorkTableTotal,
+            //   pageSize: workPageSize,
+            //   current: workPageIndex,
+            //   onChange: handleWorkTableChange,
+            // }}
           />
         </Card>
+        </div>
       </Modal>
 
-      {/**计划外 省级&&市级工单数弹框  */}
+      {/**计划外 省级&&市级   工单数弹框 */}
 
       <Modal
         title={<Row justify='space-between' align='middle'>
@@ -1303,23 +1337,26 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
         wrapClassName={`spreadOverModal`}
         bodyStyle={{ padding: 0 }}
       >
-        <Card title={searchOutWorkComponents()} bordered={false} bodyStyle={{ padding: '16px  24px 0 24px' }}>
+        <div className='queryCriterTitleSty'>
+        <Card title={searchOutWorkComponents()} bordered={false} bodyStyle={{ padding: '16px  24px 0 24px' }}  headStyle={{ padding: '8px 24px' }}>
           <MultipleHeadResizeTable
             loading={insideOrOutsideWorkLoading}
             bordered
             dataSource={insideOrOutsiderWorkTableDatas}
             columns={outWorkOrderCol()}
             scroll={{ y: 'calc(100vh - 370px)'}}
-            pagination={{
-              showSizeChanger: true,
-              showQuickJumper: true,
-              total: insideOrOutsiderWorkTableTotal,
-              pageSize: workPageSize,
-              current: workPageIndex,
-              onChange: handleWorkTableChange,
-            }}
+            pagination={false}
+            // pagination={{
+            //   showSizeChanger: true,
+            //   showQuickJumper: true,
+            //   total: insideOrOutsiderWorkTableTotal,
+            //   pageSize: workPageSize,
+            //   current: workPageIndex,
+            //   onChange: handleWorkTableChange,
+            // }}
           />
         </Card>
+        </div>
       </Modal>
 
 
@@ -1333,7 +1370,6 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
           setTaskRecordDetailVisible(false)
           setPopVisible(true)
         }}
-
       >
         <TaskRecordDetails
           match={{ params: { TaskID: taskID, DGIMN: dgimn } }}

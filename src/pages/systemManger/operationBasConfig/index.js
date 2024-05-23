@@ -98,6 +98,7 @@ const Index = (props) => {
             InspectionType:1,
             IsFlag:false,
             TaskPlanType:1,
+            OperationType:1,
           }}
         >
         <Spin spinning={props.getOperationSettingLoading}>
@@ -128,6 +129,13 @@ const Index = (props) => {
               <Radio value={2}>否</Radio>
             </Radio.Group>
             </Form.Item> */}
+          <Form.Item label='运维类型' name='OperationType'>
+            <Radio.Group>
+              <Radio value={1}>点位运维负责人</Radio>
+              <Radio value={2}>运维小组（小组成员在工单池中领取工单）</Radio>
+            </Radio.Group>
+            </Form.Item>
+
            <Form.Item label='设备完好率数据来源' name='availability'>
             <Radio.Group>
               <Radio value={1}>抓取数据</Radio>

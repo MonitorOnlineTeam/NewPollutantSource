@@ -117,7 +117,7 @@ export const API = {
     GetOperationPlanTaskListByDay: before + '/VisualDashBoardApi/GetOperationPlanTaskListByDay', //近期运维工单详情 固定到天
     GetPlanOperationTaskCompleteRateByDay: before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRateByDay', //获取看板计划内完成巡检校准任务 固定到天
     GetWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/GetWorkOrderAnalysisList', //运维工单分析详情 固定到天
-    ExportWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/ExportWorkOrderAnalysisListDay', //运维工单分析详情 固定到天  导出
+    ExportWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/ExportWorkOrderAnalysisList', //运维工单分析详情 固定到天  导出
   },
   //工作台Api
   WorkStageApi: {
@@ -1118,7 +1118,7 @@ export const API = {
     ExportEquipmentAudit: before + '/CustomerSatisfaction/ExportEquipmentAudit', //设备安装审核信息 导出
     GetAuditPhoto: before + '/CustomerSatisfaction/GetAuditPhoto', //获取设备安装审核照片详细
     AddAuditInfo: before + '/CustomerSatisfaction/AddAuditInfo', //安装照片审核
-    ExportAuditPhoto: before + '/CustomerSatisfaction/ExportAuditPhoto', //单条设备安装 导出
+    ExportAuditPhoto: before + '/UploadApi/ExportAuditPhoto', //单条设备安装 导出
   },
   //通用管理 Api
   GeneralManagerApi: {

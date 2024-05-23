@@ -19,6 +19,7 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import Region from './components/Region'
 
 const namespace = 'planWorkOrderStatisticsDay'
@@ -97,9 +98,8 @@ const Index = (props) => {
 
  
   const [outOrInside,setOutOrInside] = useState(1)
-  const onFinish  = async () =>{  //查询
-    try {
-      const values = await form.validateFields();
+  const onFinish  = () =>{  //查询
+      const values =  form.getFieldsValue();
       if(values.time[1].diff(values.time[0], 'days') <= 90){
         
         let par = {
@@ -116,10 +116,6 @@ const Index = (props) => {
       }else{
         message.warning('日期单位不能超过90天，请重新选择')
       }
-
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
   }
 
 
@@ -146,10 +142,7 @@ const Index = (props) => {
     }}
   >  
       <Form.Item name='time' label='日期'>
-          <RangePicker   style={{width:'100%'}} 
-                        allowClear={false}
-                        showTime={false}
-           />
+          <RangePicker_    style={{width:'100%'}} format='YYYY-MM-DD'  allowClear={false} />
      </Form.Item>
       <Form.Item label='监测点类型' name='pollutantType' style={{padding:'0 8px'}}>
          <Select placeholder='请选择' style={{width:120}}>       
@@ -161,7 +154,10 @@ const Index = (props) => {
      <Button  type="primary" htmlType='submit'  loading={tableLoading}>
           查询
      </Button>
-     <Button icon={<ExportOutlined />} loading={ exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+     <Button style={{ margin: '0 8px' }} onClick={()=>{form.resetFields();onFinish();}}>
+                重置
+              </Button>
+     <Button icon={<ExportOutlined />} loading={ exportLoading} onClick={()=>{ exports()} }>
             导出
      </Button> 
      </Form.Item>  

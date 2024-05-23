@@ -382,7 +382,6 @@ const Index = (props) => {
 
           label: {
             normal: {
-              align: "right",
               alignTo: "labelLine",
               formatter: [
                 '{a|{b}:{c} }',
@@ -390,7 +389,6 @@ const Index = (props) => {
               ].join('\n'),
               rich: {
                 a: {
-                  // align:'left',
                   fontSize: 13,
                   padding: [-2, -66, 0, -66],
                 },
@@ -410,13 +408,17 @@ const Index = (props) => {
           },
           labelLine: {
             normal: {
-              length: 5,
-              length2: 62,
-              align: "right",
+              length: 10,
+              length2: 68,
             },
           },
+          emptyCircleStyle: {
+            // 将样式改为空心圆
+            color: '#343a72',
+            borderWidth: 1
+          },
           data: list
-        }
+        },
       ]
     }
   };
@@ -528,7 +530,7 @@ const Index = (props) => {
 
   const operaOrderOptionDayClick = (type) => {  //工单执行情况 固定到天 详情 
     setTaskRecordVisible(true)
-    setTaskStatus(workOrderExecuTimeVal==1&&(type=='未完成'||type=='超时未完成')? ['11','1','2'] : ['3'])
+    setTaskStatus(workOrderExecuTimeVal==1&&(type=='未完成'||type=='超时未完成')? ['1','2','10','11'] : ['3'])
     setOperaStatus((workOrderExecuTimeVal==1&&(type=='完成'||type=='未完成')) || type=='完成'? undefined : '3'  )
   }
 
@@ -693,7 +695,7 @@ const Index = (props) => {
                   GetOperationTaskStatisticsInfoByDayRequest(value)
                 }}
               />
-              <div style={{ height: '100%', padding: '20px 10px 0 0' }}>
+              <div style={{ height: '100%', padding: '18px 10px 0 0' }}>
                 <Row gutter={workOrderExecuTimeVal == 1 ? 0 : 16} style={{ justifyContent: workOrderExecuTimeVal == 1 ? 'space-between' : 'center' }}>
                   <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('完成')}><div><span style={workOrderExecuDotSty}></span>完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.completeCount}</span>个</div></Col>
                   <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('超时完成工单')}><div><span style={workOrderExecuDotSty}></span>超时完成工单</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>
