@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-17 17:13:10
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-18 10:18:52
+ * @Last Modified time: 2024-05-21 09:11:08
  * @Description:  服务响应及时率 - 基础数据
  */
 import React, { useState, useEffect } from 'react';
@@ -30,10 +30,10 @@ import styles from '../index.less';
 
 const { Text, Link } = Typography;
 
-const dvaPropsData = ({ loading, timelyRate, common }) => ({
+const dvaPropsData = ({ loading, reportsAndViews, common }) => ({
   largeRegionList: common.CtLargeRegionList,
-  basicsLoading: loading.effects[`timelyRate/GetTimelyRateInfoList`],
-  exportLoading: loading.effects['timelyRate/ExportTimelyRateInfoList'],
+  basicsLoading: loading.effects[`reportsAndViews/GetTimelyRateInfoList`],
+  exportLoading: loading.effects['reportsAndViews/ExportTimelyRateInfoList'],
 });
 
 const BasicData = props => {
@@ -56,6 +56,7 @@ const BasicData = props => {
     onCancel,
     largeRegionList,
     type,
+    wrapClassName,
   } = props;
 
   useEffect(() => {
@@ -67,7 +68,7 @@ const BasicData = props => {
   const getBasicsData = (_pageIndex, _pageSize) => {
     const values = form.getFieldsValue();
     dispatch({
-      type: 'timelyRate/GetTimelyRateInfoList',
+      type: 'reportsAndViews/GetTimelyRateInfoList',
       payload: {
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
@@ -96,7 +97,7 @@ const BasicData = props => {
   const onExport = () => {
     const values = form.getFieldsValue();
     dispatch({
-      type: 'timelyRate/ExportTimelyRateInfoList',
+      type: 'reportsAndViews/ExportTimelyRateInfoList',
       payload: {
         pageIndex: 0,
         pageSize: 0,
@@ -250,7 +251,7 @@ const BasicData = props => {
   return (
     <Modal
       title={title}
-      wrapClassName={`spreadOverModal`}
+      wrapClassName={wrapClassName || `spreadOverModal`}
       visible={isModalOpen}
       destroyOnClose
       footer={null}

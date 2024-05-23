@@ -2901,6 +2901,13 @@ export default {
                       path: '/workSupervision/dailyManagement/collections',
                       component: './workSupervision/dailyManagement/collections',
                     },
+                    {
+                      // 纪律检查
+                      name: 'disciplineCheck',
+                      path: '/workSupervision/dailyManagement/disciplineCheck/:systemType',
+                      component:
+                        './workSupervision/dailyManagement/disciplineCheck',
+                    },
                   ],
                 },
               ],
@@ -3449,24 +3456,6 @@ export default {
                   name: 'RepeatServices',
                   path: '/ctManage/projectExecuProgress/RepeatServices',
                   component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/RepeatServices',
-                },
-                // 监督核查
-                {
-                  path: '/ctManage/supervisionCheck',
-                  name: 'supervisionCheck',
-                  routes: [
-                    {
-                      path: '/ctManage/supervisionCheck',
-                      redirect: '/ctManage/afterSalesServiceManage/nodeServices',
-                    },
-                    {
-                      // 纪律检查
-                      name: 'NodeServices',
-                      path: '/ctManage/supervisionCheck/disciplineCheck',
-                      component:
-                        './ctDebuggAfterSaleServiceManage/supervisionCheck/disciplineCheck',
-                    },
-                  ],
                 },
                 // 客户满意度
                 {

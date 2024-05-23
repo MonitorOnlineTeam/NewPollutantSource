@@ -13,9 +13,9 @@ import {
 
 const customVal = 0.03456;
 
-const dvaPropsData = ({ loading, ctAfterSalesServiceManagement }) => ({
-  underWarrantyServicesData: ctAfterSalesServiceManagement.underWarrantyServicesData,
-  loading: loading.effects['ctAfterSalesServiceManagement/GetWarrantyServiceAnalysis'],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  underWarrantyServicesData: reportsAndViews.underWarrantyServicesData,
+  loading: loading.effects['reportsAndViews/GetWarrantyServiceAnalysis'],
 });
 
 const ProductProportionCard4 = props => {
@@ -65,7 +65,7 @@ const ProductProportionCard4 = props => {
       Times: 0,
       TimeRate: '0%',
       Num: 0,
-      NumRate: topFourTotal === 0 ? 0 : 100 - topFourTotal,
+      NumRate: topFourTotal === 0 ? 0 : (100 - topFourTotal).toFixed(2),
     };
 
     // 添加到结果数组

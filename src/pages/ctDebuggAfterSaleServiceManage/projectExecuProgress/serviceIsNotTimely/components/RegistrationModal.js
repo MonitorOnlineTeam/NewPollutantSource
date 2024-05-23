@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-21 16:51:07
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-15 09:55:24
+ * @Last Modified time: 2024-05-22 14:32:03
  * @Description:  登记弹窗
  */
 
@@ -276,6 +276,7 @@ const RegistrationModal = props => {
           SetServiceStatus();
         }}
         onCancel={() => {
+          setRemark()
           setIsHandleModalOpen(false);
         }}
       >

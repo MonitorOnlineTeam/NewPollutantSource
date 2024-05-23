@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-02 11:09:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-29 10:42:17
+ * @Last Modified time: 2024-05-22 13:50:47
  * @Description:  客户投诉解决页面内容
  */
 import React, { useState, useEffect } from 'react';
@@ -59,6 +59,7 @@ const AddOrEditModal = props => {
     dispatch,
     largeRegionList,
     ID,
+    Status,
     onCancel,
     onSuccessCallback,
     isModalOpen,
@@ -182,7 +183,7 @@ const AddOrEditModal = props => {
           取消
         </Button>,
         <Button
-          style={{display: ID ? 'none' : 'inline'}}
+          style={{ display: ID && Status === '2' ? 'none' : 'inline' }}
           key="save"
           type="primary"
           loading={saveLoading}

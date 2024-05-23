@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:41:16
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 14:45:25
+ * @Last Modified time: 2024-05-22 14:41:06
  * @Description:  服务报告抽查 - 抽查页面
  */
 import React, { useState, useEffect } from 'react';
@@ -154,8 +154,8 @@ const SpotCheckPage = props => {
     },
     {
       title: '合同编号',
-      dataIndex: 'ProjectID',
-      key: 'ProjectID',
+      dataIndex: 'ProjectCode',
+      key: 'ProjectCode',
       ellipsis: true,
       width: 200,
     },

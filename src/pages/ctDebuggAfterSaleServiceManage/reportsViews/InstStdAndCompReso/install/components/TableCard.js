@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-16 16:37:56
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-29 15:39:18
+ * @Last Modified time: 2024-05-21 14:42:25
  * @Description:  安装调试达标率表格
  */
 import React, { useState, useEffect } from 'react';
@@ -14,9 +14,9 @@ import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import InstallEquipment from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment';
 
-const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
-  installPageData: instStdAndCompReso.installPageData,
-  loading: loading.effects[`instStdAndCompReso/GetInstallationDebugRate`],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  installPageData: reportsAndViews.installPageData,
+  loading: loading.effects[`reportsAndViews/GetInstallationDebugRate`],
   basicsLoading: loading.effects[`ctAfterSalesServiceManagement/GetWarrantyServiceInfo`],
   exportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceAnalysis'],
   basicsExportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceInfo'],
@@ -32,6 +32,7 @@ const TableCard = props => {
     installPageData: { ColumnList, TableList },
     title,
     date,
+    modalWrapClassName,
   } = props;
 
   useEffect(() => {}, []);
@@ -254,8 +255,8 @@ const TableCard = props => {
       {isModalOpen && (
         <Modal
           title="安装调试达标基础数据"
-          wrapClassName="spreadOverModal"
-          visible={isModalOpen}
+          wrapClassName={modalWrapClassName || "spreadOverModal"}
+          open={isModalOpen}
           destroyOnClose
           footer={null}
           onCancel={() => {

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-01-18 15:08:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 10:24:42
+ * @Last Modified time: 2024-05-17 14:06:08
  * @Description:  数据现象
  */
 import React, { useState, useEffect } from 'react';
@@ -341,7 +341,7 @@ const DataPhenomena = props => {
           params.forEach((m, index) => {
             str += `<div style="padding: 4px 0;">
                   <span class="chart-tooltip-color" style="display: inline-block; margin-right: 10px; background-color: ${m.color}; width: 10px; height: 10px; border-radius:100%; margin-right: 5px"></span>
-                  ${m.seriesName}：${m.data} ${selectPollutantList[m.seriesIndex].Unit}<br/>
+                  ${m.seriesName}：${m.data !== undefined ? m.data : '-'} ${selectPollutantList[m.seriesIndex].Unit}<br/>
                 </div>
                 `;
             // str += `${m.seriesName}:${m.data}<br/>`;

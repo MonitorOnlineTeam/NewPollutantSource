@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:39:53
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 18:43:30
+ * @Last Modified time: 2024-05-22 14:40:24
  * @Description:  服务报告抽查
  */
 import React, { useState, useEffect } from 'react';
@@ -139,8 +139,8 @@ const ServiceIsNotTimely = props => {
       },
       {
         title: '合同编号',
-        dataIndex: 'ProjectID',
-        key: 'ProjectID',
+        dataIndex: 'ProjectCode',
+        key: 'ProjectCode',
         ellipsis: true,
         width: 200,
       },

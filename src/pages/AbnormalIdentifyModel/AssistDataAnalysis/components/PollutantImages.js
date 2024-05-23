@@ -116,12 +116,14 @@ const Index = props => {
         },
         callback: res => {
           setImages(type === 'stop' ? res.stopImage || [] : res.image);
-          setRangeTime(res.rangeTime);
+          let rangeTime = type === 'stop' ? res.stopRangeTime : res.rangeTime
+
+          setRangeTime(rangeTime);
           let tempUpdateDate = {};
-          for (const key in res.rangeTime) {
+          for (const key in rangeTime) {
             tempUpdateDate[key] = [
-              moment(res.rangeTime[key].BeginTime),
-              moment(res.rangeTime[key].EndTime),
+              moment(rangeTime[key].BeginTime),
+              moment(rangeTime[key].endTime),
             ];
           }
           setUpdateDate(tempUpdateDate);

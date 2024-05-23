@@ -88,6 +88,9 @@
       // overflow-y: auto;
       .taskName {
         cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         &:hover {
           color: #1890ff;
         }
@@ -95,8 +98,8 @@
       .listItem {
         text-align: left;
         // padding: 16px;
-        line-height: 34px;
-        height: 34px;
+        line-height: 40px;
+        height: 40px;
         // border-bottom: 1px solid #f0f0f0;
       }
     }
@@ -233,7 +236,7 @@
   .myRemindContentSty {
     padding:6px 16px 30px 12px;
     height: calc(100% - 126px);
-    overflow-y: auto; 
+    overflow-y: auto;
     .statusSty span{
       padding-right: 6px;
     }

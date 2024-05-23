@@ -12,7 +12,7 @@ const namespace = 'equipmentParmars'
 const dvaPropsData =  ({ loading,equipmentParmars }) => ({
    formLoading:loading.effects[`${namespace}/getEquipmentParameters`]
   })
-  
+
 const  dvaDispatch = (dispatch) => {
     return {
       addOrUpdateEquipmentParameters : (payload) =>{ //添加 or 修改 设定参数
@@ -20,7 +20,7 @@ const  dvaDispatch = (dispatch) => {
           type: `${namespace}/addOrUpdateEquipmentParameters`,
           payload:payload,
         })
-        
+
       },
       getEquipmentParameters : (payload,callback) =>{ //添加 or 修改 设定参数
         dispatch({
@@ -28,21 +28,21 @@ const  dvaDispatch = (dispatch) => {
           payload:payload,
           callback:callback
         })
-        
+
       },
-      
-      
+
+
     }
   }
 
 const SmokeSetUpForm = (props) => {
   const [setform] = Form.useForm();
   const { DGIMN, formLoading} = props;
-    
+
     useEffect(() => {
     if(DGIMN){
-      
-      
+
+
       props.getEquipmentParameters({DGIMN:DGIMN},(res)=>{
         if(res){
           setform.setFieldsValue({
@@ -64,7 +64,7 @@ const SmokeSetUpForm = (props) => {
       })
     }
 
-    
+
   },[props.DGIMN]);
    const onFinish = (values) => {
     props.addOrUpdateEquipmentParameters({...values,DGIMN:props.DGIMN})
@@ -84,7 +84,7 @@ const SmokeSetUpForm = (props) => {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       form={setform}
-    >  
+    >
      {formLoading? <PageLoading /> : <div>
         <>
         <div className={styles.title}>烟气流量设定</div>
@@ -135,14 +135,14 @@ const SmokeSetUpForm = (props) => {
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="基准氧含量（单位：%，过量空气系数请转换成基准氧含量）"  name="AirCoefficient" rules={[{ required: false,message: '请输入基准氧含量!', } ]}>
+      <Form.Item label="基准氧含量（单位：%，标准过量空气系数请转换成基准氧含量）"  name="AirCoefficient" rules={[{ required: false,message: '请输入基准氧含量!', } ]}>
         <InputNumber placeholder='请输入基准氧含量'/>
       </Form.Item>
       </Col>
       <Col>
        <Form.Item label="" name="ID">
         <Input type='hidden' />
-      </Form.Item> 
+      </Form.Item>
       </Col>
       </Row>
 

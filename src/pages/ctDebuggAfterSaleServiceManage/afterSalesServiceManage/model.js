@@ -11,13 +11,6 @@ export default Model.extend({
     serviceDispatchForAnalysisList: [], //服务详情
     serviceDispatchForAnalysisTotal: 0,
     serviceDispatchForAnalysisQueryPar: {},
-    // 质保内服务
-    underWarrantyServicesData: {
-      ColumnList: [],
-      LargeRegionAnalysis: [],
-      TableList: [],
-      WarrantyAnalysis: [],
-    },
   },
   effects: {
     // 收费服务
@@ -138,53 +131,6 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-    // 获取质保内服务页面数据
-    *GetWarrantyServiceAnalysis({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(
-        requestPost,
-        API.CtAPI_WJQ.UnderWarrantyServices.GetWarrantyServiceAnalysis,
-        payload,
-      );
-      if (result.IsSuccess) {
-        yield update({
-          underWarrantyServicesData: result.Datas,
-        });
-      }
-    },
-    // 导出 - 质保内服务页面数据
-    *ExportWarrantyServiceAnalysis({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(
-        requestPost,
-        API.CtAPI_WJQ.UnderWarrantyServices.ExportWarrantyServiceAnalysis,
-        payload,
-      );
-      if (result.IsSuccess) {
-        message.success('下载成功');
-        downloadFile(`${result.Datas}`);
-      }
-    },
-    // 获取质保内服务基础数据
-    *GetWarrantyServiceInfo({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(
-        requestPost,
-        API.CtAPI_WJQ.UnderWarrantyServices.GetWarrantyServiceInfo,
-        payload,
-      );
-      if (result.IsSuccess) {
-        callback && callback(result);
-      }
-    },
-     // 导出 - 获取质保内服务基础数据
-     *ExportWarrantyServiceInfo({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(
-        requestPost,
-        API.CtAPI_WJQ.UnderWarrantyServices.ExportWarrantyServiceInfo,
-        payload,
-      );
-      if (result.IsSuccess) {
-        message.success('下载成功');
-        downloadFile(`${result.Datas}`);
-      }
-    },
+
   },
 });

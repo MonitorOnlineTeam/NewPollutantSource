@@ -32,7 +32,7 @@ const Index = (props) => {
 
 
 
-  const { visible, data, submitSurveyLoading, completeFinish,satisfactionSurveyLoading } = props;
+  const { visible, data, submitSurveyLoading, completeFinish,satisfactionSurveyLoading, modalWrapClassName } = props;
 
   const [customerSuggesVerify, setCustomerSuggesVerify] = useState(false)
 
@@ -50,7 +50,7 @@ const Index = (props) => {
           callback:(res)=>{
             setDetailData(res?.[0])
           }
-        
+
         });
       }
     }
@@ -58,11 +58,11 @@ const Index = (props) => {
 
 
   const rateChange = (val) => {
-    if(val<5){ 
+    if(val<5){
       setCustomerSuggesVerify(true)
     }else{
       setCustomerSuggesVerify(false)
-    } 
+    }
   }
 
   const InvestigateComponents = () => {
@@ -117,7 +117,7 @@ const Index = (props) => {
             SetCurrent(current + 1)
             completeFinish&&completeFinish()
           }
-        });  
+        });
         break;
       case 2: //完成
         props.onCancel()
@@ -143,7 +143,7 @@ const Index = (props) => {
       title={<Row justify='space-between'><span>调查</span><DispatchDetailsBtn data={list} /></Row>}
       onCancel={() => { props.onCancel()}}
       destroyOnClose
-      wrapClassName={`spreadOverModal ${styles.modalSty}`}
+      wrapClassName={modalWrapClassName || `spreadOverModal ${styles.modalSty}`}
       mask={false}
       footer={<div className="steps-action">
         {current > 0 && current != steps.length - 1 && (

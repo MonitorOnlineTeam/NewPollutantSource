@@ -32,6 +32,7 @@ import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import config from '@/config';
 // import { Map, MouseTool, Marker, Markers, Polygon, Circle,InfoWindow  } from '@/components/ReactAmap';
+import { Map, Polygon, Marker, Markers, InfoWindow } from 'react-amap';
 import styles from "../style.less"
 import SiteDetailsModal from './springModal/mapModal/SiteDetailsModal'
 import { uploadPrefix } from '@/config'
@@ -40,11 +41,11 @@ const { Option } = Select;
 
 const namespace = 'newestHome'
 
-let Map;
-let Marker;
-let Polygon;
-let Markers;
-let InfoWindow;
+// let Map;
+// let Marker;
+// let Polygon;
+// let Markers;
+// let InfoWindow;
 let aMap = null;
 let massMarks = null;
 let labelsLayer = null;
@@ -182,22 +183,22 @@ class Index extends PureComponent {
     }
   }
   componentWillMount() {
-    if (config.offlineMapUrl.domain) {
-      const amap = require('@/components/ReactAmap');
-      Map = amap.Map;
-      Marker = amap.Marker;
-      Polygon = amap.Polygon;
-      Markers = amap.Markers;
-      InfoWindow = amap.InfoWindow;
-    } else {
-      const amap = require('react-amap');
-      console.log(amap)
-      Map = amap.Map;
-      Marker = amap.Marker;
-      Polygon = amap.Polygon;
-      Markers = amap.Markers;
-      InfoWindow = amap.InfoWindow;
-    }
+    // if (config.offlineMapUrl.domain) {
+    //   const amap = require('@/components/ReactAmap');
+    //   Map = amap.Map;
+    //   Marker = amap.Marker;
+    //   Polygon = amap.Polygon;
+    //   Markers = amap.Markers;
+    //   InfoWindow = amap.InfoWindow;
+    // } else {
+    //   const amap = require('react-amap');
+    //   console.log(amap)
+    //   Map = amap.Map;
+    //   Marker = amap.Marker;
+    //   Polygon = amap.Polygon;
+    //   Markers = amap.Markers;
+    //   InfoWindow = amap.InfoWindow;
+    // }
 
   }
   componentDidMount() {
@@ -324,7 +325,7 @@ class Index extends PureComponent {
     })
 
   }
-  loadPointMarkerData = (data, flag) => { //监测点 
+  loadPointMarkerData = (data, flag) => { //监测点
     this.clearMass();
     this.setState({
       showType: 3,
@@ -518,7 +519,7 @@ class Index extends PureComponent {
           });
           // 将省份轮廓覆盖物添加到地图上
           provinceOutline.setMap(aMap);
-          // 创建 CanvasLayer 图层  
+          // 创建 CanvasLayer 图层
           // var canvasLayer = new AMap.CanvasLayer();
         }
       })
@@ -610,7 +611,7 @@ class Index extends PureComponent {
   }
   //海量标注 监测点显示名称
   renderPointTitleLabelMarker = (data) => {
-    // 创建一个 labelsMarker 实例 
+    // 创建一个 labelsMarker 实例
     labelsMarker = [];
 
     data[0] && data.map(item => {
@@ -970,7 +971,7 @@ class Index extends PureComponent {
   mapBtnClick = (index, item) => {
     const { mapBtnStatusIndex, showType, selectPointMarkers, backIconGo, } = this.state;
 
-    // showType==1 || showType==3 && !backIconGo   刚进入页面或者进入页面直接点击监测点图例 
+    // showType==1 || showType==3 && !backIconGo   刚进入页面或者进入页面直接点击监测点图例
 
     const flag = showType == 1 || showType == 3 && !backIconGo ? true : false
     this.setState({ selectEnt: undefined, backIconGo: flag ? false : true, })
@@ -999,9 +1000,9 @@ class Index extends PureComponent {
 
 
     /**
-     * showType==1 || showType==3 && !backIconGo   刚进入页面或者进入页面直接点击监测点图例 
+     * showType==1 || showType==3 && !backIconGo   刚进入页面或者进入页面直接点击监测点图例
      * entGoPointFlag true为从企业进入监测点
-     * 
+     *
      */
     const statusData = showType == 1 || showType == 3 && !backIconGo ? mapStatusData : showType == 2 || showType == 3 && backIconGo && !this.state.entGoPointFlag ? mapStatusRegData : mapStatusEntData;
 
@@ -1034,7 +1035,7 @@ class Index extends PureComponent {
     // function entSearchSelect(val){
     //   let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
     //   listEle.style.display = 'none';
-    //   searchEntInput.current.blur()  
+    //   searchEntInput.current.blur()
     // }
     return mapPointLoading ?
       <PageLoading />
@@ -1045,6 +1046,8 @@ class Index extends PureComponent {
         events={this.amapEvents}
         version='1.4.19'
         mapStyle='amap://styles/6daa80e94c53325ff909a31f3d3d8809'
+
+
       >
 
         <Markers

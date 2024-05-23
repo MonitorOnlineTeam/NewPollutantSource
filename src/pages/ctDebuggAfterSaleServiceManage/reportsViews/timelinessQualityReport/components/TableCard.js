@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-05-06 15:04:23
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-07 14:18:26
+ * @Last Modified time: 2024-05-21 15:28:54
  * @Description:  表格
  */
 
@@ -14,9 +14,9 @@ import SdlTable from '@/components/SdlTable';
 import BasicData from './BasicData';
 import moment from 'moment';
 
-const dvaPropsData = ({ loading, timelinessQualityReport }) => ({
-  // loading: loading.effects[`timelinessQualityReport/GetTimelyPassRateListByArea`],
-  exportLoading: loading.effects['timelinessQualityReport/ExportTimelyPassRateListByArea'],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  // loading: loading.effects[`reportsAndViews/GetTimelyPassRateListByArea`],
+  exportLoading: loading.effects['reportsAndViews/ExportTimelyPassRateListByArea'],
 });
 
 const TableCard = props => {
@@ -30,6 +30,7 @@ const TableCard = props => {
     exportLoading,
     data: { columnList, tableList },
     date,
+    modalWrapClassName,
   } = props;
 
   useEffect(() => {}, []);
@@ -37,7 +38,7 @@ const TableCard = props => {
   // 导出
   const onExport = () => {
     dispatch({
-      type: 'timelinessQualityReport/ExportTimelyPassRateListByArea',
+      type: 'reportsAndViews/ExportTimelyPassRateListByArea',
       payload: {
         year: date.format('YYYY'),
         level: '1',
@@ -149,6 +150,7 @@ const TableCard = props => {
       },
       ...column,
     ];
+
   };
 
   const computeStartAndEnd = () => {
@@ -218,6 +220,7 @@ const TableCard = props => {
       />
       {isModalOpen && (
         <BasicData
+          wrapClassName={modalWrapClassName}
           type={1}
           level={level}
           isModalOpen={isModalOpen}

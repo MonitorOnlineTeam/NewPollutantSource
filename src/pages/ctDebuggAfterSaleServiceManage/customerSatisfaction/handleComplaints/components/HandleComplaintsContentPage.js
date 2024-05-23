@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-02 11:09:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-03 16:05:17
+ * @Last Modified time: 2024-05-22 14:22:01
  * @Description:  客户投诉解决页面内容
  */
 import React, { useState, useEffect } from 'react';
@@ -34,6 +34,7 @@ import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon';
 import styles from '../../index.less';
 import AddOrEditModal from './AddOrEditModal';
 import ViewModal from './ViewModal';
+import { permissionButton } from '@/utils/utils';
 import Dispose from './Dispose';
 
 const { TextArea } = Input;
@@ -57,9 +58,11 @@ const HandleComplaintsContentPage = props => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [addOrEditModalOpen, setAddOrEditModalOpen] = useState(false);
   const [currentID, setCurrentID] = useState();
+  const [currentStatus, setCurrentStatus] = useState();
   const [provinceList, setProvinceList] = useState([]); // 大区、省份列表
   const [disposeModalOpen, setDisposeModalOpen] = useState(false);
 
+  const buttonList = permissionButton(props?.match?.path);
   const { isAll, queryLoading, dispatch, exportLoading, largeRegionList, provinceAllList } = props;
 
   useEffect(() => {
@@ -296,6 +299,7 @@ const HandleComplaintsContentPage = props => {
                     <a
                       onClick={() => {
                         setCurrentID(record.ID);
+                        setCurrentStatus(record.Status);
                         // onAddOrEdit(record.ID);
                         form1.setFieldsValue({
                           ...record,
@@ -482,12 +486,13 @@ const HandleComplaintsContentPage = props => {
                   >
                     重置
                   </Button>
-                  {!isAll && (
+                  {buttonList.includes('Signin') && !isAll && (
                     <Button
                       type="primary"
                       loading={queryLoading}
                       onClick={() => {
                         setCurrentID();
+                        setCurrentStatus();
                         setAddOrEditModalOpen(true);
                         form1.resetFields();
                       }}
@@ -556,6 +561,7 @@ const HandleComplaintsContentPage = props => {
             isModalOpen={addOrEditModalOpen}
             largeRegionList={largeRegionList}
             ID={currentID}
+            Status={currentStatus}
             onSuccessCallback={() => {
               setAddOrEditModalOpen(false);
               getTableDataSource();

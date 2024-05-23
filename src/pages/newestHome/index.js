@@ -35,19 +35,19 @@ const dvaPropsData =  ({ loading,newestHome }) => ({
 
 const  dvaDispatch = (dispatch) => {
   return {
-    getnewestHomeList : (payload,callback) =>{ 
+    getnewestHomeList : (payload,callback) =>{
       dispatch({
         type: `${namespace}/getnewestHomeList`,
         payload:payload,
         callback:callback
       })
-      
+
     },
     updateState:(payload)=>{ //更新代码
       dispatch({
-        type: `${namespace}/updateState`, 
+        type: `${namespace}/updateState`,
         payload:{...payload},
-      }) 
+      })
     },
   }
 }
@@ -58,9 +58,9 @@ const Index = (props) => {
 
 
 
-  
+
   useEffect(() => {
-  
+
   },[]);
 
   const [type,setType] = useState('wasteGas')
@@ -80,7 +80,7 @@ const Index = (props) => {
   setTimeout(()=>{
     setType(val)
   },200)
- 
+
 }
 
 const typeObj={

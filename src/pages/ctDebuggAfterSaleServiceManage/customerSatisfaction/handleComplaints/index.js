@@ -1,8 +1,8 @@
 /*
  * @Author: JiaQi
  * @Date: 2024-04-02 11:08:59
- * @Last Modified by:   JiaQi
- * @Last Modified time: 2024-04-02 11:08:59
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-05-22 14:21:37
  * @Description:  客户投诉解决
  */
 import React, { useState, useEffect } from 'react';
@@ -29,13 +29,13 @@ const dvaPropsData = ({ loading }) => ({});
 
 const HandleComplaints = props => {
   const [pageIndex, setPageIndex] = useState(1);
-  const { isAll, queryLoading, dispatch, exportLoading } = props;
+  const { match } = props;
 
   useEffect(() => {}, []);
 
   return (
     <BreadcrumbWrapper>
-      <HandleComplaintsContentPage />
+      <HandleComplaintsContentPage match={match} />
     </BreadcrumbWrapper>
   );
 };

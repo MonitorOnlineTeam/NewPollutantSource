@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'dva';
-import {
-  Card,
-} from 'antd';
+import { Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 
-const dvaPropsData = ({ loading, ctAfterSalesServiceManagement }) => ({
-  underWarrantyServicesData: ctAfterSalesServiceManagement.underWarrantyServicesData,
-  loading: loading.effects['ctAfterSalesServiceManagement/GetWarrantyServiceAnalysis'],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  underWarrantyServicesData: reportsAndViews.underWarrantyServicesData,
+  loading: loading.effects['reportsAndViews/GetWarrantyServiceAnalysis'],
 });
 
 const ProductCountCard3 = props => {
@@ -18,6 +16,7 @@ const ProductCountCard3 = props => {
     loading,
     title,
     underWarrantyServicesData: { WarrantyAnalysis },
+    type,
   } = props;
 
   useEffect(() => {}, []);
@@ -157,7 +156,7 @@ const ProductCountCard3 = props => {
             data: xData,
           },
           {
-            name: '产品类别',
+            name: type === 1 ? '产品类别' : '服务原因',
             nameTextStyle: {
               color: '#333333',
               padding: [0, 18, 0, 0],

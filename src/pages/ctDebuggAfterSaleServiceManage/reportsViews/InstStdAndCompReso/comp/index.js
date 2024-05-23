@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-15 14:51:48
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-16 16:40:28
+ * @Last Modified time: 2024-05-21 14:42:36
  * @Description:  投诉解决率
  */
 import React, { useState, useEffect } from 'react';
@@ -19,10 +19,10 @@ import moment from 'moment';
 import YearDatePicker from '@/components/RangePicker/YearDatePicker';
 import NumAndRateChart from './components/NumAndRateChart';
 import TableCard from './components/TableCard'
- 
-const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
-  compPageData: instStdAndCompReso.compPageData,
-  loading: loading.effects[`instStdAndCompReso/GetComplaintResolutionRate`],
+
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  compPageData: reportsAndViews.compPageData,
+  loading: loading.effects[`reportsAndViews/GetComplaintResolutionRate`],
 });
 
 const Comp = props => {
@@ -40,7 +40,7 @@ const Comp = props => {
   // 获取页面数据
   const getPageData = () => {
     dispatch({
-      type: 'instStdAndCompReso/GetComplaintResolutionRate',
+      type: 'reportsAndViews/GetComplaintResolutionRate',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
       },

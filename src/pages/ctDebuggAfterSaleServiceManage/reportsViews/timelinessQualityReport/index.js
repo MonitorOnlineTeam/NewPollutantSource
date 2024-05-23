@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-05-06 14:26:53
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-07 14:24:14
+ * @Last Modified time: 2024-05-21 10:46:00
  * @Description:  报告及时合格率
  */
 
@@ -29,7 +29,7 @@ const TimelinessQualityReport = props => {
     rateData: [],
   });
 
-  const { dispatch } = props;
+  const { dispatch, hideBreadcrumb, modalWrapClassName } = props;
 
   useEffect(() => {
     getLargeRegionData();
@@ -39,7 +39,7 @@ const TimelinessQualityReport = props => {
   const getLargeRegionData = () => {
     setLoading(true);
     dispatch({
-      type: 'timelinessQualityReport/GetTimelyPassRateListByArea',
+      type: 'reportsAndViews/GetTimelyPassRateListByArea',
       payload: {
         year: date.format('YYYY'),
         level: '1',
@@ -96,9 +96,8 @@ const TimelinessQualityReport = props => {
       getLargeRegionData();
     }
   };
-  console.log('pageData', pageData);
   return (
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
       <div className={styles.pageWrapper} style={{ height: 'auto' }}>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Card bodyStyle={{ paddingTop: 10, paddingBottom: 10 }} style={{ marginBottom: 0 }}>
@@ -129,7 +128,12 @@ const TimelinessQualityReport = props => {
               </Row>
               <Row>
                 <Col span={24}>
-                  <TableCard date={date} data={pageData} loading={loading} />
+                  <TableCard
+                    date={date}
+                    data={pageData}
+                    loading={loading}
+                    modalWrapClassName={modalWrapClassName}
+                  />
                 </Col>
               </Row>
             </>

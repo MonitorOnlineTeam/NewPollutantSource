@@ -1,8 +1,8 @@
 /*
  * @Author: JiaQi
  * @Date: 2024-04-17 17:12:44
- * @Last Modified by:   JiaQi
- * @Last Modified time: 2024-04-17 17:12:44
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-05-21 09:15:04
  * @Description:  服务响应及时率 - 表格
  */
 import React, { useState, useEffect } from 'react';
@@ -13,10 +13,10 @@ import SdlTable from '@/components/SdlTable';
 import BasicData from './BasicData';
 import moment from 'moment';
 
-const dvaPropsData = ({ loading, timelyRate }) => ({
-  timelyRateList: timelyRate.timelyRateList,
-  loading: loading.effects[`timelyRate/GetTimelyRateList`],
-  exportLoading: loading.effects['timelyRate/ExportTimelyRateList'],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  timelyRateList: reportsAndViews.timelyRateList,
+  loading: loading.effects[`reportsAndViews/GetTimelyRateList`],
+  exportLoading: loading.effects['reportsAndViews/ExportTimelyRateList'],
 });
 
 const TableCard = props => {
@@ -29,6 +29,7 @@ const TableCard = props => {
     timelyRateList: { columnList, tableList },
     title,
     date,
+    modalWrapClassName,
   } = props;
 
   useEffect(() => {}, []);
@@ -36,7 +37,7 @@ const TableCard = props => {
   // 导出
   const onExport = () => {
     dispatch({
-      type: 'timelyRate/ExportTimelyRateList',
+      type: 'reportsAndViews/ExportTimelyRateList',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
       },
@@ -201,6 +202,7 @@ const TableCard = props => {
       />
       {isModalOpen && (
         <BasicData
+          wrapClassName={modalWrapClassName}
           isModalOpen={isModalOpen}
           title="服务响应基础数据"
           defaultTime={computeStartAndEnd()}

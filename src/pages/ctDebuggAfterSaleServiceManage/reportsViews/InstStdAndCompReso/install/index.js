@@ -2,17 +2,12 @@
  * @Author: JiaQi
  * @Date: 2024-04-15 14:51:48
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-16 16:40:29
+ * @Last Modified time: 2024-05-21 14:46:04
  * @Description:  安装调试达标率
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import {
-  Card,
-  Space,
-  Row,
-  Col,
-} from 'antd';
+import { Card, Space, Row, Col } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import styles from '../index.less';
 import moment from 'moment';
@@ -20,9 +15,9 @@ import YearDatePicker from '@/components/RangePicker/YearDatePicker';
 import NumAndRateChart from './components/NumAndRateChart';
 import TableCard from './components/TableCard';
 
-const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
-  installPageData: instStdAndCompReso.installPageData,
-  loading: loading.effects[`instStdAndCompReso/GetInstallationDebugRate`],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  installPageData: reportsAndViews.installPageData,
+  loading: loading.effects[`reportsAndViews/GetInstallationDebugRate`],
 });
 
 const Install = props => {
@@ -31,6 +26,8 @@ const Install = props => {
   const {
     dispatch,
     installPageData: { LargeRegionAnalysis, CategoryAnalysis },
+    hideBreadcrumb,
+    modalWrapClassName,
   } = props;
 
   useEffect(() => {
@@ -40,7 +37,7 @@ const Install = props => {
   // 获取页面数据
   const getPageData = () => {
     dispatch({
-      type: 'instStdAndCompReso/GetInstallationDebugRate',
+      type: 'reportsAndViews/GetInstallationDebugRate',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
       },
@@ -50,9 +47,8 @@ const Install = props => {
   const onDateChange = (date, dateString) => {
     setDate(date);
   };
-
   return (
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
       <div className={styles.pageWrapper}>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Card bodyStyle={{ paddingTop: 10, paddingBottom: 10 }} style={{ marginBottom: 0 }}>
@@ -82,6 +78,7 @@ const Install = props => {
                 date={date}
                 match={props.match}
                 location={props.location}
+                modalWrapClassName={modalWrapClassName}
               />
             </Col>
           </Row>
