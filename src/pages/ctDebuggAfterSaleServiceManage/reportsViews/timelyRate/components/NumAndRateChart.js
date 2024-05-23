@@ -1,8 +1,8 @@
 /*
  * @Author: JiaQi
  * @Date: 2024-04-17 17:12:56
- * @Last Modified by:   JiaQi
- * @Last Modified time: 2024-04-17 17:12:56
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-05-21 08:58:45
  * @Description:  服务响应及时率 - 图表
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -11,7 +11,7 @@ import { Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 const dvaPropsData = ({ loading }) => ({
-  loading: loading.effects[`timelyRate/GetTimelyRateList`],
+  loading: loading.effects[`reportsAndViews/GetTimelyRateList`],
 });
 
 const NumAndRateChart = props => {

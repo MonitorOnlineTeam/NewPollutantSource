@@ -32,7 +32,7 @@ const Index = (props) => {
 
 
   const {type, auditPhotoLoading, installPhotoData,parData} = props;
- 
+
 
   const [isImageViewOpen, setIsImageViewOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
@@ -80,7 +80,7 @@ const Index = (props) => {
                        <Upload
                       listType="picture-card"
                       showUploadList={{ showRemoveIcon: false }}
-                      fileList={         
+                      fileList={
                         item?.FilesList?.ImgList[0]? item.FilesList.ImgList.map((imgItem, index) => {
                             return {
                               uid: index,
@@ -96,7 +96,7 @@ const Index = (props) => {
                           imageData.push(`/${item}`)
                           if (index === file.uid) {
                             imageListIndex = index;
-                           } 
+                           }
                         });
                         setImageIndex(imageListIndex);
                         setImageList(imageData);
@@ -114,7 +114,7 @@ const Index = (props) => {
     </Row>
   }
 
-  
+
 
   return (
     <div className={styles.installEquipmentSty}>

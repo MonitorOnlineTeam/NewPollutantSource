@@ -40,7 +40,7 @@ class MapContent extends PureComponent {
         if (m) {
           m.setFitView();
           if (config.offlineMapUrl.domain) {
-            var Layer = new window.aMap.TileLayer({
+            var Layer = new window.AMap.TileLayer({
               zIndex: 2,
               getTileUrl: function(x, y, z) {
                 return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
@@ -55,7 +55,8 @@ class MapContent extends PureComponent {
 
   componentDidMount() {
     window._AMapSecurityConfig = {
-      securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
+      // securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
+      securityJsCode: config.securityJsCode,
     };
     this.getIndustryList();
     this.loadPageData();
@@ -423,8 +424,12 @@ class MapContent extends PureComponent {
             resizeEnable={true}
             events={this.mapEvents}
             zoom={5}
-            mapStyle={'amap://styles/32ae1bcea26191a8dd684f71c172af1f'}
-            amapkey={'5e60171b820065e7e9a1d6ea45abaee9'}
+            // mapStyle={'amap://styles/32ae1bcea26191a8dd684f71c172af1f'}
+            // amapkey={'5e60171b820065e7e9a1d6ea45abaee9'}
+
+
+            amapkey={'1440c67033e5ede0f3a068605de5fb5f'}
+            mapStyle='amap://styles/6daa80e94c53325ff909a31f3d3d8809'
             // center={mapCenter}
           >
             <Markers

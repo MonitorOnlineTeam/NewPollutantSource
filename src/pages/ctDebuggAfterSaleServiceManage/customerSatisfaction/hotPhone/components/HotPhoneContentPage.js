@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-01 10:18:03
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-29 10:13:05
+ * @Last Modified time: 2024-05-22 14:28:22
  * @Description:  服务热线电话页面内容
  */
 
@@ -23,6 +23,7 @@ import {
   Tooltip,
   DatePicker,
   Modal,
+  Typography,
 } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
@@ -34,6 +35,7 @@ import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon';
 import styles from '../../index.less';
 import Cookie from 'js-cookie';
 
+const { Text } = Typography;
 const { TextArea } = Input;
 
 const dvaPropsData = ({ loading }) => ({
@@ -231,10 +233,11 @@ const HotPhoneContentPage = props => {
                     setIsView(true);
                     form1.setFieldsValue({
                       ...record,
-                      ProcessingCompletion: moment(record.ProcessingCompletion),
-                      RecipientDate: moment(record.RecipientDate),
+                      // ProcessingCompletion: moment(record.ProcessingCompletion),
+                      // RecipientDate: moment(record.RecipientDate),
                     });
                     // onAddOrEdit(record.ID);
+
                     setAddOrEditModalOpen(true);
                   }}
                 >
@@ -358,7 +361,7 @@ const HotPhoneContentPage = props => {
             htmlType="submit"
             loading={queryLoading}
             onClick={() => {
-              getTableDataSource(1, 20);
+              handleTableChange(1, 20);
             }}
           >
             查询
@@ -366,7 +369,7 @@ const HotPhoneContentPage = props => {
           <Button
             onClick={() => {
               form.resetFields();
-              getTableDataSource(1, 20);
+              handleTableChange(1, 20);
             }}
           >
             重置
@@ -398,7 +401,7 @@ const HotPhoneContentPage = props => {
   };
 
   // 保存添加或编辑
-  const onAddOrEdit = id => {
+  const onAddOrEdit = () => {
     form1
       .validateFields()
       .then(values => {
@@ -407,7 +410,7 @@ const HotPhoneContentPage = props => {
         dispatch({
           type: 'customer/AddOrUpdateServiceHotline',
           payload: {
-            id,
+            id: currentID,
             ...values,
             recipientDate: values.RecipientDate.format('YYYY-MM-DD HH:mm:ss'),
             processingCompletion: values.ProcessingCompletion.format('YYYY-MM-DD HH:mm:ss'),
@@ -420,7 +423,7 @@ const HotPhoneContentPage = props => {
         });
       })
       .catch(errorInfo => {
-        console.log('errorInfo', errorInfo)
+        console.log('errorInfo', errorInfo);
         message.warning('请输入完整的数据');
         return;
       });
@@ -429,7 +432,7 @@ const HotPhoneContentPage = props => {
   const getPageContent = () => {
     const modalProps = isView ? { footer: false } : {};
     const currentUser = JSON.parse(Cookie.get('currentUser'));
-    
+
     return (
       <Card bordered={isAll ? false : true} title={<SearchComponents />}>
         <SdlTable
@@ -454,7 +457,7 @@ const HotPhoneContentPage = props => {
         />
         {/* 添加、编辑弹窗 */}
         <Modal
-          title={currentID ? '编辑' : '登记'}
+          title={isView ? '详情' : currentID ? '编辑' : '登记'}
           visible={addOrEditModalOpen}
           width={1100}
           destroyOnClose
@@ -590,7 +593,7 @@ const HotPhoneContentPage = props => {
                   ]}
                 >
                   {isView ? (
-                    <Input bordered={false} disabled={true} />
+                    <Text style={{ padding: '0 11px' }}>业务咨询类</Text>
                   ) : (
                     <Select placeholder="需求类别" style={{ width: '100%' }} allowClear>
                       <Option value={'1'}>业务咨询类</Option>
@@ -641,7 +644,11 @@ const HotPhoneContentPage = props => {
                     },
                   ]}
                 >
-                  {isView ? <Input bordered={false} disabled={true} /> : <TextArea rows={3} />}
+                  {isView ? (
+                    <TextArea bordered={false} rows={3} disabled={true} />
+                  ) : (
+                    <TextArea rows={3} />
+                  )}
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -655,7 +662,11 @@ const HotPhoneContentPage = props => {
                   //   },
                   // ]}
                 >
-                  {isView ? <Input bordered={false} disabled={true} /> : <TextArea rows={3} />}
+                  {isView ? (
+                    <TextArea bordered={false} rows={3} disabled={true} />
+                  ) : (
+                    <TextArea rows={3} />
+                  )}
                 </Form.Item>
               </Col>
             </Row>

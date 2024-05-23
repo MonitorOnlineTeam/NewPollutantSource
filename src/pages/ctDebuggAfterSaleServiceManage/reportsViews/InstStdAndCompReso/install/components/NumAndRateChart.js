@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-16 16:37:23
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-17 16:10:17
+ * @Last Modified time: 2024-05-21 14:42:31
  * @Description:  安装调试达标率图表
  */
 
@@ -11,8 +11,8 @@ import { connect } from 'dva';
 import { Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
-const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
-  loading: loading.effects[`instStdAndCompReso/GetInstallationDebugRate`],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  loading: loading.effects[`reportsAndViews/GetInstallationDebugRate`],
 });
 
 const NumAndRateChart = props => {

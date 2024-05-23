@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-14 16:46:47
+ * @Last Modified time: 2024-05-17 10:55:47
  * @Description：报警记录
  */
 
@@ -521,6 +521,7 @@ const CluesList = props => {
           </Form.Item>
           <Form.Item label="行政区" name="regionCode">
             <RegionList
+            noFilter
               style={{ width: 140 }}
               onChange={value => {
                 form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });

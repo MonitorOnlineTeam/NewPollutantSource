@@ -1,8 +1,8 @@
 /*
  * @Author: JiaQi
  * @Date: 2024-04-17 17:12:14
- * @Last Modified by:   JiaQi
- * @Last Modified time: 2024-04-17 17:12:14
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-05-21 09:14:51
  * @Description:  服务响应及时率
  */
 import React, { useState, useEffect } from 'react';
@@ -16,8 +16,8 @@ import NumAndRateChart from './components/NumAndRateChart';
 import TableCard from './components/TableCard';
 import UserStatistics from './components/UserStatistics';
 
-const dvaPropsData = ({ loading, timelyRate }) => ({
-  timelyRateList: timelyRate.timelyRateList,
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  timelyRateList: reportsAndViews.timelyRateList,
 });
 
 const Comp = props => {
@@ -27,6 +27,8 @@ const Comp = props => {
   const {
     dispatch,
     timelyRateList: { largeRegionAnalysis },
+    hideBreadcrumb,
+    modalWrapClassName,
   } = props;
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const Comp = props => {
   // 按大区统计
   const GetTimelyRateList = () => {
     dispatch({
-      type: 'timelyRate/GetTimelyRateList',
+      type: 'reportsAndViews/GetTimelyRateList',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
       },
@@ -55,7 +57,7 @@ const Comp = props => {
   };
 
   return (
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
       <div className={styles.pageWrapper}>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Card bodyStyle={{ paddingTop: 10, paddingBottom: 10 }} style={{ marginBottom: 0 }}>
@@ -84,7 +86,11 @@ const Comp = props => {
               </Row>
               <Row>
                 <Col span={24}>
-                  <TableCard title={`${date.format('YYYY年')}服务响应及时率`} date={date} />
+                  <TableCard
+                    modalWrapClassName={modalWrapClassName}
+                    title={`${date.format('YYYY年')}服务响应及时率`}
+                    date={date}
+                  />
                 </Col>
               </Row>
             </>

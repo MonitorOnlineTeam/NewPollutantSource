@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2024-04-16 16:37:38 
- * @Last Modified by:   JiaQi 
- * @Last Modified time: 2024-04-16 16:37:38 
+ * @Author: JiaQi
+ * @Date: 2024-04-16 16:37:38
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-05-21 14:42:47
  * @Description:  投诉解决率表格
  */
 import React, { useState, useEffect } from 'react';
@@ -12,10 +12,10 @@ import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import AllViewModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/handleComplaints/components/AllViewModal.js';
 
-const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
-  compPageData: instStdAndCompReso.compPageData,
-  loading: loading.effects[`instStdAndCompReso/GetComplaintResolutionRate`],
-  exportLoading: loading.effects['instStdAndCompReso/ExportComplaintResolutionRate'],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  compPageData: reportsAndViews.compPageData,
+  loading: loading.effects[`reportsAndViews/GetComplaintResolutionRate`],
+  exportLoading: loading.effects['reportsAndViews/ExportComplaintResolutionRate'],
 });
 
 const TableCard = props => {
@@ -37,7 +37,7 @@ const TableCard = props => {
   // 导出
   const onExport = () => {
     dispatch({
-      type: 'instStdAndCompReso/ExportComplaintResolutionRate',
+      type: 'reportsAndViews/ExportComplaintResolutionRate',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
       },

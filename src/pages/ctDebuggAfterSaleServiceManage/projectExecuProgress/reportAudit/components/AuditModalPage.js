@@ -54,6 +54,7 @@ const AuditModalPage = props => {
       type: `installEquipment/GetAuditPhoto`,
       payload: {
         equipmentAuditId: id,
+        Type: 1
       },
     });
   };

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-02 11:09:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-03 11:14:52
+ * @Last Modified time: 2024-05-22 14:13:10
  * @Description:  投诉内容详情
  */
 import React, { useState, useEffect } from 'react';
@@ -26,6 +26,7 @@ const ViewComplaintContent = props => {
     debugger;
     let imgList = fileList?.ImgList.map((img, index) => {
       return {
+        index: index,
         uid: index,
         status: 'done',
         url: `/${img}`,
@@ -64,7 +65,7 @@ const ViewComplaintContent = props => {
         fileList={fileList}
         onPreview={file => {
           setIsImageViewOpen(true);
-          setImageIndex(file.uid);
+          setImageIndex(file.index);
           setImageList(fileList.map(item => item.url));
         }}
       ></Upload>

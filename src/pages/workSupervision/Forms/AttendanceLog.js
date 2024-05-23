@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-06 13:57:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-13 18:40:18
+ * @Last Modified time: 2024-05-16 19:06:58
  * @Description: 检查考勤和日志
  */
 import React, { useState, useEffect } from 'react';
@@ -22,13 +22,50 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const AttendanceLog = props => {
   const [form] = Form.useForm();
-  const { taskInfo, editData, onCancel, onSubmitCallback, allUser, isDetail, TYPE } = props;
-  const [dataSource, setDataSource] = useState(editData.dataSource || []);
+  const {
+    dispatch,
+    taskInfo,
+    editData,
+    onCancel,
+    onSubmitCallback,
+    allUser,
+    isDetail,
+    TYPE,
+  } = props;
+  const [dataSource, setDataSource] = useState([]);
 
   useEffect(() => {
+    getPageData();
     getAllUser();
   }, []);
 
+  // 获取页面数据
+  const getPageData = () => {
+    const body = {
+      dailyTaskID: taskInfo.ID,
+      systemType: TYPE == 1 ? 2 : 1, // 1：运维 2：成套
+      isFlag: false, // 区分管理
+      beginTime: taskInfo.BeginTime,
+      endTime: taskInfo.EndTime,
+      isQualify: 0,
+    };
+    dispatch({
+      type: 'wordSupervision/GetDisciplineCheckInfo',
+      payload: {
+        ...body,
+      },
+      callback: res => {
+        let datas = res.Datas.map((item, index) => {
+          return {
+            Key: index,
+            RegionalArea: item.LargeRegion,
+            ...item,
+          };
+        });
+        setDataSource(datas);
+      },
+    });
+  };
   // 获取所有用户
   const getAllUser = () => {
     props.dispatch({
@@ -49,7 +86,7 @@ const AttendanceLog = props => {
       payload: {
         DailyTaskID: taskInfo.ID,
         Model: dataSource,
-        recordID: editData.ID,
+        recordID: dataSource[0]?.RecordID,
       },
       callback: () => {
         onCancel();
@@ -164,17 +201,16 @@ const AttendanceLog = props => {
       },
       {
         title: <div className={styles.required}>姓名</div>,
-        dataIndex: 'UserID',
-        key: 'UserID',
+        dataIndex: 'UserId',
+        key: 'UserId',
         width: 160,
-        align: 'center',
         render: (text, record, index) => {
           return isDetail ? (
             record.User_Name
           ) : (
             <Form.Item
               style={{ marginBottom: 0 }}
-              name={'UserID' + record.Key}
+              name={'UserId' + record.Key}
               initialValue={text}
               rules={[
                 {
@@ -190,7 +226,7 @@ const AttendanceLog = props => {
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
                 onChange={value => {
-                  changeDataSource(value, index, 'UserID');
+                  changeDataSource(value, index, 'UserId');
                 }}
               >
                 {allUser.map((item, index) => {
@@ -315,9 +351,15 @@ const AttendanceLog = props => {
       },
     ];
 
+    if (TYPE === 1) {
+      // 成套不显示省份
+      columns = columns.filter(item => item.dataIndex !== 'RegionName');
+    }
+
     if (!isDetail) {
       columns.push({
         title: '操作',
+        align: 'center',
         render: (text, record, index) => {
           return (
             <Popconfirm

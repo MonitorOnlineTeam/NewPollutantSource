@@ -9,11 +9,13 @@
   min-width: 1500px;
   overflow: auto;
   color: #fff;
-  // overflow-y: none;
+  position: relative;
   background: url(/ctHomeDataScreen/bg.png) no-repeat;
   // background-color: #030a22;
   background-size: cover;
-
+  td.bg_white {
+    background-color: #fff;
+  }
   p {
     margin-bottom: 0;
   }
@@ -119,6 +121,7 @@
         .title {
           color: #fff;
           font-weight: 500;
+          width: calc(100% - 140px);
         }
 
         .extra {
@@ -165,6 +168,7 @@
     // 设备信息总览
     .DeviceInfoCountWrapper {
       height: 100%;
+      cursor: pointer;
       p {
         width: 100px;
         text-align: center;
@@ -271,6 +275,29 @@
       }
     }
 
+    // 设备运行完好率
+    .EquipUptimeRateWrapper {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      .rate {
+        height: 180px;
+        width: 100%;
+        background: url(/ctHomeDataScreen/good.png) center center no-repeat;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        span {
+          font-family: 'YouSheBiaoTiHei';
+          margin-top: -40px;
+          font-size: 28px;
+          color: #1afcff;
+        }
+      }
+    }
+
     // 售后服务情况
     .AfterSaleServiceWrapper {
       height: 100%;
@@ -291,7 +318,7 @@
         height: calc(100% - 24px - 20px);
         overflow: hidden;
         .header {
-          background: rgba(16, 41, 81, 0.6);;
+          background: rgba(16, 41, 81, 0.6);
           color: #03aae2;
           line-height: 38px;
           text-align: center;
@@ -309,6 +336,17 @@
           background-color: rgba(16, 41, 81, 0.3);
           &:nth-child(2n) {
             background-color: #010e33;
+          }
+
+          & > div {
+            &:first-child {
+              width: 32%;
+              // text-align: left;
+            }
+            width: 17%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
       }
@@ -331,9 +369,162 @@
       height: calc(100vh - 78px);
       min-height: 936px;
       .mapWrapper {
+        min-height: 640px;
         flex: 2;
         position: relative;
         background: '#0b172f';
+
+        &.fullScreen {
+          position: fixed;
+          z-index: 1000;
+          width: 100%;
+          height: calc(100vh - 60px);
+          left: 0;
+        }
+
+        .mapOperationBtn {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          width: 36px;
+          img {
+            cursor: pointer;
+          }
+        }
+
+        .infoWindowContent {
+          border: 1px solid #007bfd;
+          border-radius: 8px;
+          .header {
+            background: rgb(8, 99, 206, 0.4);
+            padding-bottom: 0;
+            height: 30px;
+            line-height: 30px;
+            padding-left: 10px;
+
+            h2 {
+              font-size: 14px;
+              color: #52f2ff;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            button {
+              width: 100%;
+            }
+
+            p {
+              margin-top: 10px;
+
+              span {
+                font-weight: 500;
+                color: #fe0301;
+              }
+            }
+          }
+          h3 {
+            font-size: 13px;
+            color: #fff;
+            border-bottom: 1px solid #0a7bcb;
+            width: 62px;
+            padding: 0 3px;
+            background: linear-gradient(0deg, rgba(5, 78, 146, 0.8), #0a2262);
+          }
+          .desc {
+            padding: 10px;
+            overflow: hidden;
+            background: rgba(4, 45, 111, 0.6);
+            display: flex;
+            // & > div {
+            //   width: 50%;
+            //   float: left;
+            // }
+
+            .desc-l {
+              width: 50%;
+              display: inline-block;
+              p {
+                margin: 0;
+                padding: 0;
+                line-height: 26px;
+                font-size: 13px;
+                // color: #5d5d5d;
+
+                span {
+                  color: #70a7ff;
+                  font-weight: bold;
+                  padding-left: 10px;
+                  position: relative;
+                  i {
+                    width: 6px;
+                    height: 6px;
+                    background: #0895d7;
+                    border-radius: 50%;
+                    position: absolute;
+                    left: 0px;
+                    top: 6px;
+                  }
+                }
+              }
+            }
+
+            .desc-r {
+              width: 50%;
+              display: inline-block;
+              /* width: 100px; */
+              height: 100px;
+              background: #ccc;
+
+              img {
+              }
+            }
+          }
+
+          .tableList {
+            background: rgba(4, 45, 111, 0.6);
+            padding: 10px;
+
+            ul {
+              background: #002259;
+              display: flex;
+              text-align: center;
+              height: 30px;
+              line-height: 30px;
+
+              &.title {
+                background: #061f48;
+                color: rgb(3, 170, 226);
+                font-size: 13px;
+              }
+              li {
+                flex: 1;
+                font-size: 13px;
+                font-weight: bold;
+              }
+            }
+          }
+        }
+
+        //小圆点
+        .circle {
+          animation: pulse 2s infinite alternate; /* 光圈脉动动画 */
+        }
+
+        @keyframes pulse {
+          0% {
+            transform: scale(0.5);
+            opacity: 0.2;
+          }
+          0% {
+            transform: scale(0.8);
+            opacity: 0.5;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
 
         .gobackBox {
           width: 60px;
@@ -347,15 +538,6 @@
           text-align: center;
           font-weight: bold;
           cursor: pointer;
-        }
-
-        .currentPosition {
-          color: rgb(75, 243, 249);
-          font-weight: bold;
-          position: absolute;
-          right: 10px;
-          top: 54px;
-          font-size: 15px;
         }
 
         .titlePopSty {
@@ -384,40 +566,50 @@
           }
         }
 
-        .entPopWrapper {
-          background: url(/AbnormalIdentifyModel/point_bg.png) no-repeat;
-          background-size: 100% 100%;
-          width: 210px;
-          height: 70px;
-          margin-left: -94px;
-          margin-bottom: 10px;
-          font-weight: bold;
-          cursor: default;
-          & > div {
-            line-height: 32px;
-            color: #fff;
-            padding: 0 10px;
+        .titleInfoWindow {
+          padding: 6px;
+          background-color: #3c4860;
+        }
+        :global {
+          .amap-info-content {
+            position: relative;
+            background: transparent;
+            border-radius: 1px;
+            padding: 0;
+            .amap-info-close {
+              display: none;
+            }
           }
-
-          .pointName {
-            // text-align: left;
-            line-height: 14px;
-            color: #29d4f9;
+          .bottom-center .amap-info-sharp {
+            //修改向下箭头的大小
+            bottom: 2px;
+            left: 50%;
+            margin-left: -6px;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #3c4860;
           }
         }
 
         .mapCountWrapper {
-          position: absolute;
-          bottom: 20px;
-          left: 20px;
-          z-index: 1;
-          display: flex;
-          flex-direction: row;
+          margin-left: 20px;
+          display: inline-block;
+          &.fullScreen {
+            width: 40vw;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0;
+            margin: 0 30vw;
+          }
           & > div {
-            background: url(/AbnormalIdentifyModel/mapCountBg.png) no-repeat;
-            background-size: contain;
-            width: 160px;
-            // height: 80px;
+            display: inline-block;
+            background: url(/ctHomeDataScreen/number_btn_bg.png) no-repeat;
+            background-size: 100% 100%;
+            width: 128px;
+            height: 34px;
+            line-height: 34px;
             text-align: center;
             font-weight: bold;
 
@@ -441,45 +633,7 @@
           position: absolute;
           top: 10px;
           left: 20px;
-          .searchSelectWrapper {
-            .select {
-              width: 120px;
-              height: 28px;
-              line-height: 24px;
-              font-size: 15px;
-              font-weight: 500;
-              color: #e9e3e3;
-              background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
-              border: 1px solid #007bfd;
-              padding: 1px 10px;
-              cursor: pointer;
 
-              .icon {
-                float: right;
-                line-height: 28px;
-                margin-right: -6px;
-                font-size: 10px;
-                color: #59deff;
-                font-weight: bold;
-              }
-            }
-
-            .listbox {
-              border: 1px solid #007bfd;
-              margin-top: 6px;
-              padding: 10px;
-              // background: rgba(25, 101, 185, 0.4);
-              background: rgb(2, 36, 80);
-              position: absolute;
-              max-width: 800px;
-              min-width: 400px;
-              :global {
-                .ant-space-align-center {
-                  flex-wrap: wrap;
-                }
-              }
-            }
-          }
           :global {
             .ant-radio-button-wrapper {
               // background-color: transparent;
@@ -496,59 +650,91 @@
             .ant-picker {
               background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
               border-color: #007bfd;
-              height: 30px;
-              line-height: 30px;
+              height: 26px;
+              line-height: 26px;
+              border-radius: 0;
             }
 
             .ant-picker-input > input {
-              color: #fff;
+              color: #d1d1d1;
               font-weight: bold;
             }
 
             .ant-picker-suffix {
-              color: #cdc9c9;
+              color: #007bfd;
             }
           }
-
-          .myRadio {
+          // 搜索企业
+          .SelectWrapper {
+            // position: absolute;
+            // left: 20px;
+            // top: 48px;
             :global {
-              .ant-radio-button-wrapper {
-                height: 29px;
-                line-height: 28px;
+              .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+                border-color: #007bfd;
+                background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+                // background: rgba(10, 125, 254, 0.4);
+                color: #fff;
+                height: 26px;
+                line-height: 26px;
+                border-radius: 0;
+              }
+
+              .ant-select-single:not(.ant-select-customize-input)
+                .ant-select-selector
+                .ant-select-selection-search-input {
+                height: 26px;
+                line-height: 26px;
+              }
+
+              .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+                line-height: 24px;
+                color: #70a7ff;
+                font-weight: bold;
+              }
+
+              .ant-select-selection-item {
+                font-weight: 500;
+                line-height: 24px;
+              }
+
+              .ant-select-clear {
+                background-color: transparent;
+                color: #999;
+              }
+
+              .ant-select-arrow {
+                color: #59deff;
+                font-size: 10px;
+                right: 6px;
               }
             }
           }
         }
-        // 搜索企业
-        .SelectWrapper {
-          // position: absolute;
-          // left: 20px;
-          // top: 48px;
-          :global {
-            .ant-select:not(.ant-select-customize-input) .ant-select-selector {
-              border-color: #007bfd;
-              background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
-              // background: rgba(10, 125, 254, 0.4);
-              color: #fff;
-              height: 30px;
-              line-height: 30px;
-              border-radius: 0;
-            }
+        .goback {
+          position: absolute;
+          top: 64px;
+          right: 70px;
+        }
 
-            .ant-select-selection-item {
-              font-weight: 500;
-            }
+        .legend {
+          position: absolute;
+          bottom: 26px;
+          right: 20px;
 
-            .ant-select-clear {
-              background-color: transparent;
-              color: #999;
-            }
-
-            .ant-select-arrow {
-              color: #59deff;
-              font-size: 10px;
-              right: 6px;
-            }
+          .legendItem {
+            background: url(/ctHomeDataScreen/legend_bg.png) no-repeat;
+            color: #fff;
+            width: 88px;
+            height: 36px;
+            line-height: 40px;
+            display: flex;
+            /* flex-direction: row; */
+            align-items: center;
+            /* justify-content: space-around; */
+            padding: 0 10px;
+            font-weight: bold;
+            background-size: 100% 100%;
           }
         }
       }

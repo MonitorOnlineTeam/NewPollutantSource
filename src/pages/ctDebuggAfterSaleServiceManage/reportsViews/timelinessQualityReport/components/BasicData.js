@@ -24,14 +24,14 @@ import ServiceReportModal from './ServiceReportModal';
 
 const { Text, Link } = Typography;
 
-const dvaPropsData = ({ loading, timelinessQualityReport, common }) => ({
+const dvaPropsData = ({ loading, reportsAndViews, common }) => ({
   largeRegionList: common.CtLargeRegionList,
   basicsLoading:
-    loading.effects['timelinessQualityReport/GetTimelyPassRateListByArea'] ||
-    loading.effects['timelinessQualityReport/GetTimelyPassRateListByUser'],
+    loading.effects['reportsAndViews/GetTimelyPassRateListByArea'] ||
+    loading.effects['reportsAndViews/GetTimelyPassRateListByUser'],
   exportLoading:
-    loading.effects['timelinessQualityReport/ExportTimelyPassRateListByArea'] ||
-    loading.effects['timelinessQualityReport/ExportTimelyPassRateListByUser'],
+    loading.effects['reportsAndViews/ExportTimelyPassRateListByArea'] ||
+    loading.effects['reportsAndViews/ExportTimelyPassRateListByUser'],
 });
 
 const BasicData = props => {
@@ -56,6 +56,7 @@ const BasicData = props => {
     largeRegionList,
     type, // 1：按大区统计  2：按人员统计
     level, // 2: 及时率 3：合格率
+    wrapClassName,
   } = props;
   console.log('basicsLoading', basicsLoading);
   useEffect(() => {
@@ -67,8 +68,8 @@ const BasicData = props => {
   const getBasicsData = (_pageIndex, _pageSize) => {
     const actionType =
       type === 1
-        ? 'timelinessQualityReport/GetTimelyPassRateListByArea'
-        : 'timelinessQualityReport/GetTimelyPassRateListByUser';
+        ? 'reportsAndViews/GetTimelyPassRateListByArea'
+        : 'reportsAndViews/GetTimelyPassRateListByUser';
     const values = form.getFieldsValue();
     dispatch({
       type: actionType,
@@ -101,8 +102,8 @@ const BasicData = props => {
   const onExport = () => {
     const actionType =
       type === 1
-        ? 'timelinessQualityReport/ExportTimelyPassRateListByArea'
-        : 'timelinessQualityReport/ExportTimelyPassRateListByUser';
+        ? 'reportsAndViews/ExportTimelyPassRateListByArea'
+        : 'reportsAndViews/ExportTimelyPassRateListByUser';
     const values = form.getFieldsValue();
     dispatch({
       type: actionType,
@@ -321,7 +322,7 @@ const BasicData = props => {
   return (
     <Modal
       title={title}
-      wrapClassName={`spreadOverModal`}
+      wrapClassName={wrapClassName || `spreadOverModal`}
       open={isModalOpen}
       destroyOnClose
       footer={null}
@@ -467,6 +468,7 @@ const BasicData = props => {
       />
 
       <ServiceReportModal
+        wrapClassName={wrapClassName}
         descriptionColumn={4}
         descriptionList={descriptionList}
         isModalOpen={serviceReportOpen}

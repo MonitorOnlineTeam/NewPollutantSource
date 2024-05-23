@@ -4,7 +4,6 @@ import { Tooltip, Row, Col, Modal, Space } from 'antd';
 import { RollbackOutlined } from '@ant-design/icons';
 import { router } from 'umi';
 import styles from './styles.less';
-import HomeCard from './components/HomeCard';
 import DeviceInfoCount from './components/Left/DeviceInfoCount_1';
 import ProjectExecution from './components/Left/ProjectExecution_2';
 import TimelyPassRate from './components/Left/TimelyPassRate_3';
@@ -14,33 +13,17 @@ import InstallDebugRate from './components/Right/InstallDebugRate_2';
 import EquipUptimeRate from './components/Right/EquipUptimeRate_3';
 import MapContent from './components/Center/MapContent';
 import AfterSaleService from './components/Center/AfterSaleService';
-// import RunState from './components/RunState';
-// import ClueStatistics from './components/ClueStatistics';
-// import Ranking from './components/Ranking';
-// import Emissions from './components/Emissions';
-// import MapContent from './components/MapContent';
-// import { CloseOutlined } from '@ant-design/icons';
-// import EntHomePage from '../EntHomePage/EntHomePage';
 
-const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
-  // entHomeIsOpen: AbnormalIdentifyModelHome.entHomeIsOpen,
-  // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
-});
+const dvaPropsData = ({ loading, user }) => ({});
 
 const HomeDataScreen = props => {
-  const { dispatch, entHomeIsOpen } = props;
-  // const [visible, setVisible] = useState(false);
+  const { dispatch } = props;
 
-  useEffect(() => {
-    // resetCluesListParams();
-    // return () => {
-    //   // 组件销毁，重置数据
-    // }
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div className={styles.CTScreenWrapper}>
-      <header className={styles.header}>XXXXXXXXXXXXXXXXXXXXX</header>
+      <header className={styles.header}>可视化看板</header>
       <Tooltip title="返回菜单">
         <RollbackOutlined
           style={{
@@ -56,7 +39,12 @@ const HomeDataScreen = props => {
             color: 'rgb(101, 217, 255)',
           }}
           onClick={() => {
-            router.push('/AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis');
+            let meunList = sessionStorage.getItem('menuDatas')
+              ? JSON.parse(sessionStorage.getItem('menuDatas'))
+              : [];
+            if (meunList?.length > 1) {
+              router.push(meunList[1]);
+            }
           }}
         />
       </Tooltip>

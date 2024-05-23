@@ -194,7 +194,7 @@ const reportAudit = props => {
         ellipsis: true,
         render: (text, record) => {
           return (
-            <Tooltip title="审核" placement="left">
+            record.IsFlag ? <Tooltip title="审核" placement="left">
               <a
                 onClick={() => {
                   setIsModalOpen(true);
@@ -203,7 +203,7 @@ const reportAudit = props => {
               >
                 <AuditOutlined style={{ fontSize: 16 }} />
               </a>
-            </Tooltip>
+            </Tooltip> : '-'
           );
         },
       },

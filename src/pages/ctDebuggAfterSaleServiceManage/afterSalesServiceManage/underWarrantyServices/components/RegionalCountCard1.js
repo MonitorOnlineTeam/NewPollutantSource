@@ -4,9 +4,9 @@ import { Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 
-const dvaPropsData = ({ loading, ctAfterSalesServiceManagement }) => ({
-  underWarrantyServicesData: ctAfterSalesServiceManagement.underWarrantyServicesData,
-  loading: loading.effects['ctAfterSalesServiceManagement/GetWarrantyServiceAnalysis'],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  underWarrantyServicesData: reportsAndViews.underWarrantyServicesData,
+  loading: loading.effects['reportsAndViews/GetWarrantyServiceAnalysis'],
 });
 
 const RegionalCountCard1 = props => {
@@ -43,11 +43,14 @@ const RegionalCountCard1 = props => {
         trigger: 'axis',
         formatter: params => {
           console.log('params', params);
-          return (
-            `${params?.[0].name}<br />
-            ${params?.[0]?.marker} ${params?.[0]?.seriesName}：${params?.[0]?.value}次 <br />` +
-            `${params?.[3]?.marker} ${params?.[3]?.seriesName}：${params?.[3]?.value}小时 <br />`
-          );
+          let content = `${params?.[0].name}<br />`;
+          params?.[0]
+            ? (content += `${params?.[0]?.marker} ${params?.[0]?.seriesName}：${params?.[0]?.value}次 <br />`)
+            : '';
+          params?.[3]
+            ? (content += `${params?.[3]?.marker} ${params?.[3]?.seriesName}：${params?.[3]?.value}小时 <br />`)
+            : '';
+          return content;
         },
       },
       legend: {},

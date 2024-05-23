@@ -14,6 +14,7 @@ const ServiceReportModal = props => {
     descriptionColumn,
     isModalOpen,
     onCancel,
+    wrapClassName,
   } = props;
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const ServiceReportModal = props => {
   return (
     <Modal
       title={`${Num || ItemCode}-验收服务报告`}
-      wrapClassName="spreadOverModal"
+      wrapClassName={wrapClassName || 'spreadOverModal'}
       open={isModalOpen}
       destroyOnClose
       footer={false}

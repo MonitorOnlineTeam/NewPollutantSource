@@ -8,13 +8,13 @@ import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { DetailIcon } from '@/utils/icon';
 
-const dvaPropsData = ({ loading, ctAfterSalesServiceManagement, common }) => ({
-  underWarrantyServicesData: ctAfterSalesServiceManagement.underWarrantyServicesData,
+const dvaPropsData = ({ loading, reportsAndViews, common }) => ({
+  underWarrantyServicesData: reportsAndViews.underWarrantyServicesData,
   // TimeoutServiceReason: timeoutServices.TimeoutServiceReason, // 超时服务原因
-  loading: loading.effects['ctAfterSalesServiceManagement/GetWarrantyServiceAnalysis'],
-  basicsLoading: loading.effects[`ctAfterSalesServiceManagement/GetWarrantyServiceInfo`],
-  exportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceAnalysis'],
-  basicsExportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceInfo'],
+  loading: loading.effects['reportsAndViews/GetWarrantyServiceAnalysis'],
+  basicsLoading: loading.effects[`reportsAndViews/GetWarrantyServiceInfo`],
+  exportLoading: loading.effects['reportsAndViews/ExportWarrantyServiceAnalysis'],
+  basicsExportLoading: loading.effects['reportsAndViews/ExportWarrantyServiceInfo'],
 });
 
 const TableCard = props => {
@@ -41,6 +41,7 @@ const TableCard = props => {
     underWarrantyServicesData: { ColumnList, TableList },
     type,
     date,
+    modalWrapClassName,
   } = props;
 
   useEffect(() => {}, []);
@@ -49,9 +50,9 @@ const TableCard = props => {
   const getBasicsData = (_pageIndex, _pageSize, _sort) => {
     const values = form.getFieldsValue();
     console.log('values', values);
-    let time = values.time || [moment().startOf('month'), moment()];
+    let time = values.time || [moment(date).startOf('year'), moment()];
     dispatch({
-      type: 'ctAfterSalesServiceManagement/GetWarrantyServiceInfo',
+      type: 'reportsAndViews/GetWarrantyServiceInfo',
       payload: {
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
@@ -72,7 +73,7 @@ const TableCard = props => {
   // 导出
   const onExport = () => {
     dispatch({
-      type: 'ctAfterSalesServiceManagement/ExportWarrantyServiceAnalysis',
+      type: 'reportsAndViews/ExportWarrantyServiceAnalysis',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
         type: type,
@@ -84,7 +85,7 @@ const TableCard = props => {
   const onBasicsExport = () => {
     const values = form.getFieldsValue();
     dispatch({
-      type: 'ctAfterSalesServiceManagement/ExportWarrantyServiceInfo',
+      type: 'reportsAndViews/ExportWarrantyServiceInfo',
       payload: {
         pageIndex: 0,
         pageSize: 0,
@@ -398,32 +399,67 @@ const TableCard = props => {
     return columns;
   };
 
+  function aggregateAndSortByLevelWithCount(data) {
+    // 用来存储各个Level对应的ChildList集合
+    const levelMap = {};
+
+    // 遍历原始数据
+    data.forEach(item => {
+      // 检查这个Level是否已经在map里，如果不在就初始化为空数组
+      if (!levelMap[item.Level]) {
+        levelMap[item.Level] = [];
+      }
+      // 把当前Level的ChildList并到相应的数组里
+      levelMap[item.Level].push(...item.ChildList);
+    });
+
+    // 转换map成数组，并按Level排序, 同时处理ChildList中的count字段
+    const sortedLevels = Object.keys(levelMap)
+      .sort((a, b) => a - b)
+      .map(level => {
+        const childListWithCount = levelMap[level].map((child, index) => {
+          // 对每个ChildList初始化count字段，如果是第一个元素则为ChildList的长度，否则为0
+          return { ...child, count: index === 0 ? levelMap[level].length : 0 };
+        });
+
+        return {
+          Level: parseInt(level),
+          ChildList: childListWithCount,
+        };
+      });
+
+    return sortedLevels;
+  }
+
   // 处理详情数据
   const handleDetailsData = (data, rowData) => {
-    let CategoryTableList = [],
-      ReasonTableList = [];
-
-    // 服务原因表格数据
-    data.ReasonChildList.sort((a, b) => a.Level - b.Level).map(item => {
-      item.ChildList.map((child, index) => {
-        ReasonTableList.push({
-          ...child,
-          count: index == 0 ? item.ChildList.length : 0,
-        });
-      });
+    let CategoryTableList = [];
+    aggregateAndSortByLevelWithCount(data.CategoryChildList).map(item => {
+      CategoryTableList = CategoryTableList.concat(item.ChildList);
     });
-    // 产品类别表格数据
-    data.CategoryChildList.sort((a, b) => a.Level - b.Level).map(item => {
-      item.ChildList.map((child, index) => {
-        CategoryTableList.push({
-          ...child,
-          count: index == 0 ? item.ChildList.length : 0,
-        });
-      });
+    let ReasonTableList = [];
+    aggregateAndSortByLevelWithCount(data.ReasonChildList).map(item => {
+      ReasonTableList = ReasonTableList.concat(item.ChildList);
     });
 
-    console.log('CategoryTableList', CategoryTableList);
-    console.log('ReasonTableList', ReasonTableList);
+    // // 服务原因表格数据
+    // data.ReasonChildList.sort((a, b) => a.Level - b.Level).map(item => {
+    //   item.ChildList.map((child, index) => {
+    //     ReasonTableList.push({
+    //       ...child,
+    //       count: index == 0 ? item.ChildList.length : 0,
+    //     });
+    //   });
+    // });
+    // // 产品类别表格数据
+    // data.CategoryChildList.sort((a, b) => a.Level - b.Level).map(item => {
+    //   item.ChildList.map((child, index) => {
+    //     CategoryTableList.push({
+    //       ...child,
+    //       count: index == 0 ? item.ChildList.length : 0,
+    //     });
+    //   });
+    // });
 
     setDetailsData({
       CategoryTableList,
@@ -643,7 +679,7 @@ const TableCard = props => {
         title={`${moment(date).format('YYYY年')}质保内服务统计（${
           type === 1 ? '按产品类别' : '按服务原因'
         }）`}
-        wrapClassName="spreadOverModal"
+        wrapClassName={modalWrapClassName || 'spreadOverModal'}
         visible={isModalOpen}
         destroyOnClose
         footer={null}
@@ -657,7 +693,7 @@ const TableCard = props => {
           form={form}
           layout="inline"
           initialValues={{
-            time: [moment().startOf('month'), moment()],
+            time: [moment(date).startOf('year'), moment()],
           }}
           autoComplete="off"
           style={{ marginTop: 10, marginBottom: 10 }}
@@ -719,7 +755,7 @@ const TableCard = props => {
       </Modal>
       <Modal
         title="质保内服务详情"
-        wrapClassName="spreadOverModal"
+        wrapClassName={modalWrapClassName || 'spreadOverModal'}
         visible={isDetailsModalOpen}
         destroyOnClose
         footer={null}

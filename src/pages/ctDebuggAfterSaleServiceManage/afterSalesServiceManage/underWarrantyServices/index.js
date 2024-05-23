@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-09 10:10:36
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-17 10:16:18
+ * @Last Modified time: 2024-05-22 14:37:42
  * @Description:  质保内服务
  */
 import React, { useState, useEffect } from 'react';
@@ -32,11 +32,10 @@ import TableCard from './components/TableCard';
 const dvaPropsData = ({ loading }) => ({});
 
 const UnderWarrantyServices = props => {
-
   const [date, setDate] = useState(moment());
   const [type, setType] = useState(1);
 
-  const { dispatch } = props;
+  const { dispatch, hideBreadcrumb, modalWrapClassName } = props;
 
   useEffect(() => {
     GetWarrantyServiceAnalysis();
@@ -45,7 +44,7 @@ const UnderWarrantyServices = props => {
   // 获取页面数据
   const GetWarrantyServiceAnalysis = () => {
     dispatch({
-      type: 'ctAfterSalesServiceManagement/GetWarrantyServiceAnalysis',
+      type: 'reportsAndViews/GetWarrantyServiceAnalysis',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
         type: type,
@@ -66,7 +65,7 @@ const UnderWarrantyServices = props => {
   };
 
   return (
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
       <div className={styles.pageWrapper}>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Card
@@ -102,6 +101,7 @@ const UnderWarrantyServices = props => {
           <Row gutter={8}>
             <Col span={17}>
               <ProductCountCard3
+                type={type}
                 title={type === 1 ? '产品类别服务次数、时长' : '服务原因次数、时长'}
               />
             </Col>
@@ -111,7 +111,7 @@ const UnderWarrantyServices = props => {
           </Row>
           <Row>
             <Col span={24}>
-              <TableCard date={date} type={type}/>
+              <TableCard date={date} type={type} modalWrapClassName={modalWrapClassName} />
             </Col>
           </Row>
         </Space>

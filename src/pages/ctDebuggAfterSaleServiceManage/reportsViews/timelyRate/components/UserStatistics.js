@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-17 17:12:24
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-17 17:22:37
+ * @Last Modified time: 2024-05-21 08:59:03
  * @Description: 服务响应及时率 - 按人员统计
  */
 import React, { useState, useEffect } from 'react';
@@ -23,10 +23,10 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { FileSearchOutlined } from '@ant-design/icons';
 import BasicData from './BasicData';
 
-const dvaPropsData = ({ loading, timelyRate, autoForm }) => ({
+const dvaPropsData = ({ loading, reportsAndViews, autoForm }) => ({
   autoForm: autoForm,
-  loading: loading.effects[`timelyRate/GetTimelyRateByUserList`],
-  exportLoading: loading.effects['timelyRate/ExportTimelyRateByUserList'],
+  loading: loading.effects[`reportsAndViews/GetTimelyRateByUserList`],
+  exportLoading: loading.effects['reportsAndViews/ExportTimelyRateByUserList'],
 });
 
 const UserStatistics = props => {
@@ -58,7 +58,7 @@ const UserStatistics = props => {
   const GetTimelyRateByUserList = (_pageIndex, _pageSize) => {
     const values = form.getFieldsValue();
     dispatch({
-      type: 'timelyRate/GetTimelyRateByUserList',
+      type: 'reportsAndViews/GetTimelyRateByUserList',
       payload: {
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
@@ -78,7 +78,7 @@ const UserStatistics = props => {
   const onExport = () => {
     const values = form.getFieldsValue();
     dispatch({
-      type: 'timelyRate/ExportTimelyRateByUserList',
+      type: 'reportsAndViews/ExportTimelyRateByUserList',
       payload: {
         pageIndex: 0,
         pageSize: 0,

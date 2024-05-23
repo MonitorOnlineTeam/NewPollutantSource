@@ -60,11 +60,11 @@ const Index = (props) => {
 
 
 
-  const {largeRegionListLoading, location:{pathname}, queryPar, tableDatas, tableTotal, tableLoading,queryPar2, tableDatas2, tableTotal2, tableLoading2, auditPhotoLoading, installPhotoData, addAuditInfoLoading,exportLoading,exportLoading2,submitRerminaLoading,transmitSurveyLoading,} = props;
- 
+  const {largeRegionListLoading, queryPar, tableDatas, tableTotal, tableLoading,queryPar2, tableDatas2, tableTotal2, tableLoading2, auditPhotoLoading, installPhotoData, addAuditInfoLoading,exportLoading,exportLoading2,submitRerminaLoading,transmitSurveyLoading, viewOnlyAll} = props;
+
 
   const [exportIndex, setExportIndex] = useState(-1);
-  
+
   const [largeRegionList, setLargeRegionList] = useState([]);
   const [provinceList, setProvincelist] = useState([]);
   const [provinceList2, setProvincelist2] = useState([]);
@@ -75,7 +75,7 @@ const Index = (props) => {
   const [selectIndex2, setSelectIndex2] = useState(-1);
 
 
-  
+
   const [confiAssistantCheckBtn, setConfiAssistantCheckBtn] = useState(false);
 
   useEffect(() => {
@@ -97,9 +97,14 @@ const Index = (props) => {
               data.push(childListItem)
             })
           }
-         
+
         })
         setProvinceAlllist(data)
+        // 仅查看所有数据
+        if(viewOnlyAll) {
+          onFinish(1,pageIndex2, pageSize2);
+          return;
+        }
         onFinish(2,pageIndex, pageSize);
       },
     })
@@ -283,7 +288,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text) => {
-        return  <span style={{color: text == '待调查'? '#f5222d' : 'rgba(0, 0, 0, 0.85)'}}>{text}</span> 
+        return  <span style={{color: text == '待调查'? '#f5222d' : 'rgba(0, 0, 0, 0.85)'}}>{text}</span>
       }
     },
     {
@@ -293,7 +298,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text) => {
-        return  <span style={{color: text == '待处理'? '#f5222d' : 'rgba(0, 0, 0, 0.85)'}}>{text}</span> 
+        return  <span style={{color: text == '待处理'? '#f5222d' : 'rgba(0, 0, 0, 0.85)'}}>{text}</span>
       }
     },
     {
@@ -328,7 +333,7 @@ const Index = (props) => {
         return type==1?
               <a onClick={()=>detail(record)}>详细</a>  //查看所有数据
               :
-              <> 
+              <>
               <a onClick={()=>detail(record)}>详细</a>
              {(record.IsInvestigator&&record.InvestigationStatusName=='待调查') || (record.IsProcessedBy&&record.ProcessingStatusName=='待处理') ?    <Divider type="vertical" /> : ''}
              {record.IsInvestigator&&record.InvestigationStatusName=='待调查'&&<><a onClick={()=>investigate(record)}>调查</a><Divider type="vertical" />
@@ -353,7 +358,7 @@ const Index = (props) => {
               </Row>
             </Form>
           }
-          > 
+          >
           <a onClick={()=>{setPopVisible(true);setSelectIndex(index); form2.resetFields();setPopVisible2(false)}}>终止调查</a>
         </Popover>
         <Divider type="vertical" />
@@ -383,7 +388,7 @@ const Index = (props) => {
         </>}
         {record.IsProcessedBy&&record.ProcessingStatusName=='待处理'&&<><a onClick={()=>handle(record)}>处理</a></>}
              </>
-               
+
     }
     }
   ];
@@ -397,7 +402,7 @@ const Index = (props) => {
     const data = value? provinceAllList.filter(item=>item.ID == value ) : []
     setProvincelist2(data)
   }
-  
+
   const terminaInvestiga = (values,row) => {
     props.dispatch({
       type: `${namespace}/SubmitRermination`,
@@ -409,7 +414,7 @@ const Index = (props) => {
         setPopVisible(false)
         onFinish(2, pageIndex, pageSize)
       }
-    }); 
+    });
   }
   const forward = (values,row)=>{
     props.dispatch({
@@ -423,7 +428,7 @@ const Index = (props) => {
         setPopVisible2(false)
         onFinish(2, pageIndex, pageSize)
       }
-    }); 
+    });
   }
   const [data, setData] = useState([1])
 
@@ -439,7 +444,7 @@ const Index = (props) => {
     setHandleVisible(true)
     setData(row)
   }
-  
+
   const [investigateVisible, setInvestigateVisible] = useState(false)
   const investigate = (row) => {
     setInvestigateVisible(true)
@@ -471,7 +476,7 @@ const Index = (props) => {
              setPopVisible2(false)
             }
         }
-      
+
       });
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -524,7 +529,7 @@ const Index = (props) => {
           </Form.Item>
           </Spin>
         </Col>
-       
+
         <Col span={8} >
           <Form.Item name='projectCode' label='项目编号' >
             <Input placeholder="合同编号、立项号" allowClear />
@@ -637,24 +642,59 @@ const Index = (props) => {
                 <Col span={24}>
                     <Form.Item label='处理办法'>
                     {data?.ProcessedMethod}
-                   </Form.Item> 
+                   </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label='处理人'>
                     {data?.ProcessedByName}
-                   </Form.Item> 
+                   </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label='处理填写时间'>
                     {data?.ProcessedTime}
-                   </Form.Item> 
+                   </Form.Item>
                 </Col>
               </Row>
       </div>
     </Form>
   }
 
-
+  // 仅展示所有数据
+  if(viewOnlyAll) {
+    return(
+    <div className={styles.detailModalSty}>
+      {searchComponents2(1)}
+      <SdlTable
+        style={{ marginTop: 6 }}
+        resizable
+        loading={tableLoading2}
+        bordered
+        dataSource={tableDatas2}
+        columns={columns(1)}
+        pagination={{
+          total: tableTotal2,
+          pageSize: pageSize2,
+          current: pageIndex2,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          onChange: handleTableChange2,
+        }}
+      />
+          <Modal
+            visible={detailVisible}
+            title={'调查'}
+            onCancel={() => { setDetailVisible(false)}}
+            destroyOnClose
+            wrapClassName={`fullScreenModal ${styles.modalSty} ${styles.detailModalSty}`}
+            mask={false}
+            footer={null}
+          >
+            <DispatchDetails data={data}/>
+            <InvestigaContent data={data}/>
+            <ProcessResultsComponents data={data}/>
+          </Modal>
+    </div>
+  )}
   return (
     <div className={styles.customerSatisfacQuerySty}>
       <BreadcrumbWrapper>
@@ -683,12 +723,12 @@ const Index = (props) => {
             title={'调查'}
             onCancel={() => { setDetailVisible(false)}}
             destroyOnClose
-            wrapClassName={`spreadOverModal ${styles.modalSty} ${styles.detailModalSty}`}
+            wrapClassName={props.modalWrapClassName || `spreadOverModal ${styles.modalSty} ${styles.detailModalSty}`}
             mask={false}
             footer={null}
           >
           <DispatchDetails data={data}/>
-          <InvestigaContent data={data}/> 
+          <InvestigaContent data={data}/>
           <ProcessResultsComponents data={data}/>
           </Modal>
           <Modal
@@ -718,7 +758,7 @@ const Index = (props) => {
             }}
           />
           </Modal>
-          
+
       </BreadcrumbWrapper>
     </div>
   );

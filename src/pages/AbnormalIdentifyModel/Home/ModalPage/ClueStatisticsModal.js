@@ -189,7 +189,7 @@ const ClueStatisticsModal = props => {
 
     const sameColumns = [
       {
-        title: 'CEMS运行管理异常（条）',
+        title: '运行管理异常（条）',
         dataIndex: 'Count_3',
         key: 'Count_3',
         width: 160,

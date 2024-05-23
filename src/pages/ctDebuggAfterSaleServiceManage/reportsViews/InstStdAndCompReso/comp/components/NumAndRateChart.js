@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-16 16:36:46
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-17 16:19:10
+ * @Last Modified time: 2024-05-21 14:42:51
  * @Description:  投诉解决率 - 图表
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -10,8 +10,8 @@ import { connect } from 'dva';
 import { Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
-const dvaPropsData = ({ loading, instStdAndCompReso }) => ({
-  loading: loading.effects[`instStdAndCompReso/GetInstallationDebugRate`],
+const dvaPropsData = ({ loading, reportsAndViews }) => ({
+  loading: loading.effects[`reportsAndViews/GetInstallationDebugRate`],
 });
 
 const NumAndRateChart = props => {

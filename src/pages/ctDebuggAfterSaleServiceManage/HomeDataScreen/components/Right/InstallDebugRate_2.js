@@ -1,20 +1,50 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Row, Col } from 'antd';
+import { Row, Col, Modal } from 'antd';
 import styles from '../../styles.less';
 import HomeCard from '../HomeCard';
 import ReactEcharts from 'echarts-for-react';
+import moment from 'moment';
+import InstallDebugger from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/InstStdAndCompReso/install';
 
 let myChart;
-const dvaPropsData = ({ loading }) => ({});
+const dvaPropsData = ({ loading, ctDataScreen }) => ({
+  loading: loading.effects['ctDataScreen/GetInstallationDebuggingAnalysis'],
+});
 
 const InstallDebugRate = props => {
-  // const runChart = useRef();
-  // const overChart = useRef();
-  // let runChart, overChart;
+  const { dispatch, loading } = props;
+
   const [echarts, setEcharts] = useState();
+  const [InstallationDebuggingRate, setInstallationDebuggingRate] = useState({
+    Excellent: 0,
+    Qualified: 0,
+    Unqualified: 0,
+    NoPhotos: 0,
+    NoNeed: 0,
+    Rate: 0,
+  });
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {}, []);
+
+  const getData = value => {
+    dispatch({
+      type: 'ctDataScreen/GetInstallationDebuggingAnalysis',
+      payload: {
+        bTime: moment(value[0]).format('YYYY-MM-DD HH:mm:ss'),
+        eTime: moment(value[1]).format('YYYY-MM-DD HH:mm:ss'),
+      },
+      callback: res => {
+        // 安装调试达标率
+        setInstallationDebuggingRate(res.InstallationDebuggingRate);
+      },
+    });
+  };
+
+  const onOpenModal = () => {
+    setOpen(true);
+  };
 
   const getOption = () => {
     if (!echarts) {
@@ -22,15 +52,14 @@ const InstallDebugRate = props => {
     }
 
     let seriesData = [
-      { value: 5, name: '优秀' },
-      { value: 5, name: '合格' },
-      { value: 1, name: '不合格' },
-      { value: 4, name: '无照片' },
-      { value: 12, name: '/' },
+      { value: InstallationDebuggingRate.Excellent, name: '优秀' },
+      { value: InstallationDebuggingRate.Qualified, name: '合格' },
+      { value: InstallationDebuggingRate.Unqualified, name: '不合格' },
+      { value: InstallationDebuggingRate.NoPhotos, name: '无照片' },
+      { value: InstallationDebuggingRate.NoNeed, name: '/' },
     ];
-    let rate = 88;
+    let rate = InstallationDebuggingRate.Rate;
 
-    console.log('seriesData2', seriesData);
     let option = {
       color: [
         '#5CDC9F',
@@ -43,13 +72,13 @@ const InstallDebugRate = props => {
         '#EAA017',
         '#6c76f1',
       ],
-      tooltip: {
-        trigger: 'item',
-        valueFormatter: function(value) {
-          return value + '%';
-        },
-        // formatter: '{a} <br/>{b} ： {c} ({d}%)',
-      },
+      // tooltip: {
+      //   trigger: 'item',
+      //   valueFormatter: function(value) {
+      //     return value + '套';
+      //   },
+      //   // formatter: '{a} <br/>{b} ： {c} ({d}%)',
+      // },
       title: {
         text: '{val|' + rate + '%}',
         top: 'center',
@@ -66,7 +95,7 @@ const InstallDebugRate = props => {
       },
       series: [
         {
-          name: '服务时长占比',
+          name: '安装调试占比',
           type: 'pie',
           radius: [60, 100],
           roseType: 'area',
@@ -138,13 +167,13 @@ const InstallDebugRate = props => {
     <HomeCard
       style={{ minHeight: 320 }}
       title="安装调试达标率"
-      bodyStyle={
-        {
-          // height: 'calc(100% - 110px)',
-          // padding: '10px',
-          // overflowY: 'auto',
-        }
-      }
+      timeTypes={['上月', '本年']}
+      onChange={value => {
+        getData(value);
+      }}
+      onClick={onOpenModal}
+      bodyStyle={{}}
+      loading={loading}
     >
       <ReactEcharts
         ref={echart => {
@@ -153,7 +182,39 @@ const InstallDebugRate = props => {
         option={getOption(1, 82.71)}
         lazyUpdate={true}
         style={{ height: '100%', width: '100%' }}
+        onEvents={{
+          click: onOpenModal,
+        }}
       />
+
+      <Modal
+        title={`安装调试达标率`}
+        wrapClassName="fullScreenModal"
+        open={open}
+        destroyOnClose
+        footer={false}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        bodyStyle={{ padding: '10px 0' }}
+      >
+        {open && (
+          <InstallDebugger
+            hideBreadcrumb
+            modalWrapClassName="fullScreenModal"
+            location={{
+              pathname: '/ctManage/reportsViews/InstStdAndCompReso/install',
+              query: {},
+            }}
+            match={{
+              path: '/ctManage/reportsViews/InstStdAndCompReso/install',
+              url: '/ctManage/reportsViews/InstStdAndCompReso/install',
+              isExact: true,
+              params: {},
+            }}
+          />
+        )}
+      </Modal>
     </HomeCard>
   );
 };
