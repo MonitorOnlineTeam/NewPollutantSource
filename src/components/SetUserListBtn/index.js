@@ -68,9 +68,10 @@ const Index = (props) => {
 
     const [targetUserKeys, setTargetUserKeys] = useState()
     const userChange = (nextTargetKeys, direction, moveKeys) => {
+        console.log(nextTargetKeys, direction, moveKeys)
         setTargetUserKeys(nextTargetKeys)
         props.addSetUser({
-            userIdList: direction === 'right' ? nextTargetKeys : moveKeys,
+            userIdList: moveKeys,
             state: direction === 'right' ? 1 : 2,
             type: type,
         })

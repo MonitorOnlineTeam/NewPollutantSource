@@ -90,13 +90,6 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    addSetUser: (payload, callback) => { //设置人员
-      dispatch({
-        type: `common/addSetUser`,
-        payload: payload,
-        callback: callback
-      })
-    },
     getSetUser: (payload, callback) => { //获取设置人员
       dispatch({
         type: `common/getSetUser`,

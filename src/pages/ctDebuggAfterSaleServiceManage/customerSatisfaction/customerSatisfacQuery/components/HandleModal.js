@@ -33,7 +33,7 @@ const Index = (props) => {
 
 
 
-  const { visible, data,submitProcessedLoading,completeFinish} = props;
+  const { visible, data,submitProcessedLoading,completeFinish,satisfactionSurveyLoading} = props;
  
 
 
@@ -125,7 +125,7 @@ const Index = (props) => {
   return (
           <Modal
             visible={visible}
-            title={<Row justify='space-between'><span>处理</span><DispatchDetailsBtn data={{...list,ID:list.DispatchId}}/></Row>}
+            title={<Row justify='space-between'><span>处理</span><DispatchDetailsBtn loading={!!satisfactionSurveyLoading} data={{...list,ID:list?.DispatchId}}/></Row>}
             onCancel={() => { props.onCancel()}}
             destroyOnClose
             wrapClassName={`spreadOverModal ${styles.modalSty}`}
@@ -148,7 +148,7 @@ const Index = (props) => {
             <Steps current={current}>
               {steps.map(item => <Step title={item} />)}
             </Steps>
-              <Spin spinning={!!props.satisfactionSurveyLoading}><div style={{marginTop:18}}>{current==0? <><DispatchDetails data={list}/> <InvestigaContent data={list}/> </>: current==1 ? <HandleComponents />  : <CompleteComponents /> } </div></Spin>
+              <Spin spinning={!!satisfactionSurveyLoading}><div style={{marginTop:18}}>{current==0? <><DispatchDetails data={list}/> <InvestigaContent data={list}/> </>: current==1 ? <HandleComponents />  : <CompleteComponents /> } </div></Spin>
           </Modal>
   );
 };

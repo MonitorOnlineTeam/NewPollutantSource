@@ -93,7 +93,6 @@ const Index = (props) => {
 
   const list = parData? detailData : data;
 
-  console.log(parData)
   const steps = ['派单内容', '调查', '完成']
   const [current, SetCurrent] = useState(0)
 
@@ -143,7 +142,7 @@ const Index = (props) => {
   return (<>
     <Modal
       visible={visible}
-      title={<Row justify='space-between'><span>满意度调查单</span><DispatchDetailsBtn data={{...list,ID:parData? parData.msgid : list?.DispatchId}} /></Row>}
+      title={<Row justify='space-between'><span>满意度调查单</span><DispatchDetailsBtn loading={!!satisfactionSurveyLoading} data={{...list,ID: list?.DispatchId}} /></Row>}
       onCancel={() => { props.onCancel()}}
       destroyOnClose
       wrapClassName={modalWrapClassName || `spreadOverModal ${styles.modalSty}`}
@@ -166,7 +165,7 @@ const Index = (props) => {
       <Steps current={current}>
         {steps.map(item => <Step title={item} />)}
       </Steps>
-      <Spin spinning={!!props.satisfactionSurveyLoading}><div style={{ marginTop: 18 }}>{current == 0 ? <DispatchDetails data={list} /> : current == 1 ? <InvestigateComponents /> : <CompleteComponents />} </div></Spin>
+      <Spin spinning={!!satisfactionSurveyLoading}><div style={{ marginTop: 18 }}>{current == 0 ? <DispatchDetails data={list} /> : current == 1 ? <InvestigateComponents /> : <CompleteComponents />} </div></Spin>
     </Modal>
   </>);
 };

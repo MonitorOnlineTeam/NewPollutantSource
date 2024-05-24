@@ -786,8 +786,9 @@ const Index = (props, ref) => {
     "referenceMaterialsCompleteCount":  {name:'标准物质更换',value:'12'},//废水 标准物质更换
     "coordinationComparisonCompleteCount":  {name:'配合比对',value:'8'},
     "cooperationInspectionCompleteCount":  {name:'配合检查',value:'6'},
+    "dealExceptionCompleteCount":   {name:'异常处理',value:'13'},
     // "matchingComparisonCompleteCount":   {name:'参数核对',value:'5'},
-    // "dealExceptionCompleteCount":   {name:'异常处理',value:'13'},
+   
   }
   const insideOrOutsideWorkGetTaskWorkOrderList = (par) => { //计划内or计划外弹框
     const pars = {
@@ -815,12 +816,13 @@ const Index = (props, ref) => {
     if (type == 1 || type == 2) {
       setInsideWorkType(type)
       setInsideWorkOrderVisible(true)
+      setOutType(type)
     }
     if (type == 3) {
       setOutWorkOrderVisible(true)
       setOutTypeName(outTypeData[outType]['name'])
+      setOutType(outTypeData[outType]['value'])
     }
-    setOutType(outType)
     workRegForm.resetFields();
     workRegForm.setFieldsValue({
       time: queryPar&&[moment(queryPar.beginTime), moment(queryPar.endTime)]
@@ -845,7 +847,7 @@ const Index = (props, ref) => {
         ...values,
         time:undefined,
         regionCode: values.regionCode? values.regionCode : regionCode,
-        taskType: tabType == 1 || tabType == 2 ? tabType : outTypeData[outType]['value'],
+        taskType: tabType == 1 || tabType == 2 ? tabType : outType,
       })
     
   }
@@ -862,7 +864,7 @@ const Index = (props, ref) => {
     const par = {
       ...queryPar,
       entName: workRegForm.getFieldValue('entName'),
-      taskType: outTypeData[outType]['value'],
+      taskType: outType,
       staticType: 3,
       regionCode: regionCode,
       pageIndex: undefined,

@@ -319,18 +319,17 @@ const Index = (props) => {
     let data = [
       { name: '巡检', key: 'inspectionCount', value: workOrderExecuData.inspectionCount, color1: '#0487ED', color2: '#0FD5F9' },
       { name: '校准', key: 'calibrationCount', value: workOrderExecuData.calibrationCount, color1: '#0666E8', color2: '#0487ED' },
-      { name: '维修', key: 'repairCount', value: workOrderExecuData.repairCount, color1: '#3EB076', color2: '#0487ED' },
-      { name: '维护', key: 'maintainReportCount', value: workOrderExecuData.maintainReportCount, color1: '#3EB076', color2: '#A2FFD0' },
-      { name: '异常处理', key: 'dealExceptionCount', value: workOrderExecuData.dealExceptionCount, color1: '#C1C049', color2: '#FFFE95' },
-      { name: '校验测试', key: 'calibrationTestCount', value: workOrderExecuData.calibrationTestCount, color1: '#FFCD5E', color2: '#FF9000' },
-      { name: '配合检查', key: 'cooperationInspectionCount', value: workOrderExecuData.cooperationInspectionCount, color1: '#56E5EB', color2: '#56E5EB' },
-      { name: '配合比对', key: 'coordinationComparisonCount', value: workOrderExecuData.coordinationComparisonCount, color1: '#FF87A7', color2: '#FF87A7' },
-      { name: '合计维护', key: 'maintainCount', value: workOrderExecuData.maintainCount, color1: '#2043B9', color2: '#2043B9' },
+      { name: '维修', key: 'repairCount', value: workOrderExecuData.repairCount, color1: '#3EB076', color2: '#A2FFD0' },
+      { name: '维护', key: 'maintainReportCount', value: workOrderExecuData.maintainReportCount, color1: '#C1C049', color2: '#FFFE95' },
+      { name: '异常处理', key: 'dealExceptionCount', value: workOrderExecuData.dealExceptionCount, color1: '#FFCD5E', color2: '#FF9000' },
+      { name: '校验测试', key: 'calibrationTestCount', value: workOrderExecuData.calibrationTestCount, color1: '#56E5EB', color2: '#56E5EB' },
+      { name: '配合检查', key: 'cooperationInspectionCount', value: workOrderExecuData.cooperationInspectionCount, color1: '#FF87A7', color2: '#FF87A7' },
+      { name: '配合比对', key: 'coordinationComparisonCount', value: workOrderExecuData.coordinationComparisonCount, color1: '#2043B9', color2: '#2043B9' },
       { name: '参数核对', key: 'matchingComparisonCount', value: workOrderExecuData.matchingComparisonCount, color1: '#C8C8C8', color2: '#C8C8C8' },
-      { name: '备品备件更换', key: 'sparesCount', value: workOrderExecuData.sparesCount, color1: '#c41d7f', color2: '#c41d7f' },
-      { name: '易耗品更换', key: 'consumablesCount', value: workOrderExecuData.consumablesCount, color1: '#722ed1', color2: '#722ed1' },
-      { name: '标准物质更换', key: 'standCount', value: workOrderExecuData.standCount, color1: '#13c2c2', color2: '#13c2c2' },
-      { name: '试剂更换', key: 'reagentCount', value: workOrderExecuData.reagentCount, color1: '#eb2f96', color2: '#eb2f96' },
+      { name: '备品备件更换', key: 'sparesCount', value: workOrderExecuData.sparesCount, color1: '#f759ab', color2: '#f759ab' },
+      { name: '易耗品更换', key: 'consumablesCount', value: workOrderExecuData.consumablesCount, color1: '#b37feb', color2: '#b37feb' },
+      { name: '标准物质更换', key: 'standCount', value: workOrderExecuData.standCount, color1: '#5cdbd3', color2: '#5cdbd3' },
+      { name: '试剂更换', key: 'reagentCount', value: workOrderExecuData.reagentCount, color1: '#ff85c0', color2: '#ff85c0' },
     ]
     // #2043B9 #C8C8C8 
     data = data.filter(item => item.value != 0)

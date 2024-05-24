@@ -810,7 +810,8 @@ export const API = {
     /*用户恢复*/
     RecoveryUserInfo: before + '/UserApi/RecoveryUserInfo', //恢复用户信息
     /*短信发送*/
-    GetUserMessageList : before + '/AuthorizeApi/GetUserMessageList',//获取短信推送设置列表
+    GetUserMessageList : before + '/AuthorizeApi/GetUserMessageList',//获取短信推送设置信息
+    ExportUserMessageList : before + '/AuthorizeApi/ExportUserMessageList',//获取短信推送设置 导出
     AddOrUpdUserMessage: before + '/AuthorizeApi/AddOrUpdUserMessage',//添加短信推送人员
     DelUserMessage: before + '/AuthorizeApi/DelUserMessage',//删除短信推送人员
     InsertPointUserMessage: before + '/AuthorizeApi/InsertPointUserMessage',//添加人员短信报警排口

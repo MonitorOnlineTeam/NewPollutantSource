@@ -485,35 +485,29 @@ const Index = (props) => {
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
-          <Form.Item name='projectName' label='项目名称'>
-            <Input placeholder="请输入" allowClear />
-          </Form.Item>
-        </Col>
-        {expand && <>
-          <Col span={8} className={'minWidth'} >
+        <Col span={8} >
             <Form.Item name='projectCode' label='合同编号' >
               <Input placeholder="请输入" allowClear />
             </Form.Item>
           </Col>
+        {expand && <>
           <Col span={8}>
-            <Form.Item name='itemCode' label='立项号'>
+            <Form.Item name='itemCode' label='立项号'  className={'minWidth'}>
               <Input placeholder="请输入" allowClear />
             </Form.Item>
           </Col>
           <Col span={8}>
+          <Form.Item name='projectName' label='项目名称'>
+            <Input placeholder="请输入" allowClear />
+          </Form.Item>
+        </Col>
+          <Col span={8}>
             <Form.Item name='projectType' label='合同类型' >
-              {/* <Select placeholder='请选择' allowClear>
-                <Option></Option>
-              </Select> */}
               <Input placeholder='请输入' allowClear />
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item name='region' label='提供服务大区' >
-              {/* <Select placeholder='请选择' allowClear>
-                <Option></Option>
-              </Select> */}
               <Input placeholder='请输入' allowClear />
             </Form.Item>
           </Col>
