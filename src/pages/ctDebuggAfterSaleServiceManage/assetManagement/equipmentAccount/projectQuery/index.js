@@ -547,7 +547,7 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 394px)' : 'calc(100vh - 314px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 408px)' : 'calc(100vh - 328px)' }}
             dataSource={tableDatas}
             columns={columns}
             pagination={{
