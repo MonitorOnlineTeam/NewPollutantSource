@@ -2,14 +2,14 @@
  * @Author: JiaQi
  * @Date: 2024-04-17 17:12:24
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-21 08:59:03
+ * @Last Modified time: 2024-05-24 14:18:49
  * @Description: 服务响应及时率 - 按人员统计
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
   Form,
-  Typography,
+  Input,
   Button,
   Card,
   Space,
@@ -96,6 +96,7 @@ const UserStatistics = props => {
       {
         title: '序号',
         align: 'center',
+        width: 40,
         ellipsis: true,
         render: (text, record, index) => {
           return index + 1 + (pageIndex - 1) * pageSize;
@@ -185,9 +186,9 @@ const UserStatistics = props => {
   };
 
   return (
-    <Card bodyStyle={{ paddingBottom: 20 }}>
+    <Card bodyStyle={{ paddingBottom: 10, paddingTop: 10 }}>
       <Form
-        id="searchForm"
+        // id="searchForm"
         form={form}
         initialValues={{
           time: [moment().startOf('month'), moment()],
@@ -202,8 +203,8 @@ const UserStatistics = props => {
         // }}
       >
         <Space align="middle">
-          <Form.Item name="userID" label="姓名">
-            <Select
+          <Form.Item name="userID" label="姓名/工号">
+            {/* <Select
               placeholder="请选择"
               showSearch
               optionFilterProp="children"
@@ -217,7 +218,8 @@ const UserStatistics = props => {
                   </Option>
                 );
               })}
-            </Select>
+            </Select> */}
+            <Input placeholder="请输入姓名/工号"/>
           </Form.Item>
           <Form.Item name="time" label="离开现场时间" style={{ marginLeft: 20 }}>
             <RangePicker_

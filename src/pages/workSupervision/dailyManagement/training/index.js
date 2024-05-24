@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-05-10 14:18:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-15 20:01:11
+ * @Last Modified time: 2024-05-24 16:03:05
  * @Description:  人员培训
  */
 import React, { useState, useEffect } from 'react';
@@ -97,6 +97,7 @@ const Training = props => {
         dataIndex: 'LargeRegion',
         key: 'LargeRegion',
         ellipsis: true,
+        width: 200,
         render: (text, record, index) => {
           if (type === 'ct') {
             return text;

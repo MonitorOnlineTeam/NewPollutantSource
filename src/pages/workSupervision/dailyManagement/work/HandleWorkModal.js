@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:54:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-10 10:34:29
+ * @Last Modified time: 2024-05-23 16:21:11
  * @Description：部门内其他工作事项
  */
 import React, { useState, useEffect } from 'react';
@@ -43,7 +43,6 @@ const HandleWorkModal = props => {
   // 提交任务单
   const onFinish = async () => {
     const values = await form.validateFields();
-    console.log('values', values);
     let body = {
       ...values,
       WorkTime: moment(values.WorkTime).format('YYYY-MM-DD HH:mm:ss'),
@@ -52,7 +51,6 @@ const HandleWorkModal = props => {
       ctOperation: CTOperation,
       UserId: editData.UserId,
     };
-    console.log('body', body);
     // return;
     props.dispatch({
       type: 'wordSupervision/InsOrUpdOtherWork',
@@ -64,7 +62,6 @@ const HandleWorkModal = props => {
       },
     });
   };
-  console.log('editData', editData);
   return (
     <>
       <Modal

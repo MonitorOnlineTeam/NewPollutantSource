@@ -148,6 +148,7 @@ const ChecklistRecordAndManagement = props => {
     let columns = [
       {
         title: '序号',
+        width: 40,
         // dataIndex: 'index',
         // key: 'index',
         // render: (text, record, index) => {
@@ -155,9 +156,20 @@ const ChecklistRecordAndManagement = props => {
         // },
       },
       {
-        title: !type ? '省区' : '大区',
+        title: '大区',
+        dataIndex: 'LargeRegion',
+        key: 'LargeRegion',
+        ellipsis: true,
+        width: 200,
+
+      },
+      {
+        title: '省份',
         dataIndex: 'RegionName',
         key: 'RegionName',
+        ellipsis: true,
+        width: 200,
+
       },
       {
         title: '培训人',
@@ -168,6 +180,7 @@ const ChecklistRecordAndManagement = props => {
         title: '培训时间',
         dataIndex: 'TrainTime',
         key: 'TrainTime',
+        width: 200,
         sorter: (a, b) => moment(a.TrainTime).valueOf() - moment(b.TrainTime).valueOf(),
         render: (text, record) => {
           return moment(text).format('YYYY-MM-DD');
@@ -194,7 +207,7 @@ const ChecklistRecordAndManagement = props => {
         fixed: 'right',
         render: (text, record) => {
           if (record.IsEdit) {
-          // if (true) {
+            // if (true) {
             return (
               <>
                 <Tooltip title="编辑">
@@ -228,6 +241,11 @@ const ChecklistRecordAndManagement = props => {
           return '-';
         },
       });
+    }
+
+    if (type === 'ct') {
+      // 成套不显示省份
+      columns = columns.filter(item => item.dataIndex !== 'RegionName');
     }
 
     return columns;
@@ -363,8 +381,11 @@ const ChecklistRecordAndManagement = props => {
         >
           <Training
             type={type === 'ct' ? 1 : ''}
-            taskInfo={taskInfo}
-            editData={editData}
+            taskInfo={{
+              ...editData,
+              ID: editData.DailyTaskID,
+            }}
+            // editData={editData}
             onCancel={() => {
               setEditOpen(false);
             }}

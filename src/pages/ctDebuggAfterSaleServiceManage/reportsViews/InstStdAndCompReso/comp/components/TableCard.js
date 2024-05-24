@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-16 16:37:38
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-21 14:42:47
+ * @Last Modified time: 2024-05-23 14:40:14
  * @Description:  投诉解决率表格
  */
 import React, { useState, useEffect } from 'react';
@@ -60,6 +60,7 @@ const TableCard = props => {
             key: `${item.key}ComplaintsNum`,
             width: 100,
             align: 'center',
+            fixed: item.key.indexOf('年') > -1 ? 'left' : false,
             sorter: (a, b) => a[`${item.key}ComplaintsNum`] - b[`${item.key}ComplaintsNum`],
           },
           {
@@ -68,6 +69,7 @@ const TableCard = props => {
             key: `${item.key}YesComplaintsNum`,
             width: 100,
             align: 'center',
+            fixed: item.key.indexOf('年') > -1 ? 'left' : false,
             sorter: (a, b) => a[`${item.key}YesComplaintsNum`] - b[`${item.key}YesComplaintsNum`],
           },
           {
@@ -76,12 +78,14 @@ const TableCard = props => {
             key: `${item.key}NoComplaintsNum`,
             width: 100,
             sorter: (a, b) => a[`${item.key}NoComplaintsNum`] - b[`${item.key}NoComplaintsNum`],
+            fixed: item.key.indexOf('年') > -1 ? 'left' : false,
             align: 'center',
           },
           {
             title: '解决率',
             dataIndex: `${item.key}ComplaintsRate`,
             key: `${item.key}ComplaintsRate`,
+            fixed: item.key.indexOf('年') > -1 ? 'left' : false,
             width: 100,
             sorter: (a, b) =>
               a[`${item.key}ComplaintsRate`].replace('%', '') -
@@ -100,7 +104,7 @@ const TableCard = props => {
         title: '大区',
         dataIndex: 'ServiceAreaName',
         key: 'ServiceAreaName',
-        width: 200,
+        width: 150,
         fixed: 'left',
       },
       ...columnList,

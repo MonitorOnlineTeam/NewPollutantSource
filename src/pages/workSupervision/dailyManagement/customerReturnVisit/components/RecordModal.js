@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 16:18:02
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-15 19:02:04
+ * @Last Modified time: 2024-05-24 14:58:07
  * @Description:  客户现场回访记录弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -107,7 +107,7 @@ const RecordModal = props => {
         title: '序号',
         align: 'center',
         ellipsis: true,
-        width: 60,
+        width: 40,
         render: (text, record, index) => {
           return index + 1 + (pageIndex - 1) * pageSize;
         },
@@ -117,18 +117,22 @@ const RecordModal = props => {
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
+        width: 200,
       },
       {
         title: '省份',
         dataIndex: 'CityName',
         key: 'CityName',
         ellipsis: true,
+        width: 200,
+
       },
       {
         title: '任务派发时间',
         dataIndex: 'CreateTime',
         key: 'CreateTime',
         ellipsis: true,
+        width: 200,
       },
       {
         title: '是否完成',
@@ -148,12 +152,14 @@ const RecordModal = props => {
         dataIndex: 'CheckUserName',
         key: 'CheckUserName',
         ellipsis: true,
+        width: 100,
       },
       {
         title: '任务结束时间',
         dataIndex: 'ShowTime',
         key: 'ShowTime',
         ellipsis: true,
+        width: 200,
         render: (text, record) => {
           return text || '-';
         },
@@ -191,6 +197,7 @@ const RecordModal = props => {
         layout="inline"
         initialValues={{
           ...queryParams,
+          isComplete: 0,
         }}
         style={{ marginTop: 10, marginBottom: 10 }}
       >
@@ -210,6 +217,13 @@ const RecordModal = props => {
               format="YYYY-MM"
               allowClear={false}
             />
+          </Form.Item>
+          <Form.Item name="isComplete" label="是否完成">
+            <Radio.Group style={{ width: 180 }}>
+              <Radio value={0}>全部</Radio>
+              <Radio value={1}>是</Radio>
+              <Radio value={2}>否</Radio>
+            </Radio.Group>
           </Form.Item>
           <Form.Item>
             <Space style={{ marginLeft: 10 }}>

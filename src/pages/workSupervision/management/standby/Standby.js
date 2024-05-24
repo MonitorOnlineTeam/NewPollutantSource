@@ -16,7 +16,7 @@ const dvaPropsData = ({ loading, autoform }) => ({
 });
 
 const Standby = props => {
-  const { dataTrustDataSource, dataTrustTotal, loading, exportLoading,isModal} = props;
+  const { dataTrustDataSource, dataTrustTotal, loading, exportLoading, isModal } = props;
   const [pageSize, setPageSize] = useState(20);
   const [handleAddVisible, setHandleAddVisible] = useState(false);
   const [handleEditVisible, setHandleEditVisible] = useState(false);
@@ -40,8 +40,8 @@ const Standby = props => {
   }
 
   return (
-    <BreadcrumbWrapper   hideBreadcrumb={isModal}>
-      <Card>
+    <BreadcrumbWrapper hideBreadcrumb={isModal}>
+      <Card bordered={false} bodyStyle={{ padding: 0 }}>
         <SearchWrapper configId={CONFIGID} />
         <AutoFormTable
           noload

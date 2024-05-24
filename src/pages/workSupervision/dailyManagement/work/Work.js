@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:38:17
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-15 19:46:59
+ * @Last Modified time: 2024-05-23 16:20:35
  * @Description：部门内其他工作事项
  */
 
@@ -132,6 +132,7 @@ const Work = props => {
     let columns = [
       {
         title: '序号',
+        width: 40,
         // dataIndex: 'index',
         // key: 'index',
         // render: (text, record, index) => {
@@ -252,7 +253,7 @@ const Work = props => {
         >
           <Space wrap>
             <Form.Item label="工作时间" name="date">
-              <RangePicker_ />
+              <RangePicker_ picker="day" format="YYYY-MM-DD" />
             </Form.Item>
             <Form.Item label="内容项" name="WorkContent">
               {WorkType == '1' ? (

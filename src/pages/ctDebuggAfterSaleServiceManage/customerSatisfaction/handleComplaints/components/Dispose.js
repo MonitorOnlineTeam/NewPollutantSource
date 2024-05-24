@@ -14,7 +14,7 @@ import {
   Divider,
   Descriptions,
   Upload,
-  Radio,
+  InputNumber,
   Result,
   DatePicker,
 } from 'antd';
@@ -129,7 +129,13 @@ const Dispose = props => {
               checkRules['double'],
             ]}
           >
-            <Input placeholder="请输入" addonBefore="¥" addonAfter="RMB" allowClear />
+            <InputNumber
+              style={{ width: '100%' }}
+              placeholder="请输入"
+              addonBefore="¥"
+              addonAfter="RMB"
+              allowClear
+            />
           </Form.Item>
           <Form.Item
             name="preventiveMeasure"

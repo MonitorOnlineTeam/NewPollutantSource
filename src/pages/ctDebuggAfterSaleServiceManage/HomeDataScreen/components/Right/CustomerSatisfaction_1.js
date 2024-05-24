@@ -9,7 +9,7 @@ import CustomerSatisfacQuery from '@/pages/ctDebuggAfterSaleServiceManage/custom
 
 let myChart;
 const dvaPropsData = ({ loading, ctDataScreen }) => ({
-  loading: loading.effects['ctDataScreen/GetInstallationDebuggingAnalysis'],
+  // loading: loading.effects['ctDataScreen/GetInstallationDebuggingAnalysis'],
 });
 
 const CustomerSatisfaction = props => {
@@ -20,12 +20,14 @@ const CustomerSatisfaction = props => {
     TechnicalLevelRate: 0,
   });
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const { dispatch, loading } = props;
+  const { dispatch } = props;
 
   useEffect(() => {}, []);
 
   const getData = value => {
+    setLoading(true);
     dispatch({
       type: 'ctDataScreen/GetInstallationDebuggingAnalysis',
       payload: {
@@ -33,7 +35,10 @@ const CustomerSatisfaction = props => {
         eTime: moment(value[1]).format('YYYY-MM-DD HH:mm:ss'),
       },
       callback: res => {
-        setSatisfactionSurveyRate(res.SatisfactionSurveyRate);
+        if (res.IsSuccess) {
+          setSatisfactionSurveyRate(res.Datas.SatisfactionSurveyRate);
+        }
+        setLoading(false);
       },
     });
   };

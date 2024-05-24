@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-01 15:21:31
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-16 15:29:28
+ * @Last Modified time: 2024-05-23 10:37:53
  * @Description:  查看全部
  */
 
@@ -36,6 +36,7 @@ const AllViewModal = props => {
       onCancel={() => {
         onCancel();
       }}
+      bodyStyle={{ padding: 0 }}
     >
       {isModalOpen && <HandleComplaintsContentPage isAll />}
     </Modal>

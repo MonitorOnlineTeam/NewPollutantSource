@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-02 11:09:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-22 14:22:01
+ * @Last Modified time: 2024-05-23 16:42:50
  * @Description:  客户投诉解决页面内容
  */
 import React, { useState, useEffect } from 'react';
@@ -253,7 +253,7 @@ const HandleComplaintsContentPage = props => {
         width: 220,
       },
       {
-        title: '扣款金额',
+        title: '扣款金额（RMB）',
         dataIndex: 'DeductionAmount',
         key: 'DeductionAmount',
         ellipsis: true,
@@ -290,7 +290,6 @@ const HandleComplaintsContentPage = props => {
         width: 150,
         ellipsis: true,
         render: (text, record) => {
-          console.log('isAll', isAll);
           return (
             <>
               {record.IsEidtOrDel && !isAll && (
@@ -384,7 +383,7 @@ const HandleComplaintsContentPage = props => {
     return (
       <div>
         <Form
-          id="searchForm"
+          // id="searchForm"
           form={form}
           // layout="inline"
           initialValues={{

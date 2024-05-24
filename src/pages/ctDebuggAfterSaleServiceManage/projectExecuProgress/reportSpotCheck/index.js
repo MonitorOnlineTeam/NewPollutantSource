@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-22 15:39:53
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-22 14:40:24
+ * @Last Modified time: 2024-05-24 16:16:03
  * @Description:  服务报告抽查
  */
 import React, { useState, useEffect } from 'react';
@@ -114,9 +114,6 @@ const ServiceIsNotTimely = props => {
       payload: {
         ...body,
         isExport: 1,
-      },
-      callback: res => {
-        handleTableChange(1, 20);
       },
     });
   };
@@ -418,7 +415,7 @@ const ServiceIsNotTimely = props => {
             htmlType="submit"
             loading={queryLoading}
             onClick={() => {
-              getTableDataSource(1, 20);
+              handleTableChange(1, 20);
             }}
           >
             查询
@@ -426,7 +423,7 @@ const ServiceIsNotTimely = props => {
           <Button
             onClick={() => {
               form.resetFields();
-              getTableDataSource(1, 20);
+              handleTableChange(1, 20);
             }}
           >
             重置

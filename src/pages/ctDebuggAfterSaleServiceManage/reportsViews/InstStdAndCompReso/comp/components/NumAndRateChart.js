@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-16 16:36:46
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-21 14:42:51
+ * @Last Modified time: 2024-05-23 14:37:07
  * @Description:  投诉解决率 - 图表
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -22,7 +22,7 @@ const NumAndRateChart = props => {
   useEffect(() => {}, []);
 
   const getOption = () => {
-    const lineColor = '#F6A821';
+    const lineColor = '#faad14';
 
     const color = [
       ['#89C9FF', '#399FF5'],
@@ -135,22 +135,23 @@ const NumAndRateChart = props => {
             },
           },
           itemStyle: {
-            color: {
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: color[0][0], // 开始颜色
-                },
-                {
-                  offset: 1,
-                  color: color[0][1], // 结束颜色
-                },
-              ],
-            },
+            color: color[0][1],
+            // color: {
+            //   x: 0,
+            //   y: 0,
+            //   x2: 0,
+            //   y2: 1,
+            //   colorStops: [
+            //     {
+            //       offset: 0,
+            //       color: color[0][0], // 开始颜色
+            //     },
+            //     {
+            //       offset: 1,
+            //       color: color[0][1], // 结束颜色
+            //     },
+            //   ],
+            // },
           },
           z: 2,
         },
@@ -176,22 +177,24 @@ const NumAndRateChart = props => {
             },
           },
           itemStyle: {
-            color: {
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: color[1][0], // 开始颜色
-                },
-                {
-                  offset: 1,
-                  color: color[1][1], // 结束颜色
-                },
-              ],
-            },
+            color: lineColor,
+
+            // color: {
+            //   x: 0,
+            //   y: 0,
+            //   x2: 0,
+            //   y2: 1,
+            //   colorStops: [
+            //     {
+            //       offset: 0,
+            //       color: color[1][0], // 开始颜色
+            //     },
+            //     {
+            //       offset: 1,
+            //       color: color[1][1], // 结束颜色
+            //     },
+            //   ],
+            // },
           },
           z: 3,
         },
@@ -234,12 +237,12 @@ const NumAndRateChart = props => {
           data: rate,
           yAxisIndex: 1,
           itemStyle: {
-            color: lineColor,
+            color: color[1][1],
           },
           label: {
             show: true,
             textStyle: {
-              color: lineColor,
+              color: color[1][1],
               fontWeight: 'bold',
             },
             formatter: function(params) {

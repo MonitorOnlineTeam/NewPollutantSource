@@ -337,7 +337,7 @@ const reportAudit = props => {
                   htmlType="submit"
                   loading={queryLoading}
                   onClick={() => {
-                    getTableDataSource(1, 20);
+                    handleTableChange(1, 20);
                   }}
                 >
                   查询
@@ -345,7 +345,7 @@ const reportAudit = props => {
                 <Button
                   onClick={() => {
                     form.resetFields();
-                    getTableDataSource(1, 20);
+                    handleTableChange(1, 20);
                   }}
                 >
                   重置

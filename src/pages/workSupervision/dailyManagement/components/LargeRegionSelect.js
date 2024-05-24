@@ -49,7 +49,13 @@ const LargeRegionSelect = props => {
         ]}
         style={{ ...formItemStyle }}
       >
-        <Select placeholder="请选择" style={{ width: 140, ...style }} allowClear>
+        <Select
+          placeholder="请选择"
+          style={{ width: 140, ...style }}
+          allowClear
+          showSearch
+          optionFilterProp="children"
+        >
           {largeRegionList.map(item => {
             return (
               <Option value={item.ID} key={item.ID}>
@@ -73,7 +79,13 @@ const LargeRegionSelect = props => {
         ]}
         style={{ ...formItemStyle }}
       >
-        <Select placeholder="请选择" style={{ width: 140, ...style }} allowClear>
+        <Select
+          placeholder="请选择"
+          style={{ width: 140, ...style }}
+          allowClear
+          showSearch
+          optionFilterProp="children"
+        >
           {provinceAllList.map(item => {
             return (
               <Option value={item.RegionCode} key={item.RegionCode}>
