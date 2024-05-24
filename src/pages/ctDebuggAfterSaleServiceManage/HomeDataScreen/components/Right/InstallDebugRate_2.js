@@ -9,11 +9,11 @@ import InstallDebugger from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews
 
 let myChart;
 const dvaPropsData = ({ loading, ctDataScreen }) => ({
-  loading: loading.effects['ctDataScreen/GetInstallationDebuggingAnalysis'],
+  // loading: loading.effects['ctDataScreen/GetInstallationDebuggingAnalysis'],
 });
 
 const InstallDebugRate = props => {
-  const { dispatch, loading } = props;
+  const { dispatch } = props;
 
   const [echarts, setEcharts] = useState();
   const [InstallationDebuggingRate, setInstallationDebuggingRate] = useState({
@@ -25,10 +25,12 @@ const InstallDebugRate = props => {
     Rate: 0,
   });
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {}, []);
 
   const getData = value => {
+    setLoading(true);
     dispatch({
       type: 'ctDataScreen/GetInstallationDebuggingAnalysis',
       payload: {
@@ -37,7 +39,10 @@ const InstallDebugRate = props => {
       },
       callback: res => {
         // 安装调试达标率
-        setInstallationDebuggingRate(res.InstallationDebuggingRate);
+        if (res.IsSuccess) {
+          setInstallationDebuggingRate(res.Datas.InstallationDebuggingRate);
+        }
+        setLoading(false);
       },
     });
   };

@@ -208,7 +208,7 @@ const RecordAndManagement = props => {
         key: 'UserName',
       },
       {
-        title: '回访日期',
+        title: '回访时间',
         dataIndex: 'ReturnTime',
         key: 'ReturnTime',
         sorter: (a, b) => moment(a.ReturnTime).valueOf() - moment(b.ReturnTime).valueOf(),
@@ -311,7 +311,7 @@ const RecordAndManagement = props => {
                   formItemStyle={{ display: mode === 'record' ? 'block' : 'none' }}
                 />
                 <Form.Item name="searcahUserName" label="回访人">
-                  <Input style={{ width: 200 }} placeholder="回访人" />
+                  <Input style={{ width: 200 }} placeholder="回访人" allowClear />
                 </Form.Item>
                 <Form.Item name="time" label="回访时间">
                   <RangePicker_
@@ -322,7 +322,7 @@ const RecordAndManagement = props => {
                   />
                 </Form.Item>
                 <Form.Item name="customerName" label="客户名称">
-                  <Input style={{ width: 200 }} placeholder="客户名称" />
+                  <Input style={{ width: 200 }} placeholder="客户名称" allowClear />
                 </Form.Item>
                 <Form.Item
                   name="Score"

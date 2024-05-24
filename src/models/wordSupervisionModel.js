@@ -1030,5 +1030,87 @@ export default Model.extend({
         downloadFile(result.Datas);
       }
     },
+
+    // 纪律检查统计列表
+    *GetDisciplineCheckList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.DisciplineCheck.GetDisciplineCheckList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 纪律检查管理、记录
+    *GetDisciplineCheckInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.DisciplineCheck.GetDisciplineCheckInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 纪律检查管理、记录 - 导出
+    *ExportDisciplineCheckInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.DisciplineCheck.ExportDisciplineCheckInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 获取纪律检查详情
+    *GetRecordLogInfor({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.DailyManagement.DisciplineCheck.GetRecordLogInfor}?LogID=${payload.ID}`,
+        {},
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 修改纪律检查
+    *UpdateDisciplineCheckManage({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.DisciplineCheck.UpdateDisciplineCheckManage,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('修改成功！');
+        callback && callback(result);
+      }
+    },
+    // 导出纪律检查
+    *ExportDisciplineCheckList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.DisciplineCheck.ExportDisciplineCheckList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 删除纪律检查
+    *DeleteDisciplineCheckManage({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.DailyManagement.DisciplineCheck.DeleteDisciplineCheckManage}?LogID=${payload.ID}`,
+        {},
+      );
+      if (result.IsSuccess) {
+        callback && callback();
+        message.success('删除成功！');
+      }
+    },
   },
 });

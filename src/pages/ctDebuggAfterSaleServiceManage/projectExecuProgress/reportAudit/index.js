@@ -193,8 +193,8 @@ const reportAudit = props => {
         width: 60,
         ellipsis: true,
         render: (text, record) => {
-          return (
-            record.IsFlag ? <Tooltip title="审核" placement="left">
+          return record.IsFlag ? (
+            <Tooltip title="审核" placement="left">
               <a
                 onClick={() => {
                   setIsModalOpen(true);
@@ -203,7 +203,9 @@ const reportAudit = props => {
               >
                 <AuditOutlined style={{ fontSize: 16 }} />
               </a>
-            </Tooltip> : '-'
+            </Tooltip>
+          ) : (
+            '-'
           );
         },
       },
@@ -311,7 +313,7 @@ const reportAudit = props => {
             htmlType="submit"
             loading={queryLoading}
             onClick={() => {
-              getTableDataSource(1, 20);
+              handleTableChange(1, 20);
             }}
           >
             查询
@@ -319,7 +321,7 @@ const reportAudit = props => {
           <Button
             onClick={() => {
               form.resetFields();
-              getTableDataSource(1, 20);
+              handleTableChange(1, 20);
             }}
           >
             重置
@@ -357,6 +359,8 @@ const reportAudit = props => {
         <AuditModalPage
           CheckStatus={currentRowData.CheckStatus}
           id={currentRowData.ID}
+          WorkJLID={currentRowData.WorkJLID}
+          AssistantID={currentRowData.AssistantID}
           isModalOpen={isModalOpen}
           onCancel={() => {
             setIsModalOpen(false);

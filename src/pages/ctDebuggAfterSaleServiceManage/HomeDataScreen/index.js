@@ -55,7 +55,6 @@ const HomeDataScreen = props => {
           className={styles.contentWrapper}
         >
           <Col style={{ width: '27%', minWidth: 400 }} className={styles.leftWrapper}>
-            {/* <Space direction="vertical" className=''> */}
             {/* 设备信息总览 */}
             <DeviceInfoCount />
             {/* 项目执行情况 */}
@@ -64,7 +63,6 @@ const HomeDataScreen = props => {
             <TimelyPassRate />
             {/* 服务响应及时率 */}
             <ServiceResponseRate />
-            {/* </Space> */}
           </Col>
           <Col style={{ maxWidth: '46%' }} flex={'auto'} className={styles.centerWrapper}>
             {/* 地图 */}

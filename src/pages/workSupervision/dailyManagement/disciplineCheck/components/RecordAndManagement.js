@@ -460,7 +460,7 @@ const RecordAndManagement = props => {
 
   return (
     <Modal
-      title={mode === 'record' ? '客户现场回访记录' : '客户现场回访管理'}
+      title={mode === 'record' ? '纪律检查记录' : '纪律检查管理'}
       wrapClassName={`spreadOverModal`}
       open={open}
       destroyOnClose
@@ -468,6 +468,7 @@ const RecordAndManagement = props => {
       onCancel={() => {
         onCancel();
       }}
+      bodyStyle={{ padding: '0px 16px' }}
     >
       {getPageContent()}
     </Modal>

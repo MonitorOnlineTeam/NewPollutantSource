@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-29 10:00:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-15 18:54:47
+ * @Last Modified time: 2024-05-24 14:50:23
  * @Description:  客户现场回访
  */
 
@@ -166,7 +166,7 @@ const ReturnVisit = props => {
         width: 200,
       },
       {
-        title: '回访完成率',
+        title: '任务完成率',
         dataIndex: 'CheckRate',
         key: 'CheckRate',
         ellipsis: true,

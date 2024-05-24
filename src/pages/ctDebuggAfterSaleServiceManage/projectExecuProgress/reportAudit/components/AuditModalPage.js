@@ -44,7 +44,16 @@ const AuditModalPage = props => {
   // const [uid, setUid] = useState(cuid());
   const [currentNum, setCurrentNum] = useState();
 
-  const { dispatch, id, CheckStatus, isModalOpen, onCancel, reloadPageData } = props;
+  const {
+    dispatch,
+    id,
+    CheckStatus,
+    isModalOpen,
+    onCancel,
+    reloadPageData,
+    WorkJLID,
+    AssistantID,
+  } = props;
 
   useEffect(() => {}, []);
 
@@ -54,7 +63,7 @@ const AuditModalPage = props => {
       type: `installEquipment/GetAuditPhoto`,
       payload: {
         equipmentAuditId: id,
-        Type: 1
+        Type: 1,
       },
     });
   };
@@ -66,6 +75,8 @@ const AuditModalPage = props => {
         type: 'reportAudit/AuditService',
         payload: {
           id,
+          WorkJLID,
+          AssistantID,
           CheckStatus: CheckStatus,
           ...values,
         },

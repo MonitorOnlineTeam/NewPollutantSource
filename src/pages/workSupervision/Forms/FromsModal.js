@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:56:52
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-15 17:09:57
+ * @Last Modified time: 2024-05-23 15:14:18
  * @Description: 任务单电子表单 - 操作弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -80,6 +80,7 @@ const FromsModal = props => {
         );
       case 6:
         return (
+          // 人员培训
           <Training
             taskInfo={taskInfo}
             editData={editData}

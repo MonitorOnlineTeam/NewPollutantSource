@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-19 16:22:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-15 19:38:51
+ * @Last Modified time: 2024-05-23 16:10:07
  * @Description: 人员培训记录表
  */
 import React, { useState, useEffect } from 'react';
@@ -42,25 +42,64 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const Training = props => {
   const [form] = Form.useForm();
-  const { dispatch, taskInfo, submitLoading, onCancel, editData, onSubmitCallback, TYPE } = props;
+  const { dispatch, taskInfo, submitLoading, onCancel, onSubmitCallback, TYPE } = props;
   const [fileList, setFileList] = useState([]);
   const [uploadId, setUploadId] = useState(cuid());
+  const [editData, setEditData] = useState({});
 
   useEffect(() => {
-    // 处理附件列表
-    if (editData.FilesList) {
-      let _fileList = editData.FilesList?.ImgList.map((item, index) => {
-        return {
-          uid: editData.FilesList?.ImgNameList[index],
-          name: editData.FilesList?.NameList[index],
-          status: 'done',
-          url: `/${item}`,
-        };
-      });
-      setUploadId(editData.FilesList.AttachID);
-      setFileList(_fileList);
-    }
+    // // 处理附件列表
+    // if (editData.FilesList) {
+    //   let _fileList = editData.FilesList?.ImgList.map((item, index) => {
+    //     return {
+    //       uid: editData.FilesList?.ImgNameList[index],
+    //       name: editData.FilesList?.NameList[index],
+    //       status: 'done',
+    //       url: `/${item}`,
+    //     };
+    //   });
+    //   setUploadId(editData.FilesList.AttachID);
+    //   setFileList(_fileList);
+    // }
+    getPageDataByID();
   }, []);
+
+  // 根据ID获取数据
+  const getPageDataByID = () => {
+    dispatch({
+      type: 'wordSupervision/GetPersonTrainList',
+      payload: {
+        BeginTime: '',
+        EndTime: '',
+        type: TYPE,
+        isFlag: 1, // 区分管理
+        dailyTaskID: taskInfo.ID,
+      },
+      callback: res => {
+        if (res.Datas && res.Datas.length) {
+          let data = res.Datas[0];
+          // 处理附件列表
+          let _fileList = data.FilesList?.ImgList.map((item, index) => {
+            return {
+              uid: data.FilesList?.ImgNameList[index],
+              name: data.FilesList?.NameList[index],
+              status: 'done',
+              url: `/${item}`,
+            };
+          });
+          setUploadId(data.FilesList.AttachID);
+          setFileList(_fileList);
+
+          setEditData(data);
+          form.setFieldsValue({
+            ...data,
+            regionCode: data.RegionCode,
+            TrainTime: moment(data.TrainTime),
+          });
+        }
+      },
+    });
+  };
 
   //
   const onFinish = async () => {
@@ -160,7 +199,6 @@ const Training = props => {
       }
     },
   };
-  console.log('editData', editData);
   return (
     <>
       {taskInfo.CreateTime && (

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-17 17:13:10
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-21 09:11:08
+ * @Last Modified time: 2024-05-24 14:16:33
  * @Description:  服务响应及时率 - 基础数据
  */
 import React, { useState, useEffect } from 'react';
@@ -293,7 +293,13 @@ const BasicData = props => {
           {type !== 'user' && (
             <Col span={8}>
               <Form.Item name="serviceAreaCode" label="服务大区">
-                <Select placeholder="请选择服务大区" style={{ width: '100%' }} allowClear>
+                <Select
+                  placeholder="请选择服务大区"
+                  style={{ width: '100%' }}
+                  allowClear
+                  showSearch
+                  optionFilterProp="children"
+                >
                   {largeRegionList.map(item => {
                     return (
                       <Option value={item.ID} key={item.ID} data-childList={item.ChildList}>
@@ -307,7 +313,13 @@ const BasicData = props => {
           )}
           <Col span={8}>
             <Form.Item name="responseStatus" label="响应及时状态">
-              <Select placeholder="请选择" style={{ width: '100%' }} allowClear>
+              <Select
+                placeholder="请选择"
+                style={{ width: '100%' }}
+                allowClear
+                showSearch
+                optionFilterProp="children"
+              >
                 <Option value={1} key={1}>
                   及时
                 </Option>
@@ -315,7 +327,7 @@ const BasicData = props => {
                   不及时
                 </Option>
                 <Option value={3} key={3}>
-                  不参与统计
+                  不参与
                 </Option>
               </Select>
             </Form.Item>
@@ -441,8 +453,8 @@ const BasicData = props => {
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
         <TitleComponents
-          text={<Text type="danger">响应及时判断标准</Text>}
-          style={{ marginTop: 20 }}
+          text={<Text type="danger">响应及时判断标准：</Text>}
+          style={{ marginTop: 20, border: 'none' }}
         />
         <div style={{ fontWeight: 'bold' }}>
           <Row>
@@ -477,7 +489,7 @@ const BasicData = props => {
             <Text type="danger">7. 因客户原因导致不及时的，不参与统计。</Text>
           </Row>
           <Row>
-            <Text type="danger">7. 如客户变更需求服务时间，按第1点统计。</Text>
+            <Text type="danger">8. 如客户变更需求服务时间，按第1点统计。</Text>
           </Row>
         </div>
       </Modal>

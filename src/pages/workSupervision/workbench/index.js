@@ -36,6 +36,7 @@ import InstallEquipmentExamineModal from '@/pages/ctDebuggAfterSaleServiceManage
 import CustomerSatisfacHandleModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery/components/HandleModal';
 import CustomerSatisfaInvestigateModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery/components/InvestigateModal';
 import ReportAuditModal from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/reportAudit/components/AuditModalPage';
+import HandleComplaints from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/handleComplaints/components/Dispose';
 import ProjectQueryDetail from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery/Detail';
 import StandardGasValidityContent from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/standardGasValidity/components/StandardGasValidityContent';
 import router from 'umi/router';
@@ -161,6 +162,10 @@ const Workbench = props => {
 
   const [reportAuditVisible, setReportAuditVisible] = useState(false);
   const [reportAuditData, setReportAuditData] = useState({});
+
+  // 投诉处理
+  const [handleComplaintsModalOpen, setHandleComplaintsModalOpen] = useState(false);
+  const [handleComplaintsData, setHandleComplaintsData] = useState({});
 
   const [projectQueryDetailVisible, setProjectQueryDetailVisible] = useState(false);
   const [projectQueryDetailTitle, setProjectQueryDetailTitle] = useState('详情');
@@ -1188,6 +1193,13 @@ const Workbench = props => {
                                                   msgid: item.ID,
                                                 });
                                               }
+                                            } else if (item.Type === '3') {
+                                              // 投诉处理
+                                              debugger;
+                                              setHandleComplaintsModalOpen(true);
+                                              setHandleComplaintsData({
+                                                ID: item.MsgID,
+                                              });
                                             }
                                           }}
                                           style={{
@@ -1772,6 +1784,20 @@ const Workbench = props => {
             getCtWorkbenchMsg(2);
           }}
         />
+
+        {/* 投诉处理 */}
+        {handleComplaintsModalOpen && (
+          <HandleComplaints
+            id={handleComplaintsData.ID}
+            isModalOpen={handleComplaintsModalOpen}
+            onCancel={() => {
+              setHandleComplaintsModalOpen(false);
+            }}
+            reloadPageData={() => {
+              getCtWorkbenchMsg(3);
+            }}
+          />
+        )}
 
         <Modal //标气有效期预警  项目详情
           visible={projectQueryDetailVisible}

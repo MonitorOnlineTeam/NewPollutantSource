@@ -10,7 +10,7 @@ import {
   Select,
   DatePicker,
   message,
-  Tag,
+  Modal,
   Radio,
   Tooltip,
   Divider,
@@ -22,6 +22,8 @@ import moment from 'moment';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import StandbyRecordModal from './PortableRecordModal';
+import Portable from './index';
+import { permissionButton } from '@/utils/utils';
 
 import Cookie from 'js-cookie';
 
@@ -32,11 +34,13 @@ const dvaPropsData = ({ loading, autoform }) => ({
 
 const PortableBorrow = props => {
   const { dispatch } = props;
+  const [isOpen, setIsOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [insCode, setInsCode] = useState('');
 
-  useEffect(() => {
-  }, []);
+  const buttonList = permissionButton(props.match.path);
+
+  useEffect(() => {}, []);
 
   // 关闭使用记录弹窗
   const onHandleCancel = () => {
@@ -76,6 +80,22 @@ const PortableBorrow = props => {
           isFixedOpera
           isCenter
           hideBtns
+          appendHandleButtons={(selectedRowKeys, selectedRows) => {
+            if (buttonList.includes('PortableManage')) {
+              // if (true) {
+              return (
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                  style={{ marginRight: 8 }}
+                >
+                  便携仪器管理
+                </Button>
+              );
+            }
+          }}
           appendHandleRows={row => {
             return (
               <>
@@ -112,6 +132,22 @@ const PortableBorrow = props => {
           }}
         />
         <StandbyRecordModal visible={visible} onCancel={onHandleCancel} insCode={insCode} />
+        {isOpen && (
+          <Modal
+            centered
+            title="便携仪器管理"
+            open={isOpen}
+            footer={null}
+            wrapClassName="spreadOverModal"
+            mask={false}
+            destroyOnClose
+            onCancel={() => {
+              setIsOpen(false);
+            }}
+          >
+            <Portable isModal />
+          </Modal>
+        )}
       </Card>
     </BreadcrumbWrapper>
   );

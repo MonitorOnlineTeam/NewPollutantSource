@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-03-27 11:11:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-16 16:48:48
+ * @Last Modified time: 2024-05-24 16:03:06
  * @Description:  纪律检查
  */
 
@@ -196,6 +196,11 @@ const DisciplineCheck = props => {
       },
     ];
 
+    if (systemType === '2') {
+      // 成套不显示省份
+      columns = columns.filter(item => item.dataIndex !== 'CityName');
+    }
+
     return columns;
   };
 
@@ -255,17 +260,17 @@ const DisciplineCheck = props => {
                 >
                   导出
                 </Button>
-                {/* {buttonList.includes('disciplineCheck') && ( */}
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    setIsModalOpen2(true);
-                    setMode('management');
-                  }}
-                >
-                  纪律检查管理
-                </Button>
-                {/* )} */}
+                {buttonList.includes('disciplineCheck') && (
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      setIsModalOpen2(true);
+                      setMode('management');
+                    }}
+                  >
+                    纪律检查管理
+                  </Button>
+                )}
                 <Button
                   type="primary"
                   onClick={() => {

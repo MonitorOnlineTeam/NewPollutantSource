@@ -10,8 +10,8 @@ import { API } from '@config/API';
 export default Model.extend({
   namespace: 'ctDataScreen',
   state: {
-  
-  
+
+
   },
   effects: {
     // 获取地图数据
@@ -65,9 +65,7 @@ export default Model.extend({
         API.CtAPI_WJQ.CTDataScreenApi.GetInstallationDebuggingAnalysis,
         payload,
       );
-      if (result.IsSuccess) {
-        callback && callback(result.Datas);
-      }
+      callback && callback(result);
     },
     // 售后服务统计
     *GetAfterSalesServiceAnalysis({ payload, callback }, { call, put, update }) {

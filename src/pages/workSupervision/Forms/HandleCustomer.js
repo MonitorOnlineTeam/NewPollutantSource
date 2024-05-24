@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:58:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-15 18:38:46
+ * @Last Modified time: 2024-05-24 14:47:21
  * @Description: 客户操作页面
  */
 import React, { useState, useEffect } from 'react';
@@ -31,7 +31,6 @@ const HandleCustomer = props => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [editRowData, setEditRowData] = useState({});
   const [selectRow, setSelectRow] = useState([]);
-console.log('RegionCode', RegionCode)
   useEffect(() => {
     // setSelectedRowKeys([CustomID]);
     getOtherCustomerList();
@@ -75,6 +74,7 @@ console.log('RegionCode', RegionCode)
                   onClick={() => {
                     setEditRowData(record);
                     onHandleClick();
+                    form.setFieldsValue({...record})
                   }}
                 >
                   <EditIcon />
@@ -115,7 +115,6 @@ console.log('RegionCode', RegionCode)
 
   // 获取客户
   const getCustomerList = () => {
-    debugger
     props.dispatch({
       type: 'wordSupervision/getCustomerList',
       payload: {
@@ -182,6 +181,7 @@ console.log('RegionCode', RegionCode)
         },
         callback: () => {
           setAddOrEditVisible(false);
+          form.setFieldsValue({ CustomName: undefined });
           getOtherCustomerList();
         },
       });
@@ -249,6 +249,7 @@ console.log('RegionCode', RegionCode)
         onOk={() => InsOrUpdOtherCustomer()}
         onCancel={() => {
           getColumns();
+          form.setFieldsValue({ CustomName: undefined });
           setAddOrEditVisible(false);
         }}
       >

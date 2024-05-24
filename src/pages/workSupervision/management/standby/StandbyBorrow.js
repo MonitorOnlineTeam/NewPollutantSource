@@ -15,6 +15,7 @@ import {
   Tooltip,
   Divider,
   Popconfirm,
+  Modal,
 } from 'antd';
 import { ExportOutlined, ImportOutlined, FileTextOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
@@ -22,6 +23,8 @@ import moment from 'moment';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import StandbyRecordModal from './StandbyRecordModal';
+import Standby from './Standby';
+import { permissionButton } from '@/utils/utils';
 
 import Cookie from 'js-cookie';
 
@@ -32,8 +35,11 @@ const dvaPropsData = ({ loading, autoform }) => ({
 
 const StandbyBorrow = props => {
   const { dispatch } = props;
+  const [isOpen, setIsOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [insCode, setInsCode] = useState('');
+
+  const buttonList = permissionButton(props.match.path);
 
   useEffect(() => {
     const currentUserStr = Cookie.get('currentUser');
@@ -84,6 +90,21 @@ const StandbyBorrow = props => {
           isFixedOpera
           isCenter
           hideBtns
+          appendHandleButtons={(selectedRowKeys, selectedRows) => {
+            if (buttonList.includes('StandbyManage')) {
+              return (
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                  style={{ marginRight: 8 }}
+                >
+                  备机管理
+                </Button>
+              );
+            }
+          }}
           appendHandleRows={row => {
             return (
               <>
@@ -120,6 +141,23 @@ const StandbyBorrow = props => {
           }}
         />
         <StandbyRecordModal visible={visible} onCancel={onHandleCancel} insCode={insCode} />
+
+        {isOpen && (
+          <Modal
+            centered
+            title="备机管理"
+            open={isOpen}
+            footer={null}
+            wrapClassName="spreadOverModal"
+            mask={false}
+            destroyOnClose
+            onCancel={() => {
+              setIsOpen(false);
+            }}
+          >
+            <Standby isModal />
+          </Modal>
+        )}
       </Card>
     </BreadcrumbWrapper>
   );

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-06 13:57:18
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-16 19:06:58
+ * @Last Modified time: 2024-05-24 11:14:37
  * @Description: 检查考勤和日志
  */
 import React, { useState, useEffect } from 'react';
@@ -44,7 +44,7 @@ const AttendanceLog = props => {
     const body = {
       dailyTaskID: taskInfo.ID,
       systemType: TYPE == 1 ? 2 : 1, // 1：运维 2：成套
-      isFlag: false, // 区分管理
+      isFlag: true, // 区分管理
       beginTime: taskInfo.BeginTime,
       endTime: taskInfo.EndTime,
       isQualify: 0,

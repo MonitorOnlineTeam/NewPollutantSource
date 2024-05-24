@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-02 11:09:09
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-03 15:58:51
+ * @Last Modified time: 2024-05-23 16:40:14
  * @Description:  客户投诉解决页面内容
  */
 import React, { useState, useEffect } from 'react';
@@ -93,7 +93,7 @@ const ViewModal = props => {
         style={{ marginTop: 20 }}
       >
         <Descriptions.Item label="处理结果">{detailsData.ProcessingResults}</Descriptions.Item>
-        <Descriptions.Item label="扣款金额">{detailsData.DeductionAmount}</Descriptions.Item>
+        <Descriptions.Item label="扣款金额（RMB）">{detailsData.DeductionAmount}</Descriptions.Item>
         <Descriptions.Item label="纠正预防措施">{detailsData.PreventiveMeasure}</Descriptions.Item>
         <Descriptions.Item label="人员考核">{detailsData.PersonnelAssessment}</Descriptions.Item>
         <Descriptions.Item label="处理人">{detailsData.ProcessedByName}</Descriptions.Item>

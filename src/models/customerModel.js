@@ -7,7 +7,7 @@ import config from '@/config';
 import { downloadFile, requestPost } from '@/utils/utils';
 import { API } from '@config/API';
 
-export default Model.extend({
+export default Model.extend({ 
   namespace: 'customer',
   state: {
     largeRegionList: [],
@@ -161,6 +161,7 @@ export default Model.extend({
     },
     // 处理投诉
     *HandleCustomerComplaints({ payload, callback }, { call, put, update }) {
+      debugger
       const result = yield call(
         requestPost,
         API.CtAPI_WJQ.HandleComplaints.HandleCustomerComplaints,

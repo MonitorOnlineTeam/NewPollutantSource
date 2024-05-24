@@ -172,7 +172,7 @@ const ProductProportionCard4 = props => {
         rate: item.TimeRate,
         itemStyle: {
           color: color[index],
-          opacity: 0.8,
+          opacity: 1,
           // // 这里设置半透明
           // normal: {
           //   color: new echarts3D.graphic.LinearGradient(0, 0, 0, 1, [
@@ -288,12 +288,7 @@ const ProductProportionCard4 = props => {
   }, [WarrantyAnalysis, echarts]);
 
   return (
-    <Card
-      title={title}
-      size="small"
-      bodyStyle={{ height: 640, paddingTop: 0 }}
-      loading={loading}
-    >
+    <Card title={title} size="small" bodyStyle={{ height: 640, paddingTop: 0 }} loading={loading}>
       <div className={styles.ProductProportionWrapper}>
         <div className={styles.chartItemWrapper}>
           {renderCountEcharts}
