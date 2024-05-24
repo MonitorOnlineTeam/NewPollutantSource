@@ -18,7 +18,7 @@ export default Model.extend({
   effects: {
     //列表信息
     *GetResourceOverviewLeft({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.ResourceOverviewApi.GetResourceOverviewLeft, payload);
+      const result = yield call(requestPost, API.AssetManagementApi.GetResourceOverviewLeft, payload);
       if (result.IsSuccess) {
         yield update({
           tableDatas: result.Datas,

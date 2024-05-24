@@ -125,7 +125,7 @@ const Index = (props) => {
   return (
           <Modal
             visible={visible}
-            title={<Row justify='space-between'><span>处理</span><DispatchDetailsBtn data={list}/></Row>}
+            title={<Row justify='space-between'><span>处理</span><DispatchDetailsBtn data={{...list,ID:list.DispatchId}}/></Row>}
             onCancel={() => { props.onCancel()}}
             destroyOnClose
             wrapClassName={`spreadOverModal ${styles.modalSty}`}

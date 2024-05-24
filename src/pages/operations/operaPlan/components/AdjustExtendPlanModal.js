@@ -46,7 +46,7 @@ const Index = (props) => {
     const { type, adjustPointList, pointType, operationPlanInfoRefreshId, visible, onCancel, onFinish } = props;
 
 
-    const [recordType, setRecordType] = useState(pointType == 2 ? '1' : '7')
+    const [recordType, setRecordType] = useState()
 
 
 
@@ -54,9 +54,9 @@ const Index = (props) => {
     const [adjustExtendForm] = Form.useForm();
 
     useEffect(() => {
+        setRecordType(pointType == 2 ? '1' : '7')
 
-
-    }, []);
+    }, [pointType]);
 
 
 
@@ -67,7 +67,7 @@ const Index = (props) => {
         setCheckAll(valList.length === checkOptions.length);
     }
     const onCheckAllChange = (e, checkOptions) => {
-        const allVal = checkOptions.map(item => item.PointCode)
+        const allVal = checkOptions.map(item =>type==1? item.PointCode : item.PointID)
         adjustExtendForm.setFieldsValue({ pointID: e.target.checked ? allVal : [] })
         setIndeterminate(false);
         setCheckAll(e.target.checked);

@@ -50,8 +50,11 @@ const Index = (props) => {
     destroyOnClose
     wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
     mask={false}
+    bodyStyle={{
+      overflowY:'visible'
+    }}
   >
-    <Detail data={data ? data : {}} id={data?.ID}/>
+    <Detail id={data?.ID}/>
   </Modal>
  </> );
 };

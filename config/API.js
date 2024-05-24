@@ -789,7 +789,6 @@ export const API = {
     GetSetOperationGroup: before + '/DepartmentApi/GetSetOperationGroup', //获取设置运维小组信息
     AddSetOperationGroup: before + '/DepartmentApi/AddSetOperationGroup', //设置运维小组
     GroupSort: before + '/DepartmentApi/GroupSort', //部门排序
-
     /*角色管理*/
     GetRoleInfoByTree: before + '/RoleApi/GetRoleInfoByTree', //获取角色详细信息和层级关系
     GetRoleInfoByID: before + '/RoleApi/GetRoleInfoByID', //获取单个角色信息
@@ -810,6 +809,11 @@ export const API = {
     InsertPointFilterByUser: before + '/AuthorizeApi/InsertPointFilterByUser', //给当前人员添加排口权限（可批量）
     /*用户恢复*/
     RecoveryUserInfo: before + '/UserApi/RecoveryUserInfo', //恢复用户信息
+    /*短信发送*/
+    GetUserMessageList : before + '/AuthorizeApi/GetUserMessageList',//获取短信推送设置列表
+    AddOrUpdUserMessage: before + '/AuthorizeApi/AddOrUpdUserMessage',//添加短信推送人员
+    DelUserMessage: before + '/AuthorizeApi/DelUserMessage',//删除短信推送人员
+    InsertPointUserMessage: before + '/AuthorizeApi/InsertPointUserMessage',//添加人员短信报警排口
     /*** 基础设置 ***/
     /*合同变更设置*/
     GetOperationUserList: before + '/UserApi/GetOperationUserList', //获取合同变更运维人信息
@@ -943,6 +947,11 @@ export const API = {
     /*遗留问题*/
     GetQuestionList: before + '/CTStatisticsApi/GetQuestionList', //获取遗留问题
     ExportQuestionList: before + '/CTStatisticsApi/ExportQuestionList', //遗留问题 导出
+     /*部件更换*/
+    GetSpareReplacementRecordList : before + '/CTBaseDataApi/GetSpareReplacementRecordList', //获取部件更换信息
+    ExportpareReplacementRecordList : before + '/CTBaseDataApi/ExportpareReplacementRecordList', //部件更换信息 导出
+    GetCisPartsList : before + '/CTBaseDataApi/GetCisPartsList', //获取故障原因
+
   },
 
   /*** 工作台 ***/

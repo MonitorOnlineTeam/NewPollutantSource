@@ -87,7 +87,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-  const { detailLoading, ID, pollutantType, statusLoading,saveLoading,passLoading, } = props;
+  const { detailLoading, ID, pollutantType, statusLoading,saveLoading,passLoading, onFinish} = props;
 
   const [operationInfoList, setOperationInfoList] = useState({})
   const [infoList, seInfoList] = useState(null) 
@@ -179,6 +179,7 @@ const Index = (props) => {
         if(isSuccess){
           setRejectVisible(false)
           isSuccess &&  initData('rectificat');
+          onFinish&&onFinish();
         }
       })
     } catch (errorInfo) {

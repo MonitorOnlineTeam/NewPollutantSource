@@ -644,7 +644,7 @@ const Index = (props) => {
         {
 
           <div>
-            <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
+             <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
               <Radio.Group
                 options={[{ label: '关联企业', value: 1 }, { label: '关联监测点', value: 2, }]}
                 onChange={associaTypeChange}
@@ -656,7 +656,7 @@ const Index = (props) => {
                 <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onChange={(e) => setEntPointName(e.target.value)} />
                 <Button type="primary" loading={entAndPointLoading} onClick={handlePointQuery}>查询</Button>
               </Input.Group>
-            </Row>
+            </Row> 
 
             {associaType == 1 ?
               <Spin spinning={entAndPointLoading || rojectPointRelationLoading || addProjectEntRelationLoading}>

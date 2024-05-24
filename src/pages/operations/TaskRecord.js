@@ -218,7 +218,6 @@ class TaskRecord extends Component {
       operaStatus,
       completeTime
     } = this.props;
-    console.log(completeTime)
     dispatch({
       type: 'task/updateState',
       payload: {
@@ -230,7 +229,7 @@ class TaskRecord extends Component {
           OperationsUserId: '',
           TaskType: '',
           CompleteTime: completeTime,
-          CreateTime:[moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+          CreateTime:isWorkExecue?'': [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
           pageIndex: 1,
           pageSize: 20,
           total: 0,
@@ -239,7 +238,7 @@ class TaskRecord extends Component {
         },
       },
     })
-    this.props.form.setFieldsValue({CompleteTime: completeTime,})
+    this.props.form.setFieldsValue({CompleteTime: completeTime,  CreateTime:isWorkExecue?'': [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],})
     dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: false, }, })
 
     dispatch({
@@ -799,9 +798,7 @@ class TaskRecord extends Component {
                 </Col></>}
               <Col md={8} sm={24}>
                 <FormItem {...formLayout} label="创建时间" style={{ width: '100%' }}>
-                  {getFieldDecorator('CreateTime', {
-                    initialValue: gettasklistqueryparams.CreateTime,
-                  })(
+                  {getFieldDecorator('CreateTime')(
                     <RangePicker_
                       isNoPanelChange
                       dateValue={gettasklistqueryparams.CreateTime}

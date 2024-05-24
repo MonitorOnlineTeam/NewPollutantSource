@@ -71,6 +71,9 @@ const Index = (props) => {
         form={investigateForm}
         name="advanced_search2"
         className={'investigate-search-form'}
+        initialValues={{
+          investigationTime:moment()
+        }}
       >
         <Form.Item name='investigationTime' label='调查日期' rules={[{ required: true, message: '请选择调查日期！' }]}>
           <DatePicker />
@@ -90,7 +93,7 @@ const Index = (props) => {
 
   const list = parData? detailData : data;
 
-
+  console.log(parData)
   const steps = ['派单内容', '调查', '完成']
   const [current, SetCurrent] = useState(0)
 
@@ -140,7 +143,7 @@ const Index = (props) => {
   return (<>
     <Modal
       visible={visible}
-      title={<Row justify='space-between'><span>调查</span><DispatchDetailsBtn data={list} /></Row>}
+      title={<Row justify='space-between'><span>满意度调查单</span><DispatchDetailsBtn data={{...list,ID:parData? parData.msgid : list?.DispatchId}} /></Row>}
       onCancel={() => { props.onCancel()}}
       destroyOnClose
       wrapClassName={modalWrapClassName || `spreadOverModal ${styles.modalSty}`}

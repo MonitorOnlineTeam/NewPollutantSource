@@ -92,14 +92,14 @@ const TableTransfer = ({ leftColumns, rightColumns, loading, ...restProps }) => 
 );
 
 const Office = props => {
-  const { allUserByOffice, allManager, getUserLoading, bindUserLoading,isModal } = props;
+  const { allUserByOffice, allManager, getUserLoading, bindUserLoading, isModal, onlyAppendHandleRows } = props;
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [targetKeys, setTargetKeys] = useState([]);
   const [currentID, setCurrentID] = useState(undefined);
   const [currentManager, setCurrentManager] = useState();
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   // 删除办事处
   const onDeleteOffice = (record, key) => {
@@ -171,7 +171,7 @@ const Office = props => {
     props.dispatch({
       type: 'wordSupervisionManage/GetAllManager',
       payload: {},
-      callback: res => {},
+      callback: res => { },
     });
   };
 
@@ -210,14 +210,13 @@ const Office = props => {
       ellipsis: true,
     },
   ];
-
   return (
     <BreadcrumbWrapper hideBreadcrumb={isModal}>
       <Card>
         <SearchWrapper configId={CONFIGID} />
         <AutoFormTable
           noload
-          onlyAppendHandleRows = {props.onlyAppendHandleRows}
+          onlyAppendHandleRows={onlyAppendHandleRows}
           getPageConfig
           handleMode="modal"
           style={{ marginTop: 10 }}
@@ -230,7 +229,7 @@ const Office = props => {
           appendHandleRows={row => {
             return (
               <>
-                {!props.onlyAppendHandleRows&&<Divider type="vertical" />}
+                {!onlyAppendHandleRows && <Divider type="vertical" />}
                 <Tooltip title="关联办事处人员">
                   <a
                     onClick={() => {
@@ -268,20 +267,31 @@ const Office = props => {
           onOk={onBindOfficeByUser}
           onCancel={() => setVisible(false)}
           confirmLoading={bindUserLoading}
+          footer={onlyAppendHandleRows&&null}
         >
-          <TableTransfer
-            dataSource={allUserByOffice}
-            targetKeys={targetKeys}
-            showSearch
-            loading={getUserLoading}
-            onChange={handleChange}
-            filterOption={(inputValue, item) =>
-              (item.User_Name && item.User_Name.indexOf(inputValue) !== -1) ||
-              (item.User_Account && item.User_Account.indexOf(inputValue) !== -1)
-            }
-            leftColumns={columns}
-            rightColumns={columns}
-          />
+          {onlyAppendHandleRows ?
+            <SdlTable
+              columns={columns}
+              dataSource={allUserByOffice.filter(obj => targetKeys.includes(obj.key))}
+              loading={getUserLoading}
+              size="small"
+              align='center'
+            />
+            :
+            <TableTransfer
+              dataSource={allUserByOffice}
+              targetKeys={targetKeys}
+              showSearch
+              loading={getUserLoading}
+              onChange={handleChange}
+              filterOption={(inputValue, item) =>
+                (item.User_Name && item.User_Name.indexOf(inputValue) !== -1) ||
+                (item.User_Account && item.User_Account.indexOf(inputValue) !== -1)
+              }
+              leftColumns={columns}
+              rightColumns={columns}
+            />
+          }
         </Modal>
         <Modal
           title="设置成套大区经理/省区运维经理"

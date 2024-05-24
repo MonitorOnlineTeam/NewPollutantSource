@@ -166,7 +166,7 @@ const Index = (props) => {
       GetOperationTaskStatisticsInfoByDayRequest(workOrderExecuTimeVal) //工单执行情况 固定到天
       props.GetPlanOperationTaskCompleteRateByDay({ //近30日运维情况 固定到天
         pollutantType: pollutantType,
-        ...workOrderExecuTimeObj[workOrderExecuTimeVal]
+        ...latelyDays30
       })
     }
 
@@ -527,11 +527,18 @@ const Index = (props) => {
   const [taskRecordVisible,setTaskRecordVisible] = useState(false)
   const [taskStatus,setTaskStatus] = useState()
   const [operaStatus,setOperaStatus] = useState()
+  const [completeTime,setCompleteTime] = useState()
 
+  
   const operaOrderOptionDayClick = (type) => {  //工单执行情况 固定到天 详情 
     setTaskRecordVisible(true)
     setTaskStatus(workOrderExecuTimeVal==1&&(type=='未完成'||type=='超时未完成')? ['1','2','10','11'] : ['3'])
     setOperaStatus((workOrderExecuTimeVal==1&&(type=='完成'||type=='未完成')) || type=='完成'? undefined : '3'  )
+    if(type=='完成'|| type=='超时完成'){
+      setCompleteTime(workOrderExecuTimeObj[workOrderExecuTimeVal]&&[moment(workOrderExecuTimeObj[workOrderExecuTimeVal].beginTime), moment(workOrderExecuTimeObj[workOrderExecuTimeVal].endTime)])
+    }else{
+      setCompleteTime()
+    }
   }
 
 
@@ -696,9 +703,9 @@ const Index = (props) => {
                 }}
               />
               <div style={{ height: '100%', padding: '18px 10px 0 0' }}>
-                <Row gutter={workOrderExecuTimeVal == 1 ? 0 : 16} style={{ justifyContent: workOrderExecuTimeVal == 1 ? 'space-between' : 'center' }}>
+                <Row gutter={workOrderExecuTimeVal == 1 ? 0 : 16}  style={{ justifyContent: workOrderExecuTimeVal == 1 ? 'space-between' : 'center',paddingRight:8 }}>
                   <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('完成')}><div><span style={workOrderExecuDotSty}></span>完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.completeCount}</span>个</div></Col>
-                  <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('超时完成工单')}><div><span style={workOrderExecuDotSty}></span>超时完成工单</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>
+                  <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('超时完成')}><div><span style={workOrderExecuDotSty}></span>超时完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>
                   {workOrderExecuTimeVal == 1 ? <>
                     <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('未完成')}><div><span style={workOrderExecuDotSty}></span>未完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.notCompleteCount}</span>个</div></Col>
                     <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('超时未完成')}><div><span style={workOrderExecuDotSty}></span>超时未完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>
@@ -780,7 +787,7 @@ const Index = (props) => {
           isWorkExecue
           taskStatus={taskStatus} 
           operaStatus={operaStatus}
-          completeTime={workOrderExecuTimeObj[workOrderExecuTimeVal]&&[moment(workOrderExecuTimeObj[workOrderExecuTimeVal].beginTime), moment(workOrderExecuTimeObj[workOrderExecuTimeVal].endTime)]}
+          completeTime={completeTime}
           />
       </Modal>
       <Modal

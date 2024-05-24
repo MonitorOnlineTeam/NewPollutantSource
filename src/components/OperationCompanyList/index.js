@@ -19,9 +19,9 @@ class Index extends Component {
 
 
   componentDidMount() {
-    
+
     const { operationCompanyList, } = this.props;
-    if(operationCompanyList&&operationCompanyList[0]){ //已经请求的数据 不再请求 缓存数据 默认值问题
+    if (operationCompanyList && operationCompanyList[0]) { //已经请求的数据 不再请求 缓存数据 默认值问题
       this.props.getDefaultOpration && this.props.getDefaultOpration(operationCompanyList[0].id)
       return
     }
@@ -36,21 +36,25 @@ class Index extends Component {
 
 
   render() {
-    const { operationCompanyLoading, operationCompanyList, style, placeholder,mode, } = this.props;
+    const { operationCompanyLoading, operationCompanyList, style, placeholder, mode, } = this.props;
 
-    return (<Spin spinning={operationCompanyLoading} size='small'>
-      <Select 
-         allowClear
-         showSearch
-         style={{ width: '100%', ...style }} 
-         placeholder={placeholder ? placeholder : '请选择'} 
-         {...this.props} >
+    return (operationCompanyLoading ?
+      <Spin size='small'>
+        <Select placeholder={placeholder ? placeholder : '请选择'} />
+      </Spin>
+      :
+      <Select
+        allowClear
+        showSearch
+        style={{ width: '100%', ...style }}
+        placeholder={'请选择'}
+        {...this.props} 
+        >
         {operationCompanyList.map(item => {
           return <Option key={item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']} value={item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']}>{item['dbo.T_Bas_OperationMaintenanceEnterprise.Company']}</Option>
         })
         }
       </Select>
-    </Spin>
 
     );
   }

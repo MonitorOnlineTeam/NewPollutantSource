@@ -6,12 +6,12 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined,ProfileOutlined, AmazonCircleFilled, } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 
-const { Option } = Select; 
+const { Option } = Select;
 
 const namespace = 'ctCommon'
 
@@ -28,40 +28,42 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    GetLargeRegionList: (payload,callback) => { //服务大区
-        dispatch({
-          type: `ctCommon/GetLargeRegionList`,
-          payload: payload,
-          callback:callback,
-        })
-      },
+    GetLargeRegionList: (payload, callback) => { //服务大区
+      dispatch({
+        type: `ctCommon/GetLargeRegionList`,
+        payload: payload,
+        callback: callback,
+      })
+    },
   }
 }
 const Index = (props) => {
 
 
 
-  const { name,label } = props;
+  const { name, label } = props;
   const [largeRegionList, setLargeRegionList] = useState([]);
 
 
 
   useEffect(() => {
-    props.GetLargeRegionList({},(res)=>{
-        setLargeRegionList(res)
+    props.GetLargeRegionList({}, (res) => {
+      setLargeRegionList(res)
     })
 
   }, []);
 
-  
+
   return (
-        <Spin size='small' spinning={props.largeRegionListLoading} className='formItemSpinSty'>
-        <Form.Item name={name? name : 'serviceAreaCode'} label={label?label :'服务大区'}  >
-         <Select placeholder='请选择' allowClear  showSearch  optionFilterProp="children">
-         {largeRegionList.map(item=><Option value={item.ID}>{item.LargeRegion}</Option>)}
-         </Select>
-         </Form.Item>
-        </Spin>
+      <Form.Item name={name ? name : 'serviceAreaCode'} label={label ? label : '服务大区'}  >
+        {props.largeRegionListLoading ?
+          <Spin size='small'> <Select placeholder='请选择' style={{width:'100%'}}/> </Spin>
+          :
+          <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
+            {largeRegionList.map(item => <Option value={item.ID}>{item.LargeRegion}</Option>)}
+          </Select>
+        }
+      </Form.Item>
 
   );
 };

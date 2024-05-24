@@ -282,7 +282,7 @@ const Index = (props) => {
         time:[moment().add(-6, 'months').startOf('day'), moment().endOf('day')]
       }}
     >
-      <Row align='middle'>
+      <Row align='middle' gutter={[16,0]}>
         <Col span={8}>
           <Form.Item name='num' className='minWidth3' label='派工单号'>
             <Input placeholder="请输入" allowClear />

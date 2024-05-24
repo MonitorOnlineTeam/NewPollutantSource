@@ -4,7 +4,7 @@
  * 创建时间：2024.04
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Upload, Popconfirm, Radio,Result, Steps, Image, Form, Tag, Skeleton, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty } from 'antd';
+import { Table, Input, InputNumber, Rate,Upload, Popconfirm, Radio,Result, Steps, Image, Form, Tag, Skeleton, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty } from 'antd';
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, AuditOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 const { RangePicker } = DatePicker;
@@ -59,12 +59,12 @@ const Index = (props) => {
                 <Col span={8}></Col>
                 <Col span={8}>
                     <Form.Item label='工程师的服务态度'>
-                    {data?.ServiceAttitude}
+                    <Rate disabled value={data?.ServiceAttitude}/>
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
                     <Form.Item label='工程师的技术水平'>
-                    {data?.TechnicalLevel}
+                    <Rate disabled value={data?.TechnicalLevel}/>
                    </Form.Item> 
                 </Col>
                 <Col span={8}></Col>

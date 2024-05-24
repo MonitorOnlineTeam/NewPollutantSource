@@ -56,12 +56,12 @@ const Index = (props) => {
 
   }, []);
  
-  useEffect(() => {
-    if(data?.StandbyMachineInfo){
-    echartsRef?.current?.getEchartsInstance()?.dispatchAction({ type: 'highlight', dataIndex: 2 }); //备机统计 默认高亮
-    echartsRef2?.current?.getEchartsInstance()?.dispatchAction({ type: 'highlight',  dataIndex: 1 }); //备机统计 默认高亮
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if(data?.StandbyMachineInfo){
+  //   echartsRef?.current?.getEchartsInstance()?.dispatchAction({ type: 'highlight', dataIndex: 2 }); //备机统计 默认高亮
+  //   echartsRef2?.current?.getEchartsInstance()?.dispatchAction({ type: 'highlight',  dataIndex: 1 }); //备机统计 默认高亮
+  //   }
+  // }, [data]);
   const [personType,setPersonType] = useState('1')
   const personlStatistics = () => {
     let name = [],value=[];

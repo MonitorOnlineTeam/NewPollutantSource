@@ -3382,9 +3382,9 @@ export default {
                     {
                       // 部件更换查询
                       name: 'componentReplaceQuery',
-                      path: '/ctManage/projectExecuProgress/componentReplaceQuery',
+                      path: '/ctManage/projectExecuProgress/componentReplace',
                       component:
-                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/componentReplaceQuery',
+                        './ctDebuggAfterSaleServiceManage/projectExecuProgress/componentReplace',
                     },
                     {
                       // 服务不及时

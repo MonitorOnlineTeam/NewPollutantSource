@@ -170,6 +170,7 @@ const Workbench = props => {
   const [standardGasValidityId, setStandardGasValidityId] = useState();
 
   const type = props.location.pathname === '/ctManage/workbench' ? 1 : '';
+  const paddingBottomVal = 10;
   useEffect(() => {
     // loadData();
   }, []);
@@ -1000,7 +1001,7 @@ const Workbench = props => {
                                     supervisionVerificaList.map(item => (
                                       <Row
                                         justify="space-between"
-                                        style={{ paddingBottom: 18, cursor: 'pointer' }}
+                                        style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
                                         onClick={() => {
                                           operaServiceClick(item.ID);
                                         }}
@@ -1028,7 +1029,7 @@ const Workbench = props => {
                                     projectExecutionList.map((item, index) => (
                                       <Row
                                         justify="space-between"
-                                        style={{ paddingBottom: 18, cursor: 'pointer' }}
+                                        style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
                                       >
                                         <Col
                                           onClick={() => {
@@ -1167,7 +1168,7 @@ const Workbench = props => {
                                     customeSatisfactList.map((item, index) => (
                                       <Row
                                         justify="space-between"
-                                        style={{ paddingBottom: 18, cursor: 'pointer' }}
+                                        style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
                                       >
                                         <Col
                                           onClick={() => {
@@ -1273,7 +1274,7 @@ const Workbench = props => {
                                   {/*数据报警 */}
                                   {workAlarmPushList?.length ? (
                                     workAlarmPushList.map(item => (
-                                      <Row justify="space-between" style={{ paddingBottom: 12 }}>
+                                      <Row justify="space-between" style={{ paddingBottom: paddingBottomVal }}>
                                         <Col style={{ paddingTop: 4 }}>
                                           <img src="/work_alarm.png" />
                                         </Col>
@@ -1350,7 +1351,7 @@ const Workbench = props => {
                                     contractList.map(item => (
                                       <Row
                                         justify="space-between"
-                                        style={{ paddingBottom: 8, transition: '0.5s all ease-in' }}
+                                        style={{ paddingBottom: paddingBottomVal, transition: '0.5s all ease-in' }}
                                       >
                                         <Col style={{ paddingTop: 4 }}>
                                           <img src="/work_contract.png" />
@@ -1407,7 +1408,7 @@ const Workbench = props => {
                                         <Row
                                           justify="space-between"
                                           style={{
-                                            paddingBottom: 8,
+                                            paddingBottom: paddingBottomVal,
                                             transition: '0.5s all ease-in',
                                           }}
                                         >
@@ -1682,6 +1683,8 @@ const Workbench = props => {
           className={superviseRectificaSty.fromModal}
           onCancel={() => {
             setSuperviseRectificaDetailVisible(false);
+          }}
+          onFinish={() => {
             GetStagingInspectorRectificationList();
           }}
           destroyOnClose

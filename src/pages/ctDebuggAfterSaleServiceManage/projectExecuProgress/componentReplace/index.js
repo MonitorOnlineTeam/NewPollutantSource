@@ -1,5 +1,5 @@
 /**
- * 功  能：项目执行进度 部件更换查询
+ * 功  能：项目执行进度 部件更换
  * 创建人：jab
  * 创建时间：2024.04
  */
@@ -24,18 +24,19 @@ import { permissionButton } from '@/utils/utils';
 
 const { Option } = Select;
 
-const namespace = 'componentReplaceQuery'
+const namespace = 'componentReplace'
 
 
 
 
-const dvaPropsData = ({ loading, componentReplaceQuery, global, }) => ({
-  tableLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-  tableDatas: componentReplaceQuery.tableDatas,
-  tableTotal: componentReplaceQuery.tableTotal,
-  queryPar: componentReplaceQuery.queryPar,
-  exportLoading: loading.effects[`${namespace}/GetAuditPhoto`],
-  configInfo: global.configInfo,
+const dvaPropsData = ({ loading, componentReplace, global, }) => ({
+  tableLoading: loading.effects[`${namespace}/GetSpareReplacementRecordList`],
+  tableDatas: componentReplace.tableDatas,
+  tableTotal: componentReplace.tableTotal,
+  queryPar: componentReplace.queryPar,
+  exportLoading: loading.effects[`${namespace}/ExportpareReplacementRecordList`],
+  cisPartsListLoading: loading.effects[`${namespace}/GetCisPartsList`],
+  cisPartsList: componentReplace.cisPartsList,
 })
 
 const Index = (props) => {
@@ -51,7 +52,7 @@ const Index = (props) => {
 
 
 
-  const { queryPar, tableDatas, tableTotal, tableLoading, exportLoading, hideBreadcrumb } = props;
+  const { queryPar, tableDatas, tableTotal, tableLoading, exportLoading, cisPartsList } = props;
 
 
 
@@ -59,7 +60,10 @@ const Index = (props) => {
 
   useEffect(() => {
     onFinish(pageIndex, pageSize);
-
+    props.dispatch({
+      type: `${namespace}/GetCisPartsList`,
+      payload: {},
+    });
   }, []);
 
 
@@ -74,118 +78,115 @@ const Index = (props) => {
     },
     {
       title: '合同编号',
-      dataIndex: 'projectCode',
-      key: 'projectCode',
+      dataIndex: 'ProjectCode',
+      key: 'ProjectCode',
       ellipsis: true,
     },
     {
       title: '项目名称',
-      dataIndex: 'projectName',
-      key: 'projectName',
+      dataIndex: 'ProjectName',
+      key: 'ProjectName',
       ellipsis: true,
     },
     {
       title: '企业名称',
-      dataIndex: 'remark',
-      key: 'remark',
+      dataIndex: 'EntName',
+      key: 'EntName',
       width: 150,
       ellipsis: true,
     },
     {
       title: '点位情况',
-      dataIndex: 'dd',
-      key: 'dd',
+      dataIndex: 'IsPoint',
+      key: 'IsPoint',
       width: 90,
       ellipsis: true,
+      render: (text, record, index) => {
+        return text? '有监测点' : '设备未安装';
+      }
     },
     {
       title: '点位名称',
-      dataIndex: 'problemStatusName',
-      key: 'problemStatusName',
+      dataIndex: 'PointName',
+      key: 'PointName',
       ellipsis: true,
     },
     {
       title: '系统型号',
-      dataIndex: 'solveUserName',
-      key: 'solveUserName',
+      dataIndex: 'SystemModelName',
+      key: 'SystemModelName',
       ellipsis: true,
     },
     {
       title: '申请人',
-      dataIndex: 'problemTime',
-      key: 'problemTime',
+      dataIndex: 'ApplicationUser',
+      key: 'ApplicationUser',
       ellipsis: true,
     },
     {
       title: 'CIS申请时间',
-      dataIndex: 'problemTime',
-      key: 'problemTime',
+      dataIndex: 'ApplicationDate',
+      key: 'ApplicationDate',
       ellipsis: true,
     },
     {
       title: '物料编码',
-      dataIndex: 'dd',
-      key: 'dd',
+      dataIndex: 'U8Code',
+      key: 'U8Code',
       ellipsis: true,
     },
     {
       title: '部件名称',
-      dataIndex: 'problemTime',
-      key: 'problemTime',
+      dataIndex: 'PartsName',
+      key: 'PartsName',
       ellipsis: true,
     },
     {
       title: '规格型号',
-      dataIndex: 'problemTime',
-      key: 'problemTime',
+      dataIndex: 'ModelType',
+      key: 'ModelType',
       ellipsis: true,
     },
     {
       title: 'CIS更换数量',
-      dataIndex: 'dd',
-      key: 'dd',
+      dataIndex: 'CisChangeCount',
+      key: 'CisChangeCount',
       ellipsis: true,
     },
     {
       title: '更换数量',
-      dataIndex: 'problemTime',
-      key: 'problemTime',
+      dataIndex: 'ReplacementNum',
+      key: 'ReplacementNum',
       ellipsis: true,
     },
     {
       title: '故障原因',
-      dataIndex: 'problemTime',
-      key: 'problemTime',
+      dataIndex: 'FailureCauseName',
+      key: 'FailureCauseName',
       ellipsis: true,
     },
     {
       title: '更换人',
-      dataIndex: 'dd',
-      key: 'dd',
-      ellipsis: true,
-    },
-    {
-      title: '更换人',
-      dataIndex: 'createUserName',
-      key: 'createUserName',
+      dataIndex: 'ReplacementUser',
+      key: 'ReplacementUser',
       ellipsis: true,
     },
     {
       title: '更换时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
+      dataIndex: 'ReplacementTime',
+      key: 'ReplacementTime',
       ellipsis: true,
     },
     {
       title: '提交人',
-      dataIndex: 'createUserName',
-      key: 'createUserName',
+      dataIndex: 'CreateUserName',
+      key: 'CreateUserName',
       ellipsis: true,
     },
     {
       title: '提交时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
+      dataIndex: 'CreateTime',
+      key: 'CreateTime',
       ellipsis: true,
     },
     {
@@ -215,8 +216,8 @@ const Index = (props) => {
   }
   const exportData = () => {
     props.dispatch({
-      type: `${namespace}/ExportQuestionList`,
-      payload: queryPar,
+      type: `${namespace}/ExportpareReplacementRecordList`,
+      payload: {...queryPar,pageIndex:undefined,pageSize:undefined},
     });
   };
 
@@ -227,14 +228,14 @@ const Index = (props) => {
       const values = await form.validateFields();
       const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
         ...values,
-        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
-        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
+        btime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        etime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
         pageIndex: PageIndex,
         pageSize: PageSize,
       }
       props.dispatch({
-        type: `${namespace}/GetQuestionList`,
+        type: `${namespace}/GetSpareReplacementRecordList`,
         payload: {
           ...par,
         },
@@ -276,12 +277,12 @@ const Index = (props) => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='itemCode' label='物料编码' className='minWidth'>
+          <Form.Item name='u8Code' label='物料编码'>
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='itemCode' label='部件名称' className='minWidth'>
+          <Form.Item name='partsName' label='部件名称'>
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
@@ -291,21 +292,8 @@ const Index = (props) => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='problemStatus' label='故障分类'>
-            <Select placeholder='请选择' allowClear>
-              <Option value={1}>人为原因</Option>
-              <Option value={2}>产品质量</Option>
-              <Option value={2}>其他</Option>
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item name='problemStatus' label='原因分析'>
-            <Select placeholder='请选择' allowClear>
-              <Option value={1}>人为原因</Option>
-              <Option value={2}>产品质量</Option>
-              <Option value={2}>其他</Option>
-            </Select>
+          <Form.Item name='failureCause' label='故障原因'>
+            {props.cisPartsListLoading?  <Spin size='small'><Select placeholder='请选择' /></Spin> : <Select placeholder='请选择' allowClear options={cisPartsList} fieldNames={{ label: 'Name', value: 'ChildID' }}/>}
           </Form.Item>
         </Col>
         <Col span={8} >
@@ -359,7 +347,7 @@ const Index = (props) => {
           footer={null}
         >
           <Row>
-            {columns.filter(item => (item.title != '序号' && item.title != '操作')).map(item => (<Col span={8}><Form.Item label={item.title} >  {detailData?.[`${item.dataIndex}`]}  </Form.Item> </Col>))}
+            {columns.filter(item => (item.title != '序号' && item.title != '操作')).map(item => (<Col span={8}><Form.Item label={item.title}>  {detailData?.[`${item.dataIndex}`]}  </Form.Item> </Col>))}
           </Row>
         </Modal>
       </BreadcrumbWrapper>

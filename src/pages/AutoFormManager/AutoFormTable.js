@@ -356,6 +356,8 @@ class AutoFormTable extends PureComponent {
       match,
       parentcode,
       configId,
+      notOperate,
+      onlyAppendHandleRows
     } = this.props;
     this._SELF_.btnEl = [];
     this._SELF_.moreBtns = [];
@@ -365,7 +367,7 @@ class AutoFormTable extends PureComponent {
           switch (btn.DISPLAYBUTTON) {
             case 'add':
               // if (btnsAuthority.includes('add')) {
-              return (
+              return !notOperate && !onlyAppendHandleRows && (
                 <Button
                   style={{ marginRight: 8 }}
                   key={btn.DISPLAYBUTTON}

@@ -37,8 +37,6 @@ const dvaPropsData = ({ loading, planWorkOrderStatisticsDay, global }) => ({
   cityTableDatas: planWorkOrderStatisticsDay.cityTableDatas,
   cityTableLoading: loading.effects[`${namespace}/cityGetTaskWorkOrderList`],
   cityTableTotal: planWorkOrderStatisticsDay.cityTableTotal,
-  regPointTableDatas: planWorkOrderStatisticsDay.regPointTableDatas,
-  regPointTableLoading: loading.effects[`${namespace}/regPointGetTaskWorkOrderList`],
   insideOrOutsideWorkLoading: loading.effects[`${namespace}/insideOrOutsideWorkGetTaskWorkOrderList`],
   insideOrOutsideWorkActualLoading: loading.effects[`${namespace}/insideOrOutsideWorkActualGetTaskWorkOrderList`],
   insideOrOutsiderWorkTableDatas: planWorkOrderStatisticsDay.insideOrOutsiderWorkTableDatas,
@@ -66,12 +64,6 @@ const dvaDispatch = (dispatch) => {
     cityGetTaskWorkOrderList: (payload) => { // 计划工单统计 市级别
       dispatch({
         type: `${namespace}/cityGetTaskWorkOrderList`,
-        payload: payload,
-      })
-    },
-    regPointGetTaskWorkOrderList: (payload) => { // 计划工单统计 运维监测点
-      dispatch({
-        type: `${namespace}/regPointGetTaskWorkOrderList`,
         payload: payload,
       })
     },
@@ -191,7 +183,8 @@ const Index = (props, ref) => {
   const colorObj = {
     'taskCompleteCount': '#1890ff',
     'overCompleteList': '#faad14',
-    'overIncompleteList': '#f5222d'
+    'overIncompleteList': '#f5222d',
+    'taskCount': '#1890ff',
   }
 
   let popData = data.taskList
@@ -199,6 +192,7 @@ const Index = (props, ref) => {
     'taskCompleteCount': popData.filter(item=>!item.TaskOverTime && item.TaskStatus==3),
     'overCompleteList': popData.filter(item=> item.TaskOverTime==1 && item.TaskStatus==3),
     'overIncompleteList': popData.filter(item=> item.TaskOverTime==1 && item.TaskStatus!=3),
+    'taskCount': popData,
   }
   if (type == 3) {//同时存在三种工单
       let taskWorkNums1, taskWorkNums2, taskWorkNums3;
@@ -206,17 +200,17 @@ const Index = (props, ref) => {
       if (data[taskTypeName[0]] > 1) {
         taskWorkNums1 = multipleNum(popFilterData[taskTypeName[0]], taskWorkNum1, taskTypeName[0])
       } else {
-        taskWorkNums1 = oneNum(popData, taskWorkNum1)
+        taskWorkNums1 = oneNum(popFilterData[taskTypeName[0]], taskWorkNum1)
       }
       if (data[taskTypeName[1]] > 1) {
         taskWorkNums2 = multipleNum(popFilterData[taskTypeName[1]], taskWorkNum2, taskTypeName[1])
       } else {
-        taskWorkNums2 = oneNum(popData, taskWorkNum2)
+        taskWorkNums2 = oneNum(popFilterData[taskTypeName[1]], taskWorkNum2)
       }
       if (data[taskTypeName[2]] > 1) {
         taskWorkNums3 = multipleNum(popFilterData[taskTypeName[2]], taskWorkNum3, taskTypeName[2])
       } else {
-        taskWorkNums3 = oneNum(popData, taskWorkNum3)
+        taskWorkNums3 = oneNum(popFilterData[taskTypeName[2]], taskWorkNum3)
       }
       return <Row align='middle' justify='center' style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
         <div style={{ width: '33.33%', height: '100%', display: 'flex', alignItems: 'center', background:  colorObj[taskTypeName[0]] }}> {taskWorkNums1} </div>
@@ -229,23 +223,27 @@ const Index = (props, ref) => {
       if (data[taskTypeName[0]] > 1) {
         taskWorkNums1 = multipleNum(popFilterData[taskTypeName[0]], taskWorkNum1, taskTypeName[0])
       } else {
-        taskWorkNums1 = oneNum(popData, taskWorkNum1)
+        taskWorkNums1 = oneNum(popFilterData[taskTypeName[0]], taskWorkNum1)
       }
       if (data[taskTypeName[1]] > 1) {
         taskWorkNums2 = multipleNum(popFilterData[taskTypeName[1]], taskWorkNum2, taskTypeName[1])
       } else {
-        taskWorkNums2 = oneNum(popData, taskWorkNum2)
+        taskWorkNums2 = oneNum(popFilterData[taskTypeName[1]], taskWorkNum2)
       }
       return <Row align='middle' justify='center' style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
         <div style={{ width: '50%', height: '100%', display: 'flex', alignItems: 'center', background:  colorObj[taskTypeName[0]]  }}> {taskWorkNums1} </div>
         <div style={{ width: '50%', height: '100%', display: 'flex', alignItems: 'center', background:  colorObj[taskTypeName[1]]  }}> {taskWorkNums2} </div>
       </Row>;
-    }else{
+    }else if(type==1){
+      let taskWorkNums1;
       if (taskWorkNum1 && taskWorkNum1 > 1) {
-        return multipleNum(popFilterData[taskTypeName], taskWorkNum1, taskTypeName)
-      } else {
-        return oneNum(popData, taskWorkNum1)
+        taskWorkNums1 =  multipleNum(popFilterData[taskTypeName], taskWorkNum1, taskTypeName)
+      } else { 
+        taskWorkNums1 =  oneNum(popFilterData[taskTypeName], taskWorkNum1)
       }
+     return  <Row align='middle' justify='center' style={{ background: colorObj[taskTypeName] , width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+          {taskWorkNums1}
+        </Row>
     }
 
   }
@@ -564,7 +562,7 @@ const Index = (props, ref) => {
 
   ];
 
-  const planOutRegCompleteCommonCol = (type)=>{//计划外 行政区 市级别 完成工单数
+  const planOutRegCompleteCommonCol = ()=>{//计划外 行政区 市级别 完成工单数
     const col = [{
       title: '工单合计',
       dataIndex: 'allCompleteTaskCount',
@@ -583,7 +581,7 @@ const Index = (props, ref) => {
         align: 'center',
         sorter: (a, b) => a[key] - b[key],
         render: (text, record, index) => {
-          return text == 0 || key=='allCompleteTaskCount' || type==2? text : <Button type="link" onClick={() => { workOrderNum(3, record, key) }}>{text}</Button>
+          return text == 0 || key=='allCompleteTaskCount'? text : <Button type="link" onClick={() => { workOrderNum(3, record, key) }}>{text}</Button>
         }
        });
      }
@@ -630,7 +628,7 @@ const Index = (props, ref) => {
       fixed:'left',
       width: 100,
     },
-    ...planOutRegCompleteCommonCol(1),
+    ...planOutRegCompleteCommonCol(),
 
   ];
   const cityOutRegColumns = ()=>[ //计划外  市级别 二级弹框
@@ -683,7 +681,7 @@ const Index = (props, ref) => {
       fixed: 'left',
       width: 100,
     },
-    ...planOutRegCompleteCommonCol(2),
+    ...planOutRegCompleteCommonCol(),
 
   ];
 
@@ -1012,31 +1010,7 @@ const Index = (props, ref) => {
       </Form.Item>
     </Form>
   }
-  const regPointGetTaskWorkOrderList = (par) => {
-    props.regPointGetTaskWorkOrderList({
-      ...queryPar,
-      pageIndex: 1,
-      pageSize: 20,
-      regionLevel: undefined,
-      staticType: 2,
-      ...par
-    })
-  }
 
-
-
-  const [operaPointForm] = Form.useForm()
-
-  const [operationStatus, setOperationStatus] = useState();
-  const operaPointClick = (e) => {  //查询  运维监测点
-    setRegPointPageIndex(1)
-    setRegPointPageSize(20)
-    setOperationStatus(e.target.value)
-    regPointGetTaskWorkOrderList({
-      regionCode: regionCode,
-      operationStatus: e.target.value
-    })
-  }
 
 
 
@@ -1044,9 +1018,8 @@ const Index = (props, ref) => {
   let noWorkNumDataEle = <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}> </Row>
   const { dateCol } = props;
   const insideWorkOrderCol = () => { //计划内 巡检 校准
-    let col = []
+    let col = [];
     if (dateCol && dateCol[0]) {
-
       col = dateCol.map((item, index) => {
           return {
             title: `${item.date&&moment(item.date).format('MM-DD')}`,
@@ -1060,10 +1033,8 @@ const Index = (props, ref) => {
               align: 'center',
               ellipsis: false, 
               render: (text, row, index) => {
-                let workNumEle, taskWorkNum1, taskWorkNum2, taskWorkNum3, taskTypeName;
-                
+                let  taskWorkNum1, taskWorkNum2, taskWorkNum3, taskTypeName;
                 if(row.datePick?.length==0){ return noWorkNumDataEle} //没有工单
-                
                 return row.datePick.map(dateItem => {
                   if(dateItem.date == item.date){
                    if (dateItem.taskCompleteCount && dateItem.overCompleteList && dateItem.overIncompleteList) { //同时存在 按照计划完成、 超时完成、超时未完成
@@ -1088,28 +1059,17 @@ const Index = (props, ref) => {
                     taskTypeName = 'overCompleteList,overIncompleteList'
                     return popContent(2, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, taskWorkNum1, taskWorkNum2) //同时存在 超时完成、 超时未完成
                   } else if (dateItem.taskCompleteCount) {//按照计划完成
-                    workNumEle = <Row align='middle' justify='center' style={{ background: '#1890ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount}</span>
-                    </Row>
                     taskTypeName = 'taskCompleteCount'
-                    return popContent(1, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, workNumEle)
+                    return popContent(1, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, dateItem.taskCompleteCount)
                   } else if (dateItem.overCompleteList) {//超时完成
-                    workNumEle = <Row align='middle' justify='center' style={{ background: '#faad14', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      <span style={{ color: '#fff' }}>{dateItem.overCompleteList}</span>
-                    </Row>
                     taskTypeName = 'overCompleteList'
-                    return popContent(1, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, workNumEle)
+                    return popContent(1, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, dateItem.overCompleteList)
                   } else if (dateItem.overIncompleteList) { //超时未完成
-                    workNumEle = <Row align='middle' justify='center' style={{ background: '#f5222d', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      <span style={{ color: '#fff' }}>{dateItem.overIncompleteList}</span>
-                    </Row>
                     taskTypeName = 'overIncompleteList'
-                    return popContent(1, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, workNumEle)
+                    return popContent(1, `${row.DGIMN}${dateItem.date}`, taskTypeName, dateItem, dateItem.overIncompleteList)
                    }else{
-                    return noWorkNumDataEle
+                    // return noWorkNumDataEle
                   }
-                 }else{
-                  return noWorkNumDataEle
                  }
                 })
 
@@ -1148,16 +1108,11 @@ const Index = (props, ref) => {
 
                 return row.datePick.map(dateItem => {
                   if(dateItem.date == item.date){
-                   if (dateItem.taskCompleteCount) {
-                    outWorkNumEle = <Row align='middle' justify='center' style={{ background: '#1890ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-                      <span style={{ color: '#fff' }}>{dateItem.taskCompleteCount}</span>
-                    </Row>
-                    return popContent(1, `${row.DGIMN}${dateItem.date}`, 'taskCompleteCount', dateItem, outWorkNumEle)
+                   if (dateItem.taskCount) {
+                    return popContent(1, `${row.DGIMN}${dateItem.date}`, 'taskCount', dateItem, dateItem.taskCount)
                   }else{
-                    return noWorkNumDataEle
+                    // return noWorkNumDataEle
                   }
-                }else{
-                  return noWorkNumDataEle
                 }
                 })
 
@@ -1185,7 +1140,7 @@ const Index = (props, ref) => {
   const tabsChange = (key) => {
     setTabType(key)
     setTimeout(() => {
-      props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息 子传父
+      props.parentCallback(key == 3 ? 2 : 1) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息 子传父
       queryPar && queryPar.beginTime && props.regEntGetTaskWorkOrderList({
         ...queryPar,
         regionCode: '',
