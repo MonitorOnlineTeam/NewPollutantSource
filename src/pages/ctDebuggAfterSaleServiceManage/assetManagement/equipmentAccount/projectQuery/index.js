@@ -490,13 +490,12 @@ const Index = (props) => {
               <Input placeholder="请输入" allowClear />
             </Form.Item>
           </Col>
-        {expand && <>
           <Col span={8}>
             <Form.Item name='itemCode' label='立项号'  className={'minWidth'}>
               <Input placeholder="请输入" allowClear />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          {expand && <> <Col span={8}>
           <Form.Item name='projectName' label='项目名称'>
             <Input placeholder="请输入" allowClear />
           </Form.Item>
@@ -514,7 +513,7 @@ const Index = (props) => {
 
         </>}
         <Col span={8} >
-          <Form.Item style={{ marginLeft: expand ? 0 : 16 }}>
+          <Form.Item>
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
