@@ -24,7 +24,6 @@ const DataQueryModal = props => {
   } = props;
 
   useEffect(() => {}, []);
-  console.log('DGIMN', DGIMN)
   return (
     <Modal
       title={title}
