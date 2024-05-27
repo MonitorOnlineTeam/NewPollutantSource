@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-17 10:55:47
+ * @Last Modified time: 2024-05-27 09:00:53
  * @Description：报警记录
  */
 
@@ -196,7 +196,7 @@ const CluesList = props => {
         title: '编号',
         dataIndex: 'index',
         key: 'index',
-        width: 80,
+        width: 60,
         ellipsis: true,
         render: (text, record, index) => {
           return (
@@ -229,7 +229,7 @@ const CluesList = props => {
         title: '发现线索时间',
         dataIndex: 'WarningTime',
         key: 'WarningTime',
-        width: 180,
+        width: 160,
         ellipsis: true,
         sorter: (a, b) => moment(a.WarningTime).valueOf() - moment(b.WarningTime).valueOf(),
       },
@@ -252,7 +252,7 @@ const CluesList = props => {
         title: '线索内容',
         dataIndex: 'WarningContent',
         key: 'WarningContent',
-        width: 240,
+        width: 260,
         ellipsis: true,
         render: (text, record) => {
           return (
@@ -281,7 +281,7 @@ const CluesList = props => {
       {
         title: '操作',
         key: 'handle',
-        width: 100,
+        width: 60,
         render: (text, record) => {
           return (
             <Tooltip title="查看">
@@ -639,6 +639,7 @@ const CluesList = props => {
           </Form.Item>
         </Form>
         <SdlTable
+          resizable
           rowKey="ModelWarningGuid"
           align="center"
           style={{ marginTop: 10 }}
