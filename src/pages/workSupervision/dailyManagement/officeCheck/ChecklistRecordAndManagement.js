@@ -25,7 +25,7 @@ import OfficeInspection from '@/pages/workSupervision/Forms/OfficeInspection';
 const { Text, Link } = Typography;
 
 const dvaPropsData = ({ loading, provinceAllList, common }) => ({
-  provinceAllList: common.CtProvinceList,
+  provinceAllList: common.provinceList,
   loading: loading.effects[`wordSupervision/GetOfficeCheckStatisticsList`],
   exportLoading: loading.effects[`wordSupervision/ExportOfficeCheckStatisticsList`],
 });
@@ -61,7 +61,7 @@ const ChecklistRecordAndManagement = props => {
   // 获取大区及省份
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getCTLargeRegion',
+      type: 'common/getLargeRegion',
       payload: {},
     });
   };
