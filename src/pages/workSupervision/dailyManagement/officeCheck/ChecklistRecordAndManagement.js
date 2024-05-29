@@ -13,6 +13,7 @@ import {
   Tooltip,
   Popconfirm,
   Divider,
+  DatePicker,
 } from 'antd';
 import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
@@ -21,6 +22,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { getCurrentUserId } from '@/utils/utils';
 import { DelIcon, EditIcon } from '@/utils/icon';
 import OfficeInspection from '@/pages/workSupervision/Forms/OfficeInspection';
+const { RangePicker } = DatePicker;
 
 const { Text, Link } = Typography;
 
@@ -212,10 +214,10 @@ const ChecklistRecordAndManagement = props => {
             align: 'center',
           },
           {
-            title: '出入台账规范（1-5分）',
+            title: '出入库台账规范（1-5分）',
             dataIndex: 'AccountSpecification',
             key: 'AccountSpecification',
-            width: 160,
+            width: 180,
             align: 'center',
           },
           {
@@ -238,10 +240,10 @@ const ChecklistRecordAndManagement = props => {
             align: 'center',
           },
           {
-            title: '整洁度（含后备箱 1-5分）',
+            title: '整洁度(含后备箱)（ 1-5分）',
             dataIndex: 'CarNeatness',
             key: 'CarNeatness',
-            width: 180,
+            width: 190,
             align: 'center',
           },
           {
@@ -268,7 +270,7 @@ const ChecklistRecordAndManagement = props => {
         ellipsis: true,
       },
       {
-        title: '检查时间',
+        title: '填报时间',
         dataIndex: 'TaskTime',
         key: 'TaskTime',
         width: 200,
@@ -369,7 +371,7 @@ const ChecklistRecordAndManagement = props => {
               <Input style={{ width: 200 }} placeholder="检查人" />
             </Form.Item>
             <Form.Item name="time" label="检查时间">
-              <RangePicker_
+              <RangePicker
                 style={{ width: '100%' }}
                 picker="month"
                 format="YYYY-MM"

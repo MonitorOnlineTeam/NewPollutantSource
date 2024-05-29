@@ -362,7 +362,7 @@ class Index extends PureComponent {
         options={[{ value: '', label: '全部' }, { value: '可使用', label: '可使用' }, { value: '使用中', label: '使用中' }]} />}
       <RightIconMapComponent />
       {selectType.isEnter && <div style={{ cursor: 'pointer', position: 'absolute', top: 72, right: 66 }} onClick={this.onBack}>  { /**返回 */}
-        <img src='/currencyResOver/back.png' />
+        <img title='返回' src='/currencyResOver/back.png' />
       </div>}
     </Map>
 

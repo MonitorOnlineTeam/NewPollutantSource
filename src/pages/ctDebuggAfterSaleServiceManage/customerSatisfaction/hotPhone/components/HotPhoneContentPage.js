@@ -200,12 +200,12 @@ const HotPhoneContentPage = props => {
         dataIndex: 'handle',
         align: 'center',
         fixed: 'right',
-        width: 120,
+        width: isAll? 80 : 120,
         ellipsis: true,
         render: (text, record) => {
           return (
             <>
-              {record.IsFlag && (
+              {record.IsFlag && !isAll &&(
                 <>
                   <Tooltip title="编辑">
                     <a
@@ -244,7 +244,7 @@ const HotPhoneContentPage = props => {
                   <DetailIcon />
                 </a>
               </Tooltip>
-              {record.IsFlag && (
+              {record.IsFlag && !isAll &&(
                 <>
                   <Divider type="vertical" />
                   <Tooltip title="删除">
@@ -271,7 +271,7 @@ const HotPhoneContentPage = props => {
     // 查看全部过滤掉操作列和“离开现场时间”
     if (isAll) {
       columns = columns.filter(
-        item => item.dataIndex !== 'handle' && item.dataIndex !== 'LeaveDate',
+        item => item.dataIndex !== 'LeaveDate',
       );
     }
 

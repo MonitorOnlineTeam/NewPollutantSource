@@ -317,7 +317,7 @@ const Index = (props) => {
   };
   const operaOrderOptionDay = () => {
     let data = [
-      { name: '巡检', key: 'inspectionCount', value: workOrderExecuData.inspectionCount, color1: '#0487ED', color2: '#0FD5F9' },
+      { name: '启动', key: 'inspectionCount', value: workOrderExecuData.inspectionCount, color1: '#0487ED', color2: '#0FD5F9' },
       { name: '校准', key: 'calibrationCount', value: workOrderExecuData.calibrationCount, color1: '#0666E8', color2: '#0487ED' },
       { name: '维修', key: 'repairCount', value: workOrderExecuData.repairCount, color1: '#3EB076', color2: '#A2FFD0' },
       { name: '维护', key: 'maintainReportCount', value: workOrderExecuData.maintainReportCount, color1: '#C1C049', color2: '#FFFE95' },

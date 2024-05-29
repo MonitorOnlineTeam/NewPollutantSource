@@ -23,7 +23,7 @@ import TaskCompletionRecord from './TaskCompletionRecord';
 import { permissionButton } from '@/utils/utils';
 import SupervisionManager from '@/pages/operations/supervisionManager';
 import { API } from '@config/API';
-
+const { RangePicker } = DatePicker;
 const dvaPropsData = ({ loading }) => ({
   queryLoading: loading.effects[`wordSupervision/GetSiteInspectionForRegion`],
   exportLoading: loading.effects[`wordSupervision/ExportSiteInspectionForRegion`],
@@ -181,7 +181,7 @@ const OfficeCheck = props => {
         >
           <Space>
             <Form.Item name="time" label="任务派发时间">
-              <RangePicker_
+              <RangePicker
                 style={{ width: '100%' }}
                 picker="month"
                 format="YYYY-MM"

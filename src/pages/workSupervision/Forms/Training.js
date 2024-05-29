@@ -203,7 +203,7 @@ const Training = props => {
     <>
       {taskInfo.CreateTime && (
         <Alert
-          message={`任务类型：人员培训记录，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次1次/月。`}
+          message={`任务类型：人员培训任务单，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次1次/月。`}
           type="info"
           showIcon
           style={{ marginRight: 30 }}

@@ -22,6 +22,10 @@ class SelectPollutantType extends PureComponent {
   }
   componentDidMount() {
     const { onlyShowEnt, onlyShowAir, } = this.props;
+    const { pollutantTypelist, defaultPollutantCode, } = this.state;
+      if(pollutantTypelist?.length>0){
+         return
+      }
       this.props.dispatch({
       type: 'common/getPollutantTypeList',
       payload: {

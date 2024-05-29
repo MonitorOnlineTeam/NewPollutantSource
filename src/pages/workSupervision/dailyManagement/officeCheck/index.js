@@ -22,6 +22,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import TaskCompletionRecord from './TaskCompletionRecord';
 import ChecklistRecordAndManagement from './ChecklistRecordAndManagement';
 import { permissionButton } from '@/utils/utils';
+const { RangePicker } = DatePicker;
 
 const dvaPropsData = ({ loading }) => ({
   queryLoading: loading.effects[`wordSupervision/GetOfficeCheckStatisticsForRegion`],
@@ -74,13 +75,14 @@ const OfficeCheck = props => {
     let columns = [
       {
         title: '序号',
-        width: 40,
+        // width: 40,
       },
       {
         title: '大区',
         dataIndex: 'LargeRegion',
         key: 'LargeRegion',
         ellipsis: true,
+        width: 'auto',
         render: (text, record, index) => {
           return {
             children: text,
@@ -93,18 +95,12 @@ const OfficeCheck = props => {
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width: 'auto',
         render: (text, record, index) => {
           return {
             children: (
-              <a
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setRegionCode(record.RegionCode);
-                }}
-              >
-                {text}
-              </a>
+              text
             ),
             props: { colSpan: record.LargeRegion === '合计' ? 0 : 1 },
           };
@@ -115,20 +111,34 @@ const OfficeCheck = props => {
         dataIndex: 'CompletedCount',
         key: 'CompletedCount',
         ellipsis: true,
+        width: 'auto',
+        render: (text, record, index) => {
+          return  <a
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setRegionCode(record.RegionCode);
+                }}
+              >
+                {text}
+              </a>
+          
+        },
       },
       {
         title: '实际完成任务数量',
         dataIndex: 'CompletedCountYes',
         key: 'CompletedCountYes',
         ellipsis: true,
-        width: 200,
+        // width: 180,
+        width: 'auto',
       },
       {
         title: '任务完成率',
         dataIndex: 'CompletedRate',
         key: 'CompletedRate',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width: 'auto',
         sorter: (a, b) => {
           if (a.RegionCode !== 'All' && b.RegionCode !== 'All') {
             return a.CheckRate - b.CheckRate;
@@ -178,7 +188,7 @@ const OfficeCheck = props => {
         >
           <Space align="middle">
             <Form.Item name="time" label="任务派发时间">
-              <RangePicker_
+              <RangePicker
                 style={{ width: '100%' }}
                 picker="month"
                 format="YYYY-MM"
@@ -239,6 +249,7 @@ const OfficeCheck = props => {
     <BreadcrumbWrapper>
       <Card title={<SearchComponents />}>
         <SdlTable
+          scroll={{x:840}}
           loading={queryLoading}
           align="center"
           dataSource={dataSource}

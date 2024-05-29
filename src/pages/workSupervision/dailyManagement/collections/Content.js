@@ -281,11 +281,11 @@ const Content = props => {
           <Space wrap>
             {mode === 'record' && [
               <Form.Item label="项目编号" name="projectNo">
-                <Input placeholder="请输入项目编号" />
+                <Input placeholder="请输入项目编号" allowClear/>
               </Form.Item>,
               <LargeRegionSelect label="项目所在省" name="RegionCode" />,
               <Form.Item label="催收人" name="userName">
-                <Input placeholder="请输入催收人" />
+                <Input placeholder="请输入催收人"  allowClear/>
               </Form.Item>,
             ]}
             <Form.Item label="催收时间" name="date">

@@ -38,7 +38,7 @@ class DataQuery extends Component {
       displayType: 'data',
       displayName: '查看数据',
       rangeDate: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-      format: 'YYYY-MM-DD HH:mm:ss',
+      format: 'YYYY-MM-DD HH',
       selectDisplay: false,
       dd: [],
       // selectP: '',
@@ -573,7 +573,7 @@ class DataQuery extends Component {
             //   this.dateCallbackDataQuery(dates, dataType)
             // }
             allowClear={false}
-            showTime={this.state.format}
+            showTime={ {format: 'HH',}}
           />
           //     :
           // <RangePicker_ style={{ width: 360 }} dateValue={dateValue}

@@ -54,10 +54,15 @@ export default Model.extend({
     //添加人员短信报警排口
     *InsertPointUserMessage({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.AssetManagementApi.InsertPointUserMessage, payload);
+      callback && callback(result)
+    },
+    //获取人员短信报警排口
+    *GetPointUserMessageList({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.AssetManagementApi.GetPointUserMessageList, payload);
       if (result.IsSuccess) {
-        message.success(result.Message);
-        callback && callback()
+        callback && callback(result?.Datas || [])
       }
+     
     },
   },
 });

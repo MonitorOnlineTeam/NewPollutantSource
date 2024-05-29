@@ -132,7 +132,7 @@ const Work = props => {
     let columns = [
       {
         title: '序号',
-        width: 40,
+        // width: 40,
         // dataIndex: 'index',
         // key: 'index',
         // render: (text, record, index) => {
@@ -181,7 +181,7 @@ const Work = props => {
         title: '内容描述',
         dataIndex: 'ContentDes',
         key: 'ContentDes',
-        width: 200,
+        width: 'auto',
         ellipsis: true,
       },
     ];
@@ -327,6 +327,7 @@ const Work = props => {
         align="center"
         columns={getColumns()}
         dataSource={dataSource}
+        scroll={{x:840}}
         pagination={{
           total: tableTotal,
           pageSize: pageSize,

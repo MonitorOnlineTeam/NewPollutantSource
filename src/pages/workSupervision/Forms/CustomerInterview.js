@@ -331,7 +331,7 @@ const CustomerInterview = props => {
                   },
                 ]}
               >
-                <Input placeholder="请输入客户姓名！" />
+                <Input placeholder="请输入客户姓名" />
               </Form.Item>
             </Col>
             <Col span={12}>

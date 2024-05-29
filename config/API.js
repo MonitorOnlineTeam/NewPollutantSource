@@ -815,6 +815,7 @@ export const API = {
     AddOrUpdUserMessage: before + '/AuthorizeApi/AddOrUpdUserMessage',//添加短信推送人员
     DelUserMessage: before + '/AuthorizeApi/DelUserMessage',//删除短信推送人员
     InsertPointUserMessage: before + '/AuthorizeApi/InsertPointUserMessage',//添加人员短信报警排口
+    GetPointUserMessageList: before + '/AuthorizeApi/GetPointUserMessageList',//获取人员短信报警排口
     /*** 基础设置 ***/
     /*合同变更设置*/
     GetOperationUserList: before + '/UserApi/GetOperationUserList', //获取合同变更运维人信息

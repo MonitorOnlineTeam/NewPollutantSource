@@ -283,10 +283,10 @@ export function chartClick(myChart, that, params, fixedHeight) { //基本用不�
     // 监听鼠标事件，实现饼图选中效果（单选），近似实现高亮（放大）效果。
     // 监听点击事件，实现选中效果（单选）
     // 从 option.series 中读取重新渲染扇形所需的参数，将是否选中取反。
-    let k = that.option.series[params.seriesIndex].pieStatus.k;
-    let startRatio = that.option.series[params.seriesIndex].pieData.startRatio;
-    let endRatio = that.option.series[params.seriesIndex].pieData.endRatio;
-    let h = fixedHeight ? fixedHeight : that.option.series[params.seriesIndex].pieData.endRatio;
+    let k = that.option.series[params.seriesIndex].pieStatus?.k;
+    let startRatio = that.option.series[params.seriesIndex].pieData?.startRatio;
+    let endRatio = that.option.series[params.seriesIndex].pieData?.endRatio;
+    let h = fixedHeight ? fixedHeight : that.option.series[params.seriesIndex].pieData?.endRatio;
 
     if (selectedIndex == params.seriesIndex) {
         return

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Form, Select, Typography } from 'antd';
+import RegionList from '@/components/RegionList';
 
 const dvaPropsData = ({ loading, provinceAllList, common }) => ({});
 
@@ -11,7 +12,10 @@ const LargeRegionSelect = props => {
   const { dispatch, type, required, label, formItemStyle, style, name } = props;
 
   useEffect(() => {
-    type === 'ct' ? getCtLargeRegion() : getLargeRegion();
+    // type === 'ct' ? getCtLargeRegion() : getLargeRegion();
+    if(type === 'ct' ){
+      getCtLargeRegion()
+    }
   }, []);
 
   // 获取成套大区及省份
@@ -79,7 +83,8 @@ const LargeRegionSelect = props => {
         ]}
         style={{ ...formItemStyle }}
       >
-        <Select
+        <RegionList style={{ width: 180, ...style }} levelNum={1}/>
+        {/* <Select
           placeholder="请选择"
           style={{ width: 140, ...style }}
           allowClear
@@ -93,7 +98,7 @@ const LargeRegionSelect = props => {
               </Option>
             );
           })}
-        </Select>
+        </Select> */}
       </Form.Item>
     );
   }

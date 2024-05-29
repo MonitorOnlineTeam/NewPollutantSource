@@ -66,7 +66,7 @@ const Index = (props) => {
     });
   }, []);
 
-
+  
 
   const columns = [
     {
@@ -347,7 +347,7 @@ const Index = (props) => {
           footer={null}
         >
           <Row>
-            {columns.filter(item => (item.title != '序号' && item.title != '操作')).map(item => (<Col span={8}><Form.Item label={item.title}>  {detailData?.[`${item.dataIndex}`]}  </Form.Item> </Col>))}
+            {columns.filter(item => (item.title != '序号' && item.title != '操作')).map(item => (<Col span={8}><Form.Item label={item.title}>  {item.dataIndex=='IsPoint'? detailData?.[`${item.dataIndex}`]? '有监测点' : '设备未安装'  : detailData?.[`${item.dataIndex}`]}  </Form.Item> </Col>))}
           </Row>
         </Modal>
       </BreadcrumbWrapper>

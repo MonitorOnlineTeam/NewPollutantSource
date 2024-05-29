@@ -11,11 +11,11 @@ import TreeTransfer from '@/components/TreeTransfer'
 import SelectPollutantType from '@/components/SelectPollutantType';
 import RegionList from '@/components/RegionList'
 
-const namespace = 'common'
+const namespace = 'smsSend'
 const dvaPropsData = ({ global,loading }) => ({
     clientHeight: global.clientHeight,
-    checkPointLoading: loading.effects['departinfo/getpointbydepid'],
-    entPointLoading: loading.effects[`${namespace}/getEntAndPointList`],
+    checkPointLoading: loading.effects[`${namespace}/GetPointUserMessageList`],
+    entPointLoading: loading.effects[`common/getEntAndPointList`],
   })
 
 const Index = (props) => {
@@ -31,12 +31,16 @@ const Index = (props) => {
 
 
   useEffect(()=>{
-    getEntAndPointList() 
-  },[])
+    if(visible){
+    pointAccessQuery()
+    }else{
+      setCheckedKeys([])
+    }
+  },[visible])
     // 获取企业和排口
     const getEntAndPointList = (pollutantType,regionCode,entName) => {
         props.dispatch({
-          type: `${namespace}/getEntAndPointList`,
+          type: `common/getEntAndPointList`,
           payload: {
             PollutantTypes: pollutantType,
             RegionCode:regionCode?.toString(),
@@ -54,12 +58,12 @@ const Index = (props) => {
  const pollutantChange = e => {
     const pollTypeVal = e.target.value
     setPollutantType(pollTypeVal)
-    this.props.dispatch({
-      type: 'newuserinfo/getpointbydepid',
+    props.dispatch({
+      type: `${namespace}/GetPointUserMessageList`,
       payload: {
         UserGroup_ID: record?.ID,
         PollutantType: pollTypeVal,
-        RegionCode:  regionCode?.toString(),
+        RegionCode:  regionCode?.toString() || undefined,
       },
     });
     getEntAndPointList(pollTypeVal,regionCode,entPointName)
@@ -68,34 +72,38 @@ const Index = (props) => {
   //查询
   const pointAccessQuery = () => {
     getEntAndPointList(pollutantType,regionCode,entPointName)
-    this.props.dispatch({
-      type: 'newuserinfo/getpointbydepid',
+    props.dispatch({
+      type: `${namespace}/GetPointUserMessageList`,
       payload: {
         UserGroup_ID: record?.ID,
         PollutantType: pollutantType,
-        RegionCode:  regionCode?.toString(),
+        RegionCode:  regionCode?.toString() || undefined,
       },
+      callback:(data)=>{
+         setCheckedKeys(data)
+      }
     });
   }
-const handleDataOK = (state, callback) => {
+const handleDataOK = (state, callback,checkedKeys) => {
     setOkLoading(true)
     props.dispatch({
-      type: 'departinfo/insertpointfilterbydepid',
+      type:`${namespace}/InsertPointUserMessage`,
       payload: {
         Type: pollutantType,
         DGIMN: checkedKeys,
-        UserGroup_ID: record?.ID,
-        RegionCode: regionCode?.toString(),
+        UserID: record?.ID,
+        RegionCode: regionCode?.toString() || undefined,
         state: state,
-        callback: res => {
-          if (res.IsSuccess) {
-            message.success('成功');
-            callback()
-          } else {
-            message.error(res.Message);
-          }
-           setOkLoading(false)
-        },
+      },
+      callback: res => {
+        if (res.IsSuccess) {
+          message.success('操作成功');
+          props.onFinish && props.onFinish()
+          callback()
+        } else {
+          message.error(res.Message);
+        }
+         setOkLoading(false)
       },
     });
   };
@@ -155,10 +163,8 @@ const handleDataOK = (state, callback) => {
                     checkedKeys={checkedKeys}
                     targetKeysChange={(key, type, callback) =>{
                         setCheckedKeys(key)
-                        setTimeout(()=>{
-                         handleDataOK(type == 1 ? 1 : 2, callback)
-                        })
-                    }} 
+                         handleDataOK(type == 1 ? 1 : 2, callback, key)
+                      }} 
                      />
                 </Spin>
               ) : (

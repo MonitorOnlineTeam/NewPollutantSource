@@ -73,10 +73,10 @@ const Index = (props) => {
           //   seriesIndex: 0,
           //   dataIndex: 0 // 这里可以指定你想要显示 tooltip 的数据点的索引
           // });
-          let echartsOption = echartsRef?.current?.props;
-          myChart.on('click', function (params) {
-            chartClick(myChart, echartsOption, params, 10)
-          });
+          // let echartsOption = echartsRef?.current?.props;
+          // myChart.on('click', function (params) {
+          //   chartClick(myChart, echartsOption, params, 10)
+          // });
         }, 200)
       }
 
@@ -95,7 +95,7 @@ const Index = (props) => {
       return { name: item.Used, value: item.Num, itemStyle: { color: colors[index] } }
     });
     const option = getPie3D(datalist,
-      { internalDiameterRatio: 0, height: 12, customVal: customVal, legendOption: { show: false }, defaultselection: true, defaultIndex: 0},
+      { internalDiameterRatio: 0, height: 12, customVal: customVal, legendOption: { show: false }, defaultselection: false, defaultIndex: 0},
       { //3d效果可以放大、旋转等，请自己去查看官方配置
         alpha: 20,// 视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
         beta: -10,// 视角绕 y 轴，即左右旋转的角度
@@ -129,7 +129,49 @@ const Index = (props) => {
       }
 
     }
-    console.log(option)
+    option.series.push({
+      name: "pie2d",
+      type: "pie",
+      label: {
+        // position: 'inside',
+        color: 'inherit', //继承饼图颜色
+        opacity: 1,
+        formatter: function (params) {
+          return (
+            "{a|●} {b|" + params.name + "}\n{c|" + params.value + "个}"
+          );
+        },
+        rich: {
+          a: {
+            fontSize: 18,
+          },
+          b: {
+            fontFamily: 'Source Han Sans CN',
+            fontSize: 14,
+            color: '#fff',
+          },
+          c: {
+            padding: [2, 0, 0, 16]
+          },
+        },
+        textStyle:{
+          fontWeight: 400,  
+        },
+       
+      },
+      labelLine: {
+        length: 10,//视觉引导线第一段的长度
+        length2: 50,//视觉引导线第二段的长度
+      },
+      startAngle: 50, //起始角度，支持范围[0, 360]。
+      clockwise: false, //饼图的扇区是否是顺时针排布。上述这两项配置主要是为了对齐3d的样式
+      radius: ["0%", "80%"],
+      center: ["50%", "60%"],
+      data: datalist,
+      itemStyle: {
+        opacity: 0,
+      },
+    });
     return option;
   }
   const bxColor0 = { bagColor: 'linear-gradient(90deg, #19BC23, rgba(31,196,40,0))', textColor: 'linear-gradient(0deg, #FFFFFF 0.1220703125%, rgba(122,255,129,0.8) 100%)' }
@@ -221,12 +263,12 @@ const Index = (props) => {
                 </div>
               </Row>
             </Col>
-            <Col span={12} style={{ paddingLeft: 6 }}>
-              {data?.StorehouseInfo?.UsedList.map((item, index) => {
+             <Col span={12} style={{ paddingLeft: 6 }}>
+              {data?.StorehouseInfo?.UsedList?.map((item, index) => {
                 return <div style={{ height: 32, marginBottom: index == 0 ? 38 : 0, marginTop: index == 1 ? 38 : 0, background: 'url(/currencyResOver/syztxbk.png)', backgroundSize: '100% 100%' }}><Row justify='space-between' style={{ paddingLeft: 36 }}><span>使用状态：{item.Used}</span> <span style={{ fontFamily: 'YouSheBiaoTiHei', fontSize: 18, lineHeight: '100%' }}>{item.Num}</span></Row></div>
               })
               }
-            </Col>
+            </Col> 
           </Row>
         </div>
       </div>
