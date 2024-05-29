@@ -5,6 +5,7 @@ import styles from '../../styles.less';
 import ReactEcharts from 'echarts-for-react';
 import HomeCard from '../../components/HomeCard';
 import RankingContent from './RankingContent';
+import { ModalTypeNameConversion } from '@/pages/AbnormalIdentifyModel/CONST'
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   // todoList: wordSupervision.todoList,
@@ -36,8 +37,8 @@ const Ranking = props => {
             setModelBaseType(e.target.value);
           }}
         >
-          <Radio.Button value={1}>人为干预</Radio.Button>
-          <Radio.Button value={2}>设备故障</Radio.Button>
+          <Radio.Button value={1}>{ModalTypeNameConversion('人为干预')}</Radio.Button>
+          <Radio.Button value={2}>{ModalTypeNameConversion('设备故障')}</Radio.Button>
         </Radio.Group>
       }
     >

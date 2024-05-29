@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-24 10:36:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-11 15:15:56
+ * @Last Modified time: 2024-05-29 16:13:49
  * @Description:  数据质量分析
  */
 import React, { useState, useEffect, useRef } from 'react';
@@ -12,7 +12,11 @@ import SdlTable from '@/components/SdlTable';
 import styles from '../../styles.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
-import { handleHomeDate, getModelGuidsByBaseTypeCode } from '@/pages/AbnormalIdentifyModel/CONST';
+import {
+  handleHomeDate,
+  getModelGuidsByBaseTypeCode,
+  ModalTypeNameConversion,
+} from '@/pages/AbnormalIdentifyModel/CONST';
 import EntAtmoList from '@/components/EntAtmoList';
 import { RollbackOutlined } from '@ant-design/icons';
 import WarningTableData from './WarningTableData';
@@ -302,7 +306,7 @@ const DataQualityAnalysisModal = props => {
             },
           },
           {
-            title: '人为干预小时数',
+            title: ModalTypeNameConversion('人为干预小时数'),
             dataIndex: 'RenweiHour',
             key: 'RenweiHour',
             width: 180,
@@ -312,7 +316,12 @@ const DataQualityAnalysisModal = props => {
               return (
                 <a
                   onClick={e => {
-                    onHourNumClick(record, 'RenweiHour', '人为干预数据', true);
+                    onHourNumClick(
+                      record,
+                      'RenweiHour',
+                      ModalTypeNameConversion('人为干预数据'),
+                      true,
+                    );
                     updateCluesListFormState(record, '1');
                   }}
                 >
@@ -322,10 +331,10 @@ const DataQualityAnalysisModal = props => {
             },
           },
           {
-            title: '设备故障',
+            title: ModalTypeNameConversion('设备故障'),
             children: [
               {
-                title: '设备故障小时数',
+                title: ModalTypeNameConversion('设备故障小时数'),
                 dataIndex: 'FaultHour',
                 key: 'FaultHour',
                 width: 180,
@@ -335,7 +344,12 @@ const DataQualityAnalysisModal = props => {
                   return (
                     <a
                       onClick={e => {
-                        onHourNumClick(record, 'FaultHour', '设备故障', true);
+                        onHourNumClick(
+                          record,
+                          'FaultHour',
+                          ModalTypeNameConversion('设备故障'),
+                          true,
+                        );
                         updateCluesListFormState(record, '2');
                       }}
                     >
