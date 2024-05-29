@@ -447,6 +447,7 @@ export default Model.extend({
       // const token = Cookie.get(config.cookieName);
       // const tokenFlag = token&&token!='null' && token!= 'undefined'&& token!= '';
       if (pathname === '/') {
+        window.configInfo = {};
         let meunList = sessionStorage.getItem('menuDatas') ? JSON.parse(sessionStorage.getItem('menuDatas')) : []
         router.push(meunList?.[0] ? meunList?.[0] : '/user/login')
         return
