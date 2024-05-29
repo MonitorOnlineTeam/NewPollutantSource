@@ -106,14 +106,22 @@ const RunStateModal = props => {
             dataIndex: 'EntNum',
             key: 'EntNum',
             width: 160,
-            sorter: (a, b) => a.EntNum - b.EntNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.EntNum - b.EntNum;
+              }
+            },
           },
           {
             title: '监测点数',
             dataIndex: 'PointNum',
             key: 'PointNum',
             width: 160,
-            sorter: (a, b) => a.PointNum - b.PointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.PointNum - b.PointNum;
+              }
+            },
           },
           {
             title: '正常',
@@ -125,7 +133,11 @@ const RunStateModal = props => {
                 key: 'NormalEntNum',
                 width: 160,
                 align: 'center',
-                sorter: (a, b) => a.NormalEntNum - b.NormalEntNum,
+                sorter: (a, b) => {
+                  if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                    return a.NormalEntNum - b.NormalEntNum;
+                  }
+                },
               },
               {
                 title: '排口（个）',
@@ -133,7 +145,11 @@ const RunStateModal = props => {
                 key: 'NormalPointNum',
                 align: 'center',
                 width: 160,
-                sorter: (a, b) => a.NormalPointNum - b.NormalPointNum,
+                sorter: (a, b) => {
+                  if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                    return a.NormalPointNum - b.NormalPointNum;
+                  }
+                },
               },
             ],
           },
@@ -147,7 +163,11 @@ const RunStateModal = props => {
                 key: 'ExceptionEntNum',
                 width: 160,
                 align: 'center',
-                sorter: (a, b) => a.ExceptionEntNum - b.ExceptionEntNum,
+                sorter: (a, b) => {
+                  if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                    return a.ExceptionEntNum - b.ExceptionEntNum;
+                  }
+                },
               },
               {
                 title: '排口（个）',
@@ -155,7 +175,11 @@ const RunStateModal = props => {
                 key: 'ExceptionPointNum',
                 width: 160,
                 align: 'center',
-                sorter: (a, b) => a.ExceptionPointNum - b.ExceptionPointNum,
+                sorter: (a, b) => {
+                  if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                    return a.ExceptionPointNum - b.ExceptionPointNum;
+                  }
+                },
               },
             ],
           },
@@ -169,7 +193,11 @@ const RunStateModal = props => {
                 key: 'OverEntNum',
                 width: 160,
                 align: 'center',
-                sorter: (a, b) => a.OverEntNum - b.OverEntNum,
+                sorter: (a, b) => {
+                  if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                    return a.OverEntNum - b.OverEntNum;
+                  }
+                },
               },
               {
                 title: '排口（个）',
@@ -177,7 +205,11 @@ const RunStateModal = props => {
                 key: 'OverPointNum',
                 width: 160,
                 align: 'center',
-                sorter: (a, b) => a.OverPointNum - b.OverPointNum,
+                sorter: (a, b) => {
+                  if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                    return a.OverPointNum - b.OverPointNum;
+                  }
+                },
               },
             ],
           },
@@ -191,7 +223,11 @@ const RunStateModal = props => {
                 key: 'StopEntNum',
                 width: 160,
                 align: 'center',
-                sorter: (a, b) => a.StopEntNum - b.StopEntNum,
+                sorter: (a, b) => {
+                  if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                    return a.StopEntNum - b.StopEntNum;
+                  }
+                },
               },
               {
                 title: '排口（个）',
@@ -199,7 +235,11 @@ const RunStateModal = props => {
                 key: 'StopPointNum',
                 width: 160,
                 align: 'center',
-                sorter: (a, b) => a.StopPointNum - b.StopPointNum,
+                sorter: (a, b) => {
+                  if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                    return a.StopPointNum - b.StopPointNum;
+                  }
+                },
               },
             ],
           },
@@ -238,35 +278,55 @@ const RunStateModal = props => {
             dataIndex: 'PointNum',
             key: 'PointNum',
             width: 160,
-            sorter: (a, b) => a.PointNum - b.PointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.PointNum - b.PointNum;
+              }
+            },
           },
           {
             title: '正常点位数',
             dataIndex: 'NormalPointNum',
             key: 'NormalPointNum',
             width: 160,
-            sorter: (a, b) => a.NormalPointNum - b.NormalPointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.NormalPointNum - b.NormalPointNum;
+              }
+            },
           },
           {
             title: '异常点位数',
             dataIndex: 'OverPointNum',
             key: 'OverPointNum',
             width: 160,
-            sorter: (a, b) => a.OverPointNum - b.OverPointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.OverPointNum - b.OverPointNum;
+              }
+            },
           },
           {
             title: '超标点位数',
             dataIndex: 'ExceptionPointNum',
             key: 'ExceptionPointNum',
             width: 160,
-            sorter: (a, b) => a.ExceptionPointNum - b.ExceptionPointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.ExceptionPointNum - b.ExceptionPointNum;
+              }
+            },
           },
           {
             title: '停运点位数',
             dataIndex: 'StopPointNum',
             key: 'StopPointNum',
             width: 160,
-            sorter: (a, b) => a.StopPointNum - b.StopPointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.StopPointNum - b.StopPointNum;
+              }
+            },
           },
         );
         break;
@@ -294,7 +354,11 @@ const RunStateModal = props => {
             dataIndex: 'NormalHourSum',
             key: 'NormalHourSum',
             width: 160,
-            sorter: (a, b) => a.NormalHourSum - b.NormalHourSum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.NormalHourSum - b.NormalHourSum;
+              }
+            },
             render: (text, record) => {
               return level == 3 && record.RegionName !== '合计' ? (
                 <a
@@ -314,7 +378,11 @@ const RunStateModal = props => {
             dataIndex: 'ExceptionHourSum',
             key: 'ExceptionHourSum',
             width: 160,
-            sorter: (a, b) => a.ExceptionHourSum - b.ExceptionHourSum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.ExceptionHourSum - b.ExceptionHourSum;
+              }
+            },
             render: (text, record) => {
               return level == 3 && record.RegionName !== '合计' ? (
                 <a
@@ -334,7 +402,11 @@ const RunStateModal = props => {
             dataIndex: 'OverHourSum',
             key: 'OverHourSum',
             width: 160,
-            sorter: (a, b) => a.OverHourSum - b.OverHourSum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.OverHourSum - b.OverHourSum;
+              }
+            },
             render: (text, record) => {
               return level == 3 && record.RegionName !== '合计' ? (
                 <a
@@ -354,7 +426,11 @@ const RunStateModal = props => {
             dataIndex: 'StopHourSum',
             key: 'StopHourSum',
             width: 160,
-            sorter: (a, b) => a.StopHourSum - b.StopHourSum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.StopHourSum - b.StopHourSum;
+              }
+            },
             render: (text, record) => {
               return level == 3 && record.RegionName !== '合计' ? (
                 <a
@@ -472,6 +548,7 @@ const RunStateModal = props => {
         dataSource={dataSource[level]}
         columns={getColumns()}
         scroll={{ y: 'calc(100vh - 250px)' }}
+        pagination={false}
       />
       {isModalOpen && (
         <DataQueryModal

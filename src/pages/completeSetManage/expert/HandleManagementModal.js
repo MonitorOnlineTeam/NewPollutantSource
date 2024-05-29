@@ -1,8 +1,8 @@
 /*
- * @Author: JiaQi 
- * @Date: 2023-05-23 17:00:01 
+ * @Author: JiaQi
+ * @Date: 2023-05-23 17:00:01
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-23 17:04:40
+ * @Last Modified time: 2024-05-27 09:30:17
  * @Description: 添加、编辑专家弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -51,10 +51,13 @@ const HandleManagementModal = props => {
   return (
     <Modal
       // width={800}
-      title="添加专家信息"
+      title={editData.ID ? '编辑专家信息' : '添加专家信息'}
       destroyOnClose={true}
-      visible={visible}
-      onCancel={() => onCancel()}
+      open={visible}
+      onCancel={() => {
+        form.resetFields();
+        onCancel();
+      }}
       onOk={() => {
         onSubmit();
       }}

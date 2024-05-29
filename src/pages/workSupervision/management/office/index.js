@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-11 17:00:58
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-18 10:33:19
+ * @Last Modified time: 2024-05-27 11:50:45
  * @Description: 办事处管理
  */
 import React, { useState, useEffect } from 'react';
@@ -30,6 +30,7 @@ import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import Cookie from 'js-cookie';
 import { UsergroupAddOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import difference from 'lodash/difference';
 
 const CONFIGID = 'T_Bas_OfficeLocation';
 
@@ -195,7 +196,6 @@ const Office = props => {
 
   const filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1;
   const handleChange = newTargetKeys => {
-    console.log('newTargetKeys', newTargetKeys);
     setTargetKeys(newTargetKeys);
   };
   const columns = [

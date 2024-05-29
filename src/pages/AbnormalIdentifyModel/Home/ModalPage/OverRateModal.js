@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-24 10:31:43
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-11 15:13:59
+ * @Last Modified time: 2024-05-27 13:40:50
  * @Description:  超标率统计
  */
 import React, { useState, useEffect, useRef } from 'react';
@@ -135,14 +135,22 @@ const OverRateModal = props => {
             dataIndex: 'EntNum',
             key: 'EntNum',
             width: 160,
-            sorter: (a, b) => a.EntNum - b.EntNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.EntNum - b.EntNum;
+              }
+            },
           },
           {
             title: '监测点数',
             dataIndex: 'PointNum',
             key: 'PointNum',
             width: 160,
-            sorter: (a, b) => a.PointNum - b.PointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.PointNum - b.PointNum;
+              }
+            },
           },
         );
         break;
@@ -179,7 +187,11 @@ const OverRateModal = props => {
             dataIndex: 'PointNum',
             key: 'PointNum',
             width: 160,
-            sorter: (a, b) => a.PointNum - b.PointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.PointNum - b.PointNum;
+              }
+            },
           },
         );
         break;
@@ -246,7 +258,11 @@ const OverRateModal = props => {
         title: '排放源运行小时数',
         dataIndex: 'RunHourNum',
         key: 'RunHourNum',
-        sorter: (a, b) => a.RunHourNum - b.RunHourNum,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.RunHourNum - b.RunHourNum;
+          }
+        },
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
@@ -265,7 +281,11 @@ const OverRateModal = props => {
         title: '超标小时数',
         dataIndex: 'OverHourNum',
         key: 'OverHourNum',
-        sorter: (a, b) => a.OverHourNum - b.OverHourNum,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.OverHourNum - b.OverHourNum;
+          }
+        },
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
@@ -289,7 +309,11 @@ const OverRateModal = props => {
         key: 'OverRate',
         // fixed: 'left',
         width: 240,
-        sorter: (a, b) => a.OverRate - b.OverRate,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.OverRate - b.OverRate;
+          }
+        },
         render: (text, record) => {
           let percent = Number(text).toFixed(2);
           return (
@@ -393,6 +417,7 @@ const OverRateModal = props => {
         dataSource={dataSource[level]}
         scroll={{ y: 'calc(100vh - 250px)' }}
         columns={getColumns()}
+        pagination={false}
       />
       {isModalOpen && (
         <WarningTableData

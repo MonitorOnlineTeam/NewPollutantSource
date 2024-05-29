@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-11 15:32:31
+ * @Last Modified time: 2024-05-27 09:17:13
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -385,10 +385,16 @@ class SdlTable extends PureComponent {
             })}
             dataSource={dragable ? this.state.dataSource : this.props.dataSource}
             {..._props}
-            scroll={{
-              x: (this.props.scroll && this.props.scroll.x && this.props.scroll.x) || scrollXWidth,
-              y: scrollY,
-            }}
+            scroll={
+              this.props.scroll === false
+                ? {}
+                : {
+                    x:
+                      (this.props.scroll && this.props.scroll.x && this.props.scroll.x) ||
+                      scrollXWidth,
+                    y: scrollY,
+                  }
+            }
           />
         </div>
       </DndProvider>

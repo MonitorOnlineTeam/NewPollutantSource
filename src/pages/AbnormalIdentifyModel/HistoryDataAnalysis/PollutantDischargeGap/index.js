@@ -73,9 +73,18 @@ const Index = props => {
 
     onTableChange(1, 20);
   }, [type]);
-  const renderContent = (text, record) => {
+  const renderContent = (text, record, isGap) => {
     let obj = {
-      children: <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>,
+      children: (
+        <div
+          style={{
+            whiteSpace: 'pre-wrap',
+            color: isGap && text < 0 ? '#ff4d4f' : 'rgba(0, 0, 0, 0.85)',
+          }}
+        >
+          {text}
+        </div>
+      ),
       props: { rowSpan: record.Count },
     };
     return obj;
@@ -130,7 +139,7 @@ const Index = props => {
               align: 'center',
               width: 150,
               ellipsis: true,
-              render: renderContent,
+              render: (text, record) => renderContent(text, record, true),
             },
             {
               title: 'SO₂排放量',
@@ -156,7 +165,7 @@ const Index = props => {
               align: 'center',
               width: 150,
               ellipsis: true,
-              render: renderContent,
+              render: (text, record) => renderContent(text, record, true),
             },
             {
               title: 'NOx排放量',
@@ -182,7 +191,7 @@ const Index = props => {
               align: 'center',
               width: 150,
               ellipsis: true,
-              render: renderContent,
+              render: (text, record) => renderContent(text, record, true),
             },
           ],
         },
@@ -334,20 +343,20 @@ const Index = props => {
                   <RegionList style={{ width: 140 }} />
               </Form.Item> */}
                 {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
-                  <Form.Item label="企业" name="entCode">
-                    <EntAtmoList
-                      style={{ width: 200 }}
-                      onChange={value => {
-                        if (!value) {
-                          form.setFieldsValue({ dgimn: undefined });
-                          setPointList([]);
-                        } else {
-                          form.setFieldsValue({ dgimn: undefined });
-                          getPointList(value);
-                        }
-                      }}
-                    />
-                  </Form.Item>
+                <Form.Item label="企业" name="entCode">
+                  <EntAtmoList
+                    style={{ width: 200 }}
+                    onChange={value => {
+                      if (!value) {
+                        form.setFieldsValue({ dgimn: undefined });
+                        setPointList([]);
+                      } else {
+                        form.setFieldsValue({ dgimn: undefined });
+                        getPointList(value);
+                      }
+                    }}
+                  />
+                </Form.Item>
                 {/* </Spin> */}
                 <Spin spinning={!!pointListLoading} size="small">
                   <Form.Item label="监测点名称" name="dgimn">
@@ -412,6 +421,7 @@ const Index = props => {
           loading={queryLoading}
           rowClassName={null}
           pagination={false}
+          scroll={{ y: 'calc(100vh - 370px)' }}
           {...tableProps}
         />
         {total && total > 0 ? (

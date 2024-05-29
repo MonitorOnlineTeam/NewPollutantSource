@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-23 17:00:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-05-25 11:04:23
+ * @Last Modified time: 2024-05-27 09:32:45
  * @Description：专家管理
  */
 import React, { useState, useEffect } from 'react';
@@ -161,7 +161,13 @@ const Management = props => {
           autoComplete="off"
         >
           <Form.Item label="大区" name="UserGroup_ID">
-            <Select style={{ width: 200 }} placeholder="请选择大区">
+            <Select
+              style={{ width: 200 }}
+              placeholder="请选择大区"
+              allowClear
+              showSearch
+              optionFilterProp="children"
+            >
               {regionalList.map(item => {
                 return (
                   <Option key={item.UserGroup_ID} value={item.UserGroup_ID}>
@@ -172,10 +178,10 @@ const Management = props => {
             </Select>
           </Form.Item>
           <Form.Item label="设备型号" name="Model">
-            <Input style={{ width: 300 }} placeholder="请输入设备型号" />
+            <Input style={{ width: 300 }} placeholder="请输入设备型号" allowClear />
           </Form.Item>
           <Form.Item label="专家" name="ExpertName">
-            <Input style={{ width: 300 }} placeholder="请输入专家姓名" />
+            <Input style={{ width: 300 }} placeholder="请输入专家姓名" allowClear />
           </Form.Item>
           <Space>
             <Button type="primary" htmlType="submit" loading={loading}>
@@ -199,19 +205,19 @@ const Management = props => {
           pagination={false}
         />
       </Card>
-      {/* {visible && ( */}
-      <HandleManagementModal
-        visible={visible}
-        onCancel={() => {
-          setVisible(false);
-        }}
-        editData={currentEditData}
-        reloadDataList={() => {
-          onFinish();
-          setVisible(false);
-        }}
-      />
-      {/* )} */}
+      {visible && (
+        <HandleManagementModal
+          visible={visible}
+          onCancel={() => {
+            setVisible(false);
+          }}
+          editData={currentEditData}
+          reloadDataList={() => {
+            onFinish();
+            setVisible(false);
+          }}
+        />
+      )}
     </BreadcrumbWrapper>
   );
 };

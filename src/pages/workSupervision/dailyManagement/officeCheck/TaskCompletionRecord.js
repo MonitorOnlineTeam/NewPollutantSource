@@ -21,7 +21,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const { Text, Link } = Typography;
 
 const dvaPropsData = ({ loading, provinceAllList, common }) => ({
-  provinceAllList: common.CtProvinceList,
+  provinceAllList: common.provinceList,
   loading: loading.effects[`wordSupervision/GetOfficeCheckStatisticsForRegionInfo`],
   exportLoading: loading.effects[`wordSupervision/ExportOfficeCheckStatisticsForRegionInfo`],
 });
@@ -53,7 +53,7 @@ const TaskCompletionRecord = props => {
   // 获取大区及省份
   const getLargeRegion = () => {
     dispatch({
-      type: 'common/getCTLargeRegion',
+      type: 'common/getLargeRegion',
       payload: {},
     });
   };

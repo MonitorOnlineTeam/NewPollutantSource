@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-20 16:43:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-09 15:40:55
+ * @Last Modified time: 2024-05-27 17:13:52
  * @Description: 办事处检查任务单填写、编辑
  */
 import React, { useState, useEffect } from 'react';
@@ -138,8 +138,9 @@ const OfficeInspection = props => {
       type: 'wordSupervision/GetLargeRegion',
       payload: {},
       callback: res => {
-        let region = findLargeRegionByRegionCode(res, taskInfo.RegionCode);
-        form.setFieldsValue({ LargeRegion: region.LargeRegion, RegionCode: taskInfo.RegionCode });
+        let RegionCode = taskInfo.RegionCode || editData.RegionCode;
+        let region = findLargeRegionByRegionCode(res, RegionCode);
+        form.setFieldsValue({ LargeRegion: region.LargeRegion, RegionCode: RegionCode });
         setProvinceList(region.ChildList);
       },
     });
@@ -147,10 +148,11 @@ const OfficeInspection = props => {
 
   // 获取办事处列表
   const GetOfficeList = () => {
+    let RegionCode = taskInfo.RegionCode || editData.RegionCode;
     props.dispatch({
       type: 'wordSupervision/GetOfficeList',
       payload: {
-        regionCode: taskInfo.RegionCode,
+        regionCode: RegionCode,
       },
     });
   };
@@ -158,13 +160,15 @@ const OfficeInspection = props => {
   // 提交任务单
   const onFinish = async () => {
     const values = await form.validateFields();
+
+    const dailyTaskID = taskInfo.ID || editData.DailyTaskID
     // console.log('values', values);
     // return;
     let body = {
       ...values,
       LargeRegion: undefined,
       RegionCode: undefined,
-      DailyTaskID: taskInfo.ID,
+      DailyTaskID: dailyTaskID,
       ID: editData.ID,
       CreateTime: editData.CreateTime,
     };
@@ -259,7 +263,6 @@ const OfficeInspection = props => {
       },
     ];
   };
-  console.log('taskInfo', taskInfo);
   return (
     <>
       <h2 className={styles.formTitle}>办事处检查任务单</h2>

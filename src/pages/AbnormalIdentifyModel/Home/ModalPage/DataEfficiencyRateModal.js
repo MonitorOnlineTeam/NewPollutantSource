@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-08 16:09:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-14 09:49:14
+ * @Last Modified time: 2024-05-27 09:10:04
  * @Description:  数据有效率统计
  */
 import React, { useState, useEffect, useRef } from 'react';
@@ -331,7 +331,11 @@ const DataEfficiencyRateModal = props => {
             key: 'EntNum',
             fixed: 'left',
             width: 120,
-            sorter: (a, b) => a.EntNum - b.EntNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.EntNum - b.EntNum;
+              }
+            },
           },
           {
             title: '监测点数',
@@ -339,7 +343,11 @@ const DataEfficiencyRateModal = props => {
             key: 'PointNum',
             fixed: 'left',
             width: 120,
-            sorter: (a, b) => a.PointNum - b.PointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.PointNum - b.PointNum;
+              }
+            },
           },
         );
         break;
@@ -379,7 +387,11 @@ const DataEfficiencyRateModal = props => {
             key: 'PointNum',
             fixed: 'left',
             width: 120,
-            sorter: (a, b) => a.PointNum - b.PointNum,
+            sorter: (a, b) => {
+              if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+                return a.PointNum - b.PointNum;
+              }
+            },
           },
         );
         break;
@@ -453,13 +465,21 @@ const DataEfficiencyRateModal = props => {
         dataIndex: 'AllHours',
         key: 'AllHours',
         width: 160,
-        sorter: (a, b) => a.AllHours - b.AllHours,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.AllHours - b.AllHours;
+          }
+        },
       },
       {
         title: '停炉小时数',
         dataIndex: 'StopHour',
         key: 'StopHour',
-        sorter: (a, b) => a.StopHour - b.StopHour,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.StopHour - b.StopHour;
+          }
+        },
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
@@ -478,7 +498,11 @@ const DataEfficiencyRateModal = props => {
         title: '排放源运行小时数',
         dataIndex: 'RunHour',
         key: 'RunHour',
-        sorter: (a, b) => a.RunHour - b.RunHour,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.RunHour - b.RunHour;
+          }
+        },
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
@@ -497,7 +521,11 @@ const DataEfficiencyRateModal = props => {
         title: '维护数据小时数',
         dataIndex: 'DefendHour',
         key: 'DefendHour',
-        sorter: (a, b) => a.DefendHour - b.DefendHour,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.DefendHour - b.DefendHour;
+          }
+        },
         // 内蒙注释掉
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
@@ -517,7 +545,11 @@ const DataEfficiencyRateModal = props => {
         title: '数据现象异常小时数',
         dataIndex: 'DataExceptionHour',
         key: 'DataExceptionHour',
-        sorter: (a, b) => a.DataExceptionHour - b.DataExceptionHour,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.DataExceptionHour - b.DataExceptionHour;
+          }
+        },
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
@@ -536,7 +568,11 @@ const DataEfficiencyRateModal = props => {
         title: '人为干预小时数',
         dataIndex: 'RenweiHour',
         key: 'RenweiHour',
-        sorter: (a, b) => a.RenweiHour - b.RenweiHour,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.RenweiHour - b.RenweiHour;
+          }
+        },
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
@@ -556,7 +592,11 @@ const DataEfficiencyRateModal = props => {
         title: '设备故障小时数',
         dataIndex: 'FaultHour',
         key: 'FaultHour',
-        sorter: (a, b) => a.FaultHour - b.FaultHour,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.FaultHour - b.FaultHour;
+          }
+        },
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
@@ -577,7 +617,11 @@ const DataEfficiencyRateModal = props => {
         dataIndex: 'NormalMissHour',
         key: 'NormalMissHour',
         width: 200,
-        sorter: (a, b) => a.NormalMissHour - b.NormalMissHour,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.NormalMissHour - b.NormalMissHour;
+          }
+        },
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
@@ -598,7 +642,11 @@ const DataEfficiencyRateModal = props => {
         dataIndex: 'NomarlHour',
         key: 'NomarlHour',
         width: 200,
-        sorter: (a, b) => a.NomarlHour - b.NomarlHour,
+        sorter: (a, b) => {
+          if (a.RegionName !== '合计' && b.RegionName !== '合计') {
+            return a.NomarlHour - b.NomarlHour;
+          }
+        },
         render: (text, record) => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
@@ -704,6 +752,7 @@ const DataEfficiencyRateModal = props => {
         dataSource={dataSource[level]}
         columns={getColumns()}
         scroll={{ y: 'calc(100vh - 250px)' }}
+        pagination={false}
       />
       {isModalOpen && (
         <WarningTableData
