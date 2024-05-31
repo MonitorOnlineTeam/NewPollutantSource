@@ -283,8 +283,7 @@ class Index extends PureComponent {
     const btnList = [{ name: '备机', value: leftData?.StandbyMachineInfo?.StandbyMachineNum }, { name: '便携仪器', value: rightData?.PortableInstrumentInfo?.PortableInstrumentNum }, { name: '办事处', value: rightData?.OfficeLocationInfo?.OfficeLocationNum }, { name: '备件库', value: rightData?.StorehouseInfo?.StorehouseNum },]
 
     const operationBtnArr = () => {
-
-      const fullData = [{ text: fullScreen ? '退出全屏' : '全屏', url: fullScreen ? '/currencyResOver/mapqp.png' : '/currencyResOver/mapqp.png' }]
+      const fullData = [{ text: fullScreen ? '退出全屏' : '全屏', url: fullScreen ? '/currencyResOver/maptcqp.png' : '/currencyResOver/mapqp.png' }]
       return selectType.secondFlag ? [
         ...fullData,
         { text: '省', url: '/currencyResOver/xzq.png' },

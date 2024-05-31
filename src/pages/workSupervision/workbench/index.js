@@ -331,7 +331,8 @@ const Workbench = props => {
         taskType: todoItem.TaskType,
       },
       callback: () => {
-        loadData();
+        // loadData();
+        GetToDoDailyWorks();
       },
     });
   };

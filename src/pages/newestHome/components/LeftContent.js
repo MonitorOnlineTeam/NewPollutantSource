@@ -160,13 +160,13 @@ const Index = (props) => {
       })
       props.GetOperationPlanTaskRate({ //计划运维情况
         pollutantType: pollutantType,
-        ...workOrderExecuTimeObj[workOrderExecuTimeVal]
+        ...latelyDays30
       })
     } else {
       GetOperationTaskStatisticsInfoByDayRequest(workOrderExecuTimeVal) //工单执行情况 固定到天
       props.GetPlanOperationTaskCompleteRateByDay({ //近30日运维情况 固定到天
         pollutantType: pollutantType,
-        ...latelyDays30
+        ...workOrderExecuTimeObj[workOrderExecuTimeVal]
       })
     }
 
@@ -315,25 +315,25 @@ const Index = (props) => {
 
     ]
   };
+
+  let operaTypeData = [
+    { name: '巡检', key: 'inspectionCount', value: workOrderExecuData.inspectionCount,TaskType:workOrderExecuData.inspectionTaskType, color1: '#0487ED', color2: '#0FD5F9' },
+    { name: '校准', key: 'calibrationCount', value: workOrderExecuData.calibrationCount,TaskType:workOrderExecuData.calibrationTaskType, color1: '#0666E8', color2: '#0487ED' },
+    { name: '维修', key: 'repairCount', value: workOrderExecuData.repairCount, TaskType:workOrderExecuData.repairTaskType,color1: '#3EB076', color2: '#A2FFD0' },
+    { name: '维护', key: 'maintainReportCount', value: workOrderExecuData.maintainReportCount,TaskType:workOrderExecuData.maintainReportTaskType, color1: '#C1C049', color2: '#FFFE95' },
+    { name: '异常处理', key: 'dealExceptionCount', value: workOrderExecuData.dealExceptionCount,TaskType:workOrderExecuData.dealExceptionTaskType, color1: '#FFCD5E', color2: '#FF9000' },
+    { name: '校验测试', key: 'calibrationTestCount', value: workOrderExecuData.calibrationTestCount,TaskType:workOrderExecuData.calibrationTestTaskType, color1: '#56E5EB', color2: '#56E5EB' },
+    { name: '配合检查', key: 'cooperationInspectionCount', value: workOrderExecuData.cooperationInspectionCount,TaskType:workOrderExecuData.cooperationInspectionTaskType, color1: '#FF87A7', color2: '#FF87A7' },
+    { name: '配合比对', key: 'coordinationComparisonCount', value: workOrderExecuData.coordinationComparisonCount,TaskType:workOrderExecuData.coordinationComparisonTaskType, color1: '#2043B9', color2: '#2043B9' },
+    { name: '参数核对', key: 'matchingComparisonCount', value: workOrderExecuData.matchingComparisonCount,TaskType:workOrderExecuData.matchingComparisonTaskType, color1: '#C8C8C8', color2: '#C8C8C8' },
+    { name: '备品备件更换', key: 'sparesCount', value: workOrderExecuData.sparesCount,TaskType:workOrderExecuData.sparesTaskType, color1: '#f759ab', color2: '#f759ab' },
+    { name: '易耗品更换', key: 'consumablesCount', value: workOrderExecuData.consumablesCount,TaskType:workOrderExecuData.consumablesTaskType, color1: '#b37feb', color2: '#b37feb' },
+    { name: '标准物质更换', key: 'standCount', value: workOrderExecuData.standCount,TaskType:workOrderExecuData.standTaskType, color1: '#5cdbd3', color2: '#5cdbd3' },
+    { name: '试剂更换', key: 'reagentCount', value: workOrderExecuData.reagentCount, TaskType:workOrderExecuData.reagentTaskType,color1: '#ff85c0', color2: '#ff85c0' },
+  ]
   const operaOrderOptionDay = () => {
-    let data = [
-      { name: '启动', key: 'inspectionCount', value: workOrderExecuData.inspectionCount, color1: '#0487ED', color2: '#0FD5F9' },
-      { name: '校准', key: 'calibrationCount', value: workOrderExecuData.calibrationCount, color1: '#0666E8', color2: '#0487ED' },
-      { name: '维修', key: 'repairCount', value: workOrderExecuData.repairCount, color1: '#3EB076', color2: '#A2FFD0' },
-      { name: '维护', key: 'maintainReportCount', value: workOrderExecuData.maintainReportCount, color1: '#C1C049', color2: '#FFFE95' },
-      { name: '异常处理', key: 'dealExceptionCount', value: workOrderExecuData.dealExceptionCount, color1: '#FFCD5E', color2: '#FF9000' },
-      { name: '校验测试', key: 'calibrationTestCount', value: workOrderExecuData.calibrationTestCount, color1: '#56E5EB', color2: '#56E5EB' },
-      { name: '配合检查', key: 'cooperationInspectionCount', value: workOrderExecuData.cooperationInspectionCount, color1: '#FF87A7', color2: '#FF87A7' },
-      { name: '配合比对', key: 'coordinationComparisonCount', value: workOrderExecuData.coordinationComparisonCount, color1: '#2043B9', color2: '#2043B9' },
-      { name: '参数核对', key: 'matchingComparisonCount', value: workOrderExecuData.matchingComparisonCount, color1: '#C8C8C8', color2: '#C8C8C8' },
-      { name: '备品备件更换', key: 'sparesCount', value: workOrderExecuData.sparesCount, color1: '#f759ab', color2: '#f759ab' },
-      { name: '易耗品更换', key: 'consumablesCount', value: workOrderExecuData.consumablesCount, color1: '#b37feb', color2: '#b37feb' },
-      { name: '标准物质更换', key: 'standCount', value: workOrderExecuData.standCount, color1: '#5cdbd3', color2: '#5cdbd3' },
-      { name: '试剂更换', key: 'reagentCount', value: workOrderExecuData.reagentCount, color1: '#ff85c0', color2: '#ff85c0' },
-    ]
-    // #2043B9 #C8C8C8 
-    data = data.filter(item => item.value != 0)
-    const list = data?.map(item => {
+    operaTypeData = operaTypeData.filter(item => item.value != 0)
+    const list = operaTypeData?.map(item => {
       return {
         value: item.value, name: item.name, itemStyle: {
           color: {
@@ -479,7 +479,7 @@ const Index = (props) => {
           // name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '实际校准完成率',
           name: type == 1 ? '计划巡检完成率' : '计划校准完成率',
           type: 'pie',
-          radius: ['70%', '80%'],
+          radius:TaskPlanType==1? ['70%', '80%'] :  ['80%', '90%'] ,
           avoidLabelOverlap: false,
           label: { normal: { show: false, position: 'center' }, },
           // data: [
@@ -539,7 +539,17 @@ const Index = (props) => {
       setCompleteTime()
     }
   }
-
+const [operaTaskType,setOperaTaskType] = useState()
+ const operaOrderOptionDayEchartsClick = (params) =>{ //工单执行情况 图表各项点击事件
+  if (params.componentType === 'series' && params.seriesType === 'pie') {
+     setTaskRecordVisible(true)
+     setCompleteTime()
+     setTaskStatus(['3'])
+     const taskType = operaTypeData.filter(item=>item.name ==  params.name)?.[0]?.taskType;
+     console.log(taskType)
+     setOperaTaskType(taskType)
+  }
+ }
 
   const [operatingInfoType, setOperatingInfoType] = useState()
   const [operatingStatus, setOperatingStatus] = useState(1)
@@ -578,13 +588,13 @@ const Index = (props) => {
             </>
             :
             <>
-              <div>计划内应完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCount}</span></div>
-              <div>计划内完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCompleteCount}</span></div>
-              <div>超时完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionOverCompleteCount}</span></div>
-              <div>超时未完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionOverIncompleteCount}</span></div>
-              <div style={{ color: '#4BF3F9' }}>今日待完成：<span style={{ color: '#4BF3F9' }}>{planOperaList.inspectionTodayInCompleteCount}</span> </div>
+              <div>计划内应完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCount}次</span></div>
+              <div>计划内完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCompleteCount}次</span></div>
+              <div>超时完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionOverCompleteCount}次</span></div>
+              <div>超时未完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionOverIncompleteCount}次</span></div>
+              <div style={{ color: '#4BF3F9' }}>今日待完成：<span style={{ color: '#4BF3F9' }}>{planOperaList.inspectionTodayInCompleteCount}次</span> </div>
             </>
-          }
+          } 
         </div>
       </Row>
       <div style={{ width: '100%', height: 1, marginLeft: -21, background: "rgba(65, 66, 69, 0.5)",margin: TaskPlanType == 1? 0 : '4px 0' }}></div>
@@ -604,11 +614,11 @@ const Index = (props) => {
              </>
             :
             <>
-              <div>计划内应完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationCount}</span></div>
-              <div>计划内完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationCompleteCount}</span></div>
-              <div>超时完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationOverCompleteCount}</span></div>
-              <div>超时未完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationOverIncompleteCount}</span></div>
-              <div style={{ color: '#4BF3F9' }}>今日待完成：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationTodayInCompleteCount}</span> </div>
+              <div>计划内应完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationCount}次</span></div>
+              <div>计划内完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationCompleteCount}次</span></div>
+              <div>超时完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationOverCompleteCount}次</span></div>
+              <div>超时未完成：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationOverIncompleteCount}次</span></div>
+              <div style={{ color: '#4BF3F9' }}>今日待完成：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationTodayInCompleteCount}次</span> </div>
             </>
           }
           </div>
@@ -670,6 +680,8 @@ const Index = (props) => {
   color: '#1BDEEA',
   paddingRight:8,
  }
+
+
   return (
     <div>
         <Spin spinning={operationLoading}>
@@ -707,11 +719,12 @@ const Index = (props) => {
                   <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('超时完成')}><div><span style={workOrderExecuDotSty}></span>超时完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>
                   {workOrderExecuTimeVal == 1 ? <>
                     <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('未完成')}><div><span style={workOrderExecuDotSty}></span>未完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.notCompleteCount}</span>个</div></Col>
-                    <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('超时未完成')}><div><span style={workOrderExecuDotSty}></span>超时未完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>
+                    <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('超时未完成')}><div><span style={workOrderExecuDotSty}></span>超时未完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeNotCompleteCount}</span>个</div></Col>
                   </> : <></>}
                 </Row>
                 <ReactEcharts
                   option={operaOrderOptionDay()}
+                  onEvents={{ click: operaOrderOptionDayEchartsClick }}
                   style={{ height: 'calc(100% - 58px )', width: '100%' }}
                 />
               </div>
@@ -787,10 +800,11 @@ const Index = (props) => {
           taskStatus={taskStatus} 
           operaStatus={operaStatus}
           completeTime={completeTime}
+          operaTaskType={operaTaskType}
           />
       </Modal>
       <Modal
-        title={`${planOperationTitle}`}
+        title={`运维情况`}
         destroyOnClose
         wrapClassName='spreadOverModal'
         visible={planOperationVisible}

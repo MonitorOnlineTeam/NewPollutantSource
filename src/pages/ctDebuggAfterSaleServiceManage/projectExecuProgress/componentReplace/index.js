@@ -4,7 +4,7 @@
  * 创建时间：2024.04
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Spin, Form, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Spin, Form, Popover, Typography,Descriptions, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Space } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -346,9 +346,12 @@ const Index = (props) => {
           mask={false}
           footer={null}
         >
-          <Row>
-            {columns.filter(item => (item.title != '序号' && item.title != '操作')).map(item => (<Col span={8}><Form.Item label={item.title}>  {item.dataIndex=='IsPoint'? detailData?.[`${item.dataIndex}`]? '有监测点' : '设备未安装'  : detailData?.[`${item.dataIndex}`]}  </Form.Item> </Col>))}
-          </Row>
+          <Descriptions
+          className={'detailsWrapper'}
+          labelStyle={{ fontWeight: 500 }}
+        >
+          {columns.filter(item => (item.title != '序号' && item.title != '操作')).map(item => (<Descriptions.Item label={item.title}>{item.dataIndex=='IsPoint'? detailData?.[`${item.dataIndex}`]? '有监测点' : '设备未安装'  : detailData?.[`${item.dataIndex}`]}</Descriptions.Item>))}
+          </Descriptions>
         </Modal>
       </BreadcrumbWrapper>
     </div>

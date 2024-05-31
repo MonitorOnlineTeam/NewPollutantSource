@@ -233,14 +233,13 @@ const RegionalProportionCard2 = props => {
         rich: {
           name: {
             fontSize: 14,
-            fontWeight: 'bolder',
-            color: '#3888FF',
-            padding: [10, 0],
+            color: '#0693EF',
+            padding: [0,0,10, 0],
           },
           val: {
-            fontSize: 14,
+            fontSize: 24,
             fontWeight: 'bolder',
-            color: '#3888FF',
+            color: '#0693EF',
           },
         },
       },
@@ -296,7 +295,6 @@ const RegionalProportionCard2 = props => {
           return '{b|' + params.name + '}\n{c|' + params.data.rate + '%}';
         },
         opacity: 1,
-        padding: [0, -90],
         rich: {
           // a: {
           //   fontSize: 18,
@@ -307,20 +305,21 @@ const RegionalProportionCard2 = props => {
             fontWeight: 500,
             fontSize: 14,
             color: '#999999',
+            padding: [0, -90, 4,-90],
             // padding: [18, 8, 0, 6],
           },
           c: {
             fontFamily: 'Microsoft YaHei',
             fontWeight: 500,
             fontSize: 13,
-            padding: [10, 8, 0, 0],
-            align: 'left',
+            padding: [4, -44,0,-44],
+            // padding: [10, -20, 0, -20],
             // color: '#0055FE',
           },
         },
       },
       labelLine: {
-        length: 30,
+        length: 32,
         length2: 90,
         color: 'inherit',
         lineStyle: {
@@ -389,7 +388,7 @@ const RegionalProportionCard2 = props => {
     <Card
       title={title}
       size="small"
-      bodyStyle={{ height: 340, paddingBottom: 0, paddingTop: 0 }}
+      bodyStyle={{ height: 340, paddingBottom: 0, paddingTop: 4 }}
       loading={loading}
     >
       <Row wrap={false} style={{ height: '100%' }}>

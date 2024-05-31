@@ -68,21 +68,21 @@ export default Model.extend({
       width: 160,
     },
     {
+      title: '备注',
+      dataIndex: 'remark',
+      key: 'remark',
+      ellipsis: true,
+      width: 160,
+    },
+    {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
       ellipsis: true,
       width: 90,
       render: (text, record, index) => {
-        return <span className={text == '暂停' || text=='异常终止' ? 'red' : text == '进行中'? 'green' : ''}>{text}</span>
+        return <span className={text=='异常终止' ? 'red' : text == '进行中'? 'green' : ''}>{text}</span>
       }
-    },
-    {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      ellipsis: true,
-      width: 160,
     },
     {
       title: '创建人',
@@ -167,6 +167,7 @@ export default Model.extend({
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.UpdOperationPlan, payload);
       if (result.IsSuccess) {
         message.success(result.Message);
+        yield update({ operationPlanInfoRefreshId: result.Datas });
         callback && callback(result.Datas)
       }
     },

@@ -50,8 +50,8 @@ const OfficeCheck = props => {
     dispatch({
       type: 'wordSupervision/GetSiteInspectionForRegion',
       payload: {
-        beginTime: values.time[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time[1].format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time?.[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values.time?.[1].endOf('month').format('YYYY-MM-DD HH:mm:ss'),
       },
       callback: res => {
         setDataSource(res);

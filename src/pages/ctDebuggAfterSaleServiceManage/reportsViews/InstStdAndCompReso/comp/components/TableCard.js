@@ -104,7 +104,7 @@ const TableCard = props => {
         title: '大区',
         dataIndex: 'ServiceAreaName',
         key: 'ServiceAreaName',
-        width: 150,
+        width: 120,
         fixed: 'left',
       },
       ...columnList,

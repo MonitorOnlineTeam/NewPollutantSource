@@ -49,7 +49,7 @@ const ProductCountCard3 = props => {
             left: '3%',
             top: '10%',
             bottom: '6%',
-            width: '36%',
+            width: '41%',
           },
           {
             show: false,
@@ -63,7 +63,7 @@ const ProductCountCard3 = props => {
             right: '3%',
             top: '10%',
             bottom: '6%',
-            width: '36%',
+            width: '41%',
           },
         ],
         xAxis: [

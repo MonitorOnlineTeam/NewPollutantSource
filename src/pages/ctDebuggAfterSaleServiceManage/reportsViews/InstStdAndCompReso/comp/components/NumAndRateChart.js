@@ -269,9 +269,9 @@ const NumAndRateChart = props => {
         trigger: 'axis',
         formatter: params => {
           let content = `${params?.[0].name}<br />`;
-          params.map((item, index) => {
+          params?.map((item, index) => {
             content += `${item.marker} ${item.seriesName}：${item.value}${
-              index === params.length - 1 ? '%' : '次'
+              item.seriesName?.includes('率')? '%' : '次'
             } <br />`;
           });
           return content;

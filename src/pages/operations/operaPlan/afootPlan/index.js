@@ -340,7 +340,7 @@ const Index = (props) => {
                         </Row>
                     </Form>
                     <TitleComponents simpleSty text='运维计划内容' />
-                    <PlanList type={2} entCode={entCode} extensionPlan={extensionPlan} />
+                    <PlanList type={2} pointType={pointType} entCode={entCode} extensionPlan={extensionPlan} />
                 </Modal>
                 <AdjustExtendPlanModal
                     visible={extensVisible}

@@ -158,28 +158,32 @@ const TaskCompletionRecord = props => {
         dataIndex: 'LargeRegion',
         key: 'LargeRegion',
         ellipsis: true,
+        width:'auto',
       },
       {
         title: '省份',
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
+        width:'auto',
       },
       {
         title: '任务派发时间',
         dataIndex: 'BeginTime',
         key: 'BeginTime',
         ellipsis: true,
-        width: 200,
-        render: text => {
-          return moment(text).format('YYYY-MM-DD');
-        },
+        width:'auto',
+        // width: 200,
+        // render: text => {
+        //   return moment(text).format('YYYY-MM-DD');
+        // },
       },
       {
         title: '是否完成',
         dataIndex: 'StatusName',
         key: 'StatusName',
         ellipsis: true,
+        width:'auto',
         render: (text, row) => {
           return <Text type={text === '是' ? 'default' : 'danger'}>{text}</Text>;
         },
@@ -189,13 +193,15 @@ const TaskCompletionRecord = props => {
         dataIndex: 'UserName',
         key: 'UserName',
         ellipsis: true,
+        width:'auto',
       },
       {
         title: '任务结束时间',
         dataIndex: 'EndTime',
         key: 'EndTime',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
         render: text => {
           return moment(text).format('YYYY-MM-DD');
         },
@@ -299,6 +305,7 @@ const TaskCompletionRecord = props => {
           align="center"
           dataSource={dataSource}
           columns={getColumns()}
+          scroll={{x:710}}
           pagination={{
             total: tableTotal,
             pageSize: pageSize,

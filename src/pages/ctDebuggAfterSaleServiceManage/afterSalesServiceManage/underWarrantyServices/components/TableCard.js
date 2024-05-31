@@ -638,9 +638,7 @@ const TableCard = props => {
     <Card
       title={
         <Space>
-          <span>{`${moment(date).format('YYYY年')}质保内服务统计（${
-            type === 1 ? '按产品类别' : '按服务原因'
-          }）`}</span>
+          <span>{`${moment(date).format('YYYY年')}质保内服务基础数据`}</span>
           <Button
             icon={<ExportOutlined />}
             loading={exportLoading}
@@ -770,9 +768,9 @@ const TableCard = props => {
         >
           <Descriptions.Item label="派工单号">{detailsData.Num}</Descriptions.Item>
           <Descriptions.Item label="合同编号">{detailsData.ProjectCode}</Descriptions.Item>
-          {/* <Descriptions.Item label="立项号"></Descriptions.Item> */}
-          <Descriptions.Item label="离开现场时间">{detailsData.LeaveDate}</Descriptions.Item>
+          <Descriptions.Item label="立项号">{detailsData.ItemCode}</Descriptions.Item>
           <Descriptions.Item label="项目名称">{detailsData.ProjectName}</Descriptions.Item>
+          <Descriptions.Item label="离开现场时间">{detailsData.LeaveDate}</Descriptions.Item>
           <Descriptions.Item label="填报人">{detailsData.CreateUserName}</Descriptions.Item>
           <Descriptions.Item label="填报时间" span={3}>
             {detailsData.CreateTime}

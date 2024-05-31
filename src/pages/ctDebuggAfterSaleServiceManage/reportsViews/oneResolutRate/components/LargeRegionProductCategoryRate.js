@@ -245,14 +245,15 @@ const Index = props => {
       ],
       tooltip: {
         trigger: 'axis',
-        formatter: (params) => {
-          console.log(params)
-          return params[0] && (
-            `${params[0].name}<br /> ${params[0].marker} ${params[0].seriesName}：${params[0].value}${ params[0].seriesName?.includes('次数')? '次' : '%'} <br />`
-            + (params[1]? `${params[1].marker} ${params[1].seriesName}：${params[1].value}${ params[1].seriesName?.includes('次数')? '次' : '%'} <br />` : '')
-            + (params[2]?  `${params[2].marker} ${params[2].seriesName}：${params[2].value}%` : '')
-          )
-        }
+        formatter: params => {
+          let content = `${params?.[0].name}<br />`;
+          params?.map((item, index) => {
+            content += `${item.marker} ${item.seriesName}：${item.value}${
+              item.seriesName?.includes('率')? '%' : '次'
+            } <br />`;
+          });
+          return content;
+        },
       },
     };
   };

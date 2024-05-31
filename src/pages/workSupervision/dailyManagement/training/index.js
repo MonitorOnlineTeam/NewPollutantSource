@@ -90,14 +90,15 @@ const Training = props => {
     let columns = [
       {
         title: '序号',
-        width: 40,
+        // width: 40,
       },
       {
         title: '大区',
         dataIndex: 'LargeRegion',
         key: 'LargeRegion',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
         render: (text, record, index) => {
           if (type === 'ct') {
             return text;
@@ -113,7 +114,8 @@ const Training = props => {
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
         render: (text, record, index) => {
           // if (type === 'ct') {
           //   return text;
@@ -137,6 +139,7 @@ const Training = props => {
         dataIndex: 'CompletedCount',
         key: 'CompletedCount',
         ellipsis: true,
+        width:'auto',
         render: (text, record) => {
           // if (type === 'ct') {
           return (
@@ -162,14 +165,16 @@ const Training = props => {
         dataIndex: 'CompletedCountYes',
         key: 'CompletedCountYes',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
       },
       {
         title: '任务完成率',
         dataIndex: 'CompletedRate',
         key: 'CompletedRate',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
         sorter: (a, b) => {
           if (a.RegionCode !== 'All' && b.RegionCode !== 'All') {
             return a.CheckRate - b.CheckRate;
@@ -287,6 +292,7 @@ const Training = props => {
         <SdlTable
           loading={queryLoading}
           align="center"
+          scroll={{x:710}}
           dataSource={dataSource}
           columns={getColumns()}
           pagination={false}

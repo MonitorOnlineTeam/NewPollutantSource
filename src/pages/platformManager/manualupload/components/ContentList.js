@@ -457,7 +457,6 @@ export default class ContentList extends Component {
                                 placeholder="请选择污染物"
                                 filterOption={true}
                                 allowClear={true}
-
                                 maxTagCount={2}
                                 onChange={this.SelectHandleChange}
                             >

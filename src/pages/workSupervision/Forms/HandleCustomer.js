@@ -210,6 +210,7 @@ const HandleCustomer = props => {
         onCancel={() => {
           getCustomerList();
           setVisible(false);
+          setSelectedRowKeys([])
         }}
         onOk={() => {
           setVisible(false);

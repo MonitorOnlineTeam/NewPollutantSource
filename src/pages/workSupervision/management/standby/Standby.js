@@ -41,7 +41,7 @@ const Standby = props => {
 
   return (
     <BreadcrumbWrapper hideBreadcrumb={isModal}>
-      <Card bordered={false} bodyStyle={{ padding: 0 }}>
+      <Card bordered={false} bodyStyle={isModal&&{ padding: 0 }}>
         <SearchWrapper configId={CONFIGID} />
         <AutoFormTable
           noload

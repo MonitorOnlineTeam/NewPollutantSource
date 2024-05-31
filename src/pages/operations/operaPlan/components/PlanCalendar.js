@@ -100,6 +100,7 @@ const Index = (props) => {
             key: 'pointName',
             fixed: 'left',
             ellipsis: true,
+            width:'auto',
         }]
         if (dateCol && dateCol[0]) {
             const colList = dateCol.map((item, index) => {
@@ -114,7 +115,7 @@ const Index = (props) => {
                             title: `${item.week}`,
                             dataIndex: `${item.date}`,
                             key: `${item.date}`,
-                            width: 70,
+                            width: 90,
                             align: 'center',
                             render: (text, record, index) => {
                                 const filterData = (status) => typeLegendData.filter(item => item.value == status)?.[0]?.color;
@@ -295,13 +296,13 @@ const Index = (props) => {
                 </Row>)}
             </Row>
             <SdlTable
-                resizable
+                // resizable
                 loading={tableLoading}
                 bordered
                 dataSource={tableDatas}
                 columns={columns()}
                 align='center'
-                scroll={{ y: 'calc(100vh - 200px)' }}
+                scroll={{x:(dateCol?.length * 90 || 0 ) + 200,  y: 'calc(100vh - 200px)' }}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,

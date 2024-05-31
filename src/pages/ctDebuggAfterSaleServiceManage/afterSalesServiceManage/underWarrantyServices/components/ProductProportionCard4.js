@@ -139,7 +139,7 @@ const ProductProportionCard4 = props => {
           name: '产品类别占比',
           type: 'pie',
           // radius: [50, 250],
-          radius: ['40%', '70%'],
+          radius: ['60%', '88%'],
           center: ['30%', '50%'],
           itemStyle: {
             borderRadius: 6,
@@ -217,8 +217,8 @@ const ProductProportionCard4 = props => {
       left: '-20%',
       viewControl: {
         //3d效果可以放大、旋转等，请自己去查看官方配置
-        alpha: 26, //角度
-        distance: 190, //调整视角到主体的距离，类似调整zoom
+        alpha: 30, //角度
+        distance: 150, //调整视角到主体的距离，类似调整zoom
         rotateSensitivity: 0, //设置为0无法旋转
         zoomSensitivity: 0, //设置为0无法缩放
         panSensitivity: 0, //设置为0无法平移
@@ -288,7 +288,7 @@ const ProductProportionCard4 = props => {
   }, [WarrantyAnalysis, echarts]);
 
   return (
-    <Card title={title} size="small" bodyStyle={{ height: 640, paddingTop: 0 }} loading={loading}>
+    <Card title={title} size="small" bodyStyle={{ height: 640, paddingTop: 4 }} loading={loading}>
       <div className={styles.ProductProportionWrapper}>
         <div className={styles.chartItemWrapper}>
           {renderCountEcharts}

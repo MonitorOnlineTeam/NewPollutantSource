@@ -100,7 +100,7 @@ const ReturnVisit = props => {
       {
         title: '序号',
         align: 'center',
-        width: 40,
+        // width: 40,
         // ellipsis: true,
         // render: (text, record, index) => {
         //   return index + 1 + (pageIndex - 1) * pageSize;
@@ -111,7 +111,8 @@ const ReturnVisit = props => {
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
         render: (text, record, index) => {
           if (systemType !== '1') {
             return text;
@@ -127,7 +128,8 @@ const ReturnVisit = props => {
         dataIndex: 'CityName',
         key: 'CityName',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
         render: (text, record, index) => {
           return {
             children: text,
@@ -140,7 +142,8 @@ const ReturnVisit = props => {
         dataIndex: 'ShouldCheckCount',
         key: 'ShouldCheckCount',
         ellipsis: true,
-        width: 150,
+        // width: 150,
+        width:'auto',
         render: (text, record) => {
           return (
             <a
@@ -163,14 +166,16 @@ const ReturnVisit = props => {
         dataIndex: 'AlreadyCheckCount',
         key: 'AlreadyCheckCount',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
       },
       {
         title: '任务完成率',
         dataIndex: 'CheckRate',
         key: 'CheckRate',
         ellipsis: true,
-        width: 300,
+        // width: 300,
+        width:'auto',
         sorter: (a, b) => {
           if (a.RegionCode !== 'All' && b.RegionCode !== 'All') {
             return a.CheckRate - b.CheckRate;
@@ -287,6 +292,7 @@ const ReturnVisit = props => {
           align="center"
           dataSource={dataSource}
           columns={getColumns()}
+          scroll={{x:710}}
           pagination={false}
         />
       </Card>

@@ -12,11 +12,13 @@ import {
   Typography,
   message,
   Progress,
+  DatePicker
 } from 'antd';
 import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+const { RangePicker } = DatePicker;
 
 const { Text, Link } = Typography;
 
@@ -212,7 +214,7 @@ const TaskCompletionRecord = props => {
               <Input style={{ width: 200 }} placeholder="检查人" allowClear />
             </Form.Item>
             <Form.Item name="time" label="任务派发时间">
-              <RangePicker_
+              <RangePicker
                 style={{ width: '100%' }}
                 picker="month"
                 format="YYYY-MM"

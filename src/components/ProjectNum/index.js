@@ -20,7 +20,7 @@ const Index = (props) => {
     const [popVisible, setPopVisible] = useState(false);
 
 
-    const [projectName, setProjectName] = useState(props.projectName);
+    const [projectCode, setProjectCode] = useState(props.projectCode);
 
     const projectNumCol = [
         {
@@ -78,7 +78,7 @@ const Index = (props) => {
         },
       ];
       const setPorjectInfo = record => {
-        setProjectName(record.ProjectName || undefined)
+        setProjectCode(record.ProjectCode || undefined)
         setPopVisible(false);
         onChange&&onChange(record)
     };
@@ -154,10 +154,10 @@ const Index = (props) => {
             <Select
                 allowClear
                 showSearch={false}
-                value={projectName}
+                value={projectCode}
                 dropdownStyle={{display:'none'}}
                 placeholder="请选择"
-                onClear={()=>{setProjectName(undefined);onChange&&onChange(undefined)}}
+                onClear={()=>{setProjectCode(undefined);onChange&&onChange(undefined)}}
             ></Select>
         </Popover>
     );

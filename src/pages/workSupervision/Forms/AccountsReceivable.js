@@ -49,16 +49,16 @@ const AccountsReceivable = props => {
   const [isProjectSelect, setIsProjectSelect] = useState(false);
 
   useEffect(() => {
-    GetIndustryList();
+    // GetIndustryList();
   }, []);
 
   // 获取行业
-  const GetIndustryList = () => {
-    props.dispatch({
-      type: 'wordSupervision/GetPollutantTypeList',
-      payload: {},
-    });
-  };
+  // const GetIndustryList = () => {
+  //   props.dispatch({
+  //     type: 'wordSupervision/GetPollutantTypeList',
+  //     payload: {},
+  //   });
+  // };
 
   // 获取项目
   const GetProjectInfoList = () => {
@@ -280,13 +280,15 @@ const AccountsReceivable = props => {
                     }
                   }}
                 >
-                  {IndustryList.map(item => {
+                  <Option value={2} key={2}>  废气 </Option>
+                  <Option value={1} key={1}>  废水 </Option>
+                  {/* {IndustryList.map(item => {
                     return (
                       <Option value={item.PollutantTypeCode} key={item.PollutantTypeCode}>
                         {item.PollutantTypeName}
                       </Option>
                     );
-                  })}
+                  })} */}
                 </Select>
               </Form.Item>
             </Col>

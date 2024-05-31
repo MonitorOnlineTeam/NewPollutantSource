@@ -57,6 +57,7 @@ const Content = props => {
     const endTime = values.date ? moment(values.date[1]).format('YYYY-MM-DD 23:59:59') : undefined;
 
     return {
+      ...values,
       BeginTime: beginTime,
       EndTime: endTime,
       flag: mode !== 'record',
@@ -202,7 +203,7 @@ const Content = props => {
         },
       },
       {
-        title: '催收时间',
+        title: '填报时间',
         dataIndex: 'CreateTime',
         key: 'CreateTime',
         render: text => {
@@ -288,8 +289,8 @@ const Content = props => {
                 <Input placeholder="请输入催收人"  allowClear/>
               </Form.Item>,
             ]}
-            <Form.Item label="催收时间" name="date">
-              <RangePicker_ />
+            <Form.Item label="填报时间" name="date">
+              <RangePicker_  format={'YYYY-MM-DD'}/>
             </Form.Item>
             <Space>
               <Button

@@ -78,6 +78,7 @@ const Index = (props) => {
             dataIndex: 'Status',
             key: 'Status',
             ellipsis: true,
+            width:100,
             render: (text, record, index) => {
                 return <span className={text == '暂停' ? 'red' : text == '进行中'? 'green' : ''}>{text}</span>
               }
@@ -87,12 +88,14 @@ const Index = (props) => {
             dataIndex: 'Remark',
             key: 'Remark',
             ellipsis: true,
+            width:'auto',
         },
         {
             title: '附件',
             dataIndex: 'File',
             key: 'File',
             ellipsis: true,
+            width:100,
             render: (text) => {
                 return <CheckPhoto fileList={text} />
             }
@@ -131,7 +134,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns}
                 align='center'
-                scroll={{y:props.noTitle? 'calc(100vh - 308px)' : 'calc(100vh - 602px)'}}
+                scroll={{x:700, y:props.noTitle? 'calc(100vh - 308px)' : 'calc(100vh - 602px)'}}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,

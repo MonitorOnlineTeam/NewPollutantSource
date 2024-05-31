@@ -285,7 +285,7 @@ const RecordAndManagement = props => {
       <>
         {taskInfo.ID && (
           <Alert
-            message={`任务类型：客户回访任务单，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次1次/月，每个任务单最少有（4次/月）记录。`}
+            message={`任务类型：客户回访任务单，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次1次/月，每个任务单最少有（${taskInfo.standNum || 0}次/月）记录。`}
             type="info"
             showIcon
             style={{ marginRight: 30 }}

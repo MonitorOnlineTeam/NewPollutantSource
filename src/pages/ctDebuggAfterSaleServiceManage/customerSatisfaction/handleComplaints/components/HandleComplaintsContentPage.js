@@ -390,16 +390,13 @@ const HandleComplaintsContentPage = props => {
             resolutionStatus: null,
           }}
           autoComplete="off"
-          labelCol={{
-            flex: '110px',
-          }}
-          wrapperCol={{
-            flex: 1,
-          }}
+          // wrapperCol={{
+          //   flex: 1,
+          // }}
         >
           <Row align="middle">
             <Col span={8}>
-              <Form.Item name="serviceAreaCode" label="大区名称">
+              <Form.Item name="serviceAreaCode" label="大区名称"  className='form_label_width_110'>
                 <Select
                   placeholder="请选择大区名称"
                   style={{ width: '100%' }}
@@ -424,7 +421,7 @@ const HandleComplaintsContentPage = props => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="province" label="省份">
+              <Form.Item name="province" label="省份"  className='form_label_width_97'>
                 <Select placeholder="请选择省份" style={{ width: '100%' }} allowClear>
                   {provinceList.map(item => {
                     return (
@@ -466,7 +463,7 @@ const HandleComplaintsContentPage = props => {
             )}
             <Col span={16}>
               <Form.Item>
-                <Space style={{ marginLeft: 10 }}>
+                <Space>
                   <Button
                     type="primary"
                     htmlType="submit"
@@ -531,7 +528,7 @@ const HandleComplaintsContentPage = props => {
 
   const getPageContent = () => {
     return (
-      <Card bordered={isAll ? false : true} title={<SearchComponents />}>
+      <Card className='queryCriterTitleSty' bordered={isAll ? false : true} title={<SearchComponents />} bodyStyle={{padding:'12px 24px'}}>
         <SdlTable
           loading={queryLoading}
           align="center"

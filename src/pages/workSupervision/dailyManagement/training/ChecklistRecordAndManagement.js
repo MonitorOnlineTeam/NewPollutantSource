@@ -148,7 +148,7 @@ const ChecklistRecordAndManagement = props => {
     let columns = [
       {
         title: '序号',
-        width: 40,
+        // width: 40,
         // dataIndex: 'index',
         // key: 'index',
         // render: (text, record, index) => {
@@ -160,27 +160,29 @@ const ChecklistRecordAndManagement = props => {
         dataIndex: 'LargeRegion',
         key: 'LargeRegion',
         ellipsis: true,
-        width: 200,
-
+        // width: 200,
+        width:'auto',
       },
       {
         title: '省份',
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
-        width: 200,
-
+        // width: 200,
+        width:'auto',
       },
       {
         title: '培训人',
         dataIndex: 'UserName',
         key: 'UserName',
+        width:'auto',
       },
       {
         title: '培训时间',
         dataIndex: 'TrainTime',
         key: 'TrainTime',
-        width: 200,
+        // width: 200,
+        width:'auto',
         sorter: (a, b) => moment(a.TrainTime).valueOf() - moment(b.TrainTime).valueOf(),
         render: (text, record) => {
           return moment(text).format('YYYY-MM-DD');
@@ -190,6 +192,7 @@ const ChecklistRecordAndManagement = props => {
         title: '附件',
         dataIndex: 'FileName',
         key: 'FileName',
+        width:'auto',
         render: (text, record) => {
           // let fileList = getAttachmentDataSource(text);
           // console.log('fileList', fileList);
@@ -360,6 +363,7 @@ const ChecklistRecordAndManagement = props => {
             align="center"
             dataSource={dataSource}
             columns={getColumns()}
+            scroll={{x:800}}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

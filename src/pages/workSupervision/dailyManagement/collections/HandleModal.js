@@ -53,19 +53,19 @@ const HandleModal = props => {
 
   useEffect(() => {
     GetProjectInfoList();
-    GetIndustryList();
+    // GetIndustryList();
     form.setFieldsValue({
       ...editData,
     });
   }, [editData]);
 
   // 获取行业
-  const GetIndustryList = () => {
-    props.dispatch({
-      type: 'wordSupervision/GetPollutantTypeList',
-      payload: {},
-    });
-  };
+  // const GetIndustryList = () => {
+  //   props.dispatch({
+  //     type: 'wordSupervision/GetPollutantTypeList',
+  //     payload: {pollutantType:'1,2'},
+  //   });
+  // };
 
   // 获取项目
   const GetProjectInfoList = () => {
@@ -395,13 +395,15 @@ const HandleModal = props => {
                 ]}
               >
                 <Select placeholder="请选择行业" style={{ width: '100%' }}>
-                  {IndustryList.map(item => {
+                  <Option value={2} key={2}>  废气 </Option>
+                  <Option value={1} key={1}>  废水 </Option>
+                  {/* {IndustryList.map(item => {
                     return (
                       <Option value={item.PollutantTypeCode} key={item.PollutantTypeCode}>
                         {item.PollutantTypeName}
                       </Option>
                     );
-                  })}
+                  })} */}
                 </Select>
               </Form.Item>
             </Col>

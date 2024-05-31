@@ -111,6 +111,7 @@ const Index = (props) => {
             const par = queryPar ? { ...queryPar, pageIndex: PageIndex, pageSize: PageSize, } : {
                 ...values,
                 planType:planType,
+                commitStatus:planType? undefined : 2,
                 beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
                 endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
                 time: undefined,
@@ -155,7 +156,7 @@ const Index = (props) => {
         >
             <Row>
                 <Col span={8}>
-                    <Form.Item name='projectCode' label='合同编号'>
+                    <Form.Item name='projectCode' label='项目编号'>
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>

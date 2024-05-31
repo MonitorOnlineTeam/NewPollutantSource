@@ -107,7 +107,7 @@ const RecordModal = props => {
         title: '序号',
         align: 'center',
         ellipsis: true,
-        width: 40,
+        // width: 40,
         render: (text, record, index) => {
           return index + 1 + (pageIndex - 1) * pageSize;
         },
@@ -117,14 +117,16 @@ const RecordModal = props => {
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
       },
       {
         title: '省份',
         dataIndex: 'CityName',
         key: 'CityName',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
 
       },
       {
@@ -132,14 +134,16 @@ const RecordModal = props => {
         dataIndex: 'CreateTime',
         key: 'CreateTime',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
       },
       {
         title: '是否完成',
         dataIndex: 'IsCompleteTip',
         key: 'IsCompleteTip',
         ellipsis: true,
-        width: 100,
+        // width: 100,
+        width:'auto',
         render: (text, record) => {
           if (text === '是') {
             return <Tag color="success">{text}</Tag>;
@@ -152,14 +156,16 @@ const RecordModal = props => {
         dataIndex: 'CheckUserName',
         key: 'CheckUserName',
         ellipsis: true,
-        width: 100,
+        // width: 100,
+        width:'auto',
       },
       {
         title: '任务结束时间',
         dataIndex: 'ShowTime',
         key: 'ShowTime',
         ellipsis: true,
-        width: 200,
+        // width: 200,
+        width:'auto',
         render: (text, record) => {
           return text || '-';
         },
@@ -264,6 +270,7 @@ const RecordModal = props => {
         align="center"
         dataSource={dataSource}
         columns={getColumns()}
+        scroll={{x:730}}
         pagination={{
           total: tableTotal,
           pageSize: pageSize,

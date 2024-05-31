@@ -233,20 +233,22 @@ const DurationTable = props => {
         dataIndex: 'ProjectName',
         key: 'ProjectName',
         ellipsis: true,
-        width: 180,
+        width: 'auto',
       },
       {
         title: '超时服务原因',
         dataIndex: 'QuestionName',
         key: 'QuestionName',
         ellipsis: true,
+        width: 'auto',
       },
       {
-        title: '超时时长（H）',
+        title: '超时时长（小时）',
         dataIndex: 'OverTime',
         key: 'OverTime',
         ellipsis: true,
         sorter: true,
+        width: 180,
         // sorter: (a, b) => a.OverTime - b.OverTime,
       },
     ];
@@ -360,7 +362,7 @@ const DurationTable = props => {
               <Select
                 allowClear
                 placeholder="请选择超时服务原因"
-                style={{ width: 160 }}
+                style={{ width: 180 }}
                 showSearch
                 filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -404,6 +406,7 @@ const DurationTable = props => {
           loading={basicsLoading}
           dataSource={basicsDataSource}
           columns={getBasicsColumns()}
+          scroll={{x:710}}
           align="center"
           onChange={onTableChange}
           pagination={{

@@ -88,7 +88,7 @@ const Index = (props) => {
                 className={'ant-advanced-search-form'}
                 labelCol={{ flex: labelWidth }}
             >
-                <Checkbox style={{ paddingLeft: labelWidth }} indeterminate={indeterminate} onChange={(e) => onCheckAllChange(e, dataList)} checked={checkAll}>
+                <Checkbox style={{position:'absolute',left: labelWidth,zIndex:1 }}  indeterminate={indeterminate} onChange={(e) => onCheckAllChange(e, dataList)} checked={checkAll}>
                     全选
                 </Checkbox>
                 <Form.Item className='form_label_width_94 pointItemSty' name='pointID' label='监测点' rules={[{ required: true, message: '请选择监测点！' }]} >

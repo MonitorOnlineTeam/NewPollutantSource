@@ -294,9 +294,9 @@ const Index = (props) => {
   }
   const onChartClick = (e) => {
     const selectedRegionVal = sessionStorage.getItem('selectedRegion')
-    echartsRef.current.props.option.series[0].renderItem = (params, api) => {
-      return renderItemFun(params, api, 2, e)
-    }
+    // echartsRef.current.props.option.series[0].renderItem = (params, api) => {
+    //   return renderItemFun(params, api, 2, e)
+    // }
 
     serviceNum.map((item, index) => {
       if (e.name == selectedRegionVal || e.dataIndex != index) { //取消或上一次选中
@@ -723,7 +723,7 @@ const Index = (props) => {
     <div className={styles.ctAfterSalesServiceManagementSty}>
       <BreadcrumbWrapper>
         <div className='serchContent'>
-          <Card>
+          <Card bodyStyle={{padding:'0 24px'}}>
             {searchComponents()}
           </Card>
         </div>

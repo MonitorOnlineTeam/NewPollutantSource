@@ -77,6 +77,9 @@ const CustomerInterview = props => {
 
   useEffect(() => {
     getCustomerList();
+    return ()=>{
+      form.resetFields()
+    }
   }, []);
 
   // 获取客户

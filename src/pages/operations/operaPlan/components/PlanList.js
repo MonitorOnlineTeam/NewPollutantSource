@@ -51,21 +51,21 @@ const Index = (props) => {
 
 
 
-    const { entCode, pointLoading, operationPlanInfoRefreshId, operationPlanInfoRefreshType, operationPlanPointPar, type, pointType, xjPointList, jzPointList, queryPar, tableDatas, tableTotal, exportLoading, delOperationPlanPointLoading,updOperationPlanPointLoading } = props;
+    const { entCode, pointLoading, operationPlanInfoRefreshId, operationPlanInfoRefreshType, operationPlanPointPar, type, pointType, xjPointList, jzPointList, queryPar, tableDatas, tableTotal, exportLoading, delOperationPlanPointLoading, updOperationPlanPointLoading } = props;
 
 
     const [planCalendarVisible, setPlanCalendarVisible] = useState(false)
-    
+
     const [pointList, setPointList] = useState([])
     useEffect(() => {
         return () => {
             // 执行清理工作，比如取消订阅或清除定时器
             // 这个清理函数会在组件卸载时自动执行
-            props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanInfo: [],operationPlanInfoTotal:0 } });
-          };
+            props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanInfo: [], operationPlanInfoTotal: 0 } });
+        };
     }, []);
     useEffect(() => {
-        props.pointList&&setPointList(props.pointList)
+        props.pointList && setPointList(props.pointList)
     }, [props.pointList]);
     useEffect(() => {
         entCode && props.dispatch({    //获取排口
@@ -117,11 +117,11 @@ const Index = (props) => {
                     width: 100,
                     ellipsis: true,
                     render: (text, record, index) => {
-                        const isOpen = record.Status==2;
+                        const isOpen = record.Status == 2;
                         return (
                             <Space>
-                                <Popconfirm title="确认要开启这条计划吗?" onConfirm={() => { startCeasePlan(record,1) }} disabled={!isOpen}><a className={isOpen ? '' : 'disabled_a'}> 开启 </a></Popconfirm>
-                                <Popconfirm title="确认要停止这条计划吗?" onConfirm={() => { startCeasePlan(record,2) }} disabled={isOpen} > <a className={isOpen ? 'disabled_a' : ''}> 停止 </a></Popconfirm>
+                                <Popconfirm title="确认要开启这条计划吗?" onConfirm={() => { startCeasePlan(record, 1) }} disabled={!isOpen}><a className={isOpen ? '' : 'disabled_a'}> 开启 </a></Popconfirm>
+                                <Popconfirm title="确认要停止这条计划吗?" onConfirm={() => { startCeasePlan(record, 2) }} disabled={isOpen} > <a className={isOpen ? 'disabled_a' : ''}> 停止 </a></Popconfirm>
                             </Space>
                         );
 
@@ -144,30 +144,35 @@ const Index = (props) => {
             dataIndex: 'PointName',
             key: 'PointName',
             ellipsis: true,
+            width: 'auto',
         },
         {
             title: '间隔',
             dataIndex: 'IntervalDays',
             key: 'IntervalDays',
             ellipsis: true,
+            width: 'auto',
         },
         {
             title: '计划内容',
             dataIndex: 'RecordTypeName',
             key: 'RecordTypeName',
             ellipsis: true,
+            width: 'auto',
         },
         {
             title: '实际起始日期',
             dataIndex: 'BeginTime',
             key: 'BeginTime',
             ellipsis: true,
+            width: 'auto',
         },
         {
             title: '实际结束日期',
             dataIndex: 'EndTime',
             key: 'EndTime',
             ellipsis: true,
+            width: 'auto',
         },
         ...planContentOpera,
     ];
@@ -183,12 +188,12 @@ const Index = (props) => {
             });
         }
     }
-    const startCeasePlan = (record,status) => {
+    const startCeasePlan = (record, status) => {
         props.dispatch({
             type: `${namespace}/UpdOperationPlanPoint`,
-            payload: { id: record.ID,status:status },
+            payload: { id: record.ID, status: status },
             callback: () => {
-                 onFinish(pageIndex, pageSize)
+                onFinish(pageIndex, pageSize)
             }
         });
     }
@@ -231,30 +236,39 @@ const Index = (props) => {
     const exportData = () => {
         props.dispatch({
             type: `${namespace}/ExportOperationPlanInfo`,
-            payload: {...queryPar,pageIndex:undefined,pageSize:undefined},
+            payload: { ...queryPar, pageIndex: undefined, pageSize: undefined },
         });
     };
 
     const commonSearchComponents = (type) => {
-        return <> <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
-            <Form.Item name='pointID' label='监测点' style={{ marginBottom: 8 }}>
-                <Select
-                    mode="multiple"
-                    maxTagCount={2}
-                    maxTagTextLength={10}
-                    maxTagPlaceholder="..."
-                    placeholder="请选择"
-                    style={{ width: 200 }}
-                >
-                    {pointList.map(item => (<Option key={item.PointCode} value={item.PointCode}>{item.PointName}</Option>))}
-                </Select>
-            </Form.Item>
-        </Spin>
-            <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
-                 <Select placeholder='请选择' allowClear style={{ width: 100 }}>
-                        <Option key={pointType == 2 ? 1 : 7} value={pointType == 2 ? 1 : 7}>巡检</Option>
-                        <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
+        return <>
+
+            {planCalendarVisible ? <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
+                <Form.Item name='pointID' label='监测点' style={{ marginBottom: 8 }}>
+                    <Select
+                        mode="multiple"
+                        maxTagCount={2}
+                        maxTagTextLength={10}
+                        maxTagPlaceholder="..."
+                        placeholder="请选择"
+                        style={{ width: 200 }}
+                        optionFilterProp="children"
+                    >
+                        {pointList.map(item => (<Option key={item.PointCode} value={item.PointCode}>{item.PointName}</Option>))}
                     </Select>
+
+                </Form.Item>
+
+            </Spin> :
+                <Form.Item name='pointID' label='监测点'   style={{ marginBottom: 8 }}>
+                    <Input placeholder='请输入' allowClear/>
+                </Form.Item>
+            }
+            <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
+                <Select placeholder='请选择' allowClear style={{ width: 100 }}>
+                    <Option key={pointType == 2 ? 1 : 7} value={pointType == 2 ? 1 : 7}>巡检</Option>
+                    <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
+                </Select>
             </Form.Item>
             <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
                 <RangePicker_ format="YYYY-MM-DD" />
@@ -271,7 +285,7 @@ const Index = (props) => {
             form={form}
             layout='inline'
             onFinish={resDataHandle}
-        >
+        >   
             {commonSearchComponents(type)}
             <Form.Item style={{ marginBottom: 4 }}>
                 <Space>
@@ -317,12 +331,13 @@ const Index = (props) => {
                 rowSelection={type == 1 ? {
                     ...rowSelection,
                 } : null}
-                resizable
+                // resizable
                 loading={tableLoading || !!delOperationPlanPointLoading || !!updOperationPlanPointLoading}
                 bordered
                 dataSource={tableDatas}
                 columns={columns}
                 align='center'
+                scroll={{ x: 840, y: 'auto' }}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,
