@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-04-08 16:09:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-27 09:10:04
+ * @Last Modified time: 2024-05-29 16:12:59
  * @Description:  数据有效率统计
  */
 import React, { useState, useEffect, useRef } from 'react';
@@ -12,7 +12,7 @@ import SdlTable from '@/components/SdlTable';
 import styles from '../../styles.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
-import { handleHomeDate, getModelGuidsByBaseTypeCode } from '@/pages/AbnormalIdentifyModel/CONST';
+import { handleHomeDate, getModelGuidsByBaseTypeCode, ModalTypeNameConversion } from '@/pages/AbnormalIdentifyModel/CONST';
 import EntAtmoList from '@/components/EntAtmoList';
 import { RollbackOutlined } from '@ant-design/icons';
 import WarningTableData from './WarningTableData';
@@ -241,7 +241,7 @@ const DataEfficiencyRateModal = props => {
         },
       },
       {
-        title: '人为干预',
+        title: ModalTypeNameConversion('人为干预'),
         dataIndex: 'RenweiRate',
         key: 'RenweiRate',
         // fixed: 'left',
@@ -261,7 +261,7 @@ const DataEfficiencyRateModal = props => {
         },
       },
       {
-        title: '设备故障',
+        title: ModalTypeNameConversion('设备故障'),
         dataIndex: 'FaultRate',
         key: 'FaultRate',
         // fixed: 'left',
@@ -565,7 +565,7 @@ const DataEfficiencyRateModal = props => {
         },
       },
       {
-        title: '人为干预小时数',
+        title: ModalTypeNameConversion('人为干预小时数'),
         dataIndex: 'RenweiHour',
         key: 'RenweiHour',
         sorter: (a, b) => {
@@ -577,7 +577,7 @@ const DataEfficiencyRateModal = props => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
               onClick={e => {
-                onHourNumClick(record, 'RenweiHour', '人为干预', true);
+                onHourNumClick(record, 'RenweiHour', ModalTypeNameConversion('人为干预'), true);
                 updateCluesListFormState(record, '1');
               }}
             >
@@ -589,7 +589,7 @@ const DataEfficiencyRateModal = props => {
         },
       },
       {
-        title: '设备故障小时数',
+        title: ModalTypeNameConversion('设备故障小时数'),
         dataIndex: 'FaultHour',
         key: 'FaultHour',
         sorter: (a, b) => {
@@ -601,7 +601,7 @@ const DataEfficiencyRateModal = props => {
           return level == 3 && record.RegionName !== '合计' ? (
             <a
               onClick={e => {
-                onHourNumClick(record, 'FaultHour', '设备故障', true);
+                onHourNumClick(record, 'FaultHour', ModalTypeNameConversion('设备故障'), true);
                 updateCluesListFormState(record, '2');
               }}
             >

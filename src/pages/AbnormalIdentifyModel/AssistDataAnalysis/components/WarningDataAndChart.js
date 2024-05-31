@@ -20,7 +20,7 @@ import styles from '../../styles.less';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { RightOutlined } from '@ant-design/icons';
-import { getColorByName } from '../../CONST';
+import { getColorByName, ModalTypeNameConversion } from '../../CONST';
 import TableText from '@/components/TableText';
 import moment from 'moment';
 
@@ -67,6 +67,9 @@ const WarningDataAndChart = props => {
   const [updateLoading, setUpdateLoading] = useState(false);
   const [dataZoomPosition, setDataZoomPosition] = useState([]);
   const [echartRef, setEchartRef] = useState();
+
+  const RWGYText = ModalTypeNameConversion('人为干预');
+  const GZText = ModalTypeNameConversion('故障原因');
 
   const {
     dispatch,
@@ -256,7 +259,7 @@ const WarningDataAndChart = props => {
             },
           },
           {
-            title: '人为干预',
+            title: RWGYText,
             dataIndex: 'WCArtificialFlag',
             key: 'WCArtificialFlag',
             width: 180,
@@ -276,7 +279,7 @@ const WarningDataAndChart = props => {
             },
           },
           {
-            title: '故障原因',
+            title: GZText,
             dataIndex: 'WCFaultFlag',
             key: 'WCFaultFlag',
             width: 180,
@@ -349,7 +352,7 @@ const WarningDataAndChart = props => {
             },
           },
           {
-            title: '人为干预',
+            title: RWGYText,
             dataIndex: 'QHArtificialFlag',
             key: 'QHArtificialFlag',
             width: 180,
@@ -546,7 +549,7 @@ const WarningDataAndChart = props => {
           color: getColorByName[selectedNames[index]],
         },
         symbol: (value, params) => {
-          console.log('params', params)
+          console.log('params', params);
           // 污染物flag非正常，显示三角
           let { dataIndex, seriesId } = params;
           let currentData = allTypeDataList[dataIndex];
@@ -1032,7 +1035,7 @@ const WarningDataAndChart = props => {
             }">${currentData.WorkCon || '-'}</span>
                 </p>
                 <div>
-                  <div style="display: inline-block;vertical-align: top;">人为干预：</div>
+                  <div style="display: inline-block;vertical-align: top;">${RWGYText}：</div>
                   <div  style="display: inline-block;">
                     ${WCArtificialFlag.length ? WCArtificialFlag.join('<br/>') : '-'}
                   </div>
@@ -1066,7 +1069,7 @@ const WarningDataAndChart = props => {
                 <p>工况：<span style="color: ${WorkConColor2}; font-weight: bold">${currentData.ModelQHFlag ||
             '-'}<p>
                 <div>
-                  <div style="display: inline-block;vertical-align: top;">人为干预：</div>
+                  <div style="display: inline-block;vertical-align: top;">${RWGYText}：</div>
                   <div  style="display: inline-block;">
                     ${QHArtificialFlag.length ? QHArtificialFlag.join('<br/>') : '-'}
                   </div>
@@ -1511,7 +1514,7 @@ const WarningDataAndChart = props => {
               <Badge
                 // status="processing"
                 color="#722ed1"
-                text="人为干预"
+                text={RWGYText}
               />
               <Badge
                 // status="processing"
@@ -1593,7 +1596,7 @@ const WarningDataAndChart = props => {
             <Badge
               // status="processing"
               color="#722ed1"
-              text="人为干预"
+              text={RWGYText}
             />
             <Badge
               // status="processing"

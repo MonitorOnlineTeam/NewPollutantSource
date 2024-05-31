@@ -193,6 +193,22 @@ export const ModalNameConversion = name => {
   return name;
 };
 
+const ModalTypeName = {
+  人为干预: '疑似不规范运行',
+  设备故障: '疑似设备故障',
+};
+export const ModalTypeNameConversion = inputText => {
+  let result = inputText;
+  for (const key in ModalTypeName) {
+    let target = key;
+    if (inputText.includes(target)) {
+      // 使用全局替换
+      result = inputText.replace(new RegExp(target, 'g'), ModalTypeName[key]);
+    }
+  }
+  return result;
+};
+
 export const handleHomeDate = (date, dateType) => {
   let btime = _.cloneDeep(date).startOf(dateType);
   let etime = _.cloneDeep(date).endOf(dateType);
