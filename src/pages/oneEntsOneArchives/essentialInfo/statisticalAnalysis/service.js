@@ -1,6 +1,6 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-10-10 09:39:12 
+ * @Author: Jiaqi
+ * @Date: 2019-10-10 09:39:12
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-10-10 10:02:49
  * @desc: 主页接口api
@@ -18,7 +18,7 @@ export async function getHomePage(params) {
 
 // 获取所有企业及排口信息
 export async function getAllEntAndPoint(params) {
-  const result = await post(API.commonApi.GetEntAndPoint, params, null);
+  const result = await post(API.CommonApi.GetEntAndPoint, params, null);
   return result === null ? {
     data: null
   } : result;

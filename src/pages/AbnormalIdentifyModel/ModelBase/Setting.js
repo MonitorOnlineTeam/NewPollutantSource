@@ -176,13 +176,13 @@ const Setting = props => {
     return [
       {
         title: '序号',
-        // align: 'center',
-        // dataIndex: 'index',
-        // key: 'index',
-        // width: 80,
-        // render: (text, record, index) => {
-        //   return index + 1;
-        // },
+        align: 'center',
+        dataIndex: 'index',
+        key: 'index',
+        width: 80,
+        render: (text, record, index) => {
+          return index + 1;
+        },
       },
       {
         title: '企业名称',
@@ -275,7 +275,6 @@ const Setting = props => {
       .validateFields()
       .then(async values => {
         let modelParamsData = await childRef.current.onFinish();
-        debugger;
         if (modelParamsData.dataAttribute !== false) {
           console.log('modelParamsData', modelParamsData);
           // return;
@@ -287,7 +286,6 @@ const Setting = props => {
             },
             dataAttribute: modelParamsData.dataAttribute,
           };
-          console.log('body', body);
           // return;
           dispatch({
             type: 'AbnormalIdentifyModel/SaveModelInfoAndParams',
@@ -315,7 +313,7 @@ const Setting = props => {
     getEntAndPointList(values);
   };
 
-  // console.log('checkedKeys', checkedKeys);
+  console.log('dataSource', dataSource);
 
   return (
     <BreadcrumbWrapper titles=" / 设置">
@@ -485,6 +483,7 @@ const Setting = props => {
             {getPointQueryCondition()}
           </Form>
           <SdlTable
+            rowKey="DGIMN"
             loading={relationDGIMNLoading}
             scroll={{
               y: 400,

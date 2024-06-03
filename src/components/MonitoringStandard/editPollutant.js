@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import { isNullOrUndefined } from 'util';
-
+import NumTips from '@/components/NumTips';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -54,20 +54,30 @@ class EditPollutant extends Component {
           DGIMN,
           PollutantCode: Id,
           callback: () => {
-            this.props.form.setFieldsValue({
-              UpperLimit: this.props.editpollutant.UpperLimit,
-              LowerLimit: this.props.editpollutant.LowerLimit,
-              AlarmContinuityCount: this.props.editpollutant.AlarmContinuityCount,
-              OverrunContinuityCount: this.props.editpollutant.OverrunContinuityCount,
-              ZeroContinuityCount: this.props.editpollutant.ZeroContinuityCount,
-              SerialContinuityCount: this.props.editpollutant.SerialContinuityCount,
-              AlarmType: this.props.editpollutant.AlarmType,
-              IsStatisti: this.props.editpollutant.IsStatisti,
-              AlarmDescription: this.props.editpollutant.AlarmDescription,
-              AbnormalUpperLimit: this.props.editpollutant.AbnormalUpperLimit,
-              AbnormalLowerLimit: this.props.editpollutant.AbnormalLowerLimit,
-              ExceptionType: !this.props.editpollutant.ExceptionType ? [] : this.props.editpollutant.ExceptionType.split(','),
-            });
+            console.log('this.props.editpollutant====', this.props.editpollutant);
+            this.props.editpollutant &&
+              this.props.form.setFieldsValue({
+                UpperLimit: this.props.editpollutant.UpperLimit,
+                LowerLimit: this.props.editpollutant.LowerLimit,
+                AlarmContinuityCount: this.props.editpollutant.AlarmContinuityCount,
+                OverrunContinuityCount: this.props.editpollutant.OverrunContinuityCount,
+                ZeroContinuityCount: this.props.editpollutant.ZeroContinuityCount,
+                SerialContinuityCount: this.props.editpollutant.SerialContinuityCount,
+                AlarmType: this.props.editpollutant.AlarmType,
+                IsStatisti: this.props.editpollutant.IsStatisti,
+                AlarmDescription: this.props.editpollutant.AlarmDescription,
+                AbnormalUpperLimit: this.props.editpollutant.AbnormalUpperLimit,
+                AbnormalLowerLimit: this.props.editpollutant.AbnormalLowerLimit,
+                ExceptionType: !this.props.editpollutant.ExceptionType
+                  ? []
+                  : this.props.editpollutant.ExceptionType &&
+                    this.props.editpollutant.ExceptionType.split(','),
+                NormalRangeUpper: this.props.editpollutant.NormalRangeUpper,
+                NormalRangeLower: this.props.editpollutant.NormalRangeLower,
+                OverNormalRangeCount: this.props.editpollutant.OverNormalRangeCount
+                  ? this.props.editpollutant.OverNormalRangeCount
+                  : 3,
+              });
           },
         },
       });
@@ -78,16 +88,19 @@ class EditPollutant extends Component {
     e.preventDefault();
     let flag = true;
     this.props.form.validateFieldsAndScroll((err, values) => {
+      debugger;
+      console.log('values=====', values);
       const that = this;
       if (this.state.PollutantCode !== null && this.state.DGIMN !== null) {
         if (values.AbnormalUpperLimit < values.AbnormalLowerLimit) {
-          message.error('错误：检出上限小于检出下限！', 3).then(() => {
+          message.error('错误：量程上限小于量程下限！', 3).then(() => {
             flag = false;
           });
           flag = false;
         } else {
           flag = true;
         }
+
         if (values.UpperLimit < values.LowerLimit) {
           message.error('错误：报警上限小于报警下限！', 3).then(() => {
             flag = false;
@@ -96,14 +109,7 @@ class EditPollutant extends Component {
         } else {
           flag = true;
         }
-        // if (values.DayUpperLimit < values.DayLowerLimit) {
-        //   message.error('错误：报警上限小于报警下限！', 3).then(() => {
-        //     flag = false;
-        //   });
-        //   flag = false;
-        // } else {
-        //   flag = true;
-        // }
+
         if (!err && flag === true) {
           that.props.dispatch({
             type: 'standardLibrary/editmonitorpointPollutant',
@@ -132,6 +138,12 @@ class EditPollutant extends Component {
               AlarmDescription: values.AlarmDescription,
               IsStatisti: values.IsStatisti,
               ExceptionType: values.ExceptionType.length > 0 ? values.ExceptionType.join(',') : '',
+              NormalRangeUpper:
+                values.NormalRangeUpper === isNullOrUndefined ? 0 : values.NormalRangeUpper,
+              NormalRangeLower:
+                values.NormalRangeLower === isNullOrUndefined ? 0 : values.NormalRangeLower,
+              OverNormalRangeCount:
+                values.OverNormalRangeCount === isNullOrUndefined ? 0 : values.OverNormalRangeCount,
               callback: res => {
                 if (res.IsSuccess) {
                   this.props.oncancel();
@@ -170,7 +182,7 @@ class EditPollutant extends Component {
             defaultActiveKey={['1', '2']}
             expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
           >
-            <Panel header="报警设置" key="1" style={customPanelStyle}>
+            <Panel header="超标报警设置" key="1" style={customPanelStyle}>
               <Row gutter={48}>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警类型">
@@ -220,7 +232,7 @@ class EditPollutant extends Component {
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警描述">
                     {getFieldDecorator('AlarmDescription')(
-                      <TextArea rows={2} style={{ width: '100' }} maxLength={50} />
+                      <TextArea rows={2} style={{ width: '100' }} maxLength={50} />,
                     )}
                   </FormItem>
                 </Col>
@@ -232,18 +244,17 @@ class EditPollutant extends Component {
                       <Radio.Group>
                         <Radio value={1}>是</Radio>
                         <Radio value={0}>否</Radio>
-                      </Radio.Group>
+                      </Radio.Group>,
                     )}
                   </FormItem>
                 </Col>
               </Row>
             </Panel>
-            <Panel header="异常设置" key="2" style={customPanelStyle}>
+            <Panel header="异常报警设置" key="2" style={customPanelStyle}>
               <Row>
                 <Col span={24}>
-                  <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 15 }} label="异常类型">
-                    {getFieldDecorator('ExceptionType', {
-                    })(
+                  <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 15 }} label="异常类型">
+                    {getFieldDecorator('ExceptionType', {})(
                       <Select
                         mode="multiple"
                         style={{ width: '100%' }}
@@ -251,51 +262,75 @@ class EditPollutant extends Component {
                       >
                         <Option value="1">零值异常</Option>
                         <Option value="2">超量程异常</Option>
-                        <Option value="3">连续值异常</Option>
+                        <Option value="3">恒定值异常</Option>
+                        {/* <Option value="5">超出正常范围异常</Option> */}
                       </Select>,
                     )}
                   </FormItem>
                 </Col>
               </Row>
               <Row>
-                <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="检出上限">
-                    {getFieldDecorator('AbnormalUpperLimit', {
-                      initialValue: 0,
-                    })(<InputNumber min={-100000} max={100000} step={1} />)}
-                  </FormItem>
-                </Col>
-                <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="检出下限">
-                    {getFieldDecorator('AbnormalLowerLimit', {
-                      initialValue: 0,
-                    })(<InputNumber min={-100000} max={100000} step={1} />)}
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="零值计数">
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 9 }} wrapperCol={{ span: 12 }} label="零值计数">
                     {getFieldDecorator('ZeroContinuityCount', {
                       initialValue: 1,
                     })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
-                <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="连续值计数">
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 9 }} wrapperCol={{ span: 12 }} label="恒定值计数">
                     {getFieldDecorator('SerialContinuityCount', {
                       initialValue: 2,
                     })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
-                <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超限计数">
+              </Row>
+              <Row>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 9 }} wrapperCol={{ span: 12 }} label="量程上限">
+                    {getFieldDecorator('AbnormalUpperLimit', {
+                      initialValue: 0,
+                    })(<InputNumber min={-10000000} max={10000000} step={1} />)}
+                  </FormItem>
+                </Col>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 9 }} wrapperCol={{ span: 12 }} label="量程下限">
+                    {getFieldDecorator('AbnormalLowerLimit', {
+                      initialValue: 0,
+                    })(<InputNumber min={-10000000} max={10000000} step={1} />)}
+                  </FormItem>
+                </Col>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 9 }} wrapperCol={{ span: 12 }} label="超量程计数">
                     {getFieldDecorator('OverrunContinuityCount', {
                       initialValue: 1,
                     })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
               </Row>
+              {/* <Row>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="正常范围最大值">
+                    {getFieldDecorator('NormalRangeUpper', {
+                      initialValue: 0,
+                    })(<InputNumber min={-10000000} max={10000000}  step={1} />)}
+                    <NumTips style={{ top: 4, right: -18, zIndex: 1 }} content={'正常值范围（3%、97%小时历史数据区间）'} />
+                  </FormItem>
+                </Col>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="正常范围最小值">
+                    {getFieldDecorator('NormalRangeLower', {
+                      initialValue: 0,
+                    })(<InputNumber  min={-10000000} max={10000000}  step={1}/>)}
+                  </FormItem>
+                </Col>
+                <Col span={8}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超出正常范围计数">
+                    {getFieldDecorator('OverNormalRangeCount', {
+                    })(<InputNumber  min={0} max={100000}  step={1} />)}
+                  </FormItem>
+                </Col>
+              </Row> */}
             </Panel>
           </Collapse>
           <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>

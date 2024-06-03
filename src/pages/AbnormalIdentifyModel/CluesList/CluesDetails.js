@@ -27,6 +27,7 @@ import WarningDataAndChart from '@/pages/AbnormalIdentifyModel/AssistDataAnalysi
 import ModelChartMultiple from './components/ModelChart-multiple';
 import ModelChartLinear from './components/ModelChart-Linear';
 import ProgrammeCheck from '@/pages/AbnormalIdentifyModel/components/ProgrammeCheck.js';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   warningInfoLoading: loading.effects['AbnormalIdentifyModel/GetSingleWarning'],
@@ -37,7 +38,7 @@ const CluesDetails = props => {
   const warningId = props.match.params.id;
   const checkId = props.location.query.checkId;
   const COLOR = ['#5470c6', '#91cc75', '#ea7ccc'];
-  const { dispatch, warningInfoLoading, modelChartsLoading, height } = props;
+  const { dispatch, warningInfoLoading, modelChartsLoading, height, hideBreadcrumb } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [dataModalVisible, setDataModalVisible] = useState(false);
   const [warningDataDate, setWarningDataDate] = useState();
@@ -296,12 +297,12 @@ const CluesDetails = props => {
     }
   };
 
-  const isShowBack = location.pathname.indexOf('autoLogin') <= -1;
-  return (
-    <BreadcrumbWrapper titles=" / 线索详情" hideBreadcrumb={props.hideBreadcrumb}>
+  const getPageContent = () => {
+    const isShowBack = !hideBreadcrumb;
+    return (
       <div
         className={styles.PageWrapper}
-        style={{ height: height ? height : isShowBack ? '100%' : 'calc(100vh - 22px)' }}
+        style={{ height: height ? height : isShowBack ? '100%' : 'calc(100vh - 92px)' }}
       >
         <Card
           title="线索详情"
@@ -311,7 +312,9 @@ const CluesDetails = props => {
             isShowBack ? (
               <Button
                 onClick={() =>
-                  props.hideBreadcrumb && props.onCancel ? props.onCancel() : router.goBack()
+                  hideBreadcrumb && props.onCancel
+                    ? props.onCancel()
+                    : router.push('/AbnormalIdentifyModel/CluesList/all')
                 }
               >
                 <RollbackOutlined />
@@ -337,7 +340,16 @@ const CluesDetails = props => {
               </Tooltip>
             </Descriptions.Item>
             <Descriptions.Item label="发现线索时间">{warningInfo.WarningTime}</Descriptions.Item>
-            <Descriptions.Item label="线索内容">{warningInfo.WarningContent}</Descriptions.Item>
+            <Descriptions.Item label="线索内容" span={3}>
+              {warningInfo.WarningContent}
+            </Descriptions.Item>
+            <Descriptions.Item>
+              <CopyToClipboard
+                text={`${location.origin}/AbnormalIdentifyModel/CluesList/CluesDetails/${warningId}?checkId=${checkId}`}
+              >
+                <div style={{ cursor: 'pointer', color: '#fff', width: 100 }}>复制</div>
+              </CopyToClipboard>
+            </Descriptions.Item>
           </Descriptions>
         </Card>
         <Card
@@ -354,8 +366,8 @@ const CluesDetails = props => {
             </Button>
           }
         >
+          <p style={{ marginBottom: 20 }}>{modelDescribe}</p>
           <Row className={styles.chartWrapper} style={{ height: 'auto' }}>
-            <p style={{ marginBottom: 20 }}>{modelDescribe}</p>
             {/* 表格模型 */}
             {modelTableDatas.length
               ? modelTableDatas.map(item => {
@@ -454,6 +466,11 @@ const CluesDetails = props => {
           />
         )}
       </div>
+    );
+  };
+  return (
+    <BreadcrumbWrapper titles=" / 线索详情" hideBreadcrumb={hideBreadcrumb}>
+      {getPageContent()}
     </BreadcrumbWrapper>
   );
 };

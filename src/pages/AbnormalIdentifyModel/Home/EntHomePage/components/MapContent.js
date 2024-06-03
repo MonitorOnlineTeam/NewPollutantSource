@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import styles from '../../styles.less';
 import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
-import { Radio, Space, Spin } from 'antd';
+import { Radio, Space, Spin, Select, DatePicker } from 'antd';
 import moment from 'moment';
 import { GasIcon, GasOffline, GasExceed, GasAbnormal } from '@/utils/icon';
 import { router } from 'umi';
@@ -24,7 +24,6 @@ class MapContent extends PureComponent {
       regionToggle: false,
       industryToggle: false,
       industryList: [],
-      currentRegionName: '全国',
     };
     this.mapEvents = {
       created(m) {
@@ -204,7 +203,7 @@ class MapContent extends PureComponent {
     const {
       mapMarkersList,
       loading,
-      entRequestParams: { pLeve, pollutantCode, dateRange },
+      entRequestParams: { pLeve, pollutantCode, dateType, btime },
     } = this.props;
 
     return (
@@ -233,7 +232,7 @@ class MapContent extends PureComponent {
         </Map>
         <div className={styles.mapSearchWrapper}>
           <Space align="start">
-            <Radio.Group
+            {/* <Radio.Group
               value={dateRange}
               className={styles.myRadio}
               style={{ lineHeight: '24px' }}
@@ -255,7 +254,45 @@ class MapContent extends PureComponent {
             >
               <Radio.Button value="week">近七天</Radio.Button>
               <Radio.Button value="month">近一个月</Radio.Button>
-            </Radio.Group>
+            </Radio.Group> */}
+
+            <Space.Compact className={styles.SelectWrapper}>
+              <div>
+                <Select
+                  // showSearch
+                  // optionFilterProp="children"
+                  popupClassName={styles.popupStyle}
+                  value={dateType}
+                  onChange={value => {
+                    // setDateType(value);
+                    this.queryParamsChange(
+                      {
+                        dateType: value,
+                      },
+                      true,
+                    );
+                  }}
+                >
+                  <Option value="month">月</Option>
+                  <Option value="year">年</Option>
+                </Select>
+              </div>
+              <DatePicker
+                allowClear={false}
+                picker={dateType}
+                value={btime}
+                onChange={date => {
+                  this.queryParamsChange(
+                    {
+                      btime: date,
+                    },
+                    true,
+                  );
+                }}
+                popupClassName={styles.datePickerPopup}
+              />
+            </Space.Compact>
+
             <div className={styles.pollutantWrapper}>
               {/* <p>污染物</p> */}
               <ul>

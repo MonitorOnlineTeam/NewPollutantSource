@@ -20,7 +20,7 @@ export async function getysyList(params) {
     }
  */
 export async function querypollutantlist(params) {
-  const result = await post(API.commonApi.GetPollutantListByDgimn, params, null);
+  const result = await post(API.CommonApi.GetPollutantListByDgimn, params, null);
   return result === null
     ? {
         data: null,

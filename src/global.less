@@ -191,7 +191,8 @@ p {
 
   // 搜索form
   #searchForm {
-    .ant-form-item {
+    .ant-form-item,
+    .ant-legacy-form-item {
       margin-bottom: 12px;
     }
   }
@@ -296,7 +297,7 @@ a:hover {
   }
 
   // formItem 样式
-  .ant-legacy-form-item {
+  .searchForm .ant-legacy-form-item {
     margin-bottom: 8px;
   }
 
@@ -571,6 +572,16 @@ a:hover {
   //   overflow-x: hidden;
   //   background-color: transparent;
   // }
+}
+
+.hideBreadcrumb {
+  .ant-pro-page-header-wrap-page-header-warp {
+    display: none;
+  }
+  .ant-pro-page-header-wrap-children-content {
+    margin: 0;
+  }
+  margin: 0 !important;
 }
 
 #notBreadcrumbLayout {
@@ -1034,7 +1045,7 @@ a:hover {
     height: 20px;
   }
 }
-.qlbt-operation-menu{
+.qlbt-operation-menu {
   z-index: 1100 !important;
 }
 .ql-editor.ql-blank::before {

@@ -2,6 +2,7 @@ import * as services from '@/services/qcaCheckApi';
 import { getQCAPollutantByDGIMN } from '@/services/commonApi';
 import Model from '@/utils/model';
 import { message } from 'antd';
+import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
   namespace: 'qcaCheck',
@@ -219,7 +220,7 @@ export default Model.extend({
     *qcaCheckExport({ payload }, { call, update, put, take, select }) {
       const result = yield call(services[payload.exportType], payload);
       if (result.IsSuccess) {
-        window.open(result.Datas);
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message);
       }

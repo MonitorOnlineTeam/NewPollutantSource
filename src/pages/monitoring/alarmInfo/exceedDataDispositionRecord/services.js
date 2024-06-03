@@ -43,7 +43,7 @@ export async function ExportAlarmManagementDetail(params) {
 }
 //监测因子列表
 export async function GetPollutantCodeList(params) {
-    const result = post(API.commonApi.GetPollutantCodeList, params);
+    const result = post(API.CommonApi.GetPollutantCodeList, params);
     return result
 }
 //处置结果

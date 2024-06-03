@@ -47,7 +47,7 @@ class OpenFileModal extends PureComponent {
       >
         <FileViewer
           fileType={fileType}
-          filePath={`/upload/${filePath}`}
+          filePath={`/wwwroot/Upload/${filePath}`}
           // errorComponent={message.error("文件打开失败")}
           errorComponent={CustomErrorComponent}
           onError={() => {

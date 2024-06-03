@@ -72,6 +72,8 @@ class Login extends Component {
           active,
         });
       },
+      verificaCodeChange:this.props.verificaCodeChange,
+      handleRef:this.props.handleRef,
     };
   };
   handleSubmit = e => {
@@ -136,7 +138,7 @@ class Login extends Component {
     );
   }
 }
-
+console.log('LoginItem', LoginItem)
 Object.keys(LoginItem).forEach(item => {
   Login[item] = LoginItem[item];
 });

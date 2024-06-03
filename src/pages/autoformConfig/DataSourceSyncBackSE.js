@@ -73,7 +73,7 @@ class DataSourceSyncBackSE extends React.PureComponent {
       headers: {
         Authorization: "Bearer " + Cookie.get(config.cookieName)
       },
-      action: API.autoFormApi.ImportConsoleConfig,
+      action: API.AutoFormApi.ImportConsoleConfig,
       data: {
         canOverride: canOverride,
         canClear: false

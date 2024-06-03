@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-01-18 15:08:40
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-23 17:04:44
+ * @Last Modified time: 2024-03-28 14:10:39
  * @Description:  数据现象
  */
 import React, { useState, useEffect } from 'react';
@@ -355,10 +355,14 @@ const DataPhenomena = props => {
       toolbox: {
         feature: {
           dataZoom: {
-            yAxisIndex: 'none',
+            show: true,
+            title: {
+              zoom: '区域缩放',
+              back: '区域缩放还原',
+            },
           },
-          restore: {},
-          saveAsImage: {},
+          restore: { show: true, title: '还原' },
+          saveAsImage: { show: true, title: '保存为图片' },
         },
       },
       axisPointer: {

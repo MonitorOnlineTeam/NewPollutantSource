@@ -13,7 +13,7 @@ export async function GetMenuInfos(params) {
     const body = {
     };
 
-    const result = await post(API.autoFormApi.GetMenuInfos, body, null);
+    const result = await post(API.AutoFormApi.GetMenuInfos, body, null);
     return result === null ? null : result;
 }
 
@@ -32,10 +32,10 @@ export async function AddMenuManagement(params) {
         DeleteMark: params.DeleteMark,
         AllowEdit: params.AllowEdit,//是否首页
     };
-    const result = await post(API.autoFormApi.AddMenuManagement, body, null);
+    const result = await post(API.AutoFormApi.AddMenuManagement, body, null);
     return result === null ? null : result;
 }
-/** 
+/**
  * 修改菜单
  */
 export async function UpdateMenuManagement(params) {
@@ -52,7 +52,7 @@ export async function UpdateMenuManagement(params) {
         ParentId: params.ParentId,
         AllowEdit: params.AllowEdit,//是否首页
     };
-    const result = await post(API.autoFormApi.UpdateMenuManagement, body, null);
+    const result = await post(API.AutoFormApi.UpdateMenuManagement, body, null);
     return result === null ? null : result;
 }
 /**
@@ -62,7 +62,7 @@ export async function DelectMenuManagement(params) {
     const body = {
         Menu_Id: params.Menu_Id
     };
-    const result = await post(API.autoFormApi.DelectMenuManagement, body, null);
+    const result = await post(API.AutoFormApi.DelectMenuManagement, body, null);
     return result === null ? null : result;
 }
 

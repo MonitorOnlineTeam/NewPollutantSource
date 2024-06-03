@@ -1,4 +1,4 @@
-import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
+import ProLayout, { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
 import React, { Component } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
@@ -32,6 +32,13 @@ class BasicLayout extends Component {
     //   type: 'global/getSystemConfigInfo',
     //   payload: {},
     // });
+    configInfo.IsOpera &&
+      dispatch({
+        //获取运维基础配置
+        type: 'global/getOperationSetting',
+        payload: {},
+      });
+    // 获取菜单
     dispatch({
       type: 'user/fetchCurrent',
       payload: {},
@@ -45,6 +52,11 @@ class BasicLayout extends Component {
     dispatch({
       type: 'login/IfSpecial',
       payload: {},
+    });
+    //获取行政区列表
+    dispatch({
+      type: 'autoForm/getRegions',
+      payload: { PointMark: '2', RegionCode: '' },
     });
     if (!this.props.sysPollutantTypeList.length && configInfo.IsShowSysPage === '1') {
       dispatch({
@@ -65,6 +77,10 @@ class BasicLayout extends Component {
   render() {
     const { dispatch, children, settings, currentMenu, configInfo, loading } = this.props;
     const { panes } = this.state;
+
+    if(loading) {
+      return <PageLoading />
+    }
 
     const handleMenuCollapse = payload =>
       dispatch &&

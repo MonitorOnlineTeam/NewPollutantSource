@@ -4,7 +4,7 @@
  * 创建时间：2020.10.19
  */
 import React, { PureComponent, Fragment } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
@@ -19,23 +19,24 @@ import {
   Tabs,
   Modal,
 } from 'antd';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { connect } from "dva";
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import { connect } from 'dva';
 import ReactEcharts from 'echarts-for-react';
-import moment from 'moment'
-import RangePicker_ from '@/components/RangePicker/NewRangePicker'
+import moment from 'moment';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SdlTable from '@/components/SdlTable';
-import PageLoading from '@/components/PageLoading'
+import PageLoading from '@/components/PageLoading';
 import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
-import style from '@/pages/report/tableClass.less'
+import style from '@/pages/dataSearch/tableClass.less';
 import { downloadFile } from '@/utils/utils';
 import { compose } from 'redux';
-import FileDown from '@/components/AttachmentView/index'
-import RegionList from '@/components/RegionList'
+import FileDown from '@/components/AttachmentView/index';
+import VerifyDetailsPop from './VerifyDetailsPop';
 const { Option } = Select;
 const { TabPane } = Tabs;
-
+import RegionList from '@/components/RegionList';
+import { uploadPrefix } from '@/config';
 
 const pageUrl = {
   GetAttentionDegreeList: 'enterpriseMonitoringModel/GetAttentionDegreeList',
@@ -49,11 +50,14 @@ const pageUrl = {
   ExportAlarmVerifyRate: 'exceedDataAlarmModel/ExportAlarmVerifyRate',
   ExportAlarmVerifyRateDetail: 'exceedDataAlarmModel/ExportAlarmVerifyRateDetail',
   ExportAlarmVerifyDetail: 'exceedDataAlarmModel/ExportAlarmVerifyDetail',
-}
+};
 @connect(({ loading, autoForm, enterpriseMonitoringModel, exceedDataAlarmModel }) => ({
   loading: loading.effects['exceedDataAlarmModel/GetAlarmVerifyRate'],
   loadingRateDetail: loading.effects['exceedDataAlarmModel/GetAlarmVerifyRateDetail'],
   loadingDetail: loading.effects['exceedDataAlarmModel/GetAlarmVerifyDetail'],
+  exportLoading1: loading.effects[pageUrl.ExportAlarmVerifyRate],
+  exportLoading2: loading.effects[pageUrl.ExportAlarmVerifyRateDetail],
+  exportLoading3: loading.effects[pageUrl.ExportAlarmVerifyDetail],
   regionList: autoForm.regionList,
   attention: enterpriseMonitoringModel.attention,
   total: enterpriseMonitoringModel.total,
@@ -66,22 +70,24 @@ const pageUrl = {
   AlarmDealTypeList: exceedDataAlarmModel.AlarmDealTypeList,
   ManagementDetail: exceedDataAlarmModel.ManagementDetail,
   priseList: exceedDataAlarmModel.priseList,
+  DGIMN: '',
 }))
 class index extends PureComponent {
   constructor(props) {
     super(props);
-    this.newTabIndex = 0
+    this.newTabIndex = 0;
     this.state = {
       regionCode: '',
       //////////////
-      dataType: "Hour",
-      time: [moment().add(-24, "hour"), moment()],
+      dataType: 'Hour',
+      time: [moment().add(-24, 'hour'), moment()],
       activeKey: '1',
       panes: [],
-      entType: '1',
+      entType: '2',
       regionValue: '',
       attentionValue: '',
-      outletValue: '1',
+      outletValue: '2',
+      operationpersonnel: '',
       regVisible: false,
       regVisibleAlready: false,
       regVisibleStay: false,
@@ -90,7 +96,7 @@ class index extends PureComponent {
       detailsVisible2: false,
       statusAlram: '',
       pollutantCodeList: [],
-      AlarmDealTypeList: [],
+      alarmDealTypeListCode: [],
       DealType: '2',
       enterpriseValue: '',
       ModalTitle: '',
@@ -99,7 +105,8 @@ class index extends PureComponent {
       filePath: '',
       entCode: '',
       status: '',
-      exportRegion: '1'
+      exportRegion: '1',
+      DGIMN: '',
     };
   }
 
@@ -109,13 +116,13 @@ class index extends PureComponent {
 
   initData = () => {
     //获取行政区列表
-    this.props.dispatch({
-      type: pageUrl.getRegions,
-      payload: {
-        PointMark: '2',
-        RegionCode: ''
-      },
-    });
+    // this.props.dispatch({
+    //     type: pageUrl.getRegions,
+    //     payload: {
+    //         PointMark: '2',
+    //         RegionCode: ''
+    //     },
+    // });
     //获取关注度列表
     this.props.dispatch({
       type: pageUrl.GetAttentionDegreeList,
@@ -123,55 +130,65 @@ class index extends PureComponent {
     });
 
     //获取监测因子列表
-    this.props.dispatch({
-      type: pageUrl.GetPollutantCodeList,
-      payload: {
-        PollutantType: this.state.outletValue
-      }
-    }).then(() => {
-      if (this.props.pollutantCodeList.length > 0) {
-        const { outletValue, dataType, time } = this.state
+    this.props
+      .dispatch({
+        type: pageUrl.GetPollutantCodeList,
+        payload: {
+          PollutantType: this.state.outletValue,
+        },
+      })
+      .then(() => {
+        if (this.props.pollutantCodeList.length > 0) {
+          const { outletValue, dataType, time } = this.state;
 
-        this.props.dispatch({
-          type: pageUrl.GetAlarmVerifyRate,
-          payload: {
-            RegionCode: '',
-            attentionCode: '',
-            PollutantType: outletValue == undefined ? '' : outletValue,
-            DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-            BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-            EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-            PageSize: 20,
-            PageIndex: 1,
-            PollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode),
-          }
-        })
-        this.setState({
-          pollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode)
-        })
-      }
-    })
+          this.props.dispatch({
+            type: pageUrl.GetAlarmVerifyRate,
+            payload: {
+              RegionCode: '',
+              attentionCode: '',
+              PollutantType: outletValue == undefined ? '' : outletValue,
+              DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
+              BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+              EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
+              PageSize: 20,
+              PageIndex: 1,
+              PollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode),
+            },
+          });
+          this.setState({
+            pollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode),
+          });
+        }
+      });
     //获取核实结果
-    this.props.dispatch({
-      type: pageUrl.GetOverToExamineOperation,
-      payload: {
-        PollutantType: ''
-      },
-    }).then(() => {
-      if (this.props.AlarmDealTypeList.length > 0) {
-        this.setState({
-          AlarmDealTypeList: this.props.AlarmDealTypeList.map(poll => poll.code)
-        })
-      }
-    })
-
+    this.props
+      .dispatch({
+        type: pageUrl.GetOverToExamineOperation,
+        payload: {
+          PollutantType: '',
+        },
+      })
+      .then(() => {
+        if (this.props.AlarmDealTypeList.length > 0) {
+          this.setState({
+            alarmDealTypeListCode: this.props.AlarmDealTypeList.map(poll => poll.code),
+          });
+        }
+      });
   };
-
 
   // 导出
   exportReport = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, pollutantCodeList, exportRegion } = this.state
-    console.log
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      pollutantCodeList,
+      exportRegion,
+      operationpersonnel,
+    } = this.state;
     if (exportRegion != '1') {
       this.props.dispatch({
         type: pageUrl.ExportAlarmVerifyRateDetail,
@@ -180,13 +197,14 @@ class index extends PureComponent {
           attentionCode: attentionValue == undefined ? '' : attentionValue,
           PollutantType: outletValue == undefined ? '' : outletValue,
           DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-          BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-          EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+          BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+          EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
           PollutantCodeList: pollutantCodeList,
-        }
-      })
-    }
-    else {
+          operationpersonnel: operationpersonnel,
+          regionLevel: this.state.regionLevel,
+        },
+      });
+    } else {
       this.props.dispatch({
         type: pageUrl.ExportAlarmVerifyRate,
         payload: {
@@ -194,18 +212,27 @@ class index extends PureComponent {
           attentionCode: attentionValue == undefined ? '' : attentionValue,
           PollutantType: outletValue == undefined ? '' : outletValue,
           DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-          BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-          EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+          BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+          EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
           PollutantCodeList: pollutantCodeList,
-        }
-      })
+          operationpersonnel: operationpersonnel,
+          regionLevel: this.state.regionLevel,
+        },
+      });
     }
-
-  }
+  };
 
   //查询数据
-  getChartAndTableData = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, pollutantCodeList } = this.state
+  getChartAndTableData = regionLevel => {
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      pollutantCodeList,
+      operationpersonnel,
+    } = this.state;
 
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyRate,
@@ -214,18 +241,20 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         PageSize: 20,
         PageIndex: 1,
         PollutantCodeList: pollutantCodeList,
-      }
-    })
+        operationpersonnel: operationpersonnel,
+        regionLevel: regionLevel,
+      },
+    });
     this.setState({
-      entType: outletValue
-    })
-
-  }
+      entType: outletValue,
+      regionLevel: regionLevel,
+    });
+  };
 
   children = () => {
     const { regionList } = this.props;
@@ -255,111 +284,210 @@ class index extends PureComponent {
       });
       return selectList;
     }
-  }
-  checkBoxChange = (checkedValues) => {
+  };
+  checkBoxChange = checkedValues => {
     this.setState({
-      pollutantCodeList: checkedValues
-    })
-  }
-  onRef1 = (ref) => {
+      pollutantCodeList: checkedValues,
+    });
+  };
+  onRef1 = ref => {
     this.childrenHand = ref;
-  }
+  };
   cardTitle = () => {
-    const { time } = this.state;
-    const { pollutantCodeList } = this.props
-    return <>
+    const { time, regionValue, regionLevel, exportRegion } = this.state;
+    const { pollutantCodeList, exportLoading1, exportLoading2 } = this.props;
+    return (
+      <>
+        {/* <Select
+                allowClear
+                showSearch
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="行政区"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                    if (option && option.props && option.props.title) {
+                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                    } else {
+                        return true
+                    }
+                }}
+                onChange={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }}>
+                {this.children()}
+            </Select> */}
+        {!regionLevel && (
+          <Row>
+            <RegionList
+              style={{ width: 200, marginRight: 10 }}
+              changeRegion={value => {
+                this.setState({
+                  regionValue: value,
+                });
+              }}
+              RegionCode={regionValue}
+            />
+            <Select
+              allowClear
+              style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+              placeholder="关注程度"
+              maxTagCount={2}
+              maxTagTextLength={5}
+              maxTagPlaceholder="..."
+              onChange={value => {
+                this.setState({
+                  attentionValue: value,
+                });
+              }}
+            >
+              {this.attention()}
+            </Select>
 
-      <RegionList
-        changeRegion={(value) => {
-          this.setState({
-            regionValue: value
-          })
-        }}
-        RegionCode={this.state.regionValue}
-      />
-      <Select
-        allowClear
-        style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-        placeholder="关注程度"
-        maxTagCount={2}
-        maxTagTextLength={5}
-        maxTagPlaceholder="..."
-        onChange={(value) => {
-          this.setState({
-            attentionValue: value,
-          })
-        }}>
-        {this.attention()}
-      </Select>
-      <Select
-        style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-        placeholder="排口类型"
-        maxTagCount={2}
-        maxTagTextLength={5}
-        defaultValue={this.state.entType}
-        maxTagPlaceholder="..."
-        onChange={(value) => {
-          //获取监测因子列表
-          this.props.dispatch({
-            type: pageUrl.GetPollutantCodeList,
-            payload: {
-              PollutantType: value
-            }
-          }).then(() => {
-            if (this.props.pollutantCodeList.length > 0) {
-              this.setState({
-                pollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode)
-              })
-            }
-          })
-          this.setState({
-            outletValue: value,
-          })
-        }}>
-        <Option value="1">废水</Option>
-        <Option value="2">废气</Option>
-      </Select>
-      <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
-        this.setState({
-          dataType: e.target.value,
-          time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
-        })
-        e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
-      }}>
-        <Radio.Button value="Hour">小时</Radio.Button>
-        <Radio.Button value="Day">日均</Radio.Button>
-      </Radio.Group>
+            <Select
+              style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+              placeholder="排口类型"
+              maxTagCount={2}
+              maxTagTextLength={5}
+              defaultValue={this.state.entType}
+              maxTagPlaceholder="..."
+              onChange={value => {
+                //获取监测因子列表
+                this.props
+                  .dispatch({
+                    type: pageUrl.GetPollutantCodeList,
+                    payload: {
+                      PollutantType: value,
+                    },
+                  })
+                  .then(() => {
+                    if (this.props.pollutantCodeList.length > 0) {
+                      this.setState({
+                        pollutantCodeList: this.props.pollutantCodeList.map(
+                          poll => poll.PollutantCode,
+                        ),
+                      });
+                    }
+                  });
+                this.setState({
+                  outletValue: value,
+                });
+              }}
+            >
+              <Option value="2">废气</Option>
+              <Option value="1">废水</Option>
+            </Select>
+            <Radio.Group
+              defaultValue="Hour"
+              style={{ marginRight: 10 }}
+              onChange={e => {
+                this.setState({
+                  dataType: e.target.value,
+                  time:
+                    e.target.value === 'Day'
+                      ? [moment().add(-1, 'month')]
+                      : [moment().add(-24, 'hour'), moment()],
+                });
+                e.target.value === 'Day'
+                  ? this.childrenHand.onPanelChange([moment().add(-1, 'month'), moment()])
+                  : this.childrenHand.onPanelChange([moment().add(-24, 'hour'), moment()]);
+              }}
+            >
+              <Radio.Button value="Hour">小时</Radio.Button>
+              <Radio.Button value="Day">日均</Radio.Button>
+            </Radio.Group>
 
-      <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
-        (dates, dataType) => {
-          this.setState({
-            time: dates
-          })
-        }
-      } />
-      <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-      <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
-      <div style={{ marginTop: 10 }}>
-        <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
-        <Checkbox.Group defaultValue={pollutantCodeList.map(item => item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
-          {
-            pollutantCodeList.map(poll =>
-              <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
-            )
-          }
-        </Checkbox.Group>
-        <span style={{ fontSize: 14, color: 'red' }}>已核实指运维人员已核实的超标报警</span>
-      </div>
-    </>;
-  }
+            <RangePicker_
+              allowClear={false}
+              onRef={this.onRef1}
+              isVerification={true}
+              dateValue={time}
+              dataType={this.state.dataType}
+              style={{ width: 400, minWidth: '200px', marginRight: '10px' }}
+              callback={(dates, dataType) => {
+                this.setState({
+                  time: dates,
+                });
+              }}
+            />
+          </Row>
+        )}
+        <div style={{ marginTop: 10 }}>
+          {!regionLevel && (
+            <>
+              {' '}
+              <Checkbox.Group
+                defaultValue={pollutantCodeList.map(item => item.PollutantCode)}
+                value={this.state.pollutantCodeList}
+                onChange={this.checkBoxChange}
+              >
+                {pollutantCodeList.map(poll => (
+                  <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
+                ))}
+              </Checkbox.Group>
+              <Button
+                type="primary"
+                style={{ marginRight: 10 }}
+                onClick={() => {
+                  this.getChartAndTableData();
+                }}
+              >
+                查询
+              </Button>
+            </>
+          )}
+          <Button
+            style={{ marginRight: 10 }}
+            onClick={this.exportReport}
+            loading={exportRegion == '1' ? exportLoading1 : exportLoading2}
+          >
+            <ExportOutlined />
+            导出
+          </Button>
+          {regionLevel && (
+            <Button
+              onClick={() => {
+                this.setState({ regionValue: '' }, () => {
+                  this.props.dispatch({
+                    type: 'exceedDataAlarmModel/updateState',
+                    payload: {
+                      cityRegionCode: '',
+                    },
+                  });
+                  this.getChartAndTableData();
+                });
+              }}
+            >
+              {' '}
+              <RollbackOutlined />
+              返回{' '}
+            </Button>
+          )}
+          {!regionLevel && (
+            <span style={{ fontSize: 14, color: 'red' }}>已核实指运维人员已核实的超标报警</span>
+          )}
+        </div>
+      </>
+    );
+  };
 
-
-  onChange = (PageIndex, PageSize) => {
-
-  }
+  onChange = (PageIndex, PageSize) => {};
   //行政区 报警次数
-  AlarmNumHandle = (regionCode, PollutantCode, regionName, DGIMN) => {
-    const { regionValue, attentionValue, outletValue, dataType, time, AlarmDealTypeList } = this.state
+  AlarmNumHandle = (regionCode, PollutantCode, regionName) => {
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      alarmDealTypeListCode,
+      operationpersonnel,
+      DGIMN,
+    } = this.state;
     this.props.dispatch({
       //获取企业列表
       type: pageUrl.GetEntByRegion,
@@ -370,8 +498,13 @@ class index extends PureComponent {
       regVisible: true,
       regionCode: regionCode,
       PollutantCode: PollutantCode,
-      ModalTitle: regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警情况'
-    })
+      ModalTitle:
+        regionName +
+        moment(time[0]).format('YYYY年MM月DD号HH时') +
+        '至' +
+        moment(time[1]).format('YYYY年MM月DD号HH时') +
+        '超标报警情况',
+    });
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -379,30 +512,43 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        DGIMN: DGIMN,
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
         Status: '',
         EntCode: '',
-        VerifyStatus: AlarmDealTypeList
-      }
-    })
-
-
-  }
+        VerifyStatus: alarmDealTypeListCode,
+        operationpersonnel: operationpersonnel,
+        DGIMN: DGIMN == undefined ? '' : DGIMN,
+      },
+    });
+  };
   //行政区 已核实报警次数
-  AlreadyAlarmNumHandle = (regionCode, PollutantCode, regionName, DGIMN) => {
-    const { regionValue, attentionValue, outletValue, dataType, time, AlarmDealTypeList } = this.state
+  AlreadyAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      alarmDealTypeListCode,
+      operationpersonnel,
+      DGIMN,
+    } = this.state;
     this.setState({
       DealType: '1',
       regVisibleAlready: true,
       regionCode: regionCode,
       PollutantCode: PollutantCode,
-      ModalTitle: regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警已核实情况'
-    })
+      ModalTitle:
+        regionName +
+        moment(time[0]).format('YYYY年MM月DD号HH时') +
+        '至' +
+        moment(time[1]).format('YYYY年MM月DD号HH时') +
+        '超标报警已核实情况',
+    });
     this.props.dispatch({
       //获取企业列表
       type: pageUrl.GetEntByRegion,
@@ -415,22 +561,31 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        DGIMN: DGIMN,
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
         Status: '1',
         EntCode: '',
-        VerifyStatus: AlarmDealTypeList
-      }
-    })
-
-  }
+        VerifyStatus: alarmDealTypeListCode,
+        operationpersonnel: operationpersonnel,
+        DGIMN: DGIMN ? DGIMN : '',
+      },
+    });
+  };
   //行政区 待核实报警次数
-  StayAlarmNumHandle = (regionCode, PollutantCode, regionName, DGIMN) => {
-    const { regionValue, attentionValue, outletValue, dataType, time, AlarmDealTypeList } = this.state
+  StayAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      alarmDealTypeListCode,
+      operationpersonnel,
+      DGIMN,
+    } = this.state;
     this.props.dispatch({
       //获取企业列表
       type: pageUrl.GetEntByRegion,
@@ -441,8 +596,13 @@ class index extends PureComponent {
       regVisibleStay: true,
       regionCode: regionCode,
       PollutantCode: PollutantCode,
-      ModalTitle: regionName + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警待核实情况'
-    })
+      ModalTitle:
+        regionName +
+        moment(time[0]).format('YYYY年MM月DD号HH时') +
+        '至' +
+        moment(time[1]).format('YYYY年MM月DD号HH时') +
+        '超标报警待核实情况',
+    });
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -450,106 +610,124 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        DGIMN: DGIMN,
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
         Status: '0',
         EntCode: '',
-        VerifyStatus: AlarmDealTypeList
-      }
-    })
-
-  }
+        VerifyStatus: alarmDealTypeListCode,
+        operationpersonnel: operationpersonnel,
+        DGIMN: DGIMN ? DGIMN : '',
+      },
+    });
+  };
   // 企业弹框
   EntAlarmHandle = (reCode, entCode, status, PollutantCode, entName, pointName, DGIMN) => {
-    const { attentionValue, outletValue, dataType, time, regionCode, AlarmDealTypeList } = this.state
-
-    let deal = ''
+    const {
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      regionCode,
+      alarmDealTypeListCode,
+      operationpersonnel,
+    } = this.state;
+    let deal = '';
     if (status == '') {
-      deal = '核实情况'
+      deal = '核实情况';
     }
     if (status == '0') {
-      deal = '待核实情况'
+      deal = '待核实情况';
     }
     if (status == '1') {
-      deal = '已核实情况'
+      deal = '已核实情况';
     }
     if (entCode == undefined) {
       this.setState({
         entVisible: true,
-        ModalTitle: '全部合计' + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
+        ModalTitle:
+          '全部合计' +
+          '于' +
+          moment(time[0]).format('YYYY年MM月DD号HH时') +
+          '至' +
+          moment(time[1]).format('YYYY年MM月DD号HH时') +
+          '超标报警' +
+          deal,
         status: status,
-        PollutantCode: PollutantCode
-
-      })
-    }
-    else {
+        PollutantCode: PollutantCode,
+      });
+    } else {
       this.setState({
         entVisible: true,
-        ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
+        ModalTitle:
+          entName +
+          '-' +
+          pointName +
+          '于' +
+          moment(time[0]).format('YYYY年MM月DD号HH时') +
+          '至' +
+          moment(time[1]).format('YYYY年MM月DD号HH时') +
+          '超标报警' +
+          deal,
         status: status,
         entCode: entCode,
         regionCode: reCode,
-        PollutantCode: PollutantCode
-
-      })
+        PollutantCode: PollutantCode,
+        DGIMN: DGIMN,
+      });
     }
 
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
-        RegionCode: reCode == "" ? regionCode : reCode,
+        RegionCode: reCode == '' ? regionCode : reCode,
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        DGIMN: DGIMN,
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         //PageSize: 10,
         // PageIndex: 1,
         PollutantCode: PollutantCode,
-        Status: status == "2" ? "" : status,
+        Status: status == '2' ? '' : status,
         EntCode: entCode == undefined ? '' : entCode,
-        VerifyStatus: AlarmDealTypeList
-      }
-    })
-
-  }
-
+        VerifyStatus: alarmDealTypeListCode,
+        DGIMN: DGIMN ? DGIMN : '',
+        operationpersonnel: operationpersonnel,
+      },
+    });
+  };
 
   //行政区 报警次数=>详情
   DetailsHandle = (verifyImage, remark) => {
-    let filename = ''
+    let filename = '';
     if (verifyImage == null || verifyImage == '') {
-      filename = ''
-    }
-    else {
-      filename = verifyImage[0].FileName
+      filename = '';
+    } else {
+      filename = verifyImage[0].FileName;
     }
     this.setState({
       detailsVisible: true,
       remark: remark,
-      filePath: filename
-    })
-  }
+      filePath: filename,
+    });
+  };
   //行政区 已核实报警次数=>详情
   DetailsHandle2 = (verifyImage, remark) => {
-    let filename = ''
+    let filename = '';
     if (verifyImage == null || verifyImage == '') {
-      filename = ''
-    }
-    else {
-      filename = verifyImage[0].FileName
+      filename = '';
+    } else {
+      filename = verifyImage[0].FileName;
     }
     this.setState({
       detailsVisible2: true,
       remark: remark,
-      filePath: filename
-    })
-  }
+      filePath: filename,
+    });
+  };
 
   //获取企业列表
   entList = () => {
@@ -569,172 +747,268 @@ class index extends PureComponent {
 
   //添加标签
   paneAdd = (text, region) => {
-    const { column, AlarmDetailList } = this.props
-    const { panes, regionValue, attentionValue, outletValue, dataType, time, pollutantCodeList } = this.state
-    const activeKey = `${region}newTab${this.newTabIndex++}`;
-
-    this.props.dispatch({
-      type: pageUrl.GetAlarmVerifyRateDetail,
-      payload: {
-        RegionCode: region == "" ? regionValue : region,
-        attentionCode: attentionValue == undefined ? '' : attentionValue,
-        PollutantType: outletValue == undefined ? '' : outletValue,
-        DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        //PageSize: 20,
-        //PageIndex: 1,
-        PollutantCodeList: pollutantCodeList,
-      }
-    }).then(() => {
-      if (this.props.AlarmDetailList.length > 0) {
-        const fixed = false
-        const columns = [
-          {
-            title: "行政区",
-            width: 100,
-            align: 'center',
-            fixed: fixed,
-            dataIndex: 'regionName',
-            key: 'regionName',
+    if (!this.state.regionValue) {
+      this.setState({ regionValue: region }, () => {
+        this.getChartAndTableData(2);
+      });
+    } else {
+      const { column, AlarmDetailList, loadingRateDetail } = this.props;
+      const {
+        panes,
+        regionValue,
+        attentionValue,
+        outletValue,
+        dataType,
+        time,
+        pollutantCodeList,
+        operationpersonnel,
+      } = this.state;
+      const activeKey = `${region}newTab${this.newTabIndex++}`;
+      this.props
+        .dispatch({
+          type: pageUrl.GetAlarmVerifyRateDetail,
+          payload: {
+            RegionCode: region == '' ? regionValue : region,
+            attentionCode: attentionValue == undefined ? '' : attentionValue,
+            PollutantType: outletValue == undefined ? '' : outletValue,
+            DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
+            BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+            EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
+            //PageSize: 20,
+            //PageIndex: 1,
+            PollutantCodeList: pollutantCodeList,
+            operationpersonnel: operationpersonnel,
           },
-          {
-            title: "企业名称",
-            width: 150,
-            align: 'left',
-            fixed: fixed,
-            dataIndex: 'entName',
-            key: 'entName',
-            render: (text) => {
-              return typeof (text) == 'number' ? '-' : text
-            }
-          },
-          {
-            title: "监测点名称",
-            width: 100,
-            align: 'left',
-            fixed: fixed,
-            dataIndex: 'pointName',
-            key: 'pointName',
-            render: (text) => {
-              return typeof (text) == 'number' ? '-' : text
-            }
-          },
-          {
-            title: "数据类型",
-            width: 100,
-            align: 'center',
-            fixed: fixed,
-            dataIndex: 'dataType',
-            key: 'dataType',
-          },
-        ]
-        column.map(col => {
-          let addColumns = {
-            title: col.PollutantName,
-            align: 'center',
-            fixed: fixed,
-            children: [
-              {
-                title: "报警次数",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: col.PollutantCode + '_alarmCount',
-                key: col.PollutantCode + '_alarmCount',
-                render: (text, record) => {
-                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
-                }
-              },
-              {
-                title: "已核实报警次数",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: col.PollutantCode + '_respondedCount',
-                key: col.PollutantCode + '_respondedCount',
-                render: (text, record) => {
-                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '1', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
-                }
-              },
-              {
-                title: "待核实报警次数",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: col.PollutantCode + '_noRespondedCount',
-                key: col.PollutantCode + '_noRespondedCount',
-                render: (text, record) => {
-                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '0', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
-                }
-              },
-            ]
-          }
-          columns.push(addColumns)
         })
+        .then(() => {
+          if (this.props.AlarmDetailList.length > 0) {
+            const fixed = false;
+            const columns = [
+              // {
+              //     title: "行政区",
+              //     width: 100,
+              //     align: 'center',
+              //     fixed: fixed,
+              //     dataIndex: 'regionName',
+              //     key: 'regionName',
+              // },
+              {
+                title: '省',
+                dataIndex: 'ProvinceName',
+                key: 'ProvinceName',
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+              },
+              {
+                title: '市',
+                dataIndex: 'CityName',
+                key: 'CityName',
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+              },
+              {
+                title: '企业名称',
+                width: 150,
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'entName',
+                key: 'entName',
+                render: text => {
+                  return typeof text == 'number' ? '-' : text;
+                },
+              },
+              {
+                title: '监测点名称',
+                width: 100,
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'pointName',
+                key: 'pointName',
+                render: text => {
+                  return typeof text == 'number' ? '-' : text;
+                },
+              },
+              {
+                title: '数据类型',
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'dataType',
+                key: 'dataType',
+              },
+            ];
+            column.map(col => {
+              let addColumns = {
+                title: col.PollutantName,
+                align: 'center',
+                fixed: fixed,
+                children: [
+                  {
+                    title: '报警次数',
+                    width: 100,
+                    align: 'center',
+                    fixed: fixed,
+                    dataIndex: col.PollutantCode + '_alarmCount',
+                    key: col.PollutantCode + '_alarmCount',
+                    render: (text, record) => {
+                      return (
+                        <a
+                          onClick={this.EntAlarmHandle.bind(
+                            this,
+                            record.regionCode,
+                            record.entCode,
+                            '',
+                            col.PollutantCode,
+                            record.entName,
+                            record.pointName,
+                            record.DGIMN,
+                          )}
+                        >
+                          {text}
+                        </a>
+                      );
+                    },
+                  },
+                  {
+                    title: '已核实报警次数',
+                    width: 100,
+                    align: 'center',
+                    fixed: fixed,
+                    dataIndex: col.PollutantCode + '_respondedCount',
+                    key: col.PollutantCode + '_respondedCount',
+                    render: (text, record) => {
+                      return (
+                        <a
+                          onClick={this.EntAlarmHandle.bind(
+                            this,
+                            record.regionCode,
+                            record.entCode,
+                            '1',
+                            col.PollutantCode,
+                            record.entName,
+                            record.pointName,
+                            record.DGIMN,
+                          )}
+                        >
+                          {text}
+                        </a>
+                      );
+                    },
+                  },
+                  {
+                    title: '待核实报警次数',
+                    width: 100,
+                    align: 'center',
+                    fixed: fixed,
+                    dataIndex: col.PollutantCode + '_noRespondedCount',
+                    key: col.PollutantCode + '_noRespondedCount',
+                    render: (text, record) => {
+                      return (
+                        <a
+                          onClick={this.EntAlarmHandle.bind(
+                            this,
+                            record.regionCode,
+                            record.entCode,
+                            '0',
+                            col.PollutantCode,
+                            record.entName,
+                            record.pointName,
+                            record.DGIMN,
+                          )}
+                        >
+                          {text}
+                        </a>
+                      );
+                    },
+                  },
+                ],
+              };
+              columns.push(addColumns);
+            });
 
-        let key = ''
-        let indexx = 0
-        panes.map((item, index) => {
-          if (item.title == text) {
-            indexx = index
-            return key = item.key
-          }
-        })
-        let alarmDetailList = this.props.AlarmDetailList.filter(item => item.regionName !== "全部合计")
-        if (key != '') {
-          let obj = {
-            title: text, content: <SdlTable columns={columns} dataSource={alarmDetailList}
-              pagination={
-                {
-                  showSizeChanger: true,
-                  showQuickJumper: true,
-                  defaultPageSize: 20,
-                  pageSizeOptions: ['20', '30', '40', '50'],
-                }
+            let key = '';
+            let indexx = 0;
+            panes.map((item, index) => {
+              if (item.title == text) {
+                indexx = index;
+                return (key = item.key);
               }
-            // pagination={{
-            //     showSizeChanger: true,
-            //     showQuickJumper: true,
-            //     pageSize: this.props.PageSize,
-            //     current: this.props.PageIndex,
-            //     onChange: this.RegiononChange,
-            //     pageSizeOptions: ['25', '30', '40', '100'],
-            //     total: this.props.total,
-            // }}
-            />, key: key, closable: true
-          }
+            });
+            let alarmDetailList = this.props.AlarmDetailList.filter(
+              item => item.regionName !== '全部合计',
+            );
+            if (key != '') {
+              let obj = {
+                title: text,
+                content: (
+                  <SdlTable
+                    columns={columns}
+                    dataSource={alarmDetailList}
+                    loading={loadingRateDetail}
+                    // pagination={
+                    // {
+                    // showSizeChanger: true,
+                    // showQuickJumper: true,
+                    //defaultPageSize:20,
+                    //     pageSizeOptions: ['20', '30', '40', '50'],
+                    // }
+                    // }
+                    // pagination={{
+                    //     showSizeChanger: true,
+                    //     showQuickJumper: true,
+                    //     pageSize: this.props.PageSize,
+                    //     current: this.props.PageIndex,
+                    //     onChange: this.RegiononChange,
+                    //     pageSizeOptions: ['25', '30', '40', '100'],
+                    //     total: this.props.total,
+                    // }}
+                  />
+                ),
+                key: key,
+                closable: true,
+              };
 
-          panes.splice(indexx, 1, obj);
-          this.setState({ panes, activeKey: key, regionCode: region, exportRegion: region });
-        }
-        if (key == '') {
-          panes.push({
-            title: text, content: <SdlTable columns={columns} dataSource={alarmDetailList}
-              pagination={
-                {
-                  showSizeChanger: true,
-                  showQuickJumper: true,
-                  defaultPageSize: 20,
-                  pageSizeOptions: ['20', '30', '40', '50'],
-                }
-              }
-            // pagination={{
-            //     showSizeChanger: true,
-            //     showQuickJumper: true,
-            //     pageSize: this.props.PageSize,
-            //     current: this.props.PageIndex,
-            //     onChange: this.RegiononChange,
-            //     pageSizeOptions: ['25', '30', '40', '100'],
-            //     total: this.props.total,
-            // }}
-            />, key: activeKey, closable: true
-          });
-          this.setState({ panes, activeKey, regionCode: region, exportRegion: region });
-        }
-      }
-    })
-  }
+              panes.splice(indexx, 1, obj);
+              this.setState({ panes, activeKey: key, regionCode: region, exportRegion: region });
+            }
+            if (key == '') {
+              panes.push({
+                title: text,
+                content: (
+                  <SdlTable
+                    columns={columns}
+                    dataSource={alarmDetailList}
+                    loading={loadingRateDetail}
+                    // pagination={
+                    //     {
+                    //         showSizeChanger: true,
+                    //         showQuickJumper: true,
+                    //defaultPageSize:20,
+                    // pageSizeOptions: ['20', '30', '40', '50'],
+                    // }
+                    // }
+                    // pagination={{
+                    //     showSizeChanger: true,
+                    //     showQuickJumper: true,
+                    //     pageSize: this.props.PageSize,
+                    //     current: this.props.PageIndex,
+                    //     onChange: this.RegiononChange,
+                    //     pageSizeOptions: ['25', '30', '40', '100'],
+                    //     total: this.props.total,
+                    // }}
+                  />
+                ),
+                key: activeKey,
+                closable: true,
+              });
+              this.setState({ panes, activeKey, regionCode: region, exportRegion: region });
+            }
+          }
+        });
+    }
+  };
   //删除标签
   remove = targetKey => {
     let { activeKey } = this.state;
@@ -751,38 +1025,37 @@ class index extends PureComponent {
       } else {
         activeKey = panes[0].key;
       }
+    } else {
+      activeKey = '1';
     }
-    else {
-      activeKey = '1'
-    }
-    let arr = activeKey.split('new')
+    let arr = activeKey.split('new');
     this.setState({ panes, activeKey, exportRegion: arr[0] });
   };
   //切换标签
-  onChangeHandle = (activeKey) => {
-    let arr = activeKey.split('new')
+  onChangeHandle = activeKey => {
+    let arr = activeKey.split('new');
     this.setState({ activeKey, exportRegion: arr[0] });
-  }
+  };
   onEdit = (targetKey, action) => {
     this[action](targetKey);
-  }
+  };
   pageContent = () => {
-    const { AlarmList, column, loading, loadingRateDetail } = this.props
-    const fixed = false
+    const { AlarmList, column, loading, loadingRateDetail } = this.props;
+    const fixed = false;
     const columns = [
       {
-        title: "行政区",
+        title: '行政区',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'regionName',
         key: 'regionName',
         render: (text, record) => {
-          return <a onClick={this.paneAdd.bind(this, text, record.regionCode)}> {text} </a>
-        }
+          return <a onClick={this.paneAdd.bind(this, text, record.regionCode)}> {text} </a>;
+        },
       },
       {
-        title: "超标报警企业数",
+        title: '超标报警企业数',
         width: 100,
         align: 'center',
         fixed: fixed,
@@ -790,7 +1063,7 @@ class index extends PureComponent {
         key: 'entCount',
       },
       {
-        title: "超标报警监测点数",
+        title: '超标报警监测点数',
         width: 100,
         align: 'center',
         fixed: fixed,
@@ -798,15 +1071,57 @@ class index extends PureComponent {
         key: 'pointCount',
       },
       {
-        title: "数据类型",
+        title: '数据类型',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'dataType',
         key: 'dataType',
       },
-    ]
-
+    ];
+    this.state.regionValue &&
+      columns.splice(
+        0,
+        1,
+        {
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
+          align: 'center',
+          fixed: fixed,
+          render: (text, record, index) => {
+            if (text == '全部合计') {
+              return { props: { colSpan: 0 } };
+            }
+            return text;
+          },
+        },
+        {
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
+          align: 'center',
+          fixed: fixed,
+          render: (text, record) => {
+            const name = record.ProvinceName == '全部合计' ? '全部合计' : text;
+            return {
+              props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
+              children: (
+                <a
+                  onClick={this.paneAdd.bind(
+                    this,
+                    name,
+                    record.ProvinceName == '全部合计' ? this.state.regionValue : record.CityCode,
+                  )}
+                >
+                  {' '}
+                  {name}{' '}
+                </a>
+              ),
+            };
+          },
+        },
+      );
     column.map(col => {
       let addColumns = {
         title: col.PollutantName,
@@ -814,100 +1129,145 @@ class index extends PureComponent {
         fixed: fixed,
         children: [
           {
-            title: "报警次数",
+            title: '报警次数',
             width: 100,
             align: 'center',
             fixed: fixed,
             dataIndex: col.PollutantCode + '_alarmCount',
             key: col.PollutantCode + '_alarmCount',
             render: (text, record) => {
-              return <a onClick={this.AlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
-            }
+              return (
+                <a
+                  onClick={this.AlarmNumHandle.bind(
+                    this,
+                    record.ProvinceName == '全部合计' ? this.state.regionCode : record.regionCode,
+                    col.PollutantCode,
+                    record.regionName,
+                  )}
+                >
+                  {text}
+                </a>
+              );
+            },
           },
           {
-            title: "已核实报警次数",
+            title: '已核实报警次数',
             width: 100,
             align: 'center',
             fixed: fixed,
             dataIndex: col.PollutantCode + '_respondedCount',
             key: col.PollutantCode + '_respondedCount',
             render: (text, record) => {
-              return <a onClick={this.AlreadyAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
-            }
+              return (
+                <a
+                  onClick={this.AlreadyAlarmNumHandle.bind(
+                    this,
+                    record.ProvinceName == '全部合计' ? this.state.regionCode : record.regionCode,
+                    col.PollutantCode,
+                    record.regionName,
+                  )}
+                >
+                  {text}
+                </a>
+              );
+            },
           },
           {
-            title: "待核实报警次数",
+            title: '待核实报警次数',
             width: 100,
             align: 'center',
             fixed: fixed,
             dataIndex: col.PollutantCode + '_noRespondedCount',
             key: col.PollutantCode + '_noRespondedCount',
             render: (text, record) => {
-              return <a onClick={this.StayAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
-            }
+              return (
+                <a
+                  onClick={this.StayAlarmNumHandle.bind(
+                    this,
+                    record.ProvinceName == '全部合计' ? this.state.regionCode : record.regionCode,
+                    col.PollutantCode,
+                    record.regionName,
+                  )}
+                >
+                  {text}
+                </a>
+              );
+            },
           },
-        ]
-      }
-      columns.push(addColumns)
-    })
+        ],
+      };
+      columns.push(addColumns);
+    });
 
-    return <>{
-
-      <Tabs
-        hideAdd
-        type="editable-card"
-        onChange={this.onChangeHandle}
-        activeKey={this.state.activeKey}
-        onEdit={this.onEdit}
-      >
-        <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key='1' closable={false}>
-          <SdlTable columns={columns} dataSource={AlarmList}
-            // pagination={{
-            //     showSizeChanger: true,
-            //     showQuickJumper: true,
-            //     pageSize: this.props.pageSize,
-            //     current: this.props.PageIndex,
-            //     onChange: this.onChange,
-            //     pageSizeOptions: ['20', '30', '40', '100'],
-            //     total: this.props.total,
-            // }}
-            pagination={
-              false
-            }
-          />
-        </TabPane>
+    return (
+      <>
         {
-          this.state.panes.map(pane => (
-            <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
-              {pane.content}
+          <Tabs
+            hideAdd
+            type="editable-card"
+            onChange={this.onChangeHandle}
+            activeKey={this.state.activeKey}
+            onEdit={this.onEdit}
+          >
+            <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key={'1'} closable={false}>
+              <SdlTable
+                columns={columns}
+                dataSource={AlarmList}
+                loading={loading}
+                // pagination={{
+                //     showSizeChanger: true,
+                //     showQuickJumper: true,
+                //     pageSize: this.props.pageSize,
+                //     current: this.props.PageIndex,
+                //     onChange: this.onChange,
+                //     pageSizeOptions: ['20', '30', '40', '100'],
+                //     total: this.props.total,
+                // }}
+                pagination={false}
+              />
             </TabPane>
-          ))
+            {this.state.panes.map(pane => (
+              <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+                {pane.content}
+              </TabPane>
+            ))}
+          </Tabs>
         }
-      </Tabs>
-
-
-    }
-    </>
+      </>
+    );
     //
-  }
+  };
 
   RegCancelHandel = () => {
     this.setState({
       regVisible: false,
       regVisibleAlready: false,
       regVisibleStay: false,
-      entVisible: false
-    })
-  }
+      entVisible: false,
+    });
+  };
   CancelHandel = () => {
     this.setState({
       detailsVisible: false,
-      detailsVisible2: false
-    })
-  }
+      detailsVisible2: false,
+    });
+  };
   //报警次数数据按钮查询信息
   AlertsButtonHandle = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList } = this.state
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      DealType,
+      regionCode,
+      enterpriseValue,
+      PollutantCode,
+      alarmDealTypeListCode,
+      operationpersonnel,
+      DGIMN,
+    } = this.state;
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -915,20 +1275,34 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
         Status: DealType == '2' ? '' : DealType,
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: AlarmDealTypeList
-      }
-    })
-  }
+        VerifyStatus: alarmDealTypeListCode,
+        DGIMN: DGIMN ? DGIMN : '',
+        operationpersonnel: operationpersonnel,
+      },
+    });
+  };
   //报警次数数据   导出
   ButtonHandleExpor = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList } = this.state
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      DealType,
+      regionCode,
+      enterpriseValue,
+      PollutantCode,
+      alarmDealTypeListCode,
+      operationpersonnel,
+    } = this.state;
     this.props.dispatch({
       type: pageUrl.ExportAlarmVerifyDetail,
       payload: {
@@ -936,18 +1310,32 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         PollutantCode: PollutantCode,
         Status: DealType == '2' ? '' : DealType,
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: AlarmDealTypeList
-      }
-    })
-  }
+        VerifyStatus: alarmDealTypeListCode,
+        operationpersonnel: operationpersonnel,
+      },
+    });
+  };
   //已核实报警按钮查询信息
   AlreadyButtonCountHandle = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList } = this.state
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      DealType,
+      regionCode,
+      enterpriseValue,
+      PollutantCode,
+      alarmDealTypeListCode,
+      operationpersonnel,
+      DGIMN,
+    } = this.state;
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -955,20 +1343,34 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
         Status: '1',
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: AlarmDealTypeList
-      }
-    })
-  }
+        VerifyStatus: alarmDealTypeListCode,
+        DGIMN: DGIMN ? DGIMN : '',
+        operationpersonnel: operationpersonnel,
+      },
+    });
+  };
   //已核实报警   导出
   AlreadyButtonHandleExpor = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList } = this.state
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      DealType,
+      regionCode,
+      enterpriseValue,
+      PollutantCode,
+      alarmDealTypeListCode,
+      operationpersonnel,
+    } = this.state;
     this.props.dispatch({
       type: pageUrl.ExportAlarmVerifyDetail,
       payload: {
@@ -976,18 +1378,31 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         PollutantCode: PollutantCode,
         Status: '1',
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: AlarmDealTypeList
-      }
-    })
-  }
+        VerifyStatus: alarmDealTypeListCode,
+        operationpersonnel: operationpersonnel,
+      },
+    });
+  };
   ////待核实报警按钮查询信息
   StayButtonCountHandle = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode } = this.state
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      DealType,
+      regionCode,
+      enterpriseValue,
+      PollutantCode,
+      operationpersonnel,
+      DGIMN,
+    } = this.state;
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -995,20 +1410,33 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
         Status: '0',
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: []
-      }
-    })
-  }
+        VerifyStatus: [],
+        DGIMN: DGIMN ? DGIMN : '',
+        operationpersonnel: operationpersonnel,
+      },
+    });
+  };
   //待核实报警   导出
   StayButtonHandleExpor = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode } = this.state
+    const {
+      regionValue,
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      DealType,
+      regionCode,
+      enterpriseValue,
+      PollutantCode,
+      operationpersonnel,
+    } = this.state;
     this.props.dispatch({
       type: pageUrl.ExportAlarmVerifyDetail,
       payload: {
@@ -1016,17 +1444,28 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         PollutantCode: PollutantCode,
         Status: '0',
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: []
-      }
-    })
-  }
+        VerifyStatus: [],
+        operationpersonnel: operationpersonnel,
+      },
+    });
+  };
   ButtonCountHandleExpor = () => {
-    const { attentionValue, outletValue, dataType, time, regionCode, PollutantCode, status, entCode } = this.state
+    const {
+      attentionValue,
+      outletValue,
+      dataType,
+      time,
+      regionCode,
+      PollutantCode,
+      status,
+      entCode,
+      operationpersonnel,
+    } = this.state;
     this.props.dispatch({
       type: pageUrl.ExportAlarmVerifyDetail,
       payload: {
@@ -1034,37 +1473,61 @@ class index extends PureComponent {
         attentionCode: attentionValue == undefined ? '' : attentionValue,
         PollutantType: outletValue == undefined ? '' : outletValue,
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
         PollutantCode: PollutantCode,
-        Status: status == "2" ? "" : status,
+        Status: status == '2' ? '' : status,
         EntCode: entCode,
-        VerifyStatus: []
-      }
-    })
-  }
-  AlarmDealCheckBoxChange = (checkedValues) => {
+        VerifyStatus: [],
+        operationpersonnel: operationpersonnel,
+      },
+    });
+  };
+  AlarmDealCheckBoxChange = checkedValues => {
     this.setState({
-      AlarmDealTypeList: checkedValues
-    })
-  }
-  downloadFile = (filePath) => {
-    downloadFile(filePath)
-  }
+      alarmDealTypeListCode: checkedValues,
+    });
+  };
+  downloadFile = filePath => {
+    downloadFile(filePath);
+  };
   render() {
-    const { loading, priseList, AlarmDealTypeList, ManagementDetail, loadingDetail } = this.props
-    const fixed = false
+    const {
+      loading,
+      priseList,
+      AlarmDealTypeList,
+      ManagementDetail,
+      loadingDetail,
+      exportLoading3,
+    } = this.props;
+    const fixed = false;
     const columns2 = [
+      // {
+      //     title: "行政区",
+      //     width: 100,
+      //     align: 'center',
+      //     fixed: fixed,
+      //     dataIndex: 'regionName',
+      //     key: 'regionName',
+      // },
       {
-        title: "行政区",
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
         width: 100,
         align: 'center',
         fixed: fixed,
-        dataIndex: 'regionName',
-        key: 'regionName',
       },
       {
-        title: "企业名称",
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+      },
+      {
+        title: '企业名称',
         width: 100,
         align: 'left',
         fixed: fixed,
@@ -1072,7 +1535,7 @@ class index extends PureComponent {
         key: 'entName',
       },
       {
-        title: "监测点名称",
+        title: '监测点名称',
         width: 100,
         align: 'left',
         fixed: fixed,
@@ -1080,7 +1543,7 @@ class index extends PureComponent {
         key: 'pointName',
       },
       {
-        title: "数据类型",
+        title: '数据类型',
         width: 100,
         align: 'center',
         fixed: fixed,
@@ -1088,15 +1551,17 @@ class index extends PureComponent {
         key: 'dataType',
       },
       {
-        title: "首次报警时间",
-        width: 100,
+        title: '首次报警时间',
+        width: 130,
         align: 'center',
         fixed: fixed,
         dataIndex: 'firstTime',
         key: 'firstTime',
+        defaultSortOrder: 'descend',
+        sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf(),
       },
       {
-        title: "报警因子",
+        title: '报警因子',
         width: 90,
         align: 'center',
         fixed: fixed,
@@ -1104,7 +1569,14 @@ class index extends PureComponent {
         key: 'pollutantName',
       },
       {
-        title: "报警信息",
+        title: '报警生成时间',
+        width: 120,
+        align: 'center',
+        dataIndex: 'createTime',
+        key: 'createTime',
+      },
+      {
+        title: '报警信息',
         width: 200,
         align: 'left',
         fixed: fixed,
@@ -1112,86 +1584,102 @@ class index extends PureComponent {
         key: 'message',
       },
       {
-        title: "核实人",
+        title: '核实人',
         width: 90,
         align: 'center',
         fixed: fixed,
         dataIndex: 'dealPerson',
         key: 'dealPerson',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实时间",
+        title: '核实时间',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'verifyTime',
         key: 'verifyTime',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实状态",
+        title: '核实状态',
         width: 90,
         align: 'center',
         fixed: fixed,
         dataIndex: 'status',
         key: 'status',
-        render: (text) => {
-          return text == '' ? '-' : text == 0 ? '待核实' : '已核实'
-        }
+        render: text => {
+          return text == '' ? '-' : text == 0 ? '待核实' : '已核实';
+        },
       },
       {
-        title: "核实结果",
+        title: '核实结果',
         width: 90,
         align: 'center',
         fixed: fixed,
         dataIndex: 'verifymessage',
         key: 'verifymessage',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实详情",
+        title: '核实详情',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'remark',
         key: 'remark',
         render: (text, record) => {
-          let sourc = []
-          if (record.verifyImage == null || record.verifyImage == '' || record.status == 0) {
-            sourc = []
+          let sourc = [];
+          if (!record.verifyImage && !record.remark) {
+            sourc = [];
+          } else {
+            let obj = {};
+            record.verifyImage &&
+              record.verifyImage.map(item => {
+                obj = {
+                  name: item.FileName,
+                  attach: `${uploadPrefix}/` + item.FileName,
+                };
+                sourc.push(obj);
+              });
           }
-          else {
-            record.verifyImage.map(item => {
-              let obj = {
-                name: item.FileName,
-                attach: '/upload/' + item.FileName
-              }
-              sourc.push(obj)
-            })
-          }
-          return sourc.length > 0 ? <FileDown dataSource={sourc} /> : '-'
-          //return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
-        }
+          return <VerifyDetailsPop dataSource={sourc} remark={text} />;
+        },
       },
-    ]
+    ];
     const columns3 = [
+      // {
+      //     title: "行政区",
+      //     width: 100,
+      //     align: 'center',
+      //     fixed: fixed,
+      //     dataIndex: 'regionName',
+      //     key: 'regionName',
+      // },
       {
-        title: "行政区",
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
         width: 100,
         align: 'center',
         fixed: fixed,
-        dataIndex: 'regionName',
-        key: 'regionName',
       },
       {
-        title: "企业名称",
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+      },
+      {
+        title: '企业名称',
         width: 100,
         align: 'left',
         fixed: fixed,
@@ -1199,7 +1687,7 @@ class index extends PureComponent {
         key: 'entName',
       },
       {
-        title: "监测点名称",
+        title: '监测点名称',
         width: 100,
         align: 'left',
         fixed: fixed,
@@ -1207,7 +1695,7 @@ class index extends PureComponent {
         key: 'pointName',
       },
       {
-        title: "数据类型",
+        title: '数据类型',
         width: 100,
         align: 'center',
         fixed: fixed,
@@ -1215,15 +1703,17 @@ class index extends PureComponent {
         key: 'dataType',
       },
       {
-        title: "首次报警时间",
-        width: 100,
+        title: '首次报警时间',
+        width: 130,
         align: 'center',
         fixed: fixed,
         dataIndex: 'firstTime',
         key: 'firstTime',
+        defaultSortOrder: 'descend',
+        sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf(),
       },
       {
-        title: "报警因子",
+        title: '报警因子',
         width: 90,
         align: 'center',
         fixed: fixed,
@@ -1231,94 +1721,117 @@ class index extends PureComponent {
         key: 'pollutantName',
       },
       {
-        title: "报警信息",
-        width: 200,
+        title: '报警生成时间',
+        width: 120,
         align: 'center',
+        dataIndex: 'createTime',
+        key: 'createTime',
+      },
+      {
+        title: '报警信息',
+        width: 200,
+        align: 'left',
         fixed: fixed,
         dataIndex: 'message',
         key: 'message',
       },
       {
-        title: "核实人",
+        title: '核实人',
         width: 90,
         align: 'center',
         fixed: fixed,
         dataIndex: 'dealPerson',
         key: 'dealPerson',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实时间",
+        title: '核实时间',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'verifyTime',
         key: 'verifyTime',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实状态",
+        title: '核实状态',
         width: 90,
         align: 'center',
         fixed: fixed,
         dataIndex: 'status',
         key: 'status',
-        render: (text) => {
-          return text == '' ? '-' : text == '0' ? '待核实' : '已核实'
-        }
+        render: text => {
+          return text == '' ? '-' : text == '0' ? '待核实' : '已核实';
+        },
       },
       {
-        title: "核实结果",
+        title: '核实结果',
         width: 90,
         align: 'center',
         fixed: fixed,
         dataIndex: 'verifymessage',
         key: 'verifymessage',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实详情",
+        title: '核实详情',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'remark',
         key: 'remark',
         render: (text, record) => {
-          let sourc = []
-          if (record.verifyImage == null || record.verifyImage == '' || record.status == 0) {
-            sourc = []
+          let sourc = [];
+          if (!record.verifyImage && !record.remark) {
+            sourc = [];
+          } else {
+            let obj = {};
+            record.verifyImage &&
+              record.verifyImage.map(item => {
+                obj = {
+                  name: item.FileName,
+                  attach: `${uploadPrefix}/` + item.FileName,
+                };
+                sourc.push(obj);
+              });
           }
-          else {
-            record.verifyImage.map(item => {
-              let obj = {
-                name: item.FileName,
-                attach: '/upload/' + item.FileName
-              }
-              sourc.push(obj)
-            })
-          }
-          return <FileDown dataSource={sourc} />
-          //  return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
-        }
+          return <VerifyDetailsPop dataSource={sourc} remark={text} />;
+        },
       },
-    ]
+    ];
     const columns4 = [
+      // {
+      //     title: "行政区",
+      //     width: 100,
+      //     align: 'center',
+      //     fixed: fixed,
+      //     dataIndex: 'regionName',
+      //     key: 'regionName',
+      // },
       {
-        title: "行政区",
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
         width: 100,
         align: 'center',
         fixed: fixed,
-        dataIndex: 'regionName',
-        key: 'regionName',
       },
       {
-        title: "企业名称",
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+      },
+      {
+        title: '企业名称',
         width: 100,
         align: 'left',
         fixed: fixed,
@@ -1326,7 +1839,7 @@ class index extends PureComponent {
         key: 'entName',
       },
       {
-        title: "监测点名称",
+        title: '监测点名称',
         width: 100,
         align: 'left',
         fixed: fixed,
@@ -1334,7 +1847,7 @@ class index extends PureComponent {
         key: 'pointName',
       },
       {
-        title: "数据类型",
+        title: '数据类型',
         width: 100,
         align: 'center',
         fixed: fixed,
@@ -1342,7 +1855,7 @@ class index extends PureComponent {
         key: 'dataType',
       },
       {
-        title: "报警因子",
+        title: '报警因子',
         width: 100,
         align: 'center',
         fixed: fixed,
@@ -1350,7 +1863,14 @@ class index extends PureComponent {
         key: 'pollutantName',
       },
       {
-        title: "报警信息",
+        title: '报警生成时间',
+        width: 120,
+        align: 'center',
+        dataIndex: 'createTime',
+        key: 'createTime',
+      },
+      {
+        title: '报警信息',
         width: 200,
         align: 'left',
         fixed: fixed,
@@ -1358,107 +1878,124 @@ class index extends PureComponent {
         key: 'message',
       },
       {
-        title: "核实人",
+        title: '核实人',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'dealPerson',
         key: 'dealPerson',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实结果",
+        title: '核实结果',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'verifymessage',
         key: 'verifymessage',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实时间",
+        title: '核实时间',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'verifyTime',
         key: 'verifyTime',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实状态",
+        title: '核实状态',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'status',
         key: 'status',
-        render: (text) => {
-          return text == '' ? '-' : text == '0' ? '待核实' : '已核实'
-        }
+        render: text => {
+          return text == '' ? '-' : text == '0' ? '待核实' : '已核实';
+        },
       },
       {
-        title: "核实详情",
+        title: '核实详情',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'remark',
         key: 'remark',
         render: (text, record) => {
-          let sourc = []
-          if (record.verifyImage == null || record.verifyImage == '' || record.status == 0) {
-            sourc = []
+          let sourc = [];
+          if (!record.verifyImage && !record.remark) {
+            sourc = [];
+          } else {
+            let obj = {};
+            record.verifyImage &&
+              record.verifyImage.map(item => {
+                obj = {
+                  name: item.FileName,
+                  attach: `${uploadPrefix}/` + item.FileName,
+                };
+                sourc.push(obj);
+              });
           }
-          else {
-            record.verifyImage.map(item => {
-              let obj = {
-                name: item.FileName,
-                attach: '/upload/' + item.FileName
-              }
-              sourc.push(obj)
-            })
-          }
-          return sourc.length > 0 ? <FileDown dataSource={sourc} /> : '-'
-        }
+          return <VerifyDetailsPop dataSource={sourc} remark={text} />;
+        },
       },
-    ]
+    ];
     const columns5 = [
+      // {
+      //     title: "行政区",
+      //     width: 100,
+      //     align: 'center',
+      //     fixed: fixed,
+      //     dataIndex: 'regionName',
+      //     key: 'regionName',
+      // },
       {
-        title: "行政区",
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
         width: 100,
         align: 'center',
         fixed: fixed,
-        dataIndex: 'regionName',
-        key: 'regionName',
       },
       {
-        title: "企业名称",
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+      },
+      {
+        title: '企业名称',
         width: 100,
         align: 'left',
         fixed: fixed,
         dataIndex: 'entName',
         key: 'entName',
-        render: (text) => {
-          return text == undefined ? '-' : text
-        }
+        render: text => {
+          return text == undefined ? '-' : text;
+        },
       },
       {
-        title: "监测点名称",
+        title: '监测点名称',
         width: 100,
         align: 'left',
         fixed: fixed,
         dataIndex: 'pointName',
         key: 'pointName',
-        render: (text) => {
-          return text == undefined ? '-' : text
-        }
+        render: text => {
+          return text == undefined ? '-' : text;
+        },
       },
       {
-        title: "数据类型",
+        title: '数据类型',
         width: 100,
         align: 'center',
         fixed: fixed,
@@ -1466,7 +2003,7 @@ class index extends PureComponent {
         key: 'dataType',
       },
       {
-        title: "首次超标时间",
+        title: '首次超标时间',
         width: 100,
         align: 'center',
         fixed: fixed,
@@ -1474,7 +2011,7 @@ class index extends PureComponent {
         key: 'firstTime',
       },
       {
-        title: "报警因子",
+        title: '报警因子',
         width: 100,
         align: 'center',
         fixed: fixed,
@@ -1482,7 +2019,14 @@ class index extends PureComponent {
         key: 'pollutantName',
       },
       {
-        title: "报警信息",
+        title: '报警生成时间',
+        width: 120,
+        align: 'center',
+        dataIndex: 'createTime',
+        key: 'createTime',
+      },
+      {
+        title: '报警信息',
         width: 200,
         align: 'left',
         fixed: fixed,
@@ -1490,301 +2034,364 @@ class index extends PureComponent {
         key: 'message',
       },
       {
-        title: "核实人",
+        title: '核实人',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'dealPerson',
         key: 'dealPerson',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实结果",
+        title: '核实结果',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'verifymessage',
         key: 'verifymessage',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实时间",
+        title: '核实时间',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'verifyTime',
         key: 'verifyTime',
-        render: (text) => {
-          return text == '' ? '-' : text
-        }
+        render: text => {
+          return text == '' ? '-' : text;
+        },
       },
       {
-        title: "核实状态",
+        title: '核实状态',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'status',
         key: 'status',
-        render: (text) => {
-          return text == '' ? '-' : text == '0' ? '待核实' : '已核实'
-        }
+        render: text => {
+          return text == '' ? '-' : text == '0' ? '待核实' : '已核实';
+        },
       },
       {
-        title: "核实详情",
+        title: '核实详情',
         width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'remark',
         key: 'remark',
         render: (text, record) => {
-          let sourc = []
-          if (record.verifyImage == null || record.verifyImage == '' || record.status == 0) {
-            sourc = []
+          let sourc = [];
+          if (!record.verifyImage && !record.remark) {
+            sourc = [];
+          } else {
+            let obj = {};
+            record.verifyImage &&
+              record.verifyImage.map(item => {
+                obj = {
+                  name: item.FileName,
+                  attach: `${uploadPrefix}/` + item.FileName,
+                };
+                sourc.push(obj);
+              });
           }
-          else {
-            record.verifyImage.map(item => {
-              let obj = {
-                name: item.FileName,
-                attach: '/upload/' + item.FileName
-              }
-              sourc.push(obj)
-            })
-          }
-          return sourc.length > 0 ? <FileDown dataSource={sourc} /> : '-'
-        }
+          return <VerifyDetailsPop dataSource={sourc} remark={text} />;
+        },
       },
-    ]
-    return <>
-      <div id="siteParamsPage" className={style.cardTitle}>
-        <BreadcrumbWrapper>
-          <Card
-            extra={
-              <>
-                {
-                  this.cardTitle()
-                }
-              </>
-            }
-            className={style.dataTable}
-          >
-
-            {this.pageContent()}
-          </Card>
-          <Modal
-            centered
-            title={this.state.ModalTitle}
-            visible={this.state.regVisible}
-            footer={null}
-            width={1300}
-            onCancel={this.RegCancelHandel}
-          >
-            <div style={{ marginBottom: 10 }}>
-              <Select
-                allowClear
-                showSearch
-                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                placeholder="企业列表"
-                maxTagCount={2}
-                maxTagTextLength={5}
-                maxTagPlaceholder="..."
-                optionFilterProp="children"
-                filterOption={(input, option) => {
-                  if (option && option.props && option.props.title) {
-                    return option.props.title === input || option.props.title.indexOf(input) !== -1
-                  } else {
-                    return true
-                  }
-                }}
-                onChange={(value) => {
-                  this.setState({
-                    enterpriseValue: value
-                  })
-                }}>
-                {this.entList()}
-              </Select>
-              <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlertsButtonHandle}> 查询</Button>
-              <Button onClick={this.ButtonHandleExpor}><ExportOutlined /> 导出</Button>
-              <Radio.Group value={this.state.DealType} style={{ marginRight: 10, marginLeft: 10 }} onChange={(e) => {
-                this.setState({
-                  DealType: e.target.value,
-                })
-              }}>
-                <Radio.Button value="2">全部</Radio.Button>
-                <Radio.Button value="1">已核实</Radio.Button>
-                <Radio.Button value="0">待核实</Radio.Button>
-              </Radio.Group>
-              <div style={{ marginTop: 10 }}>
-                {this.state.DealType === '1' ?
-                  <div>
-                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
-                    <Checkbox.Group defaultValue={AlarmDealTypeList.map(item => item.code)} onChange={this.AlarmDealCheckBoxChange}>
-                      {
-                        AlarmDealTypeList.map(poll =>
+    ];
+    return (
+      <>
+        <div id="siteParamsPage" className={style.cardTitle}>
+          <BreadcrumbWrapper title="超标数据报警核实记录查询">
+            <Card extra={<>{this.cardTitle()}</>} className={style.dataTable}>
+              {this.pageContent()}
+            </Card>
+            <Modal
+              centered
+              title={this.state.ModalTitle}
+              visible={this.state.regVisible}
+              footer={null}
+              width={'90%'}
+              onCancel={this.RegCancelHandel}
+            >
+              <div style={{ marginBottom: 10 }}>
+                <Select
+                  allowClear
+                  showSearch
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="企业列表"
+                  maxTagCount={2}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  optionFilterProp="children"
+                  filterOption={(input, option) => {
+                    if (option && option.props && option.props.title) {
+                      return (
+                        option.props.title === input || option.props.title.indexOf(input) !== -1
+                      );
+                    } else {
+                      return true;
+                    }
+                  }}
+                  onChange={value => {
+                    this.setState({
+                      enterpriseValue: value,
+                    });
+                  }}
+                >
+                  {this.entList()}
+                </Select>
+                <Radio.Group
+                  value={this.state.DealType}
+                  style={{ marginRight: 10, marginLeft: 10 }}
+                  onChange={e => {
+                    this.setState({
+                      DealType: e.target.value,
+                    });
+                  }}
+                >
+                  <Radio.Button value="2">全部</Radio.Button>
+                  <Radio.Button value="1">已核实</Radio.Button>
+                  <Radio.Button value="0">待核实</Radio.Button>
+                </Radio.Group>
+                <Button
+                  type="primary"
+                  style={{ marginRight: 10 }}
+                  onClick={this.AlertsButtonHandle}
+                >
+                  {' '}
+                  查询
+                </Button>
+                <Button onClick={this.ButtonHandleExpor} loading={exportLoading3}>
+                  <ExportOutlined /> 导出
+                </Button>
+                <div style={{ marginTop: 10 }}>
+                  {this.state.DealType === '1' ? (
+                    <div>
+                      <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>
+                        核实结果:
+                      </label>
+                      <Checkbox.Group
+                        value={this.state.alarmDealTypeListCode}
+                        onChange={this.AlarmDealCheckBoxChange}
+                      >
+                        {AlarmDealTypeList.map(poll => (
                           <Checkbox value={poll.code}>{poll.name}</Checkbox>
-                        )
-                      }
-                    </Checkbox.Group>
-                  </div>
-                  : null}
+                        ))}
+                      </Checkbox.Group>
+                    </div>
+                  ) : null}
+                </div>
               </div>
-            </div>
-            {
-              <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns2} dataSource={ManagementDetail} pagination={false} />
-            }
-          </Modal>
-          <Modal
-            centered
-            title={this.state.ModalTitle}
-            visible={this.state.regVisibleAlready}
-            footer={null}
-            width={1300}
-            onCancel={this.RegCancelHandel}
-          >
-            <div style={{ marginBottom: 10 }}>
-              <Select
-                allowClear
-                showSearch
-                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                placeholder="企业列表"
-                maxTagCount={2}
-                maxTagTextLength={5}
-                maxTagPlaceholder="..."
-                optionFilterProp="children"
-                filterOption={(input, option) => {
-                  if (option && option.props && option.props.title) {
-                    return option.props.title === input || option.props.title.indexOf(input) !== -1
-                  } else {
-                    return true
-                  }
-                }}
-                onChange={(value) => {
-                  this.setState({
-                    enterpriseValue: value
-                  })
-                }}>
-                {this.entList()}
-              </Select>
-              <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlreadyButtonCountHandle}> 查询</Button>
-              <Button onClick={this.AlreadyButtonHandleExpor}><ExportOutlined /> 导出</Button>
-              <div style={{ marginTop: 10 }}>
-                <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
-                <Checkbox.Group defaultValue={AlarmDealTypeList.map(item => item.code)} onChange={this.AlarmDealCheckBoxChange}>
-                  {
-                    AlarmDealTypeList.map(poll =>
+              {
+                <SdlTable
+                  scroll={{ y: 500 }}
+                  loading={loadingDetail}
+                  columns={columns2}
+                  dataSource={ManagementDetail}
+                  pagination={false}
+                />
+              }
+            </Modal>
+            <Modal
+              centered
+              title={this.state.ModalTitle}
+              visible={this.state.regVisibleAlready}
+              footer={null}
+              width={'90%'}
+              onCancel={this.RegCancelHandel}
+            >
+              <div style={{ marginBottom: 10 }}>
+                <Select
+                  allowClear
+                  showSearch
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="企业列表"
+                  maxTagCount={2}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  optionFilterProp="children"
+                  filterOption={(input, option) => {
+                    if (option && option.props && option.props.title) {
+                      return (
+                        option.props.title === input || option.props.title.indexOf(input) !== -1
+                      );
+                    } else {
+                      return true;
+                    }
+                  }}
+                  onChange={value => {
+                    this.setState({
+                      enterpriseValue: value,
+                    });
+                  }}
+                >
+                  {this.entList()}
+                </Select>
+                <Button
+                  type="primary"
+                  style={{ marginRight: 10 }}
+                  onClick={this.AlreadyButtonCountHandle}
+                >
+                  {' '}
+                  查询
+                </Button>
+                <Button onClick={this.AlreadyButtonHandleExpor} loading={exportLoading3}>
+                  <ExportOutlined /> 导出
+                </Button>
+                <div style={{ marginTop: 10 }}>
+                  <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
+                  <Checkbox.Group
+                    value={this.state.alarmDealTypeListCode}
+                    onChange={this.AlarmDealCheckBoxChange}
+                  >
+                    {AlarmDealTypeList.map(poll => (
                       <Checkbox value={poll.code}>{poll.name}</Checkbox>
-                    )
-                  }
-                </Checkbox.Group>
+                    ))}
+                  </Checkbox.Group>
+                </div>
               </div>
-            </div>
-            {
-              <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns3} dataSource={ManagementDetail} pagination={false} />
-            }
-
-          </Modal>
-          <Modal
-            centered
-            title={this.state.ModalTitle}
-            visible={this.state.regVisibleStay}
-            footer={null}
-            width={1300}
-            onCancel={this.RegCancelHandel}
-          >
-            <div style={{ marginBottom: 10 }}>
-              <Select
-                allowClear
-                showSearch
-                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                placeholder="企业列表"
-                maxTagCount={2}
-                maxTagTextLength={5}
-                maxTagPlaceholder="..."
-                optionFilterProp="children"
-                filterOption={(input, option) => {
-                  if (option && option.props && option.props.title) {
-                    return option.props.title === input || option.props.title.indexOf(input) !== -1
-                  } else {
-                    return true
-                  }
-                }}
-                onChange={(value) => {
-                  this.setState({
-                    enterpriseValue: value
-                  })
-                }}>
-                {this.entList()}
-              </Select>
-              <Button type='primary' style={{ marginRight: 10 }} onClick={this.StayButtonCountHandle}> 查询</Button>
-              <Button onClick={this.StayButtonHandleExpor}><ExportOutlined /> 导出</Button>
-            </div>
-            {
-              <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns4} dataSource={ManagementDetail} pagination={false} />
-            }
-
-          </Modal>
-          <Modal
-            centered
-            title={this.state.ModalTitle}
-            visible={this.state.entVisible}
-            footer={null}
-            width={1300}
-            onCancel={this.RegCancelHandel}
-          >
-            <div style={{ marginBottom: 10 }}>
-              <Button onClick={this.ButtonCountHandleExpor}><ExportOutlined /> 导出</Button>
-            </div>
-            {
-              <SdlTable loading={loadingDetail} columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />
-            }
-
-          </Modal>
-          <Modal
-            centered
-            title="核实信息"
-            visible={this.state.detailsVisible}
-            footer={null}
-            width={500}
-            onCancel={this.CancelHandel}
-          >
-            <div style={{ marginBottom: 10 }}>
-              <div>
-                <label>备注:</label>
-                <span>{this.state.remark}</span>
+              {
+                <SdlTable
+                  scroll={{ y: 500 }}
+                  loading={loadingDetail}
+                  columns={columns3}
+                  dataSource={ManagementDetail}
+                  pagination={false}
+                />
+              }
+            </Modal>
+            <Modal
+              centered
+              title={this.state.ModalTitle}
+              visible={this.state.regVisibleStay}
+              footer={null}
+              width={'90%'}
+              onCancel={this.RegCancelHandel}
+            >
+              <div style={{ marginBottom: 10 }}>
+                <Select
+                  allowClear
+                  showSearch
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="企业列表"
+                  maxTagCount={2}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  optionFilterProp="children"
+                  filterOption={(input, option) => {
+                    if (option && option.props && option.props.title) {
+                      return (
+                        option.props.title === input || option.props.title.indexOf(input) !== -1
+                      );
+                    } else {
+                      return true;
+                    }
+                  }}
+                  onChange={value => {
+                    this.setState({
+                      enterpriseValue: value,
+                    });
+                  }}
+                >
+                  {this.entList()}
+                </Select>
+                <Button
+                  type="primary"
+                  style={{ marginRight: 10 }}
+                  onClick={this.StayButtonCountHandle}
+                >
+                  {' '}
+                  查询
+                </Button>
+                <Button onClick={this.StayButtonHandleExpor} loading={exportLoading3}>
+                  <ExportOutlined /> 导出
+                </Button>
               </div>
-              <div>
-                <label>附件:</label>
-                <a onClick={this.downloadFile.bind(this, this.state.filePath)}>{this.state.filePath}</a>
+              {
+                <SdlTable
+                  scroll={{ y: 500 }}
+                  loading={loadingDetail}
+                  columns={columns4}
+                  dataSource={ManagementDetail}
+                  pagination={false}
+                />
+              }
+            </Modal>
+            <Modal
+              centered
+              title={this.state.ModalTitle}
+              visible={this.state.entVisible}
+              footer={null}
+              width={'90%'}
+              onCancel={this.RegCancelHandel}
+            >
+              <div style={{ marginBottom: 10 }}>
+                <Button onClick={this.ButtonCountHandleExpor} loading={exportLoading3}>
+                  <ExportOutlined /> 导出
+                </Button>
               </div>
-            </div>
-          </Modal>
-          <Modal
-            centered
-            title="核实信息"
-            visible={this.state.detailsVisible2}
-            footer={null}
-            width={500}
-            onCancel={this.CancelHandel}
-          >
-            <div style={{ marginBottom: 10 }}>
-              <div>
-                <label>备注:</label>
-                <span>{this.state.remark}</span>
+              {
+                <SdlTable
+                  loading={loadingDetail}
+                  columns={columns5}
+                  scroll={{ y: 500 }}
+                  dataSource={ManagementDetail}
+                  pagination={false}
+                />
+              }
+            </Modal>
+            <Modal
+              centered
+              title="核实信息"
+              visible={this.state.detailsVisible}
+              footer={null}
+              width={500}
+              onCancel={this.CancelHandel}
+            >
+              <div style={{ marginBottom: 10 }}>
+                <div>
+                  <label>备注:</label>
+                  <span>{this.state.remark}</span>
+                </div>
+                <div>
+                  <label>附件:</label>
+                  <a onClick={this.downloadFile.bind(this, this.state.filePath)}>
+                    {this.state.filePath}
+                  </a>
+                </div>
               </div>
-              <div>
-                <label>附件:</label>
-                <a onClick={this.downloadFile.bind(this, this.state.filePath)}>{this.state.filePath}</a>
+            </Modal>
+            <Modal
+              centered
+              title="核实信息"
+              visible={this.state.detailsVisible2}
+              footer={null}
+              width={500}
+              onCancel={this.CancelHandel}
+            >
+              <div style={{ marginBottom: 10 }}>
+                <div>
+                  <label>备注:</label>
+                  <span>{this.state.remark}</span>
+                </div>
+                <div>
+                  <label>附件:</label>
+                  <a onClick={this.downloadFile.bind(this, this.state.filePath)}>
+                    {this.state.filePath}
+                  </a>
+                </div>
               </div>
-            </div>
-          </Modal>
-        </BreadcrumbWrapper>
-      </div>
-    </>;
+            </Modal>
+          </BreadcrumbWrapper>
+        </div>
+      </>
+    );
   }
 }
 
 export default index;
-

@@ -4,6 +4,7 @@ import { Spin, Row, Col, Modal, Tooltip } from 'antd';
 import styles from '../../styles.less';
 import ReactSeamlessScroll from 'rc-seamless-scroll';
 import CluesList from '@/pages/AbnormalIdentifyModel/CluesList';
+import { handleHomeDate } from '@/pages/AbnormalIdentifyModel/CONST';
 
 const COLOR = ['#FFC611', '#DBDEE1', '#FF942B'];
 
@@ -63,17 +64,18 @@ const RankingContent = props => {
   };
 
   return (
-    <div className={styles.RankingContent}>
+    <div className={styles.RankingContent} style={{ overflowY: 'auto' }}>
       <Spin spinning={!!loading}>
         {rankDataList.length ? (
-          <ReactSeamlessScroll
-            list={rankDataList}
-            wrapperClassName={styles.RankingSeamlessScrollContent}
-            hover={true}
-            step={0.5}
-            limitScrollNum={limitScrollNum}
-            // speed={20} style={{ width: '100%', height: '100%' }}
-          >
+          <>
+            {/* <ReactSeamlessScroll
+              list={rankDataList}
+              wrapperClassName={styles.RankingSeamlessScrollContent}
+              hover={true}
+              step={0.5}
+              limitScrollNum={limitScrollNum}
+              // speed={20} style={{ width: '100%', height: '100%' }}
+            > */}
             {rankDataList.map((item, index) => {
               return (
                 <Tooltip title={'点击查看线索'}>
@@ -111,13 +113,15 @@ const RankingContent = props => {
                         // });
 
                         let requestParams_temp = _.cloneDeep(entRequestParams);
+
+                        const { btime, etime } = handleHomeDate(
+                          requestParams_temp.btime,
+                          requestParams_temp.dateType,
+                        );
                         // 进入线索列表，传入时间、场景类型、企业、污染物
                         updateCluesListFormState({
                           date: [],
-                          date1: [
-                            requestParams_temp.btime.add(-20, 'month'),
-                            requestParams_temp.etime.add(-1, 'day').add(-20, 'month'),
-                          ],
+                          date1: [btime, etime],
                           warningTypeCode: item.code,
                           EntCode: entRequestParams.entCode,
                           PollutantCode:
@@ -136,7 +140,8 @@ const RankingContent = props => {
                 </Tooltip>
               );
             })}
-          </ReactSeamlessScroll>
+            {/* </ReactSeamlessScroll> */}
+          </>
         ) : (
           <div className="notData">
             <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />

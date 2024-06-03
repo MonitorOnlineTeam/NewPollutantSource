@@ -119,7 +119,7 @@ class index extends PureComponent {
         let suffix = fileName.split(".")[1];
         let id = data["dbo.T_Bas_Repository.ID"];
         this.updViewForKBM(id, "down")
-        window.open(`/upload/${fileName}`);
+        window.open(`/wwwroot/Upload/${fileName}`);
       } else {
         message.error("文件不存在！")
       }

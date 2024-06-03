@@ -9,7 +9,7 @@ import { async } from 'q';
 //获取流量数据
 export async function GetPollutantByType(params) {
     // const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceedPollutantByType?type=${params.type}`, {})
-    const result = post(API.commonApi.GetPollutantCodeList, params, {})
+    const result = post(API.CommonApi.GetPollutantCodeList, params, {})
     return result
 }
 //查询超标数据
@@ -24,9 +24,9 @@ export async function GetExceedNum(params) {
 }
 //企业
 export async function GetEntByRegion(params) {
-    const result = post(API.RegionApi.GetEntByRegion, params);
-    return result
-}
+    const result = post(API.CommonApi.GetEntByRegion, { regionCode: params.RegionCode }, null);
+    return result;
+  }
 //导出超标数据
 export async function ExportExceedDataList(params) {
     const result = post(API.ExportApi.ExportOverDataList, params, null)

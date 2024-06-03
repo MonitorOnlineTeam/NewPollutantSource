@@ -36,7 +36,7 @@ class FileUpload extends Component {
   }
 
   componentWillUnmount() {
-    
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,7 +58,7 @@ class FileUpload extends Component {
       imageProps.accept = accept;
     }
     const props = {
-      action: API.commonApi.UploadFiles,
+      action: API.CommonApi.UploadFiles,
       accept: '.xls,.xlsx,.doc,.docx,.ppt,.pdf,.pptx,.txt,image/*',
       // beforeUpload: (file) => {
       //   if (accept === 'image/*') {

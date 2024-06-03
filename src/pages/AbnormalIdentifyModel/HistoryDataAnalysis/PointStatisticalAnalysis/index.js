@@ -13,6 +13,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const PointStatisticalAnalysis = props => {
   const { dispatch } = props;
+  const [entCode, setEntCode] = useState();
   const [DGIMN, setDGIMN] = useState();
   const [pageTitle, setPageTitle] = useState();
 
@@ -37,16 +38,17 @@ const PointStatisticalAnalysis = props => {
         polShow
         domId="#PointStatisticalAnalysis"
         onItemClick={value => {
-          console.log('value', value);
           if (value[0].IsEnt === false) {
+            console.log('value', value)
             setDGIMN(value[0].key);
+            setEntCode(value[0].EntCode);
             setPageTitle(`${value[0].entName} - ${value[0].pointName}`);
           }
         }}
       />
       <div id="PointStatisticalAnalysis">
         <BreadcrumbWrapper>
-          {DGIMN && <PageContent pageTitle={pageTitle} DGIMN={DGIMN} />}
+          {DGIMN && <PageContent pageTitle={pageTitle} DGIMN={DGIMN} entCode={entCode} />}
         </BreadcrumbWrapper>
       </div>
     </>

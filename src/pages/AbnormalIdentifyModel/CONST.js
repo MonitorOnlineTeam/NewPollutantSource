@@ -1,3 +1,6 @@
+import moment from 'moment';
+import _ from 'lodash';
+
 export const ChartDefaultSelected = {
   // 疑似监测样品为空气
   '9104ab9f-d3f3-4bd9-a0d9-898d87def4dd': ['实测NOx'],
@@ -188,6 +191,37 @@ export const ModalNameConversion = name => {
     return ModalName[name];
   }
   return name;
+};
+
+export const handleHomeDate = (date, dateType) => {
+  let btime = _.cloneDeep(date).startOf(dateType);
+  let etime = _.cloneDeep(date).endOf(dateType);
+  if (moment().format('YYYY-MM') === date.format('YYYY-MM')) {
+    //
+    etime = moment().add(-1, 'day');
+  }
+
+  return { btime, etime };
+};
+
+// 根据ModelBaseTypeCode获取模型id
+export const getModelGuidsByBaseTypeCode = (data, baseTypeCode) => {
+  const results = [];
+
+  // 遍历原始数据
+  data.forEach(baseType => {
+    // 检查ModelBaseTypeCode是否与提供的baseTypeCode匹配
+    if (baseType.ModelBaseTypeCode === baseTypeCode) {
+      // 遍历ModelBaseList数组
+      baseType.ModelBaseList.forEach(modelType => {
+        // 累加最后一层的ModelGuid到results数组
+        const guids = modelType.ModelList.map(model => model.ModelGuid);
+        results.push(...guids);
+      });
+    }
+  });
+
+  return results;
 };
 
 // export const ChartDefaultSelected = {/*  */

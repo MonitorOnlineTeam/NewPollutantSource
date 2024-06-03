@@ -6,6 +6,7 @@ import * as services from '../services/dataQueryApi';
 import { formatPollutantPopover, getDirLevel, getDataTruseMsg } from '@/utils/utils';
 import moment from 'moment';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
+import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'dataquery',
   state: {
@@ -83,6 +84,7 @@ export default Model.extend({
       let historyparams = dataqueryData.historyparams;
       let _pollutantlist = dataqueryData.pollutantlist;
       let _historyparams = { ...historyparams, ...payload };
+      debugger
       let pollutantlist = _pollutantlist;
       // 电力：实时类型不显示“有功总累计电能”，其他类型只显示“有功总累计电能”
       if (payload.Type == 37) {
@@ -139,6 +141,9 @@ export default Model.extend({
       }
       let xAxis = [];
       const arr = [];
+      let yAxisIndex = 0;
+      let yAxisRoller = [];
+      //如果是大气小时和日添加aqi污染物和空气质量，月季年增加iqi污染物
       let i = 0;
       if (result[0].PollutantType === '5AQI') {
         _historyparams.pollutantCodes = 'AQI,' + _historyparams.pollutantCodes;
@@ -148,48 +153,404 @@ export default Model.extend({
         _historyparams.pollutantCodes = 'IQI,' + _historyparams.pollutantCodes;
         _historyparams.pollutantNames = 'IQI,' + _historyparams.pollutantNames;
       }
+      //大气浓度
+      let arrayConcentration = [
+        'IQI',
+        'AQI',
+        'a34004',
+        'a34002',
+        'a05024',
+        'a21005',
+        'a21026',
+        'a21004',
+        'a21003',
+        'a21002',
+      ];
+      //大气其它
+      let arrayOther = ['a01002', 'a01006', 'a01007', 'a01020', 'a01001'];
+      //废气浓度
+      let arrayConcentrationGas = ['01', 'zs01', '02', 'zs02', '03', 'zs03'];
+      //废气其它
+      let arrayOtherGas = ['s01', 's02', 's03', 's05', 's08'];
+      //废气流量
+      let arrayFlowGas = ['b02'];
+      //废水浓度
+      let arrayConcentrationWater = ['011', '060', '101', '065'];
+      //废水其它（PH）
+      let arrayOtherWater = ['001'];
+      //废水流量
+      let arrayFlowWater = ['b01'];
+      //将大气类型中的风向污染物去掉，不在曲线图中展示
+      _historyparams.pollutantNames = _historyparams.pollutantNames
+        .split(',')
+        .filter(function(item) {
+          return item != '风向';
+        })
+        .toString();
       const arrname = _historyparams.pollutantNames.split(',');
       _historyparams.pollutantCodes.split(',').map((item, key) => {
-        let seriesdata = [];
-        let series = {
-          type: 'line',
-          name: '',
-          data: [],
-          markLine: [],
-        };
-        let markLine = {};
-        const polluntinfo =
-          pollutantlist.find((value, index, arr) => value.PollutantCode === item) || {};
-        if (polluntinfo.StandardValue) {
-          markLine = {
-            symbol: 'none', // 去掉警戒线最后面的箭头
-            data: [
-              {
-                // lineStyle: {
-                //     type: 'dash',
-                //     // color: polluntinfo.Color,
-                // },
-                yAxis: polluntinfo.UpperValue,
-              },
-            ],
+        if (item !== 'a01008') {
+          //如果是大气
+          if (
+            result[0].PollutantType === '5AQI' ||
+            result[0].PollutantType === '5IQI' ||
+            result[0].PollutantType === '5'
+          ) {
+            //如果包含大气浓度
+            if (arrayConcentration.indexOf(item) !== -1) {
+              if (
+                yAxisRoller.length !== 0 &&
+                yAxisRoller.filter(n => n.name == '浓度值').length !== 0
+              ) {
+                yAxisRoller.push({});
+              } else {
+                yAxisRoller.push({
+                  type: 'value',
+                  name: '浓度值',
+                  alignTicks: true,
+                  position: 'left',
+                  axisLine: {
+                    show: true,
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      type: 'dashed',
+                    },
+                  },
+                });
+              }
+            } else if (arrayOther.indexOf(item) !== -1) {
+              if (
+                yAxisRoller.length !== 0 &&
+                yAxisRoller.filter(n => n.name == '其它').length !== 0
+              ) {
+                yAxisRoller.push({});
+              } else {
+                yAxisRoller.push({
+                  type: 'value',
+                  name: '其它',
+                  alignTicks: true,
+                  position: 'right',
+                  axisLine: {
+                    show: true,
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      type: 'dashed',
+                    },
+                  },
+                });
+              }
+            } else {
+              yAxisRoller.push({});
+            }
+            if (arrayConcentration.indexOf(item) !== -1) {
+              yAxisRoller.map((item, i) => {
+                if (item.name === '浓度值') {
+                  yAxisIndex = i;
+                }
+              });
+            }
+            if (arrayOther.indexOf(item) !== -1) {
+              yAxisRoller.map((item, i) => {
+                if (item.name === '其它') {
+                  yAxisIndex = i;
+                }
+              });
+            }
+          }
+          //废气
+          else if (
+            result[0].PollutantType === '2' ||
+            result[0].PollutantType === '2AQI' ||
+            result[0].PollutantType === '2IQI'
+          ) {
+            //如果包含废气浓度
+            if (arrayConcentrationGas.indexOf(item) !== -1) {
+              if (
+                yAxisRoller.length !== 0 &&
+                yAxisRoller.filter(n => n.name == '浓度值').length !== 0
+              ) {
+                yAxisRoller.push({});
+              } else {
+                yAxisRoller.push({
+                  type: 'value',
+                  name: '浓度值',
+                  alignTicks: true,
+                  position: 'left',
+                  axisLine: {
+                    show: true,
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      type: 'dashed',
+                    },
+                  },
+                });
+              }
+            } else if (arrayOtherGas.indexOf(item) !== -1) {
+              if (
+                yAxisRoller.length !== 0 &&
+                yAxisRoller.filter(n => n.name == '其它').length !== 0
+              ) {
+                yAxisRoller.push({});
+              } else {
+                yAxisRoller.push({
+                  type: 'value',
+                  name: '其它',
+                  alignTicks: true,
+                  position: 'right',
+                  axisLine: {
+                    show: true,
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      type: 'dashed',
+                    },
+                  },
+                });
+              }
+            } else if (arrayFlowGas.indexOf(item) !== -1) {
+              if (
+                yAxisRoller.length !== 0 &&
+                yAxisRoller.filter(n => n.name == '流量').length !== 0
+              ) {
+                yAxisRoller.push({});
+              } else {
+                yAxisRoller.push({
+                  type: 'value',
+                  name: '流量',
+                  offset: 50,
+                  position: 'right',
+                  alignTicks: true,
+                  axisLine: {
+                    show: true,
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      type: 'dashed',
+                    },
+                  },
+                });
+              }
+            } else {
+              yAxisRoller.push({});
+            }
+            if (arrayConcentrationGas.indexOf(item) !== -1) {
+              yAxisRoller.map((item, i) => {
+                if (item.name === '浓度值') {
+                  yAxisIndex = i;
+                }
+              });
+            }
+            if (arrayOtherGas.indexOf(item) !== -1) {
+              yAxisRoller.map((item, i) => {
+                if (item.name === '其它') {
+                  yAxisIndex = i;
+                }
+              });
+            }
+            if (arrayFlowGas.indexOf(item) !== -1) {
+              yAxisRoller.map((item, i) => {
+                if (item.name === '流量') {
+                  yAxisIndex = i;
+                }
+              });
+            }
+          }
+          //废水
+          else if (
+            result[0].PollutantType === '1' ||
+            result[0].PollutantType === '1AQI' ||
+            result[0].PollutantType === '1IQI'
+          ) {
+            //如果包含大气浓度
+            if (arrayConcentrationWater.indexOf(item) !== -1) {
+              if (
+                yAxisRoller.length !== 0 &&
+                yAxisRoller.filter(n => n.name == '浓度值').length !== 0
+              ) {
+                yAxisRoller.push({});
+              } else {
+                yAxisRoller.push({
+                  type: 'value',
+                  name: '浓度值',
+                  alignTicks: true,
+                  position: 'left',
+                  axisLine: {
+                    show: true,
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      type: 'dashed',
+                    },
+                  },
+                });
+              }
+            } else if (arrayOtherWater.indexOf(item) !== -1) {
+              if (
+                yAxisRoller.length !== 0 &&
+                yAxisRoller.filter(n => n.name == 'PH').length !== 0
+              ) {
+                yAxisRoller.push({});
+              } else {
+                yAxisRoller.push({
+                  type: 'value',
+                  name: 'PH',
+                  alignTicks: true,
+                  position: 'right',
+                  axisLine: {
+                    show: true,
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      type: 'dashed',
+                    },
+                  },
+                });
+              }
+            } else if (arrayFlowWater.indexOf(item) !== -1) {
+              if (
+                yAxisRoller.length !== 0 &&
+                yAxisRoller.filter(n => n.name == '流量').length !== 0
+              ) {
+                yAxisRoller.push({});
+              } else {
+                yAxisRoller.push({
+                  type: 'value',
+                  name: '流量',
+                  offset: 50,
+                  alignTicks: true,
+                  position: 'right',
+                  axisLine: {
+                    show: true,
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      type: 'dashed',
+                    },
+                  },
+                });
+              }
+            } else {
+              yAxisRoller.push({});
+            }
+            if (arrayConcentrationWater.indexOf(item) !== -1) {
+              yAxisRoller.map((item, i) => {
+                if (item.name === '浓度值') {
+                  yAxisIndex = i;
+                }
+              });
+            }
+            if (arrayOtherWater.indexOf(item) !== -1) {
+              yAxisRoller.map((item, i) => {
+                if (item.name === 'PH') {
+                  yAxisIndex = i;
+                }
+              });
+            }
+            if (arrayFlowWater.indexOf(item) !== -1) {
+              yAxisRoller.map((item, i) => {
+                if (item.name === '流量') {
+                  yAxisIndex = i;
+                }
+              });
+            }
+          }
+          //其它情况只添加一个轴
+          else {
+            if (yAxisRoller.length === 0) {
+              yAxisRoller.push({
+                type: 'value',
+                name: `浓度值`,
+                alignTicks: true,
+                axisLine: {
+                  show: true,
+                },
+                splitLine: {
+                  show: true,
+                  lineStyle: {
+                    type: 'dashed',
+                  },
+                },
+              });
+            }
+          }
+          let seriesdata = [];
+          let series = {
+            type: 'line',
+            name: '',
+            data: [],
+            markLine: [],
           };
-        }
+          let markLine = {};
+          // const polluntinfo =
+          //   pollutantlist.find((value, index, arr) => value.PollutantCode === item) || {};
+          // if (polluntinfo.StandardValue) {
+          //   markLine = {
+          //     symbol: 'none', // 去掉警戒线最后面的箭头
+          //     data: [
+          //       {
+          //         // lineStyle: {
+          //         //     type: 'dash',
+          //         //     // color: polluntinfo.Color,
+          //         // },
+          //         yAxis: polluntinfo.UpperValue,
+          //       },
+          //     ],
+          //   };
+          // }
 
-        result.map((item1, key) => {
-          seriesdata = seriesdata.concat(item1[item] == 0 ? undefined : item1[item]);
-        });
-        console.log('seriesdata=', seriesdata);
-        series = {
-          ...series,
-          name: arrname[i],
-          data: seriesdata,
-          markLine,
-        };
-        arr.push(series);
-        i++;
+          result.map((item1, key) => {
+            seriesdata = seriesdata.concat(item1[item]);
+          });
+          series = {
+            ...series,
+            name: arrname[i],
+            data: seriesdata,
+            markLine,
+            yAxisIndex: yAxisIndex,
+          };
+          arr.push(series);
+          i++;
+        }
       });
       result.map((item1, key) => {
-        xAxis = xAxis.concat(item1.MonitorTime);
+        switch (historyparams.datatype) {
+          case 'month':
+            xAxis = xAxis.concat(moment(item1.MonitorTime).format('YYYY-MM'));
+            break;
+          case 'quarter':
+            switch (moment(item1.MonitorTime).format('MM-DD')) {
+              case '01-01':
+                xAxis = xAxis.concat(moment(item1.MonitorTime).format('YYYY') + '年第一季度');
+                break;
+              case '04-01':
+                xAxis = xAxis.concat(moment(item1.MonitorTime).format('YYYY') + '年第二季度');
+                break;
+              case '07-01':
+                xAxis = xAxis.concat(moment(item1.MonitorTime).format('YYYY') + '年第三季度');
+                break;
+              case '10-01':
+                xAxis = xAxis.concat(moment(item1.MonitorTime).format('YYYY') + '年第四季度');
+                break;
+            }
+            break;
+          case 'year':
+            xAxis = xAxis.concat(moment(item1.MonitorTime).format('YYYY'));
+            break;
+          default:
+            xAxis = xAxis.concat(item1.MonitorTime);
+            break;
+        }
       });
       let pollutantcols = [];
       let tablewidth = 0;
@@ -202,7 +563,14 @@ export default Model.extend({
         }
         tablewidth = width * pollutantlist.length + 200;
         pollutantlist.map((item, key) => {
-          const unit = item.Unit ? `(${item.Unit})` : '';
+          let unit = item.Unit ? `(${item.Unit})` : '';
+          if (_historyparams.datatype == 'realtime') {
+            if (item.PollutantCode == 'b01') {
+              unit = '(L/s)';
+            } else if (item.PollutantCode == 'b02') {
+              unit = '(m³/s)';
+            }
+          }
           pollutantcols = pollutantcols.concat({
             title: (
               <>
@@ -431,33 +799,66 @@ export default Model.extend({
           },
           tooltip: {
             trigger: 'axis',
+            // formatter: function(params) {
+            //   let html = params[0].name;
+            //   params.forEach((item, index) => {
+            //     html += `<br/>${item.marker + item.seriesName}: ${
+            //       item.value == undefined ? 0 : item.value
+            //     }`;
+            //   });
+            //   return html;
+            // },
+            //格式化风向并重新拼接数据
             formatter: function(params) {
-              let html = params[0].name;
-              params.forEach((item, index) => {
-                html += `<br/>${item.marker + item.seriesName}: ${
-                  item.value == undefined ? 0 : item.value
-                }`;
-              });
-              return html;
+              let res = [];
+              let listItem = '';
+              res.push('<div >时间：' + params[0].name + '</div>');
+              for (var i = 0; i < params.length; i++) {
+                if (params[i].seriesName == '风向') {
+                  res.push(
+                    '<div ><i style="width: 10px;height: 10px;display: inline-block;background: ' +
+                      params[i].color +
+                      ';margin-right: 5px;border-radius: 50%;}"></i><span style=" display:inline-block;">' +
+                      params[i].seriesName +
+                      '：' +
+                      getDirLevel(params[i].data) +
+                      '</div>',
+                  );
+                } else {
+                  res.push(
+                    '<div><i style="width: 10px;height: 10px;display: inline-block;background: ' +
+                      params[i].color +
+                      ';margin-right: 5px;border-radius: 50%;}"></i><span style=" display:inline-block;">' +
+                      params[i].seriesName +
+                      '：' +
+                      params[i].data +
+                      '</div>',
+                  );
+                }
+              }
+              listItem = res.join('');
+              return '<div class="showBox">' + listItem + '</div>';
             },
           },
           legend: {
-            orient: 'vertical',
-            x: 'right', // 可设定图例在左、右、居中
+            // orient: 'vertical',
+            // x: 'right', // 可设定图例在左、右、居中
             y: 'top', // 可设定图例在上、下、居中
-            padding: [40, 16, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+            padding: [25, 130, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
             data: _historyparams.pollutantNames.split(','),
           },
           toolbox: {
-            right: 40,
+            right: 130,
             show: true,
             feature: {
-              saveAsImage: {},
+              saveAsImage: {
+                title: '导出图片',
+              },
             },
           },
           xAxis: {
             type: 'category',
-            name: '时间',
+            // name: '时间',
             boundaryGap: false,
             data: xAxis,
             nameTextStyle: {
@@ -470,29 +871,46 @@ export default Model.extend({
               },
             },
           },
-          yAxis: {
-            type: 'log',
-            // name: `浓度值${unit}`,
-            name: `浓度值`,
-            axisLabel: {
-              formatter: '{value}',
-            },
-            splitLine: {
-              show: true,
-              lineStyle: {
-                type: 'dashed',
-              },
-            },
-          },
+          yAxis: yAxisRoller,
+          // yAxis: {
+          //   type: 'log',
+          //   // name: `浓度值${unit}`,
+          //   name: `浓度值`,
+          //   axisLabel: {
+          //     formatter: '{value}',
+          //   },
+          //   splitLine: {
+          //     show: true,
+          //     lineStyle: {
+          //       type: 'dashed',
+          //     },
+          //   },
+          // },
           grid: {
-            x: 100,
+            x: 60,
             y: 45,
-            x2: 45,
+            x2: 62,
             y2: 20,
-            right: 80,
+            containLabel: true,
           },
           series: arr,
         };
+      }
+      if (
+        result &&
+        result[0] &&
+        result[0].PollutantType !== '5IQI' &&
+        result[0].PollutantType !== '5AQI'
+      ) {
+        tablewidth = tablewidth + 50;
+        columns = columns.concat({
+          title: '是否停运',
+          dataIndex: 'stop',
+          key: 'stop',
+          width: 50,
+          // fixed: 'left',
+          align: 'center',
+        });
       }
       yield update({
         tablewidth,
@@ -515,8 +933,8 @@ export default Model.extend({
       };
       const result = yield call(services.exportHistoryReport, postData);
       if (result.IsSuccess) {
-        window.open(result.Datas);
-        message.success('导出成功');
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message);
       }
@@ -558,7 +976,7 @@ export default Model.extend({
       const result = yield call(services.exportDataAuditReport, payload);
       if (result.IsSuccess) {
         message.success('导出成功');
-        window.open(result.Datas);
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message);
       }
@@ -595,7 +1013,7 @@ export default Model.extend({
       });
       if (result.IsSuccess) {
         message.success('导出成功');
-        window.open(result.Datas);
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message);
       }
@@ -611,6 +1029,16 @@ export default Model.extend({
         });
       } else {
         message.error(result.Message);
+      }
+    },
+    //导出 平台分析报告
+    *exportPlatformAnalysisReport({ payload }, { call, put, update, select }) {
+      const result = yield call(services.exportPlatformAnalysisReport, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      } else {
+        message.warning(result.Message);
       }
     },
   },

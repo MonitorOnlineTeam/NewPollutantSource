@@ -59,7 +59,7 @@ class KBSMoreModal extends PureComponent {
         let suffix = fileName.split(".")[1];
         this.setState({
           fileType: suffix,
-          filePath: fileName
+          filePath: '/wwwroot/Upload/'+fileName
         }, () => {
           this.onOpenViewFileModal()
         })
@@ -81,7 +81,7 @@ class KBSMoreModal extends PureComponent {
         let suffix = fileName.split(".")[1];
         let id = data["dbo.T_Bas_Repository.ID"];
         this.updViewForKBM(id, "down")
-        window.open(`/upload/${fileName}`);
+        window.open(`/wwwroot/${fileName}`);
       } else {
         message.error("文件不存在！")
       }

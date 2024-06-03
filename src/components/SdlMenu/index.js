@@ -102,11 +102,9 @@ class SdlMenu extends Component {
           <div className="ant-pro-top-nav-header-left" style={{ marginRight: 20 }}>
             <div className="ant-pro-top-nav-header-logo" id="logo">
               <a href="/">
-                <img
-                  src="/wwwroot/BaseDataUpload/Report/logo.png"
-                  alt="logo"
-                  style={{ height: 60 }}
-                />
+                {configInfo.IsShowLogo === 'true' && (
+                  <img src={configInfo.Logo || '/logo.png'} alt="logo" style={{ height: 60 }} />
+                )}
                 <h1>{title}</h1>
               </a>
             </div>

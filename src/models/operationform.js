@@ -14,6 +14,7 @@ import {
 } from '../services/operationBaseApi';
 import { message } from 'antd';
 import moment from 'moment';
+import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
   namespace: 'operationform',
@@ -84,7 +85,7 @@ export default Model.extend({
     *exportReport({ payload, callback }, { call, put, update, select }) {
       const result = yield call(exportReport, payload);
       if (result.IsSuccess) {
-        window.open(result.Datas);
+        downloadFile(result.Datas)
         message.success('导出成功');
       } else {
         message.error(result.Message);

@@ -3,7 +3,7 @@ import { API } from '@config/API'
 
 // 获取污染物类型 - 表头
 export async function getPollutantList(params) {
-  const result = await post(API.commonApi.GetPollutantTypeCode, params);
+  const result = await post(API.CommonApi.GetPollutantTypeCode, params);
   return result === null ? {
     data: null
   } : result;
@@ -22,7 +22,7 @@ export async function getSiteDailyDayReport(params) {
  */
 export async function getPollutantTypeList(params) {
   let _params = params || {};
-  const result = await post(API.commonApi.GetPollutantTypeList, {
+  const result = await post(API.CommonApi.GetPollutantTypeList, {
     ..._params,
     pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || _params.pollutantCodes
   }, null);
@@ -125,7 +125,7 @@ export async function getSummaryYearReport(params) {
  * 获取企业及排口
  */
 export async function getEntAndPoint(params) {
-  const result = await post(API.commonApi.GetEntAndPoint, {
+  const result = await post(API.CommonApi.GetEntAndPoint, {
     ...params,
     PollutantTypes: params.PollutantTypes || sessionStorage.getItem('sysPollutantCodes'),
   }, null);

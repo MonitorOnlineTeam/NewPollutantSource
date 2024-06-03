@@ -190,6 +190,7 @@
         flex: 1;
         margin-top: 10px;
         height: calc(100vh - 346px);
+        min-height: 690px;
 
         .ClueStatisticsContent {
           display: flex;
@@ -233,6 +234,7 @@
       .DataQualityAnalysisWrapper {
         flex: 1;
         margin-top: 10px;
+        min-height: 690px;
 
         .rateBoxWrapper {
           background: url(/AbnormalIdentifyModel/rate_bg.png) no-repeat;
@@ -320,7 +322,7 @@
             }
             .num {
               display: inline-block;
-              width: 60px;
+              width: 74px;
               color: #00d9ff;
               text-align: right;
             }
@@ -333,6 +335,7 @@
       display: flex;
       flex-direction: column;
       height: calc(100vh - 100px);
+      min-height: 936px;
       .mapWrapper {
         flex: 1;
         position: relative;
@@ -392,6 +395,15 @@
           text-align: center;
           font-weight: bold;
           cursor: pointer;
+        }
+
+        .currentPosition {
+          color: rgb(75, 243, 249);
+          font-weight: bold;
+          position: absolute;
+          right: 10px;
+          top: 54px;
+          font-size: 15px;
         }
 
         .titlePopSty {
@@ -586,7 +598,7 @@
         }
 
         // 搜索企业
-        .searchEntWrapper {
+        .SelectWrapper {
           // position: absolute;
           // left: 20px;
           // top: 48px;
@@ -608,6 +620,28 @@
             .ant-select-clear {
               background-color: transparent;
               color: #999;
+            }
+
+            .ant-picker {
+              background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+              border-color: #007bfd;
+              height: 30px;
+              line-height: 30px;
+            }
+
+            .ant-picker-input > input {
+              color: #fff;
+              font-weight: bold;
+            }
+
+            .ant-picker-suffix {
+              color: #cdc9c9;
+            }
+
+            .ant-select-arrow {
+              color: #59deff;
+              font-size: 10px;
+              right: 6px;
             }
           }
         }
@@ -648,6 +682,7 @@
       .RunkingWrapper {
         flex: 1;
         height: calc(100% - 238px);
+        min-height: 700px;
       }
       .Runking {
         height: 50%;
@@ -722,6 +757,46 @@
 
     .ant-select-item {
       color: #fff;
+    }
+  }
+}
+
+.datePickerPopup {
+  // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+  border: 1px solid rgb(0, 123, 253);
+  border-bottom: 0;
+
+  :global {
+    .ant-picker-panel-container {
+      background: rgb(9, 47, 97, 0.8);
+    }
+
+    .ant-picker-panel {
+      border-color: rgb(0, 123, 253);
+    }
+
+    .ant-picker-header {
+      color: #fff;
+      font-weight: bold;
+      border-color: rgb(0, 123, 253);
+    }
+
+    .ant-picker-header button {
+      color: #fff;
+    }
+
+    .ant-picker-header-view {
+      font-weight: bold;
+    }
+
+    .ant-picker-content td {
+      color: #fff;
+      font-weight: bold;
+    }
+    .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner,
+    .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end)
+      .ant-picker-cell-inner {
+      background: #136fd1;
     }
   }
 }

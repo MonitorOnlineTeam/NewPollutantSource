@@ -59,6 +59,7 @@ export default Model.extend({
         //     }
         //   }
         // }
+        debugger
         for (let key in pollutant) {
           let valueObj = pollutant[key].find(item => item.Code === 'concentration') || {};
           console.log('valueObj', valueObj)

@@ -3,7 +3,7 @@ import { API } from '@config/API'
 
 // 获取污染物
 export async function getPollutantList(params) {
-  const result = await post(API.commonApi.GetAirOrDustPollutantAQI, params, null);
+  const result = await post(API.CommonApi.GetAirOrDustPollutantAQI, params, null);
   return result;
 }
 
@@ -23,7 +23,7 @@ export async function exportData(params) {
  * 获取系统污染物
  */
 export async function getPollutantTypeList(params) {
-  const result = await post(API.commonApi.GetPollutantTypeList, {
+  const result = await post(API.CommonApi.GetPollutantTypeList, {
     ...params,
     pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
   }, null);
@@ -52,7 +52,7 @@ export async function getDataGainRateTableData(params) {
 
 // 获取数据获取率 - 详情污染物数据
 export async function getDataGainRateDetailPollutantList(params) {
-  const result = await post(API.commonApi.GetPollutantListByDgimn, params, null);
+  const result = await post(API.CommonApi.GetPollutantListByDgimn, params, null);
   return result;
 }
 

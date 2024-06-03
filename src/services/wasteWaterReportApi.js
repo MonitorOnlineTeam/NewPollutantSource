@@ -13,7 +13,7 @@ export async function GetEntByRegionAndAtt(params) {
 }
 //根据 企业 获取 监测点
 export async function GetPointByEntCode(params) {
-    const result = await post(API.BaseDataApi.GetPointByEntCode, params);
+    const result = await post(API.CommonApi.GetPointByEntCode, params);
     return result
 }
 //数据列表

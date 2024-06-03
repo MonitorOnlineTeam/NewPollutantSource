@@ -9,6 +9,7 @@ import Histogram from './components/Histogram';
 import CorrelationCoefficient from './components/CorrelationCoefficient';
 import WarningDataAndChart from './components/WarningDataAndChart';
 import DataPhenomena from './components/DataPhenomena';
+import AbruptChange from './components/AbruptChange';
 
 const dvaPropsData = ({ loading, dataModel }) => ({});
 
@@ -54,7 +55,8 @@ const AssistDataAnalysis = props => {
               DGIMN={DGIMN}
               date={[moment().subtract(1, 'week'), moment()]}
               // defaultChartSelected={['氧含量', '烟气湿度', '烟气温度', '流速']}
-              defaultChartSelected={['s01', 's05', 's03', 's02']}
+              // defaultChartSelected={['s01', 's05', 's03', 's02']}
+              displayType={displayType}
               {...dataChartParams}
             />
           </Tabs.TabPane>
@@ -76,6 +78,14 @@ const AssistDataAnalysis = props => {
               DGIMN={DGIMN}
               echartBoxHeight={displayType === 'modal' ? 'calc(100vh - 200px)' : ''}
               tableHeight={displayType === 'modal' ? 'calc(100vh - 320px)' : ''}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="陡变过程" key="7" style={{ overflowY: 'auto' }}>
+            <AbruptChange
+              date={dataChartParams.date || [moment().subtract(1, 'day'), moment()]}
+              DGIMN={DGIMN}
+              echartBoxHeight={displayType === 'modal' ? 'calc(100vh - 200px)' : ''}
+              // tableHeight={displayType === 'modal' ? 'calc(100vh - 320px)' : ''}
             />
           </Tabs.TabPane>
         </Tabs>
@@ -102,7 +112,6 @@ const AssistDataAnalysis = props => {
         polShow
         domId="#AbnormalJudgmentPage"
         onItemClick={value => {
-          console.log('value', value);
           if (value[0].IsEnt === false) {
             setDGIMN(value[0].key);
           }

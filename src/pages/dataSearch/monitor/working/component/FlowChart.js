@@ -285,7 +285,7 @@ class FlowChart extends PureComponent {
         {
           // 有二氧化碳不展示脱硝设施、脱硫设施、脱尘设施
           !isCO2 && <>
-            <span className={`${styles.tuox} ${styles.commonSty}`}>脱销设施</span>
+            <span className={`${styles.tuox} ${styles.commonSty}`}>脱硝设施</span>
             <span className={`${styles.tuol} ${styles.commonSty}`}>脱硫设施</span>
             <span className={`${styles.chu} ${styles.commonSty}`}>除尘设施</span>
           </>

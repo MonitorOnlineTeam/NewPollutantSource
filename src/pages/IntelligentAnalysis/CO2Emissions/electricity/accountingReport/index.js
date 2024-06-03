@@ -28,7 +28,7 @@ class index extends PureComponent {
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'common/getEntList',
+      type: 'common/getEntByRegion',
       payload: {},
     });
 

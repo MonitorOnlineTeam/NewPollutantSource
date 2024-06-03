@@ -2,13 +2,16 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-24 11:33:09
+ * @Last Modified time: 2024-03-20 09:35:07
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
 import config from '@/config';
 import moment from 'moment';
 import * as services from '@/services/autoformapi';
+import * as commonServices from '@/services/commonApi';
+// import { addOrUpdateMonitorEntElectronicFence } from '@/pages/ctAssetManagement/equipmentAccount/pollutantManagement/service';
+import { downloadFile } from '@/utils/utils';
 
 function formatDateFormat(format) {
   let _format = 'YYYY-MM-DD HH:mm:ss';
@@ -95,15 +98,15 @@ function getQueryParams(state, payload) {
   const searchParams = payload.searchParams || [];
   group.length || searchParams.length
     ? (postData.ConditionWhere = JSON.stringify({
-      // group.length? postData.ConditionWhere = JSON.stringify({
-      rel: '$and',
-      group: [
-        {
-          rel: '$and',
-          group: [...group, ...searchParams],
-        },
-      ],
-    }))
+        // group.length? postData.ConditionWhere = JSON.stringify({
+        rel: '$and',
+        group: [
+          {
+            rel: '$and',
+            group: [...group, ...searchParams],
+          },
+        ],
+      }))
     : '';
 
   return postData;
@@ -155,7 +158,7 @@ export default Model.extend({
       const result = yield call(services.getListPager, { ...postData });
       if (result.IsSuccess) {
         state = yield select(state => state.autoForm);
-        callback && callback(result.Datas);
+        callback && callback(result.Datas.DataSource);
         yield update({
           // configIdList: {
           //   [payload.configId]: result.data
@@ -179,13 +182,7 @@ export default Model.extend({
     },
     // 根据configId 获取数据
     *getConfigIdList({ payload, callback }, { call, update, select }) {
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let postData = {
-      //   params: payload,
-      //   sysConfig
-      // };
-      let postData = payload;
-      const result = yield call(services.getListPager, postData);
+      const result = yield call(services.getListPager, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
         const configIdList = yield select(state => state.autoForm.configIdList);
@@ -199,14 +196,8 @@ export default Model.extend({
     },
     // FOREIGN_DF_NAME /// FOREIGN_DF_ID
     // 获取页面配置项
-    *getPageConfig({ payload }, { call, put, update, select }) {
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let postData = {
-      //   params: { ...payload },
-      //   sysConfig
-      // };
-      let postData = payload;
-      const result = yield call(services.getPageConfigInfo, postData);
+    *getPageConfig({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.getPageConfigInfo, { ...payload });
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
         const columns = result.Datas.ColumnFields.filter(
@@ -215,7 +206,7 @@ export default Model.extend({
           title: item.DF_NAME_CN,
           dataIndex: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : item.FullFieldName,
           key: item.FullFieldNameVerticalBar,
-          align: item.DF_ALIGN,
+          align: item.DF_ALIGN || 'center',
           width: item.DF_WIDTH ? item.DF_WIDTH * 1 : item.DF_WIDTH,
           sorter:
             item.DF_ISSORT === 1 ? (a, b) => a[item.FullFieldName] - b[item.FullFieldName] : false,
@@ -271,12 +262,14 @@ export default Model.extend({
           addCfgField = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1);
         }
         // const colSpanLen = ;
+
+        // TODO：DF_ROWSPAN 改为 DF_COLSPAN
         let layout = 12;
-        if (addCfgField.filter(item => item.DF_ROWSPAN === null).length == addCfgField.length) {
+        if (addCfgField.filter(item => item.DF_COLSPAN === null).length == addCfgField.length) {
           // 显示两列
           layout = 12;
         } else if (
-          addCfgField.filter(item => item.DF_ROWSPAN === 1 || item.DF_ROWSPAN === 2).length ==
+          addCfgField.filter(item => item.DF_COLSPAN === 1 || item.DF_COLSPAN === 2).length ==
           addCfgField.length
         ) {
           // 显示一列
@@ -301,7 +294,7 @@ export default Model.extend({
           required: item.DF_ISNOTNULL === 1,
           validator: item.DF_ISNOTNULL === 1 && (item.DF_TOOLTIP || ''), // TODO：正则？
           validate: item.DF_VALIDATE ? item.DF_VALIDATE.split(',') : [],
-          rowSpan: item.DF_ROWSPAN,
+          rowSpan: item.DF_COLSPAN,
           dateFormat: item.DF_DATEFORMAT,
           isHide: item.DF_HIDDEN,
           defaultValue: item.DF_DEFAULTVALUE,
@@ -366,14 +359,13 @@ export default Model.extend({
             [configId]: layout,
           },
         });
+        callback && callback();
       }
     },
     // autoForm列表删除
     *del({ payload, callback }, { call, update, put, select }) {
-      const sysConfig = yield select(state => state.global.configInfo);
-      let postData = payload;
       let configId = payload.configId;
-      const result = yield call(services.postAutoFromDataDelete, postData);
+      const result = yield call(services.postAutoFromDataDelete, { ...payload });
       if (result.IsSuccess) {
         message.success('删除成功！');
         // 如果当前页只有一条数据，删除后跳转到第一页
@@ -403,11 +395,6 @@ export default Model.extend({
     },
 
     *add({ payload }, { call, update, put, select }) {
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let postData = {
-      //   params: { ...payload, FormData: JSON.stringify(payload.FormData) },
-      //   sysConfig
-      // };
       let postData = { ...payload, FormData: JSON.stringify(payload.FormData) };
       const result = yield call(services.postAutoFromDataAdd, postData);
       if (result.IsSuccess) {
@@ -426,11 +413,6 @@ export default Model.extend({
     },
 
     *saveEdit({ payload }, { call, update, put, select }) {
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let postData = {
-      //   params: { ...payload, FormData: JSON.stringify(payload.FormData) },
-      //   sysConfig
-      // };
       let postData = { ...payload, FormData: JSON.stringify(payload.FormData) };
       const result = yield call(services.postAutoFromDataUpdate, postData);
       if (result.IsSuccess) {
@@ -453,13 +435,7 @@ export default Model.extend({
 
     *getFormData({ payload, callback }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let postData = {
-      //   params: { ...payload },
-      //   sysConfig
-      // };
-      let postData = payload;
-      const result = yield call(services.getFormData, postData);
+      const result = yield call(services.getFormData, { ...payload });
       if (result.IsSuccess && result.Datas.length) {
         callback && callback(result.Datas[0]);
         yield update({
@@ -472,17 +448,20 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-
+    *getFormDatas({ payload, callback }, { call, select, update, put }) {
+      //特殊需求 列表用的正常接口 回显用的autoForm接口
+      const state = yield select(state => state.autoForm);
+      const result = yield call(services.getFormData, { ...payload });
+      if (result.IsSuccess && result.Datas.length) {
+        callback(result.Datas[0]);
+      } else {
+        message.error(result.Message);
+      }
+    },
     // 获取详情页面配置
     *getDetailsConfigInfo({ payload }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let postData = {
-      //   params: { ...payload },
-      //   sysConfig
-      // };
-      let postData = payload;
-      const result = yield call(services.getPageConfigInfo, postData);
+      const result = yield call(services.getPageConfigInfo, { ...payload });
       if (result.IsSuccess) {
         const detailFormItems = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1).map(
           item => ({
@@ -492,8 +471,8 @@ export default Model.extend({
               item.DF_FOREIGN_TYPE === 2
                 ? `${item.FullFieldName}_Name`
                 : item.FOREIGH_DT_CONFIGID
-                  ? item.FOREIGN_DF_NAME
-                  : item.DF_NAME, // 判断是否是外键或表连接
+                ? item.FOREIGN_DF_NAME
+                : item.DF_NAME, // 判断是否是外键或表连接
             // configId: item.DT_CONFIG_ID,
             isHide: item.DF_HIDDEN,
             configId: item.FOREIGH_DT_CONFIGID,
@@ -513,14 +492,25 @@ export default Model.extend({
       }
     },
 
+    // // 获取联动
+    // *getRegions({ payload, callback }, { call, update }) {
+    //   const result = yield call(services.getRegions, { ...payload });
+    //   if (result.IsSuccess) {
+    //     yield update({
+    //       regionList: result.Datas,
+    //     });
+    //     callback && callback(result);
+    //   }
+    // },
+
     // 获取联动
     *getRegions({ payload, callback }, { call, update }) {
-      const result = yield call(services.getRegions, { ...payload });
+      const result = yield call(commonServices.getEnterpriseAndPoint, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          regionList: result.Datas,
+          regionList: result.Datas.list,
         });
-        callback && callback(result);
+        callback && callback(result.Datas.list);
       }
     },
 
@@ -549,17 +539,35 @@ export default Model.extend({
       }
     },
 
+    *getAttachmentLists({ payload, callback }, { call, update }) {
+      //特殊需求 列表用的正常接口 回显用的autoForm接口
+      if (payload.FileUuid && payload.FileUuid !== 'null') {
+        const result = yield call(services.getAttachmentList, { ...payload });
+        if (result.IsSuccess) {
+          let fileList = [];
+          fileList = result.Datas.map((item, index) => ({
+            uid: item.Guid,
+            name: item.FileName,
+            status: 'done',
+            url: `/${item.Url}`,
+          }));
+          callback(fileList);
+        }
+      } else {
+        yield update({
+          fileList: [],
+        });
+      }
+    },
+
     // 文件上传
     *fileUpload({ payload }, { call, update, select }) {
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let body = {
-      //   params: { ...payload },
-      //   sysConfig
-      // };
-      let body = payload;
-      const result = yield call(services.exportTemplet, body);
+      const result = yield call(services.exportTemplet, payload);
       if (result.IsSuccess) {
         // result.Datas && window.open(result.Datas)
+        if (result?.Datas?.fNameList?.length <= 0) {
+          message.error('上传文件不能为空');
+        }
       } else {
         message.error(result.Datas);
       }
@@ -569,70 +577,76 @@ export default Model.extend({
     *exportDataExcel({ payload }, { call, select, update }) {
       const state = yield select(state => state.autoForm);
       const postData = getQueryParams(state, payload);
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let body = {
-      //   params: { ...postData, ...payload },
-      //   sysConfig
-      // };
-      let body = payload;
-
-      const result = yield call(services.exportDataExcel, body);
+      const result = yield call(services.exportDataExcel, { ...postData, ...payload });
       if (result.IsSuccess) {
-        console.log('suc=', result);
-        result.Datas && window.open(result.Datas);
+        message.success('下载成功');
+        result.Datas && downloadFile(`${result.Datas}`);
       } else {
         message.error(result.reason);
       }
     },
     // 下载导入模板
     *exportTemplet({ payload }, { call, update, select }) {
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let body = {
-      //   params: payload,
-      //   sysConfig
-      // };
-      let body = payload;
-      const result = yield call(services.exportTemplet, body);
+      const result = yield call(services.exportTemplet, payload);
       if (result.IsSuccess) {
-        result.Datas && window.open(result.Datas);
+        result.Datas && downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Datas);
       }
     },
-
     // 删除导入模板
     *deleteAttach({ payload }, { call, update }) {
       let Guid = '';
       if (payload.Guid) {
         if (payload.Guid.fNameList && payload.Guid.fNameList[0]) {
-          Guid = payload.Guid.fNameList[0].split('/')[2]
-        } else if (Array.isArray(payload.Guid) && payload.Guid[0]) { //只上传图片的情况 UploadPicture接口
-          Guid = payload.Guid[0].split('/')[2]
+          Guid = payload.Guid.fNameList[0].split('/')[2];
+        } else if (Array.isArray(payload.Guid) && payload.Guid[0]) {
+          //只上传图片的情况 UploadPicture接口
+          Guid = payload.Guid[0].split('/')[2];
         } else {
-          Guid = payload.Guid //编辑的情况
+          Guid = payload.Guid; //编辑的情况
         }
       } else {
         Guid = '';
       }
-      if (!Guid) { //文件为空的情况
+      if (!Guid) {
+        //文件为空的情况
         return;
       }
-      const result = yield call(services.deleteAttach, { ...payload,Guid:Guid });
+      const result = yield call(services.deleteAttach, { ...payload, Guid: Guid });
       if (result.IsSuccess) {
         message.success('删除成功！');
       } else {
-        message.error(result.Datas);
+        // message.error(result.Datas);
+        message.error(result.Message);
       }
     },
     // 校验重复
     *checkRepeat({ payload, callback }, { call, update, select }) {
-      const sysConfig = yield select(state => state.global.configInfo);
-      // let body = {
-      //   params: payload,
-      //   sysConfig
-      // };
-      let body = payload;
-      const result = yield call(services.checkRepeat, body);
+      const result = yield call(services.checkRepeat, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+      }
+    },
+    // //成套企业电子围栏半径 添加
+    // *addOrUpdateMonitorEntElectronicFence({ payload, callback }, { call, put, update, select }) {
+    //   const result = yield call(addOrUpdateMonitorEntElectronicFence, { ...payload });
+    //   if (result.IsSuccess) {
+    //     callback && callback();
+    //   }
+    // },
+    // 运维 企业设置电子围栏半径
+    *addOrUpdOperationSignRadiusInfo({ payload, callback }, { call, update }) {
+      const result = yield call(services.addOrUpdOperationSignRadiusInfo, { ...payload });
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+      }
+    },
+    //  运维 企业获取电子围栏半径
+    *getOperationSignRadiusInfo({ payload, callback }, { call, update }) {
+      const result = yield call(services.getOperationSignRadiusInfo, { ...payload });
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {

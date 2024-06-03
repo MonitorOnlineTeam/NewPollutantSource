@@ -3,7 +3,8 @@ import moment from 'moment';
 import { message } from 'antd';
 import * as services from './service';
 import Model from '@/utils/model';
-import _ from 'lodash'
+import _ from 'lodash';
+import { downloadFile } from '@/utils/utils';
 // import { EnumRequstResult } from '../utils/enum';
 
 export default Model.extend({
@@ -41,8 +42,12 @@ export default Model.extend({
       EntList: [],
       PageIndex: 1,
       PageSize: 10,
-      beginTime: moment().add(-1, 'month').format('YYYY-MM-01 00:00:00'),
-      endTime: moment(moment().format('YYYY-MM-01 00:00:00')).add(-1, 'second').format('YYYY-MM-DD 23:59:59'),
+      beginTime: moment()
+        .add(-1, 'month')
+        .format('YYYY-MM-01 00:00:00'),
+      endTime: moment(moment().format('YYYY-MM-01 00:00:00'))
+        .add(-1, 'second')
+        .format('YYYY-MM-DD 23:59:59'),
       // aaa:moment(moment().format('YYYY-MM-01 00:00:00')).add(1,"month").format('YYYY-MM-01 23:59:59'),
       total: 0,
     },
@@ -63,20 +68,24 @@ export default Model.extend({
 
   effects: {
     // 获取污染物 - 表头
-    * getPollutantList({
-      payload,
-    }, { call, update, select }) {
+    *getPollutantList({ payload }, { call, update, select }) {
       const result = yield call(services.getPollutantList, payload);
       if (result.IsSuccess) {
         const columns = result.Datas.map(item => {
-          const unit = item.unit ? `(${item.unit})` : ''
+          const unit = item.unit ? `(${item.unit})` : '';
           return {
-            title: <>{item.name}<br />{unit}</>,
+            title: (
+              <>
+                {item.name}
+                <br />
+                {unit}
+              </>
+            ),
             dataIndex: item.name,
             align: 'center',
-            flag: 'pollutant'
-          }
-        })
+            flag: 'pollutant',
+          };
+        });
         yield update({
           pollutantList: [
             // {
@@ -85,15 +94,13 @@ export default Model.extend({
             // },
             ...columns,
           ],
-        })
-        payload.callback && payload.callback()
+        });
+        payload.callback && payload.callback();
       }
     },
     // 获取站点日报数据
-    * getDateReportData({
-      payload, reportType,
-    }, { call, update, select }) {
-      const dateReportForm = yield select(state => state.report.dateReportForm)
+    *getDateReportData({ payload, reportType }, { call, update, select }) {
+      const dateReportForm = yield select(state => state.report.dateReportForm);
 
       // let _props = {};
       // let startFormat = "YYYY-MM-DD";
@@ -124,25 +131,39 @@ export default Model.extend({
         PageIndex: dateReportForm.current,
         IsPage: 1,
         ...payload,
-      }
-      const serviceApi = reportType === 'siteDaily' ? services.getSiteDailyDayReport : (reportType === 'monthly' ? services.getMonthlyReport : services.getAnnalsReport)
+      };
+      const serviceApi =
+        reportType === 'siteDaily'
+          ? services.getSiteDailyDayReport
+          : reportType === 'monthly'
+          ? services.getMonthlyReport
+          : services.getAnnalsReport;
       const result = yield call(serviceApi, postData);
       if (result.IsSuccess) {
         let data = [];
         if (result.Datas.length) {
           data = result.Datas.map(item => {
             let variate = [];
-            variate = item.Datas.map(itm => ({ ...itm, pointName: item.PointName, entName: item.EntName, rowSpan: item.Datas.length + 3 }))
+            variate = item.Datas.map(itm => ({
+              ...itm,
+              pointName: item.PointName,
+              entName: item.EntName,
+              rowSpan: item.Datas.length + 3,
+            }));
             // 大气和扬尘不显示最大最小平均值
-            if (dateReportForm.PollutantSourceType.value != 5 && dateReportForm.PollutantSourceType.value != 12) {
-              variate.concat([ // 将最大、最小、平均值放入数据源中
+            if (
+              dateReportForm.PollutantSourceType.value != 5 &&
+              dateReportForm.PollutantSourceType.value != 12
+            ) {
+              variate.concat([
+                // 将最大、最小、平均值放入数据源中
                 { ...item.MinVal[0], pointName: item.PointName, time: '最小值' },
                 { ...item.MaxVal[0], pointName: item.PointName, time: '最大值' },
                 { ...item.AvgVal[0], pointName: item.PointName, time: '平均值' },
-              ])
+              ]);
             }
             return variate;
-          }).reduce((acc, cur) => acc.concat(cur))
+          }).reduce((acc, cur) => acc.concat(cur));
         }
         // console.log('data=',data)
         // message.success("统计成功！")
@@ -152,16 +173,14 @@ export default Model.extend({
             ...dateReportForm,
             total: result.Total,
           },
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
     // 获取系统污染物
-    * getPollutantTypeList({
-      payload, callback,
-    }, { call, update, select }) {
+    *getPollutantTypeList({ payload, callback }, { call, update, select }) {
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.IsSuccess) {
         const dateReportForm = yield select(state => state.report.dateReportForm);
@@ -173,15 +192,13 @@ export default Model.extend({
               value: result.Datas[0].pollutantTypeCode,
             },
           },
-        })
-        callback && callback(result)
+        });
+        callback && callback(result);
       }
     },
 
     // 获取企业
-    * getEnterpriseList({
-      payload,
-    }, { call, update, select }) {
+    *getEnterpriseList({ payload }, { call, update, select }) {
       const result = yield call(services.getEnterpriseList, payload);
       if (result.IsSuccess) {
         const dateReportForm = yield select(state => state.report.dateReportForm);
@@ -193,14 +210,12 @@ export default Model.extend({
               value: result.Datas[0].ParentCode,
             },
           },
-        })
-        payload.callback && payload.callback(result)
+        });
+        payload.callback && payload.callback(result);
       }
     },
     // 获取汇总日报数据
-    * getDailySummaryDataList({
-      payload, reportType,
-    }, { call, update, select }) {
+    *getDailySummaryDataList({ payload, reportType }, { call, update, select }) {
       // const summaryForm = yield select(state => state.report.summaryForm);
       // let serviceApi = reportType === 'daily' ? services.getDailySummaryList : (reportType === 'monthly' ? services.getSummaryMonthReport : services.getSummaryYearReport)
       let serviceApi = '';
@@ -232,54 +247,58 @@ export default Model.extend({
           data = result.Datas.map(item =>
             // return { ...item, EntName: item.EntName}
             ({ EntName: item.EntName, ...item.DatasItem }),
-          )
+          );
         }
         yield update({
           dailySummaryDataList: data,
           Total: result.Total,
-        })
+        });
       }
     },
     // 报表导出
-    * reportExport({ payload }, { call, update, select }) {
-      const dateReportForm = yield select(state => state.report.dateReportForm)
+    *reportExport({ payload }, { call, update, select }) {
+      const dateReportForm = yield select(state => state.report.dateReportForm);
       const result = yield call(services.reportExcel, payload);
       if (result.IsSuccess) {
-        result.Datas && window.open(result.Datas)
+        result.Datas && downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 汇总报表导出
-    * summaryReportExcel({ payload }, { call, update, select }) {
-      const summaryForm = yield select(state => state.report.summaryForm)
+    *summaryReportExcel({ payload }, { call, update, select }) {
+      const summaryForm = yield select(state => state.report.summaryForm);
       const result = yield call(services.summaryReportExcel, payload);
       if (result.IsSuccess) {
-        result.Datas && window.open(result.Datas)
+        result.Datas && downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 数据上报报表
     *getStatisticsReportDataList({ payload }, { call, update, select }) {
       const params = yield select(a => a.report.StatisticsReportDataWhere);
       const result = yield call(services.getStatisticsReportDataList, params);
-      yield update({ statisticsReportDataList: result.Datas, total: result.Total })
+      yield update({ statisticsReportDataList: result.Datas, total: result.Total });
     },
     // 污水处理厂列表
     *getEntSewageList({ payload }, { call, update }) {
       const result = yield call(services.getEntSewageList, payload);
-      yield update({ EntSewageList: result.Datas })
+      yield update({ EntSewageList: result.Datas });
     },
     // 汇总报表导出
-    * getStatisticsReportDataExcel({ payload }, { call, update, select }) {
+    *getStatisticsReportDataExcel({ payload }, { call, update, select }) {
       const params = yield select(a => a.report.StatisticsReportDataWhere);
 
-      const result = yield call(services.getStatisticsReportDataExcel, { ...params, PageIndex: null, PageSize: null });
+      const result = yield call(services.getStatisticsReportDataExcel, {
+        ...params,
+        PageIndex: null,
+        PageSize: null,
+      });
       if (result.IsSuccess) {
-        result.Datas && window.open(result.Datas)
+        result.Datas && downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取企业及排口
@@ -291,19 +310,19 @@ export default Model.extend({
             const children = item.children.map(itm => {
               const obj = itm;
               delete obj.children;
-              return { ...obj }
-            })
+              return { ...obj };
+            });
             return {
               ...item,
               children,
-            }
+            };
           }
-        })
+        });
         yield update({
           entAndPointList: filterData,
           defaultEntAndPoint: [filterData[0].key, filterData[0].children[0].key],
           pointName: filterData[0].children[0].title,
-        })
+        });
         // 获取数据
         yield put({
           type: 'getSmokeReportData',
@@ -312,34 +331,40 @@ export default Model.extend({
             time: moment().format('YYYY-MM-DD HH:mm:ss'),
             dataType: payload.reportType,
           },
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
     // 获取报表数据
     *getSmokeReportData({ payload }, { call, update, select }) {
       const SmokeForm = yield select(a => a.report.SmokeForm);
-      const result = yield call(services.getSmokeReportData,
-        { ...payload, BeginTime: SmokeForm.beginTime, EndTime: SmokeForm.endTime });
+      const result = yield call(services.getSmokeReportData, {
+        ...payload,
+        BeginTime: SmokeForm.beginTime,
+        EndTime: SmokeForm.endTime,
+      });
       if (result.IsSuccess) {
         yield update({
           smokeReportData: result.Datas,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 烟气报表导出
     *exportSmokeReport({ payload }, { call, update, select }) {
       const SmokeForm = yield select(a => a.report.SmokeForm);
-      const result = yield call(services.exportSmokeReport,
-        { ...payload, BeginTime: SmokeForm.beginTime, EndTime: SmokeForm.endTime });
+      const result = yield call(services.exportSmokeReport, {
+        ...payload,
+        BeginTime: SmokeForm.beginTime,
+        EndTime: SmokeForm.endTime,
+      });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
@@ -352,42 +377,44 @@ export default Model.extend({
             const children = item.children.map(itm => {
               const obj = itm;
               delete obj.children;
-              return { ...obj }
-            })
+              return { ...obj };
+            });
             return {
               ...item,
               children,
-            }
+            };
           }
-        })
+        });
         yield update({
           entAndPontList: filterData,
-        })
-        callback && callback(result.Datas)
+        });
+        callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
 
     // 二氧化碳 - 获取企业列表
     *getEntByRegionAndAtt({ payload }, { call, put, update, select }) {
-      const result = yield call(services.getEntByRegionAndAtt, payload)
+      const result = yield call(services.getEntByRegionAndAtt, payload);
       if (result.IsSuccess) {
         yield update({
-          entByRegionAndAttList: result.Datas
-        })
+          entByRegionAndAttList: result.Datas,
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
     // 获取烟气报表表头
     *getReportColumns({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(services.getReportColumns, payload)
+      const result = yield call(services.getReportColumns, payload);
       if (result.IsSuccess) {
-        let data = _.sortBy(result.Datas, function (o) { return o.SortCode; });
-        callback && callback(data)
+        let data = _.sortBy(result.Datas, function(o) {
+          return o.SortCode;
+        });
+        callback && callback(data);
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
   },

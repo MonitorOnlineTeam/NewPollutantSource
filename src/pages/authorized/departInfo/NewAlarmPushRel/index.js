@@ -1,6 +1,6 @@
 /**
  * 功  能：新报警推送关联组件
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.12.30
  */
 import React, { Component } from 'react';
@@ -32,7 +32,7 @@ import {
 import { connect } from 'dva';
 import moment from 'moment';
 // import SdlCascader from '../../pages/AutoFormManager/SdlCascader'
-import RegionList from '@/components/RegionList'
+import RegionList from '@/components/RegionList';
 import styles from '@/pages/authorized/departInfo/index.less';
 import difference from 'lodash/difference';
 
@@ -46,9 +46,8 @@ const FormItem = Form.Item;
   alarmPushSelect: alarmPush.alarmPushSelect,
   alarmPushParam: alarmPush.alarmPushParam,
   alarmPushFlag: alarmPush.alarmPushFlag,
-  alarmPushParLoading: alarmPush.alarmPushParLoading
+  alarmPushParLoading: alarmPush.alarmPushParLoading,
 }))
-
 @Form.create()
 class Index extends Component {
   constructor(props) {
@@ -67,7 +66,6 @@ class Index extends Component {
         { label: '核实', value: '8' },
         { label: '响应', value: '9' },
       ],
-
     };
     this.leftTableColumns = [
       {
@@ -77,10 +75,12 @@ class Index extends Component {
       {
         dataIndex: 'EntName',
         title: '企业名称',
+        ellipsis: true,
       },
       {
         dataIndex: 'PointName',
         title: '监测点名称',
+        ellipsis: true,
       },
     ];
     this.rightTableColumns = [
@@ -91,10 +91,12 @@ class Index extends Component {
       {
         dataIndex: 'EntName',
         title: '企业名称',
+        ellipsis: true,
       },
       {
         dataIndex: 'PointName',
         title: '监测点名称',
+        ellipsis: true,
       },
     ];
   }
@@ -103,36 +105,32 @@ class Index extends Component {
   componentDidMount() {
     const { dispatch, alarmPushParam, FlagType, type, alarmPushData, alarmPushFlag } = this.props;
 
-    const alarmType = (flag)=>flag? "" : '1'
-
+    const alarmType = flag => (flag ? '' : '0');
     dispatch({
       type: 'alarmPush/getFirstAlarmpar',
-      payload: { Type: type, RegionCode: "", ID: alarmPushData.key, AlarmType: alarmType(alarmPushFlag) },
-      callback: (flag) => {
+      payload: { Type: type, RegionCode: '', ID: alarmPushData.key, AlarmType: '' },
+      callback: flag => {
+        const par = {
+          Type: type,
+          RegionCode: '',
+          ID: alarmPushData.key,
+          AlarmType: alarmType(flag),
+        };
         dispatch({
           type: 'alarmPush/updateState',
-          payload: {
-            alarmPushParam: {
-              Type: type,
-              RegionCode: "",
-              ID: alarmPushData.key,
-              AlarmType: alarmType(flag)
-            },
-          },
-        })
-        setTimeout(() => {
-          this.getData();
-
-        })
-      }
+          payload: { alarmPushParam: { ...alarmPushParam, ...par } },
+        });
+        this.getData({
+          Type: type,
+          RegionCode: '',
+          ID: alarmPushData.key,
+          AlarmType: alarmType(flag),
+        });
+      },
     });
-
-
   }
 
-  componentWillReceiveProps(nextProps) {
-
-  }
+  componentWillReceiveProps(nextProps) {}
 
   TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
     <Transfer {...restProps} showSelectAll={false}>
@@ -172,7 +170,7 @@ class Index extends Component {
             loading={this.props.alarmPushLoading}
             style={{ pointerEvents: listDisabled ? 'none' : null }}
             scroll={{ y: 'calc(100vh - 550px)' }}
-            pagination={false}
+            // pagination={false}
             onRow={({ key, disabled: itemDisabled }) => ({
               onClick: () => {
                 if (itemDisabled || listDisabled) return;
@@ -185,176 +183,189 @@ class Index extends Component {
     </Transfer>
   );
 
-
-
-
-
-
-  getData = () => {
+  getData = data => {
     const { dispatch, alarmPushParam } = this.props;
     dispatch({
       type: 'alarmPush/getAlarmPushDepOrRole',
-      payload: { ...alarmPushParam },
-      callback: (targetKeys) => {
-        this.setState({ targetKeys })
-      }
+      payload: data ? data : { ...alarmPushParam },
+      callback: targetKeys => {
+        this.setState({ targetKeys });
+      },
     });
-
   };
 
   filterOption = (inputValue, option) => option.EntName.indexOf(inputValue) > -1;
 
-  handleChange = (targetKeys, direction, moveKeys) => { //穿梭框change事件
-    console.log(targetKeys)
+  handleChange = (targetKeys, direction, moveKeys) => {
+    //穿梭框change事件
+    console.log(targetKeys);
     this.setState({ targetKeys });
   };
 
-
   getAlarmRadioOptions = () => {
     const { options } = this.state;
-    const arr = []
+    const arr = [];
     return options.map(item => {
-      return <Radio.Button value={item.value}>{item.label}</Radio.Button>
-    })
-  }
-
-
+      return <Radio.Button value={item.value}>{item.label}</Radio.Button>;
+    });
+  };
 
   updateQueryState = payload => {
     const { alarmPushParam, dispatch } = this.props;
 
     dispatch({
-      type: "alarmPush/updateState",
+      type: 'alarmPush/updateState',
       payload: { alarmPushParam: { ...alarmPushParam, ...payload } },
     });
   };
-  changeRegion = (value) => {
+  changeRegion = value => {
     this.updateQueryState({
-      RegionCode: value,
+      RegionCode: value ? value : '',
     });
-  }
-  changeCheckboxGroup = (data) => {
-
-    if (data.target) { //单选
-      const { alarmPushParam: { AlarmType } } = this.props;
-
-      const selectType = data.target.value
-
+  };
+  changeCheckboxGroup = data => {
+    if (data.target) {
+      //单选
+      const {
+        alarmPushParam: { AlarmType },
+      } = this.props;
+      const selectType = data.target.value;
       this.updateQueryState({ AlarmType: selectType });
       setTimeout(() => {
         this.getData();
-      })
-      //    if(AlarmType&&AlarmType === selectType){
-      //     this.updateQueryState({AlarmType: '' });
-      //  }
+      });
     } else {
-      this.updateQueryState({ AlarmType: data.join(","), });
-      // setTimeout(()=>{
-      //   this.getData();
-      //  })
-
+      this.updateQueryState({ AlarmType: data.join(',') });
     }
-  }
+  };
   handleOk = () => {
-
-    const { dispatch, FlagType, type, alarmPushParam: { AlarmType }, alarmPushData } = this.props;
+    const {
+      dispatch,
+      FlagType,
+      type,
+      alarmPushParam: { AlarmType },
+      alarmPushData,
+    } = this.props;
 
     const { targetKeys } = this.state;
     if (!AlarmType) {
-      message.error("请至少勾选一个报警类型！");
+      message.error('请至少勾选一个报警类型！');
       return;
     }
-    let parData = targetKeys.length > 0 ? targetKeys.map(item => {
-      return {
-        RoleIdOrDepId: alarmPushData.key,
-        FlagType: type,
-        DGIMN: item,
-        AlarmType: AlarmType,
-      }
-    })
-      :
-      [{
-        RoleIdOrDepId: alarmPushData.key,
-        FlagType: type,
-        DGIMN: 'ALL',
-        AlarmType: AlarmType,
-      }]
-    this.setState({ confirmLoading: true })
+    let parData =
+      targetKeys.length > 0
+        ? targetKeys.map(item => {
+            return {
+              RoleIdOrDepId: alarmPushData.key,
+              FlagType: type,
+              DGIMN: item,
+              AlarmType: AlarmType,
+            };
+          })
+        : [
+            {
+              RoleIdOrDepId: alarmPushData.key,
+              FlagType: type,
+              DGIMN: 'ALL',
+              AlarmType: AlarmType,
+            },
+          ];
+
+    this.setState({ confirmLoading: true });
     dispatch({
       type: 'alarmPush/insertAlarmDepOrRole',
       payload: { Datas: [...parData] },
       callback: () => {
         this.setState({
-          confirmLoading: false
-        }, () => {
-          // this.props.cancelAlarmModal();
-
-        })
-      }
+          confirmLoading: false,
+        });
+      },
     });
-
-
-  }
+  };
 
   render() {
     // const { alarmPushData, showAlarmState, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingGetAlarmState, loadingInsertData } = this.props;
     // const { currentData, checkedYC, checkedCB, checkedYJ,checkedCS } = this.state;
-    const { loadingInsertData, visibleAlarm, cancelAlarmModal, alarmPushDepOrRoleList, alarmPushParLoading, alarmPushFlag, alarmPushParam: { RegionCode, AlarmType } } = this.props;
+    const {
+      loadingInsertData,
+      visibleAlarm,
+      cancelAlarmModal,
+      alarmPushDepOrRoleList,
+      alarmPushParLoading,
+      alarmPushFlag,
+      alarmPushParam: { RegionCode, AlarmType },
+      alarmPushData,
+    } = this.props;
     const { options, targetKeys, confirmLoading } = this.state;
 
     const TableTransfer = this.TableTransfer;
     return (
       <Modal
-        title="报警关联"
+        title={`${alarmPushData.UserGroup_Name || alarmPushData.CreateUserName}-报警关联`}
         visible={visibleAlarm}
         onOk={this.handleOk}
         onCancel={cancelAlarmModal}
         confirmLoading={confirmLoading}
         destroyOnClose
         width="70%"
-        okText='保存'
+        okText="保存"
       >
         <div className={styles.newAlarmPushRel}>
           <div>
             <Row>
               <Col>
-                <Row>
-                  <RegionList style={{ width: 150 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
+                <Row align="middle">
+                  <RegionList
+                    style={{ width: 165 }}
+                    changeRegion={this.changeRegion}
+                    RegionCode={RegionCode}
+                  />
                   <div style={{ display: 'inline-block', padding: '0 10px' }}>
-                    {!alarmPushParLoading ? <>{alarmPushFlag ? <Checkbox.Group
-                      defaultValue={["0", "2", "5", "6", "7", "8", "9"]}
-                      options={options}
-                      onChange={this.changeCheckboxGroup}
-                    />
-
-                      : <Radio.Group defaultValue={"1"} onChange={this.changeCheckboxGroup} >
-                        {this.getAlarmRadioOptions()}
-                      </Radio.Group>} </>
-                      :
-                      <Spin size="small" />}
+                    {!alarmPushParLoading ? (
+                      <>
+                        {alarmPushFlag ? (
+                          <Checkbox.Group
+                            // defaultValue={["1","2","5","6","7","8","9"]}
+                            options={options}
+                            onChange={this.changeCheckboxGroup}
+                          />
+                        ) : (
+                          <Radio.Group defaultValue={'0'} onChange={this.changeCheckboxGroup}>
+                            {this.getAlarmRadioOptions()}
+                          </Radio.Group>
+                        )}
+                      </>
+                    ) : (
+                      <Spin size="small" />
+                    )}
                   </div>
 
-
-                  <Button type="primary" onClick={() => { this.getData() }}>查询</Button>
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      this.getData();
+                    }}
+                  >
+                    查询
+                  </Button>
                 </Row>
               </Col>
             </Row>
-
           </div>
 
           <TableTransfer
             rowKey={record => record.DGIMN}
-            style={{ marginTop: 20, width: "100%" }}
+            style={{ marginTop: 20, width: '100%' }}
             dataSource={alarmPushDepOrRoleList}
             showSearch
             filterOption={this.filterOption}
-            locale={{ searchPlaceholder: "请输入企业名称" }}
+            searchPlaceholder={'请输入企业名称'}
             targetKeys={targetKeys}
             onChange={this.handleChange}
             leftColumns={this.leftTableColumns}
             rightColumns={this.rightTableColumns}
           />
-        </div >
+        </div>
       </Modal>
     );
   }

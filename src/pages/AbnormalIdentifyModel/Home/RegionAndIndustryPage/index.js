@@ -24,6 +24,14 @@ const RegionAndIndustryPage = props => {
 
   useEffect(() => {
     resetCluesListParams();
+
+    return () => {
+      // 组件销毁，重置数据
+      dispatch({
+        type: 'AbnormalIdentifyModelHome/resetState',
+        payload: {},
+      });
+    };
   }, []);
 
   // 重置数据列表表单
@@ -39,7 +47,7 @@ const RegionAndIndustryPage = props => {
 
   return (
     <div className={styles.ScreenWrapper}>
-      <header className={styles.header}>异常数据智能精准识别系统</header>
+      <header className={styles.header}>异常数据精准识别系统</header>
       <Tooltip title="返回菜单">
         <RollbackOutlined
           style={{

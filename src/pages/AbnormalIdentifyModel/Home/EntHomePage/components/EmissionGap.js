@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Row, Col } from 'antd';
+import { Row, Col, Modal, Tooltip } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import HomeCard from '../../components/HomeCard';
 import styles from '../../styles.less';
+import _ from 'lodash';
+import PollutantDischargeGap from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/PollutantDischargeGap';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   entRequestParams: AbnormalIdentifyModelHome.entRequestParams,
@@ -19,6 +21,7 @@ const EmissionGap = props => {
     loading,
     entRequestParams: { pollutantCode },
   } = props;
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [gapData, setGapData] = useState({});
   useEffect(() => {
     GetPollutantDischargeGapStatistics();
@@ -36,7 +39,7 @@ const EmissionGap = props => {
   };
 
   const getOption = type => {
-    console.log('gapData', gapData)
+    console.log('gapData', gapData);
     let name = type === '01' ? '烟尘' : type === '02' ? '二氧化硫' : '氮氧化物';
     let currentData = gapData[type];
 
@@ -244,6 +247,7 @@ const EmissionGap = props => {
     );
   };
 
+  let requestParams_temp = _.cloneDeep(entRequestParams);
   return (
     <HomeCard
       title="排污缺口统计"
@@ -252,52 +256,81 @@ const EmissionGap = props => {
         height: 'calc(100% - 110px)',
       }}
     >
-      <Row
-        style={{
-          height: '100%',
-        }}
-      >
-        {_pollutantCode.map(item => {
-          return (
-            <Col span={24 / _pollutantCode.length}>
-              <div className={styles.gapWrapper}>
-                <p
-                  style={{
-                    textAlign: 'center',
-                    position: 'absolute',
-                    top: 12,
-                    fontSize: 20,
-                    width: '100%',
-                    color: '#fff',
-                    zIndex: 1,
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {item === '01' ? '烟尘' : item === '02' ? 'SO2' : 'NOx'}
-                </p>
-                {gapData[item] ? (
-                  <ReactEcharts
-                    option={getOption(item)}
-                    style={{ height: '90%', width: '100%', marginTop: 6 }}
-                    theme="my_theme"
-                  />
-                ) : (
-                  <div className="notData">
-                    <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
-                    <p style={{ color: '#d5d9e2', fontSize: 16, fontWeight: 500 }}>暂无数据</p>
-                  </div>
-                )}
+      <Tooltip title={'点击查看排污缺口'}>
+        <Row
+          style={{
+            height: '100%',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          {_pollutantCode.map(item => {
+            return (
+              <Col span={24 / _pollutantCode.length}>
+                <div className={styles.gapWrapper}>
+                  <p
+                    style={{
+                      textAlign: 'center',
+                      position: 'absolute',
+                      top: 12,
+                      fontSize: 20,
+                      width: '100%',
+                      color: '#fff',
+                      zIndex: 1,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {item === '01' ? '烟尘' : item === '02' ? 'SO2' : 'NOx'}
+                  </p>
+                  {gapData[item] ? (
+                    <ReactEcharts
+                      option={getOption(item)}
+                      style={{ height: '90%', width: '100%', marginTop: 6 }}
+                      theme="my_theme"
+                    />
+                  ) : (
+                    <div className="notData">
+                      <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
+                      <p style={{ color: '#d5d9e2', fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+                    </div>
+                  )}
 
-                {renderInfoContent(item)}
-                {/* <div className={styles.infoContent}>
+                  {renderInfoContent(item)}
+                  {/* <div className={styles.infoContent}>
                   <p>SO2排放量：324121kg (75%)</p>
                   <p>排污缺口：31341kg (25%)</p>
                 </div> */}
-              </div>
-            </Col>
-          );
-        })}
-      </Row>
+                </div>
+              </Col>
+            );
+          })}
+        </Row>
+      </Tooltip>
+
+      <Modal
+        title="排污缺口"
+        wrapClassName="fullScreenModal"
+        open={isModalOpen}
+        destroyOnClose
+        // open={false}
+        footer={[]}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <PollutantDischargeGap
+          showMode="modal"
+          tableProps={{
+            scroll: { y: 'calc(100vh - 320px)' },
+          }}
+          formInitialValues={{
+            entCode: requestParams_temp.entCode,
+            date: requestParams_temp.btime,
+          }}
+        />
+      </Modal>
     </HomeCard>
   );
 };

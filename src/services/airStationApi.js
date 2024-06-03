@@ -8,7 +8,7 @@ import { API } from '@config/API'
 import { async } from 'q';
 //获取空气站信息
 export async function GetPointSummary(params) {
-    const result = post(API.PointApi.GetPointSummary, params)
+    const result = post(API.EntAndPointApi.GetPointSummary, params)
     return result
 }
 //导出企业详细信息

@@ -10,20 +10,20 @@ import { API } from '@config/API'
 
 // 获取关注程度
 export async function getAttentionDegreeList(params) {
-  const result = post(API.commonApi.GetAttentionDegreeList, params);
+  const result = post(API.CommonApi.GetAttentionDegreeList, params);
   return result;
 }
 
 // xinjiang根据企业类型查询监测因子
 export async function getPollutantCodeList(params) {
-  const result = post(API.commonApi.GetPollutantCodeList, params);
+  const result = post(API.CommonApi.GetPollutantCodeList, params);
   return result;
 }
 
 // 根据企业类型查询监测因子
 export async function getPollutantByType(params) {
   const result = post(
-    `${API.commonApi.GetPollutantByType}?type=${params.type}`,
+    `${API.CommonApi.GetPollutantByType}?type=${params.type}`,
     {},
   );
   return result;

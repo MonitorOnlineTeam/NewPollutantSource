@@ -3,13 +3,13 @@ import { API } from '@config/API'
 
 // 获取所有监测点
 export async function getAllPoint(params) {
-  const result = await post(API.PointApi.GetViewPoint, params);
+  const result = await post(API.EntAndPointApi.GetViewPoint, params);
   return result;
 }
 
 // 获取所有污染物
 export async function getPollutantList(params) {
-  const result = await post(API.commonApi.GetPollutantTypeCode, params);
+  const result = await post(API.CommonApi.GetPollutantTypeCode, params);
   return result;
 }
 

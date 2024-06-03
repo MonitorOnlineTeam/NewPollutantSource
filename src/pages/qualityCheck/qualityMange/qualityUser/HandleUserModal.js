@@ -1,35 +1,45 @@
-import React, { Component } from 'react'
-import { Modal, Form, Row, Col, Space, Input, Button, Radio, Upload, TreeSelect, message } from "antd"
-import { connect } from "dva"
-import { LoadingOutlined, PlusOutlined, ZoomInOutlined } from "@ant-design/icons"
+import React, { Component } from 'react';
+import {
+  Modal,
+  Form,
+  Row,
+  Col,
+  Space,
+  Input,
+  Button,
+  Radio,
+  Upload,
+  TreeSelect,
+  message,
+} from 'antd';
+import { connect } from 'dva';
+import { LoadingOutlined, PlusOutlined, ZoomInOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 import Cookie from 'js-cookie';
-import config from '@/config'
+import config from '@/config';
 import { checkRules } from '@/utils/validator';
 
-
 const { SHOW_PARENT, TreeNode } = TreeSelect;
-
 
 const figureStyle = {
   width: 102,
   height: 108,
-  border: "1px dashed #d9d9d9",
+  border: '1px dashed #d9d9d9',
   padding: 4,
-  color: "#666",
-  textAlign: "center",
-}
+  color: '#666',
+  textAlign: 'center',
+};
 
 const instructionsStyle = {
   flex: 1,
   marginLeft: 10,
-  border: "1px dashed rgb(217, 217, 217)",
+  border: '1px dashed rgb(217, 217, 217)',
   height: 108,
-  color: "#666",
+  color: '#666',
   fontSize: 13,
-  padding: "6px 10px",
-  lineHeight: "20px"
-}
+  padding: '6px 10px',
+  lineHeight: '20px',
+};
 
 @connect(({ qualityUser, common, loading }) => ({
   handleUserModalVisible: qualityUser.handleUserModalVisible,
@@ -45,10 +55,10 @@ class HandleUserModal extends Component {
     uuid: this.props.id ? this.props.id : uuidv4(),
     fileList: [],
     entAndPointList: [],
-  }
+  };
 
   componentDidMount() {
-    this.getEntAndPointList()
+    this.getEntAndPointList();
     // this.getViewUser();
     if (this.props.id) {
       this.setState({
@@ -58,9 +68,9 @@ class HandleUserModal extends Component {
             name: 'image.png',
             status: 'done',
             url: `/${this.props.viewUserData.Pic}`,
-          }
+          },
         ],
-      })
+      });
     }
   }
 
@@ -73,127 +83,131 @@ class HandleUserModal extends Component {
             name: 'image.png',
             status: 'done',
             url: `/${this.props.viewUserData.Pic}`,
-          }
+          },
         ],
-      })
+      });
     }
     if (this.props.entAndPointList !== prevProps.entAndPointList) {
       let entAndPointList = this.props.entAndPointList.map(item => {
         if (item.children) {
           let children = item.children.map(child => {
             return {
-              ...child, title: child.EntName + " - " + child.title
-            }
-          })
-          return { ...item, children }
+              ...child,
+              title: child.EntName + ' - ' + child.title,
+            };
+          });
+          return { ...item, children };
         }
-        return item
-      })
+        return item;
+      });
       this.setState({
-        entAndPointList
-      })
+        entAndPointList,
+      });
     }
   }
 
   getViewUser = () => {
     if (this.props.id) {
       this.props.dispatch({
-        type: "qualityUser/getViewUser",
+        type: 'qualityUser/getViewUser',
         payload: {
-          UserID: this.props.id
-        }
-      })
+          UserID: this.props.id,
+        },
+      });
     }
-  }
+  };
 
   // 获取企业和排口
   getEntAndPointList = () => {
     this.props.dispatch({
-      type: "common/getEntAndPointList",
-      payload: { "Status": [], "RunState": "1", "PollutantTypes": "1,2" }
-    })
-  }
+      type: 'common/getEntAndPointList',
+      payload: { Status: [], RunState: '1', PollutantTypes: '1,2' },
+    });
+  };
 
   closeModal = () => {
     if (!this.props.id) {
       this.deletePhoto();
     }
     this.props.dispatch({
-      type: "qualityUser/updateState",
+      type: 'qualityUser/updateState',
       payload: {
-        handleUserModalVisible: false
-      }
-    })
-  }
+        handleUserModalVisible: false,
+      },
+    });
+  };
 
   // 添加
   handleOk = () => {
-    this.formRef.current.validateFields().then((values) => {
-      console.log("values=", values)
+    this.formRef.current.validateFields().then(values => {
+      console.log('values=', values);
       // return;
-      let actionType = this.props.id ? "qualityUser/updateOperatorUser" : "qualityUser/addOperator";
+      let actionType = this.props.id ? 'qualityUser/updateOperatorUser' : 'qualityUser/addOperator';
       this.props.dispatch({
         type: actionType,
         payload: {
           ...values,
-          userId: this.state.uuid
-        }
-      })
-    })
-  }
-
+          userId: this.state.uuid,
+        },
+      });
+    });
+  };
 
   handleChange = info => {
-    console.log("info=", info)
+    console.log('info=', info);
     let fileList = [...info.fileList];
     if (!info.fileList.length) {
-      this.formRef.current.setFieldsValue({ "OpenID": undefined })
+      this.formRef.current.setFieldsValue({ OpenID: undefined });
     }
     if (info.file.status === 'done') {
       if (info.fileList[0].response.IsSuccess) {
-        fileList = [{
-          uid: '-4',
-          name: 'image.png',
-          status: 'done',
-          url: `/${info.fileList[0].response.Datas}`,
-        }]
-        this.formRef.current.setFieldsValue({ "OpenID": info.fileList[0].response.Datas })
+        fileList = [
+          {
+            uid: '-4',
+            name: 'image.png',
+            status: 'done',
+            url: `/${info.fileList[0].response.Datas}`,
+          },
+        ];
+        this.formRef.current.setFieldsValue({ OpenID: info.fileList[0].response.Datas });
       } else {
-        message.error(info.fileList[0].response.Message)
-        fileList = [{
-          uid: '-5',
-          name: 'image.png',
-          status: 'error',
-        }]
+        message.error(info.fileList[0].response.Message);
+        fileList = [
+          {
+            uid: '-5',
+            name: 'image.png',
+            status: 'error',
+          },
+        ];
       }
     }
     if (info.file.status === 'error') {
-      message.error(info.fileList[0].response.Message)
+      message.error(info.fileList[0].response.Message);
     }
     this.setState({
-      fileList: fileList
-    })
+      fileList: fileList,
+    });
   };
 
   deletePhoto = () => {
     this.props.dispatch({
-      type: "qualityUser/deletePhoto",
+      type: 'qualityUser/deletePhoto',
       payload: {
-        UserID: this.state.uuid
-      }
-    })
-  }
-
+        UserID: this.state.uuid,
+      },
+    });
+  };
 
   render() {
     const { handleUserModalVisible, addLoading, updateLoading, viewUserData, id } = this.props;
     const { uuid, fileList, entAndPointList } = this.state;
     const tProps = {
       treeData: entAndPointList,
+      fieldNames: { label: 'title', value: 'key', children: 'children' },
       // treeNodeLabelProp: "",
       treeDefaultExpandAll: true,
       treeCheckable: true,
-      treeNodeFilterProp: "title",
+      treeNodeFilterProp: 'title',
       placeholder: '请选择运维站点！',
       style: {
         width: '100%',
@@ -208,7 +222,7 @@ class HandleUserModal extends Component {
     );
     return (
       <Modal
-        title={id ? "编辑运维人信息" : "添加运维人信息"}
+        title={id ? '编辑运维人信息' : '添加运维人信息'}
         width="600px"
         confirmLoading={id ? updateLoading : addLoading}
         visible={handleUserModalVisible}
@@ -221,9 +235,9 @@ class HandleUserModal extends Component {
           ref={this.formRef}
           layout="horizontal"
           scrollToFirstError
-        // initialValues={initialValues}
-        // onValuesChange={onFormLayoutChange}
-        // size={componentSize}
+          // initialValues={initialValues}
+          // onValuesChange={onFormLayoutChange}
+          // size={componentSize}
         >
           <Form.Item
             label="姓名"
@@ -248,8 +262,12 @@ class HandleUserModal extends Component {
             rules={[{ required: true, message: '请选择性别!' }]}
           >
             <Radio.Group>
-              <Radio key={1} value={1}>男</Radio>
-              <Radio key={0} value={0}>女</Radio>
+              <Radio key={1} value={1}>
+                男
+              </Radio>
+              <Radio key={0} value={0}>
+                女
+              </Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
@@ -267,31 +285,40 @@ class HandleUserModal extends Component {
                 disabled={!!id}
                 fileList={fileList}
                 style={{ width: 120 }}
-                action={id ? "/rest/PollutantSourceApi/QCAOperator/UpdateOperPhoto" : "/rest/PollutantSourceApi/QCAOperator/AddOperPhoto"}
+                action={
+                  id
+                    ? '/rest/PollutantSourceApi/QCAOperator/UpdateOperPhoto'
+                    : '/rest/PollutantSourceApi/QCAOperator/AddOperPhoto'
+                }
                 headers={{
-                  Authorization: "Bearer " + Cookie.get(config.cookieName)
+                  Authorization: 'Bearer ' + Cookie.get(config.cookieName),
                 }}
                 data={{
                   ssoToken: Cookie.get(config.cookieName),
-                  UserId: uuid
+                  UserId: uuid,
                 }}
                 onChange={this.handleChange}
               >
                 {fileList.length >= 1 ? null : uploadButton}
               </Upload>
               <div>
-                <div style={{ display: "flex" }}>
+                <div style={{ display: 'flex' }}>
                   <div style={{ ...figureStyle }}>
                     <img src="/rl.jpg" alt="" width="86" height="80" />
-                    <span style={{ cursor: 'pointer' }} onClick={() => this.setState({ visible: true })}>示例图&nbsp;&nbsp;<ZoomInOutlined /></span>
+                    <span
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => this.setState({ visible: true })}
+                    >
+                      示例图&nbsp;&nbsp;
+                      <ZoomInOutlined />
+                    </span>
                   </div>
                   <div style={{ ...instructionsStyle }}>
                     <p style={{ marginBottom: 14 }}>
-                      * 请确保上传的照片光线良好照片清晰；眼睛、鼻子、嘴巴、脸颊、下巴不能被遮挡；人脸部分不小于100*100像素；照片中仅一人。
+                      *
+                      请确保上传的照片光线良好照片清晰；眼睛、鼻子、嘴巴、脸颊、下巴不能被遮挡；人脸部分不小于100*100像素；照片中仅一人。
                     </p>
-                    <p>
-                      * 支持扩展名：.PNG、.JPG、.JPEG、.BMP
-                    </p>
+                    <p>* 支持扩展名：.PNG、.JPG、.JPEG、.BMP</p>
                   </div>
                 </div>
               </div>
@@ -321,7 +348,9 @@ class HandleUserModal extends Component {
         <Modal
           footer={false}
           visible={this.state.visible}
-          onCancel={() => { this.setState({ visible: false }) }}
+          onCancel={() => {
+            this.setState({ visible: false });
+          }}
         >
           <div style={{ textAlign: 'center' }}>
             <img src="/rl.jpg" alt="" />

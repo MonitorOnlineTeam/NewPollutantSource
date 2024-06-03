@@ -2,6 +2,8 @@ import Model from '@/utils/model';
 import * as services from './service';
 import moment from 'moment';
 import { message } from 'antd';
+import { downloadFile } from '@/utils/utils';
+
 export default Model.extend({
   namespace: 'abnormalData',
   state: {
@@ -57,7 +59,7 @@ export default Model.extend({
     *exportExceptionList({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportExceptionList, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message)
       }
@@ -77,7 +79,7 @@ export default Model.extend({
     *exportExceptionPointList({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportExceptionPointList, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message)
       }

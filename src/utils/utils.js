@@ -1,11 +1,13 @@
 import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import { Badge, Popover, message, Tag } from 'antd';
 import moment from 'moment';
-import BetterTable from 'quill-better-table'
-const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
+import BetterTable from 'quill-better-table';
+import Cookie from 'js-cookie';
+import webConfig from '@public/webConfig';
+import CryptoJS from 'crypto-js';
+import { cookieName, uploadPrefix } from '@/config';
 
-export const encryptKey =
-  'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCC0hrRIjb3noDWNtbDpANbjt5Iwu2NFeDwU16Ec87ToqeoIm2KI+cOs81JP9aTDk/jkAlU97mN8wZkEMDr5utAZtMVht7GLX33Wx9XjqxUsDfsGkqNL8dXJklWDu9Zh80Ui2Ug+340d5dZtKtd+nv09QZqGjdnSp9PTfFDBY133QIDAQAB';
+const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 const isUrl = path => reg.test(path);
 
@@ -175,30 +177,55 @@ export function downloadFile(sUrl) {
     alert('Your device does not support files downloading. Please try again in desktop browser.');
     return false;
   }
+
+  // 指定文件的路径
+  let filePath = sUrl;
+  // 利用split()将路径根据'/'进行切分，得到一个数组
+  let pathSegments = filePath.split('/');
+  // 利用pop()从数组中取出最后一个元素，即文件名
+  let fileName = pathSegments.pop();
   //If in Chrome or Safari - download via virtual link click
-  if (true) {
-    //Creating new link node.
-    var link = document.createElement('a');
-    link.href = sUrl;
-    if (link.download !== undefined) {
-      //Set HTML5 download attribute. This will prevent file from opening if supported.
-      var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
-      link.download = fileName;
-    }
-    //Dispatching click event.
-    if (document.createEvent) {
-      var e = document.createEvent('MouseEvents');
-      e.initEvent('click', true, true);
-      link.dispatchEvent(e);
-      return true;
-    }
-  }
-  // Force file download (whether supported by server).
-  if (sUrl.indexOf('?') === -1) {
-    sUrl += '?download';
-  }
-  window.open('/publish' + sUrl, '_self');
-  return true;
+  // if (true) {
+  //   //Creating new link node.
+  //   var link = document.createElement('a');
+  //   link.href = sUrl;
+  //   if (link.download !== undefined) {
+  //     //Set HTML5 download attribute. This will prevent file from opening if supported.
+  //     var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
+  //     link.download = fileName;
+  //   }
+  //   //Dispatching click event.
+  //   if (document.createEvent) {
+  //     var e = document.createEvent('MouseEvents');
+  //     e.initEvent('click', true, true);
+  //     link.dispatchEvent(e);
+  //     return true;
+  //   }
+  // }
+
+  // 你的API URL
+  fetch(sUrl, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + Cookie.get(cookieName),
+    },
+  })
+    .then(res => res.blob()) // 获得一个Blob对象代表了被请求资源。
+    .then(blob => {
+      let url = window.URL.createObjectURL(blob); // 创建一个Blob URL
+      let a = document.createElement('a'); // 创建下载链接
+      a.href = url;
+      a.download = fileName; // 设置文件名，根据实际情况修改
+      a.click(); // 模拟点击实现下载
+    })
+    .catch(error => console.error('Error:', error));
+
+  // // Force file download (whether supported by server).
+  // if (sUrl.indexOf('?') === -1) {
+  //   sUrl += '?download';
+  // }
+  // window.open(sUrl, '_self');
+  // return true;
 }
 
 // 风向
@@ -310,7 +337,7 @@ export function interceptTwo(value) {
   const result =
     data.indexOf('.') == -1
       ? `${value.toFixed(2)}`
-      : data.split('.')[1].length <= 1
+      : data.split('.')[1].length <= 2
       ? `${value.toFixed(2)}`
       : data.substring(0, data.indexOf('.') + 3);
   return result;
@@ -413,6 +440,71 @@ function isInner(userIp, begin, end) {
   return userIp >= begin && userIp <= end;
 }
 
+export function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+export function getAttachmentArrDataSource(fileInfo) {
+  if (fileInfo && fileInfo[0]) {
+    return fileInfo.map(item => {
+      return {
+        name: item.FileName,
+        attach: item.FileName,
+      };
+    });
+  } else {
+    return [];
+  }
+}
+
+export function getSum(arr) {
+  //求和
+  return arr && arr.length ? eval(arr.join('+')) : 0;
+}
+export function getAve(arr) {
+  //求平均值
+  return arr && arr.length ? eval(arr.join('+') / arr.length) : 0;
+}
+
+export function numVerify(val, callback) {
+  //允许输入数字 负数 小数
+  const t = val.charAt(0);
+  if (!/^([-])?\d+(\.[0-9]{1,2})?$/.test(val)) {
+    // 先把非数字的都替换掉，除了数字和.
+    val = val.replace(/[^\d.]/g, '');
+    // 必须保证第一个为数字而不是.
+    val = val.replace(/^\./g, '');
+    // 保证只有出现一个.-而没有多个.
+    val = val.replace(/\.{2,}/g, '.');
+    // 保证.只出现一次，-而不能出现两次以上
+    val = val
+      .replace('.', '$#$')
+      .replace(/\./g, '')
+      .replace('$#$', '.');
+
+    // val = val.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数
+    // 如果第一位是负号，则允许添加
+    if (t === '-') {
+      val = '-' + val;
+    }
+    callback(val);
+  } else {
+    callback(val);
+  }
+}
+
+export function arrDistinctByProp(arr, prop) {
+  //对象数组去重
+  return arr.filter(function(item, index, self) {
+    return self.findIndex(el => el[prop] == item[prop]) === index;
+  });
+}
+
 // 根据端口获取系统名称
 export function getSysName(systemName) {
   const sysName = JSON.parse(systemName);
@@ -424,6 +516,16 @@ export function getSysName(systemName) {
     return sysName[port] ? sysName[port] : sysName[-1];
   }
   return sysName[-1];
+}
+
+export function getCurrentUserId() {
+  // 获取当前登录人id
+  let currentUserId = '';
+  const userCookie = Cookie.get('currentUser');
+  if (userCookie && userCookie !== 'null') {
+    currentUserId = JSON.parse(userCookie).UserId;
+  }
+  return currentUserId;
 }
 
 // 获取数据不可信信息
@@ -520,8 +622,6 @@ export const getDataTruseItemMsg = (record, key, value) => {
     );
   }
 
-  console.log('value', value);
-
   return <span>{value}</span>;
 };
 
@@ -531,77 +631,217 @@ export const quillModules = {
   modules: {
     toolbar: {
       container: [
-        [{'header': [1, 2, false]}],
+        [{ header: [1, 2, false] }],
         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{'script': 'sub'}, {'script': 'super'}], // superscript/subscript
-        [{'align': []}],
-        [{'color': []}],
-        [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
-        [{'list': 'ordered'}, {'list': 'bullet'}],
-        [{'direction': 'rtl'}],
-        ["formula"],
+        [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+        [{ align: [] }],
+        [{ color: [] }],
+        [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ direction: 'rtl' }],
+        ['formula'],
         // ['link', 'image', 'video'],
         ['link', 'image'],
         ['clean'],
-        [{ 'size':  ['12px', '14px', '16px', '18px','20px', '24px', '36px'] }], // 文字大小自定义
+        [{ size: ['12px', '14px', '16px', '18px', '20px', '24px', '36px'] }], // 文字大小自定义
         ['table'], // 引入table到工具栏
       ],
       handlers: {
         quill: undefined,
-        table() { // 工具栏点击事件修改
-          const quill = this.quill
-          const tableModule = quill.getModule('better-table')
-          tableModule.insertTable(3, 3) // 简单插入一个3*3到表格
+        table() {
+          // 工具栏点击事件修改
+          const quill = this.quill;
+          const tableModule = quill.getModule('better-table');
+          tableModule.insertTable(3, 3); // 简单插入一个3*3到表格
         },
       },
     },
     table: false,
     'better-table': {
-      operationMenu: { // table右键事件重命名
+      operationMenu: {
+        // table右键事件重命名
         items: {
           insertColumnRight: {
-            text: '右侧插入一列'
+            text: '右侧插入一列',
           },
           insertColumnLeft: {
-            text: '左侧插入一列'
+            text: '左侧插入一列',
           },
           insertRowUp: {
-            text: '上侧插入一行'
+            text: '上侧插入一行',
           },
           insertRowDown: {
-            text: '下侧插入一行'
+            text: '下侧插入一行',
           },
           mergeCells: {
-            text: '合并单元格'
+            text: '合并单元格',
           },
           unmergeCells: {
-            text: '拆分单元格'
+            text: '拆分单元格',
           },
           deleteColumn: {
-            text: '删除当前列'
+            text: '删除当前列',
           },
           deleteRow: {
-            text: '删除当前行'
+            text: '删除当前行',
           },
           deleteTable: {
-            text: '删除表格'
-          }
+            text: '删除表格',
+          },
         },
         color: {
           colors: [
-            '#E53333', '#E56600', '#FF9900', '#64451D',
-            '#DFC5A4', '#FFE500', '#009900', '#006600',
-            '#99BB00', '#B8D100', '#60D978', '#00D5FF',
-            '#337FE5', '#003399', '#4C33E5', '#9933E5',
-            '#CC33E5', '#EE33EE', '#FFFFFF', '#CCCCCC',
-            '#999999', '#666666', '#333333', '#000000'
+            '#E53333',
+            '#E56600',
+            '#FF9900',
+            '#64451D',
+            '#DFC5A4',
+            '#FFE500',
+            '#009900',
+            '#006600',
+            '#99BB00',
+            '#B8D100',
+            '#60D978',
+            '#00D5FF',
+            '#337FE5',
+            '#003399',
+            '#4C33E5',
+            '#9933E5',
+            '#CC33E5',
+            '#EE33EE',
+            '#FFFFFF',
+            '#CCCCCC',
+            '#999999',
+            '#666666',
+            '#333333',
+            '#000000',
           ],
-          text: '背景颜色'
-        }
+          text: '背景颜色',
+        },
       },
     },
     keyboard: {
-      bindings: BetterTable.keyboardBindings //绑定table右键事件
+      bindings: BetterTable.keyboardBindings, //绑定table右键事件
     },
+  },
+};
+
+export function permissionButton(router) {
+  //权限按钮
+  let currentUser = Cookie.get('currentUser') ? JSON.parse(Cookie.get('currentUser')) : null;
+  let meunList =
+    currentUser && sessionStorage.getItem(currentUser.UserName)
+      ? JSON.parse(sessionStorage.getItem(currentUser.UserName))
+      : null;
+  if (meunList?.length > 0) {
+    const filterData = [];
+    (function filterFun(meunList) {
+      for (let i = 0; i < meunList.length; i++) {
+        let item = meunList[i];
+        if (item.path == router) {
+          for (let j = 0; j < item.buttonList.length; j++) {
+            const buttoItem = item.buttonList[j];
+            buttoItem?.code && filterData.push(buttoItem.code);
+          }
+          break;
+        }
+      }
+    })(meunList);
+    return filterData;
+  } else {
+    return [];
+  }
 }
+
+export function copyObjectArrayTreeAndRenameProperty(arr, oldPropertyName, newPropertyName) {
+  // 创建一个新的数组来存储复制后的对象
+  const newArr = [];
+
+  // 遍历原数组
+  for (let i = 0; i < arr.length; i++) {
+    // 复制当前对象，并递归复制其子数组
+    const newObj = { ...arr[i] };
+    if (Array.isArray(newObj.children)) {
+      newObj.children = copyObjectArrayTreeAndRenameProperty(
+        newObj.children,
+        oldPropertyName,
+        newPropertyName,
+      );
+    }
+    // 如果当前对象包含需要改变的属性名称，则替换为新的名称
+    if (newObj.hasOwnProperty(oldPropertyName)) {
+      newObj[newPropertyName] = newObj[oldPropertyName];
+      delete newObj[oldPropertyName];
+    }
+    // 将复制后的对象添加到新数组中
+    newArr.push(newObj);
+  }
+
+  return newArr;
+}
+
+export function deepCloneTree(tree) {
+  if (typeof tree !== 'object' || tree === null) {
+    return tree;
+  }
+
+  let clone;
+  if (Array.isArray(tree)) {
+    clone = [];
+    for (let i = 0; i < tree.length; i++) {
+      clone[i] = deepCloneTree(tree[i]);
+    }
+  } else {
+    clone = {};
+    for (let key in tree) {
+      if (tree.hasOwnProperty(key)) {
+        clone[key] = deepCloneTree(tree[key]);
+      }
+    }
+  }
+
+  return clone;
+}
+
+// AES对称加密
+export function encryptionRequest(value) {
+  // console.log('未加密-value', value);
+  if (webConfig.isEncryption) {
+    debugger;
+    let body = JSON.stringify(value); // 数字加密会报错，转成字符串
+    let key = CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB');
+    let iv = CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9P');
+    const encrypted = CryptoJS.AES.encrypt(body, key, {
+      iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    });
+    return encrypted.ciphertext.toString();
+  }
+
+  return value;
+}
+
+// AES对称解密
+export function decryptionResponse(responseData) {
+  if (webConfig.isEncryption) {
+    const key = CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB');
+    const iv = CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9P');
+
+    const decrypted = CryptoJS.AES.decrypt(
+      {
+        ciphertext: CryptoJS.enc.Base64.parse(responseData),
+      },
+      key,
+      {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      },
+    );
+    let res = decrypted.toString(CryptoJS.enc.Utf8);
+    // console.log('解密：', res);
+    return JSON.parse(res);
+  }
+  return responseData;
 }

@@ -27,7 +27,7 @@ class index extends Component {
 
   pageHeaderRender = pageHeaderWrapperProps => {
     const { selectTreeItem } = this.state;
-    if (pageHeaderWrapperProps.unfoldMenuList.length) {
+    if (pageHeaderWrapperProps?.unfoldMenuList?.length) {
       let pathname = location.pathname;
 
       // 匹配地址栏参数
@@ -128,7 +128,7 @@ class index extends Component {
     return (
       <PageHeaderWrapper
         title={null}
-        className={!webConfig.isShowBreadcrumb ? 'hideBreadcrumb' : ''}
+        className={!webConfig.isShowBreadcrumb || this.props.hideBreadcrumb ? "hideBreadcrumb" : ""}
         pageHeaderRender={PageHeaderWrapperProps => {
           return this.pageHeaderRender(PageHeaderWrapperProps);
         }}

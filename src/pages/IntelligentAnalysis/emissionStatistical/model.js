@@ -2,6 +2,8 @@ import Model from '@/utils/model';
 import * as services from './service';
 import moment from 'moment';
 import { message } from 'antd';
+import { downloadFile } from '@/utils/utils';
+
 export default Model.extend({
   namespace: 'emissionsStatistics',
   state: {
@@ -93,7 +95,7 @@ export default Model.extend({
       yield update({ [loadingName]: true })
       const result = yield call(services[actionType], { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        downloadFile(result.Datas);
         yield update({
           [loadingName]: false
         })
@@ -156,7 +158,7 @@ export default Model.extend({
       yield update({ [loadingName]: true })
       const result = yield call(services[actionType], { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
+        downloadFile(result.Datas);
         yield update({
           [loadingName]: false
         })

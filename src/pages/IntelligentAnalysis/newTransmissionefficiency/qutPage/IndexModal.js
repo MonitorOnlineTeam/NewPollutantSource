@@ -31,7 +31,7 @@ import { router } from 'umi';
 import styles from '../style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import EnterpriseModels from '../components/EnterpriseModel';
-import { downloadFile,interceptTwo } from '@/utils/utils';
+import { downloadFile, interceptTwo } from '@/utils/utils';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -39,7 +39,7 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
-  getData: 'newtransmissionefficiency/getQutletData',
+  getData: 'newtransmissionefficiency/getTransmissionEfficiencyForPoint',
 };
 const content = <div>当有效传输率未到达90%时判定为未达标</div>;
 @connect(({ loading, newtransmissionefficiency }) => ({
@@ -52,8 +52,8 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   entName: newtransmissionefficiency.entName,
   pageSize: newtransmissionefficiency.pageSize,
   pageIndex: newtransmissionefficiency.pageIndex,
-  beginTime:newtransmissionefficiency.beginTime,
-  endTime:newtransmissionefficiency.endTime,
+  beginTime: newtransmissionefficiency.beginTime,
+  endTime: newtransmissionefficiency.endTime,
   pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
 }))
@@ -79,7 +79,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,beginTime,endTime } = this.props;
+    const { dispatch, location, beginTime, endTime } = this.props;
 
     this.updateQueryState({
       RegionCode: location.query.RegionCode,
@@ -89,7 +89,7 @@ export default class EntTransmissionEfficiency extends Component {
       PageSize: 20,
       EntCode: '',
       PollutantType: this.props.pollutantType,
-      Assessment:this.props.assessment
+      Assessment: this.props.assessment,
     });
 
     dispatch({
@@ -115,7 +115,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...queryPar, regionLevel: 3 },
     });
   };
 
@@ -157,7 +157,6 @@ export default class EntTransmissionEfficiency extends Component {
   typeChange = value => {
     this.updateQueryState({
       PollutantType: value,
-
     });
   };
 
@@ -176,7 +175,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForEnt',
-      payload: {...queryPar},
+      payload: { ...queryPar, regionLevel: 3 },
       callback: data => {
         downloadFile(data);
       },
@@ -198,7 +197,7 @@ export default class EntTransmissionEfficiency extends Component {
     //企业下  排口有效传输效率
     const {
       dispatch,
-      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode,Assessment },
+      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode, Assessment },
       entName,
     } = this.props;
 
@@ -208,7 +207,7 @@ export default class EntTransmissionEfficiency extends Component {
       PollutantType: PollutantType,
       RegionCode: RegionCode,
       EntCode: row.EntCode,
-      Assessment:Assessment
+      Assessment: Assessment,
       // PageIndex: 4,
       // PageSize: 5
     };
@@ -223,16 +222,16 @@ export default class EntTransmissionEfficiency extends Component {
         },
       });
       dispatch({
-        type: 'newtransmissionefficiency/getTransmissionEfficiencyForEnt',
-        payload: { ...priseQueryPar },
+        type: 'newtransmissionefficiency/getTransmissionEfficiencyForPoint',
+        payload: { ...priseQueryPar, regionLevel: 4 },
       });
     });
   };
-  interceptTwo=(value)=>{
-     const data = value.toString();
-     const result = data.substring(0,data.indexOf(".")+3)
-     return result;
-   }
+  interceptTwo = value => {
+    const data = value.toString();
+    const result = data.substring(0, data.indexOf('.') + 3);
+    return result;
+  };
   render() {
     const { eName } = this.state;
     const {
@@ -245,49 +244,49 @@ export default class EntTransmissionEfficiency extends Component {
 
     const columns = [
       {
-        title: <span style={{ fontWeight: 'bold' }}>行政区</span>,
+        title: <span style={{ fontWeight: 'normal' }}>行政区</span>,
         dataIndex: 'RegionName',
         key: 'RegionName',
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-        return <span>{text}</span>;
+          return <span>{text}</span>;
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>考核企业名称</span>,
+        title: <span style={{ fontWeight: 'normal' }}>考核企业名称</span>,
         dataIndex: 'EntName',
         key: 'EntName',
         align: 'center',
-        render: (text, record) => {     
-           return   <div style={{textAlign:'left',width:'100%'}}>
-            <a href="javascript:;"  onClick={this.priseClick.bind(this, text, record)}>
-            {text}
-            </a>
+        render: (text, record) => {
+          return (
+            <div style={{ textAlign: 'left', width: '100%' }}>
+              <a href="javascript:;" onClick={this.priseClick.bind(this, text, record)}>
+                {text}
+              </a>
             </div>
-      
+          );
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>考核监测点数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>考核监测点数</span>,
         dataIndex: 'CountPoint',
         key: 'CountPoint',
         sorter: (a, b) => a.CountPoint - b.CountEnt,
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          return <span>{text}</span>
-
+          return <span>{text}</span>;
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效率</span>,
         dataIndex: 'EffectiveRate',
         key: 'EffectiveRate',
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
@@ -310,14 +309,14 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>传输率</span>,
         dataIndex: 'TransmissionRate',
         key: 'TransmissionRate',
         sorter: (a, b) => a.TransmissionRate - b.TransmissionRate,
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
@@ -342,13 +341,13 @@ export default class EntTransmissionEfficiency extends Component {
       },
       ,
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效传输率</span>,
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
@@ -360,7 +359,7 @@ export default class EntTransmissionEfficiency extends Component {
                   successPercent={percent}
                   percent={percent}
                   size="small"
-                  style={{width:'85%'}}
+                  style={{ width: '85%' }}
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
               </div>
@@ -373,7 +372,7 @@ export default class EntTransmissionEfficiency extends Component {
                 percent={percent}
                 status="exception"
                 size="small"
-                style={{width:'85%'}}
+                style={{ width: '85%' }}
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
               />
             </div>
@@ -417,7 +416,7 @@ export default class EntTransmissionEfficiency extends Component {
                   placeholder="企业列表"
                   onChange={this.changeRegion}
                   value={EntCode ? EntCode : undefined}
-                  style={{ width: 200, marginLeft: 10 }}
+                  style={{ width: 200 }}
                 >
                   {this.children()}
                 </Select>
@@ -473,7 +472,7 @@ export default class EntTransmissionEfficiency extends Component {
                 }}
               />
               <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                 {`<90%未达标`}
+                {`<90%未达标`}
               </span>
             </div>
           </>
@@ -484,7 +483,6 @@ export default class EntTransmissionEfficiency extends Component {
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
             columns={columns}
-            bordered={false}
             onChange={this.handleTableChange}
             dataSource={this.props.tableDatas}
             // scroll={{ y: 'calc(100vh - 450px)' }}

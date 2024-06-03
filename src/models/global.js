@@ -13,6 +13,7 @@ import config from '@/config';
 import { message } from 'antd';
 import { router } from 'umi';
 import { getSysName } from '@/utils/utils';
+import { GetOperationSetting } from '@/pages/systemManger/operationBasConfig/service';
 
 /**
  * 功  能：报警消息和推送相关model
@@ -40,6 +41,9 @@ export default Model.extend({
     },
     clientHeight: null,
     sysPollutantTypeList: [],
+    userGoDetail: false,
+    permisBtnTip: '您暂无操作权限',
+    operationSettingInfo: {},
   },
   effects: {
     // 首次加载获取当天报警消息
@@ -83,7 +87,7 @@ export default Model.extend({
       });
     },
     // 获取系统入口
-    *getSysPollutantTypeList({ payload }, { call, update, select }) {
+    *getSysPollutantTypeList({ payload, callback }, { call, update, select }) {
       const result = yield call(getSysPollutantTypeList);
       if (result.IsSuccess) {
         let sysPollutantTypeList = result.Datas;
@@ -94,6 +98,18 @@ export default Model.extend({
         }
         yield update({
           sysPollutantTypeList: sysPollutantTypeList,
+        });
+        callback && callback(sysPollutantTypeList);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *getOperationSetting({ payload, callback }, { call, put, update }) {
+      //获取运维基础配置
+      const result = yield call(GetOperationSetting, payload);
+      if (result.IsSuccess) {
+        yield update({
+          operationSettingInfo: result.Datas,
         });
       } else {
         message.error(result.Message);
@@ -134,21 +150,29 @@ export default Model.extend({
 
         let configInfo = response.Datas;
         // configInfo.IsSingleEnterprise = true;
+        // window.IsOperation = true;
         window.configInfo = configInfo;
+        // configInfo.IsShowSysPage = '1';
         configInfo.SystemName = getSysName(configInfo.SystemName);
-        const IsShhy = configInfo.SystemName==='污染源在线监测综合管理平台';//是否为上海华谊项目
+        // configInfo.IsOpera = configInfo.SystemName === '技术服务智慧管理平台'; //是否为公司运维项目
+        configInfo.IsOpera = false;
+        const IsShhy = configInfo.SystemName === '污染源在线监测综合管理平台'; //是否为上海华谊项目
         configInfo.IsShhy = IsShhy;
         // configInfo.IsShhy = true;
-        localStorage.setItem('sysConfigInfo', JSON.stringify({
-          // ...response.Datas,
-          ...configInfo,
-          ZoomLevel: response.Datas.ZoomLevel || 10,
-          //  北京市中心坐标：116.397693,39.908195
-          CenterLongitude: response.Datas.CenterLongitude || 116.397693,
-          CenterLatitude: response.Datas.CenterLatitude || 39.908195,
-        }))
+        localStorage.setItem(
+          'sysConfigInfo',
+          JSON.stringify({
+            // ...response.Datas,
+            ...configInfo,
+            ZoomLevel: response.Datas.ZoomLevel || 10,
+            //  北京市中心坐标：116.397693,39.908195
+            CenterLongitude: response.Datas.CenterLongitude || 116.397693,
+            CenterLatitude: response.Datas.CenterLatitude || 39.908195,
+          }),
+        );
         // 防止系统错乱，如果没有menuId，跳转中间页。
         if (
+          !IsShhy &&
           location.pathname !== '/user/login' &&
           location.pathname !== '/dataFlowChart' &&
           location.pathname !== '/console' &&

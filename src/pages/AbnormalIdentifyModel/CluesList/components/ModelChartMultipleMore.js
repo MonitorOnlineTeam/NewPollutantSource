@@ -33,7 +33,6 @@ const ModelChartMultipleBig = props => {
     GetAllTypeDataListForModel2();
   }, [DGIMNs]);
 
-
   // 获取数据
   const GetAllTypeDataListForModel2 = () => {
     const values = form.getFieldsValue();
@@ -117,9 +116,15 @@ const ModelChartMultipleBig = props => {
         feature: {
           // dataView: { show: true, readOnly: false },
           // magicType: { show: true, type: ['line', 'bar'] },
-          dataZoom: { show: true },
-          restore: { show: true },
-          saveAsImage: { show: true },
+          dataZoom: {
+            show: true,
+            title: {
+              zoom: '区域缩放',
+              back: '区域缩放还原',
+            },
+          },
+          restore: { show: true, title: '还原' },
+          saveAsImage: { show: true, title: '保存为图片' },
         },
       },
       grid: {

@@ -3,7 +3,8 @@ import { connect } from 'dva';
 import { Spin, Row, Col, Modal, Tooltip } from 'antd';
 import styles from '../../styles.less';
 import ReactSeamlessScroll from 'rc-seamless-scroll';
-import CluesList from '@/pages/AbnormalIdentifyModel/CluesList';
+import { handleHomeDate } from '@/pages/AbnormalIdentifyModel/CONST';
+import CluesListModal from '../../ModalPage/CluesListModal';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome, AbnormalIdentifyModel }) => ({
   warningForm: AbnormalIdentifyModel.warningForm,
@@ -88,8 +89,9 @@ const RankingContent = props => {
   };
 
   console.log('rankDataList', rankDataList);
+
   return (
-    <div className={styles.RankingContent}>
+    <div className={styles.RankingContent} style={{overflowY: 'auto'}}>
       {!!loading ? (
         // {true ? (
         <Spin
@@ -110,14 +112,15 @@ const RankingContent = props => {
       ) : (
         <>
           {rankDataList.length ? (
-            <ReactSeamlessScroll
-              list={rankDataList}
-              style={{ width: '100%', height: '100%' }}
-              wrapperClassName={styles.RankingSeamlessScrollContent}
-              hover={true}
-              step={0.5}
-              limitScrollNum={6}
-            >
+            // <ReactSeamlessScroll
+            //   list={rankDataList}
+            //   style={{ width: '100%', height: '100%' }}
+            //   wrapperClassName={styles.RankingSeamlessScrollContent}
+            //   hover={true}
+            //   step={0.5}
+            //   limitScrollNum={6}
+            // >
+            <>
               {rankDataList.map((item, index) => {
                 return (
                   <Tooltip title={modelType === 1 ? '点击进入企业' : '点击查看线索'}>
@@ -152,13 +155,15 @@ const RankingContent = props => {
                             });
                           } else {
                             let requestParams_temp = _.cloneDeep(requestParams);
+
+                            const { btime, etime } = handleHomeDate(
+                              requestParams_temp.btime,
+                              requestParams_temp.dateType,
+                            );
                             // 进入线索列表，传入时间、场景类型、企业、污染物
                             updateCluesListFormState({
                               date: [],
-                              date1: [
-                                requestParams_temp.btime.add(-20, 'month'),
-                                requestParams_temp.etime.add(-1, 'day').add(-20, 'month'),
-                              ],
+                              date1: [btime, etime],
                               regionCode: requestParams_temp.regionCode || undefined,
                               warningTypeCode: item.code,
                               PollutantCode:
@@ -178,7 +183,8 @@ const RankingContent = props => {
                   </Tooltip>
                 );
               })}
-            </ReactSeamlessScroll>
+              {/* </ReactSeamlessScroll> */}
+            </>
           ) : (
             <div className="notData">
               <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
@@ -187,8 +193,12 @@ const RankingContent = props => {
           )}
         </>
       )}
-
-      <Modal
+      <CluesListModal
+        history={props.history}
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+      />
+      {/* <Modal
         title="异常线索清单"
         wrapClassName="fullScreenModal"
         open={isModalOpen}
@@ -218,7 +228,7 @@ const RankingContent = props => {
             },
           }}
         />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

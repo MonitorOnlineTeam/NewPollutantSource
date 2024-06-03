@@ -6,6 +6,9 @@ import { downloadFile } from '@/utils/utils';
 import { ModelNumberIdsDatas } from './CONST';
 import { getListPager } from '@/services/autoformapi';
 import { useSelector } from 'umi';
+import { cookieName, uploadPrefix } from '@/config';
+import Cookie from 'js-cookie';
+
 function initWarningForm() {
   let warningForm = {};
   for (const key in ModelNumberIdsDatas) {
@@ -16,7 +19,7 @@ function initWarningForm() {
           .startOf('day'),
         moment().endOf('day'),
       ],
-      date1:[],
+      date1: [],
       PollutantCode: '',
       warningTypeCode: [],
       pageSize: 20,
@@ -52,7 +55,7 @@ export default Model.extend({
       scrollTop: '',
       type: '',
     },
-    waitCheckDatasQueryPar:{},
+    waitCheckDatasQueryPar: {},
     workTowerQueryPar: {},
     verificationTaskData: {
       pageIndex: 1,
@@ -75,6 +78,8 @@ export default Model.extend({
         });
         // console.log('unfoldModelList', unfoldModelList);
         let modelList = result.Datas.sort((a, b) => a.ModelTypeCode - b.ModelTypeCode);
+        // { label: label, value: value, children: children }
+        console.log('modelList', modelList);
         callback && callback(modelList, unfoldModelList);
         yield update({
           modelList: modelList,
@@ -160,6 +165,7 @@ export default Model.extend({
         // yield update({
         //   allTypeDataList: result.Datas,
         // });
+        debugger
         callback && callback(result.Datas);
       } else {
         message.error(result.Message);
@@ -283,7 +289,7 @@ export default Model.extend({
                 .startOf('day'),
               moment().endOf('day'),
             ],
-            date1:[],
+            date1: [],
             PollutantCode: '',
             warningTypeCode: [],
             pageSize: 20,
@@ -314,6 +320,47 @@ export default Model.extend({
     *GetSnapshotData({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetSnapshotData, payload);
       if (result.IsSuccess) {
+        let data = Array.isArray(result.Datas) ? {} : result.Datas;
+        if (Array.isArray(result.Datas)) {
+          result.Datas.map(item => {
+            if (!data.chartData) {
+              // data.push(item);
+              data = item;
+            } else {
+              data.chartData = data.chartData.concat(item.chartData);
+            }
+          });
+        }
+        console.log('data', data);
+        callback && callback(data);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 更新数据工况
+    *UpdateHourDataWCFlag({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.UpdateHourDataWCFlag, payload);
+      if (result.IsSuccess) {
+        message.success('修改成功！');
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取陡变过程数据
+    *GetAbruptChangeData({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetAbruptChangeData, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 修改陡变系数
+    *UpdAbruptLinear({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.UpdAbruptLinear, payload);
+      if (result.IsSuccess) {
+        message.success('操作成功！');
         callback && callback(result.Datas);
       } else {
         message.error(result.Message);
@@ -368,7 +415,7 @@ export default Model.extend({
       const result = yield call(services.ExportHourDataForModel, payload);
       if (result.IsSuccess) {
         message.success('导出成功！');
-        window.open(result.Datas);
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message);
       }
@@ -464,7 +511,7 @@ export default Model.extend({
       const result = yield call(services.ExportStatisNormalRange, payload);
       if (result.IsSuccess) {
         message.success('导出成功！');
-        window.open(result.Datas);
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message);
       }

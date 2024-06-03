@@ -18,7 +18,7 @@ export async function getHomePage(params) {
 
 // 获取所有企业及排口信息
 export async function getAllEntAndPoint(params) {
-  const result = await post(API.commonApi.GetEntAndPoint, params, null);
+  const result = await post(API.CommonApi.GetEntAndPoint, params, null);
   return result === null ? {
     data: null
   } : result;

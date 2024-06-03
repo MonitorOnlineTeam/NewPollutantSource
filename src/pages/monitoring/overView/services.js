@@ -7,7 +7,7 @@
  */
 import moment from 'moment';
 import { post, get } from '@/utils/request';
-import { API } from '@config/API'
+import { API } from '@config/API';
 
 /**
  * 【智能监控】获取污染物系统污染物
@@ -15,10 +15,10 @@ import { API } from '@config/API'
  */
 export async function getPollutantTypeList(params) {
   const result = await post(
-    API.commonApi.GetPollutantTypeList,
+    API.CommonApi.GetPollutantTypeList,
     {
       ...params,
-      pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
+      pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes,
     },
     null,
   );
@@ -30,7 +30,7 @@ export async function getPollutantTypeList(params) {
  * @params {"pollutantTypes":2}
  */
 export async function querypollutanttypecode(params) {
-  const result = await post(API.commonApi.GetPollutantTypeCode, params);
+  const result = await post(API.CommonApi.GetPollutantTypeCode, params);
   return result === null ? { data: null } : result.Datas;
 }
 /**
@@ -42,16 +42,12 @@ export async function querypollutanttypecode(params) {
         "pointName": "1号脱硫出口",
         "status": 1,
         "terate": 1,
-   
+
     }
  */
 export async function querydatalist(params) {
   if (params.dgimn) params.DGIMNs = params.dgimn;
-  const result = await post(
-    API.MonitorDataApi.AllTypeSummaryList,
-    params,
-    null,
-  );
+  const result = await post(API.MonitorDataApi.AllTypeSummaryList, params, null);
   return result === null ? { data: null } : result.Datas;
 }
 
@@ -120,17 +116,19 @@ export async function querygetentdatalist(params) {
 
 // 获取实时数据一览表头
 export async function getRealTimeColumn(params) {
-  const result = await post(API.commonApi.GetPollutantTypeCode, params);
+  const result = await post(API.CommonApi.GetPollutantTypeCode, params);
   return result;
 }
 
 // 获取实时数据一览
 export async function getRealTimeDataView(params) {
-  const result = await post(
-    API.MonitorDataApi.AllTypeSummaryList,
-    params,
-    null,
-  );
+  const result = await post(API.MonitorDataApi.AllTypeSummaryList, params, null);
+  return result;
+}
+
+// 根据行政区获取企业列表
+export async function getEntByRegion(params) {
+  const result = post(API.RegionApi.GetEntByRegion, { regionCode: params.RegionCode }, null);
   return result;
 }
 

@@ -24,7 +24,7 @@ export async function TableConfigAdd(params) {
         EnableDataPermission: params.EnableDataPermission,
         MulType: params.MulType
     }
-    const result = post(API.autoFormApi.TableConfigAdd, body, null)
+    const result = post(API.AutoFormApi.TableConfigAdd, body, null)
     return result === null ? {
         data: null
     } : result;
@@ -47,7 +47,7 @@ export async function TableConfigUpdate(params) {
         EnableDataPermission: params.EnableDataPermission,
         MulType: params.MulType
     }
-    const result = post(API.autoFormApi.TableConfigUpdate, body, null)
+    const result = post(API.AutoFormApi.TableConfigUpdate, body, null)
     return result === null ? {
         data: null
     } : result;
@@ -58,14 +58,14 @@ export async function GetPkByTableName(params) {
         dbkey: params.dbkey,
         tableName: params.tableName,
     }
-    const result = post(API.autoFormApi.GetPkByTableName, body, null)
+    const result = post(API.AutoFormApi.GetPkByTableName, body, null)
     return result === null ? {
         data: null
     } : result;
 }
 /** AutoForm 获取数据源树 */
 export async function GetTables(params) {
-    const result = post(API.autoFormApi.GetTables, params, null)
+    const result = post(API.AutoFormApi.GetTables, params, null)
     return result === null ? {
         data: null
     } : result;
@@ -73,7 +73,7 @@ export async function GetTables(params) {
 
 /** AutoForm 根据表Id获取数据源基础信息 */
 export async function TableConfig(params) {
-    const result = post(API.autoFormApi.TableConfig, params, null)
+    const result = post(API.AutoFormApi.TableConfig, params, null)
     return result === null ? {
         data: null
     } : result;
@@ -81,7 +81,7 @@ export async function TableConfig(params) {
 
 /** AutoForm 验证数据源ID是否存在 */
 export async function ConfigIDisExisti(params) {
-    const result = post(API.autoFormApi.ConfigIDisExisti, params, null)
+    const result = post(API.AutoFormApi.ConfigIDisExisti, params, null)
     return result === null ? {
         data: null
     } : result;
@@ -89,12 +89,12 @@ export async function ConfigIDisExisti(params) {
 
 // 导出数据源配置
 export async function ExportConsoleConfig(params) {
-    const result = post(API.autoFormApi.ExportConsoleConfig, [...params.keys])
+    const result = post(API.AutoFormApi.ExportConsoleConfig, [...params.keys])
     return result;
 }
 
 // 导入数据源配置
 export async function ImportConsoleConfig(params) {
-    const result = post(API.autoFormApi.ImportConsoleConfig, [...params.keys])
+    const result = post(API.AutoFormApi.ImportConsoleConfig, [...params.keys])
     return result;
 }

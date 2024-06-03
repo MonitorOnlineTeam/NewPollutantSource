@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import styles from '../../styles.less';
 import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
-import { Radio, Space, Spin, Select } from 'antd';
+import { Radio, Space, Spin, Select, DatePicker } from 'antd';
 import moment from 'moment';
 import { EntIcon } from '@/utils/icon';
 import PageLoading from '@/components/PageLoading';
@@ -20,6 +20,8 @@ let aMap;
   regionList: AbnormalIdentifyModelHome.regionList,
   mapMarkersList: AbnormalIdentifyModelHome.mapMarkersList,
   entRequestParams: AbnormalIdentifyModelHome.entRequestParams,
+  defaultRegionName: AbnormalIdentifyModelHome.defaultRegionName,
+  AbnormalIdentifyModelHome: AbnormalIdentifyModelHome,
 }))
 class MapContent extends PureComponent {
   constructor(props) {
@@ -67,6 +69,7 @@ class MapContent extends PureComponent {
       prevProps.requestParams.regionCode !== this.props.requestParams.regionCode &&
       this.props.requestParams.pLeve === 2
     ) {
+      aMap.clearMap();
       this.renderRegionBoundary({
         regionName: this.props.requestParams.regionName,
       });
@@ -95,6 +98,12 @@ class MapContent extends PureComponent {
           mapMarkersList: this.props.mapMarkersList,
           filterMarkerList: this.props.mapMarkersList,
         });
+        configInfo.RegionName &&
+          configInfo.RegionLeve !== '1' &&
+          this.props.requestParams.pLeve === 1 &&
+          this.renderRegionBoundary({
+            regionName: configInfo.RegionName,
+          });
       });
   };
 
@@ -125,8 +134,7 @@ class MapContent extends PureComponent {
             ...params,
           },
         },
-        callback: () => {
-        },
+        callback: () => {},
       })
       .then(() => {
         // this.getMapPointList(isFitView);
@@ -155,7 +163,7 @@ class MapContent extends PureComponent {
       {
         regionCode: position.regionCode,
         regionName: position.regionName,
-        industryCode: '',
+        // industryCode: '',
         pLeve: position.pLeve || 2,
       },
       true,
@@ -196,7 +204,7 @@ class MapContent extends PureComponent {
           // 将省份轮廓覆盖物添加到地图上
           provinceOutline.setMap(aMap);
           // 创建 CanvasLayer 图层
-          // var canvasLayer = new AMap.CanvasLayer();
+          var canvasLayer = new AMap.CanvasLayer();
         }
       });
     });
@@ -276,8 +284,7 @@ class MapContent extends PureComponent {
               width: 'calc(100% - 14px - 10px - 14px)',
             }}
           >
-            {' '}
-            {extData.position && extData.position.regionName}{' '}
+            {extData.position && extData.position.regionName}
           </div>
           <img
             src="/location.png"
@@ -377,6 +384,15 @@ class MapContent extends PureComponent {
     );
   };
 
+  onDateChange = (dataType, value) => {
+    this.queryParamsChange(
+      {
+        dateType: value,
+      },
+      true,
+    );
+  };
+
   render() {
     const {
       regionToggle,
@@ -393,13 +409,13 @@ class MapContent extends PureComponent {
       regionList,
       requestParams,
       loading,
-      requestParams: { pLeve, pollutantCode },
+      requestParams: { pLeve, pollutantCode, dateType, btime },
     } = this.props;
     // if (!!loading) {
     //   return <PageLoading />;
     // }
 
-    console.log('mapMarkersList-region', mapMarkersList);
+    console.log('requestParams', this.props.requestParams);
     return (
       <>
         <Spin spinning={!!loading}>
@@ -450,7 +466,9 @@ class MapContent extends PureComponent {
                       }}
                     >
                       {/* {requestParams.regionName !== undefined ? requestParams.regionName : '按区域'} */}
-                      {!requestParams.industryCode ? '全国' : '按区域'}
+                      {!requestParams.industryCode && requestParams.regionName
+                        ? requestParams.regionName
+                        : '按区域'}
                       <DownOutlined className={styles.icon} />
                     </div>
                     {regionToggle && (
@@ -549,7 +567,7 @@ class MapContent extends PureComponent {
                   </div>
                 </>
               )}
-              <Radio.Group
+              {/* <Radio.Group
                 value={requestParams.dateRange}
                 className={styles.myRadio}
                 style={{ lineHeight: '24px' }}
@@ -571,7 +589,66 @@ class MapContent extends PureComponent {
               >
                 <Radio.Button value="week">近七天</Radio.Button>
                 <Radio.Button value="month">近一个月</Radio.Button>
-              </Radio.Group>
+              </Radio.Group> */}
+
+              <Space.Compact className={styles.SelectWrapper}>
+                <div>
+                  <Select
+                    // showSearch
+                    // optionFilterProp="children"
+                    popupClassName={styles.popupStyle}
+                    value={dateType}
+                    onChange={value => {
+                      // setDateType(value);
+                      this.queryParamsChange(
+                        {
+                          dateType: value,
+                        },
+                        true,
+                      );
+
+                      // 时间同时更新到企业中
+                      this.updateEntQueryParams({
+                        dateType: value,
+                      });
+                    }}
+                  >
+                    <Option value="month">月</Option>
+                    <Option value="year">年</Option>
+                  </Select>
+                </div>
+                <DatePicker
+                  allowClear={false}
+                  picker={dateType}
+                  value={btime}
+                  onChange={date => {
+                    this.queryParamsChange(
+                      {
+                        btime: date,
+                      },
+                      true,
+                    );
+                    // 时间同时更新到企业中
+                    this.updateEntQueryParams({
+                      btime: date,
+                    });
+                    // let value = e.target.value;
+                    // this.queryParamsChange({
+                    //   dateRange: value,
+                    //   btime: value === 'week' ? moment().add(-6, 'day') : moment().add(-1, value),
+                    //   etime: moment(),
+                    // });
+                    // // 时间同时更新到企业中
+                    // this.updateEntQueryParams({
+                    //   dateRange: value,
+                    //   btime: value === 'week' ? moment().add(-6, 'day') : moment().add(-1, value),
+                    //   etime: moment(),
+                    // });
+                  }}
+                  popupClassName={styles.datePickerPopup}
+                />
+              </Space.Compact>
+
               <div className={styles.pollutantWrapper}>
                 {/* <p>污染物</p> */}
                 <ul>
@@ -603,7 +680,7 @@ class MapContent extends PureComponent {
                 </ul>
               </div>
               {pLeve === 2 && (
-                <div className={styles.searchEntWrapper}>
+                <div className={styles.SelectWrapper}>
                   <Select
                     allowClear
                     placeholder="搜索企业"
@@ -622,7 +699,6 @@ class MapContent extends PureComponent {
                       );
                     }}
                     style={{ width: 180 }}
-                    showSearch
                     optionFilterProp="children"
                     popupClassName={styles.popupStyle}
                   >
@@ -646,12 +722,14 @@ class MapContent extends PureComponent {
                   aMap.clearMap();
                   this.queryParamsChange(
                     {
+                      regionName: this.props.defaultRegionName,
                       regionCode: '',
                       pLeve: 1,
                     },
                     true,
                   );
                   this.setState({
+                    // currentIndustryName: undefined,
                     currentRegionName: undefined,
                     regionToggle: false,
                     industryToggle: false,
@@ -660,6 +738,7 @@ class MapContent extends PureComponent {
               >
                 返回
               </div>
+              <p className={styles.currentPosition}>当前位置：{requestParams.regionName}</p>
             </>
           )}
         </Spin>

@@ -293,7 +293,7 @@ export async function getpollutantbydgimn(params) {
   const body = {
     DGIMN: params.DGIMN,
   };
-  const result = await get(API.commonApi.GetStandardPollutantsByDgimn, body);
+  const result = await get(API.CommonApi.GetStandardPollutantsByDgimn, body);
   return result === null
     ? {
       data: null,

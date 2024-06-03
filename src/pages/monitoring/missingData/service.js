@@ -26,7 +26,7 @@ export async function GetDefectPointDetail(params) {
 }
 //关注列表
 export async function GetAttentionDegreeList(params) {
-  const result = post(API.commonApi.GetAttentionDegreeList, params);
+  const result = post(API.CommonApi.GetAttentionDegreeList, params);
   return result;
 }
 

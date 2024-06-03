@@ -1,10 +1,10 @@
 import { parse, stringify } from 'qs';
 import { routerRedux } from 'dva/router';
-import {
+import { getSystemLoginConfigInfo, IfSpecial, LogOut } from '@/services/login';
+import router from 'umi/router';
+import Cookie from 'js-cookie';
+import configToken from '@/config';
 
-  getSystemLoginConfigInfo,
-  IfSpecial,
-} from '@/services/login';
 export function getPageQuery() {
   return parse(window.location.href.split('?')[1]);
 }
@@ -16,17 +16,25 @@ const LoginModel = {
     appFlag: '',
   },
   effects: {
-    *logout(_, { put }) {
-      const { redirect } = getPageQuery(); // redirect
-      if (window.location.pathname !== '/user/login' && !redirect) {
-        yield put(
-          routerRedux.replace({
-            pathname: '/user/login',
-            search: stringify({
-              redirect: window.location.href,
-            }),
-          }),
-        );
+    *logout(_, { call, put }) {
+      const response = yield call(LogOut);
+      if (response.IsSuccess) {
+        // const { redirect } = getPageQuery(); // redirect
+        // if (window.location.pathname !== '/user/login' && !redirect) {
+        // yield put(
+        //   routerRedux.replace({
+        //     pathname: '/user/login',
+        //     search: stringify({
+        //       redirect: window.location.href,
+        //     }),
+        //   }),
+
+        // );
+
+        // }
+        Cookie.set(configToken.cookieName, null);
+        Cookie.set('currentUser', null);
+        router.push('/user/login');
       }
     },
     *getSystemLoginConfigInfo({ payload }, { call, put, select }) {
@@ -42,7 +50,6 @@ const LoginModel = {
     },
     *IfSpecial({ payload }, { call, put, select }) {
       const response = yield call(IfSpecial);
-      console.log('response=', response)
       yield put({
         type: 'setAppFlagInfo',
         payload: response.Datas,

@@ -1,5 +1,5 @@
 import { post, get } from '@/utils/request';
-import { API } from '@config/API'
+import { API } from '@config/API';
 import { encryptKey } from '@/utils/utils';
 import Cookie from 'js-cookie';
 import request from 'umi-request';
@@ -7,7 +7,7 @@ import { async } from 'q';
 import config from '@/config';
 // import { JSEncrypt } from 'jsencrypt';
 // import {CryptoJS} from 'crypto-js';
-var CryptoJS = require("crypto-js");
+// var CryptoJS = require('crypto-js');
 
 /**
  * 系统登录
@@ -19,7 +19,9 @@ export async function systemLogin(params) {
     UserAccount: params.userName,
     UserPwd: params.password,
     MenuId: params.MenuId,
-    LoginFlag: 'true'
+    IsAgree: params.IsAgree,
+    VerificationStatus: params.verificationCode && 1,
+    VerificationCode: params.verificationCode,
   };
   let body = Object.assign(defaults);
   const result = await post(API.LoginApi.Login, body);
@@ -33,19 +35,24 @@ export async function systemLogin(params) {
 
 // 获取token
 export async function getToken(params) {
-  const urlencoded = encodeURI(`client_id=WryWebClient&client_secret=Web_P@ssw0rd_!@#$%&grant_type=${params.grant_type}&username=${params.username}&password=${params.password}`)
+  const urlencoded = encodeURI(
+    `client_id=WryWebClient&client_secret=Web_P@ssw0rd_!@#$%&grant_type=${params.grant_type}&username=${params.username}&password=${params.password}`,
+  );
   const result = await post(API.LoginApi.getToken, urlencoded, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' },
   });
-  if (result) {
+  if (result.access_token) {
     Cookie.set(config.cookieName, result.access_token);
-    window.localStorage.setItem('loginTokenData', JSON.stringify({
-      expires_in: result.expires_in,
-      time: new Date().getTime(),
-      username: params.username,
-      password: params.password,
-      refresh_token: result.refresh_token,
-    }))
+    window.localStorage.setItem(
+      'loginTokenData',
+      JSON.stringify({
+        expires_in: result.expires_in,
+        time: new Date().getTime(),
+        username: params.username,
+        password: params.password,
+        refresh_token: result.refresh_token,
+      }),
+    );
   } else {
     Cookie.set(config.cookieName, '');
   }

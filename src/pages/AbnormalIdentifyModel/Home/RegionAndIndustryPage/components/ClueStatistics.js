@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'dva';
-import { Modal, Row, Col } from 'antd';
+import { Modal, Row, Col, Tooltip } from 'antd';
 import styles from '../../styles.less';
 import ReactEcharts from 'echarts-for-react';
 import HomeCard from '../../components/HomeCard';
 import _ from 'lodash';
+import ClueStatisticsModal from '../../ModalPage/ClueStatisticsModal';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   requestParams: AbnormalIdentifyModelHome.requestParams,
@@ -22,6 +23,7 @@ const ClueStatistics = props => {
   const [barDataMax, setBarDataMax] = useState();
   const [barData, setBarData] = useState([]);
   const [pieOption, setPieOption] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     GetAbnormalClueStatistics();
@@ -33,11 +35,9 @@ const ClueStatistics = props => {
       type: 'AbnormalIdentifyModelHome/GetAbnormalClueStatistics',
       payload: {},
       callback: res => {
-        console.log('res', res);
         // handleBarData(res.CountList);
         res.CountList.length && setBarDataMax(_.maxBy(res.CountList, 'val').val);
         setBarData(res.CountList);
-        getOption(res.ModelGroupList);
       },
     });
   };
@@ -57,9 +57,10 @@ const ClueStatistics = props => {
   };
 
   // 线索统计饼图
-  const getOption = (pieData) => {
+  const getOption = () => {
+    let pieData = ModelGroupList;
     let data = pieData.map(item => {
-      return { value: item.count, name: item.name };
+      return { value: item.count, name: item.name.replace('CEMS', '') };
     });
 
     // let data = [
@@ -110,7 +111,7 @@ const ClueStatistics = props => {
             formatter: '{b}: {c}条 {d}%',
           },
           labelLine: {
-            length: 1,
+            length: 10,
             length2: 20,
             // length: 15,
             // length2: 0,
@@ -132,8 +133,8 @@ const ClueStatistics = props => {
         },
       ],
     };
-
-    setPieOption(option);
+    return option;
+    // setPieOption(option);
   };
 
   // 柱状图
@@ -233,9 +234,23 @@ const ClueStatistics = props => {
     const { dataIndex } = e;
     let currentData = ModelGroupList[dataIndex].childList;
     // handleBarData(currentData);
-    setBarDataMax(_.maxBy(currentData, 'val').val);
+    setBarDataMax(currentData.length ? _.maxBy(currentData, 'val').val : 0);
     setBarData(currentData);
   };
+
+  const renderEcharts = useMemo(() => {
+    return (
+      <ReactEcharts
+        // option={pieOption}
+        option={getOption()}
+        // lazyUpdate={true}
+        onEvents={{
+          click: onClickEchartsPie,
+        }}
+        style={{ height: '100%', width: '100%' }}
+      />
+    );
+  }, [ModelGroupList]);
 
   return (
     <HomeCard
@@ -247,15 +262,25 @@ const ClueStatistics = props => {
     >
       <div className={styles.ClueStatisticsContent}>
         <div style={{ height: 300 }}>
-          <ReactEcharts
-            option={pieOption}
-            // option={getOption()}
-            // lazyUpdate={true}
-            onEvents={{
-              click: onClickEchartsPie,
-            }}
-            style={{ height: '100%', width: '100%' }}
-          />
+          {renderEcharts}
+          <Tooltip title={'点击查看异常线索统计'}>
+            <div
+              className={styles.echartsTitle}
+              style={{
+                color: '#fff',
+                fontWeight: 'bold',
+                marginTop: -46,
+                fontSize: 16,
+                position: 'relative',
+                zIndex: 1,
+              }}
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+            >
+              异常线索统计
+            </div>
+          </Tooltip>
         </div>
         <p className={styles.unit}>单位：条</p>
         <div className={styles.BarBox}>
@@ -298,6 +323,19 @@ const ClueStatistics = props => {
           })}
         </div>
       </div>
+      <Modal
+        title="异常线索统计"
+        wrapClassName="fullScreenModal"
+        open={isModalOpen}
+        destroyOnClose
+        // open={false}
+        footer={[]}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <ClueStatisticsModal level={requestParams.regionCode ? 2 : 1} />
+      </Modal>
     </HomeCard>
   );
 };

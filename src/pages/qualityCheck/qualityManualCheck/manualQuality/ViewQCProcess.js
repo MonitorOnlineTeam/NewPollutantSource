@@ -268,9 +268,9 @@ class ViewQCProcess extends PureComponent {
         {console.log('CEMSOpen=', CEMSOpen)}
         {/* CEMS连接状态 */}
         {// 系统
-        GasPathMode == 1 &&
-        CEMSOpen == 1 &&
-        (this.props.QCStatus == 1 || this.props.QCStatus == 2) ? (
+        GasPathMode == 1 &&  // 接口返回的：系统还是全程
+        CEMSOpen == 1 &&  // i33070  1: 系统  0: 全程
+        (this.props.QCStatus == 1 || this.props.QCStatus == 2) ? (  // i32002  1: 运行  2: 维护
           <>
             {/* true ? <> */}
             <img className={styles.CEMSLine} src="/qualityControl/CEMSLine.jpg" alt="" />

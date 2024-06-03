@@ -17,13 +17,28 @@ export default Model.extend({
     industryTreeList: [],
     entAndPointList: [],
     atmoStationList: [],
-    priseList: [],
+    entList: [],
+    entLoading: true,
+    noFilterEntList: [],
+    noFilterEntLoading: [],
     attentionList: [],
     pointListByEntCode: [],
     pollutantListByDgimn: [],
     menuNameList: [],
-    entList: [],
     QCAPollutantList: [],
+    userList: [],
+    userTotal: null,
+    inspectorUserList: [],
+    operationUserList: [],
+    noFilterRegionList: [],
+    roleList: [],
+    testRegionList: [],
+    ctEntAndPointList: [],
+    ctProjectList: [],
+    ctProjectTotal: 0,
+    ctProjectQueryPar: null,
+    ctRegionList: [],
+    allUser: [],
   },
 
   effects: {
@@ -38,11 +53,31 @@ export default Model.extend({
     },
     *getEntByRegion({ payload }, { call, put, update, select }) {
       //企业列表
+      yield update({ entLoading: true });
       const response = yield call(services.GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          priseList: response.Datas,
+          entList: response.Datas,
+          entLoading: false,
         });
+      } else {
+        message.error(response.Message);
+        yield update({ entList: [], entLoading: false });
+      }
+    },
+    *getEntNoFilterList({ payload, callback }, { call, put, update, select }) {
+      //企业列表 未过滤的
+      yield update({ noFilterEntLoading: true });
+      const response = yield call(services.GetEntNoFilterList, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          noFilterEntList: response.Datas,
+          noFilterEntLoading: false,
+        });
+        callback && callback(response.Datas);
+      } else {
+        message.error(response.Message);
+        yield update({ noFilterEntList: [], noFilterEntLoading: false });
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
@@ -57,10 +92,11 @@ export default Model.extend({
     // 获取污染物类型
     *getPollutantTypeList({ payload = {}, showAll, callback }, { update, call }) {
       const { filterPollutantType, filterInvalidData } = payload;
+      console.log('payload', payload);
       const result = yield call(services.getPollutantTypeList, payload);
       if (result.IsSuccess) {
         let data = result.Datas;
-        if (filterPollutantType !== 'undefined') {
+        if (filterPollutantType) {
           const thisPollutantType = filterPollutantType && filterPollutantType.split(',');
           thisPollutantType &&
             (data = data.filter(item => {
@@ -68,7 +104,7 @@ export default Model.extend({
               return flag.length > 0;
             }));
         }
-        if (filterInvalidData !== 'undefined') {
+        if (filterInvalidData) {
           const _filterInvalidData = filterInvalidData && filterInvalidData.split(',');
           _filterInvalidData &&
             _filterInvalidData.map(item => {
@@ -137,7 +173,8 @@ export default Model.extend({
         });
         callback && callback(filterData);
         yield update({
-          entAndPointList: result.Datas,
+          // entAndPointList: result.Datas,
+          entAndPointList: filterData,
         });
       } else {
         message.error(result.Message);
@@ -149,13 +186,13 @@ export default Model.extend({
       const result = yield call(services.getOperationImageList, payload);
       if (result.IsSuccess) {
         let imageList = [];
-        if (result.Datas) {
+        if (result.Datas && result.Datas[0]) {
           imageList = result.Datas.map((item, index) => {
             return {
               uid: index,
               name: item,
               status: 'done',
-              url: `/uploadplantform/${item}`,
+              url: `${config.uploadPrefix}/${item}`,
             };
           });
           yield update({
@@ -195,13 +232,13 @@ export default Model.extend({
       }
     },
     // 根据企业获取排口
-    *getPointByEntCode({ payload,callback }, { call, update }) {
+    *getPointByEntCode({ payload, callback }, { call, update }) {
       const result = yield call(services.getPointByEntCode, payload);
       if (result.IsSuccess) {
         yield update({
           pointListByEntCode: result.Datas,
         });
-        callback&&callback(result.Datas)
+        callback && callback(result.Datas);
       }
     },
     // 根据mn号获取站点下的所有污染物因子
@@ -211,15 +248,6 @@ export default Model.extend({
         callback && callback(result.Datas);
         yield update({
           pollutantListByDgimn: result.Datas,
-        });
-      }
-    },
-    // 获取所有企业
-    *getEntList({ payload }, { call, update }) {
-      const result = yield call(services.getEntList, payload);
-      if (result.IsSuccess) {
-        yield update({
-          entList: result.Datas,
         });
       }
     },
@@ -261,6 +289,144 @@ export default Model.extend({
         ...payload,
       });
       payload.callback(result);
+    },
+    // 用户列表
+    *getUserList({ payload }, { call, update }) {
+      const result = yield call(services.GetUserList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          userList: result.Datas,
+          userTotal: result.Total,
+        });
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 角色列表
+    *getRoleCodeList({ payload }, { call, update }) {
+      const result = yield call(services.GetRoleCodeList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          roleList: result.Datas,
+        });
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 运维人员 督查人员
+    *getInspectorUserList({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetInspectorUserList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          inspectorUserList: result.Datas
+            ? result.Datas.InspectorUserList.map(item => ({ ...item, key: item.UserId }))
+            : [],
+          operationUserList: result.Datas ? result.Datas.OperationUserList : [],
+        });
+      } else {
+        message.error(result.Message);
+      }
+      callback && callback();
+    },
+    // 行政区 非过滤
+    *getNoFilterRegionList({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetNoFilterRegionList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          noFilterRegionList: result.Datas ? result.Datas.list : [],
+        });
+        callback && callback(result.Datas ? result.Datas.list : []);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 行政区 非过滤  联级选择下拉列表  防止loading重复刷新
+    *getCascaderNoFilterRegionList({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetNoFilterRegionList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          noFilterRegionList: result.Datas ? result.Datas.list : [],
+        });
+        callback && callback(result.Datas ? result.Datas.list : []);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 行政区 非过滤  联级选择下拉列表  防止loading重复刷新
+    *getCascaderNoFilterRegionList({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetNoFilterRegionList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          noFilterRegionList: result.Datas ? result.Datas.list : [],
+        });
+        callback && callback(result.Datas ? result.Datas.list : []);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 行政区 调试服务
+    *getTestXuRegions({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetTestXuRegions, payload);
+      if (result.IsSuccess) {
+        yield update({
+          testRegionList: result.Datas ? result.Datas.list : [],
+        });
+        callback && callback(result.Datas ? result.Datas.list : []);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 行政区 成套污染源管理
+    *getCtTestXuRegions({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetCtTestXuRegions, payload);
+      if (result.IsSuccess) {
+        yield update({
+          ctRegionList: result.Datas ? result.Datas.list : [],
+        });
+        callback && callback(result.Datas ? result.Datas.list : []);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    //成套获取 企业和监测点
+    *getCtEntAndPointList({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetCtEntAndPointList, payload);
+      if (result.IsSuccess) {
+        const data = result.Datas ? result.Datas : [];
+        yield update({
+          ctEntAndPointList: data,
+        });
+        callback && callback(data);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    *getCTProjectList({ payload, callback }, { call, put, update }) {
+      //项目列表
+      const result = yield call(services.GetCTProjectList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          ctProjectList: result.Datas,
+          ctProjectTotal: result.Total,
+          ctProjectQueryPar: payload,
+        });
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    //获取所有用户信息
+    *getAlluser({ payload, callback }, { call, update }) {
+      const result = yield call(services.GetAlluser, payload);
+      if (result.IsSuccess) {
+        const data = result.Datas ? result.Datas : [];
+        yield update({
+          allUser: data,
+        });
+        callback && callback(data);
+      } else {
+        message.error(result.Message);
+      }
     },
   },
 });

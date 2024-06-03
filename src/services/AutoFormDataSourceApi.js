@@ -14,7 +14,7 @@ export async function GetDBSourceTree(params) {
     const body = {
         id:params.Id,
     };
-    const result = await post(API.autoFormApi.GetDBSourceTree, body,null);
+    const result = await post(API.AutoFormApi.GetDBSourceTree, body,null);
     return result === null ?null: result;
 }
 
@@ -25,6 +25,6 @@ export async function DeleteTreeConfig(params) {
     const body = {
         id:params.Id,
     };
-    const result = await post(API.autoFormApi.DeleteTreeConfig, body,null);
+    const result = await post(API.AutoFormApi.DeleteTreeConfig, body,null);
     return result === null ?null: result;
 }

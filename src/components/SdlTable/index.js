@@ -2,17 +2,77 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-19 14:19:22
+ * @Last Modified time: 2024-04-23 14:47:31
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
 import { Table } from 'antd';
 import { Resizable } from 'react-resizable';
 import { connect } from 'dva';
-import $ from 'jquery';
-import styles from './index.less';
+import { DndProvider, DragSource, DropTarget } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import update from 'immutability-helper';
+/****拖拽功能**** */
+let dragingIndex = -1;
 
-// const DEFAULT_WIDTH = 180;
+class BodyRow extends React.Component {
+  render() {
+    const { isOver, connectDragSource, connectDropTarget, moveRow, ...restProps } = this.props;
+    const style = { ...restProps.style, cursor: 'move' };
+
+    let { className } = restProps;
+    if (isOver) {
+      if (restProps.index > dragingIndex) {
+        className += ' drop-over-downward';
+      }
+      if (restProps.index < dragingIndex) {
+        className += ' drop-over-upward';
+      }
+    }
+
+    return connectDragSource(
+      connectDropTarget(<tr {...restProps} className={className} style={style} />),
+    );
+  }
+}
+const rowSource = {
+  beginDrag(props) {
+    dragingIndex = props.index;
+    return {
+      index: props.index,
+    };
+  },
+};
+
+const rowTarget = {
+  drop(props, monitor) {
+    const dragIndex = monitor.getItem().index;
+    const hoverIndex = props.index;
+
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    // Time to actually perform the action
+    props.moveRow(dragIndex, hoverIndex);
+
+    // Note: we're mutating the monitor item here!
+    // Generally it's better to avoid mutations,
+    // but it's good here for the sake of performance
+    // to avoid expensive index searches.
+    monitor.getItem().index = hoverIndex;
+  },
+};
+
+const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver(),
+}))(
+  DragSource('row', rowSource, connect => ({
+    connectDragSource: connect.dragSource(),
+  }))(BodyRow),
+);
 
 const ResizeableTitle = props => {
   const { onResize, width, ...restProps } = props;
@@ -45,11 +105,30 @@ class SdlTable extends PureComponent {
       columns: props.columns,
       computeHeight: null,
       headAndFooterHeight: 110,
+      pageIndex: 1,
+      pageSize: 20,
+      dataSource: [],
     };
 
     this.components = {
       header: {
         cell: ResizeableTitle,
+      },
+    };
+
+    this.dragableComponents = {
+      //拖拽功能
+      body: {
+        row: DragableBodyRow,
+      },
+    };
+    this.totalComponents = {
+      //拖拽功能&&表头伸缩
+      header: {
+        cell: ResizeableTitle,
+      },
+      body: {
+        row: DragableBodyRow,
       },
     };
   }
@@ -70,15 +149,17 @@ class SdlTable extends PureComponent {
       // let fr=this.refs.polytableframe;
       if (!this._calledComponentWillUnmount) {
         // let otherHeight = this.props.pagination ? 136 : 96;
-
-        this.setState(
-          {
-            computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
-          },
-          () => {
-            // console.log("computeHeight=", this.state.computeHeight)
-          },
-        );
+        if (this.sdlTableFrame) {
+          const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
+          const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
+          const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
+          const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
+          const count = tableTheadHeight + 88 + tableFooterHeight;
+          this.setState({
+            headAndFooterHeight: count > 110 ? count : 110,
+            computeHeight: this.getOffsetTop(this.sdlTableFrame) || 0,
+          });
+        }
       }
     }, 50);
   }
@@ -103,6 +184,9 @@ class SdlTable extends PureComponent {
       if (title.indexOf('状态') != -1) {
         return col.width || 150;
       }
+      if (title.indexOf('序号') != -1) {
+        return col.width || 60;
+      }
       if (
         title.indexOf('风向') != -1 ||
         title.indexOf('温度') != -1 ||
@@ -110,7 +194,7 @@ class SdlTable extends PureComponent {
         title.indexOf('湿度') != -1 ||
         title.indexOf('次数') != -1
       ) {
-        return 80;
+        return col.width || 80;
       }
       if (title == '行政区') {
         return col.width || 200;
@@ -179,15 +263,35 @@ class SdlTable extends PureComponent {
       const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
       const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
       const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
-      const count = tableTheadHeight + 85 + tableFooterHeight;
+      const count = tableTheadHeight + 88 + tableFooterHeight;
+      console.log('count', count);
       this.setState({
         headAndFooterHeight: count > 110 ? count : 110,
       });
     }
+    if (this.props.dragable !== prevProps.dragable) {
+      this.setState({ dataSource: this.props.dataSource });
+    }
   }
 
+  moveRow = (dragIndex, hoverIndex) => {
+    //拖拽事件
+    const { dataSource } = this.state;
+
+    const dragRow = dataSource[dragIndex];
+
+    this.setState(
+      update(this.state, {
+        dataSource: {
+          $splice: [[dragIndex, 1], [hoverIndex, 0, dragRow]],
+        },
+      }),
+    );
+    this.props.dragData(this.state.dataSource);
+  };
+
   render() {
-    const { defaultWidth, resizable, clientHeight, pagination, align } = this.props;
+    const { defaultWidth, resizable, clientHeight, pagination, align, dragable } = this.props;
     const { _props, columns, headAndFooterHeight } = this.state;
 
     const fixedHeight = this.state.computeHeight;
@@ -206,6 +310,17 @@ class SdlTable extends PureComponent {
     const _columns = (columns || []).map((col, index) => ({
       render: (text, record) =>
         text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</div>,
+      render: (text, record, index) =>
+        col.title == '序号' && !col.dataIndex && !col.key && !col.render
+          ? index + 1 + (this.state.pageIndex - 1) * this.state.pageSize
+          : text && (
+              <div
+                style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
+                className={col.ellipsis ? 'ant-table-cell-ellipsis' : null}
+              >
+                {text}
+              </div>
+            ),
       align: align || 'center',
       ...col,
       width: this.getInitialColWidth(col),
@@ -216,40 +331,74 @@ class SdlTable extends PureComponent {
     }));
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
-      <div ref={el => (this.sdlTableFrame = el)}>
-        <Table
-          // ref={table => { this.sdlTable = table }}
-          id="sdlTable"
-          rowKey={record => record.id || record.ID || record.DGIMN}
-          size="middle"
-          components={resizable ? this.components : undefined}
-          // className={styles.dataTable}
-          rowClassName={(record, index, indent) => {
-            if (index === 0) {
-              return;
+      <DndProvider backend={HTML5Backend}>
+        <div ref={el => (this.sdlTableFrame = el)}>
+          <Table
+            // ref={table => {
+            //   this.sdlTable = table;
+            // }}
+            id="sdlTable"
+            rowKey={(record, index) => record.id || record.ID || record.DGIMN || index}
+            size="middle"
+            // components={resizable ? this.components : undefined}
+            components={
+              resizable && dragable
+                ? this.totalComponents
+                : resizable
+                ? this.components
+                : dragable
+                ? this.dragableComponents
+                : undefined
             }
-            if (index % 2 !== 0) {
-              return 'light';
+            // className={styles.dataTable}
+            rowClassName={(record, index, indent) => {
+              if (index === 0) {
+                return;
+              }
+              if (index % 2 !== 0) {
+                return 'light';
+              }
+            }}
+            bordered
+            pagination={{
+              // defaultCurrent: 1,
+              current: this.state.pageIndex,
+              pageSize: this.state.pageSize,
+              // showQuickJumper: true,
+              total: this.props.dataSource ? this.props.dataSource.length : 0,
+              showSizeChanger: true,
+              onChange: (current, size) => {
+                this.setState({
+                  pageIndex: current,
+                  pageSize: size,
+                });
+                this.props.onPageChange && this.props.onPageChange(current, size);
+              },
+              pageSizeOptions: ['10', '20', '30', '40', '100'],
+            }}
+            {...this.props}
+            defaultWidth={80}
+            columns={_columns}
+            onRow={(record, index) => ({
+              //拖拽功能
+              index,
+              moveRow: this.moveRow,
+            })}
+            dataSource={dragable ? this.state.dataSource : this.props.dataSource}
+            {..._props}
+            scroll={
+              this.props.scroll === false
+                ? {}
+                : {
+                    x:
+                      (this.props.scroll && this.props.scroll.x && this.props.scroll.x) ||
+                      scrollXWidth,
+                    y: scrollY,
+                  }
             }
-          }}
-          bordered
-          pagination={{ defaultPageSize: 20 }}
-          {...this.props}
-          defaultWidth={80}
-          scroll={
-            this.props.scroll === false
-              ? {}
-              : {
-                  x:
-                    (this.props.scroll && this.props.scroll.x && this.props.scroll.x) ||
-                    scrollXWidth,
-                  y: scrollY,
-                }
-          }
-          columns={_columns}
-          {..._props}
-        />
-      </div>
+          />
+        </div>
+      </DndProvider>
     );
   }
 }
@@ -257,6 +406,7 @@ class SdlTable extends PureComponent {
 SdlTable.defaultProps = {
   defaultWidth: 130,
   resizable: false,
+  dataSource: [],
 };
 
 export default SdlTable;

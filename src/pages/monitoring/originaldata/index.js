@@ -85,7 +85,6 @@ class Index extends Component {
                 <BreadcrumbWrapper>
                     <div className={styles.cardTitle}>
                         <NavigationTree runState='1' domId="#originaldata" choice={false} onItemClick={value => {
-                            console.log('value', value);
                             if (value.length > 0 && !value[0].IsEnt) {
                                 this.changeDgimn(value[0].key)
                             }

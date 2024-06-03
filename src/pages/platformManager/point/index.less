@@ -1,7 +1,131 @@
 .addContent {
-    line-height: 30px;
-    border: 1px dashed #1990ff;
-    color: #1990ff;
-    cursor: pointer;
-    text-align: center;
+  line-height: 30px;
+  border: 1px dashed #1990ff;
+  color: #1990ff;
+  cursor: pointer;
+  text-align: center;
+}
+.MNmodal {
+  :global {
+    .ant-legacy-form-item-label {
+      width: 126px;
+      padding-right: 8px;
+    }
+    .ant-legacy-form-item-label > label::after {
+      margin: 0;
+      margin-left: 2px;
+    }
   }
+}
+
+.deviceManagerSty {
+  :global {
+    .ant-table .ant-form-item-label {
+      text-align: right;
+      min-width: 189px;
+    }
+    .specificationSty .ant-form-item-label {
+      min-width: 203px;
+    }
+    .ant-pagination-options-size-changer.ant-select {
+      width: auto;
+    }
+    .ant-select {
+      text-align: left;
+    }
+    .ant-modal-body {
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      .ant-table-body {
+        min-height: 46px;
+      }
+    }
+  }
+}
+.editOperationStatusSty :global {
+  .ant-form-item-label {
+    min-width: 80px;
+  }
+}
+.dataVerificationSty,
+.pointCoefficientSty,
+.deviceParSty {
+  :global {
+    .ant-legacy-form-item {
+      margin-bottom: 16px;
+    }
+    .ant-legacy-form-item-control,
+    .ant-legacy-form-item-label {
+      line-height: normal;
+    }
+    .inputSty {
+      .ant-legacy-form-item-label {
+        line-height: 40px;
+      }
+      .ant-legacy-form-item-control {
+        line-height: 40px;
+      }
+    }
+  }
+}
+.dataVerificationSty {
+  :global {
+    .ant-legacy-form-item-label {
+      min-width: 167px;
+    }
+    .ant-checkbox-group .ant-checkbox-group-item > span:nth-last-child(1) {
+      width: 105px;
+      display: inline-block;
+    }
+    .ant-legacy-form-item:last-child {
+      padding-left: 112px;
+    }
+  }
+}
+.popSelectSty :global {
+  display: none;
+}
+.deviceParSty :global {
+  .ant-modal-body {
+    padding: 6px 12px;
+    height: calc(100vh - 148px);
+    overflow-y: auto;
+    .ant-table-body {
+      max-height: calc(50vh - 211px);
+    }
+  }
+  .ant-modal-footer {
+    padding: 6px 12px;
+  }
+  .ant-tabs-tab .anticon {
+    margin-right: 0;
+    margin-left: 4px;
+  }
+  .ant-table-pagination.ant-pagination {
+    margin: 6px 0;
+  }
+  .ant-tabs-tab {
+    padding: 4px 0;
+  }
+  .ant-tabs-nav {
+    margin-bottom: 6px;
+  }
+  .ant-table.ant-table-small .ant-table-title,
+  .ant-table.ant-table-small .ant-table-footer,
+  .ant-table.ant-table-small .ant-table-thead > tr > th,
+  .ant-table.ant-table-small .ant-table-tbody > tr > td,
+  .ant-table.ant-table-small tfoot > tr > th,
+  .ant-table.ant-table-small tfoot > tr > td {
+    padding: 6px 8px;
+  }
+}
+.popSty :global {
+  .ant-modal {
+    position: relative !important;
+    width: 800px !important;
+    height: auto !important;
+  }
+  .ant-modal-content {
+    height: auto !important;
+  }
+}

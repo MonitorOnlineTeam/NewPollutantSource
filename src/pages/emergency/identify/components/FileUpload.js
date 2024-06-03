@@ -62,7 +62,7 @@ class FileUpload extends PureComponent {
         showRemoveIcon: true,
       },
       defaultFileList: fileList,
-      action: API.commonApi.UploadFiles,
+      action: API.CommonApi.UploadFiles,
       headers: {
         Authorization: "Bearer " + Cookie.get(config.cookieName)
       },

@@ -48,7 +48,7 @@ class index extends PureComponent {
   };
 
   onSysItemClick = item => {
-    debugger
+    debugger;
     let url = item.Url ? new URL(item.Url) : item.Url;
     if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
       if (webConfig.middlePageOpenMode === 'single') {
@@ -89,7 +89,7 @@ class index extends PureComponent {
       <div className={styles.middleContainer}>
         <header className={styles.header}>
           <div className={styles.left}>
-            <img src={`${configInfo.Logo}`} alt="" />
+            <img src={`${configInfo.Logo || '/logo.png'}`} alt="" />
             <span>{configInfo.SystemName}</span>
           </div>
           <div className={styles.right}>

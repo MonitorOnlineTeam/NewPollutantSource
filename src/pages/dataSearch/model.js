@@ -4,6 +4,7 @@ import Model from '@/utils/model';
 import { post, get } from '@/utils/request';
 import { API } from '@config/API';
 import _ from 'lodash';
+import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
   namespace: 'dataSearch',
@@ -27,7 +28,7 @@ export default Model.extend({
     *exportUnTrustedList({ payload }, { call, update, select }) {
       const result = yield call(_post, API.ExportApi.ExportUnTrustedList, payload);
       if (result.IsSuccess) {
-        window.open(result.Datas);
+        downloadFile(result.Datas);
       }
     },
     // 获取表头

@@ -2,7 +2,7 @@ import { post } from '@/utils/request';
 import { API } from '@config/API'
 
 /**
- * 排放量变化趋势 
+ * 排放量变化趋势
  *
  */
 export async function GetEmissionsTrendList(params) {
@@ -28,7 +28,7 @@ export async function GetEmissionsEntPointPollutant(params) {
 
 //关注列表
 export async function GetAttentionDegreeList(params) {
-  const result = post(API.commonApi.GetAttentionDegreeList, params);
+  const result = post(API.CommonApi.GetAttentionDegreeList, params);
   return result;
 }
 

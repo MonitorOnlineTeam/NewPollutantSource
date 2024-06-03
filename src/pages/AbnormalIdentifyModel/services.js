@@ -182,6 +182,54 @@ export async function ExportHourDataForModel(params) {
   return result;
 }
 
+// 获取数据有效率下钻数据
+export async function GetEffectiveDrillDownData(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetEffectiveDrillDownData, params);
+  return result;
+}
+
+// 获取异常线索统计下钻数据
+export async function GetClueDrillDownData(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetClueDrillDownData, params);
+  return result;
+}
+
+// 获取超标率下钻数据
+export async function GetOverStandardDrillDownData(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetOverStandardDrillDownData, params);
+  return result;
+}
+
+// 获取运行状态分布下钻数据
+export async function GetRunningStateDrillDownData(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetRunningStateDrillDownData, params);
+  return result;
+}
+
+// 获取数据质量分析下钻数据
+export async function GetQualityDrillDownData(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetQualityDrillDownData, params);
+  return result;
+}
+
+// 修改小数数据WCFlag
+export async function UpdateHourDataWCFlag(params) {
+  const result = await post(API.AbnormalIdentifyModel.UpdateHourDataWCFlag, params);
+  return result;
+}
+
+// 获取陡变过程数据
+export async function GetAbruptChangeData(params) {
+  const result = await post(API.AbnormalIdentifyModel.GetAbruptChangeData, params);
+  return result;
+}
+
+// 修改陡变系数
+export async function UpdAbruptLinear(params) {
+  const result = await post(API.AbnormalIdentifyModel.UpdAbruptLinear, params);
+  return result;
+}
+
 // 保存点位参数配置
 export async function SavePointParamsRange(params) {
   const result = await post('/newApi/rest/PollutantSourceApi/Warning/SavePointParamsRange', params);

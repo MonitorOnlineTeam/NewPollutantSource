@@ -27,6 +27,19 @@
   // max-height: calc(100vh + -60px);
   background: #f0f2f5;
   padding-bottom: 10px;
+
+  :global {
+    .ant-card-head {
+      min-height: auto;
+    }
+    .ant-card-head-title {
+      padding: 8px 0;
+    }
+
+    .ant-card-extra {
+      padding: 0;
+    }
+  }
 }
 
 .WarningDataTable {
@@ -134,12 +147,11 @@
         right: 6px;
         top: 6px;
       }
-      .ant-form-item-explain-connected{
+      .ant-form-item-explain-connected {
         width: auto;
       }
     }
   }
-
 }
 .verificationTaskDetailWrapper {
   :global {
@@ -180,48 +192,47 @@
     .ant-progress-inner {
       margin-top: 16px;
     }
-    .programmeLabel{
-      .ant-form-item-control-input-content{
-      & > div {  
-       width: calc(100vw - 208px);
-       word-wrap: break-word;
-      }  
-    }
-    .programmeLabel2{
-      .ant-form-item-control-input-content{
-      & > div {  
-       width: calc(100vw - 166px);
-       word-wrap: break-word;
-      }  
-     }
-    }
-      .ant-form-item-label > label{
+    .programmeLabel {
+      .ant-form-item-control-input-content {
+        & > div {
+          width: calc(100vw - 208px);
+          word-wrap: break-word;
+        }
+      }
+      .programmeLabel2 {
+        .ant-form-item-control-input-content {
+          & > div {
+            width: calc(100vw - 166px);
+            word-wrap: break-word;
+          }
+        }
+      }
+      .ant-form-item-label > label {
         height: 20px;
         line-height: 20px;
       }
       .ant-form-item-control-input {
         min-height: 20px;
-     }
+      }
     }
-    .checkedDesLabel{
-      .ant-form-item-label > label{
+    .checkedDesLabel {
+      .ant-form-item-label > label {
         height: 20px;
         line-height: 20px;
       }
-      .ant-form-item-control-input{
-        width: calc(25vw - 120px );
+      .ant-form-item-control-input {
+        width: calc(25vw - 120px);
         word-wrap: break-word;
         min-height: 20px;
       }
     }
-    .ant-card-head{
+    .ant-card-head {
       min-height: 32px;
     }
-    .ant-card-head-title{
+    .ant-card-head-title {
       padding: 8px 0;
     }
   }
-
 }
 
 .pollutantDischargeGapWrapper {

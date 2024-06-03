@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Modal } from 'antd';
+import { Modal, Tooltip } from 'antd';
 import styles from '../../styles.less';
 import ReactEcharts from 'echarts-for-react';
 import HomeCard from '../../components/HomeCard';
+import RunStateModal from '../../ModalPage/RunStateModal';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   PointSumStatus: AbnormalIdentifyModelHome.entPointSumStatus,
+  entRequestParams: AbnormalIdentifyModelHome.entRequestParams,
   // todoList: wordSupervision.todoList,
   loading: loading.effects['AbnormalIdentifyModelHome/GetEntMapPointList'],
 });
 
 const RunState = props => {
-  const { dispatch, PointSumStatus, loading } = props;
+  const { entRequestParams, PointSumStatus, loading } = props;
   const [echarts, setEcharts] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {}, []);
 
@@ -82,9 +85,8 @@ const RunState = props => {
         //图例标记的图形宽度
         itemWidth: 20,
         formatter: function(name, option) {
-          console.log('name', name);
           let current = data.find(item => item.name === name);
-          return `${name}: ${current.value}个   ${current.rate}%`;
+          return `${name}: ${current.value || 0}个   ${current.rate || 0}%`;
         },
       },
       series: [
@@ -256,7 +258,7 @@ const RunState = props => {
               value: 25,
               itemStyle: {
                 normal: {
-                  color: new echarts.echartsLib.graphic.LinearGradient(0, 1, 0, 0, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
                       color: 'rgba(51,149,191,0.5)',
@@ -274,7 +276,7 @@ const RunState = props => {
               value: 25,
               itemStyle: {
                 normal: {
-                  color: new echarts.echartsLib.graphic.LinearGradient(0, 1, 0, 0, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
                       color: 'rgba(0,0,0,0)',
@@ -292,7 +294,7 @@ const RunState = props => {
               value: 25,
               itemStyle: {
                 normal: {
-                  color: new echarts.echartsLib.graphic.LinearGradient(0, 1, 0, 0, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
                       color: 'rgba(51,149,191,0)',
@@ -310,7 +312,7 @@ const RunState = props => {
               value: 25,
               itemStyle: {
                 normal: {
-                  color: new echarts.echartsLib.graphic.LinearGradient(0, 1, 0, 0, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
                       color: 'rgba(51,149,191,0.5)',
@@ -330,16 +332,38 @@ const RunState = props => {
   };
   return (
     <HomeCard title="运行状态分布" loading={loading}>
-      <div className={styles.echartsContent}>
-        <ReactEcharts
-          ref={echart => {
-            setEcharts(echart);
-          }}
-          option={getOption(1)}
-          lazyUpdate={true}
-          style={{ height: '200px', width: '100%' }}
-        />
-      </div>
+      {!loading && (
+        <Tooltip title={'点击查看运行状态分布'}>
+          <div
+            className={styles.echartsContent}
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            <ReactEcharts
+              ref={echart => {
+                setEcharts(echart);
+              }}
+              option={getOption(1)}
+              lazyUpdate={true}
+              style={{ height: '200px', width: '100%' }}
+            />
+          </div>
+        </Tooltip>
+      )}
+      <Modal
+        title="运行状态分布"
+        wrapClassName="fullScreenModal"
+        open={isModalOpen}
+        destroyOnClose
+        // open={false}
+        footer={false}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <RunStateModal level={3} pollutantCode={entRequestParams.pollutantCode} />
+      </Modal>
     </HomeCard>
   );
 };

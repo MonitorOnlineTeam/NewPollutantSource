@@ -287,7 +287,7 @@ class FlowChart_Carbon extends PureComponent {
           :
           <span style={{ color: gold[5], left: 75, top: 670 }} className={`${styles.guo} ${styles.commonSty}`}>锅炉{isStop == 3 ? "(停产)" : isStop == 1 ? "(停产)" : isStop == 2 ? "(停产)" : ''}</span>
         }
-        {/* <span className={`${styles.tuox} ${styles.commonSty}`}>脱销设施</span> */}
+        {/* <span className={`${styles.tuox} ${styles.commonSty}`}>脱硝设施</span> */}
         {/* <span className={`${styles.tuol} ${styles.commonSty}`}>脱硫设施</span> */}
         {/* <span className={`${styles.chu} ${styles.commonSty}`}>除尘设施</span> */}
         <span className={`${styles.yan} ${styles.commonSty}`}>烟囱</span>
@@ -397,7 +397,7 @@ class FlowChart_Carbon extends PureComponent {
             this.setState({ isStop: item.Value })
           }
           if (item.PollutantCode === "cems") {
-            if (item.Code === "a01016") { //烟道截面积  
+            if (item.Code === "a01016") { //烟道截面积
               this.setState({ yan: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
             }
             if (item.Code === "a01030") { //皮托管

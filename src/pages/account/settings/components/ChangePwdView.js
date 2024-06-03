@@ -4,6 +4,7 @@ import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Input, Modal, Spin, Divider, Button } from 'antd';
 import Cookie from 'js-cookie';
+import { RollbackOutlined } from '@ant-design/icons';
 
 const FormItem = Form.Item;
 const response = Cookie.get('currentUser');
@@ -86,7 +87,7 @@ class ChangePwdView extends PureComponent {
     const confirmDirty = this.state.confirmDirty || !!value;
     this.setState({ confirmDirty: confirmDirty });
   };
-
+  // 监控
   validateToNextPassword = (rule, value, callback) => {
     const form = this.props.form;
     var rule = /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_]+$)(?![a-z0-9]+$)(?![a-z\W_]+$)(?![0-9\W_]+$)[a-zA-Z0-9\W_]{8,}$/;
@@ -100,6 +101,18 @@ class ChangePwdView extends PureComponent {
       }
     }
     callback();
+  };
+
+  validatePassStrenth = (rule, value, callback) => {
+    //?=.*[a-z])表示任意字符拼接小写字母
+    let regex = /^(?=.*[\d])(?=.*[a-zA-Z])(?=.*[^\da-zA-Z]).{8,}$/;
+    //拼接数字      拼接字母         拼接非数字和字母(特殊字符)
+    if (regex.test(value)) {
+      callback();
+    } else {
+      // callback("密码强度不够，密码要求最少8位并且包含字母、数字、特殊字符三项中有两项");
+      callback('密码强度不够，密码要求最少8位并且包含字母、数字、特殊字符');
+    }
   };
 
   compareToFirstPassword = (rule, value, callback) => {
@@ -145,7 +158,7 @@ class ChangePwdView extends PureComponent {
               //     validator: this.validateToOldPassword,
               // },
             ],
-          })(<Input type="password" placeholder="请输入旧密码" />)}
+          })(<Input.Password placeholder="请输入旧密码" />)}
         </FormItem>
         <FormItem {...formItemLayout} label="新密码">
           {getFieldDecorator('password', {
@@ -157,8 +170,11 @@ class ChangePwdView extends PureComponent {
               {
                 validator: this.validateToNextPassword,
               },
+              {
+                validator: this.validatePassStrenth,
+              },
             ],
-          })(<Input type="password" placeholder="请输入新密码" />)}
+          })(<Input.Password placeholder="请输入新密码" />)}
         </FormItem>
         <FormItem {...formItemLayout} label="确认密码">
           {getFieldDecorator('confirm', {
@@ -171,15 +187,19 @@ class ChangePwdView extends PureComponent {
                 validator: this.compareToFirstPassword,
               },
             ],
-          })(
-            <Input
-              type="password"
-              onBlur={this.handleConfirmBlur}
-              placeholder="请再次输入新密码"
-            />,
-          )}
+          })(<Input.Password onBlur={this.handleConfirmBlur} placeholder="请再次输入新密码" />)}
         </FormItem>
+
         <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+          <Button
+            onClick={() => {
+              history.go(-1);
+            }}
+            style={{ marginRight: 12 }}
+          >
+            <RollbackOutlined />
+            返回
+          </Button>
           <Button type="primary" htmlType="submit" onClick={this.handleSubmit}>
             更新设置
           </Button>

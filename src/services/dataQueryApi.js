@@ -1,18 +1,22 @@
 import { post } from '@/utils/request';
-import { API } from '@config/API'
+import { API } from '@config/API';
 
 // 获取数据获取率 - 详情污染物数据
 export async function getDataGainRateDetailPollutantList(params) {
-  const result = await post(API.commonApi.GetPollutantListByDgimn, params);
+  const result = await post(API.CommonApi.GetPollutantListByDgimn, params);
   return result;
 }
 
 // 获取数据
 export async function getAllTypeDataForFlag(params) {
-  const result = await post(API.MonitorDataApi.GetAllTypeDataForFlag, {
-    IsWry: false,
-    ...params
-  }, null);
+  const result = await post(
+    API.MonitorDataApi.GetAllTypeDataForFlag,
+    {
+      IsWry: false,
+      ...params,
+    },
+    null,
+  );
   return result;
 }
 
@@ -24,10 +28,14 @@ export async function updateDataFlag(params) {
 
 // 修改数据标识
 export async function exportDataAuditReport(params) {
-  const result = await post(API.MonitorDataApi.ExportAllTypeDataForFlag, {
-    IsWry: false,
-    ...params
-  }, null);
+  const result = await post(
+    API.MonitorDataApi.ExportAllTypeDataForFlag,
+    {
+      IsWry: false,
+      ...params,
+    },
+    null,
+  );
   return result;
 }
 
@@ -39,10 +47,14 @@ export async function exportHistoryReport(params) {
 
 // 导出历史数据报表
 export async function getAllTypeDataForWryFlag(params) {
-  const result = await post(API.MonitorDataApi.GetAllTypeDataForFlag, {
-    IsWry: true,
-    ...params
-  }, null);
+  const result = await post(
+    API.MonitorDataApi.GetAllTypeDataForFlag,
+    {
+      IsWry: true,
+      ...params,
+    },
+    null,
+  );
   return result;
 }
 
@@ -54,10 +66,14 @@ export async function updateDataWryFlag(params) {
 
 // 数据标记 - 导出
 export async function exportDataFlagReport(params) {
-  const result = await post(API.MonitorDataApi.ExportAllTypeDataForFlag, {
-    IsWry: true,
-    ...params
-  }, null);
+  const result = await post(
+    API.MonitorDataApi.ExportAllTypeDataForFlag,
+    {
+      IsWry: true,
+      ...params,
+    },
+    null,
+  );
   return result;
 }
 
@@ -67,4 +83,8 @@ export async function getCO2SumData(params) {
   return result;
 }
 
-
+// 平台分析报告 - 导出
+export async function exportPlatformAnalysisReport(params) {
+  const result = await post(API.ExportApi.ExportPlatformAnalysisReport, params, null);
+  return result;
+}

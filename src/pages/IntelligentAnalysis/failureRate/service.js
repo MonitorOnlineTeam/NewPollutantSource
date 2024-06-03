@@ -36,14 +36,14 @@ export async function GetExceptionDataRate(params) {
 
 //关注列表
 export async function GetAttentionDegreeList(params) {
-  const result = post(API.commonApi.GetAttentionDegreeList, params);
+  const result = post(API.CommonApi.GetAttentionDegreeList, params);
   return result;
 }
 
-//导出 
+//导出
 // ExportOverDataRate  超标率导出
 // ExportDeviceDataRate  运转率导出
-// ExportExceptionDataRate  故障率导出 
+// ExportExceptionDataRate  故障率导出
 export async function ExportOverDataRate(params) {
   const result = post(
     '/api/rest/PollutantSourceApi/TaskFormApi/ExportOverDataRate',

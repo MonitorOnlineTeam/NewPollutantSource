@@ -1,27 +1,48 @@
 import { QrcodeOutlined } from '@ant-design/icons';
 import { Tooltip, Popover, Dropdown, Menu, Button } from 'antd';
-import React from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'dva';
-import { formatMessage } from 'umi-plugin-react/locale';
 import Avatar from './AvatarDropdown';
-import HeaderSearch from '../HeaderSearch';
-import SelectLang from '../SelectLang';
 import styles from './index.less';
-import config from '@/config';
 import NoticeIconView from './NoticeIconView';
-import { UnorderedListOutlined, RollbackOutlined } from '@ant-design/icons';
+import {
+  ExpandOutlined,
+  CompressOutlined,
+  UnorderedListOutlined,
+  RollbackOutlined,
+} from '@ant-design/icons';
 import webConfig from '../../../public/webConfig';
 import { router } from 'umi';
 
 const GlobalHeaderRight = props => {
-  const { theme, layout, configInfo, appFlag, sysPollutantTypeList } = props;
+  const {
+    theme,
+    layout,
+    configInfo,
+    appFlag,
+    sysPollutantTypeList,
+    configInfo: { IsOpera },
+  } = props;
   // console.log("changePwdVisible=",props);
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {
     className = `${styles.right}  ${styles.dark}`;
   }
-
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      //默认状态
+      const element = document.documentElement;
+      element.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) {
+        //全屏状态
+        document.exitFullscreen();
+      }
+    }
+    setIsFullscreen(!isFullscreen);
+  };
   var QRCode = require('qrcode.react');
   //获取当前ip地址和端口号
   var getIp = '';
@@ -87,7 +108,7 @@ const GlobalHeaderRight = props => {
           </Dropdown>
         </>
       )}
-      {configInfo && configInfo.IsShowQRcode === 'true' && (
+      {configInfo && configInfo.IsShowQRcode === 'true' && !IsOpera && (
         <Popover
           placement="bottom"
           content={
@@ -104,8 +125,23 @@ const GlobalHeaderRight = props => {
         </Popover>
       )}
 
-      {/** 污水处理厂权限去掉铃铛 */}
-      <NoticeIconView />
+      {/** 污水处理厂权限和运维去掉铃铛 */}
+      {!IsOpera && <NoticeIconView />}
+      <Popover
+        placement="bottom"
+        zIndex={9999}
+        overlayClassName={styles.expandPopSty}
+        content={isFullscreen ? '退出全屏' : '全屏展示'}
+      >
+        {' '}
+        <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }}>
+          {isFullscreen ? (
+            <CompressOutlined style={{ color: '#fff' }} />
+          ) : (
+            <ExpandOutlined style={{ color: '#fff' }} />
+          )}
+        </span>
+      </Popover>
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}
     </div>

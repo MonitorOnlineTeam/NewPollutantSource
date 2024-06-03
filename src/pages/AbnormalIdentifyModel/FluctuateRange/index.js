@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:47:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-20 16:44:32
+ * @Last Modified time: 2024-04-10 15:19:22
  * @Description:
  */
 import React, { useState, useEffect } from 'react';
@@ -116,11 +116,15 @@ const Index = props => {
     if (flag) {
       otherOptions.toolbox = {
         feature: {
-          // dataView: { show: true, readOnly: false },
-          // magicType: { show: true, type: ['line', 'bar'] },
-          dataZoom: { show: true },
-          restore: { show: true },
-          saveAsImage: { show: true },
+          dataZoom: {
+            show: true,
+            title: {
+              zoom: '区域缩放',
+              back: '区域缩放还原',
+            },
+          },
+          restore: { show: true, title: '还原' },
+          saveAsImage: { show: true, title: '保存为图片' },
         },
       };
     }
@@ -220,11 +224,16 @@ const Index = props => {
   // 重置form
   const onReset = () => {
     form.resetFields();
+    getPageData();
   };
 
   const columns = [
     {
       title: '序号',
+      dataIndex: 'index',
+      render: (text, record, index) => {
+        return index + 1;
+      },
     },
     {
       title: '企业',
@@ -294,12 +303,12 @@ const Index = props => {
     setZoomInChartData(chartData);
     setZoomInVisible(true);
   };
-
+  console.log('regionCode', regionCode);
   return (
     <BreadcrumbWrapper>
       <div className={styles.FluctuateRange}>
         <Space direction="vertical" style={{ width: '100%' }}>
-          <Card bodyStyle={{ paddingTop: 0 }}>
+          <Card bodyStyle={{ paddingTop: 0 }} bordered={false}>
             <Form
               name="searchForm"
               form={form}
@@ -328,7 +337,7 @@ const Index = props => {
               true && (
                 <Spin spinning={entLoading}>
                   <Form.Item label="企业" name="EntCode">
-                    <EntAtmoList mode="multiple" regionCode={regionCode} style={{ width: 200 }} />
+                    <EntAtmoList regionCode={regionCode} style={{ width: 200 }} />
                   </Form.Item>
                 </Spin>
               )}
@@ -377,7 +386,14 @@ const Index = props => {
                   >
                     查询
                   </Button>
-                  <Button onClick={() => onReset()}>重置</Button>
+                  <Button
+                    onClick={() => {
+                      setRegionCode();
+                      onReset();
+                    }}
+                  >
+                    重置
+                  </Button>
                   <Button
                     type="primary"
                     loading={exportLoading}
@@ -454,7 +470,7 @@ const Index = props => {
         title=""
         wrapClassName="spreadOverModal"
         destroyOnClose
-        visible={zoomInVisible}
+        open={zoomInVisible}
         footer={false}
         onCancel={() => setZoomInVisible(false)}
         bodyStyle={{ padding: 0 }}

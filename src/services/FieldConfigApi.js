@@ -12,7 +12,7 @@ export async function GetCfgFiledsData(params) {
         dbkey: params.dbKey,
         configId: params.configId
     };
-    const result = post(API.autoFormApi.GetCfgFiledsDataFromDbByTableName, body,null);
+    const result = post(API.AutoFormApi.GetCfgFiledsDataFromDbByTableName, body,null);
     return result === null ? {
         data: null
     } : result;
@@ -27,7 +27,7 @@ export async function SaveFieldsConfig(params) {
         configId:params.configId,
         tabAllName:params.tabAllName
     };
-    const result = await post(API.autoFormApi.SaveFieldsConfig, body,null);
+    const result = await post(API.AutoFormApi.SaveFieldsConfig, body,null);
     return result === null ?null: result;
 }
 
@@ -38,7 +38,7 @@ export async function GetCfgFiledsDataFromDbByTableName(params) {
     const body = {
         configId:params.configId,
     };
-    const result = await post(API.autoFormApi.GetCfgFiledsDataFromDbByTableName, body,null);
+    const result = await post(API.AutoFormApi.GetCfgFiledsDataFromDbByTableName, body,null);
     return result === null ?null: result;
 }
  //获取添加字段数据信息
@@ -48,7 +48,7 @@ export async function GetAddfieldData(params) {
         dbKey: params.dbKey,
         tableName:params.tableName
     };
-    const result = await post(API.autoFormApi.GetNotinCfgField, body,null);
+    const result = await post(API.AutoFormApi.GetNotinCfgField, body,null);
     return result === null ?null: result;
 }
 //获取保存字段数据信息
@@ -59,7 +59,7 @@ export async function SavefieldData(params) {
         tableName:params.tableName,
         Cfg_Fields:params.Cfg_Field
     };
-    const result = await post(API.autoFormApi.SaveField, body,null);
+    const result = await post(API.AutoFormApi.SaveField, body,null);
     return result === null ?null: result;
 }
 

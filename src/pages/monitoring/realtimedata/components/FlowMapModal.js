@@ -164,7 +164,6 @@ class FlowMapModal extends Component {
         for (var i = 0; i < max_x; i++) {
           for (var j = 0; j < max_y; j++) {
             let value = flows.find(item => item.pollutantName === `流速${i + 1}-${j + 1}`).value;
-            console.log('value', value);
             dataSource[j]['flow' + (i + 1)] = value;
           }
         }

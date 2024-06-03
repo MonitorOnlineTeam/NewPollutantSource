@@ -88,11 +88,11 @@ export default class enterpriseEfficiency extends Component {
   //     }
   //     this.getTableData(pagination.current);
   // }
-  interceptTwo=(value)=>{
+  interceptTwo = value => {
     const data = value.toString();
-    const result = data.substring(0,data.indexOf(".")+3)
+    const result = data.substring(0, data.indexOf('.') + 3);
     return result;
-  }
+  };
   render() {
     const { getFieldDecorator } = this.props.form;
     const columns = [
@@ -102,7 +102,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'PollutantTypeName',
         align: 'center',
         render: (text, record) => {
-          return <span>{text}</span>
+          return <span>{text}</span>;
         },
       },
       {
@@ -111,7 +111,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'PointName',
         align: 'center',
         render: (text, record) => {
-          return <span>{text}</span>
+          return <span>{text}</span>;
         },
       },
       {
@@ -120,7 +120,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'ShouldNumber',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span className={styles.normaldata}>停运</span>;
           }
 
@@ -133,7 +133,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'TransmissionNumber',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgTransmissionNumber <= text) {
@@ -163,7 +163,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'TransmissionNumber',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgEffectiveNumber <= text) {
@@ -192,7 +192,7 @@ export default class enterpriseEfficiency extends Component {
         key: 'TransmissionRate',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
@@ -224,7 +224,7 @@ export default class enterpriseEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
@@ -256,7 +256,7 @@ export default class enterpriseEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
@@ -268,7 +268,7 @@ export default class enterpriseEfficiency extends Component {
                   successPercent={percent}
                   percent={percent}
                   size="small"
-                  style={{width:'80%'}}
+                  style={{ width: '80%' }}
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
               </div>
@@ -281,7 +281,7 @@ export default class enterpriseEfficiency extends Component {
                 percent={percent}
                 status="exception"
                 size="small"
-                style={{width:'80%'}}
+                style={{ width: '80%' }}
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
               />
             </div>

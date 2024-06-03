@@ -1,17 +1,21 @@
-import { Alert, Checkbox } from 'antd';
+import { Alert, Checkbox, Button, message, Modal, Row } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
+import Cookie from 'js-cookie';
 import LoginComponents from './components/Login';
+import Agreement from '../login/components/Agreement';
 import styles from './style.less';
+import config from '@/config';
 
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginComponents;
-
+const { Tab, UserName, Password, Mobile, Captcha, VerificaCode, Submit } = LoginComponents;
 @connect(({ userLogin, global, loading }) => ({
   userLogin,
   configInfo: global.configInfo,
-  submitting: loading.effects['userLogin/login'],
+  // submitting: loading.effects['userLogin/login'],
+  submitting: userLogin.loginLoading,
+  isAgree: userLogin.isAgree,
 }))
 class Login extends Component {
   loginForm = undefined;
@@ -19,6 +23,9 @@ class Login extends Component {
   state = {
     type: 'web',
     autoLogin: true,
+    verificaCode: undefined,
+    agreementVisible: false,
+    loginSuccess: true,
   };
 
   changeAutoLogin = e => {
@@ -30,14 +37,27 @@ class Login extends Component {
   // 登录
   handleSubmit = (err, values) => {
     const { type } = this.state;
+    const { isAgree } = this.props;
     // ;
     console.log('handleSubmit-values=', values);
     if (!err) {
       const { dispatch } = this.props;
-
+      if (!this.state.loginSuccess) {
+        if (values.verificaCode.toLowerCase() != verificaCode) {
+          message.error('请输入正确的验证码');
+          this.child && this.child.current && this.child.current.click(); //刷新验证码
+          return;
+        }
+      }
+      debugger;
+      if (!isAgree) {
+        message.error('请勾选阅读并接受用户监测数据许可协议');
+        return;
+      }
       let payload = {
         ...values,
-        LoginType: type
+        IsAgree: isAgree,
+        LoginType: type,
       };
       if (type === 'phone') {
         payload.userName = values.mobile;
@@ -47,10 +67,42 @@ class Login extends Component {
       dispatch({
         type: 'userLogin/login',
         payload: payload,
+        callback: isSuccess => {
+          if (!isSuccess) {
+            this.child && this.child.current && this.child.current.click();
+          } //请求错误刷新验证码
+          this.setState({ loginSuccess: isSuccess });
+          this.clearCommonData();
+        },
       });
     }
   };
-
+  clearCommonData = () => {
+    //清除公共组件数据
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'common/updateState',
+      payload: {
+        noFilterRegionList: [],
+        testRegionList: [],
+        ctRegionList: [],
+        operationUserList: [],
+        inspectorUserList: [],
+        roleList: [],
+        entList: [],
+        noFilterEntList: [],
+        atmoStationList: [],
+      },
+    });
+    dispatch({
+      type: 'autoForm/updateState',
+      payload: { regionList: [] },
+    });
+    dispatch({
+      type: 'operations/updateState',
+      payload: { operationCompanyList: [] },
+    });
+  };
   onTabChange = type => {
     this.setState({
       type,
@@ -73,20 +125,46 @@ class Login extends Component {
           dispatch({
             type: 'userLogin/getCaptcha',
             payload: {
-              UserAccount: values.mobile
+              UserAccount: values.mobile,
             },
           })
             // .then(resolve)
             .then(() => {
               if (this.props.userLogin.status !== 'error') {
-                resolve()
+                resolve();
               }
             })
             .catch(reject);
         }
       });
     });
+  clearData = () => {
+    // 系统列表数据和用户信息 清除
+    const { dispatch } = this.props;
+    Cookie.remove(config.cookieName);
+    Cookie.remove('currentUser');
+    Cookie.remove('newToken');
+    Cookie.remove('sysMenuId');
+    sessionStorage.clear();
+    dispatch({ type: 'global/updateState', payload: { sysPollutantTypeList: [] } });
+  };
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      this.child && this.child.current && this.child.current.click(); // 3分钟刷新一次
+    }, 1000 * 60 * 3);
+    this.clearData();
+  }
 
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: 'userLogin/changeLoginStatus',
+      payload: { status: '', type: '', message: '' },
+    });
+    clearInterval(this.timer);
+  }
+  verificaCodeChange = code => {
+    this.setState({ verificaCode: code });
+  };
   renderMessage = content => (
     <Alert
       style={{
@@ -99,13 +177,23 @@ class Login extends Component {
   );
 
   render() {
-    const { userLogin, submitting, configInfo, configInfo:{IsShhy}} = this.props;
+    const {
+      userLogin,
+      submitting,
+      configInfo,
+      configInfo: { IsOpera, IsShhy },
+    } = this.props;
     const { status, type: loginType, message, mobileMessage } = userLogin;
-    const { type, autoLogin } = this.state;
+    const { type, autoLogin, agreementVisible, loginSuccess, } = this.state;
+    const provinceShow = configInfo?.IsShowProjectRegion; //是否为宝武
     // 是否显示手机号登录
     let IsPhoneLogin = configInfo.IsPhoneLogin === 'true';
+
+    console.log('submitting', submitting)
     return (
-      <div className={`${styles.main} ${IsPhoneLogin && styles.phone}  ${IsShhy && styles.shhySty}`}>
+      <div
+        className={`${styles.main} ${IsPhoneLogin && styles.phone}  ${IsShhy && styles.shhySty}`}
+      >
         <LoginComponents
           defaultActiveKey={type}
           onTabChange={this.onTabChange}
@@ -113,11 +201,12 @@ class Login extends Component {
           ref={form => {
             this.loginForm = form;
           }}
+          verificaCodeChange={this.verificaCodeChange}
+          handleRef={ref => {
+            this.child = ref;
+          }}
         >
-          <Tab
-            key="web"
-            tab="账户密码登录"
-          >
+          <Tab key="web" tab="账户密码登录">
             {status === 'error' &&
               loginType === 'account' &&
               message &&
@@ -146,13 +235,29 @@ class Login extends Component {
                 this.loginForm && this.loginForm.validateFields(this.handleSubmit)
               }
             />
+            {/* <Captcha
+              name="verificationCode"
+              placeholder={formatMessage({
+                id: 'user-login.verification-code.placeholder',
+              })}
+              countDown={120}
+              onGetCaptcha={this.onGetCaptcha}
+              getCaptchaButtonText={formatMessage({
+                id: 'user-login.form.get-captcha',
+              })}
+              getCaptchaSecondText={formatMessage({
+                id: 'user-login.captcha.second',
+              })}
+            />   */}
+            {IsOpera && (
+              <VerificaCode //运维 图片验证码
+                name="verificaCode"
+                loginSuccess={this.state.loginSuccess}
+              />
+            )}
           </Tab>
-          {
-            IsPhoneLogin &&
-            <Tab
-              key="phone"
-              tab="手机号登录"
-            >
+          {IsPhoneLogin && (
+            <Tab key="phone" tab="手机号登录">
               {status === 'error' &&
                 loginType === 'account' &&
                 mobileMessage &&
@@ -185,7 +290,7 @@ class Login extends Component {
                 })}
                 countDown={120}
                 onGetCaptcha={this.onGetCaptcha}
-                getCaptchaButtonText={"获取验证码"}
+                getCaptchaButtonText={'获取验证码'}
                 getCaptchaSecondText={formatMessage({
                   id: 'user-login.captcha.second',
                 })}
@@ -199,12 +304,36 @@ class Login extends Component {
                 ]}
               />
             </Tab>
-          }
-          {
-            type === 'web' && <div>
-              <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-                <span className="autoLogin">自动登录</span>
-              </Checkbox>
+          )}
+          {type === 'web' && (
+            <div>
+              {IsOpera && !provinceShow && (
+                <Checkbox
+                  checked={this.props.isAgree}
+                  onChange={e => {
+                    this.props.dispatch({
+                      type: 'userLogin/changeLoginStatus',
+                      payload: { isAgree: e.target.checked },
+                    });
+                  }}
+                >
+                  阅读并接受
+                  <Button
+                    type="link"
+                    style={{ padding: 0 }}
+                    onClick={() => {
+                      this.setState({ agreementVisible: true });
+                    }}
+                  >
+                    《用户监测数据许可协议》
+                  </Button>
+                </Checkbox>
+              )}
+              {!IsOpera && (
+                <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
+                  <span className="autoLogin">自动登录</span>
+                </Checkbox>
+              )}
               {/* <a
               style={{
                 float: 'right',
@@ -214,10 +343,8 @@ class Login extends Component {
               <FormattedMessage id="user-login.login.forgot-password" />
             </a> */}
             </div>
-          }
-          <Submit loading={submitting}>
-            登录
-          </Submit>
+          )}
+          <Submit loading={submitting}>登录</Submit>
           {/* <div className={styles.other}>
             <FormattedMessage id="user-login.login.sign-in-with" />
             <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
@@ -228,6 +355,17 @@ class Login extends Component {
             </Link>
           </div> */}
         </LoginComponents>
+        <Modal
+          footer={false}
+          visible={agreementVisible}
+          onCancel={() => {
+            this.setState({ agreementVisible: false });
+          }}
+          width={'55%'}
+          wrapClassName={styles.userAgreementSty}
+        >
+          <Agreement />
+        </Modal>
       </div>
     );
   }

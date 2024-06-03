@@ -1,4 +1,3 @@
-
 /**
  * 功  能：AutoForm基本服务
  * 创建人：吴建伟
@@ -6,7 +5,7 @@
  */
 
 import { post, get } from '@/utils/request';
-import { API } from '@config/API'
+import { API } from '@config/API';
 
 /**
  * 【AutoForm】获取页面配置信息
@@ -22,11 +21,7 @@ export async function getPageConfigInfo(payload) {
     // PageSize: 200,
   };
   const body = Object.assign(defaults, param);
-  const result = await get(
-    API.autoFormApi.GetPageConfigInfo,
-    body,
-    null,
-  );
+  const result = await get(API.AutoFormApi.GetPageConfigInfo, body, null);
   return result;
 }
 
@@ -35,31 +30,16 @@ export async function getPageConfigInfo(payload) {
  * @params {"configId": "TestCommonPoint"}
  */
 export async function getListPager(payload) {
-  let params = payload;
-  const result = await post(
-    API.autoFormApi.GetListPager,
-    params,
-    null,
-  );
+  const result = await post(API.AutoFormApi.GetListPager, payload, null);
   return result;
 }
-
 
 /**
  * 【AutoForm】获取编辑或添加页面表单元素的值
  * @params {"configId": "TestCommonPoint"}
  */
 export async function getFormData(payload) {
-  let params = payload;
-
-  const defaults = {
-    configId: 'TestCommonPoint',
-  };
-  const result = await get(
-    API.autoFormApi.GetFormData,
-    params,
-    null,
-  );
+  const result = await get(API.AutoFormApi.GetFormData, payload, null);
   return result;
 }
 
@@ -69,11 +49,7 @@ export async function getFormData(payload) {
  */
 export async function postAutoFromDataDelete(payload) {
   let params = payload;
-  const result = await post(
-    API.autoFormApi.PostAutoFromDataDelete,
-    params,
-    null,
-  );
+  const result = await post(API.AutoFormApi.PostAutoFromDataDelete, params, null);
   return result;
 }
 /**
@@ -81,12 +57,7 @@ export async function postAutoFromDataDelete(payload) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function postAutoFromDataAdd(payload) {
-  let params = payload;
-  const result = await post(
-    API.autoFormApi.PostAutoFromDataAdd,
-    params,
-    null,
-  );
+  const result = await post(API.AutoFormApi.PostAutoFromDataAdd, payload, null);
   return result;
 }
 
@@ -95,12 +66,7 @@ export async function postAutoFromDataAdd(payload) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function postAutoFromDataUpdate(payload) {
-  let params = payload;
-  const result = await post(
-    API.autoFormApi.PostAutoFromDataUpdate,
-    params,
-    null,
-  );
+  const result = await post(API.AutoFormApi.PostAutoFromDataUpdate, payload, null);
   return result;
 }
 
@@ -118,11 +84,7 @@ export async function getRegions(params) {
  * @params {"FileUuid": "String"}
  */
 export async function getAttachmentList(params) {
-  const result = await post(
-    API.commonApi.GetAttachmentList,
-    params,
-    null,
-  );
+  const result = await post(API.UploadApi.GetAttachmentList, params, null);
   return result;
 }
 
@@ -131,11 +93,7 @@ export async function getAttachmentList(params) {
  * @params {"configId": "String"}
  */
 export async function exportDataExcel(payload) {
-  const result = await post(
-    API.autoFormApi.ExportDataExcel,
-    payload,
-    null,
-  );
+  const result = await post(API.AutoFormApi.ExportDataExcel, payload, null);
   return result;
 }
 
@@ -144,11 +102,7 @@ export async function exportDataExcel(payload) {
  * @params {"configId": "String"}
  */
 export async function exportTemplet(payload) {
-  const result = await post(
-    API.autoFormApi.ExportTemplet,
-    payload,
-    null,
-  );
+  const result = await post(API.AutoFormApi.ExportTemplet, payload, null);
   return result;
 }
 
@@ -157,7 +111,7 @@ export async function exportTemplet(payload) {
  * @params {"configId": "String"}
  */
 export async function fileUpload(params) {
-  const result = await post('/upload/rest/PollutantSourceApi/UploadApi/PostFiles', params, null);
+  const result = await post(API.UploadApi.UploadFiles, params, null);
   return result;
 }
 
@@ -168,10 +122,18 @@ export async function deleteAttach(params) {
 }
 // 校验重复
 export async function checkRepeat(payload) {
-  const result = await post(
-    API.autoFormApi.VerificationData,
-    payload,
-    null,
-  );
+  const result = await post(API.AutoFormApi.VerificationData, payload, null);
+  return result;
+}
+
+//企业设置电子围栏半径 运维
+export async function addOrUpdOperationSignRadiusInfo(params) {
+  const result = await post(API.EntAndPointApi.AddOrUpdOperationSignRadiusInfo, params, null);
+  return result;
+}
+
+//企业获取电子围栏半径 运维
+export async function getOperationSignRadiusInfo(params) {
+  const result = await post(API.EntAndPointApi.GetOperationSignRadiusInfo, params, null);
   return result;
 }

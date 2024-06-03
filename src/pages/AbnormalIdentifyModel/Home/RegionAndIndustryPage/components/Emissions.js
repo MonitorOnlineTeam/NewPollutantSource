@@ -175,7 +175,7 @@ const Emissions = props => {
           barMaxWidth: 30,
           yAxisIndex: 0,
           itemStyle: {
-            color: new echarts.echartsLib.graphic.LinearGradient(0, 0, 0, 1, [
+            color: new echarts.echarts.graphic.LinearGradient(0, 0, 0, 1, [
               { offset: 0, color: '#83bff6' },
               { offset: 0.5, color: '#188df0' },
               { offset: 1, color: '#188df0' },

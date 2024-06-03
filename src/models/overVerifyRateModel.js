@@ -24,24 +24,26 @@ export default Model.extend({
 
     overVerifyRateForm: {
       beginTime: moment()
-        .subtract(1, 'months')
+        .subtract(7, 'days')
         .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: undefined,
       RegionCode: undefined,
-      PollutantType: '1',
+      PollutantType: '2',
       PollutantList: [],
       Rate: 1,
       EntCode: '',
+      OperationPersonnel: '',
     },
-    pollutantByType:'1',
+    pollutantByType: '2',
     divisorList: [],
     tableDatas: { data: [] },
     total: '',
     attentionList: [],
     priseList: [],
     airList: [],
-    tableDatil: { data: [] },
+    tableDatil: [],
+    tableDatilTotal: 0,
   },
   subscriptions: {},
   effects: {
@@ -60,7 +62,8 @@ export default Model.extend({
       const response = yield call(GetDefectPointDetail, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          tableDatil: response.Datas,
+          tableDatil: response.Datas && response.Datas.data ? response.Datas.data : [],
+          tableDatilTotal: response.Total,
         });
       }
     },

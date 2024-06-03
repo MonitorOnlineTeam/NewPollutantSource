@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-01 09:07:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-19 14:22:33
+ * @Last Modified time: 2024-03-28 17:07:44
  * @Description：模型管理
  */
 
@@ -239,6 +239,9 @@ const General = props => {
         width: 160,
         align: 'center',
         render: (text, record) => {
+          if (text === '-') {
+            return '-';
+          }
           return (
             <Switch
               checkedChildren="启用"
@@ -257,6 +260,9 @@ const General = props => {
         align: 'center',
         width: 120,
         render: (text, record) => {
+          if (record.Status === '-') {
+            return '-';
+          }
           return (
             <Tooltip title={'设置'}>
               <a
@@ -293,6 +299,27 @@ const General = props => {
     <BreadcrumbWrapper>
       <div className={styles.PageWrapper}>
         {modelList.map(item => {
+          let tempModelList = item.ModelBaseList[0].ModelList;
+          if (item.ModelBaseTypeName === 'CEMS运行管理异常') {
+            tempModelList.push({
+              ModelGuid: '测试',
+              ModelNumber: 99,
+              ModelName: '超量程故障',
+              ModelDes: '超量程故障',
+              DataAttr: '超量程故障',
+              SuitScene: '超量程故障',
+              IsCAbnormal: null,
+              AbnormalNum: null,
+              Accuracy: '58%~76%',
+              Status: '-',
+              CreateTime: '2024-01-12 14:24:04',
+              CreateUser: '48f3889c-af8d-401f-ada2-c383031af92d',
+              ModelType: '0',
+              ModelBaseType: '3',
+              IndustryTypeCode: '0',
+              Port: '0',
+            });
+          }
           return (
             <Card
               // loading={loading}
@@ -328,7 +355,8 @@ const General = props => {
                 <SdlTable
                   rowKey="ModelGuid"
                   columns={getExpandedColumns(false)}
-                  dataSource={item.ModelBaseList[0].ModelList}
+                  // dataSource={item.ModelBaseList[0].ModelList}
+                  dataSource={tempModelList}
                   pagination={false}
                   scroll={false}
                 />

@@ -164,7 +164,7 @@ class NavigationTree extends Component {
                 {record.pointName}
               </b>
               <br></br>
-              <span title={record.entName} style={{ fontSize: 7 }}>
+              <span title={record.entName} style={{ fontSize: 10 }}>
                 {record.entName}
                 {record.outPutFlag == 1 ? (
                   <Tag style={{ marginLeft: 2 }} line-height={18} color="#f50">
@@ -521,7 +521,6 @@ class NavigationTree extends Component {
             VideoNo,
           },
         ];
-        console.log('rtnKey=', rtnKey);
         this.props.dispatch({
           type: 'navigationtree/updateState',
           payload: {
@@ -730,8 +729,6 @@ class NavigationTree extends Component {
         expandedKeys,
       });
     }
-    console.log(' this.state.panelDataListAys', this.state.panelDataListAys);
-
     this.setState({
       // expandedKeys,
       EntAndPoint: tempEntAndPoint,
@@ -1425,7 +1422,7 @@ class NavigationTree extends Component {
           <Radio.Group
             defaultValue={this.props.IsTree ? 'tree' : 'panel'}
             buttonStyle="solid"
-            style={{ marginTop: 10, marginLeft: 15, cursor: 'pointer', width: '35%' }}
+            style={{ marginTop: 10, marginLeft: 15, cursor: 'pointer' }}
             onChange={this.onRadioChange}
           >
             <Tooltip title="节点">
@@ -1467,7 +1464,7 @@ class NavigationTree extends Component {
                       selectedKeys={this.state.selectedKeys}
                       style={{
                         // marginTop: '5%',
-                        maxHeight: 'calc(100vh - 290px)',
+                        maxHeight: 'calc(100vh - 320px)',
                         overflow: 'hidden',
                         overflowY: 'auto',
                         width: '100%',

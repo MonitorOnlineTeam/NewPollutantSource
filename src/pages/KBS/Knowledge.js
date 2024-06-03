@@ -120,7 +120,7 @@ class Knowledge extends PureComponent {
                         return <div className={styles.fileItem}>
                           <img src="/u236.png" alt="" />
                           <p title="查看" style={{ cursor: 'pointer' }} onClick={() => { this.onViewFile(item) }}>{item.Name}</p>
-                          <a href={`/upload/${item.File}`} download onClick={(e) => {
+                          <a href={`/${item.File}`} download onClick={(e) => {
                             e.stopPropagation()
                             if (item.File) {
                               this.updViewForKBM(item.ID, "down")
@@ -132,7 +132,6 @@ class Knowledge extends PureComponent {
                           }}>
                             <DownloadOutlined className={styles.download} />
                           </a>
-
                         </div>
                       }
                     })

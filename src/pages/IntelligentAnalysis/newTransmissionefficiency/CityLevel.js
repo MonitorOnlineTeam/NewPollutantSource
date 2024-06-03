@@ -1,10 +1,10 @@
 /**
  * 功  能：有效传输率
- * 创建人：贾安波
- * 创建时间：
+ * 创建人：jab
+ * 创建时间：2020
  */
 import React, { Component } from 'react';
-import { ExportOutlined, QuestionCircleTwoTone } from '@ant-design/icons';
+import { ExportOutlined, QuestionCircleTwoTone, RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -32,12 +32,11 @@ import styles from './style.less';
 import { downloadFile, interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import RegionList from '@/components/RegionList'
-
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const monthFormat = 'YYYY-MM';
+import RegionList from '@/components/RegionList';
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
@@ -57,6 +56,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
   RegionCode: newtransmissionefficiency.RegionCode,
+  operationpersonnel: newtransmissionefficiency.operationpersonnel,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -77,18 +77,18 @@ export default class EntTransmissionEfficiency extends Component {
   }
 
   componentWillMount() {
-    this.updateState({
-      pollutantType: '',
-      assessment: configInfo.IsSingleEnterprise ? '2' : '1',
-    })
-    this.getTableData();
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: {
-        RegionCode: '',
-        PointMark: '2',
-      },
+    let query = this.props.location.query;
+    setTimeout(() => {
+      this.getTableData(query && query.RegionCode, 2);
     });
+
+    // this.props.dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: {
+    //     RegionCode: '',
+    //     PointMark: '2',
+    //   },
+    // });
   }
 
   updateState = payload => {
@@ -98,9 +98,10 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
-  getTableData = () => {
+  getTableData = (RegionCode, regionLevel) => {
     this.props.dispatch({
       type: pageUrl.getData,
+      payload: { RegionCode: RegionCode, regionLevel },
     });
   };
 
@@ -161,7 +162,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateState({
-      pollutantType: value,
+      pollutantType: value ? value : '',
     });
   };
 
@@ -173,7 +174,12 @@ export default class EntTransmissionEfficiency extends Component {
 
   changeRegion = value => {
     this.updateState({
-      RegionCode: value,
+      RegionCode: value ? value : '',
+    });
+  };
+  changePperation = value => {
+    this.updateState({
+      operationpersonnel: value ? value : '',
     });
   };
 
@@ -186,6 +192,7 @@ export default class EntTransmissionEfficiency extends Component {
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForRegion',
       payload: {
+        regionLevel: 2,
         callback: data => {
           downloadFile(data);
         },
@@ -220,33 +227,38 @@ export default class EntTransmissionEfficiency extends Component {
   //         tabName: "有效传输率 - 详情"
   //     }
   // })
-  interceptTwo = (value) => {
+  interceptTwo = value => {
     const data = value.toString();
-    const result = data.substring(0, data.indexOf(".") + 3)
+    const result = data.substring(0, data.indexOf('.') + 3);
     return result;
-  }
+  };
   render() {
     const { eName } = this.state;
-    const { regionList, exRegionloading, RegionCode } = this.props;
+    const { regionList, exRegionloading, RegionCode, operationpersonnel } = this.props;
     const columns = [
       {
-        title: <span style={{ fontWeight: 'bold' }}>行政区</span>,
+        title: <span style={{ fontWeight: 'normal' }}>行政区</span>,
         dataIndex: 'RegionName',
         key: 'RegionName',
         align: 'center',
         render: (text, record) => {
-          return <Link to={{
-            pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-            query: { RegionCode: record.RegionCode },
-          }}
-          >
-            {text}
-          </Link>
-
+          return (
+            <Link
+              to={{
+                pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                query: {
+                  RegionCode: record.RegionCode,
+                  Operationersonnel: this.props.operationpersonnel,
+                },
+              }}
+            >
+              {text}
+            </Link>
+          );
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>考核企业数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>考核企业数</span>,
         dataIndex: 'CountEnt',
         key: 'CountEnt',
         sorter: (a, b) => a.CountEnt - b.CountEnt,
@@ -254,23 +266,21 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         render: (text, record) => {
           return <span>{text}</span>;
-
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>考核监测点数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>考核监测点数</span>,
         dataIndex: 'CountPoint',
         key: 'CountPoint',
         sorter: (a, b) => a.CountPoint - b.CountEnt,
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          return <span>{text}</span>
-
+          return <span>{text}</span>;
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效率</span>,
         dataIndex: 'EffectiveRate',
         key: 'EffectiveRate',
         // width: '10%',
@@ -299,7 +309,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>传输率</span>,
         dataIndex: 'TransmissionRate',
         key: 'TransmissionRate',
         sorter: (a, b) => a.TransmissionRate - b.TransmissionRate,
@@ -313,16 +323,14 @@ export default class EntTransmissionEfficiency extends Component {
             return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>;
           }
           return (
-            <span className={styles.avgtext}>
-              {`${interceptTwo(Number(text) * 100)}%`}
-            </span>
+            <span className={styles.avgtext}>{`${interceptTwo(Number(text) * 100)}%`}</span>
             // </Popover>
           );
         },
       },
       ,
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效传输率</span>,
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
@@ -361,7 +369,7 @@ export default class EntTransmissionEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>低于90%的监测点个数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>低于90%的监测点个数</span>,
         dataIndex: 'LowerTransmissionEffectiveRateCount',
         key: 'LowerTransmissionEffectiveRateCount',
         width: 145,
@@ -370,66 +378,83 @@ export default class EntTransmissionEfficiency extends Component {
           if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           } else {
-            return <span>{text}</span>
+            return <span>{text}</span>;
           }
         },
       },
     ];
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper title="有效传输率">
         {/* <div className="contentContainer"> */}
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
-                <Form.Item>
-                  查询时间：
-                  {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
-                  <RangePicker_
+                {/* <Form.Item> */}
+                {/* <Form.Item>
+                  查询时间： */}
+                {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
+                {/* <RangePicker_
                     dateValue={[moment(this.props.beginTime), moment(this.props.endTime)]}
                     format="YYYY-MM-DD"
                     callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                     allowClear={false}
                   />
-                </Form.Item>
-                <Form.Item>
+                </Form.Item> */}
+                {/* <Form.Item>
                   <Select
-                    placeholder="请选择企业类型"
+                    placeholder="请选择排口类型"
                     onChange={this.typeChange}
-                    value={this.props.pollutantType || undefined}
+                    value={this.props.pollutantType?this.props.pollutantType : undefined }
                     style={{ width: 200, marginLeft: 10 }}
+                    allowClear
                   >
-                    <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
                 </Form.Item>
-                {
-                  // 单企业不显示行政区和考核类型
-                  !configInfo.IsSingleEnterprise && <>
-                    {/* true && <> */}
-                    <Form.Item>
-                      <Select
-                        placeholder="请选择考核类型"
-                        onChange={this.asseChange}
-                        value={this.props.assessment}
-                        style={{ width: 200, marginLeft: 10 }}
-                      >
-                        <Option value="1">国家考核</Option>
-                        <Option value="2">辖区考核</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item>
-                      <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode} />
-
-                    </Form.Item>
-                  </>
-                }
                 <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
+                  <Select
+                    placeholder="请选择考核类型"
+                    onChange={this.asseChange}
+                    value={this.props.assessment}
+                    style={{ width: 200, marginLeft: 10 }}
+                  >
+                    <Option value="2">全部考核</Option>
+                    <Option value="1">国家考核</Option>
+                  </Select>
+                </Form.Item> */}
+                {/* <Select
+                    allowClear
+                    placeholder="请选择行政区"
+                    onChange={this.changeRegion}
+                    value={this.props.RegionCode ? this.props.RegionCode : undefined}
+                    style={{ width: 200, marginLeft: 10 }}
+                  >
+                    {this.children()}
+                  </Select> */}
+                {/* <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/> */}
+                {/* </Form.Item> */}
+                {/*  <Form.Item>
+                <Select
+                  allowClear
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="运维状态"
+                  maxTagCount={2}
+                  value={this.props.operationpersonnel ? this.props.operationpersonnel : undefined }
+                  onChange={this.changePperation}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  >
+                  <Option value="1">已设置运维人员</Option>
+                  <Option value="2">未设置运维人员</Option>
+                </Select>
+                </Form.Item> */}
+                <Form.Item>
+                  {/* <Button type="primary" onClick={this.queryClick}>
                     查询
-                  </Button>
+                  </Button> */}
                   <Button
                     style={{ margin: '0 5px' }}
                     icon={<ExportOutlined />}
@@ -438,6 +463,14 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     {/* <Icon type="export" /> */}
                     导出
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      this.props.onBack ? this.props.onBack() : history.go(-1);
+                    }}
+                  >
+                    <RollbackOutlined />
+                    返回
                   </Button>
                   {/* <Button type="primary" onClick={this.manualData}>
                     手工生成有效传输效率数据
@@ -476,7 +509,9 @@ export default class EntTransmissionEfficiency extends Component {
                   {' '}
                   {`<90%未达标`}
                 </span>
-                <span style={{ color: '#f5222d', fontSize: 14, paddingLeft: 15 }}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span>
+                <span style={{ color: '#f5222d', fontSize: 14, paddingLeft: 15 }}>
+                  每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率
+                </span>
               </div>
             </>
           }
@@ -485,7 +520,6 @@ export default class EntTransmissionEfficiency extends Component {
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
             columns={columns}
-            bordered={false}
             // onChange={this.handleTableChange}
             dataSource={this.props.tableDatas}
             // scroll={{ y: 'calc(100vh - 450px)' }}
@@ -506,7 +540,20 @@ export default class EntTransmissionEfficiency extends Component {
           >
             <Form layout="inline">
               <Form.Item>
-                <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
+                {/* <Select
+                  allowClear
+                  placeholder="请选择行政区"
+                  onChange={this.changeRegion}
+                  value={this.props.RegionCode ? this.props.RegionCode : undefined}
+                  style={{ width: 200, marginLeft: 10 }}
+                >
+                  {this.children()}
+                </Select> */}
+                <RegionList
+                  style={{ width: 200, marginLeft: 10 }}
+                  changeRegion={this.changeRegion}
+                  RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}
+                />
               </Form.Item>
               <Form.Item>
                 <RangePicker_

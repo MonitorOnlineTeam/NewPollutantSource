@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Modal } from 'antd';
+import { Modal, Tooltip } from 'antd';
 import styles from '../../styles.less';
 import ReactEcharts from 'echarts-for-react';
 import HomeCard from '../../components/HomeCard';
+import DataEfficiencyRateModal from '../../ModalPage/DataEfficiencyRateModal';
+import OverRateModal from '../../ModalPage/OverRateModal';
 
 let myChart;
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
@@ -21,6 +23,8 @@ const RanAnalysis = props => {
   const { dispatch, requestParams, DataEfficiencyRate, OverRate, loading } = props;
   const [runChart, setRunChart] = useState();
   const [overChart, setOverChart] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
 
   useEffect(() => {
     GetOperationsAnalysis();
@@ -95,7 +99,7 @@ const RanAnalysis = props => {
             coordinateSystem: 'polar',
             itemStyle: {
               normal: {
-                color: new runChart.echartsLib.graphic.LinearGradient(0, 1, 0, 0, [
+                color: new runChart.echarts.graphic.LinearGradient(0, 1, 0, 0, [
                   {
                     offset: 0,
                     color: colors[0],
@@ -116,33 +120,73 @@ const RanAnalysis = props => {
   return (
     <HomeCard title="运行分析" loading={loading}>
       <div className={styles.echartsContent}>
-        <div className={styles.echartItem}>
-          <ReactEcharts
-            ref={echart => {
-              setRunChart(echart);
-            }}
-            option={getOption(1, DataEfficiencyRate)}
-            lazyUpdate={true}
-            style={{ height: '180px', width: '100%' }}
-          />
-          <div className={styles.echartsTitle} style={{ color: '#53F5FF' }}>
-            数据有效率
-          </div>
+        <div
+          className={styles.echartItem}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          <Tooltip title={'点击查看数据有效率统计'}>
+            <ReactEcharts
+              ref={echart => {
+                setRunChart(echart);
+              }}
+              option={getOption(1, DataEfficiencyRate)}
+              lazyUpdate={true}
+              style={{ height: '180px', width: '100%' }}
+            />
+            <div className={styles.echartsTitle} style={{ color: '#53F5FF' }}>
+              数据有效率
+            </div>
+          </Tooltip>
         </div>
-        <div className={styles.echartItem}>
-          <ReactEcharts
-            ref={echart => {
-              setOverChart(echart);
-            }}
-            option={getOption(2, OverRate)}
-            style={{ height: '180px', width: '100%' }}
-            theme="my_theme"
-          />
-          <div className={styles.echartsTitle} style={{ color: '#FCB12E' }}>
-            超标率
-          </div>
+        <div
+          className={styles.echartItem}
+          onClick={() => {
+            setIsModalOpen2(true);
+          }}
+        >
+          <Tooltip title={'点击查看超标率统计'}>
+            <ReactEcharts
+              ref={echart => {
+                setOverChart(echart);
+              }}
+              option={getOption(2, OverRate)}
+              style={{ height: '180px', width: '100%' }}
+              theme="my_theme"
+            />
+            <div className={styles.echartsTitle} style={{ color: '#FCB12E' }}>
+              超标率
+            </div>
+          </Tooltip>
         </div>
       </div>
+      <Modal
+        title="数据有效率统计"
+        wrapClassName="fullScreenModal"
+        open={isModalOpen}
+        destroyOnClose
+        // open={false}
+        footer={false}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <DataEfficiencyRateModal level={requestParams.regionCode ? 2 : 1} />
+      </Modal>
+      <Modal
+        title="超标率统计"
+        wrapClassName="fullScreenModal"
+        open={isModalOpen2}
+        destroyOnClose
+        // open={false}
+        footer={false}
+        onCancel={() => {
+          setIsModalOpen2(false);
+        }}
+      >
+        <OverRateModal level={requestParams.regionCode ? 2 : 1} />
+      </Modal>
     </HomeCard>
   );
 };

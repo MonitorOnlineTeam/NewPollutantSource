@@ -8,15 +8,19 @@ import {
   getSystemConfigInfo,
   vertifyOldPwd,
   changePwd,
-  getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState, getEnterpriseList, GetAndroidOrIosSettings,
+  getAlarmPushAuthor,
+  insertAlarmPushAuthor,
+  getAlarmState,
+  getEnterpriseList,
+  GetAndroidOrIosSettings,
+  RecoveryUser,
 } from '@/services/user';
-import { postAutoFromDataUpdate } from '@/services/autoformapi'
+import { postAutoFromDataUpdate } from '@/services/autoformapi';
 import Cookie from 'js-cookie';
 import { message, Select } from 'antd';
 import { isUrl, sdlMessage } from '@/utils/utils';
 import Model from '@/utils/model';
-import configToken from '@/config'
-
+import configToken from '@/config';
 
 function formatter(data, parentPath = '') {
   if (data && data.length > 0) {
@@ -89,11 +93,11 @@ export default Model.extend({
         const response = yield call(getMenuData, payload);
         // ;
         if (response.IsSuccess) {
-          callback && callback(response)
+          callback && callback(response);
           const cMenu = formatter(response.Datas);
           // const cMenu = yield call(formatter, response.Datas);
 
-          let defaultNavigateUrl = sessionStorage.getItem('defaultNavigateUrl')
+          let defaultNavigateUrl = sessionStorage.getItem('defaultNavigateUrl');
           if (window.location.pathname === '/') {
             if (defaultNavigateUrl) {
               router.push(defaultNavigateUrl);
@@ -107,15 +111,19 @@ export default Model.extend({
             }
           }
           const menuList = getMenuList(cMenu);
-          let filterDescList = (menuList && menuList.length) ?
-            menuList.filter(item => { if (item.desc) return item.desc.indexOf("ReactPD") > -1 }) : []
+          let filterDescList =
+            menuList && menuList.length
+              ? menuList.filter(item => {
+                  if (item.desc) return item.desc.indexOf('ReactPD') > -1;
+                })
+              : [];
           yield put({
             type: 'saveCurrentUser',
             payload: {
               currentUser,
               currentMenu: cMenu,
               unfoldMenuList: [...menuList],
-              menuDescList: filterDescList.map(item => item.desc.replace("ReactPD", ""))
+              menuDescList: filterDescList.map(item => item.desc.replace('ReactPD', '')),
             },
           });
         } else {
@@ -123,7 +131,7 @@ export default Model.extend({
         }
       }
     },
-    * editUserInfo({ payload }, { call, update, put }) {
+    *editUserInfo({ payload }, { call, update, put }) {
       console.log(payload);
       const payloaduser = {
         configId: payload.configId,
@@ -183,8 +191,8 @@ export default Model.extend({
       if (result.IsSuccess) {
         sdlMessage('修改成功，请重新登录', 'success');
         // 退出登录
-        Cookie.set(configToken.cookieName, null);
-        Cookie.set('currentUser', null);
+        // Cookie.set(configToken.cookieName, null);
+        // Cookie.set('currentUser', null);
         yield put({
           type: 'login/logout',
         });
@@ -234,7 +242,6 @@ export default Model.extend({
         Datas: payload,
       };
       const result = yield call(insertAlarmPushAuthor, body);
-      console.log('insertAlarmPushAuthor=', result);
       if (result.IsSuccess) {
         sdlMessage('操作成功', 'success');
         callback && callback();
@@ -248,40 +255,45 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           showAlarmState: result.Datas,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
-    * getEnterpriseList({
-      payload,
-    }, { call, update }) {
+    *getEnterpriseList({ payload }, { call, update }) {
       const result = yield call(getEnterpriseList, payload);
       const arr = [];
       if (result.IsSuccess) {
         if (result.Datas.length) {
           result.Datas.map(item => {
             arr.push(item.ParentCode);
-          })
+          });
         }
-        payload.callback && payload.callback(arr.toString())
+        payload.callback && payload.callback(arr.toString());
       }
     },
     //获取手机端配置信息
-    * GetAndroidOrIosSettings({
-      payload,
-    }, { call, update }) {
+    *GetAndroidOrIosSettings({ payload }, { call, update }) {
       const result = yield call(GetAndroidOrIosSettings, payload);
       if (result.IsSuccess) {
         if (result.Datas) {
           yield update({
             settingList: result.Datas,
-          })
+          });
         }
       }
     },
+    // 用户恢复
+    *recoveryUser({ payload, callback }, { put, call, update, select }) {
+      const result = yield call(RecoveryUser, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
   },
-
 
   reducers: {
     saveCurrentUser(state, action) {

@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { Spin } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
+import webConfig from '@public/webConfig';
 
 @connect(state => ({
   configInfo: global.configInfo,
 }))
 export default class AutoLogin extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   componentDidMount() {
@@ -20,13 +21,13 @@ export default class AutoLogin extends Component {
   login = () => {
     const { username, password } = this.props.location.query;
     this.props.dispatch({
-      type: "userLogin/login",
+      type: 'userLogin/login',
       payload: {
-        userName: username || "system",
-        password: password || "system",
-      }
-    })
-  }
+        userName: username || webConfig.autoLoginUserInfo.username,
+        password: password || webConfig.autoLoginUserInfo.password,
+      },
+    });
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (JSON.stringify(this.props.configInfo) !== JSON.stringify(prevProps.configInfo)) {
@@ -42,10 +43,10 @@ export default class AutoLogin extends Component {
           height: 'calc(100vh/2)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
         size="large"
       />
-    )
+    );
   }
 }

@@ -16,11 +16,13 @@ class SaveSessionPage extends PureComponent {
     sessionStorage.setItem("sysMenuId", sysInfo.ID);
     sessionStorage.setItem("sysPollutantCodes", sysInfo.CodeList);
     sessionStorage.setItem("sysName", sysInfo.Name);
+    debugger
     this.getMenuList(sysInfo.ID);
   }
 
   // 获取菜单
   getMenuList = (menuId) => {
+    debugger
     let sysInfo = JSON.parse(this.props.history.location.query.sysInfo)
     this.props.dispatch({
       type: 'user/fetchCurrent',

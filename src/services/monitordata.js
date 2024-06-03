@@ -19,7 +19,7 @@ export async function queryhistorydatalist(params) {
 }
 
 export async function GetMonitorPointList(params) {
-    const result = await post(API.PointApi.GetMonitorPointList, params);
+    const result = await post(API.EntAndPointApi.GetMonitorPointList, params);
     return result;
 }
 

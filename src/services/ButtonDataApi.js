@@ -14,7 +14,7 @@ export async function GetButtonsByConfigID(params) {
         ConfigId: params.ConfigID
     }
 
-    const result = post(API.autoFormApi.GetButtonsByConfigID, body, null);
+    const result = post(API.AutoFormApi.GetButtonsByConfigID, body, null);
     return result === null ? {
         data: null
     } : result;
@@ -27,7 +27,7 @@ export async function GetTableExtend(params) {
         PageFlag: params.PageFlag
     }
 
-    const result = post(API.autoFormApi.GetTableExtend, body, null);
+    const result = post(API.AutoFormApi.GetTableExtend, body, null);
     return result === null ? {
         data: null
     } : result;
@@ -39,7 +39,7 @@ export async function SaveCfgButtons(params) {
         "ConfigId": params.ConfigId,
         "ButtonList": params.ButtonList
     };
-    const result = await post(API.autoFormApi.SaveCfgButtons, body, null);
+    const result = await post(API.AutoFormApi.SaveCfgButtons, body, null);
     return result === null ? null : result;
 }
 
@@ -52,7 +52,7 @@ export async function SaveTableExtend(params) {
         "DT_CUSTOMCSS": params.DT_CUSTOMCSS,
         "DT_PAGEFLAG": params.DT_PAGEFLAG
     };
-    const result = await post(API.autoFormApi.SaveTableExtend, body, null);
+    const result = await post(API.AutoFormApi.SaveTableExtend, body, null);
     return result === null ? null : result;
 }
 

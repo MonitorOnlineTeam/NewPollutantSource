@@ -2,12 +2,12 @@
  * @Author: JiaQi
  * @Date: 2023-06-19 09:10:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-26 15:45:52
+ * @Last Modified time: 2024-03-04 09:44:18
  * @Description：模型参数配置
  */
 import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { connect } from 'dva';
-import { Card, Form, Select, InputNumber, Row, Col, Divider, message, Tabs } from 'antd';
+import { Card, Form, Select, InputNumber, Row, Col, Divider, message, Empty } from 'antd';
 import styles from '../../styles.less';
 
 const WeekData = [
@@ -109,9 +109,16 @@ const ModelParamsConfig = props => {
   };
 
   // 处理运行策略参数
-  const renderParamsItem = (data, index) => {
+  const renderParamsItem = (data, index, type) => {
     const { WaveType, PollutantName, PollutantCode, ParamType, Unit } = data;
     let Value = /,/.test(data.Value) ? data.Value.split(',') : data.Value;
+
+    let isMin =
+      type !== '3'
+        ? {
+            min: 0.01,
+          }
+        : {};
 
     switch (WaveType) {
       // 小时
@@ -141,6 +148,7 @@ const ModelParamsConfig = props => {
               <InputNumber
                 onChange={value => onFormItemChange(value, ParamType, index, 0)}
                 style={{ width: '80px' }}
+                min={1}
               />
             </Form.Item>
             <span className={styles.formItemText_r}>小时，获取</span>
@@ -160,6 +168,7 @@ const ModelParamsConfig = props => {
               <InputNumber
                 onChange={value => onFormItemChange(value, ParamType, index, 1)}
                 style={{ width: '80px' }}
+                min={1}
               />
             </Form.Item>
             <span className={styles.formItemText_r}>小时的数据，判断是否符合模型数据特征。</span>
@@ -319,6 +328,7 @@ const ModelParamsConfig = props => {
               <InputNumber
                 onChange={value => onFormItemChange(value, ParamType, index, 2)}
                 style={{ width: '80px' }}
+                min={1}
               />
             </Form.Item>
             <span className={styles.formItemText_r}>小时的数据，判断是否符合模型数据特征。</span>
@@ -400,6 +410,7 @@ const ModelParamsConfig = props => {
               <InputNumber
                 onChange={value => onFormItemChange(value, ParamType, index)}
                 style={{ width: '80px' }}
+                {...isMin}
               />
             </Form.Item>
             <span className={styles.formItemText_r}>{Unit}</span>
@@ -431,35 +442,45 @@ const ModelParamsConfig = props => {
             autoComplete="off"
             colon={false}
           >
-            {dataAttribute['1'].length ? (
-              <Card className={styles.paramsCardWrapper}>
-                <span className={styles.paramTitle}>运行策略</span>
-                {dataAttribute['1'].map((item, index) => {
-                  return renderParamsItem(item, index);
-                })}
-              </Card>
+            {!dataAttribute['1'].length &&
+            !dataAttribute['2'].length &&
+            !dataAttribute['3'].length ? (
+              <Row className="center" style={{ width: '100%' }}>
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              </Row>
             ) : (
-              ''
-            )}
-            {dataAttribute['3'].length ? (
-              <Card className={styles.paramsCardWrapper}>
-                <span className={styles.paramTitle}>算法参数</span>
-                {dataAttribute['3'].map((item, index) => {
-                  return renderParamsItem(item, index);
-                })}
-              </Card>
-            ) : (
-              ''
-            )}
-            {dataAttribute['2'].length ? (
-              <Card className={styles.paramsCardWrapper} style={{ marginBottom: 0 }}>
-                <span className={styles.paramTitle}>动机判断</span>
-                {dataAttribute['2'].map((item, index) => {
-                  return renderParamsItem(item, index);
-                })}
-              </Card>
-            ) : (
-              ''
+              <>
+                {dataAttribute['1'].length ? (
+                  <Card className={styles.paramsCardWrapper}>
+                    <span className={styles.paramTitle}>运行策略</span>
+                    {dataAttribute['1'].map((item, index) => {
+                      return renderParamsItem(item, index, '1');
+                    })}
+                  </Card>
+                ) : (
+                  ''
+                )}
+                {dataAttribute['3'].length ? (
+                  <Card className={styles.paramsCardWrapper}>
+                    <span className={styles.paramTitle}>算法参数</span>
+                    {dataAttribute['3'].map((item, index) => {
+                      return renderParamsItem(item, index, '3');
+                    })}
+                  </Card>
+                ) : (
+                  ''
+                )}
+                {dataAttribute['2'].length ? (
+                  <Card className={styles.paramsCardWrapper} style={{ marginBottom: 0 }}>
+                    <span className={styles.paramTitle}>动机判断</span>
+                    {dataAttribute['2'].map((item, index) => {
+                      return renderParamsItem(item, index, '2');
+                    })}
+                  </Card>
+                ) : (
+                  ''
+                )}
+              </>
             )}
           </Form>
         </Card>

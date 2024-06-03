@@ -95,6 +95,11 @@ const routes = [
     ],
   },
   {
+    name: 'changePassword',
+    path: '/user/changePassword', //修改密码
+    component: './account/settings',
+  },
+  {
     path: '/',
     component: '../layouts/BlankLayout',
     routes: [
@@ -734,6 +739,11 @@ const routes = [
                 component: './platformManager/monitortarget',
               },
               {
+                name: 'entOperationInfo', //企业下的运维信息
+                path: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2/operationInfo',
+                component: './platformManager/monitortarget/operationInfo',
+              },
+              {
                 name: 'dischargepermit',
                 path:
                   '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
@@ -1216,7 +1226,14 @@ const routes = [
                   {
                     name: 'index',
                     path: '/rolesmanager/user/userinfoindex/UserInfo',
-                    component: './authorized/user',
+                    // component: './authorized/user',
+                    component: './authorized/newUser',
+                  },
+                  {
+                    // 用户权限
+                    name: 'userAuthority',
+                    path: '/rolesmanager/user/userAuthority',
+                    component: './authorized/userAuthority',
                   },
                   {
                     name: 'add',
@@ -1261,6 +1278,12 @@ const routes = [
                     component: './authorized/departInfo',
                   },
                 ],
+              },
+              {
+                //用户恢复
+                name: 'userRecovery',
+                path: '/rolesmanager/userRecovery',
+                component: './authorized/userRecovery',
               },
             ],
           },
@@ -1395,6 +1418,17 @@ const routes = [
                 name: 'realtimedata',
                 path: '/monitoring/realtimedata',
                 component: './monitoring/realtimedata',
+              },
+              // 数据总览 - 运维
+              {
+                name: 'realtimedataent',
+                path: '/monitoring/realtimedata/ent',
+                component: './monitoring/overView/realtime/Ent',
+              },
+              {
+                name: 'air',
+                path: '/monitoring/realtimedata/air',
+                component: './monitoring/overView/realtime/Air',
               },
               // 数据一览 - 实时
               {
@@ -1798,7 +1832,19 @@ const routes = [
               {
                 name: 'Intelligentanalysis',
                 path: '/Intelligentanalysis/transmissionefficiency',
-                component: './IntelligentAnalysis/newTransmissionefficiency/entIndex',
+                component: './IntelligentAnalysis/newTransmissionefficiency',
+              },
+              //传输有效率 城市级别
+              {
+                name: 'Intelligentanalysis',
+                path: '/Intelligentanalysis/transmissionefficiency/cityLevel',
+                component: './Intelligentanalysis/newTransmissionefficiency/CityLevel',
+              },
+              //传输有效率 企业级别
+              {
+                name: 'Intelligentanalysis',
+                path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                component: './Intelligentanalysis/newTransmissionefficiency/qutPage',
               },
               //季度有效数据捕集率 - 碳排放
               {
@@ -3184,8 +3230,7 @@ const routes = [
                     // 排污缺口
                     name: 'PollutantDischargeGap',
                     path: '/AbnormalIdentifyModel/HistoryDataAnalysis/PollutantDischargeGap',
-                    component:
-                      './AbnormalIdentifyModel/HistoryDataAnalysis/PollutantDischargeGap',
+                    component: './AbnormalIdentifyModel/HistoryDataAnalysis/PollutantDischargeGap',
                   },
                   {
                     // 统计分析

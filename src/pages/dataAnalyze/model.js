@@ -3,6 +3,7 @@ import moment from 'moment';
 import * as services from './service';
 import Model from '@/utils/model';
 import { message } from 'antd';
+import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
   namespace: 'dataAnalyze',
@@ -127,7 +128,7 @@ export default Model.extend({
     *export({ payload }, { call, put, update }) {
       const result = yield call(services.exportData, payload);
       if (result.IsSuccess) {
-        window.open(result.Datas);
+        downloadFile(result.Datas);
         message.success("导出成功")
       } else {
         message.error(result.Message)
@@ -221,7 +222,7 @@ export default Model.extend({
     *exportGasReport({ payload }, { call, put, update }) {
       const result = yield call(services.exportGasReport, payload);
       if (result.IsSuccess) {
-        window.open(result.Datas);
+        downloadFile(result.Datas);
         message.success("导出成功")
       } else {
         message.error(result.Message)
@@ -246,7 +247,7 @@ export default Model.extend({
       const result = yield call(api, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message)
       }
@@ -278,7 +279,7 @@ export default Model.extend({
       const result = yield call(services.exportCompositeyoyRangeData, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message)
       }
@@ -288,7 +289,7 @@ export default Model.extend({
       const result = yield call(services.exportRangeCompositeReport, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message)
       }
@@ -309,7 +310,7 @@ export default Model.extend({
       const result = yield call(services.exportCompositeRangeContrast, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message)
       }
@@ -331,7 +332,7 @@ export default Model.extend({
       const result = yield call(services.excellentDaysExportReport, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message)
       }
@@ -352,7 +353,7 @@ export default Model.extend({
       const result = yield call(services.exportAirDayRank, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message)
       }
@@ -373,7 +374,7 @@ export default Model.extend({
       const result = yield call(services.exportAddUpAirRank, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open(result.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(result.Message)
       }

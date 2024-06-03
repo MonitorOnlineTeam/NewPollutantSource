@@ -15,7 +15,7 @@ import { async } from 'q';
  */
 export async function getPollutantTypeList(params) {
   const result = await post(
-    API.commonApi.GetPollutantTypeList,
+    API.CommonApi.GetPollutantTypeList,
     {
       ...params,
       pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
@@ -37,7 +37,7 @@ export async function getBtnAuthority(params) {
     }
  */
 export async function querypollutantlist(params) {
-  const result = await post(API.commonApi.GetPollutantListByDgimn, params);
+  const result = await post(API.CommonApi.GetPollutantListByDgimn, params);
   return result === null ? {
     data: null,
   } : result.Datas;
@@ -51,7 +51,7 @@ export async function querypollutantlist(params) {
  */
 export async function deletePoints(params) {
   // console.log("params=",params);
-  const result = await post(API.PointApi.DeletePoints, params, null);
+  const result = await post(API.EntAndPointApi.DeletePoints, params, null);
   return result;
 }
 
@@ -63,6 +63,6 @@ export async function deletePoints(params) {
  */
 export async function queryPointForTarget(params) {
   console.log("params=", params);
-  const result = await post(API.PointApi.queryPointForTarget, params, null);
+  const result = await post(API.EntAndPointApi.queryPointForTarget, params, null);
   return result;
 }

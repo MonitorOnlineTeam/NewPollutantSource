@@ -3,7 +3,7 @@ import { API } from '@config/API'
 
 // 获取所有企业及排口信息
 export async function getAllEntAndPoint(params) {
-  const result = await post(API.commonApi.GetEntAndPoint, {
+  const result = await post(API.CommonApi.GetEntAndPoint, {
     ...params,
     PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || params.PollutantTypes
   }, null);
@@ -28,7 +28,7 @@ export async function getEntAndPointList(params) {
 
 // 获取所有污染物
 export async function getPollutantList(params) {
-  const result = await post(API.commonApi.GetPollutantTypeCode, params);
+  const result = await post(API.CommonApi.GetPollutantTypeCode, params);
   return result;
 }
 

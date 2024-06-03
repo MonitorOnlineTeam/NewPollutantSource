@@ -2,6 +2,8 @@ import Model from '@/utils/model';
 import * as services from './service';
 import moment from 'moment';
 import { message } from 'antd';
+import { downloadFile } from '@/utils/utils';
+
 export default Model.extend({
   namespace: 'chaoStatistics',
   state: {
@@ -35,7 +37,7 @@ export default Model.extend({
     *exportData({ payload }, { call, put, update, select }) {
       const response = yield call(services.exportData, { ...payload });
       if (response.IsSuccess) {
-        window.open(response.Datas)
+        downloadFile(result.Datas);
       } else {
         message.error(response.Message)
       }

@@ -20,6 +20,8 @@ import {
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
+import { downloadFile } from '@/utils/utils';
+
 export default Model.extend({
   namespace: 'yearCheckEnt',
   state: {
@@ -221,7 +223,7 @@ export default Model.extend({
       const response = yield call(ExportAnnualAssessmentEnt, { ...body });
       if (response.IsSuccess) {
         message.success('导出成功');
-        window.open(response.Datas);
+        downloadFile(result.Datas)
       } else {
         message.error(response.Datas);
       }

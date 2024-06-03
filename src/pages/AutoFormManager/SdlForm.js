@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-16 10:05:13
+ * @Last Modified time: 2024-03-20 09:10:05
  */
 
 import React, { PureComponent, Fragment } from 'react';
@@ -387,7 +387,7 @@ class SdlForm extends PureComponent {
             ? {
                 fileList: fileList,
               }
-            : {fileList: []};
+            : { fileList: [] };
           element = (
             <SdlUpload
               {...this.props}
@@ -610,6 +610,7 @@ class SdlForm extends PureComponent {
     return (
       <Card bordered={false}>
         <Form
+          id="searchForm"
           onSubmit={e => {
             e.preventDefault();
             this._onSubmitForm();

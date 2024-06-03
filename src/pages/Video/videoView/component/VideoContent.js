@@ -116,7 +116,6 @@ class VideoContent extends PureComponent {
   };
 
   onDateChange2 = (value, dateString) => {
-    console.log('value', value);
     if (value) {
       this.setState({
         startDate: value.startOf('day'),

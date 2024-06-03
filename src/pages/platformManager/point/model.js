@@ -10,7 +10,7 @@ export default Model.extend({
     instrumentSelectList: [],
     factorySelectList: [],
     methodSelectList: [],
-    monitorItem: "",
+    monitorItem: '',
     unitInfoList: [],
   },
 
@@ -19,7 +19,7 @@ export default Model.extend({
     *addPoint({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.addPoint, payload.FormData);
       if (result.IsSuccess) {
-        message.success("添加成功");
+        message.success('添加成功');
         callback && callback(result);
       } else {
         message.error(result.Message);
@@ -29,7 +29,7 @@ export default Model.extend({
     *updatePoint({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.updatePoint, payload.FormData);
       if (result.IsSuccess) {
-        message.success("修改成功");
+        message.success('修改成功');
         callback && callback(result);
       } else {
         message.error(result.Message);
@@ -39,7 +39,7 @@ export default Model.extend({
     *getPointInstrument({ payload }, { call, put, update, select }) {
       const result = yield call(services.getPointInstrument, payload);
       if (result.IsSuccess) {
-        yield update({ pointInstrumentList: result.Datas })
+        yield update({ pointInstrumentList: result.Datas });
       } else {
         message.error(result.Message);
       }
@@ -48,7 +48,7 @@ export default Model.extend({
     *getInstrumentSelectList({ payload }, { call, put, update, select }) {
       const result = yield call(services.getInstrumentSelectList, payload);
       if (result.IsSuccess) {
-        yield update({ instrumentSelectList: result.Datas })
+        yield update({ instrumentSelectList: result.Datas });
       } else {
         message.error(result.Message);
       }
@@ -57,7 +57,7 @@ export default Model.extend({
     *getFactorySelectList({ payload }, { call, put, update, select }) {
       const result = yield call(services.getFactorySelectList, payload);
       if (result.IsSuccess) {
-        yield update({ factorySelectList: result.Datas })
+        yield update({ factorySelectList: result.Datas });
       } else {
         message.error(result.Message);
       }
@@ -66,7 +66,7 @@ export default Model.extend({
     *getMethodSelectList({ payload }, { call, put, update, select }) {
       const result = yield call(services.getMethodSelectList, payload);
       if (result.IsSuccess) {
-        yield update({ methodSelectList: result.Datas })
+        yield update({ methodSelectList: result.Datas });
       } else {
         message.error(result.Message);
       }
@@ -75,7 +75,7 @@ export default Model.extend({
     *getMonitorItem({ payload }, { call, put, update, select }) {
       const result = yield call(services.getMonitorItem, payload);
       if (result.IsSuccess) {
-        yield update({ monitorItem: result.Datas })
+        yield update({ monitorItem: result.Datas });
       } else {
         message.error(result.Message);
       }
@@ -84,14 +84,14 @@ export default Model.extend({
     *saveInstrument({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.saveInstrument, payload);
       if (result.IsSuccess) {
-        message.success("添加成功")
+        message.success('添加成功');
         callback && callback();
         yield put({
-          type: "getPointInstrument",
+          type: 'getPointInstrument',
           payload: {
-            DGIMN: payload.DGIMN
-          }
-        })
+            DGIMN: payload.DGIMN,
+          },
+        });
       } else {
         message.error(result.Message);
       }
@@ -100,13 +100,13 @@ export default Model.extend({
     *deleteInstrument({ payload }, { call, put, update, select }) {
       const result = yield call(services.deleteInstrument, payload);
       if (result.IsSuccess) {
-        message.success("删除成功！")
+        message.success('删除成功！');
         yield put({
-          type: "getPointInstrument",
+          type: 'getPointInstrument',
           payload: {
-            DGIMN: payload.DGIMN
-          }
-        })
+            DGIMN: payload.DGIMN,
+          },
+        });
       } else {
         message.error(result.Message);
       }
@@ -115,7 +115,7 @@ export default Model.extend({
     *getUnitList({ payload }, { call, put, update, select }) {
       const result = yield call(services.getUnitList, payload);
       if (result.IsSuccess) {
-        yield update({ unitInfoList: result.Datas })
+        yield update({ unitInfoList: result.Datas });
       } else {
         message.error(result.Message);
       }
@@ -147,5 +147,5 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-  }
+  },
 });

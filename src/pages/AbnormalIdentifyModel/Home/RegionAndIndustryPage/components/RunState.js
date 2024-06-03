@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Modal } from 'antd';
+import { Modal, Tooltip } from 'antd';
 import styles from '../../styles.less';
 import ReactEcharts from 'echarts-for-react';
 import HomeCard from '../../components/HomeCard';
+import RunStateModal from '../../ModalPage/RunStateModal';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   PointSumStatus: AbnormalIdentifyModelHome.PointSumStatus,
+  requestParams: AbnormalIdentifyModelHome.requestParams,
   // todoList: wordSupervision.todoList,
   loading: loading.effects['AbnormalIdentifyModelHome/GetMapPointList'],
 });
 
 const RunState = props => {
-  const { dispatch, PointSumStatus, loading } = props;
+  const { dispatch, PointSumStatus, requestParams, loading } = props;
   const [echarts, setEcharts] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {}, []);
 
@@ -51,19 +54,6 @@ const RunState = props => {
     let color = ['#2899F6', '#E3AB15', '#FF4374', '#CACACA'];
     return {
       color: color,
-      // title: [
-      //   {
-      //     text: '状态分布',
-      //     x: '19.5%',
-      //     y: 'center',
-      //     textStyle: {
-      //       fontSize: '18',
-      //       color: '#fff',
-      //       // fontFamily: 'DINAlternate-Bold, DINAlternate',
-      //       fontWeight: '600',
-      //     },
-      //   },
-      // ],
       tooltip: {
         trigger: 'item',
       },
@@ -82,9 +72,9 @@ const RunState = props => {
         //图例标记的图形宽度
         itemWidth: 20,
         formatter: function(name, option) {
-          console.log('name', name);
           let current = data.find(item => item.name === name);
-          return `${name}: 企业${current.entCount}家 排口${current.value}个   ${current.rate}%`;
+          return `${name}: 企业${current.entCount || 0}家 排口${current.value ||
+            0}个   ${current.rate || 0}%`;
         },
       },
       series: [
@@ -93,8 +83,8 @@ const RunState = props => {
           type: 'pie',
           radius: ['120%', '140%'],
           center: ['50%', '50%'],
-          width: '55%',
-          height: '55%',
+          width: '50%',
+          height: '50%',
           top: 'center',
           avoidLabelOverlap: false,
           // barWidth: 30,
@@ -124,8 +114,8 @@ const RunState = props => {
           type: 'pie',
           radius: ['30%', '36%'],
           center: ['50%', '50%'],
-          width: '55%',
-          height: '55%',
+          width: '50%',
+          height: '50%',
           top: 'center',
           color: ['#ffffff', 'red'],
           startAngle: 105,
@@ -179,8 +169,8 @@ const RunState = props => {
 
           // radius: ['20%', '36%'],
           center: ['50%', '50%'],
-          width: '55%',
-          height: '55%',
+          width: '50%',
+          height: '50%',
           top: 'center',
           startAngle: 90,
           tooltip: {
@@ -233,8 +223,8 @@ const RunState = props => {
 
           // radius: ['20%', '36%'],
           center: ['50%', '50%'],
-          width: '55%',
-          height: '55%',
+          width: '50%',
+          height: '50%',
           top: 'center',
           z: 10,
           startAngle: 90,
@@ -256,7 +246,7 @@ const RunState = props => {
               value: 25,
               itemStyle: {
                 normal: {
-                  color: new echarts.echartsLib.graphic.LinearGradient(0, 1, 0, 0, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
                       color: 'rgba(51,149,191,0.5)',
@@ -274,7 +264,7 @@ const RunState = props => {
               value: 25,
               itemStyle: {
                 normal: {
-                  color: new echarts.echartsLib.graphic.LinearGradient(0, 1, 0, 0, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
                       color: 'rgba(0,0,0,0)',
@@ -292,7 +282,7 @@ const RunState = props => {
               value: 25,
               itemStyle: {
                 normal: {
-                  color: new echarts.echartsLib.graphic.LinearGradient(0, 1, 0, 0, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
                       color: 'rgba(51,149,191,0)',
@@ -310,7 +300,7 @@ const RunState = props => {
               value: 25,
               itemStyle: {
                 normal: {
-                  color: new echarts.echartsLib.graphic.LinearGradient(0, 1, 0, 0, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
                       color: 'rgba(51,149,191,0.5)',
@@ -328,18 +318,44 @@ const RunState = props => {
       ],
     };
   };
+
+  console.log('requestParams', requestParams);
   return (
     <HomeCard title="运行状态分布" loading={loading}>
-      <div className={styles.echartsContent}>
-        <ReactEcharts
-          ref={echart => {
-            setEcharts(echart);
+      <Tooltip title={'点击查看运行状态分布'}>
+        <div
+          className={styles.echartsContent}
+          onClick={() => {
+            setIsModalOpen(true);
           }}
-          option={getOption(1)}
-          lazyUpdate={true}
-          style={{ height: '200px', width: '100%' }}
+        >
+          <ReactEcharts
+            ref={echart => {
+              console.log('echart', echart);
+              setEcharts(echart);
+            }}
+            option={getOption(1)}
+            lazyUpdate={true}
+            style={{ height: '200px', width: '100%' }}
+          />
+        </div>
+      </Tooltip>
+      <Modal
+        title="运行状态分布"
+        wrapClassName="fullScreenModal"
+        open={isModalOpen}
+        destroyOnClose
+        // open={false}
+        footer={false}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <RunStateModal
+          level={requestParams.regionCode ? 2 : 1}
+          pollutantCode={requestParams.pollutantCode}
         />
-      </div>
+      </Modal>
     </HomeCard>
   );
 };

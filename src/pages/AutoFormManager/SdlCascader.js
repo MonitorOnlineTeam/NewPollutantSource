@@ -1,18 +1,16 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-
-import {
-  Cascader,
-  Select
-} from 'antd'
+import { Cascader, Select } from 'antd';
 import { connect } from 'dva';
 const { Option } = Select;
-
-@connect(({ loading, common }) => ({
+@connect(({ loading, common, autoForm }) => ({
   enterpriseAndPointList: common.enterpriseAndPointList,
   industryTreeList: common.industryTreeList,
-  level: common.level
+  level: common.level,
+  regionList: autoForm.regionList,
+  noFilterRegionList: common.noFilterRegionList,
+  testRegionList: common.testRegionList,
 }))
 class SdlCascader extends Component {
   constructor(props) {
@@ -21,8 +19,8 @@ class SdlCascader extends Component {
       industryTreeList: [],
     };
     this._SELF_ = {
-      defaultPlaceholder: "请选择",
-    }
+      defaultPlaceholder: '请选择',
+    };
   }
 
   // static getDerivedStateFromProps(props, state) {
@@ -35,7 +33,18 @@ class SdlCascader extends Component {
   // }
 
   componentDidMount() {
-    const { dispatch, data, configId, itemValue, itemName } = this.props;
+    const {
+      dispatch,
+      data,
+      configId,
+      itemValue,
+      itemName,
+      noFilter,
+      regionList,
+      noFilterRegionList,
+      testRegionList,
+      isCtPoll,
+    } = this.props;
     // !data.length && dispatch({
     //   type: 'autoForm/getRegions',
     // })
@@ -46,24 +55,148 @@ class SdlCascader extends Component {
     //     PointMark: "2"
     //   }
     // })
-    !data.length && this.props.dispatch({
-      type: "common/getIndustryTree",
-      payload: {
-        ConfigId: configId,
-        ValueField: itemValue,
-        TextField: itemName
-      },
-      callback: (res) => {
-        this.setState({ industryTreeList: res })
+    //   !data.length && this.props.dispatch({type: this.props.noFilter?"common/getCascaderNoFilterRegionList" : "common/getEnterpriseAndPoint",
+    //   // payload: {
+    //   //   ConfigId: configId,
+    //   //   ValueField: itemValue,
+    //   //   TextField: itemName
+    //   // },
+    //   payload: { PointMark: '2'},
+    //   callback: (res) => {
+    //     this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
+    //   }
+    // })
+    if (itemName === 'dbo.T_Cod_Region.RegionName' || !configId) {
+      if (noFilter) {
+        //不用过滤行政区
+        if (noFilterRegionList && noFilterRegionList[0]) {
+          this.setState({ industryTreeList: this.industryTreeListFormat(noFilterRegionList, 1) });
+        } else {
+          this.props.dispatch({
+            type: 'common/getCascaderNoFilterRegionList',
+            payload: { PointMark: '2' },
+            callback: res => {
+              this.setState({ industryTreeList: this.industryTreeListFormat(res, 1) });
+            },
+          });
+        }
+      } else {
+        if (regionList && regionList.length <= 0) {
+          //普通行政区
+          this.props.dispatch({
+            type: 'autoForm/getRegions',
+            payload: { PointMark: '2' },
+            callback: res => {
+              this.setState({ industryTreeList: this.industryTreeListFormat(res, 1) });
+            },
+          });
+        }
+        setTimeout(() => {
+          this.setState({ industryTreeList: this.industryTreeListFormat(regionList, 1) }), 300;
+        });
       }
-    })
+    } else if (itemName === 'dbo.View_TestRegion.RegionName') {
+      //调试服务和成套污染源管理
+      if (isCtPoll) {
+        //成套污染源管理
+        this.props.dispatch({
+          type: 'common/getCtTestXuRegions',
+          payload: { PointMark: '2' },
+          callback: res => {
+            this.setState({ industryTreeList: this.industryTreeListFormat(res, 1) });
+          },
+        });
+      } else {
+        //调试服务
+        if (testRegionList && testRegionList[0]) {
+          this.setState({ industryTreeList: this.industryTreeListFormat(testRegionList, 1) });
+        } else {
+          this.props.dispatch({
+            type: 'common/getTestXuRegions',
+            payload: { PointMark: '2' },
+            callback: res => {
+              this.setState({ industryTreeList: this.industryTreeListFormat(res, 1) });
+            },
+          });
+        }
+      }
+    } else {
+      !data.length &&
+        this.props.dispatch({
+          type: 'common/getIndustryTree',
+          payload: {
+            ConfigId: configId,
+            ValueField: itemValue,
+            TextField: itemName,
+          },
+          callback: res => {
+            this.setState({ industryTreeList: res });
+          },
+        });
+    }
   }
+  componentDidUpdate(props) {
+    const {
+      regionList,
+      configId,
+      itemName,
+      noFilter,
+      noFilterRegionList,
+      testRegionList,
+      isCtPoll,
+    } = this.props;
+    if (
+      props.regionList !== regionList ||
+      (props.noFilterRegionList !== noFilterRegionList &&
+        (itemName === 'dbo.T_Cod_Region.RegionName' || !configId))
+    ) {
+      //资产管理污染源管理 或 不需要过滤的行政区
+      this.setState({
+        industryTreeList: this.industryTreeListFormat(
+          noFilter ? noFilterRegionList : regionList,
+          1,
+        ),
+      });
+    }
+    if (
+      props.testRegionList !== testRegionList &&
+      itemName === 'dbo.View_TestRegion.RegionName' &&
+      !isCtPoll
+    ) {
+      //调试服务
+      this.setState({
+        industryTreeList: this.industryTreeListFormat(this.props.testRegionList, 1),
+      });
+    }
+  }
+  industryTreeListFormat = (data, i) => {
+    const { selectType } = this.props;
+    let levelNum = (selectType && selectType.split(',')[0]) || 999;
+    if (data && data.length > 0 && i <= levelNum) {
+      i++;
+      return data.map(item => {
+        return {
+          label: item.label,
+          value: item.value,
+          children:
+            item.children && item.children.length > 0
+              ? this.industryTreeListFormat(item.children, i)
+              : undefined,
+        };
+      });
+    }
+  };
 
-  filter(inputValue, path) {
-    return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
-  }
   render() {
-    const { configId, enterpriseAndPointList, data, itemValue, itemName, level } = this.props;
+    const {
+      configId,
+      enterpriseAndPointList,
+      data,
+      itemValue,
+      itemName,
+      level,
+      selectType,
+    } = this.props;
     const { industryTreeList } = this.state;
     // const options = data.length ? data : enterpriseAndPointList;
     const options = data.length ? data : industryTreeList;
@@ -85,21 +218,24 @@ class SdlCascader extends Component {
     //     </Select>
     //   )
     // }
+    let onSelect = (selectType && selectType.split(',')[1]) || '是';
     return (
       <Cascader
-        fieldNames={{ label: "label", value: "value", children: 'children' }}
+        {...this.props}
+        fieldNames={{ label: 'label', value: 'value', children: 'children' }}
         options={options}
         showSearch={(inputValue, path) => {
-          return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+          return path.some(
+            option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1,
+          );
         }}
-        changeOnSelect
-        // changeOnSelect={true}
-        {...this.props}
+        changeOnSelect={onSelect === '是' ? true : false}
+        // changeOnSelect
+        // {...this.props}
       />
     );
   }
 }
-
 
 // SearchSelect.propTypes = {
 //   // placeholder
@@ -115,9 +251,9 @@ class SdlCascader extends Component {
 // }
 
 SdlCascader.defaultProps = {
-  itemName: "title",
-  itemValue: "value",
-  data: []
-}
+  itemName: 'title',
+  itemValue: 'value',
+  data: [],
+};
 
 export default SdlCascader;

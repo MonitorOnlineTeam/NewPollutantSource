@@ -3,13 +3,13 @@ import { API } from '@config/API'
 
 // 添加排口
 export async function addPoint(params) {
-  const result = await post(API.PointApi.AddPoint, params);
+  const result = await post(API.EntAndPointApi.AddPoint, params);
   return result;
 }
 
 // 更新排口
 export async function updatePoint(params) {
-  const result = await post(API.PointApi.UpdatePoint, params);
+  const result = await post(API.EntAndPointApi.UpdatePoint, params);
   return result;
 }
 

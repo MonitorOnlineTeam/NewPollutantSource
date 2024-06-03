@@ -41,7 +41,6 @@ const Index = props => {
         polShow
         domId="#ModelMatch"
         onItemClick={value => {
-          console.log('value', value);
           if (value[0].IsEnt === false) {
             setDGIMN(value[0].key);
           }

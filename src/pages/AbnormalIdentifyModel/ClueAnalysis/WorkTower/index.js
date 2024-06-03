@@ -244,7 +244,8 @@ const WorkTower = props => {
                         });
                         router.push(`/AbnormalIdentifyModel/CluesList/ClueAnalysis/GenerateVerificationTake?data=${JSON.stringify(data)}`);
                       }}
-                      color="default" style={{ marginTop: 4 }}>监测样品为<span>{typeItem.WarningName}</span>  <span style={{ paddingLeft: 6 }}>{typeItem.WarningCount}</span>个</Tag>)}
+                      // color="default" style={{ marginTop: 4 }}>监测样品为<span>{typeItem.WarningName}</span>  <span style={{ paddingLeft: 6 }}>{typeItem.WarningCount}</span>个</Tag>)}
+                      color="default" style={{ marginTop: 4 }}><span>{typeItem.WarningName}</span>  <span style={{ paddingLeft: 6 }}>{typeItem.WarningCount}</span>个</Tag>)}
                   </div>
                 </Col>)
                 :

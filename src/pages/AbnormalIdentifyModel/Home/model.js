@@ -3,21 +3,27 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 import moment from 'moment';
 import _ from 'lodash';
+import { handleHomeDate } from '@/pages/AbnormalIdentifyModel/CONST';
 
 function getBodyParams(params) {
   const requestParams = _.cloneDeep(params);
-  let btime = requestParams.btime.format('YYYY-MM-DD  00:00:00');
-  let etime = requestParams.etime.add(-1, 'day').format('YYYY-MM-DD 23:59:59');
-
-  if (requestParams.isYanShi) {
-    btime = requestParams.btime.add(-20, 'month').format('YYYY-MM-DD 00:00:00');
-    etime = requestParams.etime.add(-20, 'month').format('YYYY-MM-DD 23:59:59');
-  }
+  // let btime = _.cloneDeep(requestParams.btime).startOf(requestParams.dateType);
+  // let etime = _.cloneDeep(requestParams.btime).endOf(requestParams.dateType);
+  // debugger;
+  // if (moment().format('YYYY-MM') === requestParams.btime.format('YYYY-MM')) {
+  //   //
+  //   etime = moment().add(-1, 'day');
+  // }
+  const { btime, etime } = handleHomeDate(requestParams.btime, requestParams.dateType);
+  // if (requestParams.isYanShi) {
+  //   btime = requestParams.btime.add(-20, 'month').format('YYYY-MM-DD 00:00:00');
+  //   etime = requestParams.etime.add(-20, 'month').format('YYYY-MM-DD 23:59:59');
+  // }
 
   let body = {
     ...requestParams,
-    etime: etime,
-    btime: btime,
+    btime: btime.format('YYYY-MM-DD 00:00:00'),
+    etime: etime.format('YYYY-MM-DD 23:59:59'),
     // etime: '2023-12-08 00:00:00',
     // btime: '2023-12-01 00:00:00',
     // pollutantCode: requestParams.pollutantCode.length
@@ -28,90 +34,106 @@ function getBodyParams(params) {
   return body;
 }
 
+const initialState = {
+  entHomeIsOpen: false,
+  defaultRegionName:
+    configInfo.RegionLeve === '2' ? '全省' : configInfo.RegionLeve === '3' ? '全市' : '全国',
+  // 首页
+  requestParams: {
+    regionName:
+      configInfo.RegionLeve === '2' ? '全省' : configInfo.RegionLeve === '3' ? '全市' : '全国',
+    regionCode: '',
+    industryCode: '',
+    // dateRange: 'week',
+    btime: moment()
+      .add(-2, 'year')
+      .startOf('month'),
+    // .startOf('day'),
+    // etime: moment().add(-2, 'year'),
+    // .endOf('day'),
+    pollutantCode: '01,02,03',
+    // pollutantCode: [],
+    pLeve: 1,
+    entCode: '',
+    dateType: 'year',
+  },
+  queryData: {
+    RegionName:
+      configInfo.RegionLeve === '2' ? '全省' : configInfo.RegionLeve === '3' ? '全市' : '全国',
+    IndustryName: undefined,
+  },
+  //
+  EntCount: 0,
+  PointCount: 0,
+  regionList: [],
+  PointSumStatus: {
+    Normal: 0,
+    NormalRate: 0,
+    NormalEnt: 0,
+    Exception: 0,
+    ExceptionRate: 0,
+    ExceptionEnt: 0,
+    Over: 0,
+    OverRate: 0,
+    OverEnt: 0,
+    Stop: 0,
+    StopRate: 0,
+    StopEnt: 0,
+  },
+  mapMarkersList: [],
+  // 运行分析
+  OverRate: 0,
+  DataEfficiencyRate: 0,
+  // 异常线索统计
+  ClueStatisticsData: {
+    CountList: [],
+    ModelGroupList: [],
+  },
+  EmissionStatisticsData: {
+    pollutantList: [],
+    EntCount: [],
+    xData: [],
+  },
+
+  // 企业
+  currentEntName: '',
+  // 请求参数
+  entRequestParams: {
+    // regionCode: '150000000',
+    regionCode: '',
+    industryCode: '',
+    // dateRange: 'week',
+    btime: moment()
+      .add(-2, 'year')
+      .startOf('month'),
+    // .startOf('day'),
+    // etime: moment(),
+
+    pollutantCode: '01,02,03',
+    // pollutantCode: [],
+    pLeve: 3,
+    entCode: '',
+    dateType: 'year',
+  },
+  entPointSumStatus: {
+    Normal: 0,
+    NormalRate: 0,
+    Exception: 0,
+    ExceptionRate: 0,
+    Over: 0,
+    OverRate: 0,
+    Stop: 0,
+    StopRate: 0,
+  },
+  entMapMarkersList: [],
+  // 运行分析
+  EntOverRate: 0,
+  EntDataEfficiencyRate: 0,
+};
+
 export default Model.extend({
   namespace: 'AbnormalIdentifyModelHome',
-  state: {
-    entHomeIsOpen: false,
-    // 首页
-    requestParams: {
-      regionName: '全国',
-      regionCode: '',
-      industryCode: '',
-      dateRange: 'week',
-      btime: moment().add(-6, 'day'),
-      // .startOf('day'),
-      etime: moment(),
-      // .endOf('day'),
-      pollutantCode: '01,02,03',
-      // pollutantCode: [],
-      pLeve: 1,
-      entCode: '',
-    },
-    queryData: {
-      RegionName: '全国',
-      IndustryName: undefined,
-    },
-    //
-    EntCount: 0,
-    PointCount: 0,
-    regionList: [],
-    PointSumStatus: {
-      Normal: 0,
-      NormalRate: 0,
-      Exception: 0,
-      ExceptionRate: 0,
-      Over: 0,
-      OverRate: 0,
-      Stop: 0,
-      StopRate: 0,
-    },
-    mapMarkersList: [],
-    // 运行分析
-    OverRate: 0,
-    DataEfficiencyRate: 0,
-    // 异常线索统计
-    ClueStatisticsData: {
-      CountList: [],
-      ModelGroupList: [],
-    },
-    EmissionStatisticsData: {
-      pollutantList: [],
-      EntCount: [],
-      xData: [],
-    },
-
-    // 企业
-    currentEntName: '',
-    // 请求参数
-    entRequestParams: {
-      // regionCode: '150000000',
-      regionCode: '',
-      industryCode: '',
-      dateRange: 'week',
-      btime: moment().add(-6, 'day'),
-      // .startOf('day'),
-      etime: moment(),
-
-      pollutantCode: '01,02,03',
-      // pollutantCode: [],
-      pLeve: 3,
-      entCode: '',
-    },
-    entPointSumStatus: {
-      Normal: 0,
-      NormalRate: 0,
-      Exception: 0,
-      ExceptionRate: 0,
-      Over: 0,
-      OverRate: 0,
-      Stop: 0,
-      StopRate: 0,
-    },
-    entMapMarkersList: [],
-    // 运行分析
-    EntOverRate: 0,
-    EntDataEfficiencyRate: 0,
-  },
+  state: initialState,
   effects: {
     // 获取首页地图数据
     *GetMapPointList({ payload, callback }, { call, select, update }) {
@@ -156,8 +178,6 @@ export default Model.extend({
       if (result.IsSuccess) {
         // callback && callback(result.Datas);
         yield update(result.Datas);
-      } else {
-        message.error(result.Message);
       }
     },
     // 获取排放量统计
@@ -188,8 +208,6 @@ export default Model.extend({
             xData,
           },
         });
-      } else {
-        message.error(result.Message);
       }
     },
     // 获取异常线索统计
@@ -204,8 +222,6 @@ export default Model.extend({
             ...result.Datas,
           },
         });
-      } else {
-        message.error(result.Message);
       }
     },
     // 获取排名
@@ -220,8 +236,6 @@ export default Model.extend({
       if (result.IsSuccess) {
         let rankData = _.sortBy([...result.Datas], item => -item.val);
         callback && callback(rankData);
-      } else {
-        message.error(result.Message);
       }
     },
 
@@ -239,8 +253,6 @@ export default Model.extend({
       if (result.IsSuccess) {
         let rankData = _.sortBy([...result.Datas], item => -item.val);
         callback && callback(rankData);
-      } else {
-        message.error(result.Message);
       }
     },
     // 获取企业级别 - 数据质量分析
@@ -252,8 +264,6 @@ export default Model.extend({
       const result = yield call(services.GetDataQualityAnalysis, body);
       if (result.IsSuccess) {
         callback(result.Datas);
-      } else {
-        message.error(result.Message);
       }
     },
     // 获取企业级别 - 排污缺口
@@ -273,8 +283,6 @@ export default Model.extend({
           '03': pollutant03,
         };
         callback && callback(obj);
-      } else {
-        message.error(result.Message);
       }
     },
     // 获取企业首页地图数据
@@ -322,6 +330,54 @@ export default Model.extend({
           EntOverRate: result.Datas.OverRate,
           EntDataEfficiencyRate: result.Datas.DataEfficiencyRate,
         });
+      }
+    },
+    // 获取数据有效率下钻数据
+    *GetEffectiveDrillDownData({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetEffectiveDrillDownData, payload);
+      if (result.IsSuccess) {
+        // yield update({});
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取异常线索统计下钻数据
+    *GetClueDrillDownData({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetClueDrillDownData, payload);
+      if (result.IsSuccess) {
+        // yield update({});
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取超标率下钻数据
+    *GetOverStandardDrillDownData({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetOverStandardDrillDownData, payload);
+      if (result.IsSuccess) {
+        // yield update({});
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取运行状态分布下钻数据
+    *GetRunningStateDrillDownData({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetRunningStateDrillDownData, payload);
+      if (result.IsSuccess) {
+        // yield update({});
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取数据质量分析下钻数据
+    *GetQualityDrillDownData({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetQualityDrillDownData, payload);
+      if (result.IsSuccess) {
+        // yield update({});
+        callback && callback(result.Datas);
       } else {
         message.error(result.Message);
       }
@@ -337,6 +393,10 @@ export default Model.extend({
       // });
     },
 
+    // 重置首页数据
+    *resetState({ payload }, { put, take, update }) {
+      yield update(initialState);
+    },
     // // 更新企业首页请求参数
     // *updateRequestParams({ payload }, { put, take, update }) {
     //   yield update(payload);

@@ -1,4 +1,10 @@
-import { LockOutlined, MailOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  LockOutlined,
+  MailOutlined,
+  MobileOutlined,
+  UserOutlined,
+  SafetyOutlined,
+} from '@ant-design/icons';
 import React from 'react';
 import styles from './index.less';
 export default {
@@ -51,13 +57,36 @@ export default {
   Captcha: {
     props: {
       size: 'large',
+      id: 'verificationCode',
       prefix: <MailOutlined className={styles.prefixIcon} />,
-      placeholder: 'captcha',
+      placeholder: '请输入手机验证码',
     },
     rules: [
       {
         required: true,
-        message: 'Please enter Captcha!',
+        message: '请输入手机验证码',
+      },
+      {
+        pattern: /^[0-9]{4}$/,
+        message: '请输入4位数的验证码',
+      },
+    ],
+  },
+  VerificaCode: {
+    props: {
+      size: 'large',
+      id: 'verificaCode',
+      prefix: <SafetyOutlined className={styles.prefixIcon} />,
+      placeholder: '请输入验证码',
+    },
+    rules: [
+      {
+        required: true,
+        message: '请输入验证码',
+      },
+      {
+        pattern: /^[A-Za-z0-9]{4}$/,
+        message: '请输入4位验证码',
       },
     ],
   },

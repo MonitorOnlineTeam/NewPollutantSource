@@ -6,6 +6,7 @@ import omit from 'omit.js';
 import ItemMap from './map';
 import LoginContext from './LoginContext';
 import styles from './index.less';
+import Captcha from 'react-captcha-code';
 const FormItem = Form.Item;
 
 class WrapFormItem extends Component {
@@ -96,6 +97,7 @@ class WrapFormItem extends Component {
       type,
       form,
       tabUtil,
+      loginSuccess,
       ...restProps
     } = this.props;
 
@@ -106,7 +108,6 @@ class WrapFormItem extends Component {
     if (!form) {
       return null;
     }
-
     const { getFieldDecorator } = form; // get getFieldDecorator props
 
     const options = this.getFormItemOptions(this.props);
@@ -135,9 +136,36 @@ class WrapFormItem extends Component {
       );
     }
 
-    return (
+    return name == 'verificaCode' ? ( //验证码 登录失败需要验证
+      <Row gutter={8} className={styles.verificaCodeSty}>
+        {!loginSuccess && (
+          <>
+            <Col span={16}>
+              <FormItem>
+                {getFieldDecorator(name, options)(<Input {...customProps} {...otherProps} />)}
+              </FormItem>
+            </Col>
+            <Col span={8}>
+              <Captcha
+                charNum={4}
+                onRef={this.props.handleRef}
+                onChange={this.props.verificaCodeChange}
+                bgColor={'#c6d2e0'}
+              />
+            </Col>
+          </>
+        )}
+      </Row>
+    ) : (
       <FormItem>
-        {getFieldDecorator(name, options)(<Input {...customProps} {...otherProps} />)}
+        {getFieldDecorator(name, options)(
+          name == 'password' ? (
+            <Input.Password {...customProps} {...otherProps} />
+          ) : (
+            <Input {...customProps} {...otherProps} />
+          ),
+        )}
+        {/* {getFieldDecorator(name, options)(<Input {...customProps} {...otherProps} />)} */}
       </FormItem>
     );
   }

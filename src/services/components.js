@@ -9,7 +9,7 @@ export async function getTreeNodeData(params) {
 
 // 获取站点详情
 export async function getSiteInfo(params) {
-  const result = await post(API.PointApi.GetPointModelInfo, params);
+  const result = await post(API.EntAndPointApi.GetPointModelInfo, params);
   return result;
 }
 
@@ -21,6 +21,6 @@ export async function getPointInstrument(params) {
 
 // 获取污染物信息
 export async function getPollutantByDgimn(params) {
-  const result = await get(API.commonApi.GetStandardPollutantsByDgimn, params);
+  const result = await get(API.CommonApi.GetStandardPollutantsByDgimn, params);
   return result;
 }

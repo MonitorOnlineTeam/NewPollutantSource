@@ -444,7 +444,13 @@ class AutoFormTable extends PureComponent {
 
   // 更多按钮点击
   moreClick(e) {
-    const { dispatch, configId } = this.props;
+    const { dispatch, configId, type } = this.props;
+    if (e.key === 'import' && type === 'company') {
+      //企业导入
+      // router.push(`/platformconfig/monitortarget/entImport`);
+      router.push(`/platformconfig/monitortarget/AEnterpriseTest/1/1,2/entImport`);
+      return;
+    }
     switch (e.key) {
       // 打印
       case 'printer':
@@ -476,6 +482,9 @@ class AutoFormTable extends PureComponent {
       match,
       parentcode,
       hideBtns,
+      resizable,
+      noPaging,
+      modalWidth,
     } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]['columns'] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]['checkboxOrRadio'] * 1 : 1;
@@ -486,7 +495,6 @@ class AutoFormTable extends PureComponent {
       if (col.type === '上传') {
         return {
           ...col,
-          align: 'center',
           width: 200,
           render: (text, record) => {
             if (!text) {
@@ -499,15 +507,19 @@ class AutoFormTable extends PureComponent {
       }
       return {
         ...col,
-        align: 'center',
         width: col.width || DEFAULT_WIDTH,
+        ellipsis: resizable ? true : false,
         render: (text, record) => {
           text = text ? text + '' : text;
           const type = col.formatType;
           if (type === '标签') {
             const types = text ? (text.indexOf('|') ? text.split('|') : text.split(',')) : [];
             return types.map(item => {
-              return <Tag>{item}</Tag>;
+              let color = 'default';
+              if (col.otherConfig) {
+                color = JSON.parse(col.otherConfig)[text];
+              }
+              return <Tag color={color}>{item}</Tag>;
             });
           }
           if (type === '超链接') {
@@ -519,9 +531,20 @@ class AutoFormTable extends PureComponent {
                 },
               };
             }
-            return <TableText content={text} {...porps} />;
+            // return <TableText content={text} {...porps} />;
+            // return (
+            //   <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>
+            //     {text}
+            //   </a>
+            // );
+
             return (
-              <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>
+              <a
+                title={text}
+                className={styles.ellipsisText}
+                style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
+                {...porps}
+              >
                 {text}
               </a>
             );
@@ -532,16 +555,16 @@ class AutoFormTable extends PureComponent {
           }
           // 格式化日期
           if (col.dateFormat) {
-            text = moment(text).format(col.dateFormat);
+            text = text ? moment(text).format(col.dateFormat) : '';
           }
           return (
             text && (
-              <div className={styles.ellipsisText}>
-                {/* {type === '超链接' &&
-              <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
-            } */}
+              <div
+                title={!type && text}
+                className={styles.ellipsisText}
+                // style={{ display: isCenter ? 'inline-block' : '' }}
+              >
                 {type == '小圆点' && <Badge status="warning" text={text} />}
-                {/* {type === '标签' && <Tag>{text}</Tag>} */}
                 {type === '进度条' && <Progress percent={text} />}
 
                 {!type && text}
@@ -569,7 +592,7 @@ class AutoFormTable extends PureComponent {
         _columns.push({
           align: 'center',
           title: '操作',
-          width: 220,
+          width: 260,
           fixed: isFixed,
           render: (text, record) => {
             const returnKey = keys[configId] && record[keys[configId][0]];
@@ -652,7 +675,7 @@ class AutoFormTable extends PureComponent {
                             okText="是"
                             cancelText="否"
                           >
-                            <a href="#">
+                            <a>
                               <DelIcon />
                             </a>
                           </Popconfirm>
@@ -737,7 +760,7 @@ class AutoFormTable extends PureComponent {
                   {this._SELF_.moreBtns.map(item => {
                     return (
                       <Menu.Item key={item.type}>
-                        <LegacyIcon type={item.type} />
+                        <LegacyIcon type={item.type} style={{ marginRight: 10 }} />
                         {item.text}
                       </Menu.Item>
                     );
@@ -817,16 +840,20 @@ class AutoFormTable extends PureComponent {
               );
             },
           })}
-          pagination={{
-            showSizeChanger: true,
-            showQuickJumper: true,
-            pageSize,
-            current,
-            // onShowSizeChange: this.onTableChange,
-            onChange: this.onTableChange,
-            pageSizeOptions: ['10', '20', '30', '40'],
-            total,
-          }}
+          pagination={
+            noPaging
+              ? false
+              : {
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  pageSize,
+                  current,
+                  // onShowSizeChange: this.onTableChange,
+                  onShowSizeChange: this.onTableChange,
+                  pageSizeOptions: ['10', '20', '30', '40'],
+                  total,
+                }
+          }
           {...this.props}
           // scroll={{ x: this.props.scroll.x || scrollXWidth, y: this.props.scroll.y || 'calc(100vh - 390px)' }}
           // scroll={scroll}
@@ -866,14 +893,14 @@ class AutoFormTable extends PureComponent {
         <AutoFormAddModal
           configId={configId}
           visible={handleAddVisible}
-          width={700}
+          width={modalWidth || 800}
           onCancel={this.onHandleCancel}
           successCallback={this.onHandleCancel}
         />
         <AutoFormEditModal
           configId={configId}
           visible={handleEditVisible}
-          width={700}
+          width={modalWidth || 800}
           keysParams={this.state.editKeysParams}
           onCancel={this.onHandleCancel}
           successCallback={this.onHandleCancel}
