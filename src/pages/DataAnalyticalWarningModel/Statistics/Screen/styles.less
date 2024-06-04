@@ -1,3 +1,22 @@
+.popupStyle {
+  // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+  background: rgba(41, 107, 181, 0.8);
+  // background: rgba(0, 6, 47, 0.6);
+
+  font-weight: 500;
+  :global {
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+      background-color: #136fd1;
+    }
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+      background-color: #007bfd;
+    }
+
+    .ant-select-item {
+      color: #fff;
+    }
+  }
+}
 .ScreenWrapper {
   height: 100vh;
   width: 100vw;
@@ -45,6 +64,55 @@
     .ant-spin-container {
       width: 100%;
       height: 100%;
+    }
+  }
+
+  // 下拉列表
+  .SelectWrapper {
+    position: absolute;
+    left: 20px;
+    top: 46px;
+    :global {
+      .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+        border-color: rgba(0, 188, 255, 0.5);
+        // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+        background: linear-gradient(0, rgba(14, 119, 157, 0.4), rgba(11, 26, 69, 0));
+        // background: rgba(10, 125, 254, 0.4);
+        color: #fceded;
+        font-weight: bold;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 0;
+      }
+
+      .ant-select-single:not(.ant-select-customize-input)
+        .ant-select-selector
+        .ant-select-selection-search-input {
+        height: 30px;
+        line-height: 30px;
+      }
+
+      .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+        line-height: 28px;
+        color: #70a7ff;
+        font-weight: bold;
+      }
+
+      .ant-select-selection-item {
+        font-weight: 500;
+        line-height: 28px;
+      }
+
+      .ant-select-clear {
+        background-color: transparent;
+        color: #999;
+      }
+
+      .ant-select-arrow {
+        color: #59deff;
+        font-size: 10px;
+        right: 6px;
+      }
     }
   }
 

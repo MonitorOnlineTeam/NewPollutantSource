@@ -607,7 +607,7 @@ const Index = props => {
           }}
         />
       </Tooltip>
-      <Tooltip title="看板时间选择">
+      {/* <Tooltip title="看板时间选择">
         <CalendarOutlined
           style={{
             position: 'absolute',
@@ -624,7 +624,30 @@ const Index = props => {
           onClick={confirm}
           // onClick={() => setVisible(true)}
         />
-      </Tooltip>
+      </Tooltip> */}
+      <div className={styles.SelectWrapper}>
+        <Select
+          value={queryDateLabel}
+          placeholder="请选择时间"
+          style={{
+            width: 160,
+          }}
+          onChange={(value, option) => {
+            let date = option['data-date'];
+            setQueryDate(date);
+            setQueryDateLabel(value);
+          }}
+          popupClassName={styles.popupStyle}
+        >
+          {DateOptions.map((item, index) => {
+            return (
+              <Option key={index} value={item.label} data-date={item.value}>
+                {item.label}
+              </Option>
+            );
+          })}
+        </Select>
+      </div>
       <main>
         <div className={styles.boxWrapper}>
           <BoxItem title={<>异常线索统计分析</>} style={{ flex: 1, marginRight: 14 }}>
