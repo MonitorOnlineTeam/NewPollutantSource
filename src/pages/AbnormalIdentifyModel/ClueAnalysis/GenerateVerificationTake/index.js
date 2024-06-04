@@ -178,7 +178,6 @@ const Index = props => {
       setTimeout(() => {
         if (quillRef.current) {
           editor = new Quill(quillRef.current, { ...quillModules });
-          console.log('editor2', editor2);
           editor.on('text-change', () => {
             // 监听Quill编辑器的内容变化
             modalForm.validateFields(['planContent']);

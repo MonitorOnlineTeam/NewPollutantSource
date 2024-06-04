@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Alert, Tooltip, Spin, Button, Progress, Modal, DatePicker } from 'antd';
+import { Row, Col, Alert, Tooltip, Spin, Button, Progress, Modal, DatePicker, Select } from 'antd';
 import styles from './styles.less';
 import BoxItem from './BoxItem';
 import ReactEcharts from 'echarts-for-react';
@@ -16,6 +16,99 @@ import locale from 'antd/es/date-picker/locale/zh_CN';
 
 const { RangePicker } = DatePicker;
 
+const DateOptions = [
+  {
+    value: [moment().startOf('month'), moment().endOf('months')],
+    label: '本月',
+  },
+  {
+    value: [moment().startOf('year'), moment().endOf('years')],
+    label: '本年',
+  },
+  {
+    value: [moment().format(`YYYY-01-01`), moment().format(`YYYY-06-30`)],
+    label: '上半年',
+  },
+  {
+    value: [moment().format(`YYYY-07-01`), moment().endOf('years')],
+    label: '下半年',
+  },
+  {
+    value: [
+      moment()
+        .startOf('year')
+        .quarter(1)
+        .startOf('quarter'),
+      moment()
+        .startOf('year')
+        .quarter(1)
+        .endOf('quarter'),
+    ],
+    label: '一季度',
+  },
+  {
+    value: [
+      moment()
+        .startOf('year')
+        .quarter(2)
+        .startOf('quarter'),
+      moment()
+        .startOf('year')
+        .quarter(2)
+        .endOf('quarter'),
+    ],
+    label: '二季度',
+  },
+  {
+    value: [
+      moment()
+        .startOf('year')
+        .quarter(3)
+        .startOf('quarter'),
+      moment()
+        .startOf('year')
+        .quarter(3)
+        .endOf('quarter'),
+    ],
+    label: '三季度',
+  },
+  {
+    value: [
+      moment()
+        .startOf('year')
+        .quarter(4)
+        .startOf('quarter'),
+      moment()
+        .startOf('year')
+        .quarter(4)
+        .endOf('quarter'),
+    ],
+    label: '四季度',
+  },
+  {
+    value: [
+      moment()
+        .subtract(1, 'year')
+        .startOf('year'),
+      moment()
+        .subtract(1, 'year')
+        .endOf('year'),
+    ],
+    label: '去年',
+  },
+  {
+    value: [
+      moment()
+        .subtract(2, 'year')
+        .startOf('year'),
+      moment()
+        .subtract(2, 'year')
+        .endOf('year'),
+    ],
+    label: '前年',
+  },
+];
+
 // 获取默认时间
 const getDefaultDate = timeFlag => {
   let beginTime, endTime;
@@ -29,7 +122,8 @@ const getDefaultDate = timeFlag => {
       endTime = moment();
       break;
     default:
-      beginTime = moment().subtract(1, 'year');
+      // beginTime = moment().subtract(1, 'year');
+      beginTime = moment().startOf('year');
       endTime = moment();
       break;
   }
@@ -57,9 +151,11 @@ const Index = props => {
   const [queryDate, setQueryDate] = useState(getDefaultDate(props.location.query.timeFlag));
   const _SELF = {
     queryDate: queryDate,
+    queryDateLabel: '本年',
   };
 
   const [visible, setVisible] = useState(false);
+  const [queryDateLabel, setQueryDateLabel] = useState('本年');
   const [dataSource, setDataSource] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [dataCountStatistics, setDataCountStatistics] = useState([]); // 数据统计分析数据
@@ -400,7 +496,6 @@ const Index = props => {
       entCode: [],
       modelGuid: row.ModelGuid,
     };
-    console.log('values', values);
     router.push(
       '/DataAnalyticalWarningModel/Statistics/AnalysisReport?params=' + JSON.stringify(values),
     );
@@ -416,7 +511,6 @@ const Index = props => {
   };
 
   const onSelectChange = newSelectedRowKeys => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -425,23 +519,54 @@ const Index = props => {
   };
 
   const confirm = () => {
+    let beginTime, endTime;
+    beginTime = moment(queryDate[0]).format('YYYY-MM-DD');
+    endTime = moment(queryDate[1]).format('YYYY-MM-DD');
     Modal.confirm({
       title: '看板时间选择',
       icon: <ExclamationCircleOutlined />,
       content: (
-        <RangePicker
-          locale={locale}
-          allowClear={false}
-          defaultValue={_SELF.queryDate}
-          onChange={date => {
-            _SELF.queryDate = date;
-          }}
-        />
+        // <RangePicker
+        //   locale={locale}
+        //   allowClear={false}
+        //   defaultValue={_SELF.queryDate}
+        //   onChange={date => {
+        //     _SELF.queryDate = date;
+        //   }}
+        // />
+        <>
+          <Row align="middle" style={{ fontSize: 12, color: '#878282', marginBottom: 10 }}>
+            {/* <ExclamationCircleOutlined style={{ marginBottom: 2, marginRight: 10 }} /> */}
+            <span>
+              当前数据时间：{queryDateLabel}（{beginTime} - {endTime}）
+            </span>
+          </Row>
+          <Select
+            placeholder="请选择时间"
+            style={{
+              width: 200,
+            }}
+            onChange={(value, option) => {
+              let date = option['data-date'];
+              _SELF.queryDate = date;
+              _SELF.queryDateLabel = value;
+            }}
+          >
+            {DateOptions.map((item, index) => {
+              return (
+                <Option key={index} value={item.label} data-date={item.value}>
+                  {item.label}
+                </Option>
+              );
+            })}
+          </Select>
+        </>
       ),
       okText: '查询',
       cancelText: '取消',
       onOk() {
         setQueryDate(_SELF.queryDate);
+        setQueryDateLabel(_SELF.queryDateLabel);
       },
       onCancel() {
         console.log('Cancel');

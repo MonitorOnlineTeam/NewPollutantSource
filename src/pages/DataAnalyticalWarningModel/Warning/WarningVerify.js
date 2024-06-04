@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-12-12 10:25:30
+ * @Last Modified time: 2024-06-04 16:37:34
  * @Description：报警核实详情
  */
 
@@ -20,6 +20,7 @@ import {
   Empty,
   message,
   Divider,
+  Alert,
 } from 'antd';
 import { router } from 'umi';
 import styles from '../styles.less';
@@ -32,7 +33,12 @@ import ModelChartLinear from './components/ModelChart-Linear';
 import ModelTable from './components/ModelTable';
 import WarningDataModal from './WarningDataModal';
 import moment from 'moment';
-import { ChartDefaultSelected, getPollutantNameByCode, ModalNameConversion } from '../CONST';
+import {
+  ChartDefaultSelected,
+  getPollutantNameByCode,
+  ModalNameConversion,
+  GetModelInfoByGuid,
+} from '../CONST';
 import _ from 'lodash';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
@@ -493,6 +499,16 @@ const WarningVerify = props => {
         className={styles.WarningVerifyWrapper}
         style={{ height: height ? height : isShowBack ? '100%' : 'calc(100vh - 22px)' }}
       >
+        {GetModelInfoByGuid[warningInfo.WarningTypeCode]?.method && (
+          <Alert
+            message={`现场检查办法：${GetModelInfoByGuid[warningInfo.WarningTypeCode].method}`}
+            type="info"
+            showIcon
+            style={{ marginBottom: 10 }}
+          />
+        )}
+
+        {/* <Alert message="Informational Notes" type="info" showIcon /> */}
         <Card
           title="线索详情"
           bodyStyle={{ paddingTop: 16 }}
