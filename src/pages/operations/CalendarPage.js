@@ -27,7 +27,7 @@ import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatist
   loading: loading.effects["operations/getAbnormalDetailList"],
   calendarInfoLoading: loading.effects["operations/getCalendarInfo"],
   queryPar: abnormalWorkStatistics.queryPar,
-  entAbnormalNumVisible:abnormalWorkStatistics.entAbnormalNumVisible,
+  entAbnormalNumVisible: abnormalWorkStatistics.entAbnormalNumVisible,
 }))
 class CalendarPage extends PureComponent {
   constructor(props) {
@@ -73,16 +73,16 @@ class CalendarPage extends PureComponent {
               item.ExceptionTypeText && item.ExceptionTypeText.split(",").map(itm => {
                 // 报警响应异常,打卡异常,工作超时
                 let color = itm === "报警响应异常" ? "#f50" : (itm === "打卡异常" ? "#108ee9" : "#2db7f5")
-                return <div  style={{position:'relative',display:'inline-block'}}>
+                return <div style={{ position: 'relative', display: 'inline-block' }}>
                   <Tag color={color}>{itm}</Tag>
                   <Popover
-                  content={<Button type="link" onClick={() => this.exceptionDetail(item)}>详情</Button>}
-                  overlayClassName={styles.exceptionTypePopSty}
-                  zIndex={99}
-                  visible={itm === "打卡异常"}
-                  getPopupContainer={trigger => trigger.parentNode}
-                  placement='right'
-                />
+                    content={<Button type="link" onClick={() => this.exceptionDetail(item)}>详情</Button>}
+                    overlayClassName={styles.exceptionTypePopSty}
+                    zIndex={99}
+                    visible={itm === "打卡异常"}
+                    getPopupContainer={trigger => trigger.parentNode}
+                    placement='right'
+                  />
                 </div>
               })
             }
@@ -203,7 +203,7 @@ class CalendarPage extends PureComponent {
             // key: 'index',
             // width: 60,
             render: (text, record, index) => {
-              return (index + 1) + (modalTableCurrent-1)*10;
+              return (index + 1) + (modalTableCurrent - 1) * 10;
             }
           }, {
             title: '上次更换日期',
@@ -241,7 +241,7 @@ class CalendarPage extends PureComponent {
             // key: 'index',
             // width: 60,
             render: (text, record, index) => {
-              return (index + 1) + (modalTableCurrent-1)*10;
+              return (index + 1) + (modalTableCurrent - 1) * 10;
             }
           }, {
             title: '上次更换日期',
@@ -279,7 +279,7 @@ class CalendarPage extends PureComponent {
             // key: 'index',
             // width: 60,
             render: (text, record, index) => {
-              return (index + 1) + (modalTableCurrent-1)*10;
+              return (index + 1) + (modalTableCurrent - 1) * 10;
             }
           }, {
             title: '上次更换日期',
@@ -317,7 +317,7 @@ class CalendarPage extends PureComponent {
             // key: 'index',
             // width: 60,
             render: (text, record, index) => {
-              return (index + 1) + (modalTableCurrent-1)*10;
+              return (index + 1) + (modalTableCurrent - 1) * 10;
             }
           }, {
             title: '上次更换日期',
@@ -379,6 +379,10 @@ class CalendarPage extends PureComponent {
         if (item.CompleteTaskNum) {
           listData.push({ color: '#87d068', content: `完成任务${item.CompleteTaskNum}个`, type: 3, date: item.ExcetionDate, text: "完成任务" })
         }
+        // 超时完成
+        if (item.CompleteOverTaskNum) {
+          listData.push({ color: '#fa8c16', content: `超时完成任务${item.CompleteOverTaskNum}个`, type: 5, date: item.ExcetionDate, text: "超时完成任务" })
+        }
         // 待执行任务
         if (item.ExecutedTaskNum) {
           listData.push({ color: '#108ee9', content: `待执行任务${item.ExecutedTaskNum}个`, type: 1, date: item.ExcetionDate, text: "待执行任务" })
@@ -387,14 +391,20 @@ class CalendarPage extends PureComponent {
         if (item.HaveInHandTaskNum) {
           listData.push({ color: '#2db7f5', content: `进行中任务${item.HaveInHandTaskNum}个`, type: 2, date: item.ExcetionDate, text: "进行中任务" })
         }
+        // 超时未完成
+        if (item.InCompleteOverTaskNum) {
+          listData.push({ color: '#f5222d', content: `超时未完成任务${item.InCompleteOverTaskNum}个`, type: 6, date: item.ExcetionDate, text: "超时未完成任务" })
+        }
         // 系统关闭任务
         if (item.ColseTaskNum) {
           listData.push({ color: '#bfbfbf', content: `系统关闭任务${item.ColseTaskNum}个`, type: 10, date: item.ExcetionDate, text: "系统关闭任务" })
         }
+
         // 无异常
-        if (!item.ExceptionTaskNum && !item.CompleteTaskNum && !item.ExecutedTaskNum && !item.HaveInHandTaskNum && !item.ColseTaskNum ) {
+        if (!item.ExceptionTaskNum && !item.CompleteTaskNum && !item.ExecutedTaskNum && !item.HaveInHandTaskNum && !item.ColseTaskNum) {
           listData.push({ notAbnormal: true, date: item.ExcetionDate, type: 0 })
         }
+
       }
       // 未来 0全部  1 备件更换  2 易耗品更换 3标气更换 4 清理点位（保养）
       if (item.FutureDate === value) {
@@ -452,7 +462,7 @@ class CalendarPage extends PureComponent {
       </div>
     }
     return (
-      <ul className="events" style={{ width: "104%", height: "96%", overflow: "auto" }}>
+      <ul className="events" style={{ width: "100%", height: "96%", overflow: "auto" }}>
         {listData.map(item => {
           // if (item.notAbnormal) {  // 无异常
           //   return <li style={{ marginTop: -20 }}><Badge status={"success"} /></li>
@@ -675,7 +685,7 @@ class CalendarPage extends PureComponent {
             />
           </Modal>
           {/** 打卡异常  监测点 弹框 */}
-          {this.state.abnormalTitle&&<EntAbnormalMapModal abnormalTitle={abnormalTitle} onCancel={()=>{this.setState({abnormalTitle:undefined})}}/>}
+          {this.state.abnormalTitle && <EntAbnormalMapModal abnormalTitle={abnormalTitle} onCancel={() => { this.setState({ abnormalTitle: undefined }) }} />}
         </div>
       </BreadcrumbWrapper>
     );

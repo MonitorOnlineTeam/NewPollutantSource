@@ -19,17 +19,18 @@ const ProjectExecution = props => {
   });
 
   const { dispatch, loading } = props;
-
+  const [date, setDate] = useState();
   useEffect(() => {}, []);
 
   const getData = value => {
     dispatch({
       type: 'ctDataScreen/GetProjectExecutionAnalysis',
-      payload: {
+      payload:  {
         bTime: moment(value[0]).format('YYYY-MM-DD HH:mm:ss'),
         eTime: moment(value[1]).format('YYYY-MM-DD HH:mm:ss'),
       },
       callback: res => {
+        setDate(value?.[0]&&moment(value[0]))
         setNums(res);
       },
     });
@@ -72,6 +73,7 @@ const ProjectExecution = props => {
           onCancel={() => {
             setOpen(false);
           }}
+          initDate={date}
         />
       )}
     </HomeCard>

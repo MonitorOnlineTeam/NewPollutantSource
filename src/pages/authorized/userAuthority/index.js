@@ -638,6 +638,7 @@ export default class UserAuthority extends Component {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
+    console.log(this.props.RegionInfoTree)
     const tProps = {
       treeData: this.props.RegionInfoTree,
       value: this.state.DataTreeValue,
@@ -655,13 +656,7 @@ export default class UserAuthority extends Component {
         overflowY: 'auto',
       },
       showSearch:true,
-      filterOption:(input, option) => {
-        if (option && option.props && option.props.title) {
-            return option.props.title === input || option.props.title.indexOf(input) !== -1
-        } else {
-            return true
-        }
-      }
+      treeNodeFilterProp:'label'
     };
     return (
       <BreadcrumbWrapper title="用户管理">

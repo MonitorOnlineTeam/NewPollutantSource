@@ -116,7 +116,9 @@ class TaskRecord extends Component {
         case 'forward': this.setState({forwardPermis: true }); break;
       }
     })
-    this.LoadData();
+    setTimeout(()=>{
+      this.LoadData();
+    })
   }
 
   /** 时间控件回调 */
@@ -216,7 +218,8 @@ class TaskRecord extends Component {
       isWorkExecue,
       taskStatus,
       operaStatus,
-      completeTime
+      completeTime,
+      operaTaskType
     } = this.props;
     dispatch({
       type: 'task/updateState',
@@ -227,7 +230,7 @@ class TaskRecord extends Component {
           TaskFrom: '',
           TaskStatusList: taskStatus,
           OperationsUserId: '',
-          TaskType: '',
+          TaskType: operaTaskType,
           CompleteTime: completeTime,
           CreateTime:isWorkExecue?'': [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
           pageIndex: 1,
@@ -238,7 +241,10 @@ class TaskRecord extends Component {
         },
       },
     })
-    this.props.form.setFieldsValue({CompleteTime: completeTime,  CreateTime:isWorkExecue?'': [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],})
+    this.props.form.setFieldsValue({
+      CompleteTime: completeTime, 
+      CreateTime:isWorkExecue?'': [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+    })
     dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: false, }, })
 
     dispatch({
@@ -698,8 +704,9 @@ class TaskRecord extends Component {
             reslist.push(<>
               <Tooltip title="详情">
                 <a><ProfileOutlined
-                  // onClick={() =>isHomeModal?this.taskRecordDetails(TaskID,DGIMN) : this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))}
-                  onClick={() => this.taskRecordDetails(TaskID, DGIMN)}
+                    style={{ fontSize: 16 }} 
+                   // onClick={() =>isHomeModal?this.taskRecordDetails(TaskID,DGIMN) : this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))}
+                   onClick={() => this.taskRecordDetails(TaskID, DGIMN)}
                 /></a>
               </Tooltip>
              

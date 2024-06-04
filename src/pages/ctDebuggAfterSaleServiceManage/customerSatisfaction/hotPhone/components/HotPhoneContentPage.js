@@ -603,38 +603,6 @@ const HotPhoneContentPage = props => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="ProcessingCompletion"
-                  label="处理完成日期"
-                  rules={[
-                    {
-                      required: true,
-                      message: '请选择处理完成日期！',
-                    },
-                  ]}
-                >
-                  {isView ? (
-                    <Input bordered={false} disabled={true} />
-                  ) : (
-                    <DatePicker placeholder="请选择" style={{ width: '100%' }} allowClear />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="Source"
-                  label="来源"
-                  // rules={[
-                  //   {
-                  //     required: true,
-                  //     message: '请填写来源！',
-                  //   },
-                  // ]}
-                >
-                  {isView ? <Input bordered={false} disabled={true} /> : <TextArea rows={1} />}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
                   name="ProblemDescription"
                   label="问题描述"
                   rules={[
@@ -669,6 +637,39 @@ const HotPhoneContentPage = props => {
                   )}
                 </Form.Item>
               </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="ProcessingCompletion"
+                  label="处理完成日期"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请选择处理完成日期！',
+                    },
+                  ]}
+                >
+                  {isView ? (
+                    <Input bordered={false} disabled={true} />
+                  ) : (
+                    <DatePicker placeholder="请选择" style={{ width: '100%' }} allowClear />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="Source"
+                  label="来源"
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //     message: '请填写来源！',
+                  //   },
+                  // ]}
+                >
+                  {isView ? <Input bordered={false} disabled={true} /> : <TextArea rows={1} />}
+                </Form.Item>
+              </Col>
+              
             </Row>
           </Form>
         </Modal>

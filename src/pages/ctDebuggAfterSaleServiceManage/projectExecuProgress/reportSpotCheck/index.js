@@ -30,6 +30,7 @@ import SdlTable from '@/components/SdlTable';
 import { DeleteOutlined, ExportOutlined, EditOutlined, ProfileOutlined } from '@ant-design/icons';
 import AllViewModal from './components/AllViewModal';
 import SpotCheckPage from './components/SpotCheckPage';
+import cuid from 'cuid';
 import ImageLightboxView from '@/components/ImageLightboxView';
 import SdlUpload from '@/pages/AutoFormManager/SdlUpload';
 import ServiceReportModal from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/timelinessQualityReport/components/ServiceReportModal';
@@ -528,19 +529,18 @@ const ServiceIsNotTimely = props => {
                 ]}
               >
                 <Radio.Group>
-                  <Radio value={'0'}>合格</Radio>
-                  <Radio value={'1'}>不合格</Radio>
+                  <Radio value={'1'}>合格</Radio>
+                  <Radio value={'0'}>不合格</Radio>
                 </Radio.Group>
               </Form.Item>
               <Form.Item name="remark" label="备注">
                 <TextArea rows={4} />
               </Form.Item>
               <Form.Item name="attachment" label="附件照片">
-                {console.log('fileList', fileList)}
                 <SdlUpload
                   accept="image/*"
                   fileList={fileList}
-                  cuid={editData.FileList?.AttachID}
+                  cuid={editData.FileList?.AttachID || cuid()}
                   uploadSuccess={id => {
                     form1.setFieldsValue({ attachment: id });
                   }}

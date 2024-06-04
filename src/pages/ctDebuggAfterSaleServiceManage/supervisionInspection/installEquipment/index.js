@@ -457,7 +457,7 @@ const Index = props => {
               >
                 导出
               </Button>
-              {reviewersListBtn && <SetUserListBtn type={4} text="审核人员清单" />}
+              {/* {reviewersListBtn && <SetUserListBtn type={4} text="审核人员清单" />} */}
             </Form.Item>
           </Col>
         </Row>
@@ -471,7 +471,7 @@ const Index = props => {
 
   const examinePhotos = row => {
     setExamineVisible(true);
-    setExamineTitle(`安装审核照片（${row.EntName} - ${row.PointName} - ${row.SystemModelName} ）`);
+    setExamineTitle(`审核安装照片（${row.EntName} - ${row.PointName} - ${row.SystemModelName} ）`);
     setExamineData(row);
   };
 

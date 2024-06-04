@@ -313,7 +313,7 @@ const Index = (props) => {
 
                 <Row gutter={[16, 16]}>
                     <Col span={6}>
-                        <Form.Item name='intervalDays' label='间隔（天）' rules={[{ required: true, message: '请输入间隔！' }]}>
+                        <Form.Item name='intervalDays' label='间隔（天）' rules={[{ required: true, message: '请输入间隔天数！' }]}>
                             <InputNumber style={{ width: '100%' }} placeholder='请输入' />
                         </Form.Item>
                     </Col>
@@ -321,11 +321,22 @@ const Index = (props) => {
                         <Form.Item name='beginTime' label={`${pointType == 2 ? '实际' : '计划'}起始日期`} rules={[{ required: true, message: '请选择实际起始日期！' }]}>
                             <DatePicker
                                 disabledDate={(current) => {
-                                    if (!current) {
-                                        return false;
+                                    // 检查是否小于明天
+                                    const tomorrow = moment().add(1, 'days');
+                                    if (current.isBefore(tomorrow, 'day')) {
+                                        return true;
                                     }
-                                    const endDate = form2.getFieldValue('endTime'); // 开始日期
-                                    return current && (current < moment() || current > endDate);
+                                    const endDate = form2.getFieldValue('endTime'); // 结束日期
+                                    // 如果有结束日期，且所选日期大于结束日期，则禁用
+                                    if (endDate && current > endDate.startOf('d')) {
+                                        return true;
+                                    }
+                                    return false;
+                                    // if (!current) {
+                                    //     return false;
+                                    // }
+                                    // const endDate = form2.getFieldValue('endTime'); // 结束日期
+                                    // return current < moment().startOf('day') || endDate && current > endDate.startOf('d');
 
                                 }}
                                 style={{ width: '100%' }} />
@@ -339,8 +350,7 @@ const Index = (props) => {
                                         return false;
                                     }
                                     const startDate = form2.getFieldValue('beginTime'); // 开始日期
-                                    // 禁用结束日期为今天及之前的日期，并且小于等于开始日期
-                                    return current && (current < moment() || current < startDate);
+                                    return current < moment().add(1, 'day') || startDate && current < startDate.endOf('d');
                                 }}
                                 style={{ width: '100%' }} />
                         </Form.Item>

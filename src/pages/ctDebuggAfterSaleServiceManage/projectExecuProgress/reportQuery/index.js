@@ -21,6 +21,7 @@ import SdlTable from '@/components/SdlTable';
 import { AuditOutlined } from '@ant-design/icons';
 import StatisticsModal from './components/StatisticsModal';
 import ServiceReportModal from './components/ServiceReportModal';
+import { DetailIcon } from '@/utils/icon';
 
 const dvaPropsData = ({ loading, common }) => ({
   provinceAllList: common.CtProvinceList,
@@ -222,7 +223,7 @@ const reportAudit = props => {
                   setCurrentRowData(record);
                 }}
               >
-                <AuditOutlined style={{ fontSize: 16 }} />
+                <DetailIcon  />
               </a>
             </Tooltip>
           );
@@ -249,7 +250,7 @@ const reportAudit = props => {
           form={form}
           // layout="inline"
           initialValues={{
-            time: [moment().startOf('month'), moment()],
+            time: [moment().startOf('year'), moment()],
           }}
           autoComplete="off"
           labelCol={{

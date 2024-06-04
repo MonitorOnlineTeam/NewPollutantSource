@@ -23,6 +23,7 @@ import {
   Tree,
   Form,
   Popover,
+  Input,
 } from 'antd';
 import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import styles from '../styles.less';
@@ -156,6 +157,9 @@ const Workbench = props => {
   const [standardgasAlarm, setStandardgasAlarm] = useState(false);
 
   const [popForm] = Form.useForm(); //项目执行-解决问题
+  const [remainProblemsData, setRemainProblemsData] = useState();
+
+
 
   const [installEquipmentVisible, setInstallEquipmentVisible] = useState(false);
   const [installEquipmentData, setInstallEquipmentData] = useState({});
@@ -368,8 +372,9 @@ const Workbench = props => {
       props.dispatch({
         type: 'wordSupervision/UpdateImplementationStatus',
         payload: {
+          ...values,
           problemTime: values.problemTime && values.problemTime.format('YYYY-MM-DD HH:mm:ss'),
-          ...row,
+          id:row.MsgID
         },
         callback: () => {
           setPopVisible(false);
@@ -443,28 +448,28 @@ const Workbench = props => {
 
           {TaskType === 1
             ? [
-                <li>
-                  <span>任务要求：</span>需覆盖{standMNNum}个监测点，{standPersonNum}名运维人员。
+              <li>
+                <span>任务要求：</span>需覆盖{standMNNum}个监测点，{standPersonNum}名运维人员。
                 </li>,
-                <li>
-                  <span>完成情况：</span>已覆盖{overMNNum}个监测点，{overPersonNum}名运维人员。
+              <li>
+                <span>完成情况：</span>已覆盖{overMNNum}个监测点，{overPersonNum}名运维人员。
                 </li>,
-                <li>
-                  <span>填写位置：</span>请跳转到
+              <li>
+                <span>填写位置：</span>请跳转到
                   <a href="/operations/siteInspector" target="_blank">
-                    “监督核查/现场监督核查/系统设施核查”
+                  “监督核查/现场监督核查/系统设施核查”
                   </a>
                   页面中填写。
                 </li>,
-              ]
+            ]
             : [
-                <li>
-                  <span>任务要求：</span>需回访客户{standNum}次。
+              <li>
+                <span>任务要求：</span>需回访客户{standNum}次。
                 </li>,
-                <li>
-                  <span>完成情况：</span>已回访客户{overReturnPersonNum}次。
+              <li>
+                <span>完成情况：</span>已回访客户{overReturnPersonNum}次。
                 </li>,
-              ]}
+            ]}
         </ul>
       </div>
     );
@@ -477,10 +482,10 @@ const Workbench = props => {
               达标
             </Tag>
           ) : (
-            <Tag style={{ marginLeft: 10 }} color="error">
-              未达标
-            </Tag>
-          )}
+              <Tag style={{ marginLeft: 10 }} color="error">
+                未达标
+              </Tag>
+            )}
         </div>
       ),
       content: content,
@@ -895,7 +900,7 @@ const Workbench = props => {
           okText="是"
           cancelText="否"
         >
-          <div>{btnSquareComponents([{ name: '删除全部', value: 1 }], allClose, () => {})}</div>
+          <div>{btnSquareComponents([{ name: '删除全部', value: 1 }], allClose, () => { })}</div>
         </Popconfirm>
       </Row>
     );
@@ -916,25 +921,25 @@ const Workbench = props => {
               <PageLoading size="default" />{' '}
             </div>
           ) : (
-            <>
-              <div className={styles.leftWrapper}>
-                {daily && (
-                  <div className={styles.topWrapper}>
-                    <div className={styles.taskListWrapper}>
-                      <Card
-                        style={{ height: '100%' }}
-                        bodyStyle={{
-                          padding: 0,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          height: '100%',
-                          paddingTop: 8,
-                        }}
-                      >
-                        {/* 手工申请 */}
-                        <div className={styles.title}>日常监督</div>
-                        <div className={styles.manualList}>
-                          {/* <Row
+              <>
+                <div className={styles.leftWrapper}>
+                  {daily && (
+                    <div className={styles.topWrapper}>
+                      <div className={styles.taskListWrapper}>
+                        <Card
+                          style={{ height: '100%' }}
+                          bodyStyle={{
+                            padding: 0,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '100%',
+                            paddingTop: 8,
+                          }}
+                        >
+                          {/* 手工申请 */}
+                          <div className={styles.title}>日常监督</div>
+                          <div className={styles.manualList}>
+                            {/* <Row
                           gutter={32}
                           className={styles.content}
                         >
@@ -957,608 +962,619 @@ const Workbench = props => {
                             );
                           })}
                         </Row> */}
-                        </div>
-                        <div className={styles.taskList}>
-                          <div className={styles.content} style={{ textAlign: 'center' }}>
-                            {/* <Spin spinning={todoListLoading}>{renderTodoList()}</Spin> */}
                           </div>
-                        </div>
-                      </Card>
-                    </div>
-                  </div>
-                )}
-                <Row className={`${styles.bottomWrapper}`}>
-                  {opera && (
-                    <Col flex="1" span={24} style={{ height: 360 }}>
-                      <Card
-                        style={{ height: '100%' }}
-                        bodyStyle={{
-                          padding: 0,
-                          height: '100%',
-                          paddingTop: 8,
-                        }}
-                      >
-                        {/* 待办中心 */}
-                        {(operaSupervisionCheck || projectExecution || customSatisfact) && (
-                          <>
-                            <Row justify="space-between">
-                              <div className={styles.title}>待办中心</div>
-                              {operaSupervisionCheck && selectOperaVal == 1 && (
-                                <img
-                                  title="更多"
-                                  style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }}
-                                  src="/more.png"
-                                  onClick={() => setSuperviseRectificaVisible(true)}
-                                />
-                              )}{' '}
-                              {/**监督核查 */}
-                            </Row>
-                            <BtnComponents
-                              data={operaServiceBtnList}
-                              val={selectOperaVal}
-                              callback={val => {
-                                setSelectOperaVal(val);
-                              }}
-                            />
-                            <div className={styles.operaServiceSty} style={{ padding: '0 16px' }}>
-                              {selectOperaVal == 1 && (
-                                <Spin spinning={operaServiceLoading}>
-                                  {supervisionVerificaList?.length ? (
-                                    supervisionVerificaList.map(item => (
-                                      <Row
-                                        justify="space-between"
-                                        style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
-                                        onClick={() => {
-                                          operaServiceClick(item.ID);
-                                        }}
-                                      >
-                                        <Col
-                                          style={{ width: 'calc(100% - 146px)' }}
-                                          className="textOverflow"
-                                          title={item.EntNamePointName}
-                                        >
-                                          {item.EntNamePointName}
-                                        </Col>
-                                        <Col>{item.Time}</Col>
-                                      </Row>
-                                    ))
-                                  ) : (
-                                    <Empty style={{ marginTop: '30px' }} />
-                                  )}
-                                </Spin>
-                              )}
-                              {selectOperaVal == 2 && (
-                                <Spin
-                                  spinning={!!projectExecutionLoading || !!delInstallPhotosLoading}
-                                >
-                                  {projectExecutionList?.length ? (
-                                    projectExecutionList.map((item, index) => (
-                                      <Row
-                                        justify="space-between"
-                                        style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
-                                      >
-                                        <Col
-                                          onClick={() => {
-                                            if (item.Type == 2) {
-                                              //遗留问题
-                                              setRemainProblemsVisible(true);
-                                            } else if (item.Type == 4) {
-                                              //安装照片审核
-                                              if (item.Col1 == 2) {
-                                                setInstallEquipmentVisible(true);
-                                                const dataArr = item.MsgID?.split(',');
-                                                //Col1代表systemModelId
-                                                setInstallEquipmentData({
-                                                  DispatchId: dataArr?.[0],
-                                                  PointId: dataArr?.[1],
-                                                  Col1: dataArr?.[2],
-                                                  EquipmentAuditId: dataArr?.[3],
-                                                });
-                                              }
-                                            } else if (item.Type == 7) {
-                                              //验收服务报告
-                                              setReportAuditVisible(true);
-                                              const dataArr = item.Col2?.split(',');
-                                              setReportAuditData({
-                                                ID: dataArr?.[0],
-                                                CheckStatus: dataArr?.[1],
-                                              });
-                                            }
-                                          }}
-                                          style={{
-                                            width:
-                                              item.Type == 2
-                                                ? 'calc(100% - 210px)'
-                                                : item.Col1 == 1
-                                                ? 'calc(100% - 180px)'
-                                                : 'calc(100% - 140px)',
-                                          }}
-                                          className="textOverflow"
-                                          title={item.Msg}
-                                        >
-                                          {msgTypeTitle[item.Type]}
-                                          {item.Msg}
-                                        </Col>
-                                        <Col>
-                                          {item.Type == 2 ? (
-                                            <Popover
-                                              visible={index == popSelectIndex && popVisible}
-                                              placement="leftTop"
-                                              title={'解决问题'}
-                                              trigger="click"
-                                              overlayStyle={{ width: 400 }}
-                                              content={
-                                                <Form
-                                                  name="basicPop"
-                                                  form={popForm}
-                                                  onFinish={() => solveProblem(item)}
-                                                >
-                                                  <Form.Item
-                                                    label="解决时间"
-                                                    name="problemTime"
-                                                    rules={[
-                                                      {
-                                                        required: true,
-                                                        message: '请选择解决时间！',
-                                                      },
-                                                    ]}
-                                                  >
-                                                    <DatePicker
-                                                      disabledDate={current =>
-                                                        current && current > moment()
-                                                      }
-                                                      showTime
-                                                      style={{ width: '100%' }}
-                                                    />
-                                                  </Form.Item>
-                                                  <Row align="end">
-                                                    <Button
-                                                      onClick={() => {
-                                                        setPopVisible(false);
-                                                      }}
-                                                      style={{ marginRight: 8 }}
-                                                    >
-                                                      取消
-                                                    </Button>
-                                                    <Button
-                                                      type="primary"
-                                                      htmlType="submit"
-                                                      loading={updateprojectExecutionLoading}
-                                                    >
-                                                      提交
-                                                    </Button>
-                                                  </Row>
-                                                </Form>
-                                              }
-                                            >
-                                              <Tag
-                                                color="#4090FF"
-                                                onClick={() => {
-                                                  setSelectPopIndex(index);
-                                                  setPopVisible(true);
-                                                }}
-                                                style={{ cursor: 'pointer', marginLeft: 8 }}
-                                              >
-                                                解决问题
-                                              </Tag>
-                                            </Popover>
-                                          ) : (
-                                            <>
-                                              {item.Col1 == 1 && (
-                                                <Popconfirm
-                                                  placement="left"
-                                                  title={'确定要删除这条安装照片信息吗？'}
-                                                  onConfirm={() => delInstallPhotos(item)}
-                                                  okText="是"
-                                                  cancelText="否"
-                                                >
-                                                  <a>删除</a>
-                                                </Popconfirm>
-                                              )}
-                                            </>
-                                          )}
-                                        </Col>
-                                        <Col>{item.CreateTime}</Col>
-                                      </Row>
-                                    ))
-                                  ) : (
-                                    <Empty style={{ marginTop: '30px' }} />
-                                  )}
-                                </Spin>
-                              )}
-                              {selectOperaVal == 3 && (
-                                <Spin
-                                  spinning={customeSatisfactLoading || delCustomSatisfactLoading}
-                                >
-                                  {customeSatisfactList?.length ? (
-                                    customeSatisfactList.map((item, index) => (
-                                      <Row
-                                        justify="space-between"
-                                        style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
-                                      >
-                                        <Col
-                                          onClick={() => {
-                                            if (item.Type == 6) {
-                                              if (item.Col1 == 2) {
-                                                //客户满意度 调查
-                                                setCustomSatisfactVisible(true);
-                                                setCustomSatisfactData({
-                                                  id: item.MsgID,
-                                                  msgid: item.ID,
-                                                });
-                                              } else if (item.Col1 == 3) {
-                                                //客户满意度 处理
-                                                setCustomSatisfactVisible2(true);
-                                                setCustomSatisfactData2({
-                                                  id: item.MsgID,
-                                                  msgid: item.ID,
-                                                });
-                                              }
-                                            } else if (item.Type === '3') {
-                                              // 投诉处理
-                                              debugger;
-                                              setHandleComplaintsModalOpen(true);
-                                              setHandleComplaintsData({
-                                                ID: item.MsgID,
-                                              });
-                                            }
-                                          }}
-                                          style={{
-                                            width:
-                                              item.Col1 == 1
-                                                ? 'calc(100% - 180px)'
-                                                : 'calc(100% - 140px)',
-                                          }}
-                                          className="textOverflow"
-                                          title={item.Msg}
-                                        >
-                                          {item.Type == 6 ? '（满意度调查）' : ''} {item.Msg}{' '}
-                                        </Col>
-                                        <Col></Col>
-                                        <Col>{item.CreateTime}</Col>
-                                        {item.Col1 == 1 && (
-                                          <Popconfirm
-                                            placement="left"
-                                            title={'确定要删除这条满意度调查信息吗？'}
-                                            onConfirm={() => delCustomSatisfact(item)}
-                                            okText="是"
-                                            cancelText="否"
-                                          >
-                                            <a>删除</a>
-                                          </Popconfirm>
-                                        )}
-                                      </Row>
-                                    ))
-                                  ) : (
-                                    <Empty style={{ marginTop: '30px' }} />
-                                  )}
-                                </Spin>
-                              )}
-                              {selectOperaVal == 4 && (
-                                <div className={styles.taskList}>
-                                  <div className={styles.content} style={{ textAlign: 'center' }}>
-                                    <Spin spinning={todoListLoading}>{renderTodoList()}</Spin>
-                                    {/* <Spin spinning={true}>{renderTodoList()}</Spin> */}
-                                  </div>
-                                </div>
-                              )}
+                          <div className={styles.taskList}>
+                            <div className={styles.content} style={{ textAlign: 'center' }}>
+                              {/* <Spin spinning={todoListLoading}>{renderTodoList()}</Spin> */}
                             </div>
-                          </>
-                        )}
-                      </Card>
-                    </Col>
+                          </div>
+                        </Card>
+                      </div>
+                    </div>
                   )}
-                </Row>
-                {/* 我的提醒 */}
-                {remind && (
-                  <Row className={`${styles.myRemindSty}`}>
-                    <Col flex="1" span={24} style={{ height: 380 }}>
-                      <Card
-                        style={{ height: '100%' }}
-                        bodyStyle={{
-                          padding: 0,
-                          height: '100%',
-                          paddingTop: 8,
-                        }}
-                      >
-                        <div className={styles.title}>我的提醒</div>
-                        {remindDataAlarm && (
-                          <Row justify="space-between">
-                            <BtnComponents
-                              data={myRemindBtnList}
-                              val={selectMyVal}
-                              callback={val => {
-                                setSelectMyVal(val);
-                              }}
-                            />
-                            {selectMyVal == 10 && workAlarmPushList?.length > 0
-                              ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, val => {
-                                  dataAlarmTypeChange(val);
-                                })
-                              : null}
-                          </Row>
-                        )}
-                        <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
-                          {remindDataAlarm && (
+                  <Row className={`${styles.bottomWrapper}`}>
+                    {opera && (
+                      <Col flex="1" span={24} style={{ height: 360 }}>
+                        <Card
+                          style={{ height: '100%' }}
+                          bodyStyle={{
+                            padding: 0,
+                            height: '100%',
+                            paddingTop: 8,
+                          }}
+                        >
+                          {/* 待办中心 */}
+                          {(operaSupervisionCheck || projectExecution || customSatisfact) && (
                             <>
-                              {selectMyVal == 10 && (
-                                <Spin spinning={workAlarmPushLoading}>
-                                  {' '}
-                                  {/*数据报警 */}
-                                  {workAlarmPushList?.length ? (
-                                    workAlarmPushList.map(item => (
-                                      <Row justify="space-between" style={{ paddingBottom: paddingBottomVal }}>
-                                        <Col style={{ paddingTop: 4 }}>
-                                          <img src="/work_alarm.png" />
-                                        </Col>
-                                        <Col style={{ width: 'calc(100% - 100px)' }}>
-                                          <div>{item.message}</div>
-                                          <div
-                                            className="statusSty"
-                                            style={{ color: '#666', fontSize: 13, paddingTop: 4 }}
-                                          >
-                                            <span>报警生成时间：{item.alarmCreateTime}</span>
-                                            {item.alarmType == 0 || item.alarmType == 12 ? (
-                                              <>
-                                                <Tag
-                                                  color={item.status == 3 ? 'success' : 'warning'}
-                                                >
-                                                  {item.status == 3 ? '已响应' : '待响应'}
-                                                </Tag>
-                                                {item.status == 3 && (
-                                                  <>
-                                                    <span>响应人：{item.userName}</span>{' '}
-                                                    <span>响应时间：{item.responseTime}</span>
-                                                  </>
-                                                )}
-                                              </>
-                                            ) : (
-                                              <>
-                                                <Tag
-                                                  color={item.status == 3 ? 'success' : 'warning'}
-                                                >
-                                                  {item.status == 3 ? '已响应' : '待响应'}
-                                                </Tag>
-                                                {item.status == 3 && (
-                                                  <>
-                                                    <span>核实人：{item.userName}</span>{' '}
-                                                    <span>核实时间：{item.responseTime}</span>
-                                                  </>
-                                                )}
-                                              </>
-                                            )}
-                                          </div>
-                                        </Col>
-                                        <Col>
-                                          <Popconfirm
-                                            placement="left"
-                                            title={'确定要删除这条报警吗？'}
-                                            onConfirm={() => delAlarm(item)}
-                                            okText="是"
-                                            cancelText="否"
-                                          >
-                                            <a>删除</a>
-                                          </Popconfirm>
-                                        </Col>
-                                      </Row>
-                                    ))
-                                  ) : (
-                                    <Empty style={{ marginTop: '30px' }} />
-                                  )}
-                                </Spin>
-                              )}
-                            </>
-                          )}
-                          {remindExpire && (
-                            <>
-                              {selectMyVal == 11 && (
-                                <Spin
-                                  spinning={
-                                    contractLoading ||
-                                    !!delContractLoading ||
-                                    !!delAllContractLoading
-                                  }
-                                >
-                                  {/*合同到期 */}
-                                  {contractList?.length ? (
-                                    contractList.map(item => (
-                                      <Row
-                                        justify="space-between"
-                                        style={{ paddingBottom: paddingBottomVal, transition: '0.5s all ease-in' }}
-                                      >
-                                        <Col style={{ paddingTop: 4 }}>
-                                          <img src="/work_contract.png" />
-                                        </Col>
-                                        <Col style={{ width: 'calc(100% - 100px)' }}>
-                                          <div>{item.Msg}</div>
-                                          <div>如合同不再续签请参考以下注意事项：</div>
-                                          <div>
-                                            1、如涉及物联网卡销号请及时提交CIS申请《物联网卡新增或销号申请》
-                                          </div>
-                                          <div>
-                                            2、办事处、备件库、车辆等如有变动请同服务管理部对应同事沟通
-                                          </div>
-                                          <div>
-                                            3、如有人员跨行业调整请记得考取对应行业运营上岗证
-                                          </div>
-                                        </Col>
-                                        <Col>
-                                          <Popconfirm
-                                            placement="left"
-                                            title={'确定要删除这条合同到期吗？'}
-                                            onConfirm={() => delContract(item)}
-                                            okText="是"
-                                            cancelText="否"
-                                          >
-                                            <a>删除</a>
-                                          </Popconfirm>
-                                        </Col>
-                                      </Row>
-                                    ))
-                                  ) : (
-                                    <Empty style={{ marginTop: '30px' }} />
-                                  )}
-                                </Spin>
-                              )}
-                            </>
-                          )}
-
-                          {standardgasAlarm && (
-                            <>
-                              {selectMyVal == 12 && (
-                                <Spin
-                                  spinning={
-                                    standgaswaringLoading ||
-                                    !!delStandgaswaringLoading ||
-                                    !!delAllStandgaswaringLoading
-                                  }
-                                >
-                                  {/*标气报警 */}
-                                  {standgaswaringList?.length ? (
-                                    standgaswaringList.map(item => {
-                                      const dataArr = item.Col2?.split(',');
-                                      return (
+                              <Row justify="space-between">
+                                <div className={styles.title}>待办中心</div>
+                                {operaSupervisionCheck && selectOperaVal == 1 && (
+                                  <img
+                                    title="更多"
+                                    style={{ height: '100%', paddingRight: 16, cursor: 'pointer' }}
+                                    src="/more.png"
+                                    onClick={() => setSuperviseRectificaVisible(true)}
+                                  />
+                                )}{' '}
+                                {/**监督核查 */}
+                              </Row>
+                              <BtnComponents
+                                data={operaServiceBtnList}
+                                val={selectOperaVal}
+                                callback={val => {
+                                  setSelectOperaVal(val);
+                                }}
+                              />
+                              <div className={styles.operaServiceSty} style={{ padding: '0 16px' }}>
+                                {selectOperaVal == 1 && (
+                                  <Spin spinning={operaServiceLoading}>
+                                    {supervisionVerificaList?.length ? (
+                                      supervisionVerificaList.map(item => (
                                         <Row
                                           justify="space-between"
-                                          style={{
-                                            paddingBottom: paddingBottomVal,
-                                            transition: '0.5s all ease-in',
+                                          style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
+                                          onClick={() => {
+                                            operaServiceClick(item.ID);
                                           }}
                                         >
                                           <Col
-                                            style={{ width: 'calc(100% - 186px)' }}
+                                            style={{ width: 'calc(100% - 146px)' }}
                                             className="textOverflow"
+                                            title={item.EntNamePointName}
                                           >
-                                            {item.Msg}
-                                            {item.Msg}
+                                            {item.EntNamePointName}
+                                          </Col>
+                                          <Col>{item.Time}</Col>
+                                        </Row>
+                                      ))
+                                    ) : (
+                                        <Empty style={{ marginTop: '30px' }} />
+                                      )}
+                                  </Spin>
+                                )}
+                                {selectOperaVal == 2 && (
+                                  <Spin
+                                    spinning={!!projectExecutionLoading || !!delInstallPhotosLoading}
+                                  >
+                                    {projectExecutionList?.length ? (
+                                      projectExecutionList.map((item, index) => (
+                                        <Row
+                                          justify="space-between"
+                                          style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
+                                        >
+                                          <Col
+                                            onClick={() => {
+                                              if (item.Type == 2) {
+                                                //遗留问题
+                                                // setRemainProblemsVisible(true);
+                                                setPopVisible(true);
+                                                popForm.resetFields();
+                                                setRemainProblemsData(item)
+                                              } else if (item.Type == 4) {
+                                                //安装照片审核
+                                                if (item.Col1 == 2) {
+                                                  setInstallEquipmentVisible(true);
+                                                  const dataArr = item.MsgID?.split(',');
+                                                  //Col1代表systemModelId
+                                                  setInstallEquipmentData({
+                                                    DispatchId: dataArr?.[0],
+                                                    PointId: dataArr?.[1],
+                                                    Col1: dataArr?.[2],
+                                                    EquipmentAuditId: dataArr?.[3],
+                                                  });
+                                                }
+                                              } else if (item.Type == 7) {
+                                                //验收服务报告
+                                                setReportAuditVisible(true);
+                                                const dataArr = item.Col2?.split(',');
+                                                setReportAuditData({
+                                                  ID: dataArr?.[0],
+                                                  CheckStatus: dataArr?.[1],
+                                                });
+                                              }
+                                            }}
+                                            style={{
+                                              width:
+                                                item.Type == 2
+                                                  ? 'calc(100% - 210px)'
+                                                  : item.Col1 == 1
+                                                    ? 'calc(100% - 180px)'
+                                                    : 'calc(100% - 140px)',
+                                            }}
+                                            className="textOverflow"
+                                            title={item.Msg}
+                                          >
+                                            {msgTypeTitle[item.Type]}
                                             {item.Msg}
                                           </Col>
-                                          <Col style={{ cursor: 'pointer' }}>
-                                            <Space>
-                                              <a
-                                                onClick={() => {
-                                                  setProjectQueryDetailVisible(true);
-                                                  setProjectQueryDetailCode(dataArr?.[0]);
-                                                  setProjectQueryDetailTitle(
-                                                    `${
+                                          <Col>
+                                            {item.Type == 2 ?
+                                              //  (
+                                              //   <Popover
+                                              //     visible={index == popSelectIndex && popVisible}
+                                              //     placement="leftTop"
+                                              //     title={'解决问题'}
+                                              //     trigger="click"
+                                              //     overlayStyle={{ width: 400 }}
+                                              //     content={
+                                              // <Form
+                                              //   name="basicPop"
+                                              //   form={popForm}
+                                              //   onFinish={() => solveProblem(item)}
+                                              //   labelCol={{flex:'80px'}}
+                                              // >
+                                              //   <Form.Item label="解决人" name="solveUserName" className='minWidth' rules={[{ required: true, message: '请输入解决人！' }]} >
+                                              //     <Input placeholder='请输入' allowClear />
+                                              //   </Form.Item>
+                                              //   <Form.Item
+                                              //     label="解决时间"
+                                              //     name="problemTime"
+                                              //     rules={[
+                                              //       {
+                                              //         required: true,
+                                              //         message: '请选择解决时间！',
+                                              //       },
+                                              //     ]}
+                                              //   >
+                                              //     <DatePicker
+                                              //       disabledDate={current =>
+                                              //         current && current > moment()
+                                              //       }
+                                              //       showTime
+                                              //       style={{ width: '100%' }}
+                                              //     />
+                                              //   </Form.Item>
+                                              //   <Row align="end">
+                                              //     <Button
+                                              //       onClick={() => {
+                                              //         setPopVisible(false);
+                                              //       }}
+                                              //       style={{ marginRight: 8 }}
+                                              //     >
+                                              //       取消
+                                              //   </Button>
+                                              //     <Button
+                                              //       type="primary"
+                                              //       htmlType="submit"
+                                              //       loading={updateprojectExecutionLoading}
+                                              //     >
+                                              //       提交
+                                              //   </Button>
+                                              //   </Row>
+                                              // </Form>
+                                              //     }
+                                              //   >
+                                              //     <Tag
+                                              //       color="#4090FF"
+                                              //       onClick={() => {
+                                              //         setSelectPopIndex(index);
+                                              //         setPopVisible(true);
+                                              //       }}
+                                              //       style={{ cursor: 'pointer', marginLeft: 8 }}
+                                              //     >
+                                              //       解决问题
+                                              //   </Tag>
+                                              //   </Popover>
+                                              // ) 
+                                              null
+                                              :
+                                              (
+                                                <>
+                                                  {item.Col1 == 1 && (
+                                                    <Popconfirm
+                                                      placement="left"
+                                                      title={'确定要删除这条安装照片信息吗？'}
+                                                      onConfirm={() => delInstallPhotos(item)}
+                                                      okText="是"
+                                                      cancelText="否"
+                                                    >
+                                                      <a>删除</a>
+                                                    </Popconfirm>
+                                                  )}
+                                                </>
+                                              )}
+                                          </Col>
+                                          <Col>{item.CreateTime}</Col>
+                                        </Row>
+                                      ))
+                                    ) : (
+                                        <Empty style={{ marginTop: '30px' }} />
+                                      )}
+                                  </Spin>
+                                )}
+                                {selectOperaVal == 3 && (
+                                  <Spin
+                                    spinning={customeSatisfactLoading || delCustomSatisfactLoading}
+                                  >
+                                    {customeSatisfactList?.length ? (
+                                      customeSatisfactList.map((item, index) => (
+                                        <Row
+                                          justify="space-between"
+                                          style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
+                                        >
+                                          <Col
+                                            onClick={() => {
+                                              if (item.Type == 6) {
+                                                if (item.Col1 == 2) {
+                                                  //客户满意度 调查
+                                                  setCustomSatisfactVisible(true);
+                                                  setCustomSatisfactData({
+                                                    id: item.MsgID,
+                                                    msgid: item.ID,
+                                                  });
+                                                } else if (item.Col1 == 3) {
+                                                  //客户满意度 处理
+                                                  setCustomSatisfactVisible2(true);
+                                                  setCustomSatisfactData2({
+                                                    id: item.MsgID,
+                                                    msgid: item.ID,
+                                                  });
+                                                }
+                                              } else if (item.Type === '3') {
+                                                // 投诉处理
+                                                debugger;
+                                                setHandleComplaintsModalOpen(true);
+                                                setHandleComplaintsData({
+                                                  ID: item.MsgID,
+                                                });
+                                              }
+                                            }}
+                                            style={{
+                                              width:
+                                                item.Col1 == 1
+                                                  ? 'calc(100% - 180px)'
+                                                  : 'calc(100% - 140px)',
+                                            }}
+                                            className="textOverflow"
+                                            title={item.Msg}
+                                          >
+                                            {item.Type == 6 ? '（满意度调查）' : ''} {item.Msg}{' '}
+                                          </Col>
+                                          <Col></Col>
+                                          <Col>{item.CreateTime}</Col>
+                                          {item.Col1 == 1 && (
+                                            <Popconfirm
+                                              placement="left"
+                                              title={'确定要删除这条满意度调查信息吗？'}
+                                              onConfirm={() => delCustomSatisfact(item)}
+                                              okText="是"
+                                              cancelText="否"
+                                            >
+                                              <a>删除</a>
+                                            </Popconfirm>
+                                          )}
+                                        </Row>
+                                      ))
+                                    ) : (
+                                        <Empty style={{ marginTop: '30px' }} />
+                                      )}
+                                  </Spin>
+                                )}
+                                {selectOperaVal == 4 && (
+                                  <div className={styles.taskList}>
+                                    <div className={styles.content} style={{ textAlign: 'center' }}>
+                                      <Spin spinning={todoListLoading}>{renderTodoList()}</Spin>
+                                      {/* <Spin spinning={true}>{renderTodoList()}</Spin> */}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </Card>
+                      </Col>
+                    )}
+                  </Row>
+                  {/* 我的提醒 */}
+                  {remind && (
+                    <Row className={`${styles.myRemindSty}`}>
+                      <Col flex="1" span={24} style={{ height: 380 }}>
+                        <Card
+                          style={{ height: '100%' }}
+                          bodyStyle={{
+                            padding: 0,
+                            height: '100%',
+                            paddingTop: 8,
+                          }}
+                        >
+                          <div className={styles.title}>我的提醒</div>
+                          {remindDataAlarm && (
+                            <Row justify="space-between">
+                              <BtnComponents
+                                data={myRemindBtnList}
+                                val={selectMyVal}
+                                callback={val => {
+                                  setSelectMyVal(val);
+                                }}
+                              />
+                              {selectMyVal == 10 && workAlarmPushList?.length > 0
+                                ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, val => {
+                                  dataAlarmTypeChange(val);
+                                })
+                                : null}
+                            </Row>
+                          )}
+                          <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
+                            {remindDataAlarm && (
+                              <>
+                                {selectMyVal == 10 && (
+                                  <Spin spinning={workAlarmPushLoading}>
+                                    {' '}
+                                    {/*数据报警 */}
+                                    {workAlarmPushList?.length ? (
+                                      workAlarmPushList.map(item => (
+                                        <Row justify="space-between" style={{ paddingBottom: paddingBottomVal }}>
+                                          <Col style={{ paddingTop: 4 }}>
+                                            <img src="/work_alarm.png" />
+                                          </Col>
+                                          <Col style={{ width: 'calc(100% - 100px)' }}>
+                                            <div>{item.message}</div>
+                                            <div
+                                              className="statusSty"
+                                              style={{ color: '#666', fontSize: 13, paddingTop: 4 }}
+                                            >
+                                              <span>报警生成时间：{item.alarmCreateTime}</span>
+                                              {item.alarmType == 0 || item.alarmType == 12 ? (
+                                                <>
+                                                  <Tag
+                                                    color={item.status == 3 ? 'success' : 'warning'}
+                                                  >
+                                                    {item.status == 3 ? '已响应' : '待响应'}
+                                                  </Tag>
+                                                  {item.status == 3 && (
+                                                    <>
+                                                      <span>响应人：{item.userName}</span>{' '}
+                                                      <span>响应时间：{item.responseTime}</span>
+                                                    </>
+                                                  )}
+                                                </>
+                                              ) : (
+                                                  <>
+                                                    <Tag
+                                                      color={item.status == 3 ? 'success' : 'warning'}
+                                                    >
+                                                      {item.status == 3 ? '已响应' : '待响应'}
+                                                    </Tag>
+                                                    {item.status == 3 && (
+                                                      <>
+                                                        <span>核实人：{item.userName}</span>{' '}
+                                                        <span>核实时间：{item.responseTime}</span>
+                                                      </>
+                                                    )}
+                                                  </>
+                                                )}
+                                            </div>
+                                          </Col>
+                                          <Col>
+                                            <Popconfirm
+                                              placement="left"
+                                              title={'确定要删除这条报警吗？'}
+                                              onConfirm={() => delAlarm(item)}
+                                              okText="是"
+                                              cancelText="否"
+                                            >
+                                              <a>删除</a>
+                                            </Popconfirm>
+                                          </Col>
+                                        </Row>
+                                      ))
+                                    ) : (
+                                        <Empty style={{ marginTop: '30px' }} />
+                                      )}
+                                  </Spin>
+                                )}
+                              </>
+                            )}
+                            {remindExpire && (
+                              <>
+                                {selectMyVal == 11 && (
+                                  <Spin
+                                    spinning={
+                                      contractLoading ||
+                                      !!delContractLoading ||
+                                      !!delAllContractLoading
+                                    }
+                                  >
+                                    {/*合同到期 */}
+                                    {contractList?.length ? (
+                                      contractList.map(item => (
+                                        <Row
+                                          justify="space-between"
+                                          style={{ paddingBottom: paddingBottomVal, transition: '0.5s all ease-in' }}
+                                        >
+                                          <Col style={{ paddingTop: 4 }}>
+                                            <img src="/work_contract.png" />
+                                          </Col>
+                                          <Col style={{ width: 'calc(100% - 100px)' }}>
+                                            <div>{item.Msg}</div>
+                                            <div>如合同不再续签请参考以下注意事项：</div>
+                                            <div>
+                                              1、如涉及物联网卡销号请及时提交CIS申请《物联网卡新增或销号申请》
+                                          </div>
+                                            <div>
+                                              2、办事处、备件库、车辆等如有变动请同服务管理部对应同事沟通
+                                          </div>
+                                            <div>
+                                              3、如有人员跨行业调整请记得考取对应行业运营上岗证
+                                          </div>
+                                          </Col>
+                                          <Col>
+                                            <Popconfirm
+                                              placement="left"
+                                              title={'确定要删除这条合同到期吗？'}
+                                              onConfirm={() => delContract(item)}
+                                              okText="是"
+                                              cancelText="否"
+                                            >
+                                              <a>删除</a>
+                                            </Popconfirm>
+                                          </Col>
+                                        </Row>
+                                      ))
+                                    ) : (
+                                        <Empty style={{ marginTop: '30px' }} />
+                                      )}
+                                  </Spin>
+                                )}
+                              </>
+                            )}
+
+                            {standardgasAlarm && (
+                              <>
+                                {selectMyVal == 12 && (
+                                  <Spin
+                                    spinning={
+                                      standgaswaringLoading ||
+                                      !!delStandgaswaringLoading ||
+                                      !!delAllStandgaswaringLoading
+                                    }
+                                  >
+                                    {/*标气报警 */}
+                                    {standgaswaringList?.length ? (
+                                      standgaswaringList.map(item => {
+                                        const dataArr = item.Col2?.split(',');
+                                        return (
+                                          <Row
+                                            justify="space-between"
+                                            style={{
+                                              paddingBottom: paddingBottomVal,
+                                              transition: '0.5s all ease-in',
+                                            }}
+                                          >
+                                            <Col
+                                              style={{ width: 'calc(100% - 186px)' }}
+                                              className="textOverflow"
+                                            >
+                                              {item.Msg}
+                                              {item.Msg}
+                                              {item.Msg}
+                                            </Col>
+                                            <Col style={{ cursor: 'pointer' }}>
+                                              <Space>
+                                                <a
+                                                  onClick={() => {
+                                                    setProjectQueryDetailVisible(true);
+                                                    setProjectQueryDetailCode(dataArr?.[0]);
+                                                    setProjectQueryDetailTitle(
+                                                      `${
                                                       dataArr && dataArr[0]
                                                         ? `${dataArr[0]}-详情`
                                                         : '详情'
-                                                    }`,
-                                                  );
-                                                }}
-                                              >
-                                                项目详情
+                                                      }`,
+                                                    );
+                                                  }}
+                                                >
+                                                  项目详情
                                               </a>
-                                              <a
-                                                onClick={() => {
-                                                  setStandardGasValidityVisible(true);
-                                                  setStandardGasValidityId(dataArr?.[1]);
-                                                }}
-                                              >
-                                                标气详情
+                                                <a
+                                                  onClick={() => {
+                                                    setStandardGasValidityVisible(true);
+                                                    setStandardGasValidityId(dataArr?.[1]);
+                                                  }}
+                                                >
+                                                  标气详情
                                               </a>
-                                              <Popconfirm
-                                                placement="left"
-                                                title={'确定要删除这条标气有效期报警吗？'}
-                                                onConfirm={() => delStandgaswaring(item)}
-                                                okText="是"
-                                                cancelText="否"
-                                              >
-                                                <Tag style={{ marginRight: 0 }} color="#4090FF">
-                                                  删除
+                                                <Popconfirm
+                                                  placement="left"
+                                                  title={'确定要删除这条标气有效期报警吗？'}
+                                                  onConfirm={() => delStandgaswaring(item)}
+                                                  okText="是"
+                                                  cancelText="否"
+                                                >
+                                                  <Tag style={{ marginRight: 0 }} color="#4090FF">
+                                                    删除
                                                 </Tag>
-                                              </Popconfirm>
-                                            </Space>
-                                          </Col>
-                                        </Row>
-                                      );
-                                    })
-                                  ) : (
-                                    <Empty style={{ marginTop: '30px' }} />
-                                  )}
-                                </Spin>
-                              )}
+                                                </Popconfirm>
+                                              </Space>
+                                            </Col>
+                                          </Row>
+                                        );
+                                      })
+                                    ) : (
+                                        <Empty style={{ marginTop: '30px' }} />
+                                      )}
+                                  </Spin>
+                                )}
+                              </>
+                            )}
+                          </div>
+
+                          {selectMyVal == 10 && (
+                            <>
+                              {workAlarmPushList?.length > 0 ? (
+                                <Row justify="space-between" style={{ paddingTop: 12 }}>
+                                  <Popconfirm
+                                    placement="topLeft"
+                                    title={'确定要关闭全部报警吗？'}
+                                    onConfirm={() => closeAllAlarmChange()}
+                                    okText="是"
+                                    cancelText="否"
+                                  >
+                                    <div>
+                                      {btnSquareComponents(
+                                        [{ name: '关闭全部', value: 1 }],
+                                        allClose,
+                                        () => { },
+                                      )}
+                                    </div>
+                                  </Popconfirm>
+                                  <Pagination
+                                    size="small"
+                                    style={{ paddingRight: 12 }}
+                                    showSizeChanger
+                                    showQuickJumper
+                                    total={workAlarmTotal}
+                                    current={alarmPageIndex}
+                                    pageSize={alarmPageSize}
+                                    onChange={alarmPageChange}
+                                  />
+                                </Row>
+                              ) : null}
                             </>
                           )}
-                        </div>
-
-                        {selectMyVal == 10 && (
-                          <>
-                            {workAlarmPushList?.length > 0 ? (
-                              <Row justify="space-between" style={{ paddingTop: 12 }}>
-                                <Popconfirm
-                                  placement="topLeft"
-                                  title={'确定要关闭全部报警吗？'}
-                                  onConfirm={() => closeAllAlarmChange()}
-                                  okText="是"
-                                  cancelText="否"
-                                >
-                                  <div>
-                                    {btnSquareComponents(
-                                      [{ name: '关闭全部', value: 1 }],
-                                      allClose,
-                                      () => {},
-                                    )}
-                                  </div>
-                                </Popconfirm>
-                                <Pagination
-                                  size="small"
-                                  style={{ paddingRight: 12 }}
-                                  showSizeChanger
-                                  showQuickJumper
-                                  total={workAlarmTotal}
-                                  current={alarmPageIndex}
-                                  pageSize={alarmPageSize}
-                                  onChange={alarmPageChange}
-                                />
-                              </Row>
-                            ) : null}
-                          </>
-                        )}
-                        {selectMyVal == 11 && (
-                          <>
-                            {contractList?.length > 0 ? (
-                              <Row justify="space-between" style={{ paddingTop: 8 }}>
-                                <Popconfirm
-                                  placement="topLeft"
-                                  title={'确定要删除全部合同到期吗？'}
-                                  onConfirm={() => delAll(11)}
-                                  okText="是"
-                                  cancelText="否"
-                                >
-                                  <div>
-                                    {btnSquareComponents(
-                                      [{ name: '删除全部', value: 1 }],
-                                      allClose,
-                                      () => {},
-                                    )}
-                                  </div>
-                                </Popconfirm>
-                                <Pagination
-                                  size="small"
-                                  style={{ paddingRight: 12 }}
-                                  showSizeChanger
-                                  showQuickJumper
-                                  total={contractList.length}
-                                  current={contractPageIndex}
-                                  pageSize={contractPageSize}
-                                  onChange={contractPageChange}
-                                />
-                              </Row>
-                            ) : null}
-                          </>
-                        )}
-                        {selectMyVal == 12 && standgaswaringList?.length > 0 && (
-                          <DelAllBtnComponents title="标气有效期报警" type={12} />
-                        )}
-                      </Card>
-                    </Col>
-                  </Row>
-                )}
-              </div>
-            </>
-          )}
+                          {selectMyVal == 11 && (
+                            <>
+                              {contractList?.length > 0 ? (
+                                <Row justify="space-between" style={{ paddingTop: 8 }}>
+                                  <Popconfirm
+                                    placement="topLeft"
+                                    title={'确定要删除全部合同到期吗？'}
+                                    onConfirm={() => delAll(11)}
+                                    okText="是"
+                                    cancelText="否"
+                                  >
+                                    <div>
+                                      {btnSquareComponents(
+                                        [{ name: '删除全部', value: 1 }],
+                                        allClose,
+                                        () => { },
+                                      )}
+                                    </div>
+                                  </Popconfirm>
+                                  <Pagination
+                                    size="small"
+                                    style={{ paddingRight: 12 }}
+                                    showSizeChanger
+                                    showQuickJumper
+                                    total={contractList.length}
+                                    current={contractPageIndex}
+                                    pageSize={contractPageSize}
+                                    onChange={contractPageChange}
+                                  />
+                                </Row>
+                              ) : null}
+                            </>
+                          )}
+                          {selectMyVal == 12 && standgaswaringList?.length > 0 && (
+                            <DelAllBtnComponents title="标气有效期报警" type={12} />
+                          )}
+                        </Card>
+                      </Col>
+                    </Row>
+                  )}
+                </div>
+              </>
+            )}
           <div className={styles.rightWrapper}>
             <div className={styles.quickNavWrapper}>
               <Card
@@ -1629,8 +1645,8 @@ const Workbench = props => {
                         {renderMessageTimeLine()}
                       </Timeline>
                     ) : (
-                      <Empty style={{ marginTop: '30px' }} />
-                    )}
+                        <Empty style={{ marginTop: '30px' }} />
+                      )}
                   </Spin>
                 </div>
               </Card>
@@ -1727,7 +1743,7 @@ const Workbench = props => {
             />
           </Spin>
         </Modal>
-        <Modal
+        {/* <Modal
           visible={remainProblemsVisible}
           title={'遗留问题'}
           footer={null}
@@ -1739,8 +1755,44 @@ const Workbench = props => {
           bodyStyle={{ padding: '8px 0 0 0' }}
         >
           <RemainProblems hideBreadcrumb match={{ path: '/operations/superviseRectification' }} />
+        </Modal> */}
+        <Modal //遗留问题  解决问题
+          visible={popVisible}
+          title={'解决问题'}
+          onCancel={() => {
+            setPopVisible(false);
+          }}
+          destroyOnClose
+          confirmLoading={updateprojectExecutionLoading}
+          onOk={()=>solveProblem(remainProblemsData)}
+        >
+          <Form
+            name="basicPop"
+            form={popForm}
+            labelCol={{ flex: '80px' }}
+          >
+            <Form.Item label="解决人" name="solveUserName"  rules={[{ required: true, message: '请输入解决人！' }]} >
+              <Input placeholder='请输入' allowClear />
+            </Form.Item>
+            <Form.Item
+              label="解决时间"
+              name="problemTime"
+              rules={[
+                {
+                  required: true,
+                  message: '请选择解决时间！',
+                },
+              ]}
+            >
+              <DatePicker
+                disabledDate={current =>
+                  current && current > moment()
+                }
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+          </Form>
         </Modal>
-
         <InstallEquipmentExamineModal
           title="安装照片审核"
           visible={installEquipmentVisible}

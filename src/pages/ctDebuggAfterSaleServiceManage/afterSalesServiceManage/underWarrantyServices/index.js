@@ -33,7 +33,7 @@ const dvaPropsData = ({ loading }) => ({});
 
 const UnderWarrantyServices = props => {
   const [date, setDate] = useState(moment());
-  const [type, setType] = useState(1);
+  const [type, setType] = useState(props?.btnType || 1);
 
   const { dispatch, hideBreadcrumb, modalWrapClassName } = props;
 
@@ -84,7 +84,7 @@ const UnderWarrantyServices = props => {
                   allowClear={false}
                 />
               </span>
-              <Radio.Group onChange={onTypeChange} defaultValue={1}>
+              <Radio.Group onChange={onTypeChange} value={type}>
                 <Radio.Button value={1}>按产品类型</Radio.Button>
                 <Radio.Button value={2}>按服务原因</Radio.Button>
               </Radio.Group>

@@ -64,8 +64,8 @@ const reportAudit = props => {
     return {
       ...values,
       time: undefined,
-      beginLeaveDate: values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      endLeaveDate: values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      beginLeaveDate: values.time?.[0]&&values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      endLeaveDate: values.time?.[1]&&values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
     };
   };
 
@@ -230,12 +230,12 @@ const reportAudit = props => {
           form={form}
           // layout="inline"
           initialValues={{
-            time: [
-              moment().startOf('week'),
-              moment()
-                // .add(-1, 'day')
-                .endOf('week'),
-            ],
+            // time: [
+            //   moment().startOf('week'),
+            //   moment()
+            //     // .add(-1, 'day')
+            //     .endOf('week'),
+            // ],
           }}
           autoComplete="off"
           labelCol={{

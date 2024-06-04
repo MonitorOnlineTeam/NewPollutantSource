@@ -44,6 +44,7 @@ const Index = (props) => {
     props.dispatch({
       type: `${namespace}/GetAuditPhoto`,
       payload: {
+        type:parData.Type,
         systemModelId: parData.Col1,
         dispatchId: parData.DispatchId,
         pointId: parData.PointId,

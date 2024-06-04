@@ -175,11 +175,7 @@ const Index = (props) => {
     }
     const switchPlanSubmit = (values) => {  //开启、暂停、终止计划提交
         updOperationPlanReauest(values, () => {
-            if (values.status == 3) { //终止
-                setSwitchPlanVisible(false)
-            } else {
-                setRefresh(!refresh)
-            }
+            setSwitchPlanVisible(false)
             restData()
         })
 

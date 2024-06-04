@@ -47,7 +47,12 @@ const AuditModalPage = props => {
           </Descriptions>
           <ServiceReport id={ID} shouldOnlyRecordId="9" />
           <Divider />
-          <HandlingSugges />
+          <HandlingSugges
+            parData={{
+              Type: 1,
+              EquipmentAuditId: ID,
+            }}
+          />
         </>
       )}
     </Modal>

@@ -9,7 +9,7 @@ const dvaPropsData = ({ loading }) => ({});
 const ServiceReportModal = props => {
   const {
     dispatch,
-    data: { ID, ItemCode, Num },
+    data: { ID, ItemCode, Num, DispatchId,SystemModelId,PointId,EquipmentAuditId },
     descriptionList,
     descriptionColumn,
     isModalOpen,
@@ -51,7 +51,13 @@ const ServiceReportModal = props => {
           </Descriptions>
           <ServiceReport id={ID} shouldOnlyRecordId="9" />
           <Divider />
-          <HandlingSugges />
+          <HandlingSugges
+            parData={{
+              Type: 1,
+              EquipmentAuditId: ID,
+            }}
+
+          />
         </>
       )}
     </Modal>

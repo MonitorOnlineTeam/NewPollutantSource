@@ -160,13 +160,6 @@ const BasicData = props => {
         width: 260,
       },
       {
-        title: '服务大区',
-        dataIndex: 'Region',
-        key: 'Region',
-        align: 'center',
-        ellipsis: true,
-      },
-      {
         title: '合同类型',
         dataIndex: 'ProjectType',
         key: 'ProjectType',
@@ -184,6 +177,13 @@ const BasicData = props => {
         title: '项目所在省',
         dataIndex: 'Province',
         key: 'Province',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '服务大区',
+        dataIndex: 'Region',
+        key: 'Region',
         align: 'center',
         ellipsis: true,
       },
@@ -257,8 +257,7 @@ const BasicData = props => {
                     descriptionList = [
                       { name: '离开现场时间', value: record.LeaveDate },
                       { name: '及时状态', value: record.TimelyTip },
-                      { name: '审核状态', value: record.CheckStatuTip },
-                      { name: '审核后报告状态', value: record.CheckReportStatuTip },
+                      { name: '验收服务报告首次上传时间', value: record.CommitDate },
                     ];
                   } else {
                     descriptionList = [
@@ -279,13 +278,16 @@ const BasicData = props => {
     ];
 
     if (level === '2') {
-      // 及时率不显示合格状态
-      columns = columns.filter(item => item.dataIndex !== 'AuditTip');
+      // 及时率不显示合格状态 审核状态  审核后报告状态
+      columns = columns.filter(item =>
+         item.dataIndex !== 'AuditTip' &&
+         item.dataIndex !== 'CheckStatuTip' &&
+         item.dataIndex !== 'CheckReportStatuTip',
+         );
     } else {
-      // 合格率不显示大区、及时状态、审核后报告状态
+      // 合格率不显示及时状态、审核后报告状态
       columns = columns.filter(
         item =>
-          item.dataIndex !== 'Region' &&
           item.dataIndex !== 'TimelyTip' &&
           item.dataIndex !== 'CheckReportStatuTip',
       );

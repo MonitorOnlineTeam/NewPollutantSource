@@ -395,9 +395,9 @@ const SpotCheckPage = props => {
         <Form
           id="searchForm"
           form={form1}
-          initialValues={{
-            checkResult: 0,
-          }}
+          // initialValues={{
+          //   checkResult: 0,
+          // }}
           autoComplete="off"
           style={{ marginBottom: 10 }}
           // labelCol={{ span: 5 }}

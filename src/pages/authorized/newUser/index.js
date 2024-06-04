@@ -705,13 +705,7 @@ export default class UserInfoIndex extends Component {
         overflowY: 'auto',
       },
       showSearch: true,
-      filterOption: (input, option) => {
-        if (option && option.props && option.props.title) {
-          return option.props.title === input || option.props.title.indexOf(input) !== -1
-        } else {
-          return true
-        }
-      }
+      treeNodeFilterProp:'label'
     };
     const provinceShow = this.props.configInfo && this.props.configInfo.IsShowProjectRegion;
     return (

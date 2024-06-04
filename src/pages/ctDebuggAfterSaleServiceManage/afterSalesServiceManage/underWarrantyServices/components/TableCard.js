@@ -412,7 +412,6 @@ const TableCard = props => {
       // 把当前Level的ChildList并到相应的数组里
       levelMap[item.Level].push(...item.ChildList);
     });
-
     // 转换map成数组，并按Level排序, 同时处理ChildList中的count字段
     const sortedLevels = Object.keys(levelMap)
       .sort((a, b) => a - b)
@@ -460,7 +459,6 @@ const TableCard = props => {
     //     });
     //   });
     // });
-
     setDetailsData({
       CategoryTableList,
       ReasonTableList,

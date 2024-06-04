@@ -26,9 +26,12 @@ const ProjectExecutionModal = props => {
   const [columnList, setColumnList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
 
-  const { dispatch, open, onCancel, queryLoading, exportLoading, time } = props;
+  const { dispatch, open, onCancel, queryLoading, exportLoading, initDate } = props;
 
   useEffect(() => {
+    form.setFieldsValue({
+      analysisDate:initDate? initDate : moment()
+    })
     getTableDataSource();
   }, []);
 
@@ -181,9 +184,9 @@ const ProjectExecutionModal = props => {
         <Form
           form={form}
           layout="inline"
-          initialValues={{
-            analysisDate: moment(),
-          }}
+          // initialValues={{
+          //   analysisDate: moment(),
+          // }}
           autoComplete="off"
         >
           <Form.Item name="analysisDate" label="年份">

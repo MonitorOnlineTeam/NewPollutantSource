@@ -148,7 +148,6 @@ export default Model.extend({
 
     // 获取质保内服务页面数据
     *GetWarrantyServiceAnalysis({ payload, callback }, { call, put, update, select }) {
-      debugger
       const result = yield call(
         requestPost,
         API.CtAPI_WJQ.UnderWarrantyServices.GetWarrantyServiceAnalysis,

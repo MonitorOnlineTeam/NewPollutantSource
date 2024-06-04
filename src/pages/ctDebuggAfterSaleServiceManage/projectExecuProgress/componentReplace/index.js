@@ -52,18 +52,23 @@ const Index = (props) => {
 
 
 
-  const { queryPar, tableDatas, tableTotal, tableLoading, exportLoading, cisPartsList } = props;
+  const { queryPar, tableDatas, tableTotal, tableLoading, exportLoading, cisPartsList, reportContent,projectCode } = props;
 
 
 
 
 
   useEffect(() => {
-    onFinish(pageIndex, pageSize);
-    props.dispatch({
-      type: `${namespace}/GetCisPartsList`,
-      payload: {},
-    });
+    if(reportContent){ //派单查询 - 服务填报内容
+      onFinish(pageIndex, pageSize,{projectCode:projectCode});
+    }else{
+      onFinish(pageIndex, pageSize);
+      props.dispatch({
+        type: `${namespace}/GetCisPartsList`,
+        payload: {},
+      });
+    }
+
   }, []);
 
   
@@ -318,14 +323,14 @@ const Index = (props) => {
 
   return (
     <div className={`queryCriterTitleSty`}>
-      <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
+        <Card title={reportContent? null : searchComponents()} bodyStyle={reportContent&&{padding:0}} bordered={!reportContent}>
           <SdlTable
             resizable
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={columns}
+            columns={reportContent ? columns.filter(item=>item.title!='合同编号' && item.title!='项目名称') :  columns}
             align='center'
             pagination={{
               total: tableTotal,

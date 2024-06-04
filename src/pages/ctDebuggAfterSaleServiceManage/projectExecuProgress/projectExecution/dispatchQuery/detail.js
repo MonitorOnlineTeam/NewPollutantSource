@@ -16,6 +16,7 @@ import ImageView from '@/components/ImageView';
 import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils';
 import AttachmentView from '@/components/AttachmentView';
 import CooperaInspection from './components/CooperaInspection'
+import ComponentReplace from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/componentReplace'
 import { uploadPrefix } from '@/config'
 import styles from "./style.less"
 import { isArray } from 'lodash';
@@ -1601,6 +1602,12 @@ const Index = (props) => {
               setMaintenInfoId(item.RecordId);
               return <MaintenanceRecord data={maintenInfoData} loading={maintenInfoLoading} />;//维修记录
             }
+          case '26':
+            if (item.RecordStatus == 1) {//部件更换
+              return <div>
+                <TitleComponents text='部件更换' /> <ComponentReplace hideBreadcrumb reportContent projectCode={serviceApplicaData?.ProjectCode}/>;
+              </div>
+            }
         }
 
       })}
@@ -1707,7 +1714,7 @@ const Index = (props) => {
     let RecordList = isArray(item.RecordList) ? item.RecordList : [];
 
     // 查询指定的RecordId
-    if(props.shouldOnlyRecordId) {
+    if (props.shouldOnlyRecordId) {
       RecordList = RecordList.filter(item => item.RecordId === props.shouldOnlyRecordId);
     }
 
@@ -1953,7 +1960,7 @@ const Index = (props) => {
           <ServiceFillContent /> :
           <Tabs defaultActiveKey="1" tabPosition="left">
             <TabPane tab="服务填报内容" key="1">
-            <ServiceFillContent />
+              <ServiceFillContent />
             </TabPane>
             <TabPane tab="服务派工申请单" key="2">
               <Spin spinning={!!serviceDispatchLoading}> <ServiceWorkContent /> </Spin>

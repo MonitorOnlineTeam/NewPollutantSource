@@ -17,6 +17,7 @@ const AfterSaleService = props => {
   const { dispatch, loading } = props;
 
   const [open, setOpen] = useState(false);
+  const [openType, setOpenType] = useState(1);
 
   const [ProductCategoryList, setProductCategoryList] = useState([]);
   const [ServiceReasonsList, setServiceReasonsList] = useState([]);
@@ -39,8 +40,9 @@ const AfterSaleService = props => {
     });
   };
 
-  const onOpenModal = () => {
+  const onOpenModal = (type) => {
     setOpen(true);
+    setOpenType(type)
   };
 
   return (
@@ -51,14 +53,13 @@ const AfterSaleService = props => {
       onChange={value => {
         getData(value);
       }}
-      onClick={onOpenModal}
       bodyStyle={{
         height: 'calc(100% - 41px)',
       }}
       loading={loading}
     >
-      <Row className={styles.AfterSaleServiceWrapper} onClick={onOpenModal}>
-        <Col span={12} style={{ height: '100%' }}>
+      <Row className={styles.AfterSaleServiceWrapper}>
+        <Col span={12} style={{ height: '100%',cursor:'pointer' }}  onClick={()=>onOpenModal(1)}>
           <div className={styles.title}>质保内服务产品类别</div>
           <div className={styles.listWrapper}>
             <Row className={styles.header}>
@@ -92,7 +93,7 @@ const AfterSaleService = props => {
             </div>
           </div>
         </Col>
-        <Col span={12} style={{ height: '100%' }}>
+        <Col span={12} style={{ height: '100%',cursor:'pointer' }}  onClick={()=>onOpenModal(2)}>
           <div className={styles.title}>质保内服务原因</div>
           <div className={styles.listWrapper}>
             <Row className={styles.header}>
@@ -138,7 +139,7 @@ const AfterSaleService = props => {
         }}
         bodyStyle={{ padding: 0 }}
       >
-        {open && <UnderWarrantyServices hideBreadcrumb modalWrapClassName="fullScreenModal" />}
+        {open && <UnderWarrantyServices btnType={openType} hideBreadcrumb modalWrapClassName="fullScreenModal" />}
       </Modal>
     </HomeCard>
   );

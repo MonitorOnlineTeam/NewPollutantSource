@@ -147,7 +147,7 @@ const Index = (props) => {
             width: 'auto',
         },
         {
-            title: '间隔',
+            title: '间隔（天）',
             dataIndex: 'IntervalDays',
             key: 'IntervalDays',
             ellipsis: true,
@@ -260,7 +260,7 @@ const Index = (props) => {
                 </Form.Item>
 
             </Spin> :
-                <Form.Item name='pointID' label='监测点'   style={{ marginBottom: 8 }}>
+                <Form.Item name='pointName' label='监测点'   style={{ marginBottom: 8 }}>
                     <Input placeholder='请输入' allowClear/>
                 </Form.Item>
             }
