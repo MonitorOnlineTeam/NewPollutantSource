@@ -1,13 +1,12 @@
 import { post } from '@/utils/request';
 import { API } from '@config/API'
-
 /**
  * 缺失数据  响应
  *
  */
 export async function GetDefectModel(params) {
   const result = post(
-    API.AlarmApi.GetDefectDataSummary,
+    API.AlarmApi.GetMissDataResponseRateList,
     params,
     null,
   );
@@ -18,7 +17,7 @@ export async function GetDefectModel(params) {
 //缺失数据查询响应率 二级
 export async function GetDefectPointDetailRate(params) {
   const result = post(
-    API.AlarmApi.GetDefectPointDetailRate,
+    API.AlarmApi.GetMissDataResponseRateList,
     params,
     null,
   );
@@ -28,13 +27,18 @@ export async function GetDefectPointDetailRate(params) {
 
 //关注列表
 export async function GetAttentionDegreeList(params) {
-  const result = post(API.CommonApi.GetAttentionDegreeList, params);
+  const result = post(
+    API.CommonApi.GetAttentionDegreeList,
+    params,
+    null,
+  );
+
   return result;
 }
 //导出 缺失数据报警
 export async function ExportDefectDataSummary(params) {
   const result = post(
-    API.ExportApi.ExportDefectDataSummary,
+    API.AlarmApi.ExportMissDataResponseRateList,
     params,
     null,
   );
@@ -45,7 +49,7 @@ export async function ExportDefectDataSummary(params) {
 
 export async function ExportDefectPointDetailRate(params) {
   const result = post(
-    API.ExportApi.ExportDefectPointDetailRate,
+    API.AlarmApi.ExportMissDataResponseRateList,
     params,
     null,
   );
@@ -57,6 +61,6 @@ export async function ExportDefectPointDetailRate(params) {
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
-  const result = post(API.RegionApi.GetEntByRegion, params);
+  const result = post(API.RegionApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
   return result;
 }

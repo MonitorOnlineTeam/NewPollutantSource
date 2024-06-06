@@ -48,6 +48,6 @@ export async function ExportDefectPointDetail(params) {
 
 //根据行政区获取 企业列表
 export async function GetEntByRegion(params) {
-  const result = post(API.CommonApi.GetEntByRegion, { regionCode: params.RegionCode }, null);
+  const result = post(API.RegionApi.GetEntByRegion, { regionCode: params.RegionCode }, null);
   return result;
 }

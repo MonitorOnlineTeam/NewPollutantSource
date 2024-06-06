@@ -1,0 +1,32 @@
+/**
+ * 功  能：缺失数据 企业
+ * 创建人：jab
+ * 创建时间：2020.09.28
+ */
+import React, { Component } from 'react';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import DefectData from '../commpnents/DefectData'
+
+export default class Ent extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+
+    };
+  }
+
+  componentDidMount() {
+
+  }
+  
+  render() {
+  
+
+    return (
+      <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
+       <DefectData {...this.props}/>
+      </BreadcrumbWrapper>
+    );
+  }
+}

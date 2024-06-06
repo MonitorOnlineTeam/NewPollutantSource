@@ -1,10 +1,10 @@
 /**
  * 功  能：缺失数据报警
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -29,12 +29,13 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
 import RegionList from '@/components/RegionList'
-
-
+import MissDataSecond from '../missDataSecond'
+import styles from '../style.less'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -45,45 +46,33 @@ const pageUrl = {
   updateState: 'missingData/updateState',
   getData: 'missingData/getDefectModel',
 };
-@connect(({ loading, missingData,autoForm,common }) => ({
+@connect(({ loading, missingData, autoForm, common }) => ({
   priseList: missingData.priseList,
-  exloading:missingData.exloading,
+  exloading: missingData.exloading,
   loading: loading.effects[pageUrl.getData],
   total: missingData.total,
   tableDatas: missingData.tableDatas,
   queryPar: missingData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:missingData.attentionList,
-  atmoStationList:common.atmoStationList
+  attentionList: missingData.attentionList,
+  atmoStationList: common.atmoStationList,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
+      missingAlarmVisible: false,
+      alarmNumRegionCode: '',
+      regionName: '',
+      status: '',
+      regCode:'',
+      regLevel:1,
     };
-    
-    this.columns = [
+    this.commonCol = [
       {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
-        align: 'center',
-        render: (text, record) => { 
-          // return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',query:  {regionCode:record.regionCode} }} >
-          //          {text}
-          //      </Link>
-           return <a href='javascript:;' onClick={
-             ()=>{ 
-               sessionStorage.setItem("missDataDetailPageIndex",1)
-               sessionStorage.setItem("missDataDetailPageSize",20)
-               this.props.dispatch(routerRedux.push({pathname:'/monitoring/alarmInfo/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}));
-              }}>{text}</a>      
-       },
-      },
-      {
-        title: <span>{this.props.types==='ent'? '缺失数据报警监测点数':'缺失数据报警空气监测点数'}</span>,
+        title: <span>{this.props.types === 'ent' ? '缺失数据报警监测点数' : '缺失数据报警空气监测点数'}</span>,
         dataIndex: 'pointCount',
         key: 'pointCount',
         align: 'center',
@@ -92,34 +81,127 @@ export default class EntTransmissionEfficiency extends Component {
         title: <span>缺失数据报警次数</span>,
         dataIndex: 'exceptionCount',
         key: 'exceptionCount',
-        align: 'center'
+        align: 'center',
+        render: (text, record) => {
+          return <a onClick={() => { this.missingAlarmNum(record) }}>{text} </a>
+        }
       },
-      // {
-      //   title: <span>已响应报警次数</span>,
-      //   dataIndex: 'xiangyingCount',
-      //   key: 'xiangyingCount',
-      //   align: 'center',
-      // },
-      // {
-      //   title: <span>待响应报警次数</span>,
-      //   dataIndex: 'weixiangyingCount',
-      //   key: 'weixiangyingCount',
-      //   align: 'center',
-      // },
+      {
+        title: <span>已响应报警次数</span>,
+        dataIndex: 'xiangyingCount',
+        key: 'xiangyingCount',
+        align: 'center',
+        render: (text, record) => {
+          return <a onClick={() => { this.missingAlarmNum(record, '1') }}>{text} </a>
+        }
+      },
+      {
+        title: <span>待响应报警次数</span>,
+        dataIndex: 'weixiangyingCount',
+        key: 'weixiangyingCount',
+        align: 'center',
+        render: (text, record) => {
+          return <a onClick={() => { this.missingAlarmNum(record, '0') }}>{text} </a>
+        }
+      },
+    ]
+    this.columns = [
+      {
+        title: '行政区',
+        dataIndex: 'regionName',
+        key: 'regionName',
+        align: 'center',
+        render: (text, record) => {
+          // return <a onClick={
+          //   () => {
+          //     const { queryPar, } = this.props
+          //     //市级跳转
+          //     if (this.props.level) {
+          //       this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.regionDetailCode}), regionName: record.regionName } }));
+          //     } else { //省级跳转
+          //       this.props.dispatch(routerRedux.push({
+          //         pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar,regionDetailCode: record.regionCode }), regionCode: record.regionCode }
+          //       }));
+          //     }
+          //   }}>{text}</a>
+          return <a onClick={
+            () => {
+              const { queryPar, } = this.props
+              //省级跳转
+              this.props.dispatch(routerRedux.push({
+                pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar, regionDetailCode: record.regionCode,regionLevel:2,staticType:1 }), regionCode: record.regionCode }
+              }));
+
+            }}>{text}</a>
+        },
+      },
+      ...this.commonCol
     ];
+    this.columns2 = [
+      // {
+      //   title: '行政区',
+      //   dataIndex: 'regionName',
+      //   key: 'regionName',
+      //   align: 'center',
+      //   render: (text, record) => {
+      //     return <a onClick={
+      //       () => {
+      //         const { queryPar, } = this.props
+      //         //市级跳转
+      //         if (this.props.level) {
+      //           this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar, RegionCode: record.regionCode ? record.regionCode : queryPar.regionDetailCode}), regionName: record.regionName } }));
+      //         } else { //省级跳转
+      //           this.props.dispatch(routerRedux.push({
+      //             pathname: this.props.types === 'ent' ? '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel' : '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air', query: { queryPar: JSON.stringify({ ...queryPar,regionDetailCode: record.regionCode }), regionCode: record.regionCode }
+      //           }));
+      //         }
+      //       }}>{text}</a>
+      //   },
+      // },
+      {
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+        render: (text, record, index) => {
+          if (text == '全部合计') {
+            return { props: { colSpan: 0 }, };
+          }
+          return text;
+        },
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
+        render: (text, record) => {
+          return {
+            props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
+            children: <a onClick={
+              () => {
+                const { queryPar, } = this.props
+                //市级跳转
+                this.props.dispatch(routerRedux.push({ pathname: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond', query: { queryPar: JSON.stringify({ ...queryPar,Rate:1, RegionCode: record.CityCode ? record.CityCode : queryPar.regionDetailCode, regionLevel:3,staticType:3}), regionName: record.regionName } }));
+              }}>{record.ProvinceName == '全部合计' ? '全部合计' : text}</a>
+          }
+        },
+      },
+      ...this.commonCol
+    ]
   }
 
   componentDidMount() {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,types } = this.props;
+    const { dispatch, query, Atmosphere, types, location, queryPar, } = this.props;
 
-    let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
+    let entObj = { title: <span>缺失数据报警企业数</span>, dataIndex: 'entCount', key: 'entCount', align: 'center', }
 
-    types==='ent'? this.columns.splice(1,0,entObj) : null;
-
-    this.updateQueryState({
+    types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
+    const isReg = location && location.pathname == '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent';
+    this.updateQueryState(isReg ? {
       // BeginTime: moment()
       //   .subtract(1, 'day')
       //   .format('YYYY-MM-DD HH:mm:ss'),
@@ -128,20 +210,21 @@ export default class EntTransmissionEfficiency extends Component {
       // EntCode: '',
       // RegionCode: '',
       // Atmosphere:Atmosphere
-      RegionCode: '',
-      EntType: types==='ent'? "1":"2"
-    });
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+      // RegionCode:query.,
+      EntType: types === 'ent' ? "1" : "2",
+      OperationPersonnel: '',
+    } :
+      query && query.queryPar && JSON.parse(query.queryPar)
+    );
 
-     //获取企业列表 or 大气站列表
-     types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
- 
-     dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-  
+    //获取企业列表 or 大气站列表
+    //  types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
+    isReg && dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
 
-    setTimeout(() => {
-      this.getTableData();
-    });
+    const regCode = isReg ? queryPar.RegionCode : query.regionCode;
+    this.getTableData(regCode, isReg ? 1 : 2);
+    this.setState({regCode:regCode, regLevel:isReg ? 1 : 2})
+
   };
   updateQueryState = payload => {
     const { queryPar, dispatch } = this.props;
@@ -152,11 +235,12 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
-  getTableData = () => {
-    const { dispatch, queryPar } = this.props;
+  getTableData = (regCode, regionLevel) => {
+    const { dispatch, queryPar, query } = this.props;
+    const par = regionLevel == 1 ? queryPar : query && query.queryPar && JSON.parse(query.queryPar)
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...par, RegionCode: regCode, regionLevel: regionLevel,staticType:1},
     });
   };
 
@@ -164,29 +248,29 @@ export default class EntTransmissionEfficiency extends Component {
 
 
   children = () => { //企业列表 or 大气站列表
-    const { priseList,atmoStationList,type } = this.props;
+    const { priseList, atmoStationList, type } = this.props;
 
     const selectList = [];
-    if(type==='ent'){
-     if (priseList.length > 0) {
-      priseList.map(item => {
-        selectList.push(
-          <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
-            {item.EntName}
-          </Option>,
-        );
-      });
-     }else{
-       if(atmoStationList.length > 0){
-        atmoStationList.map(item => {
+    if (type === 'ent') {
+      if (priseList.length > 0) {
+        priseList.map(item => {
           selectList.push(
-            <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
-              {item.StationName}
+            <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
+              {item.EntName}
             </Option>,
           );
-        }); 
-       }
-     }
+        });
+      } else {
+        if (atmoStationList.length > 0) {
+          atmoStationList.map(item => {
+            selectList.push(
+              <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
+                {item.StationName}
+              </Option>,
+            );
+          });
+        }
+      }
       return selectList;
     }
   };
@@ -198,39 +282,45 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   changeRegion = (value) => { //行政区事件
-    
+
     this.updateQueryState({
       RegionCode: value,
     });
   };
-  changeAttent=(value)=>{
+  changeAttent = (value) => {
     this.updateQueryState({
       AttentionCode: value,
     });
   }
-  changeEnt=(value,data)=>{ //企业事件
+  changePperation = (value) => {
+    this.updateQueryState({
+      OperationPersonnel: value,
+    });
+  }
+  changeEnt = (value, data) => { //企业事件
     this.updateQueryState({
       EntCode: value,
     });
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar, } = this.props;
     dispatch({
       type: 'missingData/exportDefectDataSummary',
-      payload: { ...queryPar, HasOperation:true},
+      payload: { ...queryPar,regionDetailCode:undefined,RegionCode:this.state.regCode?this.state.regCode : '' ,regionLevel:this.state.regLevel,staticType:1 },
       callback: data => {
-         downloadFile(`${data}`);
-        },
+        downloadFile(`${data}`);
+      },
     });
   };
   //查询事件
   queryClick = () => {
-    this.getTableData();
+    const { queryPar } = this.props;
+    this.getTableData(queryPar.RegionCode, 1);
   };
 
 
-  regchildren=()=>{
+  regchildren = () => {
     const { regionList } = this.props;
     const selectList = [];
     if (regionList.length > 0) {
@@ -244,11 +334,11 @@ export default class EntTransmissionEfficiency extends Component {
       return selectList;
     }
   }
-  attentchildren=()=>{
+  attentchildren = () => {
     const { attentionList } = this.props;
     const selectList = [];
     if (attentionList.length > 0) {
-       attentionList.map(item => {
+      attentionList.map(item => {
         selectList.push(
           <Option key={item.AttentionCode} value={item.AttentionCode}>
             {item.AttentionName}
@@ -261,23 +351,33 @@ export default class EntTransmissionEfficiency extends Component {
   onRef1 = (ref) => {
     this.child = ref;
   }
-      /** 数据类型切换 */
- _handleDateTypeChange = value => {
-   this.child.onDataTypeChange(value)
-    }
-  dateChange=(date,dataType)=>{
-      this.updateQueryState({
-        DataType:dataType,
-        BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-      });
-    }
+  /** 数据类型切换 */
+  _handleDateTypeChange = value => {
+    this.child.onDataTypeChange(value)
+  }
+  dateChange = (date, dataType) => {
+    this.updateQueryState({
+      DataType: dataType,
+      BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+      EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+  }
+  missingAlarmNum = (record, status) => { //缺失数据报警次数
+    const { queryPar: { regionDetailCode, },} = this.props;
+    this.setState({
+      missingAlarmVisible: true,
+      regionName: record.regionName,
+      alarmNumRegionCode:record.ProvinceName == '全部合计' ? regionDetailCode : record.regionCode,
+      status: status ? status : '',
+    })
+  }
   render() {
     const {
       exloading,
-      queryPar: {  BeginTime, EndTime,EntCode, RegionCode,AttentionCode,DataType,PollutantType },
+      queryPar: { BeginTime, EndTime, EntCode, RegionCode, AttentionCode, DataType, PollutantType, OperationPersonnel },
       types,
-      tableDatas
+      tableDatas,
+      level,
     } = this.props;
 
     return (
@@ -286,82 +386,124 @@ export default class EntTransmissionEfficiency extends Component {
         title={
           <>
             <Form layout="inline">
-          
-            <Row>
-            <Form.Item label='数据类型'>
-            <Select
-                  placeholder="数据类型"
-                  onChange={this._handleDateTypeChange}
-                  value={DataType}
-                  style={{ width: 181 }}
-                >  
-               <Option key='0' value='HourData'>小时</Option>
-               <Option key='1' value='DayData'> 日均</Option>
+              <Row>
+                {level == 1 &&
+                  <>
+                    <Form.Item label='数据类型'>
+                      <Select
+                        placeholder="数据类型"
+                        onChange={this._handleDateTypeChange}
+                        value={DataType}
+                        style={{ width: 181 }}
+                      >
+                        <Option key='0' value='HourData'>小时</Option>
+                        <Option key='1' value='DayData'> 日均</Option>
 
-                </Select>
-            </Form.Item>
-              <Form.Item>
-                日期查询：
-                <RangePicker_   allowClear={false} onRef={this.onRef1} dataType={DataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
-                callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
-              </Form.Item>
-              <Form.Item label='行政区'>
-              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
-              </Form.Item>
-              {types!=='ent'? <Form.Item>
-              <Button type="primary" onClick={this.queryClick}>
-                  查询
-                </Button>
-                <Button
-                  style={{ margin: '0 5px' }}
-                  icon={<ExportOutlined />}
-                  onClick={this.template}
-                  loading={exloading}
+                      </Select>
+                    </Form.Item>
+                    <Form.Item>
+                      日期查询：
+                <RangePicker_ allowClear={false} onRef={this.onRef1} dataType={DataType} style={{ minWidth: '200px', marginRight: '10px' }} dateValue={[moment(BeginTime), moment(EndTime)]}
+                        callback={(dates, dataType) => this.dateChange(dates, dataType)} />
+                    </Form.Item>
+                    <Form.Item label='行政区'>
+                      {/* <Select
+                  allowClear
+                  placeholder="行政区"
+                  onChange={this.changeRegion}
+                  value={RegionCode ? RegionCode : undefined}
+                  style={{ width: 181 }}
                 >
-                  导出
+                  {this.regchildren()}
+                </Select> */}
+                      <RegionList style={{ width: 181 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
+                    </Form.Item>
+                  </>}
+                {/* <Form.Item label='运维状态'>
+              <Select
+                allowClear
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="运维状态"
+                maxTagCount={2}
+                onChange={this.changePperation}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                >
+                <Option value="1">已设置运维人员</Option>
+                <Option value="2">未设置运维人员</Option>
+              </Select>
+              </Form.Item>  */}
+                {types === 'air' ? <Form.Item>
+                  {level == 1 && <Button type="primary" onClick={this.queryClick}>
+                    查询
                 </Button>
-              </Form.Item> :null}
+                  }
+                  <Button
+                    style={{ margin: '0 5px' }}
+                    icon={<ExportOutlined />}
+                    onClick={this.template}
+                    loading={exloading}
+                  >
+                    导出
+                </Button>
+                  {level == 2 && <Button onClick={() => {
+                    // this.props.dispatch(routerRedux.push({pathname:'/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/air'}))
+                    history.go(-1)
+                  }}>
+                    <RollbackOutlined />返回 </Button>
+                  }
+                </Form.Item> : null}
               </Row>
-              {types==='ent'?  <Row>
-              <Form.Item label='关注程度'>
-                <Select
-                  allowClear
-                  placeholder="关注程度"
-                  onChange={this.changeAttent}
-                  value={AttentionCode?AttentionCode:undefined} 
-                  style={{ width: 181 }}
-                >
-                  {this.attentchildren()}
-                </Select>
-              </Form.Item>
 
-           <Form.Item label='企业类型'>
-                <Select
-                  allowClear
-                  placeholder="企业类型"
-                  onChange={this.typeChange}
-                  value={PollutantType?PollutantType:undefined}
-                  style={{ width: 181 }}
-                >
-                  <Option value="1">废水</Option>
-                  <Option value="2">废气</Option>
-                </Select>
-              </Form.Item> 
+              {types === 'ent' ? <Row>
+                { level == 1 &&<>
+                  <Form.Item label='关注程度'>
+                    <Select
+                      allowClear
+                      placeholder="关注程度"
+                      onChange={this.changeAttent}
+                      value={AttentionCode ? AttentionCode : undefined}
+                      style={{ width: 181 }}
+                    >
+                      {this.attentchildren()}
+                    </Select>
+                  </Form.Item>
 
-              <Form.Item>
-                <Button type="primary" onClick={this.queryClick}>
-                  查询
+                  <Form.Item label='企业类型'>
+                    <Select
+                      allowClear
+                      placeholder="企业类型"
+                      onChange={this.typeChange}
+                      value={PollutantType ? PollutantType : undefined}
+                      style={{ width: 231 }}
+                    >
+                      <Option value="2">废气</Option>
+                      <Option value="1">废水</Option>
+                    </Select>
+                  </Form.Item>
+                </>}
+                <Form.Item>
+                  {level == 1 && <Button type="primary" onClick={this.queryClick}>
+                    查询
+                </Button>}
+
+                  <Button
+                    style={{ margin: '0 5px' }}
+                    icon={<ExportOutlined />}
+                    onClick={this.template}
+                    loading={exloading}
+                  >
+                    导出
                 </Button>
-                <Button
-                  style={{ margin: '0 5px' }}
-                  icon={<ExportOutlined />}
-                  onClick={this.template}
-                  loading={exloading}
-                >
-                  导出
-                </Button>
-              </Form.Item>
-              </Row>: null }
+                  {level == 2 && <Button onClick={() => {
+                    //  this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/ent'}))
+                    history.go(-1)
+                  }}>
+                    <RollbackOutlined />返回 </Button>
+                  }
+                </Form.Item>
+              </Row> : null}
+
             </Form>
           </>
         }
@@ -370,21 +512,32 @@ export default class EntTransmissionEfficiency extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
-            columns={this.columns}
+            columns={level == 1? this.columns : this.columns2}
             dataSource={this.props.tableDatas}
             pagination={false}
-            // pagination={{
-              // showSizeChanger: true,
-              // showQuickJumper: true,
-              // sorter: true,
-              // total: this.props.total,
-              // defaultPageSize:20
-              // pageSize: PageSize,
-              // current: PageIndex,
-              // pageSizeOptions: ['10', '20', '30', '40', '50'],
-            // }}
+          // pagination={{
+          // showSizeChanger: true,
+          // showQuickJumper: true,
+          // sorter: true,
+          // total: this.props.total,
+          // //defaultPageSize:20
+          // pageSize: PageSize,
+          // current: PageIndex,
+          // pageSizeOptions: ['10', '20', '30', '40', '50'],
+          // }}
           />
         </>
+        <Modal
+          title={`${this.state.regionName} - ${this.props.types === 'ent' ? '缺失数据报警详情(企业)' : '缺失数据报警详情(空气站)'}`}
+          visible={this.state.missingAlarmVisible}
+          wrapClassName='spreadOverModal spreadOverHiddenModal'
+          footer={null}
+          destroyOnClose={true}
+          onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
+          className={styles.missDetailSty}
+        >
+          <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, status: this.state.status,staticType:3, }) } }} />
+        </Modal>
       </Card>
     );
   }

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-23 14:47:31
+ * @Last Modified time: 2024-06-05 10:24:30
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -263,8 +263,7 @@ class SdlTable extends PureComponent {
       const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
       const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
       const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
-      const count = tableTheadHeight + 88 + tableFooterHeight;
-      console.log('count', count);
+      const count = tableTheadHeight + 70 + tableFooterHeight;
       this.setState({
         headAndFooterHeight: count > 110 ? count : 110,
       });

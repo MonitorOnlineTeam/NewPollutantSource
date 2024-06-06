@@ -1,6 +1,6 @@
 /**
  * 功  能：传输有效率
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.09.27
  */
 
@@ -38,7 +38,8 @@ export default Model.extend({
     total: '',
     attentionList:[],
     priseList: [],
-    tableDatil:[]
+    tableDatil:[],
+    detailTotal:0,
   },
   subscriptions: {},
   effects: {
@@ -55,20 +56,19 @@ export default Model.extend({
           weixiangyingCount += item.weixiangyingCount;
           xiangyingCount += item.xiangyingCount;
         })
-        let state = yield select(state => state.MissingRateData);  
-        const totalRow = {
-          regionName:'全部合计',
-          regionCode:state.queryPar.RegionCode,
-          entCount:entCount,
-          pointCount:pointCount,
-          responseRate:Number(xiangyingCount)/Number(exceptionCount)*100,
-          exceptionCount:exceptionCount,
-          weixiangyingCount:weixiangyingCount,
-          xiangyingCount:xiangyingCount
-        }
+        // const totalRow = {
+        //   regionName:'全部合计',
+        //   regionCode:'',
+        //   entCount:entCount,
+        //   pointCount:pointCount,
+        //   responseRate:Number(xiangyingCount)/Number(exceptionCount)*100,
+        //   exceptionCount:exceptionCount,
+        //   weixiangyingCount:weixiangyingCount,
+        //   xiangyingCount:xiangyingCount
+        // }
         yield update({
-          tableDatas: response.Datas.length>0? [...response.Datas,totalRow] : response.Datas,
-          // tableDatas: response.Datas,
+          // tableDatas: response.Datas.length>0? [...response.Datas,totalRow] : response.Datas,
+          tableDatas: response.Datas,
           total: response.Total,
         });
       }
@@ -79,6 +79,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         yield update({
           tableDatil: response.Datas,
+          detailTotal:response.Total,
         });
       }
     },   

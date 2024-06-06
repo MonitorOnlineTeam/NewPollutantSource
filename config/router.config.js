@@ -1363,42 +1363,30 @@ const routes = [
                 path: '/dataquerymanager/dataFlag',
                 component: './monitoring/dataquery/DataTagPage',
               },
-              {
-                name: 'defectData',
-                //数据缺失
-                path: '/dataquerymanager/alarmInfo/defectData',
-                component: './monitoring/defectData/ent',
-              },
-              {
-                name: 'defectDataAir',
-                //数据缺失(空气站)
-                path: '/dataquerymanager/alarmInfo/defectDataAir',
-                component: './monitoring/defectData/air',
-              },
+              // {
+              //   name: 'defectData',
+              //   //数据缺失
+              //   path: '/dataquerymanager/alarmInfo/defectData',
+              //   component: './monitoring/defectData/ent',
+              // },
+              // {
+              //   name: 'defectDataAir',
+              //   //数据缺失(空气站)
+              //   path: '/dataquerymanager/alarmInfo/defectDataAir',
+              //   component: './monitoring/defectData/air',
+              // },
               {
                 name: 'airStation',
                 //空气站查询
                 path: '/dataquerymanager/airStation',
                 component: './monitoring/airStation',
               },
-              {
-                name: 'exceedData',
-                //超标数据查询
-                path: '/dataquerymanager/exceedData',
-                component: './monitoring/exceedData',
-              },
-              {
-                name: 'abnormalData',
-                //异常数据
-                path: '/dataquerymanager/abnormalData',
-                component: './monitoring/abnormalData',
-              },
-              {
-                name: 'abnormalDetailsData',
-                //异常数据 - 二级
-                path: '/dataquerymanager/abnormalData/details',
-                component: './monitoring/abnormalData/DetailsPage',
-              },
+              // {
+              //   name: 'exceedData',
+              //   //超标数据查询
+              //   path: '/dataquerymanager/exceedData',
+              //   component: './monitoring/exceedData',
+              // },
             ],
           },
           {
@@ -1596,6 +1584,68 @@ const routes = [
               //   path: '/monitoring/overrecord',
               //   component: './monitoring/overRecord',
               // },
+            ],
+          },
+          {
+            name: 'abnormaRecall',
+            path: '/abnormaRecall',
+            routes: [
+              // {
+              //   //智能诊断 重定向
+              //   path: '/abnormaRecall',
+              //   redirect: '/monitoring/outputstopmanage/OutputStopNew',
+              // },
+              // {
+              //   path: '/abnormaRecall/abnormalDataAnalysis', ///异常数据分析 重定向
+              //   redirect: '/dataSearch/exceedData',
+              // },
+              // {
+              //   name: 'exceptionrecord',
+              //   path:
+              //     '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
+              //   // component: './monitoring/exceptionrecord',
+              //   component: './monitoring/exceptionrecordNew',
+              // },
+              // {
+              //   name: 'exceptionrecordCity', //异常数据报警 城市级页面
+              //   path:
+              //     '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/cityLevel',
+              //   component: './monitoring/exceptionrecordNew/cityLevel',
+              // },
+
+              // {
+              //   name: 'exceptionrecordDetails',
+              //   path:
+              //     '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details',
+              //   component: './monitoring/exceptionrecordNew/RegionDetails',
+              // },
+
+              {
+                //缺失数据报警  企业
+                path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent',
+                component: './monitoring/missingData/ent',
+              },
+              {
+                //缺失数据报警  城市级别 企业
+                path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/cityLevel',
+                component: './monitoring/missingData/cityLevel/index',
+              },
+              {
+                //缺失数据报警 二级页面
+                path:
+                  '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent/missDataSecond',
+                component: './monitoring/missingData/missDataSecond',
+              },
+              {
+                //缺失数据报警 空气站
+                path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/air',
+                component: './monitoring/missingData/air',
+              },
+              {
+                //缺失数据报警 城市级别 空气站
+                path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/cityLevel/air',
+                component: './monitoring/missingData/cityLevel/index',
+              },
             ],
           },
           {
@@ -1916,9 +1966,19 @@ const routes = [
                     component: './IntelligentAnalysis/dataAlarm/missingDataRate/ent',
                   },
                   {
+                    //缺失数据报警响应率 企业  城市级别
+                    path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
+                    component: './Intelligentanalysis/dataAlarm/missingDataRate/ent/Citylevel',
+                  },
+                  {
                     //缺失数据报警响应率 空气站
                     path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
                     component: './IntelligentAnalysis/dataAlarm/missingDataRate/air',
+                  },
+                  {
+                    //缺失数据报警响应率 空气站  城市级别
+                    path: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
+                    component: './Intelligentanalysis/dataAlarm/missingDataRate/air/Citylevel',
                   },
                   {
                     //缺失数据报警响应率 二级页面
@@ -1940,6 +2000,11 @@ const routes = [
                     //超标数据核实率
                     path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
                     component: './IntelligentAnalysis/dataAlarm/overVerifyRate',
+                  },
+                  {
+                    //超标数据核实率  城市级别
+                    path: '/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel',
+                    component: './Intelligentanalysis/dataAlarm/overVerifyRate',
                   },
                   {
                     //超标数据核实率二级页面
@@ -2402,6 +2467,31 @@ const routes = [
                 component: './dataSearch/DataTrust',
               },
               {
+                name: 'defectData',
+                //数据缺失
+                path: '/dataSearch/defectData/ent',
+                routes: [
+                  {
+                    name: 'defectDatEnt',
+                    //数据缺失 - 企业
+                    path: '/dataSearch/defectData/ent',
+                    component: './dataSearch/defectData/ent',
+                  },
+                  {
+                    name: 'defectDatAir',
+                    //数据缺失 - 空气站
+                    path: '/dataSearch/defectData/air',
+                    component: './dataSearch/defectData/air',
+                  },
+                ],
+              },
+              {
+                name: 'exceedData',
+                //超标数据查询
+                path: '/dataSearch/exceedData',
+                component: './dataSearch/exceedData',
+              },
+              {
                 // 质控查询
                 path: '/dataSearch/qca',
                 name: 'qca',
@@ -2530,6 +2620,18 @@ const routes = [
                 //企业监测点查询 二级页面
                 path: '/dataSearch/enterpriseInquiryDetail/:RegionCode',
                 component: './dataSearch/enterpriseInquiryDetail',
+              },
+              {
+                name: 'abnormalData',
+                //异常数据
+                path: '/dataSearch/abnormalData',
+                component: './dataSearch/abnormalData',
+              },
+              {
+                name: 'abnormalDetailsData',
+                //异常数据 - 二级
+                path: '/dataSearch/abnormalData/details',
+                component: './dataSearch/abnormalData/DetailsPage',
               },
             ],
           },

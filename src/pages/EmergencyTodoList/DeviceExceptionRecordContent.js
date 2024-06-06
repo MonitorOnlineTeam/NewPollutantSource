@@ -25,7 +25,8 @@ class DeviceExceptionRecordContent extends Component {
         this.props.dispatch({
             type: 'task/GetDeviceExceptionRecord',
             payload: {
-                TaskID: this.props.TaskID
+                TaskID: this.props.TaskID,
+                TypeID: this.props.TypeID,
             }
         });
 
@@ -70,7 +71,7 @@ class DeviceExceptionRecordContent extends Component {
                     <tbody>
                         <tr>
                             <td style={{ width: '20%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        站点名称
+                                        点位名称
                             </td>
                             <td style={{ width: '30%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                 {pointName}

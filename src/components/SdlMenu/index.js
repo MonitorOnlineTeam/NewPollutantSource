@@ -1,9 +1,17 @@
+/*
+ * @Author: JiaQi
+ * @Date: 2024-06-03 11:20:32
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-06-03 14:55:24
+ * @Description:  菜单组件
+ */
 import React, { Component } from 'react';
-import { Menu } from 'antd';
+import { Menu, Typography } from 'antd';
 import { connect } from 'dva';
 import styles from './index.less';
 import { router } from 'umi';
 import _ from 'lodash';
+const { Text, Link } = Typography;
 
 const { SubMenu } = Menu;
 
@@ -79,7 +87,10 @@ class SdlMenu extends Component {
             }
             return (
               <Menu.Item key={itm.path} icon={this.getIcon(itm.icon)}>
-                {itm.name}
+                <Link to={itm.path} component={Typography.Link}>
+                  {itm.name}
+                </Link>
+                {/* {itm.name} */}
               </Menu.Item>
             );
           })}
@@ -143,7 +154,10 @@ class SdlMenu extends Component {
                           }
                         }}
                       >
-                        {item.name}
+                        <Link to={item.path} component={Typography.Link}>
+                          {item.name}
+                        </Link>
+                        {/* {item.name} */}
                       </Menu.Item>
                     );
                   }

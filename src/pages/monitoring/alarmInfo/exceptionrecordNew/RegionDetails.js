@@ -1,16 +1,16 @@
 import React, { PureComponent } from 'react';
-import SdlTable from '@/components/SdlTable'
-import { connect } from 'dva'
+import SdlTable from '@/components/SdlTable';
+import { connect } from 'dva';
 import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { Card, Row, Button, Divider, Radio, Modal } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { router } from 'umi'
+import { router } from 'umi';
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
 
 @connect(({ loading, autoForm, exceptionrecordNew }) => ({
   exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
-  loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForEnt"],
-  exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarmListForEnt"],
+  loading: loading.effects['exceptionrecordNew/getExceptionAlarmListForEnt'],
+  exportLoading: loading.effects['exceptionrecordNew/exportExceptionAlarmListForEnt'],
 }))
 class RegionDetails extends PureComponent {
   constructor(props) {
@@ -19,10 +19,20 @@ class RegionDetails extends PureComponent {
       visible: false,
       queryCondition: JSON.parse(this.props.location.query.queryCondition),
       columns: [
+        // {
+        //   title: '行政区',
+        //   dataIndex: 'RegionName',
+        //   key: 'RegionName',
+        // },
         {
-          title: '行政区',
-          dataIndex: 'RegionName',
-          key: 'RegionName',
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
+        },
+        {
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
         },
         {
           title: '企业名称',
@@ -45,10 +55,21 @@ class RegionDetails extends PureComponent {
           key: 'FirstTime',
         },
         {
+          title: '报警生成时间',
+          dataIndex: 'CreateTime',
+          key: 'CreateTime',
+        },
+        {
+          title: '报警类型',
+          dataIndex: 'ExceptionTypeName',
+          key: 'ExceptionTypeName',
+          width: 100,
+        },
+        {
           title: '报警信息',
           dataIndex: 'AlarmMsg',
           key: 'AlarmMsg',
-          width: 300
+          width: 300,
         },
         {
           title: '响应状态',
@@ -60,11 +81,11 @@ class RegionDetails extends PureComponent {
           dataIndex: 'OperationName',
           key: 'OperationName',
           render: (text, record) => {
-            if (record.CompleteTime === "0001-01-01 00:00:00") {
-              return "-"
+            if (record.CompleteTime === '0001-01-01 00:00:00') {
+              return '-';
             }
-            return text ? text : "-"
-          }
+            return text ? text : '-';
+          },
         },
         {
           title: '响应时间',
@@ -72,30 +93,48 @@ class RegionDetails extends PureComponent {
           key: 'CompleteTime',
           align: 'center',
           render: (text, record) => {
-            if (record.CompleteTime === "0001-01-01 00:00:00") {
-              return "-"
+            if (record.CompleteTime === '0001-01-01 00:00:00') {
+              return '-';
             }
-            return text ? text : "-"
-          }
+            return text ? text : '-';
+          },
         },
         {
           title: '处理详情',
           align: 'center',
           render: (text, record) => {
             if (record.TaskId && record.DGIMN) {
-              return <a onClick={() => {
-                this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN }, () => { this.setState({ visible: true }) })
-              }}>详情</a>
+              return (
+                <a
+                  onClick={() => {
+                    this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN }, () => {
+                      this.setState({ visible: true });
+                    });
+                  }}
+                >
+                  详情
+                </a>
+              );
             }
-            return "-"
-          }
+            return '-';
+          },
         },
       ],
       columns_onlyQuery: [
+        // {
+        //   title: '行政区',
+        //   dataIndex: 'RegionName',
+        //   key: 'RegionName',
+        // },
         {
-          title: '行政区',
-          dataIndex: 'RegionName',
-          key: 'RegionName',
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
+        },
+        {
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
         },
         {
           title: '企业名称',
@@ -118,22 +157,41 @@ class RegionDetails extends PureComponent {
           key: 'FirstTime',
         },
         {
+          title: '报警生成时间',
+          dataIndex: 'CreateTime',
+          key: 'CreateTime',
+        },
+        {
+          title: '报警类型',
+          dataIndex: 'ExceptionTypeName',
+          key: 'ExceptionTypeName',
+          width: 100,
+        },
+        {
           title: '报警信息',
           dataIndex: 'AlarmMsg',
           key: 'AlarmMsg',
-          width: 300
+          width: 300,
         },
         {
           title: '处理详情',
           align: 'center',
           render: (text, record) => {
             if (record.TaskId && record.DGIMN) {
-              return <a onClick={() => {
-                this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN }, () => { this.setState({ visible: true }) })
-              }}>详情</a>
+              return (
+                <a
+                  onClick={() => {
+                    this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN }, () => {
+                      this.setState({ visible: true });
+                    });
+                  }}
+                >
+                  详情
+                </a>
+              );
             }
-            return "-"
-          }
+            return '-';
+          },
         },
       ],
     };
@@ -143,35 +201,37 @@ class RegionDetails extends PureComponent {
     this.getExceptionAlarmListForEnt();
   }
 
-
   getExceptionAlarmListForEnt = () => {
     this.props.dispatch({
-      type: "exceptionrecordNew/getExceptionAlarmListForEnt",
+      type: 'exceptionrecordNew/getExceptionAlarmListForEnt',
       payload: {
         ...this.state.queryCondition,
-      }
-    })
-  }
+      },
+    });
+  };
 
   onExport = () => {
     this.props.dispatch({
-      type: "exceptionrecordNew/exportExceptionAlarmListForEnt",
+      type: 'exceptionrecordNew/exportExceptionAlarmListForEnt',
       payload: {
         ...this.state.queryCondition,
-      }
-    })
-  }
+      },
+    });
+  };
 
-  onChange = (e) => {
-    this.setState({
-      queryCondition: {
-        ...this.state.queryCondition,
-        ResponseStatus: e.target.value
-      }
-    }, () => {
-      this.getExceptionAlarmListForEnt()
-    })
-  }
+  onChange = e => {
+    this.setState(
+      {
+        queryCondition: {
+          ...this.state.queryCondition,
+          ResponseStatus: e.target.value,
+        },
+      },
+      () => {
+        this.getExceptionAlarmListForEnt();
+      },
+    );
+  };
 
   render() {
     const { exceptionAlarmListForEntDataSource, loading, exportLoading } = this.props;
@@ -179,31 +239,42 @@ class RegionDetails extends PureComponent {
     let _columns = columns;
     let isOnlyQuery = this.props.location.query.onlyQuery === 'true';
     if (isOnlyQuery) {
-      _columns = columns_onlyQuery
+      _columns = columns_onlyQuery;
     }
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title="异常数据报警详情">
         <Card>
           <Row style={{ marginBottom: 10 }}>
-            {
-              !isOnlyQuery && <Radio.Group onChange={this.onChange} defaultValue="" style={{ marginRight: 10 }}>
+            {!isOnlyQuery && (
+              <Radio.Group onChange={this.onChange} defaultValue="" style={{ marginRight: 10 }}>
                 <Radio.Button value="">全部</Radio.Button>
                 <Radio.Button value="1">已响应</Radio.Button>
                 <Radio.Button value="0">待响应</Radio.Button>
               </Radio.Group>
-            }
-            <Button style={{ margin: '0 5px' }} icon={<ExportOutlined />} loading={exportLoading} onClick={this.onExport}>
+            )}
+            <Button
+              style={{ margin: '0 5px' }}
+              icon={<ExportOutlined />}
+              loading={exportLoading}
+              onClick={this.onExport}
+            >
               导出
             </Button>
-            <Button onClick={() => {
-              // this.props.onBack ? this.props.onBack() : router.push("/monitoring/missingData/exceptionrecord")
-              history.back();
-            }}>
+            <Button
+              onClick={() => {
+                history.back();
+              }}
+            >
               <RollbackOutlined />
               返回
             </Button>
           </Row>
-          <SdlTable align="center" loading={loading} dataSource={exceptionAlarmListForEntDataSource} columns={_columns} />
+          <SdlTable
+            align="center"
+            loading={loading}
+            dataSource={exceptionAlarmListForEntDataSource}
+            columns={_columns}
+          />
           <Modal
             // title="Basic Modal"
             visible={this.state.visible}
@@ -214,7 +285,7 @@ class RegionDetails extends PureComponent {
             bodyStyle={{ padding: 0 }}
             onCancel={() => this.setState({ visible: false })}
           >
-            <EmergencyDetailInfo DGIMN={DGIMN} TaskID={TaskID} goback={"none"} />
+            <EmergencyDetailInfo DGIMN={DGIMN} TaskID={TaskID} goback={'none'} />
           </Modal>
         </Card>
       </BreadcrumbWrapper>

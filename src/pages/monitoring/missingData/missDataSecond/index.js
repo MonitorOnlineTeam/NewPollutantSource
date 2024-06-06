@@ -1,6 +1,5 @@
 /**
- * 功  能：缺失数据报警
- * 创建人：贾安波
+ * 功  能：缺失数据报警响应
  * 创建时间：2020/10
  */
 import React, { Component } from 'react';
@@ -30,9 +29,10 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-import EmergencyDetailInfo from '../../../../pages/EmergencyTodoList/TaskDetailModel';
+import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -62,17 +62,30 @@ export default class Index extends Component {
     this.state = {
       visible:false,
       DGIMN:'',
-      TaskID:''
+      TaskID:'',
+      status:'',
     };
     this.columns = [
+      // {
+      //   title: <span>行政区</span>,
+      //   dataIndex: 'regionName',
+      //   key: 'regionName',
+      //   align: 'center',
+      //   render: (text, record) => {
+      //     return <span>{text}</span>;
+      //   },
+      // },
       {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
+        title: '省',
+        dataIndex: 'ProvinceName', 
+        key: 'ProvinceName',
         align: 'center',
-        render: (text, record) => {
-          return <span>{text}</span>;
-        },
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
       },
       {
         title: <span>{ JSON.parse(this.props.location.query.queryPar).EntType==='1'? '企业名称': '大气站名称'}</span>,
@@ -94,7 +107,7 @@ export default class Index extends Component {
        },
       },
       {
-        title: <span>{JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次缺失时间' : '首次缺失时间' }</span>,
+        title: <span>{this.props.location&&this.props.location.query&&JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次缺失时间' : '首次缺失时间' }</span>,
         dataIndex: 'firstTime',
         key: 'firstTime',
         // width: '10%',
@@ -106,6 +119,12 @@ export default class Index extends Component {
       //  },
       },
       {
+        title: <span>报警生成时间</span>,
+        dataIndex: 'CreateTime',
+        key: 'CreateTime',
+        align: 'center',
+      },
+      {
         title: <span>报警信息</span>,
         dataIndex: 'message',
         key: 'message',
@@ -115,65 +134,55 @@ export default class Index extends Component {
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
       },
-      // {
-      //   title: <span>响应状态</span>,
-      //   dataIndex: 'status',
-      //   key: 'status',
-      //   align: 'center',
-      //   render:(text,record)=>{return text==0?'待响应':'已响应'}
-      // },
-      // {
-      //   title: <span>响应人</span>,
-      //   dataIndex: 'operationName',
-      //   key: 'operationName',
-      //   align: 'center',
-      //   render: (text, record) => {     
-      //     return  record.status==0? "-":text
-      //  },
-      // },
-      // {
-      //   title: <span>响应时间</span>,
-      //   dataIndex: 'xiangyingTime',
-      //   key: 'xiangyingTime',
-      //   align: 'center',
+      {
+        title: <span>响应状态</span>,
+        dataIndex: 'status',
+        key: 'status',
+        align: 'center',
+        render:(text,record)=>{return text==0?'待响应':'已响应'}
+      },
+      {
+        title: <span>响应人</span>,
+        dataIndex: 'operationName',
+        key: 'operationName',
+        align: 'center',
+        render: (text, record) => {     
+          return  record.status==0? "-":text
+       },
+      },
+      {
+        title: <span>响应时间</span>,
+        dataIndex: 'xiangyingTime',
+        key: 'xiangyingTime',
+        align: 'center',
       
-      // },
-      // {
-      //   title: <span>处理详情</span>,
-      //   dataIndex: 'status',
-      //   key: 'status',
-      //   align: 'center',
-      //   render:(text,record)=>{
-      //     return text==0?
-      //      '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
-      //     }        
-        // render:(text,record)=>{
-        //   return text==0?
-        //    '': <Link to={{  pathname: `/operations/taskRecord/details/${record.TaskID}/${record.DGIMN}` }} > 详情 </Link>
-        //   }
-      // },
+      },
+      {
+        title: <span>处理详情</span>,
+        dataIndex: 'status',
+        key: 'status',
+        align: 'center',
+        render:(text,record)=>{
+          return !text?
+           '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
+          }        
+      },
     ];
   }
 
   detail=(record)=>{
-     this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID},()=>{
-
-      setTimeout(()=>{
-        this.setState({visible:true})
-
-      })
-     })
+     this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID,visible:true})
   }
   componentDidMount() {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,type } = this.props;
-
+    const { dispatch, location,Atmosphere,type, } = this.props;
+   
     // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
    
 
-    this.updateQueryState({
+    // this.updateQueryState({
       // BeginTime: moment()
       // .subtract(1, 'day')
       // .format('YYYY-MM-DD 00:00:00'),
@@ -184,23 +193,26 @@ export default class Index extends Component {
       // PollutantType:'',
       // DataType:'HourData',
       // EntType:'',
-      RegionCode:location.query.regionCode,
-      Status:'',
-     });
+      // RegionCode:regionCode,
+    //   Status:status? status : '',
+    //  });
      
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
+    //  dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: regionCode },  });//获取企业列表
  
-     dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+    //  dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: regionCode },  });//获取关注列表
   
+    const  status = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar).Status : '';
+    this.setState({
+      status: status? status : '',
+    },()=>{
+      this.getTableData(status);
+    })
 
-    setTimeout(() => {
-      this.getTableData();
-    });
   };
   updateQueryState = payload => {
-    const { queryPar, dispatch } = this.props;
+    const { queryPar, dispatch,location:{query} } = this.props;
 
     dispatch({
       type: pageUrl.updateState,
@@ -208,11 +220,12 @@ export default class Index extends Component {
     });
   };
 
-  getTableData = () => {
-    const { dispatch, queryPar } = this.props;
+  getTableData = (status) => {
+    const { dispatch,location, } = this.props;
+    let par = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar) : {};  
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...par,Status:status,regionDetailCode:undefined, },
     });
   };
 
@@ -258,19 +271,20 @@ export default class Index extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch,location, } = this.props;
+    let par = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar) : {};  
     dispatch({
       type: 'missingData/exportDefectPointDetail',
-      payload: { ...queryPar, HasOperation:true },
+      payload: { ...par,Status:this.state.status,PageIndex:undefined, PageSize:undefined },
       callback: data => {
-         downloadFile(`${data}`);
-        },
+        downloadFile(`${data}`);
+       },
     });
   };
   //查询事件
-  queryClick = () => {
-    this.getTableData();
-  };
+  // queryClick = () => {
+  //   this.getTableData();
+  // };
 
 
   regchildren=()=>{
@@ -382,12 +396,9 @@ export default class Index extends Component {
   //     </>
   // }
   reponseChange=(e)=>{
-      this.updateQueryState({
-        Status: e.target.value,
-      });
-      setTimeout(()=>{
-        this.getTableData();
-      })
+    this.setState({status:e.target.value },()=>{
+      this.getTableData(e.target.value); 
+    })
      
   }
   btnCompents=()=>{
@@ -405,17 +416,17 @@ export default class Index extends Component {
       >
         导出
       </Button>
-        <Button  onClick={() => { this.props.history.go(-1);  }} >
+     {!this.props.hideBreadcrumb&&<Button  onClick={() => { this.props.history.go(-1);  }} >
            <RollbackOutlined />
                   返回
-       </Button>
+       </Button>}
     </Form.Item>
    );
   }
 reponseComp = ()=>{
-  const {queryPar:{Status} } = this.props;
+
   return <Form.Item label=''>
-        <Radio.Group value={Status} onChange={this.reponseChange}>
+        <Radio.Group value={this.state.status} onChange={this.reponseChange}>
           <Radio.Button value="">全部</Radio.Button>
           <Radio.Button value="1">已响应</Radio.Button>
           <Radio.Button value="0">待响应</Radio.Button>
@@ -423,19 +434,16 @@ reponseComp = ()=>{
 </Form.Item> 
 }
 
-handleTableChange = (pagination, filters, sorter) => {
+// handleTableChange = (pagination, filters, sorter) => {
 
-    this.updateQueryState({
-      // transmissionEffectiveRate: 'ascend',
-      PageIndex: pagination.current,
-      PageSize: pagination.pageSize,
-    });
-    sessionStorage.setItem("missDataDetailPageIndex",pagination.current)
-    sessionStorage.setItem("missDataDetailPageSize",pagination.pageSize)
+    // this.updateQueryState({
+    //   PageIndex: pagination.current,
+    //   PageSize: pagination.pageSize,
+    // });
   // setTimeout(() => {
   //   this.getTableData();
   // });
-};
+// };
   render() {
     const {
       queryPar: { EntCode,PollutantType,PageSize,PageIndex },
@@ -443,14 +451,14 @@ handleTableChange = (pagination, filters, sorter) => {
       type
     } = this.props;
     return (
-        <BreadcrumbWrapper title={JSON.parse(location.query.queryPar).EntType==='1'? "缺失数据报警详情(企业)":"缺失数据报警详情(空气站)"}>
+        <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title={`${location.query&&location.query.regionName} - ${location.query&&location.query.queryPar&&JSON.parse(location.query.queryPar)&&JSON.parse(location.query.queryPar).EntType==='1'? '缺失数据报警详情(企业)':'缺失数据报警详情(空气站)'}`}>
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
                 
-                {/* {this.reponseComp()} */}
+                {this.reponseComp()}
                  {this.btnCompents()}
               {/* {type==='ent'?
               <>
@@ -524,27 +532,14 @@ handleTableChange = (pagination, filters, sorter) => {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              // bordered={false}
               dataSource={this.props.tableDatas}
-              onChange={this.handleTableChange}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                // sorter: true,
-                // total: this.props.total,
-                defaultPageSize:20,
-                pageSize:sessionStorage.getItem("missDataDetailPageSize"),
-                current:parseInt(sessionStorage.getItem("missDataDetailPageIndex")),
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
             />
           </>
         </Card>
         <Modal
           title="任务详情"
           visible={this.state.visible}
-          width='100%'
-          style={{hegiht:'90%'}}
+          wrapClassName='spreadOverModal'
           footer={null}
           destroyOnClose={true}
           onCancel={()=>{this.setState({visible:false})}}

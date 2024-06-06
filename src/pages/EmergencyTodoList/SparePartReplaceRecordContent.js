@@ -3,7 +3,7 @@
  * @Date: 2019-08-22 09:36:43
  * @LastEditors: lzp
  * @LastEditTime: 2019-09-18 11:29:32
- * @Description: 易耗品更换记录表
+ * @Description: 备品备件更换记录表
  */
 import React, { Component } from 'react';
 import { Spin } from 'antd';
@@ -11,32 +11,34 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import styles from "./SparePartReplaceRecordContent.less";
 import MonitorContent from '../../components/MonitorContent/index';
-
+import config from '@/config'
+import Cookie from 'js-cookie';
 @connect(({ task, loading }) => ({
     isloading: loading.effects['task/GetSparePartReplaceRecord'],
     SparePartReplaceRecord: task.SparePartReplaceRecord
 }))
 /*
-页面：易耗品更换记录表
+页面：备品备件更换记录表
 */
 class SparePartReplaceRecordContent extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            isloading:this.props.isloading
-        };
+        // this.state = {
+        //     isloading:this.props.isloading
+        // };
     }
 
     componentDidMount() {
         this.props.dispatch({
             type: 'task/GetSparePartReplaceRecord',
             payload: {
-                TaskID: this.props.TaskID
+                TaskID: this.props.TaskID,
+                TypeID: this.props.TypeID,
             },
         });
-        this.setState({
-            isloading: false
-        });
+        // this.setState({
+        //     isloading: false
+        // });
     }
 
     renderItem = (record) => {
@@ -49,7 +51,10 @@ class SparePartReplaceRecordContent extends Component {
                             {index + 1}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.ReplaceDate}
+                            {item.StorehouseName}
+                        </td>
+                        <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                            {item.PartCode}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                             {item.ConsumablesName}
@@ -64,11 +69,17 @@ class SparePartReplaceRecordContent extends Component {
                             {item.Num}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.Remark}
+                            {item.CisNum}
                         </td>
                         <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.AnotherTimeOfChange}
+                            {item.ReplaceDate}
                         </td>
+                        <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                            {item.Remark}
+                        </td>
+                        {/* <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                            {item.AnotherTimeOfChange}
+                        </td> */}
                     </tr>
                 );
             });
@@ -93,10 +104,10 @@ class SparePartReplaceRecordContent extends Component {
         const Content=Record!==null?Record.Content:null;
         const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;
         const DeviceName = 'CEMS'; //设备名称
-        if (this.state.isloading) {
+        if (this.props.isloading) {
             return (<Spin
                 style={{
-                    width: '100%',
+                    width: '100vw',
                     height: 'calc(100vh/2)',
                     display: 'flex',
                     alignItems: 'center',
@@ -107,14 +118,15 @@ class SparePartReplaceRecordContent extends Component {
         }
         return (
             <div className={styles.FormDiv} style={style}>
-                <div className={styles.FormName}>备件更换记录表</div>
-                <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null ? Content.EnterpriseName:null}</div>
+                {/* <div className={styles.FormName}>备件更换记录表</div> */}
+                <div className={styles.FormName}></div>
+                {/* <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null ? Content.EnterpriseName:null}</div> */}
                 <table
                     className={styles.FormTable}
                 >
                     <tbody>
                         <tr>
-                            <td style={{ width: '12%',minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                            {/* <td style={{ width: '12%',minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         设备名称
                             </td>
                             <td style={{ width: '16%',minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
@@ -131,47 +143,58 @@ class SparePartReplaceRecordContent extends Component {
                             </td>
                             <td colSpan="3" style={{ width: '30%',minWidth: 200, textAlign: 'center', fontSize: '14px' }}>
                                 {Content !== null ?Content.EquipmentCode:null}
-                            </td>
+                            </td> */}
+                             <td colSpan="10"  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>备品备件更换记录表</td>
                         </tr>
-                        <tr>
+                         <tr>
                             <td colSpan="2" style={{ width: '18%',minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         维护管理单位
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
+                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
                                 {Content !== null ?Content.MaintenanceManagementUnit:null}
                             </td>
                             <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
                                         安装地点
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
                                 {Content !== null ?Content.PointPosition:null}
                             </td>
-                        </tr>
+                        </tr> 
                         <tr>
-                            <td style={{ width: '9%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         序号
                             </td>
-                            <td style={{ width: '18%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        更换日期
+                            <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        仓库名称
                             </td>
-                            <td style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        备品名称
+                            <td style={{ width: '10%', height: '50px',minWidth:80,  textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        存货编号
                             </td>
-                            <td style={{ width: '12%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+
+                            <td style={{ width: '10%',minWidth:80, height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        部件名称
+                            </td>
+                            <td style={{ width: '10%',minWidth:80, height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         规格型号
                             </td>
-                            <td style={{ width: '12%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         单位
                             </td>
-                            <td style={{ width: '12%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         数量
                             </td>
-                            <td style={{ width: '23%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td style={{ width: '10%',minWidth:110, height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        CIS申请单据号
+                            </td>
+                            <td style={{ width: '16%',minWidth:80, height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        更换日期
+                            </td>
+                            <td style={{ width: '18%',minWidth:154,  height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         更换原因说明（备注）
                             </td>
-                            <td style={{ width: '23%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            {/* <td style={{ width: '23%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         下次更换日期
-                            </td>
+                            </td> */}
                         </tr>
                         {
                             this.renderItem(Record !== null ?Record.RecordList:null)
@@ -180,24 +203,24 @@ class SparePartReplaceRecordContent extends Component {
                             <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         运行维护人员
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
+                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px' }}>
                                 {Record !== null ?Record.CreateUserID:null}
                             </td>
                             <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         时间
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
+                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
                                 {Record !== null ?Record.CreateTime:null}
                             </td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                             <td colSpan="8" style={{ width: '18%', height: '50px', fontSize: '14px', paddingLeft: 15 }}>
                                         注：更换备品时应及时记录，每半年汇总存档。
                             </td>
-                        </tr>
+                        </tr> */}
                     </tbody>
                 </table>
-                <table className={styles.FormTable}>
+                {/* <table className={styles.FormTable}>
                     <tbody>
                         <tr>
                             <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold',minWidth: 750 }}>负责人签名：</td>
@@ -212,7 +235,7 @@ class SparePartReplaceRecordContent extends Component {
                             <td style={{ width: '13%', height: '50px', border: '0',minWidth: 150 }}>{Record !== null ?Record.SignTime:null}</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> */}
             </div>
         );
     }

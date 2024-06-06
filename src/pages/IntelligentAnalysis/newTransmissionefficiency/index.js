@@ -77,7 +77,6 @@ export default class EntTransmissionEfficiency extends Component {
   componentWillMount() {
     this.updateState({
       RegionCode: '',
-      pollutantType: '',
       assessment: configInfo.IsSingleEnterprise ? '2' : '1',
     });
     this.getTableData();
@@ -121,21 +120,21 @@ export default class EntTransmissionEfficiency extends Component {
   //     this.getTableData(pagination.current);
   // }
 
-  children = () => {
-    const { regionList } = this.props;
+  // children = () => {
+  //   const { regionList } = this.props;
 
-    const selectList = [];
-    if (regionList.length > 0) {
-      regionList[0].children.map(item => {
-        selectList.push(
-          <Option key={item.key} value={item.value}>
-            {item.title}
-          </Option>,
-        );
-      });
-      return selectList;
-    }
-  };
+  //   const selectList = [];
+  //   if (regionList.length > 0) {
+  //     regionList[0].children.map(item => {
+  //       selectList.push(
+  //         <Option key={item.key} value={item.value}>
+  //           {item.title}
+  //         </Option>,
+  //       );
+  //     });
+  //     return selectList;
+  //   }
+  // };
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <Card style={{ paddingBottom: 25, width: '100%', lineHeight: 2 }}>
@@ -161,7 +160,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateState({
-      pollutantType: value,
+      pollutantType: value ? value : '',
     });
   };
 
@@ -173,7 +172,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   changeRegion = value => {
     this.updateState({
-      RegionCode: value,
+      RegionCode: value ? value : '',
     });
   };
 
@@ -401,8 +400,9 @@ export default class EntTransmissionEfficiency extends Component {
                     onChange={this.typeChange}
                     value={this.props.pollutantType || undefined}
                     style={{ width: 200, marginLeft: 10 }}
+                    allowClear
                   >
-                    <Option value="">全部</Option>
+                    {/* <Option value="">全部</Option> */}
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>

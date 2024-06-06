@@ -27,7 +27,7 @@ export default class Index extends Component {
    }
   render() {
     return (
-        <BreadcrumbWrapper>
+        <BreadcrumbWrapper title="缺失数据报警响应率(空气站)">
            <MissingRateData  types='air'   Atmosphere={true} />
         </BreadcrumbWrapper>
     );

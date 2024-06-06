@@ -949,6 +949,21 @@ export const API = {
 
     //
   },
+
+  //智能诊断Api
+  IntelligentDiagnosisApi: {
+    /*异常数据分析*/
+    GetExceptionList: before + '/ExceptionDataApi/GetExceptionList', //获取省级、市级异常数据信息
+    ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList', //导出省级、市级异常数据信息
+    // GetExceptionCityList: before + '/ExceptionDataApi/GetExceptionCityList',//获取市级异常数据信息
+    // ExportExceptionCityList: before + '/ExceptionDataApi/ExportExceptionCityList',//导出市级异常数据信息
+    GetExceptionPointList: before + '/ExceptionDataApi/GetExceptionPointList', //获取监测点异常数据信息
+    ExportExceptionPointList: before + '/ExceptionDataApi/ExportExceptionPointList', //获取监测点异常数据信息
+
+    /*缺失数据分析*/
+    GetMissDataList: before + '/ExceptionDataApi/GetMissDataList', //获取缺失数据分析信息
+    ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList', //导出缺失数据分析信息
+  },
   // 电力Api
   ElectricEnergyApi: {
     // 电力实时数据一览
@@ -1003,6 +1018,20 @@ export const API = {
     GetExceptionAlarmListForEnt: before + '/ExceptionAlarmApi/GetExceptionAlarmListForEnt',
     // 获取报警记录
     GetAlarmRecord: before + '/AlarmVerifyManageApi/GetAlarmAndExDetail',
+    /*异常数据报警*/
+    GetExceptionAlarmResponseList:
+      before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseList', //获取异常数据报警信息
+    ExportExceptionAlarmResponseList:
+      before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseList', //导出异常数据报警信息
+    /*异常报警响应率*/
+    GetExceptionAlarmResponseRateList:
+      before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseRateList', //获取异常数据报警响应率信息
+    ExportExceptionAlarmResponseRateList:
+      before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseRateList', //导出异常数据报警响应率信息
+
+    /*缺失数据报警 缺失数据报警响应率*/
+    GetMissDataResponseRateList: before + '/ExceptionAlarmApi/GetMissDataResponseRateList', //获取缺失数据报警和响应率信息
+    ExportMissDataResponseRateList: before + '/ExceptionAlarmApi/ExportMissDataResponseRateList', //导出缺失数据报警和响应率信息
 
     // GetDefectPointDetail: before + '/ExceptionAlarmApi/GetDefectPointDetail',
   },
@@ -1499,6 +1528,25 @@ export const API = {
     ExportOperationExpireAnalysis:
       before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis', //导出运维到期点位统计
 
+    /**运维计划**/
+    /*制定运维计划*/
+    GetOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList', //运维计划列表
+    ExportOperationPlanList: before + '/WorkOrderApi/ExportOperationPlanList', //运维计划 导出
+    DeleteOperationPlan: before + '/WorkOrderApi/DeleteOperationPlan', //删除运维计划
+    UpdOperationPlan: before + '/WorkOrderApi/UpdOperationPlan', //修改运维计划基本信息
+    GetOperationPlanPointList: before + '/WorkOrderApi/GetOperationPlanPointList', //获取未排计划点位
+    AddOperationPlan: before + '/WorkOrderApi/AddOperationPlan', //生成运维计划
+    GetOperationPlanInfo: before + '/WorkOrderApi/GetOperationPlanInfo', //获取单个运维计划详情
+    ExportOperationPlanInfo: before + '/WorkOrderApi/ExportOperationPlanInfo', //单个运维计划详情 导出
+    DelOperationPlanPoint: before + '/WorkOrderApi/DelOperationPlanPoint', //删除运维计划点位
+    GetOperationPlanCalendar: before + '/WorkOrderApi/GetOperationPlanCalendar', //运维计划日历
+    ExportOperationPlanCalendar: before + '/WorkOrderApi/ExportOperationPlanCalendar', //运维计划日历 导出
+    GetFormulatePointList: before + '/WorkOrderApi/GetFormulatePointList', //获取运维计划可调整点位
+    AdjustmentOperationPlan: before + '/WorkOrderApi/AdjustmentOperationPlan', //运维计划点位调整
+    ExtendPlanDate: before + '/WorkOrderApi/ExtendPlanDate', //运维计划点位延长
+    UpdOperationPlanPoint: before + '/WorkOrderApi/UpdOperationPlanPoint', //运维计划点位状态修改
+    UpdOperationPlanStatus: before + '/WorkOrderApi/UpdOperationPlanStatus', //运维计划状态修改
+    GetOperationPlanStatusList: before + '/WorkOrderApi/GetOperationPlanStatusList', //获取运维计划状态修改记录
     /**运维报告**/
     /*运维报告（word）*/
     GetOperationReportList: before + '/WorkOrderStatistics/GetOperationReportList', //获取运维月度报告信息

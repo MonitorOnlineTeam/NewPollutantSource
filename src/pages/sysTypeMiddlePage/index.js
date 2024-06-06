@@ -48,7 +48,6 @@ class index extends PureComponent {
   };
 
   onSysItemClick = item => {
-    debugger;
     let url = item.Url ? new URL(item.Url) : item.Url;
     if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
       if (webConfig.middlePageOpenMode === 'single') {
@@ -74,7 +73,6 @@ class index extends PureComponent {
   render() {
     const { sysPollutantTypeList, configInfo } = this.props;
     let currentUser = Cookie.get('currentUser');
-    console.log('currentUser-', currentUser);
     let userName =
       currentUser != undefined && currentUser != 'null' ? JSON.parse(currentUser).UserName : '';
     const bgImageType = configInfo.LAMImgType;

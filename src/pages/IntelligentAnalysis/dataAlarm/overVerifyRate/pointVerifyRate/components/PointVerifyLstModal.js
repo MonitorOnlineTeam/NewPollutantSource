@@ -4,7 +4,7 @@
  * 创建时间：2020.10.17
  */
 import React, { Component } from 'react';
-import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -31,12 +31,13 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import config from '@/config';
+import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import EntAtmoList from '@/components/EntAtmoList';
-import VerifyDetailsPop from '@/pages/monitoring/alarmInfo/exceedDataAlarmRecord/VerifyDetailsPop';
-import { uploadPrefix } from '@/config';
+import VerifyDetailsPop from '@/pages/dataSearch/exceedDataAlarmRecord/VerifyDetailsPop';
+import { uploadPrefix } from '@/config'
+
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -47,11 +48,11 @@ const monthFormat = 'YYYY-MM';
 const pageUrl = {
   updateState: 'overVerifyRate/updateState',
   getData: 'overVerifyRate/getDefectPointDetail',
-  GetOverToExamineOperation: 'exceedDataAlarmModel/GetOverToExamineOperation',
+  GetOverToExamineOperation:'exceedDataAlarmModel/GetOverToExamineOperation',
   GetAlarmVerifyDetail: 'exceedDataAlarmModel/GetAlarmVerifyDetail',
-  ExportAlarmVerifyDetail: 'exceedDataAlarmModel/ExportAlarmVerifyDetail',
+  ExportAlarmVerifyDetail:'exceedDataAlarmModel/ExportAlarmVerifyDetail',
 };
-@connect(({ loading, overVerifyRate, autoForm, common, exceedDataAlarmModel }) => ({
+@connect(({ loading, overVerifyRate, autoForm, common,exceedDataAlarmModel}) => ({
   priseList: overVerifyRate.priseList,
   loading: loading.effects[pageUrl.getData],
   exloading: overVerifyRate.exloading,
@@ -59,11 +60,11 @@ const pageUrl = {
   divisorList: overVerifyRate.divisorList,
   tableDatil: overVerifyRate.tableDatil,
   tableDatilTotal: overVerifyRate.tableDatilTotal,
-  alarmDealTypeList: exceedDataAlarmModel.AlarmDealTypeList,
-  managementDetail: exceedDataAlarmModel.ManagementDetail,
-  alarmVerifyQueryPar: exceedDataAlarmModel.alarmVerifyQueryPar,
-  alarmVerifyDetailLoaing: loading.effects[pageUrl.GetAlarmVerifyDetail],
-  exportAlarmVerifyDetailLoaing: loading.effects[pageUrl.ExportAlarmVerifyDetail],
+  alarmDealTypeList:exceedDataAlarmModel.AlarmDealTypeList,
+  managementDetail:exceedDataAlarmModel.ManagementDetail,
+  alarmVerifyQueryPar:exceedDataAlarmModel.alarmVerifyQueryPar,
+  alarmVerifyDetailLoaing:loading.effects[pageUrl.GetAlarmVerifyDetail],
+  exportAlarmVerifyDetailLoaing:loading.effects[pageUrl.ExportAlarmVerifyDetail],
 }))
 export default class PointVerifyLst extends Component {
   constructor(props) {
@@ -72,16 +73,16 @@ export default class PointVerifyLst extends Component {
     this.state = {
       checkedValues: [],
       columns: [],
-      pageIndex: 1,
-      pageSize: 20,
+      pageIndex:1,
+      pageSize:20,
       alarmNumVisible: false,
       alarmNumModalTitle: '',
-      PollutantCode: '',
-      dealType: '2',
-      alarmDealTypeListCode: [],
-      enterpriseValue: '',
-      regionCode: '',
-      columns2: [
+      PollutantCode:'',
+      dealType:'2',
+      alarmDealTypeListCode:[],
+      enterpriseValue:'',
+      regionCode:'',
+      columns2 :[
         // {
         //     title: "行政区",
         //     width: 100,
@@ -105,124 +106,126 @@ export default class PointVerifyLst extends Component {
           fixed: 'left',
         },
         {
-          title: '企业名称',
-          width: 100,
-          align: 'left',
-          fixed: 'left',
-          dataIndex: 'entName',
-          key: 'entName',
+            title: "企业名称",
+            width: 100,
+            align: 'left',
+            fixed: 'left',
+            dataIndex: 'entName',
+            key: 'entName',
         },
         {
-          title: '监测点名称',
-          width: 100,
-          align: 'left',
-          fixed: 'left',
-          dataIndex: 'pointName',
-          key: 'pointName',
+            title: "监测点名称",
+            width: 100,
+            align: 'left',
+            fixed: 'left',
+            dataIndex: 'pointName',
+            key: 'pointName',
         },
         {
-          title: '数据类型',
-          width: 100,
-          align: 'center',
-          dataIndex: 'dataType',
-          key: 'dataType',
+            title: "数据类型",
+            width: 100,
+            align: 'center',
+            dataIndex: 'dataType',
+            key: 'dataType',
         },
         {
-          title: '首次报警时间',
-          width: 100,
-          align: 'center',
-          dataIndex: 'firstTime',
-          key: 'firstTime',
-          defaultSortOrder: 'descend',
-          sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf(),
+            title: "首次报警时间",
+            width: 100,
+            align: 'center',
+            dataIndex: 'firstTime',
+            key: 'firstTime',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
         },
         {
-          title: '报警因子',
-          width: 90,
-          align: 'center',
-          dataIndex: 'pollutantName',
-          key: 'pollutantName',
+            title: "报警因子",
+            width: 90,
+            align: 'center',
+            dataIndex: 'pollutantName',
+            key: 'pollutantName',
         },
         {
-          title: '报警生成时间',
+          title: "报警生成时间",
           width: 120,
           align: 'center',
           dataIndex: 'createTime',
           key: 'createTime',
         },
         {
-          title: '报警信息',
-          width: 200,
-          align: 'left',
-          dataIndex: 'message',
-          key: 'message',
+            title: "报警信息",
+            width: 200,
+            align: 'left',
+            dataIndex: 'message',
+            key: 'message',
         },
         {
-          title: '核实人',
-          width: 90,
-          align: 'center',
-          dataIndex: 'dealPerson',
-          key: 'dealPerson',
-          render: text => {
-            return text == '' ? '-' : text;
-          },
+            title: "核实人",
+            width: 90,
+            align: 'center',
+            dataIndex: 'dealPerson',
+            key: 'dealPerson',
+            render:(text)=>{
+                return text == ''?'-':text
+                }
         },
         {
-          title: '核实时间',
-          width: 100,
-          align: 'center',
-          dataIndex: 'verifyTime',
-          key: 'verifyTime',
-          render: text => {
-            return text == '' ? '-' : text;
-          },
+            title: "核实时间",
+            width: 100,
+            align: 'center',
+            dataIndex: 'verifyTime',
+            key: 'verifyTime',
+            render:(text)=>{
+                return text == ''?'-':text
+                }
         },
         {
-          title: '核实状态',
-          width: 90,
-          align: 'center',
-          dataIndex: 'status',
-          key: 'status',
-          render: text => {
-            return text == '' ? '-' : text == 0 ? '待核实' : '已核实';
-          },
+            title: "核实状态",
+            width: 90,
+            align: 'center',
+            dataIndex: 'status',
+            key: 'status',
+            render:(text)=>{
+                return text == ''?'-':text == 0?'待核实':'已核实'
+                }
         },
         {
-          title: '核实结果',
-          width: 90,
-          align: 'center',
-          dataIndex: 'verifymessage',
-          key: 'verifymessage',
-          render: text => {
-            return text == '' ? '-' : text;
-          },
+            title: "核实结果",
+            width: 90,
+            align: 'center',
+            dataIndex: 'verifymessage',
+            key: 'verifymessage',
+            render:(text)=>{
+                return text == ''?'-':text
+                }
         },
         {
-          title: '核实详情',
-          width: 100,
-          align: 'center',
-          dataIndex: 'remark',
-          key: 'remark',
-          render: (text, record) => {
-            let sourc = [];
-            if (!record.verifyImage && !record.remark) {
-              sourc = [];
-            } else {
-              let obj = {};
-              record.verifyImage &&
-                record.verifyImage.map(item => {
-                  obj = {
-                    name: item.FileName,
-                    attach: `${uploadPrefix}/` + item.FileName,
-                  };
-                });
-              obj.remark = text;
-              sourc.push(obj);
+            title: "核实详情",
+            width: 100,
+            align: 'center',
+            dataIndex: 'remark',
+            key: 'remark',
+            render:(text,record)=>{
+                let sourc = []
+                 if(!record.verifyImage&&!record.remark )
+                 {
+                    sourc = []
+                 }
+                 else
+                 {
+                    let obj = {};
+                    record.verifyImage&&record.verifyImage.map(item=>{
+                        obj = {
+                            name:item.FileName,
+                            attach:`${uploadPrefix}/`+item.FileName
+                        }
+                    })
+                    obj.remark = text;
+                    sourc.push(obj)
+                 }
+                 return sourc.length>0? <VerifyDetailsPop dataSource={sourc}/>:'-'
             }
-            return sourc.length > 0 ? <VerifyDetailsPop dataSource={sourc} /> : '-';
-          },
         },
-      ],
+    ],
     };
   }
 
@@ -234,12 +237,12 @@ export default class PointVerifyLst extends Component {
   }
 
   initData = () => {
-    const { location, dispatch, RegionCode } = this.props;
-
+    const { location, dispatch,RegionCode } = this.props;
+    
     dispatch({
       //获取企业列表
       type: 'overVerifyRate/getEntByRegion',
-      payload: { RegionCode: RegionCode },
+      payload: { RegionCode: RegionCode, },
     });
     let newColumns = [
       // {
@@ -282,17 +285,16 @@ export default class PointVerifyLst extends Component {
         align: 'left',
       },
     ];
-    let colList = this.props.divisorList;
-    colList = [{ PollutantName: '全部合计', PollutantCode: '全部合计' }, ...colList];
-    colList.map((item, key) => {
-      let pollutantList = this.props.overVerifyRateForm.PollutantList.value
-        ? this.props.overVerifyRateForm.PollutantList.value
-        : this.props.overVerifyRateForm.PollutantList;
-      let index = pollutantList.findIndex((checkedItem, checkedKey) => {
-        if (item.PollutantCode == checkedItem) {
-          return true;
-        }
-      });
+    let colList = this.props.divisorList
+        colList =  [{PollutantName:'全部合计',PollutantCode:'全部合计'},...colList]
+        colList.map((item, key) => {
+        let pollutantList = this.props.overVerifyRateForm.PollutantList.value?  
+                        this.props.overVerifyRateForm.PollutantList.value : this.props.overVerifyRateForm.PollutantList;
+        let index = pollutantList.findIndex((checkedItem, checkedKey) => {
+          if (item.PollutantCode == checkedItem) {
+            return true;
+          }
+        });
       if (index !== -1) {
         newColumns.push({
           title: <span>{item.PollutantName}</span>,
@@ -306,16 +308,8 @@ export default class PointVerifyLst extends Component {
               key: item.PollutantCode + '_alarmCount',
               align: 'center',
               render: (text, record) => {
-                return (
-                  <a
-                    onClick={() => {
-                      this.entAlarmNum(record, item.PollutantCode, '2');
-                    }}
-                  >
-                    {text}
-                  </a>
-                );
-              },
+                return <a onClick={() => { this.entAlarmNum(record,item.PollutantCode,'2') }}>{text}</a>
+              }
             },
             {
               title: <span>已核实报警次数</span>,
@@ -324,16 +318,8 @@ export default class PointVerifyLst extends Component {
               key: item.PollutantCode + '_respondedCount',
               align: 'center',
               render: (text, record) => {
-                return (
-                  <a
-                    onClick={() => {
-                      this.entAlarmNum(record, item.PollutantCode, '1');
-                    }}
-                  >
-                    {text}
-                  </a>
-                );
-              },
+                return <a onClick={() => { this.entAlarmNum(record,item.PollutantCode,'1') }}>{text}</a>
+              }
             },
             {
               title: <span>待核实报警次数</span>,
@@ -342,16 +328,8 @@ export default class PointVerifyLst extends Component {
               key: item.PollutantCode + '_noRespondedCount',
               align: 'center',
               render: (text, record) => {
-                return (
-                  <a
-                    onClick={() => {
-                      this.entAlarmNum(record, item.PollutantCode, '0');
-                    }}
-                  >
-                    {text}
-                  </a>
-                );
-              },
+                return <a onClick={() => { this.entAlarmNum(record,item.PollutantCode,'0') }}>{text}</a>
+              }
             },
             {
               title: <span>核实率</span>,
@@ -360,7 +338,7 @@ export default class PointVerifyLst extends Component {
               key: item.PollutantCode + '_RespondedRate',
               align: 'center',
               render: (text, record) => {
-                return <div>{text == '-' ? text : text ? `${text}%` : ''}</div>;
+                return <div>{text == '-' ? text : text? `${text}%` : ''}</div>;
               },
             },
           ],
@@ -381,18 +359,19 @@ export default class PointVerifyLst extends Component {
     setTimeout(() => {
       this.getTableData();
     });
-    //获取核实结果
-    dispatch({
-      type: pageUrl.GetOverToExamineOperation,
-      payload: { PollutantType: '' },
-      callback: data => {
-        if (data.length > 0) {
-          this.setState({
-            alarmDealTypeListCode: data.map(poll => poll.code),
-          });
-        }
-      },
-    });
+        //获取核实结果
+        dispatch({
+          type: pageUrl.GetOverToExamineOperation,
+          payload: { PollutantType: '' },
+          callback: (data) => {
+            if (data.length > 0) {
+              this.setState({
+                alarmDealTypeListCode: data.map(poll => poll.code)
+              })
+            }
+    
+          }
+        })
   };
   updateQueryState = payload => {
     const { overVerifyRateForm, dispatch } = this.props;
@@ -407,13 +386,7 @@ export default class PointVerifyLst extends Component {
     const { dispatch, overVerifyRateForm } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: {
-        ...overVerifyRateForm,
-        RegionCode: this.props.RegionCode,
-        regionLevel: '',
-        PageIndex: this.state.pageIndex,
-        PageSize: this.state.pageSize,
-      },
+      payload: { ...overVerifyRateForm, RegionCode: this.props.RegionCode,regionLevel:'',PageIndex:this.state.pageIndex,PageSize:this.state.pageSize, },
     });
   };
 
@@ -460,87 +433,66 @@ export default class PointVerifyLst extends Component {
   onRef1 = ref => {
     this.child = ref;
   };
-  handleTableChange = (PageIndex, PageSize) => {
-    this.setState(
-      {
-        pageIndex: PageIndex,
-        pageSize: PageSize,
-      },
-      () => {
-        this.queryClick();
-      },
-    );
-  };
-  entAlarmNum = (record, pollutantCode, status) => {
-    //报警次数 弹框
-    const {
-      overVerifyRateForm: {
-        beginTime,
-        endTime,
-        EntCode,
-        PollutantList,
-        RegionCode,
-        AttentionCode,
-        PollutantType,
-        OperationPersonnel,
-      },
-    } = this.props;
+  handleTableChange = (PageIndex, PageSize) =>{
     this.setState({
-      alarmNumVisible: true,
-      PollutantCode: pollutantCode,
-      dealType: status,
-      alarmNumModalTitle:
-        record.regionName +
-        moment(beginTime).format('YYYY年MM月DD号HH时') +
-        '至' +
-        moment(endTime).format('YYYY年MM月DD号HH时') +
-        '超标报警情况',
-    });
-    this.props.dispatch({
-      type: pageUrl.GetAlarmVerifyDetail,
+      pageIndex:PageIndex,
+      pageSize:PageSize
+    },()=>{
+     this.queryClick()
+    })
+   }
+   entAlarmNum = (record,pollutantCode,status) => { //报警次数 弹框
+    const {overVerifyRateForm: {beginTime,  endTime, EntCode,PollutantList, RegionCode,  AttentionCode,  PollutantType, OperationPersonnel } } = this.props;
+    this.setState({
+      alarmNumVisible:true,
+      PollutantCode: pollutantCode=='全部合计'? '' : pollutantCode,
+      dealType:status,
+      alarmNumModalTitle:record.regionName + moment(beginTime).format('YYYY年MM月DD号HH时') + '至'+moment(endTime).format('YYYY年MM月DD号HH时')+'超标报警情况',
+    })
+  this.props.dispatch({
+      type:pageUrl.GetAlarmVerifyDetail,
       payload: {
-        RegionCode: record.regionCode,
-        attentionCode: record.attentionValue,
-        PollutantType: record.outletValue,
-        // DataType: record.dataType == '日'? 'DayData' : 'HourData',
-        DataType: '',
-        BeginTime: moment(beginTime).format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: moment(endTime).format('YYYY-MM-DD HH:mm:ss'),
-        PollutantCode: pollutantCode,
-        Status: status == 2 ? '' : status,
-        EntCode: '',
-        VerifyStatus: this.state.alarmDealTypeListCode,
-        operationpersonnel: OperationPersonnel,
-        DGIMN: record.DGIMN,
-      },
-    });
-  };
-  entAlarmNumQuery = query => {
-    //报警次数 点击查询
+          RegionCode: record.regionCode,
+          attentionCode: AttentionCode,
+          PollutantType: PollutantType,
+          // DataType: record.dataType == '日'? 'DayData' : 'HourData',
+          DataType:'',
+          BeginTime: moment(beginTime).format("YYYY-MM-DD HH:mm:ss"),
+          EndTime: moment(endTime).format("YYYY-MM-DD HH:mm:ss"),
+          PollutantCode: pollutantCode=='全部合计'? '' : pollutantCode,
+          Status:status==2? '' : status,
+          EntCode:'',
+          VerifyStatus:this.state.alarmDealTypeListCode,
+          operationpersonnel:OperationPersonnel,
+          DGIMN:record.DGIMN,
+      }
+  })
+  }
+  entAlarmNumQuery = (query) =>{ //报警次数 点击查询
 
-    const { enterpriseValue, dealType } = this.state;
+    const {enterpriseValue,dealType,} = this.state;
     this.props.dispatch({
-      type: pageUrl.GetAlarmVerifyDetail,
+      type:pageUrl.GetAlarmVerifyDetail,
       payload: {
-        ...query,
-        EntCode: enterpriseValue,
-        Status: dealType,
-        VerifyStatus: this.state.alarmDealTypeListCode,
-      },
-    });
-  };
+         ...query,
+         EntCode:enterpriseValue,
+         Status:dealType,
+         VerifyStatus: this.state.alarmDealTypeListCode,
+      }
+  })
+  }
   //报警次数数据   导出
-  entAlarmNumExport = query => {
-    const { enterpriseValue, dealType } = this.state;
-    this.props.dispatch({
-      type: pageUrl.ExportAlarmVerifyDetail,
-      payload: {
-        ...query,
-        EntCode: enterpriseValue,
-        Status: dealType,
-      },
-    });
-  };
+  entAlarmNumExport=(query)=>{
+    const {enterpriseValue,dealType,} = this.state;
+        this.props.dispatch({
+            type:pageUrl.ExportAlarmVerifyDetail,
+            payload: {
+              ...query,
+              EntCode:enterpriseValue,
+              Status:dealType,
+            }
+        })
+    }
   render() {
     let columns = [];
     return (
@@ -573,7 +525,7 @@ export default class PointVerifyLst extends Component {
                 <Button
                   style={{ marginLeft: 8 }}
                   onClick={() => {
-                    this.props.onBack();
+                    this.props.onBack() 
                   }}
                 >
                   <RollbackOutlined />
@@ -586,7 +538,7 @@ export default class PointVerifyLst extends Component {
       >
         <SdlTable
           rowKey={(record, index) => `complete${index}`}
-          loading={this.props.loading}
+          loading={this.props.loading} 
           columns={this.state.columns}
           dataSource={this.props.tableDatil}
           pagination={{
@@ -598,85 +550,49 @@ export default class PointVerifyLst extends Component {
             onChange: this.handleTableChange,
           }}
         />
-        <Modal
+         <Modal
           centered
           title={this.state.alarmNumModalTitle}
           visible={this.state.alarmNumVisible}
           footer={null}
-          wrapClassName="spreadOverModal"
-          onCancel={() => {
-            this.setState({ alarmNumVisible: false });
-          }}
+          wrapClassName='spreadOverModal'
+          onCancel={() => { this.setState({ alarmNumVisible: false }) }}
         >
-          <div style={{ marginBottom: 10 }}>
-            <EntAtmoList
-              placeholder="企业列表"
-              regionCode={this.state.regionCode}
-              onChange={value => {
-                this.setState({
-                  enterpriseValue: value,
-                });
-              }}
-              EntCode={this.state.enterpriseValue}
-              style={{ width: 200, marginRight: 10 }}
-            />
-            <Radio.Group
-              value={this.state.dealType}
-              style={{ marginRight: 10, marginLeft: 10 }}
-              onChange={e => {
-                this.setState({
-                  dealType: e.target.value,
-                });
-              }}
-            >
+          <div style={{ marginBottom: 10,display:'flex' }}>
+            <EntAtmoList placeholder="企业列表" regionCode={this.state.regionCode} onChange={(value) => {
+              this.setState({
+                enterpriseValue: value
+              })
+            }} EntCode={this.state.enterpriseValue} style={{ width: 200,  marginRight: 10 }} />
+            <Radio.Group value={this.state.dealType} style={{ marginRight: 10, marginLeft: 10 }} onChange={(e) => {
+              this.setState({
+                dealType: e.target.value,
+              })
+            }}>
               <Radio.Button value="2">全部</Radio.Button>
               <Radio.Button value="1">已核实</Radio.Button>
               <Radio.Button value="0">待核实</Radio.Button>
             </Radio.Group>
-            <Button
-              type="primary"
-              loading={this.props.alarmVerifyDetailLoaing}
-              style={{ marginRight: 10 }}
-              onClick={() => {
-                this.entAlarmNumQuery(this.props.alarmVerifyQueryPar);
-              }}
-            >
-              {' '}
-              查询
-            </Button>
-            <Button
-              loading={this.props.exportAlarmVerifyDetailLoaing}
-              onClick={() => {
-                this.entAlarmNumExport(this.props.alarmVerifyQueryPar);
-              }}
-            >
-              <ExportOutlined /> 导出
-            </Button>
+            <Button type='primary' loading={this.props.alarmVerifyDetailLoaing} style={{ marginRight: 10 }} onClick={()=>{this.entAlarmNumQuery(this.props.alarmVerifyQueryPar)}}> 查询</Button>
+            <Button loading={this.props.exportAlarmVerifyDetailLoaing} onClick={()=>{this.entAlarmNumExport(this.props.alarmVerifyQueryPar)}}><ExportOutlined /> 导出</Button>
             <div style={{ marginTop: 10 }}>
-              {this.state.dealType === '1' ? (
+              {this.state.dealType === '1' ?
                 <div>
                   <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
-                  <Checkbox.Group
-                    value={this.state.alarmDealTypeListCode}
-                    onChange={checkedValues => {
-                      this.setState({ alarmDealTypeListCode: checkedValues });
-                    }}
-                  >
-                    {this.props.alarmDealTypeList.map(poll => (
-                      <Checkbox value={poll.code}>{poll.name}</Checkbox>
-                    ))}
+                  <Checkbox.Group value={this.state.alarmDealTypeListCode}
+                   onChange={(checkedValues)=>{this.setState({alarmDealTypeListCode:checkedValues })}}>
+                    {
+                      this.props.alarmDealTypeList.map(poll =>
+                        <Checkbox value={poll.code}>{poll.name}</Checkbox>
+                      )
+                    }
                   </Checkbox.Group>
                 </div>
-              ) : null}
+                : null}
             </div>
           </div>
           {
-            <SdlTable
-              loading={this.props.alarmNumLoadingDetail}
-              columns={this.state.columns2}
-              dataSource={this.props.managementDetail}
-              pagination={false}
-            />
+            <SdlTable loading={this.props.alarmNumLoadingDetail} columns={this.state.columns2} dataSource={this.props.managementDetail} pagination={false} />
           }
         </Modal>
       </Card>

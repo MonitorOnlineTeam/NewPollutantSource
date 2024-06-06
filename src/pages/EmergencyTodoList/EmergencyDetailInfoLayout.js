@@ -56,13 +56,13 @@ class EmergencyDetailInfoLayout extends Component {
     // }
 
     render() {
-        const {match}=this.props;
+        const {match,isHomeModal,hideBreadcrumb,forwardPermis,}=this.props;
         return (
             //breadCrumbList={this.renderBreadCrumb()}
             <div>
-                <BreadcrumbWrapper title="任务单详情">
-                    <EmergencyDetailInfo {...match.params} history={this.props.history} />
-                </BreadcrumbWrapper>
+                {/* <BreadcrumbWrapper title="任务单详情"  hideBreadcrumb={hideBreadcrumb}> */}
+                    <EmergencyDetailInfo  isHomeModal={isHomeModal} {...match.params} history={this.props.history} forwardPermis={forwardPermis}/>
+                {/* </BreadcrumbWrapper> */}
             </div>
         );
     }

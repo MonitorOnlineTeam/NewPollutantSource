@@ -1,6 +1,6 @@
 /**
  * 功  能：缺失报警响应率详情
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
@@ -30,6 +30,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import config from '@/config'
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 
@@ -47,7 +48,7 @@ const pageUrl = {
   priseList: MissingRateData.priseList,
   exloading:MissingRateData.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: MissingRateData.total,
+  total: MissingRateData.detailTotal,
   tableDatas: MissingRateData.tableDatil,
   queryPar: MissingRateData.queryPar,
   regionList: autoForm.regionList,
@@ -60,17 +61,31 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
+      pageIndex:1,
+      pageSize:20,
     };
     
     this.columns = [
+      // {
+      //   title: <span>行政区</span>,
+      //   dataIndex: 'regionName',
+      //   key: 'regionName',
+      //   align: 'center',
+      //   render: (text, record) => {
+      //     return <span>{text}</span>;
+      //   },
+      // },
       {
-        title: <span>行政区</span>,
-        dataIndex: 'regionName',
-        key: 'regionName',
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
         align: 'center',
-        render: (text, record) => {
-          return <span>{text}</span>;
-        },
+      },
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
       },
       {
         title: <span>{ JSON.parse(this.props.location.query.queryPar).EntType==='1'? '企业名称': '大气站名称'}</span>,
@@ -90,6 +105,12 @@ export default class EntTransmissionEfficiency extends Component {
         render: (text, record) => {     
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
+      },
+      {
+        title: '运维负责人',
+        dataIndex: 'operationUser',
+        key: 'operationUser',
+        align: 'center',
       },
       {
         title: <span>缺失数据报警次数</span>,
@@ -141,15 +162,15 @@ export default class EntTransmissionEfficiency extends Component {
       RegionCode:regionCode,
       Status:'',
     });
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
+     dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: regionCode },  });//获取企业列表
  
-     dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: regionCode},  });//获取关注列表
   
 
     setTimeout(() => {
-      this.getTableData();
+      this.getTableData(this.state.pageIndex,this.state.pageSize);
     });
   };
   updateQueryState = payload => {
@@ -161,12 +182,15 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
-  getTableData = () => {
+  getTableData = (pageIndex,pageSize) => {
     const { dispatch, queryPar } = this.props;
-    dispatch({
-      type: pageUrl.getData,
-      payload: { ...queryPar },
-    });
+    this.setState({pageIndex,pageSize},()=>{
+      dispatch({
+        type: pageUrl.getData,
+        payload: { ...queryPar,PageIndex:pageIndex,PageSize:pageSize,regionLevel:3,staticType:2},
+      });
+    })
+
   };
 
 
@@ -214,16 +238,15 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateData/exportDefectPointDetail',
-      payload: { ...queryPar },
+      payload: { ...queryPar,regionLevel:3,staticType:2 },
       callback: data => {
-        //  downloadFile(`/upload${data}`);
-         window.open(data)
+         downloadFile(`${data}`);
         },
     });
   };
   //查询事件
   queryClick = () => {
-    this.getTableData();
+    this.getTableData(1,this.state.pageSize);
   };
 
 
@@ -343,6 +366,11 @@ export default class EntTransmissionEfficiency extends Component {
   //     </Form.Item>
   //     </>
   // }
+    /** 分页 */
+
+    onChange = (pageIndex, pageSize) => {
+      this.getTableData(pageIndex,pageSize);
+    }
   btnCompents=()=>{
     const { exloading } = this.props;
    return (
@@ -479,12 +507,11 @@ export default class EntTransmissionEfficiency extends Component {
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
-                // sorter: true,
-                // total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
+                sorter: true,
+                total: this.props.total,
+                pageSize: this.state.pageSize,
+                current: this.state.pageIndex,
+                onChange: this.onChange,
               }}
             />
           </>

@@ -35,7 +35,7 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import EntAtmoList from '@/components/EntAtmoList';
-import VerifyDetailsPop from '@/pages/monitoring/alarmInfo/exceedDataAlarmRecord/VerifyDetailsPop';
+import VerifyDetailsPop from '@/pages/dataSearch/exceedDataAlarmRecord/VerifyDetailsPop';
 import { uploadPrefix } from '@/config'
 
 const { Search } = Input;
@@ -289,7 +289,7 @@ export default class PointVerifyLst extends Component {
     let colList = this.props.divisorList
         colList =  [{PollutantName:'全部合计',PollutantCode:'全部合计'},...colList]
         colList.map((item, key) => {
-        let pollutantList = this.props.overVerifyRateForm.PollutantList.value?
+        let pollutantList = this.props.overVerifyRateForm.PollutantList.value?  
                         this.props.overVerifyRateForm.PollutantList.value : this.props.overVerifyRateForm.PollutantList;
         let index = pollutantList.findIndex((checkedItem, checkedKey) => {
           if (item.PollutantCode == checkedItem) {
@@ -370,11 +370,11 @@ export default class PointVerifyLst extends Component {
                 alarmDealTypeListCode: data.map(poll => poll.code)
               })
             }
-
+    
           }
         })
   };
-
+  
   updateQueryState = payload => {
     const { overVerifyRateForm, dispatch } = this.props;
 
@@ -446,7 +446,7 @@ export default class PointVerifyLst extends Component {
     const {overVerifyRateForm: {beginTime,  endTime, EntCode,PollutantList, RegionCode,  AttentionCode,  PollutantType, OperationPersonnel } } = this.props;
     this.setState({
       alarmNumVisible:true,
-      PollutantCode:pollutantCode,
+      PollutantCode: pollutantCode=='全部合计'? '' : pollutantCode,
       dealType:status,
       alarmNumModalTitle:record.regionName + moment(beginTime).format('YYYY年MM月DD号HH时') + '至'+moment(endTime).format('YYYY年MM月DD号HH时')+'超标报警情况',
     })
@@ -454,13 +454,13 @@ export default class PointVerifyLst extends Component {
       type:pageUrl.GetAlarmVerifyDetail,
       payload: {
           RegionCode: record.regionCode,
-          attentionCode: record.attentionValue,
-          PollutantType: record.outletValue,
+          attentionCode: AttentionCode,
+          PollutantType: PollutantType,
           // DataType: record.dataType == '日'? 'DayData' : 'HourData',
           DataType:'',
           BeginTime: moment(beginTime).format("YYYY-MM-DD HH:mm:ss"),
           EndTime: moment(endTime).format("YYYY-MM-DD HH:mm:ss"),
-          PollutantCode: pollutantCode,
+          PollutantCode: pollutantCode=='全部合计'? '' : pollutantCode,
           Status:status==2? '' : status,
           EntCode:'',
           VerifyStatus:this.state.alarmDealTypeListCode,
@@ -562,7 +562,7 @@ export default class PointVerifyLst extends Component {
           wrapClassName='spreadOverModal'
           onCancel={() => { this.setState({ alarmNumVisible: false }) }}
         >
-          <div style={{ marginBottom: 10 }}>
+          <div style={{ marginBottom: 10,display:'flex' }}>
             <EntAtmoList placeholder="企业列表" regionCode={this.state.regionCode} onChange={(value) => {
               this.setState({
                 enterpriseValue: value
