@@ -290,14 +290,14 @@ const SpotCheckPage = props => {
           }}
           autoComplete="off"
           style={{ marginBottom: 10 }}
-          // labelCol={{ span: 5 }}
-          // wrapperCol={{ span: 18 }}
-          // labelCol={{
-          //   flex: '90px',
-          // }}
-          // wrapperCol={{
-          //   flex: 1,
-          // }}
+        // labelCol={{ span: 5 }}
+        // wrapperCol={{ span: 18 }}
+        // labelCol={{
+        //   flex: '90px',
+        // }}
+        // wrapperCol={{
+        //   flex: 1,
+        // }}
         >
           <Space size={30} align="middle">
             <Form.Item name="time" label="离开现场时间">
@@ -420,8 +420,8 @@ const SpotCheckPage = props => {
             ]}
           >
             <Radio.Group>
-              <Radio value={0}>合格</Radio>
-              <Radio value={1}>不合格</Radio>
+              <Radio value={'1'}>合格</Radio>
+              <Radio value={'0'}>不合格</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item name="remark" label="备注">

@@ -202,12 +202,6 @@ const ServiceIsNotTimely = props => {
         ellipsis: true,
       },
       {
-        title: '抽查结果',
-        dataIndex: 'CheckResult',
-        key: 'CheckResult',
-        ellipsis: true,
-      },
-      {
         title: '备注',
         dataIndex: 'Remark',
         key: 'Remark',
