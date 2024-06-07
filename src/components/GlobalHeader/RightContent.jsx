@@ -89,6 +89,7 @@ const GlobalHeaderRight = props => {
   return (
     <div className={className}>
       {configInfo.IsShowSysPage === '1' && isShowSelectSystem == 1 && (
+        // {true && (
         <>
           <Tooltip title="返回首页">
             <a
@@ -99,15 +100,21 @@ const GlobalHeaderRight = props => {
               <RollbackOutlined />
             </a>
           </Tooltip>
-          <Dropdown overlay={menu} trigger={['click']}>
-            <Tooltip title="切换系统">
-              <a rel="noopener noreferrer" className={styles.action}>
-                <UnorderedListOutlined />
-              </a>
-            </Tooltip>
-          </Dropdown>
         </>
       )}
+
+      {/**切换系统**/}
+      {sysPollutantTypeList &&
+        Array.isArray(sysPollutantTypeList) &&
+        sysPollutantTypeList[0] &&
+        sysPollutantTypeList.length > 1 && (
+          <Dropdown overlay={menu}>
+            <a rel="noopener noreferrer" className={styles.action}>
+              <UnorderedListOutlined />
+            </a>
+          </Dropdown>
+        )}
+
       {configInfo && configInfo.IsShowQRcode === 'true' && !IsOpera && (
         <Popover
           placement="bottom"

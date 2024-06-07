@@ -1492,55 +1492,54 @@ const routes = [
                     path: '/monitoring/alarmInfo',
                     redirect: '/monitoring/alarmInfo/exceptionrecord',
                   },
-                  {
-                    //缺失数据报警  企业
-                    name: 'missingData',
-                    path: '/monitoring/alarmInfo/missingData',
-                    component: './monitoring/missingData/ent',
-                  },
-                  {
-                    //缺失数据报警(空气站)
-                    name: 'missingData',
-                    path: '/monitoring/alarmInfo/missingDataAir',
-                    component: './monitoring/missingData/air',
-                  },
-                  {
-                    //缺失数据报警 二级页面
-                    name: 'missDataSecond',
-                    path: '/monitoring/alarmInfo/missDataSecond',
-                    component: './monitoring/missingData/missDataSecond',
-                  },
+                  // {
+                  //   //缺失数据报警  企业
+                  //   name: 'missingData',
+                  //   path: '/monitoring/alarmInfo/missingData',
+                  //   component: './monitoring/missingData/ent',
+                  // },
+                  // {
+                  //   //缺失数据报警(空气站)
+                  //   name: 'missingData',
+                  //   path: '/monitoring/alarmInfo/missingDataAir',
+                  //   component: './monitoring/missingData/air',
+                  // },
+                  // {
+                  //   //缺失数据报警 二级页面
+                  //   name: 'missDataSecond',
+                  //   path: '/monitoring/alarmInfo/missDataSecond',
+                  //   component: './monitoring/missingData/missDataSecond',
+                  // },
 
-                  {
-                    //缺失数据报警响应  企业
-                    name: 'missingData',
-                    path: '/monitoring/alarmInfo/missingDataRes',
-                    component: './monitoring/missingData/entRes',
-                  },
-                  {
-                    //缺失数据报警响应(空气站)
-                    name: 'missingData',
-                    path: '/monitoring/alarmInfo/missingDataAirRes',
-                    component: './monitoring/missingData/airRes',
-                  },
-                  {
-                    //缺失数据报警响应 二级页面
-                    name: 'missDataSecond',
-                    path: '/monitoring/alarmInfo/missDataResSecond',
-                    component: './monitoring/missingData/missDataResSecond',
-                  },
+                  // {
+                  //   //缺失数据报警响应  企业
+                  //   name: 'missingData',
+                  //   path: '/monitoring/alarmInfo/missingDataRes',
+                  //   component: './monitoring/missingData/entRes',
+                  // },
+                  // {
+                  //   //缺失数据报警响应(空气站)
+                  //   name: 'missingData',
+                  //   path: '/monitoring/alarmInfo/missingDataAirRes',
+                  //   component: './monitoring/missingData/airRes',
+                  // },
+                  // {
+                  //   //缺失数据报警响应 二级页面
+                  //   name: 'missDataSecond',
+                  //   path: '/monitoring/alarmInfo/missDataResSecond',
+                  //   component: './monitoring/missingData/missDataResSecond',
+                  // },
                   {
                     //超标数据报警核实记录查询
                     name: 'exceedDataAlarm',
                     path: '/monitoring/alarmInfo/exceedDataAlarmRecord',
-                    component: './monitoring/alarmInfo/exceedDataAlarmRecord/exceedDataAlarm',
+                    component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
                   },
                   {
                     //超标数据报警记录查询
                     name: 'exceedDataAlarm',
                     path: '/monitoring/alarmInfo/exceedDataAlarmOnlyQuery',
-                    component:
-                      './monitoring/alarmInfo/exceedDataAlarmRecord/exceedDataAlarm_onlyQuery',
+                    component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm_onlyQuery',
                   },
                   {
                     //异常报警响应查询
@@ -2469,7 +2468,7 @@ const routes = [
               {
                 name: 'defectData',
                 //数据缺失
-                path: '/dataSearch/defectData/ent',
+                path: '/dataSearch/defectData',
                 routes: [
                   {
                     name: 'defectDatEnt',

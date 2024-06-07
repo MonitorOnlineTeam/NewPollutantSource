@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Upload, message } from 'antd'
+import { Modal, Upload, message } from 'antd';
 import { connect } from 'dva';
 
 function getBase64(file) {
@@ -24,14 +24,14 @@ class Index extends PureComponent {
   }
 
   componentDidMount() {
-      const { dispatch } = this.props;
-       dispatch({
-             type: 'autoForm/getAttachmentList',
-             payload: {
-               FileUuid: this.props.FileUuid,
-               uid: this.props.FileUuid,
-             },
-            });
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'autoForm/getAttachmentList',
+      payload: {
+        FileUuid: this.props.FileUuid,
+        uid: this.props.FileUuid,
+      },
+    });
   }
 
   handlePreview = async file => {
@@ -44,30 +44,37 @@ class Index extends PureComponent {
     });
   };
 
-
   render() {
-      const { imageList, isloading } = this.props;
-      console.log('imageList', imageList);
-    return (
-            !isloading && imageList ? <div style={{ overflow: 'hidden' }}>
-          <Upload
-            action=""
-            listType="picture-card"
-            fileList={this.props.imageList}
-            disabled
-            onPreview={this.handlePreview}
+    const { imageList, isloading } = this.props;
+    console.log('imageList', imageList);
+    return !isloading && imageList ? (
+      <div style={{ overflow: 'hidden' }}>
+        <Upload
+          action=""
+          listType="picture-card"
+          fileList={this.props.imageList}
+          disabled
+          onPreview={this.handlePreview}
           // onChange={this.handleChange}
-          >
-            {/* {fileList.length >= 8 ? null : uploadButton} */}
-          </Upload>
-          <Modal destroyOnClose="true" visible={this.state.previewVisible} width={800} footer={null} onCancel={() => {
+        >
+          {/* {fileList.length >= 8 ? null : uploadButton} */}
+        </Upload>
+        <Modal
+          destroyOnClose="true"
+          visible={this.state.previewVisible}
+          width={800}
+          footer={null}
+          onCancel={() => {
             this.setState({
               previewVisible: false,
-            })
-          }}>
-            <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
-          </Modal>
-        </div> : <div>dddd</div>
+            });
+          }}
+        >
+          <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
+        </Modal>
+      </div>
+    ) : (
+      <div>dddd</div>
     );
   }
 }

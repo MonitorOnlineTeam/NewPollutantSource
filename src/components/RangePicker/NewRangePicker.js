@@ -21,6 +21,14 @@ class NewRangePicker extends Component {
       dateValue: this.getDefault(),
       ranges: {
         今天: [moment().startOf('day'), moment()],
+        昨天: [
+          moment()
+            .subtract(1, 'days')
+            .startOf('day'),
+          moment()
+            .subtract(1, 'days')
+            .endOf('day'),
+        ],
         本周: [
           startOfWeek.subtract(startOfWeek.isoWeekday() - 1, 'days'),
           moment()
@@ -66,7 +74,7 @@ class NewRangePicker extends Component {
             .startOf('month'),
           moment(),
         ],
-        本年: [moment().startOf('year'), moment()],
+        今年: [moment().startOf('year'), moment()],
         去年: [
           moment()
             .subtract(1, 'year')
@@ -347,11 +355,7 @@ class NewRangePicker extends Component {
       dateValue,
     });
   };
-
-
   render() {
-  // {console.log('time1=', this.props.value[0].format("YYYY-MM-DD"))};
-  // {console.log('time2=', this.props.value[1].format("YYYY-MM-DD"))};
     return (
       <RangePicker
         showTime={this.state.showTime}

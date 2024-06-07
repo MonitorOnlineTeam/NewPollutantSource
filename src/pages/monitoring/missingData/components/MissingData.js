@@ -200,7 +200,7 @@ export default class EntTransmissionEfficiency extends Component {
     let entObj = { title: <span>缺失数据报警企业数</span>, dataIndex: 'entCount', key: 'entCount', align: 'center', }
 
     types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
-    const isReg = location && location.pathname == '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent';
+    const isReg = location && (location.pathname == '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent' || location.pathname == '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/air');
     this.updateQueryState(isReg ? {
       // BeginTime: moment()
       //   .subtract(1, 'day')
@@ -218,9 +218,8 @@ export default class EntTransmissionEfficiency extends Component {
     );
 
     //获取企业列表 or 大气站列表
-    //  types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
+    //  types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  })
     isReg && dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
-
     const regCode = isReg ? queryPar.RegionCode : query.regionCode;
     this.getTableData(regCode, isReg ? 1 : 2);
     this.setState({regCode:regCode, regLevel:isReg ? 1 : 2})
@@ -541,4 +540,8 @@ export default class EntTransmissionEfficiency extends Component {
       </Card>
     );
   }
+}
+
+EntTransmissionEfficiency.defaultProps = {
+  query: {}
 }

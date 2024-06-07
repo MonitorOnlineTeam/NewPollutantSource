@@ -84,15 +84,40 @@ export default class Index extends Component {
         });
       }
     } else {
-      if (regionList && regionList.length <= 0) {
-        //普通行政区
-        this.props.dispatch({
-          type: 'autoForm/getRegions',
-          payload: { PointMark: '2', RegionCode: '' },
-        });
-      }
+      //   if(regionList&&regionList.length<=0){ //普通行政区
+      //     this.props.dispatch({   type: 'autoForm/getRegions',  payload: {  PointMark: '2', RegionCode: ''} });
+      //  }
     }
   }
+
+  //       <SdlCascader
+  //        style={{ width: 170 }}
+  //        placeholder="请选择行政区"
+  //        allowClear
+  //        selectType={selectType}
+  //        onChange={changeRegion}
+  // />
+  // spinning={noFilter? noFilteRegLoading : regLoading}
+  loadingStatus = () => {
+    const {
+      regLoading,
+      noFilter,
+      noFilteRegLoading,
+      test,
+      testRegLoading,
+      ct,
+      ctRegLoading,
+    } = this.props;
+    if (noFilter) {
+      return noFilteRegLoading;
+    } else if (test) {
+      return testRegLoading;
+    } else if (ct) {
+      return ctRegLoading;
+    } else {
+      regLoading;
+    }
+  };
   render() {
     const {
       selectType,
@@ -101,52 +126,40 @@ export default class Index extends Component {
       regionList,
       noFilter,
       noFilterRegionList,
-      noFilteRegLoading,
-      regLoading,
-      spinSty,
       test,
-      testRegLoading,
       testRegionList,
       ct,
-      ctRegLoading,
       ctRegionList,
+      placeholder,
+      spinSty,
+      style,
     } = this.props;
-    return (
-      //       <SdlCascader
-      //        style={{ width: 170 }}
-      //        placeholder="请选择行政区"
-      //        allowClear
-      //        selectType={selectType}
-      //        onChange={changeRegion}
-      // />
-      // spinning={noFilter? noFilteRegLoading : regLoading}
-      <Spin
-        spinning={
-          noFilter ? noFilteRegLoading : test ? testRegLoading : ct ? ctRegLoading : regLoading
-        }
-        size="small"
-        style={{ ...spinSty }}
-      >
+    return this.loadingStatus() ? (
+      <Spin size="small" style={spinSty}>
         <TreeSelect
-          virtual={false}
-          showSearch
-          allowClear
-          searchPlaceholder="输入你查找的字段"
-          placeholder="行政区"
-          autoExpandParent={false}
-          value={RegionCode ? RegionCode : undefined}
-          style={{ width: '100%' }}
-          dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-          treeNodeFilterProp="title"
-          onChange={changeRegion}
-          {...this.props}
-        >
-          {this.regchildren(
-            noFilter ? noFilterRegionList : test ? testRegionList : ct ? ctRegionList : regionList,
-            1,
-          )}
-        </TreeSelect>
+          style={{ width: '100%', ...style }}
+          placeholder={placeholder ? placeholder : '行政区'}
+        />
       </Spin>
+    ) : (
+      <TreeSelect
+        virtual={false}
+        showSearch
+        allowClear
+        placeholder="行政区"
+        treeNodeFilterProp="title"
+        autoExpandParent={false}
+        value={RegionCode ? RegionCode : undefined}
+        style={{ width: '100%' }}
+        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+        onChange={changeRegion}
+        {...this.props}
+      >
+        {this.regchildren(
+          noFilter ? noFilterRegionList : test ? testRegionList : ct ? ctRegionList : regionList,
+          1,
+        )}
+      </TreeSelect>
     );
   }
 }
