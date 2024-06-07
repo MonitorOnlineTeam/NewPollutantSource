@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-06-03 11:20:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-06-06 16:40:58
+ * @Last Modified time: 2024-06-07 16:41:24
  * @Description:  菜单组件
  */
 import React, { Component } from 'react';
@@ -14,6 +14,45 @@ import _ from 'lodash';
 const { Text, Link } = Typography;
 
 const { SubMenu } = Menu;
+
+function transformString(input) {
+  // 检查输入是否是字符串
+  if (typeof input !== 'string') {
+    return input;
+  }
+
+  // 如果字符串包含 '-', 进行特殊处理
+  if (input.includes('-')) {
+    // 将每个 '-' 后面跟随的字符转换为大写，移除 '-'
+    input = input
+      .split('-')
+      .map((str, index) => {
+        return index === 0 ? capitalize(str) : capitalize(str);
+      })
+      .join('');
+  }
+
+  // 检查开头是否不是大写字母以及不包含 'Outlined'
+  if (
+    /^[a-zA-Z]/.test(input) &&
+    input.charAt(0) !== input.charAt(0).toUpperCase() &&
+    !input.includes('Outlined')
+  ) {
+    input = capitalize(input); // 首字母大写
+  }
+
+  // 如果符合条件，添加 'Outlined'
+  if (!input.includes('Outlined')) {
+    input += 'Outlined';
+  }
+
+  return input;
+}
+
+// 辅助函数：将字符串首字母大写
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 @connect(({ loading, user }) => ({
   menuList: user.currentMenu,
@@ -34,7 +73,8 @@ class SdlMenu extends Component {
   }
 
   getIcon = icon => {
-    let Icon = this.state.ICONS[icon];
+    let iconName = transformString(icon);
+    let Icon = this.state.ICONS[iconName];
     return Icon ? <Icon /> : '';
   };
 
