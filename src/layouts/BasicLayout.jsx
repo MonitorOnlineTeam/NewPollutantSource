@@ -58,7 +58,8 @@ class BasicLayout extends Component {
       type: 'autoForm/getRegions',
       payload: { PointMark: '2', RegionCode: '' },
     });
-    if (!this.props.sysPollutantTypeList.length && configInfo.IsShowSysPage === '1') {
+    // if (!this.props.sysPollutantTypeList.length && configInfo.IsShowSysPage === '1') {
+    if (!this.props.sysPollutantTypeList.length) {
       dispatch({
         type: 'global/getSysPollutantTypeList',
       });

@@ -57,7 +57,7 @@
     "prop-types": "^15.7.2",
     "qrcode.react": "^1.0.0",
     "qs": "^6.7.0",
-    "quill": "^2.0.0-dev.3",
+    "quill": "2.0.0-dev.3",
     "quill-better-table": "^1.2.10",
     "rc-seamless-scroll": "^1.0.0",
     "react": "^16.12.0",
