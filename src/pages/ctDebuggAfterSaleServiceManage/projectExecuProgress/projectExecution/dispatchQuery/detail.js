@@ -3,7 +3,7 @@
  * 创建人：jab
  * 创建时间：2023.09
  */
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Tabs, Spin, Empty } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined } from '@ant-design/icons';
@@ -107,6 +107,9 @@ const dvaDispatch = (dispatch) => {
     },
   }
 }
+
+let scrollEle, scrollHeight = 0;
+
 const Index = (props) => {
   const { id, serviceApplicaData, serviceDispatchTypeAndRecordLoading, serviceDispatchTypeAndRecordData, serviceDispatchLoading, } = props;
 
@@ -140,7 +143,32 @@ const Index = (props) => {
     return <div style={{ display: 'inline-block', fontWeight: 'bold', marginTop: 4, padding: '2px 0', marginBottom: 12, borderBottom: '1px solid rgba(0,0,0,.1)' }}>{props.text}</div>
   }
 
+  const handleScroll = () => {
+    if (scrollEle) {
+      // 获取滚动高度
+      const scrollTop = scrollEle.scrollTop;
+      scrollHeight = scrollTop
 
+    }
+  };
+
+  useEffect(() => {
+
+  
+    if(fillContentTab?.[0]){
+    setTimeout(() => {
+      scrollEle = document.querySelector('.ant-tabs-content-top')
+      if(scrollEle){
+        scrollEle.addEventListener('scroll',handleScroll);
+      }
+    }, 1000)
+  }
+    return () => {
+      if(scrollEle){
+        scrollEle.removeEventListener('scroll',handleScroll);
+       }
+    };
+  }, [fillContentTab,isOpen]);
 
   const acceptanceServicesCol = [ //验收服务报告列
     {
@@ -319,6 +347,7 @@ const Index = (props) => {
       setIsOpen(true)
       setImageList(text.ImgList)
       setImageIndex(0)
+
     }}>
       查看附件
     </a>
@@ -1605,7 +1634,7 @@ const Index = (props) => {
           case '26':
             if (item.RecordStatus == 1) {//部件更换
               return <div>
-                <TitleComponents text='部件更换' /> <ComponentReplace hideBreadcrumb reportContent projectCode={serviceApplicaData?.ProjectCode}/>;
+                <TitleComponents text='部件更换' /> <ComponentReplace hideBreadcrumb reportContent projectCode={serviceApplicaData?.ProjectCode} />;
               </div>
             }
         }
@@ -1740,9 +1769,9 @@ const Index = (props) => {
   const ServiceFillContent = () => {
     return serviceDispatchTypeAndRecordLoading ? <PageLoading size='default' /> :
       fillContentTab?.[0] ?
-        <Tabs type='card' activeKey={tabKey} onChange={(key) => { setTabKey(key) }} size='small'>
+        <Tabs type='card' activeKey={tabKey} onChange={(key) => { setTabKey(key) }} size='small' className='serviceFillContentSty'>
           {fillContentTab.map(item => {
-            return <TabPane tab={item.ItemName} key={item.ItemId}>
+            return <TabPane tab={item.ItemName} key={item.ItemId} >
               {fillContentTabContent(item)}
             </TabPane>
           })
@@ -1974,6 +2003,11 @@ const Index = (props) => {
         imageIndex={imageIndex}
         onCloseRequest={() => {
           setIsOpen(false);
+          const scrollEle = document.querySelector('.ant-tabs-content-top')
+          if(scrollEle){
+            scrollEle.scrollTop = scrollHeight;
+          }
+        
         }}
       />
       <Modal
