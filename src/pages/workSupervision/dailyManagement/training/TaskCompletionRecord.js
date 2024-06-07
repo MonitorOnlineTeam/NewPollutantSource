@@ -151,7 +151,6 @@ const TaskCompletionRecord = props => {
     let columns = [
       {
         title: '序号',
-        width: 40,
       },
       {
         title: '大区',

@@ -14,6 +14,7 @@ import moment from 'moment';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { FileSearchOutlined } from '@ant-design/icons';
 import BasicData from './BasicData';
+import Input from 'antd/lib/input/Input';
 
 const dvaPropsData = ({ loading, reportsAndViews, autoForm }) => ({
   autoForm: autoForm,
@@ -103,13 +104,15 @@ const UserStatistics = props => {
         key: 'WorkerName',
         align: 'center',
         ellipsis: true,
+        width:'auto',
       },
       {
         title: '工号',
-        dataIndex: 'WorkerID',
-        key: 'WorkerID',
+        dataIndex: 'User_Account',
+        key: 'User_Account',
         align: 'center',
         ellipsis: true,
+        width:'auto',
       },
       {
         title: '报告及时率',
@@ -117,6 +120,7 @@ const UserStatistics = props => {
         key: 'ReportTimelyRate',
         align: 'center',
         ellipsis: true,
+        width:'auto',
         sorter: (a, b) => a.ReportTimelyRate - b.ReportTimelyRate,
         render: (text, row) => {
           return text + '%';
@@ -124,11 +128,12 @@ const UserStatistics = props => {
       },
       {
         title: '报告合格率',
-        dataIndex: 'ReportTimelyRate',
-        key: 'ReportTimelyRate',
+        dataIndex: 'ReportTimelyQualifiedRate',
+        key: 'ReportTimelyQualifiedRate',
         align: 'center',
         ellipsis: true,
-        sorter: (a, b) => a.ReportTimelyRate - b.ReportTimelyRate,
+        width:'auto',
+        sorter: (a, b) => a.ReportTimelyQualifiedRate - b.ReportTimelyQualifiedRate,
         render: (text, row) => {
           return text + '%';
         },
@@ -139,6 +144,7 @@ const UserStatistics = props => {
         key: 'ReportTimelyQualifiedRate',
         align: 'center',
         ellipsis: true,
+        width:'auto',
         sorter: (a, b) => a.nottimelyCount - b.nottimelyCount,
         render: (text, row) => {
           return text + '%';
@@ -173,7 +179,8 @@ const UserStatistics = props => {
       >
         <Space align="middle">
           <Form.Item name="userID" label="姓名">
-            <Select
+            <Input placeholder='请输入' allowClear/>
+            {/* <Select
               placeholder="请选择"
               showSearch
               optionFilterProp="children"
@@ -187,7 +194,7 @@ const UserStatistics = props => {
                   </Option>
                 );
               })}
-            </Select>
+            </Select> */}
           </Form.Item>
           <Form.Item name="time" label="离开现场时间" style={{ marginLeft: 20 }}>
             <RangePicker_
@@ -242,6 +249,7 @@ const UserStatistics = props => {
         loading={loading}
         dataSource={dataSource}
         columns={getColumns()}
+        scroll={{x:710}}
         align="center"
         pagination={{
           total: tableTotal,

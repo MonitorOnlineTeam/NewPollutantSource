@@ -48,6 +48,23 @@ const Index = props => {
   const onDateChange = (date, dateString) => {
     setDate(date);
   };
+
+
+  // 定义一个状态来存储窗口的宽度
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // 定义一个处理函数，用于更新窗口宽度的状态
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  // 在组件挂载时添加事件监听器，以及在组件卸载时移除事件监听器
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   return (
     <BreadcrumbWrapper>
       <div className={styles.pageWrapper}>
@@ -57,11 +74,11 @@ const Index = props => {
             <YearDatePicker value={date} onChange={onDateChange}/>
           </Card>
           <Row gutter={8}>
-            <Col span={8}>
-              <LargeRegionProductCategoryRate type={1}/>
+            <Col span={windowWidth>=1900? 8 : windowWidth>=1650? 6 : 24}>
+              <LargeRegionProductCategoryRate type={1} windowWidth={windowWidth}/>
             </Col>
-            <Col span={16}>
-              <LargeRegionProductCategoryRate type={2}/>
+            <Col style={{paddingTop:windowWidth>=1650? 0 : 8}} span={windowWidth>=1900? 16 : windowWidth>=1650? 18 : 24}>
+              <LargeRegionProductCategoryRate type={2} />
             </Col>
           </Row>
           <Row>

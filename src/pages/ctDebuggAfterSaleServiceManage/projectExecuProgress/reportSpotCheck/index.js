@@ -202,6 +202,12 @@ const ServiceIsNotTimely = props => {
         ellipsis: true,
       },
       {
+        title: '抽查结果',
+        dataIndex: 'CheckResult',
+        key: 'CheckResult',
+        ellipsis: true,
+      },
+      {
         title: '备注',
         dataIndex: 'Remark',
         key: 'Remark',
@@ -270,7 +276,7 @@ const ServiceIsNotTimely = props => {
                     setCurrentRow(record);
                     let descriptionList = [
                       { name: '审核状态', value: record.CheckStatuTip },
-                      { name: '合格状态', value: record.CheckResult },
+                      { name: '合格状态', value: record.AuditStatusTip },
                     ];
                     setDescriptionList(descriptionList);
                   }}
@@ -553,7 +559,7 @@ const ServiceIsNotTimely = props => {
           descriptionColumn={4}
           descriptionList={descriptionList}
           isModalOpen={serviceReportOpen}
-          data={currentRow}
+          data={{...currentRow,ID:currentRow.DispatchId}}
           onCancel={() => {
             setServiceReportOpen(false);
           }}

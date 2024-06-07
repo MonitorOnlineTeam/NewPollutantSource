@@ -450,7 +450,7 @@ export default Model.extend({
         window.configInfo = {};
         let meunList = sessionStorage.getItem('menuDatas') ? JSON.parse(sessionStorage.getItem('menuDatas')) : []
         router.push(meunList?.[0] ? meunList?.[0] : '/user/login')
-        return
+        // return
       }
       dispatch({ //登录之后获取
         type: 'getSystemConfigInfo', payload: {

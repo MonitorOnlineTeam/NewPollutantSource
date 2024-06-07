@@ -189,9 +189,9 @@ export default Model.extend({
     },
     // 获取单个运维计划详情
     *GetOperationPlanInfo({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanInfo, payload);
-      if (result.IsSuccess) {
-        yield update({ operationPlanInfo: result?.Datas?.planInfoList, operationPlanInfoTotal: result?.Datas?.planInfoList?.length || 0, operationPlanInfoQueryPar: payload, });
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanInfo, {...payload,type:undefined});
+      if (result.IsSuccess && payload.type!='par') {
+        yield update({ operationPlanInfo: result?.Datas?.planInfoList, operationPlanInfoTotal: result?.Total || 0, operationPlanInfoQueryPar: payload, });
       }
       callback && callback(result?.Datas)
     },

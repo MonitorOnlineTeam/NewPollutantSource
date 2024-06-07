@@ -129,9 +129,9 @@ const Index = (props) => {
   const [workOrderExecuTimeVal, setWorkOrderExecuTimeVal] = useState('1')
   const workOrderExecuTimeOptions =
     [{ label: '今日', value: '1' },
-    { label: '昨天', value: '2' },
-    { label: '前天', value: '3' },
-    { label: '近7天', value: '4' }]
+    { label: '昨日', value: '2' },
+    { label: '前日', value: '3' },
+    { label: '近7日', value: '4' }]
   const workOrderExecuTimeObj = {
     '1': { beginTime: moment().startOf('day').format('YYYY-MM-DD 00:00:00'), endTime: moment().format('YYYY-MM-DD 23:59:59') },
     '2': { beginTime: moment().subtract(1, 'days').startOf('day').format('YYYY-MM-DD 00:00:00'), endTime: moment().subtract(1, 'days').endOf('day').format('YYYY-MM-DD 23:59:59') },

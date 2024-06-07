@@ -105,7 +105,7 @@ const Training = props => {
           }
           return {
             children: text,
-            props: { colSpan: text === '合计' ? 2 : 1 },
+            props: { colSpan: text === '全部合计' ? 2 : 1 },
           };
         },
       },
@@ -130,7 +130,7 @@ const Training = props => {
             // >
             //   {text}
             // </a>
-            props: { colSpan: record.LargeRegion === '合计' ? 0 : 1 },
+            props: { colSpan: record.LargeRegion === '全部合计' ? 0 : 1 },
           };
         },
       },

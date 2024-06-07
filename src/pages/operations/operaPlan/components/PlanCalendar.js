@@ -27,6 +27,7 @@ const namespace = 'operaPlan'
 
 
 const dvaPropsData = ({ loading, operaPlan, global, }) => ({
+    clientHeight: global.clientHeight,
     dateCol: operaPlan.operationPlanCalendarCol,
     tableDatas: operaPlan.operationPlanCalendarList,
     tableTotal: operaPlan.operationPlanCalendarTotal,
@@ -302,7 +303,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns()}
                 align='center'
-                scroll={{x:(dateCol?.length * 90 || 0 ) + 200,  y: 'calc(100vh - 200px)' }}
+                scroll={{x:(dateCol?.length * 90 || 0 ) + 260,  y: 'calc(100vh - 386px)' }}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,

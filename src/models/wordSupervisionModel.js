@@ -707,25 +707,25 @@ export default Model.extend({
       if (result.IsSuccess) {
         const data = result.Datas;
         //旧
-        yield update({  
-          projectExecutionList: data?.ctList   || [],
-          contractList: data  || [],
-        });
-        callback && callback({ ctListTotal:data?.ctList?.length || 0, projectListTotal:data?.length || 0});
-      
-        // yield update({
-        //   projectExecutionList: data?.ctList || [],
-        //   contractList: data?.projectList || [],
-        //   customeSatisfactList: data?.customerList || [],
-        //   standgaswaringList: data?.standgaswaringList || [],
+        // yield update({  
+        //   projectExecutionList: data?.ctList   || [],
+        //   contractList: data  || [],
         // });
-        // callback &&
-        //   callback({
-        //     ctListTotal: data?.ctList?.length || 0,
-        //     customerListTotal: data?.customerList?.length || 0,
-        //     projectListTotal: data?.projectList?.length || 0,
-        //     standgaswaringListTotal: data?.standgaswaringList?.length || 0,
-        //   });
+        // callback && callback({ ctListTotal:data?.ctList?.length || 0, projectListTotal:data?.length || 0});
+      
+        yield update({
+          projectExecutionList: data?.ctList || [],
+          contractList: data?.projectList || [],
+          customeSatisfactList: data?.customerList || [],
+          standgaswaringList: data?.standgaswaringList || [],
+        });
+        callback &&
+          callback({
+            ctListTotal: data?.ctList?.length || 0,
+            customerListTotal: data?.customerList?.length || 0,
+            projectListTotal: data?.projectList?.length || 0,
+            standgaswaringListTotal: data?.standgaswaringList?.length || 0,
+          });
       }
       yield update(
         payload.type == 1

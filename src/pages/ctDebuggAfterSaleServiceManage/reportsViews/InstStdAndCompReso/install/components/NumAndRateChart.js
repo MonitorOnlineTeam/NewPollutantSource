@@ -18,7 +18,7 @@ const dvaPropsData = ({ loading, reportsAndViews }) => ({
 const NumAndRateChart = props => {
   const [echarts, setEcharts] = useState();
 
-  const { title, data, fieldNames, loading } = props;
+  const {type, title, data, fieldNames, loading,windowWidth } = props;
 
   useEffect(() => {}, []);
 
@@ -48,6 +48,7 @@ const NumAndRateChart = props => {
       NoPhotos.push(item.NoPhotos);
       rate.push(item.Rate);
     });
+    const windowWidthFlag = windowWidth<=1652&&windowWidth>=910
     return {
       legend: {},
       tooltip: {},
@@ -61,7 +62,7 @@ const NumAndRateChart = props => {
         },
         axisLabel: {
           interval: 0,
-          rotate: 30,
+          rotate: type==2? 30 :  type==1&&windowWidthFlag ? 0 :  45, // 或者其他角度
           textStyle: {
             // fontSize: 14,
             color: '#383838',
@@ -111,7 +112,7 @@ const NumAndRateChart = props => {
       grid: {
         left: 50,
         right: 70,
-        bottom: 84,
+        bottom: type==1&&windowWidthFlag ? 24 :  80,
         top: 50,
       },
       series: [
@@ -334,7 +335,7 @@ const NumAndRateChart = props => {
         theme="my_theme"
       />
     );
-  }, [data, echarts]);
+  }, [data, echarts,windowWidth]);
 
   return (
     <Card title={title} size="small" bodyStyle={{ height: 310 }} loading={loading}>

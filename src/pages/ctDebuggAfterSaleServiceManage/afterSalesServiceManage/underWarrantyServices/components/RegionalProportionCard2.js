@@ -33,14 +33,14 @@ const RegionalProportionCard2 = props => {
   useEffect(() => {
     if (LargeRegionAnalysis.length && echarts2) {
       setTimeout(() => {
-        let myChart = echarts2?.current?.getEchartsInstance();
-        let echartsOption = echarts2?.current?.props;
-        myChart?.on('mouseover', function(params) {
-          chartMouseover(myChart, echartsOption, params);
-        });
-        myChart?.on('globalout', function(params) {
-          chartMouseout(myChart, echartsOption, params); // 修正取消高亮失败的 bug
-        });
+        // let myChart = echarts2?.current?.getEchartsInstance();
+        // let echartsOption = echarts2?.current?.props;
+        // myChart?.on('mouseover', function(params) {
+        //   chartMouseover(myChart, echartsOption, params);
+        // });
+        // myChart?.on('globalout', function(params) {
+        //   chartMouseout(myChart, echartsOption, params); // 修正取消高亮失败的 bug
+        // });
       }, 400);
     }
   }, [LargeRegionAnalysis, echarts2]);
@@ -62,8 +62,6 @@ const RegionalProportionCard2 = props => {
     // if (isAllZero) {
     //   m;
     // }
-
-    console.log('seriesData2', seriesData);
     let option = {
       color: [
         '#5CDC9F',
@@ -222,7 +220,7 @@ const RegionalProportionCard2 = props => {
         });
       }
     });
-    console.log('pie2dData', pie2dData)
+
     option.title = {
       text: '{name|总计}\n{val|' + count + '}',
       // top: 'center',
@@ -280,13 +278,7 @@ const RegionalProportionCard2 = props => {
       //需要label指引线的话
       name: 'pie2d',
       type: 'pie',
-      // avoidLabelOverlap: true,
-      // label: {
-      //   show: true,
-      //   position: 'outside',
-      //   // color: 'inherit', //继承饼图颜色
-      // },
-
+      hoverAnimation: false, // 取消悬浮效果
       label: {
         show: true,
         position: 'outside',
@@ -296,25 +288,18 @@ const RegionalProportionCard2 = props => {
         },
         opacity: 1,
         rich: {
-          // a: {
-          //   fontSize: 18,
-          //   padding: [18, 0, 0, 0],
-          // },
           b: {
             fontFamily: 'Source Han Sans CN',
             fontWeight: 500,
             fontSize: 14,
             color: '#999999',
             padding: [0, -90, 4,-90],
-            // padding: [18, 8, 0, 6],
           },
           c: {
             fontFamily: 'Microsoft YaHei',
             fontWeight: 500,
             fontSize: 13,
             padding: [4, -44,0,-44],
-            // padding: [10, -20, 0, -20],
-            // color: '#0055FE',
           },
         },
       },
@@ -324,13 +309,6 @@ const RegionalProportionCard2 = props => {
         color: 'inherit',
         lineStyle: {
           width: 2, // 引导线宽度
-          // normal: {
-          //   color: param => {
-          //     console.log('param', param);
-          //     // return color[param.dataIndex]
-          //     return 'red';
-          //   },
-          // },
         },
       },
       startAngle: -40, //起始角度，支持范围[0, 360]。

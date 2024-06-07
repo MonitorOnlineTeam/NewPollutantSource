@@ -9,7 +9,7 @@ const dvaPropsData = ({ loading }) => ({});
 const AuditModalPage = props => {
   const {
     dispatch,
-    data: { ID, ItemCode, CheckStatuTip, AuditStatuTip },
+    data: { ID, ProjectCode, ItemCode, CheckStatuTip, AuditStatuTip },
     isModalOpen,
     onCancel,
   } = props;
@@ -30,7 +30,7 @@ const AuditModalPage = props => {
 
   return (
     <Modal
-      title={`${ItemCode}-验收服务报告`}
+      title={`${ProjectCode || ItemCode}-验收服务报告`}
       wrapClassName="spreadOverModal"
       open={isModalOpen}
       destroyOnClose

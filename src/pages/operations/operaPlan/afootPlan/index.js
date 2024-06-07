@@ -111,7 +111,7 @@ const Index = (props) => {
             payload: { operationPlanInfoRefreshType: 1, operationPlanInfoRefreshId: record.ID },
         });
         setEntCode(record.entCode)
-        setPointType(record.pollutantType == '废气' ? 2 : 1)
+        setPointType(record.pollutantType == '废气' ? '2' : '1')
     }
 
     const [viewPlanVisible, setViewPlanVisible] = useState(false)
@@ -122,7 +122,7 @@ const Index = (props) => {
             type: `${namespace}/updateState`,
             payload: { operationPlanInfoRefreshId: record.ID },
         });
-        setPointType(record.pollutantType == '废气' ? 2 : 1)
+        setPointType(record.pollutantType == '废气' ? '2' : '1')
     }
 
     const delPlan = (record) => {
@@ -296,7 +296,7 @@ const Index = (props) => {
                     title={'编辑计划'}
                     onCancel={() => { setEditPlanVisible(false) }}
                     destroyOnClose
-                    wrapClassName={`spreadOverModal ${styles.formulateModalSty}`}
+                    wrapClassName={`spreadOverModal  ${styles.formulateModalSty}`}
                     mask={false}
                     footer={null}
                 >
@@ -336,7 +336,7 @@ const Index = (props) => {
                         </Row>
                     </Form>
                     <TitleComponents simpleSty text='运维计划内容' />
-                    <PlanList type={2} pointType={pointType} entCode={entCode} extensionPlan={extensionPlan} />
+                    <PlanList type={2} pointType={pointType} entCode={entCode} isEdit extensionPlan={extensionPlan} />
                 </Modal>
                 <AdjustExtendPlanModal
                     visible={extensVisible}

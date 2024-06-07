@@ -213,6 +213,7 @@ const Index = (props) => {
                         dataSource={planType==2? tableDatas2 : planType==3? tableDatas3 : tableDatas4 }
                         columns={columns}
                         align='center'
+                        scroll={{y:'calc(100vh - 346px)'}}
                         pagination={{
                             total: planType==2? tableTotal2 : planType==3? tableTotal3 : tableTotal4,
                             pageSize: pageSize,

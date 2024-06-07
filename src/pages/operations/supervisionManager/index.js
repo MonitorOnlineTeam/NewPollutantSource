@@ -192,6 +192,8 @@ const Index = (props) => {
 
   useEffect(() => {
     const buttonList = permissionButton(props.match.path)
+    console.log(buttonList)
+
     buttonList.map(item=>{
       switch (item){
         case 'editAuthority': setEditPermis(true); break;

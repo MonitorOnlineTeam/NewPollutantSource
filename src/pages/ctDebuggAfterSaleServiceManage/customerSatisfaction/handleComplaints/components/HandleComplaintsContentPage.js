@@ -290,6 +290,7 @@ const HandleComplaintsContentPage = props => {
         width: 150,
         ellipsis: true,
         render: (text, record) => {
+          const disFlag = record.StatusName === '已提交'
           return (
             <>
               {record.IsEidtOrDel && !isAll && (
@@ -297,6 +298,7 @@ const HandleComplaintsContentPage = props => {
                   <Tooltip title="编辑">
                     <a
                       onClick={() => {
+                        if(disFlag){return}
                         setCurrentID(record.ID);
                         setCurrentStatus(record.Status);
                         // onAddOrEdit(record.ID);
@@ -307,6 +309,7 @@ const HandleComplaintsContentPage = props => {
                         });
                         setAddOrEditModalOpen(true);
                       }}
+                      className={disFlag&&'disabled_a'}
                     >
                       <EditIcon />
                     </a>
@@ -334,8 +337,9 @@ const HandleComplaintsContentPage = props => {
                       onConfirm={() => onDelete(record.ID)}
                       okText="是"
                       cancelText="否"
+                      disabled={disFlag}
                     >
-                      <a>
+                      <a  className={disFlag&&'disabled_a'}>
                         <DelIcon />
                       </a>
                     </Popconfirm>

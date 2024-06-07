@@ -446,7 +446,7 @@ const Index = (props) => {
           }
         },
         axisLabel: {
-          rotate: 45, // 或者其他角度
+          rotate: 30, // 或者其他角度
           textStyle: {
             color: '#333'  // 修改 x 轴刻度文字的颜色
           }

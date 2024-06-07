@@ -69,6 +69,8 @@ const Index = (props) => {
     const [pageSize, setPageSize] = useState(20)
     const [formulateVisible, setFormulateVisible] = useState(false)
     const [formulateTitlt, setFormulateTitle] = useState('')
+    const [operationPlanInfoParList, setOperationPlanInfoParList] = useState() //生成计划需要传入的已经添加的监测点
+
     useEffect(() => {
         initData(pageIndex, pageSize);
     }, []);
@@ -119,11 +121,15 @@ const Index = (props) => {
         setFormulateTitle('编辑计划')
         setEditLoading(true)
         setProjectCode(record.projectCode)
+        const pollType  = record?.pollutantType == '废气'? '2' : '1' 
         props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanInfoRefreshId: record.ID } });
         props.dispatch({
             type: `${namespace}/GetOperationPlanInfo`,
             payload: {
-                ID: record.ID,
+                id: record.ID,
+                pollutantType:pollType,
+                // pageIndex:1,
+                // pageSize:20,
             },
             callback: (data) => {
                 setEditLoading(false)
@@ -134,11 +140,14 @@ const Index = (props) => {
                     })
                     setPointType(data.PollutantType);
                     setRecordType(data.PollutantType == 2 ? '1' : '7')
-                    props.dispatch({ type: `${namespace}/updateState`, payload: { xjPointList: data.xjList, jzPointList: data.jzList } });
+
+                    // props.dispatch({ type: `${namespace}/updateState`, payload: { xjPointList: data.xjList, jzPointList: data.jzList } });
 
                 }
             }
         });
+        getOperationPlanPointListRequest(record.entCode, pollType ,record.ID)
+
     }
     const delPlan = (record) => {
         props.dispatch({
@@ -184,7 +193,7 @@ const Index = (props) => {
     const [generateSubmitPlanLoading, setGenerateSubmitPlanLoading] = useState(false)
     const generateSubmitPlan = (type) => { //生成计划  提交计划
 
-        const resDataRequest = (par, pointIdList) => {
+        const resDataRequest = (par) => {
             props.dispatch({
                 type: `${namespace}/AddOperationPlan`,
                 payload: par,
@@ -199,23 +208,16 @@ const Index = (props) => {
                             payload: { operationPlanInfoRefreshType: 1 }
                         });
                         par?.data && getOperationPlanPointListRequest(par.data.entID, par.data.pollutantType, id)
-                        // const pointList = recordType == '1' || recordType == '7' ? xjPointList : jzPointList
-                        // const pointFilter = pointList.filter(obj => !pointIdList.includes(obj.PointCode));
-                        // if (recordType == '1' || recordType == '7') {
-                        //     props.dispatch({ type: `${namespace}/updateState`, payload: { xjPointList: pointFilter } });
-                        // } else {
-                        //     props.dispatch({ type: `${namespace}/updateState`, payload: { jzPointList: pointFilter } });
-                        // }
                         if (type == 2) {
                             setFormulateVisible(false)
                             props.dispatch({
                                 type: `${namespace}/updateState`,
                                 payload: { operationPlanInfoRefreshId: '' },
                             });
+                            setPageIndex(1)
+                            setPageSize(20)
+                            initData(1, 20);
                         }
-                        setPageIndex(1)
-                        setPageSize(20)
-                        initData(1, 20);
                     }
                 }
             });
@@ -225,18 +227,19 @@ const Index = (props) => {
             if (type == 1) { //生成计划
                 form2.validateFields().then((values2) => {
                     setGenerateSubmitPlanLoading(true)
-                    const addedPoint = operationPlanInfo?.[0] ? operationPlanInfo.map(item => ({ recordType: item.RecordType, intervalDays: item.IntervalDays, pointID: item.PointID, beginTime: item.BeginTime, endTime: item.EndTime })) : []
+                    const operationPlanData =  operationPlanInfoParList?.[0] ? operationPlanInfoParList : operationPlanInfo
+                    const addedPoint = operationPlanData?.[0] ? operationPlanData.map(item => ({ recordType: item.RecordType, intervalDays: item.IntervalDays, pointID: item.PointID, beginTime: item.BeginTime, endTime: item.EndTime })) : []
                     const addNewPoint = values2.pointID?.[0] ? values2.pointID.map(item => ({ recordType: recordType, ...values2, pointID: item, beginTime: values2.beginTime && moment(values2.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values2.endTime && moment(values2.endTime).format('YYYY-MM-DD 23:59:59') })) : []
                     const par = {
                         data: { commitStatus: type, id: operationPlanInfoRefreshId, ...values, beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59') },
                         list: [...addedPoint, ...addNewPoint],
                     }
-                    resDataRequest(par, values2.pointID)
+                    resDataRequest(par)
                 }).catch((errorInfo) => {
                     console.log('Failed:', errorInfo);
                 });
 
-            } else {
+            } else { //提交计划
                 if (!operationPlanInfo || operationPlanInfo?.length <= 0) {
                     message.error('请先生成计划')
                     return
@@ -246,8 +249,7 @@ const Index = (props) => {
                     data: { commitStatus: type, id: operationPlanInfoRefreshId, ...values, beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59') },
                     list: operationPlanInfo?.map(item => ({ id: item.ID, recordType: item.RecordType, pointID: item.PointID, intervalDays: item.IntervalDays, pointID: item.PointID, beginTime: item.BeginTime, endTime: item.EndTime })),
                 }
-                const pointIdList = operationPlanInfo?.map(item => item.PointID)
-                resDataRequest(par, pointIdList)
+                resDataRequest(par)
             }
         }).catch((errorInfo) => {
             console.log('Failed:', errorInfo);
@@ -524,11 +526,23 @@ const Index = (props) => {
                             pointType={pointType}
                             recordType={recordType}
                             entCode={form.getFieldValue('entID')}
+                            isEdit
                             delPlanCallback={() => {
                                 setCheckAll(false)
                                 setIndeterminate(false)
                                 const data = form.getFieldsValue();
                                 getOperationPlanPointListRequest(data?.entID, data?.pollutantType)
+                                props.dispatch({
+                                    type: `${namespace}/GetOperationPlanInfo`,
+                                    payload: {
+                                        pollutantType: pointType,
+                                        id: operationPlanInfoRefreshId,
+                                        type:'par',
+                                    },
+                                    callback: (data) => {
+                                        setOperationPlanInfoParList(data?.planInfoList)
+                                    }
+                                });
                             }} />
 
                     </Spin>

@@ -2,10 +2,11 @@ import 'echarts-gl';
 import { fomatFloat } from '@/utils/utils';
 //获取3d丙图的最高扇区的高度
 function getHeight3D(series, height, customVal) { //customVal 默认高度
-    series.sort((a, b) => {
+    let copySeriesData = series.slice();
+    copySeriesData.sort((a, b) => {
         return (b.pieData.value - a.pieData.value);
     })
-    return series[0].pieData.rate == 0 || series[0].pieData.value == customVal ? 50 : height * 25 / series[0].pieData.value;
+    return copySeriesData[0].pieData.rate == 0 || copySeriesData[0].pieData.value == customVal ? 50 : height * 25 / copySeriesData[0].pieData.value;
 }
 
 
@@ -89,7 +90,7 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
 
 let selectedIndex = -1;
 
-export function getPie3D(pieData, { internalDiameterRatio, customVal, legendOption, height, selection, defaultselection, defaultIndex }, viewControl) {
+export function getPie3D(pieData, { internalDiameterRatio, customVal, legendOption, height, selection, defaultselection, defaultIndex,positiveSequence }, viewControl) {
 
     //internalDiameterRatio:透明的空心占比
     let series = [];
@@ -100,6 +101,11 @@ export function getPie3D(pieData, { internalDiameterRatio, customVal, legendOpti
     let legendBfb = [];
     let k = 1 - internalDiameterRatio;
     selectedIndex = defaultIndex || defaultIndex == 0 ? defaultIndex : -1
+    positiveSequence?
+    pieData.sort((a, b) => {
+        return (a.value - b.value);
+    })
+    :
     pieData.sort((a, b) => {
         return (b.value - a.value);
     });

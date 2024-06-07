@@ -47,6 +47,19 @@ const Install = props => {
   const onDateChange = (date, dateString) => {
     setDate(date);
   };
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+  
+    useEffect(() => {
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
   return (
     <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
       <div className={styles.pageWrapper}>
@@ -56,15 +69,18 @@ const Install = props => {
             <YearDatePicker value={date} onChange={onDateChange} allowClear={false} />
           </Card>
           <Row gutter={8}>
-            <Col span={8}>
+            <Col  span={windowWidth>=1900? 8 : windowWidth>=1652? 6 : 24}>
               <NumAndRateChart
+                type={1}
                 title={`${date.format('YYYY年')}大区安装调试达标率`}
                 data={LargeRegionAnalysis}
                 fieldNames={{ title: 'LargeRegionName' }}
+                windowWidth={windowWidth}
               />
             </Col>
-            <Col span={16}>
+            <Col style={{paddingTop:windowWidth>=1652? 0 : 8}} span={windowWidth>=1900? 16 : windowWidth>=1652? 18 : 24}>
               <NumAndRateChart
+                type={2}
                 title={`${date.format('YYYY年')}产品类别安装调试达标率`}
                 data={CategoryAnalysis}
                 fieldNames={{ title: 'CategoryName' }}

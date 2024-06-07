@@ -63,7 +63,7 @@ const Work = props => {
   // 获取请求参数
   const getParams = values => {
     const beginTime = values.date
-      ? moment(values.date[0]).format('YYYY-MM-DD HH:mm:ss')
+      ? moment(values.date[0]).format('YYYY-MM-DD 00:00:00')
       : undefined;
     const endTime = values.date ? moment(values.date[1]).format('YYYY-MM-DD 23:59:59') : undefined;
 

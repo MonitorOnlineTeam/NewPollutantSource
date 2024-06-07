@@ -595,8 +595,8 @@ const Index = (props) => {
           <Form.Item name='investigationStatus' label='调查状态' >
             <Select placeholder='请选择' allowClear>
                <Option value={1}>待调查</Option>
-               <Option value={2}>调查结束</Option>
-               <Option value={3}>调查终止</Option>
+               <Option value={2}>调查终止</Option>
+               <Option value={3}>调查结束</Option>
              </Select>
           </Form.Item>
         </Col>

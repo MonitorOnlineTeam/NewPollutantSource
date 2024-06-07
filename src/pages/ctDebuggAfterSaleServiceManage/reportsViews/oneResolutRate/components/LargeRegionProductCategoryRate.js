@@ -35,6 +35,7 @@ const Index = props => {
     disposableRateList,
     loading,
     disposableDate,
+    windowWidth
   } = props;
 
   useEffect(() => { }, []);
@@ -55,6 +56,8 @@ const Index = props => {
       data2.push(item.notSolveCount)
       rate.push(item.rate)
     })
+
+    const windowWidthFlag = windowWidth<=1650&&windowWidth>=910
     return {
       legend: {
         data: [
@@ -103,7 +106,8 @@ const Index = props => {
           }
         },
         axisLabel: {
-          rotate: 45, // 或者其他角度
+          interval: 0,
+          rotate: type==2? 30 :  type==1&&windowWidthFlag ? 0 :  45, // 或者其他角度
           textStyle: {
             color: '#333'  // 修改 x 轴刻度文字的颜色
           }
@@ -150,8 +154,8 @@ const Index = props => {
       ],
       grid: {
         left: 50,
-        right: 70,
-        bottom: type==1? 80 : 120,
+        right: 50,
+        bottom: type==1&&windowWidthFlag ? 24 :  80,
         top: 40,
       },
       series: [
@@ -270,7 +274,7 @@ const Index = props => {
         theme="my_theme"
       />
     );
-  }, [disposableRateList, echarts]);
+  }, [disposableRateList, echarts,windowWidth]);
 
   return (
     <Card title={`${disposableDate && moment(disposableDate).format('YYYY年')}${type == 1 ? `大区` : '产品类别'}质保内服务一次解决率`} size="small" bodyStyle={{ height: 300 }} loading={loading}>

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Form, Modal, InputNumber } from 'antd';
 
-const dvaPropsData = ({ loading }) => ({});
+const dvaPropsData = ({ loading }) => ({
+  addProvinceManagementRulesLoading: loading.effects[`generalManager/AddProvinceManagementRules`],
+});
 
 const Setting = props => {
   const [form] = Form.useForm();
@@ -21,7 +23,7 @@ const Setting = props => {
       dispatch({
         type: 'generalManager/AddProvinceManagementRules',
         payload: {
-          id: data.ProvinceManagementRulesId || data.ID,
+          id: data.ProvinceManagementRulesId,
           Industry: data.Industry,
           CTOperation: data.CTOperation,
           LargeRegion: data.LargeRegion,
@@ -41,6 +43,7 @@ const Setting = props => {
       open={open}
       keyboard={false}
       destroyOnClose
+      confirmLoading={props.addProvinceManagementRulesLoading}
       onOk={() => {
         AddProvinceManagementRules();
       }}

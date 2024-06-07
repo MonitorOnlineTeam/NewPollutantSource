@@ -52,7 +52,8 @@ const Index = (props) => {
 
 
     const { entCode, pointLoading, operationPlanInfoRefreshId, operationPlanInfoRefreshType, operationPlanPointPar, type, pointType, xjPointList, jzPointList, queryPar, tableDatas, tableTotal, exportLoading, delOperationPlanPointLoading, updOperationPlanPointLoading } = props;
-
+    const [pageIndex, setPageIndex] = useState(1)
+    const [pageSize, setPageSize] = useState(20)
 
     const [planCalendarVisible, setPlanCalendarVisible] = useState(false)
 
@@ -208,9 +209,9 @@ const Index = (props) => {
                 beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
                 endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
                 time: undefined,
-                pageIndex: PageIndex,
-                pageSize: PageSize,
                 id: operationPlanInfoRefreshId,
+                // pageIndex: PageIndex,
+                // pageSize: PageSize,
             }
             setTableLoading(true)
             props.dispatch({
@@ -225,12 +226,10 @@ const Index = (props) => {
             });
         }
     }
-    const [pageIndex, setPageIndex] = useState(1)
-    const [pageSize, setPageSize] = useState(20)
     const handleTableChange = (PageIndex, PageSize) => { //分页
-        setPageSize(PageSize)
         setPageIndex(PageIndex)
-        // onFinish(PageIndex, PageSize, queryPar2)
+        setPageSize(PageSize)
+        // onFinish(PageIndex, PageSize, queryPar)
     }
 
     const exportData = () => {
@@ -337,7 +336,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns}
                 align='center'
-                scroll={{ x: 840, y: 'auto' }}
+                scroll={{ x: 840, y: props.isEdit? 'auto' : 'calc(100vh - 264px)' }}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,

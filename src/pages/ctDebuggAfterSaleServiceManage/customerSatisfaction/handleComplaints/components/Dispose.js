@@ -48,7 +48,7 @@ const Dispose = props => {
         id,
       },
       callback: res => {
-        setDetailsData(res);
+        setDetailsData(res || {});
       },
     });
   };

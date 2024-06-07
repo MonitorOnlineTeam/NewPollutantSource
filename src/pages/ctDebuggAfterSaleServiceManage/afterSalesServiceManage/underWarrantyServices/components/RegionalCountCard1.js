@@ -42,7 +42,6 @@ const RegionalCountCard1 = props => {
         // },
         trigger: 'axis',
         formatter: params => {
-          console.log('params', params);
           let content = `${params?.[0].name}<br />`;
           params?.[0]
             ? (content += `${params?.[0]?.marker} ${params?.[0]?.seriesName}：${params?.[0]?.value}次 <br />`)
@@ -76,7 +75,7 @@ const RegionalCountCard1 = props => {
           },
           axisLabel: {
             // interval: 0,
-            // rotate: 30,
+            rotate: 30,
             textStyle: {
               // fontSize: 14,
               color: '#333333',

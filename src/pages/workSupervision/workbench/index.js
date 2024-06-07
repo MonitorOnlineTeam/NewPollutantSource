@@ -85,8 +85,8 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
     false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
   workAlarmTotal: wordSupervision.workAlarmTotal,
-  contractLoading: wordSupervision.contractLoading  || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false, //旧
-  // contractLoading: wordSupervision.contractLoading,
+  // contractLoading: wordSupervision.contractLoading  || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false, //旧
+  contractLoading: wordSupervision.contractLoading,
   contractList: wordSupervision.contractList,
   standgaswaringList: wordSupervision.standgaswaringList,
   standgaswaringLoading: wordSupervision.standgaswaringLoading,
@@ -432,7 +432,6 @@ const Workbench = props => {
     } = todoItem;
 
     let taskName = TaskType === 1 ? '现场检查' : '回访客户';
-
     let content = (
       <div>
         {/* <Tag color="error">未达标</Tag> */}
@@ -456,7 +455,7 @@ const Workbench = props => {
                 </li>,
               <li>
                 <span>填写位置：</span>请跳转到
-                  <a href="/operations/siteInspector" target="_blank">
+                  <a  onClick={()=>{Modal.destroyAll();router.push('/operations/siteInspector');}}>
                   “监督核查/现场监督核查/系统设施核查”
                   </a>
                   页面中填写。
@@ -908,7 +907,9 @@ const Workbench = props => {
 
   const msgTypeTitle = {
     '2': '（遗留问题）',
+    '3': '（客户投诉）',
     '4': '（照片审核）',
+    '6': '（满意度调查）',
     '7': '（验收服务报告）',
   };
   return (
@@ -1059,8 +1060,9 @@ const Workbench = props => {
                                                   setInstallEquipmentData({
                                                     DispatchId: dataArr?.[0],
                                                     PointId: dataArr?.[1],
-                                                    Col1: dataArr?.[2],
-                                                    EquipmentAuditId: dataArr?.[3],
+                                                    EquipmentAuditId: dataArr?.[2],
+                                                    Col1: `${dataArr?.[3]}${dataArr?.[4]?`,${dataArr?.[4]}`:''}`,
+
                                                   });
                                                 }
                                               } else if (item.Type == 7) {
@@ -1228,7 +1230,7 @@ const Workbench = props => {
                                             className="textOverflow"
                                             title={item.Msg}
                                           >
-                                            {item.Type == 6 ? '（满意度调查）' : ''} {item.Msg}{' '}
+                                            {msgTypeTitle[item.Type]} {item.Msg}{' '}
                                           </Col>
                                           <Col></Col>
                                           <Col>{item.CreateTime}</Col>
@@ -1445,8 +1447,6 @@ const Workbench = props => {
                                               style={{ width: 'calc(100% - 186px)' }}
                                               className="textOverflow"
                                             >
-                                              {item.Msg}
-                                              {item.Msg}
                                               {item.Msg}
                                             </Col>
                                             <Col style={{ cursor: 'pointer' }}>

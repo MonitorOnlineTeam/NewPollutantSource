@@ -9,6 +9,76 @@ import { connect } from "dva";
 import difference from 'lodash/difference';
 import SdlTable from '@/components/SdlTable';
 
+
+
+const leftTableColumns = [
+    {
+        dataIndex: 'UserAccount',
+        title: '账号',
+        ellipsis: true,
+    },
+    {
+        dataIndex: 'UserName',
+        title: '名称',
+        ellipsis: true,
+    },
+];
+
+const rightTableColumns = [
+
+    ...leftTableColumns
+];
+const TableTransfer = ({ leftColumns, rightColumns, loading, scroll, bordered, pagination, ...restProps }) => (
+    <Transfer {...restProps}>
+        {({
+            direction,
+            filteredItems,
+            onItemSelectAll,
+            onItemSelect,
+            selectedKeys: listSelectedKeys,
+            disabled: listDisabled,
+        }) => {
+            const columns = direction === 'left' ? leftColumns : rightColumns;
+            const rowSelection = {
+                getCheckboxProps: (item) => ({
+                    disabled: listDisabled || item.disabled,
+                }),
+                onSelectAll(selected, selectedRows) {
+                    const treeSelectedKeys = selectedRows
+                        .filter((item) => !item.disabled)
+                        .map(({ key }) => key);
+                    const diffKeys = selected
+                        ? difference(treeSelectedKeys, listSelectedKeys)
+                        : difference(listSelectedKeys, treeSelectedKeys);
+                    onItemSelectAll(diffKeys, selected);
+                },
+                onSelect({ key }, selected) {
+                    onItemSelect(key, selected);
+                },
+                selectedRowKeys: listSelectedKeys,
+            };
+            return (
+                <Table
+                    rowSelection={rowSelection}
+                    columns={columns}
+                    dataSource={filteredItems}
+                    size="small"
+                    scroll={{ y: 'calc(100vh - 420px)' }}
+                    style={{ pointerEvents: listDisabled ? 'none' : null, paddingBottom: 10 }}
+                    onRow={({ key, disabled: itemDisabled }) => ({
+                        onClick: () => {
+                            if (itemDisabled || listDisabled) return;
+                            onItemSelect(key, !listSelectedKeys.includes(key));
+                        },
+                    })}
+                    pagination={{
+                        defaultPageSize: 20,
+                    }}
+                />
+            );
+        }}
+    </Transfer>
+);
 const dvaPropsData = ({ loading, global, common }) => ({
     clientHeight: global.clientHeight,
     inspectorUserList: common.inspectorUserList,
@@ -68,7 +138,6 @@ const Index = (props) => {
 
     const [targetUserKeys, setTargetUserKeys] = useState()
     const userChange = (nextTargetKeys, direction, moveKeys) => {
-        console.log(nextTargetKeys, direction, moveKeys)
         setTargetUserKeys(nextTargetKeys)
         props.addSetUser({
             userIdList: moveKeys,
@@ -76,75 +145,6 @@ const Index = (props) => {
             type: type,
         })
     }
-    const leftTableColumns = [
-        {
-            dataIndex: 'UserAccount',
-            title: '账号',
-            ellipsis: true,
-        },
-        {
-            dataIndex: 'UserName',
-            title: '名称',
-            ellipsis: true,
-        },
-    ];
-
-    const rightTableColumns = [
-
-        ...leftTableColumns
-    ];
-    const TableTransfer = ({ leftColumns, rightColumns, loading, scroll, bordered, pagination, ...restProps }) => (
-        <Transfer {...restProps}>
-            {({
-                direction,
-                filteredItems,
-                onItemSelectAll,
-                onItemSelect,
-                selectedKeys: listSelectedKeys,
-                disabled: listDisabled,
-            }) => {
-                const columns = direction === 'left' ? leftColumns : rightColumns;
-                const rowSelection = {
-                    getCheckboxProps: (item) => ({
-                        disabled: listDisabled || item.disabled,
-                    }),
-                    onSelectAll(selected, selectedRows) {
-                        const treeSelectedKeys = selectedRows
-                            .filter((item) => !item.disabled)
-                            .map(({ key }) => key);
-                        const diffKeys = selected
-                            ? difference(treeSelectedKeys, listSelectedKeys)
-                            : difference(listSelectedKeys, treeSelectedKeys);
-                        onItemSelectAll(diffKeys, selected);
-                    },
-                    onSelect({ key }, selected) {
-                        onItemSelect(key, selected);
-                    },
-                    selectedRowKeys: listSelectedKeys,
-                };
-                return (
-                    <Table
-                        rowSelection={rowSelection}
-                        columns={columns}
-                        dataSource={filteredItems}
-                        size="small"
-                        scroll={{ y: 'calc(100vh - 420px)' }}
-                        style={{ pointerEvents: listDisabled ? 'none' : null, paddingBottom: 10 }}
-                        onRow={({ key, disabled: itemDisabled }) => ({
-                            onClick: () => {
-                                if (itemDisabled || listDisabled) return;
-                                onItemSelect(key, !listSelectedKeys.includes(key));
-                            },
-                        })}
-                        pagination={{
-                            defaultPageSize: 20,
-                        }}
-                    />
-                );
-            }}
-        </Transfer>
-    );
-
 
     return <>
         <Button type="primary" style={{ marginRight: 4, ...props.btnSty }}

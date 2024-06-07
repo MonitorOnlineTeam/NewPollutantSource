@@ -85,19 +85,21 @@ const ProductProportionCard4 = props => {
     let copyData = tempData.slice();
 
     // 根据 TimeRate 进行降序排序
-    copyData.sort((a, b) => b.TimeRate - a.TimeRate);
-
     // 获取前四个元素
     let topFour = copyData.splice(0, 4);
 
     // 计算前四个元素的 TimeRate 总和
     let topFourTotal = topFour.reduce((sum, current) => sum + current.TimeRate, 0);
 
+      // 获取其他元素
+      let otherData = copyData;
+      // 计算前其他元素的 TimeRate 总和
+      let otherTotalData = otherData.reduce((sum, current) => sum + current.Times, 0);
     // 创建 '其他' 元素, 如果所有数据都为0，'其他' 选项的 TimeRate 也应为0
     let other = {
       ReasonName: '其他',
-      Times: 0,
-      TimeRate: topFourTotal === 0 ? 0 : 100 - topFourTotal,
+      Times: otherTotalData,
+      TimeRate: topFourTotal === 0 ? 0 : (100 - topFourTotal).toFixed(2),
       Num: 0,
       NumRate: 0,
     };
@@ -129,6 +131,12 @@ const ProductProportionCard4 = props => {
         top: 'middle',
         right: '10%',
         icon: 'circle',
+        formatter: name => {
+          const item = seriesData.find(i => {
+            return i.name === name;
+          });
+          return name + '   ' + (item?.value || '0.00') + '%';
+        },
       },
       angleAxis: {
         max: 100,
@@ -195,6 +203,7 @@ const ProductProportionCard4 = props => {
       internalDiameterRatio: 0.8,
       customVal: customVal,
       legendOption: { show: false },
+      positiveSequence : true
     });
 
     let pie2dData = [];
@@ -218,7 +227,7 @@ const ProductProportionCard4 = props => {
       viewControl: {
         //3d效果可以放大、旋转等，请自己去查看官方配置
         alpha: 30, //角度
-        distance: 150, //调整视角到主体的距离，类似调整zoom
+        distance: 170, //调整视角到主体的距离，类似调整zoom
         rotateSensitivity: 0, //设置为0无法旋转
         zoomSensitivity: 0, //设置为0无法缩放
         panSensitivity: 0, //设置为0无法平移
@@ -240,7 +249,6 @@ const ProductProportionCard4 = props => {
       //   },
       // },
     };
-
     option.legend = {
       orient: 'vertical',
       top: 'middle',
@@ -249,6 +257,12 @@ const ProductProportionCard4 = props => {
       itemWidth: 12,
       itemHeight: 12,
       itemGap: 14,
+      formatter: name => {  
+        const item = seriesData.find(i => {
+          return i.name === name;
+        });
+        return name + '   ' + (item?.rate || '0.00') + '%';
+      },
     };
 
     option.tooltip = {

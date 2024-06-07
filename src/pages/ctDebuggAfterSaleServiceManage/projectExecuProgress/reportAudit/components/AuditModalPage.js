@@ -218,7 +218,7 @@ const AuditModalPage = props => {
       <div style={{ display: stepCurrent === 2 ? 'block' : 'none' }}>
         <Result
           status="success"
-          title={<span style={{ fontSize: 18 }}>操作完成，已推送消息给服务工程师进行整改!</span>}
+          title={<span style={{ fontSize: 18 }}>操作完成</span>}
           extra={[
             <Button type="primary" onClick={() => onResult()}>
               完成
