@@ -394,6 +394,9 @@ const HandleComplaintsContentPage = props => {
             resolutionStatus: null,
           }}
           autoComplete="off"
+          labelCol={{
+            flex:'110px'
+          }}
           // wrapperCol={{
           //   flex: 1,
           // }}

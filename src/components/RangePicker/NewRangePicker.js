@@ -10,6 +10,39 @@ const { RangePicker } = DatePicker;
 
 const currentYear = moment().year();// 获取当前年份
 const startOfWeek = moment().clone().startOf('isoWeek'); // 获取本周的第一天（周一）
+
+
+
+
+const commonRanges = {
+
+    本月: [moment().startOf('month'), moment()],
+    上月: [moment().add(-1, 'M').startOf('month'), moment().add(-1, 'M').endOf('month')],
+    近三月: [moment().subtract(2, 'months').startOf('month'), moment()],
+    一季度: [moment(`${currentYear}-01-01`).startOf('quarter'), moment(`${currentYear}-03-31`).endOf('quarter')],
+    二季度: [moment(`${currentYear}-04-01`).startOf('quarter'), moment(`${currentYear}-06-30`).endOf('quarter')],
+    三季度: [moment(`${currentYear}-07-01`).startOf('quarter'), moment(`${currentYear}-09-30`).endOf('quarter')],
+    四季度: [moment(`${currentYear}-10-01`).startOf('quarter'), moment(`${currentYear}-12-31`).endOf('quarter')],
+    近半年: [moment().subtract(6, 'months').startOf('month'), moment()],
+    今年: [moment().startOf('year'),  moment()],
+    去年: [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')],
+    前年: [moment().subtract(2, 'years').startOf('year'),  moment().subtract(2, 'years').endOf('year')],
+    近一年: [moment().subtract(1, 'year').startOf('year'),moment()],
+    近二年: [moment().subtract(2, 'years').startOf('year'),moment()],
+    近三年: [ moment().subtract(3, 'years').startOf('year'), moment()],
+}
+
+const ranges = {
+    今天: [moment().startOf('day'), moment()],
+    昨天: [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+    本周: [startOfWeek.subtract(startOfWeek.isoWeekday() - 1, 'days'), moment().clone().endOf('isoWeek')],
+    上周: [startOfWeek.clone().subtract(1, 'week'), startOfWeek.clone().subtract(1, 'day')],
+    连续七天: [moment().add(-6, 'd'), moment()],
+    ...commonRanges
+}
+const monthRanges = {
+    ...commonRanges
+}
 class NewRangePicker extends Component {
     constructor(props) {
         super(props);
@@ -18,27 +51,7 @@ class NewRangePicker extends Component {
             showTime: this.props.showTime && { format: this.props.showTime.format || 'HH:mm:ss' },
             dateFormat: this.props.format || 'YYYY-MM-DD HH:mm:ss',
             dateValue: this.getDefault(),
-            ranges: {
-                今天: [moment().startOf('day'), moment()],
-                昨天: [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-                本周: [startOfWeek.subtract(startOfWeek.isoWeekday() - 1, 'days'), moment().clone().endOf('isoWeek')],
-                上周: [startOfWeek.clone().subtract(1, 'week'), startOfWeek.clone().subtract(1, 'day')],
-                连续七天: [moment().add(-6, 'd'), moment()],
-                本月: [moment().startOf('month'), moment()],
-                上月: [moment().add(-1, 'M').startOf('month'), moment().add(-1, 'M').endOf('month')],
-                近三月: [moment().subtract(2, 'months').startOf('month'), moment()],
-                一季度: [moment(`${currentYear}-01-01`).startOf('quarter'), moment(`${currentYear}-03-31`).endOf('quarter')],
-                二季度: [moment(`${currentYear}-04-01`).startOf('quarter'), moment(`${currentYear}-06-30`).endOf('quarter')],
-                三季度: [moment(`${currentYear}-07-01`).startOf('quarter'), moment(`${currentYear}-09-30`).endOf('quarter')],
-                四季度: [moment(`${currentYear}-10-01`).startOf('quarter'), moment(`${currentYear}-12-31`).endOf('quarter')],
-                近半年: [moment().subtract(6, 'months').startOf('month'), moment()],
-                今年: [moment().startOf('year'),  moment()],
-                去年: [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')],
-                前年: [moment().subtract(2, 'years').startOf('year'),  moment().subtract(2, 'years').endOf('year')],
-                近一年: [moment().subtract(1, 'year').startOf('year'),moment()],
-                近二年: [moment().subtract(2, 'years').startOf('year'),moment()],
-                近三年: [ moment().subtract(3, 'years').startOf('year'), moment()],
-            },
+            ranges: this.props.picker=="month"? monthRanges : ranges,
             // style: {
             //     width: (this.props.style && (this.props.style.width || 300)) || 250,
             //     marginLeft: 5,
