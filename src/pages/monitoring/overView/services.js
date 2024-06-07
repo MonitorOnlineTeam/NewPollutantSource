@@ -128,7 +128,7 @@ export async function getRealTimeDataView(params) {
 
 // 根据行政区获取企业列表
 export async function getEntByRegion(params) {
-  const result = post(API.RegionApi.GetEntByRegion, { regionCode: params.RegionCode }, null);
+  const result = post(API.CommonApi.GetEntByRegion, { regionCode: params.RegionCode }, null);
   return result;
 }
 

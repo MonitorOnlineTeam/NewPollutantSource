@@ -440,7 +440,7 @@ class index extends PureComponent {
         dataIndex: 'CityName',
         key: 'CityName',
         align: 'center',
-        width: 140,
+        width: 100,
         ellipsis: true,
         fixed: fixed,
       },
@@ -473,7 +473,7 @@ class index extends PureComponent {
       },
       {
         title: '停运开始时间',
-        width: 200,
+        width: 180,
         align: 'center',
         fixed: fixed,
         dataIndex: 'beginTime',
@@ -482,7 +482,7 @@ class index extends PureComponent {
       },
       {
         title: '停运截止时间',
-        width: 200,
+        width: 180,
         align: 'center',
         fixed: fixed,
         dataIndex: 'endTime',
@@ -491,7 +491,7 @@ class index extends PureComponent {
       },
       {
         title: '停运时长（小时）',
-        width: 200,
+        width: 150,
         align: 'center',
         fixed: fixed,
         dataIndex: 'stopHour',
@@ -500,7 +500,7 @@ class index extends PureComponent {
       },
       {
         title: '停运描述',
-        width: 240,
+        width: 200,
         align: 'left',
         fixed: fixed,
         dataIndex: 'remark',
@@ -542,7 +542,7 @@ class index extends PureComponent {
       },
       {
         title: '创建时间',
-        width: 200,
+        width: 180,
         align: 'center',
         ellipsis: true,
         fixed: fixed,
@@ -588,7 +588,7 @@ class index extends PureComponent {
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
-          <BreadcrumbWrapper title="停运记录" hideBreadcrumb={this.props.hideBreadcrumb}>
+          <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
             <Card
               extra={
                 <>

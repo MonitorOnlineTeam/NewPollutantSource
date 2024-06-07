@@ -62,7 +62,7 @@ export async function getUnitList(params) {
 }
 // 获取所有企业
 export async function getAllEnterprise(params) {
-  const result = await post(API.RegionApi.GetEntByRegion, params, null);
+  const result = await post(API.CommonApi.GetEntByRegion, params, null);
   return result;
 }
 // 获取监测数据对比分析

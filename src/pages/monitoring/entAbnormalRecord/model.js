@@ -11,9 +11,8 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportExceptionReported,
-  GetEmissionsEntPointPollutant
+  GetEmissionsEntPointPollutant,
 } from './service';
-
 
 import moment from 'moment';
 import { message } from 'antd';
@@ -22,76 +21,75 @@ export default Model.extend({
   state: {
     exloading: false,
     loading: true,
-    Entloading:false,
+    Entloading: false,
     queryPar: {
-      ExceptionBBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      ExceptionBBtime: moment()
+        .subtract(1, 'month')
+        .format('YYYY-MM-DD 00:00:00'),
       ExceptionBEtime: moment().format('YYYY-MM-DD 23:59:59'),
-      ExceptionEBtime:'',
+      ExceptionEBtime: '',
       ExceptionEEtime: '',
-      DGIMN: "",
-      RegionCode: "",
-      EntCode: "",
-      Status: ""
+      DGIMN: '',
+      RegionCode: '',
+      EntCode: '',
+      Status: '',
     },
-    entQueryPar: {  },
-    entNumQueryPar: { },
-    regQueryPar: { },
+    entQueryPar: {},
+    entNumQueryPar: {},
+    regQueryPar: {},
     workNumQueryPar: {},
-    pointName:'COD',
+    pointName: 'COD',
     tableDatas: [],
     total: '',
-    attentionList:[],
+    attentionList: [],
     priseList: [],
-    chartExport:[],
-    chartImport:[],
-    chartTime:[],
-    entName:'',
-    Regionloading:false,
-    EntNumloading:false,
-    EntNameloading:false,
-    TaskNumsloading:false,
-    EntList:[],
-    PointList:[],
-    parmarType:'RegionCode',
-    entTableDatas:[],
-    nextData:{}
+    chartExport: [],
+    chartImport: [],
+    chartTime: [],
+    entName: '',
+    Regionloading: false,
+    EntNumloading: false,
+    EntNameloading: false,
+    TaskNumsloading: false,
+    EntList: [],
+    PointList: [],
+    parmarType: 'RegionCode',
+    entTableDatas: [],
+    nextData: {},
   },
   subscriptions: {},
   effects: {
-    
-    *getExceptionReportedList({callback, payload }, { call, put, update, select }) {
+    *getExceptionReportedList({ callback, payload }, { call, put, update, select }) {
       //企业异常记录查询 列表
       yield update({
-          loading:true  
+        loading: true,
       });
-       const response = yield call(GetExceptionReportedList, { ...payload });
+      const response = yield call(GetExceptionReportedList, { ...payload });
       if (response.IsSuccess) {
-          yield update({
-            tableDatas:response.Datas,
-            loading:false  
-          });
-        callback(response.Datas)
-      }else{
-      
-        yield update({ loading:false }); 
+        yield update({
+          tableDatas: response.Datas,
+          loading: false,
+        });
+        callback(response.Datas);
+      } else {
+        yield update({ loading: false });
       }
     },
-    *getExceptionReportedView({callback, payload }, { call, put, update, select }) {
+    *getExceptionReportedView({ callback, payload }, { call, put, update, select }) {
       //企业异常记录查询 详情
 
-       const response = yield call(GetExceptionReportedView, { ...payload });
-       yield update({
-        Entloading:true  
+      const response = yield call(GetExceptionReportedView, { ...payload });
+      yield update({
+        Entloading: true,
       });
       if (response.IsSuccess) {
-          yield update({
-            entTableDatas:response.Datas,
-            Entloading:false  
-          });
-        callback(response.Datas)
-      }else{
-      
-        yield update({ Entloading:false }); 
+        yield update({
+          entTableDatas: response.Datas,
+          Entloading: false,
+        });
+        callback(response.Datas);
+      } else {
+        yield update({ Entloading: false });
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
@@ -103,18 +101,18 @@ export default Model.extend({
         });
       }
     },
-    *getEntByRegion({ callback,payload }, { call, put, update, select }) {
-      const { queryPar }  = yield select(state => state.removalFlowRate);
+    *getEntByRegion({ callback, payload }, { call, put, update, select }) {
+      const { queryPar } = yield select(state => state.removalFlowRate);
       //获取所有污水处理厂
       const response = yield call(GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
         yield update({
           priseList: response.Datas,
         });
-        callback(response.Datas[0].EntCode)
+        callback(response.Datas[0].EntCode);
       }
     },
-    *exportExceptionReported({callback, payload }, { call, put, update, select }) {
+    *exportExceptionReported({ callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
       //导出
       const response = yield call(ExportExceptionReported, { ...payload });
@@ -127,7 +125,5 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-
-
   },
 });

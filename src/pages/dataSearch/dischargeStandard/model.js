@@ -1,60 +1,54 @@
-/*
- * @Description:
- * @LastEditors: hxf
- * @Date: 2020-10-15 16:19:00
- * @LastEditTime: 2020-10-22 15:15:06
- * @FilePath: /NewPollutantSource/src/pages/dataSearch/abnormalStandard/model.js
- */
 /**
  * 功  能：排放标准
- * 创建人：贾安波
+ * 创建人：jab
  * 创建时间：2020.10.10
  */
 
 import Model from '@/utils/model';
 import {
-  GetExceptionStandValue,
+  GetDischargeStandValue,
   GetEntByRegion,
   GetAttentionDegreeList,
-  ExportExceptionStandValue,
+  ExportDischargeStandValue,
 } from './service';
-import moment from 'moment';
+import moment from 'moment';                                                                                                                                                                                                                  
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'abnormalStandard',
+  namespace: 'standardData',
   state: {
     exloading: false,
     loading: true,
     queryPar: {
-      PollutantCode: '',
+      PollutantCode:'',
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantType: '1',
+      PollutantType:'1',
+      PageIndex:1,
+      PageSize:20,
     },
-    pointName: '',
-    tableDatas: [],
-    column: [],
+    pointName:'',
+    disTableDatas: [],
     total: '',
-    attentionList: [],
+    attentionList:[],
     priseList: [],
-    chartExport: [],
-    chartImport: [],
-    chartTime: [],
+    chartExport:[],
+    chartImport:[],
+    chartTime:[]
   },
   subscriptions: {},
   effects: {
-    *getExceptionStandValue({ payload }, { call, put, update, select }) {
-      //列表  异常标准
+    *getDischargeStandValue({ payload,callback }, { call, put, update, select }) {
+      //列表  排放标准
       yield update({ loading: true });
-      const response = yield call(GetExceptionStandValue, { ...payload });
+      const response = yield call(GetDischargeStandValue, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          tableDatas: response.Datas.data,
-          column: response.Datas.column,
+          disTableDatas: response.Datas.data,
           total: response.Total,
-          loading: false,
+          loading: false
         });
+        callback&&callback(response.Datas?.column)
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
@@ -66,8 +60,8 @@ export default Model.extend({
         });
       }
     },
-    *getEntByRegion({ payload }, { call, put, update, select }) {
-      const { queryPar } = yield select(state => state.abnormalStandard);
+    *getEntByRegion({payload }, { call, put, update, select }) {
+      const { queryPar }  = yield select(state => state.standardData);
       //获取所有企业列表
       const response = yield call(GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
@@ -76,10 +70,10 @@ export default Model.extend({
         });
       }
     },
-    *exportExceptionStandValue({ callback, payload }, { call, put, update, select }) {
+    *exportDischargeStandValue({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出 异常
-      const response = yield call(ExportExceptionStandValue, { ...payload });
+      //导出 标准
+      const response = yield call(ExportDischargeStandValue, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);
@@ -89,5 +83,7 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
+
+
   },
 });

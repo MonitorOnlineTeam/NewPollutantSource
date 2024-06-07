@@ -6,9 +6,6 @@ import { Modal, DatePicker, Row, Col, Select, Input, Upload, message } from "ant
 import { connect } from "dva"
 import cuid from 'cuid';
 import moment from 'moment'
-import {  API } from '@config/API';
-import Cookie from 'js-cookie';
-import config from '@/config';
 
 
 const FormItem = Form.Item;
@@ -85,8 +82,8 @@ class AddExceptionModal extends PureComponent {
             Attachments: this.state.cuid,
             ExceptionType: values.ExceptionType.toString(),
             PollutantCodes: values.PollutantCodes.toString(),
-            ExceptionBeginTime: values.ExceptionBeginTime ? moment(values.ExceptionBeginTime).format("YYYY-MM-DD HH:mm:ss") : undefined,
-            ExceptionEndTime: values.ExceptionEndTime ? moment(values.ExceptionEndTime).format("YYYY-MM-DD HH:mm:ss") : undefined,
+            ExceptionBeginTime: values.ExceptionBeginTime ? moment(values.ExceptionBeginTime).format("YYYY-MM-DD HH:00:00") : undefined,
+            ExceptionEndTime: values.ExceptionEndTime ? moment(values.ExceptionEndTime).format("YYYY-MM-DD HH:00:00") : undefined,
           },
           callback: () => {
             this.props.onSuccess && this.props.onSuccess()
@@ -111,17 +108,14 @@ class AddExceptionModal extends PureComponent {
     const { form: { getFieldDecorator, getFieldValue }, pollutantListByDgimn, addExceptionModalVisible, id, loading, exceptionReportedData } = this.props;
     const { cuid, fileList } = this.state;
     const props = {
-      action: API.UploadApi.UploadFiles,
-      headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
+      action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       onChange: (info) => {
-        console.log(info)
         let fileList = info.fileList;
         if (info.file.status === 'done') {
           this.props.form.setFieldsValue({ Attachments: cuid })
-          fileList[fileList.length - 1].url = `/` + fileList[fileList.length - 1].response.Datas?.fNameList
-          fileList[fileList.length - 1].thumbUrl = `/` + fileList[fileList.length - 1].response.Datas?.fNameList
+          fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas
           // delete fileList[fileList.length - 1].thumbUrl
-          console.log(fileList)
         } else if (info.file.status === 'error') {
           message.error('上传文件失败！')
         }

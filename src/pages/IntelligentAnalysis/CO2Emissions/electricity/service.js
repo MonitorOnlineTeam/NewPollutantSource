@@ -5,7 +5,7 @@ import { API } from '@config/API'
 // 获取所有企业
 export async function getAllEnterprise(params) {
   // const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntList', params, null);
-  const result = await post(API.RegionApi.GetEntByRegion, params, null);
+  const result = await post(API.CommonApi.GetEntByRegion, params, null);
   return result;
 }
 //

@@ -75,7 +75,7 @@ export async function ExportExceptionDataRate(params) {
 //根据行政区获取 污水处理厂
 
 export async function GetEntByRegion(params) {
-  const result = post(API.RegionApi.GetEntByRegion, params);
+  const result = post(API.CommonApi.GetEntByRegion, params);
   return result;
 }
  //污水处理厂流量分析

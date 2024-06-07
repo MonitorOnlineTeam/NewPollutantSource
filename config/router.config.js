@@ -908,23 +908,6 @@ const routes = [
                 path: '/platformconfig/emissionEnt',
                 component: './platformManager/emissionEnt/',
               },
-              {
-                name: 'dischargeStandard',
-                //排放标准
-                path: '/platformconfig/dischargeStandard',
-                component: './monitoring/dischargeStandard',
-              },
-              {
-                name: 'abnormalStandard', //异常标准
-                path: '/platformconfig/abnormalStandard',
-                component: './monitoring/abnormalStandard',
-              },
-              //停运记录
-              {
-                name: 'stopRecord',
-                path: '/platformconfig/stopRecord',
-                component: './monitoring/StopRecord/stopRecord',
-              },
             ],
           },
           {
@@ -1488,10 +1471,10 @@ const routes = [
                 name: 'alarmInfo',
                 path: '/monitoring/alarmInfo',
                 routes: [
-                  {
-                    path: '/monitoring/alarmInfo',
-                    redirect: '/monitoring/alarmInfo/exceptionrecord',
-                  },
+                  // {
+                  //   path: '/monitoring/alarmInfo',
+                  //   redirect: '/monitoring/alarmInfo/exceptionrecord',
+                  // },
                   // {
                   //   //缺失数据报警  企业
                   //   name: 'missingData',
@@ -1541,23 +1524,23 @@ const routes = [
                     path: '/monitoring/alarmInfo/exceedDataAlarmOnlyQuery',
                     component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm_onlyQuery',
                   },
-                  {
-                    //异常报警响应查询
-                    name: 'exceptionrecord',
-                    path: '/monitoring/alarmInfo/exceptionrecord',
-                    component: './monitoring/alarmInfo/exceptionrecordNew',
-                  },
-                  {
-                    //异常报警查询
-                    name: 'exceptionrecordOnlyQuery',
-                    path: '/monitoring/alarmInfo/exceptionrecordOnlyQuery',
-                    component: './monitoring/alarmInfo/exceptionrecordNew/OnlyQuery',
-                  },
-                  {
-                    name: 'exceptionrecordDetails',
-                    path: '/monitoring/alarmInfo/exceptionrecord/details',
-                    component: './monitoring/alarmInfo/exceptionrecordNew/RegionDetails',
-                  },
+                  // {
+                  //   //异常报警响应查询
+                  //   name: 'exceptionrecord',
+                  //   path: '/monitoring/alarmInfo/exceptionrecord',
+                  //   component: './monitoring/alarmInfo/exceptionrecordNew',
+                  // },
+                  // {
+                  //   //异常报警查询
+                  //   name: 'exceptionrecordOnlyQuery',
+                  //   path: '/monitoring/alarmInfo/exceptionrecordOnlyQuery',
+                  //   component: './monitoring/alarmInfo/exceptionrecordNew/OnlyQuery',
+                  // },
+                  // {
+                  //   name: 'exceptionrecordDetails',
+                  //   path: '/monitoring/alarmInfo/exceptionrecord/details',
+                  //   component: './monitoring/alarmInfo/exceptionrecordNew/RegionDetails',
+                  // },
                   {
                     //超标报警处置查询
                     name: 'exceedDataDispositionRecord',
@@ -1567,12 +1550,7 @@ const routes = [
                   },
                 ],
               },
-              // 企业异常记录
-              {
-                name: 'entAbnormalRecord',
-                path: '/monitoring/entAbnormalRecord',
-                component: './monitoring/entAbnormalRecord',
-              },
+
               // {
               //   name: 'exceptionrecord',
               //   path: '/monitoring/exceptionrecord',
@@ -1598,26 +1576,27 @@ const routes = [
               //   path: '/abnormaRecall/abnormalDataAnalysis', ///异常数据分析 重定向
               //   redirect: '/dataSearch/exceedData',
               // },
-              // {
-              //   name: 'exceptionrecord',
-              //   path:
-              //     '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
-              //   // component: './monitoring/exceptionrecord',
-              //   component: './monitoring/exceptionrecordNew',
-              // },
-              // {
-              //   name: 'exceptionrecordCity', //异常数据报警 城市级页面
-              //   path:
-              //     '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/cityLevel',
-              //   component: './monitoring/exceptionrecordNew/cityLevel',
-              // },
-
-              // {
-              //   name: 'exceptionrecordDetails',
-              //   path:
-              //     '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details',
-              //   component: './monitoring/exceptionrecordNew/RegionDetails',
-              // },
+              // 异常报警响应查询
+              {
+                name: 'exceptionrecord',
+                path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord',
+                // component: './monitoring/exceptionrecord',
+                component: './monitoring/alarmInfo/exceptionrecordNew',
+              },
+              // 异常报警响应查询 - 行政区
+              {
+                name: 'exceptionrecordCity', //异常数据报警 城市级页面
+                path:
+                  '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/cityLevel',
+                component: './monitoring/alarmInfo/exceptionrecordNew/cityLevel',
+              },
+              // 异常报警响应查询 - 市
+              {
+                name: 'exceptionrecordDetails',
+                path:
+                  '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details',
+                component: './monitoring/alarmInfo/exceptionrecordNew/RegionDetails',
+              },
 
               {
                 //缺失数据报警  企业
@@ -1989,6 +1968,11 @@ const routes = [
                     // 数据异常报警响应率
                     path: '/Intelligentanalysis/dataAlarm/abnormal',
                     component: './IntelligentAnalysis/dataAlarm/abnormalResRate',
+                  },
+                  {
+                    // 数据异常报警响应率 城市级别
+                    path: '/Intelligentanalysis/dataAlarm/abnormal/cityLevel',
+                    component: './IntelligentAnalysis/dataAlarm/abnormalResRate/CityLevel',
                   },
                   {
                     // 数据异常报警响应率 详情
@@ -2489,6 +2473,29 @@ const routes = [
                 //超标数据查询
                 path: '/dataSearch/exceedData',
                 component: './dataSearch/exceedData',
+              },
+              //停运记录
+              {
+                name: 'stopRecord',
+                path: '/dataSearch/stopRecord',
+                component: './monitoring/StopRecord/stopRecord',
+              },
+              // 企业异常记录
+              {
+                name: 'entAbnormalRecord',
+                path: '/dataSearch/entAbnormalRecord',
+                component: './monitoring/entAbnormalRecord',
+              },
+              {
+                name: 'dischargeStandard',
+                //排放标准
+                path: '/dataSearch/dischargeStandard',
+                component: './dataSearch/dischargeStandard',
+              },
+              {
+                name: 'abnormalStandard', //异常标准
+                path: '/dataSearch/abnormalStandard',
+                component: './dataSearch/abnormalStandard',
               },
               {
                 // 质控查询

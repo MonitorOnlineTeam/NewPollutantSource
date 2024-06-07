@@ -56,6 +56,6 @@ export async function ExportDefectDataSummary(params) {
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
-  const result = post(API.RegionApi.GetEntByRegion, params);
+  const result = post(API.CommonApi.GetEntByRegion, params);
   return result;
 }

@@ -9,7 +9,7 @@ export async function getAttentionDegreeList(params) {
 
 // 根据行政区查询企业
 export async function getEntByRegion(params) {
-  const result = post(API.RegionApi.GetEntByRegion, params);
+  const result = post(API.CommonApi.GetEntByRegion, params);
   return result;
 }
 

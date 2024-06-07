@@ -43,7 +43,7 @@ export async function exportSecond(params) {
 
 // 根据行政区查询企业
 export async function getEntByRegion(params) {
-  const result = post(API.RegionApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
+  const result = post(API.CommonApi.GetEntByRegion,{regionCode:params.RegionCode},  null)
   return result;
 }
 

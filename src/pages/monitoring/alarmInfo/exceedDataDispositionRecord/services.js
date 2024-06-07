@@ -8,7 +8,7 @@ import { API } from '@config/API'
 import { async } from 'q';
 //企业
 export async function GetEntByRegion(params) {
-    const result = post(API.RegionApi.GetEntByRegion, params);
+    const result = post(API.CommonApi.GetEntByRegion, params);
     return result
 }
 //超标报警处置

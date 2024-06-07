@@ -118,7 +118,8 @@ export const API = {
     UploadFiles: before + '/UploadApi/UploadFiles',
     // 根据企业Code获取监测点信息
     GetPointByEntCode: before + '/MonitorPointApi/GetPointByEntCode',
-
+    // 根据行政区查询企业
+    GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',
     GetNoFilterEntList: before + '/EnterpriseApi/GetNoFilterEntList', //获取无权限过滤的企业信息
 
     GetPollutantTypeMonitoringCategoryInfo:
@@ -157,8 +158,7 @@ export const API = {
   RegionApi: {
     // 获取行政区详细信息及层级关系
     GetRegionInfoByTree: before + '/RegionApi/GetRegionInfoByTree',
-    // 根据行政区查询企业
-    GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',
+
     // 行政区企业或监测点详情
     GetEntOrPointDetail: before + '/EnterpriseApi/GetEntOrPointDetail',
     // 根据行政区和关注程度查询企业
@@ -181,14 +181,6 @@ export const API = {
     ExportEmissionEnt: before + '/EnterpriseApi/ExportEmissionEnt',
     // 企业排放量设置参与不参与
     UpdateEntFlag: before + '/EnterpriseApi/UpdateEntFlag',
-
-    // 排放标准查询
-    GetDischargeStandValue: before + '/MonitorPointApi/GetDischargeStandValue',
-
-    // 异常标准查询
-    GetExceptionStandValue: before + '/MonitorPointApi/GetExceptionStandValue',
-    // 异常标准导出
-    ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue',
 
     // 待选监测点列表
     GetEmissionEntAndPoint: before + '/MonitorPointApi/GetEmissionEntAndPoint',
@@ -952,6 +944,11 @@ export const API = {
 
   //智能诊断Api
   IntelligentDiagnosisApi: {
+    /*异常数据上报*/
+    GetExceptionReportList: before + '/ExceptionApi/GetExceptionReportList', //获取异常数据上报信息、企业异常记录
+    AddOrUpdateExceptionReportInfo: before + '/ExceptionApi/AddOrUpdateExceptionReportInfo', //添加更新异常数据上报信息
+    DeleteExceptionReportInfo: before + '/ExceptionApi/DeleteExceptionReportInfo', //删除异常数据上报信息
+    GetExceptionReportedById: before + '/ExceptionDataApi/GetExceptionReportedById', //获取异常数据上报详情
     /*异常数据分析*/
     GetExceptionList: before + '/ExceptionDataApi/GetExceptionList', //获取省级、市级异常数据信息
     ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList', //导出省级、市级异常数据信息
@@ -959,10 +956,15 @@ export const API = {
     // ExportExceptionCityList: before + '/ExceptionDataApi/ExportExceptionCityList',//导出市级异常数据信息
     GetExceptionPointList: before + '/ExceptionDataApi/GetExceptionPointList', //获取监测点异常数据信息
     ExportExceptionPointList: before + '/ExceptionDataApi/ExportExceptionPointList', //获取监测点异常数据信息
-
+    /*排放标准记录*/
+    GetDischargeStandValue: before + '/MonitorPointApi/GetDischargeStandValue', //获取排放标准记录
+    ExportDischargeStandValue: before + '/MonitorPointApi/ExportDischargeStandValue', //导出排放标准记录
     /*缺失数据分析*/
     GetMissDataList: before + '/ExceptionDataApi/GetMissDataList', //获取缺失数据分析信息
     ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList', //导出缺失数据分析信息
+    /*异常标准记录*/
+    GetExceptionStandValue: before + '/MonitorPointApi/GetExceptionStandValue', //获取异常标准记录
+    ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue', //导出异常标准记录
   },
   // 电力Api
   ElectricEnergyApi: {
@@ -1203,8 +1205,6 @@ export const API = {
     ExportExceptionPointList: before + '/ExceptionDataApi/ExportExceptionPointList',
     // 异常数据查询导出-师一级
     ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList',
-    // 缺失数据导出
-    ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList',
     // 导出超标数据
     ExportOverDataList: before + '/OverDataApi/ExportOverDataList',
     // 导出超标次数
@@ -1266,8 +1266,6 @@ export const API = {
     ExportAlarmVerifyRate: before + '/OverAlarmApi/ExportAlarmVerifyRate',
     // 缺失数据导出
     ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList',
-    // 导出排放标准
-    ExportDischargeStandValue: before + '/MonitorPointApi/ExportDischargeStandValue',
     // 超标分析报表导出
     ExportOverDataAnalysisList: before + '/OverDataApi/ExportOverDataAnalysisList',
     // 超标报警核实详细导出

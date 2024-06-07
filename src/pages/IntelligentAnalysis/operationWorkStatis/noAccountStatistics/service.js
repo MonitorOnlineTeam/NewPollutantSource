@@ -37,6 +37,6 @@ export async function ExportTaskFormBookSta(params) {
 //根据行政区获取 污水处理厂
 
 export async function GetEntByRegion(params) {
-  const result = post(API.RegionApi.GetEntByRegion, params);
+  const result = post(API.CommonApi.GetEntByRegion, params);
   return result;
 }

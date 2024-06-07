@@ -24,7 +24,7 @@ export async function GetExceedNum(params) {
 }
 //企业
 export async function GetEntByRegion(params) {
-  const result = post(API.RegionApi.GetEntByRegion, { regionCode: params.RegionCode }, null);
+  const result = post(API.CommonApi.GetEntByRegion, { regionCode: params.RegionCode }, null);
   return result;
 }
 //导出超标数据

@@ -23,7 +23,6 @@ import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import AttachmentView from '@/components/AttachmentView'
 import AddExceptionModal from './AddExceptionModal'
 import TableText from '@/components/TableText'
-import { uploadPrefix } from '@/config'
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -81,11 +80,11 @@ class Test extends PureComponent {
             let dataSource = fileInfo.map(item => {
               return {
                 name: item,
-                attach: `${uploadPrefix}/${item}`
+                attach: `/upload/${item}`
               }
             })
             return (
-              <AttachmentView dataSource={dataSource} noSlashPrefix/>
+              <AttachmentView dataSource={dataSource} />
             )
           }
         },
@@ -122,7 +121,7 @@ class Test extends PureComponent {
                   }}
                   okText="是"
                   cancelText="否">
-                  <a ><DelIcon /></a>
+                  <a href="#"><DelIcon /></a>
                 </Popconfirm>
               </Tooltip>
             </>
@@ -208,7 +207,7 @@ class Test extends PureComponent {
                   {getFieldDecorator('DataType', {
                     // initialValue: ["HourData"]
                   })(
-                    <Select mode="multiple" allowClear style={{ width: 314 }} placeholder="请选择异常数据类型">
+                    <Select mode="multiple" allowClear style={{ width: 220 }} placeholder="请选择异常数据类型">
                       <Option key="HourData" value="HourData">小时数据</Option>
                       <Option key="DayData" value="DayData">日均数据</Option>
                     </Select>
