@@ -131,7 +131,7 @@ const ProductCountCard3 = props => {
             name: '服务次数（次）',
             nameTextStyle: {
               color: '#333333',
-              padding: [0, 80, 0, 0],
+              padding: [0, type==1? 86 : 100, 0, 0],
               fontWeight: 500,
             },
             nameLocation: 'start',
@@ -198,7 +198,7 @@ const ProductCountCard3 = props => {
             name: '工作时长（小时）',
             nameTextStyle: {
               color: '#333333',
-              padding: [0, 0, 0, 80],
+              padding: [0, 0, 0, type==1? 86 : 100],
               fontWeight: 500,
             },
             nameLocation: 'start',

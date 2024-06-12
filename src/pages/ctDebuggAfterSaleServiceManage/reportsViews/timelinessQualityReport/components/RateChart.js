@@ -44,6 +44,7 @@ const RateChart = props => {
     return {
       legend: {},
       tooltip: {},
+      color:['#399FF5','#95de64','#2BE5A1'],
       xAxis: {
         type: 'category',
         data: xAxisData,

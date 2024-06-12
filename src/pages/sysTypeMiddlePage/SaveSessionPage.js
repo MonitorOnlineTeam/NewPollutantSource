@@ -18,6 +18,15 @@ class SaveSessionPage extends PureComponent {
     sessionStorage.setItem("sysPollutantCodes", sysInfo.CodeList);
     sessionStorage.setItem("sysName", sysInfo.Name);
     this.getMenuList(sysInfo.ID);
+    // if(){
+    //   dispatch({
+    //     type: 'global/updateState',
+    //     payload: {
+    //       clientHeight: document.body.clientHeight,
+    //     },
+    //   })
+  
+    // }
   }
 
   // 获取菜单

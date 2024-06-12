@@ -74,7 +74,13 @@ const Model = {
             if (payload.redirctUrl) { //大屏
               router.push(payload.redirctUrl);
             } else {
-              router.push(defaultNavigateUrl);
+              // if (configInfo.IsShowSysPage === '1') {
+              //   router.push('/sysTypeMiddlePage');
+              // } else {
+              //   sessionStorage.setItem('sysMenuId', sysList.id);
+              //   router.push(defaultNavigateUrl);
+              // }
+               router.push(defaultNavigateUrl);
             }
             //生成菜单数组保存 清空路由和路由权限使用
             function getMeun(meun) {

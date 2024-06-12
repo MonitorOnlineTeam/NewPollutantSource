@@ -60,6 +60,10 @@ const Install = props => {
         window.removeEventListener('resize', handleResize);
       };
     }, []);
+  // const maxWidth = 1900
+  // const minWidth = 1652
+  const maxWidth = 2100
+  const minWidth = 1950
   return (
     <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
       <div className={styles.pageWrapper}>
@@ -69,16 +73,17 @@ const Install = props => {
             <YearDatePicker value={date} onChange={onDateChange} allowClear={false} />
           </Card>
           <Row gutter={8}>
-            <Col  span={windowWidth>=1900? 8 : windowWidth>=1652? 6 : 24}>
+            <Col  span={windowWidth>=maxWidth? 8 : windowWidth>=minWidth? 6 : 24}>
               <NumAndRateChart
                 type={1}
                 title={`${date.format('YYYY年')}大区安装调试达标率`}
                 data={LargeRegionAnalysis}
                 fieldNames={{ title: 'LargeRegionName' }}
                 windowWidth={windowWidth}
+                minWidth={minWidth}
               />
             </Col>
-            <Col style={{paddingTop:windowWidth>=1652? 0 : 8}} span={windowWidth>=1900? 16 : windowWidth>=1652? 18 : 24}>
+            <Col style={{paddingTop:windowWidth>=minWidth? 0 : 8}} span={windowWidth>=maxWidth? 16 : windowWidth>=minWidth? 18 : 24}>
               <NumAndRateChart
                 type={2}
                 title={`${date.format('YYYY年')}产品类别安装调试达标率`}

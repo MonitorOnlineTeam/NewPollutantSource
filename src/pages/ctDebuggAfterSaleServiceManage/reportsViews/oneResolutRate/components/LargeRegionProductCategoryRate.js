@@ -41,9 +41,9 @@ const Index = props => {
   useEffect(() => { }, []);
 
   const getOption = () => {
-    const lineColor = '#F6A821'
-    const barColor1 = { color1: '#83FFD2', color2: '#2BE5A1' }
-    const barColor2 = { color1: '#89C9FF', color2: '#399FF5' }
+    const lineColor = '#2BE5A1'
+    const barColor1 = { color1: '#399FF5', color2: '#399FF5' }
+    const barColor2 = { color1: '#faad14', color2: '#faad14' }
 
     let xAxisData = [];
     let data1 = [];
@@ -57,7 +57,7 @@ const Index = props => {
       rate.push(item.rate)
     })
 
-    const windowWidthFlag = windowWidth<=1650&&windowWidth>=910
+    const windowWidthFlag = windowWidth<=props.minWidth&&windowWidth>=910
     return {
       legend: {
         data: [

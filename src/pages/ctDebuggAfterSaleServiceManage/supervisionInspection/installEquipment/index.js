@@ -377,9 +377,9 @@ const Index = props => {
           setPageSize(20);
           onFinish(1, 20);
         }}
-        initialValues={{
-          time: props.defaultTime || [moment().startOf('month'), moment()],
-        }}
+        // initialValues={{
+        //   time: props.defaultTime || [moment().startOf('month'), moment()],
+        // }}
       >
         <Row align="middle">
           <Col span={8}>

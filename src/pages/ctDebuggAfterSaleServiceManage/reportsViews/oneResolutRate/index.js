@@ -65,6 +65,10 @@ const Index = props => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+  // const maxWidth = 1900
+  // const minWidth = 1650
+  const maxWidth = 2100
+  const minWidth = 1950
   return (
     <BreadcrumbWrapper>
       <div className={styles.pageWrapper}>
@@ -74,10 +78,10 @@ const Index = props => {
             <YearDatePicker value={date} onChange={onDateChange}/>
           </Card>
           <Row gutter={8}>
-            <Col span={windowWidth>=1900? 8 : windowWidth>=1650? 6 : 24}>
-              <LargeRegionProductCategoryRate type={1} windowWidth={windowWidth}/>
+            <Col span={windowWidth>=maxWidth? 8 : windowWidth>=minWidth? 6 : 24}>
+              <LargeRegionProductCategoryRate type={1} windowWidth={windowWidth} minWidth={minWidth}/>
             </Col>
-            <Col style={{paddingTop:windowWidth>=1650? 0 : 8}} span={windowWidth>=1900? 16 : windowWidth>=1650? 18 : 24}>
+            <Col style={{paddingTop:windowWidth>=minWidth? 0 : 8}} span={windowWidth>=maxWidth? 16 : windowWidth>=minWidth? 18 : 24}>
               <LargeRegionProductCategoryRate type={2} />
             </Col>
           </Row>

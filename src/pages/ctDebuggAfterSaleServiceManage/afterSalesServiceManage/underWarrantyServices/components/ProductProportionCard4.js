@@ -26,11 +26,11 @@ const ProductProportionCard4 = props => {
     title,
     loading,
     underWarrantyServicesData: { WarrantyAnalysis },
+    windowWidth
     // timeoutServicesData: { TimeoutReasonAnalysis },
   } = props;
-
+  const legendTextWidth = 110;
   useEffect(() => {}, []);
-
   useEffect(() => {
     if (WarrantyAnalysis.length && echarts3D) {
       setTimeout(() => {
@@ -129,14 +129,28 @@ const ProductProportionCard4 = props => {
       legend: {
         orient: 'vertical',
         top: 'middle',
-        right: '10%',
+        right: 4,
         icon: 'circle',
+        triggerEvent: true,
+        tooltip: { 
+          show: true,
+          trigger: 'item',
+        },
         formatter: name => {
           const item = seriesData.find(i => {
             return i.name === name;
           });
-          return name + '   ' + (item?.value || '0.00') + '%';
+          return (
+            "{name|" + name + "} " + "{b|" + item?.value + "%}"
+          );
         },
+        textStyle: {
+          rich: {
+            name: {
+              width: legendTextWidth,
+            },
+          }
+        }
       },
       angleAxis: {
         max: 100,
@@ -147,8 +161,8 @@ const ProductProportionCard4 = props => {
           name: '产品类别占比',
           type: 'pie',
           // radius: [50, 250],
-          radius: ['60%', '88%'],
-          center: ['30%', '50%'],
+          radius: windowWidth<=1600 && windowWidth>1515 ? ['50%', '78%'] : windowWidth<=1515? ['37%', '56%'] : ['60%', '88%'],
+          center: ['25%','50%'],
           itemStyle: {
             borderRadius: 6,
             borderColor: '#fff',
@@ -220,14 +234,14 @@ const ProductProportionCard4 = props => {
 
     option.grid3D = {
       show: false,
-      boxHeight: 30, //圆环的高度
+      boxHeight: 15, //圆环的高度
       width: '100%',
       top: '-6%',
-      left: '-20%',
+      left: '-25%',
       viewControl: {
         //3d效果可以放大、旋转等，请自己去查看官方配置
         alpha: 30, //角度
-        distance: 170, //调整视角到主体的距离，类似调整zoom
+        distance: windowWidth<=1600 && windowWidth>1515? 190 : windowWidth<=1515? 220 : 175,//调整视角到主体的距离，类似调整zoom
         rotateSensitivity: 0, //设置为0无法旋转
         zoomSensitivity: 0, //设置为0无法缩放
         panSensitivity: 0, //设置为0无法平移
@@ -252,17 +266,31 @@ const ProductProportionCard4 = props => {
     option.legend = {
       orient: 'vertical',
       top: 'middle',
-      right: '10%',
+      right: 4,
       icon: 'circle',
       itemWidth: 12,
       itemHeight: 12,
       itemGap: 14,
+      triggerEvent: true,
+      tooltip: { 
+        show: true,
+        trigger: 'item',
+      },
       formatter: name => {  
         const item = seriesData.find(i => {
           return i.name === name;
         });
-        return name + '   ' + (item?.rate || '0.00') + '%';
+        return (
+          "{name|" + name + "} " + "{b|" + item?.rate + "%}"
+        );
       },
+      textStyle: {
+        rich: {
+          name: {
+            width: legendTextWidth,
+          },
+        }
+      }
     };
 
     option.tooltip = {
@@ -299,7 +327,7 @@ const ProductProportionCard4 = props => {
         theme="my_theme"
       />
     );
-  }, [WarrantyAnalysis, echarts]);
+  }, [WarrantyAnalysis, echarts, windowWidth]);
 
   return (
     <Card title={title} size="small" bodyStyle={{ height: 640, paddingTop: 4 }} loading={loading}>

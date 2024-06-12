@@ -23,17 +23,15 @@ const NumAndRateChart = props => {
   useEffect(() => {}, []);
 
   const getOption = () => {
-    const lineColor = '#F6A821';
-    const barColor1 = { color1: '#83FFD2', color2: '#2BE5A1' };
-    const barColor2 = { color1: '#89C9FF', color2: '#399FF5' };
-
+    const lineColor = '#2BE5A1'
     const color = [
-      ['#2BE5A1', '#83FFD2'],
-      ['#faad14', '#ffe58f'],
-      ['#ff4d4f', '#ffccc7'],
-      ['#c7c6c6', '#d9d9d9'],
+      ['#399FF5', '#399FF5'],
+      ['#95de64', '#95de64'],
+      ['#ff4d4f', '#ff4d4f'],
+      ['#d9d9d9', '#d9d9d9'],
     ];
-
+    // const barColor1 = { color1: '#399FF5', color2: '#399FF5' }
+    // const barColor2 = { color1: '#faad14', color2: '#faad14' }
     let xAxisData = [];
     let Excellent = [], // 优秀
       Qualified = [], // 合格
@@ -48,7 +46,7 @@ const NumAndRateChart = props => {
       NoPhotos.push(item.NoPhotos);
       rate.push(item.Rate);
     });
-    const windowWidthFlag = windowWidth<=1652&&windowWidth>=910
+    const windowWidthFlag = windowWidth<=props.minWidth&&windowWidth>=910
     return {
       legend: {},
       tooltip: {},

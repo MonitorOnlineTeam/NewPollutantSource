@@ -63,7 +63,18 @@ const UnderWarrantyServices = props => {
   const onTypeChange = e => {
     setType(e.target.value);
   };
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   return (
     <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
       <div className={styles.pageWrapper}>
@@ -106,7 +117,7 @@ const UnderWarrantyServices = props => {
               />
             </Col>
             <Col span={7}>
-              <ProductProportionCard4 title={type === 1 ? '产品类别占比' : '服务原因占比'} />
+              <ProductProportionCard4 title={type === 1 ? '产品类别占比' : '服务原因占比'} windowWidth={windowWidth}/>
             </Col>
           </Row>
           <Row>

@@ -1059,7 +1059,9 @@ class RoleIndex extends Component {
                                     <TreeTransferSingle
                                         key="key"
                                         titles={['待设置角色', '已设置角色']}
-                                        treeData={copyObjectArrayTreeAndRenameProperty(this.props.RoleInfoTree, 'Roles_Name', 'title')}
+                                        // treeData={copyObjectArrayTreeAndRenameProperty(this.props.RoleInfoTree, 'Roles_Name', 'title')}
+                                        treeData = {this.props.RoleInfoTree}
+                                        fieldNames={{ title: 'Roles_Name'}}
                                         checkedKeys={this.props.setRegOrAppRoleId}
                                         targetKeysChange={(key, type, callback) => {
                                             this.settingRoleOk(key, type == 1 ? 1 : 2, callback)
