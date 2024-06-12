@@ -1,0 +1,38 @@
+
+.formulateModalSty :global{ //制定计划弹框
+    #advanced_search_formulate .ant-col-12{
+        flex: 0 0 calc(50% - 6px);
+    }
+    #advanced_search_plancontent_form{ //运维计划内容
+        .pointItemSty{
+          .ant-checkbox-wrapper:nth-child(1){
+            margin-left: calc(168px + 16px);
+          }
+          .ant-form-item{
+            margin-bottom: 0;
+          }
+          .ant-form-item-control-input{
+            align-items: flex-start;
+          }
+          .ant-form-item-label{
+             & > label{
+             height: auto;
+           }
+          }
+        }
+        .ant-checkbox-group-item{
+            margin-right: 12px;
+        }
+        .ant-checkbox-group{
+         .ant-checkbox + span{
+            width: 168px;
+            display: inline-block;
+         }
+         .ant-checkbox-wrapper + .ant-checkbox-wrapper{
+            margin: 0;
+         }
+      }
+        
+     }
+}    
+

@@ -224,7 +224,7 @@ export async function DeleteUserDepApprove(params) {
 // 获取省区
 export async function GetAllProvince(params) {
   const result = post(
-    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/GetAllProvince',
+    '/rest/PollutantSourceApi/DailyWorkBaseApi/GetAllProvince',
     params,
     null,
   );
@@ -233,7 +233,7 @@ export async function GetAllProvince(params) {
 // 添加/编辑大区经理或省区经理
 export async function InsOrUpdProvinceOrRegional(params) {
   const result = post(
-    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/InsOrUpdProvinceOrRegional',
+    '/rest/PollutantSourceApi/DailyWorkBaseApi/InsOrUpdProvinceOrRegional',
     params,
     null,
   );
@@ -242,7 +242,7 @@ export async function InsOrUpdProvinceOrRegional(params) {
 // 获取大区下的所有经理详情
 export async function GetProvinceOrRegionalList(params) {
   const result = post(
-    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/GetProvinceOrRegionalList',
+    '/rest/PollutantSourceApi/DailyWorkBaseApi/GetProvinceOrRegionalList',
     params,
     null,
   );
@@ -251,7 +251,7 @@ export async function GetProvinceOrRegionalList(params) {
 // 删除大区或省区经理
 export async function DeleteProvinceOrRegionalOne(params) {
   const result = post(
-    '/newApi/rest/PollutantSourceApi/DailyWorkBaseApi/DeleteProvinceOrRegionalOne',
+    '/rest/PollutantSourceApi/DailyWorkBaseApi/DeleteProvinceOrRegionalOne',
     params,
     null,
   );

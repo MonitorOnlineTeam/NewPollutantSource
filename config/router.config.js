@@ -400,6 +400,11 @@ const routes = [
             path: '/home',
             component: './newHome',
           },
+          {
+            name: 'newestHome',
+            path: '/newestHome',
+            component: './newestHome',
+          },
           // 空气质量分析
           {
             path: '/airQualityAnalysis',
@@ -2959,6 +2964,7 @@ const routes = [
               },
             ],
           },
+          
           //动态管控
           {
             path: '/dynamicControl',
@@ -3351,7 +3357,137 @@ const routes = [
               },
             ],
           },
+
+    /*********** 运维*************** */
+   // 日常工作监管
+   {
+    path: '/workSupervision',
+    name: 'workSupervision',
+    routes: [
+      {
+        // 工作台
+        name: 'Standby',
+        path: '/workSupervision/workbench',
+        component: './workSupervision/workbench',
+      },
+      // 通用管理
+      {
+        name: 'management',
+        path: '/workSupervision/management',
+        routes: [
+          {
+            // 备机管理
+            name: 'Standby',
+            path: '/workSupervision/management/Standby',
+            component: './workSupervision/management/standby/Standby',
+          },
+          {
+            // 备机借用
+            name: 'StandbyBorrow',
+            path: '/workSupervision/management/StandbyBorrow',
+            component: './workSupervision/management/standby/StandbyBorrow',
+          },
+          {
+            // 便携设备管理
+            name: 'Portable',
+            path: '/workSupervision/management/Portable',
+            component: './workSupervision/management/Portable',
+          },
+          {
+            // 便携设备借用
+            name: 'PortableBorrow',
+            path: '/workSupervision/management/PortableBorrow',
+            component: './workSupervision/management/Portable/PortableBorrow',
+          },
+          {
+            // 办事处管理
+            name: 'Office',
+            path: '/workSupervision/management/Office',
+            component: './workSupervision/management/office',
+          },
         ],
+      },
+      // 任务单提交记录查询
+      {
+        name: 'taskRecordQuery',
+        path: '/workSupervision/taskRecordQuery/:type',
+        component: './workSupervision/taskRecordQuery',
+      },
+      // 日常监管统计
+      {
+        name: 'statistics',
+        path: '/workSupervision/statistics',
+        component: './workSupervision/statistics',
+      },
+      {
+        // 经理日常管理
+        path: '/workSupervision/dailyManagement',
+        name: 'dailyManagement',
+        routes: [
+          {
+            // 办事处管理
+            name: 'officeCheck',
+            path: '/workSupervision/dailyManagement/officeCheck',
+            component: './workSupervision/dailyManagement/officeCheck',
+          },
+          {
+            // 客户现场回访
+            name: 'customerReturnVisit',
+            path: '/workSupervision/dailyManagement/customerReturnVisit/:systemType',
+            component: './workSupervision/dailyManagement/customerReturnVisit',
+          },
+          {
+            // 部门内其他工作
+            name: 'innerOtherWork',
+            path:
+              '/workSupervision/dailyManagement/innerOtherWork/:WorkType/:CTOperation',
+            component: './workSupervision/dailyManagement/work',
+          },
+          {
+            // 现场工作
+            name: 'fieldWork',
+            path: '/workSupervision/dailyManagement/fieldWork/:WorkType/:CTOperation',
+            component: './workSupervision/dailyManagement/work',
+          },
+          {
+            // 支持其他部门工作
+            name: 'otherDepartmentWork',
+            path:
+              '/workSupervision/dailyManagement/otherDepartmentWork/:WorkType/:CTOperation',
+            component: './workSupervision/dailyManagement/work',
+          },
+          {
+            // 人员培训
+            name: 'training',
+            path: '/workSupervision/dailyManagement/training/:type',
+            component: './workSupervision/dailyManagement/training',
+          },
+          {
+            // 现场检查
+            name: 'fieldCheck',
+            path: '/workSupervision/dailyManagement/fieldCheck',
+            component: './workSupervision/dailyManagement/fieldCheck',
+          },
+          {
+            // 账款催收
+            name: 'fieldCheck',
+            path: '/workSupervision/dailyManagement/collections',
+            component: './workSupervision/dailyManagement/collections',
+          },
+          {
+            // 纪律检查
+            name: 'disciplineCheck',
+            path: '/workSupervision/dailyManagement/disciplineCheck/:systemType',
+            component:
+              './workSupervision/dailyManagement/disciplineCheck',
+          },
+        ],
+      },
+    ],
+  },
+
+        ],
+        
       },
       {
         component: '404',

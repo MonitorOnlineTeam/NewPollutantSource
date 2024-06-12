@@ -1081,6 +1081,7 @@ class EmergencyDetailInfo extends Component {
                     visible={this.state.processRecordVisible}
                     destroyOnClose
                     wrapClassName='spreadOverModal'
+                    mask={false}
                     footer={null}
                     onCancel={() => {
                         this.setState({ processRecordVisible: false })

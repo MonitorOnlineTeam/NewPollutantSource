@@ -108,6 +108,7 @@ const Index = (props) => {
         destroyOnClose
         // width='70%'
         wrapClassName='spreadOverModal'
+        mask={false}
         footer={null}
       >
         <QueDetail match={{ params: { id: id } }} /> {/*兼容移动端  */}

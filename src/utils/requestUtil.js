@@ -72,6 +72,13 @@ const errorHandler = error => {
 /**
  * 配置request请求时的默认参数
  */
+if (window.location.search && window.location.search.split('=')) {
+  //小程序和移动端 电子表单 token
+  if (window.location.search.split('=')[0] && window.location.search.split('=')[0] === '?Ticket') {
+    const mobileToken = window.location.search.split('=')[1];
+    Cookie.set(configToken.cookieName, mobileToken);
+  }
+}
 const request = extend({
   errorHandler,
   // timeout: 30000,

@@ -125,8 +125,8 @@ export function formatPollutantPopover(value, additional) {
   ) : value === 0 ? (
     0
   ) : (
-    '-'
-  );
+        '-'
+      );
 }
 export function asc(a, b) {
   //数字类型
@@ -338,8 +338,8 @@ export function interceptTwo(value) {
     data.indexOf('.') == -1
       ? `${value.toFixed(2)}`
       : data.split('.')[1].length <= 2
-      ? `${value.toFixed(2)}`
-      : data.substring(0, data.indexOf('.') + 3);
+        ? `${value.toFixed(2)}`
+        : data.substring(0, data.indexOf('.') + 3);
   return result;
 }
 
@@ -364,16 +364,16 @@ export function isInsidePolygon(lng, lat, poly) {
     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
       ((poly[i].lng <= lng && lng < poly[j].lng) || (poly[j].lng <= lng && lng < poly[i].lng)) &&
         lat <
-          ((poly[j].lat - poly[i].lat) * (lng - poly[i].lng)) / (poly[j].lng - poly[i].lng) +
-            poly[i].lat &&
+        ((poly[j].lat - poly[i].lat) * (lng - poly[i].lng)) / (poly[j].lng - poly[i].lng) +
+        poly[i].lat &&
         (c = !c);
     return c;
   } else {
     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
       ((poly[i][0] <= lng && lng < poly[j][0]) || (poly[j][0] <= lng && lng < poly[i][0])) &&
         lat <
-          ((poly[j][1] - poly[i][1]) * (lng - poly[i][0])) / (poly[j][0] - poly[i][0]) +
-            poly[i][1] &&
+        ((poly[j][1] - poly[i][1]) * (lng - poly[i][0])) / (poly[j][0] - poly[i][0]) +
+        poly[i][1] &&
         (c = !c);
     return c;
   }
@@ -500,7 +500,7 @@ export function numVerify(val, callback) {
 
 export function arrDistinctByProp(arr, prop) {
   //对象数组去重
-  return arr.filter(function(item, index, self) {
+  return arr.filter(function (item, index, self) {
     return self.findIndex(el => el[prop] == item[prop]) === index;
   });
 }
@@ -517,7 +517,22 @@ export function getSysName(systemName) {
   }
   return sysName[-1];
 }
-
+import { post, get } from '@/utils/request';
+export async function requestPost(url, params) {
+  return post(url, params)
+    .then(res => {
+      if (res.IsSuccess) {
+        return res;
+      } else {
+        message.error(res.Message);
+        return false;
+      }
+    })
+    .catch(error => {
+      console['error'](error);
+      return error;
+    });
+}
 export function getCurrentUserId() {
   // 获取当前登录人id
   let currentUserId = '';
@@ -753,55 +768,25 @@ export function permissionButton(router) {
   }
 }
 
-export function copyObjectArrayTreeAndRenameProperty(arr, oldPropertyName, newPropertyName) {
-  // 创建一个新的数组来存储复制后的对象
-  const newArr = [];
-
-  // 遍历原数组
-  for (let i = 0; i < arr.length; i++) {
-    // 复制当前对象，并递归复制其子数组
-    const newObj = { ...arr[i] };
-    if (Array.isArray(newObj.children)) {
-      newObj.children = copyObjectArrayTreeAndRenameProperty(
-        newObj.children,
-        oldPropertyName,
-        newPropertyName,
-      );
-    }
-    // 如果当前对象包含需要改变的属性名称，则替换为新的名称
-    if (newObj.hasOwnProperty(oldPropertyName)) {
-      newObj[newPropertyName] = newObj[oldPropertyName];
-      delete newObj[oldPropertyName];
-    }
-    // 将复制后的对象添加到新数组中
-    newArr.push(newObj);
+export function fomatFloat(num, n) {
+  var f = parseFloat(num);
+  if (isNaN(f)) {
+    return (0).toFixed(n);
   }
-
-  return newArr;
+  f = Math.round(num * Math.pow(10, n)) / Math.pow(10, n); // n 幂
+  var s = f.toString();
+  var rs = s.indexOf('.');
+  //判定如果是整数，增加小数点再补0
+  if (rs < 0) {
+    rs = s.length;
+    s += '.';
+  }
+  while (s.length <= rs + n) {
+    s += '0';
+  }
+  return s;
 }
 
-export function deepCloneTree(tree) {
-  if (typeof tree !== 'object' || tree === null) {
-    return tree;
-  }
-
-  let clone;
-  if (Array.isArray(tree)) {
-    clone = [];
-    for (let i = 0; i < tree.length; i++) {
-      clone[i] = deepCloneTree(tree[i]);
-    }
-  } else {
-    clone = {};
-    for (let key in tree) {
-      if (tree.hasOwnProperty(key)) {
-        clone[key] = deepCloneTree(tree[key]);
-      }
-    }
-  }
-
-  return clone;
-}
 
 // AES对称加密
 export function encryptionRequest(value) {

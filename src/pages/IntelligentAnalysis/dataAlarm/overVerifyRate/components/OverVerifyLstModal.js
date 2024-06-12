@@ -916,6 +916,7 @@ export default class OverVerifyLstModal extends Component {
         visible={TVisible}
         footer={null}
         wrapClassName='spreadOverModal'
+        mask={false}
         className={styles.overVerifyModalSty}
         destroyOnClose
         onCancel={() => { TCancle(); }}>
@@ -938,6 +939,7 @@ export default class OverVerifyLstModal extends Component {
         visible={this.state.alarmNumVisible}
         footer={null}
         wrapClassName='spreadOverModal'
+        mask={false}
         onCancel={() => { this.setState({ alarmNumVisible: false }) }}
         zIndex={1001}
       >

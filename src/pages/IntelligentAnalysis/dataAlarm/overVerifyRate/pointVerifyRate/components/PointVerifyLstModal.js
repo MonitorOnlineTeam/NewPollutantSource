@@ -556,6 +556,7 @@ export default class PointVerifyLst extends Component {
           visible={this.state.alarmNumVisible}
           footer={null}
           wrapClassName='spreadOverModal'
+          mask={false}
           onCancel={() => { this.setState({ alarmNumVisible: false }) }}
         >
           <div style={{ marginBottom: 10,display:'flex' }}>

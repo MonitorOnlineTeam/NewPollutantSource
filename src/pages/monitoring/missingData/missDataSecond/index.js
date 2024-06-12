@@ -540,6 +540,7 @@ reponseComp = ()=>{
           title="任务详情"
           visible={this.state.visible}
           wrapClassName='spreadOverModal'
+          mask={false}
           footer={null}
           destroyOnClose={true}
           onCancel={()=>{this.setState({visible:false})}}

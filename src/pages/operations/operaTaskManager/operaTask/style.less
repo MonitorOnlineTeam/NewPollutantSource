@@ -1,0 +1,129 @@
+
+  .addFromModal  :global ,.editFromModal  :global ,.detailFromModal :global{
+    .ant-modal-content{
+      overflow-y: hidden;
+     }
+    .ant-form-item-label{
+        width:141px;
+      } 
+      .ant-form-item{
+        // margin-bottom: 18px;
+        .ant-form-item-control-input{
+        width: 50% !important;
+       }
+       .ant-picker {
+         width: 100% !important;
+         margin: 0 !important;
+       }
+      
+     }
+
+     .ant-input-textarea-show-count::after{
+      position: absolute;
+      right: 0;
+     }
+     #basic_form{
+      .ant-spin-nested-loading > div > .ant-spin{
+         left: -20%;
+         top: -10px;
+       }
+      .ant-popover-inner .ant-spin-nested-loading > div > .ant-spin{
+        left: 0;
+        top: 0;
+      }
+    }
+     .ant-pagination{
+        .ant-select{
+         width: 100%;
+        } 
+     }
+     .ant-cascader-picker {
+      .ant-input{
+       width: 100% !important;
+      } 
+   }
+      .contractName {
+        .ant-select-dropdown {
+          display: none;
+        }
+      }
+    }
+    .editFromModal  :global ,.detailFromModal :global{ //任务编辑详情表单弹出框
+      .ant-modal-body{
+        overflow-y: auto;
+        padding-bottom: 0;
+        max-height: calc(100vh - 64px - 55px - 16px - 30px);
+       } 
+
+    }
+    .detailFromModal :global{
+      .ant-form-item{
+        margin-bottom: 12px;
+       }
+       .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before{
+        display: none;
+      }
+    }
+     .addPlanFormModal :global, .detailPlanFormModal  :global {
+      .ant-modal-body{
+        overflow-y: auto;
+        max-height: calc(100vh - 240px);
+      }
+      #plan_form{
+      .ant-form-item-label{
+        width:141px;
+      }
+      .ant-checkbox + span{
+        width: 254px;
+        display: inline-block;
+      }
+      // .ant-form-item{
+      //   margin-bottom: 18px;
+      // }
+    }
+    .ant-checkbox-disabled .ant-checkbox-inner{
+      background-color: #fff;
+    }
+    .ant-checkbox-disabled + span{
+      color: rgba(0, 0, 0, 0.85)
+     }
+    }
+
+    .detailPlanFormModal  :global {
+     .ant-form-item{
+       margin-bottom: 12px;
+     }
+     .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before{
+      display: none;
+    }
+   }
+    .operaUserFormModal :global{
+       .ant-transfer-list {
+        width: calc(50% - 20px);
+    }
+    }
+    .taskReportUploadformModal :global{
+      .ant-modal-body{
+        overflow-y: auto;
+        max-height: 50vh;
+       } 
+       .ant-form-item-label{
+           width:108px;
+         } 
+    }
+    .taskAbnormalTerminaModal :global{
+      .ant-modal-body{
+        overflow-y: auto;
+        max-height: 50vh;
+       } 
+      
+       .ant-form-item-label{
+           width:97px;
+         } 
+    }
+    .contractPopoverSty  :global{
+      width: 1000px;
+      .ant-popover-arrow{
+          left: 150px !important;
+      }
+    }

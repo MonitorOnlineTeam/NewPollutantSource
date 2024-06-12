@@ -1,25 +1,34 @@
-import React, { Component } from 'react';
-import { connect } from 'dva';
-import { Select } from 'antd';
+
+import React, { Component } from 'react'
+import { connect } from 'dva'
+import { Select,Spin } from 'antd'
+
+
 //企业 大气站 列表组件
 @connect(({ common }) => ({
-  entList: common.entList,
-  noFilterEntList: common.noFilterEntList,
   atmoStationList: common.atmoStationList,
+  entList: common.entList,
+  entLoading: common.entLoading,
+  noFilterEntList: common.noFilterEntList,
+  noFilterEntLoading: common.noFilterEntLoading,
+  enableEntList: common.enableEntList,
+  enableEntLoading: common.enableEntLoading,
+
 }))
 export default class Index extends Component {
   static defaultProps = {
     type: 1,
-    // regionCode: '',
+    regionCode: ''
   };
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+    };
+
   }
-  children = () => {
-    //企业列表 or 大气站列表
-    const { entList, atmoStationList, type, noFilter, noFilterEntList } = this.props;
+  children = () => { //企业列表 or 大气站列表
+    const { entList, atmoStationList, type, noFilter, noFilterEntList, enable, enableEntList } = this.props;
 
     const selectList = [];
 
@@ -34,14 +43,20 @@ export default class Index extends Component {
             );
           });
         }
+      } else if (enable) {
+        if (enableEntList.length > 0) {
+          enableEntList.map(item => {
+            selectList.push(
+              <Option key={item.entID} value={item.entID} title={item.entName}>
+                {item.entName}
+              </Option>,
+            );
+          });
+        }
       } else {
         if (entList.length > 0) {
           entList.map(item => {
-            selectList.push(
-              <Option key={item.EntCode} value={item.EntCode} title={item.EntName}>
-                {' '}
-                {item.EntName}
-              </Option>,
+            selectList.push(<Option key={item.EntCode} value={item.EntCode} title={item.EntName}> {item.EntName}</Option>,
             );
           });
         }
@@ -49,11 +64,7 @@ export default class Index extends Component {
     } else {
       if (atmoStationList.length > 0) {
         atmoStationList.map(item => {
-          selectList.push(
-            <Option key={item.StationCode} value={item.StationCode} title={item.StationName}>
-              {' '}
-              {item.StationName}{' '}
-            </Option>,
+          selectList.push(<Option key={item.StationCode} value={item.StationCode} title={item.StationName}> {item.StationName} </Option>,
           );
         });
       }
@@ -62,72 +73,62 @@ export default class Index extends Component {
     return selectList;
   };
   componentDidMount() {
-    const {
-      type,
-      dispatch,
-      regionCode,
-      pollutantType,
-      entList,
-      atmoStationList,
-      noFilter,
-      noFilterEntList,
-    } = this.props;
+    const { type, dispatch, regionCode, pollutantType, atmoStationList, entList, noFilter, noFilterEntList, enable, enableEntList } = this.props;
     switch (type) {
       case 1: //企业
-        if (noFilter) {
-          //不用过滤的企业列表
-          if (noFilterEntList && noFilterEntList.length) {
-            return;
-          }
-          dispatch({
-            type: 'common/getEntNoFilterList',
-            payload: { RegionCode: regionCode, PollutantType: pollutantType },
-          });
+        if (noFilter) { //不用过滤的企业列表
+          if (noFilterEntList && noFilterEntList.length) { return }
+          dispatch({ type: 'common/getEntNoFilterList', payload: { RegionCode: regionCode, PollutantType: pollutantType }, })
+        } else if (enable) { //启用的企业 不包含停用的企业
+          if (enableEntList && enableEntList.length) { return }
+          dispatch({ type: 'common/getEnableEntList', payload: { RegionCode: regionCode, PollutantType: pollutantType }, })
         } else {
-          // 有bug，会导致：跳转页面后还是之前页面的数据源，
-          // if (entList && entList.length) {
-          //   return;
-          // }
-          dispatch({
-            type: 'common/getEntByRegion',
-            payload: { RegionCode: regionCode, PollutantType: pollutantType },
-          });
+          if (entList && entList.length) { return }
+          dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType }, })
         }
         break;
       case 2: //空气站
         if (!(atmoStationList && atmoStationList[0] && regionCode)) {
-          dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode } });
+          dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode }, });
         }
         break;
     }
+
   }
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(props) {
     const { type, dispatch, regionCode, pollutantType, noFilter } = this.props;
-    if (prevProps.regionCode !== this.props.regionCode || prevProps.pollutantType !== pollutantType) {
-      type == 1
-        ? dispatch({
-            type: noFilter ? 'common/getEntNoFilterList' : 'common/getEntByRegion',
-            payload: { RegionCode: regionCode, PollutantType: pollutantType },
-          })
-        : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode } });
+    if (props.regionCode !== regionCode || props.pollutantType !== pollutantType) {
+      type == 1 ? dispatch({ type: noFilter ? 'common/getEntNoFilterList' : 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType }, }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode }, });
+    }
+  }
+  loadingStatus = () => {
+    const { entLoading, noFilter, noFilterEntLoading, enable, enableEntLoading } = this.props;
+    if (noFilter) {
+      return noFilterEntLoading
+    } else if (enable) {
+      return enableEntLoading
+    } else {
+      return entLoading
     }
   }
   render() {
-    console.log('regionCode111', this.props.regionCode);
-    const { EntCode, changeEnt, type } = this.props;
-    return (
+    const { EntCode, changeEnt, type,placeholder,style } = this.props
+    return (this.loadingStatus()?
+        <Spin size='small'>
+            <Select    style={{ width: '200px',...style }} placeholder={placeholder? placeholder : type == 1 ? "企业列表" : "大气站列表"}/>
+        </Spin>
+        :
       <Select
         allowClear
         showSearch
         optionFilterProp="children"
-        placeholder={type == 1 ? '企业列表' : '大气站列表'}
+        placeholder={type == 1 ? "企业列表" : "大气站列表"}
         onChange={changeEnt}
         value={EntCode ? EntCode : undefined}
         style={{ width: '200px' }}
         {...this.props}
       >
         {this.children()}
-      </Select>
-    );
+      </Select>)
   }
 }

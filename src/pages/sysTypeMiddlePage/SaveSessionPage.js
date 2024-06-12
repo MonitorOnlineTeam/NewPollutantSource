@@ -4,7 +4,11 @@ import { connect } from 'dva'
 import { router } from 'umi'
 import Cookie from 'js-cookie';
 
-@connect()
+
+@connect(({ global }) => ({
+  configInfo: global.configInfo,
+
+}))
 class SaveSessionPage extends PureComponent {
   constructor(props) {
     super(props);
@@ -16,8 +20,10 @@ class SaveSessionPage extends PureComponent {
     sessionStorage.setItem("sysMenuId", sysInfo.ID);
     sessionStorage.setItem("sysPollutantCodes", sysInfo.CodeList);
     sessionStorage.setItem("sysName", sysInfo.Name);
-    debugger
     this.getMenuList(sysInfo.ID);
+    if(sysInfo.Name == '智慧运维管理平台' || sysInfo.Name == '设备调试及售后服务管理平台'){
+      this.props.dispatch({ type: 'global/updateState', payload: { configInfo: {...this.props.configInfo,IsOpera:true} } });
+    }
   }
 
   // 获取菜单

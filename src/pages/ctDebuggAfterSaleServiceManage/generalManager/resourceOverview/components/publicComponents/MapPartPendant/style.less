@@ -1,0 +1,45 @@
+
+ @selectTextcolor:#D1D1D1;
+ .selectSty  :global{
+  position: absolute;
+  top: 0;
+  color: @selectTextcolor;
+  .ant-select-selector,.ant-select-dropdown {
+    background-color: transparent !important;
+    border: 1px solid #007BFD !important;
+    background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+  }
+  .ant-select-arrow{
+    color: #007BFD;
+   }
+   .ant-select-item{
+    color: @selectTextcolor;
+   }
+   .ant-select-item-option-active:not(.ant-select-item-option-disabled){ //悬浮
+     background-color: rgba(10, 125, 254, 0.4);
+   }
+   .ant-select-item-option-selected:not(.ant-select-item-option-disabled){ //选中
+    color: @selectTextcolor;
+    background-color: rgba(10, 125, 254, 0.8);
+   }
+}
+
+   //小圆点
+   .circle {
+     animation: pulse 2s infinite alternate; /* 光圈脉动动画 */
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(0.5);
+            opacity: 0.2;
+        }
+        0% {
+          transform: scale(0.8);
+          opacity: 0.5;
+      }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }

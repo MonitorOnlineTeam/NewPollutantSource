@@ -68,7 +68,6 @@ import TreeTransferSingle from '@/components/TreeTransferSingle';
 import {
   copyObjectArrayTreeAndRenameProperty,
   permissionButton,
-  deepCloneTree,
 } from '@/utils/utils';
 
 let dragingIndex = -1;
@@ -2103,11 +2102,8 @@ class DepartIndex extends Component {
                   <TreeTransferSingle
                     key="key"
                     titles={['待设置运维小组', '已设置运维小组']}
-                    treeData={copyObjectArrayTreeAndRenameProperty(
-                      this.state.departInfoTree,
-                      'UserGroup_Name',
-                      'title',
-                    )}
+                    treeData={this.state.departInfoTree}
+                    fieldNames={{ title: 'UserGroup_Name'}}
                     checkedKeys={this.props.setOperationGroupId}
                     targetKeysChange={(key, type, callback) => {
                       this.settingOperationGroupOk(key, type == 1 ? 1 : 2, callback);

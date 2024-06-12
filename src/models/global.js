@@ -155,7 +155,7 @@ export default Model.extend({
         // configInfo.IsShowSysPage = '1';
         configInfo.SystemName = getSysName(configInfo.SystemName);
         // configInfo.IsOpera = configInfo.SystemName === '技术服务智慧管理平台'; //是否为公司运维项目
-        configInfo.IsOpera = false;
+        // configInfo.IsOpera = false;
         const IsShhy = configInfo.SystemName === '污染源在线监测综合管理平台'; //是否为上海华谊项目
         configInfo.IsShhy = IsShhy;
         // configInfo.IsShhy = true;

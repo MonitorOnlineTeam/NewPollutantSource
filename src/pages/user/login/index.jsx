@@ -49,7 +49,6 @@ class Login extends Component {
           return;
         }
       }
-      debugger;
       if (!isAgree) {
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
