@@ -1588,6 +1588,12 @@ const routes = [
                 // component: './monitoring/exceptionrecord',
                 component: './monitoring/alarmInfo/exceptionrecordNew',
               },
+              {
+                //异常报警查询
+                name: 'exceptionrecordOnlyQuery',
+                path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/onlyQuery',
+                component: './monitoring/alarmInfo/exceptionrecordNew/OnlyQuery',
+              },
               // 异常报警响应查询 - 行政区
               {
                 name: 'exceptionrecordCity', //异常数据报警 城市级页面
@@ -2964,7 +2970,7 @@ const routes = [
               },
             ],
           },
-          
+
           //动态管控
           {
             path: '/dynamicControl',
@@ -3487,7 +3493,7 @@ const routes = [
   },
 
         ],
-        
+
       },
       {
         component: '404',

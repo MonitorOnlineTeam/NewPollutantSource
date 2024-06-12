@@ -152,13 +152,10 @@ export default Model.extend({
         // configInfo.IsSingleEnterprise = true;
         // window.IsOperation = true;
         window.configInfo = configInfo;
-        // configInfo.IsShowSysPage = '1';
+        configInfo.IsShowSysPage = '1';
         configInfo.SystemName = getSysName(configInfo.SystemName);
         // configInfo.IsOpera = configInfo.SystemName === '技术服务智慧管理平台'; //是否为公司运维项目
-        // configInfo.IsOpera = false;
-        const IsShhy = configInfo.SystemName === '污染源在线监测综合管理平台'; //是否为上海华谊项目
-        configInfo.IsShhy = IsShhy;
-        // configInfo.IsShhy = true;
+        configInfo.IsOpera = false;
         localStorage.setItem(
           'sysConfigInfo',
           JSON.stringify({
@@ -172,7 +169,6 @@ export default Model.extend({
         );
         // 防止系统错乱，如果没有menuId，跳转中间页。
         if (
-          !IsShhy &&
           location.pathname !== '/user/login' &&
           location.pathname !== '/dataFlowChart' &&
           location.pathname !== '/console' &&

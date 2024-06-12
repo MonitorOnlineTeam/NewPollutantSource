@@ -128,7 +128,8 @@ class index extends Component {
     return (
       <PageHeaderWrapper
         title={null}
-        className={!webConfig.isShowBreadcrumb || this.props.hideBreadcrumb ? "hideBreadcrumb" : ""}
+        style={{ height: 46 }}
+        className={!webConfig.isShowBreadcrumb || this.props.hideBreadcrumb ? 'hideBreadcrumb' : ''}
         pageHeaderRender={PageHeaderWrapperProps => {
           return this.pageHeaderRender(PageHeaderWrapperProps);
         }}

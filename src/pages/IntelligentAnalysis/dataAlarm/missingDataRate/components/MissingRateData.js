@@ -138,7 +138,7 @@ export default class EntTransmissionEfficiency extends Component {
                 query: { regionCode: record.regionCode, queryPar: JSON.stringify({...queryPar,regionLevel:2,staticType:1} ) }
               }} >
                 {text}
-              </Link> 
+              </Link>
               :
               <Link to={{
                 pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
@@ -226,7 +226,7 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch, location, Atmosphere, types } = this.props;
-
+    console.log('location', location)
     const query = location.query.queryPar && JSON.parse(location.query.queryPar)
     this.updateQueryState({
       RegionCode: '',
@@ -415,7 +415,7 @@ export default class EntTransmissionEfficiency extends Component {
                   onChange={this._handleDateTypeChange}
                   value={dataType}
                   style={{ width: 100 }}
-                >  
+                >
                <Option key='0' value='HourData'>小时数据</Option>
                <Option key='1' value='DayData'> 日数据</Option>
 

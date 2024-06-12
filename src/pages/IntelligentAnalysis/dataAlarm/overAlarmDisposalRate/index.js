@@ -17,13 +17,12 @@ import SdlTable from '@/components/SdlTable';
 import { downloadFile } from '@/utils/utils';
 import moment from 'moment';
 import { router } from 'umi';
-import RegionList from '@/components/RegionList'
+import RegionList from '@/components/RegionList';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-
 
 @connect(({ loading, autoForm, overAlarmDisposalRate }) => ({
   checkedValues: overAlarmDisposalRate.checkedValues,
@@ -51,8 +50,8 @@ class index extends PureComponent {
 
   _SELF_ = {
     formLayout: {
-      labelCol: { span: 8 },
-      wrapperCol: { span: 16 },
+      labelCol: { flex: '114px' },
+      // wrapperCol: { span: 16 },
     },
   };
 
@@ -109,11 +108,10 @@ class index extends PureComponent {
       endTime,
       PollutantType,
       checkedValues,
-     
     } = this.props;
 
-  const RegionCode  = this.props.form.getFieldValue('RegionCode');
- 
+    const RegionCode = this.props.form.getFieldValue('RegionCode');
+
     dispatch({
       type: 'overAlarmDisposalRate/getAlarmManagementRate',
       payload: {
@@ -142,7 +140,7 @@ class index extends PureComponent {
       checkedValues,
     } = this.props;
 
-  const RegionCode  = this.props.form.getFieldValue('RegionCode');
+    const RegionCode = this.props.form.getFieldValue('RegionCode');
 
     dispatch({
       type: 'overAlarmDisposalRate/exportAlarmManagementRate',
@@ -378,42 +376,41 @@ class index extends PureComponent {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <Form style={{ marginBottom: 0 }}>
+          <Form style={{ marginBottom: 0 }} layout="inline">
             <Row gutter={16}>
-              <Col md={4}>
-                <FormItem {...formLayout} label="数据类型" style={{ width: '100%' }}>
+              <Col>
+                <FormItem label="数据类型">
                   {getFieldDecorator('dataType', {
                     initialValue: dataType,
                   })(
-                    <Select placeholder="请选择数据类型" onChange={this.onDataTypeChange}>
+                    <Select
+                      placeholder="请选择数据类型"
+                      style={{ width: 120 }}
+                      onChange={this.onDataTypeChange}
+                    >
                       <Option key="0" value="HourData">
                         小时数据
                       </Option>
                       <Option key="1" value="DayData">
-                        {' '}
                         日数据
                       </Option>
                     </Select>,
                   )}
                 </FormItem>
               </Col>
-              <Col md={7}>
-                <FormItem
-                  labelCol={{ span: 5 }}
-                  wrapperCol={{ span: 19 }}
-                  label="日期查询"
-                  style={{ width: '100%' }}
-                >
+              <Col>
+                <FormItem {...formLayout} label="日期查询" style={{ width: '100%' }}>
                   {getFieldDecorator('time', {
                     initialValue: [beginTime, endTime],
                   })(
                     <RangePicker_
                       allowClear={false}
-                      // showTime={showTime}
-                      format={format}
+                      showTime={false}
+                      format={'YYYY-MM-DD'}
+                      // format={format}
                       style={{ width: '100%' }}
                       onChange={(dates, dateStrings) => {
-                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => { });
+                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => {});
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
@@ -426,8 +423,8 @@ class index extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={4}>
-                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+              <Col>
+                <FormItem {...formLayout} label="行政区">
                   {getFieldDecorator('RegionCode', {
                     initialValue: RegionCode,
                   })(
@@ -453,24 +450,29 @@ class index extends PureComponent {
                     //     );
                     //   })}
                     // </Select>,
-                    <RegionList changeRegion={(value) => {}}  RegionCode={this.props.form.getFieldValue('RegionCode')}/>
+                    <RegionList
+                      style={{ width: 180 }}
+                      changeRegion={value => {}}
+                      RegionCode={this.props.form.getFieldValue('RegionCode')}
+                    />,
                   )}
                 </FormItem>
               </Col>
-              <Col md={5}>
-                <FormItem {...formLayout} label="关注程度" style={{ width: '100%' }}>
+              <Col>
+                <FormItem {...formLayout} label="关注程度">
                   {getFieldDecorator('AttentionCode', {
-                    initialValue: AttentionCode? AttentionCode : undefined,
+                    initialValue: AttentionCode ? AttentionCode : undefined,
                   })(
                     <Select
+                      style={{ width: 160 }}
                       allowClear
                       placeholder="请选择关注程度"
                       onChange={value => {
-                        this.setState({ AttentionCode: value }, () => { });
+                        this.setState({ AttentionCode: value }, () => {});
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
-                            AttentionCode: value? value : '',
+                            AttentionCode: value ? value : '',
                           },
                         });
                       }}
@@ -488,13 +490,14 @@ class index extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
-            <Row gutter={24}>
-              <Col md={4} style={{ marginTop: 10 }}>
+            <Row gutter={16}>
+              <Col>
                 <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
                   {getFieldDecorator('PollutantType', {
                     initialValue: PollutantType,
                   })(
                     <Select
+                      style={{ width: 120 }}
                       placeholder="请选择企业类型"
                       onChange={value => {
                         this.setState({ pollutantType: value }, () => {
@@ -514,8 +517,8 @@ class index extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={20} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-                <div class="ant-form-item-label" style={{ width: 70, marginLeft: 26, marginRight: 8 }}>
+              <Col style={{ display: 'flex', alignItems: 'center' }}>
+                <div class="ant-form-item-label" style={{ width: 70, marginRight: 8 }}>
                   <label for="RegionCode" class="" title="监测因子">
                     监测因子
                   </label>
@@ -553,7 +556,7 @@ class index extends PureComponent {
             </Row>
           </Form>
           <Row gutter={16}>
-            <div style={{ color: 'red', marginBottom: 8, marginLeft: 28 }}>
+            <div style={{ color: 'red', marginBottom: 8, marginLeft: 8, fontWeight: 'normal' }}>
               核实结果为工艺超标、工艺设备故障的超标报警 ，由监管人员进行处置
             </div>
           </Row>

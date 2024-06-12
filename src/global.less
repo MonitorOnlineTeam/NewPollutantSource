@@ -81,6 +81,7 @@ p {
   .ant-pro-page-header-wrap-page-header-warp {
     background-color: transparent;
     line-height: 46px;
+    min-height: 46px;
     // margin-left: @contentMargin;
   }
 
@@ -333,14 +334,14 @@ a:hover {
     font-size: 13px !important;
   }
 
-  // .ant-table.ant-table-middle .ant-table-title,
-  // .ant-table.ant-table-middle .ant-table-footer,
-  // .ant-table.ant-table-middle .ant-table-thead > tr > th,
-  // .ant-table.ant-table-middle .ant-table-tbody > tr > td,
-  // .ant-table.ant-table-middle tfoot > tr > th,
-  // .ant-table.ant-table-middle tfoot > tr > td {
-  //   padding: 8px;
-  // }
+  .ant-table.ant-table-middle .ant-table-title,
+  .ant-table.ant-table-middle .ant-table-footer,
+  .ant-table.ant-table-middle .ant-table-thead > tr > th,
+  .ant-table.ant-table-middle .ant-table-tbody > tr > td,
+  .ant-table.ant-table-middle tfoot > tr > th,
+  .ant-table.ant-table-middle tfoot > tr > td {
+    padding: 10px 8px;
+  }
 
   .react-resizable {
     position: relative;
@@ -550,7 +551,7 @@ a:hover {
 #basicLayout,
 #notBreadcrumbLayout {
   .ant-pro-page-header-wrap-children-content {
-    height: calc(100vh - 118px);
+    height: calc(100vh - 110px);
     background-color: #fff;
     overflow-y: auto;
 
@@ -926,7 +927,7 @@ a:hover {
 
     #basicLayout .ant-pro-page-header-wrap-children-content,
     #notBreadcrumbLayout .ant-pro-page-header-wrap-children-content {
-      height: calc(100vh - 130px);
+      height: calc(100vh - 110px);
     }
   }
 }

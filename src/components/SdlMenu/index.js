@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-06-03 11:20:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-06-07 16:41:24
+ * @Last Modified time: 2024-06-07 16:54:02
  * @Description:  菜单组件
  */
 import React, { Component } from 'react';
@@ -73,6 +73,7 @@ class SdlMenu extends Component {
   }
 
   getIcon = icon => {
+    // 3.x版本icon转换成4.x
     let iconName = transformString(icon);
     let Icon = this.state.ICONS[iconName];
     return Icon ? <Icon /> : '';

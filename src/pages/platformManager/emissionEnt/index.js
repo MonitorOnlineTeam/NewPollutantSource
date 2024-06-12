@@ -5,7 +5,12 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { DeleteOutlined, ExclamationCircleOutlined, ExportOutlined, SettingOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+  ExportOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -38,7 +43,7 @@ import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
-import RegionList from '@/components/RegionList'
+import RegionList from '@/components/RegionList';
 import styles from './index.less';
 
 const FormItem = Form.Item;
@@ -84,8 +89,9 @@ const TableTransfer = ({ leftColumns, rightColumns, loading, ...restProps }) => 
           columns={columns}
           dataSource={filteredItems}
           size="small"
-          loading={loading}
           style={{ pointerEvents: listDisabled ? 'none' : null }}
+          // scroll={{ y: 'calc(100vh - 550px)' }}
+          loading={loading}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
               if (itemDisabled || listDisabled) return;
@@ -102,7 +108,7 @@ const leftTableColumns = [
     dataIndex: 'RegionName',
     title: '行政区',
     ellipsis: true,
-    width: 150
+    width: 150,
   },
   {
     dataIndex: 'EntName',
@@ -150,7 +156,7 @@ const rightTableColumns = [
     dataIndex: 'RegionName',
     title: '行政区',
     ellipsis: true,
-    width: 150
+    width: 150,
   },
   {
     dataIndex: 'EntName',
@@ -210,7 +216,7 @@ const rightTableColumns = [
   loading: loading.effects['emissionEnt/GetEmissionEntList'],
   noSelectEnt: emissionEnt.noSelectEnt,
   selectEnt: emissionEnt.selectEnt,
-  pointLoading: loading.effects['emissionEnt/GetEmissionEntAndPoint']
+  pointLoading: loading.effects['emissionEnt/GetEmissionEntAndPoint'],
 }))
 @Form.create()
 class emissionEnt extends Component {
@@ -231,13 +237,13 @@ class emissionEnt extends Component {
 
   componentDidMount() {
     // this.getTableData();
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: {
-        RegionCode: '',
-        PointMark: '2',
-      },
-    });
+    // this.props.dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: {
+    //     RegionCode: '',
+    //     PointMark: '2',
+    //   },
+    // });
     this.getEntData();
   }
 
@@ -270,6 +276,7 @@ class emissionEnt extends Component {
       type: 'emissionEnt/GetEmissionEntList',
       payload: {},
     });
+    // this.initData();
   };
 
   initData = RegionCode => {
@@ -288,7 +295,7 @@ class emissionEnt extends Component {
     dispatch({
       //获取企业列表
       type: 'emissionEnt/getEntByRegion',
-      payload: { RegionCode: RegionCode },
+      payload: { RegionCode: RegionCode ? RegionCode : '' },
     });
 
     // setTimeout(() => {
@@ -515,7 +522,7 @@ class emissionEnt extends Component {
                 cancelText="否"
               >
                 <a>
-                  <DeleteOutlined />
+                  <DeleteOutlined style={{ fontSize: 16 }} />
                 </a>
               </Popconfirm>
             </Tooltip>
@@ -539,8 +546,9 @@ class emissionEnt extends Component {
                   {this.children()}
                 </Select> */}
                 <RegionList
-                  changeRegion={(value) => {
-                    this.changeRegion(value)
+                  style={{ width: 200, marginLeft: 10 }}
+                  changeRegion={value => {
+                    this.changeRegion(value);
                   }}
                   RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}
                 />

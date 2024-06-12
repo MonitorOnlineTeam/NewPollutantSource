@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
@@ -28,9 +27,9 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import config from '@/config';
 import { downloadFile } from '@/utils/utils';
-import ButtonGroup_ from '@/components/ButtonGroup'
+import ButtonGroup_ from '@/components/ButtonGroup';
 import { blue, red } from '@ant-design/colors';
-import RegionList from '@/components/RegionList'
+import RegionList from '@/components/RegionList';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -62,8 +61,7 @@ export default class Index extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-    };
+    this.state = {};
 
     this.columns = [
       {
@@ -80,7 +78,7 @@ export default class Index extends Component {
         align: 'center',
         width: 200,
         render: (text, record) => {
-          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>;
         },
       },
       {
@@ -90,7 +88,7 @@ export default class Index extends Component {
         align: 'center',
         width: 150,
         render: (text, record) => {
-          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>;
         },
       },
       {
@@ -107,7 +105,7 @@ export default class Index extends Component {
         align: 'center',
         width: 150,
       },
-    ]
+    ];
   }
 
   componentDidMount() {
@@ -116,13 +114,11 @@ export default class Index extends Component {
   initData = () => {
     const { dispatch, location } = this.props;
 
-
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
+    dispatch({ type: 'abnormalStandard/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
 
-    dispatch({ type: 'abnormalStandard/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
-
-    dispatch({ type: 'abnormalStandard/getEntByRegion', payload: { RegionCode: '' }, });//获取企业列表
+    dispatch({ type: 'abnormalStandard/getEntByRegion', payload: { RegionCode: '' } }); //获取企业列表
 
     this.updateQueryState({
       AttentionCode: '',
@@ -134,7 +130,6 @@ export default class Index extends Component {
     setTimeout(() => {
       this.getTableData();
     });
-
   };
   updateQueryState = payload => {
     const { queryPar, dispatch } = this.props;
@@ -153,9 +148,8 @@ export default class Index extends Component {
     });
   };
 
-
-
-  children = () => { //企业列表
+  children = () => {
+    //企业列表
     const { priseList } = this.props;
 
     const selectList = [];
@@ -177,36 +171,36 @@ export default class Index extends Component {
     });
   };
 
-  changeRegion = (value) => { //行政区事件
+  changeRegion = value => {
+    //行政区事件
 
     this.updateQueryState({
       RegionCode: value,
     });
   };
-  changeAttent = (value) => {
+  changeAttent = value => {
     this.updateQueryState({
       AttentionCode: value,
     });
-  }
-  changeEnt = (value, data) => { //企业事件
+  };
+  changeEnt = (value, data) => {
+    //企业事件
     this.updateQueryState({
       EntCode: value,
     });
-  }
-  changePoll = (value, data) => { //污染物改变事件
+  };
+  changePoll = (value, data) => {
+    //污染物改变事件
     this.updateQueryState({
       PollutantType: value,
     });
-
-
-
-  }
+  };
   //创建并获取模板   导出
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'abnormalStandard/exportExceptionStandValue',
-      payload: { ...queryPar, PageIndex: undefined, PageSize: undefined, },
+      payload: { ...queryPar, PageIndex: undefined, PageSize: undefined },
       callback: data => {
         downloadFile(`${data}`);
       },
@@ -216,9 +210,10 @@ export default class Index extends Component {
   queryClick = () => {
     this.getTableData();
 
-    const { queryPar: { PollutantType } } = this.props;
+    const {
+      queryPar: { PollutantType },
+    } = this.props;
   };
-
 
   regchildren = () => {
     const { regionList } = this.props;
@@ -233,7 +228,7 @@ export default class Index extends Component {
       });
       return selectList;
     }
-  }
+  };
   attentchildren = () => {
     const { attentionList } = this.props;
     const selectList = [];
@@ -247,36 +242,35 @@ export default class Index extends Component {
       });
       return selectList;
     }
-  }
+  };
 
   /** 数据类型切换 */
   _handleDateTypeChange = value => {
-
     if (value === 'HourData') {
       this.updateQueryState({
         dataType: value,
-        beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: moment()
+          .subtract(1, 'day')
+          .format('YYYY-MM-DD HH:mm:ss'),
         endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-
       });
     } else {
       this.updateQueryState({
         dataType: value,
-        beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: moment()
+          .subtract(7, 'day')
+          .format('YYYY-MM-DD HH:mm:ss'),
         endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-
       });
     }
-  }
-  dateChange = (date) => {
+  };
+  dateChange = date => {
     this.updateQueryState({
       beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
       endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
     });
-  }
-  dateOk = () => {
-
-  }
+  };
+  dateOk = () => {};
   onTableChange = (PageIndex, PageSize) => {
     this.updateQueryState({
       PageIndex: PageIndex,
@@ -284,16 +278,30 @@ export default class Index extends Component {
     });
     setTimeout(() => {
       this.queryClick();
-    })
-  }
-  resData = (text) =>text ==='未设置'? <Badge.Ribbon style={{top:-34,right:-16,zIndex:99}} text="未设置" color="#faad14" /> : text ;
+    });
+  };
+  resData = text =>
+    text === '未设置' ? (
+      <Badge.Ribbon style={{ top: -34, right: -16, zIndex: 99 }} text="未设置" color="#faad14" />
+    ) : (
+      text
+    );
   render() {
     const {
       exloading,
       loading,
-      queryPar: { beginTime, endTime, EntCode, RegionCode, AttentionCode, PollutantType, PageSize, PageIndex },
+      queryPar: {
+        beginTime,
+        endTime,
+        EntCode,
+        RegionCode,
+        AttentionCode,
+        PollutantType,
+        PageSize,
+        PageIndex,
+      },
       column,
-      tableDatas
+      tableDatas,
     } = this.props;
     const { TabPane } = Tabs;
     let columns = [];
@@ -307,41 +315,45 @@ export default class Index extends Component {
             {
               title: '零值异常',
               align: 'center',
-              children: [{
-                title: '零值计数',
-                dataIndex: `${item.PollutantCode}_zero`,
-                key: `${item.PollutantCode}_zero`,
-                width: 100,
-                align: 'center',
-                render: (text) =>this.resData(text)
-              }]
+              children: [
+                {
+                  title: '零值计数',
+                  dataIndex: `${item.PollutantCode}_zero`,
+                  key: `${item.PollutantCode}_zero`,
+                  width: 100,
+                  align: 'center',
+                  render: text => this.resData(text),
+                },
+              ],
             },
             {
               title: '超量程异常',
-              children: [{
-                title: '量程上限',
-                dataIndex: `${item.PollutantCode}_overrunup`,
-                key: `${item.PollutantCode}_overrunup`,
-                width: 100,
-                align: 'center',
-                render: (text) =>this.resData(text)
-              },
-              {
-                title: '量程下限',
-                dataIndex: `${item.PollutantCode}_overrunlow`,
-                key: `${item.PollutantCode}_overrunlow`,
-                width: 100,
-                align: 'center',
-                render: (text) =>this.resData(text)
-              },
-              {
-                title: '超量程计数',
-                dataIndex: `${item.PollutantCode}_overrun`,
-                key: `${item.PollutantCode}_overrun`,
-                width: 100,
-                align: 'center',
-                render: (text) =>this.resData(text)
-              }]
+              children: [
+                {
+                  title: '量程上限',
+                  dataIndex: `${item.PollutantCode}_overrunup`,
+                  key: `${item.PollutantCode}_overrunup`,
+                  width: 100,
+                  align: 'center',
+                  render: text => this.resData(text),
+                },
+                {
+                  title: '量程下限',
+                  dataIndex: `${item.PollutantCode}_overrunlow`,
+                  key: `${item.PollutantCode}_overrunlow`,
+                  width: 100,
+                  align: 'center',
+                  render: text => this.resData(text),
+                },
+                {
+                  title: '超量程计数',
+                  dataIndex: `${item.PollutantCode}_overrun`,
+                  key: `${item.PollutantCode}_overrun`,
+                  width: 100,
+                  align: 'center',
+                  render: text => this.resData(text),
+                },
+              ],
             },
             // {
             //   title: '超出正常范围异常',
@@ -373,23 +385,24 @@ export default class Index extends Component {
             {
               title: '恒定值异常',
               align: 'center',
-              children: [{
-                title: '恒定值计数',
-                dataIndex: `${item.PollutantCode}_continuity`,
-                key: `${item.PollutantCode}_continuity`,
-                width: 100,
-                align: 'center',
-                render: (text) =>this.resData(text)
-              }]
+              children: [
+                {
+                  title: '恒定值计数',
+                  dataIndex: `${item.PollutantCode}_continuity`,
+                  key: `${item.PollutantCode}_continuity`,
+                  width: 100,
+                  align: 'center',
+                  render: text => this.resData(text),
+                },
+              ],
             },
           ],
+        });
+      });
 
-        })
-      })
-
-      columns = [...this.columns, ...addCol]
+      columns = [...this.columns, ...addCol];
     } else {
-      columns = this.columns
+      columns = this.columns;
     }
     return (
       <Card
@@ -397,7 +410,7 @@ export default class Index extends Component {
         title={
           <>
             <Form layout="inline">
-              <Form.Item label='行政区' >
+              <Form.Item label="行政区">
                 {/* <Select
                   allowClear
                   placeholder="行政区"
@@ -407,9 +420,13 @@ export default class Index extends Component {
                 >
                   {this.regchildren()}
                 </Select> */}
-                <RegionList style={{ width: 170 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
+                <RegionList
+                  style={{ width: 170 }}
+                  changeRegion={this.changeRegion}
+                  RegionCode={RegionCode}
+                />
               </Form.Item>
-              <Form.Item label='关注程度'>
+              <Form.Item label="关注程度">
                 <Select
                   allowClear
                   placeholder="关注程度"
@@ -420,7 +437,7 @@ export default class Index extends Component {
                   {this.attentchildren()}
                 </Select>
               </Form.Item>
-              <Form.Item label='企业类型'>
+              <Form.Item label="企业类型">
                 <Select
                   placeholder="企业类型"
                   onChange={this.typeChange}
@@ -432,7 +449,7 @@ export default class Index extends Component {
                 </Select>
               </Form.Item>
               <Form.Item>
-                <Form.Item label='企业列表'>
+                <Form.Item label="企业列表">
                   <Select
                     showSearch
                     allowClear
@@ -462,25 +479,22 @@ export default class Index extends Component {
           </>
         }
       >
-        <div id=''>
-
-          <SdlTable
-            rowKey={(record, index) => `complete${index}`}
-            loading={loading}
-            columns={columns}
-            bordered={true}
-            dataSource={tableDatas}
-            scroll={{ y: column.length > 0 && 'calc(100vh - 400px)' }}
-            pagination={{
-              showSizeChanger: true,
-              showQuickJumper: true,
-              total: this.props.total,
-              pageSize: PageSize,
-              current: PageIndex,
-              onChange: this.onTableChange,
-            }}
-          />
-        </div>
+        <SdlTable
+          rowKey={(record, index) => `complete${index}`}
+          loading={loading}
+          columns={columns}
+          bordered={true}
+          dataSource={tableDatas}
+          // scroll={{ y: column.length > 0 && 'calc(100vh - 400px)' }}
+          pagination={{
+            showSizeChanger: true,
+            showQuickJumper: true,
+            total: this.props.total,
+            pageSize: PageSize,
+            current: PageIndex,
+            onChange: this.onTableChange,
+          }}
+        />
       </Card>
     );
   }

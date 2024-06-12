@@ -79,8 +79,8 @@ class BasicLayout extends Component {
     const { dispatch, children, settings, currentMenu, configInfo, loading } = this.props;
     const { panes } = this.state;
 
-    if(loading) {
-      return <PageLoading />
+    if (loading) {
+      return <PageLoading />;
     }
 
     const handleMenuCollapse = payload =>
@@ -105,7 +105,7 @@ class BasicLayout extends Component {
     };
 
     const logoRender = Item => {
-      if (configInfo && configInfo.IsShowLogo === 'true' && !configInfo.IsShhy) {
+      if (configInfo && configInfo.IsShowLogo === 'true') {
         return settings.layout === 'topmenu' ? (
           <img
             style={{ height: 60 }}

@@ -183,12 +183,12 @@ class Login extends Component {
       configInfo: { IsOpera, IsShhy },
     } = this.props;
     const { status, type: loginType, message, mobileMessage } = userLogin;
-    const { type, autoLogin, agreementVisible, loginSuccess, } = this.state;
+    const { type, autoLogin, agreementVisible, loginSuccess } = this.state;
     const provinceShow = configInfo?.IsShowProjectRegion; //是否为宝武
     // 是否显示手机号登录
     let IsPhoneLogin = configInfo.IsPhoneLogin === 'true';
 
-    console.log('submitting', submitting)
+    console.log('submitting', submitting);
     return (
       <div
         className={`${styles.main} ${IsPhoneLogin && styles.phone}  ${IsShhy && styles.shhySty}`}
@@ -306,7 +306,7 @@ class Login extends Component {
           )}
           {type === 'web' && (
             <div>
-              {IsOpera && !provinceShow && (
+              {!provinceShow && (
                 <Checkbox
                   checked={this.props.isAgree}
                   onChange={e => {
@@ -328,31 +328,11 @@ class Login extends Component {
                   </Button>
                 </Checkbox>
               )}
-              {!IsOpera && (
-                <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-                  <span className="autoLogin">自动登录</span>
-                </Checkbox>
-              )}
-              {/* <a
-              style={{
-                float: 'right',
-              }}
-              href=""
-            >
-              <FormattedMessage id="user-login.login.forgot-password" />
-            </a> */}
             </div>
           )}
-          <Submit loading={submitting}>登录</Submit>
-          {/* <div className={styles.other}>
-            <FormattedMessage id="user-login.login.sign-in-with" />
-            <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
-            <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
-            <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
-            <Link className={styles.register} to="/user/register">
-              <FormattedMessage id="user-login.login.signup" />
-            </Link>
-          </div> */}
+          <Submit loading={submitting} style={{ marginTop: 0, marginBottom: 0 }}>
+            登录
+          </Submit>
         </LoginComponents>
         <Modal
           footer={false}

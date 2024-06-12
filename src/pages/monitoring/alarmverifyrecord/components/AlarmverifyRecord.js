@@ -82,14 +82,13 @@ class AlarmverifyRecord extends Component {
                                 <Tooltip title="报警记录详情">
                                     <a
                                         onClick={() => {
-                                            console.log('row', row);
                                             this.setState({
                                                 visible: true,
                                                 ID: `${row['dbo.T_Cod_ExceptionVerify.ID']}`,
                                             })
                                         }}
                                     >
-                                        <SnippetsTwoTone />
+                                        <DetailIcon />
                                     </a>
                                 </Tooltip>
                             </Fragment>

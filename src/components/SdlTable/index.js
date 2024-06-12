@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-06-05 10:24:30
+ * @Last Modified time: 2024-06-12 10:19:14
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -147,20 +147,22 @@ class SdlTable extends PureComponent {
     // 动态计算表格纵向位置
     setTimeout(() => {
       // let fr=this.refs.polytableframe;
-      if (!this._calledComponentWillUnmount) {
-        // let otherHeight = this.props.pagination ? 136 : 96;
-        if (this.sdlTableFrame) {
-          const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
-          const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
-          const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
-          const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
-          const count = tableTheadHeight + 88 + tableFooterHeight;
-          this.setState({
-            headAndFooterHeight: count > 110 ? count : 110,
-            computeHeight: this.getOffsetTop(this.sdlTableFrame) || 0,
-          });
-        }
-      }
+      // if (!this._calledComponentWillUnmount) {
+      //   // let otherHeight = this.props.pagination ? 136 : 96;
+      //   if (this.sdlTableFrame) {
+      //     const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
+      //     const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
+      //     const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
+      //     const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
+      //     const count = tableTheadHeight + 228 + tableFooterHeight;
+      //     // console.log('tableTheadHeight', tableTheadHeight);
+      //     // console.log('tableFooterHeight', tableFooterHeight);
+      //     this.setState({
+      //       headAndFooterHeight: count > 110 ? count : 110,
+      //       computeHeight: this.getOffsetTop(this.sdlTableFrame) || 0,
+      //     });
+      //   }
+      // }
     }, 50);
   }
 
@@ -226,11 +228,11 @@ class SdlTable extends PureComponent {
         _props,
       });
     }
-    if (this.props.columns !== nextProps.columns) {
-      this.setState({
-        columns: nextProps.columns,
-      });
-    }
+    // if (this.props.columns !== nextProps.columns) {
+    //   this.setState({
+    //     columns: nextProps.columns,
+    //   });
+    // }
 
     if (this.props.loading !== nextProps.loading && nextProps.loading === false) {
       this.setState(
@@ -256,21 +258,48 @@ class SdlTable extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      this.state.columns !== prevState.columns ||
+      this.props.columns !== prevProps.columns ||
       this.props.dataSource !== prevProps.dataSource
     ) {
-      const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
-      const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
-      const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
-      const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
-      const count = tableTheadHeight + 70 + tableFooterHeight;
+      // const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
+      // const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
+      // const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
+      // const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
+      // const count = tableTheadHeight + 88 + tableFooterHeight;
+      // debugger;
+      // console.log('tableTheadHeight', tableTheadHeight);
+      // console.log('tableFooterHeight', tableFooterHeight);
       this.setState({
-        headAndFooterHeight: count > 110 ? count : 110,
+        // computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
+        // headAndFooterHeight: count > 110 ? count : 110,
+        columns: this.props.columns,
       });
     }
+
     if (this.props.dragable !== prevProps.dragable) {
       this.setState({ dataSource: this.props.dataSource });
     }
+
+    // if (this.props.loading === false) {
+    //   if (
+    //     this.state.columns !== prevState.columns ||
+    //     this.state.dataSource !== prevState.dataSource ||
+    //     this.props.loading !== prevProps.loading
+    //   ) {
+    //     const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
+    //     const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
+    //     const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
+    //     const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
+    //     const count = tableTheadHeight + 68 + tableFooterHeight;
+    //     debugger;
+    //     console.log('tableTheadHeight', tableTheadHeight);
+    //     console.log('tableFooterHeight', tableFooterHeight);
+    //     this.setState({
+    //       computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
+    //       headAndFooterHeight: count > 110 ? count : 110,
+    //     });
+    //   }
+    // }
   }
 
   moveRow = (dragIndex, hoverIndex) => {
@@ -291,7 +320,17 @@ class SdlTable extends PureComponent {
 
   render() {
     const { defaultWidth, resizable, clientHeight, pagination, align, dragable } = this.props;
-    const { _props, columns, headAndFooterHeight } = this.state;
+    const { _props, columns } = this.state;
+
+    let headAndFooterHeight = 0;
+    if (this.sdlTableFrame) {
+      const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
+      const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
+      const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
+      const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
+      const count = tableTheadHeight + 68 + tableFooterHeight;
+      headAndFooterHeight = count;
+    }
 
     const fixedHeight = this.state.computeHeight;
     const scrollYHeight =
