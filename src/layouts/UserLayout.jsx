@@ -40,7 +40,7 @@ const UserLayout = props => {
       pathname: configInfo && configInfo.SystemName,
     },
     configInfo,
-    configInfo: { IsOpera, IsShhy },
+    configInfo: { IsOpera },
     appFlag,
   } = props;
   const { breadcrumb } = getMenuData(routes);
@@ -55,9 +55,7 @@ const UserLayout = props => {
     getIp = 'http://' + window.location.host + '/appoperation/appqrcodemain';
   }
   const bgImageType = configInfo.LAMImgType;
-  const bgImageUrl = IsShhy
-    ? `/bgImage/shhy/login_bg.jpg`
-    : bgImageType
+  const bgImageUrl = bgImageType
     ? `/bgImage/${bgImageType}/login_bg.jpg`
     : 'https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg';
   return (
@@ -72,21 +70,11 @@ const UserLayout = props => {
       title={title}
     >
       <Fragment>
-        {IsShhy && (
-          <Row
-            style={{ backgroundColor: '#fff', padding: '8px 14px' }}
-            align="middle"
-            justify="space-between"
-          >
-            <span style={{ fontSize: 18, fontWeight: 'bold' }}>服务热线：4008-728-118</span>
-            <img style={{ width: 160, height: 66 }} src={`/bgImage/shhy/login_bg2.png`} />
-          </Row>
-        )}
         <div
           className={`${styles.container} ${bgImageType ? styles.container_bg : ''}`}
           style={{
             backgroundImage: `url(${bgImageUrl})`,
-            height: IsShhy ? 'calc(100vh - 120px)' : '100vh',
+            height: '100vh',
           }}
         >
           {
@@ -95,45 +83,7 @@ const UserLayout = props => {
               configInfo && configInfo.IsShowQRcode === "true" &&
               <SelectLang />
             } */}
-              {configInfo && configInfo.IsShowQRcode === 'true' && IsShhy ? (
-                <div
-                  style={{
-                    position: 'absolute',
-                    right: 14,
-                    marginTop: 18,
-                    width: 480,
-                    lineHeight: '100%',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'inline-block',
-                      fontSize: 28,
-                      color: '#fff',
-                      fontWeight: 'bold',
-                      lineHeight: '100%',
-                      paddingBottom: 2,
-                    }}
-                  >
-                    上海华谊环保科技有限公司
-                  </div>
-                  <div>
-                    <div style={{ backgroundColor: '#fff', height: 10 }}></div>
-                    <div
-                      style={{
-                        padding: '4px 0',
-                        fontSize: 16,
-                        color: '#fff',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      Shanghai Huayi Environmental Protection Technology Co., Ltd.
-                    </div>
-                    {/* <img style={{width:'100%'}} src={`/bgImage/shhy/login_text.png`} /> */}
-                    {/* backgroundColor:'rgba(255,255,255,.3)', */}
-                  </div>
-                </div>
-              ) : IsOpera ? (
+              {configInfo && configInfo.IsShowQRcode === 'true' && IsOpera ? (
                 <Popover
                   placement="rightTop"
                   content={
@@ -209,11 +159,11 @@ const UserLayout = props => {
             </div>
           }
 
-          <div className={styles.content} style={IsShhy ? { paddingTop: 80 } : {}}>
+          <div className={styles.content} style={{}}>
             <div className={styles.top}>
               <div className={styles.header}>
                 <Link to="/">
-                  {configInfo && configInfo.IsShowLogo === 'true' && !IsShhy && (
+                  {configInfo && configInfo.IsShowLogo === 'true' && (
                     <img alt="logo" className={styles.logo} src={configInfo.Logo || '/logo.png'} />
                   )}
 
@@ -251,19 +201,6 @@ const UserLayout = props => {
 
         {configInfo && configInfo.IsShowFooterMessages === 'true' && (
           <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={[]} />
-        )}
-        {IsShhy && (
-          <Row
-            justify="end"
-            style={{
-              backgroundColor: '#fff',
-              height: '100%',
-              fontSize: 18,
-              fontWeight: 'bold',
-            }}
-          >
-            <span style={{ paddingRight: 14, paddingTop: 4 }}>中化学华谊环保&雪迪龙联合开发</span>
-          </Row>
         )}
       </Fragment>
     </DocumentTitle>
