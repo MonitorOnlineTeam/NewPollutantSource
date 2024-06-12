@@ -9,6 +9,8 @@ import Agreement from '../login/components/Agreement';
 import styles from './style.less';
 import config from '@/config';
 
+const IsShhy = true;
+
 const { Tab, UserName, Password, Mobile, Captcha, VerificaCode, Submit } = LoginComponents;
 @connect(({ userLogin, global, loading }) => ({
   userLogin,
@@ -187,10 +189,10 @@ class Login extends Component {
     const provinceShow = configInfo?.IsShowProjectRegion; //是否为宝武
     // 是否显示手机号登录
     let IsPhoneLogin = configInfo.IsPhoneLogin === 'true';
-
+    
     return (
       <div
-        className={`${styles.main} ${IsPhoneLogin && styles.phone}`}
+        className={`${styles.main} ${IsPhoneLogin && styles.phone}  ${IsShhy && styles.shhySty}`}
       >
         <LoginComponents
           defaultActiveKey={type}
