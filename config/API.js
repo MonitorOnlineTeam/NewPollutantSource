@@ -453,6 +453,10 @@ export const API = {
     GetAbruptChangeData: before + '/MoldV2/GetAbruptChangeData',
     // 修改陡变系数
     UpdAbruptLinear: before + '/MoldV2/UpdAbruptLinear',
+    // 波动范围重新运行
+    AutoOpeModel: before + '/WarningV2/AutoOpeModel',
+    // 获取模型运行状态
+    GetModelRunStatus: before + '/MoldV2/GetModelRunStatus',
 
     /*实时数据异常识别及管理*/
     //异常线索清单

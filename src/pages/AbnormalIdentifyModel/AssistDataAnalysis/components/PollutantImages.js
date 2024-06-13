@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Modal, Empty, Row, Col, DatePicker, Collapse, Button, Space, Spin } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import {
+  Modal,
+  Empty,
+  Row,
+  Col,
+  DatePicker,
+  Collapse,
+  Button,
+  Space,
+  Spin,
+  Divider,
+  Progress,
+  message,
+} from 'antd';
+import { ExclamationCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import styles from '../../styles.less';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 // import styles from '../styles.less';
 const { Panel } = Collapse;
+const { confirm } = Modal;
 const { RangePicker } = DatePicker;
 const pollutantOrder = {
   b02: 1, // 流量
@@ -33,6 +48,8 @@ const rightImagesOrder = {
   s08: 9, // 静压，压力
 };
 
+let timer;
+
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   // todoList: wordSupervision.todoList,
   loading: loading.effects['AbnormalIdentifyModel/GetPointParamsRange'],
@@ -48,9 +65,19 @@ const Index = props => {
   const [images, setImages] = useState([]);
   const [rangeTime, setRangeTime] = useState([]);
   const [updateDate, setUpdateDate] = useState({});
+  const [runState, setRunState] = useState(false);
+  const [progressNum, setProgressNum] = useState(0);
+  const [rerunDate, setRerunDate] = useState([moment().subtract('year', 1), moment()]);
 
   useEffect(() => {
-    getImages();
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    clearTimeout(timer);
+    getRunStatus();
   }, [DGIMN]);
 
   useEffect(() => {
@@ -116,7 +143,7 @@ const Index = props => {
         },
         callback: res => {
           setImages(type === 'stop' ? res.stopImage || [] : res.image);
-          let rangeTime = type === 'stop' ? res.stopRangeTime : res.rangeTime
+          let rangeTime = type === 'stop' ? res.stopRangeTime : res.rangeTime;
 
           setRangeTime(rangeTime);
           let tempUpdateDate = {};
@@ -134,7 +161,6 @@ const Index = props => {
 
   // 重新生成正常范围
   const RegenerateNomalRangeTime = pollutantCode => {
-    debugger;
     dispatch({
       type: 'AbnormalIdentifyModel/RegenerateNomalRangeTime',
       payload: {
@@ -152,7 +178,6 @@ const Index = props => {
   };
 
   const renderImages = (data, flag) => {
-    console.log('data', data);
     return data.map(item => {
       let element = (
         <div
@@ -219,22 +244,127 @@ const Index = props => {
     return true;
   };
 
-  const getPageContent = () => {
-    if (!Object.keys(images).length || checkNullValues(images)) {
-      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  // 获取运行状态
+  const getRunStatus = () => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/GetModelRunStatus',
+      payload: {
+        ModelGuid: 'AutoOpeModel',
+        DGIMN: DGIMN,
+      },
+      callback: res => {
+        let isLoading = res !== 100;
+        setRunState(isLoading);
+        setProgressNum(res);
+        if (isLoading) {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            getRunStatus();
+          }, 30000);
+        } else {
+          getImages();
+        }
+      },
+    });
+  };
+
+  // 重新运行
+  const onRerun = () => {
+    let start = moment(rerunDate[0]);
+    let end = moment(rerunDate[1]);
+    // 检查时间差，使用 months 和 years 方法
+    const diffInMonths = end.diff(start, 'months');
+    const diffInYears = end.diff(start, 'years');
+
+    // 检查是否符合条件：不能大于5年且不能小于3个月
+    if (diffInMonths < 3) {
+      message.error('时间间隔不能小于3个月，请重新选择！');
+      return;
     }
+    if (diffInYears > 5) {
+      message.error('时间间隔不能大于5年，请重新选择！');
+      return;
+    }
+    dispatch({
+      type: 'AbnormalIdentifyModel/AutoOpeModel',
+      payload: {
+        beginTime: start.format('YYYY-MM-DD 00:00:00'),
+        endTime: end.format('YYYY-MM-DD 00:00:00'),
+        DGIMN: DGIMN,
+      },
+      callback: () => {
+        setProgressNum(0)
+        setRunState(true);
+        setTimeout(() => {
+          getRunStatus();
+        }, 10000);
+      },
+    });
+  };
+
+  const getPageContent = () => {
+    let content = '';
+    if (!Object.keys(images).length || checkNullValues(images)) {
+      content = <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+    } else {
+      content = (
+        <Row>
+          <Col span={24}>
+            <Row>
+              <Col span={12}>{renderImages(topImages)}</Col>
+              <Col span={12}></Col>
+            </Row>
+          </Col>
+          <Col span={12}>{renderImages(leftImages)}</Col>
+          <Col span={12}>{renderImages(rightImages)}</Col>
+          {renderImages(otherImages, true)}
+        </Row>
+      );
+    }
+    console.log('runState', runState);
+    console.log('progressNum', progressNum);
     return (
-      <Row>
-        <Col span={24}>
-          <Row>
-            <Col span={12}>{renderImages(topImages)}</Col>
-            <Col span={12}></Col>
-          </Row>
-        </Col>
-        <Col span={12}>{renderImages(leftImages)}</Col>
-        <Col span={12}>{renderImages(rightImages)}</Col>
-        {renderImages(otherImages, true)}
-      </Row>
+      <Spin
+        spinning={runState}
+        style={{ position: 'fixed', top: '20%', left: 200 }}
+        indicator={
+          <div style={{ width: 400, marginLeft: -200 }}>
+            <div>重新运行中，请耐心等候...</div>
+            <div>
+              <Progress percent={progressNum} status="active" style={{ width: '80%' }} />
+            </div>
+          </div>
+        }
+      >
+        <Row>
+          <RangePicker
+            style={{ width: 300 }}
+            defaultValue={rerunDate}
+            onChange={(date, dateString) => {
+              setRerunDate(date);
+            }}
+          />
+          <Button
+            type="primary"
+            style={{ marginLeft: 10 }}
+            onClick={() => {
+              confirm({
+                icon: <ExclamationCircleOutlined />,
+                title: '确认是否重新运行',
+                content: '请注意，是否确认删除所有的异常数据识别线索和时间段内的标记！',
+                onOk() {
+                  onRerun();
+                },
+                onCancel() {},
+              });
+            }}
+          >
+            重新运行
+          </Button>
+          <Divider style={{ margin: '18px 0' }} />
+        </Row>
+        {content}
+      </Spin>
     );
   };
 
@@ -243,8 +373,7 @@ const Index = props => {
       {visible !== undefined ? (
         <Modal
           centered
-          // title="超标报警核实率"
-          visible={visible}
+          open={visible}
           footer={null}
           wrapClassName="spreadOverModal"
           destroyOnClose
