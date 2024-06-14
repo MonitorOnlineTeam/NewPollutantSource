@@ -171,9 +171,9 @@ const OfficeCheck = props => {
     return (
       <div>
         <Form
-          id="searchForm"
+          // id="searchForm"
           form={form}
-          // layout="inline"
+          layout="inline"
           initialValues={{
             time: [
               moment()

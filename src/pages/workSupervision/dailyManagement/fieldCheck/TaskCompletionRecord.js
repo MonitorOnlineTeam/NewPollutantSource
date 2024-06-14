@@ -270,6 +270,7 @@ const TaskCompletionRecord = props => {
     <Modal
       title={'现场检查任务完成记录'}
       wrapClassName={`spreadOverModal`}
+      mask={false}
       open={open}
       destroyOnClose
       footer={null}

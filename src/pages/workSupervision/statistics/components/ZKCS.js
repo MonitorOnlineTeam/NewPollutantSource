@@ -104,7 +104,7 @@ const ZKCS = props => {
         name="basic"
         form={form}
         layout="inline"
-        style={{ padding: '10px 0 20px' }}
+        style={{ padding: '0 0 20px' }}
         initialValues={{
           date: [moment().subtract(1, 'month'), moment()],
         }}

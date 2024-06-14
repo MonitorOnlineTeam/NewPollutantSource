@@ -406,6 +406,7 @@ const ChecklistRecordAndManagement = props => {
     <Modal
       title={mode === 'record' ? '人员培训记录' : '人员培训管理'}
       wrapClassName={`spreadOverModal`}
+      mask={false}
       open={open}
       destroyOnClose
       footer={null}

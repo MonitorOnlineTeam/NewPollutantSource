@@ -473,6 +473,7 @@ const Index = (props) => {
           rowClassName={null}
           dataSource={tableDatas}
           columns={radioType == 1 ?  columns : columns2}
+          scroll={{y:'calc(100vh - 337px)'}}
           pagination={false}
         />
       </Card>

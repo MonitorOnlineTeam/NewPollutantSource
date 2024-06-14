@@ -527,6 +527,7 @@ const SpotCheckPage = props => {
       title={`服务报告抽查`}
       // wrapClassName={`spreadOverModal ${stepCurrent !== 0 && 'isFooterSty'}`}
       wrapClassName={`spreadOverModal`}
+      mask={false}
       visible={isModalOpen}
       destroyOnClose
       footer={false}

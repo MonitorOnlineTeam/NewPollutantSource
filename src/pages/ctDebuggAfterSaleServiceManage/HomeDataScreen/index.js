@@ -19,7 +19,7 @@ const dvaPropsData = ({ loading, user }) => ({});
 const HomeDataScreen = props => {
   const { dispatch } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   return (
     <div className={styles.CTScreenWrapper}>
@@ -42,8 +42,10 @@ const HomeDataScreen = props => {
             let meunList = sessionStorage.getItem('menuDatas')
               ? JSON.parse(sessionStorage.getItem('menuDatas'))
               : [];
-            if (meunList?.length > 1) {
+            if (meunList?.length >= 1) {
               router.push(meunList[1]);
+            } else {
+              router.push('/ctManage/workbench')
             }
           }}
         />

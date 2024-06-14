@@ -1,11 +1,15 @@
 .calendarWrapper {
   // height: calc(100vh - 200px);
-  overflow-y: auto;
+  // overflow-y: auto;
   
   :global {
     .ant-card-body {
       padding: 12px;
     }
+    // .ant-list-items{
+    //   height: calc(100vh - 300px);
+    //   overflow-y: auto;
+    // }
     .ant-list-lg .ant-list-item{
       padding: 14px 0;
     }
@@ -37,6 +41,9 @@
       // height: 73px;
       // overflow: initial;
       // overflow-y: auto;
+    }
+    .ant-list-pagination{
+     margin-bottom: 12px;
     }
   }
 }
@@ -121,5 +128,26 @@
     .ant-timeline-item-content{
       margin: 0 0 0 24px;
     }
+  }
+}
+.exceptionTypePopSty :global{
+  left: 64px !important;
+  top: -4px !important;
+  .ant-popover-inner-content{
+    padding: 0;
+  }
+}
+.taskRecordSty  :global{
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 40px;
+  }
+}
+.taskForwardModalSty  :global{
+  .ant-legacy-form-item-label {
+    width: 66px;
   }
 }

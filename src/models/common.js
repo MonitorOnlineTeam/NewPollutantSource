@@ -20,7 +20,9 @@ export default Model.extend({
     entList: [],
     entLoading: true,
     noFilterEntList: [],
-    noFilterEntLoading: [],
+    noFilterEntLoading: false,
+    enableEntList:[], //启用的企业
+    enableEntLoading:false,
     attentionList: [],
     pointListByEntCode: [],
     pollutantListByDgimn: [],
@@ -39,6 +41,12 @@ export default Model.extend({
     ctProjectQueryPar: null,
     ctRegionList: [],
     allUser: [],
+        // 成套大区、省份
+        CtLargeRegionList: [],
+        CtProvinceList: [],
+        // 运维大区、省份
+        largeRegionList: [],
+        provinceList: [],
   },
 
   effects: {
@@ -79,6 +87,17 @@ export default Model.extend({
         message.error(response.Message);
         yield update({ noFilterEntList: [], noFilterEntLoading: false });
       }
+    },
+    *getEnableEntList({ payload, callback }, { call, put, update, select }) {
+      //企业列表 开启未停用的企业
+      yield update({ enableEntLoading: true });
+      const response = yield call(services.GetEntList, { ...payload });
+      if (response.IsSuccess) {
+        yield update({enableEntList: response.Datas,});
+      }
+      callback && callback(response?.Datas);
+      yield update({  enableEntLoading: false });
+      
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
       //关注列表
@@ -428,5 +447,60 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
+    *addSetUser({ payload, callback }, { call, put, update }) {
+      //设置人员信息
+      const result = yield call(services.AddSetUser, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+
+    *getSetUser({ payload, callback }, { call, put, update }) {
+      //获取设置的人员信息
+      const result = yield call(services.GetSetUser, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        message.error(result.Message);
+      }
+    },
+
+    // 获取成套大区及省份列表
+    *getCTLargeRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetCtLargeRegionList, payload);
+      if (result.IsSuccess) {
+        let provinceList = [];
+        result.Datas.map(item => {
+          provinceList = provinceList.concat([...item.ChildList]);
+        });
+        let _datas = {
+          CtLargeRegionList: result.Datas,
+          CtProvinceList: provinceList,
+        };
+        yield update(_datas);
+        callback && callback(_datas);
+      }
+    },
+    // 获取运维大区及省份列表
+    *getLargeRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.GetLargeRegion, payload);
+      if (result.IsSuccess) {
+        let provinceList = [];
+        result.Datas.map(item => {
+          provinceList = provinceList.concat([...item.ChildList]);
+        });
+        let _datas = {
+          largeRegionList: result.Datas,
+          provinceList: provinceList,
+        };
+        yield update(_datas);
+        callback && callback(_datas);
+      }
+    },
+
+
   },
 });

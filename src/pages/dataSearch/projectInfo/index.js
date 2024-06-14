@@ -417,7 +417,7 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={provinceShow ? columns : columns.filter(item=>item.title!='行政区')}
-        scroll={{ y:expand? 'calc(100vh - 420px)' : 'calc(100vh - 370px)'}}
+        scroll={{ y:expand? 'calc(100vh - 408px)' : 'calc(100vh - 356px)'}}
         pagination={{
           total:tableTotal,
           pageSize: pageSize,

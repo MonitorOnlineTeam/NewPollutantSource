@@ -536,7 +536,7 @@ const Index = (props) => {
           bordered
           dataSource={tableDatas}
           columns={columns}
-          scroll={{ y: clientHeight - 500 }}
+          scroll={{y:'calc(100vh - 312px)'}}
           rowSelection={{
             ...rowSelection,
           }}
@@ -562,7 +562,6 @@ const Index = (props) => {
         wrapClassName={styles.telModalSty}
         confirmLoading={title==='添加'? saveloading : saveloading||detailLoading}
         wrapClassName='spreadOverModal'
-        mask={false}
       >
         <Spin spinning={title==='添加'? false : detailLoading}>
         <Form

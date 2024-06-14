@@ -462,6 +462,7 @@ const RecordAndManagement = props => {
     <Modal
       title={mode === 'record' ? '纪律检查记录' : '纪律检查管理'}
       wrapClassName={`spreadOverModal`}
+      mask={false}
       open={open}
       destroyOnClose
       footer={null}

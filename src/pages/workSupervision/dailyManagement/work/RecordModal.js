@@ -33,6 +33,7 @@ const Record = props => {
     <Modal
       title={title}
       wrapClassName={`spreadOverModal`}
+      mask={false}
       open={open}
       destroyOnClose
       footer={false}

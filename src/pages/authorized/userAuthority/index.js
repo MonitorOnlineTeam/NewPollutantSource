@@ -663,7 +663,7 @@ export default class UserAuthority extends Component {
       }
     };
     return (
-      <BreadcrumbWrapper title="用户管理">
+      <BreadcrumbWrapper>
           <Card>
           <Form layout="inline">
                 <Form.Item label='登录名'>

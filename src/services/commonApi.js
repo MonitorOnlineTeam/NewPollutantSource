@@ -25,7 +25,11 @@ export async function GetEntNoFilterList(params) {
   const result = await post(API.CommonApi.GetNoFilterEntList, params, null);
   return result;
 }
-
+//根据行政区获取 企业列表  启用未停用的企业
+export async function GetEntList(params) {
+  const result = post(API.AssetManagementApi.GetEntList,{regionCode:params.RegionCode},  null)
+  return result;
+}
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(API.CommonApi.GetAttentionDegreeList, params);
@@ -195,5 +199,27 @@ export async function GetCTProjectList(params) {
 //获取所有用户
 export async function GetAlluser(params) {
   const result = post(API.AuthorityApi.GetAllUser, params);
+  return result;
+}
+
+//获取成套大区
+export async function GetCtLargeRegionList(params) {
+  const result = post(API.CtCommonApi.GetLargeRegionList, params);
+  return result;
+}
+//获取运维大区和省份
+export async function GetLargeRegion(params) {
+  const result = post(API.CommonApi.GetLargeRegion, params);
+  return result;
+}
+
+//设置人员信息
+export async function AddSetUser (params) {
+  const result = await post(API.CommonApi.AddSetUser,params, null);
+  return result;
+}
+//获取设置人员信息
+export async function GetSetUser (params) {
+  const result = await post(API.CommonApi.GetSetUser,params, null);
   return result;
 }

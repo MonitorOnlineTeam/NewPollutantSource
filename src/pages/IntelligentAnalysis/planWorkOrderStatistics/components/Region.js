@@ -2169,6 +2169,7 @@ const Index = (props, ref) => {
         footer={null}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
+        mask={false}
       >
         <Card title={searchCityRegComponents()}>
           <MultipleHeadResizeTable
@@ -2193,6 +2194,7 @@ const Index = (props, ref) => {
         footer={null}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
+        mask={false}
       >
      <Card title={  searchOperaPointComponents()}>
      <MultipleHeadResizeTable
@@ -2224,6 +2226,7 @@ const Index = (props, ref) => {
         footer={null}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
+        mask={false}
       >
         <Card title={searchWorkComponents()}>
           <MultipleHeadResizeTable
@@ -2255,6 +2258,7 @@ const Index = (props, ref) => {
         destroyOnClose
         centered
         wrapClassName={`spreadOverModal`}
+        mask={false}
 
       >
         <Card title={searchOutWorkComponents()}>
@@ -2285,6 +2289,7 @@ const Index = (props, ref) => {
         footer={null}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
+        mask={false}
       >
         <Card title={searchCityDetailRegComponents()}>
           <MultipleHeadResizeTable

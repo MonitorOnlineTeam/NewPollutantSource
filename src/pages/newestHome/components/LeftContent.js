@@ -152,6 +152,11 @@ const Index = (props) => {
     props.GetOperatePointList({ //运维监测点信息
       pollutantType: pollutantType,
     })
+    getOperationRegionPlanTaskRate(1) //计划完成率
+  }
+
+  useEffect(() => {
+    if(TaskPlanType){
     if (TaskPlanType == 1) {
       props.GetOperationTaskList({ //运维工单统计
         pollutantType: pollutantType,
@@ -169,10 +174,9 @@ const Index = (props) => {
         ...latelyDays30
       })
     }
-
-    getOperationRegionPlanTaskRate(1) //计划完成率
-
   }
+
+  }, [TaskPlanType]);
   const [workOrderExecuData, setWorkOrderExecuData] = useState({})
 
   const GetOperationTaskStatisticsInfoByDayRequest = (val) => {
@@ -797,7 +801,6 @@ const [operaTaskType,setOperaTaskType] = useState()
         title={`工单执行情况`}
         destroyOnClose
         wrapClassName='spreadOverModal'
-        mask={false}
         visible={taskRecordVisible}
         onCancel={()=>{setTaskRecordVisible(false)}}
         footer={null}
@@ -816,7 +819,6 @@ const [operaTaskType,setOperaTaskType] = useState()
         title={`运维情况`}
         destroyOnClose
         wrapClassName='spreadOverModal'
-        mask={false}
         visible={planOperationVisible}
         onCancel={()=>{setPlanOperationVisible(false)}}
         footer={null}

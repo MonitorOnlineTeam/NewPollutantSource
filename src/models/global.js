@@ -154,8 +154,8 @@ export default Model.extend({
         window.configInfo = configInfo;
         configInfo.IsShowSysPage = '1';
         configInfo.SystemName = getSysName(configInfo.SystemName);
-        // configInfo.IsOpera = configInfo.SystemName === '技术服务智慧管理平台'; //是否为公司运维项目
-        configInfo.IsOpera = false;
+        configInfo.IsOpera = configInfo.SystemName === '技术服务智慧管理平台'; //是否为公司运维项目
+        // configInfo.IsOpera = false;
         localStorage.setItem(
           'sysConfigInfo',
           JSON.stringify({

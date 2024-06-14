@@ -253,6 +253,7 @@ const OfficeCheck = props => {
         <Modal
           title="现场检查记录"
           wrapClassName={`spreadOverModal`}
+          mask={false}
           open={isModalOpen2}
           destroyOnClose
           footer={null}

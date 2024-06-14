@@ -121,7 +121,6 @@ export const API = {
     // 根据行政区查询企业
     GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',
     GetNoFilterEntList: before + '/EnterpriseApi/GetNoFilterEntList', //获取无权限过滤的企业信息
-
     GetPollutantTypeMonitoringCategoryInfo:
       before + '/EquipmentApi/GetPollutantTypeMonitoringCategoryInfo', //获取设备信息监测参数类型
   },
@@ -965,6 +964,10 @@ export const API = {
     /*异常标准记录*/
     GetExceptionStandValue: before + '/MonitorPointApi/GetExceptionStandValue', //获取异常标准记录
     ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue', //导出异常标准记录
+    /*设备故障反馈*/
+    GetEquipmentFaultFeedbackList: before + '/EquipmentFailure/GetEquipmentFaultFeedbackList', //获取设备故障反馈信息
+    ExportEquipmentFaultFeedbackList: before + '/EquipmentFailure/ExportEquipmentFaultFeedbackList', //导出设备故障反馈信息
+    UpdateEquipmentFaultFeedbackStatus: before + '/EquipmentFailure/UpdateEquipmentFaultFeedbackStatus', //更新设备故障反馈信息
   },
   // 电力Api
   ElectricEnergyApi: {
@@ -1325,41 +1328,7 @@ export const API = {
     AddVideoInfo: before + '/VideoApi/AddVideoInfo', //根据监测点添加视频信息
     UpdateVideoInfo: before + '/VideoApi/UpdateVideoInfo', //更新视频信息
   },
-  //异常数据模型分析 Api
-  AbnormalModelAnalysisApi: {
-    /**设备参数管理**/
-    GetEquipmentParametersInfo: before + '/EquipmentApi/GetEquipmentParametersInfo', //获取量程设定信息
-    GetParametersInfo: before + '/EquipmentApi/GetParametersInfo', //获取测量参数信息
-    AddOrUpdateEquipmentParametersInfo: before + '/EquipmentApi/AddOrUpdateEquipmentParametersInfo', //添加更新量程设定信息
-    DeleteEquipmentParametersInfo: before + '/EquipmentApi/DeleteEquipmentParametersInfo', //删除量程设定信息
-    GetEquipmentParameters: before + '/EquipmentApi/GetEquipmentParameters', //获取烟气流量、颗粒物参数、其他参数设定信息
-    AddOrUpdateEquipmentParameters: before + '/EquipmentApi/AddOrUpdateEquipmentParameters', //添加更新烟气流量、颗粒物参数、其他参数设定信息
-    /**异常精准识别核实整改率**/
-    /*核实率*/
-    GetModelWarningCheckedForRegion: before + '/Warning/GetModelWarningCheckedForRegion', //行政区 列表
-    GetModelWarningCheckedForCity: before + '/Warning/GetModelWarningCheckedForCity', //市 列表
-    GetModelWarningCheckedForEnt: before + '/Warning/GetModelWarningCheckedForEnt', //企业 列表
-    GetModelWarningCheckedForPoint: before + '/Warning/GetModelWarningCheckedForPoint', //监测点 列表
-    ExportModelWarningCheckedForRegion: before + '/Warning/ExportModelWarningCheckedForRegion', //行政区 导出
-    ExportModelWarningCheckedForCity: before + '/Warning/ExportModelWarningCheckedForCity', //市 导出
-    ExportModelWarningCheckedForEnt: before + '/Warning/ExportModelWarningCheckedForEnt', //企业 导出
-    /*整改率*/
-    GetModelWarningCheckedRectificationForRegion:
-      before + '/Warning/GetModelWarningCheckedRectificationForRegion', //行政区 列表
-    GetModelWarningCheckedRectificationForCity:
-      before + '/Warning/GetModelWarningCheckedRectificationForCity', //市 列表
-    GetModelWarningCheckedRectificationForEnt:
-      before + '/Warning/GetModelWarningCheckedRectificationForEnt', //企业 列表
-    GetModelWarningCheckedRectificationForPoint:
-      before + '/Warning/GetModelWarningCheckedRectificationForPoint', //监测点 列表
-    GetCheckedRectificationApprovals: before + '/Warning/GetCheckedRectificationApprovals', //整改详情
-    ExportModelWarningCheckedRectificationForRegion:
-      before + '/Warning/ExportModelWarningCheckedRectificationForRegion', //行政区 导出
-    ExportModelWarningCheckedRectificationForCity:
-      before + '/Warning/ExportModelWarningCheckedRectificationForCity', //市 导出
-    ExportModelWarningCheckedRectificationForEnt:
-      before + '/Warning/ExportModelWarningCheckedRectificationForEnt', //企业 导出
-  },
+
   // 异常数据识别模型Api
   AbnormalIdentifyModel: {
     // 获取线索列表
@@ -1453,348 +1422,6 @@ export const API = {
     GetCheckedView: before + '/Clue/GetCheckedView', //核查详情
     UpdatePlanItem: before + '/Clue/UpdatePlanItem', //核查保存或提交
     CheckConfirm: before + '/Clue/CheckConfirm', //核查确认
-  },
-  //预测性维护Api
-  PredictiveMaintenanceApi: {
-    /**智慧运维**/
-    /*运维日历*/
-    GetCalendarInfo: before + '/WorkOrderApi/GetCalendarInfo', //获取日历上工单统计信息
-    /*运维日志*/
-    GetOperationLogsList: before + '/OperationLogsApi/GetOperationLogsList', //获取运维日志记录
-    /*运维工单*/
-    GetOperationTaskList: before + '/WorkOrderApi/GetOperationTaskList', //获取运维工单记录
-    ExportOperationTaskList: before + '/WorkOrderApi/ExportOperationTaskList', //导出运维工单记录
-    GetTaskDetails: before + '/WorkOrderApi/GetTaskDetails', //获取运维工单详情
-    RejectTask: before + '/WorkOrderApi/RejectTask', //驳回任务
-    GetOperationLogList: before + '/WorkOrderApi/GetOperationLogList', //获取运维记录
-    PostRetransmission: before + '/WorkOrderApi/PostRetransmission', //任务转发
-    //电子表单
-    GetCemsCalibrationRecord: before + '/GasOperationFormApi/GetCemsCalibrationRecord', //获取单个任务的校准记录
-    GetConsumablesReplaceRecordList:
-      before + '/ConsumableMaterialApi/GetConsumablesReplaceRecordList', //获取易耗品更换记录
-    GetFaultRecordForPCList: before + '/GasOperationFormApi/GetFaultRecordForPCList', //获取故障小时记录
-    GetSparePartReplaceRecordList: before + '/ConsumableMaterialApi/GetSparePartReplaceRecordList', //获取备品备件更换记录
-    GetStandardGasRepalceRecordList:
-      before + '/ConsumableMaterialApi/GetStandardGasRepalceRecordList', //获取标气更换记录
-    GetMaintainRecordList: before + '/GasOperationFormApi/GetMaintainRecordList', //获取保养记录
-    GetShutdownRecordList: before + '/GasOperationFormApi/GetShutdownRecordList', //获取停机记录
-    GetRepairRecordForPCList: before + '/GasOperationFormApi/GetRepairRecordForPCList', //获取维修记录
-    GetDeviceExceptionRecordForPCList:
-      before + '/GasOperationFormApi/GetDeviceExceptionRecordForPCList', //获取异常记录
-    GetVerificationTestRecordList: before + '/GasOperationFormApi/GetVerificationTestRecordList', //获取单个CEMS校验测试记录
-    GetReagentRepalceRecordList: before + '/ConsumableMaterialApi/GetReagentRepalceRecordList', //获取标液更换记录
-    GetCooperationInspectionRecordForPCList:
-      before + '/GasOperationFormApi/GetCooperationInspectionRecordForPCList', //获取配合检查记录
-    GetRealtimeConsistencyRecordForPCList:
-      before + '/GasOperationFormApi/GetRealtimeConsistencyRecordForPCList', //获取数据一致性记录(实时)
-    GetHourDayConsistencyRecordForPCList:
-      before + '/GasOperationFormApi/GetHourDayConsistencyRecordForPCList', //获取数据一致性记录(小时日)
-    GetDetectionTimesRecordForPCList:
-      before + '/GasOperationFormApi/GetDetectionTimesRecordForPCList', //获取上月委托第三方检测次数
-    GetWaterCalibrationRecordForPCList:
-      before + '/WaterOperationFormApi/GetWaterCalibrationRecordForPCList', //获取废水校准记录
-    GetStandardSolutionRecordForPCList:
-      before + '/WaterOperationFormApi/GetStandardSolutionRecordForPCList', //获取标准溶液核查记录
-    GetWaterParametersChangeRecordForPCList:
-      before + '/GasOperationFormApi/GetWaterParametersChangeRecordForPCList', //获取废水参数变动记录
-    GetGasParametersChangeRecordForPCList:
-      before + '/GasOperationFormApi/GetGasParametersChangeRecordForPCList', //获取废气参数变动记录
-    GetWaterComparisonTestRecordForPCList:
-      before + '/WaterOperationFormApi/GetWaterComparisonTestRecordForPCList', //获取实际水样比对试验结果记录
-    GetRecordAttachmentList: before + '/GasOperationFormApi/GetRecordAttachmentList', //获取运维表单图片信息
-    /*运维记录*/
-    GetOperationRecordListByDGIMN: before + '/WorkOrderApi/GetOperationRecordListByDGIMN', //获取运维记录
-    ExportOperationRecordListByDGIMN: before + '/WorkOrderApi/ExportOperationRecordListByDGIMN', //导出运维记录
-    GetTaskTypeList: before + '/WorkOrderApi/GetTaskTypeList', //获取运维工单类型
-    /*工单进度*/
-    GetWorkProgressList: before + '/WorkOrderApi/GetWorkProgressList', //获取指挥调度
-    /*运维记录分析*/
-    GetOperationRecordAnalyList: before + '/WorkOrderStatistics/GetOperationRecordAnalyList', //获取运维记录分析
-    ExportOperationRecordAnalyInfo: before + '/WorkOrderStatistics/ExportOperationRecordAnalyInfo', //导出运维记录分析明细
-    GetOperationRecordAnalyInfoList:
-      before + '/WorkOrderStatistics/GetOperationRecordAnalyInfoList', //获取运维记录分析明细
-    ExportOperationRecordAnaly: before + '/WorkOrderStatistics/ExportOperationRecordAnaly', //导出运维记录分析
-    /*运维工单分析*/
-    GetWorkOrderAnalysisList: before + '/WorkOrderStatistics/GetWorkOrderAnalysisList', //获取运维工单统计信息
-    ExportWorkOrderAnalysisList: before + '/WorkOrderStatistics/ExportWorkOrderAnalysisList', //导出运维工单统计信息
-    /*异常工单分析*/
-    GetExceptionTaskOrderList: before + '/WorkOrderStatistics/GetExceptionTaskOrderList', //获取异常工单信息
-    ExportExceptionTaskOrderList: before + '/WorkOrderStatistics/ExportExceptionTaskOrderList', //导出异常工单信息
-    GetExceptionTaskOrderSignList: before + '/WorkOrderStatistics/GetExceptionTaskOrderSignList', //获取企业异常打卡信息（地图）
-    /*运维到期提醒*/
-    GetOperationExpireAnalysis: before + '/OperationExpireAnalysis/GetOperationExpireAnalysis', //运维到期点位统计
-    ExportOperationExpireAnalysis:
-      before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis', //导出运维到期点位统计
-
-    /**运维计划**/
-    /*制定运维计划*/
-    GetOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList', //运维计划列表
-    ExportOperationPlanList: before + '/WorkOrderApi/ExportOperationPlanList', //运维计划 导出
-    DeleteOperationPlan: before + '/WorkOrderApi/DeleteOperationPlan', //删除运维计划
-    UpdOperationPlan: before + '/WorkOrderApi/UpdOperationPlan', //修改运维计划基本信息
-    GetOperationPlanPointList: before + '/WorkOrderApi/GetOperationPlanPointList', //获取未排计划点位
-    AddOperationPlan: before + '/WorkOrderApi/AddOperationPlan', //生成运维计划
-    GetOperationPlanInfo: before + '/WorkOrderApi/GetOperationPlanInfo', //获取单个运维计划详情
-    ExportOperationPlanInfo: before + '/WorkOrderApi/ExportOperationPlanInfo', //单个运维计划详情 导出
-    DelOperationPlanPoint: before + '/WorkOrderApi/DelOperationPlanPoint', //删除运维计划点位
-    GetOperationPlanCalendar: before + '/WorkOrderApi/GetOperationPlanCalendar', //运维计划日历
-    ExportOperationPlanCalendar: before + '/WorkOrderApi/ExportOperationPlanCalendar', //运维计划日历 导出
-    GetFormulatePointList: before + '/WorkOrderApi/GetFormulatePointList', //获取运维计划可调整点位
-    AdjustmentOperationPlan: before + '/WorkOrderApi/AdjustmentOperationPlan', //运维计划点位调整
-    ExtendPlanDate: before + '/WorkOrderApi/ExtendPlanDate', //运维计划点位延长
-    UpdOperationPlanPoint: before + '/WorkOrderApi/UpdOperationPlanPoint', //运维计划点位状态修改
-    UpdOperationPlanStatus: before + '/WorkOrderApi/UpdOperationPlanStatus', //运维计划状态修改
-    GetOperationPlanStatusList: before + '/WorkOrderApi/GetOperationPlanStatusList', //获取运维计划状态修改记录
-    /**运维报告**/
-    /*运维报告（word）*/
-    GetOperationReportList: before + '/WorkOrderStatistics/GetOperationReportList', //获取运维月度报告信息
-    ExportOperationReport: before + '/WorkOrderStatistics/ExportOperationReport', //导出运维月度报告
-  },
-  /*监督核查 Api */
-  SupervisionVerificaApi: {
-    /*** 远程监督核查 ***/
-    /*关键参数核查*/
-    GetKeyParameterCheckList: before + '/KeyParameter/GetKeyParameterCheckList', //获取关键参数核查信息
-    ExportKeyParameterCheckList: before + '/KeyParameter/ExportKeyParameterCheckList', //导出关键参数核查信息
-    GetRangeConsistencyDetail: before + '/KeyParameter/GetRangeConsistencyDetail', //获取关键参数核查信息明细
-    AddRemoteInspector: before + '/KeyParameter/AddRemoteInspector', //更新关键参数核查信息
-    DeleteKeyParameterCheckInfo: before + '/KeyParameter/DeleteKeyParameterCheckInfo', //删除关键参数核查信息
-    GetParameterConsistencyCodeInfo: before + '/KeyParameter/GetParameterConsistencyCodeInfo', //获取量程和实时数据一致性核查监测参数信息
-    JudgeRangeConsistencyCheck: before + '/KeyParameter/JudgeRangeConsistencyCheck', //获取量程一致性(自动判断)
-    JudgeDataConsistencyCheck: before + '/KeyParameter/JudgeDataConsistencyCheck', //获取数据一致性(自动判断)
-    GetNOxValue: before + '/KeyParameter/GetNOxValue', //获取NOx数采仪实时数据
-    JudgeParameterConsistencyInfo: before + '/KeyParameter/JudgeParameterConsistencyInfo', //获取参数一致性核查检查项目信息
-    IssueKeyParameterCheckInfo: before + '/KeyParameter/IssueKeyParameterCheckInfo', //关键参数核查下发
-    GetRemoteInspectorPointList: before + '/KeyParameter/GetRemoteInspectorPointList', //获取可申请的站点工单
-    AddRemoteInspectorPoint: before + '/KeyParameter/AddRemoteInspectorPoint', //申请关键参数核查
-    ForwardRemoteInspector: before + '/KeyParameter/ForwardRemoteInspector', //转发关键参数核查
-    ExportRangeParam: before + '/KeyParameter/ExportRangeParam', //导入合格的参数核查
-    /*关键参数核查（新）*/
-    GetNewKeyParameterCheckList: before + '/KeyParameter/GetNewKeyParameterCheckList', //获取关键参数核查信息
-    ExportNewKeyParameterCheckList: before + '/KeyParameter/ExportNewKeyParameterCheckList', //导出关键参数核查信息
-    GetKeyParameterCheckDetailList: before + '/KeyParameter/GetKeyParameterCheckDetailList', //导出关键参数核查详情信息
-    CheckItemKeyParameter: before + '/KeyParameter/CheckItemKeyParameter', //核查关键参数项
-    DeleteKeyParameterItemCheck: before + '/KeyParameter/DeleteKeyParameterItemCheck', //删除核查关键参数项
-    SubCheckItem: before + '/KeyParameter/SubCheckItem', //保存或提交核查结果
-    DeleteKeyParameterCheck: before + '/KeyParameter/DeleteKeyParameterCheck', //删除核查信息
-    IssuedKeyParameter: before + '/KeyParameter/IssuedKeyParameter', //下发核查信息
-    RetransmissionKeyParameter: before + '/KeyParameter/RetransmissionKeyParameter', //转发关键参数核查任务单
-    /*关键参数核查整改*/
-    GetKeyParameterQuestionList: before + '/KeyParameter/GetKeyParameterQuestionList', //获取关键参数核查整改信息
-    ExportKeyParameterQuestionList: before + '/KeyParameter/ExportKeyParameterQuestionList', //导出关键参数核查整改信息
-    GetKeyParameterQuestionDetailList: before + '/KeyParameter/GetKeyParameterQuestionDetailList', //获取关键参数核查整改详情
-    CheckItemKeyParameterQuestion: before + '/KeyParameter/CheckItemKeyParameterQuestion', //关键参数核查整改
-    UpdateKeyParameterQuestionStatus: before + '/KeyParameter/UpdateKeyParameterQuestionStatus', //通过或驳回关键参数核查整改
-    GetZGCheckList: before + '/KeyParameter/GetZGCheckList', //获取关键参数核查整改信息
-    ExportZGCheckList: before + '/KeyParameter/ExportZGCheckList', //导出关键参数核查整改信息
-    GetZGCheckInfoList: before + '/KeyParameter/GetZGCheckInfoList', //获取关键参数核查整改详情信息
-    UpdZGCouCheck: before + '/KeyParameter/UpdZGCouCheck', //数据一致性核查整改
-    UpdZGRangeCheck: before + '/KeyParameter/UpdZGRangeCheck', //量程一致性核查整改
-    UpdZGParamCheck: before + '/KeyParameter/UpdZGParamCheck', //参数一致性核查整改
-    GetKeyPollutantList: before + '/KeyParameter/GetKeyPollutantList', //获取数据量程一致性核查整改单位信息
-    /*** 现场监督核查 ***/
-    /*系统设施核查*/
-    GetSystemFacilityVerificationList:
-      before + '/SystemFacilityVerification/GetSystemFacilityVerificationList', //获取系统设施核查
-    ExportSystemFacilityVerificationList:
-      before + '/SystemFacilityVerification/ExportSystemFacilityVerificationList', //导出系统设施核查
-    GetSystemFacilityVerificationInfo:
-      before + '/SystemFacilityVerification/GetSystemFacilityVerificationInfo', //获取单条督查信息
-    GetPointSystemInfo: before + '/SystemFacilityVerification/GetPointSystemInfo', //获取运维督查信息单个排口的默认信息
-    AddOrUpdateSystemFacilityVerificationInfo:
-      before + '/SystemFacilityVerification/AddOrUpdateSystemFacilityVerificationInfo', //添加修改督查模板
-    GetSystemFacilityVerificationDetail:
-      before + '/SystemFacilityVerification/GetSystemFacilityVerificationDetail', //获取运维督查详情
-    DeleteSystemFacilityVerificationInfo:
-      before + '/SystemFacilityVerification/DeleteSystemFacilityVerificationInfo', //删除运维督查信息
-    PushInspectorOperation: before + '/SystemFacilityVerification/PushInspectorOperation', //问题整改推送
-    /*核查模板设置*/
-    GetSupervisionQuestionTypeList:
-      before + '/SystemFacilityVerification/GetSupervisionQuestionTypeList', //获取督查类别清单
-    GetSupervisionQuestionTypeCodeList:
-      before + '/SystemFacilityVerification/GetSupervisionQuestionTypeCodeList', //获取督查类别
-    AddOrUpdateSupervisionQuestionTypeInfo:
-      before + '/SystemFacilityVerification/AddOrUpdateSupervisionQuestionTypeInfo', //添加更新督查类别清单
-    DeleteSupervisionQuestionTypeInfo:
-      before + '/SystemFacilityVerification/DeleteSupervisionQuestionTypeInfo', //删除更新督查类别清单
-    ChangeSupervisionQuestionTypeStatus:
-      before + '/SystemFacilityVerification/ChangeSupervisionQuestionTypeStatus', //更改更新督查类别清单状态
-    GetSupervisionTemplateList: before + '/SystemFacilityVerification/GetSupervisionTemplateList', //获取督查模板信息
-    AddOrUpdateSupervisionTemplateInfo:
-      before + '/SystemFacilityVerification/AddOrUpdateSupervisionTemplateInfo', //添加更新督查模板信息
-    DeleteSupervisionTemplateInfo:
-      before + '/SystemFacilityVerification/DeleteSupervisionTemplateInfo', //删除更新督查模板信息
-    GetSupervisionQuestionTypeDescribeList:
-      before + '/SystemFacilityVerification/GetSupervisionQuestionTypeDescribeList', //获取督查模板类别信息
-    ChangeSupervisionTemplateStatus:
-      before + '/SystemFacilityVerification/ChangeSupervisionTemplateStatus', //更改督查模板状态
-    GetSupervisionTemplateDetail:
-      before + '/SystemFacilityVerification/GetSupervisionTemplateDetail', //获取督查模板详情
-    /*系统设施核查整改*/
-    GetInspectorRectificationManageList:
-      before + '/SystemFacilityVerification/GetInspectorRectificationManageList', //获取核查整改信息
-    ExportInspectorRectificationManage:
-      before + '/SystemFacilityVerification/ExportInspectorRectificationManage', //导出核查整改信息
-    GetInspectorRectificationView:
-      before + '/SystemFacilityVerification/GetInspectorRectificationView', //获取核查整改详情
-    UpdateRectificationStatus: before + '/SystemFacilityVerification/UpdateRectificationStatus', //更新核查整改状态
-    RejectInspectorRectificationInfo:
-      before + '/SystemFacilityVerification/RejectInspectorRectificationInfo', //核查整改驳回或申述驳回
-    AddSetUser: before + '/UserApi/AddSetUser', //设置可以看到督察整改全部信息的人员信息
-    GetSetUser: before + '/UserApi/GetSetUser', //获取可以看到督察整改全部信息的人员信息
-    /*** 监督核查分析 ***/
-    /*督查分析总结*/
-    GetSupervisionTypeList: before + '/Supervision/GetSupervisionTypeList', //获取督查总结的督查类别
-    GetSupervisionSummaryList: before + '/Supervision/GetSupervisionSummaryList', //获取督查总结信息
-    ExportSupervisionSummaryList: before + '/Supervision/ExportSupervisionSummaryList', //导出督查总结信息
-    GetInspectorSummaryForRegionList: before + '/Supervision/GetInspectorSummaryForRegionList', //获取督查总结信息（按省统计）
-    ExportInspectorSummaryForRegion: before + '/Supervision/ExportInspectorSummaryForRegion', //导出督查总结信息（按省统计）
-    GetKeyParameterSummaryList: before + '/Supervision/GetKeyParameterSummaryList', //获取关键参数督查汇总
-    ExportKeyParameterSummaryList: before + '/Supervision/ExportKeyParameterSummaryList', //导出关键参数督查汇总
-    GetSystemFacilityVerificationSummaryList:
-      before + '/Supervision/GetSystemFacilityVerificationSummaryList', //获取全系统督查汇总信息（点位统计2）
-    ExportSystemFacilityVerificationSummaryList:
-      before + '/Supervision/ExportSystemFacilityVerificationSummaryList', //导出全系统督查汇总（点位统计2）
-    GetOperationManageSummaryTypeList: before + '/Supervision/GetOperationManageSummaryTypeList', //获取全系统督查汇总信息（问题统计）
-    ExportOperationManageSummaryType: before + '/Supervision/ExportOperationManageSummaryType', //导出全系统督查汇总（问题统计）
-    GetOperationManageSummaryListNew: before + '/Supervision/GetOperationManageSummaryListNew', //获取全系统督查汇总信息（点位统计1）
-    ExportOperationManageSummaryListNew:
-      before + '/Supervision/ExportOperationManageSummaryListNew', //导出全系统督查汇总（点位统计1）
-    GetInspectorUserList: before + '/SystemFacilityVerification/GetInspectorUserList', //获取运维人员和督查人员信息
-    /*关键参数核查统计*/
-    GetKeyParameterAnalyseList: before + '/KeyParameter/GetKeyParameterAnalyseList', //获取关键参数核查统计
-    ExportKeyParameterAnalyseList: before + '/KeyParameter/ExportKeyParameterAnalyseList', //导出关键参数核查统计获取
-    /*运维督查KPI*/
-    GetParamKPIList: before + '/KeyParameter/GetParamKPIList', //获取运维督查KPI
-    ExportParamKPIList: before + '/KeyParameter/ExportParamKPIList', //导出运维督查KPI
-  },
-  //调试服务
-  CtDebugServiceApi: {
-    /*调试点位管理*/
-    GetTestXuRegions: before + '/DebuggingBase/GetTestXuRegions', //获取省份及省份下的市县（调试服务）
-    GetPointCemsSystemList: before + '/DebuggingBase/GetPointCemsSystemList', //获取监测点CEMS参数信息
-    OperationPointCemsSystemInfo: before + '/DebuggingBase/OperationPointCemsSystemInfo', //添加更新CEMS参数信息
-    GetPointReferenceInstrumentList: before + '/DebuggingBase/GetPointReferenceInstrumentList', //获取参比仪器信息
-    OperationPointReferenceInstrumentInfo:
-      before + '/DebuggingBase/OperationPointReferenceInstrumentInfo', //添加更新参比仪器信息
-    AddOrUpdateTestPoint: before + '/DebuggingBase/AddOrUpdateTestPoint', //添加更新监测点（调试检测）
-    /*72小时调试检测*/
-    GetDebuggingEntTree: before + '/DebuggingBase/GetDebuggingEntTree', //获取企业监测点信息 树结构
-    Get72HoursDebuggingItem: before + '/CommissioningTest/Get72HoursDebuggingItem', //获取表单类型
-    Get72TestRecordPollutant: before + '/CommissioningTest/Get72TestRecordPollutant', //获取表单污染物信息
-    UsePMReferenceTimes: before + '/CommissioningTest/UsePMReferenceTimes', //获取参比方法校准颗粒物CEMS采样时间信息
-    //颗粒物CEMS零点和量程漂移检测
-    GetPMDriftInfo: before + '/CommissioningTest/GetPMDriftInfo', //获取录入信息
-    AddOrUpdatePMDriftInfo: before + '/CommissioningTest/AddOrUpdatePMDriftInfo', //添加更新信息
-    DeletePMDriftInfo: before + '/CommissioningTest/DeletePMDriftInfo', //删除信息
-    // 参比方法校准颗粒物CEMS
-    GetReferenceCalibrationPMInfo: before + '/CommissioningTest/GetReferenceCalibrationPMInfo', //获取颗粒物参比参数信息
-    AddOrUpdateReferenceCalibrationPMInfo:
-      before + '/CommissioningTest/AddOrUpdateReferenceCalibrationPMInfo', //添加更新颗粒物参比信息
-    DeleteReferenceCalibrationPMInfo:
-      before + '/CommissioningTest/DeleteReferenceCalibrationPMInfo', //删除颗粒物参比信息
-    ImportData: before + '/CommissioningTest/ImportData', //导入数据
-    //参比方法评估气态污染物CEMS（含氧量）准确度
-    GetGasReferenceMethodAccuracyInfo:
-      before + '/CommissioningTest/GetGasReferenceMethodAccuracyInfo', //获取录入信息
-    AddReferenceMethodCemsAccuracyTime:
-      before + '/CommissioningTest/AddReferenceMethodCemsAccuracyTime', //初始添加信息
-    AddOrUpdateReferenceMethodCemsAccuracyInfo:
-      before + '/CommissioningTest/AddOrUpdateReferenceMethodCemsAccuracyInfo', //添加更新信息
-    DeleteGasReferenceMethodAccuracyInfo:
-      before + '/CommissioningTest/DeleteGasReferenceMethodAccuracyInfo', //删除信息
-    GetTimesListByPollutant: before + '/CommissioningTest/GetTimesListByPollutant', //根据污染物获取时间
-    ImportDataNew: before + '/CommissioningTest/ImportDataNew', //导入数据
-    //气态污染物CEMS示值误差和系统响应时间检测
-    GetGasIndicationErrorResponseTimeInfo:
-      before + '/CommissioningTest/GetGasIndicationErrorResponseTimeInfo', //获取录入信息
-    AddOrUpdateGasIndicationErrorResponseTimeInfo:
-      before + '/CommissioningTest/AddOrUpdateGasIndicationErrorResponseTimeInfo', //添加更新信息
-    DeleteGasIndicationErrorResponseTimeInfo:
-      before + '/CommissioningTest/DeleteGasIndicationErrorResponseTimeInfo', //删除信息
-    //速度场系数检测表单
-    GetVelocityFieldCoefficientInfo: before + '/CommissioningTest/GetVelocityFieldCoefficientInfo', //获取录入信息
-    AddOrUpdateVelocityFieldCoefficientInfo:
-      before + '/CommissioningTest/AddOrUpdateVelocityFieldCoefficientInfo', //添加更新信息
-    DeleteVelocityFieldCoefficientInfo:
-      before + '/CommissioningTest/DeleteVelocityFieldCoefficientInfo', //删除信息
-    //温度CMS准确度检测表单
-    GetTemperatureAccuracyInfo: before + '/CommissioningTest/GetTemperatureAccuracyInfo', //获取录入信息
-    AddOrUpdateTemperatureAccuracyInfo:
-      before + '/CommissioningTest/AddOrUpdateTemperatureAccuracyInfo', //添加更新信息
-    DeleteTemperatureAccuracyInfo: before + '/CommissioningTest/DeleteTemperatureAccuracyInfo', //删除信息
-    //湿度CMS准确度检测表单
-    GetHumidityAccuracyInfo: before + '/CommissioningTest/GetHumidityAccuracyInfo', //获取录入信息
-    AddOrUpdateHumidityAccuracyInfo: before + '/CommissioningTest/AddOrUpdateHumidityAccuracyInfo', //添加更新信息
-    DeleteHumidityAccuracyInfo: before + '/CommissioningTest/DeleteHumidityAccuracyInfo', //删除信息
-    //气态污染物CEMS（含氧量）零点和量程漂移检测
-    GetGasDriftInfo: before + '/CommissioningTest/GetGasDriftInfo', //获取录入信息
-    AddOrUpdateGasDriftInfo: before + '/CommissioningTest/AddOrUpdateGasDriftInfo', //添加更新信息
-    DeleteGasDriftInfo: before + '/CommissioningTest/DeleteGasDriftInfo', //删除信息
-    //生成检测报告
-    Export72HoursCommissioningTestReport:
-      before + '/CommissioningTest/Export72HoursCommissioningTestReport', //导出72小时调试检测报告 word
-    Export72HoursCommissioningTestPdfReport:
-      '/api/rest/PollutantSourceApi/TaskFormApi/ImportRecord', //导出72小时调试检测报告 pdf
-    /*区域权限管理*/
-    GetDebuggingAreaGroupList: before + '/DebuggingAreaAuthority/GetDebuggingAreaGroupList', //获取部门详细信息及层级关系
-    AddOrUpdateDebuggingAreaGroupInfo:
-      before + '/DebuggingAreaAuthority/AddOrUpdateDebuggingAreaGroupInfo', //添加部门信息
-    DeleteDebuggingAreaGroupInfo: before + '/DebuggingAreaAuthority/DeleteDebuggingAreaGroupInfo', //删除部门信息
-    GetDebuggingAreaUserList: before + '/DebuggingAreaAuthority/GetDebuggingAreaUserList', //获取当前部门的用户
-    OperationDebuggingAreaUserInfo:
-      before + '/DebuggingAreaAuthority/OperationDebuggingAreaUserInfo', //给当前部门分配用户
-  },
-  //资产管理 Api
-  CtAssetManagementApi: {
-    /*** 设备台账 ***/
-    /*污染源管理*/
-    GetTestXuRegions: before + '/CTBaseDataApi/GetTestXuRegions', //获取省份及省份下的市县（成套污染源管理）
-    AddOrEditCommonPointList: before + '/CTBaseDataApi/AddOrEditCommonPointList', //添加或修改监测点（成套）
-    AddOrUpdateMonitorEntElectronicFence:
-      before + '/CTBaseDataApi/AddOrUpdateMonitorEntElectronicFence', //修改企业电子围栏半径
-    GetMonitorEntElectronicFence: before + '/CTBaseDataApi/GetMonitorEntElectronicFence', //获取企业电子围栏半径
-    GetPointIndustryList: before + '/CTBaseDataApi/GetPointIndustryList', //获取行业和监测点类型信息
-    GetTechnologyList: before + '/CTBaseDataApi/GetTechnologyList', //获取监测点工艺类型
-    GetCEMSSystemList: before + '/CTBaseDataApi/GetCEMSSystemList', // 获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
-    AddOrEditCEMSSystem: before + '/CTBaseDataApi/AddOrEditCEMSSystem', // 添加或修改系统型号
-    AddOrEditCEMSSystemChange: before + '/CTBaseDataApi/AddOrEditCEMSSystemChange', //添加或修改系统更换记录
-    AddOrEditEquipment: before + '/CTBaseDataApi/AddOrEditEquipment', // 添加或修仪表信息
-    AddOrEditEquipmentChange: before + '/CTBaseDataApi/AddOrEditEquipmentChange', // 添加或修仪仪表更换记录
-    PointSort: before + '/CTBaseDataApi/PointSort', // 监测点排序
-    /*服务档案查询 */
-    GetCTProjectList: before + '/CTBaseDataApi/GetCTProjectList', //项目列表
-    ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList', //项目列表 导出
-    UpdateCTProject: before + '/CTBaseDataApi/UpdateCTProject', //修改项目信息
-    GetrojectPointRelationList: before + '/CTBaseDataApi/GetrojectPointRelationList', //获取项目与站点管理关系
-    AddProjectPointRelation: before + '/CTBaseDataApi/AddProjectPointRelation', //添加项目与站点关联关系
-    AddProjectEntRelation: before + '/CTBaseDataApi/AddProjectEntRelation', //添加项目与企业关联关系
-    /*设备厂家名录 */
-    GetEquipmentManufacturerInventory:
-      before + '/DebuggingEquipment/GetEquipmentManufacturerInventory', //获取设备厂商信息
-    AddEquipmentManufacturerInfo: before + '/DebuggingEquipment/AddEquipmentManufacturerInfo', //添加设备厂商信息
-    UpdateEquipmentManufacturerInfo: before + '/DebuggingEquipment/UpdateEquipmentManufacturerInfo', //更新设备厂商信息
-    DeleteEquipmentManufacturerInfo: before + '/DebuggingEquipment/DeleteEquipmentManufacturerInfo', //删除设备厂商信息
-    /*系统型号清单*/
-    GetCemsSystemModelInventory: before + '/DebuggingEquipment/GetCemsSystemModelInventory', //获取系统型号清单信息
-    AddCemsSystemModelInfo: before + '/DebuggingEquipment/AddCemsSystemModelInfo', //添加系统型号清单信息
-    UpdCemsSystemModelInfo: before + '/DebuggingEquipment/UpdCemsSystemModelInfo', //更新系统型号清单信息
-    DeleteCemsSystemModelInfo: before + '/DebuggingEquipment/DeleteCemsSystemModelInfo', //删除系统型号清单信息
-    /*设备信息清单*/
-    GetCemsEquipmentInventory: before + '/DebuggingEquipment/GetCemsEquipmentInventory', //获取设备信息清单
-    AddCemsEquipmentInfo: before + '/DebuggingEquipment/AddCemsEquipmentInfo', //添加设备信息清单信息
-    UpdCemsEquipmentInfo: before + '/DebuggingEquipment/UpdCemsEquipmentInfo', //更新设备信息清单信息
-    DeleteCemsEquipmentInfo: before + '/DebuggingEquipment/DeleteCemsEquipmentInfo', //删除设备信息清单信息
-    /*参比仪器清单*/
-    GetReferenceInstrumentInventory: before + '/DebuggingEquipment/GetReferenceInstrumentInventory', //获取参比仪器设备清单
-    AddReferenceInstrumentInfo: before + '/DebuggingEquipment/AddReferenceInstrumentInfo', //添加参比仪器设备清单
-    UpdReferenceInstrumentInfo: before + '/DebuggingEquipment/UpdReferenceInstrumentInfo', //更新参比仪器设备清单
-    DeleteReferenceInstrumentInfo: before + '/DebuggingEquipment/DeleteReferenceInstrumentInfo', //删除参比仪器设备清单
-  },
-  //通用 Api
-  CtCommonApi: {
-    GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList', //站点信息
-    GetTestPollutantList: before + '/DebuggingBase/GetTestPollutantList', //站点信息
   },
   // 唐银钢铁Api
   TYGTApi: {
@@ -2049,79 +1676,79 @@ export const API = {
     GetOperationReportList: before + '/WorkOrderStatistics/GetOperationReportList', //获取运维月度报告信息
     ExportOperationReport: before + '/WorkOrderStatistics/ExportOperationReport', //导出运维月度报告
   },
-  //智能诊断Api
-  IntelligentDiagnosisApi: {
-    /**异常数据处置**/
-    /*停运上报*/
-    AddOutputStop: before + '/OutputStopApi/AddOutputStop', //添加停运上报信息
-    UpdateOutputStop: before + '/OutputStopApi/UpdateOutputStop', //更新停运上报信息
-    DeleteOutputStopById: before + '/OutputStopApi/DeleteOutputStopById', //删除停运上报信息
-    /*异常数据上报*/
-    GetExceptionReportList: before + '/ExceptionApi/GetExceptionReportList', //获取异常数据上报信息、企业异常记录
-    AddOrUpdateExceptionReportInfo: before + '/ExceptionApi/AddOrUpdateExceptionReportInfo', //添加更新异常数据上报信息
-    DeleteExceptionReportInfo: before + '/ExceptionApi/DeleteExceptionReportInfo', //删除异常数据上报信息
-    GetExceptionReportedById: before + '/ExceptionDataApi/GetExceptionReportedById', //获取异常数据上报详情
-    /*设备故障反馈*/
-    GetEquipmentFaultFeedbackList: before + '/EquipmentFailure/GetEquipmentFaultFeedbackList', //获取设备故障反馈信息
-    ExportEquipmentFaultFeedbackList: before + '/EquipmentFailure/ExportEquipmentFaultFeedbackList', //导出设备故障反馈信息
-    UpdateEquipmentFaultFeedbackStatus:
-      before + '/EquipmentFailure/UpdateEquipmentFaultFeedbackStatus', //更新设备故障反馈信息
-    /**异常数据分析**/
-    /*超标数据分析*/
-    GetOverDataList: before + '/OverDataApi/GetOverDataList', //获取超标数据信息
-    ExportOverDataList: before + '/OverDataApi/ExportOverDataList', //导出超标数据信息
-    GetOverStandardNum: before + '/OverDataApi/GetOverStandardNum', //获取超标次数
-    ExportOverStandardNum: before + '/OverDataApi/ExportOverStandardNum', //导出超标次数
-    /*超标数据报警 超标报警核实率*/
-    GetOverToExamineOperation: before + '/AlarmVerifyManageApi/GetOverToExamineOperation', //获取超标核实类型
-    GetAlarmVerifyRate: before + '/OverAlarmApi/GetAlarmVerifyRate', //获取超标数据信息
-    ExportAlarmVerifyRate: before + '/OverAlarmApi/ExportAlarmVerifyRate', //导出超标数据信息
-    GetAlarmVerifyRateDetail: before + '/OverAlarmApi/GetAlarmVerifyRateDetail', //获取超标数据信息详情
-    ExportAlarmVerifyRateDetail: before + '/OverAlarmApi/ExportAlarmVerifyRateDetail', //导出超标数据信息详情
-    GetAlarmVerifyDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyDetail', //获取超标数据报警次数详情
-    ExportAlarmVerifyDetail: before + '/AlarmVerifyManageApi/ExportAlarmVerifyDetail', //导出超标数据报警次数详情
-    /*缺失数据分析*/
-    GetMissDataList: before + '/ExceptionDataApi/GetMissDataList', //获取缺失数据分析信息
-    ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList', //导出缺失数据分析信息
-    /*缺失数据报警 缺失数据报警响应率*/
-    GetMissDataResponseRateList: before + '/ExceptionAlarmApi/GetMissDataResponseRateList', //获取缺失数据报警和响应率信息
-    ExportMissDataResponseRateList: before + '/ExceptionAlarmApi/ExportMissDataResponseRateList', //导出缺失数据报警和响应率信息
-    /*异常数据分析*/
-    GetExceptionList: before + '/ExceptionDataApi/GetExceptionList', //获取省级、市级异常数据信息
-    ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList', //导出省级、市级异常数据信息
-    // GetExceptionCityList: before + '/ExceptionDataApi/GetExceptionCityList',//获取市级异常数据信息
-    // ExportExceptionCityList: before + '/ExceptionDataApi/ExportExceptionCityList',//导出市级异常数据信息
-    GetExceptionPointList: before + '/ExceptionDataApi/GetExceptionPointList', //获取监测点异常数据信息
-    ExportExceptionPointList: before + '/ExceptionDataApi/ExportExceptionPointList', //获取监测点异常数据信息
-    /*异常数据报警*/
-    GetExceptionAlarmResponseList:
-      before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseList', //获取异常数据报警信息
-    ExportExceptionAlarmResponseList:
-      before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseList', //导出异常数据报警信息
-    /*异常报警响应率*/
-    GetExceptionAlarmResponseRateList:
-      before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseRateList', //获取异常数据报警响应率信息
-    ExportExceptionAlarmResponseRateList:
-      before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseRateList', //导出异常数据报警响应率信息
-    /*停运记录分析*/
-    GetStopList: before + '/OutputStopApi/GetStopList', //获取停运记录
-    ExportStopList: before + '/OutputStopApi/ExportStopList', //导出停运记录
-    /*企业异常记录*/
-    ExportExceptionReportList: before + '/ExceptionApi/ExportExceptionReportList', //获取企业异常记录
-    GetExceptionReportedView: before + '/ExceptionDataApi/GetExceptionReportedView', //获取企业异常记录详情
-    /**异常规则信息**/
-    /*监测标准设置*/
-    GetMonitorPointPollutantDetails: before + '/StandardLibraryApi/GetMonitorPointPollutantDetails', //获取监测污染物详情
-    UsePollutant: before + '/StandardLibraryApi/UsePollutant', //修改污染物监测状态
-    UseStatisti: before + '/StandardLibraryApi/UseStatisti', //修改污染物是否考核
-    EditMonitorPointPollutant: before + '/StandardLibraryApi/EditMonitorPointPollutant', //更新污染物设置标准
-    /*排放标准记录*/
-    GetDischargeStandValue: before + '/MonitorPointApi/GetDischargeStandValue', //获取排放标准记录
-    ExportDischargeStandValue: before + '/MonitorPointApi/ExportDischargeStandValue', //导出排放标准记录
-    /*排放标准记录*/
-    GetExceptionStandValue: before + '/MonitorPointApi/GetExceptionStandValue', //获取异常标准记录
-    ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue', //导出异常标准记录
-  },
+  // //智能诊断Api
+  // IntelligentDiagnosisApi: {
+  //   /**异常数据处置**/
+  //   /*停运上报*/
+  //   AddOutputStop: before + '/OutputStopApi/AddOutputStop', //添加停运上报信息
+  //   UpdateOutputStop: before + '/OutputStopApi/UpdateOutputStop', //更新停运上报信息
+  //   DeleteOutputStopById: before + '/OutputStopApi/DeleteOutputStopById', //删除停运上报信息
+  //   /*异常数据上报*/
+  //   GetExceptionReportList: before + '/ExceptionApi/GetExceptionReportList', //获取异常数据上报信息、企业异常记录
+  //   AddOrUpdateExceptionReportInfo: before + '/ExceptionApi/AddOrUpdateExceptionReportInfo', //添加更新异常数据上报信息
+  //   DeleteExceptionReportInfo: before + '/ExceptionApi/DeleteExceptionReportInfo', //删除异常数据上报信息
+  //   GetExceptionReportedById: before + '/ExceptionDataApi/GetExceptionReportedById', //获取异常数据上报详情
+  //   /*设备故障反馈*/
+  //   GetEquipmentFaultFeedbackList: before + '/EquipmentFailure/GetEquipmentFaultFeedbackList', //获取设备故障反馈信息
+  //   ExportEquipmentFaultFeedbackList: before + '/EquipmentFailure/ExportEquipmentFaultFeedbackList', //导出设备故障反馈信息
+  //   UpdateEquipmentFaultFeedbackStatus:
+  //     before + '/EquipmentFailure/UpdateEquipmentFaultFeedbackStatus', //更新设备故障反馈信息
+  //   /**异常数据分析**/
+  //   /*超标数据分析*/
+  //   GetOverDataList: before + '/OverDataApi/GetOverDataList', //获取超标数据信息
+  //   ExportOverDataList: before + '/OverDataApi/ExportOverDataList', //导出超标数据信息
+  //   GetOverStandardNum: before + '/OverDataApi/GetOverStandardNum', //获取超标次数
+  //   ExportOverStandardNum: before + '/OverDataApi/ExportOverStandardNum', //导出超标次数
+  //   /*超标数据报警 超标报警核实率*/
+  //   GetOverToExamineOperation: before + '/AlarmVerifyManageApi/GetOverToExamineOperation', //获取超标核实类型
+  //   GetAlarmVerifyRate: before + '/OverAlarmApi/GetAlarmVerifyRate', //获取超标数据信息
+  //   ExportAlarmVerifyRate: before + '/OverAlarmApi/ExportAlarmVerifyRate', //导出超标数据信息
+  //   GetAlarmVerifyRateDetail: before + '/OverAlarmApi/GetAlarmVerifyRateDetail', //获取超标数据信息详情
+  //   ExportAlarmVerifyRateDetail: before + '/OverAlarmApi/ExportAlarmVerifyRateDetail', //导出超标数据信息详情
+  //   GetAlarmVerifyDetail: before + '/AlarmVerifyManageApi/GetAlarmVerifyDetail', //获取超标数据报警次数详情
+  //   ExportAlarmVerifyDetail: before + '/AlarmVerifyManageApi/ExportAlarmVerifyDetail', //导出超标数据报警次数详情
+  //   /*缺失数据分析*/
+  //   GetMissDataList: before + '/ExceptionDataApi/GetMissDataList', //获取缺失数据分析信息
+  //   ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList', //导出缺失数据分析信息
+  //   /*缺失数据报警 缺失数据报警响应率*/
+  //   GetMissDataResponseRateList: before + '/ExceptionAlarmApi/GetMissDataResponseRateList', //获取缺失数据报警和响应率信息
+  //   ExportMissDataResponseRateList: before + '/ExceptionAlarmApi/ExportMissDataResponseRateList', //导出缺失数据报警和响应率信息
+  //   /*异常数据分析*/
+  //   GetExceptionList: before + '/ExceptionDataApi/GetExceptionList', //获取省级、市级异常数据信息
+  //   ExportExceptionList: before + '/ExceptionDataApi/ExportExceptionList', //导出省级、市级异常数据信息
+  //   // GetExceptionCityList: before + '/ExceptionDataApi/GetExceptionCityList',//获取市级异常数据信息
+  //   // ExportExceptionCityList: before + '/ExceptionDataApi/ExportExceptionCityList',//导出市级异常数据信息
+  //   GetExceptionPointList: before + '/ExceptionDataApi/GetExceptionPointList', //获取监测点异常数据信息
+  //   ExportExceptionPointList: before + '/ExceptionDataApi/ExportExceptionPointList', //获取监测点异常数据信息
+  //   /*异常数据报警*/
+  //   GetExceptionAlarmResponseList:
+  //     before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseList', //获取异常数据报警信息
+  //   ExportExceptionAlarmResponseList:
+  //     before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseList', //导出异常数据报警信息
+  //   /*异常报警响应率*/
+  //   GetExceptionAlarmResponseRateList:
+  //     before + '/ExceptionResponseRateApi/GetExceptionAlarmResponseRateList', //获取异常数据报警响应率信息
+  //   ExportExceptionAlarmResponseRateList:
+  //     before + '/ExceptionResponseRateApi/ExportExceptionAlarmResponseRateList', //导出异常数据报警响应率信息
+  //   /*停运记录分析*/
+  //   GetStopList: before + '/OutputStopApi/GetStopList', //获取停运记录
+  //   ExportStopList: before + '/OutputStopApi/ExportStopList', //导出停运记录
+  //   /*企业异常记录*/
+  //   ExportExceptionReportList: before + '/ExceptionApi/ExportExceptionReportList', //获取企业异常记录
+  //   GetExceptionReportedView: before + '/ExceptionDataApi/GetExceptionReportedView', //获取企业异常记录详情
+  //   /**异常规则信息**/
+  //   /*监测标准设置*/
+  //   GetMonitorPointPollutantDetails: before + '/StandardLibraryApi/GetMonitorPointPollutantDetails', //获取监测污染物详情
+  //   UsePollutant: before + '/StandardLibraryApi/UsePollutant', //修改污染物监测状态
+  //   UseStatisti: before + '/StandardLibraryApi/UseStatisti', //修改污染物是否考核
+  //   EditMonitorPointPollutant: before + '/StandardLibraryApi/EditMonitorPointPollutant', //更新污染物设置标准
+  //   /*排放标准记录*/
+  //   GetDischargeStandValue: before + '/MonitorPointApi/GetDischargeStandValue', //获取排放标准记录
+  //   ExportDischargeStandValue: before + '/MonitorPointApi/ExportDischargeStandValue', //导出排放标准记录
+  //   /*排放标准记录*/
+  //   GetExceptionStandValue: before + '/MonitorPointApi/GetExceptionStandValue', //获取异常标准记录
+  //   ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue', //导出异常标准记录
+  // },
   //异常数据模型分析 Api
   AbnormalModelAnalysisApi: {
     /**设备参数管理**/
@@ -2156,100 +1783,6 @@ export const API = {
       before + '/Warning/ExportModelWarningCheckedRectificationForCity', //市 导出
     ExportModelWarningCheckedRectificationForEnt:
       before + '/Warning/ExportModelWarningCheckedRectificationForEnt', //企业 导出
-  },
-  // 异常数据识别模型Api
-  AbnormalIdentifyModel: {
-    // 获取线索列表
-    GetWarningList: before + '/WarningV2/GetWarningList',
-    // 获取模型列表
-    GetMoldList: before + '/MoldV2/GetMoldList',
-    // 模型开启、关闭
-    SetMoldStatus: before + '/MoldV2/SetMoldStatus',
-    // 获取模型配置
-    GetModelInfoAndParams: before + '/WarningV2/GetModelInfoAndParams',
-    // 获取模型配置关联排口
-    GetModelRelationDGIMN: before + '/WarningV2/GetModelRelationDGIMN',
-    // 保存模型基础配置
-    SaveModelInfoAndParams: before + '/WarningV2/SaveModelInfoAndParams',
-    // 根据MN获取模型选配数据
-    GetDataAttributeAndPointList: before + '/MoldV2/GetDataAttributeAndPointList',
-    // 添加关联模型选配
-    AddDataAttributeAndPoint: before + '/MoldV2/AddDataAttributeAndPoint',
-    // 获取辅助分析数据
-    GetAllTypeDataListForModel: before + '/WarningV2/GetAllTypeDataListForModel',
-    // 获取直方图
-    StatisPolValueNumsByDGIMN: before + '/WarningV2/StatisPolValueNumsByDGIMN',
-    // 获取波动范围及点位参数信息
-    GetPointParamsRange: before + '/WarningV2/GetPointParamsRange',
-    // 重新生成正常范围
-    RegenerateNomalRangeTime: before + '/WarningV2/RegenerateNomalRangeTime',
-    // 线性相关系数
-    StatisLinearCoefficient: before + '/WarningV2/StatisLinearCoefficient',
-    // 历史数据综合评价/统计分析
-    GetHistoricalDataEvaluation: before + '/MoldV2/GetHistoricalDataEvaluation',
-    // 获取数据现象
-    GetHourDataForPhenomenon: before + '/WarningV2/GetHourDataForPhenomenon',
-    // 获取模型首页地图
-    GetMapPointList: before + '/MoldHome/GetMapPointList',
-    // 获取首页运行分析
-    GetOperationsAnalysis: before + '/MoldHome/GetOperationsAnalysis',
-    // 获取首页排放量统计
-    GetEmissionStatistics: before + '/MoldHome/GetEmissionStatistics',
-    // 异常线索统计
-    GetAbnormalClueStatistics: before + '/MoldHome/GetAbnormalClueStatistics',
-    // 排名
-    GetSuspectedRanking: before + '/MoldHome/GetSuspectedRanking',
-    // 数据质量分析
-    GetDataQualityAnalysis: before + '/MoldHome/GetDataQualityAnalysis',
-    // 排污缺口
-    GetPollutantDischargeGapStatistics: before + '/MoldHome/GetPollutantDischargeGapStatistics',
-    /*历史数据综合评价 */
-    // 排污缺口
-    GetPollutionDischargeGap: before + '/MoldV2/GetPollutionDischargeGap', //获取排污缺口信息
-    ExportPollutionDischargeGap: before + '/MoldV2/ExportPollutionDischargeGap', //排污缺口 导出
-    // 获取报警详情
-    GetSingleWarning: before + '/WarningV2/GetSingleWarning',
-    // 获取模型快转
-    GetSnapshotData: before + '/WarningV2/GetSnapshotData',
-    // 获取全行业波动范围
-    StatisNormalRange: before + '/WarningV2/StatisNormalRange',
-    // 获取全行业波动范围 - 导出
-    ExportStatisNormalRange: before + '/WarningV2/ExportStatisNormalRange',
-    // 数据工况 - 导出
-    ExportHourDataForModel: before + '/WarningV2/ExportHourDataForModel',
-    // 获取数据有效率下钻数据
-    GetEffectiveDrillDownData: before + '/MoldHome/GetEffectiveDrillDownData',
-    // 获取异常线索统计下钻数据
-    GetClueDrillDownData: before + '/MoldHome/GetClueDrillDownData',
-    // 获取超标率下钻数据
-    GetOverStandardDrillDownData: before + '/MoldHome/GetOverStandardDrillDownData',
-    // 获取数据质量分析下钻数据
-    GetQualityDrillDownData: before + '/MoldHome/GetQualityDrillDownData',
-    // 获取运行状态分布下钻数据
-    GetRunningStateDrillDownData: before + '/MoldHome/GetRunningStateDrillDownData',
-    // 修改小数数据WCFlag
-    UpdateHourDataWCFlag: before + '/WarningV2/UpdateHourDataWCFlag',
-    // 获取陡变过程数据
-    GetAbruptChangeData: before + '/MoldV2/GetAbruptChangeData',
-    // 修改陡变系数
-    UpdAbruptLinear: before + '/MoldV2/UpdAbruptLinear',
-
-    /*实时数据异常识别及管理*/
-    //异常线索清单
-    //线索分析
-    GetClueDatas: before + '/Clue/GetClueDatas', //工作台信息
-    //生成核查任务
-    GetWaitCheckDatas: before + '/Clue/GetWaitCheckDatas', //获取生产核查任务信息
-    GetPreTakeFlagDatas: before + '/Clue/GetPreTakeFlagDatas', //获取庄家意见信息
-    GetPlanDatas: before + '/Clue/GetPlanDatas', //获取已有方案信息
-    GetCheckRoleDatas: before + '/Clue/GetCheckRoleDatas', //获取核查角色
-    AddPlanTask: before + '/Clue/AddPlanTask', //生成核查任务
-    //核查任务管理
-    //待核查任务 已核查任务
-    GetCheckedList: before + '/Clue/GetCheckedList', //获取待核查或已核查任务信息
-    GetCheckedView: before + '/Clue/GetCheckedView', //核查详情
-    UpdatePlanItem: before + '/Clue/UpdatePlanItem', //核查保存或提交
-    CheckConfirm: before + '/Clue/CheckConfirm', //核查确认
   },
   /*监督核查 Api */
   SupervisionVerificaApi: {
@@ -2590,8 +2123,8 @@ export const API = {
     /*用户恢复*/
     RecoveryUserInfo: before + '/UserApi/RecoveryUserInfo', //恢复用户信息
     /*短信发送*/
-    GetUserMessageList : before + '/AuthorizeApi/GetUserMessageList',//获取短信推送设置信息
-    ExportUserMessageList : before + '/AuthorizeApi/ExportUserMessageList',//获取短信推送设置 导出
+    GetUserMessageList: before + '/AuthorizeApi/GetUserMessageList',//获取短信推送设置信息
+    ExportUserMessageList: before + '/AuthorizeApi/ExportUserMessageList',//获取短信推送设置 导出
     AddOrUpdUserMessage: before + '/AuthorizeApi/AddOrUpdUserMessage',//添加短信推送人员
     DelUserMessage: before + '/AuthorizeApi/DelUserMessage',//删除短信推送人员
     InsertPointUserMessage: before + '/AuthorizeApi/InsertPointUserMessage',//添加人员短信报警排口
@@ -2729,10 +2262,10 @@ export const API = {
     /*遗留问题*/
     GetQuestionList: before + '/CTStatisticsApi/GetQuestionList', //获取遗留问题
     ExportQuestionList: before + '/CTStatisticsApi/ExportQuestionList', //遗留问题 导出
-     /*部件更换*/
-    GetSpareReplacementRecordList : before + '/CTBaseDataApi/GetSpareReplacementRecordList', //获取部件更换信息
-    ExportpareReplacementRecordList : before + '/CTBaseDataApi/ExportpareReplacementRecordList', //部件更换信息 导出
-    GetCisPartsList : before + '/CTBaseDataApi/GetCisPartsList', //获取故障原因
+    /*部件更换*/
+    GetSpareReplacementRecordList: before + '/CTBaseDataApi/GetSpareReplacementRecordList', //获取部件更换信息
+    ExportpareReplacementRecordList: before + '/CTBaseDataApi/ExportpareReplacementRecordList', //部件更换信息 导出
+    GetCisPartsList: before + '/CTBaseDataApi/GetCisPartsList', //获取故障原因
 
   },
 

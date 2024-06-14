@@ -1226,6 +1226,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
         footer={null}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
+        mask={false}
         bodyStyle={{ padding: 0 }}
       >
         <Card title={searchCityRegComponents()} bordered={false}  bodyStyle={{ padding: '16px  24px 0 24px' }}>
@@ -1254,6 +1255,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
         footer={null}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
+        mask={false}
         bodyStyle={{ padding: 0 }}
       >
         <div className='queryCriterTitleSty'>
@@ -1292,6 +1294,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
         destroyOnClose
         centered
         wrapClassName={`spreadOverModal`}
+        mask={false}
         bodyStyle={{ padding: 0 }}
       >
         <div className='queryCriterTitleSty'>

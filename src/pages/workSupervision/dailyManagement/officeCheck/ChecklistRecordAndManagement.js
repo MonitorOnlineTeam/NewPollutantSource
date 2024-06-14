@@ -499,6 +499,7 @@ const ChecklistRecordAndManagement = props => {
     <Modal
       title={mode === 'record' ? '办事处检查记录' : '办事处检查任务完成记录'}
       wrapClassName={`spreadOverModal`}
+      mask={false}
       open={open}
       destroyOnClose
       footer={null}

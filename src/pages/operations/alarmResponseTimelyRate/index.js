@@ -478,6 +478,7 @@ const Index = (props) => {
         <Modal
           title={resNumTitle}
           wrapClassName={`spreadOverModal`}
+          mask={false}
           className={styles.resNumModalSty}
           destroyOnClose
           visible={resNumVisible}

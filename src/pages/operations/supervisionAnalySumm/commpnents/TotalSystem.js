@@ -607,7 +607,7 @@ const Index = (props) => {
                         onChange: handleTableChange,
                     }}
                     rowClassName={null}
-                    scroll={{ x: '100%', y: 'calc(100vh - 405px)' }}
+                    scroll={{ x: '100%',y:'calc(100vh - 377px)' }}
                 />
                <Row style={{marginTop:16}} justify='end'>
                  {isPointStatistics1&&tableTotal>0&&<Pagination 

@@ -33,6 +33,7 @@ const Record = props => {
     <Modal
       title='应收账款催收记录'
       wrapClassName={`spreadOverModal`}
+      mask={false}
       open={open}
       destroyOnClose
       footer={false}

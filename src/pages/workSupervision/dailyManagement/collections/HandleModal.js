@@ -243,6 +243,7 @@ const HandleModal = props => {
       <Modal
         title={editData.ID ? '编辑' : '添加'}
         // wrapClassName={`spreadOverModal`}
+        // mask={false}
         width={1000}
         open={open}
         destroyOnClose

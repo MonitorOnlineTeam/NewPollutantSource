@@ -2,27 +2,32 @@
  * @Author: Jiaqi
  * @Date: 2019-10-15 14:35:27
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-04-25 10:56:29
+ * @Last Modified time: 2019-10-22 10:47:21
  * @desc: 运维日历页面
  */
 import React, { PureComponent } from 'react';
-import { Calendar, Badge, Card, Divider, Tag, Empty, message, List, Modal } from 'antd';
+import { Calendar, Badge, Card, Divider, Tag, Empty, message, List, Modal, Spin, Popover, Button, } from 'antd';
 import { connect } from 'dva';
 import { router } from 'umi';
 import moment from 'moment';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable'
 import styles from './index.less'
+import TaskRecordDetails from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout'
+import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal'
 
 
-@connect(({ loading, operations }) => ({
+@connect(({ loading, operations, abnormalWorkStatistics, }) => ({
   calendarList: operations.calendarList,
   abnormalDetailList: operations.abnormalDetailList,
   abnormalForm: operations.abnormalForm,
   futureDetailList: operations.futureDetailList,
   modalTableDataSource: operations.modalTableDataSource,
   modalTableTotal: operations.modalTableTotal,
-  loading: loading.effects["operations/getAbnormalDetailList"]
+  loading: loading.effects["operations/getAbnormalDetailList"],
+  calendarInfoLoading: loading.effects["operations/getCalendarInfo"],
+  queryPar: abnormalWorkStatistics.queryPar,
+  entAbnormalNumVisible: abnormalWorkStatistics.entAbnormalNumVisible,
 }))
 class CalendarPage extends PureComponent {
   constructor(props) {
@@ -36,42 +41,66 @@ class CalendarPage extends PureComponent {
       visible: false,
       columns: [],
       modalTableCurrent: 1,
-      currentClickTagParams: {}
+      currentClickTagParams: {},
+      taskRecordDetailVisible: false,
+      TaskID: null,
+      DGIMN: null,
       // pageInfo: {
       //   pageIndex: 1,
       //   pageSize: 10
       // }
+      abnormalTitle: '',
     };
   }
 
   componentDidMount() {
     this.getCalendarInfo();
     this.abnormalItemClick({ date: moment(), type: 0, text: "运维记录" });
+    this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: false, }, })
+
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.abnormalDetailList !== nextProps.abnormalDetailList) {
       const listData = nextProps.abnormalDetailList.map(item => {
         return {
-          href: `/operations/calendar/details/${item.TaskID}/${item.DGIMN}`,
+          // href: `/operations/calendar/details/${item.TaskID}/${item.TaskID}`,
           title: <div>
-            <span style={{ marginRight: 8 }}>{item.EnterpriseName}</span>
+            <span style={{ marginRight: 8, cursor: 'pointer', }} onClick={(e) => {
+              this.setState({ taskRecordDetailVisible: true, TaskID: item.TaskID, DGIMN: item.DGIMN, })
+            }}>{item.EnterpriseName}</span>
             {
               item.ExceptionTypeText && item.ExceptionTypeText.split(",").map(itm => {
                 // 报警响应异常,打卡异常,工作超时
                 let color = itm === "报警响应异常" ? "#f50" : (itm === "打卡异常" ? "#108ee9" : "#2db7f5")
-                return <Tag color={color}>{itm}</Tag>
+                return <div style={{ position: 'relative', display: 'inline-block' }}>
+                  <Tag color={color}>{itm}</Tag>
+                  <Popover
+                    content={<Button type="link" onClick={() => this.exceptionDetail(item)}>详情</Button>}
+                    overlayClassName={styles.exceptionTypePopSty}
+                    zIndex={99}
+                    visible={itm === "打卡异常"}
+                    getPopupContainer={trigger => trigger.parentNode}
+                    placement='right'
+                  />
+                </div>
               })
             }
           </div>,
           description: <div style={{ color: "#333" }}>
             {item.PointName}
             {
-              item.TaskType === 2 && <Tag color="#ff5506" style={{ position: "relative", top: '-10px', marginLeft: 4 }} >应急</Tag>
+              item.TaskType === 2 && <Tag color="#ff5506" style={{ position: "relative", top: '0px', marginLeft: 4 }} >应急</Tag>
             }
+
           </div>,
           content:
-            <div>运维人：{item.OperationName} <Tag color={item.TaskStatus === 3 ? "green" : "volcano"}>{item.TaskStatusText}</Tag></div>
+            <div>
+              {item.TaskRecordTypeName && <span style={{ paddingRight: 8, }}> 任务类型：{
+                item.TaskRecordTypeName.map(item => <Tag color="processing">{item.TypeName}</Tag>)
+              }</span>}
+              <span>运维人：{item.OperationName} <Tag color={item.TaskStatus === 3 ? "green" : "volcano"}>{item.TaskStatusText}</Tag></span>
+            </div>
         }
       })
       this.setState({
@@ -115,7 +144,29 @@ class CalendarPage extends PureComponent {
       })
     }
   }
+  exceptionDetail = (row) => { //打卡异常详情
+    this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: true, }, })
+    this.setState({ abnormalTitle: `${row.EnterpriseName} - ${row.PointName}` })
+    setTimeout(() => {
 
+      // 根据统计周期，计算开始及结束时间
+      const scope = this.state.mode === "month" ? "day" : "month";
+      const date = this.state.currentCellInfo.date;
+      const beginTime = moment(date).startOf(scope).format("YYYY-MM-DD HH:mm:ss");
+      const endTime = moment(date).endOf(scope).format("YYYY-MM-DD HH:mm:ss");
+      this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { queryPar: { ...this.props.queryPar, beginTime: beginTime, endTime: endTime, } } })
+      this.props.dispatch({
+        type: `abnormalWorkStatistics/getPointExceptionSignList`,
+        payload: {
+          beginTime: beginTime,
+          endTime: endTime,
+          DGIMN: row.DGIMN,
+          taskID: row.TaskID,
+        },
+      }
+      )
+    })
+  }
   // tag点击事件
   onTagClick = (e, item, type) => {
     e.stopPropagation();
@@ -133,7 +184,7 @@ class CalendarPage extends PureComponent {
       endTime: endTime,
       DGIMN: item.DGIMN,
     }
-
+    const { modalTableCurrent } = this.state;
     this.setState({
       currentClickTagParams: payload,
       modalTableCurrent: 1,
@@ -148,11 +199,11 @@ class CalendarPage extends PureComponent {
         columns = [
           {
             title: '序号',
-            dataIndex: 'index',
-            key: 'index',
-            width: 60,
+            // dataIndex: 'index',
+            // key: 'index',
+            // width: 60,
             render: (text, record, index) => {
-              return index + 1;
+              return (index + 1) + (modalTableCurrent - 1) * 10;
             }
           }, {
             title: '上次更换日期',
@@ -186,11 +237,11 @@ class CalendarPage extends PureComponent {
         columns = [
           {
             title: '序号',
-            dataIndex: 'index',
-            key: 'index',
-            width: 60,
+            // dataIndex: 'index',
+            // key: 'index',
+            // width: 60,
             render: (text, record, index) => {
-              return index + 1;
+              return (index + 1) + (modalTableCurrent - 1) * 10;
             }
           }, {
             title: '上次更换日期',
@@ -224,11 +275,11 @@ class CalendarPage extends PureComponent {
         columns = [
           {
             title: '序号',
-            dataIndex: 'index',
-            key: 'index',
-            width: 60,
+            // dataIndex: 'index',
+            // key: 'index',
+            // width: 60,
             render: (text, record, index) => {
-              return index + 1;
+              return (index + 1) + (modalTableCurrent - 1) * 10;
             }
           }, {
             title: '上次更换日期',
@@ -262,11 +313,11 @@ class CalendarPage extends PureComponent {
         columns = [
           {
             title: '序号',
-            dataIndex: 'index',
-            key: 'index',
-            width: 60,
+            // dataIndex: 'index',
+            // key: 'index',
+            // width: 60,
             render: (text, record, index) => {
-              return index + 1;
+              return (index + 1) + (modalTableCurrent - 1) * 10;
             }
           }, {
             title: '上次更换日期',
@@ -328,6 +379,10 @@ class CalendarPage extends PureComponent {
         if (item.CompleteTaskNum) {
           listData.push({ color: '#87d068', content: `完成任务${item.CompleteTaskNum}个`, type: 3, date: item.ExcetionDate, text: "完成任务" })
         }
+        // 超时完成
+        if (item.CompleteOverTaskNum) {
+          listData.push({ color: '#fa8c16', content: `超时完成任务${item.CompleteOverTaskNum}个`, type: 5, date: item.ExcetionDate, text: "超时完成任务" })
+        }
         // 待执行任务
         if (item.ExecutedTaskNum) {
           listData.push({ color: '#108ee9', content: `待执行任务${item.ExecutedTaskNum}个`, type: 1, date: item.ExcetionDate, text: "待执行任务" })
@@ -336,10 +391,20 @@ class CalendarPage extends PureComponent {
         if (item.HaveInHandTaskNum) {
           listData.push({ color: '#2db7f5', content: `进行中任务${item.HaveInHandTaskNum}个`, type: 2, date: item.ExcetionDate, text: "进行中任务" })
         }
+        // 超时未完成
+        if (item.InCompleteOverTaskNum) {
+          listData.push({ color: '#f5222d', content: `超时未完成任务${item.InCompleteOverTaskNum}个`, type: 6, date: item.ExcetionDate, text: "超时未完成任务" })
+        }
+        // 系统关闭任务
+        if (item.ColseTaskNum) {
+          listData.push({ color: '#bfbfbf', content: `系统关闭任务${item.ColseTaskNum}个`, type: 10, date: item.ExcetionDate, text: "系统关闭任务" })
+        }
+
         // 无异常
-        if (!item.ExceptionTaskNum && !item.CompleteTaskNum && !item.ExecutedTaskNum && !item.HaveInHandTaskNum) {
+        if (!item.ExceptionTaskNum && !item.CompleteTaskNum && !item.ExecutedTaskNum && !item.HaveInHandTaskNum && !item.ColseTaskNum) {
           listData.push({ notAbnormal: true, date: item.ExcetionDate, type: 0 })
         }
+
       }
       // 未来 0全部  1 备件更换  2 易耗品更换 3标气更换 4 清理点位（保养）
       if (item.FutureDate === value) {
@@ -392,12 +457,12 @@ class CalendarPage extends PureComponent {
     // }
     // 无异常显示绿点
     if (listData.filter(item => item.notAbnormal).length) {
-      return <div style={{ marginTop: -22 }}>
+      return <div>
         <Badge status={"success"} />
       </div>
     }
     return (
-      <ul className="events" style={{ width: "104%", height: "96%" }}>
+      <ul className="events" style={{ width: "100%", height: "96%", overflow: "auto" }}>
         {listData.map(item => {
           // if (item.notAbnormal) {  // 无异常
           //   return <li style={{ marginTop: -20 }}><Badge status={"success"} /></li>
@@ -433,9 +498,9 @@ class CalendarPage extends PureComponent {
       exceptionType: undefined,
       FutureType: type
     } : {
-      exceptionType: type,
-      FutureType: undefined
-    }
+        exceptionType: type,
+        FutureType: undefined
+      }
 
 
     this.props.dispatch({
@@ -493,58 +558,59 @@ class CalendarPage extends PureComponent {
 
 
   render() {
-    const { abnormalDetailList, abnormalForm, loading, modalTableDataSource, modalTableTotal } = this.props;
-    const { currentCellInfo, dateFormat, listData, columns, modalTableCurrent } = this.state;
+    const { abnormalDetailList, abnormalForm, loading, calendarInfoLoading, modalTableDataSource, modalTableTotal } = this.props;
+    const { currentCellInfo, dateFormat, listData, columns, modalTableCurrent, taskRecordDetailVisible, abnormalTitle, } = this.state;
     const cardTitle = `${currentCellInfo.text} - ${moment(currentCellInfo.date).format(dateFormat)}`;
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper title="运维日历">
         <div className={styles.calendarWrapper}>
           <div style={{ display: "flex" }}>
             <div style={{ flex: 5, marginRight: 10 }}>
               <Card className="contentContainer">
-                <Calendar
-                  dateCellRender={this.cellRender}
-                  monthCellRender={this.cellRender}
-                  onSelect={(date) => {
-                    const isAfter = moment().isBefore(moment(date));
-                    // this.setState({
-                    //   currentAbnormalData: {
-                    //     ...currentAbnormalData,
-                    //     text: '运维记录'
-                    //   }
-                    // })
-                    this.updateState({ current: 1 });
-                    setTimeout(() => {
-                      this.abnormalItemClick({ date: date, type: 0, text: "运维记录", future: isAfter })
-                    }, 0)
-                  }}
-                  onPanelChange={(date, mode) => {
-                    this.setState({
-                      date, mode
-                    }, () => {
-                      this.getCalendarInfo();
-                      this.abnormalItemClick({ date: date, type: 0, text: "运维记录" });
-                    })
-                  }}
-                />
+                <Spin spinning={calendarInfoLoading} style={{ top: '25%' }}>
+                  <Calendar
+                    dateCellRender={this.cellRender}
+                    monthCellRender={this.cellRender}
+                    onSelect={(date) => {
+                      const isAfter = moment().isBefore(moment(date));
+                      // this.setState({
+                      //   currentAbnormalData: {
+                      //     ...currentAbnormalData,
+                      //     text: '运维记录'
+                      //   }
+                      // })
+                      this.updateState({ current: 1 });
+                      setTimeout(() => {
+                        this.abnormalItemClick({ date: date, type: 0, text: "运维记录", future: isAfter })
+                      }, 0)
+                    }}
+                    onPanelChange={(date, mode) => {
+                      this.setState({
+                        date, mode
+                      }, () => {
+                        this.getCalendarInfo();
+                        // this.abnormalItemClick({ date: date, type: "", text: "运维记录" });
+                      })
+                    }}
+                  />
+                </Spin>
               </Card>
             </div>
             <div style={{ flex: 3 }}>
-              <Card className="contentContainer" title={cardTitle} bordered={false}
-                bodyStyle={{ height: 'calc(100vh - 220px)', overflowY: 'auto' }}
-              >
+              <Card className="contentContainer" title={cardTitle} bordered={false}>
                 <List
                   itemLayout="vertical"
                   size="large"
                   loading={loading}
-                  pagination={listData.length ? {
+                  pagination={{
                     size: "small",
                     showQuickJumper: true,
                     pageSize: abnormalForm.pageSize,
                     current: abnormalForm.current,
                     onChange: this.onTableChange,
-                    total: abnormalForm.total
-                  } : false}
+                    total: abnormalForm.total,
+                    pageSizeOptions: [6, 10, 20, 50, 100]
+                  }}
                   dataSource={listData}
                   renderItem={item => (
                     <List.Item
@@ -601,6 +667,25 @@ class CalendarPage extends PureComponent {
               }}
             />
           </Modal>
+          <Modal
+            title="任务详情"
+            visible={taskRecordDetailVisible}
+            destroyOnClose
+            wrapClassName='spreadOverModal'
+            footer={null}
+            onCancel={() => {
+              this.setState({ taskRecordDetailVisible: false })
+            }}
+
+          >
+            <TaskRecordDetails
+              match={{ params: { TaskID: this.state.TaskID, DGIMN: this.state.DGIMN } }}
+              isHomeModal
+              hideBreadcrumb
+            />
+          </Modal>
+          {/** 打卡异常  监测点 弹框 */}
+          {this.state.abnormalTitle && <EntAbnormalMapModal abnormalTitle={abnormalTitle} onCancel={() => { this.setState({ abnormalTitle: undefined }) }} />}
         </div>
       </BreadcrumbWrapper>
     );

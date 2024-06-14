@@ -707,30 +707,232 @@ const routes = [
           //   ]
           // },
           {
+            path: '/operaAchiev', //运维绩效
+            name: 'operaAchiev',
+            routes: [
+              {
+                path: '/operaAchiev',
+                redirect: '/operaAchiev/personalAchiev', // 重定向 默认为
+              },
+              {
+                // 个人绩效
+                name: 'personalAchiev',
+                path: '/operaAchiev/personalAchiev',
+                component: './operaAchiev/personalAchiev',
+              },
+              {
+                // 绩效信息
+                name: 'achievInfo',
+                path: '/operaAchiev/achievInfo',
+                component: './operaAchiev/achievInfo',
+              },
+              {
+                // 点位系数清单
+                name: 'pointCoefficientList',
+                path: '/operaAchiev/pointCoefficientList',
+                component: './operaAchiev/pointCoefficients',
+              },
+              {
+                // 工单系数清单
+                name: 'workCoefficientList',
+                path: '/operaAchiev/workCoefficientList',
+                component: './operaAchiev/workCoefficients',
+              },
+              {
+                // 绩效定时器
+                name: 'operaAchievTimer',
+                path: '/operaAchiev/operaAchievTimer',
+                component: './operaAchiev/operaAchievTimer',
+              },
+              {
+                // 积分信息查询
+                name: 'operaUserIntegral',
+                path: '/operaAchiev/operaUserIntegral',
+                component: './operaAchiev/operaUserIntegral',
+              },
+              {
+                // 现场工作时长
+                name: 'operationSiteAttendanceStatistics',
+                path: '/operaAchiev/operationSiteAttendanceStatistics',
+                component: './operaAchiev/operationSiteAttendanceStatistics',
+              },
+              {
+                // 签到考勤查询 运维
+                name: 'OperaCheckAttendanceQuery',
+                path: '/operaAchiev/operaCheckAttendanceQuery',
+                component: './operaAchiev/operaCheckAttendanceQuery',
+              },
+            ],
+          },
+          {
+            path: '/commissionTest', //调试检测
+            name: 'commissionTest',
+            routes: [
+              {
+                path: '/commissionTest',
+                redirect: '/commissionTest/equipmentAccount',
+              },
+              {
+                name: 'equipmentAccount',
+                path: '/commissionTest/equipmentAccount', //调试检测 设备台账
+                routes: [
+                  {
+                    path: '/commissionTest/equipmentAccount',
+                    redirect: '/commissionTest',
+                  },
+                  {
+                    name: 'pollutantManager', //调试检测 污染源管理
+                    path: '/commissionTest/equipmentAccount/pollutantManager/:configId',
+                    component: './commissionTest/equipmentAccount/pollutantManager',
+                  },
+                  {
+                    name: 'commissionTestPoint', //调试检测 污染源管理 监测点
+                    path:
+                      '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise/point',
+                    component: './commissionTest/equipmentAccount/pollutantManager/point',
+                  },
+                  {
+                    name: 'pollutantManager', //调试检测 污染源查询
+                    path: '/commissionTest/equipmentAccount/pollutantQuery',
+                    component: './commissionTest/equipmentAccount/pollutantQuery',
+                  },
+                  {
+                    name: 'pollutantManager', //调试检测 设备厂家名录
+                    path: '/commissionTest/equipmentAccount/equipmentManufacturList',
+                    component: './commissionTest/equipmentAccount/equipmentManufacturList',
+                  },
+                  {
+                    name: 'cemsEquipmentList', //cems设备清单
+                    path: '/commissionTest/equipmentAccount/cemsEquipmentList',
+                    component: './commissionTest/equipmentAccount/cemsEquipmentList',
+                  },
+                  {
+                    name: 'cemsModelList', //cems型号清单
+                    path: '/commissionTest/equipmentAccount/cemsModelList',
+                    component: './commissionTest/equipmentAccount/cemsModelList',
+                  },
+                  {
+                    name: 'referenceInstruList', //参比仪器清单
+                    path: '/commissionTest/equipmentAccount/referenceInstruList',
+                    component: './commissionTest/equipmentAccount/referenceInstruList',
+                  },
+                ],
+              },
+              {
+                name: '72HourCommissionTest', //72小时调试检测
+                path: '/commissionTest/72HourCommissionTest',
+                component: './commissionTest/72HourCommissionTest',
+              },
+              {
+                name: '72HourCommissionTestQuery', //72小时调试检测查询
+                path: '/commissionTest/72HourCommissionTestQuery',
+                component: './commissionTest/72HourCommissionTest',
+              },
+              {
+                name: 'areaPermissManage', //区域权限管理
+                path: '/commissionTest/areaPermissManage',
+                component: './commissionTest/areaPermissManage',
+              },
+            ],
+          },
+          {
+            path: '/systemManger', //系统管理
+            name: 'systemManger',
+            routes: [
+              {
+                path: '/systemManger',
+                redirect: '/systemManger/noticeManger/noticeManger',
+              },
+              {
+                name: 'noticeManger',
+                path: '/systemManger/noticeManger', // 公告管理
+                component: './systemManger/noticeManger',
+              },
+              {
+                name: 'noticeMangerDetail',
+                path: '/systemManger/noticeManger/detail', // 公告管理详情
+                component: './systemManger/noticeManger/detail',
+              },
+              {
+                name: 'problemManger',
+                path: '/systemManger/problemManger', // 问题管理
+                component: './systemManger/problemManger',
+              },
+              {
+                name: 'problemMangerDetail',
+                path: '/systemManger/problemManger/detail', // 问题管理详情
+                component: './systemManger/problemManger/detail',
+              },
+              {
+                name: 'helpCenter',
+                path: '/systemManger/helpCenter', // 帮助中心
+                component: './systemManger/helpCenter',
+              },
+              {
+                name: 'pollutantModel',
+                path: '/systemManger/pollutantMold', // 污染源模型
+                component: './systemManger/pollutantMold',
+              },
+              {
+                name: 'logManger',
+                path: '/systemManger/logManger', // 日志管理
+                component: './systemManger/logManger',
+              },
+              {
+                name: 'operationBasConfig',
+                path: '/systemManger/operationBasConfig', // 运维基础配置
+                component: './systemManger/operationBasConfig',
+              },
+            ],
+          },
+          {
+            path: '/assetManage/customOrder', //客户订单
+            routes: [
+              {
+                path: '/assetManage/customOrder',
+                redirect: '/assetManage/customOrder/custopmRenew', // 重定向 默认为
+              },
+              {
+                // 客户续费
+                name: 'custopmRenew',
+                path: '/assetManage/customOrder/custopmRenew',
+                component: './platformManager/assetManage/custopmRenew',
+              },
+              {
+                // 续费日志
+                name: 'custopmRenew',
+                path: '/assetManage/customOrder/renewalLog',
+                component: './platformManager/assetManage/renewalLog',
+              },
+            ],
+          },
+          {
+            path: '/assetManage/basicSet', //基础设置
+            routes: [
+              {
+                path: '/assetManage/basicSet',
+                redirect: '/assetManage/basicSet/contractChangeSet', // 重定向 默认为
+              },
+              {
+                name: 'operationProjectUser', // 合同变更设置
+                path: '/assetManage/basicSet/contractChangeSet',
+                component: './assetManage/basicSet/contractChangeSet',
+              },
+            ],
+          },
+          {
+            //项目权限管理
+            name: 'projectManageAuthor',
+            path: '/assetManagement/equipmentAccount/projectManageAuthor',
+            component: './platformManager/assetManage/equipmentAccount/projectManageAuthor',
+          },
+          {
             path: '/platformconfig',
             name: 'platformconfig',
             routes: [
               {
                 path: '/platformconfig',
                 redirect: '/platformconfig/AEnterpriseTest',
-              },
-              {
-                // 设备管理
-                name: 'equipmentManage',
-                path: '/platformconfig/equipmentManage',
-                component: './platformManager/equipmentManage',
-              },
-              {
-                // 设备参数管理
-                name: 'equipmentManage',
-                path: '/platformconfig/equipmentParmars',
-                component: './platformManager/equipmentParmars',
-              },
-              {
-                // 设备管理 - 添加、编辑
-                name: 'addEditEquipment',
-                path: '/platformconfig/equipmentManage/:DGIMN/:id',
-                component: './platformManager/equipmentManage/AddEditEquipmentPage',
               },
               {
                 name: 'UnitInfoPage',
@@ -747,6 +949,12 @@ const routes = [
                 name: 'entOperationInfo', //企业下的运维信息
                 path: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2/operationInfo',
                 component: './platformManager/monitortarget/operationInfo',
+              },
+              {
+                name: 'entImport', //企业导入
+                path:
+                  '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/entImport',
+                component: './platformManager/monitortarget/entImport',
               },
               {
                 name: 'dischargepermit',
@@ -913,6 +1121,156 @@ const routes = [
                 path: '/platformconfig/emissionEnt',
                 component: './platformManager/emissionEnt/',
               },
+              {
+                path: '/platformconfig/basicInfo',
+                redirect: '/platformconfig/basicInfo/projectManager',
+              },
+              {
+                //仓库管理
+                name: 'warehouse',
+                path: '/platformconfig/basicInfo/monitortarget/warehouse/:configId',
+                component: './platformManager/basicInfo/storehouseManager/AutoFormManager',
+              },
+              {
+                //设备交接资料管理
+                name: 'equiptmentHandManager',
+                path: '/platformconfig/basicInfo/equiptmentHandManager',
+                component: './platformManager/basicInfo/equiptmentHandManager',
+              },
+              {
+                //配置信息
+                name: 'configurationInfo',
+                path: '/platformconfig/configurationInfo',
+                routes: [
+                  {
+                    path: '/platformconfig/configurationInfo',
+                    redirect: '/platformconfig/configurationInfo/OperationCycle',
+                  },
+                  {
+                    name: 'operationCycle', //运维频次管理
+                    path: '/platformconfig/configurationInfo/:configId',
+                    component: './platformManager/configurationInfo/AutoFormManager',
+                  },
+                  {
+                    name: 'timerManage', //定时器管理
+                    path: '/platformconfig/configurationInfo/timer/timerManage',
+                    component: './platformManager/configurationInfo/timerManage',
+                  },
+                  {
+                    name: 'equipmentFacturer', //设备厂家名录
+                    path: '/platformconfig/configurationInfo/deveice/equipmentFacturer',
+                    component: './platformManager/configurationInfo/equipmentFacturer',
+                  },
+                  {
+                    name: 'systemMarker', //系统型号
+                    path: '/platformconfig/configurationInfo/deveice/systemMarker',
+                    component: './platformManager/configurationInfo/systemMarker',
+                  },
+                  {
+                    //故障单元管理
+                    name: 'faultUnitManager',
+                    path: '/platformconfig/configurationInfo/faultUnit/faultUnitManager',
+                    component: './platformManager/configurationInfo/faultUnitManager',
+                  },
+                  {
+                    name: 'checkInfo', //核查信息
+                    path: '/platformconfig/configurationInfo/check/checkInfo',
+                    component: './platformManager/configurationInfo/checkInfo',
+                  },
+                  {
+                    name: 'pointMatchingSet', //点位匹配设置
+                    path: '/platformconfig/configurationInfo/pointMatching/pointMatchingSet',
+                    component: './platformManager/configurationInfo/pointMatchingSet',
+                  },
+                  {
+                    name: 'accountFillingSet', //台账填报设置
+                    path: '/platformconfig/configurationInfo/accountFilling/accountFillingSet',
+                    component: './platformManager/configurationInfo/accountFillingSet',
+                  },
+                  {
+                    name: 'noDataPointExport', //无数据点位导出
+                    path: '/platformconfig/configurationInfo/noDataPoint/noDataPointExport',
+                    component: './platformManager/configurationInfo/noDataPointExport',
+                  },
+                  {
+                    name: 'newOldProtocolConversManger', // 新老协议转换管理
+                    path:
+                      '/platformconfig/configurationInfo/newOldProtocol/newOldProtocolConversManger',
+                    component: './platformManager/configurationInfo/newOldProtocolConversManger',
+                  },
+                  {
+                    name: 'newOldProtocolConversManger', // 交接和报告
+                    path: '/platformconfig/configurationInfo/handoverReporting/handoverReport',
+                    component: './platformManager/configurationInfo/handoverReport',
+                  },
+                ],
+              },
+              {
+                //资产管理
+                name: 'assetManage',
+                path: '/platformconfig/assetManage',
+                routes: [
+                  {
+                    path: '/platformconfig/assetManage',
+                    redirect: '/platformconfig/assetManage/deviceInfo',
+                  },
+                  {
+                    name: 'deviceInfo', //设备管理
+                    path: '/platformconfig/assetManage/deviceInfo',
+                    component: './platformManager/assetManage/deviceInfo',
+                  },
+                  {
+                    name: 'spareParts', //备品备件
+                    path: '/platformconfig/assetManage/spareParts/:configId',
+                    component: './OperationSysManager/SparepartManage',
+                  },
+                  // {
+                  //   name: 'referenceMaterial',//标准物质
+                  //   path: '/platformconfig/assetManage/referenceMaterial/:configId',
+                  //   component: './OperationSysManager/StandardGasManage',
+                  // },
+                  {
+                    name: 'referenceMaterial', //标准物质
+                    path: '/platformconfig/assetManage/referenceMaterial',
+                    component: './platformManager/assetManage/referenceMaterial',
+                  },
+                  {
+                    name: 'StandardLiquid', //试剂信息
+                    path: '/platformconfig/assetManage/reagentInfo',
+                    component: './platformManager/assetManage/referenceMaterial',
+                  },
+                ],
+              },
+              {
+                // 项目管理
+                name: 'projectManager',
+                path: '/platformconfig/basicInfo/projectManager',
+                component: './platformManager/basicInfo/projectManager',
+              },
+              {
+                // 项目管理详情
+                name: 'projectManagerDetail',
+                path: '/platformconfig/basicInfo/projectManager/detail',
+                component: './platformManager/basicInfo/projectManager/detail',
+              },
+              {
+                // 设备管理
+                name: 'equipmentManage',
+                path: '/platformconfig/equipmentManage',
+                component: './platformManager/equipmentManage',
+              },
+              {
+                // 设备参数管理
+                name: 'equipmentManage',
+                path: '/platformconfig/equipmentParmars',
+                component: './platformManager/equipmentParmars',
+              },
+              {
+                // 设备管理 - 添加、编辑
+                name: 'addEditEquipment',
+                path: '/platformconfig/equipmentManage/:DGIMN/:id',
+                component: './platformManager/equipmentManage/AddEditEquipmentPage',
+              },
             ],
           },
           {
@@ -1058,6 +1416,21 @@ const routes = [
                 component: './operations/operationRecord',
               },
               {
+                path: '/operations/operationRecordList', //运维记录
+                name: 'operationRecordList',
+                component: './operations/operationRecordList',
+              },
+              {
+                path: '/operations/operationRecordnalysis', //运维记录分析
+                name: 'operationRecordnalysis',
+                component: './operations/operationRecordnalysis',
+              },
+              {
+                path: '/operations/alarmResponseTimelyRate', //报警响应及时率
+                name: 'alarmResponseTimelyRate',
+                component: './operations/alarmResponseTimelyRate',
+              },
+              {
                 name: 'materielmanager',
                 path: '/operations/materielmanager',
                 routes: [
@@ -1101,6 +1474,17 @@ const routes = [
                     component: './OperationSysManager/CertificateManage/',
                   },
                 ],
+              },
+              {
+                //运维资料
+                name: 'maintenancedatabase',
+                path: '/operations/maintenancedatabase/:configId',
+                component: './OperationSysManager/MaintenanceDatabaseManage/',
+              },
+              {
+                name: 'sparepartsstation', //服务站信息
+                path: '/operations/sparepartsstation/:configId',
+                component: './OperationSysManager/SparePartsStation/',
               },
               {
                 name: 'carmanager',
@@ -1166,6 +1550,16 @@ const routes = [
                 component: './operations/CommandDispatchReport',
               },
               {
+                path: '/operations/equipmentFeedback', //开发设备故障反馈
+                name: 'EquipmentFeedback',
+                component: './operations/equipmentFeedback',
+              },
+              {
+                path: '/operations/equipmentFeedback/detail', //开发设备故障反馈 详情
+                name: 'EquipmentFeedback',
+                component: './operations/equipmentFeedback/detail',
+              },
+              {
                 path: '/operations/operationEntManage/details/:TaskID/:DGIMN',
                 name: 'CommandDispatchReportDetails',
                 component: './EmergencyTodoList/EmergencyDetailInfoLayout',
@@ -1185,6 +1579,160 @@ const routes = [
                 path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
                 component:
                   './OperationSysManager/operationEntManage/operationPerson/OperationPersonDetail',
+              },
+              {
+                path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
+                name: 'CommandDispatchReportDetails',
+                component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+              },
+              {
+                path: '/operations/remoteSupervision', //远程督查
+                name: 'remoteSupervision',
+                component: './operations/remoteSupervision',
+              },
+              {
+                path: '/operations/remoteSupervisionRecord', //远程督查记录
+                name: 'remoteSupervisionRecord',
+                component: './operations/remoteSupervision',
+              },
+              {
+                path: '/operations/remoteSupervision/detail/:id', //远程督查 详情
+                name: 'remoteSupervisionDetail',
+                component: './operations/remoteSupervision/detail',
+              },
+              {
+                path: '/operations/supervisionList', //督查项清单
+                name: 'supervisionList',
+                component: './operations/supervisionList',
+              },
+              {
+                path: '/operations/supervisionManager', //运维督查管理 远程督查
+                name: 'supervisionList',
+                component: './operations/supervisionManager',
+              },
+              {
+                path: '/operations/siteInspector', //运维督查管理 现场督查
+                name: 'siteInspector',
+                component: './operations/supervisionManager',
+              },
+              {
+                path: '/operations/supervisionRecod', //运维督查记录 远程督查
+                name: 'supervisionRecod',
+                component: './operations/supervisionManager',
+              },
+              {
+                path: '/operations/siteSupervisionRecod', //运维督查记录 现场督查
+                name: 'siteSupervisionRecod',
+                component: './operations/supervisionManager',
+              },
+              {
+                path: '/operations/supervisionAnalySumm', //督查分析总结
+                name: 'supervisionAnalySumm',
+                component: './operations/supervisionAnalySumm',
+              },
+              {
+                path: '/operations/superviseRectification', //系统设施核查整改
+                name: 'superviseRectification',
+                component: './operations/superviseRectification',
+              },
+              {
+                path: '/operations/provincialManager', //省区经理管理
+                name: 'provincialManager',
+                component: './operations/provincialManager',
+              },
+              {
+                path: '/operations/cruxParSupervision', //关键参数督查
+                name: 'cruxParSupervision',
+                component: './operations/cruxParSupervision',
+              },
+              {
+                path: '/operations/cruxParSupervisionRecord', //关键参数督查记录
+                name: 'superviseRectification',
+                component: './operations/cruxParSupervision',
+              },
+              {
+                path: '/operations/cruxParSupervisionRectifica', //关键参数核查整改
+                name: 'cruxParSupervisionRectifica',
+                // component: './operations/cruxParSupervisionRectifica',
+                component: './operations/cruxParSupervisionRectifica3.0',
+              },
+              // {
+              //   path: '/operations/cruxParSupervisionAnalysis', //关键参数核查分析
+              //   name: 'cruxParSupervisionAnalysis',
+              //   component: './operations/cruxParSupervisionAnalysis',
+              // },
+              {
+                path: '/operations/cruxParSupervisionStatistics', //关键参数核查统计
+                name: 'cruxParSupervisionStatistics',
+                component: './operations/cruxParSupervisionAnalysis',
+              },
+              {
+                path: '/operations/operatioSupervisionKpi', //运维督查KPI
+                name: 'operatioSupervisionKpi',
+                component: './operations/operatioSupervisionKpi',
+              },
+              {
+                //运维任务管理 重定向
+                path: '/operations/operaTaskManager',
+                redirect: '/operations/operaTaskManager/operaTask',
+              },
+              {
+                path: '/operations/operaTaskManager',
+                name: 'operaTask',
+                routes: [
+                  {
+                    path: '/operations/operaTaskManager/operaTask', //运维任务
+                    name: 'operaTask',
+                    component: './operations/operaTaskManager/operaTask',
+                  },
+                ],
+              },
+              {
+                //运维任务报告
+                path: '/operations/operaTaskReportManager',
+                redirect: '/operations/operaTaskReportManager/operaTaskReport',
+              },
+              {
+                path: '/operations/operaTaskReportManager',
+                name: 'operaTask',
+                routes: [
+                  {
+                    path: '/operations/operaTaskReportManager/operaTaskReport', //运维任务报告
+                    name: 'operaTask',
+                    component: './operations/operaTaskReportManager/operaTaskReport',
+                  },
+                ],
+              },
+              {
+                //运维计划
+                path: '/operations/operaPlan',
+                name: 'operaPlan',
+                routes: [
+                  {
+                    path: '/operations/operaPlan',
+                    redirect: '/operations/operaPlan/formulateOperaTask',
+                  },
+                  {
+                    path: '/operations/operaPlan/formulateOperaTask', //制定运维计划
+                    name: 'formulateOperaTask',
+                    component: './operations/operaPlan/formulateOperaTask',
+                  },
+                  {
+                    path: '/operations/operaPlan/afootPlan', //进行中计划
+                    name: 'afootPlan',
+                    component: './operations/operaPlan/afootPlan',
+                  },
+                  {
+                    path: '/operations/operaPlan/completedPlan', //已完结计划
+                    name: 'completedPlan',
+                    component: './operations/operaPlan/planQuery',
+                  },
+                  {
+                    path: '/operations/operaPlan/operaPlanQuery', //运维计划查询
+                    name: 'operaPlanQuery',
+                    component: './operations/operaPlan/planQuery',
+                  },
+                ],
               },
             ],
           },
@@ -1273,6 +1821,11 @@ const routes = [
                 path: '/rolesmanager/userRecovery',
                 component: './authorized/userRecovery',
               },
+              {
+                name: 'smsSend', //短信发送
+                path: '/rolesmanager/smsSend',
+                component: './authorized/smsSend',
+              },
             ],
           },
           // {
@@ -1313,6 +1866,7 @@ const routes = [
                 path: '/alarmmanager/alarmverifyrecord/exceptionVerify',
                 component: './monitoring/alarmverifyrecord/index',
               },
+
             ],
           },
 
@@ -1376,6 +1930,40 @@ const routes = [
               //   component: './monitoring/exceedData',
               // },
             ],
+          },
+          {
+            //监督核查 重定向
+            path: '/supervisionCheck',
+            redirect: '/operations/remoteSupervision',
+          },
+          {
+            path: '/supervisionCheck/noScene', //非现场监督核查 重定向
+            redirect: '/operations/remoteSupervision',
+          },
+          {
+            path: '/supervisionCheck/scene', //现场监督核查 重定向
+            redirect: '/operations/siteInspector',
+          },
+          {
+            //资产管理 重定向
+            path: '/assetManagement',
+            redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2',
+          },
+          {
+            path: '/assetManagement/equipmentAccount', //设备台账 重定向
+            redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2',
+          },
+          {
+            path: '/assetManagement/operationAccount', //运维台账 重定向
+            redirect: '/operations/maintenancedatabase/MaintenanceDatabase',
+          },
+          {
+            path: '/assetManagement/consumables', //备件耗材 重定向
+            redirect: '/platformconfig/basicInfo/monitortarget/warehouse/Storehouse',
+          },
+          {
+            path: '/assetManagement/authorityManage', //权限管理 重定向
+            redirect: '/rolesmanager/user/newUserInfo',
           },
           {
             path: '/monitoring',
@@ -1448,6 +2036,15 @@ const routes = [
                 //   : './monitoring/videopreview/ysyvideo/VideoReact'
                 //   }`,
                 component: './Video/videoView',
+              },
+              {
+                path: '/monitoring/videoMonitor',
+                redirect: '/monitoring/videoMonitor/ent',
+              },
+              {
+                //视频监控 企业
+                path: '/monitoring/videoMonitor/ent',
+                component: './monitoring/videoMonitor/ent',
               },
               {
                 name: 'realtimedata',
@@ -1566,6 +2163,16 @@ const routes = [
               //   path: '/monitoring/overrecord',
               //   component: './monitoring/overRecord',
               // },
+              {
+                name: 'originaldata', //原始数据包
+                path: '/monitoring/missingData/originaldata',
+                component: './monitoring/originaldata',
+              },
+              {
+                name: 'platformAnalysReport', //平台分析报告
+                path: '/monitoring/platformAnalysReport',
+                component: './monitoring/platformAnalysReport',
+              },
             ],
           },
           {
@@ -2028,82 +2635,94 @@ const routes = [
                 routes: [
                   {
                     // 运维工单统计（企业）
-                    name: 'entWorkOrderStatistics',
                     path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                    component: './IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics',
+                    component: './Intelligentanalysis/planWorkOrderStatistics',
+                  },
+                  // {
+                  //   //行政区运维工单统计（企业）
+                  //   name: 'regionStaticstics',
+                  //   path:
+                  //     '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                  //   component:
+                  //     './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                  // },
+                  // {
+                  //   //企业运维工单统计（企业）
+                  //   name: 'entWorkOrderStatistics',
+                  //   path:
+                  //     '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                  //   component:
+                  //     './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                  // },
+                  // /* 缺失台账工单统计 空气站 */
+                  // {
+                  //   name: 'noAccountAirStatistics',
+                  //   path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                  //   component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                  // },
+                  // {
+                  //   name: 'noAccountStatisticsEnt', //无台账上传统计 企业
+                  //   path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                  //   component: './IntelligentAnalysis/operationWorkStatis/noAccountStatistics/ent',
+                  // },
+                  // /* 缺失台账照片统计 */
+                  // {
+                  //   name: 'noAccountAirStatisticsPhoto',
+                  //   path:
+                  //     '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                  //   component:
+                  //     './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                  // },
+                  // /* 缺失台账工单详情 */
+                  // {
+                  //   name: 'noAccountAirStatisticsDetails',
+                  //   path:
+                  //     '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                  //   component:
+                  //     './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                  // },
+                  // {
+                  //   /** 运维工单统计-空气站 */
+                  //   name: 'AirWorkOrderStatistics',
+                  //   path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
+                  //   component: './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
+                  // },
+                  // {
+                  //   /** 单区域 运维工单统计-空气站 排口 */
+                  //   name: 'RegionAirQualityMonitoringStation',
+                  //   path:
+                  //     '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
+                  //   component:
+                  //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
+                  // },
+                  // {
+                  //   /** 单站点 运维工单统计-空气站 排口 */
+                  //   name: 'SingleStationAirQualityMonitoringStation',
+                  //   path:
+                  //     '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
+                  //   component:
+                  //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
+                  // },
+                  // {
+                  //   /** 单区域 运维工单统计-空气站 */
+                  //   name: 'AirWorkOrderStatistics',
+                  //   path:
+                  //     '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
+                  //   component:
+                  //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
+                  // },
+                  {
+                    //异常工单统计
+                    name: 'abnormalWorkStatistics',
+                    path: '/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics',
+                    component: './Intelligentanalysis/abnormalWorkStatistics',
                   },
                   {
-                    //行政区运维工单统计（企业）
-                    name: 'regionStaticstics',
+                    //异常工单统计 市一级
+                    name: 'abnormalWorkStatisticsDetail',
                     path:
-                      '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                    component:
-                      './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                  },
-                  {
-                    //企业运维工单统计（企业）
-                    name: 'entWorkOrderStatistics',
-                    path:
-                      '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                    component:
-                      './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                  },
-                  /* 缺失台账工单统计 空气站 */
-                  {
-                    name: 'noAccountAirStatistics',
-                    path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                    component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                  },
-                  {
-                    name: 'noAccountStatisticsEnt', //无台账上传统计 企业
-                    path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                    component: './IntelligentAnalysis/operationWorkStatis/noAccountStatistics/ent',
-                  },
-                  /* 缺失台账照片统计 */
-                  {
-                    name: 'noAccountAirStatisticsPhoto',
-                    path:
-                      '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                    component:
-                      './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                  },
-                  /* 缺失台账工单详情 */
-                  {
-                    name: 'noAccountAirStatisticsDetails',
-                    path:
-                      '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                    component:
-                      './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                  },
-                  {
-                    /** 运维工单统计-空气站 */
-                    name: 'AirWorkOrderStatistics',
-                    path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
-                    component: './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
-                  },
-                  {
-                    /** 单区域 运维工单统计-空气站 排口 */
-                    name: 'RegionAirQualityMonitoringStation',
-                    path:
-                      '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
-                    component:
-                      './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
-                  },
-                  {
-                    /** 单站点 运维工单统计-空气站 排口 */
-                    name: 'SingleStationAirQualityMonitoringStation',
-                    path:
-                      '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
-                    component:
-                      './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
-                  },
-                  {
-                    /** 单区域 运维工单统计-空气站 */
-                    name: 'AirWorkOrderStatistics',
-                    path:
-                      '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
-                    component:
-                      './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
+                      '/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail',
+                    component: './Intelligentanalysis/abnormalWorkStatistics/regionDetail',
                   },
                 ],
               },
@@ -2240,6 +2859,24 @@ const routes = [
                 name: 'airQualityStatistics',
                 path: '/Intelligentanalysis/airQualityStatistics',
                 component: './IntelligentAnalysis/airQualityStatistics/air',
+              },
+              {
+                //运维区域账户访问率统计 大区
+                name: 'AccessStatistics',
+                path: '/Intelligentanalysis/accessStatistics',
+                component: './Intelligentanalysis/accessStatistics',
+              },
+              {
+                //运维区域账户访问率统计 服务区
+                name: 'AccessStatistics',
+                path: '/Intelligentanalysis/accessStatistics/missDataSecond',
+                component: './Intelligentanalysis/accessStatistics/missDataSecond',
+              },
+              {
+                //运维到期点位统计
+                name: 'operationExpirePoint',
+                path: '/Intelligentanalysis/operationExpirePoint',
+                component: './Intelligentanalysis/operationExpirePoint',
               },
               // 二氧化碳物料衡算法
               {
@@ -2625,6 +3262,18 @@ const routes = [
                 //设备参数查询
                 path: '/dataSearch/deviceParam',
                 component: './dataSearch/deviceParam',
+              },
+              //污染源信息
+              {
+                name: 'PollutantInfo',
+                path: '/dataSearch/pollutantInfo',
+                component: './dataSearch/pollutantInfo',
+              },
+              //项目信息
+              {
+                name: 'ProjectInfo',
+                path: '/dataSearch/projectInfo',
+                component: './dataSearch/projectInfo',
               },
               {
                 name: 'enterpriseMonitoringInquiry',
@@ -3104,6 +3753,7 @@ const routes = [
                     path: '/oneEntsOneArchives/monitoringData/monitorExhibition',
                     component: './monitoring/dataquery',
                   },
+
                 ],
               },
               {
@@ -3364,133 +4014,133 @@ const routes = [
             ],
           },
 
-    /*********** 运维*************** */
-   // 日常工作监管
-   {
-    path: '/workSupervision',
-    name: 'workSupervision',
-    routes: [
-      {
-        // 工作台
-        name: 'Standby',
-        path: '/workSupervision/workbench',
-        component: './workSupervision/workbench',
-      },
-      // 通用管理
-      {
-        name: 'management',
-        path: '/workSupervision/management',
-        routes: [
+          /*********** 运维*************** */
+          // 日常工作监管
           {
-            // 备机管理
-            name: 'Standby',
-            path: '/workSupervision/management/Standby',
-            component: './workSupervision/management/standby/Standby',
+            path: '/workSupervision',
+            name: 'workSupervision',
+            routes: [
+              {
+                // 工作台
+                name: 'Standby',
+                path: '/workSupervision/workbench',
+                component: './workSupervision/workbench',
+              },
+              // 通用管理
+              {
+                name: 'management',
+                path: '/workSupervision/management',
+                routes: [
+                  {
+                    // 备机管理
+                    name: 'Standby',
+                    path: '/workSupervision/management/Standby',
+                    component: './workSupervision/management/standby/Standby',
+                  },
+                  {
+                    // 备机借用
+                    name: 'StandbyBorrow',
+                    path: '/workSupervision/management/StandbyBorrow',
+                    component: './workSupervision/management/standby/StandbyBorrow',
+                  },
+                  {
+                    // 便携设备管理
+                    name: 'Portable',
+                    path: '/workSupervision/management/Portable',
+                    component: './workSupervision/management/Portable',
+                  },
+                  {
+                    // 便携设备借用
+                    name: 'PortableBorrow',
+                    path: '/workSupervision/management/PortableBorrow',
+                    component: './workSupervision/management/Portable/PortableBorrow',
+                  },
+                  {
+                    // 办事处管理
+                    name: 'Office',
+                    path: '/workSupervision/management/Office',
+                    component: './workSupervision/management/office',
+                  },
+                ],
+              },
+              // 任务单提交记录查询
+              {
+                name: 'taskRecordQuery',
+                path: '/workSupervision/taskRecordQuery/:type',
+                component: './workSupervision/taskRecordQuery',
+              },
+              // 日常监管统计
+              {
+                name: 'statistics',
+                path: '/workSupervision/statistics',
+                component: './workSupervision/statistics',
+              },
+              {
+                // 经理日常管理
+                path: '/workSupervision/dailyManagement',
+                name: 'dailyManagement',
+                routes: [
+                  {
+                    // 办事处管理
+                    name: 'officeCheck',
+                    path: '/workSupervision/dailyManagement/officeCheck',
+                    component: './workSupervision/dailyManagement/officeCheck',
+                  },
+                  {
+                    // 客户现场回访
+                    name: 'customerReturnVisit',
+                    path: '/workSupervision/dailyManagement/customerReturnVisit/:systemType',
+                    component: './workSupervision/dailyManagement/customerReturnVisit',
+                  },
+                  {
+                    // 部门内其他工作
+                    name: 'innerOtherWork',
+                    path:
+                      '/workSupervision/dailyManagement/innerOtherWork/:WorkType/:CTOperation',
+                    component: './workSupervision/dailyManagement/work',
+                  },
+                  {
+                    // 现场工作
+                    name: 'fieldWork',
+                    path: '/workSupervision/dailyManagement/fieldWork/:WorkType/:CTOperation',
+                    component: './workSupervision/dailyManagement/work',
+                  },
+                  {
+                    // 支持其他部门工作
+                    name: 'otherDepartmentWork',
+                    path:
+                      '/workSupervision/dailyManagement/otherDepartmentWork/:WorkType/:CTOperation',
+                    component: './workSupervision/dailyManagement/work',
+                  },
+                  {
+                    // 人员培训
+                    name: 'training',
+                    path: '/workSupervision/dailyManagement/training/:type',
+                    component: './workSupervision/dailyManagement/training',
+                  },
+                  {
+                    // 现场检查
+                    name: 'fieldCheck',
+                    path: '/workSupervision/dailyManagement/fieldCheck',
+                    component: './workSupervision/dailyManagement/fieldCheck',
+                  },
+                  {
+                    // 账款催收
+                    name: 'fieldCheck',
+                    path: '/workSupervision/dailyManagement/collections',
+                    component: './workSupervision/dailyManagement/collections',
+                  },
+                  {
+                    // 纪律检查
+                    name: 'disciplineCheck',
+                    path: '/workSupervision/dailyManagement/disciplineCheck/:systemType',
+                    component:
+                      './workSupervision/dailyManagement/disciplineCheck',
+                  },
+                ],
+              },
+            ],
           },
-          {
-            // 备机借用
-            name: 'StandbyBorrow',
-            path: '/workSupervision/management/StandbyBorrow',
-            component: './workSupervision/management/standby/StandbyBorrow',
-          },
-          {
-            // 便携设备管理
-            name: 'Portable',
-            path: '/workSupervision/management/Portable',
-            component: './workSupervision/management/Portable',
-          },
-          {
-            // 便携设备借用
-            name: 'PortableBorrow',
-            path: '/workSupervision/management/PortableBorrow',
-            component: './workSupervision/management/Portable/PortableBorrow',
-          },
-          {
-            // 办事处管理
-            name: 'Office',
-            path: '/workSupervision/management/Office',
-            component: './workSupervision/management/office',
-          },
-        ],
-      },
-      // 任务单提交记录查询
-      {
-        name: 'taskRecordQuery',
-        path: '/workSupervision/taskRecordQuery/:type',
-        component: './workSupervision/taskRecordQuery',
-      },
-      // 日常监管统计
-      {
-        name: 'statistics',
-        path: '/workSupervision/statistics',
-        component: './workSupervision/statistics',
-      },
-      {
-        // 经理日常管理
-        path: '/workSupervision/dailyManagement',
-        name: 'dailyManagement',
-        routes: [
-          {
-            // 办事处管理
-            name: 'officeCheck',
-            path: '/workSupervision/dailyManagement/officeCheck',
-            component: './workSupervision/dailyManagement/officeCheck',
-          },
-          {
-            // 客户现场回访
-            name: 'customerReturnVisit',
-            path: '/workSupervision/dailyManagement/customerReturnVisit/:systemType',
-            component: './workSupervision/dailyManagement/customerReturnVisit',
-          },
-          {
-            // 部门内其他工作
-            name: 'innerOtherWork',
-            path:
-              '/workSupervision/dailyManagement/innerOtherWork/:WorkType/:CTOperation',
-            component: './workSupervision/dailyManagement/work',
-          },
-          {
-            // 现场工作
-            name: 'fieldWork',
-            path: '/workSupervision/dailyManagement/fieldWork/:WorkType/:CTOperation',
-            component: './workSupervision/dailyManagement/work',
-          },
-          {
-            // 支持其他部门工作
-            name: 'otherDepartmentWork',
-            path:
-              '/workSupervision/dailyManagement/otherDepartmentWork/:WorkType/:CTOperation',
-            component: './workSupervision/dailyManagement/work',
-          },
-          {
-            // 人员培训
-            name: 'training',
-            path: '/workSupervision/dailyManagement/training/:type',
-            component: './workSupervision/dailyManagement/training',
-          },
-          {
-            // 现场检查
-            name: 'fieldCheck',
-            path: '/workSupervision/dailyManagement/fieldCheck',
-            component: './workSupervision/dailyManagement/fieldCheck',
-          },
-          {
-            // 账款催收
-            name: 'fieldCheck',
-            path: '/workSupervision/dailyManagement/collections',
-            component: './workSupervision/dailyManagement/collections',
-          },
-          {
-            // 纪律检查
-            name: 'disciplineCheck',
-            path: '/workSupervision/dailyManagement/disciplineCheck/:systemType',
-            component:
-              './workSupervision/dailyManagement/disciplineCheck',
-          },
-        ],
-      },
-    ],
-  },
 
         ],
 

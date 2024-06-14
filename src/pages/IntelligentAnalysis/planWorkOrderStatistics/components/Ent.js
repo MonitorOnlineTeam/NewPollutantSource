@@ -1223,6 +1223,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         footer={null}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
+        mask={false}
       >
      <Card title={  searchWorkComponents()}>
      <MultipleHeadResizeTable

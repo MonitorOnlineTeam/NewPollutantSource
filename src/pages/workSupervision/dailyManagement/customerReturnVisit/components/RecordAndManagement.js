@@ -431,6 +431,7 @@ const RecordAndManagement = props => {
     <Modal
       title={mode === 'record' ? '客户现场回访记录' : '客户现场回访管理'}
       wrapClassName={`spreadOverModal`}
+      mask={false}
       open={open}
       destroyOnClose
       footer={null}
