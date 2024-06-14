@@ -478,6 +478,7 @@ class RoleIndex extends Component {
   // };
   componentDidMount() {
     const buttonList = permissionButton(this.props.match.path);
+    console.log(this.props.match.path,buttonList,2222222)
     buttonList.map(item => {
       switch (item) {
         case 'SetRole':

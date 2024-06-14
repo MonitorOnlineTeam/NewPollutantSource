@@ -367,7 +367,7 @@ const Index = (props) => {
     </Form>
   }
   return (
-    <div className={styles.equipmentManufacturListSty}>
+    <div className={styles.noticeMangerSty}>
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
           <SdlTable
@@ -375,6 +375,7 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={columns}
+            scroll={{y:'calc(100vh - 360px)'}}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

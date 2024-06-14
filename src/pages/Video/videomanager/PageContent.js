@@ -231,7 +231,7 @@ class PageContent extends PureComponent {
 
       }
     }).then(() => {
-      this.setState({ InputType: this.props.VideoType[0].InputType })
+      this.setState({ InputType: this.props.VideoType?.[0]?.InputType })
     })
   }
 

@@ -4146,7 +4146,12 @@ const routes = [
               },
             ],
           },
-
+            // 运维评价报告
+            {
+              name: 'OperationReport',
+              path: '/OperationReport',
+              component: './OperationReport',
+            },
         ],
 
       },

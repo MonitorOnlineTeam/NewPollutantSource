@@ -724,7 +724,7 @@ export default class UserInfoIndex extends Component {
     };
     const provinceShow = this.props.configInfo && this.props.configInfo.IsShowProjectRegion;
     return (
-      <BreadcrumbWrapper title="用户管理">
+      <BreadcrumbWrapper>
         <Card>
           <Form layout="inline">
             <Form.Item label="登录名">

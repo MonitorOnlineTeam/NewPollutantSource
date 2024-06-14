@@ -72,9 +72,9 @@ const Index = (props) => {
   useEffect(() => {
    if(operationSettingInfo?.ID){
     form.setFieldsValue({
+       ...operationSettingInfo,
       availability:operationSettingInfo.Availability,
       setEquipmentMode:operationSettingInfo.SetEquipmentMode,
-      InspectionType:operationSettingInfo.InspectionType,
     })
    }
   }, [operationSettingInfo]);
@@ -96,6 +96,9 @@ const Index = (props) => {
             availability:2,
             setEquipmentMode:0,
             InspectionType:1,
+            IsFlag:false,
+            TaskPlanType:1,
+            OperationType:1,
           }}
         >
         <Spin spinning={props.getOperationSettingLoading}>
@@ -126,6 +129,13 @@ const Index = (props) => {
               <Radio value={2}>否</Radio>
             </Radio.Group>
             </Form.Item> */}
+          <Form.Item label='运维类型' name='OperationType'>
+            <Radio.Group>
+              <Radio value={1}>点位运维负责人</Radio>
+              <Radio value={2}>运维小组（小组成员在工单池中领取工单）</Radio>
+            </Radio.Group>
+            </Form.Item>
+
            <Form.Item label='设备完好率数据来源' name='availability'>
             <Radio.Group>
               <Radio value={1}>抓取数据</Radio>
@@ -142,6 +152,24 @@ const Index = (props) => {
             <Radio.Group>
               <Radio value={1}>否</Radio>
               <Radio value={2}>是</Radio>
+            </Radio.Group>
+            </Form.Item>
+            <Form.Item label='监测数据显示标识位' name='IsFlag'>
+            <Radio.Group>
+              <Radio value={true}>显示</Radio>
+              <Radio value={false}>不显示</Radio>
+            </Radio.Group>
+            </Form.Item>
+            <Form.Item label='是否显示地图点位数据' name='ShowMapData'>
+            <Radio.Group>
+              <Radio value={true}>显示</Radio>
+              <Radio value={false}>不显示</Radio>
+            </Radio.Group>
+            </Form.Item>
+            <Form.Item label='运维计划制定方式' name='TaskPlanType'>
+            <Radio.Group>
+              <Radio value={1}>固定到周</Radio>
+              <Radio value={2}>固定到天</Radio>
             </Radio.Group>
             </Form.Item>
             <Divider orientation="right" style={{borderTopColor:'#0000000f'}}>
