@@ -436,3 +436,15 @@ export async function ExportPollutionDischargeGap(params) {
   const result = await post(API.AbnormalIdentifyModel.ExportPollutionDischargeGap, params);
   return result;
 }
+
+// 波动范围重新运行
+export async function AutoOpeModel(params) {
+  const result = await post(API.AbnormalIdentifyModel.AutoOpeModel, params);
+  return result;
+}
+
+// 波动范围重新运行状态
+export async function GetModelRunStatus(params) {
+  const result = await post(`${API.AbnormalIdentifyModel.GetModelRunStatus}?ModelGuid=${params.ModelGuid}&DGIMN=${params.DGIMN}`, {});
+  return result;
+}

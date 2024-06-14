@@ -165,7 +165,6 @@ export default Model.extend({
         // yield update({
         //   allTypeDataList: result.Datas,
         // });
-        debugger
         callback && callback(result.Datas);
       } else {
         message.error(result.Message);
@@ -760,7 +759,6 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-
     *ExportPollutionDischargeGap({ payload, callback }, { call, select, update }) {
       // 排污缺口 导出
       const result = yield call(services.ExportPollutionDischargeGap, payload);
@@ -770,6 +768,20 @@ export default Model.extend({
       } else {
         message.error(result.Message);
       }
+    },
+    // 波动范围重新运行
+    *AutoOpeModel({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.AutoOpeModel, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 波动范围重新运行状态
+    *GetModelRunStatus({ payload, callback }, { call, select, update }) {
+      const result = yield call(services.GetModelRunStatus, payload);
+      callback && callback(result);
     },
   },
 });

@@ -862,7 +862,8 @@ const WarningDataAndChart = props => {
               symbol: 'circle',
               symbolSize: 6,
               itemStyle: {
-                color: '#eb2f96',
+                // color: '#eb2f96',
+                color: '#797979',
               },
             });
           }
@@ -1528,7 +1529,8 @@ const WarningDataAndChart = props => {
               />
               <Badge
                 // status="processing"
-                color="#eb2f96"
+                // color="#eb2f96"
+                color="#797979"
                 text="数据现象异常"
               />
               <Badge
