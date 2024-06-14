@@ -7,7 +7,7 @@ import { API } from '@config/API'
  */
 export async function GetTaskFormBookSta(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TaskFormApi/GetTaskFormBookSta',
+    '/rest/PollutantSourceApi/TaskFormApi/GetTaskFormBookSta',
     params,
     null,
   );
@@ -25,7 +25,7 @@ export async function GetAttentionDegreeList(params) {
 
 export async function ExportTaskFormBookSta(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskFormBookSta',
+    '/rest/PollutantSourceApi/TaskFormApi/ExportTaskFormBookSta',
     params,
     null,
   );

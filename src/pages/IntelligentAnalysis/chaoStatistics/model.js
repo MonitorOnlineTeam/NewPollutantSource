@@ -37,7 +37,7 @@ export default Model.extend({
     *exportData({ payload }, { call, put, update, select }) {
       const response = yield call(services.exportData, { ...payload });
       if (response.IsSuccess) {
-        downloadFile(result.Datas);
+        downloadFile(response.Datas);
       } else {
         message.error(response.Message)
       }

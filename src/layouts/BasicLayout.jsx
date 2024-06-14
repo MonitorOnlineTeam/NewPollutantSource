@@ -10,6 +10,7 @@ import Cookie from 'js-cookie';
 import { Tabs, Dropdown, Menu, message } from 'antd';
 import webConfig from '../../public/webConfig';
 import SdlMenu from '@/components/SdlMenu';
+import styles from './BasicLayout.less';
 
 class BasicLayout extends Component {
   constructor(props) {

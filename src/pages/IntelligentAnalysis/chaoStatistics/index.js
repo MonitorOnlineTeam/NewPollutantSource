@@ -18,7 +18,7 @@ const { RangePicker } = DatePicker;
 
 @connect(({ loading, autoForm, chaoStatistics, common }) => ({
   regionList: autoForm.regionList,
-  entList: common.priseList,
+  entList: common.entList,
   pointListByEntCode: common.pointListByEntCode,
   tableDataSource: chaoStatistics.tableDataSource,
   loading: loading.effects['chaoStatistics/getTableDataSource'],
@@ -42,10 +42,10 @@ class index extends PureComponent {
 
   componentDidMount() {
     // 获取行政区列表
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2' },
-    });
+    // this.props.dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: { RegionCode: '', PointMark: '2' },
+    // });
 
     // 获取关注列表
     this.props.dispatch({
@@ -69,15 +69,6 @@ class index extends PureComponent {
     this.props.dispatch({
       type: 'common/getPointByEntCode',
       payload: { EntCode, PollutantTypeCode: this.props.form.getFieldValue('PollutantType') },
-    });
-  };
-
-  onExport = () => {
-    this.props.dispatch({
-      type: 'exceptionrecordNew/exportExceptionAlarmListForEnt',
-      payload: {
-        ...this.state.secondQueryCondition,
-      },
     });
   };
 
@@ -357,7 +348,8 @@ class index extends PureComponent {
                   //   }
                   // </Select>
                   <RegionList
-                    changeRegion={value => {
+                    style={{ width: 120 }}
+                    onChange={value => {
                       this.getEntByRegionList(value);
                     }}
                     RegionCode={this.props.form.getFieldValue('RegionCode')}

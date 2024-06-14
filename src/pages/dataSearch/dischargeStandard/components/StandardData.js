@@ -391,7 +391,7 @@ export default class Index extends Component {
           columns={this.state.columns}
           bordered={true}
           dataSource={this.props.disTableDatas}
-          // scroll={{ y: 'calc(100vh - 373px)' }}
+          scroll={{ y: 'calc(100vh - 375px)' }}
           pagination={{
             showSizeChanger: true,
             showQuickJumper: true,

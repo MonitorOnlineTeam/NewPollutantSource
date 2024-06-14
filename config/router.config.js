@@ -1757,12 +1757,17 @@ const routes = [
                   // },
                   {
                     path: '/rolesmanager/user',
-                    redirect: '/rolesmanager/user/userinfoindex/UserInfo',
+                    redirect: '/rolesmanager/user/newUserInfo',
                   },
+                  // 用户管理-未合并
+                  // {
+                  //   name: 'index',
+                  //   path: '/rolesmanager/user/userinfoindex/UserInfo',
+                  //   component: './authorized/user',
+                  // },
                   {
-                    name: 'index',
-                    path: '/rolesmanager/user/userinfoindex/UserInfo',
-                    // component: './authorized/user',
+                    name: 'newUserInfo',
+                    path: '/rolesmanager/user/newUserInfo',
                     component: './authorized/newUser',
                   },
                   {
@@ -3070,11 +3075,11 @@ const routes = [
                 path: '/monitoring/alarmrecord',
                 component: './monitoring/alarmrecord/index',
               },
-              {
-                name: 'originaldata',
-                path: '/monitoring/originaldata',
-                component: './monitoring/originaldata',
-              },
+              // {
+              //   name: 'originaldata',
+              //   path: '/monitoring/originaldata',
+              //   component: './monitoring/originaldata',
+              // },
               {
                 name: 'alarmverifyrecord',
                 path: '/monitoring/alarmverifyrecord',

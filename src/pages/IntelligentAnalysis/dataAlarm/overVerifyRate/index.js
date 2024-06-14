@@ -14,7 +14,7 @@ export default class Index extends Component {
     const { location:{pathname,query}} = this.props;
     let level = pathname==='/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel'? '2' : ''
     return (
-      <BreadcrumbWrapper title="超标报警核实率">
+      <BreadcrumbWrapper>
         <OverVerifyLst level={level}  query={query}/>
       </BreadcrumbWrapper>
     );

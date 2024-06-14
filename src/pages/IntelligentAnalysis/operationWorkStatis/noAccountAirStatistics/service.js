@@ -13,7 +13,7 @@ export async function GetPollutantByType(params) {
  */
 export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TaskFormApi/GetTaskFormBookStaAir',
+    '/rest/PollutantSourceApi/TaskFormApi/GetTaskFormBookStaAir',
     params,
     null,
   );

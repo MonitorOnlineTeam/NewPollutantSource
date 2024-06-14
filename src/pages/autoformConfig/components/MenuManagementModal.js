@@ -242,7 +242,7 @@ class MenuManagementModal extends Component {
                 <Form.Item label={'类型'}>
                   {getFieldDecorator('Target', {
                     rules: [{ required: true, message: '请输入类型!' }],
-                    initialValue: record && record.Target,
+                    initialValue: (record && record.Target) || 'Iframe',
                   })(<Select style={{ width: '174px' }}>{this.getTarget()}</Select>)}
                 </Form.Item>
               </Col>
@@ -250,7 +250,7 @@ class MenuManagementModal extends Component {
                 <Form.Item label={'图标'}>
                   {getFieldDecorator('Menu_Img', {
                     rules: [{ required: true, message: '请输入图标!' }],
-                    initialValue: record && record.Menu_Img,
+                    initialValue: (record && record.Menu_Img) || 'FileOutlined',
                   })(<Input />)}
                 </Form.Item>
               </Col>
