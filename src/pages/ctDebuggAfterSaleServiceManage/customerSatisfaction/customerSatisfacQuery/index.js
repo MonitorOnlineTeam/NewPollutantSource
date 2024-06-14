@@ -60,7 +60,7 @@ const Index = (props) => {
 
 
 
-  const {largeRegionListLoading, queryPar, tableDatas, tableTotal, tableLoading,queryPar2, tableDatas2, tableTotal2, tableLoading2, auditPhotoLoading, installPhotoData, addAuditInfoLoading,exportLoading,exportLoading2,submitRerminaLoading,transmitSurveyLoading, viewOnlyAll} = props;
+  const {largeRegionListLoading, queryPar, tableDatas, tableTotal, tableLoading,queryPar2, tableDatas2, tableTotal2, tableLoading2, auditPhotoLoading, installPhotoData, addAuditInfoLoading,exportLoading,exportLoading2,submitRerminaLoading,transmitSurveyLoading, viewOnlyAll,isHome,initDate,} = props;
 
 
   const [exportIndex, setExportIndex] = useState(-1);
@@ -458,6 +458,7 @@ const Index = (props) => {
       const values = type==1? await formAll.validateFields() : await form.validateFields();
       const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
         ...values,
+        processingStatus:isHome? 2 : values.processingStatus,
         bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
         eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
@@ -546,7 +547,7 @@ const Index = (props) => {
          <Button  style={{ marginRight: 8}}  icon={<ExportOutlined />} loading={exportLoading} onClick={() => {exports(type) }}>
               导出
          </Button>
-           {confiAssistantCheckBtn&&<SetUserListBtn type={5} text='配置助理清单' onClick={()=>{setPopVisible(false);setPopVisible2(false)}}/>}
+           {confiAssistantCheckBtn&&<SetUserListBtn type={5} text='配置调查人员清单' onClick={()=>{setPopVisible(false);setPopVisible2(false)}}/>}
             <Button type="primary" onClick={viewAllData}>
               查看所有数据
             </Button>
@@ -560,6 +561,9 @@ const Index = (props) => {
       form={formAll}
       name="advanced_search"
       className={'ant-advanced-search-form'}
+      initialValues={{
+        time:initDate || []
+      }}
       onFinish={() => { setPageIndex2(1);setPageSize2(20); onFinish(1,1, 20) }}
     >
       <Row align='middle'>
@@ -591,7 +595,7 @@ const Index = (props) => {
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
-        <Col span={8} >
+        {!isHome&&<><Col span={8} >
           <Form.Item name='investigationStatus' label='调查状态' >
             <Select placeholder='请选择' allowClear>
                <Option value={1}>待调查</Option>
@@ -607,7 +611,7 @@ const Index = (props) => {
                <Option value={2}>已处理</Option>
              </Select>
           </Form.Item>
-        </Col>
+        </Col></>}
         <Col span={8} >
           <Form.Item name='time' label='调查日期' >
           <RangePicker_

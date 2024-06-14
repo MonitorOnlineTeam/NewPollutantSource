@@ -56,7 +56,7 @@ const RYPX = props => {
         type: type,
       },
       callback: res => {
-        setDataSource(res);
+        setDataSource(res.Datas);
       },
     });
   };
@@ -143,8 +143,8 @@ const RYPX = props => {
           // let fileList = getAttachmentDataSource(text);
           // console.log('fileList', fileList);
           // return <AttachmentView dataSource={fileList} />;
-
-          return <ImageLightboxView images={text.split(',')} />;
+          let images = record.FilesList.ImgList;
+          return <ImageLightboxView images={images} />;
         },
       },
     ];
@@ -212,7 +212,7 @@ const RYPX = props => {
         name="basic"
         form={form}
         layout="inline"
-        style={{ padding: '10px 0 20px' }}
+        style={{ padding: '0 0 20px' }}
         initialValues={{
           date: moment(),
         }}

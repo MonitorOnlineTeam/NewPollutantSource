@@ -517,7 +517,7 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={editPermis? columns : columns.filter(item=>item.title!='操作')  }
-            scroll={{ y:'calc(100vh - 288px)' }}
+            scroll={{ y:'calc(100vh - 304px)' }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

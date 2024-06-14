@@ -536,7 +536,7 @@ const Index = (props) => {
           bordered
           dataSource={tableDatas}
           columns={columns}
-          scroll={{ y: clientHeight - 500 }}
+          scroll={{y:'calc(100vh - 312px)'}}
           rowSelection={{
             ...rowSelection,
           }}

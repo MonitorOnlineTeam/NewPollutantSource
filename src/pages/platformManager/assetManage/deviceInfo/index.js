@@ -489,7 +489,7 @@ const Index = (props) => {
     for (let i = 0; i < manufacturerList.length; i += 1) {
       const key = manufacturerList[i].ID;
       const treeNode = {
-        title: <div className='textOverflow' style={{ display: 'inline-block',width:220 }}> {manufacturerList[i].ManufacturerName}</div>,
+        title:`${manufacturerList[i].ManufacturerName}`,
         key,
         icon: <ProfileFilled style={{ color: '#1890ff' }} />,
         titles: manufacturerList[i].ManufacturerName
@@ -535,6 +535,7 @@ const Index = (props) => {
         style={{
           marginTop: 64,
         }}
+        className={styles.treeSty}
       >
         <Search placeholder="请输入厂家名称" allowClear onSearch={onSearch} enterButton loading={loadingManufacturer} style={{ padding: '8px 0 12px 8px' }} />
         {loadingManufacturer ?

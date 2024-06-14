@@ -9,7 +9,7 @@ import { post, get } from '@/utils/request';
 
 // 运维工单统计 表头    运维工单统计标题栏  PollutantTypeCode
 export async function GetTaskStaticTitle(params) {
-    const result = get('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskStaticTitle', params, null);
+    const result = get('/rest/PollutantSourceApi/TaskFormApi/GetTaskStaticTitle', params, null);
     return result;
 }
 

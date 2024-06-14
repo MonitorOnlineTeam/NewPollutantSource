@@ -232,7 +232,7 @@ const ProjectExecutionModal = props => {
 
   return (
     <Modal
-      title={`设备信息总览`}
+      title={`项目执行情况`}
       wrapClassName="fullScreenModal"
       open={open}
       destroyOnClose

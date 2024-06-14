@@ -1,5 +1,5 @@
 /**
- * 功  能：问题管理
+ * 功  能：省区经理管理
  * 创建人：jab
  * 创建时间：2022.09
  */
@@ -270,7 +270,7 @@ const Index = (props) => {
     </Form>
   }
   return (
-    <div>
+    <div className={styles.provincialManagerSty}>
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
           <SdlTable
@@ -278,6 +278,7 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={columns}
+            scroll={{ y:'calc(100vh - 304px)' }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

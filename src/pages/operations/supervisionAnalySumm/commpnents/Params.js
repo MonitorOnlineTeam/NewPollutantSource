@@ -306,7 +306,7 @@ const Index = (props) => {
             showQuickJumper: true,
             onChange: handleTableChange,
         }}
-        scroll={{ x: '100%',y:'calc(100vh - 450px)' }}
+        scroll={{ x: '100%',y:'calc(100vh - 442px)' }}
         />
       </Card>
     </div>

@@ -17,9 +17,7 @@ import InstallEquipment from '@/pages/ctDebuggAfterSaleServiceManage/supervision
 const dvaPropsData = ({ loading, reportsAndViews }) => ({
   installPageData: reportsAndViews.installPageData,
   loading: loading.effects[`reportsAndViews/GetInstallationDebugRate`],
-  basicsLoading: loading.effects[`ctAfterSalesServiceManagement/GetWarrantyServiceInfo`],
-  exportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceAnalysis'],
-  basicsExportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceInfo'],
+  exportLoading: loading.effects['reportsAndViews/ExportWarrantyServiceAnalysis'],
 });
 
 const TableCard = props => {
@@ -39,8 +37,9 @@ const TableCard = props => {
 
   // 导出
   const onExport = () => {
+    alert('reportsAndViews')
     dispatch({
-      type: 'ctAfterSalesServiceManagement/ExportInstallationDebugRate',
+      type: 'reportsAndViews/ExportInstallationDebugRate',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
       },

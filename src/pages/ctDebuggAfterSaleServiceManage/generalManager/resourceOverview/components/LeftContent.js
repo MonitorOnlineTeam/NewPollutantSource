@@ -340,7 +340,7 @@ const Index = (props) => {
       series: [
         {
           type: 'pie',
-          radius: ['36%', '57%'],
+          radius: ['28%', '48%'],
           avoidLabeloverlap: false,
           label: {
             show:true,
@@ -351,7 +351,7 @@ const Index = (props) => {
               lineHeight:16,
               color: '#fff',
               align:'left',
-              padding: type == 1 ? [0, -66] : [0, -64],
+              padding:  [0, type==1?-56:-68],
             }
           },
           emphasis: {
@@ -362,8 +362,8 @@ const Index = (props) => {
           labelLine: {
             normal: {
               show: true,
-              length: 5,
-              length2:type == 1 ? 62 : 68,
+              length: 4,
+              length2: 64,
               align: "right",
             },
             emphasis: {
@@ -428,7 +428,7 @@ const Index = (props) => {
           </div>
         </div>
       <Row align='middle' justify='space-between' style={{ height: "calc(100% - 58px)" }}>
-      <div  style={{position:'relative',width: '50%',height:'100%'}}>
+      <div  style={{position:'relative',width: '50%',height:'100%',paddingRight:2}}>
       <div className='bjkSty'> </div>
       <ReactEcharts
           option={bjStatistics(1)}
@@ -438,7 +438,7 @@ const Index = (props) => {
           theme="my_theme"
         /> 
       </div>
-      <div  style={{position:'relative',width: '50%',height:'100%'}}>
+      <div  style={{position:'relative',width: '50%',height:'100%',paddingLeft:2}}>
       <div className='bjkSty'> </div>
          <ReactEcharts
           option={bjStatistics(2)}

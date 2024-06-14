@@ -14,7 +14,7 @@ export async function getEntByRegion(params) {
 
 // 获取table title数据 - 全省
 export async function getTableTitleData(params) {
-  const result = get(`/api/rest/PollutantSourceApi/TaskFormApi/GetTaskStaticTitle`, params, null);
+  const result = get(`/rest/PollutantSourceApi/TaskFormApi/GetTaskStaticTitle`, params, null);
   return result;
 }
 

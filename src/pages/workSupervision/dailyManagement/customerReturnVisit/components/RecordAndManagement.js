@@ -198,8 +198,8 @@ const RecordAndManagement = props => {
       },
       {
         title: '问题及建议',
-        dataIndex: 'Remark',
-        key: 'Remark',
+        dataIndex: 'ProblemsAndAdvice',
+        key: 'ProblemsAndAdvice',
         ellipsis: true,
       },
       {

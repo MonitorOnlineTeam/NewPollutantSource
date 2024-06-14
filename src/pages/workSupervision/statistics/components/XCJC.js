@@ -172,7 +172,7 @@ const XCJC = props => {
         name="basic"
         form={form}
         layout="inline"
-        style={{ padding: '10px 0 20px' }}
+        style={{ padding: '0 0 20px' }}
         initialValues={{
           date: moment(),
           timeType: 'month',
@@ -212,6 +212,7 @@ const XCJC = props => {
         align="center"
         columns={getColumns()}
         dataSource={dataSource}
+        scroll={{y:'calc(100vh - 300px)'}}
       />
     </Card>
   );

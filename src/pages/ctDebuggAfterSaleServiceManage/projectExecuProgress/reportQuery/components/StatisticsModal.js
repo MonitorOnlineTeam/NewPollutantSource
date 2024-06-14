@@ -150,7 +150,7 @@ const StatisticsModal = props => {
         title: '工程师',
         children: [
           {
-            title: '待审核报告数量',
+            title: '待整改报告数量',
             dataIndex: 'StayReformCount',
             key: 'StayReformCount',
             ellipsis: true,

@@ -42,9 +42,8 @@ import ProjectQueryDetail from '@/pages/ctDebuggAfterSaleServiceManage/assetMana
 import StandardGasValidityContent from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/standardGasValidity/components/StandardGasValidityContent';
 import router from 'umi/router';
 import { PageLoading } from '@ant-design/pro-layout';
+import Cookie from 'js-cookie';
 import config from '@/config';
-import { use } from 'echarts';
-import { element } from 'prop-types';
 const { DirectoryTree } = Tree;
 const manualList = [
   {
@@ -390,7 +389,7 @@ const Workbench = props => {
   const GetUserMenuList = callback => {
     props.dispatch({
       type: 'wordSupervision/GetUserMenuList',
-      payload: { systemMenuID: '99dbc722-033f-481a-932a-3c6436e17245' }, //只展示运维平台相关菜单
+      payload: { systemMenuID: Cookie.get('sysMenuId') },
       callback: callback && callback(),
     });
   };
@@ -1280,7 +1279,6 @@ const Workbench = props => {
                           }}
                         >
                           <div className={styles.title}>我的提醒</div>
-                          {remindDataAlarm && (
                             <Row justify="space-between">
                               <BtnComponents
                                 data={myRemindBtnList}
@@ -1295,7 +1293,6 @@ const Workbench = props => {
                                 })
                                 : null}
                             </Row>
-                          )}
                           <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
                             {remindDataAlarm && (
                               <>

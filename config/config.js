@@ -770,7 +770,7 @@ export default {
                 },
                 {
                   //配置信息
-                  name: 'basicInfo',
+                  name: 'configurationInfo',
                   path: '/platformconfig/configurationInfo',
                   routes: [
                     {
