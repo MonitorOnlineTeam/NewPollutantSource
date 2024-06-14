@@ -349,7 +349,7 @@ const Index = (props) => {
         <Form.Item label="查看公告单位" name="company" style={{marginBottom:0}} >
           <OperationCompanyList style={{ width: 200 }} mode='multiple'/>
         </Form.Item>
-        <Form.Item label="查看公告角色" name="role" style={{ margin: '0 8px 0 0' }} >
+        <Form.Item label="查看公告角色" name="role" style={{ margin: '0 8px' }} >
           <RoleList  style={{ width: 350 }} mode='multiple'/>
         </Form.Item>
         <Form.Item style={{ marginLeft: 30, marginBottom:0 }}>
@@ -367,7 +367,7 @@ const Index = (props) => {
     </Form>
   }
   return (
-    <div className={styles.equipmentManufacturListSty}>
+    <div className={styles.noticeMangerSty}>
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
           <SdlTable

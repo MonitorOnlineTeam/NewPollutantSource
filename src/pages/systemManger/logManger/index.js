@@ -646,7 +646,7 @@ const Index = (props) => {
                 dataSource={tableDatas2}
                 columns={columns2}
                 size='small'
-                scroll={{ x: 1000, y: 'calc(100vh - 320px)' }}
+                scroll={{ x: 1000, y: 'calc(100vh - 338px)' }}
                 pagination={{
                   total: tableTotal2,
                   pageSize: pageSize2,
@@ -666,7 +666,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns}
                 size='small'
-                scroll={{ x: 810, y: 'calc(100vh - 280px)' }}
+                scroll={{ x: 810, y: 'calc(100vh - 298px)' }}
                 resizable
                 pagination={{
                   total: tableTotal,
@@ -687,7 +687,7 @@ const Index = (props) => {
                 dataSource={tableDatas3}
                 columns={columns3}
                 size='small'
-                scroll={{ x: 1000, y: 'calc(100vh - 320px)' }}
+                scroll={{ x: 1000, y: 'calc(100vh - 338px)' }}
                 resizable
                 pagination={{
                   total: tableTotal3,

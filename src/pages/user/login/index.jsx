@@ -39,6 +39,7 @@ class Login extends Component {
     Cookie.remove('currentUser');
     Cookie.remove('newToken');
     Cookie.remove('sysMenuId');
+    Cookie.remove('sysList')
     sessionStorage.clear();
     dispatch({type: 'global/updateState', payload: { sysPollutantTypeList: [] } })
   }

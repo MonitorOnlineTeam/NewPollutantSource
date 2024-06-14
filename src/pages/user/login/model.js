@@ -66,7 +66,7 @@ const Model = {
               defaultNavigateUrl = meunList[0].NavigateUrl
             }
             //右上角系统列表
-            const systemList = response.Datas.MenuDatas.map(item => ({ ...item, ID: item.id, Name: item.name, id: undefined, name: undefined, children: undefined }));
+            const systemList = response.Datas.MenuDatas.map(item => ({ ID: item.id, Name: item.name}));
             // sessionStorage.setItem('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
             Cookie.set('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
             callback && callback(response.IsSuccess);
