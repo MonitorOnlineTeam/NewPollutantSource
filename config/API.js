@@ -12,6 +12,7 @@ export const API = {
   SystemApi: {
     GetSystemConfigInfo: before + '/ConfigureApi/GetSystemConfigInfo', //系统相关配置
     IfSpecial: before + '/ConfigureApi/IfSpecial', //手机下载特殊情况(如果配置文件中IfSpecial字段有值直接用该字段地址，不用从上面接中取数据)
+    GetSysList: before + '/MenuApi/GetSysList', // 获取中间页系统列表
   },
   //菜单相关Api
   MenuApi: {
@@ -776,6 +777,7 @@ export const API = {
     UpdDepartInfo: before + '/DepartmentApi/UpdDepartInfo', //更新部门信息
     DelDepartInfo: before + '/DepartmentApi/DelDepartInfo', //删除部门信息
     GetUserPointAuthorizeList: before + '/AuthorizeApi/GetUserPointAuthorizeList', //查询当前部门下的所有排口（公司运维）
+    InsertPointFilterByDepID: before + '/AuthorizeApi/InsertPointFilterByDepID',// 给当前部门添加排口权限(可批量) （宝武）
     GetUserPointAuthorizeListBW: before + '/AuthorizeApi/GetUserPointAuthorizeListBW', //查询当前部门下的所有排口（宝武）
     GetDepartInfoByID: before + '/DepartmentApi/GetDepartInfoByID', //获取单个部门信息
     GetDepartTreeAndObj: before + '/DepartmentApi/GetDepartTreeAndObj', //获取部门树信息（带根节点）

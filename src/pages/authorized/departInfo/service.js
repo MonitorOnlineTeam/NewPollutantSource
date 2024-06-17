@@ -193,7 +193,7 @@ export async function insertpointfilterbydepid(params) {
     state:params.state,
   };
   const result = post(
-    '/api/rest/PollutantSourceApi/AuthorApi/InsertPointFilterByDepID',
+    API.AssetManagementApi.InsertPointFilterByDepID,
     body,
     null,
   );
