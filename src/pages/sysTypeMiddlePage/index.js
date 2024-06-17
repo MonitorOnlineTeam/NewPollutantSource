@@ -34,17 +34,17 @@ class index extends PureComponent {
     this.props.dispatch({
       type: 'global/getSysPollutantTypeList',
     }).then(() => {
-      // // 如果中间页只有一个菜单，直接进入该菜单
-      // if (this.props.sysPollutantTypeList.length === 1) {
-      //   sessionStorage.setItem("isShowSelectSystem", 0);
-      //   this.onSysItemClick(this.props.sysPollutantTypeList[0])
-      // } else {
-      //   sessionStorage.setItem("isShowSelectSystem", 1);
-      //   this.setState({ loading: false });
-      // }
-      sessionStorage.setItem("isShowSelectSystem", 1);
-      this.setState({ loading: false });
-      this.props.sysPollutantTypeList?.[0]&&this.onSysItemClick(this.props.sysPollutantTypeList[0])
+      // 如果中间页只有一个菜单，直接进入该菜单
+      if (this.props.sysPollutantTypeList.length === 1) {
+        sessionStorage.setItem("isShowSelectSystem", 0);
+        this.onSysItemClick(this.props.sysPollutantTypeList[0])
+      } else {
+        sessionStorage.setItem("isShowSelectSystem", 1);
+        this.setState({ loading: false });
+      }
+      // sessionStorage.setItem("isShowSelectSystem", 1);
+      // this.setState({ loading: false });
+      // this.props.sysPollutantTypeList?.[0]&&this.onSysItemClick(this.props.sysPollutantTypeList[0])
 
     })
   }
