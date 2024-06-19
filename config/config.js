@@ -7,10 +7,12 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 import path from 'path';
-const apiHost = 'http://172.16.12.39:49003/'; //运维测试
+// const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:61003/';//运维正式
+const apiHost = 'http://172.16.12.134:61005/';//新前端
 // const apiHost = 'http://172.16.12.234:60061/';//模型
+// const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const apiHost = 'http://172.16.12.152:50089/';
 // const apiHost = 'http://61.50.135.114:63001/'; // 运维外网
 // const apiHost = 'http://172.16.12.234:61002/';
@@ -965,18 +967,18 @@ export default {
                   path: '/platformconfig/monitoringstandard',
                   component: './platformManager/monitoringstandard',
                 },
-                {
-                  //视频管理
-                  name: 'videomanager',
-                  path: '/platformconfig/videomanager',
-                  component: './platformManager/videomanager',
-                },
                 // {
-                //   //视频管理 （新）
-                //   name: 'videomanagerNew',
-                //   path: '/platformconfig/videomanagerNew',
-                //   component: './Video/videomanager',
+                //   //视频管理
+                //   name: 'videomanager',
+                //   path: '/platformconfig/videomanager',
+                //   component: './platformManager/videomanager',
                 // },
+                {
+                  //视频管理 （新）
+                  name: 'videomanagerNew',
+                  path: '/platformconfig/videomanager',
+                  component: './Video/videomanager',
+                },
                 {
                   //运维周期
                   name: 'maintenancecycle',
@@ -1179,8 +1181,7 @@ export default {
                 },
 
                 {
-                  path: '/operations/log',
-                  //运维日志
+                  path: '/operations/log', //运维日志
                   name: 'log',
                   component: './operations/operationRecord',
                 },
@@ -1188,6 +1189,11 @@ export default {
                   path: '/operations/operationRecordList', //运维记录
                   name: 'operationRecordList',
                   component: './operations/operationRecordList',
+                },
+                {
+                  path: '/operations/operationLedger', //运维台账
+                  name: 'ledger',
+                  component: './operations/operationLedger',
                 },
                 {
                   path: '/operations/operationRecordnalysis', //运维记录分析
@@ -1288,6 +1294,11 @@ export default {
                 // },
                 {
                   path: '/operations/taskRecord',
+                  name: 'taskRecord',
+                  component: './operations/TaskRecord',
+                },
+                {
+                  path: '/operations/taskRecord/:type',
                   name: 'taskRecord',
                   component: './operations/TaskRecord',
                 },
@@ -1505,6 +1516,26 @@ export default {
                   ],
                 },
               ],
+            },
+            { //设备运维过程管理
+              path: '/operaProcess',
+              name: 'operaProcess',
+              routes: [
+                {
+                  path: '/operaProcess',
+                  redirect: '/operaProcess/taskRecord?tasktype=1,7',
+                },
+                {
+                  path: '/operaProcess/routine/taskRecord/:type',
+                  name: 'routine',
+                  component: './operations/TaskRecord',
+                },
+                {
+                  path: '/operaProcess/emergency/taskRecord/:type',
+                  name: 'emergency',
+                  component: './operations/TaskRecord',
+                },
+              ]
             },
             {
               path: '/rolesmanager',
@@ -1759,11 +1790,10 @@ export default {
               path: '/monitoring',
               name: 'monitoring',
               routes: [
-                {
-                  path: '/monitoring',
-                  redirect: '/monitoring/realtimedata/ent',
-                },
-
+                // {
+                //   path: '/monitoring',
+                //   redirect: '/monitoring/realtimedata/ent',
+                // },
                 {
                   path: '/monitoring/nuclearEmission', //碳排放核酸 重定向
                   redirect: '/monitoring/realtimedata/ent',
@@ -1772,6 +1802,16 @@ export default {
                   name: 'monitoringDataquery', //监控数据
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
+                },
+                {
+                  name: 'dynamicControlData', //动态管控数据查询
+                  path: '/monitoring/dynamicControlData',
+                  component: './monitoring/dynamicControlData',
+                },
+                {
+                  name: 'workCondiData', //工况数据查询
+                  path: '/monitoring/workCondiData',
+                  component: './monitoring/workCondiData',
                 },
                 {
                   name: 'platformAnalysReport', //平台分析报告
@@ -1810,7 +1850,7 @@ export default {
                   path: '/monitoring/realtimedata/air',
                   component: './monitoring/overView/realtime/Air',
                 },
-                {
+                {  // 数据一览 - 实时
                   name: 'realtimeDataView',
                   path: '/monitoring/mapview/realtimeDataView',
                   component: './monitoring/overView/realtime',
@@ -1827,14 +1867,13 @@ export default {
                   component: './newHome/ElectronicMap',
                 },
                 {
-                  //视频监控
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videopreview/hkvideo/index'
-                      : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                  // component: `${JSON.parse(window.localStorage.getItem('sysConfigInfo')).VideoServer === 0
+                  //   ? './monitoring/videopreview/hkvideo/index'
+                  //   : './monitoring/videopreview/ysyvideo/VideoReact'
+                  //   }`,
+                  component: './Video/videoView',
                 },
                 {
                   //视频监控（新）
@@ -2256,10 +2295,16 @@ export default {
                   ],
                 },
                 {
-                  //排放量分析
+                  name: 'emissionsStatistics',
                   path: '/Intelligentanalysis/emissionsStatistics',
-                  name: 'EmissionsStatistics',
+                  // component: './Intelligentanalysis/emissions',
                   routes: [
+                    //排放量评估
+                    {
+                      name: 'emissionsStatisticsindex',
+                      path: '/Intelligentanalysis/emissionsStatistics/index',
+                      component: './IntelligentAnalysis/emissionStatistical/EmissionStatistical',
+                    },
                     {
                       path: '/Intelligentanalysis/emissionsStatistics',
                       redirect: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
@@ -3190,6 +3235,13 @@ export default {
                         './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
                     },
                     {
+                      // 核查结果跟踪
+                      name: 'verifiedTaskTracking',
+                      path: '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskTracking',
+                      component:
+                        './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                    },
+                    {
                       // 核查详情
                       name: 'AlreadyVerifiedTask',
                       path: '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail',
@@ -3349,6 +3401,13 @@ export default {
                             './ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery',
                         },
                         {
+                          // 派单查询 60主线 
+                          name: 'DispatchQuery',
+                          path: '/ctManage/projectExecuProgress/projectExecution/dispatchQuery/:id',
+                          component:
+                            './ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery',
+                        },
+                        {
                           // 派单完成率
                           name: 'DispatchCompletionRate',
                           path:
@@ -3484,6 +3543,13 @@ export default {
                       // 客户满意度调查
                       name: 'hotPhone',
                       path: '/ctManage/customerSatisfaction/customerSatisfacQuery',
+                      component:
+                        './ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery',
+                    },
+                    {
+                      // 客户满意度调查 全部数据
+                      name: 'hotPhone',
+                      path: '/ctManage/customerSatisfaction/customerSatisfacQueryAll',
                       component:
                         './ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery',
                     },

@@ -1,0 +1,209 @@
+.buttons{
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+}
+.div{
+    height: 50px;
+    line-height: 50px;
+}
+
+.line{
+    width: 100%;
+    height: 20px;
+    background: red;
+}
+.timeMinuteAction{
+    background-color: #0e62a7;
+    cursor: pointer;
+    width: 0.138888%;
+    height: 8px;
+    margin: 0;
+}
+.timeMinute{
+    width: 0.138888%;
+    height: 8px;
+    margin: 0;
+}
+.lineDiv{
+    display: flex;
+}
+
+.videoStyles{
+    background: #333;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 7px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+}
+.rowBody{
+    :global{
+        .ant-card-body{
+            position: relative;
+        }
+    }
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 45px 20px 0 20px;
+    .Slider {
+      flex: 1;
+      margin: 0px;
+      height: 40px;
+      width: 80%;
+    }
+  
+    // antd 样式
+    :global {
+        .ant-slider-rail {
+            height: 1px !important;
+            background: #000 !important;
+            top: 7px !important;
+        }
+    
+        // 显示的距离
+        .ant-slider-track {
+            height: 1px !important;
+            background: transparent !important;
+        }
+    
+        // 字体颜色
+        // .ant-slider-mark-text {
+        //   color: #fff !important;
+        // }
+    
+    
+        .ant-slider-handle:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    
+        .ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open) {
+            // border: none;
+        }
+    
+        .ant-slider-dot {
+            width: 1px !important;
+            height: 16px !important;
+            border: 0px solid rgb(85, 62, 62) !important;
+            margin-left: 0px !important;
+            background: #000;
+            top: -4px;
+        }
+  
+      // .ant-slider-handle {
+      //   width: 1px !important;
+      //   height: 30px !important;
+      //   border: none;
+      //   background: rgb(202, 12, 25);
+      //   margin-top: -10px !important;
+      //   transform: none !important;
+      // }
+  
+      // .ant-slider-mark {
+      //   top: 20px !important;
+      // }
+      // .ant-slider-mark {
+      //   position: absolute;
+      //   top: 14px;
+      //   left: 0;
+      //   width: 100%;
+      //   font-size: 28px;
+      // }
+    }
+}
+.SliderTrack{
+    display: flex;
+    width: 100%;
+    position: absolute;
+    height: 7px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    top: 0;
+}
+
+
+
+
+.timeRule {
+    position: relative;
+    height: 50px;
+    margin: 0 auto;
+    width: 1440px;
+    font-size: 12px;
+    max-width: 1440px;
+    background-color: #f5f5f5;
+    margin-top: 15px;
+}
+.timeDay {
+    position: absolute;
+    left:0;
+    top:0;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    background: #f5f5f5;
+}   
+.time-minute {
+    float: left;
+    width: 1px;
+    height: 8px;
+    margin: 0;
+}
+.time-minute.active {
+    background-color: green;
+}
+.timeText {
+    float: left;
+    width: 4.1667%;
+    border-left: 1px solid #999;
+    border-top : 1px solid #999;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
+    height: 25px;
+    line-height: 25px;
+}
+.time-00 {
+    border-left : 0;
+}   
+.timeCursor {
+    position: absolute;
+    left:0;
+    top:0;
+    height: 30px;
+    width: 2px;
+    background-color: red;
+    text-align: center;
+}
+.timeCursorText {
+    position: absolute;
+    padding: 0px;
+    width : 60px;
+    left : -30px;
+    top: 30px;
+    border : 1px solid red;
+    height: 15px;
+    line-height: 15px;
+    cursor: move;
+    background-color: white;
+    -ms-user-select: none;
+    user-select: none;
+}
+.timeContent{
+    width: 100%;
+    overflow-x: auto;
+}
+.select{
+    width: auto;
+    margin-right: 10px;
+    min-width: 200px;
+}

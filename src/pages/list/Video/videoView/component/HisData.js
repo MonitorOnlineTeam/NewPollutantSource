@@ -5,15 +5,15 @@ import moment from 'moment';
 import styles from './index.less';
 import config from '@/config';
 
-@connect(({ videodata, loading }) => ({
-  isloading: loading.effects['videodata/queryhistorydatalisthis'],
-  hisrealdata: videodata.hisrealdataList.hisrealdata,
-  total: videodata.hisrealdataList.total,
-  pageSize: videodata.hisrealdataList.pageSize,
-  pageIndex: videodata.hisrealdataList.pageIndex,
-  hiscolumns: videodata.hiscolumns,
+@connect(({ video, loading }) => ({
+  isloading: loading.effects['video/queryhistorydatalisthis'],
+  hisrealdata: video.hisrealdataList.hisrealdata,
+  total: video.hisrealdataList.total,
+  pageSize: video.hisrealdataList.pageSize,
+  pageIndex: video.hisrealdataList.pageIndex,
+  hiscolumns: video.hiscolumns,
 }))
-class YsyHisVideoData extends Component {
+class HisData extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,6 +41,7 @@ class YsyHisVideoData extends Component {
         endDate,
       },
       () => {
+        debugger
         this.getPollutantTitle();
         this.getRealTime(beginDate, endDate, pageIndex, pageSize);
         this.timerID = setInterval(() => this.tick(), config.PlayDatas);
@@ -69,9 +70,10 @@ class YsyHisVideoData extends Component {
   };
 
   getPollutantTitle = () => {
+    debugger
     const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'videodata/querypollutantlisthis',
+      type: 'video/querypollutantlisthis',
       payload: { dgimn },
     });
   };
@@ -79,7 +81,7 @@ class YsyHisVideoData extends Component {
   getRealTime = (beginTime, endTime, pageIndex, pageSize) => {
     const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'videodata/queryhistorydatalisthis',
+      type: 'video/queryhistorydatalisthis',
       payload: {
         DGIMNs: dgimn,
         datatype: 'realtime',
@@ -103,7 +105,7 @@ class YsyHisVideoData extends Component {
     } = this.props;
     const { beginDate, endDate } = this.state;
     dispatch({
-      type: 'videodata/queryhistorydatalisthis',
+      type: 'video/queryhistorydatalisthis',
       payload: {
         DGIMNs: dgimn,
         datatype: 'realtime',
@@ -119,7 +121,6 @@ class YsyHisVideoData extends Component {
   render() {
     const { hisrealdata, hiscolumns } = this.props;
     const x = hiscolumns.length * 160;
-    console.log('----------------------------', x);
     return (
       <Table
         className={styles.dataTable}
@@ -127,7 +128,7 @@ class YsyHisVideoData extends Component {
         dataSource={hisrealdata}
         columns={hiscolumns}
         size="small"
-        scroll={{ x, y: 'calc(100vh - 617px)' }}
+        scroll={{ x, y: 'calc(100vh - 408px)' }}
         pagination={{
           total: this.props.total,
           pageSize: this.props.pageSize,
@@ -138,4 +139,4 @@ class YsyHisVideoData extends Component {
     );
   }
 }
-export default YsyHisVideoData;
+export default HisData;

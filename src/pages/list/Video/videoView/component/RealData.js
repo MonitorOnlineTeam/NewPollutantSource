@@ -4,16 +4,15 @@ import { connect } from 'dva';
 import moment from 'moment';
 import styles from './index.less';
 
-@connect(({ videodata, loading }) => ({
-  isloadingC: loading.effects['videodata/querypollutantlist'],
-  isloadingp: loading.effects['videodata/queryhistorydatalist'],
-  realdata: videodata.realdata,
-  columns: videodata.columns,
+@connect(({ video, loading }) => ({
+  isloadingC: loading.effects['video/querypollutantlist'],
+  isloadingp: loading.effects['video/queryhistorydatalist'],
+  realdata: video.realdata,
+  columns: video.columns,
 }))
-class YsyRealVideoData extends Component {
+class RealData extends Component {
   constructor(props) {
     super(props);
-
     this.state = {};
   }
 
@@ -22,10 +21,17 @@ class YsyRealVideoData extends Component {
     this.getRealTime();
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.dgimn !== prevProps.dgimn) {
+      this.getPollutantTitle();
+      this.getRealTime();
+    }
+  }
+
   getPollutantTitle = () => {
     const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'videodata/querypollutantlist',
+      type: 'video/querypollutantlist',
       payload: { dgimn },
     });
   };
@@ -39,7 +45,7 @@ class YsyRealVideoData extends Component {
     ];
     const { match, dispatch, dgimn } = this.props;
     dispatch({
-      type: 'videodata/queryhistorydatalist',
+      type: 'video/queryhistorydatalist',
       payload: {
         DGIMNs: dgimn,
         datatype: 'realtime',
@@ -60,13 +66,18 @@ class YsyRealVideoData extends Component {
         columns.map((item, key) => {
           const i = key;
           const code = item.key;
+          let standard = '';
+          if (item.StandardValue) {
+            standard = ` (${item.StandardValue}) `
+          }
           res.push(
             <Fragment>
               <div className={styles.cardDiv}>
                 <div className={styles.cardtopspan}>
                   <span className={styles.pointName}>{item.title}</span>
                   <span className={styles.pollutantType}>
-                    {realdata[0][code] === undefined ? '-' : realdata[0][code]}
+                    {realdata[0][code] === undefined ? '-' : realdata[0][code] + standard}
+                    {/* {realdata[0][code] === undefined ? '-' : realdata[0][code]} */}
                   </span>
                 </div>
               </div>
@@ -81,7 +92,7 @@ class YsyRealVideoData extends Component {
   };
 
   render() {
-    const { isloadingC, isloadingP, realdata } = this.props;
+    const { isloadingC, isloadingP, realdata, isShowControl } = this.props;
     let MonitorTime;
     if (realdata.length > 0) {
       MonitorTime = realdata[0].MonitorTime;
@@ -91,7 +102,7 @@ class YsyRealVideoData extends Component {
       <div className={styles.tab}>
         <Card
           title="实时数据"
-          style={{ height: 'calc(100vh - 445px)', overflowY: 'scroll' }}
+          bodyStyle={{ height: isShowControl ? 'calc(100vh - 480px)' : 'calc(100vh - 358px)', overflowY: 'auto' }}
           extra={<div style={{ color: 'gray' }}>{MonitorTime}</div>}
           loading={isloadingC && isloadingP}
           size="small"
@@ -102,4 +113,4 @@ class YsyRealVideoData extends Component {
     );
   }
 }
-export default YsyRealVideoData;
+export default RealData;

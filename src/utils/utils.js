@@ -607,6 +607,102 @@ export  function fomatFloat(num, n) {
   }
   return s;
 }
+// 获取数据不可信信息
+export const getDataTruseMsg = record => {
+  if (record.DataTrusted === false && record.DeviceTrusted === false) {
+    // 两种数据不可信
+    return (
+      <Popover content={<span style={{ color: '#ff4d4f' }}>数据、身份不可信</span>}>
+        <Tag color="error">不可信</Tag>
+      </Popover>
+    );
+  } else if (record.DataTrusted === false) {
+    // 数据不可信
+    return (
+      <Popover content={<span style={{ color: '#ff4d4f' }}>数据不可信</span>}>
+        <Tag color="error">不可信</Tag>
+      </Popover>
+    );
+  } else if (record.DeviceTrusted === false) {
+    // 身份不可信
+    return (
+      <Popover content={<span style={{ color: '#ff4d4f' }}>身份不可信</span>}>
+        <Tag color="error">不可信</Tag>
+      </Popover>
+    );
+  } else {
+    return '';
+  }
+};
+
+// 获取数据不可信信息
+export const getDataTruseItemMsg = (record, key, value) => {
+  // let errorStr = '';
+  // if (record.DataTrusted === false && record.DeviceTrusted === false) {
+  //   // 两种数据不可信
+  //   errorStr = '数据、身份不可信';
+  // } else if (record.DataTrusted === false) {
+  //   // 数据不可信
+  //   errorStr = '数据不可信';
+  // } else if (record.DeviceTrusted === false) {
+  //   // 身份不可信
+  //   errorStr = '身份不可信';
+  // }
+
+  // dicRes.Add(code + "sum-revisionTime", model.RevisionDate); // 修约时间
+  // dicRes.Add(code + "sum-revisionDischargeVolume", model.RevisionDischargeVolume);//修约值
+  // dicRes.Add(code + "sum-revisionUser", model.RevisionUser);//修约人
+  // dicRes.Add(code + "sum-revisionCause", model.RevisionCause);//修约原因
+  // dicRes.Add(code + "sum-revisionRule", model.RevisionRule);//修约规则
+  // 是否修约
+  let isRevision = !!record[key + '-revisionDischargeVolume'];
+  let revisionTime = record[key + '-revisionTime']; // 修约时间
+  let revisionDischargeVolume = record[key + '-revisionDischargeVolume']; // 修约值
+  let revisionUser = record[key + '-revisionUser']; // 修约人
+  let revisionCause = record[key + '-revisionCause']; // 修约原因
+  let revisionRule = record[key + '-revisionRule']; // 修约规则
+  if (isRevision) {
+    let content = (
+      <div>
+        {revisionTime && (
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`修约时间：${revisionTime}`} />
+          </li>
+        )}
+        {revisionUser && (
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`修约人：${revisionUser}`} />
+          </li>
+        )}
+        {revisionDischargeVolume && (
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`修约值：${revisionDischargeVolume}`} />
+          </li>
+        )}
+        <li style={{ listStyle: 'none', marginBottom: 10 }}>
+          <Badge status="warning" text={`原始值：${value}`} />
+        </li>
+        {revisionCause && (
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`修约原因：${revisionCause}`} />
+          </li>
+        )}
+        {revisionRule && (
+          <li style={{ listStyle: 'none' }}>
+            <Badge status="warning" text={`修约规则：${revisionRule}`} />
+          </li>
+        )}
+      </div>
+    );
+    return (
+      <Popover content={content}>
+        <span style={{ color: '#faad14' }}>{revisionDischargeVolume}</span>
+      </Popover>
+    );
+  }
+
+  return <span>{value}</span>;
+};
 
 
 export const quillModules = {

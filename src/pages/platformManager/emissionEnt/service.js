@@ -74,7 +74,7 @@ export async function ExportTransmissionEfficiencyForEnt(params) {
 
 export async function GetEmissionEntList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetEmissionEntList',
+    API.WholeProcessMonitorApi.GetEmissionEntList,
     params,
     null,
   );
@@ -86,7 +86,7 @@ export async function GetEmissionEntList(params) {
 
 export async function ExportEmissionEnt(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportEmissionEnt',
+    API.WholeProcessMonitorApi.ExportEmissionEnt,
     params,
     null,
   );
@@ -98,7 +98,7 @@ export async function ExportEmissionEnt(params) {
 
 export async function DeleteEmissionEntByID(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/DeleteEmissionEntByID',
+    API.WholeProcessMonitorApi.DeleteEmissionEntByID,
     params,
     null,
   );
@@ -110,7 +110,7 @@ export async function DeleteEmissionEntByID(params) {
 
 export async function AddEmissionEnt(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/AddEmissionEnt',
+    API.WholeProcessMonitorApi.AddEmissionEnt,
     params,
     null,
   );
@@ -122,7 +122,7 @@ export async function AddEmissionEnt(params) {
 
 export async function GetEmissionEntAndPoint(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetEmissionEntAndPoint',
+    API.WholeProcessMonitorApi.GetEmissionEntAndPoint,
     params,
     null,
   );
@@ -133,7 +133,7 @@ export async function GetEmissionEntAndPoint(params) {
 
 export async function updateEntFlag(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/UpdateEntFlag',
+    API.WholeProcessMonitorApi.UpdateEntFlag,
     params,
     null,
   );

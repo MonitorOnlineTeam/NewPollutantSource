@@ -3,8 +3,8 @@ import { message } from 'antd';
 // import YSYPlaybackVideo from './YSY/Playback'
 // import LCYPlaybackVideo from './LCY/Live'
 // import LCYPlaybackVideo from './LCY/Playback'
-// import PrivateCloudPlaybackVideo from './PrivateCloud/Playback';
-// import HKPlaybackVideo from './HK/Playback';
+import PrivateCloudPlaybackVideo from './PrivateCloud/Playback';
+import HKPlaybackVideo from './HK/Playback';
 
 class PlaybackVideo extends PureComponent {
   constructor(props) {
@@ -45,6 +45,7 @@ class PlaybackVideo extends PureComponent {
   switchVideo = () => {
     const { videoInfo } = this.props;
     const { startDate, endDate } = this.state;
+    debugger;
     switch (videoInfo.InputType) {
       case 1:
         // 萤石云
@@ -58,43 +59,43 @@ class PlaybackVideo extends PureComponent {
             channelNo={videoInfo.ChannelNo}
           />
         );
-      // case 2:
+      case 2:
         // 乐橙云
-        // const LCYPlaybackVideo = require('./LCY/Playback.js').default;
-        // return (
-        //   <LCYPlaybackVideo
-        //     // id="LCYPlaybackVideo"
-        //     onRef={ref => (this.playbackVideo = ref)}
-        //     appKey={videoInfo.AppKey}
-        //     appSecret={videoInfo.AppSecret}
-        //     deviceSerial={videoInfo.VedioCamera_No}
-        //     channelNo={videoInfo.ChannelNo}
-        //     type={1}
-        //     kitToken={videoInfo.KitToken}
-        //     accessToken={videoInfo.AccessToken}
-        //     startDate={startDate}
-        //     endDate={endDate}
-        //   />
-        // );
-      // case 3:
+        const LCYPlaybackVideo = require('./LCY/Playback.js').default;
+        return (
+          <LCYPlaybackVideo
+            // id="LCYPlaybackVideo"
+            onRef={ref => (this.playbackVideo = ref)}
+            appKey={videoInfo.AppKey}
+            appSecret={videoInfo.AppSecret}
+            deviceSerial={videoInfo.VedioCamera_No}
+            channelNo={videoInfo.ChannelNo}
+            type={1}
+            kitToken={videoInfo.KitToken}
+            accessToken={videoInfo.AccessToken}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        );
+      case 3:
         // 私有云
-        // return <PrivateCloudPlaybackVideo />;
-      // case 4:
+        return <PrivateCloudPlaybackVideo />;
+      case 4:
         // 海康IE
-        // break;
-      // case 5:
+        break;
+      case 5:
         // 大华IE
-        // break;
-      // case 6:
+        break;
+      case 6:
         // 海康
-        // return (
-        //   <HKPlaybackVideo
-        //     id="HKPlayback"
-        //     onRef={ref => (this.playbackVideo = ref)}
-        //     CameraCode={videoInfo.VedioCamera_No}
-        //   />
-        // );
-        // break;
+        return (
+          <HKPlaybackVideo
+            id="HKPlayback"
+            onRef={ref => (this.playbackVideo = ref)}
+            CameraCode={videoInfo.VedioCamera_No}
+          />
+        );
+        break;
     }
   };
 

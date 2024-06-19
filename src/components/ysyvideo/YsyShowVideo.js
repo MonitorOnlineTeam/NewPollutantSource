@@ -15,10 +15,11 @@ import {
 import moment from 'moment';
 import { connect } from 'dva';
 import styles from './index.less';
-import HistoryVideo from './YsyHisVideoData';
-import YsyRealVideoData from './YsyRealVideoData';
+import HistoryVideo from './HisVideoData';
+import YsyRealVideoData from './RealVideoData';
 import config from '@/config';
 import VideoSelect from '../VideoSelect'
+import { isInnerIPFn } from '@/utils/utils'
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -56,6 +57,7 @@ class YsyShowVideo extends Component {
       // dgimn: '',
       tabsKey: 1,
       VedioID: '',
+      ysyUrl:'Web/YsyVideo/YsyVideo.html'
     };
   }
 
@@ -69,6 +71,8 @@ class YsyShowVideo extends Component {
   }
 
   componentDidMount() {
+    const { ysyUrl } = this.state;
+    isInnerIPFn()?  config.ysyvideourl =  `/api/${ysyUrl}`:  `http://61.50.135.114:60060/${ysyUrl}`
     this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
@@ -147,7 +151,6 @@ class YsyShowVideo extends Component {
 
   /** 切换排口 */
   changeDgimn=DGIMN => {
-
     this.getvideolist(DGIMN);
   }
 
@@ -346,7 +349,7 @@ class YsyShowVideo extends Component {
   render() {
     const { ysyrealtimevideofullurl, videoList } = this.props;
     if (videoList.length === 0 || ysyrealtimevideofullurl === '') {
-      return (<Card style={{ width: '100%', height: 'calc(100vh - 140px)', ...this.props.style }}>< div style = {
+      return (<Card style={{ width: '100%', height: 'calc(100vh - 230px)', ...this.props.style }}>< div style = {
         {
           textAlign: 'center',
         }
@@ -354,9 +357,9 @@ class YsyShowVideo extends Component {
         Empty.PRESENTED_IMAGE_SIMPLE
       } description="暂无视频数据"
       /></div ></Card>);
-    }
+    } 
     return (
-      <div style={{ height: 'calc(100vh - 140px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
+      <div style={{ height: 'calc(100vh - 230px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
         <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
           <div
             className={styles.divv}

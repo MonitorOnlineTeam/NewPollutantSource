@@ -72,12 +72,17 @@ const Index = (props) => {
 
   const { tableDatas, tableTotal,  tableLoading, exportLoading,  } = props;
 
-
+ 
+  const parId = props.match?.params?.id
 
   useEffect(() => {
+    if (parId) {
+      const id = this.props.match?.params?.type.split('=')
+      form.setFieldValue({id:id?.[1]})
+    }
     onFinish(pageIndex, pageSize);
 
-  }, []);
+  }, [parId]);
 
   let columns = [
     {
@@ -316,6 +321,7 @@ const Index = (props) => {
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
+        <Form.Item name='id' hidden></Form.Item>
         {expand && <>
         <Col span={8}>
           <Form.Item name='serviceUserName' label='服务工程师' >

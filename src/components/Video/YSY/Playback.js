@@ -62,13 +62,19 @@ class PlaybackVideo extends PureComponent {
   };
 
   onPlayClick = (beginTime, endTime) => {
+    const ele = document.querySelector('#backWrapper');
+    const height = ele.clientHeight;
+    const width = ele.clientWidth;
     const { deviceSerial, channelNo } = this.props;
     if (deviceSerial && channelNo) {
       // this.setState({ showTips: false })
       let url = `ezopen://open.ys7.com/${deviceSerial}/${channelNo}.rec?begin=${beginTime}&end=${endTime}`;
       if (this.playr) {
-        this.playr.play({
-          url: url,
+        // this.playr.play({
+        //   url: url,
+        // });
+        this.playr.stop().then(() => {
+          this.playr.play(url);
         });
       } else {
         this.playr = new EZUIKit.EZUIKitPlayer({
@@ -77,6 +83,8 @@ class PlaybackVideo extends PureComponent {
           accessToken: Cookies.get('YSYAccessToken'),
           url: url,
           template: 'security', // simple - 极简版;standard-标准版;security - 安防版(预览回放);voice-语音版；
+          width: width,
+          height: height,
         });
       }
     }
@@ -89,10 +97,11 @@ class PlaybackVideo extends PureComponent {
       <>
         {deviceSerial && channelNo ? (
           <div
+            id="backWrapper"
             className={styles.playbackWrapper}
-            id="ysyPlaybackWrapper"
             style={{ height: '100%', backgroundColor: '#000' }}
           >
+            <div id="ysyPlaybackWrapper"></div>
             {showTips ? <p style={style}>请选择时间后点击播放！</p> : ''}
           </div>
         ) : (

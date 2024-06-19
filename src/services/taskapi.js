@@ -324,6 +324,7 @@ export async function GetOperationTaskList(params) {
     const body = {
         params: {
             ...params,
+            TaskTypeList: params?.TaskTypeList || '', 
             CompleteTime: params.CompleteTime != undefined && params.CompleteTime != '' ? `${params.CompleteTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CompleteTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
             CreateTime: params.CreateTime != undefined && params.CreateTime != '' ? `${params.CreateTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CreateTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
         },
