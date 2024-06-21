@@ -10,7 +10,7 @@ import path from 'path';
 // const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:61003/';//运维正式
-const apiHost = 'http://172.16.12.134:61005/';//整合新前端
+const apiHost = 'http://172.16.12.134:61005/';//运维正式
 // const apiHost = 'http://172.16.12.234:60061/';//模型
 // const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const apiHost = 'http://172.16.12.152:50089/';
@@ -175,6 +175,19 @@ export default {
           name: 'ctDataScreen',
           path: '/ctDataScreen',
           component: './ctDebuggAfterSaleServiceManage/HomeDataScreen',
+        },
+        {
+          // 驾驶舱
+          name: 'SystemDashboard',
+          path: '/SystemDashboard',
+          routes: [
+            {
+              // 运维
+              name: 'Operation',
+              path: '/SystemDashboard/Operation',
+              component: './SystemDashboard/Operation',
+            },
+          ]
         },
         {
           path: '/appoperation',
@@ -3310,6 +3323,51 @@ export default {
                         './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
                     },
                     {
+                      // 排放源数据缺失分析
+                      name: 'missingDataAnalysis',
+                      path: '/AbnormalIdentifyModel/HistoryDataAnalysis/MissingDataAnalysis',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/MissingDataAnalysis/index.js',
+                    },
+                    {
+                      // 排放源工况分析
+                      name: 'missingDataAnalysis',
+                      path: '/AbnormalIdentifyModel/HistoryDataAnalysis/WorkingAnalysis',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/WorkingAnalysis/index.js',
+                    },
+                    {
+                      // 异常数据分级分析 - 分级
+                      name: 'AbnormalDataAnalysis',
+                      path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/level',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/index.js',
+                    },
+                    {
+                      // 异常数据分级分析 - 分类
+                      name: 'AbnormalDataAnalysis',
+                      path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/type',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/index.js',
+                    },
+                    {
+                      // 异常数据分级分析 - 行为
+                      name: 'AbnormalDataAnalysis',
+                      path:
+                        '/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/action',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/index.js',
+                    },
+                    {
+                      // 异常率诊断分析
+                      name: 'AnomalyDetect',
+                      path:
+                        '/AbnormalIdentifyModel/HistoryDataAnalysis/AnomalyRateDetect',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/AnomalyRateDetect/index.js',
+                    },
+                    //
+                    {
                       // 超标时长分析
                       name: 'AnalysisExceedTimeLimit',
                       path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AnalysisExceedTimeLimit',
@@ -3323,7 +3381,7 @@ export default {
                   name: 'AbnormalCluesList',
                   path: '/AbnormalIdentifyModel/ModelBaseManage',
                   routes: [
-                    // 模型训练  
+                    // 模型训练
                     {
                       // 数据接入
                       name: 'DataAccess',
@@ -3451,7 +3509,7 @@ export default {
                             './ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery',
                         },
                         {
-                          // 派单查询 60主线 
+                          // 派单查询 60主线
                           name: 'DispatchQuery',
                           path: '/ctManage/projectExecuProgress/projectExecution/dispatchQuery/:id',
                           component:

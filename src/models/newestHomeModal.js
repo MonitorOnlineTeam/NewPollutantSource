@@ -1,5 +1,5 @@
 import moment from 'moment';
-import * as services from './service';
+import * as services from '@/pages/newestHome/service.js';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
@@ -9,7 +9,7 @@ import { downloadFile, requestPost } from '@/utils/utils';
 import { API } from '@config/API';
 
 export default Model.extend({
-  namespace: 'newestHome1',
+  namespace: 'newestHome',
   state: {
     subjectFontSize: 14,
     operationDataSource: [],
@@ -81,8 +81,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
-    *GetOperationTaskStatisticsInfoByDay({ payload, callback }, { call, put, update }) { //工单执行情况
+   
+    *GetOperationTaskStatisticsInfoByDay({ payload, callback }, { call, put, update }) { //工单执行情况 
       const result = yield call(requestPost, API.VisualKanbanApi.GetOperationTaskStatisticsInfoByDay, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas)
@@ -108,7 +108,7 @@ export default Model.extend({
         yield update({ planOperaList: result.Datas });
       }
     },
-
+   
     *GetWorkOrderAnalysisList({ payload, callback }, { call, put, update }) {  //近30日运维情况 详情 固定到天
       const result = yield call(requestPost, API.VisualKanbanApi.GetWorkOrderAnalysisList, payload);
       if (result.IsSuccess) {
@@ -175,7 +175,7 @@ export default Model.extend({
             longitude: item.Longitude ? item.Longitude : item.longitude,
           }
         })) : []
-        //监测点数据 图例
+        //监测点数据 图例  
         if (payload.pointType == 3 && payload.regionCode || payload.pointType == 3 && payload.entCode && payload.selectEnt) {  // 或者后面 搜索企业 监测点图例单独处理
           yield update({ mapStatusRegData: result.Datas.sum, })
         } else if (payload.pointType == 3 && payload.entCode) {

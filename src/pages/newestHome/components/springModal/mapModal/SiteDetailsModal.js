@@ -50,7 +50,7 @@ class SiteDetailsModal extends PureComponent {
     // if (data.PollutantType === "5") {
     //   tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
     // }
-
+    tabList = this.props.tabList || tabList;
   }
   componentWillUnmount() {
     this.props.dispatch({

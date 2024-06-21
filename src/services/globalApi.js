@@ -4,7 +4,7 @@ import { async } from 'q';
 import { API } from '@config/API'
 
 export async function getAlarmNotices(params) {
-   const result = await post('/api/rest/PollutantSourceApi/AlarmDataApi/GetAlarmNotices', params, null);
+   const result = await post('/newApi/rest/PollutantSourceApi/AlarmDataApi/GetAlarmNotices', params, null);
    return result;
   //return { IsSuccess: false, Datas: [], Message: "" };
 }
