@@ -111,6 +111,15 @@ export async function getPollutantListByDgimn(params) {
   return result;
 }
 
+// 获取系统菜单名称
+export async function getMenuNameList(params) {
+  const result = post(API.AuthorityApi.GetMenuByLoginUser, params, null);
+  return result === null
+    ? {
+        data: null,
+      }
+    : result;
+}
 
 // 用户列表
 export async function GetUserList(params) {

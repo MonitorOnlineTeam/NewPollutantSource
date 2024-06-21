@@ -23,7 +23,11 @@ export default Model.extend({
       xAxisData: [],
       legend: []
     },
-    monitorTime: null
+    monitorTime: null,
+    infoWindowData: { // infoWindow数据
+      list: [],
+      time: undefined
+    },
   },
   effects: {
     *getAllEntAndPoint({ payload = {} }, {
@@ -36,16 +40,16 @@ export default Model.extend({
           global = yield select(state => state.global);
           payload = {
             ...payload,
-            PollutantTypes: global.configInfo.SystemPollutantType
+            PollutantTypes: global.configInfo.IsShowSysPage === '1' ? sessionStorage.getItem('sysPollutantCodes') : global.configInfo.SystemPollutantType
           }
         } else {
           payload = {
             ...payload,
-            PollutantTypes: global.configInfo.SystemPollutantType
+            PollutantTypes: global.configInfo.IsShowSysPage === '1' ? sessionStorage.getItem('sysPollutantCodes') : global.configInfo.SystemPollutantType
           }
         }
       }
-      const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3], ...payload });
+      const result = yield call(services.getAllEntAndPoint, { Status: [], RunState: "1", ...payload });
       if (result.IsSuccess) {
         let filterList = result.Datas.filter(item => item.MonitorObjectType === "2" || item.MonitorObjectType === "4");
         // let constructionSiteArr = result.Datas.filter(item => item.MonitorObjectType === "4");
@@ -71,7 +75,9 @@ export default Model.extend({
       payload,
     }, { call, update, select, put }) {
       const pollutantType = "pollutantType" + payload.type;
+      debugger
       const result = yield call(services.getPollutantList, { pollutantTypes: payload.type });
+      console.log("pollutantType=", pollutantType)
       if (result.IsSuccess) {
         yield update({
           [pollutantType]: result.Datas
@@ -334,6 +340,55 @@ export default Model.extend({
           windowPointInfo: result.Data
         })
       }
-    }
+    },
+    // 获取监测点infoWindow数据
+    *getInfoWindowData({
+      payload,
+    }, { call, update, select, put }) {
+      console.log("12312312323=", payload)
+      const result = yield call(services.getPollutantList, { pollutantTypes: payload.pollutantTypes });
+      if (result.IsSuccess) {
+        yield put({ type: "getInfoWindowPollutantList", payload: payload, pollutantList: result.Datas });
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取监测点infoWindow数据
+    *getInfoWindowPollutantList({ payload, pollutantList }, { call, update, select, put }) {
+      console.log("payload=", payload)
+      debugger
+      const result = yield call(services.getInfoWindowData, payload);
+      console.log("pollutantList=", pollutantList)
+      if (result.IsSuccess) {
+        let list = [];
+        pollutantList.map(item => {
+          result.Datas.map(itm => {
+            if (itm[item.field]) {
+              list.push({
+                label: item.name,
+                value: itm[item.field],
+                key: item.field,
+                title: item.title,
+                status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null,
+                level: itm[item.field + "_Level"],
+                levelColor: itm[item.field + "_LevelColor"],
+                levelValue: itm[item.field + "_LevelValue"],
+                // ...itm,
+              })
+            }
+          })
+        })
+        console.log("list=", list)
+        let data = result.Datas[0] ? result.Datas[0] : [];
+        yield update({
+          infoWindowData: {
+            list: list,
+            ...data
+          }
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
   }
 })

@@ -77,6 +77,37 @@ export const API = {
     AddVideoInfo: before + '/VideoApi/AddVideoInfo', //根据监测点添加视频信息
     UpdateVideoInfo: before + '/VideoApi/UpdateVideoInfo', //更新视频信息
   },
+
+  // 动态管控服务Api
+  DymaicControlApi: {
+    // 获取系统工况参数
+    GetProcessFlowTable: before + '/DymaicParameter/GetProcessFlowTable',
+    // 动态管控 参数备案 列表
+    GetParameterFilingList: before + '/DymaicParameter/GetParameterFilingList',
+    // 获取仪器列表
+    GetParaPollutantCodeList: before + '/DymaicParameter/GetParaPollutantCodeList',
+    // 获取参数码表
+    GetParaCodeList: before + '/DymaicParameter/GetParaCodeList',
+    // 添加或修改参数备案列表
+    AddOrUpdParameterFiling: before + '/DymaicParameter/AddOrUpdParameterFiling',
+    // 删除参数备案列表
+    DeleteParameterFiling: before + '/DymaicParameter/DeleteParameterFiling',
+    // 参数备案
+    UpdateApproveState: before + '/DymaicParameter/UpdateApproveState',
+    // 查询历史参数列表
+    GetHistoryParaCodeList: before + '/DymaicParameter/GetHistoryParaCodeList',
+    // 获取历史工况参数
+    GetProcessFlowTableHistoryDataList:
+      before + '/DymaicParameter/GetProcessFlowTableHistoryDataList',
+    // 获取关键参数
+    GetParameterSnapshot: before + '/DymaicParameter/GetParameterSnapshot',
+    // 数据提取
+    SendGetDataCMD: before + '/DymaicParameter/SendGetDataCMD',
+    // 获取数据可视化列表
+    GetVisualizationChartList: before + '/DymaicData/GetVisualizationChartList',
+    // 获取数据监控 - 污染物信息
+    GetProcessFlowChartStatus: before + '/DymaicData/GetProcessFlowChartStatus',
+  },
   //通用Api
   CommonApi: {
     GetNoFilterRegionList: before + '/RegionApi/GetNoFilterRegionList', //获取无权限过滤的行政区信息
@@ -199,6 +230,113 @@ export const API = {
       before + '/DymaicData/ExportProcessFlowTableHistoryDataList',
     //导出平台分析报告
     ExportPlatformAnalysisReport: before + '/WorkOrderStatistics/ExportPlatformAnalysisReport',
+  },
+  // 用户权限
+  AuthorityApi: {
+    // 获取角色详情及层级关系
+    GetRoleInfoByTree: before + '/RoleApi/GetRoleInfoByTree',
+    // 获取单个角色信息
+    GetRoleInfoByID: before + '/RoleApi/GetRoleInfoByID',
+    // 获取角色树
+    GetRolesTreeAndObj: before + '/RoleApi/GetRolesTreeAndObj',
+    // 获取当前角色的菜单
+    GetMenuByRoleID: before + '/RoleApi/GetMenuByRoleID',
+    // 获取当前角色的用户
+    GetUserByRoleId: before + '/RoleApi/GetUserByRoleId',
+
+    // 获取根节点下拉选择权限（角色）
+    GetParentTree: before + '/RoleApi/GetParentTree',
+    // 获取角色树
+    GetRolesTree: before + '/RoleApi/GetRolesTree',
+    // 新增角色信息
+    InsertRoleInfo: before + '/RoleApi/InsertRoleInfo',
+    // 删除角色信息
+    DelRoleInfo: before + '/RoleApi/DelRoleInfo',
+    // 修改角色信息
+    UpdRoleInfo: before + '/RoleApi/UpdRoleInfo',
+    // 给角色添加用户（可批量）
+    InsertRoleByUser: before + '/RoleApi/InsertRoleByUser',
+    // 获取部门区域过滤
+    GetGroupRegionFilter: before + '/ConfigureApi/GetGroupRegionFilter',
+    // 新报警设置 包含部门和角色（列表）
+    GetAlarmPushDepOrRole: before + '/AuthorizeApi/GetAlarmPushDepOrRole',
+    ExportUserList: before + '/UserApi/ExportUserList', //导出用户信息
+
+    /*角色管理*/
+    GetSetLongInAppRoleId: before + '/RoleApi/GetSetLongInAppRoleId', //获取允许登录的APP角色信息
+    AddSetLongInAppRole: before + '/RoleApi/AddSetLongInAppRole', //设置允许登录的APP角色
+    GetSetRoleId: before + '/RoleApi/GetSetRoleId', //获取行政区获取点位角色信息
+    AddSetRole: before + '/RoleApi/AddSetRole', //设置行政区获取点位角色
+
+    // 获取部门详细信息及层级关系
+    GetDepInfoByTree: before + '/DepartmentApi/GetDepInfoByTree',
+    // 获取部门树(带根结点)
+    GetDepartTreeAndObj: before + '/DepartmentApi/GetDepartTreeAndObj',
+    // 获取单个部门信息
+    GetDepartInfoByID: before + '/DepartmentApi/GetDepartInfoByID',
+    // 获取当前部门的用户
+    GetUserByDepID: before + '/DepartmentApi/GetUserByDepID',
+    // 获取当前部门选择的排口
+    GetPointByDepID: before + '/DepartmentApi/GetPointByDepID',
+    // 获取部门树
+    GetDepartmentTree: before + '/DepartmentApi/GetDepartmentTree',
+    // 新增部门信息
+    InsertDepartInfo: before + '/DepartmentApi/InsertDepartInfo',
+    // 删除部门信息
+    DelDepartInfo: before + '/DepartmentApi/DelDepartInfo',
+    // 修改部门信息
+    UpdDepartInfo: before + '/DepartmentApi/UpdDepartInfo',
+    // 给部门添加用户（可批量）
+    InsertDepartByUser: before + '/DepartmentApi/InsertDepartByUser',
+    // 获取当前部门的行政区
+    GetRegionByDepID: before + '/DepartmentApi/GetRegionByDepID',
+    // 给当前部门添加排口权限
+    InsertPointFilterByDepID: before + '/AuthorizeApi/InsertPointFilterByDepID',
+    // 给当前角色添加菜单权限
+    InsertMenuByRoleID: before + '/AuthorizeApi/InsertMenuByRoleID',
+    // 插入角色或部门报警权限关联
+    InsertAlarmPushAuthor: before + '/AuthorizeApi/InsertAlarmPushAuthor',
+    // 获取角色或部门报警权限数据
+    GetAlarmPushAuthor: before + '/AuthorizeApi/GetAlarmPushAuthor',
+    // 报警关联  选择
+    InsertAlarmDepOrRole: before + '/AuthorizeApi/InsertAlarmDepOrRole',
+    // 给部门添加行政区
+    InsertRegionByUser: before + '/DepartmentApi/InsertRegionByUser',
+    // 获取系统菜单名称
+    GetMenuByLoginUser: before + '/MenuApi/GetMenuByLoginUser',
+    // 获取菜单列表层级关系
+    GetRoleMenuTree: before + '/MenuApi/GetRoleMenuTree',
+
+    GetUserPointAuthorizeList: before + '/AuthorizeApi/GetUserPointAuthorizeList', //查询当前部门下的所有排口（公司运维）
+    GetUserPointAuthorizeListBW: before + '/AuthorizeApi/GetUserPointAuthorizeListBW', //查询当前部门下的所有排口（宝武）
+    GetTestRegionByDepID: before + '/DepartmentApi/GetTestRegionByDepID', //获取当前部门成套区域过滤权限
+    UpdateOperationArea: before + '/DepartmentApi/UpdateOperationArea', //更新当前部门运维区域
+    InsertTestRegionByUser: before + '/DepartmentApi/InsertTestRegionByUser', //设置当前部门成套区域过滤权限
+    GetSetOperationGroup: before + '/DepartmentApi/GetSetOperationGroup', //获取设置运维小组信息
+    AddSetOperationGroup: before + '/DepartmentApi/AddSetOperationGroup', //设置运维小组
+    GroupSort: before + '/DepartmentApi/GroupSort', //部门排序
+    /*用户权限*/
+    InsertPointFilterByUser: before + '/AuthorizeApi/InsertPointFilterByUser', //给当前人员添加排口权限（可批量）
+    ResetUserWechatInfo: before + '/UserApi/ResetUserWechatInfo', //重置用户微信注册信息
+    /*用户恢复*/
+    RecoveryUserInfo: before + '/UserApi/RecoveryUserInfo', //恢复用户信息
+
+    // 获取所有用户
+    GetAllUser: before + '/UserApi/GetAllUser',
+    // 给用户添加角色和部门
+    InsertRoleDepForUser: before + '/UserApi/InsertRoleDepForUser',
+    // 获取用户角色
+    GetRoleByUserID: before + '/UserApi/GetRoleByUserID',
+    // 获取用户部门
+    GetDepByUserID: before + '/UserApi/GetDepByUserID',
+    // 删除用户（假删除）
+    DelUserAndRoleDep: before + '/UserApi/DelUserAndRoleDep',
+    // 获取当前用户的按钮权限
+    GetButtonByUserID: before + '/UserApi/GetButtonByUserID',
+    // 获取所有部门和角色
+    GetUserRolesGroupList: before + '/UserApi/GetUserRolesGroupList',
+    // 获取用户信息
+    GetUserList: before + '/UserApi/GetUserList',
   },
   // 统计分析Api
   StatisticAnalysisApi: {
@@ -683,7 +821,26 @@ export const API = {
     GetCheckedView: before + '/Clue/GetCheckedView', //核查详情
     UpdatePlanItem: before + '/Clue/UpdatePlanItem', //核查保存或提交
     CheckConfirm: before + '/Clue/CheckConfirm', //核查确认
-  },
+
+     /*模型库管理*/
+     //模型训练 - 数据接入
+     GetProjectMonitorDataList: before + '/ProjectMonitorDataApi/GetProjectMonitorDataList', //查看项目信息
+     UpdProjectMonitorData: before + '/ProjectMonitorDataApi/UpdProjectMonitorData', //修改项目信息 修改执行方式
+     AccessEntInfoList: before + '/DataFormatBaseDataApi/AccessEntInfoList', //接入企业数据执行
+     AccessPointInfoList: before + '/DataFormatBaseDataApi/AccessPointInfoList', //接入站点数据执行
+     AccessParamInfoList: before + '/DataFormatBaseDataApi/AccessParamInfoList', //接入备案参数执行
+     AccessEmissionStandardList: before + '/DataFormatBaseDataApi/AccessEmissionStandardList', //接入站点污染物排放信息执行
+     AccessMonitorPollutantList: before + '/DataFormatBaseDataApi/AccessMonitorPollutantList', //接入站点污染物关联信息执行
+     AccessHourData: before + '/DataFormatBaseDataApi/AccessHourData', //接入小时数据执行
+     //清洗数据
+     GetProjectLogsList: before + '/ProjectMonitorDataApi/GetProjectLogsList', //企业信息、排放口信息、备案参数日志信息
+     GetProjectLogsInfoList: before + '/ProjectMonitorDataApi/GetProjectLogsInfoList', //企业信息、排放口信息、备案参数日志详情信息
+     GetMonitorPollutantLogsList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsList', //污染物日志信息
+     GetMonitorPollutantLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsInfoList', //污染物日志详情信息
+     GetMonitorAlarmLogsList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsList', //排放口日志信息
+     GetMonitorAlarmLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsInfoList', //排放口日志详情信息
+     GetHourDataLogsList: before + '/ProjectMonitorDataApi/GetHourDataLogsList', //查看监测数据日志信息
+    },
   /*监督核查 Api */
   SupervisionVerificaApi: {
     /*** 远程监督核查 ***/
@@ -1172,12 +1329,12 @@ export const API = {
 
   /*** 工作台 ***/
   CtWorkStageApi: {
-    // GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//旧 合同到期
-    // DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//旧 删除工作台合同到期
-    // DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//旧 删除所有合同到期
-    GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg', //获取工作台项目执行、合同到期等
-    DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg', //删除工作台合同到期等
-    DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg', //删除所有工作台合同到期等
+    GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//旧 合同到期
+    DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//旧 删除工作台合同到期
+    DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//旧 删除所有合同到期
+    // GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg', //获取工作台项目执行、合同到期等
+    // DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg', //删除工作台合同到期等
+    // DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg', //删除所有工作台合同到期等
     UpdateImplementationStatus: before + '/CTBaseDataApi/UpdateImplementationStatus', //解决项目执行遗留问题
   },
 

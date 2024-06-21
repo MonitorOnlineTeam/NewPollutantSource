@@ -269,9 +269,6 @@ const Index = (props) => {
                     <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
                 </Select>
             </Form.Item>
-            <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
-                <RangePicker_ format="YYYY-MM-DD" />
-            </Form.Item>
         </>
     }
 
@@ -286,6 +283,9 @@ const Index = (props) => {
             onFinish={resDataHandle}
         >   
             {commonSearchComponents(type)}
+            <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
+                    <RangePicker_ format="YYYY-MM-DD" />
+               </Form.Item>
             <Form.Item style={{ marginBottom: 4 }}>
                 <Space>
                     <Button type="primary" htmlType="submit" loading={tableLoading}>

@@ -35,8 +35,6 @@ const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     queryPar: operaPlan.operationPlanCalendarQueryPar,
     operationPlanInfoRefreshId: operaPlan.operationPlanInfoRefreshId,
     exportLoading: loading.effects[`${namespace}/ExportOperationPlanCalendar`],
-    // formulatePointListLoading: loading.effects[`${namespace}/GetFormulatePointList`],
-    // adjustmentOperationPlanLoading: loading.effects[`${namespace}/AdjustmentOperationPlan`],
 })
 
 const Index = (props) => {
@@ -77,11 +75,6 @@ const Index = (props) => {
         }
     }, [justVisible]);
 
-    // const justResData = () => {
-    //     form2.resetFields();
-    //     setIndeterminate(false);
-    //     setCheckAll(false)
-    // }
 
 
     const { dateCol } = props;
@@ -101,7 +94,7 @@ const Index = (props) => {
             key: 'pointName',
             fixed: 'left',
             ellipsis: true,
-            width:'auto',
+            width: 'auto',
         }]
         if (dateCol && dateCol[0]) {
             const colList = dateCol.map((item, index) => {
@@ -120,7 +113,7 @@ const Index = (props) => {
                             align: 'center',
                             render: (text, record, index) => {
                                 const filterData = (status) => typeLegendData.filter(item => item.value == status)?.[0]?.color;
-                                return text&&<div style={{ fontWeight: 'bold', }}><span onClick={() => { text.xjID && taskDetail(text.xjID) }} style={{ color: filterData(text.xjStatus), cursor: text.xjID && 'pointer' }}>{text.xjStr}</span>&nbsp;&nbsp;<span onClick={() => { text.jzID && taskDetail(text.jzID) }} style={{ color: filterData(text.jzStatus), cursor: text.jzID && 'pointer' }}>{text.jzStr}</span></div>
+                                return text && <div style={{ fontWeight: 'bold', }}><span onClick={() => { text.xjID && taskDetail(text.xjID) }} style={{ color: filterData(text.xjStatus), cursor: text.xjID && 'pointer' }}>{text.xjStr}</span>&nbsp;&nbsp;<span onClick={() => { text.jzID && taskDetail(text.jzID) }} style={{ color: filterData(text.jzStatus), cursor: text.jzID && 'pointer' }}>{text.jzStr}</span></div>
                             }
                         }]
                     }]
@@ -132,12 +125,12 @@ const Index = (props) => {
         return col;
     }
 
-  const [taskRecordDetailVisible, setTaskRecordDetailVisible] = useState(false)
-  const [taskID, setTaskID] = useState()
-  const taskDetail = (id) => { //任务详情
-      setTaskID(id)
-      setTaskRecordDetailVisible(true)
-  }
+    const [taskRecordDetailVisible, setTaskRecordDetailVisible] = useState(false)
+    const [taskID, setTaskID] = useState()
+    const taskDetail = (id) => { //任务详情
+        setTaskID(id)
+        setTaskRecordDetailVisible(true)
+    }
     const onFinish = async (PageIndex, PageSize, queryPar) => {  //计划列表
         try {
             const values = await form.validateFields();
@@ -148,7 +141,7 @@ const Index = (props) => {
                 time: undefined,
                 pageIndex: PageIndex,
                 pageSize: PageSize,
-                statusList:legendSelectVal,
+                statusList: legendSelectVal,
                 id: operationPlanInfoRefreshId,
             }
             props.dispatch({
@@ -173,29 +166,32 @@ const Index = (props) => {
     const exportData = () => {
         props.dispatch({
             type: `${namespace}/ExportOperationPlanCalendar`,
-            payload: {...queryPar,pageIndex:undefined,pageSize:undefined},
+            payload: { ...queryPar, pageIndex: undefined, pageSize: undefined },
         });
     };
 
     const adjustPlan = () => { //调整计划
         setJustVisible(true)
     }
-    // const adjustPlanOk = () => {
-    //     form2.validateFields().then((values)=>{
-    //        const par = {recordType: recordType,...values,tzDate:values.tzDate&&moment(values.tzDate).format('YYYY-MM-DD 00:00:00')}
-    //        props.dispatch({
-    //             type: `${namespace}/AdjustmentOperationPlan`,
-    //             payload: {id:operationPlanInfoRefreshId,...par},
-    //             callback:()=>{
-    //                 setJustVisible(false);
-    //                 setPageIndex(1);setPageSize(20);onFinish(1,20);
-    //                 justResData();
-    //             }
-    //         });
-    //         }).catch((errorInfo) => {
-    //             console.log('Failed:', errorInfo);
-    //         });
-    // }
+    const [dates, setDates] = useState(null);
+    const [value, setValue] = useState([moment().subtract(2, 'months').startOf('month'), moment()]);
+    const disabledDate = (current) => {
+        if (!dates) {
+            return false;
+        }
+        const tooLate = dates[0] && current.diff(dates[0], 'days') > 90;
+        const tooEarly = dates[1] && dates[1].diff(current, 'days') > 90;
+        return !!tooEarly || !!tooLate;
+    };
+    const onOpenChange = (open) => {
+        if (open) {
+            form.setFieldsValue({time:[]})
+            setDates([null, null]);
+        } else {
+            form.setFieldsValue({time:value})
+            setDates(null);
+        }
+    };
     const searchComponents = () => {
 
         return <Form
@@ -203,15 +199,29 @@ const Index = (props) => {
             className={'ant-advanced-search-form'}
             form={form}
             layout='inline'
-            onFinish={ () => { setPageIndex(1); setPageSize(20); onFinish(1, 20) }}
+            onFinish={() => { setPageIndex(1); setPageSize(20); onFinish(1, 20) }}
+            initialValues={{
+                time:  [moment().subtract(2, 'months').startOf('month'), moment()],
+            }}
         >
             {commonSearchComponents && commonSearchComponents(type)}
+            <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
+                <RangePicker_ 
+                    format="YYYY-MM-DD" 
+                    value={dates || value}
+                    disabledDate={disabledDate}
+                    onCalendarChange={(val) => setDates(val)}
+                    onChange={(val) => setValue(val)}
+                    onOpenChange={onOpenChange}
+                    allowClear={false}
+                    />
+            </Form.Item>
             <Form.Item style={{ marginBottom: 4 }}>
                 <Space>
                     <Button type="primary" htmlType="submit" loading={tableLoading}>
                         查询
                                  </Button>
-                    <Button loading={tableLoading} onClick={() => { form.resetFields(); setLegendSelectVal([]); setPageIndex(1); setPageSize(20); onFinish(1, 20,{  id: operationPlanInfoRefreshId})  }}   >
+                    <Button loading={tableLoading} onClick={() => { form.resetFields(); setLegendSelectVal([]); setPageIndex(1); setPageSize(20); onFinish(1, 20, { id: operationPlanInfoRefreshId }) }}   >
                         重置
                                   </Button>
                     <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exportData() }}>
@@ -283,8 +293,8 @@ const Index = (props) => {
             data = [...legendSelectVal, value]
         }
         setLegendSelectVal(data)
-        setPageIndex(1);setPageSize(20);
-        onFinish(1,20,{...queryPar,statusList:data})
+        setPageIndex(1); setPageSize(20);
+        onFinish(1, 20, { ...queryPar, statusList: data })
     }
     return (
         <div>
@@ -303,7 +313,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns()}
                 align='center'
-                scroll={{x:(dateCol?.length * 90 || 0 ) + 260,  y: 'calc(100vh - 386px)' }}
+                scroll={{ x: (dateCol?.length * 90 || 0) + 260, y: 'calc(100vh - 386px)' }}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,
@@ -322,43 +332,6 @@ const Index = (props) => {
                 pointType={pointType}
                 onFinish={() => { setPageIndex(1); setPageSize(20); onFinish(1, 20) }}
             />
-            {/* <Modal
-                visible={justVisible}
-                title={'调整计划'}
-                onCancel={() => { setJustVisible(false);justResData(); }}
-                destroyOnClose
-                wrapClassName={`spreadOverModal  ${styles.formulateModalSty}`}
-                mask={false}
-                footer={dataList?.length>0? [<Button  onClick={() => {justResData()}}>
-                    重置
-                   </Button>,
-                  <Button type="primary" loading={props.adjustmentOperationPlanLoading} onClick={adjustPlanOk}>
-                    提交
-                   </Button>] : null}
-            >
-                <Tabs
-                    defaultActiveKey="1"
-                    type='card'
-                    onChange={(key) => {
-                        form2.resetFields()
-                        setCheckAll(false)
-                        setIndeterminate(false)
-                        setRecordType(key)
-                    }}
-                    items={[
-                        {
-                            label: `巡检`,
-                            key: pointType == 2 ? '1' : '7',
-                            children: <AdJustPlanComponents />,
-                        },
-                        {
-                            label: pointType == 2 ? '校准' : '标样核查及校准',
-                            key: pointType == 2 ? '3' : '9',
-                            children: <AdJustPlanComponents />,
-                        },
-                    ]}
-                /> 
-            </Modal>*/}
             <Modal
                 title="任务详情"
                 visible={taskRecordDetailVisible}

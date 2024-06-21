@@ -375,14 +375,15 @@ class SdlTable extends PureComponent {
               },
               pageSizeOptions: ['10', '20', '30', '40', '100'],
             }}
-            {...this.props}
             defaultWidth={80}
             columns={_columns}
             onRow={(record, index) => ({
               //拖拽功能
               index,
               moveRow: this.moveRow,
+              onClick:this.props.onClick
             })}
+            {...this.props}
             dataSource={dragable ? this.state.dataSource : this.props.dataSource}
             {..._props}
             scroll={
@@ -392,7 +393,7 @@ class SdlTable extends PureComponent {
                     x:
                       (this.props.scroll && this.props.scroll.x && this.props.scroll.x) ||
                       scrollXWidth,
-                    y: scrollY,
+                    y: this.props.scroll?.y==='hidden'? undefined : scrollY,
                   }
             }
           />

@@ -1,7 +1,7 @@
 /**
- * 功  能：技术专家系统 问题库
+ * 功  能：动态管控数据查询
  * 创建人：jab
- * 创建时间：2024.04
+ * 创建时间：2024.06
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Upload, Popconfirm, Radio, Popover, Spin, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker } from 'antd';
@@ -19,6 +19,8 @@ import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import DefaultDevelopment from '@/components/DefaultDevelopment';
+
 const { Option } = Select;
 import { API } from '@config/API';
 import config from '@/config';
@@ -54,13 +56,7 @@ const Index = (props) => {
   return (
     <div className={`${styles.dynamicControlDataSty}`}>
       <BreadcrumbWrapper>
-      <Card>
-       <div style={{textAlign:'center',paddingTop:60}}> 
-       <img src="/nodata1.png" style={{ width: '180px' }} />
-       <p>敬请期待，正在开发</p>
-       </div>
-      </Card>
-   
+       <DefaultDevelopment />
       </BreadcrumbWrapper>
     </div>
   );

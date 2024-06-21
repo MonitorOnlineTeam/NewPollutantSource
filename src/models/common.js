@@ -20,11 +20,12 @@ export default Model.extend({
     entLoading: false,
     noFilterEntList: [],
     noFilterEntLoading: false,
-    enableEntList:[], //启用的企业
-    enableEntLoading:false,
+    enableEntList: [], //启用的企业
+    enableEntLoading: false,
     attentionList: [],
     pointListByEntCode: [],
     pollutantListByDgimn: [],
+    menuNameList: [],
     userList: [],
     userTotal: null,
     inspectorUserList: [],
@@ -90,11 +91,11 @@ export default Model.extend({
       yield update({ enableEntLoading: true });
       const response = yield call(services.GetEntList, { ...payload });
       if (response.IsSuccess) {
-        yield update({enableEntList: response.Datas,});
+        yield update({ enableEntList: response.Datas, });
       }
       callback && callback(response?.Datas);
-      yield update({  enableEntLoading: false });
-      
+      yield update({ enableEntLoading: false });
+
     },
     *getEntByRegionCallBack({ payload, callback }, { call, put, update, select }) {
       //企业列表 回调
@@ -266,6 +267,15 @@ export default Model.extend({
         callback && callback(result.Datas);
         yield update({
           pollutantListByDgimn: result.Datas,
+        });
+      }
+    },
+    // 根据所有菜单名称
+    *getMenuNameList({ payload }, { call, update }) {
+      const result = yield call(services.getMenuNameList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          menuNameList: result.Datas.map(item => item.replace('ReactPD', '')),
         });
       }
     },

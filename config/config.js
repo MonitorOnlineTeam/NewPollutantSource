@@ -10,7 +10,7 @@ import path from 'path';
 // const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:61003/';//运维正式
-const apiHost = 'http://172.16.12.134:61005/';//新前端
+const apiHost = 'http://172.16.12.134:61005/';//整合新前端
 // const apiHost = 'http://172.16.12.234:60061/';//模型
 // const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const apiHost = 'http://172.16.12.152:50089/';
@@ -1367,6 +1367,11 @@ export default {
                   component: './EmergencyTodoList/EmergencyDetailInfoLayout',
                 },
                 {
+                  path: '/operations/supervisionWorkbench', //督查核查软件 60 工作台
+                  name: 'remoteSupervision',
+                  component: './operations/supervisionWorkbench',
+                },
+                {
                   path: '/operations/remoteSupervision', //远程督查
                   name: 'remoteSupervision',
                   component: './operations/remoteSupervision',
@@ -1863,8 +1868,8 @@ export default {
                 {
                   name: 'mapview',
                   path: '/monitoring/mapview',
-                  // component: './monitoring/mapview',
-                  component: './newHome/ElectronicMap',
+                  component: './monitoring/mapview',
+                  // component: './newHome/ElectronicMap',
                 },
                 {
                   name: 'videopreview',
@@ -1873,6 +1878,11 @@ export default {
                   //   ? './monitoring/videopreview/hkvideo/index'
                   //   : './monitoring/videopreview/ysyvideo/VideoReact'
                   //   }`,
+                  component: './Video/videoView',
+                },
+                {
+                  name: 'videopreview',
+                  path: '/monitoring/videopreview/:key',
                   component: './Video/videoView',
                 },
                 {
@@ -1898,7 +1908,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                  }`,
+                    }`,
                 },
                 {
                   //视频监控 企业
@@ -3299,10 +3309,50 @@ export default {
                       component:
                         './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
                     },
+                    {
+                      // 超标时长分析
+                      name: 'AnalysisExceedTimeLimit',
+                      path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AnalysisExceedTimeLimit',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/AnalysisExceedTimeLimit',
+                    },
+                  ],
+                },
+                {
+                  // 模型库管理
+                  name: 'AbnormalCluesList',
+                  path: '/AbnormalIdentifyModel/ModelBaseManage',
+                  routes: [
+                    // 模型训练  
+                    {
+                      // 数据接入
+                      name: 'DataAccess',
+                      path: '/AbnormalIdentifyModel/ModelBaseManage/DataAccess',
+                      component: './AbnormalIdentifyModel/ModelBaseManage/DataAccess',
+                    },
+                    {
+                      // 数据清洗
+                      name: 'CluesList',
+                      path: '/AbnormalIdentifyModel/ModelBaseManage/DataCleaning',
+                      component: './AbnormalIdentifyModel/ModelBaseManage/DataCleaning',
+                    },
+                    {
+                      // 排放特征学习
+                      name: 'CharacteristicLearning',
+                      path: '/AbnormalIdentifyModel/ModelBaseManage/CharacteristicLearning',
+                      component: './AbnormalIdentifyModel/ModelBaseManage/CharacteristicLearning',
+                    },
+                    // 模型选配
+                    // {
+                    //   name: 'ModelSelection',
+                    //   path: '/AbnormalIdentifyModel/ModelBaseManage/ModelSelection',
+                    //   component: './AbnormalIdentifyModel/ModelBaseManage/ModelSelection',
+                    // },
                   ],
                 },
               ],
             },
+
             /********  设备调试及售后服务管理平台 成套   ********/
             {
               path: '/ctManage',
