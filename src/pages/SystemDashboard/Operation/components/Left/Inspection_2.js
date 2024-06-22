@@ -157,7 +157,7 @@ const ProjectExecution = props => {
           // wrapClassName="fullScreenModal"
           modalType="planInspection"
           visible={open}
-          type={1}
+          type={2}
           onCancel={() => {
             setOpen(false);
           }}

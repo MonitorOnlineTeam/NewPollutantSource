@@ -192,9 +192,9 @@ const Calibration = props => {
       </Row>
       {open && (
         <PlanWorkOrderStatistics //实际校准完成率弹框
-          modalType="actualCalibration"
+          modalType="planCalibration"
           visible={open}
-          type={1}
+          type={2}
           onCancel={() => {
             setOpen(false);
           }}

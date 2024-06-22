@@ -116,6 +116,21 @@ const HomeDataScreen = props => {
       type: 'global/getOperationSetting',
       payload: {},
     });
+
+    return () => {
+      // 销毁时：重置state
+      dispatch({
+        //获取运维基础配置
+        type: 'OperationSysDashboard/updateState',
+        payload: {
+          level: 1,
+          timeLabel: '本月',
+          time: [moment().startOf('month'), moment()],
+          regionCode: '',
+          entCode: '',
+        },
+      });
+    };
   }, []);
 
   // 返回系统

@@ -34,7 +34,7 @@ class Index extends PureComponent {
     const { visible,type,time,modalType,wrapClassName } = this.props
     return (
       <Modal
-        title= {modalType=='planCalibration'?"计划校准完成率":modalType=='planInspection'? "计划巡检完成率111" :"实际校准完成率" }
+        title= {modalType=='planCalibration'?"计划校准完成率":modalType=='planInspection'? "计划巡检完成率" :"实际校准完成率" }
         wrapClassName={wrapClassName||'spreadOverModal'}
         visible={visible}
         footer={false}

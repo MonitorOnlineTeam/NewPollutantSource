@@ -78,7 +78,7 @@ const DeviceDiagnostics = props => {
       },
     ]);
     const colorSet = [
-      [value / 100, color],
+      [value !== '-' ? value : 0, color],
       [1, '#192A51'],
     ];
     const rich = {
@@ -124,10 +124,10 @@ const DeviceDiagnostics = props => {
             lineHeight: 40,
             padding: [40, 0, 0, 0],
             fontStyle: 'italic',
-            formatter: function(value) {
-              var num = Math.round(value);
+            fontSize: 26,
+            formatter: function(val) {
               // return '{size|' + num + '%}';
-              return num + '%';
+              return value !== '-' ? value + '%' : '-';
             },
             // rich: rich,
             offsetCenter: ['0%', 50],
@@ -280,7 +280,7 @@ const DeviceDiagnostics = props => {
       {open1 && (
         <EquipmentFailureRate //设备故障率弹框
           visible={open1}
-          type={1}
+          type={2}
           onCancel={() => {
             setOpen1(false);
           }}
@@ -290,7 +290,7 @@ const DeviceDiagnostics = props => {
       {open2 && (
         <EquipmentFailurerePairRate //设备故障修复率弹框
           visible={open2}
-          type={1}
+          type={2}
           onCancel={() => {
             setOpen2(false);
           }}

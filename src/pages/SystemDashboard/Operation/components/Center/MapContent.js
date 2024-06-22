@@ -10,23 +10,23 @@ import SiteDetailsModal from '@/pages/newestHome/components/springModal/mapModal
 
 const legendList = [
   {
-    name: '在线',
+    name: '运维正常',
     color: '#2EEB9D',
     value: '1',
   },
+  // {
+  //   name: '离线',
+  //   color: '#C9C9C9',
+  //   value: '0',
+  // },
+  // {
+  //   name: '停产',
+  //   color: '#FFCC00',
+  //   value: '4',
+  // },
   {
-    name: '离线',
-    color: '#C9C9C9',
-    value: '0',
-  },
-  {
-    name: '停产',
+    name: '运维异常',
     color: '#FFCC00',
-    value: '4',
-  },
-  {
-    name: '超标',
-    color: '#FF3737',
     value: '2',
   },
 ];
@@ -226,18 +226,18 @@ class MapContent extends PureComponent {
     let color = '';
 
     switch (status) {
-      case '0': // 离线
-        color = legendList[1].color;
-        break;
+      // case '0': // 离线
+      //   color = legendList[1].color;
+      //   break;
       case '1': // 在线
         color = legendList[0].color;
         break;
       case '2': // 超标
-        color = legendList[3].color;
+        color = legendList[1].color;
         break;
-      case '4': // 停运
-        color = legendList[2].color;
-        break;
+      // case '4': // 停运
+      //   color = legendList[2].color;
+      //   break;
     }
 
     return (
@@ -881,6 +881,10 @@ class MapContent extends PureComponent {
                   className={`${styles.legendItem} ${
                     selectedLegend === item.value ? styles.active : ''
                   }`}
+                  style={{
+                    color: selectedLegend === item.value ? item.color : '',
+                    borderColor: selectedLegend === item.value ? item.color : '',
+                  }}
                   onClick={() => this.onLegendClick(item.value)}
                 >
                   <i style={{ background: item.color }}></i>
@@ -893,7 +897,7 @@ class MapContent extends PureComponent {
 
         <SiteDetailsModal
           data={{ ...currentPointInfo, PollutantType: 1 }}
-          tabList={['运维记录', '运维日志']}
+          tabList={["", "运维记录", "运维日志", "", "", "", "", "", ""]}
         />
       </div>
     );

@@ -133,26 +133,26 @@ const ResponseAnalysis = props => {
         grid: [
           {
             show: false,
-            left: '40px',
+            left: '60px',
             top: '18%',
             bottom: '10',
             containLabel: true,
-            width: '32%',
+            width: '24%',
           },
           {
             show: false,
-            left: '52%',
+            left: '51%',
             top: '18%',
             bottom: '10',
             width: '0%',
           },
           {
             show: false,
-            right: '40px',
+            right: '70px',
             top: '18%',
             bottom: '10',
             containLabel: true,
-            width: '32%',
+            width: '24%',
           },
         ],
         xAxis: [
@@ -459,7 +459,7 @@ const ResponseAnalysis = props => {
       {open2 && (
         <MissingDataRateModal //缺失报警响应率弹框
           type={'ent'}
-          pollutantType={'1'}
+          pollutantType={'2'}
           time={[moment(time[0]), moment(time[1])]}
           missingRateVisible={open2}
           missingRateCancel={() => {

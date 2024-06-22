@@ -232,7 +232,7 @@ const ReplacementAnalysis = props => {
       {open && (
         <ConsumablesStatisticsModal //耗材统计弹框
           visible={open}
-          type={1}
+          type={2}
           onCancel={() => {
             setOpen(false);
           }}
